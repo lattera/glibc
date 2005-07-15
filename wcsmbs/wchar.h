@@ -833,6 +833,13 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 # include <wctype.h>
 #endif
 
+
+/* Define some macros helping to catch buffer overflows.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/wchar2.h>
+#endif
+
+
 __END_DECLS
 
 #endif	/* _WCHAR_H defined */

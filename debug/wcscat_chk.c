@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -20,68 +20,36 @@
 #include <wchar.h>
 
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
+/* Append SRC on the end of DEST.  Check for overflows.  */
 wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcscat_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  wint_t c;
-  wchar_t *const s = dest;
+  register wchar_t *s1 = dest;
+  register const wchar_t *s2 = src;
+  wchar_t c;
 
-  --dest;
-
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-
-      for (;;)
-	{
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  if (--n4 == 0)
-	    goto last_chars;
-	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
-      goto zero_fill;
-    }
-
- last_chars:
-  n &= 3;
-  if (n == 0)
-    return s;
-
+  /* Find the end of the string.  */
   do
     {
-      c = *src++;
-      *++dest = c;
-      if (--n == 0)
-	return s;
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
+      c = *s1++;
     }
   while (c != L'\0');
 
- zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
+  /* Make S1 point before the next character, so we can increment
+     it while memory is read (wins on pipelined cpus).	*/
+  s1 -= 2;
+  ++destlen;
 
-  return s;
+  do
+    {
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
+      c = *s2++;
+      *++s1 = c;
+    }
+  while (c != L'\0');
+
+  return dest;
 }
-weak_alias (__wcsncpy, wcsncpy)

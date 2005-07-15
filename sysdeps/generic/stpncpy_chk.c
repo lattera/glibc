@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1996,1997,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +16,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <wchar.h>
+/* This is almost copied from strncpy.c, written by Torbjorn Granlund.  */
+
+#include <string.h>
 
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
-wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+/* Copy no more than N characters of SRC to DEST, returning the address of
+   the terminating '\0' in DEST, if any, or else DEST + N.  */
+char *
+__stpncpy_chk (char *dest, const char *src, size_t n, size_t destlen)
 {
-  wint_t c;
-  wchar_t *const s = dest;
+  char c;
+  char *s = dest;
 
-  --dest;
+  if (__builtin_expect (destlen < n, 0))
+    __chk_fail ();
 
   if (n >= 4)
     {
@@ -39,49 +39,47 @@ __wcsncpy (dest, src, n)
       for (;;)
 	{
 	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
+	  *dest++ = c;
+	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
+	  *dest++ = c;
+	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
+	  *dest++ = c;
+	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
+	  *dest++ = c;
+	  if (c == '\0')
 	    break;
 	  if (--n4 == 0)
 	    goto last_chars;
 	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
+      n -= dest - s;
       goto zero_fill;
     }
 
  last_chars:
   n &= 3;
   if (n == 0)
-    return s;
+    return dest;
 
-  do
+  for (;;)
     {
       c = *src++;
-      *++dest = c;
-      if (--n == 0)
-	return s;
+      --n;
+      *dest++ = c;
+      if (c == '\0')
+	break;
+      if (n == 0)
+	return dest;
     }
-  while (c != L'\0');
 
  zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
+  while (n-- > 0)
+    dest[n] = '\0';
 
-  return s;
+  return dest - 1;
 }
-weak_alias (__wcsncpy, wcsncpy)

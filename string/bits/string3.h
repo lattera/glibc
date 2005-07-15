@@ -144,6 +144,22 @@ __strncpy_ichk (char *__restrict __dest, const char *__restrict __src,
 }
 
 
+// XXX We have no corresponding builtin yet.
+extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
+			    size_t __destlen) __THROW;
+extern char *__REDIRECT (__stpncpy_alias, (char *__dest, const char *__src,
+					   size_t __n), stpncpy)__THROW;
+
+extern __always_inline char *
+stpncpy (char *__dest, const char *__src, size_t __n)
+{
+  if (__bos (__dest) != (size_t) -1
+      && (!__builtin_constant_p (__n) || __n <= __bos (__dest)))
+    return __stpncpy_chk (__dest, __src, __n, __bos (__dest));
+  return __stpncpy_alias (__dest, __src, __n);
+}
+
+
 #define strcat(dest, src) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___strcat_chk (dest, src, __bos (dest))			\

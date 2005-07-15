@@ -82,6 +82,8 @@ extern size_t __wcsnrtombs (char *__restrict __dst,
 			    __const wchar_t **__restrict __src,
 			    size_t __nwc, size_t __len,
 			    __mbstate_t *__restrict __ps);
+extern wchar_t *__wcsncpy (wchar_t *__restrict __dest,
+			 __const wchar_t *__restrict __src, size_t __n);
 extern wchar_t *__wcpcpy (wchar_t *__dest, __const wchar_t *__src);
 extern wchar_t *__wcpncpy (wchar_t *__dest, __const wchar_t *__src,
 			   size_t __n);
@@ -111,6 +113,13 @@ extern int __vfwprintf (__FILE *__restrict __s,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
+
+extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
+			    int __flag, size_t __s_len,
+			    __const wchar_t *__restrict __format,
+			    __gnuc_va_list __arg)
+     /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
+libc_hidden_proto (__vswprintf_chk)
 
 /* Internal functions.  */
 extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,

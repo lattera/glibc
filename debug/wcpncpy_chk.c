@@ -22,66 +22,12 @@
 
 /* Copy no more than N wide-characters of SRC to DEST.	*/
 wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcpncpy_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 {
-  wint_t c;
-  wchar_t *const s = dest;
+  if (__builtin_expect (destlen < n, 0))
+    __chk_fail ();
 
-  --dest;
-
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-
-      for (;;)
-	{
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  if (--n4 == 0)
-	    goto last_chars;
-	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
-      goto zero_fill;
-    }
-
- last_chars:
-  n &= 3;
-  if (n == 0)
-    return s;
-
-  do
-    {
-      c = *src++;
-      *++dest = c;
-      if (--n == 0)
-	return s;
-    }
-  while (c != L'\0');
-
- zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
-
-  return s;
+  /* This function is not often enough used to justify not using a
+     tail call.  */
+  return __wcpncpy (dest, src, n);
 }
-weak_alias (__wcsncpy, wcsncpy)

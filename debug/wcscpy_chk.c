@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -17,71 +17,45 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stddef.h>
 #include <wchar.h>
 
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
+/* Copy SRC to DEST.  */
 wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
 {
   wint_t c;
-  wchar_t *const s = dest;
+  wchar_t *wcp;
 
-  --dest;
-
-  if (n >= 4)
+  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
     {
-      size_t n4 = n >> 2;
+      const ptrdiff_t off = dest - src - 1;
 
-      for (;;)
+      wcp = (wchar_t *) src;
+
+      do
 	{
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  if (--n4 == 0)
-	    goto last_chars;
+	  if (__builtin_expect (n-- == 0, 0))
+	    __chk_fail ();
+	  c = *wcp++;
+	  wcp[off] = c;
 	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
-      goto zero_fill;
+      while (c != L'\0');
     }
-
- last_chars:
-  n &= 3;
-  if (n == 0)
-    return s;
-
-  do
+  else
     {
-      c = *src++;
-      *++dest = c;
-      if (--n == 0)
-	return s;
+      wcp = dest;
+
+      do
+	{
+	  if (__builtin_expect (n-- == 0, 0))
+	    __chk_fail ();
+	  c = *src++;
+	  *wcp++ = c;
+	}
+      while (c != L'\0');
     }
-  while (c != L'\0');
 
- zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
-
-  return s;
+  return dest;
 }
-weak_alias (__wcsncpy, wcsncpy)

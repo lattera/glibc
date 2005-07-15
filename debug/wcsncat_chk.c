@@ -20,68 +20,77 @@
 #include <wchar.h>
 
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
+/* Append no more than N wide-character of SRC onto DEST.  */
 wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcsncat_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 {
-  wint_t c;
-  wchar_t *const s = dest;
+  wchar_t c;
+  wchar_t * const s = dest;
 
-  --dest;
+  /* Find the end of DEST.  */
+  do
+    {
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
+      c = *dest++;
+    }
+  while (c != L'\0');
+
+  /* Make DEST point before next character, so we can increment
+     it while memory is read (wins on pipelined cpus).	*/
+  ++destlen;
+  dest -= 2;
 
   if (n >= 4)
     {
       size_t n4 = n >> 2;
-
-      for (;;)
+      do
 	{
+	  if (__builtin_expect (destlen-- == 0, 0))
+	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
-	    break;
+	    return s;
+	  if (__builtin_expect (destlen-- == 0, 0))
+	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
-	    break;
+	    return s;
+	  if (__builtin_expect (destlen-- == 0, 0))
+	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
-	    break;
+	    return s;
+	  if (__builtin_expect (destlen-- == 0, 0))
+	    __chk_fail ();
 	  c = *src++;
 	  *++dest = c;
 	  if (c == L'\0')
-	    break;
-	  if (--n4 == 0)
-	    goto last_chars;
-	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
-      goto zero_fill;
+	    return s;
+	} while (--n4 > 0);
+      n &= 3;
     }
 
- last_chars:
-  n &= 3;
-  if (n == 0)
-    return s;
-
-  do
+  while (n > 0)
     {
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
       c = *src++;
       *++dest = c;
-      if (--n == 0)
+      if (c == L'\0')
 	return s;
+      n--;
     }
-  while (c != L'\0');
 
- zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
+  if (c != L'\0')
+    {
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
+      *++dest = L'\0';
+    }
 
   return s;
 }
-weak_alias (__wcsncpy, wcsncpy)

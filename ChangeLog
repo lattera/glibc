@@ -1,3 +1,38 @@
+2005-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/bits/wchar2.h: New file.
+	* include/bits/wchar2.h: New file.
+	* wcsmbs/wchar.h: Include <bits/wchar2.h> if fortification is
+	requested.
+	* wcsmbs/wcsncpy.c: Add __wcsncpy alias.
+	* string/bits/string3.h: Add fortified stpncpy definitions.
+	* sysdeps/generic/stpncpy_chk.c: New file.
+	* libio/vswprintf.c: Move _IO_wstrnfile definition to strfile.h.
+	Export _IO_wstrn_jumps.
+	* libio/strfile.h: Define _IO_wstrnfile and declare _IO_wstrn_jumps.
+	* include/wchar.h: Declare __wcsncpy and __vswprintf_chk.
+	* debug/fgetws_chk.c: New file.
+	* debug/fgetws_u_chk.c: New file.
+	* debug/fwprintf_chk.c: New file.
+	* debug/swprintf_chk.c: New file.
+	* debug/vfwprintf_chk.c: New file.
+	* debug/vswprintf_chk.c: New file.
+	* debug/vwprintf_chk.c: New file.
+	* debug/wcpcpy_chk.c: New file.
+	* debug/wcpncpy_chk.c: New file.
+	* debug/wcscat_chk.c: New file.
+	* debug/wcscpy_chk.c: New file.
+	* debug/wcsncat_chk.c: New file.
+	* debug/wcsncpy_chk.c: New file.
+	* debug/wmemcpy_chk.c: New file.
+	* debug/wmemmove_chk.c: New file.
+	* debug/wmempcpy_chk.c: New file.
+	* debug/wmemset_chk.c: New file.
+	* debug/wprintf_chk.c: New file.
+	* debug/tst-chk1.c: Add tests for new functions.
+	* debug/Versions: Export new functions.
+	* debug/Makefile (routines): Add new functions.
+
 2005-07-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c: Add a few __builtin_expect.
