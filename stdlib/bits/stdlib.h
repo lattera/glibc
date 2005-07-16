@@ -24,9 +24,9 @@
 extern char *__realpath_chk (__const char *__restrict __name,
 			     char *__restrict __resolved,
 			     size_t __resolvedlen) __THROW __wur;
-extern char *__REDIRECT (__realpath_alias, (__const char *__restrict __name,
-					    char *__restrict __resolved),
-			 realpath) __THROW __wur;
+extern char *__REDIRECT_NTH (__realpath_alias,
+			     (__const char *__restrict __name,
+			      char *__restrict __resolved), realpath) __wur;
 
 extern __always_inline __wur char *
 realpath (const char *__name, char *__resolved)
@@ -40,9 +40,9 @@ realpath (const char *__name, char *__resolved)
 
 extern int __ptsname_r_chk (int __fd, char *__buf, size_t __buflen,
 			    size_t __nreal) __THROW __nonnull ((2));
-extern int __REDIRECT (__ptsname_r_alias, (int __fd, char *__buf,
-					   size_t __buflen), ptsname_r)
-     __THROW __nonnull ((2));
+extern int __REDIRECT_NTH (__ptsname_r_alias, (int __fd, char *__buf,
+					       size_t __buflen), ptsname_r)
+     __nonnull ((2));
 
 extern __always_inline int
 ptsname_r (int __fd, char *__buf, size_t __buflen)
@@ -56,8 +56,8 @@ ptsname_r (int __fd, char *__buf, size_t __buflen)
 
 extern int __wctomb_chk (char *__s, wchar_t __wchar, size_t __buflen)
   __THROW __wur;
-extern int __REDIRECT (__wctomb_alias, (char *__s, wchar_t __wchar), wctomb)
-  __THROW __wur;
+extern int __REDIRECT__NTH (__wctomb_alias, (char *__s, wchar_t __wchar),
+			    wctomb) __wur;
 
 extern __always_inline __wur int
 wctomb (char *__s, wchar_t __wchar)

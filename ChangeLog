@@ -1,7 +1,8 @@
 2005-07-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* wcsmbs/bits/wchar2.h: Use __REDIRECT_NTH instead of __REDIRECT
+	* stdlib/bits/stdlib.h: Use __REDIRECT_NTH instead of __REDIRECT
 	where necessary.
+	* wcsmbs/bits/wchar2.h: Likewise.
 
 2005-07-15  Andreas Jaeger  <aj@suse.de>
 
