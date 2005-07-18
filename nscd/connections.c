@@ -393,20 +393,23 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		if (offset % ps != 0)
 		  {
 		    towrite = MIN (remaining, ps - (offset % ps));
-		    pwrite (fd, tmpbuf, towrite, offset);
+		    if (pwrite (fd, tmpbuf, towrite, offset) != towrite)
+		      goto write_fail;
 		    offset += towrite;
 		    remaining -= towrite;
 		  }
 
 		while (remaining > ps)
 		  {
-		    pwrite (fd, tmpbuf, ps, offset);
+		    if (pwrite (fd, tmpbuf, ps, offset) == -1)
+		      goto write_fail;
 		    offset += ps;
 		    remaining -= ps;
 		  }
 
-		if (remaining > 0)
-		  pwrite (fd, tmpbuf, remaining, offset);
+		if (remaining > 0
+		    && pwrite (fd, tmpbuf, remaining, offset) != remaining)
+		  goto write_fail;
 
 		/* Create the header of the file.  */
 		struct database_pers_head head =
@@ -426,6 +429,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		    || (mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
 				    MAP_SHARED, fd, 0)) == MAP_FAILED)
 		  {
+		  write_fail:
 		    unlink (dbs[cnt].db_filename);
 		    dbg_log (_("cannot write to database file %s: %s"),
 			     dbs[cnt].db_filename, strerror (errno));
@@ -965,7 +969,9 @@ cannot change to old working directory: %s; disabling paranoia mode"),
       setuid (server_uid);
       setgid (server_gid);
     }
-  chdir ("/");
+  if (chdir ("/") != 0)
+    dbg_log (_("cannot change current working directory to \"/\": %s"),
+	     strerror (errno));
   paranoia = 0;
 }
 

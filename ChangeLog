@@ -1,5 +1,9 @@
 2005-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/Makefile (nscd-cflags): Add _FORTIFY_SOURCE.
+
+	* nscd/connections.c: Fix a few wur warnings.
+
 	* nscd/grpcache.c (cache_addgr): Use correct maximum for group ID
 	length.  Patch by Ivan Gyurdiev <ivg2@cornell.edu>.
 

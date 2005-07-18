@@ -84,7 +84,7 @@ CFLAGS-nscd_gethst_r.c = -fexceptions
 CFLAGS-nscd_getai.c = -fexceptions
 CFLAGS-nscd_initgroups.c = -fexceptions
 
-nscd-cflags = -DIS_IN_nscd=1
+nscd-cflags = -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
 ifeq (yesyes,$(have-fpie)$(build-shared))
 nscd-cflags += -fpie
 endif
