@@ -56,8 +56,8 @@ ptsname_r (int __fd, char *__buf, size_t __buflen)
 
 extern int __wctomb_chk (char *__s, wchar_t __wchar, size_t __buflen)
   __THROW __wur;
-extern int __REDIRECT__NTH (__wctomb_alias, (char *__s, wchar_t __wchar),
-			    wctomb) __wur;
+extern int __REDIRECT_NTH (__wctomb_alias, (char *__s, wchar_t __wchar),
+			   wctomb) __wur;
 
 extern __always_inline __wur int
 wctomb (char *__s, wchar_t __wchar)
