@@ -1,5 +1,6 @@
 2005-07-11  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #1102]
 	* sysdeps/pthread/pthread.h (PTHREAD_MUTEX_INITIALIZER,
 	PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,
 	PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP,
@@ -141,6 +142,7 @@
 
 2005-04-05  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #1102]
 	* sysdeps/pthread/pthread.h (__pthread_cleanup_routine): Use
 	__inline instead of inline.
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_routine): Likewise.

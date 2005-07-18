@@ -94,10 +94,12 @@
 
 2005-07-12  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #1106]
 	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Include not-cancel.h.
 	(has_cpuclock): Use open_not_cancel_2 instead of open, read_not_cancel
 	instead of read and close_not_cancel_no_status instead of close.
 
+	[BZ #1106]
 	* sysdeps/s390/s390-64/bcopy.S (__bcopy): Use
 	HIDDEN_BUILTIN_JUMPTARGET to jump to memmove.
 
@@ -227,6 +229,7 @@
 
 2005-07-05  Thorsten Kukuk  <kukuk@suse.de>
 
+	[BZ #1111]
 	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Check if NSS
 	module provides getgrgid_r.
 	(getgrnam_plusgroup): Preserve original return value.
@@ -271,6 +274,7 @@
 
 2005-06-23  Thorsten Kukuk  <kukuk@suse.de>
 
+	[BZ #1109]
 	* nscd/nscd_stat.c (receive_print_stats): Replace YESSTR/NOSTR
 	with own translation.
 
@@ -348,9 +352,11 @@
 
 2005-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1106]
 	* time/mktime.c: Always include <string.h> for prototype of
 	implicitly used memcpy.
 
+	[BZ #1104]
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c
 	(truncate64): Use __truncate, not truncate.
 	(__have_no_truncate64): Renamed from have_no_truncate64.
@@ -424,6 +430,7 @@
 
 2005-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1106]
 	* sysdeps/posix/sigignore.c: Include <string.h> to tell the compiler
 	to use __GI_memset.
 	* sysdeps/posix/signal.c: Likewise.
@@ -1158,6 +1165,7 @@
 
 2005-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1105]
 	* time/strptime_l.c (__strptime_internal): Handle 'z' to set
 	tm_gmtoff.
 	* time/Makefile (tests): Add tst-strptime2.
@@ -1192,6 +1200,7 @@
 
 2005-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1110]
 	* stdio-common/vfscanf.c: Correctly account for characters of
 	decimal points right after +-.
 
@@ -1211,6 +1220,7 @@
 
 2005-04-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1110]
 	* stdio-common/vfscanf.c: Fix parsing of decimal point after +-.
 	Patch by Hamed Malek <hamed@bamdad.org>.
 
@@ -2465,6 +2475,7 @@
 
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1107]
 	* iconvdata/ibm930.h: Correct Yen mapping.
 	* iconvdata/ibm939.h: Likewise.
 	* iconvdata/testdata/IBM930..UTF8: Adjust test data.
@@ -3146,6 +3157,7 @@
 
 2005-01-14  GOTO Masanori  <gotom@debian.or.jp>
 
+	[BZ #1108]
 	* sunrpc/rpc_main.c (s_output): Generate #include <rpc/pmap_clnt.h>
 	irrespective of Cflag.
 
