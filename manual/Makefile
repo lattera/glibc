@@ -80,7 +80,7 @@ libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi dir-add.texi \
 libc.dvi libc.pdf: texinfo.tex
 
 html: libc/index.html
-libc/index.html: chapters.texi top-menu.texi libm-err.texi
+libc/index.html: chapters.texi top-menu.texi dir-add.texi libm-err.texi
 	$(MAKEINFO) --html libc.texinfo
 
 # Generate the summary from the Texinfo source files for each chapter.
