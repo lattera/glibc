@@ -1,3 +1,7 @@
+2005-07-13  Thorsten Kukuk  <kukuk@suse.de>
+
+        * manual/Makefile (libc/index.html): Add dir-add.texi.
+
 2005-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/bits/stdlib.h: Use __REDIRECT_NTH instead of __REDIRECT
