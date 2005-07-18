@@ -1,6 +1,24 @@
+2005-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/grpcache.c (cache_addgr): Use correct maximum for group ID
+	length.  Patch by Ivan Gyurdiev <ivg2@cornell.edu>.
+
+	* debug/confstr_chk.c: New file.
+	* debug/getdomainname_chk.c: New file.
+	* debug/getgroups_chk.c: New file.
+	* debug/gethostname_chk.c: New file.
+	* debug/getlogin_r_chk.c: New file.
+	* debug/ttyname_r_chk.c: New file.
+	* posix/bits/unistd.h: Add definitions for new debug versions.
+	* debug/tst-chk1.c: Add tests for new functions.
+	* debug/Versions: Export new functions.
+	* debug/Makefile (routines): Add new files.
+
+	* stdlib/bits/stdlib.h: Fix typo.
+
 2005-07-13  Thorsten Kukuk  <kukuk@suse.de>
 
-        * manual/Makefile (libc/index.html): Depend on dir-add.texi.
+	* manual/Makefile (libc/index.html): Depend on dir-add.texi.
 
 2005-07-15  Ulrich Drepper  <drepper@redhat.com>
 

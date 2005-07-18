@@ -167,7 +167,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       char *gr_name;
       char *cp;
       const size_t key_len = strlen (key);
-      const size_t buf_len = 3 + sizeof (grp->gr_gid) + key_len + 1;
+      const size_t buf_len = 3 * sizeof (grp->gr_gid) + key_len + 1;
       char *buf = alloca (buf_len);
       ssize_t n;
       size_t cnt;

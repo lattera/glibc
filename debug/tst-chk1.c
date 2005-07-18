@@ -1083,7 +1083,75 @@ do_test (void)
 	}
       CHK_FAIL_END
 #endif
+      close (fd);
     }
+
+  confstr (_CS_GNU_LIBC_VERSION, largebuf, sizeof (largebuf));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  confstr (_CS_GNU_LIBC_VERSION, smallbuf, sizeof (largebuf));
+  CHK_FAIL_END
+#endif
+
+  gid_t grpslarge[5];
+  int ngr = getgroups (5, grpslarge);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  ngr = getgroups (5, (gid_t *) smallbuf);
+  CHK_FAIL_END
+#endif
+
+  fd = open (_PATH_TTY, O_RDONLY);
+  if (fd != -1)
+    {
+      char enough[1000];
+      if (ttyname_r (fd, enough, sizeof (enough)) != 0)
+	{
+	  puts ("first ttyname_r failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (ttyname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
+	{
+	  puts ("second ttyname_r somehow suceeded");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+      close (fd);
+    }
+
+  char hostnamelarge[1000];
+  gethostname (hostnamelarge, sizeof (hostnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  gethostname (smallbuf, sizeof (hostnamelarge));
+  CHK_FAIL_END
+#endif
+
+  char loginlarge[1000];
+  getlogin_r (loginlarge, sizeof (hostnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  getlogin_r (smallbuf, sizeof (loginlarge));
+  CHK_FAIL_END
+#endif
+
+  char domainnamelarge[1000];
+  int res = getdomainname (domainnamelarge, sizeof (domainnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  res = getdomainname (smallbuf, sizeof (domainnamelarge));
+  CHK_FAIL_END
+#endif
 
   return ret;
 }

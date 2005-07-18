@@ -37,6 +37,8 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    wcpncpy_chk \
 	    swprintf_chk vswprintf_chk wprintf_chk fwprintf_chk \
 	    vwprintf_chk vfwprintf_chk fgetws_chk fgetws_u_chk \
+	    confstr_chk getgroups_chk ttyname_r_chk getlogin_r_chk \
+	    gethostname_chk getdomainname_chk \
 	    stack_chk_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local

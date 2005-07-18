@@ -128,3 +128,101 @@ __NTH (getwd (char *__buf))
   return __getwd_alias (__buf);
 }
 #endif
+
+extern size_t __confstr_chk (int __name, char *__buf, size_t __len,
+			     size_t __buflen) __THROW;
+extern size_t __REDIRECT_NTH (__confstr_alias, (int __name, char *__buf,
+						size_t __len), confstr);
+
+extern __always_inline size_t
+confstr (int __name, char *__buf, size_t __len)
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __bos (__buf) < __len))
+    return __confstr_chk (__name, __buf, __len, __bos (__buf));
+  return __confstr_alias (__name, __buf, __len);
+}
+
+
+extern int __getgroups_chk (int __size, __gid_t __list[], size_t listlen)
+     __THROW __wur;
+extern int __REDIRECT_NTH (__getgroups_alias, (int __size, __gid_t __list[]),
+			   getgroups) __wur;
+
+extern __always_inline int
+getgroups (int __size, __gid_t __list[])
+{
+  if (__bos (__list) != (size_t) -1
+      && (!__builtin_constant_p (__size)
+	  || __size * sizeof (__gid_t) > __bos (__list)))
+    return __getgroups_chk (__size, __list, __bos (__list));
+  return __getgroups_alias (__size, __list);
+}
+
+
+extern int __ttyname_r_chk (int __fd, char *__buf, size_t __buflen,
+			    size_t __nreal) __THROW __nonnull ((2));
+extern int __REDIRECT_NTH (__ttyname_r_alias, (int __fd, char *__buf,
+					       size_t __buflen), ttyname_r)
+     __nonnull ((2));
+
+extern __always_inline int
+ttyname_r (int __fd, char *__buf, size_t __buflen)
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
+    return __ttyname_r_chk (__fd, __buf, __buflen, __bos (__buf));
+  return __ttyname_r_alias (__fd, __buf, __buflen);
+}
+
+
+#if defined __USE_REENTRANT || defined __USE_UNIX98
+extern int __getlogin_r_chk (char *__buf, size_t __buflen, size_t __nreal)
+     __nonnull ((1));
+extern int __REDIRECT (__getlogin_r_alias, (char *__buf, size_t __buflen),
+		       getlogin_r) __nonnull ((1));
+
+extern __always_inline int
+getlogin_r (char *__buf, size_t __buflen)
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
+    return __getlogin_r_chk (__buf, __buflen, __bos (__buf));
+  return __getlogin_r_alias (__buf, __buflen);
+}
+#endif
+
+
+#if defined __USE_BSD || defined __USE_UNIX98
+extern int __gethostname_chk (char *__buf, size_t __buflen, size_t __nreal)
+     __THROW __nonnull ((1));
+extern int __REDIRECT_NTH (__gethostname_alias, (char *__buf, size_t __buflen),
+			   gethostname) __nonnull ((1));
+
+extern __always_inline int
+gethostname (char *__buf, size_t __buflen)
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
+    return __gethostname_chk (__buf, __buflen, __bos (__buf));
+  return __gethostname_alias (__buf, __buflen);
+}
+#endif
+
+
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
+extern int __getdomainname_chk (char *__buf, size_t __buflen, size_t __nreal)
+     __THROW __nonnull ((1)) __wur;
+extern int __REDIRECT_NTH (__getdomainname_alias, (char *__buf,
+						   size_t __buflen),
+			   getdomainname) __nonnull ((1)) __wur;
+
+extern __always_inline int
+getdomainname (char *__buf, size_t __buflen)
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
+    return __getdomainname_chk (__buf, __buflen, __bos (__buf));
+  return __getdomainname_alias (__buf, __buflen);
+}
+#endif
