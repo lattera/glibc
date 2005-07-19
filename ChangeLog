@@ -1,3 +1,11 @@
+2005-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Check for -fstack-protector gcc option.
+	* config.make.in (have-ssp): Add template.
+	* nscd/Makefile (nscd-cflags): Add -fstack-protector if supported.
+
+	* nscd/nscd.c (main): Don't ignore result of chdir call.
+
 2005-07-18  Roland McGrath  <roland@redhat.com>
 
 	[BZ #869]

@@ -1508,6 +1508,21 @@ if test $libc_cv_fno_unit_at_a_time = yes; then
 fi
 AC_SUBST(fno_unit_at_a_time)
 
+AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
+cat > conftest.c <<EOF
+int foo;
+main () { return 0;}
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fstack-protector
+			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
+then
+  libc_cv_ssp=yes
+else
+  libc_cv_ssp=no
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_ssp)
+
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
 		 [AC_TRY_COMPILE(, [asm (".section .init");
