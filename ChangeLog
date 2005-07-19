@@ -1,5 +1,42 @@
 2005-07-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (aux): Add fxprintf.
+	* stdio-common/fxprintf.c: New file.
+	* include/stdio.h: Add declaration for stdio.h.
+	* argp/argp-fmtstream.c: Use __fxprintf instead of inline stream
+	orientation test and two separate function calls.
+	* argp/argp-help.c: Likewise.
+	* assert/assert-perr.c: Likewise.
+	* assert/assert.c: Likewise.
+	* gmon/gmon.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* malloc/obstack.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sysdeps/generic/wordexp.c: Likewise.
+
+	* misc/Makefile: Add rules to build and run tst-error1.
+	* misc/tst-error1.c: New file.
+	* misc/error.c: Fix memory leak and possibly endless loop.
+
 	* configure.in: Check for -fstack-protector gcc option.
 	* config.make.in (have-ssp): Add template.
 	* nscd/Makefile (nscd-cflags): Add -fstack-protector if supported.

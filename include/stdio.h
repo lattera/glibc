@@ -79,6 +79,8 @@ extern int __ftrylockfile (FILE *__stream);
 extern int __getc_unlocked (FILE *__fp);
 extern wint_t __getwc_unlocked (FILE *__fp);
 
+extern int __fxprintf (FILE *__fp, const char *__fmt, const wchar_t *__wfmt,
+		       ...) __attribute__ ((__format__ (__printf__, 2, 4)));
 
 extern __const char *__const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;

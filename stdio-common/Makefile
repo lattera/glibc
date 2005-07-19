@@ -40,7 +40,7 @@ install-others = $(inst_includedir)/bits/stdio_lim.h
 
 include ../Makeconfig
 
-aux	:= errlist siglist printf-parsemb printf-parsewc
+aux	:= errlist siglist printf-parsemb printf-parsewc fxprintf
 distribute := _itoa.h _itowa.h _i18n_number.h \
 	      printf-parse.h stdio_lim.h.in tst-unbputc.sh tst-printf.sh
 
