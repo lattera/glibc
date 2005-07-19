@@ -240,7 +240,9 @@ main (int argc, char **argv)
 
       setsid ();
 
-      chdir ("/");
+      if (chdir ("/") != 0)
+	error (EXIT_FAILURE, errno,
+	       _("cannot change current working cirectory to \"/\""));
 
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 
