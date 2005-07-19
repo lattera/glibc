@@ -1,9 +1,16 @@
+2005-07-18  Roland McGrath  <roland@redhat.com>
+
+	[BZ #869]
+	* Makerules ($(objpfx)stubs): Do cd into $(objdir) to reduce size of
+	objdump command line.
+
 2005-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/Makefile (nscd-cflags): Add _FORTIFY_SOURCE.
 
 	* nscd/connections.c: Fix a few wur warnings.
 
+	[BZ #1113]
 	* nscd/grpcache.c (cache_addgr): Use correct maximum for group ID
 	length.  Patch by Ivan Gyurdiev <ivg2@cornell.edu>.
 
