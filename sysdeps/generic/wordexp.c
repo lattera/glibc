@@ -1798,7 +1798,7 @@ envsubst:
 	      if (str[0] == '\0')
 		str = _("parameter null or not set");
 
-	      __fxprintf (NULL, "%s: %s\n", L"%s: %s\n", env, str);
+	      __fxprintf (NULL, "%s: %s\n", env, str);
 	    }
 
 	  if (free_value)

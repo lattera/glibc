@@ -17,22 +17,34 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <wchar.h>
 
 
 int
-__fxprintf (FILE *fp, const char *fmt, const wchar_t *wfmt, ...)
+__fxprintf (FILE *fp, const char *fmt, ...)
 {
   if (fp == NULL)
     fp = stderr;
 
   va_list ap;
-  va_start (ap, wfmt);
+  va_start (ap, fmt);
 
   int res;
   if (_IO_fwide (fp, 0) > 0)
-    res = __vfwprintf (fp, wfmt, ap);
+    {
+      size_t len = strlen (fmt) + 1, i;
+      wchar_t wfmt[len];
+      for (i = 0; i < len; ++i)
+	{
+	  assert (isascii (fmt[i]));
+	  wfmt[i] = fmt[i];
+	}
+      res = __vfwprintf (fp, wfmt, ap);
+    }
   else
     res = _IO_vfprintf (fp, fmt, ap);
 

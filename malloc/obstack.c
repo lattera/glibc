@@ -410,7 +410,7 @@ print_and_abort (void)
      happen because the "memory exhausted" message appears in other places
      like this and the translation should be reused instead of creating
      a very similar string which requires a separate translation.  */
-  (void) __fxprintf (NULL, "%s\n", L"%s\n", _("memory exhausted"));
+  (void) __fxprintf (NULL, "%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 

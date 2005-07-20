@@ -576,7 +576,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		  __fxprintf (NULL, "%s", L"%s", buf);
+		  __fxprintf (NULL, "%s", buf);
 
 		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		  _IO_funlockfile (stderr);
@@ -651,7 +651,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			  ((_IO_FILE *) stderr)->_flags2
 			    |= _IO_FLAGS2_NOTCANCEL;
 
-			  __fxprintf (NULL, "%s", L"%s", buf);
+			  __fxprintf (NULL, "%s", buf);
 
 			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			  _IO_funlockfile (stderr);
@@ -688,7 +688,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			  ((_IO_FILE *) stderr)->_flags2
 			    |= _IO_FLAGS2_NOTCANCEL;
 
-			  __fxprintf (NULL, "%s", L"%s", buf);
+			  __fxprintf (NULL, "%s", buf);
 
 			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			  _IO_funlockfile (stderr);
@@ -762,7 +762,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		  __fxprintf (NULL, "%s", L"%s", buf);
+		  __fxprintf (NULL, "%s", buf);
 
 		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		  _IO_funlockfile (stderr);
@@ -825,7 +825,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		__fxprintf (NULL, "%s", L"%s", buf);
+		__fxprintf (NULL, "%s", buf);
 
 		((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		_IO_funlockfile (stderr);
@@ -873,7 +873,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		    __fxprintf (NULL, "%s", L"%s", buf);
+		    __fxprintf (NULL, "%s", buf);
 
 		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		    _IO_funlockfile (stderr);
@@ -942,7 +942,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		    __fxprintf (NULL, "%s", L"%s", buf);
+		    __fxprintf (NULL, "%s", buf);
 
 		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		    _IO_funlockfile (stderr);
@@ -984,7 +984,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			    ((_IO_FILE *) stderr)->_flags2
 			      |= _IO_FLAGS2_NOTCANCEL;
 
-			    __fxprintf (NULL, "%s", L"%s", buf);
+			    __fxprintf (NULL, "%s", buf);
 
 			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			    _IO_funlockfile (stderr);
@@ -1023,7 +1023,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			    ((_IO_FILE *) stderr)->_flags2
 			      |= _IO_FLAGS2_NOTCANCEL;
 
-			    __fxprintf (NULL, "%s", L"%s", buf);
+			    __fxprintf (NULL, "%s", buf);
 
 			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			    _IO_funlockfile (stderr);
@@ -1094,7 +1094,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 			((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-			__fxprintf (NULL, "%s", L"%s", buf);
+			__fxprintf (NULL, "%s", buf);
 
 			((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			_IO_funlockfile (stderr);

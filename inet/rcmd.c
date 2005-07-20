@@ -138,11 +138,9 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	error = getaddrinfo(*ahost, num, &hints, &res);
 	if (error) {
 		if (error == EAI_NONAME && *ahost != NULL)
-			__fxprintf(NULL, "%s: Unknown host\n",
-				   L"%s: Unknown host\n", *ahost);
+			__fxprintf(NULL, "%s: Unknown host\n", *ahost);
 		else
 			__fxprintf(NULL, "rcmd: getaddrinfo: %s\n",
-				   L"rcmd: getaddrinfo: %s\n",
 				   gai_strerror(error));
 
                 return -1;
@@ -155,7 +153,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		free (ahostbuf);
 		ahostbuf = strdup (res->ai_canonname);
 		if (ahostbuf == NULL) {
-			__fxprintf(NULL, "%s", L"%s",
+			__fxprintf(NULL, "%s",
 				   _("rcmd: Cannot allocate memory\n"));
 			return -1;
 		}
@@ -171,11 +169,10 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		s = rresvport_af(&lport, ai->ai_family);
 		if (s < 0) {
 			if (errno == EAGAIN)
-				__fxprintf(NULL, "%s", L"%s", _("\
+				__fxprintf(NULL, "%s", _("\
 rcmd: socket: All ports in use\n"));
 			else
-				__fxprintf(NULL, "rcmd: socket: %m\n",
-					   L"rcmd: socket: %m\n");
+				__fxprintf(NULL, "rcmd: socket: %m\n");
 
 			__sigsetmask(oldmask);
 			freeaddrinfo(res);
@@ -203,7 +200,7 @@ rcmd: socket: All ports in use\n"));
 			if (__asprintf (&buf, _("connect to address %s: "),
 					paddr) >= 0)
 			  {
-			    __fxprintf(NULL, "%s", L"%s", buf);
+			    __fxprintf(NULL, "%s", buf);
 			    free (buf);
 			  }
 			__set_errno (oerrno);
@@ -215,7 +212,7 @@ rcmd: socket: All ports in use\n"));
 				    NI_NUMERICHOST);
 			if (__asprintf (&buf, _("Trying %s...\n"), paddr) >= 0)
 			  {
-			    __fxprintf (NULL, "%s", L"%s", buf);
+			    __fxprintf (NULL, "%s", buf);
 			    free (buf);
 			  }
 			continue;
@@ -228,7 +225,7 @@ rcmd: socket: All ports in use\n"));
 			continue;
 		}
 		freeaddrinfo(res);
-		(void)__fxprintf(NULL, "%s: %s\n", L"%s: %s\n", *ahost,
+		(void)__fxprintf(NULL, "%s: %s\n", *ahost,
 				 __strerror_r(errno, errbuf, sizeof (errbuf)));
 		__sigsetmask(oldmask);
 		return -1;
@@ -252,7 +249,7 @@ rcmd: socket: All ports in use\n"));
 			if (__asprintf (&buf, _("\
 rcmd: write (setting up stderr): %m\n")) >= 0)
 			  {
-			    __fxprintf(NULL, "%s", L"%s", buf);
+			    __fxprintf(NULL, "%s", buf);
 			    free (buf);
 			  }
 			(void)__close(s2);
@@ -271,7 +268,7 @@ rcmd: poll (setting up stderr): %m\n")) >= 0)
 				&& __asprintf(&buf, _("\
 poll: protocol failure in circuit setup\n")) >= 0))
 			  {
-			    __fxprintf (NULL, "%s", L"%s", buf);
+			    __fxprintf (NULL, "%s", buf);
 			    free  (buf);
 			  }
 			(void)__close(s2);
@@ -292,8 +289,7 @@ poll: protocol failure in circuit setup\n")) >= 0))
 		}
 		(void)__close(s2);
 		if (s3 < 0) {
-			(void)__fxprintf(NULL, "rcmd: accept: %m\n",
-					 L"rcmd: accept: %m\n");
+			(void)__fxprintf(NULL, "rcmd: accept: %m\n");
 			lport = 0;
 			goto bad;
 		}
@@ -305,7 +301,7 @@ poll: protocol failure in circuit setup\n")) >= 0))
 			if (__asprintf(&buf, _("\
 socket: protocol failure in circuit setup\n")) >= 0)
 			  {
-			    __fxprintf (NULL, "%s", L"%s", buf);
+			    __fxprintf (NULL, "%s", buf);
 			    free (buf);
 			  }
 			goto bad2;
@@ -331,7 +327,7 @@ socket: protocol failure in circuit setup\n")) >= 0)
 		    || (n != 0
 			&& __asprintf(&buf, "rcmd: %s: %m\n", *ahost) >= 0))
 		  {
-		    __fxprintf (NULL, "%s", L"%s", buf);
+		    __fxprintf (NULL, "%s", buf);
 		    free (buf);
 		  }
 		goto bad2;

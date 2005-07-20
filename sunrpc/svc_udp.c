@@ -149,8 +149,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   buf = mem_alloc (((MAX (sendsz, recvsz) + 3) / 4) * 4);
   if (xprt == NULL || su == NULL || buf == NULL)
     {
-      (void) __fxprintf (NULL, "%s", L"%s",
-			 _("svcudp_create: out of memory\n"));
+      (void) __fxprintf (NULL, "%s", _("svcudp_create: out of memory\n"));
       mem_free (xprt, sizeof (SVCXPRT));
       mem_free (su, sizeof (*su));
       mem_free (buf, ((MAX (sendsz, recvsz) + 3) / 4) * 4);
@@ -172,7 +171,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
        + sizeof(struct cmsghdr) + sizeof (struct in_pktinfo))
       > sizeof (xprt->xp_pad))
     {
-      (void) __fxprintf (NULL,"%s",  L"%s", _("\
+      (void) __fxprintf (NULL,"%s", _("\
 svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
       return NULL;
     }
@@ -402,7 +401,7 @@ svcudp_destroy (xprt)
 #define SPARSENESS 4		/* 75% sparse */
 
 #define CACHE_PERROR(msg)	\
-	(void) __fxprintf(NULL, "%s\n", L"%s\n", msg)
+	(void) __fxprintf(NULL, "%s\n", msg)
 
 #define ALLOC(type, size)	\
 	(type *) mem_alloc((unsigned) (sizeof(type) * (size)))

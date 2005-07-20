@@ -1,3 +1,38 @@
+2005-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/stdio.h (__fxprintf): Remove wfmt argument.
+	* stdio-common/fxprintf.c: Include assert.h, ctype.h and wchar.h.
+	(__fxprintf): Remove wfmt argument, create wfmt format string on
+	the fly from fmt.
+	* argp/argp-fmtstream.c: Adjust all __fxprintf callers.
+	* argp/argp-help.c: Likewise.
+	* assert/assert-perr.c: Likewise.
+	* assert/assert.c: Likewise.
+	* gmon/gmon.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* malloc/obstack.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sysdeps/generic/wordexp.c: Likewise.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/bits/wchar2.h: Add definitions for wcrtomb, mbsrtowcs,

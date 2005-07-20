@@ -344,7 +344,6 @@ write_gmon (void)
 	    char buf[300];
 	    int errnum = errno;
 	    __fxprintf (NULL, "_mcleanup: gmon.out: %s\n",
-			L"_mcleanup: gmon.out: %s\n",
 			__strerror_r (errnum, buf, sizeof buf));
 	    return;
 	  }

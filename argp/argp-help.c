@@ -1769,7 +1769,7 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 	  if (__asprintf (&buf, fmt, ap) < 0)
 	    buf = NULL;
 
-	  __fxprintf (stream, "%s: %s\n", L"%s: %s\n",
+	  __fxprintf (stream, "%s: %s\n",
 		      state ? state->name : __argp_short_program_name (), buf);
 
 	  free (buf);
@@ -1821,7 +1821,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 #endif
 
 #ifdef _LIBC
-	  __fxprintf (stream, "%s", L"%s",
+	  __fxprintf (stream, "%s",
 		      state ? state->name : __argp_short_program_name ());
 #else
 	  fputs_unlocked (state ? state->name : __argp_short_program_name (),
@@ -1839,7 +1839,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	      if (__asprintf (&buf, fmt, ap) < 0)
 		buf = NULL;
 
-	      __fxprintf (stream, ": %s", L": %s", buf);
+	      __fxprintf (stream, ": %s", buf);
 
 	      free (buf);
 #else
@@ -1857,7 +1857,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	      char buf[200];
 
 #ifdef _LIBC
-	      __fxprintf (stream, ": %s", L": %s",
+	      __fxprintf (stream, ": %s",
 			  __strerror_r (errnum, buf, sizeof (buf)));
 #else
 	      putc_unlocked (':', stream);

@@ -158,7 +158,7 @@ print_errno_message (int errnum)
 #endif
 
 #if _LIBC
-  __fxprintf (NULL, ": %s", L": %s", s);
+  __fxprintf (NULL, ": %s", s);
 #else
   fprintf (stderr, ": %s", s);
 #endif
@@ -243,7 +243,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
   if (errnum)
     print_errno_message (errnum);
 # if _LIBC
-  __fxprintf (NULL, "\n", L"\n");
+  __fxprintf (NULL, "\n");
 # else
   putc ('\n', stderr);
 # endif
@@ -291,7 +291,7 @@ error (status, errnum, message, va_alist)
   else
     {
 #if _LIBC
-      __fxprintf (NULL, "%s: ", L"%s: ", program_name);
+      __fxprintf (NULL, "%s: ", program_name);
 #else
       fprintf (stderr, "%s: ", program_name);
 #endif
@@ -374,7 +374,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
   else
     {
 #if _LIBC
-      __fxprintf (NULL, "%s:", L"%s: ", program_name);
+      __fxprintf (NULL, "%s:", program_name);
 #else
       fprintf (stderr, "%s:", program_name);
 #endif
@@ -383,7 +383,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
   if (file_name != NULL)
     {
 #if _LIBC
-      __fxprintf (NULL, "%s:%d: ", L"%s:%d: ", file_name, line_number);
+      __fxprintf (NULL, "%s:%d: ", file_name, line_number);
 #else
       fprintf (stderr, "%s:%d: ", file_name, line_number);
 #endif

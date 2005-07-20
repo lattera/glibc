@@ -91,7 +91,7 @@ getpass (prompt)
     tty_changed = 0;
 
   /* Write the prompt.  */
-  __fxprintf (out, "%s", L"%s", prompt);
+  __fxprintf (out, "%s", prompt);
   fflush_unlocked (out);
 
   /* Read the password.  */
@@ -106,7 +106,7 @@ getpass (prompt)
 	  buf[nread - 1] = '\0';
 	  if (tty_changed)
 	    /* Write the newline that was not echoed.  */
-	    __fxprintf (out, "%c", L"%c", '\n');
+	    __fxprintf (out, "\n");
 	}
     }
 

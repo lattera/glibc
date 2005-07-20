@@ -150,7 +150,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, start) < 0)
 	    return 0;
 
-	  __fxprintf (NULL, "%s", L"%s", buf);
+	  __fxprintf (NULL, "%s", buf);
 
 	  free (buf);
 	  return 0;
@@ -164,7 +164,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, SERVICE_MAX) < 0)
 	    return 0;
 
-	  __fxprintf (NULL, "%s", L"%s", buf);
+	  __fxprintf (NULL, "%s", buf);
 
 	  free (buf);
 	  return 0;
@@ -187,7 +187,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			      fname, line_num) < 0)
 		return 0;
 
-	      __fxprintf (NULL, "%s", L"%s", buf);
+	      __fxprintf (NULL, "%s", buf);
 
 	      free (buf);
 	      return 0;
@@ -223,7 +223,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, TRIMDOMAINS_MAX) < 0)
 	    return 0;
 
-	  __fxprintf (NULL, "%s", L"%s", buf);
+	  __fxprintf (NULL, "%s", buf);
 
 	  free (buf);
 	  return 0;
@@ -244,7 +244,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 			      fname, line_num) < 0)
 		return 0;
 
-	      __fxprintf (NULL, "%s", L"%s", buf);
+	      __fxprintf (NULL, "%s", buf);
 
 	      free (buf);
 	      return 0;
@@ -302,7 +302,7 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 		      fname, line_num, args) < 0)
 	return 0;
 
-      __fxprintf (NULL, "%s", L"%s", buf);
+      __fxprintf (NULL, "%s", buf);
 
       free (buf);
       return 0;
@@ -345,7 +345,7 @@ parse_line (const char *fname, int line_num, const char *str)
 		      fname, line_num, start) < 0)
 	return;
 
-      __fxprintf (NULL, "%s", L"%s", buf);
+      __fxprintf (NULL, "%s", buf);
 
       free (buf);
       return;
@@ -370,7 +370,7 @@ parse_line (const char *fname, int line_num, const char *str)
 			    fname, line_num, str) < 0)
 	      break;
 
-	    __fxprintf (NULL, "%s", L"%s", buf);
+	    __fxprintf (NULL, "%s", buf);
 
 	    free (buf);
 	  }

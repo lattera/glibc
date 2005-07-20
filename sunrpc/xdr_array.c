@@ -105,8 +105,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
 	*addrp = target = mem_alloc (nodesize);
 	if (target == NULL)
 	  {
-	    (void) __fxprintf (NULL, "%s", L"%s",
-			       _("xdr_array: out of memory\n"));
+	    (void) __fxprintf (NULL, "%s", _("xdr_array: out of memory\n"));
 	    return FALSE;
 	  }
 	__bzero (target, nodesize);

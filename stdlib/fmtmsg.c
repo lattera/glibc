@@ -155,7 +155,6 @@ fmtmsg (long int classification, const char *label, int severity,
       int do_tag = (print & tag_mask) && tag != MM_NULLTAG;
 
       if (__fxprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
-		      L"%s%s%s%s%s%s%s%s%s%s\n",
 		      do_label ? label : "",
 		      do_label && (do_severity | do_text | do_action | do_tag)
 		      ? ": " : "",

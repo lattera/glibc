@@ -47,17 +47,16 @@ psignal (int sig, const char *s)
     colon = ": ";
 
   if (sig >= 0 && sig < NSIG && (desc = INTUSE(_sys_siglist)[sig]) != NULL)
-    (void) __fxprintf (NULL, L"%s%s%s\n", "%s%s%s\n", s, colon, _(desc));
+    (void) __fxprintf (NULL, "%s%s%s\n", s, colon, _(desc));
   else
     {
       char *buf;
 
       if (__asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0)
-	(void) __fxprintf (NULL, "%s%s%s\n", L"%s%s%s\n",
-			   s, colon, _("Unknown signal"));
+	(void) __fxprintf (NULL, "%s%s%s\n", s, colon, _("Unknown signal"));
       else
 	{
-	  (void) __fxprintf (NULL, L"%s", "%s", buf);
+	  (void) __fxprintf (NULL, "%s", buf);
 
 	  free (buf);
 	}

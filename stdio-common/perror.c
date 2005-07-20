@@ -37,7 +37,7 @@ perror_internal (FILE *fp, const char *s, int errnum)
 
   errstring = __strerror_r (errnum, buf, sizeof buf);
 
-  (void) __fxprintf (fp, "%s%s%s\n", L"%s%s%s\n", s, colon, errstring);
+  (void) __fxprintf (fp, "%s%s%s\n", s, colon, errstring);
 }
 
 

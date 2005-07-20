@@ -125,7 +125,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
  err_out:
   if (buf == NULL)
     return -1;
-  (void) __fxprintf (NULL, "%s", L"%s", buf);
+  (void) __fxprintf (NULL, "%s", buf);
   free (buf);
   return -1;
 }
@@ -184,7 +184,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
  err_out2:
   if (buf == NULL)
     exit (1);
-  __fxprintf (NULL, "%s", L"%s", buf);
+  __fxprintf (NULL, "%s", buf);
   free (buf);
   exit (1);
 }

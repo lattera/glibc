@@ -61,7 +61,7 @@ __assert_perror_fail (int errnum,
 		  __strerror_r (errnum, errbuf, sizeof errbuf)) >= 0)
     {
       /* Print the message.  */
-      (void) __fxprintf (NULL, "%s", L"%s", buf);
+      (void) __fxprintf (NULL, "%s", buf);
       (void) fflush (stderr);
 
       /* We have to free the buffer since the appplication might catch the

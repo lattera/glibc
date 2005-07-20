@@ -61,7 +61,7 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 		  assertion) >= 0)
     {
       /* Print the message.  */
-      (void) __fxprintf (NULL, "%s", L"%s", buf);
+      (void) __fxprintf (NULL, "%s", buf);
       (void) fflush (stderr);
 
       /* We have to free the buffer since the application might catch the

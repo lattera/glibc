@@ -155,7 +155,7 @@ libc_hidden_def (clnt_sperror)
 void
 clnt_perror (CLIENT * rpch, const char *msg)
 {
-  (void) __fxprintf (NULL, "%s", L"%s", clnt_sperror (rpch, msg));
+  (void) __fxprintf (NULL, "%s", clnt_sperror (rpch, msg));
 }
 libc_hidden_def (clnt_perror)
 
@@ -284,7 +284,7 @@ libc_hidden_def (clnt_sperrno)
 void
 clnt_perrno (enum clnt_stat num)
 {
-  (void) __fxprintf (NULL, "%s", L"%s", clnt_sperrno (num));
+  (void) __fxprintf (NULL, "%s", clnt_sperrno (num));
 }
 
 
@@ -327,7 +327,7 @@ libc_hidden_def (clnt_spcreateerror)
 void
 clnt_pcreateerror (const char *msg)
 {
-  (void) __fxprintf (NULL, "%s", L"%s", clnt_spcreateerror (msg));
+  (void) __fxprintf (NULL, "%s", clnt_spcreateerror (msg));
 }
 
 struct auth_errtab

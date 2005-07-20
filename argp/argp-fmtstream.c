@@ -102,8 +102,7 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
   if (fs->p > fs->buf)
     {
 #ifdef USE_IN_LIBIO
-      __fxprintf (fs->stream, "%.*s", L"%.*s",
-		  (int) (fs->p - fs->buf), fs->buf);
+      __fxprintf (fs->stream, "%.*s", (int) (fs->p - fs->buf), fs->buf);
 #else
       fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
 #endif
@@ -292,7 +291,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 		/* Output the first line so we can use the space.  */
 		{
 #ifdef _LIBC
-		  __fxprintf (fs->stream, "%.*s\n", L"%.*s\n",
+		  __fxprintf (fs->stream, "%.*s\n",
 			      (int) (nl - fs->buf), fs->buf);
 #else
 		  if (nl > fs->buf)
@@ -359,8 +358,7 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       __argp_fmtstream_update (fs);
 
 #ifdef _LIBC
-      __fxprintf (fs->stream, "%.*s", L"%.*s",
-		  (int) (fs->p - fs->buf), fs->buf);
+      __fxprintf (fs->stream, "%.*s", (int) (fs->p - fs->buf), fs->buf);
       wrote = fs->p - fs->buf;
 #else
       wrote = fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
