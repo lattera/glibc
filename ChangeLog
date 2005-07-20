@@ -1,3 +1,8 @@
+2005-07-20  Bob Wilson  <bob.wilson@acm.org>
+            Darin Petkov <darin@tensilica.com>
+
+	* sysdeps/ieee754/flt-32/e_atan2f.c (pi_lo): Correct exponent value.
+
 2005-07-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/stdio.h (__fxprintf): Remove wfmt argument.
