@@ -173,12 +173,7 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
   xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
   if (r == NULL || xprt == NULL)
     {
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	__fwprintf (stderr, L"%s", _("svcunix_create: out of memory\n"));
-      else
-#endif
-	fputs (_("svcunix_create: out of memory\n"), stderr);
+      __fxprintf (NULL, "%s", L"%s", _("svcunix_create: out of memory\n"));
       mem_free (r, sizeof (*r));
       mem_free (xprt, sizeof (SVCXPRT));
       return NULL;
@@ -216,13 +211,8 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
   cd = (struct unix_conn *) mem_alloc (sizeof (struct unix_conn));
   if (xprt == (SVCXPRT *) NULL || cd == (struct unix_conn *) NULL)
     {
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",
-			   _("svc_unix: makefd_xprt: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("svc_unix: makefd_xprt: out of memory\n"), stderr);
+      (void) __fxprintf (NULL, "%s", L"%s",
+			 _("svc_unix: makefd_xprt: out of memory\n"));
       mem_free (xprt, sizeof (SVCXPRT));
       mem_free (cd, sizeof (struct unix_conn));
       return NULL;

@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -1763,33 +1763,26 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 
 	  va_start (ap, fmt);
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stream, 0) > 0)
-	    {
-	      char *buf;
+#ifdef _LIBC
+	  char *buf;
 
-	      if (__asprintf (&buf, fmt, ap) < 0)
-		buf = NULL;
+	  if (__asprintf (&buf, fmt, ap) < 0)
+	    buf = NULL;
 
-	      __fwprintf (stream, L"%s: %s\n",
-			  state ? state->name : __argp_short_program_name (),
-			  buf);
+	  __fxprintf (stream, "%s: %s\n", L"%s: %s\n",
+		      state ? state->name : __argp_short_program_name (), buf);
 
-	      free (buf);
-	    }
-	  else
+	  free (buf);
+#else
+	  fputs_unlocked (state ? state->name : __argp_short_program_name (),
+			  stream);
+	  putc_unlocked (':', stream);
+	  putc_unlocked (' ', stream);
+
+	  vfprintf (stream, fmt, ap);
+
+	  putc_unlocked ('\n', stream);
 #endif
-	    {
-	      fputs_unlocked (state
-			      ? state->name : __argp_short_program_name (),
-			      stream);
-	      putc_unlocked (':', stream);
-	      putc_unlocked (' ', stream);
-
-	      vfprintf (stream, fmt, ap);
-
-	      putc_unlocked ('\n', stream);
-	    }
 
 	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
 
@@ -1827,41 +1820,34 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	  __flockfile (stream);
 #endif
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stream, 0) > 0)
-	    __fwprintf (stream, L"%s",
-			state ? state->name : __argp_short_program_name ());
-	  else
+#ifdef _LIBC
+	  __fxprintf (stream, "%s", L"%s",
+		      state ? state->name : __argp_short_program_name ());
+#else
+	  fputs_unlocked (state ? state->name : __argp_short_program_name (),
+			  stream);
 #endif
-	    fputs_unlocked (state
-			    ? state->name : __argp_short_program_name (),
-			    stream);
 
 	  if (fmt)
 	    {
 	      va_list ap;
 
 	      va_start (ap, fmt);
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stream, 0) > 0)
-		{
-		  char *buf;
+#ifdef _LIBC
+	      char *buf;
 
-		  if (__asprintf (&buf, fmt, ap) < 0)
-		    buf = NULL;
+	      if (__asprintf (&buf, fmt, ap) < 0)
+		buf = NULL;
 
-		  __fwprintf (stream, L": %s", buf);
+	      __fxprintf (stream, ": %s", L": %s", buf);
 
-		  free (buf);
-		}
-	      else
+	      free (buf);
+#else
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
+
+	      vfprintf (stream, fmt, ap);
 #endif
-		{
-		  putc_unlocked (':', stream);
-		  putc_unlocked (' ', stream);
-
-		  vfprintf (stream, fmt, ap);
-		}
 
 	      va_end (ap);
 	    }
@@ -1870,21 +1856,18 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	    {
 	      char buf[200];
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stream, 0) > 0)
-		__fwprintf (stream, L": %s",
-			    __strerror_r (errnum, buf, sizeof (buf)));
-	      else
-#endif
-		{
-		  putc_unlocked (':', stream);
-		  putc_unlocked (' ', stream);
-#if defined _LIBC || defined HAVE_STRERROR_R
-		  fputs (__strerror_r (errnum, buf, sizeof (buf)), stream);
+#ifdef _LIBC
+	      __fxprintf (stream, ": %s", L": %s",
+			  __strerror_r (errnum, buf, sizeof (buf)));
 #else
-		  fputs (strerror (errnum), stream);
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
+# ifdef HAVE_STRERROR_R
+	      fputs (__strerror_r (errnum, buf, sizeof (buf)), stream);
+# else
+	      fputs (strerror (errnum), stream);
+# endif
 #endif
-		}
 	    }
 
 #ifdef USE_IN_LIBIO

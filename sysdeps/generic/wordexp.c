@@ -1798,12 +1798,7 @@ envsubst:
 	      if (str[0] == '\0')
 		str = _("parameter null or not set");
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stderr, 0) > 0)
-		__fwprintf (stderr, L"%s: %s\n", env, str);
-	      else
-#endif
-		fprintf (stderr, "%s: %s\n", env, str);
+	      __fxprintf (NULL, "%s: %s\n", L"%s: %s\n", env, str);
 	    }
 
 	  if (free_value)

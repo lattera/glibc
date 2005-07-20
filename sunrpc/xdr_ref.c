@@ -82,13 +82,8 @@ xdr_reference (xdrs, pp, size, proc)
 	*pp = loc = (caddr_t) mem_alloc (size);
 	if (loc == NULL)
 	  {
-#ifdef USE_IN_LIBIO
-	    if (_IO_fwide (stderr, 0) > 0)
-	      (void) __fwprintf (stderr, L"%s",
-				 _("xdr_reference: out of memory\n"));
-	    else
-#endif
-	      (void) fputs (_("xdr_reference: out of memory\n"), stderr);
+	    (void) __fxprintf (NULL, "%s", L"%s",
+			       _("xdr_reference: out of memory\n"));
 	    return FALSE;
 	  }
 	__bzero (loc, (int) size);

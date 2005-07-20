@@ -285,3 +285,114 @@ fgetws_unlocked (wchar_t *__restrict __s, int __n, FILE *__restrict __stream)
   return __fgetws_unlocked_alias (__s, __n, __stream);
 }
 #endif
+
+
+extern size_t __wcrtomb_chk (char *__s, wchar_t __wchar, mbstate_t *__p,
+			  size_t __buflen) __THROW __wur;
+extern size_t __REDIRECT_NTH (__wcrtomb_alias,
+			      (char *__restrict __s, wchar_t __wchar,
+			       mbstate_t *__restrict __ps), wcrtomb) __wur;
+
+extern __always_inline __wur size_t
+wcrtomb (char *__s, wchar_t __wchar, mbstate_t *__ps)
+{
+  /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
+     But this would only disturb the namespace.  So we define our own
+     version here.  */
+#define __WCHAR_MB_LEN_MAX	16
+#if defined MB_LEN_MAX && MB_LEN_MAX != __WCHAR_MB_LEN_MAX
+# error "Assumed value of MB_LEN_MAX wrong"
+#endif
+  if (__bos (__s) != (size_t) -1 && __WCHAR_MB_LEN_MAX > __bos (__s))
+    return __wcrtomb_chk (__s, __wchar, __ps, __bos (__s));
+  return __wcrtomb_alias (__s, __wchar, __ps);
+}
+
+
+extern size_t __mbsrtowcs_chk (wchar_t *__restrict __dst,
+			       __const char **__restrict __src,
+			       size_t __len, mbstate_t *__restrict __ps,
+			       size_t __dstlen) __THROW;
+extern size_t __REDIRECT_NTH (__mbsrtowcs_alias,
+			      (wchar_t *__restrict __dst,
+			       __const char **__restrict __src,
+			       size_t __len, mbstate_t *__restrict __ps),
+			      mbsrtowcs);
+
+extern __always_inline size_t
+mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+	    size_t __len, mbstate_t *__restrict __ps)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len)
+	  || __len * sizeof (wchar_t) > __bos (__dst)))
+    return __mbsrtowcs_chk (__dst, __src, __len, __ps, __bos (__dst));
+  return __mbsrtowcs_alias (__dst, __src, __len, __ps);
+}
+
+
+extern size_t __wcsrtombs_chk (char *__restrict __dst,
+			       __const wchar_t **__restrict __src,
+			       size_t __len, mbstate_t *__restrict __ps,
+			       size_t __dstlen) __THROW;
+extern size_t __REDIRECT_NTH (__wcsrtombs_alias,
+			      (char *__restrict __dst,
+			       __const wchar_t **__restrict __src,
+			       size_t __len, mbstate_t *__restrict __ps),
+			      wcsrtombs);
+
+extern __always_inline size_t
+wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+	   size_t __len, mbstate_t *__restrict __ps)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __len > __bos (__dst)))
+    return __wcsrtombs_chk (__dst, __src, __len, __ps, __bos (__dst));
+  return __wcsrtombs_alias (__dst, __src, __len, __ps);
+}
+
+
+#ifdef __USE_GNU
+extern size_t __mbsnrtowcs_chk (wchar_t *__restrict __dst,
+				__const char **__restrict __src, size_t __nmc,
+				size_t __len, mbstate_t *__restrict __ps,
+				size_t __dstlen) __THROW;
+extern size_t __REDIRECT_NTH (__mbsnrtowcs_alias,
+			      (wchar_t *__restrict __dst,
+			       __const char **__restrict __src, size_t __nmc,
+			       size_t __len, mbstate_t *__restrict __ps),
+			      mbsnrtowcs);
+
+extern __always_inline size_t
+mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+	    size_t __nmc, size_t __len, mbstate_t *__restrict __ps)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len)
+	  || __len * sizeof (wchar_t) > __bos (__dst)))
+    return __mbsnrtowcs_chk (__dst, __src, __nmc, __len, __ps, __bos (__dst));
+  return __mbsnrtowcs_alias (__dst, __src, __nmc, __len, __ps);
+}
+
+
+extern size_t __wcsnrtombs_chk (char *__restrict __dst,
+				__const wchar_t **__restrict __src,
+				size_t __nwc, size_t __len,
+				mbstate_t *__restrict __ps, size_t __dstlen)
+     __THROW;
+extern size_t __REDIRECT_NTH (__wcsnrtombs_alias,
+			      (char *__restrict __dst,
+			       __const wchar_t **__restrict __src,
+			       size_t __nwc, size_t __len,
+			       mbstate_t *__restrict __ps), wcsnrtombs);
+
+extern __always_inline size_t
+wcsnrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+	    size_t __nwc, size_t __len, mbstate_t *__restrict __ps)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __len > __bos (__dst)))
+    return __wcsnrtombs_chk (__dst, __src, __nwc, __len, __ps, __bos (__dst));
+  return __wcsnrtombs_alias (__dst, __src, __nwc, __len, __ps);
+}
+#endif

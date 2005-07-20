@@ -30,7 +30,8 @@ libc {
     __swprintf_chk; __vswprintf_chk; __wprintf_chk; __fwprintf_chk;
     __vwprintf_chk; __vfwprintf_chk; __fgetws_chk; __fgetws_unlocked_chk;
     __confstr_chk; __getgroups_chk; __ttyname_r_chk; __getlogin_r_chk;
-    __gethostname_chk; __getdomainname_chk;
+    __gethostname_chk; __getdomainname_chk; __wcrtomb_chk; __mbsnrtowcs_chk;
+    __wcsnrtombs_chk; __mbsrtowcs_chk; __wcsrtombs_chk;
 
     __stack_chk_fail;
   }

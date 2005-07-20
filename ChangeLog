@@ -1,8 +1,23 @@
+2005-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/bits/wchar2.h: Add definitions for wcrtomb, mbsrtowcs,
+	wcsrtombs, mbsnrtowcs, and wcsnrtombs.
+	* debug/Makefile (routines): Add wcrtomb_chk, mbsrtowcs_chk,
+	wcsrtombs_chk, mbsnrtowcs_chk, and wcsnrtombs_chk.
+	* debug/Versions: Add __wcrtomb_chk, __mbsrtowcs_chk,
+	__wcsrtombs_chk, __mbsnrtowcs_chk, and __wcsnrtombs_chk.
+	* debug/tst-chk1.c: Add tests for new functions.
+	* debug/mbsnrtowcs_chk.c: New file.
+	* debug/mbsrtowcs_chk.c: New file.
+	* debug/wcrtomb_chk.c: New file.
+	* debug/wcsnrtombs_chk.c: New file.
+	* debug/wcsrtombs_chk.c: New file.
+
 2005-07-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/Makefile (aux): Add fxprintf.
 	* stdio-common/fxprintf.c: New file.
-	* include/stdio.h: Add declaration for stdio.h.
+	* include/stdio.h: Add declaration for __fxprintf.
 	* argp/argp-fmtstream.c: Use __fxprintf instead of inline stream
 	orientation test and two separate function calls.
 	* argp/argp-help.c: Likewise.

@@ -1,6 +1,6 @@
 /* obstack.c - subroutines used implicitly by object stack macros
-   Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997,
-   1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,
+   1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -410,12 +410,7 @@ print_and_abort (void)
      happen because the "memory exhausted" message appears in other places
      like this and the translation should be reused instead of creating
      a very similar string which requires a separate translation.  */
-# if defined _LIBC && defined USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    __fwprintf (stderr, L"%s\n", _("memory exhausted"));
-  else
-# endif
-    fprintf (stderr, "%s\n", _("memory exhausted"));
+  (void) __fxprintf (NULL, "%s\n", L"%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 

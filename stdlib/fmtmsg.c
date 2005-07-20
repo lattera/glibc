@@ -154,42 +154,22 @@ fmtmsg (long int classification, const char *label, int severity,
       int do_action = (print & action_mask) && action != MM_NULLACT;
       int do_tag = (print & tag_mask) && tag != MM_NULLTAG;
 
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	{
-	  if (__fwprintf (stderr, L"%s%s%s%s%s%s%s%s%s%s\n",
-			  do_label ? label : "",
-			  do_label
-			  && (do_severity | do_text | do_action | do_tag)
-			  ? ": " : "",
-			  do_severity ? severity_rec->string : "",
-			  do_severity && (do_text | do_action | do_tag)
-			  ? ": " : "",
-			  do_text ? text : "",
-			  do_text && (do_action | do_tag) ? "\n" : "",
-			  do_action ? "TO FIX: " : "",
-			  do_action ? action : "",
-			  do_action && do_tag ? "  " : "",
-			  do_tag ? tag : "") < 0)
-	    /* Oh, oh.  An error occurred during the output.  */
-	    result = MM_NOMSG;
-	}
-      else
-#endif
-	if (fprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
-		     do_label ? label : "",
-		     do_label && (do_severity | do_text | do_action | do_tag)
-		     ? ": " : "",
-		     do_severity ? severity_rec->string : "",
-		     do_severity && (do_text | do_action | do_tag) ? ": " : "",
-		     do_text ? text : "",
-		     do_text && (do_action | do_tag) ? "\n" : "",
-		     do_action ? "TO FIX: " : "",
-		     do_action ? action : "",
-		     do_action && do_tag ? "  " : "",
-		     do_tag ? tag : "") < 0)
-	  /* Oh, oh.  An error occurred during the output.  */
-	  result = MM_NOMSG;
+      if (__fxprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
+		      L"%s%s%s%s%s%s%s%s%s%s\n",
+		      do_label ? label : "",
+		      do_label && (do_severity | do_text | do_action | do_tag)
+		      ? ": " : "",
+		      do_severity ? severity_rec->string : "",
+		      do_severity && (do_text | do_action | do_tag)
+		      ? ": " : "",
+		      do_text ? text : "",
+		      do_text && (do_action | do_tag) ? "\n" : "",
+		      do_action ? "TO FIX: " : "",
+		      do_action ? action : "",
+		      do_action && do_tag ? "  " : "",
+		      do_tag ? tag : "") < 0)
+	/* Oh, oh.  An error occurred during the output.  */
+	result = MM_NOMSG;
     }
 
   if (classification & MM_CONSOLE)

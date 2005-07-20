@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1999, 2001, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1999,2001,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,12 +91,7 @@ getpass (prompt)
     tty_changed = 0;
 
   /* Write the prompt.  */
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (out, 0) > 0)
-    __fwprintf (out, L"%s", prompt);
-  else
-#endif
-    fputs_unlocked (prompt, out);
+  __fxprintf (out, "%s", L"%s", prompt);
   fflush_unlocked (out);
 
   /* Read the password.  */
@@ -110,15 +105,8 @@ getpass (prompt)
 	  /* Remove the newline.  */
 	  buf[nread - 1] = '\0';
 	  if (tty_changed)
-	    {
-	      /* Write the newline that was not echoed.  */
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (out, 0) > 0)
-		putwc_unlocked (L'\n', out);
-	      else
-#endif
-		putc_unlocked ('\n', out);
-	    }
+	    /* Write the newline that was not echoed.  */
+	    __fxprintf (out, "%c", L"%c", '\n');
 	}
     }
 

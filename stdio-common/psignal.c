@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -47,29 +47,17 @@ psignal (int sig, const char *s)
     colon = ": ";
 
   if (sig >= 0 && sig < NSIG && (desc = INTUSE(_sys_siglist)[sig]) != NULL)
-    {
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _(desc));
-      else
-	(void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
-    }
+    (void) __fxprintf (NULL, L"%s%s%s\n", "%s%s%s\n", s, colon, _(desc));
   else
     {
       char *buf;
 
       if (__asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0)
-	{
-	  if (_IO_fwide (stderr, 0) > 0)
-	    (void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _("Unknown signal"));
-	  else
-	    (void) fprintf (stderr, "%s%s%s\n", s, colon, _("Unknown signal"));
-	}
+	(void) __fxprintf (NULL, "%s%s%s\n", L"%s%s%s\n",
+			   s, colon, _("Unknown signal"));
       else
 	{
-	  if (_IO_fwide (stderr, 0) > 0)
-	    (void) __fwprintf (stderr, L"%s",  buf);
-	  else
-	    (void) fputs (buf, stderr);
+	  (void) __fxprintf (NULL, L"%s", "%s", buf);
 
 	  free (buf);
 	}

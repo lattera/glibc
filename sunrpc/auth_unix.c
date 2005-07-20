@@ -111,13 +111,8 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
   if (auth == NULL || au == NULL)
     {
 no_memory:
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",
-			   _("authunix_create: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("authunix_create: out of memory\n"), stderr);
+      (void) __fxprintf (NULL, "%s", L"%s",
+			 _("authunix_create: out of memory\n"));
       mem_free (auth, sizeof (*auth));
       mem_free (au, sizeof (*au));
       return NULL;

@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams
-   Copyright (C) 1997,1998,1999,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999,2001,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -102,11 +102,11 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
   if (fs->p > fs->buf)
     {
 #ifdef USE_IN_LIBIO
-      if (_IO_fwide (fs->stream, 0) > 0)
-	__fwprintf (fs->stream, L"%.*s", (int) (fs->p - fs->buf), fs->buf);
-      else
+      __fxprintf (fs->stream, "%.*s", L"%.*s",
+		  (int) (fs->p - fs->buf), fs->buf);
+#else
+      fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
 #endif
-	fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
     }
   free (fs->buf);
   free (fs);
@@ -291,17 +291,15 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      else
 		/* Output the first line so we can use the space.  */
 		{
-#ifdef USE_IN_LIBIO
-		  if (_IO_fwide (fs->stream, 0) > 0)
-		    __fwprintf (fs->stream, L"%.*s\n",
-				(int) (nl - fs->buf), fs->buf);
-		  else
+#ifdef _LIBC
+		  __fxprintf (fs->stream, "%.*s\n", L"%.*s\n",
+			      (int) (nl - fs->buf), fs->buf);
+#else
+		  if (nl > fs->buf)
+		    fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
+		  putc_unlocked ('\n', fs->stream);
 #endif
-		    {
-		      if (nl > fs->buf)
-			fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
-		      putc_unlocked ('\n', fs->stream);
-		    }
+
 		  len += buf - fs->buf;
 		  nl = buf = fs->buf;
 		}
@@ -360,15 +358,13 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       /* Flush FS's buffer.  */
       __argp_fmtstream_update (fs);
 
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (fs->stream, 0) > 0)
-	{
-	  __fwprintf (fs->stream, L"%.*s", (int) (fs->p - fs->buf), fs->buf);
-	  wrote = fs->p - fs->buf;
-	}
-      else
+#ifdef _LIBC
+      __fxprintf (fs->stream, "%.*s", L"%.*s",
+		  (int) (fs->p - fs->buf), fs->buf);
+      wrote = fs->p - fs->buf;
+#else
+      wrote = fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
 #endif
-	wrote = fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
       if (wrote == fs->p - fs->buf)
 	{
 	  fs->p = fs->buf;

@@ -331,7 +331,7 @@ write_gmon (void)
       {
 	size_t len = strlen (env);
 	char buf[len + 20];
-	sprintf (buf, "%s.%u", env, __getpid ());
+	snprintf (buf, sizeof (buf), "%s.%u", env, __getpid ());
 	fd = open_not_cancel (buf, O_CREAT|O_TRUNC|O_WRONLY|O_NOFOLLOW, 0666);
       }
 
@@ -343,14 +343,9 @@ write_gmon (void)
 	  {
 	    char buf[300];
 	    int errnum = errno;
-#ifdef USE_IN_LIBIO
-	    if (_IO_fwide (stderr, 0) > 0)
-	      __fwprintf (stderr, L"_mcleanup: gmon.out: %s\n",
-			  __strerror_r (errnum, buf, sizeof buf));
-	    else
-#endif
-	      fprintf (stderr, "_mcleanup: gmon.out: %s\n",
-		       __strerror_r (errnum, buf, sizeof buf));
+	    __fxprintf (NULL, "_mcleanup: gmon.out: %s\n",
+			L"_mcleanup: gmon.out: %s\n",
+			__strerror_r (errnum, buf, sizeof buf));
 	    return;
 	  }
       }

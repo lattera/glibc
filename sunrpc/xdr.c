@@ -563,12 +563,8 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
 	}
       if (sp == NULL)
 	{
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stderr, 0) > 0)
-	    (void) __fwprintf (stderr, L"%s", _("xdr_bytes: out of memory\n"));
-	  else
-#endif
-	    (void) fputs (_("xdr_bytes: out of memory\n"), stderr);
+	  (void) __fxprintf (NULL, "%s", L"%s",
+			     _("xdr_bytes: out of memory\n"));
 	  return FALSE;
 	}
       /* fall into ... */
@@ -720,13 +716,8 @@ xdr_string (xdrs, cpp, maxsize)
 	*cpp = sp = (char *) mem_alloc (nodesize);
       if (sp == NULL)
 	{
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stderr, 0) > 0)
-	    (void) __fwprintf (stderr, L"%s",
-			       _("xdr_string: out of memory\n"));
-	  else
-#endif
-	    (void) fputs (_("xdr_string: out of memory\n"), stderr);
+	  (void) __fxprintf (NULL, "%s", L"%s",
+			     _("xdr_string: out of memory\n"));
 	  return FALSE;
 	}
       sp[size] = 0;

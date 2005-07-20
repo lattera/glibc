@@ -76,6 +76,7 @@ char buf[10];
 wchar_t wbuf[10];
 volatile size_t l0;
 volatile char *p;
+volatile wchar_t *wp;
 const char *str1 = "JIHGFEDCBA";
 const char *str2 = "F";
 const char *str3 = "%s%n%s%n";
@@ -502,7 +503,7 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
+    wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -514,7 +515,7 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = wcpcpy (wbuf + 9, wstr2);
+  wp = wcpcpy (wbuf + 9, wstr2);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -544,7 +545,7 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = wmempcpy (wa.buf1 + 6, L"abcde", l0 + 5);
+  wp = wmempcpy (wa.buf1 + 6, L"abcde", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -562,7 +563,7 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = wcpcpy (wa.buf1 + (O + 8), wstr2);
+  wp = wcpcpy (wa.buf1 + (O + 8), wstr2);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -1054,6 +1055,105 @@ do_test (void)
 	  puts ("second wctomb test failed");
 	  ret = 1;
 	}
+      CHK_FAIL_END
+#endif
+
+      mbstate_t s;
+      memset (&s, '\0', sizeof (s));
+      if (wcrtomb (enough, L'A', &s) != 1)
+	{
+	  puts ("first wcrtomb test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (wcrtomb (smallbuf, L'\x100', &s) != 2)
+	{
+	  puts ("second wcrtomb test failed");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+
+      wchar_t wenough[10];
+      memset (&s, '\0', sizeof (s));
+      const char *cp = "A";
+      if (mbsrtowcs (wenough, &cp, 10, &s) != 1)
+	{
+	  puts ("first mbsrtowcs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      wchar_t wsmallbuf[2];
+      cp = "ABC";
+      mbsrtowcs (wsmallbuf, &cp, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      cp = "A";
+      if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1)
+	{
+	  puts ("first mbsnrtowcs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      wchar_t wsmallbuf[2];
+      cp = "ABC";
+      mbsnrtowcs (wsmallbuf, &cp, 3, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      const wchar_t *wcp = L"A";
+      if (wcsrtombs (enough, &wcp, 10, &s) != 1)
+	{
+	  puts ("first wcsrtombs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      wcp = L"ABC";
+      wcsrtombs (smallbuf, &wcp, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      wcp = L"A";
+      if (wcsnrtombs (enough, &wcp, 1, 10, &s) != 1)
+	{
+	  puts ("first wcsnrtombs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      wcp = L"ABC";
+      wcsnrtombs (smallbuf, &wcp, 3, 10, &s);
       CHK_FAIL_END
 #endif
     }

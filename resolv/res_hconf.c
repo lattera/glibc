@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -150,12 +150,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, start) < 0)
 	    return 0;
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stderr, 0) > 0)
-	    __fwprintf (stderr, L"%s", buf);
-	  else
-#endif
-	    fputs (buf, stderr);
+	  __fxprintf (NULL, "%s", L"%s", buf);
 
 	  free (buf);
 	  return 0;
@@ -169,12 +164,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, SERVICE_MAX) < 0)
 	    return 0;
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stderr, 0) > 0)
-	    __fwprintf (stderr, L"%s", buf);
-	  else
-#endif
-	    fputs (buf, stderr);
+	  __fxprintf (NULL, "%s", L"%s", buf);
 
 	  free (buf);
 	  return 0;
@@ -197,12 +187,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 			      fname, line_num) < 0)
 		return 0;
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stderr, 0) > 0)
-		__fwprintf (stderr, L"%s", buf);
-	      else
-#endif
-		fputs (buf, stderr);
+	      __fxprintf (NULL, "%s", L"%s", buf);
 
 	      free (buf);
 	      return 0;
@@ -238,14 +223,9 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 			  fname, line_num, TRIMDOMAINS_MAX) < 0)
 	    return 0;
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stderr, 0) > 0)
-		__fwprintf (stderr, L"%s", buf);
-	      else
-#endif
-		fputs (buf, stderr);
+	  __fxprintf (NULL, "%s", L"%s", buf);
 
-	      free (buf);
+	  free (buf);
 	  return 0;
 	}
       _res_hconf.trimdomain[_res_hconf.num_trimdomains++] =
@@ -264,12 +244,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 			      fname, line_num) < 0)
 		return 0;
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stderr, 0) > 0)
-		__fwprintf (stderr, L"%s", buf);
-	      else
-#endif
-		fputs (buf, stderr);
+	      __fxprintf (NULL, "%s", L"%s", buf);
 
 	      free (buf);
 	      return 0;
@@ -327,12 +302,7 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 		      fname, line_num, args) < 0)
 	return 0;
 
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	__fwprintf (stderr, L"%s", buf);
-      else
-#endif
-	fputs (buf, stderr);
+      __fxprintf (NULL, "%s", L"%s", buf);
 
       free (buf);
       return 0;
@@ -375,12 +345,7 @@ parse_line (const char *fname, int line_num, const char *str)
 		      fname, line_num, start) < 0)
 	return;
 
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	__fwprintf (stderr, L"%s", buf);
-      else
-#endif
-	fputs (buf, stderr);
+      __fxprintf (NULL, "%s", L"%s", buf);
 
       free (buf);
       return;
@@ -405,12 +370,7 @@ parse_line (const char *fname, int line_num, const char *str)
 			    fname, line_num, str) < 0)
 	      break;
 
-#ifdef USE_IN_LIBIO
-	    if (_IO_fwide (stderr, 0) > 0)
-	      __fwprintf (stderr, L"%s", buf);
-	    else
-#endif
-	      fputs (buf, stderr);
+	    __fxprintf (NULL, "%s", L"%s", buf);
 
 	    free (buf);
 	  }
