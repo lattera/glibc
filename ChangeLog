@@ -1,5 +1,11 @@
+2005-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Adjust expected atan2f results.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+
 2005-07-20  Bob Wilson  <bob.wilson@acm.org>
-            Darin Petkov <darin@tensilica.com>
+            Darin Petkov  <darin@tensilica.com>
 
 	* sysdeps/ieee754/flt-32/e_atan2f.c (pi_lo): Correct exponent value.
 
