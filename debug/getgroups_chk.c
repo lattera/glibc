@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 
-char *
+int
 __getgroups_chk (int size, __gid_t list[], size_t listlen)
 {
   if (__builtin_expect (size * sizeof (__gid_t) > listlen, 0))

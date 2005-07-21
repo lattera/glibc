@@ -1,3 +1,15 @@
+2005-07-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/bits/wchar2.h (swprintf): Remove format argument.
+	* debug/tst-chk1.c (do_test): Add test for swprintf with format
+	being the last argument.
+
+2005-07-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* debug/getgroups_chk.c (__getgroups_chk): Fix return value.
+
+	* stdio-common/fxprintf.c: Include string.h.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Adjust expected atan2f results.

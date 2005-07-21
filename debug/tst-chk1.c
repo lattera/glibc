@@ -403,6 +403,10 @@ do_test (void)
       || wmemcmp (wbuf, L"aabcEDX98", 10))
     FAIL ();
 
+  if (swprintf (wbuf + 7, 3, L"64") != 2
+      || wmemcmp (wbuf, L"aabcEDX64", 10))
+    FAIL ();
+
   /* These ops need runtime checking, but shouldn't __chk_fail.  */
   wmemcpy (wbuf, L"abcdefghij", l0 + 10);
   wmemmove (wbuf + 1, wbuf, l0 + 9);

@@ -199,11 +199,10 @@ extern int __swprintf_chk (wchar_t *__restrict __s, size_t __n,
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 6))) */;
 
 /* XXX We might want to have support in gcc for swprintf.  */
-#define swprintf(s, n, format, ...) \
+#define swprintf(s, n, ...) \
   (__bos (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1			      \
-   ? __swprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1, __bos (s), format,	      \
-		     __VA_ARGS__)					      \
-   : swprintf (s, n, format, __VA_ARGS__))
+   ? __swprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1, __bos (s), __VA_ARGS__)   \
+   : swprintf (s, n, __VA_ARGS__))
 
 
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
