@@ -37,9 +37,9 @@ __fxprintf (FILE *fp, const char *fmt, ...)
   int res;
   if (_IO_fwide (fp, 0) > 0)
     {
-      size_t len = strlen (fmt) + 1, i;
+      size_t len = strlen (fmt) + 1;
       wchar_t wfmt[len];
-      for (i = 0; i < len; ++i)
+      for (size_t i = 0; i < len; ++i)
 	{
 	  assert (isascii (fmt[i]));
 	  wfmt[i] = fmt[i];

@@ -1,3 +1,12 @@
+2005-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/fxprintf.c (__fxprintf): Declare functions more local.
+
+2005-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/bits/wchar2.h (__vfwprintf_chk, __vwprintf_chk): Use
+	__gnuc_va_list rather than _G_va_list.
+
 2005-07-22  Roland McGrath  <roland@redhat.com>
 
 	[BZ #869]
