@@ -1390,7 +1390,7 @@ objs-for-stubs := $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
 		  $(addprefix $(objpfx),$(extra-objs))
 $(objpfx)stubs: $(objs-for-stubs)
 ifneq (,$(strip $(objs-for-stubs)))
-	(cd $(objdir); $(OBJDUMP) -h $(patsubst $(objpfx)%,%,$^)) | \
+	(cd $(objpfx).; $(OBJDUMP) -h $(patsubst $(objpfx)%,%,$^)) | \
 	$(AWK) '/\.gnu\.glibc-stub\./ { \
 	          sub(/\.gnu\.glibc-stub\./, "", $$2); \
 		  stubs[$$2] = 1; } \

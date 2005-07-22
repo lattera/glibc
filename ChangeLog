@@ -1,3 +1,8 @@
+2005-07-22  Roland McGrath  <roland@redhat.com>
+
+	[BZ #869]
+	* Makerules ($(objpfx)stubs): Fix last change.
+
 2005-07-21  Roland McGrath  <roland@redhat.com>
 
 	* nscd/Makefile ($(objpfx)nscd): Pass $(nscd-cflags) to $(LINK.o).
