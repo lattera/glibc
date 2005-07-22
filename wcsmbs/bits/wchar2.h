@@ -236,9 +236,9 @@ extern int __wprintf_chk (int __flag, __const wchar_t *__restrict __format,
 			  ...);
 extern int __vfwprintf_chk (FILE *__restrict __stream, int __flag,
 			    __const wchar_t *__restrict __format,
-			    _G_va_list __ap);
+			    __gnuc_va_list __ap);
 extern int __vwprintf_chk (int __flag, __const wchar_t *__restrict __format,
-			   _G_va_list __ap);
+			   __gnuc_va_list __ap);
 
 # define wprintf(...) \
   __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
