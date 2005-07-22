@@ -1,3 +1,8 @@
+2005-07-21  Roland McGrath  <roland@redhat.com>
+
+	* stdlib/Makefile (headers): Move bits/wchar.h to ...
+	* wcsmbs/Makefile (headers): ... here.  Add bits/wchar2.h too.
+
 2005-07-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/bits/wchar2.h (swprintf): Remove format argument.
