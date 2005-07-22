@@ -122,7 +122,7 @@ relro-LDFLAGS += -Wl,-z,now
 endif
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
-	$(LINK.o) -pie -Wl,-O1 \
+	$(LINK.o) -pie -Wl,-O1 $(nscd-cflags) \
 	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(relro-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \

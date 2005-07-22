@@ -1,5 +1,7 @@
 2005-07-21  Roland McGrath  <roland@redhat.com>
 
+	* nscd/Makefile ($(objpfx)nscd): Pass $(nscd-cflags) to $(LINK.o).
+
 	* stdlib/Makefile (headers): Move bits/wchar.h to ...
 	* wcsmbs/Makefile (headers): ... here.  Add bits/wchar2.h too.
 
