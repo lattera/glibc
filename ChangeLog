@@ -1,3 +1,7 @@
+2005-07-24  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/sh/memset.S (memset): Correct 2nd argument handling.
+
 2005-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1125]

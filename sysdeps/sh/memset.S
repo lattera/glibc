@@ -28,6 +28,7 @@ ENTRY(memset)
 	bt.s	L_byte_loop_init
 	mov	r4,r7
 
+	extu.b	r5,r5
 	swap.b	r5,r1
 	or	r1,r5
 	swap.w	r5,r1
