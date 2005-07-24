@@ -10,7 +10,7 @@
 	* posix/execvp.c (execvp): Change path_malloc to
 	char *, free that pointer on failure.
 
--2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/bits/wchar2.h: Use __FILE not FILE.
 	* wcsmbs/Makefile: Add rules to build and run tst-wchar-h.
