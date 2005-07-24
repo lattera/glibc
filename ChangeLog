@@ -1,6 +1,10 @@
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/bits/wchar2.h: Use __FILE not FILE.
+
 2005-07-22  Ulrich Drepper  <drepper@redhat.com>
 
-	* stdio-common/fxprintf.c (__fxprintf): Declare functions more local.
+	* stdio-common/fxprintf.c (__fxprintf): Define variable more local.
 
 2005-07-22  Jakub Jelinek  <jakub@redhat.com>
 

@@ -230,11 +230,11 @@ vswprintf (wchar_t *__s, size_t __n, __const wchar_t *__format,
 
 #if __USE_FORTIFY_LEVEL > 1
 
-extern int __fwprintf_chk (FILE *__restrict __stream, int __flag,
+extern int __fwprintf_chk (__FILE *__restrict __stream, int __flag,
 			   __const wchar_t *__restrict __format, ...);
 extern int __wprintf_chk (int __flag, __const wchar_t *__restrict __format,
 			  ...);
-extern int __vfwprintf_chk (FILE *__restrict __stream, int __flag,
+extern int __vfwprintf_chk (__FILE *__restrict __stream, int __flag,
 			    __const wchar_t *__restrict __format,
 			    __gnuc_va_list __ap);
 extern int __vwprintf_chk (int __flag, __const wchar_t *__restrict __format,
@@ -252,13 +252,13 @@ extern int __vwprintf_chk (int __flag, __const wchar_t *__restrict __format,
 #endif
 
 extern wchar_t *__fgetws_chk (wchar_t *__restrict __s, size_t __size, int __n,
-			      FILE *__restrict __stream) __wur;
+			      __FILE *__restrict __stream) __wur;
 extern wchar_t *__REDIRECT (__fgetws_alias,
 			    (wchar_t *__restrict __s, int __n,
-			     FILE *__restrict __stream), fgetws) __wur;
+			     __FILE *__restrict __stream), fgetws) __wur;
 
 extern __always_inline __wur wchar_t *
-fgetws (wchar_t *__restrict __s, int __n, FILE *__restrict __stream)
+fgetws (wchar_t *__restrict __s, int __n, __FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1
       && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
@@ -268,15 +268,15 @@ fgetws (wchar_t *__restrict __s, int __n, FILE *__restrict __stream)
 
 #ifdef __USE_GNU
 extern wchar_t *__fgetws_unlocked_chk (wchar_t *__restrict __s, size_t __size,
-				       int __n, FILE *__restrict __stream)
+				       int __n, __FILE *__restrict __stream)
   __wur;
 extern wchar_t *__REDIRECT (__fgetws_unlocked_alias,
 			    (wchar_t *__restrict __s, int __n,
-			     FILE *__restrict __stream), fgetws_unlocked)
+			     __FILE *__restrict __stream), fgetws_unlocked)
   __wur;
 
 extern __always_inline __wur wchar_t *
-fgetws_unlocked (wchar_t *__restrict __s, int __n, FILE *__restrict __stream)
+fgetws_unlocked (wchar_t *__restrict __s, int __n, __FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1
       && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
