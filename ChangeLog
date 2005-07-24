@@ -1,3 +1,10 @@
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-memset.c (do_one_test): Compare effect of call, not
+	only return value.
+
+	Add a few cassts to avoid warnings.
+
 2005-07-24  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
 
 	* sysdeps/sh/memset.S (memset): Correct 2nd argument handling.
