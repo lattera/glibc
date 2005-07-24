@@ -40,7 +40,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsmbsload mbsrtowcs_l
 
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
-	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs
+	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h
 
 include ../Rules
 
@@ -62,6 +62,7 @@ CFLAGS-wcstoull_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstod_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
+CFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
 
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
