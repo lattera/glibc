@@ -1,5 +1,16 @@
 2005-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-execvp4.
+	* posix/tst-execvp4.c: New file.
+
+2005-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1125]
+	* posix/execvp.c (execvp): Change path_malloc to
+	char *, free that pointer on failure.
+
+-2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
 	* wcsmbs/bits/wchar2.h: Use __FILE not FILE.
 	* wcsmbs/Makefile: Add rules to build and run tst-wchar-h.
 	* wcsmbs/tst-wchar-h.c: New file.

@@ -87,7 +87,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
-		   tst-execvp3
+		   tst-execvp3 tst-execvp4
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest

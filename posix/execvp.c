@@ -88,7 +88,7 @@ execvp (file, argv)
   else
     {
       char *path = getenv ("PATH");
-      bool path_malloc = false;
+      char *path_malloc = NULL;
       if (path == NULL)
 	{
 	  /* There is no `PATH' in the environment.
@@ -100,7 +100,7 @@ execvp (file, argv)
 	    return -1;
 	  path[0] = ':';
 	  (void) confstr (_CS_PATH, path + 1, len);
-	  path_malloc = true;
+	  path_malloc = path;
 	}
 
       size_t len = strlen (file) + 1;
@@ -108,8 +108,7 @@ execvp (file, argv)
       char *name = malloc (pathlen + len + 1);
       if (name == NULL)
 	{
-	  if (path_malloc)
-	    free (path);
+	  free (path_malloc);
 	  return -1;
 	}
       /* Copy the file name at the top.  */
@@ -190,8 +189,7 @@ execvp (file, argv)
 
       free (script_argv);
       free (name - pathlen);
-      if (path_malloc)
-	free (path);
+      free (path_malloc);
     }
 
   /* Return the error from the last attempt (probably ENOENT).  */
