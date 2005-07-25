@@ -193,7 +193,7 @@ test_main (void)
     printf ("\t%s", impl->name);
   putchar ('\n');
 
-  for (c = 0; c <= 130; c += 65)
+  for (c = -65; c <= 130; c += 65)
     {
       for (i = 0; i < 18; ++i)
 	do_test (0, c, 1 << i);
