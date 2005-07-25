@@ -73,3 +73,42 @@ wctomb (char *__s, wchar_t __wchar)
     return __wctomb_chk (__s, __wchar, __bos (__s));
   return __wctomb_alias (__s, __wchar);
 }
+
+
+extern size_t __mbstowcs_chk (wchar_t *__restrict __dst,
+			      __const char *__restrict __src,
+			      size_t __len, size_t __dstlen) __THROW;
+extern size_t __REDIRECT_NTH (__mbstowcs_alias,
+			      (wchar_t *__restrict __dst,
+			       __const char *__restrict __src,
+			       size_t __len), mbstowcs);
+
+extern __always_inline size_t
+mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
+	  size_t __len)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len)
+	  || __len * sizeof (wchar_t) > __bos (__dst)))
+    return __mbstowcs_chk (__dst, __src, __len, __bos (__dst));
+  return __mbstowcs_alias (__dst, __src, __len);
+}
+
+
+extern size_t __wcstombs_chk (char *__restrict __dst,
+			      __const wchar_t *__restrict __src,
+			      size_t __len, size_t __dstlen) __THROW;
+extern size_t __REDIRECT_NTH (__wcstombs_alias,
+			      (char *__restrict __dst,
+			       __const wchar_t *__restrict __src,
+			       size_t __len), wcstombs);
+
+extern __always_inline size_t
+wcstombs (char *__restrict __dst, __const wchar_t *__restrict __src,
+	  size_t __len)
+{
+  if (__bos (__dst) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __len > __bos (__dst)))
+    return __wcstombs_chk (__dst, __src, __len, __bos (__dst));
+  return __wcstombs_alias (__dst, __src, __len);
+}

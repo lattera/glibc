@@ -1,6 +1,16 @@
+2005-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/mbstowcs_chk.c: New file.
+	* debug/wcstombs_chk.c: New file.
+	* debug/Makefile (routines): Add mbstowcs_chk and wcstombs_chk.
+	* debug/Versions: Add __mbstowcs_chk and __wcstombs_chk.
+	* stdlib/bits/stdlib.h: Add definitions for mbstowcs and wcstombs.
+
+	* wcsmbs/bits/wchar2.h (mbsrtowcs): Pretty printing.
+
 2005-07-24  Ulrich Drepper  <drepper@redhat.com>
 
-	* string/test-memset.c (test_main): Use negative byte value is
+	* string/test-memset.c (test_main): Use negative byte value in
 	test.
 
 	* string/test-memset.c (do_one_test): Compare effect of call, not

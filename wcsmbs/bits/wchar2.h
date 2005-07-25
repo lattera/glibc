@@ -320,7 +320,7 @@ extern size_t __REDIRECT_NTH (__mbsrtowcs_alias,
 
 extern __always_inline size_t
 mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
-	    size_t __len, mbstate_t *__restrict __ps)
+	   size_t __len, mbstate_t *__restrict __ps)
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
