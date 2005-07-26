@@ -1,3 +1,8 @@
+2005-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/hu_HU: Better collation.
+	Patch by Gyuro Lehel <lehel@freemail.hu>.
+
 2005-07-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #408]
