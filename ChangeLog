@@ -1,3 +1,7 @@
+2005-07-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/error.c (error_tail): Fix a comment typo.
+
 2005-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/zh_TW.po: Update from translation team.
