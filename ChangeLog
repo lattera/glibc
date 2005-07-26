@@ -1,5 +1,7 @@
 2005-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/zh_TW.po: Update from translation team.
+
 	* debug/mbstowcs_chk.c: New file.
 	* debug/wcstombs_chk.c: New file.
 	* debug/Makefile (routines): Add mbstowcs_chk and wcstombs_chk.
