@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <libintl.h>
 #ifdef _LIBC
+# include <stdbool.h>
+# include <stdint.h>
 # include <wchar.h>
 # define mbsrtowcs __mbsrtowcs
 #endif
