@@ -1,3 +1,8 @@
+2005-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_xdr.c: Remove unnecessary cast which might hide bugs.
+	Rearrange code.  This reduces the code size 10%.
+
 2005-07-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/error.c (error_tail): Fix a comment typo.
