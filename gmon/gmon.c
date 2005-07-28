@@ -331,7 +331,7 @@ write_gmon (void)
       {
 	size_t len = strlen (env);
 	char buf[len + 20];
-	snprintf (buf, sizeof (buf), "%s.%u", env, __getpid ());
+	__snprintf (buf, sizeof (buf), "%s.%u", env, __getpid ());
 	fd = open_not_cancel (buf, O_CREAT|O_TRUNC|O_WRONLY|O_NOFOLLOW, 0666);
       }
 

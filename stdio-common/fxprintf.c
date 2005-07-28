@@ -47,7 +47,7 @@ __fxprintf (FILE *fp, const char *fmt, ...)
       res = __vfwprintf (fp, wfmt, ap);
     }
   else
-    res = _IO_vfprintf (fp, fmt, ap);
+    res = INTUSE(_IO_vfprintf) (fp, fmt, ap);
 
   va_end (ap);
 
