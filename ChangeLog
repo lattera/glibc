@@ -1,3 +1,8 @@
+2005-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_file.c: Rewrite the two pairs of functions into wrappers
+	around a pair of new, generalized functions.  22% size reduction.
+
 2005-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_xdr.c: Remove unnecessary cast which might hide bugs.
