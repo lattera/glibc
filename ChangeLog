@@ -1,3 +1,7 @@
+2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
+
 2005-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_xdr.c: Help gcc to generate unnecessary wrapper functions.
