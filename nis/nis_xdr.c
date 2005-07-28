@@ -41,13 +41,13 @@ _xdr_nis_name (XDR *xdrs, nis_name *objp)
   return xdr_string (xdrs, objp, ~0);
 }
 
-static bool_t
+static __always_inline bool_t
 xdr_zotypes (XDR *xdrs, zotypes *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
 
-static bool_t
+static __always_inline bool_t
 xdr_nstype (XDR *xdrs, nstype *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);

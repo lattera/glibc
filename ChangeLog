@@ -1,3 +1,7 @@
+2005-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_xdr.c: Help gcc to generate unnecessary wrapper functions.
+
 2005-07-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/fxprintf.c (__fxprintf): Add INTUSE to _IO_vfprintf
