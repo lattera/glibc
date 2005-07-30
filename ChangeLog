@@ -1,5 +1,9 @@
 2005-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c [__WORDSIZE==64] (FILEBUF_SIZE): Adjust the value
+	up.  We have more program header entries now and the note section
+	was normally not loaded.
+
 	* nis/nis_subr.c: Some minor code cleanups.
 
 2005-07-29  Ulrich Drepper  <drepper@redhat.com>

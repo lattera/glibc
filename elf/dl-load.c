@@ -122,19 +122,19 @@ int __stack_prot attribute_hidden attribute_relro
    question is how large are the ELF and program header combined.  The
    ELF header 32-bit files is 52 bytes long and in 64-bit files is 64
    bytes long.  Each program header entry is again 32 and 56 bytes
-   long respectively.  I.e., even with a file which has 7 program
-   header entries we only have to read 512B.  Add to this a bit of
-   margin for program notes and reading 512B and 640B for 32-bit and
-   64-bit files respecitvely is enough.  If this heuristic should
-   really fail for some file the code in `_dl_map_object_from_fd'
-   knows how to recover.  */
+   long respectively.  I.e., even with a file which has 10 program
+   header entries we only have to read 372B/624B respectively.  Add to
+   this a bit of margin for program notes and reading 512B and 832B
+   for 32-bit and 64-bit files respecitvely is enough.  If this
+   heuristic should really fail for some file the code in
+   `_dl_map_object_from_fd' knows how to recover.  */
 struct filebuf
 {
   ssize_t len;
 #if __WORDSIZE == 32
 # define FILEBUF_SIZE 512
 #else
-# define FILEBUF_SIZE 640
+# define FILEBUF_SIZE 832
 #endif
   char buf[FILEBUF_SIZE] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
