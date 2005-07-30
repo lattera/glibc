@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2000, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -39,22 +39,13 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
   while (name[i] != '.' && name[i] != '\0')
     i++;
 
-  if (i > buflen - 1)
+  if (__builtin_expect (i > buflen - 1, 0))
     {
       __set_errno (ERANGE);
       return NULL;
     }
 
-  if (i > 0)
-    {
-      if ((size_t)i >= buflen)
-	{
-	  __set_errno (ERANGE);
-	  return NULL;
-	}
-
-      *((char *) __mempcpy (buffer, name, i)) = '\0';
-    }
+  *((char *) __mempcpy (buffer, name, i)) = '\0';
 
   return buffer;
 }
@@ -98,13 +89,12 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 }
 libnsl_hidden_def (nis_name_of_r)
 
-static int
+static int __always_inline
 count_dots (const_nis_name str)
 {
   int count = 0;
-  size_t l = strlen (str);
 
-  for (size_t i = 0; i < l; ++i)
+  for (size_t i = 0; str[i] != '\0'; ++i)
     if (str[i] == '.')
       ++count;
 

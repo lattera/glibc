@@ -1,3 +1,7 @@
+2005-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_subr.c: Some minor code cleanups.
+
 2005-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/bits/syslog.h: New file.
