@@ -1,10 +1,22 @@
+2005-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/bits/syslog.h: New file.
+	* misc/sys/syslog.h: Include <bits/syslog.h> for fortification.
+	* misc/Makefile (headers): Add bits/syslog.h.
+	* include/sys/syslog.h: Add __vsyslog_chk prototype and hidden_proto.
+	* sysdeps/generic/syslog.c: Change vsyslog function to __vsyslog_chk.
+	Call __vfprintf_chk if necessary.  Make vsyslog a wrapper.  Add
+	__syslog_chk.
+	* misc/Versions: Export __syslog_chk and __vsyslog_chk.
+
 2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
 	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
 
 2005-07-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/nis_xdr.c: Help gcc to generate unnecessary wrapper functions.
+	* nis/nis_xdr.c: Help gcc to avoid generating unnecessary wrapper
+	functions.
 
 2005-07-28  Jakub Jelinek  <jakub@redhat.com>
 

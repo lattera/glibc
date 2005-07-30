@@ -108,32 +108,28 @@ cancel_handler (void *ptr)
  *	print message on log file; output is intended for syslogd(8).
  */
 void
-#if __STDC__
 syslog(int pri, const char *fmt, ...)
-#else
-syslog(pri, fmt, va_alist)
-	int pri;
-	char *fmt;
-	va_dcl
-#endif
 {
 	va_list ap;
 
-#if __STDC__
 	va_start(ap, fmt);
-#else
-	va_start(ap);
-#endif
-	vsyslog(pri, fmt, ap);
+	__vsyslog_chk(pri, -1, fmt, ap);
 	va_end(ap);
 }
 libc_hidden_def (syslog)
 
 void
-vsyslog(pri, fmt, ap)
-	int pri;
-	register const char *fmt;
+__syslog_chk(int pri, int flag, const char *fmt, ...)
+{
 	va_list ap;
+
+	va_start(ap, fmt);
+	__vsyslog_chk(pri, flag, fmt, ap);
+	va_end(ap);
+}
+
+void
+__vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 {
 	struct tm now_tm;
 	time_t now;
@@ -218,7 +214,10 @@ vsyslog(pri, fmt, ap)
 
 	    /* We have the header.  Print the user's format into the
                buffer.  */
-	    vfprintf (f, fmt, ap);
+	    if (flag == -1)
+	      vfprintf (f, fmt, ap);
+	    else
+	      __vfprintf_chk (f, flag, fmt, ap);
 
 	    /* Close the memory stream; this will finalize the data
 	       into a malloc'd buffer in BUF.  */
@@ -314,6 +313,16 @@ vsyslog(pri, fmt, ap)
 
 	if (buf != failbuf)
 		free (buf);
+}
+libc_hidden_def (__vsyslog_chk)
+
+void
+vsyslog(pri, fmt, ap)
+	int pri;
+	register const char *fmt;
+	va_list ap;
+{
+  __vsyslog_chk (pri, -1, fmt, ap);
 }
 libc_hidden_def (vsyslog)
 

@@ -130,4 +130,7 @@ libc {
   GLIBC_2.3.3 {
     remap_file_pages;
   }
+  GLIBC_2.4 {
+    __syslog_chk; __vsyslog_chk;
+  }
 }
