@@ -71,7 +71,7 @@ elf_machine_load_address (void)
   asm ("movq 1f(%%rip), %1\n"
        "0:\tleaq _dl_start(%%rip), %0\n\t"
        "subq %1, %0\n\t"
-       ".section\t.data\n"
+       ".section\t.data.rel.ro\n"
        "1:\t.quad _dl_start\n\t"
        ".previous\n\t"
        : "=r" (addr), "=r" (tmp) : : "cc");
