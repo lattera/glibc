@@ -69,7 +69,7 @@ elf_machine_load_address (void)
      an RIP relative addressing mode.  */
 
   asm ("movq 1f(%%rip), %1\n"
-       "0:\tleaq _dl_start(%%rip), %0\n\t"
+       "leaq _dl_start(%%rip), %0\n\t"
        "subq %1, %0\n\t"
        ".section\t.data.rel.ro\n"
        "1:\t.quad _dl_start\n\t"

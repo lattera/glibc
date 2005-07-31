@@ -1,7 +1,7 @@
 2005-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Move
-	helper variable into .data.rel.ro.
+	helper variable into .data.rel.ro. Remove unnecessary label.
 
 2005-07-31  Andreas Jaeger  <aj@suse.de>
 
