@@ -55,7 +55,7 @@ elf_machine_dynamic (void)
 static inline Elf64_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  register Elf64_Addr addr, tmp;
+  Elf64_Addr addr;
 
   /* The easy way is just the same as on x86:
        leaq _dl_start, %0
@@ -66,15 +66,18 @@ elf_machine_load_address (void)
 
      Instead we store the address of _dl_start in the data section
      and compare it with the current value that we can get via
-     an RIP relative addressing mode.  */
+     an RIP relative addressing mode.  Note that this is the address
+     of _dl_start before any relocation performed at runtime.  In case
+     the binary is prelinked the resulting "address" is actually a
+     load offset which is zero if the binary was loaded at the address
+     it is prelinked for.  */
 
-  asm ("movq 1f(%%rip), %1\n"
-       "leaq _dl_start(%%rip), %0\n\t"
-       "subq %1, %0\n\t"
+  asm ("leaq _dl_start(%%rip), %0\n\t"
+       "subq 1f(%%rip), %0\n\t"
        ".section\t.data.rel.ro\n"
        "1:\t.quad _dl_start\n\t"
        ".previous\n\t"
-       : "=r" (addr), "=r" (tmp) : : "cc");
+       : "=r" (addr) : : "cc");
 
   return addr;
 }
