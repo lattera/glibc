@@ -1,3 +1,8 @@
+2005-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigwait.c (do_sigwait): Restart system
+	call if it returned EINTR.
+
 2005-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Move
