@@ -139,6 +139,7 @@
 
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1138]
 	* sysdeps/x86_64/fpu/libm-test-ulps: Adjust expected atan2f results.
 	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
 	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
@@ -146,6 +147,7 @@
 2005-07-20  Bob Wilson  <bob.wilson@acm.org>
             Darin Petkov  <darin@tensilica.com>
 
+	[BZ #1138]
 	* sysdeps/ieee754/flt-32/e_atan2f.c (pi_lo): Correct exponent value.
 
 2005-07-20  Jakub Jelinek  <jakub@redhat.com>
@@ -233,6 +235,7 @@
 	* sunrpc/xdr_ref.c: Likewise.
 	* sysdeps/generic/wordexp.c: Likewise.
 
+	[BZ #1137]
 	* misc/Makefile: Add rules to build and run tst-error1.
 	* misc/tst-error1.c: New file.
 	* misc/error.c: Fix memory leak and possibly endless loop.
