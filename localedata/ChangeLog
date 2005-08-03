@@ -5,7 +5,7 @@
 
 2005-07-08  Ulrich Drepper  <drepper@redhat.com>
 
-	[BZ #408]
+	[BZ #448]
 	* locales/vi_VN: Update locale.
 
 2005-07-05  Ulrich Drepper  <drepper@redhat.com>
@@ -266,6 +266,7 @@
 
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #413]
 	* locales/gu_IN: Update various incorrect and missing information.
 	Patch by Ankit Patel <ankit@redhat.com>.
 
