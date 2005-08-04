@@ -12,9 +12,9 @@ endif
 
 ifeq ($(subdir),csu)
 ifneq ($(elf),no)
-# The initfini generation code doesn't work in the presence of -g1 or
-# higher, so we use -g0.
-CFLAGS-initfini.s = -g0 -fpic -O1
+# The initfini generation code doesn't work in the presence of -fPIC, so
+# we use -fpic instead which is much better.
+CFLAGS-initfini.s += -fpic -O1
 endif
 endif
 
