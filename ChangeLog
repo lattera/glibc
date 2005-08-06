@@ -1,3 +1,25 @@
+2005-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/checktab.awk: Update from tzcode2005k.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.c: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/africa: Update from tzdata2005k.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/solar87: Likewise.
+	* timezone/solar88: Likewise.
+	* timezone/solar89: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2005-08-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
