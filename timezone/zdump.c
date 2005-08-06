@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.64";
+static char	elsieid[] = "@(#)zdump.c	7.65";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -144,8 +144,10 @@ static time_t	absolute_min_time;
 static time_t	absolute_max_time;
 static size_t	longest;
 static char *	progname;
+static int	warned;
 
 static char *	abbr P((struct tm * tmp));
+static void	abbrok P((const char * abbr, const char * zone));
 static long	delta P((struct tm * newp, struct tm * oldp));
 static void	dumptime P((const struct tm * tmp));
 static time_t	hunt P((char * name, time_t lot, time_t	hit));
@@ -191,6 +193,44 @@ time_t *	tp;
 }
 #endif /* !defined TYPECHECK */
 
+static void
+abbrok(abbr, zone)
+const char * const	abbr;
+const char * const	zone;
+{
+	register int		i;
+	register const char *	cp;
+	register char *		wp;
+
+	if (warned)
+		return;
+	cp = abbr;
+	wp = NULL;
+	while (isascii(*cp) && isalpha(*cp))
+		++cp;
+	if (cp - abbr == 0)
+		wp = _("lacks alphabetic at start");
+	if (cp - abbr < 3)
+		wp = _("has fewer than 3 alphabetics");
+	if (cp - abbr > 6)
+		wp = _("has more than 6 alphabetics");
+	if (wp == NULL && (*cp == '+' || *cp == '-')) {
+		++cp;
+		if (isascii(*cp) && isdigit(*cp))
+			if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
+				++cp;
+	}
+	if (*cp != '\0')
+		wp = _("differs from POSIX standard");
+	if (wp == NULL)
+		return;
+	(void) fflush(stdout);
+	(void) fprintf(stderr,
+		"%s: warning: zone \"%s\" abbreviation \"%s\" %s\n",
+		progname, zone, abbr, wp);
+	warned = TRUE;
+}
+
 int
 main(argc, argv)
 int	argc;
@@ -216,7 +256,7 @@ char *	argv[];
 	INITIALIZE(cutlotime);
 	INITIALIZE(cuthitime);
 #if HAVE_GETTEXT
-	(void) setlocale(LC_MESSAGES, "");
+	(void) setlocale(LC_ALL, "");
 #ifdef TZ_DOMAINDIR
 	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
 #endif /* defined TEXTDOMAINDIR */
@@ -297,6 +337,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 			show(argv[i], now, FALSE);
 			continue;
 		}
+		warned = FALSE;
 		t = absolute_min_time;
 		show(argv[i], t, TRUE);
 		t += SECSPERHOUR * HOURSPERDAY;
@@ -527,6 +568,8 @@ int	v;
 		}
 	}
 	(void) printf("\n");
+	if (tmp != NULL && *abbr(tmp) != '\0')
+		abbrok(abbr(tmp), zone);
 }
 
 static char *

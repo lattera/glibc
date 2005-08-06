@@ -11,7 +11,7 @@ static char	elsieid[] = "@(#)scheck.c	8.16";
 char *
 scheck(string, format)
 const char * const	string;
-const char * const	format;
+char * const		format;
 {
 	register char *		fbuf;
 	register const char *	fp;

@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zic.c	7.122";
+static char	elsieid[] = "@(#)zic.c	7.124";
 
 /*
 ** Regardless of the type of time_t, we do our work using this type.
@@ -9,6 +9,10 @@ typedef int	zic_t;
 #include "private.h"
 #include "locale.h"
 #include "tzfile.h"
+
+#ifndef ZIC_MAX_ABBR_LEN_WO_WARN
+#define ZIC_MAX_ABBR_LEN_WO_WARN	6
+#endif /* !defined ZIC_MAX_ABBR_LEN_WO_WARN */
 
 #if HAVE_SYS_STAT_H
 #include "sys/stat.h"
@@ -475,8 +479,7 @@ char *	argv[];
 	(void) umask(umask(S_IWGRP | S_IWOTH) | (S_IWGRP | S_IWOTH));
 #endif /* defined unix */
 #if HAVE_GETTEXT
-	(void) setlocale(LC_CTYPE, "");
-	(void) setlocale(LC_MESSAGES, "");
+	(void) setlocale(LC_ALL, "");
 #ifdef TZ_DOMAINDIR
 	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
 #endif /* defined TEXTDOMAINDIR */
@@ -2197,6 +2200,41 @@ const char * const	string;
 {
 	register int	i;
 
+	if (strcmp(string, GRANDPARENTED) != 0) {
+		register const char *	cp;
+		register char *		wp;
+
+		/*
+		** Want one to ZIC_MAX_ABBR_LEN_WO_WARN alphabetics
+		** optionally followed by a + or - and a number from 1 to 14.
+		*/
+		cp = string;
+		wp = NULL;
+		while (isascii(*cp) && isalpha(*cp))
+			++cp;
+		if (cp - string == 0)
+wp = _("time zone abbreviation lacks alphabetic at start");
+		if (noise && cp - string > 3)
+wp = _("time zone abbreviation has more than 3 alphabetics");
+		if (cp - string > ZIC_MAX_ABBR_LEN_WO_WARN)
+wp = _("time zone abbreviation has too many alphabetics");
+		if (wp == NULL && (*cp == '+' || *cp == '-')) {
+			++cp;
+			if (isascii(*cp) && isdigit(*cp))
+				if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
+					++cp;
+		}
+		if (*cp != '\0')
+wp = _("time zone abbreviation differs from POSIX standard");
+		if (wp != NULL) {
+			wp = ecpyalloc(wp);
+			wp = ecatalloc(wp, " (");
+			wp = ecatalloc(wp, string);
+			wp = ecatalloc(wp, ")");
+			warning(wp);
+			ifree(wp);
+		}
+	}
 	i = strlen(string) + 1;
 	if (charcnt + i > TZ_MAX_CHARS) {
 		error(_("too many, or too long, time zone abbreviations"));
