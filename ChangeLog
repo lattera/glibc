@@ -1,3 +1,8 @@
+2005-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (DT_ALPHA_PLTRO): Use symbolic name in DT_ALPHA_PLTRO
+	definition.
+
 2005-08-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/checktab.awk: Update from tzcode2005k.

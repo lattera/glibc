@@ -1,8 +1,8 @@
-# @(#)zone.tab	1.30
+# @(#)zone.tab	1.31
 #
 # TZ zone descriptions
 #
-# From Paul Eggert <eggert@twinsun.com> (1996-08-05):
+# From Paul Eggert (1996-08-05):
 #
 # This file contains a table with the following columns:
 # 1.  ISO 3166 2-character country code.  See the file `iso3166.tab'.
