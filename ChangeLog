@@ -1,5 +1,7 @@
 2005-08-08  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdio-common/fxprintf.c: Include libioP.h.
+
 	* posix/bits/unistd.h (confstr, getgroups, ttyname_r, gethostname,
 	getdomainname): Add __NTH.
 	* stdlib/bits/stdlib.h (ptsname_r, wctomb, mbstowcs, wcstombs):
