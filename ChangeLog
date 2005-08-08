@@ -1,3 +1,40 @@
+2005-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (confstr, getgroups, ttyname_r, gethostname,
+	getdomainname): Add __NTH.
+	* stdlib/bits/stdlib.h (ptsname_r, wctomb, mbstowcs, wcstombs):
+	Likewise.
+	(realpath): Likewise.  Use __const instead of const.  Add __restrict
+	keywords.
+	* socket/bits/socket2.h (recvfrom): Add __restrict keyword to __buf.
+	* wcsmbs/bits/wchar2.h (wmemcpy, wmemmove, wmempcpy, wmemset,
+	wcscpy, wcpcpy, wcsncpy, wcpncpy, wcscat, wcsncat, vswprintf, wcrtomb,
+	mbsrtowcs, wcsrtombs, mbsnrtowcs, wcsnrtombs): Add __NTH.
+	* string/bits/string3.h (__memset_ichk): Likewise.
+	(__memcpy_ichk, __memmove_ichk, __mempcpy_ichk, __strcpy_ichk,
+	__stpcpy_ichk, __strncpy_ichk, stpncpy, __strcat_ichk,
+	__strncat_ichk): Likewise.  Use __const instead of const.
+	(__stpncpy_chk): Use __const instead of const.
+	(__stpncpy_alias): Use __REDIRECT_NTH instead of __REDIRECT.
+
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/mem.c (BLOCK_ALIGN_LOG, BLOCK_ALIGN, BLOCK_ALIGN_M1): Move
+	definitions to...
+	* nscd/nscd.h (BLOCK_ALIGN_LOG, BLOCK_ALIGN, BLOCK_ALIGN_M1): ...here.
+	* nscd/connections.c (usekey): New enum.
+	(check_use, verify_persistent_db): New functions.
+	(nscd_init): If persistent database is corrupted, unlink it and
+	recreate rather than falling back to non-persistent database.
+	Call verify_persistent_db.  Avoid overflows in total computation.
+
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/utf-16.c (PREPARE_LOOP): Minor cleanups to make code
+	better readable.  Avoid passing var to loop function, it's not
+	necessary at all.
+
 2005-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h (DT_ALPHA_PLTRO): Use symbolic name in DT_ALPHA_PLTRO

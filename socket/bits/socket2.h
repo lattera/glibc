@@ -45,7 +45,7 @@ extern ssize_t __REDIRECT (__recvfrom_alias,
 			    socklen_t *__restrict __addr_len), recvfrom);
 
 extern __always_inline ssize_t
-recvfrom (int __fd, void *__buf, size_t __n, int __flags,
+recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
 	  __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
 {
   if (__bos0 (__buf) != (size_t) -1

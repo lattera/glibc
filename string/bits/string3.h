@@ -45,8 +45,8 @@
    ? __builtin___memcpy_chk (dest, src, len, __bos0 (dest))		\
    : __memcpy_ichk (dest, src, len))
 static __always_inline void *
-__memcpy_ichk (void *__restrict __dest, const void *__restrict __src,
-	       size_t __len)
+__NTH (__memcpy_ichk (void *__restrict __dest, __const void *__restrict __src,
+		      size_t __len))
 {
   return __builtin___memcpy_chk (__dest, __src, __len, __bos0 (__dest));
 }
@@ -57,7 +57,7 @@ __memcpy_ichk (void *__restrict __dest, const void *__restrict __src,
    ? __builtin___memmove_chk (dest, src, len, __bos0 (dest))		\
    : __memmove_ichk (dest, src, len))
 static __always_inline void *
-__memmove_ichk (void *__dest, const void *__src, size_t __len)
+__NTH (__memmove_ichk (void *__dest, __const void *__src, size_t __len))
 {
   return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
@@ -69,8 +69,8 @@ __memmove_ichk (void *__dest, const void *__src, size_t __len)
    ? __builtin___mempcpy_chk (dest, src, len, __bos0 (dest))		\
    : __mempcpy_ichk (dest, src, len))
 static __always_inline void *
-__mempcpy_ichk (void *__restrict __dest, const void *__restrict __src,
-		size_t __len)
+__NTH (__mempcpy_ichk (void *__restrict __dest,
+		       __const void *__restrict __src, size_t __len))
 {
   return __builtin___mempcpy_chk (__dest, __src, __len, __bos0 (__dest));
 }
@@ -91,7 +91,7 @@ __warndecl (__warn_memset_zero_len,
       ? __builtin___memset_chk (dest, ch, len, __bos0 (dest))		      \
       : __memset_ichk (dest, ch, len)))
 static __always_inline void *
-__memset_ichk (void *__dest, int __ch, size_t __len)
+__NTH (__memset_ichk (void *__dest, int __ch, size_t __len))
 {
   return __builtin___memset_chk (__dest, __ch, __len, __bos0 (__dest));
 }
@@ -113,7 +113,7 @@ __memset_ichk (void *__dest, int __ch, size_t __len)
    ? __builtin___strcpy_chk (dest, src, __bos (dest))			\
    : __strcpy_ichk (dest, src))
 static __always_inline char *
-__strcpy_ichk (char *__restrict __dest, const char *__restrict __src)
+__NTH (__strcpy_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
 }
@@ -125,7 +125,7 @@ __strcpy_ichk (char *__restrict __dest, const char *__restrict __src)
    ? __builtin___stpcpy_chk (dest, src, __bos (dest))			\
    : __stpcpy_ichk (dest, src))
 static __always_inline char *
-__stpcpy_ichk (char *__restrict __dest, const char *__restrict __src)
+__NTH (__stpcpy_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___stpcpy_chk (__dest, __src, __bos (__dest));
 }
@@ -137,21 +137,22 @@ __stpcpy_ichk (char *__restrict __dest, const char *__restrict __src)
    ? __builtin___strncpy_chk (dest, src, len, __bos (dest))		\
    : __strncpy_ichk (dest, src, len))
 static __always_inline char *
-__strncpy_ichk (char *__restrict __dest, const char *__restrict __src,
-		size_t __len)
+__NTH (__strncpy_ichk (char *__restrict __dest, __const char *__restrict __src,
+		       size_t __len))
 {
   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
 }
 
 
 // XXX We have no corresponding builtin yet.
-extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
+extern char *__stpncpy_chk (char *__dest, __const char *__src, size_t __n,
 			    size_t __destlen) __THROW;
-extern char *__REDIRECT (__stpncpy_alias, (char *__dest, const char *__src,
-					   size_t __n), stpncpy) __THROW;
+extern char *__REDIRECT_NTH (__stpncpy_alias, (char *__dest,
+					       __const char *__src,
+					       size_t __n), stpncpy);
 
 extern __always_inline char *
-stpncpy (char *__dest, const char *__src, size_t __n)
+__NTH (stpncpy (char *__dest, __const char *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
       && (!__builtin_constant_p (__n) || __n <= __bos (__dest)))
@@ -165,7 +166,7 @@ stpncpy (char *__dest, const char *__src, size_t __n)
    ? __builtin___strcat_chk (dest, src, __bos (dest))			\
    : __strcat_ichk (dest, src))
 static __always_inline char *
-__strcat_ichk (char *__restrict __dest, const char *__restrict __src)
+__NTH (__strcat_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___strcat_chk (__dest, __src, __bos (__dest));
 }
@@ -176,8 +177,8 @@ __strcat_ichk (char *__restrict __dest, const char *__restrict __src)
    ? __builtin___strncat_chk (dest, src, len, __bos (dest))		\
    : __strncat_ichk (dest, src, len))
 static __always_inline char *
-__strncat_ichk (char *__restrict __dest, const char *__restrict __src,
-		size_t __len)
+__NTH (__strncat_ichk (char *__restrict __dest, __const char *__restrict __src,
+		       size_t __len))
 {
   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
 }

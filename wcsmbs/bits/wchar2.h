@@ -31,8 +31,8 @@ extern wchar_t *__REDIRECT_NTH (__wmemcpy_alias,
 				wmemcpy);
 
 extern __always_inline wchar_t *
-wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
-	 size_t __n)
+__NTH (wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
+		size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
     return __wmemcpy_chk (__s1, __s2, __n, __bos0 (__s1) / sizeof (wchar_t));
@@ -47,8 +47,8 @@ extern wchar_t *__REDIRECT_NTH (__wmemmove_alias, (wchar_t *__s1,
 						   size_t __n), wmemmove);
 
 extern __always_inline wchar_t *
-wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
-	  size_t __n)
+__NTH (wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
+		 size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
     return __wmemmove_chk (__s1, __s2, __n, __bos0 (__s1) / sizeof (wchar_t));
@@ -66,8 +66,8 @@ extern wchar_t *__REDIRECT_NTH (__wmempcpy_alias,
 				 size_t __n), wmempcpy);
 
 extern __always_inline wchar_t *
-wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
-	  size_t __n)
+__NTH (wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
+		 size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
     return __wmempcpy_chk (__s1, __s2, __n, __bos0 (__s1) / sizeof (wchar_t));
@@ -82,7 +82,7 @@ extern wchar_t *__REDIRECT_NTH (__wmemset_alias, (wchar_t *__s, wchar_t __c,
 						  size_t __n), wmemset);
 
 extern __always_inline wchar_t *
-wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n)
+__NTH (wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n))
 {
   if (__bos0 (__s) != (size_t) -1)
     return __wmemset_chk (__s, __c, __n, __bos0 (__s) / sizeof (wchar_t));
@@ -98,7 +98,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscpy_alias,
 				 __const wchar_t *__restrict __src), wcscpy);
 
 extern __always_inline wchar_t *
-wcscpy (wchar_t *__dest, __const wchar_t *__src)
+__NTH (wcscpy (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -113,7 +113,7 @@ extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias, (wchar_t *__dest,
 				wcpcpy);
 
 extern __always_inline wchar_t *
-wcpcpy (wchar_t *__dest, __const wchar_t *__src)
+__NTH (wcpcpy (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcpcpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -130,7 +130,7 @@ extern wchar_t *__REDIRECT_NTH (__wcsncpy_alias,
 				 size_t __n), wcsncpy);
 
 extern __always_inline wchar_t *
-wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
+__NTH (wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
       && (!__builtin_constant_p (__n) || __bos (__dest) >= __n))
@@ -149,7 +149,7 @@ extern wchar_t *__REDIRECT_NTH (__wcpncpy_alias,
 				 size_t __n), wcpncpy);
 
 extern __always_inline wchar_t *
-wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
+__NTH (wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
       && (!__builtin_constant_p (__n) || __bos (__dest) >= __n))
@@ -167,7 +167,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscat_alias,
 				 __const wchar_t *__restrict __src), wcscat);
 
 extern __always_inline wchar_t *
-wcscat (wchar_t *__dest, __const wchar_t *__src)
+__NTH (wcscat (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscat_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -184,7 +184,7 @@ extern wchar_t *__REDIRECT_NTH (__wcsncat_alias,
 				 size_t __n), wcsncat);
 
 extern __always_inline wchar_t *
-wcsncat (wchar_t *__dest, __const wchar_t *__src, size_t __n)
+__NTH (wcsncat (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcsncat_chk (__dest, __src, __n,
@@ -218,8 +218,8 @@ extern int __REDIRECT_NTH (__vswprintf_alias,
 
 
 extern __always_inline int
-vswprintf (wchar_t *__s, size_t __n, __const wchar_t *__format,
-	   __gnuc_va_list __arg)
+__NTH (vswprintf (wchar_t *__s, size_t __n, __const wchar_t *__format,
+		  __gnuc_va_list __arg))
 {
   if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
     return __vswprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1, __bos (__s),
@@ -293,7 +293,7 @@ extern size_t __REDIRECT_NTH (__wcrtomb_alias,
 			       mbstate_t *__restrict __ps), wcrtomb) __wur;
 
 extern __always_inline __wur size_t
-wcrtomb (char *__s, wchar_t __wchar, mbstate_t *__ps)
+__NTH (wcrtomb (char *__s, wchar_t __wchar, mbstate_t *__ps))
 {
   /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
      But this would only disturb the namespace.  So we define our own
@@ -319,8 +319,8 @@ extern size_t __REDIRECT_NTH (__mbsrtowcs_alias,
 			      mbsrtowcs);
 
 extern __always_inline size_t
-mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
-	   size_t __len, mbstate_t *__restrict __ps)
+__NTH (mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+		  size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
@@ -341,8 +341,8 @@ extern size_t __REDIRECT_NTH (__wcsrtombs_alias,
 			      wcsrtombs);
 
 extern __always_inline size_t
-wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
-	   size_t __len, mbstate_t *__restrict __ps)
+__NTH (wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+		  size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len) || __len > __bos (__dst)))
@@ -363,8 +363,8 @@ extern size_t __REDIRECT_NTH (__mbsnrtowcs_alias,
 			      mbsnrtowcs);
 
 extern __always_inline size_t
-mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
-	    size_t __nmc, size_t __len, mbstate_t *__restrict __ps)
+__NTH (mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+		   size_t __nmc, size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
@@ -386,8 +386,8 @@ extern size_t __REDIRECT_NTH (__wcsnrtombs_alias,
 			       mbstate_t *__restrict __ps), wcsnrtombs);
 
 extern __always_inline size_t
-wcsnrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
-	    size_t __nwc, size_t __len, mbstate_t *__restrict __ps)
+__NTH (wcsnrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+		   size_t __nwc, size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len) || __len > __bos (__dst)))

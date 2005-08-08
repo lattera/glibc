@@ -1,5 +1,5 @@
 /* Cache memory handling.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -32,12 +32,6 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
-
-
-/* Maximum alignment requirement we will encounter.  */
-#define BLOCK_ALIGN_LOG 3
-#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
-#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
 
 
 static int
@@ -194,7 +188,7 @@ gc (struct database_dyn *db)
       highref -= BLOCK_ALIGN;
     }
 
-  /* No we can iterate over the MARK array and find bits which are not
+  /* Now we can iterate over the MARK array and find bits which are not
      set.  These represent memory which can be recovered.  */
   size_t byte = 0;
   /* Find the first gap.  */

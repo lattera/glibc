@@ -199,6 +199,210 @@ writeall (int fd, const void *buf, size_t len)
 }
 
 
+enum usekey
+  {
+    use_not = 0,
+    /* The following three are not really used, they are symbolic constants.  */
+    use_first = 16,
+    use_begin = 32,
+    use_end = 64,
+
+    use_he = 1,
+    use_he_begin = use_he | use_begin,
+    use_he_end = use_he | use_end,
+#if SEPARATE_KEY
+    use_key = 2,
+    use_key_begin = use_key | use_begin,
+    use_key_end = use_key | use_end,
+    use_key_first = use_key_begin | use_first,
+#endif
+    use_data = 3,
+    use_data_begin = use_data | use_begin,
+    use_data_end = use_data | use_end,
+    use_data_first = use_data_begin | use_first
+  };
+
+
+static int
+check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
+	   enum usekey use, ref_t start, size_t len)
+{
+  assert (len >= 2);
+
+  if (start > first_free || start + len > first_free
+      || (start & BLOCK_ALIGN_M1))
+    return 0;
+
+  if (usemap[start] == use_not)
+    {
+      /* Add the start marker.  */
+      usemap[start] = use | use_begin;
+      use &= ~use_first;
+
+      while (--len > 0)
+	if (usemap[++start] != use_not)
+	  return 0;
+	else
+	  usemap[start] = use;
+
+      /* Add the end marker.  */
+      usemap[start] = use | use_end;
+    }
+  else if ((usemap[start] & ~use_first) == ((use | use_begin) & ~use_first))
+    {
+      /* Hash entries can't be shared.  */
+      if (use == use_he)
+	return 0;
+
+      usemap[start] |= (use & use_first);
+      use &= ~use_first;
+
+      while (--len > 1)
+	if (usemap[++start] != use)
+	  return 0;
+
+      if (usemap[++start] != (use | use_end))
+	return 0;
+    }
+  else
+    /* Points to a wrong object or somewhere in the middle.  */
+    return 0;
+
+  return 1;
+}
+
+
+/* Verify data in persistent database.  */
+static int
+verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
+{
+  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb);
+
+  time_t now = time (NULL);
+
+  struct database_pers_head *head = mem;
+  struct database_pers_head head_copy = *head;
+
+  /* Check that the header that was read matches the head in the database.  */
+  if (readhead != NULL && memcmp (head, readhead, sizeof (*head)) != 0)
+    return 0;
+
+  /* First some easy tests: make sure the database header is sane.  */
+  if (head->version != DB_VERSION
+      || head->header_size != sizeof (*head)
+      /* We allow a timestamp to be one hour ahead of the current time.
+	 This should cover daylight saving time changes.  */
+      || head->timestamp > now + 60 * 60 + 60
+      || (head->gc_cycle & 1)
+      || (size_t) head->module > INT32_MAX / sizeof (ref_t)
+      || (size_t) head->data_size > INT32_MAX - head->module * sizeof (ref_t)
+      || head->first_free < 0
+      || head->first_free > head->data_size
+      || (head->first_free & BLOCK_ALIGN_M1) != 0
+      || head->maxnentries < 0
+      || head->maxnsearched < 0)
+    return 0;
+
+  uint8_t *usemap = calloc (head->first_free, 1);
+  if (usemap == NULL)
+    return 0;
+
+  const char *data = (char *) &head->array[roundup (head->module,
+						    ALIGN / sizeof (ref_t))];
+
+  nscd_ssize_t he_cnt = 0;
+  for (nscd_ssize_t cnt = 0; cnt < head->module; ++cnt)
+    {
+      ref_t work = head->array[cnt];
+
+      while (work != ENDREF)
+	{
+	  if (! check_use (data, head->first_free, usemap, use_he, work,
+			   sizeof (struct hashentry)))
+	    goto fail;
+
+	  /* Now we know we can dereference the record.  */
+	  struct hashentry *here = (struct hashentry *) (data + work);
+
+	  ++he_cnt;
+
+	  /* Make sure the record is for this type of service.  */
+	  if (here->type >= LASTREQ
+	      || serv2db[here->type] != &dbs[dbnr])
+	    goto fail;
+
+	  /* Validate boolean field value.  */
+	  if (here->first != false && here->first != true)
+	    goto fail;
+
+	  if (here->len < 0)
+	    goto fail;
+
+	  /* Now the data.  */
+	  if (here->packet < 0
+	      || here->packet > head->first_free
+	      || here->packet + sizeof (struct datahead) > head->first_free)
+	    goto fail;
+
+	  struct datahead *dh = (struct datahead *) (data + here->packet);
+
+	  if (! check_use (data, head->first_free, usemap,
+			   use_data | (here->first ? use_first : 0),
+			   here->packet, dh->allocsize))
+	    goto fail;
+
+	  if (dh->allocsize < sizeof (struct datahead)
+	      || dh->recsize > dh->allocsize
+	      || (dh->notfound != false && dh->notfound != true)
+	      || (dh->usable != false && dh->usable != true))
+	    goto fail;
+
+	  if (here->key < here->packet + sizeof (struct datahead)
+	      || here->key > here->packet + dh->allocsize
+	      || here->key + here->len > here->packet + dh->allocsize)
+	    {
+#if SEPARATE_KEY
+	      /* If keys can appear outside of data, this should be done
+		 instead.  But gc doesn't mark the data in that case.  */
+	      if (! check_use (data, head->first_free, usemap,
+			       use_key | (here->first ? use_first : 0),
+			       here->key, here->len))
+#endif
+		goto fail;
+	    }
+
+	  work = here->next;
+	}
+    }
+
+  if (he_cnt != head->nentries)
+    goto fail;
+
+  /* See if all data and keys had at least one reference from
+     he->first == true hashentry.  */
+  for (ref_t idx = 0; idx < head->first_free; ++idx)
+    {
+#if SEPARATE_KEY
+      if (usemap[idx] == use_key_begin)
+	goto fail;
+#endif
+      if (usemap[idx] == use_data_begin)
+	goto fail;
+    }
+
+  /* Finally, make sure the database hasn't changed since the first test.  */
+  if (memcmp (mem, &head_copy, sizeof (*head)) != 0)
+    goto fail;
+
+  free (usemap);
+  return 1;
+
+fail:
+  free (usemap);
+  return 0;
+}
+
+
 /* Initialize database information structures.  */
 void
 nscd_init (void)
@@ -242,7 +446,7 @@ nscd_init (void)
 		  fail_db:
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename, strerror (errno));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
 		else if (head.module == 0 && head.data_size == 0)
 		  {
@@ -255,22 +459,31 @@ nscd_init (void)
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename,
 			     _("header size does not match"));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
 		else if ((total = (sizeof (head)
 				   + roundup (head.module * sizeof (ref_t),
 					      ALIGN)
 				   + head.data_size))
-			 > st.st_size)
+			 > st.st_size
+			 || total < sizeof (head))
 		  {
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename,
 			     _("file size does not match"));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
 		else if ((mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
 				      MAP_SHARED, fd, 0)) == MAP_FAILED)
 		  goto fail_db;
+		else if (!verify_persistent_db (mem, &head, cnt))
+		  {
+		    munmap (mem, total);
+		    dbg_log (_("invalid persistent database file \"%s\": %s"),
+			     dbs[cnt].db_filename,
+			     _("verification failed"));
+		    unlink (dbs[cnt].db_filename);
+		  }
 		else
 		  {
 		    /* Success.  We have the database.  */

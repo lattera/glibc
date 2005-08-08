@@ -29,7 +29,7 @@ extern char *__REDIRECT_NTH (__realpath_alias,
 			      char *__restrict __resolved), realpath) __wur;
 
 extern __always_inline __wur char *
-realpath (const char *__name, char *__resolved)
+__NTH (realpath (__const char *__restrict __name, char *__restrict __resolved))
 {
   if (__bos (__resolved) != (size_t) -1)
     return __realpath_chk (__name, __resolved, __bos (__resolved));
@@ -45,7 +45,7 @@ extern int __REDIRECT_NTH (__ptsname_r_alias, (int __fd, char *__buf,
      __nonnull ((2));
 
 extern __always_inline int
-ptsname_r (int __fd, char *__buf, size_t __buflen)
+__NTH (ptsname_r (int __fd, char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
       && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
@@ -60,7 +60,7 @@ extern int __REDIRECT_NTH (__wctomb_alias, (char *__s, wchar_t __wchar),
 			   wctomb) __wur;
 
 extern __always_inline __wur int
-wctomb (char *__s, wchar_t __wchar)
+__NTH (wctomb (char *__s, wchar_t __wchar))
 {
   /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
      But this would only disturb the namespace.  So we define our own
@@ -84,8 +84,8 @@ extern size_t __REDIRECT_NTH (__mbstowcs_alias,
 			       size_t __len), mbstowcs);
 
 extern __always_inline size_t
-mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
-	  size_t __len)
+__NTH (mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
+		 size_t __len))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
@@ -104,8 +104,8 @@ extern size_t __REDIRECT_NTH (__wcstombs_alias,
 			       size_t __len), wcstombs);
 
 extern __always_inline size_t
-wcstombs (char *__restrict __dst, __const wchar_t *__restrict __src,
-	  size_t __len)
+__NTH (wcstombs (char *__restrict __dst, __const wchar_t *__restrict __src,
+		 size_t __len))
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len) || __len > __bos (__dst)))

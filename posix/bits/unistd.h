@@ -135,7 +135,7 @@ extern size_t __REDIRECT_NTH (__confstr_alias, (int __name, char *__buf,
 						size_t __len), confstr);
 
 extern __always_inline size_t
-confstr (int __name, char *__buf, size_t __len)
+__NTH (confstr (int __name, char *__buf, size_t __len))
 {
   if (__bos (__buf) != (size_t) -1
       && (!__builtin_constant_p (__len) || __bos (__buf) < __len))
@@ -150,7 +150,7 @@ extern int __REDIRECT_NTH (__getgroups_alias, (int __size, __gid_t __list[]),
 			   getgroups) __wur;
 
 extern __always_inline int
-getgroups (int __size, __gid_t __list[])
+__NTH (getgroups (int __size, __gid_t __list[]))
 {
   if (__bos (__list) != (size_t) -1
       && (!__builtin_constant_p (__size)
@@ -167,7 +167,7 @@ extern int __REDIRECT_NTH (__ttyname_r_alias, (int __fd, char *__buf,
      __nonnull ((2));
 
 extern __always_inline int
-ttyname_r (int __fd, char *__buf, size_t __buflen)
+__NTH (ttyname_r (int __fd, char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
       && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
@@ -200,7 +200,7 @@ extern int __REDIRECT_NTH (__gethostname_alias, (char *__buf, size_t __buflen),
 			   gethostname) __nonnull ((1));
 
 extern __always_inline int
-gethostname (char *__buf, size_t __buflen)
+__NTH (gethostname (char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
       && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))
@@ -218,7 +218,7 @@ extern int __REDIRECT_NTH (__getdomainname_alias, (char *__buf,
 			   getdomainname) __nonnull ((1)) __wur;
 
 extern __always_inline int
-getdomainname (char *__buf, size_t __buflen)
+__NTH (getdomainname (char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
       && (!__builtin_constant_p (__buflen) || __buflen > __bos (__buf)))

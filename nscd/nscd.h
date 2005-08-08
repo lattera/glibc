@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -93,6 +93,11 @@ struct database_dyn
 
 /* Path used when not using persistent storage.  */
 #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
+
+/* Maximum alignment requirement we will encounter.  */
+#define BLOCK_ALIGN_LOG 3
+#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
+#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
 
 
 /* Global variables.  */
