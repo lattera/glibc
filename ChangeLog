@@ -71,7 +71,11 @@
 
 2005-08-05  Roland McGrath  <roland@redhat.com>
 
+	* mach/shortcut.awk: Ignore `weak_alias' lines.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
 	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
 
 2005-08-03  Dwayne Grant McConnell  <dgm69@us.ibm.com>
 
