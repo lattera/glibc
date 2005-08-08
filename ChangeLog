@@ -1,5 +1,7 @@
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/cache.c (cache_add): Commit hash table and header to disk.
+
 	* nscd/mem.c (mempool_alloc): Use posix_fallocate instead of ftruncate.
 	* nscd/connections.c (nscd_init): Likewise.
 
