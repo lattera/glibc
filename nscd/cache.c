@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -168,6 +168,12 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   unsigned long int nentries = table->head->nentries;
   if (nentries > table->head->maxnentries)
     table->head->maxnentries = nentries;
+
+  if (table->persistent)
+    // XXX async OK?
+    msync ((void *) table->head,
+	   (char *) &table->head->array[hash] - (char *) table->head
+	   + sizeof (ref_t), MS_ASYNC);
 
   return 0;
 }
