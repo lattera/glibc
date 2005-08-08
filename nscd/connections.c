@@ -638,7 +638,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 
 		if ((TEMP_FAILURE_RETRY (write (fd, &head, sizeof (head)))
 		     != sizeof (head))
-		    || ftruncate (fd, total) != 0
+		    || posix_fallocate (fd, 0, total) != 0
 		    || (mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
 				    MAP_SHARED, fd, 0)) == MAP_FAILED)
 		  {

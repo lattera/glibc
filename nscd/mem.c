@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
+#include <fcntl.h>
 #include <inttypes.h>
 #include <libintl.h>
 #include <limits.h>
@@ -488,7 +489,8 @@ mempool_alloc (struct database_dyn *db, size_t len)
 			     + db->head->module * sizeof (ref_t)
 			     + new_data_size);
 
-	  if ((!db->mmap_used || ftruncate (db->wr_fd, newtotal) != 0)
+	  if ((!db->mmap_used
+	       || posix_fallocate (db->wr_fd, oldtotal, newtotal) != 0)
 	      /* Try to resize the mapping.  Note: no MREMAP_MAYMOVE.  */
 	      && mremap (db->head, oldtotal, newtotal, 0) == 0)
 	    {

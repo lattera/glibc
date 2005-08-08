@@ -1,3 +1,8 @@
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/mem.c (mempool_alloc): Use posix_fallocate instead of ftruncate.
+	* nscd/connections.c (nscd_init): Likewise.
+
 2005-08-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/fxprintf.c: Include libioP.h.
