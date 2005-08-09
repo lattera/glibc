@@ -1766,7 +1766,7 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 #ifdef _LIBC
 	  char *buf;
 
-	  if (__asprintf (&buf, fmt, ap) < 0)
+	  if (vasprintf (&buf, fmt, ap) < 0)
 	    buf = NULL;
 
 	  __fxprintf (stream, "%s: %s\n",
@@ -1836,7 +1836,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 #ifdef _LIBC
 	      char *buf;
 
-	      if (__asprintf (&buf, fmt, ap) < 0)
+	      if (vasprintf (&buf, fmt, ap) < 0)
 		buf = NULL;
 
 	      __fxprintf (stream, ": %s", buf);
