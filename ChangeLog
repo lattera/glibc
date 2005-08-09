@@ -1,3 +1,8 @@
+2005-08-08  Roland McGrath  <roland@redhat.com>
+
+	* argp/argp-help.c (__argp_error): __asprintf -> vasprintf.
+	(__argp_failure): Likewise.
+
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Commit hash table and header to disk.
