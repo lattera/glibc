@@ -1,5 +1,8 @@
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_stat.c (receive_print_stats): Really print values of
+	thread number, paranoia, and restart interval the server is using.
+
 	* argp/argp-help.c: Use _IO_vasprintf instead of vasprintf.
 	* include/stdio.h: Add libc_hidden_proto for __vfprintf_chk.
 	* debug/vfprintf_chk.c: Add libc_hidden_def.

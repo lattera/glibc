@@ -75,6 +75,10 @@ struct statdata
   int debug_level;
   time_t runtime;
   unsigned long int client_queued;
+  int nthreads;
+  int max_nthreads;
+  int paranoia;
+  time_t restart_interval;
   int ndbs;
   struct dbstat dbs[lastdb];
 #ifdef HAVE_SELINUX
@@ -93,6 +97,10 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
   data.debug_level = debug_level;
   data.runtime = time (NULL) - start_time;
   data.client_queued = client_queued;
+  data.nthreads = nthreads;
+  data.max_nthreads = max_nthreads;
+  data.paranoia = paranoia;
+  data.restart_interval = restart_interval;
   data.ndbs = lastdb;
 
   for (cnt = 0; cnt < lastdb; ++cnt)
@@ -230,8 +238,9 @@ receive_print_stats (void)
 	    "%15lu  number of times clients had to wait\n"
 	    "%15s  paranoia mode enabled\n"
 	    "%15lu  restart internal\n"),
-	  nthreads, max_nthreads, data.client_queued,
-	  paranoia ? yesstr : nostr, (unsigned long int) restart_interval);
+	  data.nthreads, data.max_nthreads, data.client_queued,
+	  data.paranoia ? yesstr : nostr,
+	  (unsigned long int) data.restart_interval);
 
   for (i = 0; i < lastdb; ++i)
     {
