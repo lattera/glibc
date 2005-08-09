@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -40,3 +40,4 @@ __vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
 
   return done;
 }
+libc_hidden_def (__vfprintf_chk)
