@@ -1459,7 +1459,7 @@ fd_ready (int fd)
 	{
 	  /* We got another thread.  */
 	  ++nthreads;
-	  /* The new thread might new a kick.  */
+	  /* The new thread might need a kick.  */
 	  do_signal = true;
 	}
 
@@ -1644,8 +1644,7 @@ main_loop_epoll (int efd)
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */
-	    struct epoll_event ev = { 0, };
-	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, &ev);
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, NULL);
 
 	    /* Get a worked to handle the request.  */
 	    fd_ready (revs[cnt].data.fd);
@@ -1667,8 +1666,7 @@ main_loop_epoll (int efd)
 	if (cnt != sock && starttime[cnt] != 0 && starttime[cnt] < laststart)
 	  {
 	    /* We are waiting for this one for too long.  Close it.  */
-	    struct epoll_event ev = {0, };
-	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, &ev);
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, NULL);
 
 	    (void) close (cnt);
 

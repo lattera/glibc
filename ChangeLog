@@ -1,5 +1,8 @@
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (main_loop_epoll): Pass NULL as event
+	argument for epoll_ctl(EPOLL_CTL_DEL) calls.
+
 	* nscd/nscd_stat.c (receive_print_stats): Really print values of
 	thread number, paranoia, and restart interval the server is using.
 
