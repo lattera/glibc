@@ -1,3 +1,9 @@
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* argp/argp-help.c: Use _IO_vasprintf instead of vasprintf.
+	* include/stdio.h: Add libc_hidden_proto for __vfprintf_chk.
+	* debug/vfprintf_chk.c: Add libc_hidden_def.
+
 2005-08-08  Roland McGrath  <roland@redhat.com>
 
 	* argp/argp-help.c (__argp_error): __asprintf -> vasprintf.

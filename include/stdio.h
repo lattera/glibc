@@ -128,6 +128,7 @@ libc_hidden_proto (open_memstream)
 libc_hidden_proto (__libc_fatal)
 libc_hidden_proto (__vsprintf_chk)
 libc_hidden_proto (__vsnprintf_chk)
+libc_hidden_proto (__vfprintf_chk)
 
 #  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
   && defined HAVE_VISIBILITY_ATTRIBUTE && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE\

@@ -48,7 +48,8 @@ char *alloca ();
 #include <stdarg.h>
 #include <ctype.h>
 #include <limits.h>
-#ifdef USE_IN_LIBIO
+#ifdef _LIBC
+# include <../libio/libioP.h>
 # include <wchar.h>
 #endif
 
@@ -1766,7 +1767,7 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 #ifdef _LIBC
 	  char *buf;
 
-	  if (vasprintf (&buf, fmt, ap) < 0)
+	  if (_IO_vasprintf (&buf, fmt, ap) < 0)
 	    buf = NULL;
 
 	  __fxprintf (stream, "%s: %s\n",
@@ -1836,7 +1837,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 #ifdef _LIBC
 	      char *buf;
 
-	      if (vasprintf (&buf, fmt, ap) < 0)
+	      if (_IO_vasprintf (&buf, fmt, ap) < 0)
 		buf = NULL;
 
 	      __fxprintf (stream, ": %s", buf);
