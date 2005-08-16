@@ -203,9 +203,9 @@ prune_cache (struct database_dyn *table, time_t now)
      the entries also in this case.  */
   if (table->check_file)
     {
-      struct stat st;
+      struct stat64 st;
 
-      if (stat (table->filename, &st) < 0)
+      if (stat64 (table->filename, &st) < 0)
 	{
 	  char buf[128];
 	  /* We cannot stat() the file, disable file checking if the

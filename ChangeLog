@@ -1,3 +1,8 @@
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (prune_cache): Use stat64 not stat.
+	* nscd/connections.c (nscd_init): Likewise.
+
 2005-08-10  Sergio Gelato  <Sergio.Gelato@astro.su.se>
 
 	[BZ #1188]

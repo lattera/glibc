@@ -710,9 +710,9 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	if (dbs[cnt].check_file)
 	  {
 	    /* We need the modification date of the file.  */
-	    struct stat st;
+	    struct stat64 st;
 
-	    if (stat (dbs[cnt].filename, &st) < 0)
+	    if (stat64 (dbs[cnt].filename, &st) < 0)
 	      {
 		/* We cannot stat() the file, disable file checking.  */
 		dbg_log (_("cannot stat() file `%s': %s"),
