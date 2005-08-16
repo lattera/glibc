@@ -21,6 +21,7 @@
 #include <atomic.h>
 #include <errno.h>
 #include <error.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -238,6 +239,10 @@ prune_cache (struct database_dyn *table, time_t now)
   char *const data = table->data;
   bool any = false;
 
+  if (__builtin_expect (debug_level > 2, 0))
+    dbg_log (_("pruning %s cache; time %ld"),
+	     dbnames[table - dbs], (long int) now);
+
   do
     {
       ref_t run = table->head->array[--cnt];
@@ -246,6 +251,25 @@ prune_cache (struct database_dyn *table, time_t now)
 	{
 	  struct hashentry *runp = (struct hashentry *) (data + run);
 	  struct datahead *dh = (struct datahead *) (data + runp->packet);
+
+	  /* Some debug support.  */
+	  if (__builtin_expect (debug_level > 2, 0))
+	    {
+	      char buf[INET6_ADDRSTRLEN];
+	      const char *str;
+
+	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
+		{
+		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
+			     data + runp->key, buf, sizeof (buf));
+		  str = buf;
+		}
+	      else
+		str = data + runp->key;
+
+	      dbg_log (_("considering %s entry \"%s\", timeout %" PRIu64),
+		       serv2str[runp->type], str, dh->timeout);
+	    }
 
 	  /* Check whether the entry timed out.  */
 	  if (dh->timeout < now)
@@ -401,7 +425,7 @@ prune_cache (struct database_dyn *table, time_t now)
       /* Make sure the data is saved to disk.  */
       if (table->persistent)
 	msync (table->head,
-	       table->data + table->head->first_free - (char *) table->head,
+	       data + table->head->first_free - (char *) table->head,
 	       MS_ASYNC);
 
       /* One extra pass if we do debugging.  */
@@ -417,11 +441,11 @@ prune_cache (struct database_dyn *table, time_t now)
 	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
 		{
 		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
-			     table->data + runp->key, buf, sizeof (buf));
+			     data + runp->key, buf, sizeof (buf));
 		  str = buf;
 		}
 	      else
-		str = table->data + runp->key;
+		str = data + runp->key;
 
 	      dbg_log ("remove %s entry \"%s\"", serv2str[runp->type], str);
 

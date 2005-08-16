@@ -1,5 +1,8 @@
 2005-08-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/cache.c (prune_cache): Add more debug output.  Only for
+	debug level 3 and higher and very verbose.
+
 	* nscd/cache.c (prune_cache): Use stat64 not stat.
 	* nscd/connections.c (nscd_init): Likewise.
 
