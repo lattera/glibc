@@ -1,3 +1,29 @@
+2005-08-10  Sergio Gelato  <Sergio.Gelato@astro.su.se>
+
+	[BZ #1188]
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Change assert check
+	from (len > 0) to (len >= 0).
+
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_xdr.c (_xdr_nis_result): Fix type of res variable.
+	Reported by Thomas Schwinge.
+
+2005-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_subr.c (nis_leaf_of_r): Handle buflen == 0 correctly.
+
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (more_help): Use open_memstream instead of handling
+	memory allocation ourselves.
+
+2005-08-16  Jay Fenlason  <fenlason@redhat.com>
+
+	* nss/getent.c (parse_options): change the -s option to support
+	{database}:{search} to override /etc/resolv.conf for only the
+	specified database.
+
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (main_loop_epoll): Pass NULL as event

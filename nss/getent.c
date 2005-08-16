@@ -757,12 +757,27 @@ D(shadow)
 static error_t
 parse_option (int key, char *arg, struct argp_state *state)
 {
-  int i;
+  char *endp;
   switch (key)
     {
     case 's':
-      for (i = 0; databases[i].name; ++i)
-	__nss_configure_lookup (databases[i].name, arg);
+      endp = strchr (arg, ':');
+      if (endp == NULL)
+	/* No specific database, change them all.  */
+	for (int i = 0; databases[i].name != NULL; ++i)
+	  __nss_configure_lookup (databases[i].name, arg);
+      else
+	{
+	  int i;
+	  for (i = 0; databases[i].name != NULL; ++i)
+	    if (strncmp (databases[i].name, arg, endp - arg) == 0)
+	      {
+		__nss_configure_lookup (databases[i].name, endp + 1);
+		break;
+	      }
+	  if (databases[i].name == NULL)
+	    error (EXIT_FAILURE, 0, gettext ("Unknown database name"));
+	}
       break;
 
     default:
@@ -776,31 +791,20 @@ parse_option (int key, char *arg, struct argp_state *state)
 static char *
 more_help (int key, const char *text, void *input)
 {
-  int len;
-  char *long_doc, *doc, *p;
-
   switch (key)
     {
+      size_t len;
+      char *doc;
+      FILE *fp;
+
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-#if 0
-      return xstrdup (gettext ("\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
-#endif
-      long_doc = _("Supported databases:");
-      len = strlen (long_doc) + 2;
-
-      for (int i = 0; databases[i].name; ++i)
-	len += strlen (databases[i].name) + 1;
-
-      doc = (char *) malloc (len);
-      if (doc != NULL)
+      fp = open_memstream (&doc, &len);
+      if (fp != NULL)
 	{
-	  p = stpcpy (doc, long_doc);
-	  *p++ = '\n';
+	  fputs_unlocked (_("Supported databases:\n"), fp);
 
-	  for (int i = 0, col = 0; databases[i].name; ++i)
+	  for (int i = 0, col = 0; databases[i].name != NULL; ++i)
 	    {
 	      len = strlen (databases[i].name);
 	      if (i != 0)
@@ -808,17 +812,18 @@ For bug reporting instructions, please see:\n\
 		  if (col + len > 72)
 		    {
 		      col = 0;
-		      *p++ = '\n';
+		      fputc_unlocked ('\n', fp);
 		    }
 		  else
-		    *p++ = ' ';
+		    fputc_unlocked (' ', fp);
 		}
 
-	      p = mempcpy (p, databases[i].name, len);
+	      fputs_unlocked (databases[i].name, fp);
 	      col += len + 1;
 	    }
 
-	  return doc;
+	  if (fclose (fp) == 0)
+	    return doc;
 	}
       break;
 

@@ -281,7 +281,7 @@ _xdr_nis_error (XDR *xdrs, nis_error *objp)
 bool_t
 _xdr_nis_result (XDR *xdrs, nis_result *objp)
 {
-  bool res = _xdr_nis_error (xdrs, &objp->status);
+  bool_t res = _xdr_nis_error (xdrs, &objp->status);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_array (xdrs, (char **) &objp->objects.objects_val,

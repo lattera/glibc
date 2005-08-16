@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004
+/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004,2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
@@ -75,7 +75,7 @@ _nss_nis_setnetgrent (const char *group, struct __netgrent *netgrp)
 	 which is one byte larger than the value in LEN specifies
 	 and the last byte is filled with NUL.  So we can simply
 	 use that buffer.  */
-      assert (len > 0);
+      assert (len >= 0);
       assert (malloc_usable_size (netgrp->data) >= len + 1);
       assert (netgrp->data[len] == '\0');
 

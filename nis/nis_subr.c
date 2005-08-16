@@ -39,7 +39,7 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
   while (name[i] != '.' && name[i] != '\0')
     i++;
 
-  if (__builtin_expect (i > buflen - 1, 0))
+  if (__builtin_expect (i >= buflen, 0))
     {
       __set_errno (ERANGE);
       return NULL;
