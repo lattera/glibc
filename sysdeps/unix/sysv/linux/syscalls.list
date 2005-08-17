@@ -25,6 +25,9 @@ getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
 getsid		-	getsid		i:i	getsid
 init_module	EXTRA	init_module	5	init_module
+inotify_add_watch	EXTRA	inotify_add_watch	i:isi	inotify_add_watch
+inotify_init	EXTRA	inotify_init	i:	inotify_init
+inotify_rm_watch	EXTRA	inotify_rm_watch	i:ii	inotify_rm_watch
 ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
 keyctl		EXTRA	keyctl		i:iiiii	keyctl

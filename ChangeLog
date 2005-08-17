@@ -1,5 +1,10 @@
 2005-08-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	sys/inotify.h.
+	* sysdeps/unix/sysv/linux/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add inotify syscalls.
+
 	* nscd/cache.c (prune_cache): Add more debug output.  Only for
 	debug level 3 and higher and very verbose.
 
