@@ -115,6 +115,7 @@
 
 2005-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1075]
 	* tst-cancel17.c (do_test): Add arbitrary factor to make sure
 	aio_write blocks.
 
@@ -192,6 +193,7 @@
 
 2005-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1112]
 	* pthread_create.c (__pthread_create_2_1): Rename syscall error
 	variable to scerr.
 
