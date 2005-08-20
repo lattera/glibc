@@ -16,36 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
+#define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
 
-#include <limits.h>
-#include <atomic.h>
-
-#ifndef GETSP
-# warning "GETSP is not defined for this architecture."
-# define GETSP 0
-#endif
-
-#ifndef GETTIME
-# define GETTIME(low,high) \
-  {									      \
-    struct timeval tval;						      \
-    uint64_t usecs;							      \
-    gettimeofday (&tval, NULL);						      \
-    usecs = (uint64_t) tval.tv_usec + (uint64_t) tval.tv_usec * 1000000;      \
-    low = usecs & 0xffffffff;						      \
-    high = usecs >> 32;							      \
-  }
-#endif
-
-#if LONG_BIT == 32
-# define memusage_cntr_t uatomic32_t
-#else
-# define memusage_cntr_t uatomic64_t
-#endif
-#ifndef memusage_size_t
-# if LONG_BIT == 32
-#  define memusage_size_t uatomic32_t
-# else
-#  define memusage_size_t uatomic64_t
-# endif
-#endif
+#include <sysdeps/generic/memusage.h>

@@ -81,8 +81,8 @@
 // 12/13/04: Corrected POSIX behavior for exp2_overflow, exp2_underflow,
 //           exp10_overflow, exp10_underflow.  Added ISOC to set errno for
 //           exp10_underflow.
-// 12/14/04: Corrected POSIX behavior for nextafter_overflow, 
-//           nextafter_underflow, nexttoward_overflow, nexttoward_underflow.  
+// 12/14/04: Corrected POSIX behavior for nextafter_overflow,
+//           nextafter_underflow, nexttoward_overflow, nexttoward_underflow.
 //           Added ISOC to set errno for nextafter and nexttoward underflow.
 // 12/15/04: Corrected POSIX behavior for exp, exp2, and exp10 underflow.
 // 03/31/05: Added missing ALIGNIT statement to 6 float constants.
@@ -674,7 +674,7 @@ else if(_LIB_VERSIONIMF==_ISOC_)
          ERRNO_DOMAIN; break;
     }
     default:
-      abort();
+      break;
    }
    return;
 }
@@ -1374,7 +1374,7 @@ switch(input_tag)
       ERRNO_RANGE; break;
    }
   default:
-    abort();
+    break;
 }
 return;
 /* _POSIX_ */

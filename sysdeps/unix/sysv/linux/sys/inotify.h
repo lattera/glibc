@@ -47,6 +47,7 @@ struct inotify_event
 #define IN_CREATE	 0x00000100	/* Subfile was created.  */
 #define IN_DELETE	 0x00000200	/* Subfile was deleted.  */
 #define IN_DELETE_SELF	 0x00000400	/* Self was deleted.  */
+#define IN_MOVE_SELF	 0x00000800	/* Self was moved.  */
 
 /* Events sent by the kernel.  */
 #define IN_UNMOUNT	 0x00002000	/* Backing fs was unmounted.  */
@@ -61,7 +62,7 @@ struct inotify_event
 #define IN_ALL_EVENTS	 (IN_ACCESS | IN_MODIFY | IN_ATTRIB | IN_CLOSE_WRITE  \
 			  | IN_CLOSE_NOWRITE | IN_OPEN | IN_MOVED_FROM	      \
 			  | IN_MOVED_TO | IN_CREATE | IN_DELETE		      \
-			  | IN_DELETE_SELF)
+			  | IN_DELETE_SELF | IN_MOVE_SELF)
 
 
 __BEGIN_DECLS

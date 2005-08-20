@@ -1,3 +1,28 @@
+2005-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm_error.c (__libm_error_support): Don't abort.
+
+2005-08-17  Robert Love  <rml@novell.com>
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Add IN_MOVE_SELF event.
+
+2005-08-19  Bruno Haible  <bruno@clisp.org>
+
+	* intl/localealias.c (read_alias_file): In case of failure, close the
+	file descriptor and sort the array before returning.
+
+2005-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/Makefile: Link libmemusage.so with ld.so.
+	* malloc/memusage.c: Use atomic operations for all counter and size
+	 computations.  Handle thread stacks.
+	* sysdeps/generic/memusage.h: Define memusage_cntr_t and
+	memusage_size_t.
+	* sysdeps/i386/i686/memusage.h: New file.
+	* include/atomic.h: Define atomic_max and atomic_min.
+
+	* debug/tst-chk1.c: Add tests for mbstowcs and wcstombs.
+
 2005-08-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #1207]
