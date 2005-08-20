@@ -1104,6 +1104,24 @@ do_test (void)
       CHK_FAIL_END
 #endif
 
+      cp = "A";
+      if (mbstowcs (wenough, cp, 10) != 1)
+	{
+	  puts ("first mbstowcs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      wchar_t wsmallbuf[2];
+      cp = "ABC";
+      mbstowcs (wsmallbuf, cp, 10);
+      CHK_FAIL_END
+#endif
+
       memset (&s, '\0', sizeof (s));
       cp = "A";
       if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1)
@@ -1139,6 +1157,24 @@ do_test (void)
       char smallbuf[2];
       wcp = L"ABC";
       wcsrtombs (smallbuf, &wcp, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      wcp = L"A";
+      if (wcstombs (enough, wcp, 10) != 1)
+	{
+	  puts ("first wcstombs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      wcp = L"ABC";
+      wcstombs (smallbuf, wcp, 10);
       CHK_FAIL_END
 #endif
 
