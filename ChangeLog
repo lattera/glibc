@@ -1,3 +1,7 @@
+2005-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_vc): Pass correct sockaddr size to connect.
+
 2005-08-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/libm_error.c (__libm_error_support): Don't abort.

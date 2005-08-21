@@ -654,7 +654,9 @@ send_vc(res_state statp,
 		}
 		__set_errno (0);
 		if (connect(statp->_vcsock, (struct sockaddr *)nsap,
-			    sizeof *nsap) < 0) {
+			    nsap->sin6_family == AF_INET
+			    ? sizeof (struct sockaddr_in)
+			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno,
 			       (struct sockaddr *) nsap);
