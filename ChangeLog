@@ -1,5 +1,7 @@
 2005-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c (Aerror): Fix printing IP address.
+
 	* resolv/res_send.c (send_vc): Pass correct sockaddr size to connect.
 
 2005-08-19  H.J. Lu  <hongjiu.lu@intel.com>
