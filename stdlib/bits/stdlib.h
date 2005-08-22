@@ -89,8 +89,9 @@ __NTH (mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
-	  || __len * sizeof (wchar_t) > __bos (__dst)))
-    return __mbstowcs_chk (__dst, __src, __len, __bos (__dst));
+	  || __len > __bos (__dst) / sizeof (wchar_t)))
+    return __mbstowcs_chk (__dst, __src, __len,
+			   __bos (__dst) / sizeof (wchar_t));
   return __mbstowcs_alias (__dst, __src, __len);
 }
 

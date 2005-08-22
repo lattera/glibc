@@ -324,8 +324,9 @@ __NTH (mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
-	  || __len * sizeof (wchar_t) > __bos (__dst)))
-    return __mbsrtowcs_chk (__dst, __src, __len, __ps, __bos (__dst));
+	  || __len > __bos (__dst) / sizeof (wchar_t)))
+    return __mbsrtowcs_chk (__dst, __src, __len, __ps,
+			    __bos (__dst) / sizeof (wchar_t));
   return __mbsrtowcs_alias (__dst, __src, __len, __ps);
 }
 
@@ -368,8 +369,9 @@ __NTH (mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 {
   if (__bos (__dst) != (size_t) -1
       && (!__builtin_constant_p (__len)
-	  || __len * sizeof (wchar_t) > __bos (__dst)))
-    return __mbsnrtowcs_chk (__dst, __src, __nmc, __len, __ps, __bos (__dst));
+	  || __len > __bos (__dst) / sizeof (wchar_t)))
+    return __mbsnrtowcs_chk (__dst, __src, __nmc, __len, __ps,
+			     __bos (__dst) / sizeof (wchar_t));
   return __mbsnrtowcs_alias (__dst, __src, __nmc, __len, __ps);
 }
 

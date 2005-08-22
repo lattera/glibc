@@ -24,7 +24,7 @@ size_t
 __mbsnrtowcs_chk (wchar_t *dst, __const char **src, size_t nmc, size_t len,
 		  mbstate_t *ps, size_t dstlen)
 {
-  if (__builtin_expect (dstlen < len * sizeof (wchar_t), 0))
+  if (__builtin_expect (dstlen < len, 0))
     __chk_fail ();
 
   return __mbsnrtowcs (dst, src, nmc, len, ps);

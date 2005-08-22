@@ -32,5 +32,5 @@ __wcstombs_chk (char *dst, __const wchar_t *src, size_t len, size_t dstlen)
   memset (&state, '\0', sizeof state);
 
   /* Return how many we wrote (or maybe an error).  */
-  return __wcsrtombs (dst, src, len, &state);
+  return __wcsrtombs (dst, &src, len, &state);
 }

@@ -1,3 +1,23 @@
+2005-08-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/bits/stdlib.h (mbstowcs): Divide __bos (__dst) by
+	sizeof (wchar_t) rather than multiplying __len by sizeof (wchar_t).
+	Pass __bos (__dst) / sizeof (wchar_t) to the *_chk routine.
+	* wcsmbs/bits/wchar2.h (mbsrtowcs, mbsnrtowcs): Likewise.
+	* debug/mbsnrtowcs_chk.c (__mbsnrtowcs_chk): Don't multiply
+	len by sizeof (wchar_t).
+	* debug/mbsrtowcs_chk.c (__mbsrtowcs_chk): Likewise.
+	* debug/mbstowcs_chk.c (__mbstowcs_chk): Likewise.
+	Fix type of SRC argument.  Pass &SRC rather than SRC to
+	__mbsrtowcs.
+	* debug/wcstombs_chk.c (__wcstombs_chk): Pass &SRC rather than SRC
+	to __wcsrtombs.
+	* debug/tst-chk1.c: Include assert.h.
+	(do_test): Change enough array from VLA into a fixed size array.
+	Assert that MB_CUR_MAX is <= sizeof (enough).  Use FAIL () macro
+	instead of print error details.  Add several new tests.
+	Kill some unused variable warnings.
+
 2005-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (Aerror): Fix printing IP address.

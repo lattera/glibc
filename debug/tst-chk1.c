@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <fcntl.h>
 #include <locale.h>
 #include <paths.h>
@@ -1030,23 +1031,27 @@ do_test (void)
 #if PATH_MAX > 0
   char largebuf[PATH_MAX];
   char *realres = realpath (".", largebuf);
-#endif
-#if __USE_FORTIFY_LEVEL >= 1
+  if (realres != largebuf)
+    FAIL ();
+
+# if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   char realbuf[1];
   realres = realpath (".", realbuf);
+  if (realres != realbuf)
+    FAIL ();
   CHK_FAIL_END
+# endif
 #endif
 
   if (setlocale (LC_ALL, "de_DE.UTF-8") != NULL)
     {
+      assert (MB_CUR_MAX <= 10);
+
       /* First a simple test.  */
-      char enough[MB_CUR_MAX];
+      char enough[10];
       if (wctomb (enough, L'A') != 1)
-	{
-	  puts ("first wctomb test failed");
-	  ret = 1;
-	}
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
       /* We know the wchar_t encoding is ISO 10646.  So pick a
@@ -1055,20 +1060,14 @@ do_test (void)
       CHK_FAIL_START
       char smallbuf[2];
       if (wctomb (smallbuf, L'\x100') != 2)
-	{
-	  puts ("second wctomb test failed");
-	  ret = 1;
-	}
+	FAIL ();
       CHK_FAIL_END
 #endif
 
       mbstate_t s;
       memset (&s, '\0', sizeof (s));
-      if (wcrtomb (enough, L'A', &s) != 1)
-	{
-	  puts ("first wcrtomb test failed");
-	  ret = 1;
-	}
+      if (wcrtomb (enough, L'D', &s) != 1 || enough[0] != 'D')
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
       /* We know the wchar_t encoding is ISO 10646.  So pick a
@@ -1077,26 +1076,23 @@ do_test (void)
       CHK_FAIL_START
       char smallbuf[2];
       if (wcrtomb (smallbuf, L'\x100', &s) != 2)
-	{
-	  puts ("second wcrtomb test failed");
-	  ret = 1;
-	}
+	FAIL ();
       CHK_FAIL_END
 #endif
 
       wchar_t wenough[10];
       memset (&s, '\0', sizeof (s));
       const char *cp = "A";
-      if (mbsrtowcs (wenough, &cp, 10, &s) != 1)
-	{
-	  puts ("first mbsrtowcs test failed");
-	  ret = 1;
-	}
+      if (mbsrtowcs (wenough, &cp, 10, &s) != 1
+	  || wcscmp (wenough, L"A") != 0)
+	FAIL ();
+
+      cp = "BC";
+      if (mbsrtowcs (wenough, &cp, l0 + 10, &s) != 2
+	  || wcscmp (wenough, L"BC") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       wchar_t wsmallbuf[2];
       cp = "ABC";
@@ -1105,16 +1101,16 @@ do_test (void)
 #endif
 
       cp = "A";
-      if (mbstowcs (wenough, cp, 10) != 1)
-	{
-	  puts ("first mbstowcs test failed");
-	  ret = 1;
-	}
+      if (mbstowcs (wenough, cp, 10) != 1
+	  || wcscmp (wenough, L"A") != 0)
+	FAIL ();
+
+      cp = "DEF";
+      if (mbstowcs (wenough, cp, l0 + 10) != 3
+	  || wcscmp (wenough, L"DEF") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       wchar_t wsmallbuf[2];
       cp = "ABC";
@@ -1123,17 +1119,18 @@ do_test (void)
 #endif
 
       memset (&s, '\0', sizeof (s));
-      cp = "A";
-      if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1)
-	{
-	  puts ("first mbsnrtowcs test failed");
-	  ret = 1;
-	}
+      cp = "ABC";
+      wcscpy (wenough, L"DEF");
+      if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1
+	  || wcscmp (wenough, L"AEF") != 0)
+	FAIL ();
+
+      cp = "IJ";
+      if (mbsnrtowcs (wenough, &cp, 1, l0 + 10, &s) != 1
+	  || wcscmp (wenough, L"IEF") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       wchar_t wsmallbuf[2];
       cp = "ABC";
@@ -1143,16 +1140,16 @@ do_test (void)
 
       memset (&s, '\0', sizeof (s));
       const wchar_t *wcp = L"A";
-      if (wcsrtombs (enough, &wcp, 10, &s) != 1)
-	{
-	  puts ("first wcsrtombs test failed");
-	  ret = 1;
-	}
+      if (wcsrtombs (enough, &wcp, 10, &s) != 1
+	  || strcmp (enough, "A") != 0)
+	FAIL ();
+
+      wcp = L"BC";
+      if (wcsrtombs (enough, &wcp, l0 + 10, &s) != 2
+	  || strcmp (enough, "BC") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       char smallbuf[2];
       wcp = L"ABC";
@@ -1160,17 +1157,18 @@ do_test (void)
       CHK_FAIL_END
 #endif
 
-      wcp = L"A";
-      if (wcstombs (enough, wcp, 10) != 1)
-	{
-	  puts ("first wcstombs test failed");
-	  ret = 1;
-	}
+      memset (enough, 'Z', sizeof (enough));
+      wcp = L"EF";
+      if (wcstombs (enough, wcp, 10) != 2
+	  || strcmp (enough, "EF") != 0)
+	FAIL ();
+
+      wcp = L"G";
+      if (wcstombs (enough, wcp, l0 + 10) != 1
+	  || strcmp (enough, "G") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       char smallbuf[2];
       wcp = L"ABC";
@@ -1179,17 +1177,17 @@ do_test (void)
 #endif
 
       memset (&s, '\0', sizeof (s));
-      wcp = L"A";
-      if (wcsnrtombs (enough, &wcp, 1, 10, &s) != 1)
-	{
-	  puts ("first wcsnrtombs test failed");
-	  ret = 1;
-	}
+      wcp = L"AB";
+      if (wcsnrtombs (enough, &wcp, 1, 10, &s) != 1
+	  || strcmp (enough, "A") != 0)
+	FAIL ();
+
+      wcp = L"BCD";
+      if (wcsnrtombs (enough, &wcp, 1, l0 + 10, &s) != 1
+	  || strcmp (enough, "B") != 0)
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
       CHK_FAIL_START
       char smallbuf[2];
       wcp = L"ABC";
@@ -1208,38 +1206,36 @@ do_test (void)
     {
       char enough[1000];
       if (ptsname_r (fd, enough, sizeof (enough)) != 0)
-	{
-	  puts ("first ptsname_r failed");
-	  ret = 1;
-	}
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
       CHK_FAIL_START
       char smallbuf[2];
       if (ptsname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
-	{
-	  puts ("second ptsname_r somehow suceeded");
-	  ret = 1;
-	}
+	FAIL ();
       CHK_FAIL_END
 #endif
       close (fd);
     }
 
+#if PATH_MAX > 0
   confstr (_CS_GNU_LIBC_VERSION, largebuf, sizeof (largebuf));
-#if __USE_FORTIFY_LEVEL >= 1
+# if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   char smallbuf[1];
   confstr (_CS_GNU_LIBC_VERSION, smallbuf, sizeof (largebuf));
   CHK_FAIL_END
+# endif
 #endif
 
   gid_t grpslarge[5];
   int ngr = getgroups (5, grpslarge);
+  asm volatile ("" : : "r" (ngr));
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   char smallbuf[1];
   ngr = getgroups (5, (gid_t *) smallbuf);
+  asm volatile ("" : : "r" (ngr));
   CHK_FAIL_END
 #endif
 
@@ -1248,19 +1244,13 @@ do_test (void)
     {
       char enough[1000];
       if (ttyname_r (fd, enough, sizeof (enough)) != 0)
-	{
-	  puts ("first ttyname_r failed");
-	  ret = 1;
-	}
+	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
       CHK_FAIL_START
       char smallbuf[2];
       if (ttyname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
-	{
-	  puts ("second ttyname_r somehow suceeded");
-	  ret = 1;
-	}
+	FAIL ();
       CHK_FAIL_END
 #endif
       close (fd);
@@ -1286,10 +1276,12 @@ do_test (void)
 
   char domainnamelarge[1000];
   int res = getdomainname (domainnamelarge, sizeof (domainnamelarge));
+  asm volatile ("" : : "r" (res));
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   char smallbuf[1];
   res = getdomainname (smallbuf, sizeof (domainnamelarge));
+  asm volatile ("" : : "r" (res));
   CHK_FAIL_END
 #endif
 
