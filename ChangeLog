@@ -1,3 +1,7 @@
+2005-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Export Inotify_* syscalls.
+
 2005-08-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/bits/stdlib.h (mbstowcs): Divide __bos (__dst) by

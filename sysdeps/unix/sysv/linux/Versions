@@ -115,6 +115,9 @@ libc {
   GLIBC_2.3.4 {
     sched_getaffinity; sched_setaffinity;
   }
+  GLIBC_2.4 {
+    inotify_init; inotify_add_watch; inotify_rm_watch;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

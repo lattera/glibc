@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -53,10 +53,14 @@ timer_sigev_thread (void *arg)
 static void *
 timer_helper_thread (void *arg)
 {
-  /* Wait for the SIGTIMER signal and none else.  */
+  /* Wait for the SIGTIMER signal, allowing the setXid signal, and
+     none else.  */
   sigset_t ss;
   sigemptyset (&ss);
-  sigaddset (&ss, SIGTIMER);
+  __sigaddset (&ss, SIGTIMER);
+#ifdef SIGSETXID
+  __sigaddset (&ss, SIGSETXID);
+#endif
 
   /* Endless loop of waiting for signals.  The loop is only ended when
      the thread is canceled.  */
@@ -121,14 +125,17 @@ __start_helper_thread (void)
   (void) pthread_attr_init (&attr);
   (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
 
-  /* Block all signals in the helper thread.  To do this thoroughly we
-     temporarily have to block all signals here.  The helper can lose
-     wakeups if SIGCANCEL is not blocked throughout, but sigfillset omits
-     it.  So, we add it back explicitly here.  */
+  /* Block all signals in the helper thread but SIGSETXID.  To do this
+     thoroughly we temporarily have to block all signals here.  The
+     helper can lose wakeups if SIGCANCEL is not blocked throughout,
+     but sigfillset omits it.  So, we add it back explicitly here.  */
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
   __sigaddset (&ss, SIGCANCEL);
+#ifdef SIGSETXID
+  __sigdelset (&ss, SIGSETXID);
+#endif
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
 

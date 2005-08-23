@@ -1,3 +1,7 @@
+2005-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_routines.c: Don't block SIGSETXID ever.
+
 2005-07-11  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1102]
