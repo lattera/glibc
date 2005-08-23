@@ -63,6 +63,7 @@ struct database_dyn
   int check_file;
   int persistent;
   int shared;
+  size_t max_db_size;
   const char *filename;
   const char *db_filename;
   time_t file_mtime;
@@ -98,6 +99,12 @@ struct database_dyn
 #define BLOCK_ALIGN_LOG 3
 #define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
 #define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
+
+/* Default value for the maximum size of the database files.  */
+#define DEFAULT_MAX_DB_SIZE	(32 * 1024 * 1024)
+
+/* Number of bytes of data we initially reserve for each hash table bucket.  */
+#define DEFAULT_DATASIZE_PER_BUCKET 1024
 
 
 /* Global variables.  */
@@ -240,5 +247,15 @@ extern void gc (struct database_dyn *db);
 
 /* nscd_setup_thread.c */
 extern void setup_thread (struct database_dyn *db);
+
+
+/* Special version of TEMP_FAILURE_RETRY for functions returning error
+   values.  */
+#define TEMP_FAILURE_RETRY_VAL(expression) \
+  (__extension__							      \
+    ({ long int __result;						      \
+       do __result = (long int) (expression);				      \
+       while (__result == EINTR);					      \
+       __result; }))
 
 #endif /* nscd.h */

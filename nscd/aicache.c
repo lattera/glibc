@@ -399,7 +399,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       total = sizeof (notfound);
 
       if (fd != -1)
-	TEMP_FAILURE_RETRY (write (fd, &notfound, total));
+	TEMP_FAILURE_RETRY (send (fd, &notfound, total, MSG_NOSIGNAL));
 
       dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
       /* If we cannot permanently store the result, so be it.  */

@@ -188,7 +188,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
 	  if (fd != -1)
-	    written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
+	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+						MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
 	  /* If we cannot permanently store the result, so be it.  */

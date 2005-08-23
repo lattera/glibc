@@ -1,5 +1,32 @@
 2005-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connection.c (DEFAULT_DATASIZE_PER_BUCKET): Move to nscd.h.
+	(dbs): Initialize max_db_size fields.
+	(nscd_init): When mapping the database, use max_db_size as the
+	mapping size even if it is bigger than the file size.
+	* nscd/mem.c (mempool_alloc): When resizing the file make sure the
+	limit in max_db_size is not exceeded.  Don't use mremap, just
+	posix_fallocate is enough (according to Linus).  Use posix_fallocate
+	correctly.
+	* nscd/nscd.conf: Add max-db-size parameters.
+	* nscd/nscd.h (struct database_dyn): Add max_db_size field.
+	Define DEFAULT_MAX_DB_SIZE and DEFAULT_DATASIZE_PER_BUCKET.
+	Temporarily define TEMP_FAILURE_RETRY_VAL here.
+	* nscd/nscd_conf.c (nscd_parse_file): Parse max-db-size parameter
+	and add sanity checks for it.
+
+	* nscd/aicache.c (addhstaiX): Use send with MSG_NOSIGNAL not write to
+	send reply.
+	* nscd/connection.c (writeall): Likewise.
+	(handle_request): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/nscd.c (parse_opt): Likewise.
+	* nscd/nscd_stat.c (send_stats): Likewise.
+	(receive_print_stats): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+
 	* sysdeps/unix/sysv/linux/Versions: Export Inotify_* syscalls.
 
 2005-08-22  Jakub Jelinek  <jakub@redhat.com>

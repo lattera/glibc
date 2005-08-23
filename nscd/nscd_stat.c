@@ -133,7 +133,8 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
   if (selinux_enabled)
     nscd_avc_cache_stats (&data.cstats);
 
-  if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
+  if (TEMP_FAILURE_RETRY (send (fd, &data, sizeof (data), MSG_NOSIGNAL))
+      != sizeof (data))
     {
       char buf[256];
       dbg_log (_("cannot write statistics: %s"),
@@ -180,7 +181,8 @@ receive_print_stats (void)
   req.version = NSCD_VERSION;
   req.type = GETSTAT;
   req.key_len = 0;
-  nbytes = TEMP_FAILURE_RETRY (write (fd, &req, sizeof (request_header)));
+  nbytes = TEMP_FAILURE_RETRY (send (fd, &req, sizeof (request_header),
+				     MSG_NOSIGNAL));
   if (nbytes != sizeof (request_header))
     {
       int err = errno;

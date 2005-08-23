@@ -481,18 +481,26 @@ mempool_alloc (struct database_dyn *db, size_t len)
       if (! tried_resize)
 	{
 	  /* Try to resize the database.  Grow size of 1/8th.  */
-	  size_t new_data_size = db->head->data_size + db->head->data_size / 8;
 	  size_t oldtotal = (sizeof (struct database_pers_head)
 			     + db->head->module * sizeof (ref_t)
 			     + db->head->data_size);
+	  size_t new_data_size = (db->head->data_size
+				  + MAX (2 * len, db->head->data_size / 8));
 	  size_t newtotal = (sizeof (struct database_pers_head)
 			     + db->head->module * sizeof (ref_t)
 			     + new_data_size);
+	  if (newtotal > db->max_db_size)
+	    {
+	      new_data_size -= newtotal - db->max_db_size;
+	      newtotal = db->max_db_size;
+	    }
 
-	  if ((!db->mmap_used
-	       || posix_fallocate (db->wr_fd, oldtotal, newtotal) != 0)
-	      /* Try to resize the mapping.  Note: no MREMAP_MAYMOVE.  */
-	      && mremap (db->head, oldtotal, newtotal, 0) == 0)
+	  if (db->mmap_used && newtotal > oldtotal
+	      /* We only have to adjust the file size.  The new pages
+		 become magically available.  */
+	      && TEMP_FAILURE_RETRY_VAL (posix_fallocate (db->wr_fd, oldtotal,
+							  newtotal
+							  - oldtotal)) == 0)
 	    {
 	      db->head->data_size = new_data_size;
 	      tried_resize = true;

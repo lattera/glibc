@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -171,6 +171,17 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	  if (cnt == lastdb)
 	    dbg_log ("database %s is not supported\n", arg1);
 	}
+      else if (strcmp (entry, "max-db-size") == 0)
+	{
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		dbs[cnt].max_db_size = atol (arg2);
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("database %s is not supported\n", arg1);
+	}
       else if (strcmp (entry, "logfile") == 0)
 	set_logfile (arg1);
       else if (strcmp (entry, "debug-level") == 0)
@@ -289,6 +300,22 @@ cannot get current working directory: %s; disabling paranoia mode"),
   /* Enforce sanity.  */
   if (max_nthreads < nthreads)
     max_nthreads = nthreads;
+
+  for (cnt = 0; cnt < lastdb; ++cnt)
+    {
+      size_t datasize = (sizeof (struct database_pers_head)
+			 + roundup (dbs[cnt].suggested_module
+				    * sizeof (ref_t), ALIGN)
+			 + (dbs[cnt].suggested_module
+			    * DEFAULT_DATASIZE_PER_BUCKET));
+      if (datasize > dbs[cnt].max_db_size)
+	{
+	  dbg_log (_("maximum file size for %s database too small"),
+		   dbnames[cnt]);
+	  dbs[cnt].max_db_size = datasize;
+	}
+
+    }
 
   /* Free the buffer.  */
   free (line);

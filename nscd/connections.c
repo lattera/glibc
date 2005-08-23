@@ -48,10 +48,6 @@
 #include "selinux.h"
 
 
-/* Number of bytes of data we initially reserve for each hash table bucket.  */
-#define DEFAULT_DATASIZE_PER_BUCKET 1024
-
-
 /* Wrapper functions with error checking for standard functions.  */
 extern void *xmalloc (size_t n);
 extern void *xcalloc (size_t n, size_t s);
@@ -104,6 +100,7 @@ struct database_dyn dbs[lastdb] =
     .check_file = 1,
     .persistent = 0,
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -119,6 +116,7 @@ struct database_dyn dbs[lastdb] =
     .check_file = 1,
     .persistent = 0,
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
@@ -134,6 +132,7 @@ struct database_dyn dbs[lastdb] =
     .check_file = 1,
     .persistent = 0,
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
@@ -188,7 +187,7 @@ writeall (int fd, const void *buf, size_t len)
   ssize_t ret;
   do
     {
-      ret = TEMP_FAILURE_RETRY (write (fd, buf, n));
+      ret = TEMP_FAILURE_RETRY (send (fd, buf, n, MSG_NOSIGNAL));
       if (ret <= 0)
 	break;
       buf = (const char *) buf + ret;
@@ -473,8 +472,16 @@ nscd_init (void)
 			     _("file size does not match"));
 		    unlink (dbs[cnt].db_filename);
 		  }
-		else if ((mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
-				      MAP_SHARED, fd, 0)) == MAP_FAILED)
+		/* Note we map with the maximum size allowed for the
+		   database.  This is likely much larger than the
+		   actual file size.  This is OK on most OSes since
+		   extensions of the underlying file will
+		   automatically translate more pages available for
+		   memory access.  */
+		else if ((mem = mmap (NULL, dbs[cnt].max_db_size,
+				      PROT_READ | PROT_WRITE,
+				      MAP_SHARED, fd, 0))
+			 == MAP_FAILED)
 		  goto fail_db;
 		else if (!verify_persistent_db (mem, &head, cnt))
 		  {
@@ -638,8 +645,10 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 
 		if ((TEMP_FAILURE_RETRY (write (fd, &head, sizeof (head)))
 		     != sizeof (head))
-		    || posix_fallocate (fd, 0, total) != 0
-		    || (mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
+		    || (TEMP_FAILURE_RETRY_VAL (posix_fallocate (fd, 0, total))
+			!= 0)
+		    || (mem = mmap (NULL, dbs[cnt].max_db_size,
+				    PROT_READ | PROT_WRITE,
 				    MAP_SHARED, fd, 0)) == MAP_FAILED)
 		  {
 		  write_fail:
@@ -901,8 +910,9 @@ cannot handle old request version %d; current version is %d"),
       if (!db->enabled)
 	{
 	  /* No, sent the prepared record.  */
-	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
-					 db->disabled_iov->iov_len))
+	  if (TEMP_FAILURE_RETRY (send (fd, db->disabled_iov->iov_base,
+					db->disabled_iov->iov_len,
+					MSG_NOSIGNAL))
 	      != (ssize_t) db->disabled_iov->iov_len
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
