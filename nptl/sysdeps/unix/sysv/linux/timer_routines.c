@@ -58,9 +58,6 @@ timer_helper_thread (void *arg)
   sigset_t ss;
   sigemptyset (&ss);
   __sigaddset (&ss, SIGTIMER);
-#ifdef SIGSETXID
-  __sigaddset (&ss, SIGSETXID);
-#endif
 
   /* Endless loop of waiting for signals.  The loop is only ended when
      the thread is canceled.  */
@@ -128,14 +125,12 @@ __start_helper_thread (void)
   /* Block all signals in the helper thread but SIGSETXID.  To do this
      thoroughly we temporarily have to block all signals here.  The
      helper can lose wakeups if SIGCANCEL is not blocked throughout,
-     but sigfillset omits it.  So, we add it back explicitly here.  */
+     but sigfillset omits it SIGSETXID.  So, we add SIGCANCEL back
+     explicitly here.  */
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
   __sigaddset (&ss, SIGCANCEL);
-#ifdef SIGSETXID
-  __sigdelset (&ss, SIGSETXID);
-#endif
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
 
