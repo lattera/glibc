@@ -1,5 +1,10 @@
 2005-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd.c (main): Use error while process isn't running in the
+	background, not dbg_log.
+	* nscd/nscd_conf.c (nscd_parse_file): Likewise.
+	Mark messages with _().  Unify testing for database name.
+
 	* nscd/connection.c (DEFAULT_DATASIZE_PER_BUCKET): Move to nscd.h.
 	(dbs): Initialize max_db_size fields.
 	(nscd_init): When mapping the database, use max_db_size as the
@@ -27,7 +32,7 @@
 	(receive_print_stats): Likewise.
 	* nscd/pwdcache.c (cache_addpw): Likewise.
 
-	* sysdeps/unix/sysv/linux/Versions: Export Inotify_* syscalls.
+	* sysdeps/unix/sysv/linux/Versions: Export inotify_* syscalls.
 
 2005-08-22  Jakub Jelinek  <jakub@redhat.com>
 

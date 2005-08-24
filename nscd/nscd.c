@@ -150,12 +150,10 @@ main (int argc, char **argv)
 
   /* Read the configuration file.  */
   if (nscd_parse_file (conffile, dbs) != 0)
-    {
-      /* We couldn't read the configuration file.  We don't start the
-	 server.  */
-      dbg_log (_("cannot read configuration file; this is fatal"));
-      exit (1);
-    }
+    /* We couldn't read the configuration file.  We don't start the
+       server.  */
+    error (EXIT_FAILURE, 0,
+	   _("failure while reading configuration file; this is fatal"));
 
   /* Do we only get statistics?  */
   if (get_stats)
