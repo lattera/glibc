@@ -1,3 +1,20 @@
+2005-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c [!__STDC__]: Fix function name.
+
+2005-08-01  Bob Wilson  <bob.wilson@acm.org>
+        Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Add missing
+	exponent bias to the value for 2^126.
+
+2005-08-30  Jakub Jelinek  <jakub@redhat.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/dl-addr.c (_dl_addr): Use DL_ADDR_SYM_MATCH macro.
+	* sysdeps/generic/ldsodefs.h (DL_ADDR_SYM_MATCH): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ldsodefs.h: New file.
+
 2005-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (main): Use error while process isn't running in the

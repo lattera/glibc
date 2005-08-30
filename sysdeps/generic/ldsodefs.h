@@ -62,7 +62,7 @@ typedef struct link_map *lookup_t;
 # define LOOKUP_VALUE(map) map
 # define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
 
-/* on some architectures a pointer to a function is not just a pointer
+/* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
    specific descriptor. */
 #ifndef ELF_FUNCTION_PTR_IS_SPECIAL
@@ -72,6 +72,14 @@ typedef struct link_map *lookup_t;
 # define DL_DT_INIT_ADDRESS(map, start) (start)
 # define DL_DT_FINI_ADDRESS(map, start) (start)
 #endif
+
+/* On some architectures dladdr can't use st_size of all symbols this way.  */
+#define DL_ADDR_SYM_MATCH(L, SYM, MATCHSYM, ADDR) \
+  ((ADDR) >= (L)->l_addr + (SYM)->st_value				\
+   && (((SYM)->st_size == 0						\
+	&& (ADDR) == (L)->l_addr + (SYM)->st_value)			\
+       || (ADDR) < (L)->l_addr + (SYM)->st_value + (SYM)->st_size)	\
+   && ((MATCHSYM) == NULL || (MATCHSYM)->st_value < (SYM)->st_value))
 
 /* Unmap a loaded object, called by _dl_close (). */
 #ifndef DL_UNMAP_IS_SPECIAL

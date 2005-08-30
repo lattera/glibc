@@ -85,22 +85,15 @@ _dl_addr (const void *address, Dl_info *info,
 	   the string table which generally follows the symbol table.  */
 	symtabend = (const ElfW(Sym) *) strtab;
 
-      /* We assume that the string table follows the symbol table,
-	 because there is no way in ELF to know the size of the
-	 dynamic symbol table!!  */
       const ElfW(Sym) *matchsym;
       for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
-	if (addr >= match->l_addr + symtab->st_value
+	if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+	     || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
 #if defined USE_TLS
 	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
 #endif
-	    && ((symtab->st_size == 0
-		 && addr == match->l_addr + symtab->st_value)
-		|| addr < match->l_addr + symtab->st_value + symtab->st_size)
-	    && symtab->st_name < strtabsize
-	    && (matchsym == NULL || matchsym->st_value < symtab->st_value)
-	    && (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-		|| ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
+	    && DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
+	    && symtab->st_name < strtabsize)
 	  matchsym = (ElfW(Sym) *) symtab;
 
       if (mapp)
