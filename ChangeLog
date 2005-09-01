@@ -1,3 +1,9 @@
+2005-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h: Remove __wur from ungetc, sscanf, and vsscanf.
+	Add __wur to feof{,_unlocked}, ferror{,_unlocked},
+	fileno{,_unlocked}, and popen.
+
 2005-08-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/flt-32/e_hypotf.c [!__STDC__]: Fix function name.

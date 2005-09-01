@@ -399,7 +399,7 @@ extern int fscanf (FILE *__restrict __stream,
 extern int scanf (__const char *__restrict __format, ...) __wur;
 /* Read formatted input from S.  */
 extern int sscanf (__const char *__restrict __s,
-		   __const char *__restrict __format, ...) __THROW __wur;
+		   __const char *__restrict __format, ...) __THROW;
 __END_NAMESPACE_STD
 
 #ifdef	__USE_ISOC99
@@ -422,7 +422,7 @@ extern int vscanf (__const char *__restrict __format, _G_va_list __arg)
 /* Read formatted input from S into argument list ARG.  */
 extern int vsscanf (__const char *__restrict __s,
 		    __const char *__restrict __format, _G_va_list __arg)
-     __THROW __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
+     __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 __END_NAMESPACE_C99
 #endif /* Use ISO C9x.  */
 
@@ -594,7 +594,7 @@ extern int puts (__const char *__s);
 
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
-extern int ungetc (int __c, FILE *__stream) __wur;
+extern int ungetc (int __c, FILE *__stream);
 
 
 /* Read chunks of generic data from STREAM.
@@ -720,16 +720,16 @@ __BEGIN_NAMESPACE_STD
 /* Clear the error and EOF indicators for STREAM.  */
 extern void clearerr (FILE *__stream) __THROW;
 /* Return the EOF indicator for STREAM.  */
-extern int feof (FILE *__stream) __THROW;
+extern int feof (FILE *__stream) __THROW __wur;
 /* Return the error indicator for STREAM.  */
-extern int ferror (FILE *__stream) __THROW;
+extern int ferror (FILE *__stream) __THROW __wur;
 __END_NAMESPACE_STD
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
 extern void clearerr_unlocked (FILE *__stream) __THROW;
-extern int feof_unlocked (FILE *__stream) __THROW;
-extern int ferror_unlocked (FILE *__stream) __THROW;
+extern int feof_unlocked (FILE *__stream) __THROW __wur;
+extern int ferror_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
@@ -750,12 +750,12 @@ __END_NAMESPACE_STD
 
 #ifdef	__USE_POSIX
 /* Return the system file descriptor for STREAM.  */
-extern int fileno (FILE *__stream) __THROW;
+extern int fileno (FILE *__stream) __THROW __wur;
 #endif /* Use POSIX.  */
 
 #ifdef __USE_MISC
 /* Faster version when locking is not required.  */
-extern int fileno_unlocked (FILE *__stream) __THROW;
+extern int fileno_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
@@ -765,7 +765,7 @@ extern int fileno_unlocked (FILE *__stream) __THROW;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern FILE *popen (__const char *__command, __const char *__modes);
+extern FILE *popen (__const char *__command, __const char *__modes) __wur;
 
 /* Close a stream opened by popen and return the status of its child.
 
