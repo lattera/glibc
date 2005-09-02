@@ -1,3 +1,8 @@
+2005-08-22  Robert Millan  <robertmh@gnu.org>
+
+	* sysdeps/mach/hurd/nfs/nfs.h: Move to ...
+	* sysdeps/generic/nfs/nfs.h: ... here.
+
 2005-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Remove __wur from ungetc, sscanf, and vsscanf.
@@ -9,7 +14,7 @@
 	* sysdeps/ieee754/flt-32/e_hypotf.c [!__STDC__]: Fix function name.
 
 2005-08-01  Bob Wilson  <bob.wilson@acm.org>
-        Richard Sandiford  <richard@codesourcery.com>
+	    Richard Sandiford  <richard@codesourcery.com>
 
 	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Add missing
 	exponent bias to the value for 2^126.
