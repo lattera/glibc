@@ -1200,7 +1200,7 @@ cannot allocate TLS data structures for initial thread");
 	     handle the portion of the segment past the end of the file
 	     mapping.  */
 	  __mprotect ((caddr_t) (l->l_addr + c->mapend),
-		      loadcmds[nloadcmds - 1].allocend - c->mapend,
+		      loadcmds[nloadcmds - 1].mapstart - c->mapend,
 		      PROT_NONE);
 
 	goto postmap;
