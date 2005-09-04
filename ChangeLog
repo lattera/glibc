@@ -1,3 +1,13 @@
+2005-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile (tests): Add tst-put-error.
+	* stdio-common/tst-put-error.c: New file.
+	* libio/fileops.c (_IO_new_file_xsputn): If overflow fails and no more
+	data would have to be written signal error.
+	* libio/oldfileops.c (_IO_old_file_xsputn): Likewise.
+
+	* libio/fileops.c (_IO_new_file_overflow): Use NULL not 0.
+
 2005-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): No need to change

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -826,10 +826,10 @@ _IO_new_file_overflow (f, ch)
       return EOF;
     }
   /* If currently reading or no buffer allocated. */
-  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0 || f->_IO_write_base == 0)
+  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0 || f->_IO_write_base == NULL)
     {
       /* Allocate a buffer if needed. */
-      if (f->_IO_write_base == 0)
+      if (f->_IO_write_base == NULL)
 	{
 	  INTUSE(_IO_doallocbuf) (f);
 	  _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
@@ -1338,7 +1338,9 @@ _IO_new_file_xsputn (f, data, n)
       _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (_IO_OVERFLOW (f, EOF) == EOF)
-	return n - to_do;
+	/* If nothing else has to be written we must not signal the
+	   caller that everything has been written.  */
+	return to_do == 0 ? EOF : n - to_do;
 
       /* Try to maintain alignment: write a whole number of blocks.
 	 dont_write is what gets left over. */
