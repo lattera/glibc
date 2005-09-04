@@ -2029,8 +2029,8 @@ This is an integer data type.  Objects of this type are always accessed
 atomically.
 @end deftp
 
-In practice, you can assume that @code{int} and other integer types no
-longer than @code{int} are atomic.  You can also assume that pointer
+In practice, you can assume that @code{int} is atomic.
+You can also assume that pointer
 types are atomic; that is very convenient.  Both of these assumptions
 are true on all of the machines that the GNU C library supports and on
 all POSIX systems we know of.

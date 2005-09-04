@@ -1,5 +1,7 @@
 2005-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/bits/string.h: Removed.
+
 	* stdio-common/Makefile (tests): Add tst-put-error.
 	* stdio-common/tst-put-error.c: New file.
 	* libio/fileops.c (_IO_new_file_xsputn): If overflow fails and no more
