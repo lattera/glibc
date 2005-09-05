@@ -1,5 +1,9 @@
 2005-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/skeleton.c: Eliminate DEFINE_DIRECTION_OBJECTS macro use,
+	it wasn't used.  Remove use of from_object and to_object variable,
+	replace with some constants.  Adjust users.
+
 	* sysdeps/i386/bits/string.h: Removed.
 
 	* stdio-common/Makefile (tests): Add tst-put-error.

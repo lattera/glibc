@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -57,13 +57,6 @@
                         minimal/maximal number of bytes needed on output
                         of one round through the TO_LOOP.  Defaults
                         to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
-
-     DEFINE_DIRECTION_OBJECTS
-			two objects will be defined to be used when the
-			`gconv' function must only distinguish two
-			directions.  This is implied by DEFINE_INIT.
-			If this macro is not defined the following
-			macro must be available.
 
      FROM_DIRECTION	this macro is supposed to return a value != 0
 			if we convert from the current character set,
@@ -156,12 +149,11 @@
 #endif
 
 /* The direction objects.  */
-#if DEFINE_DIRECTION_OBJECTS || DEFINE_INIT
-static int from_object;
-static int to_object;
-
+#if DEFINE_INIT
 # ifndef FROM_DIRECTION
-#  define FROM_DIRECTION (step->__data == &from_object)
+#  define FROM_DIRECTION_VAL NULL
+#  define TO_DIRECTION_VAL ((void *) ~((uintptr_t) 0))
+#  define FROM_DIRECTION (step->__data == FROM_DIRECTION_VAL)
 # endif
 #else
 # ifndef FROM_DIRECTION
@@ -329,7 +321,7 @@ gconv_init (struct __gconv_step *step)
   /* Determine which direction.  */
   if (strcmp (step->__from_name, CHARSET_NAME) == 0)
     {
-      step->__data = &from_object;
+      step->__data = FROM_DIRECTION_VAL;
 
       step->__min_needed_from = FROM_LOOP_MIN_NEEDED_FROM;
       step->__max_needed_from = FROM_LOOP_MAX_NEEDED_FROM;
@@ -342,7 +334,7 @@ gconv_init (struct __gconv_step *step)
     }
   else if (__builtin_expect (strcmp (step->__to_name, CHARSET_NAME), 0) == 0)
     {
-      step->__data = &to_object;
+      step->__data = TO_DIRECTION_VAL;
 
       step->__min_needed_from = TO_LOOP_MIN_NEEDED_FROM;
       step->__max_needed_from = TO_LOOP_MAX_NEEDED_FROM;
