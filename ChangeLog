@@ -1,3 +1,12 @@
+2005-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
+	* configure.in: Compile source test file with -fPIC for -shared.
+
+2005-09-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_mutex_lock_wait):
+	Fix typo in register name.
+
 2005-09-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c: Eliminate DEFINE_DIRECTION_OBJECTS macro use,

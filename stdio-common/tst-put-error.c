@@ -17,7 +17,7 @@ do_test (void)
     error (EXIT_FAILURE, errno, "fdopen");
   setlinebuf (fp);
   close (fd);
-  unlink ("aaa");
+  unlink (tmpl);
   int n = fprintf (fp, "hello world\n");
   printf ("fprintf = %d\n", n);
   if (n >= 0)

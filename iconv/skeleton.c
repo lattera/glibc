@@ -157,7 +157,7 @@
 # endif
 #else
 # ifndef FROM_DIRECTION
-#  error "FROM_DIRECTION must be provided if direction objects are not used"
+#  error "FROM_DIRECTION must be provided if non-default init is used"
 # endif
 #endif
 
@@ -673,8 +673,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #ifdef RESET_INPUT_BUFFER
 		      RESET_INPUT_BUFFER;
 #else
-		      /* We have a problem with the in on of the functions
-			 below.  Undo the conversion upto the error point.  */
+		      /* We have a problem in one of the functions below.
+			 Undo the conversion upto the error point.  */
 		      size_t nstatus;
 
 		      /* Reload the pointers.  */
@@ -772,12 +772,11 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  STORE_REST
 # else
-	  size_t cnt;
-
 	  /* Make sure the remaining bytes fit into the state objects
              buffer.  */
 	  assert (inend - *inptrp < 4);
 
+	  size_t cnt;
 	  for (cnt = 0; *inptrp < inend; ++cnt)
 	    data->__statep->__value.__wchb[cnt] = *(*inptrp)++;
 	  data->__statep->__count &= ~7;
@@ -807,7 +806,6 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #undef TO_LOOP_MAX_NEEDED_FROM
 #undef TO_LOOP_MIN_NEEDED_TO
 #undef TO_LOOP_MAX_NEEDED_TO
-#undef DEFINE_DIRECTION_OBJECTS
 #undef FROM_DIRECTION
 #undef EMIT_SHIFT_TO_INIT
 #undef FROM_LOOP

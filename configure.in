@@ -1238,7 +1238,7 @@ EOF
 		 libc_cv_have_sdata_section,
 		 [echo "int i;" > conftest.c
 		  libc_cv_have_sdata_section=no
-		  if ${CC-cc} $LDFLAGS -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
+		  if ${CC-cc} $LDFLAGS -fPIC -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
 		     | grep '\.sdata' >/dev/null; then
 		    libc_cv_have_sdata_section=yes
 		  fi
@@ -1297,7 +1297,7 @@ EOF
 int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-		     -shared -o conftest.so conftest.c
+		     -fPIC -shared -o conftest.so conftest.c
 		     -nostartfiles -nostdlib
 		     -Wl,--enable-new-dtags,-z,nodelete 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1314,7 +1314,7 @@ EOF
 int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-shared -o conftest.so conftest.c
+			-fPIC -shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
 			-Wl,--enable-new-dtags,-z,nodlopen 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1331,7 +1331,7 @@ EOF
 int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-shared -o conftest.so conftest.c
+			-fPIC -shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
 			-Wl,--enable-new-dtags,-z,initfirst 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1363,7 +1363,7 @@ EOF
 int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -shared -o conftest.so conftest.c
+			      -fPIC -shared -o conftest.so conftest.c
 			      -Wl,-Bgroup -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_Bgroup=yes
@@ -1380,7 +1380,7 @@ int main (void) { return 0; }
 EOF
 changequote(,)dnl
   libc_cv_libgcc_s_suffix=`${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-			   -shared -shared-libgcc -o conftest.so \
+			   -fPIC -shared -shared-libgcc -o conftest.so \
 			   conftest.c -v 2>&1 >/dev/null \
 			   | sed -n 's/^.* -lgcc_s\([^ ]*\) .*$/\1/p'`
 changequote([,])dnl
@@ -1393,7 +1393,7 @@ changequote([,])dnl
 int main (void) { return 0; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -shared -o conftest.so conftest.c
+			      -fPIC -shared -o conftest.so conftest.c
 			      -lgcc_s$libc_cv_libgcc_s_suffix -Wl,--as-needed
 			      -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1434,7 +1434,7 @@ extern int mumble;
 int foo (void) { return bar (mumble); }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-shared -o conftest.so conftest.c
+			-fPIC -shared -o conftest.so conftest.c
 			-nostdlib -nostartfiles
 			-Wl,-z,combreloc 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1463,7 +1463,7 @@ dnl look for a section named .rel.dyn.
 int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -shared -o conftest.so conftest.c
+			      -fPIC -shared -o conftest.so conftest.c
 			      -Wl,-z,execstack -nostdlib
 			      1>&AS_MESSAGE_LOG_FD])
   then

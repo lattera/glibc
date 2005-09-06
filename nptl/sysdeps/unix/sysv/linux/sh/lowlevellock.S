@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,8 +51,8 @@ __lll_mutex_lock_wait:
 	SYSCALL_INST_PAD
 
 2:
-	mov	#2, r4
-	XCHG (r4, @r8, r2)
+	mov	#2, r6
+	XCHG (r6, @r8, r2)
 	tst	r2, r2
 	bf	1b
 
