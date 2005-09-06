@@ -35,7 +35,7 @@ static re_dfastate_t *create_cd_newstate (re_dfa_t *dfa,
 					  const re_node_set *nodes,
 					  unsigned int context,
 					  unsigned int hash) internal_function;
-static unsigned int inline calc_state_hash (const re_node_set *nodes,
+static inline unsigned int calc_state_hash (const re_node_set *nodes,
 					    unsigned int context) internal_function;
 
 /* Functions for string operation.  */
@@ -148,26 +148,26 @@ re_string_realloc_buffers (pstr, new_buf_len)
 #ifdef RE_ENABLE_I18N
   if (pstr->mb_cur_max > 1)
     {
-      wint_t *new_array = re_realloc (pstr->wcs, wint_t, new_buf_len);
-      if (BE (new_array == NULL, 0))
+      wint_t *new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
+      if (BE (new_wcs == NULL, 0))
 	return REG_ESPACE;
-      pstr->wcs = new_array;
+      pstr->wcs = new_wcs;
       if (pstr->offsets != NULL)
 	{
-	  int *new_array = re_realloc (pstr->offsets, int, new_buf_len);
-	  if (BE (new_array == NULL, 0))
+	  int *new_offsets = re_realloc (pstr->offsets, int, new_buf_len);
+	  if (BE (new_offsets == NULL, 0))
 	    return REG_ESPACE;
-	  pstr->offsets = new_array;
+	  pstr->offsets = new_offsets;
 	}
     }
 #endif /* RE_ENABLE_I18N  */
   if (pstr->mbs_allocated)
     {
-      unsigned char *new_array = re_realloc (pstr->mbs, unsigned char,
-					     new_buf_len);
-      if (BE (new_array == NULL, 0))
+      unsigned char *new_mbs = re_realloc (pstr->mbs, unsigned char,
+					   new_buf_len);
+      if (BE (new_mbs == NULL, 0))
 	return REG_ESPACE;
-      pstr->mbs = new_array;
+      pstr->mbs = new_mbs;
     }
   pstr->bufs_len = new_buf_len;
   return REG_NOERROR;
@@ -1227,12 +1227,12 @@ re_node_set_insert (set, elem)
   /* Realloc if we need.  */
   if (set->alloc == set->nelem)
     {
-      int *new_array;
+      int *new_elems;
       set->alloc = set->alloc * 2;
-      new_array = re_realloc (set->elems, int, set->alloc);
-      if (BE (new_array == NULL, 0))
+      new_elems = re_realloc (set->elems, int, set->alloc);
+      if (BE (new_elems == NULL, 0))
 	return -1;
-      set->elems = new_array;
+      set->elems = new_elems;
     }
 
   /* Move the elements which follows the new element.  Test the
@@ -1267,12 +1267,12 @@ re_node_set_insert_last (set, elem)
   /* Realloc if we need.  */
   if (set->alloc == set->nelem)
     {
-      int *new_array;
+      int *new_elems;
       set->alloc = (set->alloc + 1) * 2;
-      new_array = re_realloc (set->elems, int, set->alloc);
-      if (BE (new_array == NULL, 0))
+      new_elems = re_realloc (set->elems, int, set->alloc);
+      if (BE (new_elems == NULL, 0))
 	return -1;
-      set->elems = new_array;
+      set->elems = new_elems;
     }
 
   /* Insert the new element.  */
@@ -1349,11 +1349,11 @@ re_dfa_add_node (dfa, token)
       int *new_nexts, *new_indices;
       re_node_set *new_edests, *new_eclosures;
 
-      re_token_t *new_array = re_realloc (dfa->nodes, re_token_t,
+      re_token_t *new_nodes = re_realloc (dfa->nodes, re_token_t,
 					  new_nodes_alloc);
-      if (BE (new_array == NULL, 0))
+      if (BE (new_nodes == NULL, 0))
 	return -1;
-      dfa->nodes = new_array;
+      dfa->nodes = new_nodes;
       new_nexts = re_realloc (dfa->nexts, int, new_nodes_alloc);
       new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
       new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
@@ -1379,7 +1379,7 @@ re_dfa_add_node (dfa, token)
   return dfa->nodes_len++;
 }
 
-static unsigned int inline
+static inline unsigned int
 calc_state_hash (nodes, context)
      const re_node_set *nodes;
      unsigned int context;
@@ -1429,13 +1429,10 @@ re_acquire_state (err, dfa, nodes)
 
   /* There are no appropriate state in the dfa, create the new one.  */
   new_state = create_ci_newstate (dfa, nodes, hash);
-  if (BE (new_state != NULL, 1))
-    return new_state;
-  else
-    {
-      *err = REG_ESPACE;
-      return NULL;
-    }
+  if (BE (new_state == NULL, 0))
+    *err = REG_ESPACE;
+
+  return new_state;
 }
 
 /* Search for the state whose node_set is equivalent to NODES and
@@ -1477,13 +1474,10 @@ re_acquire_state_context (err, dfa, nodes, context)
     }
   /* There are no appropriate state in `dfa', create the new one.  */
   new_state = create_cd_newstate (dfa, nodes, context, hash);
-  if (BE (new_state != NULL, 1))
-    return new_state;
-  else
-    {
-      *err = REG_ESPACE;
-      return NULL;
-    }
+  if (BE (new_state == NULL, 0))
+    *err = REG_ESPACE;
+
+  return new_state;
 }
 
 /* Finish initialization of the new state NEWSTATE, and using its hash value

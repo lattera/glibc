@@ -721,7 +721,7 @@ expression into it by calling @code{regcomp}.
 
 @comment regex.h
 @comment POSIX.2
-@deftypefun int regcomp (regex_t *@var{compiled}, const char *@var{pattern}, int @var{cflags})
+@deftypefun int regcomp (regex_t *restrict @var{compiled}, const char *restrict @var{pattern}, int @var{cflags})
 The function @code{regcomp} ``compiles'' a regular expression into a
 data structure that you can use with @code{regexec} to match against a
 string.  The compiled regular expression format is designed for
@@ -870,7 +870,7 @@ unless the regular expression contains anchor characters (@samp{^} or
 
 @comment regex.h
 @comment POSIX.2
-@deftypefun int regexec (regex_t *@var{compiled}, char *@var{string}, size_t @var{nmatch}, regmatch_t @var{matchptr} @t{[]}, int @var{eflags})
+@deftypefun int regexec (const regex_t *restrict @var{compiled}, const char *restrict @var{string}, size_t @var{nmatch}, regmatch_t @var{matchptr}[restrict], int @var{eflags})
 This function tries to match the compiled regular expression
 @code{*@var{compiled}} against @var{string}.
 
@@ -1049,7 +1049,7 @@ the function @code{regerror} to turn it into an error message string.
 
 @comment regex.h
 @comment POSIX.2
-@deftypefun size_t regerror (int @var{errcode}, regex_t *@var{compiled}, char *@var{buffer}, size_t @var{length})
+@deftypefun size_t regerror (int @var{errcode}, const regex_t *restrict @var{compiled}, char *restrict @var{buffer}, size_t @var{length})
 This function produces an error message string for the error code
 @var{errcode}, and stores the string in @var{length} bytes of memory
 starting at @var{buffer}.  For the @var{compiled} argument, supply the

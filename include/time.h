@@ -94,7 +94,7 @@ enum ptime_locale_status { not, loc, raw };
 extern char * __strptime_internal (const char *rp, const char *fmt,
 				   struct tm *tm,
 				   enum ptime_locale_status *decided,
-				   int era_cnt, __locale_t loc)
+				   int era_cnt, __locale_t locparam)
      internal_function;
 
 extern double __difftime (time_t time1, time_t time0);

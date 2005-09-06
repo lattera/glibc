@@ -1237,8 +1237,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
     struct re_fail_stack_t *fs;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  int i, err, dest_node;
-  dest_node = -1;
+  int i, err;
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
       re_node_set *cur_nodes = &mctx->state_log[*pidx]->nodes;
@@ -1304,6 +1303,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
 
 	  if (naccepted == 0)
 	    {
+	      int dest_node;
 	      err = re_node_set_insert (eps_via_nodes, node);
 	      if (BE (err < 0, 0))
 		return -2;
@@ -1317,7 +1317,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
       if (naccepted != 0
 	  || check_node_accept (mctx, dfa->nodes + node, *pidx))
 	{
-	  dest_node = dfa->nexts[node];
+	  int dest_node = dfa->nexts[node];
 	  *pidx = (naccepted == 0) ? *pidx + 1 : *pidx + naccepted;
 	  if (fs && (*pidx > mctx->match_last || mctx->state_log[*pidx] == NULL
 		     || !re_node_set_contains (&mctx->state_log[*pidx]->nodes,
@@ -1395,6 +1395,7 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
   struct re_fail_stack_t *fs;
   struct re_fail_stack_t fs_body = { 0, 2, NULL };
   regmatch_t *prev_idx_match;
+  int prev_idx_match_malloced = 0;
 
 #ifdef DEBUG
   assert (nmatch > 1);
@@ -1413,7 +1414,18 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
   cur_node = dfa->init_node;
   re_node_set_init_empty (&eps_via_nodes);
 
-  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * nmatch);
+  if (__libc_use_alloca (nmatch * sizeof (regmatch_t)))
+    prev_idx_match = (regmatch_t *) alloca (nmatch * sizeof (regmatch_t));
+  else
+    {
+      prev_idx_match = re_malloc (regmatch_t, nmatch);
+      if (prev_idx_match == NULL)
+	{
+	  free_fail_stack_return (fs);
+	  return REG_ESPACE;
+	}
+      prev_idx_match_malloced = 1;
+    }
   memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * nmatch);
 
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
@@ -1431,6 +1443,8 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
 	      if (reg_idx == nmatch)
 		{
 		  re_node_set_free (&eps_via_nodes);
+		  if (prev_idx_match_malloced)
+		    re_free (prev_idx_match);
 		  return free_fail_stack_return (fs);
 		}
 	      cur_node = pop_fail_stack (fs, &idx, nmatch, pmatch,
@@ -1439,6 +1453,8 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
 	  else
 	    {
 	      re_node_set_free (&eps_via_nodes);
+	      if (prev_idx_match_malloced)
+		re_free (prev_idx_match);
 	      return REG_NOERROR;
 	    }
 	}
@@ -1452,6 +1468,8 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
 	  if (BE (cur_node == -2, 0))
 	    {
 	      re_node_set_free (&eps_via_nodes);
+	      if (prev_idx_match_malloced)
+		re_free (prev_idx_match);
 	      free_fail_stack_return (fs);
 	      return REG_ESPACE;
 	    }
@@ -1461,11 +1479,15 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
 	  else
 	    {
 	      re_node_set_free (&eps_via_nodes);
+	      if (prev_idx_match_malloced)
+		re_free (prev_idx_match);
 	      return REG_NOMATCH;
 	    }
 	}
     }
   re_node_set_free (&eps_via_nodes);
+  if (prev_idx_match_malloced)
+    re_free (prev_idx_match);
   return free_fail_stack_return (fs);
 }
 
@@ -2133,7 +2155,10 @@ sift_states_bkref (mctx, sctx, str_idx, candidates)
       enabled_idx = first_idx;
       do
 	{
-	  int subexp_len, to_idx, dst_node;
+	  int subexp_len;
+	  int to_idx;
+	  int dst_node;
+	  int ret;
 	  re_dfastate_t *cur_state;
 
 	  if (entry->node != node)
@@ -2159,8 +2184,8 @@ sift_states_bkref (mctx, sctx, str_idx, candidates)
 	    }
 	  local_sctx.last_node = node;
 	  local_sctx.last_str_idx = str_idx;
-	  err = re_node_set_insert (&local_sctx.limits, enabled_idx);
-	  if (BE (err < 0, 0))
+	  ret = re_node_set_insert (&local_sctx.limits, enabled_idx);
+	  if (BE (ret < 0, 0))
 	    {
 	      err = REG_ESPACE;
 	      goto free_return;
@@ -2388,7 +2413,7 @@ find_recover_state (err, mctx)
 
       cur_state = merge_state_with_log (err, mctx, NULL);
     }
-  while (err == REG_NOERROR && cur_state == NULL);
+  while (*err == REG_NOERROR && cur_state == NULL);
   return cur_state;
 }
 
@@ -3310,12 +3335,10 @@ build_trtable (dfa, state)
      from `state'.  `dests_node[i]' represents the nodes which i-th
      destination state contains, and `dests_ch[i]' represents the
      characters which i-th destination state accepts.  */
-#ifdef _LIBC
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX))
     dests_node = (re_node_set *)
       alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
   else
-#endif
     {
       dests_node = (re_node_set *)
 	malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
@@ -3349,13 +3372,11 @@ build_trtable (dfa, state)
   if (BE (err != REG_NOERROR, 0))
     goto out_free;
 
-#ifdef _LIBC
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX
 			 + ndests * 3 * sizeof (re_dfastate_t *)))
     dest_states = (re_dfastate_t **)
       alloca (ndests * 3 * sizeof (re_dfastate_t *));
   else
-#endif
     {
       dest_states = (re_dfastate_t **)
 	malloc (ndests * 3 * sizeof (re_dfastate_t *));

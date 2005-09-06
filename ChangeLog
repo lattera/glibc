@@ -1,3 +1,98 @@
+2005-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex_internal.h (re_sub_match_top_t): Remove unused member
+	next_last_offset.
+	(struct re_dfa_t): Remove unused member states_alloc.
+	* posix/regcomp.c (init_dfa): Don't initialize unused members.
+
+2005-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (set_regs): Don't alloca with an unbounded size.
+
+	alloca modernization/simplification for regex.
+	* posix/regex.c: Remove portability cruft for alloca.  This no longer
+	needs to be at the start of the file, and can be moved into
+	regex_internal.h and simplified.
+	* posix/regex_internal.h: Include <alloca.h>.
+	(__libc_use_alloca) [!defined _LIBC]: New macro.
+	* posix/regexec.c (build_trtable): Remove "#ifdef _LIBC",
+	since the code now works outside glibc.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/regex.h: Remove use of _RE_ARGS.
+
+2005-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (find_recover_state): Change "err" to "*err".
+
+2005-08-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (regerror): Pointer args are 'restrict',
+	as per POSIX.
+	* posix/regex.h (regerror): Likewise.
+	* manual/pattern.texi (POSIX Regexp Compilation): Likewise.
+	Similarly for regcomp and regexec.  Also, first 2 args of regexec
+	and 2nd arg of regerror are const.
+
+	* posix/regex.c: Do not include <sys/types.h>, as POSIX no longer
+	requires this.  (The code never needed it.)
+
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (sift_states_bkref): re_node_set_insert returns
+	int, not reg_errcode_t.
+
+	* posix/regex_internal.c (calc_state_hash): Put 'inline' before type,
+	since some broken compilers warn about it otherwise.
+
+	* posix/regcomp.c (create_initial_state): Remove duplicate decl.
+
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex.h (_RE_ARGS): Remove.  No longer needed, since we assume
+	C89 or better.  All uses removed.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Prevent using C++ compilers.
+
+2005-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (duplicate_node): Return new index, not an error
+	code, and let the caller return REG_ESPACE if out of space.  This
+	removes an uninitialied-variable warning with GCC 4.0.1, and also
+	avoids taking the address of a local variable.  All callers
+	changed.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/time.h (__strptime_internal): Rename parameter to avoid
+	bogus compiler warning.
+
+2005-08-19  Jim Meyering  <jim@meyering.net>
+
+	* posix/regexec.c (proceed_next_node): Redo local variables to
+	avoid GCC shadowing warnings.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_acquire_state): Minor code rearrangement.
+	(re_acquire_state_context): Likewise.
+
+2005-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex_internal.c (re_string_realloc_buffers):
+	(re_node_set_insert, re_node_set_insert_last, re_dfa_add_node):
+	Rename local variables to avoid GCC shadowing warnings.
+
+2005-07-08  Eric Blake  <ebb9@byu.net>
+            Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (init_dfa): Store __btowc value in wint_t, not
+	wchar_t.  Remove now-unnecessary cast.
+	(build_range_exp): Likewise.
+
 2005-08-31  Bob Wilson  <bob.wilson@acm.org>
 
 	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf):  Remove the
