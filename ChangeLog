@@ -1,3 +1,8 @@
+2005-08-31  Bob Wilson  <bob.wilson@acm.org>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf):  Remove the
+	exponent bias from the increment value for scaling by 2^60.
+
 2005-09-05  Alexandre Oliva  <aoliva@redhat.com>
 
 	* configure.in: Compile source test file with -fPIC for -shared.
