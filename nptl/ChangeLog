@@ -1,3 +1,8 @@
+2005-09-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_mutex_lock_wait):
+	Fix typo in register name.
+
 2005-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
