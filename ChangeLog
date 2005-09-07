@@ -1,4 +1,71 @@
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_string_reconstruct): Avoid calling
+	mbrtowc for very simple UTF-8 case.
+
+2005-09-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex_internal.c (build_wcs_upper_buffer): Fix portability
+	bugs in int versus size_t comparisons.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_acquire_state): Make DFA pointer arg
+	a pointer-to-const.
+	(re_acquire_state_context): Likewise.
+	* posix/regex_internal.h: Adjust prototypes.
+
+2005-08-31  Jim Meyering  <jim@meyering.net>
+
+	* posix/regcomp.c (search_duplicated_node): Make first pointer arg
+	a pointer-to-const.
+	* posix/regex_internal.c (create_ci_newstate, create_cd_newstate,
+	register_state): Likewise.
+	* posix/regexec.c (search_cur_bkref_entry, check_dst_limits):
+	(check_dst_limits_calc_pos_1, check_dst_limits_calc_pos):
+	(group_nodes_into_DFAstates): Likewise.
+
 2005-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (re_search_internal): Simplify update of
+	rm_so and rm_eo by replacing "if (A == B) A += C - B;"
+	with the equivalent of "if (A == B) A = C;".
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (re_compile_internal): Change third parameter type
+	to size_t.
+	(init_dfa): Likewise.  Make sure that arithmetic on pat_len doesn't
+	overflow.
+	* posix/regex_internal.h (struct re_dfa_t): Change type of nodes_alloc
+	and nodes_len to size_t.
+	* posix/regex_internal.c (re_dfa_add_node): Use size_t as type for
+	new_nodes_alloc.  Check for overflow.
+
+2005-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (re_compile_fastmap_iter, init_dfa, init_word_char):
+	(optimize_subexps, lower_subexp):
+	Don't assume 1<<31 has defined behavior on hosts with 32-bit int,
+	since the signed shift might overflow.  Use 1u<<31 instead.
+	* posix/regex_internal.h (bitset_set, bitset_clear, bitset_contain):
+	Likewise.
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Likewise.
+	(check_subexp_matching_top): Likewise.
+	* posix/regcomp.c (optimize_subexps, lower_subexp):
+	Use CHAR_BIT rather than 8, for clarity.
+	* posix/regexec.c (check_dst_limits_calc_pos_1):
+	(check_subexp_matching_top): Likewise.
+	* posix/regcomp.c (init_dfa): Make table_size unsigned, so that we
+	don't have to worry about portability issues when shifting it left.
+	Remove no-longer-needed test for table_size > 0.
+	* posix/regcomp.c (parse_sub_exp): Do not shift more bits than there
+	are in a word, as the resulting behavior is undefined.
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Likewise;
+	in one case, a <= should have been an <, and in another case the
+	whole test was missing.
+	* posix/regex_internal.h (BYTE_BITS): Remove.  All uses changed to
+	the standard name CHAR_BIT.
 
 	* posix/regex_internal.h (re_sub_match_top_t): Remove unused member
 	next_last_offset.
