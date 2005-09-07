@@ -2405,7 +2405,7 @@ find_recover_state (err, mctx)
      reg_errcode_t *err;
      re_match_context_t *mctx;
 {
-  re_dfastate_t *cur_state = NULL;
+  re_dfastate_t *cur_state;
   do
     {
       int max = mctx->state_log_top;
