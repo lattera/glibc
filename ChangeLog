@@ -1,3 +1,8 @@
+2005-09-07  Alexandre Oliva  <aoliva@redhat.com>
+
+	* timezone/test-tz.c: Update to match tzdata2005m.
+	* timezone/tst-timezone.c: Likewise.
+
 2005-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regexec.c (find_recover_state): Remove unnecessary
