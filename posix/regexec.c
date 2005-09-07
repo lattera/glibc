@@ -166,10 +166,10 @@ static reg_errcode_t check_arrival_add_next_nodes (re_match_context_t *mctx,
 						   int str_idx,
 						   re_node_set *cur_nodes,
 						   re_node_set *next_nodes) internal_function;
-static reg_errcode_t check_arrival_expand_ecl (re_dfa_t *dfa,
+static reg_errcode_t check_arrival_expand_ecl (const re_dfa_t *dfa,
 					       re_node_set *cur_nodes,
 					       int ex_subexp, int type) internal_function;
-static reg_errcode_t check_arrival_expand_ecl_sub (re_dfa_t *dfa,
+static reg_errcode_t check_arrival_expand_ecl_sub (const re_dfa_t *dfa,
 						   re_node_set *dst_nodes,
 						   int target, int ex_subexp,
 						   int type) internal_function;
@@ -2583,7 +2583,7 @@ transit_state_bkref (mctx, nodes)
     re_match_context_t *mctx;
     const re_node_set *nodes;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   int i;
   int cur_str_idx = re_string_cur_idx (&mctx->input);
@@ -2698,7 +2698,7 @@ get_subexp (mctx, bkref_node, bkref_str_idx)
      re_match_context_t *mctx;
      int bkref_node, bkref_str_idx;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   int subexp_num, sub_top_idx;
   const char *buf = (const char *) re_string_get_buffer (&mctx->input);
   /* Return if we have already checked BKREF_NODE at BKREF_STR_IDX.  */
@@ -2904,7 +2904,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
      state_array_t *path;
      int top_node, top_str, last_node, last_str, type;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   int subexp_num, backup_cur_idx, str_idx, null_cnt;
   re_dfastate_t *cur_state = NULL;
@@ -2920,7 +2920,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
       int old_alloc = path->alloc;
       path->alloc += last_str + mctx->max_mb_elem_len + 1;
       new_array = re_realloc (path->array, re_dfastate_t *, path->alloc);
-      if (new_array == NULL)
+      if (BE (new_array == NULL, 0))
 	{
 	  path->alloc = old_alloc;
 	  return REG_ESPACE;
@@ -2958,7 +2958,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
       if (cur_state && cur_state->has_backref)
 	{
 	  err = re_node_set_init_copy (&next_nodes, &cur_state->nodes);
-	  if (BE ( err != REG_NOERROR, 0))
+	  if (BE (err != REG_NOERROR, 0))
 	    return err;
 	}
       else
@@ -2970,7 +2970,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
 	{
 	  err = expand_bkref_cache (mctx, &next_nodes, str_idx,
 				    subexp_num, type);
-	  if (BE ( err != REG_NOERROR, 0))
+	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
 	      return err;
@@ -3001,7 +3001,8 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
       if (cur_state)
 	{
 	  err = check_arrival_add_next_nodes (mctx, str_idx,
-					      &cur_state->non_eps_nodes, &next_nodes);
+					      &cur_state->non_eps_nodes,
+					      &next_nodes);
 	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
@@ -3019,7 +3020,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
 	    }
 	  err = expand_bkref_cache (mctx, &next_nodes, str_idx,
 				    subexp_num, type);
-	  if (BE ( err != REG_NOERROR, 0))
+	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
 	      return err;
@@ -3141,7 +3142,7 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
 
 static reg_errcode_t
 check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, type)
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      re_node_set *cur_nodes;
      int ex_subexp, type;
 {
@@ -3160,7 +3161,7 @@ check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, type)
   for (idx = 0; idx < cur_nodes->nelem; ++idx)
     {
       int cur_node = cur_nodes->elems[idx];
-      re_node_set *eclosure = dfa->eclosures + cur_node;
+      const re_node_set *eclosure = dfa->eclosures + cur_node;
       outside_node = find_subexp_node (dfa, eclosure, ex_subexp, type);
       if (outside_node == -1)
 	{
@@ -3195,7 +3196,7 @@ check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, type)
 
 static reg_errcode_t
 check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, type)
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      int target, ex_subexp, type;
      re_node_set *dst_nodes;
 {

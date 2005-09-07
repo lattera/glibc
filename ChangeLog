@@ -2,6 +2,12 @@
 
 	* posix/regexec.c (find_recover_state): Remove unnecessary
 	initialization.
+	(transit_state_bkref): Make DFA a const pointer.
+	(get_subexp): Likewise.
+	(check_arrival): Likewise.
+	(check_arrival_expand_ecl): Mark DFA parameter as const.
+	(check_arrival_expand_ecl_sub): Likewise.
+	(check_arrival_expand_ecl): Mark eclosure as const.
 
 2005-09-06  Ulrich Drepper  <drepper@redhat.com>
 
