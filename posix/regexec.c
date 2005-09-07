@@ -179,7 +179,7 @@ static reg_errcode_t expand_bkref_cache (re_match_context_t *mctx,
 static int build_trtable (re_dfa_t *dfa,
 			  re_dfastate_t *state) internal_function;
 #ifdef RE_ENABLE_I18N
-static int check_node_accept_bytes (re_dfa_t *dfa, int node_idx,
+static int check_node_accept_bytes (const re_dfa_t *dfa, int node_idx,
 				    const re_string_t *input, int idx) internal_function;
 # ifdef _LIBC
 static unsigned int find_collation_sequence_value (const unsigned char *mbs,
@@ -374,8 +374,12 @@ re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
 
 	if (BE (s == NULL, 0))
 	  return -2;
+#ifdef _LIBC
+	memcpy (__mempcpy (s, string1, length1), string2, length2);
+#else
 	memcpy (s, string1, length1);
 	memcpy (s + length1, string2, length2);
+#endif
 	str = s;
 	free_str = 1;
       }
@@ -2232,7 +2236,7 @@ sift_states_iter_mb (mctx, sctx, node_idx, str_idx, max_str_idx)
     re_sift_context_t *sctx;
     int node_idx, str_idx, max_str_idx;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   int naccepted;
   /* Check the node can accept `multi byte'.  */
   naccepted = check_node_accept_bytes (dfa, node_idx, &mctx->input, str_idx);
@@ -2322,7 +2326,7 @@ merge_state_with_log (err, mctx, next_state)
      re_match_context_t *mctx;
      re_dfastate_t *next_state;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   int cur_idx = re_string_cur_idx (&mctx->input);
 
   if (cur_idx > mctx->state_log_top)
@@ -2468,7 +2472,7 @@ transit_state_sb (err, mctx, state)
      re_match_context_t *mctx;
      re_dfastate_t *state;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   re_node_set next_nodes;
   re_dfastate_t *next_state;
   int node_cnt, cur_str_idx = re_string_cur_idx (&mctx->input);
@@ -2508,7 +2512,7 @@ transit_state_mb (mctx, pstate)
     re_match_context_t *mctx;
     re_dfastate_t *pstate;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   int i;
 
@@ -3061,7 +3065,7 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
      int str_idx;
      re_node_set *cur_nodes, *next_nodes;
 {
-  re_dfa_t *const dfa = mctx->dfa;
+  const re_dfa_t *const dfa = mctx->dfa;
   int result;
   int cur_idx;
   reg_errcode_t err;
@@ -3741,9 +3745,9 @@ group_nodes_into_DFAstates (dfa, state, dests_node, dests_ch)
 
 static int
 check_node_accept_bytes (dfa, node_idx, input, str_idx)
-    re_dfa_t *dfa;
-    int node_idx, str_idx;
-    const re_string_t *input;
+     const re_dfa_t *dfa;
+     int node_idx, str_idx;
+     const re_string_t *input;
 {
   const re_token_t *node = dfa->nodes + node_idx;
   int char_len, elem_len;

@@ -1,5 +1,13 @@
 2005-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regexec.c (merge_state_with_log): Define dfa as const pointer.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(sift_states_iter_mb): Likewise.
+	(check_arrival_add_next_nodes): Likewise.
+	(check_node_accept_bytes): Change first parameter to pointer-to-const.
+	[_LIBC] (re_search_2_stub): Use mempcpy.
+
 	* posix/regex_internal.c (re_string_reconstruct): Avoid calling
 	mbrtowc for very simple UTF-8 case.
 
