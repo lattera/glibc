@@ -576,9 +576,9 @@ typedef struct
   /* The string object corresponding to the input string.  */
   re_string_t input;
 #if defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
-  re_dfa_t *const dfa;
+  const re_dfa_t *const dfa;
 #else
-  re_dfa_t *dfa;
+  const re_dfa_t *dfa;
 #endif
   /* EFLAGS of the argument of regexec.  */
   int eflags;

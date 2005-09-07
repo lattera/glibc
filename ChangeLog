@@ -5,9 +5,29 @@
 	(transit_state_bkref): Make DFA a const pointer.
 	(get_subexp): Likewise.
 	(check_arrival): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(re_search_internal): Likewise.
+	(prune_impossible_nodes): Likewise.
+	(acquire_init_state_context): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(free_fail_stack_return): Likewise.
 	(check_arrival_expand_ecl): Mark DFA parameter as const.
 	(check_arrival_expand_ecl_sub): Likewise.
+	(check_subexp_limits): Likewise.
+	(sub_epsilon_src_nodes):  Likewise.
+	(add_epsilon_src_nodes):  Likewise.
+	(merge_state_array): Likewise.
+	(update_regs): Likewise.
+	(build_trtable): Likewise.
+	(sift_states_backward): Mark MCTX parameter as const.
+	(build_sifted_states): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(sift_states_mkref): Likewise.
 	(check_arrival_expand_ecl): Mark eclosure as const.
+	(check_dst_limits_calc_pos_1): Likewise.
+	* posix/regex_internal.h (re_match_context_t): Make dfa a const
+	pointer.
 
 2005-09-06  Ulrich Drepper  <drepper@redhat.com>
 
