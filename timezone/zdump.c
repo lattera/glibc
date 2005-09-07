@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.65";
+static char	elsieid[] = "@(#)zdump.c	7.66";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -198,7 +198,6 @@ abbrok(abbr, zone)
 const char * const	abbr;
 const char * const	zone;
 {
-	register int		i;
 	register const char *	cp;
 	register char *		wp;
 

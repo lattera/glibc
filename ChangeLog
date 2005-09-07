@@ -1,5 +1,15 @@
 2005-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/africa: Update from tzdata2005m.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+	* timezone/zdump.c: Update from tzcode2005m.
+
 	* posix/regexec.c (merge_state_with_log): Define dfa as const pointer.
 	(transit_state_sb): Likewise.
 	(transit_state_mb): Likewise.
