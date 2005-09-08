@@ -30,6 +30,8 @@
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
 #define FUTEX_CMP_REQUEUE	4
+#define FUTEX_WAKE_OP		5
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -92,6 +94,27 @@
     register unsigned long int __r5 asm ("5") = (long int) (nr_move);	      \
     register unsigned long int __r6 asm ("6") = (unsigned long int) (mutex);  \
     register unsigned long int __r7 asm ("7") = (int) (val);		      \
+    register unsigned long __result asm ("2");				      \
+									      \
+    __asm __volatile ("svc %b1"						      \
+		      : "=d" (__result)					      \
+		      : "i" (SYS_futex), "0" (__r2), "d" (__r3),	      \
+			"d" (__r4), "d" (__r5), "d" (__r6), "d" (__r7)	      \
+		      : "cc", "memory" );				      \
+    __result > -4096UL;							      \
+  })
+
+
+/* Returns non-zero if error happened, zero if success.  */
+#define lll_futex_wake_unlock(futex, nr_wake, nr_wake2, futex2) \
+  ({									      \
+    register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
+    register unsigned long int __r3 asm ("3") = FUTEX_WAKE_OP;	      \
+    register unsigned long int __r4 asm ("4") = (long int) (nr_wake);	      \
+    register unsigned long int __r5 asm ("5") = (long int) (nr_wake2);	      \
+    register unsigned long int __r6 asm ("6") = (unsigned long int) (futex2); \
+    register unsigned long int __r7 asm ("7")				      \
+      = (int) FUTEX_OP_CLEAR_WAKE_IF_GT_ONE;				      \
     register unsigned long __result asm ("2");				      \
 									      \
     __asm __volatile ("svc %b1"						      \
