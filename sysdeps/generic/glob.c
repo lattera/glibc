@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -715,7 +715,7 @@ glob (pattern, flags, errfunc, pglob)
 		buflen = 20;
 	      name = (char *) __alloca (buflen);
 
-	      success = getlogin_r (name, buflen) >= 0;
+	      success = getlogin_r (name, buflen) == 0;
 #   else
 	      success = (name = getlogin ()) != NULL;
 #   endif
