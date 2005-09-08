@@ -1,3 +1,28 @@
+2005-07-11  Derek R. Price  <derek@ximbiot.com>
+
+	[BZ #1061]
+	* sysdeps/generic/glob.c (glob): Only a 0 return from
+	getlogin_r means success, according to POSIX 1003.2.
+
+2005-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1033]
+	* time/mktime.c: Import from gnulib.
+	The following macros are now consistent with other gnulib code.
+	This does not change mktime's behavior.
+	(TYPE_IS_INTEGER): New macro.
+	(time_t_is_integer): Use it.
+	(TYPE_TWOS_COMPLEMENT): New macro.
+	(twos_complement_arithmetic): Use it.
+	(TYPE_ONES_COMPLEMENT): New macro.
+	(TYPE_MINIMUM, TYPE_MAXIMUM): Now supports signed-magnitude.
+	mktime doesn't use this, but the code now matches other gnulib code.
+	(ranged_convert): Pacify GCC 4.0 in a different way, which
+	generates a few bytes less code.
+	(ranged_convert, __mktime_internal): When calling a function via a
+	pointer P, use P () rather than (*P) (), as we now assume C89 or
+	better.
+
 2005-09-07  Alexandre Oliva  <aoliva@redhat.com>
 
 	* timezone/test-tz.c: Update to match tzdata2005m.
