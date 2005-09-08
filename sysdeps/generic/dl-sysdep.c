@@ -393,7 +393,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		    cnt += *p++;
 		    ++p;	/* Skip mask word.  */
 		    dsocaps = (const char *) p;
-		    dsocapslen = note->datalen - sizeof *p;
+		    dsocapslen = note->datalen - sizeof *p * 2;
 		    break;
 		  }
 		note = ((const void *) (note + 1)
@@ -431,14 +431,23 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
   if (dsocaps != NULL)
     {
-      GLRO(dl_hwcap) |= ((uint64_t) ((const ElfW(Word) *) dsocaps)[-1]
-			 << _DL_FIRST_EXTRA);
-      for (const char *p = dsocaps;
-	   p < dsocaps + dsocapslen;
-	   p += temp[m++].len + 1)
+      const ElfW(Word) mask = ((const ElfW(Word) *) dsocaps)[-1];
+      GLRO(dl_hwcap) |= (uint64_t) mask << _DL_FIRST_EXTRA;
+      size_t len;
+      for (const char *p = dsocaps; p < dsocaps + dsocapslen; p += len + 1)
 	{
-	  temp[m].str = p;
-	  temp[m].len = strlen (p);
+	  uint_fast8_t bit = *p++;
+	  len = strlen (p);
+
+	  /* Skip entries that are not enabled in the mask word.  */
+	  if (__builtin_expect (mask & ((ElfW(Word)) 1 << bit), 1))
+	    {
+	      temp[m].str = p;
+	      temp[m].len = len;
+	      ++m;
+	    }
+	  else
+	    --cnt;
 	}
     }
 #endif
