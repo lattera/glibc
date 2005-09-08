@@ -1,3 +1,8 @@
+2005-09-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Decode DSOCAPS
+	properly, first byte is bit number in mask.  Skip disabled caps.
+
 2005-07-11  Derek R. Price  <derek@ximbiot.com>
 
 	[BZ #1061]
