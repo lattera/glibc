@@ -31,7 +31,9 @@
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-#define FUTEX_REQUEUE		3
+#define FUTEX_WAKE_OP		5
+
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
 
 #define EINVAL			22
 
@@ -66,9 +68,30 @@ __pthread_cond_signal:
 	addl	$1, (%rdi)
 
 	/* Wake up one thread.  */
-	movl	$FUTEX_WAKE, %esi
+	movl	$FUTEX_WAKE_OP, %esi
 	movl	$SYS_futex, %eax
 	movl	$1, %edx
+	movl	$1, %r10d
+#if cond_lock != 0
+	addq	$cond_lock, %r8
+#endif
+	movl	$FUTEX_OP_CLEAR_WAKE_IF_GT_ONE, %r9d
+	syscall
+#if cond_lock != 0
+	subq	$cond_lock, %r8
+#endif
+	/* For any kind of error, we try again with WAKE.
+	   The general test also covers running on old kernels.  */
+	cmpq	$-4095, %rax
+	jae	7f
+
+	xorl	%eax, %eax
+	retq
+
+7:	movl	$FUTEX_WAKE, %esi
+	movl	$SYS_futex, %eax
+	/* %rdx should be 1 already from $FUTEX_WAKE_OP syscall.
+	movl	$1, %edx  */
 	syscall
 
 	/* Unlock.  */

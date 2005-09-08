@@ -1,3 +1,29 @@
+2005-08-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	* sysdeps/pthread/pthread_cond_signal.c (__pthread_cond_signal): Use
+	lll_futex_wake_unlock.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S
+	(FUTEX_WAKE_OP, FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(__pthread_cond_signal): Use FUTEX_WAKE_OP.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
+	(FUTEX_WAKE_OP, FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(__pthread_cond_signal): Use FUTEX_WAKE_OP.
+
 2005-09-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_mutex_lock_wait):
