@@ -1,3 +1,10 @@
+2005-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1318]
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Free
+	normalized_codeset even if p was already normalized.
+	Reported by Jaroslav Snajdr <jsnajdr@kerio.com>.
+
 2005-09-08  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Decode DSOCAPS
