@@ -41,13 +41,10 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *netgrp,
 static void
 internal_nis_endnetgrent (struct __netgrent *netgrp)
 {
-  if (netgrp->data != NULL)
-    {
-      free (netgrp->data);
-      netgrp->data = NULL;
-      netgrp->data_size = 0;
-      netgrp->cursor = NULL;
-    }
+  free (netgrp->data);
+  netgrp->data = NULL;
+  netgrp->data_size = 0;
+  netgrp->cursor = NULL;
 }
 
 enum nss_status
@@ -64,8 +61,6 @@ _nss_nis_setnetgrent (const char *group, struct __netgrent *netgrp)
 
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
-
-  internal_nis_endnetgrent (netgrp);
 
   status = yperr2nss (yp_match (domain, "netgroup", group, strlen (group),
 				&netgrp->data, &len));
@@ -99,9 +94,6 @@ enum nss_status
 _nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
 			int *errnop)
 {
-  if (result->cursor == NULL)
-    return NSS_STATUS_NOTFOUND;
-
   return _nss_netgroup_parseline (&result->cursor, result, buffer, buflen,
 				  errnop);
 }

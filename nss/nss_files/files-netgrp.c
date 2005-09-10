@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_files modules.
-   Copyright (C) 1996, 1997, 2000, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include "nsswitch.h"
@@ -29,6 +30,7 @@
 
 #define DATAFILE	"/etc/netgroup"
 
+libnss_files_hidden_proto (_nss_files_endnetgrent)
 
 #define EXPAND(needed)							      \
   do									      \
@@ -75,7 +77,9 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
       status = NSS_STATUS_NOTFOUND;
       result->cursor = result->data;
 
-      while (!feof (fp))
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (!feof_unlocked (fp))
 	{
 	  ssize_t curlen = getline (&line, &line_len, fp);
 	  int found;
@@ -140,6 +144,9 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
       /* We don't need the file and the line buffer anymore.  */
       free (line);
       fclose (fp);
+
+      if (status != NSS_STATUS_SUCCESS)
+	_nss_files_endnetgrent (result);
     }
 
   return status;
@@ -150,16 +157,13 @@ int
 _nss_files_endnetgrent (struct __netgrent *result)
 {
   /* Free allocated memory for data if some is present.  */
-  if (result->data != NULL)
-    {
-      free (result->data);
-      result->data = NULL;
-      result->data_size = 0;
-      result->cursor = NULL;
-    }
-
+  free (result->data);
+  result->data = NULL;
+  result->data_size = 0;
+  result->cursor = NULL;
   return NSS_STATUS_SUCCESS;
 }
+libnss_files_hidden_def (_nss_files_endnetgrent)
 
 static char *
 strip_whitespace (char *str)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -141,13 +141,10 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
 static void
 internal_endnetgrent (struct __netgrent *netgrp)
 {
-  if (netgrp->data != NULL)
-    {
-      nis_freeresult ((nis_result *) netgrp->data);
-      netgrp->data = NULL;
-      netgrp->data_size = 0;
-      netgrp->position = 0;
-    }
+  nis_freeresult ((nis_result *) netgrp->data);
+  netgrp->data = NULL;
+  netgrp->data_size = 0;
+  netgrp->position = 0;
 }
 
 enum nss_status
@@ -160,8 +157,6 @@ _nss_nisplus_setnetgrent (const char *group, struct __netgrent *netgrp)
     return NSS_STATUS_UNAVAIL;
 
   status = NSS_STATUS_SUCCESS;
-
-  internal_endnetgrent (netgrp);
 
   sprintf (buf, "[name=%s],netgroup.org_dir", group);
 

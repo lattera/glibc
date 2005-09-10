@@ -1,5 +1,40 @@
 2005-09-09  Jakub Jelinek  <jakub@redhat.com>
 
+	* inet/getnetgrent_r.c: Include assert.
+	(setup): Remove FUNC_NAME and ALL arguments, assume they are always
+	"setnetgrent" and 1.
+	(endnetgrent_hook): New function.
+	(internal_endnetgrent): Use it.
+	(__internal_setnetgrent_reuse): Use it.  Adjust setup caller.
+	If status is NSS_STATUS_SUCCESS, yet action is continue, call
+	endnetgrent hook.
+	(internal_getnetgrent_r): Use __nss_lookup_function rather than
+	setup.  Recompute getfct pointer after successful
+	__internal_setnetgrent_reuse.  Don't use __nss_next.
+	(innetgr): Use __nss_lookup_function instead of __nss_lookup.
+	Adjust setup caller.
+	* nss/nss_files/files-netgrp.c (_nss_files_endnetgrent): Always clear
+	data_size and cursor.  Add libnss_files_hidden_proto and
+	libnss_files_hidden_def.
+	(_nss_files_setnetgrent): Call _nss_files_endnetgrent on failure.
+	* nis/nss_nis/nis-netgrp.c (internal_endnetgrent): Always clear
+	data_size and cursor.
+	(_nss_nis_setnetgrent): Don't call internal_endnetgrent.
+	(_nss_nis_getnetgrent_r): Remove result->cursor == NULL handling.
+	* nis/nss_nisplus/nisplus-netgrp.c (internal_endnetgrent): Always clear
+	data_size and position.
+	(_nss_nisplus_setnetgrent): Don't call internal_endnetgrent.
+
+2005-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (netgroup_keys): Call endnetgrent.
+	(main): Call mtrace.
+
+	* nss/nss_files/files-netgrp.c (_nss_files_setnetgrent): We don't
+	need locking for the stream.  Use feof_unlocked.
+
+2005-09-09  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #1318]
 	* locale/loadarchive.c (_nl_load_locale_from_archive): Free
 	normalized_codeset even if p was already normalized.

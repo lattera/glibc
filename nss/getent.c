@@ -21,22 +21,23 @@
 
 #include <aliases.h>
 #include <argp.h>
-#include <grp.h>
-#include <pwd.h>
-#include <shadow.h>
 #include <ctype.h>
 #include <error.h>
+#include <grp.h>
 #include <libintl.h>
 #include <locale.h>
+#include <mcheck.h>
 #include <netdb.h>
+#include <pwd.h>
+#include <shadow.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ether.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include <netinet/ether.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 /* Get libc version number.  */
 #include <version.h>
@@ -409,6 +410,8 @@ netgroup_keys (int number, char *key[])
 	  putchar_unlocked ('\n');
 	}
     }
+
+  endnetgrent ();
 
   return result;
 }
@@ -838,7 +841,8 @@ more_help (int key, const char *text, void *input)
 int
 main (int argc, char *argv[])
 {
-  int remaining, i;
+  /* Debugging support.  */
+  mtrace ();
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -846,6 +850,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   /* Parse and process arguments.  */
+  int remaining;
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   if ((argc - remaining) < 1)
@@ -855,7 +860,7 @@ main (int argc, char *argv[])
       return 1;
     }
 
-  for (i = 0; databases[i].name; ++i)
+  for (int i = 0; databases[i].name; ++i)
     if (argv[remaining][0] == databases[i].name[0]
 	&& !strcmp (argv[remaining], databases[i].name))
       return databases[i].func (argc - remaining - 1, &argv[remaining + 1]);
