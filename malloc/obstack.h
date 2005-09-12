@@ -1,5 +1,6 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988-1994,1996-1999,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1988-1994,1996-1999,2003,2004,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -446,7 +447,7 @@ __extension__								\
   (((const void **) ((h)->next_free += sizeof (void *)))[-1] = (aptr))
 
 # define obstack_int_grow_fast(h,aint)					\
-  (((int *) ((h)->next_free += sizeof (int)))[-1] = (aptr))
+  (((int *) ((h)->next_free += sizeof (int)))[-1] = (aint))
 
 # define obstack_blank(h,length)					\
 ( (h)->temp = (length),							\
