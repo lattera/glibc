@@ -1726,7 +1726,7 @@ struct malloc_chunk {
       mem-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             |             User data starts here...                          .
             .                                                               .
-            .             (malloc_usable_space() bytes)                     .
+            .             (malloc_usable_size() bytes)                      .
             .                                                               |
 nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             |             Size of chunk                                     |
@@ -3691,8 +3691,12 @@ public_cALLOc(size_t n, size_t elem_size)
 
   /* Two optional cases in which clearing not necessary */
 #if HAVE_MMAP
-  if (perturb_byte == 0 && chunk_is_mmapped(p))
-    return mem;
+  if (chunk_is_mmapped (p))
+    {
+      if (__builtin_expect (perturb_byte, 0))
+	MALLOC_ZERO (mem, sz);
+      return mem;
+    }
 #endif
 
   csz = chunksize(p);
