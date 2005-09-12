@@ -1,3 +1,10 @@
+2005-09-12  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1331]
+	* malloc/obstack.h [!__STDC__] (obstack_int_grow_fast): Fix misnamed
+	macro argument.
+	Reported by Matej Vela <vela@debian.org>.
+
 2005-09-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/malloc.c (struct malloc_chunk): Fix comment typo.
