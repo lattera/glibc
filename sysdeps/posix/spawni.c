@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000,2001,2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,15 @@ __spawni (pid_t *pid, const char *file,
   short int flags = attrp == NULL ? 0 : attrp->__flags;
 
   /* Generate the new process.  */
-  if (flags & POSIX_SPAWN_USEVFORK)
+  if ((flags & POSIX_SPAWN_USEVFORK) != 0
+      /* If no major work is done, allow using vfork.  Note that we
+	 might perform the path searching.  But this would be done by
+	 a call to execvp(), too, and such a call must be OK according
+	 to POSIX.  */
+      || ((flags & (POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSIGDEF
+		    | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER
+		    | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_RESETIDS)) == 0
+	  && file_actions == NULL))
     new_pid = __vfork ();
   else
     new_pid = __fork ();
