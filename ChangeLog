@@ -1,3 +1,8 @@
+2005-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/spawni.c (__spawni): Automatically recognize some
+	more cases when we can use vfork.
+
 2005-08-29  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
 	[BZ #1261]
