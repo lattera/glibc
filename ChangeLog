@@ -1,3 +1,9 @@
+2005-08-29  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	[BZ #1261]
+	* manual/memory.texi (Hooks for Malloc): Correct prototype of
+	my_init_hook and definition of my_free_hook.
+
 2005-09-12  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1331]

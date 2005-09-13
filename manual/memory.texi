@@ -948,7 +948,7 @@ program.
 #include <malloc.h>
 
 /* Prototypes for our hooks.  */
-static void *my_init_hook (void);
+static void my_init_hook (void);
 static void *my_malloc_hook (size_t, const void *);
 static void my_free_hook (void*, const void *);
 
@@ -984,7 +984,7 @@ my_malloc_hook (size_t size, const void *caller)
   return result;
 @}
 
-static void *
+static void
 my_free_hook (void *ptr, const void *caller)
 @{
   /* Restore all old hooks */
