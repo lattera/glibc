@@ -1,3 +1,8 @@
+2005-09-16  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1047]
+	* sysdeps/unix/sysv/linux/mips/getpagesize.c: New file.
+
 2005-09-16  Maciej W. Rozycki  <macro@linux-mips.org>
 
 	[BZ #933]
