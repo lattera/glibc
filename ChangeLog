@@ -1,3 +1,16 @@
+2005-09-16  Maciej W. Rozycki  <macro@linux-mips.org>
+
+	[BZ #933]
+	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Load the number of
+	the syscall immediately before invocation.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S (__ioctl): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S (syscall): Likewise.
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S (__ioctl): Use
+	macros to handle GP.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S (syscall):
+	Likewise.  Update inaccurate comments.
+
 2005-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/spawni.c (__spawni): Automatically recognize some

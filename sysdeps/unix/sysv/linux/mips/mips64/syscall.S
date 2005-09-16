@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,17 +20,20 @@
 
 #include <sys/asm.h>
 
-/* Please consult the file sysdeps/unix/sysv/linux/x86-64/sysdep.h for
-   more information about the value -4095 used below.  */
+/* Usage:
+   long syscall (syscall_number, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
-/* Usage: long syscall (syscall_number, arg1, arg2, arg3, arg4, arg5)
-   We need to do some arg shifting, the syscall_number will be in
-   rax.  */
+   We need to do some arg shifting, syscall_number will be in v0.  */
 
 
 	.text
-ENTRY (syscall)
-	move v0, a0		/* Syscall number -> v0 */
+NESTED (syscall, SZREG, ra)
+	.mask 0x00010000, -SZREG
+	.fmask 0x00000000, 0
+	PTR_ADDIU sp, -SZREG
+	REG_S s0, (sp)
+
+	move s0, a0
 	move a0, a1		/* shift arg1 - arg7.  */
 	move a1, a2
 	move a2, a3
@@ -39,15 +42,19 @@ ENTRY (syscall)
 	move a5, a6
 	move a6, a7
 
+	move v0, s0		/* Syscall number -> v0 */
 	syscall			/* Do the system call.  */
+
+	REG_L s0, (sp)
+	PTR_ADDIU sp, SZREG
 	bne a3, zero, L(error)
 
 	ret
 
 L(error):
-	.cpsetup t9, a0, syscall
-	PTR_LA t9,__syscall_error
-	.cprestore
+	SETUP_GP64 (a0, syscall)
+	PTR_LA t9, __syscall_error
+	RESTORE_GP64
 	jr t9
 
-PSEUDO_END (syscall)
+END (syscall)
