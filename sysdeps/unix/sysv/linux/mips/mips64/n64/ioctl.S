@@ -1,4 +1,4 @@
-/* Copyright 2003 Free Software Foundation, Inc.
+/* Copyright 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,16 +25,16 @@
 
 	.text
 ENTRY (__ioctl)
+	sll a1, a1, 0
 	li v0, __NR_ioctl
-	sll a1,a1,0
 	syscall			/* Do the system call.  */
 	bne a3, zero, L(error)
 	ret
 
 L(error):
-	.cpsetup t9, a0, __ioctl
-	PTR_LA t9,__syscall_error
-	.cprestore
+	SETUP_GP64 (a0, __ioctl)
+	PTR_LA t9, __syscall_error
+	RESTORE_GP64
 	jr t9
 
 PSEUDO_END (__ioctl)
