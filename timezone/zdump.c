@@ -12,6 +12,7 @@ static char	elsieid[] = "@(#)zdump.c	7.66";
 #include "time.h"	/* for struct tm */
 #include "stdlib.h"	/* for exit, malloc, atoi */
 #include "float.h"	/* for FLT_MAX and DBL_MAX */
+#include <ctype.h>	/* for isascii, isalpha, isdigit */
 
 #ifndef ZDUMP_LO_YEAR
 #define ZDUMP_LO_YEAR	(-500)

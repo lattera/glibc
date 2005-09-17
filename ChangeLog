@@ -1,3 +1,7 @@
+2005-09-17  Andreas Jaeger  <aj@suse.de>
+
+	* timezone/zdump.c: Include ctype.h.
+
 2005-09-16  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #1047]
