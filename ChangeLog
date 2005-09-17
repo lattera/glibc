@@ -1,3 +1,13 @@
+2005-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1051]
+	* wctype/wctype.h: Remove stray __END_NAMESPACE_C99.
+	* stdlib/stdlib.h: Use __END_NAMESPACE_STD instead of
+	__END_NAMESPACE_C99 in one place.
+	* scripts/begin-end-check.pl: New file.
+	Patch by Ralph Loader <suckfish@ihug.co.nz>.
+	* Makefile: Add rules to run scripts/begin-end-check.pl.
+
 2005-09-17  Andreas Jaeger  <aj@suse.de>
 
 	* timezone/zdump.c: Include ctype.h.
