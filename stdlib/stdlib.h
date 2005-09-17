@@ -188,7 +188,7 @@ extern long int strtol (__const char *__restrict __nptr,
 extern unsigned long int strtoul (__const char *__restrict __nptr,
 				  char **__restrict __endptr, int __base)
      __THROW __nonnull ((1)) __wur;
-__END_NAMESPACE_C99
+__END_NAMESPACE_STD
 
 #if defined __GLIBC_HAVE_LONG_LONG && defined __USE_BSD
 /* Convert a string to a quadword integer.  */
