@@ -1,5 +1,8 @@
 2005-09-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1010]
+	* sysdeps/unix/sockatmark.c (sockatmark): Use SIOCATMARK correctly.
+
 	[BZ #1053]
 	* debug/xtrace.sh: Add missing escape character in -? match.
 	Patch by Peter Breitenlohner <peb@mppmu.mpg.de>.
