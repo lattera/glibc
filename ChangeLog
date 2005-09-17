@@ -1,5 +1,9 @@
 2005-09-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1053]
+	* debug/xtrace.sh: Add missing escape character in -? match.
+	Patch by Peter Breitenlohner <peb@mppmu.mpg.de>.
+
 	[BZ #1051]
 	* wctype/wctype.h: Remove stray __END_NAMESPACE_C99.
 	* stdlib/stdlib.h: Use __END_NAMESPACE_STD instead of

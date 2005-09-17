@@ -107,7 +107,7 @@ while test $# -gt 0; do
   --d=* | --da=* | --dat=* | --data=*)
     data=${1##*=}
     ;;
-  -? | --h | --he | --hel | --help)
+  -\? | --h | --he | --hel | --help)
     do_help
     ;;
   -V | --v | --ve | --ver | --vers | --versi | --versio | --version)
