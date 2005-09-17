@@ -241,13 +241,63 @@ check-data := $(firstword $(wildcard \
 	        $(foreach M,$(config-machine) $(base-machine),\
 			  scripts/data/c++-types-$M-$(config-os).data)))
 ifneq (,$(check-data))
-$(objpfx)c++-types-check.out: $(check-data)
+$(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
 	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
 else
 $(objpfx)c++-types-check.out:
 	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
 	@echo "not run" > $@
 endif
+endif
+
+ifneq ($(PERL),no)
+installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
+		    crypt/crypt.h ctype/ctype.h debug/execinfo.h \
+		    dirent/dirent.h dlfcn/dlfcn.h elf/elf.h elf/link.h \
+		    gmon/sys/gmon.h gmon/sys/gmon_out.h gmon/sys/profil.h \
+		    grp/grp.h iconv/iconv.h iconv/gconv.h \
+		    $(wildcard inet/netinet/*.h) \
+		    $(wildcard inet/arpa/*.h inet/protocols/*.h) \
+		    inet/aliases.h inet/ifaddrs.h inet/netinet/ip6.h \
+		    inet/netinet/icmp6.h intl/libintl.h io/sys/stat.h \
+		    io/sys/statfs.h io/sys/vfs.h io/sys/statvfs.h \
+		    io/fcntl.h io/sys/fcntl.h io/poll.h io/sys/poll.h \
+		    io/utime.h io/ftw.h io/fts.h io/sys/sendfile.h \
+		    libio/stdio.h libio/libio.h locale/locale.h \
+		    locale/langinfo.h locale/xlocale.h login/utmp.h \
+		    login/lastlog.h login/pty.h malloc/malloc.h \
+		    malloc/obstack.h malloc/mcheck.h math/math.h \
+		    math/complex.h math/fenv.h math/tgmath.h misc/sys/uio.h \
+		    $(wildcard nis/rpcsvc/*.h) nptl_db/thread_db.h \
+		    nptl/sysdeps/pthread/pthread.h nptl/semaphore.h \
+		    nss/nss.h posix/sys/utsname.h posix/sys/times.h \
+		    posix/sys/wait.h posix/sys/types.h posix/unistd.h \
+		    posix/glob.h posix/regex.h posix/wordexp.h posix/fnmatch.h\
+		    posix/getopt.h posix/tar.h posix/sys/unistd.h \
+		    posix/sched.h posix/re_comp.h posix/wait.h \
+		    posix/cpio.h posix/spawn.h pwd/pwd.h resolv/resolv.h \
+		    resolv/netdb.h $(wildcard resolv/arpa/*.h) \
+		    resource/sys/resource.h resource/sys/vlimit.h \
+		    resource/sys/vtimes.h resource/ulimit.h rt/aio.h \
+		    rt/mqueue.h setjmp/setjmp.h shadow/shadow.h \
+		    signal/signal.h signal/sys/signal.h socket/sys/socket.h \
+		    socket/sys/un.h stdio-common/printf.h \
+		    stdio-common/stdio_ext.h stdlib/stdlib.h stdlib/alloca.h \
+		    stdlib/monetary.h stdlib/fmtmsg.h stdlib/ucontext.h \
+		    sysdeps/generic/inttypes.h sysdeps/generic/stdint.h \
+		    stdlib/errno.h stdlib/sys/errno.h string/string.h \
+		    string/strings.h string/memory.h string/endian.h \
+		    string/argz.h string/envz.h string/byteswap.h \
+		    $(wildcard sunrpc/rpc/*.h sunrpc/rpcsvc/*.h) \
+		    sysvipc/sys/ipc.h sysvipc/sys/msg.h sysvipc/sys/sem.h \
+		    sysvipc/sys/shm.h termios/termios.h \
+		    termios/sys/termios.h termios/sys/ttychars.h time/time.h \
+		    time/sys/time.h time/sys/timeb.h wcsmbs/wchar.h \
+		    wctype/wctype.h
+
+tests: $(objpfx)begin-end-check.out
+$(objpfx)begin-end-check.out: scripts/begin-end-check.pl
+	$(PERL) scripts/begin-end-check.pl $(installed-headers) > $@
 endif
 
 # The realclean target is just like distclean for the parent, but we want

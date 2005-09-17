@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,6 @@ typedef unsigned int wint_t;
 #  ifdef __USE_ISOC99
 __USING_NAMESPACE_C99(wint_t)
 #  endif
-__END_NAMESPACE_C99
 # endif
 
 /* Constant expression of type `wint_t' whose value does not correspond
