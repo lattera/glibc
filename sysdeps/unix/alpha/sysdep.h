@@ -242,9 +242,10 @@ __LABEL(name)						\
 	register long _sc_0 inline_syscall_r0_asm;		\
 	register long _sc_16 __asm__("$16");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
+	_sc_16 = _tmp_16;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3"				\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -261,10 +262,12 @@ __LABEL(name)						\
 	register long _sc_16 __asm__("$16");			\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -282,11 +285,14 @@ __LABEL(name)						\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -305,12 +311,16 @@ __LABEL(name)						\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -330,13 +340,18 @@ __LABEL(name)						\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
 	register long _sc_20 __asm__("$20");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
+	register long _tmp_20 = (long) (arg5);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
-	_sc_20 = (long) (arg5);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
+	_sc_20 = _tmp_20;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -357,14 +372,20 @@ __LABEL(name)						\
 	register long _sc_19 __asm__("$19");			\
 	register long _sc_20 __asm__("$20");			\
 	register long _sc_21 __asm__("$21");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
+	register long _tmp_20 = (long) (arg5);			\
+	register long _tmp_21 = (long) (arg6);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
-	_sc_20 = (long) (arg5);					\
-	_sc_21 = (long) (arg6);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
+	_sc_20 = _tmp_20;					\
+	_sc_21 = _tmp_21;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"		\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\

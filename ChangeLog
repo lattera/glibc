@@ -1,3 +1,13 @@
+2005-09-19  Richard Henderson  <rth@redhat.com>
+
+	[BZ #1358]
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall1): Copy argument(s)
+	to a temporary first.
+	(inline_syscall2, inline_syscall3, inline_syscall4): Likewise.
+	(inline_syscall5, inline_syscall6): Likewise.
+
+	* sysdeps/alpha/ldiv.S (lldiv): Add alias.
+
 2005-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1010]
