@@ -1,3 +1,12 @@
+2005-09-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Use execv, not execl.
+
+	[BZ #1346]
+	* elf/dl-load.c (_dl_map_object_from_fd) [HAVE_Z_RELRO]: Do relro
+	magic on __stack_prot only if [SHARED].  Skip mprotect if __stack_prot
+	lies outside the page-rounded-down relro region.
+
 2005-09-19  Richard Henderson  <rth@redhat.com>
 
 	[BZ #1358]

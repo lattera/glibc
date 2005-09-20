@@ -1,5 +1,5 @@
 /* Stub for ldd script to print Linux libc4 dependencies.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -84,5 +84,5 @@ main (int argc, char *argv[])
   putenv (buf);
 
   /* Now we can execute the binary.  */
-  return execl (filename, NULL) ? 4 : 0;
+  return execv (filename, &argv[argc]) ? 4 : 0;
 }
