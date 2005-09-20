@@ -1,3 +1,7 @@
+2005-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/dbg_log.c (init_logfile): Use fopen64 rather than fopen.
+
 2005-09-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Use execv, not execl.

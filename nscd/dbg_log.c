@@ -44,7 +44,7 @@ init_logfile (void)
 {
   if (logfilename)
     {
-      dbgout = fopen (logfilename, "a");
+      dbgout = fopen64 (logfilename, "a");
       return dbgout == NULL ? 0 : 1;
     }
   return 1;
