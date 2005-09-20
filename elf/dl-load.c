@@ -1354,22 +1354,36 @@ cannot allocate TLS data structures for initial thread");
 
   if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
     {
+      if (__builtin_expect (__check_caller (RETURN_ADDRESS (0), allow_ldso),
+			    0) != 0)
+	{
+	  errstring = N_("invalid caller");
+	  goto call_lose;
+	}
+
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
-#ifdef HAVE_Z_RELRO
+#if defined HAVE_Z_RELRO && defined SHARED
       if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
-	  uintptr_t p = ((uintptr_t) &__stack_prot) & ~(GLRO(dl_pagesize) - 1);
-	  size_t s = (uintptr_t) &__stack_prot - p + sizeof (int);
+	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
+	  const size_t s = (uintptr_t) (&__stack_prot + 1) - p;
 
-	  __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
-	  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
-						allow_ldso) == 0,
-				0))
+	  struct link_map *const m = &GL(dl_rtld_map);
+	  const uintptr_t relro_end = ((m->l_addr + m->l_relro_addr
+					+ m->l_relro_size)
+				       & -GLRO(dl_pagesize));
+	  if (__builtin_expect (p + s <= relro_end, 1))
+	    {
+	      /* The variable lies in the region protected by RELRO.  */
+	      __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
+	      __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
+	      __mprotect ((void *) p, s, PROT_READ);
+	    }
+	  else
 	    __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
-	  __mprotect ((void *) p, s, PROT_READ);
 	}
       else
 #endif
