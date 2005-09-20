@@ -214,3 +214,5 @@ $divbyzero:
 	ret
 
 	.end	ldiv
+
+weak_alias (ldiv, lldiv)
