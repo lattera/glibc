@@ -1,5 +1,9 @@
 2005-09-22  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-tsd.c (__libc_dl_error_tsd): Use attribute_tls_model_ie for
+	static __thread variable.
+	From Alexandre Oliva <aoliva@redhat.com>
+
 	* Makefile ($(objpfx)c++-types-check.out): Use $<, not $^, in command.
 	Reported by Alexandre Oliva <aoliva@redhat.com>.
 

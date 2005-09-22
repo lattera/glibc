@@ -1,3 +1,8 @@
+2005-09-22  Roland McGrath  <roland@redhat.com>
+
+	* perf.c [__x86_64__] (HP_TIMING_NOW): New macro (copied from
+	../sysdeps/x86_64/hp-timing.h).
+
 2005-08-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (FUTEX_WAKE_OP,
