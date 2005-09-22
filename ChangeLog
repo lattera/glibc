@@ -1,3 +1,9 @@
+2005-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1363]
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Remove incorrectly C&Ped
+	free call in code handling detection of GC runs.
+
 2005-09-22  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-tsd.c (__libc_dl_error_tsd): Use attribute_tls_model_ie for
