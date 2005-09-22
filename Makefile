@@ -242,7 +242,7 @@ check-data := $(firstword $(wildcard \
 			  scripts/data/c++-types-$M-$(config-os).data)))
 ifneq (,$(check-data))
 $(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
-	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
+	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
 else
 $(objpfx)c++-types-check.out:
 	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
