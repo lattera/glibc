@@ -227,8 +227,6 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	  mapped = NO_MAPPING;
 	}
 
-      free (resultbuf);
-
       goto retry;
     }
 
