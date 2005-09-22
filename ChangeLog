@@ -1,5 +1,8 @@
 2005-09-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1035]
+	* locale/iso-4217.def: Replace TRL entry with TRY for new Turkish Lira.
+
 	[BZ #1363]
 	* nscd/nscd_getpw_r.c (nscd_getpw_r): Remove incorrectly C&Ped
 	free call in code handling detection of GC runs.

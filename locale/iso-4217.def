@@ -151,7 +151,7 @@ DEFINE_INT_CURR("TJR")		/* Tajikistani Ruble  */
 DEFINE_INT_CURR("TMM")		/* Turkmenistan Manet  */
 DEFINE_INT_CURR("TND")		/* Tunisian Dinar  */
 DEFINE_INT_CURR("TOP")		/* Tonga Pa'Anga  */
-DEFINE_INT_CURR("TRL")		/* Turkish Lira  */
+DEFINE_INT_CURR("TRY")		/* New Turkish Lira  */
 DEFINE_INT_CURR("TTD")		/* Trinidad and Tobago  */
 DEFINE_INT_CURR("TVD")		/* Tuvalu Dollars  */
 DEFINE_INT_CURR("TWD")		/* Taiwan, Province of China Dollar  */
