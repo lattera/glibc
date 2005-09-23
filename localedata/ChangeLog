@@ -1,3 +1,10 @@
+2005-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add mg_MG and mg_MG.UTF-8.
+
+	[BZ #704]
+	* locales/mg_MG: New file.
+
 2005-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/hu_HU: Better collation.

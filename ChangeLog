@@ -1,5 +1,8 @@
 2005-09-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #704]
+	* locale/iso-4217.def: Replace MGF with MGA.
+
 	* iconvdata/jis0208.c (__jisx0208_from_ucs4_lat1): Reduce size of
 	array.
 	* iconvdata/jis0208.h (ucs4_to_jisx0208): Adjust access.

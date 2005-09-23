@@ -98,7 +98,7 @@ DEFINE_INT_CURR("LVL")		/* Latvia Lat  */
 DEFINE_INT_CURR("LYD")		/* Libyan Arab Jamahiriya Dinar  */
 DEFINE_INT_CURR("MAD")		/* Moroccan Dirham  */
 DEFINE_INT_CURR("MDL")		/* Moldova Lei  */
-DEFINE_INT_CURR("MGF")		/* Madagasy Franc  */
+DEFINE_INT_CURR("MGA")		/* Madagasy Ariary  */
 DEFINE_INT_CURR("MKD")		/* Macedonia Denar  */
 DEFINE_INT_CURR("MMK")		/* Myanmar Kyat  */
 DEFINE_INT_CURR("MNT")		/* Mongolia Tugrik  */
