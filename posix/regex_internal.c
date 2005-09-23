@@ -187,7 +187,7 @@ re_string_construct_common (str, len, pstr, trans, icase, dfa)
   pstr->raw_mbs = (const unsigned char *) str;
   pstr->len = len;
   pstr->raw_len = len;
-  pstr->trans = (unsigned RE_TRANSLATE_TYPE) trans;
+  pstr->trans = trans;
   pstr->icase = icase ? 1 : 0;
   pstr->mbs_allocated = (trans != NULL || icase);
   pstr->mb_cur_max = dfa->mb_cur_max;

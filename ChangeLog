@@ -1,5 +1,14 @@
 2005-09-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #281]
+	* posix/regex.h: Define RE_TRANSLATE_TYPE as unsigned char *.
+	* posix/regcomp.c: Remove unnecessary uses of
+	unsigned RE_TRANSLATE_TYPE.
+	* posix/regex_internal.h: Likewise.
+	* posix/regex_internal.c: Likewise.
+	* posix/regexexec.c: Likewise.
+	Based on a patch by Stepan Kasal <kasal@ucw.cz>.
+
 	[BZ #1035]
 	* locale/iso-4217.def: Replace TRL entry with TRY for new Turkish Lira.
 

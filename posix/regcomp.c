@@ -117,7 +117,7 @@ static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					re_charset_t *mbcset,
 					int *equiv_class_alloc,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
+static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
 				      re_bitset_ptr_t sbcset,
 				      re_charset_t *mbcset,
 				      int *char_class_alloc,
@@ -126,13 +126,13 @@ static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
 #else  /* not RE_ENABLE_I18N */
 static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
+static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
 				      re_bitset_ptr_t sbcset,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
 static bin_tree_t *build_charclass_op (re_dfa_t *dfa,
-				       unsigned RE_TRANSLATE_TYPE trans,
+				       RE_TRANSLATE_TYPE trans,
 				       const unsigned char *class_name,
 				       const unsigned char *extra,
 				       int non_match, reg_errcode_t *err);
@@ -3559,7 +3559,7 @@ build_charclass (trans, sbcset, mbcset, char_class_alloc, class_name, syntax)
 #else /* not RE_ENABLE_I18N */
 build_charclass (trans, sbcset, class_name, syntax)
 #endif /* not RE_ENABLE_I18N */
-     unsigned RE_TRANSLATE_TYPE trans;
+     RE_TRANSLATE_TYPE trans;
      re_bitset_ptr_t sbcset;
      const unsigned char *class_name;
      reg_syntax_t syntax;
@@ -3634,7 +3634,7 @@ build_charclass (trans, sbcset, class_name, syntax)
 static bin_tree_t *
 build_charclass_op (dfa, trans, class_name, extra, non_match, err)
      re_dfa_t *dfa;
-     unsigned RE_TRANSLATE_TYPE trans;
+     RE_TRANSLATE_TYPE trans;
      const unsigned char *class_name;
      const unsigned char *extra;
      int non_match;

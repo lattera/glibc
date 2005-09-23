@@ -657,7 +657,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 #endif
   char *fastmap = (preg->fastmap != NULL && preg->fastmap_accurate
 		   && range && !preg->can_be_null) ? preg->fastmap : NULL;
-  unsigned RE_TRANSLATE_TYPE t = (unsigned RE_TRANSLATE_TYPE) preg->translate;
+  RE_TRANSLATE_TYPE t = preg->translate;
 
 #if !(defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
   memset (&mctx, '\0', sizeof (re_match_context_t));
