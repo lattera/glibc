@@ -1,5 +1,5 @@
 /* Mapping tables for JIS0208 handling.
-   Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1783,12 +1783,20 @@ const uint16_t __jis0208_to_ucs[0x1e80] =
 };
 
 
-const char __jisx0208_from_ucs4_lat1[256][2] =
+const char __jisx0208_from_ucs4_lat1[JIS0208_LAT1_MAX + 1
+				     - JIS0208_LAT1_MIN][2] =
 {
-  [0x005C] = "\x21\x40", [0x00A2] = "\x21\x71", [0x00A3] = "\x21\x72",
-  [0x00A7] = "\x21\x78", [0x00A8] = "\x21\x2f", [0x00AC] = "\x22\x4c",
-  [0x00B0] = "\x21\x6B", [0x00B1] = "\x21\x5e", [0x00B4] = "\x21\x2d",
-  [0x00B6] = "\x22\x79", [0x00D7] = "\x21\x5f", [0x00F7] = "\x21\x60"
+  [0x00A2 - JIS0208_LAT1_MIN] = "\x21\x71",
+  [0x00A3 - JIS0208_LAT1_MIN] = "\x21\x72",
+  [0x00A7 - JIS0208_LAT1_MIN] = "\x21\x78",
+  [0x00A8 - JIS0208_LAT1_MIN] = "\x21\x2f",
+  [0x00AC - JIS0208_LAT1_MIN] = "\x22\x4c",
+  [0x00B0 - JIS0208_LAT1_MIN] = "\x21\x6B",
+  [0x00B1 - JIS0208_LAT1_MIN] = "\x21\x5e",
+  [0x00B4 - JIS0208_LAT1_MIN] = "\x21\x2d",
+  [0x00B6 - JIS0208_LAT1_MIN] = "\x22\x79",
+  [0x00D7 - JIS0208_LAT1_MIN] = "\x21\x5f",
+  [0x00F7 - JIS0208_LAT1_MIN] = "\x21\x60"
 };
 
 
