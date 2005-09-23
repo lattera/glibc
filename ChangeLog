@@ -1,3 +1,11 @@
+2005-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #394]
+	* libio/fmemopen.c (fmemopen_write): Return 0 instead of -1 if
+	nothing can be written.
+	* libio/iofopncook.c (_IO_cookie_write): If something went wrong,
+	set error bit.
+
 2005-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #281]

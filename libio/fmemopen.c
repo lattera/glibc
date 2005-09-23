@@ -127,7 +127,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
       if ((size_t) (c->pos + addnullc) == c->size)
 	{
 	  __set_errno (ENOSPC);
-	  return -1;
+	  return 0;
 	}
       s = c->size - c->pos - addnullc;
     }

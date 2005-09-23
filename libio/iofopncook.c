@@ -64,9 +64,16 @@ _IO_cookie_write (fp, buf, size)
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
 
   if (cfile->__io_functions.write == NULL)
-    return -1;
+    {
+      fp->_flags |= _IO_ERR_SEEN;
+      return 0;
+    }
 
-  return cfile->__io_functions.write (cfile->__cookie, buf, size);
+  _IO_ssize_t n = cfile->__io_functions.write (cfile->__cookie, buf, size);
+  if (n < size)
+    fp->_flags |= _IO_ERR_SEEN;
+
+  return n;
 }
 
 static _IO_off64_t
