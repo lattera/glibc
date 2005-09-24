@@ -2,16 +2,16 @@ comment_char %
 escape_char  /
 %
 % Tajik Language Locale for Tajikistan
-% Source:
+% Source: 
 % Contact: Pablo Saratxaga, Roger Kovacs
 % Email: <pablo@mandrakesoft.com>, <ROGERKO@micromotion.com>
 % Language: tg
 % Territory: TJ
-% Revision: 0.3
-% Date: 2001-01-28
+% Revision: 0.4
+% Date: 2004-01-09
 % Application: general
 % Users: general
-% Charset: KOI8-T
+% Charset: UTF-8
 % Distribution and use is free, also
 % for commercial purposes.
 
@@ -31,8 +31,8 @@ tel ""
 fax ""
 language "Tajik"
 territory "Tajikistan"
-revision "0.3"
-date "2001-01-28"
+revision "0.4"
+date "2004-01-09"
 
 category "tg_TJ:2000";LC_IDENTIFICATION
 category "tg_TJ:2000";LC_CTYPE
@@ -121,7 +121,7 @@ END LC_COLLATE
 LC_MESSAGES
 yesstr  "<U0434><U0430>"
 nostr   "<U043D><U0435><U0442>"
-yesexpr "<U005E><U005B><U0414><U0434><U0059><U0079><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U04B2><U04B3><U0425><U0445><U0414><U0434><U0059><U0079><U005D><U002E><U002A>"
 noexpr  "<U005E><U005B><U041D><U043D><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
@@ -227,3 +227,4 @@ LC_TELEPHONE
 % FIXME
 copy "en_DK"
 END LC_TELEPHONE
+
