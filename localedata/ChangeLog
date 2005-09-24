@@ -1,5 +1,8 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #665]
+	* locales/sq_AL: Add language specific collation.
+
 	[BZ #663]
 	* locales/bs_BA: Don't comment out reorder-after.  Fix tel_int_fmt.
 
