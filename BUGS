@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <02/09/30 13:49:48 drepper>
+Time-stamp: <2005-09-23 13:25:42 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -10,7 +10,7 @@ of these bugs/limitations I'll certainly be glad to receive a patch.
 Another source of information about bugs is the problem data base of the
 GNU project.  There is an easy to use WWW interface available at
 
-       http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl
+       http://sourceware.org/bugzilla/
 
 I would appreciate it very much if you could verify the problem was not
 reported before by looking through the database.  To make the information
@@ -27,18 +27,8 @@ Severity: [  *] to [***]
 [ **]  Closing shared objects in statically linked binaries most of the
        times leads to crashes during the dlopen().  Hard to fix.
 
-[ **]  There are problems with signal handling when using LinuxThreads.
-
 [ **]  The RPC code is not 64 bit clean.  This is getting slowly fixed
        but expect incompatible changes on 64 bit platforms like Alpha.
-
-[ **]  If a DSO is using implicitly libpthread and the application itself
-       does not there is a name lookup problem.  E.g., the function fork()
-       will be found in the libc.so instead of libpthread since the thread
-       library is behind the libc.  To correct this problem it must *not*
-       be relied on the currently still enabled handling of weak symbols
-       in the dynamic linker.  Instead explicit tests for the availability
-       of the libpthread version are needed.  [PR libc/2325]
 
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.

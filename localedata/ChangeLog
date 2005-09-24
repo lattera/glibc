@@ -1,3 +1,10 @@
+2005-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add be_BY@latin.
+
+	[BZ #1347]
+	* locales/be_BY@latin: New file.
+
 2005-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add mg_MG and mg_MG.UTF-8.
