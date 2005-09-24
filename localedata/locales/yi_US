@@ -1,7 +1,10 @@
 comment_char %
 escape_char  /
-% charset "CP1255"
+% charset "UTF-8"
 % Distribution and use is free, also for commercial purposes.
+%
+% 2003-08-16: corrections from Raphael Finkel <raphael@cs.uky.edu>
+%
 
 LC_IDENTIFICATION
 title "Yiddish Language locale"
@@ -13,8 +16,8 @@ tel ""
 fax ""
 language "Yiddish"
 territory "USA"
-revision "0.3"
-date "2001-01-28"
+revision "0.4"
+date "2003-08-16"
 
 category "yi_US:2000";LC_IDENTIFICATION
 category "yi_US:2000";LC_COLLATE
@@ -39,15 +42,15 @@ LC_ADDRESS
 postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
 <U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% FIXME country_name "United States" in Yiddish?
-% FIXME country_post "US" for United States?
+country_name "<U05D3><U05D9><U0020><U05E4><U05BF><U05D0><U05E8><U05D0><U05F2><U05E0><U05D9><U05E7><U05D8><U05E2><U0020><U05E9><U05D8><U05D0><U05B7><U05D8><U05DF>"
+country_post "USA"
 country_ab2 "US"
 country_ab3 "USA"
 country_num 840
 country_car "USA"
 % FIXME Check which isbn for Yiddish in USA
 country_isbn "0"
-% FIXME lang_name yiddish in yiddish?
+lang_name "<U05D9><U05D9><U05B4><U05D3><U05D9><U05E9>"
 lang_ab "yi"
 lang_term "yid"
 lang_lib "yid"
@@ -96,19 +99,19 @@ reorder-after <shin>
 <t-m-yi>
 
 reorder-after <U05D1>
-<B+'H->	<b-h-yi>;<PCT>;<MIN>;IGNORE
+<B+'H->	<b-h-yi>;<PCT>;IGNORE;IGNORE
 reorder-after <U05D5>
-<05F0>	"<vav><vav>";"<LIG><LIG>";IGNORE;IGNORE
-<05F1>	"<vav><yod>";"<LIG><LIG>";IGNORE;IGNORE
+<U05F0>	"<vav><vav>";"<LIG><LIG>";IGNORE;IGNORE
+<U05F1>	"<vav><yod>";"<LIG><LIG>";IGNORE;IGNORE
 reorder-after <U05D9>
-<05F2>	"<yod><yod>";"<LIG><LIG>";IGNORE;IGNORE
-<K+.MH>	<k-m-yi>;<PCT>;<MIN>;IGNORE
+<U05F2>	"<yod><yod>";"<LIG><LIG>";IGNORE;IGNORE
+<K+.MH>	<k-m-yi>;<PCT>;IGNORE;IGNORE
 reorder-after <U05E2>
-<P+.MH>	<p-m-yi>;<PCT>;<MIN>;IGNORE
-<P+'H->	<p-h-yi>;<PCT>;<MIN>;IGNORE
+<P+.MH>	<p-m-yi>;<PCT>;IGNORE;IGNORE
+<P+'H->	<p-h-yi>;<PCT>;IGNORE;IGNORE
 reorder-after <U05E9>
-<Sh'H.L>	<s-h-yi>;<PCT>;<MIN>;IGNORE
-<T+.MH>	<t-m-yi>;<PCT>;<MIN>;IGNORE
+<Sh'H.L>	<s-h-yi>;<PCT>;IGNORE;IGNORE
+<T+.MH>	<t-m-yi>;<PCT>;IGNORE;IGNORE
 
 reorder-end
 
@@ -166,17 +169,17 @@ mon     "<U05D9><U05D0><U05B7><U05E0><U05D5><U05D0><U05B7><U05E8>";/
         "<U05DE><U05F2><U05B7>";/
         "<U05D9><U05D5><U05E0><U05D9>";/
         "<U05D9><U05D5><U05DC><U05D9>";/
-        "<U05D0><U05F1><U05D2><U05E1><U05D8>";/
+        "<U05D0><U05F1><U05D2><U05D5><U05E1><U05D8>";/
         "<U05E1><U05E2><U05E4><U05BC><U05D8><U05E2><U05DE><U05D1><U05E2><U05E8>";/
         "<U05D0><U05B8><U05E7><U05D8><U05D0><U05B8><U05D1><U05E2><U05E8>";/
-        "<U05E0><U0041><U05B8><U05F0><U05E2><U05DE><U05D1><U05E2><U05E8>";/
-        "<U05D3><U05E6><U05DE><U05D1><U05E8>"
-abmon   "<U05D9><U05D0><U05B7><U05E0><U0027>";"<U05E4><U05BF><U05E2><U05D1><U0027>";/
-        "<U05DE><U05D0><U05B7><U05E8><U0027>";"<U05D0><U05B7><U05E4><U05BC><U05E8><U0027>";/
-        "<U05DE><U05F2><U05B7>";"<U05D9><U05D5><U05E0><U0027>";/
-        "<U05D9><U05D5><U05DC><U0027>";"<U05D0><U05F1><U05D2><U0027>";/
-        "<U05E1><U05E2><U05E4><U05BC><U0027>";"<U05D0><U05B8><U05E7><U05D8><U0027>";/
-        "<U05E0><U05D0><U05B8><U05F0><U0027>";"<U05D3><U05E2><U05E6><U0027>"
+        "<U05E0><U05D0><U05B8><U05F0><U05E2><U05DE><U05D1><U05E2><U05E8>";/
+        "<U05D3><U05E2><U05E6><U05E2><U05DE><U05D1><U05E2><U05E8>"
+abmon   "<U05D9><U05D0><U05B7><U05E0>";"<U05E4><U05BF><U05E2><U05D1>";/
+        "<U05DE><U05D0><U05B7><U05E8>";"<U05D0><U05B7><U05E4><U05BC><U05E8>";/
+        "<U05DE><U05F2><U05B7><U0020>";"<U05D9><U05D5><U05E0>";/
+        "<U05D9><U05D5><U05DC>";"<U05D0><U05F1><U05D2>";/
+        "<U05E1><U05E2><U05E4><U05BC>";"<U05D0><U05B8><U05E7><U05D8>";/
+        "<U05E0><U05D0><U05B8><U05F0>";"<U05D3><U05E2><U05E6>"
 d_t_fmt "<U0025><U005A><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0025><U0061>"
 d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
 t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
@@ -188,7 +191,7 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "<U005E><U005B><U0059><U0079><U05D9><U005D><U002E><U002A>"
 noexpr  "<U005E><U005B><U004E><U006E><U05E0><U05E7><U005D><U002E><U002A>"
-yesstr	"<U05D9><U05D0><U05B7>"
+yesstr	"<U05D9><U05D0><U05B8>"
 nostr	"<U05E7><U05F2><U05DF>"
 END LC_MESSAGES
 
