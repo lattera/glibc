@@ -2,16 +2,16 @@ comment_char %
 escape_char  /
 %
 % Azeri Language Locale for Azerbaijan (latin)
-% Source:
+% Source: 
 % Contact: Pablo Saratxaga
 % Email: <pablo@mandrakesoft.com>
 % Language: az
 % Territory: AZ
-% Revision: 0.4
-% Date: 2001-01-26
+% Revision: 0.6
+% Date: 2003-12-06
 % Application: general
 % Users: general
-% Charset: ISO-8859-9E
+% Charset: UTF-8
 % Distribution and use is free, also
 % for commercial purposes.
 
@@ -44,11 +44,11 @@ END LC_IDENTIFICATION
 
 %
 % TODO: check LC_COLLATE
-% TODO: fix LC_TIME, LC_MONETARY
+% TODO: fix LC_MONETARY
 
 LC_COLLATE
-% The new (1991) latin azeri alphabet is:
-% <a>, <b>, <c>, <c,>, <d>, <e>, <sw>, <f>, <g>, <g(>, <h>, <x>,
+% The new (1991) latin azeri alphabet is:       
+% <a>, <b>, <c>, <c,>, <d>, <e>, <sw>, <f>, <g>, <g(>, <h>, <x>, 
 % <i> (dotless i), <i.> (i with dot), <j>, <k>, <q>, <l>, <m>, <n>, <o>,
 % <o:>, <p>, <r>, <s>, <s,>, <t>, <u>, <u:>, <v>, <y>, <z>
 %
@@ -189,6 +189,15 @@ END LC_COLLATE
 LC_CTYPE
 %copy "i18n"
 copy "tr_TR"
+translit_start
+include "translit_combining";""
+
+% schwa -> a:
+<U0259> "<U00E4>"
+<U018F> "<U00C4>"
+
+translit_end
+
 END LC_CTYPE
 
 LC_MESSAGES
@@ -225,19 +234,19 @@ END LC_NUMERIC
 
 LC_TIME
 day     "<U0062><U0061><U007A><U0061><U0072><U0020><U0067><U00FC><U006E><U00FC>";/
-        "<U0062><U0069><U0072><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U0069><U006B><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U00FC><U00E7><U00FC><U006E><U0063><U00FC><U0020><U0067><U00FC><U006E>";/
-        "<U0064><U00F6><U0072><U0064><U00FC><U006E><U0063><U00FC><U0020><U0067><U00FC><U006E>";/
-        "<U0062><U0065><U015F><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U0061><U006C><U0074><U0131><U006E><U0063><U0131><U0020><U0067><U00FC><U006E>"
+        "<U0062><U0061><U007A><U0061><U0072><U0020><U0065><U0072><U0074><U0259><U0073><U0069>";/
+        "<U00E7><U0259><U0072><U015F><U0259><U006E><U0062><U0259><U0020><U0061><U0078><U015F><U0061><U006D><U0131>";/
+        "<U00E7><U0259><U0072><U015F><U0259><U006E><U0062><U0259>";/
+        "<U0063><U00FC><U006D><U0259><U0020><U0061><U0078><U015F><U0061><U006D><U0131>";/
+        "<U0063><U00FC><U006D><U0259>";/
+        "<U015F><U0259><U006E><U0062><U0259>"
 abday   "<U0062><U0061><U007A>";/
-        "<U0062><U0069><U0072>";/
-        "<U0069><U006B><U0069>";/
-        "<U00FC><U00E7><U00FC>";/
-        "<U0064><U00F6><U0072>";/
-        "<U0062><U0065><U015F>";/
-        "<U0061><U006C><U0074>"
+        "<U0062><U0065><U0072>";/
+        "<U00E7><U0061><U0078>";/
+        "<U00E7><U0259><U0072>";/
+        "<U0063><U0061><U0078>";/
+        "<U0063><U00FC><U006D>";/
+        "<U015F><U006E><U0062>"
 mon     "<U0079><U0061><U006E><U0076><U0061><U0072>";/
         "<U0066><U0065><U0076><U0072><U0061><U006C>";/
         "<U006D><U0061><U0072><U0074>";/

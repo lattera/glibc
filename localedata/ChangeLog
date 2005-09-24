@@ -1,5 +1,9 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #662]
+	* locales/az_AZ: Fix the day and month names.  Add transliteration
+	for schwa character.
+
 	[BZ #657]
 	* locales/bn_BD: Some corrections.
 	Patch by Jamil Ahmed <jamil@bengalinux.org>.
