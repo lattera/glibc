@@ -1,20 +1,20 @@
 comment_char %
 escape_char  /
-% charset "ISO_8859-1:1987"
+% charset "UTF-8"
 % Distribution and use is free, also for commercial purposes.
 
 LC_IDENTIFICATION
 title "Walloon Language Locale for Belgium"
 source "Djan SACRE"
-contact "Djan SACRE, Pablo Saratxaga"
-email "Djan_Sacre@skynet.be, pablo@mandrakesoft.com"
+contact "Pablo Saratxaga"
+email "pablo@mandrakesoft.com"
 address ""
 tel ""
 fax ""
 language "Walloon"
 territory "Belgium"
-revision "0.7"
-date "2002-02-11"
+revision "0.9"
+date "2003-08-25"
 
 category i18n:2000;LC_IDENTIFICATION
 category i18n:2000;LC_COLLATE
@@ -102,22 +102,22 @@ copy "fr_BE"
 END LC_TELEPHONE
 
 % COMINTAIRE: a çu ki dji sai, i gn a nou rascourti _oficir_
-% po les moes et les djo=FBs.
+% po les moes et les djoûs.
 % Donk, dji fwai come ça _mi_ shonne lodjike.
 %
-% Po les rascoutis, on a métu "djn" po djun, et "djl" po djulete.
+% Po les rascoutis, on a metou "djn" po djun, et "djl" po djulete.
 
 LC_TIME
-abday   "<U0064><U00EE><U006D>";"<U006C><U006F><U006E>";/
-        "<U006D><U00E5><U0072>";"<U006D><U0065><U0072>";/
-        "<U0064><U006A><U0075>";"<U0076><U0069><U006E>";/
+abday   "<U0064><U0069><U006D>";"<U006C><U006F><U006E>";/
+        "<U006D><U00E5><U0072>";"<U006D><U0069><U0065>";/
+        "<U0064><U006A><U0075>";"<U0076><U00E9><U006E>";/
         "<U0073><U0065><U006D>"
-day     "<U0064><U00EE><U006D><U0065><U0067><U006E><U0065>";/
+day     "<U0064><U0069><U006D><U0065><U0067><U006E><U0065>";/
         "<U006C><U006F><U006E><U0064><U0069>";/
         "<U006D><U00E5><U0072><U0064><U0069>";/
-        "<U006D><U0065><U0072><U006B><U0069><U0064><U0069>";/
+        "<U006D><U0069><U0065><U0072><U006B><U0069><U0064><U0069>";/
         "<U0064><U006A><U0075><U0064><U0069>";/
-        "<U0076><U0069><U006E><U0072><U0064><U0069>";/
+        "<U0076><U00E9><U006E><U0072><U0064><U0069>";/
         "<U0073><U0065><U006D><U0064><U0069>"
 abmon   "<U0064><U006A><U0061>";"<U0066><U0065><U0076>";/
         "<U006D><U00E5><U0073>";"<U0061><U0076><U0072>";/
@@ -137,8 +137,8 @@ mon     "<U0064><U006A><U0061><U006E><U0076><U00EE>";/
         "<U006F><U0063><U0074><U00F4><U0062><U0065>";/
         "<U006E><U00F4><U0076><U0069><U006D><U0062><U0065>";/
         "<U0064><U0065><U0063><U0069><U006D><U0062><U0065>"
-% Pol cogne des dates (li longue cogne), c' e-st on pô målåjhey, ca i fåt
-% stitchi on "di" ou on "d'" pa dvant li no do moes. Donk:
+% Pol cogne des dates (li longue cogne), c' est on pô målåjhey, ca i fåt
+% stitchî on "di" ou on "d'" pa dvant li no do moes. Donk:
 % "Li prumî" ou "Li 1 di djanvî 1999"
 % di fevrî
 % di måss
@@ -151,7 +151,7 @@ mon     "<U0064><U006A><U0061><U006E><U0076><U00EE>";/
 % d' octôbe
 % di nôvimbe
 % di decimbe
-% Est �u ki c' est possibe d' avu "di" ou "d'" sorlon ki li no do moes
+% Est çki c' est possibe d' aveur "di" ou "d'" sorlon ki li no do moes
 % cmince avou ene voyale ou ene cossoune?
 %
 % Neni :-(
