@@ -3,9 +3,8 @@
  * This is used in ld-address.c (address_finish).
  *
  * Format is: ("English name", 639-1-code, 639-2/T-code, 639-2/B-code)
- * If you find something missing or wrong, please go to the URL
- * http://www.gnu.org/software/libc/bugs.html and follow
- * instructions there to file a bug report.
+ * If you find something missing or wrong, please file a bug at
+ * http://sourceware.org/bugzilla/
  */
 
 DEFINE_LANGUAGE_CODE ("Abkhazian", ab, abk, abk)
@@ -17,6 +16,7 @@ DEFINE_LANGUAGE_CODE ("Afar", aa, aar, aar)
 DEFINE_LANGUAGE_CODE3 ("Afrihili", afh, afh)
 DEFINE_LANGUAGE_CODE ("Afrikaans", af, afr, afr)
 DEFINE_LANGUAGE_CODE3 ("Afro-Asiatic (Other)", afa, afa)
+DEFINE_LANGUAGE_CODE3 ("Ainu", ain, ain)
 DEFINE_LANGUAGE_CODE ("Akan", ak, aka, aka)
 DEFINE_LANGUAGE_CODE3 ("Akkadian", akk, akk)
 DEFINE_LANGUAGE_CODE ("Albanian", sq, sqi, alb)
@@ -62,9 +62,9 @@ DEFINE_LANGUAGE_CODE3 ("Berber (Other)", ber, ber)
 DEFINE_LANGUAGE_CODE3 ("Bhojpuri", bho, bho)
 DEFINE_LANGUAGE_CODE ("Bihari", bh, bih, bih)
 DEFINE_LANGUAGE_CODE3 ("Bikol", bik, bik)
+DEFINE_LANGUAGE_CODE3 ("Bilin; Blin", byn, byn)
 DEFINE_LANGUAGE_CODE3 ("Bini", bin, bin)
 DEFINE_LANGUAGE_CODE ("Bislama", bi, bis, bis)
-DEFINE_LANGUAGE_CODE3 ("Blin", byn, byn)
 DEFINE_LANGUAGE_CODE ("Bosnian", bs, bos, bos)
 DEFINE_LANGUAGE_CODE3 ("Braj", bra, bra)
 DEFINE_LANGUAGE_CODE ("Breton", br, bre, bre)
@@ -444,7 +444,7 @@ DEFINE_LANGUAGE_CODE3 ("Umbundu", umb, umb)
 DEFINE_LANGUAGE_CODE ("Urdu", ur, urd, urd)
 DEFINE_LANGUAGE_CODE ("Uzbek", uz, uzb, uzb)
 DEFINE_LANGUAGE_CODE3 ("Vai", vai, vai)
-DEFINE_LANGUAGE_CODE3 ("Venda", ven, ven)
+DEFINE_LANGUAGE_CODE ("Venda", ve, ven, ven)
 DEFINE_LANGUAGE_CODE ("Vietnamese", vi, vie, vie)
 DEFINE_LANGUAGE_CODE ("Volapük", vo, vol, vol)
 DEFINE_LANGUAGE_CODE3 ("Votic", vot, vot)
