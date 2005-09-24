@@ -1,5 +1,8 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #527]
+	* locales/sid_ET: Remove incorrect lang_ab definition.
+
 	[BZ #525]
 	* locales/ru_RU: Use nominative instead of genitive in mon data to
 	align with other locales with the same issue.

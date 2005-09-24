@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -224,16 +224,23 @@ No definition for %s category found"), "LC_ADDRESS"));
 
   if (address->lang_ab == NULL)
     {
-      if (verbose && ! nothing)
+      if (iso639[cnt].ab[0] != '\0' && verbose && ! nothing)
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
 				"LC_ADDRESS", "lang_ab"));
       address->lang_ab = "";
     }
   else if (address->lang_ab[0] == '\0')
     {
-      if (verbose)
+      if (iso639[cnt].ab[0] != '\0' && verbose)
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
 				"LC_ADDRESS", "lang_ab"));
+    }
+  else if (iso639[cnt].ab[0] == '\0')
+    {
+      WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be defined"),
+			      "LC_ADDRESS", "lang_ab"));
+
+      address->lang_ab = "";
     }
   else
     {
