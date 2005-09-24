@@ -2,21 +2,37 @@ escape_char  /
 comment_char  %
 
 % ChangeLog
+% 0.2 (2004-10-28):
+%     2004-10-28 Dwayne Bailey <dwayne@translate.org.za>
+%        - Added lang_lib
+%        - Reverted version number to 0.2 - needs more testing
+%     2004-10-27 Dwayne Bailey <dwayne@translate.org.za>
+%        - Add Translate.org.za to "source" for clarity
+%        - Update all contact details
+%        - Remove .* from yes/noexpr
+%     2004-03-30 Dwayne Bailey <dwayne@translate.org.za>
+%        - Added country_ab2/3, country_num
+%        - Added country_car
+%     2004-03-29 Dwayne Bailey <dwayne@translate.org.za>
+%       - Added lang_ab and lang_term
+%     2004-02-27 Dwayne Bailey <dwayne@translate.org.za>
+%	    - Correct capatilisation of lang_name
 % 0.1 (2003-04-19):
-%   - Initial Zulu locale by Zuza Software Foundation
+%     2003-04-19:
+%       - Initial Zulu locale by Zuza Software Foundation
 
 LC_IDENTIFICATION
 title      "Zulu locale for South Africa"
-source     "Zuza Software Foundation"
-address    "PO Box 13412, Mowbray, 7705, South Africa"
+source     "Zuza Software Foundation (Translate.org.za)"
+address    "Box 28364, Sunnyside, 0132, South Africa"
 contact    "Dwayne Bailey"
 email      "dwayne@translate.org.za"
-tel        "+27 (0)21 448 9265"
-fax        "+27 (0)21 448 9574"
+tel        "+27 12 343 0389"
+fax        "+27 12 448 0389"
 language   "Zulu"
 territory  "South Africa"
-revision   "0.1"
-date       "2003-04-19"
+revision   "0.2"
+date       "2004-10-28"
 %
 category  "zu_ZA:2003";LC_IDENTIFICATION
 category  "zu_ZA:2003";LC_CTYPE
@@ -145,13 +161,13 @@ date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
+yesexpr     "<U005E><U005B><U0079><U0059><U005D>"
 % The affirmative response -
-% "^[yY].*"
+% "^[yY]"
 %
-noexpr      "<U005E><U005B><U006E><U004E><U0063><U0043><U005D><U002E><U002A>"
+noexpr      "<U005E><U005B><U006E><U004E><U0063><U0043><U005D>"
 % The negative response -
-% "^[nNcC].*"
+% "^[nNcC]"
 %
 END LC_MESSAGES
 
@@ -201,12 +217,21 @@ country_name "<U004D><U007A><U0061><U006E><U0073><U0069><U0020>/
 country_post "<U005A><U0041>"
 % Abbreviated country postal name - "ZA"
 %
-country_ab2 "<U005A><U0041>"
-% ISO 3166 two letter country abbreviation - "ZA"
-%
-lang_name "<U0049><U0073><U0069><U007A><U0075><U006C><U0075>"
-% Language name in Zulu - "Isizulu"
-%
+lang_name "<U0049><U0073><U0069><U005A><U0075><U006C><U0075>"
+% Language name in Zulu - "IsiZulu"
+
+% UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
+% http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
+% "ZA"
+country_car   "<U005A><U0041>"
+
+% ISO 639 two and three letter language names
+% see http://www.loc.gov/standards/iso639-2/englangn.html
+% "zu", "zul", "zul"
+lang_ab   "<U007A><U0075>"
+lang_term "<U007A><U0075><U006C>"
+lang_lib  "<U007A><U0075><U006C>"
+
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
@@ -237,7 +262,13 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 % "country designation for the <country_post> keyword",
 % "end of line
 %
-country_ab3 "<U005A><U0041><U0046>"
-country_num 710
+
+% ISO 3166 country number and 2 and 3 letter abreviations
+% http://www.unicode.org/onlinedat/countries.html
+% "ZA", "ZAF"
+country_num   710
+country_ab2   "<U005A><U0041>"
+country_ab3   "<U005A><U0041><U0046>"
+
 END LC_ADDRESS
 

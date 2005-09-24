@@ -2,22 +2,32 @@ escape_char  /
 comment_char  %
 
 % ChangeLog
+% 0.2 (2004-11-03):
+%    2004-11-02 Dwayne Bailey <dwayne@translate.org.za>
+%      - Change all contact information
+%      - Change %e in date_fmt and d_t_fmt to %-e
+%      - Remove .* from yes/noexpr
+%    2004-03-30 Dwayne Bailey <dwayne@translate.org.za>
+%      - Added country_ab2/3, country_num
+%      - Added country_car
+%    2004-03-29 Dwayne Bailey <dwayne@translate.org.za>
+%      - Added lang_ab and lang_term
 % 0.1 (2003-04-21):
 %   - Initial Sotho locale for South Africa
 %     by Zuza Software Foundation
 
 LC_IDENTIFICATION
 title      "Sotho locale for South Africa"
-source     "Zuza Software Foundation"
-address    "PO Box 13412, Mowbray, 7705, South Africa"
+source     "Zuza Software Foundation (Translate.org.za)"
+address    "PO Box 28364, Sunnyside, 0132, South Africa"
 contact    "Dwayne Bailey"
 email      "dwayne@translate.org.za"
-tel        "+27 (0)21 448 9265"
-fax        "+27 (0)21 448 9574"
+tel        "+27 12 343 0389"
+fax        "+27 12 343 0389"
 language   "Sotho"
 territory  "South Africa"
-revision   "0.1"
-date       "2003-04-21"
+revision   "0.2"
+date       "2004-11-03"
 %
 category  "st_ZA:2003";LC_IDENTIFICATION
 category  "st_ZA:2003";LC_CTYPE
@@ -101,10 +111,11 @@ mon         "<U0050><U0068><U0065><U0073><U0065><U006B><U0067><U006F><U006E><U00
             "<U0054><U0073><U0068><U0069><U0074><U0077><U0065>"
  
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-%
+d_t_fmt     "<U0025><U0061><U0020><U0025><U002D><U0065><U0020><U0025><U0062>/
+<U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+
 % "%a" (short weekday name),
-% "%d" (day of month as a decimal number),
+% "%-e" (day of month as a decimal number),
 % "%b" (short month name),
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
@@ -127,14 +138,14 @@ t_fmt_ampm  ""
 % The "" means that this format is not supported.
  
 % Date representation not described in ISO/IEC 14652. Comes out as -
-% "%a %b %e %H:%M:%S %Z %Y" which is default "date" command output
-date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
+% "%a %b %-e %H:%M:%S %Z %Y" which is default "date" command output
+date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U002D><U0065>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
 %
 % %a - abbreviated weekday name,
 % %b - abreviated month name,
-% %e - day of month as a decimal number with leading space (1 to 31),
+% %-e - day of month as a decimal number without leading space (1 to 31),
 % %H - hour (24-hour clock) as a decimal number (00 to 23),
 % %M - minute as a decimal number (00 to 59),
 % %S - seconds as a decimal number (00 to 59),
@@ -146,12 +157,12 @@ END LC_TIME
 LC_MESSAGES
 % FIXME: Check both of these
 % The affirmative response -
-% "^[yY].*"
-yesexpr     "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
+% "^[yY]"
+yesexpr     "<U005E><U005B><U0079><U0059><U005D>"
 
 % The negative response -
-% "^[nN].*"
-noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+% "^[nN]"
+noexpr      "<U005E><U005B><U006E><U004E><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
@@ -204,21 +215,22 @@ country_name "<U0041><U0066><U0072><U0069><U006B><U0061><U0020><U0042><U006F><U0
 % Abbreviated country postal name - "ZA"
 country_post "<U005A><U0041>"
  
-% ISO 3166 two letter country abbreviation - "ZA"
-country_ab2 "<U005A><U0041>"
-
 % FIXME define the following correctly
-% country_ab3 ""
-% country_car ""
 % country_isbn ""
-% country_num 
  
 % Language name in Sotho - "Sesotho"
 lang_name "<U0053><U0065><U0073><U006F><U0074><U0068><U006F>"
 
-% FIXME define the following correctly
-% lang_ab   ""
-% lang_term ""
+% UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
+% http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
+% "ZA"
+country_car   "<U005A><U0041>"
+
+% ISO 639 two and three letter language names
+% see http://www.loc.gov/standards/iso639-2/englangn.html
+% "st", "sot"
+lang_ab   "<U0073><U0074>"
+lang_term "<U0073><U006F><U0074>"
  
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)
@@ -250,6 +262,13 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 % "country designation for the <country_post> keyword",
 % "end of line
 %
-country_num 710
+
+% ISO 3166 country number and 2 and 3 letter abreviations
+% http://www.unicode.org/onlinedat/countries.html
+% "ZA", "ZAF"
+country_num   710
+country_ab2   "<U005A><U0041>"
+country_ab3   "<U005A><U0041><U0046>"
+
 END LC_ADDRESS
 
