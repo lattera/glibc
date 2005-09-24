@@ -1,5 +1,10 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add hsb_DE and hsb_DE.UTF-8.
+
+	[BZ #566]
+	* locales/hsb_DE: New file.
+
 	[BZ #527]
 	* locales/sid_ET: Remove incorrect lang_ab definition.
 
