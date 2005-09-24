@@ -1,5 +1,8 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #663]
+	* locales/bs_BA: Don't comment out reorder-after.  Fix tel_int_fmt.
+
 	[BZ #662]
 	* locales/az_AZ: Fix the day and month names.  Add transliteration
 	for schwa character.

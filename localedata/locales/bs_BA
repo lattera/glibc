@@ -7,13 +7,16 @@ escape_char  /
 % Email: tvujec@carnet.hr
 % Language: bs
 % Territory: BA
-% Revision: 0.3
-% Date: 2001-01-29
+% Revision: 0.4
+% Date: 2004-01-09
 % Application: general
 % Users: general
 % Charset: ISO-8859-2
 % Distribution and use is free, also
 % for commercial purposes.
+%
+% Revisions:
+% 2004-01-09 pablo@mandrakesoft.com: fixed LC_COLLATE
 
 LC_IDENTIFICATION
 title "Bosnian language locale for Bosnia and Herzegowina"
@@ -25,8 +28,8 @@ tel ""
 fax ""
 language "Bosnian"
 territory "Bosnia and Herzegowina"
-revision "0.3"
-date "2001-01-29"
+revision "0.4"
+date "2004-01-09"
 
 category bs_BA:2000;LC_IDENTIFICATION
 category bs_BA:2000;LC_CTYPE
@@ -108,7 +111,7 @@ reorder-after <U0044>
 <D-z<>	<d-z-sh>;<PCT>;<CAP-MIN>;IGNORE
 <U0110>	<d//>;<PCT>;<CAP>;IGNORE
 
-%reorder-after <U006C>
+reorder-after <U006C>
 <l-j>	<l-j-sh>;<PCT>;<MIN>;IGNORE
 <l-J>	<l-j-sh>;<PCT>;<MIN-CAP>;IGNORE
 reorder-after <U004C>
@@ -234,8 +237,9 @@ country_num 070
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
-tel_int_fmt "???"
+% FIXME (tel_int-fmt copied from en_DK)
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
 int_prefix "<U0033><U0038><U0037>"
 int_select "<U0030><U0030>"
 END LC_TELEPHONE
