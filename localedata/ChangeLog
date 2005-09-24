@@ -1,5 +1,9 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #484]
+	* locales/af_ZA: Updates and corrections.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add be_BY@latin.
 
 	[BZ #1347]
