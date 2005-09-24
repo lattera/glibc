@@ -1,5 +1,10 @@
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add ky_KG.
+
+	[BZ #520]
+	* locales/ky_KG: New file.
+
 	[BZ #495]
 	* locales/st_ZA: Updates and corrections.
 	Patch by Dwayne Bailey <dwayne@translate.org.za>.
