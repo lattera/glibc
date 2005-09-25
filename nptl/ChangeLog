@@ -1,3 +1,8 @@
+2004-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_cond_destroy.c (__pthread_cond_destroy): If there are
+	waiters, awake all waiters on the associated mutex.
+
 2005-09-22  Roland McGrath  <roland@redhat.com>
 
 	* perf.c [__x86_64__] (HP_TIMING_NOW): New macro (copied from
