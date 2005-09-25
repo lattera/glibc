@@ -1,3 +1,8 @@
+2005-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnetgrent_r.c (innetgr): Call endfct even if result != 0.
+	Return 1 only if result == 1.  Patch by Benoit Capelle.
+
 2005-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #278]

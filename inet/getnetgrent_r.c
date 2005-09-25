@@ -409,9 +409,6 @@ innetgr (const char *netgroup, const char *host, const char *user,
 		    }
 		}
 
-	      if (result != 0)
-		break;
-
 	      /* If we found one service which does know the given
 		 netgroup we don't try further.  */
 	      status = NSS_STATUS_RETURN;
@@ -421,6 +418,9 @@ innetgr (const char *netgroup, const char *host, const char *user,
 	  endfct = __nss_lookup_function (entry.nip, "endnetgrent");
 	  if (endfct != NULL)
 	    (*endfct) (&entry);
+
+	  if (result != 0)
+	    break;
 
 	  /* Look for the next service.  */
 	  no_more = __nss_next (&entry.nip, "setnetgrent",
@@ -444,6 +444,6 @@ innetgr (const char *netgroup, const char *host, const char *user,
   /* Free the memory.  */
   free_memory (&entry);
 
-  return result;
+  return result == 1;
 }
 libc_hidden_def (innetgr)
