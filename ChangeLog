@@ -1,3 +1,11 @@
+2005-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #714]
+	* iconv/loop.c [!STORE_REST] (SINGLE): Correctly record number of
+	left-over bytes and store them correctly.
+	* iconvdata/tst-iconv6.c: New file.
+	* iconvdata/Makefile (tests): Add tst-iconv6.
+
 2005-09-24  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/i386/signal.S: Removed, saved in ports repository.

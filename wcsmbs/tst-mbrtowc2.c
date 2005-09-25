@@ -12,11 +12,11 @@ static struct
   const char *loc;
 } tests[] =
 {
-  { (const char[]) { 0x8F, 0xA2, 0xAF }, 3, "ja_JP.eucJP" },
-  { (const char[]) { 0xD1, 0xA5 }, 2, "ja_JP.eucJP" },
-  { (const char[]) { 0x8E, 0xA5 }, 2, "ja_JP.eucJP" },
-  { (const char[]) { 0x8E, 0xA2, 0xA1, 0xA1 }, 4, "zh_TW.eucTW" },
-  { (const char[]) { 0xA1, 0xA1 }, 2, "zh_TW.eucTW" },
+  { (const char[]) { 0x8F, 0xA2, 0xAF }, 3, "ja_JP.EUC-JP" },
+  { (const char[]) { 0xD1, 0xA5 }, 2, "ja_JP.EUC-JP" },
+  { (const char[]) { 0x8E, 0xA5 }, 2, "ja_JP.EUC-JP" },
+  { (const char[]) { 0x8E, 0xA2, 0xA1, 0xA1 }, 4, "zh_TW.EUC-TW" },
+  { (const char[]) { 0xA1, 0xA1 }, 2, "zh_TW.EUC-TW" },
   { (const char[]) { 0xE3, 0x80, 0x80 }, 3, "en_US.UTF-8" },
   { (const char[]) { 0xC3, 0xA4 }, 2, "en_US.UTF-8" }
 };

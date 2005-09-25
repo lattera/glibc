@@ -1,5 +1,10 @@
 2005-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add km_KH.
+
+	[BZ #826]
+	* locales/km_KH: New file.
+
 	* Makefile (LOCALES): Add zh_TW.EUC-TW.
 
 2005-09-24  Ulrich Drepper  <drepper@redhat.com>
