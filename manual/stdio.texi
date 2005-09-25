@@ -5067,14 +5067,11 @@ You should define the function to perform seek operations on the cookie
 as:
 
 @smallexample
-int @var{seeker} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
+int @var{seeker} (void *@var{cookie}, off64_t *@var{position}, int @var{whence})
 @end smallexample
 
 For this function, the @var{position} and @var{whence} arguments are
-interpreted as for @code{fgetpos}; see @ref{Portable Positioning}.  In
-the GNU library, @code{fpos_t} is equivalent to @code{off_t} or
-@code{long int}, and simply represents the number of bytes from the
-beginning of the file.
+interpreted as for @code{fgetpos}; see @ref{Portable Positioning}.
 
 After doing the seek operation, your function should store the resulting
 file position relative to the beginning of the file in @var{position}.

@@ -1,5 +1,8 @@
 2005-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #811]
+	* locales/zh_CN: Fix date_fmt information.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add km_KH.
 
 	[BZ #826]

@@ -1,10 +1,14 @@
 2005-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #278]
+	* manual/stdio.texi (Hook Functions): Correct type of position
+	parameter of seeker and fix fallout of the change in the text.
+
 	[BZ #714]
 	* iconv/loop.c [!STORE_REST] (SINGLE): Correctly record number of
 	left-over bytes and store them correctly.
-	* iconvdata/tst-iconv6.c: New file.
-	* iconvdata/Makefile (tests): Add tst-iconv6.
+	* wcsmbs/tst-mbrtowc2.c: New file.
+	* wcsmbs/Makefile (tests): Add tst-mbrtowc2.
 
 2005-09-24  Roland McGrath  <roland@redhat.com>
 
