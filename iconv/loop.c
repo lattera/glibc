@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -450,6 +450,10 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 #else
       /* We don't have enough input for another complete input
 	 character.  */
+      assert (inend - inptr > (state->__count & ~7));
+      assert (inend - inptr <= 7);
+      state->__count = (state->__count & ~7) | (inend - inptr);
+      inlen = 0;
       while (inptr < inend)
 	state->__value.__wchb[inlen++] = *inptr++;
 #endif
