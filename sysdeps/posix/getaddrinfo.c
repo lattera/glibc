@@ -1266,7 +1266,7 @@ match_prefix (const struct sockaddr_storage *ss, const struct prefixlist *list,
       uint8_t *mask = list[idx].prefix.s6_addr;
       uint8_t *val = in6->sin6_addr.s6_addr;
 
-      while (bits > 8)
+      while (bits >= 8)
 	{
 	  if (*mask != *val)
 	    break;

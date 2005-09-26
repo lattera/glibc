@@ -1,5 +1,10 @@
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #524]
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Fix matching loop of
+	number of bits is multiple of 8.
+	Patch by Fredrik Tolf <fredrik@dolda2000.com>.
+
 	[BZ #516]
 	* elf/dl-load.c: Report failed loading due to ELF class mismatch
 	with better words.
