@@ -1304,6 +1304,19 @@ get_precedence (const struct sockaddr_storage *ss)
 }
 
 
+/* Find last bit set in a word.  */
+static int
+fls (uint32_t a)
+{
+  uint32_t mask;
+  int n = 0;
+  for (n = 0, mask = 1 << 31; n < 32; mask >>= 1, ++n)
+    if ((a & mask) != 0)
+      break;
+  return n;
+}
+
+
 static int
 rfc3484_sort (const void *p1, const void *p2)
 {
@@ -1407,8 +1420,10 @@ rfc3484_sort (const void *p1, const void *p2)
 	  in2_dst = (struct sockaddr_in *) a2->dest_addr->ai_addr;
 	  in2_src = (struct sockaddr_in *) &a2->source_addr;
 
-	  bit1 = ffs (in1_dst->sin_addr.s_addr ^ in1_src->sin_addr.s_addr);
-	  bit2 = ffs (in2_dst->sin_addr.s_addr ^ in2_src->sin_addr.s_addr);
+	  bit1 = fls (ntohl (in1_dst->sin_addr.s_addr
+			     ^ in1_src->sin_addr.s_addr));
+	  bit2 = fls (ntohl (in2_dst->sin_addr.s_addr
+			     ^ in2_src->sin_addr.s_addr));
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
@@ -1435,10 +1450,10 @@ rfc3484_sort (const void *p1, const void *p2)
 
 	  if (i < 4)
 	    {
-	      bit1 = ffs (in1_dst->sin6_addr.s6_addr32[i]
-			  ^ in1_src->sin6_addr.s6_addr32[i]);
-	      bit2 = ffs (in2_dst->sin6_addr.s6_addr32[i]
-			  ^ in2_src->sin6_addr.s6_addr32[i]);
+	      bit1 = fls (ntohl (in1_dst->sin6_addr.s6_addr32[i]
+				 ^ in1_src->sin6_addr.s6_addr32[i]));
+	      bit2 = fls (ntohl (in2_dst->sin6_addr.s6_addr32[i]
+				 ^ in2_src->sin6_addr.s6_addr32[i]));
 	    }
 	}
 
