@@ -1,5 +1,9 @@
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #627]
+	* libio/iofclose.c (_IO_new_fclose): Unlock the internal lock
+	before destroying it as part of the _IO_FINISH call.
+
 	[BZ #524]
 	* sysdeps/posix/getaddrinfo.c (match_prefix): Fix matching loop of
 	number of bits is multiple of 8.

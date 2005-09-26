@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,8 +62,8 @@ _IO_new_fclose (fp)
     status = INTUSE(_IO_file_close_it) (fp);
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
-  _IO_FINISH (fp);
   _IO_release_lock (fp);
+  _IO_FINISH (fp);
   if (fp->_mode > 0)
     {
 #if _LIBC
