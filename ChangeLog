@@ -6,7 +6,7 @@
 	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
 
 	[BZ #524]
-	* sysdeps/posix/getaddrinfo.c (match_prefix): Fix matching loop of
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Fix matching loop if
 	number of bits is multiple of 8.
 	Patch by Fredrik Tolf <fredrik@dolda2000.com>.
 
