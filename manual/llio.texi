@@ -1582,11 +1582,13 @@ descriptors are checked to see if they are ready for writing; and the
 conditions.  You can pass a null pointer for any of these arguments if
 you are not interested in checking for that kind of condition.
 
-A file descriptor is considered ready for reading if it is not at end of
-file.  A server socket is considered ready for reading if there is a
-pending connection which can be accepted with @code{accept};
-@pxref{Accepting Connections}.  A client socket is ready for writing when
-its connection is fully established; @pxref{Connecting}.
+A file descriptor is considered ready for reading if a @code{read}
+call will not block.  This usually includes the read offset being at
+the end of the file or there is an error to report.  A server socket
+is considered ready for reading if there is a pending connection which
+can be accepted with @code{accept}; @pxref{Accepting Connections}.  A
+client socket is ready for writing when its connection is fully
+established; @pxref{Connecting}.
 
 ``Exceptional conditions'' does not mean errors---errors are reported
 immediately when an erroneous system call is executed, and do not

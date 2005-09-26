@@ -1,3 +1,9 @@
+2005-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #162]
+	* manual/llio.texi (Waiting for I/O): Correct description of read
+	conditions reported by select.
+
 2005-09-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/getnetgrent_r.c (innetgr): Call endfct even if result != 0.
