@@ -1,3 +1,10 @@
+2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	[BZ #652]
+	* posix/getconf.c: Add new option -a to print the names of
+	the current system configuration variables to stdout.
+	Based on patch from Josh Aas <josha@sgi.com>.
+
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #644]

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 1995-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -941,7 +941,52 @@ usage (void)
   fprintf (stderr,
 	   _("Usage: %s [-v specification] variable_name [pathname]\n"),
 	   __progname);
+  fprintf (stderr,
+	   _("       %s -a [pathname]\n"), __progname);
   exit (2);
+}
+
+static void
+print_all (const char *path)
+{
+  register const struct conf *c;
+  size_t clen;
+  long int value;
+  char *cvalue;
+  for (c = vars; c->name != NULL; ++c) {
+    printf("%-35s", c->name);
+    switch (c->call) {
+      case PATHCONF:
+        value = pathconf (path, c->call_name);
+        if (value != -1) {
+          printf("%ld", value);
+        }
+        printf("\n");
+        break;
+      case SYSCONF:
+        value = sysconf (c->call_name);
+        if (value == -1l) {
+          if (c->call_name == _SC_UINT_MAX
+            || c->call_name == _SC_ULONG_MAX)
+            printf ("%lu", value);
+        }
+        else {
+          printf ("%ld", value);
+        }
+        printf ("\n");
+        break;
+      case CONFSTR:
+        clen = confstr (c->call_name, (char *) NULL, 0);
+        cvalue = (char *) malloc (clen);
+        if (cvalue == NULL)
+          error (3, 0, _("memory exhausted"));
+        if (confstr (c->call_name, cvalue, clen) != clen)
+          error (3, errno, "confstr");
+        printf ("%.*s\n", (int) clen, cvalue);
+        break;
+    }
+  }
+  exit (0);
 }
 
 int
@@ -1048,6 +1093,16 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	  default:
 	    break;
 	}
+    }
+
+  if (argc > 1 && strcmp (argv[1], "-a") == 0)
+    {
+      if (argc == 2)
+	print_all ("/");
+      else if (argc == 3)
+	print_all (argv[2]);
+      else
+	usage ();
     }
 
   if (argc < 2 || argc > 3)
