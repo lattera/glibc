@@ -1,5 +1,9 @@
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #516]
+	* elf/dl-load.c: Report failed loading due to ELF class mismatch
+	with better words.
+
 	[BZ #162]
 	* manual/llio.texi (Waiting for I/O): Correct description of read
 	conditions reported by select.
