@@ -210,6 +210,10 @@ free_atfork(Void_t* mem, const Void_t *caller)
     (void)mutex_unlock(&ar_ptr->mutex);
 }
 
+
+/* Counter for number of times the list is locked by the same thread.  */
+static unsigned int atfork_recursive_cntr;
+
 /* The following two functions are registered via thread_atfork() to
    make sure that the mutexes remain in a consistent state in the
    fork()ed version of a thread.  Also adapt the malloc and free hooks
@@ -223,7 +227,18 @@ ptmalloc_lock_all (void)
 
   if(__malloc_initialized < 1)
     return;
-  (void)mutex_lock(&list_lock);
+  if (mutex_trylock(&list_lock))
+    {
+      Void_t *my_arena;
+      tsd_getspecific(arena_key, my_arena);
+      if (my_arena == ATFORK_ARENA_PTR)
+	/* This is the same thread which already locks the global list.
+	   Just bump the counter.  */
+	goto out;
+
+      /* This thread has to wait its turn.  */
+      (void)mutex_lock(&list_lock);
+    }
   for(ar_ptr = &main_arena;;) {
     (void)mutex_lock(&ar_ptr->mutex);
     ar_ptr = ar_ptr->next;
@@ -236,6 +251,8 @@ ptmalloc_lock_all (void)
   /* Only the current thread may perform malloc/free calls now. */
   tsd_getspecific(arena_key, save_arena);
   tsd_setspecific(arena_key, ATFORK_ARENA_PTR);
+ out:
+  ++atfork_recursive_cntr;
 }
 
 static void
@@ -244,6 +261,8 @@ ptmalloc_unlock_all (void)
   mstate ar_ptr;
 
   if(__malloc_initialized < 1)
+    return;
+  if (--atfork_recursive_cntr != 0)
     return;
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;

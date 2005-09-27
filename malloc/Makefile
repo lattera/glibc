@@ -27,7 +27,7 @@ all:
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-mallocstate tst-mcheck
+	 tst-mallocstate tst-mcheck tst-mallocfork
 test-srcs = tst-mtrace
 
 distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \

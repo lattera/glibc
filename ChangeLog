@@ -1,5 +1,13 @@
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #838]
+	* malloc/arena.c (ptmalloc_lock_all): If global lock already taken
+	by the same thread, just bump the counter.
+	(ptmalloc_unlock_all): If counter for recursive locks hasn't reached
+	zero, don't do anything else.
+	* malloc/Makefile (tests): Add tst-mallocfork.
+	* malloc/tst-mallocfork.c: New file.
+
 	[BZ #808]
 	* malloc/malloc.c (_int_realloc): Make error message clearer.
 
