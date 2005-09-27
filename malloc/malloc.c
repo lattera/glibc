@@ -4618,7 +4618,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
   if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
     {
-      errstr = "realloc(): invalid size";
+      errstr = "realloc(): invalid old size";
       goto errout;
     }
 
