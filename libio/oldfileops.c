@@ -695,7 +695,7 @@ _IO_old_file_xsputn (f, data, n)
   register const char *s = (char *) data;
   _IO_size_t to_do = n;
   int must_flush = 0;
-  _IO_size_t count;
+  _IO_size_t count = 0;
 
   if (n <= 0)
     return 0;
@@ -704,7 +704,6 @@ _IO_old_file_xsputn (f, data, n)
      (or the filebuf is unbuffered), use sys_write directly. */
 
   /* First figure out how much space is available in the buffer. */
-  count = f->_IO_write_end - f->_IO_write_ptr; /* Space available. */
   if ((f->_flags & _IO_LINE_BUF) && (f->_flags & _IO_CURRENTLY_PUTTING))
     {
       count = f->_IO_buf_end - f->_IO_write_ptr;
@@ -722,6 +721,9 @@ _IO_old_file_xsputn (f, data, n)
 	    }
 	}
     }
+  else if (f->_IO_write_end > f->_IO_write_ptr)
+    count = f->_IO_write_end - f->_IO_write_ptr; /* Space available. */
+
   /* Then fill the buffer. */
   if (count > 0)
     {
