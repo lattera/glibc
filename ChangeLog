@@ -1,6 +1,6 @@
 2005-09-26  Ulrich Drepper  <drepper@redhat.com>
 
-	[BZ #786]
+	[BZ #808]
 	* malloc/malloc.c (_int_realloc): Make error message clearer.
 
 	[BZ #713]
