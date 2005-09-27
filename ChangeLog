@@ -1,5 +1,6 @@
 2005-09-21  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	[BZ #1361]
 	* argp/argp-fmtstream.h [HAVE_CONFIG_H]: Do not #include <config.h>.
 	* argp/argp-eexst.c, argp/argp-fmtstream.c, argp/argp-fs-xinl.c,
 	argp/argp-xinl.c: Fix up whitespace.
