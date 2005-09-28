@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,8 @@ elide-routines.os := $(routines)
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c modstatic2.c \
-		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c
+		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c bug-atexit1-lib.c \
+		   bug-atexit2-lib.c
 
 extra-libs-others := libdl
 
@@ -39,14 +40,15 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1 tst-dlinfo
+	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit \
-		bug-dlsym1-lib1 bug-dlsym1-lib2
+		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
+		bug-atexit2-lib
 
 failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
@@ -125,6 +127,15 @@ $(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so \
 $(objpfx)bug-dlsym1-lib2.so: $(common-objpfx)libc.so \
 			     $(common-objpfx)libc_nonshared.a
 
+$(objpfx)bug-atexit1: $(libdl)
+$(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
+$(objpfx)bug-atexit1-lib.so: $(common-objpfx)libc.so \
+			     $(common-objpfx)libc_nonshared.a
+
+$(objpfx)bug-atexit2: $(libdl)
+$(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
+$(objpfx)bug-atexit2-lib.so: $(common-objpfx)libc.so \
+			     $(common-objpfx)libc_nonshared.a
 
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
