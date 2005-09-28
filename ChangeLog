@@ -1,3 +1,9 @@
+2005-09-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #1384]
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected y1, y1f, yn,
+	ynf results.
+
 2005-09-06  Paul Eggert  <eggert@cs.ucla.edu>
             Ulrich Drepper  <drepper@redhat.com>
 
