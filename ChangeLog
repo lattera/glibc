@@ -12,10 +12,10 @@
 	which the functions were registered.
 	* dlfcn/Makefile: Add rules to build and run bug-atexit1 and
 	bug-atexit2.
-	* dlfcn/bug-atext1.c: New file.
-	* dlfcn/bug-atext1-lib.c: New file.
-	* dlfcn/bug-atext2.c: New file.
-	* dlfcn/bug-atext2-lib.c: New file.
+	* dlfcn/bug-atexit1.c: New file.
+	* dlfcn/bug-atexit1-lib.c: New file.
+	* dlfcn/bug-atexit2.c: New file.
+	* dlfcn/bug-atexit2-lib.c: New file.
 
 	[BZ #1078]
 	* libio/fileops.c (_IO_new_file_xsputn): Determine amount of
