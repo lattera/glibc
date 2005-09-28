@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,98,2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -100,7 +100,9 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __iswdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __iswxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __towlower_l ((Ch), loc)
-# define STRNCASECMP(S1, S2, N) __wcsncasecmp_l ((S1), (S2), (N), loc)
+# define TOLOWER_C(Ch) __towlower_l ((Ch), &_nl_C_locobj)
+# define STRNCASECMP(S1, S2, N) \
+  __wcsncasecmp_l ((S1), (S2), (N), &_nl_C_locobj)
 # define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0, loc)
 #else
 # define STRING_TYPE char
@@ -110,7 +112,9 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __isdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __isxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __tolower_l ((Ch), loc)
-# define STRNCASECMP(S1, S2, N) __strncasecmp_l ((S1), (S2), (N), loc)
+# define TOLOWER_C(Ch) __tolower_l ((Ch), &_nl_C_locobj)
+# define STRNCASECMP(S1, S2, N) \
+  __strncasecmp_l ((S1), (S2), (N), &_nl_C_locobj)
 # define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0, loc)
 #endif
 
@@ -554,7 +558,7 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
   else if (c < L_('0') || c > L_('9'))
     {
       /* Check for `INF' or `INFINITY'.  */
-      if (TOLOWER (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
+      if (TOLOWER_C (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
 	{
 	  /* Return +/- infinity.  */
 	  if (endptr != NULL)
@@ -565,7 +569,7 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
 
-      if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
+      if (TOLOWER_C (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
 	  /* Return NaN.  */
 	  FLOAT retval = NAN;

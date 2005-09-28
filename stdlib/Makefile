@@ -63,7 +63,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   test-a64l tst-qsort tst-system testmb2
+		   test-a64l tst-qsort tst-system testmb2 bug-strtod2
 
 include ../Makeconfig
 

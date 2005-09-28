@@ -1,3 +1,11 @@
+2005-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1230]
+	* stdlib/strtod_l.c (STRNCASECMP): Always use C locale object.
+	(TOLOWER_C): Define.  Use it when recognizing inf and nan.
+	* stdlib/Makefile (tests): Add bug-strtod2.
+	* stdlib/bug-strtod2.c: New file.
+
 2005-09-21  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	[BZ #1361]
