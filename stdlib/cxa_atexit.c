@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <bits/libc-lock.h>
+#include <assert.h>
 #include <stdlib.h>
+
+#include <bits/libc-lock.h>
 #include "exit.h"
 
 #undef __cxa_atexit
@@ -52,45 +54,60 @@ struct exit_function_list *__exit_funcs = &initial;
 struct exit_function *
 __new_exitfn (void)
 {
+  struct exit_function_list *p = NULL;
   struct exit_function_list *l;
+  struct exit_function *r = NULL;
   size_t i = 0;
 
   __libc_lock_lock (lock);
 
-  for (l = __exit_funcs; l != NULL; l = l->next)
+  for (l = __exit_funcs; l != NULL; p = l, l = l->next)
     {
-      for (i = 0; i < l->idx; ++i)
-	if (l->fns[i].flavor == ef_free)
+      for (i = l->idx; i > 0; --i)
+	if (l->fns[i - 1].flavor != ef_free)
 	  break;
-      if (i < l->idx)
+
+      if (i > 0)
 	break;
 
-      if (l->idx < sizeof (l->fns) / sizeof (l->fns[0]))
-	{
-	  i = l->idx++;
-	  break;
-	}
+      /* This block is completely unused.  */
+      l->idx = 0;
     }
 
-  if (l == NULL)
+  if (l == NULL || i == sizeof (l->fns) / sizeof (l->fns[0]))
     {
-      l = (struct exit_function_list *)
-	malloc (sizeof (struct exit_function_list));
-      if (l != NULL)
+      /* The last entry in a block is used.  Use the first entry in
+	 the previous block if it exists.  Otherwise create a new one.  */
+      if (p == NULL)
 	{
-	  l->next = __exit_funcs;
-	  __exit_funcs = l;
-
-	  l->idx = 1;
-      	  i = 0;
+	  assert (l != NULL);
+	  p = (struct exit_function_list *)
+	    calloc (1, sizeof (struct exit_function_list));
+	  if (p != NULL)
+	    {
+	      p->next = __exit_funcs;
+	      __exit_funcs = p;
+	    }
 	}
+
+      if (p != NULL)
+	{
+	  r = &p->fns[0];
+	  p->idx = 1;
+	}
+    }
+  else
+    {
+      /* There is more room in the block.  */
+      r = &l->fns[i];
+      l->idx = i + 1;
     }
 
   /* Mark entry as used, but we don't know the flavor now.  */
-  if (l != NULL)
-    l->fns[i].flavor = ef_us;
+  if (r != NULL)
+    r->flavor = ef_us;
 
   __libc_lock_unlock (lock);
 
-  return l == NULL ? NULL : &l->fns[i];
+  return r;
 }
