@@ -1,3 +1,16 @@
+2005-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* dirent/dirent.h: Declare fdopendir.
+	* dirent/Versions: Export fdopendir for GLIBC_2.4.
+	* dirent/Makefile (routines): Add fdopendir.
+	(tests): Add tst-fdopendir.
+	* dirent/tst-fdopendir.c: New file.
+	* include/dirent.h: Declare __alloc_dir.
+	* sysdeps/generic/fdopendir.c: New file.
+	* sysdeps/unix/fdopendir.c: New file.
+	* sysdeps/unix/opendir.c: Split off back part of opendir into new
+	function __alloc_dir.
+
 2005-09-26  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #1384]

@@ -1,6 +1,7 @@
 #ifndef _DIRENT_H
 # include <dirstream.h>
 # include <dirent/dirent.h>
+# include <sys/stat.h>
 
 /* Now define the internal interfaces.  */
 extern DIR *__opendir (__const char *__name);
@@ -23,4 +24,5 @@ extern int __alphasort64 (const void *a, const void *b)
      __attribute_pure__;
 extern int __versionsort64 (const void *a, const void *b)
      __attribute_pure__;
+extern DIR *__alloc_dir (int fd, struct stat64 *statp) internal_function;
 #endif

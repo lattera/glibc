@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,6 +133,14 @@ typedef struct __dirstream DIR;
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern DIR *opendir (__const char *__name) __nonnull ((1));
+
+#ifdef __USE_GNU
+/* Same as opendir, but open the stream on the file descriptor FD.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern DIR *fdopendir (int __fd);
+#endif
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.

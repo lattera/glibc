@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1996,98,2000-2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,11 +78,7 @@ tryopen_o_directory (void)
 DIR *
 __opendir (const char *name)
 {
-  DIR *dirp;
   struct stat64 statbuf;
-  int fd;
-  size_t allocation;
-  int save_errno;
 
   if (__builtin_expect (name[0], '\1') == '\0')
     {
@@ -113,7 +109,7 @@ __opendir (const char *name)
 	 }
     }
 
-  fd = open_not_cancel_2 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE);
+  int fd = open_not_cancel_2 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE);
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
@@ -129,18 +125,30 @@ __opendir (const char *name)
     {
       if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
 	{
-	  save_errno = ENOTDIR;
-	  goto lose;
+	  __set_errno (ENOTDIR);
+	lose:
+	  close_not_cancel_no_status (fd);
+	  return NULL;
 	}
     }
 
+  return __alloc_dir (fd, &statbuf);
+}
+weak_alias (__opendir, opendir)
+
+
+DIR *
+internal_function
+__alloc_dir (int fd, struct stat64 *statp)
+{
   if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
     goto lose;
 
+  size_t allocation;
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__builtin_expect ((size_t) statbuf.st_blksize >= sizeof (struct dirent64),
+  if (__builtin_expect ((size_t) statp->st_blksize >= sizeof (struct dirent64),
 			1))
-    allocation = statbuf.st_blksize;
+    allocation = statp->st_blksize;
   else
 #endif
     allocation = (BUFSIZ < sizeof (struct dirent64)
@@ -148,11 +156,11 @@ __opendir (const char *name)
 
   const int pad = -sizeof (DIR) % __alignof__ (struct dirent64);
 
-  dirp = (DIR *) malloc (sizeof (DIR) + allocation + pad);
+  DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation + pad);
   if (dirp == NULL)
   lose:
     {
-      save_errno = errno;
+      int save_errno = errno;
       close_not_cancel_no_status (fd);
       __set_errno (save_errno);
       return NULL;
@@ -166,4 +174,3 @@ __opendir (const char *name)
 
   return dirp;
 }
-weak_alias (__opendir, opendir)
