@@ -39,6 +39,9 @@
 #if defined HAVE_WCTYPE_H || defined _LIBC
 # include <wctype.h>
 #endif /* HAVE_WCTYPE_H || _LIBC */
+#if defined HAVE_STDBOOL_H || defined _LIBC
+# include <stdbool.h>
+#endif /* HAVE_STDBOOL_H || _LIBC */
 #if defined _LIBC
 # include <bits/libc-lock.h>
 #else
@@ -120,26 +123,31 @@
 extern const char __re_error_msgid[] attribute_hidden;
 extern const size_t __re_error_msgid_idx[] attribute_hidden;
 
-/* Number of bits in an unsinged int.  */
-#define UINT_BITS (sizeof (unsigned int) * CHAR_BIT)
-/* Number of unsigned int in an bit_set.  */
-#define BITSET_UINTS ((SBC_MAX + UINT_BITS - 1) / UINT_BITS)
-typedef unsigned int bitset[BITSET_UINTS];
-typedef unsigned int *re_bitset_ptr_t;
-typedef const unsigned int *re_const_bitset_ptr_t;
+/* An integer used to represent a set of bits.  It must be unsigned,
+   and must be at least as wide as unsigned int.  */
+typedef unsigned long int bitset_word_t;
+/* All bits set in a bitset_word_t.  */
+#define BITSET_WORD_MAX ULONG_MAX
+/* Number of bits in a bitset_word_t.  */
+#define BITSET_WORD_BITS (sizeof (bitset_word_t) * CHAR_BIT)
+/* Number of bitset_word_t in a bit_set.  */
+#define BITSET_WORDS (SBC_MAX / BITSET_WORD_BITS)
+typedef bitset_word_t bitset_t[BITSET_WORDS];
+typedef bitset_word_t *re_bitset_ptr_t;
+typedef const bitset_word_t *re_const_bitset_ptr_t;
 
-#define bitset_set(set,i) (set[i / UINT_BITS] |= 1u << i % UINT_BITS)
-#define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1u << i % UINT_BITS))
-#define bitset_contain(set,i) (set[i / UINT_BITS] & (1u << i % UINT_BITS))
-#define bitset_empty(set) memset (set, 0, sizeof (unsigned int) * BITSET_UINTS)
-#define bitset_set_all(set) \
-  memset (set, 255, sizeof (unsigned int) * BITSET_UINTS)
-#define bitset_copy(dest,src) \
-  memcpy (dest, src, sizeof (unsigned int) * BITSET_UINTS)
-static inline void bitset_not (bitset set);
-static inline void bitset_merge (bitset dest, const bitset src);
-static inline void bitset_not_merge (bitset dest, const bitset src);
-static inline void bitset_mask (bitset dest, const bitset src);
+#define bitset_set(set,i) \
+  (set[i / BITSET_WORD_BITS] |= (bitset_word_t) 1 << i % BITSET_WORD_BITS)
+#define bitset_clear(set,i) \
+  (set[i / BITSET_WORD_BITS] &= ~((bitset_word_t) 1 << i % BITSET_WORD_BITS))
+#define bitset_contain(set,i) \
+  (set[i / BITSET_WORD_BITS] & ((bitset_word_t) 1 << i % BITSET_WORD_BITS))
+#define bitset_empty(set) memset (set, '\0', sizeof (bitset_t))
+#define bitset_set_all(set) memset (set, '\xff', sizeof (bitset_t))
+#define bitset_copy(dest,src) memcpy (dest, src, sizeof (bitset_t))
+static inline void bitset_not (bitset_t set);
+static inline void bitset_merge (bitset_t dest, const bitset_t src);
+static inline void bitset_mask (bitset_t dest, const bitset_t src);
 
 #define PREV_WORD_CONSTRAINT 0x0001
 #define PREV_NOTWORD_CONSTRAINT 0x0002
@@ -648,8 +656,8 @@ struct re_dfa_t
   int nbackref; /* The number of backreference in this dfa.  */
 
   /* Bitmap expressing which backreference is used.  */
-  unsigned int used_bkref_map;
-  unsigned int completed_bkref_map;
+  bitset_word_t used_bkref_map;
+  bitset_word_t completed_bkref_map;
 
   unsigned int has_plural_match : 1;
   /* If this dfa has "multibyte node", which is a backreference or
@@ -660,7 +668,7 @@ struct re_dfa_t
   unsigned int map_notascii : 1;
   unsigned int word_ops_used : 1;
   int mb_cur_max;
-  bitset word_char;
+  bitset_t word_char;
   reg_syntax_t syntax;
   int *subexp_map;
 #ifdef DEBUG
@@ -734,34 +742,26 @@ typedef struct
 
 /* Inline functions for bitset operation.  */
 static inline void
-bitset_not (bitset set)
+bitset_not (bitset_t set)
 {
   int bitset_i;
-  for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
+  for (bitset_i = 0; bitset_i < BITSET_WORDS; ++bitset_i)
     set[bitset_i] = ~set[bitset_i];
 }
 
 static inline void
-bitset_merge (bitset dest, const bitset src)
+bitset_merge (bitset_t dest, const bitset_t src)
 {
   int bitset_i;
-  for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
+  for (bitset_i = 0; bitset_i < BITSET_WORDS; ++bitset_i)
     dest[bitset_i] |= src[bitset_i];
 }
 
 static inline void
-bitset_not_merge (bitset dest, const bitset src)
-{
-  int i;
-  for (i = 0; i < BITSET_UINTS; ++i)
-    dest[i] |= ~src[i];
-}
-
-static inline void
-bitset_mask (bitset dest, const bitset src)
+bitset_mask (bitset_t dest, const bitset_t src)
 {
   int bitset_i;
-  for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
+  for (bitset_i = 0; bitset_i < BITSET_WORDS; ++bitset_i)
     dest[bitset_i] &= src[bitset_i];
 }
 

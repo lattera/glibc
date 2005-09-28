@@ -1,3 +1,42 @@
+2005-09-06  Paul Eggert  <eggert@cs.ucla.edu>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1302]
+	Change bitset word type from unsigned int to unsigned long int,
+	as this has better performance on typical 64-bit hosts.  Change
+	bitset type name to bitset_t.
+	* posix/regcomp.c (build_equiv_class, build_charclass):
+	(build_range_exp, build_collating_symbol):
+	Prefer bitset_t to re_bitset_ptr_t in prototypes, when the actual
+	argument is a bitset.  This is merely a style issue, but it makes
+	it clearer that an entire array is expected.
+	(re_compile_fastmap_iter, init_dfa, init_word_char, optimize_subexps,
+	lower_subexp): Adjust for new bitset_t definition.
+	(lower_subexp, parse_bracket_exp, built_charclass_op): Likewise.
+	* posix/regex_internal.h (bitset_set, bitset_clear, bitset_contain,
+	bitset_not, bitset_merge, bitset_set_all, bitset_mask): Likewise.
+	* posix/regexec.c (check_dst_limits_calc_pos_1,
+	check_subexp_matching_top, build_trtable, group_nodes_into_DFAstates):
+	Likewise.
+	* posix/regcomp.c (utf8_sb_map): Don't assume initializer
+	== 0xffffffff.
+	* posix/regex_internal.h (BITSET_WORD_BITS): Renamed from UINT_BITS.
+	All uses changed.
+	(BITSET_WORDS): Renamed from BITSET_UINTS.  All uses changed.
+	(bitset_word_t): New type, replacing 'unsigned int' for bitset uses.
+	All uses changed.
+	(BITSET_WORD_MAX): New macro.
+	(bitset_set, bitset_clear, bitset_contain, bitset_empty,
+	(bitset_set_all, bitset_copy):  Adjust for bitset_t change.
+	(bitset_empty, bitset_copy):
+	Prefer sizeof (bitset_t) to multiplying it out ourselves.
+	(bitset_not_merge): Remove; unused.
+	(bitset_contain): Return bool, not unsigned int with one bit on.
+	All callers changed.
+	* posix/regexec.c (build_trtable): Don't assume bitset_t has no
+	stricter alignment than re_node_set; do this by defining a new
+	internal type struct dests_alloc and using it to allocate memory.
+
 2005-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1230]

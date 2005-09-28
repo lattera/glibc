@@ -113,21 +113,21 @@ static reg_errcode_t build_collating_symbol (re_bitset_ptr_t sbcset,
 # endif /* not RE_ENABLE_I18N */
 #endif /* not _LIBC */
 #ifdef RE_ENABLE_I18N
-static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
+static reg_errcode_t build_equiv_class (bitset_t sbcset,
 					re_charset_t *mbcset,
 					int *equiv_class_alloc,
 					const unsigned char *name);
 static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
-				      re_bitset_ptr_t sbcset,
+				      bitset_t sbcset,
 				      re_charset_t *mbcset,
 				      int *char_class_alloc,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #else  /* not RE_ENABLE_I18N */
-static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
+static reg_errcode_t build_equiv_class (bitset_t sbcset,
 					const unsigned char *name);
 static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
-				      re_bitset_ptr_t sbcset,
+				      bitset_t sbcset,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
@@ -354,7 +354,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 		     &&	dfa->nodes[node].type == CHARACTER
 		     && dfa->nodes[node].mb_partial)
 		*p++ = dfa->nodes[node].opr.c;
-	      memset (&state, 0, sizeof (state));
+	      memset (&state, '\0', sizeof (state));
 	      if (mbrtowc (&wc, (const char *) buf, p - buf,
 			   &state) == p - buf
 		  && (__wcrtomb ((char *) buf, towlower (wc), &state)
@@ -365,11 +365,15 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	}
       else if (type == SIMPLE_BRACKET)
 	{
-	  int i, j, ch;
-	  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
-	    for (j = 0; j < UINT_BITS; ++j, ++ch)
-	      if (dfa->nodes[node].opr.sbcset[i] & (1u << j))
-		re_set_fastmap (fastmap, icase, ch);
+	  int i, ch;
+	  for (i = 0, ch = 0; i < BITSET_WORDS; ++i)
+	    {
+	      int j;
+	      bitset_word_t w = dfa->nodes[node].opr.sbcset[i];
+	      for (j = 0; j < BITSET_WORD_BITS; ++j, ++ch)
+		if (w & ((bitset_word_t) 1 << j))
+		  re_set_fastmap (fastmap, icase, ch);
+	    }
 	}
 #ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET)
@@ -388,13 +392,11 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 			  is a valid collation element, and don't catch
 			  'b' since 'b' is the only collation element
 			  which starts from 'b'.  */
-		  int j, ch;
 		  const int32_t *table = (const int32_t *)
 		    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-		  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
-		    for (j = 0; j < UINT_BITS; ++j, ++ch)
-		      if (table[ch] < 0)
-			re_set_fastmap (fastmap, icase, ch);
+		  for (i = 0; i < SBC_MAX; ++i)
+		    if (table[i] < 0)
+		      re_set_fastmap (fastmap, icase, i);
 		}
 # else
 	      if (dfa->mb_cur_max > 1)
@@ -581,14 +583,10 @@ weak_alias (__regerror, regerror)
    UTF-8 is used.  Otherwise we would allocate memory just to initialize
    it the same all the time.  UTF-8 is the preferred encoding so this is
    a worthwhile optimization.  */
-static const bitset utf8_sb_map =
+static const bitset_t utf8_sb_map =
 {
   /* Set the first 128 bits.  */
-# if UINT_MAX == 0xffffffff
-  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
-# else
-#  error "Add case for new unsigned int size"
-# endif
+  [0 ... 0x80 / BITSET_WORD_BITS - 1] = BITSET_WORD_MAX
 };
 #endif
 
@@ -908,20 +906,17 @@ init_dfa (dfa, pat_len)
 	{
 	  int i, j, ch;
 
-	  dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
+	  dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
 	  if (BE (dfa->sb_char == NULL, 0))
 	    return REG_ESPACE;
 
-	  /* Clear all bits by, then set those corresponding to single
-	     byte chars.  */
-	  bitset_empty (dfa->sb_char);
-
-	  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
-	    for (j = 0; j < UINT_BITS; ++j, ++ch)
+	  /* Set the bits corresponding to single byte chars.  */
+	  for (i = 0, ch = 0; i < BITSET_WORDS; ++i)
+	    for (j = 0; j < BITSET_WORD_BITS; ++j, ++ch)
 	      {
 		wint_t wch = __btowc (ch);
 		if (wch != WEOF)
-		  dfa->sb_char[i] |= 1u << j;
+		  dfa->sb_char[i] |= (bitset_word_t) 1 << j;
 # ifndef _LIBC
 		if (isascii (ch) && wch != ch)
 		  dfa->map_notascii = 1;
@@ -946,10 +941,10 @@ init_word_char (dfa)
 {
   int i, j, ch;
   dfa->word_ops_used = 1;
-  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
-    for (j = 0; j < UINT_BITS; ++j, ++ch)
+  for (i = 0, ch = 0; i < BITSET_WORDS; ++i)
+    for (j = 0; j < BITSET_WORD_BITS; ++j, ++ch)
       if (isalnum (ch) || ch == '_')
-	dfa->word_char[i] |= 1u << j;
+	dfa->word_char[i] |= (bitset_word_t) 1 << j;
 }
 
 /* Free the work area which are only used while compiling.  */
@@ -1096,8 +1091,9 @@ optimize_utf8 (dfa)
       case COMPLEX_BRACKET:
 	return;
       case SIMPLE_BRACKET:
-	/* Just double check.  */
-        for (i = 0x80 / UINT_BITS; i < BITSET_UINTS; ++i)
+	/* Just double check.  The non-ASCII range starts at 0x80.  */
+	assert (0x80 % BITSET_WORD_BITS == 0);
+        for (i = 0x80 / BITSET_WORD_BITS; i < BITSET_WORDS; ++i)
 	  if (dfa->nodes[node].opr.sbcset[i])
 	    return;
 	break;
@@ -1282,8 +1278,8 @@ optimize_subexps (extra, node)
         node->left->parent = node;
 
       dfa->subexp_map[other_idx] = dfa->subexp_map[node->token.opr.idx];
-      if (other_idx < CHAR_BIT * sizeof dfa->used_bkref_map)
-	dfa->used_bkref_map &= ~(1u << other_idx);
+      if (other_idx < BITSET_WORD_BITS)
+	  dfa->used_bkref_map &= ~((bitset_word_t) 1 << other_idx);
     }
 
   return REG_NOERROR;
@@ -1331,8 +1327,9 @@ lower_subexp (err, preg, node)
 	 very common, so we do not lose much.  An example that triggers
 	 this case is the sed "script" /\(\)/x.  */
       && node->left != NULL
-      && (node->token.opr.idx >= CHAR_BIT * sizeof dfa->used_bkref_map
-	  || !(dfa->used_bkref_map & (1u << node->token.opr.idx))))
+      && (node->token.opr.idx >= BITSET_WORD_BITS
+	  || !(dfa->used_bkref_map
+	       & ((bitset_word_t) 1 << node->token.opr.idx))))
     return node->left;
 
   /* Convert the SUBEXP node to the concatenation of an
@@ -2666,7 +2663,7 @@ build_range_exp (sbcset, mbcset, range_alloc, start_elem, end_elem)
 # else /* not RE_ENABLE_I18N */
 build_range_exp (sbcset, start_elem, end_elem)
 # endif /* not RE_ENABLE_I18N */
-     re_bitset_ptr_t sbcset;
+     bitset_t sbcset;
      bracket_elem_t *start_elem, *end_elem;
 {
   unsigned int start_ch, end_ch;
@@ -2788,7 +2785,7 @@ build_collating_symbol (sbcset, mbcset, coll_sym_alloc, name)
 # else /* not RE_ENABLE_I18N */
 build_collating_symbol (sbcset, name)
 # endif /* not RE_ENABLE_I18N */
-     re_bitset_ptr_t sbcset;
+     bitset_t sbcset;
      const unsigned char *name;
 {
   size_t name_len = strlen ((const char *) name);
@@ -2931,7 +2928,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   build_range_exp (sbcset, mbcset, range_alloc, start_elem, end_elem)
 	 re_charset_t *mbcset;
 	 int *range_alloc;
-	 re_bitset_ptr_t sbcset;
+	 bitset_t sbcset;
 	 bracket_elem_t *start_elem, *end_elem;
     {
       unsigned int ch;
@@ -3014,7 +3011,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   build_collating_symbol (sbcset, mbcset, coll_sym_alloc, name)
 	 re_charset_t *mbcset;
 	 int *coll_sym_alloc;
-	 re_bitset_ptr_t sbcset;
+	 bitset_t sbcset;
 	 const unsigned char *name;
     {
       int32_t elem, idx;
@@ -3099,7 +3096,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 						   _NL_COLLATE_SYMB_EXTRAMB);
     }
 #endif
-  sbcset = (re_bitset_ptr_t) calloc (sizeof (unsigned int), BITSET_UINTS);
+  sbcset = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
 #ifdef RE_ENABLE_I18N
   mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
 #endif /* RE_ENABLE_I18N */
@@ -3309,12 +3306,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       mbc_tree = create_token_tree (dfa, NULL, NULL, &br_token);
       if (BE (mbc_tree == NULL, 0))
 	goto parse_bracket_exp_espace;
-      for (sbc_idx = 0; sbc_idx < BITSET_UINTS; ++sbc_idx)
+      for (sbc_idx = 0; sbc_idx < BITSET_WORDS; ++sbc_idx)
 	if (sbcset[sbc_idx])
 	  break;
       /* If there are no bits set in sbcset, there is no point
 	 of having both SIMPLE_BRACKET and COMPLEX_BRACKET.  */
-      if (sbc_idx < BITSET_UINTS)
+      if (sbc_idx < BITSET_WORDS)
 	{
           /* Build a tree for simple bracket.  */
           br_token.type = SIMPLE_BRACKET;
@@ -3464,7 +3461,7 @@ build_equiv_class (sbcset, mbcset, equiv_class_alloc, name)
 #else /* not RE_ENABLE_I18N */
 build_equiv_class (sbcset, name)
 #endif /* not RE_ENABLE_I18N */
-     re_bitset_ptr_t sbcset;
+     bitset_t sbcset;
      const unsigned char *name;
 {
 #if defined _LIBC
@@ -3560,7 +3557,7 @@ build_charclass (trans, sbcset, mbcset, char_class_alloc, class_name, syntax)
 build_charclass (trans, sbcset, class_name, syntax)
 #endif /* not RE_ENABLE_I18N */
      RE_TRANSLATE_TYPE trans;
-     re_bitset_ptr_t sbcset;
+     bitset_t sbcset;
      const unsigned char *class_name;
      reg_syntax_t syntax;
 {
@@ -3649,7 +3646,7 @@ build_charclass_op (dfa, trans, class_name, extra, non_match, err)
   re_token_t br_token;
   bin_tree_t *tree;
 
-  sbcset = (re_bitset_ptr_t) calloc (sizeof (unsigned int), BITSET_UINTS);
+  sbcset = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
 #ifdef RE_ENABLE_I18N
   mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
 #endif /* RE_ENABLE_I18N */
