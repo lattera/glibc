@@ -72,11 +72,15 @@ enum mode { normal, list, verify, trace };
    all the entries.  */
 static void process_envvars (enum mode *modep);
 
-int _dl_argc attribute_relro attribute_hidden;
 #ifdef DL_ARGV_NOT_RELRO
+int _dl_argc attribute_hidden;
 char **_dl_argv = NULL;
+/* Nonzero if we were run directly.  */
+unsigned int _dl_skip_args attribute_hidden;
 #else
+int _dl_argc attribute_relro attribute_hidden;
 char **_dl_argv attribute_relro = NULL;
+unsigned int _dl_skip_args attribute_relro attribute_hidden;
 #endif
 INTDEF(_dl_argv)
 
@@ -85,9 +89,6 @@ INTDEF(_dl_argv)
    in thread local area.  */
 uintptr_t __stack_chk_guard attribute_relro;
 #endif
-
-/* Nonzero if we were run directly.  */
-unsigned int _dl_skip_args attribute_relro attribute_hidden;
 
 /* List of auditing DSOs.  */
 static struct audit_list

@@ -1,6 +1,16 @@
 2005-09-29  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1392]
+	* posix/sys/wait.h [!__GNUC__ || __cplusplus] (__WAIT_INT): Use const.
+
+2005-09-29  Alfred M. Szmidt  <ams@gnu.org>
+
+	* elf/rtld.c [! DL_ARGV_NOT_RELRO] (_dl_argc, _dl_skip_args):
+	Don't use attribute_relro.
+
+2005-09-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1392]
 	* posix/sys/wait.h (__WAIT_INT): Rewrite using an initializer,
 	in case __typeof yields a const-qualified type.
 
