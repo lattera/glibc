@@ -1,6 +1,6 @@
 #! /bin/sh -f
 # Run available iconv(1) tests.
-# Copyright (C) 1998-2002 Free Software Foundation, Inc.
+# Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -128,7 +128,7 @@ while read from to subset targets; do
     done
   fi
 
-  if test "$subset" != Y; then
+  if test "$subset" == N; then
     echo $ac_n "      suntzu: ASCII -> $to -> ASCII $ac_c"
     $PROG -f ASCII -t $to testdata/suntzus |
     $PROG -f $to -t ASCII > $temp1 ||
