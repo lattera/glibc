@@ -1641,3 +1641,224 @@ alias	CP1158//		IBM1158//
 alias	CSIBM1158//		IBM1158//
 module	IBM1158//		INTERNAL		IBM1158		1
 module	INTERNAL		IBM1158//		IBM1158		1
+
+#	from			to			module		cost
+alias	IBM-803//		IBM803//
+alias	CP803//		IBM803//
+alias	CSIBM803//		IBM803//
+module	IBM803//		INTERNAL		IBM803		1
+module	INTERNAL		IBM803//		IBM803		1
+
+#	from			to			module		cost
+alias	IBM-901//		IBM901//
+alias	CP901//		IBM901//
+alias	CSIBM901//		IBM901//
+module	IBM901//		INTERNAL		IBM901		1
+module	INTERNAL		IBM901//		IBM901		1
+
+#	from			to			module		cost
+alias	IBM-902//		IBM902//
+alias	CP902//		IBM902//
+alias	CSIBM902//		IBM902//
+module	IBM902//		INTERNAL		IBM902		1
+module	INTERNAL		IBM902//		IBM902		1
+
+#	from			to			module		cost
+alias	IBM-921//		IBM921//
+alias	CP921//		IBM921//
+alias	CSIBM921//		IBM921//
+module	IBM921//		INTERNAL		IBM921		1
+module	INTERNAL		IBM921//		IBM921		1
+
+#	from			to			module		cost
+alias	IBM-1008//		IBM1008//
+alias	CP1008//		IBM1008//
+alias	CSIBM1008//		IBM1008//
+module	IBM1008//		INTERNAL		IBM1008		1
+module	INTERNAL		IBM1008//		IBM1008		1
+
+#	from			to			module		cost
+module	IBM1008//		IBM420//		IBM1008_420	1
+module	IBM420//		IBM1008//		IBM1008_420	1
+
+#	from			to			module		cost
+alias	IBM-1097//		IBM1097//
+alias	CP1097//		IBM1097//
+alias	CSIBM1097//		IBM1097//
+module	IBM1097//		INTERNAL		IBM1097		1
+module	INTERNAL		IBM1097//		IBM1097		1
+
+#	from			to			module		cost
+alias	IBM-1112//		IBM1112//
+alias	CP1112//		IBM1112//
+alias	CSIBM1112//		IBM1112//
+module	IBM1112//		INTERNAL		IBM1112		1
+module	INTERNAL		IBM1112//		IBM1112		1
+
+#	from			to			module		cost
+alias	IBM-1123//		IBM1123//
+alias	CP1123//		IBM1123//
+alias	CSIBM1123//		IBM1123//
+module	IBM1123//		INTERNAL		IBM1123		1
+module	INTERNAL		IBM1123//		IBM1123		1
+
+#	from			to			module		cost
+alias	IBM-1130//		IBM1130//
+alias	CP1130//		IBM1130//
+alias	CSIBM1130//		IBM1130//
+module	IBM1130//		INTERNAL		IBM1130		1
+module	INTERNAL		IBM1130//		IBM1130		1
+
+#	from			to			module		cost
+alias	IBM-1140//		IBM1140//
+alias	CP1140//		IBM1140//
+alias	CSIBM1140//		IBM1140//
+module	IBM1140//		INTERNAL		IBM1140		1
+module	INTERNAL		IBM1140//		IBM1140		1
+
+#	from			to			module		cost
+alias	IBM-1141//		IBM1141//
+alias	CP1141//		IBM1141//
+alias	CSIBM1141//		IBM1141//
+module	IBM1141//		INTERNAL		IBM1141		1
+module	INTERNAL		IBM1141//		IBM1141		1
+
+#	from			to			module		cost
+alias	IBM-1142//		IBM1142//
+alias	CP1142//		IBM1142//
+alias	CSIBM1142//		IBM1142//
+module	IBM1142//		INTERNAL		IBM1142		1
+module	INTERNAL		IBM1142//		IBM1142		1
+
+#	from			to			module		cost
+alias	IBM-1143//		IBM1143//
+alias	CP1143//		IBM1143//
+alias	CSIBM1143//		IBM1143//
+module	IBM1143//		INTERNAL		IBM1143		1
+module	INTERNAL		IBM1143//		IBM1143		1
+
+#	from			to			module		cost
+alias	IBM-1144//		IBM1144//
+alias	CP1144//		IBM1144//
+alias	CSIBM1144//		IBM1144//
+module	IBM1144//		INTERNAL		IBM1144		1
+module	INTERNAL		IBM1144//		IBM1144		1
+
+#	from			to			module		cost
+alias	IBM-1145//		IBM1145//
+alias	CP1145//		IBM1145//
+alias	CSIBM1145//		IBM1145//
+module	IBM1145//		INTERNAL		IBM1145		1
+module	INTERNAL		IBM1145//		IBM1145		1
+
+#	from			to			module		cost
+alias	IBM-1146//		IBM1146//
+alias	CP1146//		IBM1146//
+alias	CSIBM1146//		IBM1146//
+module	IBM1146//		INTERNAL		IBM1146		1
+module	INTERNAL		IBM1146//		IBM1146		1
+
+#	from			to			module		cost
+alias	IBM-1147//		IBM1147//
+alias	CP1147//		IBM1147//
+alias	CSIBM1147//		IBM1147//
+module	IBM1147//		INTERNAL		IBM1147		1
+module	INTERNAL		IBM1147//		IBM1147		1
+
+#	from			to			module		cost
+alias	IBM-1148//		IBM1148//
+alias	CP1148//		IBM1148//
+alias	CSIBM1148//		IBM1148//
+module	IBM1148//		INTERNAL		IBM1148		1
+module	INTERNAL		IBM1148//		IBM1148		1
+
+#	from			to			module		cost
+alias	IBM-1149//		IBM1149//
+alias	CP1149//		IBM1149//
+alias	CSIBM1149//		IBM1149//
+module	IBM1149//		INTERNAL		IBM1149		1
+module	INTERNAL		IBM1149//		IBM1149		1
+
+#	from			to			module		cost
+alias	IBM-1166//		IBM1166//
+alias	CP1166//		IBM1166//
+alias	CSIBM1166//		IBM1166//
+module	IBM1166//		INTERNAL		IBM1166		1
+module	INTERNAL		IBM1166//		IBM1166		1
+
+#	from			to			module		cost
+alias	IBM-1167//		IBM1167//
+alias	CP1167//		IBM1167//
+alias	CSIBM1167//		IBM1167//
+module	IBM1167//		INTERNAL		IBM1167		1
+module	INTERNAL		IBM1167//		IBM1167		1
+
+#	from			to			module		cost
+alias	IBM-4517//		IBM4517//
+alias	CP4517//		IBM4517//
+alias	CSIBM4517//		IBM4517//
+module	IBM4517//		INTERNAL		IBM4517		1
+module	INTERNAL		IBM4517//		IBM4517		1
+
+#	from			to			module		cost
+alias	IBM-4899//		IBM4899//
+alias	CP4899//		IBM4899//
+alias	CSIBM4899//		IBM4899//
+module	IBM4899//		INTERNAL		IBM4899		1
+module	INTERNAL		IBM4899//		IBM4899		1
+
+#	from			to			module		cost
+alias	IBM-4909//		IBM4909//
+alias	CP4909//		IBM4909//
+alias	CSIBM4909//		IBM4909//
+module	IBM4909//		INTERNAL		IBM4909		1
+module	INTERNAL		IBM4909//		IBM4909		1
+
+#	from			to			module		cost
+alias	IBM-4971//		IBM4971//
+alias	CP4971//		IBM4971//
+alias	CSIBM4971//		IBM4971//
+module	IBM4971//		INTERNAL		IBM4971		1
+module	INTERNAL		IBM4971//		IBM4971		1
+
+#	from			to			module		cost
+alias	IBM-5347//		IBM5347//
+alias	CP5347//		IBM5347//
+alias	CSIBM5347//		IBM5347//
+module	IBM5347//		INTERNAL		IBM5347		1
+module	INTERNAL		IBM5347//		IBM5347		1
+
+#	from			to			module		cost
+alias	IBM-9030//		IBM9030//
+alias	CP9030//		IBM9030//
+alias	CSIBM9030//		IBM9030//
+module	IBM9030//		INTERNAL		IBM9030		1
+module	INTERNAL		IBM9030//		IBM9030		1
+
+#	from			to			module		cost
+alias	IBM-9066//		IBM9066//
+alias	CP9066//		IBM9066//
+alias	CSIBM9066//		IBM9066//
+module	IBM9066//		INTERNAL		IBM9066		1
+module	INTERNAL		IBM9066//		IBM9066		1
+
+#	from			to			module		cost
+alias	IBM-9448//		IBM9448//
+alias	CP9448//		IBM9448//
+alias	CSIBM9448//		IBM9448//
+module	IBM9448//		INTERNAL		IBM9448		1
+module	INTERNAL		IBM9448//		IBM9448		1
+
+#	from			to			module		cost
+alias	IBM-12712//		IBM12712//
+alias	CP12712//		IBM12712//
+alias	CSIBM12712//		IBM12712//
+module	IBM12712//		INTERNAL		IBM12712		1
+module	INTERNAL		IBM12712//		IBM12712		1
+
+#	from			to			module		cost
+alias	IBM-16804//		IBM16804//
+alias	CP16804//		IBM16804//
+alias	CSIBM16804//		IBM16804//
+module	IBM16804//		INTERNAL		IBM16804		1
+module	INTERNAL		IBM16804//		IBM16804		1

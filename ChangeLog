@@ -1,3 +1,152 @@
+2005-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add IBM803, IBM901, IBM902, IBM921,
+	IBM1008, IBM1008_420, IBM1097, IBM1112, IBM1123, IBM1130, IBM1140,
+	IBM1141, IBM1142, IBM1143, IBM1144, IBM1145, IBM1146, IBM1147, IBM1148,
+	IBM1149, IBM1166, IBM1167, IBM4517, IBM4899, IBM4909, IBM4971,
+	IBM5347, IBM9030, IBM9066, IBM9448, IBM12712, IBM16804.
+	(distribute): Add ibm803.c, ibm803.h, ibm901.c, ibm901.h, ibm902.c,
+	ibm902.h, ibm921.c, ibm921.h, ibm1008.c, ibm1008.h, ibm1008_420.c,
+	ibm1097.c, ibm1097.h, ibm1112.c, ibm1112.h, ibm1123.c, ibm1123.h,
+	ibm1130.c, ibm1130.h, ibm1140.c, ibm1140.h, ibm1141.c, ibm1141.h,
+	ibm1142.c, ibm1142.h, ibm1143.c, ibm1143.h, ibm1144.c, ibm1144.h,
+	ibm1145.c, ibm1145.h, ibm1146.c, ibm1146.h, ibm1147.c, ibm1147.h,
+	ibm1148.c, ibm1148.h, ibm1149.c, ibm1149.h, ibm1166.c, ibm1166.h,
+	ibm1167.c, ibm1167.h, ibm4517.c, ibm4517.h, ibm4899.c, ibm4899.h,
+	ibm4909.c, ibm4909.h, ibm4971.c, ibm4971.h, ibm5347.c, ibm5347.h,
+	ibm9030.c, ibm9030.h, ibm9066.c, ibm9066.h, ibm9448.c, ibm9448.h,
+	ibm12712.c, ibm12712.h, ibm16804.c, ibm16804.h.
+	* iconvdata/TESTS: Add entries for new modules.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/ibm803.c: New file.
+	* iconvdata/ibm803.h: New file.
+	* iconvdata/ibm901.c: New file.
+	* iconvdata/ibm901.h: New file.
+	* iconvdata/ibm902.c: New file.
+	* iconvdata/ibm902.h: New file.
+	* iconvdata/ibm921.c: New file.
+	* iconvdata/ibm921.h: New file.
+	* iconvdata/ibm1008.c: New file.
+	* iconvdata/ibm1008.h: New file.
+	* iconvdata/ibm1008_420.c: New file.
+	* iconvdata/ibm1097.c: New file.
+	* iconvdata/ibm1097.h: New file.
+	* iconvdata/ibm1112.c: New file.
+	* iconvdata/ibm1112.h: New file.
+	* iconvdata/ibm1123.c: New file.
+	* iconvdata/ibm1123.h: New file.
+	* iconvdata/ibm1130.c: New file.
+	* iconvdata/ibm1130.h: New file.
+	* iconvdata/ibm1140.c: New file.
+	* iconvdata/ibm1140.h: New file.
+	* iconvdata/ibm1141.c: New file.
+	* iconvdata/ibm1141.h: New file.
+	* iconvdata/ibm1142.c: New file.
+	* iconvdata/ibm1142.h: New file.
+	* iconvdata/ibm1143.c: New file.
+	* iconvdata/ibm1143.h: New file.
+	* iconvdata/ibm1144.c: New file.
+	* iconvdata/ibm1144.h: New file.
+	* iconvdata/ibm1145.c: New file.
+	* iconvdata/ibm1145.h: New file.
+	* iconvdata/ibm1146.c: New file.
+	* iconvdata/ibm1146.h: New file.
+	* iconvdata/ibm1147.c: New file.
+	* iconvdata/ibm1147.h: New file.
+	* iconvdata/ibm1148.c: New file.
+	* iconvdata/ibm1148.h: New file.
+	* iconvdata/ibm1149.c: New file.
+	* iconvdata/ibm1149.h: New file.
+	* iconvdata/ibm1166.c: New file.
+	* iconvdata/ibm1166.h: New file.
+	* iconvdata/ibm1167.c: New file.
+	* iconvdata/ibm1167.h: New file.
+	* iconvdata/ibm4517.c: New file.
+	* iconvdata/ibm4517.h: New file.
+	* iconvdata/ibm4899.c: New file.
+	* iconvdata/ibm4899.h: New file.
+	* iconvdata/ibm4909.c: New file.
+	* iconvdata/ibm4909.h: New file.
+	* iconvdata/ibm4971.c: New file.
+	* iconvdata/ibm4971.h: New file.
+	* iconvdata/ibm5347.c: New file.
+	* iconvdata/ibm5347.h: New file.
+	* iconvdata/ibm9030.c: New file.
+	* iconvdata/ibm9030.h: New file.
+	* iconvdata/ibm9066.c: New file.
+	* iconvdata/ibm9066.h: New file.
+	* iconvdata/ibm9448.c: New file.
+	* iconvdata/ibm9448.h: New file.
+	* iconvdata/ibm12712.c: New file.
+	* iconvdata/ibm12712.h: New file.
+	* iconvdata/ibm16804.c: New file.
+	* iconvdata/ibm16804.h: New file.
+	* iconvdata/testdata/IBM803: New file.
+	* iconvdata/testdata/IBM803..UTF8: New file.
+	* iconvdata/testdata/IBM901: New file.
+	* iconvdata/testdata/IBM901..UTF8: New file.
+	* iconvdata/testdata/IBM902: New file.
+	* iconvdata/testdata/IBM902..UTF8: New file.
+	* iconvdata/testdata/IBM921: New file.
+	* iconvdata/testdata/IBM921..UTF8: New file.
+	* iconvdata/testdata/IBM1008: New file.
+	* iconvdata/testdata/IBM1008..UTF8: New file.
+	* iconvdata/testdata/IBM1097: New file.
+	* iconvdata/testdata/IBM1097..UTF8: New file.
+	* iconvdata/testdata/IBM1112: New file.
+	* iconvdata/testdata/IBM1112..UTF8: New file.
+	* iconvdata/testdata/IBM1123: New file.
+	* iconvdata/testdata/IBM1123..UTF8: New file.
+	* iconvdata/testdata/IBM1130: New file.
+	* iconvdata/testdata/IBM1130..UTF8: New file.
+	* iconvdata/testdata/IBM1140: New file.
+	* iconvdata/testdata/IBM1140..UTF8: New file.
+	* iconvdata/testdata/IBM1141: New file.
+	* iconvdata/testdata/IBM1141..UTF8: New file.
+	* iconvdata/testdata/IBM1142: New file.
+	* iconvdata/testdata/IBM1142..UTF8: New file.
+	* iconvdata/testdata/IBM1143: New file.
+	* iconvdata/testdata/IBM1143..UTF8: New file.
+	* iconvdata/testdata/IBM1144: New file.
+	* iconvdata/testdata/IBM1144..UTF8: New file.
+	* iconvdata/testdata/IBM1145: New file.
+	* iconvdata/testdata/IBM1145..UTF8: New file.
+	* iconvdata/testdata/IBM1146: New file.
+	* iconvdata/testdata/IBM1146..UTF8: New file.
+	* iconvdata/testdata/IBM1147: New file.
+	* iconvdata/testdata/IBM1147..UTF8: New file.
+	* iconvdata/testdata/IBM1148: New file.
+	* iconvdata/testdata/IBM1148..UTF8: New file.
+	* iconvdata/testdata/IBM1149: New file.
+	* iconvdata/testdata/IBM1149..UTF8: New file.
+	* iconvdata/testdata/IBM1166: New file.
+	* iconvdata/testdata/IBM1166..UTF8: New file.
+	* iconvdata/testdata/IBM1167: New file.
+	* iconvdata/testdata/IBM1167..UTF8: New file.
+	* iconvdata/testdata/IBM4517: New file.
+	* iconvdata/testdata/IBM4517..UTF8: New file.
+	* iconvdata/testdata/IBM4899: New file.
+	* iconvdata/testdata/IBM4899..UTF8: New file.
+	* iconvdata/testdata/IBM4909: New file.
+	* iconvdata/testdata/IBM4909..UTF8: New file.
+	* iconvdata/testdata/IBM4971: New file.
+	* iconvdata/testdata/IBM4971..UTF8: New file.
+	* iconvdata/testdata/IBM5347: New file.
+	* iconvdata/testdata/IBM5347..UTF8: New file.
+	* iconvdata/testdata/IBM9030: New file.
+	* iconvdata/testdata/IBM9030..UTF8: New file.
+	* iconvdata/testdata/IBM9066: New file.
+	* iconvdata/testdata/IBM9066..UTF8: New file.
+	* iconvdata/testdata/IBM9448: New file.
+	* iconvdata/testdata/IBM9448..UTF8: New file.
+	* iconvdata/testdata/IBM12712: New file.
+	* iconvdata/testdata/IBM12712..UTF8: New file.
+	* iconvdata/testdata/IBM16804: New file.
+	* iconvdata/testdata/IBM16804..UTF8: New file.
+
+	* iconvdata/run-iconv-test.sh: Run ASCII->encoding->ASCII suntzus
+	test only if $subset is N.
+
 2005-09-29  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1392]

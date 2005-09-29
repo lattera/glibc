@@ -53,7 +53,11 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
 	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048	 \
 	   IBM1025 IBM1122 IBM1137 IBM1153 IBM1154 IBM1155 IBM1156	 \
-	   IBM1157 IBM1158
+	   IBM1157 IBM1158 IBM803 IBM901 IBM902 IBM921 IBM1008 		 \
+	   IBM1008_420 IBM1097 IBM1112 IBM1123 IBM1130 IBM1140 IBM1141 	 \
+	   IBM1142 IBM1143 IBM1144 IBM1145 IBM1146 IBM1147 IBM1148 	 \
+	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971 	 \
+	   IBM5347 IBM9030 IBM9066 IBM9448 IBM12712 IBM16804
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -177,7 +181,18 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c \
 	      ibm1025.c ibm1025.h ibm1122.c ibm1122.h ibm1137.c ibm1137.h   \
 	      ibm1153.c ibm1153.h ibm1154.c ibm1154.h ibm1155.c ibm1155.h   \
-	      ibm1156.c ibm1156.h ibm1157.c ibm1157.h ibm1158.c ibm1158.h
+	      ibm1156.c ibm1156.h ibm1157.c ibm1157.h ibm1158.c ibm1158.h   \
+	      ibm803.c ibm803.h ibm901.c ibm901.h ibm902.c ibm902.h	    \
+	      ibm921.c ibm921.h ibm1008.c ibm1008.h ibm1008_420.c	    \
+	      ibm1097.c ibm1097.h ibm1112.c ibm1112.h ibm1123.c ibm1123.h   \
+	      ibm1130.c ibm1130.h ibm1140.c ibm1140.h ibm1141.c ibm1141.h   \
+	      ibm1142.c ibm1142.h ibm1143.c ibm1143.h ibm1144.c ibm1144.h   \
+	      ibm1145.c ibm1145.h ibm1146.c ibm1146.h ibm1147.c ibm1147.h   \
+	      ibm1148.c ibm1148.h ibm1149.c ibm1149.h ibm1166.c ibm1166.h   \
+	      ibm1167.c ibm1167.h ibm4517.c ibm4517.h ibm4899.c ibm4899.h   \
+	      ibm4909.c ibm4909.h ibm4971.c ibm4971.h ibm5347.c ibm5347.h   \
+	      ibm9030.c ibm9030.h ibm9066.c ibm9066.h ibm9448.c ibm9448.h   \
+	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
