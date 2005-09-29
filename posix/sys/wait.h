@@ -47,7 +47,7 @@ __BEGIN_DECLS
   (__extension__ (((union { __typeof(status) __in; int __i; }) \
                    { .__in = (status) }).__i))
 #  else
-#   define __WAIT_INT(status)	(*(int *) &(status))
+#   define __WAIT_INT(status)	(*(__const int *) &(status))
 #  endif
 
 /* This is the type of the argument to `wait'.  The funky union
