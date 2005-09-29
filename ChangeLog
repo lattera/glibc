@@ -143,6 +143,7 @@
 	* iconvdata/testdata/IBM12712..UTF8: New file.
 	* iconvdata/testdata/IBM16804: New file.
 	* iconvdata/testdata/IBM16804..UTF8: New file.
+	Patch by Masahide WASHIZAWA <washi@jp.ibm.com>.
 
 	* iconvdata/run-iconv-test.sh: Run ASCII->encoding->ASCII suntzus
 	test only if $subset is N.
