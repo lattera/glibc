@@ -1,3 +1,9 @@
+2005-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_US: Fix postal_fmt.
+	* locales/es_US: Update LC_ADDRESS info from en_US.
+	Reported by FrankTang@gmail.com.
+
 2005-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #811]
