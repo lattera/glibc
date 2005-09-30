@@ -793,14 +793,21 @@ dest (void)
 \e[00;34m   free|\e[0m %10lu   %12llu\n",
 	   (unsigned long long int) grand_total, (unsigned long int) peak_heap,
 	   (unsigned long int) peak_stack,
-	   calls[idx_malloc], (unsigned long long int) total[idx_malloc],
-	   failed[idx_malloc] ? "\e[01;41m" : "", failed[idx_malloc],
-	   calls[idx_realloc], (unsigned long long int) total[idx_realloc],
-	   failed[idx_realloc] ? "\e[01;41m" : "", failed[idx_realloc],
-	   inplace, decreasing,
-	   calls[idx_calloc], (unsigned long long int) total[idx_calloc],
-	   failed[idx_calloc] ? "\e[01;41m" : "", failed[idx_calloc],
-	   calls[idx_free], (unsigned long long int) total[idx_free]);
+	   (unsigned long int) calls[idx_malloc],
+	   (unsigned long long int) total[idx_malloc],
+	   failed[idx_malloc] ? "\e[01;41m" : "",
+	   (unsigned long int) failed[idx_malloc],
+	   (unsigned long int) calls[idx_realloc],
+	   (unsigned long long int) total[idx_realloc],
+	   failed[idx_realloc] ? "\e[01;41m" : "",
+	   (unsigned long int) failed[idx_realloc],
+	   (unsigned long int) inplace, (unsigned long int) decreasing,
+	   (unsigned long int) calls[idx_calloc],
+	   (unsigned long long int) total[idx_calloc],
+	   failed[idx_calloc] ? "\e[01;41m" : "",
+	   (unsigned long int) failed[idx_calloc],
+	   (unsigned long int) calls[idx_free],
+	   (unsigned long long int) total[idx_free]);
 
   if (trace_mmap)
     fprintf (stderr, "\
@@ -809,17 +816,28 @@ dest (void)
 \e[00;34mmmap(a)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
 \e[00;34m munmap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n",
-	     calls[idx_mmap_r], (unsigned long long int) total[idx_mmap_r],
-	     failed[idx_mmap_r] ? "\e[01;41m" : "", failed[idx_mmap_r],
-	     calls[idx_mmap_w], (unsigned long long int) total[idx_mmap_w],
-	     failed[idx_mmap_w] ? "\e[01;41m" : "", failed[idx_mmap_w],
-	     calls[idx_mmap_a], (unsigned long long int) total[idx_mmap_a],
-	     failed[idx_mmap_a] ? "\e[01;41m" : "", failed[idx_mmap_a],
-	     calls[idx_mremap], (unsigned long long int) total[idx_mremap],
-	     failed[idx_mremap] ? "\e[01;41m" : "", failed[idx_mremap],
-	     inplace_mremap, decreasing_mremap,
-	     calls[idx_munmap], (unsigned long long int) total[idx_munmap],
-	     failed[idx_munmap] ? "\e[01;41m" : "", failed[idx_munmap]);
+	     (unsigned long int) calls[idx_mmap_r],
+	     (unsigned long long int) total[idx_mmap_r],
+	     failed[idx_mmap_r] ? "\e[01;41m" : "",
+	     (unsigned long int) failed[idx_mmap_r],
+	     (unsigned long int) calls[idx_mmap_w],
+	     (unsigned long long int) total[idx_mmap_w],
+	     failed[idx_mmap_w] ? "\e[01;41m" : "",
+	     (unsigned long int) failed[idx_mmap_w],
+	     (unsigned long int) calls[idx_mmap_a],
+	     (unsigned long long int) total[idx_mmap_a],
+	     failed[idx_mmap_a] ? "\e[01;41m" : "",
+	     (unsigned long int) failed[idx_mmap_a],
+	     (unsigned long int) calls[idx_mremap],
+	     (unsigned long long int) total[idx_mremap],
+	     failed[idx_mremap] ? "\e[01;41m" : "",
+	     (unsigned long int) failed[idx_mremap],
+	     (unsigned long int) inplace_mremap,
+	     (unsigned long int) decreasing_mremap,
+	     (unsigned long int) calls[idx_munmap],
+	     (unsigned long long int) total[idx_munmap],
+	     failed[idx_munmap] ? "\e[01;41m" : "",
+	     (unsigned long int) failed[idx_munmap]);
 
   /* Write out a histoogram of the sizes of the allocations.  */
   fprintf (stderr, "\e[01;32mHistogram for block sizes:\e[0;0m\n");
@@ -836,7 +854,7 @@ dest (void)
       {
 	percent = (histogram[cnt / 16] * 100) / calls_total;
 	fprintf (stderr, "%5d-%-5d%12lu ", cnt, cnt + 15,
-		 histogram[cnt / 16]);
+		 (unsigned long int) histogram[cnt / 16]);
 	if (percent == 0)
 	  fputs (" <1% \e[41;37m", stderr);
 	else
@@ -853,7 +871,7 @@ dest (void)
   if (large != 0)
     {
       percent = (large * 100) / calls_total;
-      fprintf (stderr, "   large   %12lu ", large);
+      fprintf (stderr, "   large   %12lu ", (unsigned long int) large);
       if (percent == 0)
 	fputs (" <1% \e[41;37m", stderr);
       else

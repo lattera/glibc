@@ -149,7 +149,9 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "Imaginary part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 # cexp
@@ -354,7 +356,9 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -377,7 +381,9 @@ Test "Real part of: ctan (0.75 + 1.25 i) == 0.1608077859162064267251660581734386
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 3
 ldouble: 3
@@ -395,7 +401,9 @@ Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
 ifloat: 1
 Test "Real part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "Imaginary part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
 double: 1
@@ -504,7 +512,9 @@ Test "j1 (0.75) == 0.349243602174862192523281016426251335":
 double: 1
 idouble: 1
 Test "j1 (10.0) == 0.0434727461688614366697487680258592883":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -551,7 +561,9 @@ Test "jn (1, 0.75) == 0.349243602174862192523281016426251335":
 double: 1
 idouble: 1
 Test "jn (1, 10.0) == 0.0434727461688614366697487680258592883":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -682,6 +694,7 @@ ldouble: 1
 
 # sinh
 Test "sinh (0.75) == 0.822316731935829980703661634446913849":
+double: 1
 ildouble: 1
 
 # tan
@@ -1087,7 +1100,9 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "ctanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 5
 ldouble: 5
@@ -1179,6 +1194,7 @@ ildouble: 1
 ldouble: 1
 
 Function: "sinh":
+double: 1
 ildouble: 1
 
 Function: "tan":

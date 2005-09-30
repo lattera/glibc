@@ -367,6 +367,15 @@
 	* libio/iofopncook.c (_IO_cookie_write): If something went wrong,
 	set error bit.
 
+2005-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (update_cur_sifted_state, check_arrival,
+	check_arrival_add_next_nodes): Avoid using uninitialized variable.
+
+	* malloc/memusage.c (dest): Fix a bunch of warnings on 32-bit arches.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update for GCC 4.0.x.
+
 2005-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #281]

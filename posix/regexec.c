@@ -1798,7 +1798,7 @@ update_cur_sifted_state (mctx, sctx, str_idx, dest_nodes)
      re_node_set *dest_nodes;
 {
   const re_dfa_t *const dfa = mctx->dfa;
-  reg_errcode_t err;
+  reg_errcode_t err = REG_NOERROR;
   const re_node_set *candidates;
   candidates = ((mctx->state_log[str_idx] == NULL) ? NULL
 		: &mctx->state_log[str_idx]->nodes);
@@ -2932,7 +2932,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
      int top_node, top_str, last_node, last_str, type;
 {
   const re_dfa_t *const dfa = mctx->dfa;
-  reg_errcode_t err;
+  reg_errcode_t err = REG_NOERROR;
   int subexp_num, backup_cur_idx, str_idx, null_cnt;
   re_dfastate_t *cur_state = NULL;
   re_node_set *cur_nodes, next_nodes;
@@ -3096,7 +3096,7 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
   const re_dfa_t *const dfa = mctx->dfa;
   int result;
   int cur_idx;
-  reg_errcode_t err;
+  reg_errcode_t err = REG_NOERROR;
   re_node_set union_set;
   re_node_set_init_empty (&union_set);
   for (cur_idx = 0; cur_idx < cur_nodes->nelem; ++cur_idx)
