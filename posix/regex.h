@@ -351,70 +351,66 @@ typedef enum
 
 struct re_pattern_buffer
 {
-/* [[[begin pattern_buffer]]] */
-	/* Space that holds the compiled pattern.  It is declared as
-          `unsigned char *' because its elements are
-           sometimes used as array indexes.  */
+  /* Space that holds the compiled pattern.  It is declared as
+     `unsigned char *' because its elements are sometimes used as
+     array indexes.  */
   unsigned char *buffer;
 
-	/* Number of bytes to which `buffer' points.  */
+  /* Number of bytes to which `buffer' points.  */
   unsigned long int allocated;
 
-	/* Number of bytes actually used in `buffer'.  */
+  /* Number of bytes actually used in `buffer'.  */
   unsigned long int used;
 
-        /* Syntax setting with which the pattern was compiled.  */
+  /* Syntax setting with which the pattern was compiled.  */
   reg_syntax_t syntax;
 
-        /* Pointer to a fastmap, if any, otherwise zero.  re_search uses
-           the fastmap, if there is one, to skip over impossible
-           starting points for matches.  */
+  /* Pointer to a fastmap, if any, otherwise zero.  re_search uses the
+     fastmap, if there is one, to skip over impossible starting points
+     for matches.  */
   char *fastmap;
 
-        /* Either a translate table to apply to all characters before
-           comparing them, or zero for no translation.  The translation
-           is applied to a pattern when it is compiled and to a string
-           when it is matched.  */
+  /* Either a translate table to apply to all characters before
+     comparing them, or zero for no translation.  The translation is
+     applied to a pattern when it is compiled and to a string when it
+     is matched.  */
   RE_TRANSLATE_TYPE translate;
 
-	/* Number of subexpressions found by the compiler.  */
+  /* Number of subexpressions found by the compiler.  */
   size_t re_nsub;
 
-        /* Zero if this pattern cannot match the empty string, one else.
-           Well, in truth it's used only in `re_search_2', to see
-           whether or not we should use the fastmap, so we don't set
-           this absolutely perfectly; see `re_compile_fastmap' (the
-           `duplicate' case).  */
+  /* Zero if this pattern cannot match the empty string, one else.
+     Well, in truth it's used only in `re_search_2', to see whether or
+     not we should use the fastmap, so we don't set this absolutely
+     perfectly; see `re_compile_fastmap' (the `duplicate' case).  */
   unsigned can_be_null : 1;
 
-        /* If REGS_UNALLOCATED, allocate space in the `regs' structure
-             for `max (RE_NREGS, re_nsub + 1)' groups.
-           If REGS_REALLOCATE, reallocate space if necessary.
-           If REGS_FIXED, use what's there.  */
+  /* If REGS_UNALLOCATED, allocate space in the `regs' structure
+     for `max (RE_NREGS, re_nsub + 1)' groups.
+     If REGS_REALLOCATE, reallocate space if necessary.
+     If REGS_FIXED, use what's there.  */
 #define REGS_UNALLOCATED 0
 #define REGS_REALLOCATE 1
 #define REGS_FIXED 2
   unsigned regs_allocated : 2;
 
-        /* Set to zero when `regex_compile' compiles a pattern; set to one
-           by `re_compile_fastmap' if it updates the fastmap.  */
+  /* Set to zero when `regex_compile' compiles a pattern; set to one
+     by `re_compile_fastmap' if it updates the fastmap.  */
   unsigned fastmap_accurate : 1;
 
-        /* If set, `re_match_2' does not return information about
-           subexpressions.  */
+  /* If set, `re_match_2' does not return information about
+     subexpressions.  */
   unsigned no_sub : 1;
 
-        /* If set, a beginning-of-line anchor doesn't match at the
-           beginning of the string.  */
+  /* If set, a beginning-of-line anchor doesn't match at the beginning
+     of the string.  */
   unsigned not_bol : 1;
 
-        /* Similarly for an end-of-line anchor.  */
+  /* Similarly for an end-of-line anchor.  */
   unsigned not_eol : 1;
 
-        /* If true, an anchor at a newline matches.  */
+  /* If true, an anchor at a newline matches.  */
   unsigned newline_anchor : 1;
-
-/* [[[end pattern_buffer]]] */
 };
 
 typedef struct re_pattern_buffer regex_t;
@@ -454,19 +450,19 @@ typedef struct
 
 /* Sets the current default syntax to SYNTAX, and return the old syntax.
    You can also simply assign to the `re_syntax_options' variable.  */
-extern reg_syntax_t re_set_syntax (reg_syntax_t syntax);
+extern reg_syntax_t re_set_syntax (reg_syntax_t __syntax);
 
 /* Compile the regular expression PATTERN, with length LENGTH
    and syntax given by the global `re_syntax_options', into the buffer
    BUFFER.  Return NULL if successful, and an error string if not.  */
-extern const char *re_compile_pattern (const char *pattern, size_t length,
-				       struct re_pattern_buffer *buffer);
+extern const char *re_compile_pattern (const char *__pattern, size_t __length,
+				       struct re_pattern_buffer *__buffer);
 
 
 /* Compile a fastmap for the compiled pattern in BUFFER; used to
    accelerate searches.  Return 0 if successful and -2 if was an
    internal error.  */
-extern int re_compile_fastmap (struct re_pattern_buffer *buffer);
+extern int re_compile_fastmap (struct re_pattern_buffer *__buffer);
 
 
 /* Search in the string STRING (with length LENGTH) for the pattern
@@ -474,29 +470,30 @@ extern int re_compile_fastmap (struct re_pattern_buffer *buffer);
    characters.  Return the starting position of the match, -1 for no
    match, or -2 for an internal error.  Also return register
    information in REGS (if REGS and BUFFER->no_sub are nonzero).  */
-extern int re_search (struct re_pattern_buffer *buffer, const char *string,
-		      int length, int start, int range,
-		      struct re_registers *regs);
+extern int re_search (struct re_pattern_buffer *__buffer, const char *__string,
+		      int __length, int __start, int __range,
+		      struct re_registers *__regs);
 
 
 /* Like `re_search', but search in the concatenation of STRING1 and
    STRING2.  Also, stop searching at index START + STOP.  */
-extern int re_search_2 (struct re_pattern_buffer *buffer, const char *string1,
-			int length1, const char *string2, int length2,
-			int start, int range, struct re_registers *regs,
-			int stop);
+extern int re_search_2 (struct re_pattern_buffer *__buffer,
+			const char *__string1, int __length1,
+			const char *__string2, int __length2, int __start,
+			int __range, struct re_registers *__regs, int __stop);
 
 
 /* Like `re_search', but return how many characters in STRING the regexp
    in BUFFER matched, starting at position START.  */
-extern int re_match (struct re_pattern_buffer *buffer, const char *string,
-		     int length, int start, struct re_registers *regs);
+extern int re_match (struct re_pattern_buffer *__buffer, const char *__string,
+		     int __length, int __start, struct re_registers *__regs);
 
 
 /* Relates to `re_match' as `re_search_2' relates to `re_search'.  */
-extern int re_match_2 (struct re_pattern_buffer *buffer, const char *string1,
-		       int length1, const char *string2, int length2,
-		       int start, struct re_registers *regs, int stop);
+extern int re_match_2 (struct re_pattern_buffer *__buffer,
+		       const char *__string1, int __length1,
+		       const char *__string2, int __length2, int __start,
+		       struct re_registers *__regs, int __stop);
 
 
 /* Set REGS to hold NUM_REGS registers, storing them in STARTS and
@@ -511,9 +508,10 @@ extern int re_match_2 (struct re_pattern_buffer *buffer, const char *string1,
    Unless this function is called, the first search or match using
    PATTERN_BUFFER will allocate its own register data, without
    freeing the old data.  */
-extern void re_set_registers (struct re_pattern_buffer *buffer,
-			      struct re_registers *regs, unsigned num_regs,
-			      regoff_t *starts, regoff_t *ends);
+extern void re_set_registers (struct re_pattern_buffer *__buffer,
+			      struct re_registers *__regs,
+			      unsigned int __num_regs,
+			      regoff_t *__starts, regoff_t *__ends);
 
 #if defined _REGEX_RE_COMP || defined _LIBC
 # ifndef _CRAY
@@ -564,11 +562,3 @@ extern void regfree (regex_t *__preg);
 #endif	/* C++ */
 
 #endif /* regex.h */
-
-/*
-Local variables:
-make-backup-files: t
-version-control: t
-trim-versions-without-asking: nil
-End:
-*/
