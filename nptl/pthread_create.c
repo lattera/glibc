@@ -314,6 +314,17 @@ start_thread (void *arg)
   if (IS_DETACHED (pd))
     /* Free the TCB.  */
     __free_tcb (pd);
+  else if (__builtin_expect (pd->cancelhandling & SETXID_BITMASK, 0))
+    {
+      /* Some other thread might call any of the setXid functions and expect
+	 us to reply.  In this case wait until we did that.  */
+      do
+	lll_futex_wait (&pd->setxid_futex, 0);
+      while (pd->cancelhandling & SETXID_BITMASK);
+
+      /* Reset the value so that the stack can be reused.  */
+      pd->setxid_futex = 0;
+    }
 
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
@@ -354,7 +365,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
        accessing far-away memory.  */
     iattr = &default_attr;
 
-  struct pthread *pd;
+  struct pthread *pd = NULL;
   int err = ALLOCATE_STACK (iattr, &pd);
   if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is

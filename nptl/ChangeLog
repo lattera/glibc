@@ -1,3 +1,23 @@
+2005-10-01  Ulrich Drepper  <drepper@redhat.com>
+            Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h: Define SETXID_BIT and SETXID_BITMASK.  Adjust
+	CANCEL_RESTMASK.
+	(struct pthread): Move specific_used field to avoid padding.
+	Add setxid_futex field.
+	* init.c (sighandler_setxid): Reset setxid flag and release the
+	setxid futex.
+	* allocatestack.c (setxid_signal_thread): New function.  Broken
+	out of the bodies of the two loops in __nptl_setxid.  For undetached
+	threads check whether they are exiting and if yes, don't send a signal.
+	(__nptl_setxid): Simplify loops by using setxid_signal_thread.
+	* pthread_create.c (start_thread): For undetached threads, check
+	whether setxid bit is set.  If yes, wait until signal has been
+	processed.
+
+	* allocatestack.c (STACK_VARIABLES): Initialize them.
+	* pthread_create.c (__pthread_create_2_1): Initialize pd.
+
 2004-09-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_cond_destroy.c (__pthread_cond_destroy): If there are

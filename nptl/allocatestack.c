@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,7 +34,7 @@
 #ifndef NEED_SEPARATE_REGISTER_STACK
 
 /* Most architectures have exactly one stack pointer.  Some have more.  */
-# define STACK_VARIABLES void *stackaddr
+# define STACK_VARIABLES void *stackaddr = NULL
 
 /* How to pass the values to the 'create_thread' function.  */
 # define STACK_VARIABLES_ARGS stackaddr
@@ -52,7 +53,7 @@
 
 /* We need two stacks.  The kernel will place them but we have to tell
    the kernel about the size of the reserved address space.  */
-# define STACK_VARIABLES void *stackaddr; size_t stacksize
+# define STACK_VARIABLES void *stackaddr = NULL; size_t stacksize = 0
 
 /* How to pass the values to the 'create_thread' function.  */
 # define STACK_VARIABLES_ARGS stackaddr, stacksize
@@ -817,6 +818,45 @@ __find_thread_by_id (pid_t tid)
 }
 #endif
 
+
+static void
+internal_function
+setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
+{
+  if (! IS_DETACHED (t))
+    {
+      int ch;
+      do
+	{
+	  ch = t->cancelhandling;
+
+	  /* If the thread is exiting right now, ignore it.  */
+	  if ((ch & EXITING_BITMASK) != 0)
+	    return;
+	}
+      while (atomic_compare_and_exchange_val_acq (&t->cancelhandling,
+						  ch | SETXID_BITMASK, ch));
+    }
+
+  int val;
+#if __ASSUME_TGKILL
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  t->tid, SIGSETXID);
+#else
+# ifdef __NR_tgkill
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  t->tid, SIGSETXID);
+  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
+#endif
+
+  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
+    atomic_increment (&cmdp->cntr);
+}
+
+
 int
 attribute_hidden
 __nptl_setxid (struct xid_command *cmdp)
@@ -836,54 +876,20 @@ __nptl_setxid (struct xid_command *cmdp)
   list_for_each (runp, &stack_used)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t != self)
-	{
-	  int val;
-#if __ASSUME_TGKILL
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-#else
-# ifdef __NR_tgkill
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
-	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
-# endif
-	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
-#endif
+      if (t == self)
+	continue;
 
-	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
-	    atomic_increment (&cmdp->cntr);
-	}
+      setxid_signal_thread (cmdp, t);
     }
 
   /* Now the list with threads using user-allocated stacks.  */
   list_for_each (runp, &__stack_user)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t != self)
-	{
-	  int val;
-#if __ASSUME_TGKILL
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-#else
-# ifdef __NR_tgkill
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
-	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
-# endif
-	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
-#endif
+      if (t == self)
+	continue;
 
-	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
-	    atomic_increment (&cmdp->cntr);
-	}
+      setxid_signal_thread (cmdp, t);
     }
 
   int cur = cmdp->cntr;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -161,8 +161,11 @@ struct pthread
   /* Bit set if thread terminated and TCB is freed.  */
 #define TERMINATED_BIT		5
 #define TERMINATED_BITMASK	0x20
+  /* Bit set if thread is supposed to change XID.  */
+#define SETXID_BIT		6
+#define SETXID_BITMASK		0x40
   /* Mask for the rest.  Helps the compiler to optimize.  */
-#define CANCEL_RESTMASK		0xffffffc0
+#define CANCEL_RESTMASK		0xffffff80
 
 #define CANCEL_ENABLED_AND_CANCELED(value) \
   (((value) & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK	      \
@@ -185,11 +188,11 @@ struct pthread
     void *data;
   } specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
 
-  /* Flag which is set when specific data is set.  */
-  bool specific_used;
-
   /* Two-level array for the thread-specific data.  */
   struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
+
+  /* Flag which is set when specific data is set.  */
+  bool specific_used;
 
   /* True if events must be reported.  */
   bool report_events;
@@ -202,6 +205,9 @@ struct pthread
 
   /* Lock to synchronize access to the descriptor.  */
   lll_lock_t lock;
+
+  /* Lock for synchronizing setxid calls.  */
+  lll_lock_t setxid_futex;
 
 #if HP_TIMING_AVAIL
   /* Offset of the CPU clock at start thread start time.  */

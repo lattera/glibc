@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -211,6 +211,15 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 
   if (atomic_decrement_val (&__xidcmd->cntr) == 0)
     lll_futex_wake (&__xidcmd->cntr, 1);
+
+  /* Reset the SETXID flag.  */
+  struct pthread *self = THREAD_SELF;
+  int flags = THREAD_GETMEM (self, cancelhandling);
+  THREAD_SETMEM (self, cancelhandling, flags & ~SETXID_BITMASK);
+
+  /* And release the futex.  */
+  self->setxid_futex = 1;
+  lll_futex_wake (&self->setxid_futex, 1);
 }
 
 
