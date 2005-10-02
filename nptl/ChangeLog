@@ -1,3 +1,8 @@
+2005-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* allocatestack.c (setxid_signal_thread): Need to use
+	atomic_compare_and_exchange_bool_acq.
+
 2005-10-01  Ulrich Drepper  <drepper@redhat.com>
             Jakub Jelinek  <jakub@redhat.com>
 

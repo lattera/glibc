@@ -834,8 +834,8 @@ setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
 	  if ((ch & EXITING_BITMASK) != 0)
 	    return;
 	}
-      while (atomic_compare_and_exchange_val_acq (&t->cancelhandling,
-						  ch | SETXID_BITMASK, ch));
+      while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
+						   ch | SETXID_BITMASK, ch));
     }
 
   int val;
