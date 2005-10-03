@@ -1,3 +1,7 @@
+2005-10-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/nofpu: Directory removed, saved in ports repository.
+
 2005-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex.h: Pretty printing.
