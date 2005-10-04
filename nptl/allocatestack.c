@@ -839,6 +839,7 @@ setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
     }
 
   int val;
+  INTERNAL_SYSCALL_DECL (err);
 #if __ASSUME_TGKILL
   val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
 			  t->tid, SIGSETXID);
@@ -866,8 +867,6 @@ __nptl_setxid (struct xid_command *cmdp)
 
   __xidcmd = cmdp;
   cmdp->cntr = 0;
-
-  INTERNAL_SYSCALL_DECL (err);
 
   struct pthread *self = THREAD_SELF;
 
@@ -901,6 +900,7 @@ __nptl_setxid (struct xid_command *cmdp)
 
   /* This must be last, otherwise the current thread might not have
      permissions to send SIGSETXID syscall to the other threads.  */
+  INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL_NCS (cmdp->syscall_no, err, 3,
 				 cmdp->id[0], cmdp->id[1], cmdp->id[2]);
   if (INTERNAL_SYSCALL_ERROR_P (result, err))
