@@ -243,6 +243,10 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
    Prelinked libraries may use Elf32_Rela though.  */
 #define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
 
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER arm_gnu_pltenter
+#define ARCH_LA_PLTEXIT arm_gnu_pltexit
+
 #ifdef RESOLVE_MAP
 
 /* Deal with an out-of-range PC24 reloc.  */
