@@ -1,3 +1,9 @@
+2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h (R_ARM_TLS_DTPMOD32, R_ARM_TLS_DTPOFF32,
+	R_ARM_TLS_TPOFF32, R_ARM_TLS_GD32, R_ARM_TLS_LDM32,
+	R_ARM_TLS_LDO32, R_ARM_TLS_IE32, R_ARM_TLS_LE32): New macros.
+
 2005-10-03  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/nofpu: Directory removed, saved in ports repository.

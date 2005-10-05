@@ -2174,6 +2174,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_THM_SWI8		14
 #define R_ARM_XPC25		15
 #define R_ARM_THM_XPC22		16
+#define R_ARM_TLS_DTPMOD32	17	/* ID of module containing symbol */
+#define R_ARM_TLS_DTPOFF32	18	/* Offset in TLS block */
+#define R_ARM_TLS_TPOFF32	19	/* Offset in static TLS block */
 #define R_ARM_COPY		20	/* Copy symbol at runtime */
 #define R_ARM_GLOB_DAT		21	/* Create GOT entry */
 #define R_ARM_JUMP_SLOT		22	/* Create PLT entry */
@@ -2192,6 +2195,16 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_GNU_VTINHERIT	101
 #define R_ARM_THM_PC11		102	/* thumb unconditional branch */
 #define R_ARM_THM_PC9		103	/* thumb conditional branch */
+#define R_ARM_TLS_GD32		104	/* PC-rel 32 bit for global dynamic
+					   thread local data */
+#define R_ARM_TLS_LDM32		105	/* PC-rel 32 bit for local dynamic
+					   thread local data */
+#define R_ARM_TLS_LDO32		106	/* 32 bit offset relative to TLS
+					   block */
+#define R_ARM_TLS_IE32		107	/* PC-rel 32 bit for GOT entry of
+					   static TLS block offset */
+#define R_ARM_TLS_LE32		108	/* 32 bit offset relative to static
+					   TLS block */
 #define R_ARM_RXPC25		249
 #define R_ARM_RSBREL32		250
 #define R_ARM_THM_RPC22		251
