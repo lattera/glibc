@@ -1,3 +1,12 @@
+2005-10-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces):
+	Use ARCH_PLTENTER_MEMBERS and ARCH_PLTEXIT_MEMBERS macros if defined.
+	* elf/tst-auditmod1.c: Include <tst-audit.h> to define more
+	architecture-specific code.
+	* sysdeps/generic/tst-audit.h: New file.
+	* elf/Makefile (distribute): Add it.
+
 2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* elf/elf.h (R_ARM_TLS_DTPMOD32, R_ARM_TLS_DTPOFF32,

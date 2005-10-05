@@ -192,8 +192,12 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_regs La_sparc64_regs
 # define La_retval La_sparc64_retval
 # define int_retval lrv_reg[0]
-#else
-# error "architecture specific code needed"
+#endif
+
+#include <tst-audit.h>
+#if (!defined (pltenter) || !defined (pltexit) || !defined (La_regs) \
+     || !defined (La_retval) || !defined (int_retval))
+# error "architecture specific code needed in sysdeps/CPU/tls-audit.h or here"
 #endif
 
 

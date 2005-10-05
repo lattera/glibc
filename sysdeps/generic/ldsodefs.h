@@ -292,6 +292,9 @@ struct audit_ifaces
 					const struct La_sparc64_regs *,
 					unsigned int *, const char *name,
 					long int *framesizep);
+#ifdef ARCH_PLTENTER_MEMBERS
+    ARCH_PLTENTER_MEMBERS;
+#endif
   };
   union
   {
@@ -360,6 +363,9 @@ struct audit_ifaces
 					 const struct La_sparc32_regs *,
 					 struct La_sparc32_retval *,
 					 const char *);
+#ifdef ARCH_PLTEXIT_MEMBERS
+    ARCH_PLTEXIT_MEMBERS;
+#endif
   };
   unsigned int (*objclose) (uintptr_t *);
 

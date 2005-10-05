@@ -86,11 +86,12 @@ distribute	:= rtld-Rules \
 		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
 		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
-		   unload6mod1.c unload6mod2.c unload6mod3.c tst-auditmod1.c \
+		   unload6mod1.c unload6mod2.c unload6mod3.c \
+		   tst-auditmod1.c tst-audit.sh \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
-		   tst-array5.exp 
+		   tst-array5.exp
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
