@@ -179,19 +179,27 @@ __local_syscall_error:						\
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)		\
+#undef INTERNAL_SYSCALL_RAW
+#define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
   ({ unsigned int _sys_result;					\
      {								\
        register int _a1 asm ("a1");				\
        LOAD_ARGS_##nr (args)					\
        asm volatile ("swi	%1	@ syscall " #name	\
 		     : "=r" (_a1)				\
-		     : "i" (SYS_ify(name)) ASM_ARGS_##nr	\
+		     : "i" (name) ASM_ARGS_##nr			\
 		     : "memory");				\
        _sys_result = _a1;					\
      }								\
      (int) _sys_result; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...)		\
+	INTERNAL_SYSCALL_RAW(SYS_ify(name), err, nr, args)
+
+#undef INTERNAL_SYSCALL_ARM
+#define INTERNAL_SYSCALL_ARM(name, err, nr, args...)		\
+	INTERNAL_SYSCALL_RAW(__ARM_NR_##name, err, nr, args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \

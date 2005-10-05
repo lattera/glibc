@@ -1,5 +1,20 @@
 2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/dl-machine.h: Include <tls.h>.
+	(elf_machine_type_class, elf_machine_rel, elf_machine_rela): Handle
+	TLS relocations.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Build __aeabi_read_tp.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INTERNAL_SYSCALL_RAW): Renamed
+	from INTERNAL_SYSCALL.
+	(INTERNAL_SYSCALL, INTERNAL_SYSCALL_ARM): New macros.
+	* sysdeps/arm/dl-tls.h, sysdeps/arm/elf/configure.in,
+	sysdeps/arm/elf/configure, sysdeps/arm/libc-tls.c,
+	sysdeps/arm/linuxthreads/tls.h, sysdeps/arm/tls-macros.h,
+	sysdeps/unix/sysv/linux/arm/aeabi_read_tp.S,
+	sysdeps/unix/sysv/linux/arm/libc-aeabi_read_tp.S: New files.
+
+2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/atomicity.h: Delete.
 	* sysdeps/arm/bits/atomic.h: New file.
 

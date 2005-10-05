@@ -1,0 +1,35 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/arm/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and
+# linker.
+AC_CACHE_CHECK(for ARM TLS support, libc_cv_arm_tls, [dnl
+cat > conftest.s <<\EOF
+	.section ".tdata", "awT", %progbits
+	.globl foo
+foo:	.long	1
+	.section ".tbss", "awT", %nobits
+	.globl bar
+bar:	.skip	4
+	.text
+.word	foo(tpoff)
+.word	foo(tlsgd)
+EOF
+dnl
+if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_arm_tls=yes
+else
+  libc_cv_arm_tls=no
+fi
+rm -f conftest*])
+if test $libc_cv_arm_tls = yes; then
+  AC_DEFINE(HAVE_TLS_SUPPORT)
+fi
+fi
+
+dnl It is always possible to access static and hidden symbols in an
+dnl position independent way.
+dnl NOTE: This feature was added by the GCC TLS patches.  We should test for
+dnl it.  Until we do, don't define it.
+#AC_DEFINE(PI_STATIC_AND_HIDDEN)

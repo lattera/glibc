@@ -24,6 +24,7 @@
 #define ELF_MACHINE_NAME "ARM"
 
 #include <sys/param.h>
+#include <tls.h>
 
 #define VALID_ELF_ABIVERSION(ver)	(ver == 0)
 #define VALID_ELF_OSABI(osabi) \
@@ -193,13 +194,22 @@ _dl_start_user:\n\
 .previous\n\
 ");
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
+   TLS variable, so undefined references should not be allowed to
+   define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+# define elf_machine_type_class(type) \
+  ((((type) == R_ARM_JUMP_SLOT || (type) == R_ARM_TLS_DTPMOD32		\
+     || (type) == R_ARM_TLS_DTPOFF32 || (type) == R_ARM_TLS_TPOFF32)	\
+    * ELF_RTYPE_CLASS_PLT)						\
+   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
 #define elf_machine_type_class(type) \
   ((((type) == R_ARM_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
@@ -399,7 +409,24 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     value = (*reloc_addr & 0xff000000) | (newvalue & 0x00ffffff);
 	     *reloc_addr = value;
 	  }
-	break;
+	  break;
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+	case R_ARM_TLS_DTPMOD32:
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+	  break;
+
+	case R_ARM_TLS_DTPOFF32:
+	  *reloc_addr += sym->st_value;
+	  break;
+
+	case R_ARM_TLS_TPOFF32:
+	  CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr += sym->st_value + sym_map->l_tls_offset;
+	  break;
+#endif
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
@@ -480,6 +507,24 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     *reloc_addr = value;
 	  }
 	  break;
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+	case R_ARM_TLS_DTPMOD32:
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+	  break;
+
+	case R_ARM_TLS_DTPOFF32:
+	  *reloc_addr = sym->st_value + reloc->r_addend;
+	  break;
+
+	case R_ARM_TLS_TPOFF32:
+	  CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr = (sym->st_value + sym_map->l_tls_offset
+			 + reloc->r_addend);
+	  break;
+#endif
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
