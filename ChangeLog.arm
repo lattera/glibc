@@ -1,5 +1,10 @@
 2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise.c,
+	sysdeps/unix/sysv/linux/arm/posix_fadvise64.c: New files.
+
+2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/dl-machine.h: Include <tls.h>.
 	(elf_machine_type_class, elf_machine_rel, elf_machine_rela): Handle
 	TLS relocations.
