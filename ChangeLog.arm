@@ -1,5 +1,10 @@
 2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/atomicity.h: Delete.
+	* sysdeps/arm/bits/atomic.h: New file.
+
+2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/dl-machine.h (ARCH_LA_PLTENTER,
 	ARCH_LA_PLTEXIT): Define.
 	* sysdeps/arm/ldsodefs.h, sysdeps/arm/tst-audit.h: New files.
