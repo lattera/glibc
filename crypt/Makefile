@@ -23,17 +23,15 @@ subdir	:= crypt
 
 headers := crypt.h
 
-distribute := md5.h
-
 extra-libs := libcrypt
 extra-libs-others := $(extra-libs)
 
 libcrypt-routines := crypt-entry md5-crypt md5 crypt crypt_util
 
-tests = cert md5test md5c-test
+tests := cert md5test md5c-test
 
-distribute = ufc-crypt.h crypt-private.h ufc.c speeds.c README.ufc-crypt \
-	     Banner md5.h
+distribute := ufc-crypt.h crypt-private.h ufc.c speeds.c README.ufc-crypt \
+	      Banner md5.h
 
 include ../Makeconfig
 

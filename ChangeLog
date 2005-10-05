@@ -1,5 +1,7 @@
 2005-10-05  Roland McGrath  <roland@redhat.com>
 
+	* crypt/Makefile (distribute): Remove duplicate defn.
+
 	* sysdeps/generic/ldsodefs.h (struct audit_ifaces):
 	Use ARCH_PLTENTER_MEMBERS and ARCH_PLTEXIT_MEMBERS macros if defined.
 	* elf/tst-auditmod1.c: Include <tst-audit.h> to define more
