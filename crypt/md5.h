@@ -1,6 +1,7 @@
 /* Declaration of functions and data types used for MD5 sum computing
    library functions.
-   Copyright (C) 1995-1997,1999,2000,2001,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,1999,2000,2001,2004,2005
+      Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +27,9 @@
 #if defined HAVE_LIMITS_H || _LIBC
 # include <limits.h>
 #endif
+
+#define MD5_DIGEST_SIZE 16
+#define MD5_BLOCK_SIZE 64
 
 /* The following contortions are an attempt to use the C preprocessor
    to determine an unsigned integral type that is 32 bits wide.  An

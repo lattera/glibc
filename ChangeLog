@@ -1,3 +1,7 @@
+2005-10-05  Simon Josefsson  <jas@extundo.com>
+
+	* crypt/md5.h (MD5_DIGEST_SIZE, MD5_BLOCK_SIZE): New macros.
+
 2005-10-05  Roland McGrath  <roland@redhat.com>
 
 	* crypt/Makefile (distribute): Remove duplicate defn.
