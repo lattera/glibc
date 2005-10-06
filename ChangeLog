@@ -1,3 +1,8 @@
+2005-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readonly-area.c: Allow fopen to fail because
+	the file does not exist.
+
 2005-10-05  Simon Josefsson  <jas@extundo.com>
 
 	[BZ #1423]
