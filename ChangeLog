@@ -1,3 +1,8 @@
+2005-10-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getent.c (hosts_keys): Pass INADDRSZ as size rather
+	than IN6ADDRSZ to AF_INET gethostbyaddr.
+
 2005-10-07  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1438]
