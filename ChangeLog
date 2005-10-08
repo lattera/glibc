@@ -1,3 +1,10 @@
+2005-10-07  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1438]
+	* include/features.h: Make tests on _FORTIFY_SOURCE and __OPTIMIZE__
+	friendly to -Wundef.
+	(__USE_FORTIFY_LEVEL): Always define it, to 0 if nothing else.
+
 2005-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/readonly-area.c: Allow fopen to fail because
