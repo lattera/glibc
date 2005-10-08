@@ -280,9 +280,9 @@ hosts_keys (int number, char *key[])
       char addr[IN6ADDRSZ];
 
       if (inet_pton (AF_INET6, key[i], &addr) > 0)
-	host = gethostbyaddr (addr, sizeof (addr), AF_INET6);
+	host = gethostbyaddr (addr, IN6ADDRSZ, AF_INET6);
       else if (inet_pton (AF_INET, key[i], &addr) > 0)
-	host = gethostbyaddr (addr, sizeof (addr), AF_INET);
+	host = gethostbyaddr (addr, INADDRSZ, AF_INET);
       else if ((host = gethostbyname2 (key[i], AF_INET6)) == NULL)
 	host = gethostbyname2 (key[i], AF_INET);
 
