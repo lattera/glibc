@@ -1,5 +1,14 @@
 2005-10-09  Phil Blundell  <pb@reciva.com>
 
+	* sysdeps/arm/Makefile [subdir=gmon] (sysdep_routines): Add
+	_mcount.
+	* sysdeps/arm/machine-gmon.h (MCOUNT): Replace with empty
+	definition.
+	(_MCOUNT_DECL): Make linkage global.
+	* sysdeps/arm/_mcount.S: New file.
+
+2005-10-09  Phil Blundell  <pb@reciva.com>
+
 	* sysdeps/arm/dl-trampoline.S: [PROF] (_dl_runtime_profile):
 	Don't compile.  Correct cut'n'paste error with .size.
 

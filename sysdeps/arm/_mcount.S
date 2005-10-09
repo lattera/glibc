@@ -1,5 +1,5 @@
-/* Machine-dependent definitions for profiling support.  ARM version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Profiling entry point.  ARM version.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* GCC for the ARM cannot compile __builtin_return_address(N) for N != 0, 
-   so we must use an assembly stub.  */
+#include <sysdep.h>
 
-#define _MCOUNT_DECL(frompc, selfpc) \
- void mcount_internal (u_long frompc, u_long selfpc)
-
-#define MCOUNT		/* Nothing herel code in _mcount.S is used. */
+ENTRY(_mcount)
+	stmfd	sp!, {r0-r3, lr}
+	mov	r0, lr
+	mov	r1, ip
+	bl	mcount_internal
+	ldmfd	sp!, {r0-r3, pc}
+END(_mcount)
