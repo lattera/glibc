@@ -74,6 +74,7 @@ _dl_runtime_resolve:
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
+#ifndef PROF
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
 	cfi_startproc
@@ -210,5 +211,6 @@ _dl_runtime_profile:
 	BX(lr)
 
 	cfi_endproc
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve
+	.size _dl_runtime_profile, .-_dl_runtime_profile
+#endif
 	.previous

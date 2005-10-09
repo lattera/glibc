@@ -1,3 +1,8 @@
+2005-10-09  Phil Blundell  <pb@reciva.com>
+
+	* sysdeps/arm/dl-trampoline.S: [PROF] (_dl_runtime_profile):
+	Don't compile.  Correct cut'n'paste error with .size.
+
 2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/posix_fadvise.c,
