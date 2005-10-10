@@ -1,3 +1,8 @@
+2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/memset.S (memset): Correct handling of negative
+	arguments.
+
 2005-10-10  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/_mcount.S: Suppress profiling when building this

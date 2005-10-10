@@ -32,6 +32,7 @@ ENTRY(memset)
 	subne	r2, r2, #1
 	bne	1b
 
+	and	r1, r1, #255	@ clear any sign bits
 	orr	r1, r1, r1, lsl $8
 	orr	r1, r1, r1, lsl $16
 
