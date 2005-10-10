@@ -1,3 +1,10 @@
+2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/generic/bits/byteswap.h (__bswap_constant_16): New macro.
+	(__bswap_16): Use it.
+	(__bswap_constant_32): New macro.
+	(__bswap_32): Use it.
+
 2005-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_recursive_cntr.

@@ -25,32 +25,35 @@
 #define _BITS_BYTESWAP_H 1
 
 /* Swap bytes in 16 bit value.  */
+#define __bswap_constant_16(x) \
+     ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
+
 #ifdef __GNUC__
 # define __bswap_16(x) \
     (__extension__							      \
-     ({ unsigned short int __bsx = (x);					      \
-        ((((__bsx) >> 8) & 0xffu) | (((__bsx) & 0xffu) << 8)); }))
+     ({ unsigned short int __bsx = (x); __bswap_constant_16 (__bsx); }))
 #else
 static __inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
 {
-  return ((((__bsx) >> 8) & 0xffu) | (((__bsx) & 0xffu) << 8));
+  return __bswap_constant_16 (__bsx);
 }
 #endif
 
 /* Swap bytes in 32 bit value.  */
+#define __bswap_constant_32(x) \
+     ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) |	      \
+      (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
+
 #ifdef __GNUC__
 # define __bswap_32(x) \
   (__extension__							      \
-   ({ unsigned int __bsx = (x);						      \
-      ((((__bsx) & 0xff000000u) >> 24) | (((__bsx) & 0x00ff0000u) >>  8) |    \
-       (((__bsx) & 0x0000ff00u) <<  8) | (((__bsx) & 0x000000ffu) << 24)); }))
+   ({ register unsigned int __bsx = (x); __bswap_constant_32 (__bsx); }))
 #else
 static __inline unsigned int
 __bswap_32 (unsigned int __bsx)
 {
-  return ((((__bsx) & 0xff000000u) >> 24) | (((__bsx) & 0x00ff0000u) >>  8) |
-	  (((__bsx) & 0x0000ff00u) <<  8) | (((__bsx) & 0x000000ffu) << 24));
+  return __bswap_constant_32 (__bsx);
 }
 #endif
 
