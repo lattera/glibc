@@ -1,6 +1,6 @@
 2005-10-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_arena_ptr.
+	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_recursive_cntr.
 
 2005-10-08  Jakub Jelinek  <jakub@redhat.com>
 
