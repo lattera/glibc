@@ -1,3 +1,7 @@
+2005-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_arena_ptr.
+
 2005-10-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/getent.c (hosts_keys): Pass INADDRSZ as size rather

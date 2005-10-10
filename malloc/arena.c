@@ -277,7 +277,7 @@ ptmalloc_unlock_all (void)
 
 #ifdef __linux__
 
-/* In LinuxThreads, unlocking a mutex in the child process after a
+/* In NPTL, unlocking a mutex in the child process after a
    fork() is currently unsafe, whereas re-initializing it is safe and
    does not leak resources.  Therefore, a special atfork handler is
    installed for the child. */
@@ -300,6 +300,7 @@ ptmalloc_unlock_all2 (void)
     if(ar_ptr == &main_arena) break;
   }
   mutex_init(&list_lock);
+  atfork_recursive_cntr = 0;
 }
 
 #else
