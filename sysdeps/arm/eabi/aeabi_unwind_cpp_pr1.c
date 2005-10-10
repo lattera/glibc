@@ -1,5 +1,4 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,37 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+/* Because some objects in ld.so and libc.so are built with
+   -fexceptions, we end up with references to this personality
+   routine.  However, these libraries are not linked against
+   libgcc_eh.a, so we need a dummy definition.   This routine will
+   never actually be called.  */
 
-int
-fesetround (int round)
+#include <stdlib.h>
+
+attribute_hidden
+void
+__aeabi_unwind_cpp_pr0 (void)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+#ifndef IS_IN_rtld
+  abort ();
+#endif
 }
 
-libm_hidden_def (fesetround)
+attribute_hidden
+void
+__aeabi_unwind_cpp_pr1 (void)
+{
+#ifndef IS_IN_rtld
+  abort ();
+#endif
+}
+
+attribute_hidden
+void
+__aeabi_unwind_cpp_pr2 (void)
+{
+#ifndef IS_IN_rtld
+  abort ();
+#endif
+}

@@ -1,5 +1,5 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* epoll_ctl wrapper for ARM EABI.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <sysdep.h>
+#include <errno.h>
+#include <sys/epoll.h>
+
+#include <kernel_epoll.h>
 
 int
-fesetround (int round)
+epoll_ctl (int __epfd, int __op, int __fd, struct epoll_event *__event)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+  struct kernel_epoll_event k_event;
+
+  k_event.events = __event->events;
+  memcpy (&k_event.data, &__event->data, sizeof (k_event.data));
+
+  return INLINE_SYSCALL (epoll_ctl, 4, __epfd, __op, __fd, &k_event);
 }
 
-libm_hidden_def (fesetround)
+libc_hidden_def (epoll_ctl)

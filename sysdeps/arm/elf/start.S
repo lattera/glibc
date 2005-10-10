@@ -1,5 +1,6 @@
 /* Startup code for ARM & ELF
-   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,6 +63,10 @@
 	.globl _start
 	.type _start,#function
 _start:
+#if !defined(__USING_SJLJ_EXCEPTIONS__)
+       /* Protect against unhandled exceptions.  */
+       .fnstart
+#endif
 	/* Fetch address of fini */
 	ldr ip, =__libc_csu_fini
 
@@ -92,6 +97,11 @@ _start:
 
 	/* should never get here....*/
 	bl abort
+
+#if !defined(__USING_SJLJ_EXCEPTIONS__)
+       .cantunwind
+       .fnend
+#endif
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

@@ -1,5 +1,64 @@
 2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/dl-machine.h (_dl_start_user): Preserve eight-byte
+	stack alignment.
+
+	* sysdeps/arm/elf/start.S (_start): Add unwind markers for EABI
+	targets.
+
+	* sysdeps/arm/preconfigure: Set machine for EABI targets.  Remove
+	obsolete Thumb support.
+
+	* sysdeps/arm/shlib-versions: Add EABI support.
+
+	* sysdeps/unix/sysv/linux/arm/mmap64.S (__mmap64): Allow for padding
+	in the argument list for EABI targets.
+
+	* sysdeps/arm/fpu/feholdexcpt.c, sysdeps/arm/fpu/fesetround.c: Add
+	libm_hidden_def.
+
+	* sysdeps/arm/dl-sysdep.h, sysdeps/arm/eabi/Makefile,
+	sysdeps/arm/eabi/Versions, sysdeps/arm/eabi/__longjmp.S,
+	sysdeps/arm/eabi/aeabi_assert.c, sysdeps/arm/eabi/aeabi_atexit.c,
+	sysdeps/arm/eabi/aeabi_errno_addr.c, sysdeps/arm/eabi/aeabi_lcsts.c,
+	sysdeps/arm/eabi/aeabi_localeconv.c, sysdeps/arm/eabi/aeabi_math.c,
+	sysdeps/arm/eabi/aeabi_mb_cur_max.c, sysdeps/arm/eabi/aeabi_memclr.c,
+	sysdeps/arm/eabi/aeabi_memcpy.c, sysdeps/arm/eabi/aeabi_memmove.c
+	sysdeps/arm/eabi/aeabi_memset.c, sysdeps/arm/eabi/aeabi_sighandlers.S,
+	sysdeps/arm/eabi/aeabi_unwind_cpp_pr1.c, sysdeps/arm/eabi/bits/fenv.h,
+	sysdeps/arm/eabi/bits/huge_val.h, sysdeps/arm/eabi/bits/setjmp.h,
+	sysdeps/arm/eabi/fclrexcpt.c, sysdeps/arm/eabi/fedisblxcpt.c,
+	sysdeps/arm/eabi/feenablxcpt.c, sysdeps/arm/eabi/fegetenv.c,
+	sysdeps/arm/eabi/fegetexcept.c, sysdeps/arm/eabi/fegetround.c,
+	sysdeps/arm/eabi/feholdexcpt.c, sysdeps/arm/eabi/fesetenv.c,
+	sysdeps/arm/eabi/fesetround.c, sysdeps/arm/eabi/find_exidx.c,
+	sysdeps/arm/eabi/fpu_control.h, sysdeps/arm/eabi/fraiseexcpt.c,
+	sysdeps/arm/eabi/fsetexcptflg.c, sysdeps/arm/eabi/ftestexcept.c,
+	sysdeps/arm/eabi/setjmp.S, sysdeps/unix/sysv/linux/arm/eabi/configure,
+	sysdeps/arm/eabi/rtld-global-offsets.sym, sysdeps/arm/eabi/setfpucw.c,
+	sysdeps/unix/sysv/linux/arm/eabi/configure.in,
+	sysdeps/unix/sysv/linux/arm/eabi/epoll_ctl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/epoll_wait.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fcntl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fstatfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/kernel_epoll.h,
+	sysdeps/unix/sysv/linux/arm/eabi/kernel_stat.h,
+	sysdeps/unix/sysv/linux/arm/eabi/lockf64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/lxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/oldgetrlimit.c,
+	sysdeps/unix/sysv/linux/arm/eabi/oldsetrlimit.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semtimedop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/statfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/syscalls.list,
+	sysdeps/unix/sysv/linux/arm/eabi/uname.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.h: New files.
+
+2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/memset.S (memset): Correct handling of negative
 	arguments.
 

@@ -1,5 +1,4 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <locale.h>
 
-int
-fesetround (int round)
+attribute_hidden
+struct lconv *
+__aeabi_localeconv (void)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+  return localeconv ();
 }
-
-libm_hidden_def (fesetround)

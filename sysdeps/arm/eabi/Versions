@@ -1,0 +1,6 @@
+libc {
+  GLIBC_2.4 {
+    # Helper routines
+    __gnu_Unwind_Find_exidx;
+  }
+}

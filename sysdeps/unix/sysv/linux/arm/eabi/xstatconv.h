@@ -1,5 +1,5 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Convert between the kernel's `struct stat' format, and libc's.
+   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include "kernel-features.h"
 
-int
-fesetround (int round)
-{
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
-}
-
-libm_hidden_def (fesetround)
+#ifndef STAT_IS_KERNEL_STAT
+extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
+extern int __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
+#endif
+extern int __xstat32_conv (int vers, void *kbuf, struct stat *buf);
+extern int __xstat64_kernel64_conv (int vers, struct kernel_stat64 *kbuf,
+				    struct stat64 *buf);

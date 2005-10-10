@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,21 +23,31 @@
 
 #include "kernel-features.h"
 
+/* For the EABI, there are four extra bytes of padding in the
+   incoming arguments to mmap64, to preserve alignment.  */
+#ifdef __ARM_EABI__
+# define INITIAL_OFFSET 8
+#else
+# define INITIAL_OFFSET 4
+#endif
+
+#ifdef __ARMEB__
+# define LOW_OFFSET      INITIAL_OFFSET + 4
+/* The initial + 4 is for the stack postdecrement.  */
+# define HIGH_OFFSET 4 + INITIAL_OFFSET + 0
+#else
+# define LOW_OFFSET      INITIAL_OFFSET + 0
+# define HIGH_OFFSET 4 + INITIAL_OFFSET + 4
+#endif
+
 	/* The mmap2 system call takes six arguments, all in registers.  */
 	.text
 ENTRY (__mmap64)
 #ifdef __NR_mmap2
-#ifdef __ARMEB__
-	ldr	ip, [sp, $8]		@ offset low part   
+	ldr	ip, [sp, $LOW_OFFSET]
 	str	r5, [sp, #-4]!   
-	ldr	r5, [sp, $8]		@ offset high part   
+	ldr	r5, [sp, $HIGH_OFFSET]
 	str	r4, [sp, #-4]!   
-#else
-	ldr	ip, [sp, $4]		@ offset low part
-	str	r5, [sp, #-4]!
-	ldr	r5, [sp, $12]		@ offset high part
-	str	r4, [sp, #-4]!
-#endif
 	movs	r4, ip, lsl $20		@ check that offset is page-aligned
 	mov	ip, ip, lsr $12
 	moveqs	r4, r5, lsr $12		@ check for overflow

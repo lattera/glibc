@@ -1,5 +1,4 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <math.h>
 
-int
-fesetround (int round)
-{
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
-}
-
-libm_hidden_def (fesetround)
+const double __aeabi_HUGE_VAL attribute_hidden = HUGE_VAL;
+const long double __aeabi_HUGE_VALL attribute_hidden = HUGE_VALL;
+const float __aeabi_HUGE_VALF attribute_hidden = HUGE_VALF;
+const float __aeabi_INFINITY attribute_hidden = INFINITY;
+const float __aeabi_NAN attribute_hidden = NAN;

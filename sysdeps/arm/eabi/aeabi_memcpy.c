@@ -1,5 +1,4 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <string.h>
 
-int
-fesetround (int round)
+/* Copy memory like memcpy, but no return value required.  Can't alias
+   to memcpy because it's not defined in the same translation
+   unit.  */
+void attribute_hidden
+__aeabi_memcpy (void *dest, const void *src, size_t n)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+  memcpy (dest, src, n);
 }
 
-libm_hidden_def (fesetround)
+/* Versions of the above which may assume memory alignment.  */
+strong_alias (__aeabi_memcpy, attribute_hidden __aeabi_memcpy4)
+strong_alias (__aeabi_memcpy, attribute_hidden __aeabi_memcpy8)

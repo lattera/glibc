@@ -1,5 +1,5 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <errno.h>
+#include <sysdep.h>
+#include <sys/syscall.h>
+#include <string.h>
+#include <sys/utsname.h>
+
+/* The kernel's struct utsname is two bytes larger than a userland struct
+   utsname due to the APCS structure size boundary.  */
 
 int
-fesetround (int round)
+__uname (struct utsname *__name)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+  char buf[sizeof (struct utsname) + 2];
+  int result = INLINE_SYSCALL (uname, 1, buf);
+
+  if (result == 0)
+    memcpy (__name, buf, sizeof (struct utsname));
+
+  return result;
 }
 
-libm_hidden_def (fesetround)
+libc_hidden_def (__uname)
+strong_alias (__uname, uname)
+libc_hidden_weak (uname)

@@ -1,4 +1,13 @@
 case "$machine" in
-arm*)		base_machine=arm machine=arm/arm32/$machine ;;
-thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
+arm*)
+	base_machine=arm
+	case $config_os in
+	linux-gnueabi)
+		machine=arm/eabi/$machine
+		;;
+	*)
+		machine=arm/$machine
+		;;
+	esac
+	;;
 esac

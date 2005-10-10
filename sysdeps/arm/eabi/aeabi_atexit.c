@@ -1,5 +1,4 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <stdlib.h>
 
-int
-fesetround (int round)
+/* Register a function to be called by exit or when a shared library
+   is unloaded.  This routine is like __cxa_atexit, but uses the
+   calling sequence required by the ARM EABI.  */
+int attribute_hidden
+__aeabi_atexit (void *arg, void (*func) (void *), void *d)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
+  return __cxa_atexit (func, arg, d);
 }
-
-libm_hidden_def (fesetround)

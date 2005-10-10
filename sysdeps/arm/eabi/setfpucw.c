@@ -1,5 +1,5 @@
-/* Set current rounding direction.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Set the FPU control word.
+   Copyright (C) 1996, 1997, 1999, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,31 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <math.h>
+#include <fpu_control.h>
 
-int
-fesetround (int round)
+#include <unistd.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
+#include <asm/procinfo.h>
+
+void
+__setfpucw (fpu_control_t set)
 {
-  /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?0:1;
-}
+  if (GLRO (dl_hwcap) & HWCAP_VFP)
+    {
+      fpu_control_t cw;
 
-libm_hidden_def (fesetround)
+      /* Fetch the current control word.  */
+      _FPU_GETCW (cw);
+
+      /* Preserve the reserved bits, and set the rest as the user
+	 specified (or the default, if the user gave zero).  */
+      cw &= _FPU_RESERVED;
+      cw |= set & ~_FPU_RESERVED;
+
+      _FPU_SETCW (cw);
+    }
+
+  /* Do nothing if a VFP unit isn't present.  */
+}

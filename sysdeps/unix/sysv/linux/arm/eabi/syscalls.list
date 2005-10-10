@@ -1,0 +1,4 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
+epoll_wait	EXTRA	epoll_wait	i:ipii	epoll_wait
