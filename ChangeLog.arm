@@ -1,4 +1,8 @@
 2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Julian Brown  <julian@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+	    Paul Brook  <paul@codesourcery.com>
 
 	* sysdeps/arm/dl-machine.h (_dl_start_user): Preserve eight-byte
 	stack alignment.
