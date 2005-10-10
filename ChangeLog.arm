@@ -1,3 +1,8 @@
+2005-10-10  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/_mcount.S: Suppress profiling when building this
+	file.
+
 2005-10-09  Phil Blundell  <pb@reciva.com>
 
 	* sysdeps/arm/Makefile [subdir=gmon] (sysdep_routines): Add
