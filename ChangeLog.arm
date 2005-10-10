@@ -5,6 +5,11 @@
 
 2005-10-10  Philip Blundell  <philb@gnu.org>
 
+	* sysdeps/arm/Makefile, sysdeps/arm/machine-gmon.h,
+	sysdeps/arm/_mcount.S: Revert previous bogus changes.
+	
+2005-10-10  Philip Blundell  <philb@gnu.org>
+
 	* sysdeps/arm/_mcount.S: Suppress profiling when building this
 	file.
 
