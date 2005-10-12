@@ -2157,9 +2157,9 @@ typedef struct malloc_chunk* mfastbinptr;
 
 #define FASTCHUNKS_BIT        (1U)
 
-#define have_fastchunks(M)     (((M)->max_fast &  FASTCHUNKS_BIT) == 0)
-#define clear_fastchunks(M)    ((M)->max_fast |=  FASTCHUNKS_BIT)
-#define set_fastchunks(M)      ((M)->max_fast &= ~FASTCHUNKS_BIT)
+#define have_fastchunks(M)     (((M)->flags &  FASTCHUNKS_BIT) == 0)
+#define clear_fastchunks(M)    ((M)->flags |=  FASTCHUNKS_BIT)
+#define set_fastchunks(M)      ((M)->flags &= ~FASTCHUNKS_BIT)
 
 /*
   NONCONTIGUOUS_BIT indicates that MORECORE does not return contiguous
@@ -2172,10 +2172,10 @@ typedef struct malloc_chunk* mfastbinptr;
 
 #define NONCONTIGUOUS_BIT     (2U)
 
-#define contiguous(M)          (((M)->max_fast &  NONCONTIGUOUS_BIT) == 0)
-#define noncontiguous(M)       (((M)->max_fast &  NONCONTIGUOUS_BIT) != 0)
-#define set_noncontiguous(M)   ((M)->max_fast |=  NONCONTIGUOUS_BIT)
-#define set_contiguous(M)      ((M)->max_fast &= ~NONCONTIGUOUS_BIT)
+#define contiguous(M)          (((M)->flags &  NONCONTIGUOUS_BIT) == 0)
+#define noncontiguous(M)       (((M)->flags &  NONCONTIGUOUS_BIT) != 0)
+#define set_noncontiguous(M)   ((M)->flags |=  NONCONTIGUOUS_BIT)
+#define set_contiguous(M)      ((M)->flags &= ~NONCONTIGUOUS_BIT)
 
 /*
    Set value of max_fast.
@@ -2184,10 +2184,9 @@ typedef struct malloc_chunk* mfastbinptr;
    Setting the value clears fastchunk bit but preserves noncontiguous bit.
 */
 
-#define set_max_fast(M, s) \
-  (M)->max_fast = (((s) == 0)? SMALLBIN_WIDTH: request2size(s)) | \
-  FASTCHUNKS_BIT | \
-  ((M)->max_fast &  NONCONTIGUOUS_BIT)
+#define set_max_fast(s) \
+  global_max_fast = ((s) == 0)? SMALLBIN_WIDTH: request2size(s)
+#define get_max_fast() global_max_fast
 
 
 /*
@@ -2197,15 +2196,14 @@ typedef struct malloc_chunk* mfastbinptr;
 struct malloc_state {
   /* Serialize access.  */
   mutex_t mutex;
-  // Should we have padding to move the mutex to its own cache line?
+
+  /* Flags (formerly in max_fast).  */
+  int flags;
 
 #if THREAD_STATS
   /* Statistics for locking.  Only used if THREAD_STATS is defined.  */
   long stat_lock_direct, stat_lock_loop, stat_lock_wait;
 #endif
-
-  /* The maximum chunk size to be eligible for fastbin */
-  INTERNAL_SIZE_T  max_fast;   /* low 2 bits used as flags */
 
   /* Fastbins */
   mfastbinptr      fastbins[NFASTBINS];
@@ -2267,6 +2265,10 @@ static struct malloc_state main_arena;
 
 static struct malloc_par mp_;
 
+
+/* Maximum size of memory handled in fastbins.  */
+static INTERNAL_SIZE_T global_max_fast;
+
 /*
   Initialize a malloc_state struct.
 
@@ -2296,8 +2298,9 @@ static void malloc_init_state(av) mstate av;
   if (av != &main_arena)
 #endif
     set_noncontiguous(av);
-
-  set_max_fast(av, DEFAULT_MXFAST);
+  if (av == &main_arena)
+    set_max_fast(DEFAULT_MXFAST);
+  av->flags |= FASTCHUNKS_BIT;
 
   av->top            = initial_top(av);
 }
@@ -2639,9 +2642,9 @@ static void do_check_malloc_state(mstate av)
   /* properties of fastbins */
 
   /* max_fast is in allowed range */
-  assert((av->max_fast & ~1) <= request2size(MAX_FAST_SIZE));
+  assert((get_max_fast () & ~1) <= request2size(MAX_FAST_SIZE));
 
-  max_fast_bin = fastbin_index(av->max_fast);
+  max_fast_bin = fastbin_index(get_max_fast ());
 
   for (i = 0; i < NFASTBINS; ++i) {
     p = av->fastbins[i];
@@ -3871,7 +3874,7 @@ _int_malloc(mstate av, size_t bytes)
     can try it without checking, which saves some time on this fast path.
   */
 
-  if ((unsigned long)(nb) <= (unsigned long)(av->max_fast)) {
+  if ((unsigned long)(nb) <= (unsigned long)(get_max_fast ())) {
     long int idx = fastbin_index(nb);
     fb = &(av->fastbins[idx]);
     if ( (victim = *fb) != 0) {
@@ -4283,7 +4286,7 @@ _int_free(mstate av, Void_t* mem)
     and used quickly in malloc.
   */
 
-  if ((unsigned long)(size) <= (unsigned long)(av->max_fast)
+  if ((unsigned long)(size) <= (unsigned long)(get_max_fast ())
 
 #if TRIM_FASTBINS
       /*
@@ -4499,7 +4502,7 @@ static void malloc_consolidate(av) mstate av;
     yet been initialized, in which case do so below
   */
 
-  if (av->max_fast != 0) {
+  if (get_max_fast () != 0) {
     clear_fastchunks(av);
 
     unsorted_bin = unsorted_chunks(av);
@@ -4512,7 +4515,7 @@ static void malloc_consolidate(av) mstate av;
       reused anyway.
     */
 
-    maxfb = &(av->fastbins[fastbin_index(av->max_fast)]);
+    maxfb = &(av->fastbins[fastbin_index(get_max_fast ())]);
     fb = &(av->fastbins[0]);
     do {
       if ( (p = *fb) != 0) {
@@ -5376,7 +5379,7 @@ int mALLOPt(param_number, value) int param_number; int value;
   switch(param_number) {
   case M_MXFAST:
     if (value >= 0 && value <= MAX_FAST_SIZE) {
-      set_max_fast(av, value);
+      set_max_fast(value);
     }
     else
       res = 0;

@@ -1,3 +1,24 @@
+2005-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	Correctly implement M_MXFAST.
+	* malloc/malloc.c (struct malloc_state): Replace max_fast with flags
+	fields.
+	(global_max_fast): New variable.
+	(set_max_fast): Change to not require arena parameter and to modify
+	global_max_fast.  Change all callers.
+	(get_max_fast): New macro.  Use this instead of directly accessing
+	now removed max_fast arena member.
+	(have_fastchunks): Use flags instead of max_fast.
+	(clear_fastchunks): Likewise.
+	(set_fastchunks): Likewise.
+	(contiguous): Likewise.
+	(noncontiguous): Likewise.
+	(set_noncontiguous): Likewise.
+	(set_contiguous): Likewise.
+	(malloc_init_state): Explicitly set FASTCHUNKS_BIT.  Call set_max_fast
+	only for main arena.
+	* malloc/hooks.c (public_sET_STATe): Adjust set_max_fast use.
+
 2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/generic/bits/byteswap.h (__bswap_constant_16): New macro.

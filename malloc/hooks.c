@@ -584,7 +584,7 @@ public_sET_STATe(Void_t* msptr)
   (void)mutex_lock(&main_arena.mutex);
   /* There are no fastchunks.  */
   clear_fastchunks(&main_arena);
-  set_max_fast(&main_arena, DEFAULT_MXFAST);
+  set_max_fast(DEFAULT_MXFAST);
   for (i=0; i<NFASTBINS; ++i)
     main_arena.fastbins[i] = 0;
   for (i=0; i<BINMAPSIZE; ++i)
