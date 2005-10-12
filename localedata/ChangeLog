@@ -1,3 +1,11 @@
+2005-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #532]
+	* locales/ts_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	* SUPPORTED: Add ts_ZA.UTF-8.
+
 2005-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_US: Fix postal_fmt.
