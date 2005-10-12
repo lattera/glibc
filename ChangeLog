@@ -1,5 +1,9 @@
 2005-10-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/malloc.h: Remove _int_new_arena prototype.
+	* malloc/arena.c (_int_new_arena): Move definition ahead of
+	arena_get2 and make static.
+
 	Correctly implement M_MXFAST.
 	* malloc/malloc.c (struct malloc_state): Replace max_fast with flags
 	fields.

@@ -786,6 +786,48 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
   return 1;
 }
 
+/* Create a new arena with initial size "size".  */
+
+static mstate
+_int_new_arena(size_t size)
+{
+  mstate a;
+  heap_info *h;
+  char *ptr;
+  unsigned long misalign;
+
+  h = new_heap(size + (sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT),
+	       mp_.top_pad);
+  if(!h) {
+    /* Maybe size is too large to fit in a single heap.  So, just try
+       to create a minimally-sized arena and let _int_malloc() attempt
+       to deal with the large request via mmap_chunk().  */
+    h = new_heap(sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT, mp_.top_pad);
+    if(!h)
+      return 0;
+  }
+  a = h->ar_ptr = (mstate)(h+1);
+  malloc_init_state(a);
+  /*a->next = NULL;*/
+  a->system_mem = a->max_system_mem = h->size;
+  arena_mem += h->size;
+#ifdef NO_THREADS
+  if((unsigned long)(mp_.mmapped_mem + arena_mem + main_arena.system_mem) >
+     mp_.max_total_mem)
+    mp_.max_total_mem = mp_.mmapped_mem + arena_mem + main_arena.system_mem;
+#endif
+
+  /* Set up the top chunk, with proper alignment. */
+  ptr = (char *)(a + 1);
+  misalign = (unsigned long)chunk2mem(ptr) & MALLOC_ALIGN_MASK;
+  if (misalign > 0)
+    ptr += MALLOC_ALIGNMENT - misalign;
+  top(a) = (mchunkptr)ptr;
+  set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
+
+  return a;
+}
+
 static mstate
 internal_function
 #if __STD_C
@@ -852,48 +894,6 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
       THREAD_STAT(++(a->stat_lock_loop));
     }
   (void)mutex_unlock(&list_lock);
-
-  return a;
-}
-
-/* Create a new arena with initial size "size".  */
-
-mstate
-_int_new_arena(size_t size)
-{
-  mstate a;
-  heap_info *h;
-  char *ptr;
-  unsigned long misalign;
-
-  h = new_heap(size + (sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT),
-	       mp_.top_pad);
-  if(!h) {
-    /* Maybe size is too large to fit in a single heap.  So, just try
-       to create a minimally-sized arena and let _int_malloc() attempt
-       to deal with the large request via mmap_chunk().  */
-    h = new_heap(sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT, mp_.top_pad);
-    if(!h)
-      return 0;
-  }
-  a = h->ar_ptr = (mstate)(h+1);
-  malloc_init_state(a);
-  /*a->next = NULL;*/
-  a->system_mem = a->max_system_mem = h->size;
-  arena_mem += h->size;
-#ifdef NO_THREADS
-  if((unsigned long)(mp_.mmapped_mem + arena_mem + main_arena.system_mem) >
-     mp_.max_total_mem)
-    mp_.max_total_mem = mp_.mmapped_mem + arena_mem + main_arena.system_mem;
-#endif
-
-  /* Set up the top chunk, with proper alignment. */
-  ptr = (char *)(a + 1);
-  misalign = (unsigned long)chunk2mem(ptr) & MALLOC_ALIGN_MASK;
-  if (misalign > 0)
-    ptr += MALLOC_ALIGNMENT - misalign;
-  top(a) = (mchunkptr)ptr;
-  set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
 
   return a;
 }
