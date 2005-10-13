@@ -1,5 +1,13 @@
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1466]
+	* sysdeps/generic/s_csqrt.c (__csqrt): For zero real part, return
+	principal square root.
+	* sysdeps/generic/s_csqrtf.c (__csqrtf): Likewise.
+	* sysdeps/generic/s_csqrtl.c (__csqrtl): Likewise.
+	* math/libm-test.inc (csqrt_test): Add test for returning
+	principal value.
+
 	* include/features.h: Define _POSIX_C_SOURCE to 200112 for
 	_XOPEN_SOURCE == 600.
 

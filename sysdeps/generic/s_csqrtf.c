@@ -1,5 +1,5 @@
 /* Complex square root of float value.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -79,8 +79,8 @@ __csqrtf (__complex__ float x)
 	{
 	  float r = __ieee754_sqrtf (0.5 * fabsf (__imag__ x));
 
-	  __real__ res = __copysignf (r, __imag__ x);
-	  __imag__ res = r;
+	  __real__ res = r;
+	  __imag__ res = __copysignf (r, __imag__ x);
 	}
       else
 	{

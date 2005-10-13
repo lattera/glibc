@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -153,6 +153,7 @@
 #define M_PI2_LOG10El		M_PI_2l * M_LOG10El
 #define M_PI4_LOG10El		M_PI_4l * M_LOG10El
 #define M_PI_LOG10El		M_PIl * M_LOG10El
+#define M_SQRT_2_2		0.70710678118654752440084436210484903L /* sqrt (2) / 2 */
 
 static FILE *ulps_file;	/* File to document difference.  */
 static int output_ulps;	/* Should ulps printed?  */
@@ -2212,6 +2213,9 @@ csqrt_test (void)
   TEST_c_c (csqrt, 0.75L, 1.25L, 1.05065169626078392338656675760808326L, 0.594868882070379067881984030639932657L);
   TEST_c_c (csqrt, -2, -3, 0.89597747612983812471573375529004348L, -1.6741492280355400404480393008490519L);
   TEST_c_c (csqrt, -2, 3, 0.89597747612983812471573375529004348L, 1.6741492280355400404480393008490519L);
+  /* Principal square root should be returned (i.e., non-negative real
+     part).  */
+  TEST_c_c (csqrt, 0, -1, M_SQRT_2_2, -M_SQRT_2_2);
 
   END (csqrt, complex);
 }

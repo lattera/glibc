@@ -1,5 +1,5 @@
 /* Complex square root of long double value.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -79,8 +79,8 @@ __csqrtl (__complex__ long double x)
 	{
 	  long double r = __ieee754_sqrtl (0.5 * fabsl (__imag__ x));
 
-	  __real__ res = __copysignl (r, __imag__ x);
-	  __imag__ res = r;
+	  __real__ res = r;
+	  __imag__ res = __copysignl (r, __imag__ x);
 	}
       else
 	{
