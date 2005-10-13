@@ -1,3 +1,23 @@
+2005-08-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1248]
+	* posix/regex_internal.h (bitset_not, bitset_merge, bitset_not_merge,
+	bitset_mask, re_string_allocate, re_string_construct,
+	re_string_reconstruct, re_string_destruct, re_string_elem_size_at,
+	re_string_char_size_at, re_string_wchar_at, re_string_peek_byte_case,
+	re_string_fetch_byte_case, re_node_set_alloc, re_node_set_init_1,
+	re_node_set_init_2, re_node_set_init_copy, re_node_set_add_intersect,
+	re_node_set_init_union, re_node_set_merge, re_node_set_insert,
+	re_node_set_insert_last, re_node_set_compare, re_node_set_contains,
+	re_node_set_remove_at, re_dfa_add_node, re_acquire_state,
+	re_acquire_state_context): Remove unnecessary forward decls.
+	(re_string_char_size_at, re_string_wchar_at, re_string_elem_size_at):
+	Put __attribute at function definition, now that the function decl
+	has been removed.
+	* posix/regex_internal.c (re_string_peek_byte_case,
+	re_string_fetch_byte_case, re_node_set_compare, re_node_set_contains):
+	Likewise.
+
 2005-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #1231]
