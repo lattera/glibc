@@ -4278,6 +4278,12 @@ _int_free(mstate av, Void_t* mem)
       malloc_printerr (check_action, errstr, mem);
       return;
     }
+  /* We know that each chunk is at least MINSIZE bytes in size.  */
+  if (__builtin_expect (size < MINSIZE, 0))
+    {
+      errstr = "free(): invalid size";
+      goto errout;
+    }
 
   check_inuse_chunk(av, p);
 

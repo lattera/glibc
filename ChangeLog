@@ -1,5 +1,7 @@
 2005-10-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_free): Fail if block size is obviously wrong.
+
 	* include/malloc.h: Remove _int_new_arena prototype.
 	* malloc/arena.c (_int_new_arena): Move definition ahead of
 	arena_get2 and make static.
