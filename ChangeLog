@@ -11,6 +11,7 @@
 
 	* posix/regex.c: No need to use K&R definitions for static functions.
 	* posix/regex_internal.c: Likewise.
+	* posix/regcomp.c: Likewise.
 
 	[BZ #1466]
 	* sysdeps/generic/s_csqrt.c (__csqrt): For zero real part, return
