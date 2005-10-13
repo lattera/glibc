@@ -1,3 +1,24 @@
+2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #533]
+	* locales/ss_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #529]
+	* locales/tn_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #491]
+	* locales/ve_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #486]
+	* locales/nso_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	* SUPPORTED: Add nso_ZA.UTF-8, ve_ZA.UTF-8, tn_ZA.UTF-8, and
+	ss_ZA.UTF-8.
+
 2005-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #532]

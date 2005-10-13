@@ -1,3 +1,8 @@
+2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h: Define _POSIX_C_SOURCE to 200112 for
+	_XOPEN_SOURCE == 600.
+
 2005-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_free): Fail if block size is obviously wrong.

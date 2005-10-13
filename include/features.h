@@ -186,8 +186,10 @@
 # define _POSIX_SOURCE	1
 # if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2
-# else
+# elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 600
 #  define _POSIX_C_SOURCE	199506L
+# else
+#  define _POSIX_C_SOURCE	200112L
 # endif
 #endif
 
@@ -263,7 +265,7 @@
 #endif
 
 #if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0 \
-    && __GNUC_PREREQ (4, 1) && defined __OPTIMIZE__ && __OPTIMIZE__ > 0
+    && __GNUC_PREREQ (4, 0) && defined __OPTIMIZE__ && __OPTIMIZE__ > 0
 # if _FORTIFY_SOURCE > 1
 #  define __USE_FORTIFY_LEVEL 2
 # else

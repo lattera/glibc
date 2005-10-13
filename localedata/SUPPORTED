@@ -260,6 +260,7 @@ nl_NL/ISO-8859-1 \
 nl_NL@euro/ISO-8859-15 \
 nn_NO.UTF-8/UTF-8 \
 nn_NO/ISO-8859-1 \
+nso_ZA/UTF-8 \
 oc_FR.UTF-8/UTF-8 \
 oc_FR/ISO-8859-1 \
 om_ET/UTF-8 \
@@ -297,6 +298,7 @@ sq_AL.UTF-8/UTF-8 \
 sq_AL/ISO-8859-1 \
 sr_CS.UTF-8/UTF-8 \
 sr_CS/ISO-8859-5 \
+ss_ZA/UTF-8 \
 st_ZA.UTF-8/UTF-8 \
 st_ZA/ISO-8859-1 \
 sv_FI.UTF-8/UTF-8 \
@@ -315,6 +317,7 @@ ti_ET/UTF-8 \
 tig_ER/UTF-8 \
 tl_PH.UTF-8/UTF-8 \
 tl_PH/ISO-8859-1 \
+tn_ZA/UTF-8 \
 tr_TR.UTF-8/UTF-8 \
 tr_TR/ISO-8859-9 \
 ts_ZA/UTF-8 \
@@ -324,6 +327,7 @@ uk_UA/KOI8-U \
 ur_PK/UTF-8 \
 uz_UZ/ISO-8859-1 \
 uz_UZ@cyrillic/UTF-8 \
+ve_ZA/UTF-8 \
 vi_VN.TCVN/TCVN5712-1 \
 vi_VN/UTF-8 \
 wa_BE/ISO-8859-1 \
