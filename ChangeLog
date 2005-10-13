@@ -1,4 +1,16 @@
+2005-08-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1231]
+	* posix/regex_internal.c (re_string_skip_chars, register_state,
+	calc_state_hash): Remove forward decls.
+	* posix/regexec.c (acquire_init_state_context, check_halt_node_context,
+	proceed_next_node, pop_fail_stack, sub_epsilon_src_nodes,
+	clean_state_log_if_needed): Likewise.
+
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: No need to use K&R definitions for static functions.
+	* posix/regex_internal.c: Likewise.
 
 	[BZ #1466]
 	* sysdeps/generic/s_csqrt.c (__csqrt): For zero real part, return
