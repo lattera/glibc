@@ -3487,39 +3487,45 @@ build_charclass (RE_TRANSLATE_TYPE trans, bitset_t sbcset,
 #endif /* RE_ENABLE_I18N */
 
 #define BUILD_CHARCLASS_LOOP(ctype_func)	\
-    for (i = 0; i < SBC_MAX; ++i)		\
+  do {						\
+    if (BE (trans != NULL, 0))			\
       {						\
-	if (ctype_func (i))			\
-	  {					\
-	    int ch = trans ? trans[i] : i;	\
-	    bitset_set (sbcset, ch);		\
-	  }					\
-      }
+	for (i = 0; i < SBC_MAX; ++i)		\
+  	  if (ctype_func (i))			\
+	    bitset_set (sbcset, trans[i]);	\
+      }						\
+    else					\
+      {						\
+	for (i = 0; i < SBC_MAX; ++i)		\
+  	  if (ctype_func (i))			\
+	    bitset_set (sbcset, i);		\
+      }						\
+  } while (0)
 
   if (strcmp (name, "alnum") == 0)
-    BUILD_CHARCLASS_LOOP (isalnum)
+    BUILD_CHARCLASS_LOOP (isalnum);
   else if (strcmp (name, "cntrl") == 0)
-    BUILD_CHARCLASS_LOOP (iscntrl)
+    BUILD_CHARCLASS_LOOP (iscntrl);
   else if (strcmp (name, "lower") == 0)
-    BUILD_CHARCLASS_LOOP (islower)
+    BUILD_CHARCLASS_LOOP (islower);
   else if (strcmp (name, "space") == 0)
-    BUILD_CHARCLASS_LOOP (isspace)
+    BUILD_CHARCLASS_LOOP (isspace);
   else if (strcmp (name, "alpha") == 0)
-    BUILD_CHARCLASS_LOOP (isalpha)
+    BUILD_CHARCLASS_LOOP (isalpha);
   else if (strcmp (name, "digit") == 0)
-    BUILD_CHARCLASS_LOOP (isdigit)
+    BUILD_CHARCLASS_LOOP (isdigit);
   else if (strcmp (name, "print") == 0)
-    BUILD_CHARCLASS_LOOP (isprint)
+    BUILD_CHARCLASS_LOOP (isprint);
   else if (strcmp (name, "upper") == 0)
-    BUILD_CHARCLASS_LOOP (isupper)
+    BUILD_CHARCLASS_LOOP (isupper);
   else if (strcmp (name, "blank") == 0)
-    BUILD_CHARCLASS_LOOP (isblank)
+    BUILD_CHARCLASS_LOOP (isblank);
   else if (strcmp (name, "graph") == 0)
-    BUILD_CHARCLASS_LOOP (isgraph)
+    BUILD_CHARCLASS_LOOP (isgraph);
   else if (strcmp (name, "punct") == 0)
-    BUILD_CHARCLASS_LOOP (ispunct)
+    BUILD_CHARCLASS_LOOP (ispunct);
   else if (strcmp (name, "xdigit") == 0)
-    BUILD_CHARCLASS_LOOP (isxdigit)
+    BUILD_CHARCLASS_LOOP (isxdigit);
   else
     return REG_ECTYPE;
 
