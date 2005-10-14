@@ -1,5 +1,10 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1468]
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: Fix values for
+	oFPREGS, oSIGMASK, oFPREGSMEM, and oMXCSR.
+	Patch by Nicholas Miell <nmiell@comcast.net>.
+
 	[BZ #1460]
 	* time/asctime.c (asctime_internal): New function, derived from
 	asctime_r.  Takes additional parameter which is the buffer length.

@@ -1,6 +1,6 @@
 /* Offsets and other constants needed in the *context() function
    implementation for Linux/x86-64.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,29 @@
 #define oRAX		144
 #define oRCX		152
 #define oRIP		168
-#define oFPREGS		208
-#define oSIGMASK	280
-#define oFPREGSMEM	408
-#define oMXCSR		432
+#define oFPREGS		224
+#define oSIGMASK	296
+#define oFPREGSMEM	424
+#define oMXCSR		448
+
+/* Tests run in stdlib/tst-ucontext-off.  */
+#define TESTS \
+  TEST (uc_mcontext.gregs[REG_RBP], oRBP);				\
+  TEST (uc_mcontext.gregs[REG_RSP], oRSP);				\
+  TEST (uc_mcontext.gregs[REG_RBX], oRBX);				\
+  TEST (uc_mcontext.gregs[REG_R8], oR8);				\
+  TEST (uc_mcontext.gregs[REG_R9], oR9);				\
+  TEST (uc_mcontext.gregs[REG_R12], oR12);				\
+  TEST (uc_mcontext.gregs[REG_R13], oR13);				\
+  TEST (uc_mcontext.gregs[REG_R14], oR14);				\
+  TEST (uc_mcontext.gregs[REG_R15], oR15);				\
+  TEST (uc_mcontext.gregs[REG_RDI], oRDI);				\
+  TEST (uc_mcontext.gregs[REG_RSI], oRSI);				\
+  TEST (uc_mcontext.gregs[REG_RDX], oRDX);				\
+  TEST (uc_mcontext.gregs[REG_RAX], oRAX);				\
+  TEST (uc_mcontext.gregs[REG_RCX], oRCX);				\
+  TEST (uc_mcontext.gregs[REG_RIP], oRIP);				\
+  TEST (uc_mcontext.fpregs, oFPREGS);					\
+  TEST (uc_sigmask, oSIGMASK);						\
+  TEST (__fpregs_mem, oFPREGSMEM);					\
+  TEST (__fpregs_mem.mxcsr, oMXCSR);

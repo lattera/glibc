@@ -1,3 +1,10 @@
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #870]
+	* locales/ku_TR: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add ku_TR.ISO-8859-9 and
+	ku_TR.UTF-8.
+
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #533]

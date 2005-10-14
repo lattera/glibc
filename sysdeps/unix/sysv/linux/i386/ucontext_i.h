@@ -1,6 +1,6 @@
 /* Offsets and other constants needed in the *context() function
    implementation.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,3 +39,23 @@
 #define oFPREGS		96
 #define oSIGMASK	108
 #define oFPREGSMEM	236
+
+/* Tests run in stdlib/tst-ucontext-off.  */
+#define TESTS \
+  TEST (uc_link, oLINK);				\
+  TEST (uc_stack.ss_sp, oSS_SP);			\
+  TEST (uc_stack.ss_size, oSS_SIZE);			\
+  TEST (uc_mcontext.gregs[REG_GS], oGS);		\
+  TEST (uc_mcontext.gregs[REG_FS], oFS);		\
+  TEST (uc_mcontext.gregs[REG_EDI], oEDI);		\
+  TEST (uc_mcontext.gregs[REG_ESI], oESI);		\
+  TEST (uc_mcontext.gregs[REG_EBP], oEBP);		\
+  TEST (uc_mcontext.gregs[REG_ESP], oESP);		\
+  TEST (uc_mcontext.gregs[REG_EBX], oEBX);		\
+  TEST (uc_mcontext.gregs[REG_EDX], oEDX);		\
+  TEST (uc_mcontext.gregs[REG_ECX], oECX);		\
+  TEST (uc_mcontext.gregs[REG_EAX], oEAX);		\
+  TEST (uc_mcontext.gregs[REG_EIP], oEIP);		\
+  TEST (uc_mcontext.fpregs, oFPREGS);			\
+  TEST (uc_sigmask, oSIGMASK);				\
+  TEST (__fpregs_mem, oFPREGSMEM);
