@@ -1,5 +1,14 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1460]
+	* time/asctime.c (asctime_internal): New function, derived from
+	asctime_r.  Takes additional parameter which is the buffer length.
+	Use snprintf instead sprintf, if it overflows, fail.
+	(asctime_r): Call asctime_internal with 26 as buffer length.
+	(asctime): Call asctime_internal with length of internal buffer.
+	* time/Makefile (tests): Add bug-asctime_r.
+	* time/bug-asctime_r.c: New file.
+
 	[BZ #1459]
 	* time/asctime.c (__asctime_r): Check for tm_year computation to
 	overflow and fail in this case.
