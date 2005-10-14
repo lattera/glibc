@@ -153,4 +153,9 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2 "<U004E><U004C>"
 country_ab3 "<U004E><U004C><U0044>"
 country_num 528
+country_car "<U004E><U004C>"
+lang_name "<U0064><U0075><U0074><U0063><U0068>"
+lang_ab "<U006E><U006C>"
+lang_term "<U006E><U006C><U0064>"
+lang_lib "<U0064><U0075><U0074>"
 END LC_ADDRESS

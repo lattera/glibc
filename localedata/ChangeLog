@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/nl_NL: Define country_car, lang_name, lang_ab,
+	lang_term, and lang_lib.
+
 	[BZ #870]
 	* locales/ku_TR: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add ku_TR.ISO-8859-9 and
