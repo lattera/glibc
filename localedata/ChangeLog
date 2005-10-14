@@ -1,5 +1,9 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #428]
+	* locales/te_IN: Several fixes.
+	Patch by Sunil Mohan Adapa <sunil@atc.tcs.co.in>.
+
 	[BZ #368]
 	* locales/dz_BT: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add dz_BT.UTF-8.

@@ -1,5 +1,12 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (collate_output): Fix counting of
+	elements.  Don't limit table size.  Use correct secondary hash
+	function.
+	* locale/localeinfo.h (LIMAGIC): Change value returned for LC_COLLATE.
+	* posix/fnmatch_loop.c: Adjust for changed secondary hash function.
+	* posix/regcomp.c: Likewise.
+
 	* time/asctime.c (asctime_internal): Use __snprintf instead of
 	snprintf to avoid PLT entry.
 
@@ -12,7 +19,7 @@
 
 	* stdlib/Makefile (tests): Add tst-ucontext-off.
 	* stdlib/tst-ucontext-off.c: New file.
-	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h (TEST): Define.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h (TESTS): Define.
 	* sysdeps/unix/sysv/linux/i386/ucontext_i.h (TESTS): Likewise.
 
 	[BZ #1468]
