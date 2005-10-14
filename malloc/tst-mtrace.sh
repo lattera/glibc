@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing the mtrace function.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -30,8 +30,7 @@ ${common_objpfx}elf/ld.so --library-path $common_objpfx \
   ${common_objpfx}malloc/tst-mtrace || status=1
 
 if test $status -eq 0 && test -f ${common_objpfx}malloc/mtrace; then
-  ${common_objpfx}malloc/mtrace ${common_objpfx}malloc/tst-mtrace \
-    ${common_objpfx}malloc/tst-mtrace.leak \
+  ${common_objpfx}malloc/mtrace ${common_objpfx}malloc/tst-mtrace.leak \
     > ${common_objpfx}malloc/tst-mtrace.out|| status=1
 fi
 

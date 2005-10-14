@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #804]
+	* malloc/tst-mtrace.sh: Work around for bootstraping.
+
 	* locale/programs/ld-collate.c (collate_output): Fix counting of
 	elements.  Don't limit table size.  Use correct secondary hash
 	function.

@@ -1,5 +1,9 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #448]
+	* locales/vi_VN: Several fixes.
+	Patch by Nguyen Thai Ngoc Duy <pclouds@gmail.com>.
+
 	[BZ #428]
 	* locales/te_IN: Several fixes.
 	Patch by Sunil Mohan Adapa <sunil@atc.tcs.co.in>.
