@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -2469,14 +2469,14 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   runp = collate->start;
   while (runp != NULL)
     {
-      if (runp->mbs != NULL && runp->weights != NULL)
+      if (runp->mbs != NULL && runp->weights != NULL && !runp->is_character)
 	/* Yep, the element really counts.  */
 	++elem_size;
 
       runp = runp->next;
     }
   /* Add 40% and find the next prime number.  */
-  elem_size = MIN (next_prime (elem_size * 1.4), 257);
+  elem_size = next_prime (elem_size * 1.4);
 
   /* Allocate the table.  Each entry consists of two words: the hash
      value and an index in a secondary table which provides the index
@@ -2496,18 +2496,20 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  uint32_t namelen = strlen (runp->name);
 	  uint32_t hash = elem_hash (runp->name, namelen);
 	  size_t idx = hash % elem_size;
+	  size_t start_idx = idx;
 
 	  if (elem_table[idx * 2] != 0)
 	    {
-	      /* The spot is already take.  Try iterating using the value
+	      /* The spot is already taken.  Try iterating using the value
 		 from the secondary hashing function.  */
-	      size_t iter = hash % (elem_size - 2);
+	      size_t iter = hash % (elem_size - 2) + 1;
 
 	      do
 		{
 		  idx += iter;
 		  if (idx >= elem_size)
 		    idx -= elem_size;
+		  assert (idx != start_idx);
 		}
 	      while (elem_table[idx * 2] != 0);
 	    }

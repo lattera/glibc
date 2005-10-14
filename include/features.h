@@ -265,7 +265,7 @@
 #endif
 
 #if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0 \
-    && __GNUC_PREREQ (4, 0) && defined __OPTIMIZE__ && __OPTIMIZE__ > 0
+    && __GNUC_PREREQ (4, 1) && defined __OPTIMIZE__ && __OPTIMIZE__ > 0
 # if _FORTIFY_SOURCE > 1
 #  define __USE_FORTIFY_LEVEL 2
 # else

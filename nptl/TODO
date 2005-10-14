@@ -6,6 +6,10 @@
 - a new attribute for mutexes: number of times we spin before calling
 sys_futex
 
+- for adaptive mutexes: when releasing, determine whether somebody spins.
+If yes, for a short time release lock.  If someone else locks no wakeup
+syscall needed.
+
 
 
 - test with threaded process terminating and semadj (?) being applied

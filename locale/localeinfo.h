@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,10 @@
 #include <intl/loadinfo.h>	/* For loaded_l10nfile definition.  */
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	((unsigned int) (0x20031115 ^ (category)))
+#define	LIMAGIC(category) \
+  (category == LC_COLLATE						\
+   ? ((unsigned int) (0x20051014 ^ (category)))				\
+   : ((unsigned int) (0x20031115 ^ (category))))
 
 /* Two special weight constants for the collation data.  */
 #define IGNORE_CHAR	2

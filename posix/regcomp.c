@@ -2742,23 +2742,28 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
     {
       int32_t hash = elem_hash ((const char *) name, name_len);
       int32_t elem = hash % table_size;
-      int32_t second = hash % (table_size - 2);
-      while (symb_table[2 * elem] != 0)
+      if (symb_table[2 * elem] != 0)
 	{
-	  /* First compare the hashing value.  */
-	  if (symb_table[2 * elem] == hash
-	      /* Compare the length of the name.  */
-	      && name_len == extra[symb_table[2 * elem + 1]]
-	      /* Compare the name.  */
-	      && memcmp (name, &extra[symb_table[2 * elem + 1] + 1],
-			 name_len) == 0)
-	    {
-	      /* Yep, this is the entry.  */
-	      break;
-	    }
+	  int32_t second = hash % (table_size - 2) + 1;
 
-	  /* Next entry.  */
-	  elem += second;
+	  do
+	    {
+	      /* First compare the hashing value.  */
+	      if (symb_table[2 * elem] == hash
+		  /* Compare the length of the name.  */
+		  && name_len == extra[symb_table[2 * elem + 1]]
+		  /* Compare the name.  */
+		  && memcmp (name, &extra[symb_table[2 * elem + 1] + 1],
+			     name_len) == 0)
+		{
+		  /* Yep, this is the entry.  */
+		  break;
+		}
+
+	      /* Next entry.  */
+	      elem += second;
+	    }
+	  while (symb_table[2 * elem] != 0);
 	}
       return elem;
     }
@@ -3000,7 +3005,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
       /*
       if (MB_CUR_MAX > 1)
       */
-	collseqwc = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQWC);
+      collseqwc = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQWC);
       table_size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_SYMB_HASH_SIZEMB);
       symb_table = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						  _NL_COLLATE_SYMB_TABLEMB);
