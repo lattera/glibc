@@ -40,7 +40,7 @@ mlock		-	mlock		i:bn	mlock
 mlockall	-	mlockall	i:i	mlockall
 mmap		-	mmap		b:aniiii	__mmap		mmap
 mount		EXTRA	mount		i:sssip	__mount	mount
-mremap		EXTRA	mremap		b:aini	__mremap	mremap
+mremap		EXTRA	mremap		b:ainip	__mremap	mremap
 munlock		-	munlock		i:ai	munlock
 munlockall	-	munlockall	i:	munlockall
 nanosleep	-	nanosleep	Ci:pp	__libc_nanosleep	__nanosleep nanosleep

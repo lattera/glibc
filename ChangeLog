@@ -1,3 +1,17 @@
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1458]
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MREMAP_FIXED.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+	* misc/sys/mman.h: Add ellipsis after last parameter of mremap and
+	adjust leading comment.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add pointer parameter to
+	mremap syscall.
+
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1405]
