@@ -1,5 +1,9 @@
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1405]
+	* libio/iogetdelim.c (_IO_getdelim): Fix truncation of return
+	value.  Avoid overflow in computation.
+
 	[BZ #1373]
 	* argp/argp.h: Remove __NTH for __argp_usage inline function.
 

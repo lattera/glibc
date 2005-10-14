@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1996,1997,1998,2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1996-1998,2001,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
      int delimiter;
      _IO_FILE *fp;
 {
-  int result;
+  _IO_ssize_t result;
   _IO_ssize_t cur_len = 0;
   _IO_ssize_t len;
 
@@ -91,6 +91,12 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
       if (t != NULL)
 	len = (t - fp->_IO_read_ptr) + 1;
+      if (__builtin_expect (cur_len + len + 1 < 0, 0))
+	{
+	  __set_errno (EOVERFLOW);
+	  result = -1;
+	  goto unlock_return;
+	}
       /* Make enough space for len+1 (for final NUL) bytes.  */
       needed = cur_len + len + 1;
       if (needed > *n)
