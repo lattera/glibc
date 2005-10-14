@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1993,1995-1997,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995-1997,2000,2002,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +19,7 @@
 
 #include "../locale/localeinfo.h"
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -44,6 +46,19 @@ __asctime_r (const struct tm *tp, char *buf)
   if (tp == NULL)
     {
       __set_errno (EINVAL);
+      return NULL;
+    }
+
+  /* We limit the size of the year which can be printed.  Using the %d
+     format specifier used the addition of 1900 would overflow the
+     number and a negative vaue is printed.  For some architectures we
+     could in theory use %ld or an evern larger integer format but
+     this would mean the output needs more space.  This would not be a
+     problem if the 'asctime_r' interface would be defined sanely and
+     a buffer size would be passed.  */
+  if (__builtin_expect (tp->tm_year > INT_MAX - 1900, 0))
+    {
+      __set_errno (EOVERFLOW);
       return NULL;
     }
 

@@ -1,5 +1,11 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1459]
+	* time/asctime.c (__asctime_r): Check for tm_year computation to
+	overflow and fail in this case.
+	* time/Makefile (tests): Add bug-asctime.
+	* time/bug-asctime.c: New file.
+
 	[BZ #1458]
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MREMAP_FIXED.
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
