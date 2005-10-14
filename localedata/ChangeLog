@@ -1,5 +1,11 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #195]
+	* locales/hu_HU: Add some transliterations.
+
+	[BZ #1429]
+	* locales/hu_HU: Define week.
+
 	[BZ #982]
 	* locales/ml_IN: Fix title.
 

@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/asctime.c (asctime_internal): Use __snprintf instead of
+	snprintf to avoid PLT entry.
+
 	* sysdeps/unix/opendir.c (__opendir): Pass extra argument to
 	__alloc_dir.
 	(__alloc_dir): Only close descriptor on error if new parameter is true.

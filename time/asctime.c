@@ -55,13 +55,13 @@ asctime_internal (const struct tm *tp, char *buf, size_t buflen)
       return NULL;
     }
 
-  int n = snprintf (buf, buflen, format,
-		    (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
-		     "???" : ab_day_name (tp->tm_wday)),
-		    (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
-		     "???" : ab_month_name (tp->tm_mon)),
-		    tp->tm_mday, tp->tm_hour, tp->tm_min,
-		    tp->tm_sec, 1900 + tp->tm_year);
+  int n = __snprintf (buf, buflen, format,
+		      (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
+		       "???" : ab_day_name (tp->tm_wday)),
+		      (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
+		       "???" : ab_month_name (tp->tm_mon)),
+		      tp->tm_mday, tp->tm_hour, tp->tm_min,
+		      tp->tm_sec, 1900 + tp->tm_year);
   if (n < 0)
     return NULL;
   if (n >= buflen)
