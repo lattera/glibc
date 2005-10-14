@@ -7,7 +7,7 @@ escape_char  /
 %
 
 LC_IDENTIFICATION
-title "Yiddish Language locale"
+title "Yiddish Language locale for the USA"
 source "http:////www.uyip.org//"
 address ""
 contact "Pablo Saratxaga"

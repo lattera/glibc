@@ -5,7 +5,7 @@ escape_char     /
 % E-Mail : gnu@gnu.org.in
 
 LC_IDENTIFICATION
-title     " Malayalam language locale for India"
+title     "Malayalam language locale for India"
 source     "Free Software Foundation of India, Trivandrum"
 address     ""
 contact     ""

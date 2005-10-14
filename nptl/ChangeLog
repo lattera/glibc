@@ -1,3 +1,11 @@
+2005-10-14  Jakub Jelinek  <jakub@redhat.com>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Fix stack
+	alignment in callback function.
+	* Makefile: Add rules to build and run tst-align3.
+	* tst-align3.c: New file.
+
 2005-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* allocatestack.c (setxid_signal_thread): Add

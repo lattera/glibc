@@ -86,9 +86,11 @@ __pthread_once:
 	/* Preserve the pointer to the control variable.  */
 3:	pushq	%rdi
 .Lpush_rdi:
+	pushq	%rdi
+.Lpush_rdi2:
 
 .LcleanupSTART:
-	callq	*8(%rsp)
+	callq	*16(%rsp)
 .LcleanupEND:
 
 	/* Get the control variable address back.  */
@@ -99,6 +101,9 @@ __pthread_once:
 	LOCK
 	incl	(%rdi)
 
+	addq	$8, %rsp
+.Ladd1:
+
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
@@ -106,7 +111,7 @@ __pthread_once:
 	syscall
 
 4:	addq	$8, %rsp
-.Ladd:
+.Ladd2:
 	xorl	%eax, %eax
 	retq
 
@@ -224,20 +229,28 @@ clear_once_control:
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_rdi-.Lpush_rdi
+	.long	.Lpush_rdi2-.Lpush_rdi
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 32
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Lpop_rdi-.Lpush_rdi2
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 24
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Ladd1-.Lpop_rdi
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Ladd-.Lpop_rdi
+	.long	.Ladd2-.Ladd1
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 8
 	.byte	4				# DW_CFA_advance_loc4
-	.long	clear_once_control-.Ladd
+	.long	clear_once_control-.Ladd2
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
+	.uleb128 32
 #if 0
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_rdi2-clear_once_control
+	.long	.Lpop_rdi3-clear_once_control
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 #endif

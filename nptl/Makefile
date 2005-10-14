@@ -205,7 +205,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
-	tst-align tst-align2 \
+	tst-align tst-align2 tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
@@ -412,6 +412,7 @@ CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
+CFLAGS-tst-align3.c += $(stack-align-test-flags)
 CFLAGS-tst-initializers1.c += -W -Wall -Werror
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
