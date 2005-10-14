@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #981]
+	* locales/ca_ES: Fix title.
+
 	[BZ #980]
 	* locales/yi_US: Fix title.
 
