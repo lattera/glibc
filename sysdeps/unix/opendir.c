@@ -132,14 +132,14 @@ __opendir (const char *name)
 	}
     }
 
-  return __alloc_dir (fd, &statbuf);
+  return __alloc_dir (fd, true, &statbuf);
 }
 weak_alias (__opendir, opendir)
 
 
 DIR *
 internal_function
-__alloc_dir (int fd, struct stat64 *statp)
+__alloc_dir (int fd, bool close_fd, struct stat64 *statp)
 {
   if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
     goto lose;
@@ -160,9 +160,12 @@ __alloc_dir (int fd, struct stat64 *statp)
   if (dirp == NULL)
   lose:
     {
-      int save_errno = errno;
-      close_not_cancel_no_status (fd);
-      __set_errno (save_errno);
+      if (close_fd)
+	{
+	  int save_errno = errno;
+	  close_not_cancel_no_status (fd);
+	  __set_errno (save_errno);
+	}
       return NULL;
     }
   memset (dirp, '\0', sizeof (DIR));

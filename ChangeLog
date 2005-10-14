@@ -1,5 +1,12 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/opendir.c (__opendir): Pass extra argument to
+	__alloc_dir.
+	(__alloc_dir): Only close descriptor on error if new parameter is true.
+	* sysdeps/unix/fdopendir.c (fdopendir): Pass extra argument to
+	__alloc_dir.  Don't close fd on error.
+	* include/dirent.h (__alloc_dir): Adjust prototype.
+
 	* stdlib/Makefile (tests): Add tst-ucontext-off.
 	* stdlib/tst-ucontext-off.c: New file.
 	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h (TEST): Define.
@@ -36,6 +43,9 @@
 	adjust leading comment.
 	* sysdeps/unix/sysv/linux/syscalls.list: Add pointer parameter to
 	mremap syscall.
+	* include/sys/mman.h (__mremap): Add ellipsis.
+	* malloc/memusage.c: Adjust mremap wrapper for optional additional
+	parameter.
 
 2005-10-13  Ulrich Drepper  <drepper@redhat.com>
 

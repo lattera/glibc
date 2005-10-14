@@ -29,14 +29,12 @@ fdopendir (int fd)
   struct stat64 statbuf;
 
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
-    goto out;
+    return NULL;
   if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
     {
       __set_errno (ENOTDIR);
-    out:
-      close_not_cancel_no_status (fd);
       return NULL;
     }
 
-  return __alloc_dir (fd, &statbuf);
+  return __alloc_dir (fd, false, &statbuf);
 }

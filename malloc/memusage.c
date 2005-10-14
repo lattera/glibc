@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <signal.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@ static void (*freep) (void *);
 static void *(*mmapp) (void *, size_t, int, int, int, off_t);
 static void *(*mmap64p) (void *, size_t, int, int, int, off64_t);
 static int (*munmapp) (void *, size_t);
-static void *(*mremapp) (void *, size_t, size_t, int);
+static void *(*mremapp) (void *, size_t, size_t, int, void *);
 
 enum
 {
@@ -226,8 +227,8 @@ me (void)
   mmap64p =
     (void *(*) (void *, size_t, int, int, int, off64_t)) dlsym (RTLD_NEXT,
 								"mmap64");
-  mremapp = (void *(*) (void *, size_t, size_t, int)) dlsym (RTLD_NEXT,
-							     "mremap");
+  mremapp = (void *(*) (void *, size_t, size_t, int, void *)) dlsym (RTLD_NEXT,
+								     "mremap");
   munmapp = (int (*) (void *, size_t)) dlsym (RTLD_NEXT, "munmap");
   initialized = 1;
 
@@ -649,9 +650,14 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 /* `mmap' replacement.  We do not have to keep track of the sizesince
    `munmap' will get it as a parameter.  */
 void *
-mremap (void *start, size_t old_len, size_t len, int flags)
+mremap (void *start, size_t old_len, size_t len, int flags,  ...)
 {
   void *result = NULL;
+  va_list ap;
+
+  va_start (ap, flags);
+  void *newaddr = (flags & MREMAP_FIXED) ? va_arg (ap, void *) : NULL;
+  va_end (ap);
 
   /* Determine real implementation if not already happened.  */
   if (__builtin_expect (initialized <= 0, 0))
@@ -662,7 +668,7 @@ mremap (void *start, size_t old_len, size_t len, int flags)
     }
 
   /* Always get a block.  We don't need extra memory.  */
-  result = (*mremapp) (start, old_len, len, flags);
+  result = (*mremapp) (start, old_len, len, flags, newaddr);
 
   if (!not_me && trace_mmap)
     {

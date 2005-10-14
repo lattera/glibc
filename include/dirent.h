@@ -24,5 +24,6 @@ extern int __alphasort64 (const void *a, const void *b)
      __attribute_pure__;
 extern int __versionsort64 (const void *a, const void *b)
      __attribute_pure__;
-extern DIR *__alloc_dir (int fd, struct stat64 *statp) internal_function;
+extern DIR *__alloc_dir (int fd, bool close_fd, struct stat64 *statp)
+     internal_function;
 #endif
