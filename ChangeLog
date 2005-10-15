@@ -1,5 +1,8 @@
 2005-10-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #968]
+	* string/strxfrm_l.c (STRXFRM): Fix exit conditions of two loops.
+
 	* sysdeps/unix/fdopendir.c (fdopendir): Make sure descriptor
 	allows reading.
 

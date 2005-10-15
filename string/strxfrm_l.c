@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -210,8 +210,9 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 		      /* Handle the pushed elements now.  */
 		      size_t backw;
 
-		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+		      for (backw = idxcnt; backw > backw_stop; )
 			{
+			  --backw;
 			  len = weights[idxarr[backw]++];
 
 			  if (needed + len < n)
@@ -293,8 +294,9 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 		     /* Handle the pushed elements now.  */
 		      size_t backw;
 
-		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+		      for (backw = idxcnt; backw > backw_stop; )
 			{
+			  --backw;
 			  len = weights[idxarr[backw]++];
 			  if (len != 0)
 			    {

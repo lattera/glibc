@@ -196,11 +196,17 @@ files in a directory, perhaps as part of a menu.
 
 @cindex directory stream
 The @code{opendir} function opens a @dfn{directory stream} whose
-elements are directory entries.  You use the @code{readdir} function on
-the directory stream to retrieve these entries, represented as
-@w{@code{struct dirent}} objects.  The name of the file for each entry is
-stored in the @code{d_name} member of this structure.  There are obvious
-parallels here to the stream facilities for ordinary files, described in
+elements are directory entries.  Alternatively @code{fdopendir} can be
+used which can have advantages if the program needs to have more
+control over the way the directory is opened for reading.  This
+allows, for instance, to pass the @code{O_NOATIME} flag to
+@code{open}.
+
+You use the @code{readdir} function on the directory stream to
+retrieve these entries, represented as @w{@code{struct dirent}}
+objects.  The name of the file for each entry is stored in the
+@code{d_name} member of this structure.  There are obvious parallels
+here to the stream facilities for ordinary files, described in
 @ref{I/O on Streams}.
 
 @menu
@@ -349,12 +355,57 @@ The process has too many files open.
 The entire system, or perhaps the file system which contains the
 directory, cannot support any additional open files at the moment.
 (This problem cannot happen on the GNU system.)
+
+@item ENOMEM
+Not enough memory available.
 @end table
 
 The @code{DIR} type is typically implemented using a file descriptor,
 and the @code{opendir} function in terms of the @code{open} function.
 @xref{Low-Level I/O}.  Directory streams and the underlying
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
+@end deftypefun
+
+The directory which is opened for reading by @code{opendir} is
+identified by the name.  In some situations this is not sufficient.
+Or the way @code{opendir} implicitly creates a file descriptor for the
+directory is not the way a program might want it.  In these cases an
+alternative interface can be used.
+
+@comment dirent.h
+@comment GNU
+@deftypefun {DIR *} fdopendir (int @var{fd})
+The @code{fdopendir} function works just like @code{opendir} but
+instead of taking a file name and opening a file descriptor for the
+directory the caller is required to provide a file descriptor.  This
+file descriptor is then used in subsequent uses of the returned
+directory stream object.
+
+The caller must make sure the file descriptor is associated with a
+directory and it allows reading.
+
+If the @code{fdopendir} call returns successfully the file descriptor
+is now under the control of the system.  It can be used in the same
+way the descriptor implicitly created by @code{opendir} can be used
+but the program must not close the descriptor.
+
+In case the function is unsuccessful it returns a null pointer and the
+file descriptor remains to be usable by the program.  The following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The file descriptor is not valid.
+
+@item ENOTDIR
+The file descriptor is not associated with a directory.
+
+@item EINVAL
+The descriptor does not allow reading the directory content.
+
+@item ENOMEM
+Not enough memory available.
+@end table
 @end deftypefun
 
 In some situations it can be desirable to get hold of the file
