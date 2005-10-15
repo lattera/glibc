@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #297]
+	* locales/fi_FI: Change date_fmt.
+
 	* locales/te_IN: Fix noexpr, replace yY with nN.
 
 	[BZ #305]
