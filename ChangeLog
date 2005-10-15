@@ -1,5 +1,9 @@
 2005-10-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1221]
+	* posix/regex_internal.h: Remove last traces of
+	RE_NO_INTERNAL_PROTOTYPES.
+
 	[BZ #968]
 	* string/strxfrm_l.c (STRXFRM): Fix exit conditions of two loops.
 

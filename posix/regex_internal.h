@@ -377,20 +377,18 @@ typedef struct re_dfa_t re_dfa_t;
 # endif
 #endif
 
-#ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len)
      internal_function;
-# ifdef RE_ENABLE_I18N
+#ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static int build_wcs_upper_buffer (re_string_t *pstr) internal_function;
-# endif /* RE_ENABLE_I18N */
+#endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags)
      internal_function __attribute ((pure));
-#endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
 #define re_string_fetch_byte(pstr) \
@@ -702,7 +700,7 @@ bitset_mask (bitset_t dest, const bitset_t src)
     dest[bitset_i] &= src[bitset_i];
 }
 
-#if defined RE_ENABLE_I18N && !defined RE_NO_INTERNAL_PROTOTYPES
+#ifdef RE_ENABLE_I18N
 /* Inline functions for re_string.  */
 static inline int
 internal_function __attribute ((pure))
