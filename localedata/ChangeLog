@@ -1,5 +1,9 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #451]
+	* locales/rw_RW: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add rw_RW.UTF-8.
+
 	[BZ #367]
 	* locales/si_LK: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add si_LK.UTF-8.
