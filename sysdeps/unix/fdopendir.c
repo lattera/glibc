@@ -18,6 +18,7 @@
 
 #include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 
 #include <not-cancel.h>
@@ -33,6 +34,15 @@ fdopendir (int fd)
   if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
     {
       __set_errno (ENOTDIR);
+      return NULL;
+    }
+  /* Make sure the descriptor allows for reading.  */
+  int flags = __fcntl (fd, F_GETFL);
+  if (__builtin_expect (flags == -1, 0))
+    return NULL;
+  if (__builtin_expect ((flags & O_ACCMODE) == O_WRONLY, 0))
+    {
+      __set_errno (EINVAL);
       return NULL;
     }
 
