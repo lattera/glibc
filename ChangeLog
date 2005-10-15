@@ -1,3 +1,11 @@
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1224]
+	* posix/regcomp.c (init_word_char, duplicate_node_closure,
+	fetch_token, peek_token_bracket, build_range_exp,
+	build_collating_symbol): Remove forward decls; no longer needed
+	now that we use prototypes.
+
 2005-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1221]
