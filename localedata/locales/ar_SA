@@ -350,15 +350,8 @@ date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 
-% Set up the LC_MESSAGES category
-% yesexpr = "^(\346|\346\331\345)"
-% noexpr  = "^(\344|\344\307)"
-
 LC_MESSAGES
-yesstr	"<U0646><U0639><U0645>"
-nostr	"<U0644><U0627>"
-yesexpr	"<U005E><U0028><U0646><U007C><U0646><U0639><U0645><U0029>"
-noexpr	"<U005E><U0028><U0644><U007C><U0644><U0627><U0029>"
+copy "ar_EG"
 END LC_MESSAGES
 
 LC_PAPER

@@ -151,7 +151,7 @@ yesexpr     "<U005E><U005B><U0079><U0059><U0C05><U005D><U002E><U002A>"
 %
 % Syntax on Unicode Regular Expression Guidelines TR#18
 % ^[yY\u0C15].*
-noexpr      "<U005E><U005B><U0079><U0059><U0C15><U005D><U002E><U002A>"
+noexpr      "<U005E><U005B><U006E><U004E><U0C15><U005D><U002E><U002A>"
 
 %
 yesstr      "<U0C05><U0C35><U0C28><U0C41>"

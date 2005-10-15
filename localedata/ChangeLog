@@ -1,5 +1,38 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/te_IN: Fix noexpr, replace yY with nN.
+
+	[BZ #305]
+	* locales/bn_BD: Add yY and nN to yesexpr and noexpr respectively.
+	* locales/ml_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/kw_GB: Add yY to yesexpr.
+	* locales/oc_FR: Likewise.
+
+	* locales/bn_IN: Use copy "bn_BD" in LC_MESSAGES definition.
+
+	[BZ #71]
+	[BZ #305]
+	* locales/ar_EG: Add yY and nN to yesexpr and noexpr respectively.
+	Define yesstr and nostr.
+	* locales/ar_AE: Use copy "ar_EG" in LC_MESSAGES definition.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_IN: Likewise.
+	* locales/ar_IQ: Likewise.
+	* locales/ar_JO: Likewise.
+	* locales/ar_KW: Likewise.
+	* locales/ar_LB: Likewise.
+	* locales/ar_LY: Likewise.
+	* locales/ar_MA: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_QA: Likewise.
+	* locales/ar_SA: Likewise.
+	* locales/ar_SD: Likewise.
+	* locales/ar_SY: Likewise.
+	* locales/ar_TN: Likewise.
+	* locales/ar_YE: Likewise.
+
 	[BZ #56]
 	* locales/de_DE: Add transliterations for quoting characters.
 

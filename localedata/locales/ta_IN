@@ -136,7 +136,7 @@ reorder-after <U00DE>
 <split_oo> <U0BCB>
 <split_au> <U0BCC>
 reorder-end
-END LC_COLLATE 
+END LC_COLLATE
 
 
 LC_MONETARY
@@ -235,19 +235,9 @@ LC_MESSAGES
 % These are generated based on XML base Locale difintion file
 % for IBM Class for Unicode.
 %
-% ^[\u0b86\u0bae\u0bcd]
-yesexpr     "<U005E><U005B><U0B86><U0BAE><U0BCD><U005D>"
+yesexpr     "<U005E><U005B><U0B86><U0BAE><U0BCD><U0079><U0059><U005D>"
 
-% Syntax on Unicode Regular Expression Guidelines TR#18
-% yesexpr     "<U005E><U005B><U005C><U0075><U0030><U0062><U0038><U0036><U005C><U0075><U0030><U0062><U0061><U0065><U005C><U0075><U0030><U0062><U0063><U0064><U005D>"
-
-%
-% ^[\u0b87\u0bb2\u0bcd\u0bb2\u0bc8]
-noexpr      "<U005E><U005B><U0B87><U0BB2><U0BCD><U0BB2><U0BC8><U005D>"
-
-% Syntax on Unicode Regular Expression Guidelines TR#18
-% noexpr      "<U005E><U005B><U005C><U0075><U0030><U0062><U0038><U0037><U005C><U0075><U0030><U0062><U0062><U0032><U005C><U0075><U0030><U0062><U0063><U0064><U005C><U0075><U0030><U0062><U0062><U0032><U005C><U0075><U0030><U0062><U0063><U0038><U005D>"
-%
+noexpr      "<U005E><U005B><U0B87><U0BB2><U0BCD><U0BB2><U0BC8><U006E><U004E><U005D>"
 
 % \u0b86\u0bae\u0bcd
 yesstr      "<U0B86><U0BAE><U0BCD>"

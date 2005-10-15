@@ -154,11 +154,11 @@ LC_MESSAGES
 % for IBM Class for Unicode.
 %
 % ^[\u0d05\u0d24\u0d46]
-yesexpr     "<U005E><U005B><U0D05><U0D24><U0D46><U005D>"
+yesexpr     "<U005E><U005B><U0D05><U0D24><U0D46><U0079><U0059><U005D>"
 %
 %
 % ^[\u0d05\u0d32\u0d4d\u0d32]
-noexpr     "<U005E><U005B><U0D05><U0D32><U0D4D><U0D32><U005D>"
+noexpr     "<U005E><U005B><U0D05><U0D32><U0D4D><U0D32><U006E><U004E><U005D>"
 %
 % \u0d05\u0d24\u0d46
 yesstr     "<U0D05><U0D24><U0D46>"

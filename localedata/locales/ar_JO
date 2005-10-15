@@ -166,14 +166,7 @@ END LC_TIME
 
 
 LC_MESSAGES
-% This is the POSIX Locale definition for the LC_MESSAGES category.
-% These are generated based on XML base Locale difintion file
-% for IBM Class for Unicode/Java
-%
-yesexpr     "<U005E><U005B><U0646><U005D><U002E><U002A>"
-%
-noexpr      "<U005E><U005B><U0644><U005D><U002E><U002A>"
-%
+copy "ar_EG"
 END LC_MESSAGES
 
 

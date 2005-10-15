@@ -2,7 +2,7 @@ escape_char  /
 comment_char  %
 
 % Cornish language locale for Britain
-% WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen 
+% WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen
 % to see if there is an offical release.
 
 % Cornish language locale for Britain
@@ -122,7 +122,7 @@ date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005E><U005B><U0065><U0045><U005D><U002E><U002A>"
+yesexpr     "<U005E><U005B><U0065><U0045><U0079><U0059><U005D><U002E><U002A>"
 noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
