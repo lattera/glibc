@@ -1,5 +1,8 @@
 2005-10-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/tst-mbrtowc2.c: Use de_DE.UTF-8 instead of en_US.UTF-8.
+	* wcsmbs/Makefile: Define tst-mbrtowc2-ENV.
+
 	* posix/regexec.c: Finish prototyping of static functions.
 	* posix/regex_internal.c: Likewise.
 

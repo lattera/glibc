@@ -67,3 +67,4 @@ CFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-wcrtomb-ENV = LOCPATH=$(common-objpfx)localedata
+tst-mbrtowc2-ENV = LOCPATH=$(common-objpfx)localedata
