@@ -1,5 +1,8 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #56]
+	* locales/de_DE: Add transliterations for quoting characters.
+
 	[BZ #448]
 	* locales/vi_VN: Several fixes.
 	Patch by Nguyen Thai Ngoc Duy <pclouds@gmail.com>.

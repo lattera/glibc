@@ -1,5 +1,19 @@
 2005-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #865]
+	* math/tgmath.h: Correctly determine result type for
+	__TGMATH_BINARY_REAL_ONLY,
+	__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY,
+	__TGMATH_TERNARY_REAL_ONLY, and __TGMATH_BINARY_REAL_IMAG.
+
+2005-09-17  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #865]
+	* math/test-tgmath-int.c: New file.
+	* math/Makefile (tests): Add test-tgmath-int.
+
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
 	[BZ #804]
 	* malloc/tst-mtrace.sh: Work around for bootstraping.
 

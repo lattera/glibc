@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -98,7 +98,8 @@
 		       __tgmres; }))
 
 # define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
+     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
+				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double))		      \
 			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
@@ -113,7 +114,8 @@
 		       __tgmres; }))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
+     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
+				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double))		      \
 			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
@@ -128,7 +130,9 @@
 		       __tgmres; }))
 
 # define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ ({ __tgmath_real_type ((Val1) + (Val2) + (Val3)) __tgmres;\
+     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
+				+ (__tgmath_real_type (Val2)) 0		      \
+				+ (__tgmath_real_type (Val3)) 0) __tgmres;    \
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double)		      \
 			    || sizeof (Val3) > sizeof (double))		      \
@@ -209,7 +213,8 @@
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
-     (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
+     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
+				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
 		       if ((sizeof (__real__ (Val1)) > sizeof (double)	      \
 			    || sizeof (__real__ (Val2)) > sizeof (double))    \
 			   && __builtin_classify_type (__real__ (Val1)	      \

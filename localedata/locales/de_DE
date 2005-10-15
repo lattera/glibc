@@ -57,6 +57,19 @@ include "translit_combining";""
 % LATIN SMALL LETTER A WITH RING ABOVE.
 <U00E5> "<U0061><U030A>";"<U0061><U0061>"
 
+% The following strange first-level transliteration derive from the use
+% U201E and U201C as "correct" quoting characters.  These two characters
+% do not really belong together.  The result is that somebody who uses
+% U201C and U201D will get the incorrect U00AB / U00BB sequences.
+% LEFT DOUBLE QUOTATION MARK
+<U201C> <U00AB>;<U0022>
+% RIGHT DOUBLE QUOTATION MARK
+<U201D> <U00BB>;<U0022>
+% DOUBLE LOW-9 QUOTATION MARK
+<U201E> <U00BB>;"<U002C><U002C>"
+% DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+<U201F> <U00AB>;<U0022>
+
 translit_end
 
 END LC_CTYPE

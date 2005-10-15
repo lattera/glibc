@@ -1,4 +1,4 @@
-# Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1996-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret \
-	bug-nextafter bug-nexttoward bug-tgmath1
+	bug-nextafter bug-nexttoward bug-tgmath1 test-tgmath-int
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
