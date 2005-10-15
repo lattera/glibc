@@ -127,6 +127,7 @@ re_string_construct (re_string_t *pstr, const char *str, int len,
 /* Helper functions for re_string_allocate, and re_string_construct.  */
 
 static reg_errcode_t
+internal_function
 re_string_realloc_buffers (re_string_t *pstr, int new_buf_len)
 {
 #ifdef RE_ENABLE_I18N
@@ -159,6 +160,7 @@ re_string_realloc_buffers (re_string_t *pstr, int new_buf_len)
 
 
 static void
+internal_function
 re_string_construct_common (const char *str, int len, re_string_t *pstr,
 			    RE_TRANSLATE_TYPE trans, int icase,
 			    const re_dfa_t *dfa)
@@ -190,6 +192,7 @@ re_string_construct_common (const char *str, int len, re_string_t *pstr,
    built and starts from PSTR->VALID_LEN.  */
 
 static void
+internal_function
 build_wcs_buffer (re_string_t *pstr)
 {
 #ifdef _LIBC
@@ -257,6 +260,7 @@ build_wcs_buffer (re_string_t *pstr)
    but for REG_ICASE.  */
 
 static int
+internal_function
 build_wcs_upper_buffer (re_string_t *pstr)
 {
   mbstate_t prev_st;
@@ -507,6 +511,7 @@ re_string_skip_chars (re_string_t *pstr, int new_raw_idx, wint_t *last_wc)
    This function is used in case of REG_ICASE.  */
 
 static void
+internal_function
 build_upper_buffer (re_string_t *pstr)
 {
   int char_idx, end_idx;
@@ -529,6 +534,7 @@ build_upper_buffer (re_string_t *pstr)
 /* Apply TRANS to the buffer in PSTR.  */
 
 static void
+internal_function
 re_string_translate_buffer (re_string_t *pstr)
 {
   int buf_idx, end_idx;
@@ -826,6 +832,7 @@ re_string_destruct (re_string_t *pstr)
 /* Return the context at IDX in INPUT.  */
 
 static unsigned int
+internal_function
 re_string_context_at (const re_string_t *input, int idx, int eflags)
 {
   int c;
@@ -1511,6 +1518,7 @@ free_state (re_dfastate_t *state)
    Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
+internal_function
 create_ci_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 		    unsigned int hash)
 {
@@ -1560,6 +1568,7 @@ create_ci_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
    Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
+internal_function
 create_cd_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 		    unsigned int context, unsigned int hash)
 {
