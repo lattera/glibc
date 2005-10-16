@@ -665,14 +665,20 @@ include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
 
 
-# The makefile may define $(modules-names) # to build additional
-# modules.
+# The makefile may define $(modules-names) to build additional modules.
+# These are built with $(build-module), except any in $(modules-names-nobuild).
 ifdef modules-names
 # extra-lib.mk is included once for each extra lib to define rules
 # to build it, and to add its objects to the various variables.
 # During its evaluation, $(lib) is set to the name of the library.
 extra-modules-left := $(modules-names)
 include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
+
+extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
+$(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
+		$(objpfx)$(module).os $(common-objpfx)shlib.lds \
+		$(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+	$(build-module)
 endif
 
 +depfiles := $(sources:.c=.d) \

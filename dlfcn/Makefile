@@ -68,8 +68,6 @@ generated := $(modules-names:=.so)
 include ../Rules
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
-$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
-	$(build-module)
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.

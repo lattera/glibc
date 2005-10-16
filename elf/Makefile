@@ -223,6 +223,10 @@ extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
 test-extras += $(modules-names)
 
+# filtmod1.so has a special rule
+modules-names-nobuild := filtmod1
+
+
 include ../Rules
 
 check-abi: check-abi-ld
@@ -489,10 +493,6 @@ reldep8mod2.so-no-z-defs = yes
 reldep9mod1.so-no-z-defs = yes
 unload3mod4.so-no-z-defs = yes
 unload4mod1.so-no-z-defs = yes
-
-# filtmod1.so has a special rule
-$(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
-	$(build-module)
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.

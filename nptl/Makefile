@@ -295,9 +295,6 @@ tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
 
-$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
-	$(build-module)
-
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
 tests: $(test-modules)

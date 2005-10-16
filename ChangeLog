@@ -1,3 +1,13 @@
+2005-10-16  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Roland McGrath  <roland@redhat.com>
+
+	* Makerules [module-names] (extra-modules-build): New variable.
+	($(extra-modules-build:%=$(objpfx)%.so)): New static pattern rule.
+	Depend on libc.so and libc_nonshared.a.
+	* dlfcn/Makefile ($(test-modules)): Remove static pattern rule.
+	* elf/Makefile (modules-names-nobuild): New variable, add filtmod1.
+	($(test-modules)): Remove static pattern rule.
+
 2005-10-15  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* include/dirent.h: Include <stdbool.h>.
