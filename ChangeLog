@@ -1,3 +1,7 @@
+2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MREMAP_FIXED.
+
 2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #1252]

@@ -78,6 +78,7 @@
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU
 # define MREMAP_MAYMOVE	1
+# define MREMAP_FIXED	2
 #endif
 
 /* Advice to `madvise'.  */

@@ -1,3 +1,9 @@
+2005-10-16  Roland McGrath  <roland@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Even when using a
+	compile-time default stack size, apply the minimum that allocate_stack
+	will require, and round up to page size.
+
 2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* Makefile ($(test-modules)): Remove static pattern rule.

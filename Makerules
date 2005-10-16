@@ -676,7 +676,7 @@ include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
-		$(objpfx)$(module).os $(common-objpfx)shlib.lds \
+		$(objpfx)%.os $(common-objpfx)shlib.lds \
 		$(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 	$(build-module)
 endif
