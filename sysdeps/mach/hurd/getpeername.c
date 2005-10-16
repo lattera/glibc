@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1994,1997,1999,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,14 +47,19 @@ __getpeername (int fd, __SOCKADDR_ARG addrarg, socklen_t *len)
 
   if (*len > buflen)
     *len = buflen;
-  
+
   if (buf != (char *) addr)
     {
       memcpy (addr, buf, *len);
       __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
     }
 
-  addr->sa_family = type;
+  const sa_family_t family = type;
+  if (*len < (char *) (&addr->sa_family + 1) - (char *) addr)
+    memcpy (&addr->sa_family, &family,
+	    *len - offsetof (struct sockaddr, sa_family));
+  else
+    addr->sa_family = family;
 
   return 0;
 }

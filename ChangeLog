@@ -1,5 +1,10 @@
 2005-10-16  Roland McGrath  <roland@frob.com>
 
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Respect *LEN
+	byte limit when setting ADDR->sa_family.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 	[BZ #1253]
 	* sysdeps/mach/hurd/dl-sysdep.h
 	[SHARED] (DL_ARGV_NOT_RELRO): New macro.
