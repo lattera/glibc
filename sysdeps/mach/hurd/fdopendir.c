@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <fcntl.h>
 
 DIR *_hurd_fd_opendir (struct hurd_fd *d); /* opendir.c */
 
@@ -28,7 +29,7 @@ DIR *_hurd_fd_opendir (struct hurd_fd *d); /* opendir.c */
 DIR *
 fdopendir (int fd)
 {
-  struct hurd_fd *d = _hurd_fd_get (d);
+  struct hurd_fd *d = _hurd_fd_get (fd);
 
   if (d == NULL)
     {

@@ -2,6 +2,7 @@
 # include <dirstream.h>
 # include <dirent/dirent.h>
 # include <sys/stat.h>
+# include <stdbool.h>
 
 /* Now define the internal interfaces.  */
 extern DIR *__opendir (__const char *__name);

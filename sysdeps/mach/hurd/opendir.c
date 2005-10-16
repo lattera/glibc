@@ -110,8 +110,6 @@ __opendir (const char *name)
   if (dirp == NULL)
     __close (fd);
 
-    }
-
   return dirp;
 }
 weak_alias (__opendir, opendir)
