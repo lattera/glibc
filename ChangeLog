@@ -1,3 +1,10 @@
+2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
+
+	[BZ #1252]
+	* sysdeps/mach/hurd/setitimer.c (restart_itimer): Move static fn
+	forward decl out of function body.
+	* sysdeps/mach/hurd/profil.c: Likewise.
+
 2005-10-16  Roland McGrath  <roland@frob.com>
 
 	[BZ #1254]
@@ -15,6 +22,7 @@
 	Use __builtin_frame_address and __builtin_return_address.
 	(_dl_init_first): Likewise.
 
+	[BZ #1249]
 	* sysdeps/mach/hurd/i386/init-first.c (_cthread_init_routine): Declare
 	as weak extern.
 	(init): Check for it being undefined.

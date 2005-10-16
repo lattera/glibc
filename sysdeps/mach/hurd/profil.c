@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mach/Hurd version.
-   Copyright (C) 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@ static kern_return_t profil_task_get_sampled_pcs (mach_port_t,
 						  sampled_pc_array_t,
 						  mach_msg_type_number_t *);
 static void fetch_samples (void);
+static void profile_waiter (void);
 
 /* Enable statistical profiling, writing samples of the PC into at most
    SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
@@ -64,7 +65,6 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   if (profile_thread == MACH_PORT_NULL)
     {
       /* Set up the profiling collector thread.  */
-      static void profile_waiter (void);
       err = __thread_create (__mach_task_self (), &profile_thread);
       if (! err)
 	err = __mach_setup_thread (__mach_task_self (), profile_thread,
