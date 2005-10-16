@@ -1323,11 +1323,13 @@
 	* timezone/southamerica: Likewise.
 	* timezone/zone.tab: Likewise.
 
-2005-08-05  Roland McGrath  <roland@redhat.com>
+2005-08-05  Roland McGrath  <roland@frob.com>
 
+	[BZ #1251]
 	* mach/shortcut.awk: Ignore `weak_alias' lines.
 	Reported by Alfred M. Szmidt <ams@gnu.org>.
 
+	[BZ #1250]
 	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
 	Reported by Alfred M. Szmidt <ams@gnu.org>.
 
@@ -3514,6 +3516,7 @@
 
 2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #1076]
 	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.
 
 2005-02-27  Denis Barbier  <barbier@debian.org>
