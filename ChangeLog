@@ -1,3 +1,18 @@
+2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Removed.
+	* sysdeps/unix/sysv/linux/sh/sh3/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/sys/ucontext.h: New file.
+
 2005-09-13  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1228]

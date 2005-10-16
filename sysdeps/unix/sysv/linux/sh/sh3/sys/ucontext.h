@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,24 +76,17 @@ enum
 };
 #endif
 
-typedef int freg_t;
-
-/* Number of FPU registers.  */
-#define NFPREG	16
-
-/* Structure to describe FPU registers.  */
-typedef freg_t fpregset_t[NFPREG];
-
 /* Context to describe whole processor state.  */
 typedef struct
   {
+    unsigned int oldmask;
     gregset_t gregs;
-    fpregset_t fpregs;
-    fpregset_t xfpregs;
-    unsigned int fpscr;
-    unsigned int fpul;
-    unsigned int macl;
+    unsigned int pc;
+    unsigned int pr;
+    unsigned int sr;
+    unsigned int gbr;
     unsigned int mach;
+    unsigned int macl;
   } mcontext_t;
 
 /* Userlevel context.  */
