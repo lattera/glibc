@@ -2444,6 +2444,7 @@
 
 2005-05-17  Neal H. Walfield  <neal@gnu.org>
 
+	[BZ #1350]
 	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]
 	instead of [SALEN].
 	(gaih_inet): Likewise.
