@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  Hurd version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,3 +23,9 @@
    (open, mmap, etc).  */
 
 #define RTLD_PRIVATE_ERRNO 0
+
+#ifdef SHARED
+/* _dl_argv cannot be attribute_relro, because the stack-switching
+   libc initializer for using cthreads might write into it.  */
+# define DL_ARGV_NOT_RELRO 1
+#endif
