@@ -1,3 +1,10 @@
+2005-10-15  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* include/dirent.h: Include <stdbool.h>.
+	* sysdeps/mach/hurd/fdopendir.c: Include <fcntl.h>.
+	(fdopendir): Correct argument to _hurd_fd_get().
+	* sysdeps/mach/hurd/opendir.c (__opendir): Remove stray `}'.
+
 2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #1224]
