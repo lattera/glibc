@@ -1,5 +1,6 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,01,02,03,04 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02,03,04,05
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +55,7 @@ extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;
 
-void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
+extern void *(*_cthread_init_routine) (void) __attribute__ ((weak));
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
 
 /* Things that want to be run before _hurd_init or much anything else.
@@ -203,7 +204,7 @@ init (int *data)
      code as the return address, and the argument data immediately above
      that on the stack.  */
 
-  if (_cthread_init_routine)
+  if (&_cthread_init_routine && _cthread_init_routine)
     {
       /* Initialize cthreads, which will allocate us a new stack to run on.  */
       int *newsp = (*_cthread_init_routine) ();
@@ -271,7 +272,7 @@ init (int *data)
       /* The argument data is just above the stack frame we will unwind by
 	 returning.  Mutate our own return address to run the code below.  */
       usercode = data[-1];
-      ((void **) data)[-1] = call_init1;
+      data[-1] = (int) &call_init1;
       /* Force USERCODE into %eax and &init1 into %ecx, which are not
 	 restored by function return.  */
       asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
@@ -319,11 +320,11 @@ first_init (void)
    stack set up just as the user will see it, so it can switch stacks.  */
 
 void
-_dl_init_first (int argc, ...)
+_dl_init_first (void)
 {
   first_init ();
 
-  init (&argc);
+  init ((int *) __builtin_frame_address (0) + 2);
 }
 #endif
 
@@ -350,21 +351,23 @@ strong_alias (posixland_init, __libc_init_first);
    This poorly-named function is called by static-start.S,
    which should not exist at all.  */
 void
-_hurd_stack_setup (volatile int argc, ...)
+_hurd_stack_setup (void)
 {
+  intptr_t caller = (intptr_t) __builtin_return_address (0);
+
   void doinit (intptr_t *data)
     {
       /* This function gets called with the argument data at TOS.  */
-      void doinit1 (volatile int argc, ...)
+      void doinit1 (void)
 	{
-	  init ((int *) &argc);
+	  init ((int *) __builtin_frame_address (0) + 2);
 	}
 
       /* Push the user return address after the argument data, and then
          jump to `doinit1' (above), so it is as if __libc_init_first's
          caller had called `doinit1' with the argument data already on the
          stack.  */
-      *--data = (&argc)[-1];
+      *--data = caller;
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
 		    "jmp *%1" : : "r" (data), "r" (&doinit1) : "sp");
@@ -373,7 +376,7 @@ _hurd_stack_setup (volatile int argc, ...)
 
   first_init ();
 
-  _hurd_startup ((void **) &argc, &doinit);
+  _hurd_startup ((void **) __builtin_frame_address (0) + 2, &doinit);
 }
 #endif
 

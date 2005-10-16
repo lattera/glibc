@@ -1,3 +1,15 @@
+2005-10-16  Roland McGrath  <roland@frob.com>
+
+	[BZ #1253]
+	* sysdeps/mach/hurd/i386/init-first.c (init): Make cast kosher.
+	(_hurd_stack_setup): Don't declare with arguments and ellipsis.
+	Use __builtin_frame_address and __builtin_return_address.
+	(_dl_init_first): Likewise.
+
+	* sysdeps/mach/hurd/i386/init-first.c (_cthread_init_routine): Declare
+	as weak extern.
+	(init): Check for it being undefined.
+
 2005-10-16  Daniel Jacobowitz  <dan@codesourcery.com>
 	    Roland McGrath  <roland@redhat.com>
 
