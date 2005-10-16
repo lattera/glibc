@@ -3911,6 +3911,7 @@
 
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
+	[BZ #1394]
 	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Don't
 	use __uint128_t.
 
