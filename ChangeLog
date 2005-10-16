@@ -1,3 +1,10 @@
+2005-09-13  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1228]
+	* include/limits.h (LLONG_MIN, LLONG_MAX, ULLONG_MAX): Make sure these
+	are defined for -D_GNU_SOURCE or -D_ISOC99_SOURCE even when not
+	-std=c99.
+
 2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MREMAP_FIXED.
