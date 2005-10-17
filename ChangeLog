@@ -1,3 +1,8 @@
+2005-05-03  Robert Millan  <robertmh@gnu.org>
+
+	* abi-tags (.*-.*-knetbsd.*-gnu.*): New match, with ABI value 4.
+	* elf/cache.c (print_entry): Match the kNetBSD ABI tag.
+
 2005-10-16  Alfred M. Szmidt  <ams@gnu.org>
 
 	* sysdeps/generic/bits/mman.h
