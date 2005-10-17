@@ -1,3 +1,9 @@
+2005-10-17  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-load.c (MAP_COPY): When undefined, define to
+	MAP_PRIVATE|MAP_DENYWRITE instead of just MAP_PRIVATE.
+	(_dl_map_object_from_fd): Don't use MAP_DENYWRITE explicitly.
+
 2005-10-17  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h (SC_STSZ, TESTS):
@@ -3444,6 +3450,7 @@
 
 2005-03-25  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #721]
 	* sysdeps/generic/wcstoul_l.c: Include "wcstol_l.c" rather than
 	<wcstol_l.c>.
 
@@ -3763,6 +3770,7 @@
 
 2005-03-16  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* include/libc-symbols.h (__hidden_proto): Remove bogus declaration
 	of internal.
 	(__hidden_def1, __hidden_dot_def1): Remove.
@@ -3772,6 +3780,7 @@
 	(hidden_data_ver, hidden_data_ver, hidden_data_weak): Use non-data
 	version of the macro.
 
+	[BZ #721]
 	* include/wchar.h (__wcscoll): Remove.
 	* wcsmbs/wcscoll.c: Define wcscoll directly instead of via __wcscoll.
 	* string/strcoll.c: Don't issue libc_hidden_def STRCOLL redefined.
@@ -3789,6 +3798,7 @@
 	* sysdeps/generic/wordexp.c (exec_comm_child): Add inline keyword.
 	Patch by Dan Kegel <dank@kegel.com>.
 
+	[BZ #721]
 	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rel_relative,
 	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
 	Add inline keyword.
@@ -3959,6 +3969,7 @@
 
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #721]
 	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
 	unconditionally to (defined RTLD_BOOTSTRAP).
 	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
@@ -4454,6 +4465,7 @@
 
 2005-02-14  Alan Modra  <amodra@bigpond.net.au>
 
+	[BZ #721]
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Define
 	with auto inline, and attribute always_inline.
 	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
@@ -4583,6 +4595,7 @@
 
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* iconvdata/jis0208.h (struct jisx0208_ucs_idx): Move before use.
 
 2005-02-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
@@ -4597,6 +4610,7 @@
 
 2005-01-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* math/math_private.h (__copysign): Define as builtin for gcc 4.
 	(__copysignf, __copysignl): Likewise.
 	* sysdeps/alpha/fpu/bits/mathinline.h (copysign): Don't define
