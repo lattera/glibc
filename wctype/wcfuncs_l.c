@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,2000,2001,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,2000-2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <wctype.h>
 #include <stdint.h>
 #include <locale.h>
@@ -27,29 +28,31 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
-  int __##name (wint_t wc, __locale_t locale)				      \
+  int __isw##name (wint_t wc, __locale_t locale)			      \
   {									      \
+    if (isascii (wc))							      \
+      return is##name ((int) wc, locale);				      \
     size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
     const char *desc = locale->__locales[LC_CTYPE]->values[i].string;	      \
     return wctype_table_lookup (desc, wc);				      \
   }									      \
-  libc_hidden_def (__##name)						      \
-  weak_alias (__##name, name)
+  libc_hidden_def (__isw##name)						      \
+  weak_alias (__isw##name, isw##name)
 
-func (iswalnum_l, __ISwalnum)
-func (iswalpha_l, __ISwalpha)
-func (iswblank_l, __ISwblank)
-func (iswcntrl_l, __ISwcntrl)
+func (alnum_l, __ISwalnum)
+func (alpha_l, __ISwalpha)
+func (blank_l, __ISwblank)
+func (cntrl_l, __ISwcntrl)
 #undef iswdigit_l
 #undef __iswdigit_l
-func (iswdigit_l, __ISwdigit)
-func (iswlower_l, __ISwlower)
-func (iswgraph_l, __ISwgraph)
-func (iswprint_l, __ISwprint)
-func (iswpunct_l, __ISwpunct)
-func (iswspace_l, __ISwspace)
-func (iswupper_l, __ISwupper)
-func (iswxdigit_l, __ISwxdigit)
+func (digit_l, __ISwdigit)
+func (lower_l, __ISwlower)
+func (graph_l, __ISwgraph)
+func (print_l, __ISwprint)
+func (punct_l, __ISwpunct)
+func (space_l, __ISwspace)
+func (upper_l, __ISwupper)
+func (xdigit_l, __ISwxdigit)
 
 wint_t
 (__towlower_l) (wint_t wc, __locale_t locale)
