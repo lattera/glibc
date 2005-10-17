@@ -1,3 +1,8 @@
+2005-10-16  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/generic/bits/mman.h
+	[__USE_GNU] (MREMAP_MAYMOVE, REMAP_FIXED): New macros.
+
 2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/makecontext.S: New file.
