@@ -27,9 +27,23 @@
 #define SC_FLGS 0x000
 #define SC_LINK 0x004
 #define SC_STCK 0x008
+#define SC_STSZ 0x010
 #define SC_PSW  0x018
 #define SC_GPRS 0x020
 #define SC_ACRS 0x060
 #define SC_FPC  0x0A0
 #define SC_FPRS 0x0A8
 #define SC_MASK 0x128
+
+/* Tests run in stdlib/tst-ucontext-off.  */
+#define TESTS \
+  TEST (uc_flags, SC_FLGS);				\
+  TEST (uc_link, SC_LINK);				\
+  TEST (uc_stack.ss_sp, SC_STCK);			\
+  TEST (uc_stack.ss_size, SC_STSZ);			\
+  TEST (uc_mcontext.psw, SC_PSW);			\
+  TEST (uc_mcontext.gregs, SC_GPRS);			\
+  TEST (uc_mcontext.aregs, SC_ACRS);			\
+  TEST (uc_mcontext.fpregs.fpc, SC_FPC);		\
+  TEST (uc_mcontext.fpregs.fprs, SC_FPRS);		\
+  TEST (uc_sigmask, SC_MASK);

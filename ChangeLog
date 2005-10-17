@@ -1,3 +1,10 @@
+2005-10-17  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h (SC_STSZ, TESTS):
+	Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h (SC_STSZ, TESTS):
+	Likewise.
+
 2005-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/oldfileops.c (_IO_old_file_xsputn): Fix last patch.
