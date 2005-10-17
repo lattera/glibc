@@ -4,7 +4,7 @@
 	Return EOF not 0.
 
 	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): Also
-	allow EACCES errors when opening /rpco for now.
+	allow EACCES errors when opening /proc for now.
 
 	* wctype/wcfuncs.c: Don't use expensive wide char lookups in isw*
 	functions if character is in ASCII range.
