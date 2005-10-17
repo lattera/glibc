@@ -1,3 +1,15 @@
+2005-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/oldfileops.c (_IO_old_file_xsputn): Fix last patch.
+	Return EOF not 0.
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): Also
+	allow EACCES errors when opening /rpco for now.
+
+	* wctype/wcfuncs.c: Don't use expensive wide char lookups in isw*
+	functions if character is in ASCII range.
+	* wctype/wcfuncs_l.c: Likewise.
+
 2005-05-03  Robert Millan  <robertmh@gnu.org>
 
 	* abi-tags (.*-.*-knetbsd.*-gnu.*): New match, with ABI value 4.

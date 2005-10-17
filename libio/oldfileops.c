@@ -754,7 +754,7 @@ _IO_old_file_xsputn (f, data, n)
       _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (__overflow (f, EOF) == EOF)
-	return to_do == 0 ? 0 : n - to_do;
+	return to_do == 0 ? EOF : n - to_do;
 
       /* Try to maintain alignment: write a whole number of blocks.
 	 dont_write is what gets left over. */
