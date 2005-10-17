@@ -50,15 +50,17 @@
    overwritten.  Some losing VM systems like Linux's lack MAP_COPY.  All we
    get is MAP_PRIVATE, which copies each page when it is modified; this
    means if the file is overwritten, we may at some point get some pages
-   from the new version after starting with pages from the old version.  */
-#ifndef MAP_COPY
-# define MAP_COPY	MAP_PRIVATE
-#endif
+   from the new version after starting with pages from the old version.
 
-/* We want to prevent people from modifying DSOs which are currently in
-   use.  This is what MAP_DENYWRITE is for.  */
-#ifndef MAP_DENYWRITE
-# define MAP_DENYWRITE	0
+   To make up for the lack and avoid the overwriting problem,
+   what Linux does have is MAP_DENYWRITE.  This prevents anyone
+   from modifying the file while we have it mapped.  */
+#ifndef MAP_COPY
+# ifdef MAP_DENYWRITE
+#  define MAP_COPY	(MAP_PRIVATE | MAP_DENYWRITE)
+# else
+#  define MAP_COPY	MAP_PRIVATE
+# endif
 #endif
 
 /* Some systems link their relocatable objects for another base address
@@ -1181,7 +1183,7 @@ cannot allocate TLS data structures for initial thread");
 	/* Remember which part of the address space this object uses.  */
 	l->l_map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplength,
 					      c->prot,
-					      MAP_COPY|MAP_FILE|MAP_DENYWRITE,
+					      MAP_COPY|MAP_FILE,
 					      fd, c->mapoff);
 	if (__builtin_expect ((void *) l->l_map_start == MAP_FAILED, 0))
 	  {
@@ -1229,7 +1231,7 @@ cannot allocate TLS data structures for initial thread");
 	    /* Map the segment contents from the file.  */
 	    && (__mmap ((void *) (l->l_addr + c->mapstart),
 			c->mapend - c->mapstart, c->prot,
-			MAP_FIXED|MAP_COPY|MAP_FILE|MAP_DENYWRITE,
+			MAP_FIXED|MAP_COPY|MAP_FILE,
 			fd, c->mapoff)
 		== MAP_FAILED))
 	  goto map_error;
