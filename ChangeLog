@@ -1,3 +1,34 @@
+2005-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add IBM1364, IBM1371, IBM1388, IBM1390,
+	and IBM1399.
+	(distribute): Add ibm1364.c, ibm1364.h, ibm1371.c, ibm1371.h,
+	ibm1388.c, ibm1388.h, ibm1390.c, ibm1390.h, ibm1399.c, and ibm1399.h.
+	* iconvdata/TESTS: Add entries for IBM1364, IBM1371, IBM1388, IBM1390,
+	and IBM1399.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/ibm1364.c: New file.
+	* iconvdata/ibm1364.h: New file.
+	* iconvdata/ibm1371.c: New file.
+	* iconvdata/ibm1371.h: New file.
+	* iconvdata/ibm1388.c: New file.
+	* iconvdata/ibm1388.h: New file.
+	* iconvdata/ibm1390.c: New file.
+	* iconvdata/ibm1390.h: New file.
+	* iconvdata/ibm1399.c: New file.
+	* iconvdata/ibm1399.h: New file.
+	* iconvdata/testdata/IBM1364: New file.
+	* iconvdata/testdata/IBM1364..UTF8: New file.
+	* iconvdata/testdata/IBM1371: New file.
+	* iconvdata/testdata/IBM1371..UTF8: New file.
+	* iconvdata/testdata/IBM1388: New file.
+	* iconvdata/testdata/IBM1388..UTF8: New file
+	* iconvdata/testdata/IBM1390: New file.
+	* iconvdata/testdata/IBM1390..UTF8: New file.
+	* iconvdata/testdata/IBM1399: New file.
+	* iconvdata/testdata/IBM1399..UTF8: New file.
+	Original patch by Masahide Washizawa <washi@jp.ibm.com>.
+
 2005-10-17  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (MAP_COPY): When undefined, define to

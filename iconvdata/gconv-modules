@@ -1862,3 +1862,38 @@ alias	CP16804//		IBM16804//
 alias	CSIBM16804//		IBM16804//
 module	IBM16804//		INTERNAL		IBM16804		1
 module	INTERNAL		IBM16804//		IBM16804		1
+
+#	from			to			module		cost
+alias	IBM-1364//		IBM1364//
+alias	CP1364//		IBM1364//
+alias	CSIBM1364//		IBM1364//
+module	IBM1364//		INTERNAL		IBM1364		1
+module	INTERNAL		IBM1364//		IBM1364		1
+
+#	from			to			module		cost
+alias	IBM-1371//		IBM1371//
+alias	CP1371//		IBM1371//
+alias	CSIBM1371//		IBM1371//
+module	IBM1371//		INTERNAL		IBM1371		1
+module	INTERNAL		IBM1371//		IBM1371		1
+
+#	from			to			module		cost
+alias	IBM-1388//		IBM1388//
+alias	CP1388//		IBM1388//
+alias	CSIBM1388//		IBM1388//
+module	IBM1388//		INTERNAL		IBM1388		1
+module	INTERNAL		IBM1388//		IBM1388		1
+
+#	from			to			module		cost
+alias	IBM-1390//		IBM1390//
+alias	CP1390//		IBM1390//
+alias	CSIBM1390//		IBM1390//
+module	IBM1390//		INTERNAL		IBM1390		1
+module	INTERNAL		IBM1390//		IBM1390		1
+
+#	from			to			module		cost
+alias	IBM-1399//		IBM1399//
+alias	CP1399//		IBM1399//
+alias	CSIBM1399//		IBM1399//
+module	IBM1399//		INTERNAL		IBM1399		1
+module	INTERNAL		IBM1399//		IBM1399		1
