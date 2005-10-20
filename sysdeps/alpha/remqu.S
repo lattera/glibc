@@ -246,7 +246,7 @@ $y_is_neg:
 	   from the divide will be completely wrong.  Fortunately, the
 	   quotient must be either 0 or 1, so the remainder must be X
 	   or X-Y, so just compute it directly.  */
-	cmpult	Y, X, AT
+	cmpule	Y, X, AT
 	subq	X, Y, RV
 	ldt	$f0, 0(sp)
 	cmoveq	AT, X, RV
