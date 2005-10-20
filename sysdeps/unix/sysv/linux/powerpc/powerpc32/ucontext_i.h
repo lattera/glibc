@@ -41,3 +41,22 @@
 #define _UC_VREGS	464
 #define _UC_VSCR	976
 #define _UC_VRSAVE	980
+
+/* The registers don't have a fixed offset within ucontext because the
+   orginal ucontext only contained the regs pointer.  Also with the
+   addition of VMX to the register state the mcontext may require
+   stronger alignment (16) then the containing ucontext (4).  All access
+   to register state (pt_regs/mcontext) must be indirect via the regs
+   (uc_regs) pointer.  This means we can't test the PPC32 mcontext
+   register offsets here.  */
+
+/* Tests run in stdlib/tst-ucontext-off.  */
+#define TESTS \
+  TEST (uc_link, _UC_LINK);					\
+  TEST (uc_stack.ss_sp, _UC_STACK_SP);				\
+  TEST (uc_stack.ss_size, _UC_STACK_SIZE);			\
+  TEST (uc_mcontext.regs, _UC_REGS_PTR);			\
+  TEST (uc_mcontext.uc_regs, _UC_REGS_PTR);			\
+  TEST (uc_sigmask, _UC_SIGMASK);				\
+  TEST (uc_reg_space, _UC_REG_SPACE);
+

@@ -58,3 +58,18 @@
 #define SIGCONTEXT_FP_REGS 616
 #define SIGCONTEXT_V_REGS_PTR 880
 #define SIGCONTEXT_V_RESERVE 888
+
+/* Tests run in stdlib/tst-ucontext-off.  */
+#define TESTS \
+  TEST (uc_link, UCONTEXT_LINK);				\
+  TEST (uc_stack.ss_sp, UCONTEXT_STACK_SP);			\
+  TEST (uc_stack.ss_size, UCONTEXT_STACK_SIZE);			\
+  TEST (uc_sigmask, UCONTEXT_SIGMASK);				\
+  TEST (uc_mcontext.signal, SIGCONTEXT_SIGNAL);			\
+  TEST (uc_mcontext.handler, SIGCONTEXT_HANDLER);		\
+  TEST (uc_mcontext.oldmask, SIGCONTEXT_OLDMASK);		\
+  TEST (uc_mcontext.regs, SIGCONTEXT_PT_REGS);			\
+  TEST (uc_mcontext.gp_regs, SIGCONTEXT_GP_REGS);		\
+  TEST (uc_mcontext.fp_regs, SIGCONTEXT_FP_REGS);		\
+  TEST (uc_mcontext.v_regs, SIGCONTEXT_V_REGS_PTR);		\
+  TEST (uc_mcontext.vmx_reserve, SIGCONTEXT_V_RESERVE);

@@ -1,3 +1,10 @@
+2005-10-18  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h (TESTS):
+	Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h (TESTS):
+	Likewise.
+
 2005-10-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add IBM1364, IBM1371, IBM1388, IBM1390,
