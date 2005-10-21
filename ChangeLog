@@ -1,3 +1,13 @@
+2005-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/ibm1364.h (__ucs4_to_ibm1364sb): Fix one mapping.
+	* iconvdata/ibm1388.h (__ucs4_to_ibm1388sb): Likewise.
+	* iconvdata/testdata/IBM1364: Add missing valid input.
+	* iconvdata/testdata/IBM1388: Likewise.
+	* iconvdata/testdata/IBM1364..UTF8: Adjust appropriately.
+	* iconvdata/testdata/IBM1388..UTF8: Likewise.
+	Patch by Masahide Washizawa <washi@jp.ibm.com>.
+
 2005-08-23  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/alpha/remqu.S: Return the correct result when the same
