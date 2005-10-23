@@ -1,6 +1,5 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -57,8 +56,8 @@ extern int mq_setattr (mqd_t __mqdes,
 /* Remove message queue named NAME.  */
 extern int mq_unlink (const char *__name) __THROW;
 
-/* Register notification upon message arrival to an empty message queue
-   MQDES.  */
+/* Register notification issued upon message arrival to an empty
+   message queue MQDES.  */
 extern int mq_notify (mqd_t __mqdes, const struct sigevent *__notification)
      __THROW;
 
@@ -86,6 +85,6 @@ extern int mq_timedsend (mqd_t __mqdes, const char *__msg_ptr,
 			 const struct timespec *__abs_timeout);
 #endif
 
-__END_DECLS                                                      
+__END_DECLS
 
 #endif /* mqueue.h */
