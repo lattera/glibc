@@ -201,9 +201,10 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		    case MACH_MSG_TYPE_MOVE_SEND:
 		      for (i = 0; i < number; i++)
 			__mach_port_deallocate (__mach_task_self (), *ports++);
-		      (ty->msgtl_header.msgt_longform
-		       ? ty->msgtl_name : ty->msgtl_header.msgt_name)
-			= MACH_MSG_TYPE_COPY_SEND;
+		      if (ty->msgtl_header.msgt_longform)
+			ty->msgtl_name = MACH_MSG_TYPE_COPY_SEND;
+		      else
+			ty->msgtl_header.msgt_name = MACH_MSG_TYPE_COPY_SEND;
 		      break;
 		    case MACH_MSG_TYPE_COPY_SEND:
 		    case MACH_MSG_TYPE_MOVE_RECEIVE:
@@ -223,29 +224,29 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		  name = ty->msgtl_name;
 		  size = ty->msgtl_size;
 		  number = ty->msgtl_number;
-		  (char *) ty += sizeof (mach_msg_type_long_t);
+		  ty = (void *) ty + sizeof (mach_msg_type_long_t);
 		}
 	      else
 		{
 		  name = ty->msgtl_header.msgt_name;
 		  size = ty->msgtl_header.msgt_size;
 		  number = ty->msgtl_header.msgt_number;
-		  (char *) ty += sizeof (mach_msg_type_t);
+		  ty = (void *) ty + sizeof (mach_msg_type_t);
 		}
 
 	      if (ty->msgtl_header.msgt_inline)
 		{
 		  clean_ports ((void *) ty, 0);
 		  /* calculate length of data in bytes, rounding up */
-		  (char *) ty += (((((number * size) + 7) >> 3)
-				   + sizeof (mach_msg_type_t) - 1)
-				  &~ (sizeof (mach_msg_type_t) - 1));
+		  ty = (void *) ty + (((((number * size) + 7) >> 3)
+				       + sizeof (mach_msg_type_t) - 1)
+				      &~ (sizeof (mach_msg_type_t) - 1));
 		}
 	      else
 		{
 		  clean_ports (*(void **) ty,
 			       ty->msgtl_header.msgt_deallocate);
-		  ++(void **) ty;
+		  ty = (void *) ty + sizeof (void *);
 		}
 	    }
 #else  /* Untyped Mach IPC flavor. */

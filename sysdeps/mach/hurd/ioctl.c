@@ -136,9 +136,11 @@ __ioctl (int fd, unsigned long int request, ...)
 	     Rather than pointing to the value, ARG is the value itself.  */
 #ifdef MACH_MSG_TYPE_BIT
 	  *t++ = io2mach_type (1, _IOTS (integer_t));
-	  *((integer_t *) t)++ = (integer_t) arg;
+	  *(integer_t *) t = (integer_t) arg;
+	  t = (void *) t + sizeof (integer_t);
 #else
-	  *((integer_t *) p)++ = (integer_t) arg;
+	  *(integer_t *) p = (integer_t) arg;
+	  p = (void *) p + sizeof (integer_t);
 #endif
 	}
 
