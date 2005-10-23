@@ -1,3 +1,9 @@
+2005-10-22  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Fix last change.
+	From Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 2005-10-17  Thomas Schwinge  <tschwinge@gnu.org>
 
 	[BZ #1252]

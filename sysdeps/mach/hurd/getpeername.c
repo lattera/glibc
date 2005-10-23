@@ -55,11 +55,14 @@ __getpeername (int fd, __SOCKADDR_ARG addrarg, socklen_t *len)
     }
 
   const sa_family_t family = type;
-  if (*len < (char *) (&addr->sa_family + 1) - (char *) addr)
-    memcpy (&addr->sa_family, &family,
-	    *len - offsetof (struct sockaddr, sa_family));
-  else
-    addr->sa_family = family;
+  if (*len > offsetof (struct sockaddr, sa_family))
+    {
+      if (*len < (char *) (&addr->sa_family + 1) - (char *) addr)
+	memcpy (&addr->sa_family, &family,
+		*len - offsetof (struct sockaddr, sa_family));
+      else
+	addr->sa_family = family;
+    }
 
   return 0;
 }
