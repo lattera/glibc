@@ -1,3 +1,9 @@
+2005-10-17  Thomas Schwinge  <tschwinge@gnu.org>
+
+	[BZ #1252]
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Don't use ?: as lvalue.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+
 2005-10-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/ibm1364.h (__ucs4_to_ibm1364sb): Fix one mapping.
@@ -10,6 +16,7 @@
 
 2005-08-23  GOTO Masanori  <gotom@debian.or.jp>
 
+	[BZ #1498]
 	* sysdeps/alpha/remqu.S: Return the correct result when the same
 	dividend and divisor are provided, and they're negative numbers.
 	* sysdeps/alpha/divqu.S: Likewise.
