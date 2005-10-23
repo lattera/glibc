@@ -1,3 +1,7 @@
+2005-10-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/mqueue.h: Cleanups.
+
 2005-10-22  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1254]
