@@ -1,3 +1,8 @@
+2005-10-28  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey): Fix off
+	by one error.
+
 2005-10-24  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1534]
