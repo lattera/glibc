@@ -1,3 +1,13 @@
+2005-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/hsearch_r.c (hsearch_r): Remove duplicate test.
+	Patch by Chris Caputo <ccaputo@alt.net>.
+
+2005-10-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sh/sysdep.S: Remove unnecessary weak_alias.
+	* sysdeps/unix/sysv/linux/sh/socket.S: Honor NO_WEAK_ALIAS.
+
 2005-10-28  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey): Fix off
