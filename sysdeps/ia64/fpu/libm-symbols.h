@@ -39,13 +39,13 @@
 
 #define WEAK_LIBM_ENTRY(name)			\
 	.align 32;				\
-	LOCAL_LIBM_ENTRY(name);			\
+	LOCAL_LIBM_ENTRY(__##name);		\
 	.global __##name;			\
  __##name:
 #define WEAK_LIBM_END(name)			\
  weak_alias (__##name, name);			\
  .hidden __##name;				\
-	LOCAL_LIBM_END(name);			\
+	LOCAL_LIBM_END(__##name);		\
  ASM_SIZE_DIRECTIVE(__##name);			\
  ASM_TYPE_DIRECTIVE(__##name, @function)
 

@@ -1,3 +1,9 @@
+2005-10-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h (WEAK_LIBM_ENTRY): Add "__"
+	prefix to LOCAL_LIBM_ENTRY.
+	(WEAK_LIBM_END): Add "__" prefix to LOCAL_LIBM_END.
+
 2005-10-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-conflict.c (_dl_resolve_conflicts): Use _dl_debug_printf
