@@ -20,12 +20,12 @@
 
 /* Clear memory.  Can't alias to bzero because it's not defined in the
    same translation unit.  */
-void attribute_hidden
+void
 __aeabi_memclr (void *dest, size_t n)
 {
   __bzero (dest, n);
 }
 
 /* Versions of the above which may assume memory alignment.  */
-strong_alias (__aeabi_memclr, attribute_hidden __aeabi_memclr4)
-strong_alias (__aeabi_memclr, attribute_hidden __aeabi_memclr8)
+strong_alias (__aeabi_memclr, __aeabi_memclr4)
+strong_alias (__aeabi_memclr, __aeabi_memclr8)

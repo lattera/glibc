@@ -5,7 +5,7 @@ aeabi_routines = aeabi_assert aeabi_localeconv aeabi_errno_addr \
 	aeabi_memmove aeabi_memset
 
 sysdep_routines += $(aeabi_constants) $(aeabi_routines)
-static-only-routines += $(aeabi_constants) $(aeabi_routines)
+static-only-routines += $(aeabi_constants)
 
 # get offset to rtld_global._dl_hwcap
 gen-as-const-headers += rtld-global-offsets.sym

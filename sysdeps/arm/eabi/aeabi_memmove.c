@@ -21,12 +21,12 @@
 /* Copy memory like memmove, but no return value required.  Can't
    alias to memmove because it's not defined in the same translation
    unit.  */
-void attribute_hidden
+void
 __aeabi_memmove (void *dest, const void *src, size_t n)
 {
   memmove (dest, src, n);
 }
 
 /* Versions of the above which may assume memory alignment.  */
-strong_alias (__aeabi_memmove, attribute_hidden __aeabi_memmove4)
-strong_alias (__aeabi_memmove, attribute_hidden __aeabi_memmove8)
+strong_alias (__aeabi_memmove, __aeabi_memmove4)
+strong_alias (__aeabi_memmove, __aeabi_memmove8)

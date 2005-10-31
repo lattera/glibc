@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <locale/localeinfo.h>
 
-int attribute_hidden
+int
 __aeabi_MB_CUR_MAX (void)
 {
   return MB_CUR_MAX;
