@@ -1,3 +1,9 @@
+2005-10-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Use _dl_debug_printf
+	instead of _dl_printf to print conflict processing debug message.
+	Reported by John Reiser <jreiser@BitWagon.com>.
+
 2005-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/hsearch_r.c (hsearch_r): Remove duplicate test.
