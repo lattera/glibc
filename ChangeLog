@@ -1,3 +1,8 @@
+2005-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1579]
+	* debug/execinfo.h: Change backtrace+symbols_fd comment.
+
 2005-10-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/libm-symbols.h (WEAK_LIBM_ENTRY): Add "__"
