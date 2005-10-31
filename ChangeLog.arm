@@ -1,5 +1,10 @@
 2005-10-31  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/eabi/aeabi_lcsts.c, sysdeps/arm/eabi/aeabi_math.c,
+	sysdeps/arm/eabi/aeabi_sighandlers.S: Add LGPL exception.
+
+2005-10-31  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/eabi/Makefile (static-only-routines): Remove
 	$(aeabi_routines).
 	* sysdeps/arm/eabi/Versions (GLIBC_2.4): Add ARM EABI portability
