@@ -1,3 +1,11 @@
+2005-10-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile
+	(sysdep_routines, elide-routines.os): Add hp-timing.
+	* sysdeps/powerpc/powerpc64/hp-timing.c: New file.
+	* sysdeps/powerpc/powerpc64/hp-timing.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: New file.
+
 2005-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_init.c (__res_iclose): New function.  Broken out of

@@ -11,6 +11,8 @@ pic-ccflag = -fpic
 endif
 
 ifeq ($(subdir),csu)
+sysdep_routines += hp-timing
+elide-routines.os += hp-timing
 ifneq ($(elf),no)
 # The initfini generation code doesn't work in the presence of -fPIC, so
 # we use -fpic instead which is much better.
