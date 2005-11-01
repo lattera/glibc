@@ -487,12 +487,6 @@ __hesiod_res_set(void *context, struct __res_state *res,
 
 	if (ctx->res && ctx->free_res) {
 		res_nclose(ctx->res);
-		if ((ctx->res->options & RES_INIT) && ctx->res->nscount > 0) {
-			for (int ns = 0; ns < MAXNS; ns++) {
-				free (ctx->res->_u._ext.nsaddrs[ns]);
-				ctx->res->_u._ext.nsaddrs[ns] = NULL;
-			}
-		}
 		(*ctx->free_res)(ctx->res);
 	}
 

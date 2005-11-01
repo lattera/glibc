@@ -555,7 +555,7 @@ libc_hidden_def (__res_randomid)
  * This routine is not expected to be user visible.
  */
 void
-res_nclose(res_state statp) {
+__res_iclose(res_state statp, bool free_addr) {
 	int ns;
 
 	if (statp->_vcsock >= 0) {
@@ -568,12 +568,24 @@ res_nclose(res_state statp) {
 #else
 	for (ns = 0; ns < statp->_u._ext.nscount; ns++)
 #endif
-		if (statp->_u._ext.nsaddrs[ns]
-		    && statp->_u._ext.nssocks[ns] != -1) {
-			close_not_cancel_no_status(statp->_u._ext.nssocks[ns]);
-			statp->_u._ext.nssocks[ns] = -1;
+		if (statp->_u._ext.nsaddrs[ns]) {
+			if (statp->_u._ext.nssocks[ns] != -1) {
+				close_not_cancel_no_status(statp->_u._ext.nssocks[ns]);
+				statp->_u._ext.nssocks[ns] = -1;
+			}
+			if (free_addr) {
+				free (statp->_u._ext.nsaddrs[ns]);
+				statp->_u._ext.nsaddrs[ns] = NULL;
+			}
 		}
 	statp->_u._ext.nsinit = 0;
+}
+libc_hidden_def (__res_iclose)
+
+void
+res_nclose(res_state statp)
+{
+  __res_iclose (statp, true);
 }
 #ifdef _LIBC
 libc_hidden_def (__res_nclose)
@@ -589,14 +601,7 @@ res_thread_freeres (void)
     /* Never called res_ninit.  */
     return;
 
-  __res_nclose (&_res);		/* Close any VC sockets.  */
-
-  for (int ns = 0; ns < MAXNS; ns++)
-    if (_res._u._ext.nsaddrs[ns] != NULL)
-      {
-	free (_res._u._ext.nsaddrs[ns]);
-	_res._u._ext.nsaddrs[ns] = NULL;
-      }
+  __res_iclose (&_res, true);		/* Close any VC sockets.  */
 
   /* Make sure we do a full re-initialization the next time.  */
   _res.options = 0;

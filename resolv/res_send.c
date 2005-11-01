@@ -381,7 +381,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				}
 			}
 		if (needclose)
-			res_nclose(statp);
+			__res_iclose(statp, false);
 	}
 
 	/*
@@ -488,7 +488,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 					done = 1;
 					break;
 				case res_nextns:
-					res_nclose(statp);
+					__res_iclose(statp, false);
 					goto next_ns;
 				case res_done:
 					return (resplen);
@@ -553,7 +553,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		 */
 		if ((v_circuit && (statp->options & RES_USEVC) == 0) ||
 		    (statp->options & RES_STAYOPEN) == 0) {
-			res_nclose(statp);
+			__res_iclose(statp, false);
 		}
 		if (statp->rhook) {
 			int done = 0, loops = 0;
@@ -570,7 +570,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 					done = 1;
 					break;
 				case res_nextns:
-					res_nclose(statp);
+					__res_iclose(statp, false);
 					goto next_ns;
 				case res_modified:
 					/* give the hook another try */
@@ -589,7 +589,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
  next_ns: ;
 	   } /*foreach ns*/
 	} /*foreach retry*/
-	res_nclose(statp);
+	__res_iclose(statp, false);
 	if (!v_circuit) {
 		if (!gotsomewhere)
 			__set_errno (ECONNREFUSED);	/* no nameservers found */
@@ -637,14 +637,14 @@ send_vc(res_state statp,
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)&peer, &size) < 0 ||
 		    !sock_eq(&peer, nsap)) {
-			res_nclose(statp);
+		  __res_iclose(statp, false);
 			statp->_flags &= ~RES_F_VC;
 		}
 	}
 
 	if (statp->_vcsock < 0 || (statp->_flags & RES_F_VC) == 0) {
 		if (statp->_vcsock >= 0)
-			res_nclose(statp);
+		  __res_iclose(statp, false);
 
 		statp->_vcsock = socket(nsap->sin6_family, SOCK_STREAM, 0);
 		if (statp->_vcsock < 0) {
@@ -660,7 +660,7 @@ send_vc(res_state statp,
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno,
 			       (struct sockaddr *) nsap);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		statp->_flags |= RES_F_VC;
@@ -676,7 +676,7 @@ send_vc(res_state statp,
 	    != (INT16SZ + buflen)) {
 		*terrno = errno;
 		Perror(statp, stderr, "write failed", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	/*
@@ -694,7 +694,7 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read failed", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		/*
 		 * A long running process might get its TCP
 		 * connection reset if the remote server was
@@ -706,10 +706,8 @@ send_vc(res_state statp,
 		 */
 		if (*terrno == ECONNRESET && !connreset) {
 			connreset = 1;
-			res_nclose(statp);
 			goto same_ns;
 		}
-		res_nclose(statp);
 		return (0);
 	}
 	resplen = ns_get16(ans);
@@ -718,7 +716,7 @@ send_vc(res_state statp,
 			ans = malloc (MAXPACKET);
 			if (ans == NULL) {
 				*terrno = ENOMEM;
-				res_nclose(statp);
+				__res_iclose(statp, false);
 				return (0);
 			}
 			anssiz = MAXPACKET;
@@ -743,7 +741,7 @@ send_vc(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; undersized: %d\n", len));
 		*terrno = EMSGSIZE;
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	cp = ans;
@@ -754,7 +752,7 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	if (truncating) {
@@ -847,7 +845,7 @@ send_dg(res_state statp,
 			    sizeof *nsap) < 0) {
 			Aerror(statp, stderr, "connect(dg)", errno,
 			       (struct sockaddr *) nsap);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		/* Make socket non-blocking.  */
@@ -879,7 +877,7 @@ send_dg(res_state statp,
 		evNowTime(&now);
 		if (evCmpTime(finish, now) <= 0) {
 			Perror(statp, stderr, "select", errno);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		evSubTime(&timeout, &finish, &now);
@@ -910,7 +908,7 @@ send_dg(res_state statp,
 			}
 		}
 		Perror(statp, stderr, "poll", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	__set_errno (0);
@@ -919,7 +917,7 @@ send_dg(res_state statp,
 			if (errno == EINTR || errno == EAGAIN)
 				goto recompute_resend;
 			Perror(statp, stderr, "send", errno);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		pfd[0].events = POLLIN;
@@ -950,7 +948,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		*gotsomewhere = 1;
@@ -962,7 +960,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				resplen));
 			*terrno = EMSGSIZE;
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		if (hp->id != anhp->id) {
@@ -1011,7 +1009,7 @@ send_dg(res_state statp,
 				(stdout, "server rejected query:\n"),
 				ans, (resplen > anssiz) ? anssiz : resplen);
 		next_ns:
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			/* don't retry if called from dig */
 			if (!statp->pfcode)
 				return (0);
@@ -1031,7 +1029,7 @@ send_dg(res_state statp,
 			Dprint(statp->options & RES_DEBUG,
 			       (stdout, ";; truncated answer\n"));
 			*v_circuit = 1;
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (1);
 		}
 		/*
@@ -1041,7 +1039,7 @@ send_dg(res_state statp,
 		return (resplen);
 	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
 		/* Something went wrong.  We can stop trying.  */
-		res_nclose(statp);
+	  __res_iclose(statp, false);
 		return (0);
 	}
 	else {

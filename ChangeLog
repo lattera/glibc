@@ -1,5 +1,21 @@
 2005-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_init.c (__res_iclose): New function.  Broken out of
+	res_nclose.  Take addition parameter which determines whether
+	addresses should be freed.
+	(res_nclose): Call __res_iclose.
+	(res_thread_freeres): Likewise.
+	* resolv/res_data.c (res_close): Call __res_iclose.
+	* resolv/res_libc.c (res_init): No need to separately free the
+	addresses.
+	(__res_maybe_init): Likewise.
+	* resolv/res_send.c: Use __res_iclose instead of res_nclose.
+	* resolv/Versions [GLIBC_PRIVATE]: Add __res_iclose.
+	* include/resolv.h: Declare __res_iclose.
+	Add libc_hidden_proto for __res_iclose.
+	* hesiod/hesiod.c (__hesiod_res_set): No need to free name server
+	addresses here again.
+
 	[BZ #1579]
 	* debug/execinfo.h: Change backtrace_symbols_fd comment.
 
