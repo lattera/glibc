@@ -372,7 +372,7 @@ svc_getreqset (fd_set *readfds)
     setsize = FD_SETSIZE;
   maskp = readfds->fds_bits;
   for (sock = 0; sock < setsize; sock += NFDBITS)
-    for (mask = *maskp++; (bit = ffsl (mask)); mask ^= (1 << (bit - 1)))
+    for (mask = *maskp++; (bit = ffsl (mask)); mask ^= (1L << (bit - 1)))
       INTUSE(svc_getreq_common) (sock + bit - 1);
 }
 INTDEF (svc_getreqset)
