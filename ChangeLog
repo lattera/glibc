@@ -1,3 +1,13 @@
+2005-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1774]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use simple
+	gethostbyname2 lookup if AI_V4MAPPED|AI_ALL is set.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Avoid alloca when possible
+	while looking for scope delimiter.
+	Some pretty printing.
+
 2005-10-31  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/Makefile

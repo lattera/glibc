@@ -568,12 +568,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
       if (at->family == AF_UNSPEC)
 	{
-	  char *namebuf = strdupa (name);
-	  char *scope_delim;
+	  char *namebuf = (char *) name;
+	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
 
-	  scope_delim = strchr (namebuf, SCOPE_DELIMITER);
-	  if (scope_delim != NULL)
-	    *scope_delim = '\0';
+	  if (__builtin_expect (scope_delim != NULL, 0))
+	    {
+	      namebuf = alloca (scope_delim - name + 1);
+	      *((char *) __mempcpy (namebuf, name, scope_delim - name)) = '\0';
+	    }
 
 	  if (inet_pton (AF_INET6, namebuf, at->addr) > 0)
 	    {
@@ -629,7 +631,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  /* If we do not have to look for IPv4 and IPv6 together, use
 	     the simple, old functions.  */
-	  if (req->ai_family == AF_INET || req->ai_family == AF_INET6)
+	  if (req->ai_family == AF_INET
+	      || (req->ai_family == AF_INET6
+		  && ((req->ai_flags & AI_V4MAPPED) == 0
+		      || (req->ai_flags & AI_ALL) == 0)))
 	    {
 	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
@@ -888,8 +893,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		     AF_INET6.  Try to find a useful one for both.  */
 		  if (inet6_status == NSS_STATUS_TRYAGAIN)
 		    status = NSS_STATUS_TRYAGAIN;
-		  else if (status == NSS_STATUS_UNAVAIL &&
-			   inet6_status != NSS_STATUS_UNAVAIL)
+		  else if (status == NSS_STATUS_UNAVAIL
+			   && inet6_status != NSS_STATUS_UNAVAIL)
 		    status = inet6_status;
 		}
 
@@ -1039,9 +1044,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      }
 	  }
 
-	if (at2->family == AF_INET6)
+	family = at2->family;
+	if (family == AF_INET6)
 	  {
-	    family = AF_INET6;
 	    socklen = sizeof (struct sockaddr_in6);
 
 	    /* If we looked up IPv4 mapped address discard them here if
@@ -1053,10 +1058,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      goto ignore;
 	  }
 	else
-	  {
-	    family = AF_INET;
-	    socklen = sizeof (struct sockaddr_in);
-	  }
+	  socklen = sizeof (struct sockaddr_in);
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
