@@ -1,3 +1,9 @@
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1548]
+	* sunrpc/svc.c (svc_getreqset): Use ffsl instead of ffs on fd_mask.
+	From Jay Lan <jlan@engr.sgi.com>.
+
 2005-11-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1774]
