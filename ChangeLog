@@ -1,3 +1,7 @@
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	* NEWS: Synch with 2.3 branch updates.
+
 2005-11-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/svc.c (svc_getreq_poll): Fix inefficient loop test.
