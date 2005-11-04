@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-4-5
+GNU C Library NEWS -- history of user-visible changes.  2005-10-22
 Copyright (C) 1992-2002,2003,2004,2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -19,6 +19,23 @@ Version 2.4
   longer supported.  The new NPTL implementation requires Linux 2.6 kernels.
   For a libc and libpthread that works well on Linux 2.4 kernels, we
   recommend using the stable 2.3 branch.
+
+Version 2.3.6
+
+* The following bugs are resolved with this release:
+
+  38, 253, 549, 622, 653, 721, 758, 851, 877, 915, 934, 955, 961,
+  1016, 1037, 1076, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086,
+  1087, 1088, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098,
+  1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109,
+  1110, 1111, 1112, 1113, 1125, 1137, 1138, 1249, 1250, 1251, 1252,
+  1253, 1254, 1350, 1358, 1394, 1438, 1498, 1534
+
+  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
+
+* As of this release, GCC 4 can be used to compile the C Library.
+
+* Timezone data updated to 2005m version.
 
 Version 2.3.5
 
@@ -1510,7 +1527,8 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999,2000,2001,2002 Free Software Foundation, Inc.
+Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005
+	Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the
