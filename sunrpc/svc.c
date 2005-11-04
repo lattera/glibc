@@ -380,22 +380,24 @@ INTDEF (svc_getreqset)
 void
 svc_getreq_poll (struct pollfd *pfdp, int pollretval)
 {
-  register int i;
-  register int fds_found;
+  if (pollretval == 0)
+    return;
 
-  for (i = fds_found = 0; i < svc_max_pollfd && fds_found < pollretval; ++i)
+  register int fds_found;
+  for (int i = fds_found = 0; i < svc_max_pollfd; ++i)
     {
       register struct pollfd *p = &pfdp[i];
 
       if (p->fd != -1 && p->revents)
 	{
 	  /* fd has input waiting */
-	  ++fds_found;
-
 	  if (p->revents & POLLNVAL)
 	    xprt_unregister (xports[p->fd]);
 	  else
 	    INTUSE(svc_getreq_common) (p->fd);
+
+	  if (++fds_found >= pollretval)
+	    break;
 	}
     }
 }
