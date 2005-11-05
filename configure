@@ -6462,46 +6462,6 @@ _ACEOF
 
 fi
 
-echo "$as_me:$LINENO: checking for local label subtraction" >&5
-echo $ECHO_N "checking for local label subtraction... $ECHO_C" >&6
-if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat > conftest.c <<EOF
-#line $LINENO "configure"
-int foo (int a)
-{
-  static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
-  void *p = &&l1 + ar[a];
-  goto *p;
- l1:
-  return 1;
- l2:
-  return 2;
-}
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  libc_cv_gcc_subtract_local_labels=yes
-else
-  libc_cv_gcc_subtract_local_labels=no
-fi
-rm -f conftest*
-fi
-echo "$as_me:$LINENO: result: $libc_cv_gcc_subtract_local_labels" >&5
-echo "${ECHO_T}$libc_cv_gcc_subtract_local_labels" >&6
-if test "$libc_cv_gcc_subtract_local_labels" = yes; then
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_SUBTRACT_LOCAL_LABELS 1
-_ACEOF
-
-fi
-
 if test "x$use__thread" != xno; then
   echo "$as_me:$LINENO: checking for __thread" >&5
 echo $ECHO_N "checking for __thread... $ECHO_C" >&6

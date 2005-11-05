@@ -1855,35 +1855,6 @@ if test "$libc_cv_gcc_builtin_redirection" = yes ; then
   AC_DEFINE(HAVE_BUILTIN_REDIRECTION)
 fi
 
-dnl Check whether the compiler supports subtraction of local labels.
-AC_CACHE_CHECK(for local label subtraction, libc_cv_gcc_subtract_local_labels,
-[cat > conftest.c <<EOF
-changequote(,)dnl
-#line $LINENO "configure"
-int foo (int a)
-{
-  static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
-  void *p = &&l1 + ar[a];
-  goto *p;
- l1:
-  return 1;
- l2:
-  return 2;
-}
-changequote([,])dnl
-EOF
-dnl No \ in command here because it ends up inside ''.
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc_subtract_local_labels=yes
-else
-  libc_cv_gcc_subtract_local_labels=no
-fi
-rm -f conftest*])
-if test "$libc_cv_gcc_subtract_local_labels" = yes; then
-  AC_DEFINE(HAVE_SUBTRACT_LOCAL_LABELS)
-fi
-
 dnl Check whether the compiler supports the __thread keyword.
 if test "x$use__thread" != xno; then
   AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,

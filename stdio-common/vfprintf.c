@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -257,7 +257,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define NOT_IN_JUMP_RANGE(Ch) ((Ch) < L_(' ') || (Ch) > L_('z'))
 #define CHAR_CLASS(Ch) (jump_table[(INT_T) (Ch) - L_(' ')])
-#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
+#ifdef SHARED
   /* 'int' is enough and it saves some space on 64 bit systems.  */
 # define JUMP_TABLE_TYPE const int
 # define JUMP(ChExpr, table)						      \
@@ -1283,7 +1283,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Process whole format string.  */
   do
     {
-#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
+#ifdef SHARED
 # define REF(Name) &&do_##Name - &&do_form_unknown
 #else
 # define REF(Name) &&do_##Name
@@ -1726,7 +1726,7 @@ do_positional:
     for (; (size_t) nspecs_done < nspecs; ++nspecs_done)
       {
 #undef REF
-#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
+#ifdef SHARED
 # define REF(Name) &&do2_##Name - &&do_form_unknown
 #else
 # define REF(Name) &&do2_##Name
