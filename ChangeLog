@@ -1,6 +1,7 @@
 2005-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Remove test for support for subtracting local labels.
+	* config.h.in: Remove HAVE_SUBTRACT_LOCAL_LABELS.
 	* stdio-common/vfprintf.c: Remove test of
 	HAVE_SUBTRACT_LOCAL_LABELS.
 
