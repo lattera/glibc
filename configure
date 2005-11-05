@@ -2083,23 +2083,26 @@ done
 # Find what sysdep directories exist.
 sysnames=
 IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-for d in $add_ons_pfx ''; do
-  for b in $base ''; do
-    for m0 in $mach ''; do
-      for v in /$vendor ''; do
-	test "$v" = / && continue
-	for o in /$ostry ''; do
-	  test "$o" = / && continue
-	  for m in $mach ''; do
+for b in $base ''; do
+  for m0 in $mach ''; do
+    for v in /$vendor ''; do
+      test "$v" = / && continue
+      for o in /$ostry ''; do
+	test "$o" = / && continue
+	for m in $mach ''; do
+	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
-	      if test "$m0$b$v$o$m"; then
-		try="${d}sysdeps$m0$b$v$o$m$a"
+	      if test "$m0$m0sub$b$v$o$m$msub"; then
+		try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
 		test -n "$enable_debug_configure" &&
 		echo "$0 DEBUG: try $try" >&2
 		if test -d $srcdir/$try; then
 		  sysnames="$sysnames $try"
 		  { test -n "$o" || test -n "$b"; } && os_used=t
 		  { test -n "$m" || test -n "$m0"; } && machine_used=t
+		  case x${m0:-$m} in
+		  x*/$submachine) submachine_used=t ;;
+		  esac
 		fi
 	      fi
 	    done
@@ -2108,14 +2111,18 @@ for d in $add_ons_pfx ''; do
       done
     done
   done
-  if test -n "$d"; then
-    try="${d}sysdeps/generic"
-    test -n "$enable_debug_configure" &&
-    echo "$0 DEBUG: try $try" >&2
-    if test -d $srcdir/$try; then
-      sysnames="$sysnames $try"
+done
+for d in $add_ons_pfx ''; do
+  for a in $add_ons_sfx ''; do
+    if test -n "$d" && test "$d" != "$a"; then
+      try="${d}sysdeps/generic${a}"
+      test -n "$enable_debug_configure" &&
+      echo "$0 DEBUG: try $try" >&2
+      if test -d $srcdir/$try; then
+	sysnames="$sysnames $try"
+      fi
     fi
-  fi
+  done
 done
 IFS="$ac_save_ifs"
 
