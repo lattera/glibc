@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for ia64. NPTL version.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -38,7 +38,6 @@
 
 #include <stddef.h>
 
-#ifdef HAVE_INITFINI_ARRAY
 
 __asm__ ("\n\
 #include \"defs.h\"\n\
@@ -49,95 +48,3 @@ __asm__ ("\n\
 	.xdata8 \".init_array\",@fptr(__pthread_initialize_minimal_internal)\n\
 /*@_init_PROLOG_ENDS*/\n\
 ");
-
-#else
-
-__asm__ ("\n\
-\n\
-#include \"defs.h\"\n\
-\n\
-/*@HEADER_ENDS*/\n\
-\n\
-/*@_init_PROLOG_BEGINS*/\n\
-	.section .init\n\
-	.align 16\n\
-	.global _init#\n\
-	.proc _init#\n\
-_init:\n\
-	.prologue\n\
-	.save ar.pfs, r34\n\
-	alloc r34 = ar.pfs, 0, 3, 0, 0\n\
-	.vframe r32\n\
-	mov r32 = r12\n\
-	.save rp, r33\n\
-	mov r33 = b0\n\
-	.body\n\
-	adds r12 = -16, r12\n\
-	;;\n\
-	st8 [r12] = gp, -16\n\
-	br.call.sptk.many b0 = __pthread_initialize_minimal_internal# ;;\n\
-	;;\n\
-	adds r12 = 16, r12\n\
-	;;\n\
-	ld8 gp = [r12]\n\
-	;;\n\
-	.endp _init#\n\
-\n\
-/*@_init_PROLOG_ENDS*/\n\
-\n\
-/*@_init_EPILOG_BEGINS*/\n\
-	.section .init\n\
-	.proc _init#\n\
-	.prologue\n\
-	.save ar.pfs, r34\n\
-	.vframe r32\n\
-	.save rp, r33\n\
-	.body\n\
-	mov r12 = r32\n\
-	mov ar.pfs = r34\n\
-	mov b0 = r33\n\
-	br.ret.sptk.many b0\n\
-	.endp _init#\n\
-/*@_init_EPILOG_ENDS*/\n\
-\n\
-/*@_fini_PROLOG_BEGINS*/\n\
-	.section .fini\n\
-	.align 16\n\
-	.global _fini#\n\
-	.proc _fini#\n\
-_fini:\n\
-	.prologue\n\
-	.save ar.pfs, r34\n\
-	alloc r34 = ar.pfs, 0, 3, 0, 0\n\
-	.vframe r32\n\
-	mov r32 = r12\n\
-	.save rp, r33\n\
-	mov r33 = b0\n\
-	.body\n\
-	adds r12 = -16, r12\n\
-	;;\n\
-	.endp _fini#\n\
-\n\
-/*@_fini_PROLOG_ENDS*/\n\
-\n\
-/*@_fini_EPILOG_BEGINS*/\n\
-	.section .fini\n\
-	.proc _fini#\n\
-	.prologue\n\
-	.save ar.pfs, r34\n\
-	.vframe r32\n\
-	.save rp, r33\n\
-	.body\n\
-	mov r12 = r32\n\
-	mov ar.pfs = r34\n\
-	mov b0 = r33\n\
-	br.ret.sptk.many b0\n\
-	.endp _fini#\n\
-\n\
-/*@_fini_EPILOG_ENDS*/\n\
-\n\
-/*@TRAILER_BEGINS*/\n\
-	.weak	__gmon_start__#\n\
-");
-
-#endif

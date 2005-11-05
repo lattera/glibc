@@ -313,7 +313,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -5387,7 +5387,7 @@ _ACEOF
 
   echo "$as_me:$LINENO: checking for .preinit_array/.init_array/.fini_array support" >&5
 echo $ECHO_N "checking for .preinit_array/.init_array/.fini_array support... $ECHO_C" >&6
-if test "${libc_cv_initfinit_array+set}" = set; then
+if test "${libc_cv_initfini_array+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
     cat > conftest.c <<EOF
@@ -5405,23 +5405,21 @@ EOF
   (exit $ac_status); }; }
   then
     if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
-      libc_cv_initfinit_array=yes
+      libc_cv_initfini_array=yes
     else
-      libc_cv_initfinit_array=no
+      libc_cv_initfini_array=no
     fi
   else
-    libc_cv_initfinit_array=no
+    libc_cv_initfini_array=no
   fi
   rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_initfinit_array" >&5
-echo "${ECHO_T}$libc_cv_initfinit_array" >&6
-
-  if test $libc_cv_initfinit_array = yes; then
-    cat >>confdefs.h <<\_ACEOF
-#define HAVE_INITFINI_ARRAY 1
-_ACEOF
-
+echo "$as_me:$LINENO: result: $libc_cv_initfini_array" >&5
+echo "${ECHO_T}$libc_cv_initfini_array" >&6
+  if test $libc_cv_initfini_array != yes; then
+    { { echo "$as_me:$LINENO: error: Need linker with .init_array/.fini_array support." >&5
+echo "$as_me: error: Need linker with .init_array/.fini_array support." >&2;}
+   { (exit 1); exit 1; }; }
   fi
 
   echo "$as_me:$LINENO: checking for libunwind-support in compiler" >&5
@@ -8454,7 +8452,6 @@ s,@INSTALL_INFO@,$INSTALL_INFO,;t t
 s,@BISON@,$BISON,;t t
 s,@VERSIONING@,$VERSIONING,;t t
 s,@libc_cv_asm_protected_directive@,$libc_cv_asm_protected_directive,;t t
-s,@libc_cv_initfinit_array@,$libc_cv_initfinit_array,;t t
 s,@libc_cv_cc_with_libunwind@,$libc_cv_cc_with_libunwind,;t t
 s,@libc_cv_z_nodelete@,$libc_cv_z_nodelete,;t t
 s,@libc_cv_z_nodlopen@,$libc_cv_z_nodlopen,;t t

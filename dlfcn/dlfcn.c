@@ -23,7 +23,7 @@
 int __dlfcn_argc attribute_hidden;
 char **__dlfcn_argv attribute_hidden;
 
-#ifdef HAVE_INITFINI_ARRAY
+
 static void
 init (int argc, char *argv[])
 {
@@ -33,7 +33,7 @@ init (int argc, char *argv[])
 
 static void (*const init_array []) (int argc, char *argv[])
      __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
-     __attribute_used__ = { init };
-#else
-# error "Need linker with .init_array support."
-#endif
+     __attribute_used__ =
+{
+  init
+};

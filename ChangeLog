@@ -1,3 +1,14 @@
+2005-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: If init_array/fini_array support is not available,
+	bail out.
+	* config.h.in: Remove trace of optional init_array/fini_array support.
+	* config.make.in: Likewise.
+	* csu/elf-init.c: Likewise.
+	* dlfcn/dlfcn.c: Likewise.
+	* elf/soinit.c: Likewise.
+	* sysdeps/ia64/elf/initfinit.c: Likewise.
+
 2005-11-04  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/configure.in (libc_mtune_example): Variable removed.

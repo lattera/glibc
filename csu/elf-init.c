@@ -36,7 +36,7 @@
 
 #include <stddef.h>
 
-#ifdef HAVE_INITFINI_ARRAY
+
 /* These magic symbols are provided by the linker.  */
 extern void (*__preinit_array_start []) (int, char **, char **)
   attribute_hidden;
@@ -48,7 +48,7 @@ extern void (*__init_array_end []) (int, char **, char **)
   attribute_hidden;
 extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
-#endif
+
 
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
@@ -63,11 +63,10 @@ extern void _fini (void);
 void
 __libc_csu_init (int argc, char **argv, char **envp)
 {
-#ifdef HAVE_INITFINI_ARRAY
   /* For dynamically linked executables the preinit array is executed by
      the dynamic linker (before initializing any shared object.  */
 
-# ifndef LIBC_NONSHARED
+#ifndef LIBC_NONSHARED
   /* For static executables, preinit happens rights before init.  */
   {
     const size_t size = __preinit_array_end - __preinit_array_start;
@@ -75,19 +74,13 @@ __libc_csu_init (int argc, char **argv, char **envp)
     for (i = 0; i < size; i++)
       (*__preinit_array_start [i]) (argc, argv, envp);
   }
-# endif
 #endif
 
   _init ();
 
-#ifdef HAVE_INITFINI_ARRAY
-  {
-    const size_t size = __init_array_end - __init_array_start;
-    size_t i;
-    for (i = 0; i < size; i++)
+  const size_t size = __init_array_end - __init_array_start;
+  for (size_t i = 0; i < size; i++)
       (*__init_array_start [i]) (argc, argv, envp);
-  }
-#endif
 }
 
 /* This function should not be used anymore.  We run the executable's
@@ -97,11 +90,9 @@ void
 __libc_csu_fini (void)
 {
 #ifndef LIBC_NONSHARED
-# ifdef HAVE_INITFINI_ARRAY
   size_t i = __fini_array_end - __fini_array_start;
   while (i-- > 0)
     (*__fini_array_start [i]) ();
-# endif
 
   _fini ();
 #endif

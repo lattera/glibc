@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for ia64.
-   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,6 @@ __asm__ ("\n\n"
 "\n"
 "/*@_init_PROLOG_BEGINS*/\n");
 
-#ifdef HAVE_INITFINI_ARRAY
 
 /* If we have working .init_array support, we want to keep the .init
    section empty (apart from the mandatory prologue/epilogue.  This
@@ -75,7 +74,6 @@ gmon_initializer (void)
 __asm__ (".section .init_array, \"aw\"\n"
 	 "\tdata8 @fptr(gmon_initializer)\n");
 
-#endif
 
 __asm__ (".section .init\n"
 "	.global _init#\n"
@@ -90,27 +88,7 @@ __asm__ (".section .init\n"
 "	mov r33 = b0\n"
 "	.body\n"
 "	adds r12 = -16, r12\n"
-#ifdef HAVE_INITFINI_ARRAY
 "	;;\n"		/* see gmon_initializer() above */
-#else
-"	.weak	__gmon_start__#\n"
-"	addl r14 = @ltoff(@fptr(__gmon_start__#)), gp\n"
-"	;;\n"
-"	ld8 r15 = [r14]\n"
-"	;;\n"
-"	cmp.eq p6, p7 = 0, r15\n"
-"	(p6) br.cond.dptk .L5\n"
-"\n"
-"/* we could use r35 to save gp, but we use the stack since that's what\n"
-" * all the other init routines will do --davidm 00/04/05 */\n"
-"	st8 [r12] = gp, -16\n"
-"	br.call.sptk.many b0 = __gmon_start__# ;;\n"
-"	adds r12 = 16, r12\n"
-"	;;\n"
-"	ld8 gp = [r12]\n"
-"	;;\n"
-".L5:\n"
-#endif
 "	.endp _init#\n"
 "\n"
 "/*@_init_PROLOG_ENDS*/\n"

@@ -1257,7 +1257,7 @@ EOF
   fi
 
   AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
-		 libc_cv_initfinit_array, [dnl
+		 libc_cv_initfini_array, [dnl
   cat > conftest.c <<EOF
 int _start (void) { return 0; }
 int __start (void) { return 0; }
@@ -1268,17 +1268,16 @@ EOF
 		     -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
-      libc_cv_initfinit_array=yes
+      libc_cv_initfini_array=yes
     else
-      libc_cv_initfinit_array=no
+      libc_cv_initfini_array=no
     fi
   else
-    libc_cv_initfinit_array=no
+    libc_cv_initfini_array=no
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_initfinit_array)
-  if test $libc_cv_initfinit_array = yes; then
-    AC_DEFINE(HAVE_INITFINI_ARRAY)
+  if test $libc_cv_initfini_array != yes; then
+    AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
   fi
 
   AC_CACHE_CHECK(for libunwind-support in compiler,

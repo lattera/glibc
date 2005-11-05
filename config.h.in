@@ -158,10 +158,6 @@
 /* Define if binutils support TLS handling.  */
 #undef	HAVE_TLS_SUPPORT
 
-/* Define if the linker supports .preinit_array/.init_array/.fini_array
-   sections.  */
-#undef	HAVE_INITFINI_ARRAY
-
 /* Define if the compiler's exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 
