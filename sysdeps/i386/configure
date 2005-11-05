@@ -52,6 +52,3 @@ if test $libc_cv_cpp_asm_debuginfo = yes; then
 _ACEOF
 
 fi
-
-# Tell top-level configure to try -mtune=i386.
-libc_mtune_example=i386

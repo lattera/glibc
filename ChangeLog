@@ -1,5 +1,8 @@
 2005-11-04  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/i386/configure.in (libc_mtune_example): Variable removed.
+	* sysdeps/i386/configure: Regenerated.
+
 	[BZ #1089]
 	* configure.in: Change order of add-on sysdeps directories,
 	so they are interleaved with main sysdeps directories.

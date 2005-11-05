@@ -33,6 +33,3 @@ rm -f conftest*])AC_SUBST(libc_cv_cpp_asm_debuginfo)
 if test $libc_cv_cpp_asm_debuginfo = yes; then
   AC_DEFINE(HAVE_CPP_ASM_DEBUGINFO)
 fi
-
-# Tell top-level configure to try -mtune=i386.
-libc_mtune_example=i386
