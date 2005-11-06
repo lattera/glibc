@@ -3268,19 +3268,31 @@ munmap_chunk(p) mchunkptr p;
 #endif
 {
   INTERNAL_SIZE_T size = chunksize(p);
-  int ret;
 
   assert (chunk_is_mmapped(p));
 #if 0
   assert(! ((char*)p >= mp_.sbrk_base && (char*)p < mp_.sbrk_base + mp_.sbrked_mem));
   assert((mp_.n_mmaps > 0));
 #endif
-  assert(((p->prev_size + size) & (mp_.pagesize-1)) == 0);
+
+  uintptr_t block = (uintptr_t) p - p->prev_size;
+  size_t total_size = p->prev_size + size;
+  /* Unfortunately we have to do the compilers job by hand here.  Normally
+     we would test BLOCK and TOTAL-SIZE separately for compliance with the
+     page size.  But gcc does not recognize the optimization possibility
+     (in the moment at least) so we combine the two values into one before
+     the bit test.  */
+  if (__builtin_expect (((block | total_size) & (mp_.pagesize - 1)) != 0, 0))
+    {
+      malloc_printerr (check_action, "munmap_chunk(): invalid pointer",
+		       chunk2mem (p));
+      return;
+    }
 
   mp_.n_mmaps--;
-  mp_.mmapped_mem -= (size + p->prev_size);
+  mp_.mmapped_mem -= total_size;
 
-  ret = munmap((char *)p - p->prev_size, size + p->prev_size);
+  int ret = munmap(block, total_size);
 
   /* munmap returns non-zero on failure */
   assert(ret == 0);

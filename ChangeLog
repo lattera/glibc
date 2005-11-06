@@ -1,3 +1,9 @@
+2005-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (munmap_chunk): Add sanity checks.
+
+	* sysdeps/pthread/configure: Fix comment.
+
 2005-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Remove gnu_as definition and everything using it.
