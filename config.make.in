@@ -80,7 +80,6 @@ sizeof-long-double = @sizeof_long_double@
 
 # Configuration options.
 gnu-as = @gnu_as@
-gnu-ld = @gnu_ld@
 build-static = @static@
 build-shared = @shared@
 build-pic-default= @pic_default@

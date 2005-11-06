@@ -2,6 +2,7 @@
 
 	* configure.in: Remove gnu_ld definition and everything using it.
 	* config.h.in: Remove HAVE_GNU_LD.
+	* config.make.in: Remove gnu-ld.
 	* csu/Makefile: Remove use of gnu-ld.
 	* csu/munch.awk: Removed.
 	* csu/munch-tmpl.c: Removed.
