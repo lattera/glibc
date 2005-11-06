@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,11 +36,8 @@ ENTRY (sethostid)
 	retl
 	sub %g0, 1, %o0
 
-#ifdef	HAVE_GNU_LD
 
 .stabs "warning: sethostid is not implemented and will always fail",30,0,0,0
 .stabs "_sethostid",1,0,0,0
-
-#endif
 
 #endif

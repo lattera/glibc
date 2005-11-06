@@ -39,8 +39,8 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
-	     abi-note.S init.c munch-tmpl.c not-cancel.h
+distribute = initfini.c gmon-start.c start.c defs.awk \
+	     abi-note.S init.c c not-cancel.h
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
 
@@ -73,19 +73,6 @@ endif
 ifeq (yes,$(elf))
 before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
-endif
-
-ifneq (yes,$(gnu-ld))
-libc-init = munch-init
-$(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
-	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
-	mv -f $@-t $@
-generated += munch-init.c
-
-# All initialization source files.
-+subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
-# All subdirectories containing initialization source files.
-+init_subdirs	:= $(patsubst %/,%,$(dir $(+subdir_inits)))
 endif
 
 ifeq ($(have-initfini),yes)

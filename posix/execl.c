@@ -24,9 +24,6 @@
 
 #include <stackinfo.h>
 
-#ifndef	HAVE_GNU_LD
-# define __environ	environ
-#endif
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */

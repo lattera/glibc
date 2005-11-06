@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,6 @@
 
 #include <stddef.h>
 
-#ifndef HAVE_GNU_LD
-#define	_sys_errlist	sys_errlist
-#define	_sys_nerr	sys_nerr
-#endif
 
 const char *const _sys_errlist[] =
   {

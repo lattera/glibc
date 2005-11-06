@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,11 +29,7 @@
 .data
 .global C_SYMBOL_NAME(__curbrk)
 C_LABEL(__curbrk)
-#ifdef	HAVE_GNU_LD
 	.long C_SYMBOL_NAME(_end)
-#else
-	.long C_SYMBOL_NAME(end)
-#endif
 
 .text
 ENTRY (__brk)

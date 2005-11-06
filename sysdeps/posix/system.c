@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,6 @@
 #include <bits/libc-lock.h>
 #include <sysdep-cancel.h>
 
-
-#ifndef	HAVE_GNU_LD
-#define	__environ	environ
-#endif
 
 #define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
 #define	SHELL_NAME	"sh"		/* Name to give it.  */

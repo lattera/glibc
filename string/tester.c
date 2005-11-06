@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995-2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +34,6 @@
 #include <strings.h>
 #include <fcntl.h>
 
-#ifndef HAVE_GNU_LD
-#define _sys_nerr	sys_nerr
-#define _sys_errlist	sys_errlist
-#endif
 
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
 

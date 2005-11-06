@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,95,96,97,99,2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,97,99,2001,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,8 @@
 #include <unistd.h>
 #include "exit.h"
 
-#ifdef HAVE_GNU_LD
 #include "set-hooks.h"
 DEFINE_HOOK (__libc_atexit, (void))
-#endif
 
 
 /* Call all functions registered with `atexit' and `on_exit',
@@ -70,14 +68,7 @@ exit (int status)
 	free (old);
     }
 
-#ifdef	HAVE_GNU_LD
   RUN_HOOK (__libc_atexit, ());
-#else
-  {
-    extern void _cleanup (void);
-    _cleanup ();
-  }
-#endif
 
   _exit (status);
 }

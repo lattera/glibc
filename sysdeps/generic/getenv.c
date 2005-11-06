@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,96,98,99,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,96,98,99,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifndef	HAVE_GNU_LD
-#define	__environ	environ
-#endif
 
 /* Return the value of the environment variable NAME.  This implementation
    is tuned a bit in that it assumes no environment variable has an empty

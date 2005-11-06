@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,6 @@
 #include <libintl.h>
 #include <bits/libc-lock.h>
 
-
-#ifndef	HAVE_GNU_LD
-#define	_sys_siglist	sys_siglist
-#endif
 
 /* Defined in siglist.c.  */
 extern const char *const _sys_siglist[];

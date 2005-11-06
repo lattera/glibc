@@ -24,10 +24,6 @@
 #include <wchar.h>
 
 
-#ifndef	HAVE_GNU_LD
-#define	_sys_siglist	sys_siglist
-#endif
-
 /* Defined in sys_siglist.c.  */
 extern const char *const _sys_siglist[];
 extern const char *const _sys_siglist_internal[] attribute_hidden;

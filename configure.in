@@ -298,11 +298,6 @@ config_os="`echo $config_os | sed 's/^unknown-//'`"
 
 # Some configurations imply other options.
 case "$host_os" in
-gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
-  # These systems always use GNU tools.
-  gnu_ld=yes gnu_as=yes ;;
-esac
-case "$host_os" in
 # i586-linuxaout is mangled into i586-pc-linux-gnuaout
 linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
   ;;
@@ -1240,7 +1235,7 @@ EOF
     AC_DEFINE(HAVE_BROKEN_ALIAS_ATTRIBUTE)
   fi
 
-  if test $libc_cv_visibility_attribute = yes -a $gnu_ld = yes; then
+  if test $libc_cv_visibility_attribute = yes; then
     AC_CACHE_CHECK(whether to put _rtld_local into .sdata section,
 		 libc_cv_have_sdata_section,
 		 [echo "int i;" > conftest.c
@@ -1542,7 +1537,7 @@ if test $elf != yes; then
   fi
 fi
 
-if test $elf = yes -a $gnu_ld = yes; then
+if test $elf = yes; then
   AC_CACHE_CHECK(whether cc puts quotes around section names,
 		 libc_cv_have_section_quotes,
 		 [cat > conftest.c <<EOF
@@ -2080,10 +2075,7 @@ AC_SUBST(libc_cv_forced_unwind)
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 
-AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(xcoff)
-if test $gnu_ld = yes; then
-  AC_DEFINE(HAVE_GNU_LD)
-fi
+AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(xcoff)
 if test $gnu_as = yes; then
   AC_DEFINE(HAVE_GNU_AS)
 fi
@@ -2097,13 +2089,7 @@ fi
 AC_SUBST(static)
 AC_SUBST(shared)
 if test $shared = default; then
-  if test $gnu_ld = yes; then
-    shared=$elf
-  else
-    # For now we do not assume shared libs are available.  In future more
-    # tests might become available.
-    shared=no
-  fi
+  shared=$elf
 fi
 
 if test x"$libc_cv_idn" = xyes; then

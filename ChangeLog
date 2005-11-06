@@ -1,5 +1,31 @@
 2005-11-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Remove gnu_ld definition and everything using it.
+	* config.h.in: Remove HAVE_GNU_LD.
+	* csu/Makefile: Remove use of gnu-ld.
+	* csu/munch.awk: Removed.
+	* csu/munch-tmpl.c: Removed.
+	* include/libc-symbols.h: Remove use of HAVE_GNU_LD.
+	* posix/execl.c: Likewise.
+	* posix/execv.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdlib/exit.c: Likewise.
+	* string/strsignal.c: Likewise.
+	* string/tester.c: Likewise.
+	* sysdeps/generic/errlist.c: Likewise.
+	* sysdeps/generic/getenv.c: Likewise.
+	* sysdeps/generic/getgroups.c: Likewise.
+	* sysdeps/generic/init-posix.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/unix/bsd/init-posix.c: Likewise.
+	* sysdeps/unix/bsd/ulimit.c: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/brk.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sethostid.S: Likewise.
+	* sysdeps/unix/i386/brk.S: Likewise.
+	* sysdeps/unix/sparc/brk.S: Likewise.
+
 	* configure.in: Remove test for support for subtracting local labels.
 	* config.h.in: Remove HAVE_SUBTRACT_LOCAL_LABELS.
 	* stdio-common/vfprintf.c: Remove test of

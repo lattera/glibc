@@ -8,11 +8,6 @@
 # error "glibc must not be compiled with -ffast-math"
 #endif
 
-/* Define if using GNU ld, with support for weak symbols in a.out,
-   and for symbol set and warning messages extensions in a.out and ELF.
-   This implies HAVE_WEAK_SYMBOLS; set by --with-gnu-ld.  */
-#undef	HAVE_GNU_LD
-
 /* Define if using ELF, which supports weak symbols.
    This implies HAVE_ASM_WEAK_DIRECTIVE and NO_UNDERSCORES; set by
    --with-elf.  */
