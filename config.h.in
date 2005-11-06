@@ -45,9 +45,6 @@
 /* Define if __attribute__((section("foo"))) puts quotes around foo.  */
 #undef  HAVE_SECTION_QUOTES
 
-/* Define if using the GNU assembler, gas.  */
-#undef	HAVE_GNU_AS
-
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
 

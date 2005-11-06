@@ -79,7 +79,6 @@ have-ksh = @libc_cv_have_ksh@
 sizeof-long-double = @sizeof_long_double@
 
 # Configuration options.
-gnu-as = @gnu_as@
 build-static = @static@
 build-shared = @shared@
 build-pic-default= @pic_default@

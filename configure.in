@@ -2075,10 +2075,7 @@ AC_SUBST(libc_cv_forced_unwind)
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 
-AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(xcoff)
-if test $gnu_as = yes; then
-  AC_DEFINE(HAVE_GNU_AS)
-fi
+AC_SUBST(elf) AC_SUBST(xcoff)
 if test $elf = yes; then
   AC_DEFINE(HAVE_ELF)
 fi
