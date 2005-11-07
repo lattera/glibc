@@ -3292,7 +3292,7 @@ munmap_chunk(p) mchunkptr p;
   mp_.n_mmaps--;
   mp_.mmapped_mem -= total_size;
 
-  int ret = munmap(block, total_size);
+  int ret __attribute__ ((unused)) = munmap((char *)block, total_size);
 
   /* munmap returns non-zero on failure */
   assert(ret == 0);

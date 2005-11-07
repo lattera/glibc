@@ -1,7 +1,11 @@
 2005-11-07  Roland McGrath  <roland@redhat.com>
 
+	* malloc/malloc.c (munmap_chunk): Suppress warnings from last change.
+
 	* sysdeps/unix/bsd/sun: Directory and all subdirectories removed,
 	saved in ports repository.
+	* sysdeps/unix/sysv/linux/tcflush.c: Rewritten.
+	* sysdeps/unix/sysv/linux/tcflow.c: Rewritten.
 
 2005-11-06  Ulrich Drepper  <drepper@redhat.com>
 
