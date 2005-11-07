@@ -1,3 +1,8 @@
+2005-11-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/bsd/sun: Directory and all subdirectories removed,
+	saved in ports repository.
+
 2005-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (munmap_chunk): Add sanity checks.

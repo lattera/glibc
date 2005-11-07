@@ -1,3 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-sigvec		-	sigvec		3	__raw_sigvec
