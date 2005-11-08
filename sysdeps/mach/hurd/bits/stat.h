@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 96, 97, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,96,97,99,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,8 +182,11 @@ struct stat64
 /* All the bits relevant to translators */
 #define S_ITRANS	000070000000
 
+/* Definitely no mmaps to this.  */
+#define S_IMMAP0	000100000000
+
 /* ALL the unused bits.  */
-#define	S_ISPARE	(~(S_IFMT|S_ITRANS|S_INOCACHE|    \
+#define	S_ISPARE	(~(S_IFMT|S_ITRANS|S_INOCACHE|S_IMMAP0|    \
 			   S_IUSEUNK|S_IUNKNOWN|07777))
 #endif
 

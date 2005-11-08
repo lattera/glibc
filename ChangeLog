@@ -1,3 +1,8 @@
+2005-11-05  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/mach/hurd/bits/stat.h (S_IMMAP0): New macro.
+	(S_ISPARE): Unset the S_IMMAP0 flag.
+
 2005-11-07  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Grok --with-cpu=CPU option.  If given, search for
