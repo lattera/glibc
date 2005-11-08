@@ -2569,6 +2569,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_M32R_SDA16_RELA	42	/* 16 bit offset in SDA */
 #define R_M32R_RELA_GNU_VTINHERIT	43
 #define R_M32R_RELA_GNU_VTENTRY	44
+#define R_M32R_REL32		45	/* PC relative 32 bit.  */
 
 #define R_M32R_GOT24		48	/* 24 bit GOT entry */
 #define R_M32R_26_PLTREL	49	/* 26 bit PC relative to PLT shifted */
