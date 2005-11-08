@@ -313,7 +313,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine submachine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -906,6 +906,7 @@ Optional Packages:
                           default]
   --with-tls              enable support for TLS
   --without-__thread      do not use TLS features even when supporting them
+  --with-cpu=CPU          select code for CPU variant
 
 Some influential environment variables:
   CC          C compiler command
@@ -1827,6 +1828,21 @@ case "$machine-$host_os" in
     ;;
 esac
 
+submachine=
+
+# Check whether --with-cpu or --without-cpu was given.
+if test "${with_cpu+set}" = set; then
+  withval="$with_cpu"
+    case "$withval" in
+  yes|'') { { echo "$as_me:$LINENO: error: --with-cpu requires an argument" >&5
+echo "$as_me: error: --with-cpu requires an argument" >&2;}
+   { (exit 1); exit 1; }; } ;;
+  no) ;;
+  *) submachine="$withval" ;;
+  esac
+
+fi;
+
 
 # An add-on can set this when it the tuple to disable the sanity check below.
 libc_config_ok=no
@@ -2061,7 +2077,7 @@ done
 
 # For sparc/sparc32, try sparc/sparc32 and then sparc.
 mach=
-tail=$machine
+tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
@@ -2131,6 +2147,12 @@ if test -z "$machine_used" && test "$machine" != none; then
 echo "$as_me: error: The $machine is not supported." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "$submachine_used" && test -n "$submachine"; then
+  { { echo "$as_me:$LINENO: error: The $submachine subspecies of $host_cpu is not supported." >&5
+echo "$as_me: error: The $submachine subspecies of $host_cpu is not supported." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
 
 # We have now validated the configuration.
 
@@ -8347,6 +8369,7 @@ s,@host_os@,$host_os,;t t
 s,@subdirs@,$subdirs,;t t
 s,@add_ons@,$add_ons,;t t
 s,@base_machine@,$base_machine,;t t
+s,@submachine@,$submachine,;t t
 s,@sysnames@,$sysnames,;t t
 s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t

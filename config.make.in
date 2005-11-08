@@ -31,6 +31,7 @@ base-machine = @base_machine@
 config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
+with-cpu = @submachine@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@

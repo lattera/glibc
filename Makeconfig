@@ -611,7 +611,7 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-+cflags := $(+cflags) $(+gccwarn)
++cflags := $(+cflags) $(addprefix -mcpu=,$(with-cpu)) $(+gccwarn)
 +gcc-nowarn := -w
 
 # Don't duplicate options if we inherited variables from the parent.

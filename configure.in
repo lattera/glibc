@@ -332,6 +332,17 @@ case "$machine-$host_os" in
     ;;
 esac
 
+submachine=
+AC_ARG_WITH([cpu],
+	    AS_HELP_STRING([--with-cpu=CPU], [select code for CPU variant]),
+	    [dnl
+  case "$withval" in
+  yes|'') AC_MSG_ERROR([--with-cpu requires an argument]) ;;
+  no) ;;
+  *) submachine="$withval" ;;
+  esac
+])
+
 
 # An add-on can set this when it the tuple to disable the sanity check below.
 libc_config_ok=no
@@ -551,7 +562,7 @@ done
 
 # For sparc/sparc32, try sparc/sparc32 and then sparc.
 mach=
-tail=$machine
+tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
@@ -619,6 +630,10 @@ fi
 if test -z "$machine_used" && test "$machine" != none; then
   AC_MSG_ERROR(The $machine is not supported.)
 fi
+if test -z "$submachine_used" && test -n "$submachine"; then
+  AC_MSG_ERROR(The $submachine subspecies of $host_cpu is not supported.)
+fi
+AC_SUBST(submachine)
 
 # We have now validated the configuration.
 

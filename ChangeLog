@@ -1,5 +1,11 @@
 2005-11-07  Roland McGrath  <roland@redhat.com>
 
+	* configure.in: Grok --with-cpu=CPU option.  If given, search for
+	sysdeps/.../machine/CPU subdirs, and give error if none are found.
+	* configure: Regenerated.
+	* config.make.in (with-cpu): New substituted variable.
+	* Makeconfig (+cflags): Add -mcpu=$(with-cpu) if set.
+
 	* malloc/malloc.c (munmap_chunk): Suppress warnings from last change.
 
 	* sysdeps/unix/bsd/sun: Directory and all subdirectories removed,
