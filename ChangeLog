@@ -2,7 +2,7 @@
 
 	* sysdeps/generic/check_fds.c (check_one_fd): For writable
 	descriptors, use /dev/full.
-	(__libc_check_standard_fds): Revert modes so that common operations on
+	(__libc_check_standard_fds): Reverse modes so that common operations on
 	the descriptors fail.
 
 2005-11-07  Kazuhiro Inaoka  <inaoka.kazuhiro@renesas.com>
