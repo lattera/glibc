@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,12 +44,26 @@ check_one_fd (int fd, int mode)
   if (__builtin_expect (__libc_fcntl (fd, F_GETFD), 0) == -1
       && errno == EBADF)
     {
-      struct stat64 st;
+      const char *name;
+      dev_t dev;
+
+      /* For writable descriptors we use /dev/full.  */
+      if ((mode & O_ACCMODE) == O_WRONLY)
+	{
+	  name = _PATH_DEV "full";
+	  dev = makedev (DEV_FULL_MAJOR, DEV_FULL_MINOR);
+	}
+      else
+	{
+	  name = _PATH_DEVNULL;
+	  dev = makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR);
+	}
 
       /* Something is wrong with this descriptor, it's probably not
 	 opened.  Open /dev/null so that the SUID program we are
 	 about to start does not accidently use this descriptor.  */
-      int nullfd = open_not_cancel (_PATH_DEVNULL, mode, 0);
+      int nullfd = open_not_cancel (name, mode, 0);
+
       /* We are very paranoid here.  With all means we try to ensure
 	 that we are actually opening the /dev/null device and nothing
 	 else.
@@ -57,13 +71,11 @@ check_one_fd (int fd, int mode)
 	 Note that the following code assumes that STDIN_FILENO,
 	 STDOUT_FILENO, STDERR_FILENO are the three lowest file
 	 decsriptor numbers, in this order.  */
+      struct stat64 st;
       if (__builtin_expect (nullfd != fd, 0)
 	  || __builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) != 0
 	  || __builtin_expect (S_ISCHR (st.st_mode), 1) == 0
-#if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
-	  || st.st_rdev != makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
-#endif
-	  )
+	  || st.st_rdev != dev)
 	/* We cannot even give an error message here since it would
 	   run into the same problems.  */
 	while (1)
@@ -84,7 +96,7 @@ __libc_check_standard_fds (void)
 # define O_NOFOLLOW	0
 #endif
   /* Check all three standard file descriptors.  */
-  check_one_fd (STDIN_FILENO, O_RDONLY | O_NOFOLLOW);
-  check_one_fd (STDOUT_FILENO, O_RDWR | O_NOFOLLOW);
-  check_one_fd (STDERR_FILENO, O_RDWR | O_NOFOLLOW);
+  check_one_fd (STDIN_FILENO, O_WRONLY | O_NOFOLLOW);
+  check_one_fd (STDOUT_FILENO, O_RDONLY | O_NOFOLLOW);
+  check_one_fd (STDERR_FILENO, O_RDONLY | O_NOFOLLOW);
 }
