@@ -1,3 +1,10 @@
+2005-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/check_fds.c (check_one_fd): For writable
+	descriptors, use /dev/full.
+	(__libc_check_standard_fds): Revert modes so that common operations on
+	the descriptors fail.
+
 2005-11-07  Kazuhiro Inaoka  <inaoka.kazuhiro@renesas.com>
 
 	* elf/elf.h (R_M32R_REL32): New macro.
