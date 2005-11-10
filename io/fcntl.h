@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +81,32 @@ extern int __REDIRECT (open, (__const char *__file, int __oflag, ...), open64)
 #endif
 #ifdef __USE_LARGEFILE64
 extern int open64 (__const char *__file, int __oflag, ...) __nonnull ((1));
+#endif
+
+#ifdef __USE_GNU
+/* Similar to OPEN but a relative path name is interpreted relative to
+   the directory for which FD is a descriptor.
+
+   NOTE: some other OPENAT implementation support additional functionality
+   through this interface, especially using the O_XATTR flag.  This is not
+   yet supported here.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+# ifndef __USE_FILE_OFFSET64
+extern int openat (int __fd, __const char *__file, int __oflag, ...)
+     __nonnull ((2));
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (openat, (int __fd, __const char *__file, int __oflag,
+				...), openat64) __nonnull ((2));
+#  else
+#   define openat openat64
+#  endif
+# endif
+
+extern int openat64 (int __fd, __const char *__file, int __oflag, ...)
+     __nonnull ((2));
 #endif
 
 /* Create and open FILE, with mode MODE.  This takes an `int' MODE

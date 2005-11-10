@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1992-2002, 2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,8 @@ routines :=							      \
 	statfs fstatfs statfs64 fstatfs64			      \
 	statvfs fstatvfs statvfs64 fstatvfs64			      \
 	umask chmod fchmod lchmod mkdir				      \
-	open open64 close read write lseek lseek64 access euidaccess  \
+	open open64 openat openat64 close			      \
+	read write lseek lseek64 access euidaccess		      \
 	fcntl flock lockf lockf64				      \
 	dup dup2 pipe						      \
 	creat creat64						      \
@@ -57,7 +58,8 @@ static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
-		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs
+		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
+		   tst-openat
 
 distribute	:= ftwtest-sh
 

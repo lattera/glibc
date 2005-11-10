@@ -1,5 +1,5 @@
 /* Device numbers of devices used in the implementation.  Linux version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,10 @@
 /* /dev/null is (1,3).  */
 #define DEV_NULL_MAJOR	1
 #define DEV_NULL_MINOR	3
+
+/* /dev/full is (1,7).  */
+#define DEV_FULL_MAJOR	1
+#define DEV_FULL_MINOR	7
 
 /* Pseudo tty slaves.  For Linux we use the Unix98 ttys.  We could
    also include the old BSD-style tty buts they should not be used and

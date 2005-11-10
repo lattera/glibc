@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-10-22
+GNU C Library NEWS -- history of user-visible changes.  2005-11-09
 Copyright (C) 1992-2002,2003,2004,2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -12,6 +12,13 @@ Version 2.4
 * New iconv converters for IBM1025, IBM1122, IBM1137, IBM1153,
   IBM1154, IBM1155, IBM1156, IBM1157, and IBM1158 contributed by Jiro Sekiba.
 
+  More converters for IBM803, IBM901, IBM902, IBM921, IBM1008, IBM1097,
+  IBM1112, IBM1123, IBM1130, IBM1140, IBM1141, IBM1142, IBM1143, IBM1144,
+  IBM1145, IBM1146, IBM1147, IBM1148, IBM1149, IBM1166, IBM1167, IBM4517,
+  IBM4899, IBM4909, IBM4971, IBM5347, IBM9030, IBM9066, IBM9448, IBM12712,
+  IBM16804, IBM1364, IBM1371, IBM1388, IBM1390, and IBM1399 contributed
+  by Masahide Washizawa.
+
 * It is now possible to install audit libraries for the dynamic linker using
   LD_AUDIT.  Implemented by Ulrich Drepper.
 
@@ -19,6 +26,8 @@ Version 2.4
   longer supported.  The new NPTL implementation requires Linux 2.6 kernels.
   For a libc and libpthread that works well on Linux 2.4 kernels, we
   recommend using the stable 2.3 branch.
+
+* New interfaces: fdopendir, openat.
 
 Version 2.3.6
 

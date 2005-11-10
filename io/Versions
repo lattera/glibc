@@ -97,4 +97,7 @@ libc {
     # n*
     nftw; nftw64;
   }
+  GLIBC_2.4 {
+    openat; openat64;
+  }
 }

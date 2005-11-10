@@ -1,9 +1,20 @@
 2005-11-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/fcntl.h: Declare openat and openat64.
+	* io/Makefile (routines): Add openat and openat64.
+	(tests): Add tst-openat.
+	* io/Versions: Add openat and openat64 for GLIBC_2.4.
+	* sysdeps/generic/openat.c: New file.
+	* sysdeps/generic/openat64.c: New file.
+	* sysdeps/unix/sysv/linux/openat.c: New file.
+	* sysdeps/unix/sysv/linux/openat64.c: New file.
+	* io/tst-openat.c: New file.
+
 	* sysdeps/generic/check_fds.c (check_one_fd): For writable
 	descriptors, use /dev/full.
 	(__libc_check_standard_fds): Reverse modes so that common operations on
 	the descriptors fail.
+	* sysdeps/unix/sysv/linux/device-nrs.h: Add info for /dev/full.
 
 2005-11-07  Kazuhiro Inaoka  <inaoka.kazuhiro@renesas.com>
 
