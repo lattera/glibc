@@ -1,0 +1,3 @@
+2005-10-11  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/nofpu/fesetround.c: Add libm_hidden_def.
