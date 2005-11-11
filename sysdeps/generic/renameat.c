@@ -18,52 +18,33 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <sys/stat.h>
+#include <stdio.h>
 
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+
+/* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
 int
-openat64 (fd, file, oflag)
-     int fd;
-     const char *file;
-     int oflag;
+renameat (oldfd, old, newfd, new)
+     int oldfd;
+     const char *old;
+     int newfd;
+     const char *new;
 {
-  int mode;
+  if ((oldfd < 0 & oldfd !_ AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
-  if (file == NULL)
+  if (old == NULL || new == NULL)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      /* Check FD is associated with a directory.  */
-      struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	return -1;
-
-      if (!S_ISDIR (st.st_mode))
-	{
-	  __set_errno (ENOTDIR);
-	  return -1;
-	}
-    }
-
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
-    }
-
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (openat64)
 
+
+stub_warning (renameat)
 #include <stub-tag.h>

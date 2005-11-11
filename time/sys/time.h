@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,13 +70,14 @@ typedef void *__restrict __timezone_ptr_t;
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
 extern int gettimeofday (struct timeval *__restrict __tv,
-			 __timezone_ptr_t __tz) __THROW;
+			 __timezone_ptr_t __tz) __THROW __nonnull ((1));
 
 #ifdef __USE_BSD
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
 extern int settimeofday (__const struct timeval *__tv,
-			 __const struct timezone *__tz) __THROW;
+			 __const struct timezone *__tz)
+     __THROW __nonnull ((1));
 
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
@@ -136,15 +137,23 @@ extern int setitimer (__itimer_which_t __which,
    FILE to TVP[1].  If TVP is a null pointer, use the current time instead.
    Returns 0 on success, -1 on errors.  */
 extern int utimes (__const char *__file, __const struct timeval __tvp[2])
-     __THROW;
+     __THROW __nonnull ((1));
 
 #ifdef __USE_BSD
 /* Same as `utimes', but does not follow symbolic links.  */
 extern int lutimes (__const char *__file, __const struct timeval __tvp[2])
-     __THROW;
+     __THROW __nonnull ((1));
 
 /* Same as `utimes', but takes an open file descriptor instead of a name.  */
 extern int futimes (int __fd, __const struct timeval __tvp[2]) __THROW;
+#endif
+
+#ifdef __USE_GNU
+/* Change the access time of FILE relative to FD to TVP[0] and the
+   modification time of FILE to TVP[1].  If TVP is a null pointer, use
+   the current time instead.  Returns 0 on success, -1 on errors.  */
+extern int futimesat (int __fd, __const char *__file,
+		      __const struct timeval __tvp[2]) __THROW __nonnull ((2));
 #endif
 
 

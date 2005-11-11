@@ -18,51 +18,21 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sysdep-cancel.h>
+#include <utime.h>
+#include <sys/time.h>
+#include <sysdep.h>
+#include "kernel-features.h"
 
 
-#ifndef OPENAT
-# define OPENAT openat
-# define MORE_OFLAGS 0
-
-
-void
-attribute_hidden
-__atfct_seterrno (int errval, int fd, const char *buf)
-{
-  if (buf != NULL && errval == ENOTDIR)
-    {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
-      struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	/* errno is already set correctly.  */
-	return;
-
-      /* If /proc is not mounted there is nothing we can do.  */
-      if (S_ISDIR (st.st_mode)
-	  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-	      || !S_ISDIR (st.st_mode)))
-	errval = ENOSYS;
-    }
-
-  __set_errno (errval);
-}
-#endif
-
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+/* Change the access time of FILE relative to FD to TVP[0] and
+   the modification time of FILE to TVP[1].  */
 int
-OPENAT (fd, file, oflag)
+futimesat (fd, file, tvp)
      int fd;
      const char *file;
-     int oflag;
+     const struct timeval tvp[2];
 {
   char *buf = NULL;
 
@@ -84,34 +54,44 @@ OPENAT (fd, file, oflag)
       file = buf;
     }
 
-  mode_t mode = 0;
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
-    }
-
+  int result;
   INTERNAL_SYSCALL_DECL (err);
-  int res;
 
-  if (SINGLE_THREAD_P)
-    res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+#ifdef __NR_utimes
+  result = INTERNAL_SYSCALL (utimes, err, 2, file, tvp);
+  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+    return result;
+
+# ifndef __ASSUME_UTIMES
+  if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
+    goto fail;
+# endif
+#endif
+
+  /* The utimes() syscall does not exist or is not available in the
+     used kernel.  Use utime().  For this we have to convert to the
+     data format utime() expects.  */
+#ifndef __ASSUME_UTIMES
+  struct utimbuf tmp;
+  struct utimbuf *times;
+
+  if (tvp != NULL)
+    {
+      times = &tmp;
+      tmp.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
+      tmp.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
+    }
   else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
+    times = NULL;
 
-      res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+  result = INTERNAL_SYSCALL (utime, err, 2, file, times);
+  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+    return result;
 
-      LIBC_CANCEL_RESET (oldtype);
-    }
+ fail:
+#endif
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
-      res = -1;
-    }
+  __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
-  return res;
+  return -1;
 }

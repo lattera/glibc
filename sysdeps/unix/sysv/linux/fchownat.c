@@ -18,52 +18,26 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sysdep-cancel.h>
+#include <unistd.h>
+#include <sys/types.h>
 
-
-#ifndef OPENAT
-# define OPENAT openat
-# define MORE_OFLAGS 0
-
-
-void
-attribute_hidden
-__atfct_seterrno (int errval, int fd, const char *buf)
-{
-  if (buf != NULL && errval == ENOTDIR)
-    {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
-      struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	/* errno is already set correctly.  */
-	return;
-
-      /* If /proc is not mounted there is nothing we can do.  */
-      if (S_ISDIR (st.st_mode)
-	  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-	      || !S_ISDIR (st.st_mode)))
-	errval = ENOSYS;
-    }
-
-  __set_errno (errval);
-}
-#endif
-
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+/* Change the owner and group of FILE.  */
 int
-OPENAT (fd, file, oflag)
+fchownat (fd, file, owner, group, flag)
      int fd;
      const char *file;
-     int oflag;
+     uid_t owner;
+     gid_t group;
+     int flag;
 {
+  if (flag & ~AT_SYMLINK_NOFOLLOW)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -84,34 +58,16 @@ OPENAT (fd, file, oflag)
       file = buf;
     }
 
-  mode_t mode = 0;
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
-    }
-
+  int result;
   INTERNAL_SYSCALL_DECL (err);
-  int res;
 
-  if (SINGLE_THREAD_P)
-    res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+  if (flag & AT_SYMLINK_NOFOLLOW)
+    result = INTERNAL_SYSCALL (lchown, err, 3, file, owner, group);
   else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
+    result = INTERNAL_SYSCALL (chown, err, 3, file, owner, group);
 
-      res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
+    __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
-      LIBC_CANCEL_RESET (oldtype);
-    }
-
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
-      res = -1;
-    }
-
-  return res;
+  return result;
 }

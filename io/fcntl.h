@@ -56,6 +56,15 @@ __BEGIN_DECLS
 # define SEEK_END	2	/* Seek from end of file.  */
 #endif	/* XPG */
 
+#ifdef __USE_GNU
+# define AT_FDCWD		-100	/* Special value used to indicate
+					   openat should use the current
+					   working directory. */
+# define AT_SYMLINK_NOFOLLOW	0x100	/* Do not follow symbolic links.  */
+# define AT_REMOVEDIR		0x200	/* Remove directory instead of
+					   unlinking file.  */
+#endif
+
 /* Do the file control operation described by CMD on FD.
    The remaining arguments are interpreted depending on CMD.
 

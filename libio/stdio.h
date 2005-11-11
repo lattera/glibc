@@ -154,6 +154,11 @@ extern int remove (__const char *__filename) __THROW;
 extern int rename (__const char *__old, __const char *__new) __THROW;
 __END_NAMESPACE_STD
 
+#ifdef __USE_GNU
+/* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
+extern int renameat (int __oldfd, __const char *__old, int __newfd,
+		     __const char *__new) __THROW;
+#endif
 
 __BEGIN_NAMESPACE_STD
 /* Create a temporary file and open it read/write.

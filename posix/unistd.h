@@ -431,6 +431,14 @@ extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
 
 #endif /* Use BSD || X/Open Unix.  */
 
+#ifdef __USE_GNU
+/* Change the owner and group of FILE relative to the directory FD is open
+   on.  */
+extern int fchownat (int __fd, __const char *__file, __uid_t __owner,
+		     __gid_t __group, int __flag)
+     __THROW __nonnull ((2)) __wur;
+#endif /* Use GNU.  */
+
 /* Change the process's working directory to PATH.  */
 extern int chdir (__const char *__path) __THROW __nonnull ((1)) __wur;
 
@@ -748,6 +756,12 @@ extern int readlink (__const char *__restrict __path, char *__restrict __buf,
 
 /* Remove the link NAME.  */
 extern int unlink (__const char *__name) __THROW __nonnull ((1));
+
+#ifdef __USE_GNU
+/* Remove the link NAME relative to FD.  */
+extern int unlinkat (int __fd, __const char *__name, int __flag)
+     __THROW __nonnull ((2));
+#endif
 
 /* Remove the directory PATH.  */
 extern int rmdir (__const char *__path) __THROW __nonnull ((1));

@@ -33,7 +33,7 @@ routines	:=							      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
-	remove rename							      \
+	remove rename renameat						      \
 	flockfile ftrylockfile funlockfile
 
 install-others = $(inst_includedir)/bits/stdio_lim.h

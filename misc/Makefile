@@ -47,7 +47,7 @@ routines := brk sbrk sstk ioctl \
 	    gtty stty \
 	    ptrace \
 	    fstab mntent mntent_r \
-	    utimes lutimes futimes \
+	    utimes lutimes futimes futimesat \
 	    truncate ftruncate truncate64 ftruncate64 \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \

@@ -20,7 +20,7 @@ static void
 prepare (void)
 {
   size_t test_dir_len = strlen (test_dir);
-  static const char dir_name[] = "/tst-openat.XXXXXX";
+  static const char dir_name[] = "/tst-unlinkat.XXXXXX";
 
   size_t dirbuflen = test_dir_len + sizeof (dir_name);
   char *dirbuf = malloc (dirbuflen);
@@ -101,7 +101,7 @@ do_test (void)
   dupfd = dup (dir_fd);
   if (dupfd == -1)
     {
-      puts ("dup failed");
+      puts ("2nd dup failed");
       return 1;
     }
   if (lseek (dupfd, 0, SEEK_SET) != 0)
@@ -114,7 +114,7 @@ do_test (void)
   dir = fdopendir (dupfd);
   if (dir == NULL)
     {
-      puts ("fdopendir failed");
+      puts ("2nd fdopendir failed");
       return 1;
     }
   bool seen_file = false;
@@ -137,33 +137,42 @@ do_test (void)
       return 1;
     }
 
-  int cwdfd = open (".", O_RDONLY | O_DIRECTORY);
-  if (cwdfd == -1)
+  /* Remove the file now.  */
+  if (unlinkat (dir_fd, "some-file", 0) != 0)
     {
-      puts ("cannot get descriptor for cwd");
+      puts ("unlinkat failed");
       return 1;
     }
 
-  if (fchdir (dir_fd) != 0)
+  /* We won't need dir_fd anymore after this, so use it.  */
+  if (lseek (dir_fd, 0, SEEK_SET) != 0)
     {
-      puts ("1st fchdir failed");
+      puts ("3rd lseek failed");
       return 1;
     }
 
-  if (unlink ("some-file") != 0)
+  /* The directory should be empty safe the . and .. files.  */
+  dir = fdopendir (dir_fd);
+  if (dir == NULL)
     {
-      puts ("unlink failed");
+      puts ("3rd fdopendir failed");
       return 1;
     }
-
-  if (fchdir (cwdfd) != 0)
-    {
-      puts ("2nd fchdir failed");
-      return 1;
-    }
-
-  close (dir_fd);
-  close (cwdfd);
+  while ((d = readdir64 (dir)) != NULL)
+    if (strcmp (d->d_name, ".") != 0 && strcmp (d->d_name, "..") != 0)
+      {
+	if (strcmp (d->d_name, "some-file") == 0)
+	  {
+	    puts ("some-file not removed");
+	    return 1;
+	  }
+	else
+	  {
+	    printf ("temp directory contains file \"%s\"\n", d->d_name);
+	    return 1;
+	  }
+      }
+  closedir (dir);
 
   return 0;
 }

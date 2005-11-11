@@ -26,40 +26,43 @@ headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   poll.h sys/poll.h bits/poll.h \
 	   utime.h ftw.h fts.h sys/sendfile.h
 
-routines :=							      \
-	utime							      \
-	mkfifo							      \
-	stat fstat lstat mknod stat64 fstat64 lstat64		      \
-	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64	      \
-	statfs fstatfs statfs64 fstatfs64			      \
-	statvfs fstatvfs statvfs64 fstatvfs64			      \
-	umask chmod fchmod lchmod mkdir				      \
-	open open64 openat openat64 close			      \
-	read write lseek lseek64 access euidaccess		      \
-	fcntl flock lockf lockf64				      \
-	dup dup2 pipe						      \
-	creat creat64						      \
-	chdir fchdir						      \
-	getcwd getwd getdirname					      \
-	chown fchown lchown					      \
-	ttyname ttyname_r isatty				      \
-	link symlink readlink					      \
-	unlink rmdir						      \
-	ftw ftw64 fts poll					      \
-	posix_fadvise posix_fadvise64				      \
-	posix_fallocate posix_fallocate64			      \
+routines :=								\
+	utime								\
+	mkfifo								\
+	stat fstat lstat mknod stat64 fstat64 lstat64 fstatat fstatat64	\
+	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64		\
+	fxstatat fxstatat64						\
+	statfs fstatfs statfs64 fstatfs64				\
+	statvfs fstatvfs statvfs64 fstatvfs64				\
+	umask chmod fchmod lchmod mkdir					\
+	open open64 openat openat64 close				\
+	read write lseek lseek64 access euidaccess			\
+	fcntl flock lockf lockf64					\
+	dup dup2 pipe							\
+	creat creat64							\
+	chdir fchdir							\
+	getcwd getwd getdirname						\
+	chown fchown lchown fchownat					\
+	ttyname ttyname_r isatty					\
+	link symlink readlink						\
+	unlink unlinkat rmdir						\
+	ftw ftw64 fts poll						\
+	posix_fadvise posix_fadvise64					\
+	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
+static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64	\
+		       fstatat fstatat64
 
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
-		   tst-openat
+		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
+		   tst-renameat tst-fchownat
 
 distribute	:= ftwtest-sh
 

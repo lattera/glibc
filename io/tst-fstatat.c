@@ -20,7 +20,7 @@ static void
 prepare (void)
 {
   size_t test_dir_len = strlen (test_dir);
-  static const char dir_name[] = "/tst-openat.XXXXXX";
+  static const char dir_name[] = "/tst-fstatat.XXXXXX";
 
   size_t dirbuflen = test_dir_len + sizeof (dir_name);
   char *dirbuf = malloc (dirbuflen);
@@ -94,76 +94,50 @@ do_test (void)
       return 1;
     }
   write (fd, "hello", 5);
-  close (fd);
   puts ("file created");
 
-  /* fdopendir takes over the descriptor, make a copy.  */
-  dupfd = dup (dir_fd);
-  if (dupfd == -1)
+  struct stat64 st1;
+  if (fstat64 (fd, &st1) != 0)
     {
-      puts ("dup failed");
-      return 1;
-    }
-  if (lseek (dupfd, 0, SEEK_SET) != 0)
-    {
-      puts ("2nd lseek failed");
+      puts ("fstat64 failed");
       return 1;
     }
 
-  /* The directory should be empty safe the . and .. files.  */
-  dir = fdopendir (dupfd);
-  if (dir == NULL)
-    {
-      puts ("fdopendir failed");
-      return 1;
-    }
-  bool seen_file = false;
-  while ((d = readdir64 (dir)) != NULL)
-    if (strcmp (d->d_name, ".") != 0 && strcmp (d->d_name, "..") != 0)
-      {
-	if (strcmp (d->d_name, "some-file") != 0)
-	  {
-	    printf ("temp directory contains file \"%s\"\n", d->d_name);
-	    return 1;
-	  }
+  close (fd);
 
-	seen_file = true;
-      }
-  closedir (dir);
-
-  if (!seen_file)
+  struct stat64 st2;
+  if (fstatat64 (dir_fd, "some-file", &st2, 0) != 0)
     {
-      puts ("file not created in correct directory");
+      puts ("fstatat64 failed");
       return 1;
     }
 
-  int cwdfd = open (".", O_RDONLY | O_DIRECTORY);
-  if (cwdfd == -1)
+  if (st1.st_dev != st2.st_dev
+      || st1.st_ino != st2.st_ino
+      || st1.st_size != st2.st_size)
     {
-      puts ("cannot get descriptor for cwd");
+      puts ("stat results do not match");
       return 1;
     }
 
-  if (fchdir (dir_fd) != 0)
+  if (unlinkat (dir_fd, "some-file", 0) != 0)
     {
-      puts ("1st fchdir failed");
+      puts ("unlinkat failed");
       return 1;
     }
 
-  if (unlink ("some-file") != 0)
+  if (fstatat64 (dir_fd, "some-file", &st2, 0) == 0)
     {
-      puts ("unlink failed");
+      puts ("second fstatat64 succeeded");
       return 1;
     }
-
-  if (fchdir (cwdfd) != 0)
+  if (errno != ENOENT)
     {
-      puts ("2nd fchdir failed");
+      puts ("second fstatat64 did not fail with ENOENT");
       return 1;
     }
 
   close (dir_fd);
-  close (cwdfd);
 
   return 0;
 }

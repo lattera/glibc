@@ -18,20 +18,23 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
 #include <stddef.h>
-#include <sys/stat.h>
+#include <sys/time.h>
 
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+
+/* Change the access time of FILE relative to FD to TVP[0] and
+   the modification time of FILE to TVP[1].  */
 int
-openat64 (fd, file, oflag)
+futimesat (fd, file, tvp)
      int fd;
      const char *file;
-     int oflag;
+     const struct timeval tvp[2];
 {
-  int mode;
+  if (fd < 0 && fd != AT_FDCWD)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
   if (file == NULL)
     {
@@ -39,31 +42,11 @@ openat64 (fd, file, oflag)
       return -1;
     }
 
-  if (fd != AT_FDCWD && file[0] != '/')
-    {
-      /* Check FD is associated with a directory.  */
-      struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	return -1;
-
-      if (!S_ISDIR (st.st_mode))
-	{
-	  __set_errno (ENOTDIR);
-	  return -1;
-	}
-    }
-
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
-    }
-
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (openat64)
 
+weak_alias (__utimes, utimes)
+
+stub_warning (utimes)
 #include <stub-tag.h>

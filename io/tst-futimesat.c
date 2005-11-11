@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 
 static void prepare (void);
@@ -20,7 +21,7 @@ static void
 prepare (void)
 {
   size_t test_dir_len = strlen (test_dir);
-  static const char dir_name[] = "/tst-openat.XXXXXX";
+  static const char dir_name[] = "/tst-futimesat.XXXXXX";
 
   size_t dirbuflen = test_dir_len + sizeof (dir_name);
   char *dirbuf = malloc (dirbuflen);
@@ -94,76 +95,53 @@ do_test (void)
       return 1;
     }
   write (fd, "hello", 5);
-  close (fd);
   puts ("file created");
 
-  /* fdopendir takes over the descriptor, make a copy.  */
-  dupfd = dup (dir_fd);
-  if (dupfd == -1)
+  struct stat64 st1;
+  if (fstat64 (fd, &st1) != 0)
     {
-      puts ("dup failed");
-      return 1;
-    }
-  if (lseek (dupfd, 0, SEEK_SET) != 0)
-    {
-      puts ("2nd lseek failed");
+      puts ("fstat64 failed");
       return 1;
     }
 
-  /* The directory should be empty safe the . and .. files.  */
-  dir = fdopendir (dupfd);
-  if (dir == NULL)
-    {
-      puts ("fdopendir failed");
-      return 1;
-    }
-  bool seen_file = false;
-  while ((d = readdir64 (dir)) != NULL)
-    if (strcmp (d->d_name, ".") != 0 && strcmp (d->d_name, "..") != 0)
-      {
-	if (strcmp (d->d_name, "some-file") != 0)
-	  {
-	    printf ("temp directory contains file \"%s\"\n", d->d_name);
-	    return 1;
-	  }
+  close (fd);
 
-	seen_file = true;
-      }
-  closedir (dir);
-
-  if (!seen_file)
+  struct timeval tv[2];
+  tv[0].tv_sec = st1.st_atime + 1;
+  tv[0].tv_usec = 0;
+  tv[1].tv_sec = st1.st_mtime + 1;
+  tv[1].tv_usec = 0;
+  if (futimesat (dir_fd, "some-file", tv) != 0)
     {
-      puts ("file not created in correct directory");
+      puts ("futimesat failed");
       return 1;
     }
 
-  int cwdfd = open (".", O_RDONLY | O_DIRECTORY);
-  if (cwdfd == -1)
+  struct stat64 st2;
+  if (fstatat64 (dir_fd, "some-file", &st2, 0) != 0)
     {
-      puts ("cannot get descriptor for cwd");
+      puts ("fstatat64 failed");
       return 1;
     }
 
-  if (fchdir (dir_fd) != 0)
+  if (st2.st_mtime != tv[1].tv_sec
+#ifdef _STATBUF_ST_NSEC
+      || st2.st_mtim.tv_nsec != 0
+#endif
+      )
     {
-      puts ("1st fchdir failed");
+      puts ("stat shows different mtime");
       return 1;
     }
 
-  if (unlink ("some-file") != 0)
-    {
-      puts ("unlink failed");
-      return 1;
-    }
 
-  if (fchdir (cwdfd) != 0)
+  if (unlinkat (dir_fd, "some-file", 0) != 0)
     {
-      puts ("2nd fchdir failed");
+      puts ("unlinkat failed");
       return 1;
     }
 
   close (dir_fd);
-  close (cwdfd);
 
   return 0;
 }

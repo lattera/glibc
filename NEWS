@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-11-09
+GNU C Library NEWS -- history of user-visible changes.  2005-11-11
 Copyright (C) 1992-2002,2003,2004,2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -27,7 +27,8 @@ Version 2.4
   For a libc and libpthread that works well on Linux 2.4 kernels, we
   recommend using the stable 2.3 branch.
 
-* New interfaces: fdopendir, openat.
+* New interfaces: fdopendir, openat, fstatat, fchownat, futimesat, renameat,
+  unlinkat.
 
 Version 2.3.6
 

@@ -39,7 +39,7 @@ openat (fd, file, oflag)
       return -1;
     }
 
-  if (file[0] != '/')
+  if (fd != AT_FDCWD && file[0] != '/')
     {
       /* Check FD is associated with a directory.  */
       struct stat64 st;

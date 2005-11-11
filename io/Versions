@@ -98,6 +98,9 @@ libc {
     nftw; nftw64;
   }
   GLIBC_2.4 {
+    fchownat;
+    __fxstatat; __fxstatat64;
     openat; openat64;
+    unlinkat;
   }
 }

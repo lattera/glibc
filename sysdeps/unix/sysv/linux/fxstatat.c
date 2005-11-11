@@ -16,54 +16,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* Ho hum, if fxstatat == fxstatat64 we must get rid of the prototype or gcc
+   will complain since they don't strictly match.  */
+#define __fxstatat64 __fxstatat64_disable
+
 #include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <string.h>
 #include <sys/stat.h>
-#include <sysdep-cancel.h>
+#include <kernel_stat.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+#include <bp-checks.h>
 
-#ifndef OPENAT
-# define OPENAT openat
-# define MORE_OFLAGS 0
+#include <xstatconv.h>
 
-
-void
-attribute_hidden
-__atfct_seterrno (int errval, int fd, const char *buf)
+/* Get information about the file NAME in BUF.  */
+int
+__fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  if (buf != NULL && errval == ENOTDIR)
+  if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
-      struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	/* errno is already set correctly.  */
-	return;
-
-      /* If /proc is not mounted there is nothing we can do.  */
-      if (S_ISDIR (st.st_mode)
-	  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-	      || !S_ISDIR (st.st_mode)))
-	errval = ENOSYS;
+      __set_errno (EINVAL);
+      return -1;
     }
 
-  __set_errno (errval);
-}
-#endif
-
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
-int
-OPENAT (fd, file, oflag)
-     int fd;
-     const char *file;
-     int oflag;
-{
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -84,34 +63,44 @@ OPENAT (fd, file, oflag)
       file = buf;
     }
 
-  mode_t mode = 0;
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
-    }
-
+  int result;
   INTERNAL_SYSCALL_DECL (err);
-  int res;
 
-  if (SINGLE_THREAD_P)
-    res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+  if (vers == _STAT_VER_KERNEL)
+    {
+      if (flag & AT_SYMLINK_NOFOLLOW)
+	result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
+				   CHECK_1 ((struct kernel_stat *) st));
+      else
+	result = INTERNAL_SYSCALL (stat, err, 2, CHECK_STRING (file),
+				   CHECK_1 ((struct kernel_stat *) st));
+
+      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	return result;
+    }
+
+#ifdef STAT_IS_KERNEL_STAT
+  __set_errno (EINVAL);
+  return -1;
+#else
+  struct kernel_stat kst;
+
+  if (flag & AT_SYMLINK_NOFOLLOW)
+    result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
+			       __ptrvalue (&kst));
   else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
+    result = INTERNAL_SYSCALL (stat, err, 2, CHECK_STRING (file),
+			       __ptrvalue (&kst));
 
-      res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+    return __xstat_conv (vers, &kst, st);
+#endif
 
-      LIBC_CANCEL_RESET (oldtype);
-    }
+  __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
-  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-    {
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
-      res = -1;
-    }
-
-  return res;
+  return -1;
 }
+#ifdef XSTAT_IS_XSTAT64
+# undef __fxstatat64
+strong_alias (__fxstatat, __fxstatat64);
+#endif

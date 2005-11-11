@@ -1,3 +1,70 @@
+2005-11-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (routines): Add fstatat, fstatat64, fxstatat, fxstatat64,
+	fchownat, and unlinkat.
+	(static-only-routines): Add fstatat and fstatat64.
+	(tests): Add tst-unlinkat, tst-fstatat, tst-futimesat, tst-renameat,
+	and tst-fchownat.
+	* io/Versions [GLIBC_2.4]: Add fchownat, __fxstatat, __fxstatat64,
+	and unlinkat.
+	* io/fcntl.h: Define AT_FDCWD, AT_SYMLINK_NOFOLLOW, and AT_REMOVEDIR.
+	* io/fstatat.c: New file.
+	* io/fstatat64.c: New file.
+	* io/sys/stat.h: Declare fstatat, fstatat64, __fxstatat, __fxstatat64
+	and define fstatat and fstatat64 inline functions.
+	* libio/stdio.h: Declare renameat.
+	* misc/Makefile (routines): Add futimesat.
+	* misc/Versions [GLIBC_2.4]: Add futimesat.
+	* posix/unistd.h: Declare fchownat and unlinkat.
+	* stdio-common/Makefile (routines): Add renameat.
+	* stdio-common/Versions [GLIBC_2.4]: Add renameat.
+	* sysdeps/generic/fchownat.c: New file.
+	* sysdeps/generic/futimesat.c: New file.
+	* sysdeps/generic/fxstatat.c: New file.
+	* sysdeps/generic/fxstatat64.c: New file.
+	* sysdeps/generic/renameat.c: New file.
+	* sysdeps/generic/unlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/futimesat.c: New file.
+	* sysdeps/unix/sysv/linux/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: New file.
+	* sysdeps/unix/sysv/linux/renameat.c: New file.
+	* sysdeps/unix/sysv/linux/unlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sh/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/sh/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat64.c: New file.
+	* time/sys/time.h: Declare futimesat.
+	* include/fcntl.h: Declare __atfct_seterrno.
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): New function.
+	Split out from openat code and called.
+	(do_test): Allow openat to fail with ENOSYS.  Handle AT_FDCWD.
+	* sysdeps/generic/openat.c: Handle AT_FDCWD.
+	* sysdeps/generic/openat64.c: Likewise.
+	* io/tst-unlinkat.c: New file.
+	* io/tst-fstatat.c: New file.
+	* io/tst-futimesat.c: New file.
+	* io/tst-renameat.c: New file.
+	* io/tst-fchownat.c: New file.
+	* io/tst-openat.c: Don't fail if openat is not implemented.
+
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Don't provide backward
+	compatibility code if new kernel is guaranteed.
+
+	* time/sys/time.h: Add a few nonnull attributes.
+
 2005-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/fcntl.h: Declare openat and openat64.

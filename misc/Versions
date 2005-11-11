@@ -131,6 +131,7 @@ libc {
     remap_file_pages;
   }
   GLIBC_2.4 {
+    futimesat;
     __syslog_chk; __vsyslog_chk;
   }
 }

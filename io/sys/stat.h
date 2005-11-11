@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -228,6 +228,23 @@ extern int stat64 (__const char *__restrict __file,
 extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2));
 #endif
 
+#ifdef __USE_GNU
+/* Similar to stat, get the attributes for FILE and put them in BUF.
+   Relative path names are interpreted relative to FD unless FD is
+   AT_FDCWD.  */
+# ifndef __USE_FILE_OFFSET64
+extern int fstatat (int __fd, const char *__file, struct stat *__buf,
+		    int __flag) __THROW __nonnull ((2, 3));
+# else
+extern int __REDIRECT_NTH (fstatat, (int __fd, const char *__file,
+				     struct stat *__buf, int __flag),
+			   fstatat64) __THROW __nonnull ((2, 3));
+# endif
+
+extern int fstatat64 (int __fd, const char *__file, struct stat64 *__buf,
+		      int __flag) __THROW __nonnull ((2, 3));
+#endif
+
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
@@ -327,6 +344,9 @@ extern int __xstat (int __ver, __const char *__filename,
 		    struct stat *__stat_buf) __THROW __nonnull ((2, 3));
 extern int __lxstat (int __ver, __const char *__filename,
 		     struct stat *__stat_buf) __THROW __nonnull ((2, 3));
+extern int __fxstatat (int __ver, int __fildes, __const char *__filename,
+		       struct stat *__stat_buf, int __flag)
+     __THROW __nonnull ((3, 4));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (__fxstat, (int __ver, int __fildes,
@@ -338,6 +358,10 @@ extern int __REDIRECT_NTH (__xstat, (int __ver, __const char *__filename,
 extern int __REDIRECT_NTH (__lxstat, (int __ver, __const char *__filename,
 				      struct stat *__stat_buf), __lxstat64)
      __nonnull ((2, 3));
+extern int __REDIRECT_NTH (__fxstatat, (int __ver, int __fildes,
+					__const char *__filename,
+					struct stat *__stat_buf, int __flag),
+			   __fxstatat64) __nonnull ((3, 4));
 
 # else
 #  define __fxstat __fxstat64
@@ -353,6 +377,9 @@ extern int __xstat64 (int __ver, __const char *__filename,
 		      struct stat64 *__stat_buf) __THROW __nonnull ((2, 3));
 extern int __lxstat64 (int __ver, __const char *__filename,
 		       struct stat64 *__stat_buf) __THROW __nonnull ((2, 3));
+extern int __fxstatat64 (int __ver, int __fildes, __const char *__filename,
+			 struct stat64 *__stat_buf, int __flag)
+     __THROW __nonnull ((3, 4));
 #endif
 extern int __xmknod (int __ver, __const char *__path, __mode_t __mode,
 		     __dev_t *__dev) __THROW __nonnull ((2, 4));
@@ -379,6 +406,15 @@ __NTH (fstat (int __fd, struct stat *__statbuf))
 {
   return __fxstat (_STAT_VER, __fd, __statbuf);
 }
+
+# ifdef __USE_GNU
+extern __inline__ int
+__NTH (fstatat (int __fd, __const char *__filename, struct stat *__statbuf,
+		int __flag))
+{
+  return __fxstatat (_STAT_VER, __fd, __filename, __statbuf, __flag);
+}
+# endif
 
 # if defined __USE_MISC || defined __USE_BSD
 extern __inline__ int
@@ -409,6 +445,15 @@ extern __inline__ int
 __NTH (fstat64 (int __fd, struct stat64 *__statbuf))
 {
   return __fxstat64 (_STAT_VER, __fd, __statbuf);
+}
+# endif
+
+# ifdef __USE_GNU
+extern __inline__ int
+__NTH (fstatat64 (int __fd, __const char *__filename, struct stat64 *__statbuf,
+		  int __flag))
+{
+  return __fxstatat64 (_STAT_VER, __fd, __filename, __statbuf, __flag);
 }
 # endif
 
