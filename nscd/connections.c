@@ -1656,7 +1656,7 @@ main_loop_epoll (int efd)
 	    /* Remove the descriptor from the epoll descriptor.  */
 	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, NULL);
 
-	    /* Get a worked to handle the request.  */
+	    /* Get a worker to handle the request.  */
 	    fd_ready (revs[cnt].data.fd);
 
 	    /* Reset the time.  */

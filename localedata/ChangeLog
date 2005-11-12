@@ -1,3 +1,8 @@
+2005-11-11  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1294]
+	* locales/pt_BR: Set p_cs_precedes and n_cs_precedes to 1.
+
 2005-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Fix typo in si_LK line.
