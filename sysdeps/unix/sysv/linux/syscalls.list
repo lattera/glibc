@@ -8,9 +8,9 @@ capset		EXTRA	capset		i:pp	capset
 creat		-	creat		Ci:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
-epoll_create	EXTRA	epoll_create	i:i	epoll_create
-epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
-epoll_wait	EXTRA	epoll_wait	i:ipii	epoll_wait
+epoll_create	EXTRA	epoll_create	Ci:i	epoll_create
+epoll_ctl	EXTRA	epoll_ctl	Ci:iiip	epoll_ctl
+epoll_wait	EXTRA	epoll_wait	Ci:ipii	epoll_wait
 fdatasync	-	fdatasync	i:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
 fork		-	fork		i:	__libc_fork	__fork fork

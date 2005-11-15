@@ -1,3 +1,13 @@
+2005-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (epoll_create, epoll_ctl,
+	epoll_wait): Align with poll, make cancelable.
+
+2005-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h (fstatat): Don't use __THROW together with
+	__REDIRECT_NTH.
+
 2005-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c [!SHARED]: Remove _dl_tls_static_size definition.

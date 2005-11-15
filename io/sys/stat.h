@@ -238,7 +238,7 @@ extern int fstatat (int __fd, const char *__file, struct stat *__buf,
 # else
 extern int __REDIRECT_NTH (fstatat, (int __fd, const char *__file,
 				     struct stat *__buf, int __flag),
-			   fstatat64) __THROW __nonnull ((2, 3));
+			   fstatat64) __nonnull ((2, 3));
 # endif
 
 extern int fstatat64 (int __fd, const char *__file, struct stat64 *__buf,
