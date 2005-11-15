@@ -1,7 +1,7 @@
 2005-11-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/syscalls.list (epoll_create, epoll_ctl,
-	epoll_wait): Align with poll, make cancelable.
+	* sysdeps/unix/sysv/linux/syscalls.list (epoll_wait): Align with
+	poll, make cancelable.
 
 2005-11-15  Jakub Jelinek  <jakub@redhat.com>
 
