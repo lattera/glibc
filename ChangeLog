@@ -1,3 +1,8 @@
+2005-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c [!SHARED]: Remove _dl_tls_static_size definition.
+	* sysdeps/generic/libc-tls.c: Initialize _dl_tls_static_size here.
+
 2005-11-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/Makefile (routines): Add fstatat, fstatat64, fxstatat, fxstatat64,
