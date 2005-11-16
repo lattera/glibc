@@ -1,3 +1,14 @@
+2005-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fchownat.c: Include string.h.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+
 2005-11-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add ISO_11548-1.

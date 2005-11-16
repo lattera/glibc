@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include <utime.h>
 #include <sys/time.h>
 #include <sysdep.h>

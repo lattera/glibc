@@ -1,7 +1,7 @@
 2005-11-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ 1872]
-	* localedata/charmaps/ISO_11548-1. New file.
+	* charmaps/ISO_11548-1. New file.
 	Patch by Samuel Thibault <samuel.thibault@ens-lyon.org>.
 
 2005-11-11  Ulrich Drepper  <drepper@redhat.com>
