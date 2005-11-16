@@ -1,5 +1,12 @@
 2005-11-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c (__fxstatat):
+	Return -1 on failure.
+	* sysdeps/unix/sysv/linux/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Likewise..
+	* sysdeps/unix/sysv/linux/fxstatat64.c [__ASSUME_STAT64_SYSCALL]
+	(__fxstatat64): Handle errors.
+
 	* io/sys/poll.h: Add comment explaining poll is a cancellation	point.
 
 	* sysdeps/unix/sysv/linux/syscalls.list (epoll_wait): Align with

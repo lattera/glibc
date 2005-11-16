@@ -128,8 +128,8 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     return __xstat64_conv (vers, &kst, st);
 
  fail:
+#endif
   __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
   return -1;
-#endif
 }

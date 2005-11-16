@@ -47,7 +47,7 @@ extern int __have_no_stat64;
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  if (flag & ~AT_SYMLINK_NOFOLLOW)
+  if (__builtin_expect (flag & ~AT_SYMLINK_NOFOLLOW, 0))
     {
       __set_errno (EINVAL);
       return -1;
@@ -138,7 +138,10 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
  out:
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
-    __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+    {
+      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+      result = -1;
+    }
 
   return result;
 }
