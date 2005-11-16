@@ -1,3 +1,16 @@
+2005-11-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add ISO_11548-1.
+	(distribute): Add iso_11548-1.c.
+	* iconvdata/gconv-modules: Add entries for ISO 11548-1.
+	* iconvdata/TESTS: Add entry for ISO 11548-1.
+
+	[BZ 1872]
+	* iconvdata/iso_11548-1.c: New file.
+	* iconvdata/testdata/ISO_11548-1: New file.
+	* iconvdata/testdata/ISO_11548-1..UTF8: New file.
+	Patch by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 2005-11-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Remove incorrect &.

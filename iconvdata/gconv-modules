@@ -1897,3 +1897,9 @@ alias	CP1399//		IBM1399//
 alias	CSIBM1399//		IBM1399//
 module	IBM1399//		INTERNAL		IBM1399		1
 module	INTERNAL		IBM1399//		IBM1399		1
+
+#	from			to			module		cost
+alias	ISO/TR_11548-1/		ISO_11548-1//
+alias	ISO11548-1//		ISO_11548-1//
+module	ISO_11548-1//		INTERNAL		ISO_11548-1	1
+module	INTERNAL		ISO_11548-1//		ISO_11548-1	1
