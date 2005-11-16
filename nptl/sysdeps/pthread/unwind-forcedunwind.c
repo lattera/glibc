@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -56,6 +56,10 @@ pthread_cancel_init (void)
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;
   libgcc_s_forcedunwind = forcedunwind;
+  /* Make sure libgcc_s_getcfa is written last.  Otherwise,
+     pthread_cancel_init might return early even when the pointer the
+     caller is interested in is not initialized yet.  */
+  atomic_write_barrier ();
   libgcc_s_getcfa = getcfa;
 }
 

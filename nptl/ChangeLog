@@ -1,3 +1,8 @@
+2005-11-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/unwind-forcedunwind.c (pthread_cancel_init): Put
+	a write barrier before writing libgcc_s_getcfa.
+
 2005-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/configure: Removed.
