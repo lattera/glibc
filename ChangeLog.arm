@@ -1,5 +1,14 @@
 2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h,
+	sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c,
+	sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c,
+	sysdeps/unix/sysv/linux/arm/nptl/unwind.h,
+	sysdeps/arm/unwind-dw2-fde-glibc.c,
+	sysdeps/arm/unwind-pe.c, sysdeps/arm/framestate.c: New files.
+
+2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/bits/setjmp.h, sysdeps/arm/fpu/bits/setjmp.h: Update
 	include guards.
 
