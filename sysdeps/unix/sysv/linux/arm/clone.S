@@ -25,7 +25,11 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
+#define CLONE_VM      0x00000100
+#define CLONE_THREAD  0x00010000
+
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+	     pid_t *ptid, struct user_desc *tls, pid_t *ctid); */
 
         .text
 ENTRY(__clone)
@@ -42,16 +46,58 @@ ENTRY(__clone)
 	@ do the system call
 	@ get flags
 	mov	r0, r2
+#ifdef RESET_PID
+	mov	ip, r2
+#endif
 	@ new sp is already in r1
-	DO_CALL (clone, 0)
-	movs	a1, a1
+#ifdef __ARM_EABI__
+	stmfd	sp!, {r4, r7}
+#else
+	str	r4, [sp, #-8]!
+#endif
+	ldr	r2, [sp, #8]
+	ldr	r3, [sp, #12]
+	ldr	r4, [sp, #16]
+#ifdef __ARM_EABI__
+	ldr	r7, =SYS_ify(clone)
+	swi	0x0
+#else
+	swi	SYS_ify(clone)
+#endif
+	cmp	r0, #0
+	beq	1f
+#ifdef __ARM_EABI__
+	ldmfd	sp!, {r4, r7}
+#else
+	ldr	r4, [sp], #8
+#endif
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
-	RETINSTR(ne, lr)
+	RETINSTR(, lr)
 
+1:
+#ifdef RESET_PID
+	tst	ip, #CLONE_THREAD
+	bne	3f
+	mov	r0, #0xffff0fff
+	mov	lr, pc
+	sub	pc, r0, #31
+	mov	r1, r0
+	tst	ip, #CLONE_VM
+	movne	r0, #-1
+#ifdef __ARM_EABI__
+	ldr	r7, =SYS_ify(getpid)
+	swieq	0x0
+#else
+	swieq	SYS_ify(getpid)
+#endif
+	str	r0, [r1, #PID_OFFSET]
+	str	r0, [r1, #TID_OFFSET]
+3:
+#endif
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
 	mov	lr, pc
-	ldr 	pc, [sp]
+	ldr 	pc, [sp], #8
 
 	@ and we are done, passing the return value through r0
 	b	PLTJMP(_exit)

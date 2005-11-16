@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,24 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  ARM version. */
+/* Default stack size.  */
+#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H 1
+/* Required stack pointer alignment at beginning.  SSE requires 16
+   bytes.  */
+#define STACK_ALIGN		16
 
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
+/* Minimal stack size after allocating thread descriptor and guard size.  */
+#define MINIMAL_REST_STACK	2048
 
-#ifndef _ASM
-/* Jump buffer contains v1-v6, sl, fp, sp and pc.  Other registers are not
-   saved.  */
-typedef int __jmp_buf[22];
-#endif
+/* Alignment requirement for TCB.  */
+#define TCB_ALIGNMENT		16
 
-#define __JMP_BUF_SP		20
 
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((void *) (address) < (void *) (jmpbuf[__JMP_BUF_SP]))
+/* Location of current stack frame.  */
+#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
 
-#endif
+
+/* XXX Until we have a better place keep the definitions here.  */
+#define __exit_thread_inline(val) \
+  INLINE_SYSCALL (exit, 1, (val))

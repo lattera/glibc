@@ -1,4 +1,6 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,2002,03 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2002, 2003,
+   2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +22,11 @@
 #define _ERRNO_H
 #include <bits/errno.h>
 
-.globl C_SYMBOL_NAME(errno)
-.globl syscall_error
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>			/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
+#include <tls.h>
 
 #undef syscall_error
 #ifdef NO_UNDERSCORES
@@ -37,7 +42,29 @@ syscall_error:
 	moveq r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 
-#ifdef _LIBC_REENTRANT
+#if USE___THREAD
+	mov ip, lr
+	mov r1, r0
+
+	mov r0, #0xffff0fff
+	mov lr, pc
+	sub pc, r0, #31
+
+	ldr r2, 1f
+2:	ldr r2, [pc, r2]
+	str r1, [r0, r2]
+	mvn r0, #0
+	RETINSTR (, ip)
+
+1:	.word errno(gottpoff) + (. - 2b - 8)
+#elif RTLD_PRIVATE_ERRNO
+	ldr r1, 1f
+0:	str r0, [pc, r1]
+	mvn r0, $0
+	DO_RET(r14)
+
+1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - 8
+#elif defined(_LIBC_REENTRANT)
 	str lr, [sp, #-4]!
 	str r0, [sp, #-4]!
 	bl PLTJMP(C_SYMBOL_NAME(__errno_location))

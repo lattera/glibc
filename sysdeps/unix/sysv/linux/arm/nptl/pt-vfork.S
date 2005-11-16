@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  ARM version. */
+#include <tcb-offsets.h>
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H 1
+/* Save the PID value.  */
+#define SAVE_PID \
+	str	lr, [sp, #-4]!;		/* Save LR.  */			\
+	mov	r0, #0xffff0fff;	/* Point to the high page.  */	\
+	mov	lr, pc;			/* Save our return address.  */	\
+	sub	pc, r0, #31;		/* Jump to the TLS entry.  */	\
+	ldr	lr, [sp], #4;		/* Restore LR.  */		\
+	mov	r2, r0;			/* Save the TLS addr in r2.  */	\
+	ldr	r3, [r2, #PID_OFFSET];	/* Load the saved PID.  */	\
+	rsb	r0, r3, #0;		/* Negate it.  */		\
+	str	r0, [r2, #PID_OFFSET]	/* Store the temporary PID.  */
 
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
+/* Restore the old PID value in the parent.  */
+#define RESTORE_PID \
+	cmp	r0, #0;			/* If we are the parent... */	\
+	strne	r3, [r2, #PID_OFFSET]	/* ... restore the saved PID.  */
 
-#ifndef _ASM
-/* Jump buffer contains v1-v6, sl, fp, sp and pc.  Other registers are not
-   saved.  */
-typedef int __jmp_buf[22];
-#endif
-
-#define __JMP_BUF_SP		20
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((void *) (address) < (void *) (jmpbuf[__JMP_BUF_SP]))
-
-#endif
+#include "../vfork.S"

@@ -33,19 +33,19 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-#ifndef NO_WEAK_ALIAS
-#define __socket P(__,socket)
-#else
-#define __socket socket
-#endif
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
-#define PUSHARGS_1	str a1, [sp, $-8]!
-#define PUSHARGS_2	stmfd sp!, {a1, a2}
-#define PUSHARGS_3	stmfd sp!, {a1, a2, a3, a4}	/* a4 pushed for padding */
-#define PUSHARGS_4	stmfd sp!, {a1, a2, a3, a4}
-#define PUSHARGS_5	stmfd sp!, {a1, a2, a3, a4}	/* Caller has already pushed arg 5 */
-#define PUSHARGS_6	stmfd sp!, {a1, a2, a3, a4}
+#define PUSHARGS_1	str a1, [sp, $-8]!; .pad #8
+#define PUSHARGS_2	stmfd sp!, {a1, a2}; .pad #8
+#define PUSHARGS_3	stmfd sp!, {a1, a2, a3, a4}; .pad #16	/* a4 pushed for padding */
+#define PUSHARGS_4	stmfd sp!, {a1, a2, a3, a4}; .pad #16
+#define PUSHARGS_5	stmfd sp!, {a1, a2, a3, a4}; .pad #16	/* Caller has already pushed arg 5 */
+#define PUSHARGS_6	stmfd sp!, {a1, a2, a3, a4}; .pad #16
 
 #define POPARGS_1	add sp, sp, #8
 #define POPARGS_2	add sp, sp, #8
@@ -64,6 +64,8 @@
 
 .globl __socket
 ENTRY (__socket)
+	.fnstart
+
 	/* This code previously moved sp into ip and stored the args using
 	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had
 	   to be restored after the syscall completed.  It saved an
@@ -98,11 +100,12 @@ ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
 1:
 	stmfd sp!, {r7, lr}
+	.save {r7, lr}
 	CENABLE
 	mov ip, r0
 
 	mov r0, #P(SOCKOP_,socket)
-	add r1, sp, #4
+	add r1, sp, #8
 	mov r7, #SYS_ify(socketcall)
 	swi 0x0
 
@@ -120,6 +123,7 @@ ENTRY (__socket)
 	b PLTJMP(SYSCALL_ERROR)
 #endif
 
+	.fnend
 PSEUDO_END (__socket)
 
 #ifndef NO_WEAK_ALIAS

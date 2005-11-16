@@ -1,5 +1,63 @@
 2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/bits/setjmp.h, sysdeps/arm/fpu/bits/setjmp.h: Update
+	include guards.
+
+	* sysdeps/unix/arm/sysdep.S (syscall_error): Handle USE___THREAD and
+	RTLD_PRIVATE_ERRNO.
+
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Handle RESET_PID.
+	Handle new arguments.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Use SAVE_PID and
+	RESTORE_PID.  Use the right syscall error handler.
+
+	* sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S
+	(__default_sa_restorer, __default_rt_sa_restorer): Add unwind
+	information.
+
+	* sysdeps/unix/sysv/linux/arm/eabi/socket.S: Update formatting.
+	Add unwind information.  Correct stack alignment typo.
+
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Define.
+
+	* sysdeps/unix/sysv/linux/arm/sigaction.c
+	(__libc_sigaction): Remove never-valid handling for SA_ONSTACK.
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: Whitespace cleanup.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (SYSCALL_ERROR_HANDLER): Handle
+	RTLD_PRIVATE_ERRNO.
+	(INTERNAL_SYSCALL_NCS): Implement.
+
+	* sysdeps/arm/nptl/Makefile, sysdeps/arm/nptl/jmpbuf-unwind.h,
+	sysdeps/arm/nptl/pthread_spin_lock.S,
+	sysdeps/arm/nptl/pthread_spin_trylock.S,
+	sysdeps/arm/nptl/pthreaddef.h, sysdeps/arm/nptl/tcb-offsets.sym,
+	sysdeps/arm/nptl/tls.h, sysdeps/unix/sysv/linux/arm/eabi/Makefile,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/Makefile,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/configure,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/configure.in,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/nptl-aeabi_unwind_cpp_pr1.c,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/rt-aeabi_unwind_cpp_pr1.c,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-resume.c,
+	sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind.h,
+	sysdeps/unix/sysv/linux/arm/nptl/Versions,
+	sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h,
+	sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h,
+	sysdeps/unix/sysv/linux/arm/nptl/clone.S,
+	sysdeps/unix/sysv/linux/arm/nptl/createthread.c,
+	sysdeps/unix/sysv/linux/arm/nptl/fork.c,
+	sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c,
+	sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h,
+	sysdeps/unix/sysv/linux/arm/nptl/pt-vfork.S,
+	sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c,
+	sysdeps/unix/sysv/linux/arm/nptl/vfork.S: New files.
+
+2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): Use INTERNAL_SYSCALL_ARM.
 	* sysdeps/unix/sysv/linux/arm/brk.c (__brk): Use INLINE_SYSCALL.
 	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Use DO_CALL.

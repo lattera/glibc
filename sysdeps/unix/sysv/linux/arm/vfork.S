@@ -30,16 +30,22 @@
 ENTRY (__vfork)
 
 #ifdef __NR_vfork
+#ifdef SAVE_PID
+	SAVE_PID
+#endif
 	DO_CALL (vfork, 0)
+#ifdef RESTORE_PID
+	RESTORE_PID
+#endif
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
 
 # ifdef __ASSUME_VFORK_SYSCALL
-	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+	b	PLTJMP(SYSCALL_ERROR)
 # else
 	/* Check if vfork syscall is known at all.  */
-	cmn	a2, #ENOSYS
-	bne	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+	cmn	a1, #ENOSYS
+	bne	PLTJMP(SYSCALL_ERROR)
 # endif
 #endif
 
@@ -48,7 +54,7 @@ ENTRY (__vfork)
 	DO_CALL (fork, 0)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
-    	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+    	b	PLTJMP(SYSCALL_ERROR)
 #elif !defined __NR_vfork
 # error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
 #endif

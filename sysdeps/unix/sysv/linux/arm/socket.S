@@ -34,11 +34,11 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-#ifndef NO_WEAK_ALIAS
-#define __socket P(__,socket)
-#else
-#define __socket socket
-#endif
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 #define PUSHARGS_1	str a1, [sp, $-4]!
@@ -53,7 +53,7 @@
 #define POPARGS_3	add sp, sp, #12
 #define POPARGS_4	add sp, sp, #16
 #define POPARGS_5	add sp, sp, #16
-#define POPARGS_6	add sp, sp, #16 
+#define POPARGS_6	add sp, sp, #16
 
 #ifndef NARGS
 #define NARGS 3			/* If we were called with no wrapper, this is really socket() */
@@ -66,8 +66,8 @@
 .globl __socket
 ENTRY (__socket)
 	/* This code previously moved sp into ip and stored the args using
-	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had 
-	   to be restored after the syscall completed.  It saved an 
+	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had
+	   to be restored after the syscall completed.  It saved an
 	   instruction and meant no stack cleanup work was required.
 
 	   This will not work in the case of a socket call being interrupted

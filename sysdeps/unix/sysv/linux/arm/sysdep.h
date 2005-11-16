@@ -24,6 +24,9 @@
 /* There is some commonality.  */
 #include <ports/sysdeps/unix/arm/sysdep.h>
 
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
+#include <dl-sysdep.h>
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
@@ -43,7 +46,7 @@
    might return a large offset.  Therefore we must not anymore test
    for < 0, but test for a real error by making sure the value in R0
    is a real error number.  Linus said he will make sure the no syscall
-   returns a value in -1 .. -4095 as a valid result so we can savely
+   returns a value in -1 .. -4095 as a valid result so we can safely
    test with -4095.  */
 
 #undef	PSEUDO
@@ -96,7 +99,17 @@
 
 #if NOT_IN_libc
 # define SYSCALL_ERROR __local_syscall_error
-# define SYSCALL_ERROR_HANDLER					\
+# if RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER					\
+__local_syscall_error:						\
+       ldr     r1, 1f;						\
+       rsb     r0, r0, #0;					\
+0:     str     r0, [pc, r1];					\
+       mvn     r0, #0;						\
+       DO_RET(lr);						\
+1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - 8;
+# else
+#  define SYSCALL_ERROR_HANDLER					\
 __local_syscall_error:						\
 	str	lr, [sp, #-4]!;					\
 	str	r0, [sp, #-4]!;					\
@@ -106,6 +119,7 @@ __local_syscall_error:						\
 	str	r1, [r0];					\
 	mvn	r0, #0;						\
 	ldr	pc, [sp], #4;
+# endif
 #else
 # define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 # define SYSCALL_ERROR __syscall_error
@@ -238,6 +252,24 @@ __local_syscall_error:						\
   register int _v3 asm ("v3") = (int) (a7);	\
   LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)
 #define ASM_ARGS_7	ASM_ARGS_6, "r" (_v3)
+
+/* We can't implement non-constant syscalls directly since the syscall
+   number is normally encoded in the instruction.  So use SYS_syscall.  */
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)		\
+	INTERNAL_SYSCALL_NCS_##nr (number, err, args)
+
+#define INTERNAL_SYSCALL_NCS_0(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 1, number, args)
+#define INTERNAL_SYSCALL_NCS_1(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 2, number, args)
+#define INTERNAL_SYSCALL_NCS_2(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 3, number, args)
+#define INTERNAL_SYSCALL_NCS_3(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 4, number, args)
+#define INTERNAL_SYSCALL_NCS_4(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 5, number, args)
+#define INTERNAL_SYSCALL_NCS_5(number, err, args...)		\
+	INTERNAL_SYSCALL (syscall, err, 6, number, args)
 
 #endif	/* __ASSEMBLER__ */
 

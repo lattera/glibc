@@ -48,6 +48,11 @@
 		     : "memory");				\
        _a1; })
 
+/* For EABI, non-constant syscalls are actually pretty easy...  */
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)          \
+  INTERNAL_SYSCALL_RAW (number, err, nr, args)
+
 /* We must save and restore r7 (call-saved) for the syscall number.
    We never make function calls from inside here (only potentially
    signal handlers), so we do not bother with doubleword alignment.
