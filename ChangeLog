@@ -1,3 +1,7 @@
+2005-11-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Remove incorrect &.
+
 2005-11-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ 1865]
