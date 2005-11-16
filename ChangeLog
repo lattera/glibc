@@ -1,5 +1,11 @@
 2005-11-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ 1865]
+	* inet/netinet/icmp6.h: More updates for RFC3542.
+	* inet/netinet/ip6.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h: Adjust for current kernel sources.
+	Patch by David L Stevens <dlstevens@us.ibm.com>.
+
 	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c (__fxstatat):
 	Return -1 on failure.
 	* sysdeps/unix/sysv/linux/fchownat.c (fchownat): Likewise.

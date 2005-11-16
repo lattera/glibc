@@ -105,13 +105,13 @@ struct in_pktinfo
    The first word in the comment at the right is the data type used;
    "bool" means a boolean value stored in an `int'.  */
 #define IPV6_ADDRFORM		1
-#define IPV6_PKTINFO		2
-#define IPV6_HOPOPTS		3
-#define IPV6_DSTOPTS		4
-#define IPV6_RTHDR		5
-#define IPV6_PKTOPTIONS		6
+#define IPV6_2292PKTINFO	2
+#define IPV6_2292HOPOPTS	3
+#define IPV6_2292DSTOPTS	4
+#define IPV6_2292RTHDR		5
+#define IPV6_2292PKTOPTIONS	6
 #define IPV6_CHECKSUM		7
-#define IPV6_HOPLIMIT		8
+#define IPV6_2292HOPLIMIT	8
 
 #define SCM_SRCRT		IPV6_RXSRCRT
 
@@ -132,6 +132,21 @@ struct in_pktinfo
 #define IPV6_LEAVE_ANYCAST	28
 #define IPV6_IPSEC_POLICY	34
 #define IPV6_XFRM_POLICY	35
+
+#define IPV6_RECVPKTINFO	49
+#define IPV6_PKTINFO		50
+#define IPV6_RECVHOPLIMIT	51
+#define IPV6_HOPLIMIT		52
+#define IPV6_RECVHOPOPTS	53
+#define IPV6_HOPOPTS		54
+#define IPV6_RTHDRDSTOPTS	55
+#define IPV6_RECVRTHDR		56
+#define IPV6_RTHDR		57
+#define IPV6_RECVDSTOPTS	58
+#define IPV6_DSTOPTS		59
+
+#define IPV6_RECVTCLASS		66
+#define IPV6_TCLASS		67
 
 /* Obsolete synonyms for the above.  */
 #define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP

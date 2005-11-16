@@ -33,7 +33,7 @@
 
 struct icmp6_filter
   {
-    uint32_t data[8];
+    uint32_t icmp6_filt[8];
   };
 
 struct icmp6_hdr
@@ -67,14 +67,14 @@ struct icmp6_hdr
 
 #define ICMP6_ECHO_REQUEST          128
 #define ICMP6_ECHO_REPLY            129
-#define ICMP6_MEMBERSHIP_QUERY      130
-#define ICMP6_MEMBERSHIP_REPORT     131
-#define ICMP6_MEMBERSHIP_REDUCTION  132
+#define MLD_LISTENER_QUERY          130
+#define MLD_LISTENER_REPORT         131
+#define MLD_LISTENER_REDUCTION      132
 
 #define ICMP6_DST_UNREACH_NOROUTE     0 /* no route to destination */
 #define ICMP6_DST_UNREACH_ADMIN       1 /* communication with destination */
                                         /* administratively prohibited */
-#define ICMP6_DST_UNREACH_NOTNEIGHBOR 2 /* not a neighbor */
+#define ICMP6_DST_UNREACH_BEYONDSCOPE 2 /* beyond scope of source address */
 #define ICMP6_DST_UNREACH_ADDR        3 /* address unreachable */
 #define ICMP6_DST_UNREACH_NOPORT      4 /* bad port */
 
@@ -86,16 +86,16 @@ struct icmp6_hdr
 #define ICMP6_PARAMPROB_OPTION        2 /* unrecognized IPv6 option */
 
 #define ICMP6_FILTER_WILLPASS(type, filterp) \
-	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) == 0)
+	((((filterp)->icmp6_filt[(type) >> 5]) & (1 << ((type) & 31))) == 0)
 
 #define ICMP6_FILTER_WILLBLOCK(type, filterp) \
-	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) != 0)
+	((((filterp)->icmp6_filt[(type) >> 5]) & (1 << ((type) & 31))) != 0)
 
 #define ICMP6_FILTER_SETPASS(type, filterp) \
-	((((filterp)->data[(type) >> 5]) &= ~(1 << ((type) & 31))))
+	((((filterp)->icmp6_filt[(type) >> 5]) &= ~(1 << ((type) & 31))))
 
 #define ICMP6_FILTER_SETBLOCK(type, filterp) \
-	((((filterp)->data[(type) >> 5]) |=  (1 << ((type) & 31))))
+	((((filterp)->icmp6_filt[(type) >> 5]) |=  (1 << ((type) & 31))))
 
 #define ICMP6_FILTER_SETPASSALL(filterp) \
 	memset (filterp, 0, sizeof (struct icmp6_filter));
@@ -231,6 +231,98 @@ struct nd_opt_mtu             /* MTU option */
     uint16_t  nd_opt_mtu_reserved;
     uint32_t  nd_opt_mtu_mtu;
   };
+
+struct mld_hdr
+  {
+    struct icmp6_hdr    mld_icmp6_hdr;
+    struct in6_addr     mld_addr; /* multicast address */
+  };
+
+#define mld_type        mld_icmp6_hdr.icmp6_type
+#define mld_code        mld_icmp6_hdr.icmp6_code
+#define mld_cksum       mld_icmp6_hdr.icmp6_cksum
+#define mld_maxdelay    mld_icmp6_hdr.icmp6_data16[0]
+#define mld_reserved    mld_icmp6_hdr.icmp6_data16[1]
+
+#define ICMP6_ROUTER_RENUMBERING    138
+
+struct icmp6_router_renum    /* router renumbering header */
+  {
+    struct icmp6_hdr    rr_hdr;
+    uint8_t             rr_segnum;
+    uint8_t             rr_flags;
+    uint16_t            rr_maxdelay;
+    uint32_t            rr_reserved;
+  };
+
+#define rr_type		rr_hdr.icmp6_type
+#define rr_code         rr_hdr.icmp6_code
+#define rr_cksum        rr_hdr.icmp6_cksum
+#define rr_seqnum       rr_hdr.icmp6_data32[0]
+
+/* Router renumbering flags */
+#define ICMP6_RR_FLAGS_TEST             0x80
+#define ICMP6_RR_FLAGS_REQRESULT        0x40
+#define ICMP6_RR_FLAGS_FORCEAPPLY       0x20
+#define ICMP6_RR_FLAGS_SPECSITE         0x10
+#define ICMP6_RR_FLAGS_PREVDONE         0x08
+
+struct rr_pco_match    /* match prefix part */
+  {
+    uint8_t             rpm_code;
+    uint8_t             rpm_len;
+    uint8_t             rpm_ordinal;
+    uint8_t             rpm_matchlen;
+    uint8_t             rpm_minlen;
+    uint8_t             rpm_maxlen;
+    uint16_t            rpm_reserved;
+    struct in6_addr     rpm_prefix;
+  };
+
+/* PCO code values */
+#define RPM_PCO_ADD             1
+#define RPM_PCO_CHANGE          2
+#define RPM_PCO_SETGLOBAL       3
+
+struct rr_pco_use      /* use prefix part */
+  {
+    uint8_t             rpu_uselen;
+    uint8_t             rpu_keeplen;
+    uint8_t             rpu_ramask;
+    uint8_t             rpu_raflags;
+    uint32_t            rpu_vltime;
+    uint32_t            rpu_pltime;
+    uint32_t            rpu_flags;
+    struct in6_addr     rpu_prefix;
+  };
+
+#define ICMP6_RR_PCOUSE_RAFLAGS_ONLINK  0x20
+#define ICMP6_RR_PCOUSE_RAFLAGS_AUTO    0x10
+
+#if BYTE_ORDER == BIG_ENDIAN
+# define ICMP6_RR_PCOUSE_DECRVLTIME      0x80000000
+# define ICMP6_RR_PCOUSE_DECRPLTIME      0x40000000
+#elif BYTE_ORDER == LITTLE_ENDIAN
+# define ICMP6_RR_PCOUSE_DECRVLTIME      0x80
+# define ICMP6_RR_PCOUSE_DECRPLTIME      0x40
+#endif
+
+struct rr_result       /* router renumbering result message */
+  {
+    uint16_t            rrr_flags;
+    uint8_t             rrr_ordinal;
+    uint8_t             rrr_matchedlen;
+    uint32_t            rrr_ifid;
+    struct in6_addr     rrr_prefix;
+  };
+
+#if BYTE_ORDER == BIG_ENDIAN
+# define ICMP6_RR_RESULT_FLAGS_OOB       0x0002
+# define ICMP6_RR_RESULT_FLAGS_FORBIDDEN 0x0001
+#elif BYTE_ORDER == LITTLE_ENDIAN
+# define ICMP6_RR_RESULT_FLAGS_OOB       0x0200
+# define ICMP6_RR_RESULT_FLAGS_FORBIDDEN 0x0100
+#endif
 
 /* Mobile IPv6 extension: Advertisement Interval.  */
 struct nd_opt_adv_interval
