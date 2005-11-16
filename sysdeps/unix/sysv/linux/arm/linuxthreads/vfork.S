@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -27,8 +27,6 @@
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 
-	PSEUDO_PROLOGUE
-
 ENTRY (__vfork)
 
 #ifdef __NR_vfork
@@ -44,7 +42,7 @@ ENTRY (__vfork)
 	movs	r0, r0
 	bne	HIDDEN_JUMPTARGET (__fork)
 		
-	swi	__NR_vfork
+	DO_CALL (vfork, 0)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
 
@@ -58,7 +56,7 @@ ENTRY (__vfork)
 
 #ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
-	swi	__NR_fork
+	DO_CALL (fork, 0)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
 #elif !defined __NR_vfork

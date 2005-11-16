@@ -35,15 +35,7 @@
   && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
 
 #define CLEAR_CACHE(BEG,END)						\
-{									\
-  register unsigned long _beg __asm ("a1") = (unsigned long)(BEG);	\
-  register unsigned long _end __asm ("a2") = (unsigned long)(END);	\
-  register unsigned long _flg __asm ("a3") = 0;				\
-  __asm __volatile ("swi 0x9f0002		@ sys_cacheflush"	\
-		    : /* no outputs */					\
-		    : /* no inputs */					\
-		    : "a1");						\
-}
+  INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))

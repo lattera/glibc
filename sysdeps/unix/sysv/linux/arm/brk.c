@@ -1,5 +1,5 @@
 /* brk system call for Linux/ARM.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,14 +29,7 @@ __brk (void *addr)
 {
   void *newbrk;
 
-  asm ("mov a1, %1\n"	/* save the argment in r0 */
-       "swi %2\n"	/* do the system call */
-       "mov %0, a1;"	/* keep the return value */
-       : "=r"(newbrk) 
-       : "r"(addr), "i" (SYS_ify (brk))
-       : "a1");
-
-  __curbrk = newbrk;
+  __curbrk = newbrk = (void *) INLINE_SYSCALL (brk, 1, addr);
 
   if (newbrk < addr)
     {

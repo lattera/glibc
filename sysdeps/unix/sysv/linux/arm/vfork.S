@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -30,7 +30,7 @@
 ENTRY (__vfork)
 
 #ifdef __NR_vfork
-	swi	__NR_vfork
+	DO_CALL (vfork, 0)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
 
@@ -45,7 +45,7 @@ ENTRY (__vfork)
 
 #ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
-	swi	__NR_fork
+	DO_CALL (fork, 0)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))

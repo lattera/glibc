@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ ENTRY (__mmap)
 	mov	r5, r5, lsr #12
 	
 	/* do the syscall */
-	swi	SYS_ify (mmap2)
+	DO_CALL (mmap2, 0)
 
 	/* restore registers */
 2:
@@ -77,7 +77,7 @@ ENTRY (__mmap)
 
 	/* do the syscall */
 	mov	a1, sp
-	swi	SYS_ify (mmap)
+	DO_CALL (mmap, 0)
 
 	/* pop args off the stack. */
 	add	sp, sp, #16

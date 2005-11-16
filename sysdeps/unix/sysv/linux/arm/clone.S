@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
 
@@ -42,7 +43,7 @@ ENTRY(__clone)
 	@ get flags
 	mov	r0, r2
 	@ new sp is already in r1
-	swi	SYS_ify(clone)
+	DO_CALL (clone, 0)
 	movs	a1, a1
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 	RETINSTR(ne, lr)

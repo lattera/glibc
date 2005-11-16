@@ -1,3 +1,53 @@
+2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): Use INTERNAL_SYSCALL_ARM.
+	* sysdeps/unix/sysv/linux/arm/brk.c (__brk): Use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Use DO_CALL.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure.in: Bump
+	arch_minimum_kernel.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/eabi/epoll_ctl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/epoll_wait.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fcntl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fstatfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/ftruncate64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/fxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/kernel_epoll.h,
+	sysdeps/unix/sysv/linux/arm/eabi/kernel_stat.h,
+	sysdeps/unix/sysv/linux/arm/eabi/lockf64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/lxstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/semtimedop.c,
+	sysdeps/unix/sysv/linux/arm/eabi/statfs64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/syscalls.list,
+	sysdeps/unix/sysv/linux/arm/eabi/uname.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstat64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.c,
+	sysdeps/unix/sysv/linux/arm/eabi/xstatconv.h: Removed.
+	* sysdeps/unix/sysv/linux/arm/eabi/linuxthreads/sysdep-cancel.h,
+	sysdeps/unix/sysv/linux/arm/eabi/mmap64.S,
+	sysdeps/unix/sysv/linux/arm/eabi/pread.c,
+	sysdeps/unix/sysv/linux/arm/eabi/pread64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/pwrite.c,
+	sysdeps/unix/sysv/linux/arm/eabi/pwrite64.c,
+	sysdeps/unix/sysv/linux/arm/eabi/readahead.c,
+	sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S,
+	sysdeps/unix/sysv/linux/arm/eabi/socket.S,
+	sysdeps/unix/sysv/linux/arm/eabi/syscall.S,
+	sysdeps/unix/sysv/linux/arm/eabi/sysdep.h,
+	sysdeps/unix/sysv/linux/arm/eabi/truncate64.c: New files.
+	* sysdeps/unix/sysv/linux/arm/linuxthreads/sysdep-cancel.h
+	(SINGLE_THREAD_P_INT, SINGLE_THREAD_P_PIC): Removed.
+	(SINGLE_THREAD_P): Rewritten to use only ip.
+	* sysdeps/unix/sysv/linux/arm/linuxthreads/vfork.S (__vfork): Use
+	DO_CALL.
+	* sysdeps/unix/sysv/linux/arm/mmap.S (__mmap): Use DO_CALL.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S (__mmap64): Use DO_CALL.
+	Don't handle EABI here.
+	* sysdeps/unix/sysv/linux/arm/socket.S (__socket): Use
+	SINGLE_THREAD_P.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Use DO_CALL.
+
 2005-11-03  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/aeabi_read_tp.S: Add LGPL exception.

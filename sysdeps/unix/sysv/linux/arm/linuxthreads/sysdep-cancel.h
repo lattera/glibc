@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell <pb@nexus.co.uk>, 2003.
 
@@ -46,7 +46,7 @@
   .section ".text";							\
     PSEUDO_PROLOGUE;							\
   ENTRY (name);								\
-    SINGLE_THREAD_P_INT;						\
+    SINGLE_THREAD_P;							\
     bne .Lpseudo_cancel;						\
     DO_CALL (syscall_name, args);					\
     cmn r0, $4096;							\
@@ -104,11 +104,10 @@ extern int __local_multiple_threads attribute_hidden;
 #  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 # else
 #  if !defined PIC
-#   define SINGLE_THREAD_P_INT						\
+#   define SINGLE_THREAD_P						\
   ldr ip, =__local_multiple_threads;					\
   ldr ip, [ip];								\
   teq ip, #0;
-#   define SINGLE_THREAD_P SINGLE_THREAD_P_INT
 #   define MAYBE_SAVE_LR						\
   str lr, [sp, $-4]!;
 #   define PSEUDO_RET_MOV						\
@@ -116,22 +115,13 @@ extern int __local_multiple_threads attribute_hidden;
   b PLTJMP(SYSCALL_ERROR)
 #   define PSEUDO_PROLOGUE
 #  else
-#   define SINGLE_THREAD_P_PIC(reg)					\
-  ldr ip, 1b;								\
-  ldr reg, 2b;								\
-3:									\
-  add ip, pc, ip;							\
-  ldr ip, [ip, reg];							\
-  teq ip, #0;
-#   define SINGLE_THREAD_P_INT						\
-  str lr, [sp, $-4]!;							\
-  SINGLE_THREAD_P_PIC(lr)
 #   define SINGLE_THREAD_P						\
-  SINGLE_THREAD_P_INT;							\
-  ldr lr, [sp], $4
+  ldr ip, 1b;								\
+2:									\
+  ldr ip, [pc, ip];							\
+  teq ip, #0;
 #   define PSEUDO_PROLOGUE						\
-  1:  .word _GLOBAL_OFFSET_TABLE_ - 3f - 8;				\
-  2:  .word __local_multiple_threads(GOTOFF);
+  1:  .word __local_multiple_threads - 2f - 8;
 #   define MAYBE_SAVE_LR	/* lr already saved */
 #   define PSEUDO_RET_MOV PSEUDO_RET
 #  endif

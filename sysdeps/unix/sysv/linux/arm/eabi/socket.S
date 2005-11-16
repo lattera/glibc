@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2003, 2004, 2005
+/* Copyright (C) 1995, 1996, 1997, 1998, 2003, 2005
    Free Software Foundation, Inc.
-
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,19 +40,19 @@
 #endif
 #endif
 
-#define PUSHARGS_1	str a1, [sp, $-4]!
+#define PUSHARGS_1	str a1, [sp, $-8]!
 #define PUSHARGS_2	stmfd sp!, {a1, a2}
-#define PUSHARGS_3	stmfd sp!, {a1, a2, a3}
+#define PUSHARGS_3	stmfd sp!, {a1, a2, a3, a4}	/* a4 pushed for padding */
 #define PUSHARGS_4	stmfd sp!, {a1, a2, a3, a4}
 #define PUSHARGS_5	stmfd sp!, {a1, a2, a3, a4}	/* Caller has already pushed arg 5 */
 #define PUSHARGS_6	stmfd sp!, {a1, a2, a3, a4}
 
-#define POPARGS_1	add sp, sp, #4
+#define POPARGS_1	add sp, sp, #8
 #define POPARGS_2	add sp, sp, #8
-#define POPARGS_3	add sp, sp, #12
+#define POPARGS_3	add sp, sp, #16
 #define POPARGS_4	add sp, sp, #16
 #define POPARGS_5	add sp, sp, #16
-#define POPARGS_6	add sp, sp, #16 
+#define POPARGS_6	add sp, sp, #16
 
 #ifndef NARGS
 #define NARGS 3			/* If we were called with no wrapper, this is really socket() */
@@ -66,8 +65,8 @@
 .globl __socket
 ENTRY (__socket)
 	/* This code previously moved sp into ip and stored the args using
-	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had 
-	   to be restored after the syscall completed.  It saved an 
+	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had
+	   to be restored after the syscall completed.  It saved an
 	   instruction and meant no stack cleanup work was required.
 
 	   This will not work in the case of a socket call being interrupted
@@ -86,7 +85,7 @@ ENTRY (__socket)
         /* Do the system call trap.  */
 	mov a1, $P(SOCKOP_,socket)
 	mov a2, sp
-	swi SYS_ify(socketcall)
+	DO_CALL (socketcall, 0)
 
 	/* Pop args off the stack */
 	P(POPARGS_,NARGS)
@@ -98,19 +97,20 @@ ENTRY (__socket)
 
 #if defined NEED_CANCELLATION && defined CENABLE
 1:
-	str lr, [sp, #-4]!
+	stmfd sp!, {r7, lr}
 	CENABLE
 	mov ip, r0
 
 	mov r0, #P(SOCKOP_,socket)
 	add r1, sp, #4
-	swi SYS_ify(socketcall)
+	mov r7, #SYS_ify(socketcall)
+	swi 0x0
 
-	str r0, [sp, #-4]!
+	mov r7, r0
 	mov r0, ip
 	CDISABLE
-	ldr r0, [sp], #4
-	ldr lr, [sp], #4
+	mov r0, r7
+	ldmfd sp!, {r7, lr}
 
 	P(POPARGS_,NARGS)
 

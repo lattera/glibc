@@ -1,5 +1,4 @@
-/* Copyright (C) 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,27 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
-#include <string.h>
-#include <sys/utsname.h>
 
-/* The kernel's struct utsname is two bytes larger than a userland struct
-   utsname due to the APCS structure size boundary.  */
+/* If no SA_RESTORER function was specified by the application we use
+   one of these.  This avoids the need for the kernel to synthesise a return
+   instruction on the stack, which would involve expensive cache flushes. */
 
-int
-__uname (struct utsname *__name)
-{
-  char buf[sizeof (struct utsname) + 2];
-  int result = INLINE_SYSCALL (uname, 1, buf);
+ENTRY(__default_sa_restorer)
+	mov	r7, $SYS_ify(sigreturn)
+	swi	0x0
 
-  if (result == 0)
-    memcpy (__name, buf, sizeof (struct utsname));
+#ifdef __NR_rt_sigreturn
 
-  return result;
-}
+ENTRY(__default_rt_sa_restorer)
+	mov	r7, $SYS_ify(rt_sigreturn)
+	swi	0x0
 
-libc_hidden_def (__uname)
-strong_alias (__uname, uname)
-libc_hidden_weak (uname)
+#endif
