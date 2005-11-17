@@ -86,6 +86,46 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
 }
 
 static void
+do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
+	 int exp_result)
+{
+  size_t i;
+  char *s1, *s2;
+
+  if (n == 0)
+    return;
+
+  align1 &= 7;
+
+  align2 &= 7;
+
+  s1 = (char*)(buf1 + page_size - n);
+  s2 = (char*)(buf2 + page_size - n);
+
+  for (i = 0; i < n; i++)
+    s1[i] = s2[i] = 1 + 23 * i % max_char;
+
+  if (len < n)
+    {
+      s1[len] = 0;
+      s2[len] = 0;
+      if (exp_result < 0)
+	s2[len] = 32;
+      else if (exp_result > 0)
+	s1[len] = 64;
+    }
+
+  if (HP_TIMING_AVAIL)
+    printf ("Length %4zd/%4zd, alignment %2zd/%2zd:", len, n, align1, align2);
+
+  FOR_EACH_IMPL (impl, 0)
+    do_one_test (impl, s1, s2, n, exp_result);
+
+  if (HP_TIMING_AVAIL)
+    putchar ('\n');
+}
+
+static void
 do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 	 int exp_result)
 {
@@ -103,8 +143,8 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
   if (align2 + n + 1 >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char*)(buf1 + align1);
+  s2 = (char*)(buf2 + align2);
 
   for (i = 0; i < n; i++)
     s1[i] = s2[i] = 1 + 23 * i % max_char;
@@ -124,7 +164,7 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
     printf ("Length %4zd/%4zd, alignment %2zd/%2zd:", len, n, align1, align2);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s1, s2, n, exp_result);
+    do_one_test (impl, (char*)s1, (char*)s2, n, exp_result);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -208,7 +248,7 @@ do_random_tests (void)
 
       FOR_EACH_IMPL (impl, 1)
 	{
-	  r = CALL (impl, p1 + align1, p2 + align2, size);
+	  r = CALL (impl, (char*)(p1 + align1), (char*)(p2 + align2), size);
 	  /* Test whether on 64-bit architectures where ABI requires
 	     callee to promote has the promotion been done.  */
 	  asm ("" : "=g" (r) : "0" (r));
@@ -270,6 +310,18 @@ test_main (void)
       do_test (8 - i, 2 * i, 8 << i, 16 << i, 127, 1);
       do_test (2 * i, i, 8 << i, 16 << i, 255, 0);
       do_test (2 * i, i, 8 << i, 16 << i, 255, 1);
+    }
+
+  for (i = 1; i < 8; ++i)
+    {
+      do_test_limit (0, 0, 17 - i, 16 - i, 127, 0);
+      do_test_limit (0, 0, 17 - i, 16 - i, 255, 0);
+      do_test_limit (0, 0, 15 - i, 16 - i, 127, 0);
+      do_test_limit (0, 0, 15 - i, 16 - i, 127, 1);
+      do_test_limit (0, 0, 15 - i, 16 - i, 127, -1);
+      do_test_limit (0, 0, 15 - i, 16 - i, 255, 0);
+      do_test_limit (0, 0, 15 - i, 16 - i, 255, 1);
+      do_test_limit (0, 0, 15 - i, 16 - i, 255, -1);
     }
 
   do_random_tests ();

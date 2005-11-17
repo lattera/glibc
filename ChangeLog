@@ -1,3 +1,14 @@
+2005-11-17  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #1877]
+	* string/test-strncmp.c (do_test_limit): New function.
+	(do_test) Add cast to eliminate compiler warnings.
+	(do_random_tests) Add cast to eliminate compiler warnings.
+	(test_main) Add do_test_limit tests.
+	* sysdeps/powerpc/powerpc32/strncmp.S: Test length before unaligned
+	load.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+
 2005-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/resolv.h: Include <stdbool.h>.
