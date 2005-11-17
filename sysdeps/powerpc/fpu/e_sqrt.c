@@ -24,7 +24,6 @@
 
 #include <sysdep.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 static const double almost_half = 0.5000000000000001;	/* 0.5 + 2^-53 */
 static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };

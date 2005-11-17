@@ -23,7 +23,6 @@
 
 #include <sysdep.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 #ifdef __STDC__
 float
