@@ -1,3 +1,11 @@
+2005-11-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h (fstatat): If __REDIRECT_NTH isn't defined,
+	define fstatat to fstatat64.
+	(fstatat64): Only provide prototype if __USE_LARGEFILE64,
+	similarly with the inline.
+	* io/fcntl.h (openat64): Only provide prototype if __USE_LARGEFILE64.
+
 2005-11-17  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #1877]

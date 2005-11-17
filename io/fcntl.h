@@ -114,8 +114,10 @@ extern int __REDIRECT (openat, (int __fd, __const char *__file, int __oflag,
 #  endif
 # endif
 
+# ifdef __USE_LARGEFILE64
 extern int openat64 (int __fd, __const char *__file, int __oflag, ...)
      __nonnull ((2));
+# endif
 #endif
 
 /* Create and open FILE, with mode MODE.  This takes an `int' MODE

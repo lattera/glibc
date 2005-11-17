@@ -236,13 +236,19 @@ extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2));
 extern int fstatat (int __fd, __const char *__file, struct stat *__buf,
 		    int __flag) __THROW __nonnull ((2, 3));
 # else
+#  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (fstatat, (int __fd, __const char *__file,
 				     struct stat *__buf, int __flag),
 			   fstatat64) __nonnull ((2, 3));
+#  else
+#   define fstatat fstatat64
+#  endif
 # endif
 
+# ifdef __USE_LARGEFILE64
 extern int fstatat64 (int __fd, __const char *__file, struct stat64 *__buf,
 		      int __flag) __THROW __nonnull ((2, 3));
+# endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -446,15 +452,16 @@ __NTH (fstat64 (int __fd, struct stat64 *__statbuf))
 {
   return __fxstat64 (_STAT_VER, __fd, __statbuf);
 }
-# endif
 
-# ifdef __USE_GNU
+#  ifdef __USE_GNU
 extern __inline__ int
 __NTH (fstatat64 (int __fd, __const char *__filename, struct stat64 *__statbuf,
 		  int __flag))
 {
   return __fxstatat64 (_STAT_VER, __fd, __filename, __statbuf, __flag);
 }
+#  endif
+
 # endif
 
 #endif
