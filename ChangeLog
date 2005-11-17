@@ -1,5 +1,8 @@
 2005-11-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/resolv.h: Include <stdbool.h>.
+	Patch by Paul Brook.
+
 	* io/sys/stat.h: Use __const not const in fstatat prototypes.
 
 2005-11-08  H.J. Lu  <hongjiu.lu@intel.com>
