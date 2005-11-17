@@ -1,3 +1,7 @@
+2005-11-17  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (R_PPC64_ADDR30): Renamed to R_PPC64_REL30.
+
 2005-11-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/sys/stat.h (fstatat): If __REDIRECT_NTH isn't defined,
