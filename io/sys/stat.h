@@ -233,15 +233,15 @@ extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2));
    Relative path names are interpreted relative to FD unless FD is
    AT_FDCWD.  */
 # ifndef __USE_FILE_OFFSET64
-extern int fstatat (int __fd, const char *__file, struct stat *__buf,
+extern int fstatat (int __fd, __const char *__file, struct stat *__buf,
 		    int __flag) __THROW __nonnull ((2, 3));
 # else
-extern int __REDIRECT_NTH (fstatat, (int __fd, const char *__file,
+extern int __REDIRECT_NTH (fstatat, (int __fd, __const char *__file,
 				     struct stat *__buf, int __flag),
 			   fstatat64) __nonnull ((2, 3));
 # endif
 
-extern int fstatat64 (int __fd, const char *__file, struct stat64 *__buf,
+extern int fstatat64 (int __fd, __const char *__file, struct stat64 *__buf,
 		      int __flag) __THROW __nonnull ((2, 3));
 #endif
 
