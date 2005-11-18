@@ -245,10 +245,8 @@ extern int __REDIRECT_NTH (fstatat, (int __fd, __const char *__file,
 #  endif
 # endif
 
-# ifdef __USE_LARGEFILE64
 extern int fstatat64 (int __fd, __const char *__file, struct stat64 *__buf,
 		      int __flag) __THROW __nonnull ((2, 3));
-# endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
