@@ -1,4 +1,5 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* unlinkat -- Remove a link by relative name.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +21,9 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sysdep.h>
 #include <unistd.h>
 
 
@@ -51,7 +54,7 @@ unlinkat (fd, file, flag)
 	 due to the format elements compensates for possible negative
 	 numbers.  */
       size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
-      buf = alloca (buflen);
+      buf = __alloca (buflen);
 
       __snprintf (buf, buflen, procfd, fd, file);
       file = buf;

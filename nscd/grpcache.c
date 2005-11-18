@@ -32,6 +32,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 #include <stackinfo.h>
 
 #include "nscd.h"
