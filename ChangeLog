@@ -27,7 +27,6 @@
 	define fstatat to fstatat64.
 	(fstatat64): Only provide prototype if __USE_LARGEFILE64,
 	similarly with the inline.
-	* io/fcntl.h (openat64): Only provide prototype if __USE_LARGEFILE64.
 
 2005-11-17  Steven Munroe  <sjmunroe@us.ibm.com>
 
