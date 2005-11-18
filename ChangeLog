@@ -1,5 +1,7 @@
 2005-11-18  Paul Brook  <paul@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h (MREMAP_FIXED): New macro.
+
 	* nscd/grpcache.c: Include <sys/socket.h>.
 	* nscd/nscd_stat.c: Likewise.
 	* nscd/pwdcache.c: Likewise.

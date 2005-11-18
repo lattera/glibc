@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/m68k version.
-   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,6 +78,7 @@
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU
 # define MREMAP_MAYMOVE	1
+# define MREMAP_FIXED	2
 #endif
 
 /* Advice to `madvise'.  */
