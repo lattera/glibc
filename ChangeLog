@@ -1,3 +1,10 @@
+2005-11-18  Paul Brook  <paul@codesourcery.com>
+
+	* nscd/grpcache.c: Include <sys/socket.h>.
+	* nscd/nscd_stat.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Include <stdlib.h>, <sysdep.h>.
+
 2005-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Define SHM_NORESERVE.
