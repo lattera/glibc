@@ -1,3 +1,22 @@
+2005-11-17  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #1877]
+	* string/test-strncmp.c (do_test_limit): Handle zero length and
+	non-zero align values.
+	(test_main): Correct do_test_limit tests for 64-bit.
+
+2005-11-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_HAS_SPE,
+	PPC_FEATURE_HAS_EFP_SINGLE, PPC_FEATURE_HAS_EFP_DOUBLE,
+	PPC_FEATURE_NO_TB, PPC_FEATURE_POWER4, PPC_FEATURE_POWER5,
+	PPC_FEATURE_POWER5_PLUS, PPC_FEATURE_CELL, PPC_FEATURE_970):
+	Define to match 2.6.15 kernel.
+
+	* sysdeps/powerpc/fpu/e_sqrt.c: Remove dl-procinfo.h include.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/powerpc/fpu/w_sqrtf.c: Likewise.
+
 2005-11-17  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (R_PPC64_ADDR30): Renamed to R_PPC64_REL30.

@@ -89,19 +89,38 @@ static void
 do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 	 int exp_result)
 {
-  size_t i;
+  size_t i, align_n;
   char *s1, *s2;
 
   if (n == 0)
-    return;
+    {
+      s1 = (char*)(buf1 + page_size);
+      s2 = (char*)(buf2 + page_size);
+      if (HP_TIMING_AVAIL)
+	printf ("Length %4zd/%4zd:", len, n);
+	
+      FOR_EACH_IMPL (impl, 0)
+	do_one_test (impl, s1, s2, n, 0);
 
-  align1 &= 7;
+      if (HP_TIMING_AVAIL)
+	putchar ('\n');
+	
+      return;
+    }
 
-  align2 &= 7;
+  align1 &= 15;
+  align2 &= 15;
+  align_n = (page_size - n) & 15;
 
   s1 = (char*)(buf1 + page_size - n);
   s2 = (char*)(buf2 + page_size - n);
-
+  
+  if (align1 < align_n)
+    s1 -= (align_n - align1);
+    
+  if (align2 < align_n)
+    s2 -= (align_n - align2);
+    
   for (i = 0; i < n; i++)
     s1[i] = s2[i] = 1 + 23 * i % max_char;
 
@@ -311,8 +330,14 @@ test_main (void)
       do_test (2 * i, i, 8 << i, 16 << i, 255, 0);
       do_test (2 * i, i, 8 << i, 16 << i, 255, 1);
     }
+    
+  do_test_limit (0, 0, 0, 0, 127, 0);
+  do_test_limit (4, 0, 21, 20, 127, 0);
+  do_test_limit (0, 4, 21, 20, 127, 0);
+  do_test_limit (8, 0, 25, 24, 127, 0);
+  do_test_limit (0, 8, 25, 24, 127, 0);
 
-  for (i = 1; i < 8; ++i)
+  for (i = 0; i < 8; ++i)
     {
       do_test_limit (0, 0, 17 - i, 16 - i, 127, 0);
       do_test_limit (0, 0, 17 - i, 16 - i, 255, 0);

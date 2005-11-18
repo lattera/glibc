@@ -29,6 +29,15 @@
 #define PPC_FEATURE_HAS_MMU		0x04000000 /* Memory Management Unit.  */
 #define PPC_FEATURE_HAS_4xxMAC		0x02000000 /* 4xx Multiply Accumulator.  */
 #define PPC_FEATURE_UNIFIED_CACHE	0x01000000 /* Unified I/D cache.  */
+#define PPC_FEATURE_HAS_SPE		0x00800000 
+#define PPC_FEATURE_HAS_EFP_SINGLE	0x00400000
+#define PPC_FEATURE_HAS_EFP_DOUBLE	0x00200000
+#define PPC_FEATURE_NO_TB		0x00100000 /* 601/403gx have no timebase */
+#define PPC_FEATURE_POWER4		0x00080000 /* POWER4 microarch level */
+#define PPC_FEATURE_POWER5		0x00040000 /* POWER5 microarch level */
+#define PPC_FEATURE_POWER5_PLUS		0x00020000 /* POWER5+ microarch level */
+#define PPC_FEATURE_CELL		0x00010000 /* CELL PU microarch level */
+#define PPC_FEATURE_970 (PPC_FEATURE_POWER4 + PPC_FEATURE_HAS_ALTIVEC)
 
 #ifdef __ASSEMBLER__
 
