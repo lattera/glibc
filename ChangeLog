@@ -1,3 +1,11 @@
+2005-11-18  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Remove useless alias.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: Handle
+	NO_WEAK_ALIAS.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+
 2005-11-18  Paul Brook  <paul@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/mman.h (MREMAP_FIXED): New macro.

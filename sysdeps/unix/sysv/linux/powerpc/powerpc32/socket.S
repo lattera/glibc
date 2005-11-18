@@ -44,7 +44,11 @@
 #define stackblock 20
 
 #ifndef __socket
-#define __socket P(__,socket)
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 	.text
@@ -114,4 +118,6 @@ ENTRY(__socket)
 
 PSEUDO_END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

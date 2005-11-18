@@ -79,7 +79,6 @@ ENTRY (__lround)
 	b	.L9
 	END (__lround)
 
-strong_alias (__lround, __lround)
 weak_alias (__lround, lround)
 
 strong_alias (__lround, __lroundf)

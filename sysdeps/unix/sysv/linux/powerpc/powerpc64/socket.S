@@ -41,12 +41,12 @@
 
 #define stackblock 80 /* offset to socket parm area.  */
 
-#ifndef socket
-/* If this is just socket.S leave it alone! */
-#else
 #ifndef __socket
-#define __socket P(__,socket)
-#endif
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 	.text
@@ -120,4 +120,6 @@ ENTRY(__socket)
 	cfi_endproc
 PSEUDO_END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif
