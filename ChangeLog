@@ -1,3 +1,7 @@
+2005-11-19  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h: Revert last change.
+
 2005-11-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/shm.h (shmatt_t): New type.
