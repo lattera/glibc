@@ -32,11 +32,17 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#ifdef HAVE_SENDFILE
+# include <sys/sendfile.h>
+#endif
 #include <sys/socket.h>
 #include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 /* This is the standard reply in case the service is disabled.  */
 static const pw_response_header disabled =
@@ -289,7 +295,29 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	     unnecessarily let the receiver wait.  */
 	  assert (fd != -1);
 
-	  written = writeall (fd, &dataset->resp, total);
+#ifdef HAVE_SENDFILE
+	  if (__builtin_expect (db->mmap_used, 1))
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) &dataset->resp > (char *) db->data);
+	      assert ((char *) &dataset->resp - (char *) db->head
+		      + total
+		      <= (sizeof (struct database_pers_head)
+                          + db->head->module * sizeof (ref_t)
+                          + db->head->data_size));
+	      off_t off = (char *) &dataset->resp - (char *) db->head;
+	      written = sendfile (fd, db->wr_fd, &off, total);
+# ifndef __ASSUME_SENDFILE
+	      if (written == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    written = writeall (fd, &dataset->resp, total);
 	}
 
 

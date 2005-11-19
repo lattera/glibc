@@ -84,6 +84,11 @@
 # define __ASSUME_MSG_NOSIGNAL		1
 #endif
 
+/* The sendfile syscall was introduced in 2.2.0.  */
+#if __LINUX_KERNEL_VERSION >= 131584
+# define __ASSUME_SENDFILE		1
+#endif
+
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */
 #if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1

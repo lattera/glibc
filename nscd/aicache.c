@@ -26,8 +26,15 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <dbg_log.h>
-#include <nscd.h>
+#ifdef HAVE_SENDFILE
+# include <sys/sendfile.h>
+#endif
+
+#include "dbg_log.h"
+#include "nscd.h"
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 
 typedef enum nss_status (*nss_gethostbyname3_r)
@@ -365,7 +372,30 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		     wait.  */
 		  assert (fd != -1);
 
-		  writeall (fd, &dataset->resp, total);
+#ifdef HAVE_SENDFILE
+		  if (__builtin_expect (db->mmap_used, 1))
+		    {
+		      assert (db->wr_fd != -1);
+		      assert ((char *) &dataset->resp > (char *) db->data);
+		      assert ((char *) &dataset->resp - (char *) db->head
+			      + total
+			      <= (sizeof (struct database_pers_head)
+				  + db->head->module * sizeof (ref_t)
+				  + db->head->data_size));
+		      off_t off = (char *) &dataset->resp - (char *) db->head;
+		      ssize_t written;
+		      written = sendfile (fd, db->wr_fd, &off, total);
+# ifndef __ASSUME_SENDFILE
+		      if (written == -1 && errno == ENOSYS)
+			goto use_write;
+# endif
+		    }
+		  else
+# ifndef __ASSUME_SENDFILE
+		  use_write:
+# endif
+#endif
+		    writeall (fd, &dataset->resp, total);
 		}
 
 	      goto out;

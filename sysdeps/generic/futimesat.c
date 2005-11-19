@@ -30,15 +30,11 @@ futimesat (fd, file, tvp)
      const char *file;
      const struct timeval tvp[2];
 {
-  if (fd < 0 && fd != AT_FDCWD)
+  if (fd < 0
+      && (file == NULL
+          || (fd != AT_FDCWD && file[0] != '/')))
     {
       __set_errno (EBADF);
-      return -1;
-    }
-
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
       return -1;
     }
 

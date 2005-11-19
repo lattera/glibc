@@ -152,6 +152,11 @@ CFLAGS-mq_receive.c += -fexceptions
 endif
 
 ifeq ($(subdir),nscd)
-CFLAGS-connections.c += -DHAVE_EPOLL
+CFLAGS-connections.c += -DHAVE_EPOLL -DHAVE_SENDFILE
+CFLAGS-pwdcache.c += -DHAVE_SENDFILE
+CFLAGS-grpcache.c += -DHAVE_SENDFILE
+CFLAGS-hstcache.c += -DHAVE_SENDFILE
+CFLAGS-aicache.c += -DHAVE_SENDFILE
+CFLAGS-initgrcache.c += -DHAVE_SENDFILE
 CFLAGS-gai.c += -DNEED_NETLINK
 endif

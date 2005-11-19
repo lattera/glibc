@@ -1,3 +1,35 @@
+2005-11-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h (shmatt_t): New type.
+	(struct shmid_ds): Use it for shm_nattch field.
+
+2005-11-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimesat.c (futimesat): If FILE is NULL,
+	set access and modification times of the file referenced by FD.
+	* sysdeps/generic/futimesat.c (futimesat): Don't return EINVAL if
+	FILE is NULL.  Don't check FD if FILE is absolute path.
+
+2005-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Avoid unnecesary read call
+	if there are no aliases.
+
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-connections.c,
+	CFLAGS-pwdcache.c, CFLAGS-grpcache.c, CFLAGS-hstcache.c,
+	CFLAGS-aicache.c, CFLAGS-initgrcache.c): Add -DHAVE_SENDFILE.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_SENDFILE):
+	Define.
+	* nscd/pwdcache.c [HAVE_SENDFILE]: Include <sys/sendfile.h> and
+	<kernel-features.h>.
+	[HAVE_SENDFILE] (cache_addpw): Use sendfile to transmit positive
+	result.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/aicache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/connectionc.c: Likewise.
+
 2005-11-18  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Remove useless alias.

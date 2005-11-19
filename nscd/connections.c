@@ -39,6 +39,9 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
+#ifdef HAVE_SENDFILE
+# include <sys/sendfile.h>
+#endif
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/un.h>
@@ -46,6 +49,9 @@
 #include "nscd.h"
 #include "dbg_log.h"
 #include "selinux.h"
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 
 /* Wrapper functions with error checking for standard functions.  */
@@ -939,8 +945,33 @@ cannot handle old request version %d; current version is %d"),
       if (cached != NULL)
 	{
 	  /* Hurray it's in the cache.  */
-	  if (writeall (fd, cached->data, cached->recsize)
-	      != cached->recsize
+	  ssize_t nwritten;
+
+#ifdef HAVE_SENDFILE
+	  if (db->mmap_used || !cached->notfound)
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) cached->data > (char *) db->data);
+	      assert ((char *) cached->data - (char *) db->head
+		      + cached->recsize
+		      <= (sizeof (struct database_pers_head)
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
+	      off_t off = (char *) cached->data - (char *) db->head;
+	      nwritten = sendfile (fd, db->wr_fd, &off, cached->recsize);
+# ifndef __ASSUME_SENDFILE
+	      if (nwritten == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    nwritten = writeall (fd, cached->data, cached->recsize);
+
+	  if (nwritten != cached->recsize
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */

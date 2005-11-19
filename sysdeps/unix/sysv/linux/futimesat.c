@@ -37,7 +37,22 @@ futimesat (fd, file, tvp)
 {
   char *buf = NULL;
 
-  if (fd != AT_FDCWD && file[0] != '/')
+  if (file == NULL)
+    {
+      static const char procfd[] = "/proc/self/fd/%d";
+      /* Buffer for the path name we are going to use.  It consists of
+	 - the string /proc/self/fd/
+	 - the file descriptor number.
+	 The final NUL is included in the sizeof.   A bit of overhead
+	 due to the format elements compensates for possible negative
+	 numbers.  */
+      size_t buflen = sizeof (procfd) + sizeof (int) * 3;
+      buf = alloca (buflen);
+
+      __snprintf (buf, buflen, procfd, fd);
+      file = buf;
+    }
+  else if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
       static const char procfd[] = "/proc/self/fd/%d/%s";
