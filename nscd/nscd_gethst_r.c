@@ -328,8 +328,9 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       /* And finally read the aliases.  */
       if (addr_list == NULL)
 	{
-	  if ((size_t) __readall (sock, resultbuf->h_aliases[0], total_len)
-	      == total_len)
+	  if (total_len == 0
+	      || ((size_t) __readall (sock, resultbuf->h_aliases[0], total_len)
+		  == total_len))
 	    {
 	      retval = 0;
 	      *result = resultbuf;
