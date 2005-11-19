@@ -2031,7 +2031,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC64_SECTOFF_LO	R_PPC_SECTOFF_LO
 #define R_PPC64_SECTOFF_HI	R_PPC_SECTOFF_HI
 #define R_PPC64_SECTOFF_HA	R_PPC_SECTOFF_HA
-#define R_PPC64_REL30		37 /* word30 (S + A - P) >> 2 */
+#define R_PPC64_ADDR30		37 /* word30 (S + A - P) >> 2 */
 #define R_PPC64_ADDR64		38 /* doubleword64 S + A */
 #define R_PPC64_ADDR16_HIGHER	39 /* half16 #higher(S + A) */
 #define R_PPC64_ADDR16_HIGHERA	40 /* half16 #highera(S + A) */
