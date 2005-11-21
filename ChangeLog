@@ -1,3 +1,29 @@
+2005-11-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile.in: Remove RCS ID line.
+	* config-name.in: Likewise.
+	* config.make.in: Likewise.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+	* malloc/malloc.c: Likewise.
+	* manual/dir: Likewise.
+	* math/math_private.h: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* scripts/mkinstalldirs: Likewise.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sysdeps/unix/sysv/linux/sys/quote.h: Likewise.
+
+	* nscd/nscd_helper.c: Pretty printing.
+
 2005-11-19  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h: Revert last change.
