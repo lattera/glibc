@@ -31,10 +31,6 @@
 /*
  * From: @(#)rpc_util.c 1.11 89/02/22 (C) 1987 SMI
  */
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char util_rcsid[] =
-  "$Id$";
-#endif
 
 /*
  * rpc_util.c, Utility routines for the RPC protocol compiler

@@ -1,4 +1,3 @@
-$Id$
 This is the file .../info/dir, which contains the topmost node of the
 Info hierarchy.  The first time you invoke Info you start off
 looking at that node, which is (dir)Top.

@@ -31,10 +31,6 @@
 /*
  * From: @(#)rpc_cout.c 1.13 89/02/22 (C) 1987 SMI
  */
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char cout_rcsid[] =
-"$Id$";
-#endif
 
 /*
  * rpc_cout.c, XDR routine outputter for the RPC protocol compiler

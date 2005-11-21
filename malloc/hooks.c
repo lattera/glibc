@@ -18,8 +18,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* $Id$ */
-
 /* What to do if the standard debugging hooks are in place and a
    corrupt pointer is detected: do nothing (0), print an error message
    (1), or call abort() (2). */

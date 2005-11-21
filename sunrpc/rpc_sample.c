@@ -31,10 +31,6 @@
 /*
  * From: @(#)rpc_sample.c  1.1  90/08/30  (C) 1987 SMI
  */
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char sample_rcsid[] =
-  "$Id$";
-#endif
 
 /*
  * rpc_sample.c, Sample client-server code outputter for the RPC protocol compiler

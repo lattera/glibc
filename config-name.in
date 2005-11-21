@@ -1,5 +1,4 @@
 /* @configure_input@ -*- C -*-
-   Generated from $Id$.
 
    This is used only by the generic `uname' function for systems with no real
    `uname' call.  If this data is not correct, it does not matter much.  */

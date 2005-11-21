@@ -31,10 +31,6 @@
 /*
  * From: @(#)rpc_scan.c 1.11 89/02/22 (C) 1987 SMI
  */
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char scan_rcsid[] =
-  "$Id$";
-#endif
 
 /*
  * rpc_scan.c, Scanner for the RPC protocol compiler

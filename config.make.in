@@ -1,5 +1,4 @@
 # @configure_input@
-# From $Id$.
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
 version = @VERSION@

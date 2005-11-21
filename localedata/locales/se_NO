@@ -1,4 +1,3 @@
-#	$Id$	
 comment_char %
 escape_char  /
 %
@@ -71,7 +70,7 @@ collating-symbol <scaron>
 collating-symbol <oumlaut>
 collating-symbol <oslash>
 
-% 
+%
 reorder-after <CAP>
 <MIN>
 
@@ -267,7 +266,7 @@ am_pm       "";""
 t_fmt_ampm  ""
 
 % Denne linjen vil gi f.eks.:
-% duorasdat, borgem<U00E1>nu 23. b. 2001 00:47:57 CEST 
+% duorasdat, borgem<U00E1>nu 23. b. 2001 00:47:57 CEST
 date_fmt       "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0064><U002E>/
 <U0020><U0062><U002E><U0020><U0025><U0059><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U005A>"
