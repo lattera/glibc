@@ -230,9 +230,9 @@ get_mapping (request_type type, const char *key,
   if (wait_on_socket (sock) <= 0)
     goto out_close2;
 
-#ifndef MSG_NOSIGNAL
-# define MSG_NOSIGNAL 0
-#endif
+# ifndef MSG_NOSIGNAL
+#  define MSG_NOSIGNAL 0
+# endif
   if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg,
 						       MSG_NOSIGNAL))
 			!= keylen, 0))
