@@ -1,5 +1,14 @@
 2005-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (sendfileall): Define.
+	(handle_request): Use it instead of sendfile call.
+	* nscd/nscd-client.h: Declare sendfileall.
+	* nscd/aicache.c: Use sendfileall instead of sendfile.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 	[BZ #1908]
 	* manual/install.texi (Tools for Compilation): Require gawk.
 

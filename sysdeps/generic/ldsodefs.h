@@ -508,7 +508,6 @@ struct rtld_global
     struct dtv_slotinfo
     {
       size_t gen;
-      bool is_static;
       struct link_map *map;
     } slotinfo[0];
   } *_dl_tls_dtv_slotinfo_list;

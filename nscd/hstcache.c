@@ -34,9 +34,6 @@
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <sys/mman.h>
-#ifdef HAVE_SENDFILE
-# include <sys/sendfile.h>
-#endif
 #include <stackinfo.h>
 
 #include "nscd.h"
@@ -344,8 +341,9 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
-	      off_t off = (char *) &dataset->resp - (char *) db->head;
-	      written = sendfile (fd, db->wr_fd, &off, total);
+	      written = sendfileall (fd, db->wr_fd,
+				     (char *) &dataset->resp
+				     - (char *) db->head, total);
 # ifndef __ASSUME_SENDFILE
 	      if (written == -1 && errno == ENOSYS)
 		goto use_write;

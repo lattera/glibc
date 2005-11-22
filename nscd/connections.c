@@ -204,6 +204,26 @@ writeall (int fd, const void *buf, size_t len)
 }
 
 
+#ifdef HAVE_SENDFILE
+ssize_t
+sendfileall (int tofd, int fromfd, off_t off, size_t len)
+{
+  ssize_t n = len;
+  ssize_t ret;
+
+  do
+    {
+      ret = TEMP_FAILURE_RETRY (sendfile (tofd, fromfd, &off, n));
+      if (ret <= 0)
+	break;
+      n -= ret;
+    }
+  while (n > 0);
+  return ret < 0 ? ret : len - n;
+}
+#endif
+
+
 enum usekey
   {
     use_not = 0,
@@ -957,8 +977,9 @@ cannot handle old request version %d; current version is %d"),
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
-	      off_t off = (char *) cached->data - (char *) db->head;
-	      nwritten = sendfile (fd, db->wr_fd, &off, cached->recsize);
+	      nwritten = sendfileall (fd, db->wr_fd,
+				      (char *) cached->data
+				      - (char *) db->head, cached->recsize);
 # ifndef __ASSUME_SENDFILE
 	      if (nwritten == -1 && errno == ENOSYS)
 		goto use_write;

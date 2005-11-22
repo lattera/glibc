@@ -319,5 +319,7 @@ extern ssize_t __readvall (int fd, const struct iovec *iov, int iovcnt)
   attribute_hidden;
 extern ssize_t writeall (int fd, const void *buf, size_t len)
   attribute_hidden;
+extern ssize_t sendfileall (int tofd, int fromfd, off_t off, size_t len)
+  attribute_hidden;
 
 #endif /* nscd.h */
