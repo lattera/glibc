@@ -357,11 +357,10 @@ understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
 
 @item
-GNU @code{awk} 3.0, or some other POSIX awk
+GNU @code{awk} 3.0, or higher
 
-@code{Awk} is used in several places to generate files.  The scripts
-should work with any POSIX-compliant @code{awk} implementation;
-@code{gawk} 3.0 and @code{mawk} 1.3 are known to work.
+@code{Awk} is used in several places to generate files.
+@code{gawk} 3.0 is known to work.
 
 @item
 Perl 5

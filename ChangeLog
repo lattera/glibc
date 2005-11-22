@@ -1,3 +1,13 @@
+2005-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1908]
+	* manual/install.texi (Tools for Compilation): Require gawk.
+
+2005-11-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	unused is_static field from slotinfo array.
+
 2005-11-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/bindrsvprt.c (bindresvport): Wrap around to startport
