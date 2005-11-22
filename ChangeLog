@@ -1,3 +1,10 @@
+2005-11-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/bindrsvprt.c (bindresvport): Wrap around to startport
+	in the loop if port is bigger than endport, initially set to
+	ENDPORT.  When changing startport, set endport and port
+	appropriately.
+
 2005-11-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile.in: Remove RCS ID line.
