@@ -1,3 +1,11 @@
+2005-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h
+	(__cleanup_fct_attribute): Use __regparm__ not regparm.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: When
+	compiling 32-bit code we must define __cleanup_fct_attribute.
+
 005-11-24  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1920]

@@ -1,3 +1,16 @@
+2005-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/check-local-headers.sh: New file.
+	* Makefile (tests): Run check-local-headers.sh.
+
+2005-11-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* include/sys/sendfile.h: New file.
+
+2005-11-24  Andreas Schwab  <schwab@suse.de>
+
+	* time/sys/time.h: Remove nonnull attribute from futimesat.
+
 2005-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (sendfileall): Define.

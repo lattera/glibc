@@ -155,6 +155,6 @@ typedef union
 
 
 /* Extra attributes for the cleanup functions.  */
-#define __cleanup_fct_attribute __attribute__ ((regparm (1)))
+#define __cleanup_fct_attribute __attribute__ ((__regparm__ (1)))
 
 #endif	/* bits/pthreadtypes.h */

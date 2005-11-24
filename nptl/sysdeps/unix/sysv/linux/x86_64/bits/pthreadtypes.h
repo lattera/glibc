@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -191,5 +191,10 @@ typedef union
 } pthread_barrierattr_t;
 #endif
 
+
+#if __WORDSIZE == 32
+/* Extra attributes for the cleanup functions.  */
+# define __cleanup_fct_attribute __attribute__ ((__regparm__ (1)))
+#endif
 
 #endif	/* bits/pthreadtypes.h */
