@@ -235,7 +235,7 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
-tests: $(objpfx)c++-types-check.out
+tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 check-data := $(firstword $(wildcard \
 	        $(foreach M,$(config-machine) $(base-machine),\
@@ -249,6 +249,9 @@ $(objpfx)c++-types-check.out:
 	@echo "not run" > $@
 endif
 endif
+
+$(objpfx)check-local-headers.out: scripts/check-local-headers.sh
+	scripts/check-local-headers.sh "$(includedir)" "$(objpfx)" > $@
 
 ifneq ($(PERL),no)
 installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \

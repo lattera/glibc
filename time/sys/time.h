@@ -153,7 +153,7 @@ extern int futimes (int __fd, __const struct timeval __tvp[2]) __THROW;
    modification time of FILE to TVP[1].  If TVP is a null pointer, use
    the current time instead.  Returns 0 on success, -1 on errors.  */
 extern int futimesat (int __fd, __const char *__file,
-		      __const struct timeval __tvp[2]) __THROW __nonnull ((2));
+		      __const struct timeval __tvp[2]) __THROW;
 #endif
 
 

@@ -1,3 +1,11 @@
+005-11-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1920]
+	* sysdeps/pthread/pthread.h (__pthread_unwind_next): Use
+	__attribute__ instead of __attribute.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h
+	(__cleanup_fct_attribute): Likewise.
+
 2005-11-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/unwind-forcedunwind.c (pthread_cancel_init): Put

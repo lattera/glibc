@@ -657,9 +657,9 @@ extern void __pthread_unregister_cancel_restore (__pthread_unwind_buf_t *__buf)
 
 /* Internal interface to initiate cleanup.  */
 extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
-     __cleanup_fct_attribute __attribute ((__noreturn__))
+     __cleanup_fct_attribute __attribute__ ((__noreturn__))
 # ifndef SHARED
-     __attribute ((__weak__))
+     __attribute__ ((__weak__))
 # endif
      ;
 #endif
