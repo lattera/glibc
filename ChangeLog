@@ -1,3 +1,8 @@
+2005-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1912]
+	* nss/function.def: Add entry to use gethostbyname2 for files.
+
 2005-11-25  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/fxstatat64.c: Include string.h.

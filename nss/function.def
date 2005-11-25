@@ -1,5 +1,5 @@
 /* List of functions defined for static NSS in GNU C Library.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,7 @@ DEFINE_GET (files, grnam)
 DEFINE_ENT (files, host)
 DEFINE_GETBY (files, host, addr)
 DEFINE_GETBY (files, host, name)
+DEFINE_GETBY (files, host, name2)
 DEFINE_GET (files, hostton)
 DEFINE_GET (files, ntohost)
 DEFINE_GETBY (dns, host, addr)
