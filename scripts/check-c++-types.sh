@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 # egrep '^typedef.*;$' |
 # sed 's/^typedef[[:space:]]*//;s/\([[:space:]]\{1,\}__attribute__.*\);/;/;s/.*[[:space:]]\([*]\|\)\(.*\);/\2/' |
 # egrep -v '^_' |
-# sort -u
+# LC_ALL=C sort -u
 #
 data=$1
 shift
