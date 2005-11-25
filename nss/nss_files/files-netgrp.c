@@ -153,7 +153,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 }
 
 
-int
+enum nss_status
 _nss_files_endnetgrent (struct __netgrent *result)
 {
   /* Free allocated memory for data if some is present.  */

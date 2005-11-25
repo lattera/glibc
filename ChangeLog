@@ -1,5 +1,9 @@
 2005-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1926]
+	* nss/nss_files/files-netgrp.c (_nss_files_endnetgrent): Change
+	return value type to match expected type.
+
 	[BZ #1925]
 	* nis/ypclnt.c (yp_order): Correct test for invalid parameter.
 
