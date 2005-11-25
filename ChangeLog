@@ -1,3 +1,8 @@
+2005-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1925]
+	* nis/ypclnt.c (yp_order): Correct test for invalid parameter.
+
 2005-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/check-c++-types.sh: Improve comments.

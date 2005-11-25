@@ -593,7 +593,7 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   enum clnt_stat result;
 
   if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap == '\0')
+      inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
