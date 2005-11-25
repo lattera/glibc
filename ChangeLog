@@ -1,5 +1,7 @@
 2005-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makeconfig (+cflags): Add -fmerge-all-constants by default.
+
 	[BZ #1912]
 	* nss/function.def: Add entry to use gethostbyname2 for files.
 
