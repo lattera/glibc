@@ -17,6 +17,8 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <sys/cdefs.h>
+#include <stddef.h>
 
 /*
  * In order to get the hidden arguments for rt_sigaction set up
