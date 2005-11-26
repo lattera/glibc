@@ -1,3 +1,21 @@
+2005-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/ypclnt.c (yp_bind_ypbindprog): Initialize clnt_saddr by hand.
+	(ypdomainname): Renamed from __ypdomainname.  No need for initializer.
+	(ypbindlist): Renamed from __ypbindlist.
+	(do_ypcall): Check memory allocation suceeded before calling
+	yp_bind_ypbindprog.
+	(yperr_string): Reduce size of function by using only one gettext call.
+	(ypbinderr_string): Likewise.
+	(yp_match): Free response in case memory for return value cannot be
+	allocated.
+	(yp_first): Likewise.
+	(yp_next): Likewise.
+	(do_ypcall_tr): New function which translates error codes as well.
+	(yp_match, yp_next, yp_master, yp_order, yp_maplist): Use it.
+	(yp_all): Correct test for invalid parameter.
+	Pretty printing.
+
 2005-11-25  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/fxstatat.c (__fxstatat): Fix typo.
