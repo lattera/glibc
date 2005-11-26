@@ -67,7 +67,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
   if (vers == _STAT_VER_KERNEL64 && !__libc_missing_axp_stat64)
     {
-      if (flags & AT_SYMLINK_NOFOLLOW)
+      if (flag & AT_SYMLINK_NOFOLLOW)
 	result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
       else
 	result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
@@ -94,7 +94,4 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
   return -1;
 }
-hidden_def (__xstat)
-weak_alias (__xstat, _xstat);
-strong_alias (__xstat, __xstat64);
-hidden_ver (__xstat, __xstat64)
+strong_alias (__fxstatat, __fxstatat64);
