@@ -137,7 +137,7 @@ __get_tablepath (char *name, dir_binding *bptr)
 		      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
 		      (caddr_t) &res, RPCTIMEOUT);
 
-  char *cptr;
+  const char *cptr;
   if (result == RPC_SUCCESS && NIS_RES_STATUS (&res) == NIS_SUCCESS
       && __type_of (NIS_RES_OBJECT (&res)) == NIS_TABLE_OBJ)
     cptr = NIS_RES_OBJECT (&res)->TA_data.ta_path;

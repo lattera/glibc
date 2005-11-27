@@ -1,5 +1,8 @@
 2005-11-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_lookup.c (nis_lookup): Mark RPCTIMEOUT as const.  Pretty
+	printing.
+
 	* nis/nis_table.c (__create_ib_request): Use strdupa instead of
 	variable size array.
 	(RPCTIMEOUT): Mark as const.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -90,7 +90,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 
       do
 	{
-	  static struct timeval RPCTIMEOUT = {10, 0};
+	  static const struct timeval RPCTIMEOUT = {10, 0};
 	  enum clnt_stat result;
 
 	again:
@@ -107,8 +107,8 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 
 	      if (NIS_RES_STATUS (res) == NIS_SUCCESS)
 		{
-		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
-			flags & FOLLOW_LINKS) /* We are following links */
+		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ
+			&& (flags & FOLLOW_LINKS)) /* We are following links */
 		      {
 			if (count_links)
 			  free (req.ns_name);
@@ -137,16 +137,17 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 		      }
 		}
 	      else
-		if ((NIS_RES_STATUS (res) == NIS_SYSTEMERROR) ||
-		    (NIS_RES_STATUS (res) == NIS_NOSUCHNAME) ||
-		    (NIS_RES_STATUS (res) == NIS_NOT_ME))
+		if (NIS_RES_STATUS (res) == NIS_SYSTEMERROR
+		    || NIS_RES_STATUS (res) == NIS_NOSUCHNAME
+		    || NIS_RES_STATUS (res) == NIS_NOT_ME)
 		  {
 		    if (link_first_try)
 		      {
 			__nisbind_destroy (&bptr);
 			nis_free_directory (dir);
 
-			if (__nisfind_server (req.ns_name, &dir) != NIS_SUCCESS)
+			if (__nisfind_server (req.ns_name, &dir)
+			    != NIS_SUCCESS)
 			  return res;
 
 			if (__nisbind_create (&bptr,
