@@ -23,6 +23,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <alloca.h>
+#include <sysdep.h>
 
 /* Change the owner and group of FILE.  */
 int
