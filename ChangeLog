@@ -1,3 +1,7 @@
+2005-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Avoid some code duplication.
+
 2005-11-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fchownat.c: Include alloca.h, sysdep.h.
