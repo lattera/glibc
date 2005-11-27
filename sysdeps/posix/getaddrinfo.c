@@ -393,6 +393,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
     }
 
+  int port = 0;
   if (service != NULL)
     {
       if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
@@ -445,63 +446,41 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
       else
 	{
-	  if (req->ai_socktype || req->ai_protocol)
-	    {
-	      st = __alloca (sizeof (struct gaih_servtuple));
-	      st->next = NULL;
-	      st->socktype = tp->socktype;
-	      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-			      ? req->ai_protocol : tp->protocol);
-	      st->port = htons (service->num);
-	    }
-	  else
-	    {
-	      /* Neither socket type nor protocol is set.  Return all
-		 socket types we know about.  */
-	      struct gaih_servtuple **lastp = &st;
-	      for (tp = gaih_inet_typeproto + 1; tp->name[0]; ++tp)
-		if ((tp->protoflag & GAI_PROTO_NOSERVICE) == 0)
-		  {
-		    struct gaih_servtuple *newp;
-
-		    newp = __alloca (sizeof (struct gaih_servtuple));
-		    newp->next = NULL;
-		    newp->socktype = tp->socktype;
-		    newp->protocol = tp->protocol;
-		    newp->port = htons (service->num);
-
-		    *lastp = newp;
-		    lastp = &newp->next;
-		  }
-	    }
+	  port = htons (service->num);
+	  goto got_port;
 	}
-    }
-  else if (req->ai_socktype || req->ai_protocol)
-    {
-      st = __alloca (sizeof (struct gaih_servtuple));
-      st->next = NULL;
-      st->socktype = tp->socktype;
-      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-		      ? req->ai_protocol : tp->protocol);
-      st->port = 0;
     }
   else
     {
-      /* Neither socket type nor protocol is set.  Return all socket types
-	 we know about.  */
-      struct gaih_servtuple **lastp = &st;
-      for (++tp; tp->name[0]; ++tp)
+    got_port:
+
+      if (req->ai_socktype || req->ai_protocol)
 	{
-	  struct gaih_servtuple *newp;
+	  st = __alloca (sizeof (struct gaih_servtuple));
+	  st->next = NULL;
+	  st->socktype = tp->socktype;
+	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+			  ? req->ai_protocol : tp->protocol);
+	  st->port = port;
+	}
+      else
+	{
+	  /* Neither socket type nor protocol is set.  Return all socket types
+	     we know about.  */
+	  struct gaih_servtuple **lastp = &st;
+	  for (++tp; tp->name[0]; ++tp)
+	    {
+	      struct gaih_servtuple *newp;
 
-	  newp = __alloca (sizeof (struct gaih_servtuple));
-	  newp->next = NULL;
-	  newp->socktype = tp->socktype;
-	  newp->protocol = tp->protocol;
-	  newp->port = 0;
+	      newp = __alloca (sizeof (struct gaih_servtuple));
+	      newp->next = NULL;
+	      newp->socktype = tp->socktype;
+	      newp->protocol = tp->protocol;
+	      newp->port = port;
 
-	  *lastp = newp;
-	  lastp = &newp->next;
+	      *lastp = newp;
+	      lastp = &newp->next;
+	    }
 	}
     }
 
