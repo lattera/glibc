@@ -46,8 +46,8 @@ struct dom_binding
   };
 typedef struct dom_binding dom_binding;
 
-static struct timeval RPCTIMEOUT = {25, 0};
-static struct timeval UDPTIMEOUT = {5, 0};
+static const struct timeval RPCTIMEOUT = {25, 0};
+static const struct timeval UDPTIMEOUT = {5, 0};
 static int const MAXTRIES = 2;
 static char ypdomainname[NIS_MAXNAMELEN + 1];
 __libc_lock_define_initialized (static, ypbindlist_lock)

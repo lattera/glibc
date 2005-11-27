@@ -27,11 +27,9 @@
 static struct ib_request *
 __create_ib_request (const_nis_name name, unsigned int flags)
 {
-  struct ib_request *ibreq = calloc (1, sizeof (ib_request));
-  char buf[strlen (name) + 1];
+  struct ib_request *ibreq = calloc (1, sizeof (struct ib_request));
   nis_attr *search_val = NULL;
   size_t search_len = 0;
-  char *cptr;
   size_t size = 0;
 
   if (ibreq == NULL)
@@ -39,7 +37,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
 
   ibreq->ibr_flags = flags;
 
-  cptr = strcpy (buf, name);
+  char *cptr = strdupa (name);
 
   /* Not of "[key=value,key=value,...],foo.." format? */
   if (cptr[0] != '[')
@@ -49,8 +47,8 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   ibreq->ibr_name = strchr (cptr, ']');
   if (ibreq->ibr_name == NULL || ibreq->ibr_name[1] != ',')
     {
-      ibreq->ibr_name = NULL; /* Or the xdr_* functions will dump */
-      nis_free_request (ibreq);
+      /* The object has not really been built yet so we use free.  */
+      free (ibreq);
       return NULL;
     }
 
@@ -120,17 +118,16 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   return ibreq;
 }
 
-static struct timeval RPCTIMEOUT = {10, 0};
+static const struct timeval RPCTIMEOUT = {10, 0};
 
 static char *
 __get_tablepath (char *name, dir_binding *bptr)
 {
   enum clnt_stat result;
-  nis_result *res = calloc (1, sizeof (nis_result));
+  nis_result res;
   struct ns_request req;
 
-  if (res == NULL)
-    return NULL;
+  memset (&res, '\0', sizeof (res));
 
   req.ns_name = name;
   req.ns_object.ns_object_len = 0;
@@ -138,20 +135,16 @@ __get_tablepath (char *name, dir_binding *bptr)
 
   result = clnt_call (bptr->clnt, NIS_LOOKUP, (xdrproc_t) _xdr_ns_request,
 		      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-		      (caddr_t) res, RPCTIMEOUT);
+		      (caddr_t) &res, RPCTIMEOUT);
 
-  if (result == RPC_SUCCESS && NIS_RES_STATUS (res) == NIS_SUCCESS &&
-      __type_of (NIS_RES_OBJECT (res)) == NIS_TABLE_OBJ)
-    {
-      char *cptr = strdup (NIS_RES_OBJECT (res)->TA_data.ta_path);
-      nis_freeresult (res);
-      return cptr;
-    }
+  char *cptr;
+  if (result == RPC_SUCCESS && NIS_RES_STATUS (&res) == NIS_SUCCESS
+      && __type_of (NIS_RES_OBJECT (&res)) == NIS_TABLE_OBJ)
+    cptr = NIS_RES_OBJECT (&res)->TA_data.ta_path;
   else
-    {
-      nis_freeresult (res);
-      return strdup ("");
-    }
+    cptr = "";
+
+  return strdup (cptr);
 }
 
 nis_result *
