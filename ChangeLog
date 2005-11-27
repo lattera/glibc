@@ -1,3 +1,7 @@
+2005-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_table.c (nis_list): Add more free calls in error cases.
+
 2005-11-26  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/strncmp.S: Don't read too much data when pointers
