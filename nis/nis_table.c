@@ -343,6 +343,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		    res = calloc (1, sizeof (nis_result));
 		    if (res == NULL || ibreq->ibr_name == NULL)
 		      {
+			free (ibreq->ibr_name);
 			free (res);
 			nis_free_request (ibreq);
 			if (have_tablepath)
