@@ -1,3 +1,8 @@
+2005-11-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fchownat.c: Include alloca.h, sysdep.h.
+	Reported by René Rebe <rene@exactcode.de>.
+
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/euidaccess.c [_LIBC] (euidaccess): Don't cache
