@@ -1,5 +1,8 @@
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c: Avoid RFC 3484 sorting if there are
+	multiple return records but only one address.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Avoid some code duplication.
 
 2005-11-27  Roland McGrath  <roland@redhat.com>

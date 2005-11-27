@@ -121,7 +121,8 @@ struct gaih
   {
     int family;
     int (*gaih)(const char *name, const struct gaih_service *service,
-		const struct addrinfo *req, struct addrinfo **pai);
+		const struct addrinfo *req, struct addrinfo **pai,
+		unsigned int *naddrs);
   };
 
 static const struct addrinfo default_hints =
@@ -363,7 +364,8 @@ extern service_user *__nss_hosts_database attribute_hidden;
 
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
-	   const struct addrinfo *req, struct addrinfo **pai)
+	   const struct addrinfo *req, struct addrinfo **pai,
+	   unsigned int *naddrs)
 {
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
@@ -1087,6 +1089,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  }
 	*pai = NULL;
 
+	++*naddrs;
+
       ignore:
 	at2 = at2->next;
       }
@@ -1535,6 +1539,7 @@ getaddrinfo (const char *name, const char *service,
   else
     end = NULL;
 
+  unsigned int naddrs = 0;
   while (g->gaih)
     {
       if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
@@ -1543,7 +1548,7 @@ getaddrinfo (const char *name, const char *service,
 	  if (pg == NULL || pg->gaih != g->gaih)
 	    {
 	      pg = g;
-	      i = g->gaih (name, pservice, hints, end);
+	      i = g->gaih (name, pservice, hints, end, &naddrs);
 	      if (i != 0)
 		{
 		  /* EAI_NODATA is a more specific result as it says that
@@ -1575,7 +1580,7 @@ getaddrinfo (const char *name, const char *service,
   if (j == 0)
     return EAI_FAMILY;
 
-  if (nresults > 1)
+  if (naddrs > 1)
     {
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
