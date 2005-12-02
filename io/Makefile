@@ -28,13 +28,14 @@ headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 
 routines :=								\
 	utime								\
-	mkfifo								\
-	stat fstat lstat mknod stat64 fstat64 lstat64 fstatat fstatat64	\
-	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64		\
+	mkfifo mkfifoat							\
+	stat fstat lstat stat64 fstat64 lstat64 fstatat fstatat64	\
+	xstat fxstat lxstat xstat64 fxstat64 lxstat64			\
+	mknod mknodat xmknod xmknodat					\
 	fxstatat fxstatat64						\
 	statfs fstatfs statfs64 fstatfs64				\
 	statvfs fstatvfs statvfs64 fstatvfs64				\
-	umask chmod fchmod lchmod mkdir					\
+	umask chmod fchmod lchmod mkdir mkdirat				\
 	open open64 openat openat64 close				\
 	read write lseek lseek64 access euidaccess			\
 	fcntl flock lockf lockf64					\
@@ -54,8 +55,8 @@ routines :=								\
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64	\
-		       fstatat fstatat64
+static-only-routines = stat fstat lstat stat64 fstat64 lstat64	\
+		       fstatat fstatat64 mknod mknodat
 
 others		:= pwd
 test-srcs	:= ftwtest

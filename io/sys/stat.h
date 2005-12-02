@@ -305,6 +305,14 @@ extern __mode_t getumask (void) __THROW;
 extern int mkdir (__const char *__path, __mode_t __mode)
      __THROW __nonnull ((1));
 
+#ifdef __USE_GNU
+/* Like mkdir, create a new directory with permission bits MODE.  But
+   interpret relative PATH names relative to the directory associated
+   with FD.  */
+extern int mkdirat (int __fd, __const char *__path, __mode_t __mode)
+     __THROW __nonnull ((2));
+#endif
+
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
@@ -313,10 +321,26 @@ extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
      __THROW __nonnull ((1));
 #endif
 
+#ifdef __USE_GNU
+/* Like mknod, create a new device file with permission bits MODE and
+   device number DEV.  But interpret relative PATH names relative to
+   the directory associated with FD.  */
+extern int mknodat (int __fd, __const char *__path, __mode_t __mode,
+		    __dev_t __dev) __THROW __nonnull ((2));
+#endif
+
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
 extern int mkfifo (__const char *__path, __mode_t __mode)
      __THROW __nonnull ((1));
+
+#ifdef __USE_GNU
+/* Like mkfifo, create a new FIFO with permission bits MODE.  But
+   interpret relative PATH names relative to the directory associated
+   with FD.  */
+extern int mkfifoat (int __fd, __const char *__path, __mode_t __mode)
+     __THROW __nonnull ((2));
+#endif
 
 /* To allow the `struct stat' structure and the file type `mode_t'
    bits to vary without changing shared library major version number,
@@ -388,6 +412,10 @@ extern int __fxstatat64 (int __ver, int __fildes, __const char *__filename,
 extern int __xmknod (int __ver, __const char *__path, __mode_t __mode,
 		     __dev_t *__dev) __THROW __nonnull ((2, 4));
 
+extern int __xmknodat (int __ver, int __fd, __const char *__path,
+		       __mode_t __mode, __dev_t *__dev)
+     __THROW __nonnull ((3, 5));
+
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Inlined versions of the real stat and mknod functions.  */
 
@@ -425,6 +453,15 @@ extern __inline__ int
 __NTH (mknod (__const char *__path, __mode_t __mode, __dev_t __dev))
 {
   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
+}
+# endif
+
+# ifdef __USE_GNU
+extern __inline__ int
+__NTH (mknodat (int __fd, __const char *__path, __mode_t __mode,
+		__dev_t __dev))
+{
+  return __xmknodat (_MKNOD_VER, __fd, __path, __mode, &__dev);
 }
 # endif
 

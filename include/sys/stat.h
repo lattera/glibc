@@ -29,6 +29,7 @@ extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
 {
   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
 }
+libc_hidden_proto (__xmknodat)
 
 
 /* The `stat', `fstat', `lstat' functions have to be handled special since

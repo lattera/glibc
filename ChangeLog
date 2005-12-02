@@ -1,3 +1,21 @@
+2005-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (routines): Add mknodat, xmknodat, mkdirat, mkfifoat.
+	(static-only-routines): Add mknodat.
+	* io/Versions [GLIBC_2.4]: Add mkdirat, mkfifoat, __xmknodat.
+	* io/sys/stat.h: Declare mkditat, mknodat, mkfifoat, __xmknodat.
+	Define mknodat inline function.
+	* include/sys/stat.h: Add hidden proto for __xmknodat.
+	* sysdeps/generic/mkdirat.c: New file.
+	* sysdeps/generic/mkfifoat.c: New file.
+	* sysdeps/generic/mknodat.c: New file.
+	* sysdeps/generic/xmknodat.c: New file.
+	* sysdeps/unix/mkfifoat.c: New file.
+	* sysdeps/unix/sysv/linux/mkdirat.c: New file.
+	* sysdeps/unix/sysv/linux/xmknodat.c: New file.
+
+	* sysdeps/generic/xmknod.c: Add one more parameter check.
+
 2005-11-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MREMAP_FIXED): Added,
