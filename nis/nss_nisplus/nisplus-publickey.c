@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2001, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -37,7 +37,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
 {
   nis_result *res;
   enum nss_status retval;
-  char buf[NIS_MAXNAMELEN+2];
+  char buf[NIS_MAXNAMELEN + 2];
   size_t slen;
   char *domain, *cptr;
   int len;
@@ -120,7 +120,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
 {
   nis_result *res;
   enum nss_status retval;
-  char buf[NIS_MAXNAMELEN+2];
+  char buf[NIS_MAXNAMELEN + 2];
   size_t slen;
   char *domain, *cptr;
   int len;
@@ -154,7 +154,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
       buf[slen] = '\0';
     }
 
-  res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
+  res = nis_list (buf, USE_DGRAM | NO_AUTHINFO | FOLLOW_LINKS | FOLLOW_PATH,
 		  NULL, NULL);
 
   if (res == NULL)
@@ -242,9 +242,9 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 {
   char *domain;
   nis_result *res;
-  char sname[NIS_MAXNAMELEN+2]; /*  search criteria + table name */
+  char sname[NIS_MAXNAMELEN + 2]; /*  search criteria + table name */
   size_t slen;
-  char principal[NIS_MAXNAMELEN+1];
+  char principal[NIS_MAXNAMELEN + 1];
   int len;
 
   /* 1.  Get home domain of user. */
@@ -255,10 +255,6 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   ++domain;  /* skip '@' */
 
   /* 2.  Get user's nisplus principal name.  */
-  if ((strlen (netname) + strlen (domain)+45) >
-      (size_t) NIS_MAXNAMELEN)
-    return NSS_STATUS_UNAVAIL;
-
   slen = snprintf (sname, NIS_MAXNAMELEN,
 		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
 		   netname, domain);
@@ -339,8 +335,9 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_UNAVAIL;
     }
 
-  slen = sprintf (sname, "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
-		  principal, domain);
+  slen = snprintf (sname, sizeof  (sname),
+		   "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
+		   principal, domain);
 
   if (sname[slen - 1] != '.')
     {

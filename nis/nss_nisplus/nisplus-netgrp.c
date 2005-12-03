@@ -150,15 +150,14 @@ internal_endnetgrent (struct __netgrent *netgrp)
 enum nss_status
 _nss_nisplus_setnetgrent (const char *group, struct __netgrent *netgrp)
 {
-  enum nss_status status;
-  char buf[strlen (group) + 30];
+  char buf[strlen (group) + 25];
 
   if (group == NULL || group[0] == '\0')
     return NSS_STATUS_UNAVAIL;
 
-  status = NSS_STATUS_SUCCESS;
+  enum nss_status status = NSS_STATUS_SUCCESS;
 
-  sprintf (buf, "[name=%s],netgroup.org_dir", group);
+  snprintf (buf, sizeof (buf), "[name=%s],netgroup.org_dir", group);
 
   netgrp->data = (char *) nis_list (buf, EXPAND_NAME, NULL, NULL);
 

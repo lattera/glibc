@@ -56,7 +56,12 @@ _nss_pwd_create_tablename (int *errnop)
 
       atomic_write_barrier ();
 
-      pwd_tablename_val = p;
+      if (atomic_compare_and_exchange_bool_acq (&pwd_tablename_val, p, NULL))
+	{
+	  /* Another thread already installed the value.  */
+	  free (p);
+	  pwd_tablename_len = strlen (pwd_tablename_val);
+	}
     }
 
   return NSS_STATUS_SUCCESS;
@@ -181,11 +186,7 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
 
   if (pwd_tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
       enum nss_status status = _nss_pwd_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -248,11 +249,7 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
 {
   if (pwd_tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
       enum nss_status status = _nss_pwd_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;

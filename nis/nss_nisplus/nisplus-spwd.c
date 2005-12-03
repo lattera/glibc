@@ -154,11 +154,7 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
 
   if (pwd_tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
       enum nss_status status = _nss_pwd_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;

@@ -1,5 +1,7 @@
 2005-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_error.c (nis_sperror_r): Let snprintf determine whether
+	there is an overflow.
 	* nis/nss_nisplus/nisplus-service.c: Fix locking to use
 	_nss_create_tablename.  Avoid unnecessary copying, remove
 	unnecessary variables, general cleanup.
@@ -17,6 +19,10 @@
 	general cleanup.
 	* nis/nss_nisplus/nisplus-alias.c: Fix locking to use
 	_nss_create_tablename.  Avoid unnecessary copying, general cleanup.
+	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_setnetgrent):
+	Rewrite to use snprintf.
+	* nis/nss_nisplus/nisplus-publickey.c (_nss_nisplus_netname2user):
+	Likewise.
 
 2005-12-02  Ulrich Drepper  <drepper@redhat.com>
 
