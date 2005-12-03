@@ -416,32 +416,28 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
     }
 
   {
-    int parse_res, retval;
-    nis_result *result;
-    char buf[1024 + tablename_len];
-    struct in_addr in;
-    char buf2[256];
-    int b2len;
+    char buf[27 + tablename_len];
+    char buf2[18];
     int olderr = errno;
 
-    in = inet_makeaddr (addr, 0);
+    struct in_addr in = inet_makeaddr (addr, 0);
     strcpy (buf2, inet_ntoa (in));
-    b2len = strlen (buf2);
+    size_t b2len = strlen (buf2);
 
     while (1)
       {
-	sprintf (buf, "[addr=%s],%s", buf2, tablename_val);
-	result = nis_list (buf, EXPAND_NAME, NULL, NULL);
+	snprintf (buf, sizeof (buf), "[addr=%s],%s", buf2, tablename_val);
+	nis_result *result = nis_list (buf, EXPAND_NAME, NULL, NULL);
 
 	if (result == NULL)
 	  {
 	    __set_errno (ENOMEM);
 	    return NSS_STATUS_TRYAGAIN;
 	  }
-	retval = niserr2nss (result->status);
-	if (retval != NSS_STATUS_SUCCESS)
+	enum nss_status retval = niserr2nss (result->status);
+	if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
 	  {
-	    if (buf2[b2len -2] == '.' && buf2[b2len -1] == '0')
+	    if (b2len > 2 && buf2[b2len - 2] == '.' && buf2[b2len - 1] == '0')
 	      {
 		/* Try again, but with trailing dot(s)
 		   removed (one by one) */
@@ -449,8 +445,6 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 		b2len -= 2;
 		continue;
 	      }
-	    else
-	      return NSS_STATUS_NOTFOUND;
 
 	    if (retval == NSS_STATUS_TRYAGAIN)
 	      {
@@ -463,8 +457,8 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 	    return retval;
 	  }
 
-	parse_res = _nss_nisplus_parse_netent (result, network, buffer,
-					       buflen, errnop);
+	int parse_res = _nss_nisplus_parse_netent (result, network, buffer,
+						   buflen, errnop);
 
 	nis_freeresult (result);
 
