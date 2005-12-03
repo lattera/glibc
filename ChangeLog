@@ -1,8 +1,18 @@
 2005-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_pwd_create_tablename):
+	Renamed from _nss_create_tablename.  Export from file (but not DSO).
+	(pwd_tablename_val): Renamed from tablename_val, mark hidden.
+	(pwd_tablename_len): Renamed from tablename_len, mark hidden.
+	Change all users.
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_create_tablename): Removed.
+	Use _nss_pwd_create_tablename now.  Use pwd_tablename_val and
+	pwd_tablename_len.  Remove unnecessary variables, general cleanup.
+
 	* nis/nss_nisplus/nisplus-pwd.c: Fix locking to use
 	_nss_create_tablename.  Avoid unnecessary copying, remove
 	unnecessary variables, general cleanup.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
 
 	* io/Makefile (routines): Add mknodat, xmknodat, mkdirat, mkfifoat.
 	(static-only-routines): Add mknodat.

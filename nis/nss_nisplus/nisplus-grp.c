@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <atomic.h>
 #include <nss.h>
 #include <grp.h>
 #include <ctype.h>
@@ -28,31 +29,39 @@
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 
+
 __libc_lock_define_initialized (static, lock);
 
 static nis_result *result;
 static unsigned long next_entry;
 static nis_name tablename_val;
-static u_long tablename_len;
+static size_t tablename_len;
 
 static enum nss_status
 _nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
-      char buf [40 + strlen (nis_local_directory ())];
-      char *p;
+      const char *local_dir = nis_local_directory ();
+      size_t local_dir_len = strlen (local_dir);
+      static const char prefix[] = "group.org_dir.";
 
-      p = __stpcpy (buf, "group.org_dir.");
-      p = __stpcpy (p, nis_local_directory ());
-      tablename_val = __strdup (buf);
+      char *p = malloc (sizeof (prefix) + local_dir_len);
       if (tablename_val == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      tablename_len = strlen (tablename_val);
+
+      memcpy (__stpcpy (p, prefix), local_dir, local_dir_len + 1);
+
+      tablename_len = sizeof (prefix) - 1 + local_dir_len;
+
+      atomic_write_barrier ();
+
+      tablename_val = p;
     }
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -60,16 +69,20 @@ static enum nss_status
 internal_setgrent (void)
 {
   enum nss_status status;
-  int err;
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
   next_entry = 0;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      int err;
+      if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
+	return NSS_STATUS_UNAVAIL;
+    }
 
   result = nis_list (tablename_val, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
   if (result == NULL)
@@ -108,9 +121,11 @@ _nss_nisplus_endgrent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   __libc_lock_unlock (lock);
 
@@ -173,7 +188,11 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -184,47 +203,46 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
       *errnop = EINVAL;
       return NSS_STATUS_NOTFOUND;
     }
-  else
+
+  nis_result *result;
+  char buf[strlen (name) + 9 + tablename_len];
+  int olderr = errno;
+
+  snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
+
+  result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+
+  if (result == NULL)
     {
-      nis_result *result;
-      char buf[strlen (name) + 24 + tablename_len];
-      int olderr = errno;
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
 
-      sprintf (buf, "[name=%s],%s", name, tablename_val);
+  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+    {
+      enum nss_status status = niserr2nss (result->status);
 
-      result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+      nis_freeresult (result);
+      return status;
+    }
 
-      if (result == NULL)
+  parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen, errnop);
+  nis_freeresult (result);
+  if (__builtin_expect (parse_res < 1, 0))
+    {
+      if (parse_res == -1)
 	{
-	  *errnop = ENOMEM;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+      else
 	{
-	  enum nss_status status = niserr2nss (result->status);
-
-	  nis_freeresult (result);
-	  return status;
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
 	}
-
-      parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen,
-					    errnop);
-      nis_freeresult (result);
-      if (parse_res < 1)
-	{
-	  if (parse_res == -1)
-	    {
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
-	  else
-	    {
-	      __set_errno (olderr);
-	      return NSS_STATUS_NOTFOUND;
-	    }
-	}
-      return NSS_STATUS_SUCCESS;
     }
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -233,53 +251,57 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 {
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
     }
 
-  {
-    int parse_res;
-    nis_result *result;
-    char buf[36 + tablename_len];
-    int olderr = errno;
+  int parse_res;
+  nis_result *result;
+  char buf[8 + 3 * sizeof (unsigned long int) + tablename_len];
+  int olderr = errno;
 
-    sprintf (buf, "[gid=%lu],%s", (unsigned long int) gid, tablename_val);
+  snprintf (buf, sizeof (buf), "[gid=%lu],%s",
+	    (unsigned long int) gid, tablename_val);
 
-    result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
-    if (result == NULL)
-      {
-	*errnop = ENOMEM;
-	return NSS_STATUS_TRYAGAIN;
-      }
-    if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-      {
-	enum nss_status status = niserr2nss (result->status);
+  if (result == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
 
-	__set_errno (olderr);
+  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+    {
+      enum nss_status status = niserr2nss (result->status);
 
-	nis_freeresult (result);
-	return status;
-      }
+      __set_errno (olderr);
 
-    parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen,
-					  errnop);
+      nis_freeresult (result);
+      return status;
+    }
 
-    nis_freeresult (result);
-    if (parse_res < 1)
-      {
-	__set_errno (olderr);
+  parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen, errnop);
 
-	if (parse_res == -1)
-	  {
-	    *errnop = ERANGE;
-	    return NSS_STATUS_TRYAGAIN;
-	  }
-	else
-	  return NSS_STATUS_NOTFOUND;
-      }
-    return NSS_STATUS_SUCCESS;
-  }
+  nis_freeresult (result);
+  if (__builtin_expect (parse_res < 1, 0))
+    {
+      __set_errno (olderr);
+
+      if (parse_res == -1)
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+
+  return NSS_STATUS_SUCCESS;
 }
