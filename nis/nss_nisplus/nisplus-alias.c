@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2001,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <atomic.h>
 #include <nss.h>
 #include <errno.h>
 #include <ctype.h>
@@ -32,7 +33,7 @@ __libc_lock_define_initialized (static, lock)
 static nis_result *result;
 static u_long next_entry;
 static nis_name tablename_val;
-static u_long tablename_len;
+static size_t tablename_len;
 
 #define NISENTRYVAL(idx,col,res) \
         ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
@@ -45,19 +46,26 @@ _nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
-      char buf [40 + strlen (nis_local_directory ())];
-      char *p;
+      const char *local_dir = nis_local_directory ();
+      size_t local_dir_len = strlen (local_dir);
+      static const char prefix[] = "mail_aliases.org_dir.";
 
-      p = __stpcpy (buf, "mail_aliases.org_dir.");
-      p = __stpcpy (p, nis_local_directory ());
-      tablename_val = __strdup (buf);
+      char *p = malloc (sizeof (prefix) + local_dir_len);
       if (tablename_val == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      tablename_len = strlen (tablename_val);
+
+      memcpy (__stpcpy (p, prefix), local_dir, local_dir_len + 1);
+
+      tablename_len = sizeof (prefix) - 1 + local_dir_len;
+
+      atomic_write_barrier ();
+
+      tablename_val = p;
     }
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -75,81 +83,73 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 		 "mail_aliases") != 0
       || result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)
     return 0;
-  else
+
+  char *first_unused = buffer + NISENTRYLEN (0, 1, result) + 1;
+  size_t room_left = (buflen - (buflen % __alignof__ (char *))
+		      - NISENTRYLEN (0, 1, result) - 2);
+
+  if (NISENTRYLEN (entry, 1, result) >= buflen)
     {
-      char *first_unused = buffer + NISENTRYLEN (0, 1, result) + 1;
-      size_t room_left =
-	buflen - (buflen % __alignof__ (char *)) -
-	NISENTRYLEN (0, 1, result) - 2;
-      char *line;
-      char *cp;
-
-      if (NISENTRYLEN (entry, 1, result) >= buflen)
-	{
-	  /* The line is too long for our buffer.  */
-	no_more_room:
-	  *errnop = ERANGE;
-	  return -1;
-	}
-      else
-	{
-	  cp = __stpncpy (buffer, NISENTRYVAL (entry, 1, result),
-			 NISENTRYLEN (entry, 1, result));
-	  *cp = '\0';
-	}
-
-      if (NISENTRYLEN(entry, 0, result) >= room_left)
-	goto no_more_room;
-
-      alias->alias_local = 0;
-      alias->alias_members_len = 0;
-      *first_unused = '\0';
-      ++first_unused;
-      cp = __stpncpy (first_unused, NISENTRYVAL (entry, 0, result),
-		      NISENTRYLEN (entry, 0, result));
-      *cp = '\0';
-      alias->alias_name = first_unused;
-
-      /* Terminate the line for any case.  */
-      cp = strpbrk (alias->alias_name, "#\n");
-      if (cp != NULL)
-	*cp = '\0';
-
-      first_unused += strlen (alias->alias_name) +1;
-      /* Adjust the pointer so it is aligned for
-	 storing pointers.  */
-      first_unused += __alignof__ (char *) - 1;
-      first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
-      alias->alias_members = (char **) first_unused;
-
-      line = buffer;
-
-      while (*line != '\0')
-	{
-	  /* Skip leading blanks.  */
-	  while (isspace (*line))
-	    ++line;
-
-	  if (*line == '\0')
-	    break;
-
-	  if (room_left < sizeof (char *))
-	    goto no_more_room;
-	  room_left -= sizeof (char *);
-	  alias->alias_members[alias->alias_members_len] = line;
-
-	  while (*line != '\0' && *line != ',')
-	    ++line;
-
-	  if (line != alias->alias_members[alias->alias_members_len])
-	    {
-	      *line++ = '\0';
-	      alias->alias_members_len++;
-	    }
-	}
-
-      return alias->alias_members_len == 0 ? 0 : 1;
+      /* The line is too long for our buffer.  */
+    no_more_room:
+      *errnop = ERANGE;
+      return -1;
     }
+
+  char *cp = __stpncpy (buffer, NISENTRYVAL (entry, 1, result),
+			NISENTRYLEN (entry, 1, result));
+  *cp = '\0';
+
+  if (NISENTRYLEN(entry, 0, result) >= room_left)
+    goto no_more_room;
+
+  alias->alias_local = 0;
+  alias->alias_members_len = 0;
+  *first_unused = '\0';
+  ++first_unused;
+  cp = __stpncpy (first_unused, NISENTRYVAL (entry, 0, result),
+		  NISENTRYLEN (entry, 0, result));
+  *cp = '\0';
+  alias->alias_name = first_unused;
+
+  /* Terminate the line for any case.  */
+  cp = strpbrk (alias->alias_name, "#\n");
+  if (cp != NULL)
+    *cp = '\0';
+
+  first_unused += strlen (alias->alias_name) +1;
+  /* Adjust the pointer so it is aligned for
+     storing pointers.  */
+  first_unused += __alignof__ (char *) - 1;
+  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
+  alias->alias_members = (char **) first_unused;
+
+  char *line = buffer;
+  while (*line != '\0')
+    {
+      /* Skip leading blanks.  */
+      while (isspace (*line))
+	++line;
+
+      if (*line == '\0')
+	break;
+
+      if (room_left < sizeof (char *))
+	goto no_more_room;
+      room_left -= sizeof (char *);
+      alias->alias_members[alias->alias_members_len] = line;
+
+      while (*line != '\0' && *line != ',')
+	++line;
+
+      if (line != alias->alias_members[alias->alias_members_len])
+	{
+	  *line++ = '\0';
+	  alias->alias_members_len++;
+	}
+    }
+
+  return alias->alias_members_len == 0 ? 0 : 1;
 }
 
 static enum nss_status
@@ -158,9 +158,11 @@ internal_setaliasent (void)
   enum nss_status status;
   int err;
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result !=  NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
     return NSS_STATUS_UNAVAIL;
@@ -203,9 +205,11 @@ _nss_nisplus_endaliasent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
   next_entry = 0;
 
   __libc_lock_unlock (lock);
@@ -240,7 +244,8 @@ internal_nisplus_getaliasent_r (struct aliasent *alias,
 	return NSS_STATUS_TRYAGAIN;
 
       ++next_entry;
-    } while (!parse_res);
+    }
+  while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
 }
@@ -268,7 +273,12 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
+
       if (status != NSS_STATUS_SUCCESS)
 	return status;
     }
@@ -278,35 +288,34 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
-  else
+
+  char buf[strlen (name) + 9 + tablename_len];
+  int olderr = errno;
+
+  snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
+
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+
+  if (result == NULL)
     {
-      nis_result *result;
-      char buf[strlen (name) + 30 + tablename_len];
-      int olderr = errno;
-
-      sprintf (buf, "[name=%s],%s", name, tablename_val);
-
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-
-      if (result == NULL)
-	{
-	  *errnop = ENOMEM;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	return niserr2nss (result->status);
-
-      parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
-					       buffer, buflen, errnop);
-      if (parse_res < 1)
-	{
-	  __set_errno (olderr);
-
-	  if (parse_res == -1)
-	    return NSS_STATUS_TRYAGAIN;
-	  else
-	    return NSS_STATUS_NOTFOUND;
-	}
-      return NSS_STATUS_SUCCESS;
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
     }
+
+  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+    return niserr2nss (result->status);
+
+  parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
+					   buffer, buflen, errnop);
+  if (__builtin_expect (parse_res < 1, 0))
+    {
+      __set_errno (olderr);
+
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+
+  return NSS_STATUS_SUCCESS;
 }

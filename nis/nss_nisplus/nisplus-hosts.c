@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -17,15 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <nss.h>
-#include <netdb.h>
-#include <errno.h>
+#include <atomic.h>
 #include <ctype.h>
+#include <errno.h>
+#include <netdb.h>
+#include <nss.h>
 #include <string.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <bits/libc-lock.h>
+#include <netinet/in.h>
 #include <rpcsvc/nis.h>
+#include <bits/libc-lock.h>
 
 #include "nss-nisplus.h"
 
@@ -180,19 +181,26 @@ _nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
-      char buf [40 + strlen (nis_local_directory ())];
-      char *p;
+      const char *local_dir = nis_local_directory ();
+      size_t local_dir_len = strlen (local_dir);
+      static const char prefix[] = "hosts.org_dir.";
 
-      p = __stpcpy (buf, "hosts.org_dir.");
-      p = __stpcpy (p, nis_local_directory ());
-      tablename_val = __strdup (buf);
+      char *p = malloc (sizeof (prefix) + local_dir_len);
       if (tablename_val == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      tablename_len = strlen (tablename_val);
+
+      memcpy (__stpcpy (p, prefix), local_dir, local_dir_len + 1);
+
+      tablename_len = sizeof (prefix) - 1 + local_dir_len;
+
+      atomic_write_barrier ();
+
+      tablename_val = p;
     }
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -204,9 +212,11 @@ _nss_nisplus_sethostent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   if (tablename_val == NULL)
     status = _nss_create_tablename (&err);
@@ -221,9 +231,11 @@ _nss_nisplus_endhostent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   __libc_lock_unlock (lock);
 
@@ -335,7 +347,11 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	{
@@ -350,75 +366,81 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       *herrnop = NETDB_INTERNAL;
       return NSS_STATUS_NOTFOUND;
     }
-  else
+
+  nis_result *result;
+  char buf[strlen (name) + 10 + tablename_len];
+  int olderr = errno;
+
+  /* Search at first in the alias list, and use the correct name
+     for the next search.  */
+  snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+
+  if (result != NULL)
     {
-      nis_result *result;
-      char buf[strlen (name) + 255 + tablename_len];
-      int olderr = errno;
+      char *bufptr = buf;
 
-      /* Search at first in the alias list, and use the correct name
-	 for the next search */
-      sprintf (buf, "[name=%s],%s", name, tablename_val);
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-
-      if (result != NULL)
-	{
-	  /* If we do not find it, try it as original name. But if the
-	     database is correct, we should find it in the first case, too */
-	  if ((result->status != NIS_SUCCESS
-	       && result->status != NIS_S_SUCCESS)
-	      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	      || strcmp (result->objects.objects_val->EN_data.en_type,
-			 "hosts_tbl") != 0
-	      || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
-	    sprintf (buf, "[cname=%s],%s", name, tablename_val);
-	  else
-	    sprintf (buf, "[cname=%s],%s", NISENTRYVAL(0, 0, result),
-		     tablename_val);
-
-	  nis_freeresult (result);
-	  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-	}
-
-      if (result == NULL)
-	{
-	  *errnop = ENOMEM;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      retval = niserr2nss (result->status);
-      if (retval != NSS_STATUS_SUCCESS)
-        {
-          if (retval == NSS_STATUS_TRYAGAIN)
-            {
-	      *errnop = errno;
-              *herrnop = NETDB_INTERNAL;
-            }
-	  else
-	    __set_errno (olderr);
-	  nis_freeresult (result);
-          return retval;
-        }
-
-      parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
-					      buflen, errnop, flags);
-
-      nis_freeresult (result);
-
-      if (parse_res > 0)
-	return NSS_STATUS_SUCCESS;
-
-      *herrnop = NETDB_INTERNAL;
-      if (parse_res == -1)
-	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      /* If we did not find it, try it as original name. But if the
+	 database is correct, we should find it in the first case, too.  */
+      if ((result->status != NIS_SUCCESS
+	   && result->status != NIS_S_SUCCESS)
+	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	  || strcmp (result->objects.objects_val->EN_data.en_type,
+		     "hosts_tbl") != 0
+	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
+	snprintf (buf, sizeof (buf), "[cname=%s],%s", name, tablename_val);
       else
 	{
-	  __set_errno (olderr);
-	  return NSS_STATUS_NOTFOUND;
+	  /* We need to allocate a new buffer since there is no
+	     guarantee the returned name has a length limit.  */
+	  const char *entryval = NISENTRYVAL(0, 0, result);
+	  size_t buflen = strlen (entryval) + 10 + tablename_len;
+	  bufptr = alloca (buflen);
+	  snprintf (bufptr, buflen, "[cname=%s],%s",
+		    entryval, tablename_val);
 	}
+
+      nis_freeresult (result);
+      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
     }
+
+  if (result == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  retval = niserr2nss (result->status);
+  if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+    {
+      if (retval == NSS_STATUS_TRYAGAIN)
+	{
+	  *errnop = errno;
+	  *herrnop = NETDB_INTERNAL;
+	}
+      else
+	__set_errno (olderr);
+      nis_freeresult (result);
+      return retval;
+    }
+
+  parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
+					  buflen, errnop, flags);
+
+  nis_freeresult (result);
+
+  if (parse_res > 0)
+    return NSS_STATUS_SUCCESS;
+
+  *herrnop = NETDB_INTERNAL;
+  if (parse_res == -1)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  __set_errno (olderr);
+  return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status
@@ -430,17 +452,6 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 				    herrnop,
 			 ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
 }
-
-#if 0
-enum nss_status
-_nss_nisplus_getipnodebyname_r (const char *name, int af, int flags,
-				struct hostent *result, char *buffer,
-				size_t buflen, int *errnop, int *herrnop)
-{
-  return internal_gethostbyname2_r (name, af, result, buffer, buflen,
-				    errnop, herrnop, flags);
-}
-#endif
 
 enum nss_status
 _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
@@ -469,7 +480,11 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 {
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -477,54 +492,51 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 
   if (addr == NULL)
     return NSS_STATUS_NOTFOUND;
-  else
+
+  char buf[24 + tablename_len];
+  int retval, parse_res;
+  int olderr = errno;
+
+  snprintf (buf, sizeof (buf), "[addr=%s],%s",
+	   inet_ntoa (*(const struct in_addr *) addr), tablename_val);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+
+  if (result == NULL)
     {
-      nis_result *result;
-      char buf[255 + tablename_len];
-      int retval, parse_res;
-      int olderr = errno;
+      __set_errno (ENOMEM);
+      return NSS_STATUS_TRYAGAIN;
+    }
 
-      sprintf (buf, "[addr=%s],%s",
-	       inet_ntoa (*(const struct in_addr *) addr), tablename_val);
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-
-      if (result == NULL)
+  retval = niserr2nss (result->status);
+  if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
+    {
+      if (retval == NSS_STATUS_TRYAGAIN)
 	{
-	  __set_errno (ENOMEM);
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      retval = niserr2nss (result->status);
-      if (retval != NSS_STATUS_SUCCESS)
-        {
-          if (retval == NSS_STATUS_TRYAGAIN)
-            {
-	      *errnop = errno;
-              *herrnop = NETDB_INTERNAL;
-            }
-	  else
-	    __set_errno (olderr);
-	  nis_freeresult (result);
-          return retval;
-        }
-
-      parse_res = _nss_nisplus_parse_hostent (result, af, host,
-					      buffer, buflen, errnop,
-		     ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
-      nis_freeresult (result);
-
-      if (parse_res > 0)
-	return NSS_STATUS_SUCCESS;
-
-      *herrnop = NETDB_INTERNAL;
-      if (parse_res == -1)
-	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  *errnop = errno;
+	  *herrnop = NETDB_INTERNAL;
 	}
       else
-	{
-	  __set_errno (olderr);
-	  return NSS_STATUS_NOTFOUND;
-	}
+	__set_errno (olderr);
+      nis_freeresult (result);
+      return retval;
     }
+
+  parse_res = _nss_nisplus_parse_hostent (result, af, host,
+					  buffer, buflen, errnop,
+					  ((_res.options & RES_USE_INET6)
+					   ? AI_V4MAPPED : 0));
+  nis_freeresult (result);
+
+  if (parse_res > 0)
+    return NSS_STATUS_SUCCESS;
+
+  *herrnop = NETDB_INTERNAL;
+  if (parse_res == -1)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  __set_errno (olderr);
+  return NSS_STATUS_NOTFOUND;
 }

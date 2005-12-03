@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2001,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -17,13 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <nss.h>
-#include <errno.h>
+#include <atomic.h>
 #include <ctype.h>
+#include <errno.h>
 #include <netdb.h>
+#include <nss.h>
 #include <string.h>
-#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
+#include <bits/libc-lock.h>
 
 #include "nss-nisplus.h"
 
@@ -141,19 +142,26 @@ _nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
-      char buf [40 + strlen (nis_local_directory ())];
-      char *p;
+      const char *local_dir = nis_local_directory ();
+      size_t local_dir_len = strlen (local_dir);
+      static const char prefix[] = "protocols.org_dir.";
 
-      p = __stpcpy (buf, "protocols.org_dir.");
-      p = __stpcpy (p, nis_local_directory ());
-      tablename_val = __strdup (buf);
+      char *p = malloc (sizeof (prefix) + local_dir_len);
       if (tablename_val == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      tablename_len = strlen (tablename_val);
+
+      memcpy (__stpcpy (p, prefix), local_dir, local_dir_len + 1);
+
+      tablename_len = sizeof (prefix) - 1 + local_dir_len;
+
+      atomic_write_barrier ();
+
+      tablename_val = p;
     }
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -164,9 +172,11 @@ _nss_nisplus_setprotoent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   if (tablename_val == NULL)
     {
@@ -184,9 +194,11 @@ _nss_nisplus_endprotoent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
 
   __libc_lock_unlock (lock);
 
@@ -221,11 +233,8 @@ internal_nisplus_getprotoent_r (struct protoent *proto, char *buffer,
 	}
       else
 	{
-	  nis_result *res;
-
 	  saved_res = result;
-	  res = nis_next_entry (tablename_val, &result->cookie);
-	  result = res;
+	  result = nis_next_entry (tablename_val, &result->cookie);
 
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
@@ -277,7 +286,11 @@ _nss_nisplus_getprotobyname_r (const char *name, struct protoent *proto,
 
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -285,71 +298,79 @@ _nss_nisplus_getprotobyname_r (const char *name, struct protoent *proto,
 
   if (name == NULL)
     return NSS_STATUS_NOTFOUND;
-  else
+
+  char buf[strlen (name) + 10 + tablename_len];
+  int olderr = errno;
+
+  /* Search at first in the alias list, and use the correct name
+     for the next search */
+  snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+
+  if (result != NULL)
     {
-      nis_result *result;
-      char buf[strlen (name) + 255 + tablename_len];
-      int olderr = errno;
+      char *bufptr = buf;
 
-      /* Search at first in the alias list, and use the correct name
-         for the next search */
-      sprintf (buf, "[name=%s],%s", name, tablename_val);
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-
-      if (result != NULL)
-	{
-	  /* If we do not find it, try it as original name. But if the
-	     database is correct, we should find it in the first case, too */
-	  if ((result->status != NIS_SUCCESS
-	       && result->status != NIS_S_SUCCESS)
-	      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	      || strcmp (result->objects.objects_val->EN_data.en_type,
+      /* If we did not find it, try it as original name. But if the
+	 database is correct, we should find it in the first case, too */
+      if ((result->status != NIS_SUCCESS
+	   && result->status != NIS_S_SUCCESS)
+	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	  || strcmp (result->objects.objects_val->EN_data.en_type,
 			 "protocols_tbl") != 0
-	      || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
-	    sprintf (buf, "[cname=%s],%s", name, tablename_val);
-	  else
-	    sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
-		     tablename_val);
-
-	  nis_freeresult (result);
-	  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-	}
-
-      if (result == NULL)
+	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
+	snprintf (buf, sizeof (buf), "[cname=%s],%s", name, tablename_val);
+      else
 	{
-	  __set_errno (ENOMEM);
-	  return NSS_STATUS_TRYAGAIN;
+	  /* We need to allocate a new buffer since there is no
+	     guarantee the returned name has a length limit.  */
+	  const char *entryval = NISENTRYVAL (0, 0, result);
+	  size_t buflen = strlen (entryval) + 10 + tablename_len;
+	  bufptr = alloca (buflen);
+	  snprintf (bufptr, buflen, "[cname=%s],%s",
+		    entryval, tablename_val);
 	}
-      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	{
-	  enum nss_status status = niserr2nss (result->status);
-
-	  __set_errno (olderr);
-
-	  nis_freeresult (result);
-	  return status;
-	}
-
-      parse_res = _nss_nisplus_parse_protoent (result, proto, buffer, buflen,
-					       errnop);
 
       nis_freeresult (result);
-
-      if (parse_res < 1)
-	{
-	  if (parse_res == -1)
-	    {
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
-	  else
-	    {
-	      __set_errno (olderr);
-	      return NSS_STATUS_NOTFOUND;
-	    }
-	}
-      return NSS_STATUS_SUCCESS;
+      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
     }
+
+  if (result == NULL)
+    {
+      __set_errno (ENOMEM);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+    {
+      enum nss_status status = niserr2nss (result->status);
+
+      __set_errno (olderr);
+
+      nis_freeresult (result);
+      return status;
+    }
+
+  parse_res = _nss_nisplus_parse_protoent (result, proto, buffer, buflen,
+					   errnop);
+
+  nis_freeresult (result);
+
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
+	}
+    }
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -358,55 +379,57 @@ _nss_nisplus_getprotobynumber_r (const int number, struct protoent *proto,
 {
   if (tablename_val == NULL)
     {
+      __libc_lock_lock (lock);
+
       enum nss_status status = _nss_create_tablename (errnop);
+
+      __libc_lock_unlock (lock);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
     }
 
-  {
-    int parse_res;
-    nis_result *result;
-    char buf[46 + tablename_len];
-    int olderr = errno;
+  char buf[12 + 3 * sizeof (number) + tablename_len];
+  int olderr = errno;
 
-    sprintf (buf, "[number=%d],%s", number, tablename_val);
+  snprintf (buf, sizeof (buf), "[number=%d],%s", number, tablename_val);
 
-    result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
-    if (result == NULL)
-      {
-	__set_errno (ENOMEM);
-	return NSS_STATUS_TRYAGAIN;
-      }
-    if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-      {
-	enum nss_status status = niserr2nss (result->status);
+  if (result == NULL)
+    {
+      __set_errno (ENOMEM);
+      return NSS_STATUS_TRYAGAIN;
+    }
 
-	__set_errno (olderr);
+  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
+    {
+      enum nss_status status = niserr2nss (result->status);
 
-	nis_freeresult (result);
-	return status;
-      }
+      __set_errno (olderr);
 
-    parse_res = _nss_nisplus_parse_protoent (result, proto, buffer, buflen,
-					     errnop);
+      nis_freeresult (result);
+      return status;
+    }
 
-    nis_freeresult (result);
+  int parse_res = _nss_nisplus_parse_protoent (result, proto, buffer, buflen,
+					       errnop);
 
-    if (parse_res < 1)
-      {
-	if (parse_res == -1)
-	  {
-	    *errnop = ERANGE;
-	    return NSS_STATUS_TRYAGAIN;
-	  }
-	else
-	  {
-	    __set_errno (olderr);
-	    return NSS_STATUS_NOTFOUND;
-	  }
-      }
-    return NSS_STATUS_SUCCESS;
-  }
+  nis_freeresult (result);
+
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
+	}
+    }
+
+  return NSS_STATUS_SUCCESS;
 }

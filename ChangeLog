@@ -1,3 +1,23 @@
+2005-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nisplus/nisplus-service.c: Fix locking to use
+	_nss_create_tablename.  Avoid unnecessary copying, remove
+	unnecessary variables, general cleanup.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise..
+	* nis/nss_nisplus/nisplus-network.c: Fix locking to use
+	_nss_create_tablename.  Avoid unnecessary copying, general cleanup.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_getipnodebyname_r):
+	Removed.
+	Fix locking to use _nss_create_tablename.  Avoid unnecessary copying,
+	general cleanup.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_getntohost_r):
+	Correctly construct request.
+	Fix locking to use _nss_create_tablename.  Avoid unnecessary copying,
+	general cleanup.
+	* nis/nss_nisplus/nisplus-alias.c: Fix locking to use
+	_nss_create_tablename.  Avoid unnecessary copying, general cleanup.
+
 2005-12-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nisplus/nisplus-pwd.c (_nss_pwd_create_tablename):
