@@ -1,5 +1,9 @@
 2005-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-pwd.c: Fix locking to use
+	_nss_create_tablename.  Avoid unnecessary copying, remove
+	unnecessary variables, general cleanup.
+
 	* io/Makefile (routines): Add mknodat, xmknodat, mkdirat, mkfifoat.
 	(static-only-routines): Add mknodat.
 	* io/Versions [GLIBC_2.4]: Add mkdirat, mkfifoat, __xmknodat.
