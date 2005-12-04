@@ -267,8 +267,8 @@ nis_list (const_nis_name name, unsigned int flags,
 	  case NIS_PARTIAL:
 	  case NIS_SUCCESS:
 	  case NIS_S_SUCCESS:
-	    if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
-		flags & FOLLOW_LINKS)		/* We are following links.  */
+	    if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ
+		&& (flags & FOLLOW_LINKS))	/* We are following links.  */
 	      {
 		free (ibreq->ibr_name);
 		ibreq->ibr_name = NULL;
@@ -319,8 +319,8 @@ nis_list (const_nis_name name, unsigned int flags,
 		first_try = 1; /* Try at first the old binding */
 		goto again;
 	      }
-	    else if ((flags & FOLLOW_PATH) &&
-		     NIS_RES_STATUS (res) == NIS_PARTIAL)
+	    else if ((flags & FOLLOW_PATH)
+		     && NIS_RES_STATUS (res) == NIS_PARTIAL)
 	      {
 		if (!have_tablepath)
 		  {
@@ -349,11 +349,21 @@ nis_list (const_nis_name name, unsigned int flags,
 		else
 		  {
 		    ibreq->ibr_name = strdup (ibreq->ibr_name);
+		    /* The following is a non-obvious optimization.  A
+		       nis_freeresult call would call xdr_free as the
+		       following code.  But it also would unnecessarily
+		       free the result structure.  We avoid this here
+		       along with the necessary tests.  */
+#if 1
+		    xdr_free ((xdrproc_t) _xdr_nis_result, (char *)res);
+		    memset (res, '\0', sizeof (*res));
+		    if (ibreq->ibr_name == NULL)
+#else
 		    nis_freeresult (res);
 		    res = calloc (1, sizeof (nis_result));
 		    if (res == NULL || ibreq->ibr_name == NULL)
+#endif
 		      {
-			free (ibreq->ibr_name);
 			free (res);
 			nis_free_request (ibreq);
 			if (have_tablepath)
