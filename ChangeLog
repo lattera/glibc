@@ -1,5 +1,8 @@
 2005-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_table.c (nis_list): Optimize freeing and reallocation of
+	result record.
+
 	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
 	Better sized buffers.  Correct error case handling.
 	* nis/nis_error.c (nis_sperror_r): Let snprintf determine whether

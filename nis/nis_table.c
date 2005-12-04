@@ -296,6 +296,15 @@ nis_list (const_nis_name name, unsigned int flags,
 		      ibreq->ibr_srch.ibr_srch_val =
 			NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_val;
 		    }
+		/* The following is a non-obvious optimization.  A
+		   nis_freeresult call would call xdr_free as the
+		   following code.  But it also would unnecessarily
+		   free the result structure.  We avoid this here
+		   along with the necessary tests.  */
+#if 1
+		xdr_free ((xdrproc_t) _xdr_nis_result, (char *)res);
+		memset (res, '\0', sizeof (*res));
+#else
 		nis_freeresult (res);
 		res = calloc (1, sizeof (nis_result));
 		if (res == NULL)
@@ -306,6 +315,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		    nis_free_directory (dir);
 		    return NULL;
 		  }
+#endif
 		first_try = 1; /* Try at first the old binding */
 		goto again;
 	      }
