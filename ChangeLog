@@ -1,3 +1,7 @@
+2005-12-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* stdlib/longlong.h: Update from GCC.
+
 2005-12-04  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* soft-fp/soft-fp.h: Include <stdlib.h>.
