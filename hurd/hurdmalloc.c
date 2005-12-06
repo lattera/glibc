@@ -33,63 +33,7 @@
  * the rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.15  2001/09/19 03:04:09  drepper
- * (bcopy): Removed.
- * (realloc): Replace bcopy with memcpy.
- *
- * Revision 1.14  2001/04/01 05:03:14  roland
- * 2001-03-11  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/mach_error.h: Fix ancient #endif syntax.
- * 	* hurd/hurdmalloc.c: Likewise.
- *
- * Revision 1.13  1996/12/20 01:32:01  drepper
- * Update from main archive 961219
- *
- * Revision 1.12  1996/11/15 19:44:13  thomas
- * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
- *
- * 	* mach/msg-destroy.c (mach_msg_destroy_port,
- * 	mach_msg_destroy_memory): Use prototype	syntax.
- * 	* hurd/hurdmalloc.c (more_memory, malloc_fork_prepare,
- * 	malloc_fork_parent, malloc_fork_child): Likewise.
- *
- * Revision 1.11  1996/06/06 15:13:47  miles
- * Changes to bring in line with the hurd libthreads/malloc.c:
- *   (more_memory): Use assert_perror instead of MACH_CALL.
- *   "cthread_internals.h": Include removed.
- *   (realloc): Use LOG2_MIN_SIZE.
- *   (LOG2_MIN_SIZE): New macro.
- *   (realloc): Don't bother allocating a new block if the
- *     new size request fits in the old one and doesn't waste any space.
- *     Only free the old block if we successfully got a new one.
- *   [MCHECK] (struct header): New type.
- *   (union header): Only define if !MCHECK.
- *   (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
- *   [MCHECK] (MIN_SIZE): Add correct definition for this case.
- *   (more_memory, malloc, free, realloc): Use above macros, and add
- *     appropriate checks & frobs in MCHECK case.
- *
- * Revision 1.6  1996/03/07 21:13:08  miles
- * (realloc):
- *   Use LOG2_MIN_SIZE.
- *   Don't bother allocating a new block if the new size request fits in the old
- *     one and doesn't waste any space.
- *   Only free the old block if we successfully got a new one.
- * (LOG2_MIN_SIZE): New macro.
- *
- * Revision 1.5  1996/03/06 23:51:04  miles
- * [MCHECK] (struct header): New type.
- * (union header): Only define if !MCHECK.
- * (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
- * [MCHECK] (MIN_SIZE): Add correct definition for this case.
- * (more_memory, malloc, free, realloc):
- *   Use above macros, and add appropriate checks & frobs in MCHECK case.
- *
- * Revision 1.4  1994/05/05 11:21:42  roland
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
  * 	Correcting copyright

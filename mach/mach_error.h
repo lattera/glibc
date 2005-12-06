@@ -24,38 +24,7 @@
  * rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.4  2001/04/01 05:03:14  roland
- * 2001-03-11  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/mach_error.h: Fix ancient #endif syntax.
- * 	* hurd/hurdmalloc.c: Likewise.
- *
- * Revision 1.3  1997/03/16 17:42:25  drepper
- * (mach_error_string, mach_error, mach_error_type): Always provide
- * prototypes.
- * (mach_error_fn_t): Comment out declaration; it appears to be entirely
- * unused dead code.
- *
- * Revision 1.3  1997/03/14 15:26:31  thomas
- * Wed Mar  5 10:40:05 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
- *
- * 	* mach/mach_error.c (mach_error_string_int): Give full prototype.
- * 	* mach/errstring.c (mach_error_string_int): Likewise.
- * 	* mach/error_compat.c (__mach_error_map_compat): Likewise.
- *
- * 	* mach/spin-solid.c: Include <mach/mach_traps.h>.
- * 	* mach/spin-solid.c (__spin_lock_solid): Provide arg to
- * 	swtch_pri.
- *
- * 	* mach/mach_init.c: Include <mach/mig_support.h>.
- *
- * 	* mach/mach_error.h (mach_error_string, mach_error,
- * 	mach_error_type): Always provide prototypes.
- *
- * Revision 1.2  1993/11/23 20:39:08  mib
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.2  92/01/16  00:08:10  rpd
  * 	Moved from user collection to mk collection.

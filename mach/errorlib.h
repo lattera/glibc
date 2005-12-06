@@ -1,47 +1,41 @@
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1991,1990,1989 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
- * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS 
+ *
+ * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie the
  * rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.5  1995/03/10 23:57:44  roland
- * (errors): Use const for decl.
- *
- * Revision 1.4  1993/12/17  21:56:16  roland
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.3  92/03/31  15:18:52  rpd
  * 	Added KERN_DEVICE_MOD for device errors.
  * 	[92/03/09            rpd]
- * 
+ *
  * Revision 2.2  92/01/16  00:21:17  rpd
  * 	Moved from user collection to mk collection.
- * 
+ *
  * Revision 2.2  91/03/27  15:37:37  mrt
  * 	First checkin
- * 
+ *
  */
 /*
  *	File:	errorlib.h

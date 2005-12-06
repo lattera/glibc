@@ -1,3 +1,19 @@
+2005-12-05  Roland McGrath  <roland@redhat.com>
+
+	* hurd/hurdmalloc.c: Remove $ tag $ magic.
+	* mach/err_kern.sub: Likewise.
+	* mach/err_server.sub: Likewise.
+	* mach/err_us.sub: Likewise.
+	* mach/error_compat.c: Likewise.
+	* mach/errorlib.h: Likewise.
+	* mach/errstring.c: Likewise.
+	* mach/mach/error.h: Likewise.
+	* mach/mach_error.c: Likewise.
+	* mach/mach_error.h: Likewise.
+	* mach/msg-destroy.c: Likewise.
+	* mach/msgserver.c: Likewise.
+	* sysdeps/mach/sys/reboot.h: Likewise.
+
 2005-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/tst-mallocfork.c (do_test): Make sure sa_flags is

@@ -24,36 +24,7 @@
  * the rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.6  2002/02/17 07:13:36  roland
- * 2002-02-16  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/msg-destroy.c (__mach_msg_destroy) [MACH_MSG_PORT_DESCRIPTOR]:
- * 	Grok the OSF flavor of message format.
- * 	(mach_msg_destroy_port): For MAKE_SEND and
- * 	MAKE_SEND_ONCE rights, create an destroy a right to ensure proper
- * 	no-senders notification.
- *
- * Revision 1.5  1997/06/21 01:40:07  drepper
- * More 64bit changes.
- *
- * Revision 1.4  1996/11/15 19:44:43  thomas
- * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
- *
- * 	* mach/mach.h (__mach_msg_destroy, mach_msg_destroy, __mach_msg):
- *  	Provide prototypes.
- *
- * 	* mach/msg-destroy.c (mach_msg_destroy_port,
- * 	mach_msg_destroy_memory): Use prototype	syntax.
- * 	* hurd/hurdmalloc.c (more_memory, malloc_fork_prepare,
- * 	malloc_fork_parent, malloc_fork_child): Likewise.
- *
- * Revision 1.3  1995/01/23 22:16:52  roland
- * (mach_msg_destroy): Define as weak alias for __mach_msg_destroy.
- *
- * Revision 1.2  1993/08/03  06:13:18  roland
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.4  91/05/14  17:53:15  mrt
  * 	Correcting copyright
