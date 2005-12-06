@@ -17,8 +17,10 @@
    02111-1307 USA.  */
 
 /* Define the machine-dependent type `jmp_buf'.  HPPA version.  */
+#ifndef _BITS_SETJMP_H
+#define _BITS_SETJMP_H	1
 
-#ifndef _SETJMP_H
+#if !defined _SETJMP_H && !defined _PTHREAD_H
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
@@ -39,3 +41,5 @@ typedef double __jmp_buf[21];
    variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(_jmpbuf, _address)				\
      ((void *)(_address) > (void *)(((unsigned long *) _jmpbuf)[JB_SP]))
+
+#endif	/* bits/setjmp.h */

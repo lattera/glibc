@@ -1,3 +1,21 @@
+2005-11-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/bits/setjmp.h: Add _BITS_SETJMP_H preprocessor
+	protection and allow pthread.h to include bits/setjmp.h as well as
+	setjmp.h.
+	* sysdeps/m68k/bits/setjmp.h: Likewise.
+	* sysdeps/s390/bits/setjmp.h: Make sure only setjmp.h or pthread.h
+	are allow to include bits/setjmp.h.
+	* sysdeps/mips/bits/setjmp.h (_JMPBUF_UNWINDS): Cast rhs to match lhs
+	cast of address.
+	* sysdeps/sh/bits/setjmp.h: Likewise.
+
+2005-11-12  Jim Meyering  <jim@meyering.net>
+
+	* sysdeps/unix/opendir.c (__alloc_dir): Declare STATP parameter
+	to be pointer to const.
+	* include/dirent.h: Update decl.
+
 2005-12-05  Roland McGrath  <roland@redhat.com>
 
 	* hurd/hurdmalloc.c: Remove $ tag $ magic.

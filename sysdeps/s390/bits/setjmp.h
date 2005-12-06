@@ -21,6 +21,10 @@
 #ifndef __S390_SETJMP_H__
 #define __S390_SETJMP_H__
 
+#if !defined _SETJMP_H && !defined _PTHREAD_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
+
 #include <bits/wordsize.h>
 
 #define __JB_GPR6	0

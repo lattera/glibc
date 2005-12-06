@@ -139,7 +139,7 @@ weak_alias (__opendir, opendir)
 
 DIR *
 internal_function
-__alloc_dir (int fd, bool close_fd, struct stat64 *statp)
+__alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
 {
   if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
     goto lose;
