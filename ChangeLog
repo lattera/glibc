@@ -1,3 +1,8 @@
+2005-11-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/tst-mallocfork.c (do_test): Make sure sa_flags is
+	initialized.  Reported by John Reiser <jreiser@BitWagon.com>.
+
 2005-12-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* stdlib/longlong.h: Update from GCC.

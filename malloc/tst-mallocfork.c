@@ -22,9 +22,8 @@ do_test (void)
 {
   pid_t parent = getpid ();
 
-  struct sigaction action;
+  struct sigaction action = { .sa_handler = sig_handler };
   sigemptyset (&action.sa_mask);
-  action.sa_handler = sig_handler;
 
   malloc (sizeof (int));
 
