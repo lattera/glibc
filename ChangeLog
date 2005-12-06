@@ -1,3 +1,9 @@
+2005-12-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/soft-fp.h: Include <stdlib.h>.
+
+	* soft-fp/floatdisf.c (__floatdisf): Return float.
+
 2005-12-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

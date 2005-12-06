@@ -23,7 +23,7 @@
 #include "soft-fp.h"
 #include "single.h"
 
-double __floatdisf(DItype i)
+float __floatdisf(DItype i)
 {
   FP_DECL_EX;
   FP_DECL_S(A);

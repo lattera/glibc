@@ -175,4 +175,6 @@ typedef USItype UHWtype;
 #include <stdlib/longlong.h>
 #endif
 
+#include <stdlib.h>
+
 #endif
