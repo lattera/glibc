@@ -1,3 +1,7 @@
+2005-12-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dwarf2.h: Replace license text with glibc LGPL.
+
 2005-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_table.c (nis_list): Optimize freeing and reallocation of
