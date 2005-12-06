@@ -14,6 +14,8 @@
 	* mach/msgserver.c: Likewise.
 	* sysdeps/mach/sys/reboot.h: Likewise.
 
+	* sysdeps/generic/dwarf2.h: Replace license text with glibc LGPL.
+
 2005-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/tst-mallocfork.c (do_test): Make sure sa_flags is
@@ -33,8 +35,6 @@
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_POSIX_CPU_TIMERS): New macro, for 2.6.12 and later.
-
-	* sysdeps/generic/dwarf2.h: Replace license text with glibc LGPL.
 
 2005-12-03  Ulrich Drepper  <drepper@redhat.com>
 
