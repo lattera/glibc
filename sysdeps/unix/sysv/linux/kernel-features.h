@@ -318,6 +318,11 @@
 # define __ASSUME_POSIX_TIMERS		1
 #endif
 
+/* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
+#if __LINUX_KERNEL_VERSION >= 0x2060c
+# define __ASSUME_POSIX_CPU_TIMERS	1
+#endif
+
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.

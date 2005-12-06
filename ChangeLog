@@ -1,5 +1,8 @@
 2005-12-05  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_POSIX_CPU_TIMERS): New macro, for 2.6.12 and later.
+
 	* sysdeps/generic/dwarf2.h: Replace license text with glibc LGPL.
 
 2005-12-03  Ulrich Drepper  <drepper@redhat.com>
