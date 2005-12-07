@@ -174,7 +174,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
       if (key_gendes (&auth->ah_key) < 0)
 	{
 	  debug ("authdes_create: unable to gen conversation key");
-	  return NULL;
+	  goto failed;
 	}
     }
   else
