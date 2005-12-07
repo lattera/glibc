@@ -1,3 +1,9 @@
+2005-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/auth_des.c (authdes_pk_create): If conversation key
+	cannot be created, free memory.
+	Reported by rprasad@vmware.com.
+
 2005-11-15  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/hppa/bits/setjmp.h: Add _BITS_SETJMP_H preprocessor
