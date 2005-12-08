@@ -81,7 +81,6 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	{
 	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
 	    {
-	      __nisbind_destroy (&bptr);
 	      nis_free_directory (dir);
 	      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
 	      return res;
@@ -167,7 +166,6 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 		      {
 			if (__nisbind_next (&bptr) != NIS_SUCCESS)
 			  {
-			    __nisbind_destroy (&bptr);
 			    nis_free_directory (dir);
 			    return res;
 			  }

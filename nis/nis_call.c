@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -179,7 +179,6 @@ __nisbind_connect (dir_binding *dbp)
 	}
       else
 	dbp->clnt->cl_auth = authunix_create_default ();
-      dbp->use_auth = TRUE;
     }
 
   return NIS_SUCCESS;
@@ -215,10 +214,7 @@ __nisbind_create (dir_binding *dbp, const nis_server *serv_val,
 
   dbp->class = -1;
   if (__nis_findfastest (dbp) < 1)
-    {
-      __nisbind_destroy (dbp);
-      return NIS_NAMEUNREACHABLE;
-    }
+    return NIS_NAMEUNREACHABLE;
 
   return NIS_SUCCESS;
 }
@@ -585,7 +581,6 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
 	    {
 	      nis_free_directory (dir);
-	      __nisbind_destroy (&bptr);
 	      return NIS_NAMEUNREACHABLE;
 	    }
 	}

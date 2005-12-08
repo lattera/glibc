@@ -1,5 +1,15 @@
 2005-12-08  Jakub Jelinek  <jakub@redhat.com>
 
+	* nis/nis_call.c (__nisbind_create): Remove __nisbind_destroy,
+	->clnt cannot be != NULL.
+	(__do_niscall): No need to use __nisbind_destroy, __nisbind_next
+	did it.
+	(__nisbind_connect): use_auth is already TRUE, otherwise we would
+	not be here.
+
+	* nis/nis_lookup.c (nis_lookup): Remove unnecessary
+	__nisbind_destroy calls.  __nisbind_next does all that.
+
 	* nis/ypclnt.c (yp_update): Before trying default authentication,
 	free DES descriptor.
 
