@@ -1,3 +1,8 @@
+2005-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/ypclnt.c (yp_update): Before trying default authentication,
+	free DES descriptor.
+
 2005-12-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_table.c (nis_list): Fix memory handling in error case.

@@ -1004,6 +1004,7 @@ again:
     {
       if (clnt->cl_auth->ah_cred.oa_flavor == AUTH_DES)
 	{
+	  auth_destroy (clnt->cl_auth);
 	  clnt->cl_auth = authunix_create_default ();
 	  goto again;
 	}
