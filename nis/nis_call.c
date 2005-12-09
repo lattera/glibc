@@ -40,25 +40,16 @@ extern u_short __pmap_getnisport (struct sockaddr_in *address, u_long program,
 unsigned long
 inetstr2int (const char *str)
 {
-  char buffer[strlen (str) + 3];
-  size_t buflen;
-  size_t i, j;
-
-  buflen = stpcpy (buffer, str) - buffer;
-
-  j = 0;
-  for (i = 0; i < buflen; ++i)
-    if (buffer[i] == '.')
+  size_t j = 0;
+  for (size_t i = 0; str[i] != '\0'; ++i)
+    if (str[i] == '.' && ++j == 4)
       {
-	++j;
-	if (j == 4)
-	  {
-	    buffer[i] = '\0';
-	    break;
-	  }
+	char buffer[i + 1];
+	buffer[i] = '\0';
+	return inet_addr (memcpy (buffer, str, i));
       }
 
-  return inet_addr (buffer);
+  return inet_addr (str);
 }
 
 void

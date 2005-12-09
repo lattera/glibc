@@ -1,3 +1,7 @@
+2005-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (inetstr2int): Optimize.
+
 2005-12-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_call.c (__nisbind_create): Remove __nisbind_destroy,
