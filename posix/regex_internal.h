@@ -42,6 +42,9 @@
 #if defined HAVE_STDBOOL_H || defined _LIBC
 # include <stdbool.h>
 #endif /* HAVE_STDBOOL_H || _LIBC */
+#if defined HAVE_STDINT_H || defined _LIBC
+# include <stdint.h>
+#endif /* HAVE_STDINT_H || _LIBC */
 #if defined _LIBC
 # include <bits/libc-lock.h>
 #else
@@ -81,6 +84,11 @@
 /* This define is so xgettext can find the internationalizable
    strings.  */
 # define gettext_noop(String) String
+#endif
+
+/* For loser systems without the definition.  */
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
 #endif
 
 #if (defined MB_CUR_MAX && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_WCRTOMB && HAVE_MBRTOWC && HAVE_WCSCOLL) || _LIBC

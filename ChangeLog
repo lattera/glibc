@@ -1,3 +1,11 @@
+2005-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.h: Include <stdint.h> if available.
+
+2005-12-06  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (SIZE_MAX): Provide a default definition.
+
 2005-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (inetstr2int): Optimize.
