@@ -1,3 +1,7 @@
+2005-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/sys/stat.h: Add restrict to fstatat declarations.
+
 2005-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex_internal.h: Include <stdint.h> if available.
