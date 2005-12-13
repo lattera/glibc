@@ -1,3 +1,9 @@
+2005-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/det_endian.c: Removed.
+	* sysdeps/generic/Makefile: Remove rule to build it.
+	* sysdeps/generic/Dist: Don't distribute it.
+
 2005-12-13  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/dl-procinfo.c: New file.
