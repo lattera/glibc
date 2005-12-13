@@ -289,6 +289,17 @@ __pthread_initialize_minimal_internal (void)
   (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
 			   NULL, _NSIG / 8);
 
+  /* Get the size of the static and alignment requirements for the TLS
+     block.  */
+  size_t static_tls_align;
+  _dl_get_tls_static_info (&__static_tls_size, &static_tls_align);
+
+  /* Make sure the size takes all the alignments into account.  */
+  if (STACK_ALIGN > static_tls_align)
+    static_tls_align = STACK_ALIGN;
+  __static_tls_align_m1 = static_tls_align - 1;
+
+  __static_tls_size = roundup (__static_tls_size, static_tls_align);
 
   /* Determine the default allowed stack size.  This is the size used
      in case the user does not specify one.  */
@@ -306,25 +317,13 @@ __pthread_initialize_minimal_internal (void)
   /* Make sure it meets the minimum size that allocate_stack
      (allocatestack.c) will demand, which depends on the page size.  */
   const uintptr_t pagesz = __sysconf (_SC_PAGESIZE);
-  const size_t minstack = pagesz * 2 + __static_tls_size + MINIMAL_REST_STACK;
+  const size_t minstack = pagesz + __static_tls_size + MINIMAL_REST_STACK;
   if (limit.rlim_cur < minstack)
     limit.rlim_cur = minstack;
 
   /* Round the resource limit up to page size.  */
   limit.rlim_cur = (limit.rlim_cur + pagesz - 1) & -pagesz;
   __default_stacksize = limit.rlim_cur;
-
-  /* Get the size of the static and alignment requirements for the TLS
-     block.  */
-  size_t static_tls_align;
-  _dl_get_tls_static_info (&__static_tls_size, &static_tls_align);
-
-  /* Make sure the size takes all the alignments into account.  */
-  if (STACK_ALIGN > static_tls_align)
-    static_tls_align = STACK_ALIGN;
-  __static_tls_align_m1 = static_tls_align - 1;
-
-  __static_tls_size = roundup (__static_tls_size, static_tls_align);
 
 #ifdef SHARED
   /* Transfer the old value from the dynamic linker's internal location.  */
