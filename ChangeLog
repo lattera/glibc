@@ -1,5 +1,10 @@
 2005-12-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/signame.c: Removed.
+	* sysdeps/generic/signame.h: Removed.
+	* sysdeps/generic/configure.in: Removed.
+	* sysdeps/generic/Dist: Remove these files.
+
 	* sysdeps/generic/det_endian.c: Removed.
 	* sysdeps/generic/Makefile: Remove rule to build it.
 	* sysdeps/generic/Dist: Don't distribute it.

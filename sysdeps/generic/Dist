@@ -1,5 +1,3 @@
-signame.c
-signame.h
 dl-brk.c
 dl-sbrk.c
 entry.h
