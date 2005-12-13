@@ -1,3 +1,9 @@
+2005-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): Don't demand that there is an
+	additional full page available on the stack beside guard, TLS, the
+	minimum stack.
+
 2005-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h

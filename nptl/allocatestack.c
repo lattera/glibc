@@ -407,8 +407,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* Make sure the size of the stack is enough for the guard and
 	 eventually the thread descriptor.  */
       guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
-      if (__builtin_expect (size < (guardsize + __static_tls_size
-				    + MINIMAL_REST_STACK + pagesize_m1 + 1),
+      if (__builtin_expect (size < ((guardsize + __static_tls_size
+				     + MINIMAL_REST_STACK + pagesize_m1)
+				    & ~pagesize_m1),
 			    0))
 	/* The stack is too small (or the guard too large).  */
 	return EINVAL;
