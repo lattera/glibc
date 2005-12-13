@@ -1,3 +1,9 @@
+2005-12-12  Roland McGrath  <roland@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Do __static_tls_size
+	adjustments before choosing stack size.  Update minimum stack size
+	calculation to match allocate_stack change.
+
 2005-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (allocate_stack): Don't demand that there is an
