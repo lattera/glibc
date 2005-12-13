@@ -1,6 +1,5 @@
 signame.c
 signame.h
-det_endian.c
 dl-brk.c
 dl-sbrk.c
 entry.h

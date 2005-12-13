@@ -19,15 +19,8 @@
 ifeq (,$(filter-out $(sysdep_dir)/generic/bits $(common-objpfx)/bits,\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/endian.h))))))
 
-$(common-objpfx)bytesex.h: $(common-objpfx)det_endian
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
-
-$(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
-	$(common-objdir-compile)
-
 before-compile := $(before-compile) $(common-objpfx)bits/endian.h
-common-generated := $(common-generated) bits/endian.h det_endian
+common-generated := $(common-generated) bits/endian.h
 
 endif
 
