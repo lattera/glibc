@@ -1,3 +1,7 @@
+2005-12-13  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/Makefile: Remove remaining bits/endian.h cruft.
+
 2005-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/signame.c: Removed.
