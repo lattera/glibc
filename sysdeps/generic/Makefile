@@ -1,4 +1,5 @@
-# Copyright (C) 1992,93,94,95,96,97,99,2002 Free Software Foundation, Inc.
+# Copyright (C) 1992,93,94,95,96,97,99,2002,2005
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +17,6 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-ifeq (,$(filter-out $(sysdep_dir)/generic/bits $(common-objpfx)/bits,\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/endian.h))))))
-
-before-compile := $(before-compile) $(common-objpfx)bits/endian.h
-common-generated := $(common-generated) bits/endian.h
-
-endif
-
 ifeq ($(subdir),string)
 CFLAGS-wordcopy.c += -Wno-uninitialized
 endif
