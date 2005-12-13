@@ -1,3 +1,8 @@
+2005-12-13  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/dl-procinfo.c: New file.
+	* sysdeps/powerpc/dl-procinfo.h: New file.
+
 2005-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/sys/stat.h: Add restrict to fstatat declarations.
