@@ -47,7 +47,7 @@ include ../Rules
 CFLAGS-wcwidth.c = -I../wctype
 CFLAGS-wcswidth.c = -I../wctype
 
-strtox-CFLAGS = -I../include -I../stdlib
+strtox-CFLAGS = -I../include
 CFLAGS-wcstol.c = $(strtox-CFLAGS)
 CFLAGS-wcstoul.c = $(strtox-CFLAGS)
 CFLAGS-wcstoll.c = $(strtox-CFLAGS)
@@ -63,6 +63,9 @@ CFLAGS-wcstod_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
 CFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
+
+# We need to find the default version of strtold_l in stdlib.
+CPPFLAGS-wcstold_l.c = -I../stdlib
 
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata

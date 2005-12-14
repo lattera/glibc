@@ -19,7 +19,7 @@
 
 #define COMPILE_GLOB64	1
 
-#include <sysdeps/generic/glob.c>
+#include <posix/glob.c>
 
 #include "shlib-compat.h"
 
@@ -48,7 +48,7 @@ int __old_glob64 (__const char *__pattern, int __flags,
 
 #define GLOB_ONLY_P 1
 
-#include <sysdeps/generic/glob.c>
+#include <posix/glob.c>
 
 compat_symbol (libc, __old_glob64, glob64, GLIBC_2_1);
 #endif

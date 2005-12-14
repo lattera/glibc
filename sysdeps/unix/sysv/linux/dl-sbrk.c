@@ -2,4 +2,4 @@
    from ld.so.  */
 extern void *__curbrk attribute_hidden;
 
-#include <sbrk.c>
+#include <misc/sbrk.c>

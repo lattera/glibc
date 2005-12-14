@@ -1,3 +1,9 @@
+2005-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/sigfillset.c: Adjust for files moved out of
+	sysdeps/generic.
+	* errno-loc.c: New file.
+
 2005-12-12  Roland McGrath  <roland@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Do __static_tls_size

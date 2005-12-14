@@ -7,4 +7,4 @@
 # define send_flags 0
 #endif
 
-#include <sysdeps/generic/syslog.c>
+#include <misc/syslog.c>

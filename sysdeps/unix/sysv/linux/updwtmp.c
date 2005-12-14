@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1998.
 
@@ -31,4 +31,4 @@
 	 && __access (_PATH_WTMP "x", F_OK) != 0) ? _PATH_WTMP : \
 	file_name))))
 
-#include <sysdeps/generic/updwtmp.c>
+#include <login/updwtmp.c>

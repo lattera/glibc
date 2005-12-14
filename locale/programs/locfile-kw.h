@@ -1,35 +1,64 @@
-/* ANSI-C code produced by gperf version 2.7.2 */
+/* ANSI-C code produced by gperf version 3.0.1 */
 /* Command-line: gperf -acCgopt -k'1,2,5,9,$' -L ANSI-C -N locfile_hash programs/locfile-kw.gperf  */
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+
+#if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
+      && ('%' == 37) && ('&' == 38) && ('\'' == 39) && ('(' == 40) \
+      && (')' == 41) && ('*' == 42) && ('+' == 43) && (',' == 44) \
+      && ('-' == 45) && ('.' == 46) && ('/' == 47) && ('0' == 48) \
+      && ('1' == 49) && ('2' == 50) && ('3' == 51) && ('4' == 52) \
+      && ('5' == 53) && ('6' == 54) && ('7' == 55) && ('8' == 56) \
+      && ('9' == 57) && (':' == 58) && (';' == 59) && ('<' == 60) \
+      && ('=' == 61) && ('>' == 62) && ('?' == 63) && ('A' == 65) \
+      && ('B' == 66) && ('C' == 67) && ('D' == 68) && ('E' == 69) \
+      && ('F' == 70) && ('G' == 71) && ('H' == 72) && ('I' == 73) \
+      && ('J' == 74) && ('K' == 75) && ('L' == 76) && ('M' == 77) \
+      && ('N' == 78) && ('O' == 79) && ('P' == 80) && ('Q' == 81) \
+      && ('R' == 82) && ('S' == 83) && ('T' == 84) && ('U' == 85) \
+      && ('V' == 86) && ('W' == 87) && ('X' == 88) && ('Y' == 89) \
+      && ('Z' == 90) && ('[' == 91) && ('\\' == 92) && (']' == 93) \
+      && ('^' == 94) && ('_' == 95) && ('a' == 97) && ('b' == 98) \
+      && ('c' == 99) && ('d' == 100) && ('e' == 101) && ('f' == 102) \
+      && ('g' == 103) && ('h' == 104) && ('i' == 105) && ('j' == 106) \
+      && ('k' == 107) && ('l' == 108) && ('m' == 109) && ('n' == 110) \
+      && ('o' == 111) && ('p' == 112) && ('q' == 113) && ('r' == 114) \
+      && ('s' == 115) && ('t' == 116) && ('u' == 117) && ('v' == 118) \
+      && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122) \
+      && ('{' == 123) && ('|' == 124) && ('}' == 125) && ('~' == 126))
+/* The character set is not based on ISO-646.  */
+#error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf@gnu.org>."
+#endif
+
+#line 1 "programs/locfile-kw.gperf"
+
+/* Copyright (C) 1996,1997,1998,1999,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
 
 #include "locfile-token.h"
+#line 23 "programs/locfile-kw.gperf"
 struct keyword_t ;
 
 #define TOTAL_KEYWORDS 175
 #define MIN_WORD_LENGTH 3
 #define MAX_WORD_LENGTH 22
 #define MIN_HASH_VALUE 3
-#define MAX_HASH_VALUE 687
-/* maximum key range = 685, duplicates = 0 */
+#define MAX_HASH_VALUE 610
+/* maximum key range = 608, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -43,49 +72,51 @@ hash (register const char *str, register unsigned int len)
 {
   static const unsigned short asso_values[] =
     {
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-        5,   0, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688,  15, 688,   0,   0,   0,
-        5,   0,   0,   0, 688, 688,   0, 688,   0,   5,
-      688, 688,  15,   0,   5,  15, 688, 688, 688,   0,
-      688, 688, 688, 688, 688,  75, 688,   0,   0,  65,
-        5,   0,  85,  40,   5, 155, 688,  10, 105, 120,
-      125,  35,   5,  20,   5, 190,   0, 125,  35,  10,
-       30,  35,   0, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688, 688, 688, 688, 688,
-      688, 688, 688, 688, 688, 688
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+        5,   0, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611,   5, 611,   0,   0,   0,
+        0,   0,  10,   0, 611, 611,   0, 611,   0,   5,
+      611, 611,   0,   0,   0,  10, 611, 611, 611,   0,
+      611, 611, 611, 611, 611,   0, 611, 145, 105,  25,
+       15,   0, 190, 110,  10,  35, 611,   0,  80,  65,
+        5, 130,  40,  50,   5,   0,  10,  35,  50,  20,
+        5,  10,   0, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611, 611, 611, 611, 611,
+      611, 611, 611, 611, 611, 611
     };
   register int hval = len;
 
   switch (hval)
     {
       default:
-      case 9:
         hval += asso_values[(unsigned char)str[8]];
+      /*FALLTHROUGH*/
       case 8:
       case 7:
       case 6:
       case 5:
         hval += asso_values[(unsigned char)str[4]];
+      /*FALLTHROUGH*/
       case 4:
       case 3:
       case 2:
         hval += asso_values[(unsigned char)str[1]];
+      /*FALLTHROUGH*/
       case 1:
         hval += asso_values[(unsigned char)str[0]];
         break;
@@ -102,314 +133,470 @@ locfile_hash (register const char *str, register unsigned int len)
   static const struct keyword_t wordlist[] =
     {
       {""}, {""}, {""},
+#line 30 "programs/locfile-kw.gperf"
       {"END",                    tok_end,                    0},
-      {""}, {""}, {""},
-      {"LC_TIME",                tok_lc_time,                0},
-      {"era",                    tok_era,                    0},
-      {"date",                   tok_date,                   0},
-      {"LC_ADDRESS",             tok_lc_address,             0},
-      {"LC_MESSAGES",            tok_lc_messages,            0},
-      {"LC_TELEPHONE",           tok_lc_telephone,           0},
-      {"LC_CTYPE",               tok_lc_ctype,               0},
-      {"era_t_fmt",              tok_era_t_fmt,              0},
-      {"print",                  tok_print,                  0},
-      {"height",                 tok_height,                 0},
-      {"LC_IDENTIFICATION",      tok_lc_identification,      0},
-      {""},
-      {"era_d_fmt",              tok_era_d_fmt,              0},
-      {"LC_COLLATE",             tok_lc_collate,             0},
+      {""}, {""},
+#line 69 "programs/locfile-kw.gperf"
       {"IGNORE",                 tok_ignore,                 0},
+#line 127 "programs/locfile-kw.gperf"
+      {"LC_TIME",                tok_lc_time,                0},
+#line 29 "programs/locfile-kw.gperf"
+      {"LC_CTYPE",               tok_lc_ctype,               0},
+      {""},
+#line 164 "programs/locfile-kw.gperf"
+      {"LC_ADDRESS",             tok_lc_address,             0},
+#line 149 "programs/locfile-kw.gperf"
+      {"LC_MESSAGES",            tok_lc_messages,            0},
+#line 157 "programs/locfile-kw.gperf"
       {"LC_NAME",                tok_lc_name,                0},
-      {"backward",               tok_backward,               0},
-      {"week",                   tok_week,                   0},
-      {"LC_NUMERIC",             tok_lc_numeric,             0},
-      {"reorder-end",            tok_reorder_end,            0},
-      {""},
-      {"reorder-after",          tok_reorder_after,          0},
-      {"UNDEFINED",              tok_undefined,              0},
-      {""},
-      {"LC_MONETARY",            tok_lc_monetary,            0},
-      {""},
-      {"repertoiremap",          tok_repertoiremap,          0},
-      {"LC_MEASUREMENT",         tok_lc_measurement,         0},
-      {""}, {""}, {""},
+#line 154 "programs/locfile-kw.gperf"
       {"LC_PAPER",               tok_lc_paper,               0},
-      {""}, {""}, {""}, {""},
-      {"day",                    tok_day,                    0},
-      {""}, {""},
-      {"yesstr",                 tok_yesstr,                 0},
-      {""}, {""}, {""}, {""}, {""},
-      {"toupper",                tok_toupper,                0},
-      {"era_year",               tok_era_year,               0},
-      {""}, {""},
-      {"order_start",            tok_order_start,            0},
-      {"tolower",                tok_tolower,                0},
-      {""}, {""},
-      {"graph",                  tok_graph,                  0},
-      {""}, {""}, {""},
-      {"order_end",              tok_order_end,              0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 182 "programs/locfile-kw.gperf"
+      {"LC_MEASUREMENT",         tok_lc_measurement,         0},
+#line 55 "programs/locfile-kw.gperf"
+      {"LC_COLLATE",             tok_lc_collate,             0},
       {""},
-      {"abday",                  tok_abday,                  0},
+#line 184 "programs/locfile-kw.gperf"
+      {"LC_IDENTIFICATION",      tok_lc_identification,      0},
+#line 197 "programs/locfile-kw.gperf"
+      {"revision",               tok_revision,               0},
+#line 68 "programs/locfile-kw.gperf"
+      {"UNDEFINED",              tok_undefined,              0},
+#line 123 "programs/locfile-kw.gperf"
+      {"LC_NUMERIC",             tok_lc_numeric,             0},
+#line 80 "programs/locfile-kw.gperf"
+      {"LC_MONETARY",            tok_lc_monetary,            0},
+#line 177 "programs/locfile-kw.gperf"
+      {"LC_TELEPHONE",           tok_lc_telephone,           0},
       {""},
-      {"yesexpr",                tok_yesexpr,                0},
-      {""}, {""},
-      {"t_fmt",                  tok_t_fmt,                  0},
-      {""}, {""}, {""}, {""},
-      {"d_fmt",                  tok_d_fmt,                  0},
-      {""}, {""},
-      {"date_fmt",               tok_date_fmt,               0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"grouping",               tok_grouping,               0},
-      {""}, {""},
-      {"tel_dom_fmt",            tok_tel_dom_fmt,            0},
-      {""}, {""}, {""}, {""},
-      {"era_d_t_fmt",            tok_era_d_t_fmt,            0},
-      {"contact",                tok_contact,                0},
-      {"tel",                    tok_tel,                    0},
-      {"else",                   tok_else,                   0},
-      {"alpha",                  tok_alpha,                  0},
-      {"country_ab3",            tok_country_ab3,            0},
-      {""}, {""}, {""}, {""},
-      {"country_ab2",            tok_country_ab2,            0},
-      {"country_post",           tok_country_post,           0},
-      {"fax",                    tok_fax,                    0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"map",                    tok_map,                    0},
+#line 130 "programs/locfile-kw.gperf"
+      {"week",                   tok_week,                   0},
       {""},
-      {"blank",                  tok_blank,                  0},
-      {""},
-      {"forward",                tok_forward,                0},
-      {"audience",               tok_audience,               0},
-      {""},
-      {"punct",                  tok_punct,                  0},
+#line 74 "programs/locfile-kw.gperf"
       {"define",                 tok_define,                 0},
-      {"abbreviation",           tok_abbreviation,           0},
+#line 150 "programs/locfile-kw.gperf"
+      {"yesexpr",                tok_yesexpr,                0},
+#line 139 "programs/locfile-kw.gperf"
+      {"era_year",               tok_era_year,               0},
       {""},
-      {"copy",                   tok_copy,                   0},
-      {""}, {""}, {""},
-      {"decimal_point",          tok_decimal_point,          0},
+#line 53 "programs/locfile-kw.gperf"
+      {"translit_ignore",        tok_translit_ignore,        0},
+#line 152 "programs/locfile-kw.gperf"
+      {"yesstr",                 tok_yesstr,                 0},
       {""},
-      {"upper",                  tok_upper,                  0},
+#line 87 "programs/locfile-kw.gperf"
+      {"negative_sign",          tok_negative_sign,          0},
+      {""},
+#line 135 "programs/locfile-kw.gperf"
+      {"t_fmt",                  tok_t_fmt,                  0},
+#line 155 "programs/locfile-kw.gperf"
+      {"height",                 tok_height,                 0},
       {""}, {""},
-      {"category",               tok_category,               0},
+#line 51 "programs/locfile-kw.gperf"
+      {"translit_start",         tok_translit_start,         0},
+#line 134 "programs/locfile-kw.gperf"
+      {"d_fmt",                  tok_d_fmt,                  0},
       {""},
-      {"conversion_rate",        tok_conversion_rate,        0},
-      {""}, {""}, {""}, {""},
-      {"lower",                  tok_lower,                  0},
+#line 52 "programs/locfile-kw.gperf"
+      {"translit_end",           tok_translit_end,           0},
+#line 92 "programs/locfile-kw.gperf"
+      {"n_cs_precedes",          tok_n_cs_precedes,          0},
+#line 142 "programs/locfile-kw.gperf"
+      {"era_t_fmt",              tok_era_t_fmt,              0},
+#line 38 "programs/locfile-kw.gperf"
+      {"space",                  tok_space,                  0},
+#line 71 "programs/locfile-kw.gperf"
+      {"reorder-end",            tok_reorder_end,            0},
+#line 72 "programs/locfile-kw.gperf"
+      {"reorder-sections-after", tok_reorder_sections_after, 0},
       {""},
-      {"collating-element",      tok_collating_element,      0},
-      {"duo_p_sep_by_space",     tok_duo_p_sep_by_space,     0},
-      {""},
+#line 140 "programs/locfile-kw.gperf"
+      {"era_d_fmt",              tok_era_d_fmt,              0},
+#line 185 "programs/locfile-kw.gperf"
       {"title",                  tok_title,                  0},
       {""}, {""},
+#line 147 "programs/locfile-kw.gperf"
       {"timezone",               tok_timezone,               0},
       {""},
-      {"digit",                  tok_digit,                  0},
-      {""}, {""}, {""}, {""},
-      {"postal_fmt",             tok_postal_fmt,             0},
-      {""},
-      {"d_t_fmt",                tok_d_t_fmt,                0},
-      {"position",               tok_position,               0},
-      {"p_sep_by_space",         tok_p_sep_by_space,         0},
-      {"nostr",                  tok_nostr,                  0},
-      {"noexpr",                 tok_noexpr,                 0},
-      {""},
-      {"charconv",               tok_charconv,               0},
-      {""},
-      {"width",                  tok_width,                  0},
-      {"country_car",            tok_country_car,            0},
-      {"comment_char",           tok_comment_char,           0},
-      {""}, {""}, {""}, {""},
-      {"lang_ab",                tok_lang_ab,                0},
-      {"lang_lib",               tok_lang_lib,               0},
-      {"lang_name",              tok_lang_name,              0},
-      {""}, {""}, {""}, {""},
-      {"elif",                   tok_elif,                   0},
-      {""},
-      {"xdigit",                 tok_xdigit,                 0},
-      {""}, {""}, {""},
-      {"space",                  tok_space,                  0},
-      {""},
-      {"address",                tok_address,                0},
-      {""}, {""}, {""}, {""}, {""},
-      {"name_fmt",               tok_name_fmt,               0},
-      {""},
-      {"t_fmt_ampm",             tok_t_fmt_ampm,             0},
-      {""},
-      {"name_mr",                tok_name_mr,                0},
-      {""},
-      {"from",                   tok_from,                   0},
-      {""},
-      {"escape_char",            tok_escape_char,            0},
-      {"duo_valid_to",           tok_duo_valid_to,           0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 73 "programs/locfile-kw.gperf"
       {"reorder-sections-end",   tok_reorder_sections_end,   0},
-      {""},
-      {"reorder-sections-after", tok_reorder_sections_after, 0},
-      {""}, {""}, {""}, {""}, {""}, {""},
-      {"territory",              tok_territory,              0},
-      {""}, {""},
-      {"country_name",           tok_country_name,           0},
-      {"language",               tok_language,               0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
       {""}, {""}, {""},
-      {"tel_int_fmt",            tok_tel_int_fmt,            0},
-      {"mon_grouping",           tok_mon_grouping,           0},
-      {"positive_sign",          tok_positive_sign,          0},
-      {""},
-      {"abmon",                  tok_abmon,                  0},
-      {"measurement",            tok_measurement,            0},
-      {""}, {""}, {""},
-      {"coll_weight_max",        tok_coll_weight_max,        0},
-      {"collating-symbol",       tok_collating_symbol,       0},
-      {""}, {""}, {""}, {""},
-      {"script",                 tok_script,                 0},
-      {""}, {""}, {""}, {""}, {""}, {""},
-      {"cal_direction",          tok_cal_direction,          0},
-      {""}, {""}, {""}, {""},
-      {"duo_n_sep_by_space",     tok_duo_n_sep_by_space,     0},
-      {""}, {""}, {""}, {""},
-      {"mon",                    tok_mon,                    0},
-      {"translit_start",         tok_translit_start,         0},
-      {"translit_ignore",        tok_translit_ignore,        0},
-      {""},
-      {"translit_end",           tok_translit_end,           0},
-      {"first_weekday",          tok_first_weekday,          0},
-      {""}, {""},
-      {"p_sign_posn",            tok_p_sign_posn,            0},
-      {""},
-      {"first_workday",          tok_first_workday,          0},
+#line 93 "programs/locfile-kw.gperf"
       {"n_sep_by_space",         tok_n_sep_by_space,         0},
-      {""},
-      {"source",                 tok_source,                 0},
-      {"mon_decimal_point",      tok_mon_decimal_point,      0},
-      {"symbol-equivalence",     tok_symbol_equivalence,     0},
-      {""},
-      {"endif",                  tok_endif,                  0},
-      {""}, {""}, {""},
-      {"duo_valid_from",         tok_duo_valid_from,         0},
-      {"default_missing",        tok_default_missing,        0},
       {""}, {""},
+#line 98 "programs/locfile-kw.gperf"
+      {"int_n_cs_precedes",      tok_int_n_cs_precedes,      0},
+      {""}, {""}, {""},
+#line 25 "programs/locfile-kw.gperf"
+      {"escape_char",            tok_escape_char,            0},
+      {""},
+#line 27 "programs/locfile-kw.gperf"
+      {"repertoiremap",          tok_repertoiremap,          0},
+#line 45 "programs/locfile-kw.gperf"
+      {"charclass",              tok_charclass,              0},
+#line 42 "programs/locfile-kw.gperf"
+      {"print",                  tok_print,                  0},
+#line 43 "programs/locfile-kw.gperf"
+      {"xdigit",                 tok_xdigit,                 0},
+#line 108 "programs/locfile-kw.gperf"
+      {"duo_n_cs_precedes",      tok_duo_n_cs_precedes,      0},
+#line 125 "programs/locfile-kw.gperf"
+      {"thousands_sep",          tok_thousands_sep,          0},
+#line 193 "programs/locfile-kw.gperf"
+      {"territory",              tok_territory,              0},
+#line 35 "programs/locfile-kw.gperf"
+      {"digit",                  tok_digit,                  0},
+      {""}, {""},
+#line 90 "programs/locfile-kw.gperf"
+      {"p_cs_precedes",          tok_p_cs_precedes,          0},
+      {""},
+#line 156 "programs/locfile-kw.gperf"
+      {"width",                  tok_width,                  0},
+#line 61 "programs/locfile-kw.gperf"
+      {"script",                 tok_script,                 0},
+#line 28 "programs/locfile-kw.gperf"
+      {"include",                tok_include,                0},
+      {""},
+#line 77 "programs/locfile-kw.gperf"
+      {"else",                   tok_else,                   0},
+#line 180 "programs/locfile-kw.gperf"
+      {"int_select",             tok_int_select,             0},
+      {""}, {""}, {""}, {""},
+#line 32 "programs/locfile-kw.gperf"
+      {"upper",                  tok_upper,                  0},
+      {""}, {""},
+#line 190 "programs/locfile-kw.gperf"
+      {"tel",                    tok_tel,                    0},
+#line 91 "programs/locfile-kw.gperf"
+      {"p_sep_by_space",         tok_p_sep_by_space,         0},
+      {""}, {""},
+#line 96 "programs/locfile-kw.gperf"
+      {"int_p_cs_precedes",      tok_int_p_cs_precedes,      0},
+      {""}, {""},
+#line 40 "programs/locfile-kw.gperf"
+      {"punct",                  tok_punct,                  0},
+      {""}, {""},
+#line 99 "programs/locfile-kw.gperf"
+      {"int_n_sep_by_space",     tok_int_n_sep_by_space,     0},
+      {""}, {""}, {""},
+#line 106 "programs/locfile-kw.gperf"
+      {"duo_p_cs_precedes",      tok_duo_p_cs_precedes,      0},
+      {""}, {""},
+#line 46 "programs/locfile-kw.gperf"
+      {"class",                  tok_class,                  0},
+#line 112 "programs/locfile-kw.gperf"
+      {"duo_int_n_cs_precedes",  tok_duo_int_n_cs_precedes,  0},
+#line 113 "programs/locfile-kw.gperf"
+      {"duo_int_n_sep_by_space", tok_duo_int_n_sep_by_space, 0},
+#line 109 "programs/locfile-kw.gperf"
+      {"duo_n_sep_by_space",     tok_duo_n_sep_by_space,     0},
+#line 117 "programs/locfile-kw.gperf"
+      {"duo_int_n_sign_posn",    tok_duo_int_n_sign_posn,    0},
+      {""}, {""}, {""},
+#line 47 "programs/locfile-kw.gperf"
+      {"charconv",               tok_charconv,               0},
+      {""}, {""},
+#line 183 "programs/locfile-kw.gperf"
+      {"measurement",            tok_measurement,            0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 57 "programs/locfile-kw.gperf"
+      {"section-symbol",         tok_section_symbol,         0},
+#line 181 "programs/locfile-kw.gperf"
+      {"int_prefix",             tok_int_prefix,             0},
+      {""}, {""}, {""}, {""},
+#line 137 "programs/locfile-kw.gperf"
+      {"t_fmt_ampm",             tok_t_fmt_ampm,             0},
+      {""}, {""},
+#line 97 "programs/locfile-kw.gperf"
       {"int_p_sep_by_space",     tok_int_p_sep_by_space,     0},
       {""},
-      {"alt_digits",             tok_alt_digits,             0},
-      {""},
-      {"duo_int_p_sep_by_space", tok_duo_int_p_sep_by_space, 0},
+#line 41 "programs/locfile-kw.gperf"
+      {"graph",                  tok_graph,                  0},
       {""}, {""},
-      {"duo_p_sign_posn",        tok_duo_p_sign_posn,        0},
-      {""}, {""}, {""},
-      {"duo_currency_symbol",    tok_duo_currency_symbol,    0},
-      {""}, {""}, {""},
-      {"outdigit",               tok_outdigit,               0},
-      {""}, {""}, {""}, {""},
-      {"revision",               tok_revision,               0},
-      {""}, {""}, {""}, {""},
-      {"name_gen",               tok_name_gen,               0},
-      {""},
-      {"email",                  tok_email,                  0},
-      {""},
-      {"uno_valid_to",           tok_uno_valid_to,           0},
-      {"negative_sign",          tok_negative_sign,          0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 124 "programs/locfile-kw.gperf"
+      {"decimal_point",          tok_decimal_point,          0},
       {""}, {""},
-      {"alnum",                  tok_alnum,                  0},
-      {""}, {""}, {""}, {""}, {""},
-      {"country_num",            tok_country_num,            0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"am_pm",                  tok_am_pm,                  0},
-      {""},
-      {"mon_thousands_sep",      tok_mon_thousands_sep,      0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"currency_symbol",        tok_currency_symbol,        0},
-      {""}, {""}, {""}, {""}, {""}, {""},
-      {"country_isbn",           tok_country_isbn,           0},
-      {""}, {""}, {""}, {""},
-      {"name_ms",                tok_name_ms,                0},
-      {"name_mrs",               tok_name_mrs,               0},
-      {""}, {""}, {""}, {""},
-      {"thousands_sep",          tok_thousands_sep,          0},
-      {""},
-      {"cntrl",                  tok_cntrl,                  0},
-      {""}, {""}, {""}, {""}, {""},
-      {"n_sign_posn",            tok_n_sign_posn,            0},
-      {"include",                tok_include,                0},
-      {""}, {""},
-      {"ifdef",                  tok_ifdef,                  0},
-      {""},
-      {"duo_p_cs_precedes",      tok_duo_p_cs_precedes,      0},
-      {""}, {""}, {""}, {""}, {""},
-      {"p_cs_precedes",          tok_p_cs_precedes,          0},
-      {"uno_valid_from",         tok_uno_valid_from,         0},
-      {"undef",                  tok_undef,                  0},
-      {""}, {""},
-      {"int_n_sep_by_space",     tok_int_n_sep_by_space,     0},
-      {"lang_term",              tok_lang_term,              0},
-      {""}, {""},
-      {"duo_int_n_sep_by_space", tok_duo_int_n_sep_by_space, 0},
-      {""},
-      {"duo_int_p_sign_posn",    tok_duo_int_p_sign_posn,    0},
-      {"duo_n_sign_posn",        tok_duo_n_sign_posn,        0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""},
-      {"application",            tok_application,            0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""},
-      {"int_p_sign_posn",        tok_int_p_sign_posn,        0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"duo_int_curr_symbol",    tok_duo_int_curr_symbol,    0},
-      {""}, {""}, {""}, {""}, {""},
-      {"int_prefix",             tok_int_prefix,             0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""},
-      {"duo_frac_digits",        tok_duo_frac_digits,        0},
-      {""}, {""}, {""}, {""}, {""},
+#line 110 "programs/locfile-kw.gperf"
       {"duo_int_p_cs_precedes",  tok_duo_int_p_cs_precedes,  0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 111 "programs/locfile-kw.gperf"
+      {"duo_int_p_sep_by_space", tok_duo_int_p_sep_by_space, 0},
+#line 107 "programs/locfile-kw.gperf"
+      {"duo_p_sep_by_space",     tok_duo_p_sep_by_space,     0},
+#line 116 "programs/locfile-kw.gperf"
+      {"duo_int_p_sign_posn",    tok_duo_int_p_sign_posn,    0},
+#line 153 "programs/locfile-kw.gperf"
+      {"nostr",                  tok_nostr,                  0},
+      {""}, {""},
+#line 138 "programs/locfile-kw.gperf"
+      {"era",                    tok_era,                    0},
       {""},
-      {"frac_digits",            tok_frac_digits,            0},
-      {""}, {""},
-      {"charclass",              tok_charclass,              0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""},
-      {"duo_n_cs_precedes",      tok_duo_n_cs_precedes,      0},
-      {""}, {""},
-      {"int_curr_symbol",        tok_int_curr_symbol,        0},
-      {""}, {""},
-      {"n_cs_precedes",          tok_n_cs_precedes,          0},
+#line 82 "programs/locfile-kw.gperf"
+      {"currency_symbol",        tok_currency_symbol,        0},
       {""},
-      {"int_select",             tok_int_select,             0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"duo_int_n_sign_posn",    tok_duo_int_n_sign_posn,    0},
-      {"class",                  tok_class,                  0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""},
-      {"int_p_cs_precedes",      tok_int_p_cs_precedes,      0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""},
-      {"duo_int_frac_digits",    tok_duo_int_frac_digits,    0},
-      {""}, {""}, {""}, {""}, {""},
-      {"int_n_sign_posn",        tok_int_n_sign_posn,        0},
-      {""}, {""}, {""},
+#line 163 "programs/locfile-kw.gperf"
+      {"name_ms",                tok_name_ms,                0},
+#line 161 "programs/locfile-kw.gperf"
+      {"name_mrs",               tok_name_mrs,               0},
+#line 162 "programs/locfile-kw.gperf"
       {"name_miss",              tok_name_miss,              0},
+#line 81 "programs/locfile-kw.gperf"
+      {"int_curr_symbol",        tok_int_curr_symbol,        0},
+#line 186 "programs/locfile-kw.gperf"
+      {"source",                 tok_source,                 0},
+#line 160 "programs/locfile-kw.gperf"
+      {"name_mr",                tok_name_mr,                0},
+#line 159 "programs/locfile-kw.gperf"
+      {"name_gen",               tok_name_gen,               0},
+#line 198 "programs/locfile-kw.gperf"
+      {"date",                   tok_date,                   0},
+      {""}, {""},
+#line 187 "programs/locfile-kw.gperf"
+      {"address",                tok_address,                0},
+#line 158 "programs/locfile-kw.gperf"
+      {"name_fmt",               tok_name_fmt,               0},
+#line 31 "programs/locfile-kw.gperf"
+      {"copy",                   tok_copy,                   0},
+      {""}, {""},
+#line 49 "programs/locfile-kw.gperf"
+      {"tolower",                tok_tolower,                0},
+#line 129 "programs/locfile-kw.gperf"
+      {"day",                    tok_day,                    0},
+#line 103 "programs/locfile-kw.gperf"
+      {"duo_currency_symbol",    tok_duo_currency_symbol,    0},
+#line 101 "programs/locfile-kw.gperf"
+      {"int_n_sign_posn",        tok_int_n_sign_posn,        0},
+      {""}, {""},
+#line 148 "programs/locfile-kw.gperf"
+      {"date_fmt",               tok_date_fmt,               0},
+#line 63 "programs/locfile-kw.gperf"
+      {"order_end",              tok_order_end,              0},
+      {""}, {""},
+#line 166 "programs/locfile-kw.gperf"
+      {"country_name",           tok_country_name,           0},
+#line 70 "programs/locfile-kw.gperf"
+      {"reorder-after",          tok_reorder_after,          0},
+#line 118 "programs/locfile-kw.gperf"
+      {"uno_valid_from",         tok_uno_valid_from,         0},
+#line 115 "programs/locfile-kw.gperf"
+      {"duo_n_sign_posn",        tok_duo_n_sign_posn,        0},
+#line 151 "programs/locfile-kw.gperf"
+      {"noexpr",                 tok_noexpr,                 0},
+      {""},
+#line 194 "programs/locfile-kw.gperf"
+      {"audience",               tok_audience,               0},
+      {""},
+#line 44 "programs/locfile-kw.gperf"
+      {"blank",                  tok_blank,                  0},
+      {""},
+#line 48 "programs/locfile-kw.gperf"
+      {"toupper",                tok_toupper,                0},
+#line 67 "programs/locfile-kw.gperf"
+      {"position",               tok_position,               0},
+#line 120 "programs/locfile-kw.gperf"
+      {"duo_valid_from",         tok_duo_valid_from,         0},
+#line 39 "programs/locfile-kw.gperf"
+      {"cntrl",                  tok_cntrl,                  0},
+      {""},
+#line 26 "programs/locfile-kw.gperf"
+      {"comment_char",           tok_comment_char,           0},
+#line 86 "programs/locfile-kw.gperf"
+      {"positive_sign",          tok_positive_sign,          0},
+      {""}, {""}, {""}, {""},
+#line 132 "programs/locfile-kw.gperf"
+      {"mon",                    tok_mon,                    0},
+      {""}, {""},
+#line 171 "programs/locfile-kw.gperf"
+      {"country_car",            tok_country_car,            0},
+      {""},
+#line 60 "programs/locfile-kw.gperf"
+      {"symbol-equivalence",     tok_symbol_equivalence,     0},
+#line 102 "programs/locfile-kw.gperf"
+      {"duo_int_curr_symbol",    tok_duo_int_curr_symbol,    0},
+#line 100 "programs/locfile-kw.gperf"
+      {"int_p_sign_posn",        tok_int_p_sign_posn,        0},
+      {""}, {""}, {""}, {""}, {""}, {""},
+#line 172 "programs/locfile-kw.gperf"
+      {"country_isbn",           tok_country_isbn,           0},
+#line 36 "programs/locfile-kw.gperf"
+      {"outdigit",               tok_outdigit,               0},
+      {""},
+#line 114 "programs/locfile-kw.gperf"
+      {"duo_p_sign_posn",        tok_duo_p_sign_posn,        0},
+      {""},
+#line 133 "programs/locfile-kw.gperf"
+      {"d_t_fmt",                tok_d_t_fmt,                0},
+      {""}, {""},
+#line 33 "programs/locfile-kw.gperf"
+      {"lower",                  tok_lower,                  0},
+      {""},
+#line 167 "programs/locfile-kw.gperf"
+      {"country_post",           tok_country_post,           0},
+#line 146 "programs/locfile-kw.gperf"
+      {"cal_direction",          tok_cal_direction,          0},
+      {""},
+#line 189 "programs/locfile-kw.gperf"
+      {"email",                  tok_email,                  0},
+#line 141 "programs/locfile-kw.gperf"
+      {"era_d_t_fmt",            tok_era_d_t_fmt,            0},
+      {""}, {""},
+#line 173 "programs/locfile-kw.gperf"
+      {"lang_name",              tok_lang_name,              0},
+      {""},
+#line 179 "programs/locfile-kw.gperf"
+      {"tel_dom_fmt",            tok_tel_dom_fmt,            0},
+      {""}, {""}, {""},
+#line 54 "programs/locfile-kw.gperf"
+      {"default_missing",        tok_default_missing,        0},
+#line 89 "programs/locfile-kw.gperf"
+      {"frac_digits",            tok_frac_digits,            0},
+      {""}, {""}, {""},
+#line 88 "programs/locfile-kw.gperf"
+      {"int_frac_digits",        tok_int_frac_digits,        0},
+#line 170 "programs/locfile-kw.gperf"
+      {"country_num",            tok_country_num,            0},
+#line 119 "programs/locfile-kw.gperf"
+      {"uno_valid_to",           tok_uno_valid_to,           0},
+      {""}, {""}, {""}, {""}, {""},
+#line 50 "programs/locfile-kw.gperf"
+      {"map",                    tok_map,                    0},
+      {""},
+#line 105 "programs/locfile-kw.gperf"
+      {"duo_frac_digits",        tok_duo_frac_digits,        0},
+#line 178 "programs/locfile-kw.gperf"
+      {"tel_int_fmt",            tok_tel_int_fmt,            0},
+#line 121 "programs/locfile-kw.gperf"
+      {"duo_valid_to",           tok_duo_valid_to,           0},
+#line 144 "programs/locfile-kw.gperf"
+      {"first_weekday",          tok_first_weekday,          0},
+      {""},
+#line 143 "programs/locfile-kw.gperf"
+      {"alt_digits",             tok_alt_digits,             0},
+#line 95 "programs/locfile-kw.gperf"
+      {"n_sign_posn",            tok_n_sign_posn,            0},
+#line 84 "programs/locfile-kw.gperf"
+      {"mon_thousands_sep",      tok_mon_thousands_sep,      0},
+#line 145 "programs/locfile-kw.gperf"
+      {"first_workday",          tok_first_workday,          0},
+#line 64 "programs/locfile-kw.gperf"
+      {"from",                   tok_from,                   0},
+#line 131 "programs/locfile-kw.gperf"
+      {"abmon",                  tok_abmon,                  0},
+      {""}, {""},
+#line 192 "programs/locfile-kw.gperf"
+      {"language",               tok_language,               0},
+      {""}, {""},
+#line 195 "programs/locfile-kw.gperf"
+      {"application",            tok_application,            0},
+      {""},
+#line 126 "programs/locfile-kw.gperf"
+      {"grouping",               tok_grouping,               0},
+#line 78 "programs/locfile-kw.gperf"
+      {"elif",                   tok_elif,                   0},
+#line 128 "programs/locfile-kw.gperf"
+      {"abday",                  tok_abday,                  0},
+      {""},
+#line 196 "programs/locfile-kw.gperf"
+      {"abbreviation",           tok_abbreviation,           0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 56 "programs/locfile-kw.gperf"
+      {"coll_weight_max",        tok_coll_weight_max,        0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 66 "programs/locfile-kw.gperf"
+      {"backward",               tok_backward,               0},
+#line 104 "programs/locfile-kw.gperf"
+      {"duo_int_frac_digits",    tok_duo_int_frac_digits,    0},
+      {""},
+#line 94 "programs/locfile-kw.gperf"
+      {"p_sign_posn",            tok_p_sign_posn,            0},
+      {""},
+#line 199 "programs/locfile-kw.gperf"
+      {"category",               tok_category,               0},
+      {""},
+#line 122 "programs/locfile-kw.gperf"
+      {"conversion_rate",        tok_conversion_rate,        0},
+      {""},
+#line 83 "programs/locfile-kw.gperf"
+      {"mon_decimal_point",      tok_mon_decimal_point,      0},
+      {""}, {""}, {""},
+#line 62 "programs/locfile-kw.gperf"
+      {"order_start",            tok_order_start,            0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""},
+#line 188 "programs/locfile-kw.gperf"
+      {"contact",                tok_contact,                0},
+      {""}, {""}, {""},
+#line 169 "programs/locfile-kw.gperf"
+      {"country_ab3",            tok_country_ab3,            0},
+      {""}, {""}, {""}, {""},
+#line 168 "programs/locfile-kw.gperf"
+      {"country_ab2",            tok_country_ab2,            0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""},
+#line 174 "programs/locfile-kw.gperf"
+      {"lang_ab",                tok_lang_ab,                0},
+#line 176 "programs/locfile-kw.gperf"
+      {"lang_lib",               tok_lang_lib,               0},
+      {""}, {""}, {""}, {""},
+#line 191 "programs/locfile-kw.gperf"
+      {"fax",                    tok_fax,                    0},
+      {""},
+#line 136 "programs/locfile-kw.gperf"
+      {"am_pm",                  tok_am_pm,                  0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""},
+#line 37 "programs/locfile-kw.gperf"
+      {"alnum",                  tok_alnum,                  0},
+      {""}, {""}, {""},
+#line 175 "programs/locfile-kw.gperf"
+      {"lang_term",              tok_lang_term,              0},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 79 "programs/locfile-kw.gperf"
+      {"endif",                  tok_endif,                  0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 165 "programs/locfile-kw.gperf"
+      {"postal_fmt",             tok_postal_fmt,             0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""},
+#line 75 "programs/locfile-kw.gperf"
+      {"undef",                  tok_undef,                  0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""},
+#line 58 "programs/locfile-kw.gperf"
+      {"collating-element",      tok_collating_element,      0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""},
+#line 85 "programs/locfile-kw.gperf"
+      {"mon_grouping",           tok_mon_grouping,           0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""},
+#line 65 "programs/locfile-kw.gperf"
+      {"forward",                tok_forward,                0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+#line 59 "programs/locfile-kw.gperf"
+      {"collating-symbol",       tok_collating_symbol,       0},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
       {""}, {""}, {""}, {""},
-      {"duo_int_n_cs_precedes",  tok_duo_int_n_cs_precedes,  0},
+#line 34 "programs/locfile-kw.gperf"
+      {"alpha",                  tok_alpha,                  0},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""},
-      {"int_frac_digits",        tok_int_frac_digits,        0},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {"section-symbol",         tok_section_symbol,         0},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""},
-      {"int_n_cs_precedes",      tok_int_n_cs_precedes,      0}
+#line 76 "programs/locfile-kw.gperf"
+      {"ifdef",                  tok_ifdef,                  0}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)

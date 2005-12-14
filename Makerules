@@ -208,53 +208,6 @@ before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 # later directory would be chosen over a .c file in an earlier directory,
 # which does not preserve the desired sysdeps ordering behavior.
 
-# It matters that this set of rules, for compiling from sources in
-# the current directory (the $srcdir/$subdir) come before the
-# generated sysdep rules in included from sysd-rules below.  When
-# compiling in the source tree, generated sources go into the current
-# directory, and those should be chosen before any sources in sysdeps.
-define o-iterator-doit
-$(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-# Omit the objpfx rules when building in the source tree, because
-# objpfx is empty and so these rules just override the ones above.
-ifdef objpfx
-# Define first rules to find the source files in $(objpfx).
-# Generated source files will end up there.
-define o-iterator-doit
-$(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-endif
-
 # System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
 # patterns matching sysdep directories whose assembly source files should
 # be suppressed.
@@ -304,6 +257,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
 	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
 	 done;								      \
+	 echo "\$$(objpfx)m_%.c: s_%.c; \$$(+make-include-of-dep)";   \
 	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@
 
@@ -317,6 +271,53 @@ define +make-include-of-dep
 echo '#include <$<>' > $@T
 mv -f $@T $@
 endef
+
+# It matters that this set of rules, for compiling from sources in
+# the current directory (the $srcdir/$subdir) come before the
+# generated sysdep rules in included from sysd-rules below.  When
+# compiling in the source tree, generated sources go into the current
+# directory, and those should be chosen before any sources in sysdeps.
+define o-iterator-doit
+$(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+# Omit the objpfx rules when building in the source tree, because
+# objpfx is empty and so these rules just override the ones above.
+ifdef objpfx
+# Define first rules to find the source files in $(objpfx).
+# Generated source files will end up there.
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+endif
 
 # Generate version maps, but wait until sysdep-subdirs is known
 ifeq ($(sysd-sorted-done),t)

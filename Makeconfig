@@ -622,14 +622,15 @@ endif	# $(+cflags) == ""
 +cflags	:= $(sort $(+cflags))
 
 
-# These are flags given to the C compiler to tell it to look for include
-# files (including ones given in angle brackets) in the current directory,
-# in the parent library source directory and in the include directory.
+# These are flags given to the C compiler to tell it to look for
+# include files (including ones given in angle brackets) in the parent
+# library source directory, in the include directory, and in the
+# current directory.
 # `+sysdep-includes' will be defined by Makerules.
-+includes = -I$(..)include -I. \
-	    $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
++includes = -I$(..)include $(patsubst %/,-I%,$(..)) \
 	    $(libio-include) $(includes) \
-	    $(+sysdep-includes) $(sysincludes)
+	    $(+sysdep-includes) $(sysincludes) -I. \
+	    $(patsubst %/,-I%,$(objpfx))
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.
