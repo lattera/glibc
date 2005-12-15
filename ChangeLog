@@ -1,5 +1,9 @@
 2005-12-15  Roland McGrath  <roland@redhat.com>
 
+	[BZ #1997]
+	* manual/stdio.texi (String Streams): For open_memstream, elaborate a
+	little on malloc reference.
+
 	* sysdeps/alpha/fpu/s_cacosf.c: Don't use sysdeps/generic/.
 	* sysdeps/alpha/fpu/s_cacoshf.c: Likewise.
 	* sysdeps/alpha/fpu/s_casinf.c: Likewise.

@@ -4852,8 +4852,9 @@ Got r
 @comment GNU
 @deftypefun {FILE *} open_memstream (char **@var{ptr}, size_t *@var{sizeloc})
 This function opens a stream for writing to a buffer.  The buffer is
-allocated dynamically (as with @code{malloc}; @pxref{Unconstrained
-Allocation}) and grown as necessary.
+allocated dynamically and grown as necessary, using @code{malloc}.
+After you've closed the stream, this buffer is your responsibility to
+clean up using @code{free} or @code{realloc}.  @xref{Unconstrained Allocation}.
 
 When the stream is closed with @code{fclose} or flushed with
 @code{fflush}, the locations @var{ptr} and @var{sizeloc} are updated to
