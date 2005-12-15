@@ -1,5 +1,5 @@
 /* Return hyperbole tangent of complex float value.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 
 static _Complex float internal_ctanhf (_Complex float x);
 
-#include <sysdeps/generic/s_ctanhf.c>
+#include <math/s_ctanhf.c>
 #include "cfloat-compat.h"
 
 #undef __ctanhf

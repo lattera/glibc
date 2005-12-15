@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #define wordexp(words, pwordexp, flags) \
   __new_wordexp (words, pwordexp, flags)
 
-#include <sysdeps/generic/wordexp.c>
+#include <posix/wordexp.c>
 
 versioned_symbol (libc, __new_wordexp, wordexp, GLIBC_2_2_2);
 
