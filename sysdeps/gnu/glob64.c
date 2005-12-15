@@ -19,7 +19,7 @@
 
 #define COMPILE_GLOB64	1
 
-#include <sysdeps/generic/glob.c>
+#include <posix/glob.c>
 
 libc_hidden_def (glob64)
 libc_hidden_def (globfree64)

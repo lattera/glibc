@@ -1,5 +1,5 @@
 /* shm_unlink -- remove a POSIX shared memory object.  Generic POSIX version.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 #if ! _POSIX_MAPPED_FILES
-#include <sysdeps/generic/shm_unlink.c>
+#include <rt/shm_unlink.c>
 
 #else
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,5 +71,5 @@ truncate64 (const char *path, off64_t length)
 
 #else
 /* Use the generic implementation.  */
-# include <sysdeps/generic/truncate64.c>
+# include <misc/truncate64.c>
 #endif

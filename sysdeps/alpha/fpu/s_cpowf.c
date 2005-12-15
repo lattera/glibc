@@ -1,5 +1,5 @@
 /* Return power of complex float value.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 
 static _Complex float internal_cpowf (_Complex float x, _Complex float c);
 
-#include <sysdeps/generic/s_cpowf.c>
+#include <math/s_cpowf.c>
 #include "cfloat-compat.h"
 
 #undef __cpowf

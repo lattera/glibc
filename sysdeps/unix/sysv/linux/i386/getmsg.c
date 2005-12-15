@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,5 +34,5 @@ getmsg (fildes, ctlptr, dataptr, flagsp)
   return INLINE_SYSCALL (getpmsg, 5, fildes, ctlptr, dataptr, NULL, flagsp);
 }
 #else
-# include <sysdeps/generic/getmsg.c>
+# include <streams/getmsg.c>
 #endif

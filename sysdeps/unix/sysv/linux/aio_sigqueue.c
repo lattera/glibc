@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,5 +52,5 @@ __aio_sigqueue (sig, val, caller_pid)
 			 sig, __ptrvalue (&info));
 }
 #else
-# include <sysdeps/generic/aio_sigqueue.c>
+# include <rt/aio_sigqueue.c>
 #endif

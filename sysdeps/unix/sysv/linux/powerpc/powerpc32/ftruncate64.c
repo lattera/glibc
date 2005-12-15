@@ -74,5 +74,5 @@ weak_alias (__ftruncate64, ftruncate64)
 
 #else
 /* Use the generic implementation.  */
-# include <sysdeps/generic/ftruncate64.c>
+# include <misc/ftruncate64.c>
 #endif

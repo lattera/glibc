@@ -1,3 +1,7 @@
+2005-12-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_notify.c: Don't use sysdeps/generic.
+
 2005-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/sigfillset.c: Adjust for files moved out of

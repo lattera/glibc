@@ -1,5 +1,5 @@
 /* Emulate sigstack function using sigaltstack.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -65,5 +65,5 @@ sigstack (ss, oss)
 
 link_warning (sigstack, "the `sigstack' function is dangerous.  `sigaltstack' should be used instead.")
 #else
-# include <sysdeps/generic/sigstack.c>
+# include <signal/sigstack.c>
 #endif

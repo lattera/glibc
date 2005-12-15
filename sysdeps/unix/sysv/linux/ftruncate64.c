@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,5 +72,5 @@ weak_alias (__ftruncate64, ftruncate64)
 
 #else
 /* Use the generic implementation.  */
-# include <sysdeps/generic/ftruncate64.c>
+# include <posix/ftruncate64.c>
 #endif

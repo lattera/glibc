@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,5 +54,5 @@ __sched_getaffinity_old (pid_t pid, cpu_set_t *cpuset)
 compat_symbol (libc, __sched_getaffinity_old, sched_getaffinity, GLIBC_2_3_3);
 # endif
 #else
-# include <sysdeps/generic/sched_getaffinity.c>
+# include <posix/sched_getaffinity.c>
 #endif
