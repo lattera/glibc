@@ -1,3 +1,7 @@
+2005-12-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (inhibit-siglist): Removed.
+
 2005-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/charmap-kw.h: Regenerated with new gperf.
