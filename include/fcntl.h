@@ -21,5 +21,8 @@ libc_hidden_proto (__fcntl)
 /* Helper functions for the various *at functions.  For Linux.  */
 extern void __atfct_seterrno (int errval, int fd, const char *buf)
   attribute_hidden;
+extern void __atfct_seterrno_2 (int errval, int fd1, const char *buf1,
+				int fd2, const char *buf2)
+  attribute_hidden;
 
 #endif

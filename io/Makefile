@@ -45,7 +45,7 @@ routines :=								\
 	getcwd getwd getdirname						\
 	chown fchown lchown fchownat					\
 	ttyname ttyname_r isatty					\
-	link symlink readlink						\
+	link linkat symlink symlinkat readlink readlinkat		\
 	unlink unlinkat rmdir						\
 	ftw ftw64 fts poll						\
 	posix_fadvise posix_fadvise64					\

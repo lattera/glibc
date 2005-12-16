@@ -1,3 +1,18 @@
+2005-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/renameat.c: Move errno setting code in
+	separate function __atfct_seterrno_2.
+	* include/fcntl.h: Declare __atfct_seterrno_2.
+	* posix/unistd.h: Declare linkat, symlinkat, readlinkat.
+	* io/Makefile (routines): Add linkat, symlinkat, readlinkat.
+	* io/Versions [GLIBC_2.4]: Export linkat, symlinkat, readlinkat.
+	* io/linkat.c: New file.
+	* io/readlinkat.c: New file.
+	* io/symlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/linkat.c: New file.
+	* sysdeps/unix/sysv/linux/readlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/symlinkat.c: New file.
+
 2005-12-15  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1997]

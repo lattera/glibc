@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-12-02
+GNU C Library NEWS -- history of user-visible changes.  2005-12-15
 Copyright (C) 1992-2002,2003,2004,2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -28,7 +28,7 @@ Version 2.4
   recommend using the stable 2.3 branch.
 
 * New interfaces: fdopendir, openat, fstatat, fchownat, futimesat, renameat,
-  unlinkat, mkdirat, mkfifoat, mknodat.
+  unlinkat, mkdirat, mkfifoat, mknodat, linkat, symlinkat, readlinkat.
 
 Version 2.3.6
 

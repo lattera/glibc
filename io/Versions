@@ -100,8 +100,11 @@ libc {
   GLIBC_2.4 {
     fchownat;
     __fxstatat; __fxstatat64;
+    linkat;
     mkdirat; mkfifoat; __xmknodat;
     openat; openat64;
+    readlinkat;
+    symlinkat;
     unlinkat;
   }
 }

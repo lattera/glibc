@@ -742,6 +742,13 @@ extern int ttyslot (void) __THROW;
 extern int link (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2)) __wur;
 
+#ifdef __USE_GNU
+/* Like link but relative paths in TO and FROM are interpreted relative
+   to FROMFD and TOFD respectively.  */
+extern int linkat (int __fromfd, __const char *__from, int __tofd,
+		   __const char *__to) __THROW __nonnull ((2, 4)) __wur;
+#endif
+
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 /* Make a symbolic link to FROM named TO.  */
 extern int symlink (__const char *__from, __const char *__to)
@@ -753,6 +760,17 @@ extern int symlink (__const char *__from, __const char *__to)
 extern int readlink (__const char *__restrict __path, char *__restrict __buf,
 		     size_t __len) __THROW __nonnull ((1, 2)) __wur;
 #endif /* Use BSD.  */
+
+#ifdef __USE_GNU
+/* Like symlink but a relative path in TO is interpreted relative to TOFD.  */
+extern int symlinkat (__const char *__from, int __tofd,
+		      __const char *__to) __THROW __nonnull ((1, 3)) __wur;
+
+/* Like readlink but a relative PATH is interpreted relative to FD.  */
+extern int readlinkat (int __fd, __const char *__restrict __path,
+		       char *__restrict __buf, size_t __len)
+     __THROW __nonnull ((2, 3)) __wur;
+#endif
 
 /* Remove the link NAME.  */
 extern int unlink (__const char *__name) __THROW __nonnull ((1));
