@@ -36,13 +36,12 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 
 ifeq ($(have-thread-library),yes)
 
-others := nscd_nischeck
 ifneq (yesyes,$(have-fpie)$(build-shared))
 others += nscd
 endif
-install-sbin := nscd nscd_nischeck
+install-sbin := nscd
 
-extra-objs := $(nscd-modules:=.o) nscd_nischeck.o
+extra-objs := $(nscd-modules:=.o)
 
 endif
 
@@ -73,8 +72,7 @@ $(objpfx)selinux.o: sysincludes = # nothing
 
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
-	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
-	      nscd-types.h
+	      nscd.conf nscd.init nscd_proto.h nscd-types.h
 
 include ../Rules
 
@@ -137,14 +135,11 @@ lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
-$(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
 $(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
 	       $(common-objpfx)nis/libnsl.so
-$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
 $(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
 	       $(common-objpfx)nis/libnsl.a
-$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif
