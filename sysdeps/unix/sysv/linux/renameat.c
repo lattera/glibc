@@ -23,6 +23,52 @@
 #include <sysdep.h>
 
 
+void
+attribute_hidden
+__atfct_seterrno_2 (int errval, int fd1, const char *buf1, int fd2,
+		    const char *buf2)
+{
+  if (errval == ENOTDIR && (buf1 != NULL || buf2 != NULL))
+    {
+      /* This can mean either the file descriptor is invalid or
+	 /proc is not mounted.  */
+      struct stat64 st;
+
+      if (buf1 != NULL)
+	{
+	  if (__fxstat64 (_STAT_VER, fd1, &st) != 0)
+	    /* errno is already set correctly.  */
+	    return;
+
+	  /* If /proc is not mounted there is nothing we can do.  */
+	  if (S_ISDIR (st.st_mode)
+	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		  || !S_ISDIR (st.st_mode)))
+	    {
+	      errval = ENOSYS;
+	      goto out;
+	    }
+	}
+
+      if (buf2 != NULL)
+	{
+	  if (__fxstat64 (_STAT_VER, fd2, &st) != 0)
+	    /* errno is already set correctly.  */
+	    return;
+
+	  /* If /proc is not mounted there is nothing we can do.  */
+	  if (S_ISDIR (st.st_mode)
+	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		  || !S_ISDIR (st.st_mode)))
+	    errval = ENOSYS;
+	}
+    }
+
+ out:
+  __set_errno (errval);
+}
+
+
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
 int
 renameat (oldfd, old, newfd, new)
@@ -76,45 +122,8 @@ renameat (oldfd, old, newfd, new)
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
-      int errval = INTERNAL_SYSCALL_ERRNO (result, err);
-      if (errval == ENOTDIR && (bufnew != NULL || bufold != NULL))
-	{
-	  /* This can mean either the file descriptor is invalid or
-	     /proc is not mounted.  */
-	  struct stat64 st;
-
-	  if (bufnew != NULL)
-	    {
-	      if (__fxstat64 (_STAT_VER, newfd, &st) != 0)
-		/* errno is already set correctly.  */
-		return -1;
-
-	      /* If /proc is not mounted there is nothing we can do.  */
-	      if (S_ISDIR (st.st_mode)
-		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		      || !S_ISDIR (st.st_mode)))
-		{
-		  errval = ENOSYS;
-		  goto out;
-		}
-	    }
-
-	  if (bufold != NULL)
-	    {
-	      if (__fxstat64 (_STAT_VER, oldfd, &st) != 0)
-		/* errno is already set correctly.  */
-		return -1;
-
-	      /* If /proc is not mounted there is nothing we can do.  */
-	      if (S_ISDIR (st.st_mode)
-		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		      || !S_ISDIR (st.st_mode)))
-		errval = ENOSYS;
-	    }
-	}
-
-    out:
-      __set_errno (errval);
+      __atfct_seterrno_2 (INTERNAL_SYSCALL_ERRNO (result, err), newfd, bufnew,
+			  oldfd, bufold);
       result = -1;
     }
 
