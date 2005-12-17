@@ -170,7 +170,8 @@ _dl_catch_error (const char **objname, const char **errstring,
 
   struct catch **const catchp = &CATCH_HOOK;
   old = *catchp;
-  errcode = setjmp (c.env);
+  /* Do not save the signal mask.  */
+  errcode = __sigsetjmp (c.env, 0);
   if (__builtin_expect (errcode, 0) == 0)
     {
       *catchp = &c;

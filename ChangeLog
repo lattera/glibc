@@ -1,5 +1,7 @@
 2005-12-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-error.c (_dl_catch_error): Use __sigsetgjmp instead of
+	setjmp.
 	* elf/dl-error.c (_dl_signal_error): Use __longjmp instead of longjmp.
 	* elf/dl-minimal.c (longjmp): Remove definition.
 
