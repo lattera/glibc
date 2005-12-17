@@ -33,6 +33,7 @@ ENTRY (BP_SYM (setjmp))
 	/* Set up arguments, we only need to set the 2nd arg.  */
 	movl $1, %esi
 #ifdef	PIC
+	jmp HIDDEN_JUMPTARGET (__sigsetjmp)
 #else
 	jmp BP_SYM (__sigsetjmp)
 #endif
