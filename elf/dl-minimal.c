@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -147,12 +147,6 @@ __sigjmp_save (sigjmp_buf env, int savemask __attribute__ ((unused)))
 {
   env[0].__mask_was_saved = 0;
   return 0;
-}
-
-void weak_function
-longjmp (jmp_buf env, int val)
-{
-  __longjmp (env[0].__jmpbuf, val);
 }
 
 /* Define our own version of the internal function used by strerror.  We

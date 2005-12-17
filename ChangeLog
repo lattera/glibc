@@ -1,5 +1,8 @@
 2005-12-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-error.c (_dl_signal_error): Use __longjmp instead of longjmp.
+	* elf/dl-minimal.c (longjmp): Remove definition.
+
 	* sysdeps/x86_64/bsd-setjmp.S [PIC] (setjmp): Add missing jmp.
 
 2005-12-14  Thorsten Kukuk  <kukuk@suse.de>
