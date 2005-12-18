@@ -1,3 +1,7 @@
+2005-12-18  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/libc-tls.c: Fix directory on include of base file.
+
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_builtin.c: Mark map with attribute_relro.
