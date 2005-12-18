@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <atomic.h>
 #include "exit.h"
 #include <fork.h>
+#include <sysdep.h>
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'
    with the same dso handle.  Otherwise, if D is NULL, call all of the
@@ -39,7 +40,13 @@ __cxa_finalize (void *d)
 	    /* We don't want to run this cleanup more than once.  */
 	    && ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
 						       ef_cxa))
-	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
+	  {
+	    void (*cxafn) (void *arg, int status) = f->func.cxa.fn;
+#ifdef PTR_DEMANGLE
+	    PTR_DEMANGLE (cxafn);
+#endif
+	    cxafn (f->func.cxa.arg, 0);
+	  }
     }
 
   /* Remove the registered fork handlers.  We do not have to

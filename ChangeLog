@@ -1,5 +1,12 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/cxa_atexit.c: Use PTR_MANGLE on function pointer.  Fill in
+	flavor field last and protect with memory barrier.
+	* stdlib/on_exit.c: Likewise.
+	* stdlib/cxa_finalize.c: Use PTR_DEMANGLE on function pointer before
+	using it.
+	* stdlib/exit.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define PTR_MANGLE and
 	PTR_DEMANGLE for C code in libc.
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.

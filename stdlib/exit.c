@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sysdep.h>
 #include "exit.h"
 
 #include "set-hooks.h"
@@ -45,17 +46,33 @@ exit (int status)
 	    &__exit_funcs->fns[--__exit_funcs->idx];
 	  switch (f->flavor)
 	    {
+	      void (*atfct) (void);
+	      void (*onfct) (int status, void *arg);
+	      void (*cxafct) (void *arg, int status);
+
 	    case ef_free:
 	    case ef_us:
 	      break;
 	    case ef_on:
-	      (*f->func.on.fn) (status, f->func.on.arg);
+	      onfct = f->func.on.fn;
+#ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (onfct);
+#endif
+	      onfct (status, f->func.on.arg);
 	      break;
 	    case ef_at:
-	      (*f->func.at) ();
+	      atfct = f->func.at;
+#ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (atfct);
+#endif
+	      atfct ();
 	      break;
 	    case ef_cxa:
-	      (*f->func.cxa.fn) (f->func.cxa.arg, status);
+	      cxafct = f->func.cxa.fn;
+#ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (cxafct);
+#endif
+	      cxafct (f->func.cxa.arg, status);
 	      break;
 	    }
 	}

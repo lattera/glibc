@@ -21,6 +21,8 @@
 
 #include <bits/libc-lock.h>
 #include "exit.h"
+#include <atomic.h>
+#include <sysdep.h>
 
 #undef __cxa_atexit
 
@@ -35,10 +37,14 @@ __cxa_atexit (void (*func) (void *), void *arg, void *d)
   if (new == NULL)
     return -1;
 
-  new->flavor = ef_cxa;
+#ifdef PTR_MANGLE
+  PTR_MANGLE (func);
+#endif
   new->func.cxa.fn = (void (*) (void *, int)) func;
   new->func.cxa.arg = arg;
   new->func.cxa.dso_handle = d;
+  atomic_write_barrier ();
+  new->flavor = ef_cxa;
   return 0;
 }
 INTDEF(__cxa_atexit)

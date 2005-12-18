@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <stdlib.h>
 #include "exit.h"
+#include <atomic.h>
+#include <sysdep.h>
 
 /* Register a function to be called by exit.  */
 int
@@ -28,9 +30,13 @@ __on_exit (void (*func) (int status, void *arg), void *arg)
   if (new == NULL)
     return -1;
 
-  new->flavor = ef_on;
+#ifdef PTR_MANGLE
+  PTR_MANGLE (func);
+#endif
   new->func.on.fn = func;
   new->func.on.arg = arg;
+  atomic_write_barrier ();
+  new->flavor = ef_on;
   return 0;
 }
 weak_alias (__on_exit, on_exit)
