@@ -1,5 +1,5 @@
 /* Table for builtin transformation mapping.
-   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,7 @@ static struct builtin_map
   int min_needed_to;
   int max_needed_to;
 
-} map[] =
+} map[] attribute_relro =
 {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT) \

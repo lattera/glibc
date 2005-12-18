@@ -1,5 +1,7 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_builtin.c: Mark map with attribute_relro.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (PTR_MANGLE): Define C
 	version for inside ld.so.
 
