@@ -1,5 +1,10 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (PTR_MANGLE): Define C
+	version for inside ld.so.
+
+	* elf/rtld.c (dl_main): Don't use hp timing code unless it's available.
+
 	* sysdeps/powerpc/powerpc32/setjmp-common.S [IS_IN_rtld]: Avoid
 	call to __sigjmp_save.
 	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.

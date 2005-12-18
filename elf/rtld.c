@@ -1837,10 +1837,12 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   if (GLRO(dl_pointer_guard))
     {
       // XXX If it is cheap, we should use a separate value.
-      uintptr_t pointer_chk_guard;
+      uintptr_t pointer_chk_guard = stack_chk_guard;
+#ifndef HP_TIMING_NONAVAIL
       hp_timing_t now;
       HP_TIMING_NOW (now);
-      pointer_chk_guard = stack_chk_guard ^ now;
+      pointer_chk_guard ^= now;
+#endif
 #ifdef THREAD_SET_POINTER_GUARD
       THREAD_SET_POINTER_GUARD (pointer_chk_guard);
 #endif

@@ -320,7 +320,9 @@
 #  define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
 #  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
 # else
-#  error "Define these if necessary"
+#  define PTR_MANGLE(reg)	asm ("xorq __pointer_chk_guard_local(%%rip), %0"\
+				     : "=r" (reg) : "0" (reg))
+#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
 # endif
 #else
 # ifdef __ASSEMBLER__
