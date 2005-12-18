@@ -1,5 +1,6 @@
 /* setjmp for PowerPC.
-   Copyright (C) 1995-1997,1999-2001,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,1999-2001,2003,2004,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,5 +56,10 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stw  r29,((JB_GPRS+15)*4)(3)
 	stw  r30,((JB_GPRS+16)*4)(3)
 	stw  r31,((JB_GPRS+17)*4)(3)
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	li   r3,0
+	blr
+#else
 	b BP_SYM (__sigjmp_save@local)
+#endif
 END (BP_SYM (__sigsetjmp))

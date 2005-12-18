@@ -1,5 +1,9 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/setjmp-common.S [IS_IN_rtld]: Avoid
+	call to __sigjmp_save.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+
 	* stdlib/cxa_atexit.c: Use PTR_MANGLE on function pointer.  Fill in
 	flavor field last and protect with memory barrier.
 	* stdlib/on_exit.c: Likewise.

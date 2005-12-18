@@ -1,5 +1,5 @@
 /* setjmp for PowerPC64.
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -177,5 +177,10 @@ L(aligned_save_vmx):
 	stvx	31,0,r6
 L(no_vmx):
 #endif
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	li	r3,0
+	blr
+#else
 	b JUMPTARGET (BP_SYM (__sigjmp_save))
+#endif
 END (BP_SYM (__sigsetjmp))
