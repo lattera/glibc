@@ -1,5 +1,27 @@
 2005-12-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Versions [GLIBC_PRIVATE]: Export __pointer_chk_guard if defined.
+	* elf/rtld.c: Define __pointer_chk_guard_local and if necessary
+	__pointer_chk_guard.
+	(_rtld_global_ro): Initialize _dl_pointer_guard.
+	(dl_main): Initialize __pointer_chk_guard_local and either
+	__pointer_chk_guard or TLS value if necessary.
+	(process_envvars): Recognize and handle LD_POINTER_GUARD.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro): Add _dl_pointer_guard.
+	* sysdeps/i386/__longjmp.S: Use PTR_DEMANGLE for PC if defined.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Use PTR_MANGLE for PC if defined.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	[IS_IN_rtld]: Avoid call to __sigjmp_save.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define PTR_MANGLE and
+	PTR_DEMANGLE.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+
+	* sysdeps/i386/elf/setjmp.S: Removed.
+	* sysdeps/i386/elf/bsd-setjmp.S: Removed.
+
 	* elf/dl-error.c (_dl_catch_error): Use __sigsetgjmp instead of
 	setjmp.
 	* elf/dl-error.c (_dl_signal_error): Use __longjmp instead of longjmp.

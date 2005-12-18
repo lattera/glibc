@@ -311,4 +311,16 @@
 
 #endif	/* __ASSEMBLER__ */
 
+
+/* Pointer mangling support.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+/* We cannot use the thread descriptor because in ld.so we use setjmp
+   earlier than the descriptor is initialized.  */
+# define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
+# define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+#else
+# define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg
+# define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+#endif
+
 #endif /* linux/x86_64/sysdep.h */

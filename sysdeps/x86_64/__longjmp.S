@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,5 +50,8 @@ ENTRY(__longjmp)
 	mov %esi, %eax
 	movq (JB_PC*8)(%rdi),%rdx
 	movq (JB_RSP*8)(%rdi),%rsp
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (%rdx)
+#endif
 	jmpq *%rdx
 END (BP_SYM (__longjmp))

@@ -50,6 +50,7 @@ typedef struct
   int multiple_threads;
   uintptr_t sysinfo;
   uintptr_t stack_guard;
+  uintptr_t pointer_guard;
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
@@ -423,6 +424,14 @@ union user_desc_init
 #define THREAD_COPY_STACK_GUARD(descr) \
   ((descr)->header.stack_guard						      \
    = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+
+
+/* Set the pointer guard field in the TCB head.  */
+#define THREAD_SET_POINTER_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
+#define THREAD_COPY_POINTER_GUARD(descr) \
+  ((descr)->header.pointer_guard					      \
+   = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
 
 
 #endif /* __ASSEMBLER__ */

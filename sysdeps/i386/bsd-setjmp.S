@@ -28,6 +28,10 @@
 #include "bp-sym.h"
 #include "bp-asm.h"
 
+#define PARMS  LINKAGE		/* no space for saved regs */
+#define JMPBUF PARMS
+#define SIGMSK JMPBUF+PTR_SIZE
+
 ENTRY (BP_SYM (setjmp))
 	/* Note that we have to use a non-exported symbol in the next
 	   jump since otherwise gas will emit it as a jump through the
@@ -44,6 +48,9 @@ ENTRY (BP_SYM (setjmp))
 	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
      	movl %ecx, (JB_SP*4)(%eax)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%ecx)
+#endif
      	movl %ecx, (JB_PC*4)(%eax)
 	LEAVE /* pop frame pointer to prepare for tail-call.  */
 	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */

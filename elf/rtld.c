@@ -90,6 +90,15 @@ INTDEF(_dl_argv)
 uintptr_t __stack_chk_guard attribute_relro;
 #endif
 
+/* Only exported for architectures that don't store the pointer guard
+   value in thread local area.  */
+uintptr_t __pointer_chk_guard_local
+     attribute_relro attribute_hidden __attribute__ ((nocommon));
+#ifndef THREAD_SET_POINTER_GUARD
+strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
+#endif
+
+
 /* List of auditing DSOs.  */
 static struct audit_list
 {
@@ -142,6 +151,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
+    ._dl_pointer_guard = 1,
 
     /* Function pointers.  */
     ._dl_debug_printf = _dl_debug_printf,
@@ -1823,6 +1833,20 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   __stack_chk_guard = stack_chk_guard;
 #endif
 
+  /* Set up the pointer guard as well, if necessary.  */
+  if (GLRO(dl_pointer_guard))
+    {
+      // XXX If it is cheap, we should use a separate value.
+      uintptr_t pointer_chk_guard;
+      hp_timing_t now;
+      HP_TIMING_NOW (now);
+      pointer_chk_guard = stack_chk_guard ^ now;
+#ifdef THREAD_SET_POINTER_GUARD
+      THREAD_SET_POINTER_GUARD (pointer_chk_guard);
+#endif
+      __pointer_chk_guard_local = pointer_chk_guard;
+    }
+
   if (__builtin_expect (mode, normal) != normal)
     {
       /* We were run just to list the shared libraries.  It is
@@ -2575,7 +2599,13 @@ process_envvars (enum mode *modep)
 #endif
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
-	    GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
+	    {
+	      GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
+	      break;
+	    }
+
+	  if (memcmp (envline, "POINTER_GUARD", 13) == 0)
+	    GLRO(dl_pointer_guard) = envline[14] == '0';
 	  break;
 
 	case 14:

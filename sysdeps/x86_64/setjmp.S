@@ -1,5 +1,5 @@
 /* setjmp for x86-64.
-   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,13 +34,22 @@ ENTRY (__sigsetjmp)
 	leaq 8(%rsp), %rdx	/* Save SP as it will be after we return.  */
 	movq %rdx, (JB_RSP*8)(%rdi)
 	movq (%rsp), %rax	/* Save PC we are returning to now.  */
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%rax)
+#endif
 	movq %rax, (JB_PC*8)(%rdi)
 
-	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-#ifdef	PIC
-	jmp C_SYMBOL_NAME (BP_SYM (__sigjmp_save))@PLT
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	xorl %eax, %eax
+	retq
 #else
+	/* Make a tail call to __sigjmp_save; it takes the same args.  */
+# ifdef	PIC
+	jmp C_SYMBOL_NAME (BP_SYM (__sigjmp_save))@PLT
+# else
 	jmp BP_SYM (__sigjmp_save)
+# endif
 #endif
 END (BP_SYM (__sigsetjmp))
 hidden_def (__sigsetjmp)

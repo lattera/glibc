@@ -415,6 +415,11 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   THREAD_COPY_STACK_GUARD (pd);
 #endif
 
+  /* Copy the pointer guard value.  */
+#ifdef THREAD_COPY_POINTER_GUARD
+  THREAD_COPY_POINTER_GUARD (pd);
+#endif
+
   /* Determine scheduling parameters for the thread.  */
   if (attr != NULL
       && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)

@@ -1,3 +1,13 @@
+2005-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): Use
+	THREAD_COPY_POINTER_GUARD if available.
+	* sysdeps/i386/tcb-offsets.sym: Add POINTER_GUARD.
+	* sysdeps/x86_64/tcb-offsets.sym: Likewise.
+	* sysdeps/i386/tls.h (tcbhead_t): Add pointer_guard.
+	Define THREAD_SET_POINTER_GUARD and THREAD_COPY_POINTER_GUARD.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2005-12-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mq_notify.c: Don't use sysdeps/generic.

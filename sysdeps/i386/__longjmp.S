@@ -1,5 +1,5 @@
 /* longjmp for i386.
-   Copyright (C) 1995,1996,1997,1998,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,9 @@ ENTRY (BP_SYM (__longjmp))
 	movl (JB_DI*4)(%ecx), %edi
 	movl (JB_BP*4)(%ecx), %ebp
 	movl (JB_SP*4)(%ecx), %esp
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (%edx)
+#endif
 	/* Jump to saved PC.  */
      	jmp *%edx
 END (BP_SYM (__longjmp))

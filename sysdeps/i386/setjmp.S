@@ -1,5 +1,5 @@
 /* setjmp for i386.
-   Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2001,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,10 +42,19 @@ ENTRY (BP_SYM (__sigsetjmp))
 	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
      	movl %ecx, (JB_SP*4)(%eax)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%ecx)
+#endif
      	movl %ecx, (JB_PC*4)(%eax)
 	LEAVE /* pop frame pointer to prepare for tail-call.  */
 	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
 
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	xorl %eax, %eax
+	ret
+#else
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-	jmp BP_SYM (__sigjmp_save)
+	jmp __sigjmp_save
+#endif
 END (BP_SYM (__sigsetjmp))
