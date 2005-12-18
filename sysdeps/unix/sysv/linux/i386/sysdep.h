@@ -565,8 +565,17 @@ asm (".L__X'%ebx = 1\n\t"
    earlier than the descriptor is initialized.  Using a global variable
    is too complicated here since we have no PC-relative addressing mode.  */
 #else
-# define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg
-# define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg
+#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# else
+#  define PTR_MANGLE(var)	asm ("xorl %%gs:%c2, %0"		      \
+				     : "=r" (var)			      \
+				     : "0" (var),			      \
+				       "i" (offsetof (tcbhead_t,	      \
+						      pointer_guard)))
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
 #endif
 
 #endif /* linux/i386/sysdep.h */

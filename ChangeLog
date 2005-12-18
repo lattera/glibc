@@ -1,3 +1,9 @@
+2005-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define PTR_MANGLE and
+	PTR_DEMANGLE for C code in libc.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+
 2005-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Versions [GLIBC_PRIVATE]: Export __pointer_chk_guard if defined.

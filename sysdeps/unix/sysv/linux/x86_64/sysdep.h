@@ -316,11 +316,24 @@
 #if defined NOT_IN_libc && defined IS_IN_rtld
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  */
-# define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
-# define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
+#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# else
+#  error "Define these if necessary"
+# endif
 #else
-# define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg
-# define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg
+#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+# else
+#  define PTR_MANGLE(var)	asm ("xorq %%fs:%c2, %0"		      \
+				     : "=r" (var)			      \
+				     : "0" (var),			      \
+				       "i" (offsetof (tcbhead_t,	      \
+						      pointer_guard)))
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
 #endif
 
 #endif /* linux/x86_64/sysdep.h */
