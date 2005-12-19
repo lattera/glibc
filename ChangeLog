@@ -1,3 +1,8 @@
+2005-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcsmbsload.c (to_wc): Mark as const.
+	(to_mb): Likewise.
+
 2005-12-18  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/libc-tls.c: Fix directory on include of base file.
