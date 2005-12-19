@@ -2,6 +2,7 @@
 
 	* libio/iofwide.c (__libio_codecvt): Mark as const.
 	(__libio_translit): Likewise.
+	* libio/libioP.h (__libio_codecvt): Adjust declaraction.
 
 	* wcsmbs/wcsmbsload.c (to_wc): Mark as const.
 	(to_mb): Likewise.

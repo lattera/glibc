@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -469,7 +469,7 @@ extern const struct _IO_jump_t _IO_streambuf_jumps;
 extern const struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_str_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
-extern struct _IO_codecvt __libio_codecvt attribute_hidden;
+extern const struct _IO_codecvt __libio_codecvt attribute_hidden;
 extern int _IO_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
 extern int _IO_new_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
 extern int _IO_old_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
