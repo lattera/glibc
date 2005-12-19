@@ -17,13 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <assert.h>
+#include <sysdep.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -67,6 +68,11 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 
   /* Get the structure with the function pointers.  */
   tomb = fcts->tomb;
+  __gconv_fct fct = tomb->__fct;
+#ifdef PTR_DEMANGLE
+  if (tomb->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -82,10 +88,9 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 	{
 	  data.__outbuf = buf;
 
-	  status = DL_CALL_FCT (tomb->__fct,
-				(tomb, &data, &inbuf,
-				 (const unsigned char *) srcend, NULL,
-				 &dummy, 0, 1));
+	  status = DL_CALL_FCT (fct, (tomb, &data, &inbuf,
+				      (const unsigned char *) srcend, NULL,
+				      &dummy, 0, 1));
 
 	  /* Count the number of bytes.  */
 	  result += data.__outbuf - buf;
@@ -107,10 +112,9 @@ __wcsnrtombs (dst, src, nwc, len, ps)
       data.__outbuf = (unsigned char *) dst;
       data.__outbufend = (unsigned char *) dst + len;
 
-      status = DL_CALL_FCT (tomb->__fct,
-			    (tomb, &data, (const unsigned char **) src,
-			     (const unsigned char *) srcend, NULL,
-			     &dummy, 0, 1));
+      status = DL_CALL_FCT (fct, (tomb, &data, (const unsigned char **) src,
+				  (const unsigned char *) srcend, NULL,
+				  &dummy, 0, 1));
 
       /* Count the number of bytes.  */
       result = data.__outbuf - (unsigned char *) dst;

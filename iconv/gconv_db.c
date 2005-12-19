@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <limits.h>
 #include <search.h>
 #include <stdlib.h>
@@ -28,6 +29,7 @@
 
 #include <dlfcn.h>
 #include <gconv_int.h>
+#include <sysdep.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'
@@ -180,7 +182,15 @@ free_derivation (void *p)
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
     if (deriv->steps[cnt].__counter > 0
 	&& deriv->steps[cnt].__end_fct != NULL)
-      DL_CALL_FCT (deriv->steps[cnt].__end_fct, (&deriv->steps[cnt]));
+      {
+	assert (deriv->steps[cnt].__shlib_handle != NULL);
+
+	__gconv_end_fct end_fct = deriv->steps[cnt].__end_fct;
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (end_fct);
+#endif
+	DL_CALL_FCT (end_fct, (&deriv->steps[cnt]));
+      }
 
   /* Free the name strings.  */
   free ((char *) deriv->steps[0].__from_name);
@@ -196,22 +206,30 @@ void
 internal_function
 __gconv_release_step (struct __gconv_step *step)
 {
-  if (--step->__counter == 0)
+  /* Skip builtin modules; they are not reference counted.  */
+  if (step->__shlib_handle != NULL && --step->__counter == 0)
     {
       /* Call the destructor.  */
       if (step->__end_fct != NULL)
-	DL_CALL_FCT (step->__end_fct, (step));
+	{
+	  assert (step->__shlib_handle != NULL);
+
+	  __gconv_end_fct end_fct = step->__end_fct;
+#ifdef PTR_DEMANGLE
+	  PTR_DEMANGLE (end_fct);
+#endif
+	  DL_CALL_FCT (end_fct, (step));
+	}
 
 #ifndef STATIC_GCONV
-      /* Skip builtin modules; they are not reference counted.  */
-      if (step->__shlib_handle != NULL)
-	{
-	  /* Release the loaded module.  */
-	  __gconv_release_shlib (step->__shlib_handle);
-	  step->__shlib_handle = NULL;
-	}
+      /* Release the loaded module.  */
+      __gconv_release_shlib (step->__shlib_handle);
+      step->__shlib_handle = NULL;
 #endif
     }
+  else
+    /* Builtin modules should not have end functions.  */
+    assert (step->__end_fct == NULL);
 }
 
 static int
@@ -272,10 +290,15 @@ gen_steps (struct derivation_step *best, const char *toset,
 	      result[step_cnt].__btowc_fct = NULL;
 
 	      /* Call the init function.  */
-	      if (result[step_cnt].__init_fct != NULL)
+	      __gconv_init_fct init_fct = result[step_cnt].__init_fct;
+	      if (init_fct != NULL)
 		{
-		  status = DL_CALL_FCT (result[step_cnt].__init_fct,
-					(&result[step_cnt]));
+		  assert (result[step_cnt].__shlib_handle != NULL);
+
+# ifdef PTR_DEMANGLE
+		  PTR_DEMANGLE (init_fct);
+# endif
+		  status = DL_CALL_FCT (init_fct, (&result[step_cnt]));
 
 		  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
 		    {
@@ -285,6 +308,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 		      result[step_cnt].__end_fct = NULL;
 		      break;
 		    }
+
+# ifdef PTR_MANGLE
+		  if (result[step_cnt].__btowc_fct != NULL)
+		    PTR_MANGLE (result[step_cnt].__btowc_fct);
+# endif
 		}
 	    }
 	  else
@@ -362,8 +390,19 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 	    }
 
 	  /* Call the init function.  */
-	  if (step->__init_fct != NULL)
-	    DL_CALL_FCT (step->__init_fct, (step));
+	  __gconv_init_fct init_fct = step->__init_fct;
+	  if (init_fct != NULL)
+	    {
+#ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (init_fct);
+#endif
+	      DL_CALL_FCT (init_fct, (step));
+
+#ifdef PTR_MANGLE
+	      if (step->__btowc_fct != NULL)
+		PTR_MANGLE (step->__btowc_fct);
+#endif
+	    }
 	}
     }
   return result;

@@ -18,13 +18,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <assert.h>
+#include <sysdep.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -73,9 +74,13 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   endbuf = inbuf + n;
   if (__builtin_expect (endbuf < inbuf, 0))
     endbuf = (const unsigned char *) ~(uintptr_t) 0;
-  status = DL_CALL_FCT (fcts->towc->__fct,
-			(fcts->towc, &data, &inbuf, endbuf,
-			 NULL, &dummy, 0, 1));
+  __gconv_fct fct = fcts->towc->__fct;
+#ifdef PTR_DEMANGLE
+  if (fcts->towc->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+  status = DL_CALL_FCT (fct, (fcts->towc, &data, &inbuf, endbuf,
+			      NULL, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the

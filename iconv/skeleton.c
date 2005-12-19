@@ -144,6 +144,8 @@
 # include <dlfcn.h>
 #endif
 
+#include <sysdep.h>
+
 #ifndef DL_CALL_FCT
 # define DL_CALL_FCT(fct, args) fct args
 #endif
@@ -393,10 +395,17 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 {
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
-  __gconv_fct fct;
+  __gconv_fct fct = NULL;
   int status;
 
-  fct = (data->__flags & __GCONV_IS_LAST) ? NULL : next_step->__fct;
+  if ((data->__flags & __GCONV_IS_LAST) == 0)
+    {
+      fct = next_step->__fct;
+#ifdef PTR_DEMANGLE
+      if (next_step->__shlib_handle != NULL)
+	PTR_DEMANGLE (fct);
+#endif
+    }
 
   /* If the function is called with no input this means we have to reset
      to the initial state.  The possibly partly converted input is

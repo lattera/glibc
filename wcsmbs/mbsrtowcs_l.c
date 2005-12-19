@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <ctype.h>
 #include <string.h>
 #include "wcsmbsload.h"
@@ -28,7 +29,7 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <assert.h>
+#include <sysdep.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -63,6 +64,11 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 
   /* Get the structure with the function pointers.  */
   towc = fcts->towc;
+  __gconv_fct fct = towc->__fct;
+#ifdef PTR_DEMANGLE
+  if (towc->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -81,9 +87,8 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	{
 	  data.__outbuf = (unsigned char *) buf;
 
-	  status = DL_CALL_FCT (towc->__fct,
-				(towc, &data, &inbuf, srcend, NULL,
-				 &non_reversible, 0, 1));
+	  status = DL_CALL_FCT (fct, (towc, &data, &inbuf, srcend, NULL,
+				      &non_reversible, 0, 1));
 
 	  result += (wchar_t *) data.__outbuf - buf;
 	}
@@ -116,9 +121,8 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	     worst case we need one input byte for one output wchar_t.  */
 	  srcend = srcp + __strnlen ((const char *) srcp, len) + 1;
 
-	  status = DL_CALL_FCT (towc->__fct,
-				(towc, &data, &srcp, srcend, NULL,
-				 &non_reversible, 0, 1));
+	  status = DL_CALL_FCT (fct, (towc, &data, &srcp, srcend, NULL,
+				      &non_reversible, 0, 1));
 	  if ((status != __GCONV_EMPTY_INPUT
 	       && status != __GCONV_INCOMPLETE_INPUT)
 	      /* Not all input read.  */

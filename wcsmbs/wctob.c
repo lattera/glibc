@@ -24,6 +24,8 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
+#include <sysdep.h>
+
 
 int
 wctob (c)
@@ -64,7 +66,12 @@ wctob (c)
   inbuf[0] = c;
 
   const unsigned char *argptr = (const unsigned char *) inptr;
-  status = DL_CALL_FCT (fcts->tomb->__fct,
+  __gconv_fct fct = fcts->tomb->__fct;
+#ifdef PTR_DEMANGLE
+  if (fcts->tomb->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+  status = DL_CALL_FCT (fct,
 			(fcts->tomb, &data, &argptr,
 			 argptr + sizeof (inbuf[0]), NULL, &dummy, 0, 1));
 

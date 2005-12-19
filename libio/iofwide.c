@@ -40,6 +40,7 @@
 # include <wcsmbs/wcsmbsload.h>
 # include <iconv/gconv_int.h>
 # include <shlib-compat.h>
+# include <sysdep.h>
 #endif
 
 
@@ -126,12 +127,11 @@ _IO_fwide (fp, mode)
 	 selected locale for LC_CTYPE.  */
 #ifdef _LIBC
       {
-	struct gconv_fcts fcts;
-
 	/* Clear the state.  We start all over again.  */
 	memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
 	memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
 
+	struct gconv_fcts fcts;
 	__wcsmbs_clone_conv (&fcts);
 	assert (fcts.towc_nsteps == 1);
 	assert (fcts.tomb_nsteps == 1);
@@ -159,7 +159,8 @@ _IO_fwide (fp, mode)
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
 	/* And now the transliteration.  */
-	cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
+	cc->__cd_out.__cd.__data[0].__trans
+	  = (struct __gconv_trans_data  *) &__libio_translit;
       }
 #else
 # ifdef _GLIBCPP_USE_WCHAR_T
@@ -232,7 +233,13 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_out.__cd.__data[0].__outbufend = (unsigned char *) to_end;
   codecvt->__cd_out.__cd.__data[0].__statep = statep;
 
-  status = DL_CALL_FCT (gs->__fct,
+  __gconv_fct fct = gs->__fct;
+#ifdef PTR_DEMANGLE
+  if (gs->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+
+  status = DL_CALL_FCT (fct,
 			(gs, codecvt->__cd_out.__cd.__data, &from_start_copy,
 			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));
@@ -298,7 +305,13 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_out.__cd.__data[0].__outbufend = (unsigned char *) to_end;
   codecvt->__cd_out.__cd.__data[0].__statep = statep;
 
-  status = DL_CALL_FCT (gs->__fct,
+  __gconv_fct fct = gs->__fct;
+#ifdef PTR_DEMANGLE
+  if (gs->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+
+  status = DL_CALL_FCT (fct,
 			(gs, codecvt->__cd_out.__cd.__data, NULL, NULL,
 			 NULL, &dummy, 1, 0));
 
@@ -361,7 +374,13 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.__cd.__data[0].__outbufend = (unsigned char *) to_end;
   codecvt->__cd_in.__cd.__data[0].__statep = statep;
 
-  status = DL_CALL_FCT (gs->__fct,
+  __gconv_fct fct = gs->__fct;
+#ifdef PTR_DEMANGLE
+  if (gs->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+
+  status = DL_CALL_FCT (fct,
 			(gs, codecvt->__cd_in.__cd.__data, &from_start_copy,
 			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));
@@ -459,7 +478,13 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.__cd.__data[0].__outbufend = (unsigned char *) &to_buf[max];
   codecvt->__cd_in.__cd.__data[0].__statep = statep;
 
-  status = DL_CALL_FCT (gs->__fct,
+  __gconv_fct fct = gs->__fct;
+#ifdef PTR_DEMANGLE
+  if (gs->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+
+  status = DL_CALL_FCT (fct,
 			(gs, codecvt->__cd_in.__cd.__data, &cp,
 			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));

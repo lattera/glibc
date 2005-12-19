@@ -1,5 +1,21 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv.c: Demangle pointers before use if necessary.
+	* iconv/gconv_cache.c: Likewise.
+	* iconv/skeleton.c: Likewise.
+	* libio/iofwide.c: Likewise.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs_l.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+	* iconv_gconv_db.c: Likewise.  After init functions returns mangle
+	btowc pointer if necessary.
+	* iconv/gconv_dl.c: Mangle function pointers retrieved from dlsym.
+
 	* iconv/gconv_builtin.c (builtin_map): Change type of size
 	information fields to int8_t.
 

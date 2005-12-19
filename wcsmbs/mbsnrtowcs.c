@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
@@ -24,7 +25,7 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <assert.h>
+#include <sysdep.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -69,6 +70,11 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
   /* Get the structure with the function pointers.  */
   towc = fcts->towc;
+  __gconv_fct fct = towc->__fct;
+#ifdef PTR_DEMANGLE
+  if (towc->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -82,9 +88,8 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	{
 	  data.__outbuf = (unsigned char *) buf;
 
-	  status = DL_CALL_FCT (towc->__fct,
-				(towc, &data, &inbuf, srcend, NULL,
-				 &dummy, 0, 1));
+	  status = DL_CALL_FCT (fct, (towc, &data, &inbuf, srcend, NULL,
+				      &dummy, 0, 1));
 
 	  result += (wchar_t *) data.__outbuf - buf;
 	}
@@ -103,7 +108,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       data.__outbuf = (unsigned char *) dst;
       data.__outbufend = data.__outbuf + len * sizeof (wchar_t);
 
-      status = DL_CALL_FCT (towc->__fct,
+      status = DL_CALL_FCT (fct,
 			    (towc, &data, (const unsigned char **) src, srcend,
 			     NULL, &dummy, 0, 1));
 
