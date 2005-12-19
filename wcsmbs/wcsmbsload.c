@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,1999,2000,2001,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -29,7 +29,7 @@
 
 
 /* These are the descriptions for the default conversion functions.  */
-static struct __gconv_step to_wc =
+static const struct __gconv_step to_wc =
 {
   .__shlib_handle = NULL,
   .__modname = NULL,
@@ -48,7 +48,7 @@ static struct __gconv_step to_wc =
   .__data = NULL
 };
 
-static struct __gconv_step to_mb =
+static const struct __gconv_step to_mb =
 {
   .__shlib_handle = NULL,
   .__modname = NULL,
@@ -71,9 +71,9 @@ static struct __gconv_step to_mb =
 /* For the default locale we only have to handle ANSI_X3.4-1968.  */
 const struct gconv_fcts __wcsmbs_gconv_fcts_c =
 {
-  .towc = &to_wc,
+  .towc = (struct __gconv_step *) &to_wc,
   .towc_nsteps = 1,
-  .tomb = &to_mb,
+  .tomb = (struct __gconv_step *) &to_mb,
   .tomb_nsteps = 1
 };
 
