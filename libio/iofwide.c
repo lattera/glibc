@@ -68,7 +68,7 @@ static int do_always_noconv (struct _IO_codecvt *codecvt);
 
 
 /* The functions used in `codecvt' for libio are always the same.  */
-struct _IO_codecvt __libio_codecvt =
+const struct _IO_codecvt __libio_codecvt =
 {
   .__codecvt_destr = NULL,		/* Destructor, never used.  */
   .__codecvt_do_out = do_out,
@@ -82,7 +82,7 @@ struct _IO_codecvt __libio_codecvt =
 
 
 #ifdef _LIBC
-struct __gconv_trans_data __libio_translit attribute_hidden =
+const struct __gconv_trans_data __libio_translit attribute_hidden =
 {
   .__trans_fct = __gconv_transliterate
 };

@@ -1,5 +1,8 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/iofwide.c (__libio_codecvt): Mark as const.
+	(__libio_translit): Likewise.
+
 	* wcsmbs/wcsmbsload.c (to_wc): Mark as const.
 	(to_mb): Likewise.
 
