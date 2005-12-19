@@ -1,5 +1,8 @@
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_builtin.c (builtin_map): Change type of size
+	information fields to int8_t.
+
 	* libio/iofwide.c (__libio_codecvt): Mark as const.
 	(__libio_translit): Likewise.
 	* libio/libioP.h (__libio_codecvt): Adjust declaraction.

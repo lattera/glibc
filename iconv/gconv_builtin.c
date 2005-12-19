@@ -20,6 +20,7 @@
 
 #include <endian.h>
 #include <limits.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <gconv_int.h>
@@ -27,18 +28,18 @@
 #include <assert.h>
 
 
-static struct builtin_map
+static const struct builtin_map
 {
   const char *name;
   __gconv_fct fct;
   __gconv_btowc_fct btowc_fct;
 
-  int min_needed_from;
-  int max_needed_from;
-  int min_needed_to;
-  int max_needed_to;
+  int8_t min_needed_from;
+  int8_t max_needed_from;
+  int8_t min_needed_to;
+  int8_t max_needed_to;
 
-} map[] attribute_relro =
+} map[] =
 {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT) \
