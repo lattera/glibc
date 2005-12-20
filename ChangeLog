@@ -1,3 +1,12 @@
+2005-12-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifreq.h: File removed.
+	* sysdeps/unix/sysv/linux/ifreq.c: #include "kernel-features.h" here.
+
+	* sysdeps/mach/hurd/ifreq.h: File removed.
+	(__ifreq): Function moved to ...
+	* sysdeps/mach/hurd/ifreq.c: ... here, new file.
+
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/auth_unix.c (auth_unix_ops): Mark as const.
