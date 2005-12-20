@@ -65,7 +65,7 @@ static bool_t authunix_validate (AUTH *, struct opaque_auth *);
 static bool_t authunix_refresh (AUTH *);
 static void authunix_destroy (AUTH *);
 
-static struct auth_ops auth_unix_ops = {
+static const struct auth_ops auth_unix_ops = {
   authunix_nextverf,
   authunix_marshal,
   authunix_validate,
@@ -116,7 +116,7 @@ no_memory:
       mem_free (au, sizeof (*au));
       return NULL;
     }
-  auth->ah_ops = &auth_unix_ops;
+  auth->ah_ops = (struct auth_ops *) &auth_unix_ops;
   auth->ah_private = (caddr_t) au;
   auth->ah_verf = au->au_shcred = _null_auth;
   au->au_shfaults = 0;

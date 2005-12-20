@@ -1,6 +1,7 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sunrpc/auth_none.c (ops): Mark as const.
+	* sunrpc/auth_unix.c (auth_unix_ops): Mark as const.
+	* sunrpc/auth_none.c (ops): Likewise.
 
 	* nss/nsswitch.c (databases): Mark as const.  Change name field
 	into array.
