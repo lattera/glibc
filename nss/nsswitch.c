@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -59,9 +59,9 @@ static service_library *nss_new_service (name_database *database,
 #undef DEFINE_DATABASE
 
 /* Structure to map database name to variable.  */
-static struct
+static const struct
 {
-  const char *name;
+  const char name[10];
   service_user **dbp;
 } databases[] =
 {

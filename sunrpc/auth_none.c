@@ -49,7 +49,7 @@ static bool_t authnone_marshal (AUTH *, XDR *);
 static bool_t authnone_validate (AUTH *, struct opaque_auth *);
 static bool_t authnone_refresh (AUTH *);
 
-static struct auth_ops ops = {
+static const struct auth_ops ops = {
   authnone_verf,
   authnone_marshal,
   authnone_validate,
@@ -80,7 +80,7 @@ authnone_create_once (void)
   ap = &authnone_private;
 
   ap->no_client.ah_cred = ap->no_client.ah_verf = _null_auth;
-  ap->no_client.ah_ops = &ops;
+  ap->no_client.ah_ops = (struct auth_ops *) &ops;
   xdrs = &xdr_stream;
   INTUSE(xdrmem_create) (xdrs, ap->marshalled_client,
 			 (u_int) MAX_MARSHAL_SIZE, XDR_ENCODE);
@@ -88,7 +88,7 @@ authnone_create_once (void)
   (void) INTUSE(xdr_opaque_auth) (xdrs, &ap->no_client.ah_verf);
   ap->mcnt = XDR_GETPOS (xdrs);
   XDR_DESTROY (xdrs);
-}  
+}
 
 AUTH *
 authnone_create (void)

@@ -1,5 +1,11 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/auth_none.c (ops): Mark as const.
+
+	* nss/nsswitch.c (databases): Mark as const.  Change name field
+	into array.
+	* nss/databases.def: Add warning.
+
 	* resolv/res_hconf.c (arg_service_list): Reduce size of svcs and
 	mark const.
 	(cmd): Mark as const.
