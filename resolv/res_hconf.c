@@ -114,10 +114,10 @@ arg_service_list (const char *fname, int line_num, const char *args,
   const char *start;
   size_t len;
   size_t i;
-  static struct
+  static const struct
   {
-    const char * name;
-    enum Name_Service service;
+    const char name[6];
+    int16_t service;
   } svcs[] =
     {
       {"bind",	SERVICE_BIND},
