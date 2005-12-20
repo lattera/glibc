@@ -1,5 +1,8 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_hconf.c (cmd): Mark as const.
+	(parse_line): Mark c as pointer to const.
+
 	* misc/getusershell.c (initshells): Remove unnecessary tests.
 	(endusershell): Likewise.
 	(okshells): Mark as const.

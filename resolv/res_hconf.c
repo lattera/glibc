@@ -67,7 +67,7 @@ static const char *arg_trimdomain_list (const char *, int, const char *,
 static const char *arg_spoof (const char *, int, const char *, unsigned int);
 static const char *arg_bool (const char *, int, const char *, unsigned int);
 
-static struct cmd
+static const struct cmd
 {
   const char *name;
   const char *(*parse_args) (const char * filename, int line_num,
@@ -315,7 +315,7 @@ static void
 parse_line (const char *fname, int line_num, const char *str)
 {
   const char *start;
-  struct cmd *c = 0;
+  const struct cmd *c = 0;
   size_t len;
   size_t i;
 
