@@ -1,5 +1,5 @@
 /* Fetch the host's network interface list.  Hurd version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,14 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <net/if.h>
-#include <hurd.h>
-#include <hurd/pfinet.h>
-#include <sys/socket.h>
-#include <sys/mman.h>
-
-
-static inline void
+void
 __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
   file_t server;
@@ -63,18 +56,4 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
       *ifreqs = (struct ifreq *) data;
     }
 
-}
-
-
-static inline struct ifreq *
-__if_nextreq (struct ifreq *ifr)
-{
-  return ifr + 1;
-}
-
-
-static inline void
-__if_freereq (struct ifreq *ifreqs, int num_ifs)
-{
-  __munmap (ifreqs, num_ifs * sizeof (struct ifreq));
 }
