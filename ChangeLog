@@ -1,3 +1,8 @@
+2005-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/Makefile: Make sure the correct errlist.c file is
+	used when generating errlist-compat.c.
+
 2005-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv.c: Demangle pointers before use if necessary.

@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004, 2005
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -32,12 +32,14 @@ endif
 
 ifeq ($(subdir),stdio-common)
 
-vpath errlist.c $(full_config_sysdirs)
+errlist-c = $(firstword $(wildcard $(addsuffix /errlist.c, \
+						   $(full_config_sysdirs) .)))
+
 ifeq ($(versioning),yes)
-$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(common-objpfx)Versions.v.i $(before-compile)
 else
-$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(before-compile)
 endif
 	$(make-target-directory)
