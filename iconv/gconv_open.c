@@ -71,7 +71,8 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		{
 		  /* It's the builtin transliteration handling.  We only
 		     support it for working on the internal encoding.  */
-		  static const char *internal_trans_names[1] = { "INTERNAL" };
+		  static const char *const internal_trans_names[1]
+		    = { "INTERNAL" };
 		  struct trans_struct *lastp = NULL;
 		  struct trans_struct *runp;
 
@@ -90,7 +91,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 		      /* We leave the `name' field zero to signal that
 			 this is an internal transliteration step.  */
-		      newp->csnames = internal_trans_names;
+		      newp->csnames = (const char **) internal_trans_names;
 		      newp->ncsnames = 1;
 		      newp->trans_fct = __gconv_transliterate;
 
