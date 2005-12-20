@@ -1,5 +1,5 @@
 /* setjmp for 64 bit S/390, ELF version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -46,12 +46,24 @@ END (setjmp)
 
 ENTRY(__sigsetjmp)
 .Linternal_sigsetjmp:
+#ifdef PTR_MANGLE
+	stmg   %r6,%r13,0(%r2)      /* Store registers in jmp_buf.  */
+	lgr    %r4,%r14
+	PTR_MANGLE (%r4, %r5)
+	stg    %r4,64(%r2)
+	stg    %r15,72(%r2)
+#else
         stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
+#endif
 	std    %f1,80(%r2)
 	std    %f3,88(%r2)
 	std    %f5,96(%r2)
 	std    %f7,104(%r2)
-#ifdef PIC
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	lghi   %r2,0
+	br     %r14
+#elif defined PIC
         jg     __sigjmp_save@PLT    /* Branch to PLT of __sigsetjmp.  */
 #else
 	jg     __sigjmp_save

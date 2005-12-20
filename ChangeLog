@@ -1,3 +1,58 @@
+2005-12-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	[BZ #1978]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Map more filesystem types to a string.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Add SYSFS_MAGIC.
+
+2005-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/Makefile (programs/%-kw.h): Run $(GPERF) inside of the
+	programs subdirectory.
+
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S (__longjmp): Use
+	PTR_DEMANGLE for PC if defined.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S (__longjmp):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S (__longjmp): Likewise.
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): Xor %r14 with
+	THREAD_GET_POINTER_GUARD () if PTR_DEMANGLE is defined.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S (__sigsetjmp): Use
+	PTR_MANGLE for PC if defined.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S (__sigsetjmp): Likewise.
+	* sysdeps/s390/s390-32/setjmp.S (__sigsetjmp): Likewise.
+	Avoid call to __sigjmp_save if IS_IN_rtld.
+	* sysdeps/s390/s390-32/elf/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/s390/s390-64/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/s390/s390-64/elf/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (PTR_MANGLE, PTR_DEMANGLE):
+	Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Include tls.h.
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Include tls.h
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Include tls.h.
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	(SYSCALL_ERROR_HANDLER): Add missing semicolons.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Include tls.h.
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S (__socket): Add
+	SYSCALL_ERROR_HANDLER.
+
+2005-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Handle NO_WEAK_ALIAS.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: Likewise.
+	Patch by Clint Adams.
+
+2005-12-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/sys/user.h: Copy struct user and
+	dependent definitions from the kernel header to sys/user.h and
+	remove the #include of asm/user.h.
+
 2005-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/gnu/Makefile: Make sure the correct errlist.c file is

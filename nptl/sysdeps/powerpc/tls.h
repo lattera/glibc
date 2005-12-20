@@ -66,9 +66,11 @@ typedef union dtv
 # include <nptl/descr.h>
 
 /* The stack_guard is accessed directly by GCC -fstack-protector code,
-   so it is a part of public ABI.  The dtv field is private.  */
+   so it is a part of public ABI.  The dtv and pointer_guard fields
+   are private.  */
 typedef struct
 {
+  uintptr_t pointer_guard;
   uintptr_t stack_guard;
   dtv_t *dtv;
 } tcbhead_t;
@@ -165,6 +167,17 @@ register void *__thread_register __asm__ ("r13");
 		     + TLS_PRE_TCB_SIZE))[-1].stack_guard		      \
      = ((tcbhead_t *) ((char *) __thread_register			      \
 		       - TLS_TCB_OFFSET))[-1].stack_guard)
+
+/* Set the stack guard field in TCB head.  */
+# define THREAD_GET_POINTER_GUARD() \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].pointer_guard)
+# define THREAD_SET_POINTER_GUARD(value) \
+    (THREAD_GET_POINTER_GUARD () = (value))
+# define THREAD_COPY_POINTER_GUARD(descr) \
+    (((tcbhead_t *) ((char *) (descr)					      \
+		     + TLS_PRE_TCB_SIZE))[-1].pointer_guard		      \
+     = THREAD_GET_POINTER_GUARD())
 
 /* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
    different value to mean unset l_tls_offset.  */

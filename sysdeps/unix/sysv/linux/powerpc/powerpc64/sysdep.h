@@ -23,6 +23,7 @@
 #define _LINUX_POWERPC_SYSDEP_H 1
 
 #include <sysdeps/unix/powerpc/sysdep.h>
+#include <tls.h>
 
 /* Define __set_errno() for INLINE_SYSCALL macro below.  */
 #ifndef __ASSEMBLER__
@@ -179,5 +180,23 @@
 #define ASM_INPUT_4 ASM_INPUT_3, "4" (r6)
 #define ASM_INPUT_5 ASM_INPUT_4, "5" (r7)
 #define ASM_INPUT_6 ASM_INPUT_5, "6" (r8)
+
+
+/* Pointer mangling support.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+/* We cannot use the thread descriptor because in ld.so we use setjmp
+   earlier than the descriptor is initialized.  */
+#else
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg, tmpreg) \
+	ld	tmpreg,POINTER_GUARD(r13); \
+	xor	reg,tmpreg,reg
+#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
+# else
+#  define PTR_MANGLE(var) \
+  (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
+#endif
 
 #endif /* linux/powerpc/powerpc64/sysdep.h */

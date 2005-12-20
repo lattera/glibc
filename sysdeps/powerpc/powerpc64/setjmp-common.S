@@ -56,6 +56,9 @@ JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 #endif
 	std  r14,((JB_GPRS+0)*8)(3)
 	stfd fp14,((JB_FPRS+0)*8)(3)
+#ifdef PTR_MANGLE
+	PTR_MANGLE (r0, r10)
+#endif
 	std  r0,(JB_LR*8)(3)
 	std  r15,((JB_GPRS+1)*8)(3)
 	stfd fp15,((JB_FPRS+1)*8)(3)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -70,6 +70,33 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
       break;
     case NFS_SUPER_MAGIC:
       fsname = "nfs";
+      break;
+    case SYSFS_MAGIC:
+      fsname = "sysfs";
+      break;
+    case REISERFS_SUPER_MAGIC:
+      fsname = "reiserfs";
+      break;
+    case XFS_SUPER_MAGIC:
+      fsname = "xfs";
+      break;
+    case JFS_SUPER_MAGIC:
+      fsname = "jfs";
+      break;
+    case HPFS_SUPER_MAGIC:
+      fsname = "hpfs";
+      break;
+    case DEVFS_SUPER_MAGIC:
+      fsname = "devfs";
+      break;
+    case ISOFS_SUPER_MAGIC:
+      fsname = "iso9660";
+      break;
+    case MSDOS_SUPER_MAGIC:
+      fsname = "msdos";
+      break;
+    case NTFS_SUPER_MAGIC:
+      fsname = "ntfs";
       break;
     }
 

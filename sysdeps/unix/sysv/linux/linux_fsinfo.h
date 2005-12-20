@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,6 +134,9 @@
 
 /* Constants that identify the `vxfs' filesystem.  */
 #define VXFS_SUPER_MAGIC	0xa501fcf5
+
+/* Constants that identify the `sysfs´ filesystem.  */
+#define SYSFS_MAGIC		0x62656572
 
 /* Maximum link counts.  */
 #define COH_LINK_MAX		10000

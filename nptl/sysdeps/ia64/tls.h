@@ -81,13 +81,14 @@ register struct pthread *__thread_self __asm__("r13");
 # define TLS_TCB_SIZE sizeof (tcbhead_t)
 
 /* This is the size we need before TCB.
-   If there is not any room for uintptr_t stack_guard in struct pthread's
-   final padding, we need to put struct pthread 16 byte slower.  */
+   If there is not any room for uintptr_t stack_guard and
+   uintptr_t pointer_guard in struct pthread's final padding,
+   we need to put struct pthread 16 byte slower.  */
 # define TLS_PRE_TCB_SIZE \
-  (sizeof (struct pthread)					\
-   + (PTHREAD_STRUCT_END_PADDING < sizeof (uintptr_t)		\
-      ? ((sizeof (uintptr_t) + __alignof__ (struct pthread) - 1)\
-	 & ~(__alignof__ (struct pthread) - 1))			\
+  (sizeof (struct pthread)						\
+   + (PTHREAD_STRUCT_END_PADDING < 2 * sizeof (uintptr_t)		\
+      ? ((2 * sizeof (uintptr_t) + __alignof__ (struct pthread) - 1)	\
+	 & ~(__alignof__ (struct pthread) - 1))				\
       : 0))
 
 /* Alignment requirements for the TCB.  */
@@ -155,6 +156,15 @@ register struct pthread *__thread_self __asm__("r13");
 #define THREAD_COPY_STACK_GUARD(descr) \
   (((uintptr_t *) ((char *) (descr) + TLS_PRE_TCB_SIZE))[-1] \
    = ((uintptr_t *) __thread_self)[-1])
+
+/* Set the pointer guard field in TCB head.  */
+#define THREAD_GET_POINTER_GUARD() \
+  (((uintptr_t *) __thread_self)[-2])
+#define THREAD_SET_POINTER_GUARD(value) \
+  (((uintptr_t *) __thread_self)[-2] = (value))
+#define THREAD_COPY_POINTER_GUARD(descr) \
+  (((uintptr_t *) ((char *) (descr) + TLS_PRE_TCB_SIZE))[-2] \
+   = THREAD_GET_POINTER_GUARD ())
 
 #endif /* __ASSEMBLER__ */
 

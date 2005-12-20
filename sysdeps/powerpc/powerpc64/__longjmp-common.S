@@ -1,5 +1,5 @@
 /* longjmp for PowerPC64.
-   Copyright (C) 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -128,6 +128,9 @@ L(no_vmx):
 	lfd fp19,((JB_FPRS+5)*8)(r3)
 	ld r20,((JB_GPRS+6)*8)(r3)
 	lfd fp20,((JB_FPRS+6)*8)(r3)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (r0, r25)
+#endif
 	mtlr r0
 /* 	std r2,40(r1)	Restore the TOC save area.  */
 	ld r21,((JB_GPRS+7)*8)(r3)

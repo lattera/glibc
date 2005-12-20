@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -29,10 +29,22 @@
 /* R2 = pointer to jmp_buf, R3 = savemask */
 
 ENTRY(__sigsetjmp)
+#ifdef PTR_MANGLE
+	stm    %r6,%r13,0(%r2)      /* store registers in jmp_buf */
+	lr     %r4,%r14
+	PTR_MANGLE (%r4, %r5)
+	st     %r4,32(%r2)
+	st     %r15,36(%r2)
+#else
 	stm    %r6,%r15,0(%r2)      /* store registers in jmp_buf */
+#endif
 	std    %f4,40(%r2)
 	std    %f6,48(%r2)
-#ifdef PIC
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	lhi    %r2,0
+	br     %r14
+#elif defined PIC
 	/* We cannot use the PLT, because it requires that %r12 be set, but
 	   we can't save and restore our caller's value.  Instead, we do an
 	   indirect jump through the GOT. */

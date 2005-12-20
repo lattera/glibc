@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -29,18 +29,27 @@
 void
 __longjmp (__jmp_buf env, int val)
 {
-   /* Restore registers and jump back.  */
-   asm volatile ("lgr  %%r2,%0\n\t"        /* Put val in grp 2.  */
-		 "ld   %%f7,104(%1)\n\t"
-		 "ld   %%f5,96(%1)\n\t"
-		 "ld   %%f3,88(%1)\n\t"
-		 "ld   %%f1,80(%1)\n\t"
-                 "lmg  %%r6,%%r15,0(%1)\n\t"
-                 "br   %%r14"
-                 : : "r" (val == 0 ? 1 : val),
-                 "a" (env) : "2" );
+#ifdef PTR_DEMANGLE
+  register uintptr_t r5 __asm ("%r5") = THREAD_GET_POINTER_GUARD ();
+#endif
+  /* Restore registers and jump back.  */
+  asm volatile ("lgr  %%r2,%0\n\t"        /* Put val in grp 2.  */
+		"ld   %%f7,104(%1)\n\t"
+		"ld   %%f5,96(%1)\n\t"
+		"ld   %%f3,88(%1)\n\t"
+		"ld   %%f1,80(%1)\n\t"
+		"lmg  %%r6,%%r15,0(%1)\n\t"
+#ifdef PTR_DEMANGLE
+		"xgr  %%r14,%2\n\t"
+#endif
+		"br   %%r14"
+		: : "r" (val == 0 ? 1 : val),
+		    "a" (env)
+#ifdef PTR_DEMANGLE
+		    , "r" (r5)
+#endif
+		: "2" );
 
   /* Avoid `volatile function does return' warnings.  */
   for (;;);
 }
-

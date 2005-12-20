@@ -1,5 +1,6 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-1997,1999-2001,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 1999-2001, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +41,9 @@ ENTRY (BP_SYM (__longjmp))
 	lwz r18,((JB_GPRS+4)*4)(r3)
 	lwz r19,((JB_GPRS+5)*4)(r3)
 	lwz r20,((JB_GPRS+6)*4)(r3)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (r0, r25)
+#endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)
 	lwz r22,((JB_GPRS+8)*4)(r3)

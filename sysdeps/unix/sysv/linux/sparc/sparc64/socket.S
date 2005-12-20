@@ -40,7 +40,11 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-#define __socket P(__,socket)
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 .globl __socket
@@ -107,4 +111,6 @@ ENTRY (__socket)
 
 END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

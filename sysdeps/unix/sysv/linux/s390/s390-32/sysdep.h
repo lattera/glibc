@@ -1,4 +1,5 @@
-/* Copyright (C) 2000,01,02,03,04 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -23,6 +24,7 @@
 #include <sysdeps/s390/s390-32/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
+#include <tls.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -111,8 +113,8 @@
 0:  lcr   %r0,%r2;							      \
     basr  %r1,0;							      \
 1:  al    %r1,2f-1b(%r1);						      \
-    l     %r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1)			      \
-    ear   %r2,%a0							      \
+    l     %r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1);			      \
+    ear   %r2,%a0;							      \
     st    %r0,0(%r1,%r2);						      \
     lhi   %r2,-1;							      \
     br    %r14;								      \
@@ -260,5 +262,25 @@
 #define ASMFMT_3 , "0" (gpr2), "d" (gpr3), "d" (gpr4)
 #define ASMFMT_4 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5)
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
+
+
+/* Pointer mangling support.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+/* We cannot use the thread descriptor because in ld.so we use setjmp
+   earlier than the descriptor is initialized.  */
+#else
+/* For the time being just use stack_guard rather than a separate
+   pointer_guard.  */
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg, tmpreg) \
+  ear     tmpreg,%a0;			\
+  x       reg,STACK_GUARD(tmpreg)
+#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
+# else
+#  define PTR_MANGLE(var) \
+  (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
+#endif
 
 #endif /* _LINUX_S390_SYSDEP_H */

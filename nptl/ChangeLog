@@ -1,3 +1,19 @@
+2005-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/tls.h (TLS_PRE_TCB_SIZE): Make room for 2 uintptr_t's
+	rather than one.
+	(THREAD_GET_POINTER_GUARD, THREAD_SET_POINTER_GUARD,
+	THREAD_COPY_POINTER_GUARD): Define.
+	* sysdeps/powerpc/tcb-offsets.sym (POINTER_GUARD): Add.
+	* sysdeps/powerpc/tls.h (tcbhead_t): Add pointer_guard field.
+	(THREAD_GET_POINTER_GUARD, THREAD_SET_POINTER_GUARD,
+	THREAD_COPY_POINTER_GUARD): Define.
+	* sysdeps/s390/tcb-offsets.sym (STACK_GUARD): Add.
+	* sysdeps/s390/tls.h (THREAD_GET_POINTER_GUARD,
+	THREAD_SET_POINTER_GUARD, THREAD_COPY_POINTER_GUARD): Define.
+	* sysdeps/unix/sysv/linux/ia64/__ia64_longjmp.S (__ia64_longjmp):
+	Use PTR_DEMANGLE for B0 if defined.
+
 2005-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): Use

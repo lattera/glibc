@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2004, 2005 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -102,6 +102,9 @@ LEAF(__ia64_longjmp)
 	;;
 	ld8.nta r20=[r2],16		// b4
 	ld8.nta r21=[r3],16		// b5
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (r16, r24)
+#endif
 	;;
 	ld8.nta r11=[r2],16		// ar.pfs
 	ld8.nta r22=[r3],56		// ar.lc
