@@ -1,3 +1,10 @@
+2005-12-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Update for GCC 4.1 prerelease.
+
+	* sysdeps/unix/sysv/linux/time.c: If __NR_time is not defined,
+	use sysdeps/unix/time.c implementation.
+
 2005-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1955]

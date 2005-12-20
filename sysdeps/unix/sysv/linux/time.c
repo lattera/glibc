@@ -21,9 +21,11 @@
 
 #include <sysdep.h>
 
+#ifdef __NR_time
 
 time_t
-time (time_t *t)
+time (t)
+     time_t *t;
 {
   INTERNAL_SYSCALL_DECL (err);
   time_t res = INTERNAL_SYSCALL (time, err, 1, NULL);
@@ -33,3 +35,9 @@ time (time_t *t)
   return res;
 }
 libc_hidden_def (time)
+
+#else
+
+# include <sysdeps/unix/time.c>
+
+#endif
