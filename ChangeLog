@@ -1,5 +1,9 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/getusershell.c (initshells): Remove unnecessary tests.
+	(endusershell): Likewise.
+	(okshells): Mark as const.
+
 	* sysdeps/posix/gai_strerror.c: Complete rewrite. Avoid relocations.
 	* sysdeps/posix/gai_strerror-strs.h: New file.
 	* sysdeps/posix/Dist: New file.

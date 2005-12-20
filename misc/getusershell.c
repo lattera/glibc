@@ -46,7 +46,7 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
  * /etc/shells.
  */
 
-static const char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
+static const char *const okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
 static char **curshell, **shells, *strings;
 static char **initshells (void) __THROW;
 
@@ -70,11 +70,9 @@ void
 endusershell()
 {
 
-	if (shells != NULL)
-		free(shells);
+	free(shells);
 	shells = NULL;
-	if (strings != NULL)
-		free(strings);
+	free(strings);
 	strings = NULL;
 	curshell = NULL;
 }
@@ -94,11 +92,9 @@ initshells()
 	struct stat64 statb;
 	int flen;
 
-	if (shells != NULL)
-		free(shells);
+	free(shells);
 	shells = NULL;
-	if (strings != NULL)
-		free(strings);
+	free(strings);
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "rc")) == NULL)
 		return (char **) okshells;
@@ -117,8 +113,6 @@ initshells()
 		strings = NULL;
 		return (char **) okshells;
 	}
-	/* No threads using this stream.  */
-	__fsetlocking (fp, FSETLOCKING_BYCALLER);
 	sp = shells;
 	cp = strings;
 	flen = statb.st_size;
