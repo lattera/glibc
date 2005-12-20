@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997,98,99,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -78,7 +78,7 @@ static struct gconv_module builtin_modules[] =
 #undef BUILTIN_ALIAS
 };
 
-static const char *builtin_aliases[] =
+static const char *const builtin_aliases[] =
 {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT)

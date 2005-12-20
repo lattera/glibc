@@ -1,3 +1,10 @@
+2005-12-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tcb-offsets.sym: Add POINTER_GUARD.
+	* sysdeps/sh/tls.h (tcbhead_t): Remove private and add pointer_guard.
+	(THREAD_GET_POINTER_GUARD, THREAD_SET_POINTER_GUARD,
+	THREAD_COPY_POINTER_GUARD): Define.
+
 2005-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/tls.h (TLS_PRE_TCB_SIZE): Make room for 2 uintptr_t's
