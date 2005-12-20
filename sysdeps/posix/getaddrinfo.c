@@ -1098,7 +1098,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   return 0;
 }
 
-static struct gaih gaih[] =
+static const struct gaih gaih[] =
   {
     { PF_INET6, gaih_inet },
     { PF_INET, gaih_inet },
@@ -1461,7 +1461,8 @@ getaddrinfo (const char *name, const char *service,
   int i = 0, j = 0, last_i = 0;
   int nresults = 0;
   struct addrinfo *p = NULL, **end;
-  struct gaih *g = gaih, *pg = NULL;
+  const struct gaih *g = gaih;
+  const struct gaih *pg = NULL;
   struct gaih_service gaih_service, *pservice;
   struct addrinfo local_hints;
 

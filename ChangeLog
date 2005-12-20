@@ -1,6 +1,7 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* locale/loadlocale.c (_nl_value_types): Mark as const.
+	* sysdeps/posix/getaddrinfo.c (gaih): Mark as const.
+	* locale/loadlocale.c (_nl_value_types): Likewise.
 	* iconv/gconv_conf.c (builtin_aliases): Likewise.
 	* iconv/gconv_open.c (internal_trans_names): Likewise.
 
