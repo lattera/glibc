@@ -74,7 +74,7 @@ static bool_t clntudp_freeres (CLIENT *, xdrproc_t, caddr_t);
 static bool_t clntudp_control (CLIENT *, int, char *);
 static void clntudp_destroy (CLIENT *);
 
-static struct clnt_ops udp_ops =
+static const struct clnt_ops udp_ops =
 {
   clntudp_call,
   clntudp_abort,
@@ -153,7 +153,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 	}
       raddr->sin_port = htons (port);
     }
-  cl->cl_ops = &udp_ops;
+  cl->cl_ops = (struct clnt_ops *) &udp_ops;
   cl->cl_private = (caddr_t) cu;
   cu->cu_raddr = *raddr;
   cu->cu_rlen = sizeof (cu->cu_raddr);

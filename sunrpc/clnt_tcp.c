@@ -91,7 +91,7 @@ static bool_t clnttcp_freeres (CLIENT *, xdrproc_t, caddr_t);
 static bool_t clnttcp_control (CLIENT *, int, char *);
 static void clnttcp_destroy (CLIENT *);
 
-static struct clnt_ops tcp_ops =
+static const struct clnt_ops tcp_ops =
 {
   clnttcp_call,
   clnttcp_abort,
@@ -213,7 +213,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    */
   INTUSE(xdrrec_create) (&(ct->ct_xdrs), sendsz, recvsz,
 			 (caddr_t) ct, readtcp, writetcp);
-  h->cl_ops = &tcp_ops;
+  h->cl_ops = (struct clnt_ops *) &tcp_ops;
   h->cl_private = (caddr_t) ct;
   h->cl_auth = INTUSE(authnone_create) ();
   return h;

@@ -66,7 +66,7 @@ static void authdes_destroy (AUTH *);
 static bool_t synchronize (struct sockaddr *, struct rpc_timeval *)
      internal_function;
 
-static struct auth_ops authdes_ops = {
+static const struct auth_ops authdes_ops = {
   authdes_nextverf,
   authdes_marshal,
   authdes_validate,
@@ -185,7 +185,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
    */
   auth->ah_cred.oa_flavor = AUTH_DES;
   auth->ah_verf.oa_flavor = AUTH_DES;
-  auth->ah_ops = &authdes_ops;
+  auth->ah_ops = (struct auth_ops *) &authdes_ops;
   auth->ah_private = (caddr_t) ad;
 
   if (!authdes_refresh (auth))

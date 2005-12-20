@@ -14,7 +14,13 @@
 
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sunrpc/auth_unix.c (auth_unix_ops): Mark as const.
+	* sunrpc/clnt_unix.c (unix_ops): Mark as const.
+	* sunrpc/auth_des.c (authdes_ops): Likewise.
+	* sunrpc/svc_raw.c (server_ops): Likewise.
+	* sunrpc/clnt_udp.c (udp_ops): Likewise.
+	* sunrpc/clnt_tcp.c (tcp_ops): Likewise.
+	* sunrpc/clnt_raw.c (client_ops): Likewise.
+	* sunrpc/auth_unix.c (auth_unix_ops): Likewise.
 	* sunrpc/auth_none.c (ops): Likewise.
 
 	* nss/nsswitch.c (databases): Mark as const.  Change name field
