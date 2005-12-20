@@ -1,5 +1,5 @@
 /* setjmp for SH3.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,13 @@ ENTRY (__sigsetjmp)
 	/* Save registers */
 	add	#(JB_SIZE - 4 * 5), r4
 	stc.l	gbr, @-r4
+#ifdef PTR_MANGLE
+	sts	pr, r2
+	PTR_MANGLE (r2)
+	mov.l	r2, @-r4
+#else
 	sts.l	pr, @-r4
+#endif
 	mov.l	r15, @-r4
 	mov.l	r14, @-r4
 	mov.l	r13, @-r4
@@ -36,8 +42,13 @@ ENTRY (__sigsetjmp)
 	mov.l	r9, @-r4
 	mov.l	r8, @-r4
 
+#if defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	rts
+	 mov	#0, r0
+#else
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-#ifdef SHARED
+# ifdef SHARED
 	mov.l	1f, r1
 	mova	1f, r0
 	bra	2f
@@ -53,12 +64,13 @@ ENTRY (__sigsetjmp)
 	.align	2
 .L1:
 	.long	C_SYMBOL_NAME(__sigjmp_save@GOT)
-#else
+# else
 	mov.l	.L1, r1
 	jmp	@r1
 	 nop
 	.align	2
 .L1:
 	.long	C_SYMBOL_NAME(__sigjmp_save)
+# endif
 #endif
 END (__sigsetjmp)

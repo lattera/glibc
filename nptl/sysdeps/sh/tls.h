@@ -41,7 +41,7 @@ typedef union dtv
 typedef struct
 {
   dtv_t *dtv;
-  void *private;
+  uintptr_t pointer_guard;
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
@@ -139,6 +139,19 @@ typedef struct
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
     descr->member[idx] = (value)
+
+#define THREAD_GET_POINTER_GUARD() \
+  ({ tcbhead_t *__tcbp;							      \
+     __asm __volatile ("stc gbr,%0" : "=r" (__tcbp));			      \
+     __tcbp->pointer_guard;})
+ #define THREAD_SET_POINTER_GUARD(value) \
+  ({ tcbhead_t *__tcbp;							      \
+     __asm __volatile ("stc gbr,%0" : "=r" (__tcbp));			      \
+     __tcbp->pointer_guard = (value);})
+#define THREAD_COPY_POINTER_GUARD(descr) \
+  ({ tcbhead_t *__tcbp;							      \
+     __asm __volatile ("stc gbr,%0" : "=r" (__tcbp));			      \
+     ((tcbhead_t *) (descr + 1))->pointer_guard	= __tcbp->pointer_guard;})
 
 #endif /* __ASSEMBLER__ */
 

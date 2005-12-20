@@ -1,3 +1,13 @@
+2005-12-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Include tls.h.
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	(SYSCALL_ERROR_HANDLER): Fix typo.
+	* sysdeps/sh/sh4/__longjmp.S: Use PTR_DEMANGLE if defined.
+	* sysdeps/sh/sh3/__longjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Use PTR_MANGLE if defined.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+
 2005-12-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Update for GCC 4.1 prerelease.
