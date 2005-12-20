@@ -1,4 +1,14 @@
-2005-12-15  Thomas Schwinge <tschwinge@gnu.org>
+2005-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1955]
+	* timezone/zic.c (tofile;): Fix typo in symlink creation.
+	Patch by Phil Estes <pestes@us.ibm.com>.
+
+	[BZ #1952]
+	* sysdeps/unix/sysv/linux/time.c: New file.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Remove time entry.
+
+2005-12-15  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* io/xmknodat.c: Include <stddef.h>.
 	* misc/futimesat.c: Remove weak_alias and correct stub_warning.
