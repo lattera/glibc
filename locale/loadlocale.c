@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -52,7 +52,7 @@ static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
 #include "categories.def"
 #undef DEFINE_CATEGORY
 
-static const enum value_type *_nl_value_types[] =
+static const enum value_type *const _nl_value_types[] =
 {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
   [category] = _nl_value_type_##category,

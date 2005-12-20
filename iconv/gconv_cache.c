@@ -1,5 +1,5 @@
 /* Cache handling for iconv modules.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -209,7 +209,18 @@ find_module (const char *directory, const char *filename,
 
       /* Call the init function.  */
       if (result->__init_fct != NULL)
-	status = DL_CALL_FCT (result->__init_fct, (result));
+	{
+	  __gconv_init_fct init_fct = result->__init_fct;
+#ifdef PTR_DEMANGLE
+	  PTR_DEMANGLE (init_fct);
+#endif
+	  status = DL_CALL_FCT (init_fct, (result));
+
+#ifdef PTR_MANGLE
+	  if (result->__btowc_fct != NULL)
+	    PTR_MANGLE (result->__btowc_fct);
+#endif
+	}
     }
 
   return status;
