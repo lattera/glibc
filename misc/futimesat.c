@@ -42,7 +42,5 @@ futimesat (fd, file, tvp)
   return -1;
 }
 
-weak_alias (__utimes, utimes)
-
-stub_warning (utimes)
+stub_warning (futimesat)
 #include <stub-tag.h>

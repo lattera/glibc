@@ -29,7 +29,7 @@ renameat (oldfd, old, newfd, new)
      int newfd;
      const char *new;
 {
-  if ((oldfd < 0 & oldfd !_ AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
+  if ((oldfd < 0 & oldfd != AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
     {
       __set_errno (EBADF);
       return -1;
