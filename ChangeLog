@@ -1,3 +1,8 @@
+2005-12-15  Thomas Schwinge  <tschwinge@gnu.org>
+
+	[BZ #2061]
+	* sysdeps/mach/hurd/xmknod.c (__xmknod): Handle S_IFREG.
+
 2005-12-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifreq.h: File removed.

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,96,99,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1994,1995,1996,1999,2002,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,13 +58,18 @@ __xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
       translator = _HURD_FIFO;
       len = sizeof (_HURD_FIFO);
     }
+  else if (S_ISREG (mode))
+    {
+      translator = NULL;
+      len = 0;
+    }
   else
     {
       errno = EINVAL;
       return -1;
     }
 
-  if (! S_ISFIFO (mode))
+  if (translator != NULL && ! S_ISFIFO (mode))
     {
       /* We set the translator to "ifmt\0major\0minor\0", where IFMT
 	 depends on the S_IFMT bits of our MODE argument, and MAJOR and
@@ -89,7 +95,7 @@ __xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
   /* Create a new, unlinked node in the target directory.  */
   err = __dir_mkfile (dir, O_WRITE, (mode & ~S_IFMT) & ~_hurd_umask, &node);
 
-  if (! err)
+  if (! err && translator != NULL)
     /* Set the node's translator to make it a device.  */
     err = __file_set_translator (node,
 				 FS_TRANS_EXCL | FS_TRANS_SET,
