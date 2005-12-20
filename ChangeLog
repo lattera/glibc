@@ -1,5 +1,9 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/gai_strerror.c: Complete rewrite. Avoid relocations.
+	* sysdeps/posix/gai_strerror-strs.h: New file.
+	* sysdeps/posix/Dist: New file.
+
 	* sysdeps/posix/getaddrinfo.c (gaih): Mark as const.
 	* locale/loadlocale.c (_nl_value_types): Likewise.
 	* iconv/gconv_conf.c (builtin_aliases): Likewise.
