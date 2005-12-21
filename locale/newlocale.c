@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004
+   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -66,7 +66,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   if (locale == NULL)
     ERROR_RETURN;
 
-  if (base == &_nl_C_locobj)
+  if (base == _nl_C_locobj_ptr)
     /* We're to modify BASE, returned for a previous call with "C".
        We can't really modify the read-only structure, so instead
        start over by copying it.  */
@@ -75,7 +75,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   if ((base == NULL || category_mask == (1 << __LC_LAST) - 1 - (1 << LC_ALL))
       && (category_mask == 0 || !strcmp (locale, "C")))
     /* Asking for the "C" locale needn't allocate a new object.  */
-    return &_nl_C_locobj;
+    return _nl_C_locobj_ptr;
 
   /* Allocate memory for the result.  */
   if (base != NULL)

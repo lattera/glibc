@@ -148,7 +148,7 @@ __libc_lock_define (extern, __gconv_lock);
     tmp = result = __alloca (cp - (str) + 3 + suffix_len);		      \
     cp = (str);								      \
     while (*cp != '\0')							      \
-      *tmp++ = __toupper_l (*cp++, &_nl_C_locobj);			      \
+      *tmp++ = __toupper_l (*cp++, _nl_C_locobj_ptr);			      \
     if (cnt < 2)							      \
       {									      \
 	*tmp++ = '/';							      \

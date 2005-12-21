@@ -195,7 +195,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 					      - f->_IO_write_ptr,
 					      "%h %e %T ",
 					      __localtime_r (&now, &now_tm),
-					      &_nl_C_locobj);
+					      _nl_C_locobj_ptr);
 	    msgoff = ftell (f);
 	    if (LogTag == NULL)
 	      LogTag = __progname;

@@ -1,5 +1,19 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/xlocale.c (_nl_C_locobj): Mark as const.
+	* include/locale.h: Define _nl_C_locobj_ptr.
+	* iconv/gconv_charset.h: Use _nl_C_locobj_ptr instead of using pointer
+	to _nl_C_locobj because we also need a cast.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* locale/duplocale.c: Likewise.
+	* locale/freelocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* stdlib/strtod_l.c: Likewise.
+	* sysdeps/unix/sysv/linux/getloadavg.c: Likewise.
+
 	* csu/dso_handle.c (__dso_handle): Mark as const.
 
 	* intl/plural-exp.c (GERMANIC_PLURAL): Mark as const.

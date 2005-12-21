@@ -100,9 +100,9 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __iswdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __iswxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __towlower_l ((Ch), loc)
-# define TOLOWER_C(Ch) __towlower_l ((Ch), &_nl_C_locobj)
+# define TOLOWER_C(Ch) __towlower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
-  __wcsncasecmp_l ((S1), (S2), (N), &_nl_C_locobj)
+  __wcsncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
 # define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0, loc)
 #else
 # define STRING_TYPE char
@@ -112,9 +112,9 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __isdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __isxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __tolower_l ((Ch), loc)
-# define TOLOWER_C(Ch) __tolower_l ((Ch), &_nl_C_locobj)
+# define TOLOWER_C(Ch) __tolower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
-  __strncasecmp_l ((S1), (S2), (N), &_nl_C_locobj)
+  __strncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
 # define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0, loc)
 #endif
 

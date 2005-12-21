@@ -1,5 +1,5 @@
 /* Get system load averages.  Linux (/proc/loadavg) version.
-   Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ getloadavg (double loadavg[], int nelem)
       for (i = 0; i < nelem; ++i)
 	{
 	  char *endp;
-	  loadavg[i] = __strtod_l (p, &endp, &_nl_C_locobj);
+	  loadavg[i] = __strtod_l (p, &endp, _nl_C_locobj_ptr);
 	  if (endp == p)
 	    /* This should not happen.  The format of /proc/loadavg
 	       must have changed.  Don't return with what we have,

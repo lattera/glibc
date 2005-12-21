@@ -1,5 +1,5 @@
 /* Free data allocated by a call to setlocale_r
-   Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -35,7 +35,7 @@ __freelocale (__locale_t dataset)
   int cnt;
 
   /* This static object is returned for newlocale (LC_ALL_MASK, "C").  */
-  if (dataset == &_nl_C_locobj)
+  if (dataset == _nl_C_locobj_ptr)
     return;
 
   /* We modify global data (the usage counts).  */
