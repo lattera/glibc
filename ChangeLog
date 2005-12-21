@@ -1,3 +1,8 @@
+2005-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1960]
+	* io/fts.c (fts_open): Avoid function call in MAX macro use.
+
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/xlocale.c (_nl_C_locobj): Mark as const.

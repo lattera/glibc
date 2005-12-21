@@ -120,7 +120,8 @@ fts_open(argv, options, compar)
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 1024
 #endif
-	if (fts_palloc(sp, MAX(fts_maxarglen(argv), MAXPATHLEN)))
+	size_t maxarglen = fts_maxarglen(argv);
+	if (fts_palloc(sp, MAX(maxarglen, MAXPATHLEN)))
 		goto mem1;
 
 	/* Allocate/initialize root's parent. */
