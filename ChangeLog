@@ -1,5 +1,7 @@
 2005-12-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_conf.c: Initialize empty_path_elem.
+
 	* sysdeps/ieee754/dbl-64/halfulp.c: Mark tab54 as static and const.
 	* sysdeps/i386/fpu/e_expl.c: Mark c0 and c1 as const.
 	* sysdeps/ieee754/flt-32/s_expm1f.c: Make sure huge and tiny end

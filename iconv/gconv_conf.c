@@ -46,7 +46,7 @@ struct path_elem *__gconv_path_elem;
 size_t __gconv_max_path_elem_len;
 
 /* We use the following struct if we couldn't allocate memory.  */
-static const struct path_elem empty_path_elem;
+static const struct path_elem empty_path_elem = { NULL, 0 };
 
 /* Name of the file containing the module information in the directories
    along the path.  */
