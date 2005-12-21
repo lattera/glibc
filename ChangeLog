@@ -1,5 +1,9 @@
 2005-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/plural-exp.c (GERMANIC_PLURAL): Mark as const.
+	* intl/plural-exp.h: Adjust declaration of
+	__gettext_germanic_plural.
+
 	* resolv/herror.c (h_errlist): Mark as const.
 	(h_nerr): Likewise.
 

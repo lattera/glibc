@@ -1,5 +1,5 @@
 /* Expression parsing for plural form selection.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
    This file is part of the GNU C Library.
 
@@ -47,7 +47,7 @@ static const struct expression plone =
     .num = 1
   }
 };
-struct expression GERMANIC_PLURAL =
+const struct expression GERMANIC_PLURAL =
 {
   .nargs = 2,
   .operation = not_equal,
