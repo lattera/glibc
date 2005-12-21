@@ -1,3 +1,15 @@
+2005-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/halfulp.c: Mark tab54 as static and const.
+	* sysdeps/i386/fpu/e_expl.c: Mark c0 and c1 as const.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Make sure huge and tiny end
+	up in .rodata.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Make sure TWO127 and TWOM100
+	end up in .rodata.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Make sure TWO1023 and TWOM1000
+	end up in .rodata.
+
 2005-12-21  Thorsten Kukuk  <kukuk@suse.de>
 
 	* elf/readlib.c: Fix include of readelflib.c.

@@ -1,5 +1,5 @@
 /* Double-precision floating point 2^x.
-   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -37,8 +37,15 @@
 
 #include "t_exp2.h"
 
-static const volatile double TWO1023 = 8.988465674311579539e+307;
-static const volatile double TWOM1000 = 9.3326361850321887899e-302;
+/* XXX I know the assembler generates a warning about incorrect section
+   attributes. But without the attribute here the compiler places the
+   constants in the .data section.  Ideally the constant is placed in
+   .rodata.cst8 so that it can be merged, but gcc sucks, it ICEs when
+   we try to force this section on it.  --drepper  */
+static const volatile double TWO1023 __attribute__ ((section (".rodata")))
+  = 8.988465674311579539e+307;
+static const volatile double TWOM1000 __attribute__ ((section (".rodata")))
+  = 9.3326361850321887899e-302;
 
 double
 __ieee754_exp2 (double x)
