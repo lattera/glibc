@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,4 +18,5 @@
 
 /* We have to define __dso_handle ourselves since we do not use gcc's
    crtbegin files.  */
-void *__dso_handle __attribute__ ((__visibility__ ("hidden"))) = &__dso_handle;
+void *const __dso_handle __attribute__ ((__visibility__ ("hidden")))
+  = &__dso_handle;
