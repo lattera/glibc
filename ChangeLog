@@ -1,3 +1,7 @@
+2005-12-21  Roland McGrath  <roland@redhat.com>
+
+	* csu/dso_handle.c (__dso_handle): Add const to pointer type too.
+
 2005-12-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_conf.c: Initialize empty_path_elem.
