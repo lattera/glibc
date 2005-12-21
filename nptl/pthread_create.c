@@ -52,7 +52,7 @@ unsigned int __nptl_nthreads = 1;
 #include "allocatestack.c"
 
 /* Code to create the thread.  */
-#include "createthread.c"
+#include <createthread.c>
 
 
 struct pthread *

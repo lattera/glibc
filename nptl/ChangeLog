@@ -1,3 +1,16 @@
+2005-12-21  Roland McGrath  <roland@redhat.com>
+
+	* libc-cancellation.c: Use <> rather than "" #includes.
+	* pt-cleanup.c: Likewise.
+	* pthread_create.c: Likewise.
+	* pthread_join.c: Likewise.
+	* pthread_timedjoin.c: Likewise.
+	* pthread_tryjoin.c: Likewise.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Likewise.
+	* sysdeps/unix/sysv/linux/register-atfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c: Likewise.
+	* unwind.c: Likewise.
+
 2005-12-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/tcb-offsets.sym: Add POINTER_GUARD.

@@ -17,6 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ifreq.h>
+#include <hurd.h>
+#include <hurd/pfinet.h>
+#include <sys/mman.h>
+
+
 void
 __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {

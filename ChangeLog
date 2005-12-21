@@ -1,5 +1,7 @@
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/mach/hurd/ifreq.c: Add missing #includes.
+
 	* elf/cache.c: Use <> rather than "" #includes.
 	* elf/chroot_canon.c: Likewise.
 	* elf/dl-lookup.c: Likewise.
