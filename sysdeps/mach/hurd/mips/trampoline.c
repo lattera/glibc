@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  MIPS version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,11 +19,11 @@
 
 #include <hurd/signal.h>
 #include <hurd/userlink.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <assert.h>
 #include <errno.h>
 #include "hurdfault.h"
-#include "intr-msg.h"
+#include <intr-msg.h>
 
 
 struct sigcontext *
@@ -35,7 +35,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   __label__ trampoline, rpc_wait_trampoline, firewall;
   void *volatile sigsp;
   struct sigcontext *scp;
-  struct 
+  struct
     {
       int signo;
       long int sigcode;
@@ -163,7 +163,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 still waiting for a reply.  We will have it run the special
 	 trampoline code which retries the message receive before running
 	 the signal handler.
-	 
+
 	 To do this we change the OPTION argument in its registers to
 	 enable only message reception, since the request message has
 	 already been sent.  */
