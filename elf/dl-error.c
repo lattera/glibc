@@ -113,7 +113,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 	  lcatch->malloced = false;
 	}
       /* We do not restore the signal mask because none was saved.  */
-      __longjmp (lcatch->env, errcode ?: -1);
+      __longjmp (lcatch->env[0].__jmpbuf, errcode ?: -1);
     }
   else
     {

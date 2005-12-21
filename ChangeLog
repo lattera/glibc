@@ -1,5 +1,9 @@
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/unwind-dw2.c (extract_cie_info): Add a cast.
+
+	* elf/dl-error.c (_dl_signal_error): Use .__jmpbuf in __longjmp call.
+
 	* csu/dso_handle.c (__dso_handle): Add const to pointer type too.
 
 2005-12-21  Ulrich Drepper  <drepper@redhat.com>
