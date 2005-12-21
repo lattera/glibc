@@ -1,5 +1,10 @@
 2005-12-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1962]
+	* io/fts.c (fts_open): Change type of len to size_t.
+	(fts_build): Remove cast in call to fts_alloc.
+	(fts_alloc): Change third parameter's type to size_t.
+
 	[BZ #1960]
 	* io/fts.c (fts_open): Avoid function call in MAX macro use.
 

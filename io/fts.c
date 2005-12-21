@@ -53,7 +53,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif
 
 
-static FTSENT	*fts_alloc (FTS *, const char *, int) internal_function;
+static FTSENT	*fts_alloc (FTS *, const char *, size_t) internal_function;
 static FTSENT	*fts_build (FTS *, int) internal_function;
 static void	 fts_lfree (FTSENT *) internal_function;
 static void	 fts_load (FTS *, FTSENT *) internal_function;
@@ -94,7 +94,6 @@ fts_open(argv, options, compar)
 	register FTSENT *p, *root;
 	register int nitems;
 	FTSENT *parent, *tmp;
-	int len;
 
 	/* Options check. */
 	if (options & ~FTS_OPTIONMASK) {
@@ -132,7 +131,8 @@ fts_open(argv, options, compar)
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {
 		/* Don't allow zero-length paths. */
-		if ((len = strlen(*argv)) == 0) {
+		size_t len = strlen(*argv);
+		if (len == 0) {
 			__set_errno (ENOENT);
 			goto mem3;
 		}
@@ -691,7 +691,7 @@ fts_build(sp, type)
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
-		if ((p = fts_alloc(sp, dp->d_name, (int)_D_EXACT_NAMLEN (dp))) == NULL)
+		if ((p = fts_alloc(sp, dp->d_name, _D_EXACT_NAMLEN (dp))) == NULL)
 			goto mem1;
 		if (_D_EXACT_NAMLEN (dp) >= maxlen) {/* include space for NUL */
 			oldaddr = sp->fts_path;
@@ -962,7 +962,7 @@ internal_function
 fts_alloc(sp, name, namelen)
 	FTS *sp;
 	const char *name;
-	register int namelen;
+	size_t namelen;
 {
 	register FTSENT *p;
 	size_t len;
