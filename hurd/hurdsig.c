@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,01,2002
+/* Copyright (C) 1991,92,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2005
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -132,7 +132,7 @@ _hurd_thread_sigstate (thread_t thread)
 #include <setjmp.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <hurd/msg_server.h>
 #include <hurd/msg_reply.h>	/* For __msg_sig_post_reply.  */
 #include <hurd/interrupt.h>
@@ -256,7 +256,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
 }
 
 #include <hurd/sigpreempt.h>
-#include "intr-msg.h"
+#include <intr-msg.h>
 
 /* Timeout on interrupt_operation calls.  */
 mach_msg_timeout_t _hurdsig_interrupt_timeout = 1000;

@@ -181,14 +181,14 @@ profil_count_uint (void *pcp)
    interrupted code.  */
 #define profil_counter		profil_counter_ushort
 #define profil_count(pc)	profil_count (pc, 0)
-#include "profil-counter.h"
+#include <profil-counter.h>
 
 #undef profil_counter
 #undef profil_count
 
 #define profil_counter		profil_counter_uint
 #define profil_count(pc)	profil_count (pc, 1)
-#include "profil-counter.h"
+#include <profil-counter.h>
 
 static int
 insert (int i, unsigned long int start, unsigned long int end, struct prof *p,

@@ -37,10 +37,10 @@
 #include <glob.h>
 #include <libgen.h>
 
-#include "ldconfig.h"
-#include "dl-cache.h"
+#include <ldconfig.h>
+#include <dl-cache.h>
 
-#include "dl-procinfo.h"
+#include <dl-procinfo.h>
 
 #ifdef _DL_FIRST_PLATFORM
 # define _DL_FIRST_EXTRA (_DL_FIRST_PLATFORM + _DL_PLATFORMS_COUNT)

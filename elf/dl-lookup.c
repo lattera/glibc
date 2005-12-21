@@ -23,7 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include "dl-hash.h"
+#include <dl-hash.h>
 #include <dl-machine.h>
 #include <bits/libc-lock.h>
 #include <tls.h>

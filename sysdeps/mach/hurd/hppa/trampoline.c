@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  HPPA version.
-   Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <hurd/signal.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <assert.h>
 #include <errno.h>
 #include "hurdfault.h"

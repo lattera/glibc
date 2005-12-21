@@ -1,5 +1,5 @@
 /* Report on what a thread in our task is waiting for.
-   Copyright (C) 1996,97,99,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,8 @@
 #include <string.h>
 #include <assert.h>
 #include <hurd/msg_server.h>
-#include "thread_state.h"
-#include "intr-msg.h"
+#include <thread_state.h>
+#include <intr-msg.h>
 
 static char *
 describe_number (string_t description, const char *flavor, long int i)

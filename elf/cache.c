@@ -30,8 +30,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "ldconfig.h"
-#include "dl-cache.h"
+#include <ldconfig.h>
+#include <dl-cache.h>
 
 struct cache_entry
 {

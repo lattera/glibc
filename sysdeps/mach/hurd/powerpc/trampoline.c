@@ -1,5 +1,6 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  For PowerPC.
-   Copyright (C) 1994,95,96,97,98,99,2001 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1997,1998,1999,2001,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,11 +20,11 @@
 
 #include <hurd/signal.h>
 #include <hurd/userlink.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <assert.h>
 #include <errno.h>
 #include "hurdfault.h"
-#include "intr-msg.h"
+#include <intr-msg.h>
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,

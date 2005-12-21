@@ -1,5 +1,40 @@
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
+	* elf/cache.c: Use <> rather than "" #includes.
+	* elf/chroot_canon.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/readlib.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* gmon/mcount.c: Likewise.
+	* hurd/hurdfault.c: Likewise.
+	* hurd/hurdsig.c: Likewise.
+	* hurd/report-wait.c: Likewise.
+	* hurd/sigunwind.c: Likewise.
+	* mach/setup-thread.c: Likewise.
+	* rt/aio_read64.c: Likewise.
+	* rt/aio_sigqueue.c: Likewise.
+	* rt/aio_write64.c: Likewise.
+	* soft-fp/soft-fp.h: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* sysdeps/mach/hurd/fork.c: Likewise.
+	* sysdeps/mach/hurd/hppa/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/i386/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/mips/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/trampoline.c: Likewise.
+	* sysdeps/posix/sprofil.c: Likewise.
+	* sysdeps/pthread/aio_cancel.c: Likewise.
+	* sysdeps/pthread/aio_fsync.c: Likewise.
+	* sysdeps/pthread/aio_read64.c: Likewise.
+	* sysdeps/pthread/aio_read.c: Likewise.
+	* sysdeps/pthread/aio_suspend.c: Likewise.
+	* sysdeps/pthread/aio_write64.c: Likewise.
+	* sysdeps/pthread/aio_write.c: Likewise.
+	* sysdeps/pthread/lio_listio64.c: Likewise.
+	* sysdeps/pthread/lio_listio.c: Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/tcflow.c: Likewise.
+
 	* sysdeps/generic/unwind-dw2.c (extract_cie_info): Add a cast.
 
 	* elf/dl-error.c (_dl_signal_error): Use .__jmpbuf in __longjmp call.

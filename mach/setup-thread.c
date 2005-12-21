@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,94,95,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1994,1995,1997,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,10 @@
    02111-1307 USA.  */
 
 #include <mach.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <string.h>
 #include <mach/machine/vm_param.h>
-#include "sysdep.h"		/* Defines stack direction.  */
+#include <sysdep.h"		/* Defines stack direction.  *>
 
 #define	STACK_SIZE	(16 * 1024 * 1024) /* 16MB, arbitrary.  */
 

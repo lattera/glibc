@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <hurd.h>
-#include "thread_state.h"
+#include <thread_state.h>
 #include <setjmp.h>
 #include <assert.h>
 

@@ -34,7 +34,7 @@
 #include <sys/stat.h>
 #include <gnu/lib-names.h>
 
-#include "ldconfig.h"
+#include <ldconfig.h>
 
 #define Elf32_CLASS ELFCLASS32
 #define Elf64_CLASS ELFCLASS64

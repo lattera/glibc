@@ -34,7 +34,7 @@
 #include <hp-timing.h>
 #include <bits/libc-lock.h>
 #include "dynamic-link.h"
-#include "dl-librecon.h"
+#include <dl-librecon.h>
 #include <unsecvars.h>
 #include <dl-cache.h>
 #include <dl-osinfo.h>

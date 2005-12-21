@@ -1,5 +1,6 @@
 /* Software floating-point emulation.
-   Copyright (C) 1997,1998,1999,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2002,2003,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -24,7 +25,7 @@
 #ifndef SOFT_FP_H
 #define SOFT_FP_H
 
-#include "sfp-machine.h"
+#include <sfp-machine.h>
 
 /* Allow sfp-machine to have its own byte order definitions. */
 #ifndef __BYTE_ORDER
