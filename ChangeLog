@@ -1,3 +1,8 @@
+2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/__longjmp.S: Also protect SP and BP.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/ucontext_i.h: File removed.

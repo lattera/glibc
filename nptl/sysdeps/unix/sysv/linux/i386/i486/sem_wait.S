@@ -57,7 +57,7 @@ __new_sem_wait:
 	cfi_offset(6, -12)		/* %esi */
 3:	movl	(%ebx), %eax
 2:	testl	%eax, %eax
-	je,pn	1f
+	je	1f
 
 	leal	-1(%eax), %edx
 	LOCK
@@ -73,7 +73,7 @@ __new_sem_wait:
 	cfi_adjust_cfa_offset(-12)
 	ret
 
-	cfi_adjust_cfa_offset(8)
+	cfi_adjust_cfa_offset(12)
 	cfi_offset(3, -8)		/* %ebx */
 	cfi_offset(6, -12)		/* %esi */
 1:	call	__pthread_enable_asynccancel

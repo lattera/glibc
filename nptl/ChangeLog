@@ -1,3 +1,9 @@
+2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1913]
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S (__new_sem_wait):
+	Fix unwind info.  Remove useless branch prediction prefix.
+
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
 	* libc-cancellation.c: Use <> rather than "" #includes.
