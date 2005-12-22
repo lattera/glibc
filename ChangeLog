@@ -1,3 +1,11 @@
+2005-12-22  Roland McGrath  <roland@redhat.com>
+
+	* Makerules [gen-as-const-headers] (tests): Add one test per .sym
+	file, not just one.
+	($(objpfx)test-as-const.c): Target replaced with ...
+	($(objpfx)test-as-const-%.c): ... this pattern rule.
+	(generated): Add those files.
+
 2005-12-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/__longjmp.S: Also protect SP and BP.
