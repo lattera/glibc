@@ -1,3 +1,7 @@
+2005-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update for GCC 4.1 prerelease.
+
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/ifreq.c: Add missing #includes.

@@ -345,22 +345,22 @@ ifloat: 1
 # j0
 Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "j0 (2.0) == 0.223890779141235668051827454649948626":
 float: 2
 ifloat: 2
 Test "j0 (10.0) == -0.245935764451348335197760862485328754":
-double: 2
+double: 3
 float: 1
-idouble: 2
+idouble: 3
 ifloat: 1
 Test "j0 (4.0) == -3.9714980986384737228659076845169804197562E-1":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "j0 (8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
@@ -379,22 +379,22 @@ idouble: 1
 # jn
 Test "jn (0, -4.0) == -3.9714980986384737228659076845169804197562E-1":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "jn (0, 2.0) == 0.223890779141235668051827454649948626":
 float: 2
 ifloat: 2
 Test "jn (0, 10.0) == -0.245935764451348335197760862485328754":
-double: 2
+double: 3
 float: 1
-idouble: 2
+idouble: 3
 ifloat: 1
 Test "jn (0, 4.0) == -3.9714980986384737228659076845169804197562E-1":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "jn (0, 8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
@@ -433,9 +433,9 @@ double: 1
 idouble: 1
 Test "jn (3, 10.0) == 0.0583793793051868123429354784103409563":
 double: 3
-float: 1
+float: 2
 idouble: 3
-ifloat: 1
+ifloat: 2
 Test "jn (3, 2.0) == 0.128943249474402051098793332969239835":
 double: 1
 float: 2
@@ -618,7 +618,9 @@ float: 2
 ifloat: 2
 Test "yn (10, 10.0) == -0.359814152183402722051986577343560609":
 double: 2
+float: 2
 idouble: 2
+ifloat: 2
 Test "yn (10, 2.0) == -129184.542208039282635913145923304214":
 double: 3
 float: 1
@@ -820,9 +822,9 @@ float: 1
 ifloat: 1
 
 Function: "j0":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
 
 Function: "j1":
