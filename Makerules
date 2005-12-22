@@ -203,10 +203,10 @@ $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 vpath %.sym $(sysdirs)
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
-tests += test-as-const
-$(objpfx)test-as-const.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
-			  $(gen-as-const-headers) \
-			  $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+tests += $(gen-as-const-headers:%.sym=test-as-const-%)
+generated += $(gen-as-const-headers:%.sym=test-as-const-%.c)
+$(objpfx)test-as-const-%.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
+			    %.sym $(common-objpfx)%.h
 	($(AWK) '{ sub(/^/, "asconst_", $$2); print; }' $(filter %.h,$^); \
 	 $(AWK) -v test=1 -f $< $(filter %.sym,$^); \
 	 echo '#include "$(..)test-skeleton.c"') > $@T
