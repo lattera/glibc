@@ -183,6 +183,7 @@ sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
 endif
 
 
+ifdef gen-as-const-headers
 # Generating headers for assembly constants.
 # We need this defined early to get into before-compile before
 # it's used in sysd-rules, below.
@@ -201,6 +202,16 @@ $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
 vpath %.sym $(sysdirs)
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+
+tests += test-as-const
+$(objpfx)test-as-const.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
+			  $(gen-as-const-headers) \
+			  $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+	($(AWK) '{ sub(/^/, "asconst_", $$2); print; }' $(filter %.h,$^); \
+	 $(AWK) -v test=1 -f $< $(filter %.sym,$^); \
+	 echo '#include "$(..)test-skeleton.c"') > $@T
+	mv -f $@T $@
+endif
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the

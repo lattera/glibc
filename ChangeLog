@@ -1,5 +1,33 @@
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) = stdlib]:
+	(gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sh/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Likewise.
+	* stdlib/tst-ucontext-off.c: File removed.
+	* stdlib/Makefile (tests): Remove it.
+
+	* scripts/gen-as-const.awk: Support generating a test program.
+	* Makerules [gen-as-const-headers] (tests): Add test-as-const.
+	[gen-as-const-headers] ($(objpfx)test-as-const.c): New target.
+
 	* sysdeps/generic/bits: Subdirectory and all files moved to ...
 	* bits: ... here, new subdirectory.
 	* Makeconfig (+includes): Reordered includes to put build and sysdeps
