@@ -1,5 +1,10 @@
 2005-12-21  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/bits: Subdirectory and all files moved to ...
+	* bits: ... here, new subdirectory.
+	* Makeconfig (+includes): Reordered includes to put build and sysdeps
+	dirs first after $(..)include, $(sysincludes) last.
+
 	[BZ #2066]
 	* intl/l10nflist.c (_nl_make_l10nflist): Free ABS_FILENAME when later
 	malloc fails.

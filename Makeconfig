@@ -627,10 +627,10 @@ endif	# $(+cflags) == ""
 # library source directory, in the include directory, and in the
 # current directory.
 # `+sysdep-includes' will be defined by Makerules.
-+includes = -I$(..)include $(patsubst %/,-I%,$(..)) \
-	    $(libio-include) $(includes) \
-	    $(+sysdep-includes) $(sysincludes) -I. \
-	    $(patsubst %/,-I%,$(objpfx))
++includes = -I$(..)include \
+	    $(patsubst %/,-I%,$(objpfx)) $(+sysdep-includes) \
+	    $(patsubst %/,-I%,$(..)) $(libio-include) $(includes) -I. \
+	    $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.
