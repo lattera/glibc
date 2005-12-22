@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -270,7 +270,10 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 				* (1 << pop (mask))
 				* sizeof (struct loaded_l10nfile *)));
   if (retval == NULL)
-    return NULL;
+    {
+      free (abs_filename);
+      return NULL;
+    }
 
   retval->filename = abs_filename;
   /* If more than one directory is in the list this is a pseudo-entry
