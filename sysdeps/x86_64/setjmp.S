@@ -26,12 +26,21 @@
 ENTRY (__sigsetjmp)
 	/* Save registers.  */
 	movq %rbx, (JB_RBX*8)(%rdi)
+#ifdef PTR_MANGLE
+	movq %rbp, %rax
+	PTR_MANGLE (%rax)
+	movq %rax, (JB_RBP*8)(%rdi)
+#else
 	movq %rbp, (JB_RBP*8)(%rdi)
+#endif
 	movq %r12, (JB_R12*8)(%rdi)
 	movq %r13, (JB_R13*8)(%rdi)
 	movq %r14, (JB_R14*8)(%rdi)
 	movq %r15, (JB_R15*8)(%rdi)
 	leaq 8(%rsp), %rdx	/* Save SP as it will be after we return.  */
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%rdx)
+#endif
 	movq %rdx, (JB_RSP*8)(%rdi)
 	movq (%rsp), %rax	/* Save PC we are returning to now.  */
 #ifdef PTR_MANGLE
