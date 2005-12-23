@@ -152,7 +152,9 @@ timeout_handler (int sig __attribute__ ((unused)))
 	 nanosleep() call return prematurely, all the better.  We
 	 won't restart it since this probably means the child process
 	 finally died.  */
-      struct timespec ts = { .tv_sec = 0, .tv_nsec = 100000000 };
+      struct timespec ts;
+      ts.tv_sec = 0;
+      ts.tv_nsec = 100000000;
       nanosleep (&ts, NULL);
     }
   if (killed != 0 && killed != pid)
