@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,7 +28,11 @@
    SIGCANCEL or SIGTIMER to be handled.  */
 # define LIBC_SIGACTION	1
 
-# include <nptl/sysdeps/pthread/sigaction.c>
+/* Note this include must be one that isn't found using a -I directory such
+   as -I. or -I.. for using an explicit <sysdeps/...> path, because that
+   would reset the search path starting position for the #include_next
+   below, to after that -I directory, and skip the search we want to do.  */
+# include "sigaction.c"
 
 int
 __sigaction (sig, act, oact)
