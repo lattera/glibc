@@ -1,3 +1,9 @@
+2005-12-22  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/sigaction.c: Use "" instead of <> to include self,
+	so that #include_next's search location is not reset to the -I..
+	directory where <nptl/...> can be found.
+
 2005-12-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1913]
