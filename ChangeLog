@@ -1,5 +1,9 @@
 2005-12-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1499]
+	* misc/syslog.c (SyslogAddr): Use sockaddr_un instead of sockaddr.
+	(openlog_internal): Adjust for this change.
+
 	* Makeconfig: Define CXXFLAGS.  Split out warnings from +gccwarn which
 	are not understood by the C++ compiler.
 	* Makerules: Add rules to build C++ code for test cases.

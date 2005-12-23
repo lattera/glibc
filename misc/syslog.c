@@ -35,6 +35,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <sys/socket.h>
 #include <sys/syslog.h>
 #include <sys/uio.h>
+#include <sys/un.h>
 #include <netdb.h>
 
 #include <errno.h>
@@ -326,7 +327,7 @@ vsyslog(pri, fmt, ap)
 }
 libc_hidden_def (vsyslog)
 
-static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */
+static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
 
 
 static void
@@ -342,9 +343,9 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	int retry = 0;
 	while (retry < 2) {
 		if (LogFile == -1) {
-			SyslogAddr.sa_family = AF_UNIX;
-			(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
-				      sizeof(SyslogAddr.sa_data));
+			SyslogAddr.sun_family = AF_UNIX;
+			(void)strncpy(SyslogAddr.sun_path, _PATH_LOG,
+				      sizeof(SyslogAddr.sun_path));
 			if (LogStat & LOG_NDELAY) {
 				if ((LogFile = __socket(AF_UNIX, LogType, 0))
 				    == -1)
