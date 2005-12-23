@@ -1,3 +1,9 @@
+2005-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1566]
+	* sysdeps/i386/i586/memusage.h: New file.
+	* sysdeps/i386/memusage.h: Don't define GETTIME.
+
 2005-12-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1499]
