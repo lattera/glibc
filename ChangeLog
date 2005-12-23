@@ -1,3 +1,11 @@
+2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig: Define CXXFLAGS.  Split out warnings from +gccwarn which
+	are not understood by the C++ compiler.
+	* Makerules: Add rules to build C++ code for test cases.
+	* include/stdlib.h: Protect for inclusion in C++ code.
+	* include/time.h: Likewise.
+
 2005-12-22  Roland McGrath  <roland@redhat.com>
 
 	* Makerules [gen-as-const-headers] (tests): Add one test per .sym
@@ -7,6 +15,9 @@
 	(generated): Add those files.
 
 2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (timeout_handler): Rewrite ts initialization for
+	C++ compatibility.
 
 	* sysdeps/x86_64/__longjmp.S: Also protect SP and BP.
 	* sysdeps/x86_64/setjmp.S: Likewise.

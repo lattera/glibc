@@ -552,10 +552,11 @@ endif
 
 # Extra flags to pass to GCC.
 ifeq ($(all-warnings),yes)
-+gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
++gccwarn := -Wall -Wwrite-strings -Winline -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
 else
-+gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes
++gccwarn := -Wall -Wwrite-strings -Winline
 endif
++gccwarn-c = -Wstrict-prototypes
 
 # We do not depend on the address of constants in different files to be
 # actually different, so allow the compiler to merge them all.
@@ -647,8 +648,11 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 		         $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 \
-		  $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
-		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
+		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
+		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
+		  $(CFLAGS-$(@F))
+override CXXFLAGS = $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
+		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by
 # defining the PIC symbol.

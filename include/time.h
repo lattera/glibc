@@ -5,6 +5,8 @@
 # include <time/time.h>
 # include <xlocale.h>
 
+__BEGIN_DECLS
+
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
 extern __typeof (strptime_l) __strptime_l;
@@ -89,6 +91,8 @@ extern int __getclktck (void);
 
 /* strptime support.  */
 /* Status of lookup: do we use the locale data or the raw data?  */
+#ifndef __cplusplus
+// C++ cannot deal with using 'not'.
 enum ptime_locale_status { not, loc, raw };
 
 extern char * __strptime_internal (const char *rp, const char *fmt,
@@ -96,6 +100,7 @@ extern char * __strptime_internal (const char *rp, const char *fmt,
 				   enum ptime_locale_status *decided,
 				   int era_cnt, __locale_t locparam)
      internal_function;
+#endif
 
 extern double __difftime (time_t time1, time_t time0);
 
@@ -105,5 +110,8 @@ extern double __difftime (time_t time1, time_t time0);
 #ifndef _ISOMAC
 # define CLOCK_IDFIELD_SIZE	3
 #endif
+
+__END_DECLS
+
 #endif
 #endif

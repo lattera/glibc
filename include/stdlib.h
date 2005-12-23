@@ -10,6 +10,8 @@
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
 
+__BEGIN_DECLS
+
 extern __typeof (strtol_l) __strtol_l;
 extern __typeof (strtoul_l) __strtoul_l;
 extern __typeof (strtoll_l) __strtoll_l;
@@ -196,6 +198,8 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 
 extern void * __default_morecore (ptrdiff_t);
 libc_hidden_proto (__default_morecore)
+
+__END_DECLS
 
 #undef __Need_M_And_C
 

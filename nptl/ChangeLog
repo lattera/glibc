@@ -3,6 +3,8 @@
 	[BZ #1913]
 	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S (__new_sem_wait):
 	Fix unwind info.  Remove useless branch prediction prefix.
+	* tst-cancel24.cc: New file.
+	* Makefile: Add rules to build and run tst-cancel24.
 
 2005-12-21  Roland McGrath  <roland@redhat.com>
 

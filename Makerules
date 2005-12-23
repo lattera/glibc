@@ -306,6 +306,12 @@ endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
+define o-iterator-doit
+$(objpfx)%$o: %.cc $(before-compile); $$(compile-command.cc)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
 # Omit the objpfx rules when building in the source tree, because
 # objpfx is empty and so these rules just override the ones above.
 ifdef objpfx
@@ -381,9 +387,11 @@ compile-mkdep-flags = -MD -MP -MF $@.dt -MT $@
 compile-command.S = $(compile.S) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
+compile-command.cc = $(compile.cc) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+compile.cc = $(CXX) $< -c $(CXXFLAGS) $(CPPFLAGS)
 compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
@@ -1180,9 +1188,9 @@ xcheck: xtests
 
 all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
-cpp-srcs-left = $(all-nonlib:=.c)
+cpp-srcs-left = $(all-nonlib:=.c) $(all-nonlib:=.cc)
 lib := nonlib
-include $(patsubst %,$(..)cppflags-iterator.mk,$(all-nonlib))
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
 
 # The include magic above causes those files to use this variable for flags.
