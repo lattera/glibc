@@ -1,3 +1,11 @@
+2005-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_mutex_destroy.c: Set mutex type to an invalid value.
+	* pthread_mutex_lock.c: Return EINVAL for invalid mutex type.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+
 2005-12-22  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/sigaction.c: Use "" instead of <> to include self,

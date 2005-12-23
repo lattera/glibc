@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -70,8 +70,6 @@ pthread_mutex_timedlock (mutex, abstime)
 
       /* FALLTHROUGH */
 
-    default:
-      /* Correct code cannot set any other type.  */
     case PTHREAD_MUTEX_TIMED_NP:
     simple:
       /* Normal mutex.  */
@@ -104,6 +102,10 @@ pthread_mutex_timedlock (mutex, abstime)
 	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
 	}
       break;
+
+    default:
+      /* Correct code cannot set any other type.  */
+      return EINVAL;
     }
 
   if (result == 0)

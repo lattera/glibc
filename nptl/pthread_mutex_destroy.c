@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,6 +27,9 @@ __pthread_mutex_destroy (mutex)
 {
   if (mutex->__data.__nusers != 0)
     return EBUSY;
+
+  /* Set to an invalid value.  */
+  mutex->__data.__kind = -1;
 
   return 0;
 }

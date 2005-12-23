@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -57,8 +57,6 @@ __pthread_mutex_trylock (mutex)
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  We do not check for deadlocks.  */
-    default:
-      /* Correct code cannot set any other type.  */
     case PTHREAD_MUTEX_TIMED_NP:
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       /* Normal mutex.  */
@@ -70,6 +68,10 @@ __pthread_mutex_trylock (mutex)
 
 	  return 0;
 	}
+
+    default:
+      /* Correct code cannot set any other type.  */
+      return EINVAL;
     }
 
   return EBUSY;
