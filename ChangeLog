@@ -1,5 +1,8 @@
 2005-12-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/errno.texi: Add new Linux errno codes.
+	* sysdeps/unix/sysv/linux/Versions: Add new errlist-compat entry
+	for up to 132 errnos.
 	* sysdeps/unix/sysv/linux/bits/errno.h: Define EOWNERDEAD and
 	ENOTRECOVERABLE if not already defined.
 

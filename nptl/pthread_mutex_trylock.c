@@ -68,6 +68,7 @@ __pthread_mutex_trylock (mutex)
 
 	  return 0;
 	}
+      break;
 
     default:
       /* Correct code cannot set any other type.  */

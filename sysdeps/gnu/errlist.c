@@ -1408,6 +1408,54 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # define ERR_MAX EMEDIUMTYPE
 # endif
 #endif
+#ifdef ENOKEY
+/* */
+    [ERR_REMAP (ENOKEY)] = N_("Required key not available"),
+# if ENOKEY > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX ENOKEY
+# endif
+#endif
+#ifdef EKEYEXPIRED
+/* */
+    [ERR_REMAP (EKEYEXPIRED)] = N_("Key has expired"),
+# if EKEYEXPIRED > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EKEYEXPIRED
+# endif
+#endif
+#ifdef EKEYREVOKED
+/* */
+    [ERR_REMAP (EKEYREVOKED)] = N_("Key has been revoked"),
+# if EKEYREVOKED > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EKEYREVOKED
+# endif
+#endif
+#ifdef EKEYREJECTED
+/* */
+    [ERR_REMAP (EKEYREJECTED)] = N_("Key was rejected by service"),
+# if EKEYREJECTED > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EKEYREJECTED
+# endif
+#endif
+#ifdef EOWNERDEAD
+/* */
+    [ERR_REMAP (EOWNERDEAD)] = N_("Owner died"),
+# if EOWNERDEAD > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EOWNERDEAD
+# endif
+#endif
+#ifdef ENOTRECOVERABLE
+/* */
+    [ERR_REMAP (ENOTRECOVERABLE)] = N_("State not recoverable"),
+# if ENOTRECOVERABLE > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX ENOTRECOVERABLE
+# endif
+#endif
   };
 
 #define NERR \
