@@ -1,3 +1,7 @@
+2005-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.c: Update cpoyright year.
+
 2005-12-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_mutex_destroy.c: Set mutex type to an invalid value.

@@ -1,3 +1,8 @@
+2005-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define EOWNERDEAD and
+	ENOTRECOVERABLE if not already defined.
+
 2005-12-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1566]
