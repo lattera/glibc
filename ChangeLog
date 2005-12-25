@@ -1,3 +1,8 @@
+2005-12-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/Makefile ($(objpfx)isomac.out): Move -I.. to the end so
+	that $(..)/bits is not found early.
+
 2005-12-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/errno.texi: Add new Linux errno codes.

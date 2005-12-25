@@ -124,7 +124,7 @@ endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
-	'-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $<.out
+	'-I../include $(+sysdep-includes) $(sysincludes) -I..' > $<.out
 
 isomac-CFLAGS = -O
 $(objpfx)isomac: isomac.c
