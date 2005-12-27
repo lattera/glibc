@@ -1,5 +1,8 @@
 2005-12-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-tls13.c (do_test): Avoid using the library path when
+	looking for tst-tlsmod13a.so.
+
 	* stdio-common/tstdiomisc.c: If FLT_EVEL_METHOD is 2 use long
 	double math to generate NaN results.
 
