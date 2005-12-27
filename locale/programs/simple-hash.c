@@ -146,13 +146,13 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
   if ((hash_entry *) htab->first == NULL)
     {
       table[idx].next = &table[idx];
-      *(hash_entry **) &htab->first = &table[idx];
+      htab->first = &table[idx];
     }
   else
     {
       table[idx].next = ((hash_entry *) htab->first)->next;
       ((hash_entry *) htab->first)->next = &table[idx];
-      *(hash_entry **) &htab->first = &table[idx];
+      htab->first = &table[idx];
     }
 
   ++htab->filled;

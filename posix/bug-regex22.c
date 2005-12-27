@@ -1,5 +1,5 @@
 /* Test re.translate != NULL.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -40,7 +40,7 @@ main (void)
   re_set_syntax (RE_SYNTAX_POSIX_EGREP);
 
   memset (&re, 0, sizeof (re));
-  re.translate = trans;
+  re.translate = (unsigned char *) trans;
   s = re_compile_pattern ("\\W", 2, &re);
 
   if (s != NULL)
@@ -68,7 +68,7 @@ main (void)
     }
 
   memset (&re, 0, sizeof (re));
-  re.translate = trans;
+  re.translate = (unsigned char *) trans;
   s = re_compile_pattern ("\\w", 2, &re);
 
   if (s != NULL)
@@ -96,7 +96,7 @@ main (void)
     }
 
   memset (&re, 0, sizeof (re));
-  re.translate = trans;
+  re.translate = (unsigned char *) trans;
   s = re_compile_pattern ("[[:DIGIT:]]", 11, &re);
   if (s == NULL)
     {
@@ -106,7 +106,7 @@ main (void)
     }
 
   memset (&re, 0, sizeof (re));
-  re.translate = trans;
+  re.translate = (unsigned char *) trans;
   s = re_compile_pattern ("[[:DIGIT:]]", 2, &re);
   if (s == NULL)
     {

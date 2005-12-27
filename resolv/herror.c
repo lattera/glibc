@@ -80,7 +80,6 @@ const int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 void
 herror(const char *s) {
 	struct iovec iov[4], *v = iov;
-	extern int * __h_errno();
 
 	if (s != NULL && *s != '\0') {
 		v->iov_base = (/*noconst*/ char *)s;

@@ -1,5 +1,5 @@
 /* Test and measure strpbrk functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -102,8 +102,8 @@ do_test (size_t align, size_t pos, size_t len)
   if (align + pos + 10 >= page_size || len > 240)
     return;
 
-  rej = buf2 + (random () & 255);
-  s = buf1 + align;
+  rej = (char *) (buf2 + (random () & 255));
+  s = (char *) (buf1 + align);
 
   for (i = 0; i < len; ++i)
     {
@@ -182,7 +182,7 @@ do_random_tests (void)
 	}
       rej[i] = '\0';
       for (c = 1; c <= 255; ++c)
-	if (strchr (rej, c) == NULL)
+	if (strchr ((char *) rej, c) == NULL)
 	  break;
       j = (pos > len ? pos : len) + align + 64;
       if (j > 512)
@@ -199,23 +199,24 @@ do_random_tests (void)
 	  else
 	    {
 	      p[i] = random () & 255;
-	      if (strchr (rej, p[i]))
+	      if (strchr ((char *) rej, p[i]))
 		{
 		  p[i] = random () & 255;
-		  if (strchr (rej, p[i]))
+		  if (strchr ((char *) rej, p[i]))
 		    p[i] = c;
 		}
 	    }
 	}
 
-      result = STRPBRK_RESULT (p + align, pos < len ? pos : len);
+      result = STRPBRK_RESULT ((char *) (p + align), pos < len ? pos : len);
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align, rej) != result)
+	if (CALL (impl, (char *) (p + align), (char *) rej) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd, %zd, %zd) %p != %p",
 		   n, impl->name, align, rej, rlen, pos, len,
-		   (void *) CALL (impl, p + align, rej), (void *) result);
+		   (void *) CALL (impl, (char *) (p + align), (char *) rej),
+		   (void *) result);
 	    ret = 1;
 	  }
     }

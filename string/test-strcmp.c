@@ -1,5 +1,5 @@
 /* Test and measure strcmp functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -103,8 +103,8 @@ do_test (size_t align1, size_t align2, size_t len, int max_char,
   if (align2 + len + 1 >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) (buf1 + align1);
+  s2 = (char *) (buf2 + align2);
 
   for (i = 0; i < len; i++)
     s1[i] = s2[i] = 1 + 23 * i % max_char;
@@ -198,7 +198,7 @@ do_random_tests (void)
 
       FOR_EACH_IMPL (impl, 1)
 	{
-	  r = CALL (impl, p1 + align1, p2 + align2);
+	  r = CALL (impl, (char *) (p1 + align1), (char *) (p2 + align2));
 	  /* Test whether on 64-bit architectures where ABI requires
 	     callee to promote has the promotion been done.  */
 	  asm ("" : "=g" (r) : "0" (r));

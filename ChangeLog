@@ -1,9 +1,44 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* posix/tst-execle1.c (do_test): Add a const.
+	* posix/tst-execle2.c (do_test): Likewise.
+
+	* posix/transbug.c (run_test): Add some casts.
+	* posix/bug-regex22.c (main): Likewise.
+	* posix/bug-regex5.c (main): Likewise.
+	* wcsmbs/tst-mbsrtowcs.c (main): Likewise.
+	* string/test-strspn.c (do_test, do_random_tests): Likewise.
+	* string/test-strrchr.c (do_test, do_random_tests): Likewise.
+	* string/test-strlen.c (do_random_tests): Likewise.
+	* string/test-strpbrk.c (do_test, do_random_tests): Likewise.
+	* string/test-strcmp.c (do_random_tests): Likewise.
+	* string/test-strchr.c (do_test, do_random_tests): Likewise.
+	* string/test-strcat.c (do_test, do_random_tests): Likewise.
+	* string/test-strncpy.c (do_random_tests): Likewise.
+	* string/test-strcpy.c (do_test, do_random_tests): Likewise.
+	* string/test-memccpy.c (do_test): Likewise.
+	* string/test-memmove.c (do_test, do_random_tests): Likewise.
+	* string/test-memcpy.c (do_test, do_random_tests): Likewise.
+	* string/test-memcmp.c (do_test, do_random_tests): Likewise.
+	* string/test-memchr.c (do_test, do_random_tests): Likewise.
+	* dlfcn/bug-atexit1.c (do_test): Fix up prototype in cast.
+	* stdio-common/tst-fgets.c (do_test): Add a cast.
+	* iconvdata/bug-iconv4.c (xiconv): Add a cast.
+
+	* locale/programs/simple-hash.c (insert_entry_2): Remove useless casts.
+
+	* resolv/herror.c (herror): Remove unused extern decl.
+
+	* libio/obprintf.c: Include "strfile.h".
+
+	* elf/order2mod2.c (init): Cast ignored value to void.
+
 2005-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/tst-tls13.c (do_test): Avoid using the library path when
 	looking for tst-tlsmod13a.so.
 
-	* stdio-common/tstdiomisc.c: If FLT_EVEL_METHOD is 2 use long
+	* stdio-common/tstdiomisc.c: If FLT_EVAL_METHOD is 2, use long
 	double math to generate NaN results.
 
 	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: Define EOWNERDEAD

@@ -5,7 +5,7 @@
 static int
 do_test (void)
 {
-  FILE *fp = fmemopen ("hello", 5, "r");
+  FILE *fp = fmemopen ((char *) "hello", 5, "r");
   char buf[2];
   char *bp = fgets (buf, sizeof (buf), fp);
   printf ("fgets: %s\n", bp == buf ? "OK" : "ERROR");

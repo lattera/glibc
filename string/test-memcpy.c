@@ -1,5 +1,5 @@
 /* Test and measure memcpy functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -102,8 +102,8 @@ do_test (size_t align1, size_t align2, size_t len)
   if (align2 + len >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) (buf1 + align1);
+  s2 = (char *) (buf2 + align2);
 
   for (i = 0, j = 1; i < len; i++, j += 23)
     s1[i] = j;
@@ -190,7 +190,9 @@ do_random_tests (void)
 	  if (j > size2)
 	    j = size2;
 	  memset (p2, c, j);
-	  res = CALL (impl, p2 + align2, p1 + align1, len);
+	  res = (unsigned char *) CALL (impl,
+					(char *) (p2 + align2),
+					(char *) (p1 + align1), len);
 	  if (res != MEMCPY_RESULT (p2 + align2, len))
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",

@@ -101,8 +101,8 @@ do_test (size_t align1, size_t align2, size_t len)
   if (align2 + len >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) (buf1 + align1);
+  s2 = (char *) (buf2 + align2);
 
   for (i = 0, j = 1; i < len; i++, j += 23)
     s1[i] = j;
@@ -111,7 +111,7 @@ do_test (size_t align1, size_t align2, size_t len)
     printf ("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s2, buf2 + align1, s1, len);
+    do_one_test (impl, s2, (char *) (buf2 + align1), s1, len);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -179,7 +179,9 @@ do_random_tests (void)
 	{
 	  memset (p2 + dststart, c, dstend - dststart);
 	  memcpy (p2 + srcstart, p1 + srcstart, srcend - srcstart);
-	  res = CALL (impl, p2 + align2, p2 + align1, len);
+	  res = (unsigned char *) CALL (impl,
+					(char *) (p2 + align2),
+					(char *) (p2 + align1), len);
 	  if (res != p2 + align2)
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",

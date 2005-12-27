@@ -1,5 +1,5 @@
 /* Test and measure strlen functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -92,7 +92,7 @@ do_test (size_t align, size_t len, int max_char)
     printf ("Length %4zd, alignment %2zd:", len, align);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, buf1 + align, len);
+    do_one_test (impl, (char *) (buf1 + align), len);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -127,10 +127,11 @@ do_random_tests (void)
 	}
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align) != len)
+	if (CALL (impl, (char *) (p + align)) != len)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd) %zd != %zd, p %p",
-		   n, impl->name, align, CALL (impl, p + align), len, p);
+		   n, impl->name, align, CALL (impl, (char *) (p + align)),
+		   len, p);
 	    ret = 1;
 	  }
     }

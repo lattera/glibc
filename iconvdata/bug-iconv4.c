@@ -15,7 +15,7 @@ xiconv (iconv_t cd, int out_size)
 {
   unsigned char euc[4];
   char *inp = (char *) UCS_STR;
-  char *outp = euc;
+  char *outp = (char *) euc;
   size_t inbytesleft = strlen (UCS_STR);
   size_t outbytesleft = out_size;
   size_t ret;

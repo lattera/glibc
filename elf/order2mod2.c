@@ -7,7 +7,7 @@ void
 __attribute__ ((constructor))
 init (void)
 {
-  foo () - bar ();
+  (void) (foo () - bar ());
 }
 
 static void
