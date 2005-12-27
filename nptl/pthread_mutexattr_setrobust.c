@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +17,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthreadP.h>
 
 
 int
-pthread_mutexattr_getpshared (attr, pshared)
-     const pthread_mutexattr_t *attr;
-     int *pshared;
+pthread_mutexattr_setrobust_np (attr, robustness)
+     pthread_mutexattr_t *attr;
+     int robustness;
 {
-  const struct pthread_mutexattr *iattr;
+  if (robustness != PTHREAD_MUTEX_STALLED_NP
+      && __builtin_expect (robustness != PTHREAD_MUTEX_ROBUST_NP, 0))
+    return EINVAL;
 
-  iattr = (const struct pthread_mutexattr *) attr;
+  struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;
 
-  *pshared = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
-	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
+  /* We use bit 30 to signal whether the mutex is going to be
+     robust or not.  */
+  if (robustness == PTHREAD_MUTEX_STALLED_NP)
+    iattr->mutexkind &= ~PTHREAD_MUTEXATTR_FLAG_ROBUST;
+  else
+    iattr->mutexkind |= PTHREAD_MUTEXATTR_FLAG_ROBUST;
 
   return 0;
 }

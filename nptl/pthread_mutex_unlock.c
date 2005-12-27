@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <stdlib.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
@@ -28,6 +29,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
      int decr;
 {
+  int newowner = 0;
+
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
     case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -52,13 +55,58 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       /* Normal mutex.  Nothing special to do.  */
       break;
 
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
+      /* Recursive mutex.  */
+      if (mutex->__data.__owner == -THREAD_GETMEM (THREAD_SELF, tid))
+	{
+	  if (--mutex->__data.__count != 0)
+	    /* We still hold the mutex.  */
+	    return ENOTRECOVERABLE;
+
+	  goto notrecoverable;
+	}
+
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
+	return EPERM;
+
+      if (--mutex->__data.__count != 0)
+	/* We still hold the mutex.  */
+	return 0;
+
+      goto robust;
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
+      /* Error checking mutex.  */
+      if (abs (mutex->__data.__owner) != THREAD_GETMEM (THREAD_SELF, tid)
+	  || ! lll_mutex_islocked (mutex->__data.__lock))
+	return EPERM;
+
+      /* FALLTHROUGH */
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
+      /* If the previous owner died and the caller did not succeed in
+	 making the state consistent, mark the mutex as unrecoverable
+	 and make all waiters.  */
+      if (__builtin_expect (mutex->__data.__owner
+			    == -THREAD_GETMEM (THREAD_SELF, tid)
+			    || (mutex->__data.__owner
+				== PTHREAD_MUTEX_NOTRECOVERABLE), 0))
+      notrecoverable:
+	newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
+
+    robust:
+      /* Remove mutex from the list.  */
+      DEQUEUE_MUTEX (mutex);
+      break;
+
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;
     }
 
   /* Always reset the owner field.  */
-  mutex->__data.__owner = 0;
+  mutex->__data.__owner = newowner;
   if (decr)
     /* One less user.  */
     --mutex->__data.__nusers;

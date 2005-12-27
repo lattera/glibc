@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
@@ -49,17 +50,15 @@ pthread_mutex_timedlock (mutex, abstime)
 
 	  goto out;
 	}
-      else
-	{
-	  /* We have to get the mutex.  */
-	  result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
 
-	  if (result != 0)
-	    goto out;
+      /* We have to get the mutex.  */
+      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
 
-	  /* Only locked once so far.  */
-	  mutex->__data.__count = 1;
-	}
+      if (result != 0)
+	goto out;
+
+      /* Only locked once so far.  */
+      mutex->__data.__count = 1;
       break;
 
       /* Error checking mutex.  */
@@ -101,6 +100,71 @@ pthread_mutex_timedlock (mutex, abstime)
 
 	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
 	}
+      break;
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
+      /* Check whether we already hold the mutex.  */
+      if (abs (mutex->__data.__owner) == id)
+	{
+	  /* Just bump the counter.  */
+	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+	    /* Overflow of the counter.  */
+	    return EAGAIN;
+
+	  ++mutex->__data.__count;
+
+	  goto out;
+	}
+
+      /* We have to get the mutex.  */
+      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+
+      if (result != 0)
+	goto out;
+
+      /* Only locked once so far.  */
+      mutex->__data.__count = 1;
+      goto robust;
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
+      /* Check whether we already hold the mutex.  */
+      if (__builtin_expect (abs (mutex->__data.__owner) == id, 0))
+	return EDEADLK;
+
+      /* FALLTHROUGH */
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
+      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+
+      if (result != 0)
+	goto out;
+
+    robust:
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	{
+	  /* This mutex is now not recoverable.  */
+	  mutex->__data.__count = 0;
+	  lll_mutex_unlock (mutex->__data.__lock);
+	  return ENOTRECOVERABLE;
+	}
+
+      /* This mutex is either healthy or we can try to recover it.  */
+      assert (mutex->__data.__owner == 0
+	      || mutex->__data.__owner == PTHREAD_MUTEX_OWNERDEAD);
+
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_OWNERDEAD, 0))
+	{
+	  result = EOWNERDEAD;
+	  /* We signal ownership of a not yet recovered robust mutex
+	     by storing the negative thread ID.  */
+	  mutex->__data.__owner = -id;
+	  ++mutex->__data.__nusers;
+	}
+
+      ENQUEUE_MUTEX (mutex);
       break;
 
     default:

@@ -310,6 +310,33 @@ start_thread (void *arg)
      the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
+  /* If this thread has any robust mutexes locked, handle them now.  */
+  pthread_mutex_t *robust = THREAD_GETMEM (pd, robust_list);
+  if (__builtin_expect (robust != NULL, 0))
+    {
+      do
+	{
+	  pthread_mutex_t *this = robust;
+	  robust = robust->__data.__next;
+
+	  assert (lll_mutex_islocked (this->__data.__lock));
+	  this->__data.__count = 0;
+	  --this->__data.__nusers;
+	  assert (this->__data.__owner != PTHREAD_MUTEX_NOTRECOVERABLE);
+	  this->__data.__owner = PTHREAD_MUTEX_OWNERDEAD;
+	  this->__data.__next = NULL;
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+	  this->__data.__prev = NULL;
+#endif
+
+	  lll_mutex_unlock (this->__data.__lock);
+	}
+      while (robust != NULL);
+
+      /* Clean up so that the thread descriptor can be reused.  */
+      THREAD_SETMEM (pd, robust_list, NULL);
+    }
+
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))
     /* Free the TCB.  */

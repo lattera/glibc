@@ -60,24 +60,39 @@ enum
 #endif
 };
 
-/* Mutex initializers.  */
-#define PTHREAD_MUTEX_INITIALIZER \
-  { { 0, 0, 0, 0, 0, 0 } }
+
 #ifdef __USE_GNU
-# if __WORDSIZE == 64
+/* Robust mutex or not flags.  */
+enum
+{
+  PTHREAD_MUTEX_STALLED_NP,
+  PTHREAD_MUTEX_ROBUST_NP
+};
+#endif
+
+
+/* Mutex initializers.  */
+#if __WORDSIZE == 64
+# define PTHREAD_MUTEX_INITIALIZER \
+  { { 0, 0, 0, 0, 0, 0, (void *) 0, (void *) 0 } }
+# ifdef __USE_GNU
 #  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0 } }
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0, (void *) 0, (void *) 0 } }
 #  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0 } }
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0, (void *) 0, (void *) 0 } }
 #  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0 } }
-# else
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0, (void *) 0, (void *) 0 } }
+# endif
+#else
+# define PTHREAD_MUTEX_INITIALIZER \
+  { { 0, 0, 0, 0, 0, { 0 } } }
+# ifdef __USE_GNU
 #  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0, 0 } }
+  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0, { 0 } } }
 #  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0, 0 } }
+  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0, { 0 } } }
 #  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0, 0 } }
+  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0, { 0 } } }
 # endif
 #endif
 
@@ -696,6 +711,12 @@ extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 
 
+#ifdef __USE_GNU
+/* Declare the state protected by MUTEX as consistent.  */
+extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex) __THROW;
+#endif
+
+
 /* Functions for handling mutex attributes.  */
 
 /* Initialize mutex attribute object ATTR with default attributes
@@ -724,6 +745,16 @@ extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
    PTHREAD_MUTEX_DEFAULT).  */
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW;
+#endif
+
+#ifdef __USE_GNU
+/* Get the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_getrobust_np (__const pthread_mutexattr_t *__attr,
+					   int *__robustness) __THROW;
+
+/* Set the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
+					   int __robustness) __THROW;
 #endif
 
 

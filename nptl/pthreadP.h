@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -49,6 +49,32 @@
 #ifndef MAX_ADAPTIVE_COUNT
 # define MAX_ADAPTIVE_COUNT 100
 #endif
+
+
+/* Magic cookie representing robust mutex with dead owner.  */
+#define PTHREAD_MUTEX_OWNERDEAD		INT_MAX
+/* Magic cookie representing not recoverable robust mutex.  */
+#define PTHREAD_MUTEX_NOTRECOVERABLE	(INT_MAX - 1)
+
+
+/* Internal mutex type value.  */
+enum
+{
+  PTHREAD_MUTEX_ROBUST_PRIVATE_NP = 256,
+  PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP
+  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_RECURSIVE_NP,
+  PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP
+  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP
+  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_ADAPTIVE_NP
+};
+
+
+/* Flags in mutex attr.  */
+#define PTHREAD_MUTEXATTR_FLAG_ROBUST	0x40000000
+#define PTHREAD_MUTEXATTR_FLAG_PSHARED	0x80000000
+#define PTHREAD_MUTEXATTR_FLAG_BITS \
+  (PTHREAD_MUTEXATTR_FLAG_ROBUST | PTHREAD_MUTEXATTR_FLAG_PSHARED)
 
 
 /* Internal variables.  */

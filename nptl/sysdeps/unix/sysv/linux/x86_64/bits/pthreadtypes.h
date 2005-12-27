@@ -59,7 +59,7 @@ typedef union
 
 /* Data structures for mutex handling.  The structure of the attribute
    type is not exposed on purpose.  */
-typedef union
+typedef union __pthread_mutex_u
 {
   struct
   {
@@ -72,10 +72,19 @@ typedef union
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
-#if __WORDSIZE != 64
-    unsigned int __nusers;
-#endif
+#if __WORDSIZE == 64
     int __spins;
+    union __pthread_mutex_u *__next;
+    union __pthread_mutex_u *__prev;
+# define __PTHREAD_MUTEX_HAVE_PREV	1
+#else
+    unsigned int __nusers;
+    union
+    {
+      int __spins;
+      union __pthread_mutex_u *__next;
+    };
+#endif
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

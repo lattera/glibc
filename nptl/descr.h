@@ -134,6 +134,51 @@ struct pthread
   /* Process ID - thread group ID in kernel speak.  */
   pid_t pid;
 
+  /* List of robust mutexes the thread is holding.  */
+  pthread_mutex_t *robust_list;
+
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+# define ENQUEUE_MUTEX(mutex) \
+  do {									      \
+    mutex->__data.__next = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
+    THREAD_SETMEM (THREAD_SELF, robust_list, mutex);			      \
+    if (mutex->__data.__next != NULL)					      \
+      mutex->__data.__next->__data.__prev = mutex;			      \
+    mutex->__data.__prev = NULL;					      \
+  } while (0)
+# define DEQUEUE_MUTEX(mutex) \
+  do {									      \
+    if (mutex->__data.__prev == NULL)					      \
+      THREAD_SETMEM (THREAD_SELF, robust_list, mutex->__data.__next);	      \
+    else								      \
+      mutex->__data.__prev->__data.__next = mutex->__data.__next;	      \
+    if (mutex->__data.__next != NULL)					      \
+      mutex->__data.__next->__data.__prev = mutex->__data.__prev;	      \
+    mutex->__data.__prev = NULL;					      \
+    mutex->__data.__next = NULL;					      \
+  } while (0)
+#else
+# define ENQUEUE_MUTEX(mutex) \
+  do {									      \
+    mutex->__data.__next = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
+    THREAD_SETMEM (THREAD_SELF, robust_list, mutex);			      \
+  } while (0)
+# define DEQUEUE_MUTEX(mutex) \
+  do {									      \
+    pthread_mutex_t *runp = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
+    if (runp == mutex)							      \
+      THREAD_SETMEM (THREAD_SELF, robust_list, runp->__data.__next);	      \
+    else								      \
+      {									      \
+	while (runp->__data.__next != mutex)				      \
+	  runp = runp->__data.__next;					      \
+									      \
+	runp->__data.__next = runp->__data.__next->__data.__next;	      \
+	mutex->__data.__next = NULL;					      \
+      }									      \
+  } while (0)
+#endif
+
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;
 

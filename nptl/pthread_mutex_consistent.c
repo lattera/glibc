@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +17,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthreadP.h>
 
 
 int
-pthread_mutexattr_getpshared (attr, pshared)
-     const pthread_mutexattr_t *attr;
-     int *pshared;
+pthread_mutex_consistent_np (mutex)
+     pthread_mutex_t *mutex;
 {
-  const struct pthread_mutexattr *iattr;
+  /* Test whether this is a robust mutex with a dead owner.  */
+  if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_PRIVATE_NP) == 0
+      || mutex->__data.__owner != -THREAD_GETMEM (THREAD_SELF, tid))
+    return EINVAL;
 
-  iattr = (const struct pthread_mutexattr *) attr;
-
-  *pshared = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
-	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
+  mutex->__data.__owner = -mutex->__data.__owner;
 
   return 0;
 }

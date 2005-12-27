@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <stdlib.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
@@ -37,6 +38,7 @@ __pthread_mutex_lock (mutex)
 
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
+  int retval = 0;
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
@@ -57,13 +59,14 @@ __pthread_mutex_lock (mutex)
       /* We have to get the mutex.  */
       LLL_MUTEX_LOCK (mutex->__data.__lock);
 
+      assert (mutex->__data.__owner == 0);
       mutex->__data.__count = 1;
       break;
 
       /* Error checking mutex.  */
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Check whether we already hold the mutex.  */
-      if (mutex->__data.__owner == id)
+      if (__builtin_expect (mutex->__data.__owner == id, 0))
 	return EDEADLK;
 
       /* FALLTHROUGH */
@@ -72,6 +75,7 @@ __pthread_mutex_lock (mutex)
     simple:
       /* Normal mutex.  */
       LLL_MUTEX_LOCK (mutex->__data.__lock);
+      assert (mutex->__data.__owner == 0);
       break;
 
     case PTHREAD_MUTEX_ADAPTIVE_NP:
@@ -99,6 +103,65 @@ __pthread_mutex_lock (mutex)
 
 	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
 	}
+      assert (mutex->__data.__owner == 0);
+      break;
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
+      /* Check whether we already hold the mutex.  */
+      if (abs (mutex->__data.__owner) == id)
+	{
+	  /* Just bump the counter.  */
+	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+	    /* Overflow of the counter.  */
+	    return EAGAIN;
+
+	  ++mutex->__data.__count;
+
+	  return 0;
+	}
+
+      /* We have to get the mutex.  */
+      LLL_MUTEX_LOCK (mutex->__data.__lock);
+
+      mutex->__data.__count = 1;
+
+      goto robust;
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
+      /* Check whether we already hold the mutex.  */
+      if (__builtin_expect (abs (mutex->__data.__owner) == id, 0))
+	return EDEADLK;
+
+      /* FALLTHROUGH */
+
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
+      LLL_MUTEX_LOCK (mutex->__data.__lock);
+
+    robust:
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	{
+	  /* This mutex is now not recoverable.  */
+	  mutex->__data.__count = 0;
+	  lll_mutex_unlock (mutex->__data.__lock);
+	  return ENOTRECOVERABLE;
+	}
+
+      /* This mutex is either healthy or we can try to recover it.  */
+      assert (mutex->__data.__owner == 0
+	      || mutex->__data.__owner == PTHREAD_MUTEX_OWNERDEAD);
+
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_OWNERDEAD, 0))
+	{
+	  retval = EOWNERDEAD;
+	  /* We signal ownership of a not yet recovered robust mutex
+	     by storing the negative thread ID.  */
+	  id = -id;
+	}
+
+      ENQUEUE_MUTEX (mutex);
       break;
 
     default:
@@ -107,13 +170,12 @@ __pthread_mutex_lock (mutex)
     }
 
   /* Record the ownership.  */
-  assert (mutex->__data.__owner == 0);
   mutex->__data.__owner = id;
 #ifndef NO_INCR
   ++mutex->__data.__nusers;
 #endif
 
-  return 0;
+  return retval;
 }
 #ifndef __pthread_mutex_lock
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)

@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,16 +21,16 @@
 
 
 int
-pthread_mutexattr_getpshared (attr, pshared)
+pthread_mutexattr_getrobust_np (attr, robustness)
      const pthread_mutexattr_t *attr;
-     int *pshared;
+     int *robustness;
 {
   const struct pthread_mutexattr *iattr;
 
   iattr = (const struct pthread_mutexattr *) attr;
 
-  *pshared = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
-	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
+  *robustness = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0
+		 ? PTHREAD_MUTEX_ROBUST_NP : PTHREAD_MUTEX_STALLED_NP);
 
   return 0;
 }

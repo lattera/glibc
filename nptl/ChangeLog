@@ -1,3 +1,56 @@
+2005-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Define PTHREAD_MUTEX_ROBUST_PRIVATE_NP,
+	PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP,
+	PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP,
+	PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP,
+	PTHREAD_MUTEXATTR_FLAG_ROBUST, PTHREAD_MUTEXATTR_FLAG_PSHARED,
+	and PTHREAD_MUTEXATTR_FLAG_BITS.
+	* descr.h (struct pthread): Add robust_list field and define
+	ENQUEUE_MUTEX and DEQUEUE_MUTEX macros.
+	* pthread_mutexattr_getrobust.c: New file.
+	* pthread_mutexattr_setrobust.c: New file.
+	* pthread_mutex_consistent.c: New file.
+	* sysdeps/pthread/pthread.h: Declare pthread_mutexattr_getrobust,
+	pthread_mutexattr_setrobust, and pthread_mutex_consistent.
+	Define PTHREAD_MUTEX_STALLED_NP and PTHREAD_MUTEX_ROBUST_NP.
+	Adjust pthread_mutex_t initializers.
+	* nptl/sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Add __next
+	field to pthread_mutex_t.
+	* nptl/sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Add __next
+	and __prev field to pthread_mutex_t.
+	* Versions [GLIBC_2.4]: Export pthread_mutexattr_getrobust_np,
+	pthread_mutexattr_setrobust_np, and pthread_mutex_consistent_np.
+	* pthread_mutexattr_getpshared.c: Use PTHREAD_MUTEXATTR_FLAG_PSHARED
+	and PTHREAD_MUTEXATTR_FLAG_BITS macros instead of magic numbers.
+	* pthread_mutexattr_gettype.c: Likewise.
+	* pthread_mutexattr_setpshared.c: Likewise.
+	* pthread_mutexattr_settype.c: Likewise.
+	* pthread_mutex_init.c: Reject robust+pshared attribute for now.
+	Initialize mutex kind according to robust flag.
+	* pthread_mutex_lock.c: Implement local robust mutex.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* pthread_create.c (start_thread): Mark robust mutexes which remained
+	locked as dead.
+	* tst-robust1.c: New file.
+	* tst-robust2.c: New file.
+	* tst-robust3.c: New file.
+	* tst-robust4.c: New file.
+	* tst-robust5.c: New file.
+	* tst-robust6.c: New file.
+	* tst-robust7.c: New file.
+	* Makefile (libpthread-routines): Add pthread_mutexattr_getrobust,
+	pthread_mutexattr_setrobust, and pthread_mutex_consistent.
+	(tests): Add tst-robust1, tst-robust2, tst-robust3, tst-robust4,
+	tst-robust5, tst-robust6, and tst-robust7.
+
+	* tst-typesizes.c: New file.
+	* Makefile (tests): Add tst-typesizes.
+
+	* tst-once3.c: More debug output.
+
 2005-12-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Add break

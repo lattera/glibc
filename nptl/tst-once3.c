@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -51,6 +51,8 @@ once_handler1 (void)
       puts ("once_handler1: barrier_wait failed");
       exit (1);
     }
+
+  puts ("once_handler1: going to wait on cond");
 
   pthread_cond_wait (&cond, &mut);
 
@@ -139,6 +141,9 @@ do_test (void)
       puts ("join didn't return PTHREAD_CANCELED");
       return 1;
     }
+  puts ("joined successfully");
+
+  printf ("once = %d\n", *(int *) &once);
 
   if (cl_called != 1)
     {

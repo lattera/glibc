@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <errno.h>
 #include <string.h>
 #include "pthreadP.h"
 
@@ -40,17 +41,26 @@ __pthread_mutex_init (mutex, mutexattr)
 
   imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
 
+  /* Sanity checks.  */
+  // XXX For now we cannot implement robust mutexes if they are shared.
+  if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0
+      && (imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0)
+    return ENOTSUP;
+
   /* Clear the whole variable.  */
   memset (mutex, '\0', __SIZEOF_PTHREAD_MUTEX_T);
 
   /* Copy the values from the attribute.  */
-  mutex->__data.__kind = imutexattr->mutexkind & ~0x80000000;
+  mutex->__data.__kind = imutexattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS;
+  if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0)
+    mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_PRIVATE_NP;
 
   /* Default values: mutex not used yet.  */
   // mutex->__count = 0;	already done by memset
   // mutex->__owner = 0;	already done by memset
   // mutex->__nusers = 0;	already done by memset
   // mutex->__spins = 0;	already done by memset
+  // mutex->__next = NULL;	already done by memset
 
   return 0;
 }

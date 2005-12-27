@@ -1,3 +1,7 @@
+2005-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.4 for libpthread.
+
 2005-12-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Makefile ($(objpfx)isomac.out): Move -I.. to the end so
