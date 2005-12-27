@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -46,7 +46,7 @@ typedef union
 
 /* Data structures for mutex handling.  The structure of the attribute
    type is not exposed on purpose.  */
-typedef union
+typedef union __pthread_mutex_u
 {
   struct
   {
@@ -57,7 +57,11 @@ typedef union
        binary compatibility.  */
     int __kind;
     unsigned int __nusers;
-    int __spins;
+    union
+    {
+      int __spins;
+      union __pthread_mutex_u *__next;
+    };
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

@@ -1,3 +1,14 @@
+2005-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Add __next
+	and __prev field to pthread_mutex_t.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Add __next field
+	to pthread_mutex_t.
+
 2005-12-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h: Define PTHREAD_MUTEX_ROBUST_PRIVATE_NP,
@@ -56,7 +67,7 @@
 	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Add break
 	missing after last change.
 
-	* version.c: Update cpoyright year.
+	* version.c: Update copyright year.
 
 2005-12-23  Ulrich Drepper  <drepper@redhat.com>
 

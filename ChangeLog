@@ -1,3 +1,14 @@
+2005-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: Define EOWNERDEAD
+	and ENOTRECOVERABLE if not already defined.
+	* sysdeps/unix/sysv/linux/alpha/bits/errno.h: Likewise.
+
+2005-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Versions: Add new errlist-compat
+	entry for up to 138 errnos.
+
 2005-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/gconv_trans.c (__gconv_transliterate): Demangle step __fct
