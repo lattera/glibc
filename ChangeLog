@@ -1,3 +1,13 @@
+2005-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/gconv_trans.c (__gconv_transliterate): Demangle step __fct
+	before calling it.
+
+2005-12-27  David S. Miller  <davem@sunset.davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add new errlist-compat
+	entry for up to 134 errnos.
+
 2005-12-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def: Add GLIBC_2.4 for libpthread.
