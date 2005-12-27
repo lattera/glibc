@@ -45,7 +45,7 @@ prepare (int argc, char *argv[])
 static int
 do_test (void)
 {
-  char *env[] = {"FOO=BAR", NULL};
+  const char *env[] = {"FOO=BAR", NULL};
   errno = 0;
   execle (copy, copy, NULL, env);
 
