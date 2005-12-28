@@ -1,5 +1,11 @@
 2005-12-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/__longjmp.S [PTR_DEMANGLE]: Also demangle stack
+	pointer.  Add CFI.
+	* sysdeps/i386/bsd-_setjmp.S [PTR_MANGLE]: Also mangle stack pointer.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+
 	* sysdeps/x86_64/__longjmp.S: No need to make sure return value is
 	!= 0, the caller did that.
 

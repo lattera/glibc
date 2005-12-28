@@ -32,6 +32,36 @@
 ENTRY (BP_SYM (__longjmp))
 	ENTER
 
+#ifdef PTR_DEMANGLE
+	movl JBUF(%esp), %eax	/* User's jmp_buf in %eax.  */
+	CHECK_BOUNDS_BOTH_WIDE (%eax, JBUF(%esp), $JB_SIZE)
+
+	/* Save the return address now.  */
+	movl (JB_PC*4)(%eax), %edx
+	/* Get the stack pointer.  */
+	movl (JB_SP*4)(%eax), %ecx
+	PTR_DEMANGLE (%edx)
+	PTR_DEMANGLE (%ecx)
+	cfi_def_cfa(%eax, 0)
+	cfi_register(%eip, %edx)
+	cfi_register(%esp, %ecx)
+	cfi_offset(%ebx, JB_BX*4)
+	cfi_offset(%esi, JB_SI*4)
+	cfi_offset(%edi, JB_DI*4)
+	cfi_offset(%ebp, JB_BP*4)
+     	/* Restore registers.  */
+	movl (JB_BX*4)(%eax), %ebx
+	movl (JB_SI*4)(%eax), %esi
+	movl (JB_DI*4)(%eax), %edi
+	movl (JB_BP*4)(%eax), %ebp
+	cfi_restore(%ebx)
+	cfi_restore(%esi)
+	cfi_restore(%edi)
+	cfi_restore(%ebp)
+
+	movl VAL(%esp), %eax	/* Second argument is return value.  */
+	movl %ecx, %esp
+#else
 	movl JBUF(%esp), %ecx	/* User's jmp_buf in %ecx.  */
 	CHECK_BOUNDS_BOTH_WIDE (%ecx, JBUF(%esp), $JB_SIZE)
 
@@ -44,8 +74,6 @@ ENTRY (BP_SYM (__longjmp))
 	movl (JB_DI*4)(%ecx), %edi
 	movl (JB_BP*4)(%ecx), %ebp
 	movl (JB_SP*4)(%ecx), %esp
-#ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (%edx)
 #endif
 	/* Jump to saved PC.  */
      	jmp *%edx

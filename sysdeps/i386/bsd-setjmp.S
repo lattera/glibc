@@ -46,6 +46,9 @@ ENTRY (BP_SYM (setjmp))
 	movl %esi, (JB_SI*4)(%eax)
 	movl %edi, (JB_DI*4)(%eax)
 	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%ecx)
+#endif
      	movl %ecx, (JB_SP*4)(%eax)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
 #ifdef PTR_MANGLE
