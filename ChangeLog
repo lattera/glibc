@@ -1,5 +1,10 @@
 2005-12-27  Roland McGrath  <roland@redhat.com>
 
+	* config.make.in (c++-sysincludes): New substituted variable.
+	* configure.in (CXX_SYSINCLUDES): New substituted variable.
+	* configure: Regenerated.
+	* Makeconfig (CXXFLAGS): Prepend $(c++-sysincludes) here.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
 	(PTR_MANGLE): Fix cast.
 

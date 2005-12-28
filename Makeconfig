@@ -651,7 +651,8 @@ override CFLAGS	= -std=gnu99 \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
 		  $(CFLAGS-$(@F))
-override CXXFLAGS = $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
+override CXXFLAGS = $(c++-sysincludes) \
+		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by

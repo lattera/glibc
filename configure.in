@@ -838,8 +838,16 @@ if test -n "$sysheaders"; then
   ccheaders=`$CC -print-file-name=include`
   SYSINCLUDES="-nostdinc -isystem $ccheaders \
 -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
+  if test -n "$CXX"; then
+    cxxversion=`$CXX -dumpversion 2>&AS_MESSAGE_LOG_FD` &&
+    cxxmachine=`$CXX -dumpmachine 2>&AS_MESSAGE_LOG_FD` &&
+    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
+    CXX_SYSINCLUDES="-isystem $cxxheaders \
+-isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
+  fi
 fi
 AC_SUBST(SYSINCLUDES)
+AC_SUBST(CXX_SYSINCLUDES)
 
 # check if ranlib is necessary
 AC_CACHE_CHECK(whether ranlib is necessary, libc_cv_ranlib_necessary, [dnl

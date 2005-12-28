@@ -34,6 +34,7 @@ with-cpu = @submachine@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
+c++-sysincludes = @CXX_SYSINCLUDES@
 all-warnings = @all_warnings@
 
 elf = @elf@
