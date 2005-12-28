@@ -1,3 +1,8 @@
+2005-12-28  Roland McGrath  <roland@redhat.com>
+
+	* hurd/sigunwind.c: Include <stdint.h>.
+	* sysdeps/mach/hurd/jmp-unwind.c: Likewise.
+
 2005-12-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/__longjmp.S [PTR_DEMANGLE]: Also demangle stack
