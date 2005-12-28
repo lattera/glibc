@@ -1,3 +1,8 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/am33/bits/setjmp.h (_JMPBUF_UNWINDS): Take third argument
+	DEMANGLE, and pass SP value through it.
+
 2004-10-25  Alexandre Oliva  <aoliva@redhat.com>
 
 	* ChangeLog.am33: Added emacs local variables for mode setting and
@@ -66,7 +71,7 @@
 	* sysdeps/am33/fpu/fraiseexcpt.c: New file.
 	* sysdeps/am33/fpu/fsetexcptflg.c: New file.
 	* sysdeps/am33/fpu/ftestexcept.c: New file.
-	
+
 	* sysdeps/unix/am33/sysdep.h: Use relative pathnames.
 	* sysdeps/unix/sysv/linux/am33/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/am33/sysdep.S: Likewise.

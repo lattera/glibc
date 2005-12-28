@@ -1,3 +1,14 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm/eabi/bits/setjmp.h (_JMPBUF_UNWINDS): Take third argument
+	DEMANGLE, and pass SP value through it.
+	* sysdeps/arm/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/arm/fpu/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+
+2005-12-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm/libc-tls.c: Use csu/ instead of sysdeps/generic/.
+
 2005-11-16  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h,
@@ -217,7 +228,7 @@
 
 	* sysdeps/arm/Makefile, sysdeps/arm/machine-gmon.h,
 	sysdeps/arm/_mcount.S: Revert previous bogus changes.
-	
+
 2005-10-10  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/_mcount.S: Suppress profiling when building this
@@ -274,7 +285,7 @@
 	* sysdeps/arm/ieee754.h: Deleted.
 	* sysdeps/arm/gmp-mparam.h: Support VFP and big endian.
 	* sysdeps/arm/bits/endian.h: Likewise.
-	
+
 2005-06-11  Phil Blundell  <pb@reciva.com>
 
 	* sysdeps/arm/init-first.c: Deleted.

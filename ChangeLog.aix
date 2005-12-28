@@ -1,0 +1,6 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/aix/bits/setjmp.h (_JMPBUF_UNWINDS): Take third
+	argument DEMANGLE, and pass SP value through it.
+
+	* sysdeps/unix/sysv/aix/powerpc/memset.c: Don't use sysdeps/generic.
