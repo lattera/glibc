@@ -1,5 +1,8 @@
 2005-12-27  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/x86_64/__longjmp.S: Don't confuse unwinder by loading
+	mangled values in %rbp and %rsp registers and by wrong cfi.
+
 	* config.make.in (c++-sysincludes): New substituted variable.
 	* configure.in (CXX_SYSINCLUDES): New substituted variable.
 	* configure: Regenerated.
