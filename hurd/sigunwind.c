@@ -21,6 +21,7 @@
 #include <thread_state.h>
 #include <setjmp.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 /* _hurd_setup_sighandler puts a link on the `active resources' chain so that

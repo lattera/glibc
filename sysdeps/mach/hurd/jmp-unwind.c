@@ -22,6 +22,7 @@
 #include <hurd/signal.h>
 #include <hurd/sigpreempt.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 #ifndef _JMPBUF_UNWINDS
