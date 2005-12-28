@@ -52,9 +52,6 @@ ENTRY(__longjmp)
 	movq (JB_R14*8)(%rdi),%r14
 	movq (JB_R15*8)(%rdi),%r15
 	/* Set return value for setjmp.  */
-	test %esi,%esi
-	mov $01,%eax
-	cmove %eax,%esi
 	mov %esi, %eax
 	movq %r8,%rsp
 	movq %r9,%rbp
