@@ -70,11 +70,19 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
 
       struct hurd_userlink *link;
 
+      inline uintptr_t demangle_ptr (uintptr_t x)
+	{
+# ifdef PTR_DEMANGLE
+	  PTR_DEMANGLE (x);
+# endif
+	  return x;
+	}
+
       /* Continue _longjmp_unwind's job of running the unwind
 	 forms for frames being unwound, since we will not
 	 return to its loop like this one, which called us.  */
       for (link = ss->active_resources;
-	   link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link);
+	   link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link, demangle_ptr);
 	   link = link->thread.next)
 	if (_hurd_userlink_unlink (link))
 	  {

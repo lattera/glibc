@@ -1,3 +1,17 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/jmpbuf-unwind.h (_jmpbuf_sp): New inline function.
+	(_JMPBUF_UNWINDS_ADJ): Use it, to PTR_DEMANGLE before comparison.
+	* sysdeps/alpha/jmpbuf-unwind.h: Likewise.
+	* sysdeps/i386/jmpbuf-unwind.h: Likewise.
+	* sysdeps/mips/jmpbuf-unwind.h: Likewise.
+	* sysdeps/powerpc/jmpbuf-unwind.h: Likewise.
+	* sysdeps/s390/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sh/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Likewise.
+
 2005-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Add __next

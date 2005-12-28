@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2000,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000,2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,8 +59,8 @@ typedef struct __sparc64_jmp_buf
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_fp)
+#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
+  ((unsigned long int) (address) < demangle ((jmpbuf)->uc_mcontext.mc_fp))
 
 #else
 
@@ -76,8 +76,8 @@ typedef int __jmp_buf[3];
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((int) (address) < (jmpbuf)[JB_SP])
+#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)	\
+  ((int) (address) < demangle ((jmpbuf)[JB_SP]))
 
 #endif
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -20,12 +20,23 @@
 #include <setjmp.h>
 #include <stdint.h>
 #include <unwind.h>
+#include <sysdep.h>
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
-#define _JMPBUF_UNWINDS_ADJ(jmpbuf, address, adj) \
-  ((uintptr_t) (address) - (adj) < (uintptr_t) (jmpbuf)[0].__regs[7] - (adj))
+static inline uintptr_t __attribute__ ((unused))
+_jmpbuf_sp (__jmp_buf regs)
+{
+  uintptr_t sp = regs[0].__regs[7];
+#ifdef PTR_DEMANGLE
+  PTR_DEMANGLE (sp);
+#endif
+  return sp;
+}
+
+#define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
+  ((uintptr_t) (_address) - (_adj) < _jmpbuf_sp (_jmpbuf) - (_adj))
 
 /* We use the normal lobngjmp for unwinding.  */
 #define __libc_unwind_longjmp(buf, val) __libc_longjmp (buf, val)

@@ -19,12 +19,23 @@
 #include <setjmp.h>
 #include <stdint.h>
 #include <unwind.h>
+#include <sysdep.h>
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
+static inline uintptr_t __attribute__ ((unused))
+_jmpbuf_sp (__jmp_buf regs)
+{
+  uintptr_t sp = regs[0].__sp;
+#ifdef PTR_DEMANGLE
+  PTR_DEMANGLE (sp);
+#endif
+  return sp;
+}
+
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
-  ((uintptr_t) (_address) - (_adj) < (uintptr_t) (_jmpbuf)[0].__sp - (_adj))
+  ((uintptr_t) (_address) - (_adj) < _jmpbuf_sp (_jmpbuf) - (_adj))
 
 /* We use the normal longjmp for unwinding.  */
 #define __libc_unwind_longjmp(buf, val) __libc_longjmp (buf, val)

@@ -1,5 +1,5 @@
 /* _longjmp_unwind -- Clean up stack frames unwound by longjmp.  Hurd version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,15 @@
 #error "<bits/setjmp.h> fails to define _JMPBUF_UNWINDS"
 #endif
 
+static inline uintptr_t
+demangle_ptr (uintptr_t x)
+{
+# ifdef PTR_DEMANGLE
+  PTR_DEMANGLE (x);
+# endif
+  return x;
+}
+
 /* This function is called by `longjmp' (with its arguments) to restore
    active resources to a sane state before the frames code using them are
    jumped out of.  */
@@ -46,7 +55,7 @@ _longjmp_unwind (jmp_buf env, int val)
 
   /* Remove local signal preemptors being unwound past.  */
   while (ss->preemptors &&
-	 _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preemptors))
+	 _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preemptors, demangle_ptr))
     ss->preemptors = ss->preemptors->next;
 
   __spin_unlock (&ss->lock);
@@ -56,7 +65,7 @@ _longjmp_unwind (jmp_buf env, int val)
      in stack frames being unwound by this jump.  */
 
   for (link = ss->active_resources;
-       link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link);
+       link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link, demangle_ptr);
        link = link->thread.next)
     /* Remove this link from the resource's users list,
        since the frame using the resource is being unwound.

@@ -1,5 +1,26 @@
 2005-12-27  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(PTR_MANGLE): Fix cast.
+
+	* sysdeps/alpha/bits/setjmp.h (_JMPBUF_UNWINDS): Take third argument
+	DEMANGLE, and pass SP value through it.
+	* sysdeps/hppa/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/i386/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/mips/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/powerpc/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/s390/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/sparc/sparc32/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h: Likewise.
+	* sysdeps/x86_64/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Pass inline
+	demangler function to _JMPBUF_UNWINDS.
+	* sysdeps/mach/hurd/jmp-unwind.c (demangle_ptr): New function.
+	(_longjmp_unwind): Pass it to _JMPBUF_UNWINDS.
+
 	* posix/tst-execle1.c (do_test): Add a const.
 	* posix/tst-execle2.c (do_test): Likewise.
 
