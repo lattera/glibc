@@ -43,6 +43,7 @@ ENTRY (BP_SYM (__longjmp))
 	lwz r20,((JB_GPRS+6)*4)(r3)
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (r0, r25)
+	PTR_DEMANGLE2 (r1, r25)
 #endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)

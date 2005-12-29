@@ -46,7 +46,13 @@ ENTRY (BP_SYM (__sigsetjmp))
 	.hidden JUMPTARGET(GLUE(__sigsetjmp,_ent))
 JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+#ifdef PTR_MANGLE
+	mr   r5, r1
+	PTR_MANGLE (r5, r10)
+	std  r5,(JB_GPR1*8)(3)
+#else
 	std  r1,(JB_GPR1*8)(3)
+#endif
 	mflr r0
 #if defined SHARED && !defined IS_IN_rtld
 	ld   r5,40(r1)	/* Retrieve the callers TOC.  */

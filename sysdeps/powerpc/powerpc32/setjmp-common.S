@@ -33,7 +33,13 @@
 ENTRY (BP_SYM (__sigsetjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
+#ifdef PTR_MANGLE
+	mr   r5,r1
+	PTR_MANGLE(r5, r10)
+	stw  r5,(JB_GPR1*4)(3)
+#else
 	stw  r1,(JB_GPR1*4)(3)
+#endif
 	mflr r0
 	stw  r14,((JB_GPRS+0)*4)(3)
 #ifdef PTR_MANGLE

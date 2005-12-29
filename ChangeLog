@@ -1,5 +1,16 @@
 2005-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h [ASSEMBLER]:
+	Define PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S [PTR_MANGLE]: Also
+	mangle r1.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S [PTR_DEMANGLE]: Also
+	demangle r1.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S [PTR_MANGLE]: Mangle
+	r0 and r1.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S [PTR_DEMANGLE]:
+	Demangle r0 and r1.
+
 	* sysdeps/powerpc/powerpc64/setjmp-common.S [PTR_MANGLE]: Also
 	mangle r1.
 	* sysdeps/powerpc/powerpc64/__longjmp-common.S [PTR_DEMANGLE]: Also
