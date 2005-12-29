@@ -58,7 +58,16 @@ __ioctl (int fd, unsigned long int request, ...)
   struct
   {
 #ifdef MACH_MSG_TYPE_BIT
-    mig_reply_header_t header;
+    union
+    {
+      mig_reply_header_t header;
+      struct
+      {
+	mach_msg_header_t	Head;
+	int			RetCodeType;
+	kern_return_t		RetCode;
+      } header_typecheck;
+    };
     char data[3 * sizeof (mach_msg_type_t) +
 	     msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
 	     msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
@@ -192,7 +201,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	return MIG_TYPE_ERROR;
 
 #ifdef MACH_MSG_TYPE_BIT
-      if (*(int *) &msg.header.RetCodeType !=
+      if (msg.header_typecheck.RetCodeType !=
 	  ((union { mach_msg_type_t t; int i; })
 	   { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
 	return MIG_TYPE_ERROR;

@@ -1,5 +1,9 @@
 2005-12-29  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/errno.c: New file.
+
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Use a union to avoid a cast.
+
 	* sysdeps/posix/libc_fatal.c (__libc_message): Add a const, a cast.
 
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Fix cast.
