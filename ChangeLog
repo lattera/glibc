@@ -1,3 +1,12 @@
+2005-12-29  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/posix/libc_fatal.c (__libc_message): Add a const, a cast.
+
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Fix cast.
+	* hurd/report-wait.c (_S_msg_report_wait): Likewise.
+
+	* include/sys/xattr.h: New file.
+
 2005-12-28  Roland McGrath  <roland@redhat.com>
 
 	* hurd/sigunwind.c: Include <stdint.h>.

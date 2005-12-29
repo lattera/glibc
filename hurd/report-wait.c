@@ -140,7 +140,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 	  error_t err;
 
 	  err = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-				    (integer_t *) &state, &count);
+				    (natural_t *) &state, &count);
 	  if (err)
 	    return err;
 	  assert (count == MACHINE_THREAD_STATE_COUNT);
