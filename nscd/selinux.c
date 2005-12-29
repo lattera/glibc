@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <syslog.h>
+#include <unistd.h>
 #include <selinux/av_permissions.h>
 #include <selinux/avc.h>
 #include <selinux/flask.h>
@@ -114,11 +115,28 @@ static int audit_fd = -1;
 static void
 log_callback (const char *fmt, ...)
 {
-  va_list ap;
+  if (audit_fd >= 0)
+    {
+      va_list ap;
+      va_start (ap, fmt);
 
-  va_start (ap, fmt);
-  audit_log_avc (audit_fd, AUDIT_USER_AVC, fmt, ap);
-  va_end (ap);
+      char *buf;
+      int e = vasprintf (&buf, fmt, ap);
+      if (e < 0)
+	{
+	  buf = alloca (BUFSIZ);
+	  vsnprintf (buf, BUFSIZ, fmt, ap);
+	}
+
+      /* FIXME: need to attribute this to real user, using getuid for now */
+      audit_log_user_avc_message (audit_fd, AUDIT_USER_AVC, buf, NULL, NULL,
+				  NULL, getuid ());
+
+      if (e >= 0)
+	free (buf);
+
+      va_end (ap);
+    }
 }
 
 /* Initialize the connection to the audit system */
@@ -126,8 +144,10 @@ static void
 audit_init (void)
 {
   audit_fd = audit_open ();
-  if (audit_fd < 0)
-     dbg_log (_("Failed opening connection to the audit subsystem"));
+  if (audit_fd < 0
+      /* If kernel doesn't support audit, bail out */
+      && errno != EINVAL && errno != EPROTONOSUPPORT && errno != EAFNOSUPPORT)
+    dbg_log (_("Failed opening connection to the audit subsystem"));
 }
 #endif /* HAVE_LIBAUDIT */
 

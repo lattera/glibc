@@ -5,6 +5,11 @@
 
 2005-12-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/selinux.c (log_callback): Use audit_log_user_avc_message.
+	Don't do anything if audit_fd is invalid.
+	(audit_init): Don't complain if kernel support is missing.
+	Patch by Steve Grubb <sgrubb@redhat.com>.
+
 	* sysdeps/i386/__longjmp.S [PTR_DEMANGLE]: Also demangle stack
 	pointer.  Add CFI.
 	* sysdeps/i386/bsd-_setjmp.S [PTR_MANGLE]: Also mangle stack pointer.
