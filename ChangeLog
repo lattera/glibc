@@ -1,3 +1,22 @@
+2005-12-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.sym
+	(_FRAME_BACKCHAIN, _FRAME_LR_SAVE, _FRAME_PARM_SAVE1,
+	_FRAME_PARM_SAVE2, _FRAME_PARM_SAVE3, _FRAME_PARM_SAVE4):
+	Remove unrelated stack frame defines.
+
 2005-12-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tstdiomisc.c [FLT_EVAL_METHOD!=2] (dbl_max):

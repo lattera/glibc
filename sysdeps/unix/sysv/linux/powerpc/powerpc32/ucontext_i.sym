@@ -7,14 +7,6 @@
 SIG_BLOCK
 SIG_SETMASK
 
--- XXX Do these correspond to some struct?
-_FRAME_BACKCHAIN	0
-_FRAME_LR_SAVE		4
-_FRAME_PARM_SAVE1	8
-_FRAME_PARM_SAVE2	12
-_FRAME_PARM_SAVE3	16
-_FRAME_PARM_SAVE4	20
-
 -- Offsets in ucontext_t.
 #define ucontext(member)	offsetof (ucontext_t, member)
 _UC_LINK		ucontext (uc_link)
