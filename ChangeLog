@@ -1,3 +1,14 @@
+2005-12-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: If WRAPPER_INCLUDE is defined,
+	include the named file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+
 2005-12-29  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/errno.c: New file.

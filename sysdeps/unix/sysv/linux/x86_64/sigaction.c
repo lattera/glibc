@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/x86-64.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,6 +78,10 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   return result;
 }
 libc_hidden_def (__libc_sigaction)
+
+#ifdef WRAPPER_INCLUDE
+# include WRAPPER_INCLUDE
+#endif
 
 #ifndef LIBC_SIGACTION
 weak_alias (__libc_sigaction, __sigaction)
