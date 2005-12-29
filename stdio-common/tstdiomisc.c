@@ -51,7 +51,7 @@ volatile long double dbl_max = LDBL_MAX;
 # define FLT_FLT_FMT "%Lf %LF"
 # define FLT_FLT_WFMT L"%Lf %LF"
 #else
-volatile double dbl_max = DBL_MAX;
+# define dbl_max DBL_MAX
 # define FLT_FLT_FMT "%f %F"
 # define FLT_FLT_WFMT L"%f %F"
 #endif

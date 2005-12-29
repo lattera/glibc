@@ -1,5 +1,8 @@
 2005-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/tstdiomisc.c [FLT_EVAL_METHOD!=2] (dbl_max):
+	Defining as macro as before the last change.
+
 	* sysdeps/unix/sysv/linux/sigaction.c: If WRAPPER_INCLUDE is defined,
 	include the named file.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
