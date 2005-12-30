@@ -70,7 +70,6 @@ int disabled_passwd;
 int disabled_group;
 int go_background = 1;
 
-int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
 time_t start_time;
@@ -366,16 +365,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'S':
-#if 0
-      if (strcmp (arg, "passwd,yes") == 0)
-	secure_in_use = dbs[pwddb].secure = 1;
-      else if (strcmp (arg, "group,yes") == 0)
-	secure_in_use = dbs[grpdb].secure = 1;
-      else if (strcmp (arg, "hosts,yes") == 0)
-	secure_in_use = dbs[hstdb].secure = 1;
-#else
       error (0, 0, _("secure services not implemented anymore"));
-#endif
       break;
 
     default:

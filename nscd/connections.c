@@ -431,7 +431,7 @@ void
 nscd_init (void)
 {
   /* Secure mode and unprivileged mode are incompatible */
-  if (server_user != NULL && secure_in_use)
+  if (server_user != NULL)
     {
       dbg_log (_("Cannot run nscd in secure mode as unprivileged user"));
       exit (4);
@@ -1060,29 +1060,28 @@ cannot handle old request version %d; current version is %d"),
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
-      if (! secure_in_use)
-	{
-	  /* Get the callers credentials.  */
+      {
+	/* Get the callers credentials.  */
 #ifdef SO_PEERCRED
-	  struct ucred caller;
-	  socklen_t optlen = sizeof (caller);
+	struct ucred caller;
+	socklen_t optlen = sizeof (caller);
 
-	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
-	    {
-	      char buf[256];
+	if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
+	  {
+	    char buf[256];
 
-	      dbg_log (_("error getting callers id: %s"),
-		       strerror_r (errno, buf, sizeof (buf)));
-	      break;
-	    }
+	    dbg_log (_("error getting callers id: %s"),
+		     strerror_r (errno, buf, sizeof (buf)));
+	    break;
+	  }
 
-	  uid = caller.uid;
+	uid = caller.uid;
 #else
-	  /* Some systems have no SO_PEERCRED implementation.  They don't
-	     care about security so we don't as well.  */
-	  uid = 0;
+	/* Some systems have no SO_PEERCRED implementation.  They don't
+	   care about security so we don't as well.  */
+	uid = 0;
 #endif
-	}
+      }
 
       /* Accept shutdown, getstat and invalidate only from root.  For
 	 the stat call also allow the user specified in the config file.  */
@@ -1376,25 +1375,7 @@ nscd_run (void *p)
 #ifdef SO_PEERCRED
       pid_t pid = 0;
 
-      if (secure_in_use)
-	{
-	  struct ucred caller;
-	  socklen_t optlen = sizeof (caller);
-
-	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
-	    {
-	      dbg_log (_("error getting callers id: %s"),
-		       strerror_r (errno, buf, sizeof (buf)));
-	      goto close_and_out;
-	    }
-
-	  if (req.type < GETPWBYNAME || req.type > LASTDBREQ
-	      || serv2db[req.type]->secure)
-	    uid = caller.uid;
-
-	  pid = caller.pid;
-	}
-      else if (__builtin_expect (debug_level > 0, 0))
+      if (__builtin_expect (debug_level > 0, 0))
 	{
 	  struct ucred caller;
 	  socklen_t optlen = sizeof (caller);

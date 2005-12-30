@@ -68,7 +68,6 @@ struct database_dyn
   const char *db_filename;
   time_t file_mtime;
   size_t suggested_module;
-  int secure;
 
   unsigned long int postimeout;	/* In seconds.  */
   unsigned long int negtimeout;	/* In seconds.  */
@@ -121,9 +120,6 @@ extern const struct iovec hst_iov_disabled;
 extern int nthreads;
 /* Maximum number of threads to use.  */
 extern int max_nthreads;
-
-/* Tables for which we cache data with uid.  */
-extern int secure_in_use; /* Is one of the above 1?  */
 
 /* User name to run server processes as.  */
 extern const char *server_user;
