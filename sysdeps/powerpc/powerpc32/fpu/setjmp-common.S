@@ -1,5 +1,5 @@
 /* setjmp for PowerPC.
-   Copyright (C) 1995-99, 2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 
 #ifdef PTR_MANGLE
 	mr   r5,r1
-	PTR_MANGLE(r5, r10)
+	PTR_MANGLE(r5, r6)
 	stw  r5,(JB_GPR1*4)(3)
 #else
 	stw  r1,(JB_GPR1*4)(3)
@@ -43,7 +43,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stw  r14,((JB_GPRS+0)*4)(3)
 	stfd fp14,((JB_FPRS+0*2)*4)(3)
 #ifdef PTR_MANGLE
-	PTR_MANGLE (r0, r10)
+	PTR_MANGLE2 (r0, r6)
 #endif
 	stw  r0,(JB_LR*4)(3)
 	stw  r15,((JB_GPRS+1)*4)(3)
@@ -104,9 +104,9 @@ ENTRY (BP_SYM (__sigsetjmp))
 	lwz     r5,0(r5)
 #  endif
 # else
-	lis	r5,_dl_hwcap@ha
-	lwz     r5,_dl_hwcap@l(r5)
-#endif
+	lis	r6,_dl_hwcap@ha
+	lwz     r5,_dl_hwcap@l(r6)
+# endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)
 	la	r5,((JB_VRS)*4)(3)

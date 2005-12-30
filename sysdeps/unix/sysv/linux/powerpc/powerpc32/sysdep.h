@@ -283,9 +283,10 @@
 #  define PTR_MANGLE(reg, tmpreg) \
 	lwz	tmpreg,POINTER_GUARD(r2); \
 	xor	reg,tmpreg,reg
-#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
-#  define PTR_DEMANGLE2(reg, tmpreg) \
+#  define PTR_MANGLE2(reg, tmpreg) \
 	xor	reg,tmpreg,reg
+#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
+#  define PTR_DEMANGLE2(reg, tmpreg) PTR_MANGLE2 (reg, tmpreg)
 # else
 #  define PTR_MANGLE(var) \
   (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())

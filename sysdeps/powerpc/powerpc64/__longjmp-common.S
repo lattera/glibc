@@ -132,7 +132,7 @@ L(no_vmx):
 	ld r20,((JB_GPRS+6)*8)(r3)
 	lfd fp20,((JB_FPRS+6)*8)(r3)
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (r0, r25)
+	PTR_DEMANGLE2 (r0, r25)
 #endif
 	mtlr r0
 /* 	std r2,40(r1)	Restore the TOC save area.  */

@@ -43,7 +43,8 @@ ENTRY (BP_SYM (__sigsetjmp))
 	mflr r0
 	stw  r14,((JB_GPRS+0)*4)(3)
 #ifdef PTR_MANGLE
-	PTR_MANGLE (r0, r10)
+	PTR_MANGLE2 (r0, r10)
+	li   r10,0
 #endif
 	stw  r0,(JB_LR*4)(3)
 	stw  r15,((JB_GPRS+1)*4)(3)

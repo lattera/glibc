@@ -1,5 +1,23 @@
 2005-12-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Make sure pointer guard
+	value doesn't survive in a registers when the function returns.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+
+2005-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Define
+	PTR_MANGLE2.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Define
+	PTR_MANGLE2 and PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Use PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Use PTR_MANGLE2.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+
+2005-12-30  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h (_JMPBUF_UNWINDS):
 	Don't use _demangle parameter for now.
 
