@@ -25,7 +25,6 @@
 
 	.text
 	.align  5
-	cfi_startproc
 ENTRY(__getcontext)
 
 	/* Return value of getcontext.  R0 is the only register whose
@@ -84,7 +83,6 @@ ENTRY(__getcontext)
 	rts
 	 nop
 
-	cfi_endproc
 PSEUDO_END(__getcontext)
 
 weak_alias (__getcontext, getcontext)

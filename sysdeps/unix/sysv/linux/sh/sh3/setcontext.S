@@ -25,7 +25,6 @@
 
 	.text
 	.align  5
-	cfi_startproc
 ENTRY(__setcontext)
 
 	mov	r4, r8
@@ -95,7 +94,6 @@ ENTRY(__setcontext)
 	jmp	@r0
 	 mov.l	@r15+, r0
 
-	cfi_endproc
 PSEUDO_END(__setcontext)
 
 weak_alias (__setcontext, setcontext)

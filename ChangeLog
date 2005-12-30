@@ -1,3 +1,20 @@
+2005-12-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sysdep.h: Add cfi instrumentation to asm fragments.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/sh/_mcount.S: Add cfi instrumentation.
+	* sysdeps/unix/sh/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/makecontext.S: Adjust cfi_startproc.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: Remove now duplicate
+	cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.S: Add cfi_endproc.
+
 2005-12-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/setjmp-common.S: Make sure pointer guard

@@ -25,7 +25,6 @@
 
 	.text
 	.align  5
-	cfi_startproc
 ENTRY(__swapcontext)
 
 	/* Return value of getcontext.  R0 is the only register whose
@@ -210,7 +209,6 @@ ENTRY(__swapcontext)
 	jmp	@r0
 	 mov.l	@r15+, r0
 	
-	cfi_endproc
 PSEUDO_END(__swapcontext)
 
 weak_alias (__swapcontext, swapcontext)

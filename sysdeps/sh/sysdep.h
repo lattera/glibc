@@ -1,5 +1,5 @@
 /* Assembler macros for SH.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,10 +52,12 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),function)			      \
   .align ALIGNARG(5);							      \
   C_LABEL(name)								      \
+  cfi_startproc;							      \
   CALL_MCOUNT
 
 #undef	END
 #define END(name)							      \
+  cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(name))
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
@@ -63,12 +65,17 @@
 #define CALL_MCOUNT					\
 	mov.l	1f,r1;					\
 	sts.l	pr,@-r15;				\
+	cfi_adjust_cfa_offset (4);			\
+	cfi_rel_offset (pr, 0);				\
 	mova	2f,r0;					\
 	jmp	@r1;					\
 	 lds	r0,pr;					\
 	.align	2;					\
 1:	.long	mcount;					\
-2:	lds.l	@r15+,pr
+2:	lds.l	@r15+,pr;				\
+	cfi_adjust_cfa_offset (-4);			\
+	cfi_restore (pr)
+
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif

@@ -32,7 +32,6 @@
 
 	.text
 	.align	5
-	cfi_startproc
 ENTRY(__makecontext)
 	mov	#4, r3
 	mov.l	@(oSS_SP,r4), r1
@@ -140,6 +139,7 @@ ENTRY(__makecontext)
 .L4:
 	.long	HIDDEN_JUMPTARGET(exit)
 #endif
+	cfi_startproc
 PSEUDO_END(__makecontext)
 
 weak_alias (__makecontext, makecontext)

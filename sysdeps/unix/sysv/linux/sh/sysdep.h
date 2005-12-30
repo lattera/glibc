@@ -141,13 +141,22 @@
 #   define SYSCALL_ERROR_HANDLER \
 	neg r0,r1; \
 	mov.l r14,@-r15; \
+	cfi_adjust_cfa_offset (4); \
+	cfi_rel_offset (r14, 0); \
 	mov.l r12,@-r15; \
+	cfi_adjust_cfa_offset (4); \
+	cfi_rel_offset (r12, 0); \
 	mov.l r1,@-r15; \
+	cfi_adjust_cfa_offset (4); \
+	cfi_rel_offset (r1, 0); \
 	mov.l 0f,r12; \
 	mova 0f,r0; \
 	add r0,r12; \
 	sts.l pr,@-r15; \
+	cfi_adjust_cfa_offset (4); \
+	cfi_rel_offset (pr, 0); \
 	mov r15,r14; \
+	cfi_def_cfa_register (r14); \
 	mov.l 1f,r1; \
 	bsrf r1; \
          nop; \

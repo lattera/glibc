@@ -88,7 +88,6 @@
 #endif
 
 .globl __socket
-	cfi_startproc
 ENTRY (__socket)
 	/* This will not work in the case of a socket call being interrupted
 	   by a signal.  If the signal handler uses any stack the arguments
@@ -169,7 +168,6 @@ ENTRY (__socket)
 	bra	.Lsyscall_error
 	 nop
 #endif
-	cfi_endproc
 
 	.align 2
 .L1:
