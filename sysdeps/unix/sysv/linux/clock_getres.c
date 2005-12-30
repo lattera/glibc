@@ -1,5 +1,5 @@
 /* clock_getres -- Get the resolution of a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,17 @@
 
 #include "kernel-features.h"
 
+#ifndef HAVE_CLOCK_GETRES_VSYSCALL
+# undef INTERNAL_VSYSCALL
+# define INTERNAL_VSYSCALL INTERNAL_SYSCALL
+# undef INLINE_VSYSCALL
+# define INLINE_VSYSCALL INLINE_SYSCALL
+#else
+# include <bits/libc-vdso.h>
+#endif
 
 #define SYSCALL_GETRES \
-  retval = INLINE_SYSCALL (clock_getres, 2, clock_id, res); \
+  retval = INLINE_VSYSCALL (clock_getres, 2, clock_id, res); \
   break
 
 #ifdef __ASSUME_POSIX_TIMERS
@@ -52,7 +60,7 @@ maybe_syscall_getres (clockid_t clock_id, struct timespec *res)
   if (!__libc_missing_posix_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_SYSCALL (clock_getres, err, 2, clock_id, res);
+      int r = INTERNAL_VSYSCALL (clock_getres, err, 2, clock_id, res);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
 	return 0;
 
@@ -109,7 +117,7 @@ maybe_syscall_getres_cpu (clockid_t clock_id, struct timespec *res)
   if (!__libc_missing_posix_cpu_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_SYSCALL (clock_getres, err, 2, clock_id, res);
+      int r = INTERNAL_VSYSCALL (clock_getres, err, 2, clock_id, res);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
 	return 0;
 
@@ -128,7 +136,7 @@ maybe_syscall_getres_cpu (clockid_t clock_id, struct timespec *res)
 	    {
 	      /* Check whether the kernel supports CPU clocks at all.
 		 If not, record it for the future.  */
-	      r = INTERNAL_SYSCALL (clock_getres, err, 2,
+	      r = INTERNAL_VSYSCALL (clock_getres, err, 2,
 				    MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
 				    NULL);
 	      if (INTERNAL_SYSCALL_ERROR_P (r, err))

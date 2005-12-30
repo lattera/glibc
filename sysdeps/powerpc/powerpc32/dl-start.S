@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995-2000, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,6 +98,7 @@ ENTRY(_dl_start_user)
    Take the opportunity to clear LR, so anyone who accidentally returns
    from _start gets SEGV.  Also clear the next few words of the stack.  */
 
+ENTRY(_dl_main_dispatch)
 	li	r31,0
 	stw	r31,0(r1)
 	mtlr	r31

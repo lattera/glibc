@@ -1,3 +1,31 @@
+2005-12-08  Steven Munroe  <sjmunroe@us.ibm.com>
+            Tom Gall <tom_gall@vnet.ibm.com>
+
+	* elf/rtld.c (dl_main): Initialize l_local_scope for sysinfo_map.
+	* sysdeps/powerpc/elf/libc-start.c: Move this...
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: ...to here.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Add _dl_main_dispatch label.
+	* sysdeps/powerpc/powerpc32/hp-timing.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: New file.
+	* sysdeps/unix/sysv/linux/clock_getres.c: If HAVE_CLOCK_GETRES_VSYSCALL
+	is not defined, redefine INTERNAL_VSYSCALL and INLINE_VSYSCALL to
+	INTERNAL_SYSCALL and INLINE_SYSCALL respectively.  Otherwise include
+	<bits/libc-vdso.h>.  Use INLINE_VSYSCALL and INTERNAL_SYSCALL instead
+	of the normal versions throughout the code.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise if
+	HAVE_CLOCK_GETTIME_VSYSCALL is defined.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Use vDSO.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Add dl-vdso to routines.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Define
+	INLINE_VSYSCALL, INTERNAL_VSYSCALL, INTERNAL_SYSCALL_NCS,
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK, HAVE_CLOCK_GETRES_VSYSCALL,
+	and HAVE_CLOCK_GETTIME_VSYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+
 2005-12-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h [ASSEMBLER]:

@@ -1307,6 +1307,13 @@ ld.so does not support TLS, but program uses it!\n");
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
 
+	  /* Initialize l_local_scope to contain just this map.  This allows
+	     the use of dl_lookup_symbol_x to resolve symbols within the vdso.
+	     So we create a single entry list pointing to l_real as its only
+	     element */
+	  l->l_local_scope[0]->r_nlist = 1;
+	  l->l_local_scope[0]->r_list = &l->l_real;
+
 	  /* Now that we have the info handy, use the DSO image's soname
 	     so this object can be looked up by name.  Note that we do not
 	     set l_name here.  That field gives the file name of the DSO,
