@@ -1,5 +1,9 @@
 2005-12-30  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2080]
+	* libio/iogetwline.c (_IO_getwline_info): Move return to correct
+	location.
+
 	* nscd/connections.c: Remove last remnants of -S option support.
 	* nscd/nscd.c: Likewise.
 	* nscd/nscd.h: Likewise.
