@@ -626,8 +626,7 @@ static const unsigned int poweroften[10]=
 
 /* takes an XeY precision/size value, returns a string representation. */
 static const char *
-precsize_ntoa(prec)
-	u_int8_t prec;
+precsize_ntoa (u_int8_t prec)
 {
 	static char retbuf[sizeof "90000000.00"];	/* XXX nonreentrant */
 	unsigned long val;
@@ -644,8 +643,7 @@ precsize_ntoa(prec)
 
 /* converts ascii size/precision X * 10**Y(cm) to 0xXY.  moves pointer. */
 static u_int8_t
-precsize_aton(strptr)
-	const char **strptr;
+precsize_aton (const char **strptr)
 {
 	unsigned int mval = 0, cmval = 0;
 	u_int8_t retval = 0;
@@ -686,9 +684,7 @@ precsize_aton(strptr)
 
 /* converts ascii lat/lon to unsigned encoded 32-bit number.  moves pointer. */
 static u_int32_t
-latlon2ul(latlonstrptr,which)
-	const char **latlonstrptr;
-	int *which;
+latlon2ul (const char **latlonstrptr, int *which)
 {
 	const char *cp;
 	u_int32_t retval;

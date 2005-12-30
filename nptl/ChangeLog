@@ -1,3 +1,9 @@
+2005-12-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Remove explicit
+	.eh_frame section, use cfi_* directives.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Add cfi instrumentation.
+
 2005-12-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Undo last change for

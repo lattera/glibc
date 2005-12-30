@@ -176,11 +176,7 @@ Dprintf(msg, num)
 
 
 static struct hostent *
-getanswer(answer, anslen, qname, qtype)
-	const querybuf *answer;
-	int anslen;
-	const char *qname;
-	int qtype;
+getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 {
 	register const HEADER *hp;
 	register const u_char *cp;
@@ -522,7 +518,6 @@ gethostbyname2(name, af)
 	char *bp;
 	int n, size, type, len;
 	struct hostent *ret;
-	extern struct hostent *_gethtbyname2();
 
 	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
@@ -666,7 +661,6 @@ gethostbyaddr(addr, len, af)
 	u_long old_options;
 	char hname2[MAXDNAME+1];
 #endif /*SUNSECURITY*/
-	extern struct hostent *_gethtbyaddr();
 
 	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
@@ -879,7 +873,6 @@ struct hostent *
 _gethtbyname(name)
 	const char *name;
 {
-	extern struct hostent *_gethtbyname2();
 	struct hostent *hp;
 
 	if (_res.options & RES_USE_INET6) {

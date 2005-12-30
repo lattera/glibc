@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,27 +49,32 @@
     .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel; \
  .Lpseudo_cancel: \
     sts.l pr,@-r15; \
- .LCFI0: \
+    cfi_adjust_cfa_offset (4); \
+    cfi_rel_offset (pr, 0); \
     add _IMM16,r15; \
+    cfi_adjust_cfa_offset (16); \
     SAVE_ARGS_##args; \
- .LCFI1: \
     CENABLE; \
     LOAD_ARGS_##args; \
     add _IMP16,r15; \
- .LCFI2: \
+    cfi_adjust_cfa_offset (-16); \
     lds.l @r15+,pr; \
- .LCFI3: \
+    cfi_adjust_cfa_offset (-4); \
+    cfi_restore (pr); \
     DO_CALL(syscall_name, args); \
     SYSCALL_INST_PAD; \
     sts.l pr,@-r15; \
- .LCFI4: \
+    cfi_adjust_cfa_offset (4); \
+    cfi_rel_offset (pr, 0); \
     mov.l r0,@-r15; \
- .LCFI5: \
+    cfi_adjust_cfa_offset (4); \
+    cfi_rel_offset (r0, 0); \
     CDISABLE; \
     mov.l @r15+,r0; \
- .LCFI6: \
+    cfi_adjust_cfa_offset (-4); \
     lds.l @r15+,pr; \
- .LCFI7: \
+    cfi_adjust_cfa_offset (-4); \
+    cfi_restore (pr); \
     mov r0,r1; \
     mov _IMM12,r2; \
     shad r2,r1; \
@@ -78,106 +83,17 @@
     bf .Lpseudo_end; \
  .Lsyscall_error: \
     SYSCALL_ERROR_HANDLER; \
- .Lpseudo_end: \
- /* Create unwinding information for the syscall wrapper.  */ \
- .section .eh_frame,"a",@progbits; \
- .Lframe1: \
-    .ualong .LECIE1-.LSCIE1; \
- .LSCIE1: \
-    .ualong 0x0; \
-    .byte   0x1; \
-    AUGMENTATION_STRING; \
-    .uleb128 0x1; \
-    .sleb128 -4; \
-    .byte   0x11; \
-    AUGMENTATION_PARAM; \
-    .byte   0xc; \
-    .uleb128 0xf; \
-    .uleb128 0x0; \
-    .align 2; \
- .LECIE1: \
- .LSFDE1: \
-    .ualong .LEFDE1-.LASFDE1; \
- .LASFDE1: \
-    .ualong .LASFDE1-.Lframe1; \
-    START_SYMBOL_REF; \
-    .ualong .Lpseudo_end - .Lpseudo_start; \
-    AUGMENTATION_PARAM_FDE; \
-    .byte   0x4; \
-    .ualong .LCFI0-.Lpseudo_start; \
-    .byte   0xe; \
-    .uleb128 0x4; \
-    .byte   0x91; \
-    .uleb128 0x1; \
-    .byte   0x4; \
-    .ualong .LCFI1-.LCFI0; \
-    .byte   0xe; \
-    .uleb128 0x14; \
-    FRAME_REG_##args; \
-    .byte   0x4; \
-    .ualong .LCFI2-.LCFI1; \
-    .byte   0xe; \
-    .uleb128 0x4; \
-    .byte   0x4; \
-    .ualong .LCFI3-.LCFI2; \
-    .byte   0xe; \
-    .uleb128 0x0; \
-    .byte   0xd1; \
-    .byte   0x4; \
-    .ualong .LCFI4-.LCFI3; \
-    .byte   0xe; \
-    .uleb128 0x4; \
-    .byte   0x91; \
-    .uleb128 0x1; \
-    .byte   0x4; \
-    .ualong .LCFI5-.LCFI4; \
-    .byte   0xe; \
-    .uleb128 0x8; \
-    .byte   0x80; \
-    .uleb128 0x2; \
-    .byte   0x4; \
-    .ualong .LCFI6-.LCFI5; \
-    .byte   0xe; \
-    .uleb128 0x4; \
-    .byte   0xc0; \
-    .byte   0x4; \
-    .ualong .LCFI7-.LCFI6; \
-    .byte   0xe; \
-    .uleb128 0x0; \
-    .byte   0xd1; \
-    .align 2; \
- .LEFDE1: \
- .previous
-
-# ifdef SHARED
-#  define AUGMENTATION_STRING .string "zR"
-#  define AUGMENTATION_PARAM .uleb128 1; .byte 0x1b
-#  define AUGMENTATION_PARAM_FDE .uleb128 0
-#  define START_SYMBOL_REF .long .Lpseudo_start-.
-# else
-#  define AUGMENTATION_STRING .ascii "\0"
-#  define AUGMENTATION_PARAM
-#  define AUGMENTATION_PARAM_FDE
-#  define START_SYMBOL_REF .long .Lpseudo_start
-# endif
-
-# define FRAME_REG_0	/* Nothing.  */
-# define FRAME_REG_1	FRAME_REG_0; .byte 0x84; .uleb128 5
-# define FRAME_REG_2	FRAME_REG_1; .byte 0x85; .uleb128 4
-# define FRAME_REG_3	FRAME_REG_2; .byte 0x86; .uleb128 3
-# define FRAME_REG_4	FRAME_REG_3; .byte 0x87; .uleb128 2
-# define FRAME_REG_5	FRAME_REG_4
-# define FRAME_REG_6	FRAME_REG_5
+ .Lpseudo_end:
 
 # undef PSEUDO_END
 # define PSEUDO_END(sym) \
   END (sym)
 
 # define SAVE_ARGS_0	/* Nothing.  */
-# define SAVE_ARGS_1	SAVE_ARGS_0; mov.l r4,@(0,r15)
-# define SAVE_ARGS_2	SAVE_ARGS_1; mov.l r5,@(4,r15)
-# define SAVE_ARGS_3	SAVE_ARGS_2; mov.l r6,@(8,r15)
-# define SAVE_ARGS_4	SAVE_ARGS_3; mov.l r7,@(12,r15)
+# define SAVE_ARGS_1	SAVE_ARGS_0; mov.l r4,@(0,r15); cfi_offset (r4,-4)
+# define SAVE_ARGS_2	SAVE_ARGS_1; mov.l r5,@(4,r15); cfi_offset (r5,-8)
+# define SAVE_ARGS_3	SAVE_ARGS_2; mov.l r6,@(8,r15); cfi_offset (r6,-12)
+# define SAVE_ARGS_4	SAVE_ARGS_3; mov.l r7,@(12,r15); cfi_offset (r7,-16)
 # define SAVE_ARGS_5	SAVE_ARGS_4
 # define SAVE_ARGS_6	SAVE_ARGS_5
 

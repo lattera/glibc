@@ -40,14 +40,21 @@ skip:
 #else
 	mov.l	.L3, r1
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	jsr	@r1
 	 mov.l	r0, @-r15
+	cfi_adjust_cfa_offset (4)
 	mov.l	@r15+, r1
+	cfi_adjust_cfa_offset (-4)
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
 	mov.l	r1, @r0
 #endif
 #else
 	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r12, 0)
 #ifndef _LIBC_REENTRANT
 	mov	r0, r2
         mov.l	0f, r12
@@ -58,7 +65,10 @@ skip:
 	mov.l	r2, @r1
 #else
 	mov.l	r0, @-r15
+	cfi_adjust_cfa_offset (4)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
         mov.l	0f, r12
 	mova	0f, r0
 	add	r0, r12

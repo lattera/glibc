@@ -32,8 +32,11 @@
 	.type	__lll_mutex_lock_wait,@function
 	.hidden	__lll_mutex_lock_wait
 	.align	5
+	cfi_startproc
 __lll_mutex_lock_wait:
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
 	mov	r4, r6
 	mov	r5, r8
 	mov	#0, r7		/* No timeout.  */
@@ -59,6 +62,7 @@ __lll_mutex_lock_wait:
 	mov.l	@r15+, r8
 	ret
 	 mov	r2, r0
+	cfi_endproc
 	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 
 
@@ -67,6 +71,7 @@ __lll_mutex_lock_wait:
 	.type	__lll_mutex_timedlock_wait,@function
 	.hidden	__lll_mutex_timedlock_wait
 	.align	5
+	cfi_startproc
 __lll_mutex_timedlock_wait:
 	/* Check for a valid timeout value.  */
 	mov.l	@(4,r6), r1
@@ -75,14 +80,21 @@ __lll_mutex_timedlock_wait:
 	bt	3f
 
 	mov.l	r10, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r10, 0)
 	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r9, 0)
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
 	mov	r4, r10
 	mov	r6, r9
 	mov	r5, r8
 
 	/* Stack frame for the timespec and timeval structs.  */
 	add	#-8, r15
+	cfi_adjust_cfa_offset(8)
 
 1:
 	/* Get current time.  */
@@ -162,6 +174,7 @@ __lll_mutex_timedlock_wait:
 5:
 	bra	6b
 	 mov	#ETIMEDOUT, r0
+	cfi_endproc
 
 .L1k:
 	.word	1000
@@ -178,6 +191,7 @@ __lll_mutex_timedlock_wait:
 	.type	lll_unlock_wake_cb,@function
 	.hidden	lll_unlock_wake_cb
 	.align	5
+	cfi_startproc
 lll_unlock_wake_cb:
 	DEC	(@r4, r2)
 	tst	r2, r2
@@ -195,6 +209,7 @@ lll_unlock_wake_cb:
 1:	
 	rts
 	 nop
+	cfi_endproc
 	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
 #endif
 
@@ -203,6 +218,7 @@ lll_unlock_wake_cb:
 	.type	__lll_mutex_unlock_wake,@function
 	.hidden	__lll_mutex_unlock_wake
 	.align	5
+	cfi_startproc
 __lll_mutex_unlock_wake:
 	mov	#FUTEX_WAKE, r5
 	mov	#1, r6		/* Wake one thread.  */
@@ -214,6 +230,7 @@ __lll_mutex_unlock_wake:
 	SYSCALL_INST_PAD
 	rts
 	 nop
+	cfi_endproc
 	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake
 
 
@@ -222,14 +239,20 @@ __lll_mutex_unlock_wake:
 	.type	__lll_timedwait_tid,@function
 	.hidden	__lll_timedwait_tid
 	.align	5
+	cfi_startproc
 __lll_timedwait_tid:
 	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r9, 0)
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
 	mov	r4, r8
 	mov	r5, r9
 
 	/* Stack frame for the timespec and timeval structs.  */
 	add	#-8, r15
+	cfi_adjust_cfa_offset(8)
 
 2:
 	/* Get current time.  */
@@ -292,6 +315,7 @@ __lll_timedwait_tid:
 6:
 	bra	3b
 	 mov	#ETIMEDOUT, r0
+	cfi_endproc
 
 .L1k2:
 	.word	1000

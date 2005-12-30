@@ -1,3 +1,14 @@
+2005-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/res_debug.c (latlon2ul): Use ISO C function declaration.
+	(precsize_aton): Likewise.
+	(precsize_ntoa): Likewise.
+
+	* resolv/gethnamaddr.c (_gethtbyname): Remove extra prototype.
+	(gethostbyname2): Likewise.
+	(gethostbyaddr): Likewise.
+	(getanswer): Use ISO C function declaration.
+
 2005-12-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sysdep.h: Add cfi instrumentation to asm fragments.
