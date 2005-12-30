@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004
+   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -219,7 +219,7 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
     socklen_t msg_controllen;	/* Ancillary data buffer length.  */
