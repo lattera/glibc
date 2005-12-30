@@ -35,6 +35,6 @@ typedef long __jmp_buf[_JBLEN] __attribute__ ((aligned (16))); /* guarantees 128
 /* Test if longjmp to JMPBUF would unwind the frame containing a local
    variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(_jmpbuf, _address, _demangle) \
-  ((void *) (_address) < (void *) demangle (((long int *) _jmpbuf)[0]))
+  ((void *) (_address) < (void *) (((long int *) _jmpbuf)[0]))
 
 #endif  /* bits/setjmp.h */

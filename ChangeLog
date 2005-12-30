@@ -1,5 +1,8 @@
 2005-12-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h (_JMPBUF_UNWINDS):
+	Don't use _demangle parameter for now.
+
 	[BZ #2080]
 	* libio/iogetwline.c (_IO_getwline_info): Move return to correct
 	location.

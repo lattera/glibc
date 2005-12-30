@@ -1,3 +1,8 @@
+2005-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Undo last change for
+	now.
+
 2005-12-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/sigaction.c: Removed.
