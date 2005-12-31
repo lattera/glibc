@@ -1250,10 +1250,10 @@ result is passed back as the return value of the function in a block of
 memory allocated with @code{malloc}.  If the result is not used anymore
 the memory should be freed with a call to @code{free}.
 
-In any of the path components except the last one is missing the
-function returns a NULL pointer.  This is also what is returned if the
-length of the path reaches or exceeds @code{PATH_MAX} characters.  In
-any case @code{errno} is set accordingly.
+If any of the path components is missing the function returns a NULL
+pointer.  This is also what is returned if the length of the path
+reaches or exceeds @code{PATH_MAX} characters.  In any case
+@code{errno} is set accordingly.
 
 @table @code
 @item ENAMETOOLONG

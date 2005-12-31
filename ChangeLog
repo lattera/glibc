@@ -1,3 +1,10 @@
+2005-12-31  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1395]
+	* manual/filesys.texi (Symbolic Links): Fix description of
+	canonicalize_file_name based on patch by Oskar Liljeblad
+	<oskar@osk.mine.nu>.
+
 2005-12-29  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/res_debug.c (latlon2ul): Use ISO C function declaration.
