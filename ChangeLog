@@ -1,3 +1,22 @@
+2006-01-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* debug/catchsegv.sh: Likewise.
+
 2005-12-31  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #1395]
@@ -7,14 +26,14 @@
 
 2005-12-29  Andreas Jaeger  <aj@suse.de>
 
-	* resolv/res_debug.c (latlon2ul): Use ISO C function declaration.
+	* resolv/res_debug.c (latlon2ul): Use ISO C function definition.
 	(precsize_aton): Likewise.
 	(precsize_ntoa): Likewise.
 
 	* resolv/gethnamaddr.c (_gethtbyname): Remove extra prototype.
 	(gethostbyname2): Likewise.
 	(gethostbyaddr): Likewise.
-	(getanswer): Use ISO C function declaration.
+	(getanswer): Use ISO C function definition.
 
 2005-12-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
