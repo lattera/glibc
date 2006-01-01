@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999-2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1999-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -71,7 +71,7 @@ do_version() {
   printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2005"
+" "2006"
   printf $"Written by %s.
 " "Ulrich Drepper"
   exit 0

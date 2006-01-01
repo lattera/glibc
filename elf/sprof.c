@@ -1,5 +1,5 @@
 /* Read and display shared object profiling data.
-   Copyright (C) 1997-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -357,7 +357,7 @@ Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "),
-	   "2005");
+	   "2006");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
