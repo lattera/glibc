@@ -275,6 +275,8 @@
 #  define PTR_MANGLE(reg, tmpreg) \
   ear     tmpreg,%a0;			\
   x       reg,STACK_GUARD(tmpreg)
+#  define PTR_MANGLE2(reg, tmpreg) \
+  x       reg,STACK_GUARD(tmpreg)
 #  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
 # else
 #  define PTR_MANGLE(var) \

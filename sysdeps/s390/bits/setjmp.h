@@ -40,7 +40,7 @@
 
 #ifndef	_ASM
 
-typedef struct {
+typedef struct __s390_jmp_buf {
     /* We save registers 6-15.  */
     long int __gregs[10];
 

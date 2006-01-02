@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 93, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1998, 1999, 2000, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +31,9 @@ ENTRY(__longjmp)
 	   use them while unwinding frames and their register windows.  */
 
 	ld ENV(o0,JB_FP), %g3	/* Cache target FP in register %g3.  */
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (%g3, %g3, %g4)
+#endif
 	mov %o0, %g1		/* ENV in %g1 */
      	orcc %o1, %g0, %g2	/* VAL in %g2 */
      	be,a 0f			/* Branch if zero; else skip delay slot.  */
@@ -62,8 +66,15 @@ LOC(thread):
 	 * windows.
 	 */
 	ta	ST_FLUSH_WINDOWS
+#ifdef PTR_DEMANGLE
+	ld	ENV(g1,JB_PC), %g5 /* Set return PC. */
+	ld	ENV(g1,JB_SP), %g1 /* Set saved SP on restore below. */
+	PTR_DEMANGLE2 (%o7, %g5, %g4)
+	PTR_DEMANGLE2 (%fp, %g1, %g4)
+#else
 	ld	ENV(g1,JB_PC), %o7 /* Set return PC. */
 	ld	ENV(g1,JB_SP), %fp /* Set saved SP on restore below. */
+#endif
 	sub	%fp, 64, %sp	/* Allocate a register frame. */
 	st	%g3, RW_FP	/* Set saved FP on restore below. */
 	retl
@@ -71,10 +82,17 @@ LOC(thread):
 
 LOC(found):
 	/* We have unwound register windows so %fp matches the target.  */
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE2 (%sp, %o0, %g4)
+#else
 	mov %o0, %sp		/* OK, install new SP.  */
+#endif
 
 LOC(sp_ok):
 	ld ENV(g1,JB_PC), %o0	/* Extract target return PC.  */
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE2 (%o0, %o0, %g4)
+#endif
 	jmp %o0 + 8		/* Return there.  */
 	 mov %g2, %o0		/* Delay slot: set return value.  */
 

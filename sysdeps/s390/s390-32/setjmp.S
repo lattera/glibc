@@ -32,9 +32,10 @@ ENTRY(__sigsetjmp)
 #ifdef PTR_MANGLE
 	stm    %r6,%r13,0(%r2)      /* store registers in jmp_buf */
 	lr     %r4,%r14
-	PTR_MANGLE (%r4, %r5)
-	st     %r4,32(%r2)
-	st     %r15,36(%r2)
+	lr     %r5,%r15
+	PTR_MANGLE (%r4, %r1)
+	PTR_MANGLE2 (%r5, %r1)
+	stm    %r4,%r5,32(%r2)
 #else
 	stm    %r6,%r15,0(%r2)      /* store registers in jmp_buf */
 #endif

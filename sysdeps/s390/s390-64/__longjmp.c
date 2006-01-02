@@ -29,26 +29,34 @@
 void
 __longjmp (__jmp_buf env, int val)
 {
+  register long int r2 __asm ("%r2") = val == 0 ? 1 : val;
 #ifdef PTR_DEMANGLE
-  register uintptr_t r5 __asm ("%r5") = THREAD_GET_POINTER_GUARD ();
+  register uintptr_t r3 __asm ("%r3") = THREAD_GET_POINTER_GUARD ();
+  register void *r1 __asm ("%r1") = (void *) env;
 #endif
   /* Restore registers and jump back.  */
-  asm volatile ("lgr  %%r2,%0\n\t"        /* Put val in grp 2.  */
-		"ld   %%f7,104(%1)\n\t"
+  asm volatile ("ld   %%f7,104(%1)\n\t"
 		"ld   %%f5,96(%1)\n\t"
 		"ld   %%f3,88(%1)\n\t"
 		"ld   %%f1,80(%1)\n\t"
+#ifdef PTR_DEMANGLE
+		"lmg  %%r6,%%r13,0(%1)\n\t"
+		"lmg  %%r4,%%r5,64(%1)\n\t"
+		"xgr  %%r4,%2\n\t"
+		"xgr  %%r5,%2\n\t"
+		"lgr  %%r15,%%r5\n\t"
+		"br   %%r4"
+#else
 		"lmg  %%r6,%%r15,0(%1)\n\t"
-#ifdef PTR_DEMANGLE
-		"xgr  %%r14,%2\n\t"
-#endif
 		"br   %%r14"
-		: : "r" (val == 0 ? 1 : val),
-		    "a" (env)
-#ifdef PTR_DEMANGLE
-		    , "r" (r5)
 #endif
-		: "2" );
+		: : "r" (r2),
+#ifdef PTR_DEMANGLE
+		    "r" (r1), "r" (r3)
+#else
+		    "a" (env)
+#endif
+		);
 
   /* Avoid `volatile function does return' warnings.  */
   for (;;);

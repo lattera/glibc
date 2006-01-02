@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 93, 94, 96, 97, 98, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994, 1996, 1997, 1998, 2002, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,9 +40,18 @@ ENTRY (__sigsetjmp)
 	   a tail-call for simplicity; it always returns zero.  */
 	ta	ST_FLUSH_WINDOWS
 
+#ifdef PTR_MANGLE
+	PTR_MANGLE (%g1, %o7, %g4)
+	PTR_MANGLE2 (%g2, %sp, %g4)
+	PTR_MANGLE2 (%g3, %fp, %g4)
+	st	%g1, [%o0 + (JB_PC * 4)]
+	st	%g2, [%o0 + (JB_SP * 4)]
+	st	%g3, [%o0 + (JB_FP * 4)]
+#else
 	st	%o7, [%o0 + (JB_PC * 4)]
 	st	%sp, [%o0 + (JB_SP * 4)]
 	st	%fp, [%o0 + (JB_FP * 4)]
+#endif
 
 	mov	%o7, %g1
 	call	__sigjmp_save

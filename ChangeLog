@@ -1,3 +1,37 @@
+2006-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (PTR_MANGLE,
+	PTR_MANGLE2, PTR_DEMANGLE, PTR_DEMANGLE2): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h (PTR_MANGLE,
+	PTR_MANGLE2, PTR_DEMANGLE, PTR_DEMANGLE2): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h [__WORDSIZE == 64]
+	(_JMPBUF_UNWINDS): Don't demangle uc_mcontext.mc_fp.
+	* sysdeps/sparc/sparc32/setjmp.S (__sigsetjmp): Mangle %fp, %sp
+	and %o7.
+	* sysdeps/sparc/sparc32/__longjmp.S (__longjmp): Demangle %fp, %sp
+	and %o7.
+
+2006-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (PTR_MANGLE2):
+	Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (PTR_MANGLE2):
+	Likewise.
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): Demangle also %r15.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+	* sysdeps/s390/s390-32/setjmp.S (__sigsetjmp): Mangle also %r15.
+	* sysdeps/s390/s390-32/elf/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/s390/s390-64/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/s390/s390-64/elf/setjmp.S (__sigsetjmp): Likewise.
+
+	* sysdeps/s390/bits/setjmp.h (__jmp_buf): Add __s390_jmp_buf
+	struct tag to make C++ happy.
+
+2006-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile ($(objpfx)annexc.out): Move -I.. to the end of
+	the include list.
+
 2006-01-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Update copyright year.

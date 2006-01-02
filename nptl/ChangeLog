@@ -1,3 +1,11 @@
+2006-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/tls.h (tcbhead_t): Add pointer_guard field.
+	(THREAD_GET_POINTER_GUARD, THREAD_SET_POINTER_GUARD,
+	THREAD_COPY_POINTER_GUARD): Define.
+	* sysdeps/sparc/tcb-offsets.sym (POINTER_GUARD): Define.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Revert 2005-12-27 changes.
+
 2006-01-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.c: Update copyright year.

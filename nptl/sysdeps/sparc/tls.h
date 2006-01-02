@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  NPTL/sparc version.
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,6 +48,7 @@ typedef struct
   int multiple_threads;
   uintptr_t sysinfo;
   uintptr_t stack_guard;
+  uintptr_t pointer_guard;
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
@@ -134,6 +135,14 @@ register struct pthread *__thread_self __asm__("%g7");
 # define THREAD_COPY_STACK_GUARD(descr) \
   ((descr)->header.stack_guard \
    = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+
+/* Get/set the stack guard field in TCB head.  */
+#define THREAD_GET_POINTER_GUARD() \
+  THREAD_GETMEM (THREAD_SELF, header.pointer_guard)
+#define THREAD_SET_POINTER_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
+# define THREAD_COPY_POINTER_GUARD(descr) \
+  ((descr)->header.pointer_guard = THREAD_GET_POINTER_GUARD ())
 
 #endif /* !ASSEMBLER */
 
