@@ -1,3 +1,8 @@
+2006-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (nscd_init): Remove if block which should
+	have been removed as part of the -S option removal.
+
 2006-01-03  Andreas Jaeger  <aj@suse.de>
 
 	* scripts/check-local-headers.sh: Allow $includedir/c++.
