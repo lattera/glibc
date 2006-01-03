@@ -1,3 +1,7 @@
+2006-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/check-local-headers.sh: Allow $includedir/c++.
+
 2006-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/unistd.h (ctermid): Remove __nonnull attribute.
