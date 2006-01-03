@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -430,13 +430,6 @@ fail:
 void
 nscd_init (void)
 {
-  /* Secure mode and unprivileged mode are incompatible */
-  if (server_user != NULL)
-    {
-      dbg_log (_("Cannot run nscd in secure mode as unprivileged user"));
-      exit (4);
-    }
-
   /* Look up unprivileged uid/gid/groups before we start listening on the
      socket  */
   if (server_user != NULL)
