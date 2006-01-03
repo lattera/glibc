@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1075,7 +1075,7 @@ extern void swab (__const void *__restrict __from, void *__restrict __to,
    It is also found in <stdio.h>.  */
 #ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
-extern char *ctermid (char *__s) __THROW __nonnull ((1));
+extern char *ctermid (char *__s) __THROW;
 #endif
 
 

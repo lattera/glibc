@@ -1,3 +1,8 @@
+2006-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h [__WORDSIZE==64]: Don't use cast in
+	mutex initializers.
+
 2006-01-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/tls.h (tcbhead_t): Add pointer_guard field.
