@@ -1,0 +1,5 @@
+librt {
+  GLIBC_2.4 {
+    lio_listio; lio_listio64;
+  }
+}

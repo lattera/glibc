@@ -1,5 +1,23 @@
 2006-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	lio_listio should emit an event for each individual request in
+	addition to the global event.
+	* sysdeps/pthread/lio_listio.c (lio_listio): Renamed to
+	lio_listio_internal.  Remove mode parameter check.  Only set sigevent
+	type ti SIGEV_NONE if LIO_NO_INDIVIDUAL_EVENT is set.
+	(__lio_listio_21): New function.  Compatiblity version which sets
+	LIO_NO_INDIVIDUAL_EVENT before calling lio_listio_internal.
+	(__lio_listio_item_notify): New function.
+	* sysdeps/pthread/lio_listio64.c: Define __lio_listio_21 and
+	__lio_listio_item_notify macros.
+	* sysdeps/pthread/Versions: New file.
+	* rt/tst-aio2.c: Adjust test for new semantics of lio_listio.
+	* include/aio.h: Define LIO_NO_INDIVIDUAL_EVENT.
+	* Versions.def: Add GLIBC_2.4 for librt.
+
+	* rt/Versions: Whitespace fix.
+	* sysdeps/pthread/aio_misc.c: Likewise.
+
 	* nscd/connections.c (nscd_init): Remove if block which should
 	have been removed as part of the -S option removal.
 

@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -46,8 +46,7 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
 
   (void) pthread_attr_destroy (&attr);
   return ret;
-}                                                                                 
-
+}
 #endif
 
 static void add_request_to_runlist (struct requestlist *newrequest);

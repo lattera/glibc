@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests.
-   Copyright (C) 1997,1998,1999,2000,2001,2003,2005
+   Copyright (C) 1997,1998,1999,2000,2001,2003,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -31,6 +31,9 @@
 #define LIO_OPCODE_BASE 0
 #endif
 
+#include <shlib-compat.h>
+
+
 /* We need this special structure to handle asynchronous I/O.  */
 struct async_waitlist
   {
@@ -40,25 +43,28 @@ struct async_waitlist
   };
 
 
-int
-lio_listio (mode, list, nent, sig)
-     int mode;
-     struct aiocb *const list[];
-     int nent;
-     struct sigevent *sig;
+/* The code in glibc 2.1 to glibc 2.4 issued only one event when all
+   requests submitted with lio_listio finished.  The existing practice
+   is to issue events for the individual requests as well.  This is
+   what the new code does.  */
+#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
+# define LIO_MODE(mode) ((mode) & 127)
+# define NO_INDIVIDUAL_EVENT_P(mode) ((mode) & 128)
+#else
+# define LIO_MODE(mode) mode
+# define NO_INDIVIDUAL_EVENT_P(mode) 0
+#endif
+
+
+static int
+lio_listio_internal (int mode, struct aiocb *const list[], int nent,
+		     struct sigevent *sig)
 {
   struct sigevent defsigev;
   struct requestlist *requests[nent];
   int cnt;
   volatile int total = 0;
   int result = 0;
-
-  /* Check arguments.  */
-  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
 
   if (sig == NULL)
     {
@@ -74,7 +80,9 @@ lio_listio (mode, list, nent, sig)
   for (cnt = 0; cnt < nent; ++cnt)
     if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
       {
-	list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
+	if (NO_INDIVIDUAL_EVENT_P (mode))
+	  list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
+
 	requests[cnt] = __aio_enqueue_request ((aiocb_union *) list[cnt],
 					       (list[cnt]->aio_lio_opcode
 					        | LIO_OPCODE_BASE));
@@ -100,7 +108,7 @@ lio_listio (mode, list, nent, sig)
 	 locked forever.  */
       pthread_mutex_unlock (&__aio_requests_mutex);
 
-      if (mode == LIO_NOWAIT)
+      if (LIO_MODE (mode) == LIO_NOWAIT)
 	{
 #ifdef BROKEN_THREAD_SIGNALS
 	__aio_notify_only (sig,
@@ -112,7 +120,7 @@ lio_listio (mode, list, nent, sig)
 
       return result;
     }
-  else if (mode == LIO_WAIT)
+  else if (LIO_MODE (mode) == LIO_WAIT)
     {
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
       struct waitlist waitlist[nent];
@@ -202,3 +210,38 @@ lio_listio (mode, list, nent, sig)
 
   return result;
 }
+
+
+#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
+int
+attribute_compat_text_section
+__lio_listio_21 (int mode, struct aiocb *const list[], int nent,
+		 struct sigevent *sig)
+{
+  /* Check arguments.  */
+  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  return lio_listio_internal (mode | LIO_NO_INDIVIDUAL_EVENT, list, nent, sig);
+}
+compat_symbol (librt, __lio_listio_21, lio_listio, GLIBC_2_1);
+#endif
+
+
+int
+__lio_listio_item_notify (int mode, struct aiocb *const list[], int nent,
+			  struct sigevent *sig)
+{
+    /* Check arguments.  */
+  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  return lio_listio_internal (mode, list, nent, sig);
+}
+versioned_symbol (librt, __lio_listio_item_notify, lio_listio, GLIBC_2_4);

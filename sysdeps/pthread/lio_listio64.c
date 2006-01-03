@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests, 64bit offset version.
-   Copyright (C) 1997, 1998, 1999, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,6 +27,8 @@
 #include <aio_misc.h>
 
 #define lio_listio lio_listio64
+#define __lio_listio_21 __lio_listio64_21
+#define __lio_listio_item_notify __lio_listio64_item_notify
 #define aiocb aiocb64
 #define LIO_OPCODE_BASE 128
 #include <lio_listio.c>
