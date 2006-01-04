@@ -1,3 +1,8 @@
+2005-12-25  Kristian Van Der Vliet  <vanders@liqwyd.com>
+
+	* abi-tags (*-.*-syllable.*): New match, with ABI value 5.
+	* elf/cache.c (print_entry): Match the Syllable ABI tag.
+
 2006-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/stdlib.h: Make even more C++ compliant.

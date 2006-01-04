@@ -107,7 +107,8 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 	[2] = "Solaris",
 	[3] = "FreeBSD",
 	[4] = "kNetBSD",
-	[5] = N_("Unknown OS")
+	[5] = "Syllable",
+	[6] = N_("Unknown OS")
       };
 #define MAXTAG (sizeof abi_tag_os / sizeof abi_tag_os[0] - 1)
       unsigned int os = osversion >> 24;

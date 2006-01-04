@@ -1,3 +1,9 @@
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* tst-ctype.c (main): Add some casts.
+
+	* tst-mbswcs1.c (main): Make BUF const.  Add casts in mbrtowc calls.
+
 2006-01-02  Andreas Jaeger  <aj@suse.de>
 
 	* locales/fi_FI: Fix date_fmt.
