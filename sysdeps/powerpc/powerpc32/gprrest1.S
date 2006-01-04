@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 /*
     General Purpose Register (GPR) restore routine
@@ -61,3 +61,4 @@ C_TEXT(_restgpr1_29):	lwz	r29,-12(r12)	#restore r29
 			lwz	r30,-8(r12)	#restore r30
 			lwz	r31,-4(r12)	#restore r31
 			blr			#return
+END (_restgpr1_all)

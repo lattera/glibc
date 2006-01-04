@@ -1,5 +1,5 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdeps/powerpc/sysdep.h>
 
@@ -31,7 +31,8 @@
    for its benefit.  */
 # define CALL_MCOUNT							      \
   mflr  r0;								      \
-  stw   r0,4(r1);	       						      \
+  stw   r0,4(r1);							      \
+  cfi_offset (lr, 4);	       						      \
   bl    JUMPTARGET(_mcount);
 #else  /* PROF */
 # define CALL_MCOUNT		/* Do nothing.  */
@@ -42,6 +43,7 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
+  cfi_startproc;							      \
   CALL_MCOUNT
 
 #define EALIGN_W_0  /* No words to insert.  */
@@ -61,6 +63,7 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
+  cfi_startproc;							      \
   CALL_MCOUNT								      \
   b 0f;									      \
   .align ALIGNARG(alignt);						      \
@@ -72,11 +75,13 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(alignt);						      \
   EALIGN_W_##words;							      \
-  C_LABEL(name)
+  C_LABEL(name)								      \
+  cfi_startproc;
 #endif
 
 #undef	END
 #define END(name)							      \
+  cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
 #define DO_CALL(syscall)				      		      \

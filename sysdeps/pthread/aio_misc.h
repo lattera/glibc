@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000,2001,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,10 @@ struct waitlist
   {
     struct waitlist *next;
 
+    /* The next two fields is used in synchronous `lio_listio' operations.  */
     pthread_cond_t *cond;
+    int *result;
+
     volatile int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;

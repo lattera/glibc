@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995-2000, 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 
@@ -39,7 +39,7 @@ ENTRY(_start)
 	bl	_dl_start@local
 
 	/* FALLTHRU */
-ENTRY(_dl_start_user)
+_dl_start_user:
 /* Now, we do our main work of calling initialisation procedures.
    The ELF ABI doesn't say anything about parameters for these,
    so we just pass argc, argv, and the environment.
@@ -98,7 +98,7 @@ ENTRY(_dl_start_user)
    Take the opportunity to clear LR, so anyone who accidentally returns
    from _start gets SEGV.  Also clear the next few words of the stack.  */
 
-ENTRY(_dl_main_dispatch)
+_dl_main_dispatch:
 	li	r31,0
 	stw	r31,0(r1)
 	mtlr	r31

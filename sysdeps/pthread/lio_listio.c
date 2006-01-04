@@ -134,6 +134,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	  if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
 	    {
 	      waitlist[cnt].cond = &cond;
+	      waitlist[cnt].result = &result;
 	      waitlist[cnt].next = requests[cnt]->waiting;
 	      waitlist[cnt].counterp = &total;
 	      waitlist[cnt].sigevp = NULL;
@@ -145,21 +146,25 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	    }
 	}
 
-      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
+      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancellation
 	 points we must be careful.  We added entries to the waiting lists
-	 which we must remove.  So defer cancelation for now.  */
+	 which we must remove.  So defer cancellation for now.  */
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
       while (total > 0)
 	pthread_cond_wait (&cond, &__aio_requests_mutex);
 
-      /* Now it's time to restore the cancelation state.  */
+      /* Now it's time to restore the cancellation state.  */
       pthread_setcancelstate (oldstate, NULL);
 
       /* Release the conditional variable.  */
       if (pthread_cond_destroy (&cond) != 0)
 	/* This must never happen.  */
 	abort ();
+
+      /* If any of the I/O requests failed, return -1 and set errno.  */
+      if (result != 0)
+	__set_errno (EIO);
     }
   else
     {
@@ -189,6 +194,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 		  && list[cnt]->aio_lio_opcode != LIO_NOP)
 		{
 		  waitlist->list[cnt].cond = NULL;
+		  waitlist->list[cnt].result = NULL;
 		  waitlist->list[cnt].next = requests[cnt]->waiting;
 		  waitlist->list[cnt].counterp = &waitlist->counter;
 		  waitlist->list[cnt].sigevp = &waitlist->sigev;

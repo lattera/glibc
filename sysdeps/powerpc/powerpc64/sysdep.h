@@ -1,5 +1,5 @@
 /* Assembly macros for 64-bit PowerPC.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdeps/powerpc/sysdep.h>
 
@@ -92,7 +92,8 @@ name##: OPD_ENT (name);				\
 #define ENTRY(name)	\
 	ENTRY_2(name)				\
 	.align ALIGNARG(2);			\
-BODY_LABEL(name):
+BODY_LABEL(name):				\
+	cfi_startproc;
 
 #define EALIGN_W_0  /* No words to insert.  */
 #define EALIGN_W_1  nop
@@ -109,7 +110,8 @@ BODY_LABEL(name):
 	ENTRY_2(name)				\
 	.align ALIGNARG(alignt);		\
 	EALIGN_W_##words;			\
-BODY_LABEL(name):
+BODY_LABEL(name):				\
+	cfi_startproc;
 
 /* Local labels stripped out by the linker.  */
 #undef L
@@ -173,11 +175,13 @@ LT_LABELSUFFIX(name,_name_end): ; \
 /* END generates Traceback tables */
 #undef	END
 #define END(name) \
+  cfi_endproc;			\
   TRACEBACK(name)		\
   END_2(name)
 
 /* This form supports more informative traceback tables */
 #define END_GEN_TB(name,mask)	\
+  cfi_endproc;			\
   TRACEBACK_MASK(name,mask)	\
   END_2(name)
 

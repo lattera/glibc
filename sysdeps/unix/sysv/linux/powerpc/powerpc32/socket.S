@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,99, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep-cancel.h>
 #include <socketcall.h>
@@ -53,7 +53,6 @@
 
 	.text
 ENTRY(__socket)
-	cfi_startproc
 	stwu r1,-48(r1)
 	cfi_adjust_cfa_offset(48)
 #if NARGS >= 1
@@ -114,7 +113,6 @@ ENTRY(__socket)
 	addi	r1,r1,48
 	PSEUDO_RET
 #endif
-	cfi_endproc
 
 PSEUDO_END (__socket)
 

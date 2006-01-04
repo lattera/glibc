@@ -1,3 +1,35 @@
+2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (ENTRY, EALIGN): Add cfi_startproc
+	directive to ENTRY macros.
+	(END): Add cfi_endproc directive to END macro.
+	* sysdeps/powerpc/powerpc64/sysdep.h (ENTRY, EALIGN): Add cfi_startproc
+	directive to ENTRY macros.
+	(END, END_GEN_TB): Add cfi_endproc directive to END macros.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Remove ENTRY()s for
+	_dl_start_user and _dl_main_dispatch.
+	* sysdeps/powerpc/powerpc32/fpu/fprrest.S: Use END macro.
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Use Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest0.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest1.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave0.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave1.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: Remove redundant
+	cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+
+2006-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/aio_misc.h (struct waitlist): Add result member.
+	* sysdeps/pthread/aio_notify.c (__aio_notify): For synchronous waiters,
+	failed I/O, and a result pointer, set value to -1.
+	* sysdeps/pthread/aio_suspend.c: Initialize result pointer to NULL.
+	* sysdeps/pthread/lio_listio.c: For LIO_WAIT, point result pointer in
+	wait list to local variable result.  If nonzero afterwards, set errno
+	to EIO.  For LIO_NOWAIT set result to NULL.
+	* rt/Makefile (tests): Add tst-aio8.
+	* rt/tst-aio8.c: New file.
+
 2005-12-25  Kristian Van Der Vliet  <vanders@liqwyd.com>
 
 	* abi-tags (*-.*-syllable.*): New match, with ABI value 5.

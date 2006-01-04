@@ -1,5 +1,5 @@
 /* Cancellable system call stubs.  Linux/PowerPC64 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>, 2003.
 
@@ -15,8 +15,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #include <tls.h>
@@ -36,7 +36,6 @@
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
   ENTRY (name)								\
-    cfi_startproc;							\
     SINGLE_THREAD_P;							\
     bne- .Lpseudo_cancel;						\
   .type DASHDASHPFX(syscall_name##_nocancel),@function;			\
@@ -66,8 +65,7 @@
     ld   3,64(1);							\
     mtlr 9;								\
     mtcr 0;								\
-    addi 1,1,128;							\
-    cfi_endproc;
+    addi 1,1,128;
 
 # define DOCARGS_0
 # define UNDOCARGS_0

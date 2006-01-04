@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 /*
     Floating Point Registers (FPRs) save routine
@@ -91,3 +91,4 @@ C_TEXT(_savefpr_29):	stfd	fp29,-24(r1)	#save f29
 			stfd	fp31,-8(r1)	#save f31
 			stw	r0,8(r1)	#save LR in callers frame
 			blr			#return
+END (_savefpr_all)
