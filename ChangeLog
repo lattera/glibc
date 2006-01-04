@@ -1,3 +1,8 @@
+2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Use
+	__SYSCALL_CLOBBERS.
+
 2006-01-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in (HAVE_LIBAUDIT): Check
