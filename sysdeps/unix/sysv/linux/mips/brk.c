@@ -41,7 +41,7 @@ __brk (void *addr)
 	 "syscall"		/* Perform the system call.  */
 	 : "=r" (res)
 	 : "I" (SYS_ify (brk)), "r" (addr)
-+	 : "$4", "$7", __SYSCALL_CLOBBERS);
+	 : "$4", "$7", __SYSCALL_CLOBBERS);
     newbrk = (void *) res;
   }
   __curbrk = newbrk;
