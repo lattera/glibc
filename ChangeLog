@@ -1,3 +1,7 @@
+2006-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: Make even more C++ compliant.
+
 2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Use

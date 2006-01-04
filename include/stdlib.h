@@ -144,44 +144,44 @@ libc_hidden_proto (____strtoul_l_internal)
 libc_hidden_proto (____strtoull_l_internal)
 
 extern __inline double
-__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    __locale_t __loc)
+__NTH (__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   __locale_t __loc))
 {
   return ____strtod_l_internal (__nptr, __endptr, 0, __loc);
 }
 extern __inline long int
-__strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    int __base, __locale_t __loc)
+__NTH (__strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   int __base, __locale_t __loc))
 {
   return ____strtol_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 extern __inline unsigned long int
-__strtoul_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base, __locale_t __loc)
+__NTH (__strtoul_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoul_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 extern __inline float
-__strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    __locale_t __loc)
+__NTH (__strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   __locale_t __loc))
 {
   return ____strtof_l_internal (__nptr, __endptr, 0, __loc);
 }
 extern __inline long double
-__strtold_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     __locale_t __loc)
+__NTH (__strtold_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, __locale_t __loc))
 {
   return ____strtold_l_internal (__nptr, __endptr, 0, __loc);
 }
 __extension__ extern __inline long long int
-__strtoll_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base, __locale_t __loc)
+__NTH (__strtoll_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoll_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 __extension__ extern __inline unsigned long long int
-__strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
-	      int __base, __locale_t __loc)
+__NTH (__strtoull_l (__const char * __restrict __nptr,
+		     char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoull_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
@@ -196,7 +196,7 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 
 #endif
 
-extern void * __default_morecore (ptrdiff_t);
+extern void *__default_morecore (ptrdiff_t) __THROW;
 libc_hidden_proto (__default_morecore)
 
 __END_DECLS

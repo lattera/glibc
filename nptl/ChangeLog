@@ -1,3 +1,7 @@
+2006-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel24.cc: Use C headers instead of C++ headers.
+
 2006-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Remove #error for

@@ -1,7 +1,7 @@
-#include <cstdlib>
-#include <cstdio>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
 
