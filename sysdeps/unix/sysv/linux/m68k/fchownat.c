@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>

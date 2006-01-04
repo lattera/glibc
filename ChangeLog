@@ -1,3 +1,29 @@
+2006-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: Include string.h.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (LD_SO_PRELOAD): Remove unused
+	define.
+
+	* sysdeps/sparc/sparc32/bits/atomic.h: Include stdint.h, add
+	{,u}atomic*_t typedefs.
+	(__sparc32_atomic_do_lock): Add __volatile and memory clobber.
+	(__sparc32_atomic_do_unlock): Add memory barrier.
+	(__sparc32_atomic_do_lock24, __sparc32_atomic_do_unlock24): Define.
+	[!SHARED] (__v9_compare_and_exchange_val_32_acq): Define.
+	(__v7_compare_and_exchange_val_acq, __v7_compare_and_exchange_bool_acq,
+	__v7_exchange_acq, __v7_exchange_and_add, __v7_exchange_24_rel,
+	__v7_compare_and_exchange_val_24_acq, __atomic_is_v9,
+	atomic_exchange_acq, atomic_compare_and_exchange_val_24_acq,
+	atomic_exchange_24_rel): Define.
+	[SHARED] (atomic_exchange_and_add): Define.
+	[!SHARED] (__ATOMIC_HWCAP_SPARC_V9): Define.
+	[!SHARED] (_dl_hwcap): New weak decl.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (atomic_exchange_24_rel,
+	atomic_compare_and_exchange_val_24_acq): Define.
+	* sysdeps/sparc/sparc64/bits/atomic.h (atomic_exchange_24_rel,
+	atomic_compare_and_exchange_val_24_acq): Define.
+
 2006-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	lio_listio should emit an event for each individual request in

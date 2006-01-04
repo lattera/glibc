@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,13 +39,6 @@
 #define OPCODE_JMP_G1	0x81c06000 /* jmp %g1+?; add lo 10 bits of value */
 #define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
 #define OPCODE_BA	0x30800000 /* b,a ?; add PC-rel word address */
-
-/* Use a different preload file when running in 32-bit emulation mode
-   on a 64-bit host.  */
-#define LD_SO_PRELOAD ((GLRO(dl_hwcap) & HWCAP_SPARC_V9) \
-		       ? "/etc/ld.so.preload32" \
-		       : "/etc/ld.so.preload")
-
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int

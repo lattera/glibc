@@ -1,3 +1,36 @@
+2006-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Remove #error for
+	sparc-linux configured glibc.
+	(lll_futex_wake_unlock): Define to 1 for sparc-linux configured glibc.
+	(__lll_mutex_trylock, __lll_mutex_cond_trylock, __lll_mutex_lock,
+	__lll_mutex_cond_lock, __lll_mutex_timedlock): Use
+	atomic_compare_and_exchange_val_24_acq instead of
+	atomic_compare_and_exchange_val_acq.
+	(lll_mutex_unlock, lll_mutex_unlock_force): Use atomic_exchange_24_rel
+	instead of atomic_exchange_rel.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lowlevellock.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pthread_barrier_init.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pthread_barrier_wait.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_init.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_timedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_trywait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_wait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/pthread_barrier_init.c:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/pthread_barrier_wait.c:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_init.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_timedwait.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_trywait.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_wait.c: New file.
+
 2006-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h [__WORDSIZE==64]: Don't use cast in

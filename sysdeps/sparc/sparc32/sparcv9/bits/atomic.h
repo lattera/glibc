@@ -1,5 +1,5 @@
 /* Atomic operations.  sparcv9 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -78,6 +78,12 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        abort ();							      \
      __oldval; })
+
+#define atomic_compare_and_exchange_val_24_acq(mem, newval, oldval) \
+  atomic_compare_and_exchange_val_acq (mem, newval, oldval)
+
+#define atomic_exchange_24_rel(mem, newval) \
+  atomic_exchange_rel (mem, newval)
 
 #define atomic_full_barrier() \
   __asm __volatile ("membar #LoadLoad | #LoadStore"			      \
