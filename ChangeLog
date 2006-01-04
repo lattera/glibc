@@ -1,3 +1,12 @@
+2006-01-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in (HAVE_LIBAUDIT): Check
+	audit_log_user_avc_message instead of audit_log_avc.
+
+2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/bits/nan.h: Fix typo.
+
 2006-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/m68k/fchownat.c: Include string.h.

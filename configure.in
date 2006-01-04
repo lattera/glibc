@@ -1956,13 +1956,13 @@ else
 fi
 # Check if we're building with SELinux support.
 if test "x$have_selinux" = xyes; then
-  AC_DEFINE(HAVE_SELINUX,1,[SELinux support])
+  AC_DEFINE(HAVE_SELINUX, 1, [SELinux support])
 
   # See if we have the libaudit library
-  AC_CHECK_LIB(audit, audit_log_avc,
-              have_libaudit=yes, have_libaudit=no)
+  AC_CHECK_LIB(audit, audit_log_user_avc_message,
+               have_libaudit=yes, have_libaudit=no)
   if test "x$have_libaudit" = xyes; then
-    AC_DEFINE(HAVE_LIBAUDIT,1,[SELinux libaudit support])
+    AC_DEFINE(HAVE_LIBAUDIT, 1, [SELinux libaudit support])
   fi
   AC_SUBST(have_libaudit)
 fi
