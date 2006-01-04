@@ -44,7 +44,7 @@
 	addition to the global event.
 	* sysdeps/pthread/lio_listio.c (lio_listio): Renamed to
 	lio_listio_internal.  Remove mode parameter check.  Only set sigevent
-	type ti SIGEV_NONE if LIO_NO_INDIVIDUAL_EVENT is set.
+	type to SIGEV_NONE if LIO_NO_INDIVIDUAL_EVENT is set.
 	(__lio_listio_21): New function.  Compatiblity version which sets
 	LIO_NO_INDIVIDUAL_EVENT before calling lio_listio_internal.
 	(__lio_listio_item_notify): New function.
