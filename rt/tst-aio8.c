@@ -21,6 +21,7 @@ do_test (void)
   req.aio_reqprio = 0;
   req.aio_buf = (void *) "hello";
   req.aio_nbytes = 5;
+  req.aio_offset = 0;
   req.aio_sigevent.sigev_notify = SIGEV_NONE;
 
   struct aiocb *list[1];
