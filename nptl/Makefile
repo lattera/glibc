@@ -324,7 +324,7 @@ crti-objs += $(multidir)/crti.o
 crtn-objs += $(multidir)/crtn.o
 omit-deps += $(multidir)/crti $(multidir)/crtn
 $(objpfx)$(multidir):
-	mkdir $@
+	mkdir -p $@
 endif
 extra-objs += $(crti-objs) $(crtn-objs)
 omit-deps += crti crtn
