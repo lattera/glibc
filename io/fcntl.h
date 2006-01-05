@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ __BEGIN_DECLS
 # define SEEK_END	2	/* Seek from end of file.  */
 #endif	/* XPG */
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 # define AT_FDCWD		-100	/* Special value used to indicate
 					   openat should use the current
 					   working directory. */
@@ -92,11 +92,11 @@ extern int __REDIRECT (open, (__const char *__file, int __oflag, ...), open64)
 extern int open64 (__const char *__file, int __oflag, ...) __nonnull ((1));
 #endif
 
-#ifdef __USE_GNU
-/* Similar to OPEN but a relative path name is interpreted relative to
+#ifdef __USE_ATFILE
+/* Similar to `open' but a relative path name is interpreted relative to
    the directory for which FD is a descriptor.
 
-   NOTE: some other OPENAT implementation support additional functionality
+   NOTE: some other `openat' implementation support additional functionality
    through this interface, especially using the O_XATTR flag.  This is not
    yet supported here.
 

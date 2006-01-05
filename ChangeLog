@@ -1,5 +1,13 @@
 2006-01-05  Roland McGrath  <roland@redhat.com>
 
+	* include/features.h: Grok _ATFILE_SOURCE and define __USE_ATFILE when
+	it or _GNU_SOURCE is defined.
+	* io/fcntl.h: Protect *at and AT_* with [__USE_ATFILE] instead of
+	[__USE_GNU].
+	* libio/stdio.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* time/sys/time.h: Likewise.
+
 	* io/sys/stat.h [__USE_GNU]: Declare fchmodat.
 	* io/fchmodat.c: New file.
 	* io/Makefile (routines): Add fchmodat.

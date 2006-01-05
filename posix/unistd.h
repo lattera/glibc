@@ -431,7 +431,7 @@ extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
 
 #endif /* Use BSD || X/Open Unix.  */
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Change the owner and group of FILE relative to the directory FD is open
    on.  */
 extern int fchownat (int __fd, __const char *__file, __uid_t __owner,
@@ -742,7 +742,7 @@ extern int ttyslot (void) __THROW;
 extern int link (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2)) __wur;
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Like link but relative paths in TO and FROM are interpreted relative
    to FROMFD and TOFD respectively.  */
 extern int linkat (int __fromfd, __const char *__from, int __tofd,
@@ -761,7 +761,7 @@ extern int readlink (__const char *__restrict __path, char *__restrict __buf,
 		     size_t __len) __THROW __nonnull ((1, 2)) __wur;
 #endif /* Use BSD.  */
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Like symlink but a relative path in TO is interpreted relative to TOFD.  */
 extern int symlinkat (__const char *__from, int __tofd,
 		      __const char *__to) __THROW __nonnull ((1, 3)) __wur;
@@ -775,7 +775,7 @@ extern int readlinkat (int __fd, __const char *__restrict __path,
 /* Remove the link NAME.  */
 extern int unlink (__const char *__name) __THROW __nonnull ((1));
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Remove the link NAME relative to FD.  */
 extern int unlinkat (int __fd, __const char *__name, int __flag)
      __THROW __nonnull ((2));

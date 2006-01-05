@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1993,1995-2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +39,7 @@
    _FILE_OFFSET_BITS=N	Select default filesystem interface.
    _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
+   _ATFILE_SOURCE	Additional *at interfaces.
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
@@ -69,6 +71,7 @@
    __USE_BSD		Define 4.3BSD things.
    __USE_SVID		Define SVID things.
    __USE_MISC		Define things common to BSD and System V Unix.
+   __USE_ATFILE		Define *at interfaces and AT_* constants for them.
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
@@ -102,6 +105,7 @@
 #undef	__USE_BSD
 #undef	__USE_SVID
 #undef	__USE_MISC
+#undef	__USE_ATFILE
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
 #undef	__USE_FORTIFY_LEVEL
@@ -158,6 +162,8 @@
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
 # define _SVID_SOURCE	1
+# undef  _ATFILE_SOURCE
+# define _ATFILE_SOURCE	1
 #endif
 
 /* If nothing (other than _GNU_SOURCE) is defined,
@@ -254,6 +260,10 @@
 
 #ifdef	_SVID_SOURCE
 # define __USE_SVID	1
+#endif
+
+#ifdef	_ATFILE_SOURCE
+# define __USE_ATFILE	1
 #endif
 
 #ifdef	_GNU_SOURCE

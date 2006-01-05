@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991,1994-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1991,1994-2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,7 +154,7 @@ extern int remove (__const char *__filename) __THROW;
 extern int rename (__const char *__old, __const char *__new) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
 extern int renameat (int __oldfd, __const char *__old, int __newfd,
 		     __const char *__new) __THROW;
