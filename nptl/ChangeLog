@@ -1,3 +1,7 @@
+2006-01-03  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)$(multidir)): Use mkdir -p.
+
 2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
