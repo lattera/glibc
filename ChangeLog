@@ -1,3 +1,13 @@
+2006-01-05  Roland McGrath  <roland@redhat.com>
+
+	* io/sys/stat.h [__USE_GNU]: Declare fchmodat.
+	* io/fchmodat.c: New file.
+	* io/Makefile (routines): Add fchmodat.
+	* io/Versions (libc: GLIBC_2.4): Likewise.
+	* sysdeps/unix/sysv/linux/fchmodat.c: New file.
+	* io/tst-fchmodat.c: New file.
+	* io/Makefile (tests): Add it.
+
 2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (ENTRY, EALIGN): Add cfi_startproc

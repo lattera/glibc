@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -292,6 +292,14 @@ extern int lchmod (__const char *__file, __mode_t __mode)
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
+
+#ifdef __USE_GNU
+/* Set file access permissions of FILE relative to
+   the directory FD is open on.  */
+extern int fchmodat (int __fd, __const char *__file, __mode_t mode, int __flag)
+     __THROW __nonnull ((2)) __wur;
+#endif /* Use GNU.  */
+
 
 
 /* Set the file creation mask of the current process to MASK,
