@@ -172,7 +172,10 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 
       /* If any of the I/O requests failed, return -1 and set errno.  */
       if (result != 0)
-	__set_errno (EIO);
+	{
+	  __set_errno (result == EINTR ? EINTR : EIO);
+	  result = -1;
+	}
     }
   else
     {

@@ -7,8 +7,9 @@
 	* sysdeps/pthread/aio_suspend.c [!DONT_USE_BOOTSTRAP_MAP]: Don't
 	use condvar, use AIO_MISC_WAIT.
 	* sysdeps/pthread/lio_listio.c: Likewise.
-	* rt/Makefile (tests): Add aio_suspend.
+	* rt/Makefile (tests): Add tst-aio9 and tst-aio10.
 	* rt/tst-aio9.c: New file.
+	* rt/tst-aio10.c: New file.
 
 	* rt/tst-aio3.c: The thread is now supposed to be created.
 
