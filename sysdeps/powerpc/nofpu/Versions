@@ -10,4 +10,9 @@ libc {
     __negdf2; __negsf2; __sqrtdf2; __sqrtsf2; __subdf3;
     __subsf3; __truncdfsf2; __trunctfsf2;
   }
+  GLIBC_2.4 {
+    __floatundidf; __floatundisf; __floatunditf;
+    __floatunsidf; __floatunsisf; __floatunsitf;
+    __unorddf2; __unordsf2; __unordtf2;
+  }
 }
