@@ -51,7 +51,7 @@
 	* soft-fp/op-common.h (__FP_CLZ): Define using __builtin_clz,
 	__builtin_clzl and __builtin_clzll.
 
-2005-01-05  Mike Frysinger  <vapier@gentoo.org>
+2006-01-05  Mike Frysinger  <vapier@gentoo.org>
 
 	* include/alloca.h (extend_alloca): Fix typoed name 'extern_alloca'.
 
