@@ -1,5 +1,14 @@
 2006-01-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/check-c++-types.sh: Add more pthread types.
+	* scripts/data//c++-types-i386-linux-gnu.data: Adjust.
+	* scripts/data//c++-types-ia64-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-powerpc-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-powerpc64-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-s390-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-s390x-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-x86_64-linux-gnu.data: Likewise.
+
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL_NCS):
 	Adjust for private->__private rename in tcbhead_t.
 

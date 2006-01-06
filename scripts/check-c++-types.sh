@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -75,8 +75,17 @@ nlink_t
 off64_t
 off_t
 pid_t
+pthread_attr_t
+pthread_barrier_t
+pthread_barrierattr_t
+pthread_cond_t
+pthread_condattr_t
 pthread_key_t
+pthread_mutex_t
+pthread_mutexattr_t
 pthread_once_t
+pthread_rwlock_t
+pthread_rwlockattr_t
 pthread_spinlock_t
 pthread_t
 quad_t

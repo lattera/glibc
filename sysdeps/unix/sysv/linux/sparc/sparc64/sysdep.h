@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002, 2003, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -25,6 +26,7 @@
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
+#include <tls.h>
 
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
@@ -124,10 +126,10 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 #  define SYSCALL_ERROR_HANDLER						\
 SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;			\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g2;			\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g4;			\
 	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;		\
-	add	%g2, %lo(_GLOBAL_OFFSET_TABLE_), %g2;			\
-	ldx	[%g2 + %g1], %g1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
+	add	%g4, %lo(_GLOBAL_OFFSET_TABLE_), %g4;			\
+	ldx	[%g4 + %g1], %g1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
 	st	%o0, [%g7 + %g1], %tie_add(SYSCALL_ERROR_ERRNO);	\
 	jmpl	%o7+8, %g0;						\
 	 mov	-1, %o0;						\

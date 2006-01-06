@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -40,7 +40,11 @@ __##syscall_name##_nocancel:						      \
 	 nop;								      \
 .size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
 	.subsection 2;							      \
+	cfi_startproc;							      \
 1:	save %sp, -192, %sp;						      \
+	cfi_def_cfa_register (%fp);					      \
+	cfi_window_save;						      \
+	cfi_register (%o7, %i7);					      \
 	CENABLE;							      \
 	 nop;								      \
 	mov %o0, %l0;							      \
@@ -53,6 +57,7 @@ __##syscall_name##_nocancel:						      \
 	 mov %l0, %o0;							      \
 	jmpl %i7 + 8, %g0;						      \
 	 restore %g0, %l1, %o0;						      \
+	cfi_endproc;							      \
 	.previous;							      \
 	SYSCALL_ERROR_HANDLER						      \
 	SYSCALL_ERROR_HANDLER2

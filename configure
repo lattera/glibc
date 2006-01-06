@@ -6135,13 +6135,17 @@ echo $ECHO_N "checking whether CFI directives are supported... $ECHO_C" >&6
 if test "${libc_cv_asm_cfi_directives+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  cat > conftest.s <<EOF
+  case $machine in
+  sparc/sparc64*) cfi_offset=2047;;
+  *) cfi_offset=0;;
+esac
+cat > conftest.s <<EOF
         .text
         .type   func,%function
 func:
         .cfi_startproc
 	.cfi_remember_state
-	.cfi_rel_offset 1, 0
+	.cfi_rel_offset 1, $cfi_offset
         .cfi_endproc
 EOF
 if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
