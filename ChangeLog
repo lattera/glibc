@@ -1,3 +1,10 @@
+2006-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_WAITID_SYSCALL):
+	Only define for 2.6.12+ on s390{,x}.
+	(__ASSUME_GETDENTS32_D_TYPE): Only define for 2.6.8+ on most arches
+	and only for 2.6.11+ on s390{,x}.
+
 2006-01-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/aio_misc.h [!DONT_USE_BOOTSTRAP_MAP]
