@@ -1,3 +1,14 @@
+2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Define MADV_REMOVE.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
 2006-01-06  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (+gnu-stabs): Remove ancient cruft.
