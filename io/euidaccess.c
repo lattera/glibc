@@ -1,5 +1,5 @@
 /* Test for access to FILE using effective UID and GID.  Stub version.
-   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1997,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,5 +36,7 @@ __euidaccess (file, type)
   return -1;
 }
 weak_alias (__euidaccess, euidaccess)
+weak_alias (__euidaccess, eaccess)
 stub_warning (euidaccess)
+stub_warning (eaccess)
 #include <stub-tag.h>

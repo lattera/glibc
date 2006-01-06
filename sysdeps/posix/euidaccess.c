@@ -183,8 +183,10 @@ euidaccess (path, mode)
   return -1;
 }
 #undef euidaccess
+#undef eaccess
 #ifdef weak_alias
 weak_alias (__euidaccess, euidaccess)
+weak_alias (__euidaccess, eaccess)
 #endif
 
 #ifdef TEST

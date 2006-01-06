@@ -1,5 +1,5 @@
 /* Test for access to FILE using effective UID and GID.  Hurd version.
-   Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,3 +57,4 @@ __euidaccess (file, type)
   return 0;
 }
 weak_alias (__euidaccess, euidaccess)
+weak_alias (__euidaccess, eaccess)

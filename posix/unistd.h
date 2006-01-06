@@ -260,6 +260,10 @@ extern int access (__const char *__name, int __type) __THROW __nonnull ((1));
    (as normal file operations use).  */
 extern int euidaccess (__const char *__name, int __type)
      __THROW __nonnull ((1));
+
+/* An alias for `euidaccess', used by some other systems.  */
+extern int eaccess (__const char *__name, int __type)
+     __THROW __nonnull ((1));
 #endif
 
 
