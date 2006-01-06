@@ -1,5 +1,13 @@
 2006-01-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2114]
+	* ncsd/aicache.c: Don't use sendfile for records on the stack.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	Patch by dmueller@suse.com.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Define MADV_REMOVE.
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.

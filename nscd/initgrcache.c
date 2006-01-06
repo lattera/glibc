@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -347,7 +347,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  assert (fd != -1);
 
 #ifdef HAVE_SENDFILE
-	  if (__builtin_expect (db->mmap_used, 1))
+	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) &dataset->resp > (char *) db->data);
