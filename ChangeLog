@@ -1,5 +1,7 @@
 2006-01-06  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/wordsize-32/divdi3.c (__moddi3): Add a cast.
+
 	* io/fcntl.h [__USE_ATFILE] (AT_EACCESS): New macro.
 	* posix/unistd.h [__USE_ATFILE]: Declare faccessat.
 	* io/faccessat.c: New file.
