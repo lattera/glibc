@@ -35,10 +35,10 @@ routines :=								\
 	fxstatat fxstatat64						\
 	statfs fstatfs statfs64 fstatfs64				\
 	statvfs fstatvfs statvfs64 fstatvfs64				\
-	umask chmod fchmod lchmod fchmodat \
+	umask chmod fchmod lchmod fchmodat				\
 	mkdir mkdirat							\
 	open open64 openat openat64 close				\
-	read write lseek lseek64 access euidaccess			\
+	read write lseek lseek64 access euidaccess faccessat		\
 	fcntl flock lockf lockf64					\
 	dup dup2 pipe							\
 	creat creat64							\
@@ -64,7 +64,7 @@ test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
-		   tst-renameat tst-fchownat tst-fchmodat
+		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat
 
 distribute	:= ftwtest-sh
 

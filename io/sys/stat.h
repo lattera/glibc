@@ -228,7 +228,7 @@ extern int stat64 (__const char *__restrict __file,
 extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2));
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Similar to stat, get the attributes for FILE and put them in BUF.
    Relative path names are interpreted relative to FD unless FD is
    AT_FDCWD.  */
@@ -293,12 +293,12 @@ extern int lchmod (__const char *__file, __mode_t __mode)
 extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Set file access permissions of FILE relative to
    the directory FD is open on.  */
 extern int fchmodat (int __fd, __const char *__file, __mode_t mode, int __flag)
      __THROW __nonnull ((2)) __wur;
-#endif /* Use GNU.  */
+#endif /* Use ATFILE.  */
 
 
 
@@ -316,7 +316,7 @@ extern __mode_t getumask (void) __THROW;
 extern int mkdir (__const char *__path, __mode_t __mode)
      __THROW __nonnull ((1));
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Like mkdir, create a new directory with permission bits MODE.  But
    interpret relative PATH names relative to the directory associated
    with FD.  */
@@ -332,7 +332,7 @@ extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
      __THROW __nonnull ((1));
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Like mknod, create a new device file with permission bits MODE and
    device number DEV.  But interpret relative PATH names relative to
    the directory associated with FD.  */
@@ -345,7 +345,7 @@ extern int mknodat (int __fd, __const char *__path, __mode_t __mode,
 extern int mkfifo (__const char *__path, __mode_t __mode)
      __THROW __nonnull ((1));
 
-#ifdef __USE_GNU
+#ifdef __USE_ATFILE
 /* Like mkfifo, create a new FIFO with permission bits MODE.  But
    interpret relative PATH names relative to the directory associated
    with FD.  */
@@ -450,7 +450,7 @@ __NTH (fstat (int __fd, struct stat *__statbuf))
   return __fxstat (_STAT_VER, __fd, __statbuf);
 }
 
-# ifdef __USE_GNU
+# ifdef __USE_ATFILE
 extern __inline__ int
 __NTH (fstatat (int __fd, __const char *__filename, struct stat *__statbuf,
 		int __flag))
@@ -467,7 +467,7 @@ __NTH (mknod (__const char *__path, __mode_t __mode, __dev_t __dev))
 }
 # endif
 
-# ifdef __USE_GNU
+# ifdef __USE_ATFILE
 extern __inline__ int
 __NTH (mknodat (int __fd, __const char *__path, __mode_t __mode,
 		__dev_t __dev))

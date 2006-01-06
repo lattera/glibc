@@ -266,6 +266,14 @@ extern int eaccess (__const char *__name, int __type)
      __THROW __nonnull ((1));
 #endif
 
+#ifdef __USE_ATFILE
+/* Test for access to FILE relative to the directory FD is open on.
+   If AT_EACCESS is set in FLAG, then use effective IDs like `eaccess',
+   otherwise use real IDs like `access'.  */
+extern int faccessat (int __fd, __const char *__file, int __type, int __flag)
+     __THROW __nonnull ((2)) __wur;
+#endif /* Use GNU.  */
+
 
 /* Values for the WHENCE argument to lseek.  */
 #ifndef	_STDIO_H		/* <stdio.h> has the same definitions.  */
