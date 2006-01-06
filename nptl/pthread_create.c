@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -311,25 +311,25 @@ start_thread (void *arg)
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
   /* If this thread has any robust mutexes locked, handle them now.  */
-  pthread_mutex_t *robust = THREAD_GETMEM (pd, robust_list);
+  struct __pthread_mutex_s *robust = THREAD_GETMEM (pd, robust_list);
   if (__builtin_expect (robust != NULL, 0))
     {
       do
 	{
-	  pthread_mutex_t *this = robust;
-	  robust = robust->__data.__next;
+	  struct __pthread_mutex_s *this = robust;
+	  robust = robust->__next;
 
-	  assert (lll_mutex_islocked (this->__data.__lock));
-	  this->__data.__count = 0;
-	  --this->__data.__nusers;
-	  assert (this->__data.__owner != PTHREAD_MUTEX_NOTRECOVERABLE);
-	  this->__data.__owner = PTHREAD_MUTEX_OWNERDEAD;
-	  this->__data.__next = NULL;
+	  assert (lll_mutex_islocked (this->__lock));
+	  this->__count = 0;
+	  --this->__nusers;
+	  assert (this->__owner != PTHREAD_MUTEX_NOTRECOVERABLE);
+	  this->__owner = PTHREAD_MUTEX_OWNERDEAD;
+	  this->__next = NULL;
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
-	  this->__data.__prev = NULL;
+	  this->__prev = NULL;
 #endif
 
-	  lll_mutex_unlock (this->__data.__lock);
+	  lll_mutex_unlock (this->__lock);
 	}
       while (robust != NULL);
 
