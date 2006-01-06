@@ -1,6 +1,6 @@
 2006-01-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/ia64/tls.h (tcbhead_t): Rename private membe to __private.
+	* sysdeps/ia64/tls.h (tcbhead_t): Rename private member to __private.
 	* sysdeps/ia64/tcb-offsets.sym: Adjust for private->__private
 	rename in tcbhead_t.
 
