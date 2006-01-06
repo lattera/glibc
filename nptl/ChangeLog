@@ -1,3 +1,8 @@
+2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h [!__PTHREAD_MUTEX_HAVE_PREV] (DEQUEUE_MUTEX): Use
+	correct type.
+
 2006-01-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h (PSEUDO):

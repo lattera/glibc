@@ -1,3 +1,11 @@
+2006-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Include tls.h.
+	(SYSCALL_ERROR_HANDLER_ENTRY): Use %g4 instead of %g2, to avoid
+	the need of .register directive for it.
+	* configure.in (libc_cv_asm_cfi_directives): Use CFI rel offset
+	2047 instead of 0 in the test on sparc64.
+
 2006-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/check-c++-types.sh: Add more pthread types.

@@ -165,7 +165,7 @@ struct pthread
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \
-    struct pthread_mutex_s *runp = THREAD_GETMEM (THREAD_SELF, robust_list);  \
+    struct __pthread_mutex_s *runp = THREAD_GETMEM (THREAD_SELF, robust_list);\
     if (runp == &mutex->__data)						      \
       THREAD_SETMEM (THREAD_SELF, robust_list, runp->__next);		      \
     else								      \
