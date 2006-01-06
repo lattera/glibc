@@ -224,6 +224,7 @@ union _FP_UNION_E
 
 #define FP_CMP_E(r,X,Y,un)	_FP_CMP(E,4,r,X,Y,un)
 #define FP_CMP_EQ_E(r,X,Y)	_FP_CMP_EQ(E,4,r,X,Y)
+#define FP_CMP_UNORD_E(r,X,Y)	_FP_CMP_UNORD(E,4,r,X,Y)
 
 #define FP_TO_INT_E(r,X,rsz,rsg)	_FP_TO_INT(E,4,r,X,rsz,rsg)
 #define FP_FROM_INT_E(X,r,rs,rt)	_FP_FROM_INT(E,4,X,r,rs,rt)

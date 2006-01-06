@@ -553,6 +553,14 @@ do {							\
       }									  \
   } while (0)
 
+/* Version to test unordered.  */
+
+#define _FP_CMP_UNORD(fs, wc, ret, X, Y)				\
+  do {									\
+    ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))	\
+	   || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)));	\
+  } while (0)
+
 /*
  * Main square root routine.  The input value should be cooked.
  */

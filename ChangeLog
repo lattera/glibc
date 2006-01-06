@@ -1,5 +1,24 @@
 2005-12-04  Joseph S. Myers  <joseph@codesourcery.com>
 
+	* soft-fp/Makefile (gcc-single-routines): Add unordsf2,
+	floatunsisf, floatundisf.
+	(gcc-double-routines): Add unorddf2, floatunsidf, floatundidf.
+	(gcc-quad-routines): Add unordtf2, floatunsitf, floatunditf.
+	* soft-fp/op-common.h (_FP_CMP_UNORD): Define.
+	* soft-fp/single.h (FP_CMP_UNORD_S): Define.
+	* soft-fp/double.h (FP_CMP_UNORD_D): Define.
+	* soft-fp/quad.h (FP_CMP_UNORD_Q): Define.
+	* soft-fp/extended.h (FP_CMP_UNORD_E): Define.
+	* soft-fp/unordsf2.c: New file.
+	* soft-fp/unorddf2.c: New file.
+	* soft-fp/unordtf2.c: New file.
+	* soft-fp/floatunsisf.c: New file.
+	* soft-fp/floatundisf.c: New file.
+	* soft-fp/floatunsidf.c: New file.
+	* soft-fp/floatundidf.c: New file.
+	* soft-fp/floatunsitf.c: New file.
+	* soft-fp/floatunditf.c: New file.
+
 	* soft-fp/op-common.h (__FP_CLZ): Define using __builtin_clz,
 	__builtin_clzl and __builtin_clzll.
 
