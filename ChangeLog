@@ -1,5 +1,11 @@
 2006-01-06  Roland McGrath  <roland@redhat.com>
 
+	[BZ #2103]
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_HWX25): Corrected macro
+	name (was typo ARPHDR_HWX25).
+	(ARPHRD_IEEE80211_PRISM, ARPHRD_IEEE80211_RADIOTAP): New macros.
+	(ARPHRD_VOID, ARPHRD_NONE): New macros.
+
 	* sysdeps/wordsize-32/divdi3.c (__moddi3): Add a cast.
 
 	* io/fcntl.h [__USE_ATFILE] (AT_EACCESS): New macro.

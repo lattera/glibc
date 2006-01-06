@@ -1,5 +1,5 @@
 /* Definitions for Address Resolution Protocol.
-   Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2001,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -96,7 +96,7 @@ struct arphdr
 #define ARPHRD_ADAPT	264
 #define ARPHRD_ROSE	270
 #define ARPHRD_X25	271		/* CCITT X.25.  */
-#define ARPHDR_HWX25	272		/* Boards with X.25 in firmware.  */
+#define ARPHRD_HWX25	272		/* Boards with X.25 in firmware.  */
 #define ARPHRD_PPP	512
 #define ARPHRD_CISCO	513		/* Cisco HDLC.  */
 #define ARPHRD_HDLC	ARPHRD_CISCO
@@ -126,6 +126,12 @@ struct arphdr
 #define ARPHRD_FCFABRIC 787		/* Fibrechanel fabric.  */
 #define ARPHRD_IEEE802_TR 800		/* Magic type ident for TR.  */
 #define ARPHRD_IEEE80211 801		/* IEEE 802.11.  */
+#define ARPHRD_IEEE80211_PRISM 802	/* IEEE 802.11 + Prism2 header.  */
+#define ARPHRD_IEEE80211_RADIOTAP 803	/* IEEE 802.11 + radiotap header.  */
+
+#define ARPHRD_VOID	  0xFFFF	/* Void type, nothing is known.  */
+#define ARPHRD_NONE	  0xFFFE	/* Zero header length.  */
+
 
 /* ARP ioctl request.  */
 struct arpreq
