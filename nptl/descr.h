@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -135,15 +135,15 @@ struct pthread
   pid_t pid;
 
   /* List of robust mutexes the thread is holding.  */
-  pthread_mutex_t *robust_list;
+  struct __pthread_mutex_s *robust_list;
 
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
 # define ENQUEUE_MUTEX(mutex) \
   do {									      \
     mutex->__data.__next = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
-    THREAD_SETMEM (THREAD_SELF, robust_list, mutex);			      \
+    THREAD_SETMEM (THREAD_SELF, robust_list, &mutex->__data);		      \
     if (mutex->__data.__next != NULL)					      \
-      mutex->__data.__next->__data.__prev = mutex;			      \
+      mutex->__data.__next->__prev = &mutex->__data;			      \
     mutex->__data.__prev = NULL;					      \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
@@ -151,9 +151,9 @@ struct pthread
     if (mutex->__data.__prev == NULL)					      \
       THREAD_SETMEM (THREAD_SELF, robust_list, mutex->__data.__next);	      \
     else								      \
-      mutex->__data.__prev->__data.__next = mutex->__data.__next;	      \
+      mutex->__data.__prev->__next = mutex->__data.__next;		      \
     if (mutex->__data.__next != NULL)					      \
-      mutex->__data.__next->__data.__prev = mutex->__data.__prev;	      \
+      mutex->__data.__next->__prev = mutex->__data.__prev;		      \
     mutex->__data.__prev = NULL;					      \
     mutex->__data.__next = NULL;					      \
   } while (0)
@@ -161,19 +161,19 @@ struct pthread
 # define ENQUEUE_MUTEX(mutex) \
   do {									      \
     mutex->__data.__next = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
-    THREAD_SETMEM (THREAD_SELF, robust_list, mutex);			      \
+    THREAD_SETMEM (THREAD_SELF, robust_list, &mutex->__data);		      \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \
-    pthread_mutex_t *runp = THREAD_GETMEM (THREAD_SELF, robust_list);	      \
-    if (runp == mutex)							      \
-      THREAD_SETMEM (THREAD_SELF, robust_list, runp->__data.__next);	      \
+    struct pthread_mutex_s *runp = THREAD_GETMEM (THREAD_SELF, robust_list);  \
+    if (runp == &mutex->__data)						      \
+      THREAD_SETMEM (THREAD_SELF, robust_list, runp->__next);		      \
     else								      \
       {									      \
-	while (runp->__data.__next != mutex)				      \
-	  runp = runp->__data.__next;					      \
+	while (runp->__next != &mutex->__data)				      \
+	  runp = runp->__next;						      \
 									      \
-	runp->__data.__next = runp->__data.__next->__data.__next;	      \
+	runp->__next = runp->__next->__next;				      \
 	mutex->__data.__next = NULL;					      \
       }									      \
   } while (0)

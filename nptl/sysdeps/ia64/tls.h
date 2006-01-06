@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/IA-64 version.
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ typedef union dtv
 typedef struct
 {
   dtv_t *dtv;
-  void *private;
+  void *__private;
 } tcbhead_t;
 
 register struct pthread *__thread_self __asm__("r13");
@@ -113,9 +113,9 @@ register struct pthread *__thread_self __asm__("r13");
 #  define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
 
-#define THREAD_SELF_SYSINFO	(((tcbhead_t *) __thread_self)->private)
+#define THREAD_SELF_SYSINFO	(((tcbhead_t *) __thread_self)->__private)
 #define THREAD_SYSINFO(pd) \
-  (((tcbhead_t *) ((char *) (pd) + TLS_PRE_TCB_SIZE))->private)
+  (((tcbhead_t *) ((char *) (pd) + TLS_PRE_TCB_SIZE))->__private)
 
 #if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO   THREAD_SELF_SYSINFO = (void *) GLRO(dl_sysinfo)
