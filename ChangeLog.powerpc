@@ -1,3 +1,9 @@
+2006-01-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/nofpu/Versions (libc: GLIBC_2.4): New set.
+	Add __floatundidf, __floatundisf, __floatunditf, __floatunsidf,
+	__floatunsisf, __floatunsitf, __unorddf2, __unordsf2, __unordtf2.
+
 2005-10-11  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/nofpu/fesetround.c: Add libm_hidden_def.
