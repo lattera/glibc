@@ -47,7 +47,9 @@ struct waitlist
     struct waitlist *next;
 
     /* The next two fields is used in synchronous `lio_listio' operations.  */
+#ifndef DONT_NEED_AIO_MISC_COND
     pthread_cond_t *cond;
+#endif
     int *result;
 
     volatile int *counterp;

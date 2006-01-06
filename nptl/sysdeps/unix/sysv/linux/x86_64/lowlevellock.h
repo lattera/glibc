@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -47,16 +47,31 @@
 
 
 #define lll_futex_wait(futex, val) \
-  do {									      \
-    int __ignore;							      \
+  ({									      \
+    int __status;							      \
     register __typeof (val) _val asm ("edx") = (val);			      \
     __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
 		      "syscall"						      \
-		      : "=a" (__ignore)					      \
+		      : "=a" (__status)					      \
 		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
 			"d" (_val)					      \
 		      : "memory", "cc", "r10", "r11", "cx");		      \
-  } while (0)
+    __status;								      \
+  })
+
+
+#define lll_futex_timed_wait(futex, val, timeout)			      \
+  ({									      \
+    register const struct timespec *__to __asm__ ("r10") = timeout;	      \
+    int __status;							      \
+    register __typeof (val) _val asm ("edx") = (val);			      \
+    __asm __volatile ("syscall"						      \
+		      : "=a" (__status)					      \
+		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
+		        "d" (_val), "r" (__to)				      \
+		      : "memory", "cc", "r11", "cx");			      \
+    __status;								      \
+  })
 
 
 #define lll_futex_wake(futex, nr) \

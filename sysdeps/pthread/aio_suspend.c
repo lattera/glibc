@@ -44,7 +44,9 @@ struct clparam
   const struct aiocb *const *list;
   struct waitlist *waitlist;
   struct requestlist **requestlist;
+#ifndef DONT_NEED_AIO_MISC_COND
   pthread_cond_t *cond;
+#endif
   int nent;
 };
 
@@ -52,6 +54,12 @@ struct clparam
 static void
 cleanup (void *arg)
 {
+#ifdef DONT_NEED_AIO_MISC_COND
+  /* Acquire the mutex.  If pthread_cond_*wait is used this would
+     happen implicitly.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
+#endif
+
   const struct clparam *param = (const struct clparam *) arg;
 
   /* Now remove the entry in the waiting list for all requests
@@ -75,8 +83,10 @@ cleanup (void *arg)
 	  *listp = (*listp)->next;
       }
 
+#ifndef DONT_NEED_AIO_MISC_COND
   /* Release the conditional variable.  */
   (void) pthread_cond_destroy (param->cond);
+#endif
 
   /* Release the mutex.  */
   pthread_mutex_unlock (&__aio_requests_mutex);
@@ -89,13 +99,21 @@ aio_suspend (list, nent, timeout)
      int nent;
      const struct timespec *timeout;
 {
+  if (__builtin_expect (nent < 0, 0))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   struct waitlist waitlist[nent];
   struct requestlist *requestlist[nent];
+#ifndef DONT_NEED_AIO_MISC_COND
   pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#endif
   int cnt;
   bool any = false;
   int result = 0;
-  int dummy;
+  int cntr = 1;
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
@@ -111,10 +129,12 @@ aio_suspend (list, nent, timeout)
 
 	    if (requestlist[cnt] != NULL)
 	      {
+#ifndef DONT_NEED_AIO_MISC_COND
 		waitlist[cnt].cond = &cond;
+#endif
 		waitlist[cnt].result = NULL;
 		waitlist[cnt].next = requestlist[cnt]->waiting;
-		waitlist[cnt].counterp = &dummy;
+		waitlist[cnt].counterp = &cntr;
 		waitlist[cnt].sigevp = NULL;
 #ifdef BROKEN_THREAD_SIGNALS
 		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
@@ -140,12 +160,17 @@ aio_suspend (list, nent, timeout)
 	  .list = list,
 	  .waitlist = waitlist,
 	  .requestlist = requestlist,
+#ifndef DONT_NEED_AIO_MISC_COND
 	  .cond = &cond,
+#endif
 	  .nent = nent
 	};
 
       pthread_cleanup_push (cleanup, &clparam);
 
+#ifdef DONT_NEED_AIO_MISC_COND
+      AIO_MISC_WAIT (result, cntr, timeout, 1);
+#else
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
       else
@@ -167,6 +192,7 @@ aio_suspend (list, nent, timeout)
 	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
 					   &abstime);
 	}
+#endif
 
       pthread_cleanup_pop (0);
     }
@@ -190,19 +216,23 @@ aio_suspend (list, nent, timeout)
 	  *listp = (*listp)->next;
       }
 
+#ifndef DONT_NEED_AIO_MISC_COND
   /* Release the conditional variable.  */
   if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
     /* This must never happen.  */
     abort ();
+#endif
 
   if (result != 0)
     {
-      /* An error occurred.  Possibly it's EINTR.  We have to translate
+#ifndef DONT_NEED_AIO_MISC_COND
+      /* An error occurred.  Possibly it's ETIMEDOUT.  We have to translate
 	 the timeout error report of `pthread_cond_timedwait' to the
 	 form expected from `aio_suspend'.  */
       if (result == ETIMEDOUT)
 	__set_errno (EAGAIN);
       else
+#endif
 	__set_errno (result);
 
       result = -1;

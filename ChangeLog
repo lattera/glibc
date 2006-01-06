@@ -1,5 +1,15 @@
 2006-01-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/aio_misc.h [!DONT_USE_BOOTSTRAP_MAP]
+	(struct waitlist): Don't add cond.
+	* sysdeps/pthread/aio_notify.c [!DONT_USE_BOOTSTRAP_MAP]
+	(__aio_notify): Use AIO_MISC_NOTIFY instead of pthread_cond_signal.
+	* sysdeps/pthread/aio_suspend.c [!DONT_USE_BOOTSTRAP_MAP]: Don't
+	use condvar, use AIO_MISC_WAIT.
+	* sysdeps/pthread/lio_listio.c: Likewise.
+	* rt/Makefile (tests): Add aio_suspend.
+	* rt/tst-aio9.c: New file.
+
 	* rt/tst-aio3.c: The thread is now supposed to be created.
 
 2006-01-05  Roland McGrath  <roland@redhat.com>

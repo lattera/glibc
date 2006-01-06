@@ -122,9 +122,11 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
     }
   else if (LIO_MODE (mode) == LIO_WAIT)
     {
+#ifndef DONT_NEED_AIO_MISC_COND
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-      struct waitlist waitlist[nent];
       int oldstate;
+#endif
+      struct waitlist waitlist[nent];
 
       total = 0;
       for (cnt = 0; cnt < nent; ++cnt)
@@ -133,7 +135,9 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 
 	  if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
 	    {
+#ifndef DONT_NEED_AIO_MISC_COND
 	      waitlist[cnt].cond = &cond;
+#endif
 	      waitlist[cnt].result = &result;
 	      waitlist[cnt].next = requests[cnt]->waiting;
 	      waitlist[cnt].counterp = &total;
@@ -146,6 +150,9 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	    }
 	}
 
+#ifdef DONT_NEED_AIO_MISC_COND
+      AIO_MISC_WAIT (result, total, NULL, 0);
+#else
       /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancellation
 	 points we must be careful.  We added entries to the waiting lists
 	 which we must remove.  So defer cancellation for now.  */
@@ -161,6 +168,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
       if (pthread_cond_destroy (&cond) != 0)
 	/* This must never happen.  */
 	abort ();
+#endif
 
       /* If any of the I/O requests failed, return -1 and set errno.  */
       if (result != 0)
@@ -193,7 +201,9 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	      if (requests[cnt] != NULL
 		  && list[cnt]->aio_lio_opcode != LIO_NOP)
 		{
+#ifndef DONT_NEED_AIO_MISC_COND
 		  waitlist->list[cnt].cond = NULL;
+#endif
 		  waitlist->list[cnt].result = NULL;
 		  waitlist->list[cnt].next = requests[cnt]->waiting;
 		  waitlist->list[cnt].counterp = &waitlist->counter;

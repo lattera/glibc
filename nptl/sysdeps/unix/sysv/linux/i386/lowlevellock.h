@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -66,17 +66,33 @@
 
 
 #define lll_futex_wait(futex, val) \
-  do {									      \
-    int __ignore;							      \
+  ({									      \
+    int __status;							      \
     register __typeof (val) _val asm ("edx") = (val);			      \
     __asm __volatile (LLL_EBX_LOAD					      \
 		      LLL_ENTER_KERNEL					      \
 		      LLL_EBX_LOAD					      \
-		      : "=a" (__ignore)					      \
+		      : "=a" (__status)					      \
 		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (0),	      \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
-  } while (0)
+    __status;								      \
+  })
+
+
+#define lll_futex_timed_wait(futex, val, timeout)			      \
+  ({									      \
+    int __status;							      \
+    register __typeof (val) _val asm ("edx") = (val);			      \
+    __asm __volatile (LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__status)					      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (timeout),  \
+			"c" (FUTEX_WAIT), "d" (_val),			      \
+			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+    __status;								      \
+  })
 
 
 #define lll_futex_wake(futex, nr) \
