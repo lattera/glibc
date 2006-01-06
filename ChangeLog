@@ -1,3 +1,7 @@
+2005-01-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* include/alloca.h (extend_alloca): Fix typoed name 'extern_alloca'.
+
 2006-01-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_WAITID_SYSCALL):
