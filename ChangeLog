@@ -1,5 +1,7 @@
 2006-01-06  Roland McGrath  <roland@redhat.com>
 
+	* scripts/check-local-headers.sh: Revert last change.
+
 	* io/euidaccess.c: Add eaccess as an alias.
 	* sysdeps/mach/hurd/euidaccess.c: Likewise.
 	* sysdeps/posix/euidaccess.c: Likewise.
