@@ -1,3 +1,68 @@
+2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-tls8.c (do_test): Use $ORIGIN in module names.
+
+2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/generic/sysdep.h (cfi_same_value): Define macro.
+
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve): Add CFI directives for stack and LR save.
+	Save LR in LRSAVE of previous frame per ABI.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Add CFI directives
+	for LR save.
+	* sysdeps/powerpc/powerpc32/lshift.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext, __novec_makecontext): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Add CFI directive
+	for LR save to register.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Add CFI directive
+	for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S:  Likewise.  Don't use
+	negative stack addressing.
+
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve): Add CFI directives for stack and LR save.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Add CFI directives
+	for stack.
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S (_mcount): Add CFI
+	directives for stack and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Add CFI
+	directives for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Add CFI
+	directives for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	(__getcontext, __novec_getcontext): Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Add CFI directives for stack and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__setcontext, __novec_setcontext): Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__swapcontext, __novec_swapcontext):  Add CFI directives for stack
+	and LR save.
+
 2006-01-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Include tls.h.

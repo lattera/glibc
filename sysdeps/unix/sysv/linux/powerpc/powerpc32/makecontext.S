@@ -1,5 +1,5 @@
 /* Set up a context to call a function.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #include <shlib-compat.h>
@@ -49,10 +49,12 @@ ENTRY(__makecontext)
 	/* Set the function's LR to point to the exitcode below. */
 #ifdef PIC
 	mflr	r0
+	cfi_register(lr,r0)
 	bl	1f
 1:	mflr	r6
 	addi	r6,r6,L(exitcode)-1b
 	mtlr	r0
+	cfi_same_value (lr)
 #else
 	lis	r6,L(exitcode)@ha
 	addi	r6,r6,L(exitcode)@l
@@ -136,10 +138,12 @@ ENTRY(__novec_makecontext)
 	/* Set the function's LR to point to the exitcode below. */
 #ifdef PIC
 	mflr	r0
+	cfi_register(lr,r0)
 	bl	1f
 1:	mflr	r6
 	addi	r6,r6,L(novec_exitcode)-1b
 	mtlr	r0
+	cfi_same_value (lr)
 #else
 	lis	r6,L(novec_exitcode)@ha
 	addi	r6,r6,L(novec_exitcode)@l

@@ -1,5 +1,5 @@
 /* Jump to a new context powerpc32 common.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,9 @@
 ENTRY(__CONTEXT_FUNC_NAME)
 	mflr	r0
 	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
 	stw	r0,20(r1)
+	cfi_offset (lr, _FRAME_LR_SAVE)
 	stw	r31,12(r1)
 	lwz	r31,_UC_REGS_PTR(r3)
 

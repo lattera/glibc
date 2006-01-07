@@ -1,5 +1,5 @@
 /* Save current context and install the given one.
-   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
@@ -37,9 +37,11 @@ ENTRY(__novec_swapcontext)
   std   r31,-8(1)
   std  r2,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std  r0,FRAME_LR_SAVE(r1)
+  cfi_offset (lr, FRAME_LR_SAVE)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_LNK*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)
   stdu  r1,-128(r1)
+  cfi_adjust_cfa_offset (128)
   std  r4,(SIGCONTEXT_GP_REGS+(PT_R4*8))(r3)
   std  r5,(SIGCONTEXT_GP_REGS+(PT_R5*8))(r3)
   std  r6,(SIGCONTEXT_GP_REGS+(PT_R6*8))(r3)
@@ -744,7 +746,9 @@ L(do_sigret):
   /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
   mflr r0
   std  r0,FRAME_LR_SAVE(r1)
+  cfi_offset (lr, FRAME_LR_SAVE)
   stdu r1,-128(r1)
+  cfi_adjust_cfa_offset (128)
   li   r3,ENOSYS
   bl   JUMPTARGET(__syscall_error)
   nop

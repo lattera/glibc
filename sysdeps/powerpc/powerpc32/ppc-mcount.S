@@ -1,5 +1,5 @@
 /* PowerPC-specific implementation of profiling support.
-   Copyright (C) 1997, 1999, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 /* This would be bad.  */
 #ifdef PROF
@@ -42,6 +42,7 @@
 
 ENTRY(_mcount)
 	stwu	r1,-48(r1)
+	cfi_adjust_cfa_offset (48)
 /* We need to save the parameter-passing registers.  */
 	stw	r3, 12(r1)
 	stw	r4, 16(r1)
@@ -55,6 +56,7 @@ ENTRY(_mcount)
 	stw	r9, 36(r1)
 	stw	r10,40(r1)
 	stw	r4, 44(r1)
+	cfi_offset (lr, -4)
 	stw	r5,  8(r1)
 	bl	__mcount_internal@local
 	nop

@@ -1,5 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-99, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-99, 2000, 2003-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 1 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #define _ASM
@@ -34,6 +34,7 @@ ENTRY (BP_SYM (__longjmp))
 #ifndef __NO_VMX__
 # ifdef PIC
 	mflr    r6
+	cfi_register (lr,r6)
 #  ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r5
@@ -46,10 +47,12 @@ ENTRY (BP_SYM (__longjmp))
 #  ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
 	mtlr    r6
+	cfi_same_value (lr)
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 #  else
 	lwz     r5,_dl_hwcap@got(r5)
 	mtlr    r6
+	cfi_same_value (lr)
 	lwz     r5,0(r5)
 #  endif
 # else

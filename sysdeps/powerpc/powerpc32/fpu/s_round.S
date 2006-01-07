@@ -1,5 +1,5 @@
 /* round function.  PowerPC32 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 1 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 
@@ -41,6 +41,7 @@ ENTRY (__round)
 	mffs	fp11		/* Save current FPU rounding mode.  */
 #ifdef SHARED
 	mflr	r11
+	cfi_register(lr,r11)
 # ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r9
@@ -52,6 +53,7 @@ ENTRY (__round)
 	lwz	r9,.LC0@got(10)
 # endif
 	mtlr	r11
+	cfi_same_value (lr)
 	lfs	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha

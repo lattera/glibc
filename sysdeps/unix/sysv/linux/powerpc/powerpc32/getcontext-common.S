@@ -1,5 +1,5 @@
 /* Save current context, powerpc32 common.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@
 #endif
 ENTRY(__CONTEXT_FUNC_NAME)
 	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
 /* Insure that the _UC_REGS start on a quadword boundary.  */
 	stw	r3,_FRAME_PARM_SAVE1(r1)
 	addi	r3,r3,_UC_REG_SPACE+12
@@ -55,6 +56,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stw	r0,_UC_GREGS+(PT_LNK*4)(r3)
 	stw	r0,_UC_GREGS+(PT_NIP*4)(r3)
 	stw	r0,_FRAME_LR_SAVE+16(r1)
+	cfi_offset (lr, _FRAME_LR_SAVE)
 	stw	r5,_UC_GREGS+(PT_R5*4)(r3)
 	stw	r6,_UC_GREGS+(PT_R6*4)(r3)
 	stw	r7,_UC_GREGS+(PT_R7*4)(r3)

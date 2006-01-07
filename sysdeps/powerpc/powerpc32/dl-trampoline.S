@@ -1,5 +1,5 @@
 /* PLT trampolines.  PPC32 version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 
@@ -24,9 +24,11 @@
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve,@function
 _dl_runtime_resolve:
+	cfi_startproc
  # We need to save the registers used to pass parameters, and register 0,
  # which is used by _mcount; the registers are saved in a stack frame.
 	stwu r1,-64(r1)
+	cfi_adjust_cfa_offset (64)
 	stw r0,12(r1)
 	stw r3,16(r1)
 	stw r4,20(r1)
@@ -38,7 +40,8 @@ _dl_runtime_resolve:
 	mflr r0
  # We also need to save some of the condition register fields
 	stw r7,32(r1)
-	stw r0,48(r1)
+	stw r0,68(r1)
+ 	cfi_offset (lr, 4)
 	stw r8,36(r1)
 	mfcr r0
 	stw r9,40(r1)
@@ -48,7 +51,7 @@ _dl_runtime_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr r3
  # Put the registers back...
-	lwz r0,48(r1)
+	lwz r0,68(r1)
 	lwz r10,44(r1)
 	lwz r9,40(r1)
 	mtlr r0
@@ -64,6 +67,7 @@ _dl_runtime_resolve:
  # ...unwind the stack frame, and jump to the PLT entry we updated.
 	addi r1,r1,64
 	bctr
+	cfi_endproc
 	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve
 
 #ifndef PROF
@@ -71,9 +75,11 @@ _dl_runtime_resolve:
 	.globl _dl_prof_resolve
 	.type _dl_prof_resolve,@function
 _dl_prof_resolve:
+	cfi_startproc
  # We need to save the registers used to pass parameters, and register 0,
  # which is used by _mcount; the registers are saved in a stack frame.
 	stwu r1,-320(r1)
+	cfi_adjust_cfa_offset (320)
 	/* Stack layout:
 
 	  +312   stackframe
@@ -122,7 +128,8 @@ _dl_prof_resolve:
 	mflr r5
  # We also need to save some of the condition register fields.
 	stw r7,32(r1)
-	stw r5,308(r1)
+	stw r5,324(r1)
+	cfi_offset (lr, 4)
 	stw r8,36(r1)
 	mfcr r0
 	stw r9,40(r1)
@@ -147,7 +154,7 @@ _dl_prof_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr r3
  # Put the registers back...
-	lwz r0,308(r1)
+	lwz r0,324(r1)
 	lwz r10,44(r1)
 	lwz r9,40(r1)
 	mtlr r0
@@ -172,5 +179,6 @@ _dl_prof_resolve:
  # ...unwind the stack frame, and jump to the PLT entry we updated.
 	addi r1,r1,320
 	bctr
+	cfi_endproc
 	.size	 _dl_prof_resolve,.-_dl_prof_resolve
 #endif

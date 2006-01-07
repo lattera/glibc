@@ -11,8 +11,8 @@ static int
 do_test (void)
 {
 #ifdef USE_TLS
-  static const char modname1[] = "tst-tlsmod3.so";
-  static const char modname2[] = "tst-tlsmod4.so";
+  static const char modname1[] = "$ORIGIN/tst-tlsmod3.so";
+  static const char modname2[] = "$ORIGIN/tst-tlsmod4.so";
   int result = 0;
   int (*fp1) (void);
   int (*fp2) (int, int *);

@@ -60,6 +60,7 @@
 #  define cfi_register(r1, r2)		.cfi_register r1, r2
 #  define cfi_return_column(reg)	.cfi_return_column reg
 #  define cfi_restore(reg)		.cfi_restore reg
+#  define cfi_same_value(reg)		.cfi_same_value reg
 #  define cfi_undefined(reg)		.cfi_undefined reg
 #  define cfi_remember_state		.cfi_remember_state
 #  define cfi_restore_state		.cfi_restore_state
@@ -76,6 +77,7 @@
 #  define cfi_register(r1, r2)
 #  define cfi_return_column(reg)
 #  define cfi_restore(reg)
+#  define cfi_same_value(reg)
 #  define cfi_undefined(reg)
 #  define cfi_remember_state
 #  define cfi_restore_state

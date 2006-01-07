@@ -1,5 +1,5 @@
 /* Save current context and jump to a new context.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@
 #endif
 ENTRY(__CONTEXT_FUNC_NAME)
 	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
 /* Insure that the _UC_REGS start on a quadword boundary.  */
 	stw	r3,_FRAME_PARM_SAVE1(r1)
 	addi	r3,r3,_UC_REG_SPACE+12
@@ -56,6 +57,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stw	r0,_UC_GREGS+(PT_LNK*4)(r3)
 	stw	r0,_UC_GREGS+(PT_NIP*4)(r3)
 	stw	r0,_FRAME_LR_SAVE+16(r1)
+	cfi_offset (lr, _FRAME_LR_SAVE)
 	stw	r5,_UC_GREGS+(PT_R5*4)(r3)
 	stw	r6,_UC_GREGS+(PT_R6*4)(r3)
 	stw	r7,_UC_GREGS+(PT_R7*4)(r3)
@@ -309,13 +311,12 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7
 #   endif
+	mtlr    r8
 #   ifdef SHARED
 	lwz     r7,_rtld_global_ro@got(r7)
-	mtlr    r8
 	lwz     r7,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r7)
 #   else
 	lwz     r7,_dl_hwcap@got(r7)
-	mtlr    r8
 	lwz     r7,0(r7)
 #   endif
 #  else
@@ -467,7 +468,6 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	mtcr	r5
 
 	/* Restore the general registers */
-	lwz	r1,_UC_GREGS+(PT_R1*4)(r31)
 	lwz	r3,_UC_GREGS+(PT_R3*4)(r31)
 	lwz	r4,_UC_GREGS+(PT_R4*4)(r31)
 	lwz	r5,_UC_GREGS+(PT_R5*4)(r31)
@@ -496,6 +496,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lwz	r28,_UC_GREGS+(PT_R28*4)(r31)
 	lwz	r29,_UC_GREGS+(PT_R29*4)(r31)
 	lwz	r30,_UC_GREGS+(PT_R30*4)(r31)
+	lwz	r1,_UC_GREGS+(PT_R1*4)(r31)
 	lwz	r31,_UC_GREGS+(PT_R31*4)(r31)
 
 	bctr

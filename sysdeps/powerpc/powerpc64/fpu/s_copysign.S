@@ -28,7 +28,11 @@ ENTRY(__copysign)
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */
 	stdu	r1,-48(r1)
+	cfi_adjust_cfa_offset (48)
 	stfd	fp2,24(r1)
+	nop
+	nop
+	nop
 	ld	r3,24(r1)
 	cmpdi   r3,0
 	addi    r1,r1,48

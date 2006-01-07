@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.
-   Copyright (C) 1997,98,99,2000,02,2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,02,04,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #define _ERRNO_H	1
@@ -49,6 +49,7 @@ ENTRY (BP_SYM (__clone))
 
 	/* Set up stack frame for parent.  */
 	stwu	r1,-32(r1)
+	cfi_adjust_cfa_offset (32)
 #ifdef RESET_PID
 	stmw	r28,16(r1)
 #else
