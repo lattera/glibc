@@ -1,3 +1,8 @@
+2004-08-03  Marco Gerards  <marco@gnu.org>
+
+	[BZ #2119]
+	* sysdeps/mach/hurd/bits/ioctls.h (SIOCGIFHWADDR): New macro.
+
 2006-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tstdiomisc.c (F): Use NAN to get NaN value.
