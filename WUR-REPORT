@@ -27,7 +27,7 @@ fsetpos:   likewise
 
 <stdlib.h>:
 
-atext:     it is guaranteed that a certain number of handlers can be
+atexit:    it is guaranteed that a certain number of handlers can be
            registered, so some calls might need not be checked
 on_exit:   same
 random functions:  one might want to discard a number of results.  In any

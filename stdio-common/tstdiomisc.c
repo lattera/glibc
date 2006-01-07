@@ -46,15 +46,8 @@ t2 (void)
   return result;
 }
 
-#if FLT_EVAL_METHOD == 2
-volatile long double dbl_max = LDBL_MAX;
-# define FLT_FLT_FMT "%Lf %LF"
-# define FLT_FLT_WFMT L"%Lf %LF"
-#else
-# define dbl_max DBL_MAX
-# define FLT_FLT_FMT "%f %F"
-# define FLT_FLT_WFMT L"%f %F"
-#endif
+volatile double nanval;
+
 
 static int
 F (void)
@@ -63,9 +56,9 @@ F (void)
   wchar_t wbuf[10];
   int result;
 
-  snprintf (buf, sizeof buf, FLT_FLT_FMT,
-	    dbl_max * dbl_max - dbl_max * dbl_max,
-	    dbl_max * dbl_max - dbl_max * dbl_max);
+  nanval = NAN;
+
+  snprintf (buf, sizeof buf, "%f %F", nanval, nanval);
   result = strcmp (buf, "nan NAN") != 0;
   printf ("expected \"nan NAN\", got \"%s\"\n", buf);
 
@@ -73,9 +66,7 @@ F (void)
   result |= strcmp (buf, "inf INF") != 0;
   printf ("expected \"inf INF\", got \"%s\"\n", buf);
 
-  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), FLT_FLT_WFMT,
-	    dbl_max * dbl_max - dbl_max * dbl_max,
-	    dbl_max * dbl_max - dbl_max * dbl_max);
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F", nanval, nanval);
   result |= wcscmp (wbuf, L"nan NAN") != 0;
   printf ("expected L\"nan NAN\", got L\"%S\"\n", wbuf);
 
