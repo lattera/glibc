@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <fenv_libc.h>
 #include <sysdep.h>
 #include <float.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 #include "kernel_sysinfo.h"
 
 

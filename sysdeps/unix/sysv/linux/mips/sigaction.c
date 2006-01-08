@@ -1,5 +1,5 @@
-/* Copyright (C) 1997,1998,1999,2000,2002,2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2002,2003,2004,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 #include <sgidefs.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must

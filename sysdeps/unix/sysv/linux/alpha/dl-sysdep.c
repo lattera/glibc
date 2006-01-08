@@ -1,5 +1,5 @@
-/* Operating system support for run-time dynamic linker.  Linux/PPC version.
-   Copyright (C) 1997, 1998, 2001, 2003 Free Software Foundation, Inc.
+/* Operating system support for run-time dynamic linker.  Linux/Alpha version.
+   Copyright (C) 1997, 1998, 2001, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-
-#include "config.h"
-#include "kernel-features.h"
+#include <config.h>
+#include <kernel-features.h>
 #include <ldsodefs.h>
 
 extern long __libc_alpha_cache_shape[4];
