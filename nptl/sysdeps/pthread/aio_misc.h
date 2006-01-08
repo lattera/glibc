@@ -35,6 +35,7 @@
 
 #define AIO_MISC_WAIT(result, futex, timeout, cancel)			      \
   do {									      \
+    volatile int *futexaddr = &futex;					      \
     int oldval = futex;							      \
 									      \
     if (oldval != 0)							      \
@@ -48,11 +49,11 @@
 	int status;							      \
 	do								      \
 	  {								      \
-	    status = lll_futex_timed_wait (&futex, oldval, timeout);	      \
+	    status = lll_futex_timed_wait (futexaddr, oldval, timeout);	      \
 	    if (status != -EWOULDBLOCK)					      \
 	      break;							      \
 									      \
-	    oldval = futex;						      \
+	    oldval = *futexaddr;					      \
 	  }								      \
 	while (oldval != 0);						      \
 									      \
