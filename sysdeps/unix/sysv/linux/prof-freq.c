@@ -1,5 +1,5 @@
 /* Determine realtime clock frequency.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <sys/time.h>
 #include <libc-internal.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 #include <ldsodefs.h>
 
 

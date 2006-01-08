@@ -1,5 +1,5 @@
 /* futimes -- change access and modification times of open file.  Linux version.
-   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #include <stdio-common/_itoa.h>
 #include <fcntl.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1], but do not follow symlinks.

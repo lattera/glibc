@@ -1,5 +1,5 @@
 /* Procedure definition for FE_NOMASK_ENV for Linux/ppc.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 #include <unistd.h>
 #include <sysdep.h>
 #include <sys/prctl.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 #if __ASSUME_NEW_PRCTL_SYSCALL == 0
 /* This is rather fiddly under Linux.  We don't have direct access,
-   and there is no system call, but we can change the bits 
+   and there is no system call, but we can change the bits
    in a signal handler's context...  */
 
 static struct sigaction oact;

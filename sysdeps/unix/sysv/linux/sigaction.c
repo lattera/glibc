@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2000,2002,2003,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2000,2002,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must

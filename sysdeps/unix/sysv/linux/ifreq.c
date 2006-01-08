@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2002,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include "ifreq.h"
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 /* Variable to signal whether SIOCGIFCONF is not available.  */
 #if __ASSUME_SIOCGIFNAME == 0 || 1

@@ -1,5 +1,5 @@
-/* Copyright (C) 1995, 1997, 1998, 2000, 2002, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1998,2000,2002,2004,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -28,7 +28,7 @@
 #include <shlib-compat.h>
 #include <bp-checks.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 struct __old_msqid_ds
 {

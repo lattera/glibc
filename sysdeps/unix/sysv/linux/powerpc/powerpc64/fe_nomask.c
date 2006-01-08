@@ -1,5 +1,5 @@
 /* Procedure definition for FE_NOMASK_ENV for Linux/ppc64.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <sys/prctl.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 const fenv_t *
 __fe_nomask_env (void)
@@ -36,7 +36,7 @@ __fe_nomask_env (void)
       && INTERNAL_SYSCALL_ERRNO (result, err) == EINVAL)
     __set_errno (ENOSYS);
 # endif
-#else  
+#else
   __set_errno (ENOSYS);
 #endif
   return FE_ENABLED_ENV;

@@ -18,7 +18,7 @@
    02110-1301 USA.  */
 
 #include <sysdep.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
