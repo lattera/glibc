@@ -28,7 +28,7 @@ do_test (void)
   o = ftello (fp);
   if (o != 0)
     {
-      printf ("second ftello returned %ld, expected %zu\n", o, 0);
+      printf ("second ftello returned %ld, expected %zu\n", o, (off_t) 0);
       result = 1;
     }
   if (fseeko (fp, 0, SEEK_END) != 0)

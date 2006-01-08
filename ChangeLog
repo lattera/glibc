@@ -1,5 +1,8 @@
 2006-01-08  Roland McGrath  <roland@redhat.com>
 
+	* stdio-common/tst-fmemopen2.c (do_test): Add a cast.
+	* stdio-common/printf-parsemb.c (__find_specmb): Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Use <> instead of "" in
 	#include for kernel-features.h.
 	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c: Likewise.
@@ -80,6 +83,7 @@
 	* sysdeps/unix/sysv/linux/msgctl.c: Likewise.
 	* sysdeps/unix/sysv/linux/netlinkaccess.h: Likewise.
 	* sysdeps/unix/sysv/linux/opendir.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fe_nomask.c: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c: Likewise.
