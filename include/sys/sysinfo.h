@@ -15,4 +15,7 @@ extern long int __get_phys_pages (void);
 /* Return number of available physical pages of memory in the system.  */
 extern long int __get_avphys_pages (void);
 
+/* Return maximum number of processes this real user ID can have.  */
+extern long int __get_child_max (void);
+
 #endif /* sys/sysinfo.h */

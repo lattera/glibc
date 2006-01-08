@@ -1,5 +1,12 @@
 2006-01-08  Roland McGrath  <roland@redhat.com>
 
+	[BZ #1535]
+	* sysdeps/unix/get_child_max.c: New file.
+	* posix/get_child_max.c: New file.
+	* posix/Makefile (routines): Add it.
+	* include/sys/sysinfo.h (__get_child_max): Declare it.
+	* sysdeps/posix/sysconf.c (__sysconf) [! CHILD_MAX]: Use it.
+
 	* sysdeps/unix/sysv/linux/futimes.c [!__NR_fcntl && __NR_fcntl64]: Use
 	fcntl64 syscall instead.
 
