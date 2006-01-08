@@ -88,6 +88,9 @@ __futimes (int fd, const struct timeval tvp[2])
       case ENOENT:
 	/* Validate the file descriptor by letting fcntl set errno to
 	   EBADF if it's bogus.  Otherwise it's a /proc issue.  */
+#if !defined __NR_fcntl && defined __NR_fcntl64
+# define __NR_fcntl __NR_fcntl64
+#endif
 	if (INLINE_SYSCALL (fcntl, 3, fd, F_GETFD, 0) != -1)
 	  __set_errno (ENOSYS);
 	break;

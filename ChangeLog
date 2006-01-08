@@ -1,5 +1,8 @@
 2006-01-08  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/futimes.c [!__NR_fcntl && __NR_fcntl64]: Use
+	fcntl64 syscall instead.
+
 	* stdio-common/tst-fmemopen2.c (do_test): Add a cast.
 	* stdio-common/printf-parsemb.c (__find_specmb): Likewise.
 
