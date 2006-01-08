@@ -1,1 +1,1 @@
-#include <sysdeps/generic/swapon.c>
+#include <misc/swapon.c>

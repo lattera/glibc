@@ -1,1 +1,1 @@
-#include <sysdeps/generic/sethostid.c>
+#include <misc/sethostid.c>

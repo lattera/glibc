@@ -1,1 +1,1 @@
-#include <sysdeps/generic/reboot.c>
+#include <misc/reboot.c>
