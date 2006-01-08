@@ -1,5 +1,7 @@
 2006-01-07  Roland McGrath  <roland@redhat.com>
 
+	* po/libc.pot: Regenerated.
+
 	* po/.cvsignore: List libc.pot.files, and not any .pot names.
 
 	* manual/maint.texi (Porting): Don't mention Dist files.
