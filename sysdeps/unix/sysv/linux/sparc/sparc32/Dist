@@ -1,4 +1,0 @@
-clone.S
-kernel_stat.h
-setfsuid.c
-setfsgid.c

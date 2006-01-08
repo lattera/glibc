@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -324,6 +324,15 @@ ifdef objdir
 endif
 	-rm -f $(sysdep-$(distclean-1))
 
+# Make the TAGS file for Emacs users.
+
+.PHONY: TAGS
+TAGS:
+	scripts/list-sources.sh | sed -n '/Makefile/p;\
+	  $(foreach S,[chsSyl] cxx sh bash pl,\
+		    $(subst .,\.,/.$S\(.in\)*$$/p;))' \
+	| $(ETAGS) -o $@ -
+
 # Make the distribution tarfile.
 .PHONY: dist tag-for-dist
 
@@ -397,7 +406,7 @@ ifeq ($(with-cvs),yes)
 endif
 FORCE:
 
-iconvdata/% localedata/% po/% manual/%:
+iconvdata/% localedata/% po/% manual/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 # glibc 2.0 contains some header files which aren't used with glibc 2.1

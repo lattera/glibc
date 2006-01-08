@@ -1,7 +1,0 @@
-aix-dirent.h
-aix-errno.h
-aix-stat.h
-aix-termios.h
-direntconv.c
-errnoconv.c
-statconv.c

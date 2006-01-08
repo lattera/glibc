@@ -1,4 +1,0 @@
-ldd-rewrite.sed
-sys/elf.h
-sys/procfs.h
-sys/user.h

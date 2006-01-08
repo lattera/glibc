@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -1343,14 +1343,7 @@ ifndef no_deps
 endif
 common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
 
-.PHONY: TAGS
-TAGS: $(objpfx)distinfo $(..)MakeTAGS
-	$(MAKE) $(addprefix -f ,$^) $@
-
-$(..)po/%.pot: $(objpfx)distinfo $(..)MakeTAGS FORCE
-	$(MAKE) $(addprefix -f ,$(filter-out FORCE,$^)) $@
 FORCE:
-
 
 .PHONY: echo-headers
 echo-headers:
@@ -1401,7 +1394,6 @@ common-clean: common-mostlyclean
 	-rm -f $(objpfx)*.d $(objpfx)*.dt
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
-	-rm -f $(objpfx)distinfo
 
 # Produce a file `stubs' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
@@ -1425,26 +1417,6 @@ ifneq (,$(strip $(objs-for-stubs)))
 else
 	> $@
 endif
-
-# This information is not used for making distributions any more.
-# But it's used by MakeTAGS for making TAGS files and the .pot files.
-$(objpfx)distinfo: Makefile $(..)Makerules \
-		   $(wildcard $(foreach dir,$(sysdirs),$(dir)/Makefile))
-	$(make-target-directory)
-	$(distinfo-vars)
-	mv -f $@.new $@
-
-define distinfo-vars
-rm -f $@.new
-echo > $@.new 'subdir := $(subdir)'
-$(foreach var,subdir-dirs sources elided-routines sysdep_routines \
-	      headers sysdep_headers distribute dont_distribute generated \
-	      others tests xtests test-srcs extra-libs versioned \
-	      $(extra-libs:%=%-routines) \
-	      $(addprefix install-,lib lib.so data bin bin-script sbin others),
-echo >> $@.new '$(subdir)-$(var) := $($(var))'
-echo >> $@.new '$(var) = $$($(subdir)-$(var))')
-endef
 
 ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))

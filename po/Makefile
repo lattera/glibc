@@ -1,4 +1,5 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2006
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +22,7 @@
 subdir := po
 
 # Add names of the languages with broken .po files here.
-BROKEN_LINGUAS = 
+BROKEN_LINGUAS =
 
 # List of languages for which we have message catalogs of translations.
 ALL_LINGUAS := $(filter-out $(BROKEN_LINGUAS),$(basename $(wildcard *.po)))
@@ -54,6 +55,28 @@ distribute = $(ALL_LINGUAS:=.po) $(BROKEN_LINGUAS:=.po) $(ALL_LINGUAS:=.mo) \
 
 include ../Rules
 
+# Generate the translation template from all the source files.
+libc.pot: header.pot libc.pot.files
+	@rm -f $@.new
+	set `date -R`; disp="$$6"; \
+	sed -e 's/VERSION/$(version)/' \
+	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
+	    $< > $@.new
+	cd ..; $(XGETTEXT) --keyword=_ --keyword=N_ \
+			   --add-comments=TRANS --flag=error:3:c-format \
+			   --sort-by-file --omit-header -E -n -d - \
+			   -f po/$(word 2,$^) >> po/$@.new
+	mv -f $@.new $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
+endif
+
+# Omit tst-* files, and get only files with the given suffixes.
+libc.pot.files: FORCE
+	$(..)scripts/list-sources.sh .. | sed -n '/\/tst-/d;\
+	  $(foreach S,[ch] cxx sh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))' \
+	  > $@.new
+	mv -f $@.new $@
 
 .SUFFIXES: .mo .po .pot
 

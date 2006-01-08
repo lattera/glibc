@@ -572,6 +572,11 @@ endif
 # The program that makes Emacs-style TAGS files.
 ETAGS	:= etags
 
+# The `xgettext' program for producing .pot files from sources.
+ifndef XGETTEXT
+XGETTEXT = xgettext
+endif
+
 # The `m4' macro processor; this is used by sysdeps/sparc/Makefile (and
 # perhaps others) to preprocess assembly code in some cases.
 M4 = m4
@@ -934,6 +939,7 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 	  echo sysd-sorted-done = t;					  \
 	} > $@-tmp
 	mv -f $@-tmp $@
+$(all-Depend-files): ;
 endif
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.

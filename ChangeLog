@@ -1,3 +1,98 @@
+2006-01-07  Roland McGrath  <roland@redhat.com>
+
+	* po/.cvsignore: List libc.pot.files, and not any .pot names.
+
+	* manual/maint.texi (Porting): Don't mention Dist files.
+	* sysdeps/alpha/soft-fp/Dist: File removed.
+	* sysdeps/alpha/Dist: File removed.
+	* sysdeps/i386/i686/Dist: File removed.
+	* sysdeps/i386/soft-fp/Dist: File removed.
+	* sysdeps/i386/Dist: File removed.
+	* sysdeps/mips/soft-fp/Dist: File removed.
+	* sysdeps/mips/mips64/soft-fp/Dist: File removed.
+	* sysdeps/mips/mips64/Dist: File removed.
+	* sysdeps/mips/Dist: File removed.
+	* sysdeps/wordsize-32/Dist: File removed.
+	* sysdeps/m68k/fpu/switch/Dist: File removed.
+	* sysdeps/m68k/fpu/Dist: File removed.
+	* sysdeps/powerpc/powerpc64/Dist: File removed.
+	* sysdeps/powerpc/soft-fp/Dist: File removed.
+	* sysdeps/powerpc/powerpc32/fpu/Dist: File removed.
+	* sysdeps/powerpc/powerpc32/Dist: File removed.
+	* sysdeps/powerpc/fpu/Dist: File removed.
+	* sysdeps/powerpc/Dist: File removed.
+	* sysdeps/unix/common/Dist: File removed.
+	* sysdeps/unix/bsd/bsd4.4/Dist: File removed.
+	* sysdeps/unix/bsd/Dist: File removed.
+	* sysdeps/unix/sysv/linux/alpha/Dist: File removed.
+	* sysdeps/unix/sysv/linux/i386/Dist: File removed.
+	* sysdeps/unix/sysv/linux/mips/mips64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/mips/Dist: File removed.
+	* sysdeps/unix/sysv/linux/m68k/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/aix/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/Dist: File removed.
+	* sysdeps/unix/sysv/linux/ia64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sh/Dist: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/hppa/Dist: File removed.
+	* sysdeps/unix/sysv/linux/Dist: File removed.
+	* sysdeps/unix/sysv/Dist: File removed.
+	* sysdeps/unix/Dist: File removed.
+	* sysdeps/generic/Dist: File removed.
+	* sysdeps/sparc/sparc32/soft-fp/Dist: File removed.
+	* sysdeps/sparc/sparc32/sparcv9/Dist: File removed.
+	* sysdeps/sparc/sparc32/sparcv8/Dist: File removed.
+	* sysdeps/sparc/sparc32/Dist: File removed.
+	* sysdeps/sparc/sparc64/soft-fp/Dist: File removed.
+	* sysdeps/sparc/sparc64/Dist: File removed.
+	* sysdeps/sparc/Dist: File removed.
+	* sysdeps/gnu/Dist: File removed.
+	* sysdeps/ia64/fpu/Dist: File removed.
+	* sysdeps/ia64/Dist: File removed.
+	* sysdeps/mach/mips/Dist: File removed.
+	* sysdeps/mach/hurd/alpha/Dist: File removed.
+	* sysdeps/mach/hurd/i386/Dist: File removed.
+	* sysdeps/mach/hurd/mips/Dist: File removed.
+	* sysdeps/mach/hurd/powerpc/Dist: File removed.
+	* sysdeps/mach/hurd/Dist: File removed.
+	* sysdeps/s390/s390-64/Dist: File removed.
+	* sysdeps/s390/Dist: File removed.
+	* sysdeps/s390/s390-32/Dist: File removed.
+	* sysdeps/sh/Dist: File removed.
+	* sysdeps/posix/Dist: File removed.
+	* sysdeps/ieee754/dbl-64/Dist: File removed.
+	* sysdeps/ieee754/ldbl-128/Dist: File removed.
+	* sysdeps/ieee754/flt-32/Dist: File removed.
+	* sysdeps/ieee754/Dist: File removed.
+	* sysdeps/x86_64/soft-fp/Dist: File removed.
+	* sysdeps/x86_64/Dist: File removed.
+	* sysdeps/hppa/Dist: File removed.
+
+	* Makerules (common-clean): Don't remove distinfo file.
+	($(objpfx)distinfo): Target removed.
+	* manual/Makefile (mostlyclean): Don't remove distinfo file.
+	(glibc-targets): Remove echo-distinfo.
+
+	* scripts/list-sources.sh: New file.
+	* Makefile (TAGS): New target.
+	* po/Makefile (libc.pot, libc.pot.files): New targets.
+	* Makeconfig (XGETTEXT): New variable.
+	* Makerules ($(..)po/%.pot): Rule removed.
+	(TAGS): Target removed.
+	* Rules (subdir_TAGS): Target removed.
+	* MakeTAGS: File removed.
+
+	* Makefile (iconvdata/% localedata/% po/% manual/%): Depend on FORCE.
+	* Makeconfig ($(all-Depend-files)): New targets with no-op commands.
+
 2004-08-03  Marco Gerards  <marco@gnu.org>
 
 	[BZ #2119]
