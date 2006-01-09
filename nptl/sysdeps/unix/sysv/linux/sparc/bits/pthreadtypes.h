@@ -60,9 +60,9 @@ typedef union
 
 /* Data structures for mutex handling.  The structure of the attribute
    type is deliberately not exposed.  */
-typedef union __pthread_mutex_u
+typedef union
 {
-  struct
+  struct __pthread_mutex_s
   {
     int __lock;
     unsigned int __count;
@@ -75,15 +75,15 @@ typedef union __pthread_mutex_u
     int __kind;
 #if __WORDSIZE == 64
     int __spins;
-    union __pthread_mutex_u *__next;
-    union __pthread_mutex_u *__prev;
+    struct __pthread_mutex_s *__next;
+    struct __pthread_mutex_s *__prev;
 # define __PTHREAD_MUTEX_HAVE_PREV	1
 #else
     unsigned int __nusers;
     __extension__ union
     {
       int __spins;
-      union __pthread_mutex_u *__next;
+      struct __pthread_mutex_s *__next;
     };
 #endif
   } __data;
