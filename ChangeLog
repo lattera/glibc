@@ -1,3 +1,11 @@
+2006-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Remove section attribute from
+	const variables, gas produces garbage.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+
 2006-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h (_JMPBUF_UNWINDS): Add

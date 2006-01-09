@@ -1,5 +1,5 @@
 /* Single-precision floating point e^x.
-   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -60,15 +60,8 @@
 extern const float __exp_deltatable[178];
 extern const double __exp_atable[355] /* __attribute__((mode(DF))) */;
 
-/* XXX I know the assembler generates a warning about incorrect section
-   attributes. But without the attribute here the compiler places the
-   constants in the .data section.  Ideally the constant is placed in
-   .rodata.cst4 so that it can be merged, but gcc sucks, it ICEs when
-   we try to force this section on it.  --drepper  */
-static const volatile float TWOM100 __attribute__ ((section (".rodata")))
-  = 7.88860905e-31;
-static const volatile float TWO127 __attribute__ ((section (".rodata")))
-  = 1.7014118346e+38;
+static const volatile float TWOM100 = 7.88860905e-31;
+static const volatile float TWO127 = 1.7014118346e+38;
 
 float
 __ieee754_expf (float x)
