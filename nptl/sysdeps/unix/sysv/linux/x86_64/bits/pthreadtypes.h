@@ -79,7 +79,7 @@ typedef union
 # define __PTHREAD_MUTEX_HAVE_PREV	1
 #else
     unsigned int __nusers;
-    union
+    __extension__ union
     {
       int __spins;
       struct __pthread_mutex_s *__next;

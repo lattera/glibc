@@ -56,7 +56,7 @@ typedef union
        binary compatibility.  */
     int __kind;
     unsigned int __nusers;
-    union
+    __extension__ union
     {
       int __spins;
       struct __pthread_mutex_s *__next;

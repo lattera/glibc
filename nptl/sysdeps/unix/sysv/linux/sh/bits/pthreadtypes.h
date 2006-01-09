@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -57,7 +57,7 @@ typedef union __pthread_mutex_u
        binary compatibility.  */
     int __kind;
     unsigned int __nusers;
-    union
+    __extension__ union
     {
       int __spins;
       union __pthread_mutex_u *__next;
