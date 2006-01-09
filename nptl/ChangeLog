@@ -1,3 +1,8 @@
+2006-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h (_JMPBUF_UNWINDS_ADJ): Add
+	stack bias to mc_ftp field.
+
 2006-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/aio_misc.h (AIO_MISC_WAIT): Work around gcc
