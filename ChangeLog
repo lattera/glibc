@@ -16,8 +16,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: Use i386/xstat.c.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstatat.c:
 	Use i386/fxstatat.c.
-	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstatat.c:
-	Use i386/lxstatat.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat.c: Use i386/lxstat.c.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/xstatconv.c: New file.
 	* sysdeps/unix/sysv/linux/sparc/bits/stat.h (struct stat,
 	struct stat64): Add nsec resolution for 64-bit code like already done
