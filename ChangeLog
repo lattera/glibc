@@ -1,3 +1,35 @@
+2006-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h (_JMPBUF_UNWINDS): Add
+	stack bias to mc_fp field.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h
+	(struct kernel_stat): Rename st_[amc]time fields to st_[amc]time_sec.
+	(struct kernel_stat64): New type.
+	(_HAVE___UNUSED1, _HAVE___UNUSED2, _HAVE_STAT___UNUSED1,
+	_HAVE_STAT___UNUSED2, _HAVE_STAT___UNUSED3, _HAVE_STAT___UNUSED4,
+	_HAVE_STAT___UNUSED5, _HAVE_STAT___PAD1, _HAVE_STAT___PAD2,
+	_HAVE_STAT64___UNUSED1, _HAVE_STAT64___UNUSED2,
+	_HAVE_STAT64___UNUSED3, _HAVE_STAT64___UNUSED4,
+	_HAVE_STAT64___UNUSED5, _HAVE_STAT64___PAD1, _HAVE_STAT64___PAD2):
+	Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: Include i386 version.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstatconv.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h (struct stat,
+	struct stat64): Add nsec resolution for 64-bit code like already done
+	for 32-bit code.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TRUNCATE64_SYSCALL, __ASSUME_MMAP2_SYSCALL): Don't define
+	for sparc64.
+	(__ASSUME_STAT64_SYSCALL): Only define for sparc64 for >= 2.6.12
+	kernels.
+
+	* scripts/data/c++-types-sparc-linux-gnu.data: New file.
+	* scripts/data/c++-types-sparc64-linux-gnu.data: New file.
+	* scripts/data/c++-types-alpha-linux-gnu.data: Adjust.
+
 2006-01-08  Roland McGrath  <roland@redhat.com>
 
 	[BZ #1535]
