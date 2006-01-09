@@ -18,6 +18,16 @@
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
 
+2006-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_mutex_t):
+	Don't give the union a name because it changes the mangled name.
+	Instead name the struct for __data.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_mutex_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h (pthread_mutex_t):
+	Likewise.
+
 2006-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/jmpbuf-unwind.h (_JMPBUF_UNWINDS_ADJ): Add
