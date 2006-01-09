@@ -111,7 +111,8 @@
 
 /* On sparc and ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
-#if __LINUX_KERNEL_VERSION >= 131875 && (defined __sparc__ || defined __arm__)
+#if __LINUX_KERNEL_VERSION >= 131875 \
+    && ((defined __sparc__ && !defined __arch64__) || defined __arm__)
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
@@ -448,4 +449,10 @@
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
 #if __LINUX_KERNEL_VERSION >= 0x020609 && defined __alpha__
 #define __ASSUME_IEEE_RAISE_EXCEPTION	1
+#endif
+
+/* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
+#if __LINUX_KERNEL_VERSION >= 0x02060c && defined __sparc__ \
+    && defined __arch64__
+# define __ASSUME_STAT64_SYSCALL	1
 #endif
