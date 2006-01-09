@@ -1,5 +1,5 @@
 /* Machine-specific pthread type layouts.  SPARC version.
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -80,7 +80,7 @@ typedef union __pthread_mutex_u
 # define __PTHREAD_MUTEX_HAVE_PREV	1
 #else
     unsigned int __nusers;
-    union
+    __extension__ union
     {
       int __spins;
       union __pthread_mutex_u *__next;
