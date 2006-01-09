@@ -1,5 +1,5 @@
 /* Machine-specific pthread type layouts.  Alpha version.
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,9 +45,9 @@ typedef union
 
 /* Data structures for mutex handling.  The structure of the attribute
    type is deliberately not exposed.  */
-typedef union __pthread_mutex_u
+typedef union
 {
-  struct
+  struct __pthread_mutex_s
   {
     int __lock;
     unsigned int __count;
@@ -57,8 +57,8 @@ typedef union __pthread_mutex_u
        binary compatibility.  */
     int __kind;
     int __spins;
-    union __pthread_mutex_u *__next;
-    union __pthread_mutex_u *__prev;
+    struct __pthread_mutex_s *__next;
+    struct __pthread_mutex_s *__prev;
 #define __PTHREAD_MUTEX_HAVE_PREV	1
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
