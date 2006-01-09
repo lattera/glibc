@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -246,7 +246,8 @@ tests = tst-typesizes \
 	tst-backtrace1 \
 	tst-oddstacklimit \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
-	tst-getpid1 tst-getpid2 tst-initializers1
+	tst-getpid1 tst-getpid2 \
+	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
 xtests = tst-setuid1 tst-setuid1-static
 
 # Files which must not be linked with libpthread.
@@ -415,7 +416,13 @@ CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
 CFLAGS-tst-align3.c += $(stack-align-test-flags)
-CFLAGS-tst-initializers1.c += -W -Wall -Werror
+CFLAGS-tst-initializers1.c = -W -Wall -Werror
+CFLAGS-tst-initializers1-< = $(CFLAGS-tst-initializers1.c) \
+			     $(patsubst tst-initializers1-%.c,-std=%,$<)
+CFLAGS-tst-initializers1-c89.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)

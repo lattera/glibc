@@ -1,5 +1,15 @@
 2006-01-09  Roland McGrath  <roland@redhat.com>
 
+	* tst-initializers1-c89.c: New file.
+	* tst-initializers1-c99.c: New file.
+	* tst-initializers1-gnu89.c: New file.
+	* tst-initializers1-gnu99.c: New file.
+	* Makefile (tests): Add them.
+	(CFLAGS-tst-initializers1-c89.c): New variable.
+	(CFLAGS-tst-initializers1-c99.c): New variable.
+	(CFLAGS-tst-initializers1-gnu89.c): New variable.
+	(CFLAGS-tst-initializers1-gnu99.c): New variable.
+
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_mutex_t):
 	Use __extension__ on anonymous union definition.
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
