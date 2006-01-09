@@ -20,15 +20,8 @@ static char rcsid[] = "$NetBSD: s_expm1f.c,v 1.5 1995/05/10 20:47:11 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-/* XXX I know the assembler generates a warning about incorrect section
-   attributes. But without the attribute here the compiler places the
-   constants in the .data section.  Ideally the constant is placed in
-   .rodata.cst4 so that it can be merged, but gcc sucks, it ICEs when
-   we try to force this section on it.  --drepper  */
-static const volatile float huge __attribute__ ((section (".rodata")))
-  = 1.0e+30;
-static const volatile float tiny __attribute__ ((section (".rodata")))
-  = 1.0e-30;
+static const volatile float huge = 1.0e+30;
+static const volatile float tiny = 1.0e-30;
 
 #ifdef __STDC__
 static const float
