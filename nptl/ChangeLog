@@ -6,6 +6,7 @@
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
 
 2006-01-09  Jakub Jelinek  <jakub@redhat.com>
 
