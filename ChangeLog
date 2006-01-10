@@ -1,3 +1,8 @@
+2006-01-10  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* hurd/sigunwind.c: Include <jmpbuf-unwind.h> instead of <setjmp.h>.
+	* sysdeps/mach/hurd/jmp-unwind.c: Likewise.
+
 2006-01-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/bits/wchar2.h (vswprintf): Call __vswprintf_alias rather than
