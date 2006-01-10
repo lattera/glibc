@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1998,2005,2006 Free Software Foundation, Inc.
+/* Private macros for accessing __jmp_buf contents.  ARM version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +17,4 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  ARM version. */
-
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H 1
-
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-#ifndef _ASM
-/* Jump buffer contains v1-v6, sl, fp, sp and pc.  Other registers are not
-   saved.  */
-typedef int __jmp_buf[10];
-#endif
-
-#endif
+#define __JMP_BUF_SP		8

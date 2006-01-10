@@ -35,6 +35,4 @@
 typedef int __jmp_buf[64] __attribute__((aligned (8)));
 #endif
 
-#define __JMP_BUF_SP		8
-
 #endif

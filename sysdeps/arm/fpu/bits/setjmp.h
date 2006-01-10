@@ -31,6 +31,4 @@
 typedef int __jmp_buf[22];
 #endif
 
-#define __JMP_BUF_SP		20
-
 #endif
