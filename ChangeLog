@@ -1,3 +1,8 @@
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* timezone/test-tz.c: Revert last change, updating to match
+	tzdata2005r definition of "MST".
+
 2006-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/bits/setjmp.h: Don't include jmpbuf-offsets.h if _ISOMAC is
