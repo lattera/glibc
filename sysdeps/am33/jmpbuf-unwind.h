@@ -1,4 +1,5 @@
-/* Copyright 2001 Free Software Foundation, Inc.
+/* Examine __jmp_buf for unwinding frames.  AM33 version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  AM33 version. */
+#include <setjmp.h>
 
-#ifndef _SETJMP_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-#ifndef _ASM
-typedef int __jmp_buf[26];
-#endif
-
-#define __JMP_BUF_SP		20
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
+  ((void *) (address) < (void *) demangle (jmpbuf[__JMP_BUF_SP]))
