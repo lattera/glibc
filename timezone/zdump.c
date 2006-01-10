@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.66";
+static char	elsieid[] = "@(#)zdump.c	7.74";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -12,7 +12,10 @@ static char	elsieid[] = "@(#)zdump.c	7.66";
 #include "time.h"	/* for struct tm */
 #include "stdlib.h"	/* for exit, malloc, atoi */
 #include "float.h"	/* for FLT_MAX and DBL_MAX */
-#include <ctype.h>	/* for isascii, isalpha, isdigit */
+#include "ctype.h"	/* for isalpha et al. */
+#ifndef isascii
+#define isascii(x) 1
+#endif
 
 #ifndef ZDUMP_LO_YEAR
 #define ZDUMP_LO_YEAR	(-500)
@@ -148,7 +151,7 @@ static char *	progname;
 static int	warned;
 
 static char *	abbr P((struct tm * tmp));
-static void	abbrok P((const char * abbr, const char * zone));
+static void	abbrok P((const char * abbrp, const char * zone));
 static long	delta P((struct tm * newp, struct tm * oldp));
 static void	dumptime P((const struct tm * tmp));
 static time_t	hunt P((char * name, time_t lot, time_t	hit));
@@ -195,8 +198,8 @@ time_t *	tp;
 #endif /* !defined TYPECHECK */
 
 static void
-abbrok(abbr, zone)
-const char * const	abbr;
+abbrok(abbrp, zone)
+const char * const	abbrp;
 const char * const	zone;
 {
 	register const char *	cp;
@@ -204,30 +207,31 @@ const char * const	zone;
 
 	if (warned)
 		return;
-	cp = abbr;
+	cp = abbrp;
 	wp = NULL;
-	while (isascii(*cp) && isalpha(*cp))
+	while (isascii((unsigned char) *cp) && isalpha((unsigned char) *cp))
 		++cp;
-	if (cp - abbr == 0)
+	if (cp - abbrp == 0)
 		wp = _("lacks alphabetic at start");
-	if (cp - abbr < 3)
+	else if (cp - abbrp < 3)
 		wp = _("has fewer than 3 alphabetics");
-	if (cp - abbr > 6)
+	else if (cp - abbrp > 6)
 		wp = _("has more than 6 alphabetics");
 	if (wp == NULL && (*cp == '+' || *cp == '-')) {
 		++cp;
-		if (isascii(*cp) && isdigit(*cp))
-			if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
-				++cp;
+		if (isascii((unsigned char) *cp) &&
+			isdigit((unsigned char) *cp))
+				if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
+					++cp;
+		if (*cp != '\0')
+			wp = _("differs from POSIX standard");
 	}
-	if (*cp != '\0')
-		wp = _("differs from POSIX standard");
 	if (wp == NULL)
 		return;
 	(void) fflush(stdout);
 	(void) fprintf(stderr,
-		"%s: warning: zone \"%s\" abbreviation \"%s\" %s\n",
-		progname, zone, abbr, wp);
+		_("%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"),
+		progname, zone, abbrp, wp);
 	warned = TRUE;
 }
 
@@ -266,7 +270,7 @@ char *	argv[];
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
 			(void) printf("%s\n", elsieid);
-			(void) exit(EXIT_SUCCESS);
+			exit(EXIT_SUCCESS);
 		}
 	vflag = 0;
 	cutarg = NULL;
@@ -279,7 +283,7 @@ char *	argv[];
 			(void) fprintf(stderr,
 _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 				progname, progname);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 	}
 	if (vflag) {
 		if (cutarg != NULL) {
@@ -296,7 +300,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 			} else {
 (void) fprintf(stderr, _("%s: wild -c argument %s\n"),
 					progname, cutarg);
-				(void) exit(EXIT_FAILURE);
+				exit(EXIT_FAILURE);
 			}
 		}
 		setabsolutes();
@@ -319,7 +323,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 		if (fakeenv == NULL ||
 			(fakeenv[0] = (char *) malloc(longest + 4)) == NULL) {
 					(void) perror(progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 		}
 		to = 0;
 		(void) strcpy(fakeenv[to++], "TZ=");
@@ -386,7 +390,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 	if (fflush(stdout) || ferror(stdout)) {
 		(void) fprintf(stderr, "%s: ", progname);
 		(void) perror(_("Error writing standard output"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
 	/* If exit fails to exit... */
@@ -410,7 +414,7 @@ setabsolutes()
 			(void) fprintf(stderr,
 _("%s: use of -v on system with floating time_t other than float or double\n"),
 				progname);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 	} else if (0 > (time_t) -1) {
 		/*
@@ -510,7 +514,7 @@ time_t	hit;
 }
 
 /*
-** Thanks to Paul Eggert (eggert@twinsun.com) for logic used in delta.
+** Thanks to Paul Eggert for logic used in delta.
 */
 
 static long

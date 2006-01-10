@@ -1,4 +1,23 @@
+2006-01-07  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/elf/start.S (_start): Use PLABEL32 relocations
+	by using LR and RR. Add %sr0 to iitlbp.
+
 2006-01-09  Roland McGrath  <roland@redhat.com>
+
+	* timezone/private.h: Update from tzcode2005r.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/africa: Update from tzdata2005r.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
 
 	* elf/Makefile ($(objpfx)reldep5.out): Fix dependency typo,
 	so we depend on $(objpfx)reldepmod6.so as intended.

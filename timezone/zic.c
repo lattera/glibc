@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zic.c	7.124";
+static char	elsieid[] = "@(#)zic.c	7.128";
 
 /*
 ** Regardless of the type of time_t, we do our work using this type.
@@ -370,7 +370,7 @@ char * const	ptr;
 
 		(void) fprintf(stderr, _("%s: Memory exhausted: %s\n"),
 			progname, e);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return ptr;
 }
@@ -456,7 +456,7 @@ usage P((void))
 [ --version ] [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n\
 \t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
 		progname, progname);
-	(void) exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
 
 static const char *	psxrules;
@@ -489,7 +489,7 @@ char *	argv[];
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
 			(void) printf("%s\n", elsieid);
-			(void) exit(EXIT_SUCCESS);
+			exit(EXIT_SUCCESS);
 		}
 	while ((c = getopt(argc, argv, "d:l:p:L:vsy:")) != EOF && c != -1)
 		switch (c) {
@@ -502,7 +502,7 @@ char *	argv[];
 					(void) fprintf(stderr,
 _("%s: More than one -d option specified\n"),
 						progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'l':
@@ -512,7 +512,7 @@ _("%s: More than one -d option specified\n"),
 					(void) fprintf(stderr,
 _("%s: More than one -l option specified\n"),
 						progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'p':
@@ -522,7 +522,7 @@ _("%s: More than one -l option specified\n"),
 					(void) fprintf(stderr,
 _("%s: More than one -p option specified\n"),
 						progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'y':
@@ -532,7 +532,7 @@ _("%s: More than one -p option specified\n"),
 					(void) fprintf(stderr,
 _("%s: More than one -y option specified\n"),
 						progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'L':
@@ -542,7 +542,7 @@ _("%s: More than one -y option specified\n"),
 					(void) fprintf(stderr,
 _("%s: More than one -L option specified\n"),
 						progname);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'v':
@@ -569,7 +569,7 @@ _("%s: More than one -L option specified\n"),
 	for (i = optind; i < argc; ++i)
 		infile(argv[i]);
 	if (errors)
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	associate();
 	for (i = 0; i < nzones; i = j) {
 		/*
@@ -634,7 +634,7 @@ const char * const	tofile;
 		int	result;
 
 		if (mkdirs(toname) != 0)
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 
 		result = link(fromname, toname);
 #if HAVE_SYMLINK
@@ -648,14 +648,14 @@ const char * const	tofile;
 					symlinkcontents =
 						ecatalloc(symlinkcontents,
 						"../");
-					symlinkcontents =
-						ecatalloc(symlinkcontents,
-							  fromname);
-					result = symlink(symlinkcontents,
-						toname);
-					if (result == 0)
+				symlinkcontents =
+					ecatalloc(symlinkcontents,
+					fromname);
+				result = symlink(symlinkcontents,
+					toname);
+				if (result == 0)
 warning(_("hard link failed, symbolic link used"));
-					ifree(symlinkcontents);
+				ifree(symlinkcontents);
 		}
 #endif /* HAVE_SYMLINK */
 		if (result != 0) {
@@ -664,7 +664,7 @@ warning(_("hard link failed, symbolic link used"));
 			(void) fprintf(stderr,
 				_("%s: Can't link from %s to %s: %s\n"),
 				progname, fromname, toname, e);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 	}
 	ifree(fromname);
@@ -825,7 +825,7 @@ associate P((void))
 		}
 	}
 	if (errors)
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 }
 
 static void
@@ -849,7 +849,7 @@ const char *	name;
 
 		(void) fprintf(stderr, _("%s: Can't open %s: %s\n"),
 			progname, name, e);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	wantcont = FALSE;
 	for (num = 1; ; ++num) {
@@ -859,7 +859,7 @@ const char *	name;
 		cp = strchr(buf, '\n');
 		if (cp == NULL) {
 			error(_("line too long"));
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 		*cp = '\0';
 		fields = getfields(buf);
@@ -903,7 +903,7 @@ _("%s: Leap line in non leap seconds file %s\n"),
 					(void) fprintf(stderr,
 _("%s: panic: Invalid l_value %d\n"),
 						progname, lp->l_value);
-					(void) exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
 			}
 		}
 		ifree((char *) fields);
@@ -911,14 +911,14 @@ _("%s: panic: Invalid l_value %d\n"),
 	if (ferror(fp)) {
 		(void) fprintf(stderr, _("%s: Error reading %s\n"),
 			progname, filename);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if (fp != stdin && fclose(fp)) {
 		const char *e = strerror(errno);
 
 		(void) fprintf(stderr, _("%s: Error closing %s: %s\n"),
 			progname, filename, e);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if (wantcont)
 		error(_("expected continuation line not found"));
@@ -1324,7 +1324,7 @@ const char * const		timep;
 			(void) fprintf(stderr,
 				_("%s: panic: Invalid l_value %d\n"),
 				progname, lp->l_value);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_loyear) != 1) {
 		error(_("invalid starting year"));
 		return;
@@ -1349,7 +1349,7 @@ const char * const		timep;
 			(void) fprintf(stderr,
 				_("%s: panic: Invalid l_value %d\n"),
 				progname, lp->l_value);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_hiyear) != 1) {
 		error(_("invalid ending year"));
 		return;
@@ -1520,17 +1520,17 @@ const char * const	name;
 
 		(void) fprintf(stderr, _("%s: Can't remove %s: %s\n"),
 			progname, fullname, e);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if ((fp = fopen(fullname, "wb")) == NULL) {
 		if (mkdirs(fullname) != 0)
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		if ((fp = fopen(fullname, "wb")) == NULL) {
 			const char *e = strerror(errno);
 
 			(void) fprintf(stderr, _("%s: Can't create %s: %s\n"),
 				progname, fullname, e);
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 	}
 	convert(eitol(typecnt), tzh.tzh_ttisgmtcnt);
@@ -1597,7 +1597,7 @@ const char * const	name;
 	if (ferror(fp) || fclose(fp)) {
 		(void) fprintf(stderr, _("%s: Error writing %s\n"),
 			progname, fullname);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -1648,7 +1648,7 @@ const int			zonecount;
 	typecnt = 0;
 	charcnt = 0;
 	/*
-	** Thanks to Earl Chew (earl@dnd.icp.nec.com.au)
+	** Thanks to Earl Chew
 	** for noting the need to unconditionally initialize startttisstd.
 	*/
 	startttisstd = FALSE;
@@ -1830,7 +1830,7 @@ int		type;
 	}
 	if (timecnt >= TZ_MAX_TIMES) {
 		error(_("too many transitions?!"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	attypes[timecnt].at = starttime;
 	attypes[timecnt].type = type;
@@ -1849,15 +1849,15 @@ const int		ttisgmt;
 
 	if (isdst != TRUE && isdst != FALSE) {
 		error(_("internal error - addtype called with bad isdst"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if (ttisstd != TRUE && ttisstd != FALSE) {
 		error(_("internal error - addtype called with bad ttisstd"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if (ttisgmt != TRUE && ttisgmt != FALSE) {
 		error(_("internal error - addtype called with bad ttisgmt"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	/*
 	** See if there's already an entry for this zone type.
@@ -1876,7 +1876,7 @@ const int		ttisgmt;
 	*/
 	if (typecnt >= TZ_MAX_TYPES) {
 		error(_("too many local time types"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	gmtoffs[i] = gmtoff;
 	isdsts[i] = isdst;
@@ -1904,13 +1904,13 @@ int		count;
 
 	if (leapcnt + (positive ? count : 1) > TZ_MAX_LEAPS) {
 		error(_("too many leap seconds"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	for (i = 0; i < leapcnt; ++i)
 		if (t <= trans[i]) {
 			if (t == trans[i]) {
 				error(_("repeated leap second moment"));
-				(void) exit(EXIT_FAILURE);
+				exit(EXIT_FAILURE);
 			}
 			break;
 		}
@@ -1965,7 +1965,7 @@ const char * const	type;
 	(void) fprintf(stderr, _("%s: command was '%s', result was %d\n"),
 		progname, buf, result);
 	for ( ; ; )
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 }
 
 static int
@@ -2046,8 +2046,9 @@ register char *	cp;
 		emalloc((int) ((strlen(cp) + 1) * sizeof *array));
 	nsubs = 0;
 	for ( ; ; ) {
-		while (isascii(*cp) && isspace((unsigned char) *cp))
-			++cp;
+		while (isascii((unsigned char) *cp) &&
+			isspace((unsigned char) *cp))
+				++cp;
 		if (*cp == '\0' || *cp == '#')
 			break;
 		array[nsubs++] = dp = cp;
@@ -2080,7 +2081,7 @@ const long	t2;
 	t = t1 + t2;
 	if ((t2 > 0 && t <= t1) || (t2 < 0 && t >= t1)) {
 		error(_("time overflow"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return t;
 }
@@ -2099,7 +2100,7 @@ const long	t2;
 	t = t1 + t2;
 	if ((t2 > 0 && t <= t1) || (t2 < 0 && t >= t1)) {
 		error(_("time overflow"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return t;
 }
@@ -2146,7 +2147,7 @@ register const int			wantedy;
 			--i;
 		else {
 			error(_("use of 2/29 in non leap-year"));
-			(void) exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 	}
 	--i;
@@ -2210,8 +2211,9 @@ const char * const	string;
 		*/
 		cp = string;
 		wp = NULL;
-		while (isascii(*cp) && isalpha(*cp))
-			++cp;
+		while (isascii((unsigned char) *cp) &&
+			isalpha((unsigned char) *cp))
+				++cp;
 		if (cp - string == 0)
 wp = _("time zone abbreviation lacks alphabetic at start");
 		if (noise && cp - string > 3)
@@ -2220,9 +2222,11 @@ wp = _("time zone abbreviation has more than 3 alphabetics");
 wp = _("time zone abbreviation has too many alphabetics");
 		if (wp == NULL && (*cp == '+' || *cp == '-')) {
 			++cp;
-			if (isascii(*cp) && isdigit(*cp))
-				if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
-					++cp;
+			if (isascii((unsigned char) *cp) &&
+				isdigit((unsigned char) *cp))
+					if (*cp++ == '1' &&
+						*cp >= '0' && *cp <= '4')
+							++cp;
 		}
 		if (*cp != '\0')
 wp = _("time zone abbreviation differs from POSIX standard");
@@ -2238,7 +2242,7 @@ wp = _("time zone abbreviation differs from POSIX standard");
 	i = strlen(string) + 1;
 	if (charcnt + i > TZ_MAX_CHARS) {
 		error(_("too many, or too long, time zone abbreviations"));
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	(void) strcpy(&chars[charcnt], string);
 	charcnt += eitol(i);
@@ -2302,7 +2306,7 @@ const int	i;
 		(void) fprintf(stderr,
 			_("%s: %d did not sign extend correctly\n"),
 			progname, i);
-		(void) exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return l;
 }
