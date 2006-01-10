@@ -23,6 +23,13 @@
 #include <bits/wordsize.h>
 #include <sysdep.h>
 
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
+  ((void *) (address) < (void *) demangle ((jmpbuf)->__gregs[__JB_GPR15]))
+
+
 /* On s390{,x}, CFA is always 96 (resp. 160) bytes above actual
    %r15.  */
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \

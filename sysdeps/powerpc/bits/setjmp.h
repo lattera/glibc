@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,10 +72,5 @@ typedef long int __jmp_buf[64] __attribute__ ((__aligned__ (16)));
 typedef long int __jmp_buf[64 + (12 * 4)] __attribute__ ((__aligned__ (16)));
 # endif
 #endif
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
-  ((void *) (address) < (void *) demangle ((jmpbuf)[JB_GPR1]))
 
 #endif  /* bits/setjmp.h */

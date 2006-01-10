@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,10 +47,5 @@ typedef struct
 #if defined __USE_MISC || defined _ASM
 # define JB_SIZE		(4 * 15)
 #endif
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)		\
-  ((void *) (address) < (void *) demangle ((jmpbuf)[0].__regs[7]))
 
 #endif  /* bits/setjmp.h */

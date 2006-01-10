@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -20,6 +20,11 @@
 #include <setjmp.h>
 #include <stdint.h>
 #include <unwind.h>
+
+/* Test if longjmp to JMPBUF would unwind the frame containing a local
+   variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(_jmpbuf, _address, _demangle) \
+  ((void *) (_address) < (void *) (((long int *) _jmpbuf)[0]))
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   ({ uintptr_t _cfa = (uintptr_t) _Unwind_GetCFA (_context) - (_adj);	\

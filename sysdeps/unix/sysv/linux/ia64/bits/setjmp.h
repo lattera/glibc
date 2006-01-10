@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  Linux/IA-64 version.
-   Copyright (C) 1999, 2000, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -31,10 +31,5 @@
 
 /* the __jmp_buf element type should be __float80 per ABI... */
 typedef long __jmp_buf[_JBLEN] __attribute__ ((aligned (16))); /* guarantees 128-bit alignment! */
-
-/* Test if longjmp to JMPBUF would unwind the frame containing a local
-   variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(_jmpbuf, _address, _demangle) \
-  ((void *) (_address) < (void *) (((long int *) _jmpbuf)[0]))
 
 #endif  /* bits/setjmp.h */
