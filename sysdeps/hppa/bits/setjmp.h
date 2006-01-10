@@ -29,10 +29,6 @@
    easier, and to ensure proper alignment. Naturally, user code should
    not depend on either representation. */
 
-#if defined __USE_MISC || defined _ASM
-#define JB_SP (76/4)
-#endif
-
 #ifndef	_ASM
 typedef double __jmp_buf[21];
 #endif

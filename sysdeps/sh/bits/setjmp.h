@@ -44,8 +44,4 @@ typedef struct
   } __jmp_buf[1];
 #endif
 
-#if defined __USE_MISC || defined _ASM
-# define JB_SIZE		(4 * 15)
-#endif
-
 #endif  /* bits/setjmp.h */
