@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  Alpha version.
-   Copyright (C) 1992, 1997, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1992,1997,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,11 +77,6 @@
 
 #ifndef __ASSEMBLY__
 typedef long int __jmp_buf[17];
-
-/* Test if longjmp to JMPBUF would unwind the frame containing a local
-   variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(_jmpbuf, _address, _demangle) \
-  ((void *)(_address) < (void *) _demangle ((_jmpbuf)[JB_SP]))
 #endif
 
 #endif  /* bits/setjmp.h */
