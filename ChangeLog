@@ -1,3 +1,7 @@
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/linkmap.h: File removed.
+
 2006-01-07  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/elf/start.S (_start): Use PLABEL32 relocations
