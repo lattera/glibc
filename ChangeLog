@@ -1,5 +1,13 @@
 2006-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2126]
+	* sysdeps/i386/i686/strtok.S: Store pointer to NUL byte if NULL is
+	returned.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+	* string/Makefile (tests): Add bug-strtok1.
+	* string/bug-strtok1.c: New file.
+
 	* elf/check-textrel.c (AB): Also check for writable and executable
 	segments.
 
