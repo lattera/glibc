@@ -72,9 +72,4 @@ typedef struct
 #endif
   } __jmp_buf[1];
 
-#ifdef __USE_MISC
-/* Offset to the program counter in `jmp_buf'.  */
-# define JB_PC	0
-#endif
-
 #endif /* _MIPS_BITS_SETJMP_H */

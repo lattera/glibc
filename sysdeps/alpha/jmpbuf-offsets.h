@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2005, 2006 Free Software Foundation, Inc.
+/* Private macros for accessing __jmp_buf contents.  Alpha version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +17,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  HPPA version.  */
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H	1
-
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-/* The previous bits/setjmp.h had __jmp_buf defined as a structure.
-   We use an array of 'double' instead, to make writing the assembler
-   easier, and to ensure proper alignment. Naturally, user code should
-   not depend on either representation. */
-
-#ifndef	_ASM
-typedef double __jmp_buf[21];
-#endif
-
-#endif	/* bits/setjmp.h */
+#define JB_S0  0
+#define JB_S1  1
+#define JB_S2  2
+#define JB_S3  3
+#define JB_S4  4
+#define JB_S5  5
+#define JB_PC  6
+#define JB_FP  7
+#define JB_SP  8
+#define JB_F2  9
+#define JB_F3  10
+#define JB_F4  11
+#define JB_F5  12
+#define JB_F6  13
+#define JB_F7  14
+#define JB_F8  15
+#define JB_F9  16
