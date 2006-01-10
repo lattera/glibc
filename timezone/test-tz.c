@@ -7,7 +7,7 @@ struct {
   const char *	env;
   time_t	expected;
 } tests[] = {
-  {"MST",	832910115},
+  {"MST",	832935315},
   {"",		832910115},
   {":UTC",	832910115},
   {"UTC",	832910115},
