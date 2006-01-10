@@ -34,4 +34,6 @@ typedef long int __jmp_buf[8];
 typedef int __jmp_buf[6];
 # endif
 
+#endif
+
 #endif  /* bits/setjmp.h */
