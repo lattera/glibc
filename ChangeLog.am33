@@ -1,3 +1,8 @@
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/am33/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/am33/jmpbuf-unwind.h: ... here, new file.
+
 2005-12-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/am33/bits/setjmp.h (_JMPBUF_UNWINDS): Take third argument
