@@ -1,5 +1,11 @@
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/arm/bits/setjmp.h (__JMP_BUF_SP): Macro moved to ...
+	* sysdeps/arm/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/arm/fpu/bits/setjmp.h: (__JMP_BUF_SP): Macro moved to ...
+	* sysdeps/arm/fpu/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/arm/eabi/bits/setjmp.h (__JMP_BUF_SP): Macro removed.
+
 	* sysdeps/arm/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
 	* sysdeps/arm/jmpbuf-unwind.h: ... here.
 	* sysdeps/arm/fpu/bits/setjmp.h (_JMPBUF_UNWINDS): Macro removed.
