@@ -1,3 +1,7 @@
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/bits/setjmp.h: Add back accidently removed #endif.
+
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
 	* include/bits/setjmp.h: New file.
