@@ -1,5 +1,5 @@
 /* _longjmp_unwind -- Clean up stack frames unwound by longjmp.  Hurd version.
-   Copyright (C) 1995, 1996, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <setjmp.h>
+#include <jmpbuf-unwind.h>
 #include <hurd/userlink.h>
 #include <hurd/signal.h>
 #include <hurd/sigpreempt.h>
@@ -26,7 +26,7 @@
 
 
 #ifndef _JMPBUF_UNWINDS
-#error "<bits/setjmp.h> fails to define _JMPBUF_UNWINDS"
+#error "<jmpbuf-unwind.h> fails to define _JMPBUF_UNWINDS"
 #endif
 
 static inline uintptr_t
