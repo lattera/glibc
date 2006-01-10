@@ -92,7 +92,7 @@ extern int __getclktck (void);
 /* strptime support.  */
 /* Status of lookup: do we use the locale data or the raw data?  */
 #ifndef __cplusplus
-// C++ cannot deal with using 'not'.
+/* C++ cannot deal with using 'not'.  */
 enum ptime_locale_status { not, loc, raw };
 
 extern char * __strptime_internal (const char *rp, const char *fmt,

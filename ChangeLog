@@ -1,3 +1,7 @@
+2006-01-10  Andreas Jaeger  <aj@suse.de>
+
+	* include/time.h: Use normal comments.
+
 2006-01-10  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* hurd/sigunwind.c: Include <jmpbuf-unwind.h> instead of <setjmp.h>.
