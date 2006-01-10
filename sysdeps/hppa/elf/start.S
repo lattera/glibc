@@ -34,16 +34,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-	.text
-
-	.align 4
-
 	.import main, code
 	.import $global$, data
 	.import __libc_start_main, code
 	.import __libc_csu_fini, code
 	.import __libc_csu_init, code
 
+	/* Have the linker create plabel words
+           so we get PLABEL32 relocs and not 21/14 */
+	.section	.rodata
+	.align 4
+.Lpmain:
+	.word P%main
+.Lp__libc_start_main:
+	.word P%__libc_start_main
+.Lp__libc_csu_fini:
+	.word P%__libc_csu_fini
+.Lp__libc_csu_init:
+	.word P%__libc_csu_init
+
+	.text
+	.align 4
 	.globl _start
 	.export _start, ENTRY
 	.type _start,@function
@@ -52,28 +63,41 @@ _start:
 	.proc
 	.callinfo
 
-	/* load main */
-	ldil	LP%main, %r26
-	ldo	RP%main(%r26), %r26
-
-	/* argc and argv should be in 25 and 24 */
-
 	/* Expand the stack to store the 5th through 7th args */
 	ldo	64(%sp), %sp
+	/* TODO: Follow ABI? Place more things on the stack here... */
 
-	/* void (*rtld_fini) (void) (actually the 6th arg) */
-	stw	%r23, -56(%sp)
-
-	/* void (*init) (void) */
-	ldil	LP%__libc_csu_init, %r23
-	ldo	RP%__libc_csu_init(%r23), %r23
-
-	/* void (*fini) (void) */
-	ldil	LP%__libc_csu_fini, %r22
-	ldo	RP%__libc_csu_fini(%r22), %r22
+#if SHARED
+	/* load main (1st argument) */
+	addil	LR'.Lpmain, %r19
+	ldw	RR'.Lpmain(%r1), %r26
+	ldw	0(%r26),%r26
+	/* argc and argv should be in 25 and 24 (2nd and 3rd argument) */
+	/* void (*init) (void) (4th argument) */
+	addil	LR'.Lp__libc_csu_init, %r19
+	ldw	RR'.Lp__libc_csu_init(%r1), %r23
+	ldw	0(%r23), %r23
+	/* void (*fini) (void) (5th argument) */
+	addil	LR'.Lp__libc_csu_fini, %r19
+	ldw	RR'.Lp__libc_csu_fini(%r1), %r22
+	ldw	0(%r22), %r22
+#else
+	/* load main (1st argument) */
+	ldil	LR'.Lpmain, %r26
+	ldw	RR'.Lpmain(%r26), %r26
+	/* argc and argv should be in 25 and 24 (2nd and 3rd argument) */
+	/* void (*init) (void) (4th argument) */
+	ldil	LR'.Lp__libc_csu_init, %r23
+	ldw	RR'.Lp__libc_csu_init(%r23), %r23
+	/* void (*fini) (void) (5th argument) */
+	ldil	LR'.Lp__libc_csu_fini, %r22
+	ldw	RR'.Lp__libc_csu_fini(%r22), %r22
+#endif
+	/* Store 5th argument */
 	stw	%r22, -52(%sp)
-
-	/* void *stack_end */
+	/* void (*rtld_fini) (void) (6th argument) */
+	stw	%r23, -56(%sp)
+	/* void *stack_end (7th argument) */
 	stw	%sp, -60(%sp)
 
 	/* load global */
@@ -83,7 +107,7 @@ _start:
 	bl	__libc_start_main,%r2
 	nop
 	/* die horribly if it returned (it shouldn't) */
-	iitlbp %r0,(%r0)
+	iitlbp %r0,(%sr0,%r0)
 	nop
 
 	.procend
