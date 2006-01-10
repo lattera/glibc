@@ -1,3 +1,8 @@
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/bits/setjmp.h: Don't include jmpbuf-offsets.h if _ISOMAC is
+	defined.
+
 2006-01-10  Andreas Jaeger  <aj@suse.de>
 
 	* include/time.h: Use normal comments.
