@@ -2,4 +2,6 @@
    plus the JB_* macros from the private header <jmpbuf-offsets.h>.  */
 
 #include_next <bits/setjmp.h>
-#include <jmpbuf-offsets.h>
+#ifndef _ISOMAC
+# include <jmpbuf-offsets.h>
+#endif
