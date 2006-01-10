@@ -22,6 +22,11 @@
 #include <unwind.h>
 #include <sysdep.h>
 
+/* Test if longjmp to JMPBUF would unwind the frame containing a local
+   variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(_jmpbuf, _address, _demangle) \
+  ((void *)(_address) < (void *) _demangle ((_jmpbuf)[JB_SP]))
+
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
