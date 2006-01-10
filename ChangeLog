@@ -1,5 +1,15 @@
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/alpha/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/i386/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/mips/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/powerpc/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/s390/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sh/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/x86_64/jmpbuf-unwind.h: New file, moved from nptl/.
+
 	* sysdeps/linkmap.h: File removed.
 
 2006-01-07  Carlos O'Donell  <carlos@systemhalted.org>

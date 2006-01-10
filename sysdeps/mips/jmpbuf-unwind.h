@@ -1,6 +1,5 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -28,7 +27,7 @@
 static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf regs)
 {
-  uintptr_t sp = regs[JB_RSP];
+  uintptr_t sp = regs[0].__sp;
 #ifdef PTR_DEMANGLE
   PTR_DEMANGLE (sp);
 #endif
@@ -38,5 +37,5 @@ _jmpbuf_sp (__jmp_buf regs)
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
   ((uintptr_t) (_address) - (_adj) < _jmpbuf_sp (_jmpbuf) - (_adj))
 
-/* We use the normal lobngjmp for unwinding.  */
+/* We use the normal longjmp for unwinding.  */
 #define __libc_unwind_longjmp(buf, val) __libc_longjmp (buf, val)
