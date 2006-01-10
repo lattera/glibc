@@ -1,4 +1,5 @@
-/* Copyright 2001 Free Software Foundation, Inc.
+/* Private macros for accessing __jmp_buf contents.  AM33 version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +17,4 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  AM33 version. */
-
-#ifndef _SETJMP_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-#ifndef _ASM
-typedef int __jmp_buf[26];
-#endif
+#define __JMP_BUF_SP		20
