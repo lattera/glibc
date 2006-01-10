@@ -1,5 +1,5 @@
 /* Checking macros for wchar functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -224,7 +224,7 @@ __NTH (vswprintf (wchar_t *__s, size_t __n, __const wchar_t *__format,
   if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
     return __vswprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1, __bos (__s),
 			    __format, __arg);
-  return vswprintf (__s, __n, __format, __arg);
+  return __vswprintf_alias (__s, __n, __format, __arg);
 }
 
 
