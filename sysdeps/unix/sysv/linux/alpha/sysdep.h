@@ -22,10 +22,10 @@
 #define _LINUX_ALPHA_SYSDEP_H 1
 
 #ifdef __ASSEMBLER__
-
 #include <asm/pal.h>
 #include <alpha/regdef.h>
-
+#else
+#include <stdint.h>
 #endif
 
 /* There is some commonality.  */
@@ -97,5 +97,40 @@
 	  __attribute__((unused));					\
 	INTERNAL_SYSCALL1(name, err_out, nr, args);			\
 })
+
+/* Pointer mangling support.  Note that tls access is slow enough that
+   we don't deoptimize things by placing the pointer check value there.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)				\
+	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
+	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)				\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var)	\
+	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#elif defined PIC
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)		\
+	ldq	tmp, __pointer_chk_guard;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)		\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard attribute_relro;
+#  define PTR_MANGLE(var)	\
+	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#endif
 
 #endif /* _LINUX_ALPHA_SYSDEP_H */

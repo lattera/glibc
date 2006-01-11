@@ -1,5 +1,20 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makerules: Define build-module-asneeded.
+	* iconvdata/extra-module.mk: Use build-module-asneeded.
+	needed.
+
+2006-01-09  Richard Henderson  <rth@redhat.com>
+
+	* iconvdata/extra-module.mk ($(objpfx)$(mod).so): Depend on ld.so.
+	* sysdeps/alpha/__longjmp.S: Use PTR_DEMANGLE.
+	* sysdeps/alpha/setjmp.S: Likewise.  Avoid __sigjmp_save for rtld;
+	tailcall in libc.so.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (PTR_MANGLE): Define.
+	(PTR_MANGLE2): Define.
+
+2006-01-11  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/check-localplt.c: New file.
 	* elf/Makefile: Add rules to build and run check-localplt.
 	* scripts/data/localplt-x86_64-linux-gnu.data: New file.

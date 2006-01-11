@@ -23,16 +23,22 @@
 #define _SETJMP_H
 #include <bits/setjmp.h>
 
-       .ent __sigsetjmp
-       .global __sigsetjmp
+	.ent __sigsetjmp
+	.global __sigsetjmp
 __sigsetjmp:
-       ldgp    gp, 0(pv)
+	ldgp    gp, 0(pv)
 
 $sigsetjmp_local:
-       subq    sp, 16, sp
-       .frame  sp, 16, ra, 0
-       stq     ra, 0(sp)
-       .mask   0x04000000, -16
+#ifndef PIC
+#define FRAME	16	
+	subq    sp, FRAME, sp
+	.frame  sp, FRAME, ra, 0
+	stq     ra, 0(sp)
+	.mask   0x04000000, -FRAME
+#else
+#define FRAME	0
+	.frame	sp, FRAME, ra, 0
+#endif
 #ifdef PROF
 	.set noat
 	lda	AT, _mcount
@@ -47,10 +53,27 @@ $sigsetjmp_local:
 	stq	s3, JB_S3*8(a0)
 	stq	s4, JB_S4*8(a0)
 	stq	s5, JB_S5*8(a0)
+#ifdef PTR_MANGLE
+	PTR_MANGLE(t1, ra, t0)
+	stq	t1, JB_PC*8(a0)
+#else
 	stq	ra, JB_PC*8(a0)
-	addq	sp, 16, t0
+#endif
+#if defined(PTR_MANGLE) && FRAME == 0
+	PTR_MANGLE2(t1, sp, t0)
+#else
+	addq	sp, FRAME, t1
+# ifdef PTR_MANGLE
+	PTR_MANGLE2(t1, t1, t0)
+# endif
+#endif
+	stq	t1, JB_SP*8(a0)
+#ifdef PTR_MANGLE
+	PTR_MANGLE2(t1, fp, t0)
+	stq	t1, JB_FP*8(a0)
+#else
 	stq	fp, JB_FP*8(a0)
-	stq	t0, JB_SP*8(a0)
+#endif
 	stt	$f2, JB_F2*8(a0)
 	stt	$f3, JB_F3*8(a0)
 	stt	$f4, JB_F4*8(a0)
@@ -60,12 +83,20 @@ $sigsetjmp_local:
 	stt	$f8, JB_F8*8(a0)
 	stt	$f9, JB_F9*8(a0)
 
+#ifndef PIC
 	/* Call to C to (potentially) save our signal mask.  */
 	jsr	ra, __sigjmp_save
-
 	ldq	ra, 0(sp)
 	addq	sp, 16, sp
 	ret
+#elif defined NOT_IN_libc && defined IS_IN_rtld
+	/* In ld.so we never save the signal mask.  */
+	mov	0, v0
+	ret
+#else
+	/* Tailcall to save the signal mask.  */
+	br	$31, __sigjmp_save	!samegp
+#endif
 
 END(__sigsetjmp)
 

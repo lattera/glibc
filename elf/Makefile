@@ -828,11 +828,21 @@ check-data := $(firstword $(wildcard \
 ifneq (,$(check-data))
 tests: $(objpfx)check-localplt.out
 
+ifeq ($(have-thread-library),yes)
+thread-dso := $(filter-out %_nonshared.a, $(shared-thread-library))
+endif
+
 $(objpfx)check-localplt.out: $(objpfx)check-localplt $(common-objpfx)libc.so \
-			     $(common-objpfx)math/libm.so $(check-data)
+			     $(common-objpfx)math/libm.so $(thread-dso) \
+			     $(common-objpfx)rt/librt.so \
+			     $(common-objpfx)dlfcn/libdl.so \
+			     $(check-data)
 	$(objpfx)check-localplt $(common-objpfx)libc.so \
-				$(common-objpfx)math/libm.so | LC_ALL=C sort |\
-	  diff -u $(check-data) -
+				$(common-objpfx)math/libm.so $(thread-dso) \
+				$(common-objpfx)rt/librt.so \
+				$(common-objpfx)dlfcn/libdl.so | \
+	  LC_ALL=C sort | \
+	  diff -u $(check-data) - > $@
 endif
 endif
 

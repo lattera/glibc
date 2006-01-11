@@ -212,7 +212,7 @@ AB(handle_file) (const char *fname, int fd)
 
 	if (sym.st_value != 0)
 	  /* This symbol is locally defined.  */
-	  puts (strtab + SWAP (sym.st_name));
+	  printf ("%s: %s\n", basename (fname), strtab + SWAP (sym.st_name));
       }
   else
     for (E(Rel) *rel = relmem; (char *) rel - (char *) relmem < relsz; ++rel)
@@ -230,7 +230,7 @@ AB(handle_file) (const char *fname, int fd)
 
 	if (sym.st_value != 0)
 	  /* This symbol is locally defined.  */
-	  puts (strtab + SWAP (sym.st_name));
+	  printf ("%s: %s\n", basename (fname), strtab + SWAP (sym.st_name));
       }
 
   return 0;

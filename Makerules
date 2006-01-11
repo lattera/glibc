@@ -572,6 +572,11 @@ define build-module
 $(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist)
 endef
+define build-module-asneeded
+$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
+	  $(csu-objpfx)abi-note.o \
+	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed
+endef
 else
 ifneq (,$(findstring aix,$(config-os)))
 define build-module
