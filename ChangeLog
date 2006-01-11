@@ -1,3 +1,38 @@
+2005-10-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* malloc/obstack.c: Fix old comments.  Update FSF snail mail address.
+	* malloc/obstack.h: Likewise.
+
+	[BZ #321]
+	Fix portability bugs encountered when porting to Itanium.
+	* malloc/obstack.h (obstack_empty_p, obstack_finish): Do not
+	assume that the "contents" member is suitably aligned.  It is
+	not, for some hosts and alignments: e.g., Itanium, long-double.
+	* malloc/obstack.c (_obstack_begin, _obstack_begin_1,
+	_obstack_newchunk): Likewise.
+	* malloc/obstack.c: Include <stddef.h>, for size_t.
+	Include <inttypes.h>, <stdint.h> if needed and available.
+	(DEFAULT_ALIGNMENT): Now an enum constant, not a macro.
+	Use C89 offsetof rather than K&R trick.
+	Use the maximum alignment of uintmax_t, long double, void *
+	rather than the alignment of double.
+	(union fooround): Use uintmax_t, long double, void * members
+	rather than just long and double.
+
+	[BZ #321]
+	Fix portability bugs encountered when porting to the IBM iSeries,
+	where pointers are 256 bits wide and no integers are that wide.
+	* malloc/obstack.h (__PTR_TO_INT, __INT_TO_PTR): Remove.
+	All uses changed to:
+	(__BPTR_ALIGN, __PTR_ALIGN): New macros.
+	(struct _obstack_chunk.temp): Change from int to a union
+	of pointer and int.  All uses changed.
+
+	[BZ #321]
+	* malloc/obstack.c (print_and_abort) [!_LIBC]:
+	Call fprintf (stderr, ...), not __fxprintf (NULL, ...).
+	[_LIBC && USE_IN_LIBIO]: Don't include <wchar.h>; no longer needed.
+
 2006-01-10  Derek Price  <derek@ximbiot.com>
 	    Paul Eggert  <eggert@cs.ucla.edu>
 
