@@ -467,7 +467,7 @@ libc_freeres_fn (free_mem)
   if (cache_malloced)
     free (gconv_cache);
 #ifdef _POSIX_MAPPED_FILES
-  else
+  else if (gconv_cache != NULL)
     __munmap (gconv_cache, cache_size);
 #endif
 }
