@@ -1,3 +1,8 @@
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_cache.c (free_mem): Don't call munmap if gconv_cache
+	is NULL.
+
 2005-10-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* malloc/obstack.c: Fix old comments.  Update FSF snail mail address.
