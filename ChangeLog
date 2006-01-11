@@ -1,5 +1,8 @@
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(PTR_MANGLE): Fix cast.
+
 	* timezone/test-tz.c: Revert last change, updating to match
 	tzdata2005r definition of "MST".
 
