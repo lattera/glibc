@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1995,1997-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2002, 2003, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -657,6 +658,7 @@ _IO_no_init (fp, flags, orientation, wd, jmp)
       fp->_wide_data->_wide_vtable = jmp;
     }
 #endif
+  fp->_freeres_list = NULL;
 }
 
 int
@@ -914,10 +916,27 @@ INTDEF(_IO_flush_all_linebuffered)
 weak_alias (_IO_flush_all_linebuffered, _flushlbf)
 #endif
 
+
+/* The following is a bit tricky.  In general, we want to unbuffer the
+   streams so that all output which follows is seen.  If we are not
+   looking for memory leaks it does not make much sense to free the
+   actual buffer because this will happen anyway once the program
+   terminated.  If we do want to look for memory leaks we have to free
+   the buffers.  Whether something is freed is determined by the
+   function sin the libc_freeres section.  Those are called as part of
+   the atexit routine, just like _IO_cleanup.  The problem is we do
+   not know whether the freeres code is called first or _IO_cleanup.
+   if the former is the case, we set the DEALLOC_BUFFER variable to
+   true and _IO_unbuffer_write will take care of the rest.  If
+   _IO_unbuffer_write is called first we add the streams to a list
+   which the freeres function later can walk through.  */
 static void _IO_unbuffer_write (void);
 
+static bool dealloc_buffers;
+static _IO_FILE *freeres_list;
+
 static void
-_IO_unbuffer_write ()
+_IO_unbuffer_write (void)
 {
   struct _IO_FILE *fp;
   for (fp = (_IO_FILE *) INTUSE(_IO_list_all); fp; fp = fp->_chain)
@@ -927,7 +946,19 @@ _IO_unbuffer_write ()
 	      || (fp->_flags & _IO_IS_APPENDING))
 	  /* Iff stream is un-orientated, it wasn't used. */
 	  && fp->_mode != 0)
-	_IO_SETBUF (fp, NULL, 0);
+	{
+	  if (! dealloc_buffers && !(fp->_flags & _IO_USER_BUF))
+	    {
+	      fp->_flags |= _IO_USER_BUF;
+
+	      fp->_freeres_list = freeres_list;
+	      freeres_list = fp;
+	      fp->_freeres_buf = fp->_IO_buf_base;
+	      fp->_freeres_size = _IO_blen (fp);
+	    }
+
+	  _IO_SETBUF (fp, NULL, 0);
+	}
 
       /* Make sure that never again the wide char functions can be
 	 used.  */
@@ -935,11 +966,25 @@ _IO_unbuffer_write ()
     }
 }
 
+
+libc_freeres_fn (buffer_free)
+{
+  dealloc_buffers = true;
+
+  while (freeres_list != NULL)
+    {
+      FREE_BUF (freeres_list->_freeres_buf, freeres_list->_freeres_size);
+
+      freeres_list = freeres_list->_freeres_list;
+    }
+}
+
+
 int
 _IO_cleanup ()
 {
   /* We do *not* want locking.  Some threads might use streams but
-     that is there problem, we flush them underneath them.  */
+     that is their problem, we flush them underneath them.  */
   int result = _IO_flush_all_lockp (0);
 
   /* We currently don't have a reliable mechanism for making sure that

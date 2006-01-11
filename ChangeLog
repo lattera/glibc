@@ -1,5 +1,13 @@
 2006-01-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/genops.c (_IO_unbuffer_write): Don't always free the
+	buffer.  This is not necessary except in debug mode.  If we don't
+	free the buffer but the FILE structure to a list.
+	(buffer_free): New function.  Free buffers or tell _IO_unbuffer_write
+	to do so.
+	* libio/libio.h (struct _IO_FILE): Add new members to keep track
+	of which buffers have to be freed.
+
 	* iconv/gconv_cache.c (free_mem): Don't call munmap if gconv_cache
 	is NULL.
 
