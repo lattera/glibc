@@ -1,3 +1,9 @@
+2006-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/genops.c (_IO_unbuffer_write): Give concurrently running
+	threads the chance to work correctly by trying to lock the stream.
+	If this does not work, proceed without locking.
+
 2006-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/genops.c (_IO_unbuffer_write): Don't always free the
