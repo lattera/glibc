@@ -134,3 +134,4 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 
   return -1;
 }
+libc_hidden_def (__fxstatat64)

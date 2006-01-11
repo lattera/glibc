@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-97,99,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-97,99,2000,2002-2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,9 +140,9 @@ _IO_mem_finish (fp, dummy)
     {
       (*mp->bufloc)[fp->_IO_write_ptr - fp->_IO_write_base] = '\0';
       *mp->sizeloc = fp->_IO_write_ptr - fp->_IO_write_base;
+
+      fp->_IO_buf_base = NULL;
     }
 
-  fp->_IO_buf_base = NULL;
-
-  INTUSE(_IO_default_finish) (fp, 0);
+  _IO_str_finish (fp, 0);
 }

@@ -1,5 +1,16 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/sys/stat.h: Add libc_hidden_proto for __fxstatat64.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Add libc_hidden_def for
+	__fxstatat64.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Add
+	__GI___fxstatat64 alias.
+
+	* libio/memstream.c (_IO_mem_finish): Fix potential memory leak of
+	realloc fails.
+
+	* include/sched.h: Add libc_hidden_proto for __sched_yield.
+
 	* libio/genops.c (_IO_unbuffer_write): Give concurrently running
 	threads the chance to work correctly by trying to lock the stream.
 	If this does not work, proceed without locking.
