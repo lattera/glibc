@@ -1,3 +1,16 @@
+2006-01-10  Derek Price  <derek@ximbiot.com>
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1060]
+	* posix/glob.c: Assume freestanding C89 compiler.  Simplify cruft that
+	may be replaced with GNULIB modules.  Make no attempt to find 64-bit
+	versions of file access functions directly when [!_LIBC].
+	Don't define GLOB_* macros here.
+	(DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK, DIRENT_MIGHT_BE_DIR): New
+	macros to abstract dirent->d_type access.
+	(GETPW_R_SIZE_MAX, GET_LOGIN_NAME_MAX): New macros to abstract sysconf
+	access.
+
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
