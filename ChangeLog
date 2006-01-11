@@ -1,5 +1,10 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/check-localplt.c: New file.
+	* elf/Makefile: Add rules to build and run check-localplt.
+	* scripts/data/localplt-x86_64-linux-gnu.data: New file.
+	* scripts/data/localplt-i386-linux-gnu.data: New file.
+
 	* include/sys/stat.h: Add libc_hidden_proto for __fxstatat64.
 	* sysdeps/unix/sysv/linux/fxstatat64.c: Add libc_hidden_def for
 	__fxstatat64.

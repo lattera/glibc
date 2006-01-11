@@ -1,0 +1,7 @@
+_Unwind_Find_FDE
+calloc
+free
+malloc
+matherr
+memalign
+realloc

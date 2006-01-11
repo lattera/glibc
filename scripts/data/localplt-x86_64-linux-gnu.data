@@ -1,0 +1,6 @@
+calloc
+free
+malloc
+matherr
+memalign
+realloc

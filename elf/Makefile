@@ -806,6 +806,10 @@ check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 
+check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
+$(objpfx)check-localplt: check-localplt.c
+	$(native-compile)
+
 ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out
 
@@ -818,6 +822,18 @@ generated += check-textrel check-textrel.out
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
+check-data := $(firstword $(wildcard \
+	        $(foreach M,$(config-machine) $(base-machine),\
+			  ../scripts/data/localplt-$M-$(config-os).data)))
+ifneq (,$(check-data))
+tests: $(objpfx)check-localplt.out
+
+$(objpfx)check-localplt.out: $(objpfx)check-localplt $(common-objpfx)libc.so \
+			     $(common-objpfx)math/libm.so $(check-data)
+	$(objpfx)check-localplt $(common-objpfx)libc.so \
+				$(common-objpfx)math/libm.so | LC_ALL=C sort |\
+	  diff -u $(check-data) -
+endif
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)
