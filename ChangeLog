@@ -1,5 +1,7 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/check-textrel.c: Add missing argument.
+
 	* Makerules: Define build-module-asneeded.
 	* iconvdata/extra-module.mk: Use build-module-asneeded.
 	needed.

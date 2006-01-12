@@ -87,7 +87,7 @@ AB(handle_file) (const char *fname, int fd)
 	     && (SWAP (phdr[cnt].p_flags) & (PF_X | PF_W)) == (PF_X | PF_W))
       {
 	printf ("%s: segment %zu is executable and writable\n",
-		fname);
+		fname, cnt);
 	return 1;
       }
 
