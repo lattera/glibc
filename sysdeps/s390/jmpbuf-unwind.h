@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <setjmp.h>
+#include <jmpbuf-offsets.h>
 #include <stdint.h>
 #include <unwind.h>
 #include <bits/wordsize.h>

@@ -1,3 +1,40 @@
+2006-01-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/s390/jmpbuf-offsets.h: New file.
+	* sysdeps/s390/jmpbuf-unwind.h: Include it.
+
+	* sysdeps/alpha/__longjmp.S: Include <jmpbuf-offsets.h>
+	instead of <bits/setjmp.h>.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/i386/__longjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S:
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/__longjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+	* sysdeps/mach/hurd/i386/longjmp-ts.c: Include <jmpbuf-offsets.h>.
+	* sysdeps/mach/hurd/powerpc/longjmp-ts.c: Likewise.
+	* sysdeps/mach/hurd/alpha/longjmp-ts.c: Likewise.
+	* sysdeps/alpha/jmpbuf-unwind.h: Likewise.
+	* sysdeps/hppa/jmpbuf-unwind.h: Likewise.
+	* sysdeps/i386/jmpbuf-unwind.h: Likewise.
+	* sysdeps/powerpc/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/x86_64/jmpbuf-unwind.h: Likewise.
+	* setjmp/jmpbuf-offsets.h: File removed.
+	* include/bits/setjmp.h: File removed.
+
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wmemstream.c: New file.
@@ -40,7 +77,7 @@
 	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Add
 	__GI___fxstatat64 alias.
 
-	* libio/memstream.c (_IO_mem_finish): Fix potential memory leak of
+	* libio/memstream.c (_IO_mem_finish): Fix potential memory leak if
 	realloc fails.
 
 	* include/sched.h: Add libc_hidden_proto for __sched_yield.
