@@ -1,5 +1,6 @@
 /* setjmp for i386.
-   Copyright (C) 1995,1996,1997,2000,2001,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2001,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +19,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
+#include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
 #include "bp-sym.h"
 #include "bp-asm.h"

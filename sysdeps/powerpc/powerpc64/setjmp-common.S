@@ -1,5 +1,5 @@
 /* setjmp for PowerPC64.
-   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,11 +19,10 @@
 
 #include <sysdep.h>
 #define _ASM
-#define _SETJMP_H
 #ifdef __NO_VMX__
 #include <novmxsetjmp.h>
 #else
-#include <bits/setjmp.h>
+#include <jmpbuf-offsets.h>
 #endif
 #include <bp-sym.h>
 #include <bp-asm.h>

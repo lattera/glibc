@@ -19,9 +19,7 @@
 
 #include <sysdep.h>
 
-#define _ASM 1
-#define _SETJMP_H
-#include <bits/setjmp.h>
+#include <jmpbuf-offsets.h>
 #define ENV(base,reg) [%base + (reg * 4)]
 #define ST_FLUSH_WINDOWS 3
 #define RW_FP [%fp + 0x48]

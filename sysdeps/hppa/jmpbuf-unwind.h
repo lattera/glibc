@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <setjmp.h>
+#include <jmpbuf-offsets.h>
 
 /* Test if longjmp to JMPBUF would unwind the frame containing a local
    variable at ADDRESS.  */

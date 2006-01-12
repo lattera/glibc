@@ -20,9 +20,7 @@
 #include <sysdep.h>
 #include <sys/trap.h>
 
-#define _ASM 1
-#define _SETJMP_H
-#include <bits/setjmp.h>
+#include <jmpbuf-offsets.h>
 
 ENTRY(_setjmp)
 	b	1f

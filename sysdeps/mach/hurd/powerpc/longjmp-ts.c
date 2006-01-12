@@ -1,5 +1,5 @@
 /* Perform a `longjmp' on a Mach thread_state.  PowerPC version.
-   Copyright (C) 1991,94,95,97,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991,94,95,97,2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <hurd/signal.h>
 #include <setjmp.h>
+#include <jmpbuf-offsets.h>
 #include <mach/thread_status.h>
 
 
