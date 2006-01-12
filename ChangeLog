@@ -1,5 +1,17 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wmemstream.c: New file.
+	* libio/Makefile (routines): Add wmemstream.
+	(tests): Add tst-memstream1, tst-memstream2, tst-wmemstream2, and
+	tst-wmemstream2.
+	* libio/tst-memstream1.c: New file.
+	* libio/tst-memstream2.c: New file.
+	* libio/tst-wmemstream1.c: New file.
+	* libio/tst-wmemstream2.c: New file.
+
+	* libio/memstream.c (_IO_mem_sync): Remove useless call to
+	_IO_default_sync.
+
 	* elf/check-textrel.c: Add missing argument.
 
 	* Makerules: Define build-module-asneeded.
