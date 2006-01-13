@@ -1,3 +1,8 @@
+2006-01-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (ELF_NVRREG): Fix
+	value for PowerPC64.
+
 2006-01-12  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/s390/jmpbuf-offsets.h: New file.
