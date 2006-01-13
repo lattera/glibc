@@ -28,7 +28,7 @@ __sigsetjmp:
 
 $sigsetjmp_local:
 #ifndef PIC
-#define FRAME	16	
+#define FRAME	16
 	subq    sp, FRAME, sp
 	.frame  sp, FRAME, ra, 0
 	stq     ra, 0(sp)
