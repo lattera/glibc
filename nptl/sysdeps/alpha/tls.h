@@ -65,7 +65,7 @@ typedef union dtv
 typedef struct
 {
   dtv_t *dtv;
-  void *private;
+  void *__private;
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  */
