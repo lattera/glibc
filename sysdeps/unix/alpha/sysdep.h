@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -396,5 +396,43 @@ __LABEL(name)						\
 	   : inline_syscall_clobbers);				\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
+
+/* Pointer mangling support.  Note that tls access is slow enough that
+   we don't deoptimize things by placing the pointer check value there.  */
+
+#include <stdint.h>
+
+#if defined NOT_IN_libc && defined IS_IN_rtld
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)				\
+	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
+	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)				\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var)	\
+	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#elif defined PIC
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)		\
+	ldq	tmp, __pointer_chk_guard;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)		\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard attribute_relro;
+#  define PTR_MANGLE(var)	\
+	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#endif
 
 #endif /* ASSEMBLER */

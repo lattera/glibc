@@ -1,3 +1,10 @@
+2006-01-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (PTR_MANGLE, PTR_MANGLE2,
+	PTR_DEMANGLE, PTR_DEMANGLE2): Move ...
+	* sysdeps/unix/alpha/sysdep.h: ... here.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: Define __GI___fxstatat64.
+
 2006-01-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (ELF_NVRREG): Fix
