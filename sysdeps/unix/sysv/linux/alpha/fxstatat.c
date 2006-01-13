@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,4 +94,5 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
   return -1;
 }
-strong_alias (__fxstatat, __fxstatat64);
+strong_alias (__fxstatat, __fxstatat64)
+strong_alias (__fxstatat64, __GI___fxstatat64)
