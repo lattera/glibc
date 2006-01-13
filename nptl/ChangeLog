@@ -1,3 +1,7 @@
+2006-01-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/tls.h (tcbhead_t): Rename member to __private.
+
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/alpha/jmpbuf-unwind.h: File moved to main source tree.
