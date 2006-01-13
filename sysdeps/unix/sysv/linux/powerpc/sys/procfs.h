@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,11 @@ __BEGIN_DECLS
 #ifndef __PPC64_ELF_H
 #define ELF_NGREG       48      /* includes nip, msr, lr, etc. */
 #define ELF_NFPREG      33      /* includes fpscr */
-#define ELF_NVRREG      33      /* includes vscr */
+#if __WORDSIZE == 32
+# define ELF_NVRREG      33      /* includes vscr */
+#else
+# define ELF_NVRREG      34      /* includes vscr */
+#endif
 
 typedef unsigned long elf_greg_t;
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
