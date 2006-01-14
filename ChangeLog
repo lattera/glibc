@@ -4,7 +4,7 @@
 	(NLDBL_DECL): Rewritten.
 	Remove __THROW from NLDBL_DECL uses.
 	Use NLDBL_DECL for __vstrfmon, __vstrfmon_l.
-
+	(__nldbl___vstrfmon, __nldbl___vsyslog_chk): Restore missing decls.
 	* sysdeps/ieee754/ldbl-opt/nldbl-asinh.c: Restore attribute_hidden.
 
 2006-01-14  Jakub Jelinek  <jakub@redhat.com>

@@ -63,8 +63,12 @@ NLDBL_DECL (vsyslog);
 NLDBL_DECL (qecvt);
 NLDBL_DECL (qfcvt);
 NLDBL_DECL (qgcvt);
-NLDBL_DECL (__vstrfmon);
 NLDBL_DECL (__vstrfmon_l);
+
+/* This one does not exist in the normal interface, only
+   __nldbl___vstrfmon really exists.  */
+extern ssize_t __nldbl___vstrfmon (char *, size_t, const char *, va_list)
+  __THROW;
 
 /* These don't use __typeof because they were not declared by the headers,
    since we don't compile with _FORTIFY_SOURCE.  */
@@ -80,6 +84,7 @@ extern int __nldbl___vsnprintf_chk (char *__restrict, size_t, int, size_t,
 extern int __nldbl___vswprintf_chk (wchar_t *__restrict, size_t, int, size_t,
 				    const wchar_t *__restrict, __gnuc_va_list)
   __THROW;
+extern void __nldbl___vsyslog_chk (int, int, const char *, va_list);
 
 
 #endif /* __NLDBL_COMPAT_H */
