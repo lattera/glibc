@@ -1,5 +1,6 @@
 #include "nldbl-compat.h"
 
+attribute_hidden
 int
 fprintf (FILE *stream, const char *fmt, ...)
 {

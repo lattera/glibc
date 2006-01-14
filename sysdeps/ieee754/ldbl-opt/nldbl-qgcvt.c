@@ -2,6 +2,7 @@
 #include "nldbl-compat.h"
 #undef qgcvt
 
+attribute_hidden
 char *
 qgcvt (double val, int ndigit, char *buf)
 {

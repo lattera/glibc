@@ -33,11 +33,8 @@
 #include <sys/syslog.h>
 
 
-/* Declare the __nldbl_NAME function the wrappers call that's in libc.so,
-   and then redeclare NAME to mark it hidden for the nldbl-*.c definition.  */
-#define NLDBL_DECL(name) \
-  extern __typeof (name) __nldbl_##name; \
-  extern __typeof (name) name attribute_hidden
+/* Declare the __nldbl_NAME function the wrappers call that's in libc.so.  */
+#define NLDBL_DECL(name) extern __typeof (name) __nldbl_##name
 
 NLDBL_DECL (_IO_vfscanf);
 NLDBL_DECL (vfscanf);

@@ -1,5 +1,19 @@
 2006-01-14  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Don't try
+	attribute_hidden here.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog.c (vsyslog): Restore
+	attribute_hidden here.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asprintf.c (__asprintf): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf.c (fprintf): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt.c (qecvt): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt.c (qfcvt): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qgcvt.c (qgcvt): Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/configure.in: Use AC_TRY_COMPILE and
+	verify __LONG_DOUBLE_128__ predefine.
+	* sysdeps/ieee754/ldbl-opt/configure: Regenerated.
+
 	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_HIDDEN): Removed.
 	(NLDBL_DECL): Rewritten.
 	Remove __THROW from NLDBL_DECL uses.

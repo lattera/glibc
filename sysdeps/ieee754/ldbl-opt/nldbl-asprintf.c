@@ -1,5 +1,6 @@
 #include "nldbl-compat.h"
 
+attribute_hidden
 int
 __asprintf (char **string_ptr, const char *fmt, ...)
 {

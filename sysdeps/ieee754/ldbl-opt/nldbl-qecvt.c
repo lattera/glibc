@@ -2,6 +2,7 @@
 #include "nldbl-compat.h"
 #undef qecvt
 
+attribute_hidden
 char *
 qecvt (double val, int ndigit, int *__restrict decpt, int *__restrict sign)
 {
