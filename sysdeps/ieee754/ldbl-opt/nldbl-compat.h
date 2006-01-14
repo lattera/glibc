@@ -32,60 +32,54 @@
 #include <monetary.h>
 #include <sys/syslog.h>
 
-#ifdef SHARED
-# define NLDBL_HIDDEN
-#else
-# define NLDBL_HIDDEN attribute_hidden
-#endif
+
+/* Declare the __nldbl_NAME function the wrappers call that's in libc.so,
+   and then redeclare NAME to mark it hidden for the nldbl-*.c definition.  */
 #define NLDBL_DECL(name) \
-  extern __typeof (name) __nldbl_##name NLDBL_HIDDEN
+  extern __typeof (name) __nldbl_##name; \
+  extern __typeof (name) name attribute_hidden
 
 NLDBL_DECL (_IO_vfscanf);
 NLDBL_DECL (vfscanf);
 NLDBL_DECL (vfwscanf);
-NLDBL_DECL (obstack_vprintf) __THROW;
-NLDBL_DECL (vasprintf) __THROW;
+NLDBL_DECL (obstack_vprintf);
+NLDBL_DECL (vasprintf);
 NLDBL_DECL (dprintf);
 NLDBL_DECL (vdprintf);
 NLDBL_DECL (fprintf);
 NLDBL_DECL (vfprintf);
 NLDBL_DECL (vfwprintf);
-NLDBL_DECL (vsnprintf) __THROW;
-NLDBL_DECL (vsprintf) __THROW;
-NLDBL_DECL (vsscanf) __THROW;
-NLDBL_DECL (vswprintf) __THROW;
-NLDBL_DECL (vswscanf) __THROW;
+NLDBL_DECL (vsnprintf);
+NLDBL_DECL (vsprintf);
+NLDBL_DECL (vsscanf);
+NLDBL_DECL (vswprintf);
+NLDBL_DECL (vswscanf);
 NLDBL_DECL (__asprintf);
 NLDBL_DECL (asprintf);
 NLDBL_DECL (__printf_fp);
-NLDBL_DECL (printf_size) __THROW;
+NLDBL_DECL (printf_size);
 NLDBL_DECL (syslog);
 NLDBL_DECL (vsyslog);
 NLDBL_DECL (qecvt);
 NLDBL_DECL (qfcvt);
 NLDBL_DECL (qgcvt);
+NLDBL_DECL (__vstrfmon);
+NLDBL_DECL (__vstrfmon_l);
+
+/* These don't use __typeof because they were not declared by the headers,
+   since we don't compile with _FORTIFY_SOURCE.  */
 extern int __nldbl___vfprintf_chk (FILE *__restrict, int,
-				   const char *__restrict, _G_va_list)
-  NLDBL_HIDDEN;
+				   const char *__restrict, _G_va_list);
 extern int __nldbl___vfwprintf_chk (FILE *__restrict, int,
-				    const wchar_t *__restrict, __gnuc_va_list)
-  NLDBL_HIDDEN;
+				    const wchar_t *__restrict, __gnuc_va_list);
 extern int __nldbl___vsprintf_chk (char *__restrict, int, size_t,
-				   const char *__restrict, _G_va_list) __THROW
-  NLDBL_HIDDEN;
+				   const char *__restrict, _G_va_list) __THROW;
 extern int __nldbl___vsnprintf_chk (char *__restrict, size_t, int, size_t,
 				    const char *__restrict, _G_va_list)
-  __THROW NLDBL_HIDDEN;
+  __THROW;
 extern int __nldbl___vswprintf_chk (wchar_t *__restrict, size_t, int, size_t,
 				    const wchar_t *__restrict, __gnuc_va_list)
-  __THROW NLDBL_HIDDEN;
-extern void __nldbl___vsyslog_chk (int, int, const char *, va_list)
-  NLDBL_HIDDEN;
-extern ssize_t __nldbl___vstrfmon (char *, size_t, const char *, va_list)
-  __THROW NLDBL_HIDDEN;
-extern ssize_t  __nldbl___vstrfmon_l (char *, size_t, __locale_t,
-				      const char *, va_list)
-  __THROW NLDBL_HIDDEN;
+  __THROW;
 
 
 #endif /* __NLDBL_COMPAT_H */

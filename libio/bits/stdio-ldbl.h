@@ -61,6 +61,10 @@ __LDBL_REDIR_DECL (obstack_vprintf)
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 __LDBL_REDIR_DECL (__sprintf_chk)
 __LDBL_REDIR_DECL (__vsprintf_chk)
+# if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98
+__LDBL_REDIR_DECL (__snprintf_chk)
+__LDBL_REDIR_DECL (__vsnprintf_chk)
+# endif
 # if __USE_FORTIFY_LEVEL > 1
 __LDBL_REDIR_DECL (__fprintf_chk)
 __LDBL_REDIR_DECL (__printf_chk)

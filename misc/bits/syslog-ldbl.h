@@ -22,4 +22,15 @@
 #endif
 
 __LDBL_REDIR_DECL (syslog)
+
+#ifdef __USE_BSD
 __LDBL_REDIR_DECL (vsyslog)
+#endif
+
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+__LDBL_REDIR_DECL (__syslog_chk)
+
+# ifdef __USE_BSD
+__LDBL_REDIR_DECL (__vsyslog_chk)
+# endif
+#endif

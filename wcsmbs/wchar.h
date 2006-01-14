@@ -561,8 +561,8 @@ extern __inline float
 __NTH (wcstof (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr))
 { return __wcstof_internal (__nptr, __endptr, 0); }
-extern __inline long double
 #  ifndef __LDBL_COMPAT
+extern __inline long double
 __NTH (wcstold (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr))
 { return __wcstold_internal (__nptr, __endptr, 0); }
@@ -833,14 +833,13 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 # include <wctype.h>
 #endif
 
-
-#ifdef __LDBL_COMPAT
-# include <bits/wchar-ldbl.h>
-#endif
-
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 # include <bits/wchar2.h>
+#endif
+
+#ifdef __LDBL_COMPAT
+# include <bits/wchar-ldbl.h>
 #endif
 
 __END_DECLS

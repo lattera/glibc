@@ -21,40 +21,8 @@
 # error "Never include <bits/monetary-ldbl.h> directly; use <monetary.h> instead."
 #endif
 
-#if defined __LDBL_COMPAT && defined __GNUC__ && __GNUC__ >= 2
+__LDBL_REDIR_DECL (strfmon)
 
-# define __LDBL_REDIR_WCHAR(name) \
-  extern __typeof (name) name __asm (__ASMNAME (__nldbl_##name))
-
-# if defined __USE_ISOC99 || defined __USE_UNIX98
-__BEGIN_NAMESPACE_C99
-__LDBL_REDIR_WCHAR (fwprintf);
-__LDBL_REDIR_WCHAR (wprintf);
-__LDBL_REDIR_WCHAR (swprintf);
-__LDBL_REDIR_WCHAR (vfwprintf);
-__LDBL_REDIR_WCHAR (vwprintf);
-__LDBL_REDIR_WCHAR (vswprintf);
-__LDBL_REDIR_WCHAR (fwscanf);
-__LDBL_REDIR_WCHAR (wscanf);
-__LDBL_REDIR_WCHAR (swscanf);
-__END_NAMESPACE_C99
-# endif
-
-# ifdef __USE_ISOC99
-__BEGIN_NAMESPACE_C99
-__LDBL_REDIR_WCHAR (vfwscanf);
-__LDBL_REDIR_WCHAR (vwscanf);
-__LDBL_REDIR_WCHAR (vswscanf);
-__END_NAMESPACE_C99
-# endif
-
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
-__LDBL_REDIR_DECL (__swprintf_chk)
-__LDBL_REDIR_DECL (__vswprintf_chk)
-# if __USE_FORTIFY_LEVEL > 1
-__LDBL_REDIR_DECL (__fwprintf_chk)
-__LDBL_REDIR_DECL (__wprintf_chk)
-__LDBL_REDIR_DECL (__vfwprintf_chk)
-__LDBL_REDIR_DECL (__vwprintf_chk)
-# endif
+#ifdef __USE_GNU
+__LDBL_REDIR_DECL (strfmon_l)
 #endif

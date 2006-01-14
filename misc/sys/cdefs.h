@@ -321,8 +321,10 @@
 #  define __LDBL_REDIR1_NTH(name, proto, alias) __REDIRECT_NTH (name, proto, alias)
 #  define __LDBL_REDIR_NTH(name, proto) \
   __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
+#  define __LDBL_REDIR1_DECL(name, alias) \
+  extern __typeof (name) name __asm (__ASMNAME (#alias));
 #  define __LDBL_REDIR_DECL(name) \
-  extern __typeof (name) name __asm (__ASMNAME (__nldbl_##name));
+  extern __typeof (name) name __asm (__ASMNAME ("__nldbl_" #name));
 # endif
 #endif
 #if !defined __LDBL_COMPAT || !defined __REDIRECT

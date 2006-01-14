@@ -1,5 +1,38 @@
 2006-01-14  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_HIDDEN): Removed.
+	(NLDBL_DECL): Rewritten.
+	Remove __THROW from NLDBL_DECL uses.
+	Use NLDBL_DECL for __vstrfmon, __vstrfmon_l.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-asinh.c: Restore attribute_hidden.
+
+2006-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__LDBL_REDIR1_DECL): Define.
+	(__LDBL_REDIR_DECL): Stringize __nldbl and name.
+	* stdlib/bits/monetary-ldbl.h: Remove pastos from wchar-ldbl.h.
+	(strfmon, strfmon_l): Add __LDBL_REDIR_DECL.
+	* stdlib/bits/stdlib-ldbl.h (strtold, strtold_l, __strtold_internal,
+	qecvt, qfcvt, qgcvt, qecvt_r, qfcvt_r): Use __LDBL_REDIR1_DECL
+	instead of __LDBL_REDIR_DECL.
+	* wcsmbs/bits/wchar-ldbl.h: Remove stale #if.
+	(__LDBL_REDIR_WCHAR): Remove.
+	(fwprintf, wprintf, swprintf, vfwprintf, vwprintf, vswprintf,
+	fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf): Use
+	__LDBL_REDIR_DECL instead of __LDBL_REDIR_WCHAR.
+	(wcstold, wcstold_l, __wcstold_internal): Add __LDBL_REDIR1_DECL.
+	* wcsmbs/wchar.h: Include bits/wchar-ldbl.h after bits/wchar2.h
+	instead of before it.
+	(wcstold inline): Move #ifndef __LDBL_COMPAT before
+	extern keyword.
+	* libio/bits/stdio-ldbl.h (__snprintf_chk, __vsnprintf_chk): Add
+	__LDBL_REDIR_DECL.
+	* misc/bits/syslog-ldbl.h (vsyslog): Protect with #ifdef __USE_BSD.
+	(__syslog_chk, __vsyslog_chk): Add __LDBL_REDIR_DECL.
+
+2006-01-14  Roland McGrath  <roland@redhat.com>
+
 	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Fix typo.
 	(NLDBL_HIDDEN): New macro.
 	(NLDBL_DECL): Use it in place of attribute_hidden.
