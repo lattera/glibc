@@ -1,5 +1,6 @@
+%include <nldbl-abi.h>
 %ifndef NLDBL_VERSION
-% error "CPU-specific sysdeps/.../Version file must %define NLDBL_VERSION"
+% error "nldbl-abi.h must define NLDBL_VERSION"
 %endif
 
 libc {

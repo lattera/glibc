@@ -21,8 +21,3 @@ libc {
     posix_fadvise64; posix_fallocate64;
   }
 }
-
-/* This is used by sysdeps/ieee754/ldbl-opt/Versions.  It gives the
-   ABI version where long double == double was replaced with proper
-   long double for libm *l functions and libc functions using long double.  */
-%define NLDBL_VERSION GLIBC_2.4

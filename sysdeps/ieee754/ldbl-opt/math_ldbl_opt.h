@@ -1,16 +1,17 @@
 /* -mlong-double-64 compatibility mode macros.  */
 
-#ifndef NLDBL_VERSION
-# define NLDBL_VERSION GLIBC_2_4
+#include <nldbl-abi.h>
+#ifndef LONG_DOUBLE_COMPAT_VERSION
+# error "nldbl-abi.h must define LONG_DOUBLE_COMPAT_VERSION"
 #endif
 
 #include <math.h>
 #include <math/math_private.h>
 #include <shlib-compat.h>
 #define LONG_DOUBLE_COMPAT(lib, introduced) \
-  SHLIB_COMPAT(lib, introduced, NLDBL_VERSION)
+  SHLIB_COMPAT(lib, introduced, LONG_DOUBLE_COMPAT_VERSION)
 #define long_double_symbol(lib, local, symbol) \
-  long_double_symbol_1 (lib, local, symbol, NLDBL_VERSION)
+  long_double_symbol_1 (lib, local, symbol, LONG_DOUBLE_COMPAT_VERSION)
 #if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
 # define ldbl_hidden_def(local, name) libc_hidden_ver (local, name)
 # define ldbl_strong_alias(name, aliasname) \

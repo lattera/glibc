@@ -1,3 +1,12 @@
+2006-01-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nldbl-abi.h: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: #include <nldbl-abi.h>
+	to define LONG_DOUBLE_COMPAT_VERSION.  Use that in place of
+	NLDBL_VERSION.
+	* sysdeps/ieee754/ldbl-opt/Versions: Include <nldbl-abi.h>.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Revert last change.
+
 2006-01-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* math/math.h [__NO_LONG_DOUBLE_MATH] (__nldbl_nexttowardf): New
