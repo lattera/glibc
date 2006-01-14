@@ -1,5 +1,6 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -138,9 +139,9 @@ static wchar_t *group_number (wchar_t *buf, wchar_t *bufend,
 
 
 int
-__printf_fp (FILE *fp,
-	     const struct printf_info *info,
-	     const void *const *args)
+___printf_fp (FILE *fp,
+	      const struct printf_info *info,
+	      const void *const *args)
 {
   /* The floating-point value to output.  */
   union
@@ -1153,7 +1154,8 @@ __printf_fp (FILE *fp,
   }
   return done;
 }
-libc_hidden_def (__printf_fp)
+ldbl_hidden_def (___printf_fp, __printf_fp)
+ldbl_strong_alias (___printf_fp, __printf_fp)
 
 /* Return the number of extra grouping characters that will be inserted
    into a number with INTDIG_MAX integer digits.  */

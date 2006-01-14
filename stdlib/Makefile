@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,10 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h alloca.h monetary.h fmtmsg.h ucontext.h sys/ucontext.h    \
+headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h			      \
+	   monetary.h bits/monetary-ldbl.h				      \
 	   inttypes.h stdint.h bits/wordsize.h				      \
-	   errno.h sys/errno.h bits/errno.h bits/stdlib.h
+	   errno.h sys/errno.h bits/errno.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \

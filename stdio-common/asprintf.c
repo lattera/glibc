@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004
+/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,7 +20,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <libio/libioP.h>
+#include <libioP.h>
 #define vasprintf(s, f, a) _IO_vasprintf (s, f, a)
 #undef __asprintf
 
@@ -28,7 +28,7 @@
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */
 int
-__asprintf (char **string_ptr, const char *format, ...)
+___asprintf (char **string_ptr, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -39,5 +39,7 @@ __asprintf (char **string_ptr, const char *format, ...)
 
   return done;
 }
-INTDEF(__asprintf)
-weak_alias (__asprintf, asprintf)
+INTDEF2(___asprintf, __asprintf)
+
+ldbl_strong_alias (___asprintf, __asprintf)
+ldbl_weak_alias (___asprintf, asprintf)

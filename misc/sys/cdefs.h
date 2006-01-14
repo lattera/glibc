@@ -1,4 +1,5 @@
-/* Copyright (C) 1992-2001, 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -307,6 +308,29 @@
 #   define __restrict_arr	/* Not supported.  */
 #  endif
 # endif
+#endif
+
+#include <bits/wordsize.h>
+
+#if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
+# define __LDBL_COMPAT 1
+# ifdef __REDIRECT
+#  define __LDBL_REDIR1(name, proto, alias) __REDIRECT (name, proto, alias)
+#  define __LDBL_REDIR(name, proto) \
+  __LDBL_REDIR1 (name, proto, __nldbl_##name)
+#  define __LDBL_REDIR1_NTH(name, proto, alias) __REDIRECT_NTH (name, proto, alias)
+#  define __LDBL_REDIR_NTH(name, proto) \
+  __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
+#  define __LDBL_REDIR_DECL(name) \
+  extern __typeof (name) name __asm (__ASMNAME (__nldbl_##name));
+# endif
+#endif
+#if !defined __LDBL_COMPAT || !defined __REDIRECT
+# define __LDBL_REDIR1(name, proto, alias) name proto
+# define __LDBL_REDIR(name, proto) name proto
+# define __LDBL_REDIR1_NTH(name, proto, alias) name proto __THROW
+# define __LDBL_REDIR_NTH(name, proto) name proto __THROW
+# define __LDBL_REDIR_DECL(name)
 #endif
 
 #endif	 /* sys/cdefs.h */

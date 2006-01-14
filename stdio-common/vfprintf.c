@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +65,7 @@
 #define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
 
 #ifndef COMPILE_WPRINTF
-# define vfprintf	_IO_vfprintf
+# define vfprintf	_IO_vfprintf_internal
 # define CHAR_T		char
 # define UCHAR_T	unsigned char
 # define INT_T		int
@@ -758,6 +759,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
+	    if (__ldbl_is_dbl)						      \
+	      is_long_double = 0;					      \
+									      \
 	    struct printf_info info = { .prec = prec,			      \
 					.width = width,			      \
 					.spec = spec,			      \
@@ -785,6 +789,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    ptr = (const void *) &args_value[fspec->data_arg];		      \
+	    if (__ldbl_is_dbl)						      \
+	      {								      \
+		fspec->data_arg_type = PA_DOUBLE;			      \
+		fspec->info.is_long_double = 0;				      \
+	      }								      \
 									      \
 	    function_done = __printf_fp (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -808,6 +817,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
+	    if (__ldbl_is_dbl)						      \
+	      is_long_double = 0;					      \
+									      \
 	    struct printf_info info = { .prec = prec,			      \
 					.width = width,			      \
 					.spec = spec,			      \
@@ -834,6 +846,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    ptr = (const void *) &args_value[fspec->data_arg];		      \
+	    if (__ldbl_is_dbl)						      \
+	      fspec->info.is_long_double = 0;				      \
 									      \
 	    function_done = __printf_fphex (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -1704,7 +1718,15 @@ do_positional:
 	T (PA_INT|PA_FLAG_LONG_LONG, pa_long_long_int, long long int);
 	T (PA_FLOAT, pa_double, double);	/* Promoted.  */
 	T (PA_DOUBLE, pa_double, double);
-	T (PA_DOUBLE|PA_FLAG_LONG_DOUBLE, pa_long_double, long double);
+	case PA_DOUBLE|PA_FLAG_LONG_DOUBLE:
+	  if (__ldbl_is_dbl)
+	    {
+	      args_value[cnt].pa_double = va_arg (ap_save, double);
+	      args_type[cnt] &= ~PA_FLAG_LONG_DOUBLE;
+	    }
+	  else
+	    args_value[cnt].pa_long_double = va_arg (ap_save, long double);
+	  break;
 	T (PA_STRING, pa_string, const char *);
 	T (PA_WSTRING, pa_wstring, const wchar_t *);
 	T (PA_POINTER, pa_pointer, void *);
@@ -2154,25 +2176,11 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 }
 
 #undef vfprintf
-#ifdef strong_alias
-/* This is for glibc.  */
-# ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WPRINTF
 strong_alias (_IO_vfwprintf, __vfwprintf);
-weak_alias (_IO_vfwprintf, vfwprintf);
-# else
-strong_alias (_IO_vfprintf, vfprintf);
-libc_hidden_def (vfprintf)
-INTDEF(_IO_vfprintf)
-# endif
+ldbl_weak_alias (_IO_vfwprintf, vfwprintf);
 #else
-# if defined __ELF__ || defined __GNU_LIBRARY__
-#  include <gnu-stabs.h>
-#  ifdef weak_alias
-#   ifdef COMPILE_WPRINTF
-weak_alias (_IO_vfwprintf, vfwprintf);
-#   else
-weak_alias (_IO_vfprintf, vfprintf);
-#   endif
-#  endif
-# endif
+ldbl_strong_alias (_IO_vfprintf_internal, vfprintf);
+ldbl_hidden_def (_IO_vfprintf_internal, vfprintf)
+ldbl_strong_alias (_IO_vfprintf_internal, _IO_vfprintf);
 #endif

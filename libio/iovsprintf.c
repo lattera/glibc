@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,10 +29,7 @@
 #include "strfile.h"
 
 int
-_IO_vsprintf (string, format, args)
-     char *string;
-     const char *format;
-     _IO_va_list args;
+__IO_vsprintf (char *string, const char *format, _IO_va_list args)
 {
   _IO_strfile sf;
   int ret;
@@ -47,8 +44,7 @@ _IO_vsprintf (string, format, args)
   _IO_putc_unlocked ('\0', (_IO_FILE *) &sf._sbf);
   return ret;
 }
-INTDEF(_IO_vsprintf)
+INTDEF2(__IO_vsprintf, _IO_vsprintf)
 
-#ifdef weak_alias
-weak_alias (_IO_vsprintf, vsprintf)
-#endif
+ldbl_strong_alias (__IO_vsprintf, _IO_vsprintf)
+ldbl_weak_alias (__IO_vsprintf, vsprintf)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <libioP.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -25,7 +26,7 @@
 /* Write formatted output to stdout from the format string FORMAT.  */
 /* VARARGS1 */
 int
-printf (const char *format, ...)
+__printf (const char *format, ...)
 {
   va_list arg;
   int done;
@@ -38,5 +39,6 @@ printf (const char *format, ...)
 }
 
 #undef _IO_printf
+ldbl_strong_alias (__printf, printf);
 /* This is for libg++.  */
-strong_alias (printf, _IO_printf);
+ldbl_strong_alias (__printf, _IO_printf);

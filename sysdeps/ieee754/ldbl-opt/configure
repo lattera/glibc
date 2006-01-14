@@ -1,0 +1,22 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/ieee754/ldbl-opt/.
+
+echo "$as_me:$LINENO: checking whether $CC $CFLAGS -mlong-double-128" >&5
+echo $ECHO_N "checking whether $CC $CFLAGS -mlong-double-128... $ECHO_C" >&6
+if test "${libc_cv_mlong_double_128+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if $CC $CFLAGS -mlong-double-128 -S -xc /dev/null -o /dev/null 2>&1
+then
+  libc_cv_mlong_double_128=yes
+else
+  libc_cv_mlong_double_128=no
+fi
+fi
+echo "$as_me:$LINENO: result: $libc_cv_mlong_double_128" >&5
+echo "${ECHO_T}$libc_cv_mlong_double_128" >&6
+if test "$libc_cv_mlong_double_128" = no; then
+  { { echo "$as_me:$LINENO: error: this configuration requires -mlong-double-128 support" >&5
+echo "$as_me: error: this configuration requires -mlong-double-128 support" >&2;}
+   { (exit 1); exit 1; }; }
+fi

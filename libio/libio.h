@@ -534,6 +534,10 @@ extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
 #endif
 
+#ifdef __LDBL_COMPAT
+# include <bits/libio-ldbl.h>
+#endif
+
 #ifdef __cplusplus
 }
 #endif

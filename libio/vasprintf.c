@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1997,1999-2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1999-2002,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,7 +87,4 @@ _IO_vasprintf (result_ptr, format, args)
   (*result_ptr)[needed - 1] = '\0';
   return ret;
 }
-
-#ifdef weak_alias
-weak_alias (_IO_vasprintf, vasprintf)
-#endif
+ldbl_weak_alias (_IO_vasprintf, vasprintf)

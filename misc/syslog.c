@@ -58,6 +58,8 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #endif
 
 #include <libio/iolibio.h>
+#include <math_ldbl_opt.h>
+
 #define ftell(s) INTUSE(_IO_ftell) (s)
 
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */
@@ -109,7 +111,7 @@ cancel_handler (void *ptr)
  *	print message on log file; output is intended for syslogd(8).
  */
 void
-syslog(int pri, const char *fmt, ...)
+__syslog(int pri, const char *fmt, ...)
 {
 	va_list ap;
 
@@ -117,7 +119,8 @@ syslog(int pri, const char *fmt, ...)
 	__vsyslog_chk(pri, -1, fmt, ap);
 	va_end(ap);
 }
-libc_hidden_def (syslog)
+ldbl_hidden_def (__syslog, syslog)
+ldbl_strong_alias (__syslog, syslog)
 
 void
 __syslog_chk(int pri, int flag, const char *fmt, ...)
@@ -318,14 +321,12 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 libc_hidden_def (__vsyslog_chk)
 
 void
-vsyslog(pri, fmt, ap)
-	int pri;
-	register const char *fmt;
-	va_list ap;
+__vsyslog(int pri, const char *fmt, va_list ap)
 {
   __vsyslog_chk (pri, -1, fmt, ap);
 }
-libc_hidden_def (vsyslog)
+ldbl_hidden_def (__vsyslog, vsyslog)
+ldbl_strong_alias (__vsyslog, vsyslog)
 
 static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
 

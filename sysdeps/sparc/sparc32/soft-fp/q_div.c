@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return a / b
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -35,5 +35,5 @@ long double _Q_div(const long double a, const long double b)
   FP_DIV_Q(C, A, B);
   FP_PACK_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
-  return long double;
+  return c;
 }

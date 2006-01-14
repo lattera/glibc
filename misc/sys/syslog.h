@@ -206,6 +206,9 @@ extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 # include <bits/syslog.h>
 #endif
+#ifdef __LDBL_COMPAT
+# include <bits/syslog-ldbl.h>
+#endif
 
 __END_DECLS
 

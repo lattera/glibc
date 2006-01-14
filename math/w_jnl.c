@@ -48,9 +48,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	long double jnl(int n, long double x)	/* wrapper jnl */
+	long double __jnl(int n, long double x)	/* wrapper jnl */
 #else
-	long double jnl(n,x)			/* wrapper jnl */
+	long double __jnl(n,x)			/* wrapper jnl */
 	long double x; int n;
 #endif
 {
@@ -66,11 +66,12 @@ static char rcsid[] = "$NetBSD: $";
 	    return z;
 #endif
 }
+weak_alias (__jnl, jnl)
 
 #ifdef __STDC__
-	long double ynl(int n, long double x)	/* wrapper ynl */
+	long double __ynl(int n, long double x)	/* wrapper ynl */
 #else
-	long double ynl(n,x)			/* wrapper ynl */
+	long double __ynl(n,x)			/* wrapper ynl */
 	long double x; int n;
 #endif
 {
@@ -94,3 +95,4 @@ static char rcsid[] = "$NetBSD: $";
 	    return z;
 #endif
 }
+weak_alias (__ynl, ynl)

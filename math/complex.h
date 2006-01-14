@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,14 @@ __BEGIN_DECLS
 
 /* And the long double versions.  It is non-critical to define them
    here unconditionally since `long double' is required in ISO C99.  */
-#if __STDC__ - 0 || __GNUC__ - 0 && !defined __NO_LONG_DOUBLE_MATH
+#if (__STDC__ - 0 || __GNUC__ - 0) \
+    && (!defined __NO_LONG_DOUBLE_MATH || defined __LDBL_COMPAT)
+# ifdef __LDBL_COMPAT
+#  undef __MATHDECL_1
+#  define __MATHDECL_1(type, function, args) \
+  extern type __REDIRECT(__MATH_PRECNAME(function), args, function) __THROW
+# endif
+
 # ifndef _Mlong_double_
 #  define _Mlong_double_	long double
 # endif

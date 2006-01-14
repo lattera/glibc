@@ -107,18 +107,21 @@ extern int __vswprintf (wchar_t *__restrict __s, size_t __n,
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 extern int __fwprintf (__FILE *__restrict __s,
 		       __const wchar_t *__restrict __format, ...)
-     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
+     /* __attribute__ ((__format__ (__wprintf__, 2, 3))) */;
 extern int __vfwprintf (__FILE *__restrict __s,
 			__const wchar_t *__restrict __format,
 			__gnuc_va_list __arg)
+     /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
+extern int __vfwprintf_chk (FILE *__restrict __s, int __flag,
+			    const wchar_t *__restrict __format,
+			    __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
-
-
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    int __flag, size_t __s_len,
 			    __const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
+libc_hidden_proto (__vfwprintf_chk)
 libc_hidden_proto (__vswprintf_chk)
 
 /* Internal functions.  */

@@ -1,3 +1,614 @@
+2006-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/math.h [__NO_LONG_DOUBLE_MATH] (__nldbl_nexttowardf): New
+	prototype.
+	(nexttowardf): Redirect to __nldbl_nexttowardf.
+	(nexttoward): Redirect to nextafter.
+	(__MATHDECL_2, __MATHDECL_1): Redirect *l functions to
+	non-*l versions if __LONG_DOUBLE_MATH_OPTIONAL and
+	__NO_LONG_DOUBLE_MATH.
+	* math/complex.h (__MATHDECL_1): Likewise.
+	* math/bits/mathcalls.h (nexttoward): Don't prototype if
+	__LDBL_COMPAT.
+	* misc/sys/cdefs.h: Include <bits/wordsize.h>.
+	(__LDBL_COMPAT, __LDBL_REDIR1, __LDBL_REDIR, __LDBL_REDIR1_NTH,
+	__LDBL_REDIR_NTH, __LDBL_REDIR_DECL): New macros.
+
+	* libio/bits/stdio-ldbl.h: New file.
+	* libio/Makefile (headers): Add it.
+	* libio/stdio.h [__LDBL_COMPAT]: #include it.
+	* libio/bits/libio-ldbl.h: New file.
+	* libio/Makefile (headers): Add it.
+	* libio/libio.h [__LDBL_COMPAT]: #include it.
+	* libio/libioP.h: Include <math_ldbl_opt.h>.
+	* include/wchar.h (__fwprintf, __vfwprintf): Fix commented out
+	attribute.
+	(__vfwprintf_chk): New prototype.  Add libc_hidden_proto.
+	* wcsmbs/bits/wchar-ldbl.h: New file.
+	* wcsmbs/Makefile (headers): Add it.
+	* wcsmbs/wchar.h [__LDBL_COMPAT]: #include it.
+	* wcsmbs/bits/wchar2.h (__vswprintf_alias): Removed.
+	(vswprintf): Define as a macro rather than inline function.
+	* stdio-common/bits/printf-ldbl.h: New file.
+	* stdio-common/Makefile (headers): Add it.
+	* stdio-common/printf.h [__LDBL_COMPAT]: #include it.
+	* libio/fwprintf.c: Include libioP.h.
+	(fwprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/fwscanf.c: Include libioP.h.
+	(fwscanf): Rename to __fwscanf and add ldbl_strong_alias.
+	* libio/iovdprintf.c (vdprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/iovsprintf.c (_IO_vsprintf): Rename to __IO_vsprintf,
+	add ldbl_strong_alias and use INTDEF2 instead of INTDEF.
+	(vsprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/iovsscanf.c (__vsscanf, vsscanf): Use ldbl_weak_alias
+	instead of weak_alias.
+	* libio/iovswscanf.c (vswscanf): Rename to __vswscanf,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* libio/obprintf.c (obstack_printf, obstack_vprintf): Use
+	ldbl_weak_alias instead of weak_alias.
+	* libio/swprintf.c: Include libioP.h.
+	(swprintf): Rename to __swprintf and add ldbl_strong_alias.
+	* libio/swscanf.c: Include libioP.h.
+	(swscanf): Rename to __swscanf and add ldbl_strong_alias.
+	* libio/vasprintf.c (vasprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/vscanf.c (vscanf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/vsnprintf.c (__vsnprintf, vsnprintf): Use ldbl_weak_alias
+	instead of weak_alias.
+	* libio/vswprintf.c (__vswprintf): Remove alias.
+	(vswprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/vwprintf.c: Include libioP.h.
+	(vwprintf): Rename to __vwprintf and add ldbl_strong_alias.
+	* libio/vwscanf.c (vwscanf): Rename to __vwscanf and add
+	ldbl_strong_alias.
+	* libio/wprintf.c: Include libioP.h.
+	(wprintf): Rename to __wprintf and add ldbl_strong_alias.
+	* libio/wscanf.c: Include libioP.h.
+	(wscanf): Rename to __wscanf and add ldbl_strong_alias.
+	* stdio-common/asprintf.c (__asprintf): Rename to ___asprintf, add
+	ldbl_strong_alias and use INTDEF2 instead of INTDEF.
+	(asprintf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/dprintf.c (dprintf): Rename to __dprintf, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* stdio-common/fprintf.c: Include libioP.h.
+	(fprintf): Rename to __fprintf, add ldbl_strong_alias and
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(_IO_fprintf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/fscanf.c: Include libioP.h.
+	(fscanf): Rename to __fscanf and add ldbl_strong_alias.
+	* stdio-common/printf.c: Include libioP.h.
+	(printf): Rename to __printf and add ldbl_strong_alias.
+	(_IO_printf): Use ldbl_strong_alias instead of strong_alias.
+	* stdio-common/printf_fp.c (__printf_fp): Rename to __printf_fp, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* stdio-common/printf_size.c (printf_size): Rename to __printf_size
+	and add ldbl_strong_alias.
+	* stdio-common/scanf.c (scanf): Rename to __scanf and add
+	ldbl_strong_alias.
+	* stdio-common/snprintf.c (snprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* stdio-common/sprintf.c (sprintf): Rename to __sprintf, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	(_IO_sprintf): Use ldbl_strong_alias instead of strong_alias.
+	* stdio-common/sscanf.c: Include libioP.h instead of iolibio.h.
+	(sscanf): Rename to __sscanf and add ldbl_strong_alias.
+	* stdio-common/vfprintf.c (vfprintf): Define to
+	_IO_vfprintf_internal.  Use ldbl_strong_alias instead.  Use
+	ldbl_hidden_def instead of libc_hidden_def.
+	(_IO_vfprintf_internal): Clear is_long_double if __ldbl_is_dbl,
+	handle the argument as double if it is non-zero.
+	(vfwprintf): Use ldbl_weak_alias instead of weak_alias.
+	(_IO_vfprintf): Add ldbl_strong_alias.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Rename to
+	_IO_vfscanf_internal, don't use strtold if __ldbl_is_dbl, add
+	ldbl_strong_alias.
+	(vfwscanf): Use ldbl_weak_alias instead of weak_alias.
+	(__vfscanf): Rename to ___vfscanf, add ldbl_strong_alias and
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(vfscanf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/vprintf.c: Include libioP.h.
+	(vprintf): Rename to __vprintf and add ldbl_strong_alias.
+	* debug/fprintf_chk.c (__fprintf_chk): Rename to ___fprintf_chk
+	and add ldbl_strong_alias.
+	* debug/printf_chk.c (__printf_chk): Rename to ___printf_chk
+	and add ldbl_strong_alias.
+	* debug/snprintf_chk.c: Include libioP.h.
+	(__snprintf_chk): Rename to ___snprintf_chk and add ldbl_strong_alias.
+	* debug/sprintf_chk.c: Include libioP.h.
+	(__sprintf_chk): Rename to ___sprintf_chk and add ldbl_strong_alias.
+	* debug/vfprintf_chk.c (__vfprintf_chk): Rename to ___vfprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* debug/vfwprintf_chk.c (__vfwprintf_chk): Add libc_hidden_def.
+	* debug/vprintf_chk.c (__vprintf_chk): Rename to ___vprintf_chk
+	and add ldbl_strong_alias.
+	* debug/vsnprintf_chk.c (__vsnprintf_chk): Rename to ___vsnprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* debug/vsprintf_chk.c (__vsprintf_chk): Rename to ___vsprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+
+	* stdlib/stdlib.h (strtold): Don't define inline if [!__LDBL_COMPAT].
+	* wcsmbs/wchar.h (wcstold): Likewise.
+	* stdlib/strtod_l.c: Include math_ldbl_opt.h.
+	(____STRTOF_INTERNAL): Define.
+	(INTERNAL (__STRTOF)): Rename to ____STRTOF_INTERNAL.
+	(__STRTOF): Call ____STRTOF_INTERNAL instead.
+	[LONG_DOUBLE_COMPAT] (strtold_l, wcstold_l, __strtold_l, __wcstold_l):
+	Add compatibility symbols.
+	* stdlib/strtod.c: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (strtold, wcstold, __strtold_internal,
+	__wcstold_internal): Add compatibility symbols.
+	* stdlib/strtold.c: Include bits/wordsize.h, wchar.h.
+	(NEW, NEW1): Define.
+	(__new_strtold, __new_wcstold): New prototypes.
+	(____new_strtold_internal, ____new_wcstold_internal): Likewise.
+	Add libc_hidden_proto.
+	(STRTOF): Define to NEW (*told).
+	[__LONG_DOUBLE_MATH_OPTIONAL] (wcstold, strtold): Add
+	long_double_symbol.
+	[__LONG_DOUBLE_MATH_OPTIONAL] (__wcstold_internal,
+	__strtold_internal): Likewise. Add libc_hidden_ver.
+
+	* stdlib/bits/stdlib-ldbl.h: New file.
+	* stdlib/Makefile (headers): Add it.
+	* stdlib/stdlib.h [__LDBL_COMPAT]: #include it.
+	* include/stdlib.h (ecvt_r, fcvt_r, qecvt_r, qfcvt_r): Remove
+	libc_hidden_proto.
+	(__ecvt, __fcvt, __gcvt, __ecvt_r, __fcvt_r, __qecvt, __qfcvt,
+	__qgcvt, __qecvt_r, __qfcvt_r): New prototypes.
+	* misc/efgcvt_r.c: Include shlib-compat.h.
+	(LONG_DOUBLE_CVT): Define.
+	(__APPEND, __APPEND2): Define.
+	(*fcvt_r): Use __APPEND instead of APPEND.  Remove libc_hidden_def.
+	(*ecvt_r): Likewise.
+	(cvt_symbol): Define.  Use it on fcvt_r and ecvt_r.
+	* misc/efgcvt.c: Include shlib-compat.h.
+	(LONG_DOUBLE_CVT): Define.
+	(__APPEND, __APPEND2): Define.
+	(fcvt): Use __APPEND instead of APPEND.  Remove libc_hidden_def.
+	(ecvt, gcvt): Likewise.
+	(cvt_symbol): Define.  Use it on fcvt, ecvt and gcvt.
+
+	* stdlib/bits/monetary-ldbl.h: New file.
+	* stdlib/Makefile (headers): Add it.
+	* stdlib/monetary.h [__LDBL_COMPAT]: #include it.
+	* stdlib/strfmon.c: Include math_ldbl_opt.h.
+	(strfmon): Rename to __strfmon and add ldbl_strong_alias.
+	* stdlib/strfmon_l.c: Remove all traces of [!USE_IN_LIBIO].
+	(__vstrfmon_l): Don't set is_long_double if __ldbl_is_dbl.
+	(__strfmon_l): Rename to ___strfmon_l and add ldbl_strong_alias.
+	(strfmon_l): Use ldbl_weak_alias instead of weak_alias.
+
+	* misc/bits/syslog-ldbl.h: New file.
+	* misc/Makefile (headers): Add it.
+	* misc/sys/syslog.h [__LDBL_COMPAT]: #include it.
+	* misc/syslog.c: Include math_ldbl_opt.h.
+	(syslog): Rename to __syslog and add ldbl_strong_alias,
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(vsyslog): Rename to __vsyslog and add ldbl_strong_alias,
+	use ldbl_hidden_def instead of libc_hidden_def.
+
+	* sysdeps/generic/math_ldbl_opt.h: New file.
+	* math/w_j1l.c (j1l, y1l): Rename to __ prefixed variants.
+	Add weak_alias.
+	* math/w_j0l.c (j0l, y0l): Likewise.
+	* math/w_jnl.c (jnl, ynl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c
+	(__nexttowardl): Remove strong_alias.
+	(nexttowardl): Remove weak_alias.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c
+	(__erfl, __erfcl): Remove strong_alias.
+	(erfl, erfcl): Remove weak_alias.
+
+	* sysdeps/ieee754/ldbl-64-128/s_asinhl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_atanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_cbrtl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_ceill.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_copysignl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_erfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_expm1l.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_fabsl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_finitel.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_floorl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_fpclassifyl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_frexpl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_ilogbl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_isinfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_isnanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_llrintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_llroundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_log1pl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_logbl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_lrintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_lroundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_modfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nearbyintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nextafterl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardfd.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_remquol.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_rintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_roundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_scalblnl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_scalbnl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_signbitl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_tanhl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_truncl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/w_expl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/configure.in: New file.
+	* sysdeps/ieee754/ldbl-opt/configure: New file.
+	* sysdeps/ieee754/ldbl-opt/Makefile: New file.
+	* sysdeps/ieee754/ldbl-opt/Versions: New file.
+	* sysdeps/ieee754/ldbl-opt/cabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cabsl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/carg.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cargl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cimag.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/conj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/conjl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/creal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/creall.c: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-acos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-acosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atan2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cacos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cacosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-carg.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-casin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-casinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-catan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-catanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cbrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ccos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ccosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ceil.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cimag.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-clog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-clog10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-conj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-copysign.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cpow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cproj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-creal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ctan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ctanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-drem.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-erf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-erfc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-expm1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fdim.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-finite.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-floor.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmax.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmod.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-frexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-gamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-hypot.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ilogb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-iovfscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isinf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isnan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-j0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-j1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-jn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ldexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lgamma_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-llrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-llround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log1p.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-logb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-modf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nearbyint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nextafter.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_printf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_vprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-pow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-pow10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_fp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_size.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qgcvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-remainder.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-remquo.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-rint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-round.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalbln.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalbn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-signbit.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-significand.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sincos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-snprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-snprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfmon.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfmon_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtold.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtoldint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-syslog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-syslog_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-trunc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vasprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vdprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsnprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsnprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstold.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstold_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstoldint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-y0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-y1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-yn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_asinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_atan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cbrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ceil.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cexpl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clogl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_copysign.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cpow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cpowl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cproj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cprojl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_erf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_expm1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fdim.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fdiml.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_finite.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_floor.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmax.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fminl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_frexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ilogb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_isinf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_isnan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ldexpl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_llrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_llround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_log1p.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_logb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_lrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_lround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_modf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nearbyint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nextafter.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_remquo.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_rint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_round.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_scalbln.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_scalbn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_significand.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_significandl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_sin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_sincos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_tan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_tanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_trunc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_asin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_asinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atan2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atan2l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_cosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_coshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_drem.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_dreml.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_fmod.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_fmodl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_hypot.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_hypotl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j0l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j1l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_jn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_jnl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log2l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_logl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_pow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_powl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_remainder.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_scalb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_scalbl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_tgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_tgammal.c: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Implies: New file.
+	* sysdeps/sparc/sparc32/Implies: Move ldbl-128 first and flt-32
+	after dbl-64.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (NLDBL_VERSION):
+	%define this to to GLIBC_2.4.
+	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.c: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsf.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoui.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoux.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtox.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_uitoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_uxtoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_xtoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_lltoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoll.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtou.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoull.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_ulltoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_utoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/Versions: New file.
+	* sysdeps/sparc/fpu/bits/mathinline.h (__unordered_cmp,
+	__unordered_v9cmp): Define differently depending on
+	-m32 -mlong-double-{64,128}.
+	(__signbitl, sqrtl, __ieee754_sqrtl): New inlines.
+	* sysdeps/sparc/fpu/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/sparc/sparc32/soft-fp/Makefile (sparc32-quad-routines):
+	Set.
+	(sysdep-routines): Add sparc32-quad-routines.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h: Include stdlib.h.
+	(FP_HANDLE_EXCEPTIONS): Call ___Q_simulate_exceptions as a normal
+	function.
+	* sysdeps/sparc/sparc32/soft-fp/q_sqrt.c (__ieee754_sqrtl): New
+	alias to _Q_sqrt.
+	* sysdeps/sparc/sparc32/soft-fp/q_div.c (_Q_div): Fix a typo.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h: Include stdlib.h.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+
+	* libio/libio.h (_IO_vfscanf, _IO_vfprintf): Remove __THROW.
+	(_IO_vfwscanf, _IO_vfwprintf): Likewise.
+	* libio/libioP.h (_IO_vdprintf): Likewise.
+
 2006-01-13  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h (PTR_MANGLE, PTR_MANGLE2,

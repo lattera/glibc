@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,98,2002,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2002,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -28,6 +28,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
    `strtof.c', `wcstod.c', `wcstold.c', and `wcstof.c' to produce the
    `long double' and `float' versions of the reader.  */
 #ifndef FLOAT
+# include <math_ldbl_opt.h>
 # define FLOAT		double
 # define FLT		DBL
 # ifdef USE_WIDE_CHAR
@@ -406,6 +407,9 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
 
 #define INTERNAL(x) INTERNAL1(x)
 #define INTERNAL1(x) __##x##_internal
+#ifndef ____STRTOF_INTERNAL
+# define ____STRTOF_INTERNAL INTERNAL (__STRTOF)
+#endif
 
 /* This file defines a function to check for correct grouping.  */
 #include "grouping.h"
@@ -417,7 +421,7 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
-INTERNAL (__STRTOF) (nptr, endptr, group, loc)
+____STRTOF_INTERNAL (nptr, endptr, group, loc)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int group;
@@ -1557,7 +1561,7 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
   /* NOTREACHED */
 }
 #if defined _LIBC && !defined USE_WIDE_CHAR
-libc_hidden_def (INTERNAL (__STRTOF))
+libc_hidden_def (____STRTOF_INTERNAL)
 #endif
 
 /* External user entry point.  */
@@ -1571,6 +1575,23 @@ __STRTOF (nptr, endptr, loc)
      STRING_TYPE **endptr;
      __locale_t loc;
 {
-  return INTERNAL (__STRTOF) (nptr, endptr, 0, loc);
+  return ____STRTOF_INTERNAL (nptr, endptr, 0, loc);
 }
 weak_alias (__STRTOF, STRTOF)
+
+#ifdef LONG_DOUBLE_COMPAT
+# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_1)
+#  ifdef USE_WIDE_CHAR
+compat_symbol (libc, __wcstod_l, __wcstold_l, GLIBC_2_1);
+#  else
+compat_symbol (libc, __strtod_l, __strtold_l, GLIBC_2_1);
+#  endif
+# endif
+# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_3)
+#  ifdef USE_WIDE_CHAR
+compat_symbol (libc, wcstod_l, wcstold_l, GLIBC_2_3);
+#  else
+compat_symbol (libc, strtod_l, strtold_l, GLIBC_2_3);
+#  endif
+# endif
+#endif

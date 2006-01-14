@@ -1,6 +1,6 @@
 #  Software floating-point emulation.
 #  Makefile for SPARC v8 long double utility functions (_Q_*).
-#  Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+#  Copyright (C) 1999, 2000, 2006 Free Software Foundation, Inc.
 #  This file is part of the GNU C Library.
 #  Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 #
@@ -20,13 +20,11 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-#  Currently gcc does not support TFmode long double on sparc32
-#  so these routines are not used.
-#ifeq ($(subdir),soft-fp)
-#sparc32-quad-routines := q_add q_cmp q_cmpe q_div q_dtoq q_feq q_fge	\
-#	q_fgt q_fle q_flt q_fne q_itoq q_mul q_neg q_qtod q_qtoi	\
-#	q_qtos q_qtoui q_qtoux q_qtox q_sqrt q_stoq q_sub q_uitoq	\
-#	q_uxtoq q_xtoq q_util
-#sysdep_routines += $(sparc32-quad-routines)
-#
-#endif
+ifeq ($(subdir),soft-fp)
+sparc32-quad-routines := q_add q_cmp q_cmpe q_div q_dtoq q_feq q_fge	\
+	q_fgt q_fle q_flt q_fne q_itoq q_mul q_neg q_qtod q_qtoi	\
+	q_qtos q_qtou q_qtoull q_qtoll q_sqrt q_stoq q_sub q_utoq	\
+	q_ulltoq q_lltoq q_util
+sysdep_routines += $(sparc32-quad-routines)
+
+endif

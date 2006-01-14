@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -562,11 +562,11 @@ __NTH (wcstof (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr))
 { return __wcstof_internal (__nptr, __endptr, 0); }
 extern __inline long double
+#  ifndef __LDBL_COMPAT
 __NTH (wcstold (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr))
 { return __wcstold_internal (__nptr, __endptr, 0); }
-
-
+#  endif
 __extension__
 extern __inline long long int
 __NTH (wcstoq (__const wchar_t *__restrict __nptr,
@@ -834,11 +834,14 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 #endif
 
 
+#ifdef __LDBL_COMPAT
+# include <bits/wchar-ldbl.h>
+#endif
+
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 # include <bits/wchar2.h>
 #endif
-
 
 __END_DECLS
 

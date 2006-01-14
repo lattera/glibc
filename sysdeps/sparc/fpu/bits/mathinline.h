@@ -1,5 +1,6 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -36,22 +37,51 @@
 
 # if __WORDSIZE == 32
 
-#  define __unordered_cmp(x, y) \
+#  ifndef __NO_LONG_DOUBLE_MATH
+
+#   define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ unsigned __r;							      \
-      if (sizeof(x) == 4 && sizeof(y) == 4)				      \
+      if (sizeof (x) == 4 && sizeof (y) == 4)				      \
 	{								      \
 	  float __x = (x); float __y = (y);				      \
-	  __asm__("fcmps %1,%2; st %%fsr, %0" : "=m" (__r) : "f" (__x),	      \
-		  "f" (__y) : "cc");					      \
+	  __asm__ ("fcmps %1,%2; st %%fsr, %0" : "=m" (__r) : "f" (__x),      \
+		   "f" (__y) : "cc");					      \
+	}								      \
+      else if (sizeof (x) <= 8 && sizeof (y) <= 8)			      \
+	{								      \
+	  double __x = (x); double __y = (y);				      \
+	  __asm__ ("fcmpd\t%1,%2\n\tst\t%%fsr,%0" : "=m" (__r) : "f" (__x),   \
+		   "f" (__y) : "cc");					      \
+	}								      \
+      else								      \
+	{								      \
+	  long double __x = (x); long double __y = (y);			      \
+	  extern int _Q_cmp (const long double a, const long double b);	      \
+	  __r = _Q_cmp (__x, __y) << 10;				      \
+	}								      \
+      __r; }))
+
+#  else
+
+#   define __unordered_cmp(x, y) \
+  (__extension__							      \
+   ({ unsigned __r;							      \
+      if (sizeof (x) == 4 && sizeof (y) == 4)				      \
+	{								      \
+	  float __x = (x); float __y = (y);				      \
+	  __asm__ ("fcmps %1,%2; st %%fsr, %0" : "=m" (__r) : "f" (__x),      \
+		   "f" (__y) : "cc");					      \
 	}								      \
       else								      \
 	{								      \
 	  double __x = (x); double __y = (y);				      \
-	  __asm__("fcmpd\t%1,%2\n\tst\t%%fsr,%0" : "=m" (__r) : "f" (__x),    \
-		  "f" (__y) : "cc");					      \
+	  __asm__ ("fcmpd\t%1,%2\n\tst\t%%fsr,%0" : "=m" (__r) : "f" (__x),   \
+		   "f" (__y) : "cc");					      \
 	}								      \
       __r; }))
+
+#  endif
 
 #  define isgreater(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (2 << 10))
 #  define isgreaterequal(x, y) ((__unordered_cmp (x, y) & (1 << 10)) == 0)
@@ -65,22 +95,22 @@
 #  define __unordered_v9cmp(x, y, op, qop) \
   (__extension__							      \
    ({ unsigned __r;						      	      \
-      if (sizeof(x) == 4 && sizeof(y) == 4)				      \
+      if (sizeof (x) == 4 && sizeof (y) == 4)				      \
 	{								      \
 	  float __x = (x); float __y = (y);				      \
-	  __asm__("fcmps\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
-		  : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");	      \
+	  __asm__ ("fcmps\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
+		   : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");      \
 	}								      \
-      else if (sizeof(x) <= 8 && sizeof(y) <= 8)			      \
+      else if (sizeof (x) <= 8 && sizeof (y) <= 8)			      \
 	{								      \
 	  double __x = (x); double __y = (y);				      \
-	  __asm__("fcmpd\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
-		  : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");	      \
+	  __asm__ ("fcmpd\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
+		   : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");      \
 	}								      \
       else								      \
 	{								      \
 	  long double __x = (x); long double __y = (y);			      \
-	  extern int _Qp_cmp(const long double *a, const long double *b);     \
+	  extern int _Qp_cmp (const long double *a, const long double *b);    \
 	  __r = qop;						      	      \
 	}								      \
       __r; }))
@@ -127,11 +157,20 @@ __NTH (__signbit (double __x))
   return __u.__i[0] < 0;
 }
 
+#    ifndef __NO_LONG_DOUBLE_MATH
+__MATH_INLINE int
+__NTH (__signbitl (long double __x))
+{
+  __extension__ union { long double __l; int __i[4]; } __u = { __l: __x };
+  return __u.__i[0] < 0;
+}
+#    else
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
 {
   return __signbit ((double)__x);
 }
+#    endif
 
 #   else /* sparc64 */
 
@@ -180,6 +219,13 @@ __NTH (sqrtl (long double __x))
   _Qp_sqrt (&__r, &__x);
   return __r;
 }
+#   elif !defined __NO_LONG_DOUBLE_MATH
+__MATH_INLINE long double
+sqrtl (long double __x) __THROW
+{
+  extern long double _Q_sqrt (__const__ long double);
+  return _Q_sqrt (__x);
+}
 #   endif /* sparc64 */
 
 #  endif /* !__NO_MATH_INLINES && !GCC 3.2+ */
@@ -210,6 +256,13 @@ __ieee754_sqrtl (long double __x)
   extern void _Qp_sqrt (long double *, __const__ long double *);
   _Qp_sqrt(&__r, &__x);
   return __r;
+}
+#   elif !defined __NO_LONG_DOUBLE_MATH
+__MATH_INLINE long double
+__ieee754_sqrtl (long double __x)
+{
+  extern long double _Q_sqrt (__const__ long double);
+  return _Q_sqrt (__x);
 }
 #   endif /* sparc64 */
 #  endif /* __LIBC_INTERNAL_MATH_INLINES */

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,12 @@ subdir	:= misc
 headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   sys/ptrace.h sys/file.h sys/dir.h sys/cdefs.h \
 	   ar.h a.out.h libgen.h stab.h bits/stab.def sgtty.h \
-	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
+	   ttyent.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h \
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
 	   sys/select.h ustat.h sys/ustat.h bits/ustat.h sys/sysinfo.h \
-	   regexp.h bits/select.h bits/mman.h sys/xattr.h bits/syslog.h
+	   regexp.h bits/select.h bits/mman.h sys/xattr.h \
+	   syslog.h sys/syslog.h bits/syslog.h bits/syslog-ldbl.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \

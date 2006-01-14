@@ -836,6 +836,9 @@ extern void funlockfile (FILE *__stream) __THROW;
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 # include <bits/stdio2.h>
 #endif
+#ifdef __LDBL_COMPAT
+# include <bits/stdio-ldbl.h>
+#endif
 
 __END_DECLS
 

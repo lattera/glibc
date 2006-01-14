@@ -1,6 +1,6 @@
 /* Machine-dependent software floating-point definitions.
    Sparc userland (_Q_*) version.
-   Copyright (C) 1997,1998,1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz) and
@@ -22,6 +22,7 @@
    02111-1307 USA.  */
 
 #include <fpu_control.h>
+#include <stdlib.h>
 
 #define _FP_W_TYPE_SIZE		32
 #define _FP_W_TYPE		unsigned long
@@ -208,14 +209,5 @@ do {								\
       	" : : "r" (___Q_numbers) : "f30");			\
     }								\
   else								\
-    {								\
-      __asm__ __volatile__("\
-        mov %0, %%o0\n\
-        mov %%o7, %%g1\n\
-        call ___Q_simulate_exceptions\n\
-         mov %%g1, %%o7\
-        " : : "r" (_fex) :					\
-        "g1", "g2", "g3", "g4", "g5", "o0", 			\
-        "o1", "o2", "o3", "o4", "o5", "cc");			\
-    }								\
+    ___Q_simulate_exceptions (_fex);			        \
 } while (0)

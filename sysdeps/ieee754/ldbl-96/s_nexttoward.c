@@ -99,7 +99,3 @@ static char rcsid[] = "$NetBSD: $";
 	return x;
 }
 weak_alias (__nexttoward, nexttoward)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__nexttoward, __nexttowardl)
-weak_alias (__nexttoward, nexttowardl)
-#endif

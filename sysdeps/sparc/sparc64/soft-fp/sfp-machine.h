@@ -1,6 +1,6 @@
 /* Machine-dependent software floating-point definitions.
    Sparc64 userland (_Q_* and _Qp_*) version.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz) and
@@ -23,6 +23,7 @@
    
 #include <fpu_control.h>
 #include <fenv.h>
+#include <stdlib.h>
 
 #define _FP_W_TYPE_SIZE		64
 #define _FP_W_TYPE		unsigned long

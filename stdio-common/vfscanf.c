@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -178,18 +179,12 @@
    Return the number of assignments made, or -1 for an input error.  */
 #ifdef COMPILE_WSCANF
 int
-_IO_vfwscanf (s, format, argptr, errp)
-     _IO_FILE *s;
-     const wchar_t *format;
-     _IO_va_list argptr;
-     int *errp;
+_IO_vfwscanf (_IO_FILE *s, const wchar_t *format, _IO_va_list argptr,
+	      int *errp)
 #else
 int
-_IO_vfscanf (s, format, argptr, errp)
-     _IO_FILE *s;
-     const char *format;
-     _IO_va_list argptr;
-     int *errp;
+_IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
+		      int *errp)
 #endif
 {
   va_list arg;
@@ -1891,13 +1886,13 @@ _IO_vfscanf (s, format, argptr, errp)
 	scan_float:
 	  /* Convert the number.  */
 	  ADDW (L_('\0'));
-	  if (flags & LONGDBL)
+	  if ((flags & LONGDBL) && !__ldbl_is_dbl)
 	    {
 	      long double d = __strtold_internal (wp, &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != wp)
 		*ARG (long double *) = negative ? -d : d;
 	    }
-	  else if (flags & LONG)
+	  else if (flags & (LONG | LONGDBL))
 	    {
 	      double d = __strtod_internal (wp, &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != wp)
@@ -2460,18 +2455,15 @@ __vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
 {
   return _IO_vfwscanf (s, format, argptr, NULL);
 }
+ldbl_weak_alias (__vfwscanf, vfwscanf)
 #else
 int
-__vfscanf (FILE *s, const char *format, va_list argptr)
+___vfscanf (FILE *s, const char *format, va_list argptr)
 {
-  return INTUSE(_IO_vfscanf) (s, format, argptr, NULL);
+  return _IO_vfscanf_internal (s, format, argptr, NULL);
 }
-libc_hidden_def (__vfscanf)
-#endif
-
-#ifdef COMPILE_WSCANF
-weak_alias (__vfwscanf, vfwscanf)
-#else
-weak_alias (__vfscanf, vfscanf)
-INTDEF(_IO_vfscanf)
+ldbl_strong_alias (_IO_vfscanf_internal, _IO_vfscanf)
+ldbl_strong_alias (___vfscanf, __vfscanf)
+ldbl_hidden_def (___vfscanf, __vfscanf)
+ldbl_weak_alias (___vfscanf, vfscanf)
 #endif

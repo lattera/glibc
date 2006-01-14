@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,7 +24,7 @@
 
 /* Write formatted output to FP from the format string FORMAT.  */
 int
-__vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
+___vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
 {
   int done;
 
@@ -40,4 +40,5 @@ __vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
 
   return done;
 }
-libc_hidden_def (__vfprintf_chk)
+ldbl_hidden_def (___vfprintf_chk, __vfprintf_chk)
+ldbl_strong_alias (___vfprintf_chk, __vfprintf_chk)

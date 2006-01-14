@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1997-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2000, 2001, 2002, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +31,7 @@
 #include <wchar.h>
 
 int
-vswscanf (string, format, args)
-     const wchar_t *string;
-     const wchar_t *format;
-     _IO_va_list args;
+__vswscanf (const wchar_t *string, const wchar_t *format, _IO_va_list args)
 {
   int ret;
   _IO_strfile sf;
@@ -47,4 +45,5 @@ vswscanf (string, format, args)
   ret = _IO_vfwscanf ((_IO_FILE *) &sf._sbf, format, args, NULL);
   return ret;
 }
-libc_hidden_def (vswscanf)
+ldbl_hidden_def (__vswscanf, vswscanf)
+ldbl_strong_alias (__vswscanf, vswscanf)

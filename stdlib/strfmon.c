@@ -1,5 +1,6 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -22,10 +23,10 @@
 #include <monetary.h>
 #include <stdarg.h>
 #include <locale/localeinfo.h>
-
+#include <math_ldbl_opt.h>
 
 ssize_t
-strfmon (char *s, size_t maxsize, const char *format, ...)
+__strfmon (char *s, size_t maxsize, const char *format, ...)
 {
   va_list ap;
 
@@ -37,3 +38,4 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 
   return res;
 }
+ldbl_strong_alias (__strfmon, strfmon)

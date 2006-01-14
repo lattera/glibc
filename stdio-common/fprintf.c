@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,97,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,13 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <libioP.h>
 
 
 /* Write formatted output to STREAM from the format string FORMAT.  */
 /* VARARGS2 */
 int
-fprintf (FILE *stream, const char *format, ...)
+__fprintf (FILE *stream, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -34,9 +35,10 @@ fprintf (FILE *stream, const char *format, ...)
 
   return done;
 }
-libc_hidden_def (fprintf)
+ldbl_hidden_def (__fprintf, fprintf)
+ldbl_strong_alias (__fprintf, fprintf)
 
 /* We define the function with the real name here.  But deep down in
    libio the original function _IO_fprintf is also needed.  So make
    an alias.  */
-weak_alias (fprintf, _IO_fprintf)
+ldbl_weak_alias (__fprintf, _IO_fprintf)

@@ -1,4 +1,5 @@
-/* Copyright (C) 1994, 1997, 1999-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999-2003, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,8 +62,8 @@ static const struct _IO_jump_t _IO_str_chk_jumps =
 
 
 int
-__vsprintf_chk (char *s, int flags, size_t slen, const char *format,
-		va_list args)
+___vsprintf_chk (char *s, int flags, size_t slen, const char *format,
+		 va_list args)
 {
   _IO_strfile f;
   int ret;
@@ -88,4 +89,5 @@ __vsprintf_chk (char *s, int flags, size_t slen, const char *format,
   *f._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
-libc_hidden_def (__vsprintf_chk)
+ldbl_hidden_def (___vsprintf_chk, __vsprintf_chk)
+ldbl_strong_alias (___vsprintf_chk, __vsprintf_chk)

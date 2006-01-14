@@ -25,10 +25,6 @@ libc_hidden_proto (abort)
 libc_hidden_proto (getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
-libc_hidden_proto (ecvt_r)
-libc_hidden_proto (fcvt_r)
-libc_hidden_proto (qecvt_r)
-libc_hidden_proto (qfcvt_r)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
 libc_hidden_proto (__secure_getenv)
@@ -186,6 +182,28 @@ __NTH (__strtoull_l (__const char * __restrict __nptr,
   return ____strtoull_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 
+extern char *__ecvt (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign);
+extern char *__fcvt (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign);
+extern char *__gcvt (double __value, int __ndigit, char *__buf);
+extern int __ecvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign, char *__restrict __buf,
+		     size_t __len);
+extern int __fcvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign, char *__restrict __buf,
+		     size_t __len);
+extern char *__qecvt (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign);
+extern char *__qfcvt (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign);
+extern char *__qgcvt (long double __value, int __ndigit, char *__buf);
+extern int __qecvt_r (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign,
+		      char *__restrict __buf, size_t __len);
+extern int __qfcvt_r (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign,
+		      char *__restrict __buf, size_t __len);
 
 # ifndef NOT_IN_libc
 #  undef MB_CUR_MAX

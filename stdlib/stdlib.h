@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -350,11 +350,13 @@ __NTH (strtof (__const char *__restrict __nptr, char **__restrict __endptr))
 {
   return __strtof_internal (__nptr, __endptr, 0);
 }
+#  ifndef __LDBL_COMPAT
 extern __inline long double
 __NTH (strtold (__const char *__restrict __nptr, char **__restrict __endptr))
 {
   return __strtold_internal (__nptr, __endptr, 0);
 }
+#  endif
 __END_NAMESPACE_C99
 # endif
 
@@ -965,6 +967,9 @@ extern int getloadavg (double __loadavg[], int __nelem)
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 # include <bits/stdlib.h>
+#endif
+#ifdef __LDBL_COMPAT
+# include <bits/stdlib-ldbl.h>
 #endif
 
 #endif /* don't just need malloc and calloc */
