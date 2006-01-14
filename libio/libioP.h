@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1997-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -649,7 +650,7 @@ extern void _IO_wstr_finish (_IO_FILE *, int) __THROW;
 
 extern int _IO_vasprintf (char **result_ptr, __const char *format,
 			  _IO_va_list args) __THROW;
-extern int _IO_vdprintf (int d, __const char *format, _IO_va_list arg) __THROW;
+extern int _IO_vdprintf (int d, __const char *format, _IO_va_list arg);
 extern int _IO_vsnprintf (char *string, _IO_size_t maxlen,
 			  __const char *format, _IO_va_list args) __THROW;
 

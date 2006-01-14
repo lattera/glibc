@@ -478,9 +478,9 @@ extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 #endif /* !_IO_MTSAFE_IO */
 
 extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
-			_IO_va_list, int *__restrict) __THROW;
+			_IO_va_list, int *__restrict);
 extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
-			 _IO_va_list) __THROW;
+			 _IO_va_list);
 extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t) __THROW;
 extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
 
@@ -527,9 +527,9 @@ weak_extern (_IO_stdin_used);
 # endif
 
 extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
-			 _IO_va_list, int *__restrict) __THROW;
+			 _IO_va_list, int *__restrict);
 extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
-			  _IO_va_list) __THROW;
+			  _IO_va_list);
 extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
 #endif
