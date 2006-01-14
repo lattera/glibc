@@ -1,5 +1,8 @@
 2006-01-14  Roland McGrath  <roland@redhat.com>
 
+	* misc/efgcvt.c: Include <math_ldbl_opt.h> instead of <shlib-compat.h>.
+	* misc/efgcvt_r.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/nldbl-abi.h: New file.
 	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: #include <nldbl-abi.h>
 	to define LONG_DOUBLE_COMPAT_VERSION.  Use that in place of

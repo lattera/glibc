@@ -24,7 +24,7 @@
 #include <sys/param.h>
 #include <float.h>
 #include <bits/libc-lock.h>
-#include <shlib-compat.h>
+#include <math_ldbl_opt.h>
 
 #ifndef FLOAT_TYPE
 # define FLOAT_TYPE double

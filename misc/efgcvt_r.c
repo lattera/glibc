@@ -26,7 +26,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <sys/param.h>
-#include <shlib-compat.h>
+#include <math_ldbl_opt.h>
 
 #ifndef FLOAT_TYPE
 # define FLOAT_TYPE double
