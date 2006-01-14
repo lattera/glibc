@@ -32,8 +32,13 @@
 #include <monetary.h>
 #include <sys/syslog.h>
 
+#ifdef SHARED
+# define NLDBL_HIDDEN
+#else
+# define NLDBL_HIDDEN attribute_hidden
+#endif
 #define NLDBL_DECL(name) \
-  extern __typeof (#name) __nldbl_##name attribute_hidden
+  extern __typeof (name) __nldbl_##name NLDBL_HIDDEN
 
 NLDBL_DECL (_IO_vfscanf);
 NLDBL_DECL (vfscanf);
@@ -61,26 +66,26 @@ NLDBL_DECL (qfcvt);
 NLDBL_DECL (qgcvt);
 extern int __nldbl___vfprintf_chk (FILE *__restrict, int,
 				   const char *__restrict, _G_va_list)
-  attribute_hidden;
+  NLDBL_HIDDEN;
 extern int __nldbl___vfwprintf_chk (FILE *__restrict, int,
 				    const wchar_t *__restrict, __gnuc_va_list)
-  attribute_hidden;
+  NLDBL_HIDDEN;
 extern int __nldbl___vsprintf_chk (char *__restrict, int, size_t,
 				   const char *__restrict, _G_va_list) __THROW
-  attribute_hidden;
+  NLDBL_HIDDEN;
 extern int __nldbl___vsnprintf_chk (char *__restrict, size_t, int, size_t,
 				    const char *__restrict, _G_va_list)
-  __THROW attribute_hidden;
+  __THROW NLDBL_HIDDEN;
 extern int __nldbl___vswprintf_chk (wchar_t *__restrict, size_t, int, size_t,
 				    const wchar_t *__restrict, __gnuc_va_list)
-  __THROW attribute_hidden;
+  __THROW NLDBL_HIDDEN;
 extern void __nldbl___vsyslog_chk (int, int, const char *, va_list)
-  attribute_hidden;
+  NLDBL_HIDDEN;
 extern ssize_t __nldbl___vstrfmon (char *, size_t, const char *, va_list)
-  __THROW attribute_hidden;
+  __THROW NLDBL_HIDDEN;
 extern ssize_t  __nldbl___vstrfmon_l (char *, size_t, __locale_t,
 				      const char *, va_list)
-  __THROW attribute_hidden;
+  __THROW NLDBL_HIDDEN;
 
 
 #endif /* __NLDBL_COMPAT_H */

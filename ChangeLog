@@ -1,5 +1,9 @@
 2006-01-14  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Fix typo.
+	(NLDBL_HIDDEN): New macro.
+	(NLDBL_DECL): Use it in place of attribute_hidden.
+
 	* misc/efgcvt.c: Include <math_ldbl_opt.h> instead of <shlib-compat.h>.
 	* misc/efgcvt_r.c: Likewise.
 
