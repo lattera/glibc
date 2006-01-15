@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2001-2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,9 @@
 #define SCHED_OTHER	0
 #define SCHED_FIFO	1
 #define SCHED_RR	2
+#ifdef __USE_GNU
+# define SCHED_BATCH	3
+#endif
 
 #ifdef __USE_MISC
 /* Cloning flags.  */
