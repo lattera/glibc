@@ -1,3 +1,7 @@
+2006-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define SCHED_BATCH.
+
 2006-01-14  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Don't try
