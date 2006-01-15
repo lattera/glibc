@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ fputwc_unlocked (wc, fp)
      wchar_t wc;
      _IO_FILE *fp;
 {
-  CHECK_FILE (fp, EOF);
+  CHECK_FILE (fp, WEOF);
   if (_IO_fwide (fp, 1) < 0)
     return WEOF;
   return _IO_putwc_unlocked (wc, fp);
