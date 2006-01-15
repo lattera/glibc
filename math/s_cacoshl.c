@@ -1,5 +1,5 @@
 /* Return arc hyperbole cosine for long double value.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -72,6 +72,9 @@ __cacoshl (__complex__ long double x)
       __imag__ y = 2.0 * __real__ x * __imag__ x;
 
       y = __csqrtl (y);
+
+      if (__real__ x < 0.0)
+	y = -y;
 
       __real__ y += __real__ x;
       __imag__ y += __imag__ x;

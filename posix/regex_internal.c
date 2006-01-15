@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -259,7 +259,7 @@ build_wcs_buffer (re_string_t *pstr)
 /* Build wide character buffer PSTR->WCS like build_wcs_buffer,
    but for REG_ICASE.  */
 
-static int
+static reg_errcode_t
 internal_function
 build_wcs_upper_buffer (re_string_t *pstr)
 {
@@ -721,7 +721,7 @@ re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
     {
       if (pstr->icase)
 	{
-	  int ret = build_wcs_upper_buffer (pstr);
+	  reg_errcode_t ret = build_wcs_upper_buffer (pstr);
 	  if (BE (ret != REG_NOERROR, 0))
 	    return ret;
 	}

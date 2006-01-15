@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -1116,7 +1116,7 @@ cacosh_test (void)
   TEST_c_c (cacosh, nan_value, nan_value, nan_value, nan_value);
 
   TEST_c_c (cacosh, 0.75L, 1.25L, 1.13239363160530819522266333696834467L, 1.11752014915610270578240049553777969L);
-  TEST_c_c (cacosh, -2, -3, -1.9833870299165354323470769028940395L, 2.1414491111159960199416055713254211L);
+  TEST_c_c (cacosh, -2, -3, 1.9833870299165354323470769028940395L, -2.1414491111159960199416055713254211L);
 
   END (cacosh, complex);
 }

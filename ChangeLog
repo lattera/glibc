@@ -1,5 +1,30 @@
 2006-01-15  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #1950]
+	* posix/regex_internal.c (re_string_reconstruct): Adjust for
+	build_wcs_upper_buffer change.
+	(build_wcs_upper_buffer): Change return type.
+
+	[BZ #2153]
+	* math/s_cacosh.c (__cacosh): Do not return a negative
+	value. Patch by Wes Loewer <wjltemp-temp01@yahoo.com>.
+	* math/s_cacoshl.c (__cacoshl): Likewise.
+	* math/s_cacoshf.c (__cacoshf): Likewise.
+	* math/libm-test.inc (cacosh_test): Adjust for change.
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Adopt for cacosh test change.
+	* sysdeps/hppa/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/fpu/libm-test-ulps: Likewise.
+	* sysdeps/mips/fpu/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #2079]
 	* libio/fputwc_u.c (fputwc_unlocked): Fix return value.
 	* libio/getwc_u.c (__getwc_unlocked): Likewise.
