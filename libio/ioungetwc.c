@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998, 1999, 2001, 2002, 2003
+/* Copyright (C) 1993, 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -34,7 +34,7 @@ ungetwc (c, fp)
      wint_t c;
      _IO_FILE *fp;
 {
-  int result;
+  wint_t result;
   CHECK_FILE (fp, WEOF);
   _IO_acquire_lock (fp);
   _IO_fwide (fp, 1);

@@ -1,3 +1,14 @@
+2006-01-15  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #2079]
+	* libio/fputwc_u.c (fputwc_unlocked): Fix return value.
+	* libio/getwc_u.c (__getwc_unlocked): Likewise.
+	* libio/wfileops.c (_IO_wdo_write): Likewise.
+
+	[BZ #2078]
+	* libio/fputwc.c (fputwc): Use proper type for result.
+	* libio/ioungetwc.c (ungetwc): Likewise.
+
 2006-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Define SCHED_BATCH.
