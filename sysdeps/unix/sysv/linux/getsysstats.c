@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -32,75 +32,6 @@
 #include <sys/sysinfo.h>
 
 #include <atomic.h>
-
-
-/* The default value for the /proc filesystem mount point.  */
-static const char path_proc[] = "/proc";
-
-/* Actual mount point of /proc filesystem.  */
-libc_freeres_ptr (static char *mount_proc);
-
-/* Determine the path to the /proc filesystem if available.  */
-static const char *
-internal_function
-get_proc_path (char *buffer, size_t bufsize)
-{
-  struct mntent mount_point;
-  struct mntent *entry;
-  char *result = NULL;
-  char *copy_result;
-  FILE *fp;
-
-  /* First find the mount point of the proc filesystem.  */
-  fp = __setmntent (_PATH_MOUNTED, "r");
-  if (fp == NULL)
-    fp = __setmntent (_PATH_MNTTAB, "r");
-  if (fp != NULL)
-    {
-      /* We don't need locking.  */
-      (void) __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-      while ((entry = __getmntent_r (fp, &mount_point, buffer, bufsize))
-	     != NULL)
-	if (strcmp (mount_point.mnt_type, "proc") == 0)
-	  {
-	    result = mount_point.mnt_dir;
-	    break;
-	  }
-      __endmntent (fp);
-    }
-
-  /* If we haven't found anything this is generally a bad sign but we
-     handle it gracefully.  We return what is hopefully the right
-     answer (/proc) but we don't remember this.  This will enable
-     programs which started before the system is fully running to
-     adjust themselves.  */
-  if (result == NULL)
-    return path_proc;
-
-  /* Make a copy we can keep around.  */
-  copy_result = __strdup (result);
-  if (copy_result == NULL)
-    return result;
-
-  /* Now store the copied value.  But do it atomically.  */
-  assert (sizeof (long int) == sizeof (void *__unbounded));
-  if (atomic_compare_and_exchange_bool_acq (&mount_proc, copy_result, NULL))
-    /* Replacing the value failed.  This means another thread was
-       faster and we don't need the copy anymore.  */
-    free (copy_result);
-#if __BOUNDED_POINTERS__
-  else
-    {
-      /* compare_and_swap only copied the pointer value, so we must
-	 now copy the bounds as well.  */
-      __ptrlow (mount_proc) = __ptrlow (copy_result);
-      __ptrhigh (mount_proc) = __ptrhigh (copy_result);
-    }
-#endif
-
-  return mount_proc;
-}
 
 
 /* How we can determine the number of available processors depends on
@@ -136,49 +67,34 @@ get_proc_path (char *buffer, size_t bufsize)
 int
 __get_nprocs ()
 {
-  FILE *fp;
   char buffer[8192];
-  const char *proc_path;
   int result = 1;
 
   /* XXX Here will come a test for the new system call.  */
 
-  /* Get mount point of proc filesystem.  */
-  proc_path = get_proc_path (buffer, sizeof buffer);
-
-  /* If we haven't found an appropriate entry return 1.  */
-  if (proc_path != NULL)
+  /* The /proc/stat format is more uniform, use it by default.  */
+  FILE *fp = fopen ("/proc/stat", "rc");
+  if (fp != NULL)
     {
-      char *proc_fname = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
+      /* No threads use this stream.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
-      /* The /proc/stat format is more uniform, use it by default.  */
-      __stpcpy (__stpcpy (proc_fname, proc_path), "/stat");
+      result = 0;
+      while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
+	if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
+	  ++result;
 
-      fp = fopen (proc_fname, "rc");
+      fclose (fp);
+    }
+  else
+    {
+      fp = fopen ("/proc/cpuinfo", "rc");
       if (fp != NULL)
 	{
 	  /* No threads use this stream.  */
 	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-	  result = 0;
-	  while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
-	    if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
-	      ++result;
-
+	  GET_NPROCS_PARSER (fp, buffer, result);
 	  fclose (fp);
-	}
-      else
-	{
-	  __stpcpy (__stpcpy (proc_fname, proc_path), "/cpuinfo");
-
-	  fp = fopen (proc_fname, "rc");
-	  if (fp != NULL)
-	    {
-	      /* No threads use this stream.  */
-	      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-	      GET_NPROCS_PARSER (fp, buffer, result);
-	      fclose (fp);
-	    }
 	}
     }
 
@@ -193,30 +109,19 @@ weak_alias (__get_nprocs, get_nprocs)
 int
 __get_nprocs_conf ()
 {
-  FILE *fp;
   char buffer[8192];
-  const char *proc_path;
   int result = 1;
 
   /* XXX Here will come a test for the new system call.  */
 
-  /* Get mount point of proc filesystem.  */
-  proc_path = get_proc_path (buffer, sizeof buffer);
-
   /* If we haven't found an appropriate entry return 1.  */
-  if (proc_path != NULL)
+  FILE *fp = fopen ("/proc/cpuinfo", "rc");
+  if (fp != NULL)
     {
-      char *proc_cpuinfo = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
-      __stpcpy (__stpcpy (proc_cpuinfo, proc_path), "/cpuinfo");
-
-      fp = fopen (proc_cpuinfo, "rc");
-      if (fp != NULL)
-	{
-	  /* No threads use this stream.  */
-	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-	  GET_NPROCS_CONF_PARSER (fp, buffer, result);
-	  fclose (fp);
-	}
+      /* No threads use this stream.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+      GET_NPROCS_CONF_PARSER (fp, buffer, result);
+      fclose (fp);
     }
 
   return result;
@@ -235,40 +140,29 @@ static long int
 internal_function
 phys_pages_info (const char *format)
 {
-  FILE *fp;
   char buffer[8192];
-  const char *proc_path;
   long int result = -1;
 
-  /* Get mount point of proc filesystem.  */
-  proc_path = get_proc_path (buffer, sizeof buffer);
-
   /* If we haven't found an appropriate entry return 1.  */
-  if (proc_path != NULL)
+  FILE *fp = fopen ("/proc/meminfo", "rc");
+  if (fp != NULL)
     {
-      char *proc_meminfo = alloca (strlen (proc_path) + sizeof ("/meminfo"));
-      __stpcpy (__stpcpy (proc_meminfo, proc_path), "/meminfo");
+      /* No threads use this stream.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
-      fp = fopen (proc_meminfo, "rc");
-      if (fp != NULL)
-	{
-	  /* No threads use this stream.  */
-	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+      result = 0;
+      /* Read all lines and count the lines starting with the
+	 string "processor".  We don't have to fear extremely long
+	 lines since the kernel will not generate them.  8192
+	 bytes are really enough.  */
+      while (fgets_unlocked (buffer, sizeof buffer, fp) != NULL)
+	if (sscanf (buffer, format, &result) == 1)
+	  {
+	    result /= (__getpagesize () / 1024);
+	    break;
+	  }
 
-	  result = 0;
-	  /* Read all lines and count the lines starting with the
-	     string "processor".  We don't have to fear extremely long
-	     lines since the kernel will not generate them.  8192
-	     bytes are really enough.  */
-	  while (fgets_unlocked (buffer, sizeof buffer, fp) != NULL)
-	    if (sscanf (buffer, format, &result) == 1)
-	      {
-		result /= (__getpagesize () / 1024);
-		break;
-	      }
-
-	  fclose (fp);
-	}
+      fclose (fp);
     }
 
   if (result == -1)
