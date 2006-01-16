@@ -775,6 +775,8 @@
 2006-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wmemstream.c: New file.
+	* libio/stdio.h: Declare open_wmemstream.
+	* libio/Versions: Export open_wmemstream for GLIBC_2.4.
 	* libio/Makefile (routines): Add wmemstream.
 	(tests): Add tst-memstream1, tst-memstream2, tst-wmemstream2, and
 	tst-wmemstream2.

@@ -293,6 +293,11 @@ extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes) __THROW;
    and the number of characters written on fflush or fclose.  */
 extern FILE *open_memstream (char **__restrict __bufloc,
 			     size_t *__restrict __sizeloc) __THROW;
+
+/* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
+   a wide character string.  */
+extern FILE *open_wmemstream (wchar_t **__restrict __bufloc,
+			      size_t *__restrict __sizeloc) __THROW;
 #endif
 
 

@@ -145,6 +145,9 @@ libc {
     # w*
     wprintf; wscanf;
   }
+  GLIBC_2.4 {
+    open_wmemstream;
+  }
   GLIBC_PRIVATE {
     # Used by NPTL and librt
     __libc_fatal;
