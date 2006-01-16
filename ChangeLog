@@ -1,3 +1,14 @@
+2006-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_TMPFS_NAME.
+	* sysdeps/unix/sysv/linux/shm_open.c [!__ASSUME_TMPFS_NAME]
+	(where_is_shmfs): Don't test for obsolete shm filesystem name.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c: Don't search for proc
+	mount point.  We assume procfs is mounted at /proc in many other
+	places already.
+
 2006-01-15  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #1950]

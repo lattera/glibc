@@ -456,3 +456,10 @@
     && defined __arch64__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
+
+/* Early kernel used "shm" as the filesystem name for the filesystem used
+   for shm_open etc.  Later it is "tmpfs".  2.4.20 is a safe bet for the
+   cutover.  */
+#if __LINUX_KERNEL_VERSION >= 0x02041a
+# define __ASSUME_TMPFS_NAME	1
+#endif

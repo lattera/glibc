@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000,2001,2002,2003,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,8 @@
 #include <sys/statfs.h>
 #include <bits/libc-lock.h>
 #include "linux_fsinfo.h"
+
+#include <kernel-features.h>
 
 
 /* Mount point of the shared memory filesystem.  */
@@ -81,7 +83,10 @@ where_is_shmfs (void)
     /* The original name is "shm" but this got changed in early Linux
        2.4.x to "tmpfs".  */
     if (strcmp (mp->mnt_type, "tmpfs") == 0
-	|| strcmp (mp->mnt_type, "shm") == 0)
+#ifndef __ASSUME_TMPFS_NAME
+	|| strcmp (mp->mnt_type, "shm") == 0
+#endif
+	)
       {
 	/* Found it.  There might be more than one place where the
            filesystem is mounted but one is enough for us.  */
