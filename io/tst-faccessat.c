@@ -135,7 +135,7 @@ do_test (void)
 
   errno = 0;
   if (faccessat (dir_fd, "some-file", W_OK, AT_EACCESS) == 0
-      || errno != EACCES)
+      ? (geteuid () != 0) : (errno != EACCES))
     {
       printf ("faccessat W_OK on unwritable file: %m\n");
       result = 1;
