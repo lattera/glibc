@@ -1,14 +1,10 @@
 #include <math.h>
-#include <stdio.h>
-#include <errno.h>
+#include "math_private.h"
 
 long double
 __ieee754_exp2l (long double x)
 {
-  fputs ("__ieee754_exp2l not implemented\n", stderr);
-  __set_errno (ENOSYS);
-  return 0.0;
+  /* This is a very stupid and inprecise implementation.  It'll get
+     replaced sometime (soon?).  */
+  return __ieee754_expl (M_LN2l * x);
 }
-
-stub_warning (exp2l)
-#include <stub-tag.h>

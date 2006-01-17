@@ -24,7 +24,9 @@ subdir	:= stdlib
 headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h			      \
 	   monetary.h bits/monetary-ldbl.h				      \
 	   inttypes.h stdint.h bits/wordsize.h				      \
-	   errno.h sys/errno.h bits/errno.h
+	   errno.h sys/errno.h bits/errno.h				      \
+	   ucontext.h sys/ucontext.h					      \
+	   alloca.h fmtmsg.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \

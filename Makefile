@@ -163,6 +163,7 @@ else
 installed-stubs = $(inst_includedir)/gnu/stubs-$(biarch).h
 
 $(inst_includedir)/gnu/stubs.h: include/stubs-biarch.h $(+force)
+	$(make-target-directory)
 	$(INSTALL_DATA) $< $@
 
 install-others-nosubdir: $(installed-stubs)

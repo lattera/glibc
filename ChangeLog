@@ -1,3 +1,30 @@
+2006-01-16  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(+sysdir_pfx)sysd-rules): Emit pattern rules to install
+	into $(inst_includedir)/%.h from sysdirs.
+	[headers]: Change static pattern rule for installing
+	$(headers) to do only those not matching %.h.
+	($(inst_includedir)/%.h: $(objpfx)%.h): Add this pattern rule instead.
+	($(inst_includedir)/%.h: %.h): Likewise.
+	($(inst_includedir)/%.h: $(..)include/%.h): Likewise.
+
+	* Makefile ($(inst_includedir)/gnu/stubs.h):
+	Add $(make-target-directory).
+
+	* stdlib/Makefile (headers): Restore headers removed in last change.
+
+2006-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/e_exp2l.c: Don't include stdio.h, errno.h, stub-tag.h, include
+	math_private.h.
+	(__ieee754_exp2l): Compute for now as expl (M_LN2l * x)
+	instead of failing.
+	(exp2l): Remove stub_warning.
+
+2006-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/tst-faccessat.c (do_test): Don't fail if geteuid () == 0.
+
 2006-01-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
