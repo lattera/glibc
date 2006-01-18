@@ -1,5 +1,5 @@
 /* Machine-specific pthread type layouts.  MIPS version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ typedef union
    type is deliberately not exposed.  */
 typedef union
 {
-  struct
+  struct __pthread_mutex_s
   {
     int __lock;
     unsigned int __count;
@@ -70,10 +70,19 @@ typedef union
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
-#if _MIPS_SIM != _ABI64
-    unsigned int __nusers;
-#endif
+#if _MIPS_SIM == _ABI64
     int __spins;
+    struct __pthread_mutex_s *__next;
+    struct __pthread_mutex_s *__prev;
+# define __PTHREAD_MUTEX_HAVE_PREV	1
+#else
+    unsigned int __nusers;
+    __extension__ union
+    {
+      int __spins;
+      struct __pthread_mutex_s *__next;
+    };
+#endif
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;
