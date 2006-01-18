@@ -247,6 +247,7 @@ _dl_map_object_deps (struct link_map *map,
 		if (__builtin_expect (errstring != NULL, 0))
 		  {
 		    char *new_errstring = strdupa (errstring);
+		    objname = strdupa (objname);
 		    if (malloced)
 		      free ((char *) errstring);
 		    errstring = new_errstring;
@@ -337,6 +338,7 @@ _dl_map_object_deps (struct link_map *map,
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			char *new_errstring = strdupa (errstring);
+			objname = strdupa (objname);
 			if (malloced)
 			  free ((char *) errstring);
 			errstring = new_errstring;
