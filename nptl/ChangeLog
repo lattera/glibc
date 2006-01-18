@@ -1,6 +1,6 @@
 2006-01-18  Andreas Jaeger  <aj@suse.de>
 
-	[BZ #838]
+	[BZ #2167]
 	* sysdeps/unix/sysv/linux/mips/bits/pthreadtypes.h
 	(pthread_mutex_t): Follow changes for other archs.  Based on patch
 	by Jim Gifford <patches@jg555.com>.
