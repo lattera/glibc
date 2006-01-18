@@ -1,5 +1,8 @@
 2006-01-18  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf.c: Restore
+	attribute_hidden here.
+
 	* sysdeps/sparc/sparc64/Makefile (long-double-fcts): Move this ...
 	* sysdeps/sparc/Makefile (long-double-fcts): ... to here.
 
