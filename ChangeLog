@@ -1,3 +1,8 @@
+2006-01-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): In case of failure also make a
+	copy of objname string.
+
 2006-01-16  Roland McGrath  <roland@redhat.com>
 
 	* Makerules ($(+sysdir_pfx)sysd-rules): Emit pattern rules to install
