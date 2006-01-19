@@ -1,3 +1,11 @@
+2006-01-18  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2173]
+	* libio/fileops.c (_IO_new_file_fopen): If ,ccs= is given, also
+	set vtable to the wide vtable.
+	* libio/tst-fopenloc2.c: New file.
+	* libio/Makefile (tests): Add tst-fopenloc2.
+
 2006-01-18  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf.c: Restore
@@ -42,7 +50,7 @@
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_TMPFS_NAME.
-	* sysdeps/unix/sysv/linux/shm_open.c [!__ASSUME_TMPFS_NAME]
+	* sysdeps/unix/sysv/linux/shm_open.c [__ASSUME_TMPFS_NAME]
 	(where_is_shmfs): Don't test for obsolete shm filesystem name.
 
 	* sysdeps/unix/sysv/linux/getsysstats.c: Don't search for proc
