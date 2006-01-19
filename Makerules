@@ -257,6 +257,10 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.S)";				      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
 		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
 	     $(close-check-inhibit-asm)	\
 	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
@@ -264,13 +268,12 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.c)";				      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
 	   done; \
-	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
-	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
 	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force); \
 	   	 	\$$(do-install)"; 				      \
 	 done;								      \
-	 echo "\$$(objpfx)m_%.c: s_%.c; \$$(+make-include-of-dep)";   \
 	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@
 
@@ -278,12 +281,6 @@ ifndef sysd-rules-done
 # Don't do deps until this exists, because it provides rules to make the deps.
 no_deps=t
 endif
-
-# This is used by the m_%.[Sc] pattern rules in sysd-rules.
-define +make-include-of-dep
-echo '#include <$<>' > $@T
-mv -f $@T $@
-endef
 
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)

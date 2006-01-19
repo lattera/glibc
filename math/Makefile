@@ -1,4 +1,5 @@
-# Copyright (C) 1996-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1996-2001,2002,2003,2004,2005,2006
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -147,6 +148,15 @@ extra-objs += libieee.a ieee-math.o
 distribute += ieee-math.c
 
 include ../Rules
+
+
+# The generated sysd-rules file defines rules like this for sources
+# coming from sysdeps/ directories.  These rules find the generic sources.
+define o-iterator-doit
+$(objpfx)m_%$o: s_%.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
 
 
 # This file defines the default _LIB_VERSION variable that controls

@@ -1,3 +1,12 @@
+2006-01-18  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h [__ASSEMBLER__]: Don't
+	include problematic headers for assembler.
+
+	* Makerules ($(+sysdir_pfx)sysd-rules): Don't emit m_%.c rules,
+	instead emit m_%.o compilation rules from s_%.? source files.
+	* math/Makefile ($(objpfx)m_%$o: s_%.c): New rule using o-iterator.
+
 2006-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fxstatat.c [STAT_IS_KERNEL_STAT]
