@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,10 +78,12 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
 	return result;
     }
-
 #ifdef STAT_IS_KERNEL_STAT
-  __set_errno (EINVAL);
-  return -1;
+  else
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 #else
   struct kernel_stat kst;
 

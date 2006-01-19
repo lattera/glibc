@@ -1,5 +1,8 @@
 2006-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/fxstatat.c [STAT_IS_KERNEL_STAT]
+	(__fxstatat): Correct handling of invalid vers values.
+
 	[BZ #2173]
 	* libio/fileops.c (_IO_new_file_fopen): If ,ccs= is given, also
 	set vtable to the wide vtable.
