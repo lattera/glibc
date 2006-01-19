@@ -5,8 +5,6 @@
 # error "nldbl-abi.h must define LONG_DOUBLE_COMPAT_VERSION"
 #endif
 
-#include <math.h>
-#include <math/math_private.h>
 #include <shlib-compat.h>
 #define LONG_DOUBLE_COMPAT(lib, introduced) \
   SHLIB_COMPAT(lib, introduced, LONG_DOUBLE_COMPAT_VERSION)
@@ -29,7 +27,7 @@
 /* Note that weak_alias cannot be used - it is defined to nothing
    in most of the files.  */
 # define long_double_symbol_1(lib, local, symbol, version) \
-  _weak_alias (local, symbol)
+  weak_alias (local, symbol)
 #else
 # define ldbl_hidden_def(local, name) libc_hidden_def (name)
 # define ldbl_strong_alias(name, aliasname) strong_alias (name, aliasname)
@@ -38,7 +36,12 @@
   strong_alias (local, symbol)
 #endif
 
+#ifndef __ASSEMBLER__
+# include <math.h>
+# include <math/math_private.h>
+
 /* Set temporarily to non-zero if long double should be considered
    the same as double.  */
 extern __thread int __no_long_double attribute_tls_model_ie attribute_hidden;
-#define __ldbl_is_dbl __builtin_expect (__no_long_double, 0)
+# define __ldbl_is_dbl __builtin_expect (__no_long_double, 0)
+#endif
