@@ -22,6 +22,7 @@
 #include <stddef.h>	/* For NULL.  */
 #include <sys/time.h>
 #include <sys/select.h>
+#include <sysdep-cancel.h>
 
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
@@ -63,3 +64,5 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 }
 weak_alias (__pselect, pselect)
 strong_alias (__pselect, __libc_pselect)
+/* __select handles cancellation.  */
+LIBC_CANCEL_HANDLED ();

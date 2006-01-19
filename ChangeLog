@@ -1,6 +1,7 @@
 2006-01-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/pselect.c (__pselect): Remove static.
+	Include sysdep-cancel.h again.  Add LIBC_CANCEL_HANDLED ().
 
 2006-01-18  Roland McGrath  <roland@redhat.com>
 
