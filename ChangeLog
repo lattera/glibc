@@ -9,6 +9,9 @@
 
 2006-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/pselect.c (__pselect): No need to enable async cancellation
+	here.  This is done in select.
+
 	* sysdeps/unix/sysv/linux/fxstatat.c [STAT_IS_KERNEL_STAT]
 	(__fxstatat): Correct handling of invalid vers values.
 
