@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -398,6 +398,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 
 	  /* And now the transliteration.  */
 	  cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
+
+	  /* From now on use the wide character callback functions.  */
+	  ((struct _IO_FILE_plus *) fp)->vtable = fp->_wide_data->_wide_vtable;
 
 	  /* Set the mode now.  */
 	  result->_mode = 1;
