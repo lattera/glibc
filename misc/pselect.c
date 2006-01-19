@@ -30,7 +30,7 @@
    after waiting the interval specified therein.  Additionally set the sigmask
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
-static int
+int
 __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	   const struct timespec *timeout, const sigset_t *sigmask)
 {
