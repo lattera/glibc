@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2001,2002,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -22,7 +22,7 @@
 #include <stddef.h>	/* For NULL.  */
 #include <sys/time.h>
 #include <sys/select.h>
-#include <sysdep-cancel.h>
+
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -31,8 +31,8 @@
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
 static int
-do_pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-	    const struct timespec *timeout, const sigset_t *sigmask)
+__pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	   const struct timespec *timeout, const sigset_t *sigmask)
 {
   struct timeval tval;
   int retval;
@@ -60,29 +60,6 @@ do_pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
     __sigprocmask (SIG_SETMASK, &savemask, NULL);
 
   return retval;
-}
-
-
-int
-__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
-     int nfds;
-     fd_set *readfds;
-     fd_set *writefds;
-     fd_set *exceptfds;
-     const struct timespec *timeout;
-     const sigset_t *sigmask;
-{
-  if (SINGLE_THREAD_P)
-    return do_pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = do_pselect (nfds, readfds, writefds, exceptfds, timeout,
-			   sigmask);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
 }
 weak_alias (__pselect, pselect)
 strong_alias (__pselect, __libc_pselect)
