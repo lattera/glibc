@@ -110,5 +110,7 @@ libc {
     readlinkat;
     symlinkat;
     unlinkat;
+
+    ppoll;
   }
 }

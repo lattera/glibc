@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <kernel-features.h>
 #include <sysdep-cancel.h>
 
 
-#ifndef OPENAT
+#if !defined OPENAT && !defined __ASSUME_ATFCTS
 # define OPENAT openat
-# define MORE_OFLAGS 0
 
 
 void
@@ -53,6 +53,8 @@ __atfct_seterrno (int errval, int fd, const char *buf)
 
   __set_errno (errval);
 }
+
+int __have_atfcts;
 #endif
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
@@ -64,6 +66,49 @@ OPENAT (fd, file, oflag)
      const char *file;
      int oflag;
 {
+  mode_t mode = 0;
+  if (oflag & O_CREAT)
+    {
+      va_list arg;
+      va_start (arg, oflag);
+      mode = va_arg (arg, mode_t);
+      va_end (arg);
+    }
+
+  /* We have to add the O_LARGEFILE flag for openat64.  */
+#ifdef MORE_OFLAGS
+  oflag |= MORE_OFLAGS;
+#endif
+
+  INTERNAL_SYSCALL_DECL (err);
+  int res;
+
+#ifdef __NR_openat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      if (SINGLE_THREAD_P)
+	res = INLINE_SYSCALL (openat, 4, fd, file, oflag, mode);
+      else
+	{
+	  int oldtype = LIBC_CANCEL_ASYNC ();
+
+	  res = INLINE_SYSCALL (openat, 4, fd, file, oflag, mode);
+
+	  LIBC_CANCEL_RESET (oldtype);
+	}
+
+# ifndef __ASSUME_ATFCTS
+      if (res == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return res;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -84,25 +129,13 @@ OPENAT (fd, file, oflag)
       file = buf;
     }
 
-  mode_t mode = 0;
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-  int res;
-
   if (SINGLE_THREAD_P)
-    res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+    res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
-      res = INTERNAL_SYSCALL (open, err, 3, file, oflag | MORE_OFLAGS, mode);
+      res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
 
       LIBC_CANCEL_RESET (oldtype);
     }
@@ -114,4 +147,5 @@ OPENAT (fd, file, oflag)
     }
 
   return res;
+#endif
 }

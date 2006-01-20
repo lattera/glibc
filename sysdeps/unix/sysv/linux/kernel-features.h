@@ -463,3 +463,27 @@
 #if __LINUX_KERNEL_VERSION >= 0x02041a
 # define __ASSUME_TMPFS_NAME	1
 #endif
+
+/* pselect was introduced just after 2.6.16-rc1.  Due to the way the
+   kernel versions are advertised we can only rely on 2.6.17 to have
+   the code.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && (defined __i386__ || defined __powerpc__)
+# define __ASSUME_PSELECT	1
+#endif
+
+/* ppoll was introduced just after 2.6.16-rc1.  Due to the way the
+   kernel versions are advertised we can only rely on 2.6.17 to have
+   the code.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && (defined __i386__ || defined __powerpc__)
+# define __ASSUME_PPOLL	1
+#endif
+
+/* The *at syscalls were introduced just after 2.6.16-rc1.  Due to the way the
+   kernel versions are advertised we can only rely on 2.6.17 to have
+   the code.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && (defined __i386__ || defined __x86_64__)
+# define __ASSUME_ATFCTS	1
+#endif

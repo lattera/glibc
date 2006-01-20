@@ -35,6 +35,24 @@ futimesat (fd, file, tvp)
      const char *file;
      const struct timeval tvp[2];
 {
+  int result;
+
+#ifdef __NR_futimesat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (file == NULL)
@@ -70,24 +88,23 @@ futimesat (fd, file, tvp)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
-#ifdef __NR_utimes
+# ifdef __NR_utimes
   result = INTERNAL_SYSCALL (utimes, err, 2, file, tvp);
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return result;
 
-# ifndef __ASSUME_UTIMES
+#  ifndef __ASSUME_UTIMES
   if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
     goto fail;
+#  endif
 # endif
-#endif
 
   /* The utimes() syscall does not exist or is not available in the
      used kernel.  Use utime().  For this we have to convert to the
      data format utime() expects.  */
-#ifndef __ASSUME_UTIMES
+# ifndef __ASSUME_UTIMES
   struct utimbuf tmp;
   struct utimbuf *times;
 
@@ -105,9 +122,10 @@ futimesat (fd, file, tvp)
     return result;
 
  fail:
-#endif
+# endif
 
   __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
   return -1;
+#endif
 }

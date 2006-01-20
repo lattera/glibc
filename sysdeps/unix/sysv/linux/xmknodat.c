@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,10 @@
 #include <sys/sysmacros.h>
 
 #include <sysdep.h>
+#include <kernel-features.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+
 
 /* Create a device file named PATH relative to FD, with permission and
    special bits MODE and device number DEV (which can be constructed
@@ -40,6 +42,30 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
       return -1;
     }
 
+  /* We must convert the value to dev_t type used by the kernel.  */
+  unsigned long long int k_dev =  (*dev) & ((1ULL << 32) - 1);
+  if (k_dev != *dev)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+#ifdef __NR_mknodat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      int res = INLINE_SYSCALL (mknodat, 4, fd, file, mode, k_dev);
+# ifndef __ASSUME_ATFCTS
+      if (res == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return res;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -60,16 +86,9 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
       file = buf;
     }
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  unsigned long long int k_dev =  (*dev) & ((1ULL << 32) - 1);
-  if (k_dev != *dev)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
   return INLINE_SYSCALL (mknod, 3, CHECK_STRING (file), mode,
 			 (unsigned int) k_dev);
+#endif
 }
 
 libc_hidden_def (__xmknodat)

@@ -1,3 +1,7 @@
+2006-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c: Test ppoll.
+
 2006-01-18  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #2167]

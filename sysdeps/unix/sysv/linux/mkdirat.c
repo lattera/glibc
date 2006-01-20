@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <kernel-features.h>
 #include <sysdep-cancel.h>
 
 
@@ -33,6 +34,24 @@ mkdirat (fd, file, mode)
      const char *file;
      mode_t mode;
 {
+  int res;
+
+#ifdef __NR_mkdirat
+#  ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      res = INLINE_SYSCALL (mkdirat, 3, fd, file, mode);
+# ifndef __ASSUME_ATFCTS
+      if (res == -1 && res == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return res;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -54,7 +73,7 @@ mkdirat (fd, file, mode)
     }
 
   INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (mkdir, err, 2, file, mode);
+  res = INTERNAL_SYSCALL (mkdir, err, 2, file, mode);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
     {
@@ -63,4 +82,5 @@ mkdirat (fd, file, mode)
     }
 
   return res;
+#endif
 }

@@ -1,3 +1,33 @@
+2006-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/fcntl.h: Declare __have_atfcts.
+	* sysdeps/unix/sysv/linux/faccessat.c: Use syscall if available.
+	* sysdeps/unix/sysv/linux/fchmodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PSELECT,
+	__ASSUME_PPOLL, and __ASSUME_ATFCTS if possible.
+
+	* io/ppoll.c: New file.
+	* io/Makefile (routines): Add ppoll.
+	(CFLAGS-ppoll.c): Define.
+	* io/Versions: Export ppoll for GLIBC_2.4.
+	* io/sys/poll.h: Declare ppoll.
+	* sysdeps/unix/sysv/linux/ppoll.c: New file.
+
+	* misc/pselect.c: Make it possible to include this file to define
+	the generic code as a static function.
+	* sysdeps/unix/sysv/linux/pselect.c: New file.
+
 2006-01-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/pselect.c (__pselect): Remove static.

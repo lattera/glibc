@@ -1,5 +1,5 @@
 /* unlinkat -- Remove a link by relative name.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 
 /* Remove the link named NAME.  */
@@ -34,6 +35,24 @@ unlinkat (fd, file, flag)
      const char *file;
      int flag;
 {
+  int result;
+
+#ifdef __NR_unlinkat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (unlinkat, 3, fd, file, flag);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (flag & ~AT_REMOVEDIR)
     {
       __set_errno (EINVAL);
@@ -60,7 +79,6 @@ unlinkat (fd, file, flag)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
   if (flag & AT_REMOVEDIR)
@@ -75,4 +93,5 @@ unlinkat (fd, file, flag)
     }
 
   return result;
+#endif
 }

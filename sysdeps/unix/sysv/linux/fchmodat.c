@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <alloca.h>
+#include <kernel-features.h>
 #include <sysdep.h>
 
 int
@@ -47,6 +48,24 @@ fchmodat (fd, file, mode, flag)
     }
 #endif
 
+  int result;
+
+#ifdef __NR_fchmodat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')
@@ -67,14 +86,13 @@ fchmodat (fd, file, mode, flag)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
-#ifdef __NR_lchmod
+# ifdef __NR_lchmod
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lchmod, err, 2, file, mode);
   else
-#endif
+# endif
     result = INTERNAL_SYSCALL (chmod, err, 2, file, mode);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
@@ -84,4 +102,5 @@ fchmodat (fd, file, mode, flag)
     }
 
   return result;
+#endif
 }

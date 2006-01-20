@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -517,6 +517,53 @@ tf_poll (void *arg)
   pthread_cleanup_pop (0);
 
   printf ("%s: poll returns with %d (%s)\n", __FUNCTION__, s,
+	  strerror (errno));
+
+  exit (1);
+}
+
+
+static void *
+tf_ppoll (void *arg)
+{
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  struct pollfd rfs[1] = { [0] = { .fd = fd, .events = POLLIN } };
+
+  int s;
+  pthread_cleanup_push (cl, NULL);
+
+  s = ppoll (rfs, 1, NULL, NULL);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: ppoll returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
 
   exit (1);
@@ -2006,6 +2053,7 @@ static struct
   ADD_TEST (select, 2, 0),
   ADD_TEST (pselect, 2, 0),
   ADD_TEST (poll, 2, 0),
+  ADD_TEST (ppoll, 2, 0),
   ADD_TEST (write, 2, 0),
   ADD_TEST (writev, 2, 0),
   ADD_TEST (sleep, 2, 0),

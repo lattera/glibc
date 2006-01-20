@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 
 /* Read the contents of the symbolic link PATH relative to FD into no
@@ -35,6 +36,24 @@ readlinkat (fd, path, buf, len)
      char *buf;
      size_t len;
 {
+  int result;
+
+#ifdef __NR_readlinkat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (readlinkat, 4, fd, path, buf, len);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *pathbuf = NULL;
 
   if (fd != AT_FDCWD && path[0] != '/')
@@ -57,7 +76,7 @@ readlinkat (fd, path, buf, len)
 
   INTERNAL_SYSCALL_DECL (err);
 
-  int result = INTERNAL_SYSCALL (readlink, err, 3, path, buf, len);
+  result = INTERNAL_SYSCALL (readlink, err, 3, path, buf, len);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
@@ -66,4 +85,5 @@ readlinkat (fd, path, buf, len)
     }
 
   return result;
+#endif
 }

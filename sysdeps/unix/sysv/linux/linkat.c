@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <sysdep.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 
 /* Make a link to FROM named TO but relative paths in TO and FROM are
@@ -33,6 +34,24 @@ linkat (fromfd, from, tofd, to)
      int tofd;
      const char *to;
 {
+  int result;
+
+#ifdef __NR_linkat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (linkat, 4, fromfd, from, tofd, to);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   static const char procfd[] = "/proc/self/fd/%d/%s";
   char *buffrom = NULL;
 
@@ -74,7 +93,7 @@ linkat (fromfd, from, tofd, to)
 
   INTERNAL_SYSCALL_DECL (err);
 
-  int result = INTERNAL_SYSCALL (link, err, 2, from,  to);
+  result = INTERNAL_SYSCALL (link, err, 2, from,  to);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
@@ -84,4 +103,5 @@ linkat (fromfd, from, tofd, to)
     }
 
   return result;
+#endif
 }

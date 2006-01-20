@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 
 /* Make a symbolic link to FROM named TO relative to TOFD.  */
@@ -33,6 +34,24 @@ symlinkat (from, tofd, to)
      int tofd;
      const char *to;
 {
+  int result;
+
+#ifdef __NR_symlinkat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (symlinkat, 3, from, tofd, to);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
   if (tofd != AT_FDCWD && to[0] != '/')
@@ -55,7 +74,7 @@ symlinkat (from, tofd, to)
 
   INTERNAL_SYSCALL_DECL (err);
 
-  int result = INTERNAL_SYSCALL (symlink, err, 2, from, to);
+  result = INTERNAL_SYSCALL (symlink, err, 2, from, to);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
@@ -64,4 +83,5 @@ symlinkat (from, tofd, to)
     }
 
   return result;
+#endif
 }

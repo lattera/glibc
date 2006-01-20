@@ -1,5 +1,5 @@
 /* Compatibility definitions for System V `poll' interface.
-   Copyright (C) 1994,1996-2001,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996-2001,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,13 @@
 
 /* Get the platform dependent bits of `poll'.  */
 #include <bits/poll.h>
+#ifdef __USE_GNU
+/* Get the __sigset_t definition.  */
+# include <bits/sigset.h>
+/* Get the timespec definition.  */
+# define __need_timespec
+# include <time.h>
+#endif
 
 
 /* Type used for the number of file descriptors.  */
@@ -49,6 +56,18 @@ __BEGIN_DECLS
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int poll (struct pollfd *__fds, nfds_t __nfds, int __timeout);
+
+#ifdef __USE_GNU
+/* Like poll, but before waiting the threads signal mask is replaced
+   with that specified in the fourth parameter.  For better usability,
+   the timeout value is specified using a TIMESPEC object.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
+		  __const struct timespec *__timeout,
+		  __const __sigset_t *__ss);
+#endif
 
 __END_DECLS
 

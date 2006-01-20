@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <sys/types.h>
 #include <alloca.h>
 #include <sysdep.h>
+#include <kernel-features.h>
+
 
 /* Change the owner and group of FILE.  */
 int
@@ -35,6 +37,24 @@ fchownat (fd, file, owner, group, flag)
      gid_t group;
      int flag;
 {
+  int result;
+
+#ifdef __NR_fchownat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (fchownat, 5, fd, file, owner, group, flag);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -61,7 +81,6 @@ fchownat (fd, file, owner, group, flag)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
   if (flag & AT_SYMLINK_NOFOLLOW)
@@ -76,4 +95,5 @@ fchownat (fd, file, owner, group, flag)
     }
 
   return result;
+#endif
 }

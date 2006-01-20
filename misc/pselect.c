@@ -62,7 +62,9 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 
   return retval;
 }
+#ifndef __pselect
 weak_alias (__pselect, pselect)
 strong_alias (__pselect, __libc_pselect)
 /* __select handles cancellation.  */
 LIBC_CANCEL_HANDLED ();
+#endif

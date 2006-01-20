@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,11 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <kernel-features.h>
 #include <sysdep.h>
 
 
+#ifndef __ASSUME_ATFCTS
 void
 attribute_hidden
 __atfct_seterrno_2 (int errval, int fd1, const char *buf1, int fd2,
@@ -67,6 +69,7 @@ __atfct_seterrno_2 (int errval, int fd1, const char *buf1, int fd2,
  out:
   __set_errno (errval);
 }
+#endif
 
 
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
@@ -77,6 +80,24 @@ renameat (oldfd, old, newfd, new)
      int newfd;
      const char *new;
 {
+  int result;
+
+#ifdef __NR_renameat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (renameat, 4, oldfd, old, newfd, new);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   static const char procfd[] = "/proc/self/fd/%d/%s";
   char *bufold = NULL;
 
@@ -118,7 +139,7 @@ renameat (oldfd, old, newfd, new)
 
   INTERNAL_SYSCALL_DECL (err);
 
-  int result = INTERNAL_SYSCALL (rename, err, 2, old,  new);
+  result = INTERNAL_SYSCALL (rename, err, 2, old,  new);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
@@ -128,4 +149,5 @@ renameat (oldfd, old, newfd, new)
     }
 
   return result;
+#endif
 }

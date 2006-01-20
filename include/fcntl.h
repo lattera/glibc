@@ -25,4 +25,8 @@ extern void __atfct_seterrno_2 (int errval, int fd1, const char *buf1,
 				int fd2, const char *buf2)
   attribute_hidden;
 
+
+/* Flag determining whether the *at system calls are available.  */
+extern int __have_atfcts attribute_hidden;
+
 #endif

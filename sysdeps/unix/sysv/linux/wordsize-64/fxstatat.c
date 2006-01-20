@@ -28,15 +28,40 @@
 #include <sys/stat.h>
 
 #include <sysdep.h>
+#include <kernel-features.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+
 
 /* Get information about the file NAME relative to FD in ST.  */
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  if ((vers != _STAT_VER_KERNEL && vers != _STAT_VER_LINUX)
-      || (flag & ~AT_SYMLINK_NOFOLLOW) != 0)
+  if (vers != _STAT_VER_KERNEL && vers != _STAT_VER_LINUX)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  int res;
+
+#ifdef __NR_newfstatat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      res = INLINE_SYSCALL (newfstatat, 4, fd, file, st, flag);
+# ifndef __ASSUME_ATFCTS
+      if (res == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return res;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
+  if ((flag & ~AT_SYMLINK_NOFOLLOW) != 0)
     {
       __set_errno (EINVAL);
       return -1;
@@ -63,7 +88,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     }
 
   INTERNAL_SYSCALL_DECL (err);
-  int res;
 
   if (flag & AT_SYMLINK_NOFOLLOW)
     res = INTERNAL_SYSCALL (lstat, err, 2, file, CHECK_1 (st));
@@ -77,6 +101,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     }
 
   return res;
+#endif
 }
 #undef __fxstatat64
 strong_alias (__fxstatat, __fxstatat64);
