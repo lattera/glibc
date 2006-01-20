@@ -65,7 +65,8 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
 		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
-		   tst-symlinkat tst-linkat tst-readlinkat
+		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
+		   tst-mknodat tst-mkfifoat
 
 distribute	:= ftwtest-sh
 

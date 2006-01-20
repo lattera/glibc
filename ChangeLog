@@ -3,11 +3,14 @@
 	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Try using the
 	syscall in more cases.
 
-	* io/Makefile (tests): Add tst-symlinkat, tst-linkat, and
-	tst-readlinkat.
+	* io/Makefile (tests): Add tst-symlinkat, tst-linkat, tst-readlinkat,
+	tst-mkdirat, tst-mknodat, and tst-mkfifoat.
 	* io/tst-symlinkat.c: New file.
 	* io/tst-linkat.c: New file.
 	* io/tst-readlinkat.c: New file.
+	* io/tst-mkdirat.c: New file.
+	* io/tst-mknodat.c: New file.
+	* io/tst-mkfifoat.c: New file.
 
 	* dirent/Makefile (tests): Add tst-fdopendir2.
 	* dirent/tst-fdopendir2.c: New file.
