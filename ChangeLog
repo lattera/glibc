@@ -1,8 +1,5 @@
 2006-01-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/fdopendir.c (fdopendir): If O_DIRECTORY is
-	available, avoid stat call, use fcntl result to determine whether
-	descriptor is for a directory or not.
 	* dirent/Makefile (tests): Add tst-fdopendir2.
 	* dirent/tst-fdopendir2.c: New file.
 

@@ -29,7 +29,6 @@ fdopendir (int fd)
 {
   struct stat64 statbuf;
 
-#ifndef O_DIRECTORY
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
     return NULL;
   if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
@@ -37,20 +36,11 @@ fdopendir (int fd)
       __set_errno (ENOTDIR);
       return NULL;
     }
-#endif
 
-  /* Make sure the descriptor allows for reading (and eventually that
-     the descriptor is for a directory).  */
+  /* Make sure the descriptor allows for reading.  */
   int flags = __fcntl (fd, F_GETFL);
   if (__builtin_expect (flags == -1, 0))
     return NULL;
-#ifdef O_DIRECTORY
-  if (__builtin_expect ((flags & O_DIRECTORY) == 0, 0))
-    {
-      __set_errno (ENOTDIR);
-      return NULL;
-    }
-#endif
   if (__builtin_expect ((flags & O_ACCMODE) == O_WRONLY, 0))
     {
       __set_errno (EINVAL);
