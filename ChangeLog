@@ -1,3 +1,8 @@
+2006-01-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h
+	(sigcontext_struct) [__WORDSIZE == 32]: Define.
+
 2006-01-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sh4/__longjmp.S: Demangle also r14 and r15.

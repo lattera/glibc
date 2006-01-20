@@ -70,6 +70,14 @@ struct _fpstate
   __uint32_t		padding[56];
 };
 
+#ifndef sigcontext_struct
+/* Kernel headers before 2.1.1 define a struct sigcontext_struct, but
+   we need sigcontext.  Some packages have come to rely on
+   sigcontext_struct being defined on 32-bit x86, so define this for
+   their benefit.  */
+# define sigcontext_struct sigcontext
+#endif
+
 struct sigcontext
 {
   unsigned short gs, __gsh;
