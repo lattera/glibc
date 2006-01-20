@@ -1,5 +1,5 @@
 /* Copyright (C) 1992,1993,1995,1996,1997,1998,1999,2000,2002,2003,2004,
-   2005	Free Software Foundation, Inc.
+   2005,2006	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -376,9 +376,11 @@
    is too complicated here since we have no PC-relative addressing mode.  */
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg) \
-     stc gbr,r1; mov.l @(POINTER_GUARD,r1),r1; xor r1,reg
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+#  define PTR_MANGLE(reg, tmp) \
+     stc gbr,tmp; mov.l @(POINTER_GUARD,tmp),tmp; xor tmp,reg
+#  define PTR_MANGLE2(reg, tmp)	xor tmp,reg
+#  define PTR_DEMANGLE(reg, tmp)	PTR_MANGLE (reg, tmp)
+#  define PTR_DEMANGLE2(reg, tmp)	PTR_MANGLE2 (reg, tmp)
 # else
 #  define PTR_MANGLE(var) \
      (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())

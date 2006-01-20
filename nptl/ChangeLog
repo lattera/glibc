@@ -1,3 +1,9 @@
+2006-01-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (lll_futex_wait):
+	Return status.
+	(lll_futex_timed_wait): Define.
+
 2006-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c: Test ppoll.

@@ -1,3 +1,14 @@
+2006-01-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/__longjmp.S: Demangle also r14 and r15.
+	* sysdeps/sh/sh3/__longjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Mangle also r14 and r15.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h [__ASSEMBLER__]
+	(PTR_MANGLE): Add temporary register as the second parameter.
+	(PTR_DEMANGLE): Likewize.
+	(PTR_MANGLE2, PTR_DEMANGLE2): Define.
+
 2006-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/fcntl.h: Declare __have_atfcts.

@@ -31,13 +31,20 @@ ENTRY (__sigsetjmp)
 	stc.l	gbr, @-r4
 #ifdef PTR_MANGLE
 	sts	pr, r2
-	PTR_MANGLE (r2)
+	PTR_MANGLE (r2, r1)
 	mov.l	r2, @-r4
+	mov	r15, r2
+	PTR_MANGLE2 (r2, r1)
+	mov.l	r2, @-r4
+	mov	r14, r2
+	PTR_MANGLE2 (r2, r1)
+	mov.l	r2, @-r4
+	mov	#0, r1
 #else
 	sts.l	pr, @-r4
-#endif
 	mov.l	r15, @-r4
 	mov.l	r14, @-r4
+#endif
 	mov.l	r13, @-r4
 	mov.l	r12, @-r4
 	mov.l	r11, @-r4
