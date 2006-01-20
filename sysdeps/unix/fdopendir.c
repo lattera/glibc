@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ fdopendir (int fd)
 {
   struct stat64 statbuf;
 
+#ifndef O_DIRECTORY
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
     return NULL;
   if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
@@ -36,10 +37,20 @@ fdopendir (int fd)
       __set_errno (ENOTDIR);
       return NULL;
     }
-  /* Make sure the descriptor allows for reading.  */
+#endif
+
+  /* Make sure the descriptor allows for reading (and eventually that
+     the descriptor is for a directory).  */
   int flags = __fcntl (fd, F_GETFL);
   if (__builtin_expect (flags == -1, 0))
     return NULL;
+#ifdef O_DIRECTORY
+  if (__builtin_expect ((flags & O_DIRECTORY) == 0, 0))
+    {
+      __set_errno (ENOTDIR);
+      return NULL;
+    }
+#endif
   if (__builtin_expect ((flags & O_ACCMODE) == O_WRONLY, 0))
     {
       __set_errno (EINVAL);
