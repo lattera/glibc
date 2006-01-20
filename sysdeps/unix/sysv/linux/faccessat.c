@@ -45,7 +45,7 @@ faccessat (fd, file, mode, flag)
   int result;
 
 #ifdef __NR_faccessat
-  if (flag == 0
+  if ((flag == 0 || ((flag & ~AT_EACCESS) == 0 && ! __libc_enable_secure))
 # ifndef __ASSUME_ATFCTS
       && __have_atfcts >= 0
 # endif
