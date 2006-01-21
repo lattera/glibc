@@ -1,10 +1,16 @@
+2006-01-21  Roland McGrath  <roland@redhat.com>
+
+	* time/time.h [__need_timespec et al]: Include <bits/types.h> here too.
+
+	* stdlib/fpioconst.c: Fix whitespace typo.
+
 2006-01-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pselect.c (__pselect): Allow actual
 	system call code to be redefined in macro CALL_PSELECT6.
 	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=misc]
 	(sysdep_routines): Add call_pselect6.
-	* sysdeps/unix/sysv/linux/i386/call_pselect6.c: New file.
+	* sysdeps/unix/sysv/linux/i386/call_pselect6.S: New file.
 	* sysdeps/unix/sysv/linux/i386/pselect.c: New file.
 	* misc/Makefile (tests): Add tst-pselect.
 	* misc/tst-pselect.c: New file.

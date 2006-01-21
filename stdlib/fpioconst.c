@@ -278,7 +278,7 @@ const mp_limb_t __tens[] =
   0x26b2716ed595d80full, 0x1d153624adc666b0ull, 0x63ff540e3c42d35aull,
   0x65f9ef17cc5573c0ull, 0x80dcc7f755bc28f2ull, 0x5fdcefcef46eeddcull,
   0x00000000000553f7ull,
-#if!defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
+#if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
 # define TENS_P9_IDX	(TENS_P8_IDX + TENS_P8_SIZE)
 # define TENS_P9_SIZE	28
   [TENS_P9_IDX] = 0x0000000000000000ull, 0x0000000000000000ull,
