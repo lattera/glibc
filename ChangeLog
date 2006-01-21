@@ -1,8 +1,24 @@
+2006-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pselect.c (__pselect): Allow actual
+	system call code to be redefined in macro CALL_PSELECT6.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=misc]
+	(sysdep_routines): Add call_pselect6.
+	* sysdeps/unix/sysv/linux/i386/call_pselect6.c: New file.
+	* sysdeps/unix/sysv/linux/i386/pselect.c: New file.
+	* misc/Makefile (tests): Add tst-pselect.
+	* misc/tst-pselect.c: New file.
+
 2006-01-20  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/ppoll.c: New file.
 
 2006-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pselect.c: Fix typo in declaration.
+
+	* sysdeps/unix/sysv/linux/xmknodat.c (__xmknodat): Cast k_dev
+	value to unsigned int to match kernel.
 
 	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Try using the
 	syscall in more cases.

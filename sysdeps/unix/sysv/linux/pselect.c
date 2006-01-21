@@ -29,7 +29,7 @@
 static int __generic_pselect (int nfds, fd_set *readfds, fd_set *writefds,
 			      fd_set *exceptfds,
 			      const struct timespec *timeout,
-			      const sigset_t *sigmask)
+			      const sigset_t *sigmask);
 
 
 int
@@ -51,7 +51,7 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
      be created.  */
   struct
   {
-    sigset_t *ss;
+    const sigset_t *ss;
     size_t ss_len;
   } data;
 
@@ -60,15 +60,21 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 
   int result;
 
+#ifndef CALL_PSELECT6
+# define CALL_PSELECT6(nfds, readfds, writefds, exceptfds, timeout, data) \
+  INLINE_SYSCALL (pselect6, 6, nfds, readfds, writefds, exceptfds,	      \
+		  timeout, data)
+#endif
+
   if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (pselect6, 6, nfds, readfds, writefds, exceptfds,
-			     timeout, &data);
+    result = CALL_PSELECT6 (nfds, readfds, writefds, exceptfds, timeout,
+			    &data);
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
-      result = INLINE_SYSCALL (pselect6, 6, nfds, readfds, writefds, exceptfds,
-			       timeout, &data);
+      result = CALL_PSELECT6 (nfds, readfds, writefds, exceptfds, timeout,
+			      &data);
 
       LIBC_CANCEL_RESET (oldtype);
     }
@@ -81,6 +87,8 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 
   return result;
 }
+weak_alias (__pselect, pselect)
+strong_alias (__pselect, __libc_pselect)
 
 # ifndef __ASSUME_PSELECT
 #  define __pselect static __generic_pselect
