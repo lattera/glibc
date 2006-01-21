@@ -1,3 +1,11 @@
+2006-01-21  Roland McGrath  <roland@redhat.com>
+
+	* misc/tst-pselect.c: Include <unistd.h>.
+
+	* time/time.h [__need_timespec et al]: Include <bits/types.h> here too.
+
+	* stdlib/fpioconst.c: Fix whitespace typo.
+
 2006-01-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-64-128/s_nexttowardfd.c: Moved to...
@@ -9,12 +17,6 @@
 	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: New file.
 	* sysdeps/powerpc/fpu/bits/mathinline.h (__CPU_HAS_FSQRT): New macro.
 	(__ieee754_sqrt, __ieee754_sqrtf): Use it.
-
-2006-01-21  Roland McGrath  <roland@redhat.com>
-
-	* time/time.h [__need_timespec et al]: Include <bits/types.h> here too.
-
-	* stdlib/fpioconst.c: Fix whitespace typo.
 
 2006-01-21  Ulrich Drepper  <drepper@redhat.com>
 
