@@ -55,7 +55,8 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
   if (__have_atfcts >= 0)
 # endif
     {
-      int res = INLINE_SYSCALL (mknodat, 4, fd, file, mode, k_dev);
+      int res = INLINE_SYSCALL (mknodat, 4, fd, file, mode,
+				(unsigned int) k_dev);
 # ifndef __ASSUME_ATFCTS
       if (res == -1 && errno == ENOSYS)
 	__have_atfcts = -1;
