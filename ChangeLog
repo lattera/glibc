@@ -1,3 +1,7 @@
+2006-01-20  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/ppoll.c: New file.
+
 2006-01-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Try using the
