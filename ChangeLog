@@ -1,5 +1,10 @@
 2006-01-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardfd.c: Moved to...
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: ... here.  New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h (long_double_symbol_1): For
+	C define again using _weak_alias, for assembler use weak_alias.
+
 	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: New file.
 	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: New file.
 	* sysdeps/powerpc/fpu/bits/mathinline.h (__CPU_HAS_FSQRT): New macro.

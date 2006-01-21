@@ -24,10 +24,15 @@
 # define ldbl_hidden_def(local, name) libc_hidden_def (name)
 # define ldbl_strong_alias(name, aliasname) strong_alias (name, aliasname)
 # define ldbl_weak_alias(name, aliasname) weak_alias (name, aliasname)
+# ifndef __ASSEMBLER__
 /* Note that weak_alias cannot be used - it is defined to nothing
-   in most of the files.  */
-# define long_double_symbol_1(lib, local, symbol, version) \
+   in most of the C files.  */
+#  define long_double_symbol_1(lib, local, symbol, version) \
+  _weak_alias (local, symbol)
+# else
+#  define long_double_symbol_1(lib, local, symbol, version) \
   weak_alias (local, symbol)
+# endif
 #else
 # define ldbl_hidden_def(local, name) libc_hidden_def (name)
 # define ldbl_strong_alias(name, aliasname) strong_alias (name, aliasname)
