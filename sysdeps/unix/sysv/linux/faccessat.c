@@ -42,8 +42,6 @@ faccessat (fd, file, mode, flag)
       return -1;
     }
 
-  int result;
-
 #ifdef __NR_faccessat
   if ((flag == 0 || ((flag & ~AT_EACCESS) == 0 && ! __libc_enable_secure))
 # ifndef __ASSUME_ATFCTS
@@ -51,7 +49,7 @@ faccessat (fd, file, mode, flag)
 # endif
       )
     {
-      result = INLINE_SYSCALL (faccessat, 3, fd, file, mode);
+      int result = INLINE_SYSCALL (faccessat, 3, fd, file, mode);
 # ifndef __ASSUME_ATFCTS
       if (result == -1 && errno == ENOSYS)
 	__have_atfcts = -1;

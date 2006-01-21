@@ -1,5 +1,7 @@
 2006-01-21  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/faccessat.c: Move RESULT defn inside block.
+
 	* misc/tst-pselect.c: Include <unistd.h>.
 
 	* time/time.h [__need_timespec et al]: Include <bits/types.h> here too.
