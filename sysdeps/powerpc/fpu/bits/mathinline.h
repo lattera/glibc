@@ -1,5 +1,5 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -123,11 +123,17 @@ __NTH (fdimf (float __x, float __y))
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
 /* This code is used internally in the GNU libc.  */
-#  ifdef __LIBC_INTERNAL_MATH_INLINES
+#ifdef __LIBC_INTERNAL_MATH_INLINES
 
 #include <sysdep.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
+
+# if __WORDSIZE == 64
+#  define __CPU_HAS_FSQRT 1
+# else
+#  define __CPU_HAS_FSQRT ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
+# endif
 
 extern double __slow_ieee754_sqrt (double);
 __MATH_INLINE double
@@ -136,7 +142,7 @@ __NTH (__ieee754_sqrt (double __x))
   double __z;
 
   /* If the CPU is 64-bit we can use the optional FP instructions we.  */
-  if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
+  if (__CPU_HAS_FSQRT)
   {
     /* Volatile is required to prevent the compiler from moving the
        fsqrt instruction above the branch.  */
@@ -158,7 +164,7 @@ __NTH (__ieee754_sqrtf (float __x))
   float __z;
 
   /* If the CPU is 64-bit we can use the optional FP instructions we.  */
-  if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
+  if (__CPU_HAS_FSQRT)
   {
     /* Volatile is required to prevent the compiler from moving the
        fsqrts instruction above the branch.  */
@@ -172,5 +178,5 @@ __NTH (__ieee754_sqrtf (float __x))
 
   return __z;
 }
-#  endif /* __LIBC_INTERNAL_MATH_INLINES */
+#endif /* __LIBC_INTERNAL_MATH_INLINES */
 #endif /* __GNUC__ && !_SOFT_FLOAT */
