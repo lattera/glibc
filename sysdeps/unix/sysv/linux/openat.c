@@ -35,20 +35,36 @@ void
 attribute_hidden
 __atfct_seterrno (int errval, int fd, const char *buf)
 {
-  if (buf != NULL && errval == ENOTDIR)
+  if (buf != NULL)
     {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
       struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fd, &st) != 0)
-	/* errno is already set correctly.  */
-	return;
 
-      /* If /proc is not mounted there is nothing we can do.  */
-      if (S_ISDIR (st.st_mode)
-	  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-	      || !S_ISDIR (st.st_mode)))
-	errval = ENOSYS;
+      if (errval == ENOTDIR)
+	{
+	  /* This can mean either the file descriptor is invalid or
+	     /proc is not mounted.  */
+	  if (__fxstat64 (_STAT_VER, fd, &st) != 0)
+	    /* errno is already set correctly.  */
+	    return;
+
+	  /* If /proc is not mounted there is nothing we can do.  */
+	  if (S_ISDIR (st.st_mode)
+	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		  || !S_ISDIR (st.st_mode)))
+	    errval = ENOSYS;
+	}
+      else if (errval == ENOENT)
+	{
+	  /* This could mean the file descriptor is not valid.  We
+	     reuse BUF for the stat call.  Find the slash after the
+	     file descriptor number.  */
+	  *(char *) strchr (buf + sizeof "/proc/self/fd", '/') = '\0';
+
+	  int e = __xstat64 (_STAT_VER, buf, &st);
+	  if ((e == -1 && errno == ENOENT)
+	      ||(e == 0 && !S_ISLNK (st.st_mode)))
+	    errval = EBADF;
+	}
     }
 
   __set_errno (errval);
