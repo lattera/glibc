@@ -94,6 +94,21 @@ do_test (void)
       return 1;
     }
   write (fd, "hello", 5);
+
+  /* Before closing the file, try using this file descriptor to open
+     another file.  This must fail.  */
+  int fd2 = openat (fd, "should-not-work", O_CREAT|O_RDWR, 0666);
+  if (fd2 != -1)
+    {
+      puts ("openat using descriptor for normal file worked");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("error for openat using descriptor for normal file not ENOTDIR ");
+      return 1;
+    }
+
   close (fd);
   puts ("file created");
 
@@ -164,6 +179,31 @@ do_test (void)
 
   close (dir_fd);
   close (cwdfd);
+
+  /* With the file descriptor closed the next call must fail.  */
+  fd = openat (dir_fd, "some-file", O_CREAT|O_RDWR|O_EXCL, 0666);
+  if (fd != -1)
+    {
+      puts ("openat using closed descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("openat using closed descriptor did not set EBADF");
+      return 1;
+    }
+
+  fd = openat (-1, "some-file", O_CREAT|O_RDWR|O_EXCL, 0666);
+  if (fd != -1)
+    {
+      puts ("openat using -1 descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("openat using -1 descriptor did not set EBADF");
+      return 1;
+    }
 
   return 0;
 }

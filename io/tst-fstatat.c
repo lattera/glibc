@@ -97,6 +97,20 @@ do_test (void)
   puts ("file created");
 
   struct stat64 st1;
+
+  /* Before closing the file, try using this file descriptor to open
+     another file.  This must fail.  */
+  if (fstatat64 (fd, "some-file", &st1, 0) != -1)
+    {
+      puts ("fstatatat using descriptor for normal file worked");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("error for fstatat using descriptor for normal file not ENOTDIR ");
+      return 1;
+    }
+
   if (fstat64 (fd, &st1) != 0)
     {
       puts ("fstat64 failed");
@@ -137,7 +151,38 @@ do_test (void)
       return 1;
     }
 
+  /* Create a file descriptor which is closed again right away.  */
+  int dir_fd2 = dup (dir_fd);
+  if (dir_fd2 == -1)
+    {
+      puts ("dup failed");
+      return 1;
+    }
+  close (dir_fd2);
+
+  if (fstatat64 (dir_fd2, "some-file", &st1, 0) != -1)
+    {
+      puts ("fstatat64 using closed descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fstatat using closed descriptor not EBADF ");
+      return 1;
+    }
+
   close (dir_fd);
+
+  if (fstatat64 (-1, "some-file", &st1, 0) != -1)
+    {
+      puts ("fstatat64 using invalid descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fstatat using invalid descriptor not EBADF ");
+      return 1;
+    }
 
   return 0;
 }

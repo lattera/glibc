@@ -107,6 +107,20 @@ do_test (void)
       return 1;
     }
 
+  /* Before closing the file, try using this file descriptor to open
+     another file.  This must fail.  */
+  if (fchmodat (fd, "some-file", 0400, 0) != -1)
+    {
+      puts ("fchmodat using descriptor for normal file worked");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("\
+error for fchmodat using descriptor for normal file not ENOTDIR ");
+      return 1;
+    }
+
   close (fd);
 
   if ((st1.st_mode & 0777) != 0644)
@@ -140,7 +154,38 @@ do_test (void)
       return 1;
     }
 
+  /* Create a file descriptor which is closed again right away.  */
+  int dir_fd2 = dup (dir_fd);
+  if (dir_fd2 == -1)
+    {
+      puts ("dup failed");
+      return 1;
+    }
+  close (dir_fd2);
+
+  if (fchmodat (dir_fd2, "some-file", 0400, 0) != -1)
+    {
+      puts ("fchmodat using closed descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fchmodat using closed descriptor not EBADF ");
+      return 1;
+    }
+
   close (dir_fd);
+
+  if (fchmodat (-1, "some-file", 0400, 0) != -1)
+    {
+      puts ("fchmodat using invalid descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fchmodat using invalid descriptor not EBADF ");
+      return 1;
+    }
 
   return 0;
 }

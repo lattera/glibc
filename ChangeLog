@@ -1,3 +1,15 @@
+2006-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/renameat.c (__atfct_seterrno_2): Correcty
+	return EBADF for non-existing file descriptors.
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Likewise.
+	* io/tst-openat.c (do_test): Add some more tests.
+	* io/tst-faccessat.c (do_test): Likewise.
+	* io/tst-renameat.c (do_test): Likewise.
+	* io/tst-fstatat.c (do_test): Likewise.
+	* io/tst-fchmodat.c (do_test): Likewise.
+	* io/tst-fchownat.c (do_test): Likewise.
+
 2006-01-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/faccessat.c: Move RESULT defn inside block.

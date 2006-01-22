@@ -30,39 +30,70 @@ attribute_hidden
 __atfct_seterrno_2 (int errval, int fd1, const char *buf1, int fd2,
 		    const char *buf2)
 {
-  if (errval == ENOTDIR && (buf1 != NULL || buf2 != NULL))
+  if (buf1 != NULL || buf2 != NULL)
     {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
       struct stat64 st;
 
-      if (buf1 != NULL)
+      if (errval == ENOTDIR)
 	{
-	  if (__fxstat64 (_STAT_VER, fd1, &st) != 0)
-	    /* errno is already set correctly.  */
-	    return;
-
-	  /* If /proc is not mounted there is nothing we can do.  */
-	  if (S_ISDIR (st.st_mode)
-	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		  || !S_ISDIR (st.st_mode)))
+	  /* This can mean either the file descriptor is invalid or
+	     /proc is not mounted.  */
+	  if (buf1 != NULL)
 	    {
-	      errval = ENOSYS;
-	      goto out;
+	      if (__fxstat64 (_STAT_VER, fd1, &st) != 0)
+		/* errno is already set correctly.  */
+		return;
+
+	      /* If /proc is not mounted there is nothing we can do.  */
+	      if (S_ISDIR (st.st_mode)
+		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		      || !S_ISDIR (st.st_mode)))
+		{
+		  errval = ENOSYS;
+		  goto out;
+		}
+	    }
+
+	  if (buf2 != NULL)
+	    {
+	      if (__fxstat64 (_STAT_VER, fd2, &st) != 0)
+		/* errno is already set correctly.  */
+		return;
+
+	      /* If /proc is not mounted there is nothing we can do.  */
+	      if (S_ISDIR (st.st_mode)
+		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		      || !S_ISDIR (st.st_mode)))
+		errval = ENOSYS;
 	    }
 	}
-
-      if (buf2 != NULL)
+      else if (errval == ENOENT)
 	{
-	  if (__fxstat64 (_STAT_VER, fd2, &st) != 0)
-	    /* errno is already set correctly.  */
-	    return;
+	  /* This could mean the file descriptor is not valid.  We
+	     reuse BUF for the stat call.  Find the slash after the
+	     file descriptor number.  */
+	  if (buf1 != NULL)
+	    {
+	      *(char *) strchr (buf1 + sizeof "/proc/self/fd", '/') = '\0';
 
-	  /* If /proc is not mounted there is nothing we can do.  */
-	  if (S_ISDIR (st.st_mode)
-	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		  || !S_ISDIR (st.st_mode)))
-	    errval = ENOSYS;
+	      int e = __lxstat64 (_STAT_VER, buf1, &st);
+	      if ((e == -1 && errno == ENOENT)
+		  ||(e == 0 && !S_ISLNK (st.st_mode)))
+		{
+		  errval = EBADF;
+		  goto out;
+		}
+	    }
+
+	  if (buf2 != NULL)
+	    {
+	      *(char *) strchr (buf2 + sizeof "/proc/self/fd", '/') = '\0';
+
+	      int e = __lxstat64 (_STAT_VER, buf2, &st);
+	      if ((e == -1 && errno == ENOENT)
+		  ||(e == 0 && !S_ISLNK (st.st_mode)))
+		errval = EBADF;
+	    }
 	}
     }
 

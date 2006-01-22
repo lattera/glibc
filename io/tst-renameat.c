@@ -103,6 +103,29 @@ do_test (void)
       return 1;
     }
 
+  /* Using a descriptor for a normal file must fail.  */
+  if (renameat (fd, "some-file", dir_fd, "another-file") == 0)
+    {
+      puts ("renameat with normal file descriptor succeeded");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("error for renameat with normal file descriptor not ENOTDIR");
+      return 1;
+    }
+
+  if (renameat (dir_fd, "some-file", fd, "another-file") == 0)
+    {
+      puts ("2nd renameat with normal file descriptor succeeded");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("error for 2nd renameat with normal file descriptor not ENOTDIR");
+      return 1;
+    }
+
   close (fd);
 
   if (renameat (dir_fd, "some-file", dir_fd, "another-file") != 0)
@@ -137,9 +160,62 @@ do_test (void)
       return 1;
     }
 
+  /* Create a file descriptor which is closed again right away.  */
+  int dir_fd2 = dup (dir_fd);
+  if (dir_fd2 == -1)
+    {
+      puts ("dup failed");
+      return 1;
+    }
+  close (dir_fd2);
+
+  if (renameat (dir_fd2, "another-file", dir_fd, "some-file") == 0)
+    {
+      puts ("renameat with closed file descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for renameat with closed file descriptor not EBADF");
+      return 1;
+    }
+
+  if (renameat (dir_fd, "another-file", dir_fd2, "some-file") == 0)
+    {
+      puts ("2nd renameat with closed file descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for 2nd renameat with closed file descriptor not EBADF");
+      return 1;
+    }
+
   if (unlinkat (dir_fd, "another-file", 0) != 0)
     {
       puts ("unlinkat failed");
+      return 1;
+    }
+
+  if (renameat (-1, "another-file", dir_fd, "some-file") == 0)
+    {
+      puts ("renameat with invalid file descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for renameat with invalid file descriptor not EBADF");
+      return 1;
+    }
+
+  if (renameat (dir_fd, "another-file", -1, "some-file") == 0)
+    {
+      puts ("2nd renameat with invalid file descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for 2nd renameat with invalid file descriptor not EBADF");
       return 1;
     }
 

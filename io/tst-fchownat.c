@@ -112,6 +112,20 @@ do_test (void)
       return 1;
     }
 
+  /* Before closing the file, try using this file descriptor to open
+     another file.  This must fail.  */
+  if (fchownat (fd, "some-file", 1, 1, 0) != -1)
+    {
+      puts ("fchownat using descriptor for normal file worked");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("\
+error for fchownat using descriptor for normal file not ENOTDIR ");
+      return 1;
+    }
+
   close (fd);
 
   if (fchownat (dir_fd, "some-file", st1.st_uid + 1, st1.st_gid + 1, 0) != 0)
@@ -139,7 +153,38 @@ do_test (void)
       return 1;
     }
 
+  /* Create a file descriptor which is closed again right away.  */
+  int dir_fd2 = dup (dir_fd);
+  if (dir_fd2 == -1)
+    {
+      puts ("dup failed");
+      return 1;
+    }
+  close (dir_fd2);
+
+  if (fchownat (dir_fd2, "some-file", 1, 1, 0) != -1)
+    {
+      puts ("fchownat using closed descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fchownat using closed descriptor not EBADF ");
+      return 1;
+    }
+
   close (dir_fd);
+
+  if (fchownat (-1, "some-file", 1, 1, 0) != -1)
+    {
+      puts ("fchownat using invalid descriptor worked");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("error for fchownat using invalid descriptor not EBADF ");
+      return 1;
+    }
 
   return 0;
 }

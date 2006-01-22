@@ -98,6 +98,20 @@ do_test (void)
   write (fd, "hello", 5);
   puts ("file created");
 
+  /* Before closing the file, try using this file descriptor to open
+     another file.  This must fail.  */
+  if (faccessat (fd, "should-not-work", F_OK, AT_EACCESS) != -1)
+    {
+      puts ("faccessat using descriptor for normal file worked");
+      return 1;
+    }
+  if (errno != ENOTDIR)
+    {
+      puts ("\
+error for faccessat using descriptor for normal file not ENOTDIR ");
+      return 1;
+    }
+
   close (fd);
 
   int result = 0;
@@ -141,6 +155,39 @@ do_test (void)
       result = 1;
     }
 
+  /* Create a file descriptor which is closed again right away.  */
+  int dir_fd2 = dup (dir_fd);
+  if (dir_fd2 == -1)
+    {
+      puts ("dup failed");
+      return 1;
+    }
+  close (dir_fd2);
+
+  /* With the file descriptor closed the next call must fail.  */
+  if (faccessat (dir_fd2, "some-file", F_OK, AT_EACCESS) != -1)
+    {
+      puts ("faccessat using closed descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("faccessat using closed descriptor did not set EBADF");
+      return 1;
+    }
+
+  /* Same with a non-existing file.  */
+  if (faccessat (dir_fd2, "non-existing-file", F_OK, AT_EACCESS) != -1)
+    {
+      puts ("2nd faccessat using closed descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("2nd faccessat using closed descriptor did not set EBADF");
+      return 1;
+    }
+
   if (unlinkat (dir_fd, "some-file", 0) != 0)
     {
       puts ("unlinkat failed");
@@ -148,6 +195,18 @@ do_test (void)
     }
 
   close (dir_fd);
+
+  fd = faccessat (-1, "some-file", F_OK, AT_EACCESS);
+  if (fd != -1)
+    {
+      puts ("faccessat using -1 descriptor succeeded");
+      return 1;
+    }
+  if (errno != EBADF)
+    {
+      puts ("faccessat using -1 descriptor did not set EBADF");
+      return 1;
+    }
 
   return result;
 }

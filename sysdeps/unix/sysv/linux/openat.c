@@ -60,7 +60,7 @@ __atfct_seterrno (int errval, int fd, const char *buf)
 	     file descriptor number.  */
 	  *(char *) strchr (buf + sizeof "/proc/self/fd", '/') = '\0';
 
-	  int e = __xstat64 (_STAT_VER, buf, &st);
+	  int e = __lxstat64 (_STAT_VER, buf, &st);
 	  if ((e == -1 && errno == ENOENT)
 	      ||(e == 0 && !S_ISLNK (st.st_mode)))
 	    errval = EBADF;
