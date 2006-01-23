@@ -1,6 +1,11 @@
+2006-01-22  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/gnu/errlist-compat.awk: Reduce required number of symbols in
+	sanity check.
+
 2006-01-21  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/renameat.c (__atfct_seterrno_2): Correcty
+	* sysdeps/unix/sysv/linux/renameat.c (__atfct_seterrno_2): Correctly
 	return EBADF for non-existing file descriptors.
 	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Likewise.
 	* io/tst-openat.c (do_test): Add some more tests.
