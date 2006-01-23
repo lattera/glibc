@@ -35,7 +35,7 @@ $1 == "#errlist-compat" {
   # Don't process any further Versions files
   ARGC = ARGIND + 1;
   cnt = $2 + 0;
-  if (cnt < 100) {
+  if (cnt < 80) {
     print "*** this line seems bogus:", $0 > "/dev/stderr";
     exit 1;
   }
