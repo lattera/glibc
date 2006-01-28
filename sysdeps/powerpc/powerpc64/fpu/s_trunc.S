@@ -1,5 +1,5 @@
 /* trunc function.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	.section	".toc","aw"
 .LC0:	/* 2**52 */
@@ -46,7 +47,7 @@ EALIGN (__trunc, 4, 0)
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
 	fabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = 0.0; */
-	mtfsf	0x01,fp11	/* restore previous truncing mode.  */
+	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */
@@ -64,4 +65,7 @@ weak_alias (__trunc, trunc)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__trunc, truncl)
 strong_alias (__trunc, __truncl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __trunc, truncl, GLIBC_2_1)
 #endif

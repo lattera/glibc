@@ -1,5 +1,5 @@
 /* Copy a sign bit between floating-point values.  PowerPC64 version.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 ENTRY(__copysign)
 	CALL_MCOUNT 0
@@ -52,4 +53,11 @@ strong_alias(__copysign,__copysignf)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__copysign,copysignl)
 strong_alias(__copysign,__copysignl)
+#endif
+#ifdef IS_IN_libm
+# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __copysign, copysignl, GLIBC_2_0)
+# endif
+#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+compat_symbol (libc, __copysign, copysignl, GLIBC_2_0)
 #endif

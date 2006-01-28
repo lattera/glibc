@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 ENTRY(__copysign)
 /* double [f1] copysign (double [f1] x, double [f2] y);
@@ -32,6 +33,7 @@ ENTRY(__copysign)
 	lwz	r3,8(r1)
 	cmpwi   r3,0
 	addi    r1,r1,16
+	cfi_adjust_cfa_offset (-16)
 	blt     L(0)
 	fabs    fp1,fp1
 	blr
@@ -48,4 +50,11 @@ strong_alias(__copysign,__copysignf)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__copysign,copysignl)
 strong_alias(__copysign,__copysignl)
+#endif
+#ifdef IS_IN_libm
+# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __copysign, copysignl, GLIBC_2_0)
+# endif
+#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+compat_symbol (libc, __copysign, copysignl, GLIBC_2_0)
 #endif

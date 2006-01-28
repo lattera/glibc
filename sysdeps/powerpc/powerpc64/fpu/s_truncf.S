@@ -1,5 +1,5 @@
 /* truncf function.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ EALIGN (__truncf, 4, 0)
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
 	fabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = 0.0; */
-	mtfsf	0x01,fp11	/* restore previous truncing mode.  */
+	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */

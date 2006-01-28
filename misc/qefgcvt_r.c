@@ -43,6 +43,8 @@
 #endif
 #if LDBL_MIN_10_EXP == -37
 # define FLOAT_MIN_10_NORM	1.0e-37L
+#elif LDBL_MIN_10_EXP == -291
+# define FLOAT_MIN_10_NORM	1.0e-291L
 #elif LDBL_MIN_10_EXP == -307
 # define FLOAT_MIN_10_NORM	1.0e-307L
 #elif LDBL_MIN_10_EXP == -4931

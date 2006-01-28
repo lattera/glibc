@@ -1,5 +1,5 @@
 /* llround function.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	.section	".toc","aw"
 .LC0:	/* -0.0 */
@@ -65,4 +66,8 @@ weak_alias (__llround, llroundl)
 strong_alias (__llround, __llroundl)
 weak_alias (__lround, lroundl)
 strong_alias (__lround, __lroundl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __llround, llroundl, GLIBC_2_1)
+compat_symbol (libm, __lround, lroundl, GLIBC_2_1)
 #endif

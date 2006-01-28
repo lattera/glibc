@@ -1,3 +1,173 @@
+2006-01-27  Dwayne Grant McConnell  <decimal@us.ibm.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+	    Roland McGrath  <roland@redhat.com>
+	    Steven Munroe  <sjmunroe@us.ibm.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Comment fix.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Likewise.
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+	* math/libm-test.inc (check_float_internal): Allow ulp <= 0.5.
+	(erfc_test): Don't run erfcl (27.0L) test if erfcl (27.0L) is
+	denormal.
+	[TEST_LDOUBLE] (ceil_test, floor_test, llrint_test, llround_test,
+	rint_test, round_test, trunc_test): Add new tests.
+
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignl.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fabs.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fabsl.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fdim.c: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmax.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmin.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.c: New file.
+
+	* sysdeps/powerpc/powerpc64/fpu/s_ceill.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabs.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabsl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fdim.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmax.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmin.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncl.S: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/configure.in: New file.
+	* sysdeps/unix/sysv/linux/powerpc/configure: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h
+	(__LONG_DOUBLE_MATH_OPTIONAL): Define.
+	(__NO_LONG_DOUBLE_MATH): Define.
+	* sysdeps/unix/sysv/linux/powerpc/nldbl-abi.h: New file.
+	* sysdeps/powerpc/fpu/s_isnan.c: Include math_ldbl_opt.h.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (ceill): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (copysignl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (floorl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llrintl, lrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llroundl, lroundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (rintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (roundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (truncl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (ceill): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (copysignl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (floorl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (lrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (lroundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (rintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (roundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (truncl): Add compatibility symbols.
+
+	* misc/qefgcvt_r.c [LDBL_MIN_10_EXP == -291] (FLOAT_MIN_10_NORM): New.
+
+	* sysdeps/powerpc/fpu/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/powerpc/Implies: Add ieee754/ldbl-128ibm.
+	* sysdeps/powerpc/powerpc32/Implies: Remove powerpc/soft-fp.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/ieee754.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_isnanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_modfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_signbitl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/t_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: New file.
+
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Fix old comment.
+
 2006-01-22  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/gnu/errlist-compat.awk: Reduce required number of symbols in

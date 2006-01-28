@@ -18,6 +18,7 @@
    02110-1301 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align	2
@@ -96,4 +97,7 @@ weak_alias (__round, round)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__round, roundl)
 strong_alias (__round, __roundl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __round, roundl, GLIBC_2_1)
 #endif
