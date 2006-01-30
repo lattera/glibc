@@ -1,7 +1,8 @@
 # Makefile fragment for PowerPC with no FPU.
 
 ifeq ($(subdir),soft-fp)
-sysdep_routines += $(gcc-single-routines) $(gcc-double-routines) sim-full
+sysdep_routines += $(gcc-single-routines) $(gcc-double-routines) \
+		   $(gcc-quad-routines) sim-full
 endif
 
 ifeq ($(subdir),math)
