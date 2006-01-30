@@ -1,3 +1,10 @@
+2006-01-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/nofpu/Subdirs: New file.
+
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = soft-fp]
+	(sysdep_routines): Add $(gcc-quad-routines) here.
+
 2006-01-06  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/nofpu/Versions (libc: GLIBC_2.4): New set.
