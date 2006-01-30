@@ -51,7 +51,7 @@ ENTRY (__ceill)
 	fabs	fp9,fp2
 	fsub	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO52)  */
-	fcmpo	cr6,fp1,fp12	/* if (x > 0.0)  */
+	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	bnl-	cr7,.L2
 	mtfsfi	7,2		/* Set rounding mode toward +inf.  */
 	fneg	fp2,fp12

@@ -188,6 +188,7 @@ union _FP_UNION_D
 
 #define FP_CMP_D(r,X,Y,un)	_FP_CMP(D,1,r,X,Y,un)
 #define FP_CMP_EQ_D(r,X,Y)	_FP_CMP_EQ(D,1,r,X,Y)
+#define FP_CMP_UNORD_D(r,X,Y)	_FP_CMP_UNORD(D,1,r,X,Y)
 
 #define FP_TO_INT_D(r,X,rsz,rsg)	_FP_TO_INT(D,1,r,X,rsz,rsg)
 #define FP_FROM_INT_D(X,r,rs,rt)	_FP_FROM_INT(D,1,X,r,rs,rt)

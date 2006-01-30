@@ -67,79 +67,99 @@
    */
 
 ENTRY (__llroundl)
+	mffs	fp7		/* Save current FPU rounding mode.  */
 	fabs	fp0,fp1
 	lfd	fp13,.LC2@toc(2)	/* 2**52 */
 	lfd	fp12,.LC3@toc(2)	/* 2**63 */
 	lfd	fp11,.LC0@toc(2)	/* 0.0 */
 	lfd	fp10,.LC1@toc(2)	/* 0.5 */
-	fcmpu	cr0,fp0,fp12		/* if (x < TWO63 */
-	fcmpu	cr7,fp0,fp13		/* if (x < TWO52 */
-	fcmpu	cr6,fp1,fp11		/* if (x > 0.0)  */
-	bge-	cr0,.L2
-	bge-	cr7,.L8
-	ble-	cr6,.L4
-	fadd	fp4,fp2,fp10		/* x+= 0.5;  */
-	fadd	fp5,fp1,fp4		/* x+= 0.5;  */
-.L9:
-	fctidz	fp3,fp5		/* Convert To Integer DW llround toward 0.  */
-	stfd	fp3,-16(r1)
+	fabs	fp9,fp2
+	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO52)  */
+	fcmpu	cr6,fp1,fp11	/* if (x > 0.0)  */
+	bnl-	cr7,.L2
+	mtfsfi	7,1		/* Set rounding mode toward 0.  */
+	ble-	cr6,.L1
+	fadd	fp9,fp1,fp10	/* x+= 0.5;  */
+	b	.L0
+.L1:
+	fsub	fp9,fp1,fp10	/* x-= 0.5;  */
+.L0:
+	fctid	fp0,fp9
+	stfd	fp0,-16(r1)
+	mtfsf	0x01,fp7	/* restore previous rounding mode.  */
 	nop	/* Insure the following load is in a different dispatch group */
 	nop	/* to avoid pipe stall on POWER4&5.  */
 	nop
 	ld	r3,-16(r1)
 	blr
-.L4:
-	fsub	fp4,fp2,fp10	/* x-= 0.5;  */
-	fadd	fp5,fp1,fp4		/* x+= 0.5;  */
-	b	.L9
-.L8:
-	ble	cr6,.L6
-	fneg	fp10,fp10
-.L6:
-	fadd	fp2,fp2,fp10
-	fctidz	fp3,fp1		/* Convert To Integer DW llround toward 0.  */
-	fctidz	fp4,fp2		/* Convert To Integer DW llround toward 0.  */
-	stfd	fp3,-16(r1)
-	stfd	fp4,-8(r1)
-	nop	/* Insure the following load is in a different dispatch group */
-	nop	/* to avoid pipe stall on POWER4&5.  */
-	nop
-	ld	r3,-16(r1)
-	ld	r0,-8(r1)
-	add	r3,r3,r0
-	blr
-.L2:
-/* The high double is >= TWO63 so it looks like we are "out of range".
-   But this may be caused by rounding of the high double and the
-   negative low double may bring it back into range. So we need to
-   de-round the high double and invert the low double without changing
-   the effective long double value. To do this we compute a special
-   value (tau) that we can subtract from the high double and add to
-   the low double before conversion. The resulting integers can be
-   summed to get the total value.
 
-   tau = floor(x_high/TWO52);
+/* The high double is > TWO52 so we need to round the low double and
+   perhaps the high double.  In this case we have to round the low
+   double and handle any adjustment to the high double that may be
+   caused by rounding (up).  This is complicated by the fact that the
+   high double may already be rounded and the low double may have the
+   opposite sign to compensate.This gets a bit tricky so we use the
+   following algorithm:
+
+   tau = trunc(x_high/TWO52);
    x0 = x_high - tau;
-   x1 = x_low + tau;  */
+   x1 = x_low + tau;
+   r1 = round(x1);
+   y_high = x0 + r1;
+   y_low = x0 - y_high + r1;
+   return y;  */
 .L2:
+	fcmpu	cr7,fp0,fp12	/* if (|x_high| > TWO63)  */
+	fcmpu	cr0,fp9,fp11	/* || (|x_low| == 0.0)  */
+	fmr	fp9,fp1
+	fcmpu	cr5,fp2,fp11	/* if (x_low > 0.0)  */
+	bgt-	cr7,.L0		/*   return llround(x);	*/
+	mtfsfi	7,1		/* Set rounding mode toward 0.  */
 	fdiv	fp8,fp1,fp13	/* x_high/TWO52  */
-	bgt-	cr0,.L9		/* if x > TWO63  */
+	
+	bng-	cr6,.L6		/* if (x > 0.0)  */
 	fctidz	fp0,fp8
-	fcfid	fp8,fp0		/* tau = floor(x_high/TWO52);  */
+	fcfid	fp8,fp0		/* tau = trunc(x_high/TWO52);  */
+	bng	cr5,.L4		/* if (x_low > 0.0)  */
+	fmr	fp3,fp1
+	fmr	fp4,fp2
+	b	.L5
+.L4:				/* if (x_low < 0.0)  */
 	fsub	fp3,fp1,fp8	/* x0 = x_high - tau;  */
 	fadd	fp4,fp2,fp8	/* x1 = x_low + tau;  */
-	fctid	fp11,fp3
-	fctid	fp12,fp4
+.L5:
+	fadd	fp5,fp4,fp10	/* r1 = x1 + 0.5;  */
+	b	.L9
+.L6:				/* if (x < 0.0)  */
+	fctidz	fp0,fp8
+	fcfid	fp8,fp0		/* tau = trunc(x_high/TWO52);  */	
+	bnl	cr5,.L7		/* if (x_low < 0.0)  */
+	fmr	fp3,fp1
+	fmr	fp4,fp2
+	b	.L8
+.L7:				/* if (x_low > 0.0)  */
+	fsub	fp3,fp1,fp8	/* x0 = x_high - tau;  */
+	fadd	fp4,fp2,fp8	/* x1 = x_low + tau;  */
+.L8:
+	fsub	fp5,fp4,fp10	/* r1 = x1 - 0.5;  */
+.L9:
+	fctid.	fp11,fp3
+	fctid	fp12,fp5
 	stfd	fp11,-16(r1)
 	stfd	fp12,-8(r1)
+	mtfsf	0x01,fp7	/* restore previous rounding mode.  */
 	nop	/* Insure the following load is in a different dispatch group */
 	nop	/* to avoid pipe stall on POWER4&5.  */
 	nop
 	ld	r3,-16(r1)
+	bunlr   cr1		/* if not overflow, return.  */
 	ld	r0,-8(r1)
 	addo.	r3,r3,r0
-	bnslr+  cr0		/* if the sum does not overflow, return.  */
-	b	.L9		/* Otherwise we want to set "invalid operation".  */
+	bnslr	cr0
+	fmr	fp9,fp12
+	bng	cr6,.L0
+	fneg	fp9,fp12
+	b	.L0
 END (__llroundl)
 
 strong_alias (__llroundl, __lroundl)

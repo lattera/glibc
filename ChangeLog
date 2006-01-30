@@ -1,3 +1,10 @@
+2006-01-29  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/double.h (FP_CMP_UNORD_D): Also define in
+	[_FP_W_TYPE_SIZE >= 64] case.
+	* soft-fp/extended.h (FP_CMP_UNORD_E): Likewise.
+	* soft-fp/quad.h (FP_CMP_UNORD_Q): Likewise.
+
 2006-01-27  Dwayne Grant McConnell  <decimal@us.ibm.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 	    Roland McGrath  <roland@redhat.com>

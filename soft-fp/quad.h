@@ -195,6 +195,7 @@ union _FP_UNION_Q
 
 #define FP_CMP_Q(r,X,Y,un)	_FP_CMP(Q,2,r,X,Y,un)
 #define FP_CMP_EQ_Q(r,X,Y)	_FP_CMP_EQ(Q,2,r,X,Y)
+#define FP_CMP_UNORD_Q(r,X,Y)	_FP_CMP_UNORD(Q,2,r,X,Y)
 
 #define FP_TO_INT_Q(r,X,rsz,rsg)	_FP_TO_INT(Q,2,r,X,rsz,rsg)
 #define FP_FROM_INT_Q(X,r,rs,rt)	_FP_FROM_INT(Q,2,X,r,rs,rt)
