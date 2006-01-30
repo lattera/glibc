@@ -1515,19 +1515,21 @@ EOF
   AC_SUBST(libc_cv_fpie)
 fi
 
-AC_CACHE_CHECK(for -fno-unit-at-a-time, libc_cv_fno_unit_at_a_time, [dnl
+AC_CACHE_CHECK(for -fno-toplevel-reorder, libc_cv_fno_toplevel_reorder, [dnl
 cat > conftest.c <<EOF
 int foo;
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fno-unit-at-a-time
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder
 			    conftest.c 1>&AS_MESSAGE_LOG_FD])
 then
-  libc_cv_fno_unit_at_a_time=yes
+  libc_cv_fno_toplevel_reorder=yes
 else
-  libc_cv_fno_unit_at_a_time=no
+  libc_cv_fno_toplevel_reorder=no
 fi
 rm -f conftest*])
-if test $libc_cv_fno_unit_at_a_time = yes; then
+if test $libc_cv_fno_toplevel_reorder = yes; then
+  fno_unit_at_a_time=-fno-toplevel-reorder
+else
   fno_unit_at_a_time=-fno-unit-at-a-time
 fi
 AC_SUBST(fno_unit_at_a_time)
