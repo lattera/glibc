@@ -18,9 +18,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This has been coded in assembler because GCC makes such a mess of it
-   when it's coded in C.  */
-
 #include <math.h>
 #include <fenv.h>
 #include <math_ldbl_opt.h>
@@ -44,19 +41,23 @@ __ceill (x)
   u.d = x;
 
   if (fabs (u.dd[0]) < TWO52)
-    {      
+    {
+      double high = u.dd[0];
       fesetround(FE_UPWARD);
-      if (u.dd[0] > 0.0)
+      if (high > 0.0)
 	{
-	  u.dd[0] += TWO52;
-	  u.dd[0] -= TWO52;
+	  high += TWO52;
+	  high -= TWO52;
+          if (high == -0.0) high = 0.0;
 	}
-      else if (u.dd[0] < 0.0)
+      else if (high < 0.0)
 	{
-	  u.dd[0] -= TWO52;
-	  u.dd[0] += TWO52;
+	  high -= TWO52;
+	  high += TWO52;
+          if (high == 0.0) high = -0.0;
 	}
-      u.dd[1] = 0.0;      
+      u.dd[0] = high;
+      u.dd[1] = 0.0;
       fesetround(mode);
     }
   else if (fabs (u.dd[1]) < TWO52 && u.dd[1] != 0.0)
@@ -82,10 +83,10 @@ __ceill (x)
 	         adjust for that.  */
 	      high = nextafter (u.dd[0], 0.0);
 	      low = u.dd[1] + (u.dd[0] - high);
-	    }      
+	    }
           fesetround(FE_UPWARD);
 	  low += TWO52;
-	  low -= TWO52;     
+	  low -= TWO52;
           fesetround(mode);
 	}
       else if (u.dd[0] < 0.0)
@@ -103,10 +104,10 @@ __ceill (x)
 	         adjust for that.  */
 	      high = nextafter (u.dd[0], 0.0);
 	      low = u.dd[1] + (u.dd[0] - high);
-	    }      
+	    }
           fesetround(FE_UPWARD);
 	  low -= TWO52;
-	  low += TWO52;      
+	  low += TWO52;
           fesetround(mode);
 	}
       u.dd[0] = high + low;

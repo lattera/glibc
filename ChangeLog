@@ -1,3 +1,17 @@
+2006-01-30  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c (__kernel_cosl): Correct index
+	for __sincosl_table.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c (__kernel_sincosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c (__kernel_sinl): Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: Correct sign of 0.0.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c: New file.
+
 2006-01-29  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h (ECANCELED,

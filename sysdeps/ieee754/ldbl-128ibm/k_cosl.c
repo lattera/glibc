@@ -104,6 +104,24 @@ __kernel_cosl(long double x, long double y)
 	 pre-computed tables,  compute cosl(l) and sinl(l) using a
 	 Chebyshev polynomial of degree 10(11) and compute
 	 cosl(h+l) = cosl(h)cosl(l) - sinl(h)sinl(l).  */
+      int six = tix;
+      tix = ((six - 0x3ff00000) >> 4) + 0x3fff0000;
+      index = 0x3ffe - (tix >> 16);
+      hix = (tix + (0x200 << index)) & (0xfffffc00 << index);
+      x = fabsl (x);
+      switch (index)
+	{
+	case 0: index = ((45 << 10) + hix - 0x3ffe0000) >> 8; break;
+	case 1: index = ((13 << 11) + hix - 0x3ffd0000) >> 9; break;
+	default:
+	case 2: index = (hix - 0x3ffc3000) >> 10; break;
+	}
+      hix = (hix << 4) & 0x3fffffff;
+/*
+    The following should work for double but generates the wrong index.
+    For now the code above converts double to ieee extended to compute
+    the index back to double for the h value.
+    
       index = 0x3fe - (tix >> 20);
       hix = (tix + (0x200 << index)) & (0xfffffc00 << index);
       x = fabsl (x);
@@ -114,7 +132,7 @@ __kernel_cosl(long double x, long double y)
 	default:
 	case 2: index = (hix - 0x3fc30000) >> 14; break;
 	}
-
+*/
       SET_LDOUBLE_WORDS64(h, ((u_int64_t)hix) << 32, 0);
       l = y - (h - x);
       z = l * l;
