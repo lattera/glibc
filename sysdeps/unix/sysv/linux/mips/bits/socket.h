@@ -1,6 +1,6 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005
-	Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -222,7 +222,7 @@ struct msghdr
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -270,8 +270,8 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
-  if ((unsigned char *) (__cmsg + 1) >= ((unsigned char *) __mhdr->msg_control
-					 + __mhdr->msg_controllen)
+  if ((unsigned char *) (__cmsg + 1) > ((unsigned char *) __mhdr->msg_control
+					+ __mhdr->msg_controllen)
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
@@ -284,13 +284,12 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
    <linux/socket.h>.  */
 enum
   {
-    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
+    SCM_RIGHTS = 0x01		/* Transfer file descriptors.  */
 #define SCM_RIGHTS SCM_RIGHTS
 #ifdef __USE_BSD
-    SCM_CREDENTIALS = 0x02,     /* Credentials passing.  */
+    , SCM_CREDENTIALS = 0x02	/* Credentials passing.  */
 # define SCM_CREDENTIALS SCM_CREDENTIALS
 #endif
-    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
   };
 
 /* User visible structure for SCM_CREDENTIALS message */
