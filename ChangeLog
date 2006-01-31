@@ -1,3 +1,18 @@
+2006-01-29  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h (ECANCELED,
+	EOWNERDEAD, ENOTRECOVERABLE): Define.
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MADV_REMOVE): Define.
+
+	* sysdeps/mips/dl-machine.h (RTLD_START): Correct offsets for
+	N64.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (struct msghdr): Use
+	size_t for msg_controllen.
+	(__cmsg_nxthdr): Correct test.
+	(__SCM_CONNECT): Delete.
+
 2006-01-30  Alexandre Oliva  <aoliva@redhat.com>
             Roland McGrath  <roland@redhat.com>
 

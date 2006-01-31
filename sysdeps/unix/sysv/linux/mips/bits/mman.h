@@ -1,5 +1,6 @@
 /* Definitions for POSIX memory map interface.  Linux/MIPS version.
-   Copyright (C) 1997, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,6 +85,7 @@
 #define MADV_SEQUENTIAL	2		/* read-ahead aggressively */
 #define MADV_WILLNEED	3		/* pre-fault pages */
 #define MADV_DONTNEED	4		/* discard these pages */
+#define MADV_REMOVE	5		/* remove these pages & resources */
 #endif
 
 /* Flags for `mremap'.  */
