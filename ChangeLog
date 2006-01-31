@@ -1,5 +1,7 @@
 2006-01-31  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update by Jakub.
+
 	* inet/rcmd.c (iruserfopen): Remove redundant initialization.
 	From Bernhard Fischer <rep.nop@aon.at>.
 

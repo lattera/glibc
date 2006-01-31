@@ -311,6 +311,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "cos (16.0) == -0.9576594803233846418996372326511034717803"
+ildouble: 2
+ldouble: 2
 
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
@@ -503,11 +506,15 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "j0 (10.0) == -0.245935764451348335197760862485328754":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "j0 (2.0) == 0.223890779141235668051827454649948626":
 float: 2
 ifloat: 2
@@ -516,20 +523,28 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "j0 (8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # j1
 Test "j1 (10.0) == 0.0434727461688614366697487680258592883":
 float: 2
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "j1 (2.0) == 0.576724807756873387202448242269137087":
 double: 1
 idouble: 1
 Test "j1 (8.0) == 0.234636346853914624381276651590454612":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 # jn
 Test "jn (0, -4.0) == -3.9714980986384737228659076845169804197562E-1":
@@ -537,11 +552,15 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "jn (0, 10.0) == -0.245935764451348335197760862485328754":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "jn (0, 2.0) == 0.223890779141235668051827454649948626":
 float: 2
 ifloat: 2
@@ -550,18 +569,26 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "jn (0, 8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "jn (1, 10.0) == 0.0434727461688614366697487680258592883":
 float: 2
 ifloat: 2
+ildouble: 1
+ldouble: 1
 Test "jn (1, 2.0) == 0.576724807756873387202448242269137087":
 double: 1
 idouble: 1
 Test "jn (1, 8.0) == 0.234636346853914624381276651590454612":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "jn (10, -1.0) == 0.263061512368745320699785368779050294e-9":
 ildouble: 1
 ldouble: 1
@@ -583,6 +610,8 @@ ldouble: 1
 Test "jn (10, 10.0) == 0.207486106633358857697278723518753428":
 float: 1
 ifloat: 1
+ildouble: 4
+ldouble: 4
 Test "jn (10, 2.0) == 0.251538628271673670963516093751820639e-6":
 float: 4
 ifloat: 4
@@ -605,6 +634,8 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 2
+ldouble: 2
 Test "jn (3, 2.0) == 0.128943249474402051098793332969239835":
 double: 1
 float: 2
@@ -646,6 +677,11 @@ ifloat: 1
 Test "log2 (e) == M_LOG2El":
 ildouble: 1
 ldouble: 1
+
+# sin
+Test "sin (16.0) == -0.2879033166650652947844562482186175296207"
+ildouble: 2
+ldouble: 2
 
 # sincos
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
@@ -723,6 +759,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "y0 (2.0) == 0.510375672649745119596606592727157873":
 double: 1
 idouble: 1
@@ -731,6 +769,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # y1
 Test "y1 (0.125) == -5.19993611253477499595928744876579921":
@@ -744,16 +784,20 @@ double: 3
 float: 1
 idouble: 3
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "y1 (2.0) == -0.107032431540937546888370772277476637":
 double: 1
 float: 1
-idouble: 1
-ifloat: 1
+idouble: 2
+ifloat: 2
 Test "y1 (8.0) == -0.158060461731247494255555266187483550":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 # yn
 Test "yn (0, 0.75) == -0.137172769385772397522814379396581855":
@@ -764,8 +808,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "yn (0, 1.5) == 0.382448923797758843955068554978089862":
 double: 2
 float: 1
@@ -776,6 +820,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "yn (0, 2.0) == 0.510375672649745119596606592727157873":
 double: 1
 idouble: 1
@@ -784,6 +830,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "yn (1, 0.125) == -5.19993611253477499595928744876579921":
 double: 1
 idouble: 1
@@ -795,6 +843,8 @@ double: 3
 float: 1
 idouble: 3
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "yn (1, 2.0) == -0.107032431540937546888370772277476637":
 double: 1
 float: 1
@@ -805,6 +855,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 2
+ldouble: 2
 Test "yn (3, 0.125) == -2612.69757350066712600220955744091741":
 double: 1
 idouble: 1
@@ -824,13 +876,15 @@ double: 2
 float: 2
 idouble: 2
 ifloat: 2
+ildouble: 2
+ldouble: 2
 Test "yn (10, 2.0) == -129184.542208039282635913145923304214":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "yn (3, 0.125) == -2612.69757350066712600220955744091741":
 double: 1
 idouble: 1
@@ -842,6 +896,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "yn (3, 2.0) == -1.12778377684042778608158395773179238":
 double: 1
 idouble: 1
@@ -1158,18 +1214,24 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: "j1":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: "jn":
 double: 3
 float: 4
 idouble: 3
 ifloat: 4
+ildouble: 4
+ldouble: 4
 
 Function: "lgamma":
 double: 1
@@ -1244,17 +1306,23 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "y1":
 double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 Function: "yn":
 double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ildouble: 2
+ldouble: 2
 
 # end of automatic generation
