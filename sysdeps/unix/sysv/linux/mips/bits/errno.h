@@ -1,5 +1,6 @@
 /* Error constants.  MIPS/Linux specific version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +27,16 @@
 
 /* Linux has no ENOTSUP error code.  */
 # define ENOTSUP EOPNOTSUPP
+
+# ifndef ECANCELED
+#  define ECANCELED	158
+# endif
+
+/* Support for error codes to support robust mutexes was added later, too.  */
+# ifndef EOWNERDEAD
+#  define EOWNERDEAD		165
+#  define ENOTRECOVERABLE	166
+# endif
 
 # ifndef __ASSEMBLER__
 /* Function to get address of global `errno' variable.  */
