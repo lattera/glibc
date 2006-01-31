@@ -1,3 +1,11 @@
+2006-01-31  Roland McGrath  <roland@redhat.com>
+
+	* inet/rcmd.c (iruserfopen): Remove redundant initialization.
+	From Bernhard Fischer <rep.nop@aon.at>.
+
+	* posix/regcomp.c (calc_eclosure_iter): Remove dead variables.
+	Reported by Mike Frysinger <vapier@gentoo.org>.
+
 2006-01-30  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c (__kernel_cosl): Correct index

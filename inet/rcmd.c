@@ -477,7 +477,6 @@ iruserfopen (const char *file, uid_t okuser)
   /* If not a regular file, if owned by someone other than user or
      root, if writeable by anyone but the owner, or if hardlinked
      anywhere, quit.  */
-  cp = NULL;
   if (__lxstat64 (_STAT_VER, file, &st))
     cp = _("lstat failed");
   else if (!S_ISREG (st.st_mode))
