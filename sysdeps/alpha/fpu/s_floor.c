@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <math.h>
+#include <math_ldbl_opt.h>
 
 
 /* Use the -inf rounding mode conversion instructions to implement
@@ -52,4 +53,7 @@ weak_alias (__floor, floor)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__floor, __floorl)
 weak_alias (__floor, floorl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __floor, floorl, GLIBC_2_0);
 #endif

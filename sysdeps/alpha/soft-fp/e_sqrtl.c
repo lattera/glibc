@@ -1,6 +1,8 @@
-/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+/* long double square root in software floating-point emulation.
+   Copyright (C) 1997, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
+   Contributed by Richard Henderson (rth@cygnus.com) and
+		  Jakub Jelinek (jj@ultra.linux.cz).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,25 +19,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
+#include "local-soft-fp.h"
 
-double
-__copysign (double x, double y)
+long double
+__ieee754_sqrtl (const long double a)
 {
-  __asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
-  return x;
-}
+  FP_DECL_EX;
+  FP_DECL_Q(A); FP_DECL_Q(C);
+  long double c;
 
-weak_alias (__copysign, copysign)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__copysign, __copysignl)
-weak_alias (__copysign, copysignl)
-#endif
-#ifdef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
-# endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
-#endif
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_Q(A, a);
+  FP_SQRT_Q(C, A);
+  FP_PACK_Q(c, C);
+  FP_HANDLE_EXCEPTIONS;
+  return c;
+}

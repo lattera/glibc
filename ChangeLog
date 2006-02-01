@@ -1,5 +1,23 @@
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: New file.
+	* sysdeps/alpha/fpu/s_ceil.c: Include math_ldbl_opt.h, add
+	compat_symbol if LONG_DOUBLE_COMPAT.
+	* sysdeps/alpha/fpu/s_copysign.c: Likewise.
+	* sysdeps/alpha/fpu/s_fabs.c: Likewise.
+	* sysdeps/alpha/fpu/s_floor.c: Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Likewise.
+	* sysdeps/alpha/soft-fp/e_sqrtl.c: New file.
+	* sysdeps/alpha/Implies: Add ieee754/ldbl-128.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/wordsize.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Implies: Add ieee754/ldbl-64-128,
+	ieee754/ldbl-opt.
+	* sysdeps/alpha/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/unix/sysv/linux/alpha/nldbl-abi.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	[$(subdir) = math] (libm-routines): Add multc3, divtc3.
+
 	* math/divtc3.c: New file.
 	* math/multc3.c: New file.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile

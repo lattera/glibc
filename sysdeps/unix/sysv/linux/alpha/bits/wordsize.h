@@ -1,6 +1,5 @@
-/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,25 +16,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
+#define __WORDSIZE	64
 
-double
-__copysign (double x, double y)
-{
-  __asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
-  return x;
-}
+#if !defined __NO_LONG_DOUBLE_MATH && !defined __LONG_DOUBLE_MATH_OPTIONAL
 
-weak_alias (__copysign, copysign)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__copysign, __copysignl)
-weak_alias (__copysign, copysignl)
-#endif
-#ifdef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
+/* Signal that we didn't used to have a `long double'. The changes all
+   the `long double' function variants to be redirects to the double
+   functions.  */
+# define __LONG_DOUBLE_MATH_OPTIONAL	1
+# ifndef __LONG_DOUBLE_128__
+#  define __NO_LONG_DOUBLE_MATH		1
 # endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
 #endif
