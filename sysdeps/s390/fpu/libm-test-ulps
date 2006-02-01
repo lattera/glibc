@@ -691,62 +691,6 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
-# llrint
-Test "llrint (-4503599627370495.5) == -4503599627370496LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-4503599627370496.75) == -4503599627370497LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-4503599627370497.5) == -4503599627370498LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-72057594037927935.5) == -72057594037927936LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-72057594037927936.75) == -72057594037927937LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-72057594037927937.5) == -72057594037927938LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-9007199254740991.5) == -9007199254740992LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-9007199254740992.75) == -9007199254740993LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (-9007199254740993.5) == -9007199254740994LL":
-ildouble: 1
-ldouble: 1
-Test "llrint (4503599627370495.5) == 4503599627370496LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (4503599627370496.75) == 4503599627370497LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (4503599627370497.5) == 4503599627370498LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (72057594037927935.5) == 72057594037927936LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (72057594037927936.75) == 72057594037927937LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (72057594037927937.5) == 72057594037927938LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (9007199254740991.5) == 9007199254740992LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (9007199254740992.75) == 9007199254740993LL":
-ildouble: -1
-ldouble: -1
-Test "llrint (9007199254740993.5) == 9007199254740994LL":
-ildouble: -1
-ldouble: -1
-
 # log10
 Test "log10 (0.75) == -0.124938736608299953132449886193870744":
 double: 1
