@@ -26,3 +26,13 @@ endif
 ifeq ($(subdir),signal)
 sysdep_routines += rt_sigaction
 endif
+
+ifeq ($(subdir),math)
+# These 2 routines are normally in libgcc{.a,_s.so.1}.
+# However, alpha -mlong-double-128 libgcc relies on
+# glibc providing _Ots* routines and without these files
+# glibc relies on __multc3/__divtc3 only provided
+# by libgcc if configured with -mlong-double-128.
+# Provide these routines here as well.
+libm-routines += multc3 divtc3
+endif   # math
