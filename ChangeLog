@@ -1,5 +1,9 @@
 2006-02-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* math/bits/mathcalls.h: Guard __END_NAMESPACE_C99 with the
+	same #if condition as corresponding __BEGIN_NAMESPACE_C99.
+	(scalb): Don't define only if __USE_ISOC99.
+
 	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Fix a typo.
 	* sysdeps/s390/fpu/libm-test-ulps: Remove llrint ulps.
 

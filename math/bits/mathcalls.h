@@ -353,10 +353,13 @@ __MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
 
 /* Multiply-add function computed as a ternary operation.  */
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
-__END_NAMESPACE_C99
+#endif /* Use ISO C99.  */
 
-# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+__END_NAMESPACE_C99
+#endif
+
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
-# endif
-#endif /* Use ISO C99.  */
+#endif
