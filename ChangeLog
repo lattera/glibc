@@ -1,3 +1,8 @@
+2006-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add
+	some more entries.
+
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: New file.
