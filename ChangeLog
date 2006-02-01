@@ -1,3 +1,13 @@
+2006-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c [XSTAT_IS_STAT64]
+	(__fxstatat64): Add libc_hidden_ver.
+	* sysdeps/unix/sysv/linux/fxstatat.c [XSTAT_IS_STAT64] (__fxstatat64):
+	Likewise.
+
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Remove jmpbuf-offsets.h
+	include.
+
 2006-01-31  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update by Jakub.
