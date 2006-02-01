@@ -47,6 +47,21 @@ __NTH (__signbit (double __x))
   return __u.__i < 0;
 }
 
+# ifndef __NO_LONG_DOUBLE_MATH
+__MATH_INLINE int
+__NTH (__signbitl (long double __x))
+{
+  __extension__ union { long double __l; int __i[4]; } __u = { __l: __x };
+  return __u.__i[0] < 0;
+}
+# else
+__MATH_INLINE int
+__NTH (__signbitl (long double __x))
+{
+  return __signbit ((double) __x);
+}
+# endif
+
 #endif /* C99 */
 
 /* This code is used internally in the GNU libc.  */
@@ -69,6 +84,17 @@ __NTH (__ieee754_sqrtf (float x))
   asm ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
+
+# if !defined __NO_LONG_DOUBLE_MATH
+__MATH_INLINE long double
+__NTH (sqrtl (long double __x))
+{
+  long double res;
+
+  asm ( "sqxbr %0,%1" : "=f" (res) : "f" (__x) );
+  return res;
+}
+# endif /* !__NO_LONG_DOUBLE_MATH */
 
 #endif /* __LIBC_INTERNAL_MATH_INLINES */
 

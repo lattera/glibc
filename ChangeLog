@@ -1,5 +1,57 @@
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* math/divtc3.c: New file.
+	* math/multc3.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile
+	[$(subdir) = math] (libm-routines): Add multc3, divtc3.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fpu/Implies: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: Include math.h and
+	math_ldbl_opt.h.
+	(fabsl): Use long_double_symbol instead of weak_alias.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.c: Include math.h and
+	math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (fabsl): Add compat_symbol.
+
+2006-01-31  Martin Schwidefsky	<schwidefsky@de.ibm.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/Implies: New file.
+	* sysdeps/unix/sysv/linux/s390/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/s390/nldbl-abi.h: New file.
+	* sysdeps/s390/fpu/bits/mathinline.h (signbitl, sqrtl): New inlines.
+	* sysdeps/s390/bits/mathdef.h: New file.
+	* sysdeps/s390/fpu/e_sqrtl.c: New file.
+	* sysdeps/s390/s390-32/bits/wordsize.h (__LONG_DOUBLE_MATH_OPTIONAL,
+	__NO_LONG_DOUBLE_MATH): Define.
+	* sysdeps/s390/s390-64/bits/wordsize.h: Likewise.
+	* sysdeps/s390/Implies: Add ieee754/ldbl-128.
+	* sysdeps/s390/ldbl2mpn.c: File removed.
+	* sysdeps/s390/fpu/libm-test-ulps: Updated.
+
+2006-01-31  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/alpha/bits/mathdef.h: ... here.
+	* sysdeps/i386/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/i386/bits/mathdef.h: ... here.
+	* sysdeps/mips/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/mips/bits/mathdef.h: ... here.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/m68k/bits/mathdef.h: ... here.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/powerpc/bits/mathdef.h: ... here.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/sparc/bits/mathdef.h: ... here.
+	* sysdeps/ia64/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/ia64/bits/mathdef.h: ... here.
+	* sysdeps/sh/sh4/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/sh/sh4/bits/mathdef.h: ... here.
+	* sysdeps/x86_64/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/x86_64/bits/mathdef.h: ... here.
+
+2006-01-31  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/i386/fxstatat.c [XSTAT_IS_STAT64]
 	(__fxstatat64): Add libc_hidden_ver.
 	* sysdeps/unix/sysv/linux/fxstatat.c [XSTAT_IS_STAT64] (__fxstatat64):

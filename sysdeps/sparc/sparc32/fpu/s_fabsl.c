@@ -1,5 +1,8 @@
+#include <math.h>
+#include <math_ldbl_opt.h>
+
 long double __fabsl (long double x)
 {
   return __builtin_fabsl (x);
 }
-weak_alias (__fabsl, fabsl)
+long_double_symbol (libm, __fabsl, fabsl);
