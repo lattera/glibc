@@ -1,3 +1,10 @@
+2006-02-01  Roland McGrath  <roland@frob.com>
+
+	* mach/Machrules ($(objpfx)%.uh, $(objpfx)%.__h): Use static pattern
+	rules for these, not implicit rules.
+	($(objpfx)%.h): Likewise.
+	Reported by Thomas Schwinge <tschwinge@gnu.org>.
+
 2006-02-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: Use long_double_symbol

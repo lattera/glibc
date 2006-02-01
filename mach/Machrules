@@ -1,5 +1,5 @@
 # Rules for MiG interfaces that want to go into the C library.
-# Copyright (C) 1991,92,93,94,95,96,98,99,2001,02
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1998,1999,2001,2002,2006
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -158,14 +158,14 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
-$(objpfx)%.uh:; $(mig.uh)
+$(patsubst %,$(objpfx)%.uh,$(user-interfaces)): $(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
 $(include-%.defs) | \
 $(MIG) - /dev/null $(MIGFLAGS) $(MIGFLAGS-$*) \
        -header $@ -server /dev/null -user /dev/null
 endef
-$(objpfx)%.__h:; $(mig.__h)
+$(patsubst %,$(objpfx)%.__h,$(user-interfaces)): $(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
 $(include-%.defs) | \
@@ -173,7 +173,8 @@ $(MIG) - /dev/null $(MIGFLAGS) $(MIGFLAGS-$*) -prefix __ \
        -header $@ -server /dev/null -user /dev/null
 endef
 
-$(objpfx)%.h: $(objpfx)%.__h $(objpfx)%.uh
+$(patsubst %,$(objpfx)%.h,$(user-interfaces)): $(objpfx)%.h: $(objpfx)%.__h \
+							     $(objpfx)%.uh
 # The last line of foo.__h is "#endif _foo_user_".
 # The first two lines of foo.uh are "#ifndef _foo_user_"/"#define _foo_user_".
 	(sed -e '$$d' $<; sed -e '1,2d' $(word 2,$^)) > $@-new
