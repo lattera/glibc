@@ -1,5 +1,11 @@
 2006-02-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: Use long_double_symbol
+	even for libm.
+
+	* libio/bits/libio-ldbl.h (_IO_vfwscanf, _IO_vfwprintf): Remove
+	__LDBL_REDIR_DECL.
+
 	* math/bits/mathcalls.h: Guard __END_NAMESPACE_C99 with the
 	same #if condition as corresponding __BEGIN_NAMESPACE_C99.
 	(scalb): Don't define only if __USE_ISOC99.

@@ -35,8 +35,11 @@ ___finitel (long double x)
 				 -0x7ff0000000000000LL)>>63);
 }
 hidden_ver (___finitel, __finitel)
-#ifndef IS_IN_libm
 weak_alias (___finitel, ____finitel)
-long_double_symbol (libc, ___finitel, finitel);
-long_double_symbol (libc, ____finitel, __finitel);
+#ifdef IS_IN_libm
+long_double_symbol (libm, ____finitel, finitel);
+long_double_symbol (libm, ___finitel, __finitel);
+#else
+long_double_symbol (libc, ____finitel, finitel);
+long_double_symbol (libc, ___finitel, __finitel);
 #endif

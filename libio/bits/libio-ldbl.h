@@ -23,5 +23,3 @@
 
 __LDBL_REDIR_DECL (_IO_vfscanf)
 __LDBL_REDIR_DECL (_IO_vfprintf)
-__LDBL_REDIR_DECL (_IO_vfwscanf)
-__LDBL_REDIR_DECL (_IO_vfwprintf)
