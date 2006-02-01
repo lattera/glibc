@@ -13,6 +13,10 @@
 	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Fix a typo.
 	* sysdeps/s390/fpu/libm-test-ulps: Remove llrint ulps.
 
+2006-01-19  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* libio/genops.c: Include <stdbool.h>.
+
 2006-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add

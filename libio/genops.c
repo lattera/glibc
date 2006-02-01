@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #endif
 #include <string.h>
+#include <stdbool.h>
 
 #ifdef _IO_MTSAFE_IO
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
