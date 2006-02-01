@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <math.h>
+#include <math_ldbl_opt.h>
 
 
 double
@@ -47,4 +48,7 @@ weak_alias (__rint, rint)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__rint, __rintl)
 weak_alias (__rint, rintl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __rint, rintl, GLIBC_2_0);
 #endif
