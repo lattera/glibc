@@ -28,6 +28,7 @@
 
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add
 	some more entries.
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (intel_02_known): Likewise.
 
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
