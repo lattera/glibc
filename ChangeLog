@@ -1,5 +1,7 @@
 2006-02-02  Roland McGrath  <roland@redhat.com>
 
+	* include/errno.h [__cplusplus]: Avoid extra header magic for C++.
+
 	* manual/install.texi (Tools for Compilation): Require gcc 3.4,
 	recommend 4.1, advise 4.0 for powerpc64, and note 4.1 required for
 	powerpc, s390{x,} with new long double.
