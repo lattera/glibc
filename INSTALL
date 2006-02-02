@@ -9,15 +9,7 @@ installation.  It is updated more frequently than this manual.
    Features can be added to GNU Libc via "add-on" bundles.  These are
 separate tar files, which you unpack into the top level of the source
 tree.  Then you give `configure' the `--enable-add-ons' option to
-activate them, and they will be compiled into the library.  As of the
-2.2 release, one important component of glibc is distributed as
-"official" add-ons: the linuxthreads add-on.  Unless you are doing an
-unusual installation, you should get this.
-
-   Support for POSIX threads is maintained by someone else, so it's in a
-separate package.  It is only available for GNU/Linux systems, but this
-will change in the future.  Get it from the same place you got the main
-bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.
+activate them, and they will be compiled into the library.
 
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
@@ -84,8 +76,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      specified with no list, it enables all the add-on packages it
      finds.  If you do not wish to use some add-on packages that you
      have present in your source tree, give this option a list of the
-     add-ons that you _do_ want used, like this:
-     `--enable-add-ons=linuxthreads'
+     add-ons that you _do_ want used, like this: `--enable-add-ons=nptl'
 
 `--enable-kernel=VERSION'
      This option is currently only useful on GNU/Linux systems.  The
@@ -302,11 +293,18 @@ build the GNU C library:
      recommend GNU `make' version 3.79.  All earlier versions have
      severe bugs or lack features.
 
-   * GCC 3.2 or newer
+   * GCC 3.4 or newer, GCC 4.1 recommended
 
      The GNU C library can only be compiled with the GNU C compiler
-     family.  As of the 2.3 release, GCC 3.2 or higher is required.  As
-     of this writing, GCC 3.2 is the compiler we advise to use.
+     family.  For the 2.3 releases, GCC 3.2 or higher is required; GCC
+     3.4 is the compiler we advise to use for 2.3 versions.  For the
+     2.4 release, GCC 3.4 or higher is required; as of this writing,
+     GCC 4.1 is the compiler we advise to use for current versions.  On
+     certain machines including `powerpc64', compilers prior to GCC 4.0
+     have bugs that prevent them compiling the C library code in the
+     2.4 release.  On other machines, GCC 4.1 is required to build the C
+     library with support for the correct `long double' type format;
+     these include `powerpc' (32 bit), `s390' and `s390x'.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
@@ -316,7 +314,7 @@ build the GNU C library:
      Check the FAQ for any special compiler issues on particular
      platforms.
 
-   * GNU `binutils' 2.13 or later
+   * GNU `binutils' 2.15 or later
 
      You must use GNU `binutils' (as and ld) to build the GNU C library.
      No other assembler or linker has the necessary functionality at the
@@ -330,11 +328,10 @@ build the GNU C library:
      installation mechanism for the info files is not present or works
      differently.
 
-   * GNU `awk' 3.0, or some other POSIX awk
+   * GNU `awk' 3.0, or higher
 
-     `Awk' is used in several places to generate files.  The scripts
-     should work with any POSIX-compliant `awk' implementation; `gawk'
-     3.0 and `mawk' 1.3 are known to work.
+     `Awk' is used in several places to generate files.  `gawk' 3.0 is
+     known to work.
 
    * Perl 5
 

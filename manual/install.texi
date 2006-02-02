@@ -329,11 +329,18 @@ recommend GNU @code{make} version 3.79.  All earlier versions have severe
 bugs or lack features.
 
 @item
-GCC 3.2 or newer
+GCC 3.4 or newer, GCC 4.1 recommended
 
 The GNU C library can only be compiled with the GNU C compiler family.
-As of the 2.3 release, GCC 3.2 or higher is required.  As of this
-writing, GCC 3.2 is the compiler we advise to use.
+For the 2.3 releases, GCC 3.2 or higher is required; GCC 3.4 is the
+compiler we advise to use for 2.3 versions.
+For the 2.4 release, GCC 3.4 or higher is required; as of this
+writing, GCC 4.1 is the compiler we advise to use for current versions.
+On certain machines including @code{powerpc64}, compilers prior to GCC
+4.0 have bugs that prevent them compiling the C library code in the
+2.4 release.  On other machines, GCC 4.1 is required to build the C
+library with support for the correct @code{long double} type format;
+these include @code{powerpc} (32 bit), @code{s390} and @code{s390x}.
 
 You can use whatever compiler you like to compile programs that use GNU
 libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
