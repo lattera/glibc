@@ -2,7 +2,9 @@
 # -mlong-double-128 option is used (or when it becomes a default
 # when -mlong-double-64 is not used).
 long-double-fcts = yes
+ifeq (,$(filter -mlong-double-128,$(sysdep-CFLAGS)))
 sysdep-CFLAGS += -mlong-double-128
+endif
 
 ifeq ($(subdir),math)
 libm-routines += s_nexttowardfd
