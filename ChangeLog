@@ -22,7 +22,7 @@
 	* sysdeps/powerpc/powerpc64/elf/Makefile
 	(CFLAGS-dl-runtime.os, CFLAGS-dl-lookup.os, CFLAGS-dl-misc.os,
 	CFLAGS-rtld-mempcpy.os, CFLAGS-rtld-memmove.os, CFLAGS-rtld-memchr.os,
-	CFLAGS-rtld-strnlen.os): LIkewise
+	CFLAGS-rtld-strnlen.os): Likewise.
 
 2006-02-01  Roland McGrath  <roland@redhat.com>
 
