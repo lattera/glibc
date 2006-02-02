@@ -1,5 +1,11 @@
 2006-02-02  Roland McGrath  <roland@redhat.com>
 
+	* timezone/private.h: Update from tzcode2006a.
+	* timezone/scheck.c: Likewise.
+	* timezone/asia: Update from tzdata2006a.
+	* timezone/northamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): New variable.
 	(CFLAGS-mcount.c): Use it instead of -msoft-float.
 	* sysdeps/powerpc/powerpc64/elf/Makefile
