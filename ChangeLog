@@ -1,3 +1,12 @@
+2006-02-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): New variable.
+	(CFLAGS-mcount.c): Use it instead of -msoft-float.
+	* sysdeps/powerpc/powerpc64/elf/Makefile
+	(CFLAGS-dl-runtime.os, CFLAGS-dl-lookup.os, CFLAGS-dl-misc.os,
+	CFLAGS-rtld-mempcpy.os, CFLAGS-rtld-memmove.os, CFLAGS-rtld-memchr.os,
+	CFLAGS-rtld-strnlen.os): LIkewise
+
 2006-02-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ieee754/ldbl-opt/Makefile (sysdep-CFLAGS): Avoid adding

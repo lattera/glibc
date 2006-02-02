@@ -10,6 +10,18 @@ ifeq (yes,$(build-shared))
 pic-ccflag = -fpic
 endif
 
+# These flags prevent FPU or Altivec registers from being used,
+# for code called in contexts that is not allowed to touch those registers.
+# Stupid GCC requires us to pass all these ridiculous switches.
+no-special-regs := $(sort $(foreach n,40 41 50 51 60 61 62 63 \
+				      $(foreach m,2 3 4 5 6 7 8 9, \
+						  3$m 4$m 5$m),\
+				    -ffixed-$n)) \
+		   $(sort $(foreach n,$(foreach m,0 1 2 3 4 5 6 7 8 9,\
+						$m 1$m 2$m) 30 31,\
+				    -ffixed-v$n)) \
+		   -ffixed-vrsave -ffixed-vscr
+
 ifeq ($(subdir),csu)
 sysdep_routines += hp-timing
 elide-routines.os += hp-timing
@@ -29,5 +41,5 @@ ifeq ($(subdir),gmon)
 # The assembly functions assume that fp arg regs are not trashed.
 # Compiling with -msoft-float ensures that fp regs are not used
 # for moving memory around.
-CFLAGS-mcount.c += -msoft-float
+CFLAGS-mcount.c += $(no-special-regs)
 endif
