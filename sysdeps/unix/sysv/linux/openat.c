@@ -30,7 +30,8 @@
 #if !defined OPENAT && !defined __ASSUME_ATFCTS
 # define OPENAT openat
 
-
+/* Set errno after a failed call.  If BUF is not null,
+   it is a /proc/self/fd/ path name we just tried to use.  */
 void
 attribute_hidden
 __atfct_seterrno (int errval, int fd, const char *buf)
@@ -39,7 +40,7 @@ __atfct_seterrno (int errval, int fd, const char *buf)
     {
       struct stat64 st;
 
-      if (errval == ENOTDIR)
+      if (errval == ENOTDIR || errval == ENOENT)
 	{
 	  /* This can mean either the file descriptor is invalid or
 	     /proc is not mounted.  */
@@ -48,22 +49,10 @@ __atfct_seterrno (int errval, int fd, const char *buf)
 	    return;
 
 	  /* If /proc is not mounted there is nothing we can do.  */
-	  if (S_ISDIR (st.st_mode)
+	  if ((errval != ENOTDIR || S_ISDIR (st.st_mode))
 	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
 		  || !S_ISDIR (st.st_mode)))
 	    errval = ENOSYS;
-	}
-      else if (errval == ENOENT)
-	{
-	  /* This could mean the file descriptor is not valid.  We
-	     reuse BUF for the stat call.  Find the slash after the
-	     file descriptor number.  */
-	  *(char *) strchr (buf + sizeof "/proc/self/fd", '/') = '\0';
-
-	  int e = __lxstat64 (_STAT_VER, buf, &st);
-	  if ((e == -1 && errno == ENOENT)
-	      ||(e == 0 && !S_ISLNK (st.st_mode)))
-	    errval = EBADF;
 	}
     }
 

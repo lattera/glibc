@@ -1,5 +1,9 @@
 2006-02-02  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Use the same
+	fstat check for ENOENT that should be EBADF as for ENOTDIR, and also
+	check for missing /proc the same way.
+
 	* include/errno.h [__cplusplus]: Avoid extra header magic for C++.
 
 	* manual/install.texi (Tools for Compilation): Require gcc 3.4,
