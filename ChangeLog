@@ -1,3 +1,9 @@
+2006-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimesat.c [__NR_futimesat]
+	(futimesat): If file is NULL use __futimes.
+	* include/sys/time.h: Declare __futimes.
+
 2006-02-02  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Use the same
