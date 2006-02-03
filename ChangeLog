@@ -1,4 +1,13 @@
+2006-02-03  Roland McGrath  <roland@redhat.com>
+
+	[BZ #2268]
+	* sysdeps/posix/profil.c (__profil): Use __profile_frequency to choose
+	timer interval, don't assume smallest possible interval is it.
+
 2006-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/bits/fenvinline.h (fegetround): Make asm
+	volatile.
 
 	* stdlib/bits/stdlib-ldbl.h (qecvt, qfcvt, qgcvt, qecvt_r, qfcvt_r):
 	Guard with [__USE_SVID || __USE_XOPEN_EXTENDED].

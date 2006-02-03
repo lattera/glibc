@@ -1,5 +1,6 @@
 /* Low-level statistical profiling support function.  Mostly POSIX.1 version.
-   Copyright (C) 1996,97,98,2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2002,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +23,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <libc-internal.h>
 
 #ifndef SIGPROF
 
@@ -110,7 +112,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
     return -1;
 
   timer.it_value.tv_sec = 0;
-  timer.it_value.tv_usec = 1;
+  timer.it_value.tv_usec = 1000000 / __profile_frequency ();
   timer.it_interval = timer.it_value;
   return __setitimer (ITIMER_PROF, &timer, otimer_ptr);
 }
