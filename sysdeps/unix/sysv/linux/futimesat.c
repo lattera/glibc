@@ -42,6 +42,9 @@ futimesat (fd, file, tvp)
   if (__have_atfcts >= 0)
 # endif
     {
+      if (file == NULL)
+	return __futimes (fd, tvp);
+
       result = INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
 # ifndef __ASSUME_ATFCTS
       if (result == -1 && errno == ENOSYS)
