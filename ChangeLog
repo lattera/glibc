@@ -1,3 +1,16 @@
+2006-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/bits/stdlib-ldbl.h (qecvt, qfcvt, qgcvt, qecvt_r, qfcvt_r):
+	Guard with [__USE_SVID || __USE_XOPEN_EXTENDED].
+
+	* math/math.h [__LDBL_COMPAT && __USE_ISOC99] (nexttowardl): New
+	prototype.
+
+	* math/math.h (__nldbl_nexttowardf): Put __THROW before
+	__attribute__ ((__const__)).
+	(__MATHDECL_2): Use __REDIRECT_NTH instead of __REDIRECT
+	followed by __THROW.
+
 2006-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/futimesat.c [__NR_futimesat]
