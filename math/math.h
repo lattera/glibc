@@ -103,13 +103,16 @@ __BEGIN_DECLS
 
 #   ifdef __USE_ISOC99 
 extern float __nldbl_nexttowardf (float __x, long double __y)
-				  __attribute__ ((__const__)) __THROW;
+				  __THROW __attribute__ ((__const__));
 #    ifdef __REDIRECT_NTH
 extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
 			     __nldbl_nexttowardf)
      __attribute__ ((__const__));
 extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 			      nextafter) __attribute__ ((__const__));
+extern long double __REDIRECT_NTH (nexttowardl,
+				   (long double __x, long double __y),
+				   nextafter) __attribute__ ((__const__));
 #    endif
 #   endif
 
@@ -118,8 +121,8 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 
 #   undef __MATHDECL_1
 #   define __MATHDECL_2(type, function,suffix, args, alias) \
-  extern type __REDIRECT(__MATH_PRECNAME(function,suffix), \
-			 args, alias) __THROW
+  extern type __REDIRECT_NTH(__MATH_PRECNAME(function,suffix), \
+			     args, alias)
 #   define __MATHDECL_1(type, function,suffix, args) \
   __MATHDECL_2(type, function,suffix, args, __CONCAT(function,suffix))
 #  endif
