@@ -2357,7 +2357,8 @@ make_message (char *name, char *value)
     @{
       /* @r{Reallocate buffer now that we know
          how much space is needed.} */
-      buffer = (char *) xrealloc (buffer, nchars + 1);
+      size = nchars + 1;
+      buffer = (char *) xrealloc (buffer, size);
 
       if (buffer != NULL)
         /* @r{Try again.} */
