@@ -1,3 +1,8 @@
+2006-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/stdio.texi (Formatted Output Functions): Fix make_message
+	example.  Patch by NIIBE Yutaka <gniibe@m17n.org>.
+
 2006-02-03  Roland McGrath  <roland@redhat.com>
 
 	[BZ #2268]
