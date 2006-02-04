@@ -1,5 +1,5 @@
 /* Locate TLS data for a thread.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ td_thr_tlsbase (const td_thrhandle_t *th,
 		psaddr_t *base)
 {
   td_err_e err;
-  psaddr_t dtv, dtvptr;
+  psaddr_t dtv, dtvslot, dtvptr;
 
   if (modid < 1)
     return TD_NOTLS;
@@ -35,8 +35,13 @@ td_thr_tlsbase (const td_thrhandle_t *th,
   if (err != TD_OK)
     return err;
 
-  /* Get the corresponding entry in the DTV.  */
-  err = DB_GET_FIELD (dtvptr, th->th_ta_p, dtv, dtv, dtv, modid);
+  /* Find the corresponding entry in the DTV.  */
+  err = DB_GET_FIELD_ADDRESS (dtvslot, th->th_ta_p, dtv, dtv, dtv, modid);
+  if (err != TD_OK)
+    return err;
+
+  /* Extract the TLS block address from that DTV slot.  */
+  err = DB_GET_FIELD (dtvptr, th->th_ta_p, dtvslot, dtv_t, pointer_val, 0);
   if (err != TD_OK)
     return err;
 
