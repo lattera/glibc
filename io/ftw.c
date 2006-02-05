@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -36,7 +36,7 @@ char *alloca ();
 # endif
 #endif
 
-#if defined _LIBC
+#ifdef _LIBC
 # include <dirent.h>
 # define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
 #else
@@ -59,6 +59,7 @@ char *alloca ();
 #endif
 
 #include <errno.h>
+#include <fcntl.h>
 #include <ftw.h>
 #include <limits.h>
 #include <search.h>
@@ -585,7 +586,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   struct STAT st;
   int result = 0;
   int save_err;
-  char *cwd = NULL;
+  int cwdfd = -1;
   char *cp;
 
   /* First make sure the parameters are reasonable.  */
@@ -639,24 +640,33 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Now go to the directory containing the initial file/directory.  */
   if (flags & FTW_CHDIR)
     {
-      /* GNU extension ahead.  */
-      cwd =  __getcwd (NULL, 0);
-      if (cwd == NULL)
+      /* We have to be able to go back to the current working
+	 directory.  The best way to do this is to use a file
+	 descriptor.  */
+      cwdfd = __open (".", O_RDONLY | O_DIRECTORY);
+      if (cwdfd == -1)
 	result = -1;
-      else if (data.ftw.base > 0)
+      else
 	{
-	  /* Change to the directory the file is in.  In data.dirbuf
-	     we have a writable copy of the file name.  Just NUL
-	     terminate it for now and change the directory.  */
-	  if (data.ftw.base == 1)
-	    /* I.e., the file is in the root directory.  */
-	    result = __chdir ("/");
-	  else
+	  if (data.maxdir > 1)
+	    /* Account for the file descriptor we use here.  */
+	    --data.maxdir;
+
+	  if (data.ftw.base > 0)
 	    {
-	      char ch = data.dirbuf[data.ftw.base - 1];
-	      data.dirbuf[data.ftw.base - 1] = '\0';
-	      result = __chdir (data.dirbuf);
-	      data.dirbuf[data.ftw.base - 1] = ch;
+	      /* Change to the directory the file is in.  In data.dirbuf
+		 we have a writable copy of the file name.  Just NUL
+		 terminate it for now and change the directory.  */
+	      if (data.ftw.base == 1)
+		/* I.e., the file is in the root directory.  */
+		result = __chdir ("/");
+	      else
+		{
+		  char ch = data.dirbuf[data.ftw.base - 1];
+		  data.dirbuf[data.ftw.base - 1] = '\0';
+		  result = __chdir (data.dirbuf);
+		  data.dirbuf[data.ftw.base - 1] = ch;
+		}
 	    }
 	}
     }
@@ -713,11 +723,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
     }
 
   /* Return to the start directory (if necessary).  */
-  if (cwd != NULL)
+  if (cwdfd != -1)
     {
       int save_err = errno;
-      __chdir (cwd);
-      free (cwd);
+      __fchdir (cwdfd);
       __set_errno (save_err);
     }
 

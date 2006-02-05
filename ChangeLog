@@ -1,3 +1,8 @@
+2006-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/ftw.c (ftw_startup): Use fchdir to return to original
+	directory for FTW_CHDIR.
+
 2006-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/stdio.texi (Formatted Output Functions): Fix make_message
