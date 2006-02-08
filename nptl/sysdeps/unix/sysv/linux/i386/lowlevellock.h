@@ -75,7 +75,8 @@
 		      : "=a" (__status)					      \
 		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (0),	      \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
-			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+			"i" (offsetof (tcbhead_t, sysinfo))		      \
+		      : "memory");					      \
     __status;								      \
   })
 
@@ -90,7 +91,8 @@
 		      : "=a" (__status)					      \
 		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (timeout),  \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
-			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+			"i" (offsetof (tcbhead_t, sysinfo))		      \
+		      : "memory");					      \
     __status;								      \
   })
 
@@ -346,7 +348,8 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			: "=&a" (__ignore)				      \
 			: "i" (SYS_futex), LLL_EBX_REG (&tid), "S" (0),	      \
 			  "c" (FUTEX_WAIT), "d" (_tid),			      \
-			  "i" (offsetof (tcbhead_t, sysinfo)));		      \
+			  "i" (offsetof (tcbhead_t, sysinfo))		      \
+			: "memory");					      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)

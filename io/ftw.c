@@ -587,6 +587,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   int result = 0;
   int save_err;
   int cwdfd = -1;
+  char *cwd = NULL;
   char *cp;
 
   /* First make sure the parameters are reasonable.  */
@@ -645,28 +646,34 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	 descriptor.  */
       cwdfd = __open (".", O_RDONLY | O_DIRECTORY);
       if (cwdfd == -1)
-	result = -1;
-      else
 	{
-	  if (data.maxdir > 1)
-	    /* Account for the file descriptor we use here.  */
-	    --data.maxdir;
+	  /* Try getting the directory name.  This can be needed if
+	     the current directory is executable but not readable.  */
+	  if (errno == EACCES)
+	    /* GNU extension ahead.  */
+	    cwd =  __getcwd (NULL, 0);
 
-	  if (data.ftw.base > 0)
+	  if (cwd == NULL)
+	    goto out_fail;
+	}
+      else if (data.maxdir > 1)
+	/* Account for the file descriptor we use here.  */
+	--data.maxdir;
+
+      if (data.ftw.base > 0)
+	{
+	  /* Change to the directory the file is in.  In data.dirbuf
+	     we have a writable copy of the file name.  Just NUL
+	     terminate it for now and change the directory.  */
+	  if (data.ftw.base == 1)
+	    /* I.e., the file is in the root directory.  */
+	    result = __chdir ("/");
+	  else
 	    {
-	      /* Change to the directory the file is in.  In data.dirbuf
-		 we have a writable copy of the file name.  Just NUL
-		 terminate it for now and change the directory.  */
-	      if (data.ftw.base == 1)
-		/* I.e., the file is in the root directory.  */
-		result = __chdir ("/");
-	      else
-		{
-		  char ch = data.dirbuf[data.ftw.base - 1];
-		  data.dirbuf[data.ftw.base - 1] = '\0';
-		  result = __chdir (data.dirbuf);
-		  data.dirbuf[data.ftw.base - 1] = ch;
-		}
+	      char ch = data.dirbuf[data.ftw.base - 1];
+	      data.dirbuf[data.ftw.base - 1] = '\0';
+	      result = __chdir (data.dirbuf);
+	      data.dirbuf[data.ftw.base - 1] = ch;
 	    }
 	}
     }
@@ -729,8 +736,16 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
       __fchdir (cwdfd);
       __set_errno (save_err);
     }
+  else if (cwd != NULL)
+    {
+      int save_err = errno;
+      __chdir (cwd);
+      free (cwd);
+      __set_errno (save_err);
+    }
 
   /* Free all memory.  */
+ out_fail:
   save_err = errno;
   __tdestroy (data.known_objects, free);
   free (data.dirbuf);
@@ -764,7 +779,7 @@ NFTW_NAME (path, func, descriptors, flags)
 }
 #else
 
-#include <shlib-compat.h>
+# include <shlib-compat.h>
 
 int NFTW_NEW_NAME (const char *, NFTW_FUNC_T, int, int);
 
@@ -786,7 +801,7 @@ NFTW_NEW_NAME (path, func, descriptors, flags)
 
 versioned_symbol (libc, NFTW_NEW_NAME, NFTW_NAME, GLIBC_2_3_3);
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_3_3)
+# if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_3_3)
 
 /* Older nftw* version just ignored all unknown flags.  */
 
@@ -805,5 +820,5 @@ NFTW_OLD_NAME (path, func, descriptors, flags)
 }
 
 compat_symbol (libc, NFTW_OLD_NAME, NFTW_NAME, GLIBC_2_1);
-#endif
+# endif
 #endif
