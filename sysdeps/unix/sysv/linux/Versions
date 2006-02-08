@@ -118,6 +118,8 @@ libc {
   GLIBC_2.4 {
     inotify_init; inotify_add_watch; inotify_rm_watch;
 
+    unshare;
+
     #errlist-compat	132
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }

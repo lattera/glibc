@@ -1,3 +1,14 @@
+2006-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Declare unshare.
+	* sysdeps/unix/sysv/linux/Versions [libc, GLIBC_2.4]: Export
+	unshare.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add unshare syscall.
+
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Add some
+	preprocessor magic so that the compiler won't see the prototypes
+	for the functions we are defining as stubs.
+
 2006-02-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/ftw.c (ftw_startup): Use fchdir to return to original

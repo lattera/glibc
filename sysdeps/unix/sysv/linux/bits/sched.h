@@ -69,10 +69,13 @@ struct sched_param
 
 __BEGIN_DECLS
 
-/* Clone current process.  */
 #ifdef __USE_MISC
+/* Clone current process.  */
 extern int clone (int (*__fn) (void *__arg), void *__child_stack,
 		  int __flags, void *__arg, ...) __THROW;
+
+/* Unshare the specified resources.  */
+extern int unshare (int __flags) __THROW;
 #endif
 
 __END_DECLS

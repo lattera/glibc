@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003, 2006
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -294,7 +294,13 @@ sysdep_routines += stub-syscalls
 $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 			  $(..)sysdeps/unix/Makefile
 	$(make-target-directory)
-	(echo '#include <errno.h>'; \
+	(for call in $(unix-stub-syscalls); do \
+	   echo "#define $$call RENAMED_$$call"; \
+	 done; \
+	 echo '#include <errno.h>'; \
+	 for call in $(unix-stub-syscalls); do \
+	   echo "#undef $$call"; \
+	 done; \
 	 echo 'long int _no_syscall (void)'; \
 	 echo '{ __set_errno (ENOSYS); return -1L; }'; \
 	 for call in $(unix-stub-syscalls); do \
