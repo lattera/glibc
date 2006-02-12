@@ -1,3 +1,8 @@
+2006-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/not-cancel.h: Define openat_not_cancel,
+        openat_not_cancel_3, openat64_not_cancel, and openat64_not_cancel_3.
+
 2006-02-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_futex_wait,
