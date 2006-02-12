@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2001,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2002,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -116,7 +116,7 @@ _IO_wsetb (f, b, eb, a)
      int a;
 {
   if (f->_wide_data->_IO_buf_base && !(f->_flags & _IO_USER_BUF))
-    FREE_BUF (f->_wide_data->_IO_buf_base, _IO_wblen (f));
+    FREE_BUF (f->_wide_data->_IO_buf_base, _IO_wblen (f) * sizeof (wchar_t));
   f->_wide_data->_IO_buf_base = b;
   f->_wide_data->_IO_buf_end = eb;
   if (a)

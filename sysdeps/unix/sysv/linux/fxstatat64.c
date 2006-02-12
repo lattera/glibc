@@ -47,6 +47,38 @@ extern int __have_no_stat64;
 int
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
+  if (__builtin_expect (vers != _STAT_VER_LINUX, 0))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  int result;
+  INTERNAL_SYSCALL_DECL (err);
+
+#ifdef __NR_fstatat64
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
+# ifndef __ASSUME_ATFCTS
+      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1)
+	  && INTERNAL_SYSCALL_ERRNO (result, err) == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	  return 0;
+	else
+	  {
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+	    return -1;
+	  }
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -73,10 +105,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
       file = buf;
     }
 
-  int result;
-  INTERNAL_SYSCALL_DECL (err);
-
-#if __ASSUME_STAT64_SYSCALL > 0
+# if __ASSUME_STAT64_SYSCALL > 0
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat64, err, 2, CHECK_STRING (file),
 			       CHECK_1 (st));
@@ -85,15 +114,15 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 			       CHECK_1 (st));
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     {
-# if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
+#  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
       if (st->__st_ino != (__ino_t) st->st_ino)
 	st->st_ino = st->__st_ino;
-# endif
+#  endif
       return result;
     }
-#else
+# else
   struct kernel_stat kst;
-# if defined __NR_stat64
+#  ifdef __NR_stat64
   if (! __have_no_stat64)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
@@ -105,10 +134,10 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 
       if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
 	{
-#  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
+#   if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
 	  if (st->__st_ino != (__ino_t) st->st_ino)
 	    st->st_ino = st->__st_ino;
-#  endif
+#   endif
 	  return result;
 	}
       if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
@@ -116,7 +145,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 
       __have_no_stat64 = 1;
     }
-# endif
+#  endif
 
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
@@ -129,9 +158,10 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     return __xstat64_conv (vers, &kst, st);
 
  fail:
-#endif
+# endif
   __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
 
   return -1;
+#endif
 }
 libc_hidden_def (__fxstatat64)

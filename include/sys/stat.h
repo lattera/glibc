@@ -31,6 +31,7 @@ extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
 }
 libc_hidden_proto (__xmknodat)
 
+libc_hidden_proto (__fxstatat)
 libc_hidden_proto (__fxstatat64)
 
 

@@ -1,3 +1,35 @@
+2006-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/ftw.c: Start using *at functions.
+	* io/ftw64.c: Likewise.
+
+	* sysdeps/generic/not-cancel.h: Define openat_not_cancel,
+	openat_not_cancel_3, openat64_not_cancel, and openat64_not_cancel_3.
+	* sysdeps/unix/sysv/linux/not-cancel.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/openat.c: Create separate _nocancel
+	functions.
+
+	* io/fxstatat.c: Add __fxstatat alias.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Likewise.  Add support for
+	newfstatat syscall.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Add __fxstatat alias.
+	Add support for fstatat64 syscall.
+	* include/sys/stat.h: Declare __fxstatat.
+	* io/fxstatat64.c: Add __fxstatat64 alias.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Add support for fstatat64
+	syscall.
+
+	* dirent/fdopendir.c: Add __fdopendir alias.
+	* sysdeps/unix/fdopendir.c: Likewise.
+	* sysdeps/mach/hurd/fdopendir.c: Likewise.
+	* include/dirent.h: Add __fdopendir declaration.
+
+	[BZ #2226]
+	* libio/wgenops.c (_IO_wsetb): Use correct size of wide char
+	buffer in FREE_BUF call.
+
 2006-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Declare unshare.

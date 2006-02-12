@@ -1,5 +1,5 @@
 /* Open a directory stream from a file descriptor.  Stub version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,12 @@
 
 /* Open a directory stream on FD.  */
 DIR *
-fdopendir (int fd)
+__fdopendir (int fd)
 {
   __set_errno (ENOSYS);
   return NULL;
 }
+weak_alias (__fdopendir, fdopendir)
 
 stub_warning (fdopendir)
 #include <stub-tag.h>

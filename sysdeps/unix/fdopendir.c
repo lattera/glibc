@@ -25,7 +25,7 @@
 
 
 DIR *
-fdopendir (int fd)
+__fdopendir (int fd)
 {
   struct stat64 statbuf;
 
@@ -49,3 +49,4 @@ fdopendir (int fd)
 
   return __alloc_dir (fd, false, &statbuf);
 }
+weak_alias (__fdopendir, fdopendir)

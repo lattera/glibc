@@ -1,5 +1,5 @@
 /* Open a directory stream from a file descriptor.  Hurd version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ DIR *_hurd_fd_opendir (struct hurd_fd *d); /* opendir.c */
 
 /* Open a directory stream on FD.  */
 DIR *
-fdopendir (int fd)
+__fdopendir (int fd)
 {
   struct hurd_fd *d = _hurd_fd_get (fd);
 
@@ -54,3 +54,4 @@ fdopendir (int fd)
 
   return _hurd_fd_opendir (d);
 }
+weak_alias (__fdopendir, fdopendir)

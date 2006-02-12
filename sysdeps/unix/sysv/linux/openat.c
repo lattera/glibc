@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <kernel-features.h>
 #include <sysdep-cancel.h>
+#include <not-cancel.h>
 
 
 #if !defined OPENAT && !defined __ASSUME_ATFCTS
@@ -62,23 +63,19 @@ __atfct_seterrno (int errval, int fd, const char *buf)
 int __have_atfcts;
 #endif
 
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+
+#define OPENAT_NOT_CANCEL CONCAT (OPENAT)
+#define CONCAT(name) CONCAT2 (name)
+#define CONCAT2(name) __##name##_nocancel
+
+
 int
-OPENAT (fd, file, oflag)
+OPENAT_NOT_CANCEL (fd, file, oflag, mode)
      int fd;
      const char *file;
      int oflag;
+     mode_t mode;
 {
-  mode_t mode = 0;
-  if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
-    }
 
   /* We have to add the O_LARGEFILE flag for openat64.  */
 #ifdef MORE_OFLAGS
@@ -93,16 +90,7 @@ OPENAT (fd, file, oflag)
   if (__have_atfcts >= 0)
 # endif
     {
-      if (SINGLE_THREAD_P)
-	res = INLINE_SYSCALL (openat, 4, fd, file, oflag, mode);
-      else
-	{
-	  int oldtype = LIBC_CANCEL_ASYNC ();
-
-	  res = INLINE_SYSCALL (openat, 4, fd, file, oflag, mode);
-
-	  LIBC_CANCEL_RESET (oldtype);
-	}
+      res = INLINE_SYSCALL (openat, 4, fd, file, oflag, mode);
 
 # ifndef __ASSUME_ATFCTS
       if (res == -1 && errno == ENOSYS)
@@ -130,20 +118,12 @@ OPENAT (fd, file, oflag)
       size_t buflen = sizeof (procfd) + sizeof (int) * 3 + filelen;
       buf = alloca (buflen);
 
+      /* Note: snprintf cannot be canceled.  */
       __snprintf (buf, buflen, procfd, fd, file);
       file = buf;
     }
 
-  if (SINGLE_THREAD_P)
-    res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
-  else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
-
-      res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
-
-      LIBC_CANCEL_RESET (oldtype);
-    }
+  res = INTERNAL_SYSCALL (open, err, 3, file, oflag, mode);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
     {
@@ -153,4 +133,35 @@ OPENAT (fd, file, oflag)
 
   return res;
 #endif
+}
+
+
+/* Open FILE with access OFLAG.  Interpret relative paths relative to
+   the directory associated with FD.  If OFLAG includes O_CREAT, a
+   third argument is the file protection.  */
+int
+OPENAT (fd, file, oflag)
+     int fd;
+     const char *file;
+     int oflag;
+{
+  mode_t mode = 0;
+  if (oflag & O_CREAT)
+    {
+      va_list arg;
+      va_start (arg, oflag);
+      mode = va_arg (arg, mode_t);
+      va_end (arg);
+    }
+
+  if (SINGLE_THREAD_P)
+    return OPENAT_NOT_CANCEL (fd, file, oflag, mode);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int res = OPENAT_NOT_CANCEL (fd, file, oflag, mode);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return res;
 }

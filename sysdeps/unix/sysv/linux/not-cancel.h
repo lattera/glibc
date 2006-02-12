@@ -1,5 +1,5 @@
 /* Uncancelable versions of cancelable interfaces.  Linux version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sys/types.h>
 #include <sysdep.h>
 
 /* Uncancelable open.  */
@@ -25,6 +26,20 @@
    INLINE_SYSCALL (open, 3, (const char *) (name), (flags), (mode))
 #define open_not_cancel_2(name, flags) \
    INLINE_SYSCALL (open, 2, (const char *) (name), (flags))
+
+/* Uncancelable openat.  */
+extern int __openat_not_cancel (int fd, const char *fname, int oflag,
+				mode_t mode) attribute_hidden;
+#define openat_not_cancel(fd, fname, oflag, mode) \
+  __openat_not_cancel (fd, fname, oflag, mode)
+#define openat_not_cancel_3(fd, fname, oflag) \
+  __openat_not_cancel (fd, fname, oflag, 0)
+extern int __openat64_not_cancel (int fd, const char *fname, int oflag,
+				  mode_t mode) attribute_hidden;
+#define openat64_not_cancel(fd, fname, oflag, mode) \
+  __openat64_not_cancel (fd, fname, oflag, mode)
+#define openat64_not_cancel_3(fd, fname, oflag) \
+  __openat64_not_cancel (fd, fname, oflag, 0)
 
 /* Uncancelable close.  */
 #define close_not_cancel(fd) \

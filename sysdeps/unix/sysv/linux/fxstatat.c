@@ -37,6 +37,42 @@
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
+  int result;
+  INTERNAL_SYSCALL_DECL (err);
+#ifdef STAT_IS_KERNEL_STAT
+# define kst (*st)
+#else
+  struct kernel_stat kst;
+#endif
+
+#ifdef __NR_newfstatat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INTERNAL_SYSCALL (newfstatat, err, 4, fd, file, &kst, flag);
+# ifndef __ASSUME_ATFCTS
+      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1)
+	  && INTERNAL_SYSCALL_ERRNO (result, err) == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	  {
+#ifdef STAT_IS_KERNEL_STAT
+	    return 0;
+#else
+	    return __xstat_conv (vers, &kst, st);
+#endif
+	  }
+	else
+	  {
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+	    return -1;
+	  }
+    }
+#endif
+
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -63,9 +99,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       file = buf;
     }
 
-  int result;
-  INTERNAL_SYSCALL_DECL (err);
-
   if (vers == _STAT_VER_KERNEL)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
@@ -85,8 +118,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       return -1;
     }
 #else
-  struct kernel_stat kst;
-
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
 			       __ptrvalue (&kst));
@@ -102,8 +133,9 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
   return -1;
 }
+libc_hidden_def (__fxstatat)
 #ifdef XSTAT_IS_XSTAT64
 # undef __fxstatat64
 strong_alias (__fxstatat, __fxstatat64);
-libc_hidden_ver (__fxstatat, __fxstatat64)
+libc_hidden_def (__fxstatat64)
 #endif

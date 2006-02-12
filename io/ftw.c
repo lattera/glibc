@@ -66,6 +66,7 @@ char *alloca ();
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <not-cancel.h>
 #if HAVE_SYS_PARAM_H || defined _LIBC
 # include <sys/param.h>
 #endif
@@ -143,9 +144,11 @@ int rpl_lstat (const char *, struct stat *);
 # ifdef _LIBC
 #  define LXSTAT __lxstat
 #  define XSTAT __xstat
+#  define FXSTATAT __fxstatat
 # else
 #  define LXSTAT(V,f,sb) lstat (f,sb)
 #  define XSTAT(V,f,sb) stat (f,sb)
+#  define FXSTATAT(V,d,f,sb,m) fstatat (d, f, sb, m)
 # endif
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
@@ -162,6 +165,7 @@ int rpl_lstat (const char *, struct stat *);
 struct dir_data
 {
   DIR *stream;
+  int streamfd;
   char *content;
 };
 
@@ -263,7 +267,7 @@ find_object (struct ftw_data *data, struct STAT *st)
 
 static inline int
 __attribute ((always_inline))
-open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
+open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 {
   int result = 0;
 
@@ -324,6 +328,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 	    {
 	      __closedir (st);
 	      data->dirstreams[data->actdir]->stream = NULL;
+	      data->dirstreams[data->actdir]->streamfd = -1;
 	      data->dirstreams[data->actdir] = NULL;
 	    }
 	}
@@ -332,15 +337,28 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
   /* Open the new stream.  */
   if (result == 0)
     {
-      const char *name = ((data->flags & FTW_CHDIR)
-			  ? data->dirbuf + data->ftw.base: data->dirbuf);
       assert (data->dirstreams[data->actdir] == NULL);
 
-      dirp->stream = __opendir (name);
+      if (dfdp != NULL && *dfdp != -1)
+	{
+	  int fd = openat64_not_cancel_3 (*dfdp, data->dirbuf + data->ftw.base,
+					  O_RDONLY | O_DIRECTORY | O_NDELAY);
+	  dirp->stream = NULL;
+	  if (fd != -1 && (dirp->stream = __fdopendir (fd)) == NULL)
+	    close_not_cancel_no_status (fd);
+	}
+      else
+	{
+	  const char *name = ((data->flags & FTW_CHDIR)
+			      ? data->dirbuf + data->ftw.base: data->dirbuf);
+	  dirp->stream = __opendir (name);
+	}
+
       if (dirp->stream == NULL)
 	result = -1;
       else
 	{
+	  dirp->streamfd = dirfd (dirp->stream);
 	  dirp->content = NULL;
 	  data->dirstreams[data->actdir] = dirp;
 
@@ -356,7 +374,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 static int
 internal_function
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
-	       size_t namlen)
+	       size_t namlen, int d_type)
 {
   struct STAT st;
   int result = 0;
@@ -383,18 +401,28 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
   *((char *) __mempcpy (data->dirbuf + data->ftw.base, name, namlen)) = '\0';
 
-  if ((data->flags & FTW_CHDIR) == 0)
-    name = data->dirbuf;
+  int statres;
+  if (dir->streamfd != -1)
+    statres = FXSTATAT (_STAT_VER, dir->streamfd, name, &st,
+			(data->flags & FTW_PHYS) ? AT_SYMLINK_NOFOLLOW : 0);
+  else
+    {
+      if ((data->flags & FTW_CHDIR) == 0)
+	name = data->dirbuf;
 
-  if (((data->flags & FTW_PHYS)
-       ? LXSTAT (_STAT_VER, name, &st)
-       : XSTAT (_STAT_VER, name, &st)) < 0)
+      statres = ((data->flags & FTW_PHYS)
+		 ? LXSTAT (_STAT_VER, name, &st)
+		 : XSTAT (_STAT_VER, name, &st));
+    }
+
+  if (statres < 0)
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
       else if (!(data->flags & FTW_PHYS)
-	       && LXSTAT (_STAT_VER, name, &st) == 0
-	       && S_ISLNK (st.st_mode))
+	       && (d_type == DT_LNK
+		   || (LXSTAT (_STAT_VER, name, &st) == 0
+		       && S_ISLNK (st.st_mode))))
 	flag = FTW_SLN;
       else
 	flag = FTW_NS;
@@ -446,7 +474,8 @@ ftw_dir (struct ftw_data *data, struct STAT *st, struct dir_data *old_dir)
 
   /* Open the stream for this directory.  This might require that
      another stream has to be closed.  */
-  result = open_dir_stream (data, &dir);
+  result = open_dir_stream (old_dir == NULL ? NULL : &old_dir->streamfd,
+			    data, &dir);
   if (result != 0)
     {
       if (errno == EACCES)
@@ -466,6 +495,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st, struct dir_data *old_dir)
 fail:
 	  save_err = errno;
 	  __closedir (dir.stream);
+	  dir.streamfd = -1;
 	  __set_errno (save_err);
 
 	  if (data->actdir-- == 0)
@@ -496,7 +526,7 @@ fail:
 
   while (dir.stream != NULL && (d = __readdir64 (dir.stream)) != NULL)
     {
-      result = process_entry (data, &dir, d->d_name, NAMLEN (d));
+      result = process_entry (data, &dir, d->d_name, NAMLEN (d), d->d_type);
       if (result != 0)
 	break;
     }
@@ -510,6 +540,7 @@ fail:
       assert (dir.content == NULL);
 
       __closedir (dir.stream);
+      dir.streamfd = -1;
       __set_errno (save_err);
 
       if (data->actdir-- == 0)
@@ -525,7 +556,8 @@ fail:
 	{
 	  char *endp = strchr (runp, '\0');
 
-	  result = process_entry (data, &dir, runp, endp - runp);
+	  // XXX Should store the d_type values as well?!
+	  result = process_entry (data, &dir, runp, endp - runp, DT_UNKNOWN);
 
 	  runp = endp + 1;
 	}

@@ -6,6 +6,7 @@
 
 /* Now define the internal interfaces.  */
 extern DIR *__opendir (__const char *__name);
+extern DIR *__fdopendir (int __fd);
 extern int __closedir (DIR *__dirp);
 extern struct dirent *__readdir (DIR *__dirp);
 extern struct dirent64 *__readdir64 (DIR *__dirp);
@@ -27,4 +28,5 @@ extern int __versionsort64 (const void *a, const void *b)
      __attribute_pure__;
 extern DIR *__alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
      internal_function;
+
 #endif

@@ -48,6 +48,33 @@ extern int __have_no_stat64;
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
+  int result;
+  INTERNAL_SYSCALL_DECL (err);
+  struct stat64 st64;
+
+#ifdef __NR_fstatat64
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, &st64, flag);
+# ifndef __ASSUME_ATFCTS
+      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1)
+	  && INTERNAL_SYSCALL_ERRNO (result, err) == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	  return __xstat32_conv (vers, &st64, st);
+	else
+	  {
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+	    return -1;
+	  }
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (__builtin_expect (flag & ~AT_SYMLINK_NOFOLLOW, 0))
     {
       __set_errno (EINVAL);
@@ -74,12 +101,9 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       file = buf;
     }
 
-#if __ASSUME_STAT64_SYSCALL == 0
+# if __ASSUME_STAT64_SYSCALL == 0
   struct kernel_stat kst;
-#endif
-  int result;
-  INTERNAL_SYSCALL_DECL (err);
-
+# endif
   if (vers == _STAT_VER_KERNEL)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
@@ -91,8 +115,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       goto out;
     }
 
-#if __ASSUME_STAT64_SYSCALL > 0
-  struct stat64 st64;
+# if __ASSUME_STAT64_SYSCALL > 0
 
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat64, err, 2, CHECK_STRING (file),
@@ -102,14 +125,12 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 			       __ptrvalue (&st64));
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return __xstat32_conv (vers, &st64, st);
-#else
-# if defined __NR_stat64
+# else
+#  if defined __NR_stat64
   /* To support 32 bit UIDs, we have to use stat64.  The normal stat
      call only returns 16 bit UIDs.  */
   if (! __have_no_stat64)
     {
-      struct stat64 st64;
-
       if (flag & AT_SYMLINK_NOFOLLOW)
 	result = INTERNAL_SYSCALL (lstat64, err, 2, CHECK_STRING (file),
 				   __ptrvalue (&st64));
@@ -126,7 +147,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
       __have_no_stat64 = 1;
     }
-# endif
+#  endif
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
 			       __ptrvalue (&kst));
@@ -135,7 +156,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 			       __ptrvalue (&kst));
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return __xstat_conv (vers, &kst, st);
-#endif  /* __ASSUME_STAT64_SYSCALL  */
+# endif  /* __ASSUME_STAT64_SYSCALL  */
 
  out:
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
@@ -145,9 +166,11 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     }
 
   return result;
+#endif
 }
+libc_hidden_def (__fxstatat)
 #ifdef XSTAT_IS_XSTAT64
 # undef __fxstatat64
 strong_alias (__fxstatat, __fxstatat64);
-libc_hidden_ver (__fxstatat, __fxstatat64)
+libc_hidden_def (__fxstatat64)
 #endif
