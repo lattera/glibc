@@ -311,12 +311,17 @@ start_thread (void *arg)
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
   /* If this thread has any robust mutexes locked, handle them now.  */
-  struct __pthread_mutex_s *robust = THREAD_GETMEM (pd, robust_list);
-  if (__builtin_expect (robust != NULL, 0))
+#if __WORDSIZE == 64
+  __pthread_list_t *robust = pd->robust_list.__next;
+#else
+  __pthread_slist_t *robust = pd->robust_list.__next;
+#endif
+  if (__builtin_expect (robust != &pd->robust_list, 0))
     {
       do
 	{
-	  struct __pthread_mutex_s *this = robust;
+	  struct __pthread_mutex_s *this = (struct __pthread_mutex_s *)
+	    ((char *) robust - offsetof (struct __pthread_mutex_s, __list));
 	  robust = robust->__next;
 
 	  assert (lll_mutex_islocked (this->__lock));
@@ -324,17 +329,20 @@ start_thread (void *arg)
 	  --this->__nusers;
 	  assert (this->__owner != PTHREAD_MUTEX_NOTRECOVERABLE);
 	  this->__owner = PTHREAD_MUTEX_OWNERDEAD;
-	  this->__next = NULL;
+	  this->__list.__next = NULL;
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
-	  this->__prev = NULL;
+	  this->__list.__prev = NULL;
 #endif
 
 	  lll_mutex_unlock (this->__lock);
 	}
-      while (robust != NULL);
+      while (robust != &pd->robust_list);
 
       /* Clean up so that the thread descriptor can be reused.  */
-      THREAD_SETMEM (pd, robust_list, NULL);
+      pd->robust_list.__next = &pd->robust_list;
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+      pd->robust_list.__prev = &pd->robust_list;
+#endif
     }
 
   /* If the thread is detached free the TCB.  */

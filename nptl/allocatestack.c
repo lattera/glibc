@@ -1,5 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -366,6 +365,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* The process ID is also the same as that of the caller.  */
       pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
 
+      /* List of robust mutexes.  */
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+      pd->robust_list.__prev = &pd->robust_list;
+#endif
+      pd->robust_list.__next = &pd->robust_list;
+
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	{
@@ -499,6 +504,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* The process ID is also the same as that of the caller.  */
 	  pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
+
+	  /* List of robust mutexes.  */
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+	  pd->robust_list.__prev = &pd->robust_list;
+#endif
+	  pd->robust_list.__next = &pd->robust_list;
 
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)

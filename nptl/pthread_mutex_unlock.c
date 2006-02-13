@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -76,15 +76,12 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       goto robust;
 
     case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
-      /* Error checking mutex.  */
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
+    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
       if (abs (mutex->__data.__owner) != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
 
-      /* FALLTHROUGH */
-
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
       /* If the previous owner died and the caller did not succeed in
 	 making the state consistent, mark the mutex as unrecoverable
 	 and make all waiters.  */

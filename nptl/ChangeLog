@@ -1,5 +1,17 @@
 2006-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* allocatestack.c (allocate_stack): Initialize robust_list.
+	* init.c (__pthread_initialize_minimal_internal): Likewise.
+	* descr.h (struct xid_command): Pretty printing.
+	(struct pthread): Use __pthread_list_t or __pthread_slist_t for
+	robust_list.  Adjust macros.
+	* pthread_create.c (start_thread): Adjust robust_list handling.
+	* phtread_mutex_unlock.c: Don't allow unlocking from any thread
+	but the owner for all robust mutex types.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Define
+	__pthread_list_t and __pthread_slist_t.  Use them in pthread_mutex_t.
+	* sysdeps/pthread/pthread.h: Adjust mutex initializers.
+
 	* sysdeps/unix/sysv/linux/i386/not-cancel.h: Define openat_not_cancel,
         openat_not_cancel_3, openat64_not_cancel, and openat64_not_cancel_3.
 

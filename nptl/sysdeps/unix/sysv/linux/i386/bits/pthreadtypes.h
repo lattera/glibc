@@ -43,6 +43,12 @@ typedef union
 } pthread_attr_t;
 
 
+typedef struct __pthread_internal_slist
+{
+  struct __pthread_internal_slist *__next;
+} __pthread_slist_t;
+
+
 /* Data structures for mutex handling.  The structure of the attribute
    type is not exposed on purpose.  */
 typedef union
@@ -59,7 +65,7 @@ typedef union
     __extension__ union
     {
       int __spins;
-      struct __pthread_mutex_s *__next;
+      __pthread_slist_t __list;
     };
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];

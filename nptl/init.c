@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -247,6 +247,10 @@ __pthread_initialize_minimal_internal (void)
   struct pthread *pd = THREAD_SELF;
   INTERNAL_SYSCALL_DECL (err);
   pd->pid = pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+  pd->robust_list.__prev = &pd->robust_list;
+#endif
+  pd->robust_list.__next = &pd->robust_list;
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)
