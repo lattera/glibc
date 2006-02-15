@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,6 +28,7 @@ pthread_mutex_timedlock (mutex, abstime)
      pthread_mutex_t *mutex;
      const struct timespec *abstime;
 {
+  int oldval;
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
   int result = 0;
 
@@ -103,67 +104,83 @@ pthread_mutex_timedlock (mutex, abstime)
       break;
 
     case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
-      /* Check whether we already hold the mutex.  */
-      if (abs (mutex->__data.__owner) == id)
-	{
-	  /* Just bump the counter.  */
-	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
-	    /* Overflow of the counter.  */
-	    return EAGAIN;
-
-	  ++mutex->__data.__count;
-
-	  goto out;
-	}
-
-      /* We have to get the mutex.  */
-      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
-
-      if (result != 0)
-	goto out;
-
-      /* Only locked once so far.  */
-      mutex->__data.__count = 1;
-      goto robust;
-
     case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
-      /* Check whether we already hold the mutex.  */
-      if (__builtin_expect (abs (mutex->__data.__owner) == id, 0))
-	return EDEADLK;
-
-      /* FALLTHROUGH */
-
     case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
     case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
-      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
-
-      if (result != 0)
-	goto out;
-
-    robust:
-      if (__builtin_expect (mutex->__data.__owner
-			    == PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+      oldval = mutex->__data.__lock;
+      do
 	{
-	  /* This mutex is now not recoverable.  */
-	  mutex->__data.__count = 0;
-	  lll_mutex_unlock (mutex->__data.__lock);
-	  return ENOTRECOVERABLE;
+	  if ((oldval & FUTEX_OWNER_DIED) != 0)
+	    {
+	      /* The previous owner died.  Try locking the mutex.  */
+	      int newval;
+	      while ((newval
+		      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+							     id, oldval))
+		     != oldval)
+		{
+		  if ((newval & FUTEX_OWNER_DIED) == 0)
+		    goto normal;
+		  oldval = newval;
+		}
+
+	      /* We got the mutex.  */
+	      mutex->__data.__count = 1;
+	      /* But it is inconsistent unless marked otherwise.  */
+	      mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
+
+	      ENQUEUE_MUTEX (mutex);
+
+	      /* Note that we deliberately exist here.  If we fall
+		 through to the end of the function __nusers would be
+		 incremented which is not correct because the old
+		 owner has to be discounted.  */
+	      return EOWNERDEAD;
+	    }
+
+	normal:
+	  /* Check whether we already hold the mutex.  */
+	  if (__builtin_expect ((mutex->__data.__lock & FUTEX_TID_MASK)
+				== id, 0))
+	    {
+	      if (mutex->__data.__kind
+		  == PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP)
+		return EDEADLK;
+
+	      if (mutex->__data.__kind
+		  == PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP)
+		{
+		  /* Just bump the counter.  */
+		  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		    /* Overflow of the counter.  */
+		    return EAGAIN;
+
+		  ++mutex->__data.__count;
+
+		  return 0;
+		}
+	    }
+
+	  result = lll_robust_mutex_timedlock (mutex->__data.__lock, abstime,
+					       id);
+
+	  if (__builtin_expect (mutex->__data.__owner
+				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	    {
+	      /* This mutex is now not recoverable.  */
+	      mutex->__data.__count = 0;
+	      lll_mutex_unlock (mutex->__data.__lock);
+	      return ENOTRECOVERABLE;
+	    }
+
+	  if (result == ETIMEDOUT || result == EINVAL)
+	    goto out;
+
+	  oldval = result;
 	}
+      while ((oldval & FUTEX_OWNER_DIED) != 0);
 
-      /* This mutex is either healthy or we can try to recover it.  */
-      assert (mutex->__data.__owner == 0
-	      || mutex->__data.__owner == PTHREAD_MUTEX_OWNERDEAD);
-
-      if (__builtin_expect (mutex->__data.__owner
-			    == PTHREAD_MUTEX_OWNERDEAD, 0))
-	{
-	  result = EOWNERDEAD;
-	  /* We signal ownership of a not yet recovered robust mutex
-	     by storing the negative thread ID.  */
-	  mutex->__data.__owner = -id;
-	  ++mutex->__data.__nusers;
-	}
-
+      mutex->__data.__count = 1;
       ENQUEUE_MUTEX (mutex);
       break;
 

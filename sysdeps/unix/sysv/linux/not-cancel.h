@@ -28,18 +28,26 @@
    INLINE_SYSCALL (open, 2, (const char *) (name), (flags))
 
 /* Uncancelable openat.  */
-extern int __openat_not_cancel (int fd, const char *fname, int oflag,
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+extern int __openat_nocancel (int fd, const char *fname, int oflag,
+			      mode_t mode) attribute_hidden;
+extern int __openat64_nocancel (int fd, const char *fname, int oflag,
 				mode_t mode) attribute_hidden;
+#else
+# define __openat_nocancel(fd, fname, oflag, mode) \
+  openat (fd, fname, oflag, mode)
+# define __openat64_nocancel(fd, fname, oflag, mode) \
+  openat64 (fd, fname, oflag, mode)
+#endif
+
 #define openat_not_cancel(fd, fname, oflag, mode) \
-  __openat_not_cancel (fd, fname, oflag, mode)
+  __openat_nocancel (fd, fname, oflag, mode)
 #define openat_not_cancel_3(fd, fname, oflag) \
-  __openat_not_cancel (fd, fname, oflag, 0)
-extern int __openat64_not_cancel (int fd, const char *fname, int oflag,
-				  mode_t mode) attribute_hidden;
+  __openat_nocancel (fd, fname, oflag, 0)
 #define openat64_not_cancel(fd, fname, oflag, mode) \
-  __openat64_not_cancel (fd, fname, oflag, mode)
+  __openat64_nocancel (fd, fname, oflag, mode)
 #define openat64_not_cancel_3(fd, fname, oflag) \
-  __openat64_not_cancel (fd, fname, oflag, 0)
+  __openat64_nocancel (fd, fname, oflag, 0)
 
 /* Uncancelable close.  */
 #define close_not_cancel(fd) \

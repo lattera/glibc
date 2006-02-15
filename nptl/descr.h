@@ -166,7 +166,7 @@ struct pthread
   do {									      \
     __pthread_slist_t *runp = THREAD_GETMEM (THREAD_SELF, robust_list.__next);\
     if (runp == &mutex->__data.__list)					      \
-      THREAD_SETMEM (THREAD_SELF, robust_list, runp->__next);		      \
+      THREAD_SETMEM (THREAD_SELF, robust_list.__next, runp->__next);	      \
     else								      \
       {									      \
 	while (runp->__next != &mutex->__data.__list)			      \

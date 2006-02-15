@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -52,7 +52,7 @@
 
 
 /* Magic cookie representing robust mutex with dead owner.  */
-#define PTHREAD_MUTEX_OWNERDEAD		INT_MAX
+#define PTHREAD_MUTEX_INCONSISTENT	INT_MAX
 /* Magic cookie representing not recoverable robust mutex.  */
 #define PTHREAD_MUTEX_NOTRECOVERABLE	(INT_MAX - 1)
 
@@ -60,7 +60,7 @@
 /* Internal mutex type value.  */
 enum
 {
-  PTHREAD_MUTEX_ROBUST_PRIVATE_NP = 256,
+  PTHREAD_MUTEX_ROBUST_PRIVATE_NP = 16,
   PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP
   = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_RECURSIVE_NP,
   PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP
@@ -75,6 +75,12 @@ enum
 #define PTHREAD_MUTEXATTR_FLAG_PSHARED	0x80000000
 #define PTHREAD_MUTEXATTR_FLAG_BITS \
   (PTHREAD_MUTEXATTR_FLAG_ROBUST | PTHREAD_MUTEXATTR_FLAG_PSHARED)
+
+
+/* Bits used in robust mutex implementation.  */
+#define FUTEX_WAITERS		0x80000000
+#define FUTEX_OWNER_DIED	0x40000000
+#define FUTEX_TID_MASK		0x1fffffff
 
 
 /* Internal variables.  */

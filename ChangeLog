@@ -1,3 +1,11 @@
+2006-02-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/not-cancel.h (__openat_not_cancel,
+	__openat64_not_cancel): Remove prototypes.
+	(__openat_nocancel, __openat64_nocancel): New prototypes or defines.
+	(openat_not_cancel, openat_not_cancel_3, openat64_not_cancel,
+	openat64_not_cancel_3): Use them.
+
 2006-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/ftw.c: Start using *at functions.

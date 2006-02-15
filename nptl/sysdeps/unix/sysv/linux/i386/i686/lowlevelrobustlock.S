@@ -1,6 +1,6 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +17,4 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <pthreadP.h>
-
-
-int
-pthread_mutex_consistent_np (mutex)
-     pthread_mutex_t *mutex;
-{
-  /* Test whether this is a robust mutex with a dead owner.  */
-  if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_PRIVATE_NP) == 0
-      || mutex->__data.__owner != PTHREAD_MUTEX_INCONSISTENT)
-    return EINVAL;
-
-  mutex->__data.__owner = THREAD_GETMEM (THREAD_SELF, tid);
-
-  return 0;
-}
+#include "../i486/lowlevelrobustlock.S"

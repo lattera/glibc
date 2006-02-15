@@ -139,6 +139,16 @@ extern int __lll_mutex_unlock_wake (int *__futex)
      ret; })
 
 
+#define lll_robust_mutex_trylock(futex, id) \
+  ({ int ret;								      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
+		       : "=a" (ret), "=m" (futex)			      \
+		       : "r" (id), "m" (futex),				      \
+			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
+		       : "memory");					      \
+     ret; })
+
+
 #define lll_mutex_cond_trylock(futex) \
   ({ int ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
@@ -167,6 +177,25 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      : "memory"); })
 
 
+#define lll_robust_mutex_lock(futex, id) \
+  ({ int result, ignore;						      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
+		       "jnz _L_mutex_lock_%=\n\t"			      \
+		       ".subsection 1\n\t"				      \
+		       ".type _L_mutex_lock_%=,@function\n"		      \
+		       "_L_mutex_lock_%=:\n\t"				      \
+		       "leal %2, %%ecx\n\t"				      \
+		       "call __lll_robust_mutex_lock_wait\n\t"		      \
+		       "jmp 1f\n\t"					      \
+		       ".size _L_mutex_lock_%=,.-_L_mutex_lock_%=\n"	      \
+		       ".previous\n"					      \
+		       "1:"						      \
+		       : "=a" (result), "=c" (ignore), "=m" (futex)	      \
+		       : "0" (0), "1" (id), "m" (futex)			      \
+		       : "memory");					      \
+     result; })
+
+
 /* Special version of lll_mutex_lock which causes the unlock function to
    always wakeup waiters.  */
 #define lll_mutex_cond_lock(futex) \
@@ -185,6 +214,25 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      : "=a" (ignore1), "=c" (ignore2), "=m" (futex)  \
 			      : "0" (0), "1" (2), "m" (futex)		      \
 			      : "memory"); })
+
+
+#define lll_robust_mutex_cond_lock(futex, id) \
+  ({ int result, ignore;						      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
+		       "jnz _L_mutex_cond_lock_%=\n\t"			      \
+		       ".subsection 1\n\t"				      \
+		       ".type _L_mutex_cond_lock_%=,@function\n"	      \
+		       "_L_mutex_cond_lock_%=:\n\t"			      \
+		       "leal %2, %%ecx\n\t"				      \
+		       "call __lll_robust_mutex_lock_wait\n\t"		      \
+		       "jmp 1f\n\t"					      \
+		       ".size _L_mutex_cond_lock_%=,.-_L_mutex_cond_lock_%=\n"\
+		       ".previous\n"					      \
+		       "1:"						      \
+		       : "=a" (result), "=c" (ignore), "=m" (futex)	      \
+		       : "0" (0), "1" (id | FUTEX_WAITERS), "m" (futex)	      \
+		       : "memory");					      \
+     result; })
 
 
 #define lll_mutex_timedlock(futex, timeout) \
@@ -208,9 +256,30 @@ extern int __lll_mutex_unlock_wake (int *__futex)
      result; })
 
 
+#define lll_robust_mutex_timedlock(futex, timeout, id) \
+  ({ int result, ignore1, ignore2;					      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
+		       "jnz _L_mutex_timedlock_%=\n\t"			      \
+		       ".subsection 1\n\t"				      \
+		       ".type _L_mutex_timedlock_%=,@function\n"	      \
+		       "_L_mutex_timedlock_%=:\n\t"			      \
+		       "leal %3, %%ecx\n\t"				      \
+		       "movl %7, %%edx\n\t"				      \
+		       "call __lll_robust_mutex_timedlock_wait\n\t"	      \
+		       "jmp 1f\n\t"					      \
+		       ".size _L_mutex_timedlock_%=,.-_L_mutex_timedlock_%=\n"\
+		       ".previous\n"					      \
+		       "1:"						      \
+		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
+			 "=m" (futex)					      \
+		       : "0" (0), "1" (id), "m" (futex), "m" (timeout)	      \
+		       : "memory");					      \
+     result; })
+
+
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "subl $1,%0\n\t"		      \
+            __asm __volatile (LOCK_INSTR "subl $1, %0\n\t"		      \
 			      "jne _L_mutex_unlock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_unlock_%=,@function\n"	      \
@@ -224,6 +293,53 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "m" (futex)				      \
 			      : "memory"); })
+
+
+#define lll_robust_mutex_unlock(futex) \
+  (void) ({ int ignore;							      \
+            __asm __volatile (LOCK_INSTR "andl %2, %0\n\t"		      \
+			      "jne _L_mutex_unlock_%=\n\t"		      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_mutex_unlock_%=,@function\n"	      \
+			      "_L_mutex_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
+			      "call __lll_mutex_unlock_wake\n\t"	      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_unlock_%=,.-_L_mutex_unlock_%=\n" \
+			      ".previous\n"				      \
+			      "1:"					      \
+			      : "=m" (futex), "=&a" (ignore)		      \
+			      : "i" (FUTEX_TID_MASK), "m" (futex)	      \
+			      : "memory"); })
+
+
+#define lll_robust_mutex_dead(futex) \
+  (void) ({ int __ignore;						      \
+	    register int _nr asm ("edx") = 1;				      \
+	    __asm __volatile (LOCK_INSTR "orl %5, (%2)\n\t"		      \
+			      LLL_EBX_LOAD				      \
+			      LLL_ENTER_KERNEL				      \
+			      LLL_EBX_LOAD				      \
+			      : "=a" (__ignore)				      \
+			      : "0" (SYS_futex), LLL_EBX_REG (&(futex)),      \
+				"c" (FUTEX_WAKE), "d" (_nr),		      \
+				"i" (FUTEX_OWNER_DIED),			      \
+				"i" (offsetof (tcbhead_t, sysinfo))); })
+
+
+#define lll_futex_wake(futex, nr) \
+  do {									      \
+    int __ignore;							      \
+    register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    __asm __volatile (LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__ignore)					      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex),		      \
+			"c" (FUTEX_WAKE), "d" (_nr),			      \
+			"i" (0) /* phony, to align next arg's number */,      \
+			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+  } while (0)
 
 
 #define lll_mutex_islocked(futex) \

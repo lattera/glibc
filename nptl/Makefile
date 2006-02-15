@@ -100,7 +100,7 @@ libpthread-routines = init vars events version \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
-		      lowlevellock \
+		      lowlevellock lowlevelrobustlock \
 		      pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \

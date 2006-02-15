@@ -41,23 +41,32 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       if (--mutex->__data.__count != 0)
 	/* We still hold the mutex.  */
 	return 0;
-      break;
+      goto normal;
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  */
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
-      break;
+      /* FALLTHROUGH */
 
     case PTHREAD_MUTEX_TIMED_NP:
     case PTHREAD_MUTEX_ADAPTIVE_NP:
-      /* Normal mutex.  Nothing special to do.  */
+      /* Always reset the owner field.  */
+    normal:
+      mutex->__data.__owner = 0;
+      if (decr)
+	/* One less user.  */
+	--mutex->__data.__nusers;
+
+      /* Unlock.  */
+      lll_mutex_unlock (mutex->__data.__lock);
       break;
 
     case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
       /* Recursive mutex.  */
-      if (mutex->__data.__owner == -THREAD_GETMEM (THREAD_SELF, tid))
+      if ((mutex->__data.__lock & FUTEX_TID_MASK)
+	  == THREAD_GETMEM (THREAD_SELF, tid))
 	{
 	  if (--mutex->__data.__count != 0)
 	    /* We still hold the mutex.  */
@@ -78,7 +87,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
     case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
     case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
     case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
-      if (abs (mutex->__data.__owner) != THREAD_GETMEM (THREAD_SELF, tid)
+      if ((mutex->__data.__lock & FUTEX_TID_MASK)
+	  != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
 
@@ -86,30 +96,27 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	 making the state consistent, mark the mutex as unrecoverable
 	 and make all waiters.  */
       if (__builtin_expect (mutex->__data.__owner
-			    == -THREAD_GETMEM (THREAD_SELF, tid)
-			    || (mutex->__data.__owner
-				== PTHREAD_MUTEX_NOTRECOVERABLE), 0))
+			    == PTHREAD_MUTEX_INCONSISTENT, 0))
       notrecoverable:
 	newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
 
     robust:
       /* Remove mutex from the list.  */
       DEQUEUE_MUTEX (mutex);
+
+      mutex->__data.__owner = newowner;
+      if (decr)
+	/* One less user.  */
+	--mutex->__data.__nusers;
+
+      /* Unlock.  */
+      lll_robust_mutex_unlock (mutex->__data.__lock);
       break;
 
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;
     }
-
-  /* Always reset the owner field.  */
-  mutex->__data.__owner = newowner;
-  if (decr)
-    /* One less user.  */
-    --mutex->__data.__nusers;
-
-  /* Unlock.  */
-  lll_mutex_unlock (mutex->__data.__lock);
 
   return 0;
 }

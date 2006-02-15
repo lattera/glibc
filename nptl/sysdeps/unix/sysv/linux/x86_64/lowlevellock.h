@@ -111,6 +111,16 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
      ret; })
 
 
+#define lll_robust_mutex_trylock(futex, id)				      \
+  ({ int ret;								      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
+		       : "=a" (ret), "=m" (futex)			      \
+		       : "r" (id), "m" (futex),				      \
+			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
+		       : "memory");					      \
+     ret; })
+
+
 #define lll_mutex_cond_trylock(futex) \
   ({ int ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
@@ -139,6 +149,25 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      : "cx", "r11", "cc", "memory"); })
 
 
+#define lll_robust_mutex_lock(futex, id) \
+  ({ int result, ignore1, ignore2;				      \
+    __asm __volatile (LOCK_INSTR "cmpxchgl %0, %2\n\t"			      \
+		      "jnz 1f\n\t"					      \
+		      ".subsection 1\n"					      \
+		      "1:\tleaq %2, %%rdi\n\t"				      \
+		      "subq $128, %%rsp\n\t"				      \
+		      "callq __lll_robust_mutex_lock_wait\n\t"		      \
+		      "addq $128, %%rsp\n\t"				      \
+		      "jmp 2f\n\t"					      \
+		      ".previous\n"					      \
+		      "2:"						      \
+		      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex),	      \
+			"=a" (result)					      \
+		      : "0" (id), "m" (futex), "3" (0)			      \
+		      : "cx", "r11", "cc", "memory");			      \
+    result; })
+
+
 #define lll_mutex_cond_lock(futex) \
   (void) ({ int ignore1, ignore2, ignore3;				      \
 	    __asm __volatile (LOCK_INSTR "cmpxchgl %0, %2\n\t"		      \
@@ -155,6 +184,25 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 				"=a" (ignore3)				      \
 			      : "0" (2), "m" (futex), "3" (0)		      \
 			      : "cx", "r11", "cc", "memory"); })
+
+
+#define lll_robust_mutex_cond_lock(futex, id) \
+  ({ int result, ignore1, ignore2;					      \
+    __asm __volatile (LOCK_INSTR "cmpxchgl %0, %2\n\t"			      \
+		      "jnz 1f\n\t"					      \
+		      ".subsection 1\n"					      \
+		      "1:\tleaq %2, %%rdi\n\t"				      \
+		      "subq $128, %%rsp\n\t"				      \
+		      "callq __lll_robust_mutex_lock_wait\n\t"		      \
+		      "addq $128, %%rsp\n\t"				      \
+		      "jmp 2f\n\t"					      \
+		      ".previous\n"					      \
+		      "2:"						      \
+		      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex),	      \
+			"=a" (result)					      \
+		      : "0" (id | FUTEX_WAITERS), "m" (futex), "3" (0)	      \
+		      : "cx", "r11", "cc", "memory");			      \
+    result; })
 
 
 #define lll_mutex_timedlock(futex, timeout) \
@@ -177,6 +225,26 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
      result; })
 
 
+#define lll_robust_mutex_timedlock(futex, timeout, id) \
+  ({ int result, ignore1, ignore2, ignore3;				      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %4\n\t"			      \
+		       "jnz 1f\n\t"					      \
+		       ".subsection 1\n"				      \
+		       "1:\tleaq %4, %%rdi\n\t"				      \
+		       "movq %8, %%rdx\n\t"				      \
+		       "subq $128, %%rsp\n\t"				      \
+		       "callq __lll_robust_mutex_timedlock_wait\n\t"	      \
+		       "addq $128, %%rsp\n\t"				      \
+		       "jmp 2f\n\t"					      \
+		       ".previous\n"					      \
+		       "2:"						      \
+		       : "=a" (result), "=&D" (ignore1), "=S" (ignore2),      \
+			 "=&d" (ignore3), "=m" (futex)			      \
+		       : "0" (0), "2" (id), "m" (futex), "m" (timeout)	      \
+		       : "memory", "cx", "cc", "r10", "r11");		      \
+     result; })
+
+
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile (LOCK_INSTR "decl %0\n\t"			      \
@@ -192,6 +260,34 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      : "=m" (futex), "=&D" (ignore)		      \
 			      : "m" (futex)				      \
 			      : "ax", "cx", "r11", "cc", "memory"); })
+
+
+#define lll_robust_mutex_unlock(futex) \
+  (void) ({ int ignore;							      \
+	    __asm __volatile (LOCK_INSTR "andl %2, %0\n\t"		      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleaq %0, %%rdi\n\t"			      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_mutex_unlock_wake\n\t"	      \
+			      "addq $128, %%rsp\n\t"			      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=m" (futex), "=&D" (ignore)		      \
+			      : "i" (FUTEX_TID_MASK), "m" (futex)	      \
+			      : "ax", "cx", "r11", "cc", "memory"); })
+
+
+#define lll_robust_mutex_dead(futex) \
+  (void) ({ int ignore;		     \
+	    __asm __volatile (LOCK_INSTR "orl %3, (%2)\n\t"		      \
+			      "syscall"					      \
+			      : "=m" (futex), "=a" (ignore)		      \
+			      : "D" (&(futex)), "i" (FUTEX_OWNER_DIED),	      \
+				"S" (FUTEX_WAKE), "1" (__NR_futex),	      \
+				"d" (1)					      \
+			      : "cx", "r11", "cc", "memory"); })
 
 
 #define lll_mutex_islocked(futex) \

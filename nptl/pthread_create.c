@@ -324,17 +324,12 @@ start_thread (void *arg)
 	    ((char *) robust - offsetof (struct __pthread_mutex_s, __list));
 	  robust = robust->__next;
 
-	  assert (lll_mutex_islocked (this->__lock));
-	  this->__count = 0;
-	  --this->__nusers;
-	  assert (this->__owner != PTHREAD_MUTEX_NOTRECOVERABLE);
-	  this->__owner = PTHREAD_MUTEX_OWNERDEAD;
 	  this->__list.__next = NULL;
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
 	  this->__list.__prev = NULL;
 #endif
 
-	  lll_mutex_unlock (this->__lock);
+	  lll_robust_mutex_dead (this->__lock);
 	}
       while (robust != &pd->robust_list);
 
