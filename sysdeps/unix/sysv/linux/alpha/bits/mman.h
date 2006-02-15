@@ -97,6 +97,8 @@
 # define MADV_WILLNEED   3	/* Will need these pages.  */
 # define MADV_DONTNEED   6	/* Don't need these pages.  */
 # define MADV_REMOVE	 7	/* Remove these pages and resources.  */
+# define MADV_DONTFORK	 0x30	/* Do not inherit across fork.  */
+# define MADV_DOFORK	 0x31	/* Do inherit across fork.  */
 #endif
 
 /* The POSIX people had to invent similar names for the same things.  */
