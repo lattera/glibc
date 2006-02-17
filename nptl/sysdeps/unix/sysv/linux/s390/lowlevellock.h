@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -85,6 +85,17 @@
   })
 
 
+#define lll_robust_mutex_dead(futexv) \
+  do									      \
+    {									      \
+      int *__futexp = &(futexv);					      \
+									      \
+      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
+      lll_futex_wake (__futexp, 1);					      \
+    }									      \
+  while (0)
+
+
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futex, nr_wake, nr_move, mutex, val) \
   ({									      \
@@ -167,7 +178,23 @@ __lll_mutex_cond_trylock (int *futex)
 #define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))
 
 
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_trylock (int *futex, int id)
+{
+    unsigned int old;
+
+    __asm __volatile ("cs %0,%3,%1"
+		       : "=d" (old), "=Q" (*futex)
+		       : "0" (0), "d" (id), "m" (*futex) : "cc", "memory" );
+    return old != 0;
+}
+#define lll_robust_mutex_trylock(futex, id) \
+  __lll_robust_mutex_trylock (&(futex), id)
+
+
 extern void __lll_lock_wait (int *futex) attribute_hidden;
+extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
 
 static inline void
 __attribute__ ((always_inline))
@@ -178,6 +205,17 @@ __lll_mutex_lock (int *futex)
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_lock (int *futex, int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_lock_wait (futex);
+  return result;
+}
+#define lll_robust_mutex_lock(futex, id) __lll_robust_mutex_lock (&(futex), id)
+
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_cond_lock (int *futex)
@@ -187,7 +225,12 @@ __lll_mutex_cond_lock (int *futex)
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
+#define lll_robust_mutex_cond_lock(futex, id) \
+  __lll_robust_mutex_lock (&(futex), (id) | FUTEX_WAITERS)
+
 extern int __lll_timedlock_wait
+  (int *futex, const struct timespec *) attribute_hidden;
+extern int __lll_robust_timedlock_wait
   (int *futex, const struct timespec *) attribute_hidden;
 
 static inline int
@@ -201,6 +244,19 @@ __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 }
 #define lll_mutex_timedlock(futex, abstime) \
   __lll_mutex_timedlock (&(futex), abstime)
+
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_timedlock (int *futex, const struct timespec *abstime,
+			      int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_timedlock_wait (futex, abstime);
+  return result;
+}
+#define lll_robust_mutex_timedlock(futex, abstime, id) \
+  __lll_robust_mutex_timedlock (&(futex), abstime, id)
 
 
 static inline void
@@ -216,6 +272,21 @@ __lll_mutex_unlock (int *futex)
 }
 #define lll_mutex_unlock(futex) \
   __lll_mutex_unlock(&(futex))
+
+
+static inline void
+__attribute__ ((always_inline))
+__lll_robust_mutex_unlock (int *futex, int mask)
+{
+  int oldval;
+  int newval = 0;
+
+  lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
+  if (oldval & mask)
+    lll_futex_wake (futex, 1);
+}
+#define lll_robust_mutex_unlock(futex) \
+  __lll_robust_mutex_unlock(&(futex), FUTEX_WAITERS)
 
 
 static inline void

@@ -1,3 +1,15 @@
+2006-02-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (lll_robust_mutex_dead,
+	lll_robust_mutex_trylock, lll_robust_mutex_lock,
+	lll_robust_mutex_cond_lock, lll_robust_mutex_timedlock,
+	lll_robust_mutex_unlock): New macros.
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): New prototypes.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c: New file.
+
 2006-02-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Add lll_robust_mutex_*

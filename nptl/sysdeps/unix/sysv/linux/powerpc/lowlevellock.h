@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -69,6 +69,17 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
+#define lll_robust_mutex_dead(futexv) \
+  do									      \
+    {									      \
+      INTERNAL_SYSCALL_DECL (__err);					      \
+      int *__futexp = &(futexv);					      \
+									      \
+      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
+      INTERNAL_SYSCALL (futex, __err, 4, __futexp, FUTEX_WAKE, 1, 0);	      \
+    }									      \
+  while (0)
+
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val) \
   ({									      \
@@ -102,8 +113,8 @@
 # define __lll_rel_instr	"sync"
 #endif
 
-/* Set *futex to 1 if it is 0, atomically.  Returns the old value */
-#define __lll_trylock(futex) \
+/* Set *futex to ID if it is 0, atomically.  Returns the old value */
+#define __lll_robust_trylock(futex, id) \
   ({ int __val;								      \
      __asm __volatile ("1:	lwarx	%0,0,%2\n"			      \
 		       "	cmpwi	0,%0,0\n"			      \
@@ -112,31 +123,26 @@
 		       "	bne-	1b\n"				      \
 		       "2:	" __lll_acq_instr			      \
 		       : "=&r" (__val), "=m" (*futex)			      \
-		       : "r" (futex), "r" (1), "m" (*futex)		      \
+		       : "r" (futex), "r" (id), "m" (*futex)		      \
 		       : "cr0", "memory");				      \
      __val;								      \
   })
+
+#define lll_robust_mutex_trylock(lock, id) __lll_robust_trylock (&(lock), id)
+
+/* Set *futex to 1 if it is 0, atomically.  Returns the old value */
+#define __lll_trylock(futex) __lll_robust_trylock (futex, 1)
 
 #define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
 
 /* Set *futex to 2 if it is 0, atomically.  Returns the old value */
-#define __lll_cond_trylock(futex) \
-  ({ int __val;								      \
-     __asm __volatile ("1:	lwarx	%0,0,%2\n"			      \
-		       "	cmpwi	0,%0,0\n"			      \
-		       "	bne	2f\n"				      \
-		       "	stwcx.	%3,0,%2\n"			      \
-		       "	bne-	1b\n"				      \
-		       "2:	" __lll_acq_instr			      \
-		       : "=&r" (__val), "=m" (*futex)			      \
-		       : "r" (futex), "r" (2), "m" (*futex)		      \
-		       : "cr0", "memory");				      \
-     __val;								      \
-  })
+#define __lll_cond_trylock(futex) __lll_robust_trylock (futex, 2)
+
 #define lll_mutex_cond_trylock(lock)	__lll_cond_trylock (&(lock))
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;
+extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
 
 #define lll_mutex_lock(lock) \
   (void) ({								      \
@@ -144,6 +150,16 @@ extern void __lll_lock_wait (int *futex) attribute_hidden;
     if (__builtin_expect (atomic_compare_and_exchange_val_acq (__futex, 1, 0),\
 			  0) != 0)					      \
       __lll_lock_wait (__futex);					      \
+  })
+
+#define lll_robust_mutex_lock(lock, id) \
+  ({									      \
+    int *__futex = &(lock);						      \
+    int __val = 0;							      \
+    if (__builtin_expect (atomic_compare_and_exchange_bool_acq (__futex, id,  \
+								0), 0))	      \
+      __val = __lll_robust_lock_wait (__futex);				      \
+    __val;								      \
   })
 
 #define lll_mutex_cond_lock(lock) \
@@ -154,7 +170,21 @@ extern void __lll_lock_wait (int *futex) attribute_hidden;
       __lll_lock_wait (__futex);					      \
   })
 
+#define lll_robust_mutex_cond_lock(lock, id) \
+  ({									      \
+    int *__futex = &(lock);						      \
+    int __val = 0;							      \
+    int __id = id | FUTEX_WAITERS;					      \
+    if (__builtin_expect (atomic_compare_and_exchange_bool_acq (__futex, __id,\
+								0), 0))	      \
+      __val = __lll_robust_lock_wait (__futex);				      \
+    __val;								      \
+  })
+
+
 extern int __lll_timedlock_wait
+  (int *futex, const struct timespec *) attribute_hidden;
+extern int __lll_robust_timedlock_wait
   (int *futex, const struct timespec *) attribute_hidden;
 
 #define lll_mutex_timedlock(lock, abstime) \
@@ -167,11 +197,29 @@ extern int __lll_timedlock_wait
     __val;								      \
   })
 
+#define lll_robust_mutex_timedlock(lock, abstime, id) \
+  ({									      \
+    int *__futex = &(lock);						      \
+    int __val = 0;							      \
+    if (__builtin_expect (atomic_compare_and_exchange_bool_acq (__futex, id,  \
+								0), 0))	      \
+      __val = __lll_robust_timedlock_wait (__futex, abstime);		      \
+    __val;								      \
+  })
+
 #define lll_mutex_unlock(lock) \
   ((void) ({								      \
     int *__futex = &(lock);						      \
     int __val = atomic_exchange_rel (__futex, 0);			      \
     if (__builtin_expect (__val > 1, 0))				      \
+      lll_futex_wake (__futex, 1);					      \
+  }))
+
+#define lll_robust_mutex_unlock(lock) \
+  ((void) ({								      \
+    int *__futex = &(lock);						      \
+    int __val = atomic_exchange_rel (__futex, 0);			      \
+    if (__builtin_expect (__val & FUTEX_WAITERS, 0))			      \
       lll_futex_wake (__futex, 1);					      \
   }))
 
