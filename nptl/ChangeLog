@@ -1,3 +1,10 @@
+2006-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_robust_mutex_unlock): Avoid unnecessary wakeups.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
+	(lll_robust_mutex_unlock): Likewise.
+
 2006-02-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* descr.h [!__PTHREAD_MUTEX_HAVE_PREV] (DEQUEUE_MUTEX):

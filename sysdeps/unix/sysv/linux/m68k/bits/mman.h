@@ -88,8 +88,8 @@
 # define MADV_SEQUENTIAL 2	/* Expect sequential page references.  */
 # define MADV_WILLNEED	 3	/* Will need these pages.  */
 # define MADV_DONTNEED	 4	/* Don't need these pages.  */
-# define MADV_DONTFORK	 0x30	/* Do not inherit across fork.  */
-# define MADV_DOFORK	 0x31	/* Do inherit across fork.  */
+# define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
+# define MADV_DOFORK	 11	/* Do inherit across fork.  */
 #endif
 
 /* The POSIX people had to invent similar names for the same things.  */

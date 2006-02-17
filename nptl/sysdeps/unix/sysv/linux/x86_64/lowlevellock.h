@@ -275,7 +275,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=m" (futex), "=&D" (ignore)		      \
-			      : "i" (FUTEX_TID_MASK), "m" (futex)	      \
+			      : "i" (FUTEX_WAITERS), "m" (futex)	      \
 			      : "ax", "cx", "r11", "cc", "memory"); })
 
 

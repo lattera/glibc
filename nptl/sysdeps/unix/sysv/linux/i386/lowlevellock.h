@@ -309,7 +309,7 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "i" (FUTEX_TID_MASK), "m" (futex)	      \
+			      : "i" (FUTEX_WAITERS), "m" (futex)	      \
 			      : "memory"); })
 
 
