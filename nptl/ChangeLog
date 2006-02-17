@@ -1,3 +1,9 @@
+2006-02-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Add lll_robust_mutex_*
+	definitions.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S: New file.
+
 2006-02-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h

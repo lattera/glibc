@@ -62,6 +62,28 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "r0", "r1", "r2", "t", "memory"); \
      __result; })
 
+#define lll_robust_mutex_trylock(futex, id)	\
+  ({ unsigned char __result; \
+     __asm __volatile ("\
+	.align 2\n\
+	mova 1f,r0\n\
+	nop\n\
+	mov r15,r1\n\
+	mov #-8,r15\n\
+     0: mov.l @%1,r2\n\
+	cmp/eq r2,%3\n\
+	bf 1f\n\
+	mov.l %2,@%1\n\
+     1: mov r1,r15\n\
+	mov #-1,%0\n\
+	negc %0,%0"\
+	: "=r" (__result) \
+	: "r" (&(futex)), \
+	  "r" (id), \
+	  "r" (LLL_MUTEX_LOCK_INITIALIZER) \
+	: "r0", "r1", "r2", "t", "memory"); \
+     __result; })
+
 #define lll_mutex_cond_trylock(futex) \
   ({ unsigned char __result; \
      __asm __volatile ("\
@@ -102,6 +124,25 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	    if (__result) \
 	      __lll_mutex_lock_wait (__result, __futex); })
 
+#define lll_robust_mutex_lock(futex, id)		    \
+  ({ int __result, val, *__futex = &(futex); \
+     __asm __volatile ("\
+	.align 2\n\
+	mova 1f,r0\n\
+	nop\n\
+	mov r15,r1\n\
+	mov #-8,r15\n\
+      0: mov.l @%2,%0\n\
+	tst %0,%0\n\
+	bf 1f\n\
+	mov.l %1,@%2\n\
+      1: mov r1,r15"\
+	: "=&r" (__result) : "r" (id), "r" (__futex) \
+	: "r0", "r1", "t", "memory"); \
+     if (__result) \
+       __result = __lll_robust_mutex_lock_wait (__result, __futex); \
+     __result; })
+
 /* Special version of lll_mutex_lock which causes the unlock function to
    always wakeup waiters.  */
 #define lll_mutex_cond_lock(futex) \
@@ -122,6 +163,25 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	    if (__result) \
 	      __lll_mutex_lock_wait (__result, __futex); })
 
+#define lll_robust_mutex_cond_lock(futex, id)	    \
+  ({ int __result, val, *__futex = &(futex); \
+     __asm __volatile ("\
+	.align 2\n\
+	mova 1f,r0\n\
+	nop\n\
+	mov r15,r1\n\
+	mov #-8,r15\n\
+     0: mov.l @%2,%0\n\
+	tst %0,%0\n\
+	bf 1f\n\
+	mov.l %1,@%2\n\
+     1: mov r1,r15"\
+	: "=&r" (__result) : "r" (id | FUTEX_WAITERS), "r" (__futex) \
+	: "r0", "r1", "t", "memory"); \
+      if (__result) \
+	__result = __lll_robust_mutex_lock_wait (__result, __futex); \
+      __result; })
+
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int __result, val, *__futex = &(futex); \
      __asm __volatile ("\
@@ -141,6 +201,26 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
       __result = __lll_mutex_timedlock_wait (__result, __futex, timeout); \
     __result; })
 
+#define lll_robust_mutex_timedlock(futex, timeout, id)	\
+  ({ int __result, val, *__futex = &(futex); \
+     __asm __volatile ("\
+	.align 2\n\
+	mova 1f,r0\n\
+	nop\n\
+	mov r15,r1\n\
+	mov #-8,r15\n\
+     0: mov.l @%2,%0\n\
+	tst %0,%0\n\
+	bf 1f\n\
+	mov.l %1,@%2\n\
+     1: mov r1,r15"\
+	: "=&r" (__result) : "r" (id), "r" (__futex) \
+	: "r0", "r1", "t", "memory"); \
+    if (__result) \
+      __result = __lll_robust_mutex_timedlock_wait (__result, __futex, \
+						    timeout);	       \
+    __result; })
+
 #define lll_mutex_unlock(futex) \
   (void) ({ int __result, *__futex = &(futex); \
 	    __asm __volatile ("\
@@ -156,6 +236,37 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		: "r0", "r1", "memory"); \
 	    if (__result) \
 	      __lll_mutex_unlock_wake (__futex); })
+
+#define lll_robust_mutex_unlock(futex) \
+  (void) ({ int __result, *__futex = &(futex); \
+	    __asm __volatile ("\
+		.align 2\n\
+		mova 1f,r0\n\
+		mov r15,r1\n\
+		mov #-6,r15\n\
+	     0: mov.l @%1,%0\n\
+		and %2,%0\n\
+		mov.l %0,@%1\n\
+	     1: mov r1,r15"\
+		: "=&r" (__result) : "r" (__futex), "r" (FUTEX_TID_MASK) \
+		: "r0", "r1", "memory");	\
+	    if (__result) \
+	      __lll_mutex_unlock_wake (__futex); })
+
+#define lll_robust_mutex_dead(futex) \
+  (void) ({ int __ignore, *__futex = &(futex); \
+	    __asm __volatile ("\
+		.align 2\n\
+		mova 1f,r0\n\
+		mov r15,r1\n\
+		mov #-6,r15\n\
+	     0: mov.l @%1,%0\n\
+		or %2,%0\n\
+		mov.l %0,@%1\n\
+	     1: mov r1,r15"\
+		: "=&r" (__ignore) : "r" (__futex), "r" (FUTEX_OWNER_DIED) \
+		: "r0", "r1", "memory");	\
+	    lll_futex_wake (__futex, 1); })
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)
