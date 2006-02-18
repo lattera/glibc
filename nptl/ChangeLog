@@ -1,3 +1,8 @@
+2006-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-robust1.c: Add second mutex to check that the mutex list is
+	handled correctly.
+
 2006-02-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (lll_robust_mutex_dead,

@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
@@ -23,7 +23,8 @@
 #include <stdlib.h>
 
 
-static pthread_mutex_t m;
+static pthread_mutex_t m1;
+static pthread_mutex_t m2;
 static pthread_barrier_t b;
 
 
@@ -43,10 +44,17 @@ tf (void *arg)
       exit (1);
     }
 
-  int e = LOCK (&m);
+  int e = LOCK (&m1);
   if (e != 0)
     {
-      printf ("%ld: child: mutex_lock failed with error %d\n", round, e);
+      printf ("%ld: child: mutex_lock m1 failed with error %d\n", round, e);
+      exit (1);
+    }
+
+  e = LOCK (&m2);
+  if (e != 0)
+    {
+      printf ("%ld: child: mutex_lock m2 failed with error %d\n", round, e);
       exit (1);
     }
 
@@ -90,9 +98,15 @@ do_test (void)
       return 1;
     }
 #ifndef NOT_CONSISTENT
-  if (pthread_mutex_init (&m, &a) != 0)
+  if (pthread_mutex_init (&m1, &a) != 0)
     {
-      puts ("mutex_init failed");
+      puts ("mutex_init m1 failed");
+      return 1;
+    }
+
+  if (pthread_mutex_init (&m2, &a) != 0)
+    {
+      puts ("mutex_init m2 failed");
       return 1;
     }
 #endif
@@ -106,9 +120,14 @@ do_test (void)
   for (long int round = 1; round < 5; ++round)
     {
 #ifdef NOT_CONSISTENT
-      if (pthread_mutex_init (&m, &a) != 0)
+      if (pthread_mutex_init (&m1 , &a) != 0)
 	{
-	  puts ("mutex_init failed");
+	  puts ("mutex_init m1 failed");
+	  return 1;
+	}
+      if (pthread_mutex_init (&m2 , &a) != 0)
+	{
+	  puts ("mutex_init m2 failed");
 	  return 1;
 	}
 #endif
@@ -157,15 +176,27 @@ do_test (void)
 	    }
 	}
 
-      e = LOCK (&m);
+      e = LOCK (&m1);
       if (e == 0)
 	{
-	  printf ("%ld: parent: mutex_lock succeeded\n", round);
+	  printf ("%ld: parent: mutex_lock m1 succeeded\n", round);
 	  return 1;
 	}
       if (e != EOWNERDEAD)
 	{
-	  printf ("%ld: parent: mutex_lock returned wrong code\n", round);
+	  printf ("%ld: parent: mutex_lock m1 returned wrong code\n", round);
+	  return 1;
+	}
+
+      e = LOCK (&m2);
+      if (e == 0)
+	{
+	  printf ("%ld: parent: mutex_lock m2 succeeded\n", round);
+	  return 1;
+	}
+      if (e != EOWNERDEAD)
+	{
+	  printf ("%ld: parent: mutex_lock m2 returned wrong code\n", round);
 	  return 1;
 	}
 
@@ -187,47 +218,86 @@ do_test (void)
 #endif
 
 #ifndef NOT_CONSISTENT
-      e = pthread_mutex_consistent_np (&m);
+      e = pthread_mutex_consistent_np (&m1);
       if (e != 0)
 	{
-	  printf ("%ld: mutex_consistent failed with error %d\n", round, e);
+	  printf ("%ld: mutex_consistent m1 failed with error %d\n", round, e);
+	  return 1;
+	}
+
+      e = pthread_mutex_consistent_np (&m2);
+      if (e != 0)
+	{
+	  printf ("%ld: mutex_consistent m2 failed with error %d\n", round, e);
 	  return 1;
 	}
 #endif
 
-      e = pthread_mutex_unlock (&m);
+      e = pthread_mutex_unlock (&m1);
       if (e != 0)
 	{
-	  printf ("%ld: mutex_unlocked failed\n", round);
+	  printf ("%ld: mutex_unlock m1 failed\n", round);
+	  return 1;
+	}
+
+      e = pthread_mutex_unlock (&m2);
+      if (e != 0)
+	{
+	  printf ("%ld: mutex_unlock m2 failed\n", round);
 	  return 1;
 	}
 
 #ifdef NOT_CONSISTENT
-      e = LOCK (&m);
+      e = LOCK (&m1);
       if (e == 0)
 	{
-	  printf ("%ld: locking inconsistent mutex succeeded\n", round);
+	  printf ("%ld: locking inconsistent mutex m1 succeeded\n", round);
 	  return 1;
 	}
       if (e != ENOTRECOVERABLE)
 	{
-	  printf ("%ld: locking inconsistent mutex failed with error %d\n",
+	  printf ("%ld: locking inconsistent mutex m1 failed with error %d\n",
 		  round, e);
 	  return 1;
 	}
 
-      if (pthread_mutex_destroy (&m) != 0)
+      if (pthread_mutex_destroy (&m1) != 0)
 	{
-	  puts ("mutex_destroy failed");
+	  puts ("mutex_destroy m1 failed");
+	  return 1;
+	}
+
+      e = LOCK (&m2);
+      if (e == 0)
+	{
+	  printf ("%ld: locking inconsistent mutex m2 succeeded\n", round);
+	  return 1;
+	}
+      if (e != ENOTRECOVERABLE)
+	{
+	  printf ("%ld: locking inconsistent mutex m2 failed with error %d\n",
+		  round, e);
+	  return 1;
+	}
+
+      if (pthread_mutex_destroy (&m2) != 0)
+	{
+	  puts ("mutex_destroy m2 failed");
 	  return 1;
 	}
 #endif
     }
 
 #ifndef NOT_CONSISTENT
-  if (pthread_mutex_destroy (&m) != 0)
+  if (pthread_mutex_destroy (&m1) != 0)
     {
-      puts ("mutex_destroy failed");
+      puts ("mutex_destroy m1 failed");
+      return 1;
+    }
+
+  if (pthread_mutex_destroy (&m2) != 0)
+    {
+      puts ("mutex_destroy m2 failed");
       return 1;
     }
 #endif
