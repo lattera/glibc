@@ -53,7 +53,7 @@
 
 2006-02-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* pthreadp.h: Define PTHREAD_MUTEX_INCONSISTENT instead of
+	* pthreadP.h: Define PTHREAD_MUTEX_INCONSISTENT instead of
 	PTHREAD_MUTEX_OWNERDEAD.
 	(PTHREAD_MUTEX_ROBUST_PRIVATE_NP): Define as 16, not 256.
 	Define FUTEX_WAITERS, FUTEX_OWNER_DIED, FUTEX_TID_MASK.
