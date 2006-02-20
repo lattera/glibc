@@ -344,6 +344,9 @@ test_strncat (void)
 
   (void) strncat (one, "gh", 2);
   equal (one, "abcdgh", 12);		/* Count and length equal. */
+
+  (void) strncat (one, "ij", (size_t)-1);	/* set sign bit in count */
+  equal (one, "abcdghij", 13);
 }
 
 static void
@@ -364,6 +367,8 @@ test_strncmp (void)
   check (strncmp ("abce", "abc", 3) == 0, 11);	/* Count == length. */
   check (strncmp ("abcd", "abce", 4) < 0, 12);	/* Nudging limit. */
   check (strncmp ("abc", "def", 0) == 0, 13);	/* Zero count. */
+  check (strncmp ("abc", "", (size_t)-1) > 0, 14);	/* set sign bit in count */
+  check (strncmp ("abc", "abc", (size_t)-2) == 0, 15);
 }
 
 static void
@@ -425,6 +430,29 @@ test_strlen (void)
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
 	check (strlen (p) == 2, 4+i);
+      }
+   }
+}
+
+static void
+test_strnlen (void)
+{
+  it = "strnlen";
+  check (strnlen ("", 10) == 0, 1);		/* Empty. */
+  check (strnlen ("a", 10) == 1, 2);		/* Single char. */
+  check (strnlen ("abcd", 10) == 4, 3);		/* Multiple chars. */
+  check (strnlen ("foo", (size_t)-1) == 3, 4);	/* limits of n. */
+
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *) ((unsigned long int)(buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	check (strnlen (p, 100) == 2, 5+i);
       }
    }
 }
@@ -1381,6 +1409,9 @@ main (void)
 
   /* strlen.  */
   test_strlen ();
+
+  /* strnlen.  */
+  test_strnlen ();
 
   /* strchr.  */
   test_strchr ();

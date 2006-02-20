@@ -1,3 +1,10 @@
+2006-02-13  Mike Frysinger  <vapier@gentoo.org>
+
+	* string/tester.c (test_strnlen): New function.
+	(test_strchr): Call it.
+	(test_strncat): Test lengths where the sign bit is set.
+	(test_strncmp): Likewise.
+
 2006-02-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/atomic.h (atomic_and, atomic_or): Define.
