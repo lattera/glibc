@@ -94,5 +94,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 
   return -1;
 }
-strong_alias (__fxstatat, __fxstatat64)
-strong_alias (__fxstatat64, __GI___fxstatat64)
+libc_hidden_def (__fxstatat)
+strong_alias (__fxstatat, __fxstatat64);
+libc_hidden_ver(__fxstatat, __fxstatat64);

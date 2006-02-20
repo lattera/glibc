@@ -19,7 +19,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include "local-soft-fp.h"
+#include <stdlib.h>
+#include <soft-fp.h>
+#include <quad.h>
 
 long double
 __ieee754_sqrtl (const long double a)
@@ -27,6 +29,7 @@ __ieee754_sqrtl (const long double a)
   FP_DECL_EX;
   FP_DECL_Q(A); FP_DECL_Q(C);
   long double c;
+  long _round = 4;	/* dynamic rounding */
 
   FP_INIT_ROUNDMODE;
   FP_UNPACK_Q(A, a);

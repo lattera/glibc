@@ -1,3 +1,13 @@
+2006-02-20  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/soft-fp/Makefile (CPPFLAGS): Add soft-fp include
+	to math subdir.
+	* sysdeps/alpha/soft-fp/e_sqrtl.c: Don't use local-soft-fp.h.
+	(__ieee754_sqrtl): Add _round local variable.
+	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: Remove.
+
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: Fix hidden defs.
+
 2006-02-20  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurd/xattr.h: New file.
