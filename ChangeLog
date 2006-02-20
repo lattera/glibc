@@ -1,3 +1,19 @@
+2006-02-20  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/xattr.h: New file.
+	* hurd/xattr.c: New file.
+	* hurd/Makefile (routines): Add it.
+	* sysdeps/mach/hurd/fgetxattr.c: New file.
+	* sysdeps/mach/hurd/flistxattr.c: New file.
+	* sysdeps/mach/hurd/fremovexattr.c: New file.
+	* sysdeps/mach/hurd/fsetxattr.c: New file.
+	* sysdeps/mach/hurd/getxattr.c: New file.
+	* sysdeps/mach/hurd/lgetxattr.c: New file.
+	* sysdeps/mach/hurd/listxattr.c: New file.
+	* sysdeps/mach/hurd/lsetxattr.c: New file.
+	* sysdeps/mach/hurd/removexattr.c: New file.
+	* sysdeps/mach/hurd/setxattr.c: New file.
+
 2006-02-13  Mike Frysinger  <vapier@gentoo.org>
 
 	* string/tester.c (test_strnlen): New function.
