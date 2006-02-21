@@ -1,5 +1,5 @@
-/* getresgid -- fetch effective group ID, real group ID, and saved-set group ID
-   Copyright (C) 2002 Free Software Foundation, Inc.
+/* getresgid -- fetch real group ID, effective group ID, and saved-set group ID
+   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +22,13 @@
 #include <hurd.h>
 #include <hurd/id.h>
 
-/* Fetch the effective group ID, real group ID, and saved-set group ID,
+/* Fetch the real group ID, effective group ID, and saved-set group ID,
    of the calling process.  */
 int
-__getresgid (gid_t *egid, gid_t *rgid, gid_t *sgid)
+__getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
   error_t err;
-  gid_t eff, real, saved;
+  gid_t real, eff, saved;
 
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
@@ -42,8 +42,8 @@ __getresgid (gid_t *egid, gid_t *rgid, gid_t *sgid)
       else
 	{
 	  real = _hurd_id.aux.gids[0];
-	  saved = _hurd_id.aux.ngids < 2 ? real :_hurd_id.aux.gids[1];
 	  eff = _hurd_id.gen.ngids < 1 ? real : _hurd_id.gen.gids[0];
+	  saved = _hurd_id.aux.ngids < 2 ? real : _hurd_id.aux.gids[1];
 	}
     }
 
@@ -53,8 +53,8 @@ __getresgid (gid_t *egid, gid_t *rgid, gid_t *sgid)
   if (err)
     return __hurd_fail (err);
 
-  *egid = eff;
   *rgid = real;
+  *egid = eff;
   *sgid = saved;
   return 0;
 }

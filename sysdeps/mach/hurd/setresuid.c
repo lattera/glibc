@@ -1,5 +1,5 @@
-/* setresuid -- set effective user ID, real user ID, and saved-set user ID
-   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+/* setresuid -- set real user ID, effective user ID, and saved-set user ID
+   Copyright (C) 2002, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 #include <hurd.h>
 #include <hurd/id.h>
 
-/* Set the effective user ID, real user ID, and saved-set user ID,
-   of the calling process to EUID, RUID, and SUID, respectively.  */
+/* Set the real user ID, effective user ID, and saved-set user ID,
+   of the calling process to RUID, EUID, and SUID, respectively.  */
 int
-__setresuid (uid_t euid, uid_t ruid, uid_t suid)
+__setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
   auth_t newauth;
   error_t err;

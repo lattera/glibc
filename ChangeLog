@@ -8,7 +8,17 @@
 
 	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: Fix hidden defs.
 
-2006-02-20  Roland McGrath  <roland@frob.com>
+2006-02-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mips: Directory removed, saved in ports repository.
+	* sysdeps/unix/mips: Likewise.
+	* sysdeps/unix/sysv/linux/mips: Likewise.
+	* sysdeps/mach/mips: Likewise.
+	* sysdeps/mach/hurd/mips: Likewise.
+	* shlib-versions: Remove mips matches, now in ports fragment.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Likewise.
+	* configure.in (machine): Likewise.
+	* configure: Regenerated.
 
 	* hurd/hurd/xattr.h: New file.
 	* hurd/xattr.c: New file.
@@ -23,6 +33,23 @@
 	* sysdeps/mach/hurd/lsetxattr.c: New file.
 	* sysdeps/mach/hurd/removexattr.c: New file.
 	* sysdeps/mach/hurd/setxattr.c: New file.
+
+2006-02-15  Thomas Schwinge  <tschwinge@gnu.org>
+
+	[BZ #2329]
+	* include/unistd.h (__getresuid, __getresgid, __setresuid)
+	(__setresgid): Fix argument name order in prototypes.
+	* posix/unistd.h (getresuid, getresgid, setresuid, setresgid):
+	Likewise.
+	* posix/getresuid.c (__getresuid): Fix argument order in definition.
+	* posix/getresgid.c (__getresgid): Likewise.
+	* posix/setresuid.c (__setresuid): Likewise.
+	* posix/setresgid.c (__setresgid): Likewise.
+	* sysdeps/mach/hurd/getresuid.c (__getresuid): Likewise.
+	* sysdeps/mach/hurd/getresgid.c (__getresgid): Likewise.
+	* sysdeps/mach/hurd/setresuid.c (__setresuid): Likewise.
+	* sysdeps/mach/hurd/setresgid.c (__setresgid): Likewise.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
 
 2006-02-13  Mike Frysinger  <vapier@gentoo.org>
 

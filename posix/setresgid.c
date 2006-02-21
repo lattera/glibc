@@ -1,5 +1,5 @@
-/* setresgid -- set effective group ID, real group ID, and saved-set group ID
-   Copyright (C) 2002 Free Software Foundation, Inc.
+/* setresgid -- set real group ID, effective group ID, and saved-set group ID
+   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #include <errno.h>
 #include <unistd.h>
 
-/* Set the effective group ID, real group ID, and saved-set group ID,
-   of the calling process to EGID, RGID, and SGID, respectively.  */
+/* Set the real group ID, effective group ID, and saved-set group ID,
+   of the calling process to RGID, EGID, and SGID, respectively.  */
 int
-__setresgid (gid_t egid, gid_t rgid, gid_t sgid)
+__setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
   __set_errno (ENOSYS);
   return -1;

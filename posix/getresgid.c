@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,1998,2002,2006
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +20,10 @@
 #include <errno.h>
 #include <unistd.h>
 
-/* Fetch the effective group ID, real group ID, and saved-set group ID,
+/* Fetch the real group ID, effective group ID, and saved-set group ID,
    of the calling process.  */
 int
-__getresgid (gid_t *egid, gid_t *rgid, gid_t *sgid)
+__getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,1998,2002,2006
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +20,10 @@
 #include <errno.h>
 #include <unistd.h>
 
-/* Fetch the effective user ID, real user ID, and saved-set user ID,
+/* Fetch the real user ID, effective user ID, and saved-set user ID,
    of the calling process.  */
 int
-__getresuid (uid_t *euid, uid_t *ruid, uid_t *suid)
+__getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
 {
   __set_errno (ENOSYS);
   return -1;

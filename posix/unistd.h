@@ -693,24 +693,24 @@ extern int setegid (__gid_t __gid) __THROW;
 #endif /* Use BSD.  */
 
 #ifdef __USE_GNU
-/* Fetch the effective user ID, real user ID, and saved-set user ID,
+/* Fetch the real user ID, effective user ID, and saved-set user ID,
    of the calling process.  */
-extern int getresuid (__uid_t *__euid, __uid_t *__ruid, __uid_t *__suid)
+extern int getresuid (__uid_t *__ruid, __uid_t *__euid, __uid_t *__suid)
      __THROW;
 
-/* Fetch the effective group ID, real group ID, and saved-set group ID,
+/* Fetch the real group ID, effective group ID, and saved-set group ID,
    of the calling process.  */
-extern int getresgid (__gid_t *__egid, __gid_t *__rgid, __gid_t *__sgid)
+extern int getresgid (__gid_t *__rgid, __gid_t *__egid, __gid_t *__sgid)
      __THROW;
 
-/* Set the effective user ID, real user ID, and saved-set user ID,
-   of the calling process to EUID, RUID, and SUID, respectively.  */
-extern int setresuid (__uid_t __euid, __uid_t __ruid, __uid_t __suid)
+/* Set the real user ID, effective user ID, and saved-set user ID,
+   of the calling process to RUID, EUID, and SUID, respectively.  */
+extern int setresuid (__uid_t __ruid, __uid_t __euid, __uid_t __suid)
      __THROW;
 
-/* Set the effective group ID, real group ID, and saved-set group ID,
-   of the calling process to EGID, RGID, and SGID, respectively.  */
-extern int setresgid (__gid_t __egid, __gid_t __rgid, __gid_t __sgid)
+/* Set the real group ID, effective group ID, and saved-set group ID,
+   of the calling process to RGID, EGID, and SGID, respectively.  */
+extern int setresgid (__gid_t __rgid, __gid_t __egid, __gid_t __sgid)
      __THROW;
 #endif
 

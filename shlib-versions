@@ -49,7 +49,6 @@ sparc.*-.*-.*		WORDSIZE64		sparc64-@VENDOR@-@OS@
 # The interface to -lm depends mostly only on cpu, not on operating system.
 sparc64-.*-linux.*	libm=6			GLIBC_2.2
 alpha.*-.*-linux.*	libm=6.1
-mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
 ia64-.*-linux.*		libm=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libm=6			GLIBC_2.2
 hppa.*-.*-.*		libm=6			GLIBC_2.2
@@ -58,8 +57,6 @@ hppa.*-.*-.*		libm=6			GLIBC_2.2
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
-# Working mips versions were never released between 2.0 and 2.2.
-mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
 ia64-.*-linux.*		libc=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libc=6			GLIBC_2.2
 sparc64-.*-linux.*	libc=6			GLIBC_2.2
@@ -82,7 +79,6 @@ sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
 ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
-mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 hppa.*-.*-.*		ld=ld.so.1		GLIBC_2.2
 s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
 powerpc64.*-.*-linux.*	ld=ld64.so.1		GLIBC_2.3
@@ -93,7 +89,6 @@ x86_64-.*-linux.*	ld=ld-linux-x86-64.so.2	GLIBC_2.2.5
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 alpha.*-.*-linux.*	libdl=2.1
-mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
@@ -104,19 +99,11 @@ alpha.*-.*-linux.*	libutil=1.1
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
 alpha.*-.*-linux.*	libresolv=2.1
-mips.*-.*-linux.*	libresolv=2		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libresolv=2
 
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
 # in nss/nsswitch.h, which determines the library names used for service
 # names given in /etc/nsswitch.conf.
-mips.*-.*-linux.*	libnss_files=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_dns=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_compat=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnss_files=2
 .*-.*-.*		libnss_dns=2
 .*-.*-.*		libnss_compat=2
@@ -127,7 +114,6 @@ mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 
 # Version for libnsl with YP and NIS+ functions.
 alpha.*-.*-linux.*	libnsl=1.1
-mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnsl=1
 
 # This defines the shared library version numbers we will install.
@@ -143,7 +129,6 @@ hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.
-mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		librt=1
 
 # The asynchronous name lookup library.
