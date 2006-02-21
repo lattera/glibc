@@ -90,6 +90,7 @@
 	but the owner for all robust mutex types.
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Define
 	__pthread_list_t and __pthread_slist_t.  Use them in pthread_mutex_t.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
 	* sysdeps/pthread/pthread.h: Adjust mutex initializers.
 
 	* sysdeps/unix/sysv/linux/i386/not-cancel.h: Define openat_not_cancel,
