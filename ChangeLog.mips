@@ -1,0 +1,5 @@
+2006-02-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mips/shlib-versions: New file.
+	* sysdeps/mips/preconfigure: New file.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h: New file.

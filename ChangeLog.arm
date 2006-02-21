@@ -1,3 +1,7 @@
+2006-01-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm/jmpbuf-unwind.h: Include <jmpbuf-offsets.h>.
+
 2006-01-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm/bits/setjmp.h (__JMP_BUF_SP): Macro moved to ...
