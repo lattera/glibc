@@ -28,6 +28,9 @@ getsid (pid_t pid)
   error_t err;
   pid_t sid;
 
+  if (pid == 0)
+    pid = _hurd_pid;
+
   err = __USEPORT (PROC, __proc_getsid (port, pid, &sid));
   if (err)
     return (pid_t) __hurd_fail (err);

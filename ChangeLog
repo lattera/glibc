@@ -1,3 +1,9 @@
+2006-01-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	[BZ #2178]
+	* sysdeps/mach/hurd/getsid.c (getsid): When parameter PID is zero,
+	use _hurd_pid instead.
+
 2006-02-20  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/soft-fp/Makefile (CPPFLAGS): Add soft-fp include
