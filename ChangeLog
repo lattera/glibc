@@ -1,3 +1,12 @@
+2006-02-22  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
+2006-02-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/ypclnt.c (yperr_string, ypbinderr_string): Add N_()
+	around string literals.
+
 2005-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/selinux.c (audit_init): Print error string in the failure

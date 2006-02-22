@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.90\n"
-"POT-Creation-Date: 2006-01-07 22:50-0800\n"
+"POT-Creation-Date: 2006-02-22 02:00-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,15 +416,15 @@ msgid ""
 "substitution\n"
 msgstr ""
 
-#: elf/dl-deps.c:470
+#: elf/dl-deps.c:472
 msgid "cannot allocate dependency list"
 msgstr ""
 
-#: elf/dl-deps.c:503 elf/dl-deps.c:558
+#: elf/dl-deps.c:505 elf/dl-deps.c:560
 msgid "cannot allocate symbol search list"
 msgstr ""
 
-#: elf/dl-deps.c:543
+#: elf/dl-deps.c:545
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr ""
 
@@ -873,8 +873,8 @@ msgstr ""
 msgid "need absolute file name for configuration file when using -r"
 msgstr ""
 
-#: elf/ldconfig.c:1099 locale/programs/xmalloc.c:69 malloc/obstack.c:413
-#: posix/getconf.c:980 posix/getconf.c:1157
+#: elf/ldconfig.c:1099 locale/programs/xmalloc.c:69 malloc/obstack.c:434
+#: malloc/obstack.c:436 posix/getconf.c:980 posix/getconf.c:1157
 #, c-format
 msgid "memory exhausted"
 msgstr ""
@@ -1349,31 +1349,31 @@ msgstr ""
 msgid "rcmd: %s: short read"
 msgstr ""
 
-#: inet/rcmd.c:482
+#: inet/rcmd.c:481
 msgid "lstat failed"
 msgstr ""
 
-#: inet/rcmd.c:484
+#: inet/rcmd.c:483
 msgid "not regular file"
 msgstr ""
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:488
 msgid "cannot open"
 msgstr ""
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:490
 msgid "fstat failed"
 msgstr ""
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:492
 msgid "bad owner"
 msgstr ""
 
-#: inet/rcmd.c:495
+#: inet/rcmd.c:494
 msgid "writeable by other than owner"
 msgstr ""
 
-#: inet/rcmd.c:497
+#: inet/rcmd.c:496
 msgid "hard linked somewhere"
 msgstr ""
 
@@ -2888,7 +2888,8 @@ msgstr ""
 msgid "unable to free arguments"
 msgstr ""
 
-#: nis/nis_error.c:29 posix/regcomp.c:132 sysdeps/gnu/errlist.c:20
+#: nis/nis_error.c:29 nis/ypclnt.c:822 nis/ypclnt.c:910 posix/regcomp.c:132
+#: sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr ""
 
@@ -2929,7 +2930,7 @@ msgid "First/next chain broken"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:39 sysdeps/gnu/errlist.c:157
+#: nis/nis_error.c:39 nis/ypclnt.c:867 sysdeps/gnu/errlist.c:157
 msgid "Permission denied"
 msgstr ""
 
@@ -3424,6 +3425,86 @@ msgstr ""
 msgid "netname2user: should not have uid 0"
 msgstr ""
 
+#: nis/ypclnt.c:825
+msgid "Request arguments bad"
+msgstr ""
+
+#: nis/ypclnt.c:828
+msgid "RPC failure on NIS operation"
+msgstr ""
+
+#: nis/ypclnt.c:831
+msgid "Can't bind to server which serves this domain"
+msgstr ""
+
+#: nis/ypclnt.c:834
+msgid "No such map in server's domain"
+msgstr ""
+
+#: nis/ypclnt.c:837
+msgid "No such key in map"
+msgstr ""
+
+#: nis/ypclnt.c:840
+msgid "Internal NIS error"
+msgstr ""
+
+#: nis/ypclnt.c:843
+msgid "Local resource allocation failure"
+msgstr ""
+
+#: nis/ypclnt.c:846
+msgid "No more records in map database"
+msgstr ""
+
+#: nis/ypclnt.c:849
+msgid "Can't communicate with portmapper"
+msgstr ""
+
+#: nis/ypclnt.c:852
+msgid "Can't communicate with ypbind"
+msgstr ""
+
+#: nis/ypclnt.c:855
+msgid "Can't communicate with ypserv"
+msgstr ""
+
+#: nis/ypclnt.c:858
+msgid "Local domain name not set"
+msgstr ""
+
+#: nis/ypclnt.c:861
+msgid "NIS map database is bad"
+msgstr ""
+
+#: nis/ypclnt.c:864
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr ""
+
+#: nis/ypclnt.c:870
+msgid "Database is busy"
+msgstr ""
+
+#: nis/ypclnt.c:873
+msgid "Unknown NIS error code"
+msgstr ""
+
+#: nis/ypclnt.c:913
+msgid "Internal ypbind error"
+msgstr ""
+
+#: nis/ypclnt.c:916
+msgid "Domain not bound"
+msgstr ""
+
+#: nis/ypclnt.c:919
+msgid "System resource allocation failure"
+msgstr ""
+
+#: nis/ypclnt.c:922
+msgid "Unknown ypbind error"
+msgstr ""
+
 #: nis/ypclnt.c:963
 msgid "yp_update: cannot convert host to netname\n"
 msgstr ""
@@ -3915,7 +3996,8 @@ msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
 
 #: nscd/selinux.c:150
-msgid "Failed opening connection to the audit subsystem"
+#, c-format
+msgid "Failed opening connection to the audit subsystem: %m"
 msgstr ""
 
 #: nscd/selinux.c:162
@@ -4295,7 +4377,6 @@ msgid "Unknown signal"
 msgstr ""
 
 #: string/_strerror.c:44 sysdeps/mach/_strerror.c:87
-#: sysdeps/mach/hurd/mips/dl-machine.c:83
 msgid "Unknown error "
 msgstr ""
 
@@ -5798,7 +5879,7 @@ msgstr ""
 msgid "State not recoverable"
 msgstr ""
 
-#: sysdeps/mach/_strerror.c:57 sysdeps/mach/hurd/mips/dl-machine.c:68
+#: sysdeps/mach/_strerror.c:57
 msgid "Error in unknown error system: "
 msgstr ""
 
@@ -5898,38 +5979,43 @@ msgstr ""
 msgid "cannot read header from `%s'"
 msgstr ""
 
-#: timezone/zdump.c:212
+#: timezone/zdump.c:215
 msgid "lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zdump.c:214
+#: timezone/zdump.c:217
 msgid "has fewer than 3 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:216
+#: timezone/zdump.c:219
 msgid "has more than 6 alphabetics"
 msgstr ""
 
-#: timezone/zdump.c:224
+#: timezone/zdump.c:227
 msgid "differs from POSIX standard"
 msgstr ""
 
-#: timezone/zdump.c:280
+#: timezone/zdump.c:233
+#, c-format
+msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
+msgstr ""
+
+#: timezone/zdump.c:284
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
 msgstr ""
 
-#: timezone/zdump.c:297
+#: timezone/zdump.c:301
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr ""
 
-#: timezone/zdump.c:388
+#: timezone/zdump.c:392
 msgid "Error writing standard output"
 msgstr ""
 
-#: timezone/zdump.c:411
+#: timezone/zdump.c:415
 #, c-format
 msgid ""
 "%s: use of -v on system with floating time_t other than float or double\n"
@@ -6249,50 +6335,50 @@ msgstr ""
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: timezone/zic.c:2061
+#: timezone/zic.c:2062
 msgid "Odd number of quotation marks"
 msgstr ""
 
-#: timezone/zic.c:2082 timezone/zic.c:2101
+#: timezone/zic.c:2083 timezone/zic.c:2102
 msgid "time overflow"
 msgstr ""
 
-#: timezone/zic.c:2148
+#: timezone/zic.c:2149
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: timezone/zic.c:2183
+#: timezone/zic.c:2184
 msgid ""
 "rule goes past start/end of month--will not work with pre-2004 versions of "
 "zic"
 msgstr ""
 
-#: timezone/zic.c:2216
+#: timezone/zic.c:2218
 msgid "time zone abbreviation lacks alphabetic at start"
 msgstr ""
 
-#: timezone/zic.c:2218
+#: timezone/zic.c:2220
 msgid "time zone abbreviation has more than 3 alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2220
+#: timezone/zic.c:2222
 msgid "time zone abbreviation has too many alphabetics"
 msgstr ""
 
-#: timezone/zic.c:2228
+#: timezone/zic.c:2232
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr ""
 
-#: timezone/zic.c:2240
+#: timezone/zic.c:2244
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
-#: timezone/zic.c:2281
+#: timezone/zic.c:2285
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:2303
+#: timezone/zic.c:2307
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr ""

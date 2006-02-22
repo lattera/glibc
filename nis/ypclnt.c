@@ -819,58 +819,58 @@ yperr_string (const int error)
   switch (error)
     {
     case YPERR_SUCCESS:
-      str = "Success";
+      str = N_("Success");
       break;
     case YPERR_BADARGS:
-      str = "Request arguments bad";
+      str = N_("Request arguments bad");
       break;
     case YPERR_RPC:
-      str = "RPC failure on NIS operation";
+      str = N_("RPC failure on NIS operation");
       break;
     case YPERR_DOMAIN:
-      str = "Can't bind to server which serves this domain";
+      str = N_("Can't bind to server which serves this domain");
       break;
     case YPERR_MAP:
-      str = "No such map in server's domain";
+      str = N_("No such map in server's domain");
       break;
     case YPERR_KEY:
-      str = "No such key in map";
+      str = N_("No such key in map");
       break;
     case YPERR_YPERR:
-      str = "Internal NIS error";
+      str = N_("Internal NIS error");
       break;
     case YPERR_RESRC:
-      str = "Local resource allocation failure";
+      str = N_("Local resource allocation failure");
       break;
     case YPERR_NOMORE:
-      str = "No more records in map database";
+      str = N_("No more records in map database");
       break;
     case YPERR_PMAP:
-      str = "Can't communicate with portmapper";
+      str = N_("Can't communicate with portmapper");
       break;
     case YPERR_YPBIND:
-      str = "Can't communicate with ypbind";
+      str = N_("Can't communicate with ypbind");
       break;
     case YPERR_YPSERV:
-      str = "Can't communicate with ypserv";
+      str = N_("Can't communicate with ypserv");
       break;
     case YPERR_NODOM:
-      str = "Local domain name not set";
+      str = N_("Local domain name not set");
       break;
     case YPERR_BADDB:
-      str = "NIS map database is bad";
+      str = N_("NIS map database is bad");
       break;
     case YPERR_VERS:
-      str = "NIS client/server version mismatch - can't supply service";
+      str = N_("NIS client/server version mismatch - can't supply service");
       break;
     case YPERR_ACCESS:
-      str = "Permission denied";
+      str = N_("Permission denied");
       break;
     case YPERR_BUSY:
-      str = "Database is busy";
+      str = N_("Database is busy");
       break;
     default:
-      str = "Unknown NIS error code";
+      str = N_("Unknown NIS error code");
       break;
     }
   return _(str);
@@ -907,19 +907,19 @@ ypbinderr_string (const int error)
   switch (error)
     {
     case 0:
-      str = "Success";
+      str = N_("Success");
       break;
     case YPBIND_ERR_ERR:
-      str = "Internal ypbind error";
+      str = N_("Internal ypbind error");
       break;
     case YPBIND_ERR_NOSERV:
-      str = "Domain not bound";
+      str = N_("Domain not bound");
       break;
     case YPBIND_ERR_RESC:
-      str = "System resource allocation failure";
+      str = N_("System resource allocation failure");
       break;
     default:
-      str = "Unknown ypbind error";
+      str = N_("Unknown ypbind error");
       break;
     }
   return _(str);
