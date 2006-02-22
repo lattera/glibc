@@ -1,3 +1,8 @@
+2006-02-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Update comment, remove
+	__THROW from epoll_wait, to match .../linux/sys/epoll.h file.
+
 2005-11-15  Robert Millan  <robertmh@gnu.org>
 
 	[BZ #2161]
