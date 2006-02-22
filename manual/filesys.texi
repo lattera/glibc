@@ -2806,7 +2806,7 @@ function.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int futimes (int *@var{fd}, struct timeval @var{tvp}@t{[2]})
+@deftypefun int futimes (int @var{fd}, struct timeval @var{tvp}@t{[2]})
 This function is like @code{utimes}, except that it takes an open file
 descriptor as an argument instead of a file name.  @xref{Low-Level
 I/O}.  This function comes from FreeBSD, and is not available on all

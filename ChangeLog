@@ -1,3 +1,7 @@
+2006-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* manual/filesys.texi (futimes): Fix prototype.
+
 2006-02-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Update comment, remove
