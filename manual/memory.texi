@@ -1968,7 +1968,8 @@ obstack_next_free (@var{obstack-ptr}) - obstack_base (@var{obstack-ptr})
 
 Each obstack has an @dfn{alignment boundary}; each object allocated in
 the obstack automatically starts on an address that is a multiple of the
-specified boundary.  By default, this boundary is 4 bytes.
+specified boundary.  By default, this boundary is aligned so that
+the object can hold any type of data.
 
 To access an obstack's alignment boundary, use the macro
 @code{obstack_alignment_mask}, whose function prototype looks like
@@ -1980,7 +1981,9 @@ this:
 The value is a bit mask; a bit that is 1 indicates that the corresponding
 bit in the address of an object should be 0.  The mask value should be one
 less than a power of 2; the effect is that all object addresses are
-multiples of that power of 2.  The default value of the mask is 3, so that
+multiples of that power of 2.  The default value of the mask is a value
+that allows aligned objects to hold any type of data: for example, if
+its value is 3, any type of data can be stored at locations whose
 addresses are multiples of 4.  A mask value of 0 means an object can start
 on any multiple of 1 (that is, no alignment is required).
 

@@ -3,6 +3,14 @@
 	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Update comment, remove
 	__THROW from epoll_wait, to match .../linux/sys/epoll.h file.
 
+2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #315]
+	* manual/memory.texi (Obstacks Data Alignment): The default
+	alignment is not 4: it is enough to hold any type of data.
+	Problem reported by Benno in
+	<http://sources.redhat.com/ml/libc-alpha/2004-08/msg00055.html>.
+
 2005-11-15  Robert Millan  <robertmh@gnu.org>
 
 	[BZ #2161]
