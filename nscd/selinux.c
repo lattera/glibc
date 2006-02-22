@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -147,7 +147,7 @@ audit_init (void)
   if (audit_fd < 0
       /* If kernel doesn't support audit, bail out */
       && errno != EINVAL && errno != EPROTONOSUPPORT && errno != EAFNOSUPPORT)
-    dbg_log (_("Failed opening connection to the audit subsystem"));
+    dbg_log (_("Failed opening connection to the audit subsystem: %m"));
 }
 #endif /* HAVE_LIBAUDIT */
 
