@@ -1,11 +1,14 @@
-2006-02-03  Jakub Jelinek  <jakub@redhat.com>
-
-	* manual/filesys.texi (futimes): Fix prototype.
-
 2006-02-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Consolidate definitions.
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Update comment, remove
 	__THROW from epoll_wait, to match .../linux/sys/epoll.h file.
+
+2006-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* manual/filesys.texi (futimes): Fix prototype.
 
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
