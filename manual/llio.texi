@@ -368,6 +368,11 @@ sending it a @code{SIGTTIN} signal isn't working.  This might happen if
 the signal is being blocked or ignored, or because the process group is
 orphaned.  @xref{Job Control}, for more information about job control,
 and @ref{Signal Handling}, for information about signals.
+
+@item EINVAL
+In some systems, when reading from a character or block device, position
+and size offsets must be aligned to a particular block size.  This error
+indicates that the offsets were not properly aligned.
 @end table
 
 Please note that there is no function named @code{read64}.  This is not
@@ -515,6 +520,11 @@ The device containing the file is full.
 This error is returned when you try to write to a pipe or FIFO that
 isn't open for reading by any process.  When this happens, a @code{SIGPIPE}
 signal is also sent to the process; see @ref{Signal Handling}.
+
+@item EINVAL
+In some systems, when writing to a character or block device, position
+and size offsets must be aligned to a particular block size.  This error
+indicates that the offsets were not properly aligned.
 @end table
 
 Unless you have arranged to prevent @code{EINTR} failures, you should

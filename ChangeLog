@@ -1,3 +1,8 @@
+2005-11-15  Robert Millan  <robertmh@gnu.org>
+
+	[BZ #2161]
+	* manual/llio.texi (read, write): Document EINVAL on unaligned access.
+
 2006-02-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/i686/memset.S: Fix treatment of unaligned pointer.
