@@ -83,6 +83,7 @@
 
 2006-02-13  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #2380]
 	* string/tester.c (test_strnlen): New function.
 	(test_strchr): Call it.
 	(test_strncat): Test lengths where the sign bit is set.
