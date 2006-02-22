@@ -89,13 +89,6 @@
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 
-/* Define if gcc uses DWARF2 unwind information for exception support.  */
-#undef	HAVE_DWARF2_UNWIND_INFO
-
-/* Define if gcc uses DWARF2 unwind information for exception support
-   with static variable. */
-#undef	HAVE_DWARF2_UNWIND_INFO_STATIC
-
 /* Define if the compiler supports __builtin_expect.  */
 #undef	HAVE_BUILTIN_EXPECT
 

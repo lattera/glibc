@@ -1,3 +1,17 @@
+2004-11-23  Richard Sandiford  <rsandifo@redhat.com>
+
+	* configure.in (libc_cv_gcc_dwarf2_unwind_info): Delete.
+	(HAVE_DWARF2_UNWIND_INFO{,_STATIC}): Remove AC_DEFINEs.
+	* configure: Regenerate.
+	* config.h.in (HAVE_DWARF2_UNWIND_INFO{,_STATIC}): Remove undefs.
+	* elf/soinit.c: Don't include gccframe.h.
+	(__EH_FRAME_BEGIN__): Define unconditionally.
+	(__register_frame_info, __deregister_frame_info)
+	(__register_frame_info_bases, __deregister_frame_info_bases)
+	(__register_frame, __deregister_frame): Remove declarations.
+	(__libc_global_ctors, __libc_fini): Don't call registry functions.
+	* elf/sofini.c (__EH_FRAME_END__): Define unconditionally.
+
 2006-01-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	[BZ #2178]
