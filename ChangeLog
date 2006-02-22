@@ -1,3 +1,8 @@
+2006-02-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/i686/memset.S: Fix treatment of unaligned pointer.
+	Reported by John Zulauf <john.zulauf@amd.com>.
+
 2004-11-23  Richard Sandiford  <rsandifo@redhat.com>
 
 	* configure.in (libc_cv_gcc_dwarf2_unwind_info): Delete.

@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999, 2000, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -64,17 +64,17 @@ ENTRY (BP_SYM (memset))
 	movl	%edx, %edi
 	cfi_rel_offset (edi, 0)
 	andl	$3, %edx
-	jz	2f
-	jnp	3f
-	stosb
+	jz	2f	/* aligned */
+	jp	3f	/* misaligned at 3, store just one byte below */
+	stosb		/* misaligned at 1 or 2, store two bytes */
 	decl	%ecx
 	jz	1f
 3:	stosb
 	decl	%ecx
 	jz	1f
-	xorl	$3, %edx
-	jz	2f
-	stosb
+	xorl	$1, %edx
+	jnz	2f	/* was misaligned at 2 or 3, now aligned */
+	stosb		/* was misaligned at 1, store third byte */
 	decl	%ecx
 2:	movl	%ecx, %edx
 	shrl	$2, %ecx
