@@ -1,3 +1,7 @@
+2015-08-21  Mike Frysinger  <vapier@gentoo.org>
+
+	* manual/Makefile (install): Only build manual when perl is available.
+
 2015-08-21  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr.c: Replace
