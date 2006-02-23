@@ -30,7 +30,8 @@ headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
 	   sys/select.h ustat.h sys/ustat.h bits/ustat.h sys/sysinfo.h \
 	   regexp.h bits/select.h bits/mman.h sys/xattr.h \
-	   syslog.h sys/syslog.h bits/syslog.h bits/syslog-ldbl.h
+	   syslog.h sys/syslog.h \
+	   bits/syslog.h bits/syslog-ldbl.h bits/syslog-path.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \

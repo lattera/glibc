@@ -168,11 +168,11 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 #endif
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
-    {
-    fail:
-      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-      result = -1;
-    }
+    goto fail;
 
   return result;
+
+ fail:
+  __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+  return -1;
 }

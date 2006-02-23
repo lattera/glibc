@@ -1,5 +1,15 @@
 2006-02-23  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Diddle code so that "fail"
+	label is always used.
+
+	[BZ #2172]
+	* bits/syslog-path.h: New file.
+	* misc/Makefile (headers): Add it.
+	* misc/sys/syslog.h: Include it.
+	(_PATH_LOG): Macro removed.
+	From Robert Millan <robertmh@gnu.org>.
+
 	* sysdeps/unix/sysv/linux/ftruncate64.c: Find generic implementation
 	in misc/, not posix/.
 	Reported by David S. Miller <davem@davemloft.net>.

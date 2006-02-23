@@ -36,8 +36,8 @@
 #define __need___va_list
 #include <stdarg.h>
 
-
-#define	_PATH_LOG	"/dev/log"
+/* This file defines _PATH_LOG.  */
+#include <bits/syslog-path.h>
 
 /*
  * priorities/facilities are encoded into a single 32-bit quantity, where the
