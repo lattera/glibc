@@ -1,5 +1,5 @@
 /* sched_yield -- yield the processor.  Mach version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,4 +28,5 @@ __sched_yield (void)
   (void) __swtch ();
   return 0;
 }
+libc_hidden_def (__sched_yield)
 weak_alias (__sched_yield, sched_yield)

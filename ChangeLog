@@ -1,3 +1,14 @@
+2006-02-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Find generic implementation
+	in misc/, not posix/.
+	Reported by David S. Miller <davem@davemloft.net>.
+
+2006-02-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/sched_yield.c (__sched_yield): Add libc_hidden_def.
+	* sysdeps/mach/sched_yield.c (__sched_yield): Likewise.
+
 2006-02-22  Roland McGrath  <roland@redhat.com>
 
 	* po/libc.pot: Regenerated.
