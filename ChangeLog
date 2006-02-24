@@ -1,5 +1,8 @@
 2006-02-23  Roland McGrath  <roland@redhat.com>
 
+	* include/libc-symbols.h: Fix comment typo.
+	From Peter Kjellerstedt <peter.kjellerstedt@axis.com>.
+
 	* sysdeps/unix/sysv/linux/i386/fchownat.c: Diddle code so that "fail"
 	label is always used.
 

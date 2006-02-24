@@ -1,6 +1,7 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000-2003,2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -502,7 +503,7 @@ for linking")
    }
    libc_hidden_weak (foo)
 
-   Simularly for global data. If references to foo within libc.so should
+   Similarly for global data.  If references to foo within libc.so should
    always go to foo defined in libc.so, then in include/foo.h you add:
 
    libc_hidden_proto (foo)
@@ -517,7 +518,7 @@ for linking")
    int foo = INITIAL_FOO_VALUE;
    libc_hidden_data_weak (foo)
 
-   If foo is normally just an alias (strong or weak) of some other function,
+   If foo is normally just an alias (strong or weak) to some other function,
    you should use the normal strong_alias first, then add libc_hidden_def
    or libc_hidden_weak:
 
