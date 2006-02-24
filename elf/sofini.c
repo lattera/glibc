@@ -12,6 +12,6 @@ static void (*const __DTOR_END__[1]) (void)
    this would be the 'length' field in a real FDE.  */
 
 typedef unsigned int ui32 __attribute__ ((mode (SI)));
-static ui32 __FRAME_END__[1]
-     __attribute__ ((used, section (".eh_frame")))
-     = { 0 };
+static const ui32 __FRAME_END__[1]
+  __attribute__ ((used, section (".eh_frame")))
+  = { 0 };

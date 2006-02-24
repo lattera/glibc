@@ -1,3 +1,8 @@
+2006-02-24  Roland McGrath  <roland@redhat.com>
+
+	* elf/sofini.c (__FRAME_END__): Mark as const.
+	* elf/soinit.c (__EH_FRAME_BEGIN__): Likewise.  Add used attribute.
+
 2006-02-23  Roland McGrath  <roland@redhat.com>
 
 	* include/libc-symbols.h: Fix comment typo.
