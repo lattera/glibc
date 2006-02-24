@@ -1,3 +1,13 @@
+2006-02-23  Roland McGrath  <roland@redhat.com>
+
+	* descr.h (struct pthread): Add final member `end_padding'.
+	(PTHREAD_STRUCT_END_PADDING): Use it.
+
+2006-02-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mips: Directory removed, saved in ports repository.
+	* sysdeps/unix/sysv/linux/mips: Likewise.
+
 2006-02-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-robust1.c: Add second mutex to check that the mutex list is
