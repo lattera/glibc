@@ -64,7 +64,7 @@ _dl_string_hwcap (const char *str)
 };
 
 #include <bits/wordsize.h>
-#define HWCAP_IMPORTANT_V9 (__WORDSIZE__ == 64 ? 0 : HWCAP_SPARC_V9)
+#define HWCAP_IMPORTANT_V9 (__WORDSIZE == 64 ? 0 : HWCAP_SPARC_V9)
 #define HWCAP_IMPORTANT (HWCAP_IMPORTANT_V9|HWCAP_SPARC_ULTRA3)
 
 /* There are no different platforms defined.  */

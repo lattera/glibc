@@ -47,7 +47,7 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_sparc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_sparc_cap_flags[][7]
+PROCINFO_CLASS const char _dl_sparc_cap_flags[6][7]
 #endif
 #ifndef PROCINFO_DECL
 = {
