@@ -30,7 +30,7 @@ unsigned int _Q_qtou(const long double a)
   FP_DECL_Q(A);
   unsigned int r;
 
-  FP_UNPACK_Q(A, a);
+  FP_UNPACK_RAW_Q(A, a);
   FP_TO_INT_Q(r, A, 32, -1);
   FP_HANDLE_EXCEPTIONS;
 

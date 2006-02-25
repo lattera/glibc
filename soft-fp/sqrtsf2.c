@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return sqrt(a)
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,11 +23,11 @@
 #include "soft-fp.h"
 #include "single.h"
 
-float __sqrtsf2(float a)
+SFtype __sqrtsf2(SFtype a)
 {
   FP_DECL_EX;
   FP_DECL_S(A); FP_DECL_S(R);
-  float r;
+  SFtype r;
 
   FP_INIT_ROUNDMODE;
   FP_UNPACK_S(A, a);

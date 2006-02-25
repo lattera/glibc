@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Basic one-word fraction declaration and manipulation.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -40,7 +40,15 @@
 #define _FP_FRAC_SRL_1(X,N)	(X##_f >>= N)
 
 /* Right shift with sticky-lsb.  */
+#define _FP_FRAC_SRST_1(X,S,N,sz)	__FP_FRAC_SRST_1(X##_f, S, N, sz)
 #define _FP_FRAC_SRS_1(X,N,sz)	__FP_FRAC_SRS_1(X##_f, N, sz)
+
+#define __FP_FRAC_SRST_1(X,S,N,sz)			\
+do {							\
+  S = (__builtin_constant_p(N) && (N) == 1		\
+       ? X & 1 : (X << (_FP_W_TYPE_SIZE - (N))) != 0);	\
+  X = X >> (N);						\
+} while (0)
 
 #define __FP_FRAC_SRS_1(X,N,sz)						\
    (X = (X >> (N) | (__builtin_constant_p(N) && (N) == 1		\
@@ -282,17 +290,4 @@
  * Convert FP values between word sizes
  */
 
-#define _FP_FRAC_CONV_1_1(dfs, sfs, D, S)				\
-  do {									\
-    D##_f = S##_f;							\
-    if (_FP_WFRACBITS_##sfs > _FP_WFRACBITS_##dfs)			\
-      {									\
-	if (S##_c != FP_CLS_NAN)					\
-	  _FP_FRAC_SRS_1(D, (_FP_WFRACBITS_##sfs-_FP_WFRACBITS_##dfs),	\
-			 _FP_WFRACBITS_##sfs);				\
-	else								\
-	  _FP_FRAC_SRL_1(D, (_FP_WFRACBITS_##sfs-_FP_WFRACBITS_##dfs));	\
-      }									\
-    else								\
-      D##_f <<= _FP_WFRACBITS_##dfs - _FP_WFRACBITS_##sfs;		\
-  } while (0)
+#define _FP_FRAC_COPY_1_1(D, S)		(D##_f = S##_f)

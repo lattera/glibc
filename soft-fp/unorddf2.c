@@ -23,7 +23,7 @@
 #include "double.h"
 
 int
-__unorddf2(double a, double b)
+__unorddf2(DFtype a, DFtype b)
 {
   FP_DECL_D(A); FP_DECL_D(B);
   int r;

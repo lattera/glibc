@@ -1,5 +1,5 @@
-/* Data for Linux/sparc64 version of processor capability information.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Data for Linux/sparc version of processor capability information.
+   Copyright (C) 2002,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -45,9 +45,9 @@
 #endif
 
 #if !defined PROCINFO_DECL && defined SHARED
-  ._dl_sparc64_cap_flags
+  ._dl_sparc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_sparc64_cap_flags[6][7]
+PROCINFO_CLASS const char _dl_sparc_cap_flags[][7]
 #endif
 #ifndef PROCINFO_DECL
 = {

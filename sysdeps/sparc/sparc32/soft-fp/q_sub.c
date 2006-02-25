@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    c = a - b
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -30,10 +30,10 @@ long double _Q_sub(const long double a, const long double b)
   long double c;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
-  FP_UNPACK_Q(B, b);
+  FP_UNPACK_SEMIRAW_Q(A, a);
+  FP_UNPACK_SEMIRAW_Q(B, b);
   FP_SUB_Q(C, A, B);
-  FP_PACK_Q(c, C);
+  FP_PACK_SEMIRAW_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
   return c;
 }

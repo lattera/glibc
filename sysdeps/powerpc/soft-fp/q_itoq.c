@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return (long double)(a)
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -30,8 +30,8 @@ long double _q_itoq(const int a)
   int b = a;
   long double c;
 
-  FP_FROM_INT_Q(C, b, 32, int);
-  FP_PACK_Q(c, C);
+  FP_FROM_INT_Q(C, b, 32, unsigned int);
+  FP_PACK_RAW_Q(c, C);
   FP_CLEAR_EXCEPTIONS;
   FP_HANDLE_EXCEPTIONS;
   return c;

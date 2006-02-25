@@ -1,7 +1,295 @@
 2006-02-24  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.c: Moved to ...
+	* sysdeps/sparc/dl-procinfo.c: ... here, new file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Moved to ...
+	* sysdeps/sparc/dl-procinfo.h: ... here, new file.
+	(HWCAP_IMPORTANT): Include HWCAP_SPARC_V9 when [__WORDSIZE__ != 64].
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.c: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: File removed.
+
 	* elf/sofini.c (__FRAME_END__): Mark as const.
 	* elf/soinit.c (__EH_FRAME_BEGIN__): Likewise.  Add used attribute.
+
+2006-02-18  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/single.h (SFtype): Define.
+	(union _FP_UNION_S): Use it.
+	* soft-fp/double.h (DFtype): Define.
+	(union _FP_UNION_D): Use it.
+	* soft-fp/extended.h (XFtype): Define.
+	(union _FP_UNION_E): Use it.
+	* soft-fp/quad.h (TFtype): Define.
+	(union _FP_UNION_Q): Use it.
+	* soft-fp/soft-fp.h: Add _LIBC conditionals.
+	(SI_BITS, DI_BITS): Define.
+	* soft-fp/op-common.h (_FP_DECL): Add __attribute__((unused)) for
+	X##_c.
+	(_FP_CMP_EQ): Use parentheses for && inside ||.
+	(_FP_TO_INT): Use statement expressions in conditional controlling
+	constant shift.
+	(_FP_FROM_INT): Likewise.  Take unsigned type as argument.
+	* soft-fp/op-2.h (_FP_FRAC_SLL_2, _FP_FRAC_SRL_2, _FP_FRAC_SRST_2,
+	_FP_FRAC_SRS_2, _FP_FRAC_ASSEMBLE_2): Use statement expressions in
+	conditional controlling possibly constant shift.
+	(_FP_FRAC_SRST_2, _FP_FRAC_SRS_2): Avoid left shift by exactly
+	_FP_W_TYPE_SIZE.
+	(_FP_FRAC_GT_2, _FP_FRAC_GE_2): Use parentheses for && inside ||.
+	* soft-fp/op-4.h (_FP_FRAC_SRST_4): Avoid left shift by exactly
+	_FP_W_TYPE_SIZE.
+	(__FP_FRAC_ADD_3, __FP_FRAC_ADD_4, __FP_FRAC_SUB_3,
+	__FP_FRAC_SUB_4): Use _FP_W_TYPE for carry flags.
+	* soft-fp/op-8.h (_FP_FRAC_SRS_8): Avoid left shift by exactly
+	_FP_W_TYPE_SIZE.
+	* soft-fp/floatdidf.c: Pass unsigned type and macro for type size.
+	* soft-fp/floatdisf.c: Likewise.
+	* soft-fp/floatditf.c: Likewise.
+	* soft-fp/floatsidf.c: Likewise.
+	* soft-fp/floatsisf.c: Likewise.
+	* soft-fp/floatsitf.c: Likewise.
+	* soft-fp/floatundidf.c: Likewise.
+	* soft-fp/floatundisf.c: Likewise.
+	* soft-fp/floatunditf.c: Likewise.
+	* soft-fp/floatunsidf.c: Likewise.
+	* soft-fp/floatunsisf.c: Likewise.
+	* soft-fp/floatunsitf.c: Likewise.
+	* soft-fp/fixdfdi.c: Pass macro for type size.
+	* soft-fp/fixdfsi.c: Likewise.
+	* soft-fp/fixsfdi.c: Likewise.
+	* soft-fp/fixsfsi.c: Likewise.
+	* soft-fp/fixtfdi.c: Likewise.
+	* soft-fp/fixtfsi.c: Likewise.
+	* soft-fp/fixunsdfdi.c: Likewise.
+	* soft-fp/fixunsdfsi.c: Likewise.
+	* soft-fp/fixunssfdi.c: Likewise.
+	* soft-fp/fixunssfsi.c: Likewise.
+	* soft-fp/fixunstfdi.c: Likewise.
+	* soft-fp/fixunstfsi.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtqux.c: Pass unsigned type.
+	* sysdeps/alpha/soft-fp/ots_cvtqx.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_itoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_lltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_ulltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_utoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_itoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_lltoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_ulltoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_utoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_itoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_uitoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_uxtoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_xtoq.c: Likewise.
+	* soft-fp/adddf3.c: Use typedefs for argument and return types.
+        * soft-fp/addsf3.c: Likewise.
+        * soft-fp/addtf3.c: Likewise.
+        * soft-fp/divdf3.c: Likewise.
+        * soft-fp/divsf3.c: Likewise.
+        * soft-fp/divtf3.c: Likewise.
+        * soft-fp/eqdf2.c: Likewise.
+        * soft-fp/eqsf2.c: Likewise.
+        * soft-fp/eqtf2.c: Likewise.
+        * soft-fp/extenddftf2.c: Likewise.
+        * soft-fp/extendsfdf2.c: Likewise.
+        * soft-fp/extendsftf2.c: Likewise.
+        * soft-fp/fixdfdi.c: Likewise.
+        * soft-fp/fixdfsi.c: Likewise.
+        * soft-fp/fixsfdi.c: Likewise.
+        * soft-fp/fixsfsi.c: Likewise.
+        * soft-fp/fixtfdi.c: Likewise.
+        * soft-fp/fixtfsi.c: Likewise.
+        * soft-fp/fixunsdfdi.c: Likewise.
+        * soft-fp/fixunsdfsi.c: Likewise.
+        * soft-fp/fixunssfdi.c: Likewise.
+        * soft-fp/fixunssfsi.c: Likewise.
+        * soft-fp/fixunstfdi.c: Likewise.
+        * soft-fp/fixunstfsi.c: Likewise.
+        * soft-fp/floatdidf.c: Likewise.
+        * soft-fp/floatdisf.c: Likewise.
+        * soft-fp/floatditf.c: Likewise.
+        * soft-fp/floatsidf.c: Likewise.
+        * soft-fp/floatsisf.c: Likewise.
+        * soft-fp/floatsitf.c: Likewise.
+        * soft-fp/floatundidf.c: Likewise.
+        * soft-fp/floatundisf.c: Likewise.
+        * soft-fp/floatunditf.c: Likewise.
+        * soft-fp/floatunsidf.c: Likewise.
+        * soft-fp/floatunsisf.c: Likewise.
+        * soft-fp/floatunsitf.c: Likewise.
+        * soft-fp/gedf2.c: Likewise.
+        * soft-fp/gesf2.c: Likewise.
+        * soft-fp/getf2.c: Likewise.
+        * soft-fp/ledf2.c: Likewise.
+        * soft-fp/lesf2.c: Likewise.
+        * soft-fp/letf2.c: Likewise.
+        * soft-fp/muldf3.c: Likewise.
+        * soft-fp/mulsf3.c: Likewise.
+        * soft-fp/multf3.c: Likewise.
+        * soft-fp/negdf2.c: Likewise.
+        * soft-fp/negsf2.c: Likewise.
+        * soft-fp/negtf2.c: Likewise.
+        * soft-fp/sqrtdf2.c: Likewise.
+        * soft-fp/sqrtsf2.c: Likewise.
+        * soft-fp/sqrttf2.c: Likewise.
+        * soft-fp/subdf3.c: Likewise.
+        * soft-fp/subsf3.c: Likewise.
+        * soft-fp/subtf3.c: Likewise.
+        * soft-fp/truncdfsf2.c: Likewise.
+        * soft-fp/trunctfdf2.c: Likewise.
+        * soft-fp/trunctfsf2.c: Likewise.
+        * soft-fp/unorddf2.c: Likewise.
+        * soft-fp/unordsf2.c: Likewise.
+        * soft-fp/unordtf2.c: Likewise.
+
+2006-02-09  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (_FP_UNPACK_SEMIRAW): Define.
+	(_FP_OVERFLOW_SEMIRAW): Likewise.
+	(_FP_CHECK_SIGNAN_SEMIRAW): Likewise.
+	(_FP_CHOOSENAN_SEMIRAW): Likewise.
+	(_FP_EXP_NORMAL): Likewise.
+	(_FP_PACK_SEMIRAW): Likewise.
+	(_FP_ADD_INTERNAL): Rewrite to operate on semi-raw value.
+	(_FP_SUB): Likewise.
+	(_FP_TO_INT): Rewrite to operate on raw values.  Don't set INVALID
+	exception for conversions where most negative representable
+	integer is correct truncated value, but do set INEXACT for such
+	conversions where appropriate.  Don't always left-shift for
+	converting to a wider integer.
+	(_FP_FROM_INT): Rewrite to yield raw value.  Correct shift for
+	integers with one more bits than (mantissa + guard) bits for the
+	floating point format.  Don't use __FP_FRAC_SRS_1 for shifting
+	integers that may be wider than _FP_W_TYPE_SIZE.
+	(FP_CONV): Don't define.
+	(FP_EXTEND): Define.
+	(FP_TRUNC): Likewise.
+	* soft-fp/op-1.h (_FP_FRAC_SRST_1, __FP_FRAC_SRST_1): Define.
+	(_FP_FRAC_CONV_1_1): Don't define.
+	(_FP_FRAC_COPY_1_1): Define.
+	* soft-fp/op-2.h (_FP_FRAC_SRST_2): Define.
+	(_FP_FRAC_CONV_1_2, _FP_FRAC_CONV_2_1): Don't define.
+	(_FP_FRAC_COPY_1_2, _FP_FRAC_COPY_2_1): Define.
+	* soft-fp/op-4.h (_FP_FRAC_SRST_4): Define.
+	(_FP_FRAC_SRS_4): Define based on _FP_FRAC_SRST_4.
+	(_FP_FRAC_CONV_1_4, _FP_FRAC_CONV_2_4): Don't define.
+	(_FP_FRAC_COPY_1_4, _FP_FRAC_COPY_2_4): Define.
+	(_FP_FRAC_CONV_4_1, _FP_FRAC_CONV_4_2): Don't define.
+	(_FP_FRAC_COPY_4_1, _FP_FRAC_COPY_4_2): Define.
+	* soft-fp/single.h (_FP_FRACTBITS_S): Define.
+	(_FP_FRACXBITS_S): Define in terms of _FP_FRACXBITS_S.
+	(_FP_WFRACXBITS_S): Likewise.
+	(_FP_QNANBIT_SH_S, _FP_IMPLBIT_SH_S): Define.
+	(FP_UNPACK_SEMIRAW_S, FP_UNPACK_SEMIRAW_SP): Define.
+	(FP_PACK_SEMIRAW_S, FP_PACK_SEMIRAW_SP): Define.
+	* soft-fp/double.h (_FP_QNANBIT_SH_D, _FP_IMPLBIT_SH_D): Define.
+	(FP_UNPACK_SEMIRAW_D, FP_UNPACK_SEMIRAW_D): Define
+	(FP_PACK_SEMIRAW_D, FP_PACK_SEMIRAW_DP): Define.
+	* soft-fp/extended.h (_FP_QNANBIT_SH_E, _FP_IMPLBIT_SH_E): Define.
+	(FP_UNPACK_EP): Correct typo.
+	(FP_UNPACK_SEMIRAW_E, FP_UNPACK_SEMIRAW_EP): Define.
+	(FP_PACK_SEMIRAW_E, FP_PACK_SEMIRAW_EP): Define.
+	* soft-fp/quad.h (_FP_QNANBIT_SH_Q, _FP_IMPLBIT_SH_Q): Define.
+	(FP_UNPACK_SEMIRAW_Q, FP_UNPACK_SEMIRAW_QP): Define.
+	(FP_PACK_SEMIRAW_Q, FP_PACK_SEMIRAW_QP): Define.
+	* soft-fp/fixdfdi.c: Use unsigned type for result of conversion.
+	* soft-fp/fixdfsi.c: Likewise.
+	* soft-fp/fixsfdi.c: Likewise.
+	* soft-fp/fixsfsi.c: Likewise.
+	* soft-fp/fixtfdi.c: Likewise.
+	* soft-fp/fixtfsi.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtxq.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_nintxq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoi.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoll.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoi.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoll.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoi.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtox.c: Likewise.
+	* soft-fp/adddf3.c: Update for changed soft-fp interfaces.
+	* soft-fp/addsf3.c: Likewise.
+	* soft-fp/addtf3.c: Likewise.
+	* soft-fp/extenddftf2.c: Likewise.
+	* soft-fp/extendsfdf2.c: Likewise.
+	* soft-fp/extendsftf2.c: Likewise.
+	* soft-fp/fixdfdi.c: Likewise.
+	* soft-fp/fixdfsi.c: Likewise.
+	* soft-fp/fixsfdi.c: Likewise.
+	* soft-fp/fixsfsi.c: Likewise.
+	* soft-fp/fixtfdi.c: Likewise.
+	* soft-fp/fixtfsi.c: Likewise.
+	* soft-fp/fixunsdfdi.c: Likewise.
+	* soft-fp/fixunsdfsi.c: Likewise.
+	* soft-fp/fixunssfdi.c: Likewise.
+	* soft-fp/fixunssfsi.c: Likewise.
+	* soft-fp/fixunstfdi.c: Likewise.
+	* soft-fp/fixunstfsi.c: Likewise.
+	* soft-fp/floatdidf.c: Likewise.
+	* soft-fp/floatdisf.c: Likewise.
+	* soft-fp/floatditf.c: Likewise.
+	* soft-fp/floatsidf.c: Likewise.
+	* soft-fp/floatsisf.c: Likewise.
+	* soft-fp/floatsitf.c: Likewise.
+	* soft-fp/floatundidf.c: Likewise.
+	* soft-fp/floatundisf.c: Likewise.
+	* soft-fp/floatunditf.c: Likewise.
+	* soft-fp/floatunsidf.c: Likewise.
+	* soft-fp/floatunsisf.c: Likewise.
+	* soft-fp/floatunsitf.c: Likewise.
+	* soft-fp/subdf3.c: Likewise.
+	* soft-fp/subsf3.c: Likewise.
+	* soft-fp/subtf3.c: Likewise.
+	* soft-fp/truncdfsf2.c: Likewise.
+	* soft-fp/trunctfdf2.c: Likewise.
+	* soft-fp/trunctfsf2.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_add.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtqux.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtqx.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvttx.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtxq.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_cvtxt.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_nintxq.c: Likewise.
+	* sysdeps/alpha/soft-fp/ots_sub.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_add.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_dtoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_itoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_lltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtod.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoi.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoll.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtos.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtou.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoull.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_stoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_sub.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_ulltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_utoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_add.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_dtoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_itoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_lltoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtod.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoi.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoll.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtos.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtou.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoull.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_stoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_sub.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_ulltoq.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/q_utoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_add.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_dtoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_itoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtod.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoi.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtos.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoui.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoux.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtox.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_stoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_sub.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_uitoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_uxtoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_xtoq.c: Likewise.
 
 2006-02-23  Roland McGrath  <roland@redhat.com>
 

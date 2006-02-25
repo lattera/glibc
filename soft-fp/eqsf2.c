@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return 0 iff a == b, 1 otherwise
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,7 +23,7 @@
 #include "soft-fp.h"
 #include "single.h"
 
-int __eqsf2(float a, float b)
+int __eqsf2(SFtype a, SFtype b)
 {
   FP_DECL_EX;
   FP_DECL_S(A); FP_DECL_S(B);

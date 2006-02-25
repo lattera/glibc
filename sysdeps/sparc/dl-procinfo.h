@@ -1,5 +1,6 @@
-/* Linux/sparc64 version of processor capability information handling macros.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Linux/sparc version of processor capability information handling macros.
+   Copyright (C) 1999,2000,2001,2002,2003,2004,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -35,7 +36,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", GLRO(dl_sparc64_cap_flags)[i]);
+      _dl_printf (" %s", GLRO(dl_sparc_cap_flags)[i]);
 
   _dl_printf ("\n");
 
@@ -46,24 +47,25 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return GLRO(dl_sparc64_cap_flags)[idx];
+  return GLRO(dl_sparc_cap_flags)[idx];
 };
 
-
 static inline int
-__attribute__ ((unused))
+__attribute__ ((unused, always_inline))
 _dl_string_hwcap (const char *str)
 {
   int i;
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, GLRO(dl_sparc64_cap_flags) [i]) == 0)
+      if (strcmp (str, GLRO(dl_sparc_cap_flags) [i]) == 0)
 	return i;
     }
   return -1;
 };
 
-#define HWCAP_IMPORTANT (HWCAP_SPARC_ULTRA3)
+#include <bits/wordsize.h>
+#define HWCAP_IMPORTANT_V9 (__WORDSIZE__ == 64 ? 0 : HWCAP_SPARC_V9)
+#define HWCAP_IMPORTANT (HWCAP_IMPORTANT_V9|HWCAP_SPARC_ULTRA3)
 
 /* There are no different platforms defined.  */
 #define _dl_platform_string(idx) ""

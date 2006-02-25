@@ -23,7 +23,7 @@
 #include "single.h"
 
 int
-__unordsf2(float a, float b)
+__unordsf2(SFtype a, SFtype b)
 {
   FP_DECL_S(A);
   FP_DECL_S(B);

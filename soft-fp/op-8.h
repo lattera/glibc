@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Basic eight-word fraction declaration and manipulation.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz) and
@@ -83,13 +83,12 @@
     _up = _FP_W_TYPE_SIZE - _down;					\
     for (_s = _i = 0; _i < _skip; ++_i)					\
       _s |= X##_f[_i];							\
-    _s |= X##_f[_i] << _up;						\
-/* s is now != 0 if we want to set the LSbit */				\
     if (!_down)								\
       for (_i = 0; _i <= 7-_skip; ++_i)					\
 	X##_f[_i] = X##_f[_i+_skip];					\
     else								\
       {									\
+	_s |= X##_f[_i] << _up;						\
 	for (_i = 0; _i < 7-_skip; ++_i)				\
 	  X##_f[_i] = X##_f[_i+_skip] >> _down				\
 		      | X##_f[_i+_skip+1] << _up;			\

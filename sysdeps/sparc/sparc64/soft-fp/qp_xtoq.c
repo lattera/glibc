@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    (*c) = (long double)(*a)
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -29,7 +29,7 @@ void _Qp_xtoq(long double *c, const long a)
   FP_DECL_Q(C);
   long b = a;
 
-  FP_FROM_INT_Q(C, b, 64, long);
-  FP_PACK_QP(c, C);
+  FP_FROM_INT_Q(C, b, 64, unsigned long);
+  FP_PACK_RAW_QP(c, C);
   QP_NO_EXCEPTIONS;
 }

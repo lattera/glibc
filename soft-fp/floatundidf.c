@@ -28,10 +28,10 @@ __floatundidf(UDItype i)
 {
   FP_DECL_EX;
   FP_DECL_D(A);
-  double a;
+  DFtype a;
 
-  FP_FROM_INT_D(A, i, 64, long long);
-  FP_PACK_D(a, A);
+  FP_FROM_INT_D(A, i, DI_BITS, UDItype);
+  FP_PACK_RAW_D(a, A);
   FP_HANDLE_EXCEPTIONS;
 
   return a;

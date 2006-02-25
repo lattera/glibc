@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Convert a to 64bit unsigned integer
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,14 +23,14 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-UDItype __fixunstfdi(long double a)
+UDItype __fixunstfdi(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);
   UDItype r;
 
-  FP_UNPACK_Q(A, a);
-  FP_TO_INT_Q(r, A, 64, 0);
+  FP_UNPACK_RAW_Q(A, a);
+  FP_TO_INT_Q(r, A, DI_BITS, 0);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

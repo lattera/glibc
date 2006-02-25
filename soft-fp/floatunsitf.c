@@ -23,15 +23,15 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-long double
+TFtype
 __floatunsitf(USItype i)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);
-  long double a;
+  TFtype a;
 
-  FP_FROM_INT_Q(A, i, 32, int);
-  FP_PACK_Q(a, A);
+  FP_FROM_INT_Q(A, i, SI_BITS, USItype);
+  FP_PACK_RAW_Q(a, A);
   FP_HANDLE_EXCEPTIONS;
 
   return a;

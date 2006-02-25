@@ -23,7 +23,7 @@
 #include "quad.h"
 
 int
-__unordtf2(long double a, long double b)
+__unordtf2(TFtype a, TFtype b)
 {
   FP_DECL_Q(A);
   FP_DECL_Q(B);

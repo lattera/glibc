@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return a - b
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,17 +23,17 @@
 #include "soft-fp.h"
 #include "double.h"
 
-double __subdf3(double a, double b)
+DFtype __subdf3(DFtype a, DFtype b)
 {
   FP_DECL_EX;
   FP_DECL_D(A); FP_DECL_D(B); FP_DECL_D(R);
-  double r;
+  DFtype r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_D(A, a);
-  FP_UNPACK_D(B, b);
+  FP_UNPACK_SEMIRAW_D(A, a);
+  FP_UNPACK_SEMIRAW_D(B, b);
   FP_SUB_D(R, A, B);
-  FP_PACK_D(r, R);
+  FP_PACK_SEMIRAW_D(r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

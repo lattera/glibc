@@ -30,8 +30,8 @@ long double _Q_utoq(const unsigned int a)
   long double c;
   unsigned int b = a;
 
-  FP_FROM_INT_Q(C, b, 32, int);
-  FP_PACK_Q(c, C);
+  FP_FROM_INT_Q(C, b, 32, unsigned int);
+  FP_PACK_RAW_Q(c, C);
   FP_CLEAR_EXCEPTIONS;
   FP_HANDLE_EXCEPTIONS;
   return c;

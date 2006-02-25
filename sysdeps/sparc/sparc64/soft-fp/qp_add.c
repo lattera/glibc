@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    (*c) = (*a) + (*b)
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -29,10 +29,10 @@ void _Qp_add(long double *c, const long double *a, const long double *b)
   FP_DECL_Q(A); FP_DECL_Q(B); FP_DECL_Q(C);
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_QP(A, a);
-  FP_UNPACK_QP(B, b);
+  FP_UNPACK_SEMIRAW_QP(A, a);
+  FP_UNPACK_SEMIRAW_QP(B, b);
   FP_ADD_Q(C, A, B);
-  FP_PACK_QP(c, C);
+  FP_PACK_SEMIRAW_QP(c, C);
   QP_HANDLE_EXCEPTIONS(__asm (
 "	ldd [%1], %%f52\n"
 "	ldd [%1+8], %%f54\n"

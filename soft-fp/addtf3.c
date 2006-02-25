@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return a + b
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,17 +23,17 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-long double __addtf3(long double a, long double b)
+TFtype __addtf3(TFtype a, TFtype b)
 {
   FP_DECL_EX;
   FP_DECL_Q(A); FP_DECL_Q(B); FP_DECL_Q(R);
-  long double r;
+  TFtype r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
-  FP_UNPACK_Q(B, b);
+  FP_UNPACK_SEMIRAW_Q(A, a);
+  FP_UNPACK_SEMIRAW_Q(B, b);
   FP_ADD_Q(R, A, B);
-  FP_PACK_Q(r, R);
+  FP_PACK_SEMIRAW_Q(r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;

@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return -a
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -23,11 +23,11 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-long double __negtf2(long double a)
+TFtype __negtf2(TFtype a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A); FP_DECL_Q(R);
-  long double r;
+  TFtype r;
 
   FP_UNPACK_Q(A, a);
   FP_NEG_Q(R, A);

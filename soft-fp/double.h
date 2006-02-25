@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Definitions for IEEE Double Precision
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -42,16 +42,22 @@
 
 #define _FP_QNANBIT_D		\
 	((_FP_W_TYPE)1 << (_FP_FRACBITS_D-2) % _FP_W_TYPE_SIZE)
+#define _FP_QNANBIT_SH_D		\
+	((_FP_W_TYPE)1 << (_FP_FRACBITS_D-2+_FP_WORKBITS) % _FP_W_TYPE_SIZE)
 #define _FP_IMPLBIT_D		\
 	((_FP_W_TYPE)1 << (_FP_FRACBITS_D-1) % _FP_W_TYPE_SIZE)
+#define _FP_IMPLBIT_SH_D		\
+	((_FP_W_TYPE)1 << (_FP_FRACBITS_D-1+_FP_WORKBITS) % _FP_W_TYPE_SIZE)
 #define _FP_OVERFLOW_D		\
 	((_FP_W_TYPE)1 << _FP_WFRACBITS_D % _FP_W_TYPE_SIZE)
+
+typedef float DFtype __attribute__((mode(DF)));
 
 #if _FP_W_TYPE_SIZE < 64
 
 union _FP_UNION_D
 {
-  double flt;
+  DFtype flt;
   struct {
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign  : 1;
@@ -89,6 +95,18 @@ union _FP_UNION_D
     _FP_UNPACK_CANONICAL(D,2,X);	\
   } while (0)
 
+#define FP_UNPACK_SEMIRAW_D(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_2(D,X,val);		\
+    _FP_UNPACK_SEMIRAW(D,2,X);		\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_DP(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_2_P(D,X,val);	\
+    _FP_UNPACK_SEMIRAW(D,2,X);		\
+  } while (0)
+
 #define FP_PACK_D(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(D,2,X);		\
@@ -98,6 +116,19 @@ union _FP_UNION_D
 #define FP_PACK_DP(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(D,2,X);		\
+    if (!FP_INHIBIT_RESULTS)		\
+      _FP_PACK_RAW_2_P(D,val,X);	\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_D(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(D,2,X);		\
+    _FP_PACK_RAW_2(D,val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_DP(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(D,2,X);		\
     if (!FP_INHIBIT_RESULTS)		\
       _FP_PACK_RAW_2_P(D,val,X);	\
   } while (0)
@@ -125,7 +156,7 @@ union _FP_UNION_D
 
 union _FP_UNION_D
 {
-  double flt;
+  DFtype flt;
   struct {
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign : 1;
@@ -161,6 +192,18 @@ union _FP_UNION_D
     _FP_UNPACK_CANONICAL(D,1,X);	\
   } while (0)
 
+#define FP_UNPACK_SEMIRAW_D(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_2(1,X,val);		\
+    _FP_UNPACK_SEMIRAW(D,1,X);		\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_DP(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_2_P(1,X,val);	\
+    _FP_UNPACK_SEMIRAW(D,1,X);		\
+  } while (0)
+
 #define FP_PACK_D(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(D,1,X);		\
@@ -170,6 +213,19 @@ union _FP_UNION_D
 #define FP_PACK_DP(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(D,1,X);		\
+    if (!FP_INHIBIT_RESULTS)		\
+      _FP_PACK_RAW_1_P(D,val,X);	\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_D(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(D,1,X);		\
+    _FP_PACK_RAW_1(D,val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_DP(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(D,1,X);		\
     if (!FP_INHIBIT_RESULTS)		\
       _FP_PACK_RAW_1_P(D,val,X);	\
   } while (0)

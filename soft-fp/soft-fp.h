@@ -1,5 +1,5 @@
 /* Software floating-point emulation.
-   Copyright (C) 1997,1998,1999,2000,2002,2003,2005
+   Copyright (C) 1997,1998,1999,2000,2002,2003,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
@@ -25,11 +25,19 @@
 #ifndef SOFT_FP_H
 #define SOFT_FP_H
 
+#ifdef _LIBC
 #include <sfp-machine.h>
+#else
+#include "sfp-machine.h"
+#endif
 
 /* Allow sfp-machine to have its own byte order definitions. */
 #ifndef __BYTE_ORDER
+#ifdef _LIBC
 #include <endian.h>
+#else
+#error "endianness not defined by sfp-machine.h"
+#endif
 #endif
 
 #define _FP_WORKBITS		3
@@ -172,10 +180,21 @@ typedef unsigned int UHWtype __attribute__((mode(HI)));
 typedef USItype UHWtype;
 #endif
 
+#define SI_BITS		(__CHAR_BIT__ * (int)sizeof(SItype))
+#define DI_BITS		(__CHAR_BIT__ * (int)sizeof(DItype))
+
 #ifndef umul_ppmm
+#ifdef _LIBC
 #include <stdlib/longlong.h>
+#else
+#include "longlong.h"
+#endif
 #endif
 
+#ifdef _LIBC
 #include <stdlib.h>
+#else
+extern void abort (void);
+#endif
 
 #endif

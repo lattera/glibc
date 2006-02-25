@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    (*c) = (long double)(a)
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -31,13 +31,13 @@ void _Qp_stoq(long double *c, const float a)
   FP_DECL_Q(C);
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_S(A, a);
+  FP_UNPACK_RAW_S(A, a);
 #if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
-  FP_CONV(Q,S,4,1,C,A);
+  FP_EXTEND(Q,S,4,1,C,A);
 #else
-  FP_CONV(Q,S,2,1,C,A);
+  FP_EXTEND(Q,S,2,1,C,A);
 #endif
-  FP_PACK_QP(c, C);
+  FP_PACK_RAW_QP(c, C);
   QP_HANDLE_EXCEPTIONS(__asm (
 "	fstoq %1, %%f60\n"
 "	std %%f60, [%0]\n"
