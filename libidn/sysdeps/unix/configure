@@ -1,2 +1,0 @@
-# Signal that libidn is available.
-libc_cv_idn=yes

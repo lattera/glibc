@@ -1,0 +1,5 @@
+dnl glibc configure fragment for libidn add-on
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+# Get this defined in config.h for main source code to test.
+AC_DEFINE([HAVE_LIBIDN])

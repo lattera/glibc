@@ -1,3 +1,7 @@
+2006-02-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/gnu/net/if.h (IFF_DYNAMIC): New macro.
+
 2006-02-24  David S. Miller  <davem@sunset.davemloft.net>
 
 	* configure.in: Use sparc/sparc32/sparcv9/sparcv9b in place

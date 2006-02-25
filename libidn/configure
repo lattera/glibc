@@ -1,3 +1,7 @@
-# This is only to keep the GNU C library configure mechanism happy.
-# This is a shell script fragment sourced by the main configure script.
-# We have nothing we need to add here.
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+# Get this defined in config.h for main source code to test.
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_LIBIDN 1
+_ACEOF
+

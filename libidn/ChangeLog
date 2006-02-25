@@ -1,3 +1,9 @@
+2006-02-25  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: New file.
+	* configure: Replaced with generated file.
+	* sysdeps/unix/configure: File removed.
+
 2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* iconvme.c (SIZE_MAX): New macro, if not already defined.
