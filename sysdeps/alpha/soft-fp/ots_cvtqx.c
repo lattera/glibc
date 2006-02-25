@@ -33,7 +33,7 @@ _OtsCvtQX (long a)
   FP_DECL_Q(C);
   FP_DECL_RETURN(c);
 
-  FP_FROM_INT_Q(C, a, 64, long);
+  FP_FROM_INT_Q(C, a, 64, unsigned long);
   FP_PACK_RAW_Q(c, C);
   FP_RETURN(c);
 }
