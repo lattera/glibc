@@ -461,7 +461,7 @@ sparcv8 | supersparc | hypersparc)
 sparcv8plus | sparcv8plusa | sparcv9)
 		base_machine=sparc machine=sparc/sparc32/sparcv9 ;;
 sparcv8plusb | sparcv9b)
-		base_machine=sparc machine=sparc/sparc32/sparcv9b ;;
+		base_machine=sparc machine=sparc/sparc32/sparcv9/sparcv9b ;;
 sparc64)
 		base_machine=sparc machine=sparc/sparc64 ;;
 sparc64b)

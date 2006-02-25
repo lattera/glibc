@@ -1,3 +1,11 @@
+2006-02-24  David S. Miller  <davem@sunset.davemloft.net>
+
+	* configure.in: Use sparc/sparc32/sparcv9/sparcv9b in place
+	of sparc/sparc32/sparcv9b.
+	* configure: Regenerated.
+	* sysdeps/sparc/sparc32/sparcv9b/Implies: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9b/Implies: File removed.
+
 2006-02-24  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (HWCAP_SPARC_BLKINIT): New macro.
