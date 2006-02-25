@@ -1,5 +1,5 @@
 /* Software floating-point emulation: signed integer to float conversion.
-   Copyright (C) 1997,1999,2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -34,6 +34,6 @@ _OtsCvtQX (long a)
   FP_DECL_RETURN(c);
 
   FP_FROM_INT_Q(C, a, 64, long);
-  FP_PACK_Q(c, C);
+  FP_PACK_RAW_Q(c, C);
   FP_RETURN(c);
 }

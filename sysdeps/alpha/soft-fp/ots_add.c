@@ -1,5 +1,5 @@
 /* Software floating-point emulation: addition.
-   Copyright (C) 1997,1999,2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -29,10 +29,10 @@ _OtsAddX(long al, long ah, long bl, long bh, long _round)
   FP_DECL_RETURN(c);
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
-  FP_UNPACK_Q(B, b);
+  FP_UNPACK_SEMIRAW_Q(A, a);
+  FP_UNPACK_SEMIRAW_Q(B, b);
   FP_ADD_Q(C, A, B);
-  FP_PACK_Q(c, C);
+  FP_PACK_SEMIRAW_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
 
   FP_RETURN(c);

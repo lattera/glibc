@@ -1,5 +1,5 @@
 /* Software floating-point emulation: floating point extension.
-   Copyright (C) 1997,1999,2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -35,13 +35,13 @@ _OtsConvertFloatTX(double a)
   FP_DECL_Q(C);
   FP_DECL_RETURN(c);
 
-  FP_UNPACK_D(A, a);
+  FP_UNPACK_RAW_D(A, a);
 #if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
-  FP_CONV(Q,D,4,2,C,A);
+  FP_EXTEND(Q,D,4,2,C,A);
 #else
-  FP_CONV(Q,D,2,1,C,A);
+  FP_EXTEND(Q,D,2,1,C,A);
 #endif
-  FP_PACK_Q(c, C);
+  FP_PACK_RAW_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
 
   FP_RETURN(c);
