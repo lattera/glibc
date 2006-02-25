@@ -47,12 +47,10 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_sparc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_sparc_cap_flags[6][7]
+PROCINFO_CLASS const char _dl_sparc_cap_flags[7][7]
 #endif
 #ifndef PROCINFO_DECL
-= {
-    "flush", "stbar", "swap", "muldiv", "v9", "ultra3"
-  }
+  = { "flush", "stbar", "swap", "muldiv", "v9", "ultra3", "v9v" };
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
 ;

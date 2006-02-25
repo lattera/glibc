@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1250,14 +1250,15 @@ typedef struct
 #define DT_SPARC_REGISTER 0x70000001
 #define DT_SPARC_NUM	2
 
-/* Bits present in AT_HWCAP, primarily for Sparc32.  */
+/* Bits present in AT_HWCAP on SPARC.  */
 
-#define HWCAP_SPARC_FLUSH	1	/* The cpu supports flush insn.  */
+#define HWCAP_SPARC_FLUSH	1	/* The CPU supports flush insn.  */
 #define HWCAP_SPARC_STBAR	2
 #define HWCAP_SPARC_SWAP	4
 #define HWCAP_SPARC_MULDIV	8
-#define HWCAP_SPARC_V9		16	/* The cpu is v9, so v8plus is ok.  */
+#define HWCAP_SPARC_V9		16	/* The CPU is v9, so v8plus is ok.  */
 #define HWCAP_SPARC_ULTRA3	32
+#define HWCAP_SPARC_BLKINIT	64	/* Sun4v with block-init/load-twin.  */
 
 /* MIPS R3000 specific definitions.  */
 

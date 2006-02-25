@@ -1,5 +1,11 @@
 2006-02-24  Roland McGrath  <roland@redhat.com>
 
+	* elf/elf.h (HWCAP_SPARC_BLKINIT): New macro.
+	* sysdeps/sparc/dl-procinfo.h (HWCAP_IMPORTANT): Add it.
+	(_DL_HWCAP_COUNT): Increase to 7.
+	* sysdeps/sparc/dl-procinfo.c (_dl_sparc_cap_flags): Add "v9v".
+	From David S. Miller <davem@sunset.davemloft.net>.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.c: Moved to ...
 	* sysdeps/sparc/dl-procinfo.c: ... here, new file.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Moved to ...
