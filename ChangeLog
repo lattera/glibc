@@ -1,5 +1,16 @@
 2006-02-26  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/common/Makefile: File removed.
+	* sysdeps/unix/common/glue-ctype.c: File removed.
+	* sysdeps/unix/common/configure.in: File removed.
+	* sysdeps/unix/common/configure: File removed.
+
+	* sysdeps/unix/configure.in: File removed.
+	* sysdeps/unix/configure: File removed.
+	* sysdeps/unix/make_errlist.c: File removed.
+	* sysdeps/unix/Makefile ($(objpfx)errlist.c, $(objpfx)make_errlist):
+	Rules removed.
+
 	* timezone/africa: Update from tzdata2006b (comment changes only).
 	* timezone/antarctica: Likewise.
 	* timezone/asia: Likewise.
