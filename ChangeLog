@@ -1,3 +1,23 @@
+2006-02-26  Roland McGrath  <roland@redhat.com>
+
+	* timezone/antarctica: Update from tzdata2006b (comment changes only).
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/factory: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/pacificnew: Likewise.
+	* timezone/solar87: Likewise.
+	* timezone/solar88: Likewise.
+	* timezone/solar89: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2006-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h (do_lookup_x): No need to compare SKIP to NULL
