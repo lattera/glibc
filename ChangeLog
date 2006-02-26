@@ -1,6 +1,7 @@
 2006-02-26  Roland McGrath  <roland@redhat.com>
 
-	* timezone/antarctica: Update from tzdata2006b (comment changes only).
+	* timezone/africa: Update from tzdata2006b (comment changes only).
+	* timezone/antarctica: Likewise.
 	* timezone/asia: Likewise.
 	* timezone/australasia: Likewise.
 	* timezone/backward: Likewise.
