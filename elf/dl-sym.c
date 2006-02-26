@@ -103,7 +103,7 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader != NULL)
 	l = l->l_loader;
 
-      result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
+      result = GLRO(dl_lookup_symbol_x) (name, match, &ref, l->l_local_scope,
 					 vers, 0, 0, match);
     }
   else
