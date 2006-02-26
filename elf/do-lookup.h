@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ do_lookup_x (const char *undef_name, unsigned long int hash,
       map = list[i]->l_real;
 
       /* Here come the extra test needed for `_dl_lookup_symbol_skip'.  */
-      if (skip != NULL && map == skip)
+      if (map == skip)
 	continue;
 
       /* Don't search the executable when resolving a copy reloc.  */
