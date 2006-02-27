@@ -1,3 +1,9 @@
+2006-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/linkat.c (linkat): Allow flags to be set
+	when syscall is used.
+	* io/fcntl.h (AT_SYMLINK_FOLLOW): Define.
+
 2006-02-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/common/Makefile: File removed.

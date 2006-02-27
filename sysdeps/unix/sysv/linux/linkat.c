@@ -37,13 +37,6 @@ linkat (fromfd, from, tofd, to, flags)
 {
   int result;
 
-  // XXX Will be removed once the kernel support is in place.
-  if (flags != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
 #ifdef __NR_linkat
 # ifndef __ASSUME_ATFCTS
   if (__have_atfcts >= 0)
@@ -60,6 +53,13 @@ linkat (fromfd, from, tofd, to, flags)
 #endif
 
 #ifndef __ASSUME_ATFCTS
+  /* Without kernel support we cannot handle AT_SYMLINK_FOLLOW.  */
+  if (flags != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   static const char procfd[] = "/proc/self/fd/%d/%s";
   char *buffrom = NULL;
 
