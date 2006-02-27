@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,12 @@
 
 /* Make a link to FROM relative to FROMFD called TO relative to TOFD.  */
 int
-linkat (fromfd, from, tofd, to)
+linkat (fromfd, from, tofd, to, flags)
      int fromfd;
      const char *from;
      int tofd;
      const char *to;
+     int flags;
 {
   if (from == NULL || to == NULL)
     {
