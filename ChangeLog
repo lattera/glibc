@@ -32,6 +32,10 @@
 
 2006-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Add fifth parameter to linkat.
+	* io/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+
 	* elf/do-lookup.h (do_lookup_x): No need to compare SKIP to NULL
 	before comparison with MAP.
 
