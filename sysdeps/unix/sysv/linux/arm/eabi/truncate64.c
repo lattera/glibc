@@ -71,5 +71,5 @@ truncate64 (const char *path, off64_t length)
 
 #else
 /* Use the generic implementation.  */
-# include <sysdeps/generic/truncate64.c>
+# include <misc/truncate64.c>
 #endif
