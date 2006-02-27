@@ -1,3 +1,10 @@
+2006-02-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/pt-raise.c: Moved to ...
+	* pt-raise.c: ... here.
+	* sysdeps/generic/lowlevellock.h: Moved to ...
+	* lowlevellock.h: ... here.
+
 2006-02-23  Roland McGrath  <roland@redhat.com>
 
 	* descr.h (struct pthread): Add final member `end_padding'.
