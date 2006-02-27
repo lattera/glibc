@@ -758,7 +758,8 @@ extern int link (__const char *__from, __const char *__to)
 /* Like link but relative paths in TO and FROM are interpreted relative
    to FROMFD and TOFD respectively.  */
 extern int linkat (int __fromfd, __const char *__from, int __tofd,
-		   __const char *__to) __THROW __nonnull ((2, 4)) __wur;
+		   __const char *__to, int __flags)
+     __THROW __nonnull ((2, 4)) __wur;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
