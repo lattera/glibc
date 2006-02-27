@@ -105,7 +105,7 @@ do_test (void)
 
   close (fd);
 
-  if (linkat (dir_fd, "some-file", dir_fd, "another-file") != 0)
+  if (linkat (dir_fd, "some-file", dir_fd, "another-file", 0) != 0)
     {
       puts ("symlinkat failed");
       return 1;
