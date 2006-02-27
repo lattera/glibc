@@ -35,6 +35,7 @@
 	* posix/unistd.h: Add fifth parameter to linkat.
 	* io/linkat.c: Likewise.
 	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* io/tst-linkat.c (do_test): Pass new parameter to linkat.
 
 	* elf/do-lookup.h (do_lookup_x): No need to compare SKIP to NULL
 	before comparison with MAP.
