@@ -1,4 +1,5 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Low level locking macros used in NPTL implementation.  Stub version.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 

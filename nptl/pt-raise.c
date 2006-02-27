@@ -1,4 +1,5 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* ISO C raise function for libpthread.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
