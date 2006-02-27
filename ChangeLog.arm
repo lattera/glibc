@@ -1,5 +1,23 @@
 2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h
+	(struct __pthread_internal_slist): New.
+	(union pthread_mutex_t): Give struct a tag.  Add __list
+	in an anonymous union.
+	(union pthread_cond_t): Use __extension__.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+	(__lll_mutex_lock_outlined, __lll_mutex_timedlock_outlined): Remove
+	prototypes.
+	(lll_robust_mutex_dead, __lll_robust_mutex_trylock,
+	lll_robust_mutex_trylock, __lll_robust_mutex_lock,
+	lll_robust_mutex_lock, lll_robust_mutex_cond_lock,
+	__lll_robust_mutex_timedlock, lll_robust_mutex_timedlock,
+	__lll_robust_mutex_unlock, lll_robust_mutex_unlock): New.
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): New
+	prototypes.
+
+2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/arm/eabi/ftruncate64.c: Don't use
 	sysdeps/generic/.
 	* sysdeps/unix/sysv/linux/arm/eabi/truncate64.c: Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,11 +43,17 @@ typedef union
 } pthread_attr_t;
 
 
+typedef struct __pthread_internal_slist
+{
+  struct __pthread_internal_slist *__next;
+} __pthread_slist_t;
+
+
 /* Data structures for mutex handling.  The structure of the attribute
    type is not exposed on purpose.  */
 typedef union
 {
-  struct
+  struct __pthread_mutex_s
   {
     int __lock;
     unsigned int __count;
@@ -56,7 +62,11 @@ typedef union
        binary compatibility.  */
     int __kind;
     unsigned int __nusers;
-    int __spins;
+    __extension__ union
+    {
+      int __spins;
+      __pthread_slist_t __list;
+    };
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;
@@ -77,15 +87,15 @@ typedef union
   {
     int __lock;
     unsigned int __futex;
-    unsigned long long int __total_seq;
-    unsigned long long int __wakeup_seq;
-    unsigned long long int __woken_seq;
+    __extension__ unsigned long long int __total_seq;
+    __extension__ unsigned long long int __wakeup_seq;
+    __extension__ unsigned long long int __woken_seq;
     void *__mutex;
     unsigned int __nwaiters;
     unsigned int __broadcast_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
-  long long int __align;
+  __extension__ long long int __align;
 } pthread_cond_t;
 
 typedef union
