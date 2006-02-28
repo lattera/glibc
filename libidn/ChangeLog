@@ -1,3 +1,9 @@
+2006-02-27  Roland McGrath  <roland@redhat.com>
+
+	* Makefile: Use $(..) in place of ../.
+	* configure.in (libc_add_on_canonical, libc_add_on_subdirs): Set them.
+	* configure: Regenerated.
+
 2006-02-25  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: New file.

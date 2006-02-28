@@ -1,3 +1,7 @@
+2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/aio_misc.h: Include <limits.h>.
+
 2006-02-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/Subdirs: List nptl here too.

@@ -22,6 +22,7 @@
 # include <signal.h>
 # include <sysdep.h>
 # include <pthread.h>
+# include <limits.h>
 
 # define aio_start_notify_thread __aio_start_notify_thread
 # define aio_create_helper_thread __aio_create_helper_thread

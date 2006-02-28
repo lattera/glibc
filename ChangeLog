@@ -1,5 +1,8 @@
 2006-02-27  Roland McGrath  <roland@redhat.com>
 
+	* scripts/config.guess: Update from master, timestamp='2006-02-27'.
+	* scripts/config.sub: Update from master, timestamp='2006-02-27'.
+
 	* Makefile (subdir-target-args): New variable.
 	($(all-subdirs-targets)): Use it in place of -C option.
 	* Rules: Use $(..) instead of ../ if it's already defined.
