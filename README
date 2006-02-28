@@ -1,13 +1,24 @@
-This directory is an add-on for the GNU C Library (glibc).
-It provides additional ports to machines and/or operating systems that are
-not maintained in the official glibc source tree.
+This is the glibc ports repository, an add-on for the GNU C Library (glibc).
+It contains code that is not maintained in the official glibc source tree.
 
-The scripts in the top level of this directory provide the infrastructure
-necessary for a glibc add-on.  You can make a new add-on containing one or
-more ports by copying configure, configure.in, and Makeconfig into your own
-add-on directory, which you can give any name (it doesn't have to be
-`ports').  You may want to include a README and Banner of your own talking
-about your port's code in particular, rather than the generic ones here.
+This includes working ports to GNU/Linux on some machine architectures that
+are not maintained in the official glibc source tree.  It also includes
+some code once used by old libc ports now defunct, which has been abandoned
+but may be useful for some future porter to examine.  It may also include
+some optimized functions tailored for specific CPU implementations of an
+architecture, to be selected using --with-cpu.
+
+The ports repository is cooperatively maintained by volunteers on the
+<libc-ports@sourceware.org> mailing list, and housed in the glibc CVS as a
+module called "ports".  See http://www.gnu.org/software/libc/resources.html
+for details on using CVS.  To report a bug in code housed in the ports
+repository, please go to http://sources.redhat.com/bugzilla/ and file a bug
+report under the glibc "ports" component.
+
+An add-on for an individual port can be made from just the sysdeps/
+subdirectories containing the port's code.  You may want to include a
+README and Banner of your own talking about your port's code in particular,
+rather than the generic ones here.
 
 The real source code for any ports is found in the sysdeps/ subdirectories.
 These should be exactly what would go into the main libc source tree if you
@@ -25,15 +36,8 @@ rules for glibc add-on configure fragments.  No preconfigure file should do
 anything on an unrelated configuration, so that disparate ports can be put
 into a single add-on without interfering with each other.
 
-Like all glibc add-ons, the only way to use this is to place this directory
-(just a symlink won't do) inside the top-level glibc source directory.
-Then include the name of this directory (e.g. `ports') when you specify
-`--enable-add-ons=...' to glibc's configure (or use just --enable-add-ons
-to have it try every add-on directory sitting in your source tree).
-
-If you find problems with the top-level scripts in this add-on, please go
-to http://sources.redhat.com/bugzilla/ and file a report for the glibc
-under the "admin" component.
+Like all glibc add-ons, this must be used by specifying the directory in
+the --enable-add-ons option when running glibc's configure script.
 
 
 $Id$
