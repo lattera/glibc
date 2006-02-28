@@ -1,3 +1,7 @@
+2006-02-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Copy in i386/bits/fcntl.h.
+
 2006-02-27  Roland McGrath  <roland@redhat.com>
 
 	* scripts/config.guess: Update from master, timestamp='2006-02-27'.
