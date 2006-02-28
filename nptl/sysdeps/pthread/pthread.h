@@ -71,6 +71,17 @@ enum
 #endif
 
 
+#ifdef __USE_UNIX98
+/* Mutex protocols.  */
+enum
+{
+  PTHREAD_PRIO_NONE,
+  PTHREAD_PRIO_INHERIT,
+  PTHREAD_PRIO_PROTECT
+};
+#endif
+
+
 /* Mutex initializers.  */
 #if __WORDSIZE == 64
 # define PTHREAD_MUTEX_INITIALIZER \
@@ -711,6 +722,22 @@ extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 
 
+#ifdef __USE_UNIX98
+/* Get the priority ceiling of MUTEX.  */
+extern int pthread_mutex_getprioceiling (__const pthread_mutex_t *
+					 __restrict __mutex,
+					 int *__restrict __prioceiling)
+     __THROW;
+
+/* Set the priority ceiling of MUTEX to PRIOCEILING, return old
+   priority ceiling value in *OLD_CEILING.  */
+extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
+					 int __prioceiling,
+					 int *__restrict __old_ceiling)
+     __THROW;
+#endif
+
+
 #ifdef __USE_GNU
 /* Declare the state protected by MUTEX as consistent.  */
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex) __THROW;
@@ -745,6 +772,26 @@ extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
    PTHREAD_MUTEX_DEFAULT).  */
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW;
+
+/* Return in *PROTOCOL the mutex protocol attribute in *ATTR.  */
+extern int pthread_mutexattr_getprotocol (__const pthread_mutexattr_t *
+					  __restrict __attr,
+					  int *__restrict __protocol) __THROW;
+
+/* Set the mutex protocol attribute in *ATTR to PROTOCOL (either
+   PTHREAD_PRIO_NONE, PTHREAD_PRIO_INHERIT, or PTHREAD_PRIO_PROTECT).  */
+extern int pthread_mutexattr_setprotocol (pthread_mutexattr_t *__attr,
+					  int __protocol) __THROW;
+
+/* Return in *PRIOCEILING the mutex prioceiling attribute in *ATTR.  */
+extern int pthread_mutexattr_getprioceiling (__const pthread_mutexattr_t *
+					     __restrict __attr,
+					     int *__restrict __prioceiling)
+     __THROW;
+
+/* Set the mutex prioceiling attribute in *ATTR to PRIOCEILING.  */
+extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
+					     int __prioceiling) __THROW;
 #endif
 
 #ifdef __USE_GNU

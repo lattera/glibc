@@ -1,6 +1,6 @@
 # Subroutine makefile for compiling libc modules linked into dynamic linker.
 
-# Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -72,9 +72,15 @@ include $(patsubst %,../o-iterator.mk,$(object-suffixes-left))
 
 # This is how we descend into each subdirectory.  See below.
 define rtld-subdir-make
-$(MAKE) -C ../$* objdir=$(objdir) -f Makefile -f ../elf/rtld-Rules rtld-all \
+$(MAKE) $(subdir-args) objdir=$(objdir) \
+	-f Makefile -f ../elf/rtld-Rules rtld-all \
 	rtld-modules='$(addprefix rtld-,$(rtld-$*))'
 endef
+
+# See subdir-target-args in ../Makefile for the model.
+subdir-args = subdir=$*$(if $($*-srcdir),\
+			    -C $($*-srcdir) ..=`pwd`/,\
+			    -C $(..)$* ..=../)
 
 FORCE:
 

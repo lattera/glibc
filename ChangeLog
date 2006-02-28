@@ -1,3 +1,8 @@
+2006-02-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld-Rules (subdir-args): New variable.
+	(rtld-subdir-make): Use it.
+
 2006-02-22  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h

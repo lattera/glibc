@@ -235,6 +235,9 @@ libpthread {
   GLIBC_2.4 {
     pthread_mutexattr_getrobust_np; pthread_mutexattr_setrobust_np;
     pthread_mutex_consistent_np;
+    pthread_mutexattr_getprotocol; pthread_mutexattr_setprotocol;
+    pthread_mutexattr_getprioceiling; pthread_mutexattr_setprioceiling;
+    pthread_mutex_getprioceiling; pthread_mutex_setprioceiling;
   };
 
   GLIBC_PRIVATE {
