@@ -1,9 +1,5 @@
-# This boilerplate is necessary just because any add-on directory
-# gets added as a normal subdirectory for the glibc build process.
-
-subdir = ports
-
-include ../Rules
+# This makefile is not used by the glibc build process.
+# It's purely for making ports tarballs.
 
 .PHONY: dist dist-ports
 dist: dist-ports
