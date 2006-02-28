@@ -1,3 +1,10 @@
+2006-02-22  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(DO_CALL): Add support for 6 system call parameters.
+	(DECLARGS_6, ASMFMT_6): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Copy in i386/bits/fcntl.h.
