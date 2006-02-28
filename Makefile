@@ -29,10 +29,8 @@ sysdeps-of-stem = sysdeps/$* sysdeps/unix/sysv/linux/$*
 .PRECIOUS: %.gz %.bz2 # Don't delete output as intermediate files.
 dist-port-%: $(foreach Z,.bz2 .gz,glibc-port-%-$(dist-version).tar$Z)
 	md5sum $^
-glibc-port-%-$(dist-version).tar: configure ChangeLog
+glibc-port-%-$(dist-version).tar: ChangeLog.%
 	@rm -fr $(basename $@)
-	$(do-export) -l ports
-	rm -f $(basename $@)/ChangeLog.[a-z]*
 	$(MAKE) -q `find $(sysdeps-of-stem) -name configure`
 	$(do-export) ports/ChangeLog.$* $(addprefix ports/,$(sysdeps-of-stem))
 	mv $(basename $@)/ports/* $(basename $@)/
