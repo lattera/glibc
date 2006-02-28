@@ -1,0 +1,6 @@
+# This fragment canonicalizes the machine names for m68k variants.
+
+case "$machine" in
+m680?0)		base_machine=m68k machine=m68k/$machine ;;
+m68k)		base_machine=m68k machine=m68k/m68020 ;;
+esac
