@@ -1,5 +1,8 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* Makefile (glibc-port-%-$(dist-version).tar): Don't include top-level
+	stuff.
+
 	* README: Update for new add-on scheme.
 
 2006-02-27  Roland McGrath  <roland@redhat.com>
