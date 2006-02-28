@@ -1,5 +1,8 @@
 2006-02-28  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/sys/types.h [!__GNUC_PREREQ (2, 7)] (int64_t, u_int64_t):
+	typedef to long int resp. unsigned long int on 64-bit arches.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/umount.c: Include x86_64
 	umount.c rather than hppa umount.c.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/chown.c: Include sh chown.c
