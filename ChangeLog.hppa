@@ -1,3 +1,4 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/hppa/shlib-versions: New file.
 	* sysdeps/hppa/preconfigure: New file.
