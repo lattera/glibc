@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -95,7 +95,7 @@ $(crtstuff:%=$(objpfx)%.o): %.o: %.S $(objpfx)defs.h
 
 CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
 
-vpath initfini.c $(full_config_sysdirs)
+vpath initfini.c $(sysdirs)
 
 $(objpfx)initfini.s: initfini.c $(before-compile)
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
@@ -200,8 +200,7 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
 
-all-Banner-files = $(wildcard $(addsuffix /Banner, \
-					$(addprefix $(..), $(subdirs))))
+all-Banner-files = $(wildcard $(addsuffix /Banner,$(subdir-srcdirs)))
 $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \

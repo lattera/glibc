@@ -83,8 +83,7 @@ routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
 aux += fpioconst mp_clz_tab
-distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h \
-	      tst-putenvmod.c
+distribute := $(distribute) $(mpn-headers) fpioconst.h tst-putenvmod.c
 
 tests-extras += tst-putenvmod
 extra-objs += tst-putenvmod.os

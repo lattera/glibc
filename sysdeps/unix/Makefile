@@ -305,9 +305,6 @@ generated += stub-syscalls.c
 endif
 endif
 
-export sysdirs
-export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
-
 # This is the end of the pipeline for compiling the syscall stubs.
 # The stdin in assembler with cpp using sysdep.h macros.
 # Be sure to disable debugging info since it would all just say "<stdin>".
@@ -318,7 +315,9 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $(+sysdep_dirs); do \
 	  test -f $$dir/syscalls.list && \
-	  { $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
+	  { sysdirs='$(sysdirs)' \
+	    asm_CPP='$(COMPILE.S) -E -x assembler-with-cpp' \
+	    $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
 	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@

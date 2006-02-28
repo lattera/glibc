@@ -99,7 +99,20 @@ binfmt-subdir = aout
 endif
 
 # Complete path to sysdep dirs.
-export full_config_sysdirs := $(addprefix $(..),$(config-sysdirs))
+# `configure' writes a definition of `config-sysdirs' in `config.make'.
+sysdirs := $(foreach D,$(config-sysdirs),$(firstword $(filter /%,$D) $(..)$D))
+
+# Add-ons that contribute sysdeps trees get added to the include list
+# after sysdeps/generic.  This makes #include <sysdeps/...> work right
+# to find specific add-on files without assuming the add-on directory name.
+# It also means that headers can go into an add-on's base directory
+# instead of the add-on needing a sysdeps/generic of its own.
++sysdep_dirs := $(sysdirs) $(foreach add-on,$(sysdeps-add-ons),\
+				     $(firstword $(filter /%,$(add-on)) \
+						 $(..)$(add-on)))
+ifdef objdir
++sysdep_dirs := $(objdir) $(+sysdep_dirs)
+endif
 
 # Run config.status to update config.make and config.h.  We don't show the
 # dependence of config.h to Make, because it is only touched when it
@@ -113,16 +126,16 @@ $(common-objpfx)config.make: $(common-objpfx)config.status \
 # Find all the add-on and sysdeps configure fragments, to make sure we
 # re-run configure when any of them changes.
 $(common-objpfx)config.status: $(..)version.h $(..)configure \
-			       $(foreach dir,$(full_config_sysdirs),\
-					 $(wildcard \
-					   $(dir)/Implies) \
+			       $(foreach dir,$(sysdirs),\
+					 $(wildcard $(dir)/Implies) \
 					 $(patsubst %.in,%,\
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.in))))) \
 			       $(patsubst %.in,%,\
-					  $(foreach dir,$(add-ons),\
+					  $(foreach add-on,$(add-ons),\
 						    $(firstword $(wildcard \
- $(addprefix $(..)$(dir)/,configure configure.in)))))
+ $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
+	     configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
@@ -632,11 +645,10 @@ endif	# $(+cflags) == ""
 # include files (including ones given in angle brackets) in the parent
 # library source directory, in the include directory, and in the
 # current directory.
-# `+sysdep-includes' will be defined by Makerules.
-+includes = -I$(..)include \
-	    $(patsubst %/,-I%,$(objpfx)) $(+sysdep-includes) \
-	    $(patsubst %/,-I%,$(..)) $(libio-include) $(includes) -I. \
-	    $(sysincludes)
++sysdep-includes = $(addprefix -I,$(+sysdep_dirs))
++includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
+	    $(+sysdep-includes) \
+	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.
@@ -753,12 +765,10 @@ endif
 
 move-if-change = $(SHELL) $(..)scripts/move-if-change
 
--include $(common-objpfx)sysd-dirs
-
-ifeq ($(sysd-dirs-done),t)
 -include $(common-objpfx)sysd-sorted
 subdirs = $(sorted-subdirs)
-endif
+subdir-srcdirs = $(foreach dir,$(subdirs),\
+			   $(firstword $($(dir)-srcdir) $(..)$(dir)))
 
 ifeq (yes, $(build-shared))
 
@@ -789,9 +799,8 @@ ifndef avoid-generated
 # This lets add-ons give more-specific matches that override defaults
 # in the top-level file.
 $(common-objpfx)shlib-versions.v.i: \
-	$(wildcard $(patsubst %, $(..)%/shlib-versions,$(add-ons) \
-						       $(config-sysdirs) \
-						       $(subdirs))) \
+	$(wildcard $(+sysdep_dirs:=/shlib-versions) \
+		   $(subdir-srcdirs:=/shlib-versions)) \
 	$(..)shlib-versions
 
 soversions-default-setname = $(patsubst %, %,\
@@ -891,80 +900,38 @@ endif
 
 # These are the subdirectories containing the library source.  The order
 # is more or less arbitrary.  The sorting step will take care of the
-# dependencies.  Only the $(binfmt-subdir) should always be kept at the
-# end of the list.
+# dependencies.
 all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
-	      stdlib stdio-common libio malloc string wcsmbs time dirent \
+	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow po argp	    \
-	      crypt $(add-ons) nss localedata timezone rt conform debug	    \
-	      $(sysdep-subdirs) $(dlfcn) $(binfmt-subdir)
-all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
-
-# The mach and hurd subdirectories have many generated header files which
-# much of the rest of the library depends on, so it is best to build them
-# first (and mach before hurd, at that).  The before-compile additions in
-# sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
-# not to exist when making in other directories, but it will be slower that
-# way with more somewhat expensive `make' invocations.
-subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
-	   $(filter-out mach hurd,$(subdirs))
+	      crypt nss localedata timezone rt conform debug		    \
+	      $(add-on-subdirs) $(dlfcn) $(binfmt-subdir)
 
 ifndef avoid-generated
-all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
-$(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
-	$(AWK) 'BEGIN { subdirs = ""; inhibit = "" };			\
-		/^#/ { next };						\
-		/^[^-]/ { subdirs = subdirs " " $$0 };			\
-		/^-/ { inhibit = inhibit " " substr($$0, 2) };		\
-		END { printf "sysdep-subdirs =%s\n", subdirs;		\
-		      printf "sysdep-inhibit-subdirs =%s\n", inhibit;	\
-		      print "sysd-dirs-done = t" }'			\
-	       $(patsubst $<,/dev/null,$^) > $@-tmp
-	mv -f $@-tmp $@
-
-all-Depend-files = $(wildcard $(..)*/Depend)
-$(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
-			     $(common-objpfx)sysd-dirs $(..)Makeconfig
-	{ { dirs='$(patsubst $(..)%/Depend,%,$(filter %/Depend,$^))';	  \
-	    for d in $$dirs; do						  \
-	      while read on; do						  \
-		echo "depend $$d $$on";					  \
-	      done < $(..)$$d/Depend;					  \
-	    done;							  \
-	    for f in $(all-subdirs); do					  \
-	      echo $$f;							  \
-	    done;							  \
-	  } | $(AWK) -f $< &&						  \
-	  echo sysd-sorted-done = t;					  \
-	} > $@-tmp
+all-Depend-files := $(wildcard $(foreach dir,$(all-subdirs),\
+					 $(firstword $($(dir)-srcdir) \
+						     $(..)$(dir))/Depend))
+$(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk \
+			     $(common-objpfx)config.make $(..)Makeconfig \
+			     $(wildcard $(sysdirs:=/Subdirs)) \
+			     $(all-Depend-files)
+	$(AWK) -f $< \
+	       -v subdirs='$(all-subdirs)' \
+	       -v srcpfx='$(..)' \
+	       $(filter %/Subdirs %/Depend,$^) > $@-tmp
 	mv -f $@-tmp $@
 $(all-Depend-files): ;
 endif
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
-sysdep-makeconfigs := $(wildcard $(patsubst %,$(..)%/Makeconfig,\
-					    $(config-sysdirs) $(add-ons)))
-
+sysdep-makeconfigs := $(wildcard $(+sysdep_dirs:=/Makeconfig))
 ifneq (,$(sysdep-makeconfigs))
-Makeconfig-doing-sysdep := $(sysdep-makeconfigs)
-# Before each one, include ourselves again to do the bit below that
-# will set `Makeconfig-add-on' in an add-on's Makeconfig fragment.
-include $(foreach M,$(sysdep-makeconfigs),$(..)Makeconfig $M)
+include $(sysdep-makeconfigs)
 endif
 
 
 endif # Makeconfig not yet included
-
-# The whole body above didn't run when we are included as a subroutine
-# of ourselves in the sysdep-makeconfigs include line.  This bit runs.
-ifneq (,$(Makeconfig-doing-sysdep))
-sysdep-Makeconfig := $(firstword $(Makeconfig-doing-sysdep))
-Makeconfig-doing-sysdep := $(filter-out $(sysdep-Makeconfig),\
-					$(Makeconfig-doing-sysdep))
-Makeconfig-add-on := $(filter $(add-ons),$(patsubst $(..)%/Makeconfig,%,\
-						    $(sysdep-Makeconfig)))
-endif
 
 # Local Variables:
 # mode: makefile

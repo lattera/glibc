@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2004,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,7 +18,6 @@
 # 02111-1307 USA.
 
 ifeq ($(subdir),csu)
-CFLAGS-libc-start.c += -I../nptl
 routines += unwind-resume
 shared-only-routines += unwind-resume
 CFLAGS-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
@@ -31,7 +30,6 @@ endif
 ifeq ($(subdir),rt)
 librt-sysdep_routines += timer_routines librt-cancellation rt-unwind-resume
 librt-shared-only-routines += rt-unwind-resume
-CPPFLAGS-timer_routines.c = -I../nptl
 CFLAGS-librt-cancellation.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-rt-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 

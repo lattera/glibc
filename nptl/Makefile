@@ -528,7 +528,7 @@ $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
 
 ifeq ($(build-shared),yes)
-vpath pt-initfini.c $(full_config_sysdirs)
+vpath pt-initfini.c $(sysdirs)
 
 $(objpfx)pt-initfini.s: pt-initfini.c
 	$(compile.c) -S $(CFLAGS-pt-initfini.s) -finhibit-size-directive \

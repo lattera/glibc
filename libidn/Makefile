@@ -1,4 +1,4 @@
-# Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +31,10 @@ libcidn-routines := punycode toutf8 nfkc stringprep rfc3454 profiles idna \
 		    iconvme
 
 
-include ../Makeconfig
+include $(..)Makeconfig
 
 libcidn-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-include ../Rules
+include $(..)Rules
 
 $(objpfx)libcidn.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a

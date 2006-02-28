@@ -50,6 +50,7 @@ endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
+%/preconfigure: %/preconfigure.in aclocal.m4; $(autoconf-it)
 
 endif # $(AUTOCONF) = no
 
@@ -202,7 +203,13 @@ all-subdirs-targets := $(foreach dir,$(subdirs),\
 # The action for each of those is to cd into the directory and make the
 # target there.
 $(all-subdirs-targets):
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+	$(MAKE) $(PARALLELMFLAGS) $(subdir-target-args) $(@F)
+
+define subdir-target-args
+subdir=$(@D)$(if $($(@D)-srcdir),\
+-C $($(@D)-srcdir) ..=`pwd`/,\
+-C $(@D) ..=../)
+endef
 
 .PHONY: $(+subdir_targets) $(all-subdirs-targets)
 
@@ -353,17 +360,16 @@ files-for-dist := README FAQ INSTALL NOTES configure
 tag-of-stem = glibc-$(subst .,_,$*)
 
 # Add-ons in the main repository but distributed in their own tar files.
-dist-separate = libidn linuxthreads
+dist-separate = libidn
 
 # Directories in each add-on.
 dist-separate-libidn = libidn
-dist-separate-linuxthreads = linuxthreads linuxthreads_db
 
 glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 					      $(foreach D,$(dist-separate),\
 							$D/configure)
 	@rm -fr glibc-$*
-	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(add-ons)) \
+	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(sysdeps-add-ons)) \
 			 -name configure`
 	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
 # Touch all the configure scripts going into the tarball since cvs export

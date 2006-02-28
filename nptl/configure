@@ -1,6 +1,5 @@
-# This is only to keep the GNU C library configure mechanism happy.
 # This is a shell script fragment sourced by the main configure script.
-# We have nothing we need to add here.
-#
-# Perhaps some day we will need a real configuration script for different
-# kernel versions or so.
+# We're obliged to give here the canonical name that will be used to
+# as a subdirectory to search for in other add-ons' sysdeps trees.
+
+libc_add_on_canonical=nptl

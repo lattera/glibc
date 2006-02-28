@@ -56,22 +56,6 @@ ifndef +included-Makeconfig
 include $(..)Makeconfig
 endif
 
-# `configure' writes a definition of `config-sysdirs' in `config.make'.
-sysdirs = $(strip $(full_config_sysdirs))
-
-+sysdir_pfx = $(common-objpfx)
-
-export sysdirs := $(sysdirs)
-
-+sysdep_dirs := $(full_config_sysdirs)
-ifdef objdir
-+sysdep_dirs := $(objdir) $(+sysdep_dirs)
-endif
-
-# Add -I switches to get the right sysdep directories.
-# `+includes' in Makeconfig references $(+sysdep-includes).
-+sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
-
 # This variable is used in ``include $(o-iterator)'' after defining
 # $(o-iterator-doit) to produce some desired rule using $o for the object
 # suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
@@ -94,7 +78,7 @@ vpath %.x $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
 
-sysdep-makefiles := $(wildcard $(full_config_sysdirs:=/Makefile))
+sysdep-makefiles := $(wildcard $(sysdirs:=/Makefile))
 ifneq (,$(sysdep-makefiles))
 include $(sysdep-makefiles)
 endif
@@ -229,20 +213,22 @@ endef
 close-check-inhibit-asm = ;; esac ;
 endif
 
--include $(+sysdir_pfx)sysd-rules
+-include $(common-objpfx)sysd-rules
 ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
 # The value of $(+sysdep_dirs) the sysd-rules was computed for
 # differs from the one we are using now.  So force a rebuild of sysd-rules.
 sysd-rules-force = FORCE
 FORCE:
 endif
-$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
-			  $(wildcard $(foreach dir,$(sysdirs),\
-					       $(dir)/Makefile))\
-			  $(sysd-rules-force)
+$(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
+			    $(sysdep-makefiles) $(sysd-rules-force)
 	-@rm -f $@T
 	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
-	 for dir in $(config-sysdirs:%='$$(..)%'); do			      \
+	 for dir in $(config-sysdirs); do				      \
+	   case "$$dir" in						      \
+	   /*) ;;							      \
+	   *) dir="\$$(..)$$dir" ;;					      \
+	   esac;							      \
 	   for o in $(all-object-suffixes); do \
 	     $(open-check-inhibit-asm) \
 	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
@@ -340,7 +326,7 @@ postclean-generated += sysd-versions Versions.all abi-versions.h \
 		       Versions.def.v.i Versions.def.v Versions.v.i Versions.v
 
 ifndef avoid-generated
-ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
+ifneq ($(sysd-versions-subdirs),$(sorted-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
@@ -358,14 +344,14 @@ $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 	} | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@
 # See %.v/%.v.i implicit rules in Makeconfig.
-$(common-objpfx)Versions.v.i: $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
+$(common-objpfx)Versions.v.i: $(wildcard $(subdirs:%=$(..)%/Versions)) \
 			      $(wildcard $(sysdirs:%=%/Versions)) \
 			      $(common-objpfx)abi-versions.h \
 			      $(sysd-versions-force)
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(common-objpfx)Versions.v \
 			       $(..)scripts/versions.awk
-	( echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
+	( echo 'sysd-versions-subdirs = $(subdirs) $(config-sysdirs)' ; \
 	  cat $(word 2,$^) \
 	  | LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
 			    -v move_if_change='$(move-if-change)' \
@@ -1301,18 +1287,12 @@ endif
 
 endif
 
-# There's no good place to put this - here will do.
-ifeq ($(filter %posix, $(sysdirs)),)
-L_tmpnam  = 1
-TMP_MAX   = 0
-L_ctermid = 1
-L_cuserid = 1
-else
-L_tmpnam  = 20
-TMP_MAX   = 238328
-L_ctermid = 9
-L_cuserid = 9
-endif
+# These will have been set by sysdeps/posix/Makefile.
+L_tmpnam  ?= 1
+TMP_MAX   ?= 0
+L_ctermid ?= 1
+L_cuserid ?= 1
+
 stdio_lim = $(common-objpfx)bits/stdio_lim.h
 
 $(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:

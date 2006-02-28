@@ -1,3 +1,33 @@
+2006-02-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/Subdirs: List nptl here too.
+	* configure (libc_add_on_canonical): New variable.
+
+	* sysdeps/unix/sysv/linux/sh/sh4/lowlevellock.h: Use #include_next.
+
+	* sysdeps/unix/sysv/linux/sleep.c: Use #include_next after #include of
+	self to get main source tree's file.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+
+	* Makefile: Use $(sysdirs) in vpath directive.
+
+	* sysdeps/pthread/Makefile (CFLAGS-libc-start.c): Variable removed.
+	(CPPFLAGS-timer_routines.c): Likewise.
+
+	* Makeconfig (includes): Variable removed.
+
 2006-02-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/pt-raise.c: Moved to ...

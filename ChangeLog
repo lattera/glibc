@@ -1,3 +1,88 @@
+2006-02-27  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (subdir-target-args): New variable.
+	($(all-subdirs-targets)): Use it in place of -C option.
+	* Rules: Use $(..) instead of ../ if it's already defined.
+	* Makeconfig (subdir-srcdirs): New variable.
+	* csu/Makefile (all-Banner-files): Use it.
+
+	* configure.in (--enable-add-ons): Set to "yes" by default.
+	Handle absolute add-on directory names when looking for configure
+	fragments.  Also look for sysdeps/*/preconfigure fragments in add-ons.
+	Require add-on configure to set $libc_add_on_canonical, use
+	that in $add_ons_sfx.  Substitute add_on_subdirs with computed list
+	of subdir names each add-on configure set in libc_add_on_subdirs.
+	* configure: Regenerated.
+	* Makefile (%/preconfigure: %/preconfigure.in): New pattern rule.
+	* config.make.in (add-on-subdirs): New substituted variable.
+	* Makeconfig (all-subdirs): Include $(add-on-subdirs).
+	Remove $(add-ons), $(sysdep-subdirs).
+	Don't filter out $(sysdep-inhibit-subdirs).
+	($(common-objpfx)sysd-dirs): Target removed.  Don't include it.
+	($(common-objpfx)sysd-sorted): Rewritten to feed Depend and Subdirs
+	files together to gen-sorted.awk, and $(subdirs) via -v.
+	(subdirs): Remove magic reordering for mach and hurd.
+	* scripts/gen-sorted.awk: Use subdirs from command line.
+	Process Subdirs and Depend files directly.
+	Let Subdirs files use "first dir" and "inhibit dir".
+	Always move elf to the end of the list.
+	* hurd/Depend: New file.
+	* sysdeps/mach/Subdirs: Use "first mach".
+
+	* Makefile (dist-separate): Remove linuxthreads.
+	(dist-separate-linuxthreads): Variable removed.
+	(glibc-%.tar rule): Use $(sysdeps-add-ons).
+
+	* Makerules ($(common-objpfx)Versions.v.i): Use $(subdirs),
+	not $(all-subdirs).
+	(sysdep-makefiles): Use $(sysdirs).
+	(sysdirs): Remove export.
+	($(+sysdir_pfx)sysd-rules): Handle absolute directory names in
+	$(config-sysdirs).
+	(+sysdir_pfx): Variable removed.
+	(sysd-rules): Use $(common-objpfx) in place of it.
+	(sysdirs): Variable moved to ...
+	* Makeconfig (sysdirs): ... here.
+	Handle absolute directory names in $(config-sysdirs).
+	(full_config_sysdirs): Variable removed.
+	* csu/Makefile: Use $(sysdirs) in vpath directive.
+	* math/Makefile (ulps-file): Use $(sysdirs).
+	* sysdeps/gnu/Makefile (errlist-c): Likewise.
+	($(objpfx)errlist-compat.c): Likewise.
+	* Makeconfig (all-Subdirs-files): Likewise.
+	($(common-objpfx)config.status): Likewise.
+
+	* configure.in (sysnames): Handle absolute add-on directory names.
+	(sysdeps_add_ons): New variable, AC_SUBST it.
+	Compute which add-ons contributed sysdeps directories.
+	* configure: Regenerated.
+	* config.make.in (sysdeps-add-ons): New substituted variable.
+	* Makerules (+sysdep_dirs, +sysdep-includes): Variables moved ...
+	* Makeconfig: ... to here.
+	(+sysdep_dirs): Append $(sysdeps-add-ons) here.
+	(+includes): Remove $(objpfx) include, already in $(+sysdep_dirs).
+	Remove $(includes).
+	(sysdep-makeconfigs): Use $(+sysdep_dirs).
+	($(common-objpfx)shlib-versions.v.i): Likewise.
+
+	* Makeconfig: Remove hair to set Makeconfig-add-on.
+
+	* sysdeps/unix/Makefile (sysdirs): Remove export.
+	(asm_CPP): Variable removed.
+	($(common-objpfx)sysd-syscalls): Pass them directly for the script.
+
+	* sysdeps/posix/Makefile: New file.
+	* Makerules (L_tmpnam, TMP_MAX, L_ctermid, L_cuserid): Set non-posix
+	values here with ?=.
+
+	* stdlib/gen-mpn-copy: File removed.
+	* stdlib/Makefile (distribute): Remove it.
+	* configure.in: Don't grok --with-gmp.
+	* configure: Regenerated.
+
+	* configure.in (libc_cv_idn): Don't check it; libidn/configure does it.
+	* configure: Regenerated.
+
 2006-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/linkat.c (linkat): Allow flags to be set
@@ -5,6 +90,8 @@
 	* io/fcntl.h (AT_SYMLINK_FOLLOW): Define.
 
 2006-02-26  Roland McGrath  <roland@redhat.com>
+
+	* bare: Directory removed, saved in ports repository.
 
 	* sysdeps/unix/common/Makefile: File removed.
 	* sysdeps/unix/common/glue-ctype.c: File removed.

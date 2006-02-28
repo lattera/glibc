@@ -27,7 +27,7 @@ endif
 
 all: # Don't let the default goal come from Makeconfig.
 
-include ../Makeconfig
+include $(firstword $(..) ../)Makeconfig
 
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
@@ -65,7 +65,7 @@ endif
 # See below.  This must be set before Makerules processes it.
 before-compile += $(common-objpfx)bits/stdio_lim.h
 
-include ../Makerules
+include $(..)Makerules
 
 .PHONY: subdir_lib
 subdir_lib: lib-noranlib

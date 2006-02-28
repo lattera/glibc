@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2002,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <tcb-offsets.h>
+/* We want an #include_next, but we are the main source file.
+   So, #include ourselves and in that incarnation we can use #include_next.  */
+#ifndef INCLUDED_SELF
+# define INCLUDED_SELF
+# include <vfork.S>
+#else
+
+# include <tcb-offsets.h>
 
 /* Save the PID value.  */
-#define SAVE_PID \
+# define SAVE_PID \
 	movl	%gs:PID, %edx; 						      \
 	movl	%edx, %eax;						      \
 	negl	%eax;							      \
@@ -28,11 +35,11 @@
 1:	movl	%eax, %gs:PID
 
 /* Restore the old PID value in the parent.  */
-#define RESTORE_PID \
+# define RESTORE_PID \
 	testl	%eax, %eax;						      \
 	je	1f;							      \
 	movl	%edx, %gs:PID;						      \
 1:
 
-
-#include <sysdeps/unix/sysv/linux/i386/vfork.S>
+# include_next <vfork.S>
+#endif

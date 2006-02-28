@@ -88,6 +88,8 @@ build-omitfp = @omitfp@
 build-bounded = @bounded@
 build-static-nss = @static_nss@
 add-ons = @add_ons@
+add-on-subdirs = @add_on_subdirs@
+sysdeps-add-ons = @sysdeps_add_ons@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
 

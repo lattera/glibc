@@ -1,5 +1,8 @@
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
 
+libc_add_on_canonical=
+libc_add_on_subdirs=.
+
 # Get this defined in config.h for main source code to test.
 cat >>confdefs.h <<\_ACEOF
 #define HAVE_LIBIDN 1
