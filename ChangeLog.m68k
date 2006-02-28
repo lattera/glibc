@@ -1,0 +1,3 @@
+2006-02-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/m68k/preconfigure: New file.
