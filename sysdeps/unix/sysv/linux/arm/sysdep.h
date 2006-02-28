@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -22,7 +23,7 @@
 #define _LINUX_ARM_SYSDEP_H 1
 
 /* There is some commonality.  */
-#include <ports/sysdeps/unix/arm/sysdep.h>
+#include <sysdeps/unix/arm/sysdep.h>
 
 /* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>

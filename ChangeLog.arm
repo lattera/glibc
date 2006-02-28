@@ -1,3 +1,9 @@
+2006-02-28  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/arm/sysdep.h, sysdeps/unix/sysv/linux/arm/sysdep.S,
+	sysdeps/unix/sysv/linux/arm/sysdep.h: Remove ports/ from include
+	paths.
+
 2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h
