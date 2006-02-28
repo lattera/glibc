@@ -1,1 +1,1 @@
-#include <sysdeps/unix/sysv/linux/hppa/umount.c>
+#include <sysdeps/unix/sysv/linux/x86_64/umount.c>
