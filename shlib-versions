@@ -51,7 +51,6 @@ sparc64-.*-linux.*	libm=6			GLIBC_2.2
 alpha.*-.*-linux.*	libm=6.1
 ia64-.*-linux.*		libm=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libm=6			GLIBC_2.2
-hppa.*-.*-.*		libm=6			GLIBC_2.2
 .*-.*-linux.*		libm=6
 .*-.*-gnu-gnu.*		libm=6
 
@@ -60,7 +59,6 @@ alpha.*-.*-linux.*	libc=6.1
 ia64-.*-linux.*		libc=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libc=6			GLIBC_2.2
 sparc64-.*-linux.*	libc=6			GLIBC_2.2
-hppa.*-.*-.*		libc=6			GLIBC_2.2
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -79,7 +77,6 @@ sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
 ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
-hppa.*-.*-.*		ld=ld.so.1		GLIBC_2.2
 s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
 powerpc64.*-.*-linux.*	ld=ld64.so.1		GLIBC_2.3
 cris-.*-linux.*		ld=ld.so.1		GLIBC_2.2
@@ -125,7 +122,6 @@ alpha.*-.*-linux.*	libBrokenLocale=1.1
 ia64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sparc64-.*-.*		libBrokenLocale=1	GLIBC_2.2
-hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.

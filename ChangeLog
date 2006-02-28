@@ -1,5 +1,19 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/hppa: Directory removed, saved in ports repository.
+	* sysdeps/mach/hppa: Likewise.
+	* sysdeps/mach/hurd/hppa: Likewise.
+	* sysdeps/unix/sysv/linux/hppa: Likewise.
+	* configure.in (machine): Remove hppa* cases.
+	* configure: Regenerated.
+	* shlib-versions: Remove hppa cases.
+
+	* sysdeps/m68k: Directory removed, saved in ports repository.
+	* sysdeps/unix/bsd/m68k: Likewise.
+	* sysdeps/unix/sysv/linux/m68k: Likewise.
+	* configure.in (machine): Remove m68* cases.
+	* configure: Regenerated.
+
 	* elf/rtld-Rules (subdir-args): New variable.
 	(rtld-subdir-make): Use it.
 

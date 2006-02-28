@@ -1,3 +1,37 @@
+2006-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (libpthread-routines): Add
+	pthread_mutexattr_[sg]etprotocol, pthread_mutexattr_[sg]etprioceiling
+	and pthread_mutex_[sg]etprioceiling.
+	* Versions (GLIBC_2.4): Export pthread_mutexattr_getprotocol,
+	pthread_mutexattr_setprotocol, pthread_mutexattr_getprioceiling,
+	pthread_mutexattr_setprioceiling, pthread_mutex_getprioceiling and
+	pthread_mutex_setprioceiling.
+	* sysdeps/pthread/pthread.h (PTHREAD_PRIO_NONE, PTHREAD_PRIO_INHERIT,
+	PTHREAD_PRIO_PROTECT): New enum values.
+	(pthread_mutexattr_getprotocol, pthread_mutexattr_setprotocol,
+	pthread_mutexattr_getprioceiling, pthread_mutexattr_setprioceiling,
+	pthread_mutex_getprioceiling, pthread_mutex_setprioceiling): New
+	prototypes.
+	* pthreadP.h (PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP,
+	PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP): New enum values.
+	(PTHREAD_MUTEX_PRIO_CEILING_SHIFT, PTHREAD_MUTEX_PRIO_CEILING_MASK):
+	Define.
+	(PTHREAD_MUTEXATTR_PROTOCOL_SHIFT, PTHREAD_MUTEXATTR_PROTOCOL_MASK,
+	PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT,
+	PTHREAD_MUTEXATTR_PRIO_CEILING_MASK): Define.
+	(PTHREAD_MUTEXATTR_FLAG_BITS): Or in PTHREAD_MUTEXATTR_PROTOCOL_MASK
+	and PTHREAD_MUTEXATTR_PRIO_CEILING_MASK.
+	* pthread_mutex_init.c (__pthread_mutex_init): For the time being
+	return ENOTSUP for PTHREAD_PRIO_INHERIT or PTHREAD_PRIO_PROTECT
+	protocol mutexes.
+	* pthread_mutex_getprioceiling.c: New file.
+	* pthread_mutex_setprioceiling.c: New file.
+	* pthread_mutexattr_getprioceiling.c: New file.
+	* pthread_mutexattr_setprioceiling.c: New file.
+	* pthread_mutexattr_getprotocol.c: New file.
+	* pthread_mutexattr_setprotocol.c: New file.
+
 2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aio_misc.h: Include <limits.h>.
