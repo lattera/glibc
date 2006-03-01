@@ -268,7 +268,7 @@
 	register unsigned long gpr6 asm ("6") = (unsigned long)(arg5);
 #define DECLARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
 	DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	register unsigned long gpr6 asm ("7") = (unsigned long)(arg6);
+	register unsigned long gpr7 asm ("7") = (unsigned long)(arg6);
 
 #define ASMFMT_0
 #define ASMFMT_1 , "0" (gpr2)
