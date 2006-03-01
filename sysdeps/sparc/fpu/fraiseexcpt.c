@@ -25,12 +25,12 @@
 int
 __feraiseexcept (int excepts)
 {
-  static volatile double sink;
   static const struct {
     double zero, one, max, min, sixteen, pi;
   } c = {
     0.0, 1.0, DBL_MAX, DBL_MIN, 16.0, M_PI
   };
+  double d;
 
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important the if the overflow/underflow
@@ -39,24 +39,44 @@ __feraiseexcept (int excepts)
 
   /* First: invalid exception.  */
   if ((FE_INVALID & excepts) != 0)
-    /* One example of a invalid operation is 0/0.  */
-    sink = c.zero / c.zero;
+    {
+      /* One example of a invalid operation is 0/0.  */
+      __asm ("" : "=e" (d) : "0" (c.zero));
+      d /= c.zero;
+      __asm __volatile ("" : : "e" (d));
+    }
 
   /* Next: division by zero.  */
   if ((FE_DIVBYZERO & excepts) != 0)
-    sink = c.one / c.zero;
+    {
+      __asm ("" : "=e" (d) : "0" (c.one));
+      d /= c.zero;
+      __asm __volatile ("" : : "e" (d));
+    }
 
   /* Next: overflow.  */
   if ((FE_OVERFLOW & excepts) != 0)
-    sink = c.max * c.max;
+    {
+      __asm ("" : "=e" (d) : "0" (c.max));
+      d *= d;
+      __asm __volatile ("" : : "e" (d));
+    }
 
   /* Next: underflow.  */
   if ((FE_UNDERFLOW & excepts) != 0)
-    sink = c.min / c.sixteen;
+    {
+      __asm ("" : "=e" (d) : "0" (c.min));
+      d /= c.sixteen;
+      __asm __volatile ("" : : "e" (d));
+    }
 
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
-    sink = c.one / c.pi;
+    {
+      __asm ("" : "=e" (d) : "0" (c.one));
+      d /= c.pi;
+      __asm __volatile ("" : : "e" (d));
+    }
 
   /* Success.  */
   return 0;

@@ -1,5 +1,9 @@
 2006-03-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept):
+	Use inline asm to make sure the compiler doesn't optimize insns out.
+
 	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
 	(DECLARGS_6): Fix a typo.
 
