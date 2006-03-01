@@ -1,3 +1,12 @@
+2006-03-01  David S. Miller  <davem@sunset.davemloft.net>
+
+	* configure.in (machine): Match sparcv9v and sparc64v.
+	* configure: Regenerated.
+	* sysdeps/sparc/sparc32/sparcv9v/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9v/memset.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: New file.
+
 2006-03-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/Subdirs: Use "first hurd".
