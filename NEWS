@@ -1,5 +1,5 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-12-15
-Copyright (C) 1992-2002,2003,2004,2005 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2006-03-01
+Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
@@ -27,8 +27,22 @@ Version 2.4
   For a libc and libpthread that works well on Linux 2.4 kernels, we
   recommend using the stable 2.3 branch.
 
-* New interfaces: fdopendir, openat, fstatat, fchownat, futimesat, renameat,
-  unlinkat, mkdirat, mkfifoat, mknodat, linkat, symlinkat, readlinkat.
+* The new function open_wmemstream acts like open_memstream,
+  but uses a wchar_t wide character buffer.
+
+* The new function ppoll is an improved version of poll, similar to pselect.
+
+* New interfaces: fdopendir, openat, fstatat, fchmodat, fchownat,
+  futimesat, faccessat, mkdirat, mkfifoat, mknodat,
+  renameat, unlinkat, linkat, symlinkat, readlinkat.
+
+* New Linux kernel system calls: unshare,
+  inotify_init, inotify_add_watch, inotify_rm_watch.
+
+* The euidaccess function is now also known by the alias eaccess,
+  for compatibility with some other systems.
+
+* Timezone data updated to 2006b version.
 
 Version 2.3.6
 
@@ -1537,7 +1551,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005
+Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005,2006
 	Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
