@@ -200,7 +200,9 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
 
-all-Banner-files = $(wildcard $(addsuffix /Banner,$(subdir-srcdirs)))
+all-Banner-files = $(wildcard $(addsuffix /Banner,\
+					  $(sort $(subdir-srcdirs) \
+						 $(sysdeps-srcdirs))))
 $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \

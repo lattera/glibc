@@ -107,9 +107,10 @@ sysdirs := $(foreach D,$(config-sysdirs),$(firstword $(filter /%,$D) $(..)$D))
 # to find specific add-on files without assuming the add-on directory name.
 # It also means that headers can go into an add-on's base directory
 # instead of the add-on needing a sysdeps/generic of its own.
-+sysdep_dirs := $(sysdirs) $(foreach add-on,$(sysdeps-add-ons),\
-				     $(firstword $(filter /%,$(add-on)) \
-						 $(..)$(add-on)))
+sysdeps-srcdirs := $(foreach add-on,$(sysdeps-add-ons),\
+			     $(firstword $(filter /%,$(add-on)) \
+					 $(..)$(add-on)))
++sysdep_dirs = $(sysdirs) $(sysdeps-srcdirs)
 ifdef objdir
 +sysdep_dirs := $(objdir) $(+sysdep_dirs)
 endif

@@ -358,12 +358,10 @@ endif
 files-for-dist := README FAQ INSTALL NOTES configure
 
 tag-of-stem = glibc-$(subst .,_,$*)
+dist-selector = -r $(tag-of-stem)
 
 # Add-ons in the main repository but distributed in their own tar files.
 dist-separate = libidn
-
-# Directories in each add-on.
-dist-separate-libidn = libidn
 
 glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 					      $(foreach D,$(dist-separate),\
@@ -371,7 +369,7 @@ glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 	@rm -fr glibc-$*
 	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(sysdeps-add-ons)) \
 			 -name configure`
-	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
+	cvs $(CVSOPTS) -Q export -d glibc-$* $(dist-selector) libc
 # Touch all the configure scripts going into the tarball since cvs export
 # might have delivered configure.in newer than configure.
 	find glibc-$* -name configure -print | xargs touch
@@ -380,8 +378,10 @@ glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 	rm -fr glibc-$*
 define dist-do-separate-dirs
 $(foreach dir,$(dist-separate),
-	tar cf glibc-$(dir)-$*.tar -C glibc-$* $(dist-separate-$(dir))
-	rm -rf $(addprefix glibc-$*/,$(dist-separate-$(dir)))
+	@rm -fr glibc-$(dir)-$*
+	mv glibc-$*/$(dir) glibc-$(dir)-$*
+	tar cf glibc-$(dir)-$*.tar glibc-$(dir)-$*
+	rm -fr glibc-$(dir)-$*
 )
 endef
 

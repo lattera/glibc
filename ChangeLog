@@ -1,6 +1,17 @@
 2006-03-01  Roland McGrath  <roland@redhat.com>
 
+	* version.h (VERSION): 2.3.91
+
+	* Makeconfig (sysdeps-srcdirs): New variable.
+	(sysdeps-add-ons-srcdirs): Use it.
+	* csu/Makefile (all-Banner-files): Use it.
+
+	* Makefile (dist-selector): New variable.
+	(glibc-%.tar rule): Use it.  Make $(dist-separate) tarballs
+	contain one version-named directory.
+
 	* Makefile (format-me): Use  --plaintext --no-number-sections.
+
 	* NOTES, INSTALL: Regenerated.
 
 	* NEWS: Update 2.4 items.
