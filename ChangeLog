@@ -1,5 +1,10 @@
 2006-03-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat64): Use
+	libc_hidden_ver rather than libc_hidden_def.
+
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
 	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept):
 	Use inline asm to make sure the compiler doesn't optimize insns out.

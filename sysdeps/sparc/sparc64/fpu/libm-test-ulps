@@ -465,6 +465,11 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+# exp2
+Test "exp2 (10) == 1024":
+ildouble: 2
+ldouble: 2
+
 # expm1
 Test "expm1 (0.75) == 1.11700001661267466854536981983709561":
 double: 1
@@ -1191,6 +1196,10 @@ idouble: 6
 ifloat: 2
 ildouble: 1
 ldouble: 1
+
+Function: "exp2":
+ildouble: 2
+ldouble: 2
 
 Function: "expm1":
 double: 1
