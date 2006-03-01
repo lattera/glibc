@@ -399,7 +399,7 @@ tag-%: $(files-for-dist)
 
 define format-me
 @rm -f $@
-makeinfo --no-validate --no-warn --no-headers $< -o $@
+makeinfo --no-validate --plaintext --no-number-sections $< -o $@
 -chmod a-w $@
 endef
 INSTALL: manual/install.texi; $(format-me)

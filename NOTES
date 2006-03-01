@@ -1,8 +1,8 @@
 Feature Test Macros
 -------------------
 
-   The exact set of features available when you compile a source file
-is controlled by which "feature test macros" you define.
+The exact set of features available when you compile a source file is
+controlled by which "feature test macros" you define.
 
    If you compile your programs using `gcc -ansi', you get only the
 ISO C library features, unless you explicitly request additional
@@ -32,7 +32,7 @@ limited standard.  It is insufficient for this purpose, as it will not
 protect you from including header files outside the standard, or
 relying on semantics undefined within the standard.
 
- - Macro: _POSIX_SOURCE
+ -- Macro: _POSIX_SOURCE
      If you define this macro, then the functionality from the POSIX.1
      standard (IEEE Standard 1003.1) is available, as well as all of the
      ISO C facilities.
@@ -40,7 +40,7 @@ relying on semantics undefined within the standard.
      The state of `_POSIX_SOURCE' is irrelevant if you define the macro
      `_POSIX_C_SOURCE' to a positive integer.
 
- - Macro: _POSIX_C_SOURCE
+ -- Macro: _POSIX_C_SOURCE
      Define this macro to a positive integer to control which POSIX
      functionality is made available.  The greater the value of this
      macro, the more functionality is made available.
@@ -65,12 +65,7 @@ relying on semantics undefined within the standard.
      greater than or equal to `199506L', then the functionality from
      the 1996 edition is made available.
 
-     The Single Unix Specification specify that setting this macro to
-     the value `199506L' selects all the values specified by the POSIX
-     standards plus those of the Single Unix Specification, i.e., is the
-     same as if `_XOPEN_SOURCE' is set to `500' (see below).
-
- - Macro: _BSD_SOURCE
+ -- Macro: _BSD_SOURCE
      If you define this macro, functionality derived from 4.3 BSD Unix
      is included as well as the ISO C, POSIX.1, and POSIX.2 material.
 
@@ -88,15 +83,15 @@ relying on semantics undefined within the standard.
      must give the option `-lbsd-compat' to the compiler or linker when
      linking the program, to tell it to find functions in this special
      compatibility library before looking for them in the normal C
-     library.
+     library.  
 
- - Macro: _SVID_SOURCE
+ -- Macro: _SVID_SOURCE
      If you define this macro, functionality derived from SVID is
      included as well as the ISO C, POSIX.1, POSIX.2, and X/Open
      material.
 
- - Macro: _XOPEN_SOURCE
- - Macro: _XOPEN_SOURCE_EXTENDED
+ -- Macro: _XOPEN_SOURCE
+ -- Macro: _XOPEN_SOURCE_EXTENDED
      If you define this macro, functionality described in the X/Open
      Portability Guide is included.  This is a superset of the POSIX.1
      and POSIX.2 functionality and in fact `_POSIX_SOURCE' and
@@ -113,10 +108,10 @@ relying on semantics undefined within the standard.
      functionality described so far plus some new definitions from the
      Single Unix Specification, version 2.
 
- - Macro: _LARGEFILE_SOURCE
+ -- Macro: _LARGEFILE_SOURCE
      If this macro is defined some extra functions are available which
-     rectify a few shortcomings in all previous standards.  More
-     concrete the functions `fseeko' and `ftello' are available.
+     rectify a few shortcomings in all previous standards.
+     Specifically, the functions `fseeko' and `ftello' are available.
      Without these functions the difference between the ISO C interface
      (`fseek', `ftell') and the low-level POSIX interface (`lseek')
      would lead to problems.
@@ -124,8 +119,8 @@ relying on semantics undefined within the standard.
      This macro was introduced as part of the Large File Support
      extension (LFS).
 
- - Macro: _LARGEFILE64_SOURCE
-     If you define this macro an additional set of function is made
+ -- Macro: _LARGEFILE64_SOURCE
+     If you define this macro an additional set of functions is made
      available which enables 32 bit systems to use files of sizes beyond
      the usual limit of 2GB.  This interface is not available if the
      system does not support files that large.  On systems where the
@@ -138,13 +133,13 @@ relying on semantics undefined within the standard.
      `off64_t' and `fseeko' vs. `fseeko64'.
 
      This macro was introduced as part of the Large File Support
-     extension (LFS).  It is a transition interface for the time 64 bit
-     offsets are not generally used (see `_FILE_OFFSET_BITS'.
+     extension (LFS).  It is a transition interface for the period when
+     64 bit offsets are not generally used (see `_FILE_OFFSET_BITS').
 
- - Macro: _FILE_OFFSET_BITS
+ -- Macro: _FILE_OFFSET_BITS
      This macro determines which file system interface shall be used,
-     one replacing the other.  While `_LARGEFILE64_SOURCE' makes the
-     64 bit interface available as an additional interface
+     one replacing the other.  Whereas `_LARGEFILE64_SOURCE' makes the
+     64 bit interface available as an additional interface,
      `_FILE_OFFSET_BITS' allows the 64 bit interface to replace the old
      interface.
 
@@ -154,9 +149,10 @@ relying on semantics undefined within the standard.
 
      If the macro is defined to the value `64', the large file interface
      replaces the old interface.  I.e., the functions are not made
-     available under different names as `_LARGEFILE64_SOURCE' does.
-     Instead the old function names now reference the new functions,
-     e.g., a call to `fseeko' now indeed calls `fseeko64'.
+     available under different names (as they are with
+     `_LARGEFILE64_SOURCE').  Instead the old function names now
+     reference the new functions, e.g., a call to `fseeko' now indeed
+     calls `fseeko64'.
 
      This macro should only be selected if the system provides
      mechanisms for handling large files.  On 64 bit systems this macro
@@ -166,13 +162,13 @@ relying on semantics undefined within the standard.
      This macro was introduced as part of the Large File Support
      extension (LFS).
 
- - Macro: _ISOC99_SOURCE
+ -- Macro: _ISOC99_SOURCE
      Until the revised ISO C standard is widely adopted the new features
      are not automatically enabled.  The GNU libc nevertheless has a
      complete implementation of the new standard and to enable the new
      features the macro `_ISOC99_SOURCE' should be defined.
 
- - Macro: _GNU_SOURCE
+ -- Macro: _GNU_SOURCE
      If you define this macro, everything is included: ISO C89,
      ISO C99, POSIX.1, POSIX.2, BSD, SVID, X/Open, LFS, and GNU
      extensions.  In the cases where POSIX.1 conflicts with BSD, the
@@ -191,8 +187,8 @@ relying on semantics undefined within the standard.
      compiler or linker.  *Note:* If you forget to do this, you may get
      very strange errors at run time.
 
- - Macro: _REENTRANT
- - Macro: _THREAD_SAFE
+ -- Macro: _REENTRANT
+ -- Macro: _THREAD_SAFE
      If you define one of these macros, reentrant versions of several
      functions get declared.  Some of the functions are specified in
      POSIX.1c but many others are only available on a few other systems

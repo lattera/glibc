@@ -1,5 +1,8 @@
 2006-03-01  Roland McGrath  <roland@redhat.com>
 
+	* Makefile (format-me): Use  --plaintext --no-number-sections.
+	* NOTES, INSTALL: Regenerated.
+
 	* NEWS: Update 2.4 items.
 
 2006-03-01  David S. Miller  <davem@sunset.davemloft.net>

@@ -1,5 +1,5 @@
-Appendix A Installing the GNU C Library
-***************************************
+Installing the GNU C Library
+****************************
 
 Before you do anything else, you should read the file `FAQ' located at
 the top level of the source tree.  This file answers common questions
@@ -15,8 +15,8 @@ activate them, and they will be compiled into the library.
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
 below.
 
-A.1 Configuring and compiling GNU Libc
-======================================
+Configuring and compiling GNU Libc
+==================================
 
 GNU libc can be compiled in the source directory, but we strongly advise
 building it in a separate build directory.  For example, if you have
@@ -205,8 +205,8 @@ library.  You may need to set `AR' and `RANLIB' to cross-compiling
 versions of `ar' and `ranlib' if the native tools are not configured to
 work with object files for the target you configured for.
 
-A.2 Installing the C Library
-============================
+Installing the C Library
+========================
 
 To install the library and its header files, and the Info files of the
 manual, type `env LANGUAGE=C LC_ALL=C make install'.  This will build
@@ -279,8 +279,8 @@ which is in `/usr/share/zoneinfo' to the file `/etc/localtime'.  For
 Germany, you might execute `ln -s /usr/share/zoneinfo/Europe/Berlin
 /etc/localtime'.
 
-A.3 Recommended Tools for Compilation
-=====================================
+Recommended Tools for Compilation
+=================================
 
 We recommend installing the following GNU tools before attempting to
 build the GNU C library:
@@ -359,8 +359,8 @@ and if you change any of the message translation files you will need
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
 
-A.4 Supported Configurations
-============================
+Supported Configurations
+========================
 
 The GNU C Library currently supports configurations that match the
 following patterns:
@@ -431,8 +431,8 @@ some `i686' specific instructions.  To generate code for other models,
 you have to configure for that model and give GCC the appropriate
 `-march=' and `-mcpu=' compiler switches via CFLAGS.
 
-A.5 Specific advice for GNU/Linux systems
-=========================================
+Specific advice for GNU/Linux systems
+=====================================
 
 If you are installing GNU libc on a GNU/Linux system, you need to have
 the header files from a 2.2 or newer kernel around for reference.  For
@@ -486,8 +486,8 @@ kernel-side thread support.  `nscd' happens to hit these bugs
 particularly hard, but you might have problems with any threaded
 program.
 
-A.6 Reporting Bugs
-==================
+Reporting Bugs
+==============
 
 There are probably bugs in the GNU C library.  There are certainly
 errors and omissions in this manual.  If you report them, they will get
