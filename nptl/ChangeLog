@@ -1,3 +1,8 @@
+2006-02-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Include <clone2.S>
+	instead of <clone.S>.
+
 2006-02-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (libpthread-routines): Add

@@ -1,3 +1,10 @@
+2006-02-28  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (+includes): Add back $(includes)
+	after $(+sysdep-includes).
+
+	* Makerules ($(common-objpfx)%.make): Use -DASSEMBLER.
+
 2006-02-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/sys/types.h [!__GNUC_PREREQ (2, 7)] (int64_t, u_int64_t):

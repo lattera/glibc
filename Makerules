@@ -149,7 +149,7 @@ ifndef subdir
 $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(common-before-compile)
 	rm -f $@T $@.dT
 	(echo '# Generated from $*.make.c by Makerules.'; \
-	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -E -DASSEMBLER $< \
 	       -MD -MP -MT '$$(common-objpfx)$*.make' -MF $@.dT \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \

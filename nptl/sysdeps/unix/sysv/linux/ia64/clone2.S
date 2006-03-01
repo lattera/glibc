@@ -2,8 +2,8 @@
    So, #include ourselves and in that incarnation we can use #include_next.  */
 #ifndef INCLUDED_SELF
 # define INCLUDED_SELF
-# include <clone.S>
+# include <clone2.S>
 #else
 # define RESET_PID
-# include_next <clone.S>
+# include_next <clone2.S>
 #endif

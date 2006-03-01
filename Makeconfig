@@ -647,7 +647,7 @@ endif	# $(+cflags) == ""
 # current directory.
 +sysdep-includes = $(addprefix -I,$(+sysdep_dirs))
 +includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
-	    $(+sysdep-includes) \
+	    $(+sysdep-includes) $(includes) \
 	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
