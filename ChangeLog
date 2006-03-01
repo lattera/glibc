@@ -1,5 +1,38 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* elf/tst-tls-dlinfo.c: New file.
+	* elf/Makefile (tests): Add it.
+	($(objpfx)tst-tls-dlinfo): Depend on $(libdl).
+	($(objpfx)tst-tls-dlinfo.out): Depend on $(objpfx)tst-tlsmod2.so.
+
+	* dlfcn/dlfcn.h (RTLD_DI_PROFILENAME, RTLD_DI_PROFILEOUT): New enum
+	values, reserve unsupported requested names used on Solaris.
+	(RTLD_DI_TLS_MODID, RTLD_DI_TLS_DATA): New enum values.
+	(RTLD_DI_MAX): Likewise.
+	* dlfcn/dlinfo.c (dlinfo_doit): Handle RTLD_DI_TLS_MODID and
+	RTLD_DI_TLS_DATA.
+
+	* elf/dl-tls.c (_dl_tls_get_addr_soft): New function.
+	* sysdeps/generic/ldsodefs.h: Declare it.
+	* elf/Versions (ld: GLIBC_PRIVATE): Add it.
+	* elf/link.h (struct dl_phdr_info): New members dlpi_tls_modid,
+	dlpi_tls_data.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Fill them in.
+
+	* include/link.h: Don't copy contents from elf/link.h.
+	Instead, #include it while #define'ing around link_map.
+	* elf/dl-debug.c (_dl_debug_initialize): Add a cast.
+	Add bogus extern decl to verify link_map members.
+	* elf/loadtest.c (MAPS): New macro, cast _r_debug._r_map.
+	(OUT, main): Use it in place of _r_debug._r_map.
+	* elf/unload.c: Likewise.
+	* elf/unload2.c: Likewise.
+	* elf/neededtest.c (check_loaded_objects): Likewise.
+	* elf/neededtest2.c (check_loaded_objects): Likewise.
+	* elf/neededtest3.c (check_loaded_objects): Likewise.
+	* elf/neededtest4.c (check_loaded_objects): Likewise.
+	* elf/circleload1.c (check_loaded_objects): Likewise.
+
 	* nscd/nscd_helper.c: Include <time.h> for `time' declaration.
 
 	* include/fcntl.h: Declare __openat, __open64.  Use libc_hidden_proto.

@@ -1,5 +1,6 @@
 /* Communicate dynamic linker state to the debugger at runtime.
-   Copyright (C) 1996, 1998,2000,2002,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998,2000,2002,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +19,18 @@
    02111-1307 USA.  */
 
 #include <ldsodefs.h>
+
+
+/* These are the members in the public `struct link_map' type.
+   Sanity check that the internal type and the public type match.  */
+#define VERIFY_MEMBER(name) \
+  (offsetof (struct link_map_public, name) == offsetof (struct link_map, name))
+extern const int verify_link_map_members[(VERIFY_MEMBER (l_addr)
+					  && VERIFY_MEMBER (l_name)
+					  && VERIFY_MEMBER (l_ld)
+					  && VERIFY_MEMBER (l_next)
+					  && VERIFY_MEMBER (l_prev))
+					 ? 1 : -1];
 
 /* This structure communicates dl state to the debugger.  The debugger
    normally finds it via the DT_DEBUG entry in the dynamic section, but in
@@ -46,7 +59,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
       /* Tell the debugger where to find the map of loaded objects.  */
       r->r_version = 1	/* R_DEBUG_VERSION XXX */;
       r->r_ldbase = ldbase ?: _r_debug.r_ldbase;
-      r->r_map = GL(dl_ns)[ns]._ns_loaded;
+      r->r_map = (void *) GL(dl_ns)[ns]._ns_loaded;
       r->r_brk = (ElfW(Addr)) &_dl_debug_state;
     }
 

@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -735,9 +735,53 @@ __tls_get_addr (GET_ADDR_ARGS)
 # endif
 
 
+/* Look up the module's TLS block as for __tls_get_addr,
+   but never touch anything.  Return null if it's not allocated yet.  */
+void *
+internal_function
+_dl_tls_get_addr_soft (struct link_map *l)
+{
+  if (__builtin_expect (l->l_tls_modid == 0, 0))
+    /* This module has no TLS segment.  */
+    return NULL;
+
+  dtv_t *dtv = THREAD_DTV ();
+  if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
+    {
+      /* This thread's DTV is not completely current,
+	 but it might already cover this module.  */
+
+      if (l->l_tls_modid >= dtv[-1].counter)
+	/* Nope.  */
+	return NULL;
+
+      size_t idx = l->l_tls_modid;
+      struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
+      while (idx >= listp->len)
+	{
+	  idx -= listp->len;
+	  listp = listp->next;
+	}
+
+      /* We've reached the slot for this module.
+	 If its generation counter is higher than the DTV's,
+	 this thread does not know about this module yet.  */
+      if (dtv[0].counter < listp->slotinfo[idx].gen)
+	return NULL;
+    }
+
+  void *data = dtv[l->l_tls_modid].pointer.val;
+  if (__builtin_expect (data == TLS_DTV_UNALLOCATED, 0))
+    /* The DTV is current, but this thread has not yet needed
+       to allocate this module's segment.  */
+    data = NULL;
+
+  return data;
+}
+
 
 void
-_dl_add_to_slotinfo (struct link_map  *l)
+_dl_add_to_slotinfo (struct link_map *l)
 {
   /* Now that we know the object is loaded successfully add
      modules containing TLS data to the dtv info table.  We

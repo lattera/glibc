@@ -1113,6 +1113,11 @@ extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;
    module with the given index.  */
 extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid);
 
+/* Look up the module's TLS block as for __tls_get_addr,
+   but never touch anything.  Return null if it's not allocated yet.  */
+extern void *_dl_tls_get_addr_soft (struct link_map *l) internal_function;
+
+
 __END_DECLS
 
 #endif /* ldsodefs.h */

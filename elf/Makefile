@@ -163,9 +163,11 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
-	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 tst-align \
-	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
-	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
+	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
+	 tst-tls-dlinfo \
+	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
+	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
+	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 tst-audit1 tst-global1 order2 \
 	 tst-stackguard1
 #	 reldep9
@@ -699,6 +701,11 @@ $(objpfx)tst-tls14.out: $(objpfx)tst-tlsmod14b.so
 
 $(objpfx)tst-tls15: $(libdl)
 $(objpfx)tst-tls15.out: $(objpfx)tst-tlsmod15a.so $(objpfx)tst-tlsmod15b.so
+
+$(objpfx)tst-tls-dlinfo: $(libdl)
+$(objpfx)tst-tls-dlinfo.out: $(objpfx)tst-tlsmod2.so
+
+
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
 CFLAGS-tst-align2.c = $(stack-align-test-flags)

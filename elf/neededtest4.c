@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAPS ((struct link_map *) _r_debug.r_map)
+
 static int
 check_loaded_objects (const char **loaded)
 {
@@ -24,7 +26,7 @@ check_loaded_objects (const char **loaded)
 
   printf("   Name\n");
   printf(" --------------------------------------------------------\n");
-  for (lm = _r_debug.r_map; lm; lm = lm->l_next)
+  for (lm = MAPS; lm; lm = lm->l_next)
     {
       if (lm->l_name && lm->l_name[0])
 	printf(" %s, count = %d\n", lm->l_name, (int) lm->l_direct_opencount);
