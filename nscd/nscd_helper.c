@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/poll.h>

@@ -1,5 +1,7 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* nscd/nscd_helper.c: Include <time.h> for `time' declaration.
+
 	* include/fcntl.h: Declare __openat, __open64.  Use libc_hidden_proto.
 	* io/openat.c (__openat): Define instead of openat.
 	Use libc_hidden_def.  Define openat with weak_alias.
