@@ -135,12 +135,16 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
 #endif
 }
 
+#define UNDERIZE(name) UNDERIZE_1 (name)
+#define UNDERIZE_1(name) __##name
+#define __OPENAT UNDERIZE (OPENAT)
+
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If OFLAG includes O_CREAT, a
    third argument is the file protection.  */
 int
-OPENAT (fd, file, oflag)
+__OPENAT (fd, file, oflag)
      int fd;
      const char *file;
      int oflag;
@@ -165,3 +169,5 @@ OPENAT (fd, file, oflag)
 
   return res;
 }
+libc_hidden_def (__OPENAT)
+weak_alias (__OPENAT, OPENAT)

@@ -1,5 +1,14 @@
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
+	* include/fcntl.h: Declare __openat, __open64.  Use libc_hidden_proto.
+	* io/openat.c (__openat): Define instead of openat.
+	Use libc_hidden_def.  Define openat with weak_alias.
+	* io/openat64.c (__openat64): Define instead of openat64.
+	Use libc_hidden_def.  Define openat64 with weak_alias.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+
+	* libio/genops.c: Include <sched.h> for __sched_yield decl.
+
 	* Makeconfig (+includes): Add back $(includes)
 	after $(+sysdep-includes).
 

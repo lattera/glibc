@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
    the directory associated with FD.  If OFLAG includes O_CREAT, a
    third argument is the file protection.  */
 int
-openat (fd, file, oflag)
+__openat (fd, file, oflag)
      int fd;
      const char *file;
      int oflag;
@@ -64,6 +64,8 @@ openat (fd, file, oflag)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__openat)
+weak_alias (__openat, openat)
 stub_warning (openat)
 
 #include <stub-tag.h>
