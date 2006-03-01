@@ -1,3 +1,7 @@
+2006-03-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/Subdirs: Use "first hurd".
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/rs6000: Directory removed, saved in ports repository.
