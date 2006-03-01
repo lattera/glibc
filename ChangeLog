@@ -1,3 +1,10 @@
+2006-03-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pread.c: Copy in mips pread.c.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Copy in mips pwrite.c.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Copy in mips pread64.c.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Copy in mips pwrite64.c.
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* elf/tst-tls-dlinfo.c: New file.
