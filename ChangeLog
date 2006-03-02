@@ -1,3 +1,9 @@
+2006-01-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #2013]
+	* sysdeps/ia64/memccpy.S: Properly handle recovery for
+	predicated speculative load.
+
 2006-03-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
