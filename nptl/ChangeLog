@@ -1,3 +1,16 @@
+2006-03-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
+	(__lll_robust_lock_wait): Also set FUTEX_WAITERS bit if we got the
+	mutex.
+	(__lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S
+	(__lll_robust_lock_wait): Likewise.
+	(__lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_lock_wait): Likewise.
+	(__lll_robust_timedlock_wait): Likewise.
+
 2006-03-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (lll_robust_mutex_dead,

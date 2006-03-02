@@ -78,6 +78,7 @@ __lll_robust_mutex_lock_wait:
 	jne	4b
 
 	movl	%fs:TID, %edx
+	orl	$FUTEX_WAITERS, %edx
 	LOCK
 	cmpxchgl %edx, (%rdi)
 	jnz	4b
@@ -169,6 +170,7 @@ __lll_robust_mutex_timedlock_wait:
 	jne	7f
 
 	movl	%fs:TID, %edx
+	orl	$FUTEX_WAITERS, %edx
 	LOCK
 	cmpxchgl %edx, (%r12)
 	jnz	7f
