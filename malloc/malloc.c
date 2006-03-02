@@ -188,7 +188,8 @@
     Changing default word sizes:
 
     INTERNAL_SIZE_T            size_t
-    MALLOC_ALIGNMENT           2 * sizeof(INTERNAL_SIZE_T)
+    MALLOC_ALIGNMENT           MAX (2 * sizeof(INTERNAL_SIZE_T),
+				    __alignof__ (long double))
 
     Configuration and functionality options:
 
@@ -380,7 +381,8 @@ extern "C" {
 
 
 #ifndef MALLOC_ALIGNMENT
-#define MALLOC_ALIGNMENT       (2 * SIZE_SZ)
+#define MALLOC_ALIGNMENT       (2 * SIZE_SZ < __alignof__ (long double) \
+				? __alignof__ (long double) : 2 * SIZE_SZ)
 #endif
 
 /* The corresponding bit mask value */
@@ -1807,7 +1809,11 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 /* Check if m has acceptable alignment */
 
-#define aligned_OK(m)  (((unsigned long)((m)) & (MALLOC_ALIGN_MASK)) == 0)
+#define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
+
+#define misaligned_chunk(p) \
+  ((uintptr_t)(MALLOC_ALIGNMENT == 2 * SIZE_SZ ? (p) : chunk2mem (p)) \
+   & MALLOC_ALIGN_MASK)
 
 
 /*
@@ -3468,7 +3474,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
      Therefore we can exclude some size values which might appear
      here by accident or by "design" from some intruder.  */
   if (__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
-      || __builtin_expect ((uintptr_t) oldp & MALLOC_ALIGN_MASK, 0))
+      || __builtin_expect (misaligned_chunk (oldp), 0))
     {
       malloc_printerr (check_action, "realloc(): invalid pointer", oldmem);
       return NULL;
@@ -4282,7 +4288,7 @@ _int_free(mstate av, Void_t* mem)
      Therefore we can exclude some size values which might appear
      here by accident or by "design" from some intruder.  */
   if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)
-      || __builtin_expect ((uintptr_t) p & MALLOC_ALIGN_MASK, 0))
+      || __builtin_expect (misaligned_chunk (p), 0))
     {
       errstr = "free(): invalid pointer";
     errout:
@@ -4628,7 +4634,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
   oldsize = chunksize(oldp);
 
   /* Simple tests for old block integrity.  */
-  if (__builtin_expect ((uintptr_t) oldp & MALLOC_ALIGN_MASK, 0))
+  if (__builtin_expect (misaligned_chunk (oldp), 0))
     {
       errstr = "realloc(): invalid pointer";
     errout:
