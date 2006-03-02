@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -19,10 +19,10 @@
 
 #ifndef _AIO_MISC_H
 # include_next <aio_misc.h>
+# include <limits.h>
+# include <pthread.h>
 # include <signal.h>
 # include <sysdep.h>
-# include <pthread.h>
-# include <limits.h>
 
 # define aio_start_notify_thread __aio_start_notify_thread
 # define aio_create_helper_thread __aio_create_helper_thread
@@ -37,7 +37,8 @@ __aio_start_notify_thread (void)
 }
 
 extern inline int
-__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
+__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
+			    void *arg)
 {
   pthread_attr_t attr;
 
@@ -64,5 +65,5 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
 
   (void) pthread_attr_destroy (&attr);
   return ret;
-}                                                                                 
+}
 #endif
