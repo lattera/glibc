@@ -200,6 +200,9 @@
 /* Define if your assembler and linker support R_PPC_REL16* relocs.  */
 #undef HAVE_ASM_PPC_REL16
 
+/* Define if your compiler defaults to -msecure-plt mode on ppc.  */
+#undef HAVE_PPC_SECURE_PLT
+
 /* Define if __stack_chk_guard canary should be randomized at program startup.  */
 #undef ENABLE_STACKGUARD_RANDOMIZE
 

@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include "config.h"
 #include <byteswap.h>
 #include <elf.h>
 #include <endian.h>
@@ -88,7 +89,15 @@ AB(handle_file) (const char *fname, int fd)
       {
 	printf ("%s: segment %zu is executable and writable\n",
 		fname, cnt);
+#if !defined __sparc__ \
+    && !defined __alpha__ \
+    && (!defined __powerpc__ || defined __powerpc64__ || defined HAVE_PPC_SECURE_PLT)
+	/* sparc, sparc64, alpha and powerpc32 (the last one only when using
+	   -mbss-plt) are expected to have PF_X | PF_W segment containing .plt
+	   section, it is part of their ABI.  It is bad security wise, nevertheless
+	   this test shouldn't fail because of this.  */
 	return 1;
+#endif
       }
 
   if (dynphdr == NULL)
