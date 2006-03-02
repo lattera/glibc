@@ -1,5 +1,11 @@
 2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/linuxthreads/sysdep-cancel.h
+	(PSEUDO): Inline correct versions of PSEUDO_RET_MOV and MAYBE_SAVE_LR.
+	(PSEUDO_RET_MOV, MAYBE_SAVE_LR): Don't define.
+
+2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/arm/eabi/Makefile (arm-using-eabi): Set.
 	* sysdeps/unix/sysv/linux/arm/nptl/Makefile: New file.
 

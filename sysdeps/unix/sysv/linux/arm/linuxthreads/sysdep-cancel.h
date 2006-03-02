@@ -50,9 +50,10 @@
     bne .Lpseudo_cancel;						\
     DO_CALL (syscall_name, args);					\
     cmn r0, $4096;							\
-    PSEUDO_RET_MOV;							\
+    RETINSTR(cc, lr);							\
+    b PLTJMP(SYSCALL_ERROR);						\
   .Lpseudo_cancel:							\
-    MAYBE_SAVE_LR;							\
+    str lr, [sp, $-4]!;							\
     DOCARGS_##args;	/* save syscall args around CENABLE.  */	\
     CENABLE;								\
     mov ip, r0;		/* put mask in safe place.  */			\
@@ -108,11 +109,6 @@ extern int __local_multiple_threads attribute_hidden;
   ldr ip, =__local_multiple_threads;					\
   ldr ip, [ip];								\
   teq ip, #0;
-#   define MAYBE_SAVE_LR						\
-  str lr, [sp, $-4]!;
-#   define PSEUDO_RET_MOV						\
-  RETINSTR(cc, lr);							\
-  b PLTJMP(SYSCALL_ERROR)
 #   define PSEUDO_PROLOGUE
 #  else
 #   define SINGLE_THREAD_P						\
@@ -122,8 +118,6 @@ extern int __local_multiple_threads attribute_hidden;
   teq ip, #0;
 #   define PSEUDO_PROLOGUE						\
   1:  .word __local_multiple_threads - 2f - 8;
-#   define MAYBE_SAVE_LR	/* lr already saved */
-#   define PSEUDO_RET_MOV PSEUDO_RET
 #  endif
 # endif
 
