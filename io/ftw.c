@@ -419,13 +419,22 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
-      else if (!(data->flags & FTW_PHYS)
-	       && (d_type == DT_LNK
-		   || (LXSTAT (_STAT_VER, name, &st) == 0
-		       && S_ISLNK (st.st_mode))))
+      else if (data->flags & FTW_PHYS)
+	flag = FTW_NS;
+      else if (d_type == DT_LNK)
 	flag = FTW_SLN;
       else
-	flag = FTW_NS;
+	{
+	  if (dir->streamfd != -1)
+	    statres = FXSTATAT (_STAT_VER, dir->streamfd, name, &st,
+				AT_SYMLINK_NOFOLLOW);
+	  else
+	    statres = LXSTAT (_STAT_VER, name, &st);
+	  if (statres == 0 && S_ISLNK (st.st_mode))
+	    flag = FTW_SLN;
+	  else
+	    flag = FTW_NS;
+	}
     }
   else
     {

@@ -1,4 +1,8 @@
-006-03-02  Jakub Jelinek  <jakub@redhat.com>
+2006-03-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/ftw.c (process_entry): If dir->streamfd != -1,
+	use FXSTATAT rather than LXSTAT to find if unstatable
+	file is a dead symlink.
 
 	* elf/check-textrel.c: Include config.h.
 	(AB(handle_file)): Don't fail if PF_X | PF_W on architectures known
