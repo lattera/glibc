@@ -42,7 +42,9 @@ __lll_robust_lock_wait (int *futex)
 
       lll_futex_wait (futex, newval);
     }
-  while ((oldval = atomic_compare_and_exchange_val_acq (futex, tid, 0)) != 0);
+  while ((oldval = atomic_compare_and_exchange_val_acq (futex,
+							tid | FUTEX_WAITERS,
+							0)) != 0);
   return 0;
 }
 
@@ -89,7 +91,7 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
 
       lll_futex_timed_wait (futex, newval, &rt);
     }
-  while (atomic_compare_and_exchange_bool_acq (futex, tid, 0));
+  while (atomic_compare_and_exchange_bool_acq (futex, tid | FUTEX_WAITERS, 0));
 
   return 0;
 }
