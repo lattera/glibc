@@ -1,3 +1,8 @@
+2006-03-03  Roland McGrath  <roland@redhat.com>
+
+	[BZ #2414]
+	* stdlib/tst-setcontext.c (f1): Take arguments of type int.
+
 2006-03-02  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (PTR_MANGLE): Use __typeof in cast.

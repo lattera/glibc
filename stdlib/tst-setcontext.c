@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2002,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,9 +30,9 @@ static int was_in_f2;
 static char st2[32768];
 
 static void
-f1 (long a0, long a1, long a2, long a3)
+f1 (int a0, int a1, int a2, int a3)
 {
-  printf ("start f1(a0=%lx,a1=%lx,a2=%lx,a3=%lx)\n", a0, a1, a2, a3);
+  printf ("start f1(a0=%x,a1=%x,a2=%x,a3=%x)\n", a0, a1, a2, a3);
 
   if (a0 != 1 || a1 != 2 || a2 != 3 || a3 != -4)
     {
