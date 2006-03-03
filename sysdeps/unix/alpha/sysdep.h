@@ -415,7 +415,7 @@ __LABEL(name)						\
 # else
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var)	\
-	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
 #  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
 # endif
 #elif defined PIC
