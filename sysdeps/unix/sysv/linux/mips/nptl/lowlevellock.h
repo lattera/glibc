@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAIT, (val), 0);		      \
+			      (long) (futexp), FUTEX_WAIT, (val), 0);	      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
@@ -48,7 +48,7 @@
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAIT, (val), (timespec));	      \
+			      (long) (futexp), FUTEX_WAIT, (val), (timespec));\
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
@@ -57,7 +57,7 @@
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAKE, (nr), 0);		      \
+			      (long) (futexp), FUTEX_WAKE, (nr), 0);	      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
@@ -67,7 +67,7 @@
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
-			      (futexp), FUTEX_CMP_REQUEUE, (nr_wake),	      \
+			      (long) (futexp), FUTEX_CMP_REQUEUE, (nr_wake),  \
 			      (nr_move), (mutex), (val));		      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })

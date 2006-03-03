@@ -1,3 +1,30 @@
+2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(INTERNAL_SYSCALL): Update internal_syscall##nr invocation.
+	(INTERNAL_SYSCALL_NCS): New.
+	(internal_syscall0, internal_syscall1, internal_syscall2,
+	internal_syscall3, internal_syscall4, internal_syscall5,
+	internal_syscall6): Take ncs_init, cs_init, and input arguments.
+	Use them.  Correct types for registers.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(INTERNAL_SYSCALL): Update internal_syscall##nr invocation.
+	(INTERNAL_SYSCALL_NCS): New.
+	(internal_syscall0, internal_syscall1, internal_syscall2,
+	internal_syscall3, internal_syscall4, internal_syscall5,
+	internal_syscall6): Take ncs_init, cs_init, and input arguments.
+	Use them.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Remove
+	recvfrom and sendto.  Mark lseek, msgrcv, and msgsnd as cancellation
+	points.
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Remove unused "value".
+	Use Elf(Addr) for TLS relocation targets.
+	* sysdeps/unix/sysv/linux/mips/mips64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h (lll_futex_wait,
+	lll_futex_timed_wait, lll_futex_wake, lll_futex_requeue): Cast
+	futexp to long for n64.
+	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h: New file.
+
 2006-02-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mips/shlib-versions: New file.
