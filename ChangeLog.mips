@@ -1,5 +1,10 @@
 2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/ptrace.c: Delete file.
+	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: Delete file.
+
+2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
 	(INTERNAL_SYSCALL): Update internal_syscall##nr invocation.
 	(INTERNAL_SYSCALL_NCS): New.
