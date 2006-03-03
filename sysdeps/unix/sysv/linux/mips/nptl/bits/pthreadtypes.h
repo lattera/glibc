@@ -55,6 +55,20 @@ typedef union
 } pthread_attr_t;
 
 
+#if _MIPS_SIM == _ABI64
+typedef struct __pthread_internal_list
+{
+  struct __pthread_internal_list *__prev;
+  struct __pthread_internal_list *__next;
+} __pthread_list_t;
+#else
+typedef struct __pthread_internal_slist
+{
+  struct __pthread_internal_slist *__next;
+} __pthread_slist_t;
+#endif
+
+
 /* Data structures for mutex handling.  The structure of the attribute
    type is deliberately not exposed.  */
 typedef union
@@ -72,15 +86,14 @@ typedef union
     int __kind;
 #if _MIPS_SIM == _ABI64
     int __spins;
-    struct __pthread_mutex_s *__next;
-    struct __pthread_mutex_s *__prev;
+    __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV	1
 #else
     unsigned int __nusers;
     __extension__ union
     {
       int __spins;
-      struct __pthread_mutex_s *__next;
+      __pthread_slist_t __list;
     };
 #endif
   } __data;

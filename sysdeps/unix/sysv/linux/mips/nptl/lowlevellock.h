@@ -30,6 +30,8 @@
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
 #define FUTEX_CMP_REQUEUE	4
+#define FUTEX_WAKE_OP		5
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -61,6 +63,15 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
+#define lll_robust_mutex_dead(futexv) \
+  do									      \
+    {									      \
+      int *__futexp = &(futexv);					      \
+      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
+      lll_futex_wake (__futexp, 1);					      \
+    }									      \
+  while (0)
+
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val) \
   ({									      \
@@ -72,6 +83,18 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
+/* Returns non-zero if error happened, zero if success.  */
+#define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
+			      (futexp), FUTEX_WAKE_OP, (nr_wake),	      \
+			      (nr_wake2), (futexp2),			      \
+			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
+  })
 
 static inline int __attribute__((always_inline))
 __lll_mutex_trylock(int *futex)
@@ -89,7 +112,16 @@ __lll_mutex_cond_trylock(int *futex)
 #define lll_mutex_cond_trylock(lock)	__lll_mutex_cond_trylock (&(lock))
 
 
+static inline int __attribute__((always_inline))
+__lll_robust_mutex_trylock(int *futex, int id)
+{
+  return atomic_compare_and_exchange_val_acq (futex, id, 0) != 0;
+}
+#define lll_robust_mutex_trylock(lock, id) \
+  __lll_robust_mutex_trylock (&(lock), id)
+
 extern void __lll_lock_wait (int *futex) attribute_hidden;
+extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
 
 static inline void __attribute__((always_inline))
 __lll_mutex_lock(int *futex)
@@ -98,6 +130,18 @@ __lll_mutex_lock(int *futex)
     __lll_lock_wait (futex);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
+
+
+static inline int __attribute__ ((always_inline))
+__lll_robust_mutex_lock (int *futex, int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_lock_wait (futex);
+  return result;
+}
+#define lll_robust_mutex_lock(futex, id) \
+  __lll_robust_mutex_lock (&(futex), id)
 
 
 static inline void __attribute__ ((always_inline))
@@ -109,7 +153,13 @@ __lll_mutex_cond_lock (int *futex)
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
 
+#define lll_robust_mutex_cond_lock(futex, id) \
+  __lll_robust_mutex_lock (&(futex), (id) | FUTEX_WAITERS)
+
+
 extern int __lll_timedlock_wait (int *futex, const struct timespec *)
+	attribute_hidden;
+extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
 	attribute_hidden;
 
 static inline int __attribute__ ((always_inline))
@@ -124,6 +174,19 @@ __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
   __lll_mutex_timedlock (&(futex), abstime)
 
 
+static inline int __attribute__ ((always_inline))
+__lll_robust_mutex_timedlock (int *futex, const struct timespec *abstime,
+			      int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_timedlock_wait (futex, abstime);
+  return result;
+}
+#define lll_robust_mutex_timedlock(futex, abstime, id) \
+  __lll_robust_mutex_timedlock (&(futex), abstime, id)
+
+
 static inline void __attribute__ ((always_inline))
 __lll_mutex_unlock (int *futex)
 {
@@ -132,6 +195,17 @@ __lll_mutex_unlock (int *futex)
     lll_futex_wake (futex, 1);
 }
 #define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
+
+
+static inline void __attribute__ ((always_inline))
+__lll_robust_mutex_unlock (int *futex, int mask)
+{
+  int val = atomic_exchange_rel (futex, 0);
+  if (__builtin_expect (val & mask, 0))
+    lll_futex_wake (futex, 1);
+}
+#define lll_robust_mutex_unlock(futex) \
+  __lll_robust_mutex_unlock(&(futex), FUTEX_WAITERS)
 
 
 static inline void __attribute__ ((always_inline))

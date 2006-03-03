@@ -1,3 +1,19 @@
+2006-03-02  Lior Balkohen  <balkohen@gmail.com>
+
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h
+	(__pthread_list_t, __pthread_slist_t): New typedefs.
+	(pthread_mutex_t): Replace __next and __prev fields with __list.
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h (FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(lll_futex_wake_unlock): Define.
+	(lll_robust_mutex_dead, lll_robust_mutex_trylock, lll_robust_mutex_lock,
+	lll_robust_mutex_cond_lock, lll_robust_mutex_timedlock,
+	lll_robust_mutex_unlock): New macros.
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): New prototypes.	
+	* sysdeps/unix/sysv/linux/mips/nptl/pt-vfork.S: Use correct path to
+	vfork.S.
+	* sysdeps/unix/sysv/linux/mips/nptl/vfork.S: Likewise.
+
 2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/ptrace.c: Delete file.

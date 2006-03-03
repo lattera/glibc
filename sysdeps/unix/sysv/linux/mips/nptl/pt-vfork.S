@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,4 +34,4 @@
 	sw	a2, PID_OFFSET(v1);	/* Restore the PID.  */		\
 1:
 
-#include <../sysdeps/unix/sysv/linux/mips/vfork.S>
+#include <sysdeps/unix/sysv/linux/mips/vfork.S>
