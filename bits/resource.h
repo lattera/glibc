@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  4.4 BSD/generic GNU version.
-   Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996,1997,1998,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,6 +63,14 @@ enum __rlimit_resource
     RLIMIT_NOFILE = RLIMIT_OFILE, /* Another name for the same thing.  */
 #define	RLIMIT_OFILE	RLIMIT_OFILE
 #define	RLIMIT_NOFILE	RLIMIT_NOFILE
+    /* Maximum size of all socket buffers.  */
+    RLIMIT_SBSIZE,
+#define RLIMIT_SBSIZE	RLIMIT_SBSIZE
+    /* Maximum size in bytes of the process address space.  */
+    RLIMIT_AS,
+    RLIMIT_VMEM = RLIMIT_AS,	/* Another name for the same thing.  */
+#define RLIMIT_AS	RLIMIT_AS
+#define RLIMIT_VMEM	RLIMIT_AS
 
     RLIMIT_NLIMITS,		/* Number of limit flavors.  */
     RLIM_NLIMITS = RLIMIT_NLIMITS /* Traditional name for same.  */

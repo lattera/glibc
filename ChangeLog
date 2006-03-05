@@ -1,5 +1,7 @@
 2006-03-05  Roland McGrath  <roland@frob.com>
 
+	* bits/resource.h (RLIMIT_SBSIZE, RLIMIT_AS, RLIMIT_VMEM): Define.
+
 	* sysdeps/mach/hurd/fdopendir.c (__fdopendir): Use O_DIRECTORY
 	to force directory check.
 	* sysdeps/mach/hurd/opendir.c (__opendir): Likewise.
