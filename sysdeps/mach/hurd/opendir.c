@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,96,97,98,2001,2003,2005
+/* Copyright (C) 1993,1994,1995,1996,1997,1998,2001,2003,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -71,9 +71,6 @@ _hurd_fd_opendir (struct hurd_fd *d)
 DIR *
 __opendir (const char *name)
 {
-  int fd;
-  DIR *dirp;
-
   if (name[0] == '\0')
     {
       /* POSIX.1-1990 says an empty name gets ENOENT;
@@ -82,31 +79,12 @@ __opendir (const char *name)
       return NULL;
     }
 
-  {
-    /* Append trailing slash to directory name to force ENOTDIR
-       if it's not a directory.
-
-       We open using the O_NONBLOCK flag so that a nondirectory with
-       blocking behavior (FIFO or device) gets ENOTDIR immediately
-       rather than waiting for the special file's open wakeup predicate.  */
-
-    size_t len = strlen (name);
-    if (name[len - 1] == '/')
-      fd = __open (name, O_RDONLY | O_NONBLOCK);
-    else
-      {
-	char n[len + 2];
-	memcpy (n, name, len);
-	n[len] = '/';
-	n[len + 1] = '\0';
-	fd = __open (n, O_RDONLY | O_NONBLOCK);
-      }
-  }
+  int fd = __open (name, O_RDONLY | O_NONBLOCK | O_DIRECTORY);
   if (fd < 0)
     return NULL;
 
   /* Extract the pointer to the descriptor structure.  */
-  dirp = _hurd_fd_opendir (_hurd_fd_get (fd));
+  DIR *dirp = _hurd_fd_opendir (_hurd_fd_get (fd));
   if (dirp == NULL)
     __close (fd);
 

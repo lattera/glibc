@@ -2,6 +2,7 @@
 
 	* sysdeps/mach/hurd/fdopendir.c (__fdopendir): Use O_DIRECTORY
 	to force directory check.
+	* sysdeps/mach/hurd/opendir.c (__opendir): Likewise.
 
 2006-03-04  Roland McGrath  <roland@frob.com>
 
