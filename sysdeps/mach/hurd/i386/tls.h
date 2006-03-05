@@ -98,7 +98,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
     {
       /* Fetch the selector set by the first call.  */
       int sel;
-      asm ("mov %%gs, %w0" : "=q" (sel));
+      asm ("mov %%gs, %w0" : "=q" (sel) : "0" (0));
       if (__builtin_expect (sel, 0x50) & 4) /* LDT selector */
 	{
 	  error_t err = __i386_set_ldt (tcb->self, sel, &desc, 1);
@@ -151,7 +151,7 @@ _hurd_tls_fork (thread_t child, struct i386_thread_state *state)
 {
   /* Fetch the selector set by _hurd_tls_init.  */
   int sel;
-  asm ("mov %%gs, %w0" : "=q" (sel));
+  asm ("mov %%gs, %w0" : "=q" (sel) : "0" (0));
   if (sel == state->ds)		/* _hurd_tls_init was never called.  */
     return 0;
 

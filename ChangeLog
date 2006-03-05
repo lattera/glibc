@@ -1,3 +1,9 @@
+2006-03-04  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Make sure high bits
+	of SEL are clear after copying %gs to low bits.
+	(_hurd_tls_fork): Likewise.
+
 2006-03-03  Roland McGrath  <roland@redhat.com>
 
 	[BZ #2414]
