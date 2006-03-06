@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -55,8 +55,17 @@ typedef struct _heap_info {
   mstate ar_ptr; /* Arena for this heap. */
   struct _heap_info *prev; /* Previous heap. */
   size_t size;   /* Current size in bytes. */
-  size_t pad;    /* Make sure the following data is properly aligned. */
+  /* Make sure the following data is properly aligned, particularly
+     that sizeof (heap_info) + 2 * SIZE_SZ is a multiple of
+     MALLOG_ALIGNMENT. */
+  char pad[-5 * SIZE_SZ & MALLOC_ALIGN_MASK];
 } heap_info;
+
+/* Get a compile-time error if the heap_info padding is not correct
+   to make alignment work as expected in sYSMALLOc.  */
+extern int sanity_check_heap_info_alignment[(sizeof (heap_info)
+					     + 2 * SIZE_SZ) % MALLOC_ALIGNMENT
+					    ? -1 : 1];
 
 /* Thread specific data */
 

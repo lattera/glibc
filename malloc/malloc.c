@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -381,8 +381,15 @@ extern "C" {
 
 
 #ifndef MALLOC_ALIGNMENT
+/* XXX This is the correct definition.  It differs from 2*SIZE_SZ only on
+   powerpc32.  For the time being, changing this is causing more
+   compatibility problems due to malloc_get_state/malloc_set_state than
+   will returning blocks not adequately aligned for long double objects
+   under -mlong-double-128.  */
 #define MALLOC_ALIGNMENT       (2 * SIZE_SZ < __alignof__ (long double) \
 				? __alignof__ (long double) : 2 * SIZE_SZ)
+*/
+#define MALLOC_ALIGNMENT       (2 * SIZE_SZ)
 #endif
 
 /* The corresponding bit mask value */

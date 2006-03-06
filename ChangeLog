@@ -1,3 +1,16 @@
+2006-03-05  Roland McGrath  <roland@redhat.com>
+
+	* malloc/malloc.c (MALLOC_ALIGNMENT): Revert to (2 * SIZE_SZ) value.
+	The correct value differs only on powerpc32, and for now changing it
+	there is causing more trouble than it's worth.
+
+	* malloc/arena.c: Add compile-time sanity check on padding calculation.
+
+2006-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/arena.c (heap_info): Adjust the padding size if
+	MALLOC_ALIGNMENT > 2 * SIZE_SZ.
+
 2006-03-05  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf): Use #if _POSIX_FOO > 0

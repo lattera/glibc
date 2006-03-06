@@ -816,25 +816,25 @@ __sysconf (name)
 #endif
 
     case _SC_V6_ILP32_OFF32:
-#if _POSIX_V6_ILP32_OFF32 > 0
+#ifdef _POSIX_V6_ILP32_OFF32
       return _POSIX_V6_ILP32_OFF32;
 #else
       return __sysconf_check_spec ("ILP32_OFF32");
 #endif
     case _SC_V6_ILP32_OFFBIG:
-#if _POSIX_V6_ILP32_OFFBIG > 0
+#ifdef _POSIX_V6_ILP32_OFFBIG
       return _POSIX_V6_ILP32_OFFBIG;
 #else
       return __sysconf_check_spec ("ILP32_OFFBIG");
 #endif
     case _SC_V6_LP64_OFF64:
-#if _POSIX_V6_LP64_OFF64 > 0
+#ifdef _POSIX_V6_LP64_OFF64
       return _POSIX_V6_LP64_OFF64;
 #else
       return __sysconf_check_spec ("LP64_OFF64");
 #endif
     case _SC_V6_LPBIG_OFFBIG:
-#if _POSIX_V6_LPBIG_OFFBIG > 0
+#ifdef _POSIX_V6_LPBIG_OFFBIG
       return _POSIX_V6_LPBIG_OFFBIG;
 #else
       return __sysconf_check_spec ("LPBIG_OFFBIG");
