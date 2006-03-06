@@ -1,5 +1,41 @@
 2006-03-05  David S. Miller  <davem@sunset.davemloft.net>
 
+	* sysdeps/sparc/sparc32/dl-trampoline.S: Add CFI markings.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-trampoline.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/memchr.S: Rearrange code to reside
+	within ENTRY/END.
+	* sysdeps/sparc/sparc32/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strcat.S: Likewise.
+	* sysdeps/sparc/sparc32/strchr.S: Likewise.
+	* sysdeps/sparc/sparc32/strcmp.S: Likewise.
+	* sysdeps/sparc/sparc32/strcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strlen.S: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Add CFI markings
+	and use __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pipe.S: Use __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Rewrite to use
+	CFI markings and __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setcontext.S: Rearrange
+	code to reside within ENTRY/END.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.S: File removed.
+	* sysdeps/unix/sysv/linux/sparc/rt-sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (librt-routines): Add it.
+
 	* shlib-versions: Use sparc64.*- for CPU patterns.
 
 2006-03-05  Roland McGrath  <roland@frob.com>

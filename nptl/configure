@@ -3,3 +3,11 @@
 # as a subdirectory to search for in other add-ons' sysdeps trees.
 
 libc_add_on_canonical=nptl
+
+# Only linux configurations support NPTL.
+if test $add_ons_automatic = yes; then
+  case "$config_os" in
+  *linux*) ;;
+  *) libc_add_on= ;;
+  esac
+fi

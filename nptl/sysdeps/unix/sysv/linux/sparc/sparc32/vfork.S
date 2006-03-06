@@ -21,6 +21,7 @@
 #include <tcb-offsets.h>
 
 	.text
+	.globl		__syscall_error
 ENTRY(__vfork)
 	ld	[%g7 + PID], %o5
 	cmp	%o5, 0
@@ -31,16 +32,18 @@ ENTRY(__vfork)
 
 	LOADSYSCALL(vfork)
 	ta	0x10
-	bcs,a	__syscall_error_handler
-	 st	%o5, [%g7 + PID]
-	SYSCALL_ERROR_HANDLER
-	sub	%o1, 1, %o1
+	bcc	2f
+	 mov	%o7, %g1
+	st	%o5, [%g7 + PID]
+	call	__syscall_error
+	 mov	%g1, %o7
+2:	sub	%o1, 1, %o1
 	andcc	%o0, %o1, %o0
 	bne,a	1f
 	 st	%o5, [%g7 + PID]
 1:	retl
 	 nop
+END(__vfork)
 
-PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 weak_alias (__vfork, vfork)

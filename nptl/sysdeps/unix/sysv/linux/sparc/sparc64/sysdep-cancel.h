@@ -26,54 +26,46 @@
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
-# define PSEUDO(name, syscall_name, args)				      \
-	.text;								      \
-ENTRY(name)								      \
-	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;			      \
-	brnz,pn %g1, 1f;						      \
-.type	__##syscall_name##_nocancel,@function;				      \
-.globl	__##syscall_name##_nocancel;					      \
-__##syscall_name##_nocancel:						      \
-	 mov SYS_ify(syscall_name), %g1;				      \
-	ta 0x6d;							      \
-	bcs,pn %xcc, __syscall_error_handler;				      \
-	 nop;								      \
-.size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
-	.subsection 2;							      \
-	cfi_startproc;							      \
-1:	save %sp, -192, %sp;						      \
-	cfi_def_cfa_register (%fp);					      \
-	cfi_window_save;						      \
-	cfi_register (%o7, %i7);					      \
-	CENABLE;							      \
-	 nop;								      \
-	mov %o0, %l0;							      \
-	COPY_ARGS_##args						      \
-	mov SYS_ify(syscall_name), %g1;					      \
-	ta 0x6d;							      \
-	bcs,pn %xcc, __syscall_error_handler2;				      \
-	 mov %o0, %l1;							      \
-	CDISABLE;							      \
-	 mov %l0, %o0;							      \
-	jmpl %i7 + 8, %g0;						      \
-	 restore %g0, %l1, %o0;						      \
-	cfi_endproc;							      \
-	.previous;							      \
-	SYSCALL_ERROR_HANDLER						      \
-	SYSCALL_ERROR_HANDLER2
-
-#define SYSCALL_ERROR_HANDLER2						      \
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
-	.global __errno_location;					      \
-        .type   __errno_location,@function;				      \
-	CDISABLE;							      \
-	 mov	%l0, %o0;						      \
-	call	__errno_location;					      \
-	 nop;								      \
-	st	%l1, [%o0];						      \
-	jmpl	%i7 + 8, %g0;						      \
-	 restore %g0, -1, %o0;						      \
-	.previous;
+# define PSEUDO(name, syscall_name, args)	\
+	.text;					\
+	.globl		__syscall_error;	\
+ENTRY(name)					\
+	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;\
+	brnz,pn %g1, 1f;			\
+.type	__##syscall_name##_nocancel,@function;	\
+.globl	__##syscall_name##_nocancel;		\
+__##syscall_name##_nocancel:			\
+	 mov SYS_ify(syscall_name), %g1;	\
+	ta 0x6d;				\
+	bcc,pt %xcc, 8f;			\
+	 mov %o7, %g1;				\
+	call __syscall_error;			\
+	 mov %g1, %o7;				\
+8:	jmpl %o7 + 8, %g0;			\
+	 nop;					\
+.size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;\
+1:	save %sp, -192, %sp;			\
+	cfi_def_cfa_register(%fp);		\
+	cfi_window_save;			\
+	cfi_register(%o7, %i7);			\
+	CENABLE;				\
+	 nop;					\
+	mov %o0, %l0;				\
+	COPY_ARGS_##args			\
+	mov SYS_ify(syscall_name), %g1;		\
+	ta 0x6d;				\
+	bcc,pt %xcc, 1f;			\
+	 mov %o0, %l1;				\
+	CDISABLE;				\
+	 mov %l0, %o0;				\
+	call __syscall_error;			\
+	 mov %l1, %o0;				\
+	ba,pt %xcc, 2f;				\
+	 mov -1, %l1;				\
+1:	CDISABLE;				\
+	 mov %l0, %o0;				\
+2:	jmpl %i7 + 8, %g0;			\
+	 restore %g0, %l1, %o0;
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel
