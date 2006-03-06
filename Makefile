@@ -38,3 +38,6 @@ glibc-port-%-$(dist-version).tar: ChangeLog.%
 	find $(basename $@) -name configure -print | xargs touch
 	tar cf $@ $(basename $@)
 	rm -fr $(basename $@)
+
+%.bz2: %; bzip2 -9vk $<
+%.gz: %; gzip -9vnc $< > $@.new && mv -f $@.new $@
