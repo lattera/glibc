@@ -95,112 +95,112 @@ __sysconf (name)
       return MAX (__tzname_max (), _POSIX_TZNAME_MAX);
 
     case _SC_JOB_CONTROL:
-#ifdef	_POSIX_JOB_CONTROL
-      return 1;
+#if _POSIX_JOB_CONTROL > 0
+      return _POSIX_JOB_CONTROL;
 #else
       return -1;
 #endif
 
     case _SC_SAVED_IDS:
-#ifdef	_POSIX_SAVED_IDS
+#if _POSIX_SAVED_IDS > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_REALTIME_SIGNALS:
-#ifdef	_POSIX_REALTIME_SIGNALS
+#if _POSIX_REALTIME_SIGNALS > 0
       return _POSIX_REALTIME_SIGNALS;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITY_SCHEDULING:
-#ifdef	_POSIX_PRIORITY_SCHEDULING
+#if _POSIX_PRIORITY_SCHEDULING > 0
       return _POSIX_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_TIMERS:
-#ifdef	_POSIX_TIMERS
+#if _POSIX_TIMERS > 0
       return _POSIX_TIMERS;
 #else
       return -1;
 #endif
 
     case _SC_ASYNCHRONOUS_IO:
-#ifdef	_POSIX_ASYNCHRONOUS_IO
+#if _POSIX_ASYNCHRONOUS_IO > 0
       return _POSIX_ASYNCHRONOUS_IO;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITIZED_IO:
-#ifdef	_POSIX_PRIORITIZED_IO
+#if _POSIX_PRIORITIZED_IO > 0
       return _POSIX_PRIORITIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_SYNCHRONIZED_IO:
-#ifdef	_POSIX_SYNCHRONIZED_IO
+#if _POSIX_SYNCHRONIZED_IO > 0
       return _POSIX_SYNCHRONIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_FSYNC:
-#ifdef	_POSIX_FSYNC
+#if _POSIX_FSYNC > 0
       return _POSIX_FSYNC;
 #else
       return -1;
 #endif
 
     case _SC_MAPPED_FILES:
-#ifdef	_POSIX_MAPPED_FILES
+#if _POSIX_MAPPED_FILES > 0
       return _POSIX_MAPPED_FILES;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK:
-#ifdef	_POSIX_MEMLOCK
+#if _POSIX_MEMLOCK > 0
       return _POSIX_MEMLOCK;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK_RANGE:
-#ifdef	_POSIX_MEMLOCK_RANGE
+#if _POSIX_MEMLOCK_RANGE > 0
       return _POSIX_MEMLOCK_RANGE;
 #else
       return -1;
 #endif
 
     case _SC_MEMORY_PROTECTION:
-#ifdef	_POSIX_MEMORY_PROTECTION
+#if _POSIX_MEMORY_PROTECTION > 0
       return _POSIX_MEMORY_PROTECTION;
 #else
       return -1;
 #endif
 
     case _SC_MESSAGE_PASSING:
-#ifdef	_POSIX_MESSAGE_PASSING
+#if _POSIX_MESSAGE_PASSING > 0
       return _POSIX_MESSAGE_PASSING;
 #else
       return -1;
 #endif
 
     case _SC_SEMAPHORES:
-#ifdef	_POSIX_SEMAPHORES
+#if _POSIX_SEMAPHORES > 0
       return _POSIX_SEMAPHORES;
 #else
       return -1;
 #endif
 
     case _SC_SHARED_MEMORY_OBJECTS:
-#ifdef	_POSIX_SHARED_MEMORY_OBJECTS
+#if _POSIX_SHARED_MEMORY_OBJECTS > 0
       return _POSIX_SHARED_MEMORY_OBJECTS;
 #else
       return -1;
@@ -353,49 +353,49 @@ __sysconf (name)
 #endif
 
     case _SC_PII:
-#ifdef	_POSIX_PII
+#if _POSIX_PII > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_XTI:
-#ifdef	_POSIX_PII_XTI
+#if _POSIX_PII_XTI > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_SOCKET:
-#ifdef	_POSIX_PII_SOCKET
+#if _POSIX_PII_SOCKET > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_INTERNET:
-#ifdef	_POSIX_PII_INTERNET
+#if _POSIX_PII_INTERNET > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI:
-#ifdef	_POSIX_PII_OSI
+#if _POSIX_PII_OSI > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_POLL:
-#ifdef	_POSIX_POLL
+#if _POSIX_POLL > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_SELECT:
-#ifdef	_POSIX_SELECT
+#if _POSIX_SELECT > 0
       return 1;
 #else
       return -1;
@@ -410,35 +410,35 @@ __sysconf (name)
 #endif
 
     case _SC_PII_INTERNET_STREAM:
-#ifdef	_POSIX_PII_INTERNET_STREAM
+#if _POSIX_PII_INTERNET_STREAM > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_INTERNET_DGRAM:
-#ifdef	_POSIX_PII_INTERNET_DGRAM
+#if _POSIX_PII_INTERNET_DGRAM > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_COTS:
-#ifdef	_POSIX_PII_OSI_COTS
+#if _POSIX_PII_OSI_COTS > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_CLTS:
-#ifdef	_POSIX_PII_OSI_CLTS
+#if _POSIX_PII_OSI_CLTS > 0
       return 1;
 #else
       return -1;
 #endif
 
     case _SC_PII_OSI_M:
-#ifdef	_POSIX_PII_OSI_M
+#if _POSIX_PII_OSI_M > 0
       return 1;
 #else
       return -1;
@@ -519,14 +519,14 @@ __sysconf (name)
 
       /* POSIX 1003.1c (POSIX Threads).  */
     case _SC_THREADS:
-#ifdef	_POSIX_THREADS
+#if _POSIX_THREADS > 0
       return _POSIX_THREADS;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_SAFE_FUNCTIONS:
-#ifdef	_POSIX_THREAD_SAFE_FUNCTIONS
+#if _POSIX_THREAD_SAFE_FUNCTIONS > 0
       return _POSIX_THREAD_SAFE_FUNCTIONS;
 #else
       return -1;
@@ -553,7 +553,7 @@ __sysconf (name)
 #endif
 
     case _SC_THREAD_DESTRUCTOR_ITERATIONS:
-#ifdef	_POSIX_THREAD_DESTRUCTOR_ITERATIONS
+#if _POSIX_THREAD_DESTRUCTOR_ITERATIONS > 0
       return _POSIX_THREAD_DESTRUCTOR_ITERATIONS;
 #else
       return -1;
@@ -581,42 +581,42 @@ __sysconf (name)
 #endif
 
     case _SC_THREAD_ATTR_STACKADDR:
-#ifdef	_POSIX_THREAD_ATTR_STACKADDR
+#if _POSIX_THREAD_ATTR_STACKADDR > 0
       return _POSIX_THREAD_ATTR_STACKADDR;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_ATTR_STACKSIZE:
-#ifdef	_POSIX_THREAD_ATTR_STACKSIZE
+#if _POSIX_THREAD_ATTR_STACKSIZE > 0
       return _POSIX_THREAD_ATTR_STACKSIZE;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIORITY_SCHEDULING:
-#ifdef	_POSIX_THREAD_PRIORITY_SCHEDULING
+#if _POSIX_THREAD_PRIORITY_SCHEDULING > 0
       return _POSIX_THREAD_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_INHERIT:
-#ifdef	_POSIX_THREAD_PRIO_INHERIT
+#if _POSIX_THREAD_PRIO_INHERIT > 0
       return _POSIX_THREAD_PRIO_INHERIT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_PROTECT:
-#ifdef	_POSIX_THREAD_PRIO_PROTECT
+#if _POSIX_THREAD_PRIO_PROTECT > 0
       return _POSIX_THREAD_PRIO_PROTECT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PROCESS_SHARED:
-#ifdef	_POSIX_THREAD_PROCESS_SHARED
+#if _POSIX_THREAD_PROCESS_SHARED > 0
       return _POSIX_THREAD_PROCESS_SHARED;
 #else
       return -1;
@@ -816,25 +816,25 @@ __sysconf (name)
 #endif
 
     case _SC_V6_ILP32_OFF32:
-#ifdef _POSIX_V6_ILP32_OFF32
+#if _POSIX_V6_ILP32_OFF32 > 0
       return _POSIX_V6_ILP32_OFF32;
 #else
       return __sysconf_check_spec ("ILP32_OFF32");
 #endif
     case _SC_V6_ILP32_OFFBIG:
-#ifdef _POSIX_V6_ILP32_OFFBIG
+#if _POSIX_V6_ILP32_OFFBIG > 0
       return _POSIX_V6_ILP32_OFFBIG;
 #else
       return __sysconf_check_spec ("ILP32_OFFBIG");
 #endif
     case _SC_V6_LP64_OFF64:
-#ifdef _POSIX_V6_LP64_OFF64
+#if _POSIX_V6_LP64_OFF64 > 0
       return _POSIX_V6_LP64_OFF64;
 #else
       return __sysconf_check_spec ("LP64_OFF64");
 #endif
     case _SC_V6_LPBIG_OFFBIG:
-#ifdef _POSIX_V6_LPBIG_OFFBIG
+#if _POSIX_V6_LPBIG_OFFBIG > 0
       return _POSIX_V6_LPBIG_OFFBIG;
 #else
       return __sysconf_check_spec ("LPBIG_OFFBIG");
@@ -857,40 +857,40 @@ __sysconf (name)
 #endif
 
     case _SC_ADVISORY_INFO:
-#ifdef _POSIX_ADVISORY_INFO
+#if _POSIX_ADVISORY_INFO > 0
       return _POSIX_ADVISORY_INFO;
 #else
       return -1;
 #endif
 
     case _SC_BARRIERS:
-#ifdef _POSIX_BARRIERS
+#if _POSIX_BARRIERS > 0
       return _POSIX_BARRIERS;
 #else
       return -1;
 #endif
 
     case _SC_BASE:
-#ifdef _POSIX_BASE
+#if _POSIX_BASE > 0
       return _POSIX_BASE;
 #else
       return -1;
 #endif
     case _SC_C_LANG_SUPPORT:
-#ifdef _POSIX_C_LANG_SUPPORT
+#if _POSIX_C_LANG_SUPPORT > 0
       return _POSIX_C_LANG_SUPPORT;
 #else
       return -1;
 #endif
     case _SC_C_LANG_SUPPORT_R:
-#ifdef _POSIX_C_LANG_SUPPORT_R
+#if _POSIX_C_LANG_SUPPORT_R > 0
       return _POSIX_C_LANG_SUPPORT_R;
 #else
       return -1;
 #endif
 
     case _SC_CLOCK_SELECTION:
-#ifdef _POSIX_CLOCK_SELECTION
+#if _POSIX_CLOCK_SELECTION > 0
       return _POSIX_CLOCK_SELECTION;
 #else
       return -1;
@@ -904,58 +904,58 @@ __sysconf (name)
 #endif
 
     case _SC_DEVICE_IO:
-#ifdef _POSIX_DEVICE_IO
+#if _POSIX_DEVICE_IO > 0
       return _POSIX_DEVICE_IO;
 #else
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC:
-#ifdef _POSIX_DEVICE_SPCIFIC
+#if _POSIX_DEVICE_SPCIFIC > 0
       return _POSIX_DEVICE_SPECIFIC;
 #else
       return -1;
 #endif
     case _SC_DEVICE_SPECIFIC_R:
-#ifdef _POSIX_DEVICE_SPCIFIC_R
+#if _POSIX_DEVICE_SPCIFIC_R > 0
       return _POSIX_DEVICE_SPECIFIC_R;
 #else
       return -1;
 #endif
 
     case _SC_FD_MGMT:
-#ifdef _POSIX_FD_MGMT
+#if _POSIX_FD_MGMT > 0
       return _POSIX_FD_MGMT;
 #else
       return -1;
 #endif
 
     case _SC_FIFO:
-#ifdef _POSIX_FIFO
+#if _POSIX_FIFO > 0
       return _POSIX_FIFO;
 #else
       return -1;
 #endif
     case _SC_PIPE:
-#ifdef _POSIX_PIPE
+#if _POSIX_PIPE > 0
       return _POSIX_PIPE;
 #else
       return -1;
 #endif
 
     case _SC_FILE_ATTRIBUTES:
-#ifdef _POSIX_FILE_ATTRIBUTES
+#if _POSIX_FILE_ATTRIBUTES > 0
       return _POSIX_FILE_ATTRIBUTES;
 #else
       return -1;
 #endif
     case _SC_FILE_LOCKING:
-#ifdef _POSIX_FILE_LOCKING
+#if _POSIX_FILE_LOCKING > 0
       return _POSIX_FILE_LOCKING;
 #else
       return -1;
 #endif
     case _SC_FILE_SYSTEM:
-#ifdef _POSIX_FILE_SYSTEM
+#if _POSIX_FILE_SYSTEM > 0
       return _POSIX_FILE_SYSTEM;
 #else
       return -1;
@@ -969,53 +969,53 @@ __sysconf (name)
 #endif
 
     case _SC_MULTI_PROCESS:
-#ifdef _POSIX_MULTI_PROCESS
+#if _POSIX_MULTI_PROCESS > 0
       return _POSIX_MULTI_PROCESS;
 #else
       return -1;
 #endif
     case _SC_SINGLE_PROCESS:
-#ifdef _POSIX_SINGLE_PROCESS
+#if _POSIX_SINGLE_PROCESS > 0
       return _POSIX_SINGLE_PROCESS;
 #else
       return -1;
 #endif
 
     case _SC_NETWORKING:
-#ifdef _POSIX_NETWORKING
+#if _POSIX_NETWORKING > 0
       return _POSIX_NETWORKING;
 #else
       return -1;
 #endif
 
     case _SC_READER_WRITER_LOCKS:
-#ifdef _POSIX_READER_WRITER_LOCKS
+#if _POSIX_READER_WRITER_LOCKS > 0
       return _POSIX_READER_WRITER_LOCKS;
 #else
       return -1;
 #endif
     case _SC_SPIN_LOCKS:
-#ifdef _POSIX_SPIN_LOCKS
+#if _POSIX_SPIN_LOCKS > 0
       return _POSIX_SPIN_LOCKS;
 #else
       return -1;
 #endif
 
     case _SC_REGEXP:
-#ifdef _POSIX_REGEXP
+#if _POSIX_REGEXP > 0
       return _POSIX_REGEXP;
 #else
       return -1;
 #endif
     case _SC_REGEX_VERSION:
-#ifdef _POSIX_REGEX_VERSION
+#if _POSIX_REGEX_VERSION > 0
       return _POSIX_REGEX_VERSION;
 #else
       return -1;
 #endif
 
     case _SC_SHELL:
-#ifdef _POSIX_SHELL
+#if _POSIX_SHELL > 0
       return _POSIX_SHELL;
 #else
       return -1;
@@ -1029,33 +1029,33 @@ __sysconf (name)
 #endif
 
     case _SC_SPAWN:
-#ifdef _POSIX_SPAWN
+#if _POSIX_SPAWN > 0
       return _POSIX_SPAWN;
 #else
       return -1;
 #endif
 
     case _SC_SPORADIC_SERVER:
-#ifdef _POSIX_SPORADIC_SERVER
+#if _POSIX_SPORADIC_SERVER > 0
       return _POSIX_SPORADIC_SERVER;
 #else
       return -1;
 #endif
     case _SC_THREAD_SPORADIC_SERVER:
-#ifdef _POSIX_THREAD_SPORADIC_SERVER
+#if _POSIX_THREAD_SPORADIC_SERVER > 0
       return _POSIX_THREAD_SPORADIC_SERVER;
 #else
       return -1;
 #endif
 
     case _SC_SYSTEM_DATABASE:
-#ifdef _POSIX_SYSTEM_DATABASE
+#if _POSIX_SYSTEM_DATABASE > 0
       return _POSIX_SYSTEM_DATABASE;
 #else
       return -1;
 #endif
     case _SC_SYSTEM_DATABASE_R:
-#ifdef _POSIX_SYSTEM_DATABASE_R
+#if _POSIX_SYSTEM_DATABASE_R > 0
       return _POSIX_SYSTEM_DATABASE_R;
 #else
       return -1;
@@ -1069,27 +1069,27 @@ __sysconf (name)
 #endif
 
     case _SC_TIMEOUTS:
-#ifdef _POSIX_TIMEOUTS
+#if _POSIX_TIMEOUTS > 0
       return _POSIX_TIMEOUTS;
 #else
       return -1;
 #endif
 
     case _SC_TYPED_MEMORY_OBJECTS:
-#ifdef _POSIX_TYPED_MEMORY_OBJECTS
+#if _POSIX_TYPED_MEMORY_OBJECTS > 0
       return _POSIX_TYPED_MEMORY_OBJECTS;
 #else
       return -1;
 #endif
 
     case _SC_USER_GROUPS:
-#ifdef _POSIX_USER_GROUPS
+#if _POSIX_USER_GROUPS > 0
       return _POSIX_USER_GROUPS;
 #else
       return -1;
 #endif
     case _SC_USER_GROUPS_R:
-#ifdef _POSIX_USER_GROUPS_R
+#if _POSIX_USER_GROUPS_R > 0
       return _POSIX_USER_GROUPS_R;
 #else
       return -1;
@@ -1154,25 +1154,25 @@ __sysconf (name)
 #endif
 
     case _SC_TRACE:
-#ifdef _POSIX_TRACE
+#if _POSIX_TRACE > 0
       return _POSIX_TRACE;
 #else
       return -1;
 #endif
     case _SC_TRACE_EVENT_FILTER:
-#ifdef _POSIX_TRACE_EVENT_FILTER
+#if _POSIX_TRACE_EVENT_FILTER > 0
       return _POSIX_TRACE_EVENT_FILTER;
 #else
       return -1;
 #endif
     case _SC_TRACE_INHERIT:
-#ifdef _POSIX_TRACE_INHERIT
+#if _POSIX_TRACE_INHERIT > 0
       return _POSIX_TRACE_INHERIT;
 #else
       return -1;
 #endif
     case _SC_TRACE_LOG:
-#ifdef _POSIX_TRACE_LOG
+#if _POSIX_TRACE_LOG > 0
       return _POSIX_TRACE_LOG;
 #else
       return -1;
@@ -1198,14 +1198,14 @@ __sysconf (name)
       return 0;
 
     case _SC_IPV6:
-#ifdef _POSIX_IPV6
+#if _POSIX_IPV6 > 0
       return _POSIX_IPV6;
 #else
       return -1;
 #endif
 
     case _SC_RAW_SOCKETS:
-#ifdef _POSIX_RAW_SOCKETS
+#if _POSIX_RAW_SOCKETS > 0
       return _POSIX_RAW_SOCKETS;
 #else
       return -1;

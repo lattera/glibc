@@ -1,3 +1,18 @@
+2006-03-05  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Use #if _POSIX_FOO > 0
+	rather than #ifdef _POSIX_FOO for options.  We should return -1
+	at runtime for an option defined to 0 at compile time.
+
+	* sysdeps/mach/hurd/bits/posix_opt.h: Define many missing options,
+	many to -1 or 0.
+
+2006-03-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf)
+	[__NR_clock_getres || HP_TIMING_AVAIL]: Handle _SC_CPUTIME,
+	_SC_THREAD_CPUTIME.
+
 2006-03-05  David S. Miller  <davem@sunset.davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-trampoline.S: Add CFI markings.
