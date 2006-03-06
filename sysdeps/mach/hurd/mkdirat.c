@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1994,1995,1996,1999,2002,2005,2006
+/* Create a directory named relative to another open directory.  Hurd version.
+   Copyright (C) 1991,1993,1994,1995,1996,1997,2002,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,18 +19,24 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <stddef.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <hurd.h>
 
-
-/* Create a device file named FILE_NAME, with permission and special bits MODE
-   and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */
 int
-__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
+mkdirat (fd, path, mode)
+     int fd;
+     const char *path;
+     mode_t mode;
 {
-  return __xmknodat (vers, AT_FDCWD, file_name, mode, dev);
+  error_t err;
+  const char *name;
+  file_t parent = __directory_name_split (path, (char **) &name);
+  if (parent == MACH_PORT_NULL)
+    return -1;
+  err = __dir_mkdir (parent, name, mode & ~_hurd_umask);
+  __mach_port_deallocate (__mach_task_self (), parent);
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
-libc_hidden_def (__xmknod)

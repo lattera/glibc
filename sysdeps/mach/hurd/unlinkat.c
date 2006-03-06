@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1994,1995,1996,1999,2002,2005,2006
-	Free Software Foundation, Inc.
+/* unlinkat -- Remove a name relative to an open directory.  Hurd version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,16 +20,36 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stddef.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <unistd.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
 
-/* Create a device file named FILE_NAME, with permission and special bits MODE
-   and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */
+/* Remove the link named NAME.  */
 int
-__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
+unlinkat (fd, name, flag)
+     int fd;
+     const char *name;
+     int flag;
 {
-  return __xmknodat (vers, AT_FDCWD, file_name, mode, dev);
+  error_t err;
+  file_t dir;
+  const char *file;
+
+  if ((flag &~ AT_REMOVEDIR) != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  dir = __directory_name_split_at (fd, name, (char **) &file);
+  if (dir == MACH_PORT_NULL)
+    return -1;
+
+  err = ((flag & AT_REMOVEDIR) ? __dir_rmdir : __dir_unlink) (dir, file);
+  __mach_port_deallocate (__mach_task_self (), dir);
+
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
-libc_hidden_def (__xmknod)

@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002,2004
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002,2004,2006
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -46,7 +46,7 @@ server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
 	   hurdid hurdpid hurdrlimit hurdprio hurdexec hurdselect \
-	   hurdlookup lookup-retry \
+	   hurdlookup lookup-retry lookup-at \
 	   get-host set-host \
 	   path-lookup \
 	   setauth \

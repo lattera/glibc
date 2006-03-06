@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,99,2001,2004
+/* Copyright (C) 1992,1993,1994,1995,1996,1997,1999,2001,2004,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -184,19 +184,7 @@ __hurd_directory_name_split (error_t (*use_init_port)
 	--lastslash;
 
       /* Find the last one earlier in the string, before the trailing ones.  */
-#if __GLIBC__ > 2 || __GLIBC_MINOR__ >= 2
       lastslash = __memrchr (file_name, '/', lastslash - file_name);
-#else
-      /* Keep backing up, looking for a slash.  */
-      do
-	if (lastslash == file_name)
-	  {
-	    /* Hit the start with no slash.  */
-	    lastslash = NULL;
-	    break;
-	  }
-      while (*lastslash-- != '/');
-#endif
     }
 
   if (lastslash != NULL)

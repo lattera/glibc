@@ -13,6 +13,34 @@
 
 2006-03-05  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/faccessat.c: New file.
+	* sysdeps/mach/hurd/fchmodat.c: New file.
+	* sysdeps/mach/hurd/fchownat.c: New file.
+	* sysdeps/mach/hurd/fxstatat.c: New file.
+	* sysdeps/mach/hurd/fxstatat64.c: New file.
+	* sysdeps/mach/hurd/linkat.c: New file.
+	* sysdeps/mach/hurd/mkdirat.c: New file.
+	* sysdeps/mach/hurd/openat.c: New file.
+	* sysdeps/mach/hurd/openat64.c: New file.
+	* sysdeps/mach/hurd/symlinkat.c: New file.
+	* sysdeps/mach/hurd/unlinkat.c: New file.
+	* sysdeps/mach/hurd/xmknod.c (__xmknod): Just call __xmknodat.
+	Guts move to ...
+	* sysdeps/mach/hurd/xmknodat.c: ... here, new file.
+
+	* hurd/lookup-at.c: New file.
+	* hurd/Makefile (routines): Add it.
+	* hurd/hurd/fd.h: Declare __file_name_lookup_at,
+	__file_name_split_at and __directory_name_split_at.
+
+	* hurd/hurd/lookup.h: Declare {,__}hurd_directory_name_split.
+
+	* hurd/hurdlookup.c (__hurd_directory_name_split): Use __memrchr
+	unconditionally.
+
+	* sysdeps/mach/hurd/open.c: Define {,__,__libc_,}open64 as aliases.
+	* sysdeps/mach/hurd/open64.c: New file.
+
 	* sysdeps/posix/sysconf.c (__sysconf): Use #if _POSIX_FOO > 0
 	rather than #ifdef _POSIX_FOO for options.  We should return -1
 	at runtime for an option defined to 0 at compile time.

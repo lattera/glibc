@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1994,1995,1996,1999,2002,2005,2006
-	Free Software Foundation, Inc.
+/* Get information about file named relative to open directory.  Hurd version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,18 +18,16 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <stddef.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 
+#include "xstatconv.c"
 
-/* Create a device file named FILE_NAME, with permission and special bits MODE
-   and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */
 int
-__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
+__fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
 {
-  return __xmknodat (vers, AT_FDCWD, file_name, mode, dev);
+  struct stat64 buf64;
+  return (__fxstatat64 (vers, fd, filename, &buf64, flag)
+	  ?: xstat64_conv (buf, &buf64));
 }
-libc_hidden_def (__xmknod)
+libc_hidden_def (__fxstatat)

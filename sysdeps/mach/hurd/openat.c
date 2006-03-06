@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,93,94,95,97,2000,2002,2006 Free Software Foundation, Inc.
+/* openat -- Open a file named relative to an open directory.  Hurd version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,41 +20,43 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <stddef.h>
+#include <sys/stat.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
-   a third argument is the file protection.  */
+/* Open FILE with access OFLAG.  Interpret relative paths relative to
+   the directory associated with FD.  If OFLAG includes O_CREAT, a
+   third argument is the file protection.  */
 int
-__libc_open (const char *file, int oflag, ...)
+__openat (fd, file, oflag)
+     int fd;
+     const char *file;
+     int oflag;
 {
-  mode_t mode;
+  int mode;
   io_t port;
 
   if (oflag & O_CREAT)
     {
       va_list arg;
       va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
+      mode = va_arg (arg, int);
       va_end (arg);
     }
   else
     mode = 0;
 
-  port = __file_name_lookup (file, oflag, mode);
+  port = __file_name_lookup_at (fd, 0, file, oflag, mode);
   if (port == MACH_PORT_NULL)
     return -1;
 
   return _hurd_intern_fd (port, oflag, 1);
 }
+libc_hidden_def (__openat)
+weak_alias (__openat, openat)
 
-libc_hidden_def (__libc_open)
-weak_alias (__libc_open, __open)
-libc_hidden_weak (__open)
-weak_alias (__libc_open, open)
-
-/* open64 is just the same as open for us.  */
-weak_alias (__libc_open, __libc_open64)
-weak_alias (__libc_open, __open64)
-libc_hidden_weak (_open64)
-weak_alias (__libc_open, open64)
+/* openat64 is just the same as openat for us.  */
+weak_alias (__openat, __openat64)
+libc_hidden_weak (__openat64)
+weak_alias (__openat, openat64)

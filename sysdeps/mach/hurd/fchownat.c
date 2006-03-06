@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1994,1995,1996,1999,2002,2005,2006
-	Free Software Foundation, Inc.
+/* Change owner and group of a file relative to open directory.  Hurd version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,16 +20,27 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stddef.h>
+#include <unistd.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
-
-/* Create a device file named FILE_NAME, with permission and special bits MODE
-   and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */
+/* Change the owner and group of FILE.  */
 int
-__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
+fchownat (fd, file, owner, group, flag)
+     int fd;
+     const char *file;
+     uid_t owner;
+     gid_t group;
+     int flag;
 {
-  return __xmknodat (vers, AT_FDCWD, file_name, mode, dev);
+  error_t err;
+  file_t port = __file_name_lookup_at (fd, flag, file, 0, 0);
+  if (port == MACH_PORT_NULL)
+    return -1;
+  err = __file_chown (port, owner, group);
+  __mach_port_deallocate (__mach_task_self (), port);
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
-libc_hidden_def (__xmknod)
