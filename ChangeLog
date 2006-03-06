@@ -1,3 +1,7 @@
+2006-03-05  David S. Miller  <davem@sunset.davemloft.net>
+
+	* shlib-versions: Use sparc64.*- for CPU patterns.
+
 2006-03-05  Roland McGrath  <roland@frob.com>
 
 	* bits/resource.h (RLIMIT_SBSIZE, RLIMIT_AS, RLIMIT_VMEM): Define.

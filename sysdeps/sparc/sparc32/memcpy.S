@@ -146,28 +146,12 @@
 	.text
 	.align	4
 
-70:	andcc		%o1, 1, %g0
-	be		4f
-	 andcc		%o1, 2, %g0
-
-	ldub		[%o1 - 1], %g2
-	sub		%o1, 1, %o1
-	stb		%g2, [%o0 - 1]
-	sub		%o2, 1, %o2
-	be		3f
-	 sub		%o0, 1, %o0
-4:	lduh		[%o1 - 2], %g2
-	sub		%o1, 2, %o1
-	sth		%g2, [%o0 - 2]
-	sub		%o2, 2, %o2
-	b		3f
-	 sub		%o0, 2, %o0
-
 ENTRY(bcopy)
 	mov		%o0, %o3
 	mov		%o1, %o0
 	mov		%o3, %o1
 END(bcopy)
+
 ENTRY(memmove)
 	cmp		%o0, %o1
 	st		%o0, [%sp + 64]
@@ -185,8 +169,26 @@ ENTRY(memmove)
 	 cmp		%o2, 15
 	bleu		91f
 	 andcc		%o1, 3, %g0
-	bne		70b
-3:	 andcc		%o1, 4, %g0
+	be		3f
+	 nop
+
+	andcc		%o1, 1, %g0
+	be		4f
+	 andcc		%o1, 2, %g0
+
+	ldub		[%o1 - 1], %g2
+	sub		%o1, 1, %o1
+	stb		%g2, [%o0 - 1]
+	sub		%o2, 1, %o2
+	be		3f
+	 sub		%o0, 1, %o0
+4:	lduh		[%o1 - 2], %g2
+	sub		%o1, 2, %o1
+	sth		%g2, [%o0 - 2]
+	sub		%o2, 2, %o2
+	sub		%o0, 2, %o0
+
+3:	andcc		%o1, 4, %g0
 
 	be		2f
 	 mov		%o2, %g1

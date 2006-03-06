@@ -39,36 +39,6 @@
 
 	.text
 	.align		4
-10:	ldub		[%o0], %g4
-	cmp		%g4, %o1
-	be		1f
-	 add		%o0, 1, %o0
-	cmp		%g4, 0
-	be		9f
-	 andcc		%o0, 3, %g0
-	be		4f
-	 or		%o4, %lo(0x80808080), %o3
-	ldub		[%o0], %g4
-	cmp		%g4, %o1
-	be		1f
-	 add		%o0, 1, %o0
-	cmp		%g4, 0
-	be		9f
-	 andcc		%o0, 3, %g0
-	be		5f
-	 sethi		%hi(0x01010101), %o5
-	ldub		[%o0], %g4
-	cmp		%g4, %o1
-	be		1f
-	 add		%o0, 1, %o0
-	cmp		%g4, 0
-	be		9f
-	 or		%o5, %lo(0x01010101), %o2
-	b		6f
-	 ld		[%o0], %g4
-1:	retl
-	 sub		%o0, 1, %o0
-
 ENTRY(strchr)
 	andcc		%o1, 0xff, %o1
 	be		12f
@@ -77,9 +47,40 @@ ENTRY(strchr)
 	or		%o1, %o2, %o2
 	sethi		%hi(0x80808080), %o4
 	sll		%o2, 16, %o3
-	bne		10b
+	be		13f
 	 or		%o3, %o2, %g2
-	or		%o4, %lo(0x80808080), %o3
+
+	ldub		[%o0], %g4
+	cmp		%g4, %o1
+	be		11f
+	 add		%o0, 1, %o0
+	cmp		%g4, 0
+	be		9f
+	 andcc		%o0, 3, %g0
+	be		4f
+	 or		%o4, %lo(0x80808080), %o3
+	ldub		[%o0], %g4
+	cmp		%g4, %o1
+	be		11f
+	 add		%o0, 1, %o0
+	cmp		%g4, 0
+	be		9f
+	 andcc		%o0, 3, %g0
+	be		5f
+	 sethi		%hi(0x01010101), %o5
+	ldub		[%o0], %g4
+	cmp		%g4, %o1
+	be		11f
+	 add		%o0, 1, %o0
+	cmp		%g4, 0
+	be		9f
+	 or		%o5, %lo(0x01010101), %o2
+	b		6f
+	 ld		[%o0], %g4
+11:	retl
+	 sub		%o0, 1, %o0
+
+13:	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o5
 5:	or		%o5, %lo(0x01010101), %o2
 7:	ld		[%o0], %g4

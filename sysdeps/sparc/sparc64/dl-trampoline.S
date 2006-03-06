@@ -30,7 +30,13 @@
 	.globl	_dl_runtime_resolve_0
 	.type	_dl_runtime_resolve_0, @function
 _dl_runtime_resolve_0:
+	cfi_startproc
+
 	save	%sp, -192, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+
 	sethi   %hi(1047552), %l2
 	ldx	[%g4 + 32 + 8], %o0
 	sub     %g1, %g4, %l0
@@ -54,6 +60,9 @@ _dl_runtime_resolve_0:
 	 sllx    %l0, 3, %o1
 	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_resolve_0, .-_dl_runtime_resolve_0
 
 	/* %g1:	PLT offset loaded by PLT entry
@@ -64,7 +73,13 @@ _dl_runtime_resolve_0:
 	.globl	_dl_runtime_resolve_1
 	.type	_dl_runtime_resolve_1, @function
 _dl_runtime_resolve_1:
+	cfi_startproc
+
 	save	%sp, -192, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+
 	srlx	%g1, 12, %o1
 	ldx	[%g4 + 8], %o0
 	add	%o1, %o1, %o3
@@ -73,6 +88,9 @@ _dl_runtime_resolve_1:
 	 add	%o1, %o3, %o1
 	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_resolve_1, .-_dl_runtime_resolve_1
 
 	/* For the profiling cases we pass in our stack frame
@@ -92,6 +110,8 @@ _dl_runtime_resolve_1:
 	.globl	_dl_profile_save_regs
 	.type	_dl_profile_save_regs, @function
 _dl_profile_save_regs:
+	cfi_startproc
+
 	stx	%l0, [%sp + STACK_BIAS + ( 0 * 8)]
 	stx	%l1, [%sp + STACK_BIAS + ( 1 * 8)]
 	stx	%l2, [%sp + STACK_BIAS + ( 2 * 8)]
@@ -125,6 +145,9 @@ _dl_profile_save_regs:
 	std	%f28, [%sp + STACK_BIAS + (30 * 8)]
 	retl
 	 std	%f30, [%sp + STACK_BIAS + (31 * 8)]
+
+	cfi_endproc
+
 	.size	_dl_profile_save_regs, .-_dl_profile_save_regs
 
 	/* If we are going to call pltexit, then we must replicate
@@ -134,6 +157,8 @@ _dl_profile_save_regs:
 	.globl	_dl_profile_invoke
 	.type	_dl_profile_invoke, @function
 _dl_profile_invoke:
+	cfi_startproc
+
 	sub	%sp, %l0, %sp
 1:
 	srlx	%l0, 3, %l7
@@ -180,6 +205,10 @@ _dl_profile_invoke:
 	jmpl	%i7 + 8, %g0
 	 restore
 
+	cfi_endproc
+
+	.size	_dl_profile_invoke, .-_dl_profile_invoke
+
 	/* %g1:	PLT offset loaded by PLT entry
 	 * %g4: callers PC, which is PLT0 + 24, therefore we
 	 *      add (32 + 8) to get the address of PLT2 which
@@ -189,10 +218,16 @@ _dl_profile_invoke:
 	.globl	_dl_runtime_profile_0
 	.type	_dl_runtime_profile_0, @function
 _dl_runtime_profile_0:
+	cfi_startproc
+
 	brz,a,pn %fp, 1f
 	 mov	192, %g5
 	sub	%fp, %sp, %g5
 1:	save	%sp, -336, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+
 	sethi   %hi(1047552), %l2
 	ldx	[%g4 + 32 + 8], %o0
 	sub     %g1, %g4, %l0
@@ -236,6 +271,9 @@ _dl_runtime_profile_0:
 
 1:	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_profile_0, .-_dl_runtime_profile_0
 
 	/* %g1:	PLT offset loaded by PLT entry
@@ -246,10 +284,16 @@ _dl_runtime_profile_0:
 	.globl	_dl_runtime_profile_1
 	.type	_dl_runtime_profile_1, @function
 _dl_runtime_profile_1:
+	cfi_startproc
+
 	brz,a,pn %fp, 1f
 	 mov	192, %g5
 	sub	%fp, %sp, %g5
 1:	save	%sp, -336, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+
 	srlx	%g1, 12, %o1
 	ldx	[%g4 + 8], %o0
 	add	%o1, %o1, %o3
@@ -277,4 +321,7 @@ _dl_runtime_profile_1:
 
 1:	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_resolve_1, .-_dl_runtime_resolve_1

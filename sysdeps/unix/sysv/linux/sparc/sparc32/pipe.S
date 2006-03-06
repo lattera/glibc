@@ -19,20 +19,22 @@
 
 #include <sysdep.h>
 
-	.globl __libc_pipe
-ENTRY (__libc_pipe)
-        mov %o0, %o2            /* Save PIPEDES. */
-	mov SYS_ify(pipe),%g1
-	ta 0x10
-	bcs __syscall_error_handler
-	 nop
-	st %o0, [%o2]           /* PIPEDES[0] = %o0; */
-        st %o1, [%o2 + 4]       /* PIPEDES[1] = %o1; */
+	.text
+	.globl		__syscall_error
+ENTRY(__libc_pipe)
+        mov	%o0, %o2            /* Save PIPEDES. */
+	mov	SYS_ify(pipe),%g1
+	ta	0x10
+	bcc	1f
+	 mov	%o7, %g1
+	call	__syscall_error
+	 mov	%g1, %o7
+1:	st	%o0, [%o2]           /* PIPEDES[0] = %o0; */
+        st	%o1, [%o2 + 4]       /* PIPEDES[1] = %o1; */
 	retl
-	 clr %o0
-	SYSCALL_ERROR_HANDLER
+	 clr	%o0
+END(__libc_pipe)
 
-PSEUDO_END (__libc_pipe)
 weak_alias (__libc_pipe, __pipe)
 libc_hidden_def (__pipe)
 weak_alias (__libc_pipe, pipe)

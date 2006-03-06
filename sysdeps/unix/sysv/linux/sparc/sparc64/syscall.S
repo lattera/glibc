@@ -19,8 +19,8 @@
 #include <sysdep.h>
 	.text
 
-ENTRY (syscall)
-
+	.globl	__syscall_error
+ENTRY(syscall)
 	mov	%o0,%g1
 	mov	%o1,%o0
 	mov	%o2,%o1
@@ -30,11 +30,10 @@ ENTRY (syscall)
 
 	ta	0x6d
 
-	bcs,pn %xcc,__syscall_error_handler
+	bcc,pt	%xcc, 1f
+	 mov	%o7, %g1
+	call	__syscall_error
+	 mov	%g1, %o7
+1:	retl
 	 nop
-	retl
-	 nop
-
-	SYSCALL_ERROR_HANDLER
-
-PSEUDO_END (syscall)
+END(syscall)

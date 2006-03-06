@@ -38,131 +38,54 @@
 #undef PSEUDO
 #undef PSEUDO_NOERRNO
 #undef PSEUDO_ERRVAL
+#undef PSEUDO_END
 #undef ENTRY
 #undef END
 #undef LOC
 
-#define ENTRY(name) \
-	.global C_SYMBOL_NAME(name); \
-	.align 4;\
-	C_LABEL(name);\
-	.type name,@function;
+#define ENTRY(name)			\
+	.align	4;			\
+	.global	C_SYMBOL_NAME(name);	\
+	.type	name, @function;	\
+C_LABEL(name)				\
+	cfi_startproc;
 
-#define END(name) \
+#define END(name)			\
+	cfi_endproc;			\
 	.size name, . - name
 
 #define LOC(name)  .L##name
 
-#ifdef LINKER_HANDLES_R_SPARC_WDISP22
-/* Unfortunately, we cannot do this yet.  Linker doesn't seem to
-   handle R_SPARC_WDISP22 against non-STB_LOCAL symbols properly .  */
-# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
-	.section .gnu.linkonce.t.handler,"ax",@progbits;		\
-	.globl handler;							\
-	.hidden handler;						\
-	.type handler,@function;					\
-handler:
-#else
-# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
-	.subsection 3;							\
-handler:
-#endif
+	/* If the offset to __syscall_error fits into a signed 22-bit
+	 * immediate branch offset, the linker will relax the call into
+	 * a normal branch.
+	 */
+#define PSEUDO(name, syscall_name, args)	\
+	.text;					\
+	.globl		__syscall_error;	\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x10;			\
+	bcc		1f;			\
+	 mov		%o7, %g1;		\
+	call		__syscall_error;	\
+	 mov		%g1, %o7;		\
+1:
 
-#if RTLD_PRIVATE_ERRNO
-# define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc_get_pic_l7,"ax",@progbits;	\
-	.globl __sparc_get_pic_l7;					\
-	.hidden __sparc_get_pic_l7;					\
-	.type __sparc_get_pic_l7,@function;				\
-__sparc_get_pic_l7:							\
-	retl;								\
-	 add	%o7, %l7, %l7;						\
-	.previous;							\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	save	%sp,-96,%sp;						\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc_get_pic_l7;					\
-	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	ld	[%l7 + rtld_errno], %l0;				\
-	st	%i0, [%l0];						\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-#elif USE___THREAD
-# ifndef NOT_IN_libc
-#  define SYSCALL_ERROR_ERRNO __libc_errno
-# else
-#  define SYSCALL_ERROR_ERRNO errno
-# endif
-# ifdef SHARED
-#  define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc_get_pic_l7,"ax",@progbits;	\
-	.globl __sparc_get_pic_l7;					\
-	.hidden __sparc_get_pic_l7;					\
-	.type __sparc_get_pic_l7,@function;				\
-__sparc_get_pic_l7:							\
-	retl;								\
-	 add	%o7, %l7, %l7;						\
-	.previous;							\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	save	%sp,-96,%sp;						\
-	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %l1;			\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc_get_pic_l7;					\
-	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	add	%l1, %tie_lo10(SYSCALL_ERROR_ERRNO), %l1;		\
-	ld	[%l7 + %l1], %l1, %tie_ld(SYSCALL_ERROR_ERRNO);		\
-	st	%i0, [%g7 + %l1], %tie_add(SYSCALL_ERROR_ERRNO);	\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-# else
-#  define SYSCALL_ERROR_HANDLER						\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;			\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g2;			\
-	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;		\
-	add	%g2, %lo(_GLOBAL_OFFSET_TABLE_), %g2;			\
-	ld	[%g2 + %g1], %g1, %tie_ld(SYSCALL_ERROR_ERRNO);		\
-	st	%o0, [%g7 + %g1], %tie_add(SYSCALL_ERROR_ERRNO);	\
-	jmpl	%o7+8, %g0;						\
-	 mov	-1, %o0;						\
-	.previous;
-# endif
-#else
-# define SYSCALL_ERROR_HANDLER						\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	.global __errno_location;					\
-        .type   __errno_location,@function;				\
-	save   %sp, -96, %sp;						\
-	call   __errno_location;					\
-	 nop;								\
-	st	%i0, [%o0];						\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-#endif
+#define PSEUDO_NOERRNO(name, syscall_name, args)\
+	.text;					\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x10;
 
-#define PSEUDO(name, syscall_name, args)			\
-	.text;							\
-	ENTRY(name);						\
-	LOADSYSCALL(syscall_name);				\
-	ta 0x10;						\
-	bcs __syscall_error_handler;				\
-	 nop;							\
-	SYSCALL_ERROR_HANDLER
+#define PSEUDO_ERRVAL(name, syscall_name, args)	\
+	.text;					\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x10;
 
-#define PSEUDO_NOERRNO(name, syscall_name, args)		\
-	.text;							\
-	ENTRY(name);						\
-	LOADSYSCALL(syscall_name);				\
-	ta 0x10
-
-#define PSEUDO_ERRVAL(name, syscall_name, args)			\
-	.text;							\
-	ENTRY(name);						\
-	LOADSYSCALL(syscall_name);				\
-	ta 0x10
+#define PSEUDO_END(name)			\
+	END(name)
 
 #else  /* __ASSEMBLER__ */
 

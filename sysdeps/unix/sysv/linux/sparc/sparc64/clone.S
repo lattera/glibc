@@ -23,6 +23,7 @@
 #include <asm/errno.h>
 #include <asm/unistd.h>
 #include <tcb-offsets.h>
+#include <sysdep.h>
 
 #define CLONE_VM	0x00000100
 #define CLONE_THREAD	0x00010000
@@ -34,12 +35,12 @@
 	.register	%g3,#scratch
 
 	.text
-	.align	4
-	.globl	__clone
-	.type	__clone,@function
 
-__clone:
+ENTRY (__clone)
 	save	%sp, -192, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
 
 	/* sanity check arguments */
 	brz,pn	%i0, 99f		/* fn non-NULL? */
@@ -65,7 +66,7 @@ __clone:
 	 nop
 	brnz,pn	%o1, __thread_start
 	 nop
-	ret
+	jmpl	%i7 + 8, %g0
 	 restore %o0, %g0, %o0
 99:
 #ifndef _LIBC_REENTRANT
@@ -88,12 +89,13 @@ __clone:
 	 nop
 	st	%i0, [%o0]
 #endif
-	ret
+	jmpl	%i7 + 8, %g0
 	 restore %g0,-1,%o0
-	.size __clone, .-__clone
+END(__clone)
 
 	.type __thread_start,@function
 __thread_start:
+	cfi_startproc
 #ifdef RESET_PID
 	sethi	%hi(CLONE_THREAD), %l0
 	andcc	%g4, %l0, %g0
@@ -112,6 +114,8 @@ __thread_start:
 	 mov	%g3,%o0
 	call	_exit,0
 	 nop
-	.size __thread_start, .-__thread_start
+	cfi_endproc
+
+	.size	__thread_start, .-__thread_start
 
 weak_alias (__clone, clone)

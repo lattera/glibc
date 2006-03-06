@@ -30,13 +30,22 @@
 	.globl	_dl_runtime_resolve
 	.type	_dl_runtime_resolve, @function
 _dl_runtime_resolve:
+	cfi_startproc
+
 	save	%sp, -104, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register (%o7, %i7)
+
 	ld	[%g2 + 8], %o0
 	srl	%g1, 10, %o1
 	call	_dl_fixup
 	 sub	%o1, 4*12, %o1
 	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_resolve, .-_dl_runtime_resolve
 
 	/* For the profiling cases we pass in our stack frame
@@ -56,6 +65,8 @@ _dl_runtime_resolve:
 	.globl	_dl_profile_save_regs
 	.type	_dl_profile_save_regs, @function
 _dl_profile_save_regs:
+	cfi_startproc
+
 	std	%l0, [%sp + ( 0 * 8)]
 	std	%l2, [%sp + ( 1 * 8)]
 	std	%l4, [%sp + ( 2 * 8)]
@@ -67,6 +78,9 @@ _dl_profile_save_regs:
 	ld	[%sp + (8 * 8)], %l4
 	retl
 	 st	%l4, [%sp + (8 * 8)]
+
+	cfi_endproc
+
 	.size	_dl_profile_save_regs, .-_dl_profile_save_regs
 
 	/* If we are going to call pltexit, then we must replicate
@@ -76,6 +90,8 @@ _dl_profile_save_regs:
 	.globl	_dl_profile_invoke
 	.type	_dl_profile_invoke, @function
 _dl_profile_invoke:
+	cfi_startproc
+
 	sub	%sp, %l0, %sp
 1:
 	srl	%l0, 3, %l7
@@ -112,6 +128,10 @@ _dl_profile_invoke:
 	jmpl	%i7 + 8, %g0
 	 restore
 
+	cfi_endproc
+
+	.size	_dl_profile_invoke, .-_dl_profile_invoke
+
 	/* %g1:	PLT offset loaded by PLT entry
 	 * %g2: callers PC, which is PLT0 + 4, and we store the
 	 *      link map at PLT0 + 12, therefore we add 8 to get
@@ -121,11 +141,17 @@ _dl_profile_invoke:
 	.globl	_dl_runtime_profile
 	.type	_dl_runtime_profile, @function
 _dl_runtime_profile:
+	cfi_startproc
+
 	cmp	%fp, 0
 	be,a	1f
 	 mov	104, %g3
 	sub	%fp, %sp, %g3
 1:	save	%sp, -104, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+
 	ld	[%g2 + 8], %o0
 	srl	%g1, 10, %o1
 	mov	%i7, %o2
@@ -152,4 +178,7 @@ _dl_runtime_profile:
 
 1:	jmp	%o0
 	 restore
+
+	cfi_endproc
+
 	.size	_dl_runtime_profile, .-_dl_runtime_profile

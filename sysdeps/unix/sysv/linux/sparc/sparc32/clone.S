@@ -24,6 +24,7 @@
 #include <asm/errno.h>
 #include <asm/unistd.h>
 #include <tcb-offsets.h>
+#include <sysdep.h>
 
 #define CLONE_VM	0x00000100
 #define CLONE_THREAD	0x00010000
@@ -32,12 +33,11 @@
 	     pid_t *ptid, void *tls, pid_t *ctid); */
 
 	.text
-	.align	4
-	.globl	__clone
-	.type	__clone,@function
-
-__clone:
+ENTRY (__clone)
 	save	%sp,-96,%sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
 
 	/* sanity check arguments */
 	orcc	%i0,%g0,%g2
@@ -67,21 +67,21 @@ __clone:
 	 tst	%o1
 	bne	__thread_start
 	 nop
-	ret
+	jmpl	%i7 + 8, %g0
 	 restore %o0,%g0,%o0
 
 .Lerror:
 	call	__errno_location
 	 or	%g0,EINVAL,%i0
 	st	%i0,[%o0]
-	ret
+	jmpl	%i7 + 8, %g0
 	 restore %g0,-1,%o0
-
-	.size	__clone, .-__clone
+END(__clone)
 
 	.type	__thread_start,@function
-
 __thread_start:
+	cfi_startproc
+
 #ifdef RESET_PID
 	sethi	%hi(CLONE_THREAD), %l0
 	andcc	%g4, %l0, %g0
@@ -101,6 +101,8 @@ __thread_start:
 	 mov	%g3,%o0
 	call	_exit,0
 	 nop
+
+	cfi_endproc
 
 	.size	__thread_start, .-__thread_start
 

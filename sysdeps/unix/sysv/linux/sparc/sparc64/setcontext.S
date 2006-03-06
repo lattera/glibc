@@ -24,12 +24,15 @@
 .weak setcontext
 ENTRY(setcontext)
 
-	mov	1, %o1
+	ba,pt	%xcc, 1f
+	 mov	1, %o1
+
+END(setcontext)
 
 /* int __setcontext(ucontext_t *ctx, int restoremask); */
 ENTRY(__setcontext)
 
-	ldx	[%o0 + UC_SIGMASK], %o2
+1:	ldx	[%o0 + UC_SIGMASK], %o2
 	stx	%o2, [%o0 + __UC_SIGMASK]
 	ta	0x6f
 

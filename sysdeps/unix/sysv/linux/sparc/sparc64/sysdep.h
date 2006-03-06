@@ -49,142 +49,52 @@
 #undef PSEUDO
 #undef PSEUDO_NOERRNO
 #undef PSEUDO_ERRVAL
-#undef ENTRY
-
-#define ENTRY(name)							\
-	.global C_SYMBOL_NAME(name);					\
-	.align 2;							\
-	C_LABEL(name);							\
-	.type name,@function;
-
-#ifdef LINKER_HANDLES_R_SPARC_WDISP22
-/* Unfortunately, we cannot do this yet.  Linker doesn't seem to
-   handle R_SPARC_WDISP22 against non-STB_LOCAL symbols properly .  */
-# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
-	.section .gnu.linkonce.t.handler,"ax",@progbits;		\
-	.globl handler;							\
-	.hidden handler;						\
-	.type handler,@function;					\
-handler:
-#else
-# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
-	.subsection 3;							\
-handler:
-#endif
-
-#if RTLD_PRIVATE_ERRNO
-# define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
-	.globl __sparc64.get_pic.l7;					\
-	.hidden __sparc64.get_pic.l7;					\
-	.type __sparc64.get_pic.l7,@function;				\
-__sparc64.get_pic.l7:							\
-	retl;								\
-	 add	%o7, %l7, %l7;						\
-	.previous;							\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	save	%sp, -192, %sp;						\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc64.get_pic.l7;					\
-	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	sethi	%hi(rtld_errno), %g1;					\
-	or	%g1, %lo(rtld_errno), %g1;				\
-	ldx	[%l7 + %g1], %l0;					\
-	st	%i0, [%l0];						\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-#elif USE___THREAD
-# ifndef NOT_IN_libc
-#  define SYSCALL_ERROR_ERRNO __libc_errno
-# else
-#  define SYSCALL_ERROR_ERRNO errno
-# endif
-# ifdef SHARED
-#  define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
-	.globl __sparc64.get_pic.l7;					\
-	.hidden __sparc64.get_pic.l7;					\
-	.type __sparc64.get_pic.l7,@function;				\
-__sparc64.get_pic.l7:							\
-	retl;								\
-	 add	%o7, %l7, %l7;						\
-	.previous;							\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	save	%sp,-192,%sp;						\
-	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %l1;			\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc64.get_pic.l7;					\
-	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	add	%l1, %tie_lo10(SYSCALL_ERROR_ERRNO), %l1;		\
-	ldx	[%l7 + %l1], %l1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
-	st	%i0, [%g7 + %l1], %tie_add(SYSCALL_ERROR_ERRNO);	\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-# else
-#  define SYSCALL_ERROR_HANDLER						\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;			\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g4;			\
-	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;		\
-	add	%g4, %lo(_GLOBAL_OFFSET_TABLE_), %g4;			\
-	ldx	[%g4 + %g1], %g1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
-	st	%o0, [%g7 + %g1], %tie_add(SYSCALL_ERROR_ERRNO);	\
-	jmpl	%o7+8, %g0;						\
-	 mov	-1, %o0;						\
-	.previous;
-# endif
-#else
-# define SYSCALL_ERROR_HANDLER						\
-SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
-	.global __errno_location;					\
-	.type   __errno_location,@function;				\
-	save	%sp, -192, %sp;						\
-	call	__errno_location;					\
-	 nop;								\
-	st	%i0, [%o0];						\
-	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;						\
-	.previous;
-#endif
-
-#define PSEUDO(name, syscall_name, args)				\
-	.text;								\
-	ENTRY(name);							\
-	LOADSYSCALL(syscall_name);					\
-	ta	0x6d;							\
-	bcs,pn	%xcc, __syscall_error_handler;				\
-	 nop;								\
-	SYSCALL_ERROR_HANDLER
-
-#define PSEUDO_NOERRNO(name, syscall_name, args)			\
-	.text;								\
-	ENTRY(name);							\
-	LOADSYSCALL(syscall_name);					\
-	ta	0x6d
-
-#define PSEUDO_ERRVAL(name, syscall_name, args)				\
-	.text;								\
-	ENTRY(name);							\
-	LOADSYSCALL(syscall_name);					\
-	ta	0x6d
-
 #undef PSEUDO_END
-#define PSEUDO_END(name)						\
-	.size name,.-name
-
-#undef PSEUDO_END_NOERRNO
-#define PSEUDO_END_NOERRNO(name)					\
-	.size name,.-name
-
-#undef PSEUDO_END_ERRVAL
-#define PSEUDO_END_ERRVAL(name)						\
-	.size name,.-name
-
+#undef ENTRY
 #undef END
-#define END(name)							\
-	.size name,.-name
+
+#define ENTRY(name)			\
+	.align	4;			\
+	.global	C_SYMBOL_NAME(name);	\
+	.type	name, @function;	\
+C_LABEL(name)				\
+	cfi_startproc;
+
+#define END(name)			\
+	cfi_endproc;			\
+	.size name, . - name
+
+	/* If the offset to __syscall_error fits into a signed 22-bit
+	 * immediate branch offset, the linker will relax the call into
+	 * a normal branch.
+	 */
+#define PSEUDO(name, syscall_name, args)	\
+	.text;					\
+	.globl		__syscall_error;	\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x6d;			\
+	bcc,pt		%xcc, 1f;		\
+	 mov		%o7, %g1;		\
+	call		__syscall_error;	\
+	 mov		%g1, %o7;		\
+1:
+
+#define	PSEUDO_NOERRNO(name, syscall_name, args)\
+	.text;					\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x6d;
+
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+	.text;					\
+ENTRY(name);					\
+	LOADSYSCALL(syscall_name);		\
+	ta		0x6d;
+
+#define PSEUDO_END(name)			\
+	END(name)
+
 
 /* Careful here!  This "ret" define can interfere; use jmpl if unsure.  */
 #define ret		retl; nop

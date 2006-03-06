@@ -45,6 +45,7 @@ ENTRY(memset)
 	sllx		%o2, 32, %g1
 	ba,pt		%XCC, 1f
 	 or		%g1, %o2, %o2
+END(memset)
 
 ENTRY(__bzero)
 	clr		%o2
@@ -121,7 +122,6 @@ ENTRY(__bzero)
 	retl
 	 mov		%o3, %o0
 END(__bzero)
-END(memset)
 
 libc_hidden_builtin_def (memset)
 weak_alias (__bzero, bzero)

@@ -40,14 +40,14 @@ s390x-.*-.*		WORDSIZE32		s390-@VENDOR@-@OS@
 s390-.*-.*		WORDSIZE64		s390x-@VENDOR@-@OS@
 powerpc64-.*-.*		WORDSIZE32		powerpc-@VENDOR@-@OS@
 powerpc.*-.*-.*		WORDSIZE64		powerpc64-@VENDOR@-@OS@
-sparc64-.*-.*		WORDSIZE32		sparc-@VENDOR@-@OS@
+sparc64.*-.*-.*		WORDSIZE32		sparc-@VENDOR@-@OS@
 sparc.*-.*-.*		WORDSIZE64		sparc64-@VENDOR@-@OS@
 
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------
 
 # The interface to -lm depends mostly only on cpu, not on operating system.
-sparc64-.*-linux.*	libm=6			GLIBC_2.2
+sparc64.*-.*-linux.*	libm=6			GLIBC_2.2
 alpha.*-.*-linux.*	libm=6.1
 ia64-.*-linux.*		libm=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libm=6			GLIBC_2.2
@@ -58,7 +58,7 @@ sh.*-.*-linux.*		libm=6			GLIBC_2.2
 alpha.*-.*-linux.*	libc=6.1
 ia64-.*-linux.*		libc=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libc=6			GLIBC_2.2
-sparc64-.*-linux.*	libc=6			GLIBC_2.2
+sparc64.*-.*-linux.*	libc=6			GLIBC_2.2
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -72,7 +72,7 @@ sparc64-.*-linux.*	libc=6			GLIBC_2.2
 
 # The dynamic loader also requires different names.
 i.86-.*-linux.*		ld=ld-linux.so.2
-sparc64-.*-linux.*	ld=ld-linux.so.2	GLIBC_2.2
+sparc64.*-.*-linux.*	ld=ld-linux.so.2	GLIBC_2.2
 sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
@@ -121,7 +121,7 @@ alpha.*-.*-linux.*	libcrypt=1.1
 alpha.*-.*-linux.*	libBrokenLocale=1.1
 ia64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
-sparc64-.*-.*		libBrokenLocale=1	GLIBC_2.2
+sparc64.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.

@@ -37,8 +37,11 @@ __curbrk: .skip 8
 #endif
 
 	.text
-ENTRY(__brk)
+ENTRY (__brk)
 	save	%sp, -192, %sp
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
 #ifdef PIC
 1:	call	2f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
@@ -90,7 +93,6 @@ ENTRY(__brk)
 	sub	%g0, 1, %i0
 	jmpl	%i7+8, %g0
 	 restore
-
-	.size __brk, .-__brk
+END (__brk)
 
 weak_alias (__brk, brk)

@@ -47,8 +47,8 @@
 # endif
 #endif
 
-.globl __socket
-ENTRY (__socket)
+	.globl	__syscall_error
+ENTRY(__socket)
 
 	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
 	   the caller for varargs, since that's really what we have.  */
@@ -77,14 +77,15 @@ ENTRY (__socket)
 	LOADSYSCALL(socketcall)
 	ta	0x6d
 
-	bcs,pn	%xcc, __syscall_error_handler
-	 nop
-	retl
+	bcc,pt	%xcc, 1f
+	 mov	%o7, %g1
+	call	__syscall_error
+	 mov	%g1, %o7
+1:	retl
 	 nop
 
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
-	cfi_startproc
 	save	%sp, -160, %sp
 	cfi_def_cfa_register (%fp)
 	cfi_window_save
@@ -97,19 +98,21 @@ ENTRY (__socket)
 	LOADSYSCALL(socketcall)
 	ta	0x6d
 
-	bcs,pn	%xcc, __syscall_error_handler2
+	bcc,pt	%xcc, 1f
 	 mov	%o0, %l1
-	CDISABLE
+	CDISABLE;
+	 mov	%l0, %o0;
+	call	__syscall_error;
+	 mov	%l1, %o0;
+	ba,pt	%xcc, 2f
+	 mov	-1, %l1;
+1:	CDISABLE
 	 mov	%l0, %o0
-	jmpl	%i7 + 8, %g0
+2:	jmpl	%i7 + 8, %g0
 	 restore %g0, %l1, %o0
-	cfi_endproc
-	SYSCALL_ERROR_HANDLER2
 #endif
 
-	SYSCALL_ERROR_HANDLER
-
-END (__socket)
+END(__socket)
 
 #ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
