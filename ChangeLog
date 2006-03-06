@@ -1,5 +1,14 @@
 2006-03-06  Roland McGrath  <roland@redhat.com>
 
+	* version.h (VERSION): 2.4
+	* README.template: Update for 2.4.
+	* README: Regenerated.
+	* manual/install.texi (Configuring and compiling): Separate build
+	directory is mandatory.  Use glibc-2.4 in example.
+	Update --enable-add-ons description.
+	(Supported Configurations): Remove section.
+	* INSTALL: Regenerated.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysconf.c
 	(handle_intel, handle_amd): Add __attribute__ ((noinline)).
 	* sysdeps/unix/sysv/linux/i386/sysconf.c
