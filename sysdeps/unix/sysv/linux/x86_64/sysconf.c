@@ -163,7 +163,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 }
 
 
-static long int
+static long int __attribute__ ((noinline))
 handle_intel (int name, unsigned int maxidx)
 {
   assert (maxidx >= 2);
@@ -220,7 +220,7 @@ handle_intel (int name, unsigned int maxidx)
 }
 
 
-static long int
+static long int __attribute__ ((noinline))
 handle_amd (int name)
 {
   unsigned int eax;
@@ -293,12 +293,6 @@ handle_amd (int name)
 long int
 __sysconf (int name)
 {
-  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
-    {
-      /* XXX Test whether TSC is usable.  */
-      return 200112L;
-    }
-
   /* We only handle the cache information here (for now).  */
   if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
     return linux_sysconf (name);

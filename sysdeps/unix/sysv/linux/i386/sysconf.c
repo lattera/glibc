@@ -26,7 +26,7 @@
 static long int linux_sysconf (int name);
 
 
-static long int
+static long int __attribute__ ((noinline))
 handle_i486 (int name)
 {
   /* The processor only has a unified level 1 cache of 8k.  */
@@ -202,7 +202,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 }
 
 
-static long int
+static long int  __attribute__ ((noinline))
 handle_intel (int name, unsigned int maxidx)
 {
   if (maxidx < 2)
@@ -264,7 +264,7 @@ handle_intel (int name, unsigned int maxidx)
 }
 
 
-static long int
+static long int __attribute__ ((noinline))
 handle_amd (int name)
 {
   unsigned int eax;
@@ -359,17 +359,6 @@ i386_i486_test (void)
 long int
 __sysconf (int name)
 {
-  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
-    {
-#if HP_TIMING_AVAIL
-      // XXX We can add  here test for machines which cannot support a
-      // XXX usable TSC.
-      return 200112L;
-#else
-      return -1;
-#endif
-    }
-
   /* All the remainder, except the cache information, is handled in
      the generic code.  */
   if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)

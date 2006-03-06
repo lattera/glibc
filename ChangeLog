@@ -1,3 +1,14 @@
+2006-03-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c
+	(handle_intel, handle_amd): Add __attribute__ ((noinline)).
+	* sysdeps/unix/sysv/linux/i386/sysconf.c
+	(handle_i486, handle_intel, handle_amd): Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (__sysconf): Don't handle
+	_SC_CPUTIME and _SC_THREAD_CPUTIME here.
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (__sysconf): Likewise.
+
 2006-03-05  Roland McGrath  <roland@redhat.com>
 
 	* malloc/malloc.c (MALLOC_ALIGNMENT): Revert to (2 * SIZE_SZ) value.
