@@ -1,3 +1,7 @@
+2006-03-06  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (%.bz2, %.gz): New pattern rules.
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (glibc-port-%-$(dist-version).tar): Don't include top-level
