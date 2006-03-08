@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  IA-64 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ extern int _dl_sysinfo_break attribute_hidden;
        ".body\n\t"				\
        "break 0x100000;\n\t"			\
        "br.ret.sptk.many b6;\n\t"		\
-       ".endp _dl_sysinfo_break"		\
+       ".endp _dl_sysinfo_break\n\t"		\
        ".previous");
 #endif
 
