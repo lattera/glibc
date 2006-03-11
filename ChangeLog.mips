@@ -1,3 +1,12 @@
+2006-03-11  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure.in: Set libc_cv_slibdir,
+	libc_cv_localedir, libdir, arch_minimum_kernel, and
+	libc_cv_gcc_unwind_find_fde.
+	* sysdeps/unix/sysv/linux/mips/mips64/configure.in: New file.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/mips64/configure: Generated.
+
 2006-03-02  Lior Balkohen  <balkohen@gmail.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h
