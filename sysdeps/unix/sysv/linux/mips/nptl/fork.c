@@ -1,1 +1,1 @@
-#include "../i386/fork.c"
+#include <sysdeps/unix/sysv/linux/i386/fork.c>
