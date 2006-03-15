@@ -1,3 +1,14 @@
+2006-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2451]
+	* elf/dl-load.c (open_verify): Add free_name argument, if true, free
+	name before calling lose.
+	(open_path): Adjust caller.
+	(_dl_map_object): Adjust callers.  Free name_copy before calling
+	_dl_signal_error.
+	* elf/Makefile: Add rules to build and run tst-leaks1.
+	* elf/tst-leaks1.c: New test.
+
 2006-03-06  Roland McGrath  <roland@redhat.com>
 
 	* version.h (VERSION): 2.4

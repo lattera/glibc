@@ -91,7 +91,7 @@ distribute	:= rtld-Rules \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
-		   tst-array5.exp
+		   tst-array5.exp tst-leaks1.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -139,7 +139,7 @@ vpath %.c ../locale/programs
 endif
 endif
 
-tests = tst-tls1 tst-tls2 tst-tls9
+tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1
 ifeq (yes,$(have-initfini-array))
 tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 endif
@@ -180,6 +180,7 @@ endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests: $(objpfx)tst-pie1.out
 endif
+tests: $(objpfx)tst-leaks1-mem
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
@@ -895,3 +896,9 @@ order2mod2.so-no-z-defs = yes
 
 tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
+
+$(objpfx)tst-leaks1: $(libdl)
+$(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@
+
+tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace

@@ -1,5 +1,6 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+   2005, 2006  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1554,7 +1555,7 @@ print_search_path (struct r_search_path_elem **list,
    user might want to know about this.  */
 static int
 open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
-	     int whatcode, bool *found_other_class)
+	     int whatcode, bool *found_other_class, bool free_name)
 {
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
@@ -1635,6 +1636,12 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	  errstring = (errval == 0
 		       ? N_("file too short") : N_("cannot read file data"));
 	call_lose:
+	  if (free_name)
+	    {
+	      char *realname = (char *) name;
+	      name = strdupa (realname);
+	      free (realname);
+	    }
 	  lose (errval, fd, name, NULL, NULL, errstring);
 	}
 
@@ -1821,7 +1828,8 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
-	  fd = open_verify (buf, fbp, loader, whatcode, found_other_class);
+	  fd = open_verify (buf, fbp, loader, whatcode, found_other_class,
+			    false);
 	  if (this_dir->status[cnt] == unknown)
 	    {
 	      if (fd != -1)
@@ -2098,7 +2106,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		{
 		  fd = open_verify (cached,
 				    &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
-				    LA_SER_CONFIG, &found_other_class);
+				    LA_SER_CONFIG, &found_other_class, false);
 		  if (__builtin_expect (fd != -1, 1))
 		    {
 		      realname = local_strdup (cached);
@@ -2136,7 +2144,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	{
 	  fd = open_verify (realname, &fb,
 			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0,
-			    &found_other_class);
+			    &found_other_class, true);
 	  if (__builtin_expect (fd, 0) == -1)
 	    free (realname);
 	}
@@ -2166,8 +2174,11 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader,
 				      mode, nsid)) == NULL)
-	    _dl_signal_error (ENOMEM, name, NULL,
-			      N_("cannot create shared object descriptor"));
+	    {
+	      free (name_copy);
+	      _dl_signal_error (ENOMEM, name, NULL,
+				N_("cannot create shared object descriptor"));
+	    }
 	  /* Signal that this is a faked entry.  */
 	  l->l_faked = 1;
 	  /* Since the descriptor is initialized with zero we do not
