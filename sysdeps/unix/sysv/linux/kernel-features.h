@@ -359,7 +359,7 @@
 /* The utimes syscall has been available for some architectures
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */
-#if defined __alpha__ || defined __ia64__ || defined __hppa__ \
+#if defined __alpha__ || defined __ia64__ \
     || defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
