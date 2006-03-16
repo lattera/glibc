@@ -1,3 +1,9 @@
+2006-03-16  Roland McGrath  <roland@redhat.com>
+
+	* wcsmbs/wchar.h (__wcstol_internal, __wcstoul_internal): Declare these
+	 only when we will use them, under [__OPTIMIZE__ && __GNUC__ >= 2].
+	(__wcstoll_internal, __wcstoull_internal_defined): Likewise.
+
 2006-03-06  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Add cfi_offset for spilling

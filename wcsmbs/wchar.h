@@ -507,26 +507,30 @@ extern long double __wcstold_internal (__const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __group) __THROW;
 
-#ifndef __wcstol_internal_defined
+#if !defined __wcstol_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 extern long int __wcstol_internal (__const wchar_t *__restrict __nptr,
 				   wchar_t **__restrict __endptr,
 				   int __base, int __group) __THROW;
 # define __wcstol_internal_defined	1
 #endif
-#ifndef __wcstoul_internal_defined
+#if !defined __wcstoul_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 extern unsigned long int __wcstoul_internal (__const wchar_t *__restrict __npt,
 					     wchar_t **__restrict __endptr,
 					     int __base, int __group) __THROW;
 # define __wcstoul_internal_defined	1
 #endif
-#ifndef __wcstoll_internal_defined
+#if !defined __wcstoll_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 __extension__
 extern long long int __wcstoll_internal (__const wchar_t *__restrict __nptr,
 					 wchar_t **__restrict __endptr,
 					 int __base, int __group) __THROW;
 # define __wcstoll_internal_defined	1
 #endif
-#ifndef __wcstoull_internal_defined
+#if !defined __wcstoull_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 __extension__
 extern unsigned long long int __wcstoull_internal (__const wchar_t *
 						   __restrict __nptr,
