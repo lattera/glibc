@@ -1,5 +1,8 @@
 2006-03-16  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/getcontext.S (__getcontext_x):
+	Use .set noat to quiet assembler warning.
+
 	* math/gen-libm-test.pl (parse_args): Take function name for pretty
 	output as an argument.
 	(generate_testfile): Pass it the name given in the START macro.

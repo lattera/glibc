@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,8 @@ weak_alias (__getcontext, getcontext)
 	cfi_return_column (64)
 __getcontext_x:
 	cfi_register (64, 0)
+
+	.set noat
 
 	/* Return value of getcontext.  $0 is the only register
 	   whose value is not preserved. */
