@@ -1,3 +1,8 @@
+2004-12-09  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Don't
+	define for hppa, which doesn't support this syscall.
+
 2006-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2451]
