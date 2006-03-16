@@ -45,6 +45,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stw	r0,20(r1)
 	cfi_offset (lr, _FRAME_LR_SAVE)
 	stw	r31,12(r1)
+	cfi_offset(r31,-4)
 	lwz	r31,_UC_REGS_PTR(r3)
 
 	/*

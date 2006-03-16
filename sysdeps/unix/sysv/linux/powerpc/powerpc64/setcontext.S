@@ -33,6 +33,7 @@ ENTRY(__novec_setcontext)
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   mflr  r0
   std   r31,-8(1)
+  cfi_offset(r31,-8)
   std   r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
   stdu  r1,-128(r1)
@@ -169,7 +170,9 @@ L(nv_do_sigret):
   /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
   mflr r0
   std  r0,FRAME_LR_SAVE(r1)
+  cfi_offset(lr,FRAME_LR_SAVE)
   stdu r1,-128(r1)
+  cfi_adjust_cfa_offset(128)
   li   r3,ENOSYS
   bl   JUMPTARGET(__syscall_error)
   nop
@@ -201,6 +204,7 @@ ENTRY(__setcontext)
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   mflr  r0
   std   r31,-8(1)
+  cfi_offset(r31,-8)
   std   r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
   stdu  r1,-128(r1)

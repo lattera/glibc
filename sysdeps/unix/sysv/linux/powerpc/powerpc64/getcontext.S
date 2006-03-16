@@ -144,6 +144,7 @@ ENTRY(__novec_getcontext)
   std  r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
   stdu r1,-128(r1)
+  cfi_adjust_cfa_offset(128)
   li   r3,ENOSYS
   bl   JUMPTARGET(__syscall_error)
   nop

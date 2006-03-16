@@ -35,6 +35,7 @@ ENTRY(__novec_swapcontext)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
   std   r31,-8(1)
+  cfi_offset(r31,-8)
   std  r2,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std  r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
@@ -264,6 +265,7 @@ L(nv_do_sigret):
   /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
   mflr r0
   std  r0,FRAME_LR_SAVE(r1)
+  cfi_offset(lr,FRAME_LR_SAVE)
   stdu r1,-128(r1)
   li   r3,ENOSYS
   bl   JUMPTARGET(__syscall_error)
@@ -298,11 +300,14 @@ ENTRY(__swapcontext)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
   std   r31,-8(1)
+  cfi_offset(r31,-8)
   std  r2,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std  r0,FRAME_LR_SAVE(r1)
+  cfi_offset (lr, FRAME_LR_SAVE)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_LNK*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)
   stdu  r1,-128(r1)
+  cfi_adjust_cfa_offset(128)
   std  r4,(SIGCONTEXT_GP_REGS+(PT_R4*8))(r3)
   std  r5,(SIGCONTEXT_GP_REGS+(PT_R5*8))(r3)
   std  r6,(SIGCONTEXT_GP_REGS+(PT_R6*8))(r3)

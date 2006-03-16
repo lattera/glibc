@@ -1,3 +1,31 @@
+2006-03-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Add cfi_offset for spilling
+	of non-volatile floating-point registers to the stack (fp14-fp31).
+	* sysdeps/powerpc/powerpc32/gprsave0.S: Add cfi_offset for spilling of
+	non-volatile general-purpose registers to the stack (gpr13-gpr31).
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: Add cfi_offset
+	for non-volatiles gpr30 - grp31 spilled to the stack.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Add cfi_offset for non-volatile
+	gpr31 spill to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Add cfi_offset for non-volatile gpr31 spill to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Add cfi_offset
+	for non-volatiles gpr28 - grp31 spilled to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Add
+	cfi_adjust_cfa_offset when a frame is stacked.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S:
+	(__novec_setcontext) : Add cfi_offset for non-volatile gpr31 spill
+	add LR saved to the stack.  Add cfi_adjust_cfa_offset when frame is
+	stacked.
+	(__setcontext) : Add cfi_offset for non-volatile gpr31 spill to
+	the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S:
+	(__novec_swapcontext) : Add cfi_offset for non-volatile gpr31 spill
+	add LR saved to the stack.
+	(__swapcontext) : Add cfi_offset for non-volatile gpr31 spill add LR
+	saved to the stack.  Add cfi_adjust_cfa_offset when frame is stacked.
+
 2006-03-07  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2423]

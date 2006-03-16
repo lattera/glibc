@@ -52,8 +52,12 @@ ENTRY (BP_SYM (__clone))
 	std	r29,56(r1)
 	std	r30,64(r1)
 	std	r31,72(r1)
+	cfi_offset(r29,-56)
+	cfi_offset(r30,-64)
+	cfi_offset(r31,-72)
 #ifdef RESET_PID
 	std	r28,48(r1)
+	cfi_offset(r28,-48)
 #endif
 
 	/* Set up stack frame for child.  */

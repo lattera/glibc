@@ -176,7 +176,9 @@ EALIGN(_dl_profile_resolve, 4, 0)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
    need to call _dl_call_pltexit.  */
 	std	r31,-8(r1)
+	cfi_offset(r31,-8)
 	std	r30,-16(r1)
+	cfi_offset(r30,-16)
 /* We need to save the registers used to pass parameters, ie. r3 thru
    r10; the registers are saved in a stack frame.  */
 	stdu	r1,-FRAME_SIZE(r1)
