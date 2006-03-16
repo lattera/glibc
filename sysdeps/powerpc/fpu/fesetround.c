@@ -1,5 +1,5 @@
 /* Set current rounding direction.
-   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,23 +20,13 @@
 
 #include <fenv_libc.h>
 
+#undef fesetround
 int
 fesetround (int round)
 {
-  fenv_union_t u;
-
   if ((unsigned int) round > 3)
     return 1;
-
-  /* Get the current state.  */
-  u.fenv = fegetenv_register ();
-
-  /* Set the relevant bits.  */
-  u.l[1] = (u.l[1] & ~3)  |  (round & 3);
-
-  /* Put the new state in effect.  */
-  fesetenv_register (u.fenv);
-
-  return 0;
+  else
+    return __fesetround(round);
 }
 libm_hidden_def (fesetround)

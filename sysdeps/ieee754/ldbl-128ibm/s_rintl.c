@@ -22,6 +22,7 @@
    when it's coded in C.  */
 
 #include <math.h>
+#include <fenv_libc.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
@@ -36,84 +37,83 @@ __rintl (x)
      long double x;
 #endif
 {
-  static const long double TWO52 = 4503599627370496.0L;
-  union ibm_extended_long_double u;
-  u.d = x;
+  double xh, xl, hi, lo;
 
-  if (fabs (u.dd[0]) < TWO52)
+  ldbl_unpack (x, &xh, &xl);
+
+  /* Return Inf, Nan, +/-0 unchanged.  */
+  if (__builtin_expect (xh != 0.0
+			&& __builtin_isless (__builtin_fabs (xh),
+					     __builtin_inf ()), 1))
     {
-      double high = u.dd[0];
-      if (high > 0.0)
+      double orig_xh;
+      int save_round = fegetround ();
+
+      /* Long double arithmetic, including the canonicalisation below,
+	 only works in round-to-nearest mode.  */
+      fesetround (FE_TONEAREST);
+
+      /* Convert the high double to integer.  */
+      orig_xh = xh;
+      hi = ldbl_nearbyint (xh);
+
+      /* Subtract integral high part from the value.  If the low double
+	 happens to be exactly 0.5 or -0.5, you might think that this
+	 subtraction could result in an incorrect conversion.  For
+	 instance, subtracting an odd number would cause this function
+	 to round in the wrong direction.  However, if we have a
+	 canonical long double with the low double 0.5 or -0.5, then the
+	 high double must be even.  */
+      xh -= hi;
+      ldbl_canonicalize (&xh, &xl);
+
+      /* Now convert the low double, adjusted for any remainder from the
+	 high double.  */
+      lo = ldbl_nearbyint (xh);
+
+      xh -= lo;
+      ldbl_canonicalize (&xh, &xl);
+
+      switch (save_round)
 	{
-	  high += TWO52;
-	  high -= TWO52;
-          if (high == -0.0) high = 0.0;
+	case FE_TONEAREST:
+	  if (xl > 0.0 && xh == 0.5)
+	    lo += 1.0;
+	  else if (xl < 0.0 && -xh == 0.5)
+	    lo -= 1.0;
+	  break;
+
+	case FE_TOWARDZERO:
+	  if (orig_xh < 0.0)
+	    goto do_up;
+	  /* Fall thru */
+
+	case FE_DOWNWARD:
+	  if (xh < 0.0 || (xh == 0.0 && xl < 0.0))
+	    lo -= 1.0;
+	  break;
+
+	case FE_UPWARD:
+	do_up:
+	  if (xh > 0.0 || (xh == 0.0 && xl > 0.0))
+	    lo += 1.0;
+	  break;
 	}
-      else if (high < 0.0)
-	{
-	  high -= TWO52;
-	  high += TWO52;
-          if (high == 0.0) high = -0.0;
-	}
-      u.dd[0] = high;
-      u.dd[1] = 0.0;
-    }
-  else if (fabs (u.dd[1]) < TWO52 && u.dd[1] != 0.0)
-    {
-      double high, low, tau;
-      /* In this case we have to round the low double and handle any
-         adjustment to the high double that may be caused by rounding
-         (up).  This is complicated by the fact that the high double
-         may already be rounded and the low double may have the
-         opposite sign to compensate.  */
-      if (u.dd[0] > 0.0)
-	{
-	  if (u.dd[1] > 0.0)
-	    {
-	      /* If the high/low doubles are the same sign then simply
-	         round the low double.  */
-	      high = u.dd[0];
-	      low = u.dd[1];
-	    }
-	  else if (u.dd[1] < 0.0)
-	    {
-	      /* Else the high double is pre rounded and we need to
-	         adjust for that.  */
-	      
-	      tau = nextafter (u.dd[0], 0.0);
-	      tau = (u.dd[0] - tau) * 2.0;
-	      high = u.dd[0] - tau;
-	      low = u.dd[1] + tau;
-	    }
-	  low += TWO52;
-	  low -= TWO52;
-	}
-      else if (u.dd[0] < 0.0)
-	{
-	  if (u.dd[1] < 0.0)
-	    {
-	      /* If the high/low doubles are the same sign then simply
-	         round the low double.  */
-	      high = u.dd[0];
-	      low = u.dd[1];
-	    }
-	  else if (u.dd[1] > 0.0)
-	    {
-	      /* Else the high double is pre rounded and we need to
-	         adjust for that.  */
-	      tau = nextafter (u.dd[0], 0.0);
-	      tau = (u.dd[0] - tau) * 2.0;
-	      high = u.dd[0] - tau;
-	      low = u.dd[1] + tau;
-	    }
-	  low = TWO52 - low;
-	  low = -(low - TWO52);
-	}
-      u.dd[0] = high + low;
-      u.dd[1] = high - u.dd[0] + low;
+
+      /* Ensure the final value is canonical.  In certain cases,
+         rounding causes hi,lo calculated so far to be non-canonical.  */
+      xh = hi;
+      xl = lo;
+      ldbl_canonicalize (&xh, &xl);
+
+      /* Ensure we return -0 rather than +0 when appropriate.  */
+      if (orig_xh < 0.0)
+	xh = -__builtin_fabs (xh);
+
+      fesetround (save_round);
     }
 
-  return u.d;
+  return ldbl_pack (xh, xl);
 }
 
 long_double_symbol (libm, __rintl, rintl);

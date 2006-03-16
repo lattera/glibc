@@ -199,7 +199,8 @@ int32_t __ieee754_rem_pio2l(long double x, long double *y)
 {
   long double z, w, t;
   double tx[8];
-  int64_t exp, n, ix, hx, ixd;
+  int exp;
+  int64_t n, ix, hx, ixd;
   u_int64_t lx, lxd;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
@@ -243,7 +244,7 @@ int32_t __ieee754_rem_pio2l(long double x, long double *y)
      stored in a double array.  */
   /* Make the IBM extended format 105 bit mantissa look like the ieee854 112
      bit mantissa so the next operatation will give the correct result.  */
-  EXTRACT_IBM_EXTENDED_MANTISSA (ixd, lxd, exp, x);
+  ldbl_extract_mantissa (&ixd, &lxd, &exp, x);
   exp = exp - 23;
   /* This is faster than doing this in floating point, because we
      have to convert it to integers anyway and like this we can keep

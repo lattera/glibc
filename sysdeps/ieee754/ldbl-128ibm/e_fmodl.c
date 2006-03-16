@@ -76,8 +76,8 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
     /* Make the IBM extended format 105 bit mantissa look like the ieee854 112
        bit mantissa so the following operatations will give the correct
        result.  */
-        EXTRACT_IBM_EXTENDED_MANTISSA(hx, lx, temp, x);
-        EXTRACT_IBM_EXTENDED_MANTISSA(hy, ly, temp, y);
+        ldbl_extract_mantissa(&hx, &lx, &temp, x);
+        ldbl_extract_mantissa(&hy, &ly, &temp, y);
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
 	if(ix >= -1022)
@@ -127,7 +127,7 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	    iy -= 1;
 	}
 	if(iy>= -1022) {	/* normalize output */
-	    INSERT_IBM_EXTENDED_MANTISSA(x, (sx>>63), iy, hx, lx);
+	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
 	} else {		/* subnormal output */
 	    n = -1022 - iy;
 	    if(n<=48) {
@@ -138,7 +138,7 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	    } else {
 		lx = hx>>(n-64); hx = sx;
 	    }
-	    INSERT_IBM_EXTENDED_MANTISSA(x, (sx>>63), iy, hx, lx);
+	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
 	    x *= one;		/* create necessary signal */
 	}
 	return x;		/* exact output */

@@ -1,3 +1,42 @@
+2006-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2423]
+	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
+	round_test, trunc_test): Only run some of the new tests if
+	LDBL_MANT_DIG > 100.
+
+2006-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fegetround, __fesetround):
+	Define inline implementations.
+	* sysdeps/powerpc/fpu/fegetround.c: Use __fegetround.
+	* sysdeps/powerpc/fpu/fesetround.c: Use __fesetround.
+
+	* sysdeps/powerpc/fpu/math_ldbl.h: New file.
+
+	[BZ #2423]
+	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
+	round_test, trunc_test): Add new tests.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h
+	(EXTRACT_IBM_EXTENDED_MANTISSA, INSERT_IBM_EXTENDED_MANTISSA):
+	Removed, replaced with ...
+	(ldbl_extract_mantissa, ldbl_insert_mantissa, ldbl_pack, ldbl_unpack,
+	ldbl_canonicalise, ldbl_nearbyint): New functions.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Replace
+	EXTRACT_IBM_EXTENDED_MANTISSA and INSERT_IBM_EXTENDED_MANTISSA
+	with ldbl_extract_mantissa and ldbl_insert_mantissa.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Replace EXTRACT_IBM_EXTENDED_MANTISSA with ldbl_extract_mantissa.
+	(ldbl_extract_mantissa, ldbl_insert_mantissa): New inline functions.
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (__ceill): Handle rounding
+	that spans doubles in IBM long double format.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintl.S: File removed.
+
 2004-12-09  Randolph Chung  <tausq@debian.org>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Don't

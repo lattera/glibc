@@ -1,5 +1,5 @@
 /* Internal libc stuff for floating point environment routines.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,41 @@ typedef union
   fenv_t fenv;
   unsigned int l[2];
 } fenv_union_t;
+
+
+static inline int
+__fegetround (void)
+{
+  int result;
+  asm volatile ("mcrfs 7,7\n\t"
+		"mfcr  %0" : "=r"(result) : : "cr7");
+  return result & 3;
+}
+#define fegetround() __fegetround()
+
+static inline int
+__fesetround (int round)
+{
+  if ((unsigned int) round < 2)
+    {
+       asm volatile ("mtfsb0 30");
+       if ((unsigned int) round == 0)
+         asm volatile ("mtfsb0 31");
+       else
+         asm volatile ("mtfsb1 31");
+    }
+  else
+    {
+       asm volatile ("mtfsb1 30");
+       if ((unsigned int) round == 2)
+         asm volatile ("mtfsb0 31");
+       else
+         asm volatile ("mtfsb1 31");
+    }
+
+  return 0;
+}
+#define fesetround(mode) __fesetround(mode)
 
 /* Definitions of all the FPSCR bit numbers */
 enum {

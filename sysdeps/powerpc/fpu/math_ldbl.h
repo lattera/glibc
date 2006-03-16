@@ -122,24 +122,32 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
   return u.d;
 }
   
-/* Handy utility functions to pack/unpack/cononicalize and find the nearbyint
-   of long double implemented as double double.  */
+/* gcc generates disgusting code to pack and unpack long doubles.
+   This tells gcc that pack/unpack is really a nop.  We use fr1/fr2
+   because those are the regs used to pass/return a single
+   long double arg.  */
 static inline long double
 ldbl_pack (double a, double aa)
 {
-  union ibm_extended_long_double u;
-  u.dd[0] = a;
-  u.dd[1] = aa;
-  return u.d;
+  register long double x __asm__ ("fr1");
+  register double xh __asm__ ("fr1");
+  register double xl __asm__ ("fr2");
+  xh = a;
+  xl = aa;
+  __asm__ ("" : "=f" (x) : "f" (xh), "f" (xl));
+  return x;
 }
 
 static inline void
 ldbl_unpack (long double l, double *a, double *aa)
 {
-  union ibm_extended_long_double u;
-  u.d = l;
-  *a = u.dd[0];
-  *aa = u.dd[1];
+  register long double x __asm__ ("fr1");
+  register double xh __asm__ ("fr1");
+  register double xl __asm__ ("fr2");
+  x = l;
+  __asm__ ("" : "=f" (xh), "=f" (xl) : "f" (x));
+  *a = xh;
+  *aa = xl;
 }
 
 
