@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -234,7 +234,7 @@ sub special_functions {
 
 # Parse the arguments to TEST_x_y
 sub parse_args {
-  my ($file, $descr, $args) = @_;
+  my ($file, $descr, $fct, $args) = @_;
   my (@args, $str, $descr_args, $descr_res, @descr);
   my ($current_arg, $cline, $i);
   my ($pre, $post, @special);
@@ -248,7 +248,7 @@ sub parse_args {
 
   @args = split /,\s*/, $args;
 
-  $call = "$args[0] (";
+  $call = "$fct (";
 
   # Generate first the string that's shown to the user
   $current_arg = 1;
@@ -423,7 +423,7 @@ sub parse_args {
 sub generate_testfile {
   my ($input, $output) = @_;
   my ($lasttext);
-  my (@args, $i, $str);
+  my (@args, $i, $str, $thisfct);
 
   open INPUT, $input or die ("Can't open $input: $!");
   open OUTPUT, ">$output" or die ("Can't open $output: $!");
@@ -436,11 +436,12 @@ sub generate_testfile {
       my ($descr, $args);
       chop;
       ($descr, $args) = ($_ =~ /TEST_(\w+)\s*\((.*)\)/);
-      &parse_args (\*OUTPUT, $descr, $args);
+      &parse_args (\*OUTPUT, $descr, $thisfct, $args);
       next;
     }
     # START (function)
     if (/START/) {
+      ($thisfct) = ($_ =~ /START\s*\((.*)\)/);
       print OUTPUT "  init_max_error ();\n";
       next;
     }

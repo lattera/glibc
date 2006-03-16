@@ -1,5 +1,35 @@
 2006-03-16  Roland McGrath  <roland@redhat.com>
 
+	* math/gen-libm-test.pl (parse_args): Take function name for pretty
+	output as an argument.
+	(generate_testfile): Pass it the name given in the START macro.
+
+	[BZ #2466]
+	* math/libm-test.inc (llrint_test, llround_test): Fix last change to
+	protect large-precision cases with [LDBL_MANT_DIG > 100].
+	(llrint_test_tonearest, llrint_test_towardzero): Likewise.
+	(llrint_test_downward, llrint_test_upward): Likewise.
+
+2006-03-15  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	[BZ #2466]
+	* math/libm-test.inc (llrint_test, llround_test) [TEST_LDOUBLE]:
+	Add new test values.
+	(llrint_test_tonearest, llrint_test_towardzero, llrint_test_downward,
+	llrint_test_upward): New functions.
+	(main): Call them.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c (__llrintl): Handle
+	rounding that spans doubles in IBM long double format.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundl.S: Removed.
+
+2006-03-16  Roland McGrath  <roland@redhat.com>
+
 	* wcsmbs/wchar.h (__wcstol_internal, __wcstoul_internal): Declare these
 	 only when we will use them, under [__OPTIMIZE__ && __GNUC__ >= 2].
 	(__wcstoll_internal, __wcstoull_internal_defined): Likewise.

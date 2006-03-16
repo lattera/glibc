@@ -22,11 +22,10 @@
    when it's coded in C.  */
 
 #include <math.h>
-#include <fenv.h>
+#include <fenv_libc.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
-
 
 #ifdef __STDC__
 long long
@@ -37,92 +36,95 @@ __llroundl (x)
      long double x;
 #endif
 {
-  static const double TWO52 = 4503599627370496.0;
-  static const double HALF = 0.5;
-  int mode = fegetround();
-  union ibm_extended_long_double u;
-  long long result = __LONG_LONG_MAX__;
+  double xh, xl;
+  long long res, hi, lo;
 
-  u.d = x;
+  ldbl_unpack (x, &xh, &xl);
 
-  if (fabs (u.dd[0]) < TWO52)
-    {      
-      fesetround(FE_TOWARDZERO);
-      if (u.dd[0] > 0.0)
-	{
-	  u.dd[0] += HALF;
-	  u.dd[0] += TWO52;
-	  u.dd[0] -= TWO52;
-	}
-      else if (u.dd[0] < 0.0)
-	{
-	  u.dd[0] = TWO52 - (u.dd[0] - HALF);
-	  u.dd[0] = -(u.dd[0] - TWO52);
-	}
-      fesetround(mode);
-      result = u.dd[0];
-    }
-  else if (fabs (u.dd[1]) < TWO52 && u.dd[1] != 0.0)
+  /* Limit the range of values handled by the conversion to long long.
+     We do this because we aren't sure whether that conversion properly
+     raises FE_INVALID.  */
+  if (__builtin_expect
+      ((__builtin_fabs (xh) <= -(double) (-__LONG_LONG_MAX__ - 1)), 1)
+#if !defined (FE_INVALID)
+      || 1
+#endif
+    )
     {
-      double high, low;
-      long long lowint;
-      /* In this case we have to round the low double and handle any
-         adjustment to the high double that may be caused by rounding
-         (up).  This is complicated by the fact that the high double
-         may already be rounded and the low double may have the
-         opposite sign to compensate.  */
-      if (u.dd[0] > 0.0)
+      if (__builtin_expect ((xh == -(double) (-__LONG_LONG_MAX__ - 1)), 0))
 	{
-	  if (u.dd[1] > 0.0)
-	    {
-	      /* If the high/low doubles are the same sign then simply
-	         round the low double.  */
-	      high = u.dd[0];
-	      low = u.dd[1];
-	    }
-	  else if (u.dd[1] < 0.0)
-	    {
-	      /* Else the high double is pre rounded and we need to
-	         adjust for that.  */
-	      high = nextafter (u.dd[0], 0.0);
-	      low = u.dd[1] + (u.dd[0] - high);
-	    }     
-          fesetround(FE_TOWARDZERO);
-	  low += HALF;
-	  low += TWO52;
-	  low -= TWO52;
+	  /* When XH is 9223372036854775808.0, converting to long long will
+	     overflow, resulting in an invalid operation.  However, XL might
+	     be negative and of sufficient magnitude that the overall long
+	     double is in fact in range.  Avoid raising an exception.  In any
+	     case we need to convert this value specially, because
+	     the converted value is not exactly represented as a double
+	     thus subtracting HI from XH suffers rounding error.  */
+	  hi = __LONG_LONG_MAX__;
+	  xh = 1.0;
 	}
-      else if (u.dd[0] < 0.0)
+      else
 	{
-	  if (u.dd[1] < 0.0)
-	    {
-	      /* If the high/low doubles are the same sign then simply
-	         round the low double.  */
-	      high = u.dd[0];
-	      low = u.dd[1];
-	    }
-	  else if (u.dd[1] > 0.0)
-	    {
-	      /* Else the high double is pre rounded and we need to
-	         adjust for that.  */
-	      high = nextafter (u.dd[0], 0.0);
-	      low = u.dd[1] + (u.dd[0] - high);
-	    }     
-          fesetround(FE_TOWARDZERO);
-	  low -= HALF;
-	  low = TWO52 - low;
-	  low = -(low - TWO52);
+	  hi = (long long) xh;
+	  xh -= hi;
 	}
-      fesetround(mode);
-      lowint = low;
-      result = high;
-      result += lowint;
+      ldbl_canonicalize (&xh, &xl);
+
+      lo = (long long) xh;
+
+      /* Peg at max/min values, assuming that the above conversions do so.
+         Strictly speaking, we can return anything for values that overflow,
+         but this is more useful.  */
+      res = hi + lo;
+
+      /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
+      if (__builtin_expect (((~(hi ^ lo) & (res ^ hi)) < 0), 0))
+	goto overflow;
+
+      xh -= lo;
+      ldbl_canonicalize (&xh, &xl);
+
+      hi = res;
+      if (xh > 0.5)
+	{
+	  res += 1;
+	}
+      else if (xh == 0.5)
+	{
+	  if (xl > 0.0 || (xl == 0.0 && res >= 0))
+	    res += 1;
+	}
+      else if (-xh > 0.5)
+	{
+	  res -= 1;
+	}
+      else if (-xh == 0.5)
+	{
+	  if (xl < 0.0 || (xl == 0.0 && res <= 0))
+	    res -= 1;
+	}
+
+      if (__builtin_expect (((~(hi ^ (res - hi)) & (res ^ hi)) < 0), 0))
+	goto overflow;
+
+      return res;
     }
   else
-   {
-      result = u.dd[0];     
-   }
-  return result;
+    {
+      if (xh > 0.0)
+	hi = __LONG_LONG_MAX__;
+      else if (xh < 0.0)
+	hi = -__LONG_LONG_MAX__ - 1;
+      else
+	/* Nan */
+	hi = 0;
+    }
+
+overflow:
+#ifdef FE_INVALID
+  feraiseexcept (FE_INVALID);
+#endif
+  return hi;
 }
 
 long_double_symbol (libm, __llroundl, llroundl);
