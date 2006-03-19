@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2200,7 +2200,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 #ifndef HP_TIMING_NONAVAIL
       hp_timing_t start;
       hp_timing_t stop;
-      hp_timing_t add;
 #endif
 
       /* If we are profiling we also must do lazy reloaction.  */
@@ -2255,19 +2254,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
 	/* We must prepare the profiling.  */
 	_dl_start_profile ();
-
-      if (rtld_multiple_ref)
-	{
-	  /* There was an explicit ref to the dynamic linker as a shared lib.
-	     Re-relocate ourselves with user-controlled symbol definitions.  */
-	  HP_TIMING_NOW (start);
-	  /* Mark the link map as not yet relocated again.  */
-	  GL(dl_rtld_map).l_relocated = 0;
-	  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_DIFF (add, start, stop);
-	  HP_TIMING_ACCUM_NT (relocate_time, add);
-	}
     }
 
 #ifndef NONTLS_INIT_TP
@@ -2295,6 +2281,30 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 #else
   NONTLS_INIT_TP;
 #endif
+
+  if (! prelinked && rtld_multiple_ref)
+    {
+      /* There was an explicit ref to the dynamic linker as a shared lib.
+	 Re-relocate ourselves with user-controlled symbol definitions.
+
+	 We must do this after TLS initialization in case after this
+	 re-relocation, we might call a user-supplied function
+	 (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
+
+#ifndef HP_TIMING_NONAVAIL
+      hp_timing_t start;
+      hp_timing_t stop;
+      hp_timing_t add;
+#endif
+
+      HP_TIMING_NOW (start);
+      /* Mark the link map as not yet relocated again.  */
+      GL(dl_rtld_map).l_relocated = 0;
+      _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+      HP_TIMING_NOW (stop);
+      HP_TIMING_DIFF (add, start, stop);
+      HP_TIMING_ACCUM_NT (relocate_time, add);
+    }
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */

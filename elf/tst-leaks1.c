@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <dlfcn.h>
 #include <mcheck.h>
 #include <stdlib.h>

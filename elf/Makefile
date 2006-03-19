@@ -168,7 +168,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 unload4 unload5 unload6 tst-audit1 tst-global1 order2 \
+	 unload3 unload4 unload5 unload6 tst-global1 order2 \
+	 tst-audit1 tst-audit2 \
 	 tst-stackguard1
 #	 reldep9
 test-srcs = tst-pathopt
@@ -878,6 +879,9 @@ $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
 tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
+tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so

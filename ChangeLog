@@ -1,3 +1,15 @@
+2006-03-17  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main): Run final self-relocation after setting up TLS.
+	From Alexandre Oliva <aoliva@redhat.com>.
+
+	* elf/tst-audit2.c: New file.
+	* elf/Makefile (tests): Add it.
+	($(objpfx)tst-audit2.out): New target.
+	(tst-audit2-ENV): New variable.
+
+	* elf/tst-leaks1.c: Include <stdio.h>.
+
 2006-03-16  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/getcontext.S (__getcontext_x):
