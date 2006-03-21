@@ -2,6 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/arm/eabi/socket.S: Delete.
 	* sysdeps/unix/sysv/linux/arm/eabi/syscalls.list,
+	sysdeps/unix/sysv/linux/arm/kernel-features.h,
 	sysdeps/unix/sysv/linux/arm/eabi/umount.c: New files.
 	* sysdeps/unix/sysv/linux/arm/eabi/linuxthreads/sysdep-cancel.h
 	(DOCARGS_6, UNDOCARGS_6, RESTORE_LR_6): Define.
