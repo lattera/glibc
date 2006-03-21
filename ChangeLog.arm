@@ -1,3 +1,15 @@
+2006-03-21  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/socket.S: Delete.
+	* sysdeps/unix/sysv/linux/arm/eabi/syscalls.list,
+	sysdeps/unix/sysv/linux/arm/eabi/umount.c: New files.
+	* sysdeps/unix/sysv/linux/arm/eabi/linuxthreads/sysdep-cancel.h
+	(DOCARGS_6, UNDOCARGS_6, RESTORE_LR_6): Define.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h
+	(DOCARGS_6, UNDOCARGS_6, RESTORE_LR_6): Define.
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h: Undefine
+	__NR_stime and __NR_alarm.
+
 2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/linuxthreads/sysdep-cancel.h

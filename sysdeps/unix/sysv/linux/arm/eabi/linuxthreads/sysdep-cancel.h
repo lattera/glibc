@@ -53,9 +53,9 @@
     UNDOARGS_##args;							\
     cmn r0, $4096;
 
-/* DOARGS pushes four bytes on the stack for five arguments, and nothing
-   otherwise.  In order to preserve doubleword alignment, sometimes we must
-   save an extra register.  */
+/* DOARGS pushes four bytes on the stack for five arguments, eight bytes for
+   six arguments, and nothing for fewer.  In order to preserve doubleword
+   alignment, sometimes we must save an extra register.  */
 
 # define DOCARGS_0	stmfd sp!, {r7, lr}
 # define UNDOCARGS_0
@@ -80,6 +80,10 @@
 # define DOCARGS_5	stmfd sp!, {r0, r1, r2, r3, r4, r7, lr}
 # define UNDOCARGS_5	ldmfd sp!, {r0, r1, r2, r3}
 # define RESTORE_LR_5	ldmfd sp!, {r4, r7, lr}
+
+# define DOCARGS_6	stmfd sp!, {r0, r1, r2, r3, r7, lr}
+# define UNDOCARGS_6	ldmfd sp!, {r0, r1, r2, r3}
+# define RESTORE_LR_6	RESTORE_LR_0
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl PLTJMP(__pthread_enable_asynccancel)

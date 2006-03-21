@@ -1,4 +1,4 @@
-/* Copyright (C) 2005
+/* Copyright (C) 2005, 2006
    Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -28,6 +28,12 @@
 #if __NR_SYSCALL_BASE != 0
 # error Kernel headers are too old
 #endif
+
+/* Don't use stime, even if the kernel headers define it.  We have
+   settimeofday, and some EABI kernels have removed stime.  Similarly
+   use setitimer to implement alarm.  */
+#undef __NR_stime
+#undef __NR_alarm
 
 /* The ARM EABI user interface passes the syscall number in r7, instead
    of in the swi.  This is more efficient, because the kernel does not need
