@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -197,6 +197,12 @@ struct flock64
 #  define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
 #  define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
 # endif
+#endif
+
+/* Linux-specific operations for posix_fadvise.  */
+#ifdef __USE_GNU
+# define LINUX_FADV_ASYNC_WRITE	32 /* Start writeout on range.  */
+# define LINUX_FADV_WRITE_WAIT	33 /* Wait upon writeout to range.  */
 #endif
 
 __BEGIN_DECLS

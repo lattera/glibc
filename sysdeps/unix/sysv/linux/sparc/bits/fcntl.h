@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -197,6 +197,12 @@ struct flock64
 # define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
 # define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
 # define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
+#endif
+
+/* Linux-specific operations for posix_fadvise.  */
+#ifdef __USE_GNU
+# define LINUX_FADV_ASYNC_WRITE	32 /* Start writeout on range.  */
+# define LINUX_FADV_WRITE_WAIT	33 /* Wait upon writeout to range.  */
 #endif
 
 __BEGIN_DECLS
