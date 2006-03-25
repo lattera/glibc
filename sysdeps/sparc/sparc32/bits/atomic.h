@@ -122,7 +122,7 @@ volatile unsigned char __sparc32_atomic_locks[64]
   __asm __volatile (".word 0xcde05005"					      \
 		    : "+r" (__acev_tmp), "=m" (*__acev_mem)		      \
 		    : "r" (__acev_oldval), "m" (*__acev_mem),		      \
-		      "r" (__acev_mem));				      \
+		      "r" (__acev_mem) : "memory");			      \
   __acev_tmp; })
 #endif
 

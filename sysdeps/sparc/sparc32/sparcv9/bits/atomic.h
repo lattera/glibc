@@ -59,7 +59,7 @@ typedef uintmax_t uatomic_max_t;
   __asm __volatile ("cas [%4], %2, %0"					      \
 		    : "=r" (__acev_tmp), "=m" (*__acev_mem)		      \
 		    : "r" (oldval), "m" (*__acev_mem), "r" (__acev_mem),      \
-		      "0" (newval));					      \
+		      "0" (newval) : "memory");				      \
   __acev_tmp; })
 
 /* This can be implemented if needed.  */
@@ -74,7 +74,7 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*(mem)) == 4)						      \
        __asm ("swap %0, %1"						      \
 	      : "=m" (*__memp), "=r" (__oldval)				      \
-	      : "m" (*__memp), "1" (__value));				      \
+	      : "m" (*__memp), "1" (__value) : "memory");		      \
      else								      \
        abort ();							      \
      __oldval; })

@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1998,2001,2002,2003,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2002, 2003, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -147,7 +148,7 @@ _nss_create_tablename (int *errnop)
       static const char prefix[] = "protocols.org_dir.";
 
       char *p = malloc (sizeof (prefix) + local_dir_len);
-      if (tablename_val == NULL)
+      if (p == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
