@@ -1,3 +1,9 @@
+2006-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: Add POLLMSG,
+	POLLREMOVE, and POLLRDHUP.
+	* sysdeps/unix/sysv/linux/bits/poll.h: Add POLLREMOVE and POLLRDHUP.
+
 2006-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define
