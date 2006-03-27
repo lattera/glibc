@@ -321,6 +321,7 @@ __END_NAMESPACE_C99
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
 
+# ifndef __cplusplus
 /* We can use the BTOWC and WCTOB optimizations since we know that all
    locales must use ASCII encoding for the values in the ASCII range
    and because the wchar_t encoding is always ISO 10646.  */
@@ -335,6 +336,7 @@ extern __inline int
 __NTH (wctob (wint_t __wc))
 { return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
 	  ? (int) __wc : __wctob_alias (__wc)); }
+# endif
 
 extern __inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,

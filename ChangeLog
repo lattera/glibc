@@ -1,3 +1,7 @@
+2006-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h (btowc, wctob): Don't optimize in C++.
+
 2006-03-24  David S. Miller  <davem@sunset.davemloft.net>
 
 	* sysdeps/sparc/sparc32/bits/atomic.h
