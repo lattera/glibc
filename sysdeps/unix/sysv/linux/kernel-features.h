@@ -105,10 +105,10 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* On sparc and ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
+/* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
 #if __LINUX_KERNEL_VERSION >= 131875 \
-    && ((defined __sparc__ && !defined __arch64__) || defined __arm__)
+    && (defined __sparc__ && !defined __arch64__)
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
@@ -191,7 +191,7 @@
    don't know when it got introduced).  But PowerPC64 does not support
    separate FCNTL64 call, FCNTL is already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 132100 \
-    && (defined __arm__ || defined __powerpc__ || defined __sh__) \
+    && (defined __powerpc__ || defined __sh__) \
     && !defined __powerpc64__
 # define __ASSUME_FCNTL64		1
 #endif
@@ -260,22 +260,8 @@
 #endif
 
 /* The vfork syscall on x86 and arm was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && (defined __i386__ || defined __arm__)
+#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
 # define __ASSUME_VFORK_SYSCALL		1
-#endif
-
-/* There are an infinite number of PA-RISC kernel versions numbered
-   2.4.0.  But they've not really been released as such.  We require
-   and expect the final version here.  */
-#ifdef __hppa__
-# define __ASSUME_32BITUIDS		1
-# define __ASSUME_TRUNCATE64_SYSCALL	1
-# define __ASSUME_MMAP2_SYSCALL		1
-# define __ASSUME_STAT64_SYSCALL	1
-# define __ASSUME_IPC64			1
-# define __ASSUME_ST_INO_64_BIT		1
-# define __ASSUME_FCNTL64		1
-# define __ASSUME_GETDENTS64_SYSCALL	1
 #endif
 
 /* Alpha switched to a 64-bit timeval sometime before 2.2.0.  */
@@ -294,15 +280,6 @@
 	 && (defined __ia64__ || defined __s390__			\
 	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
 # define __ASSUME_CLONE_THREAD_FLAGS	1
-#endif
-
-/* These features were surely available with 2.4.12.  */
-#if __LINUX_KERNEL_VERSION >= 132108 && defined __mc68000__
-# define __ASSUME_MMAP2_SYSCALL		1
-# define __ASSUME_TRUNCATE64_SYSCALL	1
-# define __ASSUME_STAT64_SYSCALL	1
-# define __ASSUME_FCNTL64		1
-# define __ASSUME_VFORK_SYSCALL		1
 #endif
 
 /* Beginning with 2.5.63 support for realtime and monotonic clocks and

@@ -1,3 +1,30 @@
+2006-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): Always initialize robust_head.
+	* descr.h: Define struct robust_list_head.
+	(struct pthread): Use robust_list_head in robust mutex list definition.
+	Adjust ENQUEUE_MUTEX and DEQUEUE_MUTEX.
+	* init.c [!__ASSUME_SET_ROBUST_LIST] (__set_robust_list_avail): Define.
+	(__pthread_initialize_minimal_internal): Register robust_list with
+	the kernel.
+	* pthreadP.h: Remove PRIVATE_ from PTHREAD_MUTEX_ROBUST_* names.
+	Declare __set_robust_list_avail.
+	* pthread_create.c (start_thread): Register robust_list of new thread.
+	[!__ASSUME_SET_ROBUST_LIST]: If robust_list is not empty wake up
+	waiters.
+	* pthread_mutex_destroy.c: For robust mutexes don't look at the
+	number of users, it's unreliable.
+	* pthread_mutex_init.c: Allow use of pshared robust mutexes if
+	set_robust_list syscall is available.
+	* pthread_mutex_consistent.c: Adjust for PTHREAD_MUTEX_ROBUST_* rename.
+	* pthread_mutex_lock.c: Simplify robust mutex code a bit.
+	Set robust_head.list_op_pending before trying to lock a robust mutex.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise for unlocking.
+	* Makefile (tests): Add tst-robust8.
+	* tst-robust8.c: New file.
+
 2006-03-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h
