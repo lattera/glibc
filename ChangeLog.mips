@@ -1,3 +1,9 @@
+2006-03-27  Lior Balkohen  <balkohen@gmail.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Define
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.  Add readahead
+	prototype.
+
 2006-03-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/poll.h (POLLREMOVE, POLLRDHUP):
