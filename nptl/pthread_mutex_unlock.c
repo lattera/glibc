@@ -63,10 +63,12 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       lll_mutex_unlock (mutex->__data.__lock);
       break;
 
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
+    case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
       /* Recursive mutex.  */
       if ((mutex->__data.__lock & FUTEX_TID_MASK)
-	  == THREAD_GETMEM (THREAD_SELF, tid))
+	  == THREAD_GETMEM (THREAD_SELF, tid)
+	  && __builtin_expect (mutex->__data.__owner
+			       == PTHREAD_MUTEX_INCONSISTENT, 0))
 	{
 	  if (--mutex->__data.__count != 0)
 	    /* We still hold the mutex.  */
@@ -84,9 +86,9 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       goto robust;
 
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
+    case PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_ROBUST_NORMAL_NP:
+    case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
       if ((mutex->__data.__lock & FUTEX_TID_MASK)
 	  != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
@@ -102,6 +104,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
     robust:
       /* Remove mutex from the list.  */
+      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+		     &mutex->__data.__list.__next);
       DEQUEUE_MUTEX (mutex);
 
       mutex->__data.__owner = newowner;
@@ -111,6 +115,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       /* Unlock.  */
       lll_robust_mutex_unlock (mutex->__data.__lock);
+
+      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
     default:

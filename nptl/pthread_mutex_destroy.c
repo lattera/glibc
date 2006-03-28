@@ -25,15 +25,9 @@ int
 __pthread_mutex_destroy (mutex)
      pthread_mutex_t *mutex;
 {
-  if (mutex->__data.__nusers != 0)
-    {
-      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_PRIVATE_NP) != 0
-	  && (mutex->__data.__lock & FUTEX_OWNER_DIED) != 0
-	  && mutex->__data.__nusers == 1)
-	goto dead_robust_mutex;
-
-      return EBUSY;
-    }
+  if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0
+      && mutex->__data.__nusers != 0)
+    return EBUSY;
 
   /* Set to an invalid value.  */
  dead_robust_mutex:

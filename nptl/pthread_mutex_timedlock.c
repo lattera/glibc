@@ -103,25 +103,27 @@ pthread_mutex_timedlock (mutex, abstime)
 	}
       break;
 
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_NP:
-    case PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP:
+    case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
+    case PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_ROBUST_NORMAL_NP:
+    case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
+      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+		     &mutex->__data.__list.__next);
+
       oldval = mutex->__data.__lock;
       do
 	{
+	again:
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
-	      int newval;
-	      while ((newval
-		      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
-							     id, oldval))
-		     != oldval)
+	      int newval
+		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						       id, oldval);
+	      if (newval != oldval)
 		{
-		  if ((newval & FUTEX_OWNER_DIED) == 0)
-		    goto normal;
 		  oldval = newval;
+		  goto again;
 		}
 
 	      /* We got the mutex.  */
@@ -130,6 +132,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
 
 	      ENQUEUE_MUTEX (mutex);
+	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	      /* Note that we deliberately exist here.  If we fall
 		 through to the end of the function __nusers would be
@@ -138,18 +141,23 @@ pthread_mutex_timedlock (mutex, abstime)
 	      return EOWNERDEAD;
 	    }
 
-	normal:
 	  /* Check whether we already hold the mutex.  */
-	  if (__builtin_expect ((mutex->__data.__lock & FUTEX_TID_MASK)
-				== id, 0))
+	  if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
 	    {
 	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP)
-		return EDEADLK;
+		  == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
+		{
+		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+				 NULL);
+		  return EDEADLK;
+		}
 
 	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP)
+		  == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
 		{
+		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+				 NULL);
+
 		  /* Just bump the counter.  */
 		  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
 		    /* Overflow of the counter.  */
@@ -170,6 +178,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
 	      lll_mutex_unlock (mutex->__data.__lock);
+	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }
 
@@ -182,6 +191,7 @@ pthread_mutex_timedlock (mutex, abstime)
 
       mutex->__data.__count = 1;
       ENQUEUE_MUTEX (mutex);
+      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
     default:

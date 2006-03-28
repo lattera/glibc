@@ -60,6 +60,15 @@
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
 
+#ifndef __ASSUME_SET_ROBUST_LIST
+/* Negative if we do not have the system call and we can use it.  */
+int __set_robust_list_avail;
+# define set_robust_list_not_avail() \
+  __set_robust_list_avail = -1
+#else
+# define set_robust_list_not_avail() do { } while (0)
+#endif
+
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
@@ -247,10 +256,6 @@ __pthread_initialize_minimal_internal (void)
   struct pthread *pd = THREAD_SELF;
   INTERNAL_SYSCALL_DECL (err);
   pd->pid = pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-  pd->robust_list.__prev = &pd->robust_list;
-#endif
-  pd->robust_list.__next = &pd->robust_list;
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)
@@ -258,6 +263,21 @@ __pthread_initialize_minimal_internal (void)
 #if HP_TIMING_AVAIL
   THREAD_SETMEM (pd, cpuclock_offset, GL(dl_cpuclock_offset));
 #endif
+
+  /* Initialize the robust mutex data.  */
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+  pd->robust_prev = &pd->robust_head;
+#endif
+  pd->robust_head.list = &pd->robust_head;
+#ifdef __NR_set_robust_list
+  pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
+				  - offsetof (pthread_mutex_t,
+					      __data.__list.__next));
+  int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
+			      sizeof (struct robust_list_head));
+  if (INTERNAL_SYSCALL_ERROR_P (res, err))
+#endif
+    set_robust_list_not_avail ();
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c

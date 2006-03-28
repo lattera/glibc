@@ -468,3 +468,9 @@
     && (defined __i386__ || defined __x86_64__)
 # define __ASSUME_ATFCTS	1
 #endif
+
+/* Support for inter-process robust mutexes was added in 2.6.17.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && (defined __i386__ || defined __x86_64__)
+# define __ASSUME_SET_ROBUST_LIST	1
+#endif

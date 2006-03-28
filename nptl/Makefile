@@ -206,7 +206,7 @@ tests = tst-typesizes \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	tst-cond20 tst-cond21 \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
-	tst-robust6 tst-robust7 \
+	tst-robust6 tst-robust7 tst-robust8 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \

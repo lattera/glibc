@@ -22,7 +22,6 @@
 #include <string.h>
 #include "pthreadP.h"
 
-
 static const struct pthread_mutexattr default_attr =
   {
     /* Default is a normal mutex, not shared between processes.  */
@@ -42,10 +41,6 @@ __pthread_mutex_init (mutex, mutexattr)
   imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
 
   /* Sanity checks.  */
-  // XXX For now we cannot implement robust mutexes if they are shared.
-  if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0
-      && (imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0)
-    return ENOTSUP;
   // XXX For now we don't support priority inherited or priority protected
   // XXX mutexes.
   if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
@@ -57,8 +52,18 @@ __pthread_mutex_init (mutex, mutexattr)
 
   /* Copy the values from the attribute.  */
   mutex->__data.__kind = imutexattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS;
+
   if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0)
-    mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_PRIVATE_NP;
+    {
+#ifndef __ASSUME_SET_ROBUST_LIST
+      if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
+	  && __set_robust_list_avail < 0)
+	return ENOTSUP;
+#endif
+
+      mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+    }
+
   switch ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
 	  >> PTHREAD_MUTEXATTR_PROTOCOL_SHIFT)
     {

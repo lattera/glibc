@@ -365,12 +365,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* The process ID is also the same as that of the caller.  */
       pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
 
-      /* List of robust mutexes.  */
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-      pd->robust_list.__prev = &pd->robust_list;
-#endif
-      pd->robust_list.__next = &pd->robust_list;
-
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	{
@@ -505,12 +499,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* The process ID is also the same as that of the caller.  */
 	  pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
 
-	  /* List of robust mutexes.  */
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-	  pd->robust_list.__prev = &pd->robust_list;
-#endif
-	  pd->robust_list.__next = &pd->robust_list;
-
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	    {
@@ -633,6 +621,18 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   /* Initialize the lock.  We have to do this unconditionally since the
      stillborn thread could be canceled while the lock is taken.  */
   pd->lock = LLL_LOCK_INITIALIZER;
+
+  /* The robust mutex lists also need to be initialized
+     unconditionally because the cleanup for the previous stack owner
+     might have happened in the kernel.  */
+  pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
+				  - offsetof (pthread_mutex_t,
+					      __data.__list.__next));
+  pd->robust_head.list_op_pending = NULL;
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+  pd->robust_prev = &pd->robust_head;
+#endif
+  pd->robust_head.list = &pd->robust_head;
 
   /* We place the thread descriptor at the end of the stack.  */
   *pdp = pd;

@@ -26,7 +26,7 @@ pthread_mutex_consistent_np (mutex)
      pthread_mutex_t *mutex;
 {
   /* Test whether this is a robust mutex with a dead owner.  */
-  if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_PRIVATE_NP) == 0
+  if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0
       || mutex->__data.__owner != PTHREAD_MUTEX_INCONSISTENT)
     return EINVAL;
 

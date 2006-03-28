@@ -102,6 +102,15 @@ struct xid_command
 };
 
 
+/* Data structure used by the kernel to find robust futexes.  */
+struct robust_list_head
+{
+  void *list;
+  long int futex_offset;
+  void *list_op_pending;
+};
+
+
 /* Thread descriptor data structure.  */
 struct pthread
 {
@@ -136,25 +145,43 @@ struct pthread
 
   /* List of robust mutexes the thread is holding.  */
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
-  __pthread_list_t robust_list;
+  void *robust_prev;
+  struct robust_list_head robust_head;
+
+  /* The list above is strange.  It is basically a double linked list
+     but the pointer to the next/previous element of the list points
+     in the middle of the object, the __next element.  Whenever
+     casting to __pthread_list_t we need to adjust the pointer
+     first.  */
+# define QUEUE_PTR_ADJUST (offsetof (__pthread_list_t, __next))
 
 # define ENQUEUE_MUTEX(mutex) \
   do {									      \
-    __pthread_list_t *next = THREAD_GETMEM (THREAD_SELF, robust_list.__next); \
-    next->__prev = &mutex->__data.__list;				      \
-    mutex->__data.__list.__next = next;					      \
-    mutex->__data.__list.__prev = &THREAD_SELF->robust_list;		      \
-    THREAD_SETMEM (THREAD_SELF, robust_list.__next, &mutex->__data.__list);   \
+    __pthread_list_t *next = (THREAD_GETMEM (THREAD_SELF, robust_head.list)   \
+			      - QUEUE_PTR_ADJUST);			      \
+    next->__prev = (void *) &mutex->__data.__list.__next;		      \
+    mutex->__data.__list.__next = (void *) &next->__next;		      \
+    mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;	      \
+    THREAD_SETMEM (THREAD_SELF, robust_head.list,			      \
+		   &mutex->__data.__list.__next);			      \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \
-    mutex->__data.__list.__next->__prev = mutex->__data.__list.__prev;	      \
-    mutex->__data.__list.__prev->__next = mutex->__data.__list.__next;	      \
+    __pthread_list_t *next = (__pthread_list_t *)			      \
+      ((char *) mutex->__data.__list.__next - QUEUE_PTR_ADJUST);	      \
+    next->__prev = mutex->__data.__list.__prev;				      \
+    __pthread_list_t *prev = (__pthread_list_t *)			      \
+      ((char *) mutex->__data.__list.__prev - QUEUE_PTR_ADJUST);	      \
+    prev->__next = mutex->__data.__list.__next;				      \
     mutex->__data.__list.__prev = NULL;					      \
     mutex->__data.__list.__next = NULL;					      \
   } while (0)
 #else
-  __pthread_slist_t robust_list;
+  union
+  {
+    __pthread_slist_t robust_list;
+    struct robust_list_head robust_head;
+  };
 
 # define ENQUEUE_MUTEX(mutex) \
   do {									      \

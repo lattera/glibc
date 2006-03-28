@@ -31,6 +31,7 @@
 #include <internaltypes.h>
 #include <pthread-functions.h>
 #include <atomic.h>
+#include <kernel-features.h>
 
 
 /* Atomic operations on TLS memory.  */
@@ -60,13 +61,13 @@
 /* Internal mutex type value.  */
 enum
 {
-  PTHREAD_MUTEX_ROBUST_PRIVATE_NP = 16,
-  PTHREAD_MUTEX_ROBUST_PRIVATE_RECURSIVE_NP
-  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_RECURSIVE_NP,
-  PTHREAD_MUTEX_ROBUST_PRIVATE_ERRORCHECK_NP
-  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_ERRORCHECK_NP,
-  PTHREAD_MUTEX_ROBUST_PRIVATE_ADAPTIVE_NP
-  = PTHREAD_MUTEX_ROBUST_PRIVATE_NP | PTHREAD_MUTEX_ADAPTIVE_NP,
+  PTHREAD_MUTEX_ROBUST_NORMAL_NP = 16,
+  PTHREAD_MUTEX_ROBUST_RECURSIVE_NP
+  = PTHREAD_MUTEX_ROBUST_NORMAL_NP | PTHREAD_MUTEX_RECURSIVE_NP,
+  PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP
+  = PTHREAD_MUTEX_ROBUST_NORMAL_NP | PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP
+  = PTHREAD_MUTEX_ROBUST_NORMAL_NP | PTHREAD_MUTEX_ADAPTIVE_NP,
   PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP = 32,
   PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP = 64
 };
@@ -127,6 +128,11 @@ hidden_proto (__pthread_keys)
 
 /* Number of threads running.  */
 extern unsigned int __nptl_nthreads attribute_hidden;
+
+#ifndef __ASSUME_SET_ROBUST_LIST
+/* Negative if we do not have the system call and we can use it.  */
+extern int __set_robust_list_avail attribute_hidden;
+#endif
 
 /* The library can run in debugging mode where it performs a lot more
    tests.  */
@@ -502,6 +508,17 @@ extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 # define PTHREAD_STATIC_FN_REQUIRE(name)
 #else
 # define PTHREAD_STATIC_FN_REQUIRE(name) __asm (".globl " #name);
+#endif
+
+
+#ifndef __NR_set_robust_list
+/* XXX For the time being...  Once we can rely on the kernel headers
+   having the definition remove these lines.  */
+# if defined __i386__
+#  define __NR_set_robust_list  311
+# elif defined __x86_64__
+#  define __NR_set_robust_list  273
+# endif
 #endif
 
 #endif	/* pthreadP.h */

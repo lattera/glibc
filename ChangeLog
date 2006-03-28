@@ -1,3 +1,8 @@
+2006-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add
+	__ASSUME_SET_ROBUST_LIST.
+
 2006-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/wchar.h (btowc, wctob): Don't optimize in C++.

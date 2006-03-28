@@ -229,6 +229,19 @@ start_thread (void *arg)
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
 
+#ifdef __NR_set_robust_list
+# ifndef __ASSUME_SET_ROBUST_LIST
+  if (__set_robust_list_avail >= 0)
+# endif
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      /* This call should never fail because the initial call in init.c
+	 succeeded.  */
+      INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
+			sizeof (struct robust_list_head));
+    }
+#endif
+
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
   struct pthread_unwind_buf unwind_buf;
@@ -310,35 +323,34 @@ start_thread (void *arg)
      the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
+#ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */
-#if __WORDSIZE == 64
-  __pthread_list_t *robust = pd->robust_list.__next;
-#else
+# if __WORDSIZE == 64
+  void *robust = pd->robust_head.list;
+# else
   __pthread_slist_t *robust = pd->robust_list.__next;
-#endif
-  if (__builtin_expect (robust != &pd->robust_list, 0))
+# endif
+/* We let the kernel do the notification if it is able to do so.  */
+  if (__set_robust_list_avail < 0
+      && __builtin_expect (robust != &pd->robust_head, 0))
     {
       do
 	{
 	  struct __pthread_mutex_s *this = (struct __pthread_mutex_s *)
-	    ((char *) robust - offsetof (struct __pthread_mutex_s, __list));
-	  robust = robust->__next;
+	    ((char *) robust - offsetof (struct __pthread_mutex_s,
+					 __list.__next));
+	  robust = *((void **) robust);
 
-	  this->__list.__next = NULL;
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
+# ifdef __PTHREAD_MUTEX_HAVE_PREV
 	  this->__list.__prev = NULL;
-#endif
+# endif
+	  this->__list.__next = NULL;
 
 	  lll_robust_mutex_dead (this->__lock);
 	}
-      while (robust != &pd->robust_list);
-
-      /* Clean up so that the thread descriptor can be reused.  */
-      pd->robust_list.__next = &pd->robust_list;
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-      pd->robust_list.__prev = &pd->robust_list;
-#endif
+      while (robust != &pd->robust_head);
     }
+#endif
 
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))
