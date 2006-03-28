@@ -1,3 +1,8 @@
+2006-03-27  Lior Balkohen  <balkohen@gmail.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.
+
 2006-03-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/socket.S: Delete.
