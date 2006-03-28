@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux/MIPS version.
-   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004, 2005
+   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -98,7 +98,7 @@ enum __rlimit_resource
   /* Maximum realtime priority allowed for non-priviledged
      processes.  */
   __RLIMIT_RTPRIO = 14,
-#define RLIMIT_RTPRIO _RLIMIT_RTPRIO
+#define RLIMIT_RTPRIO __RLIMIT_RTPRIO
 
   __RLIMIT_NLIMITS = 15,
   __RLIM_NLIMITS = __RLIMIT_NLIMITS

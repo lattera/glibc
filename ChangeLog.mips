@@ -1,3 +1,8 @@
+2006-03-27  Denis Barbier  <barbier@linuxfr.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIMIT_RTPRIO): Fix
+	typo.
+
 2006-03-11  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/fork.c: Correct path to
