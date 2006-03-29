@@ -538,16 +538,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  else
 	    return -EAI_ADDRFAMILY;
 
-	dupname:
 	  if (req->ai_flags & AI_CANONNAME)
-	    {
-	      canon = strdup (name);
-	      if (canon == NULL)
-		return -EAI_MEMORY;
-	    }
+	    canon = name;
 	}
-
-      if (at->family == AF_UNSPEC)
+      else if (at->family == AF_UNSPEC)
 	{
 	  char *namebuf = (char *) name;
 	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
@@ -595,7 +589,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		}
 
-	      goto dupname;
+	      if (req->ai_flags & AI_CANONNAME)
+		canon = name;
 	    }
 	}
 
