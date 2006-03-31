@@ -173,16 +173,37 @@ struct flock64
 # define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
 #endif
 
-/* Linux-specific operations for posix_fadvise.  */
+
 #ifdef __USE_GNU
-# define LINUX_FADV_ASYNC_WRITE	32 /* Start writeout on range.  */
-# define LINUX_FADV_WRITE_WAIT	33 /* Wait upon writeout to range.  */
+# define SYNC_FILE_RANGE_WAIT_BEFORE	1 /* Wait upon writeout of all pages
+					     in the range before performing the
+					     write.  */
+# define SYNC_FILE_RANGE_WRITE		2 /* Initiate writeout of all those
+					     dirty pages in the range which are
+					     not presently under writeback.  */
+# define SYNC_FILE_RANGE_WAIT_AFTER	4 /* Wait upon writeout of all pages in
+					     the range after performing the
+					     write.  */
 #endif
 
 __BEGIN_DECLS
 
+#ifdef __USE_GNU
+
 /* Provide kernel hint to read ahead.  */
 extern ssize_t readahead (int __fd, __off64_t __offset, size_t __count)
     __THROW;
+
+
+/* Selective file content synch'ing.  */
+extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
+			    unsigned int __flags);
+
+
+/* Splice two files together.  */
+extern int splice (int __fdin, int __fdout, size_t __len, unsigned int __flags)
+    __THROW;
+
+#endif
 
 __END_DECLS
