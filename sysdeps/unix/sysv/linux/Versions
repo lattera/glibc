@@ -123,6 +123,9 @@ libc {
     #errlist-compat	132
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.5 {
+    splice;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

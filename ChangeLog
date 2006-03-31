@@ -1,3 +1,10 @@
+2006-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add splice syscall.
+	* sysdeps/unix/sysv/linux/Versions: Export splice with GLIBC_2.5
+	version.
+	* Versions.def: Define GLIBC_2.5 for libc.
+
 2006-03-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): No need to duplicate
