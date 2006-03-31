@@ -124,7 +124,7 @@ libc {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.5 {
-    splice;
+    splice; sync_file_range;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

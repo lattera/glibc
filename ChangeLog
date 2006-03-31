@@ -1,5 +1,20 @@
 2006-03-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Versions: Export sync_file_range with
+	GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Remove
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.
+	Declare sync_file_range and splice.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Add
+	sync_file_range.
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: New file.
 	* sysdeps/unix/sysv/linux/syscalls.list: Add splice syscall.
 	* sysdeps/unix/sysv/linux/Versions: Export splice with GLIBC_2.5
 	version.
