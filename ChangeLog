@@ -1,5 +1,9 @@
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2415]
+	* elf/ldd.bash.in: Create better error messages for invalid input
+	files.
+
 	[BZ #2477]
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Create correct LOADARGS_*
 	macros for non-shared position-independent code.

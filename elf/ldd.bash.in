@@ -144,8 +144,11 @@ for file do
   *) file=./$file
      ;;
   esac
-  if test ! -f "$file"; then
+  if test ! -e "$file"; then
     echo "ldd: ${file}:" $"No such file or directory" >&2
+    result=1
+  elif test ! -f "$file"; then
+    echo "ldd: ${file}:" $"not regular file" >&2
     result=1
   elif test -r "$file"; then
     test -x "$file" || echo 'ldd:' $"\
