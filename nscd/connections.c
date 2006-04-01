@@ -1556,18 +1556,24 @@ main_loop_poll (void)
 	      /* We have a new incoming connection.  Accept the connection.  */
 	      int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
 
-	      /* use the descriptor if we have not reached the limit.  */
-	      if (fd >= 0 && firstfree < nconns)
+	      /* Use the descriptor if we have not reached the limit.  */
+	      if (fd >= 0)
 		{
-		  conns[firstfree].fd = fd;
-		  conns[firstfree].events = POLLRDNORM;
-		  starttime[firstfree] = now;
-		  if (firstfree >= nused)
-		    nused = firstfree + 1;
+		  if (firstfree < nconns)
+		    {
+		      conns[firstfree].fd = fd;
+		      conns[firstfree].events = POLLRDNORM;
+		      starttime[firstfree] = now;
+		      if (firstfree >= nused)
+			nused = firstfree + 1;
 
-		  do
-		    ++firstfree;
-		  while (firstfree < nused && conns[firstfree].fd != -1);
+		      do
+			++firstfree;
+		      while (firstfree < nused && conns[firstfree].fd != -1);
+		    }
+		  else
+		    /* We cannot use the connection so close it.  */
+		    close (fd);
 		}
 
 	      --n;

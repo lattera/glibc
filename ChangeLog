@@ -1,3 +1,9 @@
+2006-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2498]
+	* nscd/connections.c (main_loop_poll): If the connection cannot be
+	accepted because of user-imposed limits close the descriptor.
+
 2006-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Versions: Export sync_file_range with
