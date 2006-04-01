@@ -1,5 +1,12 @@
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2450]
+	* posix/unistd.h: Match return value of readlink to what POSIX
+	says these days.
+	* io/readlink.c: Likewise.
+	* io/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+
 	[BZ #2498]
 	* nscd/connections.c (main_loop_poll): If the connection cannot be
 	accepted because of user-imposed limits close the descriptor.

@@ -770,8 +770,9 @@ extern int symlink (__const char *__from, __const char *__to)
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-extern int readlink (__const char *__restrict __path, char *__restrict __buf,
-		     size_t __len) __THROW __nonnull ((1, 2)) __wur;
+extern ssize_t readlink (__const char *__restrict __path,
+			 char *__restrict __buf, size_t __len)
+     __THROW __nonnull ((1, 2)) __wur;
 #endif /* Use BSD.  */
 
 #ifdef __USE_ATFILE
@@ -780,8 +781,8 @@ extern int symlinkat (__const char *__from, int __tofd,
 		      __const char *__to) __THROW __nonnull ((1, 3)) __wur;
 
 /* Like readlink but a relative PATH is interpreted relative to FD.  */
-extern int readlinkat (int __fd, __const char *__restrict __path,
-		       char *__restrict __buf, size_t __len)
+extern ssize_t readlinkat (int __fd, __const char *__restrict __path,
+			   char *__restrict __buf, size_t __len)
      __THROW __nonnull ((2, 3)) __wur;
 #endif
 
