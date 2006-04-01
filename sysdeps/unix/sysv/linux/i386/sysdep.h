@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1993,1995,1996,1997,1998,1999,2000,2002,2003,2004,2005
+/* Copyright (C) 1992,1993,1995-2000,2002-2005,2006
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
@@ -447,7 +447,7 @@ asm (".L__X'%ebx = 1\n\t"
 
 #define LOADARGS_0
 #ifdef __PIC__
-# if defined I386_USE_SYSENTER
+# if defined I386_USE_SYSENTER && defined SHARED
 #  define LOADARGS_1 \
     "bpushl .L__X'%k3, %k3\n\t"
 #  define LOADARGS_5 \

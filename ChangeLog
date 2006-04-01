@@ -1,5 +1,9 @@
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2477]
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Create correct LOADARGS_*
+	macros for non-shared position-independent code.
+
 	[BZ #2472]
 	* bits/siginfo.h: Fix typo in ILL_ILLOPN definition.
 
