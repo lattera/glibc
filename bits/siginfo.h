@@ -76,7 +76,7 @@ enum
 {
   ILL_ILLOPC = 1,		/* Illegal opcode.  */
 # define ILL_ILLOPC	ILL_ILLOPC
-  ILL_ILL_OPN,			/* Illegal operand.  */
+  ILL_ILLOPN,			/* Illegal operand.  */
 # define ILL_ILLOPN	ILL_ILLOPN
   ILL_ILLADR,			/* Illegal addressing mode.  */
 # define ILL_ILLADR	ILL_ILLADR

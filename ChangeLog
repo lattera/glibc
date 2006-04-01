@@ -1,5 +1,8 @@
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2472]
+	* bits/siginfo.h: Fix typo in ILL_ILLOPN definition.
+
 	[BZ #2450]
 	* posix/unistd.h: Match return value of readlink to what POSIX
 	says these days.
