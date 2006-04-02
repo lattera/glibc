@@ -176,35 +176,40 @@ get_mapping (request_type type, const char *key,
   struct mapped_database *result = NO_MAPPING;
 #ifdef SCM_RIGHTS
   const size_t keylen = strlen (key) + 1;
-  char resdata[keylen];
   int saved_errno = errno;
 
   int mapfd = -1;
 
   /* Send the request.  */
-  struct iovec iov[2];
-  request_header req;
+  struct
+  {
+    request_header req;
+    char key[keylen];
+  } reqdata;
 
   int sock = open_socket ();
   if (sock < 0)
     goto out;
 
-  req.version = NSCD_VERSION;
-  req.type = type;
-  req.key_len = keylen;
+  reqdata.req.version = NSCD_VERSION;
+  reqdata.req.type = type;
+  reqdata.req.key_len = keylen;
+  memcpy (reqdata.key, key, keylen);
 
-  iov[0].iov_base = &req;
-  iov[0].iov_len = sizeof (req);
-  iov[1].iov_base = (void *) key;
-  iov[1].iov_len = keylen;
-
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__writev (sock, iov, 2))
-			!= iov[0].iov_len + iov[1].iov_len, 0))
+# ifndef MSG_NOSIGNAL
+#  define MSG_NOSIGNAL 0
+# endif
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__send (sock, &reqdata,
+						    sizeof (reqdata),
+						    MSG_NOSIGNAL))
+			!= sizeof (reqdata), 0))
     /* We cannot even write the request.  */
     goto out_close2;
 
   /* Room for the data sent along with the file descriptor.  We expect
      the key name back.  */
+# define resdata reqdata.key
+  struct iovec iov[1];
   iov[0].iov_base = resdata;
   iov[0].iov_len = keylen;
 
@@ -231,11 +236,7 @@ get_mapping (request_type type, const char *key,
   if (wait_on_socket (sock) <= 0)
     goto out_close2;
 
-# ifndef MSG_NOSIGNAL
-#  define MSG_NOSIGNAL 0
-# endif
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg,
-						       MSG_NOSIGNAL))
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0))
 			!= keylen, 0))
     goto out_close2;
 

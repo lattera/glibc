@@ -1,5 +1,9 @@
 2006-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2501]
+	* nscd/nscd_helper.c (get_mapping): Rewrite code to send request
+	so it uses send and not writev.
+
 	[BZ #2418]
 	* sysdeps/unix/sysv/linux/bits/socket.h: Use larger of PATH_MAX and
 	page size when allocating buffer.
