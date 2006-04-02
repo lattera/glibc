@@ -87,7 +87,7 @@ __getcwd (char *buf, size_t size)
 	  return NULL;
 	}
 
-      alloc_size = PATH_MAX;
+      alloc_size = MAX (PATH_MAX, __getpagesize ());
     }
 
   if (buf == NULL)

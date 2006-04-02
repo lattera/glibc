@@ -1,3 +1,9 @@
+2006-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2418]
+	* sysdeps/unix/sysv/linux/bits/socket.h: Use larger of PATH_MAX and
+	page size when allocating buffer.
+
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2415]
