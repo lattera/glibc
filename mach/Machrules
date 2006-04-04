@@ -138,10 +138,11 @@ $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
 # We must use $(CFLAGS) to get -O flags that affect #if's in header files.
 	$(include-%.defs) | \
 	$(CC) $(CFLAGS) $(CPPFLAGS) -M -x c - | \
-	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h)\
-			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
+	sed -e 's,- *:,$(.udeps-targets):,' \
 	    $(sed-remove-objpfx) > $@.new
 	mv -f $@.new $@
+.udeps-targets = $@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h) \
+		 $(@:.udeps=_server.c) $(@:.udeps=_server.h)
 endif
 
 # Look for the server stub files where they will be written.
