@@ -1,3 +1,10 @@
+2006-04-03  Roland McGrath  <roland@frob.com>
+
+	[BZ #2507]
+	* mach/Machrules (.udeps-targets): New variable.
+	($(objpfx)%.udeps static pattern rule): Use it to avoid \ inside
+	quoted string.
+
 2006-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2501]
