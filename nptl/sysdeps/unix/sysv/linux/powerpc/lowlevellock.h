@@ -110,7 +110,21 @@
 # define __lll_rel_instr	""
 #else
 # define __lll_acq_instr	"isync"
-# define __lll_rel_instr	"sync"
+# ifdef _ARCH_PWR4
+/*
+ * Newer powerpc64 processors support the new "light weight" sync (lwsync)
+ * So if the build is using -mcpu=[power4,power5,power5+,970] we can
+ * safely use lwsync.
+ */
+#  define __lll_rel_instr	"lwsync"
+# else
+/*
+ * Older powerpc32 processors don't support the new "light weight"
+ * sync (lwsync).  So the only safe option is to use normal sync
+ * for all powerpc32 applications.
+ */
+#  define __lll_rel_instr	"sync"
+# endif
 #endif
 
 /* Set *futex to ID if it is 0, atomically.  Returns the old value */

@@ -10,6 +10,12 @@
 	($(objpfx)iso8859-7jp.stmp): Likewise.
 	Reported by S.Çağlar Onur <caglar@uludag.org.tr>.
 
+2006-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #2505]
+	* sysdeps/powerpc/powerpc32/bits/atomic.h [_ARCH_PWR4]:
+	Define atomic_read_barrier and __ARCH_REL_INSTR using lwsync.
+
 2006-04-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Terminate FDE
