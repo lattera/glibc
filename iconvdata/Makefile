@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1997-2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -255,14 +255,14 @@ export AWK
 
 define generate-8bit-table
 $(make-target-directory)
-$(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
+LC_ALL=C $(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
 
 define generate-8bit-gap-table
 $(make-target-directory)
-$(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
+LC_ALL=C $(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
@@ -304,7 +304,7 @@ $(gen-8bit-gap-modules:%=$(objpfx)%.stmp): $(objpfx)%.stmp: $(objpfx)iconv-rules
 
 $(objpfx)iso8859-7jp.stmp: $(charmaps)/ISO-8859-7 gen-8bit-gap-1.sh
 	$(make-target-directory)
-	$(SHELL) ./gen-8bit-gap-1.sh $< > $(@:stmp=T)
+	LC_ALL=C $(SHELL) ./gen-8bit-gap-1.sh $< > $(@:stmp=T)
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 

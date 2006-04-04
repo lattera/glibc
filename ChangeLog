@@ -1,3 +1,10 @@
+2006-04-04  Roland McGrath  <roland@redhat.com>
+
+	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
+	(generate-8bit-gap-table): Likewise.
+	($(objpfx)iso8859-7jp.stmp): Likewise.
+	Reported by S.Çağlar Onur <caglar@uludag.org.tr>.
+
 2006-04-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Terminate FDE
