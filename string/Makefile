@@ -64,10 +64,12 @@ inl-tester-ENV = LANGUAGE=C
 noinl-tester-ENV = LANGUAGE=C
 tst-strxfrm-ENV = LOCPATH=$(common-objpfx)localedata
 bug-strcoll1-ENV = LOCPATH=$(common-objpfx)localedata
+CFLAGS-inl-tester.c = -fno-builtin
 CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
+CFLAGS-tst-inlcall.c = -fno-builtin
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-svc.out

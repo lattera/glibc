@@ -1,3 +1,9 @@
+2006-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #2505]
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h [_ARCH_PWR4]:
+	Define __lll_rel_instr using lwsync.
+
 2006-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (allocate_stack): Always initialize robust_head.

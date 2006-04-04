@@ -1,3 +1,18 @@
+2006-04-04  Roland McGrath  <roland@redhat.com>
+
+	* string/Makefile (CFLAGS-inl-tester.c): New variable.
+	(CFLAGS-tst-inlcall.c): Likewise.
+
+	[BZ #2508]
+	* nscd/Makefile ($(objpfx)nscd_stat.o: sysincludes): Move setting
+	inside [$(have-selinux) = yes].
+	($(objpfx)selinux.o: sysincludes): Likewise.
+
+	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
+	(generate-8bit-gap-table): Likewise.
+	($(objpfx)iso8859-7jp.stmp): Likewise.
+	Reported by S.Çağlar Onur <caglar@uludag.org.tr>.
+
 2006-03-21  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* soft-fp/adddf3.c: Add libgcc exception.  Update FSF address.
@@ -70,18 +85,6 @@
 	* soft-fp/unorddf2.c: Likewise.
 	* soft-fp/unordsf2.c: Likewise.
 	* soft-fp/unordtf2.c: Likewise.
-
-2006-04-04  Roland McGrath  <roland@redhat.com>
-
-	[BZ #2508]
-	* nscd/Makefile ($(objpfx)nscd_stat.o: sysincludes): Move setting
-	inside [$(have-selinux) = yes].
-	($(objpfx)selinux.o: sysincludes): Likewise.
-
-	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
-	(generate-8bit-gap-table): Likewise.
-	($(objpfx)iso8859-7jp.stmp): Likewise.
-	Reported by S.Çağlar Onur <caglar@uludag.org.tr>.
 
 2006-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
