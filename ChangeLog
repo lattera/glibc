@@ -1,5 +1,10 @@
 2006-04-04  Roland McGrath  <roland@redhat.com>
 
+	[BZ #2508]
+	* nscd/Makefile ($(objpfx)nscd_stat.o: sysincludes): Move setting
+	inside [$(have-selinux) = yes].
+	($(objpfx)selinux.o: sysincludes): Likewise.
+
 	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
 	(generate-8bit-gap-table): Likewise.
 	($(objpfx)iso8859-7jp.stmp): Likewise.

@@ -1,4 +1,5 @@
-# Copyright (C) 1998,2000,2002,2003,2004,2005 Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002,2003,2004,2005,2006
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,9 +59,6 @@ endif
 
 nscd-modules += selinux
 selinux-LIBS := -lselinux $(libaudit)
-endif
-
-LDLIBS-nscd = $(selinux-LIBS)
 
 # The configure.in check for libselinux and its headers did not use
 # $SYSINCLUDES.  The directory specified by --with-headers usually
@@ -69,6 +67,9 @@ LDLIBS-nscd = $(selinux-LIBS)
 # system headers will be ok for this file.
 $(objpfx)nscd_stat.o: sysincludes = # nothing
 $(objpfx)selinux.o: sysincludes = # nothing
+endif
+
+LDLIBS-nscd = $(selinux-LIBS)
 
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
