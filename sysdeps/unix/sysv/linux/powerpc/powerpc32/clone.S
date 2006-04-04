@@ -84,6 +84,10 @@ ENTRY (BP_SYM (__clone))
 	mr	r6,r8
 	mr	r7,r9
 
+	/* End FDE now, because in the child the unwind info will be
+	   wrong.  */
+	cfi_endproc
+
 	/* Do the call.  */
 	DO_CALL(SYS_ify(clone))
 
@@ -138,6 +142,8 @@ L(parent):
 L(badargs):
 	li	r3,EINVAL
 	b	__syscall_error@local
+
+	cfi_startproc
 END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))
