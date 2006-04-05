@@ -1,5 +1,5 @@
 /* Checking macros for unistd functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,16 +80,16 @@ pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
-extern int __readlink_chk (__const char *__restrict __path,
-			   char *__restrict __buf, size_t __len,
-			   size_t __buflen)
+extern ssize_t __readlink_chk (__const char *__restrict __path,
+			       char *__restrict __buf, size_t __len,
+			       size_t __buflen)
      __THROW __nonnull ((1, 2)) __wur;
-extern int __REDIRECT_NTH (__readlink_alias,
-			   (__const char *__restrict __path,
-			    char *__restrict __buf, size_t __len), readlink)
+extern ssize_t __REDIRECT_NTH (__readlink_alias,
+			       (__const char *__restrict __path,
+				char *__restrict __buf, size_t __len), readlink)
      __nonnull ((1, 2)) __wur;
 
-extern __always_inline __nonnull ((1, 2)) __wur int
+extern __always_inline __nonnull ((1, 2)) __wur ssize_t
 __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 		 size_t __len))
 {

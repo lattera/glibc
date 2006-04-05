@@ -1,3 +1,9 @@
+2006-04-05  Alan Modra  <amodra@bigpond.net.au>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (readlink, __readlink_chk, __readlink_alias):
+	Change return value to ssize_t.
+
 2006-04-04  Roland McGrath  <roland@redhat.com>
 
 	* string/Makefile (CFLAGS-inl-tester.c): New variable.
@@ -11,7 +17,7 @@
 	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
 	(generate-8bit-gap-table): Likewise.
 	($(objpfx)iso8859-7jp.stmp): Likewise.
-	Reported by S.Çağlar Onur <caglar@uludag.org.tr>.
+	Reported by S.ÃaÄlar Onur <caglar@uludag.org.tr>.
 
 2006-03-21  Joseph S. Myers  <joseph@codesourcery.com>
 
@@ -6274,7 +6280,7 @@
 2005-11-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MREMAP_FIXED): Added,
-	Patch by René Rebe <rene@exactcode.de>.
+	Patch by RenÃ© Rebe <rene@exactcode.de>.
 
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
@@ -6286,7 +6292,7 @@
 2005-11-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fchownat.c: Include alloca.h, sysdep.h.
-	Reported by René Rebe <rene@exactcode.de>.
+	Reported by RenÃ© Rebe <rene@exactcode.de>.
 
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
