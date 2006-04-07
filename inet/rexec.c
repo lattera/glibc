@@ -87,8 +87,11 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 			return (-1);
 		}
 		*ahost = ahostbuf;
-	} else
+	} else {
 		*ahost = NULL;
+		__set_errno (ENOENT);
+		return -1;
+	}
 	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
 	s = __socket(res0->ai_family, res0->ai_socktype, 0);

@@ -1,5 +1,5 @@
 /* Convert using charmaps and possibly iconv().
-   Copyright (C) 2001, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -488,7 +488,7 @@ process_fd (struct convtable *tbl, int fd, FILE *output)
      process it in one step.  */
   static char *inbuf = NULL;
   static size_t maxlen = 0;
-  char *inptr = NULL;
+  char *inptr = inbuf;
   size_t actlen = 0;
 
   while (actlen < maxlen)

@@ -1,3 +1,11 @@
+2006-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/rexec.c (rexec_af): If we have no canonical name don't
+	proceed further [Coverity CID 86].
+
+	* iconv/iconv_charmap.c (process_fd): Initialize inptr from inbuf,
+	not to NULL [Coverity CID 88].
+
 2006-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c (main): Use rawmemchr instead of strchr.
