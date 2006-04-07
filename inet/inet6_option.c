@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -251,7 +251,7 @@ inet6_option_next (cmsg, tptrp)
   const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
 
   const uint8_t *result;
-  if (tptrp == NULL)
+  if (*tptrp == NULL)
     /* This is the first call, return the first option if there is one.  */
     result = (const uint8_t *) (ip6e + 1);
   else
@@ -308,7 +308,7 @@ inet6_option_find (cmsg, tptrp, type)
   const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
 
   const uint8_t *next;
-  if (tptrp == NULL)
+  if (*tptrp == NULL)
     /* This is the first call, return the first option if there is one.  */
     next = (const uint8_t *) (ip6e + 1);
   else

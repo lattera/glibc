@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>, 1997.
 
@@ -285,11 +285,12 @@ __tsearch (const void *key, void **vrootp, __compar_fn_t compar)
       q->key = key;			/* initialize new node */
       q->red = 1;
       q->left = q->right = NULL;
+
+      if (nextp != rootp)
+	/* There may be two red edges in a row now, which we must avoid by
+	   rotating the tree.  */
+	maybe_split_for_insert (nextp, rootp, parentp, r, p_r, 1);
     }
-  if (nextp != rootp)
-    /* There may be two red edges in a row now, which we must avoid by
-       rotating the tree.  */
-    maybe_split_for_insert (nextp, rootp, parentp, r, p_r, 1);
 
   return q;
 }

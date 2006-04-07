@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999,2000,2001,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -302,7 +302,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	    {
 	      size_t act = 0;
 	      size_t max = 10;
-	      char *grouping = ignore_content ? NULL : xmalloc (max);
+	      char *grouping = xmalloc (max);
 
 	      do
 		{
@@ -321,24 +321,20 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 		    }
 
 		  if (now->tok == tok_minus1)
-		    {
-		      if (!ignore_content)
-			grouping[act++] = '\177';
-		    }
+		    grouping[act++] = '\177';
 		  else if (now->val.num == 0)
 		    {
 		      /* A value of 0 disables grouping from here on but
 			 we must not store a NUL character since this
 			 terminates the string.  Use something different
 			 which must not be used otherwise.  */
-		      if (!ignore_content)
-			grouping[act++] = '\377';
+		      grouping[act++] = '\377';
 		    }
 		  else if (now->val.num > 126)
 		    lr_error (ldfile, _("\
 %s: values for field `%s' must be smaller than 127"),
 			      "LC_NUMERIC", "grouping");
-		  else if (!ignore_content)
+		  else
 		    grouping[act++] = now->val.num;
 
 		  /* Next must be semicolon.  */
@@ -353,13 +349,10 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (now->tok != tok_eol)
 		goto err_label;
 
-	      if (!ignore_content)
-		{
-		  grouping[act++] = '\0';
+	      grouping[act++] = '\0';
 
-		  numeric->grouping = xrealloc (grouping, act);
-		  numeric->grouping_len = act;
-		}
+	      numeric->grouping = xrealloc (grouping, act);
+	      numeric->grouping_len = act;
 	    }
 	  break;
 

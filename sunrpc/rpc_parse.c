@@ -303,7 +303,9 @@ def_union (definition *defp)
   case_list *cases;
 /*  case_list *tcase; */
   case_list **tailp;
+#if 0
   int flag;
+#endif
 
   defp->def_kind = DEF_UNION;
   scan (TOK_IDENT, &tok);
@@ -323,7 +325,9 @@ def_union (definition *defp)
       cases->case_name = tok.str;
       scan (TOK_COLON, &tok);
       /* now peek at next token */
+#if 0
       flag = 0;
+#endif
       if (peekscan (TOK_CASE, &tok))
 	{
 
@@ -340,6 +344,7 @@ def_union (definition *defp)
 	    }
 	  while (peekscan (TOK_CASE, &tok));
 	}
+#if 0
       else if (flag)
 	{
 
@@ -347,6 +352,7 @@ def_union (definition *defp)
 	  tailp = &cases->next;
 	  cases = ALLOC (case_list);
 	};
+#endif
 
       get_declaration (&dec, DEF_UNION);
       cases->case_decl = dec;

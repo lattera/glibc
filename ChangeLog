@@ -1,3 +1,30 @@
+2006-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/tempname.c (__gen_tempname): Change attempts_min
+	into a macro.  Use preprocessor to decide how to initialize
+	attempts [Coverity CID 67].
+
+	* io/fts.c (fts_build): Comment out dead code [Coverity CID 68].
+
+	* sunrpc/rpc_parse.c (def_union): Comment out dead code
+	[Coverity CID 70].
+
+	* locale/programs/linereader.c (lr_token): Remove duplicate
+	handling of EOF [Coverity CID 71].
+
+	* locale/programs/ld-numeric.c (numeric_read) [case tok_grouping]:
+	We bail out early if ignore_content is set, so there is no need to
+	check it later again [Coverity CID 72].
+
+	* inet/inet6_option.c (inet6_option_find): Check *tptrp for NULL,
+	not tptrp [Coverity CID 73].
+
+	* inet/inet6_option.c (inet6_option_next): Check *tptrp for NULL,
+	not tptrp [Coverity CID 74].
+
+	* misc/tsearch.c (__tsearch): Don't rotate tree if memory
+	allocation failed [Coverity CID 78].
+
 2006-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Fix typo in
