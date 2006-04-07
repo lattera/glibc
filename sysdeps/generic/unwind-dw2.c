@@ -900,7 +900,7 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  /* ??? Hardcoded for SPARC register window configuration.
 	     At least do not do anything for archs which explicitly
 	     define a lower register number.  */
-#if DWARF_FRAME_REGISTERS < 32
+#if DWARF_FRAME_REGISTERS >= 32
 	  for (reg = 16; reg < 32; ++reg)
 	    {
 	      fs->regs.reg[reg].how = REG_SAVED_OFFSET;

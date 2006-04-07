@@ -90,7 +90,7 @@ enum
 /* Bits used in robust mutex implementation.  */
 #define FUTEX_WAITERS		0x80000000
 #define FUTEX_OWNER_DIED	0x40000000
-#define FUTEX_TID_MASK		0x1fffffff
+#define FUTEX_TID_MASK		0x3fffffff
 
 
 /* Internal variables.  */

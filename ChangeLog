@@ -1,3 +1,8 @@
+2006-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Fix typo in
+	the last change.
+
 2006-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/rexec.c (rexec_af): If we have no canonical name don't
@@ -15,7 +20,7 @@
 	* intl/explodename.c (_nl_explode_name): Likewise.
 
 	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Don't handle
-	DW_CFA_GNU_windiw_save if it obviously cannot work [Coverity CID 102].
+	DW_CFA_GNU_window_save if it obviously cannot work [Coverity CID 102].
 
 	* locale/programs/ld-address.c (address_finish): Fix conditions
 	for error messages [Coverity CID 104].
