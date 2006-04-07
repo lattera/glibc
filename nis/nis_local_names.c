@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -63,7 +63,7 @@ nis_local_directory (void)
 	__nisdomainname[0] = '\0';
       else
 	{
-	  char *cp = strchr (__nisdomainname, '\0');
+	  char *cp = rawmemchr (__nisdomainname, '\0');
 
 	  /* Missing trailing dot? */
 	  if (cp[-1] != '.')
@@ -154,7 +154,7 @@ nis_local_host (void)
 	__nishostname[0] = '\0';
       else
 	{
-	  char *cp = strchr (__nishostname, '\0');
+	  char *cp = rawmemchr (__nishostname, '\0');
 	  int len = cp - __nishostname;
 
 	  /* Hostname already fully qualified? */

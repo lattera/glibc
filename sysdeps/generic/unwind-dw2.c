@@ -1,5 +1,5 @@
 /* DWARF2 exception handling and frame unwind runtime interface routines.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005,2006
    	Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -897,12 +897,16 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_GNU_window_save:
-	  /* ??? Hardcoded for SPARC register window configuration.  */
+	  /* ??? Hardcoded for SPARC register window configuration.
+	     At least do not do anything for archs which explicitly
+	     define a lower register number.  */
+#if DWARF_FRAME_REGISTERS < 32
 	  for (reg = 16; reg < 32; ++reg)
 	    {
 	      fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	      fs->regs.reg[reg].loc.offset = (reg - 16) * sizeof (void *);
 	    }
+#endif
 	  break;
 
 	case DW_CFA_GNU_args_size:

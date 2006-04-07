@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2001,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -428,7 +428,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    return dir;
 	  }
 
-	cp = strchr (leaf, '\0');
+	cp = rawmemchr (leaf, '\0');
 	*cp++ = '.';
 	strcpy (cp, domain);
 

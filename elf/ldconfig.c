@@ -1194,7 +1194,7 @@ main (int argc, char **argv)
   if (opt_chroot)
     {
       /* Normalize the path a bit, we might need it for printing later.  */
-      char *endp = strchr (opt_chroot, '\0');
+      char *endp = rawmemchr (opt_chroot, '\0');
       while (endp > opt_chroot && endp[-1] == '/')
 	--endp;
       *endp = '\0';

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -78,7 +78,7 @@ _nl_explode_name (name, language, modifier, territory, codeset,
   if (*language == cp)
     /* This does not make sense: language has to be specified.  Use
        this entry as it is without exploding.  Perhaps it is an alias.  */
-    cp = strchr (*language, '\0');
+    cp = __rawmemchr (*language, '\0');
   else if (cp[0] != '@')
     {
       if (cp[0] == '_')

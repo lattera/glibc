@@ -1,5 +1,17 @@
 2006-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/ldconfig.c (main): Use rawmemchr instead of strchr.
+	* nis/nis_call.c (rec_dirsearch): Likewise.
+	* nis/nis_local_names.c (nis_local_host): Likewise.
+	(nis_local_directory): Likewise.
+	* intl/explodename.c (_nl_explode_name): Likewise.
+
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Don't handle
+	DW_CFA_GNU_windiw_save if it obviously cannot work [Coverity CID 102].
+
+	* locale/programs/ld-address.c (address_finish): Fix conditions
+	for error messages [Coverity CID 104].
+
 	* libio/fmemopen.c (fmemopen): Free stream memory in case of
 	invalid length [Coverity CID 106].
 
