@@ -1,3 +1,8 @@
+2006-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unwind-dw2-fde.c (end_fde_sort): Remove
+	unnecessary test for accu->linear == NULL [Coverity CID 79].
+
 2006-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/tempname.c (__gen_tempname): Change attempts_min
