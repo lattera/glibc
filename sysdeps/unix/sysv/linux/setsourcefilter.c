@@ -1,5 +1,5 @@
 /* Set source filter.  Linux version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -57,14 +57,15 @@ setsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
   memcpy (gf->gf_slist, slist, numsrc * sizeof (struct sockaddr_storage));
 
   /* We need to provide the appropriate socket level value.  */
+  int result;
   int sol = __get_sol (group->sa_family, grouplen);
   if (sol == -1)
     {
       __set_errno (EINVAL);
-      return -1;
+      result = -1;
     }
-
-  int result = __setsockopt (s, sol, MCAST_MSFILTER, gf, needed);
+  else
+    result = __setsockopt (s, sol, MCAST_MSFILTER, gf, needed);
 
   if (! use_alloca)
     {

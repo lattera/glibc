@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -46,7 +46,7 @@ nis_creategroup (const_nis_name group, unsigned int flags)
       else
 	return NIS_BADNAME;
 
-      obj = malloc (sizeof (nis_object));
+      obj = calloc (1, sizeof (nis_object));
       if (__builtin_expect (obj == NULL, 0))
 	return NIS_NOMEMORY;
 
@@ -57,7 +57,13 @@ nis_creategroup (const_nis_name group, unsigned int flags)
       obj->zo_domain = strdup (domainbuf);
       if (obj->zo_name == NULL || obj->zo_owner == NULL
 	  || obj->zo_group == NULL || obj->zo_domain == NULL)
-	return NIS_NOMEMORY;
+	{
+	  free (obj->zo_group);
+	  free (obj->zo_owner);
+	  free (obj->zo_name);
+	  free (obj);
+	  return NIS_NOMEMORY;
+	}
       obj->zo_access = __nis_default_access (NULL, 0);
       obj->zo_ttl = 60 * 60;
       obj->zo_data.zo_type = NIS_GROUP_OBJ;
@@ -66,11 +72,11 @@ nis_creategroup (const_nis_name group, unsigned int flags)
       obj->zo_data.objdata_u.gr_data.gr_members.gr_members_val = NULL;
 
       res = nis_add (buf, obj);
+      nis_free_object (obj);
       if (res == NULL)
 	return NIS_NOMEMORY;
       status = NIS_RES_STATUS (res);
       nis_freeresult (res);
-      nis_free_object (obj);
 
       return status;
     }

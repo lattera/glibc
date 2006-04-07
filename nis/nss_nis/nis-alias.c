@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -206,32 +206,29 @@ enum nss_status
 _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
 			   char *buffer, size_t buflen, int *errnop)
 {
-  enum nss_status retval;
-  int parse_res;
-  char *domain;
-  char *result;
-  int len;
-  char *p;
-  size_t namlen = strlen (name);
-  char name2[namlen + 1];
-  size_t i;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
+  size_t namlen = strlen (name);
+  char name2[namlen + 1];
+
+  char *domain;
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
   /* Convert name to lowercase.  */
+  size_t i;
   for (i = 0; i < namlen; ++i)
     name2[i] = _tolower (name[i]);
   name2[i] = '\0';
 
-  retval = yperr2nss (yp_match (domain, "mail.aliases", name2, namlen,
-				&result, &len));
+  char *result;
+  int len;
+  enum nss_status retval = yperr2nss (yp_match (domain, "mail.aliases", name2,
+						namlen, &result, &len));
 
   if (retval != NSS_STATUS_SUCCESS)
     {
@@ -247,14 +244,15 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
   alias->alias_local = 0;
-  parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen, errnop);
+  int parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen,
+					   errnop);
   if (parse_res < 1)
     {
       if (parse_res == -1)

@@ -443,6 +443,7 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 		   removed (one by one) */
 		buf2[b2len - 2] = '\0';
 		b2len -= 2;
+		nis_freeresult (result);
 		continue;
 	      }
 

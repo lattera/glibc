@@ -1,4 +1,4 @@
-/* Copyright (c) 1997,1998,1999,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (c) 1997-1999,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -41,7 +41,15 @@ __create_ib_request (const_nis_name name, unsigned int flags)
 
   /* Not of "[key=value,key=value,...],foo.." format? */
   if (cptr[0] != '[')
-    return (ibreq->ibr_name = strdup (cptr)) == NULL ? NULL : ibreq;
+    {
+      ibreq->ibr_name = strdup (cptr);
+      if (ibreq->ibr_name == NULL)
+	{
+	  free (ibreq);
+	  return NULL;
+	}
+      return ibreq;
+    }
 
   /* "[key=value,...],foo" format */
   ibreq->ibr_name = strchr (cptr, ']');
@@ -497,15 +505,7 @@ libnsl_hidden_def (nis_list)
 nis_result *
 nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
 {
-  nis_object obj;
-  nis_result *res;
-  nis_error status;
-  ib_request *ibreq;
-  size_t namelen = strlen (name);
-  char buf1[namelen + 20];
-  char buf4[namelen + 20];
-
-  res = calloc (1, sizeof (nis_result));
+  nis_result *res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
@@ -515,12 +515,18 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
       return res;
     }
 
-  if ((ibreq = __create_ib_request (name, flags)) == NULL)
+  size_t namelen = strlen (name);
+  char buf1[namelen + 20];
+  char buf4[namelen + 20];
+
+  ib_request *ibreq = __create_ib_request (name, flags);
+  if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
+  nis_object obj;
   memcpy (&obj, obj2, sizeof (nis_object));
 
   if (obj.zo_name == NULL || strlen (obj.zo_name) == 0)
@@ -543,11 +549,12 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
     }
   ibreq->ibr_obj.ibr_obj_len = 1;
 
-  if ((status = __do_niscall (ibreq->ibr_name, NIS_IBADD,
-			      (xdrproc_t) _xdr_ib_request,
-			      (caddr_t) ibreq,
-			      (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
+  nis_error status = __do_niscall (ibreq->ibr_name, NIS_IBADD,
+				   (xdrproc_t) _xdr_ib_request,
+				   (caddr_t) ibreq,
+				   (xdrproc_t) _xdr_nis_result,
+				   (caddr_t) res, 0, NULL);
+  if (status  != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);

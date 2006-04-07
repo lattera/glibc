@@ -531,7 +531,7 @@ generate_guard (const char *pathname)
 
   filename = strrchr (pathname, '/');	/* find last component */
   filename = ((filename == NULL) ? pathname : filename + 1);
-  guard = strdup (filename);
+  guard = extendfile (filename, "_H_RPCGEN");
   /* convert to upper case */
   tmp = guard;
   while (*tmp)
@@ -541,7 +541,6 @@ generate_guard (const char *pathname)
       tmp++;
     }
 
-  guard = extendfile (guard, "_H_RPCGEN");
   return guard;
 }
 
@@ -661,6 +660,7 @@ h_output (const char *infile, const char *define, int extend,
     }
 
   fprintf (fout, "\n#endif /* !_%s */\n", guard);
+  free (guard);
   close_input ();
   close_output (outfilename);
 }
@@ -946,6 +946,8 @@ clnt_output (const char *infile, const char *define, int extend,
   close_output (outfilename);
 }
 
+static const char space[] = " ";
+
 static char *
 file_name (const char *file, const char *ext)
 {
@@ -954,16 +956,17 @@ file_name (const char *file, const char *ext)
 
   if (access (temp, F_OK) != -1)
     return (temp);
-  else
-    return ((char *) " ");
+
+  free (temp);
+  return (char *) space;
 }
 
 static void
 mkfile_output (struct commandline *cmd)
 {
   char *mkfilename;
-  const char *clientname, *clntname, *xdrname, *hdrname;
-  const char *servername, *svcname, *servprogname, *clntprogname;
+  char *clientname, *clntname, *xdrname, *hdrname;
+  char *servername, *svcname, *servprogname, *clntprogname;
 
   svcname = file_name (cmd->infile, "_svc.c");
   clntname = file_name (cmd->infile, "_clnt.c");
@@ -977,8 +980,8 @@ mkfile_output (struct commandline *cmd)
     }
   else
     {
-      servername = " ";
-      clientname = " ";
+      servername = (char *) space;
+      clientname = (char *) space;
     }
   servprogname = extendfile (cmd->infile, "_server");
   clntprogname = extendfile (cmd->infile, "_client");
@@ -988,6 +991,8 @@ mkfile_output (struct commandline *cmd)
       char *cp, *temp;
 
       mkfilename = alloc (strlen ("Makefile.") + strlen (cmd->infile) + 1);
+      if (mkfilename == NULL)
+	abort ();
       temp = rindex (cmd->infile, '.');
       cp = stpcpy (mkfilename, "Makefile.");
       strncpy (cp, cmd->infile, (temp - cmd->infile));
@@ -1046,6 +1051,23 @@ $(LDLIBS) \n\n");
   f_print (fout, "clean:\n\t $(RM) core $(TARGETS) $(OBJECTS_CLNT) \
 $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n");
   close_output (mkfilename);
+
+  free (clntprogname);
+  free (servprogname);
+  if (servername != space)
+    free (servername);
+  if (clientname != space)
+    free (clientname);
+  if (mkfilename != (char *) cmd->outfile)
+    free (mkfilename);
+  if (svcname != space)
+    free (svcname);
+  if (clntname != space)
+    free (clntname);
+  if (xdrname != space)
+    free (xdrname);
+  if (hdrname != space)
+    free (hdrname);
 }
 
 /*

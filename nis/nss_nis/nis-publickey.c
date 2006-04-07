@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -73,6 +73,7 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 	*p = 0;
       strncpy (pkey, result, HEXKEYBYTES + 1);
       pkey[HEXKEYBYTES] = '\0';
+      free (result);
     }
   return NSS_STATUS_SUCCESS;
 }
@@ -115,20 +116,20 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
   if (result != NULL)
     {
       char *p = strchr (result, ':');
-      if (p == NULL)
-	return NSS_STATUS_SUCCESS;
+      if (p != NULL)
+	{
+	  ++p;
+	  strncpy (buf, p, 2 * (HEXKEYBYTES + 1));
+	  buf[2 * HEXKEYBYTES + 1] = '\0';
+	  if (xdecrypt (buf, passwd)
+	      && memcmp (buf, &(buf[HEXKEYBYTES]), KEYCHECKSUMSIZE) == 0)
+	    {
+	      buf[HEXKEYBYTES] = '\0';
+	      strcpy (skey, buf);
+	    }
+	}
 
-      ++p;
-      strncpy (buf, p, 2 * (HEXKEYBYTES + 1));
-      buf[2 * HEXKEYBYTES + 1] = '\0';
-      if (!xdecrypt (buf, passwd))
-	return NSS_STATUS_SUCCESS;
-
-      if (memcmp (buf, &(buf[HEXKEYBYTES]), KEYCHECKSUMSIZE) != 0)
-	return NSS_STATUS_SUCCESS;
-
-      buf[HEXKEYBYTES] = '\0';
-      strcpy (skey, buf);
+      free (result);
     }
   return NSS_STATUS_SUCCESS;
 }

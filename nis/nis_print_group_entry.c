@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -45,12 +45,16 @@ nis_print_group_entry (const_nis_name group)
 	}
       res = nis_lookup (buf, FOLLOW_LINKS | EXPAND_NAME);
 
-      if (NIS_RES_STATUS(res) != NIS_SUCCESS)
+      if (res == NULL)
 	return;
 
-      if ((NIS_RES_NUMOBJ (res) != 1) ||
-	  (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
-	return;
+      if (NIS_RES_STATUS (res) != NIS_SUCCESS
+	  || NIS_RES_NUMOBJ (res) != 1
+	  || __type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ)
+	{
+	  nis_freeresult (res);
+	  return;
+	}
 
       char *mem_exp[NIS_RES_NUMOBJ (res)];
       char *mem_imp[NIS_RES_NUMOBJ (res)];

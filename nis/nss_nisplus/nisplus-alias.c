@@ -304,10 +304,18 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
     }
 
   if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
-    return niserr2nss (result->status);
+    {
+      enum nss_status status = niserr2nss (result->status);
+      nis_freeresult (result);
+      return status;
+    }
 
   parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
 					   buffer, buflen, errnop);
+
+  /* We do not need the lookup result anymore.  */
+  nis_freeresult (result);
+
   if (__builtin_expect (parse_res < 1, 0))
     {
       __set_errno (olderr);

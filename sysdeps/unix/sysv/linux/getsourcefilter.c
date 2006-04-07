@@ -1,5 +1,5 @@
 /* Get source filter.  Linux version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -112,23 +112,27 @@ getsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
   gf->gf_numsrc = *numsrc;
 
   /* We need to provide the appropriate socket level value.  */
+  int result;
   int sol = __get_sol (group->sa_family, grouplen);
   if (sol == -1)
     {
       __set_errno (EINVAL);
-      return -1;
+      result = -1;
     }
-
-  int result = __getsockopt (s, sol, MCAST_MSFILTER, gf, &needed);
-
-  /* If successful, copy the results to the places the caller wants
-     them in.  */
-  if (result == 0)
+  else
     {
-      *fmode = gf->gf_fmode;
-      memcpy (slist, gf->gf_slist,
-	      MIN (*numsrc, gf->gf_numsrc) * sizeof (struct sockaddr_storage));
-      *numsrc = gf->gf_numsrc;
+      result = __getsockopt (s, sol, MCAST_MSFILTER, gf, &needed);
+
+      /* If successful, copy the results to the places the caller wants
+	 them in.  */
+      if (result == 0)
+	{
+	  *fmode = gf->gf_fmode;
+	  memcpy (slist, gf->gf_slist,
+		  MIN (*numsrc, gf->gf_numsrc)
+		  * sizeof (struct sockaddr_storage));
+	  *numsrc = gf->gf_numsrc;
+	}
     }
 
   if (! use_alloca)

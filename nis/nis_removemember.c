@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1998,1999,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -68,7 +68,10 @@ nis_removemember (const_nis_name member, const_nis_name group)
 	calloc (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len,
 		sizeof (char *));
       if (newmem == NULL)
-	return NIS_NOMEMORY;
+	{
+	  nis_freeresult (res);
+	  return NIS_NOMEMORY;
+	}
 
       k = NIS_RES_OBJECT (res)[0].GR_data.gr_members.gr_members_len;
       j = 0;
@@ -96,6 +99,7 @@ nis_removemember (const_nis_name member, const_nis_name group)
       if (newp == NULL)
 	{
 	  free (newmem);
+	  nis_freeresult (res);
 	  return NIS_NOMEMORY;
 	}
       newmem = newp;

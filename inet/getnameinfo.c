@@ -403,25 +403,16 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (!(flags & NI_NUMERICSERV))
 	  {
 	    struct servent *s, ts;
-	    while (__getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
-				      ((flags & NI_DGRAM) ? "udp" : "tcp"),
-				      &ts, tmpbuf, tmpbuflen, &s))
+	    int e;
+	    while ((e = __getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
+					   ((flags & NI_DGRAM)
+					    ? "udp" : "tcp"),
+					   &ts, tmpbuf, tmpbuflen, &s)))
 	      {
-		if (herrno == NETDB_INTERNAL)
-		  {
-		    if (errno == ERANGE)
-		      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
-					      2 * tmpbuflen);
-		    else
-		      {
-			__set_errno (serrno);
-			return EAI_SYSTEM;
-		      }
-		  }
+		if (e == ERANGE)
+		  tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
 		else
-		  {
-		    break;
-		  }
+		  break;
 	      }
 	    if (s)
 	      {

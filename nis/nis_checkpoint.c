@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -24,7 +24,7 @@
 #include "nis_intern.h"
 
 nis_result *
-nis_checkpoint(const_nis_name dirname)
+nis_checkpoint (const_nis_name dirname)
 {
   nis_result *res;
 
@@ -48,7 +48,6 @@ nis_checkpoint(const_nis_name dirname)
       if (__type_of (NIS_RES_OBJECT (res2)) != NIS_DIRECTORY_OBJ)
 	{
 	  nis_freeresult (res2);
-	  nis_freeresult (res);
 	  NIS_RES_STATUS (res) = NIS_INVALIDOBJ;
 	  return res;
 	}

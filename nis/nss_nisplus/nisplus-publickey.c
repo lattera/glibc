@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2001, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1999,2001,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -394,6 +394,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   if (*uidp == 0)
     {
       syslog (LOG_ERR, _("netname2user: should not have uid 0"));
+      nis_freeresult (res);
       return NSS_STATUS_NOTFOUND;
     }
 

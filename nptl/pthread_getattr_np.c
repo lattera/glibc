@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -83,51 +83,55 @@ pthread_getattr_np (thread_id, attr)
       if (fp == NULL)
 	ret = errno;
       /* We need the limit of the stack in any case.  */
-      else if (getrlimit (RLIMIT_STACK, &rl) != 0)
-	ret = errno;
       else
 	{
-	  /* We need no locking.  */
-	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-	  /* Until we found an entry (which should always be the case)
-	     mark the result as a failure.  */
-	  ret = ENOENT;
-
-	  char *line = NULL;
-	  size_t linelen = 0;
-	  uintptr_t last_to = 0;
-
-	  while (! feof_unlocked (fp))
+	  if (getrlimit (RLIMIT_STACK, &rl) != 0)
+	    ret = errno;
+	  else
 	    {
-	      if (__getdelim (&line, &linelen, '\n', fp) <= 0)
-		break;
+	      /* We need no locking.  */
+	      __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
-	      uintptr_t from;
-	      uintptr_t to;
-	      if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) != 2)
-		continue;
-	      if (from <= (uintptr_t) __libc_stack_end
-		  && (uintptr_t) __libc_stack_end < to)
+	      /* Until we found an entry (which should always be the case)
+		 mark the result as a failure.  */
+	      ret = ENOENT;
+
+	      char *line = NULL;
+	      size_t linelen = 0;
+	      uintptr_t last_to = 0;
+
+	      while (! feof_unlocked (fp))
 		{
-		  /* Found the entry.  Now we have the info we need.  */
-		  iattr->stacksize = rl.rlim_cur;
-		  iattr->stackaddr = (void *) to;
+		  if (__getdelim (&line, &linelen, '\n', fp) <= 0)
+		    break;
 
-		  /* The limit might be too high.  */
-		  if ((size_t) iattr->stacksize
-		      > (size_t) iattr->stackaddr - last_to)
-		    iattr->stacksize = (size_t) iattr->stackaddr - last_to;
+		  uintptr_t from;
+		  uintptr_t to;
+		  if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) != 2)
+		    continue;
+		  if (from <= (uintptr_t) __libc_stack_end
+		      && (uintptr_t) __libc_stack_end < to)
+		    {
+		      /* Found the entry.  Now we have the info we need.  */
+		      iattr->stacksize = rl.rlim_cur;
+		      iattr->stackaddr = (void *) to;
 
-		  /* We succeed and no need to look further.  */
-		  ret = 0;
-		  break;
+		      /* The limit might be too high.  */
+		      if ((size_t) iattr->stacksize
+			  > (size_t) iattr->stackaddr - last_to)
+			iattr->stacksize = (size_t) iattr->stackaddr - last_to;
+
+		      /* We succeed and no need to look further.  */
+		      ret = 0;
+		      break;
+		    }
+		  last_to = to;
 		}
-	      last_to = to;
+
+	      free (line);
 	    }
 
 	  fclose (fp);
-	  free (line);
 	}
     }
 

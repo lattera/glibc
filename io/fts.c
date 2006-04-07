@@ -93,7 +93,8 @@ fts_open(argv, options, compar)
 	register FTS *sp;
 	register FTSENT *p, *root;
 	register int nitems;
-	FTSENT *parent, *tmp;
+	FTSENT *parent = NULL;
+	FTSENT *tmp;
 
 	/* Options check. */
 	if (options & ~FTS_OPTIONMASK) {
@@ -124,9 +125,11 @@ fts_open(argv, options, compar)
 		goto mem1;
 
 	/* Allocate/initialize root's parent. */
-	if ((parent = fts_alloc(sp, "", 0)) == NULL)
-		goto mem2;
-	parent->fts_level = FTS_ROOTPARENTLEVEL;
+	if (*argv != NULL) {
+		if ((parent = fts_alloc(sp, "", 0)) == NULL)
+			goto mem2;
+		parent->fts_level = FTS_ROOTPARENTLEVEL;
+	  }
 
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {

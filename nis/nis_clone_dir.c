@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,15 +29,24 @@ nis_clone_directory (const directory_obj *src, directory_obj *dest)
   char *addr;
   unsigned int size;
   XDR xdrs;
-  directory_obj *res;
 
   if (src == NULL)
-    return (NULL);
+    return NULL;
 
   size = xdr_sizeof ((xdrproc_t)_xdr_directory_obj, (char *)src);
   if ((addr = calloc(1, size)) == NULL)
     return NULL;
 
+  xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
+  if (!_xdr_directory_obj (&xdrs, (directory_obj *)src))
+    {
+      xdr_destroy (&xdrs);
+      free (addr);
+      return NULL;
+    }
+  xdr_destroy (&xdrs);
+
+  directory_obj *res;
   if (dest == NULL)
     {
       if ((res = calloc (1, sizeof (directory_obj))) == NULL)
@@ -49,18 +58,12 @@ nis_clone_directory (const directory_obj *src, directory_obj *dest)
   else
     res = dest;
 
-  xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
-  if (!_xdr_directory_obj (&xdrs, (directory_obj *)src))
-    {
-      xdr_destroy (&xdrs);
-      free (addr);
-      return NULL;
-    }
-  xdr_destroy (&xdrs);
   xdrmem_create (&xdrs, addr, size, XDR_DECODE);
   if (!_xdr_directory_obj (&xdrs, res))
     {
       xdr_destroy (&xdrs);
+      if (res != dest)
+	free (res);
       free (addr);
       return NULL;
     }

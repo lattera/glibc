@@ -1,3 +1,8 @@
+2006-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_getattr_np.c (pthread_getattr_np): Close fp if getrlimit
+	fails [Coverity CID 105].
+
 2006-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Add nonnull attributes.

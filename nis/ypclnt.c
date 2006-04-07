@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2004, 2005
+/* Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
@@ -955,16 +955,22 @@ yp_update (char *domain, char *map, unsigned ypop,
   args.update_args.datum.yp_buf_len = datalen;
   args.update_args.datum.yp_buf_val = data;
 
-  if ((r = yp_master (domain, map, &master)) != 0)
+  if ((r = yp_master (domain, map, &master)) != YPERR_SUCCESS)
     return r;
 
   if (!host2netname (servername, master, domain))
     {
       fputs (_("yp_update: cannot convert host to netname\n"), stderr);
+      free (master);
       return YPERR_YPERR;
     }
 
-  if ((clnt = clnt_create (master, YPU_PROG, YPU_VERS, "tcp")) == NULL)
+  clnt = clnt_create (master, YPU_PROG, YPU_VERS, "tcp");
+
+  /* We do not need the string anymore.  */
+  free (master);
+
+  if (clnt == NULL)
     {
       clnt_pcreateerror ("yp_update: clnt_create");
       return YPERR_RPC;

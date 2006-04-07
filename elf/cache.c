@@ -1,5 +1,4 @@
-/* Copyright (C) 1999,2000,2001,2002,2003,2005
-	Free Software Foundation, Inc.
+/* Copyright (C) 1999-2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -421,7 +420,7 @@ save_cache (const char *cache_name)
   if (opt_format != 2)
     {
       if (write (fd, file_entries, file_entries_size)
-	  != (ssize_t)file_entries_size)
+	  != (ssize_t) file_entries_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
   if (opt_format != 0)
@@ -430,15 +429,16 @@ save_cache (const char *cache_name)
       if (opt_format != 2)
 	{
 	  char zero[pad];
-	  if (write (fd, zero, pad) != (ssize_t)pad)
+	  memset (zero, '\0', pad);
+	  if (write (fd, zero, pad) != (ssize_t) pad)
 	    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
 	}
       if (write (fd, file_entries_new, file_entries_new_size)
-	  != (ssize_t)file_entries_new_size)
+	  != (ssize_t) file_entries_new_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
 
-  if (write (fd, strings, total_strlen) != (ssize_t)total_strlen)
+  if (write (fd, strings, total_strlen) != (ssize_t) total_strlen)
     error (EXIT_FAILURE, errno, _("Writing of cache data failed."));
 
   close (fd);
@@ -455,6 +455,7 @@ save_cache (const char *cache_name)
 	   cache_name);
 
   /* Free all allocated memory.  */
+  free (file_entries_new);
   free (file_entries);
   free (strings);
 

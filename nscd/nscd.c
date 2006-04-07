@@ -487,10 +487,10 @@ write_pid (const char *file)
     return -1;
 
   fprintf (fp, "%d\n", getpid ());
-  if (fflush (fp) || ferror (fp))
-    return -1;
+
+  int result = fflush (fp) || ferror (fp) ? -1 : 0;
 
   fclose (fp);
 
-  return 0;
+  return result;
 }

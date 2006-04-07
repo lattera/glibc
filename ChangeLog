@@ -1,3 +1,116 @@
+2006-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fmemopen.c (fmemopen): Free stream memory in case of
+	invalid length [Coverity CID 106].
+
+	* nss/nss_files/files-key.c (search): Close stream before
+	successful return [Coverity CID 107].
+
+	* io/fts.c (fts_open): Don't allocate parent if *argv==NULL
+	[Coverity CID 108].
+
+	* sunrpc/rpc_cout.c (inline_struct): Free sizestr after use
+	[Coverity CID 110, 109].
+
+	* sunrpc/rpc_scan.c (docppline): Free file string if it is not
+	going to be used [Coverity CID 111].
+
+	* sysdeps/unix/sysv/linux/getsourcefilter.c (getsourcefilter): Free
+	memory if socket level value cannot be retrieved [Coverity CID 112].
+
+	* nis/nis_clone_dir.c (nis_clone_directory): Free all memory in
+	error case [Coverity CID 114].
+
+	* nis/nis_clone_res.c (nis_clone_result): Free all memory in the
+	error cases [Coverity CID 115].
+
+	* sunrpc/rpc_parse.c (get_definition): Free defp if tok ==
+	TOK_EOF [Coverity CID 116].
+
+	* sysdeps/unix/sysv/linux/setsourcefilter.c (setsourcefilter): Free
+	memory if socket level value cannot be retrieved [Coverity CID 117].
+
+	* elf/cache.c (save_cache): Initialize pad to avoid writing
+	uninitialized data to disk.
+
+	* elf/cache.c (save_cache): Free file_entries_new [Coverity CID 118].
+
+	* intl/finddomain.c (_nl_find_domain): Avoid strdup of expand
+	locale name, use strdupa.  Remove free call [Coverity CID 119].
+
+	* sunrpc/rpc_main.c (generate_guard): Avoid extra allocation and
+	the resulting leak [Coverity CID 121].
+
+	* sunrpc/rpc_main.c (mkfile_output): Free all allocated memory
+	[Coverity CID 122].
+
+	* sunrpc/rpc_main.c (h_output): Free guard after we are done
+	[Coverity CID 123].
+
+	* sunrpc/svc_udp.c (cache_set): Free victim if newbuf allocation
+	fails [Coverity CID 126].
+
+	* sunrpc/svc_udp.c (svcudp_enablecache): Free memory in error
+	cases [Coverity CID 127].
+
+	* nis/nis_table.c (__create_ib_request): Free ibreq in case strdup
+	fails [Coverity CID 128].
+
+	* nis/nis_getservlist.c (nis_getservlist): Free all memory in case
+	of an error [Coverity CID 130, 129].
+
+	* nis/nis_print_group_entry.c (nis_print_group_entry): If
+	nis_lookup call failed, return.  Free lookup result in error
+	cases [Coverity CID 131].
+
+	* nis/nis_removemember.c (nis_removemember): Free all memory in
+	error cases [Coverity CID 132].
+
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Always free lookup result [Coverity CID 134].
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r):
+	Always free lookup result [Coverity CID 135].
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_getntohost_r):
+	Always free lookup result [Coverity CID 136].
+
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Before retrying, free old result [Coverity CID 137].
+
+	* nis/nss_nisplus/nisplus-publickey.c (_nss_nisplus_netname2user):
+	Free res in case UID is zero [Coverity CID 138].
+
+	* nis/ypclnt.c (yp_update): Always free master string
+	[Coverity CID 140].
+
+	* nis/nis_creategroup.c (nis_creategroup): Free all memory in
+	error cases [Coverity CID 143, 142, 141].
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey): Free result
+	if yp_match call succeeded [Coverity CID 155].
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getsecretkey): Free string
+	allocated in yp_match at all times [Coverity CID 157, 156].
+
+	* nscd/nscd.c (write_pid): Close stream also if writing failed
+	[Coverity CID 165].
+
+	* nis/nis_table.c (nis_add_entry): Move test for NULL parameter
+	ahead of first use [Coverity CID 167].
+
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Move test
+	for NULL parameter ahead of first use [Coverity CID 168].
+
+	* intl/finddomain.c (_nl_find_domain): We never return NULL if we
+	found the locale [Coverity CID 169].
+
+	* inet/getnameinfo.c (getnameinfo): __getservbyport_r does not set
+	herrno [Coverity CID 178].
+
+	* nis/nis_checkpoint.c (nis_checkpoint): Don't access and returned
+	freed object [Coverity CID 182].
+
 2006-04-05  Alan Modra  <amodra@bigpond.net.au>
 	    Jakub Jelinek  <jakub@redhat.com>
 
