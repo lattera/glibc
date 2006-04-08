@@ -1,3 +1,14 @@
+2006-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fts.c (fts_build): Call fts_lfree in the two error cases
+	after the loop [Coverity CID 187].
+
+	* nis/nis_getservlist.c (nis_getservlist): Also free lookup result
+	in error case [Coverity CID 189].
+
+	* nis/nis_getservlist.c (nis_getservlist): One more free call
+	needed [Coverity CID 190].
+
 2006-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/unwind-dw2-fde.c (end_fde_sort): Remove
