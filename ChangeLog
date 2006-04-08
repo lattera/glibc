@@ -1,5 +1,9 @@
 2006-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_ping.c: Remove unnecessary conditionals before
+	nis_freeresult calls.
+	* nis/nis_ismember.c: Likewise.
+
 	* elf/rtld.c (process_envvars): Fix handling of LD_POINTER_GUARD.
 	Reported by genesh@comcast.net.
 

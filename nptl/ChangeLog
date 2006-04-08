@@ -1,3 +1,10 @@
+2006-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (sigcancel_handler): Compare with correct PID even if the
+	thread is in the middle of a fork call.
+	(sighandler_setxid): Likewise.
+	Reported by Suzuki K P <suzuki@in.ibm.com> .
+
 2006-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthreadP.h (FUTEX_TID_MASK): Sync with kernel.
