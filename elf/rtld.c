@@ -2624,7 +2624,7 @@ process_envvars (enum mode *modep)
 	    }
 
 	  if (memcmp (envline, "POINTER_GUARD", 13) == 0)
-	    GLRO(dl_pointer_guard) = envline[14] == '0';
+	    GLRO(dl_pointer_guard) = envline[14] != '0';
 	  break;
 
 	case 14:
