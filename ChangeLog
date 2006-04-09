@@ -1,5 +1,7 @@
 2006-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/inet_ntoa.c: Rewrite to use TLS instead of TSD.
+
 	* nis/nss_nis/nis-alias.c: Optimize use of yperr2nss.  Avoid calling
 	it for YPERR_SUCCESS.  Minor cleanups.  Add __builtin_expect.
 	* nis/nss_nis/nis-ethers.c: Likewise.
