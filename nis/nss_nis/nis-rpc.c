@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1998,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2000,2002,2003,2004,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -54,7 +55,7 @@ static int
 saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
 {
-  intern_t *intern = (intern_t *)indata;
+  intern_t *intern = (intern_t *) indata;
 
   if (instatus != YP_TRUE)
     return 1;
@@ -158,7 +159,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
         ++p;
 
       parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen, errnop);
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	return NSS_STATUS_TRYAGAIN;
       data->next = data->next->next;
     }
@@ -186,21 +187,18 @@ enum nss_status
 _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 			 char *buffer, size_t buflen, int *errnop)
 {
-  intern_t data = {NULL, NULL};
-  enum nss_status status;
-  int found;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  status = internal_nis_setrpcent (&data);
-  if (status != NSS_STATUS_SUCCESS)
+  intern_t data = { NULL, NULL };
+  enum nss_status status = internal_nis_setrpcent (&data);
+  if (__builtin_expect (status != NSS_STATUS_SUCCESS, 0))
     return status;
 
-  found = 0;
+  int found = 0;
   while (!found &&
          ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop,
 					      &data)) == NSS_STATUS_SUCCESS))
@@ -226,53 +224,52 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   internal_nis_endrpcent (&data);
 
-  if (!found && status == NSS_STATUS_SUCCESS)
+  if (__builtin_expect (!found && status == NSS_STATUS_SUCCESS, 0))
     return NSS_STATUS_NOTFOUND;
-  else
-    return status;
+
+  return status;
 }
 
 enum nss_status
 _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 			   char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, nlen, parse_res;
-  char buf[32];
-
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%d", number);
+  char buf[32];
+  int nlen = snprintf (buf, sizeof (buf), "%d", number);
 
-  retval = yperr2nss (yp_match (domain, "rpc.bynumber", buf,
-				 nlen, &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "rpc.bynumber", buf, nlen, &result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen, errnop);
-
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_rpcent (p, rpc, (void  *) buffer, buflen,
+					   errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

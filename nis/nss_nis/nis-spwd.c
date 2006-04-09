@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2001,2002,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -69,48 +69,53 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 			 int *errnop)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain, *result, *outkey;
-  int len, keylen, parse_res;
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* Get the next entry until we found a correct one. */
+  int parse_res;
   do
     {
-      enum nss_status retval;
-      char *p;
+      char *result;
+      char *outkey;
+      int len;
+      int keylen;
+      int yperr;
 
       if (new_start)
-        retval = yperr2nss (yp_first (domain, "shadow.byname",
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_first (domain, "shadow.byname", &outkey, &keylen, &result,
+			  &len);
       else
-        retval = yperr2nss ( yp_next (domain, "shadow.byname",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_next (domain, "shadow.byname", oldkey, oldkeylen, &outkey,
+			 &keylen, &result, &len);
 
-      if (retval != NSS_STATUS_SUCCESS)
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
         {
+	  enum nss_status retval = yperr2nss (yperr);
+
 	  if (retval == NSS_STATUS_TRYAGAIN)
 	    *errnop = errno;
           return retval;
         }
 
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
         {
           free (result);
 	  *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
 
-      p = strncpy (buffer, result, len);
+      char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_spent (p, sp, data, buflen, errnop);
-      if (parse_res == -1)
+      parse_res = _nss_files_parse_spent (p, sp, (void *) buffer, buflen,
+					  errnop);
+      if (__builtin_expect  (parse_res == -1, 0))
 	{
 	  free (outkey);
 	  *errnop = ERANGE;
@@ -146,45 +151,46 @@ enum nss_status
 _nss_nis_getspnam_r (const char *name, struct spwd *sp,
 		     char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, parse_res;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  retval = yperr2nss (yp_match (domain, "shadow.byname", name,
-				strlen (name), &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "shadow.byname", name, strlen (name), &result,
+			&len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_spent (p, sp, data, buflen, errnop);
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_spent (p, sp, (void *) buffer, buflen,
+					  errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

@@ -42,7 +42,7 @@ __new_sem_trywait:
 	leal	-1(%eax), %edx
 	LOCK
 	cmpxchgl %edx, (%ecx)
-	jne,pn	2b
+	jne	2b
 	xorl	%eax, %eax
 	ret
 

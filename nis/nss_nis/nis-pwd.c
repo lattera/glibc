@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2001,2002,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -71,31 +71,31 @@ static enum nss_status
 internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 			 int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
   char *domain;
-  int parse_res;
-
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* Get the next entry until we found a correct one. */
+  int parse_res;
   do
     {
-      enum nss_status retval;
-      char *result, *outkey, *result2, *p;
-      int len, keylen, len2;
-      size_t namelen;
+      char *result;
+      char *outkey;
+      int len;
+      int keylen;
+      int yperr;
 
       if (new_start)
-        retval = yperr2nss (yp_first (domain, "passwd.byname",
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_first (domain, "passwd.byname", &outkey, &keylen, &result,
+			  &len);
       else
-        retval = yperr2nss ( yp_next (domain, "passwd.byname",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_next (domain, "passwd.byname", oldkey, oldkeylen, &outkey,
+			 &keylen, &result, &len);
 
-      if (retval != NSS_STATUS_SUCCESS)
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
         {
+	  enum nss_status retval = yperr2nss (yperr);
+
           if (retval == NSS_STATUS_TRYAGAIN)
             *errnop = errno;
           return retval;
@@ -103,7 +103,10 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 
       /* Check for adjunct style secret passwords.  They can be
 	 recognized by a password starting with "##".  */
-      p = strchr (result, ':');
+      char *p = strchr (result, ':');
+      size_t namelen;
+      char *result2;
+      int len2;
       if (p != NULL	/* This better should be true in all cases.  */
 	  && p[1] == '#' && p[2] == '#'
 	  && (namelen = p - result,
@@ -128,7 +131,8 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	    }
 
 	  restlen = len - (p - result);
-	  if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+	  if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
+					  + restlen + 2) > buflen, 0))
 	    {
 	      free (result2);
 	      free (result);
@@ -147,7 +151,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
       else
 	{
 	non_adjunct:
-	  if ((size_t) (len + 1) > buflen)
+	  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	    {
 	      free (result);
 	      *errnop = ERANGE;
@@ -162,8 +166,9 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
-      if (parse_res == -1)
+      parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
+					  errnop);
+      if (__builtin_expect (parse_res == -1, 0))
 	{
 	  free (outkey);
 	  *errnop = ERANGE;
@@ -199,28 +204,26 @@ enum nss_status
 _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 		     char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *result2, *p;
-  int len, len2, parse_res;
-  size_t namelen;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  namelen = strlen (name);
+  size_t namelen = strlen (name);
 
-  retval = yperr2nss (yp_match (domain, "passwd.byname", name,
-				namelen, &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "passwd.byname", name, namelen, &result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -228,7 +231,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   /* Check for adjunct style secret passwords.  They can be recognized
      by a password starting with "##".  */
-  p = strchr (result, ':');
+  char *result2;
+  int len2;
+  char *p = strchr (result, ':');
   if (p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && yp_match (domain, "passwd.adjunct.byname", name, namelen,
@@ -238,7 +243,6 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 	 therein into original result.  */
       char *encrypted = strchr (result2, ':');
       char *endp;
-      size_t restlen;
 
       if (encrypted == NULL
 	  || (endp = strchr (++encrypted, ':')) == NULL
@@ -251,8 +255,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 	  goto non_adjunct;
 	}
 
-      restlen = len - (p - result);
-      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+      size_t restlen = len - (p - result);
+      if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
+				      + restlen + 2) > buflen, 0))
 	{
 	  free (result2);
 	  free (result);
@@ -271,7 +276,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -286,8 +291,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
+					  errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
@@ -302,23 +308,21 @@ enum nss_status
 _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 		     char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p, *result2;
-  int len, nlen, parse_res, len2;
-  char buf[32];
-  size_t namelen;
-
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%lu", (unsigned long int) uid);
+  char buf[32];
+  int nlen = snprintf (buf, sizeof (buf), "%lu", (unsigned long int) uid);
 
-  retval = yperr2nss (yp_match (domain, "passwd.byuid", buf,
-				nlen, &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "passwd.byuid", buf, nlen, &result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -326,7 +330,10 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   /* Check for adjunct style secret passwords.  They can be recognized
      by a password starting with "##".  */
-  p = strchr (result, ':');
+  char *result2;
+  int len2;
+  size_t namelen;
+  char *p = strchr (result, ':');
   if (p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && (namelen = p - result,
@@ -351,7 +358,8 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 	}
 
       restlen = len - (p - result);
-      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+      if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
+				      + restlen + 2) > buflen, 0))
 	{
 	  free (result2);
 	  free (result);
@@ -370,7 +378,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -385,8 +393,9 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
+					  errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;

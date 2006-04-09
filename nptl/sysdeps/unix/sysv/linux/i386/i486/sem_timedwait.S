@@ -49,12 +49,12 @@ sem_timedwait:
 
 	movl	(%ecx), %eax
 2:	testl	%eax, %eax
-	je,pn	1f
+	je	1f
 
 	leal	-1(%eax), %edx
 	LOCK
 	cmpxchgl %edx, (%ecx)
-	jne,pn	2b
+	jne	2b
 
 	xorl	%eax, %eax
 	ret
@@ -117,7 +117,7 @@ sem_timedwait:
 	call	__pthread_disable_asynccancel
 
 	testl	%esi, %esi
-	je,pt	9f
+	je	9f
 	cmpl	$-EWOULDBLOCK, %esi
 	jne	3f
 
@@ -128,7 +128,7 @@ sem_timedwait:
 	leal	-1(%eax), %ecx
 	LOCK
 	cmpxchgl %ecx, (%ebx)
-	jne,pn	8b
+	jne	8b
 
 	addl	$12, %esp
 	cfi_adjust_cfa_offset(-12)

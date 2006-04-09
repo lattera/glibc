@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -131,17 +131,11 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 			   int af, int flags)
 {
   char *domain;
-  char *result;
-  int len, parse_res;
-  char *outkey;
-  int keylen;
-  struct parser_data *data = (void *) buffer;
-  size_t linebuflen = buffer + buflen - data->linebuffer;
-
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  if (buflen < sizeof *data + 1)
+  struct parser_data *data = (void *) buffer;
+  if (__builtin_expect (buflen < sizeof *data + 1, 0))
     {
       *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
@@ -149,21 +143,26 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
     }
 
   /* Get the next entry until we found a correct one. */
+  const size_t linebuflen = buffer + buflen - data->linebuffer;
+  int parse_res;
   do
     {
-      enum nss_status retval;
-      char *p;
-
+      char *result;
+      int len;
+      char *outkey;
+      int keylen;
+      int yperr;
       if (new_start)
-        retval = yperr2nss (yp_first (domain, "hosts.byname",
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_first (domain, "hosts.byname", &outkey, &keylen, &result,
+			  &len);
       else
-        retval = yperr2nss ( yp_next (domain, "hosts.byname",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_next (domain, "hosts.byname", oldkey, oldkeylen, &outkey,
+			 &keylen, &result, &len);
 
-      if (retval != NSS_STATUS_SUCCESS)
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
         {
+	  enum nss_status retval = yperr2nss (yperr);
+
 	  switch (retval)
 	    {
 	    case NSS_STATUS_TRYAGAIN:
@@ -180,7 +179,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	  return retval;
 	}
 
-      if ((size_t) (len + 1) > linebuflen)
+      if (__builtin_expect ((size_t) (len + 1) > linebuflen, 0))
         {
           free (result);
 	  *h_errnop = NETDB_INTERNAL;
@@ -188,14 +187,14 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
           return NSS_STATUS_TRYAGAIN;
         }
 
-      p = strncpy (data->linebuffer, result, len);
+      char *p = strncpy (data->linebuffer, result, len);
       data->linebuffer[len] = '\0';
       while (isspace (*p))
 	++p;
       free (result);
 
       parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	{
 	  free (outkey);
 	  *h_errnop = NETDB_INTERNAL;
@@ -235,11 +234,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *h_errnop, int flags)
 {
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, parse_res;
   struct parser_data *data = (void *) buffer;
-  size_t linebuflen = buffer + buflen - data->linebuffer;
 
   if (name == NULL)
     {
@@ -247,6 +242,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return NSS_STATUS_UNAVAIL;
     }
 
+  char *domain;
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
@@ -256,24 +252,24 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  else
+
+  /* Convert name to lowercase.  */
+  size_t namlen = strlen (name);
+  char name2[namlen + 1];
+  size_t i;
+
+  for (i = 0; i < namlen; ++i)
+    name2[i] = tolower (name[i]);
+  name2[i] = '\0';
+
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "hosts.byname", name2, namlen, &result, &len);
+
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
-      /* Convert name to lowercase.  */
-      size_t namlen = strlen (name);
-      char name2[namlen + 1];
-      size_t i;
+      enum nss_status retval = yperr2nss (yperr);
 
-      for (i = 0; i < namlen; ++i)
-	name2[i] = tolower (name[i]);
-      name2[i] = '\0';
-
-      retval = yperr2nss (yp_match (domain, "hosts.byname", name2,
-				    namlen, &result, &len));
-
-    }
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *h_errnop = TRY_AGAIN;
@@ -284,7 +280,8 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return retval;
     }
 
-  if ((size_t) (len + 1) > linebuflen)
+  const size_t linebuflen = buffer + buflen - data->linebuffer;
+  if (__builtin_expect ((size_t) (len + 1) > linebuflen, 0))
     {
       free (result);
       *h_errnop = NETDB_INTERNAL;
@@ -292,15 +289,15 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (data->linebuffer, result, len);
+  char *p = strncpy (data->linebuffer, result, len);
   data->linebuffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
+  int parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
 
-  if (parse_res < 1 || host->h_addrtype != af)
+  if (__builtin_expect (parse_res < 1 || host->h_addrtype != af, 0))
     {
       if (parse_res == -1)
 	{
@@ -351,42 +348,42 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 			  struct hostent *host, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, parse_res;
-  char *buf;
-  struct parser_data *data = (void *) buffer;
-  size_t linebuflen = buffer + buflen - data->linebuffer;
-
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  if (buflen < sizeof *data + 1)
+  struct parser_data *data = (void *) buffer;
+  if (__builtin_expect (buflen < sizeof *data + 1, 0))
     {
       *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  buf = inet_ntoa (*(const struct in_addr *) addr);
+  char *buf = inet_ntoa (*(const struct in_addr *) addr);
 
-  retval = yperr2nss (yp_match (domain, "hosts.byaddr", buf,
-                                strlen (buf), &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "hosts.byaddr", buf, strlen (buf), &result,
+			&len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *h_errnop = TRY_AGAIN;
 	  *errnop = errno;
 	}
-      if (retval == NSS_STATUS_NOTFOUND)
+      else if (retval == NSS_STATUS_NOTFOUND)
 	*h_errnop = HOST_NOT_FOUND;
 
       return retval;
     }
 
-  if ((size_t) (len + 1) > linebuflen)
+  const size_t linebuflen = buffer + buflen - data->linebuffer;
+  if (__builtin_expect ((size_t) (len + 1) > linebuflen, 0))
     {
       free (result);
       *errnop = ERANGE;
@@ -394,15 +391,16 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (data->linebuffer, result, len);
+  char *p = strncpy (data->linebuffer, result, len);
   data->linebuffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen, errnop, af,
-			  ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
-  if (parse_res < 1)
+  int parse_res = parse_line (p, host, data, buflen, errnop, af,
+			      ((_res.options & RES_USE_INET6)
+			       ? AI_V4MAPPED : 0));
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	{

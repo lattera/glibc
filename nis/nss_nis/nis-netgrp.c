@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004,2005
+/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004,2005,2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
@@ -47,24 +47,25 @@ internal_nis_endnetgrent (struct __netgrent *netgrp)
   netgrp->cursor = NULL;
 }
 
+
 enum nss_status
 _nss_nis_setnetgrent (const char *group, struct __netgrent *netgrp)
 {
-  char *domain;
   int len;
   enum nss_status status;
 
   status = NSS_STATUS_SUCCESS;
 
-  if (group == NULL || group[0] == '\0')
+  if (__builtin_expect (group == NULL || group[0] == '\0', 0))
     return NSS_STATUS_UNAVAIL;
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   status = yperr2nss (yp_match (domain, "netgroup", group, strlen (group),
 				&netgrp->data, &len));
-  if (status == NSS_STATUS_SUCCESS)
+  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
     {
       /* Our implementation of yp_match already allocates a buffer
 	 which is one byte larger than the value in LEN specifies
@@ -89,6 +90,7 @@ _nss_nis_endnetgrent (struct __netgrent *netgrp)
 
   return NSS_STATUS_SUCCESS;
 }
+
 
 enum nss_status
 _nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,

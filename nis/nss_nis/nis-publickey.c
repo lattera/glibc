@@ -36,10 +36,6 @@ extern int xdecrypt (char *, char *);
 enum nss_status
 _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 {
-  enum nss_status retval;
-  char *domain, *result;
-  int len;
-
   pkey[0] = 0;
 
   if (netname == NULL)
@@ -48,19 +44,23 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
       return NSS_STATUS_UNAVAIL;
     }
 
-  domain = strchr (netname, '@');
-  if (!domain)
+  char *domain = strchr (netname, '@');
+  if (domain == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
   ++domain;
 
-  retval = yperr2nss (yp_match (domain, "publickey.byname", netname,
-				strlen (netname), &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "publickey.byname", netname, strlen (netname),
+			&result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -82,11 +82,6 @@ enum nss_status
 _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 		       int *errnop)
 {
-  enum nss_status retval;
-  char buf[2 * (HEXKEYBYTES + 1)];
-  char *domain, *result;
-  int len;
-
   skey[0] = 0;
 
   if (netname == NULL || passwd == NULL)
@@ -95,19 +90,23 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
       return NSS_STATUS_UNAVAIL;
     }
 
-  domain = strchr (netname, '@');
-  if (!domain)
+  char *domain = strchr (netname, '@');
+  if (domain == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
   ++domain;
 
-  retval = yperr2nss (yp_match (domain, "publickey.byname", netname,
-				strlen (netname), &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "publickey.byname", netname, strlen (netname),
+			&result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -118,6 +117,8 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
       char *p = strchr (result, ':');
       if (p != NULL)
 	{
+	  char buf[2 * (HEXKEYBYTES + 1)];
+
 	  ++p;
 	  strncpy (buf, p, 2 * (HEXKEYBYTES + 1));
 	  buf[2 * HEXKEYBYTES + 1] = '\0';
@@ -195,13 +196,8 @@ enum nss_status
 _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 		       gid_t *gidp, int *gidlenp, gid_t *gidlist, int *errnop)
 {
-  char *domain;
-  int yperr;
-  char *lookup;
-  int len;
-
-  domain = strchr (netname, '@');
-  if (!domain)
+  char *domain = strchr (netname, '@');
+  if (domain == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
@@ -209,9 +205,10 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 
   /* Point past the '@' character */
   ++domain;
-  lookup = NULL;
-  yperr = yp_match (domain, "netid.byname", netname, strlen (netname),
-		    &lookup, &len);
+  char *lookup = NULL;
+  int len;
+  int yperr = yp_match (domain, "netid.byname", netname, strlen (netname),
+			&lookup, &len);
   switch (yperr)
     {
     case YPERR_SUCCESS:
@@ -224,17 +221,15 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (lookup)
-    {
-      enum nss_status err;
-
-      lookup[len] = '\0';
-      err = parse_netid_str (lookup, uidp, gidp, gidlenp, gidlist);
-      free (lookup);
-      return err;
-    }
-  else
+  if (lookup == NULL)
     return NSS_STATUS_NOTFOUND;
 
-  return NSS_STATUS_SUCCESS;
+
+  lookup[len] = '\0';
+
+  enum nss_status err = parse_netid_str (lookup, uidp, gidp, gidlenp, gidlist);
+
+  free (lookup);
+
+  return err;
 }

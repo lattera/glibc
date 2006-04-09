@@ -1,5 +1,20 @@
 2006-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-alias.c: Optimize use of yperr2nss.  Avoid calling
+	it for YPERR_SUCCESS.  Minor cleanups.  Add __builtin_expect.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
 	* nis/nis_ping.c: Remove unnecessary conditionals before
 	nis_freeresult calls.
 	* nis/nis_ismember.c: Likewise.

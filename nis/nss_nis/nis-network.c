@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -73,28 +73,32 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
 			  int *errnop, int *herrnop)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain, *result, *outkey;
-  int len, keylen, parse_res;
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* Get the next entry until we found a correct one. */
+  int parse_res;
   do
     {
-      enum nss_status retval;
-      char *p;
+      char *result;
+      char *outkey;
+      int len;
+      int keylen;
+      int yperr;
 
       if (new_start)
-        retval = yperr2nss (yp_first (domain, "networks.byname",
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_first (domain, "networks.byname", &outkey, &keylen, &result,
+			  &len);
       else
-        retval = yperr2nss ( yp_next (domain, "networks.byname",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
+        yperr = yp_next (domain, "networks.byname", oldkey, oldkeylen, &outkey,
+			 &keylen, &result, &len);
 
-      if (retval != NSS_STATUS_SUCCESS)
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
         {
+	  enum nss_status retval = yperr2nss (yperr);
+
           if (retval == NSS_STATUS_TRYAGAIN)
 	    {
 	      *herrnop = NETDB_INTERNAL;
@@ -103,7 +107,7 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
           return retval;
         }
 
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
         {
           free (result);
 	  *errnop = ERANGE;
@@ -111,14 +115,14 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
           return NSS_STATUS_TRYAGAIN;
         }
 
-      p = strncpy (buffer, result, len);
+      char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
         ++p;
       free (result);
 
       parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	{
 	  free (outkey);
 	  *herrnop = NETDB_INTERNAL;
@@ -155,11 +159,6 @@ enum nss_status
 _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
 			 size_t buflen, int *errnop, int *herrnop)
 {
-  enum nss_status retval;
-  struct parser_data *data = (void *) buffer;
-  char *domain, *result, *p;
-  int len, parse_res;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
@@ -167,33 +166,36 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
+  struct parser_data *data = (void *) buffer;
   if (buflen < sizeof *data + 1)
     {
       *herrnop = NETDB_INTERNAL;
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  else
+
+  /* Convert name to lowercase.  */
+  size_t namlen = strlen (name);
+  char name2[namlen + 1];
+  size_t i;
+
+  for (i = 0; i < namlen; ++i)
+    name2[i] = _tolower (name[i]);
+  name2[i] = '\0';
+
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "networks.byname", name2, namlen, &result,
+			&len);
+
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
-      /* Convert name to lowercase.  */
-      size_t namlen = strlen (name);
-      char name2[namlen + 1];
-      size_t i;
+      enum nss_status retval = yperr2nss (yperr);
 
-      for (i = 0; i < namlen; ++i)
-	name2[i] = _tolower (name[i]);
-      name2[i] = '\0';
-
-      retval = yperr2nss (yp_match (domain, "networks.byname", name2,
-				    namlen, &result, &len));
-    }
-
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *errnop = errno;
@@ -202,7 +204,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
@@ -210,15 +212,15 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
+  int parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
 
-  if (parse_res < 1)
+  if (__builtin_expect (parse_res < 1, 0))
     {
       *herrnop = NETDB_INTERNAL;
       if (parse_res == -1)
@@ -235,32 +237,26 @@ _nss_nis_getnetbyaddr_r (uint32_t addr, int type, struct netent *net,
 			 char *buffer, size_t buflen, int *errnop,
 			 int *herrnop)
 {
-  struct parser_data *data = (void *) buffer;
   char *domain;
-  char *result;
-  int len;
-  char buf[256];
-  int blen;
-  struct in_addr in;
-  char *p;
-
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  in = inet_makeaddr (addr, 0);
-  strcpy (buf, inet_ntoa (in));
-  blen = strlen (buf);
+  struct in_addr in = inet_makeaddr (addr, 0);
+  char *buf = inet_ntoa (in);
+  size_t blen = strlen (buf);
 
   while (1)
     {
-      enum nss_status retval;
-      int parse_res;
+      char *result;
+      int len;
 
-      retval = yperr2nss (yp_match (domain, "networks.byaddr", buf,
-				    strlen (buf), &result, &len));
+      int yperr = yp_match (domain, "networks.byaddr", buf, blen, &result,
+			    &len);
 
-	if (retval != NSS_STATUS_SUCCESS)
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
 	  {
+	    enum nss_status retval = yperr2nss (yperr);
+
 	    if (retval == NSS_STATUS_NOTFOUND)
 	      {
 		if (buf[blen - 2] == '.' && buf[blen - 1] == '0')
@@ -282,7 +278,7 @@ _nss_nis_getnetbyaddr_r (uint32_t addr, int type, struct netent *net,
 	      }
 	  }
 
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -290,15 +286,16 @@ _nss_nis_getnetbyaddr_r (uint32_t addr, int type, struct netent *net,
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-        p = strncpy (buffer, result, len);
+        char *p = strncpy (buffer, result, len);
 	buffer[len] = '\0';
 	while (isspace (*p))
 	  ++p;
 	free (result);
 
-	parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
+	int parse_res = _nss_files_parse_netent (p, net, (void *) buffer,
+						 buflen, errnop);
 
-	if (parse_res < 1)
+	if (__builtin_expect (parse_res < 1, 0))
 	  {
 	    *herrnop = NETDB_INTERNAL;
 	    if (parse_res == -1)

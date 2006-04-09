@@ -125,52 +125,53 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 			    size_t buflen, int *errnop)
 {
   char *domain;
-  char *result;
-  int len;
-  char *outkey;
-  int keylen;
-  char *p;
-  int parse_res;
 
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   alias->alias_local = 0;
 
   /* Get the next entry until we found a correct one. */
+  int parse_res;
   do
     {
-      enum nss_status retval;
+      char *result;
+      int len;
+      char *outkey;
+      int keylen;
+      int yperr;
 
       if (new_start)
-        retval = yperr2nss (yp_first (domain, "mail.aliases",
-				      &outkey, &keylen, &result, &len));
+        yperr = yp_first (domain, "mail.aliases", &outkey, &keylen, &result,
+			  &len);
       else
-        retval = yperr2nss ( yp_next (domain, "mail.aliases", oldkey,
-				      oldkeylen, &outkey, &keylen,
-				      &result, &len));
-      if (retval != NSS_STATUS_SUCCESS)
+        yperr = yp_next (domain, "mail.aliases", oldkey, oldkeylen, &outkey,
+			 &keylen, &result, &len);
+
+      if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
 	{
+	  enum nss_status retval = yperr2nss (yperr);
+
 	  if (retval == NSS_STATUS_TRYAGAIN)
             *errnop = errno;
           return retval;
         }
 
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
         {
 	  free (result);
           *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
-      p = strncpy (buffer, result, len);
+      char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
         ++p;
       free (result);
 
-      parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer, buflen,
-					   errnop);
-      if (parse_res == -1)
+      parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer,
+					   buflen, errnop);
+      if (__builtin_expect (parse_res == -1, 0))
 	{
 	  free (outkey);
 	  *errnop = ERANGE;
@@ -216,7 +217,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   char name2[namlen + 1];
 
   char *domain;
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* Convert name to lowercase.  */
@@ -227,17 +228,18 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
 
   char *result;
   int len;
-  enum nss_status retval = yperr2nss (yp_match (domain, "mail.aliases", name2,
-						namlen, &result, &len));
+  int yperr = yp_match (domain, "mail.aliases", name2, namlen, &result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
@@ -253,7 +255,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   alias->alias_local = 0;
   int parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen,
 					   errnop);
-  if (parse_res < 1)
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

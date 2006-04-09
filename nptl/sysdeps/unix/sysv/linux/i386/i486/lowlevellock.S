@@ -60,7 +60,7 @@ __lll_mutex_lock_wait:
 	xchgl	%eax, (%ebx)	/* NB:	 lock is implied */
 
 	testl	%eax, %eax
-	jnz,pn	1b
+	jnz	1b
 
 	popl	%esi
 	popl	%ebx

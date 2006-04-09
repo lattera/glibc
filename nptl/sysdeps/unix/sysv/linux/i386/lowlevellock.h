@@ -384,7 +384,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_trylock(futex) \
   ({ unsigned char ret;							      \
      __asm __volatile ("cmpl $0, %%gs:%P5\n\t"				      \
-		       "je,pt 0f\n\t"					      \
+		       "je 0f\n\t"					      \
 		       "lock\n"						      \
 		       "0:\tcmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (futex)			      \
@@ -398,7 +398,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile ("cmpl $0, %%gs:%P6\n\t"			      \
-			      "je,pt 0f\n\t"				      \
+			      "je 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\tcmpxchgl %1, %2\n\t"			      \
 			      "jnz _L_mutex_lock_%=\n\t"		      \
@@ -420,7 +420,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile ("cmpl $0, %%gs:%P3\n\t"			      \
-			      "je,pt 0f\n\t"				      \
+			      "je 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\tsubl $1,%0\n\t"		      \
 			      "jne _L_mutex_unlock_%=\n\t"		      \
@@ -459,7 +459,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			"1:\tmovl %1, %%eax\n\t"			      \
 			LLL_ENTER_KERNEL				      \
 			"cmpl $0, (%%ebx)\n\t"				      \
-			"jne,pn 1b\n\t"					      \
+			"jne 1b\n\t"					      \
 			LLL_EBX_LOAD					      \
 			: "=&a" (__ignore)				      \
 			: "i" (SYS_futex), LLL_EBX_REG (&tid), "S" (0),	      \

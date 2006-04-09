@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -98,29 +98,26 @@ dosearch (int instatus, char *inkey, int inkeylen, char *inval,
 {
   struct search_t *req = (struct search_t *) indata;
 
-  if (instatus != YP_TRUE)
+  if (__builtin_expect (instatus != YP_TRUE, 0))
     return 1;
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
-      struct parser_data *pdata = (void *) req->buffer;
-      int parse_res;
-      char *p;
-
-      if ((size_t) (invallen + 1) > req->buflen)
+      if (__builtin_expect ((size_t) (invallen + 1) > req->buflen, 0))
 	{
 	  *req->errnop = ERANGE;
 	  req->status = NSS_STATUS_TRYAGAIN;
 	  return 1;
 	}
 
-      p = strncpy (req->buffer, inval, invallen);
+      char *p = strncpy (req->buffer, inval, invallen);
       req->buffer[invallen] = '\0';
       while (isspace (*p))
         ++p;
 
-      parse_res = _nss_files_parse_servent (p, req->serv, pdata, req->buflen,
-					    req->errnop);
+      int parse_res = _nss_files_parse_servent (p, req->serv,
+						(void *) req->buffer,
+						req->buflen, req->errnop);
       if (parse_res == -1)
 	{
 	  req->status = NSS_STATUS_TRYAGAIN;
@@ -237,7 +234,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
         ++p;
 
       parse_res = _nss_files_parse_servent (p, serv, pdata, buflen, errnop);
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
         return NSS_STATUS_TRYAGAIN;
       data->next = data->next->next;
     }
@@ -266,60 +263,56 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 			  struct servent *serv, char *buffer, size_t buflen,
 			  int *errnop)
 {
-  enum nss_status status;
-  char *domain;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* If the protocol is given, we could try if our NIS server knows
      about services.byservicename map. If yes, we only need one query.  */
-  char key[strlen (name) + (protocol ? strlen (protocol) : 0) + 2];
-  char *cp, *result;
-  size_t keylen, len;
-  int int_len;
+  size_t keylen = strlen (name) + 1 + (protocol ? strlen (protocol) : 0);
+  char key[keylen + 1];
 
   /* key is: "name/proto" */
-  cp = stpcpy (key, name);
-  if (protocol)
+  char *cp = stpcpy (key, name);
+  if (protocol != NULL)
     {
       *cp++ = '/';
       strcpy (cp, protocol);
     }
-  keylen = strlen (key);
-  status = yperr2nss (yp_match (domain, "services.byservicename", key,
-				keylen, &result, &int_len));
-  len = int_len;
+
+  char *result;
+  int int_len;
+  enum nss_status status = yperr2nss (yp_match (domain,
+						"services.byservicename", key,
+						keylen, &result, &int_len));
+  size_t len = int_len;
 
   /* If we found the key, it's ok and parse the result. If not,
      fall through and parse the complete table. */
-  if (status == NSS_STATUS_SUCCESS)
+  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
     {
-      struct parser_data *pdata = (void *) buffer;
-      int parse_res;
-      char *p;
-
-      if ((size_t) (len + 1) > buflen)
+      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
 	  free (result);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      p = strncpy (buffer, result, len);
+      char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
 	++p;
       free (result);
-      parse_res = _nss_files_parse_servent (p, serv, pdata,
-					    buflen, errnop);
-      if (parse_res < 0)
+
+      int parse_res = _nss_files_parse_servent (p, serv, (void *) buffer,
+						buflen, errnop);
+      if (__builtin_expect (parse_res < 0, 0))
 	{
 	  if (parse_res == -1)
 	    return NSS_STATUS_TRYAGAIN;
@@ -360,10 +353,8 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 			  struct servent *serv, char *buffer,
 			  size_t buflen, int *errnop)
 {
-  enum nss_status status;
   char *domain;
-
-  if (yp_get_default_domain (&domain))
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
   /* If the protocol is given, we only need one query.
@@ -372,48 +363,45 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
   const char *proto = protocol != NULL ? protocol : "tcp";
   do
     {
-      char key[sizeof (int) * 3 + strlen (proto) + 2];
-      char *result;
-      size_t keylen, len;
-      int int_len;
-
       /* key is: "port/proto" */
-      keylen = snprintf (key, sizeof (key), "%d/%s", ntohs (port), proto);
-      status = yperr2nss (yp_match (domain, "services.byname", key,
-				    keylen, &result, &int_len));
-      len = int_len;
+      char key[sizeof (int) * 3 + strlen (proto) + 2];
+      size_t keylen = snprintf (key, sizeof (key), "%d/%s", ntohs (port),
+				proto);
+
+      char *result;
+      int int_len;
+      enum nss_status status = yperr2nss (yp_match (domain, "services.byname",
+						    key, keylen, &result,
+						    &int_len));
+      size_t len = int_len;
 
       /* If we found the key, it's ok and parse the result. If not,
 	 fall through and parse the complete table. */
       if (status == NSS_STATUS_SUCCESS)
 	{
-	  struct parser_data *pdata = (void *) buffer;
-	  int parse_res;
-	  char *p;
-
-	  if ((size_t) (len + 1) > buflen)
+	  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	    {
 	      free (result);
 	      *errnop = ERANGE;
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 
-	  p = strncpy (buffer, result, len);
+	  char  *p = strncpy (buffer, result, len);
 	  buffer[len] = '\0';
 	  while (isspace (*p))
 	    ++p;
 	  free (result);
-	  parse_res = _nss_files_parse_servent (p, serv, pdata,
-						buflen, errnop);
-	  if (parse_res < 0)
+	  int parse_res = _nss_files_parse_servent (p, serv, (void *) buffer,
+						    buflen, errnop);
+	  if (__builtin_expect (parse_res < 0, 0))
 	    {
 	      if (parse_res == -1)
 		return NSS_STATUS_TRYAGAIN;
 	      else
 		return NSS_STATUS_NOTFOUND;
 	    }
-	  else
-	    return NSS_STATUS_SUCCESS;
+
+	  return NSS_STATUS_SUCCESS;
 	}
     }
   while (protocol == NULL && (proto[0] == 't' ? (proto = "udp") : NULL));
@@ -434,7 +422,8 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
   req.buflen = buflen;
   req.errnop = errnop;
   req.status = NSS_STATUS_NOTFOUND;
-  status = yperr2nss (yp_all (domain, "services.byname", &ypcb));
+  enum nss_status status = yperr2nss (yp_all (domain, "services.byname",
+					      &ypcb));
 
   if (status != NSS_STATUS_SUCCESS)
     return status;

@@ -62,7 +62,7 @@ __new_sem_wait:
 	leal	-1(%eax), %edx
 	LOCK
 	cmpxchgl %edx, (%ebx)
-	jne,pn	2b
+	jne	2b
 	xorl	%eax, %eax
 
 	movl	4(%esp), %esi

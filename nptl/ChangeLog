@@ -1,5 +1,14 @@
 2006-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Remove branch predicion
+	suffix for conditional jumps.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+
 	* init.c (sigcancel_handler): Compare with correct PID even if the
 	thread is in the middle of a fork call.
 	(sighandler_setxid): Likewise.
