@@ -1,3 +1,10 @@
+2006-04-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/cs_CZ (LC_TIME): Define week.
+	* locales/sk_SK (LC_TIME): Likewise.
+	* locales/pl_PL (LC_TIME): Likewise.
+	* locales/en_US (LC_TIME): Change week to 7;19971130;7.
+
 2005-12-27  Roland McGrath  <roland@redhat.com>
 
 	* tst-ctype.c (main): Add some casts.
