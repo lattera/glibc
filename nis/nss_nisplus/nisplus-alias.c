@@ -36,11 +36,11 @@ static u_long next_entry;
 static nis_name tablename_val;
 static size_t tablename_len;
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 static enum nss_status
 _nss_create_tablename (int *errnop)
@@ -79,15 +79,11 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-      || __type_of (&result->objects.objects_val[entry]) != NIS_ENTRY_OBJ
-      || strcmp (result->objects.objects_val[entry].EN_data.en_type,
+      || __type_of (&NIS_RES_OBJECT (result)[entry]) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)[entry].EN_data.en_type,
 		 "mail_aliases") != 0
-      || result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)
+      || NIS_RES_OBJECT (result)[entry].EN_data.en_cols.en_cols_len < 2)
     return 0;
-
-  char *first_unused = buffer + NISENTRYLEN (0, 1, result) + 1;
-  size_t room_left = (buflen - (buflen % __alignof__ (char *))
-		      - NISENTRYLEN (0, 1, result) - 2);
 
   if (NISENTRYLEN (entry, 1, result) >= buflen)
     {
@@ -101,13 +97,15 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 			NISENTRYLEN (entry, 1, result));
   *cp = '\0';
 
-  if (NISENTRYLEN(entry, 0, result) >= room_left)
-    goto no_more_room;
+  char *first_unused = cp + 1;
+  size_t room_left = buflen - (first_unused - buffer);
 
   alias->alias_local = 0;
   alias->alias_members_len = 0;
-  *first_unused = '\0';
-  ++first_unused;
+
+  if (NISENTRYLEN (entry, 0, result) >= room_left)
+    goto no_more_room;
+
   cp = __stpncpy (first_unused, NISENTRYVAL (entry, 0, result),
 		  NISENTRYLEN (entry, 0, result));
   *cp = '\0';
@@ -118,11 +116,20 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
   if (cp != NULL)
     *cp = '\0';
 
-  first_unused += strlen (alias->alias_name) +1;
+  size_t len = strlen (alias->alias_name) + 1;
+  first_unused += len;
+  room_left -= len;
+
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
+  size_t adjust = ((__alignof__ (char *)
+		    - (first_unused - (char *) 0) % __alignof__ (char *))
+		   % __alignof__ (char *));
+  if (room_left < adjust)
+    goto no_more_room;
+  first_unused += adjust;
+  room_left -= adjust;
+
   alias->alias_members = (char **) first_unused;
 
   char *line = buffer;
@@ -146,8 +153,10 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
       if (line != alias->alias_members[alias->alias_members_len])
 	{
 	  *line++ = '\0';
-	  alias->alias_members_len++;
+	  ++alias->alias_members_len;
 	}
+      else if (*line == ',')
+	++line;
     }
 
   return alias->alias_members_len == 0 ? 0 : 1;

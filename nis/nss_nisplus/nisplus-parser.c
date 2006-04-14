@@ -211,11 +211,12 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   first_unused += (len + 1);
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  size_t adjust = ((first_unused - (char *) 0) % __alignof__ (char *));
+  size_t adjust = ((__alignof__ (char *)
+		    - (first_unused - (char *) 0) % __alignof__ (char *))
+		   % __alignof__ (char *));
   if (room_left < adjust)
     goto no_more_room;
-  first_unused -= adjust;
+  first_unused += adjust;
   room_left -= adjust;
   gr->gr_mem = (char **) first_unused;
 
