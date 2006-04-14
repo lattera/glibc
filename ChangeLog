@@ -1,3 +1,7 @@
+2006-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c: New file.
+
 2006-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/Makefile (libnsl-routimes): Add nss-default.
