@@ -1,5 +1,11 @@
 2006-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_parse_etherent):
+	Minor cleanups.  NUL terminate name string.
+
+	* nis/Versions: No need to export _nss_nisplus_parse_grent,
+	_nss_nisplus_parse_pwent, and _nss_nisplus_parse_spent.
+
 	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_parse_aliasent):
 	Avoid unnecessary allocation.  Fix adjustment for pointer value.
 

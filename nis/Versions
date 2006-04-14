@@ -120,8 +120,7 @@ libnss_nisplus {
     _nss_nisplus_getservbyname_r; _nss_nisplus_getservbynumber_r;
     _nss_nisplus_getservent_r; _nss_nisplus_getspent_r;
     _nss_nisplus_getspnam_r; _nss_nisplus_netname2user;
-    _nss_nisplus_parse_grent; _nss_nisplus_parse_pwent;
-    _nss_nisplus_parse_spent; _nss_nisplus_setaliasent;
+    _nss_nisplus_setaliasent;
     _nss_nisplus_setetherent; _nss_nisplus_setgrent; _nss_nisplus_sethostent;
     _nss_nisplus_setnetent; _nss_nisplus_setnetgrent; _nss_nisplus_setprotoent;
     _nss_nisplus_setpwent; _nss_nisplus_setrpcent; _nss_nisplus_setservent;
