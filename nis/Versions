@@ -57,6 +57,9 @@ libnsl {
   GLIBC_2.2 {
     xdr_ypall;
   }
+  GLIBC_PRIVATE {
+    _nsl_default_nss;
+  }
 }
 
 libnss_compat {

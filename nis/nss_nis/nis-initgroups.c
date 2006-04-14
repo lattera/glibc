@@ -30,6 +30,7 @@
 #include <sys/param.h>
 
 #include "nss-nis.h"
+#include <libnsl.h>
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
@@ -243,7 +244,7 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
     return NSS_STATUS_UNAVAIL;
 
   /* Check whether we are supposed to use the netid.byname map.  */
-  if (_nis_default_nss () & NSS_FLAG_NETID_AUTHORITATIVE)
+  if (_nsl_default_nss () & NSS_FLAG_NETID_AUTHORITATIVE)
     {
       /* We need the user ID.  */
       uid_t uid;

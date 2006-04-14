@@ -146,8 +146,8 @@ __ieee754_sqrtf (x)
 {
   double z;
 
-  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
-  if ((GLRO (dl_hwcap) & PPC_FEATURE_64) != 0)
+  /* If the CPU is 64-bit we can use the optional FP instructions.  */
+  if (__CPU_HAS_FSQRT)
     {
       /* Volatile is required to prevent the compiler from moving the 
          fsqrt instruction above the branch.  */

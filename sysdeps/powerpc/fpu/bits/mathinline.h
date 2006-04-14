@@ -129,7 +129,7 @@ __NTH (fdimf (float __x, float __y))
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
 
-# if __WORDSIZE == 64
+# if __WORDSIZE == 64 || defined _ARCH_PWR4
 #  define __CPU_HAS_FSQRT 1
 # else
 #  define __CPU_HAS_FSQRT ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
@@ -141,7 +141,7 @@ __NTH (__ieee754_sqrt (double __x))
 {
   double __z;
 
-  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
+  /* If the CPU is 64-bit we can use the optional FP instructions.  */
   if (__CPU_HAS_FSQRT)
   {
     /* Volatile is required to prevent the compiler from moving the
@@ -163,7 +163,7 @@ __NTH (__ieee754_sqrtf (float __x))
 {
   float __z;
 
-  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
+  /* If the CPU is 64-bit we can use the optional FP instructions.  */
   if (__CPU_HAS_FSQRT)
   {
     /* Volatile is required to prevent the compiler from moving the

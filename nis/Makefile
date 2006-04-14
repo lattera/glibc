@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 2001, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,2001,2004,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_print_group_entry nis_domain_of nis_domain_of_r\
 		  nis_modify nis_remove nis_add nis_defaults\
 		  nis_findserv nis_callback nis_clone_dir nis_clone_obj\
-		  nis_clone_res
+		  nis_clone_res nss-default
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups)
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))

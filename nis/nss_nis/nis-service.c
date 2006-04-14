@@ -27,6 +27,7 @@
 #include <rpcsvc/ypclnt.h>
 
 #include "nss-nis.h"
+#include <libnsl.h>
 
 
 /* Get the declaration of the parser function.  */
@@ -324,7 +325,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
     }
 
   /* Check if it is safe to rely on services.byservicename.  */
-  if (_nis_default_nss () & NSS_FLAG_SERVICES_AUTHORITATIVE)
+  if (_nsl_default_nss () & NSS_FLAG_SERVICES_AUTHORITATIVE)
     return status;
 
   struct ypall_callback ypcb;
