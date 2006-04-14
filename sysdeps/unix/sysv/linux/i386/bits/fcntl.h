@@ -211,6 +211,10 @@ extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
 extern int splice (int __fdin, int __fdout, size_t __len, unsigned int __flags)
     __THROW;
 
+/* In-kernel implementation of tee for pipe buffers.  */
+extern int tee (int __fdin, int __fdout, size_t __len, unsigned int __flags)
+    __THROW;
+
 #endif
 
 __END_DECLS

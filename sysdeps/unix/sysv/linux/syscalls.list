@@ -74,6 +74,7 @@ splice		EXTRA	splice		i:iiii	splice
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
+tee		EXTRA	tee		i:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:iWiP	__wait4		wait4

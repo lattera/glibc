@@ -1,5 +1,16 @@
 2006-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add tee syscall.
+	* sysdeps/unix/sysv/linux/Versions: Export tee@GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Add prototype for tee.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
 	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_parse_etherent):
 	Minor cleanups.  NUL terminate name string.
 
