@@ -1,5 +1,10 @@
 2006-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c: Fix precedence for IP V4-to-V6
+	mapped addresses.
+	* posix/Makefile (tests): Add tst-rfc3484-2.
+	* posix/tst-rfc3484-2.c: New file.
+
 	* nis/nss_nisplus/nisplus-publickey.c: Minor cleanups throughout.
 	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_parse_servent):
 	Significant cleanups.  Correct adjustment for pointer array.

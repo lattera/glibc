@@ -1199,7 +1199,7 @@ static const struct prefixlist default_precedence[] =
       96, 20 },
     { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
 				  0x0000, 0xffff, 0x0000, 0x0000 } } },
-      96, 10 },
+      96, 100 },
     { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
 				  0x0000, 0x0000, 0x0000, 0x0000 } } },
       0, 40 }
