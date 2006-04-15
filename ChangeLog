@@ -1,5 +1,6 @@
 2006-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-publickey.c: Minor cleanups throughout.
 	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_parse_protoent):
 	Significant cleanups.  Correct adjustment for pointer array
 	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_parse_netent):
