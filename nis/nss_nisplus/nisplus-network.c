@@ -36,11 +36,11 @@ static nis_result *result;
 static nis_name tablename_val;
 static u_long tablename_len;
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 
 static int
@@ -54,10 +54,10 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-      || strcmp (result->objects.objects_val[0].EN_data.en_type,
+      || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)[0].EN_data.en_type,
 		 "networks_tbl") != 0
-      || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
+      || NIS_RES_OBJECT (result)[0].EN_data.en_cols.en_cols_len < 3)
     return 0;
 
   if (NISENTRYLEN (0, 0, result) >= room_left)
@@ -72,39 +72,45 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
            NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   network->n_name = first_unused;
-  room_left -= (strlen (first_unused) +1);
-  first_unused += strlen (first_unused) +1;
+  size_t len = strlen (first_unused) + 1;
+  room_left -= len;
+  first_unused += len;
+
   network->n_addrtype = 0;
   network->n_net = inet_network (NISENTRYVAL (0, 2, result));
-  char *p = first_unused;
 
-  char *line = p;
-  for (unsigned int i = 0; i < result->objects.objects_len; ++i)
+  /* XXX Rewrite at some point to allocate the array first and then
+     copy the strings.  It wasteful to first concatenate the strings
+     to just split them again later.  */
+  char *line = first_unused;
+  for (unsigned int i = 0; i < NIS_RES_NUMOBJ (result); ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), network->n_name) != 0)
         {
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
 	    goto no_more_room;
 
-	  *p++ = ' ';
-          p = __stpncpy (p, NISENTRYVAL (i, 1, result),
-			 NISENTRYLEN (i, 1, result));
-          *p = '\0';
+	  *first_unused++ = ' ';
+          first_unused = __stpncpy (first_unused, NISENTRYVAL (i, 1, result),
+				    NISENTRYLEN (i, 1, result));
           room_left -= (NISENTRYLEN (i, 1, result) + 1);
         }
     }
-  *p++ = '\0';
-  first_unused = p;
+  *first_unused++ = '\0';
 
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
-  network->n_aliases = (char **) first_unused;
-  if (room_left < 2 * sizeof (char *))
+  size_t adjust = ((__alignof__ (char *)
+		    - (first_unused - (char *) 0) % __alignof__ (char *))
+		   % __alignof__ (char *));
+  if (room_left < adjust + sizeof (char *))
     goto no_more_room;
-  room_left -= (2 * sizeof (char *));
-  network->n_aliases[0] = NULL;
+  first_unused += adjust;
+  room_left -= adjust;
+  network->n_aliases = (char **) first_unused;
+
+  /* For the terminating NULL pointer.  */
+  room_left -= sizeof (char *);
 
   unsigned int i = 0;
   while (*line != '\0')
@@ -120,23 +126,19 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
 	goto no_more_room;
 
       room_left -= sizeof (char *);
-      network->n_aliases[i] = line;
+      network->n_aliases[i++] = line;
 
       while (*line != '\0' && *line != ' ')
         ++line;
 
       if (*line == ' ')
-	{
-	  *line = '\0';
-	  ++line;
-          ++i;
-        }
-      else
-        network->n_aliases[i + 1] = NULL;
+	*line++ = '\0';
     }
+  network->n_aliases[i] = NULL;
 
   return 1;
 }
+
 
 static enum nss_status
 _nss_create_tablename (int *errnop)
