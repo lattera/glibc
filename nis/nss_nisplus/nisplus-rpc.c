@@ -35,11 +35,12 @@ static nis_result *result;
 static nis_name tablename_val;
 static u_long tablename_len;
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+
 
 static int
 _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
@@ -48,17 +49,16 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
   char *first_unused = buffer;
   size_t room_left = buflen;
   unsigned int i;
-  char *p, *line;
+  char *line;
 
 
   if (result == NULL)
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-      || strcmp (result->objects.objects_val[0].EN_data.en_type,
-		 "rpc_tbl") != 0
-      || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
+      || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)[0].EN_data.en_type, "rpc_tbl") != 0
+      || NIS_RES_OBJECT (result)[0].EN_data.en_cols.en_cols_len < 3)
     return 0;
 
   if (NISENTRYLEN (0, 0, result) >= room_left)
@@ -71,37 +71,43 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
            NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   rpc->r_name = first_unused;
-  room_left -= (strlen (first_unused) + 1);
-  first_unused += strlen (first_unused) + 1;
-  rpc->r_number = atoi (NISENTRYVAL (0, 2, result));
-  p = first_unused;
+  size_t len = strlen (first_unused) + 1;
+  room_left -= len;
+  first_unused += len;
 
-  line = p;
-  for (i = 0; i < result->objects.objects_len; ++i)
+  rpc->r_number = atoi (NISENTRYVAL (0, 2, result));
+
+  /* XXX Rewrite at some point to allocate the array first and then
+     copy the strings.  It wasteful to first concatenate the strings
+     to just split them again later.  */
+  line = first_unused;
+  for (i = 0; i < NIS_RES_NUMOBJ (result); ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), rpc->r_name) != 0)
         {
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
 	    goto no_more_room;
-	  *p++ = ' ';
-          p = __stpncpy (p, NISENTRYVAL (i, 1, result),
-			 NISENTRYLEN (i, 1, result));
-          *p = '\0';
-          room_left -= (NISENTRYLEN (i, 1, result) + 1);
+	  *first_unused++ = ' ';
+          first_unused = __stpncpy (first_unused, NISENTRYVAL (i, 1, result),
+				    NISENTRYLEN (i, 1, result));
+          room_left -= NISENTRYLEN (i, 1, result) + 1;
         }
     }
-  ++p;
-  first_unused = p;
+  *first_unused++ = '\0';
 
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
-  rpc->r_aliases = (char **) first_unused;
-  if (room_left < sizeof (char *))
+  size_t adjust = ((__alignof__ (char *)
+		    - (first_unused - (char *) 0) % __alignof__ (char *))
+		   % __alignof__ (char *));
+  if (room_left < adjust + sizeof (char *))
     goto no_more_room;
+  first_unused += adjust;
+  room_left -= adjust;
+  rpc->r_aliases = (char **) first_unused;
+
+  /* For the terminating NULL pointer.  */
   room_left -= sizeof (char *);
-  rpc->r_aliases[0] = NULL;
 
   i = 0;
   while (*line != '\0')
@@ -117,23 +123,19 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
 	goto no_more_room;
 
       room_left -= sizeof (char *);
-      rpc->r_aliases[i] = line;
+      rpc->r_aliases[i++] = line;
 
       while (*line != '\0' && *line != ' ')
         ++line;
 
       if (*line == ' ')
-        {
-	  *line = '\0';
-	  ++line;
-          ++i;
-        }
-      else
-        rpc->r_aliases[i+1] = NULL;
+	*line++ = '\0';
     }
+  rpc->r_aliases[i] = NULL;
 
   return 1;
 }
+
 
 static enum nss_status
 _nss_create_tablename (int *errnop)
