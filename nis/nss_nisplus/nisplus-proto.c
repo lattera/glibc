@@ -35,20 +35,20 @@ static nis_result *result;
 static nis_name tablename_val;
 static u_long tablename_len;
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+
 
 static int
-_nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
+_nss_nisplus_parse_protoent (nis_result *result, struct protoent *proto,
 			     char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
   unsigned int i;
-  char *p, *line;
 
   if (result == NULL)
     return 0;
@@ -71,41 +71,41 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
            NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   proto->p_name = first_unused;
-  room_left -= (strlen (first_unused) +1);
-  first_unused += strlen (first_unused) +1;
+  size_t len = strlen (first_unused) + 1;
+  room_left -= len;
+  first_unused += len;
 
 
-  if (NISENTRYLEN (0, 2, result) + 1 > room_left)
-    goto no_more_room;
   proto->p_proto = atoi (NISENTRYVAL (0, 2, result));
-  p = first_unused;
 
-  line = p;
+  char *line = first_unused;
   for (i = 0; i < result->objects.objects_len; ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), proto->p_name) != 0)
         {
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
             goto no_more_room;
-	  *p++ = ' ';
-          p = __stpncpy (p, NISENTRYVAL (i, 1, result),
-			 NISENTRYLEN (i, 1, result));
-          *p = '\0';
-          room_left -= (NISENTRYLEN (i, 1, result) + 1);
+	  *first_unused++ = ' ';
+          first_unused = __stpncpy (first_unused, NISENTRYVAL (i, 1, result),
+				    NISENTRYLEN (i, 1, result));
+          room_left -= NISENTRYLEN (i, 1, result) + 1;
         }
     }
-  *p++ = '\0';
-  first_unused = p;
+  *first_unused++ = '\0';
 
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
-  proto->p_aliases = (char **) first_unused;
-  if (room_left < sizeof (char *))
+  size_t adjust = ((__alignof__ (char *)
+		    - (first_unused - (char *) 0) % __alignof__ (char *))
+		   % __alignof__ (char *));
+  if (room_left < adjust + sizeof (char *))
     goto no_more_room;
+  first_unused += adjust;
+  room_left -= adjust;
+  proto->p_aliases = (char **) first_unused;
+
+  /* For the terminating NULL pointer.  */
   room_left -= sizeof (char *);
-  proto->p_aliases[0] = NULL;
 
   i = 0;
   while (*line != '\0')
@@ -120,20 +120,15 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
         goto no_more_room;
 
       room_left -= sizeof (char *);
-      proto->p_aliases[i] = line;
+      proto->p_aliases[i++] = line;
 
       while (*line != '\0' && *line != ' ')
         ++line;
 
       if (*line == ' ')
-        {
-          *line = '\0';
-          ++line;
-          ++i;
-        }
-      else
-        proto->p_aliases[i+1] = NULL;
+	*line++ = '\0';
     }
+  proto->p_aliases[i] = NULL;
 
   return 1;
 }
