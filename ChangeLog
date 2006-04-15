@@ -1,3 +1,8 @@
+2006-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent):
+	Significant cleanups.  Correct adjustment for pointer array.
+
 2006-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add tee syscall.
