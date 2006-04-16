@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Generic version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,14 @@
 
 void
 attribute_hidden
-__check_pf (bool *seen_ipv4, bool *seen_ipv6)
+__check_pf (bool *seen_ipv4, bool *seen_ipv6,
+	    struct in6addrinfo **in6ai, size_t *in6ailen)
 {
+  /* By default we have no way to determine information about
+     deprecated and temporary addresses.  */
+  *in6ai = NULL;
+  *in6ailen = 0;
+
   /* Get the interface list via getifaddrs.  */
   struct ifaddrs *ifa = NULL;
   if (getifaddrs (&ifa) != 0)

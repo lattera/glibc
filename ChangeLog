@@ -1,3 +1,21 @@
+2006-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/ifaddrs.h: Define struct in6addrinfo.
+	Add two more parameters to __check_pf.
+	* sysdeps/unix/sysv/linux/check_pf.c: When using the netlink
+	interface, determine whether IPv6 addresses are deprecated or
+	temporary.  Create array of those addresses.
+	* inet/check_pf.c: Always tell caller there are no depracated
+	and temporary addresses.
+	* sysdeps/posix/getaddrinfo.c: Pretty printing.
+	(struct sort_result): Add source_addr_flags field.
+	(rfc3484_sort): Implement rule 3 and 7.
+	(in6aicmp): New function.
+	(getaddrinfo): Call __check_pf also when we need info about IPv6
+	source addresses.  When creating array for sorting addresses,
+	look up deprecated and temporary addresses returned by __check_pf
+	and add flag if necessary.
+
 2006-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c: Fix precedence for IP V4-to-V6

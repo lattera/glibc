@@ -68,7 +68,7 @@ extern int __idna_to_unicode_lzlz (const char *input, char **output,
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
 
 #ifndef UNIX_PATH_MAX
-#define UNIX_PATH_MAX  108
+# define UNIX_PATH_MAX  108
 #endif
 
 struct gaih_service
@@ -177,9 +177,9 @@ gaih_local (const char *name, const struct gaih_service *service,
       if (! tp->name[0])
 	{
 	  if (req->ai_socktype)
-	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	    return GAIH_OKIFUNSPEC | -EAI_SOCKTYPE;
 	  else
-	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	}
     }
 
@@ -249,9 +249,10 @@ gaih_local (const char *name, const struct gaih_service *service,
 }
 #endif	/* 0 */
 
+
 static int
 gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
-	       const struct addrinfo *req, struct gaih_servtuple *st)
+		const struct addrinfo *req, struct gaih_servtuple *st)
 {
   struct servent *s;
   size_t tmpbuflen = 1024;
@@ -362,6 +363,7 @@ typedef enum nss_status (*nss_getcanonname_r)
    int *errnop, int *h_errnop);
 extern service_user *__nss_hosts_database attribute_hidden;
 
+
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
 	   const struct addrinfo *req, struct addrinfo **pai,
@@ -389,9 +391,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
       if (! tp->name[0])
 	{
 	  if (req->ai_socktype)
-	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	    return GAIH_OKIFUNSPEC | -EAI_SOCKTYPE;
 	  else
-	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	}
     }
 
@@ -399,7 +401,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   if (service != NULL)
     {
       if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
-	return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 
       if (service->num < 0)
 	{
@@ -443,7 +445,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  pst = &(newp->next);
 		}
 	      if (st == (struct gaih_servtuple *) &nullserv)
-		return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+		return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	    }
 	}
       else
@@ -684,7 +686,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		  /* We made requests but they turned out no data.
 		     The name is known, though.  */
-		  return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+		  return GAIH_OKIFUNSPEC | -EAI_NODATA;
 		}
 
 	      goto process_list;
@@ -751,7 +753,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  free (air);
 
 		  if (at->family == AF_UNSPEC)
-		    return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+		    return GAIH_OKIFUNSPEC | -EAI_NONAME;
 
 		  goto process_list;
 		}
@@ -893,13 +895,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      /* We made requests but they turned out no data.  The name
 		 is known, though.  */
-	      return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+	      return GAIH_OKIFUNSPEC | -EAI_NODATA;
 	    }
 	}
 
     process_list:
       if (at->family == AF_UNSPEC)
-	return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+	return GAIH_OKIFUNSPEC | -EAI_NONAME;
     }
   else
     {
@@ -1109,6 +1111,7 @@ struct sort_result
   struct sockaddr_storage source_addr;
   uint8_t source_addr_len;
   bool got_source_addr;
+  uint8_t source_addr_flags;
 };
 
 
@@ -1331,8 +1334,16 @@ rfc3484_sort (const void *p1, const void *p2)
     }
 
 
-  /* Rule 3: Avoid deprecated addresses.
-     That's something only the kernel could decide.  */
+  /* Rule 3: Avoid deprecated addresses.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_deprecated)
+	  && (a2->source_addr_flags & in6ai_deprecated))
+	return -1;
+      if ((a1->source_addr_flags & in6ai_deprecated)
+	  && !(a2->source_addr_flags & in6ai_deprecated))
+	return 1;
+    }
 
   /* Rule 4: Prefer home addresses.
      Another thing only the kernel can decide.  */
@@ -1367,8 +1378,18 @@ rfc3484_sort (const void *p1, const void *p2)
     return 1;
 
 
-  /* Rule 7: Prefer native transport.
-     XXX How to recognize tunnels?  */
+  /* Rule 7: Prefer native transport.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_temporary)
+	  && (a1->source_addr_flags & in6ai_temporary))
+	return -1;
+      if ((a1->source_addr_flags & in6ai_temporary)
+	  && !(a1->source_addr_flags & in6ai_temporary))
+	return -1;
+
+      /* XXX Do we need to check anything beside temporary addresses?  */
+    }
 
 
   /* Rule 8: Prefer smaller scope.  */
@@ -1449,6 +1470,16 @@ rfc3484_sort (const void *p1, const void *p2)
 }
 
 
+static int
+in6aicmp (const void *p1, const void *p2)
+{
+  struct in6addrinfo *a1 = (struct in6addrinfo *) p1;
+  struct in6addrinfo *a2 = (struct in6addrinfo *) p2;
+
+  return memcmp (a1->addr, a2->addr, sizeof (a1->addr));
+}
+
+
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
@@ -1485,15 +1516,23 @@ getaddrinfo (const char *name, const char *service,
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
 
+  struct in6addrinfo *in6ai;
+  size_t in6ailen;
+  bool seen_ipv4 = false;
+  bool seen_ipv6 = false;
+  /* We might need information about what kind of interfaces are available.
+     But even if AI_ADDRCONFIG is not used, if the user requested IPv6
+     addresses we have to know whether an address is deprecated or
+     temporary.  */
+  if ((hints->ai_flags & AI_ADDRCONFIG) || hints->ai_family == PF_UNSPEC
+      || hints->ai_family == PF_INET6)
+    /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
+       cannot cache the results since new interfaces could be added at
+       any time.  */
+    __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
-      /* Determine whether we have IPv4 or IPv6 interfaces or both.
-	 We cannot cache the results since new interfaces could be
-	 added at any time.  */
-      bool seen_ipv4;
-      bool seen_ipv6;
-      __check_pf (&seen_ipv4, &seen_ipv6);
-
       /* Now make a decision on what we return, if anything.  */
       if (hints->ai_family == PF_UNSPEC && (seen_ipv4 || seen_ipv6))
 	{
@@ -1508,8 +1547,11 @@ getaddrinfo (const char *name, const char *service,
 	}
       else if ((hints->ai_family == PF_INET && ! seen_ipv4)
 	       || (hints->ai_family == PF_INET6 && ! seen_ipv6))
-	/* We cannot possibly return a valid answer.  */
-	return EAI_NONAME;
+	{
+	  /* We cannot possibly return a valid answer.  */
+	  free (in6ai);
+	  return EAI_NONAME;
+	}
     }
 
   if (service && service[0])
@@ -1520,7 +1562,10 @@ getaddrinfo (const char *name, const char *service,
       if (*c != '\0')
 	{
 	  if (hints->ai_flags & AI_NUMERICSERV)
-	    return EAI_NONAME;
+	    {
+	      free (in6ai);
+	      return EAI_NONAME;
+	    }
 
 	  gaih_service.num = -1;
 	}
@@ -1559,6 +1604,7 @@ getaddrinfo (const char *name, const char *service,
 		    }
 
 		  freeaddrinfo (p);
+		  free (in6ai);
 
 		  return -(i & GAIH_EAI);
 		}
@@ -1574,7 +1620,10 @@ getaddrinfo (const char *name, const char *service,
     }
 
   if (j == 0)
-    return EAI_FAMILY;
+    {
+      free (in6ai);
+      return EAI_FAMILY;
+    }
 
   if (naddrs > 1)
     {
@@ -1583,6 +1632,11 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
+
+      /* If we have information about deprecated and temporary address
+	 sort the array now.  */
+      if (in6ai != NULL)
+	qsort (in6ai, in6ailen, sizeof (*in6ai), in6aicmp);
 
       for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
@@ -1598,9 +1652,12 @@ getaddrinfo (const char *name, const char *service,
 		      results[i - 1].source_addr_len);
 	      results[i].source_addr_len = results[i - 1].source_addr_len;
 	      results[i].got_source_addr = results[i - 1].got_source_addr;
+	      results[i].source_addr_flags = results[i - 1].source_addr_flags;
 	    }
 	  else
 	    {
+	      results[i].source_addr_flags = 0;
+
 	      /* We overwrite the type with SOCK_DGRAM since we do not
 		 want connect() to connect to the other side.  If we
 		 cannot determine the source address remember this
@@ -1615,6 +1672,20 @@ getaddrinfo (const char *name, const char *service,
 		{
 		  results[i].source_addr_len = sl;
 		  results[i].got_source_addr = true;
+
+		  if (q->ai_family == PF_INET6 && in6ai != NULL)
+		    {
+		      /* See whether the address is the list of deprecated
+			 or temporary addresses.  */
+		      struct in6addrinfo tmp;
+		      memcpy (tmp.addr, q->ai_addr, IN6ADDRSZ);
+
+		      struct in6addrinfo *found
+			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),
+				   in6aicmp);
+		      if (found != NULL)
+			results[i].source_addr_flags = found->flags;
+		    }
 		}
 	      else
 		/* Just make sure that if we have to process the same
@@ -1647,6 +1718,8 @@ getaddrinfo (const char *name, const char *service,
       /* Fill in the canonical name into the new first entry.  */
       p->ai_canonname = canonname;
     }
+
+  free (in6ai);
 
   if (p)
     {

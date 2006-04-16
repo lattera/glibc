@@ -29,11 +29,18 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
+#include <not-cancel.h>
 #include <kernel-features.h>
 
 
+#ifndef IFA_F_TEMPORARY
+# define IFA_F_TEMPORARY IFA_F_SECONDARY
+#endif
+
+
 static int
-make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
+make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
+	      struct in6addrinfo **in6ai, size_t *in6ailen)
 {
   struct
   {
@@ -63,6 +70,12 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
   bool done = false;
   char buf[4096];
   struct iovec iov = { buf, sizeof (buf) };
+  struct in6ailist
+  {
+    struct in6addrinfo info;
+    struct in6ailist *next;
+  } *in6ailist = NULL;
+  size_t in6ailistlen = 0;
 
   do
     {
@@ -101,6 +114,42 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
 		  break;
 		case AF_INET6:
 		  *seen_ipv6 = true;
+
+		  if (ifam->ifa_flags & (IFA_F_DEPRECATED | IFA_F_TEMPORARY))
+		    {
+		      struct rtattr *rta = IFA_RTA (ifam);
+		      size_t len = (nlmh->nlmsg_len
+				    - NLMSG_LENGTH (sizeof (*ifam)));
+		      void *local = NULL;
+		      void *address = NULL;
+		      while (RTA_OK (rta, len))
+			{
+			  switch (rta->rta_type)
+			    {
+			    case IFA_LOCAL:
+			      local = RTA_DATA (rta);
+			      break;
+
+			    case IFA_ADDRESS:
+			      address = RTA_DATA (ta);
+			      break;
+			    }
+
+			  rta = RTA_NEXT (rta, len);
+			}
+
+		      struct in6ailist *newp = alloca (sizeof (*newp));
+		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
+					   ? in6ai_deprecated : 0)
+					  | ((ifam->ifa_flags
+					      & IFA_F_TEMPORARY)
+					     ? in6ai_temporary : 0));
+		      memcpy (newp->info.addr, address ?: local,
+			      sizeof (newp->info.addr));
+		      newp->next = in6ailist;
+		      in6ailsit = newp;
+		      ++in6ailistlen;
+		    }
 		  break;
 		default:
 		  /* Ignore.  */
@@ -110,12 +159,27 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
 	  else if (nlmh->nlmsg_type == NLMSG_DONE)
 	    /* We found the end, leave the loop.  */
 	    done = true;
-	  else ;
 	}
     }
   while (! done);
 
-  __close (fd);
+  close_not_cancel_no_status (fd);
+
+  if (in6ailist != NULL)
+    {
+      *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
+      if (*in6ai == NULL)
+	return -1;
+
+      *in6ailen = in6ailistlen;
+
+      do
+	{
+	  (*in6ai)[--in6ailistlen] = in6ailist->info;
+	  in6ailist = in6ailist->next;
+	}
+      while (in6ailist != NULL);
+    }
 
   return 0;
 }
@@ -133,8 +197,12 @@ extern int __no_netlink_support attribute_hidden;
 
 void
 attribute_hidden
-__check_pf (bool *seen_ipv4, bool *seen_ipv6)
+__check_pf (bool *seen_ipv4, bool *seen_ipv6,
+	    struct in6addrinfo **in6ai, size_t *in6ailen)
 {
+  *in6ai = NULL;
+  *in6ailen = 0;
+
   if (! __no_netlink_support)
     {
       int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
@@ -148,7 +216,8 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6)
       if (fd >= 0
 	  && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
 	  && __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) == 0
-	  && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6) == 0)
+	  && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6,
+			   in6ai, in6ailen) == 0)
 	/* It worked.  */
 	return;
 
@@ -177,9 +246,6 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6)
       *seen_ipv6 = true;
       return;
     }
-
-  *seen_ipv4 = false;
-  *seen_ipv6 = false;
 
   struct ifaddrs *runp;
   for (runp = ifa; runp != NULL; runp = runp->ifa_next)
