@@ -1095,6 +1095,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   return 0;
 }
 
+#if 0
 static const struct gaih gaih[] =
   {
     { PF_INET6, gaih_inet },
@@ -1104,6 +1105,7 @@ static const struct gaih gaih[] =
 #endif
     { PF_UNSPEC, NULL }
   };
+#endif
 
 struct sort_result
 {
@@ -1484,11 +1486,9 @@ int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
 {
-  int i = 0, j = 0, last_i = 0;
+  int i = 0, last_i = 0;
   int nresults = 0;
-  struct addrinfo *p = NULL, **end;
-  const struct gaih *g = gaih;
-  const struct gaih *pg = NULL;
+  struct addrinfo *p = NULL;
   struct gaih_service gaih_service, *pservice;
   struct addrinfo local_hints;
 
@@ -1575,12 +1575,21 @@ getaddrinfo (const char *name, const char *service,
   else
     pservice = NULL;
 
+  struct addrinfo **end;
   if (pai)
     end = &p;
   else
     end = NULL;
 
   unsigned int naddrs = 0;
+#if 0
+  /* If we would support more protocols than just IPv4 and IPv6 we
+     would iterate over a table with appropriate callback functions.
+     Since we currently only handle IPv4 and IPv6 this is not
+     necessary.  */
+  const struct gaih *g = gaih;
+  const struct gaih *pg = NULL;
+  int j = 0;
   while (g->gaih)
     {
       if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
@@ -1624,6 +1633,31 @@ getaddrinfo (const char *name, const char *service,
       free (in6ai);
       return EAI_FAMILY;
     }
+#else
+  if (hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET
+      || hints->ai_family == AF_INET6)
+    {
+      last_i = gaih_inet (name, pservice, hints, end, &naddrs);
+      if (last_i != 0)
+	{
+	  freeaddrinfo (p);
+	  free (in6ai);
+
+	  return -(i & GAIH_EAI);
+	}
+      if (end)
+	while (*end)
+	  {
+	    end = &((*end)->ai_next);
+	    ++nresults;
+	  }
+    }
+  else
+    {
+      free (in6ai);
+      return EAI_FAMILY;
+    }
+#endif
 
   if (naddrs > 1)
     {

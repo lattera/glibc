@@ -131,7 +131,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 			      break;
 
 			    case IFA_ADDRESS:
-			      address = RTA_DATA (ta);
+			      address = RTA_DATA (rta);
 			      break;
 			    }
 
@@ -147,7 +147,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 		      memcpy (newp->info.addr, address ?: local,
 			      sizeof (newp->info.addr));
 		      newp->next = in6ailist;
-		      in6ailsit = newp;
+		      in6ailist = newp;
 		      ++in6ailistlen;
 		    }
 		  break;

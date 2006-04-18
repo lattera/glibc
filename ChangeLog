@@ -1,3 +1,8 @@
+2006-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Rewrite to avoid loop
+	over gaih array.  There is only on function to call in the moment.
+
 2006-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/ifaddrs.h: Define struct in6addrinfo.
