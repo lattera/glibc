@@ -1,3 +1,17 @@
+2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/linuxthreads/pspinlock.c: New file.
+	* sysdeps/hppa/linuxthreads/pt-machine.h: Likewise.
+	* sysdeps/hppa/linuxthreads/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/aio_cancel.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/malloc-machine.h:
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/pt-initfini.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/initspin.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/pthreadtypes.h:
+	Likewise.
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/hppa/shlib-versions: New file.
