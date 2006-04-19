@@ -1,3 +1,11 @@
+2006-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_PROC_SELF_FD_SYMLINK.
+	* sysdeps/unix/sysv/linux/ttyname.c: Cleanups.  Avoid compatibility
+	code is possible.  Move compatibility code in .text.compat section.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+
 2006-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Rewrite to avoid loop

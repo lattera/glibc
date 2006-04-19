@@ -85,6 +85,12 @@
 # define __ASSUME_SENDFILE		1
 #endif
 
+/* Only very old kernels had no real symlinks for terminal descriptors
+   in /proc/self/fd.  */
+#if __LINUX_KERNEL_VERSION >= 131584
+# define __ASSUME_PROC_SELF_FD_SYMLINK	1
+#endif
+
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */
 #if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
