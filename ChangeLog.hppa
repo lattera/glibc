@@ -1,5 +1,9 @@
 2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h: New file.
+
+2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/linuxthreads/pspinlock.c: New file.
 	* sysdeps/hppa/linuxthreads/pt-machine.h: Likewise.
 	* sysdeps/hppa/linuxthreads/tls.h: Likewise.
