@@ -1,5 +1,13 @@
 2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_GNU]: 
+	Define MMAP_FIXED.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h [__USE_GNU]: 
+	Define SYNC_FILE_RANGE_WAIT_BEFORE, SYNC_FILE_RANGE_WRITE,
+	SYNC_FILE_RANGE_WAIT_AFTER, sync_file_range, splice, tee.
+
+2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/kernel-features.h: New file.
 
 2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
