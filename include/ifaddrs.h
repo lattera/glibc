@@ -1,6 +1,7 @@
 #ifndef _IFADDRS_H
 #include <inet/ifaddrs.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 libc_hidden_proto (getifaddrs)
 libc_hidden_proto (freeifaddrs)

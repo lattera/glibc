@@ -11,9 +11,11 @@
 
 void
 attribute_hidden
-__check_pf (bool *p1, bool *p2)
+__check_pf (bool *p1, bool *p2, struct in6addrinfo **in6ai, size_t *in6ailen)
 {
   *p1 = *p2 = true;
+  *in6ai = NULL;
+  *in6ailen = 0;
 }
 int
 __idna_to_ascii_lz (const char *input, char **output, int flags)

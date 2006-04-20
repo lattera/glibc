@@ -1,5 +1,9 @@
 2006-04-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/ifaddrs.h: Get uint32_t definition.
+	* posix/tst-rfc3484.c: Update fake __check_pf implementation.
+	* posix/tst-rfc3484-2.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_PROC_SELF_FD_SYMLINK.
 	* sysdeps/unix/sysv/linux/ttyname.c: Cleanups.  Avoid compatibility
