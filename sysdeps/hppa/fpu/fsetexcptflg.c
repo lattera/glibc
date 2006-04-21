@@ -24,16 +24,14 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  unsigned int sw[2];
+  union { unsigned long long l; unsigned int sw[2]; } s;
 
   /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-
-  /* Install new enable trap bits  */
-  sw[0] |= (*flagp & excepts & FE_ALL_EXCEPT) << 27;
-
+  __asm__ ("fstd %%fr0,0(%1)" : "=m" (s.l) : "r" (&s.l) : "%r0");
+  /* Install new raised trap bits */
+  s.sw[0] |= (*flagp & excepts & FE_ALL_EXCEPT) << 27;
   /* Store the new status word.  */
-  __asm__ ("fldd 0(%0),%%fr0" : : "r" (sw));
+  __asm__ ("fldd 0(%0),%%fr0" : : "r" (&s.l), "m" (s.l) : "%r0");
 
   /* Success.  */
   return 0;

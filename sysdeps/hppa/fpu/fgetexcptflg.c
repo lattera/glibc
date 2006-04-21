@@ -23,12 +23,14 @@
 int
 fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  unsigned int sw[2];
+  union { unsigned long long l; unsigned int sw[2]; } s;
 
   /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
+  __asm__ ("fstd %%fr0,0(%1)	\n\t" 
+           "fldd 0(%1),%%fr0	\n\t" 
+      	   : "=m" (s.l) : "r" (&s.l) : "%r0");
 
-  *flagp = (sw[0] >> 27) & excepts & FE_ALL_EXCEPT;
+  *flagp = (s.sw[0] >> 27) & excepts & FE_ALL_EXCEPT;
 
   /* Success.  */
   return 0;

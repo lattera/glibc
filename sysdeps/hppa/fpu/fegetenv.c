@@ -19,15 +19,17 @@
    02111-1307 USA.  */
 
 #include <fenv.h>
+#include <string.h>
 
 int
 fegetenv (fenv_t *envp)
 {
+  unsigned long long buf[4], *bufptr = buf;
+  
   __asm__ (
-	   "fstd,ma %%fr0,8(%1)\n"
-	   "fstd,ma %%fr1,8(%1)\n"
-	   "fstd,ma %%fr2,8(%1)\n"
-	   "fstd %%fr3,0(%1)\n"
-	   : "=m" (*envp), "+r" (envp));
+	   "fstd,ma %%fr0,8(%1)	\n\t"
+	   "fldd -8(%1),%%fr0	\n\t"
+	   : "=m" (buf), "+r" (bufptr) : : "%r0");
+  memcpy(envp, buf, sizeof (*envp));
   return 0;
 }

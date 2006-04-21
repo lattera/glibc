@@ -23,14 +23,13 @@
 int
 feclearexcept (int excepts)
 {
-  unsigned int sw[2];
+  union { unsigned long long l; unsigned int sw[2]; } s;
 
   /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-
+  __asm__ ("fstd %%fr0,0(%1)" : "=m" (s.l) : "r" (&s.l) : "%r0");
   /* Clear all the relevant bits. */
-  sw[0] &= ~((excepts & FE_ALL_EXCEPT) << 27);
-  __asm__ ("fldd 0(%0),%%fr0" : : "r" (sw));
+  s.sw[0] &= ~((excepts & FE_ALL_EXCEPT) << 27);
+  __asm__ ("fldd 0(%0),%%fr0" : : "r" (&s.l), "m" (s.l) : "%r0");
 
   /* Success.  */
   return 0;

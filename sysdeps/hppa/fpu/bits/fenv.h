@@ -62,7 +62,12 @@ typedef unsigned int fexcept_t;
 
 /* Type representing floating-point environment.  This structure
    corresponds to the layout of the status and exception words in the
-   register file. */
+   register file. The exception registers are never saved/stored by
+   userspace. This structure is also not correctly aligned ever, in
+   an ABI error we left out __aligned(8) and subsequently all of our
+   fenv functions must accept unaligned input, align the input, and
+   then use assembly to store fr0. This is a performance hit, but 
+   means the ABI is stable. */
 typedef struct
 {
   unsigned int __status_word;

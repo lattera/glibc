@@ -1,3 +1,28 @@
+2006-04-20  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/fpu/fclrexcpt.c (feclearexcept): Use union to
+	align parameters. Specify memory clobbers.
+	* sysdeps/hppa/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/hppa/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/hppa/fpu/fegetenv.c (fegetenv): Do not save exception
+	register. Use memcpy to align buffer.
+	* sysdeps/hppa/fpu/fegetexcept.c (fegetexcept): Store and reload
+	fr0. Use union to align parameters.
+	* sysdeps/hppa/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/hppa/fpu/feholdexcpt.c (feholdexcept): Do not save
+	exception registers. Define libm_hidden_def.
+	* sysdeps/hppa/fpu/fesetenv.c (fesetenv): Do not save exception
+	registers.
+	* sysdeps/hppa/fpu/fesetround.c (fesetround): Use union to
+	align parameters, speficy memory clobbers. Define libm_hidde_def
+	* sysdeps/hppa/fpu/feupdateenv.c (feupdateenv): Use union to align
+	parameters. Use memcpy to align buffer.
+	* sysdeps/hppa/fpu/fgetexcptflg.c (fegetexceptflag): Likewise.
+	* sysdeps/hppa/fpu/fsetexcptflg.c (fesetexceptflag): Likewise.
+	* sysdeps/hppa/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+	* sysdeps/hppa/fpu/bits/fenv.h: Add ABI comments.
+
 2006-04-19  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_GNU]: 

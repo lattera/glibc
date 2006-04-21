@@ -24,33 +24,32 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  fenv_t clear;
-  fenv_t * _regs = envp;
+  union { unsigned long long buf[4]; fenv_t env; } clear;
+  unsigned long long *bufptr;
 
   /* Store the environment.  */
+  bufptr = clear.buf;
   __asm__ (
 	   "fstd,ma %%fr0,8(%1)\n"
-	   "fstd,ma %%fr1,8(%1)\n"
-	   "fstd,ma %%fr2,8(%1)\n"
-	   "fstd %%fr3,0(%1)\n"
-	   : "=m" (*_regs), "+r" (_regs));
-  memcpy (&clear, envp, sizeof (clear));
+	   : "=m" (clear), "+r" (bufptr) : : "%r0");
+  memcpy (envp, &clear.env, sizeof (fenv_t));
 
-  /* Now clear all exceptions.  */
-  clear.__status_word &= ~(FE_ALL_EXCEPT << 27);
-  memset (clear.__exception, 0, sizeof (clear.__exception));
-
+  /* Clear exception queues */
+  memset (clear.env.__exception, 0, sizeof (clear.env.__exception));
   /* And set all exceptions to non-stop.  */
-  clear.__status_word &= ~FE_ALL_EXCEPT;
+  clear.env.__status_word &= ~FE_ALL_EXCEPT;
+  /* Now clear all flags  */
+  clear.env.__status_word &= ~(FE_ALL_EXCEPT << 27);
 
-  /* Load the new environment. */
-  _regs = &clear;
+  /* Load the new environment. Note: fr0 must load last to enable T-bit 
+     Thus we start bufptr at the end and work backwards */
+  bufptr = (unsigned int)(clear.buf) + sizeof(unsigned int)*4;
   __asm__ (
-	   "fldd,ma 8(%0),%%fr0\n"
-	   "fldd,ma 8(%0),%%fr1\n"
-	   "fldd,ma 8(%0),%%fr2\n"
-	   "fldd 0(%0),%%fr3\n"
-	   : : "r" (_regs));
+	   "fldd,mb -8(%0),%%fr0\n"
+	   : : "r" (bufptr), "m" (clear) : "%r0");
 
   return 0;
 }
+
+libm_hidden_def (feholdexcept)
+

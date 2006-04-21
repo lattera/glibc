@@ -23,17 +23,19 @@
 int
 fesetround (int round)
 {
-  unsigned int sw[2];
+  union { unsigned long long l; unsigned int sw[2]; } s;
 
   if (round & ~FE_DOWNWARD)
-    /* ROUND is not a valid rounding mode.  */
+    /* round is not a valid rounding mode. */
     return 1;
-
+  
   /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-  sw[0] &= ~FE_DOWNWARD;
-  sw[0] |= round;
-  __asm__ ("fldd 0(%0),%%fr0" : : "r" (sw));
+  __asm__ ("fstd %%fr0,0(%1)" : "=m" (s.l) : "r" (&s.l) : "%r0");
+  s.sw[0] &= ~FE_DOWNWARD;
+  s.sw[0] |= round & FE_DOWNWARD;
+  __asm__ ("fldd 0(%0),%%fr0" : : "r" (&s.l), "m" (s.l) : "%r0");
 
   return 0;
 }
+
+libm_hidden_def (fesetround)
