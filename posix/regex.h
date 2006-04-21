@@ -1,6 +1,6 @@
 /* Definitions for data structures and routines for the regular
    expression library.
-   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005,2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,15 +27,6 @@
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-/* POSIX says that <sys/types.h> must be included (by the caller) before
-   <regex.h>.  */
-
-#if !defined _POSIX_C_SOURCE && !defined _POSIX_SOURCE && defined VMS
-/* VMS doesn't have `size_t' in <sys/types.h>, even though POSIX says it
-   should be there.  */
-# include <stddef.h>
 #endif
 
 /* The following two types have to be signed and unsigned integer type

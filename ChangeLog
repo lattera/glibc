@@ -1,5 +1,9 @@
 2006-04-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2534, BZ #2535]
+	* posix/regex.h: Remove obsolete <sys/types.h> and special
+	handling for VMS.
+
 	* iconvdata/ibm437.c: Define HAS_HOLES to 0.
 	* iconvdata/ibm861.c: Likewise.
 	* iconvdata/ibm862.c: Likewise.
