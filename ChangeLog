@@ -1,3 +1,12 @@
+2006-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/ibm437.c: Define HAS_HOLES to 0.
+	* iconvdata/ibm861.c: Likewise.
+	* iconvdata/ibm862.c: Likewise.
+	* iconvdata/ibm863.c: Likewise.
+	* iconvdata/ibm865.c: Likewise.
+	Reported by <ash@contact.bg>.
+
 2006-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/ifaddrs.h: Get uint32_t definition.
