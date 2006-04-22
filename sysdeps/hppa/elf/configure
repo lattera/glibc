@@ -1,0 +1,63 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/hppa/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and
+# linker.
+echo "$as_me:$LINENO: checking for hppa TLS support" >&5
+echo $ECHO_N "checking for hppa TLS support... $ECHO_C" >&6
+if test "${libc_cv_hppa_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<\EOF
+; Setup tls data
+.section ".tdata","awT",@progbits
+foo:	.data	32
+	.text
+; Test general dyanmic relocations
+test0:
+	addil 	LT'foo-$tls_gdidx$, %r19
+	ldo 	RT'foo-$tls_gdidx$(%r1), %r26
+	b 	__tls_get_addr
+	nop
+; Test local dynamic relocations
+test1:
+	addil 	LT'foo-$tls_ldidx$, %r19
+	b 	__tls_get_addr
+	ldo 	RT'foo-$tls_ldidx$(%r1), %r26
+	ldo 	RR'foo-$tls_dtpoff$(%r1), %r25
+	; More variables can be loaded...
+; Test initial exec reloctiosn
+test2:
+	mfctl 	%cr27, %r26
+	addil 	LT'foo-$tls_ieoff$, %r19
+	ldw 	RT'foo-$tls_ieoff$(%r1), %r25
+	add 	%r26, %r25, %r24
+; Test local exec relocations
+test3:
+	mfctl 	%cr27, %r26
+	addil 	LR'foo-$tls_leoff$, %r26
+	ldo 	RR'foo-$tls_leoff$(%r1), %r25
+; Done all the TLS tests.
+EOF
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_hppa_tls=yes
+else
+  libc_cv_hppa_tls=no
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_hppa_tls" >&5
+echo "${ECHO_T}$libc_cv_hppa_tls" >&6
+if test $libc_cv_hppa_tls = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_TLS_SUPPORT 1
+_ACEOF
+
+fi
+fi

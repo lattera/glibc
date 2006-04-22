@@ -1,3 +1,11 @@
+2006-04-21  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/dl-tls.h: New file
+	* sysdeps/hppa/libc-tls.c: Likewise.
+	* sysdeps/hppa/tls-macros.h: Likewise.
+	* sysdeps/hppa/elf/configure: Likewise.
+	* sysdeps/hppa/elf/configure.in: Likewise.
+
 2006-04-20  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/fpu/fclrexcpt.c (feclearexcept): Use union to
