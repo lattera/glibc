@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995-1999,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <getopt.h>
+#include <limits.h>
 
 #define __need_error_t
 #include <errno.h>
@@ -574,7 +575,7 @@ __NTH (__option_is_short (__const struct argp_option *__opt))
   else
     {
       int __key = __opt->key;
-      return __key > 0 && isprint (__key);
+      return __key > 0 && __key <= UCHAR_MAX && isprint (__key);
     }
 }
 
