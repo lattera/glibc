@@ -1,3 +1,11 @@
+2006-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1951]
+	* sysdeps/posix/sigset.c (sigset): Return correct value reflecting
+	previous signal state.
+	* signal/Makefile (tests): Add tst-sigset2.
+	* signal/tst-sigset2.c: New file.
+
 2006-04-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* argp/argp.h (__option_is_short): Check upper limit of
