@@ -1,3 +1,11 @@
+2006-01-17  Robert Millan  <robertmh@gnu.org>
+
+	[BZ #2158]
+	* SUPPORTED: Add ca_AD, ca_FR and ca_IT variants.
+	* locales/ca_AD: New file.
+	* locales/ca_FR: New file.
+	* locales/ca_IT: New file.
+				
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2134]

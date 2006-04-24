@@ -60,9 +60,15 @@ br_FR@euro/ISO-8859-15 \
 bs_BA.UTF-8/UTF-8 \
 bs_BA/ISO-8859-2 \
 byn_ER/UTF-8 \
+ca_AD.UTF-8/UTF-8 \
+ca_AD/ISO-8859-15 \
 ca_ES.UTF-8/UTF-8 \
 ca_ES/ISO-8859-1 \
 ca_ES@euro/ISO-8859-15 \
+ca_FR.UTF-8/UTF-8 \
+ca_FR/ISO-8859-15 \
+ca_IT.UTF-8/UTF-8 \
+ca_IT/ISO-8859-15 \
 cs_CZ.UTF-8/UTF-8 \
 cs_CZ/ISO-8859-2 \
 cy_GB.UTF-8/UTF-8 \

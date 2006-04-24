@@ -27,17 +27,17 @@ territory  "Pakistan"
 revision   "0.3"
 date       "2000-07-11"
 %
-category  "ur_PK:2000";LC_IDENTIFICATION
-category  "ur_PK:2000";LC_CTYPE
-category  "ur_PK:2000";LC_COLLATE
-category  "ur_PK:2000";LC_TIME
-category  "ur_PK:2000";LC_NUMERIC
-category  "ur_PK:2000";LC_MONETARY
-category  "ur_PK:2000";LC_MESSAGES
-category  "ur_PK:2000";LC_PAPER
-category  "ur_PK:2000";LC_NAME
-category  "ur_PK:2000";LC_ADDRESS
-category  "ur_PK:2000";LC_TELEPHONE
+category  "pa_PK:2000";LC_IDENTIFICATION
+category  "pa_PK:2000";LC_CTYPE
+category  "pa_PK:2000";LC_COLLATE
+category  "pa_PK:2000";LC_TIME
+category  "pa_PK:2000";LC_NUMERIC
+category  "pa_PK:2000";LC_MONETARY
+category  "pa_PK:2000";LC_MESSAGES
+category  "pa_PK:2000";LC_PAPER
+category  "pa_PK:2000";LC_NAME
+category  "pa_PK:2000";LC_ADDRESS
+category  "pa_PK:2000";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
