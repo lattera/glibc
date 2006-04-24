@@ -1,3 +1,7 @@
+2006-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bunp to 2.4.90 for the trunk.
+
 2006-04-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/arena.c (ptmalloc_init): Don't call __malloc_check_init
