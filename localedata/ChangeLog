@@ -1,5 +1,9 @@
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2134]
+	* locales/pa_PK: New file.
+	* SUPPORTED: Add pa_PK.UTF-8.
+
 	[BZ #1974]
 	* locales/vi_VN: Fix int_frac_digits/frac_digits, abmon, mon, d_t_fmt,
 	am_pm, and name_fmt.
