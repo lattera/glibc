@@ -84,11 +84,13 @@ do_test (void)
   results[0].dest_addr = &ai1;
   results[0].got_source_addr = true;
   results[0].source_addr_len = sizeof (so1);
+  results[0].source_addr_flags = 0;
   memcpy (&results[0].source_addr, &so1, sizeof (so1));
 
   results[1].dest_addr = &ai2;
   results[1].got_source_addr = true;
   results[1].source_addr_len = sizeof (so2);
+  results[1].source_addr_flags = 0;
   memcpy (&results[1].source_addr, &so2, sizeof (so2));
 
 
@@ -106,11 +108,13 @@ do_test (void)
   results[1].dest_addr = &ai1;
   results[1].got_source_addr = true;
   results[1].source_addr_len = sizeof (so1);
+  results[1].source_addr_flags = 0;
   memcpy (&results[1].source_addr, &so1, sizeof (so1));
 
   results[0].dest_addr = &ai2;
   results[0].got_source_addr = true;
   results[0].source_addr_len = sizeof (so2);
+  results[0].source_addr_flags = 0;
   memcpy (&results[0].source_addr, &so2, sizeof (so2));
 
 
