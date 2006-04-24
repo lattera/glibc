@@ -87,3 +87,4 @@ readlinkat (fd, path, buf, len)
   return result;
 #endif
 }
+libc_hidden_def (readlinkat)

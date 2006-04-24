@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,36 +16,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <sys/param.h>
 
-/* Read the contents of the symbolic link PATH relative to FD into no
-   more than LEN bytes of BUF.  The contents are not null-terminated.
-   Returns the number of characters read, or -1 for errors.  */
+
 ssize_t
-readlinkat (fd, path, buf, len)
-     int fd;
-     const char *path;
-     char *buf;
-     size_t len;
+__readlinkat_chk (int fd, const char *path, void *buf, size_t len,
+		  size_t buflen)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  if (len > buflen)
+    __chk_fail ();
 
-  if (fd != AT_FDCWD && fd < 0 && *path != '/')
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
+  return readlinkat (fd, path, buf, len);
 }
-stub_warning (readlinkat)
-libc_hidden_def (readlinkat)
-
-#include <stub-tag.h>

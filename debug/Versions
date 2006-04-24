@@ -36,4 +36,7 @@ libc {
 
     __stack_chk_fail;
   }
+  GLIBC_2.5 {
+    __readlinkat_chk;
+  }
 }

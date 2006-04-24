@@ -100,6 +100,28 @@ __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 }
 #endif
 
+#ifdef __USE_ATFILE
+extern ssize_t __readlinkat_chk (int __fd, __const char *__restrict __path,
+				 char *__restrict __buf, size_t __len,
+				 size_t __buflen)
+     __THROW __nonnull ((2, 3)) __wur;
+extern ssize_t __REDIRECT_NTH (__readlinkat_alias,
+			       (int __fd, __const char *__restrict __path,
+				char *__restrict __buf, size_t __len),
+			       readlinkat)
+     __nonnull ((2, 3)) __wur;
+
+extern __always_inline __nonnull ((2, 3)) __wur ssize_t
+__NTH (readlinkat (int __fd, __const char *__restrict __path,
+		   char *__restrict __buf, size_t __len))
+{
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __len > __bos (__buf)))
+    return __readlinkat_chk (__fd, __path, __buf, __len, __bos (__buf));
+  return __readlinkat_alias (__fd, __path, __buf, __len);
+}
+#endif
+
 extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
      __THROW __wur;
 extern char *__REDIRECT_NTH (__getcwd_alias,

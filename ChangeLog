@@ -1,6 +1,20 @@
+2006-04-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (__readlinkat_chk): New prototype.
+	(__readlinkat_alias): New alias.
+	(readlinkat): New inline function.
+	* include/unistd.h (readlinkat): Add libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/readlinkat.c (readlinkat): Add
+	libc_hidden_def.
+	* io/readlinkat.c (readlinkat): Likewise.
+	* debug/readlinkat_chk.c: New file.
+	* debug/Makefile (routines): Add readlinkat_chk.
+	* debug/Versions (libc): Export __readlinkat_chk@@GLIBC_2.5.
+	* debug/tst-chk1.c (do_test): Add readlinkat tests.
+
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/nss_nisplus/nisplus-netgrp.c: Cleanups.	
+	* nis/nss_nisplus/nisplus-netgrp.c: Cleanups.
 
 	[BZ #1951]
 	* sysdeps/posix/sigset.c (sigset): Return correct value reflecting
@@ -37,13 +51,13 @@
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_PROC_SELF_FD_SYMLINK.
 	* sysdeps/unix/sysv/linux/ttyname.c: Cleanups.  Avoid compatibility
-	code if possible.  Move compatibility code in .text.compat section.
+	code is possible.  Move compatibility code in .text.compat section.
 	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
 
 2006-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Rewrite to avoid loop
-	over gaih array.  There is only on function to call in the moment.
+	over gaih array.  There is only one function to call in the moment.
 
 2006-04-16  Ulrich Drepper  <drepper@redhat.com>
 

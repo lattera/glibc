@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -943,6 +943,34 @@ do_test (void)
     FAIL ();
   CHK_FAIL_END
 #endif
+
+  int tmpfd = open ("/tmp", O_RDONLY | O_DIRECTORY);
+  if (tmpfd < 0)
+    FAIL ();
+
+  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf, 4) != 3
+      || memcmp (readlinkbuf, "bar", 3) != 0)
+    FAIL ();
+  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 1,
+		  l0 + 3) != 3
+      || memcmp (readlinkbuf, "bbar", 4) != 0)
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 2,
+		  l0 + 3) != 3)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 3,
+		  4) != 3)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  close (tmpfd);
 
   char *cwd1 = getcwd (NULL, 0);
   if (cwd1 == NULL)

@@ -31,7 +31,8 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
 	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
 	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
-	    readlink_chk getwd_chk getcwd_chk realpath_chk ptsname_r_chk \
+	    readlink_chk readlinkat_chk getwd_chk getcwd_chk \
+	    realpath_chk ptsname_r_chk \
 	    wctomb_chk wcscpy_chk wmemcpy_chk wmemmove_chk wmempcpy_chk \
 	    wcpcpy_chk wcsncpy_chk wcscat_chk wcsncat_chk wmemset_chk \
 	    wcpncpy_chk \

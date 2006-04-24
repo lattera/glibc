@@ -15,6 +15,7 @@ libc_hidden_proto (getlogin_r)
 libc_hidden_proto (seteuid)
 libc_hidden_proto (setegid)
 libc_hidden_proto (tcgetpgrp)
+libc_hidden_proto (readlinkat)
 
 /* Now define the internal interfaces.  */
 extern int __access (__const char *__name, int __type);
