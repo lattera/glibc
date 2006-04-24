@@ -1,5 +1,8 @@
 2006-04-24  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range): Use
+	__LONG_LONG_PAIR macro.
+
 	* posix/bits/unistd.h (__readlinkat_chk): New prototype.
 	(__readlinkat_alias): New alias.
 	(readlinkat): New inline function.
