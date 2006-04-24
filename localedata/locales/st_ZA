@@ -1,7 +1,15 @@
 escape_char  /
 comment_char  %
 
+% Charset: UTF-8
+
 % ChangeLog
+% 0.3 (2005-10-13):
+%    2005-10-12 Dwayne Bailey <dwayne@translate.org.za>
+%      - Added 'Charset: UTF-8' information
+%      - Update contact information
+%      - Allign spellings of month and weekday names with Dept. of
+%        Art and Culture's: Multilingual Mathematics Dictionary
 % 0.2 (2004-11-03):
 %    2004-11-02 Dwayne Bailey <dwayne@translate.org.za>
 %      - Change all contact information
@@ -22,12 +30,12 @@ source     "Zuza Software Foundation (Translate.org.za)"
 address    "PO Box 28364, Sunnyside, 0132, South Africa"
 contact    "Dwayne Bailey"
 email      "dwayne@translate.org.za"
-tel        "+27 12 343 0389"
-fax        "+27 12 343 0389"
+tel        "+27 12 460 1095"
+fax        "+27 12 460 1095"
 language   "Sotho"
 territory  "South Africa"
-revision   "0.2"
-date       "2004-11-03"
+revision   "0.3"
+date       "2005-10-13"
 %
 category  "st_ZA:2003";LC_IDENTIFICATION
 category  "st_ZA:2003";LC_CTYPE
@@ -76,38 +84,38 @@ abday       "<U0053><U006F><U006E>";/
             "<U004D><U006F><U0071>"
  
 % day - The full names of the week days:
-% - Sontaha, Mmantaha, Labobedi, Laboraru, Labone, Labohlane, Moqebelo
+% - Sontaha, Mantaha, Labobedi, Laboraro, Labone, Labohlano, Moqebelo
 day         "<U0053><U006F><U006E><U0074><U0061><U0068><U0061>";/
-            "<U004D><U006D><U0061><U006E><U0074><U0061><U0068><U0061>";/
+            "<U004D><U0061><U006E><U0074><U0061><U0068><U0061>";/
             "<U004C><U0061><U0062><U006F><U0062><U0065><U0064><U0069>";/
-            "<U004C><U0061><U0062><U006F><U0072><U0061><U0072><U0075>";/
+            "<U004C><U0061><U0062><U006F><U0072><U0061><U0072><U006F>";/
             "<U004C><U0061><U0062><U006F><U006E><U0065>";/
-            "<U004C><U0061><U0062><U006F><U0068><U006C><U0061><U006E><U0065>";/
+            "<U004C><U0061><U0062><U006F><U0068><U006C><U0061><U006E><U006F>";/
             "<U004D><U006F><U0071><U0065><U0062><U0065><U006C><U006F>"
  
 % abmon - The abbreviations for the months 
-% - Phe, Kol, Ube, Mme, Mot, Jan, Upu, Pha, Leo, Mph, Pun, Tsh
-abmon       "<U0050><U0068><U0065>";"<U004B><U006F><U006C>";/
-            "<U0055><U0062><U0065>";"<U004D><U006D><U0065>";/
+% - Phe, Hla, Tlh, Mme, Mot, Jan, Upu, Pha, Leo, Mph, Pud, Tsh
+abmon       "<U0050><U0068><U0065>";"<U0048><U006C><U0061>";/
+            "<U0054><U006C><U0048>";"<U004D><U006D><U0065>";/
             "<U004D><U006F><U0074>";"<U004A><U0061><U006E>";/
             "<U0055><U0070><U0075>";"<U0050><U0068><U0061>";/
             "<U004C><U0065><U006F>";"<U004D><U0070><U0068>";/
-            "<U0050><U0075><U006E>";"<U0054><U0073><U0068>"
+            "<U0050><U0075><U0064>";"<U0054><U0073><U0068>"
  
 % mon - The full names of the months - 
-% - Phesekgong, Hlakola, Hlakubele, Mmese, Motsheanong, Phupjane, 
-%   Phupu, Phata, Leotshe, Mphalane, Pundungwane, Tshitwe
-mon         "<U0050><U0068><U0065><U0073><U0065><U006B><U0067><U006F><U006E><U0067>";/
+% - Pherekgong, Hlakola, Tlhakubele, Mmese, Motsheanong, Phupjane, 
+%   Phupu, Phato, Leotse, Mphalane, Pudungwana, Tshitwe
+mon         "<U0050><U0068><U0065><U0072><U0065><U006B><U0067><U006F><U006E><U0067>";/
             "<U0048><U006C><U0061><U006B><U006F><U006C><U0061>";/
-            "<U0048><U006C><U0061><U006B><U0075><U0062><U0065><U006C><U0065>";/
+            "<U0054><U006C><U0068><U0061><U006B><U0075><U0062><U0065><U006C><U0065>";/
             "<U004D><U006D><U0065><U0073><U0065>";/
             "<U004D><U006F><U0074><U0073><U0068><U0065><U0061><U006E><U006F><U006E><U0067>";/
             "<U0050><U0068><U0075><U0070><U006A><U0061><U006E><U0065>";/
             "<U0050><U0068><U0075><U0070><U0075>";/
-            "<U0050><U0068><U0061><U0074><U0061>";/
-            "<U004C><U0065><U006F><U0074><U0073><U0068><U0065>";/
+            "<U0050><U0068><U0061><U0074><U006F>";/
+            "<U004C><U0065><U006F><U0074><U0073><U0065>";/
             "<U004D><U0070><U0068><U0061><U006C><U0061><U006E><U0065>";/
-            "<U0050><U0075><U006E><U0064><U0075><U006E><U0067><U0077><U0061><U006E><U0065>";/
+            "<U0050><U0075><U0064><U0075><U006E><U0067><U0077><U0061><U006E><U0061>";/
             "<U0054><U0073><U0068><U0069><U0074><U0077><U0065>"
  
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -

@@ -1,5 +1,24 @@
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1974]
+	* locales/vi_VN: Fix int_frac_digits/frac_digits, abmon, mon, d_t_fmt,
+	am_pm, and name_fmt.
+
+	[BZ #1787]
+	* locales/en_ZA: Updates.
+
+	[BZ #1786]
+	* locales/af_ZA: Updates.
+
+	[BZ #1785]
+	* locales/st_ZA: Updates and formatting changes.
+
+	[BZ #1784]
+	* locales/zu_ZA: Updates and formatting changes.
+
+	[BZ #1783]
+	* locales/xh_ZA: Updates and formatting changes.
+
 	[BZ #1782]
 	* locales/nr_ZA: New file.
 	* locales/SUPPORTED: Add nr_ZA.UTF-8.

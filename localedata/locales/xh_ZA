@@ -1,7 +1,15 @@
 escape_char  /
 comment_char  %
 
+% Charset: UTF-8
+
 % ChangeLog
+% 0.3 (2005-10-13):
+%     2005-10-12 Dwayne Bailey <dwayne@translate.org.za>
+%       - Added 'Charset: UTF-8' information
+%       - Update contact information
+%       - Allign spellings of month and weekday names with Dept. of
+%         Art and Culture's: Multilingual Mathematics Dictionary
 % 0.2 (2004-11-02):
 %     2004-11-01 Dwayne Bailey <dwayne@translate.org.za>
 %       - Change all contact information
@@ -24,12 +32,12 @@ source     "Zuza Software Foundation (Translate.org.za)"
 address    "PO Box 28364, Sunnyside, 0132, South Africa"
 contact    "Dwayne Bailey"
 email      "dwayne@translate.org.za"
-tel        "+27 12 343 8389"
-fax        "+27 12 343 0389"
+tel        "+27 12 460 1095"
+fax        "+27 12 460 1095"
 language   "Xhosa"
 territory  "South Africa"
-revision   "0.2"
-date       "2004-11-02"
+revision   "0.3"
+date       "2005-10-13"
 %
 category  "xh_ZA:2003";LC_IDENTIFICATION
 category  "xh_ZA:2003";LC_CTYPE
@@ -77,39 +85,39 @@ abday       "<U0043><U0061><U0077>";/
             "<U004D><U0067><U0071>"
 %
 % The full names of the week days:
-% - Cawe, Mvulo, Lwesibini, Lwesithathu, Lwesine, Lwesihlanu, Mgqibelo
-day         "<U0043><U0061><U0077><U0065>";/
-            "<U004D><U0076><U0075><U006C><U006F>";/
-            "<U004C><U0077><U0065><U0073><U0069><U0062><U0069><U006E><U0069>";/
-            "<U004C><U0077><U0065><U0073><U0069><U0074><U0068><U0061><U0074><U0068><U0075>";/
-            "<U004C><U0077><U0065><U0073><U0069><U006E><U0065>";/
-            "<U004C><U0077><U0065><U0073><U0069><U0068><U006C><U0061><U006E><U0075>";/
-            "<U004D><U0067><U0071><U0069><U0062><U0065><U006C><U006F>"
+% - iCawa, uMvulo, lwesiBini, lwesiThathu, ulweSine, lwesiHlanu, uMgqibelo
+day         "<U0069><U0043><U0061><U0077><U0061>";/
+            "<U0075><U004D><U0076><U0075><U006C><U006F>";/
+            "<U006C><U0077><U0065><U0073><U0069><U0042><U0069><U006E><U0069>";/
+            "<U006C><U0077><U0065><U0073><U0069><U0054><U0068><U0061><U0074><U0068><U0075>";/
+            "<U0075><U006C><U0077><U0065><U0053><U0069><U006E><U0065>";/
+            "<U006C><U0077><U0065><U0073><U0069><U0048><U006C><U0061><U006E><U0075>";/
+            "<U0075><U004D><U0067><U0071><U0069><U0062><U0065><U006C><U006F>"
 %
 % The abbreviations for the months 
-% - Jan, Feb, Mat, Epr, Mey, Jun, Jul, Aga, Sep, Okt, Nov, Dis
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0074>";"<U0045><U0070><U0072>";/
-            "<U004D><U0065><U0079>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0067><U0061>";/
-            "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0069><U0073>"
+% - Mqu, Mdu, Kwi, Tsh, Can, Sil, Kha, Thu, Msi, Dwa, Nka, Mng
+abmon       "<U004D><U0071><U0075>";"<U004D><U0064><U0075>";/
+            "<U004B><U0077><U0069>";"<U0054><U0073><U0068>";/
+            "<U0043><U0061><U006E>";"<U0053><U0069><U006C>";/
+            "<U004B><U0068><U0061>";"<U0054><U0068><U0075>";/
+            "<U004D><U0073><U0069>";"<U0044><U0077><U0061>";/
+            "<U004E><U006B><U0061>";"<U004D><U006E><U0067>"
 %
 % The full names of the months - 
-% - Janyuwari, Februwari, Matshi, Epreli, Meyi, Juni, Julayi, Agasti, Septemba,
-%   Okthoba, Novemba, Disemba
-mon         "<U004A><U0061><U006E><U0079><U0075><U0077><U0061><U0072><U0069>";/
-            "<U0046><U0065><U0062><U0072><U0075><U0077><U0061><U0072><U0069>";/
-            "<U004D><U0061><U0074><U0073><U0068><U0069>";/
-            "<U0045><U0070><U0072><U0065><U006C><U0069>";/
-            "<U004D><U0065><U0079><U0069>";/
-            "<U004A><U0075><U006E><U0069>";/
-            "<U004A><U0075><U006C><U0061><U0079><U0069>";/
-            "<U0041><U0067><U0061><U0073><U0074><U0069>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-            "<U004F><U006B><U0074><U0068><U006F><U0062><U0061>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-            "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+% - eyoMqungu, eyoMdumba, eyoKwindla, uTshazimpuzi, uCanzibe, eyeSilimela
+%   eyeKhala, eyeThupa, eyoMsintsi, eyeDwarha, eyeNkanga, eyoMnga
+mon         "<U0065><U0079><U006F><U004D><U0071><U0075><U006E><U0067><U0075>";/
+            "<U0065><U0079><U006F><U004D><U0064><U0075><U006D><U0062><U0061>";/
+            "<U0065><U0079><U006F><U004B><U0077><U0069><U006E><U0064><U006C><U0061>";/
+            "<U0075><U0054><U0073><U0068><U0061><U007A><U0069><U006D><U0070><U0075><U007A><U0069>";/
+            "<U0075><U0043><U0061><U006E><U007A><U0069><U0062><U0065>";/
+            "<U0065><U0079><U0065><U0053><U0069><U006C><U0069><U006D><U0065><U006C><U0061>";/
+            "<U0065><U0079><U0065><U004B><U0068><U0061><U006C><U0061>";/
+            "<U0065><U0079><U0065><U0054><U0068><U0075><U0070><U0061>";/
+            "<U0065><U0079><U006F><U004D><U0073><U0069><U006E><U0074><U0073><U0069>";/
+            "<U0065><U0079><U0065><U0044><U0077><U0061><U0072><U0068><U0061>";/
+            "<U0065><U0079><U0065><U004E><U006B><U0061><U006E><U0067><U0061>";/
+            "<U0065><U0079><U006F><U004D><U006E><U0067><U0061>"
 %
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
 d_t_fmt     "<U0025><U0061><U0020><U0025><U002D><U0065><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
