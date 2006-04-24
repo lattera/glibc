@@ -551,8 +551,8 @@ ptmalloc_init (void)
     }
   s = getenv("MALLOC_CHECK_");
 #endif
-  if(s) {
-    if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
+  if(s && s[0]) {
+    mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     if (check_action != 0)
       __malloc_check_init();
   }
