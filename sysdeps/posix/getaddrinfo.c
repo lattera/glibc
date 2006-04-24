@@ -1516,7 +1516,7 @@ getaddrinfo (const char *name, const char *service,
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
 
-  struct in6addrinfo *in6ai;
+  struct in6addrinfo *in6ai = NULL;
   size_t in6ailen;
   bool seen_ipv4 = false;
   bool seen_ipv6 = false;
