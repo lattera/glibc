@@ -1,5 +1,7 @@
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-netgrp.c: Cleanups.	
+
 	[BZ #1951]
 	* sysdeps/posix/sigset.c (sigset): Return correct value reflecting
 	previous signal state.
@@ -16,7 +18,7 @@
 2006-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2534, BZ #2535]
-	* posix/regex.h: Remove obsolete <sys/types.h> and special
+	* posix/regex.h: Remove obsolete <sys/types.h> comment and special
 	handling for VMS.
 
 	* iconvdata/ibm437.c: Define HAS_HOLES to 0.
@@ -35,7 +37,7 @@
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_PROC_SELF_FD_SYMLINK.
 	* sysdeps/unix/sysv/linux/ttyname.c: Cleanups.  Avoid compatibility
-	code is possible.  Move compatibility code in .text.compat section.
+	code if possible.  Move compatibility code in .text.compat section.
 	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
 
 2006-04-18  Ulrich Drepper  <drepper@redhat.com>

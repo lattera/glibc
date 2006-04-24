@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -27,11 +27,11 @@
 
 #include "nss-nisplus.h"
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 enum nss_status
 _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
