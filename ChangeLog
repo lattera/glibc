@@ -1,5 +1,11 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2571]
+	* nscd/nscd_helper.c (__nscd_get_map_ref): Make mapptr argument a
+	volatile pointer so that the mapptr->mapped value is re-read after
+	the lock is retrieved.
+	* nscd/nscd-client.h: Update __nscd_get_map_ref prototype.
+
 	* include/features.h [_GNU_SOURCE] (_POSIX_C_SOURCE): Define to
 	200112L.
 
@@ -12,7 +18,7 @@
 	(struct hconf): Replace service related fields with placeholders.
 
 	[BZ #2386]
-	* sysdeps/unix/sysv/linux/ia64/clone2.S: Check for NULL stakc
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Check for NULL stack
 	pointers to match other architectures.
 	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (tests): Add
 	tst-clone.

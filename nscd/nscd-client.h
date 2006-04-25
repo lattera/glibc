@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005
+/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -277,7 +277,7 @@ extern int __nscd_open_socket (const char *key, size_t keylen,
 /* Get reference of mapping.  */
 extern struct mapped_database *__nscd_get_map_ref (request_type type,
 						   const char *name,
-						   struct locked_map_ptr *mapptr,
+						   volatile struct locked_map_ptr *mapptr,
 						   int *gc_cyclep);
 
 /* Unmap database.  */

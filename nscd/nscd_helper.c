@@ -316,17 +316,18 @@ get_mapping (request_type type, const char *key,
 
 struct mapped_database *
 __nscd_get_map_ref (request_type type, const char *name,
-		    struct locked_map_ptr *mapptr, int *gc_cyclep)
+		    volatile struct locked_map_ptr *mapptr, int *gc_cyclep)
 {
   struct mapped_database *cur = mapptr->mapped;
   if (cur == NO_MAPPING)
     return cur;
 
   int cnt = 0;
-  while (atomic_compare_and_exchange_val_acq (&mapptr->lock, 1, 0) != 0)
+  while (__builtin_expect (atomic_compare_and_exchange_val_acq (&mapptr->lock,
+								1, 0) != 0, 0))
     {
       // XXX Best number of rounds?
-      if (++cnt > 5)
+      if (__builtin_expect (++cnt > 5, 0))
 	return NO_MAPPING;
 
       atomic_delay ();
@@ -340,7 +341,8 @@ __nscd_get_map_ref (request_type type, const char *name,
       if (cur == NULL
 	  || (cur->head->nscd_certainly_running == 0
 	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL)))
-	cur = get_mapping (type, name, &mapptr->mapped);
+	cur = get_mapping (type, name,
+			   (struct mapped_database **) &mapptr->mapped);
 
       if (__builtin_expect (cur != NO_MAPPING, 1))
 	{
