@@ -1,5 +1,8 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/features.h [_GNU_SOURCE] (_POSIX_C_SOURCE): Define to
+	200112L.
+
 	* resolv/res_hconf.c: Minor surgery to 'cmd' and the referenced
 	functions to avoid relocations.
 
