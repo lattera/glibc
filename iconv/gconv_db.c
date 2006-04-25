@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -227,7 +227,7 @@ __gconv_release_step (struct __gconv_step *step)
       step->__shlib_handle = NULL;
 #endif
     }
-  else
+  else if (step->__shlib_handle == NULL)
     /* Builtin modules should not have end functions.  */
     assert (step->__end_fct == NULL);
 }

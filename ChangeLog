@@ -1,3 +1,11 @@
+2006-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2569]
+	* iconv/gconv_db.c (__gconv_release_step): Fix condition of assert
+	call.
+	* iconvdata/Makefile (tests): Add tst-iconv6.
+	* iconvdata/tst-iconv6.c: New file.
+
 2006-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-rfc3484.c (do_test): Also initialize source_addr_flags
