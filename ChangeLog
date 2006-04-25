@@ -1,5 +1,10 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2389]
+	* resolv/res_hconf.c: Remove 'order' parsing.  Just ignore the line.
+	* resolv/res_hconf.h: Remove Name_Service definition.
+	(struct hconf): Replace service related fields with placeholders.
+
 	[BZ #2386]
 	* sysdeps/unix/sysv/linux/ia64/clone2.S: Check for NULL stakc
 	pointers to match other architectures.
@@ -26,7 +31,7 @@
 	* posix/tst-rfc3484.c: Include <ifaddrs.h> early.
 	* posix/tst-rfc3484-2.c: Likewise.
 
-	* version.h (VERSION): Bunp to 2.4.90 for the trunk.
+	* version.h (VERSION): Bump to 2.4.90 for the trunk.
 
 2006-04-24  Jakub Jelinek  <jakub@redhat.com>
 

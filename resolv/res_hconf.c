@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -53,15 +53,12 @@
 
 /* Environment vars that all user to override default behavior:  */
 #define ENV_HOSTCONF	"RESOLV_HOST_CONF"
-#define ENV_SERVORDER	"RESOLV_SERV_ORDER"
 #define ENV_SPOOF	"RESOLV_SPOOF_CHECK"
 #define ENV_TRIM_OVERR	"RESOLV_OVERRIDE_TRIM_DOMAINS"
 #define ENV_TRIM_ADD	"RESOLV_ADD_TRIM_DOMAINS"
 #define ENV_MULTI	"RESOLV_MULTI"
 #define ENV_REORDER	"RESOLV_REORDER"
 
-static const char *arg_service_list (const char *, int, const char *,
-				     unsigned int);
 static const char *arg_trimdomain_list (const char *, int, const char *,
 					unsigned int);
 static const char *arg_spoof (const char *, int, const char *, unsigned int);
@@ -75,7 +72,7 @@ static const struct cmd
   unsigned int arg;
 } cmd[] =
 {
-  {"order",		arg_service_list,	0},
+  {"order",		NULL,			0},
   {"trim",		arg_trimdomain_list,	0},
   {"spoof",		arg_spoof,		0},
   {"multi",		arg_bool,		HCONF_FLAG_MULTI},
@@ -103,101 +100,6 @@ skip_string (const char *str)
   while (*str && !isspace (*str) && *str != '#' && *str != ',')
     ++str;
   return str;
-}
-
-
-static const char *
-arg_service_list (const char *fname, int line_num, const char *args,
-		  unsigned int arg)
-{
-  enum Name_Service service;
-  const char *start;
-  size_t len;
-  size_t i;
-  static const struct
-  {
-    const char name[6];
-    int16_t service;
-  } svcs[] =
-    {
-      {"bind",	SERVICE_BIND},
-      {"hosts",	SERVICE_HOSTS},
-      {"nis",	SERVICE_NIS},
-    };
-
-  do
-    {
-      start = args;
-      args = skip_string (args);
-      len = args - start;
-
-      service = SERVICE_NONE;
-      for (i = 0; i < sizeof (svcs) / sizeof (svcs[0]); ++i)
-	{
-	  if (__strncasecmp (start, svcs[i].name, len) == 0
-	      && len == strlen (svcs[i].name))
-	  {
-	    service = svcs[i].service;
-	    break;
-	  }
-      }
-      if (service == SERVICE_NONE)
-	{
-	  char *buf;
-
-	  if (__asprintf (&buf,
-			  _("%s: line %d: expected service, found `%s'\n"),
-			  fname, line_num, start) < 0)
-	    return 0;
-
-	  __fxprintf (NULL, "%s", buf);
-
-	  free (buf);
-	  return 0;
-	}
-      if (_res_hconf.num_services >= SERVICE_MAX)
-	{
-	  char *buf;
-
-	  if (__asprintf (&buf, _("\
-%s: line %d: cannot specify more than %d services"),
-			  fname, line_num, SERVICE_MAX) < 0)
-	    return 0;
-
-	  __fxprintf (NULL, "%s", buf);
-
-	  free (buf);
-	  return 0;
-	}
-      _res_hconf.service[_res_hconf.num_services++] = service;
-
-      args = skip_ws (args);
-      switch (*args)
-	{
-	case ',':
-	case ';':
-	case ':':
-	  args = skip_ws (++args);
-	  if (!*args || *args == '#')
-	    {
-	      char *buf;
-
-	      if (__asprintf (&buf, _("\
-%s: line %d: list delimiter not followed by keyword"),
-			      fname, line_num) < 0)
-		return 0;
-
-	      __fxprintf (NULL, "%s", buf);
-
-	      free (buf);
-	      return 0;
-	    }
-	default:
-	  break;
-	}
-    }
-  while (*args && *args != '#');
-  return args;
 }
 
 
@@ -351,6 +253,11 @@ parse_line (const char *fname, int line_num, const char *str)
       return;
     }
 
+  /* Ignore lines for which no parser is set.  This is used for
+     obsolete commands.  */
+  if (c->parse_args == NULL)
+    return;
+
   /* process args: */
   str = skip_ws (str);
   str = (*c->parse_args) (fname, line_num, str, c->arg);
@@ -396,10 +303,7 @@ do_init (void)
     hconf_name = _PATH_HOSTCONF;
 
   fp = fopen (hconf_name, "rc");
-  if (!fp)
-    /* make up something reasonable: */
-    _res_hconf.service[_res_hconf.num_services++] = SERVICE_BIND;
-  else
+  if (fp)
     {
       /* No threads using this stream.  */
       __fsetlocking (fp, FSETLOCKING_BYCALLER);
@@ -411,13 +315,6 @@ do_init (void)
 	  parse_line (hconf_name, line_num, buf);
 	}
       fclose (fp);
-    }
-
-  envval = getenv (ENV_SERVORDER);
-  if (envval)
-    {
-      _res_hconf.num_services = 0;
-      arg_service_list (ENV_SERVORDER, 1, envval, 0);
     }
 
   envval = getenv (ENV_SPOOF);
