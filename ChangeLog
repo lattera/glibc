@@ -1,5 +1,8 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_hconf.c: Minor surgery to 'cmd' and the referenced
+	functions to avoid relocations.
+
 	[BZ #2389]
 	* resolv/res_hconf.c: Remove 'order' parsing.  Just ignore the line.
 	* resolv/res_hconf.h: Remove Name_Service definition.

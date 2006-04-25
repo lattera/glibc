@@ -59,26 +59,28 @@
 #define ENV_MULTI	"RESOLV_MULTI"
 #define ENV_REORDER	"RESOLV_REORDER"
 
-static const char *arg_trimdomain_list (const char *, int, const char *,
-					unsigned int);
-static const char *arg_spoof (const char *, int, const char *, unsigned int);
-static const char *arg_bool (const char *, int, const char *, unsigned int);
+enum parse_cbs
+  {
+    CB_none,
+    CB_arg_trimdomain_list,
+    CB_arg_spoof,
+    CB_arg_bool
+  };
 
 static const struct cmd
 {
-  const char *name;
-  const char *(*parse_args) (const char * filename, int line_num,
-			     const char * args, unsigned int arg);
+  const char name[11];
+  uint8_t cb;
   unsigned int arg;
 } cmd[] =
 {
-  {"order",		NULL,			0},
-  {"trim",		arg_trimdomain_list,	0},
-  {"spoof",		arg_spoof,		0},
-  {"multi",		arg_bool,		HCONF_FLAG_MULTI},
-  {"nospoof",		arg_bool,		HCONF_FLAG_SPOOF},
-  {"spoofalert",	arg_bool,		HCONF_FLAG_SPOOFALERT},
-  {"reorder",		arg_bool,		HCONF_FLAG_REORDER}
+  {"order",		CB_none,		0},
+  {"trim",		CB_arg_trimdomain_list,	0},
+  {"spoof",		CB_arg_spoof,		0},
+  {"multi",		CB_arg_bool,		HCONF_FLAG_MULTI},
+  {"nospoof",		CB_arg_bool,		HCONF_FLAG_SPOOF},
+  {"spoofalert",	CB_arg_bool,		HCONF_FLAG_SPOOFALERT},
+  {"reorder",		CB_arg_bool,		HCONF_FLAG_REORDER}
 };
 
 /* Structure containing the state.  */
@@ -104,8 +106,7 @@ skip_string (const char *str)
 
 
 static const char *
-arg_trimdomain_list (const char *fname, int line_num, const char *args,
-		     unsigned int flag)
+arg_trimdomain_list (const char *fname, int line_num, const char *args)
 {
   const char * start;
   size_t len;
@@ -161,7 +162,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 
 
 static const char *
-arg_spoof (const char *fname, int line_num, const char *args, unsigned flag)
+arg_spoof (const char *fname, int line_num, const char *args)
 {
   const char *start = args;
   size_t len;
@@ -253,14 +254,19 @@ parse_line (const char *fname, int line_num, const char *str)
       return;
     }
 
-  /* Ignore lines for which no parser is set.  This is used for
-     obsolete commands.  */
-  if (c->parse_args == NULL)
-    return;
-
   /* process args: */
   str = skip_ws (str);
-  str = (*c->parse_args) (fname, line_num, str, c->arg);
+
+  if (c->cb == CB_arg_trimdomain_list)
+    str = arg_trimdomain_list (fname, line_num, str);
+  else if (c->cb == CB_arg_spoof)
+    str = arg_spoof (fname, line_num, str);
+  else if (c->cb == CB_arg_bool)
+    str = arg_bool (fname, line_num, str, c->arg);
+  else
+    /* Ignore the line.  */
+    return;
+
   if (!str)
     return;
 
@@ -319,7 +325,7 @@ do_init (void)
 
   envval = getenv (ENV_SPOOF);
   if (envval)
-    arg_spoof (ENV_SPOOF, 1, envval, 0);
+    arg_spoof (ENV_SPOOF, 1, envval);
 
   envval = getenv (ENV_MULTI);
   if (envval)
@@ -331,13 +337,13 @@ do_init (void)
 
   envval = getenv (ENV_TRIM_ADD);
   if (envval)
-    arg_trimdomain_list (ENV_TRIM_ADD, 1, envval, 0);
+    arg_trimdomain_list (ENV_TRIM_ADD, 1, envval);
 
   envval = getenv (ENV_TRIM_OVERR);
   if (envval)
     {
       _res_hconf.num_trimdomains = 0;
-      arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval, 0);
+      arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval);
     }
 
   _res_hconf.initialized = 1;
