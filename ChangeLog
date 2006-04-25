@@ -1,8 +1,15 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2386]
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Check for NULL stakc
+	pointers to match other architectures.
+	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (tests): Add
+	tst-clone.
+	* sysdeps/unix/sysv/linux/tst-clone.c: New file.
+
 	[BZ #2072]
 	* stdio-common/printf_fp.c: Fix potential memory leaks for
-	malloc'ed wbuffer isn't freed in error conditions.
+	malloc'ed wbuffer which isn't freed in error conditions.
 
 	[BZ #2569]
 	* iconv/gconv_db.c (__gconv_release_step): Fix condition of assert
