@@ -1,5 +1,9 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2072]
+	* stdio-common/printf_fp.c: Fix potential memory leaks for
+	malloc'ed wbuffer isn't freed in error conditions.
+
 	[BZ #2569]
 	* iconv/gconv_db.c (__gconv_release_step): Fix condition of assert
 	call.

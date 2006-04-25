@@ -72,7 +72,11 @@
     {									      \
       register const int outc = (ch);					      \
       if (putc (outc, fp) == EOF)					      \
-	return -1;							      \
+	{								      \
+	  if (buffer_malloced)						      \
+	    free (wbuffer);						      \
+	  return -1;							      \
+	}								      \
       ++done;								      \
     } while (0)
 
@@ -83,7 +87,11 @@
       if (len > 20)							      \
 	{								      \
 	  if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
-	    return -1;							      \
+	    {								      \
+	      if (buffer_malloced)					      \
+		free (wbuffer);						      \
+	      return -1;						      \
+	    }								      \
 	  ptr += outlen;						      \
 	  done += outlen;						      \
 	}								      \
@@ -102,7 +110,11 @@
   do									      \
     {									      \
       if (PAD (fp, ch, len) != len)					      \
-	return -1;							      \
+	{								      \
+	  if (buffer_malloced)						      \
+	    free (wbuffer);						      \
+	  return -1;							      \
+	}								      \
       done += len;							      \
     }									      \
   while (0)
@@ -199,6 +211,11 @@ ___printf_fp (FILE *fp,
 
   /* Nonzero if this is output on a wide character stream.  */
   int wide = info->wide;
+
+  /* Buffer in which we produce the output.  */
+  wchar_t *wbuffer = NULL;
+  /* Flag whether wbuffer is malloc'ed or not.  */
+  int buffer_malloced = 0;
 
   auto wchar_t hack_digit (void);
 
@@ -790,8 +807,7 @@ ___printf_fp (FILE *fp,
 
   {
     int width = info->width;
-    wchar_t *wbuffer, *wstartp, *wcp;
-    int buffer_malloced;
+    wchar_t *wstartp, *wcp;
     int chars_needed;
     int expscale;
     int intdig_max, intdig_no = 0;
@@ -1109,8 +1125,12 @@ ___printf_fp (FILE *fp,
 	      buffer = (char *) malloc (2 + chars_needed + decimal_len
 					+ ngroups * thousands_sep_len);
 	      if (buffer == NULL)
-		/* Signal an error to the caller.  */
-		return -1;
+		{
+		  /* Signal an error to the caller.  */
+		  if (buffer_malloced)
+		    free (wbuffer);
+		  return -1;
+		}
 	    }
 	  else
 	    buffer = (char *) alloca (2 + chars_needed + decimal_len
