@@ -1,11 +1,11 @@
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* bg_BG: Update after iso-4217.def update.
-	* bs_BA: Likewise.
-	* es_MX: Likewise.
-	* ru_RU: Likewise.
-	* tg_TJ: Likewise.
-	* tt_RU: Likewise.
+	* locales/bg_BG: Update after iso-4217.def update.
+	* locales/bs_BA: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/tg_TJ: Likewise.
+	* locales/tt_RU: Likewise.
 
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
@@ -24,7 +24,7 @@
 	* locales/ca_AD: New file.
 	* locales/ca_FR: New file.
 	* locales/ca_IT: New file.
-				
+
 2006-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2134]
