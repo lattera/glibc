@@ -1,5 +1,10 @@
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2420]
+	* stdlib/strfmon_l.c (__vstrfmon_l): Fix handling of ! modifier.
+	* localedata/Makefile: Add rules to build and run tst-strfmon1.
+	* localedata/tst-strfmon1.c: New file.
+
 	[BZ #2571]
 	* nscd/nscd_helper.c (__nscd_get_map_ref): Make mapptr argument a
 	volatile pointer so that the mapptr->mapped value is re-read after

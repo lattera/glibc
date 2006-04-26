@@ -486,23 +486,21 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	    }
 
 	  if (print_curr_symbol)
-	    {
-	      out_string (currency_symbol);
+	    out_string (currency_symbol);
 
-	      if (sign_posn == 4)
-		{
-		  if (sep_by_space == 2)
-		    out_char (space_char);
-		  out_string (sign_string);
-		  if (sep_by_space == 1)
-		    /* POSIX.2 and SUS are not clear on this case, but C99
-		       says a space follows the adjacent-symbol-and-sign */
-		    out_char (' ');
-		}
-	      else
-		if (sep_by_space == 1)
-		  out_char (space_char);
+	  if (sign_posn == 4)
+	    {
+	      if (print_curr_symbol && sep_by_space == 2)
+		out_char (space_char);
+	      out_string (sign_string);
+	      if (sep_by_space == 1)
+		/* POSIX.2 and SUS are not clear on this case, but C99
+		   says a space follows the adjacent-symbol-and-sign */
+		out_char (' ');
 	    }
+	  else
+	    if (print_curr_symbol && sep_by_space == 1)
+	      out_char (space_char);
 	}
       else
 	if (sign_posn != 0 && sign_posn != 2 && sign_posn != 3
@@ -561,12 +559,13 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 		  || (sign_posn == 0 && sep_by_space == 1))
 		out_char (space_char);
 	      out_nstring (currency_symbol, currency_symbol_len);
-	      if (sign_posn == 4)
-		{
-		  if (sep_by_space == 2)
-		    out_char (' ');
-		  out_string (sign_string);
-		}
+	    }
+	    
+	  if (sign_posn == 4)
+	    {
+	      if (sep_by_space == 2)
+		out_char (' ');
+	      out_string (sign_string);
 	    }
 	}
 

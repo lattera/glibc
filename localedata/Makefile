@@ -92,7 +92,8 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
-	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale
+	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
+	tst-strfmon1
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
@@ -282,6 +283,7 @@ tst-digits-ENV = $(TEST_MBWC_ENV)
 tst-mbswcs6-ENV = $(TEST_MBWC_ENV)
 tst-xlocale1-ENV = $(TEST_MBWC_ENV)
 tst-xlocale2-ENV = $(TEST_MBWC_ENV)
+tst-strfmon1-ENV = $(TEST_MBWC_ENV)
 
 tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
 
