@@ -1,5 +1,18 @@
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add vmsplice.
+	* sysdeps/unix/sysv/linux/Versions: Export vmsplice@@GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Declare vmsplice.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/uio.h: Fix a typo in a comment.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused
 	bugs not to be reported.
 

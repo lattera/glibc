@@ -23,6 +23,10 @@
 
 #include <sys/types.h>
 #include <bits/wordsize.h>
+#ifdef __USE_GNU
+# include <bits/uio.h>
+#endif
+
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -225,6 +229,10 @@ extern ssize_t readahead (int __fd, __off64_t __offset, size_t __count)
 extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
 			    unsigned int __flags);
 
+
+/* Splice address range into a pipe.  */
+extern int vmsplice (int __fdout, const struct iovec *__iov, size_t __count,
+		     unsigned int __flags);
 
 /* Splice two files together.  */
 extern int splice (int __fdin, int __fdout, size_t __len, unsigned int __flags)

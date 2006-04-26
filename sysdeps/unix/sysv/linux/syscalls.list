@@ -77,6 +77,7 @@ swapoff		-	swapoff		i:s	__swapoff	swapoff
 tee		EXTRA	tee		i:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	uselib
+vmsplice	EXTRA	vmsplice	i:iPii	vmsplice
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
