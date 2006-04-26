@@ -61,6 +61,7 @@ have-fpie = @libc_cv_fpie@
 have-ssp = @libc_cv_ssp@
 have-selinux = @have_selinux@
 have-libaudit = @have_libaudit@
+have-libcap = @have_libcap@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@

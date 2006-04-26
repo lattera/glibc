@@ -1,5 +1,5 @@
 /* Header for nscd SELinux access controls.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -22,6 +22,9 @@
 #define _SELINUX_H 1
 
 #include "nscd.h"
+#ifdef HAVE_LIBCAP
+# include <sys/capabilities.h>
+#endif
 
 #ifdef HAVE_SELINUX
 /* Global variable to tell if the kernel has SELinux support.  */
@@ -42,6 +45,13 @@ extern int nscd_request_avc_has_perm (int fd, request_type req);
 extern void nscd_avc_cache_stats (struct avc_cache_stats *cstats);
 /* Display statistics on AVC usage.  */
 extern void nscd_avc_print_stats (struct avc_cache_stats *cstats);
+
+# ifdef HAVE_LIBCAP
+/* Preserve capabilities to connect to connnect to the audit daemon.  */
+extern cap_t preserve_capabilities (void);
+/* Install final capabilities.  */
+extern void install_real_capabilities (cap_t new_caps);
+# endif
 #else
 # define selinux_enabled 0
 # define nscd_avc_init() (void) 0

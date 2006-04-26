@@ -55,10 +55,13 @@ all-nscd-modules := $(nscd-modules) selinux
 ifeq (yes,$(have-selinux))
 ifeq (yes,$(have-libaudit))
 libaudit = -laudit
+ifeq (yes,$(have-libcap))
+libcap = -lcap
+endif
 endif
 
 nscd-modules += selinux
-selinux-LIBS := -lselinux $(libaudit)
+selinux-LIBS := -lselinux $(libaudit) $(libcap)
 
 # The configure.in check for libselinux and its headers did not use
 # $SYSINCLUDES.  The directory specified by --with-headers usually

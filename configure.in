@@ -1982,6 +1982,13 @@ if test "x$have_selinux" = xyes; then
     AC_DEFINE(HAVE_LIBAUDIT, 1, [SELinux libaudit support])
   fi
   AC_SUBST(have_libaudit)
+
+  # See if we have the libcap library
+  AC_CHECK_LIB(cap, cap_init, have_libcap=yes, have_libcap=no)
+  if test "x$have_libcap" = xyes; then
+    AC_DEFINE(HAVE_LIBCAP, 1, [SELinux libcap support])
+  fi
+  AC_SUBST(have_libcap)
 fi
 AC_SUBST(have_selinux)
 

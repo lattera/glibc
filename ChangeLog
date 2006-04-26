@@ -1,3 +1,16 @@
+2006-04-26  James Antill  <james.antill@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* config.make.in: Add have-libcap.
+	* configure.in: Check for libcap.
+	* nscd/Makefile (selinux-LIBS): Add -lcap if possible.
+	* nscd/connections.c (finish_drop_privileges): When libcap is available
+	call preserve_capabilities and install_real_capabilities.
+	* nscd/selinux.c: Define preserve_capabilities and
+	install_real_capabilities.
+	* nscd/selinux.h: Declare preserve_capabilities and
+	install_real_capabilities.
+
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-4217.def: Update.

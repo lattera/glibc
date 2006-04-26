@@ -28,12 +28,13 @@
 #include <stdlib.h>
 #include <syslog.h>
 #include <unistd.h>
+#include <sys/prctl.h>
 #include <selinux/av_permissions.h>
 #include <selinux/avc.h>
 #include <selinux/flask.h>
 #include <selinux/selinux.h>
 #ifdef HAVE_LIBAUDIT
-#include <libaudit.h>
+# include <libaudit.h>
 #endif
 
 #include "dbg_log.h"
@@ -149,6 +150,90 @@ audit_init (void)
       && errno != EINVAL && errno != EPROTONOSUPPORT && errno != EAFNOSUPPORT)
     dbg_log (_("Failed opening connection to the audit subsystem: %m"));
 }
+
+
+# ifdef HAVE_LIBCAP
+static const cap_value_t new_cap_list[] =
+  { CAP_AUDIT_WRITE };
+#  define nnew_cap_list (sizeof (new_cap_list) / sizeof (new_cap_list[0]))
+static const cap_value_t tmp_cap_list[] =
+  { CAP_AUDIT_WRITE, CAP_SETUID, CAP_SETGID };
+#  define ntmp_cap_list (sizeof (tmp_cap_list) / sizeof (tmp_cap_list[0]))
+
+cap_t
+preserve_capabilities (void)
+{
+  if (getuid () != 0)
+    /* Not root, then we cannot preserve anything.  */
+    return NULL;
+
+  if (prctl (PR_SET_KEEPCAPS, 1) == -1)
+    {
+      dbg_log (_("Failed to set keep-capabilities"));
+      error (EXIT_FAILURE, errno, _("prctl(KEEPCAPS) failed"));
+      /* NOTREACHED */
+    }
+
+  cap_t tmp_caps = cap_init ();
+  cap_t new_caps;
+  if (tmp_caps != NULL)
+    new_caps = cap_init ();
+
+  if (tmp_caps == NULL || new_caps == NULL)
+    {
+      if (tmp_caps != NULL)
+	free_caps (tmp_caps);
+
+      dbg_log (_("Failed to initialize drop of capabilities"));
+      error (EXIT_FAILURE, 0, _("cap_init failed"));
+    }
+
+  /* There is no reason why these should not work.  */
+  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list, new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list, new_cap_list, CAP_SET);
+
+  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list, tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list, tmp_cap_list, CAP_SET);
+
+  int res = cap_set_proc (tmp_caps);
+
+  cap_free (tmp_caps);
+
+  if (__builtin_expect (res != 0, 0))
+    {
+      cap_free (new_caps);
+      dbg_log (_("Failed to drop capabilities\n"));
+      error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
+    }
+
+  return new_caps;
+}
+
+void
+install_real_capabilities (cap_t new_caps)
+{
+  /* If we have no capabilities there is nothing to do here.  */
+  if (new_caps == NULL)
+    return;
+
+  if (cap_set_proc (new_caps))
+    {
+      cap_free (new_caps);
+      dbg_log (_("Failed to drop capabilities"));
+      error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
+      /* NOTREACHED */
+    }
+
+  cap_free (new_caps);
+
+  if (prctl (PR_SET_KEEPCAPS, 0) == -1)
+    {
+      dbg_log (_("Failed to unset keep-capabilities"));
+      error (EXIT_FAILURE, errno, _("prctl(KEEPCAPS) failed"));
+      /* NOTREACHED */
+    }
+}
+# endif /* HAVE_LIBCAP */
 #endif /* HAVE_LIBAUDIT */
 
 /* Determine if we are running on an SELinux kernel. Set selinux_enabled
