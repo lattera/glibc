@@ -1643,7 +1643,7 @@ getaddrinfo (const char *name, const char *service,
 	  freeaddrinfo (p);
 	  free (in6ai);
 
-	  return -(i & GAIH_EAI);
+	  return -(last_i & GAIH_EAI);
 	}
       if (end)
 	while (*end)

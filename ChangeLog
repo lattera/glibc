@@ -1,5 +1,8 @@
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused
+	bugs not to be reported.
+
 	* nscd/nscd.h (struct database_dyn): Add propagate field.
 	* nscd/nscd_conf.c (nscd_parse_file): Parse auto-propagate lines.
 	* nscd/nscd.conf: Add auto-propagate lines.
