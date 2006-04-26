@@ -1,3 +1,7 @@
+2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-4217.def: Update.
+
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2420]

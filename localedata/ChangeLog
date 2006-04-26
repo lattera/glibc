@@ -1,3 +1,12 @@
+2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* bg_BG: Update after iso-4217.def update.
+	* bs_BA: Likewise.
+	* es_MX: Likewise.
+	* ru_RU: Likewise.
+	* tg_TJ: Likewise.
+	* tt_RU: Likewise.
+
 2006-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2376]
