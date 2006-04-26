@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -63,6 +63,7 @@ struct database_dyn
   int check_file;
   int persistent;
   int shared;
+  int propagate;
   size_t max_db_size;
   const char *filename;
   const char *db_filename;

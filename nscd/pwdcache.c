@@ -338,10 +338,10 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	     marked with FIRST first.  Otherwise we end up with
 	     dangling "pointers" in case a latter hash entry cannot be
 	     added.  */
-	  bool first = req->type == GETPWBYNAME;
+	  bool first = true;
 
 	  /* If the request was by UID, add that entry first.  */
-	  if (req->type != GETPWBYNAME)
+	  if (req->type == GETPWBYUID)
 	    {
 	      if (cache_add (GETPWBYUID, cp, key_offset, &dataset->head, true,
 			     db, owner) < 0)
@@ -351,12 +351,14 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 		  dataset->head.usable = false;
 		  goto out;
 		}
+
+	      first = false;
 	    }
 	  /* If the key is different from the name add a separate entry.  */
 	  else if (strcmp (key_copy, dataset->strdata) != 0)
 	    {
 	      if (cache_add (GETPWBYNAME, key_copy, key_len + 1,
-			     &dataset->head, first, db, owner) < 0)
+			     &dataset->head, true, db, owner) < 0)
 		{
 		  /* Could not allocate memory.  Make sure the data gets
 		     discarded.  */
@@ -368,11 +370,12 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    }
 
 	  /* We have to add the value for both, byname and byuid.  */
-	  if (__builtin_expect (cache_add (GETPWBYNAME, dataset->strdata,
-					   pw_name_len, &dataset->head, first,
-					   db, owner) == 0, 1))
+	  if ((req->type == GETPWBYNAME || db->propagate)
+	      && __builtin_expect (cache_add (GETPWBYNAME, dataset->strdata,
+					      pw_name_len, &dataset->head,
+					      first, db, owner) == 0, 1))
 	    {
-	      if (req->type == GETPWBYNAME)
+	      if (req->type == GETPWBYNAME && db->propagate)
 		(void) cache_add (GETPWBYUID, cp, key_offset, &dataset->head,
 				  req->type != GETPWBYNAME, db, owner);
 	    }

@@ -342,10 +342,10 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     marked with FIRST first.  Otherwise we end up with
 	     dangling "pointers" in case a latter hash entry cannot be
 	     added.  */
-	  bool first = req->type == GETGRBYNAME;
+	  bool first = true;
 
 	  /* If the request was by GID, add that entry first.  */
-	  if (req->type != GETGRBYNAME)
+	  if (req->type == GETGRBYGID)
 	    {
 	      if (cache_add (GETGRBYGID, cp, key_offset, &dataset->head, true,
 			     db, owner) < 0)
@@ -355,12 +355,14 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		  dataset->head.usable = false;
 		  goto out;
 		}
+
+	      first = false;
 	    }
 	  /* If the key is different from the name add a separate entry.  */
 	  else if (strcmp (key_copy, gr_name) != 0)
 	    {
 	      if (cache_add (GETGRBYNAME, key_copy, key_len + 1,
-			     &dataset->head, first, db, owner) < 0)
+			     &dataset->head, true, db, owner) < 0)
 		{
 		  /* Could not allocate memory.  Make sure the data gets
 		     discarded.  */
@@ -372,11 +374,13 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	    }
 
 	  /* We have to add the value for both, byname and byuid.  */
-	  if (__builtin_expect (cache_add (GETGRBYNAME, gr_name, gr_name_len,
-					   &dataset->head, first, db, owner)
-				== 0, 1))
+	  if ((req->type == GETGRBYNAME || db->propagate)
+	      && __builtin_expect (cache_add (GETGRBYNAME, gr_name,
+					      gr_name_len,
+					      &dataset->head, first, db, owner)
+				   == 0, 1))
 	    {
-	      if (req->type == GETGRBYNAME)
+	      if (req->type == GETGRBYNAME && db->propagate)
 		(void) cache_add (GETGRBYGID, cp, key_offset, &dataset->head,
 				  req->type != GETGRBYNAME, db, owner);
 	    }

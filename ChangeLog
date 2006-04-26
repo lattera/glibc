@@ -1,3 +1,13 @@
+2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (struct database_dyn): Add propagate field.
+	* nscd/nscd_conf.c (nscd_parse_file): Parse auto-propagate lines.
+	* nscd/nscd.conf: Add auto-propagate lines.
+	* nscd/connections.c (dbs): Initialize .propagate fields.
+	* nscd/grpcache.c (cache_addgr): Do not add ID entry for name lookups
+	and vice versa if propagation is disabled for the database.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+
 2006-04-26  James Antill  <james.antill@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1998,2000,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -255,6 +255,17 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	    restart_interval = atol (arg1);
 	  else
             error (0, 0, _("Must specify value for restart-interval option"));
+	}
+      else if (strcmp (entry, "auto-propagate") == 0)
+	{
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].propagate = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].propagate = 1;
+	    }
 	}
       else
 	error (0, 0, _("Unknown option: %s %s %s"), entry, arg1, arg2);
