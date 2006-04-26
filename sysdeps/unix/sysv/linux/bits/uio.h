@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 /* Size of object which can be written atomically.
 
    This macro has different values in different kernel versions.  The
-   latest versions of ther kernel use 1024 and this is good choice.  Since
+   latest versions of the kernel use 1024 and this is good choice.  Since
    the C library implementation of readv/writev is able to emulate the
    functionality even if the currently running kernel does not support
    this large value the readv/writev call will not fail because of this.  */
