@@ -1,3 +1,8 @@
+2006-04-26  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (%.v.i rule): Don't use -DASSEMBLER.
+	The predefined __ASSEMBLER__ is sufficient.
+
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add vmsplice.

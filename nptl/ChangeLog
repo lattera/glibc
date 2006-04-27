@@ -1,3 +1,7 @@
+2006-04-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/tls.h: Include <asm/prctl.h> inside [! __ASSEMBLER__].
+
 2006-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Remove branch predicion
