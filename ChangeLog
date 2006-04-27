@@ -1,3 +1,9 @@
+2006-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (restart): If we want to switch back to the
+	old ID use setresuid and setresgid.
+	(finish_drop_privileges): Likewise.
+
 2006-04-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd.conf: Fix a typo.
