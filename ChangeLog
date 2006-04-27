@@ -1,3 +1,7 @@
+2006-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.conf: Fix a typo.
+
 2006-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2611]
