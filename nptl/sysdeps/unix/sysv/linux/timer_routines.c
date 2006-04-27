@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -27,6 +27,13 @@
 #include "kernel-posix-timers.h"
 
 
+struct thread_start_data
+{
+  void (*thrfunc) (sigval_t);
+  sigval_t sival;
+};
+
+
 #ifdef __NR_timer_create
 /* Helper thread to call the user-provided function.  */
 static void *
@@ -40,10 +47,16 @@ timer_sigev_thread (void *arg)
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
 
-  struct timer *tk = (struct timer *) arg;
+  struct thread_start_data *td = (struct thread_start_data *) arg;
+
+  void (*thrfunc) (sigval_t) = td->thrfunc;
+  sigval_t sival = td->sival;
+
+  /* The TD object was allocated in timer_helper_thread.  */
+  free (td);
 
   /* Call the user-provided function.  */
-  tk->thrfunc (tk->sival);
+  thrfunc (sival);
 
   return NULL;
 }
@@ -82,10 +95,19 @@ timer_helper_thread (void *arg)
 	  if (si.si_code == SI_TIMER)
 	    {
 	      struct timer *tk = (struct timer *) si.si_ptr;
+	      struct thread_start_data *td = malloc (sizeof (*td));
 
-	      /* That the signal we are waiting for.  */
-	      pthread_t th;
-	      (void) pthread_create (&th, &tk->attr, timer_sigev_thread, tk);
+	      /* There is not much we can do if the allocation fails.  */
+	      if (td != NULL)
+		{
+		  /* That is the signal we are waiting for.  */
+		  td->thrfunc = tk->thrfunc;
+		  td->sival = tk->sival;
+
+		  pthread_t th;
+		  (void) pthread_create (&th, &tk->attr, timer_sigev_thread,
+					 td);
+		}
 	    }
 	  else if (si.si_code == SI_TKILL)
 	    /* The thread is canceled.  */

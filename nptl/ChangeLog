@@ -1,3 +1,9 @@
+2006-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
+	Allocate new object which is passed to timer_sigev_thread so that
+	the timer can be deleted before the new thread is scheduled.
+
 2006-04-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/tls.h: Include <asm/prctl.h> inside [! __ASSEMBLER__].
