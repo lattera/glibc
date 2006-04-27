@@ -1,3 +1,8 @@
+2006-04-27  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Include uio.h, and
+	define vmsplice.
+
 2006-04-21  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/dl-tls.h: New file
