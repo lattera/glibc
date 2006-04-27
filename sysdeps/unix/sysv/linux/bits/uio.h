@@ -20,6 +20,8 @@
 # error "Never include <bits/uio.h> directly; use <sys/uio.h> instead."
 #endif
 
+#ifndef _BITS_UIO_H
+#define _BITS_UIO_H	1
 
 #include <sys/types.h>
 
@@ -44,3 +46,5 @@ struct iovec
     void *iov_base;	/* Pointer to data.  */
     size_t iov_len;	/* Length of data.  */
   };
+
+#endif

@@ -95,16 +95,10 @@
       }									      \
     else								      \
       {									      \
-	if (res == 0x1c)						      \
-	  res = 0x1a;							      \
-	else if (res == 0x7f)						      \
-	  res = 0x1c;							      \
-	else if (res == 0xa5)						      \
+	if (res == 0xa5)						      \
 	  res = 0x5c;							      \
 	else if (res == 0x203e)						      \
 	  res = 0x7e;							      \
-	else if (res == 0x1a)						      \
-	  res = 0x7f;							      \
 	put32 (outptr, res);						      \
 	outptr += 4;							      \
 	inptr++;							      \
@@ -118,16 +112,10 @@
     uint32_t res = __ibm943sb_to_ucs4[c];				      \
     if (res == 0 && c != 0)						      \
       return WEOF;							      \
-    if (res == 0x1c)							      \
-      res = 0x1a;							      \
-    else if (res == 0x7f)						      \
-      res = 0x1c;							      \
-    else if (res == 0xa5)						      \
+    if (res == 0xa5)						              \
       res = 0x5c;							      \
     else if (res == 0x203e)						      \
       res = 0x7e;							      \
-    else if (res == 0x1a)						      \
-      res = 0x7f;							      \
     return res;								      \
   }
 #include <iconv/loop.c>

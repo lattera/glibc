@@ -5,6 +5,11 @@
 
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1386]
+	* iconvdata/ibm932.c: Change mapping to allow round-trips.
+	* iconvdata/ibm943.c: Likewise.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add vmsplice.
 	* sysdeps/unix/sysv/linux/Versions: Export vmsplice@@GLIBC_2.5.
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Declare vmsplice.
