@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ renameat (oldfd, old, newfd, new)
      int newfd;
      const char *new;
 {
-  if ((oldfd < 0 & oldfd != AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
+  if ((oldfd < 0 && oldfd != AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
     {
       __set_errno (EBADF);
       return -1;
