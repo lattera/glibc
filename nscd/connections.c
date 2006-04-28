@@ -1873,14 +1873,23 @@ finish_drop_privileges (void)
       error (EXIT_FAILURE, errno, _("setgroups failed"));
     }
 
-  if (setresgid (server_gid, server_gid, old_gid) == -1)
+  int res;
+  if (paranoia)
+    res = setresgid (server_gid, server_gid, old_gid);
+  else
+    res = setgid (server_gid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setgid");
       exit (4);
     }
 
-  if (setresuid (server_uid, server_uid, old_uid) == -1)
+  if (paranoia)
+    res = setresuid (server_uid, server_uid, old_uid);
+  else
+    res = setuid (server_uid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setuid");

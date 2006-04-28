@@ -686,10 +686,10 @@ __xdr_ypresp_all (XDR *xdrs, struct ypresp_all_data *objp)
 	       if we don't modify the length. So add an extra NUL
 	       character to avoid trouble with broken code. */
 	    objp->status = YP_TRUE;
-	    memcpy (key, resp.ypresp_all_u.val.key.keydat_val, keylen);
-	    key[keylen] = '\0';
-	    memcpy (val, resp.ypresp_all_u.val.val.valdat_val, vallen);
-	    val[vallen] = '\0';
+	    *((char *) __mempcpy (key, resp.ypresp_all_u.val.key.keydat_val,
+				  keylen)) = '\0';
+	    *((char *) __mempcpy (val, resp.ypresp_all_u.val.val.valdat_val,
+				  vallen)) = '\0';
 	    xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
 	    if ((*objp->foreach) (objp->status, key, keylen,
 				  val, vallen, objp->data))
@@ -700,7 +700,7 @@ __xdr_ypresp_all (XDR *xdrs, struct ypresp_all_data *objp)
 	  objp->status = resp.ypresp_all_u.val.stat;
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
 	  /* Sun says we don't need to make this call, but must return
-	     immediatly. Since Solaris makes this call, we will call
+	     immediately. Since Solaris makes this call, we will call
 	     the callback function, too. */
 	  (*objp->foreach) (objp->status, NULL, 0, NULL, 0, objp->data);
 	  return TRUE;
