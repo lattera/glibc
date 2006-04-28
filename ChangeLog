@@ -1,5 +1,8 @@
 2006-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss-default.c (init): Rewrite parse to get the variables
+	from a table.
+
 	* nis/nss_nis/nis-service.c: Avoid passing pointer to static
 	variable around.  Reduce number of memory allocations by creating
 	list of memory pools.

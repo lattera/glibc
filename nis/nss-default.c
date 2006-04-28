@@ -35,6 +35,20 @@ static int default_nss_flags;
 /* Code to make sure we call 'init' once.  */
 __libc_once_define (static, once);
 
+/* Table of the recognized variables.  */
+static const struct
+{
+  char name[23];
+  unsigned int len;
+  int flag;
+} vars[] =
+  {
+#define STRNLEN(s) s, sizeof (s) - 1
+    { STRNLEN ("NETID_AUTHORITATIVE"), NSS_FLAG_NETID_AUTHORITATIVE },
+    { STRNLEN ("SERVICES_AUTHORITATIVE"), NSS_FLAG_SERVICES_AUTHORITATIVE }
+  };
+#define nvars (sizeof (vars) / sizeof (vars[0]))
+
 
 static void
 init (void)
@@ -53,11 +67,9 @@ init (void)
 	  if (n <= 0)
 	    break;
 
-	  /* There currently are only two variables we expect, so
-	     simplify the parsing.  Recognize only
+	  /* Recognize only
 
-	       NETID_AUTHORITATIVE = TRUE
-	       SERVICES_AUTHORITATIVE = TRUE
+	       <THE-VARIABLE> = TRUE
 
 	     with arbitrary white spaces.  */
 	  char *cp = line;
@@ -68,18 +80,14 @@ init (void)
 	  if (*cp == '#')
 	    continue;
 
-	  static const char netid_authoritative[] = "NETID_AUTHORITATIVE";
-	  static const char services_authoritative[]
-	    = "SERVICES_AUTHORITATIVE";
-	  size_t flag_len;
-	  if (strncmp (cp, netid_authoritative,
-		       flag_len = sizeof (netid_authoritative) - 1) != 0
-	      && strncmp (cp, services_authoritative,
-			  flag_len = sizeof (services_authoritative) - 1)
-		 != 0)
+	  int idx;
+	  for (idx = 0; idx < nvars; ++idx)
+	    if (strncmp (cp, vars[idx].name, vars[idx].len) == 0)
+	      break;
+	  if (idx == nvars)
 	    continue;
 
-	  cp += flag_len;
+	  cp += vars[idx].len;
 	  while (isspace (*cp))
 	    ++cp;
 	  if (*cp++ != '=')
@@ -95,9 +103,7 @@ init (void)
 	    ++cp;
 
 	  if (*cp == '\0')
-	    default_nss_flags |= (flag_len == sizeof (netid_authoritative) - 1
-				  ? NSS_FLAG_NETID_AUTHORITATIVE
-				  : NSS_FLAG_SERVICES_AUTHORITATIVE);
+	    default_nss_flags |= vars[idx].flag;
 	}
 
       free (line);
