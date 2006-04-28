@@ -18,6 +18,7 @@
 
 #define NSS_FLAG_NETID_AUTHORITATIVE	1
 #define NSS_FLAG_SERVICES_AUTHORITATIVE	2
+#define NSS_FLAG_SETENT_BATCH_READ	4
 
 
 /* Get current set of default flags.  */

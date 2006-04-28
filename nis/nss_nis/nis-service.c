@@ -110,9 +110,13 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 	  intern.offset = 0;
 	}
 
-      *((char *) mempcpy (&bucket->mem[intern.offset], inval, invallen))
-	= '\0';
-      intern.offset += invallen + 1;
+      char *p = mempcpy (&bucket->mem[intern.offset], inval, invallen);
+      if (__builtin_expect (p[-1] != '\0', 0))
+	{
+	  *p = '\0';
+	  ++invallen;
+	}
+      intern.offset += invallen;
     }
 
   return 0;
@@ -177,7 +181,7 @@ dosearch (int instatus, char *inkey, int inkeylen, char *inval,
   return 0;
 }
 
-static enum nss_status
+static void
 internal_nis_endservent (void)
 {
   struct response_t *curr = intern.next;
@@ -190,22 +194,18 @@ internal_nis_endservent (void)
     }
 
   intern.next = intern.start = NULL;
-
-  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
 _nss_nis_endservent (void)
 {
-  enum nss_status status;
-
   __libc_lock_lock (lock);
 
-  status = internal_nis_endservent ();
+  internal_nis_endservent ();
 
   __libc_lock_unlock (lock);
 
-  return status;
+  return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status
@@ -218,16 +218,18 @@ internal_nis_setservent (void)
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
 
-  (void) internal_nis_endservent ();
+  internal_nis_endservent ();
 
   ypcb.foreach = saveit;
   ypcb.data = NULL;
   status = yperr2nss (yp_all (domainname, "services.byname", &ypcb));
 
   /* Mark the last buffer as full.  */
-  intern.next->size = intern.offset;
+  if (intern.next != NULL)
+    intern.next->size = intern.offset;
 
   intern.next = intern.start;
+  intern.offset = 0;
 
   return status;
 }
@@ -262,7 +264,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
     {
       struct response_t *bucket = intern.next;
 
-      if (intern.offset >= bucket->size)
+      if (__builtin_expect (intern.offset >= bucket->size, 0))
 	{
 	  if (bucket->next == NULL)
 	    return NSS_STATUS_NOTFOUND;

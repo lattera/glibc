@@ -1,6 +1,16 @@
 2006-04-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/nss-default.c (init): Rewrite parse to get the variables
+	* nis/nss-default.c (vars): Add SETENT_BATCH_READ.
+	* nis/nss: Document SETENT_BATCH_READ.
+	* nis/libnsl.h: Define NSS_FLAG_SETENT_BATCH_READ.
+	* nis/nss_nis/nis-service.c (saveit): Don't add NUL byte if the
+	string is already NUL terminated.
+	(internal_nis_endservent): No need to return anything.  Change callers.
+	(internal_nis_setservent): One more initialization.
+	* nis/nss_nis/nis-pwd.c: Support SETENT_BATCH_READ option.
+	* nis/nss_nis/nis-grp.c: Likewise.
+
+	* nis/nss-default.c (init): Rewrite parser to get the variables
 	from a table.
 
 	* nis/nss_nis/nis-service.c: Avoid passing pointer to static
