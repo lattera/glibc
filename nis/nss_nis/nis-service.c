@@ -40,17 +40,18 @@ __libc_lock_define_initialized (static, lock)
 struct response_t
 {
   struct response_t *next;
-  char val[0];
+  size_t size;
+  char mem[0];
 };
 
-struct intern_t
+typedef struct intern_t
 {
   struct response_t *start;
   struct response_t *next;
-};
-typedef struct intern_t intern_t;
+  size_t offset;
+} intern_t;
 
-static intern_t intern = { NULL, NULL };
+static intern_t intern;
 
 struct search_t
 {
@@ -68,26 +69,50 @@ static int
 saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
 {
-  intern_t *intern = (intern_t *) indata;
-
   if (instatus != YP_TRUE)
     return 1;
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
-      struct response_t *newp = malloc (sizeof (struct response_t)
-					+ invallen + 1);
-      if (newp == NULL)
-	return 1; /* We have no error code for out of memory */
+      struct response_t *bucket = intern.next;
 
-      if (intern->start == NULL)
-	intern->start = newp;
-      else
-	intern->next->next = newp;
-      intern->next = newp;
+      if (__builtin_expect (bucket == NULL, 0))
+	{
+#define MINSIZE 4096 - 4 * sizeof (void *)
+	  const size_t minsize = MAX (MINSIZE, 2 * (invallen + 1));
+	  bucket = malloc (sizeof (struct response_t) + minsize);
+	  if (bucket == NULL)
+	    /* We have no error code for out of memory.  */
+	    return 1;
 
-      newp->next = NULL;
-      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
+	  bucket->next = NULL;
+	  bucket->size = minsize;
+	  intern.start = intern.next = bucket;
+	  intern.offset = 0;
+	}
+      else if (__builtin_expect (invallen + 1 > bucket->size - intern.offset,
+				 0))
+	{
+	  /* We need a new (larger) buffer.  */
+	  const size_t newsize = 2 * MAX (bucket->size, invallen + 1);
+	  struct response_t *newp = malloc (sizeof (struct response_t)
+					    + newsize);
+	  if (newp == NULL)
+	    /* We have no error code for out of memory.  */
+	    return 1;
+
+	  /* Mark the old bucket as full.  */
+	  bucket->size = intern.offset;
+
+	  newp->next = NULL;
+	  newp->size = newsize;
+	  bucket = intern.next = bucket->next = newp;
+	  intern.offset = 0;
+	}
+
+      *((char *) mempcpy (&bucket->mem[intern.offset], inval, invallen))
+	= '\0';
+      intern.offset += invallen + 1;
     }
 
   return 0;
@@ -153,14 +178,18 @@ dosearch (int instatus, char *inkey, int inkeylen, char *inval,
 }
 
 static enum nss_status
-internal_nis_endservent (intern_t * intern)
+internal_nis_endservent (void)
 {
-  while (intern->start != NULL)
+  struct response_t *curr = intern.next;
+
+  while (curr != NULL)
     {
-      intern->next = intern->start;
-      intern->start = intern->start->next;
-      free (intern->next);
+      struct response_t *last = curr;
+      curr = curr->next;
+      free (last);
     }
+
+  intern.next = intern.start = NULL;
 
   return NSS_STATUS_SUCCESS;
 }
@@ -172,7 +201,7 @@ _nss_nis_endservent (void)
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_endservent (&intern);
+  status = internal_nis_endservent ();
 
   __libc_lock_unlock (lock);
 
@@ -180,7 +209,7 @@ _nss_nis_endservent (void)
 }
 
 static enum nss_status
-internal_nis_setservent (intern_t *intern)
+internal_nis_setservent (void)
 {
   char *domainname;
   struct ypall_callback ypcb;
@@ -189,12 +218,16 @@ internal_nis_setservent (intern_t *intern)
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
 
-  (void) internal_nis_endservent (intern);
+  (void) internal_nis_endservent ();
 
   ypcb.foreach = saveit;
-  ypcb.data = (char *) intern;
+  ypcb.data = NULL;
   status = yperr2nss (yp_all (domainname, "services.byname", &ypcb));
-  intern->next = intern->start;
+
+  /* Mark the last buffer as full.  */
+  intern.next->size = intern.offset;
+
+  intern.next = intern.start;
 
   return status;
 }
@@ -206,7 +239,7 @@ _nss_nis_setservent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_setservent (&intern);
+  status = internal_nis_setservent ();
 
   __libc_lock_unlock (lock);
 
@@ -215,29 +248,56 @@ _nss_nis_setservent (int stayopen)
 
 static enum nss_status
 internal_nis_getservent_r (struct servent *serv, char *buffer,
-			   size_t buflen, int *errnop, intern_t *data)
+			   size_t buflen, int *errnop)
 {
   struct parser_data *pdata = (void *) buffer;
   int parse_res;
   char *p;
 
-  if (data->start == NULL)
-    internal_nis_setservent (data);
+  if (intern.start == NULL)
+    internal_nis_setservent ();
 
-  /* Get the next entry until we found a correct one. */
+  /* Get the next entry until we found a correct one.  */
   do
     {
-      if (data->next == NULL)
-	return NSS_STATUS_NOTFOUND;
+      struct response_t *bucket = intern.next;
 
-      p = strncpy (buffer, data->next->val, buflen);
-      while (isspace (*p))
-        ++p;
+      if (intern.offset >= bucket->size)
+	{
+	  if (bucket->next == NULL)
+	    return NSS_STATUS_NOTFOUND;
+
+	  /* We look at all the content in the current bucket.  Go on
+	     to the next.  */
+	  bucket = intern.next = bucket->next;
+	  intern.offset = 0;
+	}
+
+      for (p = &bucket->mem[intern.offset]; isspace (*p); ++p)
+        ++intern.offset;
+
+      size_t len = strlen (p) + 1;
+      if (__builtin_expect (len > buflen, 0))
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* We unfortunately have to copy the data in the user-provided
+	 buffer because that buffer might be around for a very long
+	 time and the servent structure must remain valid.  If we would
+	 rely on the BUCKET memory the next 'setservent' or 'endservent'
+	 call would destroy it.
+
+	 The important thing is that it is a single NUL-terminated
+	 string.  This is what the parsing routine expects.  */
+      p = memcpy (buffer, &bucket->mem[intern.offset], len);
 
       parse_res = _nss_files_parse_servent (p, serv, pdata, buflen, errnop);
       if (__builtin_expect (parse_res == -1, 0))
         return NSS_STATUS_TRYAGAIN;
-      data->next = data->next->next;
+
+      intern.offset += len;
     }
   while (!parse_res);
 
@@ -252,7 +312,7 @@ _nss_nis_getservent_r (struct servent *serv, char *buffer, size_t buflen,
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getservent_r (serv, buffer, buflen, errnop, &intern);
+  status = internal_nis_getservent_r (serv, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

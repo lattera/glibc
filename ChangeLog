@@ -1,5 +1,9 @@
 2006-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-service.c: Avoid passing pointer to static
+	variable around.  Reduce number of memory allocations by creating
+	list of memory pools.
+
 	* nis/ypclnt.c (__xdr_ypresp_all): Minor optimization in string
 	handling.  Fix typo in comment.
 
