@@ -68,8 +68,6 @@ static enum nss_status
 internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 			 int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-
   char *domain;
   if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;

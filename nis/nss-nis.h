@@ -36,4 +36,24 @@ yperr2nss (int errval)
   return __yperr2nss_tab[(unsigned int) errval];
 }
 
+
+struct response_t
+{
+  struct response_t *next;
+  size_t size;
+  char mem[0];
+};
+
+typedef struct intern_t
+{
+  struct response_t *start;
+  struct response_t *next;
+  size_t offset;
+} intern_t;
+
+
+extern int _nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
+			int invallen, char *indata) attribute_hidden;
+
+
 #endif /* nis/nss-nis.h */

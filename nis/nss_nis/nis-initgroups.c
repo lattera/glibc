@@ -38,47 +38,6 @@
 #define EXTERN_PARSER
 #include <nss/nss_files/files-parse.c>
 
-struct response_t
-{
-  struct response_t *next;
-  char val[0];
-};
-
-struct intern_t
-{
-  struct response_t *start;
-  struct response_t *next;
-};
-typedef struct intern_t intern_t;
-
-static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval,
-        int invallen, char *indata)
-{
-  intern_t *intern = (intern_t *) indata;
-
-  if (instatus != YP_TRUE)
-    return 1;
-
-  if (inkey && inkeylen > 0 && inval && invallen > 0)
-    {
-      struct response_t *newp = malloc (sizeof (struct response_t)
-					+ invallen + 1);
-      if (newp == NULL)
-	return 1; /* We have no error code for out of memory */
-
-      if (intern->start == NULL)
-	intern->start = newp;
-      else
-	intern->next->next = newp;
-      intern->next = newp;
-
-      newp->next = NULL;
-      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
-    }
-
-  return 0;
-}
 
 static enum nss_status
 internal_setgrent (char *domainname, intern_t *intern)
@@ -86,15 +45,20 @@ internal_setgrent (char *domainname, intern_t *intern)
   struct ypall_callback ypcb;
   enum nss_status status;
 
-  intern->start = NULL;
-
-  ypcb.foreach = saveit;
+  ypcb.foreach = _nis_saveit;
   ypcb.data = (char *) intern;
   status = yperr2nss (yp_all (domainname, "group.byname", &ypcb));
+
+  /* Mark the last buffer as full.  */
+  if (intern->next != NULL)
+    intern->next->size = intern->offset;
+
   intern->next = intern->start;
+  intern->offset = 0;
 
   return status;
 }
+
 
 static enum nss_status
 internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
@@ -107,18 +71,46 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   int parse_res;
   do
     {
-      if (intern->next == NULL)
-	return NSS_STATUS_NOTFOUND;
+      struct response_t *bucket = intern->next;
 
-      char *p = strncpy (buffer, intern->next->val, buflen);
-      while (isspace (*p))
-        ++p;
+      if (__builtin_expect (intern->offset >= bucket->size, 0))
+	{
+	  if (bucket->next == NULL)
+	    return NSS_STATUS_NOTFOUND;
+
+	  /* We look at all the content in the current bucket.  Go on
+	     to the next.  */
+	  bucket = intern->next = bucket->next;
+	  intern->offset = 0;
+	}
+
+      char *p;
+      for (p = &bucket->mem[intern->offset]; isspace (*p); ++p)
+        ++intern->offset;
+
+      size_t len = strlen (p) + 1;
+      if (__builtin_expect (len > buflen, 0))
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* We unfortunately have to copy the data in the user-provided
+	 buffer because that buffer might be around for a very long
+	 time and the servent structure must remain valid.  If we would
+	 rely on the BUCKET memory the next 'setservent' or 'endservent'
+	 call would destroy it.
+
+	 The important thing is that it is a single NUL-terminated
+	 string.  This is what the parsing routine expects.  */
+      p = memcpy (buffer, &bucket->mem[intern->offset], len);
 
       parse_res = _nss_files_parse_grent (p, grp, (void *) buffer, buflen,
 					  errnop);
       if (__builtin_expect (parse_res == -1, 0))
         return NSS_STATUS_TRYAGAIN;
-      intern->next = intern->next->next;
+
+      intern->offset += len;
     }
   while (!parse_res);
 
@@ -259,7 +251,7 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
   size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
   enum nss_status status;
-  intern_t intern = { NULL, NULL };
+  intern_t intern = { NULL, NULL, 0 };
   gid_t *groups = *groupsp;
 
   status = internal_setgrent (domainname, &intern);

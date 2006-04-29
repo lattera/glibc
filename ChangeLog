@@ -1,5 +1,20 @@
 2006-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-spwd.c (internal_nis_getspent_r): Remove data
+	variable.
+
+	* nis/nss-nis.h: Define response_t and intern_t.  Declare _nis_saveit.
+	* nis/nss_nis/nis-pwd.c: Remove response_t and intern_t definition.
+	(saveit): Renamed to _nis_saveit.  Take parameter which is pointer
+	to the intern_t object.  Change all users.
+	* nis/nss_nis/nis-grp.c: Remove response_t, intern_t, and saveit
+	definition.  Use _nis_saveit instead of saveit.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	(internal_setgrent): Adjust for buffer handling.
+	(internal_getgrent_r): Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+
 	* nis/nss-default.c (vars): Add SETENT_BATCH_READ.
 	* nis/nss: Document SETENT_BATCH_READ.
 	* nis/libnsl.h: Define NSS_FLAG_SETENT_BATCH_READ.

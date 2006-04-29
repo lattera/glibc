@@ -41,80 +41,7 @@ __libc_lock_define_initialized (static, lock)
 static bool_t new_start = 1;
 static char *oldkey;
 static int oldkeylen;
-
-struct response_t
-{
-  struct response_t *next;
-  size_t size;
-  char mem[0];
-};
-
-typedef struct intern_t
-{
-  struct response_t *start;
-  struct response_t *next;
-  size_t offset;
-} intern_t;
-
 static intern_t intern;
-
-
-static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval,
-        int invallen, char *indata)
-{
-  if (instatus != YP_TRUE)
-    return 1;
-
-  if (inkey && inkeylen > 0 && inval && invallen > 0)
-    {
-      struct response_t *bucket = intern.next;
-
-      if (__builtin_expect (bucket == NULL, 0))
-	{
-#define MINSIZE 4096 - 4 * sizeof (void *)
-	  const size_t minsize = MAX (MINSIZE, 2 * (invallen + 1));
-	  bucket = malloc (sizeof (struct response_t) + minsize);
-	  if (bucket == NULL)
-	    /* We have no error code for out of memory.  */
-	    return 1;
-
-	  bucket->next = NULL;
-	  bucket->size = minsize;
-	  intern.start = intern.next = bucket;
-	  intern.offset = 0;
-	}
-      else if (__builtin_expect (invallen + 1 > bucket->size - intern.offset,
-				 0))
-	{
-	  /* We need a new (larger) buffer.  */
-	  const size_t newsize = 2 * MAX (bucket->size, invallen + 1);
-	  struct response_t *newp = malloc (sizeof (struct response_t)
-					    + newsize);
-	  if (newp == NULL)
-	    /* We have no error code for out of memory.  */
-	    return 1;
-
-	  /* Mark the old bucket as full.  */
-	  bucket->size = intern.offset;
-
-	  newp->next = NULL;
-	  newp->size = newsize;
-	  bucket = intern.next = bucket->next = newp;
-	  intern.offset = 0;
-	}
-
-      char *p = mempcpy (&bucket->mem[intern.offset], inval, invallen);
-      if (__builtin_expect (p[-1] != '\0', 0))
-	{
-	  *p = '\0';
-	  ++invallen;
-	}
-      intern.offset += invallen;
-    }
-
-  return 0;
-}
 
 
 static void
@@ -164,8 +91,8 @@ internal_nis_setgrent (void)
 
   struct ypall_callback ypcb;
 
-  ypcb.foreach = saveit;
-  ypcb.data = NULL;
+  ypcb.foreach = _nis_saveit;
+  ypcb.data = (char *) &intern;
   enum nss_status status = yperr2nss (yp_all (domain, "group.byname", &ypcb));
 
 
