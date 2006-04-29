@@ -1,3 +1,10 @@
+2006-04-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nisplus/nisplus-parser.c: Some cleanups.  Remove
+	hidden_def definitions.
+	* nis/nisplus-parser.h: Add parameter names.  Remove hidden_proto
+	definitions.
+
 2006-04-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nis/nis-spwd.c (internal_nis_getspent_r): Remove data

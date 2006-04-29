@@ -25,11 +25,11 @@
 
 #include "nisplus-parser.h"
 
-#define NISENTRYVAL(idx,col,res) \
-        (NIS_RES_OBJECT (res)[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        (NIS_RES_OBJECT (res)[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 
 int
@@ -136,7 +136,6 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 
   return 1;
 }
-libnss_nisplus_hidden_def (_nss_nisplus_parse_pwent)
 
 
 int
@@ -255,7 +254,6 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
 
   return 1;
 }
-libnss_nisplus_hidden_def (_nss_nisplus_parse_grent)
 
 
 int
@@ -368,4 +366,3 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
 
   return 1;
 }
-libnss_nisplus_hidden_def (_nss_nisplus_parse_spent)
