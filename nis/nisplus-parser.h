@@ -24,8 +24,12 @@
 #include <grp.h>
 #include <shadow.h>
 
-extern int _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
-				     char *buffer, size_t buflen, int *errnop);
+extern int _nss_nisplus_parse_pwent (nis_result *result, size_t entry,
+				     struct passwd *pw, char *buffer,
+				     size_t buflen, int *errnop);
+extern int _nss_nisplus_parse_pwent_chk (nis_result *result, struct passwd *pw,
+					 char *buffer, size_t buflen,
+					 int *errnop);
 extern int _nss_nisplus_parse_grent (nis_result *result, u_long entry,
 				     struct group *gr, char *buffer,
 				     size_t buflen, int *errnop);

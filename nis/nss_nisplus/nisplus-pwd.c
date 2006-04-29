@@ -28,10 +28,18 @@
 
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
+#include <libnsl.h>
+
 
 __libc_lock_define_initialized (static, lock)
 
+/* Previous result of iteration.  */
 static nis_result *result;
+
+/* All results of batch table load.  */
+static nis_result *cached_results;
+static size_t cached_results_iter;
+
 nis_name pwd_tablename_val attribute_hidden;
 size_t pwd_tablename_len attribute_hidden;
 
@@ -69,6 +77,59 @@ _nss_pwd_create_tablename (int *errnop)
 }
 
 
+static void
+internal_nisplus_endpwent (void)
+{
+  if (cached_results != NULL)
+    {
+      nis_freeresult (cached_results);
+      cached_results = NULL;
+      cached_results_iter = 0;
+    }
+
+  if (result != NULL)
+    {
+      nis_freeresult (result);
+      result = NULL;
+    }
+}
+
+
+static enum nss_status
+internal_nisplus_setpwent (int *errnop)
+{
+  enum nss_status status;
+
+  cached_results = nis_list (pwd_tablename_val, FOLLOW_PATH | FOLLOW_LINKS,
+			     NULL, NULL);
+
+  if (cached_results == NULL)
+    {
+      *errnop = errno;
+      status = NSS_STATUS_TRYAGAIN;
+    }
+  else if (__builtin_expect ((status = niserr2nss (cached_results->status))
+			     != NSS_STATUS_SUCCESS, 0))
+    {
+      nis_freeresult (cached_results);
+      cached_results = NULL;
+    }
+  else if (__builtin_expect (__type_of (NIS_RES_OBJECT (cached_results))
+			     != NIS_ENTRY_OBJ
+			     || strcmp (NIS_RES_OBJECT (cached_results)->EN_data.en_type,
+					"passwd_tbl") != 0
+			     || NIS_RES_OBJECT (cached_results)->EN_data.en_cols.en_cols_len < 7,
+			     0))
+    {
+      nis_freeresult (cached_results);
+      cached_results = NULL;
+      status = NSS_STATUS_NOTFOUND;
+    }
+
+  return status;
+}
+
+
 enum nss_status
 _nss_nisplus_setpwent (int stayopen)
 {
@@ -76,16 +137,21 @@ _nss_nisplus_setpwent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  if (result != NULL)
-    {
-      nis_freeresult (result);
-      result = NULL;
-    }
+  internal_nisplus_endpwent ();
 
   if (pwd_tablename_val == NULL)
     {
+      // XXX We need to be able to set errno.  Pass in new parameter.
       int err;
       status = _nss_pwd_create_tablename (&err);
+    }
+
+  if (status == NSS_STATUS_SUCCESS
+      && (_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ))
+    {
+      // XXX We need to be able to set errno.  Pass in new parameter.
+      int err;
+      status = internal_nisplus_setpwent (&err);
     }
 
   __libc_lock_unlock (lock);
@@ -93,71 +159,113 @@ _nss_nisplus_setpwent (int stayopen)
   return status;
 }
 
+
 enum nss_status
 _nss_nisplus_endpwent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result != NULL)
-    {
-      nis_freeresult (result);
-      result = NULL;
-    }
+  internal_nisplus_endpwent ();
 
   __libc_lock_unlock (lock);
 
   return NSS_STATUS_SUCCESS;
 }
 
+
 static enum nss_status
 internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen,
 			     int *errnop)
 {
-  int parse_res;
+  int parse_res = -1;
+  nis_result *saved_res = NULL;
 
   /* Get the next entry until we found a correct one. */
   do
     {
-      nis_result *saved_res;
-
-      if (result == NULL)
+      if (cached_results != NULL)
 	{
-	  saved_res = NULL;
-          if (pwd_tablename_val == NULL)
-	    {
-	      enum nss_status status = _nss_pwd_create_tablename (errnop);
+	handle_batch_read:
+	  /* See whether we reported the last problem.  */
+	  if (cached_results_iter >= NIS_RES_NUMOBJ (cached_results))
+	    return NSS_STATUS_NOTFOUND;
 
-	      if (status != NSS_STATUS_SUCCESS)
-		return status;
-	    }
-
-	  result = nis_first_entry (pwd_tablename_val);
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
+	  parse_res = _nss_nisplus_parse_pwent (cached_results,
+						cached_results_iter, pw,
+						buffer, buflen, errnop);
 	}
       else
 	{
-	  saved_res = result;
-	  result = nis_next_entry (pwd_tablename_val, &result->cookie);
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+	  if (result == NULL)
 	    {
-	      nis_freeresult (saved_res);
-	      return niserr2nss (result->status);
+	      if (pwd_tablename_val == NULL)
+		{
+		  enum nss_status status = _nss_pwd_create_tablename (errnop);
+
+		  if (status != NSS_STATUS_SUCCESS)
+		    return status;
+		}
+
+	      /* Determine whether we should instead read all entries at
+		 once.  */
+	      if (_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ)
+		{
+		  enum nss_status status = internal_nisplus_setpwent (errnop);
+
+		  if (status == NSS_STATUS_SUCCESS && cached_results != NULL)
+		    goto handle_batch_read;
+		}
+
+	      saved_res = NULL;
+
+	      result = nis_first_entry (pwd_tablename_val);
+	      if (result == NULL)
+		{
+		  *errnop = errno;
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+		return niserr2nss (result->status);
 	    }
+	  else
+	    {
+	      saved_res = result;
+	      result = nis_next_entry (pwd_tablename_val, &result->cookie);
+	      if (result == NULL)
+		{
+		  *errnop = errno;
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+		{
+		  nis_freeresult (saved_res);
+		  return niserr2nss (result->status);
+		}
+	    }
+
+	  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer,
+						    buflen, errnop);
 	}
 
-      parse_res = _nss_nisplus_parse_pwent (result, pw, buffer,
-					    buflen, errnop);
       if (__builtin_expect (parse_res == -1, 0))
 	{
-	  nis_freeresult (result);
-	  result = saved_res;
+	  if (cached_results == NULL)
+	    {
+	      nis_freeresult (result);
+	      result = saved_res;
+	    }
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      if (saved_res)
-	nis_freeresult (saved_res);
+      if (cached_results != NULL)
+	++cached_results_iter;
+      else
+	if (saved_res)
+	  {
+	    nis_freeresult (saved_res);
+	    saved_res = NULL;
+	  }
     }
   while (!parse_res);
 
@@ -223,7 +331,8 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
       return status;
     }
 
-  parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen, errnop);
+  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer, buflen,
+					    errnop);
 
   nis_freeresult (result);
 
@@ -282,7 +391,8 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
       return status;
     }
 
-  parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen, errnop);
+  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer, buflen,
+					    errnop);
 
   nis_freeresult (result);
 

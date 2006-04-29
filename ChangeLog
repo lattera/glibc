@@ -1,5 +1,14 @@
 2006-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nisplus-parser.h (_nss_nisplus_parse_pwent): Add entry
+	parameter.
+	(_nss_nisplus_parse_pwent_chk): New prototype.
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_pwent):
+	Add entry parameter.  Use it for column value in all accesses.
+	Move checks for well-formed reply to...
+	(_nss_nisplus_parse_pwent_chk): ...here.  New function.
+	* nis/nss_nisplus/nisplus-pwd.c: Support SETENT_BATCH_READ option.
+
 	* nis/nss_nisplus/nisplus-parser.c: Some cleanups.  Remove
 	hidden_def definitions.
 	* nis/nisplus-parser.h: Add parameter names.  Remove hidden_proto

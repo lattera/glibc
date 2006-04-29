@@ -33,16 +33,9 @@
 
 
 int
-_nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
-			  char *buffer, size_t buflen, int *errnop)
+_nss_nisplus_parse_pwent_chk (nis_result *result, struct passwd *pw,
+			      char *buffer, size_t buflen, int *errnop)
 {
-  char *first_unused = buffer;
-  size_t room_left = buflen;
-  size_t len;
-
-  if (result == NULL)
-    return 0;
-
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
       || NIS_RES_NUMOBJ (result) != 1
       || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
@@ -50,7 +43,19 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
       || NIS_RES_OBJECT (result)->EN_data.en_cols.en_cols_len < 7)
     return 0;
 
-  if (NISENTRYLEN (0, 0, result) >= room_left)
+  return _nss_nisplus_parse_pwent (result, 0, pw, buffer, buflen, errnop);
+}
+
+
+int
+_nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
+			  char *buffer, size_t buflen, int *errnop)
+{
+  char *first_unused = buffer;
+  size_t room_left = buflen;
+  size_t len;
+
+  if (NISENTRYLEN (entry, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
@@ -58,81 +63,81 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
       return -1;
     }
 
-  strncpy (first_unused, NISENTRYVAL (0, 0, result),
-	   NISENTRYLEN (0, 0, result));
-  first_unused[NISENTRYLEN (0, 0, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 0, result),
+	   NISENTRYLEN (entry, 0, result));
+  first_unused[NISENTRYLEN (entry, 0, result)] = '\0';
   len = strlen (first_unused);
   if (len == 0) /* No name ? Should never happen, database is corrupt */
     return 0;
   pw->pw_name = first_unused;
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
-  if (NISENTRYLEN (0, 1, result) >= room_left)
+  if (NISENTRYLEN (entry, 1, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 1, result),
-	   NISENTRYLEN (0, 1, result));
-  first_unused[NISENTRYLEN (0, 1, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 1, result),
+	   NISENTRYLEN (entry, 1, result));
+  first_unused[NISENTRYLEN (entry, 1, result)] = '\0';
   pw->pw_passwd = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
-  if (NISENTRYLEN(0, 2, result) >= room_left)
+  if (NISENTRYLEN (entry, 2, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 2, result),
-	   NISENTRYLEN (0, 2, result));
-  first_unused[NISENTRYLEN (0, 2, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 2, result),
+	   NISENTRYLEN (entry, 2, result));
+  first_unused[NISENTRYLEN (entry, 2, result)] = '\0';
   len = strlen (first_unused);
   if (len == 0) /* If we don't have a uid, it's an invalid shadow entry */
     return 0;
   pw->pw_uid = strtoul (first_unused, NULL, 10);
 
-  if (NISENTRYLEN (0, 3, result) >= room_left)
+  if (NISENTRYLEN (entry, 3, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 3, result),
-	   NISENTRYLEN (0, 3, result));
-  first_unused[NISENTRYLEN (0, 3, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 3, result),
+	   NISENTRYLEN (entry, 3, result));
+  first_unused[NISENTRYLEN (entry, 3, result)] = '\0';
   len = strlen (first_unused);
   if (len == 0) /* If we don't have a gid, it's an invalid shadow entry */
     return 0;
   pw->pw_gid = strtoul (first_unused, NULL, 10);
 
-  if (NISENTRYLEN(0, 4, result) >= room_left)
+  if (NISENTRYLEN(entry, 4, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 4, result),
-	   NISENTRYLEN (0, 4, result));
-  first_unused[NISENTRYLEN (0, 4, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 4, result),
+	   NISENTRYLEN (entry, 4, result));
+  first_unused[NISENTRYLEN (entry, 4, result)] = '\0';
   pw->pw_gecos = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
-  if (NISENTRYLEN (0, 5, result) >= room_left)
+  if (NISENTRYLEN (entry, 5, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 5, result),
-	   NISENTRYLEN (0, 5, result));
-  first_unused[NISENTRYLEN (0, 5, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 5, result),
+	   NISENTRYLEN (entry, 5, result));
+  first_unused[NISENTRYLEN (entry, 5, result)] = '\0';
   pw->pw_dir = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
-  if (NISENTRYLEN (0, 6, result) >= room_left)
+  if (NISENTRYLEN (entry, 6, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (0, 6, result),
-	   NISENTRYLEN (0, 6, result));
-  first_unused[NISENTRYLEN (0, 6, result)] = '\0';
+  strncpy (first_unused, NISENTRYVAL (entry, 6, result),
+	   NISENTRYLEN (entry, 6, result));
+  first_unused[NISENTRYLEN (entry, 6, result)] = '\0';
   pw->pw_shell = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
   return 1;
 }
