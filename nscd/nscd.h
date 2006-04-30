@@ -64,11 +64,11 @@ struct database_dyn
   int persistent;
   int shared;
   int propagate;
-  size_t max_db_size;
-  const char *filename;
+  const char filename[12];
   const char *db_filename;
   time_t file_mtime;
   size_t suggested_module;
+  size_t max_db_size;
 
   unsigned long int postimeout;	/* In seconds.  */
   unsigned long int negtimeout;	/* In seconds.  */

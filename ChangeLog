@@ -1,5 +1,8 @@
 2006-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd.h (struct database_dyn): Change filename to an array
+	to avoid relocations.
+
 	* elf/ldd.bash.in: If --verify loop fails to find a dynamic linker
 	for the file don't just try the first one listed in RTLDLIST
 	again.  We already have the status.
