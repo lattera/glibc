@@ -226,8 +226,12 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
   gidlen = 0;
 
   /* After strtoul() ep should point to the marker ',', which means
-     here starts a new value. */
-  while (ep != NULL && *ep == ',')
+     here starts a new value.
+
+     The Sun man pages show that GIDLIST should contain at least NGRPS
+     elements.  Limiting the number written by this value is the best
+     we can do.  */
+  while (ep != NULL && *ep == ',' && gidlen < NGRPS)
     {
       ep++;
       s = ep;
