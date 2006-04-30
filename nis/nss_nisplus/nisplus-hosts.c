@@ -265,6 +265,11 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	    }
 
 	  result = nis_first_entry (tablename_val);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
             {
               enum nss_status retval = niserr2nss (result->status);
@@ -279,11 +284,13 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	}
       else
 	{
-	  nis_result *res2;
-
 	  saved_res = result;
-	  res2 = nis_next_entry(tablename_val, &result->cookie);
-	  result = res2;
+	  result = nis_next_entry (tablename_val, &result->cookie);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
             {
               enum nss_status retval= niserr2nss (result->status);

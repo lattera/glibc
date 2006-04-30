@@ -176,6 +176,11 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	{
 	  saved_result = NULL;
 	  result = nis_first_entry (tablename_val);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
@@ -183,6 +188,11 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	{
 	  saved_result = result;
 	  result = nis_next_entry (tablename_val, &result->cookie);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      nis_freeresult (saved_result);

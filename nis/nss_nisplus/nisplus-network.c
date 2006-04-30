@@ -232,6 +232,11 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	    }
 
 	  result = nis_first_entry (tablename_val);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      int retval = niserr2nss (result->status);
@@ -249,9 +254,13 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	}
       else
 	{
-	  nis_result *res = nis_next_entry (tablename_val, &result->cookie);
 	  saved_res = result;
-	  result = res;
+	  result = nis_next_entry (tablename_val, &result->cookie);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      int retval = niserr2nss (result->status);

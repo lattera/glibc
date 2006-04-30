@@ -1,5 +1,13 @@
 2006-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nisplus/nisplus-ethers.c: Add missing null pointer check.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
 	* nis/nisplus-parser.h (_nss_nisplus_parse_pwent): Add entry
 	parameter.
 	(_nss_nisplus_parse_pwent_chk): New prototype.

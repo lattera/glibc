@@ -99,6 +99,11 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 	    }
 
 	  result = nis_first_entry (pwd_tablename_val);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
@@ -106,6 +111,11 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 	{
 	  saved_res = result;
 	  result = nis_next_entry (pwd_tablename_val, &result->cookie);
+	  if (result == NULL)
+	    {
+	      *errnop = errno;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      nis_freeresult (saved_res);
