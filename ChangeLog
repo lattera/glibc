@@ -1,5 +1,9 @@
 2006-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Move state change
+	notification...
+	(lose): ...to here.
+
 	* posix/Makefile (tests): Add tst-getaddrinfo3.
 	* posix/tst-getaddrinfo3.c: New file.
 

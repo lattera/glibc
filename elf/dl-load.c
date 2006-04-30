@@ -1,6 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006  Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -786,7 +785,7 @@ _dl_init_paths (const char *llp)
 static void
 __attribute__ ((noreturn, noinline))
 lose (int code, int fd, const char *name, char *realname, struct link_map *l,
-      const char *msg)
+      const char *msg, struct r_debug *r)
 {
   /* The file might already be closed.  */
   if (fd != -1)
@@ -805,6 +804,13 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       free (l);
     }
   free (realname);
+
+  if (r != NULL)
+    {
+      r->r_state = RT_CONSISTENT;
+      _dl_debug_state ();
+    }
+
   _dl_signal_error (code, name, NULL, msg);
 }
 
@@ -840,13 +846,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     call_lose_errno:
       errval = errno;
     call_lose:
-      if (make_consistent)
-	{
-	  r->r_state = RT_CONSISTENT;
-	  _dl_debug_state ();
-	}
-
-      lose (errval, fd, name, realname, l, errstring);
+      lose (errval, fd, name, realname, l, errstring,
+	    make_consistent ? r : NULL);
     }
 
   /* Look again to see if the real name matched another already loaded.  */
@@ -1642,7 +1643,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	      name = strdupa (realname);
 	      free (realname);
 	    }
-	  lose (errval, fd, name, NULL, NULL, errstring);
+	  lose (errval, fd, name, NULL, NULL, errstring, NULL);
 	}
 
       /* See whether the ELF header is what we expect.  */
