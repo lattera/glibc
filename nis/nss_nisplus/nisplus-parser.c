@@ -84,27 +84,37 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
   room_left -= len + 1;
   first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 2, result) >= room_left)
-    goto no_more_room;
+  char *numstr = NISENTRYVAL (entry, 2, result);
+  len = NISENTRYLEN (entry, 2, result);
+  if (len == 0 && numstr[len - 1] != '\0')
+    {
+      if (len >= room_left)
+	goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 2, result),
-	   NISENTRYLEN (entry, 2, result));
-  first_unused[NISENTRYLEN (entry, 2, result)] = '\0';
-  len = strlen (first_unused);
-  if (len == 0) /* If we don't have a uid, it's an invalid shadow entry */
+      strncpy (first_unused, numstr, len);
+      first_unused[len] = '\0';
+      numstr = first_unused;
+    }
+  if (numstr[0] == '\0')
+    /* If we don't have a uid, it's an invalid shadow entry.  */
     return 0;
-  pw->pw_uid = strtoul (first_unused, NULL, 10);
+  pw->pw_uid = strtoul (numstr, NULL, 10);
 
-  if (NISENTRYLEN (entry, 3, result) >= room_left)
-    goto no_more_room;
+  numstr = NISENTRYVAL (entry, 3, result);
+  len = NISENTRYLEN (entry, 3, result);
+  if (len == 0 && numstr[len - 1] != '\0')
+    {
+      if (len >= room_left)
+	goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 3, result),
-	   NISENTRYLEN (entry, 3, result));
-  first_unused[NISENTRYLEN (entry, 3, result)] = '\0';
-  len = strlen (first_unused);
-  if (len == 0) /* If we don't have a gid, it's an invalid shadow entry */
+      strncpy (first_unused, numstr, len);
+      first_unused[len] = '\0';
+      numstr = first_unused;
+    }
+  if (numstr[0] == '\0')
+    /* If we don't have a gid, it's an invalid shadow entry.  */
     return 0;
-  pw->pw_gid = strtoul (first_unused, NULL, 10);
+  pw->pw_gid = strtoul (numstr, NULL, 10);
 
   if (NISENTRYLEN(entry, 4, result) >= room_left)
     goto no_more_room;
@@ -178,8 +188,8 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   if (len == 0) /* group table is corrupt */
     return 0;
   gr->gr_name = first_unused;
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
   if (NISENTRYLEN (entry, 1, result) >= room_left)
     goto no_more_room;
@@ -189,19 +199,24 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   first_unused[NISENTRYLEN (entry, 1, result)] = '\0';
   gr->gr_passwd = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 2, result) >= room_left)
-    goto no_more_room;
+  char *numstr = NISENTRYVAL (entry, 2, result);
+  len = NISENTRYLEN (entry, 2, result);
+  if (len == 0 && numstr[len - 1] != '\0')
+    {
+      if (len >= room_left)
+	goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 2, result),
-	   NISENTRYLEN (entry, 2, result));
-  first_unused[NISENTRYLEN (entry, 2, result)] = '\0';
-  len = strlen (first_unused);
-  if (len == 0) /* We should always have a gid */
+      strncpy (first_unused, numstr, len);
+      first_unused[len] = '\0';
+      numstr = first_unused;
+    }
+  if (numstr[0] == '\0')
+    /* We should always have a gid.  */
     return 0;
-  gr->gr_gid = strtoul (first_unused, NULL, 10);
+  gr->gr_gid = strtoul (numstr, NULL, 10);
 
   if (NISENTRYLEN (entry, 3, result) >= room_left)
     goto no_more_room;
@@ -211,8 +226,8 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   first_unused[NISENTRYLEN (entry, 3, result)] = '\0';
   line = first_unused;
   len = strlen (line);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
   size_t adjust = ((__alignof__ (char *)
@@ -294,8 +309,8 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   if (len == 0)
     return 0;
   sp->sp_namp = first_unused;
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
   if (NISENTRYLEN (0, 1, result) >= room_left)
     goto no_more_room;
@@ -305,8 +320,8 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   first_unused[NISENTRYLEN (0, 1, result)] = '\0';
   sp->sp_pwdp = first_unused;
   len = strlen (first_unused);
-  room_left -= (len + 1);
-  first_unused += (len + 1);
+  room_left -= len + 1;
+  first_unused += len + 1;
 
   sp->sp_lstchg = sp->sp_min = sp->sp_max = sp->sp_warn = sp->sp_inact =
     sp->sp_expire = -1;
