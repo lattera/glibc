@@ -1,5 +1,9 @@
 2006-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/ldd.bash.in: If --verify loop fails to find a dynamic linker
+	for the file don't just try the first one listed in RTLDLIST
+	again.  We already have the status.
+
 	* nis/nss_nisplus/nisplus-publickey.c (parse_grp_str): PIDLIST is
 	supposed to have NGRPS elements.
 

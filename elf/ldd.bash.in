@@ -154,6 +154,7 @@ for file do
     test -x "$file" || echo 'ldd:' $"\
 warning: you do not have execution permission for" "\`$file'" >&2
     RTLD=
+    ret=1
     for rtld in ${RTLDLIST}; do
       if test -x $rtld; then
 	verify_out=`${rtld} --verify "$file"`
@@ -163,12 +164,6 @@ warning: you do not have execution permission for" "\`$file'" >&2
 	esac
       fi
     done
-    if test -z "${RTLD}"; then
-      set ${RTLDLIST}
-      RTLD=$1
-      verify_out=`${RTLD} --verify "$file"`
-      ret=$?
-    fi
     case $ret in
     0)
       # If the program exits with exit code 5, it means the process has been
