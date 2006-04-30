@@ -1,5 +1,11 @@
 2006-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-getaddrinfo3.
+	* posix/tst-getaddrinfo3.c: New file.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Add parenthesis in test
+	for better readability.
+
 	* nscd/nscd.h (struct database_dyn): Change filename to an array
 	to avoid relocations.
 

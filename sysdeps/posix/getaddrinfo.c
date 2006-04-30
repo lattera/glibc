@@ -529,7 +529,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    at->family = AF_INET;
-	  else if (req->ai_family == AF_INET6 && req->ai_flags & AI_V4MAPPED)
+	  else if (req->ai_family == AF_INET6 && (req->ai_flags & AI_V4MAPPED))
 	    {
 	      at->addr[3] = at->addr[0];
 	      at->addr[2] = htonl (0xffff);
