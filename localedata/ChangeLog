@@ -1,4 +1,44 @@
+2006-01-07  Eddy Petrisor  <eddy.petrisor@gmail.com>
+
+	* locales/ro_RO: The sorting order of the letters a circumflex and
+	a with breve was corrected according to the Romanian alphabet.
+	Capital A with breve is in no longer used within day names.
+	Romanian post-92 writing rules are used within day and abday fields.
+	Fixed the international currency symbol because after the
+	denomination (starting with the 1st of July 2005), the symbol is
+	RON (1 RON = 10000 ROL).
+	Grouping sign for thousands, which is ".", is used for Romanian.
+	Numbers are grouped in sets of 3 digits.
+	The short date format is %d.%m.%Y for Romanian in Romania.
+	The year is placed before the time in date_fmt.
+	%Z was replaced with %z in date formats because %Z is not
+	used nor widely known in Romania, and Romania uses daylight saving
+	and the difference is more obvious this way.
+	abday for Saturday was changed because i> looks bad and is
+	incorrect according to post-92 writing rules.
+	In Romanian months' names are not capitalized. The same goes for
+	the days' names.
+	A4 is the prefered paper type and metric system is used;
+	FIXMEs were removed.
+	country_name, country_car, lang_name and lang_ab were added.
+	name_mr, name_mrs, name_miss were added; name_ms omitted as
+	there is no proper form it in Romanian.
+	An explanation related to the cedilla/comma issue and
+	the reson why the transliteration is a good idea was added.
+	The default encoding was changed to UTF-8 because this is the
+	only encoding that supports all Romanian specific symbols and
+	dicritics.
+	The name format was corrected while salutation abbreviation was
+	omitted.
+	postal_fmt was corrected according to the Romanian style of
+	writing this information.
+
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add el_CY.ISO-8859-7 and el_CY.UTF-8.
+
+	[BZ #531]
+	* locales/el_CY: New file.
 
 	[BZ #192]
 	* locales/hu_HU: Better month name abbreviations.
