@@ -1,5 +1,8 @@
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #388]
+	* locales/pl_PL: Don't ignore U0020 in collation.
+
 	[BZ #352]
 	* locales/ru_RU: Use U2002 for thousands_sep and
 	mon_throusands_sep.
