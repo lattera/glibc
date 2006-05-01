@@ -1,5 +1,10 @@
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #68]
+	* locales/hy_AM: Remove special collation rules.  Fux yesexpr, noexpr,
+	country_name, country_car, lang_name, name_fmt, name_miss, name_mr,
+	and name_mrs.
+
 	[BZ #388]
 	* locales/pl_PL: Don't ignore U0020 in collation.
 

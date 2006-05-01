@@ -1,16 +1,16 @@
 escape_char /
 comment_char %
-% charset "ARMSCII-8"
+% Charset: UTF-8
 % Distribution and use is free, also for commercial purposes.
 
 LC_IDENTIFICATION
 title "Armenian language locale for Armenia"
-source "http://moon.yerphi.am/~hovik/ArmSCII/ArmCS-005.html"
+source "http://www.freenet.am/armscii"
 %	Eugene Sevinian <sevinian@crdlx2.yerphi.am> completed
 %	LC_MONETARY and LC_TIME
 address ""
 contact "Pablo Saratxaga"
-email "srtxg@chanae.alphanet.ch"
+email "pablo@mandrakesoft.com"
 tel ""
 fax ""
 language "Armenian"
@@ -18,17 +18,17 @@ territory "Armenia"
 revision "0.4"
 date "2001-01-26"
 
-category hy_AM:2000;LC_IDENTIFICATION
-category hy_AM:2000;LC_COLLATE
-category hy_AM:2000;LC_CTYPE
-category hy_AM:2000;LC_MESSAGES
-category hy_AM:2000;LC_MONETARY
-category hy_AM:2000;LC_NUMERIC
-category hy_AM:2000;LC_TIME
-category hy_AM:2000;LC_PAPER
-category hy_AM:2000;LC_MEASUREMENT
-category hy_AM:2000;LC_TELEPHONE
-category hy_AM:2000;LC_ADDRESS
+category "hy_AM:2000";LC_IDENTIFICATION
+category "hy_AM:2000";LC_COLLATE
+category "hy_AM:2000";LC_CTYPE
+category "hy_AM:2000";LC_MESSAGES
+category "hy_AM:2000";LC_MONETARY
+category "hy_AM:2000";LC_NUMERIC
+category "hy_AM:2000";LC_TIME
+category "hy_AM:2000";LC_PAPER
+category "hy_AM:2000";LC_MEASUREMENT
+category "hy_AM:2000";LC_TELEPHONE
+category "hy_AM:2000";LC_ADDRESS
 
 % ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
 %  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE
@@ -67,136 +67,7 @@ END LC_IDENTIFICATION
 %%%%%%%%%%%%
 
 LC_COLLATE
-
-% Armenian sorting is not yet on iso14651_t1
-
-script <ARMENIAN>
-
-collating-symbol <ARM-AYB>
-collating-symbol <ARM-BEN>
-collating-symbol <ARM-GIM>
-collating-symbol <ARM-DA>
-collating-symbol <ARM-YECH>
-collating-symbol <ARM-ZA>
-collating-symbol <ARM-E>
-collating-symbol <ARM-AT>
-collating-symbol <ARM-TO>
-collating-symbol <ARM-ZHE>
-collating-symbol <ARM-INI>
-collating-symbol <ARM-LYUN>
-collating-symbol <ARM-KHE>
-collating-symbol <ARM-TSA>
-collating-symbol <ARM-KEN>
-collating-symbol <ARM-HO>
-collating-symbol <ARM-DZA>
-collating-symbol <ARM-GHAT>
-collating-symbol <ARM-TCHE>
-collating-symbol <ARM-MEN>
-collating-symbol <ARM-HI>
-collating-symbol <ARM-NU>
-collating-symbol <ARM-SHA>
-collating-symbol <ARM-VO>
-collating-symbol <ARM-CHA>
-collating-symbol <ARM-PE>
-collating-symbol <ARM-JE>
-collating-symbol <ARM-RA>
-collating-symbol <ARM-SE>
-collating-symbol <ARM-VEV>
-collating-symbol <ARM-TYUN>
-collating-symbol <ARM-RE>
-collating-symbol <ARM-TSO>
-collating-symbol <ARM-VYUN>
-collating-symbol <ARM-PYUR>
-collating-symbol <ARM-KE>
-collating-symbol <ARM-O>
-collating-symbol <ARM-FE>
-
-
 copy "iso14651_t1"
-
-order_start <ARMENIAN>;forward;forward;forward;forward,position
-<U0561> <ARM-AYB>;<BAS>;<MIN>;IGNORE
-<U0562> <ARM-BEN>;<BAS>;<MIN>;IGNORE
-<U0563> <ARM-GIM>;<BAS>;<MIN>;IGNORE
-<U0564> <ARM-DA>;<BAS>;<MIN>;IGNORE
-<U0565> <ARM-YECH>;<BAS>;<MIN>;IGNORE
-<U0566> <ARM-ZA>;<BAS>;<MIN>;IGNORE
-<U0567> <ARM-E>;<BAS>;<MIN>;IGNORE
-<U0568> <ARM-AT>;<BAS>;<MIN>;IGNORE
-<U0569> <ARM-TO>;<BAS>;<MIN>;IGNORE
-<U056A> <ARM-ZHE>;<BAS>;<MIN>;IGNORE
-<U056B> <ARM-INI>;<BAS>;<MIN>;IGNORE
-<U056C> <ARM-LYUN>;<BAS>;<MIN>;IGNORE
-<U056D> <ARM-KHE>;<BAS>;<MIN>;IGNORE
-<U056E> <ARM-TSA>;<BAS>;<MIN>;IGNORE
-<U056F> <ARM-KEN>;<BAS>;<MIN>;IGNORE
-<U0570> <ARM-HO>;<BAS>;<MIN>;IGNORE
-<U0571> <ARM-DZA>;<BAS>;<MIN>;IGNORE
-<U0572> <ARM-GHAT>;<BAS>;<MIN>;IGNORE
-<U0573> <ARM-TCHE>;<BAS>;<MIN>;IGNORE
-<U0574> <ARM-MEN>;<BAS>;<MIN>;IGNORE
-<U0575> <ARM-HI>;<BAS>;<MIN>;IGNORE
-<U0576> <ARM-NU>;<BAS>;<MIN>;IGNORE
-<U0577> <ARM-SHA>;<BAS>;<MIN>;IGNORE
-<U0578> <ARM-VO>;<BAS>;<MIN>;IGNORE
-<U0579> <ARM-CHA>;<BAS>;<MIN>;IGNORE
-<U057A> <ARM-PE>;<BAS>;<MIN>;IGNORE
-<U057B> <ARM-JE>;<BAS>;<MIN>;IGNORE
-<U057C> <ARM-RA>;<BAS>;<MIN>;IGNORE
-<U057D> <ARM-SE>;<BAS>;<MIN>;IGNORE
-<U057E> <ARM-VEV>;<BAS>;<MIN>;IGNORE
-<U057F> <ARM-TYUN>;<BAS>;<MIN>;IGNORE
-<U0580> <ARM-RE>;<BAS>;<MIN>;IGNORE
-<U0581> <ARM-TSO>;<BAS>;<MIN>;IGNORE
-<U0582> <ARM-VYUN>;<BAS>;<MIN>;IGNORE
-<U0583> <ARM-PYUR>;<BAS>;<MIN>;IGNORE
-<U0584> <ARM-KE>;<BAS>;<MIN>;IGNORE
-<U0585> <ARM-O>;<BAS>;<MIN>;IGNORE
-<U0586> <ARM-FE>;<BAS>;<MIN>;IGNORE
-<U0531> <ARM-AYB>;<BAS>;<CAP>;IGNORE
-<U0532> <ARM-BEN>;<BAS>;<CAP>;IGNORE
-<U0533> <ARM-GIM>;<BAS>;<CAP>;IGNORE
-<U0534> <ARM-DA>;<BAS>;<CAP>;IGNORE
-<U0535> <ARM-YECH>;<BAS>;<CAP>;IGNORE
-<U0536> <ARM-ZA>;<BAS>;<CAP>;IGNORE
-<U0537> <ARM-E>;<BAS>;<CAP>;IGNORE
-<U0538> <ARM-AT>;<BAS>;<CAP>;IGNORE
-<U0539> <ARM-TO>;<BAS>;<CAP>;IGNORE
-<U053A> <ARM-ZHE>;<BAS>;<CAP>;IGNORE
-<U053B> <ARM-INI>;<BAS>;<CAP>;IGNORE
-<U053C> <ARM-LYUN>;<BAS>;<CAP>;IGNORE
-<U053D> <ARM-KHE>;<BAS>;<CAP>;IGNORE
-<U053E> <ARM-TSA>;<BAS>;<CAP>;IGNORE
-<U053F> <ARM-KEN>;<BAS>;<CAP>;IGNORE
-<U0540> <ARM-HO>;<BAS>;<CAP>;IGNORE
-<U0541> <ARM-DZA>;<BAS>;<CAP>;IGNORE
-<U0542> <ARM-GHAT>;<BAS>;<CAP>;IGNORE
-<U0543> <ARM-TCHE>;<BAS>;<CAP>;IGNORE
-<U0544> <ARM-MEN>;<BAS>;<CAP>;IGNORE
-<U0545> <ARM-HI>;<BAS>;<CAP>;IGNORE
-<U0546> <ARM-NU>;<BAS>;<CAP>;IGNORE
-<U0547> <ARM-SHA>;<BAS>;<CAP>;IGNORE
-<U0548> <ARM-VO>;<BAS>;<CAP>;IGNORE
-<U0549> <ARM-CHA>;<BAS>;<CAP>;IGNORE
-<U054A> <ARM-PE>;<BAS>;<CAP>;IGNORE
-<U054B> <ARM-JE>;<BAS>;<CAP>;IGNORE
-<U054C> <ARM-RA>;<BAS>;<CAP>;IGNORE
-<U054D> <ARM-SE>;<BAS>;<CAP>;IGNORE
-<U054E> <ARM-VEV>;<BAS>;<CAP>;IGNORE
-<U054F> <ARM-TYUN>;<BAS>;<CAP>;IGNORE
-<U0550> <ARM-RE>;<BAS>;<CAP>;IGNORE
-<U0551> <ARM-TSO>;<BAS>;<CAP>;IGNORE
-<U0552> <ARM-VYUN>;<BAS>;<CAP>;IGNORE
-<U0553> <ARM-PYUR>;<BAS>;<CAP>;IGNORE
-<U0554> <ARM-KE>;<BAS>;<CAP>;IGNORE
-<U0555> <ARM-O>;<BAS>;<CAP>;IGNORE
-<U0556> <ARM-FE>;<BAS>;<CAP>;IGNORE
-order_end
-
-reorder-sections-after <CYRIL>
-<ARMENIAN>
-reorder-sections-end
-
 END LC_COLLATE
 
 LC_CTYPE
@@ -277,8 +148,8 @@ END LC_TIME
 LC_MESSAGES
 yesstr      "<U0561><U0575><U0578>"
 nostr       "<U0578><U0579>"
-yesexpr     "<U005E><U005B><U0079><U0059><U0073><U0053><U0561><U0531><U005D><U002E><U002A>"
-noexpr      "<U005E><U005B><U006E><U004E><U0578><U0548><U005D><U002E><U002A>"
+yesexpr     "<U005E><U005B><U0079><U0059><U0073><U0053><U0561><U0531><U005D>"
+noexpr      "<U005E><U005B><U006E><U004E><U0578><U0548><U005D>"
 END LC_MESSAGES
 
 % Metric Measurement system (ISO 1000)
@@ -303,20 +174,23 @@ LC_ADDRESS
 postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
 <U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% FIXME country_name "Armenia" in Armenian
+country_name "<U0540><U0561><U0575><U0561><U057D><U057F><U0561><U0576>"
 % FIXME country_post for Armenia?
 country_ab2 "<U0041><U004D>"
 country_ab3 "<U0041><U0052><U004D>"
 country_num 51
-% FIXME country_car  for Armenia ?
+country_car "<U0041><U004D>"
 country_isbn "<U0039><U0039><U0039><U0033><U0030>"
-% FIXME lang_name Armenian in Armenian
+lang_name "<U0540><U0561><U0575><U0565><U0580><U0565><U0576>"
 lang_ab "<U0068><U0079>"
 lang_term "<U0068><U0079><U0065>"
 lang_lib "<U0061><U0072><U006D>"
 END LC_ADDRESS
 
 LC_NAME
-% FIXME
-name_fmt "???"
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_miss   "<U0585><U0580><U056B><U0578><U0580><U0564>"
+name_mr     "<U057A><U0580><U0576>"
+name_mrs    "<U057F><U056F><U0576>"
 END LC_NAME
