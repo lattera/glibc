@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2006-04-16
+GNU C Library NEWS -- history of user-visible changes.  2006-05-01
 Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -10,7 +10,9 @@ Version 2.5
 * For Linux, the sorting of addresses returned by getaddrinfo now also
   handles rules 3 and 7 from RFC 3484.  Implemented by Ulrich Drepper.
 
-* New Linux interfaces: splice, tee, sync_file_range.
+* New Linux interfaces: splice, tee, sync_file_range, vmsplace.
+
+* New iconv module for MIK.  Contributed by Alexander Shopov.
 
 
 Version 2.4
