@@ -46,7 +46,7 @@
 	* SUPPORTED (SUPPORTED-LOCALES): Add hy_AM.UTF-8 and hy_AM.ARMSCII-8.
 
 	[BZ #68]
-	* locales/hy_AM: Remove special collation rules.  Fux yesexpr, noexpr,
+	* locales/hy_AM: Remove special collation rules.  Fix yesexpr, noexpr,
 	country_name, country_car, lang_name, name_fmt, name_miss, name_mr,
 	and name_mrs.
 
