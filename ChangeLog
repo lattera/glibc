@@ -1,5 +1,8 @@
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-grp.c (internal_nis_getgrent_r): Don't try to
+	free outkey in error case when batch_read is set [Coverity CID 196].
+
 	[BZ #2517]
 	* misc/sys/queue.h: Update to more recent version.
 

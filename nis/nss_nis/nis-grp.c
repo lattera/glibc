@@ -220,7 +220,8 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 					  errnop);
       if (__builtin_expect (parse_res == -1, 0))
 	{
-	  free (outkey);
+	  if (!batch_read)
+	    free (outkey);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
