@@ -1,3 +1,8 @@
+2006-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2517]
+	* misc/sys/queue.h: Update to more recent version.
+
 2006-05-01  Alexander Shopov  <ash@contact.bg>
 
 	[BZ #2625]
