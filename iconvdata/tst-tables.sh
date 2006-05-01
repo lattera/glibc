@@ -207,6 +207,7 @@ cat <<EOF |
   TSCII
   PT154
   RK1048
+  MIK
   #
   # Multibyte encodings come here
   #

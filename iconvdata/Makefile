@@ -58,7 +58,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM1142 IBM1143 IBM1144 IBM1145 IBM1146 IBM1147 IBM1148 	 \
 	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971 	 \
 	   IBM5347 IBM9030 IBM9066 IBM9448 IBM12712 IBM16804             \
-	   IBM1364 IBM1371 IBM1388 IBM1390 IBM1399 ISO_11548-1
+	   IBM1364 IBM1371 IBM1388 IBM1390 IBM1399 ISO_11548-1 MIK
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -196,7 +196,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      ibm9030.c ibm9030.h ibm9066.c ibm9066.h ibm9448.c ibm9448.h   \
 	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
 	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
-	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c
+	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -237,7 +237,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
-			iso8859-11 ibm866nav pt154 rk1048
+			iso8859-11 ibm866nav pt154 rk1048 mik
 
 gen-special-modules := iso8859-7jp
 

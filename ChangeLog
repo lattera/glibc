@@ -1,3 +1,16 @@
+2006-05-01  Alexander Shopov  <ash@contact.bg>
+
+	[BZ #2625]
+	* iconvdata/Makefile (modules): Added MIK.
+	(distribute): Added mik.c.
+	(gen-8bit-gap-modules): Added mik.
+	* iconvdata/TESTS: Added MIK.
+	* iconvdata/gconv-modules: Added MIK.
+	* iconvdata/tst-tables.sh: Added MIK.
+	* iconvdata/mik.c: New file.
+	* iconvdata/testdata/MIK: New file.
+	* iconvdata/testdata/MIK..UTF8: New file.
+
 2006-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Move state change

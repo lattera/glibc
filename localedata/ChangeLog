@@ -1,3 +1,9 @@
+2006-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #352]
+	* locales/ru_RU: Use U2002 for thousands_sep and
+	mon_throusands_sep.
+
 2006-05-01  Alexander Shopov  <ash@contact.bg>
 
 	[BZ #2625]

@@ -1903,3 +1903,7 @@ alias	ISO/TR_11548-1/		ISO_11548-1//
 alias	ISO11548-1//		ISO_11548-1//
 module	ISO_11548-1//		INTERNAL		ISO_11548-1	1
 module	INTERNAL		ISO_11548-1//		ISO_11548-1	1
+
+#	from			to			module		cost
+module	MIK//			INTERNAL		MIK		1
+module	INTERNAL		MIK//			MIK		1
