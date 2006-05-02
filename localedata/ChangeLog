@@ -1,3 +1,11 @@
+2006-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add tr_CY.ISO-8859-9 and
+	tr_CY.UTF-8.
+
+	[BZ #531]
+	* locales/tr_CY: New file.
+
 2006-01-07  Eddy Petrisor  <eddy.petrisor@gmail.com>
 
 	* locales/ro_RO: The sorting order of the letters a circumflex and

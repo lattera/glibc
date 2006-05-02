@@ -722,7 +722,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	    dbs[cnt].head = xmalloc (sizeof (struct database_pers_head)
 				     + (dbs[cnt].suggested_module
 					* sizeof (ref_t)));
-	    memset (dbs[cnt].head, '\0', sizeof (dbs[cnt].head));
+	    memset (dbs[cnt].head, '\0', sizeof (struct database_pers_head));
 	    assert (~ENDREF == 0);
 	    memset (dbs[cnt].head->array, '\xff',
 		    dbs[cnt].suggested_module * sizeof (ref_t));
