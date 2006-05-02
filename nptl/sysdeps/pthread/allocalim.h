@@ -1,5 +1,5 @@
 /* Determine whether block of given size can be allocated on the stack or not.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 #include <limits.h>
 
 
-extern inline int
+extern int
+__always_inline
 __libc_use_alloca (size_t size)
 {
   return (__builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1)

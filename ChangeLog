@@ -1,5 +1,9 @@
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2502]
+	* iconvdata/utf-7.c: Don't require more than two characters after
+	the '+' sign starting Unicode shifted sequences.
+
 	* misc/tsearch.c (__tdelete): Remove unnecessary test
 	[Coverity CID 75].
 

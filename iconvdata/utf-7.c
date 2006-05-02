@@ -44,7 +44,7 @@
    A-Z a-z 0-9 ' ( ) , - . / : ? space tab lf cr
 */
 
-static const unsigned char direct_tab[128/8] =
+static const unsigned char direct_tab[128 / 8] =
   {
     0x00, 0x26, 0x00, 0x00, 0x81, 0xf3, 0xff, 0x87,
     0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
@@ -62,7 +62,7 @@ isdirect (uint32_t ch)
    ! " # $ % & * ; < = > @ [ ] ^ _ ` { | }
 */
 
-static const unsigned char xdirect_tab[128/8] =
+static const unsigned char xdirect_tab[128 / 8] =
   {
     0x00, 0x26, 0x00, 0x00, 0xff, 0xf7, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xef, 0xff, 0xff, 0xff, 0x3f
@@ -79,7 +79,7 @@ isxdirect (uint32_t ch)
    A-Z a-z 0-9 + / -
 */
 
-static const unsigned char xbase64_tab[128/8] =
+static const unsigned char xbase64_tab[128 / 8] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0xa8, 0xff, 0x03,
     0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
@@ -170,7 +170,7 @@ base64 (unsigned int i)
 	  }								      \
 	else if (__builtin_expect (ch == '+', 1))			      \
 	  {								      \
-	    if (__builtin_expect (inptr + 2 >= inend, 0))		      \
+	    if (__builtin_expect (inptr + 2 > inend, 0))		      \
 	      {								      \
 		/* Not enough input available.  */			      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
