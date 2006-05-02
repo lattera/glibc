@@ -530,14 +530,24 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      if (is_long_num)						      \
 		signed_number = va_arg (ap, long int);			      \
-	      else  /* `char' and `short int' will be promoted to `int'.  */  \
+	      else if (is_char)						      \
+	        signed_number = (signed char) va_arg (ap, unsigned int);      \
+	      else if (!is_short)					      \
 		signed_number = va_arg (ap, int);			      \
+	      else							      \
+		signed_number = (short int) va_arg (ap, unsigned int);	      \
 	    }								      \
 	  else								      \
 	    if (is_long_num)						      \
 	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
-	    else  /* `char' and `short int' will be promoted to `int'.  */    \
+	    else if (is_char)						      \
+	      signed_number = (signed char)				      \
+		args_value[fspec->data_arg].pa_u_int;			      \
+	    else if (!is_short)						      \
 	      signed_number = args_value[fspec->data_arg].pa_int;	      \
+	    else							      \
+	      signed_number = (short int)				      \
+		args_value[fspec->data_arg].pa_u_int;			      \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.word = is_negative ? (- signed_number) : signed_number;      \
