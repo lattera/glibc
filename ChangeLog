@@ -1,5 +1,7 @@
 2006-05-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/testdate/MIK: Fix format to match expected output.
+
 	[BZ #2632]
 	* nscd/connections.c (nscd_init): Correct initialization of
 	in-memory database structure.
@@ -176,7 +178,7 @@
 	* sysdeps/unix/sysv/linux/bits/uio.h: Fix a typo in a comment.
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused
-	bugs not to be reported.
+	errors not to be reported.
 
 	* nscd/nscd.h (struct database_dyn): Add propagate field.
 	* nscd/nscd_conf.c (nscd_parse_file): Parse auto-propagate lines.
