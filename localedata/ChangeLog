@@ -1,5 +1,9 @@
 2006-05-02  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1203]
+	* locales/de_DE: Fix order of day of month and month name in
+	date_fmt.  Add period after the day number and avoid padding.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add tr_CY.ISO-8859-9 and
 	tr_CY.UTF-8.
 

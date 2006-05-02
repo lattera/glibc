@@ -1,5 +1,8 @@
 2006-05-02  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1201]
+	* posix/regex.h: g++ still cannot handled [restrict].
+
 	[BZ #2509]
 	* stdio-common/vfprintf.c (process_arg): Fix reading of signed
 	short and byte values from parameter list.
