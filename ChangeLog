@@ -1,5 +1,11 @@
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/tsearch.c (__tdelete): Remove unnecessary test
+	[Coverity CID 75].
+
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Print error
+	message for invalid DWARF data instead of crashing.
+
 	* nis/nss_nis/nis-pwd.c (internal_nis_getpwent_r): Don't try to
 	free outkey in error case when batch_read is set.
 

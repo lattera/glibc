@@ -447,7 +447,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	      /* Q is R's brother, P is R's parent.  The subtree with root
 		 R has one black edge less than the subtree with root Q.  */
 	      q = p->right;
-	      if (q != NULL && q->red)
+	      if (q->red)
 		{
 		  /* If Q is red, we know that P is black. We rotate P left
 		     so that Q becomes the top node in the tree, with P below
@@ -535,7 +535,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	    {
 	      /* Comments: see above.  */
 	      q = p->left;
-	      if (q != NULL && q->red)
+	      if (q->red)
 		{
 		  q->red = 0;
 		  p->red = 1;
