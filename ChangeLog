@@ -1,3 +1,14 @@
+2006-05-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Fix MADV_REMOVE value.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2502]

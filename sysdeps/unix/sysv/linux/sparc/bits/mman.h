@@ -91,7 +91,7 @@
 # define MADV_WILLNEED	 3	/* Will need these pages.  */
 # define MADV_DONTNEED	 4	/* Don't need these pages.  */
 # define MADV_FREE	 5	/* Content can be freed (Solaris).  */
-# define MADV_REMOVE	 6	/* Remove these pages and resources.  */
+# define MADV_REMOVE	 9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
 # define MADV_DOFORK	 11	/* Do inherit across fork.  */
 #endif
