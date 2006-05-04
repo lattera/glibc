@@ -552,8 +552,11 @@ __rpc_thread_key_cleanup (void)
 	struct key_call_private *kcp = RPC_THREAD_VARIABLE(key_call_private_s);
 
 	if (kcp) {
-		if (kcp->client)
+		if (kcp->client) {
+			if (kcp->client->cl_auth)
+				auth_destroy (kcp->client->cl_auth);
 			clnt_destroy(kcp->client);
+		}
 		free (kcp);
 	}
 }
