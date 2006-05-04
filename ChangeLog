@@ -764,8 +764,12 @@
 	so it uses send and not writev.
 
 	[BZ #2418]
-	* sysdeps/unix/sysv/linux/bits/socket.h: Use larger of PATH_MAX and
-	page size when allocating buffer.
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Use larger of PATH_MAX
+	and page size when allocating buffer.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct msghdr): Document
+	msg_controllen type issue.
+	(struct cmsghdr): Same for cmsg_len.
 
 2006-04-01  Ulrich Drepper  <drepper@redhat.com>
 
