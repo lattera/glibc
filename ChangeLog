@@ -3,4 +3,4 @@
 	* nscd/gai.c (__getline): Define.
 
 
-See ChangeLog.15 for earlier changes.
+See ChangeLog.16 for earlier changes.
