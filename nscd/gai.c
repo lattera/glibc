@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2004.
 
@@ -25,6 +25,7 @@
 #define __bind bind
 #define __sendto sendto
 #define __strchrnul strchrnul
+#define __getline getline
 
 #include <getaddrinfo.c>
 
