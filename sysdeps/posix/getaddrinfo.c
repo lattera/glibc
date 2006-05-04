@@ -36,23 +36,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <arpa/inet.h>
-#include <sys/socket.h>
+#include <net/if.h>
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
-#include <net/if.h>
+#include <unistd.h>
 #include <nsswitch.h>
+#include <bits/libc-lock.h>
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
@@ -1161,59 +1165,77 @@ get_scope (const struct sockaddr_storage *ss)
 }
 
 
-/* XXX The system administrator should be able to install other
-   tables.  We need to make this configurable.  The problem is that
-   the kernel is also involved since it needs the same table.  */
-static const struct prefixlist
+struct prefixentry
 {
   struct in6_addr prefix;
   unsigned int bits;
   int val;
-} default_labels[] =
+};
+
+
+/* The label table.  */
+static const struct prefixentry *labels;
+
+/* Default labels.  */
+static const struct prefixentry default_labels[] =
   {
     /* See RFC 3484 for the details.  */
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 } } },
       128, 0 },
-    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       16, 2 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       96, 3 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 } } },
       96, 4 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       0, 1 }
   };
 
 
-static const struct prefixlist default_precedence[] =
+/* The precedence table.  */
+static const struct prefixentry *precedence;
+
+/* The default precedences.  */
+static const struct prefixentry default_precedence[] =
   {
     /* See RFC 3484 for the details.  */
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 } } },
       128, 50 },
-    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       16, 30 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       96, 20 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 } } },
       96, 100 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       0, 40 }
   };
 
 
 static int
-match_prefix (const struct sockaddr_storage *ss, const struct prefixlist *list,
-	      int default_val)
+match_prefix (const struct sockaddr_storage *ss,
+	      const struct prefixentry *list, int default_val)
 {
   int idx;
   struct sockaddr_in6 in6_mem;
@@ -1277,7 +1299,7 @@ static int
 get_label (const struct sockaddr_storage *ss)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, default_labels, INT_MAX);
+  return match_prefix (ss, labels, INT_MAX);
 }
 
 
@@ -1285,7 +1307,7 @@ static int
 get_precedence (const struct sockaddr_storage *ss)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, default_precedence, 0);
+  return match_prefix (ss, precedence, 0);
 }
 
 
@@ -1482,6 +1504,323 @@ in6aicmp (const void *p1, const void *p2)
 }
 
 
+/* Name of the config file for RFC 3484 sorting (for now).  */
+#define GAICONF_FNAME "/etc/gai.conf"
+
+
+/* Nozero if we are supposed to reload the config file automatically
+   whenever it changed.  */
+static int gaiconf_reload_flag;
+
+/* Last modification time.  */
+static struct timespec gaiconf_mtime;
+
+
+libc_freeres_fn(fini)
+{
+  if (labels != default_labels)
+    {
+      const struct prefixentry *old = labels;
+      labels = default_labels;
+      free ((void *) old);
+    }
+
+  if (precedence != default_precedence)
+    {
+      const struct prefixentry *old = precedence;
+      precedence = default_precedence;
+      free ((void *) old);
+    }
+}
+
+
+struct prefixlist
+{
+  struct prefixentry entry;
+  struct prefixlist *next;
+};
+
+
+static void
+free_prefixlist (struct prefixlist *list)
+{
+  while (list != NULL)
+    {
+      struct prefixlist *oldp = list;
+      list = list->next;
+      free (oldp);
+    }
+}
+
+
+static int
+prefixcmp (const void *p1, const void *p2)
+{
+  const struct prefixentry *e1 = (const struct prefixentry *) p1;
+  const struct prefixentry *e2 = (const struct prefixentry *) p2;
+
+  if (e1->bits < e2->bits)
+    return 1;
+  if (e1->bits == e2->bits)
+    return 0;
+  return -1;
+}
+
+
+static void
+gaiconf_init (void)
+{
+  struct prefixlist *labellist = NULL;
+  size_t nlabellist = 0;
+  bool labellist_nullbits = false;
+  struct prefixlist *precedencelist = NULL;
+  size_t nprecedencelist = 0;
+  bool precedencelist_nullbits = false;
+
+  FILE *fp = fopen (GAICONF_FNAME, "rc");
+  if (fp != NULL)
+    {
+      struct stat64 st;
+      if (__fxstat64 (_STAT_VER, fileno (fp), &st) != 0)
+	{
+	  fclose (fp);
+	  goto no_file;
+	}
+
+      char *line = NULL;
+      size_t linelen = 0;
+
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (!feof_unlocked (fp))
+	{
+	  ssize_t n = __getline (&line, &linelen, fp);
+	  if (n <= 0)
+	    break;
+
+	  /* Handle comments.  No escaping possible so this is easy.  */
+	  char *cp = strchr (line, '#');
+	  if (cp != NULL)
+	    *cp = '\0';
+
+	  cp = line;
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *cmd = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+	  size_t cmdlen = cp - cmd;
+
+	  if (*cp != '\0')
+	    *cp++ = '\0';
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *val1 = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+	  size_t val1len = cp - cmd;
+
+	  /* We always need at least two values.  */
+	  if (val1len == 0)
+	    continue;
+
+	  if (*cp != '\0')
+	    *cp++ = '\0';
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *val2 = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+
+	  /*  Ignore the rest of the line.  */
+	  *cp = '\0';
+
+	  struct prefixlist **listp;
+	  size_t *lenp;
+	  bool *nullbitsp;
+	  switch (cmdlen)
+	    {
+	    case 5:
+	      if (strcmp (cmd, "label") == 0)
+		{
+		  struct in6_addr prefix;
+		  unsigned long int bits = 128;
+		  unsigned long int val;
+		  char *endp;
+
+		  listp = &labellist;
+		  lenp = &nlabellist;
+		  nullbitsp = &labellist_nullbits;
+
+		new_elem:
+		  __set_errno (0);
+		  cp = strchr (val1, '/');
+		  if (cp != NULL)
+		    *cp++ = '\0';
+		  if (inet_pton (AF_INET6, val1, &prefix)
+		      && (cp == NULL
+			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && bits <= INT_MAX
+		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && val <= INT_MAX)
+		    {
+		      struct prefixlist *newp = malloc (sizeof (*newp));
+		      if (newp == NULL)
+			{
+			  free (line);
+			  fclose (fp);
+			  goto no_file;
+			}
+
+		      memcpy (&newp->entry.prefix, &prefix, sizeof (prefix));
+		      newp->entry.bits = bits;
+		      newp->entry.val = val;
+		      newp->next = *listp;
+		      *listp = newp;
+		      ++*lenp;
+		      *nullbitsp |= bits == 0;
+		    }
+		}
+	      break;
+
+	    case 6:
+	      if (strcmp (cmd, "reload") == 0)
+		gaiconf_reload_flag = strcmp (val1, "yes") == 0;
+	      break;
+
+	    case 10:
+	      if (strcmp (cmd, "precedence") == 0)
+		{
+		  listp = &precedencelist;
+		  lenp = &nprecedencelist;
+		  nullbitsp = &precedencelist_nullbits;
+		  goto new_elem;
+		}
+	      break;
+	    }
+	}
+
+      free (line);
+
+      fclose (fp);
+
+      /* Create the array for the labels.  */
+      struct prefixentry *new_labels;
+      if (nlabellist > 0)
+	{
+	  if (!labellist_nullbits)
+	    ++nlabellist;
+	  new_labels = malloc (nlabellist * sizeof (*new_labels));
+	  if (new_labels == NULL)
+	    goto no_file;
+
+	  int i = nlabellist;
+	  if (!labellist_nullbits)
+	    {
+	      --i;
+	      memset (&new_labels[i].prefix, '\0', sizeof (struct in6_addr));
+	      new_labels[i].bits = 0;
+	      new_labels[i].val = 1;
+	    }
+
+	  struct prefixlist *l = labellist;
+	  while (i-- > 0)
+	    {
+	      new_labels[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_prefixlist (labellist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_labels, nlabellist, sizeof (*new_labels), prefixcmp);
+	}
+      else
+	new_labels = (struct prefixentry *) default_labels;
+
+      struct prefixentry *new_precedence;
+      if (nprecedencelist > 0)
+	{
+	  if (!precedencelist_nullbits)
+	    ++nprecedencelist;
+	  new_precedence = malloc (nprecedencelist * sizeof (*new_precedence));
+	  if (new_precedence == NULL)
+	    {
+	      if (new_labels != default_labels)
+		free (new_labels);
+	      goto no_file;
+	    }
+
+	  int i = nprecedencelist;
+	  if (!precedencelist_nullbits)
+	    {
+	      --i;
+	      memset (&new_precedence[i].prefix, '\0',
+		      sizeof (struct in6_addr));
+	      new_precedence[i].bits = 0;
+	      new_precedence[i].val = 40;
+	    }
+
+	  struct prefixlist *l = precedencelist;
+	  while (i-- > 0)
+	    {
+	      new_precedence[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_prefixlist (precedencelist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_precedence, nprecedencelist, sizeof (*new_labels),
+		 prefixcmp);
+	}
+      else
+	new_precedence = (struct prefixentry *) default_precedence;
+
+      /* Now we are ready to replace the values.  */
+      const struct prefixentry *old = labels;
+      labels = new_labels;
+      if (old != default_labels)
+	free ((void *) old);
+
+      old = precedence;
+      precedence = new_precedence;
+      if (old != default_precedence)
+	free ((void *) old);
+
+      gaiconf_mtime = st.st_mtim;
+    }
+  else
+    {
+    no_file:
+      free_prefixlist (labellist);
+      free_prefixlist (precedencelist);
+
+      /* If we previously read the file but it is gone now, free the
+	 old data and use the builtin one.  Leave the reload flag
+	 alone.  */
+      fini ();
+    }
+}
+
+
+static void
+gaiconf_reload (void)
+{
+  struct stat64 st;
+  if (__xstat64 (_STAT_VER, GAICONF_FNAME, &st) != 0
+      || memcmp (&st.st_mtim, &gaiconf_mtime, sizeof (gaiconf_mtime)) != 0)
+    gaiconf_init ();
+}
+
+
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
@@ -1661,6 +2000,13 @@ getaddrinfo (const char *name, const char *service,
 
   if (naddrs > 1)
     {
+      /* Read the config file.  */
+      __libc_once_define (static, once);
+      __typeof (once) old_once = once;
+      __libc_once (once, gaiconf_init);
+      if (old_once && gaiconf_reload_flag)
+	gaiconf_reload ();
+
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
       struct addrinfo *q;

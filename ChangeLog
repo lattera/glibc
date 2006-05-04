@@ -1,3 +1,13 @@
+2006-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Implement configuration file
+	handling.  /etc/gai.conf can contain replacements for the label
+	and precedence table.  Fix byte order of default label and
+	precedence table.
+	* posix/gai.conf: New file.
+	* posix/tst-rfc3484.c: Adjust for changes to getaddrinfo.c.
+	* posix/tst-rfc3484-2.c: Likewise.
+
 2006-05-02  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1201]

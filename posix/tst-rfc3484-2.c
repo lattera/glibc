@@ -45,9 +45,21 @@ service_user *__nss_hosts_database attribute_hidden;
 #endif
 
 
+ssize_t
+__getline (char **lineptr, size_t *n, FILE *s)
+{
+  *lineptr = NULL;
+  *n = 0;
+  return 0;
+}
+
+
 static int
 do_test (void)
 {
+  labels = default_labels;
+  precedence = default_precedence;
+
   struct sockaddr_in so1;
   so1.sin_family = AF_INET;
   so1.sin_addr.s_addr = h (0xc0a85f19);
