@@ -1,5 +1,8 @@
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/rpc_thread.c (__rpc_thread_destroy): Don't skip entire
+	cleanup for initial thread, just the free call on TVP.
+
 	* nscd/gai.c (__getline): Define.
 
 
