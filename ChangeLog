@@ -1,5 +1,8 @@
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_table.c (nis_list): Avoid clearing res twice before
+	filling it for the first time.
+
 	* nis/nis_table.c (get_tablepath): Renamed from __get_tablepath.
 	Adjust all callers.
 	Free res object content before returning.

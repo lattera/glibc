@@ -167,7 +167,7 @@ nis_list (const_nis_name name, unsigned int flags,
 			   const void *userdata),
 	  const void *userdata)
 {
-  nis_result *res = calloc (1, sizeof (nis_result));
+  nis_result *res = malloc (sizeof (nis_result));
   ib_request *ibreq;
   int status;
   enum clnt_stat clnt_status;
@@ -180,20 +180,24 @@ nis_list (const_nis_name name, unsigned int flags,
   char *tableptr;
   char *tablepath = NULL;
   int first_try = 0; /* Do we try the old binding at first ? */
+  int errcode;
 
   if (res == NULL)
     return NULL;
 
   if (name == NULL)
     {
+      errcode = NIS_BADNAME;
+    err_out:
+      memset (res, '\0', sizeof (nis_result));
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
   if ((ibreq = __create_ib_request (name, flags)) == NULL)
     {
-      NIS_RES_STATUS (res) = NIS_BADNAME;
-      return res;
+      errcode = NIS_BADNAME;
+      goto err_out;
     }
 
   if ((flags & EXPAND_NAME)
@@ -205,16 +209,16 @@ nis_list (const_nis_name name, unsigned int flags,
       if (names == NULL)
 	{
 	  nis_free_request (ibreq);
-	  NIS_RES_STATUS (res) = NIS_BADNAME;
-	  return res;
+	  errcode = NIS_BADNAME;
+	  goto err_out;
 	}
       ibreq->ibr_name = strdup (names[name_nr]);
       if (ibreq->ibr_name == NULL)
 	{
 	  nis_freenames (names);
 	  nis_free_request (ibreq);
-	  NIS_RES_STATUS (res) = NIS_NOMEMORY;
-	  return res;
+	  errcode = NIS_NOMEMORY;
+	  goto err_out;
 	}
     }
   else
