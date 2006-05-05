@@ -177,6 +177,7 @@ struct flock64
 
 
 #ifdef __USE_GNU
+/* Flags for SYNC_FILE_RANGE.  */
 # define SYNC_FILE_RANGE_WAIT_BEFORE	1 /* Wait upon writeout of all pages
 					     in the range before performing the
 					     write.  */
@@ -186,6 +187,14 @@ struct flock64
 # define SYNC_FILE_RANGE_WAIT_AFTER	4 /* Wait upon writeout of all pages in
 					     the range after performing the
 					     write.  */
+
+/* Flags for SPLICE and VMSPLICE.  */
+# define SPLICE_F_MOVE		1	/* Move pages instead of copying.  */
+# define SPLICE_F_NONBLOCK	2	/* Don't block on the pipe splicing
+					   (but we may still block on the fd
+					   we splice from/to).  */
+# define SPLICE_F_MORE		4	/* Expect more data.  */
+# define SPLICE_F_GIFT		8	/* Pages passed in are a gift.  */
 #endif
 
 __BEGIN_DECLS
