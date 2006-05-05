@@ -406,8 +406,8 @@ svcudp_destroy (xprt)
 #define ALLOC(type, size)	\
 	(type *) mem_alloc((unsigned) (sizeof(type) * (size)))
 
-#define BZERO(addr, type, size)	 \
-	__bzero((char *) addr, sizeof(type) * (int) (size))
+#define CALLOC(type, size)	\
+  (type *) calloc (sizeof (type), size)
 
 /*
  * An entry in the cache
@@ -482,15 +482,14 @@ svcudp_enablecache (SVCXPRT *transp, u_long size)
     }
   uc->uc_size = size;
   uc->uc_nextvictim = 0;
-  uc->uc_entries = ALLOC (cache_ptr, size * SPARSENESS);
+  uc->uc_entries = CALLOC (cache_ptr, size * SPARSENESS);
   if (uc->uc_entries == NULL)
     {
       mem_free (uc, sizeof (struct udp_cache));
       CACHE_PERROR (_("enablecache: could not allocate cache data"));
       return 0;
     }
-  BZERO (uc->uc_entries, cache_ptr, size * SPARSENESS);
-  uc->uc_fifo = ALLOC (cache_ptr, size);
+  uc->uc_fifo = CALLOC (cache_ptr, size);
   if (uc->uc_fifo == NULL)
     {
       mem_free (uc->uc_entries, size * SPARSENESS);
@@ -498,7 +497,6 @@ svcudp_enablecache (SVCXPRT *transp, u_long size)
       CACHE_PERROR (_("enablecache: could not allocate cache fifo"));
       return 0;
     }
-  BZERO (uc->uc_fifo, cache_ptr, size);
   su->su_cache = (char *) uc;
   return 1;
 }

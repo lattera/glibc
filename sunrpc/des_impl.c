@@ -6,10 +6,11 @@
 /* write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,*/
 /* Boston, MA 02111, USA to obtain a copy. */
 #include <string.h>
+#include <stdint.h>
 #include "des.h"
 
 
-static const unsigned long des_SPtrans[8][64] =
+static const uint32_t des_SPtrans[8][64] =
 {
   {				/* nibble 0 */
     0x00820200, 0x00020000, 0x80800000, 0x80820200,
@@ -155,7 +156,7 @@ static const unsigned long des_SPtrans[8][64] =
     0x00000020, 0x08208000, 0x00208020, 0x00000000,
     0x08000000, 0x08200020, 0x00008000, 0x00208020}};
 
-static const unsigned long des_skb[8][64] =
+static const uint32_t des_skb[8][64] =
 {
   {				/* for C bits (numbered as per FIPS 46) 1 2 3 4 5 6 */
     0x00000000, 0x00000010, 0x20000000, 0x20000010,
@@ -352,26 +353,6 @@ static const unsigned long des_skb[8][64] =
 	(a)=(a)^(t)^(t>>(16-(n))))
 
 
-/* The changes to this macro may help or hinder, depending on the
- * compiler and the achitecture.  gcc2 always seems to do well :-).
- * Inspired by Dana How <how@isl.stanford.edu>
- * DO NOT use the alternative version on machines with 8 byte longs.
- */
-#ifdef ALT_ECB
-#define D_ENCRYPT(L,R,S) \
-	u=((R^s[S  ])<<2);	\
-	t= R^s[S+1]; \
-	t=((t>>2)+(t<<30)); \
-	L^= \
-	*(const unsigned long *)(des_SP+0x0100+((t    )&0xfc))+ \
-	*(const unsigned long *)(des_SP+0x0300+((t>> 8)&0xfc))+ \
-	*(const unsigned long *)(des_SP+0x0500+((t>>16)&0xfc))+ \
-	*(const unsigned long *)(des_SP+0x0700+((t>>24)&0xfc))+ \
-	*(const unsigned long *)(des_SP+       ((u    )&0xfc))+ \
-  	*(const unsigned long *)(des_SP+0x0200+((u>> 8)&0xfc))+ \
-  	*(const unsigned long *)(des_SP+0x0400+((u>>16)&0xfc))+ \
- 	*(const unsigned long *)(des_SP+0x0600+((u>>24)&0xfc));
-#else /* original version */
 #define D_ENCRYPT(L,R,S)	\
 	u=(R^s[S  ]); \
 	t=R^s[S+1]; \
@@ -384,7 +365,6 @@ static const unsigned long des_skb[8][64] =
 		des_SPtrans[2][(u>> 8)&0x3f]| \
 		des_SPtrans[4][(u>>16)&0x3f]| \
 		des_SPtrans[6][(u>>24)&0x3f];
-#endif
 
 #define ITERATIONS 16
 
@@ -464,9 +444,6 @@ internal_function
 des_encrypt (unsigned long *buf, unsigned long *schedule, int encrypt)
 {
   register unsigned long l, r, t, u;
-#ifdef ALT_ECB
-  register const unsigned char *des_SP = (const unsigned char *) des_SPtrans;
-#endif
   register int i;
   register unsigned long *s;
 

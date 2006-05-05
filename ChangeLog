@@ -1,3 +1,18 @@
+2006-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/svcauth_des.c (cache_init): Use calloc instead of
+	malloc&bzero.
+
+	* sunrpc/svc_udp.c (BZERO): Remove definition.
+	(CALLOC): Define.
+	(svc_enablecache): Use CALLOC instead of ALLOC&BZERO.
+
+	* sunrpc/des_impl.c: Remove ALT_ECB support.  We never used it.
+	(des_SPtrans): Use uint32_t type.
+	(des_skb): Likewise.
+
+	* sunrpc/xdr_ref.c (xdr_reference): Use calloc instead of malloc&bzero.
+
 2006-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2509]
@@ -7,7 +22,7 @@
 2006-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-address.c (address_finish): Fix one more
-	place where the iso639 array might be access beyond the limits.
+	place where the iso639 array might be accessed beyond the limits.
 
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 

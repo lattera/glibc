@@ -396,11 +396,9 @@ cache_init (void)
   register int i;
 
   authdes_cache = (struct cache_entry *)
-    mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
+    calloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ, 1);
   if (authdes_cache == NULL)
     return;
-  __bzero ((char *) authdes_cache,
-	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
   authdes_lru = (int *) mem_alloc (sizeof (int) * AUTHDES_CACHESZ);
   /*
