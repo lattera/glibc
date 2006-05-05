@@ -1,3 +1,9 @@
+2006-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Update error message
+	for consistency with other ports.
+	(MADV_REMOVE, MADV_DONTFORK, MADV_DOFORK): Define.
+
 2006-05-05  Lior Balkohen  <balkohen@gmail.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Remove
