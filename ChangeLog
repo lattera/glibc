@@ -1,5 +1,9 @@
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_table.c (get_tablepath): Renamed from __get_tablepath.
+	Adjust all callers.
+	Free res object content before returning.
+
 	* sunrpc/xdr_array.c (xdr_array): Use calloc instead of malloc&bzero.
 
 	* sunrpc/key_call.c (__rpc_thread_key_cleanup): Also free

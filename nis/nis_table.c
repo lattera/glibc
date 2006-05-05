@@ -129,7 +129,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
 static const struct timeval RPCTIMEOUT = {10, 0};
 
 static char *
-__get_tablepath (char *name, dir_binding *bptr)
+get_tablepath (char *name, dir_binding *bptr)
 {
   enum clnt_stat result;
   nis_result res;
@@ -152,7 +152,12 @@ __get_tablepath (char *name, dir_binding *bptr)
   else
     cptr = "";
 
-  return strdup (cptr);
+  char *str = strdup (cptr);
+
+  if (result == RPC_SUCCESS)
+    xdr_free ((xdrproc_t) _xdr_nis_result, (char *) &res);
+
+  return str;
 }
 
 nis_result *
@@ -335,7 +340,7 @@ nis_list (const_nis_name name, unsigned int flags,
 	      {
 		if (tablepath == NULL)
 		  {
-		    tablepath = __get_tablepath (ibreq->ibr_name, &bptr);
+		    tablepath = get_tablepath (ibreq->ibr_name, &bptr);
 		    tableptr = tablepath;
 		  }
 		if (tableptr == NULL)
@@ -400,7 +405,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		  {
 		    if (tablepath == NULL)
 		      {
-			tablepath = __get_tablepath (ibreq->ibr_name, &bptr);
+			tablepath = get_tablepath (ibreq->ibr_name, &bptr);
 			tableptr = tablepath;
 		      }
 		    if (tableptr == NULL)
