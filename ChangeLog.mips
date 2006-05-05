@@ -1,3 +1,11 @@
+2006-05-05  Lior Balkohen  <balkohen@gmail.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Remove
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.
+	Define SYNC_FILE_RANGE_WAIT_BEFORE, SYNC_FILE_RANGE_WRITE
+	and SYNC_FILE_RANGE_WAIT_AFTER.
+	Declare sync_file_range, vmsplice, splice and tee.
+
 2006-03-27  Lior Balkohen  <balkohen@gmail.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Define
