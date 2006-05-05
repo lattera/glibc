@@ -237,7 +237,8 @@ No definition for %s category found"), "LC_ADDRESS"));
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
 				"LC_ADDRESS", "lang_ab"));
     }
-  else if (iso639[cnt].ab[0] == '\0')
+  else if (cnt < sizeof (iso639) / sizeof (iso639[0])
+	   && iso639[cnt].ab[0] == '\0')
     {
       WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be defined"),
 			      "LC_ADDRESS", "lang_ab"));

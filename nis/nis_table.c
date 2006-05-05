@@ -25,7 +25,7 @@
 
 
 static struct ib_request *
-__create_ib_request (const_nis_name name, unsigned int flags)
+create_ib_request (const_nis_name name, unsigned int flags)
 {
   struct ib_request *ibreq = calloc (1, sizeof (struct ib_request));
   nis_attr *search_val = NULL;
@@ -91,13 +91,13 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       if (cptr != NULL)
 	*cptr++ = '\0';
 
-      if (!val)
+      if (__builtin_expect (val == NULL, 0))
 	{
 	  nis_free_request (ibreq);
 	  return NULL;
 	}
       *val++ = '\0';
-      if ((search_len + 1) >= size)
+      if (search_len + 1 >= size)
         {
           size += 1;
 	  nis_attr *newp = realloc (search_val, size * sizeof (nis_attr));
@@ -106,7 +106,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
 	  search_val = newp;
 	}
       search_val[search_len].zattr_ndx = strdup (key);
-      if ((search_val[search_len].zattr_ndx) == NULL)
+      if (search_val[search_len].zattr_ndx == NULL)
 	goto free_null;
 
       search_val[search_len].zattr_val.zattr_val_len = strlen (val) + 1;
@@ -180,23 +180,23 @@ nis_list (const_nis_name name, unsigned int flags,
   char *tableptr;
   char *tablepath = NULL;
   int first_try = 0; /* Do we try the old binding at first ? */
-  int errcode;
 
   if (res == NULL)
     return NULL;
 
   if (name == NULL)
     {
-      errcode = NIS_BADNAME;
+      status = NIS_BADNAME;
     err_out:
       memset (res, '\0', sizeof (nis_result));
-      NIS_RES_STATUS (res) = NIS_BADNAME;
+      NIS_RES_STATUS (res) = status;
       return res;
     }
 
-  if ((ibreq = __create_ib_request (name, flags)) == NULL)
+  ibreq = create_ib_request (name, flags);
+  if (ibreq == NULL)
     {
-      errcode = NIS_BADNAME;
+      status = NIS_BADNAME;
       goto err_out;
     }
 
@@ -209,7 +209,7 @@ nis_list (const_nis_name name, unsigned int flags,
       if (names == NULL)
 	{
 	  nis_free_request (ibreq);
-	  errcode = NIS_BADNAME;
+	  status = NIS_BADNAME;
 	  goto err_out;
 	}
       ibreq->ibr_name = strdup (names[name_nr]);
@@ -217,7 +217,7 @@ nis_list (const_nis_name name, unsigned int flags,
 	{
 	  nis_freenames (names);
 	  nis_free_request (ibreq);
-	  errcode = NIS_NOMEMORY;
+	  status = NIS_NOMEMORY;
 	  goto err_out;
 	}
     }
@@ -245,14 +245,14 @@ nis_list (const_nis_name name, unsigned int flags,
 
       status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
 				 dir->do_servers.do_servers_len, flags);
-      if (status != NIS_SUCCESS)
+      if (__builtin_expect (status != NIS_SUCCESS, 0))
         {
           NIS_RES_STATUS (res) = status;
 	  goto fail2;
         }
 
       while (__nisbind_connect (&bptr) != NIS_SUCCESS)
-	if (__nisbind_next (&bptr) != NIS_SUCCESS)
+	if (__builtin_expect (__nisbind_next (&bptr) != NIS_SUCCESS, 0))
 	  {
 	    NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
 	    goto fail;
@@ -271,7 +271,7 @@ nis_list (const_nis_name name, unsigned int flags,
 			       (xdrproc_t) _xdr_nis_result,
 			       (caddr_t) res, RPCTIMEOUT);
 
-      if (clnt_status != RPC_SUCCESS)
+      if (__builtin_expect (clnt_status != RPC_SUCCESS, 0))
 	NIS_RES_STATUS (res) = NIS_RPCERROR;
       else
 	switch (NIS_RES_STATUS (res))
@@ -285,7 +285,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		free (ibreq->ibr_name);
 		ibreq->ibr_name = NULL;
 		/* If we hit the link limit, bail.  */
-		if (count_links > NIS_MAXLINKS)
+		if (__builtin_expect (count_links > NIS_MAXLINKS, 0))
 		  {
 		    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
 		    ++done;
@@ -463,7 +463,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		/* Try the next domainname if we don't follow a link.  */
 		free (ibreq->ibr_name);
 		ibreq->ibr_name = NULL;
-		if (count_links)
+		if (__builtin_expect (count_links, 0))
 		  {
 		    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
 		    ++done;
@@ -524,11 +524,7 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
       return res;
     }
 
-  size_t namelen = strlen (name);
-  char buf1[namelen + 20];
-  char buf4[namelen + 20];
-
-  ib_request *ibreq = __create_ib_request (name, flags);
+  ib_request *ibreq = create_ib_request (name, flags);
   if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
@@ -537,6 +533,10 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
 
   nis_object obj;
   memcpy (&obj, obj2, sizeof (nis_object));
+
+  size_t namelen = strlen (name);
+  char buf1[namelen + 20];
+  char buf4[namelen + 20];
 
   if (obj.zo_name == NULL || strlen (obj.zo_name) == 0)
     obj.zo_name = nis_leaf_of_r (name, buf1, sizeof (buf1));
@@ -563,7 +563,7 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
 				   (caddr_t) ibreq,
 				   (xdrproc_t) _xdr_nis_result,
 				   (caddr_t) res, 0, NULL);
-  if (status  != NIS_SUCCESS)
+  if (__builtin_expect (status != NIS_SUCCESS, 0))
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);
@@ -587,7 +587,8 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2,
   if (res == NULL)
     return NULL;
 
-  if (( ibreq =__create_ib_request (name, flags)) == NULL)
+  ibreq = create_ib_request (name, flags);
+  if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -615,10 +616,11 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2,
     }
   ibreq->ibr_obj.ibr_obj_len = 1;
 
-  if ((status = __do_niscall (ibreq->ibr_name, NIS_IBMODIFY,
-			      (xdrproc_t) _xdr_ib_request,
-			      (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
+  status = __do_niscall (ibreq->ibr_name, NIS_IBMODIFY,
+			 (xdrproc_t) _xdr_ib_request,
+			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (caddr_t) res, 0, NULL);
+  if (__builtin_expect (status != NIS_SUCCESS, 0))
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);
@@ -644,7 +646,8 @@ nis_remove_entry (const_nis_name name, const nis_object *obj,
       return res;
     }
 
-  if ((ibreq =__create_ib_request (name, flags)) == NULL)
+  ibreq = create_ib_request (name, flags);
+  if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -690,7 +693,7 @@ nis_first_entry (const_nis_name name)
       return res;
     }
 
-  ibreq = __create_ib_request (name, 0);
+  ibreq = create_ib_request (name, 0);
   if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
@@ -702,7 +705,7 @@ nis_first_entry (const_nis_name name)
 			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
 			 (caddr_t) res, 0, NULL);
 
-  if (status != NIS_SUCCESS)
+  if (__builtin_expect (status != NIS_SUCCESS, 0))
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);
@@ -727,7 +730,7 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
       return res;
     }
 
-  ibreq = __create_ib_request (name, 0);
+  ibreq = create_ib_request (name, 0);
   if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
@@ -745,7 +748,7 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
 			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
 			 (caddr_t) res, 0, NULL);
 
-  if (status != NIS_SUCCESS)
+  if (__builtin_expect (status != NIS_SUCCESS, 0))
     NIS_RES_STATUS (res) = status;
 
   if (cookie != NULL)

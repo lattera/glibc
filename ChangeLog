@@ -1,3 +1,14 @@
+2006-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2509]
+	* stdio-common/tst-printf.sh: Adjust for tst-printf.c change even
+	on 32-bit arches.
+
+2006-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-address.c (address_finish): Fix one more
+	place where the iso639 array might be access beyond the limits.
+
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_table.c (nis_list): Avoid clearing res twice before

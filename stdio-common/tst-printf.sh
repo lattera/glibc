@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing of printf.
-# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -136,6 +136,12 @@ Test ok.
 sprintf (buf, "%07Lo", 040000000000ll) = 40000000000
 printf ("%hhu", 257) = 1
 printf ("%hu", 65537) = 1
+printf ("%hhi", 257) = 1
+printf ("%hi", 65537) = 1
+printf ("%1$hhu", 257) = 1
+printf ("%1$hu", 65537) = 1
+printf ("%1$hhi", 257) = 1
+printf ("%1$hi", 65537) = 1
 --- Should be no further output. ---
 EOF
 cmp - ${common_objpfx}stdio-common/tst-printf.out > /dev/null 2>&1 ||
