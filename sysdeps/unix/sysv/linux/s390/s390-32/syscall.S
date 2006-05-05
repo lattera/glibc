@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2006 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -48,13 +48,14 @@ ENTRY (syscall)
 	lr     %r4,%r5             /* third parameter  */
 	lr     %r5,%r6             /* fourth parameter */
 	l      %r6,192(%r15)       /* fifth parameter  */
+	l      %r7,196(%r15)       /* sixth parameter  */
 
-	basr   %r7,0
-0:	cl     %r1,4f-0b(%r7)      /* svc number < 256? */
+	basr   %r8,0
+0:	cl     %r1,4f-0b(%r8)      /* svc number < 256? */
 	jl     2f
 1:	svc    0
 	j      3f
-2:	ex     %r1,1b-0b(%r7)      /* lsb of R1 is subsituted as SVC number */
+2:	ex     %r1,1b-0b(%r8)      /* lsb of R1 is subsituted as SVC number */
 3:	l      %r15,0(%r15)        /* load back chain */
 	cfi_adjust_cfa_offset (-96)
 	lm     %r6,15,24(%r15)     /* load registers */

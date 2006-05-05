@@ -1,3 +1,13 @@
+2006-05-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S: Replace pc relative relocation
+	by a GOT relocation to make Scrt1.o position independent.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S: Add support for
+	six system call parameters.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S: Likewise.
+
 2006-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/svcauth_des.c (cache_init): Use calloc instead of
