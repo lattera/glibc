@@ -50,7 +50,7 @@
 /* Other flags.  */
 #define MAP_FIXED	0x10		/* Interpret addr exactly.  */
 #ifdef __USE_MISC
-# define MAP_FILE	0x00
+# define MAP_FILE	0
 # define MAP_ANONYMOUS	0x0800		/* Don't use a file.  */
 # define MAP_ANON	MAP_ANONYMOUS
 # define MAP_RENAME	MAP_ANONYMOUS
@@ -70,26 +70,37 @@
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */
-#define MS_INVALIDATE	2		/* Invalidate the caches.  */
 #define MS_SYNC		4		/* Synchronous memory sync.  */
+#define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
 #define MCL_FUTURE	2		/* Lock all additions to address
 					   space.  */
 
-/* Advice to `madvise'.  */
-#ifdef __USE_BSD
-#define MADV_NORMAL	0		/* default page-in behavior */
-#define MADV_RANDOM	1		/* page-in minimum required */
-#define MADV_SEQUENTIAL	2		/* read-ahead aggressively */
-#define MADV_WILLNEED	3		/* pre-fault pages */
-#define MADV_DONTNEED	4		/* discard these pages */
-#define MADV_REMOVE	5		/* remove these pages & resources */
-#endif
-
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU
 # define MREMAP_MAYMOVE	1
 # define MREMAP_FIXED	2
+#endif
+
+/* Advice to `madvise'.  */
+#ifdef __USE_BSD
+# define MADV_NORMAL	 0	/* No further special treatment.  */
+# define MADV_RANDOM	 1	/* Expect random page references.  */
+# define MADV_SEQUENTIAL 2	/* Expect sequential page references.  */
+# define MADV_WILLNEED	 3	/* Will need these pages.  */
+# define MADV_DONTNEED	 4	/* Don't need these pages.  */
+# define MADV_REMOVE	 9	/* Remove these pages and resources.  */
+# define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
+# define MADV_DOFORK	 11	/* Do inherit across fork.  */
+#endif
+
+/* The POSIX people had to invent similar names for the same things.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_MADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_MADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_MADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif

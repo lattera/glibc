@@ -1,3 +1,12 @@
+2006-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Formatting changes
+	for consistency with other ports.
+	(MADV_REMOVE): Correct value.
+	(MADV_DONTFORK, MADV_DOFORK, POSIX_MADV_NORMAL,
+	POSIX_MADV_RANDOM, POSIX_MADV_SEQUENTIAL, POSIX_MADV_WILLNEED,
+	POSIX_MADV_DONTNEED): Define.
+
 2006-05-05  Lior Balkohen  <balkohen@gmail.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Remove
