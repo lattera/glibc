@@ -17,9 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
+#include <stddef.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -42,10 +44,14 @@ static int
 make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 	      struct in6addrinfo **in6ai, size_t *in6ailen)
 {
-  struct
+  struct req
   {
     struct nlmsghdr nlh;
     struct rtgenmsg g;
+    /* struct rtgenmsg consists of a single byte.  This means there
+       are three bytes of padding included in the REQ definition.
+       We make them explicit here.  */
+    char pad[3];
   } req;
   struct sockaddr_nl nladdr;
 
@@ -55,6 +61,9 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
   req.nlh.nlmsg_pid = 0;
   req.nlh.nlmsg_seq = time (NULL);
   req.g.rtgen_family = AF_UNSPEC;
+
+  assert (sizeof (req) - offsetof (struct req, pad) == 3);
+  memset (req.pad, '\0', sizeof (req.pad));
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
