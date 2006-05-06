@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -40,6 +40,10 @@ typedef union querybuf
 } querybuf;
 
 
+static const short int qtypes[] = { ns_t_a, ns_t_aaaa };
+#define nqtypes (sizeof (qtypes) / sizeof (qtypes[0]))
+
+
 enum nss_status
 _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 			 char **result,int *errnop, int *h_errnop)
@@ -53,8 +57,6 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
     unsigned char *ptr;
   } ansp = { .ptr = buf };
   enum nss_status status = NSS_STATUS_UNAVAIL;
-  int qtypes[] = { ns_t_a, ns_t_aaaa };
-#define nqtypes (sizeof (qtypes) / sizeof (qtypes[0]))
 
   for (int i = 0; i < nqtypes; ++i)
     {
@@ -101,7 +103,8 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      ptr += s;
 
 	      /* Check whether type and class match.  */
-	      unsigned int type = ntohs (*(uint16_t *) ptr);
+	      uint_fast16_t type;
+	      NS_GET16 (type, ptr);
 	      if (type == qtypes[i])
 		{
 		  /* We found the record.  */
@@ -130,15 +133,14 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      if (type != ns_t_cname)
 		goto unavail;
 
-	      ptr += sizeof (uint16_t);
-	      if (*(uint16_t *) ptr != htons (ns_c_in))
+	      if (ns_get16 (ptr) != ns_c_in)
 		goto unavail;
 
 	      /* Also skip over the TTL.  */
 	      ptr += sizeof (uint16_t) + sizeof (uint32_t);
 
 	      /* Skip over the data length and data.  */
-	      ptr += sizeof (uint16_t) + ntohs (*(uint16_t *) ptr);
+	      ptr += sizeof (uint16_t) + ns_get16 (ptr);
 	    }
 	}
     }

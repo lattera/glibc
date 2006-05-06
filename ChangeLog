@@ -1,5 +1,9 @@
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2499]
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Avoid
+	possibly unaligned memory accesses.
+
 	* include/arpa/nameser.h: Also optimize NS_PUT16 and NS_PUT32.
 	* resolv/res_mkquery.c: Use NS_PUT16 and NS_PUT32 instead of __putshort
 	and __putlong respectively.  Correct buffer overflow check for
