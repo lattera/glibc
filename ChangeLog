@@ -1,3 +1,10 @@
+2006-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2499]
+	* resolv/res_query.c (__libc_res_nquery): If answerp != NULL,
+	__libc_res_nsend might reallocate the buffer for the answer.  In
+	this case we have to reload the HP pointer.
+
 2006-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c (memory_error): Remove definition.  Add
