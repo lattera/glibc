@@ -1,5 +1,11 @@
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/arpa/nameser.h: Add optimizations for NS_GET16 and NS_GET32.
+
+	* resolv/res_send.c (res_nameinquery): Use NS_GET16 directly
+	instead of ns_get16.
+	(res_queriesmatch): Likewise.  Minor optimization.
+
 	[BZ #2499]
 	* resolv/res_query.c (__libc_res_nquery): If answerp != NULL,
 	__libc_res_nsend might reallocate the buffer for the answer.  In
