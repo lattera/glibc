@@ -1,5 +1,9 @@
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c (res_queriesmatch): Fix typo in comment.
+	(send_dg): Rewrite error handling to be more compact and avoid
+	double recomputation of timeouts.  Pass MSG_NOSIGNAL to send.
+
 	* include/arpa/nameser.h: Add optimizations for NS_GET16 and NS_GET32.
 
 	* resolv/res_send.c (res_nameinquery): Use NS_GET16 directly

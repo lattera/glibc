@@ -304,7 +304,7 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		return (1);
 
 	/* Note that we initially do not convert QDCOUNT to the host byte
-	   order.  We can compare it with the second buffers QDCOUNT
+	   order.  We can compare it with the second buffer's QDCOUNT
 	   value without doing this.  */
 	int qdcount = ((HEADER*)buf1)->qdcount;
 	if (qdcount != ((HEADER*)buf2)->qdcount)
@@ -879,9 +879,12 @@ send_dg(res_state statp,
 	pfd[0].events = POLLOUT;
  wait:
 	if (need_recompute) {
+	recompute_resend:
 		evNowTime(&now);
 		if (evCmpTime(finish, now) <= 0) {
-			Perror(statp, stderr, "select", errno);
+		poll_err_out:
+			Perror(statp, stderr, "poll", errno);
+		err_out:
 			__res_iclose(statp, false);
 			return (0);
 		}
@@ -904,26 +907,18 @@ send_dg(res_state statp,
 		return (0);
 	}
 	if (n < 0) {
-		if (errno == EINTR) {
-		recompute_resend:
-			evNowTime(&now);
-			if (evCmpTime(finish, now) > 0) {
-				evSubTime(&timeout, &finish, &now);
-				goto wait;
-			}
-		}
-		Perror(statp, stderr, "poll", errno);
-		__res_iclose(statp, false);
-		return (0);
+		if (errno == EINTR)
+			goto recompute_resend;
+
+		goto poll_err_out;
 	}
 	__set_errno (0);
 	if (pfd[0].revents & POLLOUT) {
-		if (send(pfd[0].fd, (char*)buf, buflen, 0) != buflen) {
+		if (send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL) != buflen) {
 			if (errno == EINTR || errno == EAGAIN)
 				goto recompute_resend;
 			Perror(statp, stderr, "send", errno);
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		pfd[0].events = POLLIN;
 		++nwritten;
@@ -953,8 +948,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		*gotsomewhere = 1;
 		if (resplen < HFIXEDSZ) {
@@ -965,8 +959,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				resplen));
 			*terrno = EMSGSIZE;
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		if (hp->id != anhp->id) {
 			/*
@@ -1044,8 +1037,7 @@ send_dg(res_state statp,
 		return (resplen);
 	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
 		/* Something went wrong.  We can stop trying.  */
-	  __res_iclose(statp, false);
-		return (0);
+		goto err_out;
 	}
 	else {
 	  	/* poll should not have returned > 0 in this case.  */
