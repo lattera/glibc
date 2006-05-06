@@ -131,13 +131,13 @@ res_nmkquery(res_state statp,
 	int randombits;
 	do
 	  {
-#ifdef RANDOM_BITS
+# ifdef RANDOM_BITS
 	    RANDOM_BITS (randombits);
-#else
+# else
 	    struct timeval tv;
 	    __gettimeofday (&tv, NULL);
 	    randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
-#endif
+# endif
 	  }
 	while ((randombits & 0xffff) == 0);
 	statp->id = (statp->id + randombits) & 0xffff;
@@ -155,38 +155,36 @@ res_nmkquery(res_state statp,
 	 * perform opcode specific processing
 	 */
 	switch (op) {
-	case QUERY:	/*FALLTHROUGH*/
 	case NS_NOTIFY_OP:
+		if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0)
+			return (-1);
+		goto compose;
+
+	case QUERY:
 		if ((buflen -= QFIXEDSZ) < 0)
 			return (-1);
+	compose:
 		if ((n = dn_comp(dname, cp, buflen, dnptrs, lastdnptr)) < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(type, cp);
-		cp += INT16SZ;
-		__putshort(class, cp);
-		cp += INT16SZ;
+		NS_PUT16 (type, cp);
+		NS_PUT16 (class, cp);
 		hp->qdcount = htons(1);
 		if (op == QUERY || data == NULL)
 			break;
 		/*
 		 * Make an additional record for completion domain.
 		 */
-		buflen -= RRFIXEDSZ;
 		n = dn_comp((char *)data, cp, buflen, dnptrs, lastdnptr);
-		if (n < 0)
+		if (__builtin_expect (n < 0, 0))
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(T_NULL, cp);
-		cp += INT16SZ;
-		__putshort(class, cp);
-		cp += INT16SZ;
-		__putlong(0, cp);
-		cp += INT32SZ;
-		__putshort(0, cp);
-		cp += INT16SZ;
+		NS_PUT16 (T_NULL, cp);
+		NS_PUT16 (class, cp);
+		NS_PUT32 (0, cp);
+		NS_PUT16 (0, cp);
 		hp->arcount = htons(1);
 		break;
 
@@ -194,17 +192,13 @@ res_nmkquery(res_state statp,
 		/*
 		 * Initialize answer section
 		 */
-		if (buflen < 1 + RRFIXEDSZ + datalen)
+		if (__builtin_expect (buflen < 1 + RRFIXEDSZ + datalen, 0))
 			return (-1);
 		*cp++ = '\0';	/* no domain name */
-		__putshort(type, cp);
-		cp += INT16SZ;
-		__putshort(class, cp);
-		cp += INT16SZ;
-		__putlong(0, cp);
-		cp += INT32SZ;
-		__putshort(datalen, cp);
-		cp += INT16SZ;
+		NS_PUT16 (type, cp);
+		NS_PUT16 (class, cp);
+		NS_PUT32 (0, cp);
+		NS_PUT16 (datalen, cp);
 		if (datalen) {
 			memcpy(cp, data, datalen);
 			cp += datalen;

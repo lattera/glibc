@@ -674,7 +674,7 @@ send_vc(res_state statp,
 	/*
 	 * Send length & message
 	 */
-	putshort((u_short)buflen, (u_char*)&len);
+	ns_put16((u_short)buflen, (u_char*)&len);
 	evConsIovec(&len, INT16SZ, &iov[0]);
 	evConsIovec((void*)buf, buflen, &iov[1]);
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, 2))

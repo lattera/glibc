@@ -18,10 +18,26 @@
   } while (0)
 
 # undef NS_GET32
-# define NS_GET32(s, cp) \
+# define NS_GET32(l, cp) \
   do {									      \
     uint32_t *t_cp = (uint32_t *) (cp);					      \
-    (s) = ntohl (*t_cp);						      \
+    (l) = ntohl (*t_cp);						      \
+    (cp) += NS_INT32SZ;							      \
+  } while (0)
+
+# undef NS_PUT16
+# define NS_PUT16(s, cp) \
+  do {									      \
+    uint16_t *t_cp = (uint16_t *) (cp);					      \
+    *t_cp = htons (s);							      \
+    (cp) += NS_INT16SZ;							      \
+  } while (0)
+
+# undef NS_PUT32
+# define NS_PUT32(l, cp) \
+  do {									      \
+    uint32_t *t_cp = (uint32_t *) (cp);					      \
+    *t_cp = htonl (l);							      \
     (cp) += NS_INT32SZ;							      \
   } while (0)
 

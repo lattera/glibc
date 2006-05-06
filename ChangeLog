@@ -1,5 +1,12 @@
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/arpa/nameser.h: Also optimize NS_PUT16 and NS_PUT32.
+	* resolv/res_mkquery.c: Use NS_PUT16 and NS_PUT32 instead of __putshort
+	and __putlong respectively.  Correct buffer overflow check for
+	NS_NOTIFY_OP.
+
+	* resolv/res_send.c (send_vc): Use ns_put16 instead of putshort.
+
 	* resolv/res_send.c (res_queriesmatch): Fix typo in comment.
 	(send_dg): Rewrite error handling to be more compact and avoid
 	double recomputation of timeouts.  Pass MSG_NOSIGNAL to send.
