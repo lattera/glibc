@@ -1,5 +1,8 @@
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Remove support for non-core
+	architectures.
+
 	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Make sure
 	that unused memory passed to sendto is nevertheless initialized.
 
