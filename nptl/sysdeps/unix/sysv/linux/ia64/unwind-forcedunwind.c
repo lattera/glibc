@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -33,6 +33,10 @@ _Unwind_Word
 _Unwind_GetBSP (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getbsp == NULL, 0))
-    pthread_cancel_init ();
+    {
+      pthread_cancel_init ();
+      /* The function pointer has changed, ensure we reload it.  */
+      asm volatile ("" : "+m" (libgcc_s_getbsp));
+    }
   return libgcc_s_getbsp (context);
 }

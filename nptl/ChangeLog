@@ -1,3 +1,12 @@
+2006-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/unwind-forcedunwind.c: Make sure
+	functions pointer is reloaded after pthread_cancel_init calls.
+
+	[BZ #2644]
+	* sysdeps/pthread/unwind-forcedunwind.c: Make sure functions
+	pointers are reloaded after pthread_cancel_init calls.
+
 2006-05-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Mark with
