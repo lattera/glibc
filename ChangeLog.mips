@@ -1,3 +1,8 @@
+2006-05-08  Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/mips/ldsodefs.h: New file.
+	* sysdeps/mips/tst-audit.h: New file.
+
 2006-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Formatting changes
