@@ -1,5 +1,17 @@
 2006-05-08  Richard Sandiford  <richard@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h (struct stat): Add
+	st_atim, st_mtim and st_ctim interface.
+	(struct stat64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h (struct kernel_stat):
+	Replace st_atime and its padding field with st_atim.  Likewise
+	st_mtime/st_mtim and st_ctime/st_ctim.
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c (__xstat_conv): Update
+	after above changes.
+	(__xstat64_conv): Likewise.
+
+2006-05-08  Richard Sandiford  <richard@codesourcery.com>
+
 	* sysdeps/mips/ldsodefs.h: New file.
 	* sysdeps/mips/tst-audit.h: New file.
 

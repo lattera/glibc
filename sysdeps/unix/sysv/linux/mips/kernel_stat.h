@@ -16,12 +16,9 @@ struct kernel_stat
     unsigned int st_rdev;
     unsigned int __pad2[3];
     long long st_size;
-    unsigned int st_atime;
-    unsigned int __unused1;
-    unsigned int st_mtime;
-    unsigned int __unused2;
-    unsigned int st_ctime;
-    unsigned int __unused3;
+    struct timespec st_atim;
+    struct timespec st_mtim;
+    struct timespec st_ctim;
     unsigned int st_blksize;
     unsigned int __pad3;
     unsigned long long st_blocks;
@@ -40,12 +37,9 @@ struct kernel_stat
     long int __pad2[2];
     long int st_size;
     long int __pad3;
-    long int st_atime;
-    long int __unused1;
-    long int st_mtime;
-    long int __unused2;
-    long int st_ctime;
-    long int __unused3;
+    struct timespec st_atim;
+    struct timespec st_mtim;
+    struct timespec st_ctim;
     long int st_blksize;
     long int st_blocks;
     char st_fstype[16];			/* Filesystem type name, unsupported */

@@ -62,9 +62,9 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 
-	buf->st_atime = kbuf->st_atime; buf->__reserved0 = 0;
-	buf->st_mtime = kbuf->st_mtime; buf->__reserved1 = 0;
-	buf->st_ctime = kbuf->st_ctime; buf->__reserved2 = 0;
+	buf->st_atim = kbuf->st_atim;
+	buf->st_mtim = kbuf->st_mtim;
+	buf->st_ctim = kbuf->st_ctim;
 
 	buf->st_pad5[0] = 0; buf->st_pad5[1] = 0;
 	buf->st_pad5[2] = 0; buf->st_pad5[3] = 0;
@@ -107,9 +107,9 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 
-	buf->st_atime = kbuf->st_atime; buf->__reserved0 = 0;
-	buf->st_mtime = kbuf->st_mtime; buf->__reserved1 = 0;
-	buf->st_ctime = kbuf->st_ctime; buf->__reserved2 = 0;
+	buf->st_atim = kbuf->st_atim;
+	buf->st_mtim = kbuf->st_mtim;
+	buf->st_ctim = kbuf->st_ctim;
 
 	buf->st_pad4[0] = 0; buf->st_pad4[1] = 0;
 	buf->st_pad4[2] = 0; buf->st_pad4[3] = 0;
