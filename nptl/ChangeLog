@@ -1,7 +1,7 @@
 2006-05-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/ia64/unwind-forcedunwind.c: Make sure
-	functions pointer is reloaded after pthread_cancel_init calls.
+	* sysdeps/unix/sysv/linux/ia64/unwind-forcedunwind.c: Make sure the
+	function pointer is reloaded after pthread_cancel_init calls.
 
 	[BZ #2644]
 	* sysdeps/pthread/unwind-forcedunwind.c: Make sure functions
