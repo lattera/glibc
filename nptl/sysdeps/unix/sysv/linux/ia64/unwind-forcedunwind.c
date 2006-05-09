@@ -33,10 +33,7 @@ _Unwind_Word
 _Unwind_GetBSP (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getbsp == NULL, 0))
-    {
-      pthread_cancel_init ();
-      /* The function pointer has changed, ensure we reload it.  */
-      asm volatile ("" : "+m" (libgcc_s_getbsp));
-    }
+    pthread_cancel_init ();
+
   return libgcc_s_getbsp (context);
 }

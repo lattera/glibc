@@ -22,13 +22,13 @@
 #include <unwind.h>
 #include <pthreadP.h>
 
-static void (*volatile libgcc_s_resume) (struct _Unwind_Exception *exc);
-static _Unwind_Reason_Code (*volatile libgcc_s_personality)
+static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
+static _Unwind_Reason_Code (*libgcc_s_personality)
   (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
    struct _Unwind_Context *);
-static _Unwind_Reason_Code (*volatile libgcc_s_forcedunwind)
+static _Unwind_Reason_Code (*libgcc_s_forcedunwind)
   (struct _Unwind_Exception *, _Unwind_Stop_Fn, void *);
-static _Unwind_Word (*volatile libgcc_s_getcfa) (struct _Unwind_Context *);
+static _Unwind_Word (*libgcc_s_getcfa) (struct _Unwind_Context *);
 
 void
 pthread_cancel_init (void)
@@ -37,7 +37,11 @@ pthread_cancel_init (void)
   void *handle;
 
   if (__builtin_expect (libgcc_s_getcfa != NULL, 1))
-    return;
+    {
+      /* Force gcc to reload all values.  */
+      asm volatile ("" ::: "memory");
+      return;
+    }
 
   handle = __libc_dlopen ("libgcc_s.so.1");
 
@@ -67,11 +71,8 @@ void
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__builtin_expect (libgcc_s_resume == NULL, 0))
-    {
-      pthread_cancel_init ();
-      /* The function pointer has changed, ensure we reload it.  */
-      asm volatile ("" : "+m" (libgcc_s_resume));
-    }
+    pthread_cancel_init ();
+
   libgcc_s_resume (exc);
 }
 
@@ -82,11 +83,8 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
                       struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_personality == NULL, 0))
-    {
-      pthread_cancel_init ();
-      /* The function pointer has changed, ensure we reload it.  */
-      asm volatile ("" : "+m" (libgcc_s_personality));
-    }
+    pthread_cancel_init ();
+
   return libgcc_s_personality (version, actions, exception_class,
 			       ue_header, context);
 }
@@ -96,11 +94,8 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 		      void *stop_argument)
 {
   if (__builtin_expect (libgcc_s_forcedunwind == NULL, 0))
-    {
-      pthread_cancel_init ();
-      /* The function pointer has changed, ensure we reload it.  */
-      asm volatile ("" : "+m" (libgcc_s_forcedunwind));
-    }
+    pthread_cancel_init ();
+
   return libgcc_s_forcedunwind (exc, stop, stop_argument);
 }
 
@@ -108,10 +103,7 @@ _Unwind_Word
 _Unwind_GetCFA (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getcfa == NULL, 0))
-    {
-      pthread_cancel_init ();
-      /* The function pointer has changed, ensure we reload it.  */
-      asm volatile ("" : "+m" (libgcc_s_getcfa));
-    }
+    pthread_cancel_init ();
+
   return libgcc_s_getcfa (context);
 }

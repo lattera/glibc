@@ -1,3 +1,12 @@
+2006-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2644]
+	* sysdeps/pthread/unwind-forcedunwind.c: Different solution for
+	the reload problem.  Change the one path in pthread_cancel_init
+	which causes the problem.  Force gcc to reload.  Simplify callers.
+	* sysdeps/unix/sysv/linux/ia64/unwind-forcedunwind.c
+	(_Unwind_GetBSP): Undo last patch.
+
 2006-05-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/unwind-forcedunwind.c: Make sure the
