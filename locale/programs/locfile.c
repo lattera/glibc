@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -155,10 +155,11 @@ argument to `%s' must be a single character"),
 
 	  if (repertoire_name == NULL)
 	    {
-	      repertoire_name = memcpy (xmalloc (arg->val.str.lenmb + 1),
-					arg->val.str.startmb,
-					arg->val.str.lenmb);
-	      ((char *) repertoire_name)[arg->val.str.lenmb] = '\0';
+	      char *newp = alloca (arg->val.str.lenmb + 1);
+
+	      *((char *) mempcpy (newp, arg->val.str.startmb,
+				  arg->val.str.lenmb)) = '\0';
+	      repertoire_name = newp;
 	    }
 	  break;
 

@@ -365,19 +365,27 @@ use_to_charmap (const char *from_code, struct charmap_t *to_charmap)
 	  if (outptr != (char *) outbuf)
 	    {
 	      /* We got some output.  Good, use it.  */
-	      struct charseq *newp;
+	      union
+	      {
+		struct charseq seq;
+		struct
+		{
+		  const char *name;
+		  uint32_t ucs4;
+		  int nbytes;
+		  unsigned char bytes[outlen];
+		} mem;
+	      } new;
 
 	      outlen = sizeof (outbuf) - outlen;
 	      assert ((char *) outbuf + outlen == outptr);
 
-	      newp = (struct charseq *) xmalloc (sizeof (struct charseq)
-						 + outlen);
-	      newp->name = out->name;
-	      newp->ucs4 = out->ucs4;
-	      newp->nbytes = outlen;
-	      memcpy (newp->bytes, outbuf, outlen);
+	      new.mem.name = out->name;
+	      new.mem.ucs4 = out->ucs4;
+	      new.mem.nbytes = outlen;
+	      memcpy (new.mem.bytes, outbuf, outlen);
 
-	      add_bytes (rettbl, newp, out);
+	      add_bytes (rettbl, &new.seq, out);
 	    }
 
 	  /* Clear any possible state left behind.  */

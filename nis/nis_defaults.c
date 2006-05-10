@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,44 +31,35 @@
 ** Some functions for parsing the -D param and NIS_DEFAULTS Environ
 */
 static nis_name
+searchXYX (char *str, const char *what)
+{
+  assert (strlen (what) == 6);
+  assert (strncmp (str, what, 6) == 0);
+  str += 6;			/* Points to the begin of the parameters.  */
+
+  int i = 0;
+  while (str[i] != '\0' && str[i] != ':')
+    ++i;
+  if (i == 0)			/* only "<WHAT>=" ? */
+    return strdup ("");
+
+  return strndup (str, i);
+}
+
+
+static nis_name
 searchgroup (char *str)
 {
-  char *cptr;
-  int i;
-
-  cptr = strstr (str, "group=");
-  if (cptr == NULL)
-    return NULL;
-
-  cptr += 6;			/* points to the begin of the group string */
-  i = 0;
-  while (cptr[i] != '\0' && cptr[i] != ':')
-    i++;
-  if (i == 0)			/* only "group=" ? */
-    return (nis_name) "";
-
-  return strndup (cptr, i);
+  return searchXYX (str, "group=");
 }
+
 
 static nis_name
 searchowner (char *str)
 {
-  char *cptr;
-  int i;
-
-  cptr = strstr (str, "owner=");
-  if (cptr == NULL)
-    return NULL;
-
-  cptr += 6;			/* points to the begin of the owner string */
-  i = 0;
-  while (cptr[i] != '\0' && cptr[i] != ':')
-    i++;
-  if (i == 0)			/* only "owner=" ? */
-    return strdup ("");
-
-  return strndup (cptr, i);
+  return searchXYX (str, "owner=");
 }
+
 
 static uint32_t
 searchttl (char *str)
@@ -358,85 +350,60 @@ searchaccess (char *str, unsigned int access)
   return result;
 }
 
+
 nis_name
 __nis_default_owner (char *defaults)
 {
-  char default_owner[NIS_MAXNAMELEN + 1];
-  char *cptr, *dptr;
+  char *default_owner = NULL;
 
-  strcpy (default_owner, nis_local_principal ());
+  char *cptr = defaults;
+  if (cptr == NULL)
+    cptr = getenv ("NIS_DEFAULTS");
 
-  if (defaults != NULL)
+  if (cptr != NULL)
     {
-      dptr = strstr (defaults, "owner=");
+      char *dptr = strstr (cptr, "owner=");
       if (dptr != NULL)
 	{
-	  char *p = searchowner (defaults);
-	  if (strlen (p) <= NIS_MAXNAMELEN)
-	    strcpy (default_owner, p);
+	  char *p = searchowner (dptr);
+	  if (p == NULL)
+	    return NULL;
+	  default_owner = strdupa (p);
 	  free (p);
 	}
     }
-  else
-    {
-      cptr = getenv ("NIS_DEFAULTS");
-      if (cptr != NULL)
-	{
-	  dptr = strstr (cptr, "owner=");
-	  if (dptr != NULL)
-	    {
-	      char *p = searchowner (cptr);
-	      if (strlen (p) <= NIS_MAXNAMELEN)
-		strcpy (default_owner, p);
-	      free (p);
-	    }
-	}
-    }
 
-  return strdup (default_owner);
+  return strdup (default_owner ?: nis_local_principal ());
 }
 libnsl_hidden_def (__nis_default_owner)
+
 
 nis_name
 __nis_default_group (char *defaults)
 {
-  char default_group[NIS_MAXNAMELEN + 1];
-  char *cptr, *dptr;
+  char *default_group = NULL;
 
-  strcpy (default_group, nis_local_group ());
+  char *cptr = defaults;
+  if (cptr == NULL)
+    cptr = getenv ("NIS_DEFAULTS");
 
-  if (defaults != NULL)
+  if (cptr != NULL)
     {
-      dptr = strstr (defaults, "group=");
+      char *dptr = strstr (cptr, "group=");
       if (dptr != NULL)
 	{
-	  char *p = searchgroup (defaults);
-
-	  if (strlen (p) <= NIS_MAXNAMELEN)
-	    strcpy (default_group, p);
+	  char *p = searchgroup (dptr);
+	  if (p == NULL)
+	    return NULL;
+	  default_group = strdupa (p);
 	  free (p);
 	}
     }
-  else
-    {
-      cptr = getenv ("NIS_DEFAULTS");
-      if (cptr != NULL)
-	{
-	  dptr = strstr (cptr, "group=");
-	  if (dptr != NULL)
-	    {
-	      char *p = searchgroup (cptr);
 
-	      if (strlen (p) <= NIS_MAXNAMELEN)
-		strcpy (default_group, p);
-	      free (p);
-	    }
-	}
-    }
-
-  return strdup (default_group);
+  return strdup (default_group ?: nis_local_group ());
 }
 libnsl_hidden_def (__nis_default_group)
+
 
 uint32_t
 __nis_default_ttl (char *defaults)

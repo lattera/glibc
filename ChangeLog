@@ -1,7 +1,25 @@
 2006-05-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_defaults.c (searchXYX): New functions.  Used by both
+	searchgroup and searchowner.  Significantly simplified.
+	(__nis_default_owner): Remove duplication.  Do not locally copy the
+	string before duplicating it.
+	(__nis_default_group): Likewise.
+
+	* nis/nis_lookup.c (nis_lookup): After calling nis_free_directory,
+	we must clear the variable before calling __nisfind_server.
+
+	* nis/nis_lookup.c (nis_lookup): Always free memory allocated with
+	nis_getnames.  [Coverity CID 223]
+
+	* locale/programs/locfile.c (locfile_read): Use alloca instead of
+	xmalloc to allocate local repertoire name.  [Coverity CID 222]
+
+	* iconv/iconv_charmap.c (use_to_charmap): No need to dynamically
+	allocate memory for the input to add_bytes.  [Coverity CID 221]
+
 	* posix/wordexp.c (w_addword): Free word if realloc fails and it
-	was allocated here.  [Coverity CID 219]
+	was allocated here.  [Coverity CID 219, 220]
 
 	* posix/getconf.c (print_all): Free confstr data after printing.
 	[Coverity CID 218]

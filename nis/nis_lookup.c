@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -65,7 +65,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
       if (status != NIS_SUCCESS)
 	{
 	  NIS_RES_STATUS (res) = status;
-	  return res;
+	  goto out;
 	}
 
       status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
@@ -74,7 +74,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	{
 	  NIS_RES_STATUS (res) = status;
 	  nis_free_directory (dir);
-	  return res;
+	  goto out;;
 	}
 
       while (__nisbind_connect (&bptr) != NIS_SUCCESS)
@@ -83,7 +83,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	    {
 	      nis_free_directory (dir);
 	      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
-	      return res;
+	      goto out;
 	    }
 	}
 
@@ -121,8 +121,21 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			req.ns_name =
 			  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
 			if (req.ns_name == NULL)
-			  return NULL;
+			  {
+			    nis_free_directory (dir);
+			    res = NULL;
+			    goto out;
+			  }
 
+			/* The following is a non-obvious optimization.  A
+			   nis_freeresult call would call xdr_free as the
+			   following code.  But it also would unnecessarily
+			   free the result structure.  We avoid this here
+			   along with the necessary tests.  */
+#if 1
+			xdr_free ((xdrproc_t) _xdr_nis_result, (char *) res);
+			memset (res, '\0', sizeof (*res));
+#else
 			nis_freeresult (res);
 			res = calloc (1, sizeof (nis_result));
 			if (res == NULL)
@@ -130,6 +143,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			    __nisbind_destroy (&bptr);
 			    return NULL;
 			  }
+#endif
 
 			link_first_try = 1; /* Try at first the old binding */
 			goto again;
@@ -144,10 +158,12 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 		      {
 			__nisbind_destroy (&bptr);
 			nis_free_directory (dir);
+			/* Otherwise __nisfind_server will not do anything.  */
+			dir = NULL;
 
 			if (__nisfind_server (req.ns_name, &dir)
 			    != NIS_SUCCESS)
-			  return res;
+			  goto out;
 
 			if (__nisbind_create (&bptr,
 					      dir->do_servers.do_servers_val,
@@ -155,7 +171,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 					      flags) != NIS_SUCCESS)
 			  {
 			    nis_free_directory (dir);
-			    return res;
+			    goto out;
 			  }
 		      }
 		    else
@@ -167,7 +183,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			if (__nisbind_next (&bptr) != NIS_SUCCESS)
 			  {
 			    nis_free_directory (dir);
-			    return res;
+			    goto out;
 			  }
 		      }
 		    goto again;
@@ -184,7 +200,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
       if (status != NIS_SUCCESS)
 	{
 	  NIS_RES_STATUS (res) = status;
-	  return res;
+	  goto out;
 	}
 
       switch (NIS_RES_STATUS (res))
@@ -216,6 +232,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	}
     }
 
+ out:
   if (names != namebuf)
     nis_freenames (names);
 
