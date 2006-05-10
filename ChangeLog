@@ -1,3 +1,54 @@
+2006-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c (w_addword): Free word if realloc fails and it
+	was allocated here.  [Coverity CID 219]
+
+	* posix/getconf.c (print_all): Free confstr data after printing.
+	[Coverity CID 218]
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Free canon string if
+	list allocation fails.  [Coverity CID 215]
+
+	* nss/nsswitch.c (__nss_configure_lookup): Fix loop end condition.
+	[Coverity CID 213]
+
+	* argp/argp-help.c (hol_entry_cmp): Don't call canon_doc_option if
+	string is NULL.  [Coverity CID 212]
+	* argp/Makefile: Add rules to build and run bug-argp1.
+	* argp/bug-argp1.c: New file.
+
+	* io/ftw.c (ftw_dir): Use __rawmemchr instead of strchr to find
+	end of string.
+	* stdlib/canonicalize.c (__realpath): Likewise.
+
+	* locale/programs/ld-time.c (time_finish): Don't dereference NULL
+	pointer.  [Coverity CID 206]
+
+	* elf/dl-dst.h (DL_DST_REQUIRED): Be prepared for missing link map
+	in statically linked code.
+	* elf/dl-load.c (_dl_dst_substitute): When replacing ORIGIN in
+	statically built code, be prepared to have no link map.
+	[Coverity CID 205]
+
+	* argp/argp-help.c (fill_in_uparams): Handle STATE==NULL in
+	dgettext calls. [Coverity CID 204]
+
+	* argp/argp-help.c (struct uparams): Remove valid member.  Change
+	the one user.
+	(uparam_names): Reduce size.  Avoid relative relocations.
+	Moved to read-only segment.
+	(fill_in_uparams): Update for new layout.
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Parameter can be
+	assumed to always be != NULL. [Coverity CID 202]
+
+	* argp/argp-help.c (hol_entry_help): Remove some dead code
+	[Coverity CID 200].
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyport_r): Optimize
+	away a few more unconditional yperr2nss calls.
+	(_nss_nis_getservbyname_r): Likewise.
+
 2006-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h: Remove support for non-core

@@ -31,6 +31,7 @@ static _Unwind_Reason_Code (*libgcc_s_forcedunwind)
 static _Unwind_Word (*libgcc_s_getcfa) (struct _Unwind_Context *);
 
 void
+__attribute_noinline__
 pthread_cancel_init (void)
 {
   void *resume, *personality, *forcedunwind, *getcfa;

@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,7 +91,7 @@ __realpath (const char *name, char *resolved)
 	  rpath[0] = '\0';
 	  goto error;
 	}
-      dest = strchr (rpath, '\0');
+      dest = __rawmemchr (rpath, '\0');
     }
   else
     {

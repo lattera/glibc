@@ -526,7 +526,7 @@ fail:
 
   /* Next, update the `struct FTW' information.  */
   ++data->ftw.level;
-  startp = strchr (data->dirbuf, '\0');
+  startp = __rawmemchr (data->dirbuf, '\0');
   /* There always must be a directory name.  */
   assert (startp != data->dirbuf);
   if (startp[-1] != '/')

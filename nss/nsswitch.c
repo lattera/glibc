@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -70,6 +70,7 @@ static const struct
 #include "databases.def"
 #undef DEFINE_DATABASE
 };
+#define ndatabases (sizeof (databases) / sizeof (databases[0]))
 
 
 __libc_lock_define_initialized (static, lock)
@@ -211,7 +212,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
   service_user *new_db;
   size_t cnt;
 
-  for (cnt = 0; cnt < sizeof databases; ++cnt)
+  for (cnt = 0; cnt < ndatabases; ++cnt)
     {
       int cmp = strcmp (dbname, databases[cnt].name);
       if (cmp == 0)
@@ -223,7 +224,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 	}
     }
 
-  if (cnt == sizeof databases)
+  if (cnt == ndatabases)
     {
       __set_errno (EINVAL);
       return -1;

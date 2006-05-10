@@ -981,6 +981,7 @@ print_all (const char *path)
         if (confstr (c->call_name, cvalue, clen) != clen)
           error (3, errno, "confstr");
         printf ("%.*s\n", (int) clen, cvalue);
+	free (cvalue);
         break;
     }
   }

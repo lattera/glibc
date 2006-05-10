@@ -1042,12 +1042,16 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	else
 	  socklen = sizeof (struct sockaddr_in);
 
+	struct addrinfo *pai_1st = pai;
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
 	    struct addrinfo *ai;
 	    ai = *pai = malloc (sizeof (struct addrinfo) + socklen);
 	    if (ai == NULL)
-	      return -EAI_MEMORY;
+	      {
+		free ((char *) canon);
+		return -EAI_MEMORY;
+	      }
 
 	    ai->ai_flags = req->ai_flags;
 	    ai->ai_family = family;
@@ -1064,6 +1068,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    ai->ai_addr->sa_len = socklen;
 #endif /* _HAVE_SA_LEN */
 	    ai->ai_addr->sa_family = family;
+
+	    /* In case of an allocation error the list must be NULL
+	       terminated.  */
+	    ai->ai_next = NULL;
 
 	    if (family == AF_INET6)
 	      {
@@ -1088,7 +1096,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	    pai = &(ai->ai_next);
 	  }
-	*pai = NULL;
 
 	++*naddrs;
 

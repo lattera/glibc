@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -166,6 +166,7 @@ w_addword (wordexp_t *pwordexp, char *word)
   /* Add a word to the wordlist */
   size_t num_p;
   char **new_wordv;
+  bool allocated = false;
 
   /* Internally, NULL acts like "".  Convert NULLs to "" before
    * the caller sees them.
@@ -175,6 +176,7 @@ w_addword (wordexp_t *pwordexp, char *word)
       word = __strdup ("");
       if (word == NULL)
 	goto no_space;
+      allocated = true;
     }
 
   num_p = 2 + pwordexp->we_wordc + pwordexp->we_offs;
@@ -186,6 +188,9 @@ w_addword (wordexp_t *pwordexp, char *word)
       pwordexp->we_wordv[pwordexp->we_offs + pwordexp->we_wordc] = NULL;
       return 0;
     }
+
+  if (allocated)
+    free (word);
 
 no_space:
   return WRDE_NOSPACE;

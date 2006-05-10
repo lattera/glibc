@@ -266,7 +266,14 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  ++name;
 	  if ((len = is_dst (start, name, "ORIGIN", is_path,
 			     INTUSE(__libc_enable_secure))) != 0)
-	    repl = l->l_origin;
+	    {
+#ifndef SHARED
+	      if (l == NULL)
+		repl = _dl_get_origin ();
+	      else
+#endif
+		repl = l->l_origin;
+	    }
 	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
 	    repl = GLRO(dl_platform);
 	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)

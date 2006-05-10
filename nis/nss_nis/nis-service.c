@@ -280,14 +280,13 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 
   char *result;
   int int_len;
-  enum nss_status status = yperr2nss (yp_match (domain,
-						"services.byservicename", key,
-						keylen, &result, &int_len));
+  int status = yp_match (domain, "services.byservicename", key,
+			 keylen, &result, &int_len);
   size_t len = int_len;
 
   /* If we found the key, it's ok and parse the result. If not,
      fall through and parse the complete table. */
-  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
+  if (__builtin_expect (status == YPERR_SUCCESS, 1))
     {
       if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
@@ -317,7 +316,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 
   /* Check if it is safe to rely on services.byservicename.  */
   if (_nsl_default_nss () & NSS_FLAG_SERVICES_AUTHORITATIVE)
-    return status;
+    return yperr2nss (status);
 
   struct ypall_callback ypcb;
   struct search_t req;
@@ -332,10 +331,10 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
   req.buflen = buflen;
   req.errnop = errnop;
   req.status = NSS_STATUS_NOTFOUND;
-  status = yperr2nss (yp_all (domain, "services.byname", &ypcb));
+  status = yp_all (domain, "services.byname", &ypcb);
 
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
+  if (__builtin_expect (status != YPERR_SUCCESS, 0))
+    return yperr2nss (status);
 
   return req.status;
 }
@@ -362,14 +361,13 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 
       char *result;
       int int_len;
-      enum nss_status status = yperr2nss (yp_match (domain, "services.byname",
-						    key, keylen, &result,
-						    &int_len));
+      int status = yp_match (domain, "services.byname", key, keylen, &result,
+			     &int_len);
       size_t len = int_len;
 
       /* If we found the key, it's ok and parse the result. If not,
 	 fall through and parse the complete table. */
-      if (status == NSS_STATUS_SUCCESS)
+      if (__builtin_expect (status == YPERR_SUCCESS, 1))
 	{
 	  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	    {
@@ -414,11 +412,10 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
   req.buflen = buflen;
   req.errnop = errnop;
   req.status = NSS_STATUS_NOTFOUND;
-  enum nss_status status = yperr2nss (yp_all (domain, "services.byname",
-					      &ypcb));
+  int status = yp_all (domain, "services.byname", &ypcb);
 
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
+  if (__builtin_expect (status != YPERR_SUCCESS, 0))
+    return yperr2nss (status);
 
   return req.status;
 }

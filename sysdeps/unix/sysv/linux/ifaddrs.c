@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -358,8 +358,7 @@ getifaddrs (struct ifaddrs **ifap)
 				ifa_data.  */
   int result = 0;
 
-  if (ifap)
-    *ifap = NULL;
+  *ifap = NULL;
 
   if (! __no_netlink_support && __netlink_open (&nh) < 0)
     {
@@ -840,8 +839,7 @@ getifaddrs (struct ifaddrs **ifap)
 	memmove (ifas, &ifas[newlink], sizeof (struct ifaddrs_storage));
     }
 
-  if (ifap != NULL)
-    *ifap = &ifas[0].ifa;
+  *ifap = &ifas[0].ifa;
 
  exit_free:
   __netlink_free_handle (&nh);

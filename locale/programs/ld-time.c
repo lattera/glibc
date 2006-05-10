@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -468,9 +468,14 @@ No definition for %s category found"), "LC_TIME"));
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end start */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end end */
 	  time->era_entries[idx].wname = (uint32_t *) wstr + 1;
-	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end name */
-	  *wstr = L'\0';
-	  time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
+	  if (wstr != NULL)
+	    {
+	      wstr = wcschr (wstr + 1, L':');	/* end name */
+	      *wstr = L'\0';
+	      time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
+	    }
+	  else
+	    time->era_entries[idx].wformat = NULL;
 	}
     }
 
