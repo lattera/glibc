@@ -1167,9 +1167,8 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 	return WRDE_NOSPACE;
     }
 
-  /* Premature end */
-  if (comm)
-    free (comm);
+  /* Premature end.  */
+  free (comm);
 
   return WRDE_SYNTAX;
 }
@@ -1430,8 +1429,7 @@ envsubst:
 			      &buffer[20], 10, 0);
 	  *word = w_addstr (*word, word_length, max_length, value);
 	  free (env);
-	  if (pattern)
-	    free (pattern);
+	  free (pattern);
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
       /* Is it `$*' or `$@' (unquoted) ? */
@@ -1604,8 +1602,7 @@ envsubst:
 		      if (free_value)
 			free (value);
 
-		      if (expanded)
-			free (expanded);
+		      free (expanded);
 
 		      goto do_error;
 		    }
@@ -1625,8 +1622,7 @@ envsubst:
 		      if (free_value)
 			free (value);
 
-		      if (expanded)
-			free (expanded);
+		      free (expanded);
 
 		      goto do_error;
 		    }
@@ -1648,8 +1644,7 @@ envsubst:
 		goto no_space;
 	    }
 
-	  if (pattern)
-		  free (pattern);
+	  free (pattern);
 
 	  pattern = expanded;
 	}
@@ -1863,7 +1858,7 @@ envsubst:
 	      goto success;
 	    }
 
-	  if (free_value && value)
+	  if (free_value)
 	    free (value);
 
 	  value = pattern ? __strdup (pattern) : pattern;
@@ -1880,8 +1875,10 @@ envsubst:
 	}
     }
 
-  free (env); env = NULL;
-  free (pattern); pattern = NULL;
+  free (env);
+  env = NULL;
+  free (pattern);
+  pattern = NULL;
 
   if (seen_hash)
     {
@@ -1996,11 +1993,9 @@ syntax:
   error = WRDE_SYNTAX;
 
 do_error:
-  if (env)
-    free (env);
+  free (env);
 
-  if (pattern)
-    free (pattern);
+  free (pattern);
 
   return error;
 }
@@ -2448,8 +2443,7 @@ do_error:
    *	set pwordexp members back to what they were.
    */
 
-  if (word != NULL)
-    free (word);
+  free (word);
 
   if (error == WRDE_NOSPACE)
     return WRDE_NOSPACE;

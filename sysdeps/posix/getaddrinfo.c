@@ -1042,7 +1042,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	else
 	  socklen = sizeof (struct sockaddr_in);
 
-	struct addrinfo *pai_1st = pai;
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
 	    struct addrinfo *ai;
