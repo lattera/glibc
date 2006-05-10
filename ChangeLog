@@ -1,5 +1,8 @@
 2006-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Only store
+	results if the call was succesful.
+
 	* nis/nss-nis.h: Mark __yperr2nss_tab and __yperr2nss_count as hidden.
 
 	* nis/nss-nisplus.h: Mark __niserr2nss_tab and __niserr2nss_count
