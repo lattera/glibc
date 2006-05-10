@@ -25,8 +25,8 @@
 
 
 /* Convert YP error number to NSS error number.  */
-extern const enum nss_status __yperr2nss_tab[];
-extern const unsigned int __yperr2nss_count;
+extern const enum nss_status __yperr2nss_tab[] attribute_hidden;
+extern const unsigned int __yperr2nss_count attribute_hidden;
 
 static inline enum nss_status
 yperr2nss (int errval)

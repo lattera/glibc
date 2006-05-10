@@ -1,3 +1,10 @@
+2006-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss-nis.h: Mark __yperr2nss_tab and __yperr2nss_count as hidden.
+
+	* nis/nss-nisplus.h: Mark __niserr2nss_tab and __niserr2nss_count
+	as hidden.
+
 2006-05-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/sys/queue.h: Remove uses of all QUEUEDEBUG_* macros.
