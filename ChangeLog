@@ -1,3 +1,7 @@
+2006-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/queue.h: Remove uses of all QUEUEDEBUG_* macros.
+
 2006-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/wordexp.c (parse_glob): No need to check ifs for NULL, the
