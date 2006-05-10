@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -27,8 +27,8 @@
  R8   XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
  R16  XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
  R24  XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-           pc    cause  status   badvaddr       lo       hi
-      XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+            pc       lo       hi
+      XXXXXXXX XXXXXXXX XXXXXXXX
  The FPU registers will not be printed.
 */
 
@@ -61,11 +61,8 @@ register_dump (int fd, struct sigcontext *ctx)
   for (i = 0; i < 32; i++)
     hexvalue (ctx->sc_regs[i], regs[i], 8);
   hexvalue (ctx->sc_pc, regs[32], 8);
-  hexvalue (ctx->sc_cause, regs[33], 8);
-  hexvalue (ctx->sc_status, regs[34], 8);
-  hexvalue (ctx->sc_badvaddr, regs[35], 8);
-  hexvalue (ctx->sc_mdhi, regs[36], 8);
-  hexvalue (ctx->sc_mdlo, regs[37], 8);
+  hexvalue (ctx->sc_mdhi, regs[33], 8);
+  hexvalue (ctx->sc_mdlo, regs[34], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n R0   ");
@@ -92,8 +89,8 @@ register_dump (int fd, struct sigcontext *ctx)
       ADD_MEM (regs[i], 8);
       ADD_STRING (" ");
     }
-  ADD_STRING ("\n           pc    cause  status   badvaddr       lo       hi\n      ");
-  for (i = 32; i < 38; i++)
+  ADD_STRING ("\n            pc       lo       hi\n      ");
+  for (i = 32; i < 35; i++)
     {
       ADD_MEM (regs[i], 8);
       ADD_STRING (" ");

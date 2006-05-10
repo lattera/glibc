@@ -1,5 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 2003, 2004 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Copyright (C) 1996, 1997, 1998, 2003, 2004, 2006 Free Software
+   Foundation, Inc.  This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,90 +16,69 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _BITS_SIGCONTEXT_H
+#define _BITS_SIGCONTEXT_H 1
+
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
 #include <sgidefs.h>
 
-#ifndef sigcontext_struct
-/* Kernel headers before 2.1.1 define a struct sigcontext_struct, but
-   we need sigcontext.  */
-# define sigcontext_struct sigcontext
-
-/* # include <asm/sigcontext.h> */
-/* Instead of including the kernel header, that will vary depending on
-   whether the 32- or the 64-bit kernel is installed, we paste the
-   contents here.  In case you're wondering about the different
-   licenses, the fact that the file is pasted, instead of included,
-   doesn't really make any difference for the program that includes
-   this header.  */
 #if _MIPS_SIM == _ABIO32
-/*
- * This file is subject to the terms and conditions of the GNU General Public
- * License.  See the file "COPYING" in the main directory of this archive
- * for more details.
- *
- * Copyright (C) 1996, 1997, 2000 by Ralf Baechle
- */
-#ifndef _ASM_SIGCONTEXT_H
-#define _ASM_SIGCONTEXT_H
 
-/*
- * Keep this struct definition in sync with the sigcontext fragment
- * in arch/mips/tools/offset.c
- */
+/* Certain unused fields were replaced with new ones in 2.6.12-rc4.
+   The changes were as follows:
+
+   sc_cause -> sc_hi1
+   sc_badvaddr -> sc_lo1
+   sc_sigset[0] -> sc_hi2
+   sc_sigset[1] -> sc_lo2
+   sc_sigset[2] -> sc_hi3
+   sc_sigset[3] -> sc_lo3
+
+   sc_regmask, sc_ownedfp and sc_fpc_eir are not used.  */
 struct sigcontext {
-	unsigned int       sc_regmask;		/* Unused */
-	unsigned int       sc_status;
-	unsigned long long sc_pc;
-	unsigned long long sc_regs[32];
-	unsigned long long sc_fpregs[32];
-	unsigned int       sc_ownedfp;		/* Unused */
-	unsigned int       sc_fpc_csr;
-	unsigned int       sc_fpc_eir;		/* Unused */
-	unsigned int       sc_used_math;
-	unsigned int       sc_ssflags;		/* Unused */
-	unsigned long long sc_mdhi;
-	unsigned long long sc_mdlo;
-
-	unsigned int       sc_cause;		/* Unused */
-	unsigned int       sc_badvaddr;		/* Unused */
-
-	unsigned long      sc_sigset[4];	/* kernel's sigset_t */
+  unsigned int sc_regmask;
+  unsigned int sc_status;
+  unsigned long long sc_pc;
+  unsigned long long sc_regs[32];
+  unsigned long long sc_fpregs[32];
+  unsigned int sc_ownedfp;
+  unsigned int sc_fpc_csr;
+  unsigned int sc_fpc_eir;
+  unsigned int sc_used_math;
+  unsigned int sc_dsp;
+  unsigned long long sc_mdhi;
+  unsigned long long sc_mdlo;
+  unsigned long sc_hi1;
+  unsigned long sc_lo1;
+  unsigned long sc_hi2;
+  unsigned long sc_lo2;
+  unsigned long sc_hi3;
+  unsigned long sc_lo3;
 };
 
-#endif /* _ASM_SIGCONTEXT_H */
-#else /* _MIPS_SIM != _ABIO32 */
-/*
- * This file is subject to the terms and conditions of the GNU General Public
- * License.  See the file "COPYING" in the main directory of this archive
- * for more details.
- *
- * Copyright (C) 1996, 1997, 1999 by Ralf Baechle
- * Copyright (C) 1999 Silicon Graphics, Inc.
- */
-#ifndef _ASM_SIGCONTEXT_H
-#define _ASM_SIGCONTEXT_H
+#else
 
-/*
- * Keep this struct definition in sync with the sigcontext fragment
- * in arch/mips/tools/offset.c
- */
+/* This structure changed in 2.6.12-rc4 when DSP support was added.  */
 struct sigcontext {
-	unsigned long long sc_regs[32];
-	unsigned long long sc_fpregs[32];
-	unsigned long long sc_mdhi;
-	unsigned long long sc_mdlo;
-	unsigned long long sc_pc;
-	unsigned int       sc_status;
-	unsigned int       sc_fpc_csr;
-	unsigned int       sc_fpc_eir;
-	unsigned int       sc_used_math;
-	unsigned int       sc_cause;
-	unsigned int       sc_badvaddr;
+  unsigned long long sc_regs[32];
+  unsigned long long sc_fpregs[32];
+  unsigned long long sc_mdhi;
+  unsigned long long sc_hi1;
+  unsigned long long sc_hi2;
+  unsigned long long sc_hi3;
+  unsigned long long sc_mdlo;
+  unsigned long long sc_lo1;
+  unsigned long long sc_lo2;
+  unsigned long long sc_lo3;
+  unsigned long long sc_pc;
+  unsigned int sc_fpc_csr;
+  unsigned int sc_used_math;
+  unsigned int sc_dsp;
+  unsigned int sc_reserved;
 };
 
-#endif /* _ASM_SIGCONTEXT_H */
 #endif /* _MIPS_SIM != _ABIO32 */
 #endif

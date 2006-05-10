@@ -1,5 +1,5 @@
-/* Copyright (C) 1997, 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Copyright (C) 1997, 1998, 2000, 2003, 2004, 2006 Free Software
+   Foundation, Inc.  This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -73,11 +73,15 @@ typedef struct
     unsigned int fpc_csr;
     unsigned int fpc_eir;
     unsigned int used_math;
-    unsigned int ssflags;
+    unsigned int dsp;
     greg_t mdhi;
     greg_t mdlo;
-    unsigned int cause;
-    unsigned int badvaddr;
+    unsigned long hi1;
+    unsigned long lo1;
+    unsigned long hi2;
+    unsigned long lo2;
+    unsigned long hi3;
+    unsigned long lo3;
   } mcontext_t;
 #else
 typedef struct
@@ -85,14 +89,18 @@ typedef struct
     gregset_t gregs;
     fpregset_t fpregs;
     greg_t mdhi;
+    greg_t hi1;
+    greg_t hi2;
+    greg_t hi3;
     greg_t mdlo;
+    greg_t lo1;
+    greg_t lo2;
+    greg_t lo3;
     greg_t pc;
-    unsigned int status;
     unsigned int fpc_csr;
-    unsigned int fpc_eir;
     unsigned int used_math;
-    unsigned int cause;
-    unsigned int badvaddr;
+    unsigned int dsp;
+    unsigned int reserved;
   } mcontext_t;
 #endif
 

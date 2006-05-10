@@ -1,3 +1,13 @@
+2006-05-10  Richard Sandiford  <richard@codesourcery.com>
+	    Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/register-dump.h (register_dump): Don't
+	dump sc_cause, sc_status or sc_badvaddr.
+	* sysdeps/unix/sysv/linux/mips/bits/sigcontext.h: Rewrite.  Update
+	structure definitions after DSP kernel changes.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (mcontext_t): Update
+	after the same DSP changes.
+
 2006-05-08  Richard Sandiford  <richard@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/stat.h (struct stat): Add
