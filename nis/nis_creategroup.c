@@ -52,8 +52,8 @@ nis_creategroup (const_nis_name group, unsigned int flags)
 
       obj->zo_oid.ctime = obj->zo_oid.mtime = time (NULL);
       obj->zo_name = strdup (leafbuf);
-      obj->zo_owner = strdup (__nis_default_owner (NULL));
-      obj->zo_group = strdup (__nis_default_group (NULL));
+      obj->zo_owner = __nis_default_owner (NULL);
+      obj->zo_group = __nis_default_group (NULL);
       obj->zo_domain = strdup (domainbuf);
       if (obj->zo_name == NULL || obj->zo_owner == NULL
 	  || obj->zo_group == NULL || obj->zo_domain == NULL)

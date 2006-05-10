@@ -1105,7 +1105,9 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 	    __argp_fmtstream_putc (stream, '-');
 	    __argp_fmtstream_putc (stream, *so);
 	    if (!have_long_opt || uparams.dup_args)
-	      arg (real, " %s", "[%s]", state->root_argp->argp_domain, stream);
+	      arg (real, " %s", "[%s]",
+		   state == NULL ? NULL : state->root_argp->argp_domain,
+		   stream);
 	    else if (real->arg)
 	      hhstate->suppressed_dup_arg = 1;
 	  }
@@ -1125,7 +1127,8 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 	       have been done on the original; but documentation options
 	       should be pretty rare anyway...  */
 	    __argp_fmtstream_puts (stream,
-				   dgettext (state->root_argp->argp_domain,
+				   dgettext (state == NULL ? NULL
+					     : state->root_argp->argp_domain,
 					     opt->name));
 	  }
     }
@@ -1138,7 +1141,8 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 	  {
 	    comma (uparams.long_opt_col, &pest);
 	    __argp_fmtstream_printf (stream, "--%s", opt->name);
-	    arg (real, "=%s", "[=%s]", state->root_argp->argp_domain, stream);
+	    arg (real, "=%s", "[=%s]",
+		 state == NULL ? NULL : state->root_argp->argp_domain, stream);
 	  }
     }
 
@@ -1157,7 +1161,8 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
     }
   else
     {
-      const char *tstr = real->doc ? dgettext (state->root_argp->argp_domain,
+      const char *tstr = real->doc ? dgettext (state == NULL ? NULL
+					       : state->root_argp->argp_domain,
 					       real->doc) : 0;
       const char *fstr = filter_doc (tstr, real->key, entry->argp, state);
       if (fstr && *fstr)
@@ -1205,7 +1210,8 @@ hol_help (struct hol *hol, const struct argp_state *state,
 
   if (hhstate.suppressed_dup_arg && uparams.dup_args_note)
     {
-      const char *tstr = dgettext (state->root_argp->argp_domain, "\
+      const char *tstr = dgettext (state == NULL ? NULL
+				   : state->root_argp->argp_domain, "\
 Mandatory or optional arguments to long options are also mandatory or \
 optional for any corresponding short options.");
       const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_DUP_ARGS_NOTE,

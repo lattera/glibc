@@ -1,5 +1,19 @@
 2006-05-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftw.c (open_dir_stream): Return right away if REALLOC fails.
+	[Coverity CID 229, 230]
+
+	* argp/argp-help.c (hol_entry_help): Handle STATE==NULL in ARG and
+	DGETTEXT calls.
+	(hol_help): Likewise.  [Coverity CID 226, 227]
+
+	* string/argz-replace.c (__argz_replace): Unconditionally call
+	free on SRC.  [Coverity CID 225]
+
+	* nis/nis_creategroup.c (nis_creategroup): No need to duplicate
+	the return value of __nis_default_owner and __nis_default_group,
+	it has been especially allocated.  [Coverity CID 224]
+
 	* nis/nis_defaults.c (searchXYX): New functions.  Used by both
 	searchgroup and searchowner.  Significantly simplified.
 	(__nis_default_owner): Remove duplication.  Do not locally copy the

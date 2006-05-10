@@ -1,5 +1,5 @@
 /* String replacement in an argz vector
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -121,8 +121,7 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
 	  if (! delayed_copy)
 	    /* We never found any instances of str.  */
 	    {
-	      if (src)
-		free (src);
+	      free (src);
 	      *argz = dst;
 	      *argz_len = dst_len;
 	    }

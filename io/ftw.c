@@ -301,8 +301,7 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 		      int save_err = errno;
 		      free (buf);
 		      __set_errno (save_err);
-		      result = -1;
-		      break;
+		      return -1;
 		    }
 		  buf = newp;
 		}
