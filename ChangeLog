@@ -1,3 +1,9 @@
+2006-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c (parse_glob): No need to check ifs for NULL, the
+	caller makes sure this is not the case.
+	(wordexp): Simplify ifs_white creation.  [Coverity CID 231]
+
 2006-05-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/wordexp.c: Remove numerous NULL pointer tests before FREE

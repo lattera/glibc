@@ -453,8 +453,7 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   glob_list.we_offs = 0;
   for (; words[*offset] != '\0'; ++*offset)
     {
-      if ((ifs && strchr (ifs, words[*offset])) ||
-	  (!ifs && strchr (" \t\n", words[*offset])))
+      if (strchr (ifs, words[*offset]) != NULL)
 	/* Reached IFS */
 	break;
 
@@ -2265,7 +2264,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
    */
   ifs = getenv ("IFS");
 
-  if (!ifs)
+  if (ifs == NULL)
     /* IFS unset - use <space><tab><newline>. */
     ifs = strcpy (ifs_white, " \t\n");
   else
@@ -2273,18 +2272,15 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       char *ifsch = ifs;
       char *whch = ifs_white;
 
-      /* Start off with no whitespace IFS characters */
-      ifs_white[0] = '\0';
-
       while (*ifsch != '\0')
 	{
-	  if ((*ifsch == ' ') || (*ifsch == '\t') || (*ifsch == '\n'))
+	  if (*ifsch == ' ' || *ifsch == '\t' || *ifsch == '\n')
 	    {
 	      /* Whitespace IFS.  See first whether it is already in our
 		 collection.  */
 	      char *runp = ifs_white;
 
-	      while (runp < whch && *runp != '\0' && *runp != *ifsch)
+	      while (runp < whch && *runp != *ifsch)
 		++runp;
 
 	      if (runp == whch)
