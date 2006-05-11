@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -25,7 +25,7 @@
 #include <shlib-compat.h>
 
 
-size_t __kernel_cpumask_size;
+size_t __kernel_cpumask_size attribute_hidden;
 
 
 /* Determine the current affinity.  As a side affect we learn

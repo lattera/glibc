@@ -1,5 +1,12 @@
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_key_create.c (__pthread_key_create): Do away with
+	__pthread_keys_lock.
+
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__kernel_cpumask_size): Mark as hidden.
+	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c: Likewise.
+
 	* sem_open.c (__sem_mappings_lock): Mark as hidden.
 	* semaphoreP.h (__sem_mappings_lock): Likewise.
 
