@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -22,24 +22,20 @@
 
 #include <features.h>
 
-__BEGIN_DECLS
-
-extern  bool_t _xdr_nis_attr (XDR *, nis_attr*);
-extern  bool_t _xdr_nis_name (XDR *, nis_name*);
-extern  bool_t _xdr_nis_server (XDR *, nis_server*);
-extern  bool_t _xdr_directory_obj (XDR *, directory_obj*);
-extern  bool_t _xdr_nis_object (XDR *, nis_object*);
-extern  bool_t _xdr_nis_error (XDR *, nis_error*);
-extern  bool_t _xdr_nis_result (XDR *, nis_result*);
-extern  bool_t _xdr_ns_request (XDR *, ns_request*);
-extern  bool_t _xdr_ib_request (XDR *, ib_request*);
-extern  bool_t _xdr_ping_args (XDR *, ping_args*);
-extern  bool_t _xdr_cp_result (XDR *, cp_result*);
-extern  bool_t _xdr_nis_tag (XDR *, nis_tag*);
-extern  bool_t _xdr_nis_taglist (XDR *, nis_taglist*);
-extern  bool_t _xdr_fd_args (XDR *, fd_args*);
-extern  bool_t _xdr_fd_result (XDR *, fd_result*);
-
-__END_DECLS
+extern  bool_t _xdr_nis_attr (XDR *, nis_attr*) attribute_hidden;
+extern  bool_t _xdr_nis_name (XDR *, nis_name*) attribute_hidden;
+extern  bool_t _xdr_nis_server (XDR *, nis_server*) attribute_hidden;
+extern  bool_t _xdr_directory_obj (XDR *, directory_obj*) attribute_hidden;
+extern  bool_t _xdr_nis_object (XDR *, nis_object*) attribute_hidden;
+extern  bool_t _xdr_nis_error (XDR *, nis_error*) attribute_hidden;
+extern  bool_t _xdr_nis_result (XDR *, nis_result*) attribute_hidden;
+extern  bool_t _xdr_ns_request (XDR *, ns_request*) attribute_hidden;
+extern  bool_t _xdr_ib_request (XDR *, ib_request*) attribute_hidden;
+extern  bool_t _xdr_ping_args (XDR *, ping_args*) attribute_hidden;
+extern  bool_t _xdr_cp_result (XDR *, cp_result*) attribute_hidden;
+extern  bool_t _xdr_nis_tag (XDR *, nis_tag*) attribute_hidden;
+extern  bool_t _xdr_nis_taglist (XDR *, nis_taglist*) attribute_hidden;
+extern  bool_t _xdr_fd_args (XDR *, fd_args*) attribute_hidden;
+extern  bool_t _xdr_fd_result (XDR *, fd_result*) attribute_hidden;
 
 #endif

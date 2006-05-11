@@ -1,5 +1,8 @@
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_xdr.h: Mark all functions as hidden.  Remove
+	__BEGIN_DECLS and __END_DECLS, the header is not installed.
+
 	* nis/nis_error.c: Remove table of strings.  Use position
 	independent mechanism.
 	* nis/nis_error.h: New file.
