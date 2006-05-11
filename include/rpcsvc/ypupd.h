@@ -2,5 +2,6 @@
 #include <nis/rpcsvc/ypupd.h>
 
 libnsl_hidden_proto (xdr_yp_buf)
+libnsl_hidden_proto (xdr_ypdelete_args)
 
 #endif

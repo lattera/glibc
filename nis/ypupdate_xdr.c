@@ -58,3 +58,4 @@ xdr_ypdelete_args (XDR *xdrs, ypdelete_args *objp)
     return FALSE;
   return xdr_yp_buf (xdrs, &objp->key);
 }
+libnsl_hidden_def (xdr_ypdelete_args)

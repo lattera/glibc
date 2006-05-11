@@ -1,5 +1,9 @@
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/ypupdate_xdr.c: Add libnsl_hidden_def for xdr_ypdelete_args.
+	* include/rpcsvc/ypupd.h: Add libnsl_hidden_proto for
+	xdr_ypdelete_args.
+
 	* nis/nis_xdr.h: Mark all functions as hidden.  Remove
 	__BEGIN_DECLS and __END_DECLS, the header is not installed.
 
