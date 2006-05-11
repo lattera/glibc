@@ -1,3 +1,8 @@
+2006-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sem_open.c (__sem_mappings_lock): Mark as hidden.
+	* semaphoreP.h (__sem_mappings_lock): Likewise.
+
 2006-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_atfork.c: Mark __dso_handle as hidden.

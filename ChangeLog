@@ -1,3 +1,8 @@
+2006-05-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-time.c (time_finish): If wide era name or
+	format aren't provided, set both wname and wformat to L"".
+
 2006-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Only store

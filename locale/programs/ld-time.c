@@ -467,15 +467,22 @@ No definition for %s category found"), "LC_TIME"));
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end offset */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end start */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end end */
-	  time->era_entries[idx].wname = (uint32_t *) wstr + 1;
 	  if (wstr != NULL)
 	    {
+	      time->era_entries[idx].wname = (uint32_t *) wstr + 1;
 	      wstr = wcschr (wstr + 1, L':');	/* end name */
-	      *wstr = L'\0';
-	      time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
+	      if (wstr != NULL)
+		{
+		  *wstr = L'\0';
+		  time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
+		}
+	      else
+		time->era_entries[idx].wname =
+		  time->era_entries[idx].wformat = (uint32_t *) L"";
 	    }
 	  else
-	    time->era_entries[idx].wformat = NULL;
+	    time->era_entries[idx].wname =
+	      time->era_entries[idx].wformat = (uint32_t *) L"";
 	}
     }
 

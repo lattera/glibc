@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -147,7 +147,7 @@ __sem_search (const void *a, const void *b)
 void *__sem_mappings attribute_hidden;
 
 /* Lock to protect the search tree.  */
-lll_lock_t __sem_mappings_lock = LLL_LOCK_INITIALIZER;
+lll_lock_t __sem_mappings_lock attribute_hidden = LLL_LOCK_INITIALIZER;
 
 
 /* Search for existing mapping and if possible add the one provided.  */
