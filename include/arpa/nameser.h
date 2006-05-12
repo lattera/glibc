@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
+extern struct _ns_flagdata _ns_flagdata[] attribute_hidden;
+
 #if _STRING_ARCH_unaligned
 
 # undef NS_GET16
