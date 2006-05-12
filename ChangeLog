@@ -1,5 +1,40 @@
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_master.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_master.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypbind_resp.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypbind_resp.
+
+	* nis/nis_xdr.c: Add libnsl_hidden_def for xdr_cback_data.
+	* include/rpcsvc/nis_callback.h: Add libnsl_hidden_proto for
+	xdr_cback_data.
+
+	* nis/ypupdate_xdr.c: Add libnsl_hidden_def for xdr_ypupdate_args.
+	* include/rpcsvc/ypupd.h: Add libnsl_hidden_proto for
+	xdr_ypupdate_args.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_order.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_order.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_maplist.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_maplist.
+
+	* nis/nis_xdr.c: Add libnsl_hidden_def for xdr_obj_p.
+	* include/rpcsvc/nis_callback.h: New file.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_val.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_val.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypreq_nokey.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypreq_nokey.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypmaplist.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypmaplist.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypreq_nokey.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypreq_nokey.
+
 	* nis/ypupdate_xdr.c: Add libnsl_hidden_def for xdr_ypdelete_args.
 	* include/rpcsvc/ypupd.h: Add libnsl_hidden_proto for
 	xdr_ypdelete_args.
