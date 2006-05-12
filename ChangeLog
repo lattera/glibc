@@ -1,5 +1,7 @@
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_debug.c (loc_ntoa): Define error as array, not pointer.
+
 	* include/arpa/nameser.h: Declare _ns_flagdata as hidden.
 
 	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_master.

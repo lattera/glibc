@@ -896,7 +896,7 @@ loc_ntoa(binary, ascii)
 	const u_char *binary;
 	char *ascii;
 {
-	static char *error = "?";
+	static char error[] = "?";
 	static char tmpbuf[sizeof
 "1000 60 60.000 N 1000 60 60.000 W -12345678.00m 90000000.00m 90000000.00m 90000000.00m"];
 	const u_char *cp = binary;
