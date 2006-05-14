@@ -22,9 +22,8 @@
 #include <sys/syscall.h>
 #include "config.h"
 
-#ifndef ASM_LINE_SEP
-#define ASM_LINE_SEP ;
-#endif
+#undef ASM_LINE_SEP
+#define ASM_LINE_SEP ! 
 
 #ifdef	__ASSEMBLER__
 
@@ -51,13 +50,9 @@
 #define END(name)							      \
   .PROCEND
 
-
-/* If compiled for profiling, call `mcount' at the start of each function.  */
+/* GCC does everything for us. */
 #ifdef	PROF
-/* The mcount code relies on a normal frame pointer being on the stack
-   to locate our caller, so push one just for its benefit.  */
-#define CALL_MCOUNT \
-  XXX	ASM_LINE_SEP
+#define CALL_MCOUNT 
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif

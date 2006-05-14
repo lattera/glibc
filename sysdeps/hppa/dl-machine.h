@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <dl-fptr.h>
 #include <abort-instr.h>
+#include <tls.h>
 
 # define VALID_ELF_OSABI(osabi)		((osabi == ELFOSABI_SYSV) || (osabi == ELFOSABI_LINUX))
 # define VALID_ELF_ABIVERSION(ver)	(ver == 0)
@@ -116,43 +117,28 @@ elf_machine_load_address (void)
   return dynamic - elf_machine_dynamic ();
 }
 
-/* Fixup a PLT entry to bounce directly to the function at VALUE.  
-   Optimized non-profile version. */
-static inline Elf32_Addr
+/* Fixup a PLT entry to bounce directly to the function at VALUE. */ 
+static inline struct fdesc __attribute__ ((always_inline)) 
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
-		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+		       Elf32_Addr *reloc_addr, struct fdesc value)
 {
   /* map is the link_map for the caller, t is the link_map for the object
      being called */
-  reloc_addr[1] = D_PTR (t, l_info[DT_PLTGOT]);
-  reloc_addr[0] = value;
-  /* Return the PLT slot rather than the function value so that the
-     trampoline can load the new LTP. */
-  return (Elf32_Addr) reloc_addr;
-}
-
-/* Fixup a PLT entry to bounce directly to the function at VALUE.  */
-#define ELF_MACHINE_PROFILE_FIXUP_PLT elf_machine_profile_fixup_plt
-static inline Elf32_Addr
-elf_machine_profile_fixup_plt (struct link_map *map, lookup_t t,
-		       const Elf32_Rela *reloc,
-		       Elf32_Addr *reloc_addr, Elf32_Addr value)
-{
-  if(__builtin_expect (t == NULL, 1)) 
-    return (Elf32_Addr) reloc_addr;
-  /* Return the PLT slot rather than the function value so that the
-     trampoline can load the new LTP. */
-  return (Elf32_Addr) elf_machine_fixup_plt(map, t, reloc, reloc_addr, value);
+  reloc_addr[1] = value.gp;
+  /* Need to ensure that the gp is visible before the code
+     entry point is updated */
+  ((volatile Elf32_Addr *) reloc_addr)[0] = value.ip;
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */
-static inline Elf32_Addr
+static inline struct fdesc 
 elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
-		       Elf32_Addr value)
+		       struct fdesc value)
 {
-  /* We are rela only */
-  return value + reloc->r_addend;
+  /* We are rela only, return a function descriptor as a plt entry. */
+  return (struct fdesc) { value.ip + reloc->r_addend, value.gp };
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
@@ -181,7 +167,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   
   extern void _dl_runtime_resolve (void);
   extern void _dl_runtime_profile (void);
-  
+ 
   /* Linking lazily */
   if (lazy)
     {
@@ -215,9 +201,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	    {
               /* Found the GOT! */       	
               register Elf32_Addr ltp __asm__ ("%r19");
-              /* Identify this shared object. */
+              
+              /* Identify this shared object. Second entry in the got. */
               got[1] = (Elf32_Addr) l;
-
+              
               /* This function will be called to perform the relocation. */
               if (__builtin_expect (!profile, 1))
                 {
@@ -236,7 +223,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
                 }
               else
 	        {
-	          if (_dl_name_match_p (GLRO(dl_profile), l))
+	          if (GLRO(dl_profile) != NULL
+		      && _dl_name_match_p (GLRO(dl_profile), l))
 	            {
 		      /* This is the object we are looking for.  Say that
 		         we really want profiling and the timers are
@@ -316,6 +304,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER hppa_gnu_pltenter
+#define ARCH_LA_PLTEXIT hppa_gnu_pltexit
+
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
@@ -367,7 +360,7 @@ asm (									\
 "	ldw,ma	8(%r26),%r19\n"						\
 									\
 	/* Uh oh!  We didn't find one.  Abort. */			\
-"	iitlbp	%r0,(%r0)\n"						\
+"	iitlbp	%r0,(%sr0,%r0)\n"					\
 									\
 "2:	ldw	-4(%r26),%r19\n"	/* Found it, load value. */	\
 "	add	%r19,%r20,%r19\n"	/* And add the load offset. */	\
@@ -471,85 +464,28 @@ asm (									\
 "	ldw	4(%r3),%r19\n"	/* load the object's gp */		\
 "	bv	%r0(%r2)\n"						\
 "	depi	2,31,2,%r23\n"	/* delay slot */			\
-	);
+);
 
-
-/* This code gets called via the .plt stub, and is used in
-   dl-runtime.c to call the `fixup' function and then redirect to the
-   address it returns.
-   
-   WARNING: This template is also used by gcc's __cffc, and expects
-   that the "bl" for fixup() exist at a particular offset.
-   Do not change this template without changing gcc, while the prefix
-   "bl" should fix everything so gcc finds the right spot, it will
-   slow down __cffc when it attempts to call fixup to resolve function
-   descriptor references. Please refer to gcc/gcc/config/pa/fptr.c
-   
-   Enter with r19 = reloc offset, r20 = got-8, r21 = fixup ltp.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) 			\
-  extern void tramp_name (void);		    			\
-  asm (									\
- "	.text\n"							\
- 	/* FAKE bl to provide gcc's __cffc with fixup's address */	\
- "	bl	" #fixup_name ",%r2\n" /* Runtime address of fixup */	\
- "	.globl " #tramp_name "\n"					\
- "	.type " #tramp_name ",@function\n"				\
-  #tramp_name ":\n"							\
- "	.proc\n"							\
- "	.callinfo frame=64,calls,save_rp\n"				\
- "	.entry\n"							\
- 	/* Save return pointer */					\
- "	stw	%r2,-20(%sp)\n"						\
- 	/* Save argument registers in the call stack frame. */		\
- "	stw	%r26,-36(%sp)\n"					\
- "	stw	%r25,-40(%sp)\n"					\
- "	stw	%r24,-44(%sp)\n"					\
- "	stw	%r23,-48(%sp)\n"					\
- 	/* Build a call frame, and save structure pointer. */		\
- "	stwm	%r28,64(%sp)\n"						\
- 									\
- 	/* Set up args to fixup func.  */				\
- "	ldw	8+4(%r20),%r26\n" /* (1) got[1] == struct link_map */	\
- "	copy	%r19,%r25\n"	  /* (2) reloc offset  */		\
- "	copy    %r2,%r24\n"	  /* (3) profile_fixup needs rp */	\
- 									\
- 	/* Call the real address resolver. */				\
- "	bl	" #fixup_name ",%r2\n"					\
- "	copy	%r21,%r19\n"	  /* set fixup func ltp (DELAY SLOT)*/	\
- 									\
- "	ldw	0(%r28),%r22\n"	  /* load up the returned func ptr */	\
- "	ldw	4(%r28),%r19\n"						\
- "	ldwm	-64(%sp),%r28\n"					\
- 	/* Arguments. */						\
- "	ldw	-36(%sp),%r26\n"					\
- "	ldw	-40(%sp),%r25\n"					\
- "	ldw	-44(%sp),%r24\n"					\
- "	ldw	-48(%sp),%r23\n"					\
- 	/* Call the real function. */					\
- "	bv	%r0(%r22)\n"						\
- 	/* Return pointer. */						\
- "	ldw	-20(%sp),%r2\n"						\
- "	.exit\n"							\
- "	.procend\n");
-  
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
-#endif
-
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or 
+   a TLS variable, so references should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
-  ((((type) == R_PARISC_IPLT || (type) == R_PARISC_EPLT)	\
-    * ELF_RTYPE_CLASS_PLT)					\
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+# define elf_machine_type_class(type)				\
+  ((((type) == R_PARISC_IPLT	 				\
+  || (type) == R_PARISC_EPLT					\
+  || (type) == R_PARISC_TLS_DTPMOD32				\
+  || (type) == R_PARISC_TLS_DTPOFF32				\
+  || (type) == R_PARISC_TLS_TPREL32)				\
+  * ELF_RTYPE_CLASS_PLT)					\
+  | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+#define elf_machine_type_class(type) 				\
+ ((((type) == R_PARISC_IPLT					\
+   || (type) == R_PARISC_EPLT)					\
+   * ELF_RTYPE_CLASS_PLT)					\
    | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* Used by the runtime in fixup to figure out if reloc is *really* PLT */
 #define ELF_MACHINE_JMP_SLOT R_PARISC_IPLT
@@ -579,9 +515,22 @@ dl_platform_init (void)
 /* These are only actually used where RESOLVE_MAP is defined, anyway. */
 #ifdef RESOLVE_MAP
 
+#define reassemble_21(as21) \
+  (  (((as21) & 0x100000) >> 20) \
+   | (((as21) & 0x0ffe00) >> 8) \
+   | (((as21) & 0x000180) << 7) \
+   | (((as21) & 0x00007c) << 14) \
+   | (((as21) & 0x000003) << 12))
+
+#define reassemble_14(as14) \
+  (  (((as14) & 0x1fff) << 1) \
+   | (((as14) & 0x2000) >> 13))
+
 auto void __attribute__((always_inline))
-elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const struct r_found_version *version,
+elf_machine_rela (struct link_map *map, 
+    		  const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, 
+		  const struct r_found_version *version,
 		  void *const reloc_addr_arg)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
@@ -590,7 +539,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   struct link_map *sym_map;
   Elf32_Addr value;
 
-# if !defined RTLD_BOOTSTRAP && !defined SHARED
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
@@ -612,6 +561,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # else
   sym_map = RESOLVE_MAP (&sym, version, r_type);
 # endif
+  
   if (sym_map)
     {
       value = sym ? sym_map->l_addr + sym->st_value : 0;
@@ -635,6 +585,27 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
       break;
 
+    case R_PARISC_DIR21L:
+      {
+	unsigned int insn = *(unsigned int *)reloc_addr;
+        value = sym_map->l_addr + sym->st_value 
+		+ ((reloc->r_addend + 0x1000) & -0x2000);
+	value = value >> 11;
+	insn = (insn &~ 0x1fffff) | reassemble_21 (value);
+	*(unsigned int *)reloc_addr = insn;
+      }
+      return;
+
+    case R_PARISC_DIR14R:
+      {
+	unsigned int insn = *(unsigned int *)reloc_addr;
+	value = ((sym_map->l_addr + sym->st_value) & 0x7ff) 
+		+ (((reloc->r_addend & 0x1fff) ^ 0x1000) - 0x1000);
+	insn = (insn &~ 0x3fff) | reassemble_14 (value);
+	*(unsigned int *)reloc_addr = insn;
+      }
+      return;
+
     case R_PARISC_PLABEL32:
       /* Easy rule: If there is a symbol and it is global, then we
          need to make a dynamic function descriptor.  Otherwise we
@@ -653,15 +624,42 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       value = (Elf32_Addr)((unsigned int)_dl_make_fptr (sym_map, sym, value) | 2);
       break;
 
+    case R_PARISC_PLABEL21L:
+    case R_PARISC_PLABEL14R:
+      {
+	unsigned int insn = *(unsigned int *)reloc_addr;
+
+        if (__builtin_expect (sym == NULL, 0))
+          break;
+
+        value = (Elf32_Addr)((unsigned int)_dl_make_fptr (sym_map, sym, value) | 2);
+
+        if (r_type == R_PARISC_PLABEL21L)
+	  {
+	    value >>= 11;
+	    insn = (insn &~ 0x1fffff) | reassemble_21 (value);
+	  }
+        else
+	  {
+	    value &= 0x7ff;
+	    insn = (insn &~ 0x3fff) | reassemble_14 (value);
+	  }
+
+	*(unsigned int *)reloc_addr = insn;
+      }
+      return;
+
     case R_PARISC_IPLT:
       if (__builtin_expect (sym_map != NULL, 1))
         {
-	  elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr, value);
+	  elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr, 
+	      			 DL_FIXUP_MAKE_VALUE(sym_map, value));
         } 
       else 
         {
 	  /* If we get here, it's a (weak) undefined sym.  */
-	  elf_machine_fixup_plt (NULL, map, reloc, reloc_addr, value);
+	  elf_machine_fixup_plt (NULL, map, reloc, reloc_addr, 
+	      			 DL_FIXUP_MAKE_VALUE(map, value));
         }
       return;
 
@@ -685,6 +683,28 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       memcpy (reloc_addr_arg, (void *) value,
 	      MIN (sym->st_size, refsym->st_size));
       return;
+
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP)
+    case R_PARISC_TLS_DTPMOD32:
+      value = sym_map->l_tls_modid;
+      break;
+
+    case R_PARISC_TLS_DTPOFF32:
+      /* During relocation all TLS symbols are defined and used.
+         Therefore the offset is already correct.  */
+      if (sym != NULL)
+        *reloc_addr = sym->st_value;
+      return;
+
+    case R_PARISC_TLS_TPREL32:
+      /* The offset is negative, forward from the thread pointer */
+      if (sym != NULL)
+        {
+          CHECK_STATIC_TLS (map, sym_map);
+	  value = sym_map->l_tls_offset + sym->st_value + reloc->r_addend;
+	}
+      break;
+#endif	/* use TLS */
       
     case R_PARISC_NONE:	/* Alright, Wilbur. */
       return;

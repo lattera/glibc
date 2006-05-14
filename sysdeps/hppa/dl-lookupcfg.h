@@ -20,6 +20,8 @@
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
 
+#include <dl-fptr.h>
+
 /* Forward declaration.  */
 struct link_map;
 
@@ -63,3 +65,16 @@ void _dl_unmap (struct link_map *map);
   ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
 #define DL_DT_FINI_ADDRESS(map, addr) \
   ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
+
+/* The type of the return value of fixup/profile_fixup */
+#define DL_FIXUP_VALUE_TYPE struct fdesc
+
+/* Construct a fixup value from the address and linkmap */
+#define DL_FIXUP_MAKE_VALUE(map, addr) \
+   ((struct fdesc) { (addr), (map)->l_info[DT_PLTGOT]->d_un.d_ptr })
+
+/* Extract the code address from a fixup value */
+#define DL_FIXUP_VALUE_CODE_ADDR(value) ((value).ip)
+#define DL_FIXUP_VALUE_ADDR(value) ((uintptr_t) &(value))
+#define DL_FIXUP_ADDR_VALUE(addr) (*(struct fdesc *) (addr))
+

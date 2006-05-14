@@ -1,3 +1,26 @@
+2006-05-15  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/dl-machine.h: Include tls.h
+	(elf_machine_fixup_plt): Returns fdesc.
+	(elf_machine_profile_fixup_plt): Remove.
+	(elf_machine_plt_value): Returns fdesc.
+	(elf_machine_runtime_setup): Check that dl_profile != NULL.
+	(ARCH_LA_PLTENT, ARCH_LA_PLTEXIT): Define.
+	(RTLD_START): Use iitlbp with sr0.
+	(elf_machine_type_class): Include TLS relocs.
+	(reassemble_21, reassemble_14): Define.
+	(elf_machine_rela): Add DIR21L, DIR14R, PLABEL21L, PLABEL14R,
+	TLS_DTPMOD32, TLS_TPREL32, TLS_DTPOFF32 support.
+	(TRAMPOLINE_TEMPLATE): Move to ...
+	* sysdeps/hppa/dl-trampoline.S: ... here.
+	* sysdeps/hppa/abort-instr.h: Use iitlbp with sr0.
+	* sysdeps/hppa/dl-lookupcfg.h: Inlcude dl-fptr.h.
+	(DL_FIXUP_VALUE_TYPE, DL_FIXUP_MAKE_VALUE, DL_FIXUP_VALUE_CODE_ADDR,
+	DL_FIXUP_VALUE_ADD, DL_FIXUP_ADDR_VALUE): Define.
+	* sysdeps/hppa/sysdep.h: Use "!" as a separator. Cleanup comments.
+	* sysdeps/hppa/bits/link.h (La_hppa_regs, La_hppa_retval): Define.
+	Define prototypes for la_hppa_gnu_pltenter and la_hppa_gnu_pltexit.
+
 2006-04-27  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Include uio.h, and
