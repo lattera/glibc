@@ -1,5 +1,17 @@
 2006-05-15  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Accept extra arguments
+	required for NPTL.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: Use var args for 6 arg
+	syscall.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Move DOARGS and UNDOARGS
+	into PSEUDO_*'s.
+	(ENTRY_LEAF): Define.
+	(PSEUDO_NOERRNO, PSEUDO_ERRVAL): Use ENTRY_LEAF.
+	(DO_CALL): Create frame.
+
+2006-05-15  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/dl-machine.h: Include tls.h
 	(elf_machine_fixup_plt): Returns fdesc.
 	(elf_machine_profile_fixup_plt): Remove.

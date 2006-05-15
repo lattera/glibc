@@ -22,28 +22,34 @@
 #include <asm/unistd.h>
 #include <sysdeps/generic/sysdep.h>
 #include <sys/syscall.h>
-#include "config.h"
 
-#ifndef ASM_LINE_SEP
-# define ASM_LINE_SEP ;
-#endif
+#undef ASM_LINE_SEP
+#define ASM_LINE_SEP ! 
 
 #undef SYS_ify
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
+/* WARNING: TREG must be a callee saves register so 
+   that it doesn't have to be restored after a call 
+   to another function */
 #ifdef PIC
-/* WARNING: CANNOT BE USED IN A NOP! */
-# define STW_PIC stw %r19, -32(%sr0, %sp) ASM_LINE_SEP
-# define LDW_PIC ldw -32(%sr0, %sp), %r19 ASM_LINE_SEP
-# define STW_ASM_PIC	"       copy %%r19, %%r4\n"
-# define LDW_ASM_PIC	"       copy %%r4, %%r19\n"
-# define USING_GR4	"%r4",
+# define TREG %r3
+# define SAVE_PIC(SREG) copy %r19, SREG ASM_LINE_SEP
+# define LOAD_PIC(LREG) copy LREG, %r19 ASM_LINE_SEP
+/* Inline assembly defines */
+# define TREG_ASM "%r4" /* Cant clobber r3, it holds framemarker */
+# define SAVE_ASM_PIC	"       copy %%r19, %" TREG_ASM "\n"
+# define LOAD_ASM_PIC	"       copy %" TREG_ASM ", %%r19\n"
+# define USING_TREG	TREG_ASM,
 #else
-# define STW_PIC ASM_LINE_SEP
-# define LDW_PIC ASM_LINE_SEP
-# define STW_ASM_PIC	" \n"
-# define LDW_ASM_PIC	" \n"
-# define USING_GR4
+# define TREG %r3
+# define SAVE_PIC(SREG) nop ASM_LINE_SEP
+# define LOAD_PIC(LREG) nop ASM_LINE_SEP
+/* Inline assembly defines */
+# define TREG_ASM 
+# define SAVE_ASM_PIC	"nop \n"
+# define LOAD_ASM_PIC	"nop \n"
+# define USING_TREG
 #endif
 
 #ifdef __ASSEMBLER__
@@ -76,31 +82,73 @@
 
 /* We don't want the label for the error handle to be global when we define
    it here.  */
-#ifdef PIC
+/*#ifdef PIC
 # define SYSCALL_ERROR_LABEL 0f
 #else
 # define SYSCALL_ERROR_LABEL syscall_error
-#endif
+#endif*/
+
+/* Argument manipulation from the stack for preparing to
+   make a syscall */
+
+#define DOARGS_0 /* nothing */
+#define DOARGS_1 /* nothing */
+#define DOARGS_2 /* nothing */
+#define DOARGS_3 /* nothing */
+#define DOARGS_4 /* nothing */
+#define DOARGS_5 ldw -52(%sp), %r22		ASM_LINE_SEP
+#define DOARGS_6 DOARGS_5 ldw -56(%sp), %r21	ASM_LINE_SEP
+
+#define UNDOARGS_0 /* nothing */
+#define UNDOARGS_1 /* nothing */
+#define UNDOARGS_2 /* nothing */
+#define UNDOARGS_3 /* nothing */
+#define UNDOARGS_4 /* nothing */
+#define UNDOARGS_5 /* nothing */
+#define UNDOARGS_6 /* nothing */
 
 /* Define an entry point visible from C.
 
    There is currently a bug in gdb which prevents us from specifying
    incomplete stabs information.  Fake some entries here which specify
    the current source file.  */
-#define	ENTRY(name)						\
-	.text					ASM_LINE_SEP	\
-	.export C_SYMBOL_NAME(name)		ASM_LINE_SEP	\
-	.type	C_SYMBOL_NAME(name),@function	ASM_LINE_SEP	\
-	C_LABEL(name)				ASM_LINE_SEP	\
-	CALL_MCOUNT				ASM_LINE_SEP
+#define	ENTRY(name)							\
+	.text						ASM_LINE_SEP	\
+	.align ALIGNARG(4)				ASM_LINE_SEP	\
+	.export C_SYMBOL_NAME(name)			ASM_LINE_SEP	\
+	.type	C_SYMBOL_NAME(name),@function		ASM_LINE_SEP	\
+	C_LABEL(name)					ASM_LINE_SEP	\
+	.PROC						ASM_LINE_SEP	\
+	.CALLINFO FRAME=64,CALLS,SAVE_RP,ENTRY_GR=3	ASM_LINE_SEP	\
+	.ENTRY						ASM_LINE_SEP	\
+	/* SAVE_RP says we do */			ASM_LINE_SEP	\
+	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
+	/*FIXME: Call mcount? (carefull with stack!) */
+
+/* Some syscall wrappers do not call other functions, and
+   hence are classified as leaf, so add NO_CALLS for gdb */
+#define	ENTRY_LEAF(name)						\
+	.text						ASM_LINE_SEP	\
+	.align ALIGNARG(4)				ASM_LINE_SEP	\
+	.export C_SYMBOL_NAME(name)			ASM_LINE_SEP	\
+	.type	C_SYMBOL_NAME(name),@function		ASM_LINE_SEP	\
+	C_LABEL(name)					ASM_LINE_SEP	\
+	.PROC						ASM_LINE_SEP	\
+	.CALLINFO FRAME=64,NO_CALLS,SAVE_RP,ENTRY_GR=3	ASM_LINE_SEP	\
+	.ENTRY						ASM_LINE_SEP	\
+	/* SAVE_RP says we do */			ASM_LINE_SEP	\
+	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
+	/*FIXME: Call mcount? (carefull with stack!) */
 
 #undef	END
 #define END(name)							\
-1:							ASM_LINE_SEP	\
-.size	C_SYMBOL_NAME(name),1b-C_SYMBOL_NAME(name)	ASM_LINE_SEP
+  	.EXIT						ASM_LINE_SEP	\
+	.PROCEND					ASM_LINE_SEP	\
+.size	C_SYMBOL_NAME(name), .-C_SYMBOL_NAME(name)	ASM_LINE_SEP
 
-/* If compiled for profiling, call `mcount' at the start of each function.  */
-/* No, don't bother.  gcc will put the call in for us.  */
+/* If compiled for profiling, call `mcount' at the start 
+   of each function. No, don't bother.  gcc will put the 
+   call in for us.  */
 #define CALL_MCOUNT		/* Do nothing.  */
 
 /* syscall wrappers consist of
@@ -118,14 +166,16 @@
 */
 
 #define	PSEUDO(name, syscall_name, args)			\
-  ENTRY (name)							\
-  DO_CALL(syscall_name, args)			ASM_LINE_SEP	\
+  ENTRY (name)					ASM_LINE_SEP	\
+  /* If necc. load args from stack */		ASM_LINE_SEP	\
+  DOARGS_##args					ASM_LINE_SEP	\
+  DO_CALL (syscall_name, args)			ASM_LINE_SEP	\
+  UNDOARGS_##args				ASM_LINE_SEP	\
   nop						ASM_LINE_SEP
 
 #define ret \
-	/* Return value set by ERRNO code */	ASM_LINE_SEP	\
-	bv 0(2)					ASM_LINE_SEP	\
-	nop					ASM_LINE_SEP
+  /* Return value set by ERRNO code */		ASM_LINE_SEP	\
+  bv,n 0(2)					ASM_LINE_SEP
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)					\
@@ -133,8 +183,10 @@
 
 /* We don't set the errno on the return from the syscall */
 #define	PSEUDO_NOERRNO(name, syscall_name, args)		\
-  ENTRY (name)							\
-  DO_CALL_NOERRNO(syscall_name, args)		ASM_LINE_SEP	\
+  ENTRY_LEAF (name)				ASM_LINE_SEP	\
+  DOARGS_##args					ASM_LINE_SEP	\
+  DO_CALL_NOERRNO (syscall_name, args)		ASM_LINE_SEP	\
+  UNDOARGS_##args				ASM_LINE_SEP	\
   nop						ASM_LINE_SEP
 
 #define ret_NOERRNO ret
@@ -146,9 +198,11 @@
 /* This has to return the error value */
 #undef  PSEUDO_ERRVAL
 #define PSEUDO_ERRVAL(name, syscall_name, args)			\
-	ENTRY(name)						\
-	DO_CALL_ERRVAL(syscall_name, args)	ASM_LINE_SEP	\
-	nop					ASM_LINE_SEP
+  ENTRY_LEAF (name)				ASM_LINE_SEP	\
+  DOARGS_##args					ASM_LINE_SEP	\
+  DO_CALL_ERRVAL (syscall_name, args)		ASM_LINE_SEP	\
+  UNDOARGS_##args				ASM_LINE_SEP	\
+  nop						ASM_LINE_SEP
 
 #define ret_ERRVAL ret
 
@@ -161,7 +215,8 @@
 #define SYSCALL_PIC_SETUP	/* Nothing.  */
 
 
-/* All the syscall assembly macros rely on finding the approriate
+/* FIXME: This comment is not true.
+ * All the syscall assembly macros rely on finding the approriate
    SYSCALL_ERROR_LABEL or rather HANDLER. */
 
 /* int * __errno_location(void) so you have to store your value
@@ -209,8 +264,8 @@
 	arg 2		gr25
 	arg 3		gr24
 	arg 4		gr23
-	arg 5		-52(gr30)
-	arg 6		-56(gr30)
+	arg 5		-52(sp)
+	arg 6		-56(sp)
 
    gr22 and gr21 are caller-saves, so we can just load the arguments
    there and generally be happy. */
@@ -219,46 +274,48 @@
  * is intended to mimic the if (__sys_res...)
  * code inside INLINE_SYSCALL
  */
+#define NO_ERROR -0x1000
 
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)				\
-	DOARGS_##args				ASM_LINE_SEP	\
-	STW_PIC					ASM_LINE_SEP	\
+  	copy TREG,%r1				ASM_LINE_SEP	\
+	copy %sp,TREG				ASM_LINE_SEP	\
+	/* Create a frame */			ASM_LINE_SEP	\
+	stwm %r1, 64(%sp)			ASM_LINE_SEP	\
+	stw %rp, -20(%sp)			ASM_LINE_SEP	\
+	stw TREG, -4(%sp)			ASM_LINE_SEP	\
+	/* Save r19 */				ASM_LINE_SEP	\
+	SAVE_PIC(TREG)				ASM_LINE_SEP	\
 	/* Do syscall, delay loads # */		ASM_LINE_SEP	\
 	ble  0x100(%sr2,%r0)			ASM_LINE_SEP	\
 	ldi SYS_ify (syscall_name), %r20	ASM_LINE_SEP	\
-	ldi -0x1000,%r1				ASM_LINE_SEP	\
-	cmpb,>>=,n %r1,%ret0,0f			ASM_LINE_SEP	\
-	/* save rp or we get lost */		ASM_LINE_SEP	\
-	stw %rp, -20(%sr0,%sp)			ASM_LINE_SEP	\
-	/* Restore r19 from frame */		ASM_LINE_SEP	\
-	LDW_PIC					ASM_LINE_SEP	\
-	stw %ret0, -24(%sr0,%sp)		ASM_LINE_SEP	\
+	ldi NO_ERROR,%r1			ASM_LINE_SEP	\
+	cmpb,>>=,n %r1,%ret0,L(pre_end)		ASM_LINE_SEP	\
+	/* Restore r19 from TREG */		ASM_LINE_SEP	\
+	LOAD_PIC(TREG) /* delay */		ASM_LINE_SEP	\
 	SYSCALL_ERROR_HANDLER			ASM_LINE_SEP	\
-	/* create frame */			ASM_LINE_SEP	\
-	ldo 64(%sp), %sp			ASM_LINE_SEP	\
-	ldo -64(%sp), %sp			ASM_LINE_SEP	\
+	/* Use TREG for temp storage */		ASM_LINE_SEP	\
+	copy %ret0, TREG /* delay */		ASM_LINE_SEP	\
 	/* OPTIMIZE: Don't reload r19 */	ASM_LINE_SEP	\
 	/* do a -1*syscall_ret0 */		ASM_LINE_SEP	\
-	ldw -24(%sr0,%sp), %r26			ASM_LINE_SEP	\
-	sub %r0, %r26, %r26			ASM_LINE_SEP	\
+	sub %r0, TREG, TREG			ASM_LINE_SEP	\
 	/* Store into errno location */		ASM_LINE_SEP	\
-	stw %r26, 0(%sr0,%ret0)			ASM_LINE_SEP	\
+	stw TREG, 0(%sr0,%ret0)			ASM_LINE_SEP	\
 	/* return -1 as error */		ASM_LINE_SEP	\
 	ldo -1(%r0), %ret0			ASM_LINE_SEP	\
-	ldw -20(%sr0,%sp), %rp			ASM_LINE_SEP	\
-0:						ASM_LINE_SEP	\
-	UNDOARGS_##args				ASM_LINE_SEP
+L(pre_end):					ASM_LINE_SEP	\
+	/* Restore return pointer */		ASM_LINE_SEP	\
+	ldw -84(%sp),%rp			ASM_LINE_SEP	\
+	/* Restore our frame, restoring TREG */	ASM_LINE_SEP	\
+	ldwm -64(%sp), TREG			ASM_LINE_SEP
 
 /* We do nothing with the return, except hand it back to someone else */
 #undef  DO_CALL_NOERRNO
 #define DO_CALL_NOERRNO(syscall_name, args)			\
-	DOARGS_##args                                           \
 	/* No need to store r19 */		ASM_LINE_SEP	\
 	ble  0x100(%sr2,%r0)                    ASM_LINE_SEP    \
 	ldi SYS_ify (syscall_name), %r20        ASM_LINE_SEP    \
-	/* Caller will restore r19 */		ASM_LINE_SEP	\
-	UNDOARGS_##args
+	/* Caller will restore r19 */		ASM_LINE_SEP
 
 /* Here, we return the ERRVAL in assembly, note we don't call the
    error handler function, but we do 'negate' the return _IF_
@@ -266,34 +323,15 @@
 
 #undef	DO_CALL_ERRVAL
 #define DO_CALL_ERRVAL(syscall_name, args)			\
-	DOARGS_##args				ASM_LINE_SEP	\
 	/* No need to store r19 */		ASM_LINE_SEP	\
 	ble  0x100(%sr2,%r0)			ASM_LINE_SEP	\
 	ldi SYS_ify (syscall_name), %r20	ASM_LINE_SEP	\
 	/* Caller will restore r19 */		ASM_LINE_SEP	\
-	ldi -0x1000,%r1				ASM_LINE_SEP	\
+	ldi NO_ERROR,%r1			ASM_LINE_SEP	\
 	cmpb,>>=,n %r1,%ret0,0f			ASM_LINE_SEP	\
 	sub %r0, %ret0, %ret0			ASM_LINE_SEP	\
-0:						ASM_LINE_SEP	\
-	UNDOARGS_##args				ASM_LINE_SEP
+0:						ASM_LINE_SEP
 
-#define DOARGS_0 /* nothing */
-#define DOARGS_1 /* nothing */
-#define DOARGS_2 /* nothing */
-#define DOARGS_3 /* nothing */
-#define DOARGS_4 /* nothing */
-#define DOARGS_5 ldw -52(%r30), %r22		ASM_LINE_SEP
-#define DOARGS_6 ldw -52(%r30), %r22		ASM_LINE_SEP	\
-		 ldw -56(%r30), %r21		ASM_LINE_SEP
-
-
-#define UNDOARGS_0 /* nothing */
-#define UNDOARGS_1 /* nothing */
-#define UNDOARGS_2 /* nothing */
-#define UNDOARGS_3 /* nothing */
-#define UNDOARGS_4 /* nothing */
-#define UNDOARGS_5 /* nothing */
-#define UNDOARGS_6 /* nothing */
 
 #else
 
@@ -305,27 +343,28 @@
    registers r20 -> r26 will conflict with the list so they
    are treated specially. Although r19 is clobbered by the syscall
    we cannot say this because it would violate ABI, thus we say
-   r4 is clobbered and use that register to save/restore r19
+   TREG is clobbered and use that register to save/restore r19
    across the syscall. */
 
-#define CALL_CLOB_REGS	"%r1", "%r2", USING_GR4 \
+#define CALL_CLOB_REGS	"%r1", "%r2", USING_TREG \
 		 	"%r20", "%r29", "%r31"
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)	({			\
+#define INLINE_SYSCALL(name, nr, args...)				\
+({									\
 	long __sys_res;							\
 	{								\
 		register unsigned long __res asm("r28");		\
 		LOAD_ARGS_##nr(args)					\
-		/* FIXME: HACK stw/ldw r19 around syscall */		\
+		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
-			STW_ASM_PIC					\
+			SAVE_ASM_PIC					\
 			"	ble  0x100(%%sr2, %%r0)\n"		\
 			"	ldi %1, %%r20\n"			\
-			LDW_ASM_PIC					\
+			LOAD_ASM_PIC					\
 			: "=r" (__res)					\
 			: "i" (SYS_ify(name)) ASM_ARGS_##nr		\
-			: CALL_CLOB_REGS CLOB_ARGS_##nr			\
+			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
 		);							\
 		__sys_res = (long)__res;				\
 	}								\
@@ -339,13 +378,13 @@
 /* INTERNAL_SYSCALL_DECL - Allows us to setup some function static
    value to use within the context of the syscall
    INTERNAL_SYSCALL_ERROR_P - Returns 0 if it wasn't an error, 1 otherwise
-   You are allowed to use the syscall result (val) and the DECL error variable
-   to determine what went wrong.
+   You are allowed to use the syscall result (val) and the DECL error 
+   variable to determine what went wrong.
    INTERLAL_SYSCALL_ERRNO - Munges the val/err pair into the error number.
    In our case we just flip the sign. */
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+#define INTERNAL_SYSCALL_DECL(err) 
 
 /* Equivalent to  (val < 0)&&(val > -4095) which is what we want */
 #undef INTERNAL_SYSCALL_ERROR_P
@@ -357,46 +396,72 @@
 
 /* Similar to INLINE_SYSCALL but we don't set errno */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) 		\
-({								\
-	long __sys_res;						\
-	{							\
-		register unsigned long __res asm("r28");	\
-		LOAD_ARGS_##nr(args)				\
-		/* FIXME: HACK stw/ldw r19 around syscall */	\
-		asm volatile(					\
-			STW_ASM_PIC				\
-			"	ble  0x100(%%sr2, %%r0)\n"	\
-			"	ldi %1, %%r20\n"		\
-			LDW_ASM_PIC				\
-			: "=r" (__res)				\
-			: "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-			: CALL_CLOB_REGS CLOB_ARGS_##nr		\
-		);						\
-		__sys_res = (long)__res;			\
-	}							\
-	__sys_res;						\
+#define INTERNAL_SYSCALL(name, err, nr, args...) 			\
+({									\
+	long __sys_res;							\
+	{								\
+		register unsigned long __res asm("r28");		\
+		LOAD_ARGS_##nr(args)					\
+		/* FIXME: HACK save/load r19 around syscall */		\
+		asm volatile(						\
+			SAVE_ASM_PIC					\
+			"	ble  0x100(%%sr2, %%r0)\n"		\
+			"	ldi %1, %%r20\n"			\
+			LOAD_ASM_PIC					\
+			: "=r" (__res)					\
+			: "i" (SYS_ify(name)) ASM_ARGS_##nr		\
+			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
+		);							\
+		__sys_res = (long)__res;				\
+	}								\
+	__sys_res;							\
  })
 
+
+/* The _NCS variant allows non-constant syscall numbers.  */
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) 			\
+({									\
+	long __sys_res;							\
+	{								\
+		register unsigned long __res asm("r28");		\
+		LOAD_ARGS_##nr(args)					\
+		/* FIXME: HACK save/load r19 around syscall */		\
+		asm volatile(						\
+			SAVE_ASM_PIC					\
+			"	ble  0x100(%%sr2, %%r0)\n"		\
+			"	copy %1, %%r20\n"			\
+			LOAD_ASM_PIC					\
+			: "=r" (__res)					\
+			: "r" (name) ASM_ARGS_##nr			\
+			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
+		);							\
+		__sys_res = (long)__res;				\
+	}								\
+	__sys_res;							\
+ })
+
+
+
 #define LOAD_ARGS_0()
-#define LOAD_ARGS_1(r26)					\
-	register unsigned long __r26 __asm__("r26") = (unsigned long)(r26);   \
-	LOAD_ARGS_0()
-#define LOAD_ARGS_2(r26,r25)					\
-	register unsigned long __r25 __asm__("r25") = (unsigned long)(r25);   \
-	LOAD_ARGS_1(r26)
-#define LOAD_ARGS_3(r26,r25,r24)				\
-	register unsigned long __r24 __asm__("r24") = (unsigned long)(r24);   \
-	LOAD_ARGS_2(r26,r25)
-#define LOAD_ARGS_4(r26,r25,r24,r23)				\
-	register unsigned long __r23 __asm__("r23") = (unsigned long)(r23);   \
-	LOAD_ARGS_3(r26,r25,r24)
-#define LOAD_ARGS_5(r26,r25,r24,r23,r22)			\
-	register unsigned long __r22 __asm__("r22") = (unsigned long)(r22);   \
-	LOAD_ARGS_4(r26,r25,r24,r23)
-#define LOAD_ARGS_6(r26,r25,r24,r23,r22,r21)			\
-	register unsigned long __r21 __asm__("r21") = (unsigned long)(r21);   \
-	LOAD_ARGS_5(r26,r25,r24,r23,r22)
+#define LOAD_ARGS_1(r26)						\
+  register unsigned long __r26 __asm__("r26") = (unsigned long)(r26);	\
+  LOAD_ARGS_0()
+#define LOAD_ARGS_2(r26,r25)						\
+  register unsigned long __r25 __asm__("r25") = (unsigned long)(r25);	\
+  LOAD_ARGS_1(r26)
+#define LOAD_ARGS_3(r26,r25,r24)					\
+  register unsigned long __r24 __asm__("r24") = (unsigned long)(r24);	\
+  LOAD_ARGS_2(r26,r25)
+#define LOAD_ARGS_4(r26,r25,r24,r23)					\
+  register unsigned long __r23 __asm__("r23") = (unsigned long)(r23);	\
+  LOAD_ARGS_3(r26,r25,r24)
+#define LOAD_ARGS_5(r26,r25,r24,r23,r22)				\
+  register unsigned long __r22 __asm__("r22") = (unsigned long)(r22);	\
+  LOAD_ARGS_4(r26,r25,r24,r23)
+#define LOAD_ARGS_6(r26,r25,r24,r23,r22,r21)				\
+  register unsigned long __r21 __asm__("r21") = (unsigned long)(r21);	\
+  LOAD_ARGS_5(r26,r25,r24,r23,r22)
 
 /* Even with zero args we use r20 for the syscall number */
 #define ASM_ARGS_0

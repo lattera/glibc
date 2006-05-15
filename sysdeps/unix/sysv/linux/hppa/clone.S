@@ -26,35 +26,62 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg) */
+/* Non-thread code calls __clone with the following parameters:
+   int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg)
+   
+   NPTL Code will call __clone with the following parameters:
+   int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+	     int *parent_tidptr, struct user_desc *newtls, int *child_pidptr)
+	
+   The code should not mangle the extra input registers.
+   Syscall expects:				Input to __clone:
+	4(r25) - function pointer 		(r26, arg0) 
+	0(r25) - argument			(r23, arg3)
+	r26 - clone flags.			(r24, arg2)
+	r25+64 - user stack pointer.		(r25, arg1)
+	r24 - parent tid pointer.		(stack - 52)
+	r23 - struct user_desc newtls pointer.	(stack - 56)
+	r22 - child tid pointer.		(stack - 60)
+	r20 - clone syscall number		(constant)
+ */
 
         .text
 ENTRY(__clone)
-	/* FIXME: I have no idea how profiling works on hppa. */
 
 	/* Sanity check arguments.  */
-	comib,=  0,%arg0,.Lerror        /* no NULL function pointers */
 	ldi     -EINVAL,%ret0
-	comib,=  0,%arg1,.Lerror        /* no NULL stack pointers */
-	nop
+	comib,=,n  0,%arg0,.Lerror        /* no NULL function pointers */
+	comib,=,n  0,%arg1,.Lerror        /* no NULL stack pointers */
 
 	/* Save the fn ptr and arg on the new stack.  */
-	stwm    %arg0,64(%arg1)
-	stw	%arg3,-60(%arg1)
+	stwm    %r26,64(%r25)
+	stw	%r23,-60(%r25)
+	/* Clone arguments are (int flags, void * child_stack) */
+	copy	%r24,%r26	/* flags are first */
+	/* User stack pointer is in the correct register already */
+
+	/* Load args from stack... */
+	ldw	-52(%sp), %r24	/* Load parent_tidptr */
+	ldw	-56(%sp), %r23 	/* Load newtls */
+	ldw	-60(%sp), %r22	/* Load child_tidptr */
+
+	/* Create frame to get r3 free */
+	copy	%sp, %r21
+	stwm	%r3, 64(%sp)
+	stw	%r21, -4(%sp)
 
 	/* Save the PIC register. */
 #ifdef PIC
-	stw	%r19,-32(%sr0, %sp)	/* parent */
+	copy	%r19, %r3		/* parent */
 #endif
 
 	/* Do the system call */
-	copy	%arg2,%arg0
 	ble     0x100(%sr2,%r0)
 	ldi	__NR_clone,%r20
 
 	ldi	-4096,%r1
 	comclr,>>= %r1,%ret0,%r0	/* Note: unsigned compare. */
-	b,n	.Lerror
+	b,n	.LerrorRest
 
 	comib,=,n 0,%ret0,thread_start
 
@@ -63,18 +90,25 @@ ENTRY(__clone)
 	   since we return immediately. */
 
 	bv	%r0(%rp)
-	nop
+	ldwm	-64(%sp), %r3
+
+.LerrorRest
+	/* Restore the PIC register on error */
+#ifdef PIC
+	copy	%r3, %r19		/* parent */ 
+#endif
 
 	/* Something bad happened -- no child created */
 .Lerror:
 
-	/* Restore the PIC register on error */
-#ifdef PIC
-	ldw	-32(%sr0, %sp), %r19	/* parent */
-#endif
-
+	/* Set errno, save ret0 so we return with that value. */
+	copy	%ret0, %r3
 	b	__syscall_error
 	sub     %r0,%ret0,%arg0
+	copy	%r3, %ret0
+	/* Return after setting errno, and restoring ret0 */
+	bv	%r0(%rp)
+	ldwm	-64(%sp), %r3
 
 thread_start:
 
@@ -92,7 +126,7 @@ thread_start:
 	copy	%ret0,%arg0
 
 	/* Die horribly.  */
-	iitlbp	%r0,(%r0)
+	iitlbp	%r0,(%sr0,%r0)
 
 PSEUDO_END(__clone)
 
