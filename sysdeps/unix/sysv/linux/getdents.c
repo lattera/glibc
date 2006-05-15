@@ -39,9 +39,9 @@
 # ifndef __ASSUME_GETDENTS64_SYSCALL
 #  ifndef __GETDENTS
 /* The variable is shared between all *getdents* calls.  */
-int __have_no_getdents64;
+int __have_no_getdents64 attribute_hidden;
 #  else
-extern int __have_no_getdents64;
+extern int __have_no_getdents64 attribute_hidden;
 #  endif
 #  define have_no_getdents64_defined 1
 # endif

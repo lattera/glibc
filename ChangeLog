@@ -1,5 +1,17 @@
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/rpc/key_prot.h: Maek all _internal functions as hidden.
+
+	* include/rpc/auth.h: Mark xdr_des_block_internal and
+	xdr_opaque_auth_internal as hidden.
+
+	* sysdeps/unix/sysv/linux/getdents.c: Mark __have_no_getdents64 as
+	hidden.
+
+	* include/rpc/xdr.h: Make all _internal functions as hidden.
+
+	* sunrpc/pmap_rmt.c: Declare xdr_rmtcall_args_internal as hidden.
+
 	* misc/getusershell.c (okshells): Don't use static initializers,
 	do it dynamically.
 
