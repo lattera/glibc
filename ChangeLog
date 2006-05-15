@@ -1,3 +1,17 @@
+2006-05-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/res_debug.c (loc_ntoa): Make error const.
+
+2006-05-14  Andreas Schwab  <schwab@suse.de>
+
+	* math/complex.h [__LDBL_COMPAT]: Use __REDIRECT_NTH.
+
+2006-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c: Include sys/param.h.
+	(__sched_getaffinity_new): Don't crash if cpusetsize is smaller than
+	sizeof (cpu_set_t).
+
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_debug.c (loc_ntoa): Define error as array, not pointer.

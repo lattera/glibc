@@ -89,7 +89,7 @@ __BEGIN_DECLS
 # ifdef __LDBL_COMPAT
 #  undef __MATHDECL_1
 #  define __MATHDECL_1(type, function, args) \
-  extern type __REDIRECT(__MATH_PRECNAME(function), args, function) __THROW
+  extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
 # endif
 
 # ifndef _Mlong_double_
