@@ -62,10 +62,6 @@ extern u_long _create_xid (void);
 
 static const struct timeval timeout = {3, 0};
 
-bool_t xdr_rmtcall_args_internal (XDR *xdrs, struct rmtcallargs *cap)
-  attribute_hidden;
-
-
 /*
  * pmapper remote-call-service interface.
  * This routine is used to call the pmapper remote call service

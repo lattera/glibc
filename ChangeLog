@@ -1,5 +1,19 @@
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/rpc/pmap_prot.h: Mark all functions as hidden.
+
+	* nscd/nscd_initgroups.c: Mark __gr_map_handle as hidden.
+	* nscd/nscd_getgr_r.c: Likewise.
+
+	* include/rpc/pmap_rmt.h: Mark all functions as hidden.
+
+	* nscd/nscd_getai.c (__hst_map_handle): Mark as hidden.
+	* nscd/nscd_gethst_r.c (__hst_map_handle): Likewise.
+
+	* stdlib/longlong.h (__clz_tab): Mark as hidden.
+
+	* iconv/gconv_int.h: Mark __gconv_lock as hidden.
+
 	* include/rpc/key_prot.h: Maek all _internal functions as hidden.
 
 	* include/rpc/auth.h: Mark xdr_des_block_internal and
@@ -9,8 +23,6 @@
 	hidden.
 
 	* include/rpc/xdr.h: Make all _internal functions as hidden.
-
-	* sunrpc/pmap_rmt.c: Declare xdr_rmtcall_args_internal as hidden.
 
 	* misc/getusershell.c (okshells): Don't use static initializers,
 	do it dynamically.

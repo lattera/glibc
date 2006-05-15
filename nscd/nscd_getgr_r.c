@@ -1,5 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004, 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1998-2000, 2002-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -67,7 +66,7 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 }
 
 
-libc_locked_map_ptr (,__gr_map_handle);
+libc_locked_map_ptr (,__gr_map_handle) attribute_hidden;
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */

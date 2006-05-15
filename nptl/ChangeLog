@@ -1,3 +1,7 @@
+2006-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.h: Makr __fork_handlers as hidden.
+
 2006-05-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_key_create.c (__pthread_key_create): Do away with

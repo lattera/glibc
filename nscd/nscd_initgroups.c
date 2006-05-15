@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -30,7 +30,7 @@
 
 
 /* We use the same mapping as in nscd_getgr.   */
-libc_locked_map_ptr (extern, __gr_map_handle);
+libc_locked_map_ptr (extern, __gr_map_handle) attribute_hidden;
 
 
 int
