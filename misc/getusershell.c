@@ -46,7 +46,15 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
  * /etc/shells.
  */
 
+/* NB: we do not initialize okshells here.  The initialization needs
+   relocations.  These interfaces are used so rarely that this is not
+   justified.  Instead explicitly initialize the array when it is
+   used.  */
+#if 0
 static const char *const okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
+#else
+static const char *okshells[3];
+#endif
 static char **curshell, **shells, *strings;
 static char **initshells (void) __THROW;
 
@@ -97,21 +105,22 @@ initshells()
 	free(strings);
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "rc")) == NULL)
-		return (char **) okshells;
+		goto init_okshells_noclose;
 	if (fstat64(fileno(fp), &statb) == -1) {
+	init_okshells:
 		(void)fclose(fp);
+	init_okshells_noclose:
+		okshells[0] = _PATH_BSHELL;
+		okshells[1] = _PATH_CSHELL;
 		return (char **) okshells;
 	}
-	if ((strings = malloc((u_int)statb.st_size + 1)) == NULL) {
-		(void)fclose(fp);
-		return (char **) okshells;
-	}
+	if ((strings = malloc((u_int)statb.st_size + 1)) == NULL)
+		goto init_okshells;
 	shells = calloc((unsigned)statb.st_size / 3, sizeof (char *));
 	if (shells == NULL) {
-		(void)fclose(fp);
 		free(strings);
 		strings = NULL;
-		return (char **) okshells;
+		goto init_okshells;
 	}
 	sp = shells;
 	cp = strings;

@@ -1,5 +1,8 @@
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/getusershell.c (okshells): Don't use static initializers,
+	do it dynamically.
+
 	* stdlib/fmtmsg.c (keywords): Change type of len element to
 	uint32_t to not waste space on 64bit machines.
 
