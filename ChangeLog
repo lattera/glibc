@@ -1,5 +1,14 @@
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/setlocale.c: Change _nl_category_names into a string.
+	Add new _nl_category_name_idxs.  Change all users.
+	* locale/localeinfo.h: Adjust declaration of _nl_category_names.
+	Declare _nl_category_name_idxs.
+	* locale/findlocale.c: Adjust for _nl_category_names change.
+	* locale/loadlocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+
 	* iconv/gconv_conf.c (add_alias): Move actual alias handling to...
 	(add_alias2): ...here.  New function.
 	(__gconv_read_conf): Simplify builtin alias handling.

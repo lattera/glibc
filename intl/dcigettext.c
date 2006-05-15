@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -286,7 +286,8 @@ static const char *guess_category_value PARAMS ((int category,
      internal_function;
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
-# define category_to_name(category)	_nl_category_names[category]
+# define category_to_name(category) \
+  _nl_category_names.str + _nl_category_name_idxs[category]
 #else
 static const char *category_to_name PARAMS ((int category)) internal_function;
 #endif

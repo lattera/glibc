@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004, 2005
+   Copyright (C) 1996, 1997, 1999, 2000-2002, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -133,7 +133,8 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	  for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	    if (cnt != LC_ALL
 		&& (size_t) (cp - np) == _nl_category_name_sizes[cnt]
-		&& memcmp (np, _nl_category_names[cnt], cp - np) == 0)
+		&& memcmp (np, (_nl_category_names.str
+				+ _nl_category_name_idxs[cnt]), cp - np) == 0)
 	      break;
 
 	  if (cnt == __LC_LAST)

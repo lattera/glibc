@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995-2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -172,8 +172,22 @@ enum
 #define _ISCTYPE(c, desc) \
   (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
 
-extern const char *const _nl_category_names[__LC_LAST] attribute_hidden;
-extern const size_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
+/* Category name handling variables.  */
+#define CATNAMEMF(line) CATNAMEMF1 (line)
+#define CATNAMEMF1(line) str##line
+extern const union catnamestr_t
+{
+  struct
+  {
+#define DEFINE_CATEGORY(category, category_name, items, a) \
+    char CATNAMEMF (__LINE__)[sizeof (category_name)];
+#include "categories.def"
+#undef DEFINE_CATEGORY
+  };
+  char str[0];
+} _nl_category_names attribute_hidden;
+const uint8_t _nl_category_name_idxs[__LC_LAST] attribute_hidden;
+extern const uint8_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
 
 /* Name of the standard locales.  */
 extern const char _nl_C_name[] attribute_hidden;

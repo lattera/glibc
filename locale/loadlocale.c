@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -198,7 +198,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 			      + 5 + _nl_category_name_sizes[category] + 1);
       __mempcpy (__mempcpy (__mempcpy (newp, file->filename, filenamelen),
 			    "/SYS_", 5),
-		 _nl_category_names[category],
+		 _nl_category_names.str + _nl_category_name_idxs[category],
 		 _nl_category_name_sizes[category] + 1);
 
       fd = open_not_cancel_2 (newp, O_RDONLY);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -80,7 +80,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	 variables.  */
       *name = getenv ("LC_ALL");
       if (*name == NULL || (*name)[0] == '\0')
-	*name = getenv (_nl_category_names[category]);
+	*name = getenv (_nl_category_names.str
+			+ _nl_category_name_idxs[category]);
       if (*name == NULL || (*name)[0] == '\0')
 	*name = getenv ("LANG");
     }
@@ -145,7 +146,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 				    locale_path, locale_path_len, mask,
 				    language, territory, codeset,
 				    normalized_codeset, modifier,
-				    _nl_category_names[category], 0);
+				    _nl_category_names.str
+				    + _nl_category_name_idxs[category], 0);
 
   if (locale_file == NULL)
     {
@@ -155,7 +157,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 					locale_path, locale_path_len, mask,
 					language, territory, codeset,
 					normalized_codeset, modifier,
-					_nl_category_names[category], 1);
+					_nl_category_names.str
+					+ _nl_category_name_idxs[category], 1);
       if (locale_file == NULL)
 	/* This means we are out of core.  */
 	return NULL;
