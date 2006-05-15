@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997-2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -78,11 +78,11 @@ static struct gconv_module builtin_modules[] =
 #undef BUILTIN_ALIAS
 };
 
-static const char *const builtin_aliases[] =
+static const char builtin_aliases[] =
 {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT)
-#define BUILTIN_ALIAS(From, To) From " " To,
+#define BUILTIN_ALIAS(From, To) From "\0" To "\0"
 
 #include "gconv_builtin.h"
 
@@ -124,13 +124,41 @@ detect_conflict (const char *alias)
 }
 
 
+/* The actual code to add aliases.  */
+static void
+add_alias2 (const char *from, const char *to, const char *wp, void *modules)
+{
+  /* Test whether this alias conflicts with any available module.  */
+  if (detect_conflict (from))
+    /* It does conflict, don't add the alias.  */
+    return;
+
+  struct gconv_alias *new_alias = (struct gconv_alias *)
+    malloc (sizeof (struct gconv_alias) + (wp - from));
+  if (new_alias != NULL)
+    {
+      void **inserted;
+
+      new_alias->fromname = memcpy ((char *) new_alias
+				    + sizeof (struct gconv_alias),
+				    from, wp - from);
+      new_alias->toname = new_alias->fromname + (to - from);
+
+      inserted = (void **) __tsearch (new_alias, &__gconv_alias_db,
+				      __gconv_alias_compare);
+      if (inserted == NULL || *inserted != new_alias)
+	/* Something went wrong, free this entry.  */
+	free (new_alias);
+    }
+}
+
+
 /* Add new alias.  */
 static void
 add_alias (char *rp, void *modules)
 {
   /* We now expect two more string.  The strings are normalized
      (converted to UPPER case) and strored in the alias database.  */
-  struct gconv_alias *new_alias;
   char *from, *to, *wp;
 
   while (__isspace_l (*rp, _nl_C_locobj_ptr))
@@ -152,28 +180,7 @@ add_alias (char *rp, void *modules)
     return;
   *wp++ = '\0';
 
-  /* Test whether this alias conflicts with any available module.  */
-  if (detect_conflict (from))
-    /* It does conflict, don't add the alias.  */
-    return;
-
-  new_alias = (struct gconv_alias *)
-    malloc (sizeof (struct gconv_alias) + (wp - from));
-  if (new_alias != NULL)
-    {
-      void **inserted;
-
-      new_alias->fromname = memcpy ((char *) new_alias
-				    + sizeof (struct gconv_alias),
-				    from, wp - from);
-      new_alias->toname = new_alias->fromname + (to - from);
-
-      inserted = (void **) __tsearch (new_alias, &__gconv_alias_db,
-				      __gconv_alias_compare);
-      if (inserted == NULL || *inserted != new_alias)
-	/* Something went wrong, free this entry.  */
-	free (new_alias);
-    }
+  add_alias2 (from, to, wp, modules);
 }
 
 
@@ -588,12 +595,16 @@ __gconv_read_conf (void)
     }
 
   /* Add aliases for builtin conversions.  */
-  cnt = sizeof (builtin_aliases) / sizeof (builtin_aliases[0]);
-  while (cnt > 0)
+  const char *cp = builtin_aliases;
+  do
     {
-      char *copy = strdupa (builtin_aliases[--cnt]);
-      add_alias (copy, modules);
+      const char *from = cp;
+      const char *to = __rawmemchr (from, '\0') + 1;
+      cp = __rawmemchr (to, '\0') + 1;
+
+      add_alias2 (from, to, cp, modules);
     }
+  while (*cp != '\0');
 
   /* Restore the error number.  */
   __set_errno (save_errno);
