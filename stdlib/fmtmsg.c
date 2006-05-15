@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2000-2003,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000-2003,2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -44,7 +44,7 @@ enum
 
 static const struct
 {
-  size_t len;
+  uint32_t len;
   /* Adjust the size if new elements are added.  */
   const char name[12];
 } keywords[] =

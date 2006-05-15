@@ -1,5 +1,8 @@
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/fmtmsg.c (keywords): Change type of len element to
+	uint32_t to not waste space on 64bit machines.
+
 	* locale/setlocale.c: Change _nl_category_names into a string.
 	Add new _nl_category_name_idxs.  Change all users.
 	* locale/localeinfo.h: Adjust declaration of _nl_category_names.
