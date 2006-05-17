@@ -1,3 +1,8 @@
+2006-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Define IN_CLOSE, IN_MOVE,
+	IN_ONLYDIR, IN_DONT_FOLLOW, and IN_MASK_ADD.
+
 2006-05-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/key_call.c (getkeyserv_handle): Call auth_destroy if

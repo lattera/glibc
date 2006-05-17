@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,16 @@ struct inotify_event
 #define IN_Q_OVERFLOW	 0x00004000	/* Event queued overflowed.  */
 #define IN_IGNORED	 0x00008000	/* File was ignored.  */
 
+/* Helper events.  */
+#define IN_CLOSE	 (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)	/* Close.  */
+#define IN_MOVE		 (IN_MOVED_FROM | IN_MOVED_TO)		/* Moves.  */
+
 /* Special flags.  */
+#define IN_ONLYDIR	 0x01000000	/* Only watch the path if it is a
+					   directory.  */
+#define IN_DONT_FOLLOW	 0x02000000	/* Do not follow a sym link.  */
+#define IN_MASK_ADD	 0x20000000	/* Add to the mask of an already
+					   existing watch.  */
 #define IN_ISDIR	 0x40000000	/* Event occurred against dir.  */
 #define IN_ONESHOT	 0x80000000	/* Only send event once.  */
 
