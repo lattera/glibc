@@ -1,3 +1,8 @@
+2006-05-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/key_call.c (getkeyserv_handle): Call auth_destroy if
+	pid changed.
+
 2006-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/rpc/pmap_prot.h: Mark all functions as hidden.
@@ -14,7 +19,7 @@
 
 	* iconv/gconv_int.h: Mark __gconv_lock as hidden.
 
-	* include/rpc/key_prot.h: Maek all _internal functions as hidden.
+	* include/rpc/key_prot.h: Mark all _internal functions as hidden.
 
 	* include/rpc/auth.h: Mark xdr_des_block_internal and
 	xdr_opaque_auth_internal as hidden.
@@ -22,7 +27,7 @@
 	* sysdeps/unix/sysv/linux/getdents.c: Mark __have_no_getdents64 as
 	hidden.
 
-	* include/rpc/xdr.h: Make all _internal functions as hidden.
+	* include/rpc/xdr.h: Mark all _internal functions as hidden.
 
 	* misc/getusershell.c (okshells): Don't use static initializers,
 	do it dynamically.

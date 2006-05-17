@@ -400,6 +400,7 @@ getkeyserv_handle (int vers)
   /* if pid has changed, destroy client and rebuild */
   if (kcp->client != NULL && kcp->pid != __getpid ())
     {
+      auth_destroy (kcp->client->cl_auth);
       clnt_destroy (kcp->client);
       kcp->client = NULL;
     }
