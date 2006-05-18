@@ -1,5 +1,10 @@
 2006-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_call.c (rec_dirsearch): Handle __nis_finddirectory and
+	rec_dirsearch returning NULL.
+	(first_shoot): Handle __nis_finddirectory returning NULL.
+	(__nisfind_server): Fix leak when rec_dirsearch returns NULL.
+
 	* sysdeps/unix/sysv/linux/sys/inotify.h: Define IN_CLOSE, IN_MOVE,
 	IN_ONLYDIR, IN_DONT_FOLLOW, and IN_MASK_ADD.
 
