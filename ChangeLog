@@ -1,3 +1,19 @@
+2006-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_compat/compat-pwd.c (internal_setpwent): If nss_set*ent
+	returned NSS_STATUS_UNAVAIL, still return NSS_STATUS_SUCCESS.
+	* nis/nss_compat/compat-spwd.c (internal_setspent): Likewise.
+	* nis/nss_compat/compat-grp.c (internal_setgrent): Likewise.
+
+	* nis/nss_compat/compat-initgroups.c (nss_setgrent, nss_endgrent):
+	Removed.
+	(init_nss_interface): Remove initialization of these variables.
+
+2006-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (rec_dirsearch): Little optimization: pull
+	nis_free_directory forward to avoid duplication.
+
 2006-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (rec_dirsearch): Handle __nis_finddirectory and

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001-2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -138,7 +138,11 @@ internal_setgrent (ent_t *ent, int stayopen)
     rewind (ent->stream);
 
   if (status == NSS_STATUS_SUCCESS && nss_setgrent)
-    return nss_setgrent (stayopen);
+    {
+      status = nss_setgrent (stayopen);
+      if (status == NSS_STATUS_UNAVAIL)
+        status = NSS_STATUS_SUCCESS;
+    }
 
   return status;
 }

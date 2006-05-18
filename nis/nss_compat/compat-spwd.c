@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001-2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -212,7 +212,11 @@ internal_setspent (ent_t *ent, int stayopen)
   give_spwd_free (&ent->pwd);
 
   if (status == NSS_STATUS_SUCCESS && nss_setspent)
-    return nss_setspent (stayopen);
+    {
+      status = nss_setspent (stayopen);
+      if (status == NSS_STATUS_UNAVAIL)
+        status = NSS_STATUS_SUCCESS;
+    }
 
   return status;
 }

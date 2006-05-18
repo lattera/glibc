@@ -370,6 +370,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	fd_res = __nis_finddirectory (dir, ndomain);
 	if (fd_res == NULL)
 	  {
+	    nis_free_directory (dir);
 	    *status = NIS_NOMEMORY;
 	    return NULL;
 	  }
@@ -380,31 +381,25 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    __free_fdresult (fd_res);
 	    return dir;
 	  }
+	nis_free_directory (dir);
 	obj = calloc (1, sizeof (directory_obj));
+	if (obj == NULL)
+	  {
+	    __free_fdresult (fd_res);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
+	  }
 	xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
 		       fd_res->dir_data.dir_data_len, XDR_DECODE);
 	_xdr_directory_obj (&xdrs, obj);
 	xdr_destroy (&xdrs);
 	__free_fdresult (fd_res);
-	if (obj != NULL)
-	  {
-	    /* We have found a NIS+ server serving ndomain, now
-	       let us search for "name" */
-	    nis_free_directory (dir);
-	    dir = rec_dirsearch (name, obj, status);
-	    if (dir != obj)
-	      /* This also covers the case dir == NULL.  */
-	      nis_free_directory (obj);
-	    return dir;
-	  }
-	else
-	  {
-	    /* Ups, very bad. Are we already the root server ? */
-	    nis_free_directory (dir);
-	    return NULL;
-	  }
+
+	/* We have found a NIS+ server serving ndomain, now
+	   let us search for "name" */
+	return rec_dirsearch (name, obj, status);
       }
-    break;
+      break;
     case LOWER_NAME:
       {
 	directory_obj *obj;
@@ -444,6 +439,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	fd_res = __nis_finddirectory (dir, leaf);
 	if (fd_res == NULL)
 	  {
+	    nis_free_directory (dir);
 	    *status = NIS_NOMEMORY;
 	    return NULL;
 	  }
@@ -454,21 +450,24 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    __free_fdresult (fd_res);
 	    return dir;
 	  }
-	obj = calloc(1, sizeof(directory_obj));
-	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
-		      fd_res->dir_data.dir_data_len, XDR_DECODE);
-	_xdr_directory_obj(&xdrs, obj);
-	xdr_destroy(&xdrs);
-	__free_fdresult (fd_res);
-	if (obj != NULL)
+	nis_free_directory (dir);
+	obj = calloc (1, sizeof(directory_obj));
+	if (obj == NULL)
 	  {
-	    /* We have found a NIS+ server serving ndomain, now
-	       let us search for "name" */
-	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, status);
+	    __free_fdresult (fd_res);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
 	  }
+	xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
+		       fd_res->dir_data.dir_data_len, XDR_DECODE);
+	_xdr_directory_obj (&xdrs, obj);
+	xdr_destroy (&xdrs);
+	__free_fdresult (fd_res);
+	/* We have found a NIS+ server serving ndomain, now
+	   let us search for "name" */
+	return rec_dirsearch (name, obj, status);
       }
-    break;
+      break;
     case BAD_NAME:
       nis_free_directory (dir);
       *status = NIS_BADNAME;
@@ -547,9 +546,6 @@ __nisfind_server (const_nis_name name, directory_obj **dir)
 	  obj = rec_dirsearch (name, *dir, &status);
 	  if (obj == NULL)
 	    result = status;
-
-	  if (*dir != obj)
-	    nis_free_directory (*dir);
 	}
 
       *dir = obj;
