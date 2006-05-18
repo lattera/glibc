@@ -1,3 +1,11 @@
+2006-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Use asprinf instead
+	of snprintf+strdup.  Handle OOM.
+	* nis/nis_callback.c (__nis_create_callback): Allocate cb and
+	cb->serv together.  Remove now obsolete free calls.
+	(__nis_destroy_callback): Remove now obsolete free call.
+
 2006-05-18  David Woodhouse  <dwmw2@infradead.org>
 
 	* sysdeps/posix/getaddrinfo.c: Add unique labels to the default
