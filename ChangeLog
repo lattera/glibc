@@ -1,3 +1,11 @@
+2006-05-18  David Woodhouse  <dwmw2@infradead.org>
+
+	* sysdeps/posix/getaddrinfo.c: Add unique labels to the default
+	RFC3484 precedence table for fec0::/10 and fc00::/7 (site-local
+	and ULA respectively). Set precedence for IPv4 address to 10 as
+	defined in RFC3484 for preferring IPv6.
+	* posix/gai.conf: Update to match the new default tables.
+
 2006-05-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nss_compat/compat-pwd.c (internal_setpwent): If nss_set*ent
