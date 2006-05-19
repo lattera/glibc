@@ -276,6 +276,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   struct sockaddr_in sin;
   socklen_t len = sizeof (struct sockaddr_in);
   unsigned short port;
+  int nomsg = 0;
 
   cb = (struct nis_cb *) calloc (1,
 				 sizeof (struct nis_cb) + sizeof (nis_server));
@@ -324,8 +325,14 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   cb->serv->ep.ep_val[0].proto = strdup ((flags & USE_DGRAM) ? "udp" : "tcp");
   if (__builtin_expect (cb->serv->ep.ep_val[0].proto == NULL, 0))
     goto failed;
-  cb->xprt = (flags & USE_DGRAM) ? svcudp_bufcreate (sock, 100, 8192) :
-				   svctcp_create (sock, 100, 8192);
+  cb->xprt = ((flags & USE_DGRAM)
+	      ? svcudp_bufcreate (sock, 100, 8192)
+	      : svctcp_create (sock, 100, 8192));
+  if (cb->xprt == NULL)
+    {
+      nomsg = 1;
+      goto failed;
+    }
   cb->sock = cb->xprt->xp_sock;
   if (!svc_register (cb->xprt, CB_PROG, CB_VERS, cb_prog_1, 0))
     {
@@ -359,11 +366,14 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
  failed:
   if (cb)
     {
+      if (cb->xprt)
+	svc_destroy (cb->xprt);
       if (cb->serv)
 	xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
       free (cb);
     }
-  syslog (LOG_ERR, "NIS+: out of memory allocating callback");
+  if (!nomsg)
+    syslog (LOG_ERR, "NIS+: out of memory allocating callback");
   return NULL;
 }
 

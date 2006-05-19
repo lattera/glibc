@@ -1,5 +1,9 @@
 2006-05-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_callback.c (__nis_create_callback): Calls to
+	svcudp_bufcreate and svctcp_create can fail.  Free ->xprt if
+	asprintf call fails.
+
 	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_sendreq): Make sure
 	no uninitialized memory is passed to sendto.
 
