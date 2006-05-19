@@ -1,5 +1,13 @@
 2006-05-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusage.sh (memusageso): Add quotes.
+	(memusagestat): Likewise.
+	* debug/xtrace.sh (pcprofileso): Likewise.
+	(pcprofiledump): Likewise.
+	* debug/Makefile ($(objpfx)xtrace): Use $LIB in SLIBDIR
+	replacement.
+	* malloc/Makefile ($(objpfx)memusage): Likewise.
+
 	* nis/nis_callback.c (__nis_create_callback): Calls to
 	svcudp_bufcreate and svctcp_create can fail.  Free ->xprt if
 	asprintf call fails.

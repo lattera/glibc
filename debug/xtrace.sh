@@ -18,8 +18,8 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-pcprofileso=@SLIBDIR@/libpcprofile.so
-pcprofiledump=@BINDIR@/pcprofiledump
+pcprofileso='@SLIBDIR@/libpcprofile.so'
+pcprofiledump='@BINDIR@/pcprofiledump'
 TEXTDOMAIN=libc
 
 # Print usage message.

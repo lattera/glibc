@@ -18,8 +18,8 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-memusageso=@SLIBDIR@/libmemusage.so
-memusagestat=@BINDIR@/memusagestat
+memusageso='@SLIBDIR@/libmemusage.so'
+memusagestat='@BINDIR@/memusagestat'
 TEXTDOMAIN=libc
 
 # Print usage message.

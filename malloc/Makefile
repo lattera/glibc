@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003, 2005
+# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003, 2005, 2006
 # Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -79,6 +79,7 @@ endif
 ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
+others: $(objpfx)memusage
 install-bin = memusagestat
 install-bin-script += memusage
 generated += memusagestat memusage
@@ -126,6 +127,8 @@ tst-mcheck-ENV = MALLOC_CHECK_=3
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
+sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
+
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
 	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
@@ -135,7 +138,7 @@ $(objpfx)mtrace: mtrace.pl
 $(objpfx)memusage: memusage.sh
 	rm -f $@.new
 	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
-	    -e 's|@SLIBDIR@|$(slibdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	    -e 's|@SLIBDIR@|$(sLIBdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 

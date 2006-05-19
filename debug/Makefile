@@ -1,4 +1,4 @@
-# Copyright (C) 1998,1999,2000,2001,2004,2005 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -107,6 +107,8 @@ generated = catchsegv xtrace
 
 include ../Rules
 
+sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
+
 $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 		    $(common-objpfx)config.make
 	slibpfx=`echo $(slibdir)|sed 's/lib\(64\|\)$$/\\\\\\\\$$LIB/'`; \
@@ -119,7 +121,7 @@ $(objpfx)pcprofiledump: $(objpfx)pcprofiledump.o
 $(objpfx)xtrace: xtrace.sh
 	rm -f $@.new
 	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
-	    -e 's|@SLIBDIR@|$(slibdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	    -e 's|@SLIBDIR@|$(sLIBdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
