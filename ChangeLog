@@ -1,3 +1,8 @@
+2006-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_sendreq): Make sure
+	no uninitialized memory is passed to sendto.
+
 2006-05-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_callback.c (__nis_create_callback): Use asprinf instead

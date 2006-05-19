@@ -89,10 +89,11 @@ __netlink_free_handle (struct netlink_handle *h)
 static int
 __netlink_sendreq (struct netlink_handle *h, int type)
 {
-  struct
+  struct req
   {
     struct nlmsghdr nlh;
     struct rtgenmsg g;
+    char pad[0];
   } req;
   struct sockaddr_nl nladdr;
 
@@ -105,6 +106,8 @@ __netlink_sendreq (struct netlink_handle *h, int type)
   req.nlh.nlmsg_pid = 0;
   req.nlh.nlmsg_seq = h->seq;
   req.g.rtgen_family = AF_UNSPEC;
+  if (sizeof (req) != offsetof (struct req, pad))
+    memset (req.pad, '\0', sizeof (req) - offsetof (struct req, pad));
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
