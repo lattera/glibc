@@ -1,5 +1,9 @@
 2006-05-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_callback.c (internal_nis_do_callback): Don't use malloc
+	to allocate memory for my_pollfd.  Better initialization of
+	cb_is_running.  Use TEMP_FAILURE_RETRY.
+
 	* malloc/memusage.sh (memusageso): Add quotes.
 	(memusagestat): Likewise.
 	* debug/xtrace.sh (pcprofileso): Likewise.

@@ -197,21 +197,17 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 			  struct nis_cb *cb)
 {
   struct timeval TIMEOUT = {25, 0};
-  bool_t cb_is_running = FALSE;
+  bool_t cb_is_running;
 
   data = cb;
 
   for (;;)
     {
-      struct pollfd *my_pollfd;
+      struct pollfd my_pollfd[svc_max_pollfd];
       int i;
 
       if (svc_max_pollfd == 0 && svc_pollfd == NULL)
         return NIS_CBERROR;
-
-      my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
-      if (__builtin_expect (my_pollfd == NULL, 0))
-	return NIS_NOMEMORY;
 
       for (i = 0; i < svc_max_pollfd; ++i)
         {
@@ -220,20 +216,17 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
           my_pollfd[i].revents = 0;
         }
 
-      switch (i = __poll (my_pollfd, svc_max_pollfd, 25*1000))
+      switch (i = TEMP_FAILURE_RETRY (__poll (my_pollfd, svc_max_pollfd,
+					      25*1000)))
         {
 	case -1:
-	  free (my_pollfd);
-	  if (errno == EINTR)
-	    continue;
 	  return NIS_CBERROR;
 	case 0:
-	  free (my_pollfd);
 	  /* See if callback 'thread' in the server is still alive. */
-	  memset ((char *) &cb_is_running, 0, sizeof (cb_is_running));
+	  cb_is_running = FALSE;
 	  if (clnt_call (bptr->clnt, NIS_CALLBACK, (xdrproc_t) xdr_netobj,
 			 (caddr_t) cookie, (xdrproc_t) xdr_bool,
-			 (caddr_t) & cb_is_running, TIMEOUT) != RPC_SUCCESS)
+			 (caddr_t) &cb_is_running, TIMEOUT) != RPC_SUCCESS)
 	    cb_is_running = FALSE;
 
 	  if (cb_is_running == FALSE)
@@ -244,7 +237,6 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 	  break;
 	default:
 	  svc_getreq_poll (my_pollfd, i);
-	  free (my_pollfd);
 	  if (data->nomore)
 	    return data->result;
 	}
