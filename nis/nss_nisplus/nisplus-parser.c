@@ -31,10 +31,16 @@
 #define NISENTRYLEN(idx, col, res) \
         (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
+#define NISOBJVAL(col, obj) \
+  ((obj)->EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
+
+#define NISOBJLEN(col, obj) \
+  ((obj)->EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+
 
 int
-_nss_nisplus_parse_pwent_chk (nis_result *result, struct passwd *pw,
-			      char *buffer, size_t buflen, int *errnop)
+_nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
+			  char *buffer, size_t buflen, int *errnop)
 {
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
       || NIS_RES_NUMOBJ (result) != 1
@@ -43,19 +49,12 @@ _nss_nisplus_parse_pwent_chk (nis_result *result, struct passwd *pw,
       || NIS_RES_OBJECT (result)->EN_data.en_cols.en_cols_len < 7)
     return 0;
 
-  return _nss_nisplus_parse_pwent (result, 0, pw, buffer, buflen, errnop);
-}
-
-
-int
-_nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
-			  char *buffer, size_t buflen, int *errnop)
-{
+  nis_object *obj = NIS_RES_OBJECT (result);
   char *first_unused = buffer;
   size_t room_left = buflen;
   size_t len;
 
-  if (NISENTRYLEN (entry, 0, result) >= room_left)
+  if (NISOBJLEN (0, obj) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
@@ -63,9 +62,8 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
       return -1;
     }
 
-  strncpy (first_unused, NISENTRYVAL (entry, 0, result),
-	   NISENTRYLEN (entry, 0, result));
-  first_unused[NISENTRYLEN (entry, 0, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (0, obj), NISOBJLEN (0, obj));
+  first_unused[NISOBJLEN (0, obj)] = '\0';
   len = strlen (first_unused);
   if (len == 0) /* No name ? Should never happen, database is corrupt */
     return 0;
@@ -73,19 +71,18 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
   room_left -= len + 1;
   first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 1, result) >= room_left)
+  if (NISOBJLEN (1, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 1, result),
-	   NISENTRYLEN (entry, 1, result));
-  first_unused[NISENTRYLEN (entry, 1, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (1, obj), NISOBJLEN (1, obj));
+  first_unused[NISOBJLEN (1, obj)] = '\0';
   pw->pw_passwd = first_unused;
   len = strlen (first_unused);
   room_left -= len + 1;
   first_unused += len + 1;
 
-  char *numstr = NISENTRYVAL (entry, 2, result);
-  len = NISENTRYLEN (entry, 2, result);
+  char *numstr = NISOBJVAL (2, obj);
+  len = NISOBJLEN (2, obj);
   if (len == 0 && numstr[len - 1] != '\0')
     {
       if (len >= room_left)
@@ -100,8 +97,8 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
     return 0;
   pw->pw_uid = strtoul (numstr, NULL, 10);
 
-  numstr = NISENTRYVAL (entry, 3, result);
-  len = NISENTRYLEN (entry, 3, result);
+  numstr = NISOBJVAL (3, obj);
+  len = NISOBJLEN (3, obj);
   if (len == 0 && numstr[len - 1] != '\0')
     {
       if (len >= room_left)
@@ -116,34 +113,31 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
     return 0;
   pw->pw_gid = strtoul (numstr, NULL, 10);
 
-  if (NISENTRYLEN(entry, 4, result) >= room_left)
+  if (NISOBJLEN(4, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 4, result),
-	   NISENTRYLEN (entry, 4, result));
-  first_unused[NISENTRYLEN (entry, 4, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (4, obj), NISOBJLEN (4, obj));
+  first_unused[NISOBJLEN (4, obj)] = '\0';
   pw->pw_gecos = first_unused;
   len = strlen (first_unused);
   room_left -= len + 1;
   first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 5, result) >= room_left)
+  if (NISOBJLEN (5, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 5, result),
-	   NISENTRYLEN (entry, 5, result));
-  first_unused[NISENTRYLEN (entry, 5, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (5, obj), NISOBJLEN (5, obj));
+  first_unused[NISOBJLEN (5, obj)] = '\0';
   pw->pw_dir = first_unused;
   len = strlen (first_unused);
   room_left -= len + 1;
   first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 6, result) >= room_left)
+  if (NISOBJLEN (6, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 6, result),
-	   NISENTRYLEN (entry, 6, result));
-  first_unused[NISENTRYLEN (entry, 6, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (6, obj), NISOBJLEN (6, obj));
+  first_unused[NISOBJLEN (6, obj)] = '\0';
   pw->pw_shell = first_unused;
   len = strlen (first_unused);
   room_left -= len + 1;
@@ -154,26 +148,23 @@ _nss_nisplus_parse_pwent (nis_result *result, size_t entry, struct passwd *pw,
 
 
 int
-_nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
+_nss_nisplus_parse_grent (nis_result *result, struct group *gr,
 			  char *buffer, size_t buflen, int *errnop)
 {
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of(NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)[0].EN_data.en_type, "group_tbl") != 0
+      || NIS_RES_OBJECT (result)[0].EN_data.en_cols.en_cols_len < 4)
+    return 0;
+
+  nis_object *obj = NIS_RES_OBJECT (result);
   char *first_unused = buffer;
   size_t room_left = buflen;
   char *line;
   int count;
   size_t len;
 
-  if (result == NULL)
-    return 0;
-
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-      || __type_of(NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
-      || strcmp (NIS_RES_OBJECT (result)[entry].EN_data.en_type,
-		 "group_tbl") != 0
-      || NIS_RES_OBJECT (result)[entry].EN_data.en_cols.en_cols_len < 4)
-    return 0;
-
-  if (NISENTRYLEN (entry, 0, result) >= room_left)
+  if (NISOBJLEN (0, obj) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
@@ -181,9 +172,8 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
       return -1;
     }
 
-  strncpy (first_unused, NISENTRYVAL (entry, 0, result),
-	   NISENTRYLEN (entry, 0, result));
-  first_unused[NISENTRYLEN (entry, 0, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (0, obj), NISOBJLEN (0, obj));
+  first_unused[NISOBJLEN (0, obj)] = '\0';
   len = strlen (first_unused);
   if (len == 0) /* group table is corrupt */
     return 0;
@@ -191,20 +181,19 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   room_left -= len + 1;
   first_unused += len + 1;
 
-  if (NISENTRYLEN (entry, 1, result) >= room_left)
+  if (NISOBJLEN (1, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 1, result),
-	   NISENTRYLEN (entry, 1, result));
-  first_unused[NISENTRYLEN (entry, 1, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (1, obj), NISOBJLEN (1, obj));
+  first_unused[NISOBJLEN (1, obj)] = '\0';
   gr->gr_passwd = first_unused;
   len = strlen (first_unused);
   room_left -= len + 1;
   first_unused += len + 1;
 
-  char *numstr = NISENTRYVAL (entry, 2, result);
-  len = NISENTRYLEN (entry, 2, result);
-  if (len == 0 && numstr[len - 1] != '\0')
+  char *numstr = NISOBJVAL (2, obj);
+  len = NISOBJLEN (2, obj);
+  if (len == 0 || numstr[len - 1] != '\0')
     {
       if (len >= room_left)
 	goto no_more_room;
@@ -218,12 +207,11 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
     return 0;
   gr->gr_gid = strtoul (numstr, NULL, 10);
 
-  if (NISENTRYLEN (entry, 3, result) >= room_left)
+  if (NISOBJLEN (3, obj) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL (entry, 3, result),
-	   NISENTRYLEN (entry, 3, result));
-  first_unused[NISENTRYLEN (entry, 3, result)] = '\0';
+  strncpy (first_unused, NISOBJVAL (3, obj), NISOBJLEN (3, obj));
+  first_unused[NISOBJLEN (3, obj)] = '\0';
   line = first_unused;
   len = strlen (line);
   room_left -= len + 1;

@@ -531,50 +531,68 @@ __nisfind_server (const_nis_name name, directory_obj **dir)
   return result;
 }
 
+
+nis_error
+__prepare_niscall (const_nis_name name, directory_obj **dirp,
+		   dir_binding *bptrp, unsigned int flags)
+{
+  nis_error retcode = __nisfind_server (name, dirp);
+  if (__builtin_expect (retcode != NIS_SUCCESS, 0))
+    return retcode;
+
+  nis_server *server;
+  u_int server_len;
+
+  if (flags & MASTER_ONLY)
+    {
+      server = (*dirp)->do_servers.do_servers_val;
+      server_len = 1;
+    }
+  else
+    {
+      server = (*dirp)->do_servers.do_servers_val;
+      server_len = (*dirp)->do_servers.do_servers_len;
+    }
+
+  retcode = __nisbind_create (bptrp, server, server_len, flags);
+  if (retcode == NIS_SUCCESS)
+    {
+      do
+	if (__nisbind_connect (bptrp) == NIS_SUCCESS)
+	  return NIS_SUCCESS;
+      while (__nisbind_next (bptrp) == NIS_SUCCESS);
+
+      __nisbind_destroy (bptrp);
+      memset (bptrp, '\0', sizeof (*bptrp));
+
+      retcode = NIS_NAMEUNREACHABLE;
+    }
+
+  nis_free_directory (*dirp);
+  *dirp = NULL;
+
+  return retcode;
+}
+
+
 nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 	      caddr_t req, xdrproc_t xres, caddr_t resp, unsigned int flags,
 	      nis_cb *cb)
 {
-  nis_error retcode;
   dir_binding bptr;
   directory_obj *dir = NULL;
-  nis_server *server;
-  u_int server_len;
   int saved_errno = errno;
 
-  retcode = __nisfind_server (name, &dir);
-  if (retcode != NIS_SUCCESS)
-    return retcode;
-
-  if (flags & MASTER_ONLY)
-    {
-      server = dir->do_servers.do_servers_val;
-      server_len = 1;
-    }
-  else
-    {
-      server = dir->do_servers.do_servers_val;
-      server_len = dir->do_servers.do_servers_len;
-    }
-
-  retcode = __nisbind_create (&bptr, server, server_len, flags);
+  nis_error retcode = __prepare_niscall (name, &dir, &bptr, flags);
   if (retcode == NIS_SUCCESS)
     {
-      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
-	{
-	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
-	    {
-	      nis_free_directory (dir);
-	      return NIS_NAMEUNREACHABLE;
-	    }
-	}
       retcode = __do_niscall3 (&bptr, prog, xargs, req, xres, resp, flags, cb);
 
       __nisbind_destroy (&bptr);
-    }
 
-  nis_free_directory (dir);
+      nis_free_directory (dir);
+    }
 
   __set_errno (saved_errno);
 

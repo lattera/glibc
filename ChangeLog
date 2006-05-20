@@ -1,3 +1,30 @@
+2006-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (__prepare_niscall): New function.  Split out
+	from __do_niscall.
+	* nis/nis_table.c (__create_ib_request): Renamed from create_ib_request
+	and exported.
+	(__follow_path): New function.  Split out from nis_list.
+	* nis/nis_xdr.h: Add libnsl_hidden_proto for _xdr_ib_request and
+	_xdr_nis_result.
+	* nis/nis_xdr.c: Add libnsl_hidden_def for _xdr_ib_request and
+	_xdr_nis_result.
+	* nis/libnsl.h: Declare __prepare_niscall, __create_ib_request,
+	and __follow_path.
+	* nis/Versions: Export __prepare_niscall, __create_ib_request,
+	__follow_path, __do_niscall3, _xdr_ib_request, and _xdr_nis_result
+	from libnsl for version GLIBC_PRIVATE.
+	* nis/nisplus-parser.h: Remove _nss_nisplus_parse_pwent_chk.
+	Remove entry parameter from _nss_nisplus_parse_pwent and
+	_nss_nisplus_parse_grent.
+	* nis/nss_nisplus/nisplus-parser.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Remove support for SETENT_BATCH_READ
+	again.  Rewrite getpwent handling to not use nis_first_entry and
+	nis_next_entry.  Roll out own niscall handling.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+
+	* sunrpc/xdr_rec.c: Fix typo in comment.
+
 2006-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (__do_niscall3): Avoid code duplication in error
@@ -30,7 +57,7 @@
 	cb->serv together.  Remove now obsolete free calls.
 	(__nis_destroy_callback): Remove now obsolete free call.
 
-2006-05-18  David Woodhouse  <dwmw2@infradead.org>
+2006-05-18  David Woodhouse  <dwmw2@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c: Add unique labels to the default
 	RFC3484 precedence table for fec0::/10 and fc00::/7 (site-local

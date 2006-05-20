@@ -58,7 +58,8 @@ libnsl {
     xdr_ypall;
   }
   GLIBC_PRIVATE {
-    _nsl_default_nss;
+    _nsl_default_nss; __prepare_niscall; __follow_path; __do_niscall3;
+    __create_ib_request; _xdr_ib_request; _xdr_nis_result;
   }
 }
 

@@ -16,6 +16,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <rpcsvc/nis.h>
+
 #define NSS_FLAG_NETID_AUTHORITATIVE	1
 #define NSS_FLAG_SERVICES_AUTHORITATIVE	2
 #define NSS_FLAG_SETENT_BATCH_READ	4
@@ -23,3 +25,15 @@
 
 /* Get current set of default flags.  */
 extern int _nsl_default_nss (void);
+
+/* Set up everything for a call to __do_niscall3.  */
+extern nis_error __prepare_niscall (const_nis_name name, directory_obj **dirp,
+				    dir_binding *bptrp, unsigned int flags);
+
+extern struct ib_request *__create_ib_request (const_nis_name name,
+					       unsigned int flags);
+libnsl_hidden_proto (__create_ib_request)
+
+extern nis_error __follow_path (char **tablepath, char **tableptr,
+				struct ib_request *ibreq, dir_binding *bptr);
+libnsl_hidden_proto (__follow_path)

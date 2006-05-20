@@ -29,16 +29,21 @@
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 #include <libnsl.h>
+#include <nis_intern.h>
+#include <nis_xdr.h>
 
 
 __libc_lock_define_initialized (static, lock)
 
-/* Previous result of iteration.  */
-static nis_result *result;
+/* Connection information.  */
+static ib_request *ibreq;
+static directory_obj *dir;
+static dir_binding bptr;
+static char *tablepath;
+static char *tableptr;
+/* Cursor.  */
+static netobj cursor;
 
-/* All results of batch table load.  */
-static nis_result *cached_results;
-static size_t cached_results_iter;
 
 nis_name pwd_tablename_val attribute_hidden;
 size_t pwd_tablename_len attribute_hidden;
@@ -80,50 +85,48 @@ _nss_pwd_create_tablename (int *errnop)
 static void
 internal_nisplus_endpwent (void)
 {
-  if (cached_results != NULL)
-    {
-      nis_freeresult (cached_results);
-      cached_results = NULL;
-      cached_results_iter = 0;
-    }
+  __nisbind_destroy (&bptr);
+  memset (&bptr, '\0', sizeof (bptr));
 
-  if (result != NULL)
-    {
-      nis_freeresult (result);
-      result = NULL;
-    }
+  nis_free_directory (dir);
+  dir = NULL;
+
+  nis_free_request (ibreq);
+  ibreq = NULL;
+
+  xdr_free ((xdrproc_t) xdr_netobj, (char *) &cursor);
+  memset (&cursor, '\0', sizeof (cursor));
+
+  free (tablepath);
+  tableptr = tablepath = NULL;
 }
 
 
 static enum nss_status
 internal_nisplus_setpwent (int *errnop)
 {
-  enum nss_status status;
+  enum nss_status status = NSS_STATUS_SUCCESS;
 
-  cached_results = nis_list (pwd_tablename_val, FOLLOW_PATH | FOLLOW_LINKS,
-			     NULL, NULL);
+  if (pwd_tablename_val == NULL)
+    status = _nss_pwd_create_tablename (errnop);
 
-  if (cached_results == NULL)
+  if (status == NSS_STATUS_SUCCESS)
     {
-      *errnop = errno;
-      status = NSS_STATUS_TRYAGAIN;
-    }
-  else if (__builtin_expect ((status = niserr2nss (cached_results->status))
-			     != NSS_STATUS_SUCCESS, 0))
-    {
-      nis_freeresult (cached_results);
-      cached_results = NULL;
-    }
-  else if (__builtin_expect (__type_of (NIS_RES_OBJECT (cached_results))
-			     != NIS_ENTRY_OBJ
-			     || strcmp (NIS_RES_OBJECT (cached_results)->EN_data.en_type,
-					"passwd_tbl") != 0
-			     || NIS_RES_OBJECT (cached_results)->EN_data.en_cols.en_cols_len < 7,
-			     0))
-    {
-      nis_freeresult (cached_results);
-      cached_results = NULL;
-      status = NSS_STATUS_NOTFOUND;
+      ibreq = __create_ib_request (pwd_tablename_val, 0);
+      if (ibreq == NULL)
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      nis_error retcode = __prepare_niscall (pwd_tablename_val, &dir,
+					     &bptr, 0);
+      if (retcode != NIS_SUCCESS)
+	{
+	  nis_free_request (ibreq);
+	  ibreq = NULL;
+	  status = niserr2nss (retcode);
+	}
     }
 
   return status;
@@ -133,26 +136,15 @@ internal_nisplus_setpwent (int *errnop)
 enum nss_status
 _nss_nisplus_setpwent (int stayopen)
 {
-  enum nss_status status = NSS_STATUS_SUCCESS;
+  enum nss_status status;
 
   __libc_lock_lock (lock);
 
   internal_nisplus_endpwent ();
 
-  if (pwd_tablename_val == NULL)
-    {
-      // XXX We need to be able to set errno.  Pass in new parameter.
-      int err;
-      status = _nss_pwd_create_tablename (&err);
-    }
-
-  if (status == NSS_STATUS_SUCCESS
-      && (_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ))
-    {
-      // XXX We need to be able to set errno.  Pass in new parameter.
-      int err;
-      status = internal_nisplus_setpwent (&err);
-    }
+  // XXX We need to be able to set errno.  Pass in new parameter.
+  int err;
+  status = internal_nisplus_setpwent (&err);
 
   __libc_lock_unlock (lock);
 
@@ -178,98 +170,104 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen,
 			     int *errnop)
 {
   int parse_res = -1;
-  nis_result *saved_res = NULL;
+  enum nss_status retval = NSS_STATUS_SUCCESS;
 
   /* Get the next entry until we found a correct one. */
   do
     {
-      if (cached_results != NULL)
-	{
-	handle_batch_read:
-	  /* See whether we reported the last problem.  */
-	  if (cached_results_iter >= NIS_RES_NUMOBJ (cached_results))
-	    return NSS_STATUS_NOTFOUND;
+      nis_error status;
+      nis_result result;
+      memset (&result, '\0', sizeof (result));
 
-	  parse_res = _nss_nisplus_parse_pwent (cached_results,
-						cached_results_iter, pw,
-						buffer, buflen, errnop);
+      if (cursor.n_bytes == NULL)
+	{
+	  if (ibreq == NULL)
+	    {
+	      retval = internal_nisplus_setpwent (errnop);
+	      if (retval != NSS_STATUS_SUCCESS)
+		return retval;
+	    }
+
+	  status = __do_niscall3 (&bptr, NIS_IBFIRST,
+				  (xdrproc_t) _xdr_ib_request,
+				  (caddr_t) ibreq,
+				  (xdrproc_t) _xdr_nis_result,
+				  (caddr_t) &result,
+				  0, NULL);
 	}
       else
 	{
-	  if (result == NULL)
-	    {
-	      if (pwd_tablename_val == NULL)
-		{
-		  enum nss_status status = _nss_pwd_create_tablename (errnop);
+	  ibreq->ibr_cookie.n_bytes = cursor.n_bytes;
+	  ibreq->ibr_cookie.n_len = cursor.n_len;
 
-		  if (status != NSS_STATUS_SUCCESS)
-		    return status;
-		}
+	  status = __do_niscall3 (&bptr, NIS_IBNEXT,
+				  (xdrproc_t) _xdr_ib_request,
+				  (caddr_t) ibreq,
+				  (xdrproc_t) _xdr_nis_result,
+				  (caddr_t) &result,
+				  0, NULL);
 
-	      /* Determine whether we should instead read all entries at
-		 once.  */
-	      if (_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ)
-		{
-		  enum nss_status status = internal_nisplus_setpwent (errnop);
-
-		  if (status == NSS_STATUS_SUCCESS && cached_results != NULL)
-		    goto handle_batch_read;
-		}
-
-	      saved_res = NULL;
-
-	      result = nis_first_entry (pwd_tablename_val);
-	      if (result == NULL)
-		{
-		  *errnop = errno;
-		  return NSS_STATUS_TRYAGAIN;
-		}
-	      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-		return niserr2nss (result->status);
-	    }
-	  else
-	    {
-	      saved_res = result;
-	      result = nis_next_entry (pwd_tablename_val, &result->cookie);
-	      if (result == NULL)
-		{
-		  *errnop = errno;
-		  return NSS_STATUS_TRYAGAIN;
-		}
-	      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-		{
-		  nis_freeresult (saved_res);
-		  return niserr2nss (result->status);
-		}
-	    }
-
-	  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer,
-						    buflen, errnop);
+	  ibreq->ibr_cookie.n_bytes = NULL;
+	  ibreq->ibr_cookie.n_len = 0;
 	}
+
+      if (status != NIS_SUCCESS)
+	return niserr2nss (status);
+
+      if (NIS_RES_STATUS (&result) == NIS_NOTFOUND)
+	{
+	  /* No more entries on this server.  This means we have to go
+	     to the next server on the path.  */
+	  status = __follow_path (&tablepath, &tableptr, ibreq, &bptr);
+	  if (status != NIS_SUCCESS)
+	    return niserr2nss (status);
+
+	  directory_obj *newdir = NULL;
+	  dir_binding newbptr;
+	  status = __prepare_niscall (ibreq->ibr_name, &newdir, &newbptr, 0);
+	  if (status != NIS_SUCCESS)
+	    return niserr2nss (status);
+
+	  nis_free_directory (dir);
+	  dir = newdir;
+	  __nisbind_destroy (&bptr);
+	  bptr = newbptr;
+
+	  xdr_free ((xdrproc_t) xdr_netobj, (char *) &result.cookie);
+	  result.cookie.n_bytes = NULL;
+	  result.cookie.n_len = 0;
+	  parse_res = 0;
+	  goto next;
+	}
+      else if (NIS_RES_STATUS (&result) != NIS_SUCCESS)
+	return niserr2nss (NIS_RES_STATUS (&result));
+
+      parse_res = _nss_nisplus_parse_pwent (&result, pw, buffer,
+					    buflen, errnop);
 
       if (__builtin_expect (parse_res == -1, 0))
 	{
-	  if (cached_results == NULL)
-	    {
-	      nis_freeresult (result);
-	      result = saved_res;
-	    }
 	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  retval = NSS_STATUS_TRYAGAIN;
+	  goto freeres;
 	}
 
-      if (cached_results != NULL)
-	++cached_results_iter;
-      else
-	if (saved_res)
-	  {
-	    nis_freeresult (saved_res);
-	    saved_res = NULL;
-	  }
+    next:
+      /* Free the old cursor.  */
+      xdr_free ((xdrproc_t) xdr_netobj, (char *) &cursor);
+      /* Remember the new one.  */
+      cursor.n_bytes = result.cookie.n_bytes;
+      cursor.n_len = result.cookie.n_len;
+      /* Free the result structure.  NB: we do not remove the cookie.  */
+      result.cookie.n_bytes = NULL;
+      result.cookie.n_len = 0;
+    freeres:
+      xdr_free ((xdrproc_t) _xdr_nis_result, (char *) &result);
+      memset (&result, '\0', sizeof (result));
     }
   while (!parse_res);
 
-  return NSS_STATUS_SUCCESS;
+  return retval;
 }
 
 enum nss_status
@@ -331,8 +329,7 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
       return status;
     }
 
-  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer, buflen,
-					    errnop);
+  parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen, errnop);
 
   nis_freeresult (result);
 
@@ -391,8 +388,7 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
       return status;
     }
 
-  parse_res = _nss_nisplus_parse_pwent_chk (result, pw, buffer, buflen,
-					    errnop);
+  parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen, errnop);
 
   nis_freeresult (result);
 

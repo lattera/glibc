@@ -28,14 +28,17 @@ extern  bool_t _xdr_nis_server (XDR *, nis_server*) attribute_hidden;
 extern  bool_t _xdr_directory_obj (XDR *, directory_obj*) attribute_hidden;
 extern  bool_t _xdr_nis_object (XDR *, nis_object*) attribute_hidden;
 extern  bool_t _xdr_nis_error (XDR *, nis_error*) attribute_hidden;
-extern  bool_t _xdr_nis_result (XDR *, nis_result*) attribute_hidden;
 extern  bool_t _xdr_ns_request (XDR *, ns_request*) attribute_hidden;
-extern  bool_t _xdr_ib_request (XDR *, ib_request*) attribute_hidden;
 extern  bool_t _xdr_ping_args (XDR *, ping_args*) attribute_hidden;
 extern  bool_t _xdr_cp_result (XDR *, cp_result*) attribute_hidden;
 extern  bool_t _xdr_nis_tag (XDR *, nis_tag*) attribute_hidden;
 extern  bool_t _xdr_nis_taglist (XDR *, nis_taglist*) attribute_hidden;
 extern  bool_t _xdr_fd_args (XDR *, fd_args*) attribute_hidden;
 extern  bool_t _xdr_fd_result (XDR *, fd_result*) attribute_hidden;
+
+extern  bool_t _xdr_ib_request (XDR *, ib_request*);
+libnsl_hidden_proto (_xdr_ib_request)
+extern  bool_t _xdr_nis_result (XDR *, nis_result*);
+libnsl_hidden_proto (_xdr_nis_result)
 
 #endif

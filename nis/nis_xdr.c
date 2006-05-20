@@ -308,6 +308,7 @@ _xdr_nis_result (XDR *xdrs, nis_result *objp)
     }
   return res;
 }
+libnsl_hidden_def (_xdr_nis_result)
 
 bool_t
 _xdr_ns_request (XDR *xdrs, ns_request *objp)
@@ -357,6 +358,7 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
     }
   return res;
 }
+libnsl_hidden_def (_xdr_ib_request)
 
 bool_t
 _xdr_ping_args (XDR *xdrs, ping_args *objp)
