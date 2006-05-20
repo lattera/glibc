@@ -256,6 +256,7 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 		  || ((nis_result *)resp)->status == NIS_NOSUCHNAME
 		  || ((nis_result *)resp)->status == NIS_NOT_ME)
 		{
+		next_server:
 		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
 		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
@@ -273,38 +274,14 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 	      if (((fd_result *)resp)->status == NIS_SYSTEMERROR
 		  || ((fd_result *)resp)->status == NIS_NOSUCHNAME
 		  || ((fd_result *)resp)->status == NIS_NOT_ME)
-		{
-		  if (__nisbind_next (dbp) == NIS_SUCCESS)
-		    {
-		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
-			{
-			  if (__nisbind_next (dbp) != NIS_SUCCESS)
-			    return NIS_SUCCESS;
-			}
-		    }
-		  else
-		    break; /* No more servers to search in */
-		  goto again;
-		}
+		goto next_server;
 	      break;
 	    case NIS_DUMPLOG: /* log_result */
 	    case NIS_DUMP:
 	      if (((log_result *)resp)->lr_status == NIS_SYSTEMERROR
 		  || ((log_result *)resp)->lr_status == NIS_NOSUCHNAME
 		  || ((log_result *)resp)->lr_status == NIS_NOT_ME)
-		{
-		  if (__nisbind_next (dbp) == NIS_SUCCESS)
-		    {
-		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
-			{
-			  if (__nisbind_next (dbp) != NIS_SUCCESS)
-			    return NIS_SUCCESS;
-			}
-		    }
-		  else
-		    break; /* No more servers to search in */
-		  goto again;
-		}
+		goto next_server;
 	      break;
 	    default:
 	      break;
@@ -425,7 +402,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    ++run;
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
-
+	printf("%s: run=%u\n", __func__, run);
 	if (run == 1)
 	  {
 	    /* We have found the directory above. Use it. */
