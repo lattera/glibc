@@ -53,14 +53,20 @@
 #define MCL_CURRENT	1		/* lock all current mappings */
 #define MCL_FUTURE	2		/* lock all future mappings */
 
-#define MADV_NORMAL     0               /* no further special treatment */
-#define MADV_RANDOM     1               /* expect random page references */
-#define MADV_SEQUENTIAL 2               /* expect sequential page references */
-#define MADV_WILLNEED   3               /* will need these pages */
-#define MADV_DONTNEED   4               /* dont need these pages */
-#define MADV_SPACEAVAIL 5               /* insure that resources are reserved */
-#define MADV_VPS_PURGE  6               /* Purge pages from VM page cache */
-#define MADV_VPS_INHERIT 7              /* Inherit parents page size */
+/* Advice to "madvise" */
+#ifdef __USE_BSD
+# define MADV_NORMAL	  0	/* no further special treatment */
+# define MADV_RANDOM	  1	/* expect random page references */
+# define MADV_SEQUENTIAL  2	/* expect sequential page references */
+# define MADV_WILLNEED	  3	/* will need these pages */
+# define MADV_DONTNEED	  4	/* dont need these pages */
+# define MADV_SPACEAVAIL  5	/* insure that resources are reserved */
+# define MADV_VPS_PURGE	  6	/* Purge pages from VM page cache */
+# define MADV_VPS_INHERIT 7	/* Inherit parents page size */
+# define MADV_REMOVE	  9	/* Remove these pages and resources.  */
+# define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
+# define MADV_DOFORK	 11	/* Do inherit across fork.  */
+#endif
 
 /* The range 12-64 is reserved for page size specification. */
 #define MADV_4K_PAGES   12              /* Use 4K pages  */
