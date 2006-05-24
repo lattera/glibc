@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,6 +92,7 @@ _dl_addr (const void *address, Dl_info *info,
 #if defined USE_TLS
 	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
 #endif
+	    && symtab->st_shndx != SHN_UNDEF
 	    && DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
 	    && symtab->st_name < strtabsize)
 	  matchsym = (ElfW(Sym) *) symtab;
