@@ -21,6 +21,8 @@
 #include <rpcsvc/nis.h>
 #include "nis_xdr.h"
 #include "nis_intern.h"
+#include <libnsl.h>
+
 
 nis_result *
 nis_lookup (const_nis_name name, const unsigned int flags)
@@ -61,36 +63,18 @@ nis_lookup (const_nis_name name, const unsigned int flags)
       req.ns_object.ns_object_len = 0;
       req.ns_object.ns_object_val = NULL;
 
-      status = __nisfind_server (req.ns_name, &dir);
-      if (status != NIS_SUCCESS)
+      status = __prepare_niscall (req.ns_name, &dir, &bptr, flags);
+      if (__builtin_expect (status != NIS_SUCCESS, 0))
 	{
 	  NIS_RES_STATUS (res) = status;
 	  goto out;
-	}
-
-      status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
-				 dir->do_servers.do_servers_len, flags);
-      if (status != NIS_SUCCESS)
-	{
-	  NIS_RES_STATUS (res) = status;
-	  nis_free_directory (dir);
-	  goto out;;
-	}
-
-      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
-	{
-	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
-	    {
-	      nis_free_directory (dir);
-	      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
-	      goto out;
-	    }
 	}
 
       do
 	{
 	  static const struct timeval RPCTIMEOUT = {10, 0};
 	  enum clnt_stat result;
+	  char ndomain[strlen (req.ns_name) + 1];
 
 	again:
 	  result = clnt_call (bptr.clnt, NIS_LOOKUP,
@@ -106,11 +90,9 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 
 	      if (NIS_RES_STATUS (res) == NIS_SUCCESS)
 		{
-		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ
+		    if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ
 			&& (flags & FOLLOW_LINKS)) /* We are following links */
 		      {
-			if (count_links)
-			  free (req.ns_name);
 			/* if we hit the link limit, bail */
 			if (count_links > NIS_MAXLINKS)
 			  {
@@ -119,31 +101,15 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			  }
 			++count_links;
 			req.ns_name =
-			  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
-			if (req.ns_name == NULL)
-			  {
-			    nis_free_directory (dir);
-			    res = NULL;
-			    goto out;
-			  }
+			  strdupa (NIS_RES_OBJECT (res)->LI_data.li_name);
 
 			/* The following is a non-obvious optimization.  A
 			   nis_freeresult call would call xdr_free as the
 			   following code.  But it also would unnecessarily
 			   free the result structure.  We avoid this here
 			   along with the necessary tests.  */
-#if 1
 			xdr_free ((xdrproc_t) _xdr_nis_result, (char *) res);
 			memset (res, '\0', sizeof (*res));
-#else
-			nis_freeresult (res);
-			res = calloc (1, sizeof (nis_result));
-			if (res == NULL)
-			  {
-			    __nisbind_destroy (&bptr);
-			    return NULL;
-			  }
-#endif
 
 			link_first_try = 1; /* Try at first the old binding */
 			goto again;
@@ -176,7 +142,24 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 		      }
 		    else
 		      if (__nisbind_next (&bptr) != NIS_SUCCESS)
-			break; /* No more servers to search */
+			{
+			  /* No more servers to search.  Try parent.  */
+			  nis_domain_of_r (req.ns_name, ndomain,
+					   sizeof (ndomain));
+			  req.ns_name = strdupa (ndomain);
+
+			  __nisbind_destroy (&bptr);
+			  nis_free_directory (dir);
+			  dir = NULL;
+			  status = __prepare_niscall (req.ns_name, &dir,
+						      &bptr, flags);
+			  if (__builtin_expect (status != NIS_SUCCESS, 0))
+			    {
+			      NIS_RES_STATUS (res) = status;
+			      goto out;
+			    }
+			  goto again;
+			}
 
 		    while (__nisbind_connect (&bptr) != NIS_SUCCESS)
 		      {

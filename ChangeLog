@@ -1,5 +1,9 @@
 2006-05-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_lookup.c (nis_lookup): Use __prepare_niscall instead of
+	doing it all here.  When server does not know the answer do not
+	fail immediate, try parent first.
+
 	* nis/nis_domain_of_r.c (nis_domain_of_r): Add missing buffer
 	overflow test.
 

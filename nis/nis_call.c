@@ -405,7 +405,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    ++run;
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
-	printf("%s: run=%u\n", __func__, run);
+
 	if (run == 1)
 	  {
 	    /* We have found the directory above. Use it. */
