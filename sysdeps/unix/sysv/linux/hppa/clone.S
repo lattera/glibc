@@ -92,7 +92,7 @@ ENTRY(__clone)
 	bv	%r0(%rp)
 	ldwm	-64(%sp), %r3
 
-.LerrorRest
+.LerrorRest:
 	/* Restore the PIC register on error */
 #ifdef PIC
 	copy	%r3, %r19		/* parent */ 

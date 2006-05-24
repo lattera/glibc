@@ -1,5 +1,10 @@
 2006-05-24  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/clone.S: .LerrorRest
+	is a label.
+
+2006-05-24  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/ldsodefs.h: New file.
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h:
 	Only define MADV_* macros when __USE_BSD is present.
