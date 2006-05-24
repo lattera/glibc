@@ -29,6 +29,7 @@ extern int _nsl_default_nss (void);
 /* Set up everything for a call to __do_niscall3.  */
 extern nis_error __prepare_niscall (const_nis_name name, directory_obj **dirp,
 				    dir_binding *bptrp, unsigned int flags);
+libnsl_hidden_proto (__prepare_niscall)
 
 extern struct ib_request *__create_ib_request (const_nis_name name,
 					       unsigned int flags);

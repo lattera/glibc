@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,6 +29,7 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   if (buffer == NULL)
     {
+    erange:
       __set_errno (ERANGE);
       return NULL;
     }
@@ -44,7 +45,11 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
   cptr_len = strlen (cptr);
 
   if (cptr_len == 0)
-    return strcpy (buffer, ".");
+    {
+      if (buflen < 2)
+	goto erange;
+      return strcpy (buffer, ".");
+    }
 
   if (__builtin_expect (cptr_len >= buflen, 0))
     {

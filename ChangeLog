@@ -1,3 +1,8 @@
+2006-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_domain_of_r.c (nis_domain_of_r): Add missing buffer
+	overflow test.
+
 2006-05-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (__prepare_niscall): New function.  Split out

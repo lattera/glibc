@@ -30,6 +30,7 @@
 
 #include "nis_xdr.h"
 #include "nis_intern.h"
+#include <libnsl.h>
 
 static const struct timeval RPCTIMEOUT = {10, 0};
 static const struct timeval UDPTIMEOUT = {5, 0};
@@ -293,6 +294,8 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 
   return retcode;
 }
+libnsl_hidden_def (__do_niscall3)
+
 
 nis_error
 __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
@@ -573,6 +576,7 @@ __prepare_niscall (const_nis_name name, directory_obj **dirp,
 
   return retcode;
 }
+libnsl_hidden_def (__prepare_niscall)
 
 
 nis_error
