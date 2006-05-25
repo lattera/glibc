@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1997, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1997, 2001, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,7 +89,8 @@ struct ip6_rthdr0
     uint8_t  ip6r0_segleft;	/* segments left */
     uint8_t  ip6r0_reserved;	/* reserved field */
     uint8_t  ip6r0_slmap[3];	/* strict/loose bit map */
-    struct in6_addr  ip6r0_addr[1];  /* up to 23 addresses */
+    /* followed by up to 127 struct in6_addr */
+    struct in6_addr ip6r0_addr[0];
   };
 
 /* Fragment header */
@@ -101,14 +102,14 @@ struct ip6_frag
     uint32_t  ip6f_ident;	/* identification */
   };
 
-#if     BYTE_ORDER == BIG_ENDIAN
-#define IP6F_OFF_MASK       0xfff8  /* mask out offset from _offlg */
-#define IP6F_RESERVED_MASK  0x0006  /* reserved bits in ip6f_offlg */
-#define IP6F_MORE_FRAG      0x0001  /* more-fragments flag */
+#if BYTE_ORDER == BIG_ENDIAN
+# define IP6F_OFF_MASK       0xfff8  /* mask out offset from _offlg */
+# define IP6F_RESERVED_MASK  0x0006  /* reserved bits in ip6f_offlg */
+# define IP6F_MORE_FRAG      0x0001  /* more-fragments flag */
 #else   /* BYTE_ORDER == LITTLE_ENDIAN */
-#define IP6F_OFF_MASK       0xf8ff  /* mask out offset from _offlg */
-#define IP6F_RESERVED_MASK  0x0600  /* reserved bits in ip6f_offlg */
-#define IP6F_MORE_FRAG      0x0100  /* more-fragments flag */
+# define IP6F_OFF_MASK       0xf8ff  /* mask out offset from _offlg */
+# define IP6F_RESERVED_MASK  0x0600  /* reserved bits in ip6f_offlg */
+# define IP6F_MORE_FRAG      0x0100  /* more-fragments flag */
 #endif
 
 /* IPv6 options */
@@ -175,7 +176,7 @@ struct ip6_opt_router
   };
 
 /* Router alert values (in network byte order) */
-#if     BYTE_ORDER == BIG_ENDIAN
+#if BYTE_ORDER == BIG_ENDIAN
 # define IP6_ALERT_MLD	0x0000
 # define IP6_ALERT_RSVP	0x0001
 # define IP6_ALERT_AN	0x0002

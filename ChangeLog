@@ -1,5 +1,25 @@
 2006-05-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2693]
+	* inet/Makefile (routines): Add inet6_opt and inet6_rth.
+	* inet/Versions (libc, GLIBC_2.5): Add inet6_opt_init,
+	inet6_opt_append, inet6_opt_finish, inet6_opt_set_val, inet6_opt_next,
+	inet6_opt_find, inet6_opt_get_val, inet6_rth_space, inet6_rth_init,
+	inet6_rth_add, inet6_rth_reverse, inet6_rth_segments,
+	and inet6_rth_getaddr.
+	* inet/netinet/ip6.h (struct ip6_rthdr0): Make ip6r0_addr a flexible
+	array.
+	* inet/netinet/in.h (struct ip6_mtuinfo): Define.
+	Mark inet6_option_* interfaces as deprecated.
+	Declare inet6_opt_init, inet6_opt_append, inet6_opt_finish,
+	inet6_opt_set_val, inet6_opt_next, inet6_opt_find, inet6_opt_get_val,
+	inet6_rth_space, inet6_rth_init, inet6_rth_add, inet6_rth_reverse,
+	inet6_rth_segments, and inet6_rth_getaddr.
+	* inet/inet6_opt.c: New file.
+	* inet/inet6_rth.c: New file.
+
+	* inet/netinet/icmp6.h: Pretty printing.
+
 	[BZ #2683]
 	* elf/dl-addr.c (_dl_addr): Don't match undefined references.
 

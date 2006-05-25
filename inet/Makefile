@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ routines := htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index ifaddrs inet6_option \
 	    getipv4sourcefilter setipv4sourcefilter \
-	    getsourcefilter setsourcefilter
+	    getsourcefilter setsourcefilter inet6_opt inet6_rth
 
 aux := check_pf ifreq
 

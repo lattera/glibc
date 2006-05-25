@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2001, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2001, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -455,25 +455,66 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {
-    struct in6_addr	ipi6_addr;    /* src/dst IPv6 address */
-    unsigned int	ipi6_ifindex; /* send/recv interface index */
+    struct in6_addr ipi6_addr;	/* src/dst IPv6 address */
+    unsigned int ipi6_ifindex;	/* send/recv interface index */
+  };
+
+/* IPv6 MTU information.  */
+struct ip6_mtuinfo
+  {
+    struct sockaddr_in6 ip6m_addr; /* dst address including zone ID */
+    uint32_t ip6m_mtu;		   /* path MTU in host byte order */
   };
 
 
 #ifdef __USE_GNU
-/* Hop-by-Hop and Destination Options Processing.  */
-extern int inet6_option_space (int __nbytes) __THROW;
+/* Obsolete hop-by-hop and Destination Options Processing (RFC 2292).  */
+extern int inet6_option_space (int __nbytes)
+     __THROW __attribute_deprecated__;
 extern int inet6_option_init (void *__bp, struct cmsghdr **__cmsgp,
-			      int __type) __THROW;
+			      int __type) __THROW __attribute_deprecated__;
 extern int inet6_option_append (struct cmsghdr *__cmsg,
 				__const uint8_t *__typep, int __multx,
-				int __plusy) __THROW;
+				int __plusy) __THROW __attribute_deprecated__;
 extern uint8_t *inet6_option_alloc (struct cmsghdr *__cmsg, int __datalen,
-				    int __multx, int __plusy) __THROW;
+				    int __multx, int __plusy)
+     __THROW __attribute_deprecated__;
 extern int inet6_option_next (__const struct cmsghdr *__cmsg,
-			      uint8_t **__tptrp) __THROW;
+			      uint8_t **__tptrp)
+     __THROW __attribute_deprecated__;
 extern int inet6_option_find (__const struct cmsghdr *__cmsg,
-			      uint8_t **__tptrp, int __type) __THROW;
+			      uint8_t **__tptrp, int __type)
+     __THROW __attribute_deprecated__;
+
+
+/* Hop-by-Hop and Destination Options Processing (RFC 3542).  */
+extern int inet6_opt_init (void *__extbuf, socklen_t __extlen) __THROW;
+extern int inet6_opt_append (void *__extbuf, socklen_t __extlen, int __offset,
+			     uint8_t __type, socklen_t __len, uint8_t __align,
+			     void **__databufp) __THROW;
+extern int inet6_opt_finish (void *__extbuf, socklen_t __extlen, int __offset)
+     __THROW;
+extern int inet6_opt_set_val (void *__databuf, int __offset, void *__val,
+			      socklen_t __vallen) __THROW;
+extern int inet6_opt_next (void *__extbuf, socklen_t __extlen, int __offset,
+			   uint8_t *__typep, socklen_t *__lenp,
+			   void **__databufp) __THROW;
+extern int inet6_opt_find (void *__extbuf, socklen_t __extlen, int __offset,
+			   uint8_t __type, socklen_t *__lenp,
+			   void **__databufp) __THROW;
+extern int inet6_opt_get_val (void *__databuf, int __offset, void *__val,
+			      socklen_t __vallen) __THROW;
+
+
+/* Routing Header Option (RFC 3542).  */
+extern socklen_t inet6_rth_space (int __type, int __segments) __THROW;
+extern void *inet6_rth_init (void *__bp, socklen_t __bp_len, int __type,
+			     int __segments) __THROW;
+extern int inet6_rth_add (void *__bp, __const struct in6_addr *__addr) __THROW;
+extern int inet6_rth_reverse (__const void *__in, void *__out) __THROW;
+extern int inet6_rth_segments (__const void *__bp) __THROW;
+extern struct in6_addr *inet6_rth_getaddr (__const void *__bp, int __index)
+     __THROW;
 
 
 /* Multicast source filter support.  */
