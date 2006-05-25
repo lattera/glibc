@@ -1,5 +1,9 @@
 2006-05-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_removemember.c (nis_removemember): Avoid unnecessary
+	coping.  No need to allocate new array for group members.  Just
+	move the pointers and update the size.
+
 	* nis/nis_addmember.c (nis_addmember): Avoid unnecessary copying.
 	Avoid memory leak in case realloc fails.  Simplification for
 	better code generation.

@@ -28,15 +28,12 @@ nis_removemember (const_nis_name member, const_nis_name group)
     {
       size_t grouplen = strlen (group);
       char buf[grouplen + 14 + NIS_MAXNAMELEN];
-      char leafbuf[grouplen + 2];
       char domainbuf[grouplen + 2];
-      nis_name *newmem;
       nis_result *res, *res2;
       nis_error status;
       char *cp, *cp2;
-      unsigned long int i, j, k;
 
-      cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
+      cp = rawmemchr (nis_leaf_of_r (group, buf, sizeof (buf) - 1), '\0');
       cp = stpcpy (cp, ".groups_dir");
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && cp2[0] != '\0')
@@ -44,68 +41,41 @@ nis_removemember (const_nis_name member, const_nis_name group)
           cp = stpcpy (cp, ".");
           stpcpy (cp, cp2);
         }
-      res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
-      if (res == NULL || NIS_RES_STATUS (res) != NIS_SUCCESS)
+      res = nis_lookup (buf, FOLLOW_LINKS | EXPAND_NAME);
+      if (res == NULL)
+	return NIS_NOMEMORY;
+      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
         {
-	  if (res)
-	    {
-	      status = NIS_RES_STATUS (res);
-	      nis_freeresult (res);
-	    }
-	  else
-	    return NIS_NOMEMORY;
+	  status = NIS_RES_STATUS (res);
+	  nis_freeresult (res);
           return status;
         }
 
-      if ((res->objects.objects_len != 1) ||
-          (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
+      if (NIS_RES_NUMOBJ (res) != 1
+	  || __type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ)
 	{
 	  nis_freeresult (res);
 	  return NIS_INVALIDOBJ;
 	}
 
-      newmem =
-	calloc (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len,
-		sizeof (char *));
-      if (newmem == NULL)
-	{
-	  nis_freeresult (res);
-	  return NIS_NOMEMORY;
-	}
+      nis_name *gr_members_val
+	= NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val;
+      u_int gr_members_len
+	= NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
 
-      k = NIS_RES_OBJECT (res)[0].GR_data.gr_members.gr_members_len;
-      j = 0;
-      for (i = 0; i < NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
-	   ++i)
-	{
-	  if (strcmp (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i],
-		      member) != 0)
-	    {
-	      newmem[j] = NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i];
-	      ++j;
-	    }
-	  else
-	    {
-	      free (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i]);
-	      --k;
-	    }
-	}
-      free (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val);
-      assert (k <= NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len);
-      /* This realloc() call always decreases the size.  This cannot
-	 fail.  We still have the test but do not recover memory
-	 (i.e., we overwrite the input pointer).  */
-      nis_name *newp = realloc (newmem, k * sizeof (char*));
-      if (newp == NULL)
-	{
-	  free (newmem);
-	  nis_freeresult (res);
-	  return NIS_NOMEMORY;
-	}
-      newmem = newp;
+      u_int j = 0;
+      for (u_int i = 0; i < gr_members_len; ++i)
+	if (strcmp (gr_members_val[i], member) != 0)
+	  gr_members_val[j++] = gr_members_val[i];
+	else
+	  free (gr_members_val[i]);
 
-      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val = newmem;
-      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = k;
+      /* There is no need to reallocate the gr_members_val array.  We
+	 just adjust the size to match the number of strings still in
+	 it.  Yes, xdr_array will use mem_free with a size parameter
+	 but this is mapped to a simple free call which determines the
+	 size of the block by itself.  */
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = j;
 
       cp = stpcpy (buf, NIS_RES_OBJECT (res)->zo_name);
       *cp++ = '.';
