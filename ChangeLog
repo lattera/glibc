@@ -1,3 +1,8 @@
+2006-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Always call xdr_free
+	for cleanup when cb!=NULL [Coverity CID 233].
+
 2006-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2693]

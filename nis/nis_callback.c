@@ -360,8 +360,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     {
       if (cb->xprt)
 	svc_destroy (cb->xprt);
-      if (cb->serv)
-	xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
+      xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
       free (cb);
     }
   if (!nomsg)
