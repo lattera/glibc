@@ -75,6 +75,10 @@ get_opt_end (const uint8_t **result, const uint8_t *startp,
 }
 
 
+static uint8_t *option_alloc (struct cmsghdr *cmsg, int datalen, int multx,
+			      int plusy);
+
+
 /* RFC 2292, 6.3.1
 
    This function returns the number of bytes required to hold an option
@@ -150,7 +154,7 @@ inet6_option_append (cmsg, typep, multx, plusy)
   int len = typep[0] == IP6OPT_PAD1 ? 1 : typep[1] + 2;
 
   /* Get the pointer to the space in the message.  */
-  uint8_t *ptr = inet6_option_alloc (cmsg, len, multx, plusy);
+  uint8_t *ptr = option_alloc (cmsg, len, multx, plusy);
   if (ptr == NULL)
     /* Some problem with the parameters.  */
     return -1;
@@ -169,12 +173,8 @@ inet6_option_append (cmsg, typep, multx, plusy)
    inet6_option_init().  This function returns a pointer to the 8-bit
    option type field that starts the option on success, or NULL on an
    error.  */
-uint8_t *
-inet6_option_alloc (cmsg, datalen, multx, plusy)
-     struct cmsghdr *cmsg;
-     int datalen;
-     int multx;
-     int plusy;
+static uint8_t *
+option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 {
   /* The RFC limits the value of the alignment values.  */
   if ((multx != 1 && multx != 2 && multx != 4 && multx != 8)
@@ -214,7 +214,17 @@ inet6_option_alloc (cmsg, datalen, multx, plusy)
 
   return result;
 }
-libc_hidden_def (inet6_option_alloc)
+
+
+uint8_t *
+inet6_option_alloc (cmsg, datalen, multx, plusy)
+     struct cmsghdr *cmsg;
+     int datalen;
+     int multx;
+     int plusy;
+{
+  return option_alloc (cmsg, datalen, multx, plusy);
+}
 
 
 /* RFC 2292, 6.3.5

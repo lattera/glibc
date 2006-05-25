@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -28,13 +28,12 @@ nis_addmember (const_nis_name member, const_nis_name group)
     {
       size_t grouplen = strlen (group);
       char buf[grouplen + 14 + NIS_MAXNAMELEN];
-      char leafbuf[grouplen + 2];
       char domainbuf[grouplen + 2];
       nis_result *res, *res2;
       nis_error status;
       char *cp, *cp2;
 
-      cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
+      cp = rawmemchr (nis_leaf_of_r (group, buf, sizeof (buf) - 1), '\0');
       cp = stpcpy (cp, ".groups_dir");
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && cp2[0] != '\0')
@@ -42,30 +41,35 @@ nis_addmember (const_nis_name member, const_nis_name group)
 	  *cp++ = '.';
           stpcpy (cp, cp2);
         }
-      res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
+      res = nis_lookup (buf, FOLLOW_LINKS | EXPAND_NAME);
       if (NIS_RES_STATUS (res) != NIS_SUCCESS)
 	{
 	  status = NIS_RES_STATUS (res);
 	  nis_freeresult (res);
 	  return status;
 	}
-      if ((NIS_RES_NUMOBJ (res)  != 1) ||
-          (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
+      if (NIS_RES_NUMOBJ (res) != 1
+	  || __type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ)
 	{
 	  nis_freeresult (res);
 	  return NIS_INVALIDOBJ;
 	}
 
-      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val
+      u_int gr_members_len
+	= NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
+
+      nis_name *new_gr_members_val
 	= realloc (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val,
-		   (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len + 1)
-		   * sizeof (char *));
-      if (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val == NULL)
+		   (gr_members_len + 1) * sizeof (nis_name));
+      if (new_gr_members_val == NULL)
 	goto nomem_out;
-      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len] = strdup (member);
-      if (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len] == NULL)
+
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val
+	= new_gr_members_val;
+
+      new_gr_members_val[gr_members_len] = strdup (member);
+      if (new_gr_members_val[gr_members_len] == NULL)
 	{
-	  free (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val);
 	nomem_out:
 	  nis_freeresult (res);
 	  return NIS_NOMEMORY;

@@ -1,5 +1,18 @@
 2006-05-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_addmember.c (nis_addmember): Avoid unnecessary copying.
+	Avoid memory leak in case realloc fails.  Simplification for
+	better code generation.
+
+	Avoid deprecation warning because of libc_hidden_proto for
+	inet6_option_alloc.
+	* inet/inet6_option.c (option_alloc): Renamed from
+	inet6_option_alloc.  Made static.
+	(inet6_option_alloc): New a simple wrapper around option_alloc.
+	(inet6_option_append): Call option_alloc.
+	* include/netinet/in.h: Remove libc_hidden_proto for
+	inet6_option_alloc.
+
 	* nis/nis_callback.c (__nis_create_callback): Always call xdr_free
 	for cleanup when cb!=NULL [Coverity CID 233].
 
