@@ -47,6 +47,7 @@ ar_TN/ISO-8859-6 \
 ar_YE.UTF-8/UTF-8 \
 ar_YE/ISO-8859-6 \
 az_AZ.UTF-8/UTF-8 \
+as_IN.UTF-8/UTF-8 \
 be_BY.UTF-8/UTF-8 \
 be_BY/CP1251 \
 be_BY@latin/UTF-8 \
@@ -280,6 +281,7 @@ oc_FR/ISO-8859-1 \
 om_ET/UTF-8 \
 om_KE.UTF-8/UTF-8 \
 om_KE/ISO-8859-1 \
+or_IN/UTF-8 \
 pa_IN/UTF-8 \
 pa_PK/UTF-8 \
 pl_PL.UTF-8/UTF-8 \
