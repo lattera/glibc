@@ -2,7 +2,7 @@
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add as_IN.UTF-8 and or_IN.UTF-8.
 	* locales/as_IN: New file.
-	* locales/OR_IN: New file.
+	* locales/or_IN: New file.
 	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
 
 2006-05-02  Ulrich Drepper  <drepper@redhat.com>
