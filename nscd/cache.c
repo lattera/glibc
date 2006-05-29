@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -197,6 +197,13 @@ prune_cache (struct database_dyn *table, time_t now)
   /* If this table is not actually used don't do anything.  */
   if (cnt == 0)
     return;
+
+  /* This function can be called from the cleanup thread but also in
+     response to an invalidate command.  Make sure only one thread is
+     running.  No need for the second to wait around.  */
+  if (pthread_mutex_trylock (&table->prunelock) != 0)
+    /* Te work is already being done.  */
+    return ;
 
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
@@ -455,4 +462,6 @@ prune_cache (struct database_dyn *table, time_t now)
   /* Run garbage collection if any entry has been removed or replaced.  */
   if (any)
     gc (table);
+
+  pthread_mutex_unlock (&table->prunelock);
 }

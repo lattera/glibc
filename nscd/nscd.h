@@ -58,6 +58,7 @@ typedef enum
 struct database_dyn
 {
   pthread_rwlock_t lock;
+  pthread_mutex_t prunelock;
 
   int enabled;
   int check_file;
