@@ -1,5 +1,9 @@
 2006-05-30  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/arm/initfini.c: New file.
+
+2006-05-30  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/dl-machine.h (elf_machine_dynamic): Rewrite to load
 	_GLOBAL_OFFSET_TABLE_ explicitly.
 
