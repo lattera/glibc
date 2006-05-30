@@ -1,3 +1,8 @@
+2006-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaiconf_init): Initialize bits in
+	the correct place.
+
 2006-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.h (struct database_dyn): Add prunelock field.
@@ -8,7 +13,7 @@
 2006-05-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_removemember.c (nis_removemember): Avoid unnecessary
-	coping.  No need to allocate new array for group members.  Just
+	copying.  No need to allocate new array for group members.  Just
 	move the pointers and update the size.
 
 	* nis/nis_addmember.c (nis_addmember): Avoid unnecessary copying.

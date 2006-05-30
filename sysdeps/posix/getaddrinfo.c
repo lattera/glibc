@@ -1668,7 +1668,7 @@ gaiconf_init (void)
 	      if (strcmp (cmd, "label") == 0)
 		{
 		  struct in6_addr prefix;
-		  unsigned long int bits = 128;
+		  unsigned long int bits;
 		  unsigned long int val;
 		  char *endp;
 
@@ -1677,6 +1677,7 @@ gaiconf_init (void)
 		  nullbitsp = &labellist_nullbits;
 
 		new_elem:
+		  bits = 128;
 		  __set_errno (0);
 		  cp = strchr (val1, '/');
 		  if (cp != NULL)
