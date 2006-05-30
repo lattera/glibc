@@ -28,4 +28,22 @@
 #define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
+/* On ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
+   syscalls were introduced in 2.3.35.  */
+#if __LINUX_KERNEL_VERSION >= 131875
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_STAT64_SYSCALL	1
+#endif
+
+/* Arm got fcntl64 in 2.4.4.  */
+#if __LINUX_KERNEL_VERSION >= 132100
+# define __ASSUME_FCNTL64		1
+#endif
+
+/* The vfork syscall on arm was definitely available in 2.4.  */
+#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+# define __ASSUME_VFORK_SYSCALL		1
+#endif
+
 #include_next <kernel-features.h>

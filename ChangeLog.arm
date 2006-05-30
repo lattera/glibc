@@ -1,3 +1,10 @@
+2006-05-30  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h: Add conditionals
+	for __ASSUME_TRUNCATE64_SYSCALL, __ASSUME_MMAP2_SYSCALL,
+	__ASSUME_STAT64_SYSCALL, __ASSUME_FCNTL64, and
+	__ASSUME_VFORK_SYSCALL.
+
 2006-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Update error message
