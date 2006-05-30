@@ -3,6 +3,7 @@
 	* nscd/nscd.h (struct database_dyn): Add prunelock field.
 	* nscd/cache.c (prune_cache): Take prunelock before starting the
 	work.  Just return in case it is already taken.
+	* nscd/connections.c (dbs): Initialize .prunelock.
 
 2006-05-25  Ulrich Drepper  <drepper@redhat.com>
 
