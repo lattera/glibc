@@ -332,9 +332,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	    exit (EXIT_FAILURE);
 
 	  request_header req;
-	  ssize_t nbytes;
-	  struct iovec iov[2];
-
 	  if (strcmp (arg, "passwd") == 0)
 	    req.key_len = sizeof "passwd";
 	  else if (strcmp (arg, "group") == 0)
@@ -347,17 +344,38 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  req.version = NSCD_VERSION;
 	  req.type = INVALIDATE;
 
+	  struct iovec iov[2];
 	  iov[0].iov_base = &req;
 	  iov[0].iov_len = sizeof (req);
 	  iov[1].iov_base = arg;
 	  iov[1].iov_len = req.key_len;
 
-	  nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
+	  ssize_t nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
+
+	  if (nbytes != iov[0].iov_len + iov[1].iov_len)
+	    {
+	      int err = errno;
+	      close (sock);
+	      error (EXIT_FAILURE, err, _("write incomplete"));
+	    }
+
+	  /* Wait for ack.  Older nscd just closed the socket when
+	     prune_cache finished, silently ignore that.  */
+	  int32_t resp = 0;
+	  nbytes = TEMP_FAILURE_RETRY (read (sock, &resp, sizeof (resp)));
+	  if (nbytes != 0 && nbytes != sizeof (resp))
+	    {
+	      int err = errno;
+	      close (sock);
+	      error (EXIT_FAILURE, err, _("cannot read invalidate ACK"));
+	    }
 
 	  close (sock);
 
-	  exit (nbytes != iov[0].iov_len + iov[1].iov_len
-		? EXIT_FAILURE : EXIT_SUCCESS);
+	  if (resp != 0)
+	    error (EXIT_FAILURE, resp, _("invalidation failed"));
+
+	  exit (0);
 	}
 
     case 't':

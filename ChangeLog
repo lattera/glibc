@@ -1,3 +1,16 @@
+2006-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.h (prune_cache): Add fd argument to prototype.
+	* nscd/nscd.c (parse_opt): Read response from INVALIDATE request
+	to make sure the database has been already invalidated.
+	* nscd/cache.c (prune_cache): Add fd argument.  Write response to fd
+	after the cache has been invalidated.  Use pthread_mutex_lock rather
+	than pthread_mutex_trylock if fd != -1.
+	* nscd/connections.c (invalidate_cache): Add fd argument, write
+	response to fd if not calling prune_cache, pass fd to prune_cache.
+	(handle_request): Adjust invalidate_cache caller.
+	(nscd_run): Pass -1 as fd to prune_cache.
+
 2006-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaiconf_init): Initialize bits in

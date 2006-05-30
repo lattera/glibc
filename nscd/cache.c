@@ -190,20 +190,34 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
    free the data structures since some hash table entries share the same
    data.  */
 void
-prune_cache (struct database_dyn *table, time_t now)
+prune_cache (struct database_dyn *table, time_t now, int fd)
 {
   size_t cnt = table->head->module;
 
   /* If this table is not actually used don't do anything.  */
   if (cnt == 0)
-    return;
+    {
+      if (fd != -1)
+	{
+	  /* Reply to the INVALIDATE initiator.  */
+	  int32_t resp = 0;
+	  writeall (fd, &resp, sizeof (resp));
+	}
+      return;
+    }
 
   /* This function can be called from the cleanup thread but also in
      response to an invalidate command.  Make sure only one thread is
-     running.  No need for the second to wait around.  */
-  if (pthread_mutex_trylock (&table->prunelock) != 0)
-    /* Te work is already being done.  */
-    return ;
+     running.  When not serving INVALIDATE request, no need for the
+     second to wait around.  */
+  if (fd == -1)
+    {
+      if (pthread_mutex_trylock (&table->prunelock) != 0)
+	/* The work is already being done.  */
+	return;
+    }
+  else
+    pthread_mutex_lock (&table->prunelock);
 
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
@@ -373,6 +387,14 @@ prune_cache (struct database_dyn *table, time_t now)
 	}
     }
   while (cnt > 0);
+
+  if (fd != -1)
+    {
+      /* Reply to the INVALIDATE initiator that the cache has been
+	 invalidated.  */
+      int32_t resp = 0;
+      writeall (fd, &resp, sizeof (resp));
+    }
 
   if (first <= last)
     {
