@@ -1,5 +1,11 @@
 2006-06-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIM_INFINITY,
+	RLIM64_INFINITY): Define appropriately for N64.  Use unsigned
+	types.
+
+2006-06-02  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/kernel_stat.h (struct kernel_stat):
 	Don't use struct timespec.
 	* sysdeps/unix/sysv/linux/mips/xstatconv.c (__xstat_conv,

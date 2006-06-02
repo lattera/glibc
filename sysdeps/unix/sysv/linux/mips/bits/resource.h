@@ -107,14 +107,22 @@ enum __rlimit_resource
 };
 
 /* Value to indicate that there is no limit.  */
-#ifndef __USE_FILE_OFFSET64
-# define RLIM_INFINITY ((long int)(~0UL >> 1))
+#if _MIPS_SIM == _ABI64
+/* The N64 syscall uses this value.  */
+# define RLIM_INFINITY 0xffffffffffffffffUL
+# ifdef __USE_LARGEFILE64
+#  define RLIM64_INFINITY 0xffffffffffffffffUL
+# endif
 #else
-# define RLIM_INFINITY 0x7fffffffffffffffLL
-#endif
-
-#ifdef __USE_LARGEFILE64
-# define RLIM64_INFINITY 0x7fffffffffffffffLL
+/* The O32 and N32 syscalls use 0x7fffffff.  */
+# ifndef __USE_FILE_OFFSET64
+#  define RLIM_INFINITY ((long int)(~0UL >> 1))
+# else
+#  define RLIM_INFINITY 0x7fffffffffffffffULL
+# endif
+# ifdef __USE_LARGEFILE64
+#  define RLIM64_INFINITY 0x7fffffffffffffffULL
+# endif
 #endif
 
 /* We can represent all limits.  */
