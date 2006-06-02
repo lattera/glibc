@@ -62,9 +62,12 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 
-	buf->st_atim = kbuf->st_atim;
-	buf->st_mtim = kbuf->st_mtim;
-	buf->st_ctim = kbuf->st_ctim;
+	buf->st_atim.tv_sec = kbuf->st_atime_sec;
+	buf->st_atim.tv_nsec = kbuf->st_atime_nsec;
+	buf->st_mtim.tv_sec = kbuf->st_mtime_sec;
+	buf->st_mtim.tv_nsec = kbuf->st_mtime_nsec;
+	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
+	buf->st_ctim.tv_nsec = kbuf->st_ctime_nsec;
 
 	buf->st_pad5[0] = 0; buf->st_pad5[1] = 0;
 	buf->st_pad5[2] = 0; buf->st_pad5[3] = 0;
@@ -107,9 +110,12 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 
-	buf->st_atim = kbuf->st_atim;
-	buf->st_mtim = kbuf->st_mtim;
-	buf->st_ctim = kbuf->st_ctim;
+	buf->st_atim.tv_sec = kbuf->st_atime_sec;
+	buf->st_atim.tv_nsec = kbuf->st_atime_nsec;
+	buf->st_mtim.tv_sec = kbuf->st_mtime_sec;
+	buf->st_mtim.tv_nsec = kbuf->st_mtime_nsec;
+	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
+	buf->st_ctim.tv_nsec = kbuf->st_ctime_nsec;
 
 	buf->st_pad4[0] = 0; buf->st_pad4[1] = 0;
 	buf->st_pad4[2] = 0; buf->st_pad4[3] = 0;

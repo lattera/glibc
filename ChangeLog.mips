@@ -1,3 +1,10 @@
+2006-06-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h (struct kernel_stat):
+	Don't use struct timespec.
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c (__xstat_conv,
+	__xstat64_conv): Copy individual timespec fields.
+
 2006-06-02  Richard Sandiford  <richard@codesourcery.com>
 
 	* sysdeps/mips/Makefile (ASFLAGS-.os): Define.
