@@ -1,3 +1,8 @@
+2006-06-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/feholdexcpt.c: Add libm_hidden_def.
+	* sysdeps/mips/fpu/fesetround.c: Likewise.
+
 2006-05-10  Richard Sandiford  <richard@codesourcery.com>
 	    Daniel Jacobowitz  <dan@codesourcery.com>
 

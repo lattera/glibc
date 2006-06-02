@@ -41,3 +41,5 @@ fesetround (int round)
 
   return 0;
 }
+
+libm_hidden_def (fesetround)
