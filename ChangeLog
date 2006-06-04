@@ -1,3 +1,14 @@
+2006-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_skip_chars): If no character has
+	been converted at all, set *last_wc to WEOF.  If mbrtowc failed, set wc
+	to the byte which couldn't be converted.
+	(re_string_reconstruct): Don't clear valid_raw_len before calling
+	re_string_skip_chars.  If wc is WEOF after re_string_skip_chars, set
+	tip_context using re_string_context_at.
+	* posix/Makefile: Add rules to build and run bug-regex25 test.
+	* posix/bug-regex25.c: New test.
+
 2006-06-02  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #2703]
