@@ -1,3 +1,9 @@
+2006-06-02  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #2703]
+	* string/envz.c (envz_strip): Correct erroneously reversed src
+	and dest parameters to memmove() invocation.
+
 2006-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd.h (prune_cache): Add fd argument to prototype.

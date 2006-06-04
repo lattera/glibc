@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995,96,97,98,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2001,2002,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.org>
 
@@ -165,7 +165,7 @@ envz_strip (char **envz, size_t *envz_len)
       left -= entry_len;
       if (! strchr (entry, SEP))
 	/* Null entry. */
-	memmove (entry + entry_len, entry, left);
+	memmove (entry, entry + entry_len, left);
       else
 	entry += entry_len;
     }
