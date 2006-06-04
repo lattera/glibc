@@ -1,3 +1,8 @@
+2006-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tests): Add bug-envz1.
+	* string/bug-enz1.c: New file.
+
 2006-06-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.c (re_string_skip_chars): If no character has
