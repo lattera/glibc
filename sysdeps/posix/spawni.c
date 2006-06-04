@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000,2001,2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 2000-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -177,9 +177,10 @@ __spawni (pid_t *pid, const char *file,
 
 	    case spawn_do_open:
 	      {
-		int new_fd = __open64 (action->action.open_action.path,
-				       action->action.open_action.oflag,
-				       action->action.open_action.mode);
+		int new_fd = open_not_cancel (action->action.open_action.path,
+					      action->action.open_action.oflag
+					      | O_LARGEFILE,
+					      action->action.open_action.mode);
 
 		if (new_fd == -1)
 		  /* The `open' call failed.  */
@@ -193,7 +194,7 @@ __spawni (pid_t *pid, const char *file,
 		      /* The `dup2' call failed.  */
 		      _exit (SPAWN_ERROR);
 
-		    if (__close (new_fd) != 0)
+		    if (close_not_cancel (new_fd) != 0)
 		      /* The `close' call failed.  */
 		      _exit (SPAWN_ERROR);
 		  }
