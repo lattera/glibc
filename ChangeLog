@@ -1,5 +1,10 @@
 2006-06-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/spawni.c (__spawni): Use local_seteuid and
+	local_setegid instead of seteuid and setegid.
+	* sysdeps/generic/local-setxid.h: New file.
+	* sysdeps/unix/sysv/linux/local-setxid.h: New file.
+
 	* sysdeps/posix/spawni.c (__spawni): Use non-cancelable interfaces.
 
 	* string/Makefile (tests): Add bug-envz1.

@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include "spawn_int.h"
 #include <not-cancel.h>
+#include <local-setxid.h>
 
 
 /* The Unix standard contains a long explanation of the way to signal
@@ -155,7 +156,8 @@ __spawni (pid_t *pid, const char *file,
 
   /* Set the effective user and group IDs.  */
   if ((flags & POSIX_SPAWN_RESETIDS) != 0
-      && (seteuid (__getuid ()) != 0 || setegid (__getgid ()) != 0))
+      && (local_seteuid (__getuid ()) != 0
+	  || local_setegid (__getgid ()) != 0))
     _exit (SPAWN_ERROR);
 
   /* Execute the file actions.  */
