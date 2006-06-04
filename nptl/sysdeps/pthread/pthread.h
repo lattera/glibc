@@ -1100,6 +1100,16 @@ extern int pthread_atfork (void (*__prepare) (void),
 			   void (*__parent) (void),
 			   void (*__child) (void)) __THROW;
 
+
+#ifdef __USE_EXTERN_INLINES
+/* Optimizations.  */
+extern __inline int
+__NTH (pthread_equal (pthread_t __thread1, pthread_t __thread2))
+{
+  return __thread1 == __thread2;
+}
+#endif
+
 __END_DECLS
 
 #endif	/* pthread.h */
