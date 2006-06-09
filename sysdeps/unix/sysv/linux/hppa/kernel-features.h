@@ -31,4 +31,9 @@
 #define __ASSUME_FCNTL64		1
 #define __ASSUME_GETDENTS64_SYSCALL	1
 
+/* PA-RISC 2.6.9 kernels had the first LWS CAS support */
+#if __LINUX_KERNEL_VERSION >= 0x020609
+# define __ASSUME_LWS_CAS		1
+#endif
+
 #include_next <kernel-features.h>
