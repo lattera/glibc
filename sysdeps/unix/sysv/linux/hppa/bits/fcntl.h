@@ -46,10 +46,10 @@
 
 
 #ifdef __USE_GNU
-# define O_DIRECT	00040000 /* direct disk access hint - currently ignored */
-# define O_DIRECTORY	00010000 /* must be a directory */
-# define O_NOFOLLOW	00000200 /* don't follow links */
-# define O_NOATIME	04000000 /* Do not set atime.  */
+# define O_DIRECT	00040000 /* Direct disk access. */
+# define O_DIRECTORY	00010000 /* Must be a directory. */
+# define O_NOFOLLOW	00000200 /* Do not follow links. */
+# define O_NOATIME	04000000 /* Do not set atime. */
 #endif
 
 #ifdef __USE_LARGEFILE64
@@ -76,7 +76,6 @@
 # define F_SETLK	F_SETLK64 /* Set record locking info (non-blocking). */
 # define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
 #endif
-
 #define F_GETLK64	8	/* Get record locking info.  */
 #define F_SETLK64	9	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	10	/* Set record locking info (blocking).  */
@@ -184,6 +183,14 @@ struct flock64
 # define SYNC_FILE_RANGE_WAIT_AFTER	4 /* Wait upon writeout of all pages in
 					     the range after performing the
 					     write.  */
+
+/* Flags for SPLICE and VMSPLICE.  */
+# define SPLICE_F_MOVE		1	/* Move pages instead of copying.  */
+# define SPLICE_F_NONBLOCK	2	/* Don't block on the pipe splicing
+					   (but we may still block on the fd
+					   we splice from/to).  */
+# define SPLICE_F_MORE		4	/* Expect more data.  */
+# define SPLICE_F_GIFT		8	/* Pages passed in are a gift.  */
 #endif
 
 __BEGIN_DECLS
