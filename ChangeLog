@@ -1,3 +1,8 @@
+2006-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_subr.c (nis_getnames): Fix the implementation to better
+	match what Solaris does.
+
 2006-06-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/spawni.c (__spawni): Use local_seteuid and
@@ -8,7 +13,7 @@
 	* sysdeps/posix/spawni.c (__spawni): Use non-cancelable interfaces.
 
 	* string/Makefile (tests): Add bug-envz1.
-	* string/bug-enz1.c: New file.
+	* string/bug-envz1.c: New file.
 
 2006-06-02  Jakub Jelinek  <jakub@redhat.com>
 

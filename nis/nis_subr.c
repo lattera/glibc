@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2000, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1999,2000,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -107,25 +107,23 @@ count_dots (const_nis_name str)
 nis_name *
 nis_getnames (const_nis_name name)
 {
-  nis_name *getnames = NULL;
-  char local_domain[NIS_MAXNAMELEN + 1];
+  const char *local_domain = nis_local_directory ();
+  size_t local_domain_len = strlen (local_domain);
+  size_t name_len = strlen (name);
   char *path;
-  char *cp;
-  int count;
   int pos = 0;
-  int have_point;
   char *saveptr;
+  int have_point;
+  const char *cp;
+  const char *cp2;
 
-  strncpy (local_domain, nis_local_directory (), NIS_MAXNAMELEN);
-  local_domain[NIS_MAXNAMELEN] = '\0';
-
-  count = 1;
-  getnames = malloc ((count + 1) * sizeof (char *));
+  int count = 2;
+  nis_name *getnames = malloc ((count + 1) * sizeof (char *));
   if (__builtin_expect (getnames == NULL, 0))
       return NULL;
 
   /* Do we have a fully qualified NIS+ name ? If yes, give it back */
-  if (name[strlen (name) - 1] == '.')
+  if (name[name_len - 1] == '.')
     {
       if ((getnames[0] = strdup (name)) == NULL)
 	{
@@ -141,6 +139,44 @@ nis_getnames (const_nis_name name)
       return getnames;
     }
 
+  /* If the passed NAME is shared a suffix (the latter of course with
+     a final dot) with each other we pass back NAME with a final
+     dot.  */
+  if (local_domain_len > 2)
+    {
+      have_point = 0;
+      cp = &local_domain[local_domain_len - 2];
+      cp2 = &name[name_len - 1];
+
+      while (*cp == *cp2)
+	{
+	  if (*cp == '.')
+	    have_point = 1;
+	  --cp;
+	  --cp2;
+	  if (cp < local_domain)
+	    {
+	      have_point = cp2 < name || *cp2 == '.';
+	      break;
+	    }
+	  if (cp2 < name)
+	    {
+	      have_point = *cp == '.';
+	      break;
+	    }
+	}
+
+      if (have_point)
+	{
+	  getnames[0] = malloc (name_len + 2);
+	  if (getnames[0] == NULL)
+	    goto free_null;
+
+	  strcpy (stpcpy (getnames[0], name), ".");
+	  ++pos;
+	}
+    }
+
   /* Get the search path, where we have to search "name" */
   path = getenv ("NIS_PATH");
   if (path == NULL)
@@ -148,17 +184,17 @@ nis_getnames (const_nis_name name)
   else
     path = strdupa (path);
 
-  have_point = (strchr (name, '.') != NULL);
+  have_point = strchr (name, '.') != NULL;
 
   cp = __strtok_r (path, ":", &saveptr);
   while (cp)
     {
       if (strcmp (cp, "$") == 0)
 	{
-	  char *cptr = local_domain;
+	  const char *cptr = local_domain;
 	  char *tmp;
 
-	  while ((have_point && *cptr != '\0') || (count_dots (cptr) >= 2))
+	  while (*cptr != '\0' && count_dots (cptr) >= 2)
 	    {
 	      if (pos >= count)
 		{
@@ -169,8 +205,7 @@ nis_getnames (const_nis_name name)
 		    goto free_null;
 		  getnames = newp;
 		}
-	      tmp = malloc (strlen (cptr) + strlen (local_domain) +
-			    strlen (name) + 2);
+	      tmp = malloc (strlen (cptr) + local_domain_len + name_len + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
 		goto free_null;
 
@@ -200,7 +235,7 @@ nis_getnames (const_nis_name name)
 	    {
 	      char *p;
 
-	      tmp = malloc (cplen + strlen (local_domain) + strlen (name) + 2);
+	      tmp = malloc (cplen + local_domain_len + name_len + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
 		goto free_null;
 
@@ -216,7 +251,7 @@ nis_getnames (const_nis_name name)
 	    {
 	      char *p;
 
-	      tmp = malloc (cplen + strlen (name) + 2);
+	      tmp = malloc (cplen + name_len + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
 		goto free_null;
 
