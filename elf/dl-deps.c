@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ struct list
   {
     int done;			/* Nonzero if this map was processed.  */
     struct link_map *map;	/* The data.  */
-    struct list *next;	/* Elements for normal list.  */
+    struct list *next;		/* Elements for normal list.  */
   };
 
 
@@ -101,9 +101,9 @@ struct list
   ({									      \
     const char *__str = (str);						      \
     const char *__result = __str;					      \
-    size_t __cnt = DL_DST_COUNT(__str, 0);				      \
+    size_t __dst_cnt = DL_DST_COUNT (__str, 0);				      \
 									      \
-    if (__cnt != 0)							      \
+    if (__dst_cnt != 0)							      \
       {									      \
 	char *__newp;							      \
 									      \
@@ -113,9 +113,9 @@ struct list
 DST not allowed in SUID/SGID programs"));				      \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
-						   __cnt));		      \
+						   __dst_cnt));		      \
 									      \
-	__result = _dl_dst_substitute (l, __str, __newp, 0);	      \
+	__result = _dl_dst_substitute (l, __str, __newp, 0);		      \
 									      \
 	if (*__result == '\0')						      \
 	  {								      \
