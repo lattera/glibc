@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,20 @@
 void
 insque (void *elem, void *prev)
 {
-  struct qelem *next = ((struct qelem *) prev)->q_forw;
-  ((struct qelem *) prev)->q_forw = (struct qelem *) elem;
-  if (next != NULL)
-    next->q_back = (struct qelem *) elem;
-  ((struct qelem *) elem)->q_forw = next;
-  ((struct qelem *) elem)->q_back = (struct qelem *) prev;
+  if (prev == NULL)
+    {
+      ((struct qelem *) elem)->q_forw = NULL;
+      ((struct qelem *) elem)->q_back = NULL;
+    }
+  else
+    {
+      struct qelem *next = ((struct qelem *) prev)->q_forw;
+      ((struct qelem *) prev)->q_forw = (struct qelem *) elem;
+      if (next != NULL)
+	next->q_back = (struct qelem *) elem;
+      ((struct qelem *) elem)->q_forw = next;
+      ((struct qelem *) elem)->q_back = (struct qelem *) prev;
+    }
 }
 
 /* Unlink ELEM from the doubly-linked list that it is in.  */

@@ -1,3 +1,10 @@
+2006-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2766]
+	* misc/insremque.c (insque): Handle prev == NULL.
+	* misc/Makefile (tests): Add tst-insremque.
+	* misc/tst-insremque.c: New test.
+
 2006-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2792]
