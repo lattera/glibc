@@ -1,3 +1,15 @@
+2006-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/dcigettext.c (DCIGETTEXT): If _nl_find_msg returns -1 don't
+	look further, return original strings.
+	(_nl_find_msg): Do not return found translation if the conversion
+	failed.  Either signal the string is unusable or that something went
+	wrong and the original should be used.
+
+2006-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/_strerror.c (__strerror_r): Add __builtin_expect.
+
 2006-06-14  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2766]
