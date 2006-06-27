@@ -1846,7 +1846,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 		 auditing code.  We must try to disturb the program as
 		 little as possible.  */
 	      else if (loader == NULL
-		       || GL(dl_ns)[loader->l_ns]._ns_loaded->l_audit == 0)
+		       || GL(dl_ns)[loader->l_ns]._ns_loaded->l_auditing == 0)
 		{
 		  /* We failed to open machine dependent library.  Let's
 		     test whether there is any directory at all.  */
