@@ -1,3 +1,8 @@
+2006-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object): Try harder to avoid looking at
+	RPATH of main map twice.
+
 2006-06-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/dcigettext.c (DCIGETTEXT): If _nl_find_msg returns -1 don't
