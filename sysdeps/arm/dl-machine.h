@@ -54,7 +54,7 @@ elf_machine_dynamic (void)
 {
   Elf32_Addr dynamic;
   asm ("ldr %0, 2f\n"
-       "1: add %0, pc, %0\n"
+       "1: ldr %0, [pc, %0]\n"
        "b 3f\n"
        "2: .word _GLOBAL_OFFSET_TABLE_ - (1b+8)\n"
        "3:" : "=r" (dynamic));
