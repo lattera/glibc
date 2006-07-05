@@ -1,5 +1,11 @@
 2006-07-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: Include
+	<bits/sigcontext.h>.
+	(NGREG, mcontext_t, struct ucontext): Update to match the kernel.
+
+2006-07-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/arm/dl-machine.h (elf_machine_dynamic): Correct GOT access to
 	load the _DYNAMIC slot.
 
