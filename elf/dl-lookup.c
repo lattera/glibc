@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,16 @@ struct sym_val
 
 /* The actual lookup code.  */
 #include "do-lookup.h"
+
+
+static uint_fast32_t
+dl_new_hash (const char *s)
+{
+  uint_fast32_t h = 5381;
+  for (unsigned char c = *s; c != '\0'; c = *++s)
+    h = h * 33 + c;
+  return h & 0xffffffff;
+}
 
 
 /* Add extra dependency on MAP to UNDEF_MAP.  */
@@ -206,7 +216,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 		     const struct r_found_version *version,
 		     int type_class, int flags, struct link_map *skip_map)
 {
-  const unsigned long int hash = _dl_elf_hash (undef_name);
+  const uint_fast32_t new_hash = dl_new_hash (undef_name);
+  unsigned long int old_hash = 0xffffffff;
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope = symbol_scope;
 
@@ -229,8 +240,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
     {
-      int res = do_lookup_x (undef_name, hash, *ref, &current_value, *scope,
-			     start, version, flags, skip_map, type_class);
+      int res = do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+			     &current_value, *scope, start, version, flags,
+			     skip_map, type_class);
       if (res > 0)
 	break;
 
@@ -301,9 +313,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  struct sym_val protected_value = { NULL, NULL };
 
 	  for (scope = symbol_scope; *scope != NULL; i = 0, ++scope)
-	    if (do_lookup_x (undef_name, hash, *ref, &protected_value,
-			     *scope, i, version, flags, skip_map,
-			     ELF_RTYPE_CLASS_PLT) != 0)
+	    if (do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+			     &protected_value, *scope, i, version, flags,
+			     skip_map, ELF_RTYPE_CLASS_PLT) != 0)
 	      break;
 
 	  if (protected_value.s != NULL && protected_value.m != undef_map)
@@ -352,6 +364,31 @@ _dl_setup_hash (struct link_map *map)
   Elf_Symndx *hash;
   Elf_Symndx nchain;
 
+  if (__builtin_expect (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
+  				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
+				    + DT_EXTRANUM + DT_VALNUM] != NULL, 1))
+    {
+      Elf32_Word *hash32
+	= (void *) D_PTR (map, l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
+				      + DT_THISPROCNUM + DT_VERSIONTAGNUM
+				      + DT_EXTRANUM + DT_VALNUM]);
+      map->l_nbuckets = *hash32++;
+      Elf32_Word symbias = *hash32++;
+      Elf32_Word bitmask_nwords = *hash32++;
+      /* Must be a power of two.  */
+      assert ((bitmask_nwords & (bitmask_nwords - 1)) == 0);
+      map->l_gnu_bitmask_idxbits = bitmask_nwords - 1;
+      map->l_gnu_shift = *hash32++;
+
+      map->l_gnu_bitmask = (ElfW(Addr) *) hash32;
+      hash32 += __ELF_NATIVE_CLASS / 32 * bitmask_nwords;
+
+      map->l_gnu_buckets = hash32;
+      hash32 += map->l_nbuckets;
+      map->l_gnu_chain_zero = hash32 - symbias;
+      return;
+    }
+
   if (!map->l_info[DT_HASH])
     return;
   hash = (void *) D_PTR (map, l_info[DT_HASH]);
@@ -399,9 +436,10 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	   || GLRO(dl_trace_prelink_map) == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
 	  && undef_map != GL(dl_ns)[LM_ID_BASE]._ns_loaded)
 	{
-	  const unsigned long int hash = _dl_elf_hash (undef_name);
+	  const uint_fast32_t new_hash = dl_new_hash (undef_name);
+	  unsigned long int old_hash = 0xffffffff;
 
-	  do_lookup_x (undef_name, hash, *ref, &val,
+	  do_lookup_x (undef_name, new_hash, &old_hash, *ref, &val,
 		       undef_map->l_local_scope[0], 0, version, 0, NULL,
 		       type_class);
 

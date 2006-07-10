@@ -413,11 +413,20 @@ LDFLAGS.so += $(relro-LDFLAGS)
 LDFLAGS-rtld += $(relro-LDFLAGS)
 endif
 
+ifeq (yes,$(have-hash-style))
+# For the time being we unconditionally use 'both'.  At some time we
+# should declare statically linked code as 'out of luck' and compile
+# with --hash-style=gnu only.
+hashstyle-LDFLAGS = -Wl,--hash-style=both
+LDFLAGS.so += $(hashstyle-LDFLAGS)
+LDFLAGS-rtld += $(hashstyle-LDFLAGS)
+endif
+
 # Command for linking programs with the C library.
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) \
+	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
 	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \

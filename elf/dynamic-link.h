@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,6 +143,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # endif
       ADJUST_DYN_INFO (DT_JMPREL);
       ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
+      ADJUST_DYN_INFO (DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
+		       + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM);
 # undef ADJUST_DYN_INFO
       assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }

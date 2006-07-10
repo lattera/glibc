@@ -331,7 +331,7 @@ struct audit_ifaces
 
 
 /* Test whether given NAME matches any of the names of the given object.  */
-extern int _dl_name_match_p (const char *__name, struct link_map *__map)
+extern int _dl_name_match_p (const char *__name, const struct link_map *__map)
      internal_function;
 
 /* Function used as argument for `_dl_receive_error' function.  The

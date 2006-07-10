@@ -313,7 +313,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons add_on_subdirs base_machine submachine sysnames sysdeps_add_ons INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES CXX_SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_libcap have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons add_on_subdirs base_machine submachine sysnames sysdeps_add_ons INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES CXX_SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie libc_cv_hashstyle fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_libcap have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -5876,6 +5876,33 @@ echo "$as_me:$LINENO: result: $libc_cv_fpie" >&5
 echo "${ECHO_T}$libc_cv_fpie" >&6
 
 
+
+  echo "$as_me:$LINENO: checking for --hash-style option" >&5
+echo $ECHO_N "checking for --hash-style option... $ECHO_C" >&6
+if test "${libc_cv_hashstyle+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+    cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			      -fPIC -shared -o conftest.so conftest.c
+			      -Wl,--hash-style=both -nostdlib 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }
+  then
+    libc_cv_hashstyle=yes
+  else
+    libc_cv_hashstyle=no
+  fi
+  rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_hashstyle" >&5
+echo "${ECHO_T}$libc_cv_hashstyle" >&6
+
 fi
 
 echo "$as_me:$LINENO: checking for -fno-toplevel-reorder" >&5
@@ -8496,6 +8523,7 @@ s,@ASFLAGS_config@,$ASFLAGS_config,;t t
 s,@libc_cv_z_combreloc@,$libc_cv_z_combreloc,;t t
 s,@libc_cv_z_execstack@,$libc_cv_z_execstack,;t t
 s,@libc_cv_fpie@,$libc_cv_fpie,;t t
+s,@libc_cv_hashstyle@,$libc_cv_hashstyle,;t t
 s,@fno_unit_at_a_time@,$fno_unit_at_a_time,;t t
 s,@libc_cv_ssp@,$libc_cv_ssp,;t t
 s,@libc_cv_have_initfini@,$libc_cv_have_initfini,;t t

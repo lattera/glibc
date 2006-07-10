@@ -329,7 +329,8 @@ typedef struct
 #define SHT_GROUP	  17		/* Section group */
 #define SHT_SYMTAB_SHNDX  18		/* Extended section indeces */
 #define	SHT_NUM		  19		/* Number of defined types.  */
-#define SHT_LOOS	  0x60000000	/* Start OS-specific */
+#define SHT_LOOS	  0x60000000	/* Start OS-specific.  */
+#define SHT_GNU_HASH	  0x6ffffff6	/* GNU-style hash table.  */
 #define SHT_GNU_LIBLIST	  0x6ffffff7	/* Prelink library list */
 #define SHT_CHECKSUM	  0x6ffffff8	/* Checksum for DSO content.  */
 #define SHT_LOSUNW	  0x6ffffffa	/* Sun-specific low bound.  */
@@ -699,6 +700,9 @@ typedef struct
    If any adjustment is made to the ELF object after it has been
    built these entries will need to be adjusted.  */
 #define DT_ADDRRNGLO	0x6ffffe00
+#define DT_GNU_HASH	0x6ffffef5	/* GNU-style hash table.  */
+#define DT_TLSDESC_PLT	0x6ffffef6
+#define DT_TLSDESC_GOT	0x6ffffef7
 #define DT_GNU_CONFLICT	0x6ffffef8	/* Start of conflict section */
 #define DT_GNU_LIBLIST	0x6ffffef9	/* Library list */
 #define DT_CONFIG	0x6ffffefa	/* Configuration information.  */
@@ -709,7 +713,7 @@ typedef struct
 #define DT_SYMINFO	0x6ffffeff	/* Syminfo table.  */
 #define DT_ADDRRNGHI	0x6ffffeff
 #define DT_ADDRTAGIDX(tag)	(DT_ADDRRNGHI - (tag))	/* Reverse order! */
-#define DT_ADDRNUM 10
+#define DT_ADDRNUM 11
 
 /* The versioning entry types.  The next are defined as part of the
    GNU extension.  */

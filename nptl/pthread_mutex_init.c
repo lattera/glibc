@@ -41,20 +41,14 @@ __pthread_mutex_init (mutex, mutexattr)
   imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
 
   /* Sanity checks.  */
-  // XXX For now we don't support priority protected mutexes.
+  // XXX For now we don't support priority inherited or priority protected
+  // XXX mutexes.
   switch (__builtin_expect (imutexattr->mutexkind
 			    & PTHREAD_MUTEXATTR_PROTOCOL_MASK,
 			    PTHREAD_PRIO_NONE
 			    << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT))
     {
     case PTHREAD_PRIO_NONE << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      break;
-
-    case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-#ifndef __ASSUME_SET_ROBUST_LIST
-      if (__set_robust_list_avail < 0)
-	return ENOTSUP;
-#endif
       break;
 
     default:
@@ -81,11 +75,11 @@ __pthread_mutex_init (mutex, mutexattr)
   switch (imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
     {
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_NP;
+      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP;
       break;
 
     case PTHREAD_PRIO_PROTECT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_NP;
+      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP;
       if (PTHREAD_MUTEX_PRIO_CEILING_MASK
 	  == PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
 	mutex->__data.__kind |= (imutexattr->mutexkind

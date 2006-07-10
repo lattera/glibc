@@ -124,7 +124,7 @@ struct link_map
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
-    ElfW(Half) l_ldnum;	/* Number of dynamic segment entries.  */
+    ElfW(Half) l_ldnum;		/* Number of dynamic segment entries.  */
 
     /* Array of DT_NEEDED dependencies and their dependencies, in
        dependency order for symbol lookup (with and without
@@ -141,7 +141,19 @@ struct link_map
 
     /* Symbol hash table.  */
     Elf_Symndx l_nbuckets;
-    const Elf_Symndx *l_buckets, *l_chain;
+    Elf32_Word l_gnu_bitmask_idxbits;
+    Elf32_Word l_gnu_shift;
+    const ElfW(Addr) *l_gnu_bitmask;
+    union
+    {
+      const Elf32_Word *l_gnu_buckets;
+      const Elf_Symndx *l_chain;
+    };
+    union
+    {
+      const Elf32_Word *l_gnu_chain_zero;
+      const Elf_Symndx *l_buckets;
+    };
 
     unsigned int l_direct_opencount; /* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
