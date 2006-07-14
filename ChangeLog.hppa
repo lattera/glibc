@@ -1,5 +1,36 @@
 2006-07-13  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/fxstat.c: Likewise. 
+	* sysdeps/unix/sysv/linux/hppa/fxstatat.c: Likewise.
+
+2006-07-13  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/Makefile: New file
+	* sysdeps/hppa/nptl/jmpbuf-unwind.h: Likewise
+	* sysdeps/hppa/nptl/pthread_spin_lock.c: Likewise
+	* sysdeps/hppa/nptl/pthread_spin_trylock.c: Likewise
+	* sysdeps/hppa/nptl/pthread_spin_unlock.c: Likewise
+	* sysdeps/hppa/nptl/pthreaddef.h: Likewise
+	* sysdeps/hppa/nptl/tcb-offsets.sym: Likewise
+	* sysdeps/hppa/nptl/tls.h: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/createthread.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/fork.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/internaltypes.h: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/libc-lowlevellock.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-initfini.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread_once.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c: Likewise
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-resume.c: Likewise
+
+2006-06-08  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/Versions: new errlist compat entry 
 	for up to 256 errnos
 
