@@ -102,7 +102,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp, secondcall) \
-  ({ __set_cr27(tcbp); 0; })
+  ({ __set_cr27(tcbp); NULL; })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \

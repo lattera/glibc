@@ -1,3 +1,7 @@
+2006-07-15  Jeff Bailey  <jbailey@ubuntu.com>
+
+	* sysdeps/hppa/nptl/tls.h (TLS_INIT_TP): Return NULL.
+
 2006-07-13  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/xstat.c: New file.
