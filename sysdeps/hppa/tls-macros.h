@@ -1,6 +1,7 @@
+/* TLS Access Macros for HP PARISC Linux */
 
 /* HPPA Local Exec TLS access.  */
-# define TLS_LE(x) \
+#define TLS_LE(x) \
   ({  int * __result;  \
       unsigned long __tmp; \
       asm ( \
@@ -14,7 +15,7 @@
   })
 
 /* HPPA Initial Exec TLS access.  */
-# ifdef PIC
+#ifdef PIC
 #  define TLS_IE(x) \
   ({  int * __result;  \
       unsigned long __tmp, __tmp2; \
@@ -28,7 +29,7 @@
 	: "r1" ); \
       __result;  \
   })
-# else
+#else
 #  define TLS_IE(x) \
   ({  int * __result;  \
       unsigned long __tmp, __tmp2; \
@@ -42,9 +43,9 @@
 	: "r1" ); \
       __result;  \
   })
-# endif
+#endif
 
-# ifdef PIC
+#ifdef PIC
 /* HPPA Local Dynamic TLS access.  */
 #  define TLS_LD(x) \
   ({  int * __result;  \
@@ -62,7 +63,7 @@
 	  "r25", "r26", "r28", "r29", "r31" ); \
       __result;  \
   })
-# else
+#else
 #  define TLS_LD(x) \
   ({  int * __result;  \
       asm (  \
@@ -77,10 +78,10 @@
 	  "r25", "r26", "r28", "r29", "r31" ); \
       __result;  \
   })
-# endif
+#endif
 
 /* HPPA General Dynamic TLS access.  */
-# ifdef PIC
+#ifdef PIC
 #  define TLS_GD(x) \
   ({  int * __result;  \
       asm (  \
@@ -96,7 +97,7 @@
 	  "r25", "r26", "r28", "r29", "r31" ); \
       __result;  \
   })
-# else
+#else
 #  define TLS_GD(x) \
   ({  int * __result;  \
       asm (  \

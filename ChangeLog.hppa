@@ -1,3 +1,11 @@
+2006-07-16  Jeff Bailey  <jbailey@ubuntu.com>
+
+	* sysdeps/hppa/tst-audit.h: New file.
+
+2006-07-16  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/tls-macros.h: Cleanup formatting.
+
 2006-07-15  Jeff Bailey  <jbailey@ubuntu.com>
 
 	* sysdeps/hppa/nptl/tls.h (TLS_INIT_TP): Return NULL.
