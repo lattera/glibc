@@ -1,3 +1,10 @@
+2006-07-18  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/pthread_spin_lock.c (pthread_spin_lock): Swap
+	newval and oldval.
+	* sysdeps/hppa/nptl/pthread_spin_trylock.c (pthread_spin_trylock):
+	Likewise.
+
 2006-07-16  Jeff Bailey  <jbailey@ubuntu.com>
 
 	* sysdeps/hppa/tst-audit.h: New file.

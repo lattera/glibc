@@ -29,6 +29,6 @@ pthread_spin_trylock (pthread_spinlock_t *lock)
   return __ldcw (a) ? 0 : EBUSY;
 #endif
 
-  return atomic_compare_and_exchange_val_acq(lock, 0, 1) ? EBUSY : 0;
+  return atomic_compare_and_exchange_val_acq(lock, 1, 0) ? EBUSY : 0;
 
 }

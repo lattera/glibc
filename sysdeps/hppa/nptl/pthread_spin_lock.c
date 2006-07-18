@@ -31,7 +31,7 @@ pthread_spin_lock (pthread_spinlock_t *lock)
   return 0;
 #endif
 
-  while (atomic_compare_and_exchange_val_acq(lock, 0, 1) == 1)
+  while (atomic_compare_and_exchange_val_acq(lock, 1, 0) == 1)
     while (*lock == 1);
   
   return 0;
