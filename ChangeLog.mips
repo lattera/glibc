@@ -1,5 +1,10 @@
 2006-07-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips64/n32/libm-test-ulps,
+	sysdeps/mips/mips64/n64/libm-test-ulps: New.
+
+2006-07-24  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/sigaction.c: If WRAPPER_INCLUDE is
 	defined, include the named file.
 
