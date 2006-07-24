@@ -1,3 +1,8 @@
+2006-07-24  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: If WRAPPER_INCLUDE is
+	defined, include the named file.
+
 2006-07-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: Include
