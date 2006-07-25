@@ -1,3 +1,8 @@
+2006-07-24  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h: 
+	__SIZEOF_PTHREAD_COND_T is 64 bytes. Remove __PAD_ATOMIC_LOCK_T.
+
 2006-07-18  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/nptl/pthread_spin_lock.c (pthread_spin_lock): Swap

@@ -24,6 +24,7 @@
    sizeof(pthread_mutex_t) = 0x30 (48)
    sizeof(pthread_mutexattr_t) = 0x4 (4)
    sizeof(pthread_cond_t) = 0x30 (48)
+   	= Grew to 64 bytes in NPTL.
    No pthread_cond_compat_t ...
    sizeof(pthread_condattr_t) = 0x4 (4)
    sizeof(pthread_rwlock_t) = 0x40 (64)
@@ -34,15 +35,13 @@
 #define __SIZEOF_PTHREAD_ATTR_T 36
 #define __SIZEOF_PTHREAD_MUTEX_T 48 
 #define __SIZEOF_PTHREAD_MUTEXATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 48
+#define __SIZEOF_PTHREAD_COND_T 64
 #define __SIZEOF_PTHREAD_COND_COMPAT_T 12
 #define __SIZEOF_PTHREAD_CONDATTR_T 4
 #define __SIZEOF_PTHREAD_RWLOCK_T 64
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 #define __SIZEOF_PTHREAD_BARRIER_T 48
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
-
-#define __PAD_ATOMIC_LOCK_T 12
 
 /* Thread identifiers.  The structure of the attribute type is not
    exposed on purpose.  */
@@ -78,7 +77,6 @@ typedef union
   struct __pthread_mutex_s
   {
     int __lock;
-    char __size[__PAD_ATOMIC_LOCK_T];
     unsigned int __count;
     int __owner;
     /* KIND must stay at this position in the structure to maintain
@@ -109,7 +107,6 @@ typedef union
   struct
   {
     int __lock;
-    char __size[__PAD_ATOMIC_LOCK_T];
     unsigned int __futex;
     __extension__ unsigned long long int __total_seq;
     __extension__ unsigned long long int __wakeup_seq;
@@ -145,7 +142,6 @@ typedef union
   struct
   {
     int __lock;
-    char __size[__PAD_ATOMIC_LOCK_T];
     unsigned int __nr_readers;
     unsigned int __readers_wakeup;
     unsigned int __writer_wakeup;
