@@ -1,3 +1,8 @@
+2006-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlmopen.c (dlmopen_doit): Don't allow RTLD_GLOBAL to be
+	used when the namespace is not the base namespace.
+
 2006-07-26  Gavin Romig-Koch  <gavin@redhat.com>
 
 	* stdlib/cxa_atexit.c (__new_exitfn_called): New variable.

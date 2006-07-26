@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995,96,97,98,99,2000,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,2003,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,12 +55,19 @@ dlmopen_doit (void *a)
 
   /* Non-shared code has no support for multiple namespaces.  */
   if (args->nsid != LM_ID_BASE)
+    {
 # ifdef SHARED
-    /* If trying to open the link map for the main executable the namespace
-       must be the main one.  */
-    if (args->file == NULL)
+      /* If trying to open the link map for the main executable the namespace
+	 must be the main one.  */
+      if (args->file == NULL)
 # endif
-      GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
+	GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
+
+      /* It makes no sense to use RTLD_GLOBAL when loading a DSO into
+	 a namespace other than the base namespace.  */
+      if (__builtin_expect (args->mode & RTLD_GLOBAL, 0))
+	GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid mode"));
+    }
 
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
 			     args->caller,
