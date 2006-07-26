@@ -31,6 +31,7 @@ __cxa_finalize (void *d)
 {
   struct exit_function_list *funcs;
 
+ restart:
   for (funcs = __exit_funcs; funcs; funcs = funcs->next)
     {
       struct exit_function *f;
@@ -38,17 +39,26 @@ __cxa_finalize (void *d)
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
 	{
 	  void (*cxafn) (void *arg, int status);
+	  void *cxaarg;
 
 	  if ((d == NULL || d == f->func.cxa.dso_handle)
 	      /* We don't want to run this cleanup more than once.  */
 	      && (cxafn = f->func.cxa.fn,
+		  cxaarg = f->func.cxa.arg,
 		  ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
 							  ef_cxa)))
 	    {
+	      uint64_t check = __new_exitfn_called;
+
 #ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (cxafn);
 #endif
-	      cxafn (f->func.cxa.arg, 0);
+	      cxafn (cxaarg, 0);
+
+	      /* It is possible that that last exit function registered
+		 more exit functions.  Start the loop over.  */
+	      if (__builtin_expect (check != __new_exitfn_called, 0))
+		goto restart;
 	    }
 	}
     }

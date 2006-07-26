@@ -1,3 +1,11 @@
+2006-07-26  Gavin Romig-Koch  <gavin@redhat.com>
+
+	* stdlib/cxa_atexit.c (__new_exitfn_called): New variable.
+	(__new_exitfn): Bump it in every successful call.
+	* stdlib/cxa_finalize.c (__cxa_finalize): If destructor registered
+	more exit handlers, call them right away.
+	* stdlib/exit.h: Declare __new_exitfn_called.
+
 2006-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/cxa_finalize.c (__cxa_finalize): Fix race condition when

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,7 @@ __libc_lock_define_initialized (static, lock)
 
 static struct exit_function_list initial;
 struct exit_function_list *__exit_funcs = &initial;
+uint64_t __new_exitfn_called;
 
 struct exit_function *
 __new_exitfn (void)
@@ -111,7 +112,10 @@ __new_exitfn (void)
 
   /* Mark entry as used, but we don't know the flavor now.  */
   if (r != NULL)
-    r->flavor = ef_us;
+    {
+      r->flavor = ef_us;
+      ++__new_exitfn_called;
+    }
 
   __libc_lock_unlock (lock);
 
