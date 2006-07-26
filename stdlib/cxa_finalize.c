@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2001,2002,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,17 +36,21 @@ __cxa_finalize (void *d)
       struct exit_function *f;
 
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
-	if ((d == NULL || d == f->func.cxa.dso_handle)
-	    /* We don't want to run this cleanup more than once.  */
-	    && ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
-						       ef_cxa))
-	  {
-	    void (*cxafn) (void *arg, int status) = f->func.cxa.fn;
+	{
+	  void (*cxafn) (void *arg, int status);
+
+	  if ((d == NULL || d == f->func.cxa.dso_handle)
+	      /* We don't want to run this cleanup more than once.  */
+	      && (cxafn = f->func.cxa.fn,
+		  ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
+							  ef_cxa)))
+	    {
 #ifdef PTR_DEMANGLE
-	    PTR_DEMANGLE (cxafn);
+	      PTR_DEMANGLE (cxafn);
 #endif
-	    cxafn (f->func.cxa.arg, 0);
-	  }
+	      cxafn (f->func.cxa.arg, 0);
+	    }
+	}
     }
 
   /* Remove the registered fork handlers.  We do not have to
