@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,8 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2
+	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
+	bug-atexit3
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
@@ -48,7 +49,7 @@ endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit \
 		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
-		bug-atexit2-lib
+		bug-atexit2-lib bug-atexit3-lib
 
 failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
@@ -133,6 +134,12 @@ $(objpfx)bug-atexit1-lib.so: $(common-objpfx)libc.so \
 $(objpfx)bug-atexit2: $(libdl)
 $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 $(objpfx)bug-atexit2-lib.so: $(common-objpfx)libc.so \
+			     $(common-objpfx)libc_nonshared.a
+
+LDFLAGS-bug-atexit3-lib.so = -lstdc++
+$(objpfx)bug-atexit3: $(libdl)
+$(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
+$(objpfx)bug-atexit3-lib.so: $(common-objpfx)libc.so \
 			     $(common-objpfx)libc_nonshared.a
 
 

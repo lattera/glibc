@@ -1,5 +1,9 @@
 2006-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/Makefile: Add rules to build and run bug-atexit3.
+	* dlfcn/bug-atexit3.c: New file.
+	* dlfcn/bug-atexit3-lib.cc: New file.
+
 	* dlfcn/dlmopen.c (dlmopen_doit): Don't allow RTLD_GLOBAL to be
 	used when the namespace is not the base namespace.
 
