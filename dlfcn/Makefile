@@ -136,7 +136,7 @@ $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 $(objpfx)bug-atexit2-lib.so: $(common-objpfx)libc.so \
 			     $(common-objpfx)libc_nonshared.a
 
-LDFLAGS-bug-atexit3-lib.so = -lstdc++
+LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh $(common-objpfx)libc_nonshared.a
 $(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
 $(objpfx)bug-atexit3-lib.so: $(common-objpfx)libc.so \

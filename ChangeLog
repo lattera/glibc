@@ -1,3 +1,9 @@
+2006-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Use this instead of
+	LDFLAGS.  Add -lgcc_eh and libc_nonshared (again) to make sure we
+	get the __stack_chk_fail_local definition when it's needed.
+
 2006-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/Makefile: Add rules to build and run bug-atexit3.
