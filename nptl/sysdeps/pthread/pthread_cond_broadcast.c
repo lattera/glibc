@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -55,6 +55,12 @@ __pthread_cond_broadcast (cond)
 
       /* Wake everybody.  */
       pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
+
+      /* XXX: Kernel so far doesn't support requeue to PI futex.  */
+      if (__builtin_expect (mut->__data.__kind & PTHREAD_MUTEX_PRIO_INHERIT_NP,
+			    0))
+	goto wake_all;
+
       /* lll_futex_requeue returns 0 for success and non-zero
 	 for errors.  */
       if (__builtin_expect (lll_futex_requeue (&cond->__data.__futex, 1,

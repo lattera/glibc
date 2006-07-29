@@ -30,7 +30,7 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
 {
   /* The low bits of __kind aren't ever changed after pthread_mutex_init,
      so we don't need a lock yet.  */
-  if ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP) == 0)
+  if ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_PROTECT_NP) == 0)
     return EINVAL;
 
   if (prioceiling < 0 || __builtin_expect (prioceiling > 255, 0))

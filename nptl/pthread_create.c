@@ -330,9 +330,11 @@ start_thread (void *arg)
 # else
   __pthread_slist_t *robust = pd->robust_list.__next;
 # endif
-/* We let the kernel do the notification if it is able to do so.  */
+  /* We let the kernel do the notification if it is able to do so.
+     If we have to do it here there for sure are no PI mutexes involved
+     since the kernel support for them is even more recent.  */
   if (__set_robust_list_avail < 0
-      && __builtin_expect (robust != &pd->robust_head, 0))
+      && __builtin_expect (robust != (void *) &pd->robust_head, 0))
     {
       do
 	{
@@ -348,7 +350,7 @@ start_thread (void *arg)
 
 	  lll_robust_mutex_dead (this->__lock);
 	}
-      while (robust != &pd->robust_head);
+      while (robust != (void *) &pd->robust_head);
     }
 #endif
 

@@ -15,7 +15,7 @@ static void prepare (void);
 #define PREPARE(argc, argv) prepare ()
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
-#define TIMEOUT 3
+#define TIMEOUT 5
 #include "../test-skeleton.c"
 
 
@@ -173,6 +173,13 @@ do_test (void)
       puts ("mutexattr_setpshared failed");
       return 1;
     }
+#ifdef ENABLE_PI
+  if (pthread_mutexattr_setprotocol (&ma, PTHREAD_PRIO_INHERIT) != 0)
+    {
+      puts ("pthread_mutexattr_setprotocol failed");
+      return 1;
+    }
+#endif
 
   for (int round = 1; round <= ROUNDS; ++round)
     {
@@ -181,7 +188,11 @@ do_test (void)
 	  int e = pthread_mutex_init (&map[n], &ma);
 	  if (e == ENOTSUP)
 	    {
+#ifdef ENABLE_PI
+	      puts ("cannot support pshared robust PI mutexes");
+#else
 	      puts ("cannot support pshared robust mutexes");
+#endif
 	      return 0;
 	    }
 	  if (e != 0)

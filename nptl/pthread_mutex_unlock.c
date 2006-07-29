@@ -119,6 +119,89 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
+    case PTHREAD_MUTEX_PI_RECURSIVE_NP:
+      /* Recursive mutex.  */
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
+	return EPERM;
+
+      if (--mutex->__data.__count != 0)
+	/* We still hold the mutex.  */
+	return 0;
+      goto continue_pi;
+
+    case PTHREAD_MUTEX_PI_ROBUST_RECURSIVE_NP:
+      /* Recursive mutex.  */
+      if ((mutex->__data.__lock & FUTEX_TID_MASK)
+	  == THREAD_GETMEM (THREAD_SELF, tid)
+	  && __builtin_expect (mutex->__data.__owner
+			       == PTHREAD_MUTEX_INCONSISTENT, 0))
+	{
+	  if (--mutex->__data.__count != 0)
+	    /* We still hold the mutex.  */
+	    return ENOTRECOVERABLE;
+
+	  goto pi_notrecoverable;
+	}
+
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
+	return EPERM;
+
+      if (--mutex->__data.__count != 0)
+	/* We still hold the mutex.  */
+	return 0;
+
+      goto continue_pi;
+
+    case PTHREAD_MUTEX_PI_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_PI_NORMAL_NP:
+    case PTHREAD_MUTEX_PI_ADAPTIVE_NP:
+    case PTHREAD_MUTEX_PI_ROBUST_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_PI_ROBUST_NORMAL_NP:
+    case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
+      if ((mutex->__data.__lock & FUTEX_TID_MASK)
+	  != THREAD_GETMEM (THREAD_SELF, tid)
+	  || ! lll_mutex_islocked (mutex->__data.__lock))
+	return EPERM;
+
+      /* If the previous owner died and the caller did not succeed in
+	 making the state consistent, mark the mutex as unrecoverable
+	 and make all waiters.  */
+      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0
+	  && __builtin_expect (mutex->__data.__owner
+			       == PTHREAD_MUTEX_INCONSISTENT, 0))
+      pi_notrecoverable:
+       newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
+
+    continue_pi:
+      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0)
+	{
+	  /* Remove mutex from the list.
+	     Note: robust PI futexes are signaled by setting bit 0.  */
+	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+			 (void *) (((uintptr_t) &mutex->__data.__list.__next)
+				   | 1));
+	  DEQUEUE_MUTEX (mutex);
+	}
+
+      mutex->__data.__owner = newowner;
+      if (decr)
+	/* One less user.  */
+	--mutex->__data.__nusers;
+
+      /* Unlock.  */
+      if ((mutex->__data.__lock & FUTEX_WAITERS) != 0
+	  || atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock, 0,
+						   THREAD_GETMEM (THREAD_SELF,
+								  tid)))
+	{
+	  INTERNAL_SYSCALL_DECL (__err);
+	  INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
+			    FUTEX_UNLOCK_PI);
+	}
+
+      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
+      break;
+
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;

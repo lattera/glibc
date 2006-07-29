@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,6 +78,9 @@
 
 /* We support user-defined stacks.  */
 #define _POSIX_THREAD_ATTR_STACKADDR	200112L
+
+/* We support priority inheritence.  */
+#define _POSIX_THREAD_PRIO_INHERIT	200112L
 
 /* We support POSIX.1b semaphores.  */
 #define _POSIX_SEMAPHORES	200112L
@@ -171,8 +174,7 @@
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
 
-/* No support for priority inheritance or protection so far.  */
-#define _POSIX_THREAD_PRIO_INHERIT	-1
+/* No support for priority protection so far.  */
 #define _POSIX_THREAD_PRIO_PROTECT	-1
 
 #endif /* posix_opt.h */

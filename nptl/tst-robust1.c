@@ -97,6 +97,30 @@ do_test (void)
       puts ("mutexattr_setrobust failed");
       return 1;
     }
+
+#ifdef ENABLE_PI
+  if (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT) != 0)
+    {
+      puts ("pthread_mutexattr_setprotocol failed");
+      return 1;
+    }
+  else
+    {
+      int e = pthread_mutex_init (&m1, &a);
+      if (e == ENOTSUP)
+	{
+	  puts ("PI robust mutexes not supported");
+	  return 0;
+	}
+      else if (e != 0)
+	{
+	  puts ("mutex_init m1 failed");
+	  return 1;
+	}
+      pthread_mutex_destroy (&m1);
+    }
+#endif
+
 #ifndef NOT_CONSISTENT
   if (pthread_mutex_init (&m1, &a) != 0)
     {
@@ -236,14 +260,14 @@ do_test (void)
       e = pthread_mutex_unlock (&m1);
       if (e != 0)
 	{
-	  printf ("%ld: mutex_unlock m1 failed\n", round);
+	  printf ("%ld: mutex_unlock m1 failed with %d\n", round, e);
 	  return 1;
 	}
 
       e = pthread_mutex_unlock (&m2);
       if (e != 0)
 	{
-	  printf ("%ld: mutex_unlock m2 failed\n", round);
+	  printf ("%ld: mutex_unlock m2 failed with %d\n", round, e);
 	  return 1;
 	}
 

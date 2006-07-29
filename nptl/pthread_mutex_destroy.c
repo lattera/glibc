@@ -30,7 +30,6 @@ __pthread_mutex_destroy (mutex)
     return EBUSY;
 
   /* Set to an invalid value.  */
- dead_robust_mutex:
   mutex->__data.__kind = -1;
 
   return 0;

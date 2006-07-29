@@ -29,6 +29,11 @@ static const struct pthread_mutexattr default_attr =
   };
 
 
+#ifndef __ASSUME_FUTEX_LOCK_PI
+static int tpi_supported;
+#endif
+
+
 int
 __pthread_mutex_init (mutex, mutexattr)
      pthread_mutex_t *mutex;
@@ -41,14 +46,29 @@ __pthread_mutex_init (mutex, mutexattr)
   imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
 
   /* Sanity checks.  */
-  // XXX For now we don't support priority inherited or priority protected
-  // XXX mutexes.
+  // XXX For now we don't support priority protected mutexes.
   switch (__builtin_expect (imutexattr->mutexkind
 			    & PTHREAD_MUTEXATTR_PROTOCOL_MASK,
 			    PTHREAD_PRIO_NONE
 			    << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT))
     {
     case PTHREAD_PRIO_NONE << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
+      break;
+
+    case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
+#ifndef __ASSUME_FUTEX_LOCK_PI
+      if (__builtin_expect (tpi_supported == 0, 0))
+	{
+	  int lock = 0;
+	  INTERNAL_SYSCALL_DECL (err);
+	  int ret = INTERNAL_SYSCALL (futex, err, 4, &lock, FUTEX_UNLOCK_PI,
+				      0, 0);
+	  assert (INTERNAL_SYSCALL_ERROR_P (ret, err));
+	  tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
+	}
+      if (__builtin_expect (tpi_supported < 0, 0))
+	return ENOTSUP;
+#endif
       break;
 
     default:
@@ -75,11 +95,11 @@ __pthread_mutex_init (mutex, mutexattr)
   switch (imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
     {
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP;
+      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_NP;
       break;
 
     case PTHREAD_PRIO_PROTECT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP;
+      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_NP;
       if (PTHREAD_MUTEX_PRIO_CEILING_MASK
 	  == PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
 	mutex->__data.__kind |= (imutexattr->mutexkind

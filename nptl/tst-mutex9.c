@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -88,8 +88,24 @@ do_test (void)
       return 1;
     }
 
-  if (pthread_mutex_init (m, &a) != 0)
+#ifdef ENABLE_PI
+  if (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT) != 0)
     {
+      puts ("pthread_mutexattr_setprotocol failed");
+      return 1;
+    }
+#endif
+
+  int e;
+  if ((e = pthread_mutex_init (m, &a)) != 0)
+    {
+#ifdef ENABLE_PI
+      if (e == ENOTSUP)
+	{
+	  puts ("PI mutexes unsupported");
+	  return 0;
+	}
+#endif
       puts ("mutex_init failed");
       return 1;
     }
@@ -138,7 +154,7 @@ do_test (void)
 	  ts.tv_nsec -= 1000000000;
 	}
 
-      int e = pthread_mutex_timedlock (m, &ts);
+      e = pthread_mutex_timedlock (m, &ts);
       if (e == 0)
 	{
 	  puts ("child: mutex_timedlock succeeded");

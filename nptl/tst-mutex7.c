@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,17 +17,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 
-#ifndef INIT
-# define INIT PTHREAD_MUTEX_INITIALIZER
+#ifndef TYPE
+# define TYPE PTHREAD_MUTEX_DEFAULT
 #endif
 
 
-static pthread_mutex_t lock = INIT;
+static pthread_mutex_t lock;
 
 
 #define ROUNDS 1000
@@ -65,6 +67,48 @@ tf (void *arg)
 static int
 do_test (void)
 {
+  pthread_mutexattr_t a;
+
+  if (pthread_mutexattr_init (&a) != 0)
+    {
+      puts ("mutexattr_init failed");
+      exit (1);
+    }
+
+  if (pthread_mutexattr_settype (&a, TYPE) != 0)
+    {
+      puts ("mutexattr_settype failed");
+      exit (1);
+    }
+
+#ifdef ENABLE_PI
+  if (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT) != 0)
+    {
+      puts ("pthread_mutexattr_setprotocol failed");
+      return 1;
+    }
+#endif
+
+  int e = pthread_mutex_init (&lock, &a);
+  if (e != 0)
+    {
+#ifdef ENABLE_PI
+      if (e == ENOTSUP)
+	{
+	  puts ("PI mutexes unsupported");
+	  return 0;
+	}
+#endif
+      puts ("mutex_init failed");
+      return 1;
+    }
+
+  if (pthread_mutexattr_destroy (&a) != 0)
+    {
+      puts ("mutexattr_destroy failed");
+      return 1;
+    }
+
   pthread_attr_t at;
   pthread_t th[N];
   int cnt;

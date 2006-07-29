@@ -1,3 +1,63 @@
+2006-07-28  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h: Change ENQUEUE_MUTEX and DEQUEUE_MUTEX for bit 0
+	notification of PI mutex.  Add ENQUEUE_MUTEX_PI.
+	* pthreadP.h: Define PTHREAD_MUTEX_PI_* macros for PI mutex types.
+	* pthread_mutex_setprioceilining.c: Adjust for mutex type name change.
+	* pthread_mutex_init.c: Add support for priority inheritance mutex.
+	* pthread_mutex_lock.c: Likewise.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* sysdeps/pthread/pthread_cond_broadcast.c: For PI mutexes wake
+	all mutexes.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread-pi-defines.sym: New file.
+	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-header): Add
+	pthread-pi-defines.sym.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Define FUTEX_LOCK_PI,
+	FUTEX_UNLOCK_PI, and FUTEX_TRYLOCK_PI.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_THREAD_PRIO_INHERIT to 200112L.
+	* tst-mutex1.c: Adjust to allow use in PI mutex test.
+	* tst-mutex2.c: Likewise.
+	* tst-mutex3.c: Likewise.
+	* tst-mutex4.c: Likewise.
+	* tst-mutex5.c: Likewise.
+	* tst-mutex6.c: Likewise.
+	* tst-mutex7.c: Likewise.
+	* tst-mutex7a.c: Likewise.
+	* tst-mutex8.c: Likewise.
+	* tst-mutex9.c: Likewise.
+	* tst-robust1.c: Likewise.
+	* tst-robust7.c: Likewise.
+	* tst-robust8.c: Likewise.
+	* tst-mutexpi1.c: New file.
+	* tst-mutexpi2.c: New file.
+	* tst-mutexpi3.c: New file.
+	* tst-mutexpi4.c: New file.
+	* tst-mutexpi5.c: New file.
+	* tst-mutexpi6.c: New file.
+	* tst-mutexpi7.c: New file.
+	* tst-mutexpi7a.c: New file.
+	* tst-mutexpi8.c: New file.
+	* tst-mutexpi9.c: New file.
+	* tst-robust1.c: New file.
+	* tst-robust2.c: New file.
+	* tst-robust3.c: New file.
+	* tst-robust4.c: New file.
+	* tst-robust5.c: New file.
+	* tst-robust6.c: New file.
+	* tst-robust7.c: New file.
+	* tst-robust8.c: New file.
+	* Makefile (tests): Add the new tests.
+
+	* pthread_create.c (start_thread): Add some casts to avoid warnings.
+	* pthread_mutex_destroy.c: Remove unneeded label.
+
 2006-07-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_mutex_init.c (__pthread_mutex_init): Move some

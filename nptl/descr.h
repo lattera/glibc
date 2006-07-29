@@ -155,23 +155,28 @@ struct pthread
      first.  */
 # define QUEUE_PTR_ADJUST (offsetof (__pthread_list_t, __next))
 
-# define ENQUEUE_MUTEX(mutex) \
+# define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
   do {									      \
-    __pthread_list_t *next = (THREAD_GETMEM (THREAD_SELF, robust_head.list)   \
-			      - QUEUE_PTR_ADJUST);			      \
+    __pthread_list_t *next = (__pthread_list_t *)			      \
+      ((((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
+       - QUEUE_PTR_ADJUST);						      \
     next->__prev = (void *) &mutex->__data.__list.__next;		      \
-    mutex->__data.__list.__next = (void *) &next->__next;		      \
+    mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,		      \
+						 robust_head.list);	      \
     mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;	      \
     THREAD_SETMEM (THREAD_SELF, robust_head.list,			      \
-		   &mutex->__data.__list.__next);			      \
+		   (void *) (((uintptr_t) &mutex->__data.__list.__next)	      \
+			     | val));					      \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \
     __pthread_list_t *next = (__pthread_list_t *)			      \
-      ((char *) mutex->__data.__list.__next - QUEUE_PTR_ADJUST);	      \
+      ((char *) (((uintptr_t) mutex->__data.__list.__next) & ~1ul)	      \
+       - QUEUE_PTR_ADJUST);						      \
     next->__prev = mutex->__data.__list.__prev;				      \
     __pthread_list_t *prev = (__pthread_list_t *)			      \
-      ((char *) mutex->__data.__list.__prev - QUEUE_PTR_ADJUST);	      \
+      ((char *) (((uintptr_t) mutex->__data.__list.__prev) & ~1ul)	      \
+       - QUEUE_PTR_ADJUST);						      \
     prev->__next = mutex->__data.__list.__next;				      \
     mutex->__data.__list.__prev = NULL;					      \
     mutex->__data.__list.__next = NULL;					      \
@@ -183,27 +188,36 @@ struct pthread
     struct robust_list_head robust_head;
   };
 
-# define ENQUEUE_MUTEX(mutex) \
+# define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
   do {									      \
     mutex->__data.__list.__next						      \
       = THREAD_GETMEM (THREAD_SELF, robust_list.__next);		      \
-    THREAD_SETMEM (THREAD_SELF, robust_list.__next, &mutex->__data.__list);   \
+    THREAD_SETMEM (THREAD_SELF, robust_list.__next,			      \
+		   ((uintptr_t) &mutex->__data.__list) | val);		      \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \
-    __pthread_slist_t *runp = THREAD_GETMEM (THREAD_SELF, robust_list.__next);\
+    __pthread_slist_t *runp = (__pthread_slist_t *)			      \
+      (((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_list.__next)) & ~1ul); \
     if (runp == &mutex->__data.__list)					      \
       THREAD_SETMEM (THREAD_SELF, robust_list.__next, runp->__next);	      \
     else								      \
       {									      \
-	while (runp->__next != &mutex->__data.__list)			      \
-	  runp = runp->__next;						      \
+	__pthread_slist_t *next = (__pthread_slist_t *)		      \
+	  (((uintptr_t) runp->__next) & ~1ul);				      \
+	while (next != &mutex->__data.__list)				      \
+	  {								      \
+	    runp = next;						      \
+	    next = (__pthread_slist_t *) (((uintptr_t) runp->__next) & ~1ul); \
+	  }								      \
 									      \
-	runp->__next = runp->__next->__next;				      \
+	runp->__next = next->__next;					      \
 	mutex->__data.__list.__next = NULL;				      \
       }									      \
   } while (0)
 #endif
+#define ENQUEUE_MUTEX(mutex) ENQUEUE_MUTEX_BOTH (mutex, 0)
+#define ENQUEUE_MUTEX_PI(mutex) ENQUEUE_MUTEX_BOTH (mutex, 1)
 
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;

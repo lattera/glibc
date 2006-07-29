@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,6 +21,7 @@
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
+#include <pthread-pi-defines.h>
 
 #ifdef UP
 # define LOCK
@@ -79,6 +80,10 @@ __pthread_cond_broadcast:
 
 8:	cmpq	$-1, %r8
 	je	9f
+
+	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
+	testl	$PI_BIT, MUTEX_KIND(%r8)
+	jne	9f
 
 	/* Wake up all threads.  */
 	movl	$FUTEX_CMP_REQUEUE, %esi

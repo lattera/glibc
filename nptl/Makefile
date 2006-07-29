@@ -200,6 +200,9 @@ tests = tst-typesizes \
 	tst-attr1 tst-attr2 tst-attr3 \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
+	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
+	tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a tst-mutexpi8 \
+	tst-mutexpi9 \
 	tst-spin1 tst-spin2 tst-spin3 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
@@ -207,6 +210,8 @@ tests = tst-typesizes \
 	tst-cond20 tst-cond21 \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
 	tst-robust6 tst-robust7 tst-robust8 \
+	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 \
+	tst-robustpi5 tst-robustpi6 tst-robustpi7 tst-robustpi8 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
