@@ -162,5 +162,7 @@ extern __pid_t __libc_fork (void);
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets `errno' to EINTR.  */
 extern int __libc_pause (void);
+/* Not cancelable variant.  */
+extern int __pause_nocancel (void);
 
 #endif

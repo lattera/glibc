@@ -81,6 +81,8 @@ extern long int __tzname_max (void);
 
 extern int __nanosleep (__const struct timespec *__requested_time,
 			struct timespec *__remaining);
+extern int __nanosleep_nocancel (__const struct timespec *__requested_time,
+				 struct timespec *__remaining);
 libc_hidden_proto(__nanosleep)
 extern int __getdate_r (__const char *__string, struct tm *__resbufp);
 

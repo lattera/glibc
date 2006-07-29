@@ -1,5 +1,10 @@
 2006-07-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_FUTEX_LOCK_PI.
+	* include/time.h: Declare __nanosleep_nocancel.
+	* include/unistd.h: Declare __pause_nocancel.
+
 	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Use this instead of
 	LDFLAGS.  Add -lgcc_eh and libc_nonshared (again) to make sure we
 	get the __stack_chk_fail_local definition when it's needed.

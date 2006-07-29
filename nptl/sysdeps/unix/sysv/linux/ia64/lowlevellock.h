@@ -33,6 +33,9 @@
 #define FUTEX_CMP_REQUEUE	4
 #define FUTEX_WAKE_OP		5
 #define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
+#define FUTEX_LOCK_PI		6
+#define FUTEX_UNLOCK_PI		7
+#define FUTEX_TRYLOCK_PI	8
 
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP          asm ("hint @pause")

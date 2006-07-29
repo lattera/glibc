@@ -26,6 +26,9 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_LOCK_PI		6
+#define FUTEX_UNLOCK_PI		7
+#define FUTEX_TRYLOCK_PI	8
 
 
 /* Initializer for compatibility lock.  */

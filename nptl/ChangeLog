@@ -20,6 +20,12 @@
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Define FUTEX_LOCK_PI,
 	FUTEX_UNLOCK_PI, and FUTEX_TRYLOCK_PI.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
 	_POSIX_THREAD_PRIO_INHERIT to 200112L.
 	* tst-mutex1.c: Adjust to allow use in PI mutex test.

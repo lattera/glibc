@@ -431,29 +431,30 @@
 /* pselect was introduced just after 2.6.16-rc1.  Due to the way the
    kernel versions are advertised we can only rely on 2.6.17 to have
    the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && (defined __i386__ || defined __powerpc__)
+#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
 # define __ASSUME_PSELECT	1
 #endif
 
 /* ppoll was introduced just after 2.6.16-rc1.  Due to the way the
    kernel versions are advertised we can only rely on 2.6.17 to have
    the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && (defined __i386__ || defined __powerpc__)
+#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
 # define __ASSUME_PPOLL	1
 #endif
 
 /* The *at syscalls were introduced just after 2.6.16-rc1.  Due to the way the
    kernel versions are advertised we can only rely on 2.6.17 to have
    the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && (defined __i386__ || defined __x86_64__)
+#if __LINUX_KERNEL_VERSION >= 0x020611
 # define __ASSUME_ATFCTS	1
 #endif
 
 /* Support for inter-process robust mutexes was added in 2.6.17.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && (defined __i386__ || defined __x86_64__)
+#if __LINUX_KERNEL_VERSION >= 0x020611
 # define __ASSUME_SET_ROBUST_LIST	1
+#endif
+
+/* Support for PI futexes was added in 2.6.18.  */
+#if __LINUX_KERNEL_VERSION >= 0x020612
+# define __ASSUME_FUTEX_LOCK_PI	1
 #endif
