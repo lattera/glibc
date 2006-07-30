@@ -3465,6 +3465,9 @@ class "combining_level3"; /
 
 % END modified i18n LC_CTYPE
 
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_MESSAGES

@@ -32,7 +32,7 @@ category  "ar_SD:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "ar_EG"
 END LC_CTYPE
 
 LC_COLLATE

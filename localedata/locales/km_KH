@@ -68,10 +68,6 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 %copy "i18n"
-%translit_start
-%include  "translit_combining";""
-%translit_end
-
 
 upper	<U0041>;/
 	<U0042>;/
@@ -893,6 +889,10 @@ tolower	(<U0041>,<U0061>);/
 	(<U0058>,<U0078>);/
 	(<U0059>,<U0079>);/
 	(<U005A>,<U007A>)
+
+translit_start
+include  "translit_combining";""
+translit_end
 
 END LC_CTYPE
 
@@ -1782,7 +1782,7 @@ abday   "<U17A2><U17B6>";/
         "<U1796><U17D2><U179A>";/
         "<U179F><U17BB>";/
         "<U179F>"
-	
+
 day     "<U1790><U17D2><U1784><U17C3><U200B><U17A2><U17B6><U1791><U17B7><U178F><U17D2><U1799>";/
         "<U1790><U17D2><U1784><U17C3><U200B><U1785><U17D0><U1793><U17D2><U1791>";/
         "<U1790><U17D2><U1784><U17C3><U200B><U17A2><U1784><U17D2><U1782><U17B6><U179A>";/

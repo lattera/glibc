@@ -50,6 +50,10 @@ LC_CTYPE
 % Use the characters described in the charmap file "i18n.tgz"
 %
 copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -327,4 +331,3 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab3 "<U0055><U0047><U0041>"
 country_num 800
 END LC_ADDRESS
-

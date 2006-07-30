@@ -63,6 +63,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -95,7 +99,7 @@ day         "<U0053><U006F><U006E><U0064><U0061><U0067>";/
             "<U0056><U0072><U0079><U0064><U0061><U0067>";/
             "<U0053><U0061><U0074><U0065><U0072><U0064><U0061><U0067>"
 
-% abmon - The abbreviations for the months 
+% abmon - The abbreviations for the months
 % - Jan, Feb, Mrt, Apr, Mei, Jun, Jul, Aug, Sep, Okt, Nov, Des
 abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U004D><U0072><U0074>";"<U0041><U0070><U0072>";/
@@ -104,7 +108,7 @@ abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
             "<U004E><U006F><U0076>";"<U0044><U0065><U0073>"
 
-% mon - The full names of the months - 
+% mon - The full names of the months -
 % Januarie, Februarie, Maart, April, Mei, Junie
 % Julie, Augustus, September, Oktober, November, Desember
 mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0069><U0065>";/
@@ -205,7 +209,7 @@ name_gen    ""
 % Salutation for unmarried females
 % "mej"
 name_miss   "<U006D><U0065><U006A>"
- 
+
 % Salutation for males
 % "mnr"
 name_mr     "<U006D><U006E><U0072>"

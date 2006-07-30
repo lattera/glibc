@@ -49,6 +49,10 @@ LC_CTYPE
 
 copy "i18n"
 
+translit_start
+include  "translit_combining";""
+translit_end
+
 class	"hanzi"; /
 %	<U3400>..<U4DBF>;/
 	<U4E00>..<U9FA5>;/

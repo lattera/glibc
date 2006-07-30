@@ -51,7 +51,7 @@ category  "kl_GL:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "da_DK"
 END LC_CTYPE
 
 LC_COLLATE

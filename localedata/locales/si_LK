@@ -34,6 +34,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -122,7 +126,7 @@ mon         "<U0DA2><U0DB1><U0DC0><U0DCF><U0DBB><U0DD2>";/
             "<U0DB1><U0DD9><U0DC0><U0DD0><U0DB8><U0DCA><U0DB6><U0DBB><U0DCA>";/
             "<U0DAF><U0DD9><U0DC3><U0DD0><U0DB8><U0DCA><U0DB6><U0DBB><U0DCA>"
 %
-% Equivalent of AM PM 
+% Equivalent of AM PM
 am_pm       "<U0DB4><U0DD9><U002E><U0DC0><U002E>";"<U0DB4><U002E><U0DC0><U002E>"
 %
 % Appropriate date and time representation (use the same as ISO)
@@ -133,7 +137,7 @@ d_t_fmt     "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064><U0020><U00
 % %Y-%m-%d
 d_fmt "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
 %
-% Appropriate time representation 
+% Appropriate time representation
 % %H:%M:%S
 t_fmt       "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 %

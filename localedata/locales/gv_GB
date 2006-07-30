@@ -1,7 +1,7 @@
 escape_char  /
 comment_char  %
 
-% WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen 
+% WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen
 % to see if there is an offical release for Manx Gaelic.
 
 % Manx Gaelic language locale for Britain
@@ -50,6 +50,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE

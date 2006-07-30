@@ -31,7 +31,7 @@ comment_char  %
 %     2003-05-17 Dwayne Bailey <dwayne@translate.org.za>
 %       - Add lang_ab, lang_term
 %       - Add various comments for reference documents
-%       - Add country_isbn, country_car, country_ab2, 
+%       - Add country_isbn, country_car, country_ab2,
 %         country_ab3, country_num
 %       - Add name_* for all salutations
 % 1.1 (2003-03-14):
@@ -74,7 +74,7 @@ category  "en_ZA:2003";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "en_GB"
 END LC_CTYPE
 
 LC_COLLATE
@@ -137,7 +137,7 @@ day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
             "<U0046><U0072><U0069><U0064><U0061><U0079>";/
             "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
 
-% abmon - The abbreviations for the months 
+% abmon - The abbreviations for the months
 % - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
 abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
@@ -146,7 +146,7 @@ abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
             "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
             "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
 
-% mon - The full names of the months - 
+% mon - The full names of the months -
 % - January, February, March, April, May, June
 %   July, August, September, October, November, December
 mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
@@ -269,7 +269,7 @@ name_gen    ""
 % Salutation for unmarried females
 % "Miss"
 name_miss   "<U004D><U0069><U0073><U0073>"
- 
+
 % Salutation for males
 % "Mr"
 name_mr     "<U004D><U0072>"

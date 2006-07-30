@@ -34,6 +34,10 @@ END LC_IDENTIFICATION
 %%%%%%%%%%%%%
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 %%%%%%%%%%%%%
@@ -575,8 +579,8 @@ order_start forward;forward;forward;forward
 <U09B7> <X687A>;<X0005>;<X0005>;IGNORE
 <U09B8> <X687C>;<X0005>;<X0005>;IGNORE
 <U09B9> <X687E>;<X0005>;<X0005>;IGNORE
-% FIXME <U09BD> <X6880>;<X0005>;<X0005>;IGNORE 
-%     <U09BD> (Bengali sign avagraha) is defined from Unicode4.0 
+% FIXME <U09BD> <X6880>;<X0005>;<X0005>;IGNORE
+%     <U09BD> (Bengali sign avagraha) is defined from Unicode4.0
 <U09BE> <X6882>;<X0005>;<X0005>;IGNORE
 <U09BF> <X6884>;<X0005>;<X0005>;IGNORE
 <U09C0> <X6886>;<X0005>;<X0005>;IGNORE

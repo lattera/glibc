@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Catalan Language Locale for Andorra 
+% Catalan Language Locale for Andorra
 % Language: ca
 % Territory: AD
 % Option: euro
@@ -45,7 +45,7 @@ copy "ca_ES"
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "ca_ES"
 END LC_CTYPE
 
 LC_MESSAGES

@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Catalan Language Locale for Italy (L'Alguer) 
+% Catalan Language Locale for Italy (L'Alguer)
 % Language: ca
 % Territory: IT
 % Option: euro
@@ -45,7 +45,7 @@ copy "ca_ES"
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "ca_ES"
 END LC_CTYPE
 
 LC_MESSAGES

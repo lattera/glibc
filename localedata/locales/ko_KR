@@ -6091,6 +6091,7 @@ hanja	<U3400>..<U4DB5>;<U4E00>..<U9FA5>;<UF900>..<UFA0B>;<UFA0C>..<UFA2D>
 
 translit_start
 
+include "translit_combining";""
 include "translit_hangul";""
 
 translit_end

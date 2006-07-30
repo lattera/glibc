@@ -2,7 +2,7 @@ comment_char %
 escape_char  /
 %
 % Tajik Language Locale for Tajikistan
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga, Roger Kovacs
 % Email: <pablo@mandrakesoft.com>, <ROGERKO@micromotion.com>
 % Language: tg
@@ -50,6 +50,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -126,7 +130,7 @@ noexpr  "<U005E><U005B><U041D><U043D><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0052><U0055><U0053><U0020>"
+int_curr_symbol           "<U0054><U004A><U0053><U0020>"
 currency_symbol           "<U0440><U0443><U0431>"
 mon_decimal_point         "<U002E>"
 mon_thousands_sep         "<U0020>"
@@ -227,4 +231,3 @@ LC_TELEPHONE
 % FIXME
 copy "en_DK"
 END LC_TELEPHONE
-

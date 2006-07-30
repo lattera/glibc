@@ -72,6 +72,10 @@ map to_inpunct; /
 map to_outpunct; /
   (<U002E>,<U066B>); /
   (<U002C>,<U066C>)
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE

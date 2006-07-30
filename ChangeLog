@@ -1,3 +1,11 @@
+2006-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/localedef.c (add_to_readlist): Rename local
+	variables to avoid confusion.
+
+	* locale/programs/charmap.c (charmap_read): Emit error message if
+	charmap couldn't be found or read.
+
 2006-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define

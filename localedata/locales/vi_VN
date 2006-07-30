@@ -50,6 +50,8 @@ LC_CTYPE
 copy "i18n"
 translit_start
 
+include  "translit_combining";""
+
 % dong sign -> d// -> dd
 <U20AB> "<U0111>";"<U0064><U0064>"
 
@@ -352,4 +354,3 @@ END LC_TELEPHONE
 LC_MEASUREMENT
 measurement 1
 END LC_MEASUREMENT
-

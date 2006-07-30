@@ -2129,7 +2129,7 @@ order_end
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "es_ES"
 END LC_CTYPE
 
 LC_MESSAGES

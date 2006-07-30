@@ -31,7 +31,7 @@ category  "pa_IN:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "pa_PK"
 END LC_CTYPE
 
 

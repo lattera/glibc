@@ -47,6 +47,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -56,7 +60,7 @@ script <TIBETAN>
 
 % 30 base letters
 collating-symbol <TIB-KA>
-collating-symbol <TIB-KHA> 
+collating-symbol <TIB-KHA>
 collating-symbol <TIB-GA>
 collating-symbol <TIB-NGA>
 collating-symbol <TIB-CA>
@@ -1191,7 +1195,7 @@ reorder-after <U042F>
 <U0F7C> <TIB-O>;<BAS>;<NOM>;IGNORE % o
 <U0F7D> <TIB-O>;<MAC>;<NOM>;IGNORE % oo
 
-% FIXME: 0F39, 0F7F, 0F84, 0F85, 0F86, 0F87, 
+% FIXME: 0F39, 0F7F, 0F84, 0F85, 0F86, 0F87,
 
 % FIXME: 0F88, UF89, UF8A, 0F8B
 <U0F88> IGNORE;<PCT>;IGNORE;IGNORE
@@ -1278,12 +1282,12 @@ mon      "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F51><U0F44><U0F0B><U0F54><U0F0B>
 
 
 
-% Appropriate date & time representation  
+% Appropriate date & time representation
 d_t_fmt      "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y<U0F5F><U0F63>%m<U0F5A><U0F7A><U0F66>/
 %d<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%H<U0F40><U0F66><U0F62><U0F0B><U0F58>/
 %M<U0F40><U0F66><U0F62><U0F0B><U0F46>%S"
 
-% Appropriate date representation  
+% Appropriate date representation
 d_fmt        "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y<U0F5F>/
 <U0F63>%m<U0F5A><U0F7A><U0F66>%d"
 
@@ -1357,4 +1361,3 @@ lang_ab       "<U0074><U0068>"
 lang_term     "<U0074><U0068><U0061>"
 lang_lib      "<U0074><U0068><U0061>"
 END LC_ADDRESS
-

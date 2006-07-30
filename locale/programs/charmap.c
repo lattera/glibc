@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1998-2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998-2004,2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -130,13 +130,11 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 	}
 
       if (cmfile != NULL)
-	{
-	  result = parse_charmap (cmfile, verbose, be_quiet);
+	result = parse_charmap (cmfile, verbose, be_quiet);
 
-	  if (result == NULL && !be_quiet)
-	    WITH_CUR_LOCALE (error (0, errno, _("\
+      if (result == NULL && !be_quiet)
+	WITH_CUR_LOCALE (error (0, errno, _("\
 character map file `%s' not found"), filename));
-	}
     }
 
   if (result == NULL && filename != NULL && strchr (filename, '/') == NULL)

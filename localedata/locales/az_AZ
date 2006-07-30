@@ -2,7 +2,7 @@ comment_char %
 escape_char  /
 %
 % Azeri Language Locale for Azerbaijan (latin)
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: <pablo@mandrakesoft.com>
 % Language: az
@@ -47,8 +47,8 @@ END LC_IDENTIFICATION
 % TODO: fix LC_MONETARY
 
 LC_COLLATE
-% The new (1991) latin azeri alphabet is:       
-% <a>, <b>, <c>, <c,>, <d>, <e>, <sw>, <f>, <g>, <g(>, <h>, <x>, 
+% The new (1991) latin azeri alphabet is:
+% <a>, <b>, <c>, <c,>, <d>, <e>, <sw>, <f>, <g>, <g(>, <h>, <x>,
 % <i> (dotless i), <i.> (i with dot), <j>, <k>, <q>, <l>, <m>, <n>, <o>,
 % <o:>, <p>, <r>, <s>, <s,>, <t>, <u>, <u:>, <v>, <y>, <z>
 %
@@ -187,10 +187,8 @@ reorder-end
 END LC_COLLATE
 
 LC_CTYPE
-%copy "i18n"
 copy "tr_TR"
 translit_start
-include "translit_combining";""
 
 % schwa -> a:
 <U0259> "<U00E4>"

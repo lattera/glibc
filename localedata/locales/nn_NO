@@ -32,7 +32,7 @@ category  "nn_NO:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "nb_NO"
 END LC_CTYPE
 
 LC_COLLATE

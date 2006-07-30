@@ -530,7 +530,7 @@ normalize_codeset (codeset, name_len)
 
 
 struct localedef_t *
-add_to_readlist (int locale, const char *name, const char *repertoire_name,
+add_to_readlist (int category, const char *name, const char *repertoire_name,
 		 int generate, struct localedef_t *copy_locale)
 {
   struct localedef_t *runp = locales;
@@ -561,39 +561,39 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
     }
 
   if (generate
-      && (runp->needed & (1 << locale)) != 0
-      && (runp->avail & (1 << locale)) == 0)
+      && (runp->needed & (1 << category)) != 0
+      && (runp->avail & (1 << category)) == 0)
     WITH_CUR_LOCALE (error (5, 0, _("\
 circular dependencies between locale definitions")));
 
   if (copy_locale != NULL)
     {
-      if (runp->categories[locale].generic != NULL)
+      if (runp->categories[category].generic != NULL)
 	WITH_CUR_LOCALE (error (5, 0, _("\
 cannot add already read locale `%s' a second time"), name));
       else
-	runp->categories[locale].generic =
-	  copy_locale->categories[locale].generic;
+	runp->categories[category].generic =
+	  copy_locale->categories[category].generic;
     }
 
-  runp->needed |= 1 << locale;
+  runp->needed |= 1 << category;
 
   return runp;
 }
 
 
 struct localedef_t *
-find_locale (int locale, const char *name, const char *repertoire_name,
+find_locale (int category, const char *name, const char *repertoire_name,
 	     const struct charmap_t *charmap)
 {
   struct localedef_t *result;
 
   /* Find the locale, but do not generate it since this would be a bug.  */
-  result = add_to_readlist (locale, name, repertoire_name, 0, NULL);
+  result = add_to_readlist (category, name, repertoire_name, 0, NULL);
 
   assert (result != NULL);
 
-  if ((result->avail & (1 << locale)) == 0
+  if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
     WITH_CUR_LOCALE (error (4, errno, _("\
 cannot open locale definition file `%s'"), result->name));
@@ -603,17 +603,17 @@ cannot open locale definition file `%s'"), result->name));
 
 
 struct localedef_t *
-load_locale (int locale, const char *name, const char *repertoire_name,
+load_locale (int category, const char *name, const char *repertoire_name,
 	     const struct charmap_t *charmap, struct localedef_t *copy_locale)
 {
   struct localedef_t *result;
 
   /* Generate the locale if it does not exist.  */
-  result = add_to_readlist (locale, name, repertoire_name, 1, copy_locale);
+  result = add_to_readlist (category, name, repertoire_name, 1, copy_locale);
 
   assert (result != NULL);
 
-  if ((result->avail & (1 << locale)) == 0
+  if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
     WITH_CUR_LOCALE (error (4, errno, _("\
 cannot open locale definition file `%s'"), result->name));
