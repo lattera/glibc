@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -341,7 +341,7 @@ dl_open_worker (void *a)
       if (! l->l_real->l_relocated)
 	{
 #ifdef SHARED
-	  if (GLRO(dl_profile) != NULL)
+	  if (__builtin_expect (GLRO(dl_profile) != NULL, 0))
 	    {
 	      /* If this here is the shared object which we want to profile
 		 make sure the profile is started.  We can find out whether

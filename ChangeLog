@@ -1,5 +1,7 @@
 2006-07-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-open.c (dl_open_worker): Add branch prediction.
+
 	* nis/nss_compat/compat-grp.c: Avoid unnecessary setgrent calls into
 	the backend NSS module.  If backend setgrent call failed, don't have
 	internal_setgrent fail.  Just remember this until it is needed.
