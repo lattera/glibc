@@ -163,6 +163,6 @@ extern __pid_t __libc_fork (void);
    This always returns -1 and sets `errno' to EINTR.  */
 extern int __libc_pause (void);
 /* Not cancelable variant.  */
-extern int __pause_nocancel (void);
+extern int __pause_nocancel (void) attribute_hidden;
 
 #endif
