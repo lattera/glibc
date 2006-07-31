@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <not-cancel.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
@@ -278,7 +279,7 @@ __pthread_mutex_lock (mutex)
 
 		/* Delay the thread indefinitely.  */
 		while (1)
-		  __pause_nocancel ();
+		  pause_not_cancel ();
 	      }
 
 	    oldval = mutex->__data.__lock;

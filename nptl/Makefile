@@ -108,7 +108,7 @@ libpthread-routines = init vars events version \
 		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
 		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
 		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
-		      ptw-sigwait \
+		      ptw-sigwait ptw-sigsuspend \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \

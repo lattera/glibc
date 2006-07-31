@@ -1,3 +1,24 @@
+2006-07-30  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/sigsuspend.c: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c: File removed.
+
+	* sysdeps/unix/sysv/linux/not-cancel.h (pause_not_cancel): New macro.
+	(nanosleep_not_cancel): New macro.
+	(sigsuspend_not_cancel): new macro.
+	* sysdeps/unix/sysv/linux/sigsuspend.c [__ASSUME_REALTIME_SIGNALS]
+	(do_sigsuspend): Define as inline.
+	(__sigsuspend): Always use do_sigsuspend.
+	[! NO_CANCELLATION] (__sigsuspend_nocancel): New function.
+	* include/signal.h: Declare __sigsuspend_nocancel.
+	* sysdeps/posix/pause.c
+	[! NO_CANCELLATION] (__pause_nocancel): New function.
+
+	* include/unistd.h (__pause_nocancel): Add attribute_hidden.
+	* include/time.h (__nanosleep_nocancel): Likewise.
+
 2006-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/localedef.c (add_to_readlist): Rename local

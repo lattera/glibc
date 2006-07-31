@@ -26,6 +26,9 @@ extern int __sigprocmask (int __how,
 			  __const sigset_t *__set, sigset_t *__oset);
 extern int __sigsuspend (__const sigset_t *__set);
 libc_hidden_proto (__sigsuspend)
+#ifndef NO_CANCELLATION
+extern int __sigsuspend_nocancel (__const sigset_t *__set) attribute_hidden;
+#endif
 extern int __sigwait (__const sigset_t *__set, int *__sig);
 libc_hidden_proto (__sigwait)
 extern int __sigwaitinfo (__const sigset_t *__set, siginfo_t *__info);

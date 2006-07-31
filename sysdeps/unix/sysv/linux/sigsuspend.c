@@ -56,6 +56,12 @@ do_sigsuspend (const sigset_t *set)
 
   return INLINE_SYSCALL (sigsuspend, 3, 0, 0, set->__val[0]);
 }
+#else
+static inline int __attribute__ ((always_inline))
+do_sigsuspend (const sigset_t *set)
+{
+  return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
+}
 #endif
 
 /* Change the set of blocked signals to SET,
@@ -64,19 +70,6 @@ int
 __sigsuspend (set)
      const sigset_t *set;
 {
-#if __ASSUME_REALTIME_SIGNALS
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set),
-			       _NSIG / 8);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
-#else
   if (SINGLE_THREAD_P)
     return do_sigsuspend (set);
 
@@ -87,8 +80,16 @@ __sigsuspend (set)
   LIBC_CANCEL_RESET (oldtype);
 
   return result;
-#endif
 }
 libc_hidden_def (__sigsuspend)
 weak_alias (__sigsuspend, sigsuspend)
 strong_alias (__sigsuspend, __libc_sigsuspend)
+
+#ifndef NO_CANCELLATION
+int
+__sigsuspend_nocancel (set)
+     const sigset_t *set;
+{
+  return do_sigsuspend (set);
+}
+#endif

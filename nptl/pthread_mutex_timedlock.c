@@ -19,8 +19,10 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <time.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <not-cancel.h>
 
 
 int
@@ -281,7 +283,7 @@ pthread_mutex_timedlock (mutex, abstime)
 			--reltime.tv_sec;
 		      }
 		    if (reltime.tv_sec >= 0)
-		      while (__nanosleep_nocancel (&reltime, &reltime) != 0)
+		      while (nanosleep_not_cancel (&reltime, &reltime) != 0)
 			continue;
 
 		    return ETIMEDOUT;
