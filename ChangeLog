@@ -1,3 +1,11 @@
+2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_compat/compat-grp.c: Avoid unnecessary setgrent calls into
+	the backend NSS module.  If backend setgrent call failed, don't have
+	internal_setgrent fail.  Just remember this until it is needed.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
 2006-07-30  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c: File removed.
