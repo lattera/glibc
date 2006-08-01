@@ -1,6 +1,6 @@
 #! /bin/sh -f
 # Run available iconv(1) tests.
-# Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1998-2002, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -66,7 +66,7 @@ while read from to subset targets; do
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
 	if test -s testdata/$from..$t; then
-	  cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
+	  LC_ALL=C cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
 	    { echo "/FAILED"; failed=1; continue; }
 	  echo $ac_n "/OK$ac_c"
 	fi
@@ -75,7 +75,8 @@ while read from to subset targets; do
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
-	test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
+	test -s $temp1 &&
+	LC_ALL=C cmp testdata/$from $temp2 > /dev/null 2>&1 ||
 	  { echo "/FAILED"; failed=1; continue; }
 	echo "/OK"
 	rm -f $temp1 $temp2
@@ -91,7 +92,7 @@ while read from to subset targets; do
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
-	cmp testdata/suntzus $temp1 ||
+	LC_ALL=C cmp testdata/suntzus $temp1 ||
 	  { echo "/FAILED"; failed=1; continue; }
 	echo "/OK"
       fi
@@ -110,7 +111,7 @@ while read from to subset targets; do
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
 	if test -s testdata/$from..$t; then
-	  cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
+	  LC_ALL=C cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
 	    { echo "/FAILED"; failed=1; continue; }
 	  echo $ac_n "/OK$ac_c"
 	fi
@@ -120,7 +121,8 @@ while read from to subset targets; do
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
-	test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
+	test -s $temp1 &&
+	LC_ALL=C cmp testdata/$from $temp2 > /dev/null 2>&1 ||
 	  { echo "/FAILED"; failed=1; continue; }
 	echo "/OK"
 	rm -f $temp1 $temp2
@@ -135,7 +137,7 @@ while read from to subset targets; do
       { if test $? -gt 128; then exit 1; fi
 	echo "FAILED"; failed=1; continue; }
     echo $ac_n "OK$ac_c"
-    cmp testdata/suntzus $temp1 ||
+    LC_ALL=C cmp testdata/suntzus $temp1 ||
       { echo "/FAILED"; failed=1; continue; }
     echo "/OK"
   fi
@@ -153,32 +155,32 @@ while read utf8 from filename; do
   # Test conversion to the endianness dependent encoding.
   echo $ac_n "test encoder: $utf8 -> $from $ac_c"
   $PROG -f $utf8 -t $from < testdata/${filename}..${utf8} > $temp1
-  cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
-  cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
     { echo "/FAILED"; failed=1; continue; }
   echo "OK"
 
   # Test conversion from the endianness dependent encoding.
   echo $ac_n "test decoder: $from -> $utf8 $ac_c"
   $PROG -f $from -t $utf8 < testdata/${filename}..${from}.BE > $temp1
-  cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
     { echo "/FAILED"; failed=1; continue; }
   $PROG -f $from -t $utf8 < testdata/${filename}..${from}.LE > $temp1
-  cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
     { echo "/FAILED"; failed=1; continue; }
   echo "OK"
 
   # Test byte swapping behaviour.
   echo $ac_n "test non-BOM: ${from}BE -> ${from}LE $ac_c"
   $PROG -f ${from}BE -t ${from}LE < testdata/${filename}..${from}.BE > $temp1
-  cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
     { echo "/FAILED"; failed=1; continue; }
   echo "OK"
 
   # Test byte swapping behaviour.
   echo $ac_n "test non-BOM: ${from}LE -> ${from}BE $ac_c"
   $PROG -f ${from}LE -t ${from}BE < testdata/${filename}..${from}.LE > $temp1
-  cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
+  LC_ALL=C cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
     { echo "/FAILED"; failed=1; continue; }
   echo "OK"
 
