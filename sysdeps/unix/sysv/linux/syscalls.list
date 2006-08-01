@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
-add_key		EXTRA	add_key		i:pppii	add_key
 adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_internal
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
@@ -30,7 +29,6 @@ inotify_init	EXTRA	inotify_init	i:	inotify_init
 inotify_rm_watch	EXTRA	inotify_rm_watch	i:ii	inotify_rm_watch
 ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
-keyctl		EXTRA	keyctl		i:iiiii	keyctl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
 posix_madvise	-	madvise		Vi:pii	posix_madvise
@@ -54,7 +52,6 @@ putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	query_module
 quotactl	EXTRA	quotactl	i:isip	quotactl
 remap_file_pages -	remap_file_pages i:piiii	__remap_file_pages remap_file_pages
-request_key	EXTRA	request_key	i:pppi	request_key
 sched_getp	-	sched_getparam	i:ip	__sched_getparam	sched_getparam
 sched_gets	-	sched_getscheduler	i:i	__sched_getscheduler	sched_getscheduler
 sched_primax	-	sched_get_priority_max	i:i	__sched_get_priority_max	sched_get_priority_max

@@ -125,8 +125,6 @@ libc {
   }
   GLIBC_2.5 {
     splice; sync_file_range; tee; vmsplice;
-
-    add_key; request_key; keyctl;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
