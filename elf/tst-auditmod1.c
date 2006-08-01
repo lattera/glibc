@@ -132,12 +132,6 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_regs La_sh_regs
 # define La_retval La_sh_retval
 # define int_retval lrv_r0
-#elif defined __mc68000__
-# define pltenter la_m68k_gnu_pltenter
-# define pltexit la_m68k_gnu_pltexit
-# define La_regs La_m68k_regs
-# define La_retval La_m68k_retval
-# define int_retval lrv_d0
 #elif defined __alpha__
 # define pltenter la_alpha_gnu_pltenter
 # define pltexit la_alpha_gnu_pltexit
@@ -162,24 +156,6 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_regs La_ia64_regs
 # define La_retval La_ia64_retval
 # define int_retval lrv_r8
-#elif defined __mips__ && _MIPS_SIM == _ABIO32
-# define pltenter la_mips_o32_gnu_pltenter
-# define pltexit la_mips_o32_gnu_pltexit
-# define La_regs La_mips_32_regs
-# define La_retval La_mips_32_retval
-# define int_retval lrv_v0
-#elif defined __mips__ && _MIPS_SIM == _ABIN32
-# define pltenter la_mips_n32_gnu_pltenter
-# define pltexit la_mips_n32_gnu_pltexit
-# define La_regs La_mips_64_regs
-# define La_retval La_mips_64_retval
-# define int_retval lrv_v0
-#elif defined __mips__ && _MIPS_SIM == _ABI64
-# define pltenter la_mips_n64_gnu_pltenter
-# define pltexit la_mips_n64_gnu_pltexit
-# define La_regs La_mips_64_regs
-# define La_retval La_mips_64_retval
-# define int_retval lrv_v0
 #elif defined __sparc__ && __WORDSIZE == 32
 # define pltenter la_sparc32_gnu_pltenter
 # define pltexit la_sparc32_gnu_pltexit
@@ -197,7 +173,7 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 #include <tst-audit.h>
 #if (!defined (pltenter) || !defined (pltexit) || !defined (La_regs) \
      || !defined (La_retval) || !defined (int_retval))
-# error "architecture specific code needed in sysdeps/CPU/tls-audit.h or here"
+# error "architecture specific code needed in sysdeps/CPU/tst-audit.h or here"
 #endif
 
 

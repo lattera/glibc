@@ -1,4 +1,10 @@
+2006-07-16  Jeff Bailey  <jbailey@ubuntu.com>
+
+	* elf/tst-auditmod1.c: Fix typo in #error.
+
 2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-auditmod1.c: Remove code for unsupported architectures.
 
 	* iconvdata/run-iconv-test.sh: Run cmp in C locale.
 
