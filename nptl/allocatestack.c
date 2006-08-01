@@ -742,9 +742,7 @@ __reclaim_stacks (void)
   list_t *runp;
   list_for_each (runp, &stack_used)
     {
-      struct pthread *curp;
-
-      curp = list_entry (runp, struct pthread, list);
+      struct pthread *curp = list_entry (runp, struct pthread, list);
       if (curp != self)
 	{
 	  /* This marks the stack as free.  */
@@ -756,6 +754,13 @@ __reclaim_stacks (void)
 	  /* Account for the size of the stack.  */
 	  stack_cache_actsize += curp->stackblock_size;
 	}
+    }
+
+  /* Reset the PIDs in any cached stacks.  */
+  list_for_each (runp, &stack_cache)
+    {
+      struct pthread *curp = list_entry (runp, struct pthread, list);
+      curp->pid = self->pid;
     }
 
   /* Add the stack of all running threads to the cache.  */

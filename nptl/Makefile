@@ -256,7 +256,7 @@ tests = tst-typesizes \
 	tst-backtrace1 \
 	tst-oddstacklimit \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
-	tst-getpid1 tst-getpid2 \
+	tst-getpid1 tst-getpid2 tst-getpid3 \
 	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
 xtests = tst-setuid1 tst-setuid1-static
 
