@@ -1,3 +1,9 @@
+2006-07-31  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* allocatestack.c (__reclaim_stacks): Reset the PID on cached stacks.
+	* Makefile (tests): Add tst-getpid3.
+	* tst-getpid3.c: New file.
+
 2006-07-30  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (libpthread-routines): Add ptw-sigsuspend.

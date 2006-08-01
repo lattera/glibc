@@ -1,3 +1,7 @@
+2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Remove unnecessary include.
+
 2006-07-16  Jeff Bailey  <jbailey@ubuntu.com>
 
 	* elf/tst-auditmod1.c: Fix typo in #error.
@@ -11,7 +15,7 @@
 2006-07-20  Adam Nemet  <anemet@caviumnetworks.com>
 
 	* stdlib/test-canon.c (do_test): Close fd before unlinking file so
-	that directory is empty even on non-POSIX filesystems.
+	that the directory is empty even on non-POSIX filesystems.
 
 2006-07-31  Ulrich Drepper  <drepper@redhat.com>
 
