@@ -1,5 +1,5 @@
 /* Determine whether the host has multiple processors.  Linux version.
-   Copyright (C) 1996, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,36 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <sys/sysctl.h>
-#include <not-cancel.h>
-
 /* Test whether the machine has more than one processor.  This is not the
    best test but good enough.  More complicated tests would require `malloc'
    which is not available at that time.  */
 static inline int
 is_smp_system (void)
 {
-  static const int sysctl_args[] = { CTL_KERN, KERN_VERSION };
-  char buf[512];
-  size_t reslen = sizeof (buf);
-
-  /* Try reading the number using `sysctl' first.  */
-  if (__sysctl ((int *) sysctl_args,
-		sizeof (sysctl_args) / sizeof (sysctl_args[0]),
-		buf, &reslen, NULL, 0) < 0)
-    {
-      /* This was not successful.  Now try reading the /proc filesystem.  */
-      int fd = open_not_cancel_2 ("/proc/sys/kernel/version", O_RDONLY);
-      if (__builtin_expect (fd, 0) == -1
-	  || (reslen = read_not_cancel (fd, buf, sizeof (buf))) <= 0)
-	/* This also didn't work.  We give up and say it's a UP machine.  */
-	buf[0] = '\0';
-
-      close_not_cancel_no_status (fd);
-    }
-
-  return strstr (buf, "SMP") != NULL;
+  /* Assume all machines are SMP and/or CMT and/or SMT.  */
+  return 1;
 }

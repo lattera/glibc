@@ -74,28 +74,62 @@ _dl_addr (const void *address, Dl_info *info,
 
       ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
 
-      const ElfW(Sym) *symtabend;
-      if (match->l_info[DT_HASH] != NULL)
-	symtabend = (symtab
-		     + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
-      else
-	/* There is no direct way to determine the number of symbols in the
-	   dynamic symbol table and no hash table is present.  The ELF
-	   binary is ill-formed but what shall we do?  Use the beginning of
-	   the string table which generally follows the symbol table.  */
-	symtabend = (const ElfW(Sym) *) strtab;
+      const ElfW(Sym) *matchsym = NULL;
+      if (match->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
+			+ DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] != NULL)
+	{
+	  /* We look at all symbol table entries referenced by the
+	     hash table.  */
+	  for (Elf_Symndx bucket = 0; bucket < match->l_nbuckets; ++bucket)
+	    {
+	      Elf32_Word symndx = match->l_gnu_buckets[bucket];
+	      if (bucket != 0)
+		{
+		  const Elf32_Word *hasharr = &match->l_gnu_chain_zero[symndx];
 
-      const ElfW(Sym) *matchsym;
-      for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
-	if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-	     || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
-#if defined USE_TLS
-	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
+		  do
+		    {
+		      /* The hash table never references local symbols
+			 so we can omit that test here.  */
+		      if (symtab[symndx].st_shndx != SHN_UNDEF
+#ifdef USE_TLS
+			  && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
 #endif
-	    && symtab->st_shndx != SHN_UNDEF
-	    && DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
-	    && symtab->st_name < strtabsize)
-	  matchsym = (ElfW(Sym) *) symtab;
+			  && DL_ADDR_SYM_MATCH (match, &symtab[symndx],
+						matchsym, addr)
+			  && symtab[symndx].st_name < strtabsize)
+			matchsym = (ElfW(Sym) *) &symtab[symndx];
+
+		      ++symndx;
+		    }
+		  while ((*hasharr++ & 1u) == 0);
+		}
+	    }
+	}
+      else
+	{
+	  const ElfW(Sym) *symtabend;
+	  if (match->l_info[DT_HASH] != NULL)
+	    symtabend = (symtab
+			 + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
+	  else
+	    /* There is no direct way to determine the number of symbols in the
+	       dynamic symbol table and no hash table is present.  The ELF
+	       binary is ill-formed but what shall we do?  Use the beginning of
+	       the string table which generally follows the symbol table.  */
+	    symtabend = (const ElfW(Sym) *) strtab;
+
+	  for (; (void *) symtab < (void *) symtabend; ++symtab)
+	    if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+		 || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
+#ifdef USE_TLS
+		&& ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
+#endif
+		&& symtab->st_shndx != SHN_UNDEF
+		&& DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
+		&& symtab->st_name < strtabsize)
+	      matchsym = (ElfW(Sym) *) symtab;
+	}
 
       if (mapp)
 	*mapp = match;

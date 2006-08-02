@@ -1,3 +1,14 @@
+2006-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2980]
+	* posix/Makefile (CFLAGS-waitid.c): Add
+	-fasynchronous-unwind-tables.
+
+2006-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): If GNU-style hash tables are present,
+	walk them instead of the symbol table.
+
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/initgrcache.c (addinitgroupsX): Judge successful lookups by
