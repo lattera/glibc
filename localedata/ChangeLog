@@ -1,3 +1,8 @@
+2006-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/es_NI: Define real t_fmt_ampm and am_pm.
+	* locales/es_PE: Likewise.
+
 2006-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/te_IN: Minor fixups.
