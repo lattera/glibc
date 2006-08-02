@@ -83,7 +83,7 @@ _dl_addr (const void *address, Dl_info *info,
 	  for (Elf_Symndx bucket = 0; bucket < match->l_nbuckets; ++bucket)
 	    {
 	      Elf32_Word symndx = match->l_gnu_buckets[bucket];
-	      if (bucket != 0)
+	      if (symndx != 0)
 		{
 		  const Elf32_Word *hasharr = &match->l_gnu_chain_zero[symndx];
 
