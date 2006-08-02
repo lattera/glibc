@@ -117,6 +117,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
     goto out;
 
   /* Nothing added yet.  */
+  bool any_success = false;
   while (! no_more)
     {
       long int prev_start = start;
@@ -158,6 +159,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
 	__libc_fatal ("illegal status in internal_getgrouplist");
 
+      any_success |= status == NSS_STATUS_SUCCESS;
+
       if (status != NSS_STATUS_SUCCESS
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
 	 break;
@@ -171,7 +174,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   ssize_t total;
   ssize_t written;
  out:
-  if (start == 0)
+  if (!any_success)
     {
       /* Nothing found.  Create a negative result record.  */
       written = total = sizeof (notfound);

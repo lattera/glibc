@@ -1,5 +1,8 @@
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/initgrcache.c (addinitgroupsX): Judge successful lookups by
+	status of NSS calls, not the number of returned entries.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove add_key,
 	request_key, keyctl.
 
