@@ -1,8 +1,10 @@
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+
 	* grp/initgroups.c (internal_getgrouplist): Remove unnecessary
 	test introduced in patch for bz #661.
-	(getgrouplist): Simplify code a bit.
+	(getgrouplist): Simplify code a bit.  Don't allocate one additional
+	element on NEWGROUPS.
 
 	[BZ #2908]
 	* stdio-common/printf_fphex.c (__printf_fphex): When rounding up
