@@ -1,3 +1,8 @@
+2006-08-02  Thomas Schwinge  <tschwinge@gnu.org>
+
+        * hurd/getdport.c (__detdport): Don't return EBADF; instead set
+        errno to EBADF and return MACH_PORT_NULL.
+
 2006-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2980]
