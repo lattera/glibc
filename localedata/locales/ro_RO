@@ -94,14 +94,14 @@ reorder-after <U0073>
 <U0219> <s,>;<CDI>;<MIN>;IGNORE
 <U015F> <s,>;<CDI>;<MIN>;IGNORE
 reorder-after <U0053>
-<U0218> <s,>;<CDI>;<MIN>;IGNORE
+<U0218> <s,>;<CDI>;<CAP>;IGNORE
 <U015E> <s,>;<CDI>;<CAP>;IGNORE
 
 reorder-after <U0074>
 <U021B> <t,>;<CDI>;<MIN>;IGNORE
 <U0163> <t,>;<CDI>;<MIN>;IGNORE
 reorder-after <U0054>
-<U021A> <t,>;<CDI>;<MIN>;IGNORE
+<U021A> <t,>;<CDI>;<CAP>;IGNORE
 <U0162> <t,>;<CDI>;<CAP>;IGNORE
 
 reorder-end
@@ -266,6 +266,10 @@ t_fmt_ampm ""
 date_fmt       "<U0025><U0041><U0020><U0025><U002D><U0065><U0020><U0025><U0042>/
 <U0020><U0025><U0059><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U007A>"
+% First week day is Monday
+first_weekday 2
+% First work day is Monday
+first_workday 2
 END LC_TIME
 
 
@@ -369,9 +373,18 @@ country_ab2 "<U0052><U004F>"
 country_ab3 "<U0052><U004F><U0055>"
 country_num 642
 country_car "<U0052><U004F>"
+% ISBN code is 973
+% see: http://homepages.cwi.nl/~dik/english/codes/isbn.html
+% and other sources
+country_isbn 973
+% FIXME: is it really RO?
+country_post "<U0052><U004F>"
 % language names are not capitalized in Romanian ( roma>na( )
 lang_name "<U0072><U006F><U006D><U00E2><U006E><U0103>"
 lang_ab "<U0072><U006F>"
+% set the terminology code to "ron" as defined in iso639-2
 lang_term "<U0072><U006F><U006E>"
+% set the bibliographic code to "rum" as defined in iso639-2
 lang_lib "<U0072><U0075><U006D>"
 END LC_ADDRESS
+

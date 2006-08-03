@@ -7,7 +7,7 @@
 	* grp/initgroups.c (internal_getgrouplist): Remove unnecessary
 	test introduced in patch for bz #661.
 	(getgrouplist): Simplify code a bit.  Don't allocate one additional
-	element on NEWGROUPS.
+	element for NEWGROUPS.
 
 	[BZ #2908]
 	* stdio-common/printf_fphex.c (__printf_fphex): When rounding up
@@ -60,6 +60,7 @@
 
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2098]
 	* nscd/initgrcache.c (addinitgroupsX): Judge successful lookups by
 	status of NSS calls, not the number of returned entries.
 
