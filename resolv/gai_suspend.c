@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "gai_misc.h"
+#include <gai_misc.h>
 
 
 int
@@ -32,9 +32,11 @@ gai_suspend (const struct gaicb *const list[], int ent,
 {
   struct waitlist waitlist[ent];
   struct requestlist *requestlist[ent];
+#ifndef DONT_NEED_GAI_MISC_COND
   pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#endif
   int cnt;
-  int dummy;
+  int cntr = 1;
   int none = 1;
   int result;
 
@@ -50,9 +52,11 @@ gai_suspend (const struct gaicb *const list[], int ent,
 
 	if (requestlist[cnt] != NULL)
 	  {
+#ifndef DONT_NEED_GAI_MISC_COND
 	    waitlist[cnt].cond = &cond;
+#endif
 	    waitlist[cnt].next = requestlist[cnt]->waiting;
-	    waitlist[cnt].counterp = &dummy;
+	    waitlist[cnt].counterp = &cntr;
 	    waitlist[cnt].sigevp = NULL;
 	    waitlist[cnt].caller_pid = 0;	/* Not needed.  */
 	    requestlist[cnt]->waiting = &waitlist[cnt];
@@ -78,6 +82,9 @@ gai_suspend (const struct gaicb *const list[], int ent,
 	 which we must remove.  So defer cancelation for now.  */
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
+#ifdef DONT_NEED_GAI_MISC_COND
+      GAI_MISC_WAIT (result, cntr, timeout, 1);
+#else
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__gai_requests_mutex);
       else
@@ -99,6 +106,7 @@ gai_suspend (const struct gaicb *const list[], int ent,
 	  result = pthread_cond_timedwait (&cond, &__gai_requests_mutex,
 					   &abstime);
 	}
+#endif
 
       /* Now remove the entry in the waiting list for all requests
 	 which didn't terminate.  */
@@ -121,10 +129,12 @@ gai_suspend (const struct gaicb *const list[], int ent,
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
 
+#ifndef DONT_NEED_GAI_MISC_COND
       /* Release the conditional variable.  */
       if (pthread_cond_destroy (&cond) != 0)
 	/* This must never happen.  */
 	abort ();
+#endif
 
       if (result != 0)
 	{

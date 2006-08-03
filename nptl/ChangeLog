@@ -1,3 +1,7 @@
+2006-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/gai_misc.h: New file.
+
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/smp.h: New file.  Old Linux-specific

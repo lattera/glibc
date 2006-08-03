@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -23,8 +23,29 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "gai_misc.h"
+#include <gai_misc.h>
 
+
+
+#ifndef gai_create_helper_thread
+# define gai_create_helper_thread __gai_create_helper_thread
+
+extern inline int
+__gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
+			    void *arg)
+{
+  pthread_attr_t attr;
+
+  /* Make sure the thread is created detached.  */
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+
+  int ret = pthread_create (threadp, &attr, tf, arg);
+
+  (void) pthread_attr_destroy (&attr);
+  return ret;
+}
+#endif
 
 
 /* Pool of request list entries.  */
@@ -229,16 +250,11 @@ __gai_enqueue_request (struct gaicb *gaicbp)
   if (nthreads < optim.gai_threads && idle_thread_count == 0)
     {
       pthread_t thid;
-      pthread_attr_t attr;
 
       newp->running = 1;
 
-      /* Make sure the thread is created detached.  */
-      pthread_attr_init (&attr);
-      pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-
       /* Now try to start a thread.  */
-      if (pthread_create (&thid, &attr, handle_requests, newp) == 0)
+      if (gai_create_helper_thread (&thid, handle_requests, newp) == 0)
 	/* We managed to enqueue the request.  All errors which can
 	   happen now can be recognized by calls to `gai_error'.  */
 	++nthreads;

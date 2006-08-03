@@ -1,3 +1,10 @@
+2006-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add csb_PL.UTF-8.
+
+	[BZ #2961]
+	* locales/csb_PL: New file.
+
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/es_NI: Define real t_fmt_ampm and am_pm.

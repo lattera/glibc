@@ -1,13 +1,31 @@
+2006-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/Makefile (tests): Add tst-clock2.
+	* rt/tst-clock2.c: New file.
+
+	[BZ #2978]
+	* resolv/gai_notify.c (__gai_notify_only): Copy memory for thread
+	function and its parameters and pass it to new thread.
+	(__gai_notify): Add support for alternative waiting for completion.
+	* resolv/gai_suspend.c (gai_suspend): Add support for alternative
+	waiting for completion.
+	* resolv/getaddrinfo_a.c: Likewise.
+	* resolv/gai_misc.h (struct waitlist): Don't add cond if alternative
+	waiting for completion is used.
+	* resolv/gai_misc.c: Allow overwriting code to start helper thread.
+	* resolv/gai_cancel.c: Include <gai_misc.h> not "gai_misc.h".
+	* resolv/gai_error.c: Likewise.
+	* resolv/gai_sigqueue.c: Likewise.
+
 2006-08-02  Thomas Schwinge  <tschwinge@gnu.org>
 
-        * hurd/getdport.c (__detdport): Don't return EBADF; instead set
-        errno to EBADF and return MACH_PORT_NULL.
+	* hurd/getdport.c (__detdport): Don't return EBADF; instead set
+	errno to EBADF and return MACH_PORT_NULL.
 
 2006-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2980]
-	* posix/Makefile (CFLAGS-waitid.c): Add
-	-fasynchronous-unwind-tables.
+	* posix/Makefile (CFLAGS-waitid.c): Add -fasynchronous-unwind-tables.
 
 2006-08-02  Ulrich Drepper  <drepper@redhat.com>
 

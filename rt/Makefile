@@ -48,7 +48,8 @@ tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-mqueue8 tst-mqueue9 \
 	 tst-timer3 tst-timer4 tst-timer5 \
 	 tst-cpuclock1 tst-cpuclock2 \
-	 tst-cputimer1 tst-cputimer2 tst-cputimer3
+	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
+	 tst-clock2
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
