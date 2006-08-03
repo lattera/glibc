@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <errno.h>
 #include <grp.h>
 #include <limits.h>

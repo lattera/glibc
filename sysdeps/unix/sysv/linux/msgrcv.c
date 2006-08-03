@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1998,2000,2002,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -35,7 +35,7 @@ struct ipc_kludge
   };
 
 
-int
+ssize_t
 __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
      int msqid;
      void *msgp;
@@ -56,8 +56,8 @@ __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
-			       __ptrvalue (&tmp));
+  ssize_t result = INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
+				   __ptrvalue (&tmp));
 
    LIBC_CANCEL_RESET (oldtype);
 
