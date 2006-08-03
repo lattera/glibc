@@ -80,6 +80,10 @@ __cacosh (__complex__ double x)
       __imag__ y += __imag__ x;
 
       res = __clog (y);
+
+      /* We have to use the positive branch.  */
+      if (__real__ res < 0.0)
+	res = -res;
     }
 
   return res;

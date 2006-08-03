@@ -1,8 +1,15 @@
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2182]
+	* math/s_cacosh.c: Return values from positive branch.
+	* math/s_cacoshf.c: Likewise.
+	* math/s_cacoshl.c: Likewise.
+
 	[BZ #2883]
 	* sysvipc/sys/msg.h: Change return value to ssize_t.
 	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysvipc/msgrcv.c: Likewise.
+	* include/sys/msg.h: Likewise.
 
 	* grp/initgroups.c (internal_getgrouplist): Remove unnecessary
 	test introduced in patch for bz #661.

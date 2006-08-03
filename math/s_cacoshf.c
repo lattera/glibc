@@ -95,6 +95,10 @@ __cacoshf (__complex__ float x)
 					   + ro);
       __imag__ res = __ieee754_atan2f (__imag__ x + b, __real__ x + a);
 #endif
+
+      /* We have to use the positive branch.  */
+      if (__real__ res < 0.0)
+	res = -res;
     }
 
   return res;

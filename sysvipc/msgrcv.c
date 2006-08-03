@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -26,7 +26,7 @@
    describes which message is returned in MSGFLG describes the behaviour
    in buffer overflow or queue underflow.  */
 
-int
+ssize_t
 msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
      int msqid;
      void *msgp;

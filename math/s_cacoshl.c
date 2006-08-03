@@ -80,6 +80,10 @@ __cacoshl (__complex__ long double x)
       __imag__ y += __imag__ x;
 
       res = __clogl (y);
+
+      /* We have to use the positive branch.  */
+      if (__real__ res < 0.0)
+	res = -res;
     }
 
   return res;
