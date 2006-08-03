@@ -1,5 +1,22 @@
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2908]
+	* stdio-common/printf_fphex.c (__printf_fphex): When rounding up
+	'f', use '1' as leading digit not '\1'.
+	* stdio-common/Makefile (tests): Add bug16.
+	* stdio-common/bug16.c: New file.
+
+	[BZ #2914]
+	* sysdeps/unix/sysv/linux/gethostid.c: Don't define OLD_HOSTIDFILE
+	and don't try to open it.  The patch introducing the macro
+	contained a bug and used the same file name as the new file
+	instead of using /var/adm/hostid.  Nobody complaint so I'm taking
+	this out completely.
+
+	[BZ #2926]
+	* assert/assert.h: Move cast to void inside ?: to quiet gcc.
+	Patch by Jerry James <Jerry.James@usu.edu>.
+
 	* rt/Makefile (tests): Add tst-clock2.
 	* rt/tst-clock2.c: New file.
 

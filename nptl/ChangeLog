@@ -1,5 +1,9 @@
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2892]
+	* pthread_setspecific.c (__pthread_setspecific): Check
+	out-of-range index before checking for unused key.
+
 	* sysdeps/pthread/gai_misc.h: New file.
 
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>

@@ -54,7 +54,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-swprintf tst-fseek tst-fmemopen test-vfprintf tst-gets \
 	 tst-perror tst-sprintf tst-rndseek tst-fdopen tst-fphex bug14 bug15 \
 	 tst-popen tst-unlockedio tst-fmemopen2 tst-put-error tst-fgets \
-	 tst-fwrite
+	 tst-fwrite bug16
 
 test-srcs = tst-unbputc tst-printf
 
