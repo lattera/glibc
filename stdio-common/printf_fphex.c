@@ -404,7 +404,10 @@ __printf_fphex (FILE *fp,
 		    {
 		      exponent -= 4;
 		      if (exponent <= 0)
-			expnegative = 0;
+			{
+			  exponent = -exponent;
+			  expnegative = 0;
+			}
 		    }
 		  else
 		    exponent += 4;

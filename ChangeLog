@@ -1,5 +1,9 @@
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c (internal_getgrouplist): Remove unnecessary
+	test introduced in patch for bz #661.
+	(getgrouplist): Simplify code a bit.
+
 	[BZ #2908]
 	* stdio-common/printf_fphex.c (__printf_fphex): When rounding up
 	'f', use '1' as leading digit not '\1'.
