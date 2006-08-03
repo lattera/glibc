@@ -84,16 +84,18 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 
 __END_DECLS
 
-# define assert(expr) \
-  (__ASSERT_VOID_CAST ((expr) ? 0 :					      \
-		       (__assert_fail (__STRING(expr), __FILE__, __LINE__,    \
-				       __ASSERT_FUNCTION), 0)))
+# define assert(expr)							\
+  ((expr)								\
+   ? __ASSERT_VOID_CAST (0)						\
+   : (__assert_fail (__STRING(expr), __FILE__, __LINE__, __ASSERT_FUNCTION), \
+      __ASSERT_VOID_CAST (0)))
 
 # ifdef	__USE_GNU
-#  define assert_perror(errnum) \
-  (__ASSERT_VOID_CAST (!(errnum) ? 0 :					      \
-		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
-					      __ASSERT_FUNCTION), 0)))
+#  define assert_perror(errnum)						\
+  (!(errnum)								\
+   ? __ASSERT_VOID_CAST (0)						\
+   : (__assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION), \
+      __ASSERT_VOID_CAST (0)))
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
