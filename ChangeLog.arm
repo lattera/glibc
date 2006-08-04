@@ -1,3 +1,9 @@
+2006-08-04  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	Reported by Joseph Myers <joseph@codesourcery.com>:
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h (FUTEX_LOCK_PI,
+	FUTEX_UNLOCK_PI, FUTEX_TRYLOCK_PI): Define.
+
 2006-07-24  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/sigaction.c: If WRAPPER_INCLUDE is
