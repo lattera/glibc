@@ -386,7 +386,6 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	char domain[namelen + 3];
 	char ndomain[namelen + 3];
 	char *cp;
-	u_int run = 0;
 
 	strcpy (domain, name);
 
@@ -400,15 +399,8 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    nis_leaf_of_r (domain, leaf, sizeof (leaf));
 	    nis_domain_of_r (domain, ndomain, sizeof (ndomain));
 	    strcpy (domain, ndomain);
-	    ++run;
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
-
-	if (run == 1)
-	  {
-	    /* We have found the directory above. Use it. */
-	    return dir;
-	  }
 
 	cp = rawmemchr (leaf, '\0');
 	*cp++ = '.';
