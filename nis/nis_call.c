@@ -38,12 +38,12 @@ static const struct timeval UDPTIMEOUT = {5, 0};
 extern u_short __pmap_getnisport (struct sockaddr_in *address, u_long program,
 				  u_long version, u_int protocol);
 
-unsigned long
+unsigned long int
 inetstr2int (const char *str)
 {
   size_t j = 0;
   for (size_t i = 0; str[i] != '\0'; ++i)
-    if (str[i] == '.' && ++j == 4)
+    if (str[i] == '.' && __builtin_expect (++j == 4, 0))
       {
 	char buffer[i + 1];
 	buffer[i] = '\0';
@@ -68,8 +68,6 @@ libnsl_hidden_def (__nisbind_destroy)
 nis_error
 __nisbind_next (dir_binding *bind)
 {
-  u_int j;
-
   if (bind->clnt != NULL)
     {
       if (bind->use_auth)
@@ -81,7 +79,7 @@ __nisbind_next (dir_binding *bind)
   if (bind->trys >= bind->server_len)
     return NIS_FAIL;
 
-  for (j = bind->current_ep + 1;
+  for (u_int j = bind->current_ep + 1;
        j < bind->server_val[bind->server_used].ep.ep_len; ++j)
     if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
 		"inet") == 0)
@@ -96,7 +94,7 @@ __nisbind_next (dir_binding *bind)
   if (bind->server_used >= bind->server_len)
     bind->server_used = 0;
 
-  for (j = 0; j < bind->server_val[bind->server_used].ep.ep_len; ++j)
+  for (u_int j = 0; j < bind->server_val[bind->server_used].ep.ep_len; ++j)
     if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
 		"inet") == 0)
       if (bind->server_val[bind->server_used].ep.ep_val[j].proto[0] == '-')
@@ -125,7 +123,7 @@ __nisbind_connect (dir_binding *dbp)
   dbp->addr.sin_addr.s_addr =
     inetstr2int (serv->ep.ep_val[dbp->current_ep].uaddr);
 
-  if (dbp->addr.sin_addr.s_addr == 0)
+  if (dbp->addr.sin_addr.s_addr == INADDR_NONE)
     return NIS_FAIL;
 
   /* Check, if the host is online and rpc.nisd is running. Much faster
@@ -340,7 +338,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
     case HIGHER_NAME:
       { /* We need data from a parent domain */
 	directory_obj *obj;
-	char ndomain [strlen (name) + 3];
+	char ndomain[strlen (dir->do_name) + 3];
 
 	nis_domain_of_r (dir->do_name, ndomain, sizeof (ndomain));
 
@@ -461,31 +459,44 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 /* We try to query the current server for the searched object,
    maybe he know about it ? */
 static directory_obj *
-first_shoot (const_nis_name name, directory_obj *dir)
+first_shoot (const_nis_name name, int search_parent_first, directory_obj *dir)
 {
   directory_obj *obj = NULL;
   fd_result *fd_res;
   XDR xdrs;
   char domain[strlen (name) + 3];
 
+#if 0
   if (nis_dir_cmp (name, dir->do_name) == SAME_NAME)
     return dir;
+#endif
 
-  nis_domain_of_r (name, domain, sizeof (domain));
+  const char *search_name = name;
+  if (search_parent_first)
+    {
+      nis_domain_of_r (name, domain, sizeof (domain));
+      search_name = domain;
+    }
 
-  if (nis_dir_cmp (domain, dir->do_name) == SAME_NAME)
+  if (nis_dir_cmp (search_name, dir->do_name) == SAME_NAME)
     return dir;
 
-  fd_res = __nis_finddirectory (dir, domain);
+  fd_res = __nis_finddirectory (dir, search_name);
   if (fd_res == NULL)
     return NULL;
   if (fd_res->status == NIS_SUCCESS
       && (obj = calloc (1, sizeof (directory_obj))) != NULL)
     {
-      xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
-		    fd_res->dir_data.dir_data_len, XDR_DECODE);
+      xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
+		     fd_res->dir_data.dir_data_len, XDR_DECODE);
       _xdr_directory_obj (&xdrs, obj);
       xdr_destroy (&xdrs);
+
+      if (strcmp (dir->do_name, obj->do_name) != 0)
+	{
+	  nis_free_directory (obj);
+	  obj = NULL;
+	}
     }
 
   __free_fdresult (fd_res);
@@ -497,7 +508,8 @@ first_shoot (const_nis_name name, directory_obj *dir)
 }
 
 nis_error
-__nisfind_server (const_nis_name name, directory_obj **dir)
+__nisfind_server (const_nis_name name, int search_parent_first,
+		  directory_obj **dir)
 {
   if (name == NULL)
     return NIS_BADNAME;
@@ -520,7 +532,7 @@ __nisfind_server (const_nis_name name, directory_obj **dir)
 	return NIS_UNAVAIL;
 
       /* Try at first, if servers in "dir" know our object */
-      obj = first_shoot (name, *dir);
+      obj = first_shoot (name, search_parent_first, *dir);
       if (obj == NULL)
 	{
 	  obj = rec_dirsearch (name, *dir, &status);
@@ -539,7 +551,7 @@ nis_error
 __prepare_niscall (const_nis_name name, directory_obj **dirp,
 		   dir_binding *bptrp, unsigned int flags)
 {
-  nis_error retcode = __nisfind_server (name, dirp);
+  nis_error retcode = __nisfind_server (name, 1, dirp);
   if (__builtin_expect (retcode != NIS_SUCCESS, 0))
     return retcode;
 

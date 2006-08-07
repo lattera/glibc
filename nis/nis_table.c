@@ -271,7 +271,8 @@ nis_list (const_nis_name name, unsigned int flags,
 
       memset (res, '\0', sizeof (nis_result));
 
-      status = __nisfind_server (ibreq->ibr_name, &dir);
+      status = __nisfind_server (ibreq->ibr_name,
+				 ibreq->ibr_srch.ibr_srch_val != NULL, &dir);
       if (status != NIS_SUCCESS)
 	{
           NIS_RES_STATUS (res) = status;
