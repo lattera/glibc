@@ -1,5 +1,8 @@
 2006-08-08  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (O_DIRECT): Protect with
+	__USE_GNU.
+
 	* stdlib/strtol_l.c (__strtol_ul_max_tab, __strtol_ul_rem_tab,
 	__strtol_ull_max_tab, __strtol_ull_rem_tab): Declare.
 	(DEF): Don't put the var into .gnu.linkonce.r.* section.

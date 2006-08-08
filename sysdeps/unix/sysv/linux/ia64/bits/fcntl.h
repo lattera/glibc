@@ -43,9 +43,9 @@
 #define O_SYNC		010000
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000
-#define O_DIRECT	040000
 
 #ifdef __USE_GNU
+# define O_DIRECT	040000
 # define O_DIRECTORY	0200000	/* must be a directory */
 # define O_NOFOLLOW	0400000 /* don't follow links */
 # define O_NOATIME	01000000 /* Do not set atime.  */
