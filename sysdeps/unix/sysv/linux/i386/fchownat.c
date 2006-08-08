@@ -61,6 +61,24 @@ extern int __libc_missing_32bit_uids;
 int
 fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 {
+  int result;
+
+#ifdef __NR_fchownat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (fchownat, 5, fd, file, owner, group, flag);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -87,14 +105,13 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
-#if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
-# if __ASSUME_LCHOWN_SYSCALL == 0
+# if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
+#  if __ASSUME_LCHOWN_SYSCALL == 0
   static int __libc_old_chown;
 
-#  ifdef __NR_chown32
+#   ifdef __NR_chown32
   if (__libc_missing_32bit_uids <= 0)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
@@ -111,7 +128,7 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 
       __libc_missing_32bit_uids = 1;
     }
-#  endif /* __NR_chown32 */
+#   endif /* __NR_chown32 */
 
   if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
       || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
@@ -135,13 +152,13 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 
   result = INTERNAL_SYSCALL (lchown, err, 3, CHECK_STRING (file), owner,
 			     group);
-# elif __ASSUME_32BITUIDS
+#  elif __ASSUME_32BITUIDS
   /* This implies __ASSUME_LCHOWN_SYSCALL.  */
   result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
 			     group);
-# else
+#  else
   /* !__ASSUME_32BITUIDS && ASSUME_LCHOWN_SYSCALL  */
-#  ifdef __NR_chown32
+#   ifdef __NR_chown32
   if (__libc_missing_32bit_uids <= 0)
     {
       result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
@@ -153,7 +170,7 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 
       __libc_missing_32bit_uids = 1;
     }
-#  endif /* __NR_chown32 */
+#   endif /* __NR_chown32 */
   if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
       || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
     {
@@ -162,10 +179,10 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
     }
 
   result = INTERNAL_SYSCALL (chown, err, 3, CHECK_STRING (file), owner, group);
-# endif
-#else
+#  endif
+# else
   result = INTERNAL_SYSCALL (chown, err, 3, CHECK_STRING (file), owner, group);
-#endif
+# endif
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     goto fail;
@@ -175,4 +192,5 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
  fail:
   __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
   return -1;
+#endif
 }

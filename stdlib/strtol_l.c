@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -168,10 +168,15 @@
 /* Define tables of maximum values and remainders in order to detect
    overflow.  Do this at compile-time in order to avoid the runtime
    overhead of the division.  */
+extern const unsigned long __strtol_ul_max_tab[] attribute_hidden;
+extern const unsigned char __strtol_ul_rem_tab[] attribute_hidden;
+#if defined(QUAD) && __WORDSIZE == 32
+extern const unsigned long long __strtol_ull_max_tab[] attribute_hidden;
+extern const unsigned char __strtol_ull_rem_tab[] attribute_hidden;
+#endif
 
 #define DEF(TYPE, NAME)							   \
-  const TYPE NAME[] attribute_hidden					   \
-	__attribute__((section(".gnu.linkonce.r." #NAME))) =		   \
+  const TYPE NAME[] attribute_hidden =					   \
   {									   \
     F(2), F(3), F(4), F(5), F(6), F(7), F(8), F(9), F(10), 		   \
     F(11), F(12), F(13), F(14), F(15), F(16), F(17), F(18), F(19), F(20),  \
@@ -179,19 +184,21 @@
     F(31), F(32), F(33), F(34), F(35), F(36)				   \
   }
 
-#define F(X)	ULONG_MAX / X
+#if !UNSIGNED && !defined (USE_WIDE_CHAR) && !defined (QUAD)
+# define F(X)	ULONG_MAX / X
   DEF (unsigned long, __strtol_ul_max_tab);
-#undef F
-#if defined(QUAD) && __WORDSIZE == 32
+# undef F
+# define F(X)	ULONG_MAX % X
+  DEF (unsigned char, __strtol_ul_rem_tab);
+# undef F
+#endif
+#if !UNSIGNED && !defined (USE_WIDE_CHAR) && defined (QUAD) \
+    && __WORDSIZE == 32
 # define F(X)	ULONG_LONG_MAX / X
   DEF (unsigned long long, __strtol_ull_max_tab);
 # undef F
 # define F(X)	ULONG_LONG_MAX % X
   DEF (unsigned char, __strtol_ull_rem_tab);
-# undef F
-#else
-# define F(X)	ULONG_MAX % X
-  DEF (unsigned char, __strtol_ul_rem_tab);
 # undef F
 #endif
 #undef DEF

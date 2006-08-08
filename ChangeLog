@@ -1,3 +1,23 @@
+2006-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtol_l.c (__strtol_ul_max_tab, __strtol_ul_rem_tab,
+	__strtol_ull_max_tab, __strtol_ull_rem_tab): Declare.
+	(DEF): Don't put the var into .gnu.linkonce.r.* section.
+	Only provide var definitions in strtol_l (or for *ull*
+	in strtoll_l).
+
+	* stdio-common/bug16.c (tests): New array.
+	(do_tests): Allow the first hexadecimal digit
+	to be 1, 2, 4 or 8.  Do 3 additional tests.
+
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c (fchownat): Use
+	fchownat syscall if available.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/sh/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c (fchownat): Likewise.
+
 2006-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_xdr.c: Avoid some function calls.
@@ -11,7 +31,7 @@
 2006-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c: Minor cleanups throughout.
-	(rec_dirsearch) [HIGHER_NAME]: Correctly size ndomain array.
+	(rec_dirsearch) [case HIGHER_NAME]: Correctly size ndomain array.
 	(first_shoot): Add search_parent_first parameter.  Only if it is set
 	search parent server first.
 	If directory for table found through cold start cache is not the same

@@ -37,6 +37,24 @@
 int
 fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 {
+  int result;
+
+#ifdef __NR_fchownat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (fchownat, 5, fd, file, owner, group, flag);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -63,15 +81,14 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       file = buf;
     }
 
-  int result;
   INTERNAL_SYSCALL_DECL (err);
 
-#if __ASSUME_LCHOWN_SYSCALL
+# if __ASSUME_LCHOWN_SYSCALL
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lchown, err, 3, file, owner, group);
   else
     result = INTERNAL_SYSCALL (chown, err, 3, file, owner, group);
-#else
+# else
   char link[PATH_MAX + 2];
   char path[2 * PATH_MAX + 4];
   int loopct;
@@ -89,7 +106,7 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       goto out;
     }
 
-# ifdef __NR_lchown
+#  ifdef __NR_lchown
   if (flag & AT_SYMLINK_NOFOLLOW)
     {
       result = INTERNAL_SYSCALL (lchown, err, 3, __ptrvalue (file), owner,
@@ -110,25 +127,25 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 	}
       libc_old_chown = -1;
     }
-# else
+#  else
   if (flag & AT_SYMLINK_NOFOLLOW)
     {
       result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
 				 group);
       goto out;
     }
-# endif
+#  endif
 
   result = __readlink (file, link, PATH_MAX + 1);
   if (result == -1)
     {
-# ifdef __NR_lchown
+#  ifdef __NR_lchown
       result = INTERNAL_SYSCALL (lchown, err, 3, __ptrvalue (file), owner,
 				 group);
-# else
+#  else
       result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
 				 group);
-# endif
+#  endif
       goto out;
     }
 
@@ -178,11 +195,11 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 
       if (result == -1)
 	{
-# ifdef __NR_lchown
+#  ifdef __NR_lchown
 	  result = INTERNAL_SYSCALL (lchown, err, 3, path, owner, group);
-# else
+#  else
 	  result = INTERNAL_SYSCALL (chown, err, 3, path, owner, group);
-# endif
+#  endif
 	  goto out;
 	}
     }
@@ -190,16 +207,17 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
   return -1;
 
  out:
-#endif
+# endif
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
-#if !__ASSUME_LCHOWN_SYSCALL
+# if !__ASSUME_LCHOWN_SYSCALL
     fail:
-#endif
+# endif
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
       result = -1;
     }
 
   return result;
+#endif
 }
