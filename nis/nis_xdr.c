@@ -35,10 +35,16 @@ xdr_nis_attr (XDR *xdrs, nis_attr *objp)
   return res;
 }
 
+static __always_inline bool_t
+xdr_nis_name (XDR *xdrs, nis_name *objp)
+{
+  return xdr_string (xdrs, objp, ~0);
+}
+
 bool_t
 _xdr_nis_name (XDR *xdrs, nis_name *objp)
 {
-  return xdr_string (xdrs, objp, ~0);
+  return xdr_nis_name (xdrs, objp);
 }
 
 static __always_inline bool_t
@@ -78,7 +84,7 @@ xdr_endpoint (XDR *xdrs, endpoint *objp)
 bool_t
 _xdr_nis_server (XDR *xdrs, nis_server *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->name);
+  bool_t res = xdr_nis_name (xdrs, &objp->name);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_array (xdrs, (char **) &objp->ep.ep_val, &objp->ep.ep_len,
@@ -96,7 +102,7 @@ _xdr_nis_server (XDR *xdrs, nis_server *objp)
 bool_t
 _xdr_directory_obj (XDR *xdrs, directory_obj *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->do_name);
+  bool_t res = xdr_nis_name (xdrs, &objp->do_name);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_nstype (xdrs, &objp->do_type);
@@ -161,7 +167,7 @@ xdr_link_obj (XDR *xdrs, link_obj *objp)
 		       &objp->li_attrs.li_attrs_len, ~0,
 		       sizeof (nis_attr), (xdrproc_t) xdr_nis_attr);
       if (__builtin_expect (res, TRUE))
-	res = _xdr_nis_name (xdrs, &objp->li_name);
+	res = xdr_nis_name (xdrs, &objp->li_name);
     }
   return res;
 }
@@ -245,16 +251,16 @@ _xdr_nis_object (XDR *xdrs, nis_object *objp)
   bool_t res = xdr_nis_oid (xdrs, &objp->zo_oid);
   if (__builtin_expect (res, TRUE))
     {
-      res = _xdr_nis_name (xdrs, &objp->zo_name);
+      res = xdr_nis_name (xdrs, &objp->zo_name);
       if (__builtin_expect (res, TRUE))
 	{
-	  res = _xdr_nis_name (xdrs, &objp->zo_owner);
+	  res = xdr_nis_name (xdrs, &objp->zo_owner);
 	  if (__builtin_expect (res, TRUE))
 	    {
-	      res = _xdr_nis_name (xdrs, &objp->zo_group);
+	      res = xdr_nis_name (xdrs, &objp->zo_group);
 	      if (__builtin_expect (res, TRUE))
 		{
-		  res = _xdr_nis_name (xdrs, &objp->zo_domain);
+		  res = xdr_nis_name (xdrs, &objp->zo_domain);
 		  if (__builtin_expect (res, TRUE))
 		    {
 		      res = xdr_u_int (xdrs, &objp->zo_access);
@@ -272,16 +278,22 @@ _xdr_nis_object (XDR *xdrs, nis_object *objp)
   return res;
 }
 
-bool_t
-_xdr_nis_error (XDR *xdrs, nis_error *objp)
+static __always_inline bool_t
+xdr_nis_error (XDR *xdrs, nis_error *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
 
 bool_t
+_xdr_nis_error (XDR *xdrs, nis_error *objp)
+{
+  return xdr_nis_error (xdrs, objp);
+}
+
+bool_t
 _xdr_nis_result (XDR *xdrs, nis_result *objp)
 {
-  bool_t res = _xdr_nis_error (xdrs, &objp->status);
+  bool_t res = xdr_nis_error (xdrs, &objp->status);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_array (xdrs, (char **) &objp->objects.objects_val,
@@ -313,7 +325,7 @@ libnsl_hidden_def (_xdr_nis_result)
 bool_t
 _xdr_ns_request (XDR *xdrs, ns_request *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->ns_name);
+  bool_t res = xdr_nis_name (xdrs, &objp->ns_name);
   if (__builtin_expect (res, TRUE))
     res = xdr_array (xdrs, (char **) &objp->ns_object.ns_object_val,
 		     &objp->ns_object.ns_object_len, 1,
@@ -324,7 +336,7 @@ _xdr_ns_request (XDR *xdrs, ns_request *objp)
 bool_t
 _xdr_ib_request (XDR *xdrs, ib_request *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->ibr_name);
+  bool_t res = xdr_nis_name (xdrs, &objp->ibr_name);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_array (xdrs, (char **) &objp->ibr_srch.ibr_srch_val,
@@ -363,7 +375,7 @@ libnsl_hidden_def (_xdr_ib_request)
 bool_t
 _xdr_ping_args (XDR *xdrs, ping_args *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->dir);
+  bool_t res = xdr_nis_name (xdrs, &objp->dir);
   if (__builtin_expect (res, TRUE))
     res = xdr_uint32_t (xdrs, &objp->stamp);
   return res;
@@ -372,7 +384,7 @@ _xdr_ping_args (XDR *xdrs, ping_args *objp)
 bool_t
 _xdr_cp_result (XDR *xdrs, cp_result *objp)
 {
-  bool_t res = _xdr_nis_error (xdrs, &objp->cp_status);
+  bool_t res = xdr_nis_error (xdrs, &objp->cp_status);
   if (__builtin_expect (res, TRUE))
     {
       res = xdr_uint32_t (xdrs, &objp->cp_zticks);
@@ -402,19 +414,19 @@ _xdr_nis_taglist (XDR *xdrs, nis_taglist *objp)
 bool_t
 _xdr_fd_args (XDR *xdrs, fd_args *objp)
 {
-  bool_t res = _xdr_nis_name (xdrs, &objp->dir_name);
+  bool_t res = xdr_nis_name (xdrs, &objp->dir_name);
   if (__builtin_expect (res, TRUE))
-    res = _xdr_nis_name (xdrs, &objp->requester);
+    res = xdr_nis_name (xdrs, &objp->requester);
   return res;
 }
 
 bool_t
 _xdr_fd_result (XDR *xdrs, fd_result *objp)
 {
-  bool_t res = _xdr_nis_error (xdrs, &objp->status);
+  bool_t res = xdr_nis_error (xdrs, &objp->status);
   if (__builtin_expect (res, TRUE))
     {
-      res = _xdr_nis_name (xdrs, &objp->source);
+      res = xdr_nis_name (xdrs, &objp->source);
       if (__builtin_expect (res, TRUE))
 	{
 	  res = xdr_bytes (xdrs, (char **) &objp->dir_data.dir_data_val,
