@@ -1,5 +1,7 @@
 2006-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusagestat.c: Silence warnings.
+
 	* malloc/malloc.c: Dynamically size mmap treshold if the program
 	frees mmaped blocks.
 	Patch by Valerie Henson and Arjan van de Ven.
