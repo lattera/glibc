@@ -1,3 +1,9 @@
+2006-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c: Dynamically size mmap treshold if the program
+	frees mmaped blocks.
+	Patch by Valerie Henson and Arjan van de Ven.
+
 2006-08-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (O_DIRECT): Protect with

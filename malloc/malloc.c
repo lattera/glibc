@@ -1415,6 +1415,19 @@ int      __posix_memalign(void **, size_t, size_t);
 #endif
 
 /*
+  MMAP_THRESHOLD_MAX and _MIN are the bounds on the dynamically
+  adjusted MMAP_THRESHOLD.
+*/
+
+#ifndef DEFAULT_MMAP_THRESHOLD_MIN
+#define DEFAULT_MMAP_THRESHOLD_MIN (128 * 1024)
+#endif
+
+#ifndef DEFAULT_MMAP_THRESHOLD_MAX
+#define DEFAULT_MMAP_THRESHOLD_MAX (8 * 1024 * 1024 * sizeof(long))
+#endif
+
+/*
   M_MMAP_THRESHOLD is the request size threshold for using mmap()
   to service a request. Requests of at least this size that cannot
   be allocated using already-existing space will be serviced via mmap.
@@ -1453,12 +1466,63 @@ int      __posix_memalign(void **, size_t, size_t);
   "large" chunks, but the value of "large" varies across systems.  The
   default is an empirically derived value that works well in most
   systems.
+
+
+  Update in 2006:
+  The above was written in 2001. Since then the world has changed a lot.
+  Memory got bigger. Applications got bigger. The virtual address space
+  layout in 32 bit linux changed.
+
+  In the new situation, brk() and mmap space is shared and there are no
+  artificial limits on brk size imposed by the kernel. What is more,
+  applications have started using transient allocations larger than the
+  128Kb as was imagined in 2001.
+
+  The price for mmap is also high now; each time glibc mmaps from the
+  kernel, the kernel is forced to zero out the memory it gives to the
+  application. Zeroing memory is expensive and eats a lot of cache and
+  memory bandwidth. This has nothing to do with the efficiency of the
+  virtual memory system, by doing mmap the kernel just has no choice but
+  to zero.
+
+  In 2001, the kernel had a maximum size for brk() which was about 800
+  megabytes on 32 bit x86, at that point brk() would hit the first
+  mmaped shared libaries and couldn't expand anymore. With current 2.6
+  kernels, the VA space layout is different and brk() and mmap
+  both can span the entire heap at will.
+
+  Rather than using a static threshold for the brk/mmap tradeoff,
+  we are now using a simple dynamic one. The goal is still to avoid
+  fragmentation. The old goals we kept are
+  1) try to get the long lived large allocations to use mmap()
+  2) really large allocations should always use mmap()
+  and we're adding now:
+  3) transient allocations should use brk() to avoid forcing the kernel
+     having to zero memory over and over again
+
+  The implementation works with a sliding threshold, which is by default
+  limited to go between 128Kb and 32Mb (64Mb for 64 bitmachines) and starts
+  out at 128Kb as per the 2001 default.
+
+  This allows us to satisfy requirement 1) under the assumption that long
+  lived allocations are made early in the process' lifespan, before it has
+  started doing dynamic allocations of the same size (which will
+  increase the threshold).
+
+  The upperbound on the threshold satisfies requirement 2)
+
+  The threshold goes up in value when the application frees memory that was
+  allocated with the mmap allocator. The idea is that once the application
+  starts freeing memory of a certain size, it's highly probable that this is
+  a size the application uses for transient allocations. This estimator
+  is there to satisfy the new third requirement.
+
 */
 
 #define M_MMAP_THRESHOLD      -3
 
 #ifndef DEFAULT_MMAP_THRESHOLD
-#define DEFAULT_MMAP_THRESHOLD (128 * 1024)
+#define DEFAULT_MMAP_THRESHOLD DEFAULT_MMAP_THRESHOLD_MIN
 #endif
 
 /*
@@ -2251,6 +2315,10 @@ struct malloc_par {
   int              n_mmaps;
   int              n_mmaps_max;
   int              max_n_mmaps;
+  /* the mmap_threshold is dynamic, until the user sets
+     it manually, at which point we need to disable any
+     dynamic behavior. */
+  int              no_dyn_threshold;
 
   /* Cache malloc_getpagesize */
   unsigned int     pagesize;
@@ -3428,6 +3496,14 @@ public_fREe(Void_t* mem)
 #if HAVE_MMAP
   if (chunk_is_mmapped(p))                       /* release mmapped memory. */
   {
+    /* see if the dynamic brk/mmap threshold needs adjusting */
+    if (!mp_.no_dyn_threshold
+	&& p->size > mp_.mmap_threshold
+        && p->size <= DEFAULT_MMAP_THRESHOLD_MAX)
+      {
+	mp_.mmap_threshold = chunksize (p);
+	mp_.trim_threshold = 2 * mp_.mmap_threshold;
+      }
     munmap_chunk(p);
     return;
   }
@@ -5418,10 +5494,12 @@ int mALLOPt(param_number, value) int param_number; int value;
 
   case M_TRIM_THRESHOLD:
     mp_.trim_threshold = value;
+    mp_.no_dyn_threshold = 1;
     break;
 
   case M_TOP_PAD:
     mp_.top_pad = value;
+    mp_.no_dyn_threshold = 1;
     break;
 
   case M_MMAP_THRESHOLD:
@@ -5432,6 +5510,7 @@ int mALLOPt(param_number, value) int param_number; int value;
     else
 #endif
       mp_.mmap_threshold = value;
+      mp_.no_dyn_threshold = 1;
     break;
 
   case M_MMAP_MAX:
@@ -5441,6 +5520,7 @@ int mALLOPt(param_number, value) int param_number; int value;
     else
 #endif
       mp_.n_mmaps_max = value;
+      mp_.no_dyn_threshold = 1;
     break;
 
   case M_CHECK_ACTION:
