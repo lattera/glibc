@@ -385,14 +385,13 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 #endif
     }
 
-  if (file_name != NULL)
-    {
 #if _LIBC
-      __fxprintf (NULL, "%s:%d: ", file_name, line_number);
+  __fxprintf (NULL, file_name != NULL ? "%s:%d: " : " ",
+	      file_name, line_number);
 #else
-      fprintf (stderr, "%s:%d: ", file_name, line_number);
+  fprintf (stderr, file_name != NULL ? "%s:%d: " : " ",
+	   file_name, line_number);
 #endif
-    }
 
 #ifdef VA_START
   VA_START (args, message);
