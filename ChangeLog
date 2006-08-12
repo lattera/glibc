@@ -1,3 +1,10 @@
+2006-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #2841]
+	* sysdeps/generic/stdint.h (UINT8_C, UINT16_C): Don't append 'U',
+	since C99 requires the result to promote to 'int' when uint_least8_t
+	and uint_least16_t promote to 'int'.
+
 2006-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3013]
