@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -992,8 +992,8 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		total += iov[2 + elem + offset].iov_len;
 	      }
 	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
-	    total += 1 + (4 - ((total + 1) % 4));
+	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
+	    total += 4 - (total % 4);
 
 	    idx[elem + 1] = idx[elem] + total;
 	    break;
@@ -1010,8 +1010,8 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		total += iov[2 + elem + offset].iov_len;
 	      }
 	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
-	    total += 1 + (4 - ((total + 1) % 4));
+	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
+	    total += 4 - (total % 4);
 
 	    idx[elem + 1] = idx[elem] + total;
 	    break;
@@ -1153,7 +1153,7 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_base =
 	      ctype->default_missing ?: (uint32_t *) L"";
 	    iov[2 + elem + offset].iov_len =
-	      wcslen (iov[2 + elem + offset].iov_base);
+	      wcslen (iov[2 + elem + offset].iov_base) * sizeof (uint32_t);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
@@ -3844,9 +3844,14 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
     {
       ctype->class_b[nr] = (uint32_t *) xcalloc (256 / 32, sizeof (uint32_t));
 
-      for (idx = 0; idx < 256; ++idx)
-	if (ctype->class256_collection[idx] & _ISbit (nr))
-	  ctype->class_b[nr][idx >> 5] |= (uint32_t)1 << (idx & 0x1f);
+      /* We only set CLASS_B for the bits in the ISO C classes, not
+	 the user defined classes.  The number should not change but
+	 who knows.  */
+#define LAST_ISO_C_BIT 11
+      if (nr <= LAST_ISO_C_BIT)
+	for (idx = 0; idx < 256; ++idx)
+	  if (ctype->class256_collection[idx] & _ISbit (nr))
+	    ctype->class_b[nr][idx >> 5] |= (uint32_t) 1 << (idx & 0x1f);
     }
 
   for (nr = 0; nr < ctype->nr_charclass; nr++)

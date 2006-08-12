@@ -1,5 +1,10 @@
 2006-08-12  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3013]
+	* locale/programs/ld-ctype.c (ctype_output): Adjust alignments, fix
+	lenght of one output field, correct bitmask creation.
+	* locale/programs/ld-time.c: Add alignment.
+
 	[BZ #2997]
 	* misc/error.c: Add space between program name and message if file
 	name is missing.

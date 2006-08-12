@@ -542,7 +542,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 			      * (2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 				 + time->num_era - 1
 				 + 2 * 99
-				 + 2 + time->num_era * 10 - 1));
+				 + 2 + time->num_era * 10));
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;
@@ -901,6 +901,12 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
   ++cnt;
   ++last_idx;
 
+  /* We must align the following data.  */
+  iov[2 + cnt].iov_base = (void *) "\0\0";
+  iov[2 + cnt].iov_len = -idx[last_idx] & 3;
+  idx[last_idx] += -idx[last_idx] & 3;
+  ++cnt;
+
   iov[2 + cnt].iov_base = (void *) time->wdate_fmt;
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
                           * sizeof (uint32_t));
@@ -916,7 +922,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
 		  + 2 * 99
-		  + 2 + time->num_era * 10 - 1));
+		  + 2 + time->num_era * 10));
   assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, LC_TIME, "LC_TIME", 2 + cnt, iov);
