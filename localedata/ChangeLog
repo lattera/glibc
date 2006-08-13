@@ -1,3 +1,9 @@
+2006-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #935]
+	* SUPPORTED (SUPPORTED-LOCALES): Add fy_NL.
+	* locales/fy_NL: New file.
+
 2006-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3034]
