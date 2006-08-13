@@ -1,3 +1,15 @@
+2006-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2843]
+	* pthread_join.c (pthread_join): Account for self being canceled
+	when checking for deadlocks.
+	* tst-join5.c: Cleanups.  Allow to be used in tst-join6.
+	(tf1): Don't print anything after pthread_join returns, this would be
+	another cancellation point.
+	(tf2): Likewise.
+	* tst-join6.c: New file.
+	* Makefile (tests): Add tst-join6.
+
 2006-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2892]

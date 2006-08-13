@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,7 +27,11 @@
 static void
 cleanup (void *arg)
 {
-  *(void **) arg = NULL;
+  /* If we already changed the waiter ID, reset it.  The call cannot
+     fail for any reason but the thread not having done that yet so
+     there is no reason for a loop.  */
+  atomic_compare_and_exchange_bool_acq ((struct pthread **) arg, NULL,
+					THREAD_SELF);
 }
 
 
@@ -36,7 +40,6 @@ pthread_join (threadid, thread_return)
      pthread_t threadid;
      void **thread_return;
 {
-  struct pthread *self;
   struct pthread *pd = (struct pthread *) threadid;
 
   /* Make sure the descriptor is valid.  */
@@ -49,12 +52,23 @@ pthread_join (threadid, thread_return)
     /* We cannot wait for the thread.  */
     return EINVAL;
 
-  self = THREAD_SELF;
-  if (pd == self
-      || (self->joinid == pd
-	  && (pd->cancelhandling
-	      & (CANCELING_BITMASK | CANCELED_BITMASK | EXITING_BITMASK
-		 | TERMINATED_BITMASK)) == 0))
+  struct pthread *self = THREAD_SELF;
+  int result = 0;
+
+  /* During the wait we change to asynchronous cancellation.  If we
+     are canceled the thread we are waiting for must be marked as
+     un-wait-ed for again.  */
+  pthread_cleanup_push (cleanup, &pd->joinid);
+
+  /* Switch to asynchronous cancellation.  */
+  int oldtype = CANCEL_ASYNC ();
+
+  if ((pd == self
+       || (self->joinid == pd
+	   && (pd->cancelhandling
+	       & (CANCELING_BITMASK | CANCELED_BITMASK | EXITING_BITMASK
+		  | TERMINATED_BITMASK)) == 0))
+      && !CANCEL_ENABLED_AND_CANCELED (self->cancelhandling))
     /* This is a deadlock situation.  The threads are waiting for each
        other to finish.  Note that this is a "may" error.  To be 100%
        sure we catch this error we would have to lock the data
@@ -62,28 +76,17 @@ pthread_join (threadid, thread_return)
        two threads are really caught in this situation they will
        deadlock.  It is the programmer's problem to figure this
        out.  */
-    return EDEADLK;
-
+    result = EDEADLK;
   /* Wait for the thread to finish.  If it is already locked something
      is wrong.  There can only be one waiter.  */
-  if (__builtin_expect (atomic_compare_and_exchange_bool_acq (&pd->joinid,
-							      self,
-							      NULL), 0))
+  else if (__builtin_expect (atomic_compare_and_exchange_bool_acq (&pd->joinid,
+								   self,
+								   NULL), 0))
     /* There is already somebody waiting for the thread.  */
-    return EINVAL;
-
-
-  /* During the wait we change to asynchronous cancellation.  If we
-     are cancelled the thread we are waiting for must be marked as
-     un-wait-ed for again.  */
-  pthread_cleanup_push (cleanup, &pd->joinid);
-
-  /* Switch to asynchronous cancellation.  */
-  int oldtype = CANCEL_ASYNC ();
-
-
-  /* Wait for the child.  */
-  lll_wait_tid (pd->tid);
+    result = EINVAL;
+  else
+    /* Wait for the child.  */
+    lll_wait_tid (pd->tid);
 
 
   /* Restore cancellation mode.  */
@@ -93,16 +96,19 @@ pthread_join (threadid, thread_return)
   pthread_cleanup_pop (0);
 
 
-  /* We mark the thread as terminated and as joined.  */
-  pd->tid = -1;
+  if (__builtin_expect (result == 0, 1))
+    {
+      /* We mark the thread as terminated and as joined.  */
+      pd->tid = -1;
 
-  /* Store the return value if the caller is interested.  */
-  if (thread_return != NULL)
-    *thread_return = pd->result;
+      /* Store the return value if the caller is interested.  */
+      if (thread_return != NULL)
+	*thread_return = pd->result;
 
 
-  /* Free the TCB.  */
-  __free_tcb (pd);
+      /* Free the TCB.  */
+      __free_tcb (pd);
+    }
 
-  return 0;
+  return result;
 }
