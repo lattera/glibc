@@ -1,5 +1,6 @@
 2006-08-12  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3034]
 	* locales/pa_IN (day): Fix spelling of Saturday.
 	* locales/or_IN (mon): Fix spelling of May.
 	* locales/ml_IN (day): Fix spelling of Sunday, Monday, Wednesday.
