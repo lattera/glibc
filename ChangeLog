@@ -1,3 +1,17 @@
+2006-06-08  Joseph Myers  <jsm28@gcc.gnu.org>
+
+	[BZ #2832]
+	* math/gen-libm-test.pl (clean_up_number): Do not remove trailing
+	0s from integers.
+
+2006-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2987]
+	* sysdeps/unix/sysv/linux/clock_settime.c: Add code to use syscall
+	for CPU clocks.
+	* sysdeps/unix/clock_settime.c: Add support for platform-specific
+	setting of CPU clocks.
+
 2006-06-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #2841]

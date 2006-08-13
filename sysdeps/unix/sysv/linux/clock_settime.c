@@ -16,9 +16,64 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <sysdep.h>
 
+#include "kernel-posix-cpu-timers.h"
 #include <kernel-features.h>
+
+#ifndef HAVE_CLOCK_GETTIME_VSYSCALL
+# undef INTERNAL_VSYSCALL
+# define INTERNAL_VSYSCALL INTERNAL_SYSCALL
+# undef INLINE_VSYSCALL
+# define INLINE_VSYSCALL INLINE_SYSCALL
+#else
+# include <bits/libc-vdso.h>
+#endif
+
+#if __ASSUME_POSIX_CPU_TIMERS <= 0 && defined __NR_clock_settime
+extern int __libc_missing_posix_timers attribute_hidden;
+extern int __libc_missing_posix_cpu_timers attribute_hidden;
+
+static int
+maybe_syscall_settime_cpu (clockid_t clock_id, const struct timespec *tp)
+{
+  int e = EINVAL;
+
+  if (!__libc_missing_posix_cpu_timers)
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      int r = INTERNAL_VSYSCALL (clock_settime, err, 2, clock_id, tp);
+      if (!INTERNAL_SYSCALL_ERROR_P (r, err))
+        return 0;
+
+      e = INTERNAL_SYSCALL_ERRNO (r, err);
+# ifndef __ASSUME_POSIX_TIMERS
+      if (e == ENOSYS)
+	{
+	  __libc_missing_posix_timers = 1;
+	  __libc_missing_posix_cpu_timers = 1;
+	  e = EINVAL;
+	}
+      else
+# endif
+	{
+	  if (e == EINVAL)
+	    {
+	      /* Check whether the kernel supports CPU clocks at all.
+		 If not, record it for the future.  */
+	      r = INTERNAL_VSYSCALL (clock_getres, err, 2,
+				     MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
+				     NULL);
+	      if (INTERNAL_SYSCALL_ERROR_P (r, err))
+		__libc_missing_posix_cpu_timers = 1;
+	    }
+	}
+    }
+
+  return e;
+}
+#endif
 
 
 #ifdef __ASSUME_POSIX_TIMERS
@@ -71,6 +126,24 @@ extern int __libc_missing_posix_timers attribute_hidden;
 #ifdef __NR_clock_settime
 /* We handled the REALTIME clock here.  */
 # define HANDLED_REALTIME	1
+#endif
+
+#if __ASSUME_POSIX_CPU_TIMERS > 0
+# define HANDLED_CPUTIME 1
+# define SYSDEP_SETTIME_CPU \
+  retval = INLINE_SYSCALL (clock_settime, 2, clock_id, tp)
+#elif defined __NR_clock_settime
+# define SYSDEP_SETTIME_CPU \
+  retval = maybe_syscall_settime_cpu (clock_id, tp);			      \
+  if (retval == 0)							      \
+    break;								      \
+  if (retval != EINVAL || !__libc_missing_posix_cpu_timers)		      \
+    {									      \
+      __set_errno (retval);						      \
+      retval = -1;							      \
+      break;								      \
+    }									      \
+  do { } while (0)
 #endif
 
 #include <sysdeps/unix/clock_settime.c>

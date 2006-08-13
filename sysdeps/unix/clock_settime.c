@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,43 @@ extern void __pthread_clock_settime (clockid_t clock_id, hp_timing_t offset)
 #endif
 
 
+#if HP_TIMING_AVAIL
+static int
+hp_timing_settime (clockid_t clock_id, const struct timespec *tp)
+{
+  hp_timing_t tsc;
+  hp_timing_t usertime;
+
+  /* First thing is to get the current time.  */
+  HP_TIMING_NOW (tsc);
+
+  if (__builtin_expect (freq == 0, 0))
+    {
+      /* This can only happen if we haven't initialized the `freq'
+	 variable yet.  Do this now. We don't have to protect this
+	 code against multiple execution since all of them should lead
+	 to the same result.  */
+      freq = __get_clockfreq ();
+      if (__builtin_expect (freq == 0, 0))
+	/* Something went wrong.  */
+	return -1;
+    }
+
+  /* Convert the user-provided time into CPU ticks.  */
+  usertime = tp->tv_sec * freq + (tp->tv_nsec * freq) / 1000000000ull;
+
+  /* Determine the offset and use it as the new base value.  */
+  if (clock_id == CLOCK_PROCESS_CPUTIME_ID
+      || __pthread_clock_settime == NULL)
+    GL(dl_cpuclock_offset) = tsc - usertime;
+  else
+    __pthread_clock_settime (clock_id, tsc - usertime);
+
+  return 0;
+}
+#endif
+
+
 /* Set CLOCK to value TP.  */
 int
 clock_settime (clockid_t clock_id, const struct timespec *tp)
@@ -70,55 +107,22 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 #endif
 
     default:
-#if HP_TIMING_AVAIL
-      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
-	  != CLOCK_THREAD_CPUTIME_ID)
+#ifdef SYSDEP_SETTIME_CPU
+      SYSDEP_SETTIME_CPU;
 #endif
+#ifndef HANDLED_CPUTIME
+# if HP_TIMING_AVAIL
+      if (CPUCLOCK_WHICH (clock_id) == CLOCK_PROCESS_CPUTIME_ID
+	  || CPUCLOCK_WHICH (clock_id) == CLOCK_THREAD_CPUTIME_ID)
+	retval = hp_timing_settime (clock_id, tp);
+      else
+# endif
 	{
 	  __set_errno (EINVAL);
 	  retval = -1;
-	  break;
 	}
-
-#if HP_TIMING_AVAIL
-      /* FALLTHROUGH.  */
-    case CLOCK_PROCESS_CPUTIME_ID:
-      {
-	hp_timing_t tsc;
-	hp_timing_t usertime;
-
-	/* First thing is to get the current time.  */
-	HP_TIMING_NOW (tsc);
-
-	if (__builtin_expect (freq == 0, 0))
-	  {
-	    /* This can only happen if we haven't initialized the `freq'
-	       variable yet.  Do this now. We don't have to protect this
-	       code against multiple execution since all of them should
-	       lead to the same result.  */
-	    freq = __get_clockfreq ();
-	    if (__builtin_expect (freq == 0, 0))
-	      {
-		/* Something went wrong.  */
-		retval = -1;
-		break;
-	      }
-	  }
-
-	/* Convert the user-provided time into CPU ticks.  */
-	usertime = tp->tv_sec * freq + (tp->tv_nsec * freq) / 1000000000ull;
-
-	/* Determine the offset and use it as the new base value.  */
-	if (clock_id == CLOCK_PROCESS_CPUTIME_ID
-	    || __pthread_clock_settime == NULL)
-	  GL(dl_cpuclock_offset) = tsc - usertime;
-	else
-	  __pthread_clock_settime (clock_id, tsc - usertime);
-
-	retval = 0;
-      }
-      break;
 #endif
+      break;
     }
 
   return retval;

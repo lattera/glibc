@@ -558,9 +558,11 @@ sub parse_ulps {
 sub clean_up_number {
   my ($number) = @_;
 
-  # Remove trailing zeros
-  $number =~ s/0+$//;
-  $number =~ s/\.$//;
+  # Remove trailing zeros after the decimal point
+  if ($number =~ /\./) {
+    $number =~ s/0+$//;
+    $number =~ s/\.$//;
+  }
   return $number;
 }
 
