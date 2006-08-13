@@ -1,3 +1,12 @@
+2006-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/pa_IN (day): Fix spelling of Saturday.
+	* locales/or_IN (mon): Fix spelling of May.
+	* locales/ml_IN (day): Fix spelling of Sunday, Monday, Wednesday.
+	(abmon): Fix spelling of March to October.
+	(mon): Fix spelling of March, April, June, August to December.
+	Patches by Mayank Jain <majain@redhat.com>.
+
 2006-06-03  Eddy Petrisor  <eddy.petrisor@gmail.com>
 
 	[BZ #2125]
