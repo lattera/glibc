@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -50,8 +50,7 @@ __utmpname (const char *file)
     {
       if (strcmp (file, default_file_name) == 0)
 	{
-	  if (__libc_utmp_file_name != default_file_name)
-	    free ((char *) __libc_utmp_file_name);
+	  free ((char *) __libc_utmp_file_name);
 
 	  __libc_utmp_file_name = default_file_name;
 	}
