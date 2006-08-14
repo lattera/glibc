@@ -83,7 +83,7 @@ open_wmemstream (bufloc, sizeloc)
   new_f->fp._sf._sbf._f._lock = &new_f->lock;
 #endif
 
-  buf = malloc (_IO_BUFSIZ);
+  buf = calloc (1, _IO_BUFSIZ);
   if (buf == NULL)
     return NULL;
 

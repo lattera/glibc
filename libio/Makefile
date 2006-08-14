@@ -56,7 +56,8 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-mmap2-eofsync tst-mmap-offend bug-fopena+ bug-wfflush \
 	bug-ungetc2 bug-ftell bug-ungetc3 bug-ungetc4 tst-fopenloc2 \
 	tst-memstream1 tst-memstream2 \
-	tst-wmemstream1 tst-wmemstream2
+	tst-wmemstream1 tst-wmemstream2 \
+	bug-memstream1 bug-wmemstream1
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.

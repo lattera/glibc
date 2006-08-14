@@ -46,6 +46,8 @@ _IO_vasprintf (result_ptr, format, args)
   int ret;
   _IO_size_t needed;
   _IO_size_t allocated;
+  /* No need to clear the memory here (unlike for open_memstream) since
+     we know we will never seek on the stream.  */
   string = (char *) malloc (init_string_size);
   if (string == NULL)
     return -1;

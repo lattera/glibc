@@ -25,6 +25,7 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
+#include <assert.h>
 #include "strfile.h"
 #include "libioP.h"
 #include <string.h>
@@ -102,7 +103,7 @@ _IO_str_overflow (fp, c)
       fp->_IO_write_ptr = fp->_IO_read_ptr;
       fp->_IO_read_ptr = fp->_IO_read_end;
     }
-  pos =  fp->_IO_write_ptr - fp->_IO_write_base;
+  pos = fp->_IO_write_ptr - fp->_IO_write_base;
   if (pos >= (_IO_size_t) (_IO_blen (fp) + flush_only))
     {
       if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
@@ -111,7 +112,10 @@ _IO_str_overflow (fp, c)
 	{
 	  char *new_buf;
 	  char *old_buf = fp->_IO_buf_base;
-	  _IO_size_t new_size = 2 * _IO_blen (fp) + 100;
+	  size_t old_blen = _IO_blen (fp);
+	  _IO_size_t new_size = 2 * old_blen + 100;
+	  if (new_size < old_blen)
+	    return EOF;
 	  new_buf
 	    = (char *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (new_size);
 	  if (new_buf == NULL)
@@ -121,15 +125,13 @@ _IO_str_overflow (fp, c)
 	    }
 	  if (old_buf)
 	    {
-	      memcpy (new_buf, old_buf, _IO_blen (fp));
+	      memcpy (new_buf, old_buf, old_blen);
 	      (*((_IO_strfile *) fp)->_s._free_buffer) (old_buf);
 	      /* Make sure _IO_setb won't try to delete _IO_buf_base. */
 	      fp->_IO_buf_base = NULL;
 	    }
-#if 0
-	  if (lenp == &LEN(fp)) /* use '\0'-filling */
-	      memset (new_buf + pos, 0, blen() - pos);
-#endif
+	  memset (new_buf + old_blen, '\0', new_size - old_blen);
+
 	  INTUSE(_IO_setb) (fp, new_buf, new_buf + new_size, 1);
 	  fp->_IO_read_base = new_buf + (fp->_IO_read_base - old_buf);
 	  fp->_IO_read_ptr = new_buf + (fp->_IO_read_ptr - old_buf);
@@ -179,6 +181,71 @@ _IO_str_count (fp)
 	  - fp->_IO_read_base);
 }
 
+
+static int
+enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
+{
+  if ((_IO_ssize_t) offset <= _IO_blen (fp))
+    return 0;
+
+  _IO_ssize_t oldend = fp->_IO_write_end - fp->_IO_write_base;
+
+  /* Try to enlarge the buffer.  */
+  if (fp->_flags & _IO_USER_BUF)
+    /* User-provided buffer.  */
+    return 1;
+
+  _IO_size_t newsize = offset + 100;
+  char *oldbuf = fp->_IO_buf_base;
+  char *newbuf
+    = (char *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize);
+  if (newbuf == NULL)
+    return 1;
+
+  if (oldbuf != NULL)
+    {
+      memcpy (newbuf, oldbuf, _IO_blen (fp));
+      (*((_IO_strfile *) fp)->_s._free_buffer) (oldbuf);
+      /* Make sure _IO_setb won't try to delete
+	 _IO_buf_base. */
+      fp->_IO_buf_base = NULL;
+    }
+
+  INTUSE(_IO_setb) (fp, newbuf, newbuf + newsize, 1);
+
+  if (reading)
+    {
+      fp->_IO_write_base = newbuf + (fp->_IO_write_base - oldbuf);
+      fp->_IO_write_ptr = newbuf + (fp->_IO_write_ptr - oldbuf);
+      fp->_IO_write_end = newbuf + (fp->_IO_write_end - oldbuf);
+      fp->_IO_read_ptr = newbuf + (fp->_IO_read_ptr - oldbuf);
+
+      fp->_IO_read_base = newbuf;
+      fp->_IO_read_end = fp->_IO_buf_end;
+    }
+  else
+    {
+      fp->_IO_read_base = newbuf + (fp->_IO_read_base - oldbuf);
+      fp->_IO_read_ptr = newbuf + (fp->_IO_read_ptr - oldbuf);
+      fp->_IO_read_end = newbuf + (fp->_IO_read_end - oldbuf);
+      fp->_IO_write_ptr = newbuf + (fp->_IO_write_ptr - oldbuf);
+
+      fp->_IO_write_base = newbuf;
+      fp->_IO_write_end = fp->_IO_buf_end;
+    }
+
+  /* Clear the area between the last write position and th
+     new position.  */
+  assert (offset >= oldend);
+  if (reading)
+    memset (fp->_IO_read_base + oldend, '\0', offset - oldend);
+  else
+    memset (fp->_IO_write_base + oldend, '\0', offset - oldend);
+
+  return 0;
+}
+
+
 _IO_off64_t
 _IO_str_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
@@ -219,7 +286,10 @@ _IO_str_seekoff (fp, offset, dir, mode)
 	    default: /* case _IO_seek_set: */
 	      break;
 	    }
-	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	  if (offset < 0)
+	    return EOF;
+	  if ((_IO_ssize_t) offset > cur_size
+	      && enlarge_userbuf (fp, offset, 1) != 0)
 	    return EOF;
 	  fp->_IO_read_ptr = fp->_IO_read_base + offset;
 	  fp->_IO_read_end = fp->_IO_read_base + cur_size;
@@ -240,7 +310,10 @@ _IO_str_seekoff (fp, offset, dir, mode)
 	    default: /* case _IO_seek_set: */
 	      break;
 	    }
-	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	  if (offset < 0)
+	    return EOF;
+	  if ((_IO_ssize_t) offset > cur_size
+	      && enlarge_userbuf (fp, offset, 0) != 0)
 	    return EOF;
 	  fp->_IO_write_ptr = fp->_IO_write_base + offset;
 	  new_pos = offset;

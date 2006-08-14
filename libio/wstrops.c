@@ -25,6 +25,7 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
+#include <assert.h>
 #include "strfile.h"
 #include "libioP.h"
 #include <string.h>
@@ -66,7 +67,7 @@ _IO_wstr_init_static (fp, ptr, size, pstart)
       fp->_wide_data->_IO_read_end = end;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
-  (((_IO_strfile *) fp)->_s._allocate_buffer) =  (_IO_alloc_type)0;
+  (((_IO_strfile *) fp)->_s._allocate_buffer) = (_IO_alloc_type)0;
 }
 
 _IO_wint_t
@@ -84,7 +85,7 @@ _IO_wstr_overflow (fp, c)
       fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_read_ptr;
       fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
     }
-  pos =  fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
+  pos = fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
   if (pos >= (_IO_size_t) (_IO_wblen (fp) + flush_only))
     {
       if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
@@ -93,7 +94,10 @@ _IO_wstr_overflow (fp, c)
 	{
 	  wchar_t *new_buf;
 	  wchar_t *old_buf = fp->_wide_data->_IO_buf_base;
-	  _IO_size_t new_size = 2 * _IO_wblen (fp) + 100;
+	  size_t old_wblen = _IO_wblen (fp);
+	  _IO_size_t new_size = 2 * old_wblen + 100;
+	  if (new_size < old_wblen)
+	    return EOF;
 	  new_buf
 	    = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (new_size
 									* sizeof (wchar_t));
@@ -104,11 +108,14 @@ _IO_wstr_overflow (fp, c)
 	    }
 	  if (old_buf)
 	    {
-	      __wmemcpy (new_buf, old_buf, _IO_wblen (fp));
+	      __wmemcpy (new_buf, old_buf, old_wblen);
 	      (*((_IO_strfile *) fp)->_s._free_buffer) (old_buf);
 	      /* Make sure _IO_setb won't try to delete _IO_buf_base. */
 	      fp->_wide_data->_IO_buf_base = NULL;
 	    }
+
+	  wmemset (new_buf + old_wblen, L'\0', new_size - old_wblen);
+
 	  INTUSE(_IO_wsetb) (fp, new_buf, new_buf + new_size, 1);
 	  fp->_wide_data->_IO_read_base =
 	    new_buf + (fp->_wide_data->_IO_read_base - old_buf);
@@ -131,6 +138,7 @@ _IO_wstr_overflow (fp, c)
   return c;
 }
 
+
 _IO_wint_t
 _IO_wstr_underflow (fp)
      _IO_FILE *fp;
@@ -149,16 +157,86 @@ _IO_wstr_underflow (fp)
     return WEOF;
 }
 
-/* The size of the valid part of the buffer.  */
 
+/* The size of the valid part of the buffer.  */
 _IO_ssize_t
 _IO_wstr_count (fp)
      _IO_FILE *fp;
 {
-  return ((fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_read_end
-	   ? fp->_wide_data->_IO_write_ptr : fp->_wide_data->_IO_read_end)
-	  - fp->_wide_data->_IO_read_base);
+  struct _IO_wide_data *wd = fp->_wide_data;
+
+  return ((wd->_IO_write_ptr > wd->_IO_read_end
+	   ? wd->_IO_write_ptr : wd->_IO_read_end)
+	  - wd->_IO_read_base);
 }
+
+
+static int
+enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
+{
+  if ((_IO_ssize_t) offset <= _IO_blen (fp))
+    return 0;
+
+  struct _IO_wide_data *wd = fp->_wide_data;
+
+  _IO_ssize_t oldend = wd->_IO_write_end - wd->_IO_write_base;
+
+  /* Try to enlarge the buffer.  */
+  if (fp->_flags & _IO_USER_BUF)
+    /* User-provided buffer.  */
+    return 1;
+
+  _IO_size_t newsize = offset + 100;
+  wchar_t *oldbuf = wd->_IO_buf_base;
+  wchar_t *newbuf
+    = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize
+								* sizeof (wchar_t));
+  if (newbuf == NULL)
+    return 1;
+
+  if (oldbuf != NULL)
+    {
+      __wmemcpy (newbuf, oldbuf, _IO_wblen (fp));
+      (*((_IO_strfile *) fp)->_s._free_buffer) (oldbuf);
+      /* Make sure _IO_setb won't try to delete
+	 _IO_buf_base. */
+      wd->_IO_buf_base = NULL;
+    }
+
+  INTUSE(_IO_wsetb) (fp, newbuf, newbuf + newsize, 1);
+
+  if (reading)
+    {
+      wd->_IO_write_base = newbuf + (wd->_IO_write_base - oldbuf);
+      wd->_IO_write_ptr = newbuf + (wd->_IO_write_ptr - oldbuf);
+      wd->_IO_write_end = newbuf + (wd->_IO_write_end - oldbuf);
+      wd->_IO_read_ptr = newbuf + (wd->_IO_read_ptr - oldbuf);
+
+      wd->_IO_read_base = newbuf;
+      wd->_IO_read_end = wd->_IO_buf_end;
+    }
+  else
+    {
+      wd->_IO_read_base = newbuf + (wd->_IO_read_base - oldbuf);
+      wd->_IO_read_ptr = newbuf + (wd->_IO_read_ptr - oldbuf);
+      wd->_IO_read_end = newbuf + (wd->_IO_read_end - oldbuf);
+      wd->_IO_write_ptr = newbuf + (wd->_IO_write_ptr - oldbuf);
+
+      wd->_IO_write_base = newbuf;
+      wd->_IO_write_end = wd->_IO_buf_end;
+    }
+
+  /* Clear the area between the last write position and th
+     new position.  */
+  assert (offset >= oldend);
+  if (reading)
+    wmemset (wd->_IO_read_base + oldend, L'\0', offset - oldend);
+  else
+    wmemset (wd->_IO_write_base + oldend, L'\0', offset - oldend);
+
+  return 0;
+}
+
 
 _IO_off64_t
 _IO_wstr_seekoff (fp, offset, dir, mode)
@@ -202,7 +280,10 @@ _IO_wstr_seekoff (fp, offset, dir, mode)
 	    default: /* case _IO_seek_set: */
 	      break;
 	    }
-	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	  if (offset < 0)
+	    return EOF;
+	  if ((_IO_ssize_t) offset > cur_size
+	      && enlarge_userbuf (fp, offset, 1) != 0)
 	    return EOF;
 	  fp->_wide_data->_IO_read_ptr = (fp->_wide_data->_IO_read_base
 					  + offset);
@@ -226,7 +307,10 @@ _IO_wstr_seekoff (fp, offset, dir, mode)
 	    default: /* case _IO_seek_set: */
 	      break;
 	    }
-	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	  if (offset < 0)
+	    return EOF;
+	  if ((_IO_ssize_t) offset > cur_size
+	      && enlarge_userbuf (fp, offset, 0) != 0)
 	    return EOF;
 	  fp->_wide_data->_IO_write_ptr = (fp->_wide_data->_IO_write_base
 					   + offset);

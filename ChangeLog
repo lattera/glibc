@@ -1,3 +1,21 @@
+2006-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1996]
+	* libio/memstream.c (open_memstream): Allocate initial buffer with
+	calloc.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+	* libio/strops.c: Pretty printing.
+	(_IO_str_overflow): Clear uninitialized part of the new buffer.
+	(enlarge_userbuf): New function.
+	(_IO_str_seekoff): Call it if seek position is larger than current
+	buffer.
+	* libio/wstrops.c: Likewise.
+	* libio/vasprintf.c: Add comment as to why we do not have to use
+	calloc instead of malloc to allocate initial buffer.
+	* libio/Makefile (tests): Add bug-memstream1 and bug-wmemstream1.
+	* libio/bug-memstream1.c: New file.
+	* libio/bug-wmemstream1.c: New file.
+
 2006-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wstrops.c: Remove dead macro definitions and comments.
