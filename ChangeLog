@@ -1,5 +1,8 @@
 2006-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wstrops.c: Remove dead macro definitions and comments.
+	* libio/strops.c: Likewise.
+
 	[BZ #2764]
 	* login/utmpname.c (__utmpname): Remove unnecessary test.
 

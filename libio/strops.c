@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,38 +29,6 @@
 #include "libioP.h"
 #include <string.h>
 #include <stdio_ext.h>
-
-#if 0
-/* The following definitions are for exposition only.
-   They map the terminology used in the ANSI/ISO C++ draft standard
-   to the implementation. */
-
-/* allocated:  set  when a dynamic array object has been allocated, and
-   hence should be freed by the destructor for the strstreambuf object. */
-#define ALLOCATED(FP) ((FP)->_f._IO_buf_base && DYNAMIC(FP))
-
-/* constant:  set when the array object has const elements,
-   so the output sequence cannot be written. */
-#define CONSTANT(FP) ((FP)->_f._IO_file_flags & _IO_NO_WRITES)
-
-/* alsize:  the suggested minimum size for a dynamic array object. */
-#define ALSIZE(FP) ??? /* not stored */
-
-/* palloc: points to the function to call to allocate a dynamic array object.*/
-#define PALLOC(FP) \
-  ((FP)->_s._allocate_buffer == default_alloc ? 0 : (FP)->_s._allocate_buffer)
-
-/* pfree: points  to  the  function  to call to free a dynamic array object. */
-#define PFREE(FP) \
-  ((FP)->_s._free_buffer == default_free ? 0 : (FP)->_s._free_buffer)
-
-#endif
-
-#ifdef TODO
-/* An "unbounded buffer" is when a buffer is supplied, but with no
-   specified length.  An example is the buffer argument to sprintf.
-   */
-#endif
 
 void
 _IO_str_init_static_internal (sf, ptr, size, pstart)
