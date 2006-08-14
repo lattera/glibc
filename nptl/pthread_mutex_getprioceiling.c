@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthreadP.h>
 
 
@@ -26,7 +27,11 @@ pthread_mutex_getprioceiling (mutex, prioceiling)
      const pthread_mutex_t *mutex;
      int *prioceiling;
 {
-  *prioceiling = (mutex->__data.__kind & PTHREAD_MUTEX_PRIO_CEILING_MASK)
+  if (__builtin_expect ((mutex->__data.__kind
+			 & PTHREAD_MUTEX_PRIO_PROTECT_NP) == 0, 0))
+    return EINVAL;
+
+  *prioceiling = (mutex->__data.__lock & PTHREAD_MUTEX_PRIO_CEILING_MASK)
 		 >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
 
   return 0;

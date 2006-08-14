@@ -1,3 +1,42 @@
+2006-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h
+	(_POSIX_THREAD_PRIO_PROTECT): Define to 200112L.
+	* descr.h (struct priority_protection_data): New type.
+	(struct pthread): Add tpp field.
+	* pthreadP.h (PTHREAD_MUTEX_PP_NORMAL_NP,
+	PTHREAD_MUTEX_PP_RECURSIVE_NP, PTHREAD_MUTEX_PP_ERRORCHECK_NP,
+	PTHREAD_MUTEX_PP_ADAPTIVE_NP): New enum values.
+	* pthread_mutex_init.c (__pthread_mutex_init): Handle non-robust
+	TPP mutexes.
+	* pthread_mutex_lock.c (__pthread_mutex_lock): Handle TPP mutexes.
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Likewise.
+	* tpp.c: New file.
+	* pthread_setschedparam.c (__pthread_setschedparam): Handle priority
+	boosted by TPP.
+	* pthread_setschedprio.c (pthread_setschedprio): Likewise.
+	* pthread_mutexattr_getprioceiling.c
+	(pthread_mutexattr_getprioceiling): If ceiling is 0, ensure it is
+	in the SCHED_FIFO priority range.
+	* pthread_mutexattr_setprioceiling.c
+	(pthread_mutexattr_setprioceiling): Fix prioceiling validation.
+	* pthread_mutex_getprioceiling.c (pthread_mutex_getprioceiling): Fail
+	if mutex is not TPP.  Ceiling is now in __data.__lock.
+	* pthread_mutex_setprioceiling.c: Include stdbool.h.
+	(pthread_mutex_setprioceiling): Fix prioceiling validation.  Ceiling
+	is now in __data.__lock.  Add locking.
+	* pthread_create.c (__free_tcb): Free pd->tpp structure.
+	* Makefile (libpthread-routines): Add tpp.
+	(xtests): Add tst-mutexpp1, tst-mutexpp6 and tst-mutexpp10.
+	* tst-tpp.h: New file.
+	* tst-mutexpp1.c: New file.
+	* tst-mutexpp6.c: New file.
+	* tst-mutexpp10.c: New file.
+	* tst-mutex1.c (TEST_FUNCTION): Don't redefine if already defined.
+	* tst-mutex6.c (TEST_FUNCTION): Likewise.
+
 2006-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2843]

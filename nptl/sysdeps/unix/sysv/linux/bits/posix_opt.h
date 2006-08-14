@@ -82,6 +82,10 @@
 /* We support priority inheritence.  */
 #define _POSIX_THREAD_PRIO_INHERIT	200112L
 
+/* We support priority protection, though only for non-robust
+   mutexes.  */
+#define _POSIX_THREAD_PRIO_PROTECT	200112L
+
 /* We support POSIX.1b semaphores.  */
 #define _POSIX_SEMAPHORES	200112L
 
@@ -173,8 +177,5 @@
 
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
-
-/* No support for priority protection so far.  */
-#define _POSIX_THREAD_PRIO_PROTECT	-1
 
 #endif /* posix_opt.h */

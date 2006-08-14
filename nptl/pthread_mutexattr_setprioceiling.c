@@ -27,7 +27,15 @@ pthread_mutexattr_setprioceiling (attr, prioceiling)
      pthread_mutexattr_t *attr;
      int prioceiling;
 {
-  if (prioceiling < 0 || __builtin_expect (prioceiling > 255, 0))
+  if (__sched_fifo_min_prio == -1)
+    __init_sched_fifo_prio ();
+
+  if (__builtin_expect (prioceiling < __sched_fifo_min_prio, 0)
+      || __builtin_expect (prioceiling > __sched_fifo_max_prio, 0)
+      || __builtin_expect ((prioceiling
+			    & (PTHREAD_MUTEXATTR_PRIO_CEILING_MASK
+			       >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT))
+			   != prioceiling, 0))
     return EINVAL;
 
   struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;

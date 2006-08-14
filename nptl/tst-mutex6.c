@@ -69,5 +69,7 @@ do_test (void)
 }
 
 #define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
+#ifndef TEST_FUNCTION
+# define TEST_FUNCTION do_test ()
+#endif
 #include "../test-skeleton.c"

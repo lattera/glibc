@@ -40,8 +40,9 @@ _dl_runtime_resolve:
 	mflr r0
  # We also need to save some of the condition register fields
 	stw r7,32(r1)
-	stw r0,68(r1)
- 	cfi_offset (lr, 4)
+ # Don't clobber the caller's LRSAVE, it is needed by _mcount.
+	stw r0,48(r1)
+ 	cfi_offset (lr, -16)
 	stw r8,36(r1)
 	mfcr r0
 	stw r9,40(r1)
@@ -51,7 +52,7 @@ _dl_runtime_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr r3
  # Put the registers back...
-	lwz r0,68(r1)
+	lwz r0,48(r1)
 	lwz r10,44(r1)
 	lwz r9,40(r1)
 	mtlr r0
@@ -128,8 +129,9 @@ _dl_prof_resolve:
 	mflr r5
  # We also need to save some of the condition register fields.
 	stw r7,32(r1)
-	stw r5,324(r1)
-	cfi_offset (lr, 4)
+ # Don't clobber the caller's LRSAVE, it is needed by _mcount.
+	stw r5,308(r1)
+	cfi_offset (lr, -12)
 	stw r8,36(r1)
 	mfcr r0
 	stw r9,40(r1)
@@ -154,7 +156,7 @@ _dl_prof_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr r3
  # Put the registers back...
-	lwz r0,324(r1)
+	lwz r0,308(r1)
 	lwz r10,44(r1)
 	lwz r9,40(r1)
 	mtlr r0

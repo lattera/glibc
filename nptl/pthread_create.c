@@ -206,6 +206,15 @@ __free_tcb (struct pthread *pd)
 	   running thread is gone.  */
 	abort ();
 
+      /* Free TPP data.  */
+      if (__builtin_expect (pd->tpp != NULL, 0))
+	{
+	  struct priority_protection_data *tpp = pd->tpp;
+
+	  pd->tpp = NULL;
+	  free (tpp);
+	}
+
       /* Queue the stack memory block for reuse and exit the process.  The
 	 kernel will signal via writing to the address returned by
 	 QUEUE-STACK when the stack is available.  */

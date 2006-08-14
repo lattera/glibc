@@ -46,7 +46,6 @@ __pthread_mutex_init (mutex, mutexattr)
   imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
 
   /* Sanity checks.  */
-  // XXX For now we don't support priority protected mutexes.
   switch (__builtin_expect (imutexattr->mutexkind
 			    & PTHREAD_MUTEXATTR_PROTOCOL_MASK,
 			    PTHREAD_PRIO_NONE
@@ -72,7 +71,10 @@ __pthread_mutex_init (mutex, mutexattr)
       break;
 
     default:
-      return ENOTSUP;
+      /* XXX: For now we don't support robust priority protected mutexes.  */
+      if (imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST)
+	return ENOTSUP;
+      break;
     }
 
   /* Clear the whole variable.  */
@@ -100,15 +102,18 @@ __pthread_mutex_init (mutex, mutexattr)
 
     case PTHREAD_PRIO_PROTECT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
       mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_NP;
-      if (PTHREAD_MUTEX_PRIO_CEILING_MASK
-	  == PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
-	mutex->__data.__kind |= (imutexattr->mutexkind
-				 & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK);
-      else
-	mutex->__data.__kind |= ((imutexattr->mutexkind
-				  & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
-				 >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT)
-				<< PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+
+      int ceiling = (imutexattr->mutexkind
+		     & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
+		    >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT;
+      if (! ceiling)
+	{
+	  if (__sched_fifo_min_prio == -1)
+	    __init_sched_fifo_prio ();
+	  if (ceiling < __sched_fifo_min_prio)
+	    ceiling = __sched_fifo_min_prio;
+	}
+      mutex->__data.__lock = ceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
       break;
 
     default:

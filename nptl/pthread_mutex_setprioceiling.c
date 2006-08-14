@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdbool.h>
 #include <errno.h>
 #include <pthreadP.h>
 
@@ -33,23 +34,83 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
   if ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_PROTECT_NP) == 0)
     return EINVAL;
 
-  if (prioceiling < 0 || __builtin_expect (prioceiling > 255, 0))
+  if (__sched_fifo_min_prio == -1)
+    __init_sched_fifo_prio ();
+
+  if (__builtin_expect (prioceiling < __sched_fifo_min_prio, 0)
+      || __builtin_expect (prioceiling > __sched_fifo_max_prio, 0)
+      || __builtin_expect ((prioceiling
+			    & (PTHREAD_MUTEXATTR_PRIO_CEILING_MASK
+			       >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT))
+			   != prioceiling, 0))
     return EINVAL;
 
-  /* XXX This needs to lock with TID, but shouldn't obey priority protect
-     protocol.  */
-  /* lll_xxx_mutex_lock (mutex->__data.__lock); */
+  /* Check whether we already hold the mutex.  */
+  bool locked = false;
+  if (mutex->__data.__owner == THREAD_GETMEM (THREAD_SELF, tid))
+    {
+      if (mutex->__data.__kind == PTHREAD_MUTEX_PP_ERRORCHECK_NP)
+	return EDEADLK;
+
+      if (mutex->__data.__kind == PTHREAD_MUTEX_PP_RECURSIVE_NP)
+	locked = true;
+    }
+
+  int oldval = mutex->__data.__lock;
+  if (! locked)
+    do
+      {
+	/* Need to lock the mutex, but without obeying the priority
+	   protect protocol.  */
+	int ceilval = (oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK);
+
+	oldval = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						      ceilval | 1, ceilval);
+	if (oldval == ceilval)
+	  break;
+
+	do
+	  {
+	    oldval
+	      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						     ceilval | 2,
+						     ceilval | 1);
+
+	    if ((oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK) != ceilval)
+	      break;
+
+	    if (oldval != ceilval)
+	      lll_futex_wait (&mutex->__data.__lock, ceilval | 2);
+	  }
+	while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						    ceilval | 2, ceilval)
+	       != ceilval);
+
+	if ((oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK) != ceilval)
+	  continue;
+      }
+    while (0);
+
+  int oldprio = (oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK)
+		>> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+  if (locked)
+    {
+      int ret = __pthread_tpp_change_priority (oldprio, prioceiling);
+      if (ret)
+	return ret;
+    }
 
   if (old_ceiling != NULL)
-    *old_ceiling = (mutex->__data.__kind & PTHREAD_MUTEX_PRIO_CEILING_MASK)
-		   >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+    *old_ceiling = oldprio;
 
-  int newkind = (mutex->__data.__kind & ~PTHREAD_MUTEX_PRIO_CEILING_MASK);
-  mutex->__data.__kind = newkind
+  int newlock = 0;
+  if (locked)
+    newlock = (mutex->__data.__lock & ~PTHREAD_MUTEX_PRIO_CEILING_MASK);
+  mutex->__data.__lock = newlock
 			 | (prioceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT);
+  atomic_full_barrier ();
 
-  /* XXX This needs to unlock the above special kind of lock.  */
-  /* lll_xxx_mutex_unlock (mutex->__data.__lock); */
+  lll_futex_wake (&mutex->__data.__lock, INT_MAX);
 
   return 0;
 }

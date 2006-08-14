@@ -86,17 +86,31 @@ enum
   = PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP,
   PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP
   = PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP,
-  PTHREAD_MUTEX_PRIO_PROTECT_NP = 64
+  PTHREAD_MUTEX_PRIO_PROTECT_NP = 64,
+  PTHREAD_MUTEX_PP_NORMAL_NP
+  = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_NORMAL,
+  PTHREAD_MUTEX_PP_RECURSIVE_NP
+  = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_RECURSIVE_NP,
+  PTHREAD_MUTEX_PP_ERRORCHECK_NP
+  = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_PP_ADAPTIVE_NP
+  = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_ADAPTIVE_NP
 };
-#define PTHREAD_MUTEX_PRIO_CEILING_SHIFT	16
-#define PTHREAD_MUTEX_PRIO_CEILING_MASK		0x00ff0000
+
+/* Ceiling in __data.__lock.  __data.__lock is signed, so don't
+   use the MSB bit in there, but in the mask also include that bit,
+   so that the compiler can optimize & PTHREAD_MUTEX_PRIO_CEILING_MASK
+   masking if the value is then shifted down by
+   PTHREAD_MUTEX_PRIO_CEILING_SHIFT.  */
+#define PTHREAD_MUTEX_PRIO_CEILING_SHIFT	19
+#define PTHREAD_MUTEX_PRIO_CEILING_MASK		0xfff80000
 
 
 /* Flags in mutex attr.  */
 #define PTHREAD_MUTEXATTR_PROTOCOL_SHIFT	28
 #define PTHREAD_MUTEXATTR_PROTOCOL_MASK		0x30000000
-#define PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT	16
-#define PTHREAD_MUTEXATTR_PRIO_CEILING_MASK	0x00ff0000
+#define PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT	12
+#define PTHREAD_MUTEXATTR_PRIO_CEILING_MASK	0x00fff000
 #define PTHREAD_MUTEXATTR_FLAG_ROBUST		0x40000000
 #define PTHREAD_MUTEXATTR_FLAG_PSHARED		0x80000000
 #define PTHREAD_MUTEXATTR_FLAG_BITS \
@@ -150,6 +164,14 @@ extern unsigned int __nptl_nthreads attribute_hidden;
 /* Negative if we do not have the system call and we can use it.  */
 extern int __set_robust_list_avail attribute_hidden;
 #endif
+
+/* Thread Priority Protection.  */
+extern int __sched_fifo_min_prio attribute_hidden;
+extern int __sched_fifo_max_prio attribute_hidden;
+extern void __init_sched_fifo_prio (void) attribute_hidden;
+extern int __pthread_tpp_change_priority (int prev_prio, int new_prio)
+     attribute_hidden;
+extern int __pthread_current_priority (void) attribute_hidden;
 
 /* The library can run in debugging mode where it performs a lot more
    tests.  */

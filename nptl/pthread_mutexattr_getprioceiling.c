@@ -27,11 +27,22 @@ pthread_mutexattr_getprioceiling (attr, prioceiling)
      int *prioceiling;
 {
   const struct pthread_mutexattr *iattr;
+  int ceiling;
 
   iattr = (const struct pthread_mutexattr *) attr;
 
-  *prioceiling = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
-		  >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT);
+  ceiling = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
+	     >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT);
+
+  if (! ceiling)
+    {
+      if (__sched_fifo_min_prio == -1)
+	__init_sched_fifo_prio ();
+      if (ceiling < __sched_fifo_min_prio)
+	ceiling = __sched_fifo_min_prio;
+    }
+
+  *prioceiling = ceiling;
 
   return 0;
 }

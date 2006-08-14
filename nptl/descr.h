@@ -111,6 +111,14 @@ struct robust_list_head
 };
 
 
+/* Data strcture used to handle thread priority protection.  */
+struct priority_protection_data
+{
+  int priomax;
+  unsigned int priomap[];
+};
+
+
 /* Thread descriptor data structure.  */
 struct pthread
 {
@@ -342,6 +350,9 @@ struct pthread
   size_t guardsize;
   /* This is what the user specified and what we will report.  */
   size_t reported_guardsize;
+
+  /* Thread Priority Protection data.  */
+  struct priority_protection_data *tpp;
 
   /* Resolver state.  */
   struct __res_state res;

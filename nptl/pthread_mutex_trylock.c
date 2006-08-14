@@ -297,6 +297,79 @@ __pthread_mutex_trylock (mutex)
 	return 0;
       }
 
+    case PTHREAD_MUTEX_PP_RECURSIVE_NP:
+    case PTHREAD_MUTEX_PP_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_PP_NORMAL_NP:
+    case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
+      {
+	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
+
+	oldval = mutex->__data.__lock;
+
+	/* Check whether we already hold the mutex.  */
+	if (mutex->__data.__owner == id)
+	  {
+	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
+	      return EDEADLK;
+
+	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
+	      {
+		/* Just bump the counter.  */
+		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		  /* Overflow of the counter.  */
+		  return EAGAIN;
+
+		++mutex->__data.__count;
+
+		return 0;
+	      }
+	  }
+
+	int oldprio = -1, ceilval;
+	do
+	  {
+	    int ceiling = (oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK)
+			  >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+
+	    if (__pthread_current_priority () > ceiling)
+	      {
+		if (oldprio != -1)
+		  __pthread_tpp_change_priority (oldprio, -1);
+		return EINVAL;
+	      }
+
+	    int retval = __pthread_tpp_change_priority (oldprio, ceiling);
+	    if (retval)
+	      return retval;
+
+	    ceilval = ceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+	    oldprio = ceiling;
+
+	    oldval
+	      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						     ceilval | 1, ceilval);
+
+	    if (oldval == ceilval)
+	      break;
+	  }
+	while ((oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK) != ceilval);
+
+	if (oldval != ceilval)
+	  {
+	    __pthread_tpp_change_priority (oldprio, -1);
+	    break;
+	  }
+
+	assert (mutex->__data.__owner == 0);
+	/* Record the ownership.  */
+	mutex->__data.__owner = id;
+	++mutex->__data.__nusers;
+	mutex->__data.__count = 1;
+
+	return 0;
+      }
+      break;
+
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;

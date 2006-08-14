@@ -202,6 +202,49 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
+    case PTHREAD_MUTEX_PP_RECURSIVE_NP:
+      /* Recursive mutex.  */
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
+	return EPERM;
+
+      if (--mutex->__data.__count != 0)
+	/* We still hold the mutex.  */
+	return 0;
+      goto pp;
+
+    case PTHREAD_MUTEX_PP_ERRORCHECK_NP:
+      /* Error checking mutex.  */
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
+	  || (mutex->__data.__lock & ~ PTHREAD_MUTEX_PRIO_CEILING_MASK) == 0)
+	return EPERM;
+      /* FALLTHROUGH */
+
+    case PTHREAD_MUTEX_PP_NORMAL_NP:
+    case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
+      /* Always reset the owner field.  */
+    pp:
+      mutex->__data.__owner = 0;
+
+      if (decr)
+	/* One less user.  */
+	--mutex->__data.__nusers;
+
+      /* Unlock.  */
+      int newval, oldval;
+      do
+	{
+	  oldval = mutex->__data.__lock;
+	  newval = oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK;
+	}
+      while (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
+						   newval, oldval));
+
+      if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
+	lll_futex_wake (&mutex->__data.__lock, 1);
+
+      int oldprio = newval >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+      return __pthread_tpp_change_priority (oldprio, -1);
+
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;

@@ -340,6 +340,119 @@ pthread_mutex_timedlock (mutex, abstime)
 	}
       break;
 
+    case PTHREAD_MUTEX_PP_RECURSIVE_NP:
+    case PTHREAD_MUTEX_PP_ERRORCHECK_NP:
+    case PTHREAD_MUTEX_PP_NORMAL_NP:
+    case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
+      {
+	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
+
+	oldval = mutex->__data.__lock;
+
+	/* Check whether we already hold the mutex.  */
+	if (mutex->__data.__owner == id)
+	  {
+	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
+	      return EDEADLK;
+
+	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
+	      {
+		/* Just bump the counter.  */
+		if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
+		  /* Overflow of the counter.  */
+		  return EAGAIN;
+
+		++mutex->__data.__count;
+
+		return 0;
+	      }
+	  }
+
+	int oldprio = -1, ceilval;
+	do
+	  {
+	    int ceiling = (oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK)
+			  >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+
+	    if (__pthread_current_priority () > ceiling)
+	      {
+		result = EINVAL;
+	      failpp:
+		if (oldprio != -1)
+		  __pthread_tpp_change_priority (oldprio, -1);
+		return result;
+	      }
+
+	    result = __pthread_tpp_change_priority (oldprio, ceiling);
+	    if (result)
+	      return result;
+
+	    ceilval = ceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+	    oldprio = ceiling;
+
+	    oldval
+	      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+						     ceilval | 1, ceilval);
+
+	    if (oldval == ceilval)
+	      break;
+
+	    do
+	      {
+		oldval
+		  = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+							 ceilval | 2,
+							 ceilval | 1);
+
+		if ((oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK) != ceilval)
+		  break;
+
+		if (oldval != ceilval)
+		  {
+		    /* Reject invalid timeouts.  */
+		    if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+		      {
+			result = EINVAL;
+			goto failpp;
+		      }
+
+		    struct timeval tv;
+		    struct timespec rt;
+
+		    /* Get the current time.  */
+		    (void) __gettimeofday (&tv, NULL);
+
+		    /* Compute relative timeout.  */
+		    rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+		    rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+		    if (rt.tv_nsec < 0)
+		      {
+			rt.tv_nsec += 1000000000;
+			--rt.tv_sec;
+		      }
+
+		    /* Already timed out?  */
+		    if (rt.tv_sec < 0)
+		      {
+			result = ETIMEDOUT;
+			goto failpp;
+		      }
+
+		    lll_futex_timed_wait (&mutex->__data.__lock,
+					  ceilval | 2, &rt);
+		  }
+	      }
+	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+							ceilval | 2, ceilval)
+		   != ceilval);
+	  }
+	while ((oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK) != ceilval);
+
+	assert (mutex->__data.__owner == 0);
+	mutex->__data.__count = 1;
+      }
+      break;
+
     default:
       /* Correct code cannot set any other type.  */
       return EINVAL;
