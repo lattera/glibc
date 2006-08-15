@@ -1,3 +1,10 @@
+2006-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/clock_settime.c (INTERNAL_VSYSCALL): Use
+	HAVE_CLOCK_GETRES_VSYSCALL as guard macro rather than
+	HAVE_CLOCK_GETTIME_VSYSCALL.
+	(maybe_syscall_settime_cpu): Use plain INTERNAL_VSYSCALL here.
+
 2006-08-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h

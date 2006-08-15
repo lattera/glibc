@@ -122,7 +122,7 @@ libpthread-routines = init vars events version \
 		      pthread_mutexattr_getprotocol \
 		      pthread_mutexattr_setprotocol \
 		      pthread_mutexattr_getprioceiling \
-		      pthread_mutexattr_setprioceiling \
+		      pthread_mutexattr_setprioceiling tpp \
 		      pthread_mutex_getprioceiling pthread_mutex_setprioceiling
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
@@ -258,7 +258,7 @@ tests = tst-typesizes \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
 	tst-getpid1 tst-getpid2 tst-getpid3 \
 	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
-xtests = tst-setuid1 tst-setuid1-static
+xtests = tst-setuid1 tst-setuid1-static tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload

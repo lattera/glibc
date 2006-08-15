@@ -22,7 +22,7 @@
 #include "kernel-posix-cpu-timers.h"
 #include <kernel-features.h>
 
-#ifndef HAVE_CLOCK_GETTIME_VSYSCALL
+#ifndef HAVE_CLOCK_GETRES_VSYSCALL
 # undef INTERNAL_VSYSCALL
 # define INTERNAL_VSYSCALL INTERNAL_SYSCALL
 # undef INLINE_VSYSCALL
@@ -43,7 +43,7 @@ maybe_syscall_settime_cpu (clockid_t clock_id, const struct timespec *tp)
   if (!__libc_missing_posix_cpu_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_VSYSCALL (clock_settime, err, 2, clock_id, tp);
+      int r = INTERNAL_SYSCALL (clock_settime, err, 2, clock_id, tp);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
         return 0;
 
