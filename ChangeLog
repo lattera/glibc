@@ -1,3 +1,13 @@
+2006-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Use
+	sysdeps/posix/pause.c implementation instead.
+
+2006-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/nice.c (nice): Transform EACCES errno from setpriority
+	to EPERM.
+
 2006-08-13  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_runtime_resolve):

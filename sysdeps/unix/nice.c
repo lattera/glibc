@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1996, 1997, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2001, 2002, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,9 +43,11 @@ nice (int incr)
     }
 
   result = setpriority (PRIO_PROCESS, 0, prio + incr);
-  if (result != -1)
-    return getpriority (PRIO_PROCESS, 0);
-  else
-    return -1;
-
+  if (result == -1)
+    {
+      if (errno == EACCES)
+	errno = EPERM;
+      return -1;
+    }
+  return getpriority (PRIO_PROCESS, 0);
 }
