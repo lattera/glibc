@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999, 2001, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -69,7 +69,8 @@ extern bool enc_not_ascii_compatible;
 
 /* Prototypes for charmap handling functions.  */
 extern struct charmap_t *charmap_read (const char *filename, int verbose,
-				       int be_quiet, int use_default);
+				       int error_not_found, int be_quiet,
+				       int use_default);
 
 /* Return the value stored under the given key in the hashing table.  */
 extern struct charseq *charmap_find_value (const struct charmap_t *charmap,

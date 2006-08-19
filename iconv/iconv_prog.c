@@ -183,12 +183,12 @@ main (int argc, char *argv[])
   if (strchr (from_code, '/') != NULL)
     /* The from-name might be a charmap file name.  Try reading the
        file.  */
-    from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0);
+    from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0, 0);
 
   if (strchr (orig_to_code, '/') != NULL)
     /* The to-name might be a charmap file name.  Try reading the
        file.  */
-    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1,0, 0);
+    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1, 0, 0, 0);
 
 
   /* Determine output file.  */

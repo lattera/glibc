@@ -86,7 +86,8 @@ cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)
 }
 
 struct charmap_t *
-charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
+charmap_read (const char *filename, int verbose, int error_not_found,
+	      int be_quiet, int use_default)
 {
   struct charmap_t *result = NULL;
 
@@ -132,7 +133,7 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
       if (cmfile != NULL)
 	result = parse_charmap (cmfile, verbose, be_quiet);
 
-      if (result == NULL && !be_quiet)
+      if (result == NULL && error_not_found)
 	WITH_CUR_LOCALE (error (0, errno, _("\
 character map file `%s' not found"), filename));
     }

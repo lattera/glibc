@@ -1,3 +1,12 @@
+2006-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (charmap_read): Add new parameter.  It
+	tells us when not finding a charmap file is an error.
+	* locale/programs/charmap.h: Adjust charmap_read prototype.
+	* iconv/iconv_prog.c (main): Tell charmap_read it's no error if we
+	cannot find a charmap.
+	* locale/programs/localedef.c (main): Adjust charmap_read call.
+
 2006-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Use
