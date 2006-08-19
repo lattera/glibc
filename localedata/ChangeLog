@@ -1,3 +1,13 @@
+2006-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3034]
+	* locales/ml_IN (abmon): Fix June entry.
+	* locales/bn_IN: (abday): Fix Tuesday entry.
+	(day): Likewise.
+	(abmon): Fix January and February entries.
+	(mon): Likewise.
+	Patches by Mayank Jain <majain@redhat.com>.
+
 2006-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #935]
