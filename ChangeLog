@@ -1,5 +1,9 @@
 2006-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-service.c (internal_nis_getservent_r): . If map
+	is empty simply return and use next service.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r): Likewise.
+
 	* locale/programs/charmap.c (charmap_read): Add new parameter.  It
 	tells us when not finding a charmap file is an error.
 	* locale/programs/charmap.h: Adjust charmap_read prototype.

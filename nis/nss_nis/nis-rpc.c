@@ -117,6 +117,10 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
   if (intern->start == NULL)
     internal_nis_setrpcent (intern);
 
+  if (intern->next == NULL)
+    /* Not one entry in the map.  */
+    return NSS_STATUS_NOTFOUND;
+
   /* Get the next entry until we found a correct one. */
   do
     {

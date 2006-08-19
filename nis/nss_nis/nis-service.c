@@ -188,6 +188,10 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
   if (intern.start == NULL)
     internal_nis_setservent ();
 
+  if (intern.next == NULL)
+    /* Not one entry in the map.  */
+    return NSS_STATUS_NOTFOUND;
+
   /* Get the next entry until we found a correct one.  */
   do
     {
