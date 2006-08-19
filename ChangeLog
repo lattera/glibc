@@ -1,5 +1,8 @@
 2006-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_malloc): Limit number of unsorted blocks
+	to sort in each call.
+
 	* nis/nss_nis/nis-service.c (internal_nis_getservent_r): . If map
 	is empty simply return and use next service.
 	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r): Likewise.
