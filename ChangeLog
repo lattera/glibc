@@ -1,3 +1,9 @@
+2006-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3040]
+	* sysdeps/unix/sysv/linux/openat.c: Fix compilation if
+	__ASSUME_ATFCTS is defined.
+
 2006-08-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_malloc): Limit number of unsorted blocks

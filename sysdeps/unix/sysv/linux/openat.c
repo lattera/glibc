@@ -28,9 +28,10 @@
 #include <not-cancel.h>
 
 
-#if !defined OPENAT && !defined __ASSUME_ATFCTS
+#ifndef OPENAT
 # define OPENAT openat
 
+# ifndef __ASSUME_ATFCTS
 /* Set errno after a failed call.  If BUF is not null,
    it is a /proc/self/fd/ path name we just tried to use.  */
 void
@@ -61,6 +62,7 @@ __atfct_seterrno (int errval, int fd, const char *buf)
 }
 
 int __have_atfcts;
+# endif
 #endif
 
 

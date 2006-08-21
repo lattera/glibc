@@ -4147,17 +4147,17 @@ _int_malloc(mstate av, size_t bytes)
         }
       }
 
-      if (size >= nb)
-	any_larger = true;
-#define MAX_ITERS	10000
-      if (++iters == MAX_ITERS)
-	break;
-
       mark_bin(av, victim_index);
       victim->bk = bck;
       victim->fd = fwd;
       fwd->bk = victim;
       bck->fd = victim;
+
+      if (size >= nb)
+	any_larger = true;
+#define MAX_ITERS	10000
+      if (++iters >= MAX_ITERS)
+	break;
     }
 
     /*
