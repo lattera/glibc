@@ -688,6 +688,7 @@ endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
+	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
 	     $(addsuffix .d,$(tests) $(xtests) $(test-srcs))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
@@ -1369,8 +1370,8 @@ common-mostlyclean:
 						      $(test-srcs)) \
 				     $(addsuffix -bp.out,$(tests) $(xtests) \
 							 $(test-srcs)))
-	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
-				     $(install-lib.so) \
+	-rm -f $(addprefix $(objpfx),$(extra-objs) $(extra-test-objs) \
+				     $(install-lib) $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
 	-rm -f core
 	-rm -f $(objpfx)rtld-*.os

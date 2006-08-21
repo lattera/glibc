@@ -1,3 +1,14 @@
+2006-07-30  Joseph S. Myers  <joseph@codesourcery.com>
+
+	[BZ #3018]
+	* Makerules (depfiles): Handle extra-test-objs the same as
+	extra-objs.
+	(common-mostlyclean): Likewise.
+	* dlfcn/Makefile (extra-objs): Add modules to extra-test-objs
+	instead.
+	* elf/Makefile (extra-objs): Likewise.
+	* stdlib/Makefile (extra-objs): Likewise.
+
 2006-08-14  Eric Blake	<ebb9@byu.net>
 
 	[BZ #3044]

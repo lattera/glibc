@@ -223,7 +223,7 @@ modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
 		       nodel2mod1 nodel2mod2 nodel2mod3
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
 modules-execstack-yes = tst-execstack-mod
-extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
 test-extras += $(modules-names)
 

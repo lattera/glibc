@@ -63,7 +63,7 @@ tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 tststatic2-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 endif
 
-extra-objs += $(modules-names:=.os)
+extra-test-objs += $(modules-names:=.os)
 generated := $(modules-names:=.so)
 
 include ../Rules

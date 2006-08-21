@@ -86,7 +86,7 @@ aux += fpioconst mp_clz_tab
 distribute := $(distribute) $(mpn-headers) fpioconst.h tst-putenvmod.c
 
 tests-extras += tst-putenvmod
-extra-objs += tst-putenvmod.os
+extra-test-objs += tst-putenvmod.os
 
 generated += isomac isomac.out tst-putenvmod.so
 
