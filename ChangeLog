@@ -1,3 +1,9 @@
+2006-08-14  Eric Blake	<ebb9@byu.net>
+
+	[BZ #3044]
+	* misc/error.h: Assume C89 or better.
+	* misc/error.c: Likewise.
+
 2006-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3040]
