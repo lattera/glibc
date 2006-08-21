@@ -1,18 +1,16 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# semaphore and shm system calls
-msgctl		-	msgctl		i:iip	__msgctl	msgctl
+# Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
+# wrappers (to set __IPC_64).
 msgget		-	msgget		i:ii	__msgget	msgget
 msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
 shmat		-	shmat		i:ipi	__shmat		shmat
-shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
 semget		-	semget		i:iii	__semget	semget
-semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept

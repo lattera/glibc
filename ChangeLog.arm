@@ -1,3 +1,11 @@
+2006-08-21  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/syscalls.list: Remove msgctl,
+	shmctl, and semctl.
+	* sysdeps/unix/sysv/linux/arm/eabi/semctl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/shmctl.c,
+	sysdeps/unix/sysv/linux/arm/eabi/msgctl.c: New files.
+
 2006-08-04  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	Reported by Joseph Myers <joseph@codesourcery.com>:
