@@ -1,3 +1,8 @@
+2006-05-15  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #2751]
+	* string/strchr.c: Add cast to avoid warning.
+
 2006-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (DEFAULT_MMAP_THRESHOLD_MAX): For 32-bit

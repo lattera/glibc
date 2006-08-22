@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,93,94,95,96,97,99,2000,03 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993-1997,1999,2000,2003,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
@@ -42,8 +43,8 @@ strchr (s, c_in)
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
-  for (char_ptr = s; ((unsigned long int) char_ptr
-		      & (sizeof (longword) - 1)) != 0;
+  for (char_ptr = (const unsigned char *) s;
+       ((unsigned long int) char_ptr & (sizeof (longword) - 1)) != 0;
        ++char_ptr)
     if (*char_ptr == c)
       return (void *) char_ptr;
