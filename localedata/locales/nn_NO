@@ -65,12 +65,7 @@ END LC_MONETARY
 
 
 LC_NUMERIC
-% This is the POSIX Locale definition for the LC_NUMERIC  category.
-%
-decimal_point          "<U002C>"
-thousands_sep          "<U00A0>"
-grouping               3
-%
+copy "nb_NO"
 END LC_NUMERIC
 
 
@@ -151,40 +146,25 @@ END LC_MESSAGES
 
 
 LC_PAPER
-height      297
-width       210
+copy "nb_NO"
 END LC_PAPER
 
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+copy "nb_NO"
 END LC_NAME
 
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_ab2 "<U004E><U004F>"
-country_ab3 "<U004E><U004F><U0052>"
-country_num 578
+copy "nb_NO"
 END LC_ADDRESS
 
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U006C>"
-tel_dom_fmt    "<U0025><U006C>"
-int_select     "<U0030><U0030>"
-int_prefix     "<U0034><U0037>"
+copy "nb_NO"
 END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the
-%
-measurement 1
-
+copy "nb_NO"
 END LC_MEASUREMENT
