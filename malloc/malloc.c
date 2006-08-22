@@ -259,6 +259,7 @@
 
 #ifdef _LIBC
 #include <stdio-common/_itoa.h>
+#include <bits/wordsize.h>
 #endif
 
 #ifdef __cplusplus
@@ -1424,7 +1425,15 @@ int      __posix_memalign(void **, size_t, size_t);
 #endif
 
 #ifndef DEFAULT_MMAP_THRESHOLD_MAX
-#define DEFAULT_MMAP_THRESHOLD_MAX (8 * 1024 * 1024 * sizeof(long))
+  /* For 32-bit platforms we cannot increase the maximum mmap
+     threshold much because it is also the minimum value for the
+     maximum heap size and its alignment.  Going above 1MB wastes too
+     much address space.  */
+# if __WORDSIZE == 32
+#  define DEFAULT_MMAP_THRESHOLD_MAX (1024 * 1024)
+# else
+#  define DEFAULT_MMAP_THRESHOLD_MAX (8 * 1024 * 1024 * sizeof(long))
+# endif
 #endif
 
 /*
@@ -2867,6 +2876,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
     char* mm;             /* return value from mmap call*/
 
+  try_mmap:
     /*
       Round up size to nearest page.  For mmapped chunks, the overhead
       is one SIZE_SZ unit larger than for normal chunks, because there
@@ -2996,6 +3006,9 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 	set_foot(old_top, (old_size + 2*SIZE_SZ));
       }
     }
+    else
+      /* We can at least try to use to mmap memory.  */
+      goto try_mmap;
 
   } else { /* av == main_arena */
 
