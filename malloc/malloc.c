@@ -1427,12 +1427,12 @@ int      __posix_memalign(void **, size_t, size_t);
 #ifndef DEFAULT_MMAP_THRESHOLD_MAX
   /* For 32-bit platforms we cannot increase the maximum mmap
      threshold much because it is also the minimum value for the
-     maximum heap size and its alignment.  Going above 1MB wastes too
-     much address space.  */
+     maximum heap size and its alignment.  Going above 512k (i.e., 1M
+     for new heaps) wastes too much address space.  */
 # if __WORDSIZE == 32
-#  define DEFAULT_MMAP_THRESHOLD_MAX (1024 * 1024)
+#  define DEFAULT_MMAP_THRESHOLD_MAX (512 * 1024)
 # else
-#  define DEFAULT_MMAP_THRESHOLD_MAX (8 * 1024 * 1024 * sizeof(long))
+#  define DEFAULT_MMAP_THRESHOLD_MAX (4 * 1024 * 1024 * sizeof(long))
 # endif
 #endif
 

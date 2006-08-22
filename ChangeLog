@@ -1,7 +1,7 @@
 2006-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (DEFAULT_MMAP_THRESHOLD_MAX): For 32-bit
-	platforms define as 1MB.  For 64-bit platforms as 32MB.  The lower
+	platforms define as 512K.  For 64-bit platforms as 32MB.  The lower
 	limit is needed to avoid the exploding of the address space
 	requirement for secondary heaps.
 	* malloc/arena.c (HEAP_MAX_SIZE): Define using
