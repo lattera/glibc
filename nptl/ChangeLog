@@ -1,3 +1,15 @@
+2006-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (queue_stack): Move freeing of surplus stacks to...
+	(free_stacks): ...here.
+	(__free_stack_cache): New function.
+	* pthreadP.h: Declare __free_stack_cache.
+	* sysdeps/pthread/pthread-functions.h (pthread_functions): Add
+	ptr_freeres.
+	* init.c (pthread_functions): Initialize ptr_freeres.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (freeres_libptread):
+	New freeres function.
+
 2006-07-30  Joseph S. Myers  <joseph@codesourcery.com>
 
 	[BZ #3018]

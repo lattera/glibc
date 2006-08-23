@@ -543,6 +543,8 @@ extern void __nptl_deallocate_tsd (void) attribute_hidden;
 
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
+extern void __free_stack_cache (void) attribute_hidden;
+
 #ifdef SHARED
 # define PTHREAD_STATIC_FN_REQUIRE(name)
 #else

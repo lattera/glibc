@@ -211,6 +211,45 @@ get_cached_stack (size_t *sizep, void **memp)
 }
 
 
+/* Free stacks until cache size is lower than LIMIT.  */
+static void
+free_stacks (size_t limit)
+{
+  /* We reduce the size of the cache.  Remove the last entries until
+     the size is below the limit.  */
+  list_t *entry;
+  list_t *prev;
+
+  /* Search from the end of the list.  */
+  list_for_each_prev_safe (entry, prev, &stack_cache)
+    {
+      struct pthread *curr;
+
+      curr = list_entry (entry, struct pthread, list);
+      if (FREE_P (curr))
+	{
+	  /* Unlink the block.  */
+	  list_del (entry);
+
+	  /* Account for the freed memory.  */
+	  stack_cache_actsize -= curr->stackblock_size;
+
+	  /* Free the memory associated with the ELF TLS.  */
+	  _dl_deallocate_tls (TLS_TPADJ (curr), false);
+
+	  /* Remove this block.  This should never fail.  If it does
+	     something is really wrong.  */
+	  if (munmap (curr->stackblock, curr->stackblock_size) != 0)
+	    abort ();
+
+	  /* Maybe we have freed enough.  */
+	  if (stack_cache_actsize <= limit)
+	    break;
+	}
+    }
+}
+
+
 /* Add a stack frame which is not used anymore to the stack.  Must be
    called with the cache lock held.  */
 static inline void
@@ -224,40 +263,15 @@ queue_stack (struct pthread *stack)
 
   stack_cache_actsize += stack->stackblock_size;
   if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
-    {
-      /* We reduce the size of the cache.  Remove the last entries
-	 until the size is below the limit.  */
-      list_t *entry;
-      list_t *prev;
+    free_stacks (stack_cache_maxsize);
+}
 
-      /* Search from the end of the list.  */
-      list_for_each_prev_safe (entry, prev, &stack_cache)
-	{
-	  struct pthread *curr;
 
-	  curr = list_entry (entry, struct pthread, list);
-	  if (FREE_P (curr))
-	    {
-	      /* Unlink the block.  */
-	      list_del (entry);
-
-	      /* Account for the freed memory.  */
-	      stack_cache_actsize -= curr->stackblock_size;
-
-	      /* Free the memory associated with the ELF TLS.  */
-	      _dl_deallocate_tls (TLS_TPADJ (curr), false);
-
-	      /* Remove this block.  This should never fail.  If it
-		 does something is really wrong.  */
-	      if (munmap (curr->stackblock, curr->stackblock_size) != 0)
-		abort ();
-
-	      /* Maybe we have freed enough.  */
-	      if (stack_cache_actsize <= stack_cache_maxsize)
-		break;
-	    }
-	}
-    }
+/* This function is called indirectly from the freeres code in libc.  */
+void
+__free_stack_cache (void)
+{
+  free_stacks (0);
 }
 
 
