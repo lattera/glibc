@@ -1,5 +1,9 @@
 2006-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2662]
+	* locales/bn_BD: Fix abday and day spelling of Tuesday.
+
+	[BZ #2473]
 	* locales/en_NZ: Define am/pm formats.
 
 2006-08-22  Ulrich Drepper  <drepper@redhat.com>

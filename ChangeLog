@@ -1,5 +1,6 @@
 2006-05-21  Joseph S. Myers  <joseph@codesourcery.com>
 
+	[BZ #2680]
 	* posix/unistd.h (getlogin_r): Condition on __USE_POSIX199506, not
 	__USE_UNIX98.
 	* posix/bits/unistd.h: Likewise.
