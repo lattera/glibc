@@ -33,7 +33,7 @@ merror (const char *msg)
 int
 main (void)
 {
-  void *p;
+  void *p, *q;
   int save;
 
   errno = 0;
@@ -63,6 +63,16 @@ main (void)
   p = realloc (p, 0);
   if (p != NULL)
     merror ("realloc (p, 0) failed.");
+
+  p = malloc (513 * 1024);
+  if (p == NULL)
+    merror ("malloc (513K) failed.");
+
+  q = malloc (-512 * 1024);
+  if (q != NULL)
+    merror ("malloc (-512K) succeeded.");
+
+  free (p);
 
   return errors != 0;
 }

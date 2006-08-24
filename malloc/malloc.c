@@ -2860,6 +2860,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
   unsigned long   sum;            /* for updating stats */
 
   size_t          pagemask  = mp_.pagesize - 1;
+  bool            tried_mmap = false;
 
 
 #if HAVE_MMAP
@@ -2883,6 +2884,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
       is no following chunk whose prev_size field could be used.
     */
     size = (nb + SIZE_SZ + MALLOC_ALIGN_MASK + pagemask) & ~pagemask;
+    tried_mmap = true;
 
     /* Don't try if size wraps around 0 */
     if ((unsigned long)(size) > (unsigned long)(nb)) {
@@ -3006,7 +3008,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 	set_foot(old_top, (old_size + 2*SIZE_SZ));
       }
     }
-    else
+    else if (!tried_mmap)
       /* We can at least try to use to mmap memory.  */
       goto try_mmap;
 
