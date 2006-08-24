@@ -811,7 +811,7 @@ extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern char *getlogin (void);
-#if defined __USE_REENTRANT || defined __USE_UNIX98
+#if defined __USE_REENTRANT || defined __USE_POSIX199506
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.

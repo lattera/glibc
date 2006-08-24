@@ -1,3 +1,7 @@
+2006-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_NZ: Define am/pm formats.
+
 2006-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/nn_NO: Copy more categories from nb_NO.

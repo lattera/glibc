@@ -73,7 +73,7 @@ END LC_NUMERIC
 LC_TIME
 abday       "<U09B0><U09AC><U09BF>"; /
             "<U09B8><U09CB><U09AE>";/
-            "<U09AE><U0999><U0997><U09B2>";/
+            "<U09AE><U0999><U09CD><U0997><U09B2>";/
             "<U09AC><U09C1><U09A7>";/
             "<U09AC><U09C3><U09B9><U0983>";/
             "<U09B6><U09C1><U0995><U09CD><U09B0>";/
@@ -81,7 +81,7 @@ abday       "<U09B0><U09AC><U09BF>"; /
 
 day         "<U09B0><U09AC><U09BF><U09AC><U09BE><U09B0>";/
             "<U09B8><U09CB><U09AE><U09AC><U09BE><U09B0>";/
-            "<U09AE><U0999><U0997><U09B2><U09AC><U09BE><U09B0>";/
+            "<U09AE><U0999><U09CD><U0997><U09B2><U09AC><U09BE><U09B0>";/
             "<U09AC><U09C1><U09A7><U09AC><U09BE><U09B0>";/
             "<U09AC><U09C3><U09B9><U09B8><U09CD><U09AA><U09A4><U09BF><U09AC><U09BE><U09B0>";/
             "<U09B6><U09C1><U0995><U09CD><U09B0><U09AC><U09BE><U09B0>";/

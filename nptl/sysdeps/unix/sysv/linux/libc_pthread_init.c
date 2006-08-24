@@ -61,5 +61,6 @@ __libc_pthread_init (ptr, reclaim, functions)
 
 libc_freeres_fn (freeres_libptread)
 {
-  __libc_pthread_functions.ptr_freeres ();
+  if (__libc_pthread_functions.ptr_freeres != NULL)
+    __libc_pthread_functions.ptr_freeres ();
 }

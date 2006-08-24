@@ -198,7 +198,7 @@ __NTH (ttyname_r (int __fd, char *__buf, size_t __buflen))
 }
 
 
-#if defined __USE_REENTRANT || defined __USE_UNIX98
+#if defined __USE_REENTRANT || defined __USE_POSIX199506
 extern int __getlogin_r_chk (char *__buf, size_t __buflen, size_t __nreal)
      __nonnull ((1));
 extern int __REDIRECT (__getlogin_r_alias, (char *__buf, size_t __buflen),
