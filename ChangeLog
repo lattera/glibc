@@ -1,3 +1,9 @@
+2006-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2734]
+	* sysdeps/i386/bits/byteswap.h (__bswap_32): Use same conditions
+	as in the x86-64 code to use bswap.
+
 2006-05-21  Joseph S. Myers  <joseph@codesourcery.com>
 
 	[BZ #2680]

@@ -1,3 +1,9 @@
+2006-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2695]
+	* locales/et_EE: Update LC_ADDRESS category.
+	Patch by Priit Laes <amd@store20.com>.
+
 2006-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2662]
