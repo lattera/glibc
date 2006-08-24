@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ _dl_ppc64_addr_sym_match (const struct link_map *l, const ElfW(Sym) *sym,
 	    return false;
 	}
     }
-  else if (sym->st_size == 0)
+  else if (sym->st_shndx == SHN_UNDEF || sym->st_size == 0)
     {
       if (addr != value)
 	return false;
