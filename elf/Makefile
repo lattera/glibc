@@ -170,7 +170,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
-	 tst-stackguard1
+	 tst-stackguard1 tst-addr1
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -906,3 +906,5 @@ $(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@
 
 tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
+
+$(objpfx)tst-addr1: $(libdl)

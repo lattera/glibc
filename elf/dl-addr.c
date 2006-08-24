@@ -91,7 +91,8 @@ _dl_addr (const void *address, Dl_info *info,
 		    {
 		      /* The hash table never references local symbols
 			 so we can omit that test here.  */
-		      if (symtab[symndx].st_shndx != SHN_UNDEF
+		      if ((symtab[symndx].st_shndx != SHN_UNDEF
+			   || symtab[symndx].st_value != 0)
 #ifdef USE_TLS
 			  && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
 #endif
@@ -125,7 +126,8 @@ _dl_addr (const void *address, Dl_info *info,
 #ifdef USE_TLS
 		&& ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
 #endif
-		&& symtab->st_shndx != SHN_UNDEF
+		&& (symtab->st_shndx != SHN_UNDEF
+		    || symtab->st_value != 0)
 		&& DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
 		&& symtab->st_name < strtabsize)
 	      matchsym = (ElfW(Sym) *) symtab;

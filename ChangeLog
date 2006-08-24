@@ -1,3 +1,11 @@
+2006-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2683]
+	* elf/dl-addr.c (_dl_addr): Don't ignore all undefined symbols.
+	If symbol has a value use it.
+	* elf/tst-dladdr1.c: New file.
+	* elf/Makefile: Add rules to build and run tst-addr1.
+
 2006-08-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/malloc.c (sYSMALLOc): Avoid infinite loop if MMAP

@@ -59,8 +59,8 @@ __BEGIN_DECLS
 
 /* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;
-# define LOOKUP_VALUE(map) map
-# define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
+#define LOOKUP_VALUE(map) map
+#define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
 
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
