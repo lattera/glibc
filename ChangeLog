@@ -1,5 +1,8 @@
 2006-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-ctype.c (ctype_read): If CTYPE is NULL, don't
+	do anything.
+
 	* sysdeps/generic/ldsodefs.h (DL_ADDR_SYM_MATCH): For undefined
 	symbol require exact match (these are PLTs).
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ldsodefs.h
