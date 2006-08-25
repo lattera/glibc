@@ -58,9 +58,10 @@ __libc_pthread_init (ptr, reclaim, functions)
 #endif
 }
 
-
+#ifdef SHARED
 libc_freeres_fn (freeres_libptread)
 {
   if (__libc_pthread_functions.ptr_freeres != NULL)
     __libc_pthread_functions.ptr_freeres ();
 }
+#endif

@@ -1,3 +1,8 @@
+2006-08-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (freeres_libpthread):
+	Only define ifdef SHARED.
+
 2006-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (queue_stack): Move freeing of surplus stacks to...
