@@ -1,3 +1,8 @@
+2006-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): Better patch for read
+	failure.
+
 2006-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-ctype.c (ctype_read): If CTYPE is NULL, don't

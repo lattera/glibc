@@ -2245,6 +2245,9 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (locfile_read (copy_locale, charmap) != 0)
 		goto skip_category;
 	    }
+
+	  if (copy_locale->categories[LC_CTYPE].ctype == NULL)
+	    return;
 	}
 
       lr_ignore_rest (ldfile, 1);
@@ -2256,8 +2259,6 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   /* Prepare the data structures.  */
   ctype_startup (ldfile, result, charmap, copy_locale, ignore_content);
   ctype = result->categories[LC_CTYPE].ctype;
-  if (ctype == NULL)
-    return;
 
   /* Remember the repertoire we use.  */
   if (!ignore_content)
