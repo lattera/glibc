@@ -2061,7 +2061,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 typedef struct malloc_chunk* mbinptr;
 
 /* addressing -- note that bin_at(0) does not exist */
-#define bin_at(m, i) ((mbinptr)((char*)&((m)->bins[(i)<<1]) - (SIZE_SZ<<1)))
+#define bin_at(m, i) \
+  (mbinptr) (((char *) &((m)->bins[((i) - 1) * 2]))			      \
+	     - offsetof (struct malloc_chunk, fd))
 
 /* analog of ++bin */
 #define next_bin(b)  ((mbinptr)((char*)(b) + (sizeof(mchunkptr)<<1)))
@@ -2301,7 +2303,7 @@ struct malloc_state {
   mchunkptr        last_remainder;
 
   /* Normal bins packed as described above */
-  mchunkptr        bins[NBINS * 2];
+  mchunkptr        bins[NBINS * 2 - 2];
 
   /* Bitmap of bins */
   unsigned int     binmap[BINMAPSIZE];
@@ -4168,7 +4170,7 @@ _int_malloc(mstate av, size_t bytes)
       fwd->bk = victim;
       bck->fd = victim;
 
-      if (size >= nb)
+      if (size >= nb + MINSIZE)
 	any_larger = true;
 #define MAX_ITERS	10000
       if (++iters >= MAX_ITERS)
@@ -4291,8 +4293,15 @@ _int_malloc(mstate av, size_t bytes)
         else {
           remainder = chunk_at_offset(victim, nb);
 
-          unsorted_chunks(av)->bk = unsorted_chunks(av)->fd = remainder;
-          remainder->bk = remainder->fd = unsorted_chunks(av);
+	  /* We cannot assume the unsorted list is empty and therefore
+	     have to perform a complete insert here.  */
+	  bck = unsorted_chunks(av);
+	  fwd = bck->fd;
+	  remainder->bk = bck;
+	  remainder->fd = fwd;
+	  bck->fd = remainder;
+	  fwd->bk = remainder;
+
           /* advertise as last remainder */
           if (in_smallbin_range(nb))
             av->last_remainder = remainder;

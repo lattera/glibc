@@ -1,5 +1,13 @@
 2006-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (bin_at): Rewrite to be more clear and to not
+	waste bins[0..1].
+	(malloc_state): Reduce bins size by 2.
+	(_int_malloc): Fix test for large enough buffer for early termination.
+	When no unsorted block matches perfectly and an exiting block has
+	to be split, use full list insert and not shortcut which assumes
+	the list is empty.
+
 	* locale/programs/ld-ctype.c (ctype_read): Better patch for read
 	failure.
 
