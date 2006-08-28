@@ -3625,6 +3625,29 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   (void)mutex_unlock(&ar_ptr->mutex);
   assert(!newp || chunk_is_mmapped(mem2chunk(newp)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(newp)));
+
+  if (newp == NULL)
+    {
+      /* Try harder to allocate memory in other arenas.  */
+      newp = public_mALLOc(bytes);
+      if (newp != NULL)
+	{
+	  MALLOC_COPY (newp, oldmem, oldsize - 2 * SIZE_SZ);
+#if THREAD_STATS
+	  if(!mutex_trylock(&ar_ptr->mutex))
+	    ++(ar_ptr->stat_lock_direct);
+	  else {
+	    (void)mutex_lock(&ar_ptr->mutex);
+	    ++(ar_ptr->stat_lock_wait);
+	  }
+#else
+	  (void)mutex_lock(&ar_ptr->mutex);
+#endif
+	  _int_free(ar_ptr, oldmem);
+	  (void)mutex_unlock(&ar_ptr->mutex);
+	}
+    }
+
   return newp;
 }
 #ifdef libc_hidden_def

@@ -1,3 +1,10 @@
+2006-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2684]
+	* malloc/malloc.c (public_rEALLOc): Try harder by using other
+	arenas if allocation failed.
+	Patch mostly by Jan Edler <jan.edler@indexengines.com>.
+
 2006-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (bin_at): Rewrite to be more clear and to not
