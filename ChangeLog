@@ -1,3 +1,14 @@
+2006-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): For AF_INET, check errno
+	only if herrno is NETDB_INTERNAL.  Handle errors other than
+	ERANGE outside of the loops, handle TRY_AGAIN.
+
+	* locale/programs/ld-ctype.c (translit_flatten): Issue error
+	if other's ctype category was missing.
+	* locale/programs/ld-collate.c (collate_read): Return if
+	copy_locale's collate category is missing.
+
 2006-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2684]

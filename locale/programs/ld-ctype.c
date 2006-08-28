@@ -3769,7 +3769,7 @@ translit_flatten (struct locale_ctype_t *ctype,
 
       other = find_locale (LC_CTYPE, copy_locale, copy_repertoire, charmap);
 
-      if (other == NULL)
+      if (other == NULL || other->categories[LC_CTYPE].ctype == NULL)
 	{
 	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: transliteration data from locale `%s' not available"),

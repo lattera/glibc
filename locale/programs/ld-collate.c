@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -2671,6 +2671,9 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (locfile_read (copy_locale, charmap) != 0)
 		goto skip_category;
 	    }
+
+	  if (copy_locale->categories[LC_COLLATE].collate == NULL)
+	    return;
 	}
 
       lr_ignore_rest (ldfile, 1);
