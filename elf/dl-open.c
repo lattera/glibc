@@ -221,13 +221,6 @@ dl_open_worker (void *a)
       size_t required;
       char *new_file;
 
-      /* DSTs must not appear in SUID/SGID programs.  */
-      if (INTUSE(__libc_enable_secure))
-	/* This is an error.  */
-	_dl_signal_error (0, "dlopen", NULL,
-			  N_("DST not allowed in SUID/SGID programs"));
-
-
       /* Determine how much space we need.  We have to allocate the
 	 memory locally.  */
       required = DL_DST_REQUIRED (call_map, file, len, _dl_dst_count (dst, 0));

@@ -1,3 +1,8 @@
+2006-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Allow $LIB and $PLATFORM in
+	dlopen parameters.
+
 2006-08-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/getnameinfo.c (getnameinfo): For AF_INET, check errno
