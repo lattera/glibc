@@ -1,5 +1,7 @@
 2006-08-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_init_paths): Expand DSTs.
+
 	* elf/dl-open.c (dl_open_worker): Allow $LIB and $PLATFORM in
 	dlopen parameters.
 
