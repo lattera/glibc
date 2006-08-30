@@ -224,7 +224,8 @@ extern int vmsplice (int __fdout, const struct iovec *__iov, size_t __count,
 		     unsigned int __flags);
 
 /* Splice two files together.  */
-extern int splice (int __fdin, int __fdout, size_t __len, unsigned int __flags)
+extern int splice (int __fdin, __off64_t *__offin, int __fdout,
+		   __off64_t *__offout, size_t __len, unsigned int __flags)
     __THROW;
 
 /* In-kernel implementation of tee for pipe buffers.  */

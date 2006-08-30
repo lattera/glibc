@@ -1,3 +1,16 @@
+2006-08-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (splice): Add offin
+	and offout arguments to the prototype.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (splice): Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (splice): Adjust args string.
+
 2006-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_init_paths): Expand DSTs.
