@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -40,7 +40,9 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
       int err;
 
       /* Get the rwlock if there is no writer and no reader.  */
-      if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
+      if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0
+	  && (rwlock->__data.__flags != 0
+	      || rwlock->__data.__nr_readers_queued == 0))
 	{
 	  /* Mark self as writer.  */
 	  rwlock->__data.__writer = THREAD_GETMEM (THREAD_SELF, tid);

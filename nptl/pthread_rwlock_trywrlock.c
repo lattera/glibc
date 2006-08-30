@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -30,7 +30,10 @@ __pthread_rwlock_trywrlock (rwlock)
 
   lll_mutex_lock (rwlock->__data.__lock);
 
-  if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
+  if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0
+      /* Respect the preference.  */
+      && (rwlock->__data.__flags != 0
+	  || rwlock->__data.__nr_readers_queued == 0))
     {
       rwlock->__data.__writer = THREAD_GETMEM (THREAD_SELF, tid);
       result = 0;
