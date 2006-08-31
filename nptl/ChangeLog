@@ -1,3 +1,13 @@
+2006-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock): Undo last
+	change because it can disturb too much existing code.  If real hard
+	reader preference is needed we'll introduce another type.
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.c
+	(pthread_rwlock_timedwrlock): Likewise.
+	* sysdeps/pthread/pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock):
+	Likewise.
+
 2006-08-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock): Respect

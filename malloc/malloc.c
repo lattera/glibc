@@ -4230,8 +4230,14 @@ _int_malloc(mstate av, size_t bytes)
         /* Split */
         else {
           remainder = chunk_at_offset(victim, nb);
-          unsorted_chunks(av)->bk = unsorted_chunks(av)->fd = remainder;
-          remainder->bk = remainder->fd = unsorted_chunks(av);
+          /* We cannot assume the unsorted list is empty and therefore
+             have to perform a complete insert here.  */
+	  bck = unsorted_chunks(av);
+	  fwd = bck->fd;
+	  remainder->bk = bck;
+	  remainder->fd = fwd;
+	  bck->fd = remainder;
+	  fwd->bk = remainder;
           set_head(victim, nb | PREV_INUSE |
 		   (av != &main_arena ? NON_MAIN_ARENA : 0));
           set_head(remainder, remainder_size | PREV_INUSE);

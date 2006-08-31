@@ -1,3 +1,14 @@
+2006-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add
+	ld.so.
+
+	* malloc/malloc.c (_int_malloc): Use full list insert and not
+	shortcut which assumes the list is empty for large requests
+	too.
+
+	* elf/tst-addr1.c (do_test): Allow i.dli_sname "_IO_printf".
+
 2006-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (splice): Add offin
