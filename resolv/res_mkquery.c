@@ -124,24 +124,20 @@ res_nmkquery(res_state statp,
 	   incremented by one after the initial randomization which
 	   still predictable if the application does multiple
 	   requests.  */
-#if 0
-	hp->id = htons(++statp->id);
-#else
-	hp->id = htons(statp->id);
 	int randombits;
 	do
 	  {
-# ifdef RANDOM_BITS
+#ifdef RANDOM_BITS
 	    RANDOM_BITS (randombits);
-# else
+#else
 	    struct timeval tv;
 	    __gettimeofday (&tv, NULL);
 	    randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
-# endif
+#endif
 	  }
 	while ((randombits & 0xffff) == 0);
 	statp->id = (statp->id + randombits) & 0xffff;
-#endif
+	hp->id = statp->id;
 	hp->opcode = op;
 	hp->rd = (statp->options & RES_RECURSE) != 0;
 	hp->rcode = NOERROR;

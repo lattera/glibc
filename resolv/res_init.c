@@ -537,10 +537,7 @@ net_mask(in)		/* XXX - should really use system's version of this */
 
 u_int
 res_randomid(void) {
-	struct timeval now;
-
-	__gettimeofday(&now, NULL);
-	return (0xffff & (now.tv_sec ^ now.tv_usec ^ __getpid()));
+	return 0xffff & __getpid();
 }
 #ifdef _LIBC
 libc_hidden_def (__res_randomid)

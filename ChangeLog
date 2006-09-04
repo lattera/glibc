@@ -1,3 +1,9 @@
+2006-09-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Set hp->id to statp->id after
+	randomization rather than before.
+	* resolv/res_init.c (res_randomid): Don't call gettimeofday here.
+
 2006-08-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add
