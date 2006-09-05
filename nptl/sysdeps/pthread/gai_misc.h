@@ -30,7 +30,7 @@
 
 #define GAI_MISC_NOTIFY(waitlist) \
   do {									      \
-    if (--*waitlist->counterp == 0)					      \
+    if (*waitlist->counterp > 0 && --*waitlist->counterp == 0)		      \
       lll_futex_wake (waitlist->counterp, 1);				      \
   } while (0)
 

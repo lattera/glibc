@@ -1,3 +1,8 @@
+2006-09-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/initgrcache.c (addinitgroupsX): Move any_success
+	decl before first goto out.
+
 2006-09-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makerules (shlib.lds): If have-hash-style, put .hash section
