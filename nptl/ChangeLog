@@ -1,3 +1,14 @@
+2006-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3124]
+	* descr.h (struct pthread): Add parent_cancelhandling.
+	* sysdeps/pthread/createthread.c (create_thread): Pass parent
+	cancelhandling value to child.
+	* pthread_create.c (start_thread): If parent thread was canceled
+	reset the SIGCANCEL mask.
+	* Makefile (tests): Add tst-cancel25.
+	* tst-cancel25.c: New file.
+
 2006-09-05  Jakub Jelinek  <jakub@redhat.com>
             Ulrich Drepper  <drepper@redhat.com>
 

@@ -296,6 +296,10 @@ struct pthread
   /* True if thread must stop at startup time.  */
   bool stopped_start;
 
+  /* The parent's cancel handling at the time of the pthread_create
+     call.  This might be needed to undo the effects of a cancellation.  */
+  int parent_cancelhandling;
+
   /* Lock to synchronize access to the descriptor.  */
   lll_lock_t lock;
 

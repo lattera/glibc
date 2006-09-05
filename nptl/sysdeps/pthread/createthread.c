@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -242,6 +242,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 		       || (attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0))
     stopped = true;
   pd->stopped_start = stopped;
+  pd->parent_cancelhandling = THREAD_GETMEM (THREAD_SELF, cancelhandling);
 
   /* Actually create the thread.  */
   int res = do_clone (pd, attr, clone_flags, start_thread,

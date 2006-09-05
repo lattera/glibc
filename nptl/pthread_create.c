@@ -251,6 +251,19 @@ start_thread (void *arg)
     }
 #endif
 
+  /* If the parent was running cancellation handlers while creating
+     the thread the new thread inherited the signal mask.  Reset the
+     cancellation signal mask.  */
+  if (__builtin_expect (pd->parent_cancelhandling & CANCELING_BITMASK, 0))
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      sigset_t mask;
+      __sigemptyset (&mask);
+      __sigaddset (&mask, SIGCANCEL);
+      (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &mask,
+			       NULL, _NSIG / 8);
+    }
+
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
   struct pthread_unwind_buf unwind_buf;
