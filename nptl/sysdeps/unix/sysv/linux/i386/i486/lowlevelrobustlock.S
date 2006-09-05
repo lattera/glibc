@@ -44,9 +44,16 @@
 	.hidden	__lll_robust_mutex_lock_wait
 	.align	16
 __lll_robust_mutex_lock_wait:
+	cfi_startproc
 	pushl	%edx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%edx, -8)
+	cfi_offset(%ebx, -12)
+	cfi_offset(%esi, -16)
 
 	movl	%ecx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
@@ -81,9 +88,16 @@ __lll_robust_mutex_lock_wait:
 	/* NB:	 %eax == 0 */
 
 3:	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	popl	%edx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edx)
 	ret
+	cfi_endproc
 	.size	__lll_robust_mutex_lock_wait,.-__lll_robust_mutex_lock_wait
 
 
@@ -92,17 +106,27 @@ __lll_robust_mutex_lock_wait:
 	.hidden	__lll_robust_mutex_timedlock_wait
 	.align	16
 __lll_robust_mutex_timedlock_wait:
+	cfi_startproc
 	/* Check for a valid timeout value.  */
 	cmpl	$1000000000, 4(%edx)
 	jae	3f
 
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%edi, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subl	$12, %esp
+	cfi_adjust_cfa_offset(12)
 
 	movl	%ecx, %ebp
 	movl	%edx, %edi
@@ -170,19 +194,34 @@ __lll_robust_mutex_timedlock_wait:
 	jnz	7f
 
 6:	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	ret
 
+3:	movl	$EINVAL, %eax
+	ret
+
+	cfi_adjust_cfa_offset(28)
+	cfi_offset(%edi, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 	/* Check whether the time expired.  */
 7:	cmpl	$-ETIMEDOUT, %ecx
 	jne	1b
 
 8:	movl	$ETIMEDOUT, %eax
 	jmp	6b
-
-3:	movl	$EINVAL, %eax
-	ret
+	cfi_endproc
 	.size	__lll_robust_mutex_timedlock_wait,.-__lll_robust_mutex_timedlock_wait

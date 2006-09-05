@@ -46,8 +46,13 @@
 	.hidden	__lll_robust_mutex_lock_wait
 	.align	16
 __lll_robust_mutex_lock_wait:
+	cfi_startproc
 	pushq	%r10
+	cfi_adjust_cfa_offset(8)
 	pushq	%rdx
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%r10, -16)
+	cfi_offset(%rdx, -24)
 
 	xorq	%r10, %r10	/* No timeout.  */
 #if FUTEX_WAIT == 0
@@ -85,8 +90,13 @@ __lll_robust_mutex_lock_wait:
 	/* NB:	 %rax == 0 */
 
 3:	popq	%rdx
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%rdx)
 	popq	%r10
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r10)
 	retq
+	cfi_endproc
 	.size	__lll_robust_mutex_lock_wait,.-__lll_robust_mutex_lock_wait
 
 
@@ -95,17 +105,27 @@ __lll_robust_mutex_lock_wait:
 	.hidden	__lll_robust_mutex_timedlock_wait
 	.align	16
 __lll_robust_mutex_timedlock_wait:
+	cfi_startproc
 	/* Check for a valid timeout value.  */
 	cmpq	$1000000000, 8(%rdx)
 	jae	3f
 
 	pushq	%r8
+	cfi_adjust_cfa_offset(8)
 	pushq	%r9
+	cfi_adjust_cfa_offset(8)
 	pushq	%r12
+	cfi_adjust_cfa_offset(8)
 	pushq	%r13
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%r8, -16)
+	cfi_offset(%r9, -24)
+	cfi_offset(%r12, -32)
+	cfi_offset(%r13, -40)
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subq	$24, %rsp
+	cfi_adjust_cfa_offset(24)
 
 	movq	%rdi, %r12
 	movq	%rdx, %r13
@@ -176,19 +196,34 @@ __lll_robust_mutex_timedlock_wait:
 	jnz	7f
 
 6:	addq	$24, %rsp
+	cfi_adjust_cfa_offset(-24)
 	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
 	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 	popq	%r9
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r9)
 	popq	%r8
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r8)
 	retq
 
+3:	movl	$EINVAL, %eax
+	retq
+
+	cfi_adjust_cfa_offset(56)
+	cfi_offset(%r8, -16)
+	cfi_offset(%r9, -24)
+	cfi_offset(%r12, -32)
+	cfi_offset(%r13, -40)
 	/* Check whether the time expired.  */
 7:	cmpq	$-ETIMEDOUT, %rcx
 	jne	1b
 
 8:	movl	$ETIMEDOUT, %eax
 	jmp	6b
-
-3:	movl	$EINVAL, %eax
-	retq
+	cfi_endproc
 	.size	__lll_robust_mutex_timedlock_wait,.-__lll_robust_mutex_timedlock_wait

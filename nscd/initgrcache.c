@@ -107,6 +107,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
   long int start = 0;
   bool all_tryagain = true;
+  bool any_success = false;
 
   /* This is temporary memory, we need not (ad must not) call
      mempool_alloc.  */
@@ -117,7 +118,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
     goto out;
 
   /* Nothing added yet.  */
-  bool any_success = false;
   while (! no_more)
     {
       long int prev_start = start;

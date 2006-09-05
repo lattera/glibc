@@ -1,3 +1,31 @@
+2006-03-04  Jakub Jelinek  <jakub@redhat.com>
+            Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
+	(LLL_STUB_UNWIND_INFO_START, LLL_STUB_UNWIND_INFO_END,
+	LLL_STUB_UNWIND_INFO_3, LLL_STUB_UNWIND_INFO_4): Define.
+	(lll_mutex_lock, lll_robust_mutex_lock, lll_mutex_cond_lock,
+	lll_robust_mutex_cond_lock, lll_mutex_timedlock,
+	lll_robust_mutex_timedlock, lll_mutex_unlock,
+	lll_robust_mutex_unlock, lll_lock, lll_unlock): Use them.
+	Add _L_*_ symbols around the subsection.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Add unwind info.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S: Likewise.
+
+2006-03-03  Jakub Jelinek  <jakub@redhat.com>
+            Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(LLL_STUB_UNWIND_INFO_START, LLL_STUB_UNWIND_INFO_END,
+	LLL_STUB_UNWIND_INFO_5, LLL_STUB_UNWIND_INFO_6): Define.
+	(lll_mutex_lock, lll_robust_mutex_lock, lll_mutex_cond_lock,
+	lll_robust_mutex_cond_lock, lll_mutex_timedlock,
+	lll_robust_mutex_timedlock, lll_mutex_unlock,
+	lll_robust_mutex_unlock, lll_lock, lll_unlock): Use them.
+	Add _L_*_ symbols around the subsection.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Add unwind info.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: Likewise.
+
 2006-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock): Undo last

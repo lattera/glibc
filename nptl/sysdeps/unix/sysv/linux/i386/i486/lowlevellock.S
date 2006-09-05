@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,9 +41,16 @@
 	.hidden	__lll_mutex_lock_wait
 	.align	16
 __lll_mutex_lock_wait:
+	cfi_startproc
 	pushl	%edx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%edx, -8)
+	cfi_offset(%ebx, -12)
+	cfi_offset(%esi, -16)
 
 	movl	$2, %edx
 	movl	%ecx, %ebx
@@ -63,9 +70,16 @@ __lll_mutex_lock_wait:
 	jnz	1b
 
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	popl	%edx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edx)
 	ret
+	cfi_endproc
 	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 
 
@@ -75,17 +89,27 @@ __lll_mutex_lock_wait:
 	.hidden	__lll_mutex_timedlock_wait
 	.align	16
 __lll_mutex_timedlock_wait:
+	cfi_startproc
 	/* Check for a valid timeout value.  */
 	cmpl	$1000000000, 4(%edx)
 	jae	3f
 
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%edi, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subl	$8, %esp
+	cfi_adjust_cfa_offset(8)
 
 	movl	%ecx, %ebp
 	movl	%edx, %edi
@@ -140,12 +164,29 @@ __lll_mutex_timedlock_wait:
 	jnz	7f
 
 6:	addl	$8, %esp
+	cfi_adjust_cfa_offset(-8)
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	ret
 
+3:	movl	$EINVAL, %eax
+	ret
+
+	cfi_adjust_cfa_offset(24)
+	cfi_offset(%edi, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 	/* Check whether the time expired.  */
 7:	cmpl	$-ETIMEDOUT, %ecx
 	je	5f
@@ -157,11 +198,9 @@ __lll_mutex_timedlock_wait:
 	jz	6b
 	jmp	1b
 
-3:	movl	$EINVAL, %eax
-	ret
-
 5:	movl	$ETIMEDOUT, %eax
 	jmp	6b
+	cfi_endproc
 	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
 #endif
 
@@ -200,9 +239,16 @@ lll_unlock_wake_cb:
 	.hidden	__lll_mutex_unlock_wake
 	.align	16
 __lll_mutex_unlock_wake:
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ecx
+	cfi_adjust_cfa_offset(4)
 	pushl	%edx
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%ecx, -12)
+	cfi_offset(%edx, -16)
 
 	movl	%eax, %ebx
 	movl	$0, (%eax)
@@ -212,9 +258,16 @@ __lll_mutex_unlock_wake:
 	ENTER_KERNEL
 
 	popl	%edx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edx)
 	popl	%ecx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ecx)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
+	cfi_endproc
 	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake
 
 
