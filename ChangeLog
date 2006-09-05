@@ -1,5 +1,15 @@
 2006-09-04  Jakub Jelinek  <jakub@redhat.com>
 
+	* Makerules (shlib.lds): If have-hash-style, put .hash section
+	at the end of the RO segment.
+
+2006-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h (do_lookup_x): Initialize symidx in case the new
+	style hash table format is used.
+
+2006-09-04  Jakub Jelinek  <jakub@redhat.com>
+
 	* resolv/res_mkquery.c (res_nmkquery): Set hp->id to statp->id after
 	randomization rather than before.
 	* resolv/res_init.c (res_randomid): Don't call gettimeofday here.
