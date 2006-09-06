@@ -3068,7 +3068,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 		  lr_error (ldfile, _("\
 %s: unknown symbol `%s' in equivalent definition"),
 			    "LC_COLLATE", symname);
-		  goto col_sym_free;
+		  goto sym_equiv_free;
 		}
 
 	      if (insert_entry (&collate->sym_table,
@@ -3533,13 +3533,13 @@ error while adding equivalent collating symbol"));
 	      break;
 	    }
 
+	  struct element_t *seqp;
 	  if (state == 0)
 	    {
 	      /* We are outside an `order_start' region.  This means
                  we must only accept definitions of values for
                  collation symbols since these are purely abstract
                  values and don't need directions associated.  */
-	      struct element_t *seqp;
 	      void *ptr;
 
 	      if (find_entry (&collate->seq_table, symstr, symlen, &ptr) == 0)
@@ -3586,7 +3586,6 @@ error while adding equivalent collating symbol"));
 	    {
 	      /* It is possible that we already have this collation sequence.
 		 In this case we move the entry.  */
-	      struct element_t *seqp = NULL;
 	      void *sym;
 	      void *ptr;
 

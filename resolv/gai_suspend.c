@@ -83,6 +83,7 @@ gai_suspend (const struct gaicb *const list[], int ent,
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
 #ifdef DONT_NEED_GAI_MISC_COND
+      result = 0;
       GAI_MISC_WAIT (result, cntr, timeout, 1);
 #else
       if (timeout == NULL)

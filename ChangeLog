@@ -1,3 +1,10 @@
+2006-09-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): Goto sym_equiv_free
+	rather than col_sym_free.  Move seqp declaration earlier.
+
+	* resolv/gai_suspend.c (gai_suspend): Make sure result is initialized.
+
 2006-09-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/initgrcache.c (addinitgroupsX): Move any_success
