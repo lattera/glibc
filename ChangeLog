@@ -1,5 +1,12 @@
 2006-09-07  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #2775]
+	* malloc/malloc.c (sYSMALLOc): Only call grow_heap if
+	(long) (MINSIZE + nb - old_size) is positive.
+
+	* malloc/arena.c (grow_heap): When growing bail even if new_size
+	is negative.
+
 	[BZ #3155]
 	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S (__lrint): Don't access
 	stack below r1.

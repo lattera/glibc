@@ -712,7 +712,7 @@ grow_heap(h, diff) heap_info *h; long diff;
   if(diff >= 0) {
     diff = (diff + page_mask) & ~page_mask;
     new_size = (long)h->size + diff;
-    if(new_size > HEAP_MAX_SIZE)
+    if((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
       return -1;
     if(mprotect((char *)h + h->size, diff, PROT_READ|PROT_WRITE) != 0)
       return -2;

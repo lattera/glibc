@@ -2970,7 +2970,8 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
     /* First try to extend the current heap. */
     old_heap = heap_for_ptr(old_top);
     old_heap_size = old_heap->size;
-    if (grow_heap(old_heap, MINSIZE + nb - old_size) == 0) {
+    if ((long) (MINSIZE + nb - old_size) > 0
+	&& grow_heap(old_heap, MINSIZE + nb - old_size) == 0) {
       av->system_mem += old_heap->size - old_heap_size;
       arena_mem += old_heap->size - old_heap_size;
 #if 0
