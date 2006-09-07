@@ -1,6 +1,7 @@
-/* Round double to long int.  PowerPC32 version.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+/* Test re_search with dotless i.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,31 +18,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#include <math_ldbl_opt.h>
+#include <locale.h>
+#include <regex.h>
+#include <string.h>
 
-/* long int[r3] __lrint (double x[fp1])  */
-ENTRY (__lrint)
-	stwu	r1,-16(r1)
-	fctiw	fp13,fp1
-	stfd	fp13,8(r1)
-	nop	/* Insure the following load is in a different dispatch group */
-	nop	/* to avoid pipe stall on POWER4&5.  */
-	nop
-	lwz	r3,12(r1)
-	addi	r1,r1,16
-	blr
-	END (__lrint)
-
-weak_alias (__lrint, lrint)
-
-strong_alias (__lrint, __lrintf)
-weak_alias (__lrint, lrintf)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lrint, __lrintl)
-weak_alias (__lrint, lrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __lrint, lrintl, GLIBC_2_1)
-#endif
+int
+main (void)
+{
+  struct re_pattern_buffer r;
+  struct re_registers s;
+  setlocale (LC_ALL, "en_US.UTF-8");
+  memset (&r, 0, sizeof (r));
+  memset (&s, 0, sizeof (s));
+  re_set_syntax (RE_SYNTAX_GREP | RE_HAT_LISTS_NOT_NEWLINE | RE_ICASE);
+  re_compile_pattern ("insert into", 11, &r);
+  re_search (&r, "\xFF\0\x12\xA2\xAA\xC4\xB1,K\x12\xC4\xB1*\xACK",
+	     15, 0, 15, &s);
+  return 0;
+}

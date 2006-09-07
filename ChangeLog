@@ -1,4 +1,18 @@
+2006-09-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3155]
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S (__lrint): Don't access
+	stack below r1.
+
 2006-09-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_reconstruct): Handle
+	offset < pstr->valid_raw_len && pstr->offsets_needed case.
+	Ensure no bytes read before raw_mbs array.  Pass a saved copy of
+	pstr->valid_len - 1 rather than pstr->valid_raw_len - 1 to
+	re_string_context_at.
+	* posix/Makefile: Add rules to build and run bug-regex26 test.
+	* posix/bug-regex26.c: New test.
 
 	* locale/programs/ld-collate.c (collate_read): Goto sym_equiv_free
 	rather than col_sym_free.  Move seqp declaration earlier.
@@ -28,8 +42,7 @@
 
 2006-08-31  Jakub Jelinek  <jakub@redhat.com>
 
-	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add
-	ld.so.
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add ld.so.
 
 	* malloc/malloc.c (_int_malloc): Use full list insert and not
 	shortcut which assumes the list is empty for large requests
