@@ -123,12 +123,13 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, struct fdesc value)
 {
+  volatile Elf32_Addr *rfdesc = reloc_addr;
   /* map is the link_map for the caller, t is the link_map for the object
      being called */
-  reloc_addr[1] = value.gp;
+  rfdesc[1] = value.gp;
   /* Need to ensure that the gp is visible before the code
      entry point is updated */
-  ((volatile Elf32_Addr *) reloc_addr)[0] = value.ip;
+  rfdesc[0] = value.ip;
   return value;
 }
 

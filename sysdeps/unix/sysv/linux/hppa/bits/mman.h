@@ -21,12 +21,12 @@
 # error "Never use <bits/mman.h> directly; include <sys/mman.h> instead."
 #endif
 
-/* these are basically taken from the kernel definitions */
+/* These are taken from the kernel definitions.  */
 
-#define PROT_READ	0x1		/* page can be read */
-#define PROT_WRITE	0x2		/* page can be written */
-#define PROT_EXEC	0x4		/* page can be executed */
-#define PROT_NONE	0x0		/* page can not be accessed */
+#define PROT_READ	0x1		/* Page can be read */
+#define PROT_WRITE	0x2		/* Page can be written */
+#define PROT_EXEC	0x4		/* Page can be executed */
+#define PROT_NONE	0x0		/* Page can not be accessed */
 #define PROT_GROWSDOWN	0x01000000	/* Extend change to start of
 					   growsdown vma (mprotect only).  */
 #define PROT_GROWSUP	0x02000000	/* Extend change to start of
@@ -34,33 +34,53 @@
 
 #define MAP_SHARED	0x01		/* Share changes */
 #define MAP_PRIVATE	0x02		/* Changes are private */
-#define MAP_TYPE	0x03		/* Mask for type of mapping */
+#ifdef __USE_MISC
+# define MAP_TYPE	0x03		/* Mask for type of mapping */
+#endif
+
+/* Other flags.  */
 #define MAP_FIXED	0x04		/* Interpret addr exactly */
-#define MAP_ANONYMOUS	0x10		/* don't use a file */
+#ifdef __USE_MISC
+# define MAP_FILE	0x0
+# define MAP_ANONYMOUS	0x10		/* Don't use a file */
+# define MAP_ANON	MAP_ANONYMOUS
+# define MAP_VARIABLE	0
+#endif
 
-#define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-#define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
-#define MAP_LOCKED	0x2000		/* pages are locked */
-#define MAP_NORESERVE	0x4000		/* don't check for reservations */
-#define MAP_GROWSDOWN	0x8000		/* stack-like segment */
-#define MAP_POPULATE	0x10000		/* populate (prefault) pagetables */
-#define MAP_NONBLOCK	0x20000		/* do not block on IO */
+/* These are Linux-specific.  */
+#ifdef __USE_MISC
+# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
+# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable */
+# define MAP_LOCKED	0x2000		/* Pages are locked */
+# define MAP_NORESERVE	0x4000		/* Don't check for reservations */
+# define MAP_GROWSDOWN	0x8000		/* Stack-like segment */
+# define MAP_POPULATE	0x10000		/* Populate (prefault) pagetables */
+# define MAP_NONBLOCK	0x20000		/* Do not block on IO */
+#endif
 
-#define MS_SYNC		1		/* synchronous memory sync */
-#define MS_ASYNC	2		/* sync memory asynchronously */
-#define MS_INVALIDATE	4		/* invalidate the caches */
+/* Flags to "msync"  */
+#define MS_SYNC		1		/* Synchronous memory sync */
+#define MS_ASYNC	2		/* Sync memory asynchronously */
+#define MS_INVALIDATE	4		/* Invalidate the caches */
 
-#define MCL_CURRENT	1		/* lock all current mappings */
-#define MCL_FUTURE	2		/* lock all future mappings */
+/* Flags to "mlockall"  */
+#define MCL_CURRENT	1		/* Lock all current mappings */
+#define MCL_FUTURE	2		/* Lock all future mappings */
 
-/* Advice to "madvise" */
+/* Flags for `mremap'.  */
+#ifdef __USE_GNU
+# define MREMAP_MAYMOVE 1
+# define MREMAP_FIXED	2
+#endif
+
+/* Advice to "madvise"  */
 #ifdef __USE_BSD
-# define MADV_NORMAL	  0	/* no further special treatment */
-# define MADV_RANDOM	  1	/* expect random page references */
-# define MADV_SEQUENTIAL  2	/* expect sequential page references */
-# define MADV_WILLNEED	  3	/* will need these pages */
-# define MADV_DONTNEED	  4	/* dont need these pages */
-# define MADV_SPACEAVAIL  5	/* insure that resources are reserved */
+# define MADV_NORMAL	  0	/* No further special treatment */
+# define MADV_RANDOM	  1	/* Expect random page references */
+# define MADV_SEQUENTIAL  2	/* Expect sequential page references */
+# define MADV_WILLNEED	  3	/* Will need these pages */
+# define MADV_DONTNEED	  4	/* Dont need these pages */
+# define MADV_SPACEAVAIL  5	/* Insure that resources are reserved */
 # define MADV_VPS_PURGE	  6	/* Purge pages from VM page cache */
 # define MADV_VPS_INHERIT 7	/* Inherit parents page size */
 # define MADV_REMOVE	  9	/* Remove these pages and resources.  */
@@ -78,15 +98,11 @@
 #define MADV_16M_PAGES  24              /* Use 16 Megabyte pages */
 #define MADV_64M_PAGES  26              /* Use 64 Megabyte pages */
 
-/* compatibility flags */
-#define MAP_ANON	MAP_ANONYMOUS
-#define MAP_FILE	0
-#define MAP_VARIABLE	0
-
-/* Flags for `mremap'.  */
-#ifdef __USE_GNU
-# define MREMAP_MAYMOVE 1
-# define MREMAP_FIXED	2
+/* The POSIX people had to invent similar names for the same things.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_MADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_MADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_MADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif
-
-

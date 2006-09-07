@@ -25,34 +25,10 @@
 #include <sysdep.h>
 #include <atomic.h>
 
-#if 0
 /* The hppa only has one atomic read and modify memory operation,
-   load and clear, so hppa spinlocks must use zero to signify that
-   someone is holding the lock.  The address used for the ldcw
-   semaphore must be 16-byte aligned.  */
-#define __ldcw(a) \
-({ 									\
-  unsigned int __ret;							\
-  __asm__ __volatile__("ldcw 0(%1),%0"					\
-                      : "=r" (__ret) : "r" (a) : "memory");		\
-  __ret;								\
-})
-
-/* Because malloc only guarantees 8-byte alignment for malloc'd data,
-   and GCC only guarantees 8-byte alignment for stack locals, we can't
-   be assured of 16-byte alignment for atomic lock data even if we
-   specify "__attribute ((aligned(16)))" in the type declaration.  So,
-   we use a struct containing an array of four ints for the atomic lock
-   type and dynamically select the 16-byte aligned int from the array
-   for the semaphore.  */
-#define __PA_LDCW_ALIGNMENT 16
-#define __ldcw_align(a) ({ \
-  volatile unsigned int __ret = (unsigned int) a;			\
-  if ((__ret & ~(__PA_LDCW_ALIGNMENT - 1)) < (unsigned int) a)		\
-    __ret = (__ret & ~(__PA_LDCW_ALIGNMENT - 1)) + __PA_LDCW_ALIGNMENT; \
-  (unsigned int *) __ret;						\
-})
-#endif
+   load and clear, so hppa uses a kernel helper routine to implement
+   compare_and_exchange. See atomic.h for the userspace calling
+   sequence.  */
 
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
@@ -64,11 +40,7 @@
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
 
-/* Initializer for compatibility lock.	*/
-#if 0
-#define LLL_INITIALIZER_NOT_ZERO
-#define LLL_MUTEX_LOCK_INITIALIZER ((__atomic_lock_t){ { 1, 1, 1, 1 } })
-#endif
+/* Initialize locks to zero.  */
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
 
@@ -82,7 +54,7 @@ typedef int lll_lock_t;
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAIT, (val), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
+    __ret;								      \
   })
 
 #define lll_futex_timed_wait(futexp, val, timespec) \
@@ -91,7 +63,7 @@ typedef int lll_lock_t;
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAIT, (val), (timespec));	      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
+    __ret;								      \
   })
 
 #define lll_futex_wake(futexp, nr) \
@@ -100,7 +72,7 @@ typedef int lll_lock_t;
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAKE, (nr), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
+    __ret;								      \
   })
 
 #define lll_robust_mutex_dead(futexv) \
@@ -120,7 +92,7 @@ typedef int lll_lock_t;
     __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
 			      (futexp), FUTEX_CMP_REQUEUE, (nr_wake),	      \
 			      (nr_move), (mutex), (val));		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
+    __ret;								      \
   })
 
 /* Returns non-zero if error happened, zero if success.  */
@@ -253,24 +225,11 @@ __lll_mutex_unlock_force (lll_lock_t *futex)
 }
 #define lll_mutex_unlock_force(futex) __lll_mutex_unlock_force(&(futex))
 
-
-static inline int __attribute__ ((always_inline))
-__lll_mutex_islocked (lll_lock_t *futex)
-{
-  return (*futex != 0);
-}
-#define lll_mutex_islocked(futex) __lll_mutex_islocked(&(futex))
-
+#define lll_mutex_islocked(futex) \
+  (futex != 0)
 
 /* Our internal lock implementation is identical to the binary-compatible
    mutex implementation. */
-
-/* Initializers for lock.  */
-#if 0
-#define LLL_LOCK_INITIALIZER		((__atomic_lock_t){ { 1, 1, 1, 1 } })
-#define LLL_LOCK_INITIALIZER_CONST	{ { 1, 1, 1, 1 } }
-#define LLL_LOCK_INITIALIZER_LOCKED	((__atomic_lock_t){ { 0, 0, 0, 0 } })
-#endif
 
 #define LLL_LOCK_INITIALIZER (0)
 #define LLL_LOCK_INITIALIZER_CONST (0)

@@ -1,3 +1,33 @@
+2006-09-07  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/dl-machine.h (elf_machine_fixup_plt): Remove
+	lvalue cast.
+	* sysdeps/hppa/dl-trampoline.S (_dl_fixup): Correct stack usage.
+	(_dl_runtime_profile): LA fixups.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Correct stack usage. Return
+	-1 on error. Use branch and link for error handler funciton.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Correct stack usage.
+	Avoid register shuffling.
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h (ASM_EAGAIN): Define
+	as -EAGAIN.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Adjust definitions to
+	match required standards.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h 
+	(lll_futex_wait): Return __ret.
+	(lll_futex_timed_wait): Likewise.
+	(lll_futex_wake): Likewise.
+	(lll_futex_requeue): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Correct stack
+	usage and adjust error return.
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Adjust
+	stack usage for gdb, and avoid extra register loads.
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c: Copy
+	nptl/sysdeps/pthread/unwind-forcedunwind.c.
+	(LIBGCC_SO): Define and use.
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-resume.c: Copy
+	nptl/sysdeps/pthread/unwind-resume.c.
+	(LIBGCC_SO): Define and use.
+
 2006-08-13  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h (FUTEX_LOCK_PI,

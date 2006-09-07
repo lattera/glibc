@@ -27,11 +27,19 @@
 #include <bits/errno.h>
 
 /* Non-thread code calls __clone with the following parameters:
-   int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg)
+   int clone(int (*fn)(void *arg), 
+	     void *child_stack, 
+	     int flags, 
+	     void *arg)
    
    NPTL Code will call __clone with the following parameters:
-   int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
-	     int *parent_tidptr, struct user_desc *newtls, int *child_pidptr)
+   int clone(int (*fn)(void *arg), 
+	     void *child_stack, 
+	     int flags, 
+	     void *arg,
+	     int *parent_tidptr, 
+	     struct user_desc *newtls, 
+	     int *child_pidptr)
 	
    The code should not mangle the extra input registers.
    Syscall expects:				Input to __clone:
@@ -43,32 +51,37 @@
 	r23 - struct user_desc newtls pointer.	(stack - 56)
 	r22 - child tid pointer.		(stack - 60)
 	r20 - clone syscall number		(constant)
+
+   Return:
+
+	On success the thread ID of the child process is returend in 
+	the callers context.
+	On error return -1, and set errno to the value returned by 
+	the syscall.
  */
 
         .text
 ENTRY(__clone)
+	/* Prologue */
+	stwm	%r3, 64(%sp)
+	stw	%sp, -4(%sp)
+	stw	%r19, -32(%sp)
 
 	/* Sanity check arguments.  */
-	ldi     -EINVAL,%ret0
-	comib,=,n  0,%arg0,.Lerror        /* no NULL function pointers */
-	comib,=,n  0,%arg1,.Lerror        /* no NULL stack pointers */
+	comib,=,n  0, %arg0, .LerrorSanity        /* no NULL function pointers */
+	comib,=,n  0, %arg1, .LerrorSanity        /* no NULL stack pointers */
 
 	/* Save the fn ptr and arg on the new stack.  */
-	stwm    %r26,64(%r25)
-	stw	%r23,-60(%r25)
+	stwm    %r26, 64(%r25)
+	stw	%r23, -60(%r25)
 	/* Clone arguments are (int flags, void * child_stack) */
-	copy	%r24,%r26	/* flags are first */
+	copy	%r24, %r26		/* flags are first */
 	/* User stack pointer is in the correct register already */
 
 	/* Load args from stack... */
-	ldw	-52(%sp), %r24	/* Load parent_tidptr */
-	ldw	-56(%sp), %r23 	/* Load newtls */
-	ldw	-60(%sp), %r22	/* Load child_tidptr */
-
-	/* Create frame to get r3 free */
-	copy	%sp, %r21
-	stwm	%r3, 64(%sp)
-	stw	%r21, -4(%sp)
+	ldw	-116(%sp), %r24		/* Load parent_tidptr */
+	ldw	-120(%sp), %r23 	/* Load newtls */
+	ldw	-124(%sp), %r22		/* Load child_tidptr */
 
 	/* Save the PIC register. */
 #ifdef PIC
@@ -76,19 +89,20 @@ ENTRY(__clone)
 #endif
 
 	/* Do the system call */
-	ble     0x100(%sr2,%r0)
-	ldi	__NR_clone,%r20
+	ble     0x100(%sr2, %r0)
+	ldi	__NR_clone, %r20
 
-	ldi	-4096,%r1
-	comclr,>>= %r1,%ret0,%r0	/* Note: unsigned compare. */
+	ldi	-4096, %r1
+	comclr,>>= %r1, %ret0, %r0	/* Note: unsigned compare. */
 	b,n	.LerrorRest
 
-	comib,=,n 0,%ret0,thread_start
+	comib,=,n 0, %ret0, .LthreadStart
 
 	/* Successful return from the parent
 	   No need to restore the PIC register, 
 	   since we return immediately. */
 
+	ldw	-84(%sp), %rp
 	bv	%r0(%rp)
 	ldwm	-64(%sp), %r3
 
@@ -97,36 +111,40 @@ ENTRY(__clone)
 #ifdef PIC
 	copy	%r3, %r19		/* parent */ 
 #endif
-
 	/* Something bad happened -- no child created */
-.Lerror:
-
-	/* Set errno, save ret0 so we return with that value. */
-	copy	%ret0, %r3
-	b	__syscall_error
-	sub     %r0,%ret0,%arg0
-	copy	%r3, %ret0
-	/* Return after setting errno, and restoring ret0 */
+	bl	__syscall_error, %rp
+	sub     %r0, %ret0, %arg0
+	ldw	-84(%sp), %rp
+	/* Return after setting errno, ret0 is set to -1 by __syscall_error. */
 	bv	%r0(%rp)
 	ldwm	-64(%sp), %r3
 
-thread_start:
+.LerrorSanity:
+	/* Sanity checks failed, return -1, and set errno to EINVAL. */
+	bl	__syscall_error, %rp
+	ldi     EINVAL, %arg0
+	/* Lazy, don't restore r19 */
+	ldw	-84(%sp), %rp
+	bv	%r0(%rp)
+	ldwm	-64(%sp), %r3
+
+.LthreadStart:
 
 	/* Load up the arguments.  */
-	ldw	-60(%sr0, %sp),%arg0
-	ldw     -64(%sr0, %sp),%r22
+	ldw	-60(%sp), %arg0
+	ldw     -64(%sp), %r22
 
 	/* $$dyncall fixes childs PIC register */
 
 	/* Call the user's function */
-	bl	$$dyncall,%r31
-	copy	%r31,%rp
+	bl	$$dyncall, %r31
+	copy	%r31, %rp
 
-	bl	_exit,%rp
-	copy	%ret0,%arg0
+	bl	_exit, %rp
+	copy	%ret0, %arg0
 
-	/* Die horribly.  */
-	iitlbp	%r0,(%sr0,%r0)
+	/* We should not return from _exit. */
+	iitlbp	%r0, (%sr0, %r0)
 
 PSEUDO_END(__clone)
 

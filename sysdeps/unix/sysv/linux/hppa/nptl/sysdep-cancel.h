@@ -63,11 +63,9 @@
 # define PSEUDO(name, syscall_name, args)				\
 	ENTRY (name)							\
 	DOARGS_##args					ASM_LINE_SEP	\
-	copy TREG, %r1					ASM_LINE_SEP	\
-	copy %sp, TREG					ASM_LINE_SEP	\
-	stwm %r1, 64(%sp)				ASM_LINE_SEP	\
-	stw %rp, -20(%sp)				ASM_LINE_SEP	\
-	stw TREG, -4(%sp)				ASM_LINE_SEP	\
+	stwm TREG, 64(%sp)				ASM_LINE_SEP	\
+	stw %sp, -4(%sp)				ASM_LINE_SEP	\
+	stw %r19, -32(%sp)				ASM_LINE_SEP	\
 	/* Done setting up frame, continue... */	ASM_LINE_SEP	\
 	SINGLE_THREAD_P					ASM_LINE_SEP	\
 	cmpib,<>,n 0,%ret0,L(pseudo_cancel)		ASM_LINE_SEP	\
@@ -91,7 +89,7 @@ L(unthreaded):						ASM_LINE_SEP	\
 	stw TREG, 0(%sr0,%ret0)				ASM_LINE_SEP	\
 	b L(pre_end)					ASM_LINE_SEP	\
 	/* return -1 as error */			ASM_LINE_SEP	\
-	ldo -1(%r0), %ret0 /* delay */			ASM_LINE_SEP	\
+	ldi -1, %ret0 /* delay */			ASM_LINE_SEP	\
 L(pseudo_cancel):					ASM_LINE_SEP	\
 	PUSHARGS_##args /* Save args */			ASM_LINE_SEP	\
 	/* Save r19 into TREG */			ASM_LINE_SEP	\
@@ -125,13 +123,13 @@ L(pseudo_cancel):					ASM_LINE_SEP	\
 	/* store into errno location */			ASM_LINE_SEP	\
 	stw TREG, 0(%sr0,%ret0)				ASM_LINE_SEP	\
 	/* return -1 */					ASM_LINE_SEP	\
-	ldo -1(%r0), %ret0				ASM_LINE_SEP	\
+	ldi -1, %ret0					ASM_LINE_SEP	\
 L(pre_end):						ASM_LINE_SEP	\
-	/* Restore rp before exit */			ASM_LINE_SEP	\
-	ldw -84(%sr0,%sp), %rp				ASM_LINE_SEP	\
+	/* No need to LOAD_PIC */			ASM_LINE_SEP	\
 	/* Undo frame */				ASM_LINE_SEP	\
 	ldwm -64(%sp),TREG				ASM_LINE_SEP	\
-	/* No need to LOAD_PIC */			ASM_LINE_SEP
+	/* Restore rp before exit */			ASM_LINE_SEP	\
+	ldw -20(%sp), %rp				ASM_LINE_SEP
 
 /* Save arguments into our frame */
 # define PUSHARGS_0	/* nothing to do */

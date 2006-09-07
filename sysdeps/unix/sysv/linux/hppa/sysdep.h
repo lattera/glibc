@@ -278,12 +278,10 @@
 
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)				\
-  	copy TREG,%r1				ASM_LINE_SEP	\
-	copy %sp,TREG				ASM_LINE_SEP	\
 	/* Create a frame */			ASM_LINE_SEP	\
-	stwm %r1, 64(%sp)			ASM_LINE_SEP	\
-	stw %rp, -20(%sp)			ASM_LINE_SEP	\
-	stw TREG, -4(%sp)			ASM_LINE_SEP	\
+	stwm TREG, 64(%sp)			ASM_LINE_SEP	\
+	stw %sp, -4(%sp)			ASM_LINE_SEP	\
+	stw %r19, -32(%sp)			ASM_LINE_SEP	\
 	/* Save r19 */				ASM_LINE_SEP	\
 	SAVE_PIC(TREG)				ASM_LINE_SEP	\
 	/* Do syscall, delay loads # */		ASM_LINE_SEP	\
@@ -304,10 +302,10 @@
 	/* return -1 as error */		ASM_LINE_SEP	\
 	ldo -1(%r0), %ret0			ASM_LINE_SEP	\
 L(pre_end):					ASM_LINE_SEP	\
-	/* Restore return pointer */		ASM_LINE_SEP	\
-	ldw -84(%sp),%rp			ASM_LINE_SEP	\
 	/* Restore our frame, restoring TREG */	ASM_LINE_SEP	\
-	ldwm -64(%sp), TREG			ASM_LINE_SEP
+	ldwm -64(%sp), TREG			ASM_LINE_SEP	\
+	/* Restore return pointer */		ASM_LINE_SEP	\
+	ldw -20(%sp),%rp			ASM_LINE_SEP
 
 /* We do nothing with the return, except hand it back to someone else */
 #undef  DO_CALL_NOERRNO
@@ -386,10 +384,9 @@ L(pre_end):					ASM_LINE_SEP	\
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) 
 
-/* Equivalent to  (val < 0)&&(val > -4095) which is what we want */
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
-	((unsigned long)val >= (unsigned long)-4095)
+	((val < 0) && (val > -4095))
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err) (-(val))

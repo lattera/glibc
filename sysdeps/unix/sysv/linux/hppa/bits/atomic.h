@@ -60,7 +60,7 @@ typedef uintmax_t uatomic_max_t;
 #define LWS_CAS 0x0
 /* Note r31 is the link register */
 #define LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
-#define ASM_EAGAIN "11"
+#define ASM_EAGAIN -EAGAIN
 
 #if __ASSUME_LWS_CAS
 /* The only basic operation needed is compare and exchange.  */

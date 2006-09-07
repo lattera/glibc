@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,55 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define LIBGCC_S_SO "libgcc_s.so.2"
-#include <sysdeps/pthread/unwind-resume.c>
+#include <dlfcn.h>
+#include <stdio.h>
+#include <unwind.h>
 
+#define LIBGCC_S_SO "libgcc_s.so.4"
+
+static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
+static _Unwind_Reason_Code (*libgcc_s_personality)
+  (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
+   struct _Unwind_Context *);
+
+#ifndef LIBGCC_S_SO
+#error LIBGCC_S_SO
+#define LIBGCC_S_SO "libgcc_s.so.1"
+#endif
+
+static void
+init (void)
+{
+  void *resume, *personality;
+  void *handle;
+
+  handle = __libc_dlopen (LIBGCC_S_SO);
+
+  if (handle == NULL
+      || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
+      || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL)
+    __libc_fatal ("libgcc_s.so must be installed for pthread_cancel to work\n");
+
+  libgcc_s_resume = resume;
+  libgcc_s_personality = personality;
+}
+
+void
+_Unwind_Resume (struct _Unwind_Exception *exc)
+{
+  if (__builtin_expect (libgcc_s_resume == NULL, 0))
+    init ();
+  libgcc_s_resume (exc);
+}
+
+_Unwind_Reason_Code
+__gcc_personality_v0 (int version, _Unwind_Action actions,
+		      _Unwind_Exception_Class exception_class,
+                      struct _Unwind_Exception *ue_header,
+                      struct _Unwind_Context *context)
+{
+  if (__builtin_expect (libgcc_s_personality == NULL, 0))
+    init ();
+  return libgcc_s_personality (version, actions, exception_class,
+			       ue_header, context);
+}

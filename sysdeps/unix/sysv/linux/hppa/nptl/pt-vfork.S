@@ -50,6 +50,10 @@
 
 	/* r26, r25, r24, r23 are free since vfork has no arguments */
 ENTRY(__vfork)
+	/* Prologue */
+	stwm	%r3, 64(%sp)
+	stw	%sp, -4(%sp)
+	stw	%r19, -32(%sp)
 
 	/* Save the PIC register. */
 #ifdef PIC
@@ -72,9 +76,12 @@ ENTRY(__vfork)
 	b,n	.Lerror
 
 	/* Return, no need to restore the PIC register. */
-	bv,n	%r0(%rp)
+	ldw	-84(%sp), %rp
+	bv	%r0(%rp)
+	ldwm	-64(%sp), %r3
 
 .Lerror:
+	sub	%r0,%ret0,%r3
 	SYSCALL_ERROR_HANDLER
 	/* Restore the PIC register (in delay slot) on error */
 #ifdef PIC
@@ -82,8 +89,11 @@ ENTRY(__vfork)
 #else
 	nop
 #endif
-	sub	%r0,%ret0,%arg0
-	/* Return error */
+	/* Write syscall return into errno location */
+	stw	%r3, 0(%ret0)
+	ldw	-84(%sp), %rp
+	bv	%r0(%rp)
+	ldwm	-64(%sp), %r3
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 weak_alias (__vfork, vfork)
