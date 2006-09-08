@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -67,8 +67,14 @@ __condvar_cleanup:
 	cmpl	4(%r8), %edx
 	jne	3f
 
+	/* We increment the woken_seq counter only if it is lower than
+	   total_seq.  If this is not the case the thread was woken and
+	   then canceled.  In this case we ignore the signal.  */
+	movq	total_seq(%rdi), %rax
+	cmpq	wakeup_seq(%rdi), %rax
+	jbe	6f
 	incq	wakeup_seq(%rdi)
-	incq	woken_seq(%rdi)
+6:	incq	woken_seq(%rdi)
 	incl	cond_futex(%rdi)
 
 3:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)

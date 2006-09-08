@@ -1,3 +1,14 @@
+2006-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3123]
+	* sysdeps/pthread/pthread_cond_wait.c (__condvar_cleanup): Don't
+	increment WAKEUP_SEQ if this would increase the value beyond TOTAL_SEQ.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.c: Likewise.
+	* Makefile (tests): Add tst-cond22.
+	* tst-cond22.c: New file.
+
 2006-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3124]
