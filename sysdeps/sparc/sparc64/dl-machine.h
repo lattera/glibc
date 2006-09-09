@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -623,7 +623,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  value = sym->st_value - sym_map->l_tls_offset
 	    + reloc->r_addend;
 	  if (r_type == R_SPARC_TLS_LE_HIX22)
-	    *reloc_addr = (*reloc_addr & 0xffc00000) | ((~value) >> 10);
+	    *reloc_addr = (*reloc_addr & 0xffc00000)
+	      | (((~value) >> 10) & 0x3fffff);
 	  else
 	    *reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
 	      | 0x1c00;
@@ -653,7 +654,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     case R_SPARC_WDISP30:
       *(unsigned int *) reloc_addr =
 	((*(unsigned int *)reloc_addr & 0xc0000000) |
-	 ((value - (Elf64_Addr) reloc_addr) >> 2));
+	 (((value - (Elf64_Addr) reloc_addr) >> 2) & 0x3fffffff));
       break;
 
       /* MEDLOW code model relocs */
@@ -665,7 +666,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     case R_SPARC_HI22:
       *(unsigned int *) reloc_addr =
 	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 (value >> 10));
+	 ((value >> 10) & 0x3fffff));
       break;
     case R_SPARC_OLO10:
       *(unsigned int *) reloc_addr =
@@ -677,7 +678,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     case R_SPARC_H44:
       *(unsigned int *) reloc_addr =
 	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 (value >> 22));
+	 ((value >> 22) & 0x3fffff));
       break;
     case R_SPARC_M44:
       *(unsigned int *) reloc_addr =

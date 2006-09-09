@@ -1,5 +1,11 @@
 2006-09-07  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #1006]
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela):
+	Ensure relocation doesn't clobber any bits outside of the
+	immediate field for R_SPARC_TLS_LE_HIX22, R_SPARC_WDISP30,
+	R_SPARC_HI22 and R_SPARC_H44.
+
 	[BZ #2775]
 	* malloc/malloc.c (sYSMALLOc): Only call grow_heap if
 	(long) (MINSIZE + nb - old_size) is positive.

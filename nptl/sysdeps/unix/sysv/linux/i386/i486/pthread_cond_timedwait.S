@@ -406,7 +406,7 @@ __condvar_tw_cleanup:
 	cmpl	20(%esp), %eax
 	jne	3f
 
-	/* We increment the woken_seq counter only if it is lower than
+	/* We increment the wakeup_seq counter only if it is lower than
 	   total_seq.  If this is not the case the thread was woken and
 	   then canceled.  In this case we ignore the signal.  */
 	movl	total_seq(%ebx), %eax
@@ -419,10 +419,9 @@ __condvar_tw_cleanup:
 
 6:	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
+	addl	$1, cond_futex(%ebx)
 
-7:	addl	$1, cond_futex(%ebx)
-
-	addl	$1, woken_seq(%ebx)
+7:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
 3:	subl	$(1 << clock_bits), cond_nwaiters(%ebx)

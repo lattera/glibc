@@ -51,13 +51,15 @@ __condvar_cleanup (void *arg)
     {
       /* This thread is not waiting anymore.  Adjust the sequence counters
 	 appropriately.  We do not increment WAKEUP_SEQ if this would
-	 bump it over the value of TOTAL_SEQ>  This can happen if a thread
+	 bump it over the value of TOTAL_SEQ.  This can happen if a thread
 	 was woken and then canceled.  */
       if (cbuffer->cond->__data.__wakeup_seq
 	  < cbuffer->cond->__data.__total_seq)
-	++cbuffer->cond->__data.__wakeup_seq;
+	{
+	  ++cbuffer->cond->__data.__wakeup_seq;
+	  ++cbuffer->cond->__data.__futex;
+	}
       ++cbuffer->cond->__data.__woken_seq;
-      ++cbuffer->cond->__data.__futex;
     }
 
   cbuffer->cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
