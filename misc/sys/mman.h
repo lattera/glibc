@@ -131,7 +131,9 @@ extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
    it is zero.  */
 extern int mincore (void *__start, size_t __len, unsigned char *__vec)
      __THROW;
+#endif
 
+#ifdef __USE_GNU
 /* Remap arbitrary pages of a shared backing store within an existing
    VMA.  */
 extern int remap_file_pages (void *__start, size_t __size, int __prot,

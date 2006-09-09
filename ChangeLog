@@ -1,3 +1,8 @@
+2006-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3189]
+	* misc/sys/mman.h (remap_file_pages): Make available for _GNU_SOURCE.
+
 2006-09-07  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1006]
