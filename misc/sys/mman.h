@@ -116,14 +116,6 @@ extern int mlockall (int __flags) __THROW;
 extern int munlockall (void) __THROW;
 
 #ifdef __USE_MISC
-/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
-   NEW_LEN.  If MREMAP_MAYMOVE is set in FLAGS the returned address
-   may differ from ADDR.  If MREMAP_FIXED is set in FLAGS the function
-   takes another paramter which is a fixed address at which the block
-   resides after a successful call.  */
-extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
-		     int __flags, ...) __THROW;
-
 /* mincore returns the memory residency status of the pages in the
    current process's address space specified by [start, start + len).
    The status is returned in a vector of bytes.  The least significant
@@ -134,6 +126,14 @@ extern int mincore (void *__start, size_t __len, unsigned char *__vec)
 #endif
 
 #ifdef __USE_GNU
+/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
+   NEW_LEN.  If MREMAP_MAYMOVE is set in FLAGS the returned address
+   may differ from ADDR.  If MREMAP_FIXED is set in FLAGS the function
+   takes another paramter which is a fixed address at which the block
+   resides after a successful call.  */
+extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
+		     int __flags, ...) __THROW;
+
 /* Remap arbitrary pages of a shared backing store within an existing
    VMA.  */
 extern int remap_file_pages (void *__start, size_t __size, int __prot,
