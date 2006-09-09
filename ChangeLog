@@ -1,5 +1,10 @@
 2006-09-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2821]
+	* time/mktime.c (guess_time_tm): Fix overflow detection.
+	* time/Makefile (tests): Add bug-mktime1.
+	* time/bug-mktime1.c: New file.
+
 	[BZ #3189, #3188]
 	* misc/sys/mman.h (remap_file_pages): Make available for _GNU_SOURCE.
 	(mremap): Likewise.
