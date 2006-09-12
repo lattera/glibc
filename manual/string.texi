@@ -2534,7 +2534,7 @@ The @code{argz_append} function appends @var{buf_len} bytes starting at
 
 @comment argz.h
 @comment GNU
-@deftypefun {error_t} argz_delete (char **@var{argz}, size_t *@var{argz_len}, char *@var{entry})
+@deftypefun {void} argz_delete (char **@var{argz}, size_t *@var{argz_len}, char *@var{entry})
 If @var{entry} points to the beginning of one of the elements in the
 argz vector @code{*@var{argz}}, the @code{argz_delete} function will
 remove this entry and reallocate @code{*@var{argz}}, modifying

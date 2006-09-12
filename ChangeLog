@@ -1,3 +1,26 @@
+2006-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2526]
+	* README.libm: Fix a thinko in sqrt algorithm description.
+
+	[BZ #3143]
+	* manual/string.texi (argz_delete): Fix prototype.
+	Patch by <alpt@freaknet.org>.
+
+2006-08-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3138]
+	* io/test-lfs.c (do_prepare): Give name_len type size_t.
+	* io/tst-fcntl.c (do_prepare): Likewise.
+	* posix/tst-exec.c (do_prepare): Likewise.
+	* posix/tst-preadwrite.c (do_prepare): Likewise.
+	* posix/tst-spawn.c (do_prepare): Likewise.
+	* posix/tst-truncate.c (do_prepare): Likewise.
+	* rt/tst-aio.c (do_prepare): Likewise.
+	* rt/tst-aio64.c (do_prepare): Likewise.
+	* stdlib/test-canon2.c (do_prepare): Give test_dir_len type
+	size_t.
+
 2006-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #2821]

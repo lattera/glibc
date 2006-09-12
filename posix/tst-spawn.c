@@ -61,7 +61,7 @@ static const char fd3string[] = "This file will be opened";
 void
 do_prepare (int argc, char *argv[])
 {
-   char name_len;
+   size_t name_len;
 
    name_len = strlen (test_dir);
    name1 = (char *) malloc (name_len + sizeof ("/spawnXXXXXX"));
