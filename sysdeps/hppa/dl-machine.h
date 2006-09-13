@@ -447,8 +447,10 @@ asm (									\
 "	ldw	-40(%sp),%r25\n"					\
 "	ldw	-44(%sp),%r24\n"					\
 									\
-	/* _dl_fini does have a PLT slot now.  I don't know how to get	\
-	   to it though, so this hack will remain. */			\
+	/* _dl_fini is a local function in the loader, so we construct	\
+           a false OPD here and pass this to the application.  */	\
+	/* FIXME: Should be able to use P%, and LR RR to have the	\
+	   the linker construct a proper OPD.  */			\
 "	.section .data\n"						\
 "__dl_fini_plabel:\n"							\
 "	.word	_dl_fini\n"						\

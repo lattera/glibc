@@ -40,8 +40,9 @@
 	.import __libc_csu_fini, code
 	.import __libc_csu_init, code
 
-	/* Have the linker create plabel words
-           so we get PLABEL32 relocs and not 21/14 */
+	/* Have the linker create plabel words so we get PLABEL32 
+	   relocs and not 21/14.  The use of 21/14 relocs is only 
+	   supported in the latest dynamic linker.  */
 	.section	.rodata
 	.align 4
 .Lpmain:
@@ -59,20 +60,45 @@
 	.export _start, ENTRY
 	.type _start,@function
 _start:
+	/* At entry to the function we have:
+
+		r26 - Unused
+		r25 - argc
+		r24 - argv
+		r23 - False _dl_fini plabel address
+
+	   This function is called from the lower half of RTLD_START.  
+
+	   The call to __libc_start_main expects:
+
+		1. r26 - Application main
+		2. r25 - argc
+		3. r24 - argv
+		4. r23 - __libc_csu_init
+		5. sp-52 - __libc_csu_fini
+		6. sp-56 - rtld_fini
+		7. sp-60 - stackend  */ 
 
 	.proc
 	.callinfo
-
-	/* Expand the stack to store the 5th through 7th args */
+	/* Clear previous-sp.  */
+	stw	%r0, -4(%sp)
+	/* Setup the stack and frame.  */
+	stw	%rp, -20(%sp)
 	ldo	64(%sp), %sp
-	/* TODO: Follow ABI? Place more things on the stack here... */
+	stw	%sp, -4(%sp)
+	stw	%r19, -32(%sp)
+
+	/* argc and argv should be in 25 and 24 (2nd and 3rd argument) */
+	/* void (*rtld_fini) (void) (6th argument) */
+	stw	%r23, -56(%sp)
+	/* Need to setup 1, 4, 5, and 7th arguments */
 
 #if SHARED
 	/* load main (1st argument) */
 	addil	LR'.Lpmain, %r19
 	ldw	RR'.Lpmain(%r1), %r26
 	ldw	0(%r26),%r26
-	/* argc and argv should be in 25 and 24 (2nd and 3rd argument) */
 	/* void (*init) (void) (4th argument) */
 	addil	LR'.Lp__libc_csu_init, %r19
 	ldw	RR'.Lp__libc_csu_init(%r1), %r23
@@ -85,7 +111,6 @@ _start:
 	/* load main (1st argument) */
 	ldil	LR'.Lpmain, %r26
 	ldw	RR'.Lpmain(%r26), %r26
-	/* argc and argv should be in 25 and 24 (2nd and 3rd argument) */
 	/* void (*init) (void) (4th argument) */
 	ldil	LR'.Lp__libc_csu_init, %r23
 	ldw	RR'.Lp__libc_csu_init(%r23), %r23
@@ -95,8 +120,6 @@ _start:
 #endif
 	/* Store 5th argument */
 	stw	%r22, -52(%sp)
-	/* void (*rtld_fini) (void) (6th argument) */
-	stw	%r23, -56(%sp)
 	/* void *stack_end (7th argument) */
 	stw	%sp, -60(%sp)
 
