@@ -1,3 +1,11 @@
+2006-09-13  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/dl-machine.h (RTLD_START): Comment the use of 
+	_dl_fini_plabel.
+	* sysdeps/hppa/elf/start.S: Correctly pass r23 to argument 6 of
+	__libc_start_main. Comment the order of arguments at entry and
+	those to __libc_start_main.
+
 2006-09-07  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/dl-machine.h (elf_machine_fixup_plt): Remove
