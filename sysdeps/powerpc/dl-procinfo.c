@@ -1,5 +1,5 @@
 /* Data for processor capability information.  PowerPC version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,14 +46,31 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_powerpc_cap_flags[16][10]
+PROCINFO_CLASS const char _dl_powerpc_cap_flags[20][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
-    "cell", "power5+", "power5", "power4",
+    "arch_2_05", "ic_snoop", "smt", "booke",
+    "cellbe", "power5+", "power5", "power4",
     "notb", "efpdouble", "efpsingle", "spe",
     "ucache", "4xxmac", "mmu", "fpu",
     "altivec", "ppc601", "ppc64", "ppc32",
+  }
+#endif
+#if !defined SHARED || defined PROCINFO_DECL
+;
+#else
+,
+#endif
+
+#if !defined PROCINFO_DECL && defined SHARED
+  ._dl_powerpc_platforms
+#else
+PROCINFO_CLASS const char _dl_powerpc_platforms[6][12]
+#endif
+#ifndef PROCINFO_DECL
+= {
+    "power4", "ppc970", "power5", "power5+", "power6", "ppc-cell-be"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

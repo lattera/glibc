@@ -1,3 +1,17 @@
+2006-09-14  Jakub Jelinek  <jakub@redhat.com>
+	    Steven Munroe  <sjmunroe@us.ibm.com>
+	    
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add 4 new cap
+	names to the beginning.  Rename "cell" to "cellbe".
+	(_dl_powerpc_platforms): New.
+	* sysdeps/powerpc/dl-procinfo.h (_DL_HWCAP_FIRST): Decrease.
+	(HWCAP_IMPORTANT): Remove power{4,5,5+} and cell.
+	(_DL_PLATFORMS_COUNT, _DL_FIRST_PLATFORM): Define.
+	(_DL_HWCAP_PLATFORM): Define to new mask.
+	(_dl_platform_string, _dl_string_platform): New functions.
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_BOOKE, PPC_FEATURE_SMT,
+	PPC_FEATURE_ICACHE_SNOOP, PPC_FEATURE_ARCH_2_05): Define.
+
 2006-09-12  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2526]
