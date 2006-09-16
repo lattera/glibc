@@ -1,3 +1,10 @@
+2006-09-15  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/tcb-offsets.sym: Define TID_THREAD_OFFSET.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Handle RESET_PID, and 
+	restore r19 before call to _exit.
+	* sysdeps/unix/sysv/linux/hppa/nptl/clone.S: New file.
+
 2006-09-13  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/dl-machine.h (RTLD_START): Comment the use of 

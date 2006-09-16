@@ -15,4 +15,5 @@ MUTEX_FUTEX		offsetof (pthread_mutex_t, __data.__lock)
 -- preceeds the thread pointer (which points to the dtv).
 #define thread_offsetof(mem)    (unsigned int)(offsetof(struct pthread, mem) - sizeof(struct pthread))
 PID_THREAD_OFFSET		thread_offsetof (pid)
+TID_THREAD_OFFSET		thread_offsetof (tid)
 MULTIPLE_THREADS_THREAD_OFFSET	thread_offsetof (header.multiple_threads)

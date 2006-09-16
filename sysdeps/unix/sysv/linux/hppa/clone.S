@@ -63,17 +63,20 @@
         .text
 ENTRY(__clone)
 	/* Prologue */
-	stwm	%r3, 64(%sp)
+	stwm	%r4, 64(%sp)
 	stw	%sp, -4(%sp)
+#ifdef PIC
 	stw	%r19, -32(%sp)
+#endif
 
 	/* Sanity check arguments.  */
 	comib,=,n  0, %arg0, .LerrorSanity        /* no NULL function pointers */
 	comib,=,n  0, %arg1, .LerrorSanity        /* no NULL stack pointers */
 
-	/* Save the fn ptr and arg on the new stack.  */
+	/* Save the function pointer, arg, and flags on the new stack.  */
 	stwm    %r26, 64(%r25)
 	stw	%r23, -60(%r25)
+	stw     %r24, -56(%r25)
 	/* Clone arguments are (int flags, void * child_stack) */
 	copy	%r24, %r26		/* flags are first */
 	/* User stack pointer is in the correct register already */
@@ -85,7 +88,7 @@ ENTRY(__clone)
 
 	/* Save the PIC register. */
 #ifdef PIC
-	copy	%r19, %r3		/* parent */
+	copy	%r19, %r4		/* parent */
 #endif
 
 	/* Do the system call */
@@ -96,6 +99,11 @@ ENTRY(__clone)
 	comclr,>>= %r1, %ret0, %r0	/* Note: unsigned compare. */
 	b,n	.LerrorRest
 
+	/* Restore the PIC register.  */
+#ifdef PIC
+	copy	%r4, %r19		/* parent */ 
+#endif
+
 	comib,=,n 0, %ret0, .LthreadStart
 
 	/* Successful return from the parent
@@ -104,32 +112,46 @@ ENTRY(__clone)
 
 	ldw	-84(%sp), %rp
 	bv	%r0(%rp)
-	ldwm	-64(%sp), %r3
+	ldwm	-64(%sp), %r4
 
 .LerrorRest:
-	/* Restore the PIC register on error */
-#ifdef PIC
-	copy	%r3, %r19		/* parent */ 
-#endif
 	/* Something bad happened -- no child created */
 	bl	__syscall_error, %rp
 	sub     %r0, %ret0, %arg0
 	ldw	-84(%sp), %rp
 	/* Return after setting errno, ret0 is set to -1 by __syscall_error. */
 	bv	%r0(%rp)
-	ldwm	-64(%sp), %r3
+	ldwm	-64(%sp), %r4
 
 .LerrorSanity:
 	/* Sanity checks failed, return -1, and set errno to EINVAL. */
 	bl	__syscall_error, %rp
 	ldi     EINVAL, %arg0
-	/* Lazy, don't restore r19 */
 	ldw	-84(%sp), %rp
 	bv	%r0(%rp)
-	ldwm	-64(%sp), %r3
+	ldwm	-64(%sp), %r4
 
 .LthreadStart:
-
+#ifdef RESET_PID
+# define CLONE_VM_BIT		23	/* 0x00000100  */
+# define CLONE_THREAD_BIT	15	/* 0x00010000  */
+	/* Load original clone flags. 
+	   If CLONE_THREAD was passed, don't reset the PID/TID.
+	   If CLONE_VM was passed, we need to store -1 to PID/TID.
+	   If CLONE_VM and CLONE_THREAD were not set store the result
+	   of getpid to PID/TID.  */
+	ldw	-56(%sp), %r26
+	bb,<,n	%r26, CLONE_THREAD_BIT, 1f
+	bb,<	%r26, CLONE_VM_BIT, 2f 
+	ldi	-1, %ret0
+	ble     0x100(%sr2, %r0)
+	ldi	__NR_getpid, %r20
+2:
+	mfctl	%cr27, %r26
+	stw	%ret0, PID_THREAD_OFFSET(%r26)
+	stw	%ret0, TID_THREAD_OFFSET(%r26)
+1:
+#endif
 	/* Load up the arguments.  */
 	ldw	-60(%sp), %arg0
 	ldw     -64(%sp), %r22
@@ -137,13 +159,20 @@ ENTRY(__clone)
 	/* $$dyncall fixes childs PIC register */
 
 	/* Call the user's function */
+#ifdef PIC
+	copy	%r19, %r4
+#endif
 	bl	$$dyncall, %r31
 	copy	%r31, %rp
-
+#ifdef PIC
+	copy	%r4, %r19
+#endif
+	/* The call to _exit needs saved r19.  */
 	bl	_exit, %rp
 	copy	%ret0, %arg0
 
-	/* We should not return from _exit. */
+	/* We should not return from _exit.
+           We do not restore r4, or the stack state.  */
 	iitlbp	%r0, (%sr0, %r0)
 
 PSEUDO_END(__clone)
