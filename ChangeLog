@@ -1,3 +1,19 @@
+2006-09-17  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h [PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO]: Define.
+	* sysdeps/unix/sysv/linux/ptrace.c [PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO]: Check.
+
+2006-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/register-dump.h (register_dump): Don't
+	write '\0' to the fd.
+	* sysdeps/mach/hurd/powerpc/register-dump.h (register_dump): Likewise.
+	* sysdeps/powerpc/powerpc64/register-dump.h (register_dump): Likewise.
+	Change regs to unsigned long pointer from unsigned int, fix fscr
+	offset.
+
 2006-09-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/Makefile (CFLAGS-fstatat.c): Set.
