@@ -98,6 +98,9 @@ CFLAGS-mknod.c = -DHAVE_DOT_HIDDEN
 CFLAGS-stat64.c = -DHAVE_DOT_HIDDEN
 CFLAGS-fstat64.c = -DHAVE_DOT_HIDDEN
 CFLAGS-lstat64.c = -DHAVE_DOT_HIDDEN
+CFLAGS-fstatat.c = -DHAVE_DOT_HIDDEN
+CFLAGS-fstatat64.c = -DHAVE_DOT_HIDDEN
+CFLAGS-mknodat.c = -DHAVE_DOT_HIDDEN
 endif
 
 test-stat2-ARGS = Makefile . $(objpfx)test-stat2

@@ -1,6 +1,17 @@
 2006-09-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/Makefile (CFLAGS-fstatat.c): Set.
+	(CFLAGS-fstatat64.c): Likewise.
+	(CFLAGS-mknodat.c): Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: Comment fixes.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: Rewritten.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: Rewritten.
+
+2006-09-14  Jakub Jelinek  <jakub@redhat.com>
 	    Steven Munroe  <sjmunroe@us.ibm.com>
-	    
+
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add 4 new cap
 	names to the beginning.  Rename "cell" to "cellbe".
 	(_dl_powerpc_platforms): New.

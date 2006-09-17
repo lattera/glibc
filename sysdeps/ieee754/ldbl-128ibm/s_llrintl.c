@@ -1,4 +1,4 @@
-/* Round to int long double floating-point values.
+/* Round to long long int long double floating-point values.
    IBM extended format long double version.
    Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-
-/* This has been coded in assembler because GCC makes such a mess of it
-   when it's coded in C.  */
 
 #include <math.h>
 #include <fenv_libc.h>
