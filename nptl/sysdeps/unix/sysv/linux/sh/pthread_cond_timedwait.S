@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -521,6 +521,21 @@ __condvar_tw_cleanup:
 	mov	#1, r2
 	mov	#0, r3
 
+	/* We increment the wakeup_seq counter only if it is lower than
+	   total_seq.  If this is not the case the thread was woken and
+	   then canceled.  In this case we ignore the signal.  */
+	mov.l	@(total_seq+4,r8), r0
+	mov.l	@(wakeup_seq+4,r8), r1
+	cmp/hi	r1, r0
+	bt/s	6f
+	 cmp/hi	r0, r1
+	bt	7f
+	mov.l	@(total_seq,r8), r0
+	mov.l	@(wakeup_seq,r8), r1
+	cmp/hs	r0, r1
+	bt	7f
+
+6:
 	clrt
 	mov.l	@(wakeup_seq,r8),r0
 	mov.l	@(wakeup_seq+4,r8),r1
@@ -532,6 +547,7 @@ __condvar_tw_cleanup:
 	add	r2, r0
 	mov.l	r0,@(cond_futex,r8)
 
+7:
 	clrt
 	mov.l	@(woken_seq,r8),r0
 	mov.l	@(woken_seq+4,r8),r1

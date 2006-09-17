@@ -1,3 +1,11 @@
+2006-09-12  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: For PI
+	mutexes wake all mutexes.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Don't increment
+	WAKEUP_SEQ if this would increase the value beyond TOTAL_SEQ.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+
 2006-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cond22.c (tf): Slight changes to the pthread_cond_wait use
@@ -12,7 +20,7 @@
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
-							
+
 2006-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3123]
