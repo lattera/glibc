@@ -118,7 +118,7 @@ enum __ptrace_request
 
   /* Get last ptrace message.  */
   PTRACE_GETEVENTMSG = 0x4201,
-#define PT_GETEVENTMSG PT_SETOPTIONS
+#define PT_GETEVENTMSG PTRACE_GETEVENTMSG
 
   /* Get siginfo for process.  */
   PTRACE_GETSIGINFO = 0x4202,

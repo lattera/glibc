@@ -1,3 +1,9 @@
+2006-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-kill4.c (do_test): Explicitly set tf thread's stack size.
+
+	* tst-cancel2.c (tf): Loop as long as something was written.
+
 2006-09-12  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: For PI

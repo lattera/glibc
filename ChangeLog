@@ -1,9 +1,23 @@
+2006-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_GETEVENTMSG): Fix pasto.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Define.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG): Likewise.
+	(PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Change to the arch independent
+	values.
+
 2006-09-17  Mike Frysinger  <vapier@gentoo.org>
 
-	* sysdeps/unix/sysv/linux/sys/ptrace.h [PTRACE_SETOPTIONS,
-	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO]: Define.
-	* sysdeps/unix/sysv/linux/ptrace.c [PTRACE_SETOPTIONS,
-	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO]: Check.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Define.
+	* sysdeps/unix/sysv/linux/ptrace.c (ptrace): Check PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO and PTRACE_SETSIGINFO.
 
 2006-09-16  Jakub Jelinek  <jakub@redhat.com>
 
