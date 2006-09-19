@@ -1,3 +1,9 @@
+2006-09-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-cache.c (HWCAP_CHECK): If _DL_PLATFORMS_COUNT, but
+	platform == -1, reject any libs with non-zero _DL_HWCAP_PLATFORM
+	bits.
+
 2006-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (_dl_close): If dependency is not unloaded make
