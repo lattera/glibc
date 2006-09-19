@@ -1,3 +1,16 @@
+2006-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): If dependency is not unloaded make
+	sure no reference to the unloaded map's search list remains in the
+	dependency's scope.
+
+2006-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload7 test.
+	* elf/unload7.c: New test.
+	* elf/unload7mod1.c: New file.
+	* elf/unload7mod2.c: New file.
+
 2006-09-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_GETEVENTMSG): Fix pasto.

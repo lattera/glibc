@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -330,7 +330,7 @@ _dl_close (void *_map)
 
 	      for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
 		/* This relies on l_scope[] entries being always set either
-		   to its own l_symbolic_searchlist address, or some other map's
+		   to its own l_symbolic_searchlist address, or some map's
 		   l_searchlist address.  */
 		if (imap->l_scope[cnt] != &imap->l_symbolic_searchlist)
 		  {
@@ -346,6 +346,21 @@ _dl_close (void *_map)
 			break;
 		      }
 		  }
+	    }
+	  else
+	    {
+	      unsigned int cnt = 0;
+	      while (imap->l_scope[cnt] != NULL)
+		{
+		  if (imap->l_scope[cnt] == &map->l_searchlist)
+		    {
+		      while ((imap->l_scope[cnt] = imap->l_scope[cnt + 1])
+			     != NULL)
+			++cnt;
+		      break;
+		    }
+		  ++cnt;
+		}
 	    }
 
 	  /* The loader is gone, so mark the object as not having one.

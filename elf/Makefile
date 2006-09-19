@@ -87,6 +87,7 @@ distribute	:= rtld-Rules \
 		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c \
+		   unload7mod1.c unload7mod2.c \
 		   tst-auditmod1.c tst-audit.sh \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
@@ -168,7 +169,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 unload4 unload5 unload6 tst-global1 order2 \
+	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
 	 tst-stackguard1 tst-addr1
 #	 reldep9
@@ -211,6 +212,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload3mod1 unload3mod2 unload3mod3 unload3mod4 \
 		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
 		unload6mod1 unload6mod2 unload6mod3 \
+		unload7mod1 unload7mod2 \
 		order2mod1 order2mod2 order2mod3 order2mod4
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep tst-array5dep
@@ -455,6 +457,8 @@ $(objpfx)unload4mod2.so: $(objpfx)unload4mod4.so $(objpfx)unload4mod3.so
 $(objpfx)unload6mod1.so: $(libdl)
 $(objpfx)unload6mod2.so: $(libdl)
 $(objpfx)unload6mod3.so: $(libdl)
+$(objpfx)unload7mod1.so: $(libdl)
+$(objpfx)unload7mod2.so: $(objpfx)unload7mod1.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -731,6 +735,10 @@ $(objpfx)unload5.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
 $(objpfx)unload6: $(libdl)
 $(objpfx)unload6.out: $(objpfx)unload6mod1.so $(objpfx)unload6mod2.so \
 		      $(objpfx)unload6mod3.so
+
+$(objpfx)unload7: $(libdl)
+$(objpfx)unload7.out: $(objpfx)unload7mod1.so $(objpfx)unload7mod2.so
+unload7-ENV = MALLOC_PERTURB_=85
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
