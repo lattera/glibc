@@ -3421,7 +3421,7 @@ lrint_test_upward (void)
       TEST_f_l (lrint, 1071930.0008, 1071931);
       TEST_f_l (lrint, 1073741824.01, 1073741825);
 # if LONG_MAX > 281474976710656 && defined (TEST_LDOUBLE)
-      TEST_f_l (lrint, 281474976710656.025, 28147497671065);
+      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
 # endif
 #endif
     }
