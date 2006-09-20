@@ -1,8 +1,8 @@
 comment_char %
 escape_char /
 % Macedonian language locale for Macedonia
-% Damjan Georgievski <gdamjan@freemail.org.mk>
-% Revision: 1.8 (2000-11-07)
+% Damjan Georgievski { gdamjan %% gmail.com }
+% Revision: 2.2 (2006-09-12)
 % Charsets: UTF-8, ISO-8859-5, CP1251
 % Distribution and use is free, also
 % for commercial purposes.
@@ -12,13 +12,13 @@ title      "Macedonian locale for Macedonia"
 source     ""
 address    ""
 contact    "Damjan Georgievski"
-email      "gdamjan@freemail.org.mk"
+email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Macedonian"
 territory  "Macedonia"
-revision   "1.8"
-date       "2000-11-07"
+revision   "2.2"
+date       "2006-09-12"
 %
 category  "mk_MK:2000";LC_IDENTIFICATION
 category  "mk_MK:2000";LC_CTYPE
@@ -82,9 +82,12 @@ d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
+date_fmt "<U0025><U0061><U002C><U0020><U0025><U0064><U0020><U0025><U0062>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
+week    7;19971201;4
+first_weekday 1 % Monday
+first_workday 1 % Monday
 END LC_TIME
 
 LC_MONETARY

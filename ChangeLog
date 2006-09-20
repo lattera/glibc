@@ -1,3 +1,24 @@
+2006-06-17  Joseph S. Myers  <joseph@codesourcery.com>
+
+	[BZ #2592]
+	* math/libm-test.inc (lrint_test_tonearest): New function.
+	(lrint_test_towardzero): New function.
+	(lrint_test_downward): New function.
+	(lrint_test_upward): New function.
+	(main): Run these new tests.
+	* sysdeps/ieee754/dbl-64/s_llrint.c (__llrint): Correct rounding
+	of values near to 0.
+	(two52): Use double not long double.
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c (__llrintf): Likewise.
+	(two23): Use float not double.
+	* sysdeps/ieee754/flt-32/s_lrintf.c (__lrintf): Likewise.
+	(two23): Use float not double.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c (__lrintl): Likewise.
+
 2006-09-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c (__makecontext):

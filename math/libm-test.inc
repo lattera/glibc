@@ -3273,6 +3273,166 @@ lrint_test (void)
 
 
 static void
+lrint_test_tonearest (void)
+{
+  int save_round_mode;
+  START (lrint_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_l (lrint, 0.0, 0);
+      TEST_f_l (lrint, minus_zero, 0);
+      TEST_f_l (lrint, 0.2L, 0);
+      TEST_f_l (lrint, -0.2L, 0);
+      TEST_f_l (lrint, 0.5L, 0);
+      TEST_f_l (lrint, -0.5L, 0);
+      TEST_f_l (lrint, 0.8L, 1);
+      TEST_f_l (lrint, -0.8L, -1);
+
+      TEST_f_l (lrint, 1.4L, 1);
+      TEST_f_l (lrint, -1.4L, -1);
+
+      TEST_f_l (lrint, 8388600.3L, 8388600);
+      TEST_f_l (lrint, -8388600.3L, -8388600);
+
+      TEST_f_l (lrint, 1071930.0008, 1071930);
+#ifndef TEST_FLOAT
+      TEST_f_l (lrint, 1073741824.01, 1073741824);
+# if LONG_MAX > 281474976710656
+      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
+# endif
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (lrint_tonearest);
+}
+
+
+static void
+lrint_test_towardzero (void)
+{
+  int save_round_mode;
+  START (lrint_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_l (lrint, 0.0, 0);
+      TEST_f_l (lrint, minus_zero, 0);
+      TEST_f_l (lrint, 0.2L, 0);
+      TEST_f_l (lrint, -0.2L, 0);
+      TEST_f_l (lrint, 0.5L, 0);
+      TEST_f_l (lrint, -0.5L, 0);
+      TEST_f_l (lrint, 0.8L, 0);
+      TEST_f_l (lrint, -0.8L, 0);
+
+      TEST_f_l (lrint, 1.4L, 1);
+      TEST_f_l (lrint, -1.4L, -1);
+
+      TEST_f_l (lrint, 8388600.3L, 8388600);
+      TEST_f_l (lrint, -8388600.3L, -8388600);
+
+      TEST_f_l (lrint, 1071930.0008, 1071930);
+#ifndef TEST_FLOAT
+      TEST_f_l (lrint, 1073741824.01, 1073741824);
+# if LONG_MAX > 281474976710656
+      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
+# endif
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (lrint_towardzero);
+}
+
+
+static void
+lrint_test_downward (void)
+{
+  int save_round_mode;
+  START (lrint_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_l (lrint, 0.0, 0);
+      TEST_f_l (lrint, minus_zero, 0);
+      TEST_f_l (lrint, 0.2L, 0);
+      TEST_f_l (lrint, -0.2L, -1);
+      TEST_f_l (lrint, 0.5L, 0);
+      TEST_f_l (lrint, -0.5L, -1);
+      TEST_f_l (lrint, 0.8L, 0);
+      TEST_f_l (lrint, -0.8L, -1);
+
+      TEST_f_l (lrint, 1.4L, 1);
+      TEST_f_l (lrint, -1.4L, -2);
+
+      TEST_f_l (lrint, 8388600.3L, 8388600);
+      TEST_f_l (lrint, -8388600.3L, -8388601);
+
+      TEST_f_l (lrint, 1071930.0008, 1071930);
+#ifndef TEST_FLOAT
+      TEST_f_l (lrint, 1073741824.01, 1073741824);
+# if LONG_MAX > 281474976710656
+      TEST_f_l (lrint, 281474976710656.025, 281474976710656);
+# endif
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (lrint_downward);
+}
+
+
+static void
+lrint_test_upward (void)
+{
+  int save_round_mode;
+  START (lrint_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_l (lrint, 0.0, 0);
+      TEST_f_l (lrint, minus_zero, 0);
+      TEST_f_l (lrint, 0.2L, 1);
+      TEST_f_l (lrint, -0.2L, 0);
+      TEST_f_l (lrint, 0.5L, 1);
+      TEST_f_l (lrint, -0.5L, 0);
+      TEST_f_l (lrint, 0.8L, 1);
+      TEST_f_l (lrint, -0.8L, 0);
+
+      TEST_f_l (lrint, 1.4L, 2);
+      TEST_f_l (lrint, -1.4L, -1);
+
+      TEST_f_l (lrint, 8388600.3L, 8388601);
+      TEST_f_l (lrint, -8388600.3L, -8388600);
+
+#ifndef TEST_FLOAT
+      TEST_f_l (lrint, 1071930.0008, 1071931);
+      TEST_f_l (lrint, 1073741824.01, 1073741825);
+# if LONG_MAX > 281474976710656 && defined (TEST_LDOUBLE)
+      TEST_f_l (lrint, 281474976710656.025, 28147497671065);
+# endif
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (lrint_upward);
+}
+
+
+static void
 llrint_test (void)
 {
   /* XXX this test is incomplete.  We need to have a way to specifiy
@@ -5937,6 +6097,10 @@ main (int argc, char **argv)
   rint_test_downward ();
   rint_test_upward ();
   lrint_test ();
+  lrint_test_tonearest ();
+  lrint_test_towardzero ();
+  lrint_test_downward ();
+  lrint_test_upward ();
   llrint_test ();
   llrint_test_tonearest ();
   llrint_test_towardzero ();

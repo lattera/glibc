@@ -1,3 +1,10 @@
+2006-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2823]
+	* locales/mk_MK: Fix date_fmt.  Add week, first_weekday, and
+	first_workday information.
+	Patch by Damjan Georgievski.
+
 2006-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/or_IN (mon): Fix February string.

@@ -1,6 +1,6 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 1997, 1999, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997 and
    		  Jakub Jelinek <jj@ultra.linux.cz>, 1999.
@@ -48,19 +48,14 @@ __lrintl (long double x)
 
   if (j0 < 48)
     {
-      if (j0 < -1)
-	return 0;
-      else
-	{
-	  w = two112[sx] + x;
-	  t = w - two112[sx];
-	  GET_LDOUBLE_WORDS64 (i0, i1, x);
-	  j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
-	  i0 &= 0x0000ffffffffffffLL;
-	  i0 |= 0x0001000000000000LL;
+      w = two112[sx] + x;
+      t = w - two112[sx];
+      GET_LDOUBLE_WORDS64 (i0, i1, x);
+      j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
+      i0 &= 0x0000ffffffffffffLL;
+      i0 |= 0x0001000000000000LL;
 
-	  result = i0 >> (48 - j0);
-	}
+      result = (j0 < 0 ? 0 : i0 >> (48 - j0));
     }
   else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {

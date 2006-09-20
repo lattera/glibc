@@ -1,6 +1,6 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,7 +23,7 @@
 
 #include "math_private.h"
 
-static const double two23[2] =
+static const float two23[2] =
 {
   8.3886080000e+06, /* 0x4B000000 */
  -8.3886080000e+06, /* 0xCB000000 */
@@ -49,9 +49,7 @@ __lrintf (float x)
 
   if (j0 < (int32_t) (sizeof (long int) * 8) - 1)
     {
-      if (j0 < -1)
-	return 0;
-      else if (j0 >= 23)
+      if (j0 >= 23)
 	result = (long int) i0 << (j0 - 23);
       else
 	{
@@ -62,7 +60,7 @@ __lrintf (float x)
 	  i0 &= 0x7fffff;
 	  i0 |= 0x800000;
 
-	  result = i0 >> (23 - j0);
+	  result = (j0 < 0 ? 0 : i0 >> (23 - j0));
 	}
     }
   else
