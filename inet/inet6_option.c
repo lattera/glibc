@@ -97,6 +97,8 @@ inet6_option_space (nbytes)
 
   return CMSG_SPACE (roundup (nbytes, 8));
 }
+link_warning (inet6_option_space,
+	      "inet6_option_space is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.2
@@ -131,6 +133,8 @@ inet6_option_init (bp, cmsgp, type)
 
   return 0;
 }
+link_warning (inet6_option_init,
+	      "inet6_option_init is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.3
@@ -164,6 +168,8 @@ inet6_option_append (cmsg, typep, multx, plusy)
 
   return 0;
 }
+link_warning (inet6_option_append,
+	      "inet6_option_append is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.4
@@ -225,6 +231,8 @@ inet6_option_alloc (cmsg, datalen, multx, plusy)
 {
   return option_alloc (cmsg, datalen, multx, plusy);
 }
+link_warning (inet6_option_alloc,
+	      "inet6_option_alloc is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.5
@@ -282,6 +290,8 @@ inet6_option_next (cmsg, tptrp)
   /* Check the option is fully represented in the message.  */
   return get_opt_end (&result, result, endp);
 }
+link_warning (inet6_option_next,
+	      "inet6_option_next is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.6
@@ -351,3 +361,5 @@ inet6_option_find (cmsg, tptrp, type)
   /* Success.  */
   return 0;
 }
+link_warning (inet6_option_find,
+	      "inet6_option_find is obsolete, use the RFC 3542 interfaces")
