@@ -1,3 +1,11 @@
+2006-09-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c (__makecontext):
+	Cast sp to unsigned long to avoid compiler warning.
+	Use __makecontext_ret function instead of a trampoline on the stack.
+	(__makecontext_ret): New function.
+	* sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c: Likewise.
+
 2006-09-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-cache.c (HWCAP_CHECK): If _DL_PLATFORMS_COUNT, but
