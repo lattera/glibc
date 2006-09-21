@@ -58,6 +58,17 @@
 
 #include <features.h>
 
+#ifdef __mips_soft_float
+
+#define _FPU_RESERVED 0xffffffff
+#define _FPU_DEFAULT  0x00000000
+typedef unsigned int fpu_control_t;
+#define _FPU_GETCW(cw) 0
+#define _FPU_SETCW(cw) do { } while (0)
+extern fpu_control_t __fpu_control;
+
+#else /* __mips_soft_float */
+
 /* masking of interrupts */
 #define _FPU_MASK_V     0x0800  /* Invalid operation */
 #define _FPU_MASK_Z     0x0400  /* Division by zero  */
@@ -94,5 +105,7 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
+
+#endif /* __mips_soft_float */
 
 #endif	/* fpu_control.h */

@@ -27,6 +27,7 @@
 int
 __sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
 {
+#ifdef __mips_hard_float
   /* Store the floating point callee-saved registers...  */
   asm volatile ("s.d $f20, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[0]));
   asm volatile ("s.d $f22, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[1]));
@@ -34,6 +35,7 @@ __sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
   asm volatile ("s.d $f26, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[3]));
   asm volatile ("s.d $f28, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[4]));
   asm volatile ("s.d $f30, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[5]));
+#endif
 
   /* .. and the PC;  */
   asm volatile ("sw $31, %0" : : "m" (env[0].__jmpbuf[0].__pc));
@@ -57,8 +59,10 @@ __sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
   asm volatile ("sw $22, %0" : : "m" (env[0].__jmpbuf[0].__regs[6]));
   asm volatile ("sw $23, %0" : : "m" (env[0].__jmpbuf[0].__regs[7]));
 
+#ifdef __mips_hard_float
   /* .. and finally get and reconstruct the floating point csr.  */
   asm ("cfc1 %0, $31" : "=r" (env[0].__jmpbuf[0].__fpc_csr));
+#endif
 
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);

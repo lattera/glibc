@@ -1,3 +1,11 @@
+2006-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu_control.h: If soft-float, don't use
+	floating-point registers.
+	* sysdeps/mips/__longjmp.c, sysdeps/mips/setjmp_aux.c,
+	sysdeps/mips/mips64/__longjmp.c, sysdeps/mips/mips64/setjmp_aux.c:
+	Likewise.
+
 2006-08-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h (FUTEX_LOCK_PI,
