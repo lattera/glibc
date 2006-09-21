@@ -1,3 +1,9 @@
+2006-09-21  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Handle undefined
+	symbols.
+	(elf_machine_rela): Likewise.
+
 2006-08-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/syscalls.list: Remove msgctl,

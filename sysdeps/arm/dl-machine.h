@@ -447,12 +447,16 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 
 	case R_ARM_TLS_DTPOFF32:
-	  *reloc_addr += sym->st_value;
+	  if (sym != NULL)
+	    *reloc_addr += sym->st_value;
 	  break;
 
 	case R_ARM_TLS_TPOFF32:
-	  CHECK_STATIC_TLS (map, sym_map);
-	  *reloc_addr += sym->st_value + sym_map->l_tls_offset;
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr += sym->st_value + sym_map->l_tls_offset;
+	    }
 	  break;
 #endif
 	default:
@@ -544,13 +548,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 
 	case R_ARM_TLS_DTPOFF32:
-	  *reloc_addr = sym->st_value + reloc->r_addend;
+	  *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
 	  break;
 
 	case R_ARM_TLS_TPOFF32:
-	  CHECK_STATIC_TLS (map, sym_map);
-	  *reloc_addr = (sym->st_value + sym_map->l_tls_offset
-			 + reloc->r_addend);
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr = (sym->st_value + sym_map->l_tls_offset
+			     + reloc->r_addend);
+	    }
 	  break;
 #endif
 	default:
