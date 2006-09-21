@@ -1,5 +1,5 @@
 /* longjmp for ARM.
-   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,6 @@
 #define _SETJMP_H
 #define _ASM
 #include <bits/setjmp.h>
-#define __ASSEMBLY__
-#include <asm/procinfo.h>
 #include <rtld-global-offsets.h>
 
 /* __longjmp(jmpbuf, val) */
@@ -53,7 +51,7 @@ ENTRY (__longjmp)
 #endif
 #endif
 
-	tst	a2, #HWCAP_VFP
+	tst	a2, #HWCAP_ARM_VFP
 	beq	Lno_vfp
 
 	/* Restore the VFP registers.  */
@@ -64,6 +62,19 @@ ENTRY (__longjmp)
 	/* Following instruction is fmxr fpscr, r1.  */
 	mcr	p10, 7, r1, cr1, cr0, 0
 Lno_vfp:
+
+	tst	a2, #HWCAP_ARM_IWMMXT
+	beq	Lno_iwmmxt
+
+	/* Restore the call-preserved iWMMXt registers.  */
+	/* Following instructions are wldrd wr10, [ip], #8 (etc.)  */
+	ldcl	p1, cr10, [r12], #8
+	ldcl	p1, cr11, [r12], #8
+	ldcl	p1, cr12, [r12], #8
+	ldcl	p1, cr13, [r12], #8
+	ldcl	p1, cr14, [r12], #8
+	ldcl	p1, cr15, [r12], #8
+Lno_iwmmxt:
 
 	DO_RET(lr)
 

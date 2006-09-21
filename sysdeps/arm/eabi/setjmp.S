@@ -1,5 +1,5 @@
 /* setjmp for ARM.
-   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,6 @@
 #define _SETJMP_H
 #define _ASM
 #include <bits/setjmp.h>
-#define __ASSEMBLY__
-#include <asm/procinfo.h>
 #include <rtld-global-offsets.h>
 
 ENTRY (__sigsetjmp)
@@ -51,7 +49,7 @@ ENTRY (__sigsetjmp)
 #endif
 #endif
 
-	tst	a3, #HWCAP_VFP
+	tst	a3, #HWCAP_ARM_VFP
 	beq	Lno_vfp
 
 	/* Store the VFP registers.  */
@@ -62,6 +60,19 @@ ENTRY (__sigsetjmp)
 	mrc	p10, 7, r2, cr1, cr0, 0
 	str	r2, [ip], #4
 Lno_vfp:
+
+	tst	a3, #HWCAP_ARM_IWMMXT
+	beq	Lno_iwmmxt
+
+	/* Save the call-preserved iWMMXt registers.  */
+	/* Following instructions are wstrd wr10, [ip], #8 (etc.)  */
+	stcl	p1, cr10, [r12], #8
+	stcl	p1, cr11, [r12], #8
+	stcl	p1, cr12, [r12], #8
+	stcl	p1, cr13, [r12], #8
+	stcl	p1, cr14, [r12], #8
+	stcl	p1, cr15, [r12], #8
+Lno_iwmmxt:
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))

@@ -1,3 +1,21 @@
+2006-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (_dl_arm_cap_flags):
+	Add "java" and "iwmmxt".
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h: Use <sysdep.h> for
+	HWCAP values.
+	(_DL_HWCAP_COUNT): Increase to 10.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (HWCAP_ARM_SWP,
+	HWCAP_ARM_HALF, HWCAP_ARM_THUMB, HWCAP_ARM_26BIT,
+	HWCAP_ARM_FAST_MULT, HWCAP_ARM_FPA, HWCAP_ARM_VFP, HWCAP_ARM_EDSP,
+	HWCAP_ARM_JAVA, HWCAP_ARM_IWMMXT): Define.
+	* sysdeps/arm/eabi/setjmp.S (__sigsetjmp): Save iWMMXt registers
+	if HWCAP_ARM_IWMMXT set.  Don't include <asm/procinfo.h>.  Use
+	HWCAP_ARM_VFP instead of HWCAP_VFP.
+	* sysdeps/arm/eabi/__longjmp.S (__longjmp): Restore iWMMXt
+	registers if HWCAP_ARM_IWMMXT set.  Don't include
+	<asm/procinfo.h>.  Use HWCAP_ARM_VFP instead of HWCAP_VFP.
+
 2006-09-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel): Handle undefined

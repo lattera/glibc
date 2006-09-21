@@ -1,5 +1,5 @@
 /* Linux/ARM version of processor capability information handling macros.
-   Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 2001.
 
@@ -22,8 +22,9 @@
 #define _DL_PROCINFO_H	1
 
 #include <ldsodefs.h>
+#include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 8
+#define _DL_HWCAP_COUNT 10
 
 /* The kernel provides platform data but it is not interesting.  */
 #define _DL_HWCAP_PLATFORM 	0
@@ -53,19 +54,7 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_arm_cap_flags)[idx];
 };
 
-enum
-{
-  HWCAP_ARM_SWP	      = 1 << 0,
-  HWCAP_ARM_HALF      = 1 << 1,
-  HWCAP_ARM_THUMB     = 1 << 2,
-  HWCAP_ARM_26BIT     = 1 << 3,
-  HWCAP_ARM_FAST_MULT = 1 << 4,
-  HWCAP_ARM_FPA       = 1 << 5,
-  HWCAP_ARM_VFP       = 1 << 6,
-  HWCAP_ARM_EDSP      = 1 << 7,
-
-  HWCAP_IMPORTANT = (HWCAP_ARM_HALF | HWCAP_ARM_FAST_MULT)
-};
+#define HWCAP_IMPORTANT		(HWCAP_ARM_HALF | HWCAP_ARM_FAST_MULT)
 
 static inline int
 __attribute__ ((unused))
