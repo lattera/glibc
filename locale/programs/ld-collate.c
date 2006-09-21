@@ -1295,7 +1295,7 @@ order for `%.*s' already defined at %s:%Zu"),
 	    {
 	    invalid_range:
 	      lr_error (ldfile, _("\
-`%s' and `%.*s' are no valid names for symbolic range"),
+`%s' and `%.*s' are not valid names for symbolic range"),
 			startp->name, (int) lento, endp->name);
 	      return;
 	    }

@@ -239,7 +239,7 @@ main (int argc, char *argv[])
 		  if (to_wrong)
 		    error (0, 0,
 			   _("\
-conversion from `%s' and to `%s' are not supported"),
+conversions from `%s' and to `%s' are not supported"),
 			   from_pretty, to_pretty);
 		  else
 		    error (0, 0,

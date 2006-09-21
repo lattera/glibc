@@ -328,7 +328,7 @@ argument to <%s> must be a single character"),
 
   if (tsearch (result, &known, &repertoire_compare) == NULL)
     /* Something went wrong.  */
-    WITH_CUR_LOCALE (error (0, errno, _("cannot safe new repertoire map")));
+    WITH_CUR_LOCALE (error (0, errno, _("cannot save new repertoire map")));
 
   return result;
 }

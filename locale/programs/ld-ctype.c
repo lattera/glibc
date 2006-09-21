@@ -1472,7 +1472,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
     {
     invalid_range:
       lr_error (ldfile,
-		_("`%s' and `%.*s' are no valid names for symbolic range"),
+		_("`%s' and `%.*s' are not valid names for symbolic range"),
 		last_str, (int) now->val.str.lenmb, nowstr);
       return;
     }

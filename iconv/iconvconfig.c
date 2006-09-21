@@ -339,7 +339,7 @@ main (int argc, char *argv[])
   if (status == 0)
     status = write_output ();
   else
-    error (1, 0, _("no output file produced because warning were issued"));
+    error (1, 0, _("no output file produced because warnings were issued"));
 
   return status;
 }

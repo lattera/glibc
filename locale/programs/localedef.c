@@ -288,7 +288,7 @@ cannot write output files to `%s'"), output_path));
     }
   else
     WITH_CUR_LOCALE (error (4, 0, _("\
-no output file produced because warning were issued")));
+no output file produced because warnings were issued")));
 
   /* This exit status is prescribed by POSIX.2 4.35.7.  */
   exit (error_message_count != 0);

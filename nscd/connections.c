@@ -1079,7 +1079,7 @@ cannot handle old request version %d; current version is %d"),
 	  {
 	    char buf[256];
 
-	    dbg_log (_("error getting callers id: %s"),
+	    dbg_log (_("error getting caller's id: %s"),
 		     strerror_r (errno, buf, sizeof (buf)));
 	    break;
 	  }

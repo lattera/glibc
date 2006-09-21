@@ -1,3 +1,44 @@
+2006-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* po/libc.pot: Regenerated.
+	* po/be.po: Updated.
+	* po/ca.po: Likewise.
+	* po/cs.po: Likewise.
+	* po/da.po: Likewise.
+	* po/de.po: Likewise.
+	* po/el.po: Likewise.
+	* po/en_GB.po: Likewise.
+	* po/es.po: Likewise.
+	* po/fi.po: Likewise.
+	* po/fr.po: Likewise.
+	* po/gl.po: Likewise.
+	* po/hr.po: Likewise.
+	* po/hu.po: Likewise.
+	* po/ja.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/nb.po: Likewise.
+	* po/nl.po: Likewise.
+	* po/pl.po: Likewise.
+	* po/pt_BR.po: Likewise.
+	* po/ru.po: Likewise.
+	* po/rw.po: Likewise.
+	* po/sk.po: Likewise.
+	* po/sv.po: Likewise.
+	* po/tr.po: Likewise.
+	* po/zh_CN.po: Likewise.
+	* po/zh_TW.po: Likewise.
+
+	[BZ #3137]
+	* iconv/iconv_prog.c (main): Fix spelling in error message.
+	* iconv/iconvconfig.c (main): Likewise.
+	* locale/programs/ld-collate.c (handle_ellipsis): Likewise.
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Likewise.
+	* locale/programs/localedef.c (main): Likewise.
+	* locale/programs/repertoire.c (repertoire_read): Likewise.
+	* timezone/zdump.c (main): Likewise.
+	* nscd/connections.c (handle_request): Fix spelling in log message.
+	Patch by Malcolm Parsons <malcolm.parsons@gmail.com>.
+
 2006-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/inet6_option.c: Also emit linker warnings for the RFC 2292

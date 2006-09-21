@@ -216,7 +216,7 @@ struct link_map
     /* Size of array allocated for 'l_scope'.  */
     size_t l_scope_max;
     /* This is an array defining the lookup scope for this link map.
-       There are at most three different scope lists.  */
+       There are initially at most three different scope lists.  */
     struct r_scope_elem **l_scope;
 
     /* A similar array, this time only with the local scope.  This is
