@@ -302,7 +302,7 @@ msgstr "Gufungura Ibisohoka IDOSIYE"
 
 #: iconv/iconv_prog.c:243
 #, fuzzy, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "Ihindurangero Bivuye Na Kuri OYA"
 
 #: iconv/iconv_prog.c:248
@@ -403,7 +403,7 @@ msgstr "kugirango Byose IDOSIYE"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
 #, fuzzy
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "Oya Ibisohoka IDOSIYE Iburira Byasohowe"
 
 #: iconv/iconvconfig.c:405
@@ -825,7 +825,7 @@ msgstr "%s:Urutonde OYA ku"
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, fuzzy, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s'Na."
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1823,7 +1823,7 @@ msgstr "Oya Cyangwa Agaciro"
 
 #: locale/programs/repertoire.c:332
 #, fuzzy
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "Gishya"
 
 #: locale/programs/repertoire.c:343
@@ -3440,7 +3440,7 @@ msgstr "%s:Ikoresha: ni Verisiyo v C"
 
 #: timezone/zdump.c:269
 #, fuzzy
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Bisanzwe Ibisohoka"
 
 #: timezone/zic.c:361
@@ -5785,7 +5785,7 @@ msgstr "Kwandika Igisubizo"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, fuzzy, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "Ikosa ID"
 
 #: nscd/connections.c:485

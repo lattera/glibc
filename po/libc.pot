@@ -1208,7 +1208,7 @@ msgstr ""
 
 #: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr ""
 
 #: iconv/iconv_prog.c:246
@@ -1295,7 +1295,7 @@ msgstr ""
 
 #: iconv/iconvconfig.c:342 locale/programs/localedef.c:290
 #, c-format
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr ""
 
 #: iconv/iconvconfig.c:428
@@ -1774,7 +1774,7 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:1297 locale/programs/ld-ctype.c:1475
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr ""
 
 #: locale/programs/ld-collate.c:1346 locale/programs/ld-collate.c:3737
@@ -2720,7 +2720,7 @@ msgstr ""
 
 #: locale/programs/repertoire.c:331
 #, c-format
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr ""
 
 #: locale/programs/repertoire.c:342
@@ -3637,7 +3637,7 @@ msgstr ""
 
 #: nscd/connections.c:1066
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr ""
 
 #: nscd/connections.c:1124 nscd/connections.c:1138
@@ -6012,7 +6012,7 @@ msgid "%s: wild -c argument %s\n"
 msgstr ""
 
 #: timezone/zdump.c:392
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr ""
 
 #: timezone/zdump.c:415

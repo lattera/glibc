@@ -259,7 +259,7 @@ msgstr "出力ファイルを開けません"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "`%s'からの変換と`%s'への変換はどちらもサポートされていません"
 
 #: iconv/iconv_prog.c:248
@@ -362,7 +362,7 @@ msgid "Prefix used for all file accesses"
 msgstr "全ファイルのアクセスにプレフィックスを使用します"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "警告が出されたためファイルに出力されませんでした"
 
 #: iconv/iconvconfig.c:405
@@ -737,7 +737,7 @@ msgstr "%s: シンボル範囲省略記号は`order_end'のすぐ後に続いてはいけません"
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' と `%.*s' はシンボルの範囲として不正な名前です"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1654,7 +1654,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "<Uxxxx> または <Uxxxxxxxx> 値が与えられませんでした"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "新しいレパートリマップは安全ではありません"
 
 #: locale/programs/repertoire.c:343
@@ -3075,7 +3075,7 @@ msgid "%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: 使用法 %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "エラーを標準出力に書き出し中"
 
 #: timezone/zic.c:361
@@ -5112,7 +5112,7 @@ msgstr "結果を書き込めません: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "呼び出しIDの取得でエラー: %s"
 
 #: nscd/connections.c:485

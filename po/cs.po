@@ -3709,7 +3709,7 @@ msgstr "koncový bod `...' je vìt¹í ne¾ poèáteèní"
 
 #: nscd/connections.c:357 nscd/connections.c:444
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "chyba pøi zji¹»ování id volajícího: %s"
 
 #: iconv/iconv_prog.c:193
@@ -4144,7 +4144,7 @@ msgid "no other keyword shall be specified when `copy' is used"
 msgstr "pøi pou¾ití `copy' není dovoleno pou¾ít ¾ádné jiné klíèové slovo"
 
 #: locale/programs/localedef.c:331
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "výstupní soubor nebyl vytvoøen, proto¾e se vyskytla varování"
 
 #: locale/programs/locfile.c:283 locale/programs/locfile.c:302

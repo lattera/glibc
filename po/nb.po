@@ -264,7 +264,7 @@ msgstr "kan ikke åpne utfil"
 
 #: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "konvertering fra «%s» til «%s» er ikke støttet"
 
 #: iconv/iconv_prog.c:246
@@ -366,7 +366,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Prefiks brukt for all filaksessering"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "på grunn av advarsler ble ingen utfil opprettet"
 
 #: iconv/iconvconfig.c:405
@@ -742,7 +742,7 @@ msgstr "%s: symbolsk område-ellipse må ikke følges direkte av «order_end»"
 
 #: locale/programs/ld-collate.c:1287 locale/programs/ld-ctype.c:1467
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "«%s» og «%.*s» er ulovlige navn for symbolsk område"
 
 #: locale/programs/ld-collate.c:1333 locale/programs/ld-collate.c:3712
@@ -1662,7 +1662,7 @@ msgstr "ingen <Uxxxx>- eller <Uxxxxxxxx>-verdi gitt"
 
 #: locale/programs/repertoire.c:332
 #, fuzzy
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "kan ikke lese ferdighetskart «%s»"
 
 #: locale/programs/repertoire.c:343
@@ -3148,7 +3148,7 @@ msgstr "%s: bruk er %s [ -v ] [ -c grense ] sonenavn ...\n"
 
 #: timezone/zdump.c:268
 #, fuzzy
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "%s: Feil ved skriving til standard ut "
 
 #: timezone/zic.c:365
@@ -5208,7 +5208,7 @@ msgstr "kan ikke skrive ut resultat: «%s»"
 
 #: nscd/connections.c:405 nscd/connections.c:499
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr ""
 
 #: nscd/connections.c:471

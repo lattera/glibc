@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1997-2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1997-2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -285,8 +285,12 @@
 	xor	reg,tmpreg,reg
 #  define PTR_MANGLE2(reg, tmpreg) \
 	xor	reg,tmpreg,reg
+#  define PTR_MANGLE3(destreg, reg, tmpreg) \
+	lwz	tmpreg,POINTER_GUARD(r2); \
+	xor	destreg,tmpreg,reg
 #  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
 #  define PTR_DEMANGLE2(reg, tmpreg) PTR_MANGLE2 (reg, tmpreg)
+#  define PTR_DEMANGLE3(destreg, reg, tmpreg) PTR_MANGLE3 (destreg, reg, tmpreg)
 # else
 #  define PTR_MANGLE(var) \
   (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())

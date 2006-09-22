@@ -261,7 +261,7 @@ msgstr "çıktı dosyası açılamıyor"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "`%s'den ve `%s'e dönüşüm desteklenmiyor"
 
 #: iconv/iconv_prog.c:248
@@ -366,7 +366,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Tüm dosya erişimlerinde kullanılan önek"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "uyarı yayınlandığından üretilen bir çıktı dosyası yok"
 
 #: iconv/iconvconfig.c:405
@@ -741,7 +741,7 @@ msgstr "%s: sembolik kapsam elipslerinin hemen ardından `order_end' gelmemelidi
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' ve `%.*s' sembolik kapsam için geçerli isimler değil"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1658,7 +1658,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "<Uxxxx> ya da <Uxxxxxxxx> değeri verilmeliydi"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "yeni repertuvar eşlemin doğruluğundan emin olunamaz "
 
 #: locale/programs/repertoire.c:343
@@ -3084,7 +3084,7 @@ msgstr ""
 "zamanDilimiİsmi ...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Standart çıktıya yazarken hata"
 
 #: timezone/zic.c:361
@@ -5122,7 +5122,7 @@ msgstr "sonuç yazılamıyor: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "çağrıcı kimliği alınırken hata: %s"
 
 #: nscd/connections.c:485

@@ -1870,7 +1870,7 @@ msgid "Error while talking to callback proc"
 msgstr ""
 
 #: timezone/zdump.c:268
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr ""
 
 #: inet/ruserpass.c:184
@@ -3828,7 +3828,7 @@ msgstr "`%1$s' definicija ne završava sa `END %1$s'"
 
 #: locale/programs/ld-collate.c:1281 locale/programs/ld-ctype.c:1455
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr ""
 
 #: elf/sprof.c:762
@@ -4117,7 +4117,7 @@ msgid "cannot read statistics data"
 msgstr "ne moogu pročitati statistike"
 
 #: locale/programs/repertoire.c:331
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr ""
 
 #: elf/dl-load.c:784
@@ -4339,7 +4339,7 @@ msgstr "enkoding izvornog teksta"
 
 #: nscd/connections.c:366 nscd/connections.c:460
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "greška pri dohvatu broja pozivatelja: %s"
 
 #: locale/programs/ld-collate.c:3032
@@ -4777,7 +4777,7 @@ msgid "no output digits defined and none of the standard names in the charmap"
 msgstr ""
 
 #: iconv/iconvconfig.c:308 locale/programs/localedef.c:236
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr ""
 
 #: locale/programs/charmap.c:493 locale/programs/charmap.c:673 locale/programs/charmap.c:769 locale/programs/repertoire.c:231

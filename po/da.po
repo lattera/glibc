@@ -259,7 +259,7 @@ msgstr "kan ikke åbne udfil"
 
 #: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "konvertering fra '%s' og til '%s' er ikke understøttet"
 
 #: iconv/iconv_prog.c:246
@@ -361,7 +361,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Præfiks brugt for alle filadgange"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "på grund af advarsler blev ingen udfil oprettet"
 
 #: iconv/iconvconfig.c:405
@@ -738,7 +738,7 @@ msgstr "%s: symbolsk interval-ellipse må ikke være fulgt umiddelbart af 'order_e
 
 #: locale/programs/ld-collate.c:1287 locale/programs/ld-ctype.c:1467
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "'%s' og '%.*s' er ikke gyldige navne for tegnområde"
 
 #: locale/programs/ld-collate.c:1333 locale/programs/ld-collate.c:3712
@@ -1639,7 +1639,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "ingen <Uxxxx>- eller <Uxxxxxxxx>-værdi givet"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "kan ikke gemme ny repertoiretabel"
 
 #: locale/programs/repertoire.c:343
@@ -3051,7 +3051,7 @@ msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: brug er %s [ -v ] [ -c grænse ] zonenavn ...\n"
 
 #: timezone/zdump.c:268
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Fejl ved skrivning til standard ud"
 
 #: timezone/zic.c:365
@@ -5073,7 +5073,7 @@ msgstr "kan ikke udskrive resultat: '%s'"
 
 #: nscd/connections.c:405 nscd/connections.c:499
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "fejl ved forespørgsel på opkaldets id: %s"
 
 #: nscd/connections.c:471

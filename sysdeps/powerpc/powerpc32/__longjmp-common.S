@@ -31,7 +31,11 @@
 ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
+#ifdef PTR_DEMANGLE
+	lwz r24,(JB_GPR1*4)(r3)
+#else
 	lwz r1,(JB_GPR1*4)(r3)
+#endif
 	lwz r0,(JB_LR*4)(r3)
 	lwz r14,((JB_GPRS+0)*4)(r3)
 	lwz r15,((JB_GPRS+1)*4)(r3)
@@ -41,8 +45,8 @@ ENTRY (BP_SYM (__longjmp))
 	lwz r19,((JB_GPRS+5)*4)(r3)
 	lwz r20,((JB_GPRS+6)*4)(r3)
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (r0, r25)
-	PTR_DEMANGLE2 (r1, r25)
+	PTR_DEMANGLE3 (r1, r24, r25)
+	PTR_DEMANGLE2 (r0, r25)
 #endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)

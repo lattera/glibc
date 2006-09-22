@@ -304,7 +304,7 @@ msgstr "Kann die Ausgabedatei nicht öffnen"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
 
 #: iconv/iconv_prog.c:248
@@ -406,7 +406,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Prefix für jeden Dateizugriff"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "Es wurde keine Ausgabedatei erzeugt, weil Warnungen ausgegeben wurden"
 
 #: iconv/iconvconfig.c:405
@@ -787,7 +787,7 @@ msgstr "%s: Das Symbol für Auslassungen darf nicht unmittelbar vor »order_end�
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "»%s« und »%.*s« sind ungültige Namen für eine symbolischen Zeichenbereich"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1716,7 +1716,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "Kein <Uxxxx> oder <Uxxxxxxxx> Wert angegeben"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "Kann die neue »repertoire«-Map »%s« nicht speichern"
 
 #: locale/programs/repertoire.c:343
@@ -3149,7 +3149,7 @@ msgid "%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: Syntax: %s [ --version ] [ -v ] [ -c cutoff ] Zonenname ...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Fehler beim Schreiben zur Standardausgabe"
 
 #: timezone/zic.c:361
@@ -5208,7 +5208,7 @@ msgstr "Das Ergebnis kann nicht geschrieben werden: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "Fehler beim Feststellen der Identität des Aufrufers: %s"
 
 #: nscd/connections.c:485

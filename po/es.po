@@ -302,7 +302,7 @@ msgstr "no se puede abrir el fichero de salida"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "no se admite la conversión de `%s' a `%s'"
 
 #: iconv/iconv_prog.c:248
@@ -411,7 +411,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Prefijo utilizado para todos los accesos a ficheros"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "no se ha producido ningún fichero de salida debido a la existencia de avisos"
 
 #: iconv/iconvconfig.c:405
@@ -798,7 +798,7 @@ msgstr "%s: el rango simbólico de la elipsis no debe estar directamente seguido 
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' y `%.*s' no son nombres válidos para el rango simbólico"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1748,7 +1748,7 @@ msgstr "no se ha dado ningún valor <Uxxxx> o <Uxxxxxxxx>"
 # No sé qué es eso del "repertoire map", pero creo que el repertoire
 # es una simple aclaración. sv
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "no se puede asegurar el nuevo repertorio"
 
 #: locale/programs/repertoire.c:343
@@ -3416,7 +3416,7 @@ msgid "%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: el modo de empleo es %s [ --version ] [ -v ] [ -c cutoff ] nombrezona ...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Error al escribir en la salida estándar"
 
 #: timezone/zic.c:361
@@ -5638,7 +5638,7 @@ msgstr "no se puede escribir el resultado: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "error al obtener el id de los llamantes: %s"
 
 #: nscd/connections.c:485

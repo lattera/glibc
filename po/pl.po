@@ -261,7 +261,7 @@ msgstr "nie mo¿na otworzyæ pliku wyj¶ciowego"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "konwersja z `%s' oraz do `%s' nie jest obs³ugiwana"
 
 #: iconv/iconv_prog.c:248
@@ -364,7 +364,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Prefiks u¿ywany przy ka¿dym dostêpie do pliku"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "nie utworzono pliku wyj¶ciowego, poniewa¿ wyst±pi³y ostrze¿enia"
 
 #: iconv/iconvconfig.c:405
@@ -743,7 +743,7 @@ msgstr "%s: wyrzutnia symbolicznego przedzia³u nie mo¿e byæ bezpo¶rednio przed `
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' i `%.*s' nie s± poprawnymi nazwami dla symbolicznego przedzia³u"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1662,7 +1662,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "nie podano ¿adnych warto¶ci <Uxxxx> lub <Uxxxxxxxx>"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "nie mo¿na zachowaæ nowej tablicy repertuaru"
 
 #: locale/programs/repertoire.c:343
@@ -3086,7 +3086,7 @@ msgid "%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: sk³adnia: %s [ --version ] [ -v ] [ -c rok ] nazwa_strefy...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "B³±d podczas pisania na standardowe wyj¶cie"
 
 #: timezone/zic.c:361
@@ -5129,7 +5129,7 @@ msgstr "nie mo¿na zapisaæ wyniku: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "b³±d podczas pobierania identyfikatorów wywo³uj±cych: %s"
 
 #: nscd/connections.c:485

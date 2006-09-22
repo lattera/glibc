@@ -261,7 +261,7 @@ msgstr "kan uitvoerbestand niet openen"
 
 #: iconv/iconv_prog.c:243
 #, c-format
-msgid "conversion from `%s' and to `%s' are not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "conversie van `%s' en naar `%s' wordt niet ondersteund"
 
 #: iconv/iconv_prog.c:248
@@ -367,7 +367,7 @@ msgid "Prefix used for all file accesses"
 msgstr "Voorvoegsel gebruikt voor alle bestandstoegang"
 
 #: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "geen uitvoerbestand gemaakt omdat waarschuwing is gegeven"
 
 #: iconv/iconvconfig.c:405
@@ -742,7 +742,7 @@ msgstr "%s: weglatingsteken van symbolisch bereik mag niet direct gevolgd worden
 
 #: locale/programs/ld-collate.c:1299 locale/programs/ld-ctype.c:1476
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' en `%.*s' zijn geen geldige namen voor een symbolisch bereik"
 
 #: locale/programs/ld-collate.c:1348 locale/programs/ld-collate.c:3737
@@ -1659,7 +1659,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "geen <Uxxxx> of <Uxxxxxxxx> waarde gegeven"
 
 #: locale/programs/repertoire.c:332
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "kan nieuwe repertoire afbeelding niet opslaan"
 
 #: locale/programs/repertoire.c:343
@@ -3080,7 +3080,7 @@ msgid "%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: gebruik is %s [ --version ] [ -v ] [ -c afkapwaarde ] zonenaam ...\n"
 
 #: timezone/zdump.c:269
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Fout bij schrijven naar standaard uitvoer"
 
 #: timezone/zic.c:361
@@ -5117,7 +5117,7 @@ msgstr "kan resultaat niet schrijven: %s"
 
 #: nscd/connections.c:392 nscd/connections.c:514
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "fout bij opvragen ID van aanroeper: %s"
 
 #: nscd/connections.c:485

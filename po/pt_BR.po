@@ -323,7 +323,7 @@ msgstr "%s: Erro escrevendo %s\n"
 
 #: timezone/zdump.c:266
 #, c-format
-msgid "%s: Error writing standard output "
+msgid "%s: Error writing to standard output "
 msgstr "%s: Erro escrevendo para saída padrão "
 
 #: timezone/zic.c:841
@@ -3642,7 +3642,7 @@ msgid "no other keyword shall be specified when `copy' is used"
 msgstr "nehuma outra palavra-chave deve ser especificada quando `copy' é usado"
 
 #: locale/programs/localedef.c:334
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "nenhum arquivo de saída foi produzido porque avisos foram emitidos"
 
 #: locale/programs/locfile.c:283 locale/programs/locfile.c:301

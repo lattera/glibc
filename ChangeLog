@@ -1,3 +1,15 @@
+2006-09-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3225]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (PTR_MANGLE3,
+	PTR_DEMANGLE3): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h (PTR_MANGLE3,
+	PTR_DEMANGLE3): Likewise.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S (__longjmp): Use them.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S (__longjmp): Likewise.
+
 2006-09-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* po/libc.pot: Regenerated.
