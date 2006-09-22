@@ -1,3 +1,7 @@
+2006-09-22  Khem Raj  <kraj@mvista.com>
+
+	* sysdeps/unix/sysv/linux/arm/fxstatat.c: New file.
+
 2006-09-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (_dl_arm_cap_flags):
