@@ -21,15 +21,7 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
-#ifdef STAT_IS_KERNEL_STAT
-
-/* Dummy.  */
-struct kernel_stat;
-
-#else
-
 #include <string.h>
-
 
 int
 __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
@@ -49,30 +41,43 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
 	/* Convert to current kernel version of `struct stat'.  */
 	buf->st_dev = kbuf->st_dev;
-	buf->st_pad1[0] = 0; buf->st_pad1[1] = 0; buf->st_pad1[2] = 0;
+	memset (&buf->st_pad1, 0, sizeof (buf->st_pad1));
 	buf->st_ino = kbuf->st_ino;
+	/* Check for overflow.  */
+	if (buf->st_ino != kbuf->st_ino)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-	buf->st_pad2[0] = 0; buf->st_pad2[1] = 0;
-	buf->st_pad3 = 0;
+	memset (&buf->st_pad2, 0, sizeof (buf->st_pad2));
 	buf->st_size = kbuf->st_size;
-	buf->st_blksize = kbuf->st_blksize;
-	buf->st_blocks = kbuf->st_blocks;
-
+	/* Check for overflow.  */
+	if (buf->st_size != kbuf->st_size)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	buf->st_pad3 = 0;
 	buf->st_atim.tv_sec = kbuf->st_atime_sec;
 	buf->st_atim.tv_nsec = kbuf->st_atime_nsec;
 	buf->st_mtim.tv_sec = kbuf->st_mtime_sec;
 	buf->st_mtim.tv_nsec = kbuf->st_mtime_nsec;
 	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
 	buf->st_ctim.tv_nsec = kbuf->st_ctime_nsec;
-
-	buf->st_pad5[0] = 0; buf->st_pad5[1] = 0;
-	buf->st_pad5[2] = 0; buf->st_pad5[3] = 0;
-	buf->st_pad5[4] = 0; buf->st_pad5[5] = 0;
-	buf->st_pad5[6] = 0; buf->st_pad5[7] = 0;
+	buf->st_blksize = kbuf->st_blksize;
+	buf->st_blocks = kbuf->st_blocks;
+	/* Check for overflow.  */
+	if (buf->st_blocks != kbuf->st_blocks)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	memset (&buf->st_pad5, 0, sizeof (buf->st_pad5));
       }
       break;
 
@@ -97,14 +102,14 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	struct stat64 *buf = ubuf;
 
 	buf->st_dev = kbuf->st_dev;
-	buf->st_pad1[0] = 0; buf->st_pad1[1] = 0; buf->st_pad1[2] = 0;
+	memset (&buf->st_pad1, 0, sizeof (buf->st_pad1));
 	buf->st_ino = kbuf->st_ino;
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-	buf->st_pad2[0] = 0; buf->st_pad2[1] = 0; buf->st_pad2[2] = 0;
+	memset (&buf->st_pad2, 0, sizeof (buf->st_pad2));
 	buf->st_pad3 = 0;
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
@@ -117,10 +122,7 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
 	buf->st_ctim.tv_nsec = kbuf->st_ctime_nsec;
 
-	buf->st_pad4[0] = 0; buf->st_pad4[1] = 0;
-	buf->st_pad4[2] = 0; buf->st_pad4[3] = 0;
-	buf->st_pad4[4] = 0; buf->st_pad4[5] = 0;
-	buf->st_pad4[6] = 0; buf->st_pad4[7] = 0;
+	memset (&buf->st_pad4, 0, sizeof (buf->st_pad4));
       }
       break;
 
@@ -136,4 +138,65 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 #endif
 }
 
-#endif /* ! STAT_IS_KERNEL_STAT */
+#if _MIPS_SIM == _ABIO32
+int
+__xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
+{
+  switch (vers)
+    {
+    case _STAT_VER_LINUX:
+      /* Convert current kernel version of `struct stat64' to
+	 `struct stat'.  The layout of the fields in the kernel's
+	 stat64 is the same as that in the user stat64; the only
+	 difference is that the latter has more trailing padding.  */
+      buf->st_dev = kbuf->st_dev;
+      memset (&buf->st_pad1, 0, sizeof (buf->st_pad1));
+      buf->st_ino = kbuf->st_ino;
+      /* Check for overflow.  */
+      if (buf->st_ino != kbuf->st_ino)
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+      buf->st_mode = kbuf->st_mode;
+      buf->st_nlink = kbuf->st_nlink;
+      buf->st_uid = kbuf->st_uid;
+      buf->st_gid = kbuf->st_gid;
+      buf->st_rdev = kbuf->st_rdev;
+      memset (&buf->st_pad2, 0, sizeof (buf->st_pad2));
+      buf->st_size = kbuf->st_size;
+      /* Check for overflow.  */
+      if (buf->st_size != kbuf->st_size)
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+      buf->st_pad3 = 0;
+      buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
+      buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
+      buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
+      buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
+      buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
+      buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
+      buf->st_blksize = kbuf->st_blksize;
+      buf->st_blocks = kbuf->st_blocks;
+      /* Check for overflow.  */
+      if (buf->st_blocks != kbuf->st_blocks)
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+      memset (&buf->st_pad5, 0, sizeof (buf->st_pad5));
+      break;
+
+      /* If struct stat64 is different from struct stat then
+	 _STAT_VER_KERNEL does not make sense.  */
+    case _STAT_VER_KERNEL:
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  return 0;
+}
+#endif /* _MIPS_SIM == _ABIO32 */

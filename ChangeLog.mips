@@ -1,3 +1,14 @@
+2006-09-22  Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c: Remove STAT_IS_KERNEL_STAT
+	code.
+	(__xstat_conv): Use memset to clear padding arrays.  Check for
+	overflow.
+	(__xstat64_conv): Use memset to clear padding arrays.
+	(__xstat32_conv): New function.
+	* sysdeps/unix/sysv/linux/mips/mips32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstatat64.c: Likewise.
+
 2006-09-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu_control.h: If soft-float, don't use
