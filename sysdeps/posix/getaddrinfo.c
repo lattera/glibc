@@ -1390,8 +1390,16 @@ rfc3484_sort (const void *p1, const void *p2)
 	return 1;
     }
 
-  /* Rule 4: Prefer home addresses.
-     Another thing only the kernel can decide.  */
+  /* Rule 4: Prefer home addresses.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_homeaddress)
+	  && (a2->source_addr_flags & in6ai_homeaddress))
+	return -1;
+      if ((a1->source_addr_flags & in6ai_homeaddress)
+	  && !(a2->source_addr_flags & in6ai_homeaddress))
+	return 1;
+    }
 
   /* Rule 5: Prefer matching label.  */
   if (a1->got_source_addr)

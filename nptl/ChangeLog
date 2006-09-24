@@ -1,3 +1,9 @@
+2006-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3251]
+	* descr.h (ENQUEUE_MUTEX_BOTH): Add cast to avoid warning.
+	Patch by Petr Baudis.
+
 2006-09-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-kill4.c (do_test): Explicitly set tf thread's stack size.

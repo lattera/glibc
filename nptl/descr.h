@@ -201,7 +201,7 @@ struct pthread
     mutex->__data.__list.__next						      \
       = THREAD_GETMEM (THREAD_SELF, robust_list.__next);		      \
     THREAD_SETMEM (THREAD_SELF, robust_list.__next,			      \
-		   ((uintptr_t) &mutex->__data.__list) | val);		      \
+		   (void *) (((uintptr_t) &mutex->__data.__list) | val));     \
   } while (0)
 # define DEQUEUE_MUTEX(mutex) \
   do {									      \

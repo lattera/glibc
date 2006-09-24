@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2006-08-14
+GNU C Library NEWS -- history of user-visible changes.  2006-09-24
 Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -8,7 +8,8 @@ using `glibc' in the "product" field.
 Version 2.5
 
 * For Linux, the sorting of addresses returned by getaddrinfo now also
-  handles rules 3 and 7 from RFC 3484.  Implemented by Ulrich Drepper.
+  handles rules 3, 4, and 7 from RFC 3484.  I.e., all rules are handled.
+  Implemented by Ulrich Drepper.
 
 * Allow system admin to configure getaddrinfo with the /etc/gai.conf file.
   Implemented by Ulrich Drepper.
@@ -20,7 +21,7 @@ Version 2.5
 * For sites with broken group and/or passwd database, the auto-propagate
   option of nscd can prevent creating ID lookup entries from the results
   of a name lookup and vice versa.   This usually is no problem but some
-  site might have problems with default behavior.
+  site might have problems with the default behavior.
   Implemented by Ulrich Drepper.
 
 * Iterating over entire database in NIS can be slow.  With the

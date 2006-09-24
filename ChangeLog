@@ -1,3 +1,12 @@
+2006-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Implement rule 4,
+	home addresses.
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Recognize
+	IFA_F_HOMEADDRESS flag for interfaces.
+	* include/ifaddrs.h (struct in6addrinfo): Define
+	in6ai_homeaddress.
+
 2006-09-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3225]

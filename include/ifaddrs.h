@@ -10,7 +10,8 @@ struct in6addrinfo
 {
   enum {
     in6ai_deprecated = 1,
-    in6ai_temporary = 2
+    in6ai_temporary = 2,
+    in6ai_homeaddress = 4
   } flags;
   uint32_t addr[4];
 };

@@ -38,6 +38,9 @@
 #ifndef IFA_F_TEMPORARY
 # define IFA_F_TEMPORARY IFA_F_SECONDARY
 #endif
+#ifndef IFA_F_HOMEADDRESS
+# define IFA_F_HOMEADDRESS 0
+#endif
 
 
 static int
@@ -124,7 +127,9 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 		case AF_INET6:
 		  *seen_ipv6 = true;
 
-		  if (ifam->ifa_flags & (IFA_F_DEPRECATED | IFA_F_TEMPORARY))
+		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
+					 | IFA_F_TEMPORARY
+					 | IFA_F_HOMEADDRESS))
 		    {
 		      struct rtattr *rta = IFA_RTA (ifam);
 		      size_t len = (nlmh->nlmsg_len
@@ -152,7 +157,10 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 					   ? in6ai_deprecated : 0)
 					  | ((ifam->ifa_flags
 					      & IFA_F_TEMPORARY)
-					     ? in6ai_temporary : 0));
+					     ? in6ai_temporary : 0)
+					  | ((ifam->ifa_flags
+					      & IFA_F_HOMEADDRESS)
+					     ? in6ai_homeaddress : 0));
 		      memcpy (newp->info.addr, address ?: local,
 			      sizeof (newp->info.addr));
 		      newp->next = in6ailist;
