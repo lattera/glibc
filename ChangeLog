@@ -1,3 +1,28 @@
+2006-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3252]
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c (fchownat): Handle only
+	fchownat syscall and __ASSUME_LCHOWN_SYSCALL case inline, call
+	__{,l}chown to handle the rest.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c (fchownat): Handle only
+	fchownat syscall and __ASSUME_32BITUIDS case inline, call
+	__{,l}chown to handle the rest.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchownat.c: Include
+	i386/fchownat.c.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/fchownat.c: Likewise.
+
+	[BZ #3253]
+	* posix/glob.c (glob_in_dir): Don't alloca one struct globlink at a
+	time, rather allocate increasingly bigger arrays of pointers, if
+	possible with alloca, if too large with malloc.
+
+2006-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Updated.
+
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Fix 2 typos.
+
 2006-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Implement rule 4,

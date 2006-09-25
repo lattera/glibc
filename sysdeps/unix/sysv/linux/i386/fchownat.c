@@ -30,33 +30,6 @@
 #include <linux/posix_types.h>
 #include <kernel-features.h>
 
-/*
-  In Linux 2.1.x the chown functions have been changed.  A new function lchown
-  was introduced.  The new chown now follows symlinks - the old chown and the
-  new lchown do not follow symlinks.
-  The new lchown function has the same number as the old chown had and the
-  new chown has a new number.  When compiling with headers from Linux > 2.1.8x
-  it's impossible to run this libc with older kernels.  In these cases libc
-  has therefore to route calls to chown to the old chown function.
-*/
-
-extern int __chown_is_lchown (const char *__file, uid_t __owner,
-			      gid_t __group);
-extern int __real_chown (const char *__file, uid_t __owner, gid_t __group);
-
-
-#if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
-/* Running under Linux > 2.1.80.  */
-
-# ifdef __NR_chown32
-#  if __ASSUME_32BITUIDS == 0
-/* This variable is shared with all files that need to check for 32bit
-   uids.  */
-extern int __libc_missing_32bit_uids;
-#  endif
-# endif /* __NR_chown32 */
-#endif
-
 
 int
 fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
@@ -105,92 +78,33 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       file = buf;
     }
 
+# if __ASSUME_32BITUIDS > 0
+  /* This implies __ASSUME_LCHOWN_SYSCALL.  */
   INTERNAL_SYSCALL_DECL (err);
 
-# if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
-#  if __ASSUME_LCHOWN_SYSCALL == 0
-  static int __libc_old_chown;
-
-#   ifdef __NR_chown32
-  if (__libc_missing_32bit_uids <= 0)
-    {
-      if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lchown32, err, 3, CHECK_STRING (file),
-				   owner, group);
-      else
-	result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file),
-				   owner, group);
-
-      if (!INTERNAL_SYSCALL_ERROR_P (result, err))
-	return result;
-      if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-	goto fail;
-
-      __libc_missing_32bit_uids = 1;
-    }
-#   endif /* __NR_chown32 */
-
-  if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
-      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  if (!__libc_old_chown && (flag & AT_SYMLINK_NOFOLLOW) == 0)
-    {
-      result = INTERNAL_SYSCALL (chown, err, 3, CHECK_STRING (file), owner,
-				 group);
-
-      if (!INTERNAL_SYSCALL_ERROR_P (result, err))
-	return result;
-      if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-	goto fail;
-
-      __libc_old_chown = 1;
-    }
-
-  result = INTERNAL_SYSCALL (lchown, err, 3, CHECK_STRING (file), owner,
-			     group);
-#  elif __ASSUME_32BITUIDS
-  /* This implies __ASSUME_LCHOWN_SYSCALL.  */
-  result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
-			     group);
-#  else
-  /* !__ASSUME_32BITUIDS && ASSUME_LCHOWN_SYSCALL  */
-#   ifdef __NR_chown32
-  if (__libc_missing_32bit_uids <= 0)
-    {
-      result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
-				 group);
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-	goto fail;
-
-      __libc_missing_32bit_uids = 1;
-    }
-#   endif /* __NR_chown32 */
-  if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
-      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  result = INTERNAL_SYSCALL (chown, err, 3, CHECK_STRING (file), owner, group);
-#  endif
-# else
-  result = INTERNAL_SYSCALL (chown, err, 3, CHECK_STRING (file), owner, group);
-# endif
+  if (flag & AT_SYMLINK_NOFOLLOW)
+    result = INTERNAL_SYSCALL (lchown32, err, 3, CHECK_STRING (file), owner,
+			       group);
+  else
+    result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
+			       group);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
-    goto fail;
+    {
+      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+      return -1;
+    }
+# else
+  /* Don't inline the rest to avoid unnecessary code duplication.  */
+  if (flag & AT_SYMLINK_NOFOLLOW)
+    result = __lchown (file, owner, group);
+  else
+    result = __chown (file, owner, group);
+  if (result < 0)
+    __atfct_seterrno (errno, fd, buf);
+# endif
 
   return result;
 
- fail:
-  __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-  return -1;
 #endif
 }

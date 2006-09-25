@@ -50,7 +50,7 @@ __lrintl (long double x)
     {
       w = two112[sx] + x;
       t = w - two112[sx];
-      GET_LDOUBLE_WORDS64 (i0, i1, x);
+      GET_LDOUBLE_WORDS64 (i0, i1, t);
       j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
       i0 &= 0x0000ffffffffffffLL;
       i0 |= 0x0001000000000000LL;
@@ -65,7 +65,7 @@ __lrintl (long double x)
 	{
 	  w = two112[sx] + x;
 	  t = w - two112[sx];
-	  GET_LDOUBLE_WORDS64 (i0, i1, x);
+	  GET_LDOUBLE_WORDS64 (i0, i1, t);
 	  j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
 	  i0 &= 0x0000ffffffffffffLL;
 	  i0 |= 0x0001000000000000LL;

@@ -264,8 +264,8 @@ ldouble: 1
 Test "Real part of: clog10 (0.75 + 1.25 i) == 0.163679467193165171449476605077428975 + 0.447486970040493067069984724340855636 i":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 Test "Imaginary part of: clog10 (3 + inf i) == inf + pi/2*log10(e) i":
 double: 1
 float: 1
@@ -364,6 +364,8 @@ ldouble: 2
 Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
@@ -739,6 +741,9 @@ idouble: 1
 ifloat: 1
 
 # y0
+Test "y0 (0.125) == -1.38968062514384052915582277745018693":
+ildouble: 1
+ldouble: 1
 Test "y0 (0.75) == -0.137172769385772397522814379396581855":
 ildouble: 1
 ldouble: 1
@@ -800,6 +805,9 @@ ildouble: 2
 ldouble: 2
 
 # yn
+Test "yn (0, 0.125) == -1.38968062514384052915582277745018693":
+ildouble: 1
+ldouble: 1
 Test "yn (0, 0.75) == -0.137172769385772397522814379396581855":
 ildouble: 1
 ldouble: 1
@@ -1066,8 +1074,8 @@ ldouble: 1
 Function: Real part of "clog10":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "clog10":
 double: 1

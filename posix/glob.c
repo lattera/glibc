@@ -1090,15 +1090,24 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 {
   size_t dirlen = strlen (directory);
   void *stream = NULL;
-  struct globlink
+  struct globnames
     {
-      struct globlink *next;
-      char *name;
+      struct globnames *next;
+      size_t count;
+      char *name[64];
     };
-  struct globlink *names = NULL;
-  size_t nfound;
+#define INITIAL_COUNT sizeof (init_names.name) / sizeof (init_names.name[0])
+  struct globnames init_names;
+  struct globnames *names = &init_names;
+  struct globnames *names_alloca = &init_names;
+  size_t nfound = 0;
+  size_t allocasize = sizeof (init_names);
+  size_t cur = 0;
   int meta;
   int save;
+
+  init_names.next = NULL;
+  init_names.count = INITIAL_COUNT;
 
   meta = __glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE));
   if (meta == 0 && (flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
@@ -1107,7 +1116,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	 characters and we must not return an error therefore the
 	 result will always contain exactly one name.  */
       flags |= GLOB_NOCHECK;
-      nfound = 0;
     }
   else if (meta == 0 &&
 	   ((flags & GLOB_NOESCAPE) || strchr (pattern, '\\') == NULL))
@@ -1128,8 +1136,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	/* We found this file to be existing.  Now tell the rest
 	   of the function to copy this name into the result.  */
 	flags |= GLOB_NOCHECK;
-
-      nfound = 0;
     }
   else
     {
@@ -1137,12 +1143,10 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	{
 	  /* This is a special case for matching directories like in
 	     "*a/".  */
-	  names = (struct globlink *) __alloca (sizeof (struct globlink));
-	  names->name = (char *) malloc (1);
-	  if (names->name == NULL)
+	  names->name[cur] = (char *) malloc (1);
+	  if (names->name[cur] == NULL)
 	    goto memory_error;
-	  names->name[0] = '\0';
-	  names->next = NULL;
+	  *names->name[cur++] = '\0';
 	  nfound = 1;
 	  meta = 0;
 	}
@@ -1157,7 +1161,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		  && ((errfunc != NULL && (*errfunc) (directory, errno))
 		      || (flags & GLOB_ERR)))
 		return GLOB_ABORTED;
-	      nfound = 0;
 	      meta = 0;
 	    }
 	  else
@@ -1168,7 +1171,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 			       | FNM_CASEFOLD
 #endif
 			       );
-	      nfound = 0;
 	      flags |= GLOB_MAGCHAR;
 
 	      while (1)
@@ -1224,15 +1226,30 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 			  || link_exists_p (directory, dirlen, name, pglob,
 					    flags))
 			{
-			  struct globlink *new = (struct globlink *)
-			    __alloca (sizeof (struct globlink));
+			  if (cur == names->count)
+			    {
+			      struct globnames *newnames;
+			      size_t count = names->count * 2;
+			      size_t size = (sizeof (struct globnames)
+					     + ((count - INITIAL_COUNT)
+						* sizeof (char *)));
+			      allocasize += size;
+			      if (__libc_use_alloca (allocasize))
+				newnames = names_alloca = __alloca (size);
+			      else if ((newnames = malloc (size))
+				       == NULL)
+				goto memory_error;
+			      newnames->count = count;
+			      newnames->next = names;
+			      names = newnames;
+			      cur = 0;
+			    }
 			  len = NAMLEN (d);
-			  new->name = (char *) malloc (len + 1);
-			  if (new->name == NULL)
+			  names->name[cur] = (char *) malloc (len + 1);
+			  if (names->name[cur] == NULL)
 			    goto memory_error;
-			  *((char *) mempcpy (new->name, name, len)) = '\0';
-			  new->next = names;
-			  names = new;
+			  *((char *) mempcpy (names->name[cur++], name, len))
+			    = '\0';
 			  ++nfound;
 			}
 		    }
@@ -1245,59 +1262,76 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
     {
       size_t len = strlen (pattern);
       nfound = 1;
-      names = (struct globlink *) __alloca (sizeof (struct globlink));
-      names->next = NULL;
-      names->name = (char *) malloc (len + 1);
-      if (names->name == NULL)
+      names->name[cur] = (char *) malloc (len + 1);
+      if (names->name[cur] == NULL)
 	goto memory_error;
-      *((char *) mempcpy (names->name, pattern, len)) = '\0';
+      *((char *) mempcpy (names->name[cur++], pattern, len)) = '\0';
     }
 
+  int result = GLOB_NOMATCH;
   if (nfound != 0)
     {
-      char **new_gl_pathv;
+      result = 0;
 
+      char **new_gl_pathv;
       new_gl_pathv
 	= (char **) realloc (pglob->gl_pathv,
 			     (pglob->gl_pathc + pglob->gl_offs + nfound + 1)
 			     * sizeof (char *));
       if (new_gl_pathv == NULL)
-	goto memory_error;
-      pglob->gl_pathv = new_gl_pathv;
+	{
+	memory_error:
+	  while (1)
+	    {
+	      struct globnames *old = names;
+	      for (size_t i = 0; i < cur; ++i)
+		free (names->name[i]);
+	      names = names->next;
+	      if (names == NULL)
+		break;
+	      cur = names->count;
+	      if (old == names_alloca)
+		names_alloca = names;
+	      else
+		free (old);
+	    }
+	  result = GLOB_NOSPACE;
+	}
+      else
+	{
+	  while (1)
+	    {
+	      struct globnames *old = names;
+	      for (size_t i = 0; i < cur; ++i)
+		new_gl_pathv[pglob->gl_offs + pglob->gl_pathc++]
+		  = names->name[i];
+	      names = names->next;
+	      if (names == NULL)
+		break;
+	      cur = names->count;
+	      if (old == names_alloca)
+		names_alloca = names;
+	      else
+		free (old);
+	    }
 
-      for (; names != NULL; names = names->next)
-	pglob->gl_pathv[pglob->gl_offs + pglob->gl_pathc++] = names->name;
-      pglob->gl_pathv[pglob->gl_offs + pglob->gl_pathc] = NULL;
+	  pglob->gl_pathv = new_gl_pathv;
 
-      pglob->gl_flags = flags;
+	  pglob->gl_pathv[pglob->gl_offs + pglob->gl_pathc] = NULL;
+
+	  pglob->gl_flags = flags;
+	}
     }
 
-  save = errno;
   if (stream != NULL)
     {
+      save = errno;
       if (flags & GLOB_ALTDIRFUNC)
 	(*pglob->gl_closedir) (stream);
       else
 	closedir (stream);
+      __set_errno (save);
     }
-  __set_errno (save);
 
-  return nfound == 0 ? GLOB_NOMATCH : 0;
-
- memory_error:
-  {
-    int save = errno;
-    if (flags & GLOB_ALTDIRFUNC)
-      (*pglob->gl_closedir) (stream);
-    else
-      closedir (stream);
-    __set_errno (save);
-  }
-  while (names != NULL)
-    {
-      if (names->name != NULL)
-	free (names->name);
-      names = names->next;
-    }
-  return GLOB_NOSPACE;
+  return result;
 }

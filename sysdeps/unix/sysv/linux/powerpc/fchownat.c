@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,143 +81,30 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       file = buf;
     }
 
+# if __ASSUME_LCHOWN_SYSCALL
   INTERNAL_SYSCALL_DECL (err);
 
-# if __ASSUME_LCHOWN_SYSCALL
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lchown, err, 3, file, owner, group);
   else
     result = INTERNAL_SYSCALL (chown, err, 3, file, owner, group);
-# else
-  char link[PATH_MAX + 2];
-  char path[2 * PATH_MAX + 4];
-  int loopct;
-  size_t filelen;
-  static int libc_old_chown = 0 /* -1=old linux, 1=new linux, 0=unknown */;
-
-  if (libc_old_chown == 1)
-    {
-      if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lchown, err, 3, __ptrvalue (file), owner,
-				   group);
-      else
-	result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
-				   group);
-      goto out;
-    }
-
-#  ifdef __NR_lchown
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    {
-      result = INTERNAL_SYSCALL (lchown, err, 3, __ptrvalue (file), owner,
-				 group);
-      goto out;
-    }
-
-  if (libc_old_chown == 0)
-    {
-      result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
-				 group);
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      if (INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-	{
-	  libc_old_chown = 1;
-	  goto fail;
-	}
-      libc_old_chown = -1;
-    }
-#  else
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    {
-      result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
-				 group);
-      goto out;
-    }
-#  endif
-
-  result = __readlink (file, link, PATH_MAX + 1);
-  if (result == -1)
-    {
-#  ifdef __NR_lchown
-      result = INTERNAL_SYSCALL (lchown, err, 3, __ptrvalue (file), owner,
-				 group);
-#  else
-      result = INTERNAL_SYSCALL (chown, err, 3, __ptrvalue (file), owner,
-				 group);
-#  endif
-      goto out;
-    }
-
-  filelen = strlen (file) + 1;
-  if (filelen > sizeof (path))
-    {
-      errno = ENAMETOOLONG;
-      return -1;
-    }
-  memcpy (path, file, filelen);
-
-  /* 'The system has an arbitrary limit...'  In practise, we'll hit
-     ENAMETOOLONG before this, usually.  */
-  for (loopct = 0; loopct < 128; ++loopct)
-    {
-      size_t linklen;
-
-      if (result >= PATH_MAX + 1)
-	{
-	  errno = ENAMETOOLONG;
-	  return -1;
-	}
-
-      link[result] = 0;  /* Null-terminate string, just-in-case.  */
-
-      linklen = strlen (link) + 1;
-
-      if (link[0] == '/')
-	memcpy (path, link, linklen);
-      else
-	{
-	  filelen = strlen (path);
-
-	  while (filelen > 1 && path[filelen - 1] == '/')
-	    --filelen;
-	  while (filelen > 0 && path[filelen - 1] != '/')
-	    --filelen;
-	  if (filelen + linklen > sizeof (path))
-	    {
-	      errno = ENAMETOOLONG;
-	      return -1;
-	    }
-	  memcpy (path + filelen, link, linklen);
-	}
-
-      result = __readlink (path, link, PATH_MAX + 1);
-
-      if (result == -1)
-	{
-#  ifdef __NR_lchown
-	  result = INTERNAL_SYSCALL (lchown, err, 3, path, owner, group);
-#  else
-	  result = INTERNAL_SYSCALL (chown, err, 3, path, owner, group);
-#  endif
-	  goto out;
-	}
-    }
-  __set_errno (ELOOP);
-  return -1;
-
- out:
-# endif
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
-# if !__ASSUME_LCHOWN_SYSCALL
-    fail:
-# endif
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
-      result = -1;
+      return -1;
     }
+# else
+  /* Don't inline the rest to avoid unnecessary code duplication.  */
+  if (flag & AT_SYMLINK_NOFOLLOW)
+    result = __lchown (file, owner, group);
+  else
+    result = __chown (file, owner, group);
+  if (result < 0)
+    __atfct_seterrno (errno, fd, buf);
+# endif
 
   return result;
+
 #endif
 }

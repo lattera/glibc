@@ -1,1 +1,1 @@
-#include <sysdeps/unix/sysv/linux/sh/fchownat.c>
+#include <sysdeps/unix/sysv/linux/i386/fchownat.c>
