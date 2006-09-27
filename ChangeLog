@@ -1,3 +1,8 @@
+2006-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h: Move open_wmemstream prototype to ...
+	* wcsmbs/wchar.h: ... here.
+
 2006-09-25  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3252]

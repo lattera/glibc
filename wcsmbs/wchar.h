@@ -600,6 +600,13 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 
 /* Wide character I/O functions.  */
+
+#ifdef	__USE_GNU
+/* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
+   a wide character string.  */
+extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;
+#endif
+
 #if defined __USE_ISOC99 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 
