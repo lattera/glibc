@@ -91,7 +91,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	 doesn't use memcpy but instead copies each array element one
 	 by one.  */
       assert (sizeof (int32_t) == sizeof (gid_t));
-      assert (initgr_resp->ngrps > 0);
+      assert (initgr_resp->ngrps >= 0);
 
       /* Make sure we have enough room.  We always count GROUP in even
 	 though we might not end up adding it.  */

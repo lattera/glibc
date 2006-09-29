@@ -303,7 +303,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
   GL(dl_rtld_map).l_tls_modid = 1;
 # else
-  assert (info->l.l_tls_modid == 0);
 #  if NO_TLS_OFFSET != 0
   GL(dl_rtld_map).l_tls_offset = NO_TLS_OFFSET;
 #  endif
@@ -388,6 +387,9 @@ _dl_start (void *arg)
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
+# endif
+# if USE___THREAD
+  bootstrap_map.l_tls_modid = 0;
 # endif
 #endif
 

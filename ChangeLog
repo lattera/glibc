@@ -1,3 +1,17 @@
+2006-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3273]
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): It is OK to have
+	found no group members.
+	Patch by Petr Baudis.
+
+2006-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_dl_start_final): If not USE___THREAD, don't
+	assert bootstrap_map.l_tls_modid is zero.
+	(_dl_start): Initialize bootstrap_map.l_tls_modid to 0
+	if USE___THREAD.
+
 2006-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Move open_wmemstream prototype to ...
