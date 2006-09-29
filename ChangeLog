@@ -1,5 +1,7 @@
 2006-09-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-3166.def: Add Aaland Islands and Montenegro.
+
 	[BZ #3273]
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): It is OK to have
 	found no group members.
