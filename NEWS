@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2006-09-24
+GNU C Library NEWS -- history of user-visible changes.  2006-09-29
 Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -39,6 +39,8 @@ Version 2.5
 
 * Support for priority protected mutexes added by Jakub Jelinek.
 
+* New locales: nr_ZA, pa_PK, ca_AD, ca_FR, ca_IT, el_CY, tr_CY, as_IN,
+  or_IN, csb_PL, fy_NL, sr_ME.
 
 Version 2.4
 

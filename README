@@ -1,4 +1,4 @@
-This directory contains the version 2.4 release of the GNU C Library.
+This directory contains the version 2.5 release of the GNU C Library.
 
 The GNU C Library is the standard system C library for all GNU systems,
 and is an important part of what makes up a GNU system.  It provides the
@@ -59,7 +59,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 
 The code for other CPU configurations supported by volunteers outside of
 the core glibc maintenance effort is contained in the separate `ports'
-add-on.  You can find glibc-ports-2.4 distributed separately in the
+add-on.  You can find glibc-ports-2.5 distributed separately in the
 same place where you got the main glibc distribution files.
 Currently these configurations are known to work using the `ports' add-on:
 
