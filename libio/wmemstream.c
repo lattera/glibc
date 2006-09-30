@@ -20,6 +20,7 @@
 #include "strfile.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 
 struct _IO_FILE_wmemstream

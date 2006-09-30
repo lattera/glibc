@@ -1287,8 +1287,15 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	      for (size_t i = 0; i < cur; ++i)
 		free (names->name[i]);
 	      names = names->next;
+	      /* NB: we will not leak memory here if we exit without
+		 freeing the current block assigned to OLD.  At least
+		 the very first block is always allocated on the stack
+		 and this is the block assigned to OLD here.  */
 	      if (names == NULL)
-		break;
+		{
+		  assert (old == &init_names);
+		  break;
+		}
 	      cur = names->count;
 	      if (old == names_alloca)
 		names_alloca = names;
@@ -1306,8 +1313,15 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		new_gl_pathv[pglob->gl_offs + pglob->gl_pathc++]
 		  = names->name[i];
 	      names = names->next;
+	      /* NB: we will not leak memory here if we exit without
+		 freeing the current block assigned to OLD.  At least
+		 the very first block is always allocated on the stack
+		 and this is the block assigned to OLD here.  */
 	      if (names == NULL)
-		break;
+		{
+		  assert (old == &init_names);
+		  break;
+		}
 	      cur = names->count;
 	      if (old == names_alloca)
 		names_alloca = names;
