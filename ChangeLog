@@ -1,5 +1,10 @@
 2006-09-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wmemstream.c: Include <wchar.h>.
+	* libio/bug-wmemstream1.c: Likewise.
+	* libio/tst-wmemstream1.c: Likewise.
+	* libio/tst-wmemstream2.c: Likewise.
+
 	* version.h (RELEASE): Bump to 2.5.
 	* README: Regenerated.
 
