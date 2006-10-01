@@ -1,3 +1,7 @@
+2006-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_GB: Use more complete en_US data in LC_NAME.
+
 2006-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #39]
