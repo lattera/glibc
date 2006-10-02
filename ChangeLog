@@ -12,6 +12,9 @@
 
 2006-10-02  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Make mask and val
+	variables const to avoid compiler warnings.
+
 	* io/fts.c (fts_close): Remove redundant checks.
 	(fts_build): Likewise.
 	(fts_palloc): Likewise.
