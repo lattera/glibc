@@ -10,13 +10,6 @@ In GNU/Linux systems, the C library works with the Linux kernel to
 implement the operating system behavior seen by user applications.
 In GNU/Hurd systems, it works with a microkernel and Hurd servers.
 
-Version 2.4 is the first release after a long period of development, and
-introduces changes to the API and a new ABI for all configurations.  It
-has been tested and deployed in new production systems, but should still
-be considered somewhat experimental.  The stable 2.3 release series
-continues to be maintained, and implements a widely-deployed ABI.
-Version 2.3.6 is available, and we will release 2.3.7 with more bug fixes.
-
 The GNU C Library implements much of the POSIX.1 functionality in the
 GNU/Hurd system, using configurations i[34567]86-*-gnu.
 

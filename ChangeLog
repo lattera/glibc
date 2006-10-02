@@ -1,3 +1,8 @@
+2006-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Don't use prelinking if LD_DYNAMIC_WEAK is
+	used.
+
 2006-10-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/mem.c (mempool_alloc): Round array size to 16 bytes

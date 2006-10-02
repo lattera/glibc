@@ -2087,7 +2087,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
     }
 
   if (main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]
-      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0))
+      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0)
+      && ! __builtin_expect (GLRO(dl_dynamic_weak), 0))
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
