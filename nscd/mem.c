@@ -1,5 +1,5 @@
 /* Cache memory handling.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -480,12 +480,12 @@ mempool_alloc (struct database_dyn *db, size_t len)
 	{
 	  /* Try to resize the database.  Grow size of 1/8th.  */
 	  size_t oldtotal = (sizeof (struct database_pers_head)
-			     + db->head->module * sizeof (ref_t)
+			     + roundup (db->head->module * sizeof (ref_t), ALIGN)
 			     + db->head->data_size);
 	  size_t new_data_size = (db->head->data_size
 				  + MAX (2 * len, db->head->data_size / 8));
 	  size_t newtotal = (sizeof (struct database_pers_head)
-			     + db->head->module * sizeof (ref_t)
+			     + roundup (db->head->module * sizeof (ref_t), ALIGN)
 			     + new_data_size);
 	  if (newtotal > db->max_db_size)
 	    {

@@ -290,6 +290,7 @@ get_mapping (request_type type, const char *key,
       newp->data = ((char *) mapping + head.header_size
 		    + roundup (head.module * sizeof (ref_t), ALIGN));
       newp->mapsize = size;
+      newp->datasize = head.data_size;
       /* Set counter to 1 to show it is usable.  */
       newp->counter = 1;
 
@@ -340,7 +341,8 @@ __nscd_get_map_ref (request_type type, const char *name,
       /* If not mapped or timestamp not updated, request new map.  */
       if (cur == NULL
 	  || (cur->head->nscd_certainly_running == 0
-	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL)))
+	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL))
+	  || cur->head->data_size > cur->datasize)
 	cur = get_mapping (type, name,
 			   (struct mapped_database **) &mapptr->mapped);
 
@@ -365,14 +367,18 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 		     const struct mapped_database *mapped)
 {
   unsigned long int hash = __nis_hash (key, keylen) % mapped->head->module;
+  size_t datasize = mapped->datasize;
 
   ref_t work = mapped->head->array[hash];
-  while (work != ENDREF)
+  while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
 
-      if (type == here->type && keylen == here->len
-	  && memcmp (key, mapped->data + here->key, keylen) == 0)
+      if (type == here->type
+	  && keylen == here->len
+	  && here->key + here->len <= datasize
+	  && memcmp (key, mapped->data + here->key, keylen) == 0
+	  && here->packet + sizeof (struct datahead) <= datasize)
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
 	  const struct datahead *dh
@@ -380,8 +386,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 
 	  /* See whether we must ignore the entry or whether something
 	     is wrong because garbage collection is in progress.  */
-	  if (dh->usable && ((char *) dh + dh->allocsize
-			     <= (char *) mapped->head + mapped->mapsize))
+	  if (dh->usable && here->packet + dh->allocsize <= datasize)
 	    return dh;
 	}
 

@@ -258,6 +258,7 @@ struct mapped_database
   const char *data;
   size_t mapsize;
   int counter;		/* > 0 indicates it is usable.  */
+  size_t datasize;
 };
 #define NO_MAPPING ((struct mapped_database *) -1l)
 
