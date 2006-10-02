@@ -1189,7 +1189,7 @@ the rules of how to select the plural form.  Since the formula varies
 with every language this is the only viable solution except for
 hardcoding the information in the code (which still would require the
 possibility of extensions to not prevent the use of new languages).  The
-details are explained in the GNU @code{gettext} manual.  Here only a a
+details are explained in the GNU @code{gettext} manual.  Here only a
 bit of information is provided.
 
 The information about the plural form selection has to be stored in the
@@ -1590,7 +1590,7 @@ the user to select the message s/he wants to see.  S/He must understand
 them.
 
 The POSIX locale model uses the environment variables @code{LC_COLLATE},
-@code{LC_CTYPE}, @code{LC_MESSAGES}, @code{LC_MONETARY}, @code{NUMERIC},
+@code{LC_CTYPE}, @code{LC_MESSAGES}, @code{LC_MONETARY}, @code{LC_NUMERIC},
 and @code{LC_TIME} to select the locale which is to be used.  This way
 the user can influence lots of functions.  As we mentioned above the
 @code{gettext} functions also take advantage of this.

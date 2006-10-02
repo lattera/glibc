@@ -251,8 +251,7 @@ fts_close(sp)
 	/* Free up child linked list, sort array, path buffer. */
 	if (sp->fts_child)
 		fts_lfree(sp->fts_child);
-	if (sp->fts_array)
-		free(sp->fts_array);
+	free(sp->fts_array);
 	free(sp->fts_path);
 
 	/* Return to original directory, save errno if necessary. */
@@ -705,8 +704,7 @@ fts_build(sp, type)
 				 * structures already allocated.
 				 */
 mem1:				saved_errno = errno;
-				if (p)
-					free(p);
+				free(p);
 				fts_lfree(head);
 				(void)__closedir(dirp);
 				cur->fts_info = FTS_ERR;
@@ -1043,10 +1041,7 @@ fts_palloc(sp, more)
 	 * We limit fts_pathlen to USHRT_MAX to be safe in both cases.
 	 */
 	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= USHRT_MAX) {
-		if (sp->fts_path) {
-			free(sp->fts_path);
-			sp->fts_path = NULL;
-		}
+		free(sp->fts_path);
 		sp->fts_path = NULL;
 		__set_errno (ENAMETOOLONG);
 		return (1);
