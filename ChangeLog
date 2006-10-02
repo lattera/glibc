@@ -1,3 +1,10 @@
+2006-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3291]
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Include
+	errno.h, signal.h, unistd.h and sysdep-cancel.h.
+	(__sigprocmask): Define.
+
 2006-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): Don't use prelinking if LD_DYNAMIC_WEAK is
