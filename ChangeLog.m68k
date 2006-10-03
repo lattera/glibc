@@ -1,3 +1,7 @@
+2006-10-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/mremap.S: Accept fifth parameter.
+
 2006-10-03  Richard Sandiford  <richard@codesourcery.com>
 
 	* sysdeps/m68k/bits/mathdef.h: Moved from sysdeps/m68k to

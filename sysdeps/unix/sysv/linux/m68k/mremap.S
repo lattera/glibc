@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
    its value in register %a0.  */
 
 	.text
-PSEUDO (__mremap, mremap, 4)
+PSEUDO (__mremap, mremap, 5)
 	move.l %d0, %a0
 	rts
 PSEUDO_END (__mremap)
