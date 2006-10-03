@@ -26,7 +26,13 @@
 	TEXT
 ENTRY(__memchr)
 	/* Save the callee-saved registers we use.  */
+#ifdef __mcoldfire__
+	movel	R(d2),MEM_PREDEC(sp)
+	movel	R(d3),MEM_PREDEC(sp)
+	movel	R(d4),MEM_PREDEC(sp)
+#else
 	moveml	R(d2)-R(d4),MEM_PREDEC(sp)
+#endif
 
 	/* Get string pointer, character and length.  */
 	movel	MEM_DISP(sp,16),R(a0)
@@ -34,9 +40,15 @@ ENTRY(__memchr)
 	movel	MEM_DISP(sp,24),R(d4)
 
 	/* Check if at least four bytes left to search.  */
+#ifdef __mcoldfire__
+	subql	#4,R(d4)
+	bcs	L(L6)
+	addql	#4,R(d4)
+#else
 	moveql	#4,R(d1)
 	cmpl	R(d1),R(d4)
 	bcs	L(L6)
+#endif
 
 	/* Distribute the character to all bytes of a longword.  */
 	movel	R(d0),R(d1)
@@ -49,7 +61,11 @@ ENTRY(__memchr)
 	/* First search for the character one byte at a time until the
 	   pointer is aligned to a longword boundary.  */
 	movel	R(a0),R(d1)
+#ifdef __mcoldfire__
+	andl	#3,R(d1)
+#else
 	andw	#3,R(d1)
+#endif
 	beq	L(L1)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
@@ -57,8 +73,11 @@ ENTRY(__memchr)
 	subql	#1,R(d4)
 	beq	L(L7)
 
-	movel	R(a0),R(d1)
-	andw	#3,R(d1)
+#ifdef __mcoldfire__
+	subql	#3,R(d1)
+#else
+	subqw	#3,R(d1)
+#endif
 	beq	L(L1)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
@@ -66,8 +85,11 @@ ENTRY(__memchr)
 	subql	#1,R(d4)
 	beq	L(L7)
 
-	movel	R(a0),R(d1)
-	andw	#3,R(d1)
+#ifdef __mcoldfire__
+	addql	#1,R(d1)
+#else
+	addqw	#1,R(d1)
+#endif
 	beq	L(L1)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
@@ -177,19 +199,31 @@ L(L2:)
 
 L(L6:)
 	/* Search one byte at a time in the remaining less than 4 bytes.  */
+#ifdef __mcoldfire__
+	addql	#4,R(d4)
+#else
 	andw	#3,R(d4)
+#endif
 	beq	L(L7)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
 	addql	#1,R(a0)
 
+#ifdef __mcoldfire__
+	subql	#1,R(d4)
+#else
 	subqw	#1,R(d4)
+#endif
 	beq	L(L7)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
 	addql	#1,R(a0)
 
+#ifdef __mcoldfire__
+	subql	#1,R(d4)
+#else
 	subqw	#1,R(d4)
+#endif
 	beq	L(L7)
 	cmpb	MEM(a0),R(d0)
 	beq	L(L9)
@@ -198,7 +232,13 @@ L(L7:)
 	/* Return NULL.  */
 	clrl	R(d0)
 	movel	R(d0),R(a0)
+#ifdef __mcoldfire__
+	movel	MEM_POSTINC(sp),R(d4)
+	movel	MEM_POSTINC(sp),R(d3)
+	movel	MEM_POSTINC(sp),R(d2)
+#else
 	moveml	MEM_POSTINC(sp),R(d2)-R(d4)
+#endif
 	rts
 
 L(L8:)
@@ -221,7 +261,13 @@ L(L8:)
 	/* Otherwise the fourth byte must equal C.  */
 L(L9:)
 	movel	R(a0),R(d0)
+#ifdef __mcoldfire__
+	movel	MEM_POSTINC(sp),R(d4)
+	movel	MEM_POSTINC(sp),R(d3)
+	movel	MEM_POSTINC(sp),R(d2)
+#else
 	moveml	MEM_POSTINC(sp),R(d2)-R(d4)
+#endif
 	rts
 END(__memchr)
 

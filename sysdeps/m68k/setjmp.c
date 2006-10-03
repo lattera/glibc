@@ -53,11 +53,14 @@ __sigsetjmp (jmp_buf env, int savemask)
   /* Save floating-point (68881) registers FP0 through FP7.  */
   asm volatile ("fmovem%.x %/fp0-%/fp7, %0"
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
+#elif defined (__mcffpu__)
+  asm volatile ("fmovem %/fp0-%/fp7, %0"
+		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);
 }
 #if !defined BSD_SETJMP && !defined BSD__SETJMP
-hidden_def (__sigsetjmp)
+libc_hidden_def (__sigsetjmp)
 #endif

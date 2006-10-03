@@ -40,6 +40,7 @@
 
 */
 
+#ifndef __mcoldfire__
 /* Linux saves only the call-clobbered registers in the sigcontext.  We
    need to use a trampoline that saves the rest so that the C code can
    access them.  We use the sc_fpstate field, since the handler is not
@@ -65,6 +66,7 @@ catch_segfault:\n\
 }
 #define catch_segfault(a,b) \
   __attribute_used__ real_catch_segfault(a,b)
+#endif
 
 static void
 hexvalue (unsigned long int value, char *buf, size_t len)
@@ -81,6 +83,8 @@ register_dump (int fd, struct sigcontext *ctx)
   char fpregs[11][24];
   struct iovec iov[63], *next_iov = iov;
   unsigned long *p = (unsigned long *) ctx->sc_fpstate + 1;
+  unsigned long *pfp = (unsigned long *) ctx->sc_fpregs;
+  int i, j, fpreg_size;
 
 #define ADD_STRING(str) \
   next_iov->iov_base = (char *) (str); \
@@ -91,51 +95,59 @@ register_dump (int fd, struct sigcontext *ctx)
   next_iov->iov_len = (len); \
   ++next_iov
 
+#ifdef __mcoldfire__
+  fpreg_size = 16;
+#else
+  fpreg_size = 24;
+#endif
+
   /* Generate strings of register contents.  */
   hexvalue (ctx->sc_d0, regs[0], 8);
   hexvalue (ctx->sc_d1, regs[1], 8);
+#ifdef __mcoldfire__
+  hexvalue (ctx->sc_d2, regs[2], 8);
+  hexvalue (ctx->sc_d3, regs[3], 8);
+  hexvalue (ctx->sc_d4, regs[4], 8);
+  hexvalue (ctx->sc_d5, regs[5], 8);
+  hexvalue (ctx->sc_d6, regs[6], 8);
+  hexvalue (ctx->sc_d7, regs[7], 8);
+#else
   hexvalue (*p++, regs[2], 8);
   hexvalue (*p++, regs[3], 8);
   hexvalue (*p++, regs[4], 8);
   hexvalue (*p++, regs[5], 8);
   hexvalue (*p++, regs[6], 8);
   hexvalue (*p++, regs[7], 8);
+#endif
   hexvalue (ctx->sc_a0, regs[8], 8);
   hexvalue (ctx->sc_a1, regs[9], 8);
+#ifdef __mcoldfire__
+  hexvalue (ctx->sc_a2, regs[10], 8);
+  hexvalue (ctx->sc_a3, regs[11], 8);
+  hexvalue (ctx->sc_a4, regs[12], 8);
+  hexvalue (ctx->sc_a5, regs[13], 8);
+  hexvalue (ctx->sc_a6, regs[14], 8);
+#else
   hexvalue (*p++, regs[10], 8);
   hexvalue (*p++, regs[11], 8);
   hexvalue (*p++, regs[12], 8);
   hexvalue (*p++, regs[13], 8);
   hexvalue (*p++, regs[14], 8);
+#endif
   hexvalue (ctx->sc_usp, regs[15], 8);
   hexvalue (ctx->sc_pc, regs[16], 8);
   hexvalue (ctx->sc_sr, regs[17], 4);
   hexvalue (ctx->sc_mask, regs[18], 8);
   hexvalue (ctx->sc_formatvec & 0xfff, regs[19], 4);
-  hexvalue (ctx->sc_fpregs[0], fpregs[0], 8);
-  hexvalue (ctx->sc_fpregs[1], fpregs[0] + 8, 8);
-  hexvalue (ctx->sc_fpregs[2], fpregs[0] + 16, 8);
-  hexvalue (ctx->sc_fpregs[3], fpregs[1], 8);
-  hexvalue (ctx->sc_fpregs[4], fpregs[1] + 8, 8);
-  hexvalue (ctx->sc_fpregs[5], fpregs[1] + 16, 8);
-  hexvalue (*p++, fpregs[2], 8);
-  hexvalue (*p++, fpregs[2] + 8, 8);
-  hexvalue (*p++, fpregs[2] + 16, 8);
-  hexvalue (*p++, fpregs[3], 8);
-  hexvalue (*p++, fpregs[3] + 8, 8);
-  hexvalue (*p++, fpregs[3] + 16, 8);
-  hexvalue (*p++, fpregs[4], 8);
-  hexvalue (*p++, fpregs[4] + 8, 8);
-  hexvalue (*p++, fpregs[4] + 16, 8);
-  hexvalue (*p++, fpregs[5], 8);
-  hexvalue (*p++, fpregs[5] + 8, 8);
-  hexvalue (*p++, fpregs[5] + 16, 8);
-  hexvalue (*p++, fpregs[6], 8);
-  hexvalue (*p++, fpregs[6] + 8, 8);
-  hexvalue (*p++, fpregs[6] + 16, 8);
-  hexvalue (*p++, fpregs[7], 8);
-  hexvalue (*p++, fpregs[7] + 8, 8);
-  hexvalue (*p++, fpregs[7] + 16, 8);
+  for (i = 0; i < 2; i++)
+    for (j = 0; j < fpreg_size; j += 8)
+      hexvalue (*pfp++, fpregs[i] + j, 8);
+#ifdef __mcoldfire__
+  p = pfp;
+#endif
+  for (i = 2; i < 8; i++)
+    for (j = 0; j < fpreg_size; j += 8)
+      hexvalue (*p++, fpregs[i] + j, 8);
   hexvalue (ctx->sc_fpcntl[0], fpregs[8], 8);
   hexvalue (ctx->sc_fpcntl[1], fpregs[9], 8);
   hexvalue (ctx->sc_fpcntl[2], fpregs[10], 8);
@@ -184,21 +196,21 @@ register_dump (int fd, struct sigcontext *ctx)
   ADD_MEM (regs[19], 4);
 
   ADD_STRING ("\n\n  FP0: ");
-  ADD_MEM (fpregs[0], 24);
+  ADD_MEM (fpregs[0], fpreg_size);
   ADD_STRING ("  FP1: ");
-  ADD_MEM (fpregs[1], 24);
+  ADD_MEM (fpregs[1], fpreg_size);
   ADD_STRING ("\n  FP2: ");
-  ADD_MEM (fpregs[2], 24);
+  ADD_MEM (fpregs[2], fpreg_size);
   ADD_STRING ("  FP3: ");
-  ADD_MEM (fpregs[3], 24);
+  ADD_MEM (fpregs[3], fpreg_size);
   ADD_STRING ("\n  FP4: ");
-  ADD_MEM (fpregs[4], 24);
+  ADD_MEM (fpregs[4], fpreg_size);
   ADD_STRING ("  FP5: ");
-  ADD_MEM (fpregs[5], 24);
+  ADD_MEM (fpregs[5], fpreg_size);
   ADD_STRING ("\n  FP6: ");
-  ADD_MEM (fpregs[6], 24);
+  ADD_MEM (fpregs[6], fpreg_size);
   ADD_STRING ("  FP7: ");
-  ADD_MEM (fpregs[7], 24);
+  ADD_MEM (fpregs[7], fpreg_size);
   ADD_STRING ("\n  FPCR: ");
   ADD_MEM (fpregs[8], 8);
   ADD_STRING ("  FPSR: ");

@@ -29,7 +29,13 @@ __fesetenv (const fenv_t *envp)
      values which we do not want to come from the saved environment.
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
+#ifdef __mcoldfire__
+  __asm__ ("fmove%.l %/fpcr,%0" : "=dm" (temp.__control_register));
+  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (temp.__status_register));
+  __asm__ ("fmove%.l %/fpiar,%0" : "=dm" (temp.__instruction_address));
+#else
   __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*&temp));
+#endif
 
   temp.__status_register &= ~FE_ALL_EXCEPT;
   temp.__control_register &= ~((FE_ALL_EXCEPT << 6) | FE_UPWARD);
@@ -44,7 +50,16 @@ __fesetenv (const fenv_t *envp)
       temp.__status_register |= envp->__status_register & FE_ALL_EXCEPT;
     }
 
+#ifdef __mcoldfire__
+  __asm__ __volatile__ ("fmove%.l %0,%/fpiar"
+			:: "dm" (temp.__instruction_address));
+  __asm__ __volatile__ ("fmove%.l %0,%/fpcr"
+			:: "dm" (temp.__control_register));
+  __asm__ __volatile__ ("fmove%.l %0,%/fpsr"
+			:: "dm" (temp.__status_register));
+#else
   __asm__ __volatile__ ("fmovem%.l %0,%/fpcr/%/fpsr/%/fpiar" : : "m" (*&temp));
+#endif
 
   /* Success.  */
   return 0;

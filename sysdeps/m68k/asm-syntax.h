@@ -93,7 +93,9 @@
 #define cmpl cmp.l
 #define orl or.l
 #define clrl clr.l
+#define andw and.w
 #define eorw eor.w
+#define andl and.l
 #define lsrl lsr.l
 #define lsll lsl.l
 #define roxrl roxr.l
@@ -103,7 +105,10 @@
 #define addql addq.l
 #define subl sub.l
 #define subxl subx.l
+#define subqw subq.w
 #define subql subq.l
 #define negl neg.l
 #define mulul mulu.l
+#define tstw tst.w
+#define tstl tst.l
 #endif

@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _LINUX_M68K_SYSDEP_H
+#define _LINUX_M68K_SYSDEP_H 1
+
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/m68k/sysdep.h>
 
@@ -98,7 +101,7 @@
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
-    lea (rtld_errno, %pc), %a0;					      	      \
+    PCREL_OP (lea, rtld_errno, %a0, %a0);				      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \
     move.l &-1, %d0;							      \
@@ -293,3 +296,4 @@ SYSCALL_ERROR_LABEL:							      \
 #define ASM_ARGS_6	ASM_ARGS_5, "a" (_a0)
 
 #endif /* not __ASSEMBLER__ */
+#endif

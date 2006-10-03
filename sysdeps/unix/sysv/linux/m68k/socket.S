@@ -42,7 +42,7 @@
 .globl __socket
 ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
-	SINGLE_THREAD_P
+	SINGLE_THREAD_P (%a0)
 	jne 1f
 #endif
 

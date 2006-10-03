@@ -44,32 +44,42 @@ ENTRY(__strchrnul)
 	/* First search for the character one byte at a time until the
 	   pointer is aligned to a longword boundary.  */
 	movel	R(a0),R(d1)
+#ifdef __mcoldfire__
+	andl	#3,R(d1)
+#else
 	andw	#3,R(d1)
+#endif
 	beq	L(L1)
-	moveb	MEM(a0),R(d1)
-	cmpb	R(d0),R(d1)
+	moveb	MEM(a0),R(d2)
+	cmpb	R(d0),R(d2)
 	beq	L(L9)
-	tstb	R(d1)
+	tstb	R(d2)
 	beq	L(L9)
 	addql	#1,R(a0)
 
-	movel	R(a0),R(d1)
-	andw	#3,R(d1)
+#ifdef __mcoldfire__
+	subql	#3,R(d1)
+#else
+	subqw	#3,R(d1)
+#endif
 	beq	L(L1)
-	moveb	MEM(a0),R(d1)
-	cmpb	R(d0),R(d1)
+	moveb	MEM(a0),R(d2)
+	cmpb	R(d0),R(d2)
 	beq	L(L9)
-	tstb	R(d1)
+	tstb	R(d2)
 	beq	L(L9)
 	addql	#1,R(a0)
 
-	movel	R(a0),R(d1)
-	andw	#3,R(d1)
+#ifdef __mcoldfire__
+	addql	#1,R(d1)
+#else
+	addqw	#1,R(d1)
+#endif
 	beq	L(L1)
-	moveb	MEM(a0),R(d1)
-	cmpb	R(d0),R(d1)
+	moveb	MEM(a0),R(d2)
+	cmpb	R(d0),R(d2)
 	beq	L(L9)
-	tstb	R(d1)
+	tstb	R(d2)
 	beq	L(L9)
 	addql	#1,R(a0)
 

@@ -62,22 +62,35 @@ enum
 #define PT_SR PT_SR
   PT_PC = 18,
 #define PT_PC PT_PC
+
+#ifdef __mcoldfire__
   PT_FP0 = 21,
-#define PT_FP0 PT_FP0
+  PT_FP1 = 23,
+  PT_FP2 = 25,
+  PT_FP3 = 27,
+  PT_FP4 = 29,
+  PT_FP5 = 31,
+  PT_FP6 = 33,
+  PT_FP7 = 35,
+#else
+  PT_FP0 = 21,
   PT_FP1 = 24,
-#define PT_FP1 PT_FP1
   PT_FP2 = 27,
-#define PT_FP2 PT_FP2
   PT_FP3 = 30,
-#define PT_FP3 PT_FP3
   PT_FP4 = 33,
-#define PT_FP4 PT_FP4
   PT_FP5 = 36,
-#define PT_FP5 PT_FP5
   PT_FP6 = 39,
-#define PT_FP6 PT_FP6
   PT_FP7 = 42,
+#endif
+#define PT_FP0 PT_FP0
+#define PT_FP1 PT_FP1
+#define PT_FP2 PT_FP2
+#define PT_FP3 PT_FP3
+#define PT_FP4 PT_FP4
+#define PT_FP5 PT_FP5
+#define PT_FP6 PT_FP6
 #define PT_FP7 PT_FP7
+
   PT_FPCR = 45,
 #define PT_FPCR PT_FPCR
   PT_FPSR = 46,

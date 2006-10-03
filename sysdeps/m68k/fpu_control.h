@@ -30,9 +30,9 @@
  * 12     -> enable trap for OVFL exception
  * 11     -> enable trap for UNFL exception
  * 10     -> enable trap for DZ exception
- *  9     -> enable trap for INEX2 exception
- *  8     -> enable trap for INEX1 exception
- *  7-6   -> Precision Control
+ *  9     -> enable trap for INEX2 exception (INEX on Coldfire)
+ *  8     -> enable trap for INEX1 exception (IDE on Coldfire)
+ *  7-6   -> Precision Control (only bit 6 is used on Coldfire)
  *  5-4   -> Rounding Control
  *  3-0   -> zero (read as 0, write as 0)
  *
@@ -65,8 +65,12 @@
 #define _FPU_MASK_INEX2 0x0100
 
 /* precision control */
+#ifdef __mcoldfire__
+#define _FPU_DOUBLE   0x00
+#else
 #define _FPU_EXTENDED 0x00   /* RECOMMENDED */
 #define _FPU_DOUBLE   0x80
+#endif
 #define _FPU_SINGLE   0x40     /* DO NOT USE */
 
 /* rounding control */
@@ -75,7 +79,11 @@
 #define _FPU_RC_DOWN    0x20
 #define _FPU_RC_UP      0x30
 
+#ifdef __mcoldfire__
+#define _FPU_RESERVED 0xFFFF800F
+#else
 #define _FPU_RESERVED 0xFFFF000F  /* Reserved bits in fpucr */
+#endif
 
 
 /* Now two recommended fpucr */

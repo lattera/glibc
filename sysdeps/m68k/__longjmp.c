@@ -31,6 +31,9 @@ __longjmp (__jmp_buf env, int val)
   /* Restore the floating-point registers.  */
   asm volatile("fmovem%.x %0, %/fp0-%/fp7" :
 	       /* No outputs.  */ : "g" (env[0].__fpregs[0]));
+#elif defined (__mcffpu__)
+  asm volatile("fmovem %0, %/fp0-%/fp7" :
+	       /* No outputs.  */ : "m" (env[0].__fpregs[0]));
 #endif
 
   /* Put VAL in D0.  */

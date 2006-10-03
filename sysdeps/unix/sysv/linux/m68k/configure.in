@@ -1,0 +1,7 @@
+sinclude(./aclocal.m4)dnl Autoconf lossage
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+case $machine in
+m68k/coldfire)
+  arch_minimum_kernel=2.6.10
+  ;;
+esac

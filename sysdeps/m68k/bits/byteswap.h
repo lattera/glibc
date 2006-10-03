@@ -35,7 +35,7 @@
   ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) | \
    (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#if defined __GNUC__ && __GNUC__ >= 2 && !defined(__mcoldfire__)
 # define __bswap_32(x) \
   __extension__							\
   ({ unsigned int __bswap_32_v;					\

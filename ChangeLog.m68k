@@ -1,3 +1,304 @@
+2006-10-03  Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/m68k/bits/mathdef.h: Moved from sysdeps/m68k to
+	sysdeps/m68k/m680x0.
+	* sysdeps/m68k/m68020/submul_1.S: Likewise.
+	* sysdeps/m68k/m68020/Makefile: Likewise.
+	* sysdeps/m68k/m68020/mul_1.S: Likewise.
+	* sysdeps/m68k/m68020/wordcopy.S: Likewise.
+	* sysdeps/m68k/m68020/addmul_1.S: Likewise.
+	* sysdeps/m68k/m68020/bits/string.h: Likewise.
+	* sysdeps/m68k/m68020/bits/atomic.h: Likewise.
+	* sysdeps/m68k/sub_n.S: Likewise.
+	* sysdeps/m68k/add_n.S: Likewise.
+	* sysdeps/m68k/s_isnanl.c: Likewise.
+	* sysdeps/m68k/fpu/s_log1p.c: Likewise.
+	* sysdeps/m68k/fpu/e_asinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_cosl.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinff.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccos.c: Likewise.
+	* sysdeps/m68k/fpu/s_expm1.c: Likewise.
+	* sysdeps/m68k/fpu/slowexp.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2l.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccoshf.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogbl.c: Likewise.
+	* sysdeps/m68k/fpu/Makefile: Likewise.
+	* sysdeps/m68k/fpu/s_expm1f.c: Likewise.
+	* sysdeps/m68k/fpu/s_significandf.c: Likewise.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinh.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp.c: Likewise.
+	* sysdeps/m68k/fpu/s_remquof.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogbf.c: Likewise.
+	* sysdeps/m68k/fpu/s_truncl.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexpf.c: Likewise.
+	* sysdeps/m68k/fpu/s_cos.c: Likewise.
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/branred.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexpl.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2f.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalbl.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp2.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexpf.c: Likewise.
+	* sysdeps/m68k/fpu/mplog.c: Likewise.
+	* sysdeps/m68k/fpu/s_rintf.c: Likewise.
+	* sysdeps/m68k/fpu/s_tanh.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalbf.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinhl.c: Likewise.
+	* sysdeps/m68k/fpu/s_floorl.c: Likewise.
+	* sysdeps/m68k/fpu/k_tanf.c: Likewise.
+	* sysdeps/m68k/fpu/k_tanl.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmodf.c: Likewise.
+	* sysdeps/m68k/fpu/e_atanhf.c: Likewise.
+	* sysdeps/m68k/fpu/s_isnanf.c: Likewise.
+	* sysdeps/m68k/fpu/s_fpclassifyl.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/e_log2.c: Likewise.
+	* sysdeps/m68k/fpu/e_acosf.c: Likewise.
+	* sysdeps/m68k/fpu/s_log1pl.c: Likewise.
+	* sysdeps/m68k/fpu/e_log2f.c: Likewise.
+	* sysdeps/m68k/fpu/mpa.c: Likewise.
+	* sysdeps/m68k/fpu/t_exp.c: Likewise.
+	* sysdeps/m68k/fpu/e_acos.c: Likewise.
+	* sysdeps/m68k/fpu/s_expm1l.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccoshl.c: Likewise.
+	* sysdeps/m68k/fpu/s_sinf.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/k_cosl.c: Likewise.
+	* sysdeps/m68k/fpu/e_remainder.c: Likewise.
+	* sysdeps/m68k/fpu/s_trunc.c: Likewise.
+	* sysdeps/m68k/fpu/s_sincos.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbnl.c: Likewise.
+	* sysdeps/m68k/fpu/s_finitef.c: Likewise.
+	* sysdeps/m68k/fpu/s_tanhl.c: Likewise.
+	* sysdeps/m68k/fpu/s_lrintl.c: Likewise.
+	* sysdeps/m68k/fpu/slowpow.c: Likewise.
+	* sysdeps/m68k/fpu/mpexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_isnanl.c: Likewise.
+	* sysdeps/m68k/fpu/e_expf.c: Likewise.
+	* sysdeps/m68k/fpu/s_significand.c: Likewise.
+	* sysdeps/m68k/fpu/e_sinhf.c: Likewise.
+	* sysdeps/m68k/fpu/s_tanl.c: Likewise.
+	* sysdeps/m68k/fpu/s_tanhf.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexp.c: Likewise.
+	* sysdeps/m68k/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_nearbyint.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/sincos32.c: Likewise.
+	* sysdeps/m68k/fpu/e_sqrtl.c: Likewise.
+	* sysdeps/m68k/fpu/s_sincosl.c: Likewise.
+	* sysdeps/m68k/fpu/e_atan2f.c: Likewise.
+	* sysdeps/m68k/fpu/s_nearbyintf.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmodl.c: Likewise.
+	* sysdeps/m68k/fpu/e_coshf.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosl.c: Likewise.
+	* sysdeps/m68k/fpu/e_sqrt.c: Likewise.
+	* sysdeps/m68k/fpu/s_sin.c: Likewise.
+	* sysdeps/m68k/fpu/e_asin.c: Likewise.
+	* sysdeps/m68k/fpu/mptan.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp10f.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalb.c: Likewise.
+	* sysdeps/m68k/fpu/s_finitel.c: Likewise.
+	* sysdeps/m68k/fpu/e_log10.c: Likewise.
+	* sysdeps/m68k/fpu/k_sinl.c: Likewise.
+	* sysdeps/m68k/fpu/e_remainderl.c: Likewise.
+	* sysdeps/m68k/fpu/s_remquol.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalblnf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrint.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2.c: Likewise.
+	* sysdeps/m68k/fpu/e_asinl.c: Likewise.
+	* sysdeps/m68k/fpu/e_logl.c: Likewise.
+	* sysdeps/m68k/fpu/s_cosf.c: Likewise.
+	* sysdeps/m68k/fpu/s_rint.c: Likewise.
+	* sysdeps/m68k/fpu/s_ceill.c: Likewise.
+	* sysdeps/m68k/fpu/s_modfl.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinl.c: Likewise.
+	* sysdeps/m68k/fpu/s_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_sincosf.c: Likewise.
+	* sysdeps/m68k/fpu/dosincos.c: Likewise.
+	* sysdeps/m68k/fpu/e_powl.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintl.c: Likewise.
+	* sysdeps/m68k/fpu/e_expl.c: Likewise.
+	* sysdeps/m68k/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/fpu/s_tanf.c: Likewise.
+	* sysdeps/m68k/fpu/mpsqrt.c: Likewise.
+	* sysdeps/m68k/fpu/s_sinl.c: Likewise.
+	* sysdeps/m68k/fpu/mathimpl.h: Likewise.
+	* sysdeps/m68k/fpu/e_acosl.c: Likewise.
+	* sysdeps/m68k/fpu/e_cosh.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexpl.c: Likewise.
+	* sysdeps/m68k/fpu/s_fabsl.c: Likewise.
+	* sysdeps/m68k/fpu/halfulp.c: Likewise.
+	* sysdeps/m68k/fpu/s_modff.c: Likewise.
+	* sysdeps/m68k/fpu/s_isnan.c: Likewise.
+	* sysdeps/m68k/fpu/e_atan2.c: Likewise.
+	* sysdeps/m68k/fpu/s_fabs.c: Likewise.
+	* sysdeps/m68k/fpu/e_log10f.c: Likewise.
+	* sysdeps/m68k/fpu/k_cosf.c: Likewise.
+	* sysdeps/m68k/fpu/e_sinh.c: Likewise.
+	* sysdeps/m68k/fpu/s_truncf.c: Likewise.
+	* sysdeps/m68k/fpu/s_ceil.c: Likewise.
+	* sysdeps/m68k/fpu/s_log1pf.c: Likewise.
+	* sysdeps/m68k/fpu/e_logf.c: Likewise.
+	* sysdeps/m68k/fpu/mpatan.c: Likewise.
+	* sysdeps/m68k/fpu/s_csin.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp2l.c: Likewise.
+	* sysdeps/m68k/fpu/e_sinhl.c: Likewise.
+	* sysdeps/m68k/fpu/e_atan2l.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
+	* sysdeps/m68k/fpu/s_floorf.c: Likewise.
+	* sysdeps/m68k/fpu/e_log2l.c: Likewise.
+	* sysdeps/m68k/fpu/s_atanl.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintf.c: Likewise.
+	* sysdeps/m68k/fpu/k_sinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinhf.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_atanf.c: Likewise.
+	* sysdeps/m68k/fpu/s_floor.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp10l.c: Likewise.
+	* sysdeps/m68k/fpu/doasin.c: Likewise.
+	* sysdeps/m68k/fpu/s_rintl.c: Likewise.
+	* sysdeps/m68k/fpu/e_atanhl.c: Likewise.
+	* sysdeps/m68k/fpu/e_remainderf.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbln.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2l.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp10.c: Likewise.
+	* sysdeps/m68k/fpu/s_lrintf.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/s_lrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosf.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalblnl.c: Likewise.
+	* sysdeps/m68k/fpu/switch/Makefile: Likewise.
+	* sysdeps/m68k/fpu/switch/switch.c: Likewise.
+	* sysdeps/m68k/fpu/switch/68881-sw.h: Likewise.
+	* sysdeps/m68k/fpu/switch/bits/mathinline.h: Likewise.
+	* sysdeps/m68k/fpu/e_log.c: Likewise.
+	* sysdeps/m68k/fpu/s_nextafterl.c: Likewise.
+	* sysdeps/m68k/fpu/s_nearbyintl.c: Likewise.
+	* sysdeps/m68k/fpu/mpatan2.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/e_atanh.c: Likewise.
+	* sysdeps/m68k/fpu/s_remquo.c: Likewise.
+	* sysdeps/m68k/fpu/e_log10l.c: Likewise.
+	* sysdeps/m68k/fpu/s_ceilf.c: Likewise.
+	* sysdeps/m68k/fpu/s_fabsf.c: Likewise.
+	* sysdeps/m68k/fpu/s_significandl.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosh.c: Likewise.
+	* sysdeps/m68k/fpu/e_coshl.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbnf.c: Likewise.
+	* sysdeps/m68k/fpu/s_finite.c: Likewise.
+	* sysdeps/m68k/fpu/e_exp2f.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinfl.c: Likewise.
+	* sysdeps/m68k/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/m68k/fpu/e_powf.c: Likewise.
+	* sysdeps/m68k/rshift.S: Likewise.
+	* sysdeps/m68k/lshift.S: Likewise.
+	* sysdeps/m68k/strtold_l.c: Likewise.
+	* sysdeps/m68k/printf_fphex.c: Likewise.
+	* sysdeps/m68k/s_isinfl.c: Likewise.
+	* sysdeps/m68k/bits/huge_vall.h: Likewise.
+
+	* sysdeps/m68k/asm-syntax.h (andw, andl, subqw, tstw, tstl): New.
+	* sysdeps/m68k/bits/byteswap.h (__bswap32): Don't define for
+	Coldfire targets.
+	* sysdeps/m68k/bits/setjmp.h (__jmp_buf): Add a 64-byte
+	__fpregs field for Coldfire FPUs.
+	* sysdeps/m68k/dl-machine.h: Include sysdep.h.
+	(elf_machine_load_address): Use PCREL_OP.
+	(_dl_start_user): Likewise.
+	* sysdeps/m68k/dl-trampoline.S (_dl_runtime_resolve): Avoid jmp (%dN)
+	on Coldfire; push the target address and use rts instead.
+	(_dl_runtime_profile): Likewise.  Round up the frame size to longword
+	rather than word alignment.  Avoid dbra on Coldfire.  Avoid using
+	jsr (%d0) on Coldfire; push the return address and target address
+	and use rts instead.  Use fmovem.l rather than fmovem.x on Coldfire.
+	Add missing initialization of lrv_a0 and restore a0 from it after
+	calling _dl_call_pltexit.  Adjust the stack offsets of later data
+	accordingly, fixing a previously incorrect offset for the inregs
+	parameter.
+	* sysdeps/m68k/fpu/fegetenv.c (__fegetenv): Save the control
+	registers individually on Coldfire targets.
+	* sysdeps/m68k/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	Add missing libm_hidden_def.
+	* sysdeps/m68k/fpu/fesetenv.c (__fesetenv): Save and restore the
+	control registers individually on Coldfire targets.
+	* sysdeps/m68k/fpu/fesetround.c (fesetround): Add missing
+	libm_hidden_def.
+	* sysdeps/m68k/fpu_control.h: Add the Coldfire bit assignments to
+	the main comment.
+	(_FPU_DOUBLE): Define to 0 for Coldfire.
+	(_FPU_EXTENDED): Don't define for Coldfire.
+	(_FPU_RESERVED): Include bit 15 for Coldfire.
+	* sysdeps/m68k/Implies: Remove ieee754/ldbl-96.
+	* sysdeps/m68k/m680x0/Implies: Add it to this new file instead.
+	* sysdeps/m68k/ldsodefs.h: New file.
+	* sysdeps/m68k/__longjmp.c (__longjmp): Restore the floating-point
+	registers when using a Coldfire FPU.
+	* sysdeps/m68k/Makefile (long-double-fcts): Delete.
+	* sysdeps/m68k/m680x0/Makefile: Add it to this new file instead.
+	* sysdeps/m68k/memchr.S (__memchr): Add Coldfire code.  Avoid
+	unnecessary moves.
+	* sysdeps/m68k/preconfigure (m680?0): Add "m680x0" to $machine.
+	(m68k): Use the compiler to decide whether $machine should be
+	set to m68k/coldfire or m68k/m680x0/m68020.
+	* sysdeps/m68k/rawmemchr.S (__rawmemchr): Add Coldfire code.  Avoid
+	unnecessary moves.
+	* sysdeps/m68k/setjmp.c (__sigsetjmp): Save the floating-point
+	registers when using a Coldfire FPU.  Use libc_hidden_def rather
+	than hidden_def.
+	* sysdeps/m68k/strchrnul.S (__strchrnul): Add Coldfire code.  Avoid
+	unnecessary moves.
+	* sysdeps/m68k/strchr.S (strchr): Likewise.
+	* sysdeps/m68k/sysdep.h (PCREL_OP): Define.
+	* sysdeps/m68k/tst-audit.h: New file.
+	* sysdeps/m68k/wcpcpy.c: Likewise.
+	* sysdeps/m68k/wcpcpy_chk.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/configure.in: New file.
+	* sysdeps/unix/sysv/linux/m68k/configure: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S (__clone): Add Coldfire code.
+	* sysdeps/unix/sysv/linux/m68k/register-dump.h (real_catch_segfault):
+	Do not define on Coldfire.
+	(catch_segfault): Likewise.
+	(register_dump): Use the Coldfire-specific sigcontext fields to
+	display call-saved data and address registers (rather than the
+	data stored in sc_fpstate by real_catch_segfault).  Display 8-byte 
+	floating-point registers on Coldfire.
+	* sysdeps/unix/sysv/linux/m68k/socket.S (__socket): Pass a temporary
+	register to SINGLE_THREAD_P.
+	* sysdeps/unix/sysv/linux/m68k/sys/reg.h (PT_FP0): Redefine for
+	Coldfire.
+	(PT_FP1, PT_FP2, PT_FP3, PT_FP4, PT_FP5, PT_FP6, PT_FP7): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (fpregset): Sync field
+	order with linux.  Make f_fpregs an 8*2 array on Coldfire.
+	(ucontext): Sync field order with linux.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Guard against multiple
+	inclusion.
+	(SYSCALL_ERROR_HANDLER): Use PCREL_OP.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (oldgetrlimit): Delete.
+	(oldsetrlimit): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/syscalls.list: New file.
+	List oldgetrlimit and oldsetrlimit here instead.
+	* sysdeps/unix/sysv/linux/m68k/bits/sigcontext.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/bits/siginfo.h: Likewise.
+	* sysdeps/m68k/coldfire/bits/atomic.h: Likewise.
+	* sysdeps/m68k/coldfire/fpu/e_sqrt.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_fabs.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_fabsf.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_lrint.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_lrintf.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_rint.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_rintf.c: Likewise.
+	* sysdeps/m68k/coldfire/shlib-versions: Likewise.
+
 2006-02-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/m68k/preconfigure: New file.

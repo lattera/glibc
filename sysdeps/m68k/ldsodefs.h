@@ -1,7 +1,6 @@
-/* Set current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Run-time dynamic linker data structures for loaded ELF shared objects.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,22 +17,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#ifndef __LDSODEFS_H
 
-int
-fesetround (int round)
-{
-  fexcept_t fpcr;
+#include <elf.h>
 
-  if (round & ~FE_UPWARD)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
+struct La_m68k_regs;
+struct La_m68k_retval;
 
-  __asm__ ("fmove%.l %!,%0" : "=dm" (fpcr));
-  fpcr &= ~FE_UPWARD;
-  fpcr |= round;
-  __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
+#define ARCH_PLTENTER_MEMBERS						\
+    Elf32_Addr (*m68k_gnu_pltenter) (Elf32_Sym *, unsigned int,		\
+				     uintptr_t *, uintptr_t *,		\
+				     const struct La_m68k_regs *,	\
+				     unsigned int *, const char *name,  \
+				     long int *framesizep);
 
-  return 0;
-}
-libm_hidden_def (fesetround);
+#define ARCH_PLTEXIT_MEMBERS						\
+    unsigned int (*m68k_gnu_pltexit) (Elf32_Sym *, unsigned int,	\
+				      uintptr_t *, uintptr_t *,		\
+				      const struct La_m68k_regs *,	\
+				      struct La_m68k_retval *,		\
+				      const char *);
+
+#include_next <ldsodefs.h>
+
+#endif

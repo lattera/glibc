@@ -23,6 +23,7 @@
 #define ELF_MACHINE_NAME "m68k"
 
 #include <sys/param.h>
+#include <sysdep.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -48,7 +49,7 @@ static inline Elf32_Addr
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("lea _dl_start(%%pc), %0\n\t"
+  asm (PCREL_OP ("lea", "_dl_start", "%0", "%0", "%%pc") "\n\t"
        "sub.l _dl_start@GOT.w(%%a5), %0"
        : "=a" (addr));
   return addr;
@@ -130,7 +131,7 @@ _dl_start_user:\n\
 	move.l %d0, %a4\n\
 	| See if we were run as a command with the executable file\n\
 	| name as an extra leading argument.\n\
-	move.l _dl_skip_args(%pc), %d0\n\
+	" PCREL_OP ("move.l", "_dl_skip_args", "%d0", "%d0", "%pc") "\n\
 	| Pop the original argument count\n\
 	move.l (%sp)+, %d1\n\
 	| Subtract _dl_skip_args from it.\n\
@@ -143,12 +144,12 @@ _dl_start_user:\n\
 	pea 8(%sp, %d1*4)\n\
 	pea 8(%sp)\n\
 	move.l %d1, -(%sp)\n\
-	move.l _rtld_local(%pc), -(%sp)\n\
+	" PCREL_OP ("move.l", "_rtld_local", "-(%sp)", "%d0", "%pc") "\n\
 	jbsr _dl_init_internal@PLTPC\n\
 	addq.l #8, %sp\n\
 	addq.l #8, %sp\n\
 	| Pass our finalizer function to the user in %a1.\n\
-	lea _dl_fini(%pc), %a1\n\
+	" PCREL_OP ("lea", "_dl_fini", "%a1", "%a1", "%pc") "\n\
 	| Initialize %fp with the stack pointer.\n\
 	move.l %sp, %fp\n\
 	| Jump to the user's entry point.\n\

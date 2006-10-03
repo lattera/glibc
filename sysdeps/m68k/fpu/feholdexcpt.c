@@ -26,7 +26,13 @@ feholdexcept (fenv_t *envp)
   fexcept_t fpcr, fpsr;
 
   /* Store the environment.  */
+#ifdef __mcoldfire__
+  __asm__ ("fmove%.l %/fpcr,%0" : "=dm" (envp->__control_register));
+  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (envp->__status_register));
+  __asm__ ("fmove%.l %/fpiar,%0" : "=dm" (envp->__instruction_address));
+#else
   __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*envp));
+#endif
 
   /* Now clear all exceptions.  */
   fpsr = envp->__status_register & ~FE_ALL_EXCEPT;
@@ -37,3 +43,4 @@ feholdexcept (fenv_t *envp)
 
   return 0;
 }
+libm_hidden_def (feholdexcept);

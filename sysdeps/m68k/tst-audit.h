@@ -1,7 +1,7 @@
-/* Set current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Definitions for testing PLT entry/exit auditing.  m68k version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,22 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
-
-int
-fesetround (int round)
-{
-  fexcept_t fpcr;
-
-  if (round & ~FE_UPWARD)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
-
-  __asm__ ("fmove%.l %!,%0" : "=dm" (fpcr));
-  fpcr &= ~FE_UPWARD;
-  fpcr |= round;
-  __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
-
-  return 0;
-}
-libm_hidden_def (fesetround);
+#define pltenter la_m68k_gnu_pltenter
+#define pltexit la_m68k_gnu_pltexit
+#define La_regs La_m68k_regs
+#define La_retval La_m68k_retval
+#define int_retval lrv_d0

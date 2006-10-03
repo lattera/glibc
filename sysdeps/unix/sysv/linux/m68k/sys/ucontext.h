@@ -79,10 +79,14 @@ enum
 /* Structure to describe FPU registers.  */
 typedef struct fpregset
 {
-  int f_fpregs[8][3];
   int f_pcr;
   int f_psr;
   int f_fpiaddr;
+#ifdef __mcoldfire__
+  int f_fpregs[8][2];
+#else
+  int f_fpregs[8][3];
+#endif
 } fpregset_t;
 
 /* Context to describe whole processor state.  */
@@ -98,12 +102,12 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext
 {
-  unsigned long int uc_flags;
+  unsigned long uc_flags;
   struct ucontext *uc_link;
-  __sigset_t uc_sigmask;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  long int uc_filler[174];
+  unsigned long uc_filler[80];
+  __sigset_t uc_sigmask;
 } ucontext_t;
 
 #endif /* sys/ucontext.h */

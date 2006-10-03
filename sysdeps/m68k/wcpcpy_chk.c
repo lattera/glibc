@@ -1,7 +1,6 @@
-/* Set current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,22 +17,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+/* The generic version of this file assumes that __alignof__(wchar_t) ==
+   sizeof (wchar_t).  We therefore use this port-specific implementation
+   instead.  */
+#include <wchar.h>
 
-int
-fesetround (int round)
+/* Copy SRC to DEST, returning the address of the terminating L'\0' in
+   DEST.  Check for overflows.  */
+wchar_t *
+__wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  fexcept_t fpcr;
+  do
+    if (destlen-- == 0)
+      __chk_fail ();
+  while ((*dest++ = *src++));
 
-  if (round & ~FE_UPWARD)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
-
-  __asm__ ("fmove%.l %!,%0" : "=dm" (fpcr));
-  fpcr &= ~FE_UPWARD;
-  fpcr |= round;
-  __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
-
-  return 0;
+  return dest - 1;
 }
-libm_hidden_def (fesetround);

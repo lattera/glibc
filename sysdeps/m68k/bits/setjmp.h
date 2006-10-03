@@ -38,6 +38,8 @@ typedef struct
     /* There are eight floating point registers which
        are saved in IEEE 96-bit extended format.  */
     char __fpregs[8 * (96 / 8)];
+#elif defined __mcffpu__
+    char __fpregs[8 * (64 / 8)];
 #endif
 
   } __jmp_buf[1];
