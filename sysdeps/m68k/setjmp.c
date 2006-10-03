@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1997, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,17 +37,17 @@ __sigsetjmp (jmp_buf env, int savemask)
 		: : "m" (env[0].__jmpbuf[0].__dregs[0]));
 
   /* Save return address in place of register A0.  */
-  env[0].__jmpbuf[0].__aregs[0] = ((void **) &env)[-1];
+  env[0].__jmpbuf[0].__aregs[0] = __builtin_return_address (0);
 
   /* Save address registers A1 through A5.  */
   asm volatile ("movem%.l %/a1-%/a5, %0"
 		: : "m" (env[0].__jmpbuf[0].__aregs[1]));
 
   /* Save caller's FP, not our own.  */
-  env[0].__jmpbuf[0].__fp = ((void **) &env)[-2];
+  env[0].__jmpbuf[0].__fp = *(int **) __builtin_frame_address (0);
 
   /* Save caller's SP, not our own.  */
-  env[0].__jmpbuf[0].__sp = (void *) &env;
+  env[0].__jmpbuf[0].__sp = (int *) __builtin_frame_address (0) + 2;
 
 #if defined __HAVE_68881__ || defined __HAVE_FPU__
   /* Save floating-point (68881) registers FP0 through FP7.  */
@@ -58,8 +58,13 @@ __sigsetjmp (jmp_buf env, int savemask)
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 
+#if defined NOT_IN_libc && defined IS_IN_rtld
+  /* In ld.so we never save the signal mask.  */
+  return 0;
+#else
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);
+#endif
 }
 #if !defined BSD_SETJMP && !defined BSD__SETJMP
 libc_hidden_def (__sigsetjmp)

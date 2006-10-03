@@ -1,5 +1,8 @@
 2006-10-03  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/m68k/setjmp.c: Use __builtin_return_address and
+	__builtin_frame_address.  Don't call __sigjmp_save in ld.so.
+
 	* sysdeps/unix/sysv/linux/m68k/mremap.S: Accept fifth parameter.
 
 2006-10-03  Richard Sandiford  <richard@codesourcery.com>
