@@ -125,6 +125,6 @@ libnss_nisplus {
     _nss_nisplus_setetherent; _nss_nisplus_setgrent; _nss_nisplus_sethostent;
     _nss_nisplus_setnetent; _nss_nisplus_setnetgrent; _nss_nisplus_setprotoent;
     _nss_nisplus_setpwent; _nss_nisplus_setrpcent; _nss_nisplus_setservent;
-    _nss_nisplus_setspent;
+    _nss_nisplus_setspent; _nss_nisplus_initgroups_dyn;
   }
 }

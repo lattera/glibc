@@ -1,3 +1,20 @@
+2006-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_table.c (nis_list): Handle FOLLOW_PATH | ALL_RESULTS
+	when callback is NULL.
+
+	* nis/Versions (libnss_nisplus): Add
+	_nss_nisplus_initgroups_dyn@@GLIBC_PRIVATE.
+	* nis/Makefile (libnss_nisplus-routines): Add nisplus-initgroups.
+	* nis/nss_nisplus/nisplus-grp.c (tablename_val, tablename_len,
+	_nss_create_tablename): Rename to...
+	(grp_tablename_val, grp_tablename_len, _nss_grp_create_tablename):
+	... these.  No longer static.
+	(internal_setgrent): Adjust users.
+	(_nss_nisplus_getgrnam_r, _nss_nisplus_getgrgid_r): Likewise.
+	Don't use locking around _nss_grp_create_tablename call.
+	* nis/nss_nisplus/nisplus-initgroups.c: New file.
+
 2006-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.5.90 for new development tree.

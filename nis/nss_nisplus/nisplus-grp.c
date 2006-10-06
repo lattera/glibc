@@ -46,13 +46,13 @@ static char *tableptr;
 static netobj cursor;
 
 
-static nis_name tablename_val;
-static size_t tablename_len;
+nis_name grp_tablename_val attribute_hidden;
+size_t grp_tablename_len attribute_hidden;
 
-static enum nss_status
-_nss_create_tablename (int *errnop)
+enum nss_status
+_nss_grp_create_tablename (int *errnop)
 {
-  if (tablename_val == NULL)
+  if (grp_tablename_val == NULL)
     {
       const char *local_dir = nis_local_directory ();
       size_t local_dir_len = strlen (local_dir);
@@ -67,11 +67,16 @@ _nss_create_tablename (int *errnop)
 
       memcpy (__stpcpy (p, prefix), local_dir, local_dir_len + 1);
 
-      tablename_len = sizeof (prefix) - 1 + local_dir_len;
+      grp_tablename_len = sizeof (prefix) - 1 + local_dir_len;
 
       atomic_write_barrier ();
 
-      tablename_val = p;
+      if (atomic_compare_and_exchange_bool_acq (&grp_tablename_val, p, NULL))
+	{
+	  /* Another thread already installed the value.  */
+	  free (p);
+	  grp_tablename_len = strlen (grp_tablename_val);
+	}
     }
 
   return NSS_STATUS_SUCCESS;
@@ -103,19 +108,19 @@ internal_setgrent (int *errnop)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  if (tablename_val == NULL)
-    status = _nss_create_tablename (errnop);
+  if (grp_tablename_val == NULL)
+    status = _nss_grp_create_tablename (errnop);
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      ibreq = __create_ib_request (tablename_val, 0);
+      ibreq = __create_ib_request (grp_tablename_val, 0);
       if (ibreq == NULL)
 	{
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      nis_error retcode = __prepare_niscall (tablename_val, &dir, &bptr, 0);
+      nis_error retcode = __prepare_niscall (grp_tablename_val, &dir, &bptr, 0);
       if (retcode != NIS_SUCCESS)
 	{
 	  nis_free_request (ibreq);
@@ -285,13 +290,9 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 {
   int parse_res;
 
-  if (tablename_val == NULL)
+  if (grp_tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
-      enum nss_status status = _nss_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
+      enum nss_status status = _nss_grp_create_tablename (errnop);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -304,10 +305,10 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
     }
 
   nis_result *result;
-  char buf[strlen (name) + 9 + tablename_len];
+  char buf[strlen (name) + 9 + grp_tablename_len];
   int olderr = errno;
 
-  snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
+  snprintf (buf, sizeof (buf), "[name=%s],%s", name, grp_tablename_val);
 
   result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
@@ -348,13 +349,9 @@ enum nss_status
 _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 			 char *buffer, size_t buflen, int *errnop)
 {
-  if (tablename_val == NULL)
+  if (grp_tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
-      enum nss_status status = _nss_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
+      enum nss_status status = _nss_grp_create_tablename (errnop);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -362,11 +359,11 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 
   int parse_res;
   nis_result *result;
-  char buf[8 + 3 * sizeof (unsigned long int) + tablename_len];
+  char buf[8 + 3 * sizeof (unsigned long int) + grp_tablename_len];
   int olderr = errno;
 
   snprintf (buf, sizeof (buf), "[gid=%lu],%s",
-	    (unsigned long int) gid, tablename_val);
+	    (unsigned long int) gid, grp_tablename_val);
 
   result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
