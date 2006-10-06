@@ -1,5 +1,8 @@
 2006-10-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/Banner: Removed.  It's been integral part forever and the
+	author info is incomplete anyway.
+
 	* nis/nis_table.c (nis_list): If __follow_path fails in the new
 	code, make sure the nis_freeresult call doesn't crash and that the
 	result is reported correctly.
