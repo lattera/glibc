@@ -1,3 +1,7 @@
+2006-10-05  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* locales/tt_RU: Fix territory, title and descriptive comment.
+
 2006-10-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/pa_IN (abday): Fix spelling of Sunday.
