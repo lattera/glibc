@@ -438,7 +438,11 @@ nis_list (const_nis_name name, unsigned int flags,
 					     &bptr);
 		if (clnt_status != NIS_SUCCESS)
 		  {
-		    NIS_RES_STATUS (res) = clnt_status;
+		    /* Prepare for the nis_freeresult call.  */
+		    memset (res, '\0', sizeof (*res));
+
+		    if (clnt_status == NIS_NOMEMORY)
+		      NIS_RES_STATUS (allres) = clnt_status;
 		    ++done;
 		  }
 	      }

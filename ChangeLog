@@ -1,3 +1,9 @@
+2006-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_table.c (nis_list): If __follow_path fails in the new
+	code, make sure the nis_freeresult call doesn't crash and that the
+	result is reported correctly.
+
 2006-09-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_table.c (nis_list): Handle FOLLOW_PATH | ALL_RESULTS
