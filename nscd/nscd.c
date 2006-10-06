@@ -237,7 +237,7 @@ main (int argc, char **argv)
 
       if (chdir ("/") != 0)
 	error (EXIT_FAILURE, errno,
-	       _("cannot change current working cirectory to \"/\""));
+	       _("cannot change current working directory to \"/\""));
 
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 

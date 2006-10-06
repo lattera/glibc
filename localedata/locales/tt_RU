@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Tatar Language Locale for Tatarstan
+% Tatar Language Locale for Russia
 % Source:
 % Contact: Pablo Saratxaga, Rinat Norkin
 % Email: <pablo@mandrakesoft.com>, <rinat@taif.ru>
@@ -24,7 +24,7 @@ escape_char  /
 % replace cyrillic alphabet
 
 LC_IDENTIFICATION
-title "Tatar language locale for Tatarstan"
+title "Tatar language locale for Russia"
 source "Rinat Norkin"
 address ""
 contact "Pablo Saratxaga, Rinat Norkin"
@@ -32,7 +32,7 @@ email "pablo@mandrakesoft.com, rinat@taif.ru"
 tel ""
 fax ""
 language "Tatar"
-territory "Tatarstan"
+territory "Russia"
 revision "0.4"
 date "2001-01-28"
 

@@ -2393,8 +2393,9 @@ This function is similar to @code{sprintf}, except that it dynamically
 allocates a string (as with @code{malloc}; @pxref{Unconstrained
 Allocation}) to hold the output, instead of putting the output in a
 buffer you allocate in advance.  The @var{ptr} argument should be the
-address of a @code{char *} object, and @code{asprintf} stores a pointer
-to the newly allocated string at that location.
+address of a @code{char *} object, and a successful call to
+@code{asprintf} stores a pointer to the newly allocated string at that
+location.
 
 The return value is the number of characters allocated for the buffer, or
 less than zero if an error occurred. Usually this means that the buffer
