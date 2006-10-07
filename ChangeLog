@@ -1,5 +1,9 @@
 2006-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/shlib-compat.h (SHLIB_COMPAT): Expand parameters before use.
+	(versioned_symbol): Likewise.
+	(compat_symbol): Likewise.
+
 	* po/tr.po: Update from translation team.
 
 2006-10-06  Ulrich Drepper  <drepper@redhat.com>
