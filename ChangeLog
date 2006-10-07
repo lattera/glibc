@@ -1,5 +1,7 @@
 2006-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add GLIBC_2.6 to libpthread.
+
 	* include/shlib-compat.h (SHLIB_COMPAT): Expand parameters before use.
 	(versioned_symbol): Likewise.
 	(compat_symbol): Likewise.

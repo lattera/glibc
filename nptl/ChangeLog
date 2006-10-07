@@ -1,3 +1,17 @@
+2006-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstack.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstacksize.c:
+	New file.
+	* pthread_attr_setstack.c: Allow overwriting the version number of the
+	new symbol.
+	* pthread_attr_setstacksize.c: Likewise.
+	(__old_pthread_attr_setstacksize): If STACKSIZE_ADJUST is defined use
+	it.
+	* sysdeps/unix/sysv/linux/powerpc/Versions (libpthread): Add
+	pthread_attr_setstack and pthread_attr_setstacksize to GLIBC_2.6.
+
 2006-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3251]
