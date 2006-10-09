@@ -1,3 +1,7 @@
+2006-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
 2006-10-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def: Add GLIBC_2.6 to libpthread.
