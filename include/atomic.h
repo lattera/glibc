@@ -273,9 +273,27 @@
      __oldval & __mask; })
 #endif
 
-/* Atomically *mem &= mask and return the old value of *mem.  */
+/* Atomically *mem &= mask.  */
 #ifndef atomic_and
 # define atomic_and(mem, mask) \
+  do {									      \
+    __typeof (*(mem)) __oldval;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __mask = (mask);					      \
+									      \
+    do									      \
+      __oldval = (*__memp);						      \
+    while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,    \
+								   __oldval   \
+								   & __mask,  \
+								   __oldval), \
+			     0));					      \
+  } while (0)
+#endif
+
+/* Atomically *mem &= mask and return the old value of *mem.  */
+#ifndef atomic_and_val
+# define atomic_and_val(mem, mask) \
   ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
      __typeof (*(mem)) __mask = (mask);					      \
@@ -294,6 +312,24 @@
 /* Atomically *mem |= mask and return the old value of *mem.  */
 #ifndef atomic_or
 # define atomic_or(mem, mask) \
+  do {									      \
+    __typeof (*(mem)) __oldval;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __mask = (mask);					      \
+									      \
+    do									      \
+      __oldval = (*__memp);						      \
+    while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,    \
+								   __oldval   \
+								   | __mask,  \
+								   __oldval), \
+			      0));					      \
+  } while (0)
+#endif
+
+/* Atomically *mem |= mask and return the old value of *mem.  */
+#ifndef atomic_or_val
+# define atomic_or_val(mem, mask) \
   ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
      __typeof (*(mem)) __mask = (mask);					      \

@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <dlfcn.h>
+#include <errno.h>
 #include <libintl.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -33,6 +34,10 @@
 
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);
+
+
+/* Special l_idx value used to indicate which objects remain loaded.  */
+#define IDX_STILL_USED -1
 
 
 #ifdef USE_TLS
@@ -188,7 +193,7 @@ _dl_close (void *_map)
       done[done_index] = 1;
       used[done_index] = 1;
       /* Signal the object is still needed.  */
-      l->l_idx = -1;
+      l->l_idx = IDX_STILL_USED;
 
       /* Mark all dependencies as used.  */
       if (l->l_initfini != NULL)
@@ -196,7 +201,7 @@ _dl_close (void *_map)
 	  struct link_map **lp = &l->l_initfini[1];
 	  while (*lp != NULL)
 	    {
-	      if ((*lp)->l_idx != -1)
+	      if ((*lp)->l_idx != IDX_STILL_USED)
 		{
 		  assert ((*lp)->l_idx >= 0 && (*lp)->l_idx < nloaded);
 
@@ -217,7 +222,7 @@ _dl_close (void *_map)
 	  {
 	    struct link_map *jmap = l->l_reldeps[j];
 
-	    if (jmap->l_idx != -1)
+	    if (jmap->l_idx != IDX_STILL_USED)
 	      {
 		assert (jmap->l_idx >= 0 && jmap->l_idx < nloaded);
 
@@ -310,8 +315,9 @@ _dl_close (void *_map)
       /* Else used[i].  */
       else if (imap->l_type == lt_loaded)
 	{
-	  if (imap->l_searchlist.r_list == NULL
-	      && imap->l_initfini != NULL)
+	  struct r_scope_elem *new_list = NULL;
+
+	  if (imap->l_searchlist.r_list == NULL && imap->l_initfini != NULL)
 	    {
 	      /* The object is still used.  But one of the objects we are
 		 unloading right now is responsible for loading it.  If
@@ -328,44 +334,114 @@ _dl_close (void *_map)
 	      imap->l_searchlist.r_list = &imap->l_initfini[cnt + 1];
 	      imap->l_searchlist.r_nlist = cnt;
 
-	      for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
-		/* This relies on l_scope[] entries being always set either
-		   to its own l_symbolic_searchlist address, or some map's
-		   l_searchlist address.  */
-		if (imap->l_scope[cnt] != &imap->l_symbolic_searchlist)
-		  {
-		    struct link_map *tmap;
-
-		    tmap = (struct link_map *) ((char *) imap->l_scope[cnt]
-						- offsetof (struct link_map,
-							    l_searchlist));
-		    assert (tmap->l_ns == ns);
-		    if (tmap->l_idx != -1)
-		      {
-			imap->l_scope[cnt] = &imap->l_searchlist;
-			break;
-		      }
-		  }
+	      new_list = &imap->l_searchlist;
 	    }
-	  else
+
+	  /* Count the number of scopes which remain after the unload.
+	     When we add the local search list count it.  Always add
+	     one for the terminating NULL pointer.  */
+	  size_t remain = (new_list != NULL) + 1;
+	  bool removed_any = false;
+	  for (size_t cnt = 0; imap->l_scoperec->scope[cnt] != NULL; ++cnt)
+	    /* This relies on l_scope[] entries being always set either
+	       to its own l_symbolic_searchlist address, or some map's
+	       l_searchlist address.  */
+	    if (imap->l_scoperec->scope[cnt] != &imap->l_symbolic_searchlist)
+	      {
+		struct link_map *tmap = (struct link_map *)
+		  ((char *) imap->l_scoperec->scope[cnt]
+		   - offsetof (struct link_map, l_searchlist));
+		assert (tmap->l_ns == ns);
+		if (tmap->l_idx == IDX_STILL_USED)
+		  ++remain;
+		else
+		  removed_any = true;
+	      }
+	    else
+	      ++remain;
+
+	  if (removed_any)
 	    {
-	      unsigned int cnt = 0;
-	      while (imap->l_scope[cnt] != NULL)
+	      /* Always allocate a new array for the scope.  This is
+		 necessary since we must be able to determine the last
+		 user of the current array.  If possible use the link map's
+		 memory.  */
+	      size_t new_size;
+	      struct r_scoperec *newp;
+	      if (imap->l_scoperec != &imap->l_scoperec_mem
+		  && remain < NINIT_SCOPE_ELEMS (imap)
+		  && imap->l_scoperec_mem.nusers == 0)
 		{
-		  if (imap->l_scope[cnt] == &map->l_searchlist)
-		    {
-		      while ((imap->l_scope[cnt] = imap->l_scope[cnt + 1])
-			     != NULL)
-			++cnt;
-		      break;
-		    }
-		  ++cnt;
+		  new_size = NINIT_SCOPE_ELEMS (imap);
+		  newp = &imap->l_scoperec_mem;
 		}
+	      else
+		{
+		  new_size = imap->l_scope_max;
+		  newp = (struct r_scoperec *)
+		    malloc (sizeof (struct r_scoperec)
+			    + new_size * sizeof (struct r_scope_elem *));
+		  if (newp == NULL)
+		    _dl_signal_error (ENOMEM, "dlclose", NULL,
+				      N_("cannot create scope list"));
+		}
+
+	      newp->nusers = 0;
+	      newp->remove_after_use = false;
+	      newp->notify = false;
+
+	      /* Copy over the remaining scope elements.  */
+	      remain = 0;
+	      for (size_t cnt = 0; imap->l_scoperec->scope[cnt] != NULL; ++cnt)
+		{
+		  if (imap->l_scoperec->scope[cnt]
+		      != &imap->l_symbolic_searchlist)
+		    {
+		      struct link_map *tmap = (struct link_map *)
+			((char *) imap->l_scoperec->scope[cnt]
+			 - offsetof (struct link_map, l_searchlist));
+		      if (tmap->l_idx != IDX_STILL_USED)
+			{
+			  /* Remove the scope.  Or replace with own map's
+			     scope.  */
+			  if (new_list != NULL)
+			    {
+			      newp->scope[remain++] = new_list;
+			      new_list = NULL;
+			    }
+			  continue;
+			}
+		    }
+
+		  newp->scope[remain++] = imap->l_scoperec->scope[cnt];
+		}
+	      newp->scope[remain] = NULL;
+
+	      struct r_scoperec *old = imap->l_scoperec;
+
+	      __rtld_mrlock_change (imap->l_scoperec_lock);
+	      imap->l_scoperec = newp;
+	      __rtld_mrlock_done (imap->l_scoperec_lock);
+
+	      if (atomic_increment_val (&old->nusers) != 1)
+		{
+		  old->remove_after_use = true;
+		  old->notify = true;
+		  if (atomic_decrement_val (&old->nusers) != 0)
+		    __rtld_waitzero (old->nusers);
+		}
+
+	      /* No user anymore, we can free it now.  */
+	      if (old != &imap->l_scoperec_mem)
+		free (old);
+
+	      imap->l_scope_max = new_size;
 	    }
 
 	  /* The loader is gone, so mark the object as not having one.
-	     Note: l_idx != -1 -> object will be removed.  */
-	  if (imap->l_loader != NULL && imap->l_loader->l_idx != -1)
+	     Note: l_idx != IDX_STILL_USED -> object will be removed.  */
+	  if (imap->l_loader != NULL
+	      && imap->l_loader->l_idx != IDX_STILL_USED)
 	    imap->l_loader = NULL;
 
 	  /* Remember where the first dynamically loaded object is.  */
@@ -570,8 +646,8 @@ _dl_close (void *_map)
 	  free (imap->l_initfini);
 
 	  /* Remove the scope array if we allocated it.  */
-	  if (imap->l_scope != imap->l_scope_mem)
-	    free (imap->l_scope);
+	  if (imap->l_scoperec != &imap->l_scoperec_mem)
+	    free (imap->l_scoperec);
 
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);

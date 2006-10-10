@@ -1,4 +1,31 @@
 2006-10-09  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	Implement reference counting of scope records.
+	* elf/dl-close.c (_dl_close): Remove all scopes from removed objects
+	from the list in objects which remain.  Always allocate new scope
+	record.
+	* elf/dl-open.c (dl_open_worker): When growing array for scopes,
+	don't resize, allocate a new one.
+	* elf/dl-runtime.c: Update reference counters before using a scope
+	array.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-libc.c: Adjust for l_scope name change.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* include/link.h: Inlcude <rtld-lowlevel.h>.  Define struct
+	r_scoperec.  Replace r_scope with pointer to r_scoperec structure.
+	Add l_scoperec_lock.
+	* sysdeps/generic/ldsodefs.h: Include <rtld-lowlevel.h>.
+	* sysdeps/generic/rtld-lowlevel.h: New file.
+
+	* include/atomic.h: Rename atomic_and to atomic_and_val and
+	atomic_or to atomic_or_val.  Define new macros atomic_and and
+	atomic_or which do not return values.
+	* sysdeps/x86_64/bits/atomic.h: Define atomic_and and atomic_or.
+	Various cleanups.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
 
 	* po/sv.po: Update from translation team.
 

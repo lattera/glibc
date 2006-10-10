@@ -38,6 +38,7 @@
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
+#include <rtld-lowlevel.h>
 
 __BEGIN_DECLS
 

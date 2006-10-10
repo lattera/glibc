@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -195,23 +195,24 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_increment(mem) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "incb %b0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "incw %w0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "incl %0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else							      \
-	      __asm __volatile (LOCK_PREFIX "incq %q0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "incb %b0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "incw %w0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "incl %0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else								      \
+      __asm __volatile (LOCK_PREFIX "incq %q0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+  } while (0)
 
 
 #define atomic_increment_and_test(mem) \
@@ -236,23 +237,24 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_decrement(mem) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "decb %b0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "decw %w0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "decl %0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else							      \
-	      __asm __volatile (LOCK_PREFIX "decq %q0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "decb %b0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "decw %w0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "decl %0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else								      \
+      __asm __volatile (LOCK_PREFIX "decq %q0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+  } while (0)
 
 
 #define atomic_decrement_and_test(mem) \
@@ -277,27 +279,28 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_bit_set(mem, bit) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "orb %b2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1L << (bit)));	      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "orw %w2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1L << (bit)));	      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "orl %2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1L << (bit)));	      \
-	    else if (__builtin_constant_p (bit) && (bit) < 32)		      \
-	      __asm __volatile (LOCK_PREFIX "orq %2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "i" (1L << (bit)));	      \
-	    else							      \
-	      __asm __volatile (LOCK_PREFIX "orq %q2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "r" (1UL << (bit)));	      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "orb %b2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1L << (bit)));		      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "orw %w2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1L << (bit)));		      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "orl %2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1L << (bit)));		      \
+    else if (__builtin_constant_p (bit) && (bit) < 32)			      \
+      __asm __volatile (LOCK_PREFIX "orq %2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "i" (1L << (bit)));		      \
+    else								      \
+      __asm __volatile (LOCK_PREFIX "orq %q2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "r" (1UL << (bit)));		      \
+  } while (0)
 
 
 #define atomic_bit_test_set(mem, bit) \
@@ -322,3 +325,45 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_delay() asm ("rep; nop")
+
+
+#define atomic_and(mem, mask) \
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "andb %1, %b0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "andw %1, %w0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "andl %1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else								      \
+      __asm __volatile (LOCK_PREFIX "andq %1, %q0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+  } while (0)
+
+
+#define atomic_or(mem, mask) \
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "orb %1, %b0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "orw %1, %w0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "orl %1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else								      \
+      __asm __volatile (LOCK_PREFIX "orq %1, %q0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+  } while (0)

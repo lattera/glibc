@@ -43,6 +43,8 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 #include <bits/linkmap.h>
 #include <dl-lookupcfg.h>
 #include <tls.h>		/* Defines USE_TLS.  */
+#include <bits/libc-lock.h>
+#include <rtld-lowlevel.h>
 
 
 /* Some internal data structures of the dynamic linker used in the
@@ -71,6 +73,18 @@ struct r_search_path_struct
     struct r_search_path_elem **dirs;
     int malloced;
   };
+
+
+/* Structure for a scope.  Each such data structure has a lock.  The
+   lock allows many readers.  It can be invalidated by setting bit 31
+   which means that no more lockers are allowe */
+struct r_scoperec
+{
+  bool remove_after_use;
+  bool notify;
+  int nusers;
+  struct r_scope_elem *scope[0];
+};
 
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
@@ -120,7 +134,7 @@ struct link_map
        are indexed by DT_ADDRTAGIDX(tagvalue), see <elf.h>.  */
 
     ElfW(Dyn) *l_info[DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM
-		     + DT_EXTRANUM + DT_VALNUM + DT_ADDRNUM];
+		      + DT_EXTRANUM + DT_VALNUM + DT_ADDRNUM];
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
@@ -212,12 +226,27 @@ struct link_map
     ElfW(Addr) l_text_end;
 
     /* Default array for 'l_scope'.  */
-    struct r_scope_elem *l_scope_mem[4];
+    union
+    {
+      struct r_scoperec l_scoperec_mem;
+      struct
+      {
+	struct r_scoperec scoperec_struct;
+	/* XXX This number should be increased once the scope memory
+	   handling has been tested.  */
+	struct r_scope_elem *scope_elems[4];
+#define NINIT_SCOPE_ELEMS(map) \
+	(sizeof ((map)->l_scope_realmem.scope_elems)			      \
+	 / sizeof ((map)->l_scope_realmem.scope_elems[0]))
+      } l_scope_realmem;
+    };
     /* Size of array allocated for 'l_scope'.  */
     size_t l_scope_max;
     /* This is an array defining the lookup scope for this link map.
        There are initially at most three different scope lists.  */
-    struct r_scope_elem **l_scope;
+    struct r_scoperec *l_scoperec;
+    /* We need to protect using the SCOPEREC.  */
+    __rtld_mrlock_define (, l_scoperec_lock)
 
     /* A similar array, this time only with the local scope.  This is
        used occasionally.  */

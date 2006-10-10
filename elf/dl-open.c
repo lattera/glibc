@@ -343,7 +343,7 @@ dl_open_worker (void *a)
 		 start the profiling.  */
 	      struct link_map *old_profile_map = GL(dl_profile_map);
 
-	      _dl_relocate_object (l, l->l_scope, 1, 1);
+	      _dl_relocate_object (l, l->l_scoperec->scope, 1, 1);
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		{
@@ -356,7 +356,7 @@ dl_open_worker (void *a)
 	    }
 	  else
 #endif
-	    _dl_relocate_object (l, l->l_scope, lazy, 0);
+	    _dl_relocate_object (l, l->l_scoperec->scope, lazy, 0);
 	}
 
       if (l == new)
@@ -374,11 +374,13 @@ dl_open_worker (void *a)
 	 not been loaded here and now.  */
       if (imap->l_init_called && imap->l_type == lt_loaded)
 	{
-	  struct r_scope_elem **runp = imap->l_scope;
+	  struct r_scope_elem **runp = imap->l_scoperec->scope;
 	  size_t cnt = 0;
 
 	  while (*runp != NULL)
 	    {
+	      if (*runp == &new->l_searchlist)
+		break;
 	      ++cnt;
 	      ++runp;
 	    }
@@ -391,35 +393,58 @@ dl_open_worker (void *a)
 	    {
 	      /* The 'r_scope' array is too small.  Allocate a new one
 		 dynamically.  */
-	      struct r_scope_elem **newp;
-	      size_t new_size = imap->l_scope_max * 2;
+	      size_t new_size;
+	      struct r_scoperec *newp;
 
-	      if (imap->l_scope == imap->l_scope_mem)
+	      if (imap->l_scoperec != &imap->l_scoperec_mem
+		  && imap->l_scope_max < NINIT_SCOPE_ELEMS (imap)
+		  && imap->l_scoperec_mem.nusers == 0)
 		{
-		  newp = (struct r_scope_elem **)
-		    malloc (new_size * sizeof (struct r_scope_elem *));
-		  if (newp == NULL)
-		    _dl_signal_error (ENOMEM, "dlopen", NULL,
-				      N_("cannot create scope list"));
-		  imap->l_scope = memcpy (newp, imap->l_scope,
-					  cnt * sizeof (imap->l_scope[0]));
+		  new_size = NINIT_SCOPE_ELEMS (imap);
+		  newp = &imap->l_scoperec_mem;
 		}
 	      else
 		{
-		  newp = (struct r_scope_elem **)
-		    realloc (imap->l_scope,
-			     new_size * sizeof (struct r_scope_elem *));
+		  new_size = imap->l_scope_max * 2;
+		  newp = (struct r_scoperec *)
+		    malloc (sizeof (struct r_scoperec)
+			    + new_size * sizeof (struct r_scope_elem *));
 		  if (newp == NULL)
 		    _dl_signal_error (ENOMEM, "dlopen", NULL,
 				      N_("cannot create scope list"));
-		  imap->l_scope = newp;
+		}
+
+	      newp->nusers = 0;
+	      newp->remove_after_use = false;
+	      newp->notify = false;
+	      memcpy (newp->scope, imap->l_scoperec->scope,
+		      cnt * sizeof (imap->l_scoperec->scope[0]));
+	      struct r_scoperec *old = imap->l_scoperec;
+
+	      if (old == &imap->l_scoperec_mem)
+		imap->l_scoperec = newp;
+	      else
+		{
+		  __rtld_mrlock_change (imap->l_scoperec_lock);
+		  imap->l_scoperec = newp;
+		  __rtld_mrlock_done (imap->l_scoperec_lock);
+
+		  atomic_increment (&old->nusers);
+		  old->remove_after_use = true;
+		  if (atomic_decrement_val (&old->nusers) == 0)
+		    /* No user, we can free it here and now.  */
+		    free (old);
 		}
 
 	      imap->l_scope_max = new_size;
 	    }
 
-	  imap->l_scope[cnt++] = &new->l_searchlist;
-	  imap->l_scope[cnt] = NULL;
+	  /* First terminate the extended list.  Otherwise a thread
+	     might use the new last element and then use the garbage
+	     at offset IDX+1.  */
+	  imap->l_scoperec->scope[cnt + 1] = NULL;
+	  atomic_write_barrier ();
+	  imap->l_scoperec->scope[cnt] = &new->l_searchlist;
 	}
 #if USE_TLS
       /* Only add TLS memory if this object is loaded now and

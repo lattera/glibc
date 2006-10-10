@@ -609,7 +609,7 @@ relocate_doit (void *a)
 {
   struct relocate_args *args = (struct relocate_args *) a;
 
-  _dl_relocate_object (args->l, args->l->l_scope, args->lazy, 0);
+  _dl_relocate_object (args->l, args->l->l_scoperec->scope, args->lazy, 0);
 }
 
 static void
@@ -1963,8 +1963,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    lookup_t result;
 
 	    result = _dl_lookup_symbol_x (INTUSE(_dl_argv)[i], main_map,
-					  &ref, main_map->l_scope, NULL,
-					  ELF_RTYPE_CLASS_PLT,
+					  &ref, main_map->l_scoperec->scope,
+					  NULL, ELF_RTYPE_CLASS_PLT,
 					  DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
@@ -2006,8 +2006,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		{
 		  /* Mark the link map as not yet relocated again.  */
 		  GL(dl_rtld_map).l_relocated = 0;
-		  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
-				       0, 0);
+		  _dl_relocate_object (&GL(dl_rtld_map),
+				       main_map->l_scoperec->scope, 0, 0);
 		}
             }
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
@@ -2227,7 +2227,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    }
 
 	  if (l != &GL(dl_rtld_map))
-	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy),
+	    _dl_relocate_object (l, l->l_scoperec->scope, GLRO(dl_lazy),
 				 consider_profiling);
 
 #ifdef USE_TLS
@@ -2303,7 +2303,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_NOW (start);
       /* Mark the link map as not yet relocated again.  */
       GL(dl_rtld_map).l_relocated = 0;
-      _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+      _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scoperec->scope,
+			   0, 0);
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (add, start, stop);
       HP_TIMING_ACCUM_NT (relocate_time, add);

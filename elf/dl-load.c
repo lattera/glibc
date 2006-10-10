@@ -1473,7 +1473,7 @@ cannot enable executable stack as shared object requires");
      have to do this for the main map.  */
   if ((mode & RTLD_DEEPBIND) == 0
       && __builtin_expect (l->l_info[DT_SYMBOLIC] != NULL, 0)
-      && &l->l_searchlist != l->l_scope[0])
+      && &l->l_searchlist != l->l_scoperec->scope[0])
     {
       /* Create an appropriate searchlist.  It contains only this map.
 	 This is the definition of DT_SYMBOLIC in SysVr4.  */
@@ -1490,11 +1490,11 @@ cannot enable executable stack as shared object requires");
       l->l_symbolic_searchlist.r_nlist = 1;
 
       /* Now move the existing entries one back.  */
-      memmove (&l->l_scope[1], &l->l_scope[0],
-	       (l->l_scope_max - 1) * sizeof (l->l_scope[0]));
+      memmove (&l->l_scoperec->scope[1], &l->l_scoperec->scope[0],
+	       (l->l_scope_max - 1) * sizeof (l->l_scoperec->scope[0]));
 
       /* Now add the new entry.  */
-      l->l_scope[0] = &l->l_symbolic_searchlist;
+      l->l_scoperec->scope[0] = &l->l_symbolic_searchlist;
     }
 
   /* Remember whether this object must be initialized first.  */

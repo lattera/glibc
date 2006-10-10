@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -168,34 +168,35 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_add(mem, value) \
-  (void) ({ if (__builtin_constant_p (value) && (value) == 1)		      \
-	      atomic_increment (mem);					      \
-	    else if (__builtin_constant_p (value) && (value) == -1)	      \
-	      atomic_decrement (mem);					      \
-	    else if (sizeof (*mem) == 1)				      \
-	      __asm __volatile (LOCK_PREFIX "addb %b1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "addw %w1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "addl %1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else							      \
-	      {								      \
-		__typeof (value) __addval = (value);			      \
-		__typeof (mem) __memp = (mem);				      \
-		__typeof (*mem) __oldval = *__memp;			      \
-		__typeof (*mem) __tmpval;				      \
-		do							      \
-		  __tmpval = __oldval;					      \
-		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
-		       (__memp, __oldval + __addval, __oldval)) == __tmpval); \
-	      }								      \
-	    })
+  do {									      \
+    if (__builtin_constant_p (value) && (value) == 1)			      \
+      atomic_increment (mem);						      \
+    else if (__builtin_constant_p (value) && (value) == -1)		      \
+      atomic_decrement (mem);						      \
+    else if (sizeof (*mem) == 1)					      \
+      __asm __volatile (LOCK_PREFIX "addb %b1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem));			      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "addw %w1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem));			      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "addl %1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem));			      \
+    else								      \
+      {									      \
+	__typeof (value) __addval = (value);				      \
+	__typeof (mem) __memp = (mem);					      \
+	__typeof (*mem) __oldval = *__memp;				      \
+	__typeof (*mem) __tmpval;					      \
+	do								      \
+	  __tmpval = __oldval;						      \
+	while ((__oldval = __arch_compare_and_exchange_val_64_acq	      \
+		(__memp, __oldval + __addval, __oldval)) == __tmpval);	      \
+      }									      \
+  } while (0)
 
 
 #define atomic_add_negative(mem, value) \
@@ -237,29 +238,30 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_increment(mem) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "incb %b0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "incw %w0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "incl %0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else							      \
-	      {								      \
-		__typeof (mem) __memp = (mem);				      \
-		__typeof (*mem) __oldval = *__memp;			      \
-		__typeof (*mem) __tmpval;				      \
-		do							      \
-		  __tmpval = __oldval;					      \
-		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
-		       (__memp, __oldval + 1, __oldval)) == __tmpval);	      \
-	      }								      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "incb %b0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "incw %w0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "incl %0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else								      \
+      {									      \
+	__typeof (mem) __memp = (mem);					      \
+	__typeof (*mem) __oldval = *__memp;				      \
+	__typeof (*mem) __tmpval;					      \
+	do								      \
+	  __tmpval = __oldval;						      \
+	while ((__oldval = __arch_compare_and_exchange_val_64_acq	      \
+		(__memp, __oldval + 1, __oldval)) == __tmpval);		      \
+      }									      \
+  } while (0)
 
 
 #define atomic_increment_and_test(mem) \
@@ -282,29 +284,30 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_decrement(mem) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "decb %b0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "decw %w0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "decl %0"			      \
-				: "=m" (*mem)				      \
-				: "m" (*mem));				      \
-	    else							      \
-	      {								      \
-		__typeof (mem) __memp = (mem);				      \
-		__typeof (*mem) __oldval = *__memp;			      \
-		__typeof (*mem) __tmpval;				      \
-		do							      \
-		  __tmpval = __oldval;					      \
-		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
-		       (__memp, __oldval - 1, __oldval)) == __tmpval); 	      \
-	      }								      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "decb %b0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "decw %w0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "decl %0"				      \
+			: "=m" (*mem)					      \
+			: "m" (*mem));					      \
+    else								      \
+      {									      \
+	__typeof (mem) __memp = (mem);					      \
+	__typeof (*mem) __oldval = *__memp;				      \
+	__typeof (*mem) __tmpval;					      \
+	do								      \
+	  __tmpval = __oldval;						      \
+	while ((__oldval = __arch_compare_and_exchange_val_64_acq	      \
+		(__memp, __oldval - 1, __oldval)) == __tmpval); 	      \
+      }									      \
+  } while (0)
 
 
 #define atomic_decrement_and_test(mem) \
@@ -327,21 +330,22 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_bit_set(mem, bit) \
-  (void) ({ if (sizeof (*mem) == 1)					      \
-	      __asm __volatile (LOCK_PREFIX "orb %b2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1 << (bit)));	      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "orw %w2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1 << (bit)));	      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "orl %2, %0"		      \
-				: "=m" (*mem)				      \
-				: "m" (*mem), "ir" (1 << (bit)));	      \
-	    else							      \
-	      abort ();							      \
-	    })
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "orb %b2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1 << (bit)));		      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "orw %w2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1 << (bit)));		      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "orl %2, %0"			      \
+			: "=m" (*mem)					      \
+			: "m" (*mem), "ir" (1 << (bit)));		      \
+    else								      \
+      abort ();								      \
+  } while (0)
 
 
 #define atomic_bit_test_set(mem, bit) \
@@ -364,3 +368,41 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_delay() asm ("rep; nop")
+
+
+#define atomic_and(mem, mask) \
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "andb %1, %b0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "andw %1, %w0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "andl %1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else								      \
+      abort ();								      \
+  } while (0)
+
+
+#define atomic_or(mem, mask) \
+  do {									      \
+    if (sizeof (*mem) == 1)						      \
+      __asm __volatile (LOCK_PREFIX "orb %1, %b0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (LOCK_PREFIX "orw %1, %w0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (LOCK_PREFIX "orl %1, %0"			      \
+			: "=m" (*mem)					      \
+			: "ir" (mask), "m" (*mem));			      \
+    else								      \
+      abort ();								      \
+  } while (0)

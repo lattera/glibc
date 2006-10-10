@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,16 +92,36 @@ _dl_fixup (
 	    version = NULL;
 	}
 
+      struct r_scoperec *scoperec = l->l_scoperec;
+      if (l->l_type == lt_loaded)
+	{
+	  __rtld_mrlock_lock (l->l_scoperec_lock);
+	  scoperec = l->l_scoperec;
+	  atomic_increment (&scoperec->nusers);
+	  __rtld_mrlock_unlock (l->l_scoperec_lock);
+	}
+
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
-				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
+				    scoperec->scope, version,
+				    ELF_RTYPE_CLASS_PLT,
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
+
+      if (l->l_type == lt_loaded
+	  && atomic_decrement_val (&scoperec->nusers) == 0
+	  && __builtin_expect (scoperec->remove_after_use, 0))
+	{
+	  if (scoperec->notify)
+	    __rtld_notify (scoperec->nusers);
+	  else
+	    free (scoperec);
+	}
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
 	 offset.  */
       value = DL_FIXUP_MAKE_VALUE (result,
-				   sym ? LOOKUP_VALUE_ADDRESS (result)
-					 + sym->st_value : 0);
+				   sym ? (LOOKUP_VALUE_ADDRESS (result)
+					  + sym->st_value) : 0);
     }
   else
     {
@@ -174,10 +194,29 @@ _dl_profile_fixup (
 		version = NULL;
 	    }
 
+	  struct r_scoperec *scoperec = l->l_scoperec;
+	  if (l->l_type == lt_loaded)
+	    {
+	      __rtld_mrlock_lock (l->l_scoperec_lock);
+	      scoperec = l->l_scoperec;
+	      atomic_increment (&scoperec->nusers);
+	      __rtld_mrlock_unlock (l->l_scoperec_lock);
+	    }
+
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l, &defsym,
-					l->l_scope, version,
+					scoperec->scope, version,
 					ELF_RTYPE_CLASS_PLT,
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
+
+	  if (l->l_type == lt_loaded
+	      && atomic_decrement_val (&scoperec->nusers) == 0
+	      && __builtin_expect (scoperec->remove_after_use, 0))
+	    {
+	      if (scoperec->notify)
+		__rtld_notify (scoperec->nusers);
+	      else
+		free (scoperec);
+	    }
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol
