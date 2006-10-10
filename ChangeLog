@@ -1,3 +1,9 @@
+2006-10-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/utimes.c: Use a union to avoid an improper cast.
+	* sysdeps/mach/hurd/futimes.c: Likewise.
+	* sysdeps/mach/hurd/lutimes.c: Likewise.
+
 2006-10-09  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
