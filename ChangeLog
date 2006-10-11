@@ -1,3 +1,12 @@
+2006-10-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): Remove unused any_larger variable.
+
+	* nis/nis_defaults.c (__nis_default_access): Don't call getenv twice.
+
+	* nis/nis_subr.c (nis_getnames): Use __secure_getenv instead of getenv.
+	* sysdeps/generic/unsecvars.h: Add NIS_PATH.
+
 2006-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/atomic.c: Define catomic_* operations.

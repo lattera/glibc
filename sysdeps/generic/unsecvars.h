@@ -18,6 +18,7 @@
   "LOCALDOMAIN\0"							      \
   "LOCPATH\0"								      \
   "MALLOC_TRACE\0"							      \
+  "NIS_PATH\0"								      \
   "NLSPATH\0"								      \
   "RESOLV_HOST_CONF\0"							      \
   "RES_OPTIONS\0"							      \

@@ -447,7 +447,7 @@ __nis_default_access (char *param, unsigned int defaults)
     {
       cptr = getenv ("NIS_DEFAULTS");
       if (cptr != NULL && strstr (cptr, "access=") != NULL)
-	result = searchaccess (getenv ("NIS_DEFAULTS"), result);
+	result = searchaccess (cptr, result);
     }
 
   return result;
