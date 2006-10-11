@@ -275,6 +275,13 @@ nis_getnames (const_nis_name name)
       cp = __strtok_r (NULL, ":", &saveptr);
     }
 
+  if (pos == 0
+      && __asprintf (&getnames[pos++], "%s%s%s%s",
+		     name, name[name_len - 1] == '.' ? "" : ".",
+		     local_domain,
+		     local_domain[local_domain_len - 1] == '.' ? "" : ".") < 0)
+    goto free_null;
+
   getnames[pos] = NULL;
 
   return getnames;
