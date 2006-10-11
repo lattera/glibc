@@ -1,3 +1,7 @@
+2006-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/atomic.h: Add catomic_* support.
+
 2006-10-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/malloc.c (_int_malloc): Remove unused any_larger variable.
