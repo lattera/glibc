@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -58,6 +58,7 @@
 # define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_6	SAVE_OLDTYPE_2
 
 # define PUSHCARGS_0	/* No arguments to push.  */
 # define DOCARGS_0	/* No arguments to frob.  */
@@ -101,6 +102,14 @@
 # define _POPCARGS_5	_POPCARGS_4; popl %edi; \
 			cfi_adjust_cfa_offset (-4); cfi_restore (edi);
 
+# define PUSHCARGS_6	_PUSHCARGS_6
+# define DOCARGS_6	_DOARGS_6 (44)
+# define POPCARGS_6	_POPCARGS_6
+# define _PUSHCARGS_6	pushl %ebp; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (ebp, 0); _PUSHCARGS_5
+# define _POPCARGS_6	_POPCARGS_5; popl %ebp; \
+			cfi_adjust_cfa_offset (-4); cfi_restore (ebp);
+
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel;
 #  define CDISABLE	call __pthread_disable_asynccancel
@@ -122,6 +131,7 @@
 # define POPSTATE_3	POPSTATE_2
 # define POPSTATE_4	POPSTATE_3
 # define POPSTATE_5	POPSTATE_4
+# define POPSTATE_6	POPSTATE_5
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \

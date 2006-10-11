@@ -126,6 +126,9 @@ libc {
   GLIBC_2.5 {
     splice; sync_file_range; tee; vmsplice;
   }
+  GLIBC_2.6 {
+    epoll_pwait;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

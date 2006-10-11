@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,14 @@
 
 #include <stdint.h>
 #include <sys/types.h>
+
+/* Get __sigset_t.  */
+#include <bits/sigset.h>
+
+#ifndef __sigset_t_defined
+# define __sigset_t_defined
+typedef __sigset_t sigset_t;
+#endif
 
 
 enum EPOLL_EVENTS
@@ -104,6 +112,16 @@ extern int epoll_ctl (int __epfd, int __op, int __fd,
    __THROW.  */
 extern int epoll_wait (int __epfd, struct epoll_event *__events,
 		       int __maxevents, int __timeout);
+
+
+/* Same as epoll_wait, but the thread's signal mask is temporarily
+   and atomically replaced with the one provided as parameter.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int epoll_pwait (int __epfd, struct epoll_event *__events,
+			int __maxevents, int __timeout,
+			__const __sigset_t *__ss);
 
 __END_DECLS
 

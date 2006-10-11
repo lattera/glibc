@@ -297,7 +297,7 @@
 			cfi_restore (edi); L(POPDI1):
 
 #define PUSHARGS_6	_PUSHARGS_6
-#define DOARGS_6	_DOARGS_6 (36)
+#define DOARGS_6	_DOARGS_6 (40)
 #define POPARGS_6	_POPARGS_6
 #define _PUSHARGS_6	pushl %ebp; cfi_adjust_cfa_offset (4); \
 			cfi_rel_offset (ebp, 0); L(PUSHBP1): _PUSHARGS_5

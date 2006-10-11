@@ -1,5 +1,13 @@
 2006-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_pwait.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Declare epoll_pwait.
+	* sysdeps/unix/sysv/linux/Versions (libc): Add epoll_pwait for
+	version GLIBC_2.6.
+	* Versions.def: Add GLIBC_2.6 for libc.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (DOARGS_6): Fix offset.
+
 	* sysdeps/i386/i486/bits/atomic.h: Add catomic_* support.
 
 2006-10-11  Jakub Jelinek  <jakub@redhat.com>
