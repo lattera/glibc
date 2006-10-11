@@ -1,3 +1,12 @@
+2006-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_subr.c (nis_getnames): Add trailing dot to NIS_PATH
+	components which lack them.
+
+	* nis/nis_subr.c (nis_getnames): Make sure that we always return
+	at least one entry consisting of the parameter concatenated with
+	the domain.
+
 2006-10-10  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/utimes.c: Use a union to avoid an improper cast.
