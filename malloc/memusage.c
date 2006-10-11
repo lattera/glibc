@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -128,8 +128,8 @@ update_data (struct header *result, size_t len, size_t old_len)
 
   /* Compute current heap usage and compare it with the maximum value.  */
   memusage_size_t heap
-    = atomic_exchange_and_add (&current_heap, len - old_len) + len - old_len;
-  atomic_max (&peak_heap, heap);
+    = catomic_exchange_and_add (&current_heap, len - old_len) + len - old_len;
+  catomic_max (&peak_heap, heap);
 
   /* Compute current stack usage and compare it with the maximum
      value.  The base stack pointer might not be set if this is not
@@ -152,15 +152,15 @@ update_data (struct header *result, size_t len, size_t old_len)
     start_sp = sp;
   size_t current_stack = start_sp - sp;
 #endif
-  atomic_max (&peak_stack, current_stack);
+  catomic_max (&peak_stack, current_stack);
 
   /* Add up heap and stack usage and compare it with the maximum value.  */
-  atomic_max (&peak_total, heap + current_stack);
+  catomic_max (&peak_total, heap + current_stack);
 
   /* Store the value only if we are writing to a file.  */
   if (fd != -1)
     {
-      uatomic32_t idx = atomic_exchange_and_add (&buffer_cnt, 1);
+      uatomic32_t idx = catomic_exchange_and_add (&buffer_cnt, 1);
       if (idx >= 2 * buffer_size)
 	{
 	  /* We try to reset the counter to the correct range.  If
@@ -168,7 +168,7 @@ update_data (struct header *result, size_t len, size_t old_len)
 	     counter it does not matter since that thread will take
 	     care of the correction.  */
 	  unsigned int reset = idx - 2 * buffer_size;
-	  atomic_compare_and_exchange_val_acq (&buffer_size, reset, idx);
+	  catomic_compare_and_exchange_val_acq (&buffer_size, reset, idx);
 	  idx = reset;
 	}
 
@@ -337,24 +337,24 @@ malloc (size_t len)
     return (*mallocp) (len);
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_malloc]);
+  catomic_increment (&calls[idx_malloc]);
   /* Keep track of total memory consumption for `malloc'.  */
-  atomic_add (&total[idx_malloc], len);
+  catomic_add (&total[idx_malloc], len);
   /* Keep track of total memory requirement.  */
-  atomic_add (&grand_total, len);
+  catomic_add (&grand_total, len);
   /* Remember the size of the request.  */
   if (len < 65536)
-    atomic_increment (&histogram[len / 16]);
+    catomic_increment (&histogram[len / 16]);
   else
-    atomic_increment (&large);
+    catomic_increment (&large);
   /* Total number of calls of any of the functions.  */
-  atomic_increment (&calls_total);
+  catomic_increment (&calls_total);
 
   /* Do the real work.  */
   result = (struct header *) (*mallocp) (len + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_malloc]);
+      catomic_increment (&failed[idx_malloc]);
       return NULL;
     }
 
@@ -403,36 +403,36 @@ realloc (void *old, size_t len)
     }
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_realloc]);
+  catomic_increment (&calls[idx_realloc]);
   if (len > old_len)
     {
       /* Keep track of total memory consumption for `realloc'.  */
-      atomic_add (&total[idx_realloc], len - old_len);
+      catomic_add (&total[idx_realloc], len - old_len);
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len - old_len);
+      catomic_add (&grand_total, len - old_len);
     }
   /* Remember the size of the request.  */
   if (len < 65536)
-    atomic_increment (&histogram[len / 16]);
+    catomic_increment (&histogram[len / 16]);
   else
-    atomic_increment (&large);
+    catomic_increment (&large);
   /* Total number of calls of any of the functions.  */
-  atomic_increment (&calls_total);
+  catomic_increment (&calls_total);
 
   /* Do the real work.  */
   result = (struct header *) (*reallocp) (real, len + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_realloc]);
+      catomic_increment (&failed[idx_realloc]);
       return NULL;
     }
 
   /* Record whether the reduction/increase happened in place.  */
   if (real == result)
-    atomic_increment (&inplace);
+    catomic_increment (&inplace);
   /* Was the buffer increased?  */
   if (old_len > len)
-    atomic_increment (&decreasing);
+    catomic_increment (&decreasing);
 
   /* Update the allocation data and write out the records if necessary.  */
   update_data (result, len, old_len);
@@ -463,16 +463,16 @@ calloc (size_t n, size_t len)
     return (*callocp) (n, len);
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_calloc]);
+  catomic_increment (&calls[idx_calloc]);
   /* Keep track of total memory consumption for `calloc'.  */
-  atomic_add (&total[idx_calloc], size);
+  catomic_add (&total[idx_calloc], size);
   /* Keep track of total memory requirement.  */
-  atomic_add (&grand_total, size);
+  catomic_add (&grand_total, size);
   /* Remember the size of the request.  */
   if (size < 65536)
-    atomic_increment (&histogram[size / 16]);
+    catomic_increment (&histogram[size / 16]);
   else
-    atomic_increment (&large);
+    catomic_increment (&large);
   /* Total number of calls of any of the functions.  */
   ++calls_total;
 
@@ -480,7 +480,7 @@ calloc (size_t n, size_t len)
   result = (struct header *) (*mallocp) (size + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_calloc]);
+      catomic_increment (&failed[idx_calloc]);
       return NULL;
     }
 
@@ -517,7 +517,7 @@ free (void *ptr)
   /* `free (NULL)' has no effect.  */
   if (ptr == NULL)
     {
-      atomic_increment (&calls[idx_free]);
+      catomic_increment (&calls[idx_free]);
       return;
     }
 
@@ -531,9 +531,9 @@ free (void *ptr)
     }
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_free]);
+  catomic_increment (&calls[idx_free]);
   /* Keep track of total memory freed using `free'.  */
-  atomic_add (&total[idx_free], real->length);
+  catomic_add (&total[idx_free], real->length);
 
   /* Update the allocation data and write out the records if necessary.  */
   update_data (NULL, 0, real->length);
@@ -567,22 +567,22 @@ mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
 		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx]);
+      catomic_increment (&calls[idx]);
       /* Keep track of total memory consumption for `malloc'.  */
-      atomic_add (&total[idx], len);
+      catomic_add (&total[idx], len);
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len);
+      catomic_add (&grand_total, len);
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	catomic_increment (&histogram[len / 16]);
       else
-	atomic_increment (&large);
+	catomic_increment (&large);
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      catomic_increment (&calls_total);
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx]);
+	catomic_increment (&failed[idx]);
       else if (idx == idx_mmap_w)
 	/* Update the allocation data and write out the records if
 	   necessary.  Note the first parameter is NULL which means
@@ -619,22 +619,22 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx]);
+      catomic_increment (&calls[idx]);
       /* Keep track of total memory consumption for `malloc'.  */
-      atomic_add (&total[idx], len);
+      catomic_add (&total[idx], len);
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len);
+      catomic_add (&grand_total, len);
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	catomic_increment (&histogram[len / 16]);
       else
-	atomic_increment (&large);
+	catomic_increment (&large);
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      catomic_increment (&calls_total);
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx]);
+	catomic_increment (&failed[idx]);
       else if (idx == idx_mmap_w)
 	/* Update the allocation data and write out the records if
 	   necessary.  Note the first parameter is NULL which means
@@ -673,33 +673,33 @@ mremap (void *start, size_t old_len, size_t len, int flags,  ...)
   if (!not_me && trace_mmap)
     {
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx_mremap]);
+      catomic_increment (&calls[idx_mremap]);
       if (len > old_len)
 	{
 	  /* Keep track of total memory consumption for `malloc'.  */
-	  atomic_add (&total[idx_mremap], len - old_len);
+	  catomic_add (&total[idx_mremap], len - old_len);
 	  /* Keep track of total memory requirement.  */
-	  atomic_add (&grand_total, len - old_len);
+	  catomic_add (&grand_total, len - old_len);
 	}
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	catomic_increment (&histogram[len / 16]);
       else
-	atomic_increment (&large);
+	catomic_increment (&large);
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      catomic_increment (&calls_total);
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx_mremap]);
+	catomic_increment (&failed[idx_mremap]);
       else
 	{
 	  /* Record whether the reduction/increase happened in place.  */
 	  if (start == result)
-	    atomic_increment (&inplace_mremap);
+	    catomic_increment (&inplace_mremap);
 	  /* Was the buffer increased?  */
 	  if (old_len > len)
-	    atomic_increment (&decreasing_mremap);
+	    catomic_increment (&decreasing_mremap);
 
 	  /* Update the allocation data and write out the records if
 	     necessary.  Note the first parameter is NULL which means
@@ -733,19 +733,19 @@ munmap (void *start, size_t len)
   if (!not_me && trace_mmap)
     {
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx_munmap]);
+      catomic_increment (&calls[idx_munmap]);
 
       if (__builtin_expect (result == 0, 1))
 	{
 	  /* Keep track of total memory freed using `free'.  */
-	  atomic_add (&total[idx_munmap], len);
+	  catomic_add (&total[idx_munmap], len);
 
 	  /* Update the allocation data and write out the records if
 	     necessary.  */
 	  update_data (NULL, 0, len);
 	}
       else
-	atomic_increment (&failed[idx_munmap]);
+	catomic_increment (&failed[idx_munmap]);
     }
 
   return result;

@@ -21,6 +21,26 @@
 #ifndef _ATOMIC_H
 #define _ATOMIC_H	1
 
+/* This header defines three types of macros:
+
+   - atomic arithmetic and logic operation on memory.  They all
+     have the prefix "atomic_".
+
+   - conditionally atomic operations of the same kinds.  These
+     always behave identical but can be faster when atomicity
+     is not really needed since only one thread has access to
+     the memory location.  In that case the code is slower in
+     the multi-thread case.  The interfaces have the prefix
+     "catomic_".
+
+   - support functions like barriers.  They also have the preifx
+     "atomic_".
+
+   Architectures must provide a few lowlevel macros (the compare
+   and exchange definitions).  All others are optional.  They
+   should only be provided if the architecture has specific
+   support for the operation.  */
+
 #include <stdlib.h>
 
 #include <bits/atomic.h>
@@ -70,8 +90,25 @@
 #endif
 
 
+#if !defined catomic_compare_and_exchange_val_acq \
+    && defined __arch_c_compare_and_exchange_val_32_acq
+# define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  __atomic_val_bysize (__arch_c_compare_and_exchange_val,acq,		      \
+		       mem, newval, oldval)
+#else
+# define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  atomic_compare_and_exchange_val_acq (mem, newval, oldval)
+#endif
+
+
 #ifndef atomic_compare_and_exchange_val_rel
 # define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+  atomic_compare_and_exchange_val_acq (mem, newval, oldval)
+#endif
+
+
+#ifndef catomic_compare_and_exchange_val_rel
+# define catomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
   atomic_compare_and_exchange_val_acq (mem, newval, oldval)
 #endif
 
@@ -94,9 +131,31 @@
 #endif
 
 
+#ifndef catomic_compare_and_exchange_bool_acq
+# ifdef __arch_c_compare_and_exchange_bool_32_acq
+#  define catomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  __atomic_bool_bysize (__arch_c_compare_and_exchange_bool,acq,		      \
+		        mem, newval, oldval)
+#  else
+#   define catomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  ({ /* Cannot use __oldval here, because macros later in this file might     \
+	call this macro with __oldval argument.	 */			      \
+     __typeof (oldval) __old = (oldval);				      \
+     catomic_compare_and_exchange_val_acq (mem, newval, __old) != __old;      \
+  })
+# endif
+#endif
+
+
 #ifndef atomic_compare_and_exchange_bool_rel
 # define atomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
   atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
+#endif
+
+
+#ifndef catomic_compare_and_exchange_bool_rel
+# define catomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
+  catomic_compare_and_exchange_bool_acq (mem, newval, oldval)
 #endif
 
 
@@ -141,6 +200,23 @@
 #endif
 
 
+#ifndef catomic_exchange_and_add
+# define catomic_exchange_and_add(mem, value) \
+  ({ __typeof (*(mem)) __oldv;						      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*(mem)) __value = (value);				      \
+									      \
+     do									      \
+       __oldv = *__memp;						      \
+     while (__builtin_expect (catomic_compare_and_exchange_bool_acq (__memp,  \
+								     __oldv   \
+								    + __value,\
+								     __oldv), \
+			      0));					      \
+									      \
+     __oldv; })
+#endif
+
 
 #ifndef atomic_max
 # define atomic_max(mem, value) \
@@ -159,6 +235,25 @@
   } while (0)
 #endif
 
+
+#ifndef catomic_max
+# define catomic_max(mem, value) \
+  do {									      \
+    __typeof (*(mem)) __oldv;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __value = (value);				      \
+    do {								      \
+      __oldv = *__memp;							      \
+      if (__oldv >= __value)						      \
+	break;								      \
+    } while (__builtin_expect (catomic_compare_and_exchange_bool_acq (__memp, \
+								      __value,\
+								      __oldv),\
+			       0));					      \
+  } while (0)
+#endif
+
+
 #ifndef atomic_min
 # define atomic_min(mem, value) \
   do {									      \
@@ -176,8 +271,15 @@
   } while (0)
 #endif
 
+
 #ifndef atomic_add
 # define atomic_add(mem, value) (void) atomic_exchange_and_add ((mem), (value))
+#endif
+
+
+#ifndef catomic_add
+# define catomic_add(mem, value) \
+  (void) catomic_exchange_and_add ((mem), (value))
 #endif
 
 
@@ -186,8 +288,18 @@
 #endif
 
 
+#ifndef catomic_increment
+# define catomic_increment(mem) catomic_add ((mem), 1)
+#endif
+
+
 #ifndef atomic_increment_val
 # define atomic_increment_val(mem) (atomic_exchange_and_add ((mem), 1) + 1)
+#endif
+
+
+#ifndef catomic_increment_val
+# define catomic_increment_val(mem) (catomic_exchange_and_add ((mem), 1) + 1)
 #endif
 
 
@@ -203,8 +315,18 @@
 #endif
 
 
+#ifndef catomic_decrement
+# define catomic_decrement(mem) catomic_add ((mem), -1)
+#endif
+
+
 #ifndef atomic_decrement_val
 # define atomic_decrement_val(mem) (atomic_exchange_and_add ((mem), -1) - 1)
+#endif
+
+
+#ifndef catomic_decrement_val
+# define catomic_decrement_val(mem) (catomic_exchange_and_add ((mem), -1) - 1)
 #endif
 
 
@@ -323,6 +445,23 @@
 								   __oldval   \
 								   | __mask,  \
 								   __oldval), \
+			      0));					      \
+  } while (0)
+#endif
+
+#ifndef catomic_or
+# define catomic_or(mem, mask) \
+  do {									      \
+    __typeof (*(mem)) __oldval;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __mask = (mask);					      \
+									      \
+    do									      \
+      __oldval = (*__memp);						      \
+    while (__builtin_expect (catomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    | __mask, \
+								    __oldval),\
 			      0));					      \
   } while (0)
 #endif

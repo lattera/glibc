@@ -429,9 +429,9 @@ dl_open_worker (void *a)
 		  imap->l_scoperec = newp;
 		  __rtld_mrlock_done (imap->l_scoperec_lock);
 
-		  atomic_increment (&old->nusers);
+		  catomic_increment (&old->nusers);
 		  old->remove_after_use = true;
-		  if (atomic_decrement_val (&old->nusers) == 0)
+		  if (catomic_decrement_val (&old->nusers) == 0)
 		    /* No user, we can free it here and now.  */
 		    free (old);
 		}

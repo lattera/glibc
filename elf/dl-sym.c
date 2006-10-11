@@ -124,7 +124,7 @@ do_sym (void *handle, const char *name, void *who,
 	{
 	  __rtld_mrlock_lock (match->l_scoperec_lock);
 	  struct r_scoperec *scoperec = match->l_scoperec;
-	  atomic_increment (&scoperec->nusers);
+	  catomic_increment (&scoperec->nusers);
 	  __rtld_mrlock_unlock (match->l_scoperec_lock);
 
 	  struct call_dl_lookup_args args;
@@ -141,7 +141,7 @@ do_sym (void *handle, const char *name, void *who,
 	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
 					  call_dl_lookup, &args);
 
-	  if (atomic_decrement_val (&scoperec->nusers) == 0
+	  if (catomic_decrement_val (&scoperec->nusers) == 0
 	      && __builtin_expect (scoperec->remove_after_use, 0))
 	    {
 	      if (scoperec->notify)

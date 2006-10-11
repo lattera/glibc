@@ -33,7 +33,7 @@ extern unsigned long long int __res_initstamp attribute_hidden;
 #if __WORDSIZE == 64
 # define atomicinclock(lock) (void) 0
 # define atomicincunlock(lock) (void) 0
-# define atomicinc(var) atomic_increment (&(var))
+# define atomicinc(var) catomic_increment (&(var))
 #else
 __libc_lock_define_initialized (static, lock);
 # define atomicinclock(lock) __libc_lock_lock (lock)

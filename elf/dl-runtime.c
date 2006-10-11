@@ -97,7 +97,7 @@ _dl_fixup (
 	{
 	  __rtld_mrlock_lock (l->l_scoperec_lock);
 	  scoperec = l->l_scoperec;
-	  atomic_increment (&scoperec->nusers);
+	  catomic_increment (&scoperec->nusers);
 	  __rtld_mrlock_unlock (l->l_scoperec_lock);
 	}
 
@@ -107,7 +107,7 @@ _dl_fixup (
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
       if (l->l_type == lt_loaded
-	  && atomic_decrement_val (&scoperec->nusers) == 0
+	  && catomic_decrement_val (&scoperec->nusers) == 0
 	  && __builtin_expect (scoperec->remove_after_use, 0))
 	{
 	  if (scoperec->notify)
@@ -199,7 +199,7 @@ _dl_profile_fixup (
 	    {
 	      __rtld_mrlock_lock (l->l_scoperec_lock);
 	      scoperec = l->l_scoperec;
-	      atomic_increment (&scoperec->nusers);
+	      catomic_increment (&scoperec->nusers);
 	      __rtld_mrlock_unlock (l->l_scoperec_lock);
 	    }
 
@@ -209,7 +209,7 @@ _dl_profile_fixup (
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
 	  if (l->l_type == lt_loaded
-	      && atomic_decrement_val (&scoperec->nusers) == 0
+	      && catomic_decrement_val (&scoperec->nusers) == 0
 	      && __builtin_expect (scoperec->remove_after_use, 0))
 	    {
 	      if (scoperec->notify)

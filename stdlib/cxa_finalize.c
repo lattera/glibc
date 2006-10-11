@@ -45,8 +45,8 @@ __cxa_finalize (void *d)
 	      /* We don't want to run this cleanup more than once.  */
 	      && (cxafn = f->func.cxa.fn,
 		  cxaarg = f->func.cxa.arg,
-		  ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
-							  ef_cxa)))
+		  ! catomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
+							   ef_cxa)))
 	    {
 	      uint64_t check = __new_exitfn_called;
 

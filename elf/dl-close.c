@@ -423,11 +423,11 @@ _dl_close (void *_map)
 	      imap->l_scoperec = newp;
 	      __rtld_mrlock_done (imap->l_scoperec_lock);
 
-	      if (atomic_increment_val (&old->nusers) != 1)
+	      if (catomic_increment_val (&old->nusers) != 1)
 		{
 		  old->remove_after_use = true;
 		  old->notify = true;
-		  if (atomic_decrement_val (&old->nusers) != 0)
+		  if (catomic_decrement_val (&old->nusers) != 0)
 		    __rtld_waitzero (old->nusers);
 		}
 

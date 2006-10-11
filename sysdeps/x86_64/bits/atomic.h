@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <stdint.h>
+#include <tls.h>	/* For tcbhead_t.  */
 
 
 typedef int8_t atomic8_t;
@@ -85,6 +86,51 @@ typedef uintmax_t uatomic_max_t;
      ret; })
 
 
+#define __arch_c_compare_and_exchange_val_8_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+    __asm __volatile ("cmpl $0, %%fs:%P5\n\t"				      \
+		      "je 0f\n\t"					      \
+		      "lock\n"						      \
+		       "0:\tcmpxchgb %b2, %1"				      \
+		       : "=a" (ret), "=m" (*mem)			      \
+		       : "q" (newval), "m" (*mem), "0" (oldval),	      \
+			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
+     ret; })
+
+#define __arch_c_compare_and_exchange_val_16_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+    __asm __volatile ("cmpl $0, %%fs:%P5\n\t"				      \
+		      "je 0f\n\t"					      \
+		      "lock\n"						      \
+		       "0:\tcmpxchgw %w2, %1"				      \
+		       : "=a" (ret), "=m" (*mem)			      \
+		       : "q" (newval), "m" (*mem), "0" (oldval),	      \
+			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
+     ret; })
+
+#define __arch_c_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+    __asm __volatile ("cmpl $0, %%fs:%P5\n\t"				      \
+		      "je 0f\n\t"					      \
+		      "lock\n"						      \
+		       "0:\tcmpxchgl %2, %1"				      \
+		       : "=a" (ret), "=m" (*mem)			      \
+		       : "q" (newval), "m" (*mem), "0" (oldval),	      \
+			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
+     ret; })
+
+#define __arch_c_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+    __asm __volatile ("cmpl $0, %%fs:%P5\n\t"				      \
+		      "je 0f\n\t"					      \
+		      "lock\n"						      \
+		       "0:\tcmpxchgq %q2, %1"				      \
+		       : "=a" (ret), "=m" (*mem)			      \
+		       : "q" (newval), "m" (*mem), "0" (oldval),	      \
+			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
+     ret; })
+
+
 /* Note that we need no lock prefix.  */
 #define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*mem) result;						      \
@@ -107,49 +153,76 @@ typedef uintmax_t uatomic_max_t;
      result; })
 
 
-#define atomic_exchange_and_add(mem, value) \
+#define __arch_exchange_and_add_body(lock, mem, value)			      \
   ({ __typeof (*mem) result;						      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "xaddb %b0, %1"			      \
+       __asm __volatile (lock "xaddb %b0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (value), "m" (*mem));			      \
+			 : "0" (value), "m" (*mem),			      \
+			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "xaddw %w0, %1"			      \
+       __asm __volatile (lock "xaddw %w0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (value), "m" (*mem));			      \
+			 : "0" (value), "m" (*mem),			      \
+			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "xaddl %0, %1"			      \
+       __asm __volatile (lock "xaddl %0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (value), "m" (*mem));			      \
+			 : "0" (value), "m" (*mem),			      \
+			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      else								      \
-       __asm __volatile (LOCK_PREFIX "xaddq %q0, %1"			      \
+       __asm __volatile (lock "xaddq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((long) (value)), "m" (*mem));		      \
+			 : "0" ((long) (value)), "m" (*mem),		      \
+			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      result; })
 
+#define atomic_exchange_and_add(mem, value) \
+  __arch_exchange_and_add_body (LOCK_PREFIX, mem, value)
+
+#define __arch_exchange_and_add_cprefix \
+  "cmpl $0, %%fs:%P4\n\tje 0f\n\tlock\n0:\t"
+
+#define catomic_exchange_and_add(mem, value) \
+  __arch_exchange_and_add_body (__arch_exchange_and_add_cprefix, mem, value)
+
+
+#define __arch_add_body(lock, pfx, mem, value)				      \
+  do {									      \
+    if (__builtin_constant_p (value) && (value) == 1)			      \
+      pfx##_increment (mem);						      \
+    else if (__builtin_constant_p (value) && (value) == -1)		      \
+      pfx##_decrement (mem);						      \
+    else if (sizeof (*mem) == 1)					      \
+      __asm __volatile (lock "addb %b1, %0"				      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
+    else if (sizeof (*mem) == 2)					      \
+      __asm __volatile (lock "addw %w1, %0"				      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
+    else if (sizeof (*mem) == 4)					      \
+      __asm __volatile (lock "addl %1, %0"				      \
+			: "=m" (*mem)					      \
+			: "ir" (value), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
+    else								      \
+      __asm __volatile (lock "addq %q1, %0"				      \
+			: "=m" (*mem)					      \
+			: "ir" ((long) (value)), "m" (*mem),		      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
+  } while (0)
 
 #define atomic_add(mem, value) \
-  (void) ({ if (__builtin_constant_p (value) && (value) == 1)		      \
-	      atomic_increment (mem);					      \
-	    else if (__builtin_constant_p (value) && (value) == 1)	      \
-	      atomic_decrement (mem);					      \
-	    else if (sizeof (*mem) == 1)				      \
-	      __asm __volatile (LOCK_PREFIX "addb %b1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else if (sizeof (*mem) == 2)				      \
-	      __asm __volatile (LOCK_PREFIX "addw %w1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else if (sizeof (*mem) == 4)				      \
-	      __asm __volatile (LOCK_PREFIX "addl %1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" (value), "m" (*mem));		      \
-	    else							      \
-	      __asm __volatile (LOCK_PREFIX "addq %q1, %0"		      \
-				: "=m" (*mem)				      \
-				: "ir" ((long) (value)), "m" (*mem));	      \
-	    })
+  __arch_add_body (LOCK_PREFIX, atomic, mem, value)
+
+#define __arch_add_cprefix \
+  "cmpl $0, %%fs:%P3\n\tje 0f\n\tlock\n0:\t"
+
+#define catomic_add(mem, value) \
+  __arch_add_body (__arch_add_cprefix, catomic, mem, value)
 
 
 #define atomic_add_negative(mem, value) \
@@ -194,25 +267,37 @@ typedef uintmax_t uatomic_max_t;
      __result; })
 
 
-#define atomic_increment(mem) \
+#define __arch_increment_body(lock, mem) \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "incb %b0"				      \
+      __asm __volatile (lock "incb %b0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "incw %w0"				      \
+      __asm __volatile (lock "incw %w0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (LOCK_PREFIX "incl %0"				      \
+      __asm __volatile (lock "incl %0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else								      \
-      __asm __volatile (LOCK_PREFIX "incq %q0"				      \
+      __asm __volatile (lock "incq %q0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
   } while (0)
+
+#define atomic_increment(mem) __arch_increment_body (LOCK_PREFIX, mem)
+
+#define __arch_increment_cprefix \
+  "cmpl $0, %%fs:%P2\n\tje 0f\n\tlock\n0:\t"
+
+#define catomic_increment(mem) \
+  __arch_increment_body (__arch_increment_cprefix, mem)
 
 
 #define atomic_increment_and_test(mem) \
@@ -236,25 +321,37 @@ typedef uintmax_t uatomic_max_t;
      __result; })
 
 
-#define atomic_decrement(mem) \
+#define __arch_decrement_body(lock, mem) \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "decb %b0"				      \
+      __asm __volatile (lock "decb %b0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "decw %w0"				      \
+      __asm __volatile (lock "decw %w0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (LOCK_PREFIX "decl %0"				      \
+      __asm __volatile (lock "decl %0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else								      \
-      __asm __volatile (LOCK_PREFIX "decq %q0"				      \
+      __asm __volatile (lock "decq %q0"					      \
 			: "=m" (*mem)					      \
-			: "m" (*mem));					      \
+			: "m" (*mem),					      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
   } while (0)
+
+#define atomic_decrement(mem) __arch_decrement_body (LOCK_PREFIX, mem)
+
+#define __arch_decrement_cprefix \
+  "cmpl $0, %%fs:%P2\n\tje 0f\n\tlock\n0:\t"
+
+#define catomic_decrement(mem) \
+  __arch_increment_body (__arch_decrement_cprefix, mem)
 
 
 #define atomic_decrement_and_test(mem) \
@@ -348,22 +445,33 @@ typedef uintmax_t uatomic_max_t;
   } while (0)
 
 
-#define atomic_or(mem, mask) \
+#define __arch_or_body(lock, mem, mask)					      \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "orb %1, %b0"			      \
+      __asm __volatile (lock "orb %1, %b0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "orw %1, %w0"			      \
+      __asm __volatile (lock "orw %1, %w0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (LOCK_PREFIX "orl %1, %0"			      \
+      __asm __volatile (lock "orl %1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else								      \
-      __asm __volatile (LOCK_PREFIX "orq %1, %q0"			      \
+      __asm __volatile (lock "orq %1, %q0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
   } while (0)
+
+#define atomic_or(mem, mask) __arch_or_body (LOCK_PREFIX, mem, mask)
+
+#define __arch_or_cprefix \
+  "cmpl $0, %%fs:%P3\n\tje 0f\n\tlock\n0:\t"
+
+#define catomic_or(mem, mask) __arch_or_body (__arch_or_cprefix, mem, mask)

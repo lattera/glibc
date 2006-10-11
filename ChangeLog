@@ -1,3 +1,18 @@
+2006-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.c: Define catomic_* operations.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.  Fix a few minor problems.
+	* stdlib/cxa_finalize.c: Use catomic_* operations instead of atomic_*.
+	* malloc/memusage.c: Likewise.
+	* gmon/mcount.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-fptr.c: Likewise.
+	* resolv/res_libc.c: Likewise.
+
 2006-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_subr.c (nis_getnames): Add trailing dot to NIS_PATH
