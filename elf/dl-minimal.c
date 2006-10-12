@@ -128,13 +128,14 @@ free (void *ptr)
 void * weak_function
 realloc (void *ptr, size_t n)
 {
-  void *new;
   if (ptr == NULL)
     return malloc (n);
   assert (ptr == alloc_last_block);
+  size_t old_size = alloc_ptr - alloc_last_block;
   alloc_ptr = alloc_last_block;
-  new = malloc (n);
-  assert (new == ptr);
+  void *new = malloc (n);
+  if (new != ptr)
+    memcpy (new, ptr, old_size);
   return new;
 }
 

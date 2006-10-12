@@ -1,3 +1,20 @@
+2006-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3285]
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add SEM_VALUE_MAX.
+	* sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/semaphore.h: Remove SEM_VALUE_MAX.
+	* sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/semaphore.h: Likewise.
+
 2006-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Add support for
