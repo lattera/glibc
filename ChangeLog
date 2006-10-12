@@ -1,3 +1,17 @@
+2006-11-12  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #2510]
+	* manual/search.texi (Hash Search Function): Clarify.
+	(Array Search Function): Clarify.
+
+2006-11-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2830]
+	* math/atest-exp.c (main): Cast hex value to mp_limb_t before
+	shifting.
+	* math/atest-exp2.c (read_mpn_hex): Likewise.
+	* math/atest-sincos.c (main): Likewise.
+
 2006-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_pwait.
@@ -755,7 +769,7 @@
 	* nis/nis_xdr.c: Avoid some function calls.
 
 2006-08-07  Jakub Jelinek  <jakub@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (rec_dirsearch) [case LOWER_NAME]: Don't take
 	short cut if only one name component is stripped away.

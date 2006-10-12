@@ -82,7 +82,7 @@ starting at @var{base} if it is found.  If no matching element is
 available @code{NULL} is returned.
 
 The mean runtime of this function is @code{*@var{nmemb}}/2.  This
-function should only be used elements often get added to or deleted from
+function should only be used if elements often get added to or deleted from
 the array in which case it might not be useful to sort the array before
 searching.
 @end deftypefun
@@ -247,21 +247,21 @@ Couldn't find Janice.
 @node Hash Search Function
 @section The @code{hsearch} function.
 
-The functions mentioned so far in this chapter are searching in a sorted
+The functions mentioned so far in this chapter are for searching in a sorted
 or unsorted array.  There are other methods to organize information
 which later should be searched.  The costs of insert, delete and search
 differ.  One possible implementation is using hashing tables.
-The following functions are declared in the the header file @file{search.h}.
+The following functions are declared in the header file @file{search.h}.
 
 @comment search.h
 @comment SVID
 @deftypefun int hcreate (size_t @var{nel})
 The @code{hcreate} function creates a hashing table which can contain at
 least @var{nel} elements.  There is no possibility to grow this table so
-it is necessary to choose the value for @var{nel} wisely.  The used
-methods to implement this function might make it necessary to make the
+it is necessary to choose the value for @var{nel} wisely.  The method
+used to implement this function might make it necessary to make the
 number of elements in the hashing table larger than the expected maximal
-number of elements.  Hashing tables usually work inefficient if they are
+number of elements.  Hashing tables usually work inefficiently if they are
 filled 80% or more.  The constant access time guaranteed by hashing can
 only be achieved if few collisions exist.  See Knuth's ``The Art of
 Computer Programming, Part 3: Searching and Sorting'' for more
