@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <Geoff.Keating@anu.edu.au>, 1997.
 
@@ -73,8 +73,9 @@ read_mpn_hex(mp_limb_t *x, const char *str)
 
   memset (x, 0, sizeof (mp1));
   for (i = -1; i < 100 && i < FRAC / 4; ++i)
-    x[(FRAC - i * 4 - 4) / mpbpl] |= ((strchr (hexdig, str[i + 1]) - hexdig)
-				      << (FRAC - i * 4 - 4) % mpbpl);
+    x[(FRAC - i * 4 - 4) / mpbpl] |= ((mp_limb_t) (strchr (hexdig, str[i + 1])
+						   - hexdig)
+ 				      << (FRAC - i * 4 - 4) % mpbpl);
 }
 
 static mp_limb_t *get_log2(void) __attribute__((const));
