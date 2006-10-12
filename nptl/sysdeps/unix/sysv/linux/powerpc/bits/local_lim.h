@@ -88,3 +88,6 @@
 
 /* Maximum message queue priority level.  */
 #define MQ_PRIO_MAX		32768
+
+/* Maximum value the semaphore can have.  */
+#define SEM_VALUE_MAX   (2147483647)
