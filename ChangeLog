@@ -1,7 +1,11 @@
 2006-10-13  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/malloc.c (do_check_malloc_state): Only require for empty
-	bins for large sizes in main arena.
+	[BZ #3313]
+	* malloc/malloc.c (malloc_consolidate): Don't use get_fast_max to
+	determine highest fast bin to consolidate, always look into all of
+	them.
+	(do_check_malloc_state): Only require for empty bins for large
+	sizes in main arena.
 
 	* libio/stdio.h: Add more __wur attributes.
 

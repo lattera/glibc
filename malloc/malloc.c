@@ -4692,7 +4692,15 @@ static void malloc_consolidate(av) mstate av;
       reused anyway.
     */
 
+#if 0
+    /* It is wrong to limit the fast bins to search using get_max_fast
+       because, except for the main arena, all the others might have
+       blocks in the high fast bins.  It's not worth it anyway, just
+       search all bins all the time.  */
     maxfb = &(av->fastbins[fastbin_index(get_max_fast ())]);
+#else
+    maxfb = &(av->fastbins[NFASTBINS]);
+#endif
     fb = &(av->fastbins[0]);
     do {
       if ( (p = *fb) != 0) {
