@@ -1,9 +1,13 @@
+2006-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c (realloc): Optimize last patch.
+
 2006-10-12  Richard Sandiford  <richard@codesourcery.com>
 
 	[BZ #3352]
 	* elf/dl-minimal.c (realloc): Let malloc() return a new pointer,
 	and use memcpy() if it does.
-		
+
 2006-11-12  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #2510]

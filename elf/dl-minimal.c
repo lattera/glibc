@@ -1,5 +1,6 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2002,2004,2005,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,9 +135,7 @@ realloc (void *ptr, size_t n)
   size_t old_size = alloc_ptr - alloc_last_block;
   alloc_ptr = alloc_last_block;
   void *new = malloc (n);
-  if (new != ptr)
-    memcpy (new, ptr, old_size);
-  return new;
+  return new != ptr ? memcpy (new, ptr, old_size) : new;
 }
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */
