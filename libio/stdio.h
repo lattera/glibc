@@ -166,27 +166,27 @@ __BEGIN_NAMESPACE_STD
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern FILE *tmpfile (void);
+extern FILE *tmpfile (void) __wur;
 #else
 # ifdef __REDIRECT
-extern FILE *__REDIRECT (tmpfile, (void), tmpfile64);
+extern FILE *__REDIRECT (tmpfile, (void), tmpfile64) __wur;
 # else
 #  define tmpfile tmpfile64
 # endif
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern FILE *tmpfile64 (void);
+extern FILE *tmpfile64 (void) __wur;
 #endif
 
 /* Generate a temporary filename.  */
-extern char *tmpnam (char *__s) __THROW;
+extern char *tmpnam (char *__s) __THROW __wur;
 __END_NAMESPACE_STD
 
 #ifdef __USE_MISC
 /* This is the reentrant variant of `tmpnam'.  The only difference is
    that it does not allow S to be NULL.  */
-extern char *tmpnam_r (char *__s) __THROW;
+extern char *tmpnam_r (char *__s) __THROW __wur;
 #endif
 
 
@@ -199,7 +199,7 @@ extern char *tmpnam_r (char *__s) __THROW;
    P_tmpdir is tried and finally "/tmp".  The storage for the filename
    is allocated by `malloc'.  */
 extern char *tempnam (__const char *__dir, __const char *__pfx)
-     __THROW __attribute_malloc__;
+     __THROW __attribute_malloc__ __wur;
 #endif
 
 
@@ -244,21 +244,23 @@ __BEGIN_NAMESPACE_STD
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern FILE *fopen (__const char *__restrict __filename,
-		    __const char *__restrict __modes);
+		    __const char *__restrict __modes) __wur;
 /* Open a file, replacing an existing stream with it.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern FILE *freopen (__const char *__restrict __filename,
 		      __const char *__restrict __modes,
-		      FILE *__restrict __stream);
+		      FILE *__restrict __stream) __wur;
 #else
 # ifdef __REDIRECT
 extern FILE *__REDIRECT (fopen, (__const char *__restrict __filename,
-				 __const char *__restrict __modes), fopen64);
+				 __const char *__restrict __modes), fopen64)
+  __wur;
 extern FILE *__REDIRECT (freopen, (__const char *__restrict __filename,
 				   __const char *__restrict __modes,
-				   FILE *__restrict __stream), freopen64);
+				   FILE *__restrict __stream), freopen64)
+  __wur;
 # else
 #  define fopen fopen64
 #  define freopen freopen64
@@ -267,15 +269,15 @@ extern FILE *__REDIRECT (freopen, (__const char *__restrict __filename,
 __END_NAMESPACE_STD
 #ifdef __USE_LARGEFILE64
 extern FILE *fopen64 (__const char *__restrict __filename,
-		      __const char *__restrict __modes);
+		      __const char *__restrict __modes) __wur;
 extern FILE *freopen64 (__const char *__restrict __filename,
 			__const char *__restrict __modes,
-			FILE *__restrict __stream);
+			FILE *__restrict __stream) __wur;
 #endif
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
-extern FILE *fdopen (int __fd, __const char *__modes) __THROW;
+extern FILE *fdopen (int __fd, __const char *__modes) __THROW __wur;
 #endif
 
 #ifdef	__USE_GNU
@@ -283,15 +285,16 @@ extern FILE *fdopen (int __fd, __const char *__modes) __THROW;
    and uses the given functions for input and output.  */
 extern FILE *fopencookie (void *__restrict __magic_cookie,
 			  __const char *__restrict __modes,
-			  _IO_cookie_io_functions_t __io_funcs) __THROW;
+			  _IO_cookie_io_functions_t __io_funcs) __THROW __wur;
 
 /* Create a new stream that refers to a memory buffer.  */
-extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes) __THROW;
+extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes)
+  __THROW __wur;
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) __THROW;
+extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) __THROW __wur;
 #endif
 
 
@@ -367,13 +370,13 @@ __END_NAMESPACE_C99
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
 		      _G_va_list __arg)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
+     __THROW __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
 extern int __asprintf (char **__restrict __ptr,
 		       __const char *__restrict __fmt, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 extern int asprintf (char **__restrict __ptr,
 		     __const char *__restrict __fmt, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 
 /* Write formatted output to a file descriptor.
 
