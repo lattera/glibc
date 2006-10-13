@@ -1,5 +1,8 @@
 2006-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (do_check_malloc_state): Only require for empty
+	bins for large sizes in main arena.
+
 	* libio/stdio.h: Add more __wur attributes.
 
 	* elf/dl-minimal.c (realloc): Optimize last patch.
