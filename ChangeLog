@@ -1,3 +1,9 @@
+2006-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3369]
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Fix typos in rules 4
+	and 7.
+
 2006-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/arpa/nameser.h: Document that ns_t_a6 is deprecated.
