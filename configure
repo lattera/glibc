@@ -864,7 +864,7 @@ Optional Features:
                           [default=no]
   --enable-shared         build shared library [default=yes if GNU ld &
                           ELF]
-  --enable-profile        build profiled library [default=yes]
+  --enable-profile        build profiled library [default=no]
   --enable-omitfp         build undebuggable optimized library
                           [default=no]
   --enable-bounded        build with runtime bounds checking
@@ -1543,7 +1543,7 @@ if test "${enable_profile+set}" = set; then
   enableval="$enable_profile"
   profile=$enableval
 else
-  profile=yes
+  profile=no
 fi;
 # Check whether --enable-omitfp or --disable-omitfp was given.
 if test "${enable_omitfp+set}" = set; then

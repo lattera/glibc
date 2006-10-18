@@ -131,9 +131,9 @@ AC_ARG_ENABLE([shared],
 	      [shared=default])
 AC_ARG_ENABLE([profile],
               AC_HELP_STRING([--enable-profile],
-                             [build profiled library @<:@default=yes@:>@]),
+                             [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
-	      [profile=yes])
+	      [profile=no])
 AC_ARG_ENABLE([omitfp],
               AC_HELP_STRING([--enable-omitfp],
                              [build undebuggable optimized library @<:@default=no@:>@]),

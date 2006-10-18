@@ -1,3 +1,7 @@
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Disable building profile libraries by default.
+
 2006-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/xdr_mem.c (xdrmem_setpos): Don't compare addresses
