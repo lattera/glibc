@@ -1,3 +1,51 @@
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr_mem.c (xdrmem_setpos): Don't compare addresses
+	as signed longs, check for x_base + pos overflow.
+	* sunrpc/Makefile (tests): Add tst-xdrmem2.
+	* sunrpc/tst-xdrmem2.c: New test.
+
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Add warning to
+	_dl_lookup_symbol_x code.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-runtime.c: Include sysdep-cancel.h.
+	(_dl_fixup, _dl_profile_fixup): Use __rtld_mrlock_* and
+	scoperec->nusers only if !SINGLE_THREAD_P.  Use atomic_*
+	instead of catomic_* macros.
+	* elf/dl-sym.c: Include sysdep-cancel.h.
+	(do_sym): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+	* elf/dl-close.c: Include sysdep-cancel.h.
+	(_dl_close): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+	* elf/dl-open.c: Include sysdep-cancel.h.
+	(dl_open_worker): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3313]
+	* malloc/malloc.c (malloc_consolidate): Set maxfb to address of last
+	fastbin rather than end of fastbin array.
+
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/atomic.h (catomic_decrement): Use correct
+	body macro.
+	* sysdeps/x86_64/bits/atomic.h
+	(__arch_c_compare_and_exchange_val_64_acq): Add missing casts.
+	(catomic_decrement): Use correct body macro.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Add a unique prefix to all local variables
+	in macros.
+	* csu/tst-atomic.c (do_test): Test also catomic_* macros.
+
 2006-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3369]
@@ -108,7 +156,7 @@
 	* elf/dl-load.c: Likewise.
 	* elf/dl-object.c: Likewise.
 	* elf/rtld.c: Likewise.
-	* include/link.h: Inlcude <rtld-lowlevel.h>.  Define struct
+	* include/link.h: Include <rtld-lowlevel.h>.  Define struct
 	r_scoperec.  Replace r_scope with pointer to r_scoperec structure.
 	Add l_scoperec_lock.
 	* sysdeps/generic/ldsodefs.h: Include <rtld-lowlevel.h>.

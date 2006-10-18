@@ -4699,7 +4699,7 @@ static void malloc_consolidate(av) mstate av;
        search all bins all the time.  */
     maxfb = &(av->fastbins[fastbin_index(get_max_fast ())]);
 #else
-    maxfb = &(av->fastbins[NFASTBINS]);
+    maxfb = &(av->fastbins[NFASTBINS - 1]);
 #endif
     fb = &(av->fastbins[0]);
     do {

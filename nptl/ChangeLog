@@ -1,3 +1,9 @@
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_mrlock_lock,
+	__rtld_mrlock_unlock, __rtld_mrlock_change, __rtld_mrlock_done): Use
+	atomic_* instead of catomic_* macros.
+
 2006-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3285]

@@ -25,6 +25,7 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
+#include <sysdep-cancel.h>
 #ifdef USE_TLS
 # include <dl-tls.h>
 #endif
@@ -115,7 +116,7 @@ do_sym (void *handle, const char *name, void *who,
 	 the initial binary.  And then the more complex part
 	 where the object is dynamically loaded and the scope
 	 array can change.  */
-      if (match->l_type != lt_loaded)
+      if (match->l_type != lt_loaded || SINGLE_THREAD_P)
 	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
 					   match->l_scoperec->scope, vers, 0,
 					   flags | DL_LOOKUP_ADD_DEPENDENCY,
@@ -124,7 +125,7 @@ do_sym (void *handle, const char *name, void *who,
 	{
 	  __rtld_mrlock_lock (match->l_scoperec_lock);
 	  struct r_scoperec *scoperec = match->l_scoperec;
-	  catomic_increment (&scoperec->nusers);
+	  atomic_increment (&scoperec->nusers);
 	  __rtld_mrlock_unlock (match->l_scoperec_lock);
 
 	  struct call_dl_lookup_args args;
@@ -141,7 +142,7 @@ do_sym (void *handle, const char *name, void *who,
 	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
 					  call_dl_lookup, &args);
 
-	  if (catomic_decrement_val (&scoperec->nusers) == 0
+	  if (atomic_decrement_val (&scoperec->nusers) == 0
 	      && __builtin_expect (scoperec->remove_after_use, 0))
 	    {
 	      if (scoperec->notify)

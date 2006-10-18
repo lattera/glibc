@@ -207,7 +207,11 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME, perhaps with a requested version for the symbol.  */
+   UNDEF_NAME, perhaps with a requested version for the symbol.
+
+   We must never have calls to the audit functions inside this function
+   or in any function which gets called.  If this would happen the audit
+   code might create a thread which can throw off all the scope locking.  */
 lookup_t
 internal_function
 _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,

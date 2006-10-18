@@ -425,7 +425,7 @@ typedef uintmax_t uatomic_max_t;
   "cmpl $0, %%gs:%P2\n\tje 0f\n\tlock\n0:\t"
 
 #define catomic_decrement(mem) \
-  __arch_increment_body (__arch_decrement_cprefix, __arch_c, mem)
+  __arch_decrement_body (__arch_decrement_cprefix, __arch_c, mem)
 
 
 #define atomic_decrement_and_test(mem) \

@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1994-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
-tests = tst-xdrmem
+tests = tst-xdrmem tst-xdrmem2
 xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)

@@ -62,9 +62,9 @@ typedef int __rtld_mrlock_t;
 	      {								      \
 		int newval = ((oldval & __RTLD_MRLOCK_RBITS)		      \
 			      + __RTLD_MRLOCK_INC);			      \
-		int ret = catomic_compare_and_exchange_val_acq (&(lock),      \
-								newval,	      \
-								oldval);      \
+		int ret = atomic_compare_and_exchange_val_acq (&(lock),	      \
+							       newval,	      \
+							       oldval);	      \
 		if (__builtin_expect (ret == oldval, 1))		      \
 		  goto out;						      \
 	      }								      \
@@ -72,7 +72,7 @@ typedef int __rtld_mrlock_t;
 	  }								      \
 	if ((oldval & __RTLD_MRLOCK_RWAIT) == 0)			      \
 	  {								      \
-	    catomic_or (&(lock), __RTLD_MRLOCK_RWAIT);			      \
+	    atomic_or (&(lock), __RTLD_MRLOCK_RWAIT);			      \
 	    oldval |= __RTLD_MRLOCK_RWAIT;				      \
 	  }								      \
 	lll_futex_wait (lock, oldval);					      \
@@ -83,7 +83,7 @@ typedef int __rtld_mrlock_t;
 
 #define __rtld_mrlock_unlock(lock) \
   do {									      \
-    int oldval = catomic_exchange_and_add (&(lock), -__RTLD_MRLOCK_INC);      \
+    int oldval = atomic_exchange_and_add (&(lock), -__RTLD_MRLOCK_INC);	      \
     if (__builtin_expect ((oldval					      \
 			   & (__RTLD_MRLOCK_RBITS | __RTLD_MRLOCK_WWAIT))     \
 			  == (__RTLD_MRLOCK_INC | __RTLD_MRLOCK_WWAIT), 0))   \
@@ -103,11 +103,11 @@ typedef int __rtld_mrlock_t;
 	for (int tries = 0; tries < __RTLD_MRLOCK_TRIES; ++tries)	      \
 	  {								      \
 	    oldval = lock;						      \
-	    while (__builtin_expect ((oldval & __RTLD_MRLOCK_RBITS) == 0, 1))\
+	    while (__builtin_expect ((oldval & __RTLD_MRLOCK_RBITS) == 0, 1)) \
 	      {								      \
 		int newval = ((oldval & __RTLD_MRLOCK_RWAIT)		      \
 			      + __RTLD_MRLOCK_WRITER);			      \
-		int ret = catomic_compare_and_exchange_val_acq (&(lock),      \
+		int ret = atomic_compare_and_exchange_val_acq (&(lock),	      \
 							       newval,	      \
 							       oldval);	      \
 		if (__builtin_expect (ret == oldval, 1))		      \
@@ -115,7 +115,7 @@ typedef int __rtld_mrlock_t;
 	      }								      \
 	    atomic_delay ();						      \
 	  }								      \
-	catomic_or (&(lock), __RTLD_MRLOCK_WWAIT);			      \
+	atomic_or (&(lock), __RTLD_MRLOCK_WWAIT);			      \
 	oldval |= __RTLD_MRLOCK_WWAIT;					      \
 	lll_futex_wait (lock, oldval);					      \
       }									      \
@@ -125,7 +125,7 @@ typedef int __rtld_mrlock_t;
 
 #define __rtld_mrlock_done(lock) \
   do {				 \
-    int oldval = catomic_exchange_and_add (&(lock), -__RTLD_MRLOCK_WRITER);   \
+    int oldval = atomic_exchange_and_add (&(lock), -__RTLD_MRLOCK_WRITER);    \
     if (__builtin_expect ((oldval & __RTLD_MRLOCK_RWAIT) != 0, 0))	      \
       lll_futex_wake (&(lock), 0x7fffffff);				      \
   } while (0)

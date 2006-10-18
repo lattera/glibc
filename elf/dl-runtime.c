@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <ldsodefs.h>
+#include <sysdep-cancel.h>
 #include "dynamic-link.h"
 
 #if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
@@ -93,11 +94,11 @@ _dl_fixup (
 	}
 
       struct r_scoperec *scoperec = l->l_scoperec;
-      if (l->l_type == lt_loaded)
+      if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
 	{
 	  __rtld_mrlock_lock (l->l_scoperec_lock);
 	  scoperec = l->l_scoperec;
-	  catomic_increment (&scoperec->nusers);
+	  atomic_increment (&scoperec->nusers);
 	  __rtld_mrlock_unlock (l->l_scoperec_lock);
 	}
 
@@ -106,8 +107,8 @@ _dl_fixup (
 				    ELF_RTYPE_CLASS_PLT,
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-      if (l->l_type == lt_loaded
-	  && catomic_decrement_val (&scoperec->nusers) == 0
+      if (l->l_type == lt_loaded && !SINGLE_THREAD_P
+	  && atomic_decrement_val (&scoperec->nusers) == 0
 	  && __builtin_expect (scoperec->remove_after_use, 0))
 	{
 	  if (scoperec->notify)
@@ -195,11 +196,11 @@ _dl_profile_fixup (
 	    }
 
 	  struct r_scoperec *scoperec = l->l_scoperec;
-	  if (l->l_type == lt_loaded)
+	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
 	    {
 	      __rtld_mrlock_lock (l->l_scoperec_lock);
 	      scoperec = l->l_scoperec;
-	      catomic_increment (&scoperec->nusers);
+	      atomic_increment (&scoperec->nusers);
 	      __rtld_mrlock_unlock (l->l_scoperec_lock);
 	    }
 
@@ -208,8 +209,8 @@ _dl_profile_fixup (
 					ELF_RTYPE_CLASS_PLT,
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-	  if (l->l_type == lt_loaded
-	      && catomic_decrement_val (&scoperec->nusers) == 0
+	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P
+	      && atomic_decrement_val (&scoperec->nusers) == 0
 	      && __builtin_expect (scoperec->remove_after_use, 0))
 	    {
 	      if (scoperec->notify)

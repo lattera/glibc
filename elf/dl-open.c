@@ -31,6 +31,7 @@
 #include <ldsodefs.h>
 #include <bp-sym.h>
 #include <caller.h>
+#include <sysdep-cancel.h>
 
 #include <dl-dst.h>
 
@@ -423,15 +424,20 @@ dl_open_worker (void *a)
 
 	      if (old == &imap->l_scoperec_mem)
 		imap->l_scoperec = newp;
+	      else if (SINGLE_THREAD_P)
+		{
+		  imap->l_scoperec = newp;
+		  free (old);
+		}
 	      else
 		{
 		  __rtld_mrlock_change (imap->l_scoperec_lock);
 		  imap->l_scoperec = newp;
 		  __rtld_mrlock_done (imap->l_scoperec_lock);
 
-		  catomic_increment (&old->nusers);
+		  atomic_increment (&old->nusers);
 		  old->remove_after_use = true;
-		  if (catomic_decrement_val (&old->nusers) == 0)
+		  if (atomic_decrement_val (&old->nusers) == 0)
 		    /* No user, we can free it here and now.  */
 		    free (old);
 		}

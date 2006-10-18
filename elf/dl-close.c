@@ -30,6 +30,7 @@
 #include <ldsodefs.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <sysdep-cancel.h>
 
 
 /* Type of the constructor functions.  */
@@ -419,16 +420,21 @@ _dl_close (void *_map)
 
 	      struct r_scoperec *old = imap->l_scoperec;
 
-	      __rtld_mrlock_change (imap->l_scoperec_lock);
-	      imap->l_scoperec = newp;
-	      __rtld_mrlock_done (imap->l_scoperec_lock);
-
-	      if (catomic_increment_val (&old->nusers) != 1)
+	      if (SINGLE_THREAD_P)
+		imap->l_scoperec = newp;
+	      else
 		{
-		  old->remove_after_use = true;
-		  old->notify = true;
-		  if (catomic_decrement_val (&old->nusers) != 0)
-		    __rtld_waitzero (old->nusers);
+		  __rtld_mrlock_change (imap->l_scoperec_lock);
+		  imap->l_scoperec = newp;
+		  __rtld_mrlock_done (imap->l_scoperec_lock);
+
+		  if (atomic_increment_val (&old->nusers) != 1)
+		    {
+		      old->remove_after_use = true;
+		      old->notify = true;
+		      if (atomic_decrement_val (&old->nusers) != 0)
+			__rtld_waitzero (old->nusers);
+		    }
 		}
 
 	      /* No user anymore, we can free it now.  */
