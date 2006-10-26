@@ -1,3 +1,8 @@
+2006-10-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_attr_setstacksize.c (NEW_VERNUM): Define to GLIBC_2_3_3
+	by default rather than 2_3_3.
+
 2006-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_mrlock_lock,

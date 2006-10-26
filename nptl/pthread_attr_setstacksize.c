@@ -23,7 +23,7 @@
 #include "pthreadP.h"
 
 #ifndef NEW_VERNUM
-# define NEW_VERNUM 2_3_3
+# define NEW_VERNUM GLIBC_2_3_3
 #endif
 
 
