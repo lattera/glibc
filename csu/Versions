@@ -5,7 +5,7 @@ libc {
     # helper functions
     __libc_init_first; __libc_start_main;
 
-%if !(USE_TLS && HAVE___THREAD)
+%if !HAVE___THREAD
     # global variables
     _errno;
 
@@ -18,7 +18,7 @@ libc {
     gnu_get_libc_release; gnu_get_libc_version;
   }
   GLIBC_PRIVATE {
-%if USE_TLS && HAVE___THREAD
+%if HAVE___THREAD
     # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
     errno;
 %endif

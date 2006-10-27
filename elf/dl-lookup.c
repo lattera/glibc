@@ -449,12 +449,10 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	    conflict = 1;
 	}
 
-# ifdef USE_TLS
       if (value->s
 	  && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
 				== STT_TLS, 0)))
 	type_class = 4;
-# endif
 
       if (conflict
 	  || GLRO(dl_trace_prelink_map) == undef_map

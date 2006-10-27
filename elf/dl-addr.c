@@ -93,9 +93,7 @@ _dl_addr (const void *address, Dl_info *info,
 			 so we can omit that test here.  */
 		      if ((symtab[symndx].st_shndx != SHN_UNDEF
 			   || symtab[symndx].st_value != 0)
-#ifdef USE_TLS
 			  && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
-#endif
 			  && DL_ADDR_SYM_MATCH (match, &symtab[symndx],
 						matchsym, addr)
 			  && symtab[symndx].st_name < strtabsize)
@@ -123,9 +121,7 @@ _dl_addr (const void *address, Dl_info *info,
 	  for (; (void *) symtab < (void *) symtabend; ++symtab)
 	    if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
 		 || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
-#ifdef USE_TLS
 		&& ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
-#endif
 		&& (symtab->st_shndx != SHN_UNDEF
 		    || symtab->st_value != 0)
 		&& DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)

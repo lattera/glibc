@@ -1185,9 +1185,7 @@ main (int argc, char **argv)
 	  add_dir (argv[i]);
     }
 
-#ifdef USE_TLS
   hwcap_extra[63 - _DL_FIRST_EXTRA] = "tls";
-#endif
 
   set_hwcap ();
 

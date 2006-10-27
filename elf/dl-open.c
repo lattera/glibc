@@ -164,9 +164,7 @@ dl_open_worker (void *a)
   struct link_map *new, *l;
   int lazy;
   unsigned int i;
-#ifdef USE_TLS
   bool any_tls = false;
-#endif
   struct link_map *call_map = NULL;
 
   /* Check whether _dl_open() has been called from a valid DSO.  */
@@ -441,7 +439,6 @@ dl_open_worker (void *a)
 	  atomic_write_barrier ();
 	  imap->l_scope[cnt] = &new->l_searchlist;
 	}
-#if USE_TLS
       /* Only add TLS memory if this object is loaded now and
 	 therefore is not yet initialized.  */
       else if (! imap->l_init_called
@@ -456,11 +453,11 @@ dl_open_worker (void *a)
 	  if (imap->l_need_tls_init)
 	    {
 	      imap->l_need_tls_init = 0;
-# ifdef SHARED
+#ifdef SHARED
 	      /* Update the slot information data for at least the
 		 generation of the DSO we are allocating data for.  */
 	      _dl_update_slotinfo (imap->l_tls_modid);
-# endif
+#endif
 
 	      GL(dl_init_static_tls) (imap);
 	      assert (imap->l_need_tls_init == 0);
@@ -469,15 +466,12 @@ dl_open_worker (void *a)
 	  /* We have to bump the generation counter.  */
 	  any_tls = true;
 	}
-#endif
     }
 
-#if USE_TLS
   /* Bump the generation number if necessary.  */
   if (any_tls && __builtin_expect (++GL(dl_tls_generation) == 0, 0))
     _dl_fatal_printf (N_("\
 TLS generation counter wrapped!  Please report this."));
-#endif
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, args->argc, args->argv, args->env);
@@ -574,7 +568,6 @@ no more namespaces available for dlmopen()"));
 	 state if relocation failed, for example.  */
       if (args.map)
 	{
-#ifdef USE_TLS
 	  /* Maybe some of the modules which were loaded use TLS.
 	     Since it will be removed in the following _dl_close call
 	     we have to mark the dtv array as having gaps to fill the
@@ -584,7 +577,6 @@ no more namespaces available for dlmopen()"));
 	     up.  */
 	  if ((mode & __RTLD_AUDIT) == 0)
 	    GL(dl_tls_dtv_gaps) = true;
-#endif
 
 	  _dl_close_worker (args.map);
 	}

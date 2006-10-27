@@ -64,7 +64,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_name = realname;
   new->l_type = type;
   new->l_loader = loader;
-#if defined USE_TLS && NO_TLS_OFFSET != 0
+#if NO_TLS_OFFSET != 0
   new->l_tls_offset = NO_TLS_OFFSET;
 #endif
   new->l_ns = nsid;

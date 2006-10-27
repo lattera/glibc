@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  Generic version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +16,6 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-
-/* By default no TLS support is available.  This is signaled by the
-   absence of the symbol USE_TLS.  */
-#undef USE_TLS
-
 
 /* An architecture-specific version of this file has to defined a
    number of symbols:

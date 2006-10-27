@@ -32,9 +32,7 @@ dlinfo (void *handle, int request, void *arg)
 
 #else
 
-# ifdef USE_TLS
-#  include <dl-tls.h>
-# endif
+# include <dl-tls.h>
 
 struct dlinfo_args
 {
@@ -97,18 +95,14 @@ RTLD_SELF used in code not dynamically loaded"));
 
     case RTLD_DI_TLS_MODID:
       *(size_t *) args->arg = 0;
-#ifdef USE_TLS
       *(size_t *) args->arg = l->l_tls_modid;
-#endif
       break;
 
     case RTLD_DI_TLS_DATA:
       {
 	void *data = NULL;
-#ifdef USE_TLS
 	if (l->l_tls_modid != 0)
 	  data = _dl_tls_get_addr_soft (l);
-#endif
 	*(void **) args->arg = data;
 	break;
       }

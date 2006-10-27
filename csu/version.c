@@ -34,9 +34,6 @@ Compiled by GNU CC version "__VERSION__".\n"
 #ifdef GLIBC_OLDEST_ABI
 "The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
 #endif
-#ifdef USE_TLS
-"Thread-local storage support included.\n"
-#endif
 "For bug reporting instructions, please see:\n\
 <http://www.gnu.org/software/libc/bugs.html>.\n";
 

@@ -6,9 +6,9 @@
 
 #include <tls.h>
 
-#if USE_TLS && HAVE___THREAD
+#if HAVE___THREAD
 
-#define AL 4096
+# define AL 4096
 struct foo
 {
   int i;
@@ -55,11 +55,11 @@ do_test (void)
   return result;
 }
 
-#define TEST_FUNCTION do_test ()
+# define TEST_FUNCTION do_test ()
 
 #else
 
-#define TEST_FUNCTION 0
+# define TEST_FUNCTION 0
 
 #endif
 

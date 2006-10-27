@@ -1,3 +1,7 @@
+2006-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* structs.def: USE_TLS support is now default.
+
 2006-02-03  Roland McGrath  <roland@redhat.com>
 
 	* structs.def: Add a descriptor for pointer.val field of dtv_t.

@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -414,7 +414,7 @@ memalign_check(alignment, bytes, caller)
 #ifndef NO_THREADS
 
 # ifdef _LIBC
-#  if USE___THREAD || (defined USE_TLS && !defined SHARED)
+#  if USE___THREAD || !defined SHARED
     /* These routines are never needed in this configuration.  */
 #   define NO_STARTER
 #  endif

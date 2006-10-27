@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,6 @@
 #endif
 
 
-#ifdef USE_TLS
 /* We are trying to perform a static TLS relocation in MAP, but it was
    dynamically loaded.  This can only work if there is enough surplus in
    the static TLS area already allocated for each running thread.  If this
@@ -56,7 +55,7 @@ _dl_allocate_static_tls (struct link_map *map)
 cannot allocate memory in static TLS block"));
     }
 
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   size_t freebytes;
   size_t n;
   size_t blsize;
@@ -73,7 +72,7 @@ cannot allocate memory in static TLS block"));
 					    - map->l_tls_firstbyte_offset);
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   size_t used;
   size_t check;
 
@@ -87,9 +86,9 @@ cannot allocate memory in static TLS block"));
 
   map->l_tls_offset = offset;
   GL(dl_tls_static_used) = used;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
   /* If the object is not yet relocated we cannot initialize the
      static TLS region.  Delay it.  */
@@ -115,13 +114,13 @@ cannot allocate memory in static TLS block"));
 void
 _dl_nothread_init_static_tls (struct link_map *map)
 {
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   void *dest = (char *) THREAD_SELF - map->l_tls_offset;
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   void *dest = (char *) THREAD_SELF + map->l_tls_offset + TLS_PRE_TCB_SIZE;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
   dtv_t *dtv = THREAD_DTV ();
@@ -133,7 +132,6 @@ _dl_nothread_init_static_tls (struct link_map *map)
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }
-#endif
 
 
 void

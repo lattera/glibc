@@ -2,11 +2,7 @@
 
 #include <tls.h>
 
-#if USE_TLS
 @@@ use-tls = yes @@@
-#else
-@@@ use-tls = no @@@
-#endif
 
 #if USE___THREAD
 @@@ use-thread = yes @@@

@@ -70,11 +70,9 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       info.dlpi_subs = GL(dl_load_adds) - nloaded;
       info.dlpi_tls_modid = 0;
       info.dlpi_tls_data = NULL;
-#ifdef USE_TLS
       info.dlpi_tls_modid = l->l_tls_modid;
       if (info.dlpi_tls_modid != 0)
 	info.dlpi_tls_data = _dl_tls_get_addr_soft (l);
-#endif
       ret = callback (&info, sizeof (struct dl_phdr_info), data);
       if (ret)
 	break;

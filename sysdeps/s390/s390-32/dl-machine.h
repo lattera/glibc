@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  S390 Version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005
+   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    Contributed by Carl Pederson & Martin Schwidefsky.
    This file is part of the GNU C Library.
@@ -209,17 +209,11 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#ifdef USE_TLS
-# define elf_machine_type_class(type) \
+#define elf_machine_type_class(type) \
   ((((type) == R_390_JMP_SLOT || (type) == R_390_TLS_DTPMOD		      \
      || (type) == R_390_TLS_DTPOFF || (type) == R_390_TLS_TPOFF)	      \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_390_COPY) * ELF_RTYPE_CLASS_COPY))
-#else
-# define elf_machine_type_class(type) \
-  ((((type) == R_390_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
-   | (((type) == R_390_COPY) * ELF_RTYPE_CLASS_COPY))
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_390_JMP_SLOT
@@ -315,7 +309,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
     && !defined RESOLVE_CONFLICT_FIND_MAP
 	case R_390_TLS_DTPMOD:
 # ifdef RTLD_BOOTSTRAP

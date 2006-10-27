@@ -3,15 +3,13 @@
 
 #include <tls.h>
 
-#ifdef USE_TLS
-# include "tls-macros.h"
+#include "tls-macros.h"
 
 
 /* One define int variable, two externs.  */
 COMMON_INT_DECL(foo);
 VAR_INT_DECL(bar);
 VAR_INT_DEF(baz);
-#endif
 
 
 extern int in_dso (void);
@@ -21,7 +19,6 @@ extern int in_dso (void);
 static int
 do_test (void)
 {
-#ifdef USE_TLS
   int result = 0;
   int *ap, *bp, *cp;
 
@@ -67,9 +64,6 @@ do_test (void)
   result |= in_dso ();
 
   return result;
-#else
-  return 0;
-#endif
 }
 
 

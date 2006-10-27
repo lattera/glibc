@@ -26,12 +26,10 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <sysdep-cancel.h>
-#ifdef USE_TLS
-# include <dl-tls.h>
-#endif
+#include <dl-tls.h>
 
 
-#if defined USE_TLS && defined SHARED
+#ifdef SHARED
 /* Systems which do not have tls_index also probably have to define
    DONT_USE_TLS_INDEX.  */
 
@@ -184,7 +182,7 @@ RTLD_NEXT used in code not dynamically loaded"));
     {
       void *value;
 
-#if defined USE_TLS && defined SHARED
+#ifdef SHARED
       if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
 	/* The found symbol is a thread-local storage variable.
 	   Return the address for to the current thread.  */

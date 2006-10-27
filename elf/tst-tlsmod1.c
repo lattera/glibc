@@ -2,7 +2,6 @@
 
 #include <tls.h>
 
-#ifdef USE_TLS
 #include "tls-macros.h"
 
 
@@ -10,7 +9,6 @@
 COMMON_INT_DEF(foo);
 VAR_INT_DEF(bar);
 VAR_INT_DECL(baz);
-#endif
 
 extern int in_dso (void);
 
@@ -18,7 +16,6 @@ int
 in_dso (void)
 {
   int result = 0;
-#ifdef USE_TLS
   int *ap, *bp, *cp;
 
   /* Get variables using initial exec model.  */
@@ -62,7 +59,6 @@ in_dso (void)
       printf ("baz = %d\n", *cp);
       result = 1;
     }
-#endif
 
   return result;
 }

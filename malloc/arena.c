@@ -149,7 +149,7 @@ int __malloc_initialized = -1;
 
 static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
 					   __const __malloc_ptr_t);
-# if !defined _LIBC || !defined USE_TLS || (defined SHARED && !USE___THREAD)
+# if !defined _LIBC || (defined SHARED && !USE___THREAD)
 static __malloc_ptr_t (*save_memalign_hook) (size_t __align, size_t __size,
 					     __const __malloc_ptr_t);
 # endif
@@ -385,7 +385,7 @@ extern struct dl_open_hook *_dl_open_hook;
 libc_hidden_proto (_dl_open_hook);
 # endif
 
-# if defined SHARED && defined USE_TLS && !USE___THREAD
+# if defined SHARED && !USE___THREAD
 /* This is called by __pthread_initialize_minimal when it needs to use
    malloc to set up the TLS state.  We cannot do the full work of
    ptmalloc_init (below) until __pthread_initialize_minimal has finished,
@@ -428,7 +428,7 @@ ptmalloc_init (void)
   __malloc_initialized = 0;
 
 #ifdef _LIBC
-# if defined SHARED && defined USE_TLS && !USE___THREAD
+# if defined SHARED && !USE___THREAD
   /* ptmalloc_init_minimal may already have been called via
      __libc_malloc_pthread_startup, above.  */
   if (mp_.pagesize == 0)
@@ -437,7 +437,7 @@ ptmalloc_init (void)
     ptmalloc_init_minimal();
 
 #ifndef NO_THREADS
-# if defined _LIBC && defined USE_TLS
+# if defined _LIBC
   /* We know __pthread_initialize_minimal has already been called,
      and that is enough.  */
 #   define NO_STARTER

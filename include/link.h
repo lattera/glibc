@@ -42,7 +42,7 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 #include <stddef.h>
 #include <bits/linkmap.h>
 #include <dl-lookupcfg.h>
-#include <tls.h>		/* Defines USE_TLS.  */
+#include <tls.h>
 #include <bits/libc-lock.h>
 #include <rtld-lowlevel.h>
 
@@ -261,7 +261,6 @@ struct link_map
       const ElfW(Sym) *ret;
     } l_lookup_cache;
 
-#ifdef USE_TLS
     /* Thread-local storage related info.  */
 
     /* Start of the initialization image.  */
@@ -274,14 +273,13 @@ struct link_map
     size_t l_tls_align;
     /* Offset of first byte module alignment.  */
     size_t l_tls_firstbyte_offset;
-# ifndef NO_TLS_OFFSET
-#  define NO_TLS_OFFSET	0
-# endif
+#ifndef NO_TLS_OFFSET
+# define NO_TLS_OFFSET	0
+#endif
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
-#endif
 
     /* Information used to change permission after the relocations are
        done.  */

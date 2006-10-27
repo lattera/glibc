@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998, 2000-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -405,25 +405,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     }
 #endif
 
-#ifdef USE_TLS
   /* For TLS enabled builds always add 'tls'.  */
   ++cnt;
-#else
-  if (cnt == 0)
-    {
-      /* If we no have platform name and no important capability we only
-	 have the base directory to search.  */
-      result = (struct r_strlenpair *) malloc (sizeof (*result));
-      if (result == NULL)
-	goto no_memory;
-
-      result[0].str = (char *) result;	/* Does not really matter.  */
-      result[0].len = 0;
-
-      *sz = 1;
-      return result;
-    }
-#endif
 
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
@@ -465,11 +448,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       temp[m].len = platform_len;
       ++m;
     }
-#ifdef USE_TLS
+
   temp[m].str = "tls";
   temp[m].len = 3;
   ++m;
-#endif
+
   assert (m == cnt);
 
   /* Determine the total size of all strings together.  */
@@ -487,13 +470,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   *sz = 1 << cnt;
   result = (struct r_strlenpair *) malloc (*sz * sizeof (*result) + total);
   if (result == NULL)
-    {
-#ifndef USE_TLS
-    no_memory:
-#endif
-      _dl_signal_error (ENOMEM, NULL, NULL,
-			N_("cannot create capability list"));
-    }
+    _dl_signal_error (ENOMEM, NULL, NULL,
+		      N_("cannot create capability list"));
 
   if (cnt == 1)
     {

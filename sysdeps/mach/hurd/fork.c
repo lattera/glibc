@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1995,1996,1997,1999,2001,2002,2004,2005
+/* Copyright (C) 1994,1995,1996,1997,1999,2001,2002,2004,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -532,11 +532,9 @@ __fork (void)
       /* Set the child user thread up to return 1 from the setjmp above.  */
       _hurd_longjmp_thread_state (&state, env, 1);
 
-#if USE_TLS
       /* Do special thread setup for TLS if needed.  */
       if (err = _hurd_tls_fork (thread, &state))
 	LOSE;
-#endif
 
       if (err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 				    (natural_t *) &state, statecount))

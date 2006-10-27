@@ -256,11 +256,7 @@ _dl_load_cache_lookup (const char *name)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
-#ifdef USE_TLS
-# define _DL_HWCAP_TLS_MASK (1LL << 63)
-#else
-# define _DL_HWCAP_TLS_MASK 0
-#endif
+#define _DL_HWCAP_TLS_MASK (1LL << 63)
 #define HWCAP_CHECK \
       if (GLRO(dl_osversion) && lib->osversion > GLRO(dl_osversion))	      \
 	continue;							      \

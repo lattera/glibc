@@ -61,9 +61,6 @@ register struct pthread *__thread_self __asm__("r13");
 # error "TLS support is required."
 #endif
 
-/* Signal that TLS support is available.  */
-#define USE_TLS	1
-
 /* Alignment requirement for the stack.  */
 #define STACK_ALIGN	16
 

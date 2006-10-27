@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005
+   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -208,7 +208,7 @@ __fpscr_values:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 # define elf_machine_type_class(type) \
   ((((type) == R_SH_JMP_SLOT || (type) == R_SH_TLS_DTPMOD32		      \
      || (type) == R_SH_TLS_DTPOFF32 || (type) == R_SH_TLS_TPOFF32)	      \
@@ -354,7 +354,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  /* These addresses are always aligned.  */
 	  *reloc_addr = value;
 	  break;
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 	  /* XXX Remove TLS relocations which are not needed.  */
 	case R_SH_TLS_DTPMOD32:
 # ifdef RTLD_BOOTSTRAP

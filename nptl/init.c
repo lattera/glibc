@@ -73,7 +73,7 @@ int __set_robust_list_avail;
 static const char nptl_version[] __attribute_used__ = VERSION;
 
 
-#if defined USE_TLS && !defined SHARED
+#ifndef SHARED
 extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -564,13 +564,12 @@ __process_machine_rela (struct link_map *map,
       }
       break;
 
-#ifdef USE_TLS
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
       if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
 	_dl_allocate_static_tls (sym_map);				      \
     } while (0)
-# define DO_TLS_RELOC(suffix)						      \
+#define DO_TLS_RELOC(suffix)						      \
     case R_PPC_DTPREL##suffix:						      \
       /* During relocation all TLS symbols are defined and used.	      \
 	 Therefore the offset is already correct.  */			      \
@@ -609,7 +608,6 @@ __process_machine_rela (struct link_map *map,
     DO_TLS_RELOC (16_LO)
     DO_TLS_RELOC (16_HI)
     DO_TLS_RELOC (16_HA)
-#endif
 
     default:
       _dl_reloc_bad_type (map, rinfo, 0);

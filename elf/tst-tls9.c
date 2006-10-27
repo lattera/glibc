@@ -9,7 +9,6 @@
 static int
 do_test (void)
 {
-#ifdef USE_TLS
   static const char modname1[] = "tst-tlsmod5.so";
   static const char modname2[] = "tst-tlsmod6.so";
   int result = 0;
@@ -33,9 +32,6 @@ do_test (void)
     dlclose (h2);
 
   return result;
-#else
-  return 0;
-#endif
 }
 
 

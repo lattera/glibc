@@ -1618,7 +1618,7 @@ static Void_t*   memalign_check(size_t alignment, size_t bytes,
 				const Void_t *caller);
 #ifndef NO_THREADS
 # ifdef _LIBC
-#  if USE___THREAD || (defined USE_TLS && !defined SHARED)
+#  if USE___THREAD || !defined SHARED
     /* These routines are never needed in this configuration.  */
 #   define NO_STARTER
 #  endif
