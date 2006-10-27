@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -163,7 +163,13 @@ extern int __local_multiple_threads attribute_hidden;
 
 #else
 
-# define SINGLE_THREAD_P (1)
+# ifdef IS_IN_rtld
+#  define SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+				   header.multiple_threads) == 0, 1)
+# else
+#  define SINGLE_THREAD_P (1)
+# endif
 # define NO_CANCELLATION 1
 
 #endif
