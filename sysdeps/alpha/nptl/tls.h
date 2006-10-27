@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/Alpha version.
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,9 +47,6 @@ typedef union dtv
 #ifndef HAVE_TLS_SUPPORT
 # error "TLS support is required."
 #endif
-
-/* Signal that TLS support is available.  */
-# define USE_TLS	1
 
 #ifndef __ASSEMBLER__
 
