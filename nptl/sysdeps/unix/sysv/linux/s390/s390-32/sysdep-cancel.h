@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -109,7 +109,13 @@ L(pseudo_end):
 
 #elif !defined __ASSEMBLER__
 
-# define SINGLE_THREAD_P (1)
+# ifdef IS_IN_rtld
+#  define SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+				   header.multiple_threads) == 0, 1)
+# else
+#  define SINGLE_THREAD_P (1)
+# endif
 # define NO_CANCELLATION 1
 
 #endif

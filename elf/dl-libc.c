@@ -133,8 +133,7 @@ do_dlsym_private (void *ptr)
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
   l = GLRO(dl_lookup_symbol_x) (args->name, args->map, &args->ref,
-				args->map->l_scoperec->scope, &vers, 0, 0,
-				NULL);
+				args->map->l_scope, &vers, 0, 0, NULL);
   args->loadbase = l;
 }
 

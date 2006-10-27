@@ -200,8 +200,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected);
 
@@ -351,7 +350,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
+    _dl_debug_bindings (undef_name, undef_map, ref,
 			&current_value, version, type_class, protected);
 
   *ref = current_value.s;
@@ -408,8 +407,7 @@ _dl_setup_hash (struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected)
 {

@@ -65,7 +65,6 @@ struct call_dl_lookup_args
   /* Arguments to do_dlsym.  */
   struct link_map *map;
   const char *name;
-  struct r_scope_elem **scope;
   struct r_found_version *vers;
   int flags;
 
@@ -79,7 +78,7 @@ call_dl_lookup (void *ptr)
 {
   struct call_dl_lookup_args *args = (struct call_dl_lookup_args *) ptr;
   args->map = GLRO(dl_lookup_symbol_x) (args->name, args->map, args->refp,
-					args->scope, args->vers, 0,
+					args->map->l_scope, args->vers, 0,
 					args->flags, NULL);
 }
 
@@ -118,20 +117,16 @@ do_sym (void *handle, const char *name, void *who,
 	 array can change.  */
       if (match->l_type != lt_loaded || SINGLE_THREAD_P)
 	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
-					   match->l_scoperec->scope, vers, 0,
+					   match->l_scope, vers, 0,
 					   flags | DL_LOOKUP_ADD_DEPENDENCY,
 					   NULL);
       else
 	{
-	  __rtld_mrlock_lock (match->l_scoperec_lock);
-	  struct r_scoperec *scoperec = match->l_scoperec;
-	  atomic_increment (&scoperec->nusers);
-	  __rtld_mrlock_unlock (match->l_scoperec_lock);
+	  __rtld_mrlock_lock (match->l_scope_lock);
 
 	  struct call_dl_lookup_args args;
 	  args.name = name;
 	  args.map = match;
-	  args.scope = scoperec->scope;
 	  args.vers = vers;
 	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
 	  args.refp = &ref;
@@ -142,14 +137,7 @@ do_sym (void *handle, const char *name, void *who,
 	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
 					  call_dl_lookup, &args);
 
-	  if (atomic_decrement_val (&scoperec->nusers) == 0
-	      && __builtin_expect (scoperec->remove_after_use, 0))
-	    {
-	      if (scoperec->notify)
-		__rtld_notify (scoperec->nusers);
-	      else
-		free (scoperec);
-	    }
+	  __rtld_mrlock_unlock (match->l_scope_lock);
 
 	  if (__builtin_expect (errstring != NULL, 0))
 	    {

@@ -343,14 +343,14 @@ _dl_close (void *_map)
 	     one for the terminating NULL pointer.  */
 	  size_t remain = (new_list != NULL) + 1;
 	  bool removed_any = false;
-	  for (size_t cnt = 0; imap->l_scoperec->scope[cnt] != NULL; ++cnt)
+	  for (size_t cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
 	    /* This relies on l_scope[] entries being always set either
 	       to its own l_symbolic_searchlist address, or some map's
 	       l_searchlist address.  */
-	    if (imap->l_scoperec->scope[cnt] != &imap->l_symbolic_searchlist)
+	    if (imap->l_scope[cnt] != &imap->l_symbolic_searchlist)
 	      {
 		struct link_map *tmap = (struct link_map *)
-		  ((char *) imap->l_scoperec->scope[cnt]
+		  ((char *) imap->l_scope[cnt]
 		   - offsetof (struct link_map, l_searchlist));
 		assert (tmap->l_ns == ns);
 		if (tmap->l_idx == IDX_STILL_USED)
@@ -368,38 +368,35 @@ _dl_close (void *_map)
 		 user of the current array.  If possible use the link map's
 		 memory.  */
 	      size_t new_size;
-	      struct r_scoperec *newp;
-	      if (imap->l_scoperec != &imap->l_scoperec_mem
-		  && remain < NINIT_SCOPE_ELEMS (imap)
-		  && imap->l_scoperec_mem.nusers == 0)
+	      struct r_scope_elem **newp;
+
+#define SCOPE_ELEMS(imap) \
+  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+
+	      if (imap->l_scope != imap->l_scope_mem
+		  && remain < SCOPE_ELEMS (imap))
 		{
-		  new_size = NINIT_SCOPE_ELEMS (imap);
-		  newp = &imap->l_scoperec_mem;
+		  new_size = SCOPE_ELEMS (imap);
+		  newp = imap->l_scope_mem;
 		}
 	      else
 		{
 		  new_size = imap->l_scope_max;
-		  newp = (struct r_scoperec *)
-		    malloc (sizeof (struct r_scoperec)
-			    + new_size * sizeof (struct r_scope_elem *));
+		  newp = (struct r_scope_elem **)
+		    malloc (new_size * sizeof (struct r_scope_elem *));
 		  if (newp == NULL)
 		    _dl_signal_error (ENOMEM, "dlclose", NULL,
 				      N_("cannot create scope list"));
 		}
 
-	      newp->nusers = 0;
-	      newp->remove_after_use = false;
-	      newp->notify = false;
-
 	      /* Copy over the remaining scope elements.  */
 	      remain = 0;
-	      for (size_t cnt = 0; imap->l_scoperec->scope[cnt] != NULL; ++cnt)
+	      for (size_t cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
 		{
-		  if (imap->l_scoperec->scope[cnt]
-		      != &imap->l_symbolic_searchlist)
+		  if (imap->l_scope[cnt] != &imap->l_symbolic_searchlist)
 		    {
 		      struct link_map *tmap = (struct link_map *)
-			((char *) imap->l_scoperec->scope[cnt]
+			((char *) imap->l_scope[cnt]
 			 - offsetof (struct link_map, l_searchlist));
 		      if (tmap->l_idx != IDX_STILL_USED)
 			{
@@ -407,38 +404,30 @@ _dl_close (void *_map)
 			     scope.  */
 			  if (new_list != NULL)
 			    {
-			      newp->scope[remain++] = new_list;
+			      newp[remain++] = new_list;
 			      new_list = NULL;
 			    }
 			  continue;
 			}
 		    }
 
-		  newp->scope[remain++] = imap->l_scoperec->scope[cnt];
+		  newp[remain++] = imap->l_scope[cnt];
 		}
-	      newp->scope[remain] = NULL;
+	      newp[remain] = NULL;
 
-	      struct r_scoperec *old = imap->l_scoperec;
+	      struct r_scope_elem **old = imap->l_scope;
 
 	      if (SINGLE_THREAD_P)
-		imap->l_scoperec = newp;
+		imap->l_scope = newp;
 	      else
 		{
-		  __rtld_mrlock_change (imap->l_scoperec_lock);
-		  imap->l_scoperec = newp;
-		  __rtld_mrlock_done (imap->l_scoperec_lock);
-
-		  if (atomic_increment_val (&old->nusers) != 1)
-		    {
-		      old->remove_after_use = true;
-		      old->notify = true;
-		      if (atomic_decrement_val (&old->nusers) != 0)
-			__rtld_waitzero (old->nusers);
-		    }
+		  __rtld_mrlock_change (imap->l_scope_lock);
+		  imap->l_scope = newp;
+		  __rtld_mrlock_done (imap->l_scope_lock);
 		}
 
 	      /* No user anymore, we can free it now.  */
-	      if (old != &imap->l_scoperec_mem)
+	      if (old != imap->l_scope_mem)
 		free (old);
 
 	      imap->l_scope_max = new_size;
@@ -652,8 +641,8 @@ _dl_close (void *_map)
 	  free (imap->l_initfini);
 
 	  /* Remove the scope array if we allocated it.  */
-	  if (imap->l_scoperec != &imap->l_scoperec_mem)
-	    free (imap->l_scoperec);
+	  if (imap->l_scope != imap->l_scope_mem)
+	    free (imap->l_scope);
 
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);

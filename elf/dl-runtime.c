@@ -93,29 +93,15 @@ _dl_fixup (
 	    version = NULL;
 	}
 
-      struct r_scoperec *scoperec = l->l_scoperec;
       if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
-	{
-	  __rtld_mrlock_lock (l->l_scoperec_lock);
-	  scoperec = l->l_scoperec;
-	  atomic_increment (&scoperec->nusers);
-	  __rtld_mrlock_unlock (l->l_scoperec_lock);
-	}
+	__rtld_mrlock_lock (l->l_scope_lock);
 
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
-				    scoperec->scope, version,
-				    ELF_RTYPE_CLASS_PLT,
+				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-      if (l->l_type == lt_loaded && !SINGLE_THREAD_P
-	  && atomic_decrement_val (&scoperec->nusers) == 0
-	  && __builtin_expect (scoperec->remove_after_use, 0))
-	{
-	  if (scoperec->notify)
-	    __rtld_notify (scoperec->nusers);
-	  else
-	    free (scoperec);
-	}
+      if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+	__rtld_mrlock_unlock (l->l_scope_lock);
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
@@ -195,29 +181,16 @@ _dl_profile_fixup (
 		version = NULL;
 	    }
 
-	  struct r_scoperec *scoperec = l->l_scoperec;
 	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
-	    {
-	      __rtld_mrlock_lock (l->l_scoperec_lock);
-	      scoperec = l->l_scoperec;
-	      atomic_increment (&scoperec->nusers);
-	      __rtld_mrlock_unlock (l->l_scoperec_lock);
-	    }
+	    __rtld_mrlock_lock (l->l_scope_lock);
 
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l, &defsym,
-					scoperec->scope, version,
+					l->l_scope, version,
 					ELF_RTYPE_CLASS_PLT,
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P
-	      && atomic_decrement_val (&scoperec->nusers) == 0
-	      && __builtin_expect (scoperec->remove_after_use, 0))
-	    {
-	      if (scoperec->notify)
-		__rtld_notify (scoperec->nusers);
-	      else
-		free (scoperec);
-	    }
+	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+	    __rtld_mrlock_unlock (l->l_scope_lock);
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol

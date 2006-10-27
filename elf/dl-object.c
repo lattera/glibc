@@ -82,13 +82,12 @@ _dl_new_object (char *realname, const char *libname, int type,
   /* Use the 'l_scope_mem' array by default for the the 'l_scope'
      information.  If we need more entries we will allocate a large
      array dynamically.  */
-  new->l_scoperec = &new->l_scoperec_mem;
-  new->l_scope_max = (sizeof (new->l_scope_realmem.scope_elems)
-		      / sizeof (new->l_scope_realmem.scope_elems[0]));
+  new->l_scope = new->l_scope_mem;
+  new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
 
   /* No need to initialize the scope lock if the initializer is zero.  */
 #if _RTLD_MRLOCK_INITIALIZER != 0
-  __rtld_mrlock_initialize (new->l_scoperec_mem.lock);
+  __rtld_mrlock_initialize (new->l_scope_lock);
 #endif
 
   /* Counter for the scopes we have to handle.  */
@@ -104,8 +103,7 @@ _dl_new_object (char *realname, const char *libname, int type,
       l->l_next = new;
 
       /* Add the global scope.  */
-      new->l_scoperec->scope[idx++]
-	= &GL(dl_ns)[nsid]._ns_loaded->l_searchlist;
+      new->l_scope[idx++] = &GL(dl_ns)[nsid]._ns_loaded->l_searchlist;
     }
   else
     GL(dl_ns)[nsid]._ns_loaded = new;
@@ -121,15 +119,15 @@ _dl_new_object (char *realname, const char *libname, int type,
       loader = loader->l_loader;
 
   /* Insert the scope if it isn't the global scope we already added.  */
-  if (idx == 0 || &loader->l_searchlist != new->l_scoperec->scope[0])
+  if (idx == 0 || &loader->l_searchlist != new->l_scope[0])
     {
       if ((mode & RTLD_DEEPBIND) != 0 && idx != 0)
 	{
-	  new->l_scoperec->scope[1] = new->l_scoperec->scope[0];
+	  new->l_scope[1] = new->l_scope[0];
 	  idx = 0;
 	}
 
-      new->l_scoperec->scope[idx] = &loader->l_searchlist;
+      new->l_scope[idx] = &loader->l_searchlist;
     }
 
   new->l_local_scope[0] = &new->l_searchlist;

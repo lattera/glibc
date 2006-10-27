@@ -377,8 +377,6 @@ struct rtld_global
     struct link_map *_ns_loaded;
     /* Number of object in the _dl_loaded list.  */
     unsigned int _ns_nloaded;
-    /* Array representing global scope.  */
-    struct r_scope_elem *_ns_global_scope[2];
     /* Direct pointer to the searchlist of the main object.  */
     struct r_scope_elem *_ns_main_searchlist;
     /* This is zero at program start to signal that the global scope map is

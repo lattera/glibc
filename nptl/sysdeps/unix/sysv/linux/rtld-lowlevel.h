@@ -67,6 +67,7 @@ typedef int __rtld_mrlock_t;
 							       oldval);	      \
 		if (__builtin_expect (ret == oldval, 1))		      \
 		  goto out;						      \
+		oldval = ret;						      \
 	      }								      \
 	    atomic_delay ();						      \
 	  }								      \
@@ -112,6 +113,7 @@ typedef int __rtld_mrlock_t;
 							       oldval);	      \
 		if (__builtin_expect (ret == oldval, 1))		      \
 		  goto out;						      \
+		oldval = ret;						      \
 	      }								      \
 	    atomic_delay ();						      \
 	  }								      \

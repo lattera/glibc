@@ -344,7 +344,7 @@ dl_open_worker (void *a)
 		 start the profiling.  */
 	      struct link_map *old_profile_map = GL(dl_profile_map);
 
-	      _dl_relocate_object (l, l->l_scoperec->scope, 1, 1);
+	      _dl_relocate_object (l, l->l_scope, 1, 1);
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		{
@@ -357,7 +357,7 @@ dl_open_worker (void *a)
 	    }
 	  else
 #endif
-	    _dl_relocate_object (l, l->l_scoperec->scope, lazy, 0);
+	    _dl_relocate_object (l, l->l_scope, lazy, 0);
 	}
 
       if (l == new)
@@ -375,7 +375,7 @@ dl_open_worker (void *a)
 	 not been loaded here and now.  */
       if (imap->l_init_called && imap->l_type == lt_loaded)
 	{
-	  struct r_scope_elem **runp = imap->l_scoperec->scope;
+	  struct r_scope_elem **runp = imap->l_scope;
 	  size_t cnt = 0;
 
 	  while (*runp != NULL)
@@ -395,52 +395,41 @@ dl_open_worker (void *a)
 	      /* The 'r_scope' array is too small.  Allocate a new one
 		 dynamically.  */
 	      size_t new_size;
-	      struct r_scoperec *newp;
+	      struct r_scope_elem **newp;
 
-	      if (imap->l_scoperec != &imap->l_scoperec_mem
-		  && imap->l_scope_max < NINIT_SCOPE_ELEMS (imap)
-		  && imap->l_scoperec_mem.nusers == 0)
+#define SCOPE_ELEMS(imap) \
+  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+
+	      if (imap->l_scope != imap->l_scope_mem
+		  && imap->l_scope_max < SCOPE_ELEMS (imap))
 		{
-		  new_size = NINIT_SCOPE_ELEMS (imap);
-		  newp = &imap->l_scoperec_mem;
+		  new_size = SCOPE_ELEMS (imap);
+		  newp = imap->l_scope_mem;
 		}
 	      else
 		{
 		  new_size = imap->l_scope_max * 2;
-		  newp = (struct r_scoperec *)
-		    malloc (sizeof (struct r_scoperec)
-			    + new_size * sizeof (struct r_scope_elem *));
+		  newp = (struct r_scope_elem **)
+		    malloc (new_size * sizeof (struct r_scope_elem *));
 		  if (newp == NULL)
 		    _dl_signal_error (ENOMEM, "dlopen", NULL,
 				      N_("cannot create scope list"));
 		}
 
-	      newp->nusers = 0;
-	      newp->remove_after_use = false;
-	      newp->notify = false;
-	      memcpy (newp->scope, imap->l_scoperec->scope,
-		      cnt * sizeof (imap->l_scoperec->scope[0]));
-	      struct r_scoperec *old = imap->l_scoperec;
+	      memcpy (newp, imap->l_scope, cnt * sizeof (imap->l_scope[0]));
+	      struct r_scope_elem **old = imap->l_scope;
 
-	      if (old == &imap->l_scoperec_mem)
-		imap->l_scoperec = newp;
-	      else if (SINGLE_THREAD_P)
-		{
-		  imap->l_scoperec = newp;
-		  free (old);
-		}
+	      if (SINGLE_THREAD_P)
+		imap->l_scope = newp;
 	      else
 		{
-		  __rtld_mrlock_change (imap->l_scoperec_lock);
-		  imap->l_scoperec = newp;
-		  __rtld_mrlock_done (imap->l_scoperec_lock);
-
-		  atomic_increment (&old->nusers);
-		  old->remove_after_use = true;
-		  if (atomic_decrement_val (&old->nusers) == 0)
-		    /* No user, we can free it here and now.  */
-		    free (old);
+		  __rtld_mrlock_change (imap->l_scope_lock);
+		  imap->l_scope = newp;
+		  __rtld_mrlock_done (imap->l_scope_lock);
 		}
+
+	      if (old != imap->l_scope_mem)
+		free (old);
 
 	      imap->l_scope_max = new_size;
 	    }
@@ -448,9 +437,9 @@ dl_open_worker (void *a)
 	  /* First terminate the extended list.  Otherwise a thread
 	     might use the new last element and then use the garbage
 	     at offset IDX+1.  */
-	  imap->l_scoperec->scope[cnt + 1] = NULL;
+	  imap->l_scope[cnt + 1] = NULL;
 	  atomic_write_barrier ();
-	  imap->l_scoperec->scope[cnt] = &new->l_searchlist;
+	  imap->l_scope[cnt] = &new->l_searchlist;
 	}
 #if USE_TLS
       /* Only add TLS memory if this object is loaded now and
