@@ -1,6 +1,7 @@
 2006-10-27  Ulrich Drepper  <drepper@redhat.com>
 
-	* tls.make.c: USE_TLS support is now default.
+	* Makerules: USE_TLS support is now default.
+	* tls.make.c: Likewise.
 	* csu/Versions: Likewise.
 	* csu/libc-start.c: Likewise.
 	* csu/libc-tls.c: Likewise.

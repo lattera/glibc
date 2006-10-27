@@ -2,8 +2,6 @@
 
 #include <tls.h>
 
-@@@ use-tls = yes @@@
-
 #if USE___THREAD
 @@@ use-thread = yes @@@
 #else
