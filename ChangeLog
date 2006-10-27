@@ -5,6 +5,8 @@
 	(_dl_close): Call _dl_close_worker after locking and checking.
 	* elf/dl-open.c (_dl_open): Call _dl_close_worker instead of
 	_dl_close.
+	* elf/Makefile: Add rules to build and run tst-thrlock.
+	* elf/tst-thrlock.c:  New file.
 
 	[BZ #3426]
 	* stdlib/stdlib.h: Adjust comment for canonicalize_file_name to

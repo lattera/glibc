@@ -110,10 +110,6 @@ void
 _dl_close_worker (struct link_map *map)
 {
   Lmid_t ns = map->l_ns;
-  unsigned int i;
-
-  /* Acquire the lock.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* One less direct use.  */
   --map->l_direct_opencount;
@@ -236,7 +232,7 @@ _dl_close_worker (struct link_map *map)
 #endif
   bool unload_any = false;
   unsigned int first_loaded = ~0;
-  for (i = 0; i < nloaded; ++i)
+  for (unsigned int i = 0; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
 
@@ -472,7 +468,7 @@ _dl_close_worker (struct link_map *map)
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = first_loaded; i < nloaded; ++i)
+  for (unsigned int i = first_loaded; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
       if (!used[i])
