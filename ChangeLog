@@ -1,5 +1,9 @@
 2006-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3426]
+	* stdlib/stdlib.h: Adjust comment for canonicalize_file_name to
+	reality.
+
 	[BZ #3429]
 	* elf/dl-open.c (dl_open_worker): Keep holding dl_load_lock until
 	we are sure we do not need it anymore for _dl_close.  ALso move
