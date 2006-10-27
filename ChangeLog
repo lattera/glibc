@@ -1,3 +1,11 @@
+2006-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3429]
+	* elf/dl-open.c (dl_open_worker): Keep holding dl_load_lock until
+	we are sure we do not need it anymore for _dl_close.  ALso move
+	the asserts inside the lock region.
+	Patch mostly by Suzuki <suzuki@in.ibm.com>.
+
 2006-10-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (_dl_debug_bindings): Remove unised symbol_scope

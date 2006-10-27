@@ -567,15 +567,9 @@ no more namespaces available for dlmopen()"));
   _dl_unload_cache ();
 #endif
 
-  /* Release the lock.  */
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
-
+  /* See if an error occurred during loading.  */
   if (__builtin_expect (errstring != NULL, 0))
     {
-      /* Some error occurred during loading.  */
-      char *local_errstring;
-      size_t len_errstring;
-
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
       if (args.map)
@@ -595,9 +589,15 @@ no more namespaces available for dlmopen()"));
 	  _dl_close (args.map);
 	}
 
+      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+
+      /* Release the lock.  */
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */
-      len_errstring = strlen (errstring) + 1;
+      size_t len_errstring = strlen (errstring) + 1;
+      char *local_errstring;
       if (objname == errstring + len_errstring)
 	{
 	  size_t total_len = len_errstring + strlen (objname) + 1;
@@ -614,13 +614,14 @@ no more namespaces available for dlmopen()"));
       if (malloced)
 	free ((char *) errstring);
 
-      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
-
       /* Reraise the error.  */
       _dl_signal_error (errcode, objname, NULL, local_errstring);
     }
 
   assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+
+  /* Release the lock.  */
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
 #ifndef SHARED
   DL_STATIC_INIT (args.map);
