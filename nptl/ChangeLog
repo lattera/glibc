@@ -9,8 +9,9 @@
 	* sysdeps/s390/tls.h: Likewise.
 	* sysdeps/sh/tls.h: Likewise.
 	* sysdeps/sparc/tls.h: Likewise.
-									        * nptl/sysdeps/x86_64/tls.h: Likewise.
-										2006-10-27  Jakub Jelinek  <jakub@redhat.com>
+	* sysdeps/x86_64/tls.h: Likewise.
+
+2006-10-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_mrlock_lock,
 	__rtld_mrlock_change): Update oldval if atomic compare and exchange
