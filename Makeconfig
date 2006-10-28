@@ -407,11 +407,9 @@ LDFLAGS.so += $(combreloc-LDFLAGS)
 LDFLAGS-rtld += $(combreloc-LDFLAGS)
 endif
 
-ifeq (yes,$(have-z-relro))
 relro-LDFLAGS = -Wl,-z,relro
 LDFLAGS.so += $(relro-LDFLAGS)
 LDFLAGS-rtld += $(relro-LDFLAGS)
-endif
 
 ifeq (yes,$(have-hash-style))
 # For the time being we unconditionally use 'both'.  At some time we

@@ -120,23 +120,6 @@
 /* Define if the linker supports the -z combreloc option.  */
 #undef	HAVE_Z_COMBRELOC
 
-/* Define if the assembler supported .protected.  */
-#undef	HAVE_PROTECTED
-
-/* Define if the assembler supported .hidden.  */
-#undef	HAVE_HIDDEN
-
-/* Define if the compiler supports __attribute__ ((visibility (...))).  */
-#undef	HAVE_VISIBILITY_ATTRIBUTE
-
-/* Define if the compiler doesn't support __attribute__ ((visibility (...)))
-   together with __asm__ redirection properly.  */
-#undef	HAVE_BROKEN_VISIBILITY_ATTRIBUTE
-
-/* Define if the compiler doesn't support __attribute__ ((alias (...)))
-   together with __asm__ redirection properly.  */
-#undef	HAVE_BROKEN_ALIAS_ATTRIBUTE
-
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 
@@ -187,9 +170,6 @@
 
 /* Defined if forced unwind support is available.  */
 #undef	HAVE_FORCED_UNWIND
-
-/* Defined if the linker supports the -z relro option.  */
-#undef HAVE_Z_RELRO
 
 /* Defined of libidn is available.  */
 #undef HAVE_LIBIDN

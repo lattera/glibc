@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1994,1996,1997,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1994,1996,1997,2000,2002,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,14 +41,9 @@ _IO_FILE *stderr = (FILE *) &_IO_2_1_stderr_;
 #undef _IO_stderr
 #ifdef _LIBC
 # define AL(name) AL2 (name, _IO_##name)
-# if defined HAVE_VISIBILITY_ATTRIBUTE
-#  define AL2(name, al) \
+# define AL2(name, al) \
   extern __typeof (name) al __attribute__ ((alias (#name),                    \
                                             visibility ("hidden")))
-# else
-#  define AL2(name, al) \
-  extern __typeof (name) al __attribute__ ((alias (#name)))
-# endif
 AL(stdin);
 AL(stdout);
 AL(stderr);

@@ -119,9 +119,7 @@ CFLAGS-initgrcache.c += $(nscd-cflags)
 CFLAGS-gai.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
-ifeq (yes,$(have-z-relro))
 relro-LDFLAGS += -Wl,-z,now
-endif
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 $(nscd-cflags) \

@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991,1995-2000,2002-2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-2000,2002-2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,18 +46,10 @@ int __libc_missing_rt_sigs;
 
 /* Using the hidden attribute here does not change the code but it
    helps to avoid warnings.  */
-#if defined HAVE_HIDDEN && defined HAVE_VISIBILITY_ATTRIBUTE \
-    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
-# ifdef __NR_rt_sigaction
+#ifdef __NR_rt_sigaction
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
-# endif
-extern void restore (void) asm ("__restore") attribute_hidden;
-#else
-# ifdef __NR_rt_sigaction
-static void restore_rt (void) asm ("__restore_rt");
-# endif
-static void restore (void) asm ("__restore");
 #endif
+extern void restore (void) asm ("__restore") attribute_hidden;
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.

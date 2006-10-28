@@ -114,6 +114,13 @@
 #  define _weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
+/* Same as WEAK_ALIAS, but mark symbol as hidden.  */
+#  define weak_hidden_alias(name, aliasname) \
+  _weak_hidden_alias (name, aliasname)
+#  define _weak_hidden_alias(name, aliasname) \
+  extern __typeof (name) aliasname \
+    __attribute__ ((weak, alias (#name), __visibility__ ("hidden")));
+
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
 #  define weak_extern(symbol) _weak_extern (weak symbol)
 #  define _weak_extern(expr) _Pragma (#expr)
@@ -121,6 +128,7 @@
 # else
 
 #  define weak_alias(name, aliasname) strong_alias(name, aliasname)
+#  define weak_hidden_alias(name, aliasname) strong_alias(name, aliasname)
 #  define weak_extern(symbol) /* Nothing. */
 
 # endif
@@ -431,8 +439,7 @@ for linking")
   strong_alias(real, name)
 #endif
 
-#if defined HAVE_VISIBILITY_ATTRIBUTE \
-    && (defined SHARED || defined LIBC_NONSHARED)
+#if defined SHARED || defined LIBC_NONSHARED
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
 # define attribute_hidden
@@ -444,11 +451,7 @@ for linking")
 # define attribute_tls_model_ie
 #endif
 
-#ifdef HAVE_Z_RELRO
-# define attribute_relro __attribute__ ((section (".data.rel.ro")))
-#else
-# define attribute_relro
-#endif
+#define attribute_relro __attribute__ ((section (".data.rel.ro")))
 
 /* Handling on non-exported internal names.  We have to do this only
    for shared code.  */
@@ -457,14 +460,9 @@ for linking")
 # define INTDEF(name) strong_alias (name, name##_internal)
 # define INTVARDEF(name) \
   _INTVARDEF (name, name##_internal)
-# if defined HAVE_VISIBILITY_ATTRIBUTE
-#  define _INTVARDEF(name, aliasname) \
+# define _INTVARDEF(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((alias (#name), \
 						   visibility ("hidden")));
-# else
-#  define _INTVARDEF(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
-# endif
 # define INTDEF2(name, newname) strong_alias (name, newname##_internal)
 # define INTVARDEF2(name, newname) _INTVARDEF (name, newname##_internal)
 #else
@@ -549,16 +547,10 @@ for linking")
    versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
    libc_hidden_ver (__real_foo, foo)  */
 
-#if defined SHARED && defined DO_VERSIONING \
-    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
+#if defined SHARED && defined DO_VERSIONING && !defined NO_HIDDEN
 # ifndef __ASSEMBLER__
-#  if !defined HAVE_VISIBILITY_ATTRIBUTE \
-      || defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
-#   define __hidden_proto_hiddenattr(attrs...)
-#  else
-#   define __hidden_proto_hiddenattr(attrs...) \
+#  define __hidden_proto_hiddenattr(attrs...) \
   __attribute__ ((visibility ("hidden"), ##attrs))
-#  endif
 #  define hidden_proto(name, attrs...) \
   __hidden_proto (name, __GI_##name, ##attrs)
 #  define __hidden_proto(name, internal, attrs...) \

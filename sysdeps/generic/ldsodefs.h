@@ -490,17 +490,13 @@ struct rtld_global
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
-#  ifdef HAVE_VISIBILITY_ATTRIBUTE
-#   ifdef HAVE_SDATA_SECTION
-#    define __rtld_local_attribute__ \
+#  ifdef HAVE_SDATA_SECTION
+#   define __rtld_local_attribute__ \
 	    __attribute__ ((visibility ("hidden"), section (".sdata")))
-#    undef __rtld_global_attribute__
-#    define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
-#   else
-#    define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
-#   endif
+#   undef __rtld_global_attribute__
+#   define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
 #  else
-#   define __rtld_local_attribute__
+#   define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 #  endif
 extern struct rtld_global _rtld_local __rtld_local_attribute__;
 #  undef __rtld_local_attribute__
@@ -662,11 +658,7 @@ struct rtld_global_ro
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
-#  ifdef HAVE_VISIBILITY_ATTRIBUTE
-#   define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
-#  else
-#   define __rtld_local_attribute__
-#  endif
+#  define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 extern struct rtld_global_ro _rtld_local_ro
     attribute_relro __rtld_local_attribute__;
 extern struct rtld_global_ro _rtld_global_ro

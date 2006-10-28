@@ -34,9 +34,7 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-#if defined PI_STATIC_AND_HIDDEN \
-    && defined HAVE_VISIBILITY_ATTRIBUTE && defined HAVE_HIDDEN \
-    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#ifdef PI_STATIC_AND_HIDDEN
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT, a special entry that is never relocated.  */

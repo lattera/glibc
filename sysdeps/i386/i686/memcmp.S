@@ -1,5 +1,5 @@
 /* Compare two memory blocks for differences in the first COUNT bytes.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,13 +44,9 @@
      absolute address.  */						      \
   addl	(%ebx,INDEX,4), %ebx
 
-#ifdef HAVE_HIDDEN
 	.section	.gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
 	.globl	__i686.get_pc_thunk.bx
 	.hidden	__i686.get_pc_thunk.bx
-#else
-        .text
-#endif
 	ALIGN (4)
 	.type	__i686.get_pc_thunk.bx,@function
 __i686.get_pc_thunk.bx:

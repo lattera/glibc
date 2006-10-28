@@ -1392,7 +1392,7 @@ cannot allocate TLS data structures for initial thread");
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
-#if defined HAVE_Z_RELRO && defined SHARED
+#ifdef SHARED
       if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
 	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
@@ -1935,11 +1935,10 @@ open_path (const char *name, size_t namelen, int preloaded,
 	 must not be freed using the general free() in libc.  */
       if (sps->malloced)
 	free (sps->dirs);
-#ifdef HAVE_Z_RELRO
+
       /* rtld_search_dirs is attribute_relro, therefore avoid writing
 	 into it.  */
       if (sps != &rtld_search_dirs)
-#endif
 	sps->dirs = (void *) -1;
     }
 

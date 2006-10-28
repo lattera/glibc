@@ -96,7 +96,7 @@
 #endif
 
 #if defined SHARED && defined DO_VERSIONING && defined PIC \
-    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
+    && !defined NO_HIDDEN
 # undef HIDDEN_JUMPTARGET
 # define HIDDEN_JUMPTARGET(name) __GI_##name##@local
 #endif

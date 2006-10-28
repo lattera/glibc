@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,16 +47,10 @@
    all callers.  */
 
 int
+attribute_hidden
 __mknod (const char *path, mode_t mode, dev_t dev)
 {
   return __xmknod (_MKNOD_VER, path, mode, &dev);
 }
 
-weak_alias (__mknod, mknod)
-
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tmknod");
-asm (".hidden\t__mknod");
-#endif
+weak_hidden_alias (__mknod, mknod)

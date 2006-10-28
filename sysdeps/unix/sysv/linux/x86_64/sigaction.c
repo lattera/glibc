@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/x86-64.
-   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,12 +38,7 @@
 
 /* Using the hidden attribute here does not change the code but it
    helps to avoid warnings.  */
-#if defined HAVE_HIDDEN && defined HAVE_VISIBILITY_ATTRIBUTE \
-    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
-#else
-static void restore_rt (void) asm ("__restore_rt");
-#endif
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.

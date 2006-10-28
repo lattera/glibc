@@ -1,5 +1,40 @@
 2006-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Require assembler support for visibility, compiler
+	support for visibility and aliases, linker support for various -z
+	options.
+	* Makeconfig: Remove conditional code which now is unnecessary.
+	* config.h.in: Likewise.
+	* config.make.in: Likewise.
+	* dlfcn/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* include/libc-symbols.h: Likewise.
+	* include/stdio.h: Likewise.
+	* io/Makefile: Likewise.
+	* io/fstat.c: Likewise.
+	* io/fstat64.c: Likewise.
+	* io/fstatat.c: Likewise.
+	* io/fstatat64.c: Likewise.
+	* io/lstat.c: Likewise.
+	* io/lstat64.c: Likewise.
+	* io/mknod.c: Likewise.
+	* io/mknodat.c: Likewise.
+	* io/stat.c: Likewise.
+	* io/stat64.c: Likewise.
+	* libio/stdio.c: Likewise.
+	* nscd/Makefile: Likewise.
+	* stdlib/Makefile: Likewise.
+	* stdlib/atexit.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/i386/i686/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+
 	* Makerules: USE_TLS support is now default.
 	* tls.make.c: Likewise.
 	* csu/Versions: Likewise.

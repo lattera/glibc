@@ -102,10 +102,6 @@ CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
 CFLAGS-strfmon_l.c = -D_IO_MTSAFE_IO
 endif
 
-ifeq (yes,$(have-protected))
-CFLAGS-atexit.c = -DHAVE_DOT_HIDDEN
-endif
-
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)
 

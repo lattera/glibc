@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 2001, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 2001, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,14 +47,8 @@
    all callers.  */
 
 int
+attribute_hidden
 mknodat (int fd, const char *path, mode_t mode, dev_t dev)
 {
   return __xmknodat (_MKNOD_VER, fd, path, mode, &dev);
 }
-
-
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tmknodat");
-#endif

@@ -90,19 +90,6 @@ CFLAGS-posix_fallocate64.c = -fexceptions
 CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c = -D_LARGEFILE64_SOURCE
 
-ifeq (yes,$(have-protected))
-CFLAGS-stat.c = -DHAVE_DOT_HIDDEN
-CFLAGS-fstat.c = -DHAVE_DOT_HIDDEN
-CFLAGS-lstat.c = -DHAVE_DOT_HIDDEN
-CFLAGS-mknod.c = -DHAVE_DOT_HIDDEN
-CFLAGS-stat64.c = -DHAVE_DOT_HIDDEN
-CFLAGS-fstat64.c = -DHAVE_DOT_HIDDEN
-CFLAGS-lstat64.c = -DHAVE_DOT_HIDDEN
-CFLAGS-fstatat.c = -DHAVE_DOT_HIDDEN
-CFLAGS-fstatat64.c = -DHAVE_DOT_HIDDEN
-CFLAGS-mknodat.c = -DHAVE_DOT_HIDDEN
-endif
-
 test-stat2-ARGS = Makefile . $(objpfx)test-stat2
 
 tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
