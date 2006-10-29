@@ -1444,9 +1444,14 @@ EOF
     if AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep DATA_SEGMENT_RELRO_END 1>&AS_MESSAGE_LOG_FD])
     then
       libc_cv_z_relro=yes
+    else
+      case "$base_machine" in
+        i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*) ;;
+	*) libc_cv_z_relro="not required" ;;
+      esac
     fi
   fi])
-  if test $libc_cv_z_relro != yes; then
+  if test "$libc_cv_z_relro" = no; then
     AC_MSG_ERROR(linker with -z relro support required)
   fi
 
