@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
-# Copyright © 1996, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright © 1996, 1998, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006.
-# Revision: 1.49
+# Revision: 1.50
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.5\n"
 "POT-Creation-Date: 2006-09-29 11:38-0700\n"
-"PO-Revision-Date: 2006-10-09 20:38+0200\n"
+"PO-Revision-Date: 2006-10-29 19:03+0100\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,9 @@ msgstr "Försök med \"%s --help\" eller \"%s --usage\" för mer information\n"
 #: argp/argp-help.c:1671
 #, c-format
 msgid "Report bugs to %s.\n"
-msgstr "Rapportera fel till %s.\n"
+msgstr ""
+"Rapportera fel till %s.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: argp/argp-parse.c:102
 msgid "Give this help list"
@@ -286,7 +288,7 @@ msgstr "Försök med \"xtrace --help\" för mer information\\n"
 
 #: debug/xtrace.sh:39
 msgid "xtrace: option `$1' requires an argument.\\n"
-msgstr "xtrace: flaggan \"%s\" behöver ett argument\\n"
+msgstr "xtrace: flaggan \"$1\" behöver ett argument\\n"
 
 #: debug/xtrace.sh:46
 msgid ""
@@ -316,7 +318,8 @@ msgstr ""
 "motsvarande korta.\n"
 "\n"
 "För felrapporteringsinstruktioner, se:\n"
-"<http://www.gnu.org/software/libc/bugs.html>."
+"<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\\n"
 
 #: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option `$1'\\n"

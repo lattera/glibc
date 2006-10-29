@@ -124,13 +124,13 @@
 
 #elif !defined __ASSEMBLER__
 
-# ifdef IS_IN_rtld
-#  define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-# else
-#  define SINGLE_THREAD_P (1)
-# endif
+# define SINGLE_THREAD_P (1)
 # define NO_CANCELLATION 1
 
+#endif
+
+#ifndef __ASSEMBLER__
+# define RTLD_SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+				   header.multiple_threads) == 0, 1)
 #endif
