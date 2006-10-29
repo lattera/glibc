@@ -93,14 +93,14 @@ _dl_fixup (
 	    version = NULL;
 	}
 
-      if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
 	__rtld_mrlock_lock (l->l_scope_lock);
 
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
 				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-      if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
 	__rtld_mrlock_unlock (l->l_scope_lock);
 
       /* Currently result contains the base load address (or link map)
@@ -181,7 +181,7 @@ _dl_profile_fixup (
 		version = NULL;
 	    }
 
-	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
 	    __rtld_mrlock_lock (l->l_scope_lock);
 
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l, &defsym,
@@ -189,7 +189,7 @@ _dl_profile_fixup (
 					ELF_RTYPE_CLASS_PLT,
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-	  if (l->l_type == lt_loaded && !SINGLE_THREAD_P)
+	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
 	    __rtld_mrlock_unlock (l->l_scope_lock);
 
 	  /* Currently result contains the base load address (or link map)

@@ -399,7 +399,7 @@ _dl_close_worker (struct link_map *map)
 
 	      struct r_scope_elem **old = imap->l_scope;
 
-	      if (SINGLE_THREAD_P)
+	      if (RTLD_SINGLE_THREAD_P)
 		imap->l_scope = newp;
 	      else
 		{

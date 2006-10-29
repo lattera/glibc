@@ -417,7 +417,7 @@ dl_open_worker (void *a)
 	      memcpy (newp, imap->l_scope, cnt * sizeof (imap->l_scope[0]));
 	      struct r_scope_elem **old = imap->l_scope;
 
-	      if (SINGLE_THREAD_P)
+	      if (RTLD_SINGLE_THREAD_P)
 		imap->l_scope = newp;
 	      else
 		{

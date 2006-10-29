@@ -1,3 +1,11 @@
+2006-10-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-sym.c (do_sym): Use RTLD_SINGLE_THREAD_P.
+	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Likewise.
+	* elf/dl-close.c (_dl_close_worker): Likewise.
+	* elf/dl-open.c (_dl_open_worker): Likewise.
+	* sysdeps/generic/sysdep-cancel.h (RTLD_SINGLE_THREAD_P): Define.
+
 2006-10-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Require assembler support for visibility, compiler

@@ -113,7 +113,7 @@ do_sym (void *handle, const char *name, void *who,
 	 the initial binary.  And then the more complex part
 	 where the object is dynamically loaded and the scope
 	 array can change.  */
-      if (match->l_type != lt_loaded || SINGLE_THREAD_P)
+      if (match->l_type != lt_loaded || RTLD_SINGLE_THREAD_P)
 	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
 					   match->l_scope, vers, 0,
 					   flags | DL_LOOKUP_ADD_DEPENDENCY,
