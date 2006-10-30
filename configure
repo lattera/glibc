@@ -5652,7 +5652,7 @@ else
       libc_cv_z_relro=yes
     else
       case "$base_machine" in
-        i3456786 | x86_64 | powerpc* | s390* | sparc* | alpha*) ;;
+        i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*) ;;
 	*) libc_cv_z_relro="not required" ;;
       esac
     fi
@@ -5660,7 +5660,7 @@ else
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_relro" >&5
 echo "${ECHO_T}$libc_cv_z_relro" >&6
-  if test $libc_cv_z_relro = no; then
+  if test "$libc_cv_z_relro" = no; then
     { { echo "$as_me:$LINENO: error: linker with -z relro support required" >&5
 echo "$as_me: error: linker with -z relro support required" >&2;}
    { (exit 1); exit 1; }; }

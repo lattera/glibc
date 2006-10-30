@@ -1445,10 +1445,12 @@ EOF
     then
       libc_cv_z_relro=yes
     else
+changequote(,)dnl
       case "$base_machine" in
         i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*) ;;
 	*) libc_cv_z_relro="not required" ;;
       esac
+changequote([,])dnl
     fi
   fi])
   if test "$libc_cv_z_relro" = no; then
