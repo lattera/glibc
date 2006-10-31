@@ -1,3 +1,8 @@
+2006-10-21  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h
+	(DOCARGS_6): Change ".pad #20" to ".pad #16".
+
 2006-10-31  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/fclrexcpt.c: Include <sysdep.h> instead of
