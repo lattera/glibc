@@ -59,7 +59,7 @@ typedef struct link_map link_map;
    i.e. at the very end of the area covered by TLS_PRE_TCB_SIZE.  */
 DESC (_thread_db_pthread_dtvp,
       TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv)
-      - (TLS_TCB_SIZE == 0 ? sizeof (tcbhead_t) : 0), union dtv)
+      - (TLS_TCB_SIZE == 0 ? sizeof (tcbhead_t) : 0), union dtv *)
 #endif
 
 
