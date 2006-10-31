@@ -1,3 +1,9 @@
+2006-10-31  Nicolas Pitre  <nico@cam.org>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/memcpy.S: New file.
+	* sysdeps/arm/memmove.S: Likewise.
+
 2006-09-22  Khem Raj  <kraj@mvista.com>
 
 	* sysdeps/unix/sysv/linux/arm/fxstatat.c: New file.
