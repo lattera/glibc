@@ -1,4 +1,9 @@
-2006-10-21  Joseph S. Myers  <joseph@codesourcery.com>
+2006-10-31  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h
+	(RTLD_SINGLE_THREAD_P): Define.
+
+2006-10-31  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h
 	(DOCARGS_6): Change ".pad #20" to ".pad #16".
