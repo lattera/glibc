@@ -42,7 +42,7 @@
 #endif
 
 /* The vfork syscall on arm was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+#if __LINUX_KERNEL_VERSION >= 132097
 # define __ASSUME_VFORK_SYSCALL		1
 #endif
 
