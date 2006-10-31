@@ -1,3 +1,8 @@
+2006-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/atexit.c (atexit): Don't mark as hidden when used to
+	generate compatibility version.
+
 2006-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Relax -z relro requirement a bit.
