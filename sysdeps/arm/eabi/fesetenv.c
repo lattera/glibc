@@ -23,12 +23,12 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <asm/procinfo.h>
+#include <sysdep.h>
 
 int
 __fesetenv (const fenv_t *envp)
 {
-  if (GLRO (dl_hwcap) & HWCAP_VFP)
+  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
     {
       unsigned int temp;
 

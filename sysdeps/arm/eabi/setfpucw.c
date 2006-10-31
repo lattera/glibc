@@ -23,12 +23,12 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <asm/procinfo.h>
+#include <sysdep.h>
 
 void
 __setfpucw (fpu_control_t set)
 {
-  if (GLRO (dl_hwcap) & HWCAP_VFP)
+  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
     {
       fpu_control_t cw;
 

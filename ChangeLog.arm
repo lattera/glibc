@@ -1,3 +1,20 @@
+2006-10-31  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/fclrexcpt.c: Include <sysdep.h> instead of
+	<asm/procinfo.h>.  Use HWCAP_ARM_VFP instead of HWCAP_VFP.
+	* sysdeps/arm/eabi/fedisblxcpt.c: Likewise.
+	* sysdeps/arm/eabi/feenablxcpt.c: Likewise.
+	* sysdeps/arm/eabi/fegetenv.c: Likewise.
+	* sysdeps/arm/eabi/fegetexcept.c: Likewise.
+	* sysdeps/arm/eabi/fegetround.c: Likewise.
+	* sysdeps/arm/eabi/feholdexcpt.c: Likewise.
+	* sysdeps/arm/eabi/fesetenv.c: Likewise.
+	* sysdeps/arm/eabi/fesetround.c: Likewise.
+	* sysdeps/arm/eabi/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/eabi/fsetexcptflg.c: Likewise.
+	* sysdeps/arm/eabi/ftestexcept.c: Likewise.
+	* sysdeps/arm/eabi/setfpucw.c: Likewise.
+
 2006-10-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (splice): Update

@@ -24,12 +24,12 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <asm/procinfo.h>
+#include <sysdep.h>
 
 int
 feenableexcept (int excepts)
 {
-  if (GLRO (dl_hwcap) & HWCAP_VFP)
+  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
     {
       unsigned long int new_exc, old_exc;
 

@@ -24,12 +24,12 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <asm/procinfo.h>
+#include <sysdep.h>
 
 int
 feraiseexcept (int excepts)
 {
-  if (GLRO (dl_hwcap) & HWCAP_VFP)
+  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
     {
       int fpscr;
       const float fp_zero = 0.0, fp_one = 1.0, fp_max = FLT_MAX,
