@@ -1,3 +1,7 @@
+2006-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
 2006-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/atexit.c (atexit): Don't mark as hidden when used to
