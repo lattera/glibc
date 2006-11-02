@@ -1,3 +1,8 @@
+2006-11-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Work around ld --help change and avoid -z relro
+	test completely if the architecture doesn't care about security.
+
 2006-11-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
