@@ -5629,7 +5629,9 @@ fi
 echo "$as_me:$LINENO: result: $libc_cv_z_initfirst" >&5
 echo "${ECHO_T}$libc_cv_z_initfirst" >&6
 
-  echo "$as_me:$LINENO: checking for -z relro option" >&5
+  case "$base_machine" in
+    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
+      echo "$as_me:$LINENO: checking for -z relro option" >&5
 echo $ECHO_N "checking for -z relro option... $ECHO_C" >&6
 if test "${libc_cv_z_relro+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -5650,21 +5652,19 @@ else
   (exit $ac_status); }; }
     then
       libc_cv_z_relro=yes
-    else
-      case "$base_machine" in
-        i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*) ;;
-	*) libc_cv_z_relro="not required" ;;
-      esac
     fi
   fi
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_relro" >&5
 echo "${ECHO_T}$libc_cv_z_relro" >&6
-  if test "$libc_cv_z_relro" = no; then
-    { { echo "$as_me:$LINENO: error: linker with -z relro support required" >&5
+      if test "$libc_cv_z_relro" = no; then
+        { { echo "$as_me:$LINENO: error: linker with -z relro support required" >&5
 echo "$as_me: error: linker with -z relro support required" >&2;}
    { (exit 1); exit 1; }; }
-  fi
+      fi
+      ;;
+    *) ;;
+   esac
 
   echo "$as_me:$LINENO: checking for -Bgroup option" >&5
 echo $ECHO_N "checking for -Bgroup option... $ECHO_C" >&6
