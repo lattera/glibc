@@ -887,4 +887,10 @@ dest (void)
         fputc ('=', stderr);
       fputs ("\e[0;0m\n", stderr);
     }
+
+  /* Any following malloc/free etc. calls should generate statistics again,
+     because otherwise freeing something that has been malloced before
+     this destructor (including struct header in front of it) wouldn't
+     be properly freed.  */
+  not_me = false;
 }
