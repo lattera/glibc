@@ -58,7 +58,7 @@ static const struct intel_02_cache_info
     { 0x45, _SC_LEVEL2_CACHE_SIZE, 2097152, 4, 32 },
     { 0x46, _SC_LEVEL3_CACHE_SIZE, 4194304, 4, 64 },
     { 0x47, _SC_LEVEL3_CACHE_SIZE, 8388608, 8, 64 },
-    { 0x49, _SC_LEVEL3_CACHE_SIZE, 4194304, 16, 64 },
+    { 0x49, _SC_LEVEL2_CACHE_SIZE, 4194304, 16, 64 },
     { 0x4a, _SC_LEVEL3_CACHE_SIZE, 6291456, 12, 64 },
     { 0x4b, _SC_LEVEL3_CACHE_SIZE, 8388608, 16, 64 },
     { 0x4c, _SC_LEVEL3_CACHE_SIZE, 12582912, 12, 64 },
@@ -127,6 +127,33 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	}
       else
 	{
+	  if (byte == 0x49 && folded_name == _SC_LEVEL3_CACHE_SIZE)
+	    {
+	      /* Intel reused this value.  For family 15, model 6 it
+		 specifies the 3rd level cache.  Otherwise the 2nd
+		 level cache.  */
+	      unsigned int eax;
+	      unsigned int ebx;
+	      unsigned int ecx;
+	      unsigned int edx;
+	      asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
+			    : "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
+			    : "0" (1));
+
+	      unsigned int family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
+	      unsigned int model = ((((eax >>16) & 0xf) << 4)
+				    + ((eax >> 4) & 0xf));
+	      if (family == 15 && model == 6)
+		{
+		  /* The level 3 cache is encoded for this model like
+		     the level 2 cache is for other models.  Pretend
+		     the caller asked for the level 2 cache.  */
+		  name = (_SC_LEVEL2_CACHE_SIZE
+			  + (name - _SC_LEVEL3_CACHE_SIZE));
+		  folded_name = _SC_LEVEL3_CACHE_SIZE;
+		}
+	    }
+
 	  struct intel_02_cache_info *found;
 	  struct intel_02_cache_info search;
 
