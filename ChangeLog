@@ -1,3 +1,25 @@
+2006-10-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-debug.c (_dl_debug_initialize): Check r->r_map for 0
+	rather than r->r_brk.
+
+2006-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (decompose_rpath): Return bool rather than void.
+	If l->l_name is on inhibit_rpath list, set sps->dirs to -1 and
+	return false, otherwise return true.
+	(cache_rpath): Return decompose_rpath return value.
+
+2006-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h (declare_symbol): Rename to...
+	(declare_symbol_alias): ... this.  Add ORIGINAL argument, imply
+	strong_alias (ORIGINAL, SYMBOL) in asm to make sure it preceedes
+	.size directive.
+	* sysdeps/gnu/errlist-compat.awk: Adjust for declare_symbol_alias
+	changes.
+	* sysdeps/gnu/siglist.c: Likewise.
+
 2006-11-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/bits/mathinline.h

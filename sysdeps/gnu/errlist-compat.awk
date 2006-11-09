@@ -1,5 +1,5 @@
 # awk script to generate errlist-compat.c
-# Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -92,16 +92,18 @@ END {
     printf "# include <bits/wordsize.h>\n";
     printf "extern const char *const __sys_errlist_%s[NERR];\n", old;
     printf "const int __sys_nerr_%s = %d;\n", old, n;
-    printf "strong_alias (_sys_errlist_internal, __sys_errlist_%s)\n", old;
-    printf "declare_symbol (__sys_errlist_%s, object, __WORDSIZE/8*%d)\n", \
-      old, n;
+    printf "declare_symbol_alias (__sys_errlist_%s, _sys_errlist_internal,", \
+      old;
+    printf " object, __WORDSIZE/8*%d)\n", n;
     printf "compat_symbol (libc, __sys_errlist_%s, sys_errlist, %s);\n", \
       old, old;
     printf "compat_symbol (libc, __sys_nerr_%s, sys_nerr, %s);\n", old, old;
 
     printf "extern const char *const ___sys_errlist_%s[NERR];\n", old;
     printf "extern const int __sys_nerr_%s;\n", old;
-    printf "strong_alias (__sys_errlist_%s, ___sys_errlist_%s)\n", old, old;
+    printf "declare_symbol_alias (___sys_errlist_%s, _sys_errlist_internal,", \
+      old;
+    printf " object, __WORDSIZE/8*%d)\n", n;
     printf "strong_alias (__sys_nerr_%s, ___sys_nerr_%s)\n", old, old;
     printf "compat_symbol (libc, ___sys_errlist_%s, _sys_errlist, %s);\n", \
       old, old;

@@ -511,7 +511,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 }
 
 
-static void
+static bool
 internal_function
 decompose_rpath (struct r_search_path_struct *sps,
 		 const char *rpath, struct link_map *l, const char *what)
@@ -546,19 +546,8 @@ decompose_rpath (struct r_search_path_struct *sps,
 	    {
 	      /* This object is on the list of objects for which the
 		 RUNPATH and RPATH must not be used.  */
-	      result = calloc (1, sizeof *result);
-	      if (result == NULL)
-		{
-		signal_error_cache:
-		  errstring = N_("cannot create cache for search path");
-		signal_error:
-		  _dl_signal_error (ENOMEM, NULL, NULL, errstring);
-		}
-
-	      sps->dirs = result;
-	      sps->malloced = 1;
-
-	      return;
+	      sps->dirs = (void *) -1;
+	      return false;
 	    }
 
 	  while (*inhp != '\0')
@@ -588,7 +577,11 @@ decompose_rpath (struct r_search_path_struct *sps,
   result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
-    goto signal_error_cache;
+    {
+      errstring = N_("cannot create cache for search path");
+    signal_error:
+      _dl_signal_error (ENOMEM, NULL, NULL, errstring);
+    }
 
   fillin_rpath (copy, result, ":", 0, what, where);
 
@@ -599,6 +592,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   sps->dirs = result;
   /* The caller will change this value if we haven't used a real malloc.  */
   sps->malloced = 1;
+  return true;
 }
 
 /* Make sure cached path information is stored in *SP
@@ -623,10 +617,9 @@ cache_rpath (struct link_map *l,
     }
 
   /* Make sure the cache information is available.  */
-  decompose_rpath (sp, (const char *) (D_PTR (l, l_info[DT_STRTAB])
-				       + l->l_info[tag]->d_un.d_val),
-		   l, what);
-  return true;
+  return decompose_rpath (sp, (const char *) (D_PTR (l, l_info[DT_STRTAB])
+					      + l->l_info[tag]->d_un.d_val),
+			  l, what);
 }
 
 

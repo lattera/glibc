@@ -294,27 +294,42 @@ requires at runtime the shared libraries from the glibc version used \
 for linking")
 #endif
 
-/* Declare SYMBOL to be TYPE (`function' or `object') and of SIZE bytes,
-   when the assembler supports such declarations (such as in ELF).
+/* Declare SYMBOL to be TYPE (`function' or `object') of SIZE bytes
+   alias to ORIGINAL, when the assembler supports such declarations
+   (such as in ELF).
    This is only necessary when defining something in assembly, or playing
    funny alias games where the size should be other than what the compiler
    thinks it is.  */
-#define declare_symbol(symbol, type, size) \
-  declare_symbol_1 (symbol, type, size)
+#define declare_symbol_alias(symbol, original, type, size) \
+  declare_symbol_alias_1 (symbol, original, type, size)
 #ifdef ASM_TYPE_DIRECTIVE_PREFIX
 # ifdef __ASSEMBLER__
-#  define declare_symbol_1(symbol, type, size) \
+#  define declare_symbol_alias_1(symbol, original, type, size) \
+    strong_alias (original, symbol); \
     .type C_SYMBOL_NAME (symbol), \
-	  declare_symbol_1_paste (ASM_TYPE_DIRECTIVE_PREFIX, type), size
-#  define declare_symbol_1_paste(a, b)	declare_symbol_1_paste_1 (a,b)
-#  define declare_symbol_1_paste_1(a,b)	a##b
+	  declare_symbol_alias_1_paste (ASM_TYPE_DIRECTIVE_PREFIX, type); \
+    .size C_SYMBOL_NAME (symbol), size
+#  define declare_symbol_alias_1_paste(a, b) \
+  declare_symbol_alias_1_paste_1 (a,b)
+#  define declare_symbol_alias_1_paste_1(a,b)	a##b
 # else /* Not __ASSEMBLER__.  */
-#  define declare_symbol_1(symbol, type, size) \
-    asm (".type " __SYMBOL_PREFIX #symbol ", " \
-	 declare_symbol_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
+#  define declare_symbol_alias_1(symbol, original, type, size) \
+    asm (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE) \
+	 " " __SYMBOL_PREFIX #symbol \
+	 "\n\t" declare_symbol_alias_1_alias (symbol, original) \
+	 "\n\t.type " __SYMBOL_PREFIX #symbol ", " \
+	 declare_symbol_alias_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
 	 "\n\t.size " __SYMBOL_PREFIX #symbol ", " #size);
-#  define declare_symbol_1_stringify(x) declare_symbol_1_stringify_1 (x)
-#  define declare_symbol_1_stringify_1(x) #x
+#  define declare_symbol_alias_1_stringify(x) \
+  declare_symbol_alias_1_stringify_1 (x)
+#  define declare_symbol_alias_1_stringify_1(x) #x
+#  ifdef HAVE_ASM_SET_DIRECTIVE
+#   define declare_symbol_alias_1_alias(symbol, original) \
+	 ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX #original
+#  else
+#   define declare_symbol_alias_1_alias(symbol, original) \
+	 __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX #original
+#  endif /* HAVE_ASM_SET_DIRECTIVE */
 # endif /* __ASSEMBLER__ */
 #else
 # define declare_symbol_1(symbol, type, size) /* Nothing.  */

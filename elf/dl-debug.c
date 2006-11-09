@@ -54,7 +54,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
   else
     r = &GL(dl_ns)[ns]._ns_debug;
 
-  if (r->r_brk == 0 || ldbase != 0)
+  if (r->r_map == NULL || ldbase != 0)
     {
       /* Tell the debugger where to find the map of loaded objects.  */
       r->r_version = 1	/* R_DEBUG_VERSION XXX */;
