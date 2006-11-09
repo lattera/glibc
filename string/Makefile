@@ -54,7 +54,7 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
-		   bug-envz1
+		   bug-envz1 tst-strxfrm2
 distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h
 
 

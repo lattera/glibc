@@ -1,9 +1,17 @@
+2006-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tests): Add tst-strxfrm2.
+	* string/tst-strxfrm2.c: New file.
+
 2006-10-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-debug.c (_dl_debug_initialize): Check r->r_map for 0
 	rather than r->r_brk.
 
 2006-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Do the trailing \1 removal
+	optimization even if needed > n.
 
 	* elf/dl-load.c (decompose_rpath): Return bool rather than void.
 	If l->l_name is on inhibit_rpath list, set sps->dirs to -1 and
