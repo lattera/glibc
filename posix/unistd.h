@@ -559,7 +559,7 @@ extern long int pathconf (__const char *__path, int __name)
 extern long int fpathconf (int __fd, int __name) __THROW;
 
 /* Get the value of the system variable NAME.  */
-extern long int sysconf (int __name) __THROW __attribute__ ((__const__));
+extern long int sysconf (int __name) __THROW;
 
 #ifdef	__USE_POSIX2
 /* Get the value of the string-valued system variable NAME.  */

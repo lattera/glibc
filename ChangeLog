@@ -1,5 +1,8 @@
 2006-11-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3493]
+	* posix/unistd.h (sysconf): Remove const attribute.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix test for
 	temporary or deprecated addresses.
 	Patch by Sridhar Samudrala <sri@us.ibm.com>.
