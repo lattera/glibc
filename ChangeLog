@@ -1,5 +1,9 @@
 2006-11-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix test for
+	temporary or deprecated addresses.
+	Patch by Sridhar Samudrala <sri@us.ibm.com>.
+
 	* string/Makefile (tests): Add tst-strxfrm2.
 	* string/tst-strxfrm2.c: New file.
 

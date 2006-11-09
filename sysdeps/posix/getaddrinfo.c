@@ -2085,10 +2085,12 @@ getaddrinfo (const char *name, const char *service,
 
 		  if (q->ai_family == PF_INET6 && in6ai != NULL)
 		    {
-		      /* See whether the address is the list of deprecated
-			 or temporary addresses.  */
+		      /* See whether the source address is the list of
+			 deprecated or temporary addresses.  */
 		      struct in6addrinfo tmp;
-		      memcpy (tmp.addr, q->ai_addr, IN6ADDRSZ);
+		      struct sockaddr_in6 *sin6p
+			= (struct sockaddr_in6 *) &results[i].source_addr;
+		      memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
 
 		      struct in6addrinfo *found
 			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),
