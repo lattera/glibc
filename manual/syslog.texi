@@ -370,7 +370,7 @@ The message is only for debugging purposes.
 
 Results are undefined if the priority code is anything else.
 
-If the process does not presently have a Syslog connection open (i.e.
+If the process does not presently have a Syslog connection open (i.e.,
 it did not call @code{openlog}), @code{syslog} implicitly opens the
 connection the same as @code{openlog} would, with the following defaults
 for information that would otherwise be included in an @code{openlog}

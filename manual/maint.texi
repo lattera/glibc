@@ -156,7 +156,7 @@ subdirectories under it intended to be new specific categories.
 to look for a system-dependent version of a file that's not in
 @file{generic}.  This means that any system-dependent source file must
 have an analogue in @file{generic}, even if the routines defined by that
-file are not implemented on other platforms.  Second. the @file{generic}
+file are not implemented on other platforms.  Second, the @file{generic}
 version of a system-dependent file is used if the makefiles do not find
 a version specific to the system you're compiling for.
 

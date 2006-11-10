@@ -1434,7 +1434,7 @@ like those given to the @code{printf} family of functions.  The
 arguments required for the format can follow the @var{format} parameter.
 Just like @code{perror}, @code{error} also can report an error code in
 textual form.  But unlike @code{perror} the error value is explicitly
-passed to the function in the @var{errnum} parameter.  This elimintates
+passed to the function in the @var{errnum} parameter.  This eliminates
 the problem mentioned above that the error reporting function must be
 called immediately after the function causing the error since otherwise
 @code{errno} might have a different value.
@@ -1479,7 +1479,7 @@ in an input file (like a programming language source code file etc).
 
 If the global variable @code{error_one_per_line} is set to a non-zero
 value @code{error_at_line} will avoid printing consecutive messages for
-the same file anem line.  Repetition which are not directly following
+the same file and line.  Repetition which are not directly following
 each other are not caught.
 
 Just like @code{error} this function only returned if @var{status} is

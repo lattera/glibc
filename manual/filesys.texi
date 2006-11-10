@@ -131,7 +131,7 @@ this function is deprecated.
 @comment GNU
 @deftypefun {char *} get_current_dir_name (void)
 @vindex PWD
-This @code{get_current_dir_name} function is bascially equivalent to
+This @code{get_current_dir_name} function is basically equivalent to
 @w{@code{getcwd (NULL, 0)}}.  The only difference is that the value of
 the @code{PWD} variable is returned if this value is correct.  This is a
 subtle difference which is visible if the path described by the
@@ -917,7 +917,7 @@ function returns a value other than @math{0} this value is returned as
 the return value of @code{ftw}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32-bit system this function is in fact @code{ftw64}, i.e. the LFS
+32-bit system this function is in fact @code{ftw64}, i.e., the LFS
 interface transparently replaces the old interface.
 @end deftypefun
 
@@ -990,7 +990,7 @@ accordingly.  If the return value of a callback invocation was non-zero
 then that value is returned.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32-bit system this function is in fact @code{nftw64}, i.e. the LFS
+32-bit system this function is in fact @code{nftw64}, i.e., the LFS
 interface transparently replaces the old interface.
 @end deftypefun
 
@@ -1434,7 +1434,7 @@ the existing directory named @var{newname} is deleted first.  The name
 
 One useful feature of @code{rename} is that the meaning of @var{newname}
 changes ``atomically'' from any previously existing file by that name to
-its new meaning (i.e. the file that was called @var{oldname}).  There is
+its new meaning (i.e., the file that was called @var{oldname}).  There is
 no instant at which @var{newname} is non-existent ``in between'' the old
 meaning and the new meaning.  If there is a system crash during the
 operation, it is possible for both names to still exist; but
@@ -3104,7 +3104,7 @@ terminates abnormally).
 This function is reentrant.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32-bit system this function is in fact @code{tmpfile64}, i.e. the LFS
+32-bit system this function is in fact @code{tmpfile64}, i.e., the LFS
 interface transparently replaces the old interface.
 @end deftypefun
 

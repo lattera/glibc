@@ -2567,7 +2567,7 @@ The prototype for the @code{sigprocmask} function is in @file{signal.h}.
 Note that you must not use @code{sigprocmask} in multi-threaded processes,
 because each thread has its own signal mask and there is no single process
 signal mask. According to POSIX, the behavior of @code{sigprocmask} in a
-multi-threaded process is ``unspeficied''.
+multi-threaded process is ``unspecified''.
 Instead, use @code{pthread_sigmask}.
 @ifset linuxthreads
 @xref{Threads and Signal Handling}.

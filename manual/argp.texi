@@ -832,7 +832,7 @@ Don't exit on errors, although they may still result in error messages.
 @item ARGP_LONG_ONLY
 Use the gnu getopt `long-only' rules for parsing arguments.  This allows
 long-options to be recognized with only a single @samp{-}
-(i.e.  @samp{-help}).  This results in a less useful interface, and its
+(i.e., @samp{-help}).  This results in a less useful interface, and its
 use is discouraged as it conflicts with the way most GNU programs work
 as well as the GNU coding standards.
 

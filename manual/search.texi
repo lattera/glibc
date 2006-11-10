@@ -368,9 +368,9 @@ necessary for the @code{struct hsearch_data} object can be allocated
 dynamically.  It must be initialized with zero before calling this
 function.
 
-The return value is non-zero if the operation were successful.  if the
-return value is zero something went wrong which probably means the
-programs runs out of memory.
+The return value is non-zero if the operation was successful.  If the
+return value is zero, something went wrong, which probably means the
+programs ran out of memory.
 @end deftypefun
 
 @comment search.h

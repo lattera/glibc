@@ -1810,8 +1810,8 @@ help to understand the input better.
 
 Other programs help to manage development cycle when new messages appear
 in the source files or when a new translation of the messages appear.
-here it should only be noted that using all the tools in GNU gettext it
-is possible to @emph{completely} automize the handling of message
+Here it should only be noted that using all the tools in GNU gettext it
+is possible to @emph{completely} automate the handling of message
 catalog.  Beside marking the translatable string in the source code and
 generating the translations the developers do not have anything to do
 themselves.

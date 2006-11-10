@@ -830,7 +830,7 @@ mean that there was difficulty in opening the files.
 Don't confuse a program's exit status with a process' termination status.
 There are lots of ways a process can terminate besides having it's program
 finish.  In the event that the process termination @emph{is} caused by program
-termination (i.e. @code{exit}), though, the program's exit status becomes
+termination (i.e., @code{exit}), though, the program's exit status becomes
 part of the process' termination status.
 
 @node Cleanups on Exit

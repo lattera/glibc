@@ -872,7 +872,7 @@ shall be accessible while the filesystem is mounted.
 
 @item MS_SYNCHRONOUS
 This bit on specifies that all writes to the filesystem while it is
-mounted shall be synchronous; i.e. data shall be synced before each
+mounted shall be synchronous; i.e., data shall be synced before each
 write completes rather than held in the buffer cache.
 
 @item MS_MANDLOCK
