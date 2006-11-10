@@ -439,7 +439,7 @@ save_cache (const char *cache_name)
     }
 
   if (write (fd, strings, total_strlen) != (ssize_t) total_strlen)
-    error (EXIT_FAILURE, errno, _("Writing of cache data failed."));
+    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
 
   close (fd);
 

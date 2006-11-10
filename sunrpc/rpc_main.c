@@ -457,7 +457,7 @@ check_nettype (const char *name, const char *list_to_check[])
 	  return 1;
 	}
     }
-  fprintf (stderr, _ ("illegal nettype :`%s'\n"), name);
+  fprintf (stderr, _ ("illegal nettype: `%s'\n"), name);
   return 0;
 }
 

@@ -125,7 +125,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 
       dbg_log (_("add new entry \"%s\" of type %s for %s to cache%s"),
 	       str, serv2str[type], dbnames[table - dbs],
-	       first ? " (first)" : "");
+	       first ? _(" (first)") : "");
     }
 
   unsigned long int hash = __nis_hash (key, len) % table->head->module;

@@ -558,7 +558,7 @@ manual_link (char *library)
   /* Do some sanity checks first.  */
   if (lstat64 (real_library, &stat_buf))
     {
-      error (0, errno, _("Can't lstat %s"), library);
+      error (0, errno, _("Cannot lstat %s"), library);
       free (path);
       return;
     }

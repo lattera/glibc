@@ -123,7 +123,7 @@ DST not allowed in SUID/SGID programs"));				      \
 	       processed.  */						      \
 	    if (fatal)							      \
 	      _dl_signal_error (0, __str, NULL, N_("\
-empty dynamics string token substitution"));				      \
+empty dynamic string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \

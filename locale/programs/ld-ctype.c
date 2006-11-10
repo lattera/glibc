@@ -3036,7 +3036,7 @@ set_class_defaults (struct locale_ctype_t *ctype,
 	    {
 	      if (!be_quiet)
 		WITH_CUR_LOCALE (error (0, 0, _("\
-%s: character `%s' not defined in charmap while needed as default value"),
+%s: character `%s' not defined while needed as default value"),
 					"LC_CTYPE", tmp));
 	    }
 	  else if (seq->nbytes != 1)
@@ -3161,8 +3161,8 @@ set_class_defaults (struct locale_ctype_t *ctype,
 	{
 	  if (!be_quiet)
 	    WITH_CUR_LOCALE (error (0, 0, _("\
-character `%s' not defined while needed as default value"),
-				    "<newline>"));
+%s: character `%s' not defined while needed as default value"),
+				    "LC_CTYPE", "<newline>"));
 	}
       else if (seq->nbytes != 1)
 	WITH_CUR_LOCALE (error (0, 0, _("\

@@ -202,7 +202,7 @@ preserve_capabilities (void)
   if (__builtin_expect (res != 0, 0))
     {
       cap_free (new_caps);
-      dbg_log (_("Failed to drop capabilities\n"));
+      dbg_log (_("Failed to drop capabilities"));
       error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
     }
 

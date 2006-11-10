@@ -1,5 +1,31 @@
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3465]
+	* sunrpc/clnt_raw.c: Minimal message improvements.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nis_print_group_entry.c: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+	* locale/programs/charmap.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* libio/vswprintf.c: Likewise.
+	* malloc/memusagestat.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* nscd/cache.c: Likewise.
+	* locale/programs/repertoire.c: Unify output messages.
+	* locale/programs/charmap.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* nscd/selinux.c: Likewise.
+	* elf/cache.c: Likewise.
+	Patch mostly by Benno Schulenberg <bensberg@justemail.net>.
+
 	[BZ #3451]
 	* sysdeps/i386/fpu/bits/mathinline.h (floor): Make rounding mode
 	change atomic.

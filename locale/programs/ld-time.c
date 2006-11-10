@@ -502,7 +502,7 @@ No definition for %s category found"), "LC_TIME"));
     time->first_weekday = 1;
   else if (time->first_weekday > time->week_ndays)
     WITH_CUR_LOCALE (error (0, 0, _("\
-%s: values of field `%s' must not be larger than %d"),
+%s: values for field `%s' must not be larger than %d"),
 			    "LC_TIME", "first_weekday", 7));
 
   if (time->first_workday == '\0')
@@ -510,7 +510,7 @@ No definition for %s category found"), "LC_TIME"));
     time->first_workday = 1;
   else if (time->first_workday > time->week_ndays)
     WITH_CUR_LOCALE (error (0, 0, _("\
-%s: values of field `%s' must not be larger than %d"),
+%s: values for field `%s' must not be larger than %d"),
 			    "LC_TIME", "first_workday", 7));
 
   if (time->cal_direction == '\0')

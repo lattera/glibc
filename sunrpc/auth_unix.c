@@ -347,7 +347,7 @@ marshal_new_auth (AUTH *auth)
   INTUSE(xdrmem_create) (xdrs, au->au_marshed, MAX_AUTH_BYTES, XDR_ENCODE);
   if ((!INTUSE(xdr_opaque_auth) (xdrs, &(auth->ah_cred))) ||
       (!INTUSE(xdr_opaque_auth) (xdrs, &(auth->ah_verf))))
-    perror (_("auth_none.c - Fatal marshalling problem"));
+    perror (_("auth_unix.c: Fatal marshalling problem"));
   else
     au->au_mpos = XDR_GETPOS (xdrs);
 

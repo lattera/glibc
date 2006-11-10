@@ -44,7 +44,7 @@ Profile memory usage of PROGRAM.
    -d,--data=FILE         Generate binary data file and store it in FILE
    -u,--unbuffered        Don't buffer output
    -b,--buffer=SIZE       Collect SIZE entries before writing them out
-      --no-timer          Don't collect additional information though timer
+      --no-timer          Don't collect additional information through timer
    -m,--mmap              Also trace mmap & friends
 
    -?,--help              Print this help and exit
