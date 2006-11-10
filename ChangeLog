@@ -1,3 +1,10 @@
+2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3451]
+	* sysdeps/i386/fpu/bits/mathinline.h (floor): Make rounding mode
+	change atomic.
+	(ceil): Likewise.
+
 2006-11-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/strxfrm_l.c (STRXFRM): Fix trailing \1 optimization
