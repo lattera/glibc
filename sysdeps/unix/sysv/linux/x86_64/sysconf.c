@@ -101,6 +101,7 @@ intel_02_known_compare (const void *p1, const void *p2)
 
 
 static long int
+__attribute__ ((noinline))
 intel_check_word (int name, unsigned int value, bool *has_level_2,
 		  bool *no_level_2_or_3)
 {

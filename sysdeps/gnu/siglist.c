@@ -40,13 +40,15 @@ const char *const __new_sys_sigabbrev[NSIG] =
 strong_alias (__new_sys_sigabbrev, _sys_sigabbrev_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-declare_symbol_alias (__old_sys_siglist, _sys_siglist_internal, object,
+declare_symbol_alias (__old_sys_siglist, __new_sys_siglist, object,
 		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
-declare_symbol_alias (__old_sys_sigabbrev, _sys_sigabbrev_internal, object,
+declare_symbol_alias (__old_sys_sigabbrev, __new_sys_sigabbrev, object,
 		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
-strong_alias (__old_sys_siglist, _old_sys_siglist)
+declare_symbol_alias (_old_sys_siglist, __new_sys_siglist, object,
+		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
+
 compat_symbol (libc, __old_sys_siglist, _sys_siglist, GLIBC_2_0);
 compat_symbol (libc, _old_sys_siglist, sys_siglist, GLIBC_2_0);
 compat_symbol (libc, __old_sys_sigabbrev, sys_sigabbrev, GLIBC_2_0);

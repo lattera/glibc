@@ -1,5 +1,21 @@
 2006-11-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (intel_check_word): Add
+	noinline attribute.
+
+2006-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_check_word): Add
+	noinline attribute.
+
+	* sysdeps/gnu/siglist.c (__old_sys_siglist, __old_sys_sigabbrev):
+	Use __new_sys_siglist instead of _sys_siglist_internal as
+	second macro argument.
+	(_old_sys_siglist): Use declare_symbol_alias macro instead of
+	strong_alias.
+
+2006-11-09  Ulrich Drepper  <drepper@redhat.com>
+
 	[BZ #3493]
 	* posix/unistd.h (sysconf): Remove const attribute.
 
