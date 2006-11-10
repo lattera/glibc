@@ -432,7 +432,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   if (needed > 2 && needed == last_needed + 1)
     {
       /* Remove the \1 byte.  */
-      if (--needed < n)
+      if (--needed <= n)
 	dest[needed - 1] = L('\0');
     }
 

@@ -1,3 +1,12 @@
+2006-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Fix trailing \1 optimization
+	if N is one bigger than return value.
+	* string/tst-strxfrm2.c (do_test): Also test strxfrm with l1 + 1
+	and l1 last arguments, if buf is defined, verify the return value
+	equals to strlen (buf) and verify no byte beyond passed length
+	is modified.
+
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
