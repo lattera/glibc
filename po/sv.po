@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006.
-# Revision: 1.51
+# Revision: 1.52
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.5\n"
 "POT-Creation-Date: 2006-09-29 11:38-0700\n"
-"PO-Revision-Date: 2006-11-01 08:40+0100\n"
+"PO-Revision-Date: 2006-11-09 13:51+0100\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,7 @@ msgid ""
 msgstr ""
 "För felrapporteringsinstruktioner, se:\n"
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: catgets/gencat.c:245 debug/xtrace.sh:64 elf/ldconfig.c:285
 #: elf/ldd.bash.in:39 elf/sprof.c:355 iconv/iconv_prog.c:425
@@ -946,7 +947,8 @@ msgstr ""
 "  -u, --unused            skriv ut oanvända direkta beroenden\n"
 "  -v, --verbose           skriv all information\n"
 "För felrapporteringsinstruktioner, se:\n"
-"<http://www.gnu.org/software/libc/bugs.html>."
+"<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>."
 
 #: elf/ldd.bash.in:80
 msgid "ldd: option `$1' is ambiguous"
@@ -1048,7 +1050,7 @@ msgstr "%s är inte en ELF-fil, den har inte rätt magiskt tal i början.\n"
 
 #: elf/sprof.c:77
 msgid "Output selection:"
-msgstr "Välj utdata:"
+msgstr "Val av utdata:"
 
 #: elf/sprof.c:79
 msgid "print list of count paths and their number of use"
@@ -1069,6 +1071,7 @@ msgid ""
 msgstr ""
 "Läs och visa profildata för delat objekt.För felrapporteringsinstruktioner, se:\n"
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: elf/sprof.c:94
 msgid "SHOBJ [PROFDATA]"
@@ -1212,7 +1215,7 @@ msgstr "visa alla kända teckenuppsättningar"
 
 #: iconv/iconv_prog.c:64 locale/programs/localedef.c:126
 msgid "Output control:"
-msgstr "Styr utdata:"
+msgstr "Val av utdata:"
 
 #: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
@@ -1311,7 +1314,7 @@ msgstr ""
 
 #: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
-msgstr "Skapa en konfigurationsfil för snabbladdning av modul \"iconv\""
+msgstr "Skapa en snabbladdande modulkonfigurationsfil för iconv."
 
 #: iconv/iconvconfig.c:113
 msgid "[DIR...]"
@@ -2418,6 +2421,7 @@ msgid ""
 msgstr ""
 "Hämta lokalspecifik information.För felrapporteringsinstruktioner, se:\n"
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: locale/programs/locale.c:91
 msgid ""
@@ -2881,7 +2885,8 @@ msgstr ""
 "motsvarande korta.\n"
 "\n"
 "För felrapporteringsinstruktioner, se:\n"
-"<http://www.gnu.org/software/libc/bugs.html>."
+"<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>."
 
 #: malloc/memusage.sh:90
 msgid ""
@@ -4212,6 +4217,7 @@ msgid ""
 msgstr ""
 "Hämta poster från den administrativa databasenFör felrapporteringsinstruktioner, se:\n"
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
+"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\n"
 
 #: nss/getent.c:145 nss/getent.c:394
 #, c-format
