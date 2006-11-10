@@ -1,5 +1,24 @@
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3480]
+	* manual/argp.texi: Fix typos.
+	* manual/charset.texi: Likewise.
+	* manual/errno.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/lang.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/time.texi: Likewise.
+	Patch by Ralf Wildenhues <Ralf.Wildenhues@gmx.de>.
+
 	[BZ #3465]
 	* sunrpc/clnt_raw.c: Minimal message improvements.
 	* sunrpc/pm_getmaps.c: Likewise.
