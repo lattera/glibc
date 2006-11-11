@@ -212,4 +212,11 @@ L(pre_end):						ASM_LINE_SEP	\
 # define NO_CANCELLATION 1
 
 #endif
-/* !defined NOT_IN_libc || defined IS_IN_libpthread */
+/* !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt */
+
+#ifndef __ASSEMBLER__
+# define RTLD_SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+				   header.multiple_threads) == 0, 1)
+#endif
+

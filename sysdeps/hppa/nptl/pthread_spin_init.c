@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include "pthreadP.h"
 
 int
-pthread_spin_unlock (pthread_spinlock_t *lock)
+pthread_spin_init (pthread_spinlock_t *lock, int pshared)
 {
   int tmp = 0;
   /* This should be a memory barrier to newer compilers */

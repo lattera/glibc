@@ -1,3 +1,16 @@
+2006-11-10  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/pthread_spin_init.c: New file.
+	* sysdeps/hppa/nptl/pthread_spin_unlock.c: Remove strong alias
+	to pthread_spin_init.
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Define
+	RTLD_SINGLE_THREAD_P.
+
+2006-09-20  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (splice): Add offin
+	and offout arguments to the prototype. 
+
 2006-09-15  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/nptl/tcb-offsets.sym: Define TID_THREAD_OFFSET.
