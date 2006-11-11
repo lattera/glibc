@@ -1,5 +1,17 @@
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/tzfile.c (__tzfile_read): Extend to handle new file format
+	on machines with 64-bit time_t.
+
+	* timezone/checktab.awk: Update from tzcode2006o.
+	* timezone/ialloc.c: Likewise.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.: Likewise.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 	[BZ #3483]
 	* elf/ldconfig.c (main): Call setlocale and textdomain.
 	Patch mostly by Benno Schulenberg <bensberg@justemail.net>.

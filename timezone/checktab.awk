@@ -1,6 +1,6 @@
 # Check tz tables for consistency.
 
-# @(#)checktab.awk	1.7
+# @(#)checktab.awk	8.1
 
 # Contributed by Paul Eggert.
 

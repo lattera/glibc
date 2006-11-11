@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.74";
+static char	elsieid[] = "@(#)zdump.c	8.2";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -15,7 +15,7 @@ static char	elsieid[] = "@(#)zdump.c	7.74";
 #include "ctype.h"	/* for isalpha et al. */
 #ifndef isascii
 #define isascii(x) 1
-#endif
+#endif /* !defined isascii */
 
 #ifndef ZDUMP_LO_YEAR
 #define ZDUMP_LO_YEAR	(-500)
@@ -130,11 +130,7 @@ static char	elsieid[] = "@(#)zdump.c	7.74";
 #endif /* !defined TZ_DOMAIN */
 
 #ifndef P
-#ifdef __STDC__
 #define P(x)	x
-#else /* !defined __STDC__ */
-#define P(x)	()
-#endif /* !defined __STDC__ */
 #endif /* !defined P */
 
 extern char **	environ;
@@ -389,7 +385,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 	}
 	if (fflush(stdout) || ferror(stdout)) {
 		(void) fprintf(stderr, "%s: ", progname);
-		(void) perror(_("Error writing to standard output"));
+		(void) perror(_("Error writing standard output"));
 		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
@@ -418,14 +414,21 @@ _("%s: use of -v on system with floating time_t other than float or double\n"),
 		}
 	} else if (0 > (time_t) -1) {
 		/*
-		** time_t is signed.
+		** time_t is signed.  Assume overflow wraps around.
 		*/
-		register time_t	hibit;
+		time_t t = 0;
+		time_t t1 = 1;
 
-		for (hibit = 1; (hibit * 2) != 0; hibit *= 2)
-			continue;
-		absolute_min_time = hibit;
-		absolute_max_time = -(hibit + 1);
+		while (t < t1) {
+			t = t1;
+			t1 = 2 * t1 + 1;
+		}
+		  
+		absolute_max_time = t;
+		t = -t;
+		absolute_min_time = t - 1;
+		if (t < absolute_min_time)
+			absolute_min_time = t;
 	} else {
 		/*
 		** time_t is unsigned.
@@ -468,10 +471,7 @@ const long	y;
 }
 
 static time_t
-hunt(name, lot, hit)
-char *	name;
-time_t	lot;
-time_t	hit;
+hunt(char *name, time_t lot, time_t hit)
 {
 	time_t			t;
 	long			diff;
@@ -541,10 +541,7 @@ struct tm *	oldp;
 }
 
 static void
-show(zone, t, v)
-char *	zone;
-time_t	t;
-int	v;
+show(char *zone, time_t t, int v)
 {
 	register struct tm *	tmp;
 
