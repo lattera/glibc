@@ -1,5 +1,16 @@
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/africa: Update from tzdata2006o.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 	* time/tzfile.c (__tzfile_read): Extend to handle new file format
 	on machines with 64-bit time_t.
 
