@@ -385,7 +385,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 	}
 	if (fflush(stdout) || ferror(stdout)) {
 		(void) fprintf(stderr, "%s: ", progname);
-		(void) perror(_("Error writing standard output"));
+		(void) perror(_("Error writing to standard output"));
 		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
@@ -423,7 +423,7 @@ _("%s: use of -v on system with floating time_t other than float or double\n"),
 			t = t1;
 			t1 = 2 * t1 + 1;
 		}
-		  
+
 		absolute_max_time = t;
 		t = -t;
 		absolute_min_time = t - 1;

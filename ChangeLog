@@ -1,3 +1,7 @@
+2006-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zdump.c: Redo fix for BZ #3137.
+
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/africa: Update from tzdata2006o.
@@ -17,7 +21,7 @@
 	* timezone/checktab.awk: Update from tzcode2006o.
 	* timezone/ialloc.c: Likewise.
 	* timezone/private.h: Likewise.
-	* timezone/scheck.: Likewise.
+	* timezone/scheck.c: Likewise.
 	* timezone/tzfile.h: Likewise.
 	* timezone/tzselect.ksh: Likewise.
 	* timezone/zdump.c: Likewise.

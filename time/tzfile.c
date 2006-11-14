@@ -279,7 +279,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     if (__builtin_expect (type_idxs[i] >= num_types, 0))
       goto lose;
 
-  if (BYTE_ORDER != BIG_ENDIAN || (sizeof (time_t) == 8 && trans_width == 4))
+  if ((BYTE_ORDER != BIG_ENDIAN && (sizeof (time_t) == 4 || trans_width == 4))
+      || (BYTE_ORDER == BIG_ENDIAN && sizeof (time_t) == 8
+	  && trans_width == 4))
     {
       /* Decode the transition times, stored as 4-byte integers in
 	 network (big-endian) byte order.  We work from the end of
