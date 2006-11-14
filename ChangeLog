@@ -1,5 +1,7 @@
 2006-11-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/nl.po: Update from translation team.
+
 	* timezone/zdump.c: Redo fix for BZ #3137.
 
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
