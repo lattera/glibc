@@ -3,6 +3,10 @@
 	* po/nl.po: Update from translation team.
 
 	* timezone/zdump.c: Redo fix for BZ #3137.
+2006-11-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/nss_files/files-alias.c (get_next_alias): Set line back
+	to first_unused after parsing :include: file.
 
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
 

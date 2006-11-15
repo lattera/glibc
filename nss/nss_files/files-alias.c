@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996,97,98,99,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2002,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -298,8 +298,8 @@ get_next_alias (const char *match, struct aliasent *result,
 			  first_unused[room_left - 1] = '\0';
 			  strncpy (first_unused, old_line, room_left);
 
-			  if (old_line != NULL)
-			    free (old_line);
+			  free (old_line);
+			  line = first_unused;
 
 			  if (first_unused[room_left - 1] != '\0')
 			    goto no_more_room;
