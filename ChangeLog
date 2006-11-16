@@ -1,3 +1,10 @@
+2006-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/fpu/s_copysignf.S (__copysignf): Switch to .text.
+	* sysdeps/x86_64/fpu/s_copysign.S (__copysign): Likewise.
+	(signmask): Add .size directive.
+	(othermask): Add .type directive.
+
 2006-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.
