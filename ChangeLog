@@ -1,3 +1,7 @@
+2006-10-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/mapv4v6addr.h (map_v4v6_address): Fix last change.
+
 2006-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/mapv4v6addr.h (map_v4v6_address): Optimize a bit.
@@ -24,6 +28,7 @@
 	* po/nl.po: Update from translation team.
 
 	* timezone/zdump.c: Redo fix for BZ #3137.
+
 2006-11-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/nss_files/files-alias.c (get_next_alias): Set line back

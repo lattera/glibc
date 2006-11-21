@@ -59,7 +59,7 @@ map_v4v6_address (const char *src, char *dst)
   int i;
 
   /* Move the IPv4 part to the right position.  */
-  memcpy (src + 12, src, INADDRSZ);
+  memcpy (dst + 12, src, INADDRSZ);
 
   /* Mark this ipv6 addr as a mapped ipv4. */
   for (i = 0; i < 10; i++)
