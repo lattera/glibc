@@ -1,3 +1,31 @@
+2006-10-05  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #2749]
+	* sysdeps/powerpc/nofpu/Makefile
+	[subdirs-soft-fp] (sysdep_routines): Remove gcc-quad-routines.
+	[subdirs-math] (CPPFLAGS): Add -I../soft-fp.
+	[subdirs-math] (CFLAGS-e_powl.c): Add -fno-builtin-fabsl. 
+	[subdirs-math] (CFLAGS-s_ccoshl.c): Likewise.
+	[subdirs-math] (CFLAGS-s_csinhl.c): Likewise.
+	[subdirs-math] (CFLAGS-s_clogl.c): Likewise.
+	[subdirs-math] (CFLAGS-s_clog10l.c): Likewise.
+	[subdirs-math] (CFLAGS-s_csinl.c): Likewise.
+	[subdirs-math] (CFLAGS-s_csqrtl.c): Likewise.
+	* sysdeps/powerpc/nofpu/Versions (GLIBC_2.3.2): Remove __fixtfdi,
+	__fixtfsi, and __trunctfsf2.
+	(GLIBC_2.4): Remove  __floatunditf, __floatunsitf, and __unordtf2.
+	Add __nedf2, __nesf2, __gtdf2, __gtsf2, __ltdf2, __ltsf2.
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Update for soft-fp.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/Implies: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/getcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/setcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/swapcontext.S:
+	New file.
+
 2006-01-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/nofpu/Subdirs: New file.
