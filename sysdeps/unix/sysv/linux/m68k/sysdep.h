@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.
@@ -194,6 +194,10 @@ SYSCALL_ERROR_LABEL:							      \
 #define DOARGS_5	_DOARGS_5 (20)
 #define _DOARGS_5(n)	move.l %d5, -(%sp); move.l n+4(%sp), %d5; _DOARGS_4 (n)
 #define UNDOARGS_5	UNDOARGS_4; move.l (%sp)+, %d5
+
+#define DOARGS_6	_DOARGS_6 (24)
+#define _DOARGS_6(n)	_DOARGS_5 (n-4); move.l %a0, -(%sp); move.l n+12(%sp), %a0;
+#define UNDOARGS_6	move.l (%sp)+, %a0; UNDOARGS_5
 
 
 #define	ret	rts
