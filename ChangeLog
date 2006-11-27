@@ -1,3 +1,10 @@
+2006-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3559]
+	* sunrpc/svc_run.c (svc_run): Fail instead of segfaulting if
+	malloc crashed.  Don't allocate memory unnecessarily in each
+	loop.
+
 2006-10-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/mapv4v6addr.h (map_v4v6_address): Fix last change.
