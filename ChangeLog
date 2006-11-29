@@ -1,3 +1,13 @@
+2006-11-29  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+	    Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (restore_rt): Add correct
+	unwind information.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Provide symbols for
+	'restore_rt' even in the 'signal' directory.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.sym: Extend the regs list.
+
 2006-11-27  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3559]
