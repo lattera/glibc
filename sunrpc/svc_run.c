@@ -71,6 +71,7 @@ svc_run (void)
 	      break;
 	    }
 
+	  my_pollfd = new_pollfd;
 	  last_max_pollfd = max_pollfd;
 	}
 

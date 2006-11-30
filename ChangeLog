@@ -1,3 +1,8 @@
+2006-11-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/svc_run.c (svc_run): Set my_pollfd to new_pollfd if realloc
+	succeeded.
+
 2006-11-29  Daniel Jacobowitz  <dan@codesourcery.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 	    Jan Kratochvil  <jan.kratochvil@redhat.com>
