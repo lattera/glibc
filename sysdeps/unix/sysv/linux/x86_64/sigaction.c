@@ -174,7 +174,8 @@ asm									\
    do_expr (2 /* rcx */, oRCX)						\
    do_expr (7 /* rsp */, oRSP)						\
    do_expr (16 /* rip */, oRIP)						\
-   do_expr (49 /* rflags */, oEFL)					\
+   /* libgcc-4.1.1 has only `DWARF_FRAME_REGISTERS == 17'.  */		\
+   /* do_expr (49 |* rflags *|, oEFL) */				\
    /* `cs'/`ds'/`fs' are unaligned and a different size.  */		\
    /* gas: Error: register save offset not a multiple of 8  */		\
    "	.align 8\n"							\
