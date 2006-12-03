@@ -22,14 +22,10 @@
 #include <abort-instr.h>
 #include <kernel-features.h>
 
-/* We need EFAULT, ENONSYS, and EAGAIN */
-#if !defined EFAULT && !defined ENOSYS && !defined EAGAIN
-#undef EFAULT
-#undef ENOSYS
-#undef EAGAIN
+/* We need EFAULT, ENONSYS */
+#if !defined EFAULT && !defined ENOSYS
 #define EFAULT	14
 #define ENOSYS	251
-#define EAGAIN	11
 #endif
 
 #ifndef _BITS_ATOMIC_H
@@ -57,10 +53,10 @@ typedef uintmax_t uatomic_max_t;
 
 /* Use the kernel atomic light weight syscalls on hppa */ 
 #define LWS "0xb0"
-#define LWS_CAS 0x0
+#define LWS_CAS "0"
 /* Note r31 is the link register */
 #define LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
-#define ASM_EAGAIN -EAGAIN
+#define ASM_EAGAIN "11" 
 
 #if __ASSUME_LWS_CAS
 /* The only basic operation needed is compare and exchange.  */
@@ -74,8 +70,8 @@ typedef uintmax_t uatomic_max_t;
 	"copy	%4, %%r25			\n\t"			\
 	"copy	%5, %%r24			\n\t"			\
 	"ble	" LWS "(%%sr2, %%r0)		\n\t"			\
-	"ldi	0, %%r20			\n\t"			\
-	"cmpib,=,n " ASM_EAGAIN ",%%r21,0	\n\t"			\
+	"ldi	" LWS_CAS ", %%r20		\n\t"			\
+	"cmpib,=,n " ASM_EAGAIN ",%%r21,0b	\n\t"			\
 	"nop					\n\t"			\
 	"stw	%%r28, %0			\n\t"			\
         "sub	%%r0, %%r21, %%r21		\n\t"			\
@@ -99,22 +95,9 @@ typedef uintmax_t uatomic_max_t;
      (ret != oldval);							\
    })
 #else
-/* Non-atomic primitives. */
-# define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __gmemp = (mem);				      \
-     __typeof (*mem) __gret = *__gmemp;				      \
-     __typeof (*mem) __gnewval = (newval);			      \
-								      \
-     if (__gret == (oldval))					      \
-       *__gmemp = __gnewval;					      \
-     __gret; })
+# error __ASSUME_LWS_CAS is required to build glibc.
+#endif	
+/* __ASSUME_LWS_CAS */
 
-# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __gmemp = (mem);				      \
-     __typeof (*mem) __gnewval = (newval);			      \
-								      \
-     *__gmemp == (oldval) ? (*__gmemp = __gnewval, 0) : 1; })
 #endif
-
-#endif	/* bits/atomic.h */
-
+/* _BITS_ATOMIC_H */

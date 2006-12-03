@@ -1,3 +1,14 @@
+2006-12-03  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Remove non-atomic
+	versions. Adjust jump target to '0b'.
+
+2006-12-03  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/Makefile: Set long-double-fcts to `no'.
+	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.
+	* sysdeps/hppa/fpu/bits/mathdef.h: New file.
+
 2006-11-10  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/nptl/pthread_spin_init.c: New file.
