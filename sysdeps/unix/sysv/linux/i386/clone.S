@@ -120,6 +120,9 @@ L(pseudo_end):
 	ret
 
 L(thread_start):
+	cfi_startproc;
+	/* Clearing frame pointer is insufficient, use CFI.  */
+	cfi_undefined (eip);
 	/* Note: %esi is zero.  */
 	movl	%esi,%ebp	/* terminate the stack frame */
 #ifdef RESET_PID
@@ -152,6 +155,7 @@ L(nomoregetpid):
 	jmp	L(haspid)
 	.previous
 #endif
+	cfi_endproc;
 
 	cfi_startproc
 PSEUDO_END (BP_SYM (__clone))

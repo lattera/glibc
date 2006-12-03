@@ -1,7 +1,30 @@
+2006-12-03  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sys/io.h: Removed.
+
+2006-11-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/memcmp.S: Use jump table as the base of
+	jump table entries.
+
+2006-11-30  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Provide CFI for the outermost
+	`clone' function to ensure proper unwinding stop of gdb.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+
 2006-12-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.init: Remove obsolete and commented-out -S option
 	handling.
+
+2006-11-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3514]
+	* manual/string.texi (strncmp): Fix pastos from wcscmp description.
+
+	[BZ #3515]
+	* manual/string.texi (strtok): Remove duplicate paragraph.
 
 2006-12-01  Jan Kratochvil  <jan.kratochvil@redhat.com>
 

@@ -380,38 +380,38 @@ END (BP_SYM (memcmp))
 	.section	.rodata
 	ALIGN (2)
 L(table_32bytes) :
-	.long	L(0bytes) - . + 0x0
-	.long	L(1bytes) - . + 0x4
-	.long	L(2bytes) - . + 0x8
-	.long	L(3bytes) - . + 0xc
-	.long	L(4bytes) - . + 0x10
-	.long	L(5bytes) - . + 0x14
-	.long	L(6bytes) - . + 0x18
-	.long	L(7bytes) - . + 0x1c
-	.long	L(8bytes) - . + 0x20
-	.long	L(9bytes) - . + 0x24
-	.long	L(10bytes) - . + 0x28
-	.long	L(11bytes) - . + 0x2c
-	.long	L(12bytes) - . + 0x30
-	.long	L(13bytes) - . + 0x34
-	.long	L(14bytes) - . + 0x38
-	.long	L(15bytes) - . + 0x3c
-	.long	L(16bytes) - . + 0x40
-	.long	L(17bytes) - . + 0x44
-	.long	L(18bytes) - . + 0x48
-	.long	L(19bytes) - . + 0x4c
-	.long	L(20bytes) - . + 0x50
-	.long	L(21bytes) - . + 0x54
-	.long	L(22bytes) - . + 0x58
-	.long	L(23bytes) - . + 0x5c
-	.long	L(24bytes) - . + 0x60
-	.long	L(25bytes) - . + 0x64
-	.long	L(26bytes) - . + 0x68
-	.long	L(27bytes) - . + 0x6c
-	.long	L(28bytes) - . + 0x70
-	.long	L(29bytes) - . + 0x74
-	.long	L(30bytes) - . + 0x78
-	.long	L(31bytes) - . + 0x7c
+	.long	L(0bytes) - L(table_32bytes)
+	.long	L(1bytes) - L(table_32bytes)
+	.long	L(2bytes) - L(table_32bytes)
+	.long	L(3bytes) - L(table_32bytes)
+	.long	L(4bytes) - L(table_32bytes)
+	.long	L(5bytes) - L(table_32bytes)
+	.long	L(6bytes) - L(table_32bytes)
+	.long	L(7bytes) - L(table_32bytes)
+	.long	L(8bytes) - L(table_32bytes)
+	.long	L(9bytes) - L(table_32bytes)
+	.long	L(10bytes) - L(table_32bytes)
+	.long	L(11bytes) - L(table_32bytes)
+	.long	L(12bytes) - L(table_32bytes)
+	.long	L(13bytes) - L(table_32bytes)
+	.long	L(14bytes) - L(table_32bytes)
+	.long	L(15bytes) - L(table_32bytes)
+	.long	L(16bytes) - L(table_32bytes)
+	.long	L(17bytes) - L(table_32bytes)
+	.long	L(18bytes) - L(table_32bytes)
+	.long	L(19bytes) - L(table_32bytes)
+	.long	L(20bytes) - L(table_32bytes)
+	.long	L(21bytes) - L(table_32bytes)
+	.long	L(22bytes) - L(table_32bytes)
+	.long	L(23bytes) - L(table_32bytes)
+	.long	L(24bytes) - L(table_32bytes)
+	.long	L(25bytes) - L(table_32bytes)
+	.long	L(26bytes) - L(table_32bytes)
+	.long	L(27bytes) - L(table_32bytes)
+	.long	L(28bytes) - L(table_32bytes)
+	.long	L(29bytes) - L(table_32bytes)
+	.long	L(30bytes) - L(table_32bytes)
+	.long	L(31bytes) - L(table_32bytes)
 
 
 #undef bcmp
