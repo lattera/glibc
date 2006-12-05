@@ -1,3 +1,17 @@
+2006-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_subr.c (nis_getnames): Revert last change.
+
+2006-12-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ttyname.c: Include termios.h.
+	(ttyname): Use tcgetattr instead of isatty, don't set errno to ENOTTY.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Include termios.h.
+	(__ttyname_r): Use tcgetattr instead of isatty, don't set errno to
+	ENOTTY.
+	* io/Makefile: Add rules to build and run tst-ttyname_r test.
+	* io/tst-ttyname_r.c: New test.
+
 2006-12-03  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sys/io.h: Removed.

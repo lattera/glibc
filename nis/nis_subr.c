@@ -178,7 +178,7 @@ nis_getnames (const_nis_name name)
     }
 
   /* Get the search path, where we have to search "name" */
-  path = __secure_getenv ("NIS_PATH");
+  path = getenv ("NIS_PATH");
   if (path == NULL)
     path = strdupa ("$");
   else

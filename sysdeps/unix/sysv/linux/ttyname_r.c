@@ -22,6 +22,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <termios.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -115,11 +116,11 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
-  if (__builtin_expect (!__isatty (fd), 0))
-    {
-      __set_errno (ENOTTY);
-      return ENOTTY;
-    }
+  /* isatty check, tcgetattr is used because it sets the correct
+     errno (EBADF resp. ENOTTY) on error.  */
+  struct termios term;
+  if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
+    return errno;
 
   /* We try using the /proc filesystem.  */
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';

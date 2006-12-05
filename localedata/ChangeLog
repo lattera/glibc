@@ -1,3 +1,9 @@
+2006-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/cs_CZ (LC_TIME): Change d_fmt to %e.%m.%Y from %-d.%-m.%Y.
+	Change d_t_fmt to %a %-d. %B %Y, %H:%M:%S %Z from
+	%a %e. %B %Y, %H:%M:%S %Z.
+
 2006-11-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/mai_IN: New file.
