@@ -80,6 +80,7 @@ static memusage_cntr_t large;
 static memusage_cntr_t calls_total;
 static memusage_cntr_t inplace;
 static memusage_cntr_t decreasing;
+static memusage_cntr_t realloc_free;
 static memusage_cntr_t inplace_mremap;
 static memusage_cntr_t decreasing_mremap;
 static memusage_size_t current_heap;
@@ -103,8 +104,8 @@ extern const char *__progname;
 
 struct entry
 {
-  size_t heap;
-  size_t stack;
+  uint64_t heap;
+  uint64_t stack;
   uint32_t time_low;
   uint32_t time_high;
 };
@@ -267,6 +268,7 @@ me (void)
 	      GETTIME (first.time_low, first.time_high);
 	      /* Write it two times since we need the starting and end time. */
 	      write (fd, &first, sizeof (first));
+	      write (fd, &first, sizeof (first));
 
 	      /* Determine the buffer size.  We use the default if the
 		 environment variable is not present.  */
@@ -411,6 +413,23 @@ realloc (void *old, size_t len)
       /* Keep track of total memory requirement.  */
       catomic_add (&grand_total, len - old_len);
     }
+
+  if (len == 0 && old != NULL)
+    {
+      /* Special case.  */
+      catomic_increment (&realloc_free);
+      /* Keep track of total memory freed using `free'.  */
+      catomic_add (&total[idx_free], real->length);
+
+      /* Update the allocation data and write out the records if necessary.  */
+      update_data (NULL, 0, old_len);
+
+      /* Do the real work.  */
+      (*freep) (real);
+
+      return NULL;
+    }
+
   /* Remember the size of the request.  */
   if (len < 65536)
     catomic_increment (&histogram[len / 16]);
@@ -770,7 +789,12 @@ dest (void)
   if (fd != -1)
     {
       /* Write the partially filled buffer.  */
-      write (fd, buffer, buffer_cnt * sizeof (struct entry));
+      if (buffer_cnt > buffer_size)
+	write (fd, buffer + buffer_size,
+	       (buffer_cnt - buffer_size) * sizeof (struct entry));
+      else
+	write (fd, buffer, buffer_cnt * sizeof (struct entry));
+
       /* Go back to the beginning of the file.  We allocated two records
 	 here when we opened the file.  */
       lseek (fd, 0, SEEK_SET);
@@ -794,7 +818,7 @@ dest (void)
 \e[01;32mMemory usage summary:\e[0;0m heap total: %llu, heap peak: %lu, stack peak: %lu\n\
 \e[04;34m         total calls   total memory   failed calls\e[0m\n\
 \e[00;34m malloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
-\e[00;34mrealloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
+\e[00;34mrealloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m  (nomove:%ld, dec:%ld, free:%ld)\n\
 \e[00;34m calloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34m   free|\e[0m %10lu   %12llu\n",
 	   (unsigned long long int) grand_total, (unsigned long int) peak_heap,
@@ -807,7 +831,9 @@ dest (void)
 	   (unsigned long long int) total[idx_realloc],
 	   failed[idx_realloc] ? "\e[01;41m" : "",
 	   (unsigned long int) failed[idx_realloc],
-	   (unsigned long int) inplace, (unsigned long int) decreasing,
+	   (unsigned long int) inplace,
+	   (unsigned long int) decreasing,
+	   (unsigned long int) realloc_free,
 	   (unsigned long int) calls[idx_calloc],
 	   (unsigned long long int) total[idx_calloc],
 	   failed[idx_calloc] ? "\e[01;41m" : "",
@@ -820,7 +846,7 @@ dest (void)
 \e[00;34mmmap(r)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34mmmap(w)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34mmmap(a)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
-\e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
+\e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m  (nomove: %ld, dec:%ld)\n\
 \e[00;34m munmap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n",
 	     (unsigned long int) calls[idx_mmap_r],
 	     (unsigned long long int) total[idx_mmap_r],

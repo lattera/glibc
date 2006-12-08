@@ -1,3 +1,12 @@
+2006-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/memusage.c: Handle realloc with new size of zero and
+	non-NULL pointer correctly.
+	(me): Really write first record twice.
+	(struct entry): Make format bi-arch safe.
+	(dest): Write out more realloc statistics.
+	* malloc/memusagestat.c (struct entry): Make format bi-arch safe.
+
 2006-12-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_subr.c (nis_getnames): Revert last change.

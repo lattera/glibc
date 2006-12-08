@@ -81,8 +81,8 @@ static struct argp argp =
 
 struct entry
 {
-  size_t heap;
-  size_t stack;
+  uint64_t heap;
+  uint64_t stack;
   uint32_t time_low;
   uint32_t time_high;
 };
