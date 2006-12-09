@@ -1,5 +1,6 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001, 2002, 2003, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -278,14 +279,11 @@ __hasmntopt (const struct mntent *mnt, const char *opt)
 
   while ((p = strstr (rest, opt)) != NULL)
     {
-      if (p == rest
-	  || (p[-1] == ','
-	      && (p[optlen] == '\0' ||
-		  p[optlen] == '='  ||
-		  p[optlen] == ',')))
+      if ((p == rest || p[-1] == ',')
+	  && (p[optlen] == '\0' || p[optlen] == '=' || p[optlen] == ','))
 	return p;
 
-      rest = strchr (rest, ',');
+      rest = strchr (p, ',');
       if (rest == NULL)
 	break;
       ++rest;

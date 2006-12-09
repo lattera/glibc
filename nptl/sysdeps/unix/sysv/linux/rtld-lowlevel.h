@@ -43,7 +43,7 @@ typedef int __rtld_mrlock_t;
 
 #define _RTLD_MRLOCK_INITIALIZER 0
 #define __rtld_mrlock_initialize(NAME) \
-  (void) ((NAME) = 0
+  (void) ((NAME) = 0)
 
 
 #define __rtld_mrlock_lock(lock) \
