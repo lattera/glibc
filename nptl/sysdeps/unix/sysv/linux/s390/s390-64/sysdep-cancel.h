@@ -42,7 +42,13 @@ L(pseudo_cancel):							      \
 	brasl	%r14,CENABLE;						      \
 	lgr	%r0,%r2;						      \
 	LM_##args							      \
-	DO_CALL(syscall_name, args);					      \
+	.if SYS_ify (syscall_name) < 256;				      \
+	svc SYS_ify (syscall_name);					      \
+	.else;								      \
+	lghi %r1,SYS_ify (syscall_name);				      \
+	svc 0;								      \
+	.endif;								      \
+	LR7_##args							      \
 	lgr	%r13,%r2;						      \
 	lgr	%r2,%r0;						      \
 	brasl	%r14,CDISABLE;						      \
@@ -85,6 +91,7 @@ L(pseudo_end):
 #define STM_3		stmg %r2,%r4,16(%r15);
 #define STM_4		stmg %r2,%r5,16(%r15);
 #define STM_5		stmg %r2,%r5,16(%r15);
+#define STM_6		stmg %r2,%r7,16(%r15);
 
 #define LM_0		/* Nothing */
 #define LM_1		lg %r2,16+160(%r15);
@@ -92,6 +99,18 @@ L(pseudo_end):
 #define LM_3		lmg %r2,%r4,16+160(%r15);
 #define LM_4		lmg %r2,%r5,16+160(%r15);
 #define LM_5		lmg %r2,%r5,16+160(%r15);
+#define LM_6		lmg %r2,%r5,16+160(%r15); \
+			cfi_offset (%r7, -104); \
+			lg %r7,160+160(%r15);
+
+#define LR7_0		/* Nothing */
+#define LR7_1		/* Nothing */
+#define LR7_2		/* Nothing */
+#define LR7_3		/* Nothing */
+#define LR7_4		/* Nothing */
+#define LR7_5		/* Nothing */
+#define LR7_6		lg %r7,56+160(%r15); \
+			cfi_restore (%r7);
 
 # if defined IS_IN_libpthread || !defined NOT_IN_libc
 #  ifndef __ASSEMBLER__

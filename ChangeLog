@@ -1,3 +1,15 @@
+2006-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/mntent_r.c (__hasmntopt): Check p[optlen] even when p == rest.
+	Start searching for next comma at p rather than rest.
+	* misc/Makefile (tests): Add tst-mntent2.
+	* misc/tst-mntent2.c: New test.
+
+	* misc/getusershell.c (initshells): Check for integer overflows.
+	Make strings buffer one bigger as fgets always succeeds when second
+	argument is 1.  Don't use calloc for shells array.  Disallow
+	/ as shell.
+
 2006-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/memusage.c: Handle realloc with new size of zero and

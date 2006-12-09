@@ -1,3 +1,12 @@
+2006-12-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Handle
+	6 argument cancellable syscalls.
+	(STM_6, LM_6, LR7_0, LR7_1, LR7_2, LR7_3, LR7_4, LR7_5, LR7_6): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO): Handle
+	6 argument cancellable syscalls.
+	(STM_6, LM_6, LR7_0, LR7_1, LR7_2, LR7_3, LR7_4, LR7_5, LR7_6): Define.
+
 2006-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/rtld-lowlevel.h
