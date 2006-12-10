@@ -759,13 +759,15 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	}
     }
 
-  /* We have the number digits in the integer part.  Whether these are all or
-     any is really a fractional digit will be decided later.  */
+  /* We have the number of digits in the integer part.  Whether these
+     are all or any is really a fractional digit will be decided
+     later.  */
   int_no = dig_no;
   lead_zero = int_no == 0 ? -1 : 0;
 
-  /* Read the fractional digits.  A special case are the 'american style'
-     numbers like `16.' i.e. with decimal but without trailing digits.  */
+  /* Read the fractional digits.  A special case are the 'american
+     style' numbers like `16.' i.e. with decimal point but without
+     trailing digits.  */
   if (
 #ifdef USE_WIDE_CHAR
       c == (wint_t) decimal
@@ -815,15 +817,16 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (base == 16)
 	    exp_limit = (exp_negative ?
 			 -MIN_EXP + MANT_DIG + 4 * int_no :
-			 MAX_EXP - 4 * int_no + lead_zero);
+			 MAX_EXP - 4 * int_no + 4 * lead_zero + 3);
 	  else
 	    exp_limit = (exp_negative ?
 			 -MIN_10_EXP + MANT_DIG + int_no :
-			 MAX_10_EXP - int_no + lead_zero);
+			 MAX_10_EXP - int_no + lead_zero + 1);
 
 	  do
 	    {
 	      exponent *= 10;
+	      exponent += c - L_('0');
 
 	      if (exponent > exp_limit)
 		/* The exponent is too large/small to represent a valid
@@ -853,7 +856,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  /* NOTREACHED */
 		}
 
-	      exponent += c - L_('0');
 	      c = *++cp;
 	    }
 	  while (c >= L_('0') && c <= L_('9'));
