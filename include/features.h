@@ -49,7 +49,7 @@
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
    If none of these are defined, the default is to have _SVID_SOURCE,
    _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   199506L.  If more than one of these are defined, they accumulate.
+   200112L.  If more than one of these are defined, they accumulate.
    For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
    together give you ISO C, 1003.1, and 1003.2, but nothing else.
 
