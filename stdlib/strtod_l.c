@@ -888,7 +888,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	--expp;
 	--dig_no;
 	--int_no;
-	++exponent;
+	exponent += base == 16 ? 4 : 1;
       }
     while (dig_no > 0 && exponent < 0);
 

@@ -1,3 +1,9 @@
+2006-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3674]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Adjust exponent value
+	correctly if removing trailing zero of hex-float.
+
 2006-12-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/mntent_r.c (__hasmntopt): Check p[optlen] even when p == rest.
