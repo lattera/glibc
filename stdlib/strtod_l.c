@@ -662,20 +662,20 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if ((c < L_('0') || c > L_('9'))
-      && (base == 16 && (c < (CHAR_TYPE) TOLOWER (L_('a'))
-			 || c > (CHAR_TYPE) TOLOWER (L_('f'))))
+  if (!((c >= L_('0') && c <= L_('9'))
+	|| (base == 16 && ((CHAR_TYPE) TOLOWER (c) >= L_('a')
+			   && (CHAR_TYPE) TOLOWER (c) <= L_('f')))
 #ifdef USE_WIDE_CHAR
-      && c != (wint_t) decimal
+	|| c == (wint_t) decimal
 #else
-      && ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+	|| ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
 	      if (decimal[cnt] != cp[cnt])
 		break;
-	    decimal[cnt] != '\0'; })
+	      decimal[cnt] == '\0'; })
 #endif
-      && (base == 16 && (cp == start_of_digits
-			 || (CHAR_TYPE) TOLOWER (c) != L_('p')))
-      && (base != 16 && (CHAR_TYPE) TOLOWER (c) != L_('e')))
+	|| (base == 16 && (cp != start_of_digits
+			   && (CHAR_TYPE) TOLOWER (c) == L_('p')))
+	|| (base != 16 && (CHAR_TYPE) TOLOWER (c) == L_('e'))))
     {
 #ifdef USE_WIDE_CHAR
       tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,

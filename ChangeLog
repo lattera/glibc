@@ -1,5 +1,11 @@
 2006-12-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3664]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix test to recognize
+	empty parsed strings.
+	* stdlib/Makefile (tests): Add tst-strtod2.
+	* stdlib/tst-strtod2.c: New file.
+
 	[BZ #3673]
 	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix exp_limit
 	computation.
