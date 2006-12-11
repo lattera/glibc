@@ -1,3 +1,9 @@
+2006-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Parse thousand
+	separators also if no non-zero digits found.
+	* stdlib/Makefile (tests): Add tst-strtod3.
+
 2006-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3632]

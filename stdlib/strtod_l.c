@@ -721,7 +721,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       c = *++cp;
     }
 
-  if (grouping && dig_no > 0)
+  if (grouping && cp > start_of_digits)
     {
       /* Check the grouping of the digits.  */
 #ifdef USE_WIDE_CHAR
