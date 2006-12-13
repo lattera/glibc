@@ -1,5 +1,5 @@
 /* Jump to a new context.
-   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 #include <shlib-compat.h>
+#include <kernel-features.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
