@@ -367,7 +367,7 @@ __uflow (fp)
 #endif
 
   if (fp->_mode == 0)
-    _IO_fwide (fp, -11);
+    _IO_fwide (fp, -1);
   if (_IO_in_put_mode (fp))
     if (INTUSE(_IO_switch_to_get_mode) (fp) == EOF)
       return EOF;

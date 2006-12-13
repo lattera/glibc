@@ -1,3 +1,30 @@
+2006-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2337]
+	* libio/Makefile (tests): Add tst-setvbuf1.
+	* libio/tst-setvbuf1.c: New file.
+
+2006-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2337]
+	* libio/genops.c (__uflow): Fix a typo.
+	* libio/wfiledoalloc.c (_IO_wfile_doallocate): Don't stat
+	nor set _IO_LINE_BUF bit here.  Size the wide buffer based on
+	the narrow buffer size.
+
+2006-11-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2337]
+	* libio/libio.h (_IO_FLAGS2_USER_WBUF): Define.
+	* libio/wgenops.c (_IO_wsetb, _IO_wdefault_finish): Test and set
+	_IO_FLAGS2_USER_WBUF bit in _flags2 instead of _IO_USER_BUF bit
+	in _flags.
+	* libio/wstrops.c (_IO_wstr_overflow, enlarge_userbuf,
+	_IO_wstr_finish): Likewise.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+	* libio/fileops.c (_IO_new_file_close_it): Call _IO_set[bgp]
+	even for wide streams.
+
 2006-12-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: Include

@@ -88,7 +88,7 @@ _IO_wstr_overflow (fp, c)
   pos = fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
   if (pos >= (_IO_size_t) (_IO_wblen (fp) + flush_only))
     {
-      if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
+      if (fp->_flags2 & _IO_FLAGS2_USER_WBUF) /* not allowed to enlarge */
 	return WEOF;
       else
 	{
@@ -182,7 +182,7 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
   _IO_ssize_t oldend = wd->_IO_write_end - wd->_IO_write_base;
 
   /* Try to enlarge the buffer.  */
-  if (fp->_flags & _IO_USER_BUF)
+  if (fp->_flags2 & _IO_FLAGS2_USER_WBUF)
     /* User-provided buffer.  */
     return 1;
 
@@ -335,7 +335,7 @@ _IO_wstr_finish (fp, dummy)
      _IO_FILE *fp;
      int dummy;
 {
-  if (fp->_wide_data->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
+  if (fp->_wide_data->_IO_buf_base && !(fp->_flags2 & _IO_FLAGS2_USER_WBUF))
     (((_IO_strfile *) fp)->_s._free_buffer) (fp->_wide_data->_IO_buf_base);
   fp->_wide_data->_IO_buf_base = NULL;
 

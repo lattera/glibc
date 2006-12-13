@@ -92,7 +92,7 @@ open_wmemstream (bufloc, sizeloc)
   _IO_fwide (&new_f->fp._sf._sbf._f, 1);
   _IO_wstr_init_static (&new_f->fp._sf._sbf._f, buf,
 			_IO_BUFSIZ / sizeof (wchar_t), buf);
-  new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
+  new_f->fp._sf._sbf._f._flags2 &= ~_IO_FLAGS2_USER_WBUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
 
