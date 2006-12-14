@@ -29,6 +29,15 @@ do_test (void)
       return 1;
     }
 
+  sa.sa_handler = SIG_IGN;
+  sa.sa_flags = SA_NOCLDWAIT;
+
+  if (sigaction (SIGCHLD, &sa, NULL) != 0)
+    {
+      puts ("2nd sigaction failed");
+      return 1;
+    }
+
   if (sigblock (SIGUSR1) != 0)
     {
       puts ("sigblock failed");
@@ -52,6 +61,7 @@ do_test (void)
 
   struct timespec to = { .tv_sec = 0, .tv_nsec = 500000000 };
 
+  pid_t parent = getpid ();
   pid_t p = fork ();
   if (p == 0)
     {
@@ -63,6 +73,9 @@ do_test (void)
       int e;
       do
 	{
+	  if (getppid () != parent)
+	    exit (2);
+
 	  errno = 0;
 	  e = pselect (fds[0][0] + 1, &rfds, NULL, NULL, &to, &ss);
 	}
@@ -105,12 +118,6 @@ do_test (void)
   if (!FD_ISSET (fds[1][0], &rfds))
     {
       puts ("parent: pselect reports wrong fd");
-      return 1;
-    }
-
-  if (TEMP_FAILURE_RETRY (waitpid (p, NULL, 0)) != p)
-    {
-      puts ("waitpid failed");
       return 1;
     }
 
