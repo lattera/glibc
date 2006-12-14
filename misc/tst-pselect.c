@@ -38,7 +38,7 @@ do_test (void)
       return 1;
     }
 
-  if (sigblock (SIGUSR1) != 0)
+  if (sigblock (sigmask (SIGUSR1)) != 0)
     {
       puts ("sigblock failed");
       return 1;

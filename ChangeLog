@@ -1,3 +1,7 @@
+2006-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/tst-pselect.c (do_test): Fix sigblock argument.
+
 2006-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/tst-pselect.c (do_test): Make sure the helper process is
