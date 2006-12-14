@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2001,2002,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,7 +101,9 @@ enum
 # define ST_IMMUTABLE	ST_IMMUTABLE
   ST_NOATIME = 1024,		/* Do not update access times.  */
 # define ST_NOATIME	ST_NOATIME
-  ST_NODIRATIME = 2048		/* Do not update directory access times.  */
+  ST_NODIRATIME = 2048,		/* Do not update directory access times.  */
 # define ST_NODIRATIME	ST_NODIRATIME
+  ST_RELATIME = 4096		/* Update atime relative to mtime/ctime.  */
+# define ST_RELATIME	ST_RELATIME
 #endif	/* Use GNU.  */
 };

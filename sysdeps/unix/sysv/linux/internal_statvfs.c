@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -156,6 +156,8 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 		  result |= ST_NOATIME;
 		else if (strcmp (opt, "nodiratime") == 0)
 		  result |= ST_NODIRATIME;
+		else if (strcmp (opt, "relatime") == 0)
+		  result |= ST_RELATIME;
 
 	      /* We can stop looking for more entries.  */
 	      success = true;

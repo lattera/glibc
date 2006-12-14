@@ -1,5 +1,9 @@
 2006-12-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: Define ST_RELATIME.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle relatime mount option.
+
 	[BZ #2337]
 	* libio/Makefile (tests): Add tst-setvbuf1.
 	* libio/tst-setvbuf1.c: New file.
