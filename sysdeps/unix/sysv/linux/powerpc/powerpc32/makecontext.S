@@ -26,9 +26,7 @@
 
 ENTRY(__makecontext)
 	/* Set up the first 7 args to the function in its registers */
-	addi	r11,r3,_UC_REG_SPACE+12
-	clrrwi  r11,r11,4
-	stw	r11,_UC_REGS_PTR(r3)
+	lwz	r11,_UC_REGS_PTR(r3)
 	stw	r6,_UC_GREGS+(PT_R3*4)(r11)
 	stw	r7,_UC_GREGS+(PT_R4*4)(r11)
 	stw	r8,_UC_GREGS+(PT_R5*4)(r11)

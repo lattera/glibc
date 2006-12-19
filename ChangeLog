@@ -1,3 +1,11 @@
+2006-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/Makefile (tests): Add tst-makecontext.
+	* stdlib/tst-makecontext.c: New test.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext): Don't realign uc_mcontext.uc_regs.
+
 2006-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-support.c: Include dl-procinfo.h.
