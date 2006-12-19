@@ -1,5 +1,9 @@
 2006-12-19  Jakub Jelinek  <jakub@redhat.com>
 
+	* nss/getXXbyYY_r.c: Include atomic.h.
+	(INTERNAL (REENTRANT_NAME)): Write startp after start_fct,
+	add atomic_write_barrier () in between.
+
 	* stdlib/Makefile (tests): Add tst-makecontext.
 	* stdlib/tst-makecontext.c: New test.
 
