@@ -24,18 +24,28 @@
 #include <sysdep.h>		/* This defines the PPC_FEATURE_* macros.  */
 
 /* There are 20 bits used, but they are bits 12..31.  */
-#define _DL_HWCAP_FIRST		12
+#define _DL_HWCAP_FIRST		9
 #define _DL_HWCAP_COUNT		32
 
 /* These bits influence library search.  */
-#define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC)
+#define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
+				+ PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT	6
+#define _DL_PLATFORMS_COUNT	7
 
 #define _DL_FIRST_PLATFORM      32
 /* Mask to filter out platforms.  */
 #define _DL_HWCAP_PLATFORM      (((1ULL << _DL_PLATFORMS_COUNT) - 1) \
                                  << _DL_FIRST_PLATFORM)
+
+/* Platform bits (relative to _DL_FIRST_PLATFORM).  */
+#define PPC_PLATFORM_POWER4		0
+#define PPC_PLATFORM_PPC970		1
+#define PPC_PLATFORM_POWER5		2
+#define PPC_PLATFORM_POWER5_PLUS	3
+#define PPC_PLATFORM_POWER6		4
+#define PPC_PLATFORM_CELL_BE		5
+#define PPC_PLATFORM_POWER6X		6
 
 static inline const char *
 __attribute__ ((unused))
@@ -68,22 +78,30 @@ _dl_string_platform (const char *str)
   if (str == NULL)
     return -1;
 
-  if (strncmp (str, GLRO(dl_powerpc_platforms)[0], 5) == 0)
+  if (strncmp (str, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_POWER4], 5) == 0)
     {
       int ret;
       str += 5;
       switch (*str)
 	{
 	case '4':
-	  ret = _DL_FIRST_PLATFORM + 0;
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER4;
 	  break;
 	case '5':
-	  ret = _DL_FIRST_PLATFORM + 2;
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER5;
 	  if (str[1] == '+')
-	    ++ret, ++str;
+	    {
+	      ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER5_PLUS;
+	      ++str;
+	    }
 	  break;
 	case '6':
-	  ret = _DL_FIRST_PLATFORM + 4;
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER6;
+	  if (str[1] == 'x')
+	    {
+	      ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER6X;
+	      ++str;
+	    }
 	  break;
 	default:
 	  return -1;
@@ -91,12 +109,16 @@ _dl_string_platform (const char *str)
       if (str[1] == '\0')
 	return ret;
     }
-  else if (strncmp (str, GLRO(dl_powerpc_platforms)[1], 3) == 0)
+  else if (strncmp (str, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC970],
+		    3) == 0)
     {
-      if (strcmp (str + 3, GLRO(dl_powerpc_platforms)[1] + 3) == 0)
-	return _DL_FIRST_PLATFORM + 1;
-      else if (strcmp (str + 3, GLRO(dl_powerpc_platforms)[5] + 3) == 0)
-	return _DL_FIRST_PLATFORM + 5;
+      if (strcmp (str + 3, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC970]
+			   + 3) == 0)
+	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC970;
+      else if (strcmp (str + 3,
+		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_CELL_BE] + 3)
+	       == 0)
+	return _DL_FIRST_PLATFORM + PPC_PLATFORM_CELL_BE;
     }
 
   return -1;

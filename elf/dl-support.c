@@ -29,6 +29,7 @@
 #include <bits/libc-lock.h>
 #include <dl-cache.h>
 #include <dl-librecon.h>
+#include <dl-procinfo.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
 

@@ -1,3 +1,28 @@
+2006-11-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-support.c: Include dl-procinfo.h.
+	* sysdeps/powerpc/dl-procinfo.h (PPC_PLATFORM_POWER4,
+	PPC_PLATFORM_PPC970, PPC_PLATFORM_POWER5, PPC_PLATFORM_POWER5_PLUS,
+	PPC_PLATFORM_POWER6, PPC_PLATFORM_CELL_BE, PPC_PLATFORM_POWER6X):
+	Define.
+	(_dl_string_platform): Use PPC_PLATFORM_* macros instead of
+	hardcoded constants.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platform): Use
+	PPC_PLATFORM_* macros for array designators.
+
+2006-11-11  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add 3 new cap
+	names to the beginning.
+	(_dl_powerpc_platforms): Add "power6x".
+	* sysdeps/powerpc/dl-procinfo.h (_DL_HWCAP_FIRST): Decrease.
+	(HWCAP_IMPORTANT): Add PPC_FEATURE_HAS_DFP.
+	(_DL_PLATFORMS_COUNT): Increase.
+	(_dl_string_platform): Handle power6x case.
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_PA6T, PPC_FEATURE_HAS_DFP,
+	PPC_FEATURE_POWER6_EXT): Define.
+	(PPC_FEATURE_POWER5, PPC_FEATURE_POWER5_PLUS): Correct Comment.
+
 2006-12-18  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3747]
