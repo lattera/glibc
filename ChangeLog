@@ -1,3 +1,13 @@
+2006-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3747]
+	* stdlib/jrand48_r.c (__jrand48_r): Make sure result is in the
+	[-231 .. 231) range.
+	* stdlib/tst-rand48.c (main): Fix expected values for 64-bit
+	targets.
+	* stdlib/tst-rand48-2.c: New test.
+	* stdlib/Makefile (tests): Add tst-rand48-2.
+
 2006-12-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/tst-pselect.c (do_test): Fix sigblock argument.
