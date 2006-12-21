@@ -1,3 +1,8 @@
+2006-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pthread_kill.c (pthread_kill): Make sure
+	tid isn't reread from pd->tid in between ESRCH test and the syscall.
+
 2006-12-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Handle
