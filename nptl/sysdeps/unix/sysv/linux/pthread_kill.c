@@ -37,7 +37,7 @@ __pthread_kill (threadid, signo)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  /* Force load of pd->tid into local variable or register.  Oherwise
+  /* Force load of pd->tid into local variable or register.  Otherwise
      if a thread exits between ESRCH test and tgkill, we might return
      EINVAL, because pd->tid would be cleared by the kernel.  */
   pid_t tid = atomic_forced_read (pd->tid);
