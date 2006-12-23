@@ -1809,7 +1809,7 @@ envsubst:
 	    /* Substitute parameter */
 	    break;
 
-	  if (free_value && value)
+	  if (free_value)
 	    free (value);
 
 	  if (!colon_seen && value)
@@ -1827,7 +1827,7 @@ envsubst:
 	case ACT_NONNULL_SUBST:
 	  if (value && (*value || !colon_seen))
 	    {
-	      if (free_value && value)
+	      if (free_value)
 		free (value);
 
 	      value = pattern ? __strdup (pattern) : pattern;

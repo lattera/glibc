@@ -1,3 +1,7 @@
+2006-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c: Remove some unnecessary tests.
+
 2006-12-22  Gavin Romig-Koch  <gavin@redhat.com>
 
 	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Don't
