@@ -1,3 +1,8 @@
+2006-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (sYSMALLOc): Remove some unnecessary alignment
+	attempts.
+
 2006-12-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/wordexp.c: Remove some unnecessary tests.

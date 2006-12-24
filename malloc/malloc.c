@@ -2896,7 +2896,13 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
       is one SIZE_SZ unit larger than for normal chunks, because there
       is no following chunk whose prev_size field could be used.
     */
+#if 1
+    /* See the front_misalign handling below, for glibc there is no
+       need for further alignments.  */
+    size = (nb + SIZE_SZ + pagemask) & ~pagemask;
+#else
     size = (nb + SIZE_SZ + MALLOC_ALIGN_MASK + pagemask) & ~pagemask;
+#endif
     tried_mmap = true;
 
     /* Don't try if size wraps around 0 */
@@ -2914,6 +2920,12 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           address argument for later munmap in free() and realloc().
         */
 
+#if 1
+	/* For glibc, chunk2mem increases the address by 2*SIZE_SZ and
+	   MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
+	   aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
+        assert (((INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK) == 0);
+#else
         front_misalign = (INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK;
         if (front_misalign > 0) {
           correction = MALLOC_ALIGNMENT - front_misalign;
@@ -2921,10 +2933,12 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           p->prev_size = correction;
           set_head(p, (size - correction) |IS_MMAPPED);
         }
-        else {
-          p = (mchunkptr)mm;
-          set_head(p, size|IS_MMAPPED);
-        }
+        else
+#endif
+	  {
+	    p = (mchunkptr)mm;
+	    set_head(p, size|IS_MMAPPED);
+	  }
 
         /* update statistics */
 
