@@ -1,3 +1,18 @@
+2007-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/execvp.c: Include alloca.h.
+	(allocate_scripts_argv): Renamed to...
+	(scripts_argv): ... this.  Don't allocate buffer here nor count
+	arguments.
+	(execvp): Use alloca if possible.
+	* posix/Makefile: Add rules to build and run tst-vfork3 test.
+	* posix/tst-vfork3.c: New test.
+
+2007-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tst-strxfrm2-ENV): Define.
+	* stdlib/Makefile (tst-strtod3-ENV): Define.
+
 2007-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Update copyright year.

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -64,6 +64,7 @@ tester-ENV = LANGUAGE=C
 inl-tester-ENV = LANGUAGE=C
 noinl-tester-ENV = LANGUAGE=C
 tst-strxfrm-ENV = LOCPATH=$(common-objpfx)localedata
+tst-strxfrm2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-strcoll1-ENV = LOCPATH=$(common-objpfx)localedata
 CFLAGS-inl-tester.c = -fno-builtin
 CFLAGS-noinl-tester.c = -fno-builtin

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
 		   bug-regex25 bug-regex26 tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
-		   bug-ga1 tst-vfork1 tst-vfork2 tst-waitid \
+		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
 		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
@@ -108,7 +108,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-regex21-mem bug-regex21.mtrace \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
-	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem
+	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
+	     tst-vfork3-mem tst-vfork3.mtrace
 
 include ../Rules
 
@@ -174,6 +175,7 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = `pwd`
+tst-vfork3-ARGS = --test-dir=$(objpfx)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
@@ -218,7 +220,7 @@ ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
-  $(objpfx)bug-glob2-mem
+  $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem
 xtests: $(objpfx)bug-ga2-mem
 endif
 
@@ -244,6 +246,11 @@ bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
 
 $(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@
+
+tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace
+
+$(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace > $@
 
 # tst-rxspencer.mtrace is generated only when run without --utf8
 # option, since otherwise the file has almost 100M and takes very long

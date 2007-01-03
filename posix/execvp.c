@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,1995-99,2002,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92, 1995-99, 2002, 2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -27,29 +29,18 @@
 
 /* The file is accessible but it is not an executable file.  Invoke
    the shell to interpret it as a script.  */
-static char **
+static void
 internal_function
-allocate_scripts_argv (const char *file, char *const argv[])
+scripts_argv (const char *file, char *const argv[], int argc, char **new_argv)
 {
-  /* Count the arguments.  */
-  int argc = 0;
-  while (argv[argc++])
-    ;
-
   /* Construct an argument list for the shell.  */
-  char **new_argv = (char **) malloc ((argc + 1) * sizeof (char *));
-  if (new_argv != NULL)
+  new_argv[0] = (char *) _PATH_BSHELL;
+  new_argv[1] = (char *) file;
+  while (argc > 1)
     {
-      new_argv[0] = (char *) _PATH_BSHELL;
-      new_argv[1] = (char *) file;
-      while (argc > 1)
-	{
-	  new_argv[argc] = argv[argc - 1];
-	  --argc;
-	}
+      new_argv[argc] = argv[argc - 1];
+      --argc;
     }
-
-  return new_argv;
 }
 
 
@@ -67,8 +58,6 @@ execvp (file, argv)
       return -1;
     }
 
-  char **script_argv = NULL;
-
   if (strchr (file, '/') != NULL)
     {
       /* Don't search when it contains a slash.  */
@@ -76,46 +65,71 @@ execvp (file, argv)
 
       if (errno == ENOEXEC)
 	{
-	  script_argv = allocate_scripts_argv (file, argv);
+	  /* Count the arguments.  */
+	  int argc = 0;
+	  while (argv[argc++])
+	    ;
+	  size_t len = (argc + 1) * sizeof (char *);
+	  char **script_argv;
+	  void *ptr = NULL;
+	  if (__libc_use_alloca (len))
+	    script_argv = alloca (len);
+	  else
+	    script_argv = ptr = malloc (len);
+
 	  if (script_argv != NULL)
 	    {
+	      scripts_argv (file, argv, argc, script_argv);
 	      __execve (script_argv[0], script_argv, __environ);
 
-	      free (script_argv);
+	      free (ptr);
 	    }
 	}
     }
   else
     {
+      size_t pathlen;
+      size_t alloclen = 0;
       char *path = getenv ("PATH");
+      if (path == NULL)
+	{
+	  pathlen = confstr (_CS_PATH, (char *) NULL, 0);
+	  alloclen = pathlen + 1;
+	}
+      else
+	pathlen = strlen (path);
+
+      size_t len = strlen (file) + 1;
+      alloclen += pathlen + len + 1;
+
+      char *name;
       char *path_malloc = NULL;
+      if (__libc_use_alloca (alloclen))
+	name = alloca (alloclen);
+      else
+	{
+	  path_malloc = name = malloc (alloclen);
+	  if (name == NULL)
+	    return -1;
+	}
+
       if (path == NULL)
 	{
 	  /* There is no `PATH' in the environment.
 	     The default search path is the current directory
 	     followed by the path `confstr' returns for `_CS_PATH'.  */
-	  size_t len = confstr (_CS_PATH, (char *) NULL, 0);
-	  path = (char *) malloc (1 + len);
-	  if (path == NULL)
-	    return -1;
+	  path = name + pathlen + len + 1;
 	  path[0] = ':';
-	  (void) confstr (_CS_PATH, path + 1, len);
-	  path_malloc = path;
+	  (void) confstr (_CS_PATH, path + 1, pathlen);
 	}
 
-      size_t len = strlen (file) + 1;
-      size_t pathlen = strlen (path);
-      char *name = malloc (pathlen + len + 1);
-      if (name == NULL)
-	{
-	  free (path_malloc);
-	  return -1;
-	}
       /* Copy the file name at the top.  */
       name = (char *) memcpy (name + pathlen + 1, file, len);
       /* And add the slash.  */
       *--name = '/';
 
+      char **script_argv = NULL;
+      void *script_argv_malloc = NULL;
       bool got_eacces = false;
       char *p = path;
       do
@@ -139,7 +153,15 @@ execvp (file, argv)
 	    {
 	      if (script_argv == NULL)
 		{
-		  script_argv = allocate_scripts_argv (startp, argv);
+		  /* Count the arguments.  */
+		  int argc = 0;
+		  while (argv[argc++])
+		    ;
+		  size_t arglen = (argc + 1) * sizeof (char *);
+		  if (__libc_use_alloca (alloclen + arglen))
+		    script_argv = alloca (arglen);
+		  else
+		    script_argv = script_argv_malloc = malloc (arglen);
 		  if (script_argv == NULL)
 		    {
 		      /* A possible EACCES error is not as important as
@@ -147,6 +169,7 @@ execvp (file, argv)
 		      got_eacces = false;
 		      break;
 		    }
+		  scripts_argv (startp, argv, argc, script_argv);
 		}
 
 	      __execve (script_argv[0], script_argv, __environ);
@@ -184,11 +207,10 @@ execvp (file, argv)
       /* We tried every element and none of them worked.  */
       if (got_eacces)
 	/* At least one failure was due to permissions, so report that
-           error.  */
+	   error.  */
 	__set_errno (EACCES);
 
-      free (script_argv);
-      free (name - pathlen);
+      free (script_argv_malloc);
       free (path_malloc);
     }
 
