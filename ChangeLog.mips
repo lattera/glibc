@@ -1,3 +1,8 @@
+2007-01-04  Thiemo Seufer  <ths@networkno.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/msq.h (struct msqid_ds): Update
+	to match the kernel.
+
 2006-10-31  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/sysdep-cancel.h
