@@ -1,3 +1,8 @@
+2007-01-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fesetenv.c (__sim_exceptions,
+	__sim_disabled_exceptions, __sim_round_mode): Remove declarations.
+
 2006-10-05  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #2749]

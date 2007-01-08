@@ -1,5 +1,5 @@
 /* Set floating point environment (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -21,10 +21,6 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 #include <bp-sym.h>
-
-extern int __sim_exceptions attribute_hidden;
-extern int __sim_disabled_exceptions attribute_hidden;
-extern int __sim_round_mode attribute_hidden;
 
 int
 __fesetenv (const fenv_t *envp)
