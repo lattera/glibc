@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +39,5 @@ typedef double double_t;	/* `double' expressions are evaluated as
 #ifndef __NO_LONG_DOUBLE_MATH
 /* Signal that we do not really have a `long double'.  This disables the
    declaration of all the `long double' function variants.  */
-/* XXX The FPA does support this but the patterns in GCC are currently
-   turned off.  */
 # define __NO_LONG_DOUBLE_MATH	1
 #endif

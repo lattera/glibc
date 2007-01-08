@@ -1,5 +1,10 @@
 2007-01-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/fpu/bits/mathdef.h: Move to
+	sysdeps/arm/bits/mathdef.h.  Remove comment about FPA.
+
+2007-01-08  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/arm/eabi/jmpbuf-offsets.h: New.
 
 2006-10-31  Daniel Jacobowitz  <dan@codesourcery.com>
