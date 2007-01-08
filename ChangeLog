@@ -1,3 +1,8 @@
+2006-10-27  Richard Sandiford  <richard@codesourcery.com>
+
+	* elf/elf.h (R_MIPS_GLOB_DAT): Define.
+	(R_MIPS_NUM): Bump by 1.
+
 2007-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/execvp.c: Include alloca.h.
