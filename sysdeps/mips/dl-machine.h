@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
@@ -282,9 +282,6 @@ do {									\
 	".previous"\
 );
 
-/* The MIPS never uses Elfxx_Rela relocations.  */
-#define ELF_MACHINE_NO_RELA 1
-
 /* Names of the architecture-specific auditing callback functions.  */
 # if _MIPS_SIM == _ABIO32
 #  define ARCH_LA_PLTENTER mips_o32_gnu_pltenter
@@ -301,16 +298,18 @@ do {									\
 
 #ifdef RESOLVE_MAP
 
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+/* Perform a relocation described by R_INFO at the location pointed to
+   by RELOC_ADDR.  SYM is the relocation symbol specified by R_INFO and
    MAP is the object containing the reloc.  */
 
 auto inline void
 __attribute__ ((always_inline))
-elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
-		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 void *const reloc_addr)
+elf_machine_reloc (struct link_map *map, ElfW(Word) r_info,
+		   const ElfW(Sym) *sym, const struct r_found_version *version,
+		   void *reloc_addr, ElfW(Addr) r_addend, int inplace_p)
 {
-  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
+  const unsigned long int r_type = ELFW(R_TYPE) (r_info);
+  ElfW(Addr) *addr_field = (ElfW(Addr) *) reloc_addr;
 
 #if !defined RTLD_BOOTSTRAP && !defined SHARED
   /* This is defined in rtld.c, but nowhere in the static libc.a;
@@ -342,18 +341,28 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	  case R_MIPS_TLS_DTPMOD64:
 	  case R_MIPS_TLS_DTPMOD32:
 	    if (sym_map)
-	      *(ElfW(Addr) *)reloc_addr = sym_map->l_tls_modid;
+	      *addr_field = sym_map->l_tls_modid;
 	    break;
 
 	  case R_MIPS_TLS_DTPREL64:
 	  case R_MIPS_TLS_DTPREL32:
-	    *(ElfW(Addr) *)reloc_addr += TLS_DTPREL_VALUE (sym);
+	    if (sym)
+	      {
+		if (inplace_p)
+		  r_addend = *addr_field;
+		*addr_field = r_addend + TLS_DTPREL_VALUE (sym);
+	      }
 	    break;
 
 	  case R_MIPS_TLS_TPREL32:
 	  case R_MIPS_TLS_TPREL64:
-	    CHECK_STATIC_TLS (map, sym_map);
-	    *(ElfW(Addr) *)reloc_addr += TLS_TPREL_VALUE (sym_map, sym);
+	    if (sym)
+	      {
+		CHECK_STATIC_TLS (map, sym_map);
+		if (inplace_p)
+		  r_addend = *addr_field;
+		*addr_field = r_addend + TLS_TPREL_VALUE (sym_map, sym);
+	      }
 	    break;
 	  }
 
@@ -367,13 +376,14 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
     case R_MIPS_REL32:
 #endif
       {
-	int symidx = ELFW(R_SYM) (reloc->r_info);
+	int symidx = ELFW(R_SYM) (r_info);
 	ElfW(Addr) reloc_value;
 
-	/* Support relocations on mis-aligned offsets.  Should we ever
-	   implement RELA, this should be replaced with an assignment
-	   from reloc->r_addend.  */
-	__builtin_memcpy (&reloc_value, reloc_addr, sizeof (reloc_value));
+	if (inplace_p)
+	  /* Support relocations on mis-aligned offsets.  */
+	  __builtin_memcpy (&reloc_value, reloc_addr, sizeof (reloc_value));
+	else
+	  reloc_value = r_addend;
 
 	if (symidx)
 	  {
@@ -424,6 +434,31 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	__builtin_memcpy (reloc_addr, &reloc_value, sizeof (reloc_value));
       }
       break;
+#ifndef RTLD_BOOTSTRAP
+#if _MIPS_SIM == _ABI64
+    case (R_MIPS_64 << 8) | R_MIPS_GLOB_DAT:
+#else
+    case R_MIPS_GLOB_DAT:
+#endif
+      {
+	int symidx = ELFW(R_SYM) (r_info);
+	const ElfW(Word) gotsym
+	  = (const ElfW(Word)) map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
+
+	if (__builtin_expect ((ElfW(Word)) symidx >= gotsym, 1))
+	  {
+	    const ElfW(Addr) *got
+	      = (const ElfW(Addr) *) D_PTR (map, l_info[DT_PLTGOT]);
+	    const ElfW(Word) local_gotno
+	      = ((const ElfW(Word))
+		 map->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val);
+
+	    ElfW(Addr) reloc_value = got[symidx + local_gotno - gotsym];
+	    __builtin_memcpy (reloc_addr, &reloc_value, sizeof (reloc_value));
+	  }
+      }
+      break;
+#endif
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
 #if _MIPS_SIM == _ABI64
@@ -436,7 +471,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	 itself.  For ABI compliance, we ignore such _64 dummy
 	 relocations.  For RELA, this may be simply removed, since
 	 it's totally unnecessary.  */
-      if (ELFW(R_SYM) (reloc->r_info) == 0)
+      if (ELFW(R_SYM) (r_info) == 0)
 	break;
       /* Fall through.  */
 #endif
@@ -444,6 +479,18 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
       _dl_reloc_bad_type (map, r_type, 0);
       break;
     }
+}
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   MAP is the object containing the reloc.  */
+
+auto inline void
+__attribute__ ((always_inline))
+elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
+		 const ElfW(Sym) *sym, const struct r_found_version *version,
+		 void *const reloc_addr)
+{
+  elf_machine_reloc (map, reloc->r_info, sym, version, reloc_addr, 0, 1);
 }
 
 auto inline void
@@ -457,7 +504,7 @@ elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 auto inline void
 __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
+		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc)
 {
   /* Do nothing.  */
 }
@@ -468,6 +515,8 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
 		 void *const reloc_addr)
 {
+  elf_machine_reloc (map, reloc->r_info, sym, version, reloc_addr,
+		     reloc->r_addend, 0);
 }
 
 auto inline void

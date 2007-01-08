@@ -1,3 +1,17 @@
+2007-01-08  Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NO_RELA): Delete.
+	(elf_machine_reloc): New function, retaining the body of
+	elf_machine_rel.  Take the reloc's r_info field as an argument,
+	not the reloc itself.  Add extra r_addend and inplace_p arguments.
+	When inplace_p is false, use r_addend as the addend, not the contents
+	of the relocation field.  Hoist the conversion of reloc_addr to
+	"ELFW(Addr) *".  Don't try to apply TLS relocations against
+	undefined symbols.  Add R_MIPS_GLOB_DAT support.
+	(elf_machine_rel, elf_machine_rela): Use elf_machine_reloc.
+	(elf_machine_lazy_rel): Change the reloc type from ElfW(Rel)
+	to ElfW(Rela).
+
 2007-01-08  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/mips/ldsodefs.h: Merge sysdeps/mips/elf/ldsodefs.h.  Correct
