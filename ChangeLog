@@ -1,3 +1,9 @@
+2007-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fts.c: Make sure fts_cur is always valid after return from
+	fts_read.
+	Patch by Miloslav Trmac <mitr@redhat.com>.
+
 2006-10-27  Richard Sandiford  <richard@codesourcery.com>
 
 	* elf/elf.h (R_MIPS_GLOB_DAT): Define.

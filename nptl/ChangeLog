@@ -1,3 +1,8 @@
+2007-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/pthread_barrier_wait.c:
+	Adjust include path for pthread_barrier_wait.c move.
+
 2006-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pthread_kill.c (pthread_kill): Make sure
@@ -71,7 +76,7 @@
 	* sysdeps/pthread/pthread_getcpuclockid.c: Move to...
 	* pthread_getcpuclockid.c: ...here.
 
-	* init.c: USE_TLS support is now default.
+	* init.c: USE_TLS support is now always enabled.
 	* tst-tls5.h: Likewise.
 	* sysdeps/alpha/tls.h: Likewise.
 	* sysdeps/i386/tls.h: Likewise.
