@@ -1,5 +1,13 @@
 2007-01-11  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #3855]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): 0x. not followed by
+	hexadecimal digit should accept just the initial 0.
+	* stdlib/tst-strtod2.c (tests): New variable.
+	(do_test): Run several tests rather than just one.
+
+2007-01-11  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/i386/soft-fp/sfp-machine.h: Remove.
 	* sysdeps/x86_64/soft-fp/sfp-machine.h: Likewise.
 

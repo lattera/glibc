@@ -1,5 +1,6 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2002,2004,2005,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -665,14 +666,23 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   if (!((c >= L_('0') && c <= L_('9'))
 	|| (base == 16 && ((CHAR_TYPE) TOLOWER (c) >= L_('a')
 			   && (CHAR_TYPE) TOLOWER (c) <= L_('f')))
+	|| (
 #ifdef USE_WIDE_CHAR
-	|| c == (wint_t) decimal
+	    c == (wint_t) decimal
 #else
-	|| ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
-	      if (decimal[cnt] != cp[cnt])
-		break;
-	      decimal[cnt] == '\0'; })
+	    ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+		 if (decimal[cnt] != cp[cnt])
+		   break;
+	       decimal[cnt] == '\0'; })
 #endif
+	    /* '0x.' alone is not a valid hexadecimal number.
+	       '.' alone is not valid either, but that has been checked
+	       already earlier.  */
+	    && (base != 16
+		|| cp != start_of_digits
+		|| (cp[decimal_len] >= L_('0') && cp[decimal_len] <= L_('9'))
+		|| ((CHAR_TYPE) TOLOWER (cp[decimal_len]) >= L_('a')
+		    && (CHAR_TYPE) TOLOWER (cp[decimal_len]) <= L_('f'))))
 	|| (base == 16 && (cp != start_of_digits
 			   && (CHAR_TYPE) TOLOWER (c) == L_('p')))
 	|| (base != 16 && (CHAR_TYPE) TOLOWER (c) == L_('e'))))
