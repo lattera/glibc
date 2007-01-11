@@ -240,7 +240,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
    PLT entries should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 # define elf_machine_type_class(type) \
   ((((type) == R_SPARC_JMP_SLOT						      \
      || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
@@ -589,7 +589,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       sparc64_fixup_plt (map, reloc, reloc_addr, value, reloc->r_addend, 0);
 #endif
       break;
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
     && !defined RESOLVE_CONFLICT_FIND_MAP
     case R_SPARC_TLS_DTPMOD64:
       /* Get the information from the link map returned by the

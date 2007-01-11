@@ -313,7 +313,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons add_on_subdirs base_machine submachine sysnames sysdeps_add_ons INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES CXX_SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie libc_cv_hashstyle fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_libcap have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons add_on_subdirs base_machine submachine sysnames sysdeps_add_ons INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES CXX_SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_cc_with_libunwind libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie libc_cv_hashstyle fno_unit_at_a_time libc_cv_ssp libc_cv_have_initfini no_whole_archive exceptions LIBGD have_libaudit have_libcap have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -864,7 +864,7 @@ Optional Features:
                           [default=no]
   --enable-shared         build shared library [default=yes if GNU ld &
                           ELF]
-  --enable-profile        build profiled library [default=yes]
+  --enable-profile        build profiled library [default=no]
   --enable-omitfp         build undebuggable optimized library
                           [default=no]
   --enable-bounded        build with runtime bounds checking
@@ -1543,7 +1543,7 @@ if test "${enable_profile+set}" = set; then
   enableval="$enable_profile"
   profile=$enableval
 else
-  profile=yes
+  profile=no
 fi;
 # Check whether --enable-omitfp or --disable-omitfp was given.
 if test "${enable_omitfp+set}" = set; then
@@ -5339,21 +5339,14 @@ EOF
   (exit $ac_status); }; }; then
     libc_cv_asm_protected_directive=yes
   else
-    libc_cv_asm_protected_directive=no
+    { { echo "$as_me:$LINENO: error: assembler support for symbol visibility is required" >&5
+echo "$as_me: error: assembler support for symbol visibility is required" >&2;}
+   { (exit 1); exit 1; }; }
   fi
   rm -f conftest*
 fi
 echo "$as_me:$LINENO: result: $libc_cv_asm_protected_directive" >&5
 echo "${ECHO_T}$libc_cv_asm_protected_directive" >&6
-
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_PROTECTED 1
-_ACEOF
-
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_HIDDEN 1
-_ACEOF
-
 
   if test $libc_cv_asm_protected_directive = yes; then
     echo "$as_me:$LINENO: checking whether __attribute__((visibility())) is supported" >&5
@@ -5383,11 +5376,10 @@ EOF
 fi
 echo "$as_me:$LINENO: result: $libc_cv_visibility_attribute" >&5
 echo "${ECHO_T}$libc_cv_visibility_attribute" >&6
-    if test $libc_cv_visibility_attribute = yes; then
-      cat >>confdefs.h <<\_ACEOF
-#define HAVE_VISIBILITY_ATTRIBUTE 1
-_ACEOF
-
+    if test $libc_cv_visibility_attribute != yes; then
+      { { echo "$as_me:$LINENO: error: compiler support for visibility attribute is required" >&5
+echo "$as_me: error: compiler support for visibility attribute is required" >&2;}
+   { (exit 1); exit 1; }; }
     fi
   fi
 
@@ -5419,10 +5411,9 @@ fi
 echo "$as_me:$LINENO: result: $libc_cv_broken_visibility_attribute" >&5
 echo "${ECHO_T}$libc_cv_broken_visibility_attribute" >&6
     if test $libc_cv_broken_visibility_attribute = yes; then
-      cat >>confdefs.h <<\_ACEOF
-#define HAVE_BROKEN_VISIBILITY_ATTRIBUTE 1
-_ACEOF
-
+      { { echo "$as_me:$LINENO: error: working compiler support for visibility attribute is required" >&5
+echo "$as_me: error: working compiler support for visibility attribute is required" >&2;}
+   { (exit 1); exit 1; }; }
     fi
   fi
 
@@ -5457,10 +5448,9 @@ fi
 echo "$as_me:$LINENO: result: $libc_cv_broken_alias_attribute" >&5
 echo "${ECHO_T}$libc_cv_broken_alias_attribute" >&6
   if test $libc_cv_broken_alias_attribute = yes; then
-    cat >>confdefs.h <<\_ACEOF
-#define HAVE_BROKEN_ALIAS_ATTRIBUTE 1
-_ACEOF
-
+    { { echo "$as_me:$LINENO: error: working alias attribute support required" >&5
+echo "$as_me: error: working alias attribute support required" >&2;}
+   { (exit 1); exit 1; }; }
   fi
 
   if test $libc_cv_visibility_attribute = yes; then
@@ -5572,13 +5562,14 @@ EOF
   then
     libc_cv_z_nodelete=yes
   else
-    libc_cv_z_nodelete=no
+    { { echo "$as_me:$LINENO: error: linker with -z nodelete support required" >&5
+echo "$as_me: error: linker with -z nodelete support required" >&2;}
+   { (exit 1); exit 1; }; }
   fi
   rm -f conftest*
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_nodelete" >&5
 echo "${ECHO_T}$libc_cv_z_nodelete" >&6
-
 
   echo "$as_me:$LINENO: checking for -z nodlopen option" >&5
 echo $ECHO_N "checking for -z nodlopen option... $ECHO_C" >&6
@@ -5600,13 +5591,14 @@ EOF
   then
     libc_cv_z_nodlopen=yes
   else
-    libc_cv_z_nodlopen=no
+    { { echo "$as_me:$LINENO: error: linker with -z nodlopen support required" >&5
+echo "$as_me: error: linker with -z nodlopen support required" >&2;}
+   { (exit 1); exit 1; }; }
   fi
   rm -f conftest*
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_nodlopen" >&5
 echo "${ECHO_T}$libc_cv_z_nodlopen" >&6
-
 
   echo "$as_me:$LINENO: checking for -z initfirst option" >&5
 echo $ECHO_N "checking for -z initfirst option... $ECHO_C" >&6
@@ -5628,15 +5620,18 @@ EOF
   then
     libc_cv_z_initfirst=yes
   else
-    libc_cv_z_initfirst=no
+    { { echo "$as_me:$LINENO: error: linker with -z initfirst support required" >&5
+echo "$as_me: error: linker with -z initfirst support required" >&2;}
+   { (exit 1); exit 1; }; }
   fi
   rm -f conftest*
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_initfirst" >&5
 echo "${ECHO_T}$libc_cv_z_initfirst" >&6
 
-
-  echo "$as_me:$LINENO: checking for -z relro option" >&5
+  case "$base_machine" in
+    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
+      echo "$as_me:$LINENO: checking for -z relro option" >&5
 echo $ECHO_N "checking for -z relro option... $ECHO_C" >&6
 if test "${libc_cv_z_relro+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -5662,13 +5657,14 @@ else
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_relro" >&5
 echo "${ECHO_T}$libc_cv_z_relro" >&6
-
-  if test $libc_cv_z_relro = yes; then
-    cat >>confdefs.h <<\_ACEOF
-#define HAVE_Z_RELRO 1
-_ACEOF
-
-  fi
+      if test "$libc_cv_z_relro" = no; then
+        { { echo "$as_me:$LINENO: error: linker with -z relro support required" >&5
+echo "$as_me: error: linker with -z relro support required" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+      ;;
+    *) ;;
+   esac
 
   echo "$as_me:$LINENO: checking for -Bgroup option" >&5
 echo $ECHO_N "checking for -Bgroup option... $ECHO_C" >&6
@@ -8510,12 +8506,7 @@ s,@PERL@,$PERL,;t t
 s,@INSTALL_INFO@,$INSTALL_INFO,;t t
 s,@BISON@,$BISON,;t t
 s,@VERSIONING@,$VERSIONING,;t t
-s,@libc_cv_asm_protected_directive@,$libc_cv_asm_protected_directive,;t t
 s,@libc_cv_cc_with_libunwind@,$libc_cv_cc_with_libunwind,;t t
-s,@libc_cv_z_nodelete@,$libc_cv_z_nodelete,;t t
-s,@libc_cv_z_nodlopen@,$libc_cv_z_nodlopen,;t t
-s,@libc_cv_z_initfirst@,$libc_cv_z_initfirst,;t t
-s,@libc_cv_z_relro@,$libc_cv_z_relro,;t t
 s,@libc_cv_Bgroup@,$libc_cv_Bgroup,;t t
 s,@libc_cv_libgcc_s_suffix@,$libc_cv_libgcc_s_suffix,;t t
 s,@libc_cv_as_needed@,$libc_cv_as_needed,;t t

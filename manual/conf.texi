@@ -1455,11 +1455,6 @@ Inquire about the value of @code{_POSIX_ASYNC_IO}.
 Inquire about the value of @code{_POSIX_PRIO_IO}.
 
 @comment unistd.h
-@comment POSIX.1g
-@item _PC_SOCK_MAXBUF
-Inquire about the value of @code{_POSIX_PIPE_BUF}.
-
-@comment unistd.h
 @comment LFS
 @item _PC_FILESIZEBITS
 Inquire about the availability of large files on the filesystem.

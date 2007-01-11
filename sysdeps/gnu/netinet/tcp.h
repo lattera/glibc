@@ -49,6 +49,7 @@
 #define TCP_WINDOW_CLAMP 10	/* Bound advertised window */
 #define TCP_INFO	 11	/* Information about this connection. */
 #define	TCP_QUICKACK	 12	/* Bock/reenable quick ACKs.  */
+#define TCP_CONGESTION	 13	/* Congestion control algorithm.  */
 
 #ifdef __USE_MISC
 # include <sys/types.h>

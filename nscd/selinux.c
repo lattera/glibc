@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -182,22 +182,18 @@ preserve_capabilities (void)
   if (tmp_caps == NULL || new_caps == NULL)
     {
       if (tmp_caps != NULL)
-	cap_free (tmp_caps);
+	free_caps (tmp_caps);
 
       dbg_log (_("Failed to initialize drop of capabilities"));
       error (EXIT_FAILURE, 0, _("cap_init failed"));
     }
 
   /* There is no reason why these should not work.  */
-  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list,
-		(cap_value_t *) new_cap_list, CAP_SET);
-  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list,
-		(cap_value_t *) new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list, new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list, new_cap_list, CAP_SET);
 
-  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list,
-		(cap_value_t *) tmp_cap_list, CAP_SET);
-  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list,
-		(cap_value_t *) tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list, tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list, tmp_cap_list, CAP_SET);
 
   int res = cap_set_proc (tmp_caps);
 
@@ -206,7 +202,7 @@ preserve_capabilities (void)
   if (__builtin_expect (res != 0, 0))
     {
       cap_free (new_caps);
-      dbg_log (_("Failed to drop capabilities\n"));
+      dbg_log (_("Failed to drop capabilities"));
       error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
     }
 

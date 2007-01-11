@@ -115,7 +115,7 @@ No definition for %s category found"), "LC_NUMERIC"));
   else if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
       WITH_CUR_LOCALE (error (0, 0, _("\
-%s: value for field `%s' must not be the empty string"),
+%s: value for field `%s' must not be an empty string"),
 			      "LC_NUMERIC", "decimal_point"));
     }
   if (numeric->decimal_point_wc == L'\0')

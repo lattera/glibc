@@ -119,7 +119,7 @@ _IO_vswprintf (string, maxlen, format, args)
 
   if (sf.f._sbf._f._wide_data->_IO_buf_base == sf.overflow_buf)
     /* ISO C99 requires swprintf/vswprintf to return an error if the
-       output does not fit int he provided buffer.  */
+       output does not fit in the provided buffer.  */
     return -1;
 
   /* Terminate the string.  */

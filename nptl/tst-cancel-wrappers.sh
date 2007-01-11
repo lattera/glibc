@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test whether all cancelable functions are cancelable.
-# Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -26,7 +26,6 @@ C["close"]=1
 C["connect"]=1
 C["creat"]=1
 C["fcntl"]=1
-C["fdatasync"]=1
 C["fsync"]=1
 C["msgrcv"]=1
 C["msgsnd"]=1

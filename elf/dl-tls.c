@@ -26,30 +26,26 @@
 #include <sys/param.h>
 
 #include <tls.h>
-
-/* We don't need any of this if TLS is not supported.  */
-#ifdef USE_TLS
-
-# include <dl-tls.h>
-# include <ldsodefs.h>
+#include <dl-tls.h>
+#include <ldsodefs.h>
 
 /* Amount of excess space to allocate in the static TLS area
    to allow dynamic loading of modules defining IE-model TLS data.  */
-# define TLS_STATIC_SURPLUS	64 + DL_NNS * 100
+#define TLS_STATIC_SURPLUS	64 + DL_NNS * 100
 
 /* Value used for dtv entries for which the allocation is delayed.  */
-# define TLS_DTV_UNALLOCATED	((void *) -1l)
+#define TLS_DTV_UNALLOCATED	((void *) -1l)
 
 
 /* Out-of-memory handler.  */
-# ifdef SHARED
+#ifdef SHARED
 static void
 __attribute__ ((__noreturn__))
 oom (void)
 {
   _dl_fatal_printf ("cannot allocate memory for thread-local data: ABORT\n");
 }
-# endif
+#endif
 
 
 size_t
@@ -113,7 +109,7 @@ _dl_next_tls_modid (void)
 }
 
 
-# ifdef SHARED
+#ifdef SHARED
 void
 internal_function
 _dl_determine_tlsoffset (void)
@@ -158,7 +154,7 @@ _dl_determine_tlsoffset (void)
      memory requirement for the next TLS block is smaller than the
      gap.  */
 
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   /* We simply start with zero.  */
   size_t offset = 0;
 
@@ -205,7 +201,7 @@ _dl_determine_tlsoffset (void)
   GL(dl_tls_static_used) = offset;
   GL(dl_tls_static_size) = (roundup (offset + TLS_STATIC_SURPLUS, max_align)
 			    + TLS_TCB_SIZE);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   /* The TLS blocks start right after the TCB.  */
   size_t offset = TLS_TCB_SIZE;
 
@@ -249,9 +245,9 @@ _dl_determine_tlsoffset (void)
   GL(dl_tls_static_used) = offset;
   GL(dl_tls_static_size) = roundup (offset + TLS_STATIC_SURPLUS,
 				    TLS_TCB_ALIGN);
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
   /* The alignment requirement for the static TLS block.  */
   GL(dl_tls_static_align) = max_align;
@@ -288,7 +284,7 @@ _dl_tls_setup (void)
   return 0;
 }
 rtld_hidden_def (_dl_tls_setup)
-# endif
+#endif
 
 static void *
 internal_function
@@ -337,13 +333,13 @@ _dl_allocate_tls_storage (void)
   void *result;
   size_t size = GL(dl_tls_static_size);
 
-# if TLS_DTV_AT_TP
+#if TLS_DTV_AT_TP
   /* Memory layout is:
      [ TLS_PRE_TCB_SIZE ] [ TLS_TCB_SIZE ] [ TLS blocks ]
 			  ^ This should be returned.  */
   size += (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
 	  & ~(GL(dl_tls_static_align) - 1);
-# endif
+#endif
 
   /* Allocate a correctly aligned chunk of memory.  */
   result = __libc_memalign (GL(dl_tls_static_align), size);
@@ -352,14 +348,14 @@ _dl_allocate_tls_storage (void)
       /* Allocate the DTV.  */
       void *allocated = result;
 
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  */
       result = (char *) result + size - TLS_TCB_SIZE;
 
       /* Clear the TCB data structure.  We can't ask the caller (i.e.
 	 libpthread) to do it, because we will initialize the DTV et al.  */
       memset (result, '\0', TLS_TCB_SIZE);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
       result = (char *) result + size - GL(dl_tls_static_size);
 
       /* Clear the TCB data structure and TLS_PRE_TCB_SIZE bytes before it.
@@ -367,7 +363,7 @@ _dl_allocate_tls_storage (void)
 	 initialize the DTV et al.  */
       memset ((char *) result - TLS_PRE_TCB_SIZE, '\0',
 	      TLS_PRE_TCB_SIZE + TLS_TCB_SIZE);
-# endif
+#endif
 
       result = allocate_dtv (result);
       if (result == NULL)
@@ -428,14 +424,14 @@ _dl_allocate_tls_init (void *result)
 
 	  assert (map->l_tls_modid == cnt);
 	  assert (map->l_tls_blocksize >= map->l_tls_initimage_size);
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
 	  assert ((size_t) map->l_tls_offset >= map->l_tls_blocksize);
 	  dest = (char *) result - map->l_tls_offset;
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
 	  dest = (char *) result + map->l_tls_offset;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
 	  /* Copy the initialization image and clear the BSS part.  */
 	  dtv[map->l_tls_modid].pointer.val = dest;
@@ -491,21 +487,21 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 
   if (dealloc_tcb)
     {
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  Back up to free the whole block.  */
       tcb -= GL(dl_tls_static_size) - TLS_TCB_SIZE;
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
       /* Back up the TLS_PRE_TCB_SIZE bytes.  */
       tcb -= (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
 	     & ~(GL(dl_tls_static_align) - 1);
-# endif
+#endif
       free (tcb);
     }
 }
 rtld_hidden_def (_dl_deallocate_tls)
 
 
-# ifdef SHARED
+#ifdef SHARED
 /* The __tls_get_addr function has two basic forms which differ in the
    arguments.  The IA-64 form takes two parameters, the module ID and
    offset.  The form used, among others, on IA-32 takes a reference to
@@ -513,15 +509,15 @@ rtld_hidden_def (_dl_deallocate_tls)
    form seems to be more often used (in the moment) so we default to
    it.  Users of the IA-64 form have to provide adequate definitions
    of the following macros.  */
-#  ifndef GET_ADDR_ARGS
-#   define GET_ADDR_ARGS tls_index *ti
-#  endif
-#  ifndef GET_ADDR_MODULE
-#   define GET_ADDR_MODULE ti->ti_module
-#  endif
-#  ifndef GET_ADDR_OFFSET
-#   define GET_ADDR_OFFSET ti->ti_offset
-#  endif
+# ifndef GET_ADDR_ARGS
+#  define GET_ADDR_ARGS tls_index *ti
+# endif
+# ifndef GET_ADDR_MODULE
+#  define GET_ADDR_MODULE ti->ti_module
+# endif
+# ifndef GET_ADDR_OFFSET
+#  define GET_ADDR_OFFSET ti->ti_offset
+# endif
 
 
 static void *
@@ -732,7 +728,7 @@ __tls_get_addr (GET_ADDR_ARGS)
 
   return (char *) p + GET_ADDR_OFFSET;
 }
-# endif
+#endif
 
 
 /* Look up the module's TLS block as for __tls_get_addr,
@@ -840,4 +836,3 @@ cannot create TLS data structures"));
   listp->slotinfo[idx].map = l;
   listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
 }
-#endif	/* use TLS */

@@ -1233,10 +1233,7 @@ endif
 
 ifeq ($(firstword $(sysd-sorted-done) f)$(firstword $(generating) f),tf)
 -include $(common-objpfx)tls.make
-config-tls := notls
-ifeq ($(use-tls),yes)
 config-tls := tls
-endif
 ifeq ($(use-thread),yes)
 config-tls := thread
 endif

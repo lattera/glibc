@@ -20,10 +20,7 @@
  *   Special cases:
  */
 
-#include <math.h>
-#include <math_private.h>
 #include <math_ldbl_opt.h>
-#include <float.h>
 
 float __nldbl_nexttowardf(float x, double y);
 
@@ -42,12 +39,10 @@ float __nldbl_nexttowardf(float x, double y)
 	   return x+y;
 	if((double) x==y) return y;		/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
-	    float u;
+	    float x2;
 	    SET_FLOAT_WORD(x,(u_int32_t)(hy&0x80000000)|1);/* return +-minsub*/
-	    u = math_opt_barrier (x);
-	    u = u * u;
-	    math_force_eval (u);		/* raise underflow flag */
-	    return x;
+	    x2 = x*x;
+	    if(x2==x) return x2; else return x; /* raise underflow flag */
 	}
 	if(hx>=0) {				/* x > 0 */
 	    if(hy<0||(ix>>23)>(iy>>20)-0x380
@@ -65,16 +60,13 @@ float __nldbl_nexttowardf(float x, double y)
 		hx += 1;
 	}
 	hy = hx&0x7f800000;
-	if(hy>=0x7f800000) {
-	  x = x+x;	/* overflow  */
-	  if (FLT_EVAL_METHOD != 0)
-	    /* Force conversion to float.  */
-	    asm ("" : "+m"(x));
-	  return x;
-	}
-	if(hy<0x00800000) {
-	    float u = x*x;			/* underflow */
-	    math_force_eval (u);		/* raise underflow flag */
+	if(hy>=0x7f800000) return x+x;	/* overflow  */
+	if(hy<0x00800000) {		/* underflow */
+	    float x2 = x*x;
+	    if(x2!=x) {		/* raise underflow flag */
+		SET_FLOAT_WORD(x2,hx);
+		return x2;
+	    }
 	}
 	SET_FLOAT_WORD(x,hx);
 	return x;

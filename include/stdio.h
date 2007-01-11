@@ -131,7 +131,6 @@ libc_hidden_proto (__vsnprintf_chk)
 libc_hidden_proto (__vfprintf_chk)
 
 #  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
-  && defined HAVE_VISIBILITY_ATTRIBUTE && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE\
   && !defined NO_HIDDEN
 /* Special gcc builtins.  */
 extern size_t __builtin_fwrite (const void *, size_t, size_t, void *)

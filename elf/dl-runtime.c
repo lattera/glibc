@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,6 @@
 #include <ldsodefs.h>
 #include <sysdep-cancel.h>
 #include "dynamic-link.h"
-#include <tls.h>
-
 
 #if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
     || ELF_MACHINE_NO_REL
@@ -95,19 +93,15 @@ _dl_fixup (
 	    version = NULL;
 	}
 
-      /* We need to keep the scope around so do some locking.  This is
-	 not necessary for objects which cannot be unloaded or when
-	 we are not using any threads (yet).  */
-      int flags = DL_LOOKUP_ADD_DEPENDENCY;
-      if (!RTLD_SINGLE_THREAD_P)
-	THREAD_GSCOPE_SET_FLAG ();
+      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+	__rtld_mrlock_lock (l->l_scope_lock);
 
-      result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym, l->l_scope,
-				    version, ELF_RTYPE_CLASS_PLT, flags, NULL);
+      result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
+				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
+				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-      /* We are done with the global scope.  */
-      if (!RTLD_SINGLE_THREAD_P)
-	THREAD_GSCOPE_RESET_FLAG ();
+      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+	__rtld_mrlock_unlock (l->l_scope_lock);
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
@@ -187,20 +181,16 @@ _dl_profile_fixup (
 		version = NULL;
 	    }
 
-	  /* We need to keep the scope around so do some locking.  This is
-	     not necessary for objects which cannot be unloaded or when
-	     we are not using any threads (yet).  */
-	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
-	  if (!RTLD_SINGLE_THREAD_P)
-	    THREAD_GSCOPE_SET_FLAG ();
+	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+	    __rtld_mrlock_lock (l->l_scope_lock);
 
-	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l,
-					&defsym, l->l_scope, version,
-					ELF_RTYPE_CLASS_PLT, flags, NULL);
+	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l, &defsym,
+					l->l_scope, version,
+					ELF_RTYPE_CLASS_PLT,
+					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-	  /* We are done with the global scope.  */
-	  if (!RTLD_SINGLE_THREAD_P)
-	    THREAD_GSCOPE_RESET_FLAG ();
+	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+	    __rtld_mrlock_unlock (l->l_scope_lock);
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol

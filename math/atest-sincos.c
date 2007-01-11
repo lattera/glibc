@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <Geoff.Keating@anu.edu.au>, 1997.
 
@@ -239,9 +239,11 @@ main (void)
    memset (c2, 0, sizeof (mp1));
    for (i = 0; i < 100 && i < FRAC / 4; i++)
      {
-       s2[(FRAC - i * 4 - 4) / mpbpl] |= ((strchr (hexdig, sin1[i]) - hexdig)
-					  << (FRAC - i * 4 - 4) % mpbpl);
-       c2[(FRAC - i * 4 - 4) / mpbpl] |= ((strchr (hexdig, cos1[i]) - hexdig)
+       s2[(FRAC - i * 4 - 4) / mpbpl] |= ((mp_limb_t) (strchr (hexdig, sin1[i])
+						       - hexdig)
+ 					  << (FRAC - i * 4 - 4) % mpbpl);
+       c2[(FRAC - i * 4 - 4) / mpbpl] |= ((mp_limb_t) (strchr (hexdig, cos1[i])
+						       - hexdig)
 					  << (FRAC - i * 4 - 4) % mpbpl);
      }
 

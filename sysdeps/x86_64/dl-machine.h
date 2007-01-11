@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -190,7 +190,7 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 # define elf_machine_type_class(type)					      \
   ((((type) == R_X86_64_JUMP_SLOT					      \
      || (type) == R_X86_64_DTPMOD64					      \
@@ -300,7 +300,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#if defined USE_TLS && !defined RESOLVE_CONFLICT_FIND_MAP
+#ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_X86_64_DTPMOD64:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
@@ -339,7 +339,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 			     - sym_map->l_tls_offset);
 	    }
 	  break;
-#endif	/* use TLS */
+#endif
 
 #ifndef RTLD_BOOTSTRAP
 	case R_X86_64_64:

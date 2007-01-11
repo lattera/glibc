@@ -2,7 +2,6 @@
 
 #include <tls.h>
 
-#ifdef USE_TLS
 #include "tls-macros.h"
 
 
@@ -35,4 +34,3 @@ in_dso (int n, int *caller_foop)
 
   return result;
 }
-#endif

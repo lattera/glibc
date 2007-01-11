@@ -52,8 +52,6 @@ __getgroups (int n, gid_t *groups)
     }
   else
     {
-      int i, ngids;
-      __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
 # ifdef __NR_getgroups32
       if (__libc_missing_32bit_uids <= 0)
 	{
@@ -68,6 +66,9 @@ __getgroups (int n, gid_t *groups)
 	  __libc_missing_32bit_uids = 1;
 	}
 # endif /* __NR_getgroups32 */
+
+      int i, ngids;
+      __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
 
       ngids = INLINE_SYSCALL (getgroups, 2, n, CHECK_N (kernel_groups, n));
       if (n != 0 && ngids > 0)

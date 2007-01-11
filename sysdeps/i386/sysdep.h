@@ -1,5 +1,6 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991-93,95,96,98,2002,2003,2005 Free Software Foundation, Inc.
+   Copyright (C) 1991-93,95,96,98,2002,2003,2005,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,15 +133,7 @@ lose: SYSCALL_PIC_SETUP							      \
     cfi_adjust_cfa_offset (-4);						      \
     addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
 
-# ifndef HAVE_HIDDEN
-#  define SETUP_PIC_REG(reg) \
-  call 1f;								      \
-  .subsection 1;							      \
-1:movl (%esp), %e##reg;							      \
-  ret;									      \
-  .previous
-# else
-#  define SETUP_PIC_REG(reg) \
+# define SETUP_PIC_REG(reg) \
   .ifndef __i686.get_pc_thunk.reg;					      \
   .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
   .globl __i686.get_pc_thunk.reg;					      \
@@ -153,7 +146,6 @@ __i686.get_pc_thunk.reg:						      \
   .previous;								      \
   .endif;								      \
   call __i686.get_pc_thunk.reg
-# endif
 
 # define LOAD_PIC_REG(reg) \
   SETUP_PIC_REG(reg); addl $_GLOBAL_OFFSET_TABLE_, %e##reg

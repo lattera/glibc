@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 2007 Free Software Foundation, Inc.
+/* Copyright (c) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -25,18 +25,4 @@ nis_domain_of (const_nis_name name)
   static char result[NIS_MAXNAMELEN + 1];
 
   return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
-}
-
-const_nis_name
-__nis_domain_of (const_nis_name name)
-{
-  const_nis_name cptr = strchr (name, '.');
-
-  if (cptr++ == NULL)
-    return "";
-
-  if (*cptr == '\0')
-    return ".";
-
-  return cptr;
 }

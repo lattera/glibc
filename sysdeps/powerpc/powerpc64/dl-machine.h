@@ -1,7 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
-   Free Software Foundation, Inc.
+   Copyright 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -260,7 +259,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 #define elf_machine_type_class(type)					      \
   /* This covers all the TLS relocs, though most won't appear.  */	      \
   (((((type) >= R_PPC64_DTPMOD64 && (type) <= R_PPC64_TPREL16_HIGHESTA)	      \
@@ -495,7 +494,7 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 /* This computes the value used by TPREL* relocs.  */
 auto inline Elf64_Addr __attribute__ ((always_inline, const))
 elf_machine_tprel (struct link_map *map,
@@ -562,7 +561,7 @@ elf_machine_rela (struct link_map *map,
 #endif
       return;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
     case R_PPC64_DTPMOD64:
 # ifdef RTLD_BOOTSTRAP
       /* During startup the dynamic linker is always index 1.  */
@@ -645,7 +644,7 @@ elf_machine_rela (struct link_map *map,
       value = elf_machine_tprel (map, sym_map, sym, reloc);
       *(Elf64_Half *) reloc_addr = PPC_HIGHESTA (value);
       break;
-#endif /* USE_TLS etc. */
+#endif
 
 #ifndef RTLD_BOOTSTRAP /* None of the following appear in ld.so */
     case R_PPC64_ADDR16_LO_DS:

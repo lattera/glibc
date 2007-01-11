@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -35,6 +35,7 @@
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_CMP_REQUEUE	4
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
@@ -150,7 +151,7 @@ LLL_STUB_UNWIND_INFO_END
 #define lll_futex_wait(futex, val) \
   ({									      \
     int __status;							      \
-    register __typeof (val) _val asm ("edx") = (val);			      \
+    register __typeof (val) _val __asm ("edx") = (val);			      \
     __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
 		      "syscall"						      \
 		      : "=a" (__status)					      \
@@ -163,22 +164,22 @@ LLL_STUB_UNWIND_INFO_END
 
 #define lll_futex_timed_wait(futex, val, timeout)			      \
   ({									      \
-    register const struct timespec *__to __asm__ ("r10") = timeout;	      \
+    register const struct timespec *__to __asm ("r10") = timeout;	      \
     int __status;							      \
-    register __typeof (val) _val asm ("edx") = (val);			      \
+    register __typeof (val) _val __asm ("edx") = (val);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__status)					      \
 		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
 		        "d" (_val), "r" (__to)				      \
 		      : "memory", "cc", "r11", "cx");			      \
-    __status;								      \
+    -__status;								      \
   })
 
 
 #define lll_futex_wake(futex, nr) \
   do {									      \
     int __ignore;							      \
-    register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    register __typeof (nr) _nr __asm ("edx") = (nr);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__ignore)					      \
 		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAKE),	      \
@@ -421,6 +422,21 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 				"S" (FUTEX_WAKE), "1" (__NR_futex),	      \
 				"d" (1)					      \
 			      : "cx", "r11", "cc", "memory"); })
+
+
+/* Returns non-zero if error happened, zero if success.  */
+#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val) \
+  ({ int __res;								      \
+     register int __nr_move __asm ("r10") = nr_move;			      \
+     register void *__mutex __asm ("r8") = mutex;			      \
+     register int __val __asm ("r9") = val;				      \
+     __asm __volatile ("syscall"					      \
+		       : "=a" (__res)					      \
+		       : "0" (__NR_futex), "D" ((void *) ftx),		      \
+		         "S" (FUTEX_CMP_REQUEUE), "d" (nr_wake),	      \
+		         "r" (__nr_move), "r" (__mutex), "r" (__val)	      \
+		       : "cx", "r11", "cc", "memory");			      \
+     __res < 0; })
 
 
 #define lll_mutex_islocked(futex) \

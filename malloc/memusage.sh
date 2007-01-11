@@ -44,7 +44,7 @@ Profile memory usage of PROGRAM.
    -d,--data=FILE         Generate binary data file and store it in FILE
    -u,--unbuffered        Don't buffer output
    -b,--buffer=SIZE       Collect SIZE entries before writing them out
-      --no-timer          Don't collect additional information though timer
+      --no-timer          Don't collect additional information through timer
    -m,--mmap              Also trace mmap & friends
 
    -?,--help              Print this help and exit
@@ -71,20 +71,11 @@ do_version() {
   printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2006"
+" "2007"
   printf $"Written by %s.
 " "Ulrich Drepper"
   exit 0
 }
-
-# These variables are local
-buffer=
-data=
-memusagestat_args=
-notimer=
-png=
-progname=
-tracemmap=
 
 # Process arguments.  But stop as soon as the program name is found.
 while test $# -gt 0; do
@@ -222,8 +213,15 @@ datafile=
 if test -n "$data"; then
   datafile="$data"
 elif test -n "$png"; then
-  datafile=$(mktemp -t memusage.XXXXXX) || exit
-  trap 'rm -f "$datafile"; exit 1' HUP INT QUIT TERM PIPE
+  datafile=$(mktemp ${TMPDIR:-/tmp}/memusage.XXXXXX 2> /dev/null)
+  if test $? -ne 0; then
+    # Lame, but if there is no `mktemp' program the user cannot expect more.
+    if test "$RANDOM" != "$RANDOM"; then
+      datafile=${TMPDIR:-/tmp}/memusage.$RANDOM
+    else
+      datafile=${TMPDIR:-/tmp}/memusage.$$
+    fi
+  fi
 fi
 if test -n "$datafile"; then
   add_env="$add_env MEMUSAGE_OUTPUT=$datafile"

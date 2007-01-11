@@ -1,5 +1,5 @@
 /* copy sign, double version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -31,6 +31,8 @@
 signmask:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	.byte 0, 0, 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(signmask)
+	ASM_TYPE_DIRECTIVE(othermask,@object)
 othermask:
 	.byte 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
 	.byte 0, 0, 0, 0, 0, 0, 0, 0
@@ -42,6 +44,7 @@ othermask:
 #define MO(op) op
 #endif
 
+	.text
 ENTRY(__copysign)
 	andpd MO(othermask),%xmm0
 	andpd MO(signmask),%xmm1

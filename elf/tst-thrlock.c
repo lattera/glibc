@@ -27,8 +27,9 @@ tf (void *arg)
   return NULL;
 }
 
-int
-main (void)
+
+static int
+do_test (void)
 {
 #define N 10
   pthread_t th[N];
@@ -53,3 +54,6 @@ main (void)
     }
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

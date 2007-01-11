@@ -38,14 +38,9 @@ c++-sysincludes = @CXX_SYSINCLUDES@
 all-warnings = @all_warnings@
 
 elf = @elf@
-have-protected = @libc_cv_asm_protected_directive@
-have-z-nodelete = @libc_cv_z_nodelete@
-have-z-nodlopen = @libc_cv_z_nodlopen@
-have-z-initfirst = @libc_cv_z_initfirst@
 have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
 have-initfini = @libc_cv_have_initfini@
-have-z-relro = @libc_cv_z_relro@
 have-Bgroup = @libc_cv_Bgroup@
 have-as-needed = @libc_cv_as_needed@
 libgcc_s_suffix = @libc_cv_libgcc_s_suffix@

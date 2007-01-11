@@ -80,7 +80,7 @@ pmap_getmaps (struct sockaddr_in *address)
 		     (xdrproc_t)INTUSE(xdr_pmaplist), (caddr_t)&head,
 		     minutetimeout) != RPC_SUCCESS)
 	{
-	  clnt_perror (client, _("pmap_getmaps rpc problem"));
+	  clnt_perror (client, _("pmap_getmaps.c: rpc problem"));
 	}
       CLNT_DESTROY (client);
     }

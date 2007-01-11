@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  S390 version.
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,9 @@
 #include <stdlib.h>
 #include <csu/libc-tls.c>
 
-#if USE_TLS
-
 /* On s390, the literal pool entry that refers to __tls_get_offset
    is not removed, even if all branches that use the literal pool
-   entry gets removed by TLS optimizations. To get binaries
+   entry gets removed by TLS optimizations.  To get binaries
    statically linked __tls_get_offset is defined here but
    aborts if it is used.  */
 
@@ -33,5 +31,3 @@ __tls_get_offset (size_t m, size_t offset)
 {
   abort ();
 }
-
-#endif

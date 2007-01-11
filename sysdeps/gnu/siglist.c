@@ -1,5 +1,5 @@
 /* Define list of all signal numbers and their names.
-   Copyright (C) 1997-2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2000, 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,27 +40,30 @@ const char *const __new_sys_sigabbrev[NSIG] =
 strong_alias (__new_sys_sigabbrev, _sys_sigabbrev_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-strong_alias (_sys_siglist_internal, __old_sys_siglist)
-declare_symbol (__old_sys_siglist, object, OLD_SIGLIST_SIZE * __WORDSIZE / 8)
+declare_symbol_alias (__old_sys_siglist, __new_sys_siglist, object,
+		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
-strong_alias (_sys_sigabbrev_internal, __old_sys_sigabbrev)
-declare_symbol (__old_sys_sigabbrev, object, OLD_SIGLIST_SIZE * __WORDSIZE / 8)
+declare_symbol_alias (__old_sys_sigabbrev, __new_sys_sigabbrev, object,
+		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
-strong_alias (__old_sys_siglist, _old_sys_siglist)
+declare_symbol_alias (_old_sys_siglist, __new_sys_siglist, object,
+		      OLD_SIGLIST_SIZE * __WORDSIZE / 8)
+
 compat_symbol (libc, __old_sys_siglist, _sys_siglist, GLIBC_2_0);
 compat_symbol (libc, _old_sys_siglist, sys_siglist, GLIBC_2_0);
 compat_symbol (libc, __old_sys_sigabbrev, sys_sigabbrev, GLIBC_2_0);
 #endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3) && defined OLD2_SIGLIST_SIZE
-strong_alias (_sys_siglist_internal, __old2_sys_siglist)
-declare_symbol (__old2_sys_siglist, object, OLD2_SIGLIST_SIZE * __WORDSIZE / 8)
+declare_symbol_alias (__old2_sys_siglist, __new_sys_siglist, object,
+		      OLD2_SIGLIST_SIZE * __WORDSIZE / 8)
 
-strong_alias (_sys_sigabbrev_internal, __old2_sys_sigabbrev)
-declare_symbol (__old2_sys_sigabbrev, object,
-		OLD2_SIGLIST_SIZE * __WORDSIZE / 8)
+declare_symbol_alias (__old2_sys_sigabbrev, __new_sys_sigabbrev, object,
+		      OLD2_SIGLIST_SIZE * __WORDSIZE / 8)
 
-strong_alias (__old2_sys_siglist, _old2_sys_siglist)
+declare_symbol_alias (_old2_sys_siglist, __new_sys_siglist, object,
+		      OLD2_SIGLIST_SIZE * __WORDSIZE / 8)
+
 compat_symbol (libc, __old2_sys_siglist, _sys_siglist, GLIBC_2_1);
 compat_symbol (libc, _old2_sys_siglist, sys_siglist, GLIBC_2_1);
 compat_symbol (libc, __old2_sys_sigabbrev, sys_sigabbrev, GLIBC_2_1);

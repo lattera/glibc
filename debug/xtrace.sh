@@ -64,7 +64,7 @@ do_version() {
   printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2006"
+" "2007"
   printf $"Written by %s.
 " "Ulrich Drepper"
   exit 0
@@ -161,32 +161,32 @@ if test -n "$data"; then
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
-      format_line "$fct" "$file"
+      format_line $fct $file
     fi
   done
 else
-  fifo=$(mktemp -ut xtrace.XXXXXX) || exit
-  trap 'rm -f "$fifo"; exit 1' HUP INT QUIT TERM PIPE
+  fifo=$(mktemp -u ${TMPDIR:-/tmp}/xtrace.XXXXXX)
   mkfifo -m 0600 $fifo || exit 1
+  trap 'rm $fifo; exit 1' SIGINT SIGTERM SIGPIPE
 
   # Now start the program and let it write to the FIFO.
   $TERMINAL_PROG -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read < $fifo" &
   termpid=$!
-  $pcprofiledump -u "$fifo" |
+  $pcprofiledump -u $fifo |
   while read line; do
-     echo "$line" |
+     echo $line |
      sed 's/this = \([^,]*\).*/\1/' |
-     addr2line -fC -e "$program"
+     addr2line -fC -e $program
   done |
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
-      format_line "$fct" "$file"
+      format_line $fct $file
     fi
   done
   read -p "Press return here to close $TERMINAL_PROG($program)."
-  echo > "$fifo"
-  rm "$fifo"
+  echo > $fifo
+  rm $fifo
 fi
 
 exit 0

@@ -114,7 +114,7 @@ clntraw_create (u_long prog, u_long vers)
   INTUSE(xdrmem_create) (xdrs, clp->mashl_callmsg, MCALL_MSG_SIZE, XDR_ENCODE);
   if (!INTUSE(xdr_callhdr) (xdrs, &call_msg))
     {
-      perror (_ ("clnt_raw.c - Fatal header serialization error."));
+      perror (_ ("clnt_raw.c: fatal header serialization error"));
     }
   clp->mcnt = XDR_GETPOS (xdrs);
   XDR_DESTROY (xdrs);

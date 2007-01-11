@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -138,7 +138,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 /* We never want to use a PLT entry as the destination of a
    reloc, when what is being relocated is a branch. This is
    partly for efficiency, but mostly so we avoid loops.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 #define elf_machine_type_class(type)			\
   ((((type) == R_PPC_JMP_SLOT				\
     || (type) == R_PPC_REL24				\
@@ -330,7 +330,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       *reloc_addr = value;
       break;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
     && !defined RESOLVE_CONFLICT_FIND_MAP
 # ifdef RTLD_BOOTSTRAP
 #  define NOT_BOOTSTRAP 0
@@ -361,7 +361,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
 	}
       break;
-#endif /* USE_TLS etc. */
+#endif
 
     case R_PPC_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP

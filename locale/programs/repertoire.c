@@ -311,7 +311,7 @@ argument to <%s> must be a single character"),
 	case 90:
 	  if (nowtok != tok_charids)
 	    lr_error (repfile, _("\
-`%1$s' definition does not end with `END %1$s'"), "CHARIDS");
+%1$s: definition does not end with `END %1$s'"), "CHARIDS");
 
 	  lr_ignore_rest (repfile, nowtok == tok_charids);
 	  break;
@@ -453,7 +453,7 @@ hexadecimal range format should use only capital characters"));
 
   if (from_nr > to_nr)
     {
-      lr_error (lr, _("upper limit in range is not smaller then lower limit"));
+      lr_error (lr, _("upper limit in range is smaller than lower limit"));
       return;
     }
 

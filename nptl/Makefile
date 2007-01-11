@@ -1,4 +1,4 @@
-# Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -209,16 +209,16 @@ tests = tst-typesizes \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	tst-cond20 tst-cond21 tst-cond22 \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
-	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
-	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
-	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
+	tst-robust6 tst-robust7 tst-robust8 \
+	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 \
+	tst-robustpi5 tst-robustpi6 tst-robustpi7 tst-robustpi8 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
 	tst-once1 tst-once2 tst-once3 tst-once4 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
-	tst-sem8 tst-sem9 tst-sem10 \
+	tst-sem8 tst-sem9 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	tst-align tst-align2 tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \

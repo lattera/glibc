@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,6 +21,11 @@
 #include <errno.h>
 #include <limits.h>
 #include "pthreadP.h"
+
+
+#ifndef NEW_VERNUM
+# define NEW_VERNUM GLIBC_2_3_3
+#endif
 
 
 int
@@ -54,9 +59,9 @@ strong_alias (__pthread_attr_setstack, pthread_attr_setstack)
 #else
 # include <shlib-compat.h>
 versioned_symbol (libpthread, __pthread_attr_setstack, pthread_attr_setstack,
-		  GLIBC_2_3_3);
+		  NEW_VERNUM);
 
-# if SHLIB_COMPAT(libpthread, GLIBC_2_2, GLIBC_2_3_3)
+# if SHLIB_COMPAT(libpthread, GLIBC_2_2, NEW_VERNUM)
 
 int
 __old_pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
@@ -71,9 +76,9 @@ __old_pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
   if (stacksize < 16384)
     return EINVAL;
 
-# ifdef EXTRA_PARAM_CHECKS
+#  ifdef EXTRA_PARAM_CHECKS
   EXTRA_PARAM_CHECKS;
-# endif
+#  endif
 
   iattr->stacksize = stacksize;
   iattr->stackaddr = (char *) stackaddr + stacksize;

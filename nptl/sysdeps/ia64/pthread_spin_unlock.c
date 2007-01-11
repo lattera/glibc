@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -23,6 +23,6 @@
 int
 pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  __sync_lock_release_si ((int *) lock);
+  __sync_lock_release ((int *) lock);
   return 0;
 }

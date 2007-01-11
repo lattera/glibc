@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -232,14 +232,14 @@ $fixup_stack:							\n\
    to one of the main executable's symbols, as for a COPY reloc.
    This is unused on Alpha.  */
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
-#define elf_machine_type_class(type)	\
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
+# define elf_machine_type_class(type)	\
   (((type) == R_ALPHA_JMP_SLOT		\
     || (type) == R_ALPHA_DTPMOD64	\
     || (type) == R_ALPHA_DTPREL64	\
     || (type) == R_ALPHA_TPREL64) * ELF_RTYPE_CLASS_PLT)
 #else
-#define elf_machine_type_class(type)	\
+# define elf_machine_type_class(type)	\
   (((type) == R_ALPHA_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)
 #endif
 
@@ -439,40 +439,40 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_arg, &sym_value, 8);
 	}
 #endif
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
       else if (r_type == R_ALPHA_DTPMOD64)
 	{
-#ifdef RTLD_BOOTSTRAP
+# ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always index 1.  */
 	  *reloc_addr = 1;
-#else
+# else
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-#endif
+# endif
 	}
       else if (r_type == R_ALPHA_DTPREL64)
 	{
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  *reloc_addr = sym_raw_value;
-#endif
+# endif
 	}
       else if (r_type == R_ALPHA_TPREL64)
 	{
-#ifdef RTLD_BOOTSTRAP
+# ifdef RTLD_BOOTSTRAP
 	  *reloc_addr = sym_raw_value + map->l_tls_offset;
-#else
+# else
 	  if (sym_map)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
 	      *reloc_addr = sym_raw_value + sym_map->l_tls_offset;
 	    }
-#endif
+# endif
 	}
-#endif /* USE_TLS */
+#endif
       else
 	_dl_reloc_bad_type (map, r_type, 0);
     }

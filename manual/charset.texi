@@ -207,7 +207,7 @@ and transmittal.  Because each single wide character consists of more
 than one byte, they are effected by byte-ordering.  Thus, machines with
 different endianesses would see different values when accessing the same
 data.  This byte ordering concern also applies for communication protocols
-that are all byte-based and, thereforet require that the sender has to
+that are all byte-based and therefore require that the sender has to
 decide about splitting the wide character in bytes.  A last (but not least
 important) point is that wide characters often require more storage space
 than a customized byte-oriented character set.
@@ -737,7 +737,7 @@ the return value is @math{0}.  If the next @var{n} bytes form a valid
 multibyte character, the number of bytes belonging to this multibyte
 character byte sequence is returned.
 
-If the the first @var{n} bytes possibly form a valid multibyte
+If the first @var{n} bytes possibly form a valid multibyte
 character but the character is incomplete, the return value is
 @code{(size_t) -2}.  Otherwise the multibyte character sequence is invalid
 and the return value is @code{(size_t) -1}.
@@ -2231,7 +2231,7 @@ ordering of the processor (or at least the running process) is not the
 same as the one required for UCS-4.  This is done for performance reasons
 as one does not want to perform unnecessary byte-swapping operations if
 one is not interested in actually seeing the result in UCS-4.  To avoid
-trouble with endianess, the internal representation consistently is named
+trouble with endianness, the internal representation consistently is named
 @code{INTERNAL} even on big-endian systems where the representations are
 identical.
 

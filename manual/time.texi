@@ -193,7 +193,7 @@ total amount of time a process has actively used a CPU since some
 arbitrary event.  On the GNU system, that event is the creation of the
 process.  While arbitrary in general, the event is always the same event
 for any particular process, so you can always measure how much time on
-the CPU a particular computation takes by examinining the process' CPU
+the CPU a particular computation takes by examining the process' CPU
 time before and after the computation.
 @cindex CPU time
 @cindex clock ticks
@@ -447,7 +447,7 @@ current calendar time is not available, the value
 @comment time.h
 @comment SVID, XPG
 @deftypefun int stime (time_t *@var{newtime})
-@code{stime} sets the system clock, i.e.  it tells the system that the
+@code{stime} sets the system clock, i.e., it tells the system that the
 current calendar time is @var{newtime}, where @code{newtime} is
 interpreted as described in the above definition of @code{time_t}.
 
@@ -1470,7 +1470,7 @@ widely available.
 @node Low-Level Time String Parsing
 @subsubsection Interpret string according to given format
 
-he first function is rather low-level.  It is nevertheless frequently
+The first function is rather low-level.  It is nevertheless frequently
 used in software since it is better known.  Its interface and
 implementation are heavily influenced by the @code{getdate} function,
 which is defined and implemented in terms of calls to @code{strptime}.
@@ -1790,7 +1790,7 @@ process.  If the input string contains more characters than required by
 the format string the return value points right after the last consumed
 input character.  If the whole input string is consumed the return value
 points to the @code{NULL} byte at the end of the string.  If an error
-occurs, i.e. @code{strptime} fails to match all of the format string,
+occurs, i.e., @code{strptime} fails to match all of the format string,
 the function returns @code{NULL}.
 @end deftypefun
 

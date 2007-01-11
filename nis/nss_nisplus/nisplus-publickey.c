@@ -217,7 +217,7 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
 
   if (!s || (!isdigit (*s)))
     {
-      syslog (LOG_ERR, _("netname2user: missing group id list in `%s'."), s);
+      syslog (LOG_ERR, _("netname2user: missing group id list in `%s'"), s);
       return NSS_STATUS_NOTFOUND;
     }
 

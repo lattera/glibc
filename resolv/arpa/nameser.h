@@ -287,7 +287,7 @@ typedef enum __ns_type {
 	ns_t_naptr = 35,	/* Naming Authority PoinTeR */
 	ns_t_kx = 36,		/* Key Exchange */
 	ns_t_cert = 37,		/* Certification record */
-	ns_t_a6 = 38,		/* IPv6 address (deprecates AAAA) */
+	ns_t_a6 = 38,		/* IPv6 address (deprecated, use ns_t_aaaa) */
 	ns_t_dname = 39,	/* Non-terminal DNAME (for IPv6) */
 	ns_t_sink = 40,		/* Kitchen sink (experimentatl) */
 	ns_t_opt = 41,		/* EDNS0 option (meta-RR) */

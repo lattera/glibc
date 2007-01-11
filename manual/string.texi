@@ -1187,8 +1187,8 @@ regards these characters as parts of the alphabet they do match.
 @comment ISO
 @deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
 This function is the similar to @code{strcmp}, except that no more than
-@var{size} wide characters are compared.  In other words, if the two
-strings are the same in their first @var{size} wide characters, the
+@var{size} characters are compared.  In other words, if the two
+strings are the same in their first @var{size} characters, the
 return value is zero.
 @end deftypefun
 
@@ -1961,11 +1961,6 @@ same on every call in a series of calls to @code{strtok}.
 If the end of the string @var{newstring} is reached, or if the remainder of
 string consists only of delimiter characters, @code{strtok} returns
 a null pointer.
-
-Note that ``character'' is here used in the sense of byte.  In a string
-using a multibyte character encoding (abstract) character consisting of
-more than one byte are not treated as an entity.  Each byte is treated
-separately.  The function is not locale-dependent.
 
 Note that ``character'' is here used in the sense of byte.  In a string
 using a multibyte character encoding (abstract) character consisting of

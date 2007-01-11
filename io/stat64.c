@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,13 +46,8 @@
 
 #undef stat64
 int
+attribute_hidden
 stat64 (const char *file, struct stat64 *buf)
 {
   return __xstat64 (_STAT_VER, file, buf);
 }
-
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tstat64");
-#endif

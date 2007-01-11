@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,9 +34,7 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-#if defined PI_STATIC_AND_HIDDEN \
-    && defined HAVE_VISIBILITY_ATTRIBUTE && defined HAVE_HIDDEN \
-    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#ifdef PI_STATIC_AND_HIDDEN
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT, a special entry that is never relocated.  */
@@ -244,7 +242,7 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 # define elf_machine_type_class(type) \
   ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
      || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
@@ -352,7 +350,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  *reloc_addr = value;
 	  break;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 	case R_386_TLS_DTPMOD32:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
@@ -476,7 +474,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
 	  break;
 
-#  ifdef USE_TLS
 	case R_386_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -513,7 +510,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 			    + reloc->r_addend;
 	    }
 	  break;
-#  endif	/* use TLS */
 	case R_386_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be

@@ -1,58 +1,8 @@
-2007-05-07  Ulrich Drepper  <drepper@redhat.com>
+2006-12-05  Jakub Jelinek  <jakub@redhat.com>
 
-	* locales/as_IN: Fix currency_symbol, abday for Sunday, abmon for
-	January, February, and September to December, mon for January,
-	February, September, and December, am_pm, and name_*.
-	Patch by Amitakhya Phukan <aphukan@redhat.com>.
-
-2007-04-27  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #3213]
-	* locales/translit_neutral: Add entry for U2044.
-
-2007-04-24  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #4411]
-	* locales/en_ZA: Update int_select.
-	Patch by Dwayne Bailey <dwayne@translate.org.za>.
-
-2007-02-16  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #3995]
-	* locales/ru_RU (LC_TIME): Set first_weekday and first_workday.
-
-2007-02-16  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #3851]
-	* locales/bn_BD: Fix full name of January and February.
-	Patch by Jamil Ahmed <jamil@bengalinux.org>.
-
-2007-02-17  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #3334]
-	* locales/sr_ME: Update from maintainer.
-
-2007-02-16  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #3322]
-	* SUPPORTED (SUPPORTED-LOCALES): Add sr_RS and sr_RS@latin.
-	* locales/sr_RS: New file.
-	* locales/sr_RS@latin: New file.
-
-2007-02-02  Bruno Haible  <bruno@clisp.org>
-
-	* charmaps/EUC-KR: Add mapping for 0xA2 0xE8.
-	* charmaps/JOHAB: Add mapping for 0xD9 0xE8.
-	Reported by Jungshik Shin <jungshik@google.com>.
-
-	* charmaps/JOHAB: Add mappings for 0xD9 0xE6 and 0xD9 0xE7.
-	Reported by Jungshik Shin <jungshik@google.com>.
-
-2007-01-12  Gwenole Beauchesne  <gbeauchesne@mandriva.com>
-
-	[BZ #3884]
-	* locales/sl_SI: Slovenia joined the Euro zone.
-	Fix negative number format.
+	* locales/cs_CZ (LC_TIME): Change d_fmt to %e.%m.%Y from %-d.%-m.%Y.
+	Change d_t_fmt to %a %-d. %B %Y, %H:%M:%S %Z from
+	%a %e. %B %Y, %H:%M:%S %Z.
 
 2006-11-02  Ulrich Drepper  <drepper@redhat.com>
 

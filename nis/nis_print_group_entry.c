@@ -162,7 +162,7 @@ nis_print_group_entry (const_nis_name group)
 	fputs (_("    No implicit nonmembers\n"), stdout);
       if (nomem_rec_cnt)
 	{
-	  fputs (_("    Explicit nonmembers:\n"), stdout);
+	  fputs (_("    Recursive nonmembers:\n"), stdout);
 	  for (i = 0; i < nomem_rec_cnt; ++i)
 	    printf ("\t%s=n", &nomem_rec[i][2]);
 	}

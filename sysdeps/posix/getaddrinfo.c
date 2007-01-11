@@ -1157,7 +1157,7 @@ get_scope (const struct sockaddr_storage *ss)
 	 169.254/16 and 127/8 are link-local.  */
       if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
 	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
+      else if (addr[0] == 10 || (addr[0] == 172 && addr[1] == 16)
 	       || (addr[0] == 192 && addr[1] == 168))
 	scope = 5;
       else
@@ -1217,10 +1217,6 @@ static const struct prefixentry default_labels[] =
 	= { .u6_addr8 = { 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       7, 6 },
-    { { .in6_u
-	= { .u6_addr8 = { 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
-      32, 7 },
     { { .in6_u
 	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
@@ -2089,10 +2085,12 @@ getaddrinfo (const char *name, const char *service,
 
 		  if (q->ai_family == PF_INET6 && in6ai != NULL)
 		    {
-		      /* See whether the address is the list of deprecated
-			 or temporary addresses.  */
+		      /* See whether the source address is the list of
+			 deprecated or temporary addresses.  */
 		      struct in6addrinfo tmp;
-		      memcpy (tmp.addr, q->ai_addr, IN6ADDRSZ);
+		      struct sockaddr_in6 *sin6p
+			= (struct sockaddr_in6 *) &results[i].source_addr;
+		      memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
 
 		      struct in6addrinfo *found
 			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),

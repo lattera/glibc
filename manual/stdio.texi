@@ -433,7 +433,7 @@ see @ref{Stream Buffering}.
 @cindex multi-threaded application
 Streams can be used in multi-threaded applications in the same way they
 are used in single-threaded applications.  But the programmer must be
-aware of a the possible complications.  It is important to know about
+aware of the possible complications.  It is important to know about
 these also if the program one writes never use threads since the design
 and implementation of many stream functions is heavily influenced by the
 requirements added by multi-threaded programming.
@@ -1992,7 +1992,7 @@ the precision.  The exponent always contains at least two digits.  The
 The @samp{%g} and @samp{%G} conversions print the argument in the style
 of @samp{%e} or @samp{%E} (respectively) if the exponent would be less
 than -4 or greater than or equal to the precision; otherwise they use
-the @samp{%f} style.  A precision of @code{0}, is taken as 1. is
+the @samp{%f} style.  A precision of @code{0}, is taken as 1.
 Trailing zeros are removed from the fractional portion of the result and
 a decimal-point character appears only if it is followed by a digit.
 

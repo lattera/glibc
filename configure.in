@@ -131,9 +131,9 @@ AC_ARG_ENABLE([shared],
 	      [shared=default])
 AC_ARG_ENABLE([profile],
               AC_HELP_STRING([--enable-profile],
-                             [build profiled library @<:@default=yes@:>@]),
+                             [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
-	      [profile=yes])
+	      [profile=no])
 AC_ARG_ENABLE([omitfp],
               AC_HELP_STRING([--enable-omitfp],
                              [build undebuggable optimized library @<:@default=no@:>@]),
@@ -1259,12 +1259,9 @@ EOF
   if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_protected_directive=yes
   else
-    libc_cv_asm_protected_directive=no
+    AC_MSG_ERROR(assembler support for symbol visibility is required)
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_asm_protected_directive)
-  AC_DEFINE(HAVE_PROTECTED)
-  AC_DEFINE(HAVE_HIDDEN)
 
   if test $libc_cv_asm_protected_directive = yes; then
     AC_CACHE_CHECK(whether __attribute__((visibility())) is supported,
@@ -1283,8 +1280,8 @@ EOF
 		  fi
 		  rm -f conftest.[cs]
 		 ])
-    if test $libc_cv_visibility_attribute = yes; then
-      AC_DEFINE(HAVE_VISIBILITY_ATTRIBUTE)
+    if test $libc_cv_visibility_attribute != yes; then
+      AC_MSG_ERROR(compiler support for visibility attribute is required)
     fi
   fi
 
@@ -1307,7 +1304,7 @@ changequote([,])dnl
 		  rm -f conftest.c conftest.s
 		 ])
     if test $libc_cv_broken_visibility_attribute = yes; then
-      AC_DEFINE(HAVE_BROKEN_VISIBILITY_ATTRIBUTE)
+      AC_MSG_ERROR(working compiler support for visibility attribute is required)
     fi
   fi
 
@@ -1331,7 +1328,7 @@ EOF
 		  rm -f conftest.c conftest.s
 		 ])
   if test $libc_cv_broken_alias_attribute = yes; then
-    AC_DEFINE(HAVE_BROKEN_ALIAS_ATTRIBUTE)
+    AC_MSG_ERROR(working alias attribute support required)
   fi
 
   if test $libc_cv_visibility_attribute = yes; then
@@ -1403,10 +1400,9 @@ EOF
   then
     libc_cv_z_nodelete=yes
   else
-    libc_cv_z_nodelete=no
+    AC_MSG_ERROR(linker with -z nodelete support required)
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_z_nodelete)
 
   AC_CACHE_CHECK(for -z nodlopen option,
 		 libc_cv_z_nodlopen, [dnl
@@ -1420,10 +1416,9 @@ EOF
   then
     libc_cv_z_nodlopen=yes
   else
-    libc_cv_z_nodlopen=no
+    AC_MSG_ERROR(linker with -z nodlopen support required)
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_z_nodlopen)
 
   AC_CACHE_CHECK(for -z initfirst option,
 		 libc_cv_z_initfirst, [dnl
@@ -1437,13 +1432,16 @@ EOF
   then
     libc_cv_z_initfirst=yes
   else
-    libc_cv_z_initfirst=no
+    AC_MSG_ERROR(linker with -z initfirst support required)
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_z_initfirst)
 
-  AC_CACHE_CHECK(for -z relro option,
-		 libc_cv_z_relro, [dnl
+  case "$base_machine" in
+changequote(,)dnl
+    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
+changequote([,])dnl
+      AC_CACHE_CHECK(for -z relro option,
+		     libc_cv_z_relro, [dnl
   libc_cv_z_relro=no
   if AC_TRY_COMMAND([${CC-cc} -v --help 2>&1|grep "z relro" 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1452,10 +1450,12 @@ EOF
       libc_cv_z_relro=yes
     fi
   fi])
-  AC_SUBST(libc_cv_z_relro)
-  if test $libc_cv_z_relro = yes; then
-    AC_DEFINE(HAVE_Z_RELRO)
-  fi
+      if test "$libc_cv_z_relro" = no; then
+        AC_MSG_ERROR(linker with -z relro support required)
+      fi
+      ;;
+    *) ;;
+   esac
 
   AC_CACHE_CHECK(for -Bgroup option,
 		 libc_cv_Bgroup, [dnl

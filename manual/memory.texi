@@ -31,7 +31,7 @@ One of the most basic resources a process has available to it is memory.
 There are a lot of different ways systems organize memory, but in a
 typical one, each process has one linear virtual address space, with
 addresses running from zero to some huge maximum.  It need not be
-contiguous; i.e.  not all of these addresses actually can be used to
+contiguous; i.e., not all of these addresses actually can be used to
 store data.
 
 The virtual memory is divided into pages (4 kilobytes is typical).
@@ -1065,7 +1065,7 @@ This is the total size of memory occupied by free (not in use) chunks.
 
 @item int keepcost
 This is the size of the top-most releasable chunk that normally
-borders the end of the heap (i.e. the high end of the virtual address
+borders the end of the heap (i.e., the high end of the virtual address
 space's data segment).
 
 @end table
@@ -2407,7 +2407,7 @@ of the data segment is.
 @cindex paging
 
 You can tell the system to associate a particular virtual memory page
-with a real page frame and keep it that way --- i.e. cause the page to
+with a real page frame and keep it that way --- i.e., cause the page to
 be paged in if it isn't already and mark it so it will never be paged
 out and consequently will never cause a page fault.  This is called
 @dfn{locking} a page.
@@ -2467,7 +2467,7 @@ A memory lock is associated with a virtual page, not a real frame.  The
 paging rule is: If a frame backs at least one locked page, don't page it
 out.
 
-Memory locks do not stack.  I.e. you can't lock a particular page twice
+Memory locks do not stack.  I.e., you can't lock a particular page twice
 so that it has to be unlocked twice before it is truly unlocked.  It is
 either locked or it isn't.
 

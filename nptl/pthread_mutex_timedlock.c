@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -119,11 +119,9 @@ pthread_mutex_timedlock (mutex, abstime)
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
-	      int newval = id | (oldval & FUTEX_WAITERS);
-
-	      newval
+	      int newval
 		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
-						       newval, oldval);
+						       id, oldval);
 	      if (newval != oldval)
 		{
 		  oldval = newval;

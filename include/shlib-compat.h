@@ -1,5 +1,5 @@
 /* Macros for managing ABI-compatibility definitions using ELF symbol versions.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,8 @@
    in the GLIBC_2.0 version and obsoleted in the GLIBC_2.2 version.  */
 
 # define SHLIB_COMPAT(lib, introduced, obsoleted)			      \
+  _SHLIB_COMPAT (lib, introduced, obsoleted)
+# define _SHLIB_COMPAT(lib, introduced, obsoleted)			      \
   ((IS_IN_##lib - 0)							      \
    && (!(ABI_##lib##_##obsoleted - 0)					      \
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
@@ -62,13 +64,17 @@
    shlib-versions if that is newer.  */
 
 # define versioned_symbol(lib, local, symbol, version) \
-  versioned_symbol_1 (local, symbol, VERSION_##lib##_##version)
-# define versioned_symbol_1(local, symbol, name) \
+  versioned_symbol_1 (lib, local, symbol, version)
+# define versioned_symbol_1(lib, local, symbol, version) \
+  versioned_symbol_2 (local, symbol, VERSION_##lib##_##version)
+# define versioned_symbol_2(local, symbol, name) \
   default_symbol_version (local, symbol, name)
 
 # define compat_symbol(lib, local, symbol, version) \
-  compat_symbol_1 (local, symbol, VERSION_##lib##_##version)
-# define compat_symbol_1(local, symbol, name) \
+  compat_symbol_1 (lib, local, symbol, version)
+# define compat_symbol_1(lib, local, symbol, version) \
+  compat_symbol_2 (local, symbol, VERSION_##lib##_##version)
+# define compat_symbol_2(local, symbol, name) \
   symbol_version (local, symbol, name)
 
 #else

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  IA-64 version.
-   Copyright (C) 1995-1997, 2000-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 2000-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -311,7 +311,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    of the main executable's symbols, as for a COPY reloc, which we don't
    use.  */
 /* ??? Ignore *MSB for now.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || USE___THREAD
 #define elf_machine_type_class(type) \
   (((type) == R_IA64_IPLTLSB || (type) == R_IA64_DTPMOD64LSB		      \
     || (type) == R_IA64_DTPREL64LSB || (type) == R_IA64_TPREL64LSB)	      \
@@ -432,7 +432,7 @@ elf_machine_rela (struct link_map *map,
 	    value = _dl_make_fptr (sym_map, sym, value);
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_PCREL64LSB))
 	    value -= (Elf64_Addr) reloc_addr & -16;
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || defined USE___THREAD)
+#if !defined RTLD_BOOTSTRAP || defined USE___THREAD
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_DTPMOD64LSB))
 # ifdef RTLD_BOOTSTRAP
 	    /* During startup the dynamic linker is always index 1.  */

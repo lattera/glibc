@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,6 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <dl-machine.h>
-#include <sysdep-cancel.h>
 #include <bits/libc-lock.h>
 #include <tls.h>
 
@@ -229,13 +228,17 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed if we look
      up a versioned symbol.  */
-  assert (version == NULL || (flags & ~(DL_LOOKUP_ADD_DEPENDENCY)) == 0);
+  assert (version == NULL || flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
 
   size_t i = 0;
   if (__builtin_expect (skip_map != NULL, 0))
-    /* Search the relevant loaded objects for a definition.  */
-    while ((*scope)->r_list[i] != skip_map)
-      ++i;
+    {
+      /* Search the relevant loaded objects for a definition.  */
+      while ((*scope)->r_list[i] != skip_map)
+	++i;
+
+      assert (i < (*scope)->r_nlist);
+    }
 
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
@@ -338,8 +341,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return _dl_lookup_symbol_x (undef_name, undef_map, ref, symbol_scope,
-				  version, type_class, flags, skip_map);
+      return _dl_lookup_symbol_x (undef_name, undef_map, ref,
+				  symbol_scope, version, type_class,
+				  flags, skip_map);
 
   /* The object is used.  */
   current_value.m->l_used = 1;
@@ -445,12 +449,10 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	    conflict = 1;
 	}
 
-# ifdef USE_TLS
       if (value->s
 	  && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
 				== STT_TLS, 0)))
 	type_class = 4;
-# endif
 
       if (conflict
 	  || GLRO(dl_trace_prelink_map) == undef_map

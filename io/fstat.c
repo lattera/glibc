@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,16 +47,10 @@
 #undef fstat
 #undef __fstat
 int
+attribute_hidden
 __fstat (int fd, struct stat *buf)
 {
   return __fxstat (_STAT_VER, fd, buf);
 }
 
-weak_alias (__fstat, fstat)
-
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tfstat");
-asm (".hidden\t__fstat");
-#endif
+weak_hidden_alias (__fstat, fstat)

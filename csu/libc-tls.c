@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@
  #error makefile bug, this file is for static only
 #endif
 
-#ifdef USE_TLS
 extern ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 
@@ -143,19 +142,19 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
      The initialized value of _dl_tls_static_size is provided by dl-open.c
      to request some surplus that permits dynamic loading of modules with
      IE-model TLS.  */
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   tcb_offset = roundup (memsz + GL(dl_tls_static_size), tcbalign);
   tlsblock = __sbrk (tcb_offset + tcbsize + max_align);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   tcb_offset = roundup (tcbsize, align ?: 1);
   tlsblock = __sbrk (tcb_offset + memsz + max_align
 		     + TLS_PRE_TCB_SIZE + GL(dl_tls_static_size));
   tlsblock += TLS_PRE_TCB_SIZE;
-# else
+#else
   /* In case a model with a different layout for the TCB and DTV
      is defined add another #elif here and in the following #ifs.  */
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
   /* Align the TLS block.  */
   tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
@@ -166,16 +165,16 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   // static_dtv[1].counter = 0;		would be needed if not already done
 
   /* Initialize the TLS block.  */
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   static_dtv[2].pointer.val = ((char *) tlsblock + tcb_offset
 			       - roundup (memsz, align ?: 1));
   static_map.l_tls_offset = roundup (memsz, align ?: 1);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   static_dtv[2].pointer.val = (char *) tlsblock + tcb_offset;
   static_map.l_tls_offset = tcb_offset;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
   static_dtv[2].pointer.is_static = true;
   /* sbrk gives us zero'd memory, so we don't need to clear the remainder.  */
   memcpy (static_dtv[2].pointer.val, initimage, filesz);
@@ -183,16 +182,16 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   /* Install the pointer to the dtv.  */
 
   /* Initialize the thread pointer.  */
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   INSTALL_DTV ((char *) tlsblock + tcb_offset, static_dtv);
 
   const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   INSTALL_DTV (tlsblock, static_dtv);
   const char *lossage = TLS_INIT_TP (tlsblock, 0);
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
   if (__builtin_expect (lossage != NULL, 0))
     __libc_fatal (lossage);
 
@@ -212,11 +211,11 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   memsz = roundup (memsz, align ?: 1);
 
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   memsz += tcbsize;
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   memsz += tcb_offset;
-# endif
+#endif
 
   init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));
 }
@@ -230,11 +229,11 @@ _dl_tls_setup (void)
 {
   init_slotinfo ();
   init_static_tls (
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
 		   TLS_TCB_SIZE,
-# else
+#else
 		   0,
-# endif
+#endif
 		   TLS_TCB_ALIGN);
   return 0;
 }
@@ -248,16 +247,3 @@ __pthread_initialize_minimal (void)
 {
   __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }
-
-#elif defined NONTLS_INIT_TP
-
-/* This is the minimal initialization function used when libpthread is
-   not used.  */
-void
-__attribute__ ((weak))
-__pthread_initialize_minimal (void)
-{
-  NONTLS_INIT_TP;
-}
-
-#endif

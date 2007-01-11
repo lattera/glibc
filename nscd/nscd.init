@@ -49,15 +49,8 @@ prog=nscd
 start () {
     [ -d /var/run/nscd ] || mkdir /var/run/nscd
     [ -d /var/db/nscd ] || mkdir /var/db/nscd
-    secure=""
-#   for table in passwd group hosts
-#   do
-#   	if egrep -q '^'$table':.*nisplus' /etc/nsswitch.conf; then
-#   	    /usr/lib/nscd_nischeck $table || secure="$secure -S $table,yes"
-#   	fi
-#   done
     echo -n $"Starting $prog: "
-    daemon /usr/sbin/nscd $secure
+    daemon /usr/sbin/nscd
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch /var/lock/subsys/nscd

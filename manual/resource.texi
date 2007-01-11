@@ -584,7 +584,7 @@ to}, but doesn't @emph{need to} run occupies the CPU.
 @cindex preemptive scheduling
 When two processes are in contention to use the CPU at any instant, the
 one with the higher absolute priority always gets it.  This is true even if the
-process with the lower priority is already using the CPU (i.e. the
+process with the lower priority is already using the CPU (i.e., the
 scheduling is preemptive).  Of course, we're only talking about
 processes that are running or ``ready to run,'' which means they are
 ready to execute instructions right now.  When a process blocks to wait
@@ -819,7 +819,7 @@ existing policy is not @code{SCHED_OTHER}.
 
 @item
 The calling process does not have @code{CAP_SYS_NICE} permission and its
-owner is not the target process' owner.  I.e.  the effective uid of the
+owner is not the target process' owner.  I.e., the effective uid of the
 calling process is neither the effective nor the real uid of process
 @var{pid}.
 @c We need a cross reference to the capabilities section, when written.
@@ -1185,7 +1185,7 @@ The value of @var{class} is not valid.
 
 @item EPERM
 The call would set the nice value of a process which is owned by a different
-user than the calling process (i.e. the target process' real or effective
+user than the calling process (i.e., the target process' real or effective
 uid does not match the calling process' effective uid) and the calling
 process does not have @code{CAP_SYS_NICE} permission.
 
@@ -1215,7 +1215,7 @@ a process group ID (pgid).
 @comment sys/resource.h
 @comment BSD
 @item PRIO_USER
-All the processes owned by a particular user (i.e. whose real uid
+All the processes owned by a particular user (i.e., whose real uid
 indicates the user).  The argument @var{id} is a user ID (uid).
 @end vtable
 
@@ -1272,7 +1272,7 @@ other process or thread is allowed to use.
 @item
 The access to certain resources (RAM, I/O ports) has different costs
 from different CPUs.  This is the case in NUMA (Non-Uniform Memory
-Architecture) machines.  Preferrably memory should be accessed locally
+Architecture) machines.  Preferably memory should be accessed locally
 but this requirement is usually not visible to the scheduler.
 Therefore forcing a process or thread to the CPUs which have local
 access to the mostly used memory helps to significantly boost the

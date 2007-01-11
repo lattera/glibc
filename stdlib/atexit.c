@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1999, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,14 +43,11 @@ extern void *__dso_handle __attribute__ ((__weak__));
 
 /* Register FUNC to be executed by `exit'.  */
 int
+#ifndef atexit
+attribute_hidden
+#endif
 atexit (void (*func) (void))
 {
   return __cxa_atexit ((void (*) (void *)) func, NULL,
 		       &__dso_handle == NULL ? NULL : __dso_handle);
 }
-
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tatexit");
-#endif
