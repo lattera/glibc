@@ -651,10 +651,11 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (c != '0')
 	    {
 	      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
-		if (c != thousands[cnt])
+		if (thousands[cnt] != cp[cnt])
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
+	      cp += cnt - 1;
 	    }
 	  c = *++cp;
 	}
@@ -725,6 +726,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
+	      cp += cnt - 1;
 	    }
 #endif
 	}
