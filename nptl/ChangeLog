@@ -1,3 +1,9 @@
+2007-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_futex_timed_wait): Undo part of last change, don't negate
+	return value.
+
 2007-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Cleanups.  Define

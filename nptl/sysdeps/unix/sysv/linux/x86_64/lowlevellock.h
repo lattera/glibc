@@ -172,7 +172,7 @@ LLL_STUB_UNWIND_INFO_END
 		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
 		        "d" (_val), "r" (__to)				      \
 		      : "memory", "cc", "r11", "cx");			      \
-    -__status;								      \
+    __status;								      \
   })
 
 
