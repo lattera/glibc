@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -64,6 +64,7 @@ tf (void *arg)
 	      strerror (err), err, strerror (ETIMEDOUT), ETIMEDOUT);
       pthread_exit ((void *) 1l);
     }
+  puts ("child: timedwrlock failed with ETIMEDOUT");
 
   struct timeval tv2;
   (void) gettimeofday (&tv2, NULL);
@@ -93,6 +94,7 @@ tf (void *arg)
       puts ("2nd timedwrlock did not return EINVAL");
       pthread_exit ((void *) 1l);
     }
+  puts ("child: timedwrlock failed with EINVAL");
 
   return NULL;
 }
@@ -145,6 +147,7 @@ do_test (void)
 	  printf ("round %Zu: rwlock_timedrdlock failed\n", cnt);
 	  exit (1);
 	}
+      printf ("%zu: got timedrdlock\n", cnt);
 
       pthread_t th;
       if (pthread_create (&th, NULL, tf, &r) != 0)

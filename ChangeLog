@@ -1,3 +1,9 @@
+2007-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3840]
+	* scripts/check-local-headers.sh: Restrict to testing .o.d, .os.d,
+	and .oS.d files.
+
 2007-01-05  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* stdlib/tst-makecontext.c: Include errno.h.  Change main()

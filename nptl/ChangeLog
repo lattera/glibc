@@ -1,3 +1,8 @@
+2007-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-rwlock7.c: Show some more information in case of correct
+	behavior.
+
 2007-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h

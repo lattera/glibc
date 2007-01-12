@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2005 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ cd "$objpfx"
 
 # Search all dependency files for file names in the include directory.
 # There are a few system headers we are known to use.
-if fgrep "$includedir" */*.d |
+if fgrep "$includedir" */*.{o,os,oS}.d |
 fgrep -v "$includedir/asm" |
 fgrep -v "$includedir/linux" |
 fgrep -v "$includedir/selinux" |
