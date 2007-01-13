@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -911,8 +911,9 @@ cannot handle old request version %d; current version is %d"),
      need to verify that the request type is valid, since it has not
      yet been checked at this point.  */
   if (selinux_enabled
-      && __builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
-      && __builtin_expect (req->type, LASTREQ) < LASTREQ
+      && __builtin_expect (req->type >= GETPWBYNAME, 1)
+      && __builtin_expect (req->type < LASTREQ, 1)
+      && __builtin_expect (req->type < SHUTDOWN || req->type > INVALIDATE, 1)
       && nscd_request_avc_has_perm (fd, req->type) != 0)
     return;
 
