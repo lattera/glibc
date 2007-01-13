@@ -1,5 +1,11 @@
 2007-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i486/bits/atomic.h: Define
+	atomic_compare_and_exchange_val_acq,
+	atomic_compare_and_exchange_bool_acq, and atomic_exchange_and_add
+	using __sync_* built-ins for gcc >= 4.1.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
 	[BZ #3840]
 	* scripts/check-local-headers.sh: Restrict to testing .o.d, .os.d,
 	and .oS.d files.
