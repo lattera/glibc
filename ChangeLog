@@ -1,3 +1,8 @@
+2007-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/string.h: Only redefine strndupa if this is really for
+	libc code.
+
 2007-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_gethst_r.c: Minor cleanups.

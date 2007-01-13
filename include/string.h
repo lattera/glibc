@@ -54,8 +54,9 @@ extern __typeof (strcasecmp_l) __strcasecmp_l;
 extern __typeof (strncasecmp_l) __strncasecmp_l;
 
 /* Alternative version which doesn't pollute glibc's namespace.  */
-#undef strndupa
-#define strndupa(s, n)							      \
+#ifndef NOT_IN_libc
+# undef strndupa
+# define strndupa(s, n)							      \
   (__extension__							      \
     ({									      \
       __const char *__old = (s);					      \
@@ -64,6 +65,7 @@ extern __typeof (strncasecmp_l) __strncasecmp_l;
       __new[__len] = '\0';						      \
       (char *) memcpy (__new, __old, __len);				      \
     }))
+#endif
 
 libc_hidden_proto (__mempcpy)
 libc_hidden_proto (__stpcpy)
