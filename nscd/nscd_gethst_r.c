@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -17,15 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <errno.h>
-#include <netdb.h>
 #include <resolv.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <arpa/nameser.h>
 #include <not-cancel.h>
 
@@ -175,7 +170,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       if (sock == -1)
 	{
 	  __nss_not_use_nscd_hosts = 1;
-	  goto out;;
+	  goto out;
 	}
 
       hst_resp = &hst_resp_mem;
@@ -193,7 +188,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
   if (hst_resp->found == 1)
     {
-      struct iovec vec[4];
       char *cp = buffer;
       uintptr_t align1;
       uintptr_t align2;
@@ -253,6 +247,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       if (h_name == NULL)
 	{
+	  struct iovec vec[4];
+
 	  vec[0].iov_base = resultbuf->h_name;
 	  vec[0].iov_len = hst_resp->h_name_len;
 	  total_len = hst_resp->h_name_len;

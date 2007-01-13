@@ -1,5 +1,7 @@
 2007-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_gethst_r.c: Minor cleanups.
+
 	* nscd/connections.c (handle_request): Check selinux permissions
 	for all non-admin commands.
 
