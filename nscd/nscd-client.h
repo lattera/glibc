@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006
+/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -56,7 +56,6 @@ typedef enum
   GETHOSTBYNAMEv6,
   GETHOSTBYADDR,
   GETHOSTBYADDRv6,
-  LASTDBREQ = GETHOSTBYADDRv6,
   SHUTDOWN,		/* Shut the server down.  */
   GETSTAT,		/* Get the server statistic.  */
   INVALIDATE,           /* Invalidate one special cache.  */
@@ -65,6 +64,9 @@ typedef enum
   GETFDHST,
   GETAI,
   INITGROUPS,
+  GETSERVBYNAME,
+  GETSERVBYPORT,
+  GETFDSERV,
   LASTREQ
 } request_type;
 
@@ -153,6 +155,19 @@ typedef struct
 } initgr_response_header;
 
 
+/* Structure sent in reply to services query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  nscd_ssize_t s_name_len;
+  nscd_ssize_t s_proto_len;
+  nscd_ssize_t s_aliases_cnt;
+  int32_t s_port;
+} serv_response_header;
+
+
 /* Type for offsets in data part of database.  */
 typedef uint32_t ref_t;
 /* Value for invalid/no reference.  */
@@ -186,6 +201,7 @@ struct datahead
     hst_response_header hstdata;
     ai_response_header aidata;
     initgr_response_header initgrdata;
+    serv_response_header servdata;
     nscd_ssize_t align1;
     nscd_time_t align2;
   } data[0];

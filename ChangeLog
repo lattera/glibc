@@ -1,5 +1,8 @@
 2007-01-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Correct
+	computation of keylen.
+
 	* include/string.h: Only redefine strndupa if this is really for
 	libc code.
 

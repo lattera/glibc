@@ -1,7 +1,7 @@
-/* Cache handling for passwd lookup.
-   Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
+/* Cache handling for services lookup.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Ulrich Drepper <drepper@drepper.com>, 2007.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License version 2 as
@@ -19,42 +19,28 @@
 #include <alloca.h>
 #include <assert.h>
 #include <errno.h>
-#include <error.h>
 #include <libintl.h>
-#include <pwd.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <netdb.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <sys/socket.h>
-#include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
-#ifdef HAVE_SENDFILE
-# include <kernel-features.h>
-#endif
+
 
 /* This is the standard reply in case the service is disabled.  */
-static const pw_response_header disabled =
+static const serv_response_header disabled =
 {
   .version = NSCD_VERSION,
   .found = -1,
-  .pw_name_len = 0,
-  .pw_passwd_len = 0,
-  .pw_uid = -1,
-  .pw_gid = -1,
-  .pw_gecos_len = 0,
-  .pw_dir_len = 0,
-  .pw_shell_len = 0
+  .s_name_len = 0,
+  .s_proto_len = 0,
+  .s_aliases_cnt = 0,
+  .s_port = -1
 };
 
 /* This is the struct describing how to write this record.  */
-const struct iovec pwd_iov_disabled =
+const struct iovec serv_iov_disabled =
 {
   .iov_base = (void *) &disabled,
   .iov_len = sizeof (disabled)
@@ -62,24 +48,21 @@ const struct iovec pwd_iov_disabled =
 
 
 /* This is the standard reply in case we haven't found the dataset.  */
-static const pw_response_header notfound =
+static const serv_response_header notfound =
 {
   .version = NSCD_VERSION,
   .found = 0,
-  .pw_name_len = 0,
-  .pw_passwd_len = 0,
-  .pw_uid = -1,
-  .pw_gid = -1,
-  .pw_gecos_len = 0,
-  .pw_dir_len = 0,
-  .pw_shell_len = 0
+  .s_name_len = 0,
+  .s_proto_len = 0,
+  .s_aliases_cnt = 0,
+  .s_port = -1
 };
 
 
 static void
-cache_addpw (struct database_dyn *db, int fd, request_header *req,
-	     const void *key, struct passwd *pwd, uid_t owner,
-	     struct hashentry *he, struct datahead *dh, int errval)
+cache_addserv (struct database_dyn *db, int fd, request_header *req,
+	       const void *key, struct servent *serv, uid_t owner,
+	       struct hashentry *he, struct datahead *dh, int errval)
 {
   ssize_t total;
   ssize_t written;
@@ -90,20 +73,20 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
   struct dataset
   {
     struct datahead head;
-    pw_response_header resp;
+    serv_response_header resp;
     char strdata[0];
   } *dataset;
 
   assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
 
-  if (pwd == NULL)
+  if (serv == NULL)
     {
       if (he != NULL && errval == EAGAIN)
 	{
 	  /* If we have an old record available but cannot find one
 	     now because the service is not available we keep the old
 	     record and make sure it does not get removed.  */
-	  if (reload_count != UINT_MAX && dh->nreloads == reload_count)
+	  if (reload_count != UINT_MAX)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
 
@@ -113,11 +96,10 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
-	  written = total = sizeof (notfound);
+	  total = sizeof (notfound);
 
-	  if (fd != -1)
-	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
-						MSG_NOSIGNAL));
+	  written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+					      MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
 	  /* If we cannot permanently store the result, so be it.  */
@@ -136,7 +118,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      memcpy (&dataset->resp, &notfound, total);
 
 	      /* Copy the key data.  */
-	      char *key_copy = memcpy (dataset->strdata, key, req->key_len);
+	      memcpy (dataset->strdata, key, req->key_len);
 
 	      /* If necessary, we also propagate the data to disk.  */
 	      if (db->persistent)
@@ -151,11 +133,10 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
-	      if (cache_add (req->type, key_copy, req->key_len,
+	      if (cache_add (req->type, &dataset->strdata, req->key_len,
 			     &dataset->head, true, db, owner) < 0)
 		/* Ensure the data can be recovered.  */
 		dataset->head.usable = false;
-
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -170,24 +151,32 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
   else
     {
       /* Determine the I/O structure.  */
-      size_t pw_name_len = strlen (pwd->pw_name) + 1;
-      size_t pw_passwd_len = strlen (pwd->pw_passwd) + 1;
-      size_t pw_gecos_len = strlen (pwd->pw_gecos) + 1;
-      size_t pw_dir_len = strlen (pwd->pw_dir) + 1;
-      size_t pw_shell_len = strlen (pwd->pw_shell) + 1;
+      size_t s_name_len = strlen (serv->s_name) + 1;
+      size_t s_proto_len = strlen (serv->s_proto) + 1;
+      uint32_t *s_aliases_len;
+      size_t s_aliases_cnt;
+      char *aliases;
       char *cp;
-      const size_t key_len = strlen (key);
-      const size_t buf_len = 3 * sizeof (pwd->pw_uid) + key_len + 1;
-      char *buf = alloca (buf_len);
-      ssize_t n;
+      size_t cnt;
 
-      /* We need this to insert the `byuid' entry.  */
-      int key_offset;
-      n = snprintf (buf, buf_len, "%d%c%n%s", pwd->pw_uid, '\0',
-		    &key_offset, (char *) key) + 1;
+      /* Determine the number of aliases.  */
+      s_aliases_cnt = 0;
+      for (cnt = 0; serv->s_aliases[cnt] != NULL; ++cnt)
+	++s_aliases_cnt;
+      /* Determine the length of all aliases.  */
+      s_aliases_len = (uint32_t *) alloca (s_aliases_cnt * sizeof (uint32_t));
+      total = 0;
+      for (cnt = 0; cnt < s_aliases_cnt; ++cnt)
+	{
+	  s_aliases_len[cnt] = strlen (serv->s_aliases[cnt]) + 1;
+	  total += s_aliases_len[cnt];
+	}
 
-      written = total = (sizeof (struct dataset) + pw_name_len + pw_passwd_len
-			 + pw_gecos_len + pw_dir_len + pw_shell_len);
+      total += (sizeof (struct dataset)
+		+ s_name_len
+		+ s_proto_len
+		+ s_aliases_cnt * sizeof (uint32_t));
+      written = total;
 
       /* If we refill the cache, first assume the reconrd did not
 	 change.  Allocate memory on the cache since it is likely
@@ -198,7 +187,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 
       if (he == NULL)
 	{
-	  dataset = (struct dataset *) mempool_alloc (db, total + n);
+	  dataset = (struct dataset *) mempool_alloc (db,
+						      total + req->key_len);
 	  if (dataset == NULL)
 	    ++db->head->addfailed;
 	}
@@ -208,13 +198,13 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  /* We cannot permanently add the result in the moment.  But
 	     we can provide the result as is.  Store the data in some
 	     temporary memory.  */
-	  dataset = (struct dataset *) alloca (total + n);
+	  dataset = (struct dataset *) alloca (total + req->key_len);
 
 	  /* We cannot add this record to the permanent database.  */
 	  alloca_used = true;
 	}
 
-      dataset->head.allocsize = total + n;
+      dataset->head.allocsize = total + req->key_len;
       dataset->head.recsize = total - offsetof (struct dataset, resp);
       dataset->head.notfound = false;
       dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
@@ -225,27 +215,27 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
-      dataset->resp.pw_name_len = pw_name_len;
-      dataset->resp.pw_passwd_len = pw_passwd_len;
-      dataset->resp.pw_uid = pwd->pw_uid;
-      dataset->resp.pw_gid = pwd->pw_gid;
-      dataset->resp.pw_gecos_len = pw_gecos_len;
-      dataset->resp.pw_dir_len = pw_dir_len;
-      dataset->resp.pw_shell_len = pw_shell_len;
+      dataset->resp.s_name_len = s_name_len;
+      dataset->resp.s_proto_len = s_proto_len;
+      dataset->resp.s_port = serv->s_port;
+      dataset->resp.s_aliases_cnt = s_aliases_cnt;
 
       cp = dataset->strdata;
 
-      /* Copy the strings over into the buffer.  */
-      cp = mempcpy (cp, pwd->pw_name, pw_name_len);
-      cp = mempcpy (cp, pwd->pw_passwd, pw_passwd_len);
-      cp = mempcpy (cp, pwd->pw_gecos, pw_gecos_len);
-      cp = mempcpy (cp, pwd->pw_dir, pw_dir_len);
-      cp = mempcpy (cp, pwd->pw_shell, pw_shell_len);
+      cp = mempcpy (cp, serv->s_name, s_name_len);
+      cp = mempcpy (cp, serv->s_proto, s_proto_len);
+      cp = mempcpy (cp, s_aliases_len, s_aliases_cnt * sizeof (uint32_t));
 
-      /* Finally the stringified UID value.  */
-      memcpy (cp, buf, n);
-      char *key_copy = cp + key_offset;
-      assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
+      /* Then the aliases.  */
+      aliases = cp;
+      for (cnt = 0; cnt < s_aliases_cnt; ++cnt)
+	cp = mempcpy (cp, serv->s_aliases[cnt], s_aliases_len[cnt]);
+
+      assert (cp
+	      == dataset->strdata + total - offsetof (struct dataset,
+						      strdata));
+
+      char *key_copy = memcpy (cp, key, req->key_len);
 
       /* Now we can determine whether on refill we have to create a new
 	 record or not.  */
@@ -253,7 +243,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	{
 	  assert (fd == -1);
 
-	  if (total + n == dh->allocsize
+	  if (total + req->key_len == dh->allocsize
 	      && total - offsetof (struct dataset, resp) == dh->recsize
 	      && memcmp (&dataset->resp, dh->data,
 			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
@@ -269,13 +259,15 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      /* We have to create a new record.  Just allocate
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
-		= (struct dataset *) mempool_alloc (db, total + n);
+		= (struct dataset *) mempool_alloc (db, total + req->key_len);
 	      if (newp != NULL)
 		{
-		  /* Adjust pointer into the memory block.  */
-		  cp = (char *) newp + (cp - (char *) dataset);
+		  /* Adjust pointers into the memory block.  */
+		  aliases = (char *) newp + (aliases - (char *) dataset);
+		  if (key_copy != NULL)
+		    key_copy = (char *) newp + (key_copy - (char *) dataset);
 
-		  dataset = memcpy (newp, dataset, total + n);
+		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
 
@@ -287,7 +279,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* We write the dataset before inserting it to the database
 	     since while inserting this thread might block and so would
-	     unnecessarily let the receiver wait.  */
+	     unnecessarily keep the receiver waiting.  */
 	  assert (fd != -1);
 
 #ifdef HAVE_SENDFILE
@@ -298,8 +290,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      assert ((char *) &dataset->resp - (char *) db->head
 		      + total
 		      <= (sizeof (struct database_pers_head)
-                          + db->head->module * sizeof (ref_t)
-                          + db->head->data_size));
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
 	      written = sendfileall (fd, db->wr_fd,
 				     (char *) &dataset->resp
 				     - (char *) db->head, total);
@@ -316,7 +308,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    written = writeall (fd, &dataset->resp, total);
 	}
 
-
       /* Add the record to the database.  But only if it has not been
 	 stored on the stack.  */
       if (! alloca_used)
@@ -327,64 +318,19 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      // XXX async OK?
 	      uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
 	      msync ((void *) pval,
-		     ((uintptr_t) dataset & pagesize_m1) + total + n,
-		     MS_ASYNC);
+		     ((uintptr_t) dataset & pagesize_m1)
+		     + total + req->key_len, MS_ASYNC);
 	    }
 
 	  /* Now get the lock to safely insert the records.  */
 	  pthread_rwlock_rdlock (&db->lock);
 
-	  /* NB: in the following code we always must add the entry
-	     marked with FIRST first.  Otherwise we end up with
-	     dangling "pointers" in case a latter hash entry cannot be
-	     added.  */
-	  bool first = true;
-
-	  /* If the request was by UID, add that entry first.  */
-	  if (req->type == GETPWBYUID)
-	    {
-	      if (cache_add (GETPWBYUID, cp, key_offset, &dataset->head, true,
-			     db, owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the data gets
-		     discarded.  */
-		  dataset->head.usable = false;
-		  goto out;
-		}
-
-	      first = false;
-	    }
-	  /* If the key is different from the name add a separate entry.  */
-	  else if (strcmp (key_copy, dataset->strdata) != 0)
-	    {
-	      if (cache_add (GETPWBYNAME, key_copy, key_len + 1,
-			     &dataset->head, true, db, owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the data gets
-		     discarded.  */
-		  dataset->head.usable = false;
-		  goto out;
-		}
-
-	      first = false;
-	    }
-
-	  /* We have to add the value for both, byname and byuid.  */
-	  if ((req->type == GETPWBYNAME || db->propagate)
-	      && __builtin_expect (cache_add (GETPWBYNAME, dataset->strdata,
-					      pw_name_len, &dataset->head,
-					      first, db, owner) == 0, 1))
-	    {
-	      if (req->type == GETPWBYNAME && db->propagate)
-		(void) cache_add (GETPWBYUID, cp, key_offset, &dataset->head,
-				  req->type != GETPWBYNAME, db, owner);
-	    }
-	  else if (first)
-	    /* Could not allocate memory.  Make sure the data gets
-	       discarded.  */
+	  if (cache_add (req->type, key_copy, req->key_len,
+			 &dataset->head, true, db, owner) < 0)
+	    /* Could not allocate memory.  Make sure the
+	       data gets discarded.  */
 	    dataset->head.usable = false;
 
-	out:
 	  pthread_rwlock_unlock (&db->lock);
 	}
     }
@@ -398,28 +344,32 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-union keytype
-{
-  void *v;
-  uid_t u;
-};
-
-
 static int
-lookup (int type, union keytype key, struct passwd *resultbufp, char *buffer,
-	size_t buflen, struct passwd **pwd)
+lookup (int type, char *key, struct servent *resultbufp, char *buffer,
+	size_t buflen, struct servent **serv)
 {
-  if (type == GETPWBYNAME)
-    return __getpwnam_r (key.v, resultbufp, buffer, buflen, pwd);
-  else
-    return __getpwuid_r (key.u, resultbufp, buffer, buflen, pwd);
+  char *proto = strrchr (key, '/');
+  if (proto != NULL && proto != key)
+    {
+      key = strndupa (key, proto - key);
+      if (proto[1] == '\0')
+	proto = NULL;
+      else
+	++proto;
+    }
+
+  if (type == GETSERVBYNAME)
+    return __getservbyname_r (key, proto, resultbufp, buffer, buflen, serv);
+
+  assert (type == GETSERVBYPORT);
+  return __getservbyport_r (atol (key), proto, resultbufp, buffer, buflen,
+			    serv);
 }
 
 
 static void
-addpwbyX (struct database_dyn *db, int fd, request_header *req,
-	  union keytype key, const char *keystr, uid_t c_uid,
-	  struct hashentry *he, struct datahead *dh)
+addservbyX (struct database_dyn *db, int fd, request_header *req,
+	    char *key, uid_t uid, struct hashentry *he, struct datahead *dh)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -427,20 +377,20 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
      pruning function only will look at the timestamp.  */
   size_t buflen = 1024;
   char *buffer = (char *) alloca (buflen);
-  struct passwd resultbuf;
-  struct passwd *pwd;
+  struct servent resultbuf;
+  struct servent *serv;
   bool use_malloc = false;
   int errval = 0;
 
   if (__builtin_expect (debug_level > 0, 0))
     {
       if (he == NULL)
-	dbg_log (_("Haven't found \"%s\" in password cache!"), keystr);
+	dbg_log (_("Haven't found \"%s\" in services cache!"), key);
       else
-	dbg_log (_("Reloading \"%s\" in password cache!"), keystr);
+	dbg_log (_("Reloading \"%s\" in services cache!"), key);
     }
 
-  while (lookup (req->type, key, &resultbuf, buffer, buflen, &pwd) != 0
+  while (lookup (req->type, key, &resultbuf, buffer, buflen, &serv) != 0
 	 && (errval = errno) == ERANGE)
     {
       errno = 0;
@@ -455,7 +405,7 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	      /* We ran out of memory.  We cannot do anything but
 		 sending a negative response.  In reality this should
 		 never happen.  */
-	      pwd = NULL;
+	      serv = NULL;
 	      buffer = old_buffer;
 
 	      /* We set the error to indicate this is (possibly) a
@@ -472,8 +422,7 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
-  /* Add the entry to the cache.  */
-  cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh, errval);
+  cache_addserv (db, fd, req, key, serv, uid, he, dh, errval);
 
   if (use_malloc)
     free (buffer);
@@ -481,68 +430,44 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 
 
 void
-addpwbyname (struct database_dyn *db, int fd, request_header *req,
-	     void *key, uid_t c_uid)
+addservbyname (struct database_dyn *db, int fd, request_header *req,
+	       void *key, uid_t uid)
 {
-  union keytype u = { .v = key };
-
-  addpwbyX (db, fd, req, u, key, c_uid, NULL, NULL);
+  addservbyX (db, fd, req, key, uid, NULL, NULL);
 }
 
 
 void
-readdpwbyname (struct database_dyn *db, struct hashentry *he,
-	       struct datahead *dh)
+readdservbyname (struct database_dyn *db, struct hashentry *he,
+		 struct datahead *dh)
 {
   request_header req =
     {
-      .type = GETPWBYNAME,
+      .type = GETSERVBYNAME,
       .key_len = he->len
     };
-  union keytype u = { .v = db->data + he->key };
 
-  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
 
 
 void
-addpwbyuid (struct database_dyn *db, int fd, request_header *req,
-	    void *key, uid_t c_uid)
+addservbyport (struct database_dyn *db, int fd, request_header *req,
+	       void *key, uid_t uid)
 {
-  char *ep;
-  uid_t uid = strtoul ((char *) key, &ep, 10);
-
-  if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
-    {
-      if (debug_level > 0)
-        dbg_log (_("Invalid numeric uid \"%s\"!"), (char *) key);
-
-      errno = EINVAL;
-      return;
-    }
-
-  union keytype u = { .u = uid };
-
-  addpwbyX (db, fd, req, u, key, c_uid, NULL, NULL);
+  addservbyX (db, fd, req, key, uid, NULL, NULL);
 }
 
 
 void
-readdpwbyuid (struct database_dyn *db, struct hashentry *he,
-	      struct datahead *dh)
+readdservbyport (struct database_dyn *db, struct hashentry *he,
+		 struct datahead *dh)
 {
-  char *ep;
-  uid_t uid = strtoul (db->data + he->key, &ep, 10);
-
-  /* Since the key has been added before it must be OK.  */
-  assert (*(db->data + he->key) != '\0' && *ep == '\0');
-
   request_header req =
     {
-      .type = GETPWBYUID,
+      .type = GETSERVBYPORT,
       .key_len = he->len
     };
-  union keytype u = { .u = uid };
 
-  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }

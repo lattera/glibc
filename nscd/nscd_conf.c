@@ -1,4 +1,4 @@
-/* Copyright (c) 1998,2000,2003,2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2003-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -37,11 +37,12 @@ extern char *xstrdup (const char *s);
 
 
 /* Names of the databases.  */
-const char *dbnames[lastdb] =
+const char *const dbnames[lastdb] =
 {
   [pwddb] = "passwd",
   [grpdb] = "group",
-  [hstdb] = "hosts"
+  [hstdb] = "hosts",
+  [servdb] = "services"
 };
 
 
@@ -52,7 +53,7 @@ find_db (const char *name)
     if (strcmp (name, dbnames[cnt]) == 0)
       return cnt;
 
-  error (0, 0, _("database %s is not supported\n"), name);
+  error (0, 0, _("database %s is not supported"), name);
   return -1;
 }
 

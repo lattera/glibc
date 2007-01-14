@@ -332,15 +332,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	    exit (EXIT_FAILURE);
 
 	  request_header req;
-	  if (strcmp (arg, "passwd") == 0)
-	    req.key_len = sizeof "passwd";
-	  else if (strcmp (arg, "group") == 0)
-	    req.key_len = sizeof "group";
-	  else if (strcmp (arg, "hosts") == 0)
-	    req.key_len = sizeof "hosts";
-	  else
+	  dbtype cnt;
+	  for (cnt = pwddb; cnt < lastdb; ++cnt)
+	    if (strcmp (arg, dbnames[cnt]) == 0)
+	      break;
+
+	  if (cnt == lastdb)
 	    return ARGP_ERR_UNKNOWN;
 
+	  req.key_len = strlen (arg) + 1;
 	  req.version = NSCD_VERSION;
 	  req.type = INVALIDATE;
 

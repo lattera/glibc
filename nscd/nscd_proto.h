@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2000, 2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -35,6 +35,7 @@ struct nscd_ai_result;
 extern int __nss_not_use_nscd_passwd attribute_hidden;
 extern int __nss_not_use_nscd_group attribute_hidden;
 extern int __nss_not_use_nscd_hosts attribute_hidden;
+extern int __nss_not_use_nscd_services attribute_hidden;
 
 extern int __nscd_getpwnam_r (const char *name, struct passwd *resultbuf,
 			      char *buffer, size_t buflen,
@@ -64,4 +65,11 @@ extern int __nscd_getai (const char *key, struct nscd_ai_result **result,
 			 int *h_errnop);
 extern int __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 				gid_t **groupsp, long int limit);
+extern int __nscd_getservbyname_r (const char *name, const char *proto,
+				   struct servent *result_buf, char *buf,
+				   size_t buflen, struct servent **result);
+extern int __nscd_getservbyport_r (int port, const char *proto,
+				   struct servent *result_buf, char *buf,
+				   size_t buflen, struct servent **result);
+
 #endif /* _NSCD_PROTO_H */

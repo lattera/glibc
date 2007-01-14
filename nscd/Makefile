@@ -1,4 +1,4 @@
-# Copyright (C) 1998,2000,2002,2003,2004,2005,2006
+# Copyright (C) 1998,2000,2002,2003,2004,2005,2006,2007
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -22,7 +22,8 @@
 #
 subdir	:= nscd
 
-routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai nscd_initgroups
+routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
+	    nscd_initgroups nscd_getserv_r
 aux	:= nscd_helper
 
 include ../Makeconfig
@@ -32,6 +33,7 @@ vpath %.c ../locale/programs
 
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
+		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
 		xmalloc xstrdup aicache initgrcache gai
 
@@ -117,6 +119,9 @@ CFLAGS-aicache.c += $(nscd-cflags)
 CFLAGS-selinux.c += $(nscd-cflags)
 CFLAGS-initgrcache.c += $(nscd-cflags)
 CFLAGS-gai.c += $(nscd-cflags)
+CFLAGS-servicescache.c += $(nscd-cflags)
+CFLAGS-getsrvbynm_r.c += $(nscd-cflags)
+CFLAGS-getsrvbypt_r.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 relro-LDFLAGS += -Wl,-z,now

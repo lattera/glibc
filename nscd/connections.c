@@ -75,7 +75,7 @@ static void begin_drop_privileges (void);
 static void finish_drop_privileges (void);
 
 /* Map request type to a string.  */
-const char *serv2str[LASTREQ] =
+const char *const serv2str[LASTREQ] =
 {
   [GETPWBYNAME] = "GETPWBYNAME",
   [GETPWBYUID] = "GETPWBYUID",
@@ -92,7 +92,10 @@ const char *serv2str[LASTREQ] =
   [GETFDGR] = "GETFDGR",
   [GETFDHST] = "GETFDHST",
   [GETAI] = "GETAI",
-  [INITGROUPS] = "INITGROUPS"
+  [INITGROUPS] = "INITGROUPS",
+  [GETSERVBYNAME] = "GETSERVBYNAME",
+  [GETSERVBYPORT] = "GETSERVBYPORT",
+  [GETFDSERV] = "GETFDSERV"
 };
 
 /* The control data structures for the services.  */
@@ -107,6 +110,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -125,6 +129,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
@@ -143,10 +148,30 @@ struct database_dyn dbs[lastdb] =
     .propagate = 0,		/* Not used.  */
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 1,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
     .postimeout = 3600,
+    .negtimeout = 20,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
+  },
+  [servdb] = {
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .enabled = 0,
+    .check_file = 1,
+    .persistent = 0,
+    .propagate = 0,		/* Not used.  */
+    .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
+    .filename = "/etc/services",
+    .db_filename = _PATH_NSCD_SERVICES_DB,
+    .disabled_iov = &serv_iov_disabled,
+    .postimeout = 28800,
     .negtimeout = 20,
     .wr_fd = -1,
     .ro_fd = -1,
@@ -170,7 +195,10 @@ static struct database_dyn *const serv2db[LASTREQ] =
   [GETFDGR] = &dbs[grpdb],
   [GETFDHST] = &dbs[hstdb],
   [GETAI] = &dbs[hstdb],
-  [INITGROUPS] = &dbs[grpdb]
+  [INITGROUPS] = &dbs[grpdb],
+  [GETSERVBYNAME] = &dbs[servdb],
+  [GETSERVBYPORT] = &dbs[servdb],
+  [GETFDSERV] = &dbs[servdb]
 };
 
 
@@ -305,7 +333,7 @@ check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
 static int
 verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 {
-  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb);
+  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb || dbnr == servdb);
 
   time_t now = time (NULL);
 
@@ -821,18 +849,16 @@ invalidate_cache (char *key, int fd)
   dbtype number;
   int32_t resp;
 
-  if (strcmp (key, "passwd") == 0)
-    number = pwddb;
-  else if (strcmp (key, "group") == 0)
-    number = grpdb;
-  else if (__builtin_expect (strcmp (key, "hosts"), 0) == 0)
-    {
-      number = hstdb;
+  for (number = pwddb; number < lastdb; ++number)
+    if (strcmp (key, dbnames[number]) == 0)
+      {
+	if (dbs[number].reset_res)
+	  res_init ();
 
-      /* Re-initialize the resolver.  resolv.conf might have changed.  */
-      res_init ();
-    }
-  else
+	break;
+      }
+
+  if (number == lastdb)
     {
       resp = EINVAL;
       writeall (fd, &resp, sizeof (resp));
@@ -922,8 +948,9 @@ cannot handle old request version %d; current version is %d"),
   // XXX Clean up so that each new command need not introduce a
   // XXX new conditional.
   if ((__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
-       && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
-      || req->type == GETAI || req->type == INITGROUPS)
+       && __builtin_expect (req->type, GETHOSTBYADDRv6) <= GETHOSTBYADDRv6)
+      || req->type == GETAI || req->type == INITGROUPS
+      || req->type == GETSERVBYNAME || req->type == GETSERVBYPORT)
     {
       if (__builtin_expect (debug_level, 0) > 0)
 	{
@@ -1067,6 +1094,14 @@ cannot handle old request version %d; current version is %d"),
       addinitgroups (db, fd, req, key, uid);
       break;
 
+    case GETSERVBYNAME:
+      addservbyname (db, fd, req, key, uid);
+      break;
+
+    case GETSERVBYPORT:
+      addservbyport (db, fd, req, key, uid);
+      break;
+
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
@@ -1112,6 +1147,7 @@ cannot handle old request version %d; current version is %d"),
     case GETFDPW:
     case GETFDGR:
     case GETFDHST:
+    case GETFDSERV:
 #ifdef SCM_RIGHTS
       send_ro_fd (serv2db[req->type], key, fd);
 #endif
@@ -1153,7 +1189,7 @@ cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
       if (n == -1)
 	{
 	  dbg_log (_("\
-cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+cannot read /proc/self/cmdline: %s; disabling paranoia mode"),
 		   strerror (errno));
 
 	  close (fd);

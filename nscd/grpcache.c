@@ -1,5 +1,5 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -445,23 +445,14 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in group cache!"), keystr);
     }
 
-#if 0
-  uid_t oldeuid = 0;
-  if (db->secure)
-    {
-      oldeuid = geteuid ();
-      pthread_seteuid_np (uid);
-    }
-#endif
-
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &grp) != 0
 	 && (errval = errno) == ERANGE)
     {
-      char *old_buffer = buffer;
       errno = 0;
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  char *old_buffer = buffer;
 	  buflen *= 2;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
@@ -485,11 +476,6 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
 	   with the previously allocated buffer.  */
 	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
-
-#if 0
-  if (db->secure)
-    pthread_seteuid_np (oldeuid);
-#endif
 
   cache_addgr (db, fd, req, keystr, grp, uid, he, dh, errval);
 

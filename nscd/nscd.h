@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -38,6 +38,7 @@ typedef enum
   pwddb,
   grpdb,
   hstdb,
+  servdb,
   lastdb
 } dbtype;
 
@@ -65,7 +66,8 @@ struct database_dyn
   int persistent;
   int shared;
   int propagate;
-  const char filename[12];
+  int reset_res;
+  const char filename[16];
   const char *db_filename;
   time_t file_mtime;
   size_t suggested_module;
@@ -92,6 +94,7 @@ struct database_dyn
 #define _PATH_NSCD_PASSWD_DB	"/var/db/nscd/passwd"
 #define _PATH_NSCD_GROUP_DB	"/var/db/nscd/group"
 #define _PATH_NSCD_HOSTS_DB	"/var/db/nscd/hosts"
+#define _PATH_NSCD_SERVICES_DB	"/var/db/nscd/services"
 
 /* Path used when not using persistent storage.  */
 #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
@@ -110,12 +113,13 @@ struct database_dyn
 
 /* Global variables.  */
 extern struct database_dyn dbs[lastdb];
-extern const char *dbnames[lastdb];
-extern const char *serv2str[LASTREQ];
+extern const char *const dbnames[lastdb];
+extern const char *const serv2str[LASTREQ];
 
 extern const struct iovec pwd_iov_disabled;
 extern const struct iovec grp_iov_disabled;
 extern const struct iovec hst_iov_disabled;
+extern const struct iovec serv_iov_disabled;
 
 
 /* Initial number of threads to run.  */
@@ -236,6 +240,16 @@ extern void readdhstai (struct database_dyn *db, struct hashentry *he,
 extern void addinitgroups (struct database_dyn *db, int fd,
 			   request_header *req, void *key, uid_t uid);
 extern void readdinitgroups (struct database_dyn *db, struct hashentry *he,
+			     struct datahead *dh);
+
+/* servicecache.c */
+extern void addservbyname (struct database_dyn *db, int fd,
+			   request_header *req, void *key, uid_t uid);
+extern void readdservbyname (struct database_dyn *db, struct hashentry *he,
+			     struct datahead *dh);
+extern void addservbyport (struct database_dyn *db, int fd,
+			   request_header *req, void *key, uid_t uid);
+extern void readdservbyport (struct database_dyn *db, struct hashentry *he,
 			     struct datahead *dh);
 
 /* mem.c */

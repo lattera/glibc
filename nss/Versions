@@ -9,7 +9,7 @@ libc {
   }
   GLIBC_PRIVATE {
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
-    __nss_disable_nscd; __nss_lookup_function;
+    __nss_disable_nscd; __nss_lookup_function; __nss_services_lookup;
   }
 }
 

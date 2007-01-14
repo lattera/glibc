@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,6 +79,8 @@ CFLAGS-getrpcent_r.c = -fexceptions
 CFLAGS-getrpcent.c = -fexceptions
 CFLAGS-getservent_r.c = -fexceptions
 CFLAGS-getservent.c = -fexceptions
+CFLAGS-getsrvbynm_r.c = -DUSE_NSCD=1
+CFLAGS-getsrvbypt_r.c = -DUSE_NSCD=1
 CFLAGS-getprtent_r.c = -fexceptions
 CFLAGS-getprtent.c = -fexceptions
 CFLAGS-either_ntoh.c = -fexceptions

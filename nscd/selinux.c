@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -63,7 +63,12 @@ static const int perms[LASTREQ] =
   [GETFDGR] = NSCD__SHMEMGRP,
   [GETFDHST] = NSCD__SHMEMHOST,
   [GETAI] = NSCD__GETHOST,
-  [INITGROUPS] = NSCD__GETGRP
+  [INITGROUPS] = NSCD__GETGRP,
+#ifdef NSCD__GETSERV
+  [GETSERVBYNAME] = NSCD__GETSERV,
+  [GETSERVBYPORT] = NSCD__GETSERV,
+  [GETFDSERV] = NSCD__SHMEMSERV,
+#endif
 };
 
 /* Store an entry ref to speed AVC decisions.  */

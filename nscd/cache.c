@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -38,6 +38,25 @@
 /* Number of times a value is reloaded without being used.  UINT_MAX
    means unlimited.  */
 unsigned int reload_count = DEFAULT_RELOAD_LIMIT;
+
+
+static void (*const readdfcts[LASTREQ]) (struct database_dyn *,
+					 struct hashentry *,
+					 struct datahead *) =
+{
+  [GETPWBYNAME] = readdpwbyname,
+  [GETPWBYUID] = readdpwbyuid,
+  [GETGRBYNAME] = readdgrbyname,
+  [GETGRBYGID] = readdgrbygid,
+  [GETHOSTBYNAME] = readdhstbyname,
+  [GETHOSTBYNAMEv6] = readdhstbynamev6,
+  [GETHOSTBYADDR] = readdhstbyaddr,
+  [GETHOSTBYADDRv6] = readdhstbyaddrv6,
+  [GETAI] = readdhstai,
+  [INITGROUPS] = readdinitgroups,
+  [GETSERVBYNAME] = readdservbyname,
+  [GETSERVBYPORT] = readdservbyport
+};
 
 
 /* Search the cache for a matching entry and return it when found.  If
@@ -328,51 +347,10 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		      /* Reload the value.  We do this only for the
 			 initially used key, not the additionally
 			 added derived value.  */
-		      switch (runp->type)
-			{
-			case GETPWBYNAME:
-			  readdpwbyname (table, runp, dh);
-			  break;
+		      assert (runp->type < LASTREQ
+			      && readdfcts[runp->type] != NULL);
 
-			case GETPWBYUID:
-			  readdpwbyuid (table, runp, dh);
-			  break;
-
-			case GETGRBYNAME:
-			  readdgrbyname (table, runp, dh);
-			  break;
-
-			case GETGRBYGID:
-			  readdgrbygid (table, runp, dh);
-			  break;
-
-			case GETHOSTBYNAME:
-			  readdhstbyname (table, runp, dh);
-			  break;
-
-			case GETHOSTBYNAMEv6:
-			  readdhstbynamev6 (table, runp, dh);
-			  break;
-
-			case GETHOSTBYADDR:
-			  readdhstbyaddr (table, runp, dh);
-			  break;
-
-			case GETHOSTBYADDRv6:
-			  readdhstbyaddrv6 (table, runp, dh);
-			  break;
-
-			case GETAI:
-			  readdhstai (table, runp, dh);
-			  break;
-
-			case INITGROUPS:
-			  readdinitgroups (table, runp, dh);
-			  break;
-
-			default:
-			  assert (! "should never happen");
-			}
+		      readdfcts[runp->type] (table, runp, dh);
 
 		      /* If the entry has been replaced, we might need
 			 cleanup.  */
