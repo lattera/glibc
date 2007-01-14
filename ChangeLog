@@ -1,5 +1,49 @@
 2007-01-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/Makefile: Define CFLAGS-getsrvbynm_r.c and
+	CFLAGS-getsrvbynpt_r.c.
+	* nscd/getsrvbynm_r.c: New file.
+	* nscd/getsrvbypt_r.c: New file.
+	* nscd/nscd_getserv_r.c: New file.
+	* nscd/servicescache.c: New file.
+	* nscd/Makefile (routines): Add nscd_getserv_r.
+	(nscd-modules): Add getsrvbynm_r, getsrvbypt_r, and servicescache.
+	Define CFLAGS-servicescache.c, CFLAGS-getsrvbynm_r.c, and
+	CFLAGS-getsrvbypt_r.c.
+	* nscd/cache.c (prune_cache): Rewrite to get re-add function from
+	table.  Add entries for services database.
+	* nscd/connections.c (serv2str): Mark as const.  Add entries for
+	services database.
+	(dbs): Add .reset_res and servdb initialization.
+	(serv2db): Add entries for services database.
+	(verify_persistent_db): Accept dbnr == servdb.
+	(invalidate_cache): Rewrite database name recognition to use a table.
+	Call res_init() if .reset_res is set for database.
+	(handle_request): Add code to handle services database.
+	* nscd/gai.c: Don't define __getservbyname_r.
+	* nscd/nscd-client.h (request_type): Remove LASTDBREQ, add
+	GETSERVBYNAME, GETSERVBYPORT, GETFDSERV.
+	(serv_response_header): Define.
+	(struct datahead): Add serv_response_header member.
+	* nscd/nscd.c (parse_opt): Rewrite parsing of -i parameter value
+	using table.
+	* nscd/nscd.conf: Add entries for services database.
+	* nscd/nscd.h: Adjust declaration of dbnames and serv2str.
+	Declare serv_iov_disabled.
+	Declare addservbyname, readdservbyname, addservbyport, and
+	readdservbyport.
+	* nscd/nscd_conf.c (dbnames): Mark as const.  Add services entry.
+	(find_db): Fix error message.
+	* nscd/nscd_proto.h: Declare __nss_not_use_nscd_services,
+	__nscd_getservbyname_r, and __nscd_getservbyport_r.
+	* nscd/selinux.c (perms): Add entries for services database.
+	* nss/Versions: Export __nss_services_lookup with GLIBC_PRIVATE.
+	* nss/nsswitch.c (__nss_disable_nscd): Also disable services database.
+
+	* nscd/grpcache.c: Remove obsolete code.  Cleanups.
+	* nscd/hstcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Correct
 	computation of keylen.
 
