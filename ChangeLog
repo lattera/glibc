@@ -1,3 +1,28 @@
+2007-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/op-common.h (FP_TRUNC): When truncating a NaN, clear
+	workbits in semi-raw fraction.
+
+	* math/test-misc.c: Add new tests.
+
+2007-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* math/basic-test.c: Include test-skeleton.c.
+	(TEST_TRUNC): Define.
+	(truncdfsf_test, trunctfsf_test, trunctfdf_test): New.
+	(main): Rename to ...
+	(do_test): ...this.  Run new tests.
+	(TEST_FUNCTION): Define.
+
+2006-10-05  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Joe Kerian  <jkerian@us.us.ibm.com>
+
+	[BZ #2749]
+	* soft-fp/op-4.h (__FP_FRAC_SUB_3, __FP_FRAC_SUB_4): Correct borrow
+	handling for high words.
+	* soft-fp/op-common.h (_FP_OVERFLOW_SEMIRAW): Always set inexact
+	and overflow for infinity.
+
 2007-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (handle_request): Add a __builtin_expect.
