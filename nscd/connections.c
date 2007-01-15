@@ -970,7 +970,7 @@ cannot handle old request version %d; current version is %d"),
 	}
 
       /* Is this service enabled?  */
-      if (!db->enabled)
+      if (__builtin_expect (!db->enabled, 0))
 	{
 	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (send (fd, db->disabled_iov->iov_base,
