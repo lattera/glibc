@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <dl-machine.h>
+#include <sysdep-cancel.h>
 #include <bits/libc-lock.h>
 #include <tls.h>
 
@@ -85,7 +86,7 @@ dl_new_hash (const char *s)
 /* Add extra dependency on MAP to UNDEF_MAP.  */
 static int
 internal_function
-add_dependency (struct link_map *undef_map, struct link_map *map)
+add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 {
   struct link_map **list;
   struct link_map *runp;
@@ -98,8 +99,18 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   if (undef_map == map)
     return 0;
 
-  /* Make sure nobody can unload the object while we are at it.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
+  /* Make sure nobody can unload the object while we are at it.
+     If we hold a scope lock drop it now to avoid ABBA locking problems.  */
+  if ((flags & DL_LOOKUP_SCOPE_LOCK) != 0 && !RTLD_SINGLE_THREAD_P)
+    {
+      __rtld_mrlock_unlock (undef_map->l_scope_lock);
+
+      __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+      __rtld_mrlock_lock (undef_map->l_scope_lock);
+    }
+  else
+    __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* Avoid references to objects which cannot be unloaded anyway.  */
   if (map->l_type != lt_loaded
@@ -226,9 +237,10 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   bump_num_relocations ();
 
-  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed if we look
-     up a versioned symbol.  */
-  assert (version == NULL || flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
+  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY and DL_LOOKUP_SCOPE_LOCK
+     is allowed if we look up a versioned symbol.  */
+  assert (version == NULL || (flags & ~(DL_LOOKUP_ADD_DEPENDENCY
+					| DL_LOOKUP_SCOPE_LOCK)) == 0);
 
   size_t i = 0;
   if (__builtin_expect (skip_map != NULL, 0))
@@ -338,12 +350,13 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	 runtime lookups.  */
       && (flags & DL_LOOKUP_ADD_DEPENDENCY) != 0
       /* Add UNDEF_MAP to the dependencies.  */
-      && add_dependency (undef_map, current_value.m) < 0)
+      && add_dependency (undef_map, current_value.m, flags) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
       return _dl_lookup_symbol_x (undef_name, undef_map, ref,
-				  symbol_scope, version, type_class,
-				  flags, skip_map);
+				  (flags & DL_LOOKUP_SCOPE_LOCK) == 0
+				  ? symbol_scope : undef_map->l_scope, version,
+				  type_class, flags, skip_map);
 
   /* The object is used.  */
   current_value.m->l_used = 1;

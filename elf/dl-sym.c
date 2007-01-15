@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999,2000,2001,2002,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002,2004,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,7 +126,7 @@ do_sym (void *handle, const char *name, void *who,
 	  args.name = name;
 	  args.map = match;
 	  args.vers = vers;
-	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
+	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_SCOPE_LOCK;
 	  args.refp = &ref;
 
 	  const char *objname;

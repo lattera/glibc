@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -838,7 +838,9 @@ enum
     DL_LOOKUP_ADD_DEPENDENCY = 1,
     /* Return most recent version instead of default version for
        unversioned lookup.  */
-    DL_LOOKUP_RETURN_NEWEST = 2
+    DL_LOOKUP_RETURN_NEWEST = 2,
+    /* Set if the scopr lock in the UNDEF_MAP is taken.  */
+    DL_LOOKUP_SCOPE_LOCK = 4
   };
 
 /* Lookup versioned symbol.  */
@@ -847,7 +849,7 @@ extern lookup_t _dl_lookup_symbol_x (const char *undef,
 				     const ElfW(Sym) **sym,
 				     struct r_scope_elem *symbol_scope[],
 				     const struct r_found_version *version,
-				     int type_class, int explicit,
+				     int type_class, int flags,
 				     struct link_map *skip_map)
      internal_function attribute_hidden;
 
