@@ -939,7 +939,6 @@ cannot handle old request version %d; current version is %d"),
   if (selinux_enabled
       && __builtin_expect (req->type >= GETPWBYNAME, 1)
       && __builtin_expect (req->type < LASTREQ, 1)
-      && __builtin_expect (req->type < SHUTDOWN || req->type > INVALIDATE, 1)
       && nscd_request_avc_has_perm (fd, req->type) != 0)
     return;
 

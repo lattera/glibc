@@ -1,5 +1,8 @@
 2007-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (handle_request): Fix thinko in selinux test
+	invocation.
+
 	* sysdeps/generic/ldsodefs.h: Define DL_LOOKUP_SCOPE_LOCK.
 	* elf/dl-lookup.c (add_dependency): If scope map is locked, unlock
 	it before getting dl_load_lock and then relock.
