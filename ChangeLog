@@ -1,5 +1,10 @@
 2007-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (serv2db): Change type into structure which
+	also says whether this is a request for data.  Renamed to
+	servinfo.  All users changed.
+	(handle_request): Much simpler test whether we should search the cache.
+
 	* nscd/connections.c (handle_request): Fix thinko in selinux test
 	invocation.
 
