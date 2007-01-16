@@ -153,7 +153,10 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   newp = mempool_alloc (table, sizeof (struct hashentry));
   /* If we cannot allocate memory, just do not do anything.  */
   if (newp == NULL)
-    return -1;
+    {
+      ++table->head->addfailed;
+      return -1;
+    }
 
   newp->type = type;
   newp->first = first;
