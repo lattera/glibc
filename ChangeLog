@@ -1,5 +1,9 @@
 2007-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (servinfo): Renamed to reqinfo.  Change all
+	users.
+	(handle_request): Remove unnecessary tests.
+
 	* nscd/cache.c (cache_add): Record the failure to add to the cache.
 
 2007-01-15  Jakub Jelinek  <jakub@redhat.com>

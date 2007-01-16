@@ -185,7 +185,7 @@ static struct
 {
   bool data_request;
   struct database_dyn *db;
-} const servinfo[LASTREQ] =
+} const reqinfo[LASTREQ] =
 {
   [GETPWBYNAME] = { true, &dbs[pwddb] },
   [GETPWBYUID] = { true, &dbs[pwddb] },
@@ -392,7 +392,7 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 
 	  /* Make sure the record is for this type of service.  */
 	  if (here->type >= LASTREQ
-	      || servinfo[here->type].db != &dbs[dbnr])
+	      || reqinfo[here->type].db != &dbs[dbnr])
 	    goto fail;
 
 	  /* Validate boolean field value.  */
@@ -940,19 +940,14 @@ cannot handle old request version %d; current version is %d"),
       return;
     }
 
-  /* Make the SELinux check before we go on to the standard checks.  We
-     need to verify that the request type is valid, since it has not
-     yet been checked at this point.  */
-  if (selinux_enabled
-      && __builtin_expect (req->type >= GETPWBYNAME, 1)
-      && __builtin_expect (req->type < LASTREQ, 1)
-      && nscd_request_avc_has_perm (fd, req->type) != 0)
+  /* Make the SELinux check before we go on to the standard checks.  */
+  if (selinux_enabled && nscd_request_avc_has_perm (fd, req->type) != 0)
     return;
 
-  struct database_dyn *db = servinfo[req->type].db;
+  struct database_dyn *db = reqinfo[req->type].db;
 
   /* See whether we can service the request from the cache.  */
-  if (__builtin_expect (servinfo[req->type].data_request, true))
+  if (__builtin_expect (reqinfo[req->type].data_request, true))
     {
       if (__builtin_expect (debug_level, 0) > 0)
 	{
@@ -1151,7 +1146,7 @@ cannot handle old request version %d; current version is %d"),
     case GETFDHST:
     case GETFDSERV:
 #ifdef SCM_RIGHTS
-      send_ro_fd (servinfo[req->type].db, key, fd);
+      send_ro_fd (reqinfo[req->type].db, key, fd);
 #endif
       break;
 
