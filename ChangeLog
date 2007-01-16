@@ -1,3 +1,7 @@
+2007-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Record the failure to add to the cache.
+
 2007-01-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* soft-fp/op-common.h (FP_TRUNC): When truncating a NaN, clear
