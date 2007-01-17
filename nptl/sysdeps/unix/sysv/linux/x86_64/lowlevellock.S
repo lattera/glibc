@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -269,13 +269,19 @@ __lll_mutex_unlock_wake:
 	.hidden	__lll_timedwait_tid
 	.align	16
 __lll_timedwait_tid:
+	cfi_startproc
 	pushq	%r12
+	cfi_adjust_cfa_offset(8)
 	pushq	%r13
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%r12, -16)
+	cfi_offset(%r13, -24)
 
 	movq	%rdi, %r12
 	movq	%rsi, %r13
 
 	subq	$16, %rsp
+	cfi_adjust_cfa_offset(16)
 
 	/* Get current time.  */
 2:	movq	%rsp, %rdi
@@ -319,14 +325,21 @@ __lll_timedwait_tid:
 4:	xorl	%eax, %eax
 
 8:	addq	$16, %rsp
+	cfi_adjust_cfa_offset(-16)
 	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
 	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 	retq
 
+	cfi_adjust_cfa_offset(32)
 1:	cmpq	$-ETIMEDOUT, %rax
 	jne	2b
 
 6:	movl	$ETIMEDOUT, %eax
 	jmp	8b
+	cfi_endproc
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
 #endif

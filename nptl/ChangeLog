@@ -1,5 +1,8 @@
 2007-01-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_timedwait_tid): Add unwind info.
+
 	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Don't just copy the
 	function table, mangle the pointers.
 	* sysdeps/pthread/pthread-functions.h: Define PTHFCT_CALL.
