@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000,2002,2003,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,27 +143,11 @@ do_system (const char *line)
   else
     /* Parent side.  */
     {
-#ifdef	NO_WAITPID
-      pid_t child;
-      do
-	{
-	  child = __wait (&status);
-	  if (child <= -1 && errno != EINTR)
-	    {
-	      status = -1;
-	      break;
-	    }
-	  /* Note that pid cannot be <= -1 and therefore the loop continues
-	     when __wait returned with EINTR.  */
-	}
-      while (child != pid);
-#else
       /* Note the system() is a cancellation point.  But since we call
 	 waitpid() which itself is a cancellation point we do not
 	 have to do anything here.  */
       if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, 0)) != pid)
 	status = -1;
-#endif
     }
 
 #ifdef CLEANUP_HANDLER
