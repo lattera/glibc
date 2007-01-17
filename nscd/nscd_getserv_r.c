@@ -123,10 +123,10 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	  if (((uintptr_t) aliases_len & (__alignof__ (*aliases_len) - 1))
 	      != 0)
 	    {
-	      uint32_t *tmp = alloca (hst_resp->h_aliases_cnt
+	      uint32_t *tmp = alloca (serv_resp->s_aliases_cnt
 				      * sizeof (uint32_t));
 	      aliases_len = memcpy (tmp, aliases_len,
-				    hst_resp->h_aliases_cnt
+				    serv_resp->s_aliases_cnt
 				    * sizeof (uint32_t));
 	    }
 #endif

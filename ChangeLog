@@ -1,5 +1,7 @@
 2007-01-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Fix pastos.
+
 	* sysdeps/unix/sysv/linux/getdents.c (offsetof): Remove.
 
 2007-01-17  Ulrich Drepper  <drepper@redhat.com>
