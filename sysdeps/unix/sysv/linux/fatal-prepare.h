@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,10 +24,9 @@
 # include <pthread-functions.h>
 # define FATAL_PREPARE \
   {									      \
-    int (*fp) (int, int *);						      \
-    fp = __libc_pthread_functions.ptr_pthread_setcancelstate;		      \
-    if (fp != NULL)							      \
-      fp (PTHREAD_CANCEL_DISABLE, NULL);				      \
+    if (__libc_pthread_functions_init)					      \
+      PTHFCT_CALL (ptr_pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE,	      \
+						NULL));			      \
   }
 #else
 # pragma weak pthread_setcancelstate

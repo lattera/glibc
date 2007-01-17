@@ -1,3 +1,16 @@
+2007-01-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Don't just copy the
+	function table, mangle the pointers.
+	* sysdeps/pthread/pthread-functions.h: Define PTHFCT_CALL.
+	* forward.c: Use PTHFCT_CALL and __libc_pthread_functions_init.
+	* sysdeps/pthread/bits/libc-lock.h: When using __libc_pthread_functions
+	demangle pointers before use.
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c: Use PTHFCT_CALL to
+	demangle pointer.
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Likewise.
+	* sysdeps/pthread/setxid.h: Likewise.
+
 2007-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-rwlock7.c: Show some more information in case of correct

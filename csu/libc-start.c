@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -225,7 +225,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     {
       /* Remove the thread-local data.  */
 # ifdef SHARED
-      __libc_pthread_functions.ptr__nptl_deallocate_tsd ();
+      PTHFCT_CALL (ptr__nptl_deallocate_tsd, ());
 # else
       extern void __nptl_deallocate_tsd (void) __attribute ((weak));
       __nptl_deallocate_tsd ();
@@ -235,7 +235,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 	 terminate the entire process.  */
       result = 0;
 # ifdef SHARED
-      unsigned int *const ptr = __libc_pthread_functions.ptr_nthreads;
+      unsigned int *ptr = __libc_pthread_functions.ptr_nthreads;
+      PTR_DEMANGLE (ptr);
 # else
       extern unsigned int __nptl_nthreads __attribute ((weak));
       unsigned int *const ptr = &__nptl_nthreads;

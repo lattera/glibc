@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  NPTL version.
-   Copyright (C) 1996-2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,13 +150,17 @@ typedef pthread_key_t __libc_key_t;
 
 /* Call thread functions through the function pointer table.  */
 #if defined SHARED && !defined NOT_IN_libc
-# define PTF(NAME) __libc_pthread_functions.ptr_##NAME
+# define PTFAVAIL(NAME) __libc_pthread_functions_init
 # define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  (PTF(FUNC) != NULL ? PTF(FUNC) ARGS : ELSE)
+  (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
+# define __libc_ptf_call_always(FUNC, ARGS) \
+  PTHFCT_CALL (ptr_##FUNC, ARGS)
 #else
-# define PTF(NAME) NAME
+# define PTFAVAIL(NAME) (NAME != NULL)
 # define __libc_ptf_call(FUNC, ARGS, ELSE) \
   __libc_maybe_call (FUNC, ARGS, ELSE)
+# define __libc_ptf_call_always(FUNC, ARGS) \
+  FUNC ARGS
 #endif
 
 
@@ -353,8 +357,9 @@ typedef pthread_key_t __libc_key_t;
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
   do {									      \
-    if (PTF(__pthread_once) != NULL)					      \
-      PTF(__pthread_once) (&(ONCE_CONTROL), INIT_FUNCTION);		      \
+    if (PTFAVAIL (__pthread_once))					      \
+      __libc_ptf_call_always (__pthread_once, (&(ONCE_CONTROL),		      \
+					       INIT_FUNCTION));		      \
     else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {			      \
       INIT_FUNCTION ();							      \
       (ONCE_CONTROL) |= 2;						      \
@@ -380,9 +385,10 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
   { struct _pthread_cleanup_buffer _buffer;				      \
     int _avail;								      \
     if (DOIT) {								      \
-      _avail = PTF(_pthread_cleanup_push_defer) != NULL;		      \
+      _avail = PTFAVAIL (_pthread_cleanup_push_defer);			      \
       if (_avail) {							      \
-	PTF(_pthread_cleanup_push_defer) (&_buffer, FCT, ARG);		      \
+	__libc_ptf_call_always (_pthread_cleanup_push_defer, (&_buffer, FCT,  \
+							      ARG));	      \
       } else {								      \
 	_buffer.__routine = (FCT);					      \
 	_buffer.__arg = (ARG);						      \
@@ -394,7 +400,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT) \
     if (_avail) {							      \
-      PTF(_pthread_cleanup_pop_restore) (&_buffer, DOIT);		      \
+      __libc_ptf_call_always (_pthread_cleanup_pop_restore, (&_buffer, DOIT));\
     } else if (DOIT)							      \
       _buffer.__routine (_buffer.__arg);				      \
   }
@@ -402,7 +408,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 /* Sometimes we have to exit the block in the middle.  */
 #define __libc_cleanup_end(DOIT) \
     if (_avail) {							      \
-      PTF(_pthread_cleanup_pop_restore) (&_buffer, DOIT);		      \
+      __libc_ptf_call_always (_pthread_cleanup_pop_restore, (&_buffer, DOIT));\
     } else if (DOIT)							      \
       _buffer.__routine (_buffer.__arg)
 

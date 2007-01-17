@@ -1,5 +1,5 @@
 /* Clean up stack frames unwound by longjmp.  Linux/s390 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,14 +28,13 @@ extern void __pthread_cleanup_upto (__jmp_buf env, char *targetframe);
 void
 _longjmp_unwind (jmp_buf env, int val)
 {
-#ifdef SHARED
-# define fptr __libc_pthread_functions.ptr___pthread_cleanup_upto
-#else
-# define fptr __pthread_cleanup_upto
-#endif
-
   unsigned char local_var;
 
-  if (fptr != NULL)
-    fptr (env->__jmpbuf, &local_var);
+#ifdef SHARED
+  if (__libc_pthread_functions_init)
+    PTHFCT_CALL (ptr___pthread_cleanup_upto, (env->__jmpbuf, &local_var));
+#else
+  if (__pthread_cleanup_upto != NULL)
+    __pthread_cleanup_upto (env->__jmpbuf, &local_var);
+#endif
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,6 +25,7 @@
 #include <string.h>
 #include <pthreadP.h>
 #include <bits/libc-lock.h>
+#include <sysdep.h>
 
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
@@ -46,11 +47,29 @@ __libc_pthread_init (ptr, reclaim, functions)
   __register_atfork (NULL, NULL, reclaim, NULL);
 
 #ifdef SHARED
-  /* We copy the content of the variable pointed to by the FUNCTIONS
-     parameter to one in libc.so since this means access to the array
-     can be done with one memory access instead of two.  */
-  memcpy (&__libc_pthread_functions, functions,
-	  sizeof (__libc_pthread_functions));
+  /* Copy the function pointers into an array in libc.  This enables
+     access with just one memory reference but moreso, it prevents
+     hijacking the function pointers with just one pointer change.  We
+     "encrypt" the function pointers since we cannot write-protect the
+     array easily enough.  */
+  union ptrhack
+  {
+    struct pthread_functions pf;
+    void *parr[1];
+  } const *src;
+  union ptrhack *dest;
+# define NPTRS (sizeof (struct pthread_functions) / sizeof (void *))
+
+  src = (const void *) functions;
+  dest = (void *) &__libc_pthread_functions;
+
+  for (size_t cnt = 0; cnt < NPTRS; ++cnt)
+    {
+      void *p = src->parr[cnt];
+      PTR_MANGLE (p);
+      dest->parr[cnt] = p;
+    }
+  __libc_pthread_functions_init = 1;
 #endif
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
@@ -61,7 +80,7 @@ __libc_pthread_init (ptr, reclaim, functions)
 #ifdef SHARED
 libc_freeres_fn (freeres_libptread)
 {
-  if (__libc_pthread_functions.ptr_freeres != NULL)
-    __libc_pthread_functions.ptr_freeres ();
+  if (__libc_pthread_functions_init)
+    PTHFCT_CALL (ptr_freeres, ());
 }
 #endif

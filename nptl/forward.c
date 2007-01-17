@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,16 +29,17 @@
 
 /* Pointers to the libc functions.  */
 struct pthread_functions __libc_pthread_functions attribute_hidden;
+int __libc_pthread_functions_init attribute_hidden;
 
 
 #define FORWARD2(name, rettype, decl, params, defaction) \
 rettype									      \
 name decl								      \
 {									      \
-  if (__libc_pthread_functions.ptr_##name == NULL)			      \
+  if (!__libc_pthread_functions_init)					      \
     defaction;								      \
 									      \
-  return __libc_pthread_functions.ptr_##name params;			      \
+  return PTHFCT_CALL (ptr_##name, params);				      \
 }
 
 #define FORWARD(name, decl, params, defretval) \
