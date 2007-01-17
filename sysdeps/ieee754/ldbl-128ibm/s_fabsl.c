@@ -37,7 +37,7 @@ static char rcsid[] = "$NetBSD: $";
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	lx = lx ^ ( hx & 0x8000000000000000LL );
 	hx = hx & 0x7fffffffffffffffLL;
-	SET_LDOUBLE_WORDS64(hx,lx,x);
-        return x;
+	SET_LDOUBLE_WORDS64(x,hx,lx);
+	return x;
 }
 long_double_symbol (libm, __fabsl, fabsl);

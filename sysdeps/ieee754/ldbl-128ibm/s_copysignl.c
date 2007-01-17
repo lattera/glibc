@@ -25,6 +25,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include "math.h"
 #include "math_private.h"
+#include <math_ldbl_opt.h>
 
 #ifdef __STDC__
 	long double __copysignl(long double x, long double y)
@@ -33,13 +34,13 @@ static char rcsid[] = "$NetBSD: $";
 	long double x,y;
 #endif
 {
-  if (y < 0.0)
-    {
-      if (x >= 0.0)
-	x = -x;
-    }
-  else if (x < 0.0)
+  if (signbit (x) != signbit (y))
     x = -x;
   return x;
 }
-weak_alias (__copysignl, copysignl)
+
+#ifdef IS_IN_libm
+long_double_symbol (libm, __copysignl, copysignl);
+#else
+long_double_symbol (libc, __copysignl, copysignl);
+#endif
