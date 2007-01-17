@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995-2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2003, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +50,6 @@ extern int __have_no_getdents64 attribute_hidden;
 #ifndef have_no_getdents64_defined
 # define __have_no_getdents64 0
 #endif
-
-#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 /* For Linux we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and
