@@ -30,8 +30,8 @@ cleanup (void *arg)
   /* If we already changed the waiter ID, reset it.  The call cannot
      fail for any reason but the thread not having done that yet so
      there is no reason for a loop.  */
-  atomic_compare_and_exchange_bool_acq ((struct pthread **) arg, NULL,
-					THREAD_SELF);
+  (void) atomic_compare_and_exchange_bool_acq ((struct pthread **) arg, NULL,
+					       THREAD_SELF);
 }
 
 
