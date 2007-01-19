@@ -1,5 +1,8 @@
 2007-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-initializers1.c: We want to test the initializers as seen
+	outside of libc, so undefined _LIBC.
+
 	* pthread_join.c (cleanup): Avoid warning.
 
 2007-01-17  Ulrich Drepper  <drepper@redhat.com>
