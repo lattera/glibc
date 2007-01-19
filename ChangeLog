@@ -1,3 +1,9 @@
+2007-01-18  Anton Nikishaev  <anton.nik@gmail.com>
+
+	* wcsmbs/wchar.h (wcstoll): Fix comment, function returns value of
+	type `long long int', not `long int'.
+	(wcstoq): Likewise.
+
 2007-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/gen-as-const.awk: Add cast to long to avoid int promotion
