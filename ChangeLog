@@ -1,3 +1,8 @@
+2007-01-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/gen-as-const.awk: Add cast to long to avoid int promotion
+	of values on 64-bit platforms which are too large.
+
 2007-01-12  Steven Munroe  <sjmunroe@us.ibm.com>
 	    Joe Kerian  <jkerian@us.us.ibm.com>
 

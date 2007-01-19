@@ -38,7 +38,7 @@ NF > 1 {
   if (test)
     print "  TEST (" name ", \"" FILENAME ":" FNR "\", " $0 ")";
   else
-    printf "asm (\"@@@name@@@%s@@@value@@@%%0@@@end@@@\" : : \"i\" (%s));\n",
+    printf "asm (\"@@@name@@@%s@@@value@@@%%0@@@end@@@\" : : \"i\" ((long) %s));\n",
       name, $0;
 }
 
