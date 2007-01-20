@@ -1,3 +1,8 @@
+2007-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/BRF: New file.
+	Contributed by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 2006-12-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/cs_CZ (LC_TIME): Change d_fmt to %e.%m.%Y from %-d.%-m.%Y.
