@@ -1,3 +1,13 @@
+2007-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/brf.c: New file.
+	* iconvdata/Makefile: Add rules to build BRF.
+	* iconvdata/TESTS: Add BRF entry.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/tst-tables.sh: Likewise.
+	* iconvdata/testdata/BRF: New file.
+	* iconvdata/testdata/BRF..UTF8: New file.
+
 2007-01-18  Anton Nikishaev  <anton.nik@gmail.com>
 
 	* wcsmbs/wchar.h (wcstoll): Fix comment, function returns value of
