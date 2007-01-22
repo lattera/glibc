@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-swprintf tst-fseek tst-fmemopen test-vfprintf tst-gets \
 	 tst-perror tst-sprintf tst-rndseek tst-fdopen tst-fphex bug14 bug15 \
 	 tst-popen tst-unlockedio tst-fmemopen2 tst-put-error tst-fgets \
-	 tst-fwrite bug16
+	 tst-fwrite bug16 bug17
 
 test-srcs = tst-unbputc tst-printf
 

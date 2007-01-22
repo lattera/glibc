@@ -1,3 +1,10 @@
+2007-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3902]
+	* stdio-common/_itoa.c (_itoa): Make sure at least a zero is emitted.
+	* stdio-common/Makefile (tests): Add bug17.
+	* stdio-common/bug17.c: New file.
+
 2007-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/brf.c: New file.
