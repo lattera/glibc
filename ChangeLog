@@ -1,5 +1,14 @@
 2007-01-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/_itowa.c: Don't compile _itowa for 64-bit
+	platforms.
+	* stdio-common/_itoa.c: Don't compile in _itoa and _fitoa for
+	64-bit platforms.
+	* malloc/mtrace.c (tr_where): Use _fitoa_word instead of _fitoa if
+	possible.
+	* posix/wordexp.c (parse_arith): Use _itoa_word instead of _itoa
+	if possible.
+
 	[BZ #3902]
 	* stdio-common/_itoa.c (_itoa): Make sure at least a zero is emitted.
 	* stdio-common/Makefile (tests): Add bug17.

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994,1995,1996,1999,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-1996,1999,2000,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
    and Ulrich Drepper <drepper@gnu.org>.
@@ -85,6 +85,7 @@ extern const wchar_t _itowa_lower_digits[] attribute_hidden;
 extern const wchar_t _itowa_upper_digits[] attribute_hidden;
 
 
+#if LLONG_MAX != LONG_MAX
 wchar_t *
 _itowa (value, buflim, base, upper_case)
      unsigned long long int value;
@@ -99,7 +100,7 @@ _itowa (value, buflim, base, upper_case)
 
   switch (base)
     {
-#define RUN_2N(BITS) \
+# define RUN_2N(BITS) \
       do								      \
         {								      \
 	  /* `unsigned long long int' always has 64 bits.  */		      \
@@ -153,7 +154,7 @@ _itowa (value, buflim, base, upper_case)
 
     default:
       {
-#if BITS_PER_MP_LIMB == 64
+# if BITS_PER_MP_LIMB == 64
 	mp_limb_t base_multiplier = brec->base_multiplier;
 	if (brec->flag)
 	  while (value != 0)
@@ -177,8 +178,8 @@ _itowa (value, buflim, base, upper_case)
 	      *--bp = digits[rem];
 	      value = quo;
 	    }
-#endif
-#if BITS_PER_MP_LIMB == 32
+# endif
+# if BITS_PER_MP_LIMB == 32
 	mp_limb_t t[3];
 	int n;
 
@@ -186,11 +187,11 @@ _itowa (value, buflim, base, upper_case)
 	   Optimize for frequent cases of 32 bit numbers.  */
 	if ((mp_limb_t) (value >> 32) >= 1)
 	  {
-#if UDIV_TIME > 2 * UMUL_TIME || UDIV_NEEDS_NORMALIZATION
+# if UDIV_TIME > 2 * UMUL_TIME || UDIV_NEEDS_NORMALIZATION
 	    int big_normalization_steps = brec->big.normalization_steps;
 	    mp_limb_t big_base_norm
 	      = brec->big.base << big_normalization_steps;
-#endif
+# endif
 	    if ((mp_limb_t) (value >> 32) >= brec->big.base)
 	      {
 		mp_limb_t x1hi, x1lo, r;
@@ -199,7 +200,7 @@ _itowa (value, buflim, base, upper_case)
 		   always be very small.  It might be faster just to
 		   subtract in a tight loop.  */
 
-#if UDIV_TIME > 2 * UMUL_TIME
+# if UDIV_TIME > 2 * UMUL_TIME
 		mp_limb_t x, xh, xl;
 
 		if (big_normalization_steps == 0)
@@ -224,7 +225,7 @@ _itowa (value, buflim, base, upper_case)
 		udiv_qrnnd_preinv (t[0], x, xh, xl, big_base_norm,
 				   brec->big.base_ninv);
 		t[1] = x >> big_normalization_steps;
-#elif UDIV_NEEDS_NORMALIZATION
+# elif UDIV_NEEDS_NORMALIZATION
 		mp_limb_t x, xh, xl;
 
 		if (big_normalization_steps == 0)
@@ -246,17 +247,17 @@ _itowa (value, buflim, base, upper_case)
 		xl = x1lo << big_normalization_steps;
 		udiv_qrnnd (t[0], x, xh, xl, big_base_norm);
 		t[1] = x >> big_normalization_steps;
-#else
+# else
 		udiv_qrnnd (x1hi, r, 0, (mp_limb_t) (value >> 32),
 			    brec->big.base);
 		udiv_qrnnd (x1lo, t[2], r, (mp_limb_t) value, brec->big.base);
 		udiv_qrnnd (t[0], t[1], x1hi, x1lo, brec->big.base);
-#endif
+# endif
 		n = 3;
 	      }
 	    else
 	      {
-#if (UDIV_TIME > 2 * UMUL_TIME)
+# if UDIV_TIME > 2 * UMUL_TIME
 		mp_limb_t x;
 
 		value <<= brec->big.normalization_steps;
@@ -264,17 +265,17 @@ _itowa (value, buflim, base, upper_case)
 				   (mp_limb_t) value, big_base_norm,
 				   brec->big.base_ninv);
 		t[1] = x >> brec->big.normalization_steps;
-#elif UDIV_NEEDS_NORMALIZATION
+# elif UDIV_NEEDS_NORMALIZATION
 		mp_limb_t x;
 
 		value <<= big_normalization_steps;
 		udiv_qrnnd (t[0], x, (mp_limb_t) (value >> 32),
 			    (mp_limb_t) value, big_base_norm);
 		t[1] = x >> big_normalization_steps;
-#else
+# else
 		udiv_qrnnd (t[0], t[1], (mp_limb_t) (value >> 32),
 			    (mp_limb_t) value, brec->big.base);
-#endif
+# endif
 		n = 2;
 	      }
 	  }
@@ -290,7 +291,7 @@ _itowa (value, buflim, base, upper_case)
 	    mp_limb_t ti = t[--n];
 	    int ndig_for_this_limb = 0;
 
-#if UDIV_TIME > 2 * UMUL_TIME
+# if UDIV_TIME > 2 * UMUL_TIME
 	    mp_limb_t base_multiplier = brec->base_multiplier;
 	    if (brec->flag)
 	      while (ti != 0)
@@ -316,7 +317,7 @@ _itowa (value, buflim, base, upper_case)
 		  ti = quo;
 		  ++ndig_for_this_limb;
 		}
-#else
+# else
 	    while (ti != 0)
 	      {
 		mp_limb_t quo, rem;
@@ -327,7 +328,7 @@ _itowa (value, buflim, base, upper_case)
 		ti = quo;
 		++ndig_for_this_limb;
 	      }
-#endif
+# endif
 	    /* If this wasn't the most significant word, pad with zeros.  */
 	    if (n != 0)
 	      while (ndig_for_this_limb < brec->big.ndigits)
@@ -337,10 +338,11 @@ _itowa (value, buflim, base, upper_case)
 		}
 	  }
 	while (n != 0);
-#endif
+# endif
       }
       break;
     }
 
   return bp;
 }
+#endif
