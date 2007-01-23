@@ -28,12 +28,6 @@
    happen before any instructions.  So we use cfi_same_value instead of
    cfi_restore.  */
 
-#ifdef HAVE_ASM_CFI_DIRECTIVES
-# define cfi_same_value .cfi_same_value
-#else
-# define cfi_same_value
-#endif
-
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 #ifdef __PIC__

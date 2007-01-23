@@ -1,3 +1,8 @@
+2007-01-23  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h
+	(cfi_same_value): Delete definition.
+
 2007-01-08  Richard Sandiford  <richard@codesourcery.com>
 
 	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NO_RELA): Delete.
