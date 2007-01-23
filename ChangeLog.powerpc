@@ -1,3 +1,8 @@
+2007-01-23  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #2749]
+	* sysdeps/powerpc/nofpu/fenv_libc.h: New file.
+
 2007-01-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/fesetenv.c (__sim_exceptions,
