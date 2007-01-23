@@ -245,4 +245,8 @@
 	"$14", "$15", "$24", "$25", "memory"
 #endif /* __ASSEMBLER__ */
 
+/* Pointer mangling is not yet supported for MIPS.  */
+#define PTR_MANGLE(var) (void) (var)
+#define PTR_DEMANGLE(var) (void) (var)
+
 #endif /* linux/mips/sysdep.h */

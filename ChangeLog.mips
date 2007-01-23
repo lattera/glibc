@@ -1,5 +1,14 @@
 2007-01-23  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (PTR_MANGLE,
+	PTR_DEMANGLE): Define.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h (PTR_MANGLE,
+	PTR_DEMANGLE): Define.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h (PTR_MANGLE,
+	PTR_DEMANGLE): Define.
+
+2007-01-23  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h
 	(cfi_same_value): Delete definition.
 
