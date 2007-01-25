@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997-2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -25,7 +25,6 @@
 #include <fnmatch.h>
 #include <glob.h>
 #include <libintl.h>
-#include <limits.h>
 #include <paths.h>
 #include <pwd.h>
 #include <signal.h>
@@ -758,13 +757,8 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 		convertme = numresult;
 
 	      result[20] = '\0';
-	      char *numstr;
-#if LLONG_MAX == LONG_MAX
-	      numstr = _itoa_word (convertme, &result[20], 10, 0);
-#else
-	      numstr = _itoa (convertme, &result[20], 10, 0);
-#endif
-	      *word = w_addstr (*word, word_length, max_length, numstr);
+	      *word = w_addstr (*word, word_length, max_length,
+				_itoa (convertme, &result[20], 10, 0));
 	      free (expr);
 	      return *word ? 0 : WRDE_NOSPACE;
 	    }

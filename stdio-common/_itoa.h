@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994,95,96,97,98,99,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1999,2002,2003,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,8 @@
 
 #ifndef _ITOA_H
 #define _ITOA_H
-#include <sys/cdefs.h>
+
+#include <limits.h>
 
 /* Convert VALUE into ASCII in base BASE (2..36).
    Write backwards starting the character just before BUFLIM.
@@ -80,5 +81,13 @@ extern char *_fitoa_word (unsigned long value, char *buf, unsigned int base,
 			  int upper_case) attribute_hidden;
 extern char *_fitoa (unsigned long long value, char *buf, unsigned int base,
 		     int upper_case) attribute_hidden;
+
+#if LONG_MAX == LLONG_MAX
+/* No need for special long long versions.  */
+# define _itoa(value, buf, base, upper_case) \
+  _itoa_word (value, buf, base, upper_case)
+# define _fitoa(value, buf, base, upper_case) \
+  _fitoa_word (value, buf, base, upper_case)
+#endif
 
 #endif	/* itoa.h */

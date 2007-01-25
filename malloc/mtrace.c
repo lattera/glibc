@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -28,7 +28,6 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -114,20 +113,15 @@ tr_where (caller)
 	      buf = alloca (len + 6 + 2 * sizeof (void *));
 
 	      buf[0] = '(';
-
-	      char *cp = __stpcpy (__mempcpy (buf + 1, info.dli_sname, len),
-				   caller >= (__ptr_t) info.dli_saddr
-				   ? "+0x" : "-0x");
-	      intptr_t offset = (caller >= (const __ptr_t) info.dli_saddr
-				 ? caller - (const __ptr_t) info.dli_saddr
-				 : (const __ptr_t) info.dli_saddr - caller);
-# if LLONG_MAX == LONG_MAX
-	      cp = _fitoa_word (offset, cp, 16, 0);
-# else
-	      cp = _fitoa (offset, cp, 16, 0);
-# endif
-
-	      __stpcpy (cp, ")");
+	      __stpcpy (_fitoa (caller >= (const __ptr_t) info.dli_saddr
+				? caller - (const __ptr_t) info.dli_saddr
+				: (const __ptr_t) info.dli_saddr - caller,
+				__stpcpy (__mempcpy (buf + 1, info.dli_sname,
+						     len),
+					  caller >= (__ptr_t) info.dli_saddr
+					  ? "+0x" : "-0x"),
+				16, 0),
+			")");
 	    }
 
 	  fprintf (mallstream, "@ %s%s%s[%p] ",
