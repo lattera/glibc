@@ -1,3 +1,12 @@
+2007-01-25  Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+	    Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Remove msgctl,
+	shmctl, and semctl.
+	* sysdeps/unix/sysv/linux/mips/misp64/semctl.c,
+	sysdeps/unix/sysv/linux/mips/mips64/shmctl.c,
+	sysdeps/unix/sysv/linux/mips/mips64/msgctl.c: New files.
+
 2007-01-23  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (PTR_MANGLE,
