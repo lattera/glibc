@@ -1,5 +1,6 @@
 2007-01-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-minimal.c: Undefine _itoa first.
 	* stdio-common/_itoa.h: Define _itoa and _fitoa for 64-bit platforms.
 	* malloc/mtrace.c: Revert last change.
 	* posix/wordexp.c: Likewise.

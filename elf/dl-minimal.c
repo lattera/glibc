@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004,2005,2006
+   Copyright (C) 1995-1998,2000-2002,2004-2006,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -283,6 +283,7 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 }
 
 
+#undef _itoa
 /* We always use _itoa instead of _itoa_word in ld.so since the former
    also has to be present and it is never about speed when these
    functions are used.  */
