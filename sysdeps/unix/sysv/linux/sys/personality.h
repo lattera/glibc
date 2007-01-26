@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Taken verbatim from Linux 2.4 (include/linux/personality.h).  */
+/* Taken verbatim from Linux 2.6 (include/linux/personality.h).  */
 
 #ifndef _SYS_PERSONALITY_H
 #define _SYS_PERSONALITY_H 1
@@ -27,11 +27,14 @@
    These occupy the top three bytes.  */
 enum
   {
+    ADDR_NO_RANDOMIZE = 0x0040000,
+    FDPIC_FUNCPTRS = 0x0080000,
     MMAP_PAGE_ZERO = 0x0100000,
     ADDR_LIMIT_32BIT = 0x0800000,
     SHORT_INODE = 0x1000000,
     WHOLE_SECONDS = 0x2000000,
     STICKY_TIMEOUTS = 0x4000000,
+    ADDR_LIMIT_3GB = 	0x8000000
   };
 
 /* Personality types.
@@ -52,14 +55,15 @@ enum
     PER_SUNOS = 0x0006 | STICKY_TIMEOUTS,
     PER_XENIX = 0x0007 | STICKY_TIMEOUTS | SHORT_INODE,
     PER_LINUX32 = 0x0008,
+    PER_LINUX32_3GB = 0x0008 | ADDR_LIMIT_3GB,
     PER_IRIX32 = 0x0009 | STICKY_TIMEOUTS,	/* IRIX5 32-bit */
     PER_IRIXN32 = 0x000a | STICKY_TIMEOUTS,	/* IRIX6 new 32-bit */
     PER_IRIX64 = 0x000b | STICKY_TIMEOUTS,	/* IRIX6 64-bit */
     PER_RISCOS = 0x000c,
     PER_SOLARIS = 0x000d | STICKY_TIMEOUTS,
     PER_UW7 = 0x000e | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
-    PER_HPUX = 0x000f,
-    PER_OSF4 = 0x0010,
+    PER_OSF4 = 0x000f,
+    PER_HPUX = 0x0010,
     PER_MASK = 0x00ff,
   };
 

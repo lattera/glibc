@@ -1,3 +1,10 @@
+2007-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/personality.h (ADDR_NO_RANDOMIZE,
+	FDPIC_FUNCPTRS, ADDR_LIMIT_3GB, PER_LINUX_32BIT, PER_LINUX32_3GB):
+	Add.
+	Correct values of PER_HPUX and PER_OSF4.
+
 2007-01-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-minimal.c: Undefine _itoa first.
