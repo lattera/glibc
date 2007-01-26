@@ -1,5 +1,5 @@
 /* PLT trampolines.  i386 version.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,29 +101,29 @@ _dl_runtime_profile:
 	*/
 	cfi_adjust_cfa_offset (12)
 1:	movl %ebx, (%esp)
-	cfi_rel_offset (3, 0)
+	cfi_rel_offset (ebx, 0)
 	movl %edx, %ebx		# This is the frame buffer size
 	pushl %edi
 	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (7, 0)
+	cfi_rel_offset (edi, 0)
 	pushl %esi
 	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (6, 0)
+	cfi_rel_offset (esi, 0)
 	leal 44(%esp), %esi
 	movl %ebx, %ecx
 	movl %esp, %edi
 	subl %ebx, %edi
 	andl $0xfffffff0, %edi	# Align stack
 	movl %esp, %ebx
-	cfi_def_cfa_register (3)
+	cfi_def_cfa_register (ebx)
 	movl %edi, %esp
 	shrl $2, %ecx
 	rep
 	movsl
 	movl (%edi), %esi
-	cfi_restore (6)
+	cfi_restore (esi)
 	movl 4(%edi), %edi
-	cfi_restore (7)
+	cfi_restore (edi)
 	/*
 	   %ebx+40  return address
 	   %ebx+36  PLT1
@@ -144,9 +144,9 @@ _dl_runtime_profile:
 	movl 20(%ebx), %eax
 	call *(%ebx)
 	movl %ebx, %esp
-	cfi_def_cfa_register (4)
+	cfi_def_cfa_register (esp)
 	movl 8(%esp), %ebx
-	cfi_restore (3)
+	cfi_restore (ebx)
 	/*
 	    +40     return address
 	    +36     PLT1
