@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1996,1997,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995-1997,2002,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1993.
 
@@ -110,9 +110,8 @@ hdestroy_r (htab)
       return;
     }
 
-  if (htab->table != NULL)
-    /* free used memory */
-    free (htab->table);
+  /* Free used memory.  */
+  free (htab->table);
 
   /* the sign for an existing table is an value != NULL in htable */
   htab->table = NULL;
