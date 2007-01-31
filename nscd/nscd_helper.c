@@ -97,16 +97,20 @@ __readvall (int fd, const struct iovec *iov, int iovcnt)
 
 
 static int
-open_socket (void)
+open_socket (request_type type, const char *key, size_t keylen)
 {
   int sock = __socket (PF_UNIX, SOCK_STREAM, 0);
   if (sock < 0)
     return -1;
 
+  struct
+  {
+    request_header req;
+    char key[keylen];
+  } reqdata;
+
   /* Make socket non-blocking.  */
-  int fl = __fcntl (sock, F_GETFL);
-  if (fl != -1)
-    __fcntl (sock, F_SETFL, fl | O_NONBLOCK);
+  __fcntl (sock, F_SETFL, O_RDWR | O_NONBLOCK);
 
   struct sockaddr_un sun;
   sun.sun_family = AF_UNIX;
@@ -115,13 +119,56 @@ open_socket (void)
       && errno != EINPROGRESS)
     goto out;
 
-  struct pollfd fds[1];
-  fds[0].fd = sock;
-  fds[0].events = POLLOUT | POLLERR | POLLHUP;
-  if (__poll (fds, 1, 5 * 1000) > 0)
-    /* Success.  We do not check for success of the connect call here.
-       If it failed, the following operations will fail.  */
-    return sock;
+  reqdata.req.version = NSCD_VERSION;
+  reqdata.req.type = type;
+  reqdata.req.key_len = keylen;
+
+  memcpy (reqdata.key, key, keylen);
+
+  bool first_try = true;
+  struct timeval tvend;
+  while (1)
+    {
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+      ssize_t wres = TEMP_FAILURE_RETRY (__send (sock, &reqdata,
+						 sizeof (reqdata),
+						 MSG_NOSIGNAL));
+      if (__builtin_expect (wres == (ssize_t) sizeof (reqdata), 1))
+	/* We managed to send the request.  */
+	return sock;
+
+      if (wres != -1 || errno != EAGAIN)
+	/* Something is really wrong, no chance to continue.  */
+	break;
+
+      /* The daemon is busy wait for it.  */
+      int to;
+      if (first_try)
+	{
+	  gettimeofday (&tvend, NULL);
+	  tvend.tv_sec += 5;
+	  to = 5 * 1000;
+	  first_try = false;
+	}
+      else
+	{
+	  struct timeval now;
+	  gettimeofday (&now, NULL);
+	  to = ((tvend.tv_sec - now.tv_sec) * 1000
+		+ (tvend.tv_usec - now.tv_usec) / 1000);
+	}
+
+      struct pollfd fds[1];
+      fds[0].fd = sock;
+      fds[0].events = POLLOUT | POLLERR | POLLHUP;
+      if (__poll (fds, 1, to) <= 0)
+	/* The connection timed out or broke down.  */
+	break;
+
+      /* We try to write again.  */
+    }
 
  out:
   close_not_cancel_no_status (sock);
@@ -181,36 +228,15 @@ get_mapping (request_type type, const char *key,
   int saved_errno = errno;
 
   int mapfd = -1;
+  char resdata[keylen];
 
-  /* Send the request.  */
-  struct
-  {
-    request_header req;
-    char key[keylen];
-  } reqdata;
-
-  int sock = open_socket ();
+  /* Open a socket and send the request.  */
+  int sock = open_socket (type, key, keylen);
   if (sock < 0)
     goto out;
 
-  reqdata.req.version = NSCD_VERSION;
-  reqdata.req.type = type;
-  reqdata.req.key_len = keylen;
-  memcpy (reqdata.key, key, keylen);
-
-# ifndef MSG_NOSIGNAL
-#  define MSG_NOSIGNAL 0
-# endif
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__send (sock, &reqdata,
-						    sizeof (reqdata),
-						    MSG_NOSIGNAL))
-			!= sizeof (reqdata), 0))
-    /* We cannot even write the request.  */
-    goto out_close2;
-
   /* Room for the data sent along with the file descriptor.  We expect
      the key name back.  */
-# define resdata reqdata.key
   struct iovec iov[1];
   iov[0].iov_base = resdata;
   iov[0].iov_len = keylen;
@@ -423,28 +449,22 @@ int
 __nscd_open_socket (const char *key, size_t keylen, request_type type,
 		    void *response, size_t responselen)
 {
+  /* This should never happen and it is something the nscd daemon
+     enforces, too.  He it helps to limit the amount of stack
+     used.  */
+  if (keylen > MAXKEYLEN)
+    return -1;
+
   int saved_errno = errno;
 
-  int sock = open_socket ();
+  int sock = open_socket (type, key, keylen);
   if (sock >= 0)
     {
-      request_header req;
-      req.version = NSCD_VERSION;
-      req.type = type;
-      req.key_len = keylen;
-
-      struct iovec vec[2];
-      vec[0].iov_base = &req;
-      vec[0].iov_len = sizeof (request_header);
-      vec[1].iov_base = (void *) key;
-      vec[1].iov_len = keylen;
-
-      ssize_t nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-      if (nbytes == (ssize_t) (sizeof (request_header) + keylen)
-	  /* Wait for data.  */
-	  && wait_on_socket (sock) > 0)
+      /* Wait for data.  */
+      if (wait_on_socket (sock) > 0)
 	{
-	  nbytes = TEMP_FAILURE_RETRY (__read (sock, response, responselen));
+	  ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, response,
+						       responselen));
 	  if (nbytes == (ssize_t) responselen)
 	    return sock;
 	}

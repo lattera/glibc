@@ -1,3 +1,11 @@
+2007-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (open_socket): Now takes request type and key
+	as parameter.  Construct request record.  Try sending request
+	before the first poll use, it usually succeeds.  Adjust all
+	callers.
+	* nscd/nscd-client.h: Define MAXKEYLEN.
+
 2007-01-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd-client.h (__nscd_cache_search): Remove const qualifier
