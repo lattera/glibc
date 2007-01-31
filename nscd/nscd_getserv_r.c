@@ -122,6 +122,10 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	      retval = -2;
 	      goto out;
 	    }
+	  if (__builtin_expect ((const char *) aliases_len
+				+ serv_resp.s_aliases_cnt * sizeof (uint32_t)
+				> recend, 0))
+	    goto out;
 
 #ifndef _STRING_ARCH_unaligned
 	  /* The aliases_len array in the mapped database might very
@@ -138,10 +142,6 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 				    * sizeof (uint32_t));
 	    }
 #endif
-	  if (__builtin_expect ((const char *) aliases_len
-				+ serv_resp.s_aliases_cnt * sizeof (uint32_t)
-				> recend, 0))
-	    goto out;
 	}
     }
 
