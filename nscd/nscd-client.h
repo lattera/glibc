@@ -44,6 +44,9 @@
 /* Path for the configuration file.  */
 #define _PATH_NSCDCONF	 "/etc/nscd.conf"
 
+/* Maximu allowed length for the key.  */
+#define MAXKEYLEN 1024
+
 
 /* Available services.  */
 typedef enum
