@@ -1,4 +1,5 @@
-/* Copyright (C) 1998, 1999, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -88,76 +89,81 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	      struct passwd **result)
 {
   int gc_cycle;
+  int nretries = 0;
+
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped;
   mapped = __nscd_get_map_ref (GETFDPW, "passwd", &map_handle, &gc_cycle);
 
  retry:;
-  const pw_response_header *pw_resp = NULL;
   const char *pw_name = NULL;
   int retval = -1;
   const char *recend = (const char *) ~UINTMAX_C (0);
+  pw_response_header pw_resp;
 
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (type, key, keylen,
-							  mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
       if (found != NULL)
 	{
-	  pw_resp = &found->data[0].pwdata;
-	  pw_name = (const char *) (pw_resp + 1);
+	  pw_name = (const char *) (&found->data[0].pwdata + 1);
+	  pw_resp = found->data[0].pwdata;
 	  recend = (const char *) found->data + found->recsize;
+	  /* Now check if we can trust pw_resp fields.  If GC is
+	     in progress, it can contain anything.  */
+	  if (mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out;
+	    }
 	}
     }
 
-  pw_response_header pw_resp_mem;
   int sock = -1;
-  if (pw_resp == NULL)
+  if (pw_name == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, type, &pw_resp_mem,
-				 sizeof (pw_resp_mem));
+      sock = __nscd_open_socket (key, keylen, type, &pw_resp,
+				 sizeof (pw_resp));
       if (sock == -1)
 	{
 	  __nss_not_use_nscd_passwd = 1;
 	  goto out;
 	}
-
-      pw_resp = &pw_resp_mem;
     }
 
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (pw_resp->found == -1, 0))
+  if (__builtin_expect (pw_resp.found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_passwd = 1;
       goto out_close;
     }
 
-  if (pw_resp->found == 1)
+  if (pw_resp.found == 1)
     {
       /* Set the information we already have.  */
-      resultbuf->pw_uid = pw_resp->pw_uid;
-      resultbuf->pw_gid = pw_resp->pw_gid;
+      resultbuf->pw_uid = pw_resp.pw_uid;
+      resultbuf->pw_gid = pw_resp.pw_gid;
 
       char *p = buffer;
       /* get pw_name */
       resultbuf->pw_name = p;
-      p += pw_resp->pw_name_len;
+      p += pw_resp.pw_name_len;
       /* get pw_passwd */
       resultbuf->pw_passwd = p;
-      p += pw_resp->pw_passwd_len;
+      p += pw_resp.pw_passwd_len;
       /* get pw_gecos */
       resultbuf->pw_gecos = p;
-      p += pw_resp->pw_gecos_len;
+      p += pw_resp.pw_gecos_len;
       /* get pw_dir */
       resultbuf->pw_dir = p;
-      p += pw_resp->pw_dir_len;
+      p += pw_resp.pw_dir_len;
       /* get pw_pshell */
       resultbuf->pw_shell = p;
-      p += pw_resp->pw_shell_len;
+      p += pw_resp.pw_shell_len;
 
       ssize_t total = p - buffer;
       if (__builtin_expect (pw_name + total > recend, 0))
@@ -189,14 +195,14 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	  memcpy (resultbuf->pw_name, pw_name, total);
 
 	  /* Try to detect corrupt databases.  */
-	  if (resultbuf->pw_name[pw_resp->pw_name_len - 1] != '\0'
-	      || resultbuf->pw_passwd[pw_resp->pw_passwd_len - 1] != '\0'
-	      || resultbuf->pw_gecos[pw_resp->pw_gecos_len - 1] != '\0'
-	      || resultbuf->pw_dir[pw_resp->pw_dir_len - 1] != '\0'
-	      || resultbuf->pw_shell[pw_resp->pw_shell_len - 1] != '\0')
+	  if (resultbuf->pw_name[pw_resp.pw_name_len - 1] != '\0'
+	      || resultbuf->pw_passwd[pw_resp.pw_passwd_len - 1] != '\0'
+	      || resultbuf->pw_gecos[pw_resp.pw_gecos_len - 1] != '\0'
+	      || resultbuf->pw_dir[pw_resp.pw_dir_len - 1] != '\0'
+	      || resultbuf->pw_shell[pw_resp.pw_shell_len - 1] != '\0')
 	    {
 	      /* We cannot use the database.  */
-	      retval = -1;
+	      retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
 	      goto out_close;
 	    }
 
@@ -215,19 +221,21 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0)
+      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  __nscd_unmap (mapped);
+	  if (atomic_decrement_val (&mapped->counter) == 0)
+	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      goto retry;
+      if (retval != -1)
+	goto retry;
     }
 
   return retval;

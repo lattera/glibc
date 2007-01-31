@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2000, 2002-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2000, 2002-2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -88,6 +89,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group **result)
 {
   int gc_cycle;
+  int nretries = 0;
   const uint32_t *len = NULL;
   size_t lensize = 0;
 
@@ -97,55 +99,59 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 						       &__gr_map_handle,
 						       &gc_cycle);
  retry:;
-  const gr_response_header *gr_resp = NULL;
   const char *gr_name = NULL;
   size_t gr_name_len = 0;
   int retval = -1;
   const char *recend = (const char *) ~UINTMAX_C (0);
+  gr_response_header gr_resp;
 
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (type, key, keylen,
-							  mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
       if (found != NULL)
 	{
-	  gr_resp = &found->data[0].grdata;
-	  len = (const uint32_t *) (gr_resp + 1);
-	  /* The alignment is always sufficient.  */
-	  assert (((uintptr_t) len & (__alignof__ (*len) - 1)) == 0);
+	  len = (const uint32_t *) (&found->data[0].grdata + 1);
+	  gr_resp = found->data[0].grdata;
 	  gr_name = ((const char *) len
-		     + gr_resp->gr_mem_cnt * sizeof (uint32_t));
-	  gr_name_len = gr_resp->gr_name_len + gr_resp->gr_passwd_len;
+		     + gr_resp.gr_mem_cnt * sizeof (uint32_t));
+	  gr_name_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 	  recend = (const char *) found->data + found->recsize;
+	  /* Now check if we can trust gr_resp fields.  If GC is
+	     in progress, it can contain anything.  */
+	  if (mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out;
+	    }
+
+	  /* The alignment is always sufficient, unless GC is in progress.  */
+	  assert (((uintptr_t) len & (__alignof__ (*len) - 1)) == 0);
 	}
     }
 
-  gr_response_header gr_resp_mem;
   int sock = -1;
-  if (gr_resp == NULL)
+  if (gr_name == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, type, &gr_resp_mem,
-				 sizeof (gr_resp_mem));
+      sock = __nscd_open_socket (key, keylen, type, &gr_resp,
+				 sizeof (gr_resp));
       if (sock == -1)
 	{
 	  __nss_not_use_nscd_group = 1;
 	  goto out;
 	}
-
-      gr_resp = &gr_resp_mem;
     }
 
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (gr_resp->found == -1, 0))
+  if (__builtin_expect (gr_resp.found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_group = 1;
       goto out_close;
     }
 
-  if (gr_resp->found == 1)
+  if (gr_resp.found == 1)
     {
       struct iovec vec[2];
       char *p = buffer;
@@ -157,8 +163,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	 align the pointer.  */
       align = ((__alignof__ (char *) - (p - ((char *) 0)))
 	       & (__alignof__ (char *) - 1));
-      total_len = (align + (1 + gr_resp->gr_mem_cnt) * sizeof (char *)
-		   + gr_resp->gr_name_len + gr_resp->gr_passwd_len);
+      total_len = (align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
+		   + gr_resp.gr_name_len + gr_resp.gr_passwd_len);
       if (__builtin_expect (buflen < total_len, 0))
 	{
 	no_room:
@@ -170,16 +176,16 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
       p += align;
       resultbuf->gr_mem = (char **) p;
-      p += (1 + gr_resp->gr_mem_cnt) * sizeof (char *);
+      p += (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
 
       /* Set pointers for strings.  */
       resultbuf->gr_name = p;
-      p += gr_resp->gr_name_len;
+      p += gr_resp.gr_name_len;
       resultbuf->gr_passwd = p;
-      p += gr_resp->gr_passwd_len;
+      p += gr_resp.gr_passwd_len;
 
       /* Fill in what we know now.  */
-      resultbuf->gr_gid = gr_resp->gr_gid;
+      resultbuf->gr_gid = gr_resp.gr_gid;
 
       /* Read the length information, group name, and password.  */
       if (gr_name == NULL)
@@ -187,17 +193,17 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	  /* Allocate array to store lengths.  */
 	  if (lensize == 0)
 	    {
-	      lensize = gr_resp->gr_mem_cnt * sizeof (uint32_t);
+	      lensize = gr_resp.gr_mem_cnt * sizeof (uint32_t);
 	      len = (uint32_t *) alloca (lensize);
 	    }
-	  else if (gr_resp->gr_mem_cnt * sizeof (uint32_t) > lensize)
+	  else if (gr_resp.gr_mem_cnt * sizeof (uint32_t) > lensize)
 	    len = extend_alloca (len, lensize,
-				 gr_resp->gr_mem_cnt * sizeof (uint32_t));
+				 gr_resp.gr_mem_cnt * sizeof (uint32_t));
 
 	  vec[0].iov_base = (void *) len;
-	  vec[0].iov_len = gr_resp->gr_mem_cnt * sizeof (uint32_t);
+	  vec[0].iov_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
 	  vec[1].iov_base = resultbuf->gr_name;
-	  vec[1].iov_len = gr_resp->gr_name_len + gr_resp->gr_passwd_len;
+	  vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 	  total_len = vec[0].iov_len + vec[1].iov_len;
 
 	  /* Get this data.  */
@@ -209,14 +215,14 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	/* We already have the data.  Just copy the group name and
 	   password.  */
 	memcpy (resultbuf->gr_name, gr_name,
-		gr_resp->gr_name_len + gr_resp->gr_passwd_len);
+		gr_resp.gr_name_len + gr_resp.gr_passwd_len);
 
       /* Clear the terminating entry.  */
-      resultbuf->gr_mem[gr_resp->gr_mem_cnt] = NULL;
+      resultbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
 
       /* Prepare reading the group members.  */
       total_len = 0;
-      for (cnt = 0; cnt < gr_resp->gr_mem_cnt; ++cnt)
+      for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
 	{
 	  resultbuf->gr_mem[cnt] = p;
 	  total_len += len[cnt];
@@ -224,9 +230,25 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	}
 
       if (__builtin_expect (gr_name + gr_name_len + total_len > recend, 0))
-	goto out_close;
+	{
+	  /* len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (gr_name != NULL && mapped->head->gc_cycle != gc_cycle)
+	    retval = -2;
+	  goto out_close;
+	}
       if (__builtin_expect (total_len > buflen, 0))
-	goto no_room;
+	{
+	  /* len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (gr_name != NULL && mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out_close;
+	    }
+	  else
+	    goto no_room;
+	}
 
       retval = 0;
       if (gr_name == NULL)
@@ -248,14 +270,14 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
 	  /* Try to detect corrupt databases.  */
 	  if (resultbuf->gr_name[gr_name_len - 1] != '\0'
-	      || resultbuf->gr_passwd[gr_resp->gr_passwd_len - 1] != '\0'
-	      || ({for (cnt = 0; cnt < gr_resp->gr_mem_cnt; ++cnt)
+	      || resultbuf->gr_passwd[gr_resp.gr_passwd_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
 		     if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
 		       break;
-	  	   cnt < gr_resp->gr_mem_cnt; }))
+	  	   cnt < gr_resp.gr_mem_cnt; }))
 	    {
 	      /* We cannot use the database.  */
-	      retval = -1;
+	      retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
 	      goto out_close;
 	    }
 
@@ -274,19 +296,21 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0)
+      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  __nscd_unmap (mapped);
+	  if (atomic_decrement_val (&mapped->counter) == 0)
+	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      goto retry;
+      if (retval != -1)
+	goto retry;
     }
 
   return retval;

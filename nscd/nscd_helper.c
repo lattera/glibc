@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2003,2004,2005,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,6 +22,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -362,7 +364,10 @@ __nscd_get_map_ref (request_type type, const char *name,
 }
 
 
-const struct datahead *
+/* Don't return const struct datahead *, as eventhough the record
+   is normally constant, it can change arbitrarily during nscd
+   garbage collection.  */
+struct datahead *
 __nscd_cache_search (request_type type, const char *key, size_t keylen,
 		     const struct mapped_database *mapped)
 {
@@ -374,15 +379,31 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
 
+#ifndef _STRING_ARCH_unaligned
+      /* Although during garbage collection when moving struct hashentry
+	 records around we first copy from old to new location and then
+	 adjust pointer from previous hashentry to it, there is no barrier
+	 between those memory writes.  It is very unlikely to hit it,
+	 so check alignment only if a misaligned load can crash the
+	 application.  */
+      if ((uintptr_t) here & (__alignof__ (*here) - 1))
+	return NULL;
+#endif
+
       if (type == here->type
 	  && keylen == here->len
-	  && here->key + here->len <= datasize
+	  && here->key + keylen <= datasize
 	  && memcmp (key, mapped->data + here->key, keylen) == 0
 	  && here->packet + sizeof (struct datahead) <= datasize)
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
-	  const struct datahead *dh
+	  struct datahead *dh
 	    = (struct datahead *) (mapped->data + here->packet);
+
+#ifndef _STRING_ARCH_unaligned
+	  if ((uintptr_t) dh & (__alignof__ (*dh) - 1))
+	    return NULL;
+#endif
 
 	  /* See whether we must ignore the entry or whether something
 	     is wrong because garbage collection is in progress.  */

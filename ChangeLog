@@ -1,3 +1,22 @@
+2007-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd-client.h (__nscd_cache_search): Remove const qualifier
+	from return value.
+	* nscd/nscd_helper.c: Include string.h.
+	(__nscd_cache_search): Remove const qualifier from return value.
+	On strict alignment architectures check hash entry and data head
+	alignment.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Don't crash or fail because
+	mmapped data during GC cycle contains garbage.  If
+	__nscd_drop_map_ref fails, decrement mapped->counter when returning
+	error or if retrying with NO_MAPPING, only __nscd_unmap if counter
+	dropped to 0.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
 2007-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/hsearch_r.c (hdestroy_r): Remove unnecessary test.

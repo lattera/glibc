@@ -113,7 +113,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 			       &gc_cycle);
 
  retry:;
-  const hst_response_header *hst_resp = NULL;
   const char *h_name = NULL;
   const uint32_t *aliases_len = NULL;
   const char *addr_list = NULL;
@@ -121,18 +120,27 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   int retval = -1;
   const char *recend = (const char *) ~UINTMAX_C (0);
   int sock = -1;
+  hst_response_header hst_resp;
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (type, key, keylen,
-							  mapped);
+      /* No const qualifier, as it can change during garbage collection.  */
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
       if (found != NULL)
 	{
-	  hst_resp = &found->data[0].hstdata;
-	  h_name = (char *) (hst_resp + 1);
-	  aliases_len = (uint32_t *) (h_name + hst_resp->h_name_len);
+	  h_name = (char *) (&found->data[0].hstdata + 1);
+	  hst_resp = found->data[0].hstdata;
+	  aliases_len = (uint32_t *) (h_name + hst_resp.h_name_len);
 	  addr_list = ((char *) aliases_len
-		       + hst_resp->h_aliases_cnt * sizeof (uint32_t));
-	  addr_list_len = hst_resp->h_addr_list_cnt * INADDRSZ;
+		       + hst_resp.h_aliases_cnt * sizeof (uint32_t));
+	  addr_list_len = hst_resp.h_addr_list_cnt * INADDRSZ;
+	  recend = (const char *) found->data + found->recsize;
+	  /* Now check if we can trust hst_resp fields.  If GC is
+	     in progress, it can contain anything.  */
+	  if (mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out;
+	    }
 
 #ifndef _STRING_ARCH_unaligned
 	  /* The aliases_len array in the mapped database might very
@@ -142,51 +150,47 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  if (((uintptr_t) aliases_len & (__alignof__ (*aliases_len) - 1))
 	      != 0)
 	    {
-	      uint32_t *tmp = alloca (hst_resp->h_aliases_cnt
+	      uint32_t *tmp = alloca (hst_resp.h_aliases_cnt
 				      * sizeof (uint32_t));
 	      aliases_len = memcpy (tmp, aliases_len,
-				    hst_resp->h_aliases_cnt
+				    hst_resp.h_aliases_cnt
 				    * sizeof (uint32_t));
 	    }
 #endif
 	  if (type != GETHOSTBYADDR && type != GETHOSTBYNAME)
 	    {
-	      if (hst_resp->h_length == INADDRSZ)
+	      if (hst_resp.h_length == INADDRSZ)
 		addr_list += addr_list_len;
-	      addr_list_len = hst_resp->h_addr_list_cnt * IN6ADDRSZ;
+	      addr_list_len = hst_resp.h_addr_list_cnt * IN6ADDRSZ;
 	    }
-	  recend = (const char *) found->data + found->recsize;
 	  if (__builtin_expect ((const char *) addr_list + addr_list_len
 				> recend, 0))
-	    goto out_close;
+	    goto out;
 	}
     }
 
-  hst_response_header hst_resp_mem;
-  if (hst_resp == NULL)
+  if (h_name == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, type, &hst_resp_mem,
-				 sizeof (hst_resp_mem));
+      sock = __nscd_open_socket (key, keylen, type, &hst_resp,
+				 sizeof (hst_resp));
       if (sock == -1)
 	{
 	  __nss_not_use_nscd_hosts = 1;
 	  goto out;
 	}
-
-      hst_resp = &hst_resp_mem;
     }
 
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (hst_resp->found == -1, 0))
+  if (__builtin_expect (hst_resp.found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_hosts = 1;
       goto out_close;
     }
 
-  if (hst_resp->found == 1)
+  if (hst_resp.found == 1)
     {
       char *cp = buffer;
       uintptr_t align1;
@@ -201,15 +205,15 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	 align the pointer and the base of the h_addr_list pointers.  */
       align1 = ((__alignof__ (char *) - (cp - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp->h_name_len)
+      align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp.h_name_len)
 					 - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      if (buflen < (align1 + hst_resp->h_name_len + align2
-		    + ((hst_resp->h_aliases_cnt + hst_resp->h_addr_list_cnt
+      if (buflen < (align1 + hst_resp.h_name_len + align2
+		    + ((hst_resp.h_aliases_cnt + hst_resp.h_addr_list_cnt
 			+ 2)
 		       * sizeof (char *))
-		    + hst_resp->h_addr_list_cnt * (type == AF_INET
-						   ? INADDRSZ : IN6ADDRSZ)))
+		    + hst_resp.h_addr_list_cnt * (type == AF_INET
+						  ? INADDRSZ : IN6ADDRSZ)))
 	{
 	no_room:
 	  *h_errnop = NETDB_INTERNAL;
@@ -221,12 +225,12 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       /* Prepare the result as far as we can.  */
       resultbuf->h_aliases = (char **) cp;
-      cp += (hst_resp->h_aliases_cnt + 1) * sizeof (char *);
+      cp += (hst_resp.h_aliases_cnt + 1) * sizeof (char *);
       resultbuf->h_addr_list = (char **) cp;
-      cp += (hst_resp->h_addr_list_cnt + 1) * sizeof (char *);
+      cp += (hst_resp.h_addr_list_cnt + 1) * sizeof (char *);
 
       resultbuf->h_name = cp;
-      cp += hst_resp->h_name_len + align2;
+      cp += hst_resp.h_name_len + align2;
 
       if (type == GETHOSTBYADDR || type == GETHOSTBYNAME)
 	{
@@ -238,7 +242,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  resultbuf->h_addrtype = AF_INET6;
 	  resultbuf->h_length = IN6ADDRSZ;
 	}
-      for (cnt = 0; cnt < hst_resp->h_addr_list_cnt; ++cnt)
+      for (cnt = 0; cnt < hst_resp.h_addr_list_cnt; ++cnt)
 	{
 	  resultbuf->h_addr_list[cnt] = cp;
 	  cp += resultbuf->h_length;
@@ -250,47 +254,47 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  struct iovec vec[4];
 
 	  vec[0].iov_base = resultbuf->h_name;
-	  vec[0].iov_len = hst_resp->h_name_len;
-	  total_len = hst_resp->h_name_len;
+	  vec[0].iov_len = hst_resp.h_name_len;
+	  total_len = hst_resp.h_name_len;
 	  n = 1;
 
-	  if (hst_resp->h_aliases_cnt > 0)
+	  if (hst_resp.h_aliases_cnt > 0)
 	    {
-	      aliases_len = alloca (hst_resp->h_aliases_cnt
+	      aliases_len = alloca (hst_resp.h_aliases_cnt
 				    * sizeof (uint32_t));
 	      vec[n].iov_base = (void *) aliases_len;
-	      vec[n].iov_len = hst_resp->h_aliases_cnt * sizeof (uint32_t);
+	      vec[n].iov_len = hst_resp.h_aliases_cnt * sizeof (uint32_t);
 
-	      total_len += hst_resp->h_aliases_cnt * sizeof (uint32_t);
+	      total_len += hst_resp.h_aliases_cnt * sizeof (uint32_t);
 	      ++n;
 	    }
 
 	  if (type == GETHOSTBYADDR || type == GETHOSTBYNAME)
 	    {
 	      vec[n].iov_base = resultbuf->h_addr_list[0];
-	      vec[n].iov_len = hst_resp->h_addr_list_cnt * INADDRSZ;
+	      vec[n].iov_len = hst_resp.h_addr_list_cnt * INADDRSZ;
 
-	      total_len += hst_resp->h_addr_list_cnt * INADDRSZ;
+	      total_len += hst_resp.h_addr_list_cnt * INADDRSZ;
 
 	      ++n;
 	    }
 	  else
 	    {
-	      if (hst_resp->h_length == INADDRSZ)
+	      if (hst_resp.h_length == INADDRSZ)
 		{
-		  ignore = alloca (hst_resp->h_addr_list_cnt * INADDRSZ);
+		  ignore = alloca (hst_resp.h_addr_list_cnt * INADDRSZ);
 		  vec[n].iov_base = ignore;
-		  vec[n].iov_len = hst_resp->h_addr_list_cnt * INADDRSZ;
+		  vec[n].iov_len = hst_resp.h_addr_list_cnt * INADDRSZ;
 
-		  total_len += hst_resp->h_addr_list_cnt * INADDRSZ;
+		  total_len += hst_resp.h_addr_list_cnt * INADDRSZ;
 
 		  ++n;
 		}
 
 	      vec[n].iov_base = resultbuf->h_addr_list[0];
-	      vec[n].iov_len = hst_resp->h_addr_list_cnt * IN6ADDRSZ;
+	      vec[n].iov_len = hst_resp.h_addr_list_cnt * IN6ADDRSZ;
 
-	      total_len += hst_resp->h_addr_list_cnt * IN6ADDRSZ;
+	      total_len += hst_resp.h_addr_list_cnt * IN6ADDRSZ;
 
 	      ++n;
 	    }
@@ -300,13 +304,13 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	}
       else
 	{
-	  memcpy (resultbuf->h_name, h_name, hst_resp->h_name_len);
+	  memcpy (resultbuf->h_name, h_name, hst_resp.h_name_len);
 	  memcpy (resultbuf->h_addr_list[0], addr_list, addr_list_len);
 	}
 
       /*  Now we also can read the aliases.  */
       total_len = 0;
-      for (cnt = 0; cnt < hst_resp->h_aliases_cnt; ++cnt)
+      for (cnt = 0; cnt < hst_resp.h_aliases_cnt; ++cnt)
 	{
 	  resultbuf->h_aliases[cnt] = cp;
 	  cp += aliases_len[cnt];
@@ -316,10 +320,25 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       if (__builtin_expect ((const char *) addr_list + addr_list_len
 			    + total_len > recend, 0))
-	goto out_close;
+	{
+	  /* aliases_len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (addr_list != NULL && mapped->head->gc_cycle != gc_cycle)
+	    retval = -2;
+	  goto out_close;
+	}
       /* See whether this would exceed the buffer capacity.  */
       if (__builtin_expect (cp > buffer + buflen, 0))
-	goto no_room;
+	{
+	  /* aliases_len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (addr_list != NULL && mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out_close;
+	    }
+	  goto no_room;
+	}
 
       /* And finally read the aliases.  */
       if (addr_list == NULL)
@@ -338,14 +357,18 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 		  (const char *) addr_list + addr_list_len, total_len);
 
 	  /* Try to detect corrupt databases.  */
-	  if (resultbuf->h_name[hst_resp->h_name_len - 1] != '\0'
-	      || ({for (cnt = 0; cnt < hst_resp->h_aliases_cnt; ++cnt)
+	  if (resultbuf->h_name[hst_resp.h_name_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < hst_resp.h_aliases_cnt; ++cnt)
 		     if (resultbuf->h_aliases[cnt][aliases_len[cnt] - 1]
 			 != '\0')
 		       break;
-		   cnt < hst_resp->h_aliases_cnt; }))
-	    /* We cannot use the database.  */
-	    goto out_close;
+		   cnt < hst_resp.h_aliases_cnt; }))
+	    {
+	      /* We cannot use the database.  */
+	      if (mapped->head->gc_cycle != gc_cycle)
+		retval = -2;
+	      goto out_close;
+	    }
 
 	  retval = 0;
 	  *result = resultbuf;
@@ -354,7 +377,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   else
     {
       /* Store the error number.  */
-      *h_errnop = hst_resp->error;
+      *h_errnop = hst_resp.error;
 
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
@@ -366,19 +389,21 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0 || ++nretries == 5)
+      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  __nscd_unmap (mapped);
+	  if (atomic_decrement_val (&mapped->counter) == 0)
+	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      goto retry;
+      if (retval != -1)
+	goto retry;
     }
 
   return retval;

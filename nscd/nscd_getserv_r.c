@@ -93,7 +93,6 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 		     "/", 1), proto ?: "", protolen + 1);
 
  retry:;
-  const serv_response_header *serv_resp = NULL;
   const char *s_name = NULL;
   const char *s_proto = NULL;
   const uint32_t *aliases_len = NULL;
@@ -101,19 +100,28 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
   int retval = -1;
   const char *recend = (const char *) ~UINTMAX_C (0);
   int sock = -1;
+  serv_response_header serv_resp;
+
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (type, key, keylen,
-							  mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
 
       if (found != NULL)
 	{
-	  serv_resp = &found->data[0].servdata;
-	  s_name = (char *) (serv_resp + 1);
-	  s_proto = s_name + serv_resp->s_name_len;
-	  aliases_len = (uint32_t *) (s_proto + serv_resp->s_proto_len);
+	  s_name = (char *) (&found->data[0].servdata + 1);
+	  serv_resp = found->data[0].servdata;
+	  s_proto = s_name + serv_resp.s_name_len;
+	  aliases_len = (uint32_t *) (s_proto + serv_resp.s_proto_len);
 	  aliases_list = ((char *) aliases_len
-			  + serv_resp->s_aliases_cnt * sizeof (uint32_t));
+			  + serv_resp.s_aliases_cnt * sizeof (uint32_t));
+	  recend = (const char *) found->data + found->recsize;
+	  /* Now check if we can trust serv_resp fields.  If GC is
+	     in progress, it can contain anything.  */
+	  if (mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out;
+	    }
 
 #ifndef _STRING_ARCH_unaligned
 	  /* The aliases_len array in the mapped database might very
@@ -123,46 +131,42 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	  if (((uintptr_t) aliases_len & (__alignof__ (*aliases_len) - 1))
 	      != 0)
 	    {
-	      uint32_t *tmp = alloca (serv_resp->s_aliases_cnt
+	      uint32_t *tmp = alloca (serv_resp.s_aliases_cnt
 				      * sizeof (uint32_t));
 	      aliases_len = memcpy (tmp, aliases_len,
-				    serv_resp->s_aliases_cnt
+				    serv_resp.s_aliases_cnt
 				    * sizeof (uint32_t));
 	    }
 #endif
-	  recend = (const char *) found->data + found->recsize;
 	  if (__builtin_expect ((const char *) aliases_len
-				+ serv_resp->s_aliases_cnt * sizeof (uint32_t)
+				+ serv_resp.s_aliases_cnt * sizeof (uint32_t)
 				> recend, 0))
-	    goto out_close;
+	    goto out;
 	}
     }
 
-  serv_response_header serv_resp_mem;
-  if (serv_resp == NULL)
+  if (s_name == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, type, &serv_resp_mem,
-				 sizeof (serv_resp_mem));
+      sock = __nscd_open_socket (key, keylen, type, &serv_resp,
+				 sizeof (serv_resp));
       if (sock == -1)
 	{
 	  __nss_not_use_nscd_services = 1;
 	  goto out;
 	}
-
-      serv_resp = &serv_resp_mem;
     }
 
   /* No value found so far.  */
   *result = NULL;
 
-  if (__builtin_expect (serv_resp->found == -1, 0))
+  if (__builtin_expect (serv_resp.found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_services = 1;
       goto out_close;
     }
 
-  if (serv_resp->found == 1)
+  if (serv_resp.found == 1)
     {
       char *cp = buf;
       uintptr_t align1;
@@ -176,13 +180,13 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	 align the pointer and the base of the h_addr_list pointers.  */
       align1 = ((__alignof__ (char *) - (cp - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      align2 = ((__alignof__ (char *) - ((cp + align1 + serv_resp->s_name_len
-					  + serv_resp->s_proto_len)
+      align2 = ((__alignof__ (char *) - ((cp + align1 + serv_resp.s_name_len
+					  + serv_resp.s_proto_len)
 					 - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      if (buflen < (align1 + serv_resp->s_name_len + serv_resp->s_proto_len
+      if (buflen < (align1 + serv_resp.s_name_len + serv_resp.s_proto_len
 		    + align2
-		    + (serv_resp->s_aliases_cnt + 1) * sizeof (char *)))
+		    + (serv_resp.s_aliases_cnt + 1) * sizeof (char *)))
 	{
 	no_room:
 	  __set_errno (ERANGE);
@@ -193,31 +197,31 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 
       /* Prepare the result as far as we can.  */
       resultbuf->s_aliases = (char **) cp;
-      cp += (serv_resp->s_aliases_cnt + 1) * sizeof (char *);
+      cp += (serv_resp.s_aliases_cnt + 1) * sizeof (char *);
 
       resultbuf->s_name = cp;
-      cp += serv_resp->s_name_len;
+      cp += serv_resp.s_name_len;
       resultbuf->s_proto = cp;
-      cp += serv_resp->s_proto_len + align2;
-      resultbuf->s_port = serv_resp->s_port;
+      cp += serv_resp.s_proto_len + align2;
+      resultbuf->s_port = serv_resp.s_port;
 
       if (s_name == NULL)
 	{
 	  struct iovec vec[2];
 
 	  vec[0].iov_base = resultbuf->s_name;
-	  vec[0].iov_len = serv_resp->s_name_len + serv_resp->s_proto_len;
+	  vec[0].iov_len = serv_resp.s_name_len + serv_resp.s_proto_len;
 	  total_len = vec[0].iov_len;
 	  n = 1;
 
-	  if (serv_resp->s_aliases_cnt > 0)
+	  if (serv_resp.s_aliases_cnt > 0)
 	    {
-	      aliases_len = alloca (serv_resp->s_aliases_cnt
+	      aliases_len = alloca (serv_resp.s_aliases_cnt
 				    * sizeof (uint32_t));
 	      vec[n].iov_base = (void *) aliases_len;
-	      vec[n].iov_len = serv_resp->s_aliases_cnt * sizeof (uint32_t);
+	      vec[n].iov_len = serv_resp.s_aliases_cnt * sizeof (uint32_t);
 
-	      total_len += serv_resp->s_aliases_cnt * sizeof (uint32_t);
+	      total_len += serv_resp.s_aliases_cnt * sizeof (uint32_t);
 	      ++n;
 	    }
 
@@ -226,11 +230,11 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	}
       else
 	memcpy (resultbuf->s_name, s_name,
-		serv_resp->s_name_len + serv_resp->s_proto_len);
+		serv_resp.s_name_len + serv_resp.s_proto_len);
 
       /*  Now we also can read the aliases.  */
       total_len = 0;
-      for (cnt = 0; cnt < serv_resp->s_aliases_cnt; ++cnt)
+      for (cnt = 0; cnt < serv_resp.s_aliases_cnt; ++cnt)
 	{
 	  resultbuf->s_aliases[cnt] = cp;
 	  cp += aliases_len[cnt];
@@ -240,10 +244,26 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 
       if (__builtin_expect ((const char *) aliases_list + total_len > recend,
 			    0))
-	goto out_close;
+	{
+	  /* aliases_len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (aliases_list != NULL && mapped->head->gc_cycle != gc_cycle)
+	    retval = -2;
+	  goto out_close;
+	}
+
       /* See whether this would exceed the buffer capacity.  */
       if (__builtin_expect (cp > buf + buflen, 0))
-	goto no_room;
+	{
+	  /* aliases_len array might contain garbage during nscd GC cycle,
+	     retry rather than fail in that case.  */
+	  if (aliases_list != NULL && mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out_close;
+	    }
+	  goto no_room;
+	}
 
       /* And finally read the aliases.  */
       if (aliases_list == NULL)
@@ -261,15 +281,19 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	  memcpy (resultbuf->s_aliases[0], aliases_list, total_len);
 
 	  /* Try to detect corrupt databases.  */
-	  if (resultbuf->s_name[serv_resp->s_name_len - 1] != '\0'
-	      || resultbuf->s_proto[serv_resp->s_proto_len - 1] != '\0'
-	      || ({for (cnt = 0; cnt < serv_resp->s_aliases_cnt; ++cnt)
+	  if (resultbuf->s_name[serv_resp.s_name_len - 1] != '\0'
+	      || resultbuf->s_proto[serv_resp.s_proto_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < serv_resp.s_aliases_cnt; ++cnt)
 		     if (resultbuf->s_aliases[cnt][aliases_len[cnt] - 1]
 			 != '\0')
 		       break;
-		   cnt < serv_resp->s_aliases_cnt; }))
-	    /* We cannot use the database.  */
-	    goto out_close;
+		   cnt < serv_resp.s_aliases_cnt; }))
+	    {
+	      /* We cannot use the database.  */
+	      if (mapped->head->gc_cycle != gc_cycle)
+		retval = -2;
+	      goto out_close;
+	    }
 
 	  retval = 0;
 	  *result = resultbuf;
@@ -287,19 +311,21 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0 || ++nretries == 5)
+      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  __nscd_unmap (mapped);
+	  if (atomic_decrement_val (&mapped->counter) == 0)
+	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      goto retry;
+      if (retval != -1)
+	goto retry;
     }
 
   return retval;
