@@ -1,3 +1,7 @@
+2007-02-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/mathdef.h (float_t): Change to float.
+
 2007-01-25  Atsushi Nemoto <anemo@mba.ocn.ne.jp>
 	    Daniel Jacobowitz  <dan@codesourcery.com>
 

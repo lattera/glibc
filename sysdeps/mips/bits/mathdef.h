@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004
+/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,10 +26,9 @@
 #if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-/* Normally, there is no long double type and the `float' and `double'
-   expressions are evaluated as `double'.  */
-typedef double float_t;		/* `float' expressions are evaluated as
-				   `double'.  */
+/* MIPS has `float' and `double' operations.  */
+typedef float float_t;		/* `float' expressions are evaluated as
+				   `float'.  */
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
