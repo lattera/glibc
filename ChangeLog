@@ -1,3 +1,16 @@
+2007-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PTR_MANGLE): Roll value before
+	returning.
+	(PTR_DEMANGLE): Real definition now that it's not the same as
+	PRT_MANGLE anymore.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+
+	* string/strerror_l.c: New file.
+	* string/Makefile (routines): Add strerror_l.
+	* string/string.h: Declare strerror_l.
+	* string/Versions: Export strerror_l for GLIBC_2.6.
+
 2007-01-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (open_socket): Now takes request type and key
@@ -5,6 +18,7 @@
 	before the first poll use, it usually succeeds.  Adjust all
 	callers.
 	* nscd/nscd-client.h: Define MAXKEYLEN.
+	* nscd/connections.c (nscd_run): Don't define MAXKEYLEN here.
 
 2007-01-31  Jakub Jelinek  <jakub@redhat.com>
 

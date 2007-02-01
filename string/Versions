@@ -77,4 +77,7 @@ libc {
     # x*
     __xpg_strerror_r;
   }
+  GLIBC_2.6 {
+    strerror_l;
+  }
 }

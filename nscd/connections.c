@@ -1430,7 +1430,6 @@ nscd_run (void *p)
 
       /* It should not be possible to crash the nscd with a silly
 	 request (i.e., a terribly large key).  We limit the size to 1kb.  */
-#define MAXKEYLEN 1024
       if (__builtin_expect (req.key_len, 1) < 0
 	  || __builtin_expect (req.key_len, 1) > MAXKEYLEN)
 	{

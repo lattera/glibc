@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1995-2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -282,6 +282,12 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
      __THROW __nonnull ((2));
 # endif
 #endif
+
+#ifdef __USE_GNU
+/* Translate error number to string according to the locale L.  */
+extern char *strerror_l (int __errnum, __locale_t __l) __THROW;
+#endif
+
 
 /* We define this function always since `bzero' is sometimes needed when
    the namespace rules does not allow this.  */

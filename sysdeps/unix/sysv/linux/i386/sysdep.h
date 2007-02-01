@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1993,1995-2000,2002-2005,2006
+/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
@@ -566,15 +566,23 @@ asm (".L__X'%ebx = 1\n\t"
    is too complicated here since we have no PC-relative addressing mode.  */
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
+#  define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg;		      \
+				roll $9, reg
+#  define PTR_DEMANGLE(reg)	rorl $9, reg;				      \
+				xorl %gs:POINTER_GUARD, reg
 # else
-#  define PTR_MANGLE(var)	asm ("xorl %%gs:%c2, %0"		      \
+#  define PTR_MANGLE(var)	asm ("xorl %%gs:%c2, %0\n"		      \
+				     "roll $9, %0"			      \
 				     : "=r" (var)			      \
 				     : "0" (var),			      \
 				       "i" (offsetof (tcbhead_t,	      \
 						      pointer_guard)))
-#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+#  define PTR_DEMANGLE(var)	asm ("rorl $9, %0\n"			      \
+				     "xorl %%gs:%c2, %0"		      \
+				     : "=r" (var)			      \
+				     : "0" (var),			      \
+				       "i" (offsetof (tcbhead_t,	      \
+						      pointer_guard)))
 # endif
 #endif
 
