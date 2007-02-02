@@ -147,7 +147,7 @@ open_socket (request_type type, const char *key, size_t keylen)
       int to;
       if (first_try)
 	{
-	  gettimeofday (&tvend, NULL);
+	  (void) __gettimeofday (&tvend, NULL);
 	  tvend.tv_sec += 5;
 	  to = 5 * 1000;
 	  first_try = false;
@@ -155,7 +155,7 @@ open_socket (request_type type, const char *key, size_t keylen)
       else
 	{
 	  struct timeval now;
-	  gettimeofday (&now, NULL);
+	  (void) __gettimeofday (&now, NULL);
 	  to = ((tvend.tv_sec - now.tv_sec) * 1000
 		+ (tvend.tv_usec - now.tv_usec) / 1000);
 	}
