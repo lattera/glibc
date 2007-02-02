@@ -4,6 +4,7 @@
 extern __typeof (uselocale) __uselocale;
 
 libc_hidden_proto (setlocale)
+libc_hidden_proto (__uselocale)
 
 /* This has to be changed whenever a new locale is defined.  */
 #define __LC_LAST	13
