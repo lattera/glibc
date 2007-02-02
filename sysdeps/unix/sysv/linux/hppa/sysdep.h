@@ -479,3 +479,8 @@ L(pre_end):					ASM_LINE_SEP	\
 #define CLOB_ARGS_0 CLOB_ARGS_1, "%r26"
 
 #endif	/* __ASSEMBLER__ */
+
+/* Pointer mangling is not yet supported for HPPA.  */
+#define PTR_MANGLE(var) (void) (var)
+#define PTR_DEMANGLE(var) (void) (var)
+

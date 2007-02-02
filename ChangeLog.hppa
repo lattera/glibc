@@ -1,3 +1,8 @@
+2007-02-02  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (PTR_MANGLE): Define.
+	(PTR_DEMANGLE): Define.
+
 2007-02-02  Guy Martin  <gmsoft@tuxicoman.be>
 
 	* sysdeps/hppa/dl-trampoline.S (_dl_runtime_profile):
