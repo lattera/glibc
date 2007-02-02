@@ -284,5 +284,6 @@ L(cont):
 	bv,n	0(%r2)
         .EXIT
         .PROCEND
+	cfi_endproc
 	.size   _dl_runtime_profile, . - _dl_runtime_profile
 
