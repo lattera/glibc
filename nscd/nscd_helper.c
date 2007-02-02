@@ -127,6 +127,8 @@ open_socket (request_type type, const char *key, size_t keylen)
 
   bool first_try = true;
   struct timeval tvend;
+  /* Fake initializing tvend.  */
+  asm ("" : "=m" (tvend));
   while (1)
     {
 #ifndef MSG_NOSIGNAL
@@ -145,20 +147,18 @@ open_socket (request_type type, const char *key, size_t keylen)
 
       /* The daemon is busy wait for it.  */
       int to;
+      struct timeval now;
+      (void) __gettimeofday (&now, NULL);
       if (first_try)
 	{
-	  (void) __gettimeofday (&tvend, NULL);
-	  tvend.tv_sec += 5;
+	  tvend.tv_usec = now.tv_usec;
+	  tvend.tv_sec = now.tv_sec + 5;
 	  to = 5 * 1000;
 	  first_try = false;
 	}
       else
-	{
-	  struct timeval now;
-	  (void) __gettimeofday (&now, NULL);
-	  to = ((tvend.tv_sec - now.tv_sec) * 1000
-		+ (tvend.tv_usec - now.tv_usec) / 1000);
-	}
+	to = ((tvend.tv_sec - now.tv_sec) * 1000
+	      + (tvend.tv_usec - now.tv_usec) / 1000);
 
       struct pollfd fds[1];
       fds[0].fd = sock;
