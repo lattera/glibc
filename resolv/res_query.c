@@ -120,10 +120,13 @@ __libc_res_nquery(res_state statp,
 	u_char *buf;
 	HEADER *hp = (HEADER *) answer;
 	int n, use_malloc = 0;
+        u_int oflags = statp->_flags;
 
+	size_t bufsize = QUERYSIZE;
+	buf = alloca (bufsize);
+
+ again:
 	hp->rcode = NOERROR;	/* default */
-
-	buf = alloca (QUERYSIZE);
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
@@ -131,18 +134,30 @@ __libc_res_nquery(res_state statp,
 #endif
 
 	n = res_nmkquery(statp, QUERY, name, class, type, NULL, 0, NULL,
-			 buf, QUERYSIZE);
-	if (__builtin_expect (n <= 0, 0)) {
+			 buf, bufsize);
+	if (n > 0
+	    && (oflags & RES_F_EDNS0ERR) == 0
+	    && (statp->options & RES_USE_EDNS0) != 0)
+		n = __res_nopt(statp, n, buf, bufsize, anslen);
+	if (__builtin_expect (n <= 0, 0) && !use_malloc) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
-		buf = malloc (MAXPACKET);
+		bufsize = MAXPACKET;
+		buf = malloc (bufsize);
 		if (buf != NULL) {
 			use_malloc = 1;
-			n = res_nmkquery(statp, QUERY, name, class, type, NULL,
-					 0, NULL, buf, MAXPACKET);
+			goto again;
 		}
 	}
 	if (__builtin_expect (n <= 0, 0)) {
+		/* If the query choked with EDNS0, retry without EDNS0.  */
+		if ((statp->options & RES_USE_EDNS0) != 0
+		    && ((oflags ^ statp->_flags) & RES_F_EDNS0ERR) != 0) {
+			statp->_flags |= RES_F_EDNS0ERR;
+			if (statp->options & RES_DEBUG)
+				printf(";; res_nquery: retry without EDNS0\n");
+                        goto again;
+		}
 #ifdef DEBUG
 		if (statp->options & RES_DEBUG)
 			printf(";; res_query: mkquery failed\n");

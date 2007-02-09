@@ -48,6 +48,8 @@ extern void res_send_setrhook (res_send_rhook __hook);
 extern int res_ourserver_p (const res_state __statp,
 			    const struct sockaddr_in6 *__inp);
 extern void __res_iclose (res_state statp, bool free_addr);
+extern int __res_nopt(res_state statp, int n0, u_char *buf, int buflen,
+		      int anslen);
 libc_hidden_proto (__res_ninit)
 libc_hidden_proto (__res_maybe_init)
 libc_hidden_proto (__res_nclose)
@@ -100,6 +102,7 @@ libresolv_hidden_proto (__ns_name_ntop)
 libresolv_hidden_proto (__ns_name_unpack)
 libresolv_hidden_proto (__ns_get16)
 libresolv_hidden_proto (__ns_get32)
+libresolv_hidden_proto (__res_nopt)
 
 extern const char *_res_opcodes[];
 libresolv_hidden_proto (_res_opcodes)

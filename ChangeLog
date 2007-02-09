@@ -1,3 +1,14 @@
+2007-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c (res_setoptions): Recognize edns0 option.
+	* resolv/res_mkquery.c: Define __res_nopt.
+	* resolv/res_query.c (__libc_res_nquery): If RES_USE_EDNS0 is set
+	try adding EDNS0 record.
+	* resolv/res_send.c (send_dg): If request failed with FORMERR and
+	EDNS0 record was send make sure we don't try it again.
+	* resolv/resolv.h: Define RES_F_EDNS0ERR and RES_USE_EDNS0.
+	* include/resolv.h: Declare __res_nopt.
+
 2007-02-08  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3944]

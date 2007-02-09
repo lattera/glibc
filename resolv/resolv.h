@@ -180,6 +180,7 @@ struct res_sym {
  */
 #define	RES_F_VC	0x00000001	/* socket is TCP */
 #define	RES_F_CONN	0x00000002	/* socket is connected */
+#define RES_F_EDNS0ERR	0x00000004	/* EDNS0 caused errors */
 
 /* res_findzonecut() options */
 #define	RES_EXHAUSTIVE	0x00000001	/* always do all queries */
@@ -209,6 +210,7 @@ struct res_sym {
 					   strings */
 #define RES_NOIP6DOTINT	0x00080000	/* Do not use .ip6.int in IPv6
 					   reverse lookup */
+#define RES_USE_EDNS0	0x00100000	/* Use EDNS0.  */
 
 #define RES_DEFAULT	(RES_RECURSE|RES_DEFNAMES|RES_DNSRCH|RES_NOIP6DOTINT)
 

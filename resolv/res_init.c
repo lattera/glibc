@@ -510,6 +510,8 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		} else if (!strncmp(cp, "no-check-names",
 				    sizeof("no-check-names") - 1)) {
 			statp->options |= RES_NOCHECKNAME;
+                } else if (!strncmp(cp, "edns0", sizeof("edns0") - 1)) {
+			statp->options |= RES_USE_EDNS0;
 		} else {
 			/* XXX - print a warning here? */
 		}

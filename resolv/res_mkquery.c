@@ -208,3 +208,49 @@ res_nmkquery(res_state statp,
 	return (cp - buf);
 }
 libresolv_hidden_def (res_nmkquery)
+
+
+/* attach OPT pseudo-RR, as documented in RFC2671 (EDNS0). */
+#ifndef T_OPT
+#define T_OPT   41
+#endif
+
+int
+__res_nopt(res_state statp,
+	   int n0,                /* current offset in buffer */
+	   u_char *buf,           /* buffer to put query */
+	   int buflen,            /* size of buffer */
+	   int anslen)            /* UDP answer buffer size */
+{
+	u_int16_t flags = 0;
+
+#ifdef DEBUG
+	if ((statp->options & RES_DEBUG) != 0U)
+		printf(";; res_nopt()\n");
+#endif
+
+	HEADER *hp = (HEADER *) buf;
+	u_char *cp = buf + n0;
+	u_char *ep = buf + buflen;
+
+	if ((ep - cp) < 1 + RRFIXEDSZ)
+		return -1;
+
+	*cp++ = 0;	/* "." */
+
+	ns_put16(T_OPT, cp);	/* TYPE */
+	cp += INT16SZ;
+	ns_put16(anslen & 0xffff, cp);	/* CLASS = UDP payload size */
+	cp += INT16SZ;
+	*cp++ = NOERROR;	/* extended RCODE */
+	*cp++ = 0;		/* EDNS version */
+	/* XXX Once we support DNSSEC we change the flag value here.  */
+	ns_put16(flags, cp);
+	cp += INT16SZ;
+	ns_put16(0, cp);	/* RDLEN */
+	cp += INT16SZ;
+	hp->arcount = htons(ntohs(hp->arcount) + 1);
+
+	return cp - buf;
+}
+libresolv_hidden_def (__res_nopt)
