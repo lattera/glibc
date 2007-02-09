@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -400,6 +400,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    /* Does not match a month name.  */
 	    return NULL;
 	  tm->tm_mon = cnt;
+	  have_mon = 1;
 	  want_xday = 1;
 	  break;
 	case 'c':
@@ -1085,11 +1086,15 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      tm->tm_mday =
 		(tm->tm_yday
 		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
+	  have_mon = 1;
+	  have_mday = 1;
 	}
-      day_of_the_week (tm);
+      /* Don't crash in day_of_the_week if tm_mon is uninitialized.  */
+      if (have_mon || (unsigned) tm->tm_mon <= 11)
+	day_of_the_week (tm);
     }
 
-  if (want_xday && !have_yday)
+  if (want_xday && !have_yday && (have_mon || (unsigned) tm->tm_mon <= 11))
     day_of_the_year (tm);
 
   if ((have_uweek || have_wweek) && have_wday)
