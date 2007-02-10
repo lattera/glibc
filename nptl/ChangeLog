@@ -1,3 +1,9 @@
+2007-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_timedlock_wait): Use correct pointer when we don't
+	call into the kernel to delay.
+
 2007-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-initializers1.c: We want to test the initializers as seen

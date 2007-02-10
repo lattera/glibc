@@ -182,7 +182,6 @@
     The Linux kernel uses and destroys internally these registers:
     return address from
     syscall		rcx
-    additionally clobered: r12-r15,rbx,rbp
     eflags from syscall	r11
 
     Normal function call, including calls to the system call stub

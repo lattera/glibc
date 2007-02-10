@@ -1,5 +1,7 @@
 2007-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Remove incorrect comment.
+
 	* resolv/res_init.c (res_setoptions): Recognize edns0 option.
 	* resolv/res_mkquery.c: Define __res_nopt.
 	* resolv/res_query.c (__libc_res_nquery): If RES_USE_EDNS0 is set

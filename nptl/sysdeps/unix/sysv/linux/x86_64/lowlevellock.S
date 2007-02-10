@@ -164,7 +164,7 @@ __lll_mutex_timedlock_wait:
 8:				/* NB: %edx == 2 */
 	xorl	%eax, %eax
 	LOCK
-	cmpxchgl %edx, (%rdi)
+	cmpxchgl %edx, (%r12)
 	jnz	7f
 
 6:	addq	$16, %rsp
