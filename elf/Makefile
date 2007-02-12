@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -307,6 +307,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
 	rm -f $@.lds
+	nm -u $@ | cmp -s /dev/null -
 
 # interp.c exists just to get this string into the libraries.
 CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"' \

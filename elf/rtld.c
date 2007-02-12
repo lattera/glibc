@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -359,10 +359,11 @@ _dl_start (void *arg)
 #endif
 
   /* This #define produces dynamic linking inline functions for
-     bootstrap relocation instead of general-purpose relocation.  */
+     bootstrap relocation instead of general-purpose relocation.
+     Since ld.so must not have any undefined symbols the result
+     is trivial: always the map of ld.so itself.  */
 #define RTLD_BOOTSTRAP
-#define RESOLVE_MAP(sym, version, flags) \
-  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : &bootstrap_map)
+#define RESOLVE_MAP(sym, version, flags) (&bootstrap_map)
 #include "dynamic-link.h"
 
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
