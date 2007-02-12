@@ -68,7 +68,7 @@ __bswap_16 (unsigned short int __bsx)
 #  if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__ \
       && !defined __pentium4__ && !defined __k8__ && !defined __athlon__ \
       && !defined __k6__ && !defined __nocona__ && !defined __core2__ \
-      && !defined __geode__
+      && !defined __geode__ && !defined __amdfam10__
 #   define __bswap_32(x)						      \
      (__extension__							      \
       ({ register unsigned int __v, __x = (x);				      \

@@ -61,7 +61,8 @@
 			  || defined __pentiumpro__ || defined __pentium4__   \
 			  || defined __k8__ || defined __athlon__	      \
 			  || defined __k6__ || defined __nocona__	      \
-			  || defined __core2__ || defined __geode__)
+			  || defined __core2__ || defined __geode__	      \
+			  || defined __amdfam10__)
 /* To swap the bytes in a word the i486 processors and up provide the
    `bswap' opcode.  On i386 we have to use three instructions.  */
 #  define __bswap_32(x) \
