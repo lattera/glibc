@@ -706,6 +706,77 @@ if test $failed -ne 0; then
   result=1
 fi
 
+mkdir $testdir/'dir3*'
+echo 1 > $testdir/'dir3*'/file1
+mkdir $testdir/'dir4[a'
+echo 2 > $testdir/'dir4[a'/file1
+echo 3 > $testdir/'dir4[a'/file2
+mkdir $testdir/'dir5[ab]'
+echo 4 > $testdir/'dir5[ab]'/file1
+echo 5 > $testdir/'dir5[ab]'/file2
+mkdir $testdir/dir6
+echo 6 > $testdir/dir6/'file1[a'
+echo 7 > $testdir/dir6/'file1[ab]'
+failed=0
+v=`${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+   ${common_objpfx}posix/globtest "$testdir" 'dir3\*/file2'`
+test "$v" != 'GLOB_NOMATCH' && echo "$v" >> $logfile && failed=1
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -c "$testdir" \
+'dir3\*/file1' 'dir3\*/file2' 'dir1/file\1_1' 'dir1/file\1_9' \
+'dir2\/' 'nondir\/' 'dir4[a/fil*1' 'di*r4[a/file2' 'dir5[ab]/file[12]' \
+'dir6/fil*[a' 'dir*6/file1[a' 'dir6/fi*l[ab]' 'dir*6/file1[ab]' |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`di*r4[a/file2'
+`dir*6/file1[a'
+`dir*6/file1[ab]'
+`dir1/file1_1'
+`dir1/file\1_9'
+`dir2/'
+`dir3*/file1'
+`dir3\*/file2'
+`dir4[a/fil*1'
+`dir5[ab]/file[12]'
+`dir6/fi*l[ab]'
+`dir6/fil*[a'
+`nondir\/'
+EOF
+HOME="$testdir" \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -ct "$testdir" \
+'~/dir1/file1_1' '~/dir1/file1_9' '~/dir3\*/file1' '~/dir3\*/file2' \
+'~\/dir1/file1_2' |
+sort > $testout
+cat <<EOF | $CMP - $testout >> $logfile || failed=1
+\`$testdir/dir1/file1_1'
+\`$testdir/dir1/file1_2'
+\`$testdir/dir3*/file1'
+\`~/dir1/file1_9'
+\`~/dir3\\*/file2'
+EOF
+if eval test -d ~"$USER"/; then
+  user=`echo "$USER" | sed -n -e 's/^\([^\\]\)\([^\\][^\\]*\)$/~\1\\\\\2/p'`
+  if test -n "$user"; then
+    ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+    ${common_objpfx}posix/globtest -ctq "$testdir" "$user/" |
+    sort > $testout
+    eval echo ~$USER/ | $CMP - $testout >> $logfile || failed=1
+    ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+    ${common_objpfx}posix/globtest -ctq "$testdir" "$user\\/" |
+    sort > $testout
+    eval echo ~$USER/ | $CMP - $testout >> $logfile || failed=1
+    ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+    ${common_objpfx}posix/globtest -ctq "$testdir" "$user" |
+    sort > $testout
+    eval echo ~$USER | $CMP - $testout >> $logfile || failed=1
+  fi
+fi
+if test $failed -ne 0; then
+  echo "Escape tests failed" >> $logfile
+  result=1
+fi
+
 if test $result -eq 0; then
     chmod 777 $testdir/noread
     rm -fr $testdir $testout

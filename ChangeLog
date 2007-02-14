@@ -1,3 +1,18 @@
+2007-02-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3996]
+	* posix/glob.c (attribute_hidden): Define if not defined.
+	(glob): Unescape dirname, filename or username when needed and not
+	GLOB_NOESCAPE.  Handle \/ correctly.  Handle GLOB_MARK if filename
+	is NULL.  Handle unescaped [ in pattern without closing ].
+	Don't pass GLOB_CHECK down to recursive glob for directories.
+	(__glob_pattern_type): New function.
+	(__glob_pattern_p): Implement using __glob_pattern_type.
+	(glob_in_dir): Handle GLOB_NOCHECK patterns containing no meta
+	characters and backslashes if not GLOB_NOESCAPE or unterminated [.
+	Remove unreachable code.
+	* posix/globtest.sh: Add a couple of new tests.
+
 2007-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ru.po: Update from translation team.
