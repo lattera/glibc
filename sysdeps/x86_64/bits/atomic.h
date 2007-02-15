@@ -144,7 +144,7 @@ typedef uintmax_t uatomic_max_t;
   ({ __typeof (*mem) result;						      \
      if (sizeof (*mem) == 1)						      \
        __asm __volatile ("xchgb %b0, %1"				      \
-			 : "=r" (result), "=m" (*mem)			      \
+			 : "=q" (result), "=m" (*mem)			      \
 			 : "0" (newvalue), "m" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile ("xchgw %w0, %1"				      \
@@ -165,7 +165,7 @@ typedef uintmax_t uatomic_max_t;
   ({ __typeof (*mem) result;						      \
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (lock "xaddb %b0, %1"				      \
-			 : "=r" (result), "=m" (*mem)			      \
+			 : "=q" (result), "=m" (*mem)			      \
 			 : "0" (value), "m" (*mem),			      \
 			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      else if (sizeof (*mem) == 2)					      \
@@ -209,7 +209,7 @@ typedef uintmax_t uatomic_max_t;
     else if (sizeof (*mem) == 1)					      \
       __asm __volatile (lock "addb %b1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (value), "m" (*mem),			      \
+			: "iq" (value), "m" (*mem),			      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
       __asm __volatile (lock "addw %w1, %0"				      \
@@ -243,7 +243,7 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK_PREFIX "addb %b2, %0; sets %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
+			 : "iq" (value), "m" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK_PREFIX "addw %w2, %0; sets %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
@@ -264,7 +264,7 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK_PREFIX "addb %b2, %0; setz %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
+			 : "iq" (value), "m" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK_PREFIX "addw %w2, %0; setz %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
@@ -393,7 +393,7 @@ typedef uintmax_t uatomic_max_t;
     if (sizeof (*mem) == 1)						      \
       __asm __volatile (LOCK_PREFIX "orb %b2, %0"			      \
 			: "=m" (*mem)					      \
-			: "m" (*mem), "ir" (1L << (bit)));		      \
+			: "m" (*mem), "iq" (1L << (bit)));		      \
     else if (sizeof (*mem) == 2)					      \
       __asm __volatile (LOCK_PREFIX "orw %w2, %0"			      \
 			: "=m" (*mem)					      \
@@ -418,7 +418,7 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK_PREFIX "btsb %3, %1; setc %0"		      \
 			 : "=q" (__result), "=m" (*mem)			      \
-			 : "m" (*mem), "ir" (bit));			      \
+			 : "m" (*mem), "iq" (bit));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK_PREFIX "btsw %3, %1; setc %0"		      \
 			 : "=q" (__result), "=m" (*mem)			      \
@@ -440,9 +440,9 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_and(mem, mask) \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "andb %1, %b0"			      \
+      __asm __volatile (LOCK_PREFIX "andb %b1, %0"			      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "iq" (mask), "m" (*mem));			      \
     else if (sizeof (*mem) == 2)					      \
       __asm __volatile (LOCK_PREFIX "andw %1, %w0"			      \
 			: "=m" (*mem)					      \
@@ -461,9 +461,9 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_or_body(lock, mem, mask)					      \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (lock "orb %1, %b0"				      \
+      __asm __volatile (lock "orb %b1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
+			: "iq" (mask), "m" (*mem),			      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
       __asm __volatile (lock "orw %1, %w0"				      \
