@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,15 +88,13 @@ __END_DECLS
 # define assert(expr)							\
   ((expr)								\
    ? __ASSERT_VOID_CAST (0)						\
-   : (__assert_fail (__STRING(expr), __FILE__, __LINE__, __ASSERT_FUNCTION), \
-      __ASSERT_VOID_CAST (0)))
+   : __assert_fail (__STRING(expr), __FILE__, __LINE__, __ASSERT_FUNCTION))
 
 # ifdef	__USE_GNU
 #  define assert_perror(errnum)						\
   (!(errnum)								\
    ? __ASSERT_VOID_CAST (0)						\
-   : (__assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION), \
-      __ASSERT_VOID_CAST (0)))
+   : __assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION))
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'

@@ -1,5 +1,10 @@
 2007-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3991]
+	* assert/assert.h (assert): Simplify.
+	(assert_perror): Likewise.
+	Patch by Israel G. Lugo <ilugo@bridonsecurity.com>.
+
 	* nscd/nscd_helper.c (open_socket): Don't send padding bytes from
 	reqdata.
 
