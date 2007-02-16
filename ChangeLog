@@ -1,3 +1,8 @@
+2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (parse_opt): One more conversion to use send instead
+	of writev.
+
 2007-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3991]

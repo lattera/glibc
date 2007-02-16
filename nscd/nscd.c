@@ -301,18 +301,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	error (4, 0, _("Only root is allowed to use this option!"));
       {
 	int sock = nscd_open_socket ();
-	request_header req;
-	ssize_t nbytes;
 
 	if (sock == -1)
 	  exit (EXIT_FAILURE);
 
+	request_header req;
 	req.version = NSCD_VERSION;
 	req.type = SHUTDOWN;
 	req.key_len = 0;
-	nbytes = TEMP_FAILURE_RETRY (send (sock, &req,
-					   sizeof (request_header),
-					   MSG_NOSIGNAL));
+
+	ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, &req,
+						   sizeof (request_header),
+						   MSG_NOSIGNAL));
 	close (sock);
 	exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
       }
@@ -331,7 +331,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  if (sock == -1)
 	    exit (EXIT_FAILURE);
 
-	  request_header req;
 	  dbtype cnt;
 	  for (cnt = pwddb; cnt < lastdb; ++cnt)
 	    if (strcmp (arg, dbnames[cnt]) == 0)
@@ -340,19 +339,24 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  if (cnt == lastdb)
 	    return ARGP_ERR_UNKNOWN;
 
-	  req.key_len = strlen (arg) + 1;
-	  req.version = NSCD_VERSION;
-	  req.type = INVALIDATE;
+	  size_t arg_len = strlen (arg) + 1;
+	  struct
+	  {
+	    request_header req;
+	    char arg[arg_len];
+	  } reqdata;
 
-	  struct iovec iov[2];
-	  iov[0].iov_base = &req;
-	  iov[0].iov_len = sizeof (req);
-	  iov[1].iov_base = arg;
-	  iov[1].iov_len = req.key_len;
+	  reqdata.req.key_len = strlen (arg) + 1;
+	  reqdata.req.version = NSCD_VERSION;
+	  reqdata.req.type = INVALIDATE;
+	  memcpy (reqdata.arg, arg, arg_len);
 
-	  ssize_t nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
+	  ssize_t nbytes = TEMP_FAILURE_RETRY (send (sock, &reqdata,
+						     sizeof (request_header)
+						     + arg_len,
+						     MSG_NOSIGNAL));
 
-	  if (nbytes != iov[0].iov_len + iov[1].iov_len)
+	  if (nbytes != sizeof (request_header) + arg_len)
 	    {
 	      int err = errno;
 	      close (sock);
