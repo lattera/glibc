@@ -1,5 +1,9 @@
 2007-02-02  Bruno Haible  <bruno@clisp.org>
 
+	* charmaps/EUC-KR: Add mapping for 0xA2 0xE8.
+	* charmaps/JOHAB: Add mapping for 0xD9 0xE8.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
 	* charmaps/JOHAB: Add mappings for 0xD9 0xE6 and 0xD9 0xE7.
 	Reported by Jungshik Shin <jungshik@google.com>.
 

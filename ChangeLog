@@ -1,5 +1,16 @@
 2007-02-02  Bruno Haible  <bruno@clisp.org>
 
+	[BZ #3954]
+	* iconvdata/ksc5601.c (__ksc5601_sym_to_ucs, __ksc5601_sym_from_ucs):
+	Add mapping for U+327E.
+	* iconvdata/ksc5601.h (KSC5601_SYMBOL): Increment.
+	* iconvdata/johab.c (BODY for FROM_LOOP, BODY for TO_LOOP): Enable
+	mapping of 0xD9 0xE8.
+	* iconvdata/uhc.c (BODY for FROM_LOOP, BODY for TO_LOOP): Disable
+	mapping of U+327E.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
+	[BZ #3955]
 	* iconvdata/johab.c (BODY for FROM_LOOP, BODY for TO_LOOP): Enable
 	mapping of 0xD9 0xE6 and of 0xD9 0xE7.
 	Reported by Jungshik Shin <jungshik@google.com>.
