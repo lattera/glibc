@@ -1,5 +1,8 @@
 2007-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_helper.c (open_socket): Don't send padding bytes from
+	reqdata.
+
 	* sysdeps/unix/sysv/linux/x86_64/send.c (__libc_send): Cosmetic
 	change: don't pass NULL in place of an integer.
 

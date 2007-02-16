@@ -108,6 +108,7 @@ open_socket (request_type type, const char *key, size_t keylen)
     request_header req;
     char key[keylen];
   } reqdata;
+  size_t real_sizeof_reqdata = sizeof (request_header) + keylen;
 
   /* Make socket non-blocking.  */
   __fcntl (sock, F_SETFL, O_RDWR | O_NONBLOCK);
@@ -135,9 +136,9 @@ open_socket (request_type type, const char *key, size_t keylen)
 # define MSG_NOSIGNAL 0
 #endif
       ssize_t wres = TEMP_FAILURE_RETRY (__send (sock, &reqdata,
-						 sizeof (reqdata),
+						 real_sizeof_reqdata,
 						 MSG_NOSIGNAL));
-      if (__builtin_expect (wres == (ssize_t) sizeof (reqdata), 1))
+      if (__builtin_expect (wres == (ssize_t) real_sizeof_reqdata, 1))
 	/* We managed to send the request.  */
 	return sock;
 
