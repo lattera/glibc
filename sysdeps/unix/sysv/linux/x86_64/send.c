@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,12 @@ ssize_t
 __libc_send (int fd, const void *buf, size_t n, int flags)
 {
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, NULL);
+    return INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, (size_t) 0);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  ssize_t result = INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, NULL);
+  ssize_t result = INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL,
+				   (size_t) 0);
 
   LIBC_CANCEL_RESET (oldtype);
 
