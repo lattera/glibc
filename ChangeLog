@@ -1,5 +1,9 @@
 2007-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3842]
+	* sysdeps/posix/euidaccess.c [_LIBC] (euidaccess): Remove shortcut
+	using __libc_enable_secure.
+
 	[BZ #3818]
 	* sysdeps/unix/sysv/linux/sys/acct.h (struct acct_v3): Define.
 
