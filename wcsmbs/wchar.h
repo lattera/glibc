@@ -121,11 +121,11 @@ __BEGIN_NAMESPACE_STD
 /* This incomplete type is defined in <time.h> but needed here because
    of `wcsftime'.  */
 struct tm;
+__END_NAMESPACE_STD
 /* XXX We have to clean this up at some point.  Since tm is in the std
    namespace but wcsftime is in __c99 the type wouldn't be found
    without inserting it in the global namespace.  */
 __USING_NAMESPACE_STD(tm)
-__END_NAMESPACE_STD
 
 
 __BEGIN_NAMESPACE_C99

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2001, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +30,9 @@ __BEGIN_DECLS
 #include <bits/setjmp.h>		/* Get `__jmp_buf'.  */
 #include <bits/sigset.h>		/* Get `__sigset_t'.  */
 
-__BEGIN_NAMESPACE_STD
 
 /* Calling environment, plus possibly a saved signal mask.  */
-typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
+struct __jmp_buf_tag
   {
     /* NOTE: The machine-dependent definitions of `__sigsetjmp'
        assume that a `jmp_buf' begins with a `__jmp_buf' and that
@@ -42,15 +41,18 @@ typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
     __jmp_buf __jmpbuf;		/* Calling environment.  */
     int __mask_was_saved;	/* Saved the signal mask?  */
     __sigset_t __saved_mask;	/* Saved signal mask.  */
-  } jmp_buf[1];
+  };
 
+
+__BEGIN_NAMESPACE_STD
+
+typedef struct __jmp_buf_tag jmp_buf[1];
 
 /* Store the calling environment in ENV, also saving the signal mask.
    Return 0.  */
 extern int setjmp (jmp_buf __env) __THROW;
 
 __END_NAMESPACE_STD
-__USING_NAMESPACE_STD(__jmp_buf_tag)
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.

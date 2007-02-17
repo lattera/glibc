@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991,1994-2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1991,1994-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,9 @@ __BEGIN_DECLS
 
 
 #if !defined __FILE_defined && defined __need_FILE
+
+/* Define outside of namespace so the C++ is happy.  */
+struct _IO_FILE;
 
 __BEGIN_NAMESPACE_STD
 /* The opaque type of streams.  This is the definition used elsewhere.  */

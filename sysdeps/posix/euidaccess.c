@@ -1,5 +1,5 @@
 /* Check if effective user id can access file
-   Copyright (C) 1990,1991,1995-2001,2005 Free Software Foundation, Inc.
+   Copyright (C) 1990,1991,1995-2001,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,10 +128,6 @@ euidaccess (path, mode)
 #ifdef	_LIBC
   uid_t euid;
   gid_t egid;
-
-  if (! __libc_enable_secure)
-    /* If we are not set-uid or set-gid, access does the same.  */
-    return __access (path, mode);
 #else
   if (have_ids == 0)
     {
@@ -162,6 +158,10 @@ euidaccess (path, mode)
   /* Now we need the IDs.  */
   euid = __geteuid ();
   egid = __getegid ();
+
+  if (__getuid () == euid && __getgid () == egid)
+    /* If we are not set-uid or set-gid, access does the same.  */
+    return __access (path, mode);
 #endif
 
   /* The super-user can read and write any file, and execute any file
