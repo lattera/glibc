@@ -507,7 +507,7 @@ typedef uintmax_t uatomic_max_t;
 			: "=m" (*mem)					      \
 			: "iq" (mask), "m" (*mem));			      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "andw %1, %w0"			      \
+      __asm __volatile (LOCK_PREFIX "andw %w1, %0"			      \
 			: "=m" (*mem)					      \
 			: "ir" (mask), "m" (*mem));			      \
     else if (sizeof (*mem) == 4)					      \
@@ -527,7 +527,7 @@ typedef uintmax_t uatomic_max_t;
 			: "iq" (mask), "m" (*mem),			      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (lock "orw %1, %w0"				      \
+      __asm __volatile (lock "orw %w1, %0"				      \
 			: "=m" (*mem)					      \
 			: "ir" (mask), "m" (*mem),			      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \

@@ -1,3 +1,9 @@
+2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3851]
+	* locales/bn_BD: Fix full name of January and February.
+	Patch by Jamil Ahmed <jamil@bengalinux.org>.
+
 2007-02-02  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/EUC-KR: Add mapping for 0xA2 0xE8.
