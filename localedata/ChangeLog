@@ -1,3 +1,9 @@
+2007-01-12  Gwenole Beauchesne  <gbeauchesne@mandriva.com>
+
+	[BZ #3884]
+	* localedata/locales/sl_SI: Slovenia joined the Euro zone.
+	Fix negative number format.
+
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3851]
