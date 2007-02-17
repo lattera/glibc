@@ -1,5 +1,6 @@
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-3166.def: Update entry for Serbia.
 	* locale/iso-4217.def: Define RSD, remove CSD.
 
 	* sysdeps/x86_64/bits/atomic.h: One more change, this time for 16-
