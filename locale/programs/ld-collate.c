@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2003, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1330,8 +1330,9 @@ order for `%.*s' already defined at %s:%Zu"),
 	      uint32_t wc;
 	      int cnt;
 
-	      /* Generate the the name.  */
-	      sprintf (buf + preflen, base == 10 ? "%ld" : "%lX", from);
+	      /* Generate the name.  */
+	      sprintf (buf + preflen, base == 10 ? "%0*ld" : "%0*lX",
+		       (int) (lenfrom - preflen), from);
 
 	      /* Look whether this name is already defined.  */
 	      void *ptr;
@@ -3571,7 +3572,6 @@ error while adding equivalent collating symbol"));
 
 	      if (was_ellipsis != tok_none)
 		{
-
 		  handle_ellipsis (ldfile, symstr, symlen, was_ellipsis,
 				   charmap, repertoire, result);
 

@@ -1,5 +1,9 @@
 2007-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3745]
+	* locale/programs/ld-collate.c (handle_ellipsis): Fix generation
+	of names for ellipsises.
+
 	[BZ #3348]
 	* malloc/memusage.sh: Cleanups.
 	* debug/xtrace.sh: Quoting and trap changes.
