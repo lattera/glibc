@@ -40,7 +40,6 @@ DEFINE_INT_CURR("CLP")		/* Chilean Peso  */
 DEFINE_INT_CURR("CNY")		/* China Yuan Renminbi  */
 DEFINE_INT_CURR("COP")		/* Colombian Peso  */
 DEFINE_INT_CURR("CRC")		/* Costa Rican Colon  */
-DEFINE_INT_CURR("CSD")		/* Serbian Dinar  */
 DEFINE_INT_CURR("CUP")		/* Cuban Peso  */
 DEFINE_INT_CURR("CVE")		/* Cape Verde Escudo  */
 DEFINE_INT_CURR("CYP")		/* Cypriot Pound  */
@@ -129,6 +128,7 @@ DEFINE_INT_CURR("PYG")		/* Paraguay Guarani  */
 DEFINE_INT_CURR("QAR")		/* Qatar Rial  */
 DEFINE_INT_CURR("ROL")		/* Romanian Leu  */
 DEFINE_INT_CURR("RON")		/* Romanian New Leu  */
+DEFINE_INT_CURR("RSD")		/* Serbian Dinars  */
 DEFINE_INT_CURR("RUB")		/* Russian Ruble  */
 DEFINE_INT_CURR("RWF")		/* Rwanda Franc  */
 DEFINE_INT_CURR("SAR")		/* Saudi Arabia Riyal  */

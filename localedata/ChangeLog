@@ -1,5 +1,10 @@
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3322]
+	* SUPPORTED (SUPPORTED-LOCALES): Add sr_RS and sr_RS@latin.
+	* locales/sr_RS: New file.
+	* locales/sr_RS@latin: New file.
+
 	[BZ #3995]
 	* locales/ru_RU (LC_TIME): Set first_weekday and first_workday.
 
