@@ -1,4 +1,12 @@
+2007-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3348]
+	* malloc/memusage.sh: Cleanups.
+	* debug/xtrace.sh: Quoting and trap changes.
+
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-3166.def: Add Jersey, Guernsey, and Isle Of Man entries.
 
 	* locale/iso-3166.def: Update entry for Serbia.
 	* locale/iso-4217.def: Define RSD, remove CSD.

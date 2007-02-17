@@ -161,32 +161,32 @@ if test -n "$data"; then
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
-      format_line $fct $file
+      format_line "$fct" "$file"
     fi
   done
 else
-  fifo=$(mktemp -u ${TMPDIR:-/tmp}/xtrace.XXXXXX)
+  fifo=$(mktemp -ut xtrace.XXXXXX) || exit
+  trap 'rm -f "$fifo"; exit 1' HUP INT QUIT TERM PIPE
   mkfifo -m 0600 $fifo || exit 1
-  trap 'rm $fifo; exit 1' SIGINT SIGTERM SIGPIPE
 
   # Now start the program and let it write to the FIFO.
   $TERMINAL_PROG -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read < $fifo" &
   termpid=$!
-  $pcprofiledump -u $fifo |
+  $pcprofiledump -u "$fifo" |
   while read line; do
-     echo $line |
+     echo "$line" |
      sed 's/this = \([^,]*\).*/\1/' |
-     addr2line -fC -e $program
+     addr2line -fC -e "$program"
   done |
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
-      format_line $fct $file
+      format_line "$fct" "$file"
     fi
   done
   read -p "Press return here to close $TERMINAL_PROG($program)."
-  echo > $fifo
-  rm $fifo
+  echo > "$fifo"
+  rm "$fifo"
 fi
 
 exit 0
