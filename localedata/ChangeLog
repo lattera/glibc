@@ -1,5 +1,8 @@
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3995]
+	* locales/ru_RU (LC_TIME): Set first_weekday and first_workday.
+
 	[BZ #3885]
 	* locales/i18n: Updates for Unicode 5.0.
 	* charmaps/UTF-8: Likewise.

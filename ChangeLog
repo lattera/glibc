@@ -1,5 +1,12 @@
 2007-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/bits/atomic.h: One more change, this time for 16-
+	and 64-bit operations.
+
+	[BZ #4040]
+	* sysdeps/i386/i486/bits/atomic.h: One more change, this time for
+	16-bit operations.
+
 	* nscd/nscd.c (parse_opt): One more conversion to use send instead
 	of writev.
 
