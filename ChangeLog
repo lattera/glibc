@@ -1,5 +1,12 @@
 2007-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2633]
+	* libio/stdio.h: Define struct _IO_FILE in global namespace.
+	* setjmp/setjmp.h: Define __jmp_buf_tag in global namespace.
+	Remove using for __jmp_buf_tag.
+	* locale/locale.h (struct lconv): Also define in std namespace.
+	* wcsmbs/wchar.h: Move using declaration for tm out of namespace.
+
 	[BZ #3842]
 	* sysdeps/posix/euidaccess.c [_LIBC] (euidaccess): Remove shortcut
 	using __libc_enable_secure.
