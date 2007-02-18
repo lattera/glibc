@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -59,7 +59,6 @@
 #define SUPPRESS	0x008	/* *: suppress assignment */
 #define POINTER		0x010	/* weird %p pointer (`fake hex') */
 #define NOSKIP		0x020	/* do not skip blanks */
-#define WIDTH		0x040	/* width was given */
 #define GROUP		0x080	/* ': group numbers */
 #define MALLOC		0x100	/* a: malloc strings */
 #define CHAR		0x200	/* hh: char */
@@ -424,7 +423,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    {
 	      /* Oops; that was actually the field width.  */
 	      width = argpos;
-	      flags |= WIDTH;
 	      argpos = 0;
 	      goto got_width;
 	    }
@@ -445,10 +443,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    flags |= I18N;
 	    break;
 	  }
-
-      /* We have seen width. */
-      if (ISDIGIT ((UCHAR_T) *f))
-	flags |= WIDTH;
 
       /* Find the maximum field width.  */
       width = 0;

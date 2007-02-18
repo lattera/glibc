@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -21,12 +21,18 @@
 #include <stdio.h>
 #include <locale.h>
 
-const char *str_double[] =
+#ifndef CHAR
+# define CHAR char
+# define L(str) str
+# define SSCANF sscanf
+#endif
+
+const CHAR *str_double[] =
 {
-  "-.10000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01",
-  "0.10000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01",
-  "-1234567E0198765432E0912345678901987654321091234567890198765432109",
-  "-0.1000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01"
+  L("-.10000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01"),
+  L("0.10000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01"),
+  L("-1234567E0198765432E0912345678901987654321091234567890198765432109"),
+  L("-0.1000E+020.20000E+020.25000E+010.40000E+010.50000E+010.12500E+01")
 };
 
 const double val_double[] =
@@ -38,20 +44,20 @@ const double val_double[] =
   -0.1000E+02, 0.20000E+02, 0.25000E+01, 0.40000E+01, 0.50000E+01, 0.12500E+01
 };
 
-const char *str_long[] =
+const CHAR *str_long[] =
 {
-  "-12345678987654321123456789987654321123456789987654321",
-  "-12345678987654321123456789987654321123456789987654321",
-  "-12,345,678987,654,321123,456,789987,654,321123,456,789987,654,321",
-  "-12,345,678987,654,321123,456,789987,654,321123,456,789987,654,321"
+  L("-12345678987654321123456789987654321123456789987654321"),
+  L("-12345678987654321123456789987654321123456789987654321"),
+  L("-12,345,678987,654,321123,456,789987,654,321123,456,789987,654,321"),
+  L("-12,345,678987,654,321123,456,789987,654,321123,456,789987,654,321")
 };
 
-const char *fmt_long[] =
+const CHAR *fmt_long[] =
 {
-  "%9ld%9ld%9ld%9ld%9ld%9ld",
-  "%I9ld%I9ld%I9ld%I9ld%I9ld%I9ld",
-  "%'11ld%'11ld%'11ld%'11ld%'11ld%'11ld",
-  "%I'11ld%I'11ld%I'11ld%I'11ld%I'11ld%I'11ld"
+  L("%9ld%9ld%9ld%9ld%9ld%9ld"),
+  L("%I9ld%I9ld%I9ld%I9ld%I9ld%I9ld"),
+  L("%'11ld%'11ld%'11ld%'11ld%'11ld%'11ld"),
+  L("%I'11ld%I'11ld%I'11ld%I'11ld%I'11ld%I'11ld")
 };
 
 const long int val_long[] =
@@ -61,36 +67,36 @@ const long int val_long[] =
 
 struct int_test
 {
-  const char *str;
-  const char *fmt;
+  const CHAR *str;
+  const CHAR *fmt;
   int retval;
-} int_tests[] = 
+} int_tests[] =
 {
-  { "foo\n", "foo\nbar", -1 },
-  { "foo\n", "foo bar", -1 },
-  { "foo\n", "foo %d", -1 },
-  { "foo\n", "foo\n%d", -1 },
-  { "foon", "foonbar", -1 },
-  { "foon", "foon%d", -1 },
-  { "foo ", "foo bar", -1 },
-  { "foo ", "foo %d", -1 },
-  { "foo\t", "foo\tbar", -1 },
-  { "foo\t", "foo bar", -1 },
-  { "foo\t", "foo %d", -1 },
-  { "foo\t", "foo\t%d", -1 },
-  { "foo", "foo", 0 },
-  { "foon", "foo bar", 0 },
-  { "foon", "foo %d", 0 },
-  { "foo ", "fooxbar", 0 },
-  { "foo ", "foox%d", 0 },
-  { "foo bar", "foon", 0 },
-  { "foo bar", "foo bar", 0 },
-  { "foo bar", "foo %d", 0 },
-  { "foo bar", "foon%d", 0 },
-  { "foo ", "foo %n", 0 },
-  { "foo%bar1", "foo%%bar%d", 1 },
+  { L("foo\n"), L("foo\nbar"), -1 },
+  { L("foo\n"), L("foo bar"), -1 },
+  { L("foo\n"), L("foo %d"), -1 },
+  { L("foo\n"), L("foo\n%d"), -1 },
+  { L("foon"), L("foonbar"), -1 },
+  { L("foon"), L("foon%d"), -1 },
+  { L("foo "), L("foo bar"), -1 },
+  { L("foo "), L("foo %d"), -1 },
+  { L("foo\t"), L("foo\tbar"), -1 },
+  { L("foo\t"), L("foo bar"), -1 },
+  { L("foo\t"), L("foo %d"), -1 },
+  { L("foo\t"), L("foo\t%d"), -1 },
+  { L("foo"), L("foo"), 0 },
+  { L("foon"), L("foo bar"), 0 },
+  { L("foon"), L("foo %d"), 0 },
+  { L("foo "), L("fooxbar"), 0 },
+  { L("foo "), L("foox%d"), 0 },
+  { L("foo bar"), L("foon"), 0 },
+  { L("foo bar"), L("foo bar"), 0 },
+  { L("foo bar"), L("foo %d"), 0 },
+  { L("foo bar"), L("foon%d"), 0 },
+  { L("foo "), L("foo %n"), 0 },
+  { L("foo%bar1"), L("foo%%bar%d"), 1 },
   /* Some OSes skip whitespace here while others don't.  */
-  { "foo \t %bar1", "foo%%bar%d", 1 }
+  { L("foo \t %bar1"), L("foo%%bar%d"), 1 }
 };
 
 int
@@ -112,7 +118,7 @@ main (void)
 
   for (i = 0; i < 4; ++i)
     {
-      if (sscanf (str_double[i], "%11lf%11lf%11lf%11lf%11lf%11lf",
+      if (SSCANF (str_double[i], L("%11lf%11lf%11lf%11lf%11lf%11lf"),
 		  &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]) != 6)
 	{
 	  printf ("Double sscanf test %d wrong number of "
@@ -132,7 +138,7 @@ main (void)
 
   for (i = 0; i < 4; ++i)
     {
-      if (sscanf (str_long[i], fmt_long[i],
+      if (SSCANF (str_long[i], fmt_long[i],
 		  &l[0], &l[1], &l[2], &l[3], &l[4], &l[5]) != 6)
 	{
 	  printf ("Integer sscanf test %d wrong number of "
@@ -157,7 +163,7 @@ main (void)
     {
       int dummy, ret;
 
-      if ((ret = sscanf (int_tests[i].str, int_tests[i].fmt,
+      if ((ret = SSCANF (int_tests[i].str, int_tests[i].fmt,
 			 &dummy)) != int_tests[i].retval)
 	{
 	  printf ("int_tests[%d] returned %d != %d\n",

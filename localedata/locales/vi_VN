@@ -74,8 +74,6 @@ collating-symbol <o/>>
 collating-symbol <o9>
 collating-symbol <u9>
 
-collating-symbol <HOK>
-
 reorder-after <BAS>
 <GRA>
 <HOK>
