@@ -67,15 +67,8 @@ copy "iso14651_t1"
 %% a' e' i' o' u' are sorted as if they were unaccented
 %% o" and u" are sorted as if they were o: and u:
 
-collating-symbol  <aacute>
-collating-symbol  <eacute>
-collating-symbol  <iacute>
-collating-symbol  <oacute>
 collating-symbol  <odouble>
-collating-symbol  <odacute>
-collating-symbol  <uacute>
 collating-symbol  <udouble>
-collating-symbol  <udacute>
 
 collating-symbol  <cs>
 collating-element <C-S> from "<U0043><U0053>"
@@ -240,65 +233,39 @@ reorder-after <CAP>
 <CAP-CAP-MIN>
 <CAP-CAP-CAP>
 
-reorder-after <a>
-<aacute>
 reorder-after <c>
 <cs>
 reorder-after <d>
 <dz>
 <dzs>
-reorder-after <e>
-<eacute>
 reorder-after <g>
 <gy>
-reorder-after <i>
-<iacute>
 reorder-after <l>
 <ly>
 reorder-after <n>
 <ny>
 reorder-after <o>
-<oacute>
 <odouble>
-<odacute>
 reorder-after <s>
 <sz>
 reorder-after <t>
 <ty>
 reorder-after <u>
-<uacute>
 <udouble>
-<udacute>
 reorder-after <z>
 <zs>
 
-reorder-after <a>
-<U00E1>	<aacute>;<aacute>;<MIN>;IGNORE
-<U00C1>	<aacute>;<aacute>;<CAP>;IGNORE
-
-reorder-after <e>
-<U00E9>	<eacute>;<eacute>;<MIN>;IGNORE
-<U00C9>	<eacute>;<eacute>;<CAP>;IGNORE
-
-reorder-after <i>
-<U00ED>	<iacute>;<iacute>;<MIN>;IGNORE
-<U00CD>	<iacute>;<iacute>;<CAP>;IGNORE
-
 reorder-after <o>
-<U00D3> <oacute>;<oacute>;<MIN>;IGNORE
-<U00F6>	<odouble>;<odouble>;<MIN>;IGNORE
-<U0151>	<odacute>;<odacute>;<MIN>;IGNORE
-<U00F3> <oacute>;<oacute>;<CAP>;IGNORE
-<U00D6>	<odouble>;<odouble>;<CAP>;IGNORE
-<U0150>	<odacute>;<odacute>;<CAP>;IGNORE
+<U00F6>	<odouble>;<REU>;<MIN>;IGNORE
+<U0151>	<odouble>;<DAC>;<MIN>;IGNORE
+<U00D6>	<odouble>;<REU>;<CAP>;IGNORE
+<U0150>	<odouble>;<DAC>;<CAP>;IGNORE
 
 reorder-after <u>
-<U00FA>	<uacute>;<uacute>;<MIN>;IGNORE
-<U00FC>	<udouble>;<udouble>;<MIN>;IGNORE
-<U0171>	<udacute>;<udacute>;<MIN>;IGNORE
-<U00DA>	<uacute>;<uacute>;<CAP>;IGNORE
-<U00DC>	<udouble>;<udouble>;<CAP>;IGNORE
-<U0170>	<udacute>;<udacute>;<CAP>;IGNORE
+<U00FC>	<udouble>;<REU>;<MIN>;IGNORE
+<U0171>	<udouble>;<DAC>;<MIN>;IGNORE
+<U00DC>	<udouble>;<REU>;<CAP>;IGNORE
+<U0170>	<udouble>;<DAC>;<CAP>;IGNORE
 
 reorder-after <U0043>
 <C-S>		<cs>;<BAS>;<CAP>;IGNORE
