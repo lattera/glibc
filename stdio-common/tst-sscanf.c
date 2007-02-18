@@ -65,7 +65,7 @@ const long int val_long[] =
   -12345678, 987654321, 123456789, 987654321, 123456789, 987654321
 };
 
-struct int_test
+struct test
 {
   const CHAR *str;
   const CHAR *fmt;
@@ -97,6 +97,17 @@ struct int_test
   { L("foo%bar1"), L("foo%%bar%d"), 1 },
   /* Some OSes skip whitespace here while others don't.  */
   { L("foo \t %bar1"), L("foo%%bar%d"), 1 }
+};
+
+struct test double_tests[] =
+{
+  { L("-1"), L("%1g"), 0 },
+  { L("-.1"), L("%2g"), 0 },
+  { L("-inf"), L("%3g"), 0 },
+  { L("+0"), L("%1g"),  },
+  { L("-0x1p0"), L("%2g"), 1 },
+  { L("-..1"), L("%g"), 0 },
+  { L("-inf"), L("%g"), 1 }
 };
 
 int
@@ -168,6 +179,20 @@ main (void)
 	{
 	  printf ("int_tests[%d] returned %d != %d\n",
 		  i, ret, int_tests[i].retval);
+	  result = 1;
+	}
+    }
+
+  for (i = 0; i < sizeof (double_tests) / sizeof (double_tests[0]); ++i)
+    {
+      double dummy;
+      int ret;
+
+      if ((ret = SSCANF (double_tests[i].str, double_tests[i].fmt,
+			 &dummy)) != double_tests[i].retval)
+	{
+	  printf ("double_tests[%d] returned %d != %d\n",
+		  i, ret, double_tests[i].retval);
 	  result = 1;
 	}
     }

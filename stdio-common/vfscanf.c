@@ -1585,6 +1585,8 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	case L_('a'):
 	case L_('A'):
 	  c = inchar ();
+	  if (width > 0)
+	    --width;
 	  if (__builtin_expect (c == EOF, 0))
 	    input_error ();
 
@@ -1712,7 +1714,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		}
 	    }
 
-	  do
+	  while (1)
 	    {
 	      if (ISDIGIT (c))
 		ADDW (c);
@@ -1818,10 +1820,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 #endif
 		}
+
+	      if (width == 0 || inchar () == EOF)
+		break;
+
 	      if (width > 0)
 		--width;
 	    }
-	  while (width != 0 && inchar () != EOF);
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'

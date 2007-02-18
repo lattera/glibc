@@ -1,5 +1,9 @@
 2007-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfscanf.c: Fix problems in width accounting.
+	* stdio-common/tst-sscanf.c (double_tests): New tests.
+	(main): Hook them up.
+
 	* stdio-common/vfscanf.c: Remove unused WIDTH handling.
 	More simplifications of floating-point reader.
 
