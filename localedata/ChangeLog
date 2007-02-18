@@ -1,5 +1,7 @@
 2007-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Remove sr_CS locales.
+
 	[BZ #1430]
 	* locales/hu_HU: Revert
 		* locales/hu_HU: Better collation.
