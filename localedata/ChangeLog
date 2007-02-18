@@ -1,4 +1,20 @@
+2005-01-16  Denis Barbier  <barbier@linuxfr.org>
+
+	[BZ #672]
+	* locales/ca_ES: Replace current collation rules by including
+	iso14651_t1 and adding extra rules if needed.  There should be
+	no noticeable changes in sorted text. only ligatures and
+	ignoreable characters have modified weights.
+	* locales/da_DK: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/es_US: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/nb_NO: Likewise.
+
 2007-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #672]
+	* locales/iso14651_t1: Simplified.  Extended.
 
 	[BZ #58]
 	* locales/uk_UA: New version.
