@@ -1,5 +1,9 @@
 2007-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/closedir.c: Outside libc don't use locking.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/readdir.c: Likewise.
+
 	[BZ #2211]
 	* stdio-common/vfscanf.c: Handle localized digits etc for floating
 	point numbers.

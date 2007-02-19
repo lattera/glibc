@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1995,1996,1998,2002,2003
+/* Copyright (C) 1991,1993,1995,1996,1998,2002,2003, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -45,7 +45,9 @@ __closedir (DIR *dirp)
 
   fd = dirp->fd;
 
+#ifndef NOT_IN_libc
   __libc_lock_fini (dirp->lock);
+#endif
 
   free ((void *) dirp);
 

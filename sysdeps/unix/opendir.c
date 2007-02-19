@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1996,98,2000-2003,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1996,98,2000-2003,2005,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -173,7 +174,9 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
   dirp->allocation = allocation;
   dirp->fd = fd;
 
+#ifndef NOT_IN_libc
   __libc_lock_init (dirp->lock);
+#endif
 
   return dirp;
 }

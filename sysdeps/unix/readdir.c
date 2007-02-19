@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,99,2000,02
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991-1997,1999,2000,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +41,9 @@ __READDIR (DIR *dirp)
   DIRENT_TYPE *dp;
   int saved_errno = errno;
 
+#ifndef NOT_IN_libc
   __libc_lock_lock (dirp->lock);
+#endif
 
   do
     {
@@ -110,7 +111,9 @@ __READDIR (DIR *dirp)
       /* Skip deleted files.  */
     } while (dp->d_ino == 0);
 
+#ifndef NOT_IN_libc
   __libc_lock_unlock (dirp->lock);
+#endif
 
   return dp;
 }
