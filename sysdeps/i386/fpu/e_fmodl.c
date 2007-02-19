@@ -12,7 +12,7 @@ __ieee754_fmodl (long double x, long double y)
 {
   long double res;
 
-  asm ("1:\tfprem\n"
+  asm ("1:\tfprem1\n"
        "fstsw   %%ax\n"
        "sahf\n"
        "jp      1b\n"

@@ -1,5 +1,11 @@
 2007-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3325]
+	* sysdeps/i386/fpu/e_fmodf.S: Use fprem1 instead of fprem.
+	* sysdeps/i386/fpu/e_fmodl.c: Likewise.
+	* sysdeps/i386/fpu/e_fmod.S: Likewise.
+	Patch by Jared Casper <jaredcasper@gmail.com>.
+
 	* sysdeps/unix/closedir.c: Outside libc don't use locking.
 	* sysdeps/unix/opendir.c: Likewise.
 	* sysdeps/unix/readdir.c: Likewise.
