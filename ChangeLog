@@ -1,5 +1,10 @@
 2007-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2211]
+	* stdio-common/vfscanf.c: Handle localized digits etc for floating
+	point numbers.
+	Patch mostly by Hamed Malek <hamed@farsiweb.info>.
+
 	* stdio-common/vfscanf.c: Fix problems in width accounting.
 	* stdio-common/tst-sscanf.c (double_tests): New tests.
 	(main): Hook them up.
