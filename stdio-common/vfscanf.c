@@ -52,18 +52,19 @@
 #endif
 
 /* Those are flags in the conversion format. */
-#define LONG		0x001	/* l: long or double */
-#define LONGDBL		0x002	/* L: long long or long double */
-#define SHORT		0x004	/* h: short */
-#define SUPPRESS	0x008	/* *: suppress assignment */
-#define POINTER		0x010	/* weird %p pointer (`fake hex') */
-#define NOSKIP		0x020	/* do not skip blanks */
-#define NUMBER_SIGNED	0x040	/* signed integer */
-#define GROUP		0x080	/* ': group numbers */
-#define MALLOC		0x100	/* a: malloc strings */
-#define CHAR		0x200	/* hh: char */
-#define I18N		0x400	/* I: use locale's digits */
-#define HEXA_FLOAT	0x800	/* hexadecimal float */
+#define LONG		0x0001	/* l: long or double */
+#define LONGDBL		0x0002	/* L: long long or long double */
+#define SHORT		0x0004	/* h: short */
+#define SUPPRESS	0x0008	/* *: suppress assignment */
+#define POINTER		0x0010	/* weird %p pointer (`fake hex') */
+#define NOSKIP		0x0020	/* do not skip blanks */
+#define NUMBER_SIGNED	0x0040	/* signed integer */
+#define GROUP		0x0080	/* ': group numbers */
+#define MALLOC		0x0100	/* a: malloc strings */
+#define CHAR		0x0200	/* hh: char */
+#define I18N		0x0400	/* I: use locale's digits */
+#define HEXA_FLOAT	0x0800	/* hexadecimal float */
+#define READ_POINTER	0x1000	/* this is a pointer value */
 
 
 #include <locale/localeinfo.h>
@@ -236,8 +237,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
      possibly be matched even if in the input stream no character is
      available anymore.  */
   int skip_space = 0;
-  /* Nonzero if we are reading a pointer.  */
-  int read_pointer;
   /* Workspace.  */
   CHAR_T *tw;			/* Temporary pointer.  */
   CHAR_T *wp = NULL;		/* Workspace.  */
@@ -399,9 +398,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
       /* This is the start of the conversion string. */
       flags = 0;
-
-      /* Not yet decided whether we read a pointer or not.  */
-      read_pointer = 0;
 
       /* Initialize state of modifiers.  */
       argpos = 0;
@@ -1489,7 +1485,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      /* There was no number.  If we are supposed to read a pointer
 		 we must recognize "(nil)" as well.  */
 	      if (__builtin_expect (wpsize == 0
-				    && read_pointer
+				    && (flags & READ_POINTER)
 				    && (width < 0 || width >= 0)
 				    && c == '('
 				    && TOLOWER (inchar ()) == L_('n')
@@ -1981,7 +1977,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 				      got_dot = 1;
 				    }
 				  else if (n == 10 && (flags & GROUP) != 0
-					   && thousands != NULL && ! got_dot)
+					   && ! got_dot)
 				    {
 				      /* Add all the characters.  */
 				      for (cmpp = thousands; *cmpp != '\0';
@@ -2574,7 +2570,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  flags &= ~(SHORT|LONGDBL);
 	  if (need_long)
 	    flags |= LONG;
-	  read_pointer = 1;
+	  flags |= READ_POINTER;
 	  goto number;
 
 	default:

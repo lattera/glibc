@@ -1,5 +1,8 @@
 2007-02-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/printf_fp.c (___printf_fp): Cleanups and minor
+	optimization.
+
 	* stdio-common/vfscanf.c: Small cleanups throughout.
 
 2007-02-18  Ulrich Drepper  <drepper@redhat.com>
