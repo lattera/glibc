@@ -21,18 +21,18 @@
 
 
 int
-posix_madvise (void *addr, size_t len, int advise)
+posix_madvise (void *addr, size_t len, int advice)
 {
   /* We have one problem: the kernel's MADV_DONTNEED does not
      correspond to POSIX's POSIX_MADV_DONTNEED.  The former simply
      discards changes made to the memory without writing it back to
      disk, if this would be necessary.  The POSIX behavior does not
      allow this.  There is no functionality mapping the POSIX behavior
-     so far so we ignore that advise for now.  */
-  if (advise == POSIX_MADV_DONTNEED)
+     so far so we ignore that advice for now.  */
+  if (advice == POSIX_MADV_DONTNEED)
     return 0;
 
   INTERNAL_SYSCALL_DECL (err);
-  int result = INTERNAL_SYSCALL (madvise, err, 3, addr, len, advise);
+  int result = INTERNAL_SYSCALL (madvise, err, 3, addr, len, advice);
   return INTERNAL_SYSCALL_ERRNO (result, err);
 }
