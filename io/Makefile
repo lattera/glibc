@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2002,2003,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1992-2002,2003,2005,2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
 		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
 		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
-		   tst-mknodat tst-mkfifoat tst-ttyname_r
+		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5
 
 distribute	:= ftwtest-sh
 
