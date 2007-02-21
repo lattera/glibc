@@ -1,5 +1,9 @@
 2007-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3458]
+	* sysdeps/unix/sysv/linux/posix_madvise.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove posix_madvise entry.
+
 	[BZ #4076]
 	* io/ftw.c (ftw_startup): Handle special case of FTW_CHDIR in /.
 	(open_dir_stream): Likewise.
@@ -18,8 +22,8 @@
 
 	[BZ #4070]
 	* stdio-common/printf_fp.c (___printf_fp): Handle a few more
-	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
 	special cases.
+	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
 
 2007-02-19  Ulrich Drepper  <drepper@redhat.com>
 

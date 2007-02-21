@@ -32,7 +32,6 @@ ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
-posix_madvise	-	madvise		Vi:pii	posix_madvise
 madvise		-	madvise		i:pii	madvise
 mincore		-	mincore		i:anV	mincore
 mlock		-	mlock		i:bn	mlock
