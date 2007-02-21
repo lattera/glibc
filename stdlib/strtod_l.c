@@ -563,7 +563,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   else if (c < L_('0') || c > L_('9'))
     {
       /* Check for `INF' or `INFINITY'.  */
-      if (TOLOWER_C (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
+      CHAR_TYPE lowc = TOLOWER_C (c);
+
+      if (lowc == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
 	{
 	  /* Return +/- infinity.  */
 	  if (endptr != NULL)
@@ -574,7 +576,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
 
-      if (TOLOWER_C (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
+      if (lowc == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
 	  /* Return NaN.  */
 	  FLOAT retval = NAN;
@@ -588,7 +590,8 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      do
 		++cp;
 	      while ((*cp >= L_('0') && *cp <= L_('9'))
-		     || (TOLOWER (*cp) >= L_('a') && TOLOWER (*cp) <= L_('z'))
+		     || ({ CHAR_TYPE lo = TOLOWER (*cp);
+			   lo >= L_('a') && lo <= L_('z'); })
 		     || *cp == L_('_'));
 
 	      if (*cp != L_(')'))
@@ -664,9 +667,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
+  CHAR_TYPE lowc = TOLOWER (c);
   if (!((c >= L_('0') && c <= L_('9'))
-	|| (base == 16 && ((CHAR_TYPE) TOLOWER (c) >= L_('a')
-			   && (CHAR_TYPE) TOLOWER (c) <= L_('f')))
+	|| (base == 16 && lowc >= L_('a') && lowc <= L_('f'))
 	|| (
 #ifdef USE_WIDE_CHAR
 	    c == (wint_t) decimal
@@ -682,11 +685,11 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	    && (base != 16
 		|| cp != start_of_digits
 		|| (cp[decimal_len] >= L_('0') && cp[decimal_len] <= L_('9'))
-		|| ((CHAR_TYPE) TOLOWER (cp[decimal_len]) >= L_('a')
-		    && (CHAR_TYPE) TOLOWER (cp[decimal_len]) <= L_('f'))))
+		|| ({ CHAR_TYPE lo = TOLOWER (cp[decimal_len]);
+		      lo >= L_('a') && lo <= L_('f'); })))
 	|| (base == 16 && (cp != start_of_digits
-			   && (CHAR_TYPE) TOLOWER (c) == L_('p')))
-	|| (base != 16 && (CHAR_TYPE) TOLOWER (c) == L_('e'))))
+			   && lowc == L_('p')))
+	|| (base != 16 && lowc == L_('e'))))
     {
 #ifdef USE_WIDE_CHAR
       tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,
@@ -707,8 +710,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   while (1)
     {
       if ((c >= L_('0') && c <= L_('9'))
-	  || (base == 16 && (wint_t) TOLOWER (c) >= L_('a')
-	      && (wint_t) TOLOWER (c) <= L_('f')))
+	  || (base == 16
+	      && ({ CHAR_TYPE lo = TOLOWER (c);
+		    lo >= L_('a') && lo <= L_('f'); })))
 	++dig_no;
       else
 	{
@@ -794,7 +798,8 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       cp += decimal_len;
       c = *cp;
       while ((c >= L_('0') && c <= L_('9')) ||
-	     (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
+	     (base == 16 && ({ CHAR_TYPE lo = TOLOWER (c);
+			       lo >= L_('a') && lo <= L_('f'); })))
 	{
 	  if (c != L_('0') && lead_zero == -1)
 	    lead_zero = dig_no - int_no;
@@ -807,8 +812,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   expp = cp;
 
   /* Read exponent.  */
-  if ((base == 16 && TOLOWER (c) == L_('p'))
-      || (base != 16 && TOLOWER (c) == L_('e')))
+  lowc = TOLOWER (c);
+  if ((base == 16 && lowc == L_('p'))
+      || (base != 16 && lowc == L_('e')))
     {
       int exp_negative = 0;
 
