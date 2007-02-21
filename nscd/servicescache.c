@@ -264,8 +264,8 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		{
 		  /* Adjust pointers into the memory block.  */
 		  aliases = (char *) newp + (aliases - (char *) dataset);
-		  if (key_copy != NULL)
-		    key_copy = (char *) newp + (key_copy - (char *) dataset);
+		  assert (key_copy != NULL);
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;

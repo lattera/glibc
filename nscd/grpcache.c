@@ -279,6 +279,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		  /* Adjust pointers into the memory block.  */
 		  gr_name = (char *) newp + (gr_name - (char *) dataset);
 		  cp = (char *) newp + (cp - (char *) dataset);
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
 		  dataset = memcpy (newp, dataset, total + n);
 		  alloca_used = false;
