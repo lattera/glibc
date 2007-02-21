@@ -274,6 +274,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 		{
 		  /* Adjust pointer into the memory block.  */
 		  cp = (char *) newp + (cp - (char *) dataset);
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
 		  dataset = memcpy (newp, dataset, total + n);
 		  alloca_used = false;
