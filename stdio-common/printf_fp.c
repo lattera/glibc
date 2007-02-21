@@ -926,7 +926,8 @@ ___printf_fp (FILE *fp,
 
     /* Generate the needed number of fractional digits.	 */
     int fracdig_no = 0;
-    while (fracdig_no < fracdig_min
+    int added_zeros = 0;
+    while (fracdig_no < fracdig_min + added_zeros
 	   || (fracdig_no < fracdig_max && (fracsize > 1 || frac[0] != 0)))
       {
 	++fracdig_no;
@@ -937,7 +938,7 @@ ___printf_fp (FILE *fp,
 	  {
 	    ++fracdig_max;
 	    if (fracdig_min > 0)
-	      ++fracdig_min;
+	      ++added_zeros;
 	  }
       }
 
@@ -974,11 +975,23 @@ ___printf_fp (FILE *fp,
 	  {
 	    /* Process fractional digits.  Terminate if not rounded or
 	       radix character is reached.  */
+	    int removed = 0;
 	    while (*--wtp != decimalwc && *wtp == L'9')
-	      *wtp = L'0';
+	      {
+		*wtp = L'0';
+		++removed;
+	      }
+	    if (removed == fracdig_min && added_zeros > 0)
+	      --added_zeros;
 	    if (*wtp != decimalwc)
 	      /* Round up.  */
 	      (*wtp)++;
+	    else if (__builtin_expect (spec == 'g' && type == 'f' && info->alt,
+				       0))
+	      /* This is a special case: the rounded number is 1.0,
+		 the format is 'g' or 'G', and the alternative format
+		 is selected.  This means the result mist be "1.".  */
+	      --added_zeros;
 	  }
 
 	if (fracdig_no == 0 || *wtp == decimalwc)
@@ -1045,7 +1058,7 @@ ___printf_fp (FILE *fp,
 
   do_expo:
     /* Now remove unnecessary '0' at the end of the string.  */
-    while (fracdig_no > fracdig_min && *(wcp - 1) == L'0')
+    while (fracdig_no > fracdig_min + added_zeros && *(wcp - 1) == L'0')
       {
 	--wcp;
 	--fracdig_no;
@@ -1063,26 +1076,41 @@ ___printf_fp (FILE *fp,
     /* Write the exponent if it is needed.  */
     if (type != 'f')
       {
-	*wcp++ = (wchar_t) type;
-	*wcp++ = expsign ? L'-' : L'+';
-
-	/* Find the magnitude of the exponent.	*/
-	expscale = 10;
-	while (expscale <= exponent)
-	  expscale *= 10;
-
-	if (exponent < 10)
-	  /* Exponent always has at least two digits.  */
-	  *wcp++ = L'0';
+	if (__builtin_expect (expsign != 0 && exponent == 4 && spec == 'g', 0))
+	  {
+	    /* This is another special case.  The exponent of the number is
+	       really smaller than -4, which requires the 'e'/'E' format.
+	       But after rounding the number has an exponent of -4.  */
+	    assert (wcp >= wstartp + 2);
+	    assert (wstartp[0] == L'1');
+	    __wmemcpy (wstartp, L"0.0001", 6);
+	    wstartp[1] = decimalwc;
+	    wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
+	    wcp += 4;
+	  }
 	else
-	  do
-	    {
-	      expscale /= 10;
-	      *wcp++ = L'0' + (exponent / expscale);
-	      exponent %= expscale;
-	    }
-	  while (expscale > 10);
-	*wcp++ = L'0' + exponent;
+	  {
+	    *wcp++ = (wchar_t) type;
+	    *wcp++ = expsign ? L'-' : L'+';
+
+	    /* Find the magnitude of the exponent.	*/
+	    expscale = 10;
+	    while (expscale <= exponent)
+	      expscale *= 10;
+
+	    if (exponent < 10)
+	      /* Exponent always has at least two digits.  */
+	      *wcp++ = L'0';
+	    else
+	      do
+		{
+		  expscale /= 10;
+		  *wcp++ = L'0' + (exponent / expscale);
+		  exponent %= expscale;
+		}
+	      while (expscale > 10);
+	    *wcp++ = L'0' + exponent;
+	  }
       }
 
     /* Compute number of characters which must be filled with the padding
@@ -1123,15 +1151,14 @@ ___printf_fp (FILE *fp,
 	  else
 	    thousands_sep_len = strlen (thousands_sep);
 
-	  if (buffer_malloced)
+	  if (__builtin_expect (buffer_malloced, 0))
 	    {
 	      buffer = (char *) malloc (2 + chars_needed + decimal_len
 					+ ngroups * thousands_sep_len);
 	      if (buffer == NULL)
 		{
 		  /* Signal an error to the caller.  */
-		  if (buffer_malloced)
-		    free (wbuffer);
+		  free (wbuffer);
 		  return -1;
 		}
 	    }
@@ -1165,7 +1192,7 @@ ___printf_fp (FILE *fp,
       PRINT (tmpptr, wstartp, wide ? wcp - wstartp : cp - tmpptr);
 
       /* Free the memory if necessary.  */
-      if (buffer_malloced)
+      if (__builtin_expect (buffer_malloced, 0))
 	{
 	  free (buffer);
 	  free (wbuffer);

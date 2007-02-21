@@ -4012,6 +4012,14 @@ sprint_double_type sprint_doubles[] =
   {__LINE__, 16,			"0x1.0p+4", "%.1a"},
   {__LINE__, 16,			"0x1.00000000000000000000p+4", "%.20a"},
   {__LINE__, 4444.88888888,		"4445", "%2.F"},
+  {__LINE__, 0.956,			"1", "%.0g"},
+  {__LINE__, 1.0956,			"1.", "%#.0g"},
+  {__LINE__, 0.956,			"1.", "%#.0g"},
+  {__LINE__, 0.0956,			"0.1", "%#.0g"},
+  {__LINE__, 0.00956,			"0.01", "%#.0g"},
+  {__LINE__, 0.000956,			"0.001", "%#.0g"},
+  {__LINE__, 0.000098,			"0.0001", "%#.0g"},
+  {__LINE__, 0.0000996,			"0.00010", "%#.2g"},
 
   {0 }
 
@@ -4023,13 +4031,8 @@ sprint_double_type sprint_doubles[] =
 
 int required_precision = 13;
 
-#if defined(__STDC__) || defined(__cplusplus)
 static int
 matches (register char *result, register const char *desired)
-#else
-int matches(result, desired)
-     register char *result; register const char *desired;
-#endif
 {
     int digits_seen = 0;
     for (;; result++, desired++) {
@@ -4080,7 +4083,7 @@ int main(int argc, char *argv[])
 
   /* And one special test.  */
   {
-    const char ref[] = "1.7763568394002504646778106689453125e-15";
+    static const char ref[] = "1.7763568394002504646778106689453125e-15";
     int i;
     d = 1.0;
     for (i = 1; i < 50; ++i)

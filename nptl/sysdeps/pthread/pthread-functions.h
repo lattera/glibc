@@ -106,13 +106,13 @@ extern int __libc_pthread_functions_init attribute_hidden;
 
 #ifdef PTR_DEMANGLE
 # define PTHFCT_CALL(fct, params) \
-  __libc_pthread_functions.fct params
-#else
-# define PTHFCT_CALL(fct, params) \
   ({ __typeof (__libc_pthread_functions.fct) __p;			      \
      __p = __libc_pthread_functions.fct;				      \
      PTR_DEMANGLE (__p);						      \
      __p params; })
+#else
+# define PTHFCT_CALL(fct, params) \
+  __libc_pthread_functions.fct params
 #endif
 
 #endif	/* pthread-functions.h */
