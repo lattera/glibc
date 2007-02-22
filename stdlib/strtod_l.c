@@ -482,7 +482,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   struct locale_data *current = loc->__locales[LC_NUMERIC];
 
-  if (group)
+  if (__builtin_expect (group, 0))
     {
       grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
       if (*grouping <= 0 || *grouping == CHAR_MAX)
@@ -548,7 +548,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       && (wint_t) cp[1] >= L'0' && (wint_t) cp[1] <= L'9')
     {
       /* We accept it.  This funny construct is here only to indent
-	 the code directly.  */
+	 the code correctly.  */
     }
 #else
   for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
@@ -557,7 +557,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   if (decimal[cnt] == '\0' && cp[cnt] >= '0' && cp[cnt] <= '9')
     {
       /* We accept it.  This funny construct is here only to indent
-	 the code directly.  */
+	 the code correctly.  */
     }
 #endif
   else if (c < L_('0') || c > L_('9'))
@@ -643,7 +643,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   while (c == L'0' || ((wint_t) thousands != L'\0' && c == (wint_t) thousands))
     c = *++cp;
 #else
-  if (thousands == NULL)
+  if (__builtin_expect (thousands == NULL, 1))
     while (c == '0')
       c = *++cp;
   else
@@ -717,11 +717,12 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       else
 	{
 #ifdef USE_WIDE_CHAR
-	  if ((wint_t) thousands == L'\0' || c != (wint_t) thousands)
+	  if (__builtin_expect ((wint_t) thousands == L'\0', 1)
+	      || c != (wint_t) thousands)
 	    /* Not a digit or separator: end of the integer part.  */
 	    break;
 #else
-	  if (thousands == NULL)
+	  if (__builtin_expect (thousands == NULL, 1))
 	    break;
 	  else
 	    {
@@ -737,7 +738,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       c = *++cp;
     }
 
-  if (grouping && cp > start_of_digits)
+  if (__builtin_expect (grouping != NULL, 0) && cp > start_of_digits)
     {
       /* Check the grouping of the digits.  */
 #ifdef USE_WIDE_CHAR
@@ -846,7 +847,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      exponent *= 10;
 	      exponent += c - L_('0');
 
-	      if (exponent > exp_limit)
+	      if (__builtin_expect (exponent > exp_limit, 0))
 		/* The exponent is too large/small to represent a valid
 		   number.  */
 		{
@@ -1100,7 +1101,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
       /* Now we know the exponent of the number in base two.
 	 Check it against the maximum possible exponent.  */
-      if (bits > MAX_EXP)
+      if (__builtin_expect (bits > MAX_EXP, 0))
 	{
 	  __set_errno (ERANGE);
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
