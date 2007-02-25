@@ -1031,13 +1031,13 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
     exponent -= incr;
   }
 
-  if (int_no + exponent > MAX_10_EXP + 1)
+  if (__builtin_expect (int_no + exponent > MAX_10_EXP + 1, 0))
     {
       __set_errno (ERANGE);
       return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
     }
 
-  if (exponent < MIN_10_EXP - (DIG + 1))
+  if (__builtin_expect (exponent < MIN_10_EXP - (DIG + 1), 0))
     {
       __set_errno (ERANGE);
       return 0.0;

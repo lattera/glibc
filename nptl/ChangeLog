@@ -1,3 +1,9 @@
+2007-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Reset refcntr in
+	new thread, don't just decrement it.
+	Patch by Suzuki K P <suzuki@in.ibm.com>.
+
 2007-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread-functions.h: Correct last patch, correct
