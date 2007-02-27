@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -195,7 +195,7 @@ __netlink_request (struct netlink_handle *h, int type)
 	      char *new_buf = realloc (use_malloc ? buf : NULL, this_buf_size);
 	      if (new_buf == NULL)
 		goto out_fail;
-	      new_buf = buf;
+	      buf = new_buf;
 
 	      use_malloc = true;
 	    }
