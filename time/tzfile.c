@@ -548,13 +548,60 @@ find_transition (time_t timer)
       if (i == num_types)
 	i = 0;
     }
+  else if (timer >= transitions[num_transitions - 1])
+    i = type_idxs[num_transitions - 1];
   else
     {
       /* Find the first transition after TIMER, and
 	 then pick the type of the transition before it.  */
-      for (i = 1; i < num_transitions; ++i)
-	if (timer < transitions[i])
-	  break;
+      size_t lo = 0;
+      size_t hi = num_transitions - 1;
+      /* Assume that DST is changing twice a year and guess initial
+	 search spot from it.
+	 Half of a gregorian year has on average 365.2425 * 86400 / 2
+	 = 15778476 seconds.  */
+      i = (transitions[num_transitions - 1] - timer) / 15778476;
+      if (i < num_transitions)
+	{
+	  i = num_transitions - 1 - i;
+	  if (timer < transitions[i])
+	    {
+	      if (i < 10 || timer >= transitions[i - 10])
+		{
+		  /* Linear search.  */
+		  while (timer < transitions[i - 1])
+		    --i;
+		  goto found;
+		}
+	      hi = i - 10;
+	    }
+	  else
+	    {
+	      if (i + 10 >= num_transitions || timer < transitions[i + 10])
+		{
+		  /* Linear search.  */
+		  while (timer >= transitions[i])
+		    ++i;
+		  goto found;
+		}
+	      lo = i + 10;
+	    }
+	}
+
+      /* Binary search.  */
+      /* assert (timer >= transitions[lo] && timer < transitions[hi]); */
+      while (lo + 1 < hi)
+	{
+	  i = (lo + hi) / 2;
+	  if (timer < transitions[i])
+	    hi = i;
+	  else
+	    lo = i;
+	}
+      i = hi;
+
+    found:
+      /* assert (timer >= transitions[i - 1] && timer < transitions[i]); */
       i = type_idxs[i - 1];
     }
 
