@@ -1,3 +1,8 @@
+2007-02-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sh/Makefile: Remove sys/io.h
+	from sysdep_headers.
+
 2007-02-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tzfile.c (find_transition): Instead of a linear search try to
