@@ -4614,6 +4614,17 @@ pow_test (void)
 
   /* pow (x, NaN) == NaN.  */
   TEST_ff_f (pow, 3.0, nan_value, nan_value);
+  TEST_ff_f (pow, minus_zero, nan_value, nan_value);
+  TEST_ff_f (pow, plus_infty, nan_value, nan_value);
+  TEST_ff_f (pow, -3.0, nan_value, nan_value);
+  TEST_ff_f (pow, minus_infty, nan_value, nan_value);
+
+  TEST_ff_f (pow, nan_value, 3.0, nan_value);
+  TEST_ff_f (pow, nan_value, -3.0, nan_value);
+  TEST_ff_f (pow, nan_value, plus_infty, nan_value);
+  TEST_ff_f (pow, nan_value, minus_infty, nan_value);
+  TEST_ff_f (pow, nan_value, 2.5, nan_value);
+  TEST_ff_f (pow, nan_value, -2.5, nan_value);
 
   TEST_ff_f (pow, 1, plus_infty, 1);
   TEST_ff_f (pow, -1, plus_infty, 1);
