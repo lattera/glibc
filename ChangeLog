@@ -1,6 +1,6 @@
 2007-03-01  Jakub Jelinek  <jakub@redhat.com>
 
-	[BZ #4096]
+	[BZ #4069]
 	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Check for NaN
 	earlier.
 	* math/libm-test.inc (pow_test): Add more tests involving NaNs.
