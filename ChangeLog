@@ -1,3 +1,9 @@
+2007-03-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Retry with
+	a new netlink socket if NLMSG_ERR -EBUSY is seen after some MSG_TRUNC
+	message.
+
 2007-03-01  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4069]

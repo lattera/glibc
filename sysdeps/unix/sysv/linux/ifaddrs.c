@@ -135,6 +135,7 @@ __netlink_request (struct netlink_handle *h, int type)
     return -1;
 
   size_t this_buf_size = buf_size;
+  size_t orig_this_buf_size = this_buf_size;
   if (__libc_use_alloca (this_buf_size))
     buf = alloca (this_buf_size);
   else
@@ -236,6 +237,36 @@ __netlink_request (struct netlink_handle *h, int type)
 	      struct nlmsgerr *nlerr = (struct nlmsgerr *) NLMSG_DATA (nlmh);
 	      if (nlmh->nlmsg_len < NLMSG_LENGTH (sizeof (struct nlmsgerr)))
 		errno = EIO;
+	      else if (nlerr->error == -EBUSY
+		       && orig_this_buf_size != this_buf_size)
+		{
+		  /* If EBUSY and MSG_TRUNC was seen, try again with a new
+		     netlink socket.  */
+		  struct netlink_handle hold = *h;
+		  if (__netlink_open (h) < 0)
+		    {
+		      *h = hold;
+		      goto out_fail;
+		    }
+		  __netlink_close (&hold);
+		  orig_this_buf_size = this_buf_size;
+		  nlm_next = *new_nlm_list;
+		  while (nlm_next != NULL)
+		    {
+		      struct netlink_res *tmpptr;
+
+		      tmpptr = nlm_next->next;
+		      free (nlm_next);
+		      nlm_next = tmpptr;
+		    }
+		  *new_nlm_list = NULL;
+		  count = 0;
+		  h->seq++;
+
+		  if (__netlink_sendreq (h, type) < 0)
+		    goto out_fail;
+		  break;
+		}
 	      else
 		errno = -nlerr->error;
 	      goto out_fail;
