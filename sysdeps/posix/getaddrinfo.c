@@ -1157,7 +1157,7 @@ get_scope (const struct sockaddr_storage *ss)
 	 169.254/16 and 127/8 are link-local.  */
       if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
 	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && addr[1] == 16)
+      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
 	       || (addr[0] == 192 && addr[1] == 168))
 	scope = 5;
       else
