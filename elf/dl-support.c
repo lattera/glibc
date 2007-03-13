@@ -211,6 +211,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	__libc_enable_secure = av->a_un.a_val;
 	__libc_enable_secure_decided = 1;
 	break;
+# ifdef DL_PLATFORM_AUXV
+      DL_PLATFORM_AUXV
+# endif
       }
   if (seen == 0xf)
     {

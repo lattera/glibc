@@ -27,7 +27,7 @@ static long int linux_sysconf (int name);
 #define CSHAPE(totalsize, linesize, assoc) \
   ((totalsize & ~0xff) | (linesize << 4) | assoc)
 
-long __libc_alpha_cache_shape[4] = { -2, -2, -2, -2 };
+extern long __libc_alpha_cache_shape[4];
 
 static inline unsigned long
 implver (void)
