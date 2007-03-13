@@ -55,6 +55,7 @@ __LABEL(name)							\
 	bne	a3, SYSCALL_ERROR_LABEL;			\
 __LABEL($pseudo_ret)						\
 	.subsection 2;						\
+	cfi_startproc;						\
 __LABEL($pseudo_cancel)						\
 	subq	sp, 64, sp;					\
 	cfi_def_cfa_offset(64);					\
@@ -90,12 +91,13 @@ __LABEL($multi_error)						\
 	cfi_def_cfa_offset(0);					\
 __LABEL($syscall_error)						\
 	SYSCALL_ERROR_HANDLER;					\
+	cfi_endproc;						\
 	.previous
 
 # undef PSEUDO_END
 # define PSEUDO_END(sym)					\
-	.subsection 2;						\
 	cfi_endproc;						\
+	.subsection 2;						\
 	.size sym, .-sym
 
 # define SAVE_ARGS_0	/* Nothing.  */
