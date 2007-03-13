@@ -1,3 +1,8 @@
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Add support for
+	__sigsuspend_nocancel.
+
 2007-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (get_scope): Correct test for

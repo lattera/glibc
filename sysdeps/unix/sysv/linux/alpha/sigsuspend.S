@@ -20,6 +20,19 @@
 /* sigsuspend is a special syscall since it needs to dereference the
    sigset.  This will have to change when we have more than 64 signals.  */
 
+#ifndef NO_CANCELLATION
+#include <sysdep.h>
+
+#undef PSEUDO_PREPARE_ARGS
+#define PSEUDO_PREPARE_ARGS	ldq	a0, 0(a0);
+
+PSEUDO(__sigsuspend_nocancel, sigsuspend, 1)
+	ret
+/* Use END, not PSEUDO_END, so that we don't issue two $syscall_error
+   symbols; we'll jump into __sigsuspend for the error case.  */
+END(__sigsuspend_nocancel)
+#endif /* NO_CANCELLATION */
+
 #include <sysdep-cancel.h>
 
 #undef PSEUDO_PREPARE_ARGS
