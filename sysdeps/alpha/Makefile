@@ -38,9 +38,10 @@ ifeq ($(subdir),elf)
 CFLAGS-rtld.c = -mbuild-constants
 endif
 
-# For now, build everything with full IEEE math support.
-# TODO: build separate libm and libm-ieee.
-sysdep-CFLAGS += -mieee
+# Build everything with full IEEE math support, and with dynamic rounding;
+# there are a number of math routines that are defined to work with the
+# "current" rounding mode, and it's easiest to set this with all of them.
+sysdep-CFLAGS += -mieee -mfp-rounding-mode=d
 
 # libc.so requires about 16k for the small data area, which is well
 # below the 64k maximum.

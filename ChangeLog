@@ -1,5 +1,14 @@
 2007-03-13  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/Makefile (sysdep-CFLAGS): Force dynamic rounding.
+	* sysdeps/alpha/fpu/bits/mathinline.h (__signbitl): New.
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
+	* sysdeps/unix/sysv/linux/alpha/alphaev6/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/alphaev67/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: New file.
+
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
         * elf/dl-support.c (_dl_aux_init): Honor DL_PLATFORM_AUXV.
 	* sysdeps/unix/sysv/linux/alpha/dl-auxv.h: New file.
 	* sysdeps/unix/sysv/linux/alpha/dl-support.c: New file.

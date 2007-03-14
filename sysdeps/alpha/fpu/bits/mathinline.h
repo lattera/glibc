@@ -178,6 +178,16 @@ __NTH (__signbit (double __x))
   return __u.__i < 0;
 }
 
+__MATH_INLINE int
+__NTH (__signbitl (long double __x))
+{
+  __extension__ union {
+    long double __d;
+    long __i[sizeof(long double)/sizeof(long)];
+  } __u = { __d: __x };
+  return __u.__i[sizeof(long double)/sizeof(long) - 1] < 0;
+}
+
 #endif /* C99 */
 
 #endif /* __NO_MATH_INLINES */
