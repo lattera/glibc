@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -27,25 +27,20 @@
 double
 __ceil (double x)
 {
-  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
-    {
-      double tmp1, new_x;
-
-      new_x = -x;
-      __asm (
+  double two52 = copysign (0x1.0p52, x);
+  double r, tmp;
+  
+  __asm (
 #ifdef _IEEE_FP_INEXACT
-	     "cvttq/svim %2,%1\n\t"
+	 "addt/suim %2, %3, %1\n\tsubt/suim %1, %3, %0"
 #else
-	     "cvttq/svm %2,%1\n\t"
+	 "addt/sum %2, %3, %1\n\tsubt/sum %1, %3, %0"
 #endif
-	     "cvtqt/m %1,%0\n\t"
-	     : "=f"(new_x), "=&f"(tmp1)
-	     : "f"(new_x));
+	 : "=&f"(r), "=&f"(tmp)
+	 : "f"(-x), "f"(-two52));
 
-      /* Fix up the negation we did above, as well as handling -0 properly. */
-      x = copysign(new_x, x);
-    }
-  return x;
+  /* Fix up the negation we did above, as well as handling -0 properly. */
+  return copysign (r, x);
 }
 
 weak_alias (__ceil, ceil)

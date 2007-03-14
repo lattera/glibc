@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -19,27 +19,22 @@
 
 #include <math.h>
 
-/* Use the -inf rounding mode conversion instructions to implement
-   ceil, via something akin to -floor(-x).  This is much faster than
-   playing with the fpcr to achieve +inf rounding mode.  */
+#ifdef _IEEE_FP_INEXACT
+#error "Don't compile with -mieee-with-inexact"
+#endif
 
 float
-__ceilf (float x)
+__nearbyintf (float x)
 {
   float two23 = copysignf (0x1.0p23, x);
-  float r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "adds/suim %2, %3, %1\n\tsubs/suim %1, %3, %0"
-#else
-	 "adds/sum %2, %3, %1\n\tsubs/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(-x), "f"(-two23));
+  float r;
 
-  /* Fix up the negation we did above, as well as handling -0 properly. */
-  return copysignf (r, x);
+  r = x + two23;
+  r = r - two23;
+
+  /* nearbyint(-0.1) == -0, and in general we'll always have the same sign
+     as our input.  */
+  return copysign (r, x);
 }
 
-weak_alias (__ceilf, ceilf)
+weak_alias (__nearbyintf, nearbyintf)

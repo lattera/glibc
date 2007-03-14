@@ -1,6 +1,5 @@
-/* Copyright (C) 1998, 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,29 +16,24 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __llrintf	not___llrintf
+#define llrintf		not_llrintf
 #include <math.h>
+#undef __llrintf
+#undef llrintf
 
-/* Use the -inf rounding mode conversion instructions to implement
-   ceil, via something akin to -floor(-x).  This is much faster than
-   playing with the fpcr to achieve +inf rounding mode.  */
-
-float
-__ceilf (float x)
+long int
+__lrintf (float x)
 {
-  float two23 = copysignf (0x1.0p23, x);
-  float r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "adds/suim %2, %3, %1\n\tsubs/suim %1, %3, %0"
-#else
-	 "adds/sum %2, %3, %1\n\tsubs/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(-x), "f"(-two23));
+  double tmp;
+  long ret;
 
-  /* Fix up the negation we did above, as well as handling -0 properly. */
-  return copysignf (r, x);
+  __asm ("cvtst/s %2,%1\n\tcvttq/svd %1,%0"
+	 : "=&f"(ret), "=&f"(tmp) : "f"(x));
+
+  return ret;
 }
 
-weak_alias (__ceilf, ceilf)
+strong_alias (__lrintf, __llrintf)
+weak_alias (__lrintf, lrintf)
+weak_alias (__llrintf, llrintf)
