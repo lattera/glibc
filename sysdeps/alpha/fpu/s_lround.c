@@ -1,6 +1,5 @@
-/* Copyright (C) 1998, 1999, 2000, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,37 +16,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __llround	not___llround
+#define llround		not_llround
 #include <math.h>
 #include <math_ldbl_opt.h>
+#undef __llround
+#undef llround
 
-
-/* Use the -inf rounding mode conversion instructions to implement floor.  */
-
-double
-__floor (double x)
+long int
+__lround (double x)
 {
-  double two52 = copysign (0x1.0p52, x);
-  double r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "addt/suim %2, %3, %1\n\tsubt/suim %1, %3, %0"
-#else
-	 "addt/sum %2, %3, %1\n\tsubt/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(x), "f"(two52));
+  double adj;
 
-  /* floor(-0) == -0, and in general we'll always have the same
-     sign as our input.  */
-  return copysign (r, x);
+  adj = 0x1.fffffffffffffp-2;	/* nextafter (0.5, 0.0) */
+  adj = copysign (adj, x);
+  return x + adj;
 }
 
-weak_alias (__floor, floor)
+strong_alias (__lround, __llround)
+weak_alias (__lround, lround)
+weak_alias (__llround, llround)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__floor, __floorl)
-weak_alias (__floor, floorl)
+strong_alias (__lround, __lroundl)
+strong_alias (__lround, __llroundl)
+weak_alias (__lroundl, lroundl)
+weak_alias (__llroundl, llroundl)
 #endif
 #if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __floor, floorl, GLIBC_2_0);
+compat_symbol (libm, __lround, lroundl, GLIBC_2_0);
+compat_symbol (libm, __llround, llroundl, GLIBC_2_0);
 #endif
