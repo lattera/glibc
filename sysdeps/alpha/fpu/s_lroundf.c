@@ -1,6 +1,5 @@
-/* Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,29 +16,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __llroundf	not___llroundf
+#define llroundf	not_llroundf
 #include <math.h>
+#undef __llroundf
+#undef llroundf
 
 
-/* Use the -inf rounding mode conversion instructions to implement floor.  */
-
-float
-__floorf (float x)
+long int
+__lroundf (float x)
 {
-  float two23 = copysignf (0x1.0p23, x);
-  float r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "adds/suim %2, %3, %1\n\tsubs/suim %1, %3, %0"
-#else
-	 "adds/sum %2, %3, %1\n\tsubs/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(x), "f"(two23));
+  float adj;
 
-  /* floor(-0) == -0, and in general we'll always have the same
-     sign as our input.  */
-  return copysignf (r, x);
+  adj = 0x1.fffffep-2;		/* nextafterf (0.5f, 0.0f) */
+  adj = copysignf (adj, x);
+  return x + adj;
 }
 
-weak_alias (__floorf, floorf)
+strong_alias (__lroundf, __llroundf)
+weak_alias (__lroundf, lroundf)
+weak_alias (__llroundf, llroundf)
