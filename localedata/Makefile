@@ -289,6 +289,8 @@ tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
 
 bug-iconv-trans-ENV = LOCPATH=$(common-objpfx)localedata
 
+tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
+
 tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace \
 		LOCPATH=$(common-objpfx)localedata
 $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
