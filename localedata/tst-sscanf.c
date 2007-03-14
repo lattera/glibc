@@ -36,7 +36,7 @@ check_sscanf (const char *s, const char *format, const float n)
 static int
 do_test (void)
 {
-  if (setlocale (LC_ALL, "fa_IR") == NULL)
+  if (setlocale (LC_ALL, "fa_IR.UTF-8") == NULL)
     {
       puts ("cannot set fa_IR locale");
       return 1;
