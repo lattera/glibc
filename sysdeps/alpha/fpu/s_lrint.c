@@ -1,6 +1,5 @@
-/* Copyright (C) 1998, 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,29 +16,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __llrint	not___llrint
+#define llrint		not_llrint
 #include <math.h>
+#include <math_ldbl_opt.h>
+#undef __llrint
+#undef llrint
 
-/* Use the -inf rounding mode conversion instructions to implement
-   ceil, via something akin to -floor(-x).  This is much faster than
-   playing with the fpcr to achieve +inf rounding mode.  */
-
-float
-__ceilf (float x)
+long int
+__lrint (double x)
 {
-  float two23 = copysignf (0x1.0p23, x);
-  float r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "adds/suim %2, %3, %1\n\tsubs/suim %1, %3, %0"
-#else
-	 "adds/sum %2, %3, %1\n\tsubs/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(-x), "f"(-two23));
+  long ret;
 
-  /* Fix up the negation we did above, as well as handling -0 properly. */
-  return copysignf (r, x);
+  __asm ("cvttq/svd %1,%0" : "=&f"(ret) : "f"(x));
+
+  return ret;
 }
 
-weak_alias (__ceilf, ceilf)
+strong_alias (__lrint, __llrint)
+weak_alias (__lrint, lrint)
+weak_alias (__llrint, llrint)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__lrint, __lrintl)
+strong_alias (__lrint, __llrintl)
+weak_alias (__lrintl, lrintl)
+weak_alias (__llrintl, llrintl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __lrint, lrintl, GLIBC_2_0);
+compat_symbol (libm, __llrint, llrintl, GLIBC_2_0);
+#endif

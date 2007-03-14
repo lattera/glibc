@@ -1,5 +1,6 @@
 /* Inline math functions for Alpha.
-   Copyright (C) 1996, 1997, 1999-2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999-2001, 2004, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang.
 
@@ -83,111 +84,64 @@ __inline_fabs (fabs, double)
 # undef __inline_fabs
 #endif
 
-
-/* Use the -inf rounding mode conversion instructions to implement
-   floor.  We note when the exponent is large enough that the value
-   must be integral, as this avoids unpleasant integer overflows.  */
-
-__MATH_INLINE float
-__NTH (__floorf (float __x))
-{
-  /* Check not zero since floor(-0) == -0.  */
-  if (__x != 0 && fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
-    {
-      /* Note that Alpha S_Floating is stored in registers in a
-	 restricted T_Floating format, so we don't even need to
-	 convert back to S_Floating in the end.  The initial
-	 conversion to T_Floating is needed to handle denormals.  */
-
-      float __tmp1, __tmp2;
-
-      __asm ("cvtst/s %3,%2\n\t"
-#ifdef _IEEE_FP_INEXACT
-	     "cvttq/svim %2,%1\n\t"
-#else
-	     "cvttq/svm %2,%1\n\t"
-#endif
-	     "cvtqt/m %1,%0\n\t"
-	     : "=f"(__x), "=&f"(__tmp1), "=&f"(__tmp2)
-	     : "f"(__x));
-    }
-  return __x;
-}
-
-__MATH_INLINE double
-__NTH (__floor (double __x))
-{
-  if (__x != 0 && fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
-    {
-      double __tmp1;
-      __asm (
-#ifdef _IEEE_FP_INEXACT
-	     "cvttq/svim %2,%1\n\t"
-#else
-	     "cvttq/svm %2,%1\n\t"
-#endif
-	     "cvtqt/m %1,%0\n\t"
-	     : "=f"(__x), "=&f"(__tmp1)
-	     : "f"(__x));
-    }
-  return __x;
-}
-
-__MATH_INLINE float __NTH (floorf (float __x)) { return __floorf(__x); }
-__MATH_INLINE double __NTH (floor (double __x)) { return __floor(__x); }
-
-
 #ifdef __USE_ISOC99
-
-__MATH_INLINE float
-__NTH (__fdimf (float __x, float __y))
-{
-  return __x <= __y ? 0.0f : __x - __y;
-}
-
-__MATH_INLINE float
-__NTH (fdimf (float __x, float __y))
-{
-  return __x <= __y ? 0.0f : __x - __y;
-}
-
-__MATH_INLINE double
-__NTH (__fdim (double __x, double __y))
-{
-  return __x <= __y ? 0.0 : __x - __y;
-}
-
-__MATH_INLINE double
-__NTH (fdim (double __x, double __y))
-{
-  return __x <= __y ? 0.0 : __x - __y;
-}
 
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
+#if !__GNUC_PREREQ (4, 0)
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
+#else
+  return __builtin_signbitf (__x);
+#endif
 }
 
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
+#if !__GNUC_PREREQ (4, 0)
   __extension__ union { double __d; long __i; } __u = { __d: __x };
   return __u.__i < 0;
+#else
+  return __builtin_signbit (__x);
+#endif
 }
 
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
 {
+#if !__GNUC_PREREQ (4, 0)
   __extension__ union {
     long double __d;
     long __i[sizeof(long double)/sizeof(long)];
   } __u = { __d: __x };
   return __u.__i[sizeof(long double)/sizeof(long) - 1] < 0;
+#else
+  return __builtin_signbitl (__x);
+#endif
 }
 
+/* Test for NaN.  Used in the isnan() macro.  */
+
+__MATH_INLINE int
+__NTH (__isnanf (float __x))
+{
+  return isunordered (__x, __x);
+}
+
+__MATH_INLINE int
+__NTH (__isnan (double __x))
+{
+  return isunordered (__x, __x);
+}
+
+__MATH_INLINE int
+__NTH (__isnanl (long double __x))
+{
+  return isunordered (__x, __x);
+}
 #endif /* C99 */
 
 #endif /* __NO_MATH_INLINES */
