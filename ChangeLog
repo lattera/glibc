@@ -1,5 +1,10 @@
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4130]
+	* login/utmp_file.c (setutent_file): Use O_LARGEFILE for
+	open_not_cancel_2.
+	(updwtmp_file): Likewise.
+
 	[BZ #4181]
 	* inet/inet6_opt.c (add_padding): Only insert padding if npad > 0.
 	(inet6_opt_append): Don't check extlen is big enough if extbuf

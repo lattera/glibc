@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -140,11 +140,11 @@ setutent_file (void)
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-      file_fd = open_not_cancel_2 (file_name, O_RDWR);
+      file_fd = open_not_cancel_2 (file_name, O_RDWR | O_LARGEFILE);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = open_not_cancel_2 (file_name, O_RDONLY);
+	  file_fd = open_not_cancel_2 (file_name, O_RDONLY | O_LARGEFILE);
 	  if (file_fd == -1)
 	    return 0;
 	}
@@ -459,7 +459,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   int fd;
 
   /* Open WTMP file.  */
-  fd = open_not_cancel_2 (file, O_WRONLY);
+  fd = open_not_cancel_2 (file, O_WRONLY | O_LARGEFILE);
   if (fd < 0)
     return -1;
 
