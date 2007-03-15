@@ -1,5 +1,15 @@
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4101]
+	* argp/argp-help.c (hol_cluster_cmp): Fix comparisons used to find
+	ancestors with the same depths.
+	Patch by Niels Moeller <nisse@lysator.liu.se>.
+	(filter_doc): Don't crash if argp is NULL.
+	* argp/Makefile (tests): Add tst-argp2.
+	* argp/tst-argp2.c: New test.
+
+2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #4130]
 	* login/utmp_file.c (setutent_file): Use O_LARGEFILE for
 	open_not_cancel_2.
