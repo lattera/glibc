@@ -14,8 +14,6 @@
 	* sysdeps/x86_64/fpu/e_log2l.S (__ieee754_log2l): Likewise.
 	* sysdeps/x86_64/fpu/s_log1pl.S (__log1pl): Likewise.
 
-2007-03-15  Jakub Jelinek  <jakub@redhat.com>
-
 	[BZ #4101]
 	* argp/argp-help.c (hol_cluster_cmp): Fix comparisons used to find
 	ancestors with the same depths.
@@ -23,8 +21,6 @@
 	(filter_doc): Don't crash if argp is NULL.
 	* argp/Makefile (tests): Add tst-argp2.
 	* argp/tst-argp2.c: New test.
-
-2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4130]
 	* login/utmp_file.c (setutent_file): Use O_LARGEFILE for
