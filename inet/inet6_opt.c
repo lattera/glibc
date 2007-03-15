@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -51,7 +51,7 @@ add_padding (uint8_t *extbuf, int offset, int npad)
 {
   if (npad == 1)
     extbuf[offset] = IP6OPT_PAD1;
-  else
+  else if (npad > 0)
     {
       struct ip6_opt *pad_opt = (struct ip6_opt *) (extbuf + offset);
 
@@ -102,21 +102,17 @@ inet6_opt_append (void *extbuf, socklen_t extlen, int offset, uint8_t type,
   int data_offset = offset + sizeof (struct ip6_opt);
   int npad = (align - data_offset % align) & (align - 1);
 
-  /* Now we can check whether the buffer is large enough.  */
-  if (data_offset + npad + len > extlen)
-    return -1;
-
-  if (npad != 0)
-    {
-      if (extbuf != NULL)
-	add_padding (extbuf, offset, npad);
-
-      offset += npad;
-    }
-
-  /* Now prepare the option itself.  */
   if (extbuf != NULL)
     {
+      /* Now we can check whether the buffer is large enough.  */
+      if (data_offset + npad + len > extlen)
+	return -1;
+
+      add_padding (extbuf, offset, npad);
+
+      offset += npad;
+
+      /* Now prepare the option itself.  */
       struct ip6_opt *opt = (struct ip6_opt *) ((uint8_t *) extbuf + offset);
 
       opt->ip6o_type = type;
@@ -124,6 +120,8 @@ inet6_opt_append (void *extbuf, socklen_t extlen, int offset, uint8_t type,
 
       *databufp = opt + 1;
     }
+  else
+    offset += npad;
 
   return offset + sizeof (struct ip6_opt) + len;
 }
@@ -145,12 +143,14 @@ inet6_opt_finish (void *extbuf, socklen_t extlen, int offset)
   /* Required padding at the end.  */
   int npad = (8 - (offset & 7)) & 7;
 
-  /* Make sure the buffer is large enough.  */
-  if (offset + npad > extlen)
-    return -1;
-
   if (extbuf != NULL)
-    add_padding (extbuf, offset, npad);
+    {
+      /* Make sure the buffer is large enough.  */
+      if (offset + npad > extlen)
+	return -1;
+
+      add_padding (extbuf, offset, npad);
+    }
 
   return offset + npad;
 }

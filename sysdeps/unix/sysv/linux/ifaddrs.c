@@ -122,37 +122,36 @@ int
 __netlink_request (struct netlink_handle *h, int type)
 {
   struct netlink_res *nlm_next;
-  struct netlink_res **new_nlm_list;
-  static volatile size_t buf_size = 4096;
-  char *buf;
   struct sockaddr_nl nladdr;
   struct nlmsghdr *nlmh;
   ssize_t read_len;
   bool done = false;
+
+#ifdef PAGE_SIZE
+  /* Help the compiler optimize out the malloc call if PAGE_SIZE
+     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
+  const size_t buf_size = PAGE_SIZE;
+#else
+  const size_t buf_size = __getpagesize ();
+#endif
   bool use_malloc = false;
+  char *buf;
 
-  if (__netlink_sendreq (h, type) < 0)
-    return -1;
-
-  size_t this_buf_size = buf_size;
-  size_t orig_this_buf_size = this_buf_size;
-  if (__libc_use_alloca (this_buf_size))
-    buf = alloca (this_buf_size);
+  if (__libc_use_alloca (buf_size))
+    buf = alloca (buf_size);
   else
     {
-      buf = malloc (this_buf_size);
+      buf = malloc (buf_size);
       if (buf != NULL)
 	use_malloc = true;
       else
 	goto out_fail;
     }
 
-  struct iovec iov = { buf, this_buf_size };
+  struct iovec iov = { buf, buf_size };
 
-  if (h->nlm_list != NULL)
-    new_nlm_list = &h->end_ptr->next;
-  else
-    new_nlm_list = &h->nlm_list;
+  if (__netlink_sendreq (h, type) < 0)
+    goto out_fail;
 
   while (! done)
     {
@@ -172,48 +171,7 @@ __netlink_request (struct netlink_handle *h, int type)
 	continue;
 
       if (__builtin_expect (msg.msg_flags & MSG_TRUNC, 0))
-	{
-	  if (this_buf_size >= SIZE_MAX / 2)
-	    goto out_fail;
-
-	  nlm_next = *new_nlm_list;
-	  while (nlm_next != NULL)
-	    {
-	      struct netlink_res *tmpptr;
-
-	      tmpptr = nlm_next->next;
-	      free (nlm_next);
-	      nlm_next = tmpptr;
-	    }
-	  *new_nlm_list = NULL;
-
-	  if (__libc_use_alloca (2 * this_buf_size))
-	    buf = extend_alloca (buf, this_buf_size, 2 * this_buf_size);
-	  else
-	    {
-	      this_buf_size *= 2;
-
-	      char *new_buf = realloc (use_malloc ? buf : NULL, this_buf_size);
-	      if (new_buf == NULL)
-		goto out_fail;
-	      buf = new_buf;
-
-	      use_malloc = true;
-	    }
-	  buf_size = this_buf_size;
-
-	  iov.iov_base = buf;
-	  iov.iov_len = this_buf_size;
-
-	  /* Increase sequence number, so that we can distinguish
-	     between old and new request messages.  */
-	  h->seq++;
-
-	  if (__netlink_sendreq (h, type) < 0)
-	    goto out_fail;
-
-	  continue;
-	}
+	goto out_fail;
 
       size_t count = 0;
       size_t remaining_len = read_len;
@@ -237,36 +195,6 @@ __netlink_request (struct netlink_handle *h, int type)
 	      struct nlmsgerr *nlerr = (struct nlmsgerr *) NLMSG_DATA (nlmh);
 	      if (nlmh->nlmsg_len < NLMSG_LENGTH (sizeof (struct nlmsgerr)))
 		errno = EIO;
-	      else if (nlerr->error == -EBUSY
-		       && orig_this_buf_size != this_buf_size)
-		{
-		  /* If EBUSY and MSG_TRUNC was seen, try again with a new
-		     netlink socket.  */
-		  struct netlink_handle hold = *h;
-		  if (__netlink_open (h) < 0)
-		    {
-		      *h = hold;
-		      goto out_fail;
-		    }
-		  __netlink_close (&hold);
-		  orig_this_buf_size = this_buf_size;
-		  nlm_next = *new_nlm_list;
-		  while (nlm_next != NULL)
-		    {
-		      struct netlink_res *tmpptr;
-
-		      tmpptr = nlm_next->next;
-		      free (nlm_next);
-		      nlm_next = tmpptr;
-		    }
-		  *new_nlm_list = NULL;
-		  count = 0;
-		  h->seq++;
-
-		  if (__netlink_sendreq (h, type) < 0)
-		    goto out_fail;
-		  break;
-		}
 	      else
 		errno = -nlerr->error;
 	      goto out_fail;

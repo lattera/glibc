@@ -52,7 +52,7 @@ routines := htonl htons		\
 aux := check_pf ifreq
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
-	 tst-gethnm test-ifaddrs bug-if1
+	 tst-gethnm test-ifaddrs bug-if1 test-inet6_opt
 
 include ../Rules
 

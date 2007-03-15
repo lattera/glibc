@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,17 +71,38 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
 
+#ifdef PAGE_SIZE
+  /* Help the compiler optimize out the malloc call if PAGE_SIZE
+     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
+  const size_t buf_size = PAGE_SIZE;
+#else
+  const size_t buf_size = __getpagesize ();
+#endif
+  bool use_malloc = false;
+  char *buf;
+
+  if (__libc_use_alloca (buf_size))
+    buf = alloca (buf_size);
+  else
+    {
+      buf = malloc (buf_size);
+      if (buf != NULL)
+	use_malloc = true;
+      else
+	goto out_fail;
+    }
+
+  struct iovec iov = { buf, buf_size };
+
   if (TEMP_FAILURE_RETRY (__sendto (fd, (void *) &req, sizeof (req), 0,
 				    (struct sockaddr *) &nladdr,
 				    sizeof (nladdr))) < 0)
-    return -1;
+    goto out_fail;
 
   *seen_ipv4 = false;
   *seen_ipv6 = false;
 
   bool done = false;
-  char buf[4096];
-  struct iovec iov = { buf, sizeof (buf) };
   struct in6ailist
   {
     struct in6addrinfo info;
@@ -101,10 +122,10 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
       if (read_len < 0)
-	return -1;
+	goto out_fail;
 
       if (msg.msg_flags & MSG_TRUNC)
-	return -1;
+	goto out_fail;
 
       struct nlmsghdr *nlmh;
       for (nlmh = (struct nlmsghdr *) buf;
@@ -186,7 +207,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
     {
       *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
       if (*in6ai == NULL)
-	return -1;
+	goto out_fail;
 
       *in6ailen = in6ailistlen;
 
@@ -198,6 +219,13 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
       while (in6ailist != NULL);
     }
 
+  if (use_malloc)
+    free (buf);
+  return 0;
+
+out_fail:
+  if (use_malloc)
+    free (buf);
   return 0;
 }
 
