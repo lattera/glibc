@@ -1,5 +1,21 @@
 2007-03-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/dl-open.c (dl_open_worker): Declare l in 2 different
+	smaller scopes.
+	* elf/dl-dst.h (DL_DST_REQ_STATIC): Add l as macro argument.
+	(DL_DST_REQUIRED): Adjust user.
+
+	* include/dlfcn.h (struct link_map): New forward decl.
+
+	* inet/getnameinfo.c: Include stddef.h.
+	(getnameinfo): Use offsetof.
+
+	* time/tst-mktime2.c (do_test): Don't rely on signed wrap.
+
+	* stdio-common/vfprintf.c (_itoa): Undef before redefining.
+
+	* string/strerror_l.c: Include stdlib.h.
+
 	* configure.in (libc_cv_gnu89_inline): Test for -fgnu89-inline.
 	* config.make.in (gnu89-inline-CFLAGS): New variable.
 	* Makeconfig (CFLAGS): Use $(gnu89-inline-CFLAGS) together with

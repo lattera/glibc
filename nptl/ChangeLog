@@ -1,3 +1,9 @@
+2007-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Use __extern_inline and
+	__extern_always_inline where appropriate.
+	* sysdeps/pthread/pthread.h: Likewise.
+
 2007-03-13  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (PSEUDO): Use two

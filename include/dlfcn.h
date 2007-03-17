@@ -45,6 +45,8 @@ extern int _dl_addr (const void *address, Dl_info *info,
 libc_hidden_proto (_dl_addr)
 #endif
 
+struct link_map;
+
 /* Close an object previously opened by _dl_open.  */
 extern void _dl_close (void *map) attribute_hidden;
 /* Same as above, but without locking and safety checks for user

@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <alloca.h>
 #include <errno.h>
 #include <netdb.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -180,7 +181,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   switch (sa->sa_family)
     {
     case AF_LOCAL:
-      if (addrlen < (socklen_t) (((struct sockaddr_un *) NULL)->sun_path))
+      if (addrlen < (socklen_t) offsetof (struct sockaddr_un, sun_path))
 	return EAI_FAMILY;
       break;
     case AF_INET:

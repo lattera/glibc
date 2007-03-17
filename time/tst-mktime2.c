@@ -102,7 +102,8 @@ static int
 do_test (void)
 {
   time_t t, delta;
-  int i, j;
+  int i;
+  unsigned int j;
 
   setenv ("TZ", "America/Sao_Paulo", 1);
   /* This test makes some buggy mktime implementations loop.
@@ -128,7 +129,7 @@ do_test (void)
       mktime_test ((time_t) (60 * 60));
       mktime_test ((time_t) (60 * 60 * 24));
 
-      for (j = 1; 0 < j; j *= 2)
+      for (j = 1; j <= INT_MAX; j *= 2)
 	bigtime_test (j);
       bigtime_test (j - 1);
     }

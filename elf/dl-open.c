@@ -161,7 +161,7 @@ dl_open_worker (void *a)
   struct dl_open_args *args = a;
   const char *file = args->file;
   int mode = args->mode;
-  struct link_map *new, *l;
+  struct link_map *new;
   int lazy;
   unsigned int i;
   bool any_tls = false;
@@ -186,6 +186,7 @@ dl_open_worker (void *a)
 	 By default we assume this is the main application.  */
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
+      struct link_map *l;
       for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
 	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
 	  if (caller_dlopen >= (const void *) l->l_map_start
@@ -325,7 +326,7 @@ dl_open_worker (void *a)
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
 
-  l = new;
+  struct link_map *l = new;
   while (l->l_next)
     l = l->l_next;
   while (1)
