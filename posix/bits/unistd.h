@@ -1,5 +1,5 @@
 /* Checking macros for unistd functions.
-   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
 extern ssize_t __REDIRECT (__read_alias, (int __fd, void *__buf,
 					  size_t __nbytes), read) __wur;
 
-extern __always_inline __wur ssize_t
+__extern_always_inline __wur ssize_t
 read (int __fd, void *__buf, size_t __nbytes)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -48,7 +48,7 @@ extern ssize_t __REDIRECT (__pread64_alias,
 			    __off64_t __offset), pread64) __wur;
 
 # ifndef __USE_FILE_OFFSET64
-extern __always_inline __wur ssize_t
+__extern_always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -57,7 +57,7 @@ pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
   return __pread_alias (__fd, __buf, __nbytes, __offset);
 }
 # else
-extern __always_inline __wur ssize_t
+__extern_always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -68,7 +68,7 @@ pread (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern __always_inline __wur ssize_t
+__extern_always_inline __wur ssize_t
 pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -89,7 +89,7 @@ extern ssize_t __REDIRECT_NTH (__readlink_alias,
 				char *__restrict __buf, size_t __len), readlink)
      __nonnull ((1, 2)) __wur;
 
-extern __always_inline __nonnull ((1, 2)) __wur ssize_t
+__extern_always_inline __nonnull ((1, 2)) __wur ssize_t
 __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 		 size_t __len))
 {
@@ -111,7 +111,7 @@ extern ssize_t __REDIRECT_NTH (__readlinkat_alias,
 			       readlinkat)
      __nonnull ((2, 3)) __wur;
 
-extern __always_inline __nonnull ((2, 3)) __wur ssize_t
+__extern_always_inline __nonnull ((2, 3)) __wur ssize_t
 __NTH (readlinkat (int __fd, __const char *__restrict __path,
 		   char *__restrict __buf, size_t __len))
 {
@@ -127,7 +127,7 @@ extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
 extern char *__REDIRECT_NTH (__getcwd_alias,
 			     (char *__buf, size_t __size), getcwd) __wur;
 
-extern __always_inline __wur char *
+__extern_always_inline __wur char *
 __NTH (getcwd (char *__buf, size_t __size))
 {
   if (__bos (__buf) != (size_t) -1
@@ -142,7 +142,7 @@ extern char *__getwd_chk (char *__buf, size_t buflen)
 extern char *__REDIRECT_NTH (__getwd_alias, (char *__buf), getwd)
      __nonnull ((1)) __wur;
 
-extern __always_inline __nonnull ((1)) __attribute_deprecated__ __wur char *
+__extern_always_inline __nonnull ((1)) __attribute_deprecated__ __wur char *
 __NTH (getwd (char *__buf))
 {
   if (__bos (__buf) != (size_t) -1)
@@ -156,7 +156,7 @@ extern size_t __confstr_chk (int __name, char *__buf, size_t __len,
 extern size_t __REDIRECT_NTH (__confstr_alias, (int __name, char *__buf,
 						size_t __len), confstr);
 
-extern __always_inline size_t
+__extern_always_inline size_t
 __NTH (confstr (int __name, char *__buf, size_t __len))
 {
   if (__bos (__buf) != (size_t) -1
@@ -171,7 +171,7 @@ extern int __getgroups_chk (int __size, __gid_t __list[], size_t listlen)
 extern int __REDIRECT_NTH (__getgroups_alias, (int __size, __gid_t __list[]),
 			   getgroups) __wur;
 
-extern __always_inline int
+__extern_always_inline int
 __NTH (getgroups (int __size, __gid_t __list[]))
 {
   if (__bos (__list) != (size_t) -1
@@ -188,7 +188,7 @@ extern int __REDIRECT_NTH (__ttyname_r_alias, (int __fd, char *__buf,
 					       size_t __buflen), ttyname_r)
      __nonnull ((2));
 
-extern __always_inline int
+__extern_always_inline int
 __NTH (ttyname_r (int __fd, char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
@@ -204,7 +204,7 @@ extern int __getlogin_r_chk (char *__buf, size_t __buflen, size_t __nreal)
 extern int __REDIRECT (__getlogin_r_alias, (char *__buf, size_t __buflen),
 		       getlogin_r) __nonnull ((1));
 
-extern __always_inline int
+__extern_always_inline int
 getlogin_r (char *__buf, size_t __buflen)
 {
   if (__bos (__buf) != (size_t) -1
@@ -221,7 +221,7 @@ extern int __gethostname_chk (char *__buf, size_t __buflen, size_t __nreal)
 extern int __REDIRECT_NTH (__gethostname_alias, (char *__buf, size_t __buflen),
 			   gethostname) __nonnull ((1));
 
-extern __always_inline int
+__extern_always_inline int
 __NTH (gethostname (char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1
@@ -239,7 +239,7 @@ extern int __REDIRECT_NTH (__getdomainname_alias, (char *__buf,
 						   size_t __buflen),
 			   getdomainname) __nonnull ((1)) __wur;
 
-extern __always_inline int
+__extern_always_inline int
 __NTH (getdomainname (char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1

@@ -1,5 +1,6 @@
 /* Lightweight user references for ports.
-   Copyright (C) 1993, 1994, 1995, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1995, 1997, 1999, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +56,7 @@ struct hurd_port
 
 
 #ifndef _HURD_PORT_H_EXTERN_INLINE
-#define _HURD_PORT_H_EXTERN_INLINE extern __inline
+#define _HURD_PORT_H_EXTERN_INLINE __extern_inline
 #endif
 
 

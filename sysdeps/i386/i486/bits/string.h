@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -35,7 +35,7 @@
 # ifdef __cplusplus
 #  define __STRING_INLINE inline
 # else
-#  define __STRING_INLINE extern __inline
+#  define __STRING_INLINE __extern_inline
 # endif
 #endif
 

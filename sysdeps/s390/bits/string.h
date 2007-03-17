@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  S/390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -34,7 +34,7 @@
 # ifdef __cplusplus
 #  define __STRING_INLINE inline
 # else
-#  define __STRING_INLINE extern __inline
+#  define __STRING_INLINE __extern_inline
 # endif
 #endif
 

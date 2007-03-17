@@ -26,7 +26,7 @@
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE extern __inline
+# define __MATH_INLINE __extern_inline
 #endif
 
 #if defined __USE_ISOC99 && defined __GNUC__ && !__GNUC_PREREQ(3,0)

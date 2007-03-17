@@ -1,5 +1,5 @@
 /* Inline math functions for x86-64.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE extern __inline
+# define __MATH_INLINE __extern_inline
 #endif
 
 

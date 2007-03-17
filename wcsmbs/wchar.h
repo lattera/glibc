@@ -326,19 +326,19 @@ __END_NAMESPACE_C99
    locales must use ASCII encoding for the values in the ASCII range
    and because the wchar_t encoding is always ISO 10646.  */
 extern wint_t __btowc_alias (int __c) __asm ("btowc");
-extern __inline wint_t
+__extern_inline wint_t
 __NTH (btowc (int __c))
 { return (__builtin_constant_p (__c) && __c >= '\0' && __c <= '\x7f'
 	  ? (wint_t) __c : __btowc_alias (__c)); }
 
 extern int __wctob_alias (wint_t __c) __asm ("wctob");
-extern __inline int
+__extern_inline int
 __NTH (wctob (wint_t __wc))
 { return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
 	  ? (int) __wc : __wctob_alias (__wc)); }
 # endif
 
-extern __inline size_t
+__extern_inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,
 	       mbstate_t *__restrict __ps))
 { return (__ps != NULL
@@ -548,38 +548,38 @@ extern unsigned long long int __wcstoull_internal (__const wchar_t *
 /* Define inline functions which call the internal entry points.  */
 __BEGIN_NAMESPACE_C99
 
-extern __inline double
+__extern_inline double
 __NTH (wcstod (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr))
 { return __wcstod_internal (__nptr, __endptr, 0); }
-extern __inline long int
+__extern_inline long int
 __NTH (wcstol (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr, int __base))
 { return __wcstol_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long int
+__extern_inline unsigned long int
 __NTH (wcstoul (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr, int __base))
 { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
 __END_NAMESPACE_C99
 
 # ifdef __USE_GNU
-extern __inline float
+__extern_inline float
 __NTH (wcstof (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr))
 { return __wcstof_internal (__nptr, __endptr, 0); }
 #  ifndef __LDBL_COMPAT
-extern __inline long double
+__extern_inline long double
 __NTH (wcstold (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr))
 { return __wcstold_internal (__nptr, __endptr, 0); }
 #  endif
 __extension__
-extern __inline long long int
+__extern_inline long long int
 __NTH (wcstoq (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr, int __base))
 { return __wcstoll_internal (__nptr, __endptr, __base, 0); }
 __extension__
-extern __inline unsigned long long int
+__extern_inline unsigned long long int
 __NTH (wcstouq (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr, int __base))
 { return __wcstoull_internal (__nptr, __endptr, __base, 0); }

@@ -1,5 +1,6 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995-1999,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -558,7 +559,7 @@ extern void *__argp_input (__const struct argp *__restrict __argp,
 # endif
 
 # ifndef ARGP_EI
-#  define ARGP_EI extern __inline__
+#  define ARGP_EI __extern_inline
 # endif
 
 ARGP_EI void

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -151,7 +151,7 @@ extern char *__REDIRECT_NTH (__stpncpy_alias, (char *__dest,
 					       __const char *__src,
 					       size_t __n), stpncpy);
 
-extern __always_inline char *
+__extern_always_inline char *
 __NTH (stpncpy (char *__dest, __const char *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1

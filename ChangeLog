@@ -1,4 +1,64 @@
+2007-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure.in (libc_cv_gnu89_inline): Test for -fgnu89-inline.
+	* config.make.in (gnu89-inline-CFLAGS): New variable.
+	* Makeconfig (CFLAGS): Use $(gnu89-inline-CFLAGS) together with
+	-std=gnu99.
+	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline): Define.
+	* argp/argp.h: Use it.
+	* bits/mathinline.h: Likewise.
+	* bits/sigset.h: Likewise.
+	* bits/string.h: Likewise.
+	* ctype/ctype.h: Likewise.
+	* hurd/hurd.h: Likewise.
+	* hurd/hurd/fd.h: Likewise.
+	* hurd/hurd/port.h: Likewise.
+	* hurd/hurd/signal.h: Likewise.
+	* hurd/hurd/threadvar.h: Likewise.
+	* hurd/hurd/userlink.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* libio/bits/stdio.h: Likewise.
+	* libio/bits/stdio2.h: Likewise.
+	* mach/lock-intern.h: Likewise.
+	* mach/mach/mig_support.h: Likewise.
+	* math/bits/cmathcalls.h: Likewise.
+	* posix/bits/unistd.h: Likewise.
+	* socket/bits/socket2.h: Likewise.
+	* stdlib/bits/stdlib.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/bits/string2.h: Likewise.
+	* string/bits/string3.h: Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/generic/inttypes.h: Likewise.
+	* sysdeps/generic/machine-lock.h: Likewise.
+	* sysdeps/generic/machine-sp.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	* sysdeps/ia64/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/mach/alpha/machine-lock.h: Likewise.
+	* sysdeps/mach/alpha/machine-sp.h: Likewise.
+	* sysdeps/mach/i386/machine-lock.h: Likewise.
+	* sysdeps/mach/powerpc/machine-lock.h: Likewise.
+	* sysdeps/mach/powerpc/machine-sp.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/s390/bits/string.h: Likewise.
+	* sysdeps/s390/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigset.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Likewise.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
+	* wcsmbs/bits/wchar2.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* stdlib/gmp.h: Likewise.  Include <features.h> to get
+	__extern_inline definition.
+
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-ctype.c (find_translit): Return NULL if ctype is
+	NULL.
 
 	[BZ #3919]
 	* math/libm-test.inc (log_test): Test -Inf and NaN.

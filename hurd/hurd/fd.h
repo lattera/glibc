@@ -1,5 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006
+   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -52,7 +52,7 @@ extern struct mutex _hurd_dtable_lock; /* Locks those two variables.  */
 #include <hurd/signal.h>
 
 #ifndef _HURD_FD_H_EXTERN_INLINE
-#define _HURD_FD_H_EXTERN_INLINE extern __inline
+#define _HURD_FD_H_EXTERN_INLINE __extern_inline
 #endif
 
 /* Returns the descriptor cell for FD.  If FD is invalid or unused, return

@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -43,7 +43,7 @@
 # ifdef __cplusplus
 #  define __STRING_INLINE inline
 # else
-#  define __STRING_INLINE extern __inline
+#  define __STRING_INLINE __extern_inline
 # endif
 #endif
 

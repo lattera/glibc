@@ -1,5 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006
+   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
@@ -131,7 +131,7 @@
 # ifdef __cplusplus
 #  define __MATH_INLINE __inline
 # else
-#  define __MATH_INLINE extern __inline
+#  define __MATH_INLINE __extern_inline
 # endif  /* __cplusplus */
 
 /* The gcc, version 2.7 or below, has problems with all this inlining

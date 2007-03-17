@@ -414,7 +414,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 
 
 /* Normal cleanup handling, based on C cleanup attribute.  */
-extern __inline void
+__extern_inline void
 __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
 {
   if (f->__do_it)

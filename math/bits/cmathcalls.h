@@ -1,6 +1,6 @@
 /* Prototype declarations for complex math functions;
    helper file for <complex.h>.
-   Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2001, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,21 +135,21 @@ __MATHDECL (_Mdouble_,creal, (_Mdouble_complex_ __z));
 #if defined __GNUC__ && !__GNUC_PREREQ (2, 97) && defined __OPTIMIZE__
 
 /* Imaginary part of Z.  */
-extern __inline _Mdouble_
+__extern_inline _Mdouble_
 __MATH_PRECNAME(cimag) (_Mdouble_complex_ __z) __THROW
 {
   return __imag__ __z;
 }
 
 /* Real part of Z.  */
-extern __inline _Mdouble_
+__extern_inline _Mdouble_
 __MATH_PRECNAME(creal) (_Mdouble_complex_ __z) __THROW
 {
   return __real__ __z;
 }
 
 /* Complex conjugate of Z.  */
-extern __inline _Mdouble_complex_
+__extern_inline _Mdouble_complex_
 __MATH_PRECNAME(conj) (_Mdouble_complex_ __z) __THROW
 {
   return __extension__ ~__z;

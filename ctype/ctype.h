@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -187,13 +187,13 @@ __exctype (_tolower);
 # endif
 
 # ifdef __USE_EXTERN_INLINES
-extern __inline int
+__extern_inline int
 __NTH (tolower (int __c))
 {
   return __c >= -128 && __c < 256 ? (*__ctype_tolower_loc ())[__c] : __c;
 }
 
-extern __inline int
+__extern_inline int
 __NTH (toupper (int __c))
 {
   return __c >= -128 && __c < 256 ? (*__ctype_toupper_loc ())[__c] : __c;

@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -572,7 +573,7 @@ class __pthread_cleanup_class
    function the compiler is free to decide inlining the change when
    needed or fall back on the copy which must exist somewhere
    else.  */
-extern __inline void
+__extern_inline void
 __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
 {
   if (__frame->__do_it)
@@ -1103,7 +1104,7 @@ extern int pthread_atfork (void (*__prepare) (void),
 
 #ifdef __USE_EXTERN_INLINES
 /* Optimizations.  */
-extern __inline int
+__extern_inline int
 __NTH (pthread_equal (pthread_t __thread1, pthread_t __thread2))
 {
   return __thread1 == __thread2;

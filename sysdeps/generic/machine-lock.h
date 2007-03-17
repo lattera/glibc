@@ -1,5 +1,5 @@
 /* Machine-specific definition for spin locks.  Stub version.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ typedef volatile int __spin_lock_t;
 
 
 #ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
+#define _EXTERN_INLINE __extern_inline
 #endif
 
 /* Unlock LOCK.  */

@@ -1,5 +1,5 @@
 /* Checking macros for socket functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ extern ssize_t __recv_chk (int __fd, void *__buf, size_t __n, size_t __buflen,
 extern ssize_t __REDIRECT (__recv_alias, (int __fd, void *__buf, size_t __n,
 					  int __flags), recv);
 
-extern __always_inline ssize_t
+__extern_always_inline ssize_t
 recv (int __fd, void *__buf, size_t __n, int __flags)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -44,7 +44,7 @@ extern ssize_t __REDIRECT (__recvfrom_alias,
 			    int __flags, __SOCKADDR_ARG __addr,
 			    socklen_t *__restrict __addr_len), recvfrom);
 
-extern __always_inline ssize_t
+__extern_always_inline ssize_t
 recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
 	  __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
 {

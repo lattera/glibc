@@ -1,5 +1,6 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991,1992,1994-2001,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -264,7 +265,7 @@ extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
 				      struct cmsghdr *__cmsg) __THROW;
 #ifdef __USE_EXTERN_INLINES
 # ifndef _EXTERN_INLINE
-#  define _EXTERN_INLINE extern __inline
+#  define _EXTERN_INLINE __extern_inline
 # endif
 _EXTERN_INLINE struct cmsghdr *
 __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))

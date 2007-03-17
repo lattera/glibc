@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2001, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2001, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -330,7 +330,7 @@ extern long int __strtol_internal (__const char *__restrict __nptr,
 				   int __base, int __group) __THROW;
 #   define __strtol_internal_defined	1
 #  endif
-extern __inline intmax_t
+__extern_inline intmax_t
 __NTH (strtoimax (__const char *__restrict nptr, char **__restrict endptr,
 		  int base))
 {
@@ -345,7 +345,7 @@ extern unsigned long int __strtoul_internal (__const char *
 					     int __base, int __group) __THROW;
 #   define __strtoul_internal_defined	1
 #  endif
-extern __inline uintmax_t
+__extern_inline uintmax_t
 __NTH (strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 		  int base))
 {
@@ -359,7 +359,7 @@ extern long int __wcstol_internal (__const __gwchar_t * __restrict __nptr,
 				   int __base, int __group) __THROW;
 #   define __wcstol_internal_defined	1
 #  endif
-extern __inline intmax_t
+__extern_inline intmax_t
 __NTH (wcstoimax (__const __gwchar_t *__restrict nptr,
 		  __gwchar_t **__restrict endptr, int base))
 {
@@ -376,7 +376,7 @@ extern unsigned long int __wcstoul_internal (__const __gwchar_t *
 					     int __base, int __group) __THROW;
 #   define __wcstoul_internal_defined	1
 #  endif
-extern __inline uintmax_t
+__extern_inline uintmax_t
 __NTH (wcstoumax (__const __gwchar_t *__restrict nptr,
 		  __gwchar_t **__restrict endptr, int base))
 {
@@ -393,7 +393,7 @@ extern long long int __strtoll_internal (__const char *__restrict __nptr,
 					 int __base, int __group) __THROW;
 #   define __strtoll_internal_defined	1
 #  endif
-extern __inline intmax_t
+__extern_inline intmax_t
 __NTH (strtoimax (__const char *__restrict nptr, char **__restrict endptr,
 		  int base))
 {
@@ -411,7 +411,7 @@ extern unsigned long long int __strtoull_internal (__const char *
 						   int __group) __THROW;
 #   define __strtoull_internal_defined	1
 #  endif
-extern __inline uintmax_t
+__extern_inline uintmax_t
 __NTH (strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 		  int base))
 {
@@ -427,7 +427,7 @@ extern long long int __wcstoll_internal (__const __gwchar_t *
 					 int __base, int __group) __THROW;
 #   define __wcstoll_internal_defined	1
 #  endif
-extern __inline intmax_t
+__extern_inline intmax_t
 __NTH (wcstoimax (__const __gwchar_t *__restrict nptr,
 		  __gwchar_t **__restrict endptr, int base))
 {
@@ -446,7 +446,7 @@ extern unsigned long long int __wcstoull_internal (__const __gwchar_t *
 						   int __group) __THROW;
 #   define __wcstoull_internal_defined	1
 #  endif
-extern __inline uintmax_t
+__extern_inline uintmax_t
 __NTH (wcstoumax (__const __gwchar_t *__restrict nptr,
 		  __gwchar_t **__restrict endptr, int base))
 {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1865,6 +1865,9 @@ find_translit (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (locale != NULL);
   ctype = locale->categories[LC_CTYPE].ctype;
+
+  if (ctype == NULL)
+    return NULL;
 
   if (ctype->translit != NULL)
     result = find_translit2 (ctype, charmap, wch);

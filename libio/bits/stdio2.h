@@ -1,5 +1,5 @@
 /* Checking macros for stdio functions.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ extern int __vprintf_chk (int __flag, __const char *__restrict __format,
 extern char *__gets_chk (char *__str, size_t) __wur;
 extern char *__REDIRECT (__gets_alias, (char *__str), gets) __wur;
 
-extern __always_inline __wur char *
+__extern_always_inline __wur char *
 gets (char *__str)
 {
   if (__bos (__str) != (size_t) -1)
@@ -89,7 +89,7 @@ extern char *__REDIRECT (__fgets_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets) __wur;
 
-extern __always_inline __wur char *
+__extern_always_inline __wur char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1
@@ -105,7 +105,7 @@ extern char *__REDIRECT (__fgets_unlocked_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets_unlocked) __wur;
 
-extern __always_inline __wur char *
+__extern_always_inline __wur char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1

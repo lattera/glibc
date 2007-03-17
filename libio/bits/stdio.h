@@ -1,5 +1,5 @@
 /* Optimizing macros and inline functions for stdio functions.
-   Copyright (C) 1998, 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #ifdef __cplusplus
 # define __STDIO_INLINE inline
 #else
-# define __STDIO_INLINE extern __inline
+# define __STDIO_INLINE __extern_inline
 #endif
 
 

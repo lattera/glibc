@@ -1641,6 +1641,30 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_ssp)
 
+AC_CACHE_CHECK(for -fgnu89-inline, libc_cv_gnu89_inline, [dnl
+cat > conftest.c <<EOF
+int foo;
+#ifdef __GNUC_GNU_INLINE__
+main () { return 0;}
+#else
+#error
+#endif
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -std=gnu99 -fgnu89-inline
+			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
+then
+  libc_cv_gnu89_inline=yes
+else
+  libc_cv_gnu89_inline=no
+fi
+rm -f conftest*])
+if test $libc_cv_gnu89_inline = yes; then
+  libc_cv_gnu89_inline=-fgnu89-inline
+else
+  libc_cv_gnu89_inline=
+fi
+AC_SUBST(libc_cv_gnu89_inline)
+
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
 		 [AC_TRY_COMPILE(, [asm (".section .init");

@@ -1,5 +1,5 @@
 /* Internal per-thread variables for the Hurd.
-   Copyright (C) 1994,95,97,98,99,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,98,99,2001,02,06,07 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ enum __hurd_threadvar_index
 
 
 #ifndef _HURD_THREADVAR_H_EXTERN_INLINE
-#define _HURD_THREADVAR_H_EXTERN_INLINE extern __inline
+#define _HURD_THREADVAR_H_EXTERN_INLINE __extern_inline
 #endif
 
 /* Return the location of the value for the per-thread variable with index

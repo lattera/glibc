@@ -1,5 +1,5 @@
 /* Inline math functions for ia64.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE extern __inline
+# define __MATH_INLINE __extern_inline
 #endif
 
 #if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2

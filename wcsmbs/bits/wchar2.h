@@ -1,5 +1,5 @@
 /* Checking macros for wchar functions.
-   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ extern wchar_t *__REDIRECT_NTH (__wmemcpy_alias,
 				 __const wchar_t *__restrict __s2, size_t __n),
 				wmemcpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 		size_t __n))
 {
@@ -46,7 +46,7 @@ extern wchar_t *__REDIRECT_NTH (__wmemmove_alias, (wchar_t *__s1,
 						   __const wchar_t *__s2,
 						   size_t __n), wmemmove);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 		 size_t __n))
 {
@@ -65,7 +65,7 @@ extern wchar_t *__REDIRECT_NTH (__wmempcpy_alias,
 				 __const wchar_t *__restrict __s2,
 				 size_t __n), wmempcpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 		 size_t __n))
 {
@@ -81,7 +81,7 @@ extern wchar_t *__wmemset_chk (wchar_t *__s, wchar_t __c, size_t __n,
 extern wchar_t *__REDIRECT_NTH (__wmemset_alias, (wchar_t *__s, wchar_t __c,
 						  size_t __n), wmemset);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n))
 {
   if (__bos0 (__s) != (size_t) -1)
@@ -97,7 +97,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscpy_alias,
 				(wchar_t *__restrict __dest,
 				 __const wchar_t *__restrict __src), wcscpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcscpy (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -112,7 +112,7 @@ extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias, (wchar_t *__dest,
 						 __const wchar_t *__src),
 				wcpcpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcpcpy (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -129,7 +129,7 @@ extern wchar_t *__REDIRECT_NTH (__wcsncpy_alias,
 				 __const wchar_t *__restrict __src,
 				 size_t __n), wcsncpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
@@ -148,7 +148,7 @@ extern wchar_t *__REDIRECT_NTH (__wcpncpy_alias,
 				 __const wchar_t *__restrict __src,
 				 size_t __n), wcpncpy);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
@@ -166,7 +166,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscat_alias,
 				(wchar_t *__restrict __dest,
 				 __const wchar_t *__restrict __src), wcscat);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcscat (wchar_t *__dest, __const wchar_t *__src))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -183,7 +183,7 @@ extern wchar_t *__REDIRECT_NTH (__wcsncat_alias,
 				 __const wchar_t *__restrict __src,
 				 size_t __n), wcsncat);
 
-extern __always_inline wchar_t *
+__extern_always_inline wchar_t *
 __NTH (wcsncat (wchar_t *__dest, __const wchar_t *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -246,7 +246,7 @@ extern wchar_t *__REDIRECT (__fgetws_alias,
 			    (wchar_t *__restrict __s, int __n,
 			     __FILE *__restrict __stream), fgetws) __wur;
 
-extern __always_inline __wur wchar_t *
+__extern_always_inline __wur wchar_t *
 fgetws (wchar_t *__restrict __s, int __n, __FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1
@@ -264,7 +264,7 @@ extern wchar_t *__REDIRECT (__fgetws_unlocked_alias,
 			     __FILE *__restrict __stream), fgetws_unlocked)
   __wur;
 
-extern __always_inline __wur wchar_t *
+__extern_always_inline __wur wchar_t *
 fgetws_unlocked (wchar_t *__restrict __s, int __n, __FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1
@@ -281,7 +281,7 @@ extern size_t __REDIRECT_NTH (__wcrtomb_alias,
 			      (char *__restrict __s, wchar_t __wchar,
 			       mbstate_t *__restrict __ps), wcrtomb) __wur;
 
-extern __always_inline __wur size_t
+__extern_always_inline __wur size_t
 __NTH (wcrtomb (char *__s, wchar_t __wchar, mbstate_t *__ps))
 {
   /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
@@ -307,7 +307,7 @@ extern size_t __REDIRECT_NTH (__mbsrtowcs_alias,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      mbsrtowcs);
 
-extern __always_inline size_t
+__extern_always_inline size_t
 __NTH (mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 		  size_t __len, mbstate_t *__restrict __ps))
 {
@@ -330,7 +330,7 @@ extern size_t __REDIRECT_NTH (__wcsrtombs_alias,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      wcsrtombs);
 
-extern __always_inline size_t
+__extern_always_inline size_t
 __NTH (wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
 		  size_t __len, mbstate_t *__restrict __ps))
 {
@@ -352,7 +352,7 @@ extern size_t __REDIRECT_NTH (__mbsnrtowcs_alias,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      mbsnrtowcs);
 
-extern __always_inline size_t
+__extern_always_inline size_t
 __NTH (mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 		   size_t __nmc, size_t __len, mbstate_t *__restrict __ps))
 {
@@ -376,7 +376,7 @@ extern size_t __REDIRECT_NTH (__wcsnrtombs_alias,
 			       size_t __nwc, size_t __len,
 			       mbstate_t *__restrict __ps), wcsnrtombs);
 
-extern __always_inline size_t
+__extern_always_inline size_t
 __NTH (wcsnrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
 		   size_t __nwc, size_t __len, mbstate_t *__restrict __ps))
 {

@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,94,95,96,97,98,99,2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,98,99,2001,2002,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +45,7 @@
 #include <errno.h>
 
 #ifndef _HURD_H_EXTERN_INLINE
-#define _HURD_H_EXTERN_INLINE extern __inline
+#define _HURD_H_EXTERN_INLINE __extern_inline
 #endif
 
 _HURD_H_EXTERN_INLINE int

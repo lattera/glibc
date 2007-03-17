@@ -1,5 +1,5 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004, 2006
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE extern __inline
+# define __MATH_INLINE __extern_inline
 #endif  /* __cplusplus */
 
 #if defined __GNUC__ && !defined _SOFT_FLOAT

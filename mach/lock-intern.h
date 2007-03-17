@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <machine-lock.h>
 
 #ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
+#define _EXTERN_INLINE __extern_inline
 #endif
 
 

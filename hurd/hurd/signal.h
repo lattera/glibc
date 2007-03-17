@@ -1,5 +1,5 @@
 /* Implementing POSIX.1 signals under the Hurd.
-   Copyright (C) 1993,94,95,96,98,99,2002 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,98,99,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,7 +126,7 @@ extern struct hurd_sigstate *_hurd_self_sigstate (void)
      __attribute__ ((__const__));
 
 #ifndef _HURD_SIGNAL_H_EXTERN_INLINE
-#define _HURD_SIGNAL_H_EXTERN_INLINE extern __inline
+#define _HURD_SIGNAL_H_EXTERN_INLINE __extern_inline
 #endif
 
 _HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
