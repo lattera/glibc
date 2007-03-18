@@ -1,3 +1,8 @@
+2007-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/gai.c: Include alloca.h.
+	(__libc_use_alloca): Define.
+
 2007-03-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Declare l in 2 different
