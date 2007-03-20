@@ -1650,8 +1650,8 @@ main () { return 0;}
 #error
 #endif
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -std=gnu99 -fgnu89-inline
-			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -std=gnu99 -fgnu89-inline
+			    -o conftest.s conftest.c 1>&AS_MESSAGE_LOG_FD])
 then
   libc_cv_gnu89_inline=yes
 else
