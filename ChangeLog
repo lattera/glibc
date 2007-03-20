@@ -1,3 +1,15 @@
+2007-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/double.h (_FP_UNION_D): Use _FP_W_TYPE for frac
+	bit-fields.
+	* soft-fp/extended.h (_FP_UNION_E): Likewise.
+
+2006-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2831]
+	* soft-fp/quad.h (_FP_UNION_Q): Use _FP_W_TYPE for frac
+	bit-fields.
+
 2007-03-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/gai.c: Include alloca.h.
