@@ -1,4 +1,5 @@
-/* Copyright (C) 1997-1999, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -127,18 +128,10 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			/* Otherwise __nisfind_server will not do anything.  */
 			dir = NULL;
 
-			if (__nisfind_server (req.ns_name, 1, &dir)
+			if (__nisfind_server (req.ns_name, 1, &dir, &bptr,
+					      flags & ~MASTER_ONLY)
 			    != NIS_SUCCESS)
 			  goto out;
-
-			if (__nisbind_create (&bptr,
-					      dir->do_servers.do_servers_val,
-					      dir->do_servers.do_servers_len,
-					      flags) != NIS_SUCCESS)
-			  {
-			    nis_free_directory (dir);
-			    goto out;
-			  }
 		      }
 		    else
 		      if (__nisbind_next (&bptr) != NIS_SUCCESS)

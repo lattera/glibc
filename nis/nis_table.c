@@ -1,4 +1,5 @@
-/* Copyright (c) 1997-1999,2003,2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (c) 1997-1999, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -274,20 +275,13 @@ nis_list (const_nis_name name, unsigned int flags,
       memset (res, '\0', sizeof (nis_result));
 
       status = __nisfind_server (ibreq->ibr_name,
-				 ibreq->ibr_srch.ibr_srch_val != NULL, &dir);
+				 ibreq->ibr_srch.ibr_srch_val != NULL,
+				 &dir, &bptr, flags & ~MASTER_ONLY);
       if (status != NIS_SUCCESS)
 	{
           NIS_RES_STATUS (res) = status;
           goto fail3;
 	}
-
-      status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
-				 dir->do_servers.do_servers_len, flags);
-      if (__builtin_expect (status != NIS_SUCCESS, 0))
-        {
-          NIS_RES_STATUS (res) = status;
-	  goto fail2;
-        }
 
       while (__nisbind_connect (&bptr) != NIS_SUCCESS)
 	if (__builtin_expect (__nisbind_next (&bptr) != NIS_SUCCESS, 0))
@@ -338,7 +332,6 @@ nis_list (const_nis_name name, unsigned int flags,
 		    NIS_RES_STATUS (res) = NIS_NOMEMORY;
 		  fail:
 		    __nisbind_destroy (&bptr);
-		  fail2:
 		    nis_free_directory (dir);
 		  fail3:
 		    free (tablepath);

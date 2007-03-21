@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2002, 2003, 2005, 2006
+/* Copyright (C) 1997, 1998, 2001, 2002, 2003, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
@@ -315,7 +315,8 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
   /* Search at first in the alias list, and use the correct name
      for the next search */
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result != NULL)
     {
@@ -342,7 +343,8 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 	}
 
       nis_freeresult (result);
-      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS , NULL, NULL);
+      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+			 NULL, NULL);
     }
 
   if (result == NULL)
@@ -402,7 +404,8 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
 
   snprintf (buf, sizeof (buf), "[number=%d],%s", number, tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {

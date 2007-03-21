@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2005, 2006
+/* Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
@@ -322,7 +322,8 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
      for the next search */
   snprintf (buf, sizeof (buf), "[name=%s,proto=%s],%s", name, protocol,
 	    tablename_val);
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result != NULL)
     {
@@ -351,7 +352,8 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 	}
 
       nis_freeresult (result);
-      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+			 NULL, NULL);
     }
 
   if (result == NULL)
@@ -420,7 +422,8 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
   snprintf (buf, sizeof (buf), "[port=%d,proto=%s],%s",
 	    number, protocol, tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {

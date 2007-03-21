@@ -1,3 +1,38 @@
+2007-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_call.c: Include bits/libc-lock.h, sys/stat.h, unistd.h.
+	(nis_server_cache, nis_server_cache_lock, nis_cold_start_mtime): New
+	variables.
+	(nis_server_cache_search, nis_server_cache_add): New functions.
+	(__nisfind_server): Use them.  Add dbp and flags argument, if
+	call __nisbind_create.
+	(__nisbind_create): Add server_used and current_ep arguments,
+	only call __nis_findfastest if server_used is ~0.
+	(__do_niscall2, __prepare_niscall): Adjust callers.
+	(ckey_cache, ckey_cache_size, ckey_cache_allocated, ckey_cache_pid,
+	ckey_cache_euid, ckey_cache_lock): New variables.
+	(get_ckey): New function.
+	(__nisbind_connect): If not dbp->use_udp, pass IPPROTO_TCP to
+	__pmap_getnisport.  Save __pmap_getnisport result in
+	dbp->addr.sin_port if non-zero.  Use get_ckey to create conversation
+	key.
+	* nis/nis_lookup.c (nis_lookup): Likewise.
+	* nis/nis_table.c (nis_list): Likewise.
+	* nis/rpcsvc/nislib.h (__nisbind_create, __nisfind_server): Adjust
+	prototypes.
+
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_nisplus_getpwnam_r,
+	_nss_nisplus_getpwuid_r): Pass USE_DGRAM flag to nis_list.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_getservbyname_r,
+	_nss_nisplus_getservbyport_r): Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyname_r,
+	_nss_nisplus_getnetbyaddr_r): Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_getspnam_r): Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r,
+	_nss_nisplus_getntohost_r): Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_getrpcbyname_r,
+	_nss_nisplus_getrpcbynumber_r): Likewise.
+
 2007-03-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* configure.in (libc_cv_gnu89_inline): Only do compile test.
