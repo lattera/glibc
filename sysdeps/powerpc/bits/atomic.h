@@ -70,6 +70,13 @@ typedef uintmax_t uatomic_max_t;
 # endif
 #endif
 
+#ifndef MUTEX_HINT_ACQ
+# define MUTEX_HINT_ACQ
+#endif
+#ifndef MUTEX_HINT_REL
+# define MUTEX_HINT_REL
+#endif
+
 #define atomic_full_barrier()	__asm ("sync" ::: "memory")
 #define atomic_write_barrier()	__asm ("eieio" ::: "memory")
 
@@ -78,7 +85,7 @@ typedef uintmax_t uatomic_max_t;
       __typeof (*(mem)) __tmp;						      \
       __typeof (mem)  __memp = (mem);					      \
       __asm __volatile (						      \
-		        "1:	lwarx	%0,0,%1\n"			      \
+		        "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"	      \
 		        "	cmpw	%0,%2\n"			      \
 		        "	bne	2f\n"				      \
 		        "	stwcx.	%3,0,%1\n"			      \
@@ -95,7 +102,7 @@ typedef uintmax_t uatomic_max_t;
       __typeof (*(mem)) __tmp;						      \
       __typeof (mem)  __memp = (mem);					      \
       __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		        "1:	lwarx	%0,0,%1\n"			      \
+		        "1:	lwarx	%0,0,%1" MUTEX_HINT_REL "\n"	      \
 		        "	cmpw	%0,%2\n"			      \
 		        "	bne	2f\n"				      \
 		        "	stwcx.	%3,0,%1\n"			      \
@@ -111,7 +118,7 @@ typedef uintmax_t uatomic_max_t;
   ({									      \
     __typeof (*mem) __val;						      \
     __asm __volatile (							      \
-		      "1:	lwarx	%0,0,%2\n"			      \
+		      "1:	lwarx	%0,0,%2" MUTEX_HINT_ACQ "\n"	      \
 		      "		stwcx.	%3,0,%2\n"			      \
 		      "		bne-	1b\n"				      \
 		      "   " __ARCH_ACQ_INSTR				      \
@@ -125,7 +132,7 @@ typedef uintmax_t uatomic_max_t;
   ({									      \
     __typeof (*mem) __val;						      \
     __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		      "1:	lwarx	%0,0,%2\n"			      \
+		      "1:	lwarx	%0,0,%2" MUTEX_HINT_REL "\n"	      \
 		      "		stwcx.	%3,0,%2\n"			      \
 		      "		bne-	1b"				      \
 		      : "=&r" (__val), "=m" (*mem)			      \

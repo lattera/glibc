@@ -1,4 +1,28 @@
-007-03-20  Jakub Jelinek  <jakub@redhat.com>
+2007-03-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/atomic.h
+	[!MUTEX_HINT_ACQ]: Define MUTEX_HINT_ACQ.
+	[!MUTEX_HINT_REL]: Define MUTEX_HINT_REL.
+	(__arch_compare_and_exchange_val_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_val_32_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_atomic_exchange_val_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_atomic_exchange_rel_32_rel): Add MUTEX_HINT_REL to lwarx.
+	* sysdeps/powerpc/powerpc32/bits/atomic.h [_ARCH_PWR6 || _ARCH_PWR6X]:
+	Define MUTEX_HINT_ACQ as ",1" and MUTEX_HINT_REL as ",0".
+	(__arch_compare_and_exchange_bool_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_32_rel): Add MUTEX_HINT_REL to lwarx.
+	* sysdeps/powerpc/powerpc64/bits/atomic.h [_ARCH_PWR6 || _ARCH_PWR6D]:
+	Define MUTEX_HINT_ACQ as ",1" and MUTEX_HINT_REL as ",0".
+	(__arch_compare_and_exchange_bool_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_32_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_compare_and_exchange_bool_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_64_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_compare_and_exchange_val_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_val_64_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_atomic_exchange_val_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_atomic_exchange_rel_64_rel): Add MUTEX_HINT_REL to lwarx.
+
+2007-03-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/libc-start.c
 	(__cache_line_size): Define the variable here.  Add

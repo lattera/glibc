@@ -1,5 +1,5 @@
 /* Atomic operations.  PowerPC32 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -18,17 +18,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/*  POWER6 adds a "Mutex Hint" to the Load and Reserve instruction.
+    This is a hint to the hardware to expect additional updates adjacent
+    to the lock word or not.  If we are acquiring a Mutex, the hint
+    should be true. Otherwise we releasing a Mutex or doing a simple
+    atomic operation.  In that case we don't expect addtional updates
+    adjacent to the lock word after the Store Conditional and the hint
+    should be false.  */
+    
+#if defined _ARCH_PWR6 || defined _ARCH_PWR6X
+# define MUTEX_HINT_ACQ	",1"
+# define MUTEX_HINT_REL	",0"
+#else
+# define MUTEX_HINT_ACQ
+# define MUTEX_HINT_REL
+#endif
+
 /*
  * The 32-bit exchange_bool is different on powerpc64 because the subf
  * does signed 64-bit arthmatic while the lwarx is 32-bit unsigned
  * (a load word and zero (high 32) form).  So powerpc64 has a slightly
  * different version in sysdeps/powerpc/powerpc64/bits/atomic.h.
  */
-# define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
+#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
 ({									      \
   unsigned int __tmp;							      \
   __asm __volatile (							      \
-		    "1:	lwarx	%0,0,%1\n"				      \
+		    "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"		      \
 		    "	subf.	%0,%2,%0\n"				      \
 		    "	bne	2f\n"					      \
 		    "	stwcx.	%3,0,%1\n"				      \
@@ -40,11 +56,11 @@
   __tmp != 0;								      \
 })
 
-# define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval)	      \
+#define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval)	      \
 ({									      \
   unsigned int __tmp;							      \
   __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		    "1:	lwarx	%0,0,%1\n"				      \
+		    "1:	lwarx	%0,0,%1" MUTEX_HINT_REL "\n"		      \
 		    "	subf.	%0,%2,%0\n"				      \
 		    "	bne	2f\n"					      \
 		    "	stwcx.	%3,0,%1\n"				      \
@@ -59,34 +75,34 @@
 /* Powerpc32 processors don't implement the 64-bit (doubleword) forms of
    load and reserve (ldarx) and store conditional (stdcx.) instructions.
    So for powerpc32 we stub out the 64-bit forms.  */
-# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
 
-# define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
   (abort (), 0)
 
-# define __arch_compare_and_exchange_val_64_rel(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_64_rel(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
 
-# define __arch_atomic_exchange_64_acq(mem, value) \
+#define __arch_atomic_exchange_64_acq(mem, value) \
     ({ abort (); (*mem) = (value); })
 
-# define __arch_atomic_exchange_64_rel(mem, value) \
+#define __arch_atomic_exchange_64_rel(mem, value) \
     ({ abort (); (*mem) = (value); })
 
-# define __arch_atomic_exchange_and_add_64(mem, value) \
+#define __arch_atomic_exchange_and_add_64(mem, value) \
     ({ abort (); (*mem) = (value); })
 
-# define __arch_atomic_increment_val_64(mem) \
+#define __arch_atomic_increment_val_64(mem) \
     ({ abort (); (*mem)++; })
 
-# define __arch_atomic_decrement_val_64(mem) \
+#define __arch_atomic_decrement_val_64(mem) \
     ({ abort (); (*mem)--; })
 
-# define __arch_atomic_decrement_if_positive_64(mem) \
+#define __arch_atomic_decrement_if_positive_64(mem) \
     ({ abort (); (*mem)--; })
 
 #ifdef _ARCH_PWR4
