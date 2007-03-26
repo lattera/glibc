@@ -124,10 +124,10 @@ libc {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.5 {
-    splice; sync_file_range; tee; vmsplice;
+    splice; tee; vmsplice;
   }
   GLIBC_2.6 {
-    epoll_pwait;
+    epoll_pwait; sync_file_range;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

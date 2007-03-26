@@ -1,3 +1,11 @@
+2007-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Move sync_file_range to
+	GLIBC_2.6.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add sync_file_range.
+	Reported by Atsushi Nemoto <anemo@mba.ocn.ne.jp>.
+
 2007-03-19  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/bits/atomic.h
