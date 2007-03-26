@@ -1,5 +1,6 @@
 /* Operating system support for run-time dynamic linker.  Linux/PPC version.
-   Copyright (C) 1997, 1998, 2001, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2001, 2003, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +22,7 @@
 #include <kernel-features.h>
 #include <ldsodefs.h>
 
-extern int __cache_line_size;
-weak_extern (__cache_line_size)
+int __cache_line_size attribute_hidden;
 
 /* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
    verify that the static extern __cache_line_size is defined by checking
@@ -30,12 +30,8 @@ weak_extern (__cache_line_size)
    value to __cache_line_size.  */
 #define DL_PLATFORM_AUXV						      \
       case AT_DCACHEBSIZE:						      \
-	{								      \
-	  int *cls = & __cache_line_size;				      \
-	  if (cls != NULL)						      \
-	    *cls = av->a_un.a_val;					      \
-	}								      \
-      break;
+	__cache_line_size = av->a_un.a_val;				      \
+	break;
 
 #ifndef __ASSUME_STD_AUXV
 

@@ -1,3 +1,23 @@
+007-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c
+	(__cache_line_size): Define the variable here.  Add
+	attribute_hidden, remove weak_extern.
+	(__libc_start_main): Set __cache_line_size
+	unconditionally.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(__cache_line_size): Define the variable here.  Add
+	attribute_hidden, remove weak_extern.
+	(DL_PLATFORM_AUXV): Set __cache_line_size
+	unconditionally.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__cache_line_size): Remove
+	weak_extern, add attribute_hidden.
+	(__elf_machine_runtime_setup): Assume __cache_line_size is always
+	defined in ld.so.
+	* sysdeps/powerpc/powerpc32/memset.S (__cache_line_size): Remove
+	definition.
+	* sysdeps/powerpc/powerpc64/memset.S (__cache_line_size): Likewise.
+
 2007-03-26  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4276]

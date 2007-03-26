@@ -1,5 +1,6 @@
 /* Optimized memset implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +22,6 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
-/* Define a global static that can hold the cache line size.  The
-   assumption is that startup code will access the "aux vector" to
-   to obtain the value set by the kernel and store it into this
-   variable.  */
-	.globl __cache_line_size
-	.lcomm __cache_line_size,4,4
 	.section	".toc","aw"
 .LC0:
 	.tc __cache_line_size[TC],__cache_line_size
