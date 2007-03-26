@@ -1,4 +1,5 @@
-/* Copyright (C) 1998,2000,2001,2002,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +23,7 @@
 #include <bp-start.h>
 #include <bp-sym.h>
 
-extern int __cache_line_size;
-weak_extern (__cache_line_size)
+int __cache_line_size attribute_hidden;
 /* The main work is done in the generic function.  */
 #define LIBC_START_MAIN generic_start_main
 #define LIBC_START_DISABLE_INLINE
@@ -113,11 +113,7 @@ int
     switch (av->a_type)
       {
       case AT_DCACHEBSIZE:
-	{
-	  int *cls = &__cache_line_size;
-	  if (cls != NULL)
-	    *cls = av->a_un.a_val;
-	}
+	__cache_line_size = av->a_un.a_val;
 	break;
       }
 #ifdef SHARED
