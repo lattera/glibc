@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	8.2";
+static char	elsieid[] = "@(#)zdump.c	8.4";
 
 /*
 ** This code has been made independent of the rest of the time

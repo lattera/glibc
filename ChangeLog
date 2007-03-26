@@ -1,3 +1,21 @@
+2007-03-26  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4276]
+	* timezone/africa: Update from tzdata2007d.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+	* timezone/private.h: Update from tzcode2007d.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 2007-03-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_call.c: Include bits/libc-lock.h, sys/stat.h, unistd.h.

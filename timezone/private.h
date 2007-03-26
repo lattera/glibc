@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	8.2";
+static char	privatehid[] = "@(#)private.h	8.3";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -356,7 +356,7 @@ char *ctime_r P((time_t const *, char *));
 #ifndef SECSPERREPEAT
 #define SECSPERREPEAT		((int_fast64_t) YEARSPERREPEAT * (int_fast64_t) AVGSECSPERYEAR)
 #endif /* !defined SECSPERREPEAT */
- 
+
 #ifndef SECSPERREPEAT_BITS
 #define SECSPERREPEAT_BITS	34	/* ceil(log2(SECSPERREPEAT)) */
 #endif /* !defined SECSPERREPEAT_BITS */
