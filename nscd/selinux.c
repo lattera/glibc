@@ -187,18 +187,22 @@ preserve_capabilities (void)
   if (tmp_caps == NULL || new_caps == NULL)
     {
       if (tmp_caps != NULL)
-	free_caps (tmp_caps);
+	cap_free (tmp_caps);
 
       dbg_log (_("Failed to initialize drop of capabilities"));
       error (EXIT_FAILURE, 0, _("cap_init failed"));
     }
 
   /* There is no reason why these should not work.  */
-  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list, new_cap_list, CAP_SET);
-  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list, new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list,
+		(cap_value_t *) new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list,
+		(cap_value_t *) new_cap_list, CAP_SET);
 
-  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list, tmp_cap_list, CAP_SET);
-  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list, tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list,
+		(cap_value_t *) tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list,
+		(cap_value_t *) tmp_cap_list, CAP_SET);
 
   int res = cap_set_proc (tmp_caps);
 

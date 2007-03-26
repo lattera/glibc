@@ -19,6 +19,9 @@
 /* Defined if building with SELinux support & audit libs are detected. */
 #undef	HAVE_LIBAUDIT
 
+/* Defined if building with SELinux support & libcap libs are detected.  */
+#undef  HAVE_LIBCAP
+
 /* Define if using XCOFF. Set by --with-xcoff.  */
 #undef	HAVE_XCOFF
 
