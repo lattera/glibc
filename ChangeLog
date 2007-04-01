@@ -1,3 +1,16 @@
+2007-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/fnmatch.c (STRUCT): Define.
+	(fnmatch): Pass NULL as last argument to internal_fn{,w}match.
+	* posix/fnmatch_loop.c (struct STRUCT): New type.
+	(FCT): Add ends argument.  If ends != NULL and normal * is
+	seen in the pattern, store current pattern and string pointers
+	and return.  Adjust recursive calls.
+	(EXT): Adjust FCT callers.
+	(STRUCT): Undef at the end of the file.
+	* posix/Makefile (tests): Add tst-fnmatch2.
+	* posix/tst-fnmatch2.c: New test.
+
 2007-04-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/fesetround.c (fesetround): Return 0 on success

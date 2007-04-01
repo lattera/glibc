@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -209,6 +209,7 @@ __wcschrnul (s, c)
 # define FCT	internal_fnmatch
 # define EXT	ext_match
 # define END	end_pattern
+# define STRUCT	fnmatch_struct
 # define L(CS)	CS
 # ifdef _LIBC
 #  define BTOWC(C)	__btowc (C)
@@ -235,7 +236,8 @@ __wcschrnul (s, c)
 #  define INT	wint_t
 #  define FCT	internal_fnwmatch
 #  define EXT	ext_wmatch
-# define END	end_wpattern
+#  define END	end_wpattern
+#  define STRUCT fnwmatch_struct
 #  define L(CS)	L##CS
 #  define BTOWC(C)	(C)
 #  define STRLEN(S) __wcslen (S)
@@ -397,12 +399,12 @@ fnmatch (pattern, string, flags)
 	}
 
       return internal_fnwmatch (wpattern, wstring, wstring + n,
-				flags & FNM_PERIOD, flags);
+				flags & FNM_PERIOD, flags, NULL);
     }
 # endif  /* mbstate_t and mbsrtowcs or _LIBC.  */
 
   return internal_fnmatch (pattern, string, string + strlen (string),
-			   flags & FNM_PERIOD, flags);
+			   flags & FNM_PERIOD, flags, NULL);
 }
 
 # ifdef _LIBC

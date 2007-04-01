@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004,2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004,2005,
+   2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+struct STRUCT
+{
+  const CHAR *pattern;
+  const CHAR *string;
+  int no_leading_period;
+};
+
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int FCT (const CHAR *pattern, const CHAR *string,
-		const CHAR *string_end, int no_leading_period, int flags)
+		const CHAR *string_end, int no_leading_period, int flags,
+		struct STRUCT *ends)
      internal_function;
 static int EXT (INT opt, const CHAR *pattern, const CHAR *string,
 		const CHAR *string_end, int no_leading_period, int flags)
@@ -29,12 +37,13 @@ static const CHAR *END (const CHAR *patternp) internal_function;
 
 static int
 internal_function
-FCT (pattern, string, string_end, no_leading_period, flags)
+FCT (pattern, string, string_end, no_leading_period, flags, ends)
      const CHAR *pattern;
      const CHAR *string;
      const CHAR *string_end;
      int no_leading_period;
      int flags;
+     struct STRUCT *ends;
 {
   register const CHAR *p = pattern, *n = string;
   register UCHAR c;
@@ -97,6 +106,13 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 	      if (res != -1)
 		return res;
 	    }
+	  else if (ends != NULL)
+	    {
+	      ends->pattern = p - 1;
+	      ends->string = n;
+	      ends->no_leading_period = no_leading_period;
+	      return 0;
+	    }
 
 	  if (n != string_end && *n == L('.') && no_leading_period)
 	    return FNM_NOMATCH;
@@ -157,7 +173,9 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 	  else
 	    {
 	      const CHAR *endp;
+	      struct STRUCT end;
 
+	      end.pattern = NULL;
 	      endp = MEMCHR (n, (flags & FNM_FILE_NAME) ? L('/') : L('\0'),
 			     string_end - n);
 	      if (endp == NULL)
@@ -170,36 +188,46 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
-		  int no_leading_period2 = no_leading_period;
 
-		  for (--p; n < endp; ++n, no_leading_period2 = 0)
-		    if (FCT (p, n, string_end, no_leading_period2, flags2)
-			== 0)
-		      return 0;
+		  for (--p; n < endp; ++n, no_leading_period = 0)
+		    if (FCT (p, n, string_end, no_leading_period, flags2,
+			     &end) == 0)
+		      goto found;
 		}
 	      else if (c == L('/') && (flags & FNM_FILE_NAME))
 		{
 		  while (n < string_end && *n != L('/'))
 		    ++n;
 		  if (n < string_end && *n == L('/')
-		      && (FCT (p, n + 1, string_end, flags & FNM_PERIOD, flags)
-			  == 0))
+		      && (FCT (p, n + 1, string_end, flags & FNM_PERIOD, flags,
+			       NULL) == 0))
 		    return 0;
 		}
 	      else
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
-		  int no_leading_period2 = no_leading_period;
 
 		  if (c == L('\\') && !(flags & FNM_NOESCAPE))
 		    c = *p;
 		  c = FOLD (c);
-		  for (--p; n < endp; ++n, no_leading_period2 = 0)
+		  for (--p; n < endp; ++n, no_leading_period = 0)
 		    if (FOLD ((UCHAR) *n) == c
-			&& (FCT (p, n, string_end, no_leading_period2, flags2)
-			    == 0))
-		      return 0;
+			&& (FCT (p, n, string_end, no_leading_period, flags2,
+				 &end) == 0))
+		      {
+		      found:
+			if (end.pattern == NULL)
+			  return 0;
+			break;
+		      }
+		  if (end.pattern != NULL)
+		    {
+		      p = end.pattern;
+		      n = end.string;
+		      no_leading_period = end.no_leading_period;
+		      continue;
+		    }
 		}
 	    }
 
@@ -1098,7 +1126,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
   switch (opt)
     {
     case L('*'):
-      if (FCT (p, string, string_end, no_leading_period, flags) == 0)
+      if (FCT (p, string, string_end, no_leading_period, flags, NULL) == 0)
 	return 0;
       /* FALLTHROUGH */
 
@@ -1109,7 +1137,8 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    /* First match the prefix with the current pattern with the
 	       current pattern.  */
 	    if (FCT (list->str, string, rs, no_leading_period,
-		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0
+		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD,
+		     NULL) == 0
 		/* This was successful.  Now match the rest with the rest
 		   of the pattern.  */
 		&& (FCT (p, rs, string_end,
@@ -1117,7 +1146,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			 ? no_leading_period
 			 : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
 			 flags & FNM_FILE_NAME
-			 ? flags : flags & ~FNM_PERIOD) == 0
+			 ? flags : flags & ~FNM_PERIOD, NULL) == 0
 		    /* This didn't work.  Try the whole pattern.  */
 		    || (rs != string
 			&& FCT (pattern - 1, rs, string_end,
@@ -1126,7 +1155,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				: (rs[-1] == '/' && NO_LEADING_PERIOD (flags)
 				   ? 1 : 0),
 				flags & FNM_FILE_NAME
-				? flags : flags & ~FNM_PERIOD) == 0)))
+				? flags : flags & ~FNM_PERIOD, NULL) == 0)))
 	      /* It worked.  Signal success.  */
 	      return 0;
 	}
@@ -1136,7 +1165,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
       return FNM_NOMATCH;
 
     case L('?'):
-      if (FCT (p, string, string_end, no_leading_period, flags) == 0)
+      if (FCT (p, string, string_end, no_leading_period, flags, NULL) == 0)
 	return 0;
       /* FALLTHROUGH */
 
@@ -1148,7 +1177,8 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	   pattern list.  */
 	if (FCT (STRCAT (list->str, p), string, string_end,
 		 no_leading_period,
-		 flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0)
+		 flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD,
+		 NULL) == 0)
 	  /* It worked.  Signal success.  */
 	  return 0;
       while ((list = list->next) != NULL);
@@ -1163,7 +1193,8 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
 	  for (runp = list; runp != NULL; runp = runp->next)
 	    if (FCT (runp->str, string, rs,  no_leading_period,
-		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0)
+		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD,
+		     NULL) == 0)
 	      break;
 
 	  /* If none of the patterns matched see whether the rest does.  */
@@ -1172,8 +1203,8 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		       rs == string
 		       ? no_leading_period
 		       : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
-		       flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD)
-		  == 0))
+		       flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD,
+		       NULL) == 0))
 	    /* This is successful.  */
 	    return 0;
 	}
@@ -1198,6 +1229,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 #undef FCT
 #undef EXT
 #undef END
+#undef STRUCT
 #undef MEMPCPY
 #undef MEMCHR
 #undef STRCOLL
