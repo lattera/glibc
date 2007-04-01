@@ -1,5 +1,5 @@
 /* Selective file content synch'ing.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 #ifdef __NR_sync_file_range
 int
-sync_file_range (int fd, __off64_t from, __off64_t to, int flags)
+sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
   return INLINE_SYSCALL (sync_file_range, 6, fd,
 			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
@@ -36,7 +36,7 @@ sync_file_range (int fd, __off64_t from, __off64_t to, int flags)
 }
 #else
 int
-sync_file_range (int fd, __off64_t from, __off64_t to, int flags)
+sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -1,3 +1,8 @@
+2007-04-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Change last argument to unsigned int.
+
 2007-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* scripts/check-local-headers.sh: Filter out sys/capability.h.
