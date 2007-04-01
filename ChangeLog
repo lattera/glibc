@@ -1,5 +1,8 @@
 2007-04-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ia64/fpu/fesetround.c (fesetround): Return 0 on success
+	and 1 on failure.
+
 	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
 	Change last argument to unsigned int.
 
