@@ -122,6 +122,9 @@ libc {
   GLIBC_2.3.4 {
     regexec;
   }
+  GLIBC_2.6 {
+    __sched_cpucount;
+  }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pwrite;
   }

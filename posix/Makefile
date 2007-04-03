@@ -66,7 +66,7 @@ routines :=								      \
 	spawnattr_getsigmask spawnattr_getschedpolicy spawnattr_getschedparam \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
 	posix_madvise							      \
-	get_child_max
+	get_child_max sched_cpucount
 
 include ../Makeconfig
 
@@ -90,7 +90,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
 		   tst-execvp3 tst-execvp4 tst-rfc3484 tst-rfc3484-2 \
-		   tst-getaddrinfo3 tst-fnmatch2
+		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
