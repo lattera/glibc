@@ -5,6 +5,9 @@
 	* posix/sched_cpucount.c: New file.
 	* posix/tst-cpucount.c: New file.
 	* posix/Versions: Export __sched_cpucount with version GLIBC_2.6.
+	* bits/sched.h: Define __CPU_COUNT.  Declare __sched_cpucount.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+	* posix/sched.h: Define CPU_COUNT.
 
 2007-03-27  Jakub Jelinek  <jakub@redhat.com>
 

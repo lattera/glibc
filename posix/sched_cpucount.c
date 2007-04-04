@@ -21,10 +21,10 @@
 
 
 int
-__sched_cpucount (cpu_set_t *setp)
+__sched_cpucount (size_t setsize, cpu_set_t *setp)
 {
   int s = 0;
-  for (unsigned int j = 0; j < __CPU_SETSIZE / __NCPUBITS; ++j)
+  for (unsigned int j = 0; j < setsize / sizeof (__cpu_mask); ++j)
     {
       __cpu_mask l = setp->__bits[j];
       if (l == 0)

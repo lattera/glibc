@@ -1,5 +1,5 @@
 /* Definitions for POSIX 1003.1b-1993 (aka POSIX.4) scheduling interface.
-   Copyright (C) 1996,1997,1999,2001-2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2001-2004,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,11 +65,12 @@ extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 #ifdef __USE_GNU
 /* Access macros for `cpu_set'.  */
-#define CPU_SETSIZE __CPU_SETSIZE
-#define CPU_SET(cpu, cpusetp)	__CPU_SET (cpu, cpusetp)
-#define CPU_CLR(cpu, cpusetp)	__CPU_CLR (cpu, cpusetp)
-#define CPU_ISSET(cpu, cpusetp)	__CPU_ISSET (cpu, cpusetp)
-#define CPU_ZERO(cpusetp)	__CPU_ZERO (cpusetp)
+# define CPU_SETSIZE __CPU_SETSIZE
+# define CPU_SET(cpu, cpusetp)	 __CPU_SET (cpu, cpusetp)
+# define CPU_CLR(cpu, cpusetp)	 __CPU_CLR (cpu, cpusetp)
+# define CPU_ISSET(cpu, cpusetp) __CPU_ISSET (cpu, cpusetp)
+# define CPU_ZERO(cpusetp)	 __CPU_ZERO (cpusetp)
+# define CPU_COUNT(cpusetp)	 __CPU_COUNT (cpusetp)
 
 
 /* Set the CPU affinity for a task */
