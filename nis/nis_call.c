@@ -772,15 +772,15 @@ __nisfind_server (const_nis_name name, int search_parent_first,
 
   if (result == NIS_SUCCESS)
     {
-      unsigned int server_len = (*dir)->do_servers.do_servers_len;
+      unsigned int server_len = obj->do_servers.do_servers_len;
       if (flags & MASTER_ONLY)
 	server_len = 1;
-      result = __nisbind_create (dbp, (*dir)->do_servers.do_servers_val,
+      result = __nisbind_create (dbp, obj->do_servers.do_servers_val,
 				 server_len, ~0, ~0, flags);
       if (result == NIS_SUCCESS)
 	{
 	  if ((flags & MASTER_ONLY) == 0
-	      || (*dir)->do_servers.do_servers_len == 1)
+	      || obj->do_servers.do_servers_len == 1)
 	    {
 	      server_used = dbp->server_used;
 	      current_ep = dbp->current_ep;
