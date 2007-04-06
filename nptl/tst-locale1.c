@@ -10,7 +10,8 @@
 int
 useless (void)
 {
-  pthread_create (0, 0, 0, 0);
+  pthread_t th;
+  pthread_create (&th, 0, (void *(*) (void *)) useless, 0);
   /* This is to check __libc_current_sigrt* can be used in statically
      linked apps.  */
   return SIGRTMIN;
