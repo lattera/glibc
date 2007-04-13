@@ -707,10 +707,10 @@ search_dir (const struct dir_entry *entry)
 			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
 	    continue;
 	}
-      len += strlen (entry->path);
+      len += strlen (entry->path) + 2;
       if (len > file_name_len)
 	{
-	  file_name_len = len + 1;
+	  file_name_len = len;
 	  file_name = alloca (file_name_len);
 	  if (!opt_chroot)
 	    real_file_name = file_name;
@@ -718,10 +718,10 @@ search_dir (const struct dir_entry *entry)
       sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
       if (opt_chroot)
 	{
-	  len = strlen (dir_name) + strlen (direntry->d_name);
+	  len = strlen (dir_name) + strlen (direntry->d_name) + 2;
 	  if (len > real_file_name_len)
 	    {
-	      real_file_name_len = len + 1;
+	      real_file_name_len = len;
 	      real_file_name = alloca (real_file_name_len);
 	    }
 	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
