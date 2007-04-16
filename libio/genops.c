@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2002, 2003, 2004, 2006
+/* Copyright (C) 1993,1995,1997-2002, 2003, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -696,12 +696,12 @@ _IO_default_finish (fp, dummy)
       fp->_IO_save_base = NULL;
     }
 
+  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
+
 #ifdef _IO_MTSAFE_IO
   if (fp->_lock != NULL)
     _IO_lock_fini (*fp->_lock);
 #endif
-
-  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
 }
 INTDEF(_IO_default_finish)
 

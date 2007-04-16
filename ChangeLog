@@ -1,5 +1,8 @@
 2007-04-13  Jakub Jelinek  <jakub@redhat.com>
 
+	* libio/genops.c (_IO_default_finish): Call _IO_lock_fini
+	after _IO_un_link, not before it.
+
 	* stdio-common/printf_fp.c (___printf_fp): Fix exponent -4
 	special case handling when wcp == wstartp + 1.  Fix a comment typo.
 	* stdio-common/tfformat.c (sprint_doubles): Add a new testcase.
