@@ -1,5 +1,6 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997, 1999, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2003, 2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,14 +27,19 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  unsigned short int work;
+  fenv_t temp;
 
   /* Store the environment.  */
-  __asm__ ("fnstenv %0" : "=m" (*envp));
+  __asm__ ("fnstenv %0" : "=m" (temp));
+  *envp = temp;
 
   /* Now set all exceptions to non-stop.  */
-  work = envp->__control_word | 0x3f;
-  __asm__ ("fldcw %0" : : "m" (*&work));
+  temp.__control_word |= 0x3f;
+
+  /* And clear all exceptions.  */
+  temp.__status_word &= ~0x3f;
+
+  __asm__ ("fldenv %0" : : "m" (temp));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
   if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
@@ -43,8 +49,8 @@ feholdexcept (fenv_t *envp)
       /* Get the current control word.  */
       __asm__ ("stmxcsr %0" : "=m" (*&xwork));
 
-      /* Set all exceptions to non-stop.  */
-      xwork |= 0x1f80;
+      /* Set all exceptions to non-stop and clear them.  */
+      xwork = (xwork | 0x1f80) & ~0x3f;
 
       __asm__ ("ldmxcsr %0" : : "m" (*&xwork));
     }
