@@ -1,3 +1,8 @@
+2007-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4364]
+	* posix/unistd.h (_XOPEN_VERSION): Define appropriately for SUSv3.
+
 2007-04-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/locarchive.c (INITIAL_NUM_NAMES,
