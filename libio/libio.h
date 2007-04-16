@@ -410,12 +410,12 @@ extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
 extern "C" {
 #endif
 
-extern int __underflow (_IO_FILE *) __THROW;
-extern int __uflow (_IO_FILE *) __THROW;
-extern int __overflow (_IO_FILE *, int) __THROW;
-extern _IO_wint_t __wunderflow (_IO_FILE *) __THROW;
-extern _IO_wint_t __wuflow (_IO_FILE *) __THROW;
-extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
+extern int __underflow (_IO_FILE *);
+extern int __uflow (_IO_FILE *);
+extern int __overflow (_IO_FILE *, int);
+extern _IO_wint_t __wunderflow (_IO_FILE *);
+extern _IO_wint_t __wuflow (_IO_FILE *);
+extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
 
 #if  __GNUC__ >= 3
 # define _IO_BE(expr, res) __builtin_expect ((expr), res)
@@ -448,12 +448,12 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
 
-extern int _IO_getc (_IO_FILE *__fp) __THROW;
-extern int _IO_putc (int __c, _IO_FILE *__fp) __THROW;
+extern int _IO_getc (_IO_FILE *__fp);
+extern int _IO_putc (int __c, _IO_FILE *__fp);
 extern int _IO_feof (_IO_FILE *__fp) __THROW;
 extern int _IO_ferror (_IO_FILE *__fp) __THROW;
 
-extern int _IO_peekc_locked (_IO_FILE *__fp) __THROW;
+extern int _IO_peekc_locked (_IO_FILE *__fp);
 
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
@@ -482,17 +482,17 @@ extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
 			_IO_va_list, int *__restrict);
 extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
 			 _IO_va_list);
-extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t) __THROW;
-extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
+extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t);
+extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t);
 
-extern _IO_off64_t _IO_seekoff (_IO_FILE *, _IO_off64_t, int, int) __THROW;
-extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int) __THROW;
+extern _IO_off64_t _IO_seekoff (_IO_FILE *, _IO_off64_t, int, int);
+extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int);
 
 extern void _IO_free_backup_area (_IO_FILE *) __THROW;
 
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-extern _IO_wint_t _IO_getwc (_IO_FILE *__fp) __THROW;
-extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp) __THROW;
+extern _IO_wint_t _IO_getwc (_IO_FILE *__fp);
+extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp);
 extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
 # if __GNUC__ >= 2
 /* While compiling glibc we have to handle compatibility with very old
@@ -531,7 +531,7 @@ extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
 			 _IO_va_list, int *__restrict);
 extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
 			  _IO_va_list);
-extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
+extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t);
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
 #endif
 
