@@ -1,3 +1,12 @@
+2007-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (INITIAL_NUM_NAMES,
+	INITIAL_SIZE_STRINGS, INITIAL_NUM_LOCREC): Update to accomodate
+	current number of locales in SUPPORTED.
+	(create_archive): Initialize serial.
+	(enlarge_archive): Preserve aliases rather than duplicating
+	their locrecs.
+
 2007-04-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/genops.c (_IO_default_finish): Call _IO_lock_fini

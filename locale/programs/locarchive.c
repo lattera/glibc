@@ -64,9 +64,9 @@ static const char *locnames[] =
 
 
 /* Size of the initial archive header.  */
-#define INITIAL_NUM_NAMES	450
-#define INITIAL_SIZE_STRINGS	3500
-#define INITIAL_NUM_LOCREC	350
+#define INITIAL_NUM_NAMES	900
+#define INITIAL_SIZE_STRINGS	7500
+#define INITIAL_NUM_LOCREC	420
 #define INITIAL_NUM_SUMS	2000
 
 
@@ -88,6 +88,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 
   /* Create the initial content of the archive.  */
   head.magic = AR_MAGIC;
+  head.serial = 0;
   head.namehash_offset = sizeof (struct locarhead);
   head.namehash_used = 0;
   head.namehash_size = next_prime (INITIAL_NUM_NAMES);
@@ -217,9 +218,12 @@ oldlocrecentcmp (const void *a, const void *b)
 }
 
 
-/* forward decl for below */
+/* forward decls for below */
 static uint32_t add_locale (struct locarhandle *ah, const char *name,
 			    locale_data_t data, bool replace);
+static void add_alias (struct locarhandle *ah, const char *alias,
+		       bool replace, const char *oldname,
+		       uint32_t *locrec_offset_p);
 
 static void
 enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
@@ -350,6 +354,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   qsort (oldlocrecarray, loccnt, sizeof (struct oldlocrecent),
 	 oldlocrecentcmp);
 
+  uint32_t last_locrec_offset = 0;
   for (cnt = 0; cnt < loccnt; ++cnt)
     {
       /* Insert this entry in the new hash table.  */
@@ -368,10 +373,25 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 			  old_data[idx].sum);
 	  }
 
-      if (add_locale (&new_ah,
-	  ((char *) ah->addr
-	   + oldnamehashtab[oldlocrecarray[cnt].cnt].name_offset),
-	  old_data, 0) == 0)
+      if (cnt > 0 && oldlocrecarray[cnt - 1].locrec == oldlocrec)
+	{
+	  const char *oldname
+	    = ((char *) ah->addr
+	       + oldnamehashtab[oldlocrecarray[cnt - 1].cnt].name_offset);
+
+	  add_alias (&new_ah, 
+		     ((char *) ah->addr
+		      + oldnamehashtab[oldlocrecarray[cnt].cnt].name_offset),
+		     0, oldname, &last_locrec_offset);
+	  continue;
+	}
+
+      last_locrec_offset =
+	add_locale (&new_ah,
+		    ((char *) ah->addr
+		     + oldnamehashtab[oldlocrecarray[cnt].cnt].name_offset),
+		    old_data, 0);
+      if (last_locrec_offset == 0)
 	error (EXIT_FAILURE, 0, _("cannot extend locale archive file"));
     }
 
