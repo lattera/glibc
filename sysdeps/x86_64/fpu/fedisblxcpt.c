@@ -1,5 +1,5 @@
 /* Disable floating-point exceptions.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2001.
 
@@ -24,7 +24,7 @@ int
 fedisableexcept (int excepts)
 {
   unsigned short int new_exc, old_exc;
-  unsigned int new, old;
+  unsigned int new;
 
   excepts &= FE_ALL_EXCEPT;
 
@@ -40,8 +40,6 @@ fedisableexcept (int excepts)
   __asm__ ("stmxcsr %0" : "=m" (*&new));
 
   /* The SSE exception masks are shifted by 7 bits.  */
-  old = (~new) & (FE_ALL_EXCEPT << 7);
-
   new |= excepts << 7;
   __asm__ ("ldmxcsr %0" : : "m" (*&new));
 

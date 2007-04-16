@@ -1,7 +1,7 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997, 2000, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01,07 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Christian Boissat <Christian.Boissat@cern.ch>, 1999.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,20 +21,31 @@
 #include <fenv.h>
 
 int
-feupdateenv (const fenv_t *envp)
+__feupdateenv (const fenv_t *envp)
 {
-  fenv_t fpsr;
+  fexcept_t temp;
+  unsigned int xtemp;
 
-
-  /* Get the current exception state.  */
-  __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
+  /* Save current exceptions.  */
+  __asm__ ("fnstsw %0\n\tstmxcsr %1" : "=m" (*&temp), "=m" (xtemp));
+  temp = (temp | xtemp) & FE_ALL_EXCEPT;
 
   /* Install new environment.  */
   fesetenv (envp);
 
-  /* Raise the saved exceptions.  */
-  feraiseexcept ((int) (fpsr >> 13) & FE_ALL_EXCEPT);
+  /* Raise the saved exception.  Incidently for us the implementation
+     defined format of the values in objects of type fexcept_t is the
+     same as the ones specified using the FE_* constants.  */
+  feraiseexcept ((int) temp);
 
   /* Success.  */
   return 0;
 }
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
+strong_alias (__feupdateenv, __old_feupdateenv)
+compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);

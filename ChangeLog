@@ -1,3 +1,30 @@
+2007-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3427]
+	* sysdeps/x86_64/fpu/feholdexcpt.c (feholdexcept): Clear all
+	exceptions both in SW and MXCSR.
+	* sysdeps/x86_64/fpu/feupdateenv.c: New file.
+	* sysdeps/x86_64/fpu/feenablxcpt.c (feenableexcept): Remove dead code.
+	* sysdeps/x86_64/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions
+	in MXCSR if SSE is available.
+	* sysdeps/i386/fpu/feupdateenv.c: Include unistd.h, dl-procinfo.h
+	and ldsodefs.h.
+	(__feupdateenv): Query exceptions also from MXCSR if SSE is available.
+	Fix comment typo.
+	* sysdeps/ia64/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions.
+	Return 0 rather than 1.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Fix comment typo.
+	Remove incorrect part of a comment.  Fix argument to feraiseexcept.
+	* math/test-fenv.c (feholdexcept_tests): New function.
+	(main): Call it.
+
+2007-01-05  Richard B. Kreckel  <kreckel@ginac.de>
+
+	[BZ #3427]
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions
+	in SW.
+
 2007-04-13  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4344]

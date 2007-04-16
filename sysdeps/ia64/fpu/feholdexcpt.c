@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997, 1999, 2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Christian Boissat <Christian.Boissat@cern.ch>, 1999
 
@@ -23,12 +23,20 @@
 int
 feholdexcept (fenv_t *envp)
 {
+  fenv_t fpsr;
   /* Save the current state.  */
-  fegetenv (envp);
+  __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
+  *envp = fpsr;
 
-  /* set the trap disable bit */
-  __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (*envp | FE_ALL_EXCEPT));
+  /* Set the trap disable bits.  */
+  fpsr |= FE_ALL_EXCEPT;
 
-  return 1;
+  /* And clear the exception bits.  */
+  fpsr &= ~(fenv_t) (FE_ALL_EXCEPT << 13);
+
+  __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (fpsr));
+
+  /* Success.  */
+  return 0;
 }
 libm_hidden_def (feholdexcept)

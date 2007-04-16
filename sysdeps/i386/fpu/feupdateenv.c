@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01,07 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,20 +20,29 @@
 
 #include <fenv.h>
 #include <bp-sym.h>
+#include <unistd.h>
+#include <dl-procinfo.h>
+#include <ldsodefs.h>
 
 int
 __feupdateenv (const fenv_t *envp)
 {
   fexcept_t temp;
+  unsigned int xtemp = 0;
 
   /* Save current exceptions.  */
   __asm__ ("fnstsw %0" : "=m" (*&temp));
-  temp &= FE_ALL_EXCEPT;
+
+  /* If the CPU supports SSE we test the MXCSR as well.  */
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+    __asm__ ("stmxcsr %0" : "=m" (*&xtemp));
+
+  temp = (temp | xtemp) & FE_ALL_EXCEPT;
 
   /* Install new environment.  */
   fesetenv (envp);
 
-  /* Raise the safed exception.  Incidently for us the implementation
+  /* Raise the saved exception.  Incidently for us the implementation
      defined format of the values in objects of type fexcept_t is the
      same as the ones specified using the FE_* constants.  */
   feraiseexcept ((int) temp);

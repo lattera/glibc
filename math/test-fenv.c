@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2003, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -636,6 +637,102 @@ feenv_tests (void)
 }
 
 
+static void
+feholdexcept_tests (void)
+{
+  fenv_t saved, saved2;
+  int res;
+
+  feclearexcept (FE_ALL_EXCEPT);
+  fedisableexcept (FE_ALL_EXCEPT);
+#ifdef FE_DIVBYZERO
+  feraiseexcept (FE_DIVBYZERO);
+#endif
+  test_exceptions ("feholdexcept_tests FE_DIVBYZERO test",
+		   DIVBYZERO_EXC, 0);
+  res = feholdexcept (&saved);
+  if (res != 0)
+    {
+      printf ("feholdexcept failed: %d\n", res);
+      ++count_errors;
+    }
+#if defined FE_TONEAREST && defined FE_TOWARDZERO
+  res = fesetround (FE_TOWARDZERO);
+  if (res != 0)
+    {
+      printf ("fesetround failed: %d\n", res);
+      ++count_errors;
+    }
+#endif
+  test_exceptions ("feholdexcept_tests 0 test", NO_EXC, 0);
+  feraiseexcept (FE_INVALID);
+  test_exceptions ("feholdexcept_tests FE_INVALID test",
+		   INVALID_EXC, 0);
+  res = feupdateenv (&saved);
+  if (res != 0)
+    {
+      printf ("feupdateenv failed: %d\n", res);
+      ++count_errors;
+    }
+#if defined FE_TONEAREST && defined FE_TOWARDZERO
+  res = fegetround ();
+  if (res != FE_TONEAREST)
+    {
+      printf ("feupdateenv didn't restore rounding mode: %d\n", res);
+      ++count_errors;
+    }
+#endif
+  test_exceptions ("feholdexcept_tests FE_DIVBYZERO|FE_INVALID test",
+		   DIVBYZERO_EXC | INVALID_EXC, 0);
+  feclearexcept (FE_ALL_EXCEPT);
+  feraiseexcept (FE_INVALID);
+#if defined FE_TONEAREST && defined FE_UPWARD
+  res = fesetround (FE_UPWARD);
+  if (res != 0)
+    {
+      printf ("fesetround failed: %d\n", res);
+      ++count_errors;
+    }
+#endif
+  res = feholdexcept (&saved2);
+  if (res != 0)
+    {
+      printf ("feholdexcept failed: %d\n", res);
+      ++count_errors;
+    }
+#if defined FE_TONEAREST && defined FE_UPWARD
+  res = fesetround (FE_TONEAREST);
+  if (res != 0)
+    {
+      printf ("fesetround failed: %d\n", res);
+      ++count_errors;
+    }
+#endif
+  test_exceptions ("feholdexcept_tests 0 2nd test", NO_EXC, 0);
+  feraiseexcept (FE_INEXACT);
+  test_exceptions ("feholdexcept_tests FE_INEXACT test",
+		   INEXACT_EXC, 0);
+  res = feupdateenv (&saved2);
+  if (res != 0)
+    {
+      printf ("feupdateenv failed: %d\n", res);
+      ++count_errors;
+    }
+#if defined FE_TONEAREST && defined FE_UPWARD
+  res = fegetround ();
+  if (res != FE_UPWARD)
+    {
+      printf ("feupdateenv didn't restore rounding mode: %d\n", res);
+      ++count_errors;
+    }
+  fesetround (FE_TONEAREST);
+#endif
+  test_exceptions ("feholdexcept_tests FE_INEXACT|FE_INVALID test",
+		   INVALID_EXC | INEXACT_EXC, 0);
+  feclearexcept (FE_ALL_EXCEPT);
+}
+
+
 /* IEC 559 and ISO C99 define a default startup environment */
 static void
 initial_tests (void)
@@ -654,6 +751,7 @@ main (void)
   initial_tests ();
   fe_tests ();
   feenv_tests ();
+  feholdexcept_tests ();
 
   if (count_errors)
     {
