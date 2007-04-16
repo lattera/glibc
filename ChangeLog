@@ -1,3 +1,48 @@
+2007-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3306]
+	* math/math_private.h (math_opt_barrier, math_force_eval): Define.
+	* sysdeps/i386/fpu/math_private.h: New file.
+	* sysdeps/x86_64/fpu/math_private.h: New file.
+	* math/s_nexttowardf.c (__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".
+	* math/s_nextafter.c (__nextafter): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c (__nextafterf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Use
+	math_opt_barrier and math_force_eval macros.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c: Include float.h.
+	(__nexttoward): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".  Only use asm to force double result if
+	FLT_EVAL_METHOD is 2.
+	* sysdeps/i386/fpu/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".  Only use asm to force double result if
+	FLT_EVAL_METHOD is not 0.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  If FLT_EVAL_METHOD is not 0, force
+	x to float using asm.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: Include float.h.
+	(__nldbl_nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  If FLT_EVAL_METHOD is not 0, force
+	x to float using asm.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and math_force_eval
+	macros.  If FLT_EVAL_METHOD is not 0, force x to float using asm.
+	* math/bug-nextafter.c (zero, inf): New variables.
+	(main): Add new tests.
+	* math/bug-nexttoward.c (zero, inf): New variables.
+	(main): Add new tests.
+
 2007-03-22  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3427]
