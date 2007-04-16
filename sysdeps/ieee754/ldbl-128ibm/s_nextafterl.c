@@ -24,8 +24,8 @@ static char rcsid[] = "$NetBSD: $";
  *   Special cases:
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 #ifdef __STDC__
@@ -53,9 +53,12 @@ static char rcsid[] = "$NetBSD: $";
 	if(x==y)
 	    return y;		/* x=y, return y */
 	if(ihx == 0 && ilx == 0) {			/* x == 0 */
+	    long double u;
 	    SET_LDOUBLE_WORDS64(x,hy&0x8000000000000000ULL,1);/* return +-minsubnormal */
-	    y = x*x;
-	    if(y==x) return y; else return x;	/* raise underflow flag */
+	    u = math_opt_barrier (u);
+	    u = u * u;
+	    math_force_eval (u);		/* raise underflow flag */
+	    return x;
 	}
 	if(ihx>=0) {			/* x > 0 */
 	    if(ihx>ihy||((ihx==ihy)&&(ilx>ily))) {	/* x > y, x -= ulp */
@@ -93,12 +96,9 @@ static char rcsid[] = "$NetBSD: $";
 	}
 	hy = hx&0x7ff0000000000000LL;
 	if(hy==0x7ff0000000000000LL) return x+x;/* overflow  */
-	if(hy==0) {				/* underflow */
-	    y = x*x;
-	    if(y!=x) {		/* raise underflow flag */
-	        SET_LDOUBLE_WORDS64(y,hx,lx);
-		return y;
-	    }
+	if(hy==0) {
+	    long double u = x * x;		/* underflow */
+	    math_force_eval (u);		/* raise underflow flag */
 	}
 	SET_LDOUBLE_WORDS64(x,hx,lx);
 	return x;
