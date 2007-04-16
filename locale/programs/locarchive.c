@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -1428,7 +1428,7 @@ show_archive_content (int verbose)
       int sumused;
 
       files = (struct dataent *) xmalloc (head->sumhash_used
-					  * sizeof (struct sumhashent));
+					  * sizeof (struct dataent));
 
       sumhashtab = (struct sumhashent *) ((char *) ah.addr
 					  + head->sumhash_offset);

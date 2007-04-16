@@ -1,3 +1,8 @@
+2007-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (show_archive_content): Fix sizeof
+	argument in xmalloc size computation.
+
 2007-04-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl): Use
