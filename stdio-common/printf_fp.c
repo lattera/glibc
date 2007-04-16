@@ -990,7 +990,7 @@ ___printf_fp (FILE *fp,
 				       0))
 	      /* This is a special case: the rounded number is 1.0,
 		 the format is 'g' or 'G', and the alternative format
-		 is selected.  This means the result mist be "1.".  */
+		 is selected.  This means the result must be "1.".  */
 	      --added_zeros;
 	  }
 
@@ -1081,12 +1081,17 @@ ___printf_fp (FILE *fp,
 	    /* This is another special case.  The exponent of the number is
 	       really smaller than -4, which requires the 'e'/'E' format.
 	       But after rounding the number has an exponent of -4.  */
-	    assert (wcp >= wstartp + 2);
+	    assert (wcp >= wstartp + 1);
 	    assert (wstartp[0] == L'1');
 	    __wmemcpy (wstartp, L"0.0001", 6);
 	    wstartp[1] = decimalwc;
-	    wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
-	    wcp += 4;
+	    if (wcp >= wstartp + 2)
+	      {
+		wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
+		wcp += 4;
+	      }
+	    else
+	      wcp += 5;
 	  }
 	else
 	  {

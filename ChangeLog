@@ -1,3 +1,9 @@
+2007-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf_fp.c (___printf_fp): Fix exponent -4
+	special case handling when wcp == wstartp + 1.  Fix a comment typo.
+	* stdio-common/tfformat.c (sprint_doubles): Add a new testcase.
+
 2007-03-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/libio.h (__underflow, __uflow, __overflow, __wunderflow,
