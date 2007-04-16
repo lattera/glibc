@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1997-2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -271,7 +272,7 @@ _IO_old_file_setbuf (fp, p, len)
     return fp;
 }
 
-static int old_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
+static int old_do_write (_IO_FILE *, const char *, _IO_size_t);
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */

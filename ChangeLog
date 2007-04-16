@@ -1,3 +1,52 @@
+2007-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/libio.h (__underflow, __uflow, __overflow, __wunderflow,
+	__wuflow, __woverflow, _IO_getc, _IO_putc, _IO_peekc_locked, _IO_padn,
+	_IO_sgetn, _IO_seekoff, _IO_seekpos, _IO_getwc, _IO_putwc, _IO_wpadn):
+	Remove __THROW.
+	* libio/fileops.c (new_do_write, _IO_file_xsgetn_mmap,
+	_IO_file_xsgetn_maybe_mmap): Likewise.
+	* libio/oldfileops.c (old_do_write): Likewise.
+	* libio/libioP.h (_IO_switch_to_get_mode, _IO_switch_to_wget_mode,
+	_IO_init_marker, _IO_init_wmarker, _IO_default_uflow,
+	_IO_wdefault_uflow, _IO_default_setbuf, _IO_default_seekpos,
+	_IO_do_write, _IO_new_do_write, _IO_old_do_write, _IO_wdo_write,
+	_IO_flush_all_lockp, _IO_flush_all, _IO_cleanup,
+	_IO_flush_all_linebuffered, _IO_new_fgetpos, _IO_old_fgetpos,
+	_IO_new_fsetpos, _IO_old_fsetpos, _IO_new_fgetpos64,
+	_IO_old_fgetpos64, _IO_new_fsetpos64, _IO_old_fsetpos64,
+	_IO_file_setbuf, _IO_file_seekoff, _IO_file_xsputn, _IO_file_xsgetn,
+	_IO_file_underflow, _IO_file_underflow_mmap,
+	_IO_file_underflow_maybe_mmap, _IO_file_overflow, _IO_file_attach,
+	_IO_file_open, _IO_file_fopen, _IO_file_write, _IO_file_read,
+	_IO_file_sync, _IO_file_close_it, _IO_file_finish,
+	_IO_new_file_attach, _IO_new_file_close_it, _IO_new_file_finish,
+	_IO_new_file_fopen, _IO_new_file_setbuf, _IO_file_setbuf_mmap,
+	_IO_new_file_sync, _IO_new_file_underflow, _IO_new_file_overflow,
+	_IO_new_file_seekoff, _IO_new_file_write, _IO_new_file_xsputn,
+	_IO_old_file_setbuf, _IO_old_file_seekoff, _IO_old_file_xsputn,
+	_IO_old_file_underflow, _IO_old_file_overflow, _IO_old_file_attach,
+	_IO_old_file_fopen, _IO_old_file_write, _IO_old_file_sync,
+	_IO_old_file_close_it, _IO_old_file_finish, _IO_wfile_xsputn,
+	_IO_wfile_setbuf, _IO_wfile_sync, _IO_wfile_underflow,
+	_IO_wfile_overflow, _IO_wfile_seekoff, _IO_old_proc_open,
+	_IO_old_proc_close, _IO_getdelim, _IO_flush_all_internal,
+	_IO_adjust_column_internal, _IO_default_uflow_internal,
+	_IO_default_xsgetn_internal, _IO_wdefault_xsputn_internal,
+	_IO_wdefault_xsgetn_internal, _IO_wdefault_uflow_internal,
+	_IO_file_setbuf_internal, _IO_file_seekoff_internal,
+	_IO_file_xsputn_internal, _IO_file_xsgetn_internal,
+	_IO_file_close_it_internal, _IO_file_underflow_internal,
+	_IO_file_overflow_internal, _IO_file_attach_internal,
+	_IO_file_fopen_internal, _IO_file_sync_internal,
+	_IO_file_finish_internal, _IO_wfile_xsputn_internal,
+	_IO_wfile_seekoff_internal, _IO_wfile_sync_internal,
+	_IO_switch_to_wget_mode_internal, _IO_padn_internal,
+	_IO_switch_to_get_mode_internal, _IO_seekoff_unlocked,
+	_IO_seekpos_unlocked): Likewise.
+	(_IO_strtod, _IO_dtoa, _IO_outfloat, _IO_read, _IO_write,
+	_IO_lseek, _IO_close, _IO_fstat): Remove unused prototypes.
+
 2007-04-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/locarchive.c (show_archive_content): Fix sizeof
