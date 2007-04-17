@@ -747,12 +747,11 @@ extern char *canonicalize_file_name (__const char *__name)
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-/* Return the canonical absolute name of file NAME.  The last file name
-   component need not exist, and may be a symlink to a nonexistent file.
-   If RESOLVED is null, the result is malloc'd; otherwise, if the canonical
-   name is PATH_MAX chars or more, returns null with `errno' set to
-   ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
-   name in RESOLVED.  */
+/* Return the canonical absolute name of file NAME.  If RESOLVED is
+   null, the result is malloc'd; otherwise, if the canonical name is
+   PATH_MAX chars or more, returns null with `errno' set to
+   ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars,
+   returns the name in RESOLVED.  */
 extern char *realpath (__const char *__restrict __name,
 		       char *__restrict __resolved) __THROW __wur;
 #endif
