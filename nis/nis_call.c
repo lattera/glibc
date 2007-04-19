@@ -422,9 +422,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
     case HIGHER_NAME:
       { /* We need data from a parent domain */
 	directory_obj *obj;
-	char ndomain[strlen (dir->do_name) + 3];
-
-	nis_domain_of_r (dir->do_name, ndomain, sizeof (ndomain));
+	const char *ndomain = __nis_domain_of (dir->do_name);
 
 	/* The root server of our domain is a replica of the parent
 	   domain ! (Now I understand why a root server must be a
@@ -468,7 +466,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	size_t namelen = strlen (name);
 	char leaf[namelen + 3];
 	char domain[namelen + 3];
-	char ndomain[namelen + 3];
+	const char *ndomain;
 	char *cp;
 
 	strcpy (domain, name);
@@ -481,8 +479,8 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 		return NULL;
 	      }
 	    nis_leaf_of_r (domain, leaf, sizeof (leaf));
-	    nis_domain_of_r (domain, ndomain, sizeof (ndomain));
-	    strcpy (domain, ndomain);
+	    ndomain = __nis_domain_of (domain);
+	    memmove (domain, ndomain, strlen (ndomain) + 1);
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
 
@@ -535,29 +533,16 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 /* We try to query the current server for the searched object,
    maybe he know about it ? */
 static directory_obj *
-first_shoot (const_nis_name name, int search_parent_first, directory_obj *dir)
+first_shoot (const_nis_name name, directory_obj *dir)
 {
   directory_obj *obj = NULL;
   fd_result *fd_res;
   XDR xdrs;
-  char domain[strlen (name) + 3];
 
-#if 0
   if (nis_dir_cmp (name, dir->do_name) == SAME_NAME)
     return dir;
-#endif
 
-  const char *search_name = name;
-  if (search_parent_first)
-    {
-      nis_domain_of_r (name, domain, sizeof (domain));
-      search_name = domain;
-    }
-
-  if (nis_dir_cmp (search_name, dir->do_name) == SAME_NAME)
-    return dir;
-
-  fd_res = __nis_finddirectory (dir, search_name);
+  fd_res = __nis_finddirectory (dir, name);
   if (fd_res == NULL)
     return NULL;
   if (fd_res->status == NIS_SUCCESS
@@ -585,7 +570,7 @@ first_shoot (const_nis_name name, int search_parent_first, directory_obj *dir)
 
 static struct nis_server_cache
 {
-  int search_parent_first;
+  int search_parent;
   int uses;
   unsigned int size;
   unsigned int server_used;
@@ -597,7 +582,7 @@ static time_t nis_cold_start_mtime;
 __libc_lock_define_initialized (static, nis_server_cache_lock)
 
 static directory_obj *
-nis_server_cache_search (const_nis_name name, int search_parent_first,
+nis_server_cache_search (const_nis_name name, int search_parent,
 			 unsigned int *server_used, unsigned int *current_ep,
 			 struct timeval *now)
 {
@@ -621,7 +606,7 @@ nis_server_cache_search (const_nis_name name, int search_parent_first,
 	free (nis_server_cache[i]);
 	nis_server_cache[i] = NULL;
       }
-    else if (nis_server_cache[i]->search_parent_first == search_parent_first
+    else if (nis_server_cache[i]->search_parent == search_parent
 	     && strcmp (nis_server_cache[i]->name, name) == 0)
       {
 	ret = calloc (1, sizeof (directory_obj));
@@ -653,7 +638,7 @@ nis_server_cache_search (const_nis_name name, int search_parent_first,
 }
 
 static void
-nis_server_cache_add (const_nis_name name, int search_parent_first,
+nis_server_cache_add (const_nis_name name, int search_parent,
 		      directory_obj *dir, unsigned int server_used,
 		      unsigned int current_ep, struct timeval *now)
 {
@@ -672,7 +657,7 @@ nis_server_cache_add (const_nis_name name, int search_parent_first,
   new = calloc (1, sizeof (*new) + strlen (name) + 8 + size);
   if (new == NULL)
     return;
-  new->search_parent_first = search_parent_first;
+  new->search_parent = search_parent;
   new->uses = 1;
   new->expires = now->tv_sec + dir->do_ttl;
   new->size = size;
@@ -713,7 +698,7 @@ nis_server_cache_add (const_nis_name name, int search_parent_first,
 }
 
 nis_error
-__nisfind_server (const_nis_name name, int search_parent_first,
+__nisfind_server (const_nis_name name, int search_parent,
 		  directory_obj **dir, dir_binding *dbp, unsigned int flags)
 {
   nis_error result = NIS_SUCCESS;
@@ -732,7 +717,7 @@ __nisfind_server (const_nis_name name, int search_parent_first,
   (void) gettimeofday (&now, NULL);
 
   if ((flags & NO_CACHE) == 0)
-    *dir = nis_server_cache_search (name, search_parent_first, &server_used,
+    *dir = nis_server_cache_search (name, search_parent, &server_used,
 				    &current_ep, &now);
   if (*dir != NULL)
     {
@@ -762,10 +747,13 @@ __nisfind_server (const_nis_name name, int search_parent_first,
     return NIS_UNAVAIL;
 
   /* Try at first, if servers in "dir" know our object */
-  obj = first_shoot (name, search_parent_first, *dir);
+  const char *search_name = name;
+  if (search_parent)
+    search_name = __nis_domain_of (name);
+  obj = first_shoot (search_name, *dir);
   if (obj == NULL)
     {
-      obj = rec_dirsearch (name, *dir, &status);
+      obj = rec_dirsearch (search_name, *dir, &status);
       if (obj == NULL)
 	result = status;
     }
@@ -786,7 +774,7 @@ __nisfind_server (const_nis_name name, int search_parent_first,
 	      current_ep = dbp->current_ep;
 	    }
 	  if ((flags & NO_CACHE) == 0)
-	    nis_server_cache_add (name, search_parent_first, obj,
+	    nis_server_cache_add (name, search_parent, obj,
 				  server_used, current_ep, &now);
 	}
       else

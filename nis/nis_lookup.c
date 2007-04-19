@@ -75,7 +75,6 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	{
 	  static const struct timeval RPCTIMEOUT = {10, 0};
 	  enum clnt_stat result;
-	  char ndomain[strlen (req.ns_name) + 1];
 
 	again:
 	  result = clnt_call (bptr.clnt, NIS_LOOKUP,
@@ -137,10 +136,9 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 		      if (__nisbind_next (&bptr) != NIS_SUCCESS)
 			{
 			  /* No more servers to search.  Try parent.  */
-			  nis_domain_of_r (req.ns_name, ndomain,
-					   sizeof (ndomain));
+			  const char *ndomain = __nis_domain_of (req.ns_name);
 			  req.ns_name = strdupa (ndomain);
-			  if (strcmp (ndomain, ".") == 0)
+			  if (strcmp (req.ns_name, ".") == 0)
 			    {
 			      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
 			      goto out;

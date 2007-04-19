@@ -1,3 +1,17 @@
+2007-04-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_domain_of.c (__nis_domain_of): New function.
+	* include/rpcsvc/nislib.h (__nis_domain_of): New prototype.
+	* nis/nis_lookup.c (nis_lookup): Use __nis_domain_of.
+	* nis/nis_call.c (rec_dirsearch): Likewise.
+	(first_shoot): Likewise.  Remove search_parent_first argument.
+	(struct nis_server_cache): Rename search_parent_first field
+	to search_parent.
+	(nis_server_cache_search, nis_server_cache_add): Rename
+	search_parent_first argument to search_parent.
+	(__nisfind_server): Likewise.  If search_parent, call
+	__nis_domain_of.
+
 2007-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c: Remove commented-out code.
