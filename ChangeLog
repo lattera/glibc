@@ -1,6 +1,7 @@
 2007-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/sys/mman.h: Mark madvise hidden.
+	* misc/madvise.c: Add libc_hidden_def.
 
 2007-04-06  Jakub Jelinek  <jakub@redhat.com>
 
