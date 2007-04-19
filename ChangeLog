@@ -1,3 +1,7 @@
+2007-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/mman.h: Mark madvise hidden.
+
 2007-04-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_domain_of.c (__nis_domain_of): New function.
