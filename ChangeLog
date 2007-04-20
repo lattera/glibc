@@ -1,3 +1,10 @@
+2007-04-19  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #3905]
+	* bits/in.h (IPV6_ROUTER_ALERT, IPV6_MTU_DISCOVER, IPV6_MTU,
+	IPV6_RECVERR, IPV6_V6ONLY, IPV6_JOIN_ANYCAST, IPV6_LEAVE_ANYCAST):
+	Added.
+
 2007-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/sys/mman.h: Mark madvise hidden.

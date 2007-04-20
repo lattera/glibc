@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,6 +68,13 @@ struct ip_opts
 #define IPV6_MULTICAST_LOOP	19
 #define IPV6_JOIN_GROUP		20
 #define IPV6_LEAVE_GROUP	21
+#define IPV6_ROUTER_ALERT      22
+#define IPV6_MTU_DISCOVER      23
+#define IPV6_MTU               24
+#define IPV6_RECVERR           25
+#define IPV6_V6ONLY            26
+#define IPV6_JOIN_ANYCAST      27
+#define IPV6_LEAVE_ANYCAST     28
 
 /* Obsolete synonyms for the above.  */
 #define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
