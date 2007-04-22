@@ -1,3 +1,7 @@
+2007-04-22  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (NT_PRXFPREG): New macro.
+
 2007-04-19  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #3905]
