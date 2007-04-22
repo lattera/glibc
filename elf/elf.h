@@ -603,6 +603,7 @@ typedef struct
 #define NT_LWPSTATUS	16		/* Contains copy of lwpstatus struct */
 #define NT_LWPSINFO	17		/* Contains copy of lwpinfo struct */
 #define NT_PRFPXREG	20		/* Contains copy of fprxregset struct*/
+#define NT_PRXFPREG	0x46e62b7f	/* Contains copy of user_fxsr_struct*/
 
 /* Legal values for the note segment descriptor types for object files.  */
 
