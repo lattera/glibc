@@ -1,5 +1,19 @@
 2007-04-23  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4381]
+	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Ensure sufficient
+	alignment of buffer and tmp_buffer.
+	* nis/nss_nis/nis-hosts.c (internal_nis_gethostent_r,
+	internal_gethostbyname2_r, _nss_nis_gethostbyaddr_r): Ensure sufficient
+	alignment of buffer.
+	* resolv/nss_dns/dns-hosts.c (getanswer_r): Likewise.  Handle buflen
+	bigger than INT_MAX.
+	* resolv/nss_dns/dns-network.c (getanswer_r): Likewise.  Add errnop and
+	h_errnop arguments.  Fail if buflen is too small.
+	(_nss_dns_getnetbyname_r, _nss_dns_getnetbyaddr_r): Adjust callers.
+
+2007-04-23  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #4405]
 	* iconvdata/gconv-modules (E13B): Add a missing slash to the alias
 	name.  Patch by Aurelien Jarno <aurelien@aurel32.net>.

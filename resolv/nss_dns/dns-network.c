@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -102,7 +102,8 @@ extern int __ns_name_unpack (const u_char *, const u_char *,
 /* Prototypes for local functions.  */
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    struct netent *result, char *buffer,
-				    size_t buflen, lookup_method net_i);
+				    size_t buflen, int *errnop, int *h_errnop,
+				    lookup_method net_i);
 
 
 enum nss_status
@@ -142,7 +143,8 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen, BYNAME);
+  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen,
+			errnop, herrnop, BYNAME);
   if (net_buffer.buf != orig_net_buffer)
     free (net_buffer.buf);
   return status;
@@ -218,7 +220,8 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen, BYADDR);
+  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen,
+			errnop, herrnop, BYADDR);
   if (net_buffer.buf != orig_net_buffer)
     free (net_buffer.buf);
   if (status == NSS_STATUS_SUCCESS)
@@ -240,7 +243,8 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, struct netent *result,
-	     char *buffer, size_t buflen, lookup_method net_i)
+	     char *buffer, size_t buflen, int *errnop, int *h_errnop,
+	     lookup_method net_i)
 {
   /*
    * Find first satisfactory answer
@@ -260,8 +264,25 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   {
     char *aliases[MAX_NR_ALIASES];
     char linebuffer[0];
-  } *net_data = (struct net_data *) buffer;
+  } *net_data;
+
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct net_data);
+  buffer += pad;
+
+  if (__builtin_expect (buflen < sizeof (*net_data) + pad, 0))
+    {
+      /* The buffer is too small.  */
+    too_small:
+      *errnop = ERANGE;
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_TRYAGAIN;
+    }
+  buflen -= pad;
+
+  net_data = (struct net_data *) buffer;
   int linebuflen = buflen - offsetof (struct net_data, linebuffer);
+  if (buflen - offsetof (struct net_data, linebuffer) != linebuflen)
+    linebuflen = INT_MAX;
   const unsigned char *end_of_message = &answer->buf[anslen];
   const HEADER *header_pointer = &answer->hdr;
   /* #/records in the answer section.  */
@@ -319,10 +340,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
       if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	{
 	  if (errno == EMSGSIZE)
-	    {
-	      errno = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	    goto too_small;
 
 	  n = -1;
 	}
@@ -346,10 +364,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	    {
 	      if (errno == EMSGSIZE)
-		{
-		  errno = ERANGE;
-		  return NSS_STATUS_TRYAGAIN;
-		}
+		goto too_small;
 
 	      n = -1;
 	    }
