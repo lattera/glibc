@@ -1376,7 +1376,7 @@ module	INTERNAL		INIS-CYRILLIC//		INIS-CYRILLIC	1
 #	from			to			module		cost
 alias	ISO-IR-98//		ISO_2033//
 alias	ISO_2033-1983//		ISO_2033//
-alias	E13B/			ISO_2033//
+alias	E13B//			ISO_2033//
 alias	CSISO2033//		ISO_2033//
 module	ISO_2033//		INTERNAL		ISO_2033	1
 module	INTERNAL		ISO_2033//		ISO_2033	1

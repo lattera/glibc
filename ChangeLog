@@ -1,3 +1,9 @@
+2007-04-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4405]
+	* iconvdata/gconv-modules (E13B): Add a missing slash to the alias
+	name.  Patch by Aurelien Jarno <aurelien@aurel32.net>.
+
 2007-04-22  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (NT_PRXFPREG): New macro.
