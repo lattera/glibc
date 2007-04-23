@@ -1,5 +1,6 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996-2001, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -102,6 +103,10 @@ _nss_files_get##name##_r (proto,					      \
 {									      \
   enum nss_status status;						      \
 									      \
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct hostent_data);    \
+  buffer += pad;							      \
+  buflen = buflen > pad ? buflen - pad : 0;				      \
+									      \
   __libc_lock_lock (lock);						      \
 									      \
   /* Reset file pointer to beginning or open file.  */			      \
@@ -122,7 +127,8 @@ _nss_files_get##name##_r (proto,					      \
 	{								      \
 	  /* We have to get all host entries from the file.  */		      \
 	  const size_t tmp_buflen = MIN (buflen, 4096);			      \
-	  char tmp_buffer[tmp_buflen];					      \
+	  char tmp_buffer[tmp_buflen]					      \
+	    __attribute__ ((__aligned__ (__alignof__ (struct hostent_data))));\
 	  struct hostent tmp_result_buf;				      \
 	  int naddrs = 1;						      \
 	  int naliases = 0;						      \
