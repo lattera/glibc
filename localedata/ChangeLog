@@ -1,3 +1,9 @@
+2007-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4411]
+	* locales/en_ZA: Update int_select.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
 2007-03-07  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* Makefile: Define tst-sscanf-ENV.

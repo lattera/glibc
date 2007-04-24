@@ -8,8 +8,8 @@ comment_char  %
 % Fax: +27 12 3430389
 % Language: en
 % Territory: ZA
-% Revision: 1.2.1
-% Date: 2005-10-13
+% Revision: 1.3
+% Date: 2007-04-19
 % Users: general
 % Repertoiremap: mnemonic,ds
 % Charset: ISO-8859-1
@@ -17,6 +17,9 @@ comment_char  %
 % for commercial purposes.
 %
 % Changelog
+% 1.3 (2007-04-19):
+%     2007-04-19 Dwayne Bailey <dwayne@translate.org.za>
+%       - Change int_select from 09 to 00
 % 1.2.1 (2005-10-13):
 %     2005-10-12 Dwayne Bailey <dwayne@translate.org.za>
 %       - Update contact information
@@ -55,8 +58,8 @@ territory  "South Africa"
 % audience     ""
 % application  ""
 abbreviation "Translate.org.za"
-revision   "1.2.1"
-date       "2005-10-13"
+revision   "1.3"
+date       "2007-04-19"
 %
 category  "en_ZA:2003";LC_IDENTIFICATION
 category  "en_ZA:2000";LC_CTYPE
@@ -235,8 +238,8 @@ tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
 
 % Prefix for making international calls
-% "09"
-int_select     "<U0030><U0039>"
+% "00"
+int_select     "<U0030><U0030>"
 
 % International dialing code
 % "27"
