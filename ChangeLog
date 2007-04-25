@@ -1,3 +1,9 @@
+2007-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4406]
+	* iconv/gconv_charset.h (strip): Allow ':'
+	* iconv/iconv_open.c (iconv_open): Adjust comment.
+
 2007-04-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/bits/stdio.h (fgetc_unlocked): Add extern inline optimized
