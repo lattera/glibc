@@ -1,3 +1,8 @@
+2007-04-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/bits/stdio.h (fgetc_unlocked): Add extern inline optimized
+	version.
+
 2007-04-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4381]

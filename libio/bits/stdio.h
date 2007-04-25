@@ -44,6 +44,16 @@ getchar (void)
 }
 
 
+# ifdef __USE_MISC
+/* Faster version when locking is not necessary.  */
+__STDIO_INLINE int
+fgetc_unlocked (FILE *__fp)
+{
+  return _IO_getc_unlocked (__fp);
+}
+# endif /* misc */
+
+
 # if defined __USE_POSIX || defined __USE_MISC
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
