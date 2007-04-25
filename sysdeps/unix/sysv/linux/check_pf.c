@@ -226,7 +226,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 out_fail:
   if (use_malloc)
     free (buf);
-  return 0;
+  return -1;
 }
 
 
