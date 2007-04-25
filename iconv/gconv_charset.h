@@ -1,5 +1,5 @@
 /* Charset name normalization.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003,2004,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -30,7 +30,7 @@ strip (char *wp, const char *s)
   while (*s != '\0')
     {
       if (__isalnum_l (*s, _nl_C_locobj_ptr)
-	  || *s == '_' || *s == '-' || *s == '.' || *s == ',')
+	  || *s == '_' || *s == '-' || *s == '.' || *s == ',' || *s == ':')
 	*wp++ = __toupper_l (*s, _nl_C_locobj_ptr);
       else if (*s == '/')
 	{
