@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ typedef union dtv
 
 typedef struct
 {
-  void *tcb;		/* Pointer to the TCB.  Not necessary the
+  void *tcb;		/* Pointer to the TCB.  Not necessarily the
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
@@ -50,6 +50,7 @@ typedef struct
   uintptr_t sysinfo;
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
+  unsigned long int vgetcpu_cache[2];
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
