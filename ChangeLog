@@ -665,7 +665,7 @@
 	* io/ftw.c (ftw_startup): Handle special case of FTW_CHDIR in /.
 	(open_dir_stream): Likewise.
 	* io/Makefile (tests): Add bug-ftw5.
-	io/bug-ftw5.c: New file.
+	* io/bug-ftw5.c: New file.
 
 	* nscd/hstcache.c (cache_addhst): Remove unnecessary conditional.
 	* nscd/servicescache.c (cache_addserv): Likewise.
