@@ -127,7 +127,7 @@ libc {
     splice; tee; vmsplice;
   }
   GLIBC_2.6 {
-    epoll_pwait; sync_file_range;
+    epoll_pwait; sync_file_range; sched_getcpu;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

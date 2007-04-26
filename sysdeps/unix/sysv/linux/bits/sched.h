@@ -77,6 +77,9 @@ extern int clone (int (*__fn) (void *__arg), void *__child_stack,
 
 /* Unshare the specified resources.  */
 extern int unshare (int __flags) __THROW;
+
+/* Get index of currently used CPU.  */
+extern int sched_getcpu (void) __THROW;
 #endif
 
 __END_DECLS
