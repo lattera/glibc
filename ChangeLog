@@ -5,6 +5,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: New file.
 	* sysdeps/unix/sysv/linux/Versions: Export sched_getcpu for
 	GLIBC_2.6.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=posix] (sysdep_routines):
+	Add sched_getcpu.
 
 2007-04-25  Jakub Jelinek  <jakub@redhat.com>
 

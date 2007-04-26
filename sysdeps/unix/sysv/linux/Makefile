@@ -112,7 +112,7 @@ endif
 ifeq ($(subdir),posix)
 sysdep_headers += bits/initspin.h
 
-sysdep_routines += exit-thread
+sysdep_routines += exit-thread sched_getcpu
 endif
 
 ifeq ($(subdir),inet)
