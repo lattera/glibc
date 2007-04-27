@@ -2028,10 +2028,9 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
-	     prefix or no exponent this is an error.  */
+	     prefix this is an error.  */
 	  if (__builtin_expect (wpsize == 0
-				|| ((flags & HEXA_FLOAT)
-				    && (wpsize == 2 || ! got_e)), 0))
+				|| ((flags & HEXA_FLOAT) && wpsize == 2), 0))
 	    conv_error ();
 
 	scan_float:
