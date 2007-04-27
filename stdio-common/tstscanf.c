@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,1996-2001,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -272,7 +272,7 @@ main (int argc, char **argv)
     res = sscanf ("0x1234", "%lf", &d);
     printf ("res = %d, d = %f\n", res, d);
 
-    if (res != 0 || d != 123456.789)
+    if (res != 1 || d != 4660)
       {
 	fputs ("test failed!\n", stdout);
 	result = 1;

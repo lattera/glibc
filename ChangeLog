@@ -1,3 +1,10 @@
+2007-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4342]
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Allow
+	hexa-decimal floats without exponent.
+	* stdio-common/tstscanf.c (main): Adjust Test 8 test for success.
+
 2007-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Declare sched_getcpu.
@@ -16,7 +23,7 @@
 2007-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4406]
-	* iconv/gconv_charset.h (strip): Allow ':'
+	* iconv/gconv_charset.h (strip): Allow ':'.
 	* iconv/iconv_open.c (iconv_open): Adjust comment.
 
 2007-04-25  Jakub Jelinek  <jakub@redhat.com>
