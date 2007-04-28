@@ -3132,7 +3132,7 @@ error while adding equivalent collating symbol"));
 	      break;
 	    }
 
-	  if (state != 0 && state != 1)
+	  if (state != 0 && state != 1 && state != 2)
 	    goto err_label;
 	  state = 1;
 

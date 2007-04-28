@@ -63,7 +63,7 @@ END LC_CTYPE
 
 % ISO 14651 collation sequence
 LC_COLLATE
-copy "iso14651_t1"
+copy "iso14651_t1_pinyin"
 END LC_COLLATE
 
 

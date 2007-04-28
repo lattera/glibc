@@ -1,0 +1,2424 @@
+LC_COLLATE
+
+# This is a special copy of iso14651_t1 file; because glibc 2.3 has some
+# limitations, it can't yet include a whole new alphabet ordering from
+# the definition of a locale (or I don't know how to do...)
+# This is only still necessary for Armenian (unicode has a wrong ordering)
+
+# IMPROVEMENTS:
+#
+# 1. converted to UTF-8 (for comments)
+# 2. added Armenian script block, with proper sorting
+# 3. added Tifinagh script block
+# 4. added a whole lot of Latin script letters, so they are "properly"
+#    sorted (not at random positions before "0" or after "z", but, for
+#    example, "e with dot below" sorted as "e", etc.
+# 5. added definitions of extra latin diacritics; otherwise it is not possible
+#    to differentiate enough, for example "d caron" vs "d caron below"
+#    those extra diacritics are:
+#    <HOK> # hook above (vietnamese tone mark)
+#    <DGR> # double grave
+#    <IBR> # inverted breve
+#    <BPT> # dot below (vietnamese tone mark)
+#    <BRU> # diaeresis below
+#    <BRN> # ring below
+#    <BCI> # circumflex below
+#    <BTI> # tilde below
+#    <BBR> # breve below
+#    <BMA> # macron below
+#    <CRL> # curled letter/letter with hook
+# 6. when a character has two diacritics the second one is referenced too, eg:
+#    <U1EA5> <a>;<CIR>;<MIN>;<ACA> # ấ (a with circumflex and acute)
+#    <U1EA9> <a>;<CIR>;<MIN>;<HOK> # ẩ (a with circumflex and hook)
+#                ^1st^       ^2nd^
+#    that allows differenciating between those two, but also, they get
+#    sorted along with "a circumflex", which is nicer.
+# 7. digraphs (as opposed to ligatures) are made synonyms of their
+#    base letters (encoding digraphs is considered obsolete unicode behaviour
+#    anyway); that is, the composing parts are "<BAS>" (or whatever diacritic
+#    there may be) and not "<LIG>"; compare "ae", a ligature:
+#    <U00E6> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 230 æ
+#    with "ij", a digraph:
+#    <U0133> "<i><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE # 329 <ij>
+#    that means that "<a><e>" won't be seen as a synonym of "<ae>", but that
+#    "<i><j>" will be a synonym of "<ij>"
+# 8. t/s with cedilla and t/s with comma below are made synonyms
+# 9. added various new cyrillic letters
+# 10. put <PCL> and <LIG> after all diacritics (as that often is used for
+#     chars that change more)
+#
+# 2005-11-29, Pablo Saratxaga <pablo@mandriva.com>
+
+# Déclaration des systèmes d'écriture / Declaration of scripts
+script <SPECIAL>
+script <LATIN>
+script <TIFINAGH>
+script <ARABINT>
+script <ARABFOR>
+script <HEBREU>
+script <GREC>
+script <CYRIL>
+script <ARMENIAN>
+
+# Déclaration des symboles internes / Declaration of internal symbols
+#
+# SYMB N° Expl.
+#
+collating-symbol <RES-1>
+#
+# <ARABINT>/<ARABFOR>
+#
+#
+collating-symbol <ANO> # 2 normal --> voir/see <MIN>
+collating-symbol <AIS> # 3 isol.
+collating-symbol <AFI> # 4 final
+collating-symbol <AII> # 5 initial
+collating-symbol <AME> # 6 medial/m<e'>dian
+#
+collating-symbol <MIN> # 7 minuscule/minuscule (bas de casse/lower case)
+collating-symbol <IMI> # 8 inférieur min./subscript min. (indice/index)
+collating-symbol <EMI> # 9 supér. min./superscript min. (exposant/exponent)
+collating-symbol <CAP> # 10 capitale/capital (haut de casse/upper case)
+collating-symbol <AMI> # 8 minuscule grecque/Greek lower case
+collating-symbol <ICA> # 11 inférieur en capitale/subscript capital
+collating-symbol <ECA> # 12 supérieur en capitale/superscript capital
+#
+# <ARABINT>/<ARABFOR>
+#
+collating-symbol <AMA> # 13 accent madda
+collating-symbol <AHA> # 14 accent hamza
+collating-symbol <AHW> # 14-1 accent hamza/waw
+collating-symbol <AHS> # 14-2 accent hamza under / hamza souscrit
+collating-symbol <AYE> # 14-3 accent under yeh / accent souscrit du ya'
+collating-symbol <YBA> # 14-4 accent hamza/yeh barree
+#
+collating-symbol <BAS> # 15 de base/basic (non accentué/non-accented)
+#
+collating-symbol <PCL> # 16 particulier/peculiar
+collating-symbol <LIG> # 17 ligature/ligature
+collating-symbol <ACA> # 18 accent aigu/acute accent
+collating-symbol <GRA> # 20 accent grave/grave accent
+collating-symbol <BRE> # 21 brève/breve
+collating-symbol <CIR> # 22 accent circonflexe/circumflex accent
+collating-symbol <CAR> # 23 caron/caron
+collating-symbol <RNE> # 24 rond supérieur/ring above
+collating-symbol <REU> # 25 tréma/diaeresis (ou/or umlaut)
+collating-symbol <DAC> # 26 double ac. aigu/double acute ac.
+collating-symbol <TIL> # 27 tilde/tilde
+collating-symbol <PCT> # 28 point/dot
+collating-symbol <OBL> # 29 barre oblique/oblique
+collating-symbol <CDI> # 30 cédille/cedilla
+collating-symbol <OGO> # 31 ogonek/ogonek
+collating-symbol <MAC> # 32 macron/macron
+# extra diacritics
+collating-symbol <HOK> # hook above (vietnamese tone mark)
+collating-symbol <DGR> # double grave
+collating-symbol <IBR> # inverted breve
+collating-symbol <BPT> # dot below (vietnamese tone mark)
+collating-symbol <BRU> # diaeresis below
+collating-symbol <BRN> # ring below
+collating-symbol <BCI> # circumflex below
+collating-symbol <BBR> # breve below
+collating-symbol <BTI> # tilde below
+collating-symbol <BMA> # macron below
+collating-symbol <CRL> # curled letter/letter with hook
+#
+# GREC
+#
+collating-symbol <TNS> # accent aigu/tonos/acute accent
+collating-symbol <DLT> # tr<e'>ma/dialytica/diaeresis
+collating-symbol <DTT> # dialytika tonos
+#
+collating-symbol <0>
+collating-symbol <1>
+collating-symbol <2>
+collating-symbol <3>
+collating-symbol <4>
+collating-symbol <5>
+collating-symbol <6>
+collating-symbol <7>
+collating-symbol <8>
+collating-symbol <9>
+#
+collating-symbol <a>
+collating-symbol <b>
+collating-symbol <c>
+collating-symbol <d>
+collating-symbol <e>
+collating-symbol <f>
+collating-symbol <g>
+collating-symbol <h>
+collating-symbol <i>
+collating-symbol <j>
+collating-symbol <k>
+collating-symbol <l>
+collating-symbol <m>
+collating-symbol <n>
+collating-symbol <o>
+collating-symbol <p>
+collating-symbol <q>
+collating-symbol <r>
+collating-symbol <s>
+collating-symbol <t>
+collating-symbol <u>
+collating-symbol <v>
+collating-symbol <w>
+collating-symbol <x>
+collating-symbol <y>
+collating-symbol <z>
+collating-symbol <th>
+collating-symbol <zh>
+#
+# <TIFINAGH>
+#
+collating-symbol <TIF-A>
+collating-symbol <TIF-B>
+collating-symbol <TIF-BH>
+collating-symbol <TIF-G>
+collating-symbol <TIF-GHH>
+collating-symbol <TIF-DJ>
+collating-symbol <TIF-DJ2>
+collating-symbol <TIF-D>
+collating-symbol <TIF-DH>
+collating-symbol <TIF-DD>
+collating-symbol <TIF-DDH>
+collating-symbol <TIF-E>
+collating-symbol <TIF-F>
+collating-symbol <TIF-K>
+collating-symbol <TIF-K2>
+collating-symbol <TIF-KHH>
+collating-symbol <TIF-H>
+collating-symbol <TIF-H2>
+collating-symbol <TIF-H3>
+collating-symbol <TIF-HH>
+collating-symbol <TIF-AA>
+collating-symbol <TIF-X>
+collating-symbol <TIF-X2>
+collating-symbol <TIF-Q>
+collating-symbol <TIF-Q2>
+collating-symbol <TIF-I>
+collating-symbol <TIF-J>
+collating-symbol <TIF-J2>
+collating-symbol <TIF-J3>
+collating-symbol <TIF-L>
+collating-symbol <TIF-M>
+collating-symbol <TIF-N>
+collating-symbol <TIF-GN>
+collating-symbol <TIF-NG>
+collating-symbol <TIF-P>
+collating-symbol <TIF-U>
+collating-symbol <TIF-R>
+collating-symbol <TIF-RR>
+collating-symbol <TIF-GH>
+collating-symbol <TIF-GH2>
+collating-symbol <TIF-GH3>
+collating-symbol <TIF-S>
+collating-symbol <TIF-SS>
+collating-symbol <TIF-C>
+collating-symbol <TIF-T>
+collating-symbol <TIF-TH>
+collating-symbol <TIF-TC>
+collating-symbol <TIF-TT>
+collating-symbol <TIF-V>
+collating-symbol <TIF-W>
+collating-symbol <TIF-Y>
+collating-symbol <TIF-Z>
+collating-symbol <TIF-Z2>
+collating-symbol <TIF-ZZ>
+collating-symbol <TIF-LMW>
+#
+# <ARABINT>/<ARABFOR>
+#
+collating-symbol <hamza>
+collating-symbol <alef>
+collating-symbol <beh>
+collating-symbol <peh>
+collating-symbol <teh_marbuta>
+collating-symbol <teh>
+collating-symbol <tteh>
+collating-symbol <theh>
+collating-symbol <jeem>
+collating-symbol <tcheh>
+collating-symbol <hah>
+collating-symbol <khah>
+collating-symbol <dal>
+collating-symbol <ddal>
+collating-symbol <thal>
+collating-symbol <reh>
+collating-symbol <rreh>
+collating-symbol <zain>
+collating-symbol <jeh>
+collating-symbol <seen>
+collating-symbol <sheen>
+collating-symbol <sad>
+collating-symbol <dad>
+collating-symbol <tah>
+collating-symbol <zah>
+collating-symbol <ain>
+collating-symbol <ghain>
+collating-symbol <feh>
+collating-symbol <qaf>
+collating-symbol <kaf>
+collating-symbol <keheh>
+collating-symbol <gaf>
+collating-symbol <lam>
+collating-symbol <meem>
+collating-symbol <noon>
+collating-symbol <noon_ghunna>
+collating-symbol <heh>
+collating-symbol <heh_yeh>
+collating-symbol <waw>
+collating-symbol <alef_maksura>
+collating-symbol <yeh_barree>
+#
+# <HEBREU>
+#
+collating-symbol <alef_heb>
+collating-symbol <bet>
+collating-symbol <gimel>
+collating-symbol <dalet>
+collating-symbol <he>
+collating-symbol <vav>
+collating-symbol <zayin>
+collating-symbol <het>
+collating-symbol <tet>
+collating-symbol <yod>
+collating-symbol <kaf_fin>
+collating-symbol <kaf_heb>
+collating-symbol <lamed>
+collating-symbol <mem_fin>
+collating-symbol <mem>
+collating-symbol <nun_fin>
+collating-symbol <nun>
+collating-symbol <samekh>
+collating-symbol <ayin>
+collating-symbol <pe_fin>
+collating-symbol <pe>
+collating-symbol <tsadi_fin>
+collating-symbol <tsadi>
+collating-symbol <qof>
+collating-symbol <resh>
+collating-symbol <shin>
+collating-symbol <tav>
+#
+# GREC
+#
+collating-symbol <ALPHA>
+collating-symbol <BETA>
+collating-symbol <GAMMA>
+collating-symbol <DELTA>
+collating-symbol <EPSILON>
+collating-symbol <ZETA>
+collating-symbol <ETA>
+collating-symbol <THETA>
+collating-symbol <IOTA>
+collating-symbol <KAPPA>
+collating-symbol <LAMBDA>
+collating-symbol <MU>
+collating-symbol <NU>
+collating-symbol <XI>
+collating-symbol <OMICRON>
+collating-symbol <PI>
+collating-symbol <RHO>
+collating-symbol <SIGMA>
+collating-symbol <TAU>
+collating-symbol <UPSILON>
+collating-symbol <PHI>
+collating-symbol <CHI>
+collating-symbol <PSI>
+collating-symbol <OMEGA>
+#
+# CYRIL
+#
+collating-symbol <CYR-A>
+collating-symbol <CYR-BE>
+collating-symbol <CYR-VE>
+collating-symbol <CYR-GHE>
+collating-symbol <CYR-DE>
+collating-symbol <CYR-GZHE>
+collating-symbol <CYR-DJE>
+collating-symbol <CYR-IE>
+collating-symbol <UKR-IE>
+collating-symbol <CYR-IO>
+collating-symbol <CYR-ZHE>
+collating-symbol <CYR-ZE>
+collating-symbol <CYR-DZE>
+collating-symbol <CYR-I>
+collating-symbol <UKR-I>
+collating-symbol <UKR-YI>
+collating-symbol <CYR-IBRE>
+collating-symbol <CYR-JE>
+collating-symbol <CYR-KA>
+collating-symbol <CYR-EL>
+collating-symbol <CYR-LJE>
+collating-symbol <CYR-EM>
+collating-symbol <CYR-EN>
+collating-symbol <CYR-NJE>
+collating-symbol <CYR-O>
+collating-symbol <CYR-PE>
+collating-symbol <CYR-ER>
+collating-symbol <CYR-ES>
+collating-symbol <CYR-TE>
+collating-symbol <CYR-KJE>
+collating-symbol <CYR-TSHE>
+collating-symbol <CYR-OU>
+collating-symbol <CYR-OUBRE>
+collating-symbol <CYR-EF>
+collating-symbol <CYR-HA>
+collating-symbol <CYR-TSE>
+collating-symbol <CYR-CHE>
+collating-symbol <CYR-DCHE>
+collating-symbol <CYR-SHA>
+collating-symbol <CYR-SHTSHA>
+collating-symbol <CYR-SIGDUR>
+collating-symbol <CYR-YEROU>
+collating-symbol <CYR-SIGMOUIL>
+collating-symbol <CYR-E>
+collating-symbol <CYR-YOU>
+collating-symbol <CYR-YA>
+#
+# ARMENIAN
+#
+collating-symbol <ARM-AYB>
+collating-symbol <ARM-BEN>
+collating-symbol <ARM-GIM>
+collating-symbol <ARM-DA>
+collating-symbol <ARM-ECH>
+collating-symbol <ARM-ZA>
+collating-symbol <ARM-E>
+collating-symbol <ARM-AT>
+collating-symbol <ARM-TO>
+collating-symbol <ARM-ZHE>
+collating-symbol <ARM-INI>
+collating-symbol <ARM-LYUN>
+collating-symbol <ARM-KHE>
+collating-symbol <ARM-TSA>
+collating-symbol <ARM-KEN>
+collating-symbol <ARM-HO>
+collating-symbol <ARM-DZA>
+collating-symbol <ARM-GHAT>
+collating-symbol <ARM-TCHE>
+collating-symbol <ARM-MEN>
+collating-symbol <ARM-HI>
+collating-symbol <ARM-NU>
+collating-symbol <ARM-SHA>
+collating-symbol <ARM-VO>
+collating-symbol <ARM-CHA>
+collating-symbol <ARM-PE>
+collating-symbol <ARM-JE>
+collating-symbol <ARM-RA>
+collating-symbol <ARM-SE>
+collating-symbol <ARM-VEV>
+collating-symbol <ARM-TYUN>
+collating-symbol <ARM-RE>
+collating-symbol <ARM-TSO>
+collating-symbol <ARM-VYUN>
+collating-symbol <ARM-PYUR>
+collating-symbol <ARM-KE>
+collating-symbol <ARM-O>
+collating-symbol <ARM-FE>
+
+# Ordre des symboles internes / Order of internal symbols
+#
+# SYMB. N°
+#
+<RES-1>
+<MIN>
+# forme de base (bas de casse, arabe intrinsèque,
+# hébreu intrinsèque, etc.
+# basic form (lower case, intrinsic Arabic
+# intrinsic Hebrew and so on)
+#
+# <ARABINT>/<ARABFOR>
+#
+#
+<ANO> # voir
+<AIS> # isol.
+# 3
+<AFI> # final
+# 4
+<AII> # initial
+# 5
+<AME> # medial/m<e'>dian
+# 6
+#
+<IMI> # 7
+<EMI> # 8
+<CAP> # 9
+<ICA> # 10
+<ECA> # 11
+<AMI>
+#alternate lower case/
+# 12
+#
+#minuscules spéciales après majuscules
+# <ARABINT>/<ARABFOR>
+#
+<AMA> # accent madda #13
+<AHA> # accent hamza #14
+<AHW> # accent hamza/waw #14 1
+<AHS> # accent hamza under / hamza souscrit #14 2
+<AYE> # accent under yeh / accent souscrit du ya' #14 3
+<YBA> # accent hamza/yeh barree #14 4
+#
+<BAS> # 15
+#
+<ACA> # 18
+<GRA> # 19
+<BRE> # 20
+<CIR> # 21
+<CAR> # 22
+<RNE> # 23
+<REU> # 24
+<DAC> # 25
+<TIL> # 26
+<PCT> # 27
+<OBL> # 28
+<CDI> # 29
+<OGO> # 30
+<MAC> # 31
+# extra diacritics
+<HOK> # hook above (vietnamese tone mark)
+<DGR> # double grave
+<IBR> # inverted breve
+<BPT> # dot below (vietnamese tone mark)
+<BRU> # diaeresis below
+<BRN> # ring below
+<BCI> # circumflex below
+<BBR> # breve below
+<BTI> # tilde below
+<BMA> # macron below
+<CRL> # curled letter/letter with hook
+# changed <PCL> and <LIG> to come after diacritics
+<PCL> # 16
+<LIG> # 17
+#
+# GREC
+#
+<TNS> # accent aigu/tonos/acute accent
+<DLT> # tr<e'>ma/dialytica/diaeresis
+<DTT> # dialytika tonos
+#
+<0> # 48
+<1> # 49
+<2> # 50
+<3> # 51
+<4> # 52
+<5> # 53
+<6> # 54
+<7> # 55
+<8> # 56
+<9> # 57
+#
+<a> # 97
+<b> # 98
+<c> # 99
+<d> # 100
+<e> # 101
+<f> # 102
+<g> # 103
+<h> # 104
+<i> # 105
+<j> # 106
+<k> # 107
+<l> # 108
+<m> # 109
+<n> # 110
+<o> # 111
+<p> # 112
+<q> # 113
+<r> # 114
+<s> # 115
+<t> # 116
+<u> # 117
+<v> # 118
+<w> # 119
+<x> # 120
+<y> # 121
+<z> # 122
+<th># 122b
+<zh># 122c
+#
+# <TIFINAGH>
+#
+<TIF-A>
+<TIF-B>
+<TIF-BH>
+<TIF-G>
+<TIF-GHH>
+<TIF-DJ>
+<TIF-DJ2>
+<TIF-D>
+<TIF-DH>
+<TIF-DD>
+<TIF-DDH>
+<TIF-E>
+<TIF-F>
+<TIF-K>
+<TIF-K2>
+<TIF-KHH>
+<TIF-H>
+<TIF-H2>
+<TIF-H3>
+<TIF-HH>
+<TIF-AA>
+<TIF-X>
+<TIF-X2>
+<TIF-Q>
+<TIF-Q2>
+<TIF-I>
+<TIF-J>
+<TIF-J2>
+<TIF-J3>
+<TIF-L>
+<TIF-M>
+<TIF-N>
+<TIF-GN>
+<TIF-NG>
+<TIF-P>
+<TIF-U>
+<TIF-R>
+<TIF-RR>
+<TIF-GH>
+<TIF-GH2>
+<TIF-GH3>
+<TIF-S>
+<TIF-SS>
+<TIF-C>
+<TIF-T>
+<TIF-TH>
+<TIF-TC>
+<TIF-TT>
+<TIF-V>
+<TIF-W>
+<TIF-Y>
+<TIF-Z>
+<TIF-Z2>
+<TIF-ZZ>
+<TIF-LMW>
+#
+# <ARABINT>/<ARABFOR>
+#
+<hamza>
+<alef>
+<beh>
+<peh>
+<teh_marbuta>
+<teh>
+<tteh>
+<theh>
+<jeem>
+<tcheh>
+<hah>
+<khah>
+<dal>
+<ddal>
+<thal>
+<reh>
+<rreh>
+<zain>
+<jeh>
+<seen>
+<sheen>
+<sad>
+<dad>
+<tah>
+<zah>
+<ain>
+<ghain>
+<feh>
+<qaf>
+<kaf>
+<keheh>
+<gaf>
+<lam>
+<meem>
+<noon>
+<noon_ghunna>
+<heh>
+<heh_yeh>
+<waw>
+<alef_maksura>
+<yeh_barree>
+#
+# <HEBREU>
+#
+<alef_heb>
+<bet>
+<gimel>
+<dalet>
+<he>
+<vav>
+<zayin>
+<het>
+<tet>
+<yod>
+<kaf_fin>
+<kaf_heb>
+<lamed>
+<mem_fin>
+<mem>
+<nun_fin>
+<nun>
+<samekh>
+<ayin>
+<pe_fin>
+<pe>
+<tsadi_fin>
+<tsadi>
+<qof>
+<resh>
+<shin>
+<tav>
+#
+#GREC
+#
+<ALPHA>
+<BETA>
+<GAMMA>
+<DELTA>
+<EPSILON>
+<ZETA>
+<ETA>
+<THETA>
+<IOTA>
+<KAPPA>
+<LAMBDA>
+<MU>
+<NU>
+<XI>
+<OMICRON>
+<PI>
+<RHO>
+<SIGMA>
+<TAU>
+<UPSILON>
+<PHI>
+<CHI>
+<PSI>
+<OMEGA>
+#
+#CYRIL
+#
+<CYR-A>
+<CYR-BE>
+<CYR-VE>
+<CYR-GHE>
+<CYR-DE>
+<CYR-GZHE>
+<CYR-DJE>
+<CYR-IE>
+<UKR-IE>
+<CYR-IO>
+<CYR-ZHE>
+<CYR-ZE>
+<CYR-DZE>
+<CYR-I>
+<UKR-I>
+<UKR-YI>
+<CYR-IBRE>
+<CYR-JE>
+<CYR-KA>
+<CYR-EL>
+<CYR-LJE>
+<CYR-EM>
+<CYR-EN>
+<CYR-NJE>
+<CYR-O>
+<CYR-PE>
+<CYR-ER>
+<CYR-ES>
+<CYR-TE>
+<CYR-KJE>
+<CYR-TSHE>
+<CYR-OU>
+<CYR-OUBRE>
+<CYR-EF>
+<CYR-HA>
+<CYR-TSE>
+<CYR-CHE>
+<CYR-DCHE>
+<CYR-SHA>
+<CYR-SHTSHA>
+<CYR-SIGDUR>
+<CYR-YEROU>
+<CYR-SIGMOUIL>
+<CYR-E>
+<CYR-YOU>
+<CYR-YA>
+#
+# ARMENIAN
+#
+<ARM-AYB>
+<ARM-BEN>
+<ARM-GIM>
+<ARM-DA>
+<ARM-ECH>
+<ARM-ZA>
+<ARM-E>
+<ARM-AT>
+<ARM-TO>
+<ARM-ZHE>
+<ARM-INI>
+<ARM-LYUN>
+<ARM-KHE>
+<ARM-TSA>
+<ARM-KEN>
+<ARM-HO>
+<ARM-DZA>
+<ARM-GHAT>
+<ARM-TCHE>
+<ARM-MEN>
+<ARM-HI>
+<ARM-NU>
+<ARM-SHA>
+<ARM-VO>
+<ARM-CHA>
+<ARM-PE>
+<ARM-JE>
+<ARM-RA>
+<ARM-SE>
+<ARM-VEV>
+<ARM-TYUN>
+<ARM-RE>
+<ARM-TSO>
+<ARM-VYUN>
+<ARM-PYUR>
+<ARM-KE>
+<ARM-O>
+<ARM-FE>
+
+order_start <SPECIAL>;forward;backward;forward;forward,position
+#
+# Tout caractère non précisément défini sera considéré comme caractère spécial
+# et considéré uniquement au dernier niveau.
+#
+# Any character not precisely specified will be considered as a special
+# character and considered only at the last level.
+# <U0000>......<U7FFFFFFF> IGNORE;IGNORE;IGNORE;<U0000>......<U7FFFFFFF>
+#
+# SYMB.                                N° GLY
+#
+<U0020> IGNORE;IGNORE;IGNORE;<U0020> # 32 <SP>
+<U005F> IGNORE;IGNORE;IGNORE;<U005F> # 33 _
+<U0332> IGNORE;IGNORE;IGNORE;<U0332> # 34 <"_>
+<U00AF> IGNORE;IGNORE;IGNORE;<U00AF> # 35 - (MACRON)
+<U00AD> IGNORE;IGNORE;IGNORE;<U00AD> # 36 <SHY>
+<U002D> IGNORE;IGNORE;IGNORE;<U002D> # 37 -
+<U002C> IGNORE;IGNORE;IGNORE;<U002C> # 38 ,
+<U003B> IGNORE;IGNORE;IGNORE;<U003B> # 39 ;
+<U003A> IGNORE;IGNORE;IGNORE;<U003A> # 40 :
+<U0021> IGNORE;IGNORE;IGNORE;<U0021> # 41 !
+<U00A1> IGNORE;IGNORE;IGNORE;<U00A1> # 42 ¡
+<U003F> IGNORE;IGNORE;IGNORE;<U003F> # 43 ?
+<U00BF> IGNORE;IGNORE;IGNORE;<U00BF> # 44 ¿
+<U002F> IGNORE;IGNORE;IGNORE;<U002F> # 45 /
+<U0338> IGNORE;IGNORE;IGNORE;<U0338> # 46 <"/>
+<U002E> IGNORE;IGNORE;IGNORE;<U002E> # 47 .
+<U00B7> IGNORE;IGNORE;IGNORE;<U00B7> # 58 ×
+<U00B8> IGNORE;IGNORE;IGNORE;<U00B8> # 59 ¸
+<U0328> IGNORE;IGNORE;IGNORE;<U0328> # 60 <";>
+<U0027> IGNORE;IGNORE;IGNORE;<U0027> # 61 '
+<U2018> IGNORE;IGNORE;IGNORE;<U2018> # 62 <'6>
+<U2019> IGNORE;IGNORE;IGNORE;<U2019> # 63 <'9>
+<U0022> IGNORE;IGNORE;IGNORE;<U0022> # 64 "
+<U201C> IGNORE;IGNORE;IGNORE;<U201C> # 65 <"6>
+<U201D> IGNORE;IGNORE;IGNORE;<U201D> # 66 <"9>
+<U00AB> IGNORE;IGNORE;IGNORE;<U00AB> # 67 «
+<U00BB> IGNORE;IGNORE;IGNORE;<U00BB> # 68 »
+<U0028> IGNORE;IGNORE;IGNORE;<U0028> # 69 (
+<U207D> IGNORE;IGNORE;IGNORE;<U207d> # 70 <(S>
+<U0029> IGNORE;IGNORE;IGNORE;<U0029> # 71 )
+<U207E> IGNORE;IGNORE;IGNORE;<U207E> # 72 <)S>
+<U005B> IGNORE;IGNORE;IGNORE;<U005B> # 73 [
+<U005D> IGNORE;IGNORE;IGNORE;<U005D> # 74 ]
+<U007B> IGNORE;IGNORE;IGNORE;<U007B> # 75 {
+<U007D> IGNORE;IGNORE;IGNORE;<U007D> # 76 }
+<U00A7> IGNORE;IGNORE;IGNORE;<U00A7> # 77 §
+<U00B6> IGNORE;IGNORE;IGNORE;<U00B6> # 78 ¶
+<U00A9> IGNORE;IGNORE;IGNORE;<U00A9> # 79 ©
+<U00AE> IGNORE;IGNORE;IGNORE;<U00AE> # 80 ®
+<U2122> IGNORE;IGNORE;IGNORE;<U2122> # 81 <TM>
+<U0040> IGNORE;IGNORE;IGNORE;<U0040> # 82 @
+<U00A4> IGNORE;IGNORE;IGNORE;<U00A4> # 83 ¤
+<U00A2> IGNORE;IGNORE;IGNORE;<U00A2> # 84 ¢
+<U0024> IGNORE;IGNORE;IGNORE;<U0024> # 85 $
+<U00A3> IGNORE;IGNORE;IGNORE;<U00A3> # 86 £
+<U00A5> IGNORE;IGNORE;IGNORE;<U00A5> # 87 ¥
+<U20A0> IGNORE;IGNORE;IGNORE;<U20A0> # ecu
+<U20A1> IGNORE;IGNORE;IGNORE;<U20A1> # colon
+<U20A2> IGNORE;IGNORE;IGNORE;<U20A2> # cruzeiro
+<U20A3> IGNORE;IGNORE;IGNORE;<U20A3> # french franc
+<U20A4> IGNORE;IGNORE;IGNORE;<U20A4> # lira
+<U20A5> IGNORE;IGNORE;IGNORE;<U20A5> # mill
+<U20A6> IGNORE;IGNORE;IGNORE;<U20A6> # naira
+<U20A7> IGNORE;IGNORE;IGNORE;<U20A7> # peseta
+<U20A8> IGNORE;IGNORE;IGNORE;<U20A8> # rupee
+<U20A9> IGNORE;IGNORE;IGNORE;<U20A9> # won
+<U20AA> IGNORE;IGNORE;IGNORE;<U20AA> # new sheqel
+<U20AB> IGNORE;IGNORE;IGNORE;<U20AB> # dong
+<U20AC> IGNORE;IGNORE;IGNORE;<U20AC> # euro
+<U20AD> IGNORE;IGNORE;IGNORE;<U20AD> # kip
+<U20AE> IGNORE;IGNORE;IGNORE;<U20AE> # tugrik
+<U20AF> IGNORE;IGNORE;IGNORE;<U20AF> # drachma
+<U002A> IGNORE;IGNORE;IGNORE;<U002A> # 88 *
+<U005C> IGNORE;IGNORE;IGNORE;<U005C> # 89
+<U0026> IGNORE;IGNORE;IGNORE;<U0026> # 90 &
+<U0023> IGNORE;IGNORE;IGNORE;<U0023> # 91 #
+<U0025> IGNORE;IGNORE;IGNORE;<U0025> # 92 %
+<U207B> IGNORE;IGNORE;IGNORE;<U207D> # 93 <-S>
+<U002B> IGNORE;IGNORE;IGNORE;<U002B> # 94 +
+<U207A> IGNORE;IGNORE;IGNORE;<U207E> # 95 <+S>
+<U00B1> IGNORE;IGNORE;IGNORE;<U00B1> # 96 ±
+<U00B4> IGNORE;IGNORE;IGNORE;<0> # 123 ´
+<U0060> IGNORE;IGNORE;IGNORE;<1> # 124 `
+<U0306> IGNORE;IGNORE;IGNORE;<2> # 125 <"(>
+<U005E> IGNORE;IGNORE;IGNORE;<3> # 126 ^
+<U030C> IGNORE;IGNORE;IGNORE;<4> # 127 <"<>
+<U030A> IGNORE;IGNORE;IGNORE;<5> # 128 <"0>
+<U00A8> IGNORE;IGNORE;IGNORE;<6> # 129 ¨
+<U030B> IGNORE;IGNORE;IGNORE;<7> # 130 <"">
+<U007E> IGNORE;IGNORE;IGNORE;<8> # 131 ~
+<U0307> IGNORE;IGNORE;IGNORE;<9> # 132 <".>
+<U00F7> IGNORE;IGNORE;IGNORE;<a> # 133 ¸
+<U00D7> IGNORE;IGNORE;IGNORE;<b> # 134 ´
+<U2260> IGNORE;IGNORE;IGNORE;<c> # 135 <!=>
+<U003C> IGNORE;IGNORE;IGNORE;<d> # 136 <
+<U2264> IGNORE;IGNORE;IGNORE;<e> # 137 <=<>
+<U003D> IGNORE;IGNORE;IGNORE;<f> # 138 =
+<U2265> IGNORE;IGNORE;IGNORE;<g> # 139 </>=>
+<U003E> IGNORE;IGNORE;IGNORE;<h> # 140 >
+<U00AC> IGNORE;IGNORE;IGNORE;<i> # 141 ¬
+<U007C> IGNORE;IGNORE;IGNORE;<j> # 142 |
+<U00A6> IGNORE;IGNORE;IGNORE;<k> # 143 |
+<U00B0> IGNORE;IGNORE;IGNORE;<l> # 144 °
+<U00B5> IGNORE;IGNORE;IGNORE;<m> # 145 m
+<U2126> IGNORE;IGNORE;IGNORE;<n> # 146 <Om>
+<U220E> IGNORE;IGNORE;IGNORE;<o> # 147 <FP>
+<U250C> IGNORE;IGNORE;IGNORE;<p> # 148 <_V/>>
+<U252C> IGNORE;IGNORE;IGNORE;<q> # 149 <_V->
+<U2510> IGNORE;IGNORE;IGNORE;<r> # 150 <_V<w>
+<U251C> IGNORE;IGNORE;IGNORE;<s> # 151 <_!/>>
+<U253C> IGNORE;IGNORE;IGNORE;<t> # 152 <_!->
+<U2524> IGNORE;IGNORE;IGNORE;<u> # 153 <_!<>
+<U2514> IGNORE;IGNORE;IGNORE;<v> # 154 <_A/>>
+<U2534> IGNORE;IGNORE;IGNORE;<w> # 155 <_-A>
+<U2518> IGNORE;IGNORE;IGNORE;<x> # 156 <_A<>
+<U2502> IGNORE;IGNORE;IGNORE;<y> # 157 <_!>
+<U2500> IGNORE;IGNORE;IGNORE;<z> # 158 <_-> #
+<U2501> IGNORE;IGNORE;IGNORE;<U2501> # 159 <_=>
+<U2190> IGNORE;IGNORE;IGNORE;<U2190> # 160 <<->
+<U2192> IGNORE;IGNORE;IGNORE;<U2192> # 161 <-/>>
+<U20D1> IGNORE;IGNORE;IGNORE;<U20D1> # 162 <"7>
+<U2191> IGNORE;IGNORE;IGNORE;<U2191> # 163 <-!>
+<U2193> IGNORE;IGNORE;IGNORE;<U2193> # 164 <-v>
+<U266A> IGNORE;IGNORE;IGNORE;<U266A> # 165 <_d!>
+<U2571> IGNORE;IGNORE;IGNORE;<U2571> # 166 <_/>//>
+<U2572> IGNORE;IGNORE;IGNORE;<U2572> # 167 <_<\>
+<U25E2> IGNORE;IGNORE;IGNORE;<U25E2> # 168 <_./>//>
+<U25E3> IGNORE;IGNORE;IGNORE;<U25E3> # 169 <_.<\> # # <ARABINT>/<ARABFOR> #
+<U060C> IGNORE;IGNORE;IGNORE;<U060C>
+<U061B> IGNORE;IGNORE;IGNORE;<U061B>
+<U061F> IGNORE;IGNORE;IGNORE;<U061F>
+<U0640> IGNORE;IGNORE;IGNORE;<U0640>
+<U066A> IGNORE;IGNORE;IGNORE;<U066A>
+<U066B> IGNORE;IGNORE;IGNORE;<U066B>
+<U066C> IGNORE;IGNORE;IGNORE;<U066C>
+<U066D> IGNORE;IGNORE;IGNORE;<U066D>
+<U064B> IGNORE;IGNORE;IGNORE;<U064B> #<fathatan_no>
+<UFE70> IGNORE;IGNORE;IGNORE;<UFE70> #<fathatan_is>
+<UFE71> IGNORE;IGNORE;IGNORE;<UFE71> #<fathatan_me>
+<U064C> IGNORE;IGNORE;IGNORE;<U064C> #<dammatan_no>
+<UFE72> IGNORE;IGNORE;IGNORE;<UFE72> #<dammatan_is>
+<U064D> IGNORE;IGNORE;IGNORE;<U064D> #<kasratan_no>
+<UFE74> IGNORE;IGNORE;IGNORE;<UFE74> #<kasratan_is>
+<U064E> IGNORE;IGNORE;IGNORE;<U064E> #<fatha_no>
+<UFE76> IGNORE;IGNORE;IGNORE;<UFE76> #<fatha_is>
+<UFE77> IGNORE;IGNORE;IGNORE;<UFE77> #<fatha_me>
+<U064F> IGNORE;IGNORE;IGNORE;<U064F> #<damma_no>
+<UFE78> IGNORE;IGNORE;IGNORE;<UFE78> #<damma_is>
+<UFE79> IGNORE;IGNORE;IGNORE;<UFE79> #<damma_me>
+<U0650> IGNORE;IGNORE;IGNORE;<U0650> #<kasra_no>
+<UFE7A> IGNORE;IGNORE;IGNORE;<UFE7A> #<kasra_is>
+<UFE7B> IGNORE;IGNORE;IGNORE;<UFE7B> #<kasra_me>
+<U0651> IGNORE;IGNORE;IGNORE;<U0651> #<shadda_no>
+<UFE7C> IGNORE;IGNORE;IGNORE;<UFE7C> #<shadda_is>
+<UFE7D> IGNORE;IGNORE;IGNORE;<UFE7D> #<shadda_me>
+<U0652> IGNORE;IGNORE;IGNORE;<U0652> #<sukun_no>
+<UFE7E> IGNORE;IGNORE;IGNORE;<UFE7E> #<sukun_is>
+<UFE7F> IGNORE;IGNORE;IGNORE;<UFE7F> #<sukun_me> # # <HEBREU> #
+<U05B0> IGNORE;IGNORE;IGNORE;<U05B0> #point_sheva
+<U05B1> IGNORE;IGNORE;IGNORE;<U05B1> #point_hataf_segol
+<U05B2> IGNORE;IGNORE;IGNORE;<U05B2> #point_hataf_patah
+<U05B3> IGNORE;IGNORE;IGNORE;<U05B3> #point_hataf_qamats
+<U05B4> IGNORE;IGNORE;IGNORE;<U05B4> #point_hiriq
+<U05B5> IGNORE;IGNORE;IGNORE;<U05B5> #point_tsere
+<U05B6> IGNORE;IGNORE;IGNORE;<U05B6> #point_segol
+<U05B7> IGNORE;IGNORE;IGNORE;<U05B7> #point_patah
+<U05B8> IGNORE;IGNORE;IGNORE;<U05B8> #point_qamats
+<U05B9> IGNORE;IGNORE;IGNORE;<U05B9> #point_holam
+<U05BB> IGNORE;IGNORE;IGNORE;<U05BB> #point_qubuts
+<U05BC> IGNORE;IGNORE;IGNORE;<U05BC> #point_dagesh
+<U05BD> IGNORE;IGNORE;IGNORE;<U05BD> #point_meteg
+<U05BE> IGNORE;IGNORE;IGNORE;<U05BE> #maqaf
+<U05BF> IGNORE;IGNORE;IGNORE;<U05BF> #point_rafe
+<U05C0> IGNORE;IGNORE;IGNORE;<U05C0> #paseq
+<U05C1> IGNORE;IGNORE;IGNORE;<U05C1> #point_shin_dot
+<U05C2> IGNORE;IGNORE;IGNORE;<U05C2> #point_sin_dot
+<U05C3> IGNORE;IGNORE;IGNORE;<U05C3> #sof pasuq
+
+# The comment at the beginning of this section mentions characters which
+# are not otherwise covered.  But this description cannot express this.
+# Therefore we add here a few entries which are used in older implementations
+# to be compatible.  --drepper
+<U0001> IGNORE;IGNORE;IGNORE;<U0001>
+<U0002> IGNORE;IGNORE;IGNORE;<U0002>
+<U0003> IGNORE;IGNORE;IGNORE;<U0003>
+<U0004> IGNORE;IGNORE;IGNORE;<U0004>
+<U0005> IGNORE;IGNORE;IGNORE;<U0005>
+<U0006> IGNORE;IGNORE;IGNORE;<U0006>
+<U0007> IGNORE;IGNORE;IGNORE;<U0007>
+<U0008> IGNORE;IGNORE;IGNORE;<U0008>
+<U0009> IGNORE;IGNORE;IGNORE;<U0009>
+<U000A> IGNORE;IGNORE;IGNORE;<U000A>
+<U000B> IGNORE;IGNORE;IGNORE;<U000B>
+<U000C> IGNORE;IGNORE;IGNORE;<U000C>
+<U000D> IGNORE;IGNORE;IGNORE;<U000D>
+<U000E> IGNORE;IGNORE;IGNORE;<U000E>
+<U000F> IGNORE;IGNORE;IGNORE;<U000F>
+<U0010> IGNORE;IGNORE;IGNORE;<U0010>
+<U0011> IGNORE;IGNORE;IGNORE;<U0011>
+<U0012> IGNORE;IGNORE;IGNORE;<U0012>
+<U0013> IGNORE;IGNORE;IGNORE;<U0013>
+<U0014> IGNORE;IGNORE;IGNORE;<U0014>
+<U0015> IGNORE;IGNORE;IGNORE;<U0015>
+<U0016> IGNORE;IGNORE;IGNORE;<U0016>
+<U0017> IGNORE;IGNORE;IGNORE;<U0017>
+<U0018> IGNORE;IGNORE;IGNORE;<U0018>
+<U0019> IGNORE;IGNORE;IGNORE;<U0019>
+<U001A> IGNORE;IGNORE;IGNORE;<U001A>
+<U001B> IGNORE;IGNORE;IGNORE;<U001B>
+<U001C> IGNORE;IGNORE;IGNORE;<U001C>
+<U001D> IGNORE;IGNORE;IGNORE;<U001D>
+<U001E> IGNORE;IGNORE;IGNORE;<U001E>
+<U001F> IGNORE;IGNORE;IGNORE;<U001F>
+<U007F> IGNORE;IGNORE;IGNORE;<U007F>
+<U0080> IGNORE;IGNORE;IGNORE;<U0080>
+<U0081> IGNORE;IGNORE;IGNORE;<U0081>
+<U0082> IGNORE;IGNORE;IGNORE;<U0082>
+<U0083> IGNORE;IGNORE;IGNORE;<U0083>
+<U0084> IGNORE;IGNORE;IGNORE;<U0084>
+<U0085> IGNORE;IGNORE;IGNORE;<U0085>
+<U0086> IGNORE;IGNORE;IGNORE;<U0086>
+<U0087> IGNORE;IGNORE;IGNORE;<U0087>
+<U0088> IGNORE;IGNORE;IGNORE;<U0088>
+<U0089> IGNORE;IGNORE;IGNORE;<U0089>
+<U008A> IGNORE;IGNORE;IGNORE;<U008A>
+<U008B> IGNORE;IGNORE;IGNORE;<U008B>
+<U008C> IGNORE;IGNORE;IGNORE;<U008C>
+<U008D> IGNORE;IGNORE;IGNORE;<U008D>
+<U008E> IGNORE;IGNORE;IGNORE;<U008E>
+<U008F> IGNORE;IGNORE;IGNORE;<U008F>
+<U0090> IGNORE;IGNORE;IGNORE;<U0090>
+<U0091> IGNORE;IGNORE;IGNORE;<U0091>
+<U0092> IGNORE;IGNORE;IGNORE;<U0092>
+<U0093> IGNORE;IGNORE;IGNORE;<U0093>
+<U0094> IGNORE;IGNORE;IGNORE;<U0094>
+<U0095> IGNORE;IGNORE;IGNORE;<U0095>
+<U0096> IGNORE;IGNORE;IGNORE;<U0096>
+<U0097> IGNORE;IGNORE;IGNORE;<U0097>
+<U0098> IGNORE;IGNORE;IGNORE;<U0098>
+<U0099> IGNORE;IGNORE;IGNORE;<U0099>
+<U009A> IGNORE;IGNORE;IGNORE;<U009A>
+<U009B> IGNORE;IGNORE;IGNORE;<U009B>
+<U009C> IGNORE;IGNORE;IGNORE;<U009C>
+<U009D> IGNORE;IGNORE;IGNORE;<U009D>
+<U009E> IGNORE;IGNORE;IGNORE;<U009E>
+<U009F> IGNORE;IGNORE;IGNORE;<U009F>
+
+order_start <LATIN>;forward;backward;forward;forward,position
+#
+<U00A0> <U0020>;<BAS>;<MIN>;IGNORE # 170<NBSP>
+#
+<U0030> <0>;<BAS>;<MIN>;IGNORE # 171 0
+<U0031> <1>;<BAS>;<MIN>;IGNORE # 172 1
+<U0032> <2>;<BAS>;<MIN>;IGNORE # 173 2
+<U0033> <3>;<BAS>;<MIN>;IGNORE # 174 3
+<U0034> <4>;<BAS>;<MIN>;IGNORE # 175 4
+<U0035> <5>;<BAS>;<MIN>;IGNORE # 176 5
+<U0036> <6>;<BAS>;<MIN>;IGNORE # 177 6
+<U0037> <7>;<BAS>;<MIN>;IGNORE # 178 7
+<U0038> <8>;<BAS>;<MIN>;IGNORE # 179 8
+<U0039> <9>;<BAS>;<MIN>;IGNORE # 180 9
+#
+<U215B> <0>;<GRA>;<MIN>;IGNORE # 181 <18>
+<U00BC> <0>;<BRE>;<MIN>;IGNORE # 182 ¼
+<U215C> <0>;<CIR>;<MIN>;IGNORE # 183 <38>
+<U215D> <0>;<RNE>;<MIN>;IGNORE # 184 <58>
+<U215E> <0>;<DAC>;<MIN>;IGNORE # 185 <78>
+<U00BD> <0>;<CAR>;<MIN>;IGNORE # 186 ½
+<U00BE> <0>;<REU>;<MIN>;IGNORE # 187 ¾
+<U2070> <0>;<BAS>;<EMI>;IGNORE # 188 <0S>
+<U00B9> <1>;<BAS>;<EMI>;IGNORE # 189 ¹
+<U00B2> <2>;<BAS>;<EMI>;IGNORE # 190 ²
+<U00B3> <3>;<BAS>;<EMI>;IGNORE # 191 ³
+<U2074> <4>;<BAS>;<EMI>;IGNORE # 192 <4S>
+<U2075> <5>;<BAS>;<EMI>;IGNORE # 193 <5S>
+<U2076> <6>;<BAS>;<EMI>;IGNORE # 194 <6S>
+<U2077> <7>;<BAS>;<EMI>;IGNORE # 195 <7S>
+<U2078> <8>;<BAS>;<EMI>;IGNORE # 196 <8S>
+<U2079> <9>;<BAS>;<EMI>;IGNORE # 197 <9S>
+#
+<U0061> <a>;<BAS>;<MIN>;IGNORE # 198 a
+<U00AA> <a>;<PCL>;<EMI>;IGNORE # 199 ª
+<U00E1> <a>;<ACA>;<MIN>;IGNORE # 200 á
+<U00E0> <a>;<GRA>;<MIN>;IGNORE # 201 à
+<U00E2> <a>;<CIR>;<MIN>;IGNORE # 202 â
+<U00E3> <a>;<TIL>;<MIN>;IGNORE # 203 ã
+<U00E4> <a>;<REU>;<MIN>;IGNORE # 204 ä
+<U00E5> <a>;<RNE>;<MIN>;IGNORE # 205 å
+<U0103> <a>;<BRE>;<MIN>;IGNORE # 206 <a(>
+<U0105> <a>;<OGO>;<MIN>;IGNORE # 207 <a;>
+<U0101> <a>;<MAC>;<MIN>;IGNORE # 208 <a->
+<U01CE> <a>;<CAR>;<MIN>;IGNORE # 209 <a<>
+<U01DF> <a>;<REU>;<MIN>;<MAC> # 210 ǟ
+<U01E1> <a>;<PCT>;<MIN>;<MAC> # 211 ǡ
+<U01FB> <a>;<RNE>;<MIN>;<ACA> # 212 ǻ
+<U0201> <a>;<DGR>;<MIN>;IGNORE # 213 ȁ
+<U0203> <a>;<IBR>;<MIN>;IGNORE # 214 ȃ
+<U0227> <a>;<PCT>;<MIN>;IGNORE # 215 ȧ
+<U1E01> <a>;<BRN>;<MIN>;IGNORE # 216 ḁ
+<U1E9A> <a>;<PCL>;<MIN>;IGNORE # 217 ẚ
+<U1EA1> <a>;<BPT>;<MIN>;IGNORE # 218 ạ
+<U1EA3> <a>;<HOK>;<MIN>;IGNORE # 219 ả
+<U1EA5> <a>;<CIR>;<MIN>;<ACA> # 220 ấ
+<U1EA7> <a>;<CIR>;<MIN>;<GRA> # 221 ầ
+<U1EA9> <a>;<CIR>;<MIN>;<HOK> # 222 ẩ
+<U1EAB> <a>;<CIR>;<MIN>;<TIL> # 223 ẫ
+<U1EAD> <a>;<CIR>;<MIN>;<BPT> # 224 ậ
+<U1EAF> <a>;<BRE>;<MIN>;<ACA> # 225 ắ
+<U1EB1> <a>;<BRE>;<MIN>;<GRA> # 226 ằ
+<U1EB3> <a>;<BRE>;<MIN>;<HOK> # 227 ẳ
+<U1EB5> <a>;<BRE>;<MIN>;<MAC> # 228 ẵ
+<U1EB7> <a>;<BRE>;<MIN>;<BPT> # 229 ặ
+<U00E6> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 230 æ
+<U01E3> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";<MAC> # 231 ǣ
+<U01FD> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";<ACA> # 232 ǽ
+<U0062> <b>;<BAS>;<MIN>;IGNORE # 233 b
+<U0253> <b>;<CRL>;<MIN>;IGNORE # 234 ɓ
+<U1E03> <b>;<PCT>;<MIN>;IGNORE # 235 ḃ
+<U1E05> <b>;<BPT>;<MIN>;IGNORE # 236 ḅ
+<U1E07> <b>;<BMA>;<MIN>;IGNORE # 237 ḇ
+<U0063> <c>;<BAS>;<MIN>;IGNORE # 238 c
+<U00E7> <c>;<CDI>;<MIN>;IGNORE # 239 ç
+<U0107> <c>;<ACA>;<MIN>;IGNORE # 240 <c'>
+<U0109> <c>;<CIR>;<MIN>;IGNORE # 241 <c/>>
+<U010D> <c>;<CAR>;<MIN>;IGNORE # 242 <c<>
+<U010B> <c>;<PCT>;<MIN>;IGNORE # 243 <c.>
+<U0188> <c>;<CRL>;<MIN>;IGNORE # 244 ƈ
+<U1E09> <c>;<CDI>;<MIN>;<ACA> # 245 ḉ
+<U0064> <d>;<BAS>;<MIN>;IGNORE # 246 d
+<U00F0> <d>;<PCL>;<MIN>;IGNORE # 247 ð
+<U010F> <d>;<CAR>;<MIN>;IGNORE # 248 <d<>
+<U0111> <d>;<OBL>;<MIN>;IGNORE # 249 <d//>
+<U0256> <d>;<CRL>;<MIN>;IGNORE # 250 ɖ
+<U0257> <d>;<CRL>;<MIN>;IGNORE # 251 ɗ
+<U1E0B> <d>;<PCT>;<MIN>;IGNORE # 252 ḋ
+<U1E0D> <d>;<BPT>;<MIN>;IGNORE # 253 ḍ
+<U1E0F> <d>;<BMA>;<MIN>;IGNORE # 254 ḏ
+<U1E11> <d>;<CDI>;<MIN>;IGNORE # 255 <d,>
+<U1E13> <d>;<BCI>;<MIN>;IGNORE # 256 ḓ
+<U01F3> "<d><z>";"<BAS><BAS>";"<MIN><MIN>";IGNORE # 257 <dz>
+<U01C6> "<d><z>";"<BAS><CAR>";"<MIN><MIN>";IGNORE # 258 <dz<>
+<U0065> <e>;<BAS>;<MIN>;IGNORE # 259 e
+<U00E9> <e>;<ACA>;<MIN>;IGNORE # 260 é
+<U00E8> <e>;<GRA>;<MIN>;IGNORE # 261 è
+<U00EA> <e>;<CIR>;<MIN>;IGNORE # 262 ê
+<U00EB> <e>;<REU>;<MIN>;IGNORE # 263 ë
+<U0115> <e>;<BRE>;<MIN>;IGNORE # 264 <e(>
+<U011B> <e>;<CAR>;<MIN>;IGNORE # 265 <e<>
+<U0117> <e>;<PCT>;<MIN>;IGNORE # 266 <e.>
+<U0119> <e>;<OGO>;<MIN>;IGNORE # 267 <e;>
+<U0113> <e>;<MAC>;<MIN>;IGNORE # 268 <e->
+<U0205> <e>;<DGR>;<MIN>;IGNORE # 269 ȅ
+<U0207> <e>;<IBR>;<MIN>;IGNORE # 270 ȇ
+<U0229> <e>;<CDI>;<MIN>;IGNORE # 271 <e,>
+<U1E15> <e>;<MAC>;<MIN>;<GRA> # 272 ḕ
+<U1E17> <e>;<MAC>;<MIN>;<ACA> # 273 ḗ
+<U1E19> <e>;<BCI>;<MIN>;IGNORE # 274 ḙ
+<U1E1B> <e>;<BTI>;<MIN>;IGNORE # 275 ḛ
+<U1E1D> <e>;<CDI>;<MIN>;<BRE> # 276 ḝ
+<U1EB9> <e>;<BPT>;<MIN>;IGNORE # 277 ẹ
+<U1EBB> <e>;<HOK>;<MIN>;IGNORE # 278 ẻ
+<U1EBD> <e>;<TIL>;<MIN>;IGNORE # 279 <e?>
+<U1EBF> <e>;<CIR>;<MIN>;<ACA> # 280 ế
+<U1EC1> <e>;<CIR>;<MIN>;<GRA> # 281 ề
+<U1EC3> <e>;<CIR>;<MIN>;<HOK> # 282 ể
+<U1EC5> <e>;<CIR>;<MIN>;<TIL> # 283 ễ
+<U1EC7> <e>;<CIR>;<MIN>;<BPT> # 284 ệ
+<U01DD> <e>;<PCL>;<MIN>;IGNORE # 285 ǝ
+<U0259> <e>;<PCL>;<MIN>;IGNORE # 286 ə
+<U025B> <e>;<PCL>;<MIN>;IGNORE # 287 ɛ
+<U0066> <f>;<BAS>;<MIN>;IGNORE # 288 f
+<U1E1F> <f>;<PCT>;<MIN>;IGNORE # 289 <f.>
+<U0067> <g>;<BAS>;<MIN>;IGNORE # 290 g
+<U011F> <g>;<BRE>;<MIN>;IGNORE # 291 <g(>
+<U011D> <g>;<CIR>;<MIN>;IGNORE # 292 <g/>>
+<U0121> <g>;<PCT>;<MIN>;IGNORE # 293 <g.>
+<U0123> <g>;<CDI>;<MIN>;IGNORE # 294 <g,>
+<U01E5> <g>;<OBL>;<MIN>;IGNORE # 295 ǥ
+<U01E7> <g>;<CAR>;<MIN>;IGNORE # 296 ǧ
+<U01F5> <g>;<ACA>;<MIN>;IGNORE # 297 ǵ
+<U1E21> <g>;<MAC>;<MIN>;IGNORE # 298 ḡ
+<U0260> <g>;<CRL>;<MIN>;IGNORE # 299 ɠ
+<U01A3> <g>;<PCL>;<MIN>;IGNORE # 300 ƣ
+<U0068> <h>;<BAS>;<MIN>;IGNORE # 301 h
+<U0125> <h>;<CIR>;<MIN>;IGNORE # 302 <h/>>
+<U0127> <h>;<OBL>;<MIN>;IGNORE # 303 <h//>
+<U021F> <h>;<CAR>;<MIN>;IGNORE # 304 <h<>
+<U1E23> <h>;<PCT>;<MIN>;IGNORE # 305 <h.>
+<U1E25> <h>;<BPT>;<MIN>;IGNORE # 306 ḥ
+<U1E27> <h>;<REU>;<MIN>;IGNORE # 307 <h:>
+<U1E29> <h>;<CDI>;<MIN>;IGNORE # 308 <h,>
+<U1E2B> <h>;<BBR>;<MIN>;IGNORE # 309 ḫ
+<U1E96> <h>;<BMA>;<MIN>;IGNORE # 310 ẖ
+<U0195> "<h><v>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 311 ƕ
+<U0069> <i>;<BAS>;<MIN>;IGNORE # 312 i
+<U00ED> <i>;<ACA>;<MIN>;IGNORE # 313 í
+<U00EC> <i>;<GRA>;<MIN>;IGNORE # 314 ì
+<U00EE> <i>;<CIR>;<MIN>;IGNORE # 315 î
+<U00EF> <i>;<REU>;<MIN>;IGNORE # 316 ï
+<U0131> <i>;<PCL>;<MIN>;IGNORE # 317 <i.>
+<U0129> <i>;<TIL>;<MIN>;IGNORE # 318 <i?>
+<U012F> <i>;<OGO>;<MIN>;IGNORE # 319 <i;>
+<U012B> <i>;<MAC>;<MIN>;IGNORE # 320 <i->
+<U012D> <i>;<BRE>;<MIN>;IGNORE # 321 <i(>
+<U01D0> <i>;<CAR>;<MIN>;IGNORE # 322 <i<>
+<U0209> <i>;<DGR>;<MIN>;IGNORE # 323 ȉ
+<U020B> <i>;<IBR>;<MIN>;IGNORE # 324 ȋ
+<U1E2D> <i>;<BTI>;<MIN>;IGNORE # 325 ḭ
+<U1E2F> <i>;<REU>;<MIN>;<ACA> # 326 ḯ
+<U1EC9> <i>;<HOK>;<MIN>;IGNORE # 327 ỉ
+<U1ECB> <i>;<BPT>;<MIN>;IGNORE # 328 ị
+<U0133> "<i><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE # 329 <ij>
+<U006A> <j>;<BAS>;<MIN>;IGNORE # 330 j
+<U0135> <j>;<CIR>;<MIN>;IGNORE # 331 <j/>>
+<U01F0> <j>;<CAR>;<MIN>;IGNORE # 331 <j<>
+<U006B> <k>;<BAS>;<MIN>;IGNORE # 333 k
+<U0137> <k>;<CDI>;<MIN>;IGNORE # 334 <k,>
+<U01E9> <k>;<CAR>;<MIN>;IGNORE # 335 <k<>
+<U1E31> <k>;<ACA>;<MIN>;IGNORE # 336 <k'>
+<U1E33> <k>;<BPT>;<MIN>;IGNORE # 337 ḳ
+<U1E35> <k>;<BMA>;<MIN>;IGNORE # 338 ḵ
+<U0199> <k>;<CRL>;<MIN>;IGNORE # 339 ƙ
+<U0138> <k>;<PCL>;<MIN>;IGNORE # 340 <kk>
+<U006C> <l>;<BAS>;<MIN>;IGNORE # 341 l
+<U013A> <l>;<ACA>;<MIN>;IGNORE # 342 <l'>
+<U013E> <l>;<CAR>;<MIN>;IGNORE # 343 <l<>
+<U0142> <l>;<OBL>;<MIN>;IGNORE # 344 <l//>
+<U013C> <l>;<CDI>;<MIN>;IGNORE # 345 <l,>
+<U1E37> <l>;<BPT>;<MIN>;IGNORE # 346 ḷ
+<U1E39> <l>;<BPT>;<MIN>;<MAC> # 347 ḹ
+<U1E3B> <l>;<BMA>;<MIN>;IGNORE # 348 ḻ
+<U1E3D> <l>;<BCI>;<MIN>;IGNORE # 349 ḽ
+<U0140> <l>;<PCT>;<MIN>;IGNORE # 350 <l.>
+<U01C9> "<l><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE # 351 <lj>
+<U006D> <m>;<BAS>;<MIN>;IGNORE # 352 m
+<U1E3F> <m>;<ACA>;<MIN>;IGNORE # 353 <m'>
+<U1E41> <m>;<PCT>;<MIN>;IGNORE # 354 <m.>
+<U1E43> <m>;<BPT>;<MIN>;IGNORE # 355 ṃ
+<U006E> <n>;<BAS>;<MIN>;IGNORE # 356 n
+<U00F1> <n>;<TIL>;<MIN>;IGNORE # 357 ñ
+<U0149> <n>;<PCL>;<MIN>;IGNORE # 358 <'n>
+<U0144> <n>;<ACA>;<MIN>;IGNORE # 359 <n'>
+<U0148> <n>;<CAR>;<MIN>;IGNORE # 360 <n<>
+<U0146> <n>;<CDI>;<MIN>;IGNORE # 361 <n,>
+<U01F9> <n>;<GRA>;<MIN>;IGNORE # 362 ǹ
+<U1E45> <n>;<PCT>;<MIN>;IGNORE # 363 <n.>
+<U1E47> <n>;<BPT>;<MIN>;IGNORE # 364 ṇ
+<U1E49> <n>;<BMA>;<MIN>;IGNORE # 365 ṉ
+<U1E4B> <n>;<BCI>;<MIN>;IGNORE # 366 ṋ
+<U014B> "<n><g>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 367 <ng>
+<U01CC> "<n><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE # 368 <n><j>
+<U006F> <o>;<BAS>;<MIN>;IGNORE # 369 o
+<U00BA> <o>;<PCL>;<EMI>;IGNORE # 370 º
+<U00F3> <o>;<ACA>;<MIN>;IGNORE # 371 ó
+<U00F2> <o>;<GRA>;<MIN>;IGNORE # 372 ò
+<U00F4> <o>;<CIR>;<MIN>;IGNORE # 373 ô
+<U00F5> <o>;<TIL>;<MIN>;IGNORE # 374 õ
+<U00F6> <o>;<REU>;<MIN>;IGNORE # 375 ö
+<U00F8> <o>;<OBL>;<MIN>;IGNORE # 376 ø
+<U0151> <o>;<DAC>;<MIN>;IGNORE # 377 <o">
+<U014D> <o>;<MAC>;<MIN>;IGNORE # 378 <o->
+<U014F> <o>;<BRE>;<MIN>;IGNORE # 379 <o(>
+<U01A1> <o>;<CRL>;<MIN>;IGNORE # 380 ơ
+<U01D2> <o>;<CAR>;<MIN>;IGNORE # 381 <o<>
+<U01EB> <o>;<OGO>;<MIN>;IGNORE # 382 <o;>
+<U01ED> <o>;<OGO>;<MIN>;<MAC> # 383 ǭ
+<U01FF> <o>;<OBL>;<MIN>;<ACA> # 384 ǿ
+<U020D> <o>;<DGR>;<MIN>;IGNORE # 385 ȍ
+<U020F> <o>;<IBR>;<MIN>;IGNORE # 386 ȏ
+<U022B> <o>;<REU>;<MIN>;<MAC> # 387 ȫ
+<U022D> <o>;<TIL>;<MIN>;<MAC> # 388 ȭ
+<U022F> <o>;<PCT>;<MIN>;IGNORE # 389 <o.>
+<U0231> <o>;<PCT>;<MIN>;<MAC> # 390 ȱ
+<U1E4D> <o>;<TIL>;<MIN>;<ACA> # 391 ṍ
+<U1E4F> <o>;<TIL>;<MIN>;<REU> # 392 ṏ
+<U1E51> <o>;<MAC>;<MIN>;<GRA> # 393 ṑ
+<U1E53> <o>;<MAC>;<MIN>;<ACA> # 394 ṓ
+<U1ECD> <o>;<BPT>;<MIN>;IGNORE # 395 ọ
+<U1ECF> <o>;<HOK>;<MIN>;IGNORE # 396 ỏ
+<U1ED1> <o>;<CIR>;<MIN>;<ACA> # 397 ố
+<U1ED3> <o>;<CIR>;<MIN>;<GRA> # 398 ồ
+<U1ED5> <o>;<CIR>;<MIN>;<HOK> # 399 ổ
+<U1ED7> <o>;<CIR>;<MIN>;<TIL> # 400 ỗ
+<U1ED9> <o>;<CIR>;<MIN>;<BPT> # 401 ộ
+<U1EDB> <o>;<CRL>;<MIN>;<ACA> # 402 ớ
+<U1EDD> <o>;<CRL>;<MIN>;<GRA> # 403 ờ
+<U1EDF> <o>;<CRL>;<MIN>;<HOK> # 404 ở
+<U1EE1> <o>;<CRL>;<MIN>;<TIL> # 405 ỡ
+<U1EE3> <o>;<CRL>;<MIN>;<BPT> # 406 ợ
+<U0275> <o>;<REU>;<MIN>;IGNORE # 407 ɵ # <REU> as it is often syn. of <o:>
+<U0254> <o>;<PCL>;<MIN>;IGNORE # 408 ɔ
+<U0153> "<o><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 409 <oe>
+<U0070> <p>;<BAS>;<MIN>;IGNORE # 410 p
+<U1E55> <p>;<ACA>;<MIN>;IGNORE # 411 <p'>
+<U1E57> <p>;<PCT>;<MIN>;IGNORE # 412 <p.>
+<U0071> <q>;<BAS>;<MIN>;IGNORE # 413 q
+<U0072> <r>;<BAS>;<MIN>;IGNORE # 414 r
+<U0155> <r>;<ACA>;<MIN>;IGNORE # 415 <r'>
+<U0159> <r>;<CAR>;<MIN>;IGNORE # 416 <r<>
+<U0157> <r>;<CDI>;<MIN>;IGNORE # 417 <r,>
+<U0211> <r>;<DGR>;<MIN>;IGNORE # 418 ȑ
+<U0213> <r>;<IBR>;<MIN>;IGNORE # 419 ȓ
+<U1E59> <r>;<PCT>;<MIN>;IGNORE # 420 <r.>
+<U1E5B> <r>;<BPT>;<MIN>;IGNORE # 421 ṛ
+<U1E5D> <r>;<BPT>;<MIN>;<MAC> # 422 ṝ
+<U1E5F> <r>;<BMA>;<MIN>;IGNORE # 423 ṟ
+<U0073> <s>;<BAS>;<MIN>;IGNORE # 424 s
+<U015B> <s>;<ACA>;<MIN>;IGNORE # 425 <s'>
+<U015D> <s>;<CIR>;<MIN>;IGNORE # 426 <s/>>
+<U0161> <s>;<CAR>;<MIN>;IGNORE # 427 <s<>
+<U015F> <s>;<CDI>;<MIN>;IGNORE # 428 <s,>
+<U0219> <s>;<CDI>;<MIN>;IGNORE # 429 ș
+<U1E61> <s>;<PCT>;<MIN>;IGNORE # 430 <s.>
+<U1E63> <s>;<BPT>;<MIN>;IGNORE # 431 ṣ
+<U1E65> <s>;<ACA>;<MIN>;<PCT> # 432 ṥ
+<U1E67> <s>;<CAR>;<MIN>;<PCT> # 433 ṧ
+<U1E69> <s>;<BPT>;<MIN>;<PCT> # 434 ṩ
+<U017F> <s>;<PCL>;<MIN>;IGNORE # 435 ſ
+<U1E9B> <s>;<PCL>;<MIN>;<PCT> # 436 ẛ
+<U00DF> "<s><s>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 437 ß
+<U0074> <t>;<BAS>;<MIN>;IGNORE # 438 t
+<U0165> <t>;<CAR>;<MIN>;IGNORE # 439 <t<>
+<U0167> <t>;<OBL>;<MIN>;IGNORE # 440 <t//>
+<U0163> <t>;<CDI>;<MIN>;IGNORE # 441 <t,>
+<U021B> <t>;<CDI>;<MIN>;IGNORE # 442 ț
+<U1E6B> <t>;<PCT>;<MIN>;IGNORE # 443 <t.>
+<U1E6D> <t>;<BPT>;<MIN>;IGNORE # 444 ṭ
+<U1E6F> <t>;<BMA>;<MIN>;IGNORE # 445 ṯ
+<U1E71> <t>;<BCI>;<MIN>;IGNORE # 446 ṱ
+<U1E97> <t>;<REU>;<MIN>;IGNORE # 447 <t:>
+<U0075> <u>;<BAS>;<MIN>;IGNORE # 448 u
+<U00FA> <u>;<ACA>;<MIN>;IGNORE # 449 ú
+<U00F9> <u>;<GRA>;<MIN>;IGNORE # 450 ù
+<U00FB> <u>;<CIR>;<MIN>;IGNORE # 451 û
+<U00FC> <u>;<REU>;<MIN>;IGNORE # 452 ü
+<U016D> <u>;<BRE>;<MIN>;IGNORE # 453 <u(>
+<U016F> <u>;<RNE>;<MIN>;IGNORE # 454 <u0>
+<U0171> <u>;<DAC>;<MIN>;IGNORE # 455 <u">
+<U0169> <u>;<TIL>;<MIN>;IGNORE # 456 <u?>
+<U0173> <u>;<OGO>;<MIN>;IGNORE # 457 <u;>
+<U016B> <u>;<MAC>;<MIN>;IGNORE # 458 <u->
+<U01B0> <u>;<CRL>;<MIN>;IGNORE # 459 ư
+<U01D4> <u>;<CAR>;<MIN>;IGNORE # 460 <u<>
+<U01D6> <u>;<REU>;<MIN>;<MAC> # 461 ǖ
+<U01D8> <u>;<REU>;<MIN>;<ACA> # 462 ǘ
+<U01DA> <u>;<REU>;<MIN>;<CAR> # 463 ǚ
+<U01DC> <u>;<REU>;<MIN>;<GRA> # 464 ǜ
+<U0215> <u>;<DGR>;<MIN>;IGNORE # 465 ȕ
+<U0217> <u>;<IBR>;<MIN>;IGNORE # 466 ȗ
+<U1E73> <u>;<BRU>;<MIN>;IGNORE # 467 ṳ
+<U1E75> <u>;<BTI>;<MIN>;IGNORE # 468 ṵ
+<U1E77> <u>;<BCI>;<MIN>;IGNORE # 469 ṷ
+<U1E79> <u>;<TIL>;<MIN>;<ACA> # 470 ṹ
+<U1E7B> <u>;<MAC>;<MIN>;<REU> # 471 ṻ
+<U1EE5> <u>;<BPT>;<MIN>;IGNORE # 472 ụ
+<U1EE7> <u>;<HOK>;<MIN>;IGNORE # 473 ủ
+<U1EE9> <u>;<CRL>;<MIN>;<ACA> # 474 ứ
+<U1EEB> <u>;<CRL>;<MIN>;<GRA> # 475 ừ
+<U1EED> <u>;<CRL>;<MIN>;<HOK> # 476 ử
+<U1EEF> <u>;<CRL>;<MIN>;<TIL> # 477 ữ
+<U1EF1> <u>;<CRL>;<MIN>;<BPT> # 478 ự
+<U0076> <v>;<BAS>;<MIN>;IGNORE # 479 v
+<U1E7D> <v>;<TIL>;<MIN>;IGNORE # 480 ṽ
+<U1E7F> <v>;<BPT>;<MIN>;IGNORE # 481 ṿ
+<U0077> <w>;<BAS>;<MIN>;IGNORE # 482 w
+<U0175> <w>;<CIR>;<MIN>;IGNORE # 483 <w/>>
+<U1E81> <w>;<GRA>;<MIN>;IGNORE # 484 ẁ
+<U1E83> <w>;<ACA>;<MIN>;IGNORE # 485 ẃ
+<U1E85> <w>;<REU>;<MIN>;IGNORE # 486 ẅ
+<U1E87> <w>;<PCT>;<MIN>;IGNORE # 487 ẇ
+<U1E89> <w>;<BPT>;<MIN>;IGNORE # 488 ẉ
+<U1E98> <w>;<RNE>;<MIN>;IGNORE # 489 ẘ
+<U01BF> <w>;<PCL>;<MIN>;IGNORE # 490 ƿ
+<U0078> <x>;<BAS>;<MIN>;IGNORE # 491 x
+<U1E8B> <x>;<PCT>;<MIN>;IGNORE # 492 <x.>
+<U1E8D> <x>;<REU>;<MIN>;IGNORE # 493 <x:>
+<U0079> <y>;<BAS>;<MIN>;IGNORE # 494 y
+<U00FD> <y>;<ACA>;<MIN>;IGNORE # 495 ý
+<U00FF> <y>;<REU>;<MIN>;IGNORE # 496 ÿ
+<U0177> <y>;<CIR>;<MIN>;IGNORE # 497 <y/>>
+<U0233> <y>;<MAC>;<MIN>;IGNORE # 498 <y->
+<U1E8F> <y>;<PCT>;<MIN>;IGNORE # 499 <y.>
+<U1E99> <y>;<RNE>;<MIN>;IGNORE # 500 ẙ
+<U1EF3> <y>;<GRA>;<MIN>;IGNORE # 501 ỳ
+<U1EF5> <y>;<BPT>;<MIN>;IGNORE # 502 ỵ
+<U1EF7> <y>;<HOK>;<MIN>;IGNORE # 503 ỷ
+<U1EF9> <y>;<TIL>;<MIN>;IGNORE # 504 ỹ
+<U01B4> <y>;<CRL>;<MIN>;IGNORE # 505 ƴ
+<U021D> <y>;<PCL>;<MIN>;IGNORE # 506 ȝ
+<U007A> <z>;<BAS>;<MIN>;IGNORE # 507 z
+<U017A> <z>;<ACA>;<MIN>;IGNORE # 508 <z'>
+<U017E> <z>;<CAR>;<MIN>;IGNORE # 509 <z<>
+<U017C> <z>;<PCT>;<MIN>;IGNORE # 510 <z.>
+<U1E91> <z>;<CIR>;<MIN>;IGNORE # 511 <z/>>
+<U1E93> <z>;<BPT>;<MIN>;IGNORE # 512 ẓ
+<U1E95> <z>;<BMA>;<MIN>;IGNORE # 513 ẕ
+<U01B6> <z>;<OBL>;<MIN>;IGNORE # 512 ƶ
+<U0225> <z>;<CRL>;<MIN>;IGNORE # 513 ȥ
+<U0292> <zh>;<BAS>;<MIN>;IGNORE # 514 ʒ
+<U01EF> <zh>;<CAR>;<MIN>;IGNORE # 515 ǯ
+<U00FE> <th>;<BAS>;<MIN>;IGNORE # 516 Þ
+<U0041> <a>;<BAS>;<CAP>;IGNORE # 517 A
+<U00C1> <a>;<ACA>;<CAP>;IGNORE # 518 Á
+<U00C0> <a>;<GRA>;<CAP>;IGNORE # 519 À
+<U00C2> <a>;<CIR>;<CAP>;IGNORE # 520 Â
+<U00C3> <a>;<TIL>;<CAP>;IGNORE # 521 Ã
+<U00C4> <a>;<REU>;<CAP>;IGNORE # 522 Ä
+<U00C5> <a>;<RNE>;<CAP>;IGNORE # 523 Å
+<U0102> <a>;<BRE>;<CAP>;IGNORE # 524 <A(>
+<U0104> <a>;<OGO>;<CAP>;IGNORE # 525 <A;>
+<U0100> <a>;<MAC>;<CAP>;IGNORE # 526 <A->
+<U01CD> <a>;<CAR>;<CAP>;IGNORE # 527 <A<>
+<U01DE> <a>;<REU>;<CAP>;<MAC> # 528 Ǟ
+<U01E0> <a>;<PCT>;<CAP>;<MAC> # 529 Ǡ
+<U01FA> <a>;<RNE>;<CAP>;<ACA> # 530 Ǻ
+<U0200> <a>;<DGR>;<CAP>;IGNORE # 531 Ȁ
+<U0202> <a>;<IBR>;<CAP>;IGNORE # 532 Ȃ
+<U0226> <a>;<PCT>;<CAP>;IGNORE # 533 <A.>
+<U1E00> <a>;<BRN>;<CAP>;IGNORE # 534 Ḁ
+<U1EA0> <a>;<BPT>;<CAP>;IGNORE # 535 Ạ
+<U1EA2> <a>;<HOK>;<CAP>;IGNORE # 536 Ả
+<U1EA4> <a>;<CIR>;<CAP>;<ACA> # 537 Ấ
+<U1EA6> <a>;<CIR>;<CAP>;<GRA> # 538 Ầ
+<U1EA8> <a>;<CIR>;<CAP>;<HOK> # 539 Ẩ
+<U1EAA> <a>;<CIR>;<CAP>;<TIL> # 540 Ẫ
+<U1EAC> <a>;<CIR>;<CAP>;<BPT> # 541 Ậ
+<U1EAE> <a>;<BRE>;<CAP>;<ACA> # 542 Ắ
+<U1EB0> <a>;<BRE>;<CAP>;<GRA> # 543 Ằ
+<U1EB2> <a>;<BRE>;<CAP>;<HOK> # 544 Ẳ
+<U1EB4> <a>;<BRE>;<CAP>;<TIL> # 545 Ẵ
+<U1EB6> <a>;<BRE>;<CAP>;<BPT> # 546 Ặ
+<U00C6> "<a><e>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 547 Æ
+<U01E2> "<a><e>";"<LIG><LIG>";"<CAP><CAP>";<MAC> # 548 Ǣ
+<U01FC> "<a><e>";"<LIG><LIG>";"<CAP><CAP>";<ACA> # 549 Ǽ
+<U0042> <b>;<BAS>;<CAP>;IGNORE # 550 B
+<U1E02> <b>;<PCT>;<CAP>;IGNORE # 551 <B.>
+<U1E04> <b>;<BPT>;<CAP>;IGNORE # 552 Ḅ
+<U1E06> <b>;<BMA>;<CAP>;IGNORE # 553 Ḇ
+<U0181> <b>;<CRL>;<CAP>;IGNORE # 554 Ɓ
+<U0043> <c>;<BAS>;<CAP>;IGNORE # 555 C
+<U00C7> <c>;<CDI>;<CAP>;IGNORE # 556 Ç
+<U0106> <c>;<ACA>;<CAP>;IGNORE # 557 <C'>
+<U0108> <c>;<CIR>;<CAP>;IGNORE # 558 <C/>>
+<U010C> <c>;<CAR>;<CAP>;IGNORE # 559 <C<>
+<U010A> <c>;<PCT>;<CAP>;IGNORE # 560 <C.>
+<U1E08> <c>;<CDI>;<CAP>;<ACA> # 561 Ḉ
+<U0187> <c>;<CRL>;<CAP>;IGNORE # 562 Ƈ
+<U0044> <d>;<BAS>;<CAP>;IGNORE # 563 D
+<U00D0> <d>;<PCL>;<CAP>;IGNORE # 564 Ð
+<U010E> <d>;<CAR>;<CAP>;IGNORE # 565 <D<>
+<U0110> <d>;<OBL>;<CAP>;IGNORE # 566 <D//>
+<U1E0A> <d>;<PCT>;<CAP>;IGNORE # 567 <D.>
+<U1E0C> <d>;<BPT>;<CAP>;IGNORE # 568 Ḍ
+<U1E0E> <d>;<BMA>;<CAP>;IGNORE # 569 Ḏ
+<U1E10> <d>;<CDI>;<CAP>;IGNORE # 570 <D,>
+<U1E12> <d>;<BCI>;<CAP>;IGNORE # 571 Ḓ
+<U018A> <d>;<CRL>;<CAP>;IGNORE # 572 Ɗ
+<U01C4> "<d><z>";"<BAS><CAR>";"<CAP><CAP>";IGNORE # 573 Ǆ
+<U01C5> "<d><z>";"<BAS><CAR>";"<CAP><MIN>";IGNORE # 574 ǅ
+<U01F1> "<d><z>";"<BAS><BAS>";"<CAP><CAP>";IGNORE # 575 Ǳ
+<U01F2> "<d><z>";"<BAS><BAS>";"<CAP><MIN>";IGNORE # 576 ǲ
+<U0045> <e>;<BAS>;<CAP>;IGNORE # 577 E
+<U00C9> <e>;<ACA>;<CAP>;IGNORE # 578 É
+<U00C8> <e>;<GRA>;<CAP>;IGNORE # 579 È
+<U00CA> <e>;<CIR>;<CAP>;IGNORE # 580 Ê
+<U00CB> <e>;<REU>;<CAP>;IGNORE # 581 Ë
+<U011A> <e>;<CAR>;<CAP>;IGNORE # 582 <E<>
+<U0116> <e>;<PCT>;<CAP>;IGNORE # 583 <E.>
+<U0118> <e>;<OGO>;<CAP>;IGNORE # 584 <E;>
+<U0112> <e>;<MAC>;<CAP>;IGNORE # 585 <E->
+<U0114> <e>;<BRE>;<CAP>;IGNORE # 586 <E(>
+<U0204> <e>;<DGR>;<CAP>;IGNORE # 587 Ȅ
+<U0206> <e>;<IBR>;<CAP>;IGNORE # 588 Ȇ
+<U0228> <e>;<CDI>;<CAP>;IGNORE # 589 <E,>
+<U1E14> <e>;<MAC>;<CAP>;<GRA> # 590 Ḕ
+<U1E16> <e>;<MAC>;<CAP>;<ACA> # 591 Ḗ
+<U1E18> <e>;<BCI>;<CAP>;IGNORE # 592 Ḙ
+<U1E1A> <e>;<BTI>;<CAP>;IGNORE # 593 Ḛ
+<U1E1C> <e>;<CDI>;<CAP>;<BRE> # 594 Ḝ
+<U1EB8> <e>;<BPT>;<CAP>;IGNORE # 595 Ẹ
+<U1EBA> <e>;<HOK>;<CAP>;IGNORE # 596 Ẻ
+<U1EBC> <e>;<TIL>;<CAP>;IGNORE # 597 Ẽ
+<U1EBE> <e>;<CIR>;<CAP>;<ACA> # 598 Ế
+<U1EC0> <e>;<CIR>;<CAP>;<GRA> # 599 Ề
+<U1EC2> <e>;<CIR>;<CAP>;<HOK> # 600 Ể
+<U1EC4> <e>;<CIR>;<CAP>;<TIL> # 601 Ễ
+<U1EC6> <e>;<CIR>;<CAP>;<BPT> # 602 Ệ
+<U018E> <e>;<PCL>;<CAP>;IGNORE # 603 Ǝ
+<U018F> <e>;<PCL>;<CAP>;IGNORE # 604 Ə
+<U0190> <e>;<PCL>;<CAP>;IGNORE # 605 Ɛ
+<U0046> <f>;<BAS>;<CAP>;IGNORE # 606 F
+<U1E1E> <f>;<PCT>;<CAP>;IGNORE # 607 <F.>
+<U0047> <g>;<BAS>;<CAP>;IGNORE # 608 G
+<U011E> <g>;<BRE>;<CAP>;IGNORE # 609 <G(>
+<U011C> <g>;<CIR>;<CAP>;IGNORE # 610 <G/>>
+<U0120> <g>;<PCT>;<CAP>;IGNORE # 611 <G.>
+<U0122> <g>;<CDI>;<CAP>;IGNORE # 612 <G,>
+<U01E4> <g>;<OBL>;<CAP>;IGNORE # 613 <G//>
+<U01E6> <g>;<CAR>;<CAP>;IGNORE # 614 <G<>
+<U01F4> <g>;<ACA>;<CAP>;IGNORE # 615 <G'>
+<U1E20> <g>;<MAC>;<CAP>;IGNORE # 616 <G->
+<U0193> <g>;<CRL>;<CAP>;IGNORE # 617 Ɠ
+<U01A2> <g>;<PCL>;<CAP>;IGNORE # 618 Ƣ
+<U0048> <h>;<BAS>;<CAP>;IGNORE # 619 H
+<U0124> <h>;<CIR>;<CAP>;IGNORE # 620 <H/>>
+<U0126> <h>;<OBL>;<CAP>;IGNORE # 621 <H//>
+<U021E> <h>;<CAR>;<CAP>;IGNORE # 622 <H<>
+<U1E22> <h>;<PCT>;<CAP>;IGNORE # 623 <H.>
+<U1E24> <h>;<BPT>;<CAP>;IGNORE # 624 Ḥ
+<U1E26> <h>;<REU>;<CAP>;IGNORE # 625 <H:>
+<U1E28> <h>;<CDI>;<CAP>;IGNORE # 626 <H,>
+<U1E2A> <h>;<BBR>;<CAP>;IGNORE # 627 Ḫ
+<U01F6> "<h><v>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 628 Ƕ
+<U0049> <i>;<BAS>;<CAP>;IGNORE # 629 I
+<U00CD> <i>;<ACA>;<CAP>;IGNORE # 630 Í
+<U00CC> <i>;<GRA>;<CAP>;IGNORE # 631 Ì
+<U00CE> <i>;<CIR>;<CAP>;IGNORE # 632 Î
+<U00CF> <i>;<REU>;<CAP>;IGNORE # 633 Ï
+<U0130> <i>;<PCL>;<CAP>;IGNORE # 634 <I.>
+<U0128> <i>;<TIL>;<CAP>;IGNORE # 635 <I?>
+<U012E> <i>;<OGO>;<CAP>;IGNORE # 636 <I;>
+<U012A> <i>;<MAC>;<CAP>;IGNORE # 637 <I->
+<U012C> <i>;<BRE>;<CAP>;IGNORE # 638 <I(>
+<U01CF> <i>;<CAR>;<CAP>;IGNORE # 639 <I<>
+<U0208> <i>;<DGR>;<CAP>;IGNORE # 640 Ȉ
+<U020A> <i>;<IBR>;<CAP>;IGNORE # 641 Ȋ
+<U1E2C> <i>;<BTI>;<CAP>;IGNORE # 642 Ḭ
+<U1E2E> <i>;<REU>;<CAP>;<ACA> # 643 Ḯ
+<U1EC8> <i>;<HOK>;<CAP>;IGNORE # 644 Ỉ
+<U1ECA> <i>;<BPT>;<CAP>;IGNORE # 645 Ị
+<U0132> "<i><j>";"<BAS><BAS>";"<CAP><CAP>";IGNORE # 646 <IJ>
+<U004A> <j>;<BAS>;<CAP>;IGNORE # 647 J
+<U0134> <j>;<CIR>;<CAP>;IGNORE # 648 <J/>>
+<U004B> <k>;<BAS>;<CAP>;IGNORE # 649 K
+<U0136> <k>;<CDI>;<CAP>;IGNORE # 650 <K,>
+<U01E8> <k>;<CAR>;<CAP>;IGNORE # 651 <K<>
+<U1E30> <k>;<ACA>;<CAP>;IGNORE # 652 <K'>
+<U1E32> <k>;<BPT>;<CAP>;IGNORE # 653 Ḳ
+<U1E34> <k>;<BMA>;<CAP>;IGNORE # 654 Ḵ
+<U0198> <k>;<CRL>;<CAP>;IGNORE # 655 Ƙ
+<U004C> <l>;<BAS>;<CAP>;IGNORE # 656 L
+<U0139> <l>;<ACA>;<CAP>;IGNORE # 657 <L'>
+<U013D> <l>;<CAR>;<CAP>;IGNORE # 658 <L<>
+<U0141> <l>;<OBL>;<CAP>;IGNORE # 659 <L//>
+<U013B> <l>;<CDI>;<CAP>;IGNORE # 660 <L,>
+<U1E36> <l>;<BPT>;<CAP>;IGNORE # 661 Ḷ
+<U1E38> <l>;<BPT>;<CAP>;<MAC> # 662 Ḹ
+<U1E3A> <l>;<BMA>;<CAP>;IGNORE # 663 Ḻ
+<U1E3C> <l>;<BCI>;<CAP>;IGNORE # 664 Ḽ
+<U013F> <l>;<PCT>;<CAP>;IGNORE # 665 <L.>
+<U01C7> "<l><j>";"<BAS><BAS>";"<CAP><CAP>";IGNORE # 666 <L><J>
+<U01C8> "<l><j>";"<BAS><BAS>";"<CAP><MIN>";IGNORE # 667 <L><j>
+<U004D> <m>;<BAS>;<CAP>;IGNORE # 668 M
+<U1E3E> <m>;<ACA>;<CAP>;IGNORE # 669 Ḿ
+<U1E40> <m>;<PCT>;<CAP>;IGNORE # 670 Ṁ
+<U1E42> <m>;<BPT>;<CAP>;IGNORE # 671 Ṃ
+<U004E> <n>;<BAS>;<CAP>;IGNORE # 672 N
+<U00D1> <n>;<TIL>;<CAP>;IGNORE # 673 Ñ
+<U0143> <n>;<ACA>;<CAP>;IGNORE # 674 <N'>
+<U0147> <n>;<CAR>;<CAP>;IGNORE # 675 <N<>
+<U0145> <n>;<CDI>;<CAP>;IGNORE # 676 <N,>
+<U01F8> <n>;<GRA>;<CAP>;IGNORE # 677 Ǹ
+<U1E44> <n>;<PCT>;<CAP>;IGNORE # 678 Ṅ
+<U1E46> <n>;<BPT>;<CAP>;IGNORE # 679 Ṇ
+<U1E48> <n>;<BMA>;<CAP>;IGNORE # 680 Ṉ
+<U1E4A> <n>;<BCI>;<CAP>;IGNORE # 681 Ṋ
+<U014A> "<n><g>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 682 <NG>
+<U01CA> "<n><j>";"<BAS><BAS>";"<CAP><CAP>";IGNORE # 683 <N><J>
+<U01CB> "<n><j>";"<BAS><BAS>";"<CAP><MIN>";IGNORE # 684 <N><j>
+<U004F> <o>;<BAS>;<CAP>;IGNORE # 685 O
+<U00D3> <o>;<ACA>;<CAP>;IGNORE # 686 Ó
+<U00D2> <o>;<GRA>;<CAP>;IGNORE # 687 Ò
+<U00D4> <o>;<CIR>;<CAP>;IGNORE # 688 Ô
+<U00D5> <o>;<TIL>;<CAP>;IGNORE # 689 Õ
+<U00D6> <o>;<REU>;<CAP>;IGNORE # 690 Ö
+<U00D8> <o>;<OBL>;<CAP>;IGNORE # 691 Ø
+<U0150> <o>;<DAC>;<CAP>;IGNORE # 692 <O">
+<U014C> <o>;<MAC>;<CAP>;IGNORE # 693 <O->
+<U014E> <o>;<BRE>;<CAP>;IGNORE # 694 <O(>
+<U01A0> <o>;<CRL>;<CAP>;IGNORE # 695 Ơ
+<U01D1> <o>;<CAR>;<CAP>;IGNORE # 696 <O<>
+<U01EA> <o>;<OGO>;<CAP>;IGNORE # 697 Ǫ
+<U01EC> <o>;<OGO>;<CAP>;<MAC> # 698 Ǭ
+<U01FE> <o>;<OBL>;<CAP>;<ACA> # 699 Ǿ
+<U020C> <o>;<DGR>;<CAP>;IGNORE # 700 Ȍ
+<U020E> <o>;<IBR>;<CAP>;IGNORE # 701 Ȏ
+<U022A> <o>;<REU>;<CAP>;<MAC> # 702 Ȫ
+<U022C> <o>;<TIL>;<CAP>;<MAC> # 703 Ȭ
+<U022E> <o>;<PCT>;<CAP>;IGNORE # 704 Ȯ
+<U0230> <o>;<PCT>;<CAP>;<MAC> # 705 Ȱ
+<U1E4C> <o>;<TIL>;<CAP>;<ACA> # 706 Ṍ
+<U1E4E> <o>;<TIL>;<CAP>;<REU> # 707 Ṏ
+<U1E50> <o>;<MAC>;<CAP>;<GRA> # 708 Ṑ
+<U1E52> <o>;<MAC>;<CAP>;<ACA> # 709 Ṓ
+<U1ECC> <o>;<BPT>;<CAP>;IGNORE # 710 Ọ
+<U1ECE> <o>;<HOK>;<CAP>;IGNORE # 711 Ỏ
+<U1ED0> <o>;<CIR>;<CAP>;<ACA> # 712 Ố
+<U1ED2> <o>;<CIR>;<CAP>;<GRA> # 713 Ồ
+<U1ED4> <o>;<CIR>;<CAP>;<HOK> # 714 Ổ
+<U1ED6> <o>;<CIR>;<CAP>;<TIL> # 715 Ỗ
+<U1ED8> <o>;<CIR>;<CAP>;<BPT> # 716 Ộ
+<U1EDA> <o>;<CRL>;<CAP>;<ACA> # 717 Ớ
+<U1EDC> <o>;<CRL>;<CAP>;<GRA> # 718 Ờ
+<U1EDE> <o>;<CRL>;<CAP>;<HOK> # 719 Ở
+<U1EE0> <o>;<CRL>;<CAP>;<TIL> # 720 Ỡ
+<U1EE2> <o>;<CRL>;<CAP>;<BPT> # 721 Ợ
+<U019F> <o>;<REU>;<CAP>;IGNORE # 722 ɵ # <REU> as it is often syn. of <O:>
+<U0186> <o>;<PCL>;<CAP>;IGNORE # 723 ɔ
+<U0152> "<o><e>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 724 <OE>
+<U0050> <p>;<BAS>;<CAP>;IGNORE # 725 P
+<U1E54> <p>;<ACA>;<CAP>;IGNORE # 726 Ṕ
+<U1E56> <p>;<PCT>;<CAP>;IGNORE # 727 Ṗ
+<U0051> <q>;<BAS>;<CAP>;IGNORE # 728 Q
+<U0052> <r>;<BAS>;<CAP>;IGNORE # 729 R
+<U0154> <r>;<ACA>;<CAP>;IGNORE # 730 <R'>
+<U0158> <r>;<CAR>;<CAP>;IGNORE # 731 <R<>
+<U0156> <r>;<CDI>;<CAP>;IGNORE # 732 <R,>
+<U0210> <r>;<DGR>;<CAP>;IGNORE # 733 Ȑ
+<U0212> <r>;<IBR>;<CAP>;IGNORE # 734 Ȓ
+<U1E58> <r>;<PCT>;<CAP>;IGNORE # 735 Ṙ
+<U1E5A> <r>;<BPT>;<CAP>;IGNORE # 736 Ṛ
+<U1E5C> <r>;<BPT>;<CAP>;<MAC> # 737 Ṝ
+<U1E5E> <r>;<BMA>;<CAP>;IGNORE # 738 Ṟ
+<U0053> <s>;<BAS>;<CAP>;IGNORE # 739 S
+<U015A> <s>;<ACA>;<CAP>;IGNORE # 740 <S'>
+<U015C> <s>;<CIR>;<CAP>;IGNORE # 741 <S/>>
+<U0160> <s>;<CAR>;<CAP>;IGNORE # 742 <S<>
+<U015E> <s>;<CDI>;<CAP>;IGNORE # 743 <S,>
+<U0218> <s>;<CDI>;<CAP>;IGNORE # 744 Ș
+<U1E60> <r>;<PCT>;<CAP>;IGNORE # 745 Ṡ
+<U1E62> <r>;<BPT>;<CAP>;IGNORE # 746 Ṣ
+<U1E64> <r>;<ACA>;<CAP>;<PCT> # 747 Ṥ
+<U1E66> <r>;<CAR>;<CAP>;<PCT> # 748 Ṧ
+<U1E68> <r>;<BPT>;<CAP>;<PCT> # 749 Ṩ
+<U0054> <t>;<BAS>;<CAP>;IGNORE # 750 T
+<U0164> <t>;<CAR>;<CAP>;IGNORE # 751 <T<>
+<U0166> <t>;<OBL>;<CAP>;IGNORE # 752 <T//>
+<U0162> <t>;<CDI>;<CAP>;IGNORE # 753 <T,>
+<U021A> <t>;<CDI>;<CAP>;IGNORE # 754 Ț
+<U1E6A> <t>;<PCT>;<CAP>;IGNORE # 755 Ṫ
+<U1E6C> <t>;<BPT>;<CAP>;IGNORE # 756 Ṭ
+<U1E6E> <t>;<BMA>;<CAP>;IGNORE # 757 Ṯ
+<U1E70> <t>;<BCI>;<CAP>;IGNORE # 758 Ṱ
+<U0055> <u>;<BAS>;<CAP>;IGNORE # 759 U
+<U00DA> <u>;<ACA>;<CAP>;IGNORE # 760 Ú
+<U00D9> <u>;<GRA>;<CAP>;IGNORE # 761 Ù
+<U00DB> <u>;<CIR>;<CAP>;IGNORE # 762 Û
+<U00DC> <u>;<REU>;<CAP>;IGNORE # 763 Ü
+<U016C> <u>;<BRE>;<CAP>;IGNORE # 764 <U(>
+<U016E> <u>;<RNE>;<CAP>;IGNORE # 765 <U0>
+<U0170> <u>;<DAC>;<CAP>;IGNORE # 766 <U">
+<U0168> <u>;<TIL>;<CAP>;IGNORE # 767 <U?>
+<U0172> <u>;<OGO>;<CAP>;IGNORE # 768 <U;>
+<U016A> <u>;<MAC>;<CAP>;IGNORE # 769 <U->
+<U01AF> <u>;<CRL>;<CAP>;IGNORE # 770 Ư
+<U01D3> <u>;<CAR>;<CAP>;IGNORE # 771 Ǔ
+<U01D5> <u>;<REU>;<CAP>;<MAC> # 772 Ǖ
+<U01D7> <u>;<REU>;<CAP>;<ACA> # 773 Ǘ
+<U01D9> <u>;<REU>;<CAP>;<CAR> # 774 Ǚ
+<U01DB> <u>;<REU>;<CAP>;<GRA> # 775 Ǜ
+<U1E72> <u>;<BRU>;<CAP>;IGNORE # 776 Ṳ
+<U1E74> <u>;<BTI>;<CAP>;IGNORE # 777 Ṵ
+<U1E76> <u>;<BCI>;<CAP>;IGNORE # 778 Ṷ
+<U1E78> <u>;<TIL>;<CAP>;<ACA> # 779 Ṹ
+<U1E7A> <u>;<MAC>;<CAP>;<REU> # 780 Ṻ
+<U1EE4> <u>;<BPT>;<CAP>;IGNORE # 781 Ụ
+<U1EE6> <u>;<HOK>;<CAP>;IGNORE # 782 Ủ
+<U1EE8> <u>;<CRL>;<CAP>;<ACA> # 783 Ứ
+<U1EEA> <u>;<CRL>;<CAP>;<GRA> # 784 Ừ
+<U1EEC> <u>;<CRL>;<CAP>;<HOK> # 785 Ử
+<U1EEE> <u>;<CRL>;<CAP>;<TIL> # 786 Ữ
+<U1EF0> <u>;<CRL>;<CAP>;<BPT> # 787 Ự
+<U0056> <v>;<BAS>;<CAP>;IGNORE # 788 V
+<U1E7C> <v>;<TIL>;<CAP>;IGNORE # 789 Ṽ
+<U1E7E> <v>;<BPT>;<CAP>;IGNORE # 790 Ṿ
+<U0057> <w>;<BAS>;<CAP>;IGNORE # 791 W
+<U0174> <w>;<CIR>;<CAP>;IGNORE # 792 <W/>>
+<U1E80> <w>;<GRA>;<CAP>;IGNORE # 793 Ẁ
+<U1E82> <w>;<ACA>;<CAP>;IGNORE # 794 Ẃ
+<U1E84> <w>;<REU>;<CAP>;IGNORE # 795 Ẅ
+<U1E86> <w>;<PCT>;<CAP>;IGNORE # 796 Ẇ
+<U1E88> <w>;<BPT>;<CAP>;IGNORE # 797 Ẉ
+<U01F7> <w>;<PCL>;<CAP>;IGNORE # 798 Ƿ
+<U0058> <x>;<BAS>;<CAP>;IGNORE # 799 X
+<U1E8A> <x>;<PCT>;<CAP>;IGNORE # 800 Ẋ
+<U1E8C> <x>;<REU>;<CAP>;IGNORE # 801 Ẍ
+<U0059> <y>;<BAS>;<CAP>;IGNORE # 802 Y
+<U00DD> <y>;<ACA>;<CAP>;IGNORE # 803 Ý
+<U0176> <y>;<CIR>;<CAP>;IGNORE # 804 <Y/>>
+<U0178> <y>;<REU>;<CAP>;IGNORE # 805 <Y:>
+<U0232> <y>;<MAC>;<CAP>;IGNORE # 806 <Y->
+<U1E8E> <y>;<PCT>;<CAP>;IGNORE # 807 Ẏ
+<U1EF2> <y>;<GRA>;<CAP>;IGNORE # 808 Ỳ
+<U1EF4> <y>;<BPT>;<CAP>;IGNORE # 809 Ỵ
+<U1EF6> <y>;<HOK>;<CAP>;IGNORE # 810 Ỷ
+<U1EF8> <y>;<TIL>;<CAP>;IGNORE # 811 Ỹ
+<U01B3> <y>;<CRL>;<CAP>;IGNORE # 812 Ƴ
+<U021C> <y>;<PCL>;<CAP>;IGNORE # 533 Ȝ
+<U005A> <z>;<BAS>;<CAP>;IGNORE # 813 Z
+<U0179> <z>;<ACA>;<CAP>;IGNORE # 814 <Z'>
+<U017D> <z>;<CAR>;<CAP>;IGNORE # 815 <Z<>
+<U017B> <z>;<PCT>;<CAP>;IGNORE # 816 <Z.>
+<U1E90> <z>;<CIR>;<CAP>;IGNORE # 817 <Z/>>
+<U1E92> <z>;<BPT>;<CAP>;IGNORE # 818 Ẓ
+<U1E94> <z>;<BMA>;<CAP>;IGNORE # 819 Ẕ
+<U01B5> <z>;<OBL>;<CAP>;IGNORE # 820 Ƶ
+<U0224> <z>;<CRL>;<CAP>;IGNORE # 821 Ȥ
+<U01B7> <zh>;<BAS>;<CAP>;IGNORE # 822 Ʒ
+<U01EE> <zh>;<CAR>;<CAP>;IGNORE # 823 Ǯ
+<U00DE> <th>;<BAS>;<CAP>;IGNORE # 824 þ
+
+order_start <TIFINAGH>;forward;backward;forward;forward,position
+<U2D30> <TIF-A>;<BAS>;<MIN>;IGNORE
+<U2D31> <TIF-B>;<BAS>;<MIN>;IGNORE
+<U2D32> <TIF-BH>;<BAS>;<MIN>;IGNORE
+<U2D33> <TIF-G>;<BAS>;<MIN>;IGNORE
+<U2D34> <TIF-GHH>;<BAS>;<MIN>;IGNORE
+<U2D35> <TIF-DJ>;<BAS>;<MIN>;IGNORE
+<U2D36> <TIF-DJ2>;<BAS>;<MIN>;IGNORE
+<U2D37> <TIF-D>;<BAS>;<MIN>;IGNORE
+<U2D38> <TIF-DH>;<BAS>;<MIN>;IGNORE
+<U2D39> <TIF-DD>;<BAS>;<MIN>;IGNORE
+<U2D3A> <TIF-DDH>;<BAS>;<MIN>;IGNORE
+<U2D3B> <TIF-E>;<BAS>;<MIN>;IGNORE
+<U2D3C> <TIF-F>;<BAS>;<MIN>;IGNORE
+<U2D3D> <TIF-K>;<BAS>;<MIN>;IGNORE
+<U2D3E> <TIF-K2>;<BAS>;<MIN>;IGNORE
+<U2D3F> <TIF-KHH>;<BAS>;<MIN>;IGNORE
+<U2D40> <TIF-H>;<BAS>;<MIN>;IGNORE
+<U2D41> <TIF-H2>;<BAS>;<MIN>;IGNORE
+<U2D42> <TIF-H3>;<BAS>;<MIN>;IGNORE
+<U2D43> <TIF-HH>;<BAS>;<MIN>;IGNORE
+<U2D44> <TIF-AA>;<BAS>;<MIN>;IGNORE
+<U2D45> <TIF-X>;<BAS>;<MIN>;IGNORE
+<U2D46> <TIF-X2>;<BAS>;<MIN>;IGNORE
+<U2D47> <TIF-Q>;<BAS>;<MIN>;IGNORE
+<U2D48> <TIF-Q2>;<BAS>;<MIN>;IGNORE
+<U2D49> <TIF-I>;<BAS>;<MIN>;IGNORE
+<U2D4A> <TIF-J>;<BAS>;<MIN>;IGNORE
+<U2D4B> <TIF-J2>;<BAS>;<MIN>;IGNORE
+<U2D4C> <TIF-J3>;<BAS>;<MIN>;IGNORE
+<U2D4D> <TIF-L>;<BAS>;<MIN>;IGNORE
+<U2D4E> <TIF-M>;<BAS>;<MIN>;IGNORE
+<U2D4F> <TIF-N>;<BAS>;<MIN>;IGNORE
+<U2D50> <TIF-GN>;<BAS>;<MIN>;IGNORE
+<U2D51> <TIF-NG>;<BAS>;<MIN>;IGNORE
+<U2D52> <TIF-P>;<BAS>;<MIN>;IGNORE
+<U2D53> <TIF-U>;<BAS>;<MIN>;IGNORE
+<U2D54> <TIF-R>;<BAS>;<MIN>;IGNORE
+<U2D55> <TIF-RR>;<BAS>;<MIN>;IGNORE
+<U2D56> <TIF-GH>;<BAS>;<MIN>;IGNORE
+<U2D57> <TIF-GH2>;<BAS>;<MIN>;IGNORE
+<U2D58> <TIF-GH3>;<BAS>;<MIN>;IGNORE
+<U2D59> <TIF-S>;<BAS>;<MIN>;IGNORE
+<U2D5A> <TIF-SS>;<BAS>;<MIN>;IGNORE
+<U2D5B> <TIF-C>;<BAS>;<MIN>;IGNORE
+<U2D5C> <TIF-T>;<BAS>;<MIN>;IGNORE
+<U2D5D> <TIF-TH>;<BAS>;<MIN>;IGNORE
+<U2D5E> <TIF-TC>;<BAS>;<MIN>;IGNORE
+<U2D5F> <TIF-TT>;<BAS>;<MIN>;IGNORE
+<U2D60> <TIF-V>;<BAS>;<MIN>;IGNORE
+<U2D61> <TIF-W>;<BAS>;<MIN>;IGNORE
+<U2D62> <TIF-Y>;<BAS>;<MIN>;IGNORE
+<U2D63> <TIF-Z>;<BAS>;<MIN>;IGNORE
+<U2D64> <TIF-Z2>;<BAS>;<MIN>;IGNORE
+<U2D65> <TIF-ZZ>;<BAS>;<MIN>;IGNORE
+<U2D6F> <TIF-LMW>;<BAS>;<MIN>;IGNORE
+
+order_start <ARABINT>;forward;forward;forward;forward,position
+<U0660> <0>;<BAS>;<MIN>;IGNORE
+<U06F0> <0>;<PCL>;<MIN>;IGNORE
+<U0661> <1>;<BAS>;<MIN>;IGNORE
+<U06F1> <1>;<PCL>;<MIN>;IGNORE
+<U0662> <2>;<BAS>;<MIN>;IGNORE
+<U06F2> <2>;<PCL>;<MIN>;IGNORE
+<U0663> <3>;<BAS>;<MIN>;IGNORE
+<U06F3> <3>;<PCL>;<MIN>;IGNORE
+<U0664> <4>;<BAS>;<MIN>;IGNORE
+<U06F4> <4>;<PCL>;<MIN>;IGNORE
+<U0665> <5>;<BAS>;<MIN>;IGNORE
+<U06F5> <5>;<PCL>;<MIN>;IGNORE
+<U0666> <6>;<BAS>;<MIN>;IGNORE
+<U06F6> <6>;<PCL>;<MIN>;IGNORE
+<U0667> <7>;<BAS>;<MIN>;IGNORE
+<U06F7> <7>;<PCL>;<MIN>;IGNORE
+<U0668> <8>;<BAS>;<MIN>;IGNORE
+<U06F8> <8>;<PCL>;<MIN>;IGNORE
+<U0669> <9>;<BAS>;<MIN>;IGNORE
+<U06F9> <9>;<PCL>;<MIN>;IGNORE
+<U0621> <hamza>;<BAS>;<MIN>;IGNORE
+<U0622> <alef>;<AMA>;<MIN>;IGNORE
+<U0623> <alef>;<AHA>;<MIN>;IGNORE
+<U0625> <alef>;<AHS>;<MIN>;IGNORE
+<U0627> <alef>;<BAS>;<MIN>;IGNORE
+<U0628> <beh>;<BAS>;<MIN>;IGNORE
+<U067E> <peh>;<BAS>;<MIN>;IGNORE
+<U0629> <teh_marbuta>;<BAS>;<MIN>;IGNORE
+<U062A> <teh>;<BAS>;<MIN>;IGNORE
+<U0679> <tteh>;<BAS>;<MIN>;IGNORE
+<U062B> <theh>;<BAS>;<MIN>;IGNORE
+<U062C> <jeem>;<BAS>;<MIN>;IGNORE
+<U0686> <tcheh>;<BAS>;<MIN>;IGNORE
+<U062D> <hah>;<BAS>;<MIN>;IGNORE
+<U062E> <khah>;<BAS>;<MIN>;IGNORE
+<U062F> <dal>;<BAS>;<MIN>;IGNORE
+<U0688> <ddal>;<BAS>;<MIN>;IGNORE
+<U0630> <thal>;<BAS>;<MIN>;IGNORE
+<U0631> <reh>;<BAS>;<MIN>;IGNORE
+<U0691> <rreh>;<BAS>;<MIN>;IGNORE
+<U0632> <zain>;<BAS>;<MIN>;IGNORE
+<U0698> <jeh>;<BAS>;<MIN>;IGNORE
+<U0633> <seen>;<BAS>;<MIN>;IGNORE
+<U0634> <sheen>;<BAS>;<MIN>;IGNORE
+<U0635> <sad>;<BAS>;<MIN>;IGNORE
+<U0636> <dad>;<BAS>;<MIN>;IGNORE
+<U0637> <tah>;<BAS>;<MIN>;IGNORE
+<U0638> <zah>;<BAS>;<MIN>;IGNORE
+<U0639> <ain>;<BAS>;<MIN>;IGNORE
+<U063A> <ghain>;<BAS>;<MIN>;IGNORE
+<U0641> <feh>;<BAS>;<MIN>;IGNORE
+<U0642> <qaf>;<BAS>;<MIN>;IGNORE
+<U0643> <kaf>;<BAS>;<MIN>;IGNORE
+<U06A9> <keheh>;<BAS>;<MIN>;IGNORE
+<U06AF> <gaf>;<BAS>;<MIN>;IGNORE
+<U0644> <lam>;<BAS>;<MIN>;IGNORE
+<U0645> <meem>;<BAS>;<MIN>;IGNORE
+<U0646> <noon>;<BAS>;<MIN>;IGNORE
+<U06BA> <noon_ghunna>;<BAS>;<MIN>;IGNORE
+<U0647> <heh>;<BAS>;<MIN>;IGNORE
+<U06C0> <heh_yeh>;<BAS>;<MIN>;IGNORE
+<U0624> <waw>;<AHW>;<MIN>;IGNORE
+<U0648> <waw>;<BAS>;<MIN>;IGNORE
+<U0649> <alef_maksura>;<BAS>;<MIN>;IGNORE
+<U0626> "<alef_maksura><hamza>";"<BAS><BAS>";"<MIN><MIN>";IGNORE
+<U064A> <alef_maksura>;<AYE>;<MIN>;IGNORE
+<U06D3> <yeh_barree>;<YBA>;<MIN>;IGNORE
+<U06D2> <yeh_barree>;<BAS>;<MIN>;IGNORE
+
+order_start <ARABFOR>;backward;backward;backward;forward,position
+<UFE80> <hamza>;<BAS>;<AIS>;IGNORE
+<UFE81> <alef>;<AMA>;<AIS>;IGNORE
+<UFE82> <alef>;<AMA>;<AFI>;IGNORE
+<UFE83> <alef>;<AHA>;<AIS>;IGNORE
+<UFE84> <alef>;<AHA>;<AFI>;IGNORE
+<UFE87> <alef>;<AHS>;<AIS>;IGNORE
+<UFE88> <alef>;<AHS>;<AFI>;IGNORE
+<UFE8D> <alef>;<BAS>;<AIS>;IGNORE
+<UFE8E> <alef>;<BAS>;<AFI>;IGNORE
+<UFE8F> <beh>;<BAS>;<AIS>;IGNORE
+<UFE90> <beh>;<BAS>;<AFI>;IGNORE
+<UFE91> <beh>;<BAS>;<AII>;IGNORE
+<UFE92> <beh>;<BAS>;<AME>;IGNORE
+<UFB56> <peh>;<BAS>;<AIS>;IGNORE
+<UFB57> <peh>;<BAS>;<AFI>;IGNORE
+<UFB58> <peh>;<BAS>;<AII>;IGNORE
+<UFB59> <peh>;<BAS>;<AME>;IGNORE
+<UFE93> <teh_marbuta>;<BAS>;<AIS>;IGNORE
+<UFE94> <teh_marbuta>;<BAS>;<AFI>;IGNORE
+<UFE95> <teh>;<BAS>;<AIS>;IGNORE
+<UFE96> <teh>;<BAS>;<AFI>;IGNORE
+<UFE97> <teh>;<BAS>;<AII>;IGNORE
+<UFE98> <teh>;<BAS>;<AME>;IGNORE
+<UFB66> <tteh>;<BAS>;<AIS>;IGNORE
+<UFB67> <tteh>;<BAS>;<AFI>;IGNORE
+<UFB68> <tteh>;<BAS>;<AII>;IGNORE
+<UFB69> <tteh>;<BAS>;<AME>;IGNORE
+<UFE99> <theh>;<BAS>;<AIS>;IGNORE
+<UFE9A> <theh>;<BAS>;<AFI>;IGNORE
+<UFE9B> <theh>;<BAS>;<AII>;IGNORE
+<UFE9C> <theh>;<BAS>;<AME>;IGNORE
+<UFE9D> <jeem>;<BAS>;<AIS>;IGNORE
+<UFE9E> <jeem>;<BAS>;<AFI>;IGNORE
+<UFE9F> <jeem>;<BAS>;<AII>;IGNORE
+<UFEA0> <jeem>;<BAS>;<AME>;IGNORE
+<UFB7A> <tcheh>;<BAS>;<AIS>;IGNORE
+<UFB7B> <tcheh>;<BAS>;<AFI>;IGNORE
+<UFB7C> <tcheh>;<BAS>;<AII>;IGNORE
+<UFB7D> <tcheh>;<BAS>;<AME>;IGNORE
+<UFEA1> <hah>;<BAS>;<AIS>;IGNORE
+<UFEA2> <hah>;<BAS>;<AFI>;IGNORE
+<UFEA3> <hah>;<BAS>;<AII>;IGNORE
+<UFEA4> <hah>;<BAS>;<AME>;IGNORE
+<UFEA5> <khah>;<BAS>;<AIS>;IGNORE
+<UFEA6> <khah>;<BAS>;<AFI>;IGNORE
+<UFEA7> <khah>;<BAS>;<AII>;IGNORE
+<UFEA8> <khah>;<BAS>;<AME>;IGNORE
+<UFEA9> <dal>;<BAS>;<AIS>;IGNORE
+<UFEAA> <dal>;<BAS>;<AFI>;IGNORE
+<UFB88> <ddal>;<BAS>;<AIS>;IGNORE
+<UFB89> <ddal>;<BAS>;<AFI>;IGNORE
+<UFEAB> <thal>;<BAS>;<AIS>;IGNORE
+<UFEAC> <thal>;<BAS>;<AFI>;IGNORE
+<UFEAD> <reh>;<BAS>;<AIS>;IGNORE
+<UFEAE> <reh>;<BAS>;<AFI>;IGNORE
+<UFB8C> <rreh>;<BAS>;<AIS>;IGNORE
+<UFB8D> <rreh>;<BAS>;<AFI>;IGNORE
+<UFEAF> <zain>;<BAS>;<AIS>;IGNORE
+<UFEB0> <zain>;<BAS>;<AFI>;IGNORE
+<UFB8A> <jeh>;<BAS>;<AIS>;IGNORE
+<UFB8B> <jeh>;<BAS>;<AFI>;IGNORE
+<UFEB1> <seen>;<BAS>;<AIS>;IGNORE
+<UFEB2> <seen>;<BAS>;<AFI>;IGNORE
+<UFEB3> <seen>;<BAS>;<AII>;IGNORE
+<UFEB4> <seen>;<BAS>;<AME>;IGNORE
+<UFEB5> <sheen>;<BAS>;<AIS>;IGNORE
+<UFEB6> <sheen>;<BAS>;<AFI>;IGNORE
+<UFEB7> <sheen>;<BAS>;<AII>;IGNORE
+<UFEB8> <sheen>;<BAS>;<AME>;IGNORE
+<UFEB9> <sad>;<BAS>;<AIS>;IGNORE
+<UFEBA> <sad>;<BAS>;<AFI>;IGNORE
+<UFEBB> <sad>;<BAS>;<AII>;IGNORE
+<UFEBC> <sad>;<BAS>;<AME>;IGNORE
+<UFEBD> <dad>;<BAS>;<AIS>;IGNORE
+<UFEBE> <dad>;<BAS>;<AFI>;IGNORE
+<UFEBF> <dad>;<BAS>;<AII>;IGNORE
+<UFEC0> <dad>;<BAS>;<AME>;IGNORE
+<UFEC1> <tah>;<BAS>;<AIS>;IGNORE
+<UFEC2> <tah>;<BAS>;<AFI>;IGNORE
+<UFEC3> <tah>;<BAS>;<AII>;IGNORE
+<UFEC4> <tah>;<BAS>;<AME>;IGNORE
+<UFEC5> <zah>;<BAS>;<AIS>;IGNORE
+<UFEC6> <zah>;<BAS>;<AFI>;IGNORE
+<UFEC7> <zah>;<BAS>;<AII>;IGNORE
+<UFEC8> <zah>;<BAS>;<AME>;IGNORE
+<UFEC9> <ain>;<BAS>;<AIS>;IGNORE
+<UFECA> <ain>;<BAS>;<AFI>;IGNORE
+<UFECB> <ain>;<BAS>;<AII>;IGNORE
+<UFECC> <ain>;<BAS>;<AME>;IGNORE
+<UFECD> <ghain>;<BAS>;<AIS>;IGNORE
+<UFECE> <ghain>;<BAS>;<AFI>;IGNORE
+<UFECF> <ghain>;<BAS>;<AII>;IGNORE
+<UFED0> <ghain>;<BAS>;<AME>;IGNORE
+<UFED1> <feh>;<BAS>;<AIS>;IGNORE
+<UFED2> <feh>;<BAS>;<AFI>;IGNORE
+<UFED3> <feh>;<BAS>;<AII>;IGNORE
+<UFED4> <feh>;<BAS>;<AME>;IGNORE
+<UFED5> <qaf>;<BAS>;<AIS>;IGNORE
+<UFED6> <qaf>;<BAS>;<AFI>;IGNORE
+<UFED7> <qaf>;<BAS>;<AII>;IGNORE
+<UFED8> <qaf>;<BAS>;<AME>;IGNORE
+<UFED9> <kaf>;<BAS>;<AIS>;IGNORE
+<UFEDA> <kaf>;<BAS>;<AFI>;IGNORE
+<UFEDB> <kaf>;<BAS>;<AII>;IGNORE
+<UFEDC> <kaf>;<BAS>;<AME>;IGNORE
+<UFB8E> <keheh>;<BAS>;<AIS>;IGNORE
+<UFB8F> <keheh>;<BAS>;<AFI>;IGNORE
+<UFB90> <keheh>;<BAS>;<AII>;IGNORE
+<UFB91> <keheh>;<BAS>;<AME>;IGNORE
+<UFB92> <gaf>;<BAS>;<AIS>;IGNORE
+<UFB93> <gaf>;<BAS>;<AFI>;IGNORE
+<UFB94> <gaf>;<BAS>;<AII>;IGNORE
+<UFB95> <gaf>;<BAS>;<AME>;IGNORE
+<UFEDD> <lam>;<BAS>;<AIS>;IGNORE
+<UFEDE> <lam>;<BAS>;<AFI>;IGNORE
+<UFEDF> <lam>;<BAS>;<AII>;IGNORE
+<UFEE0> <lam>;<BAS>;<AME>;IGNORE
+<UFEE1> <meem>;<BAS>;<AIS>;IGNORE
+<UFEE2> <meem>;<BAS>;<AFI>;IGNORE
+<UFEE3> <meem>;<BAS>;<AII>;IGNORE
+<UFEE4> <meem>;<BAS>;<AME>;IGNORE
+<UFEE5> <noon>;<BAS>;<AIS>;IGNORE
+<UFEE6> <noon>;<BAS>;<AFI>;IGNORE
+<UFEE7> <noon>;<BAS>;<AII>;IGNORE
+<UFEE8> <noon>;<BAS>;<AME>;IGNORE
+<UFB9E> <noon_ghunna>;<BAS>;<AIS>;IGNORE
+<UFB9F> <noon_ghunna>;<BAS>;<AFI>;IGNORE
+<UFEE9> <heh>;<BAS>;<AIS>;IGNORE
+<UFEEA> <heh>;<BAS>;<AFI>;IGNORE
+<UFEEB> <heh>;<BAS>;<AII>;IGNORE
+<UFEEC> <heh>;<BAS>;<AME>;IGNORE
+<UFBA4> <heh_yeh>;<BAS>;<AIS>;IGNORE
+<UFBA5> <heh_yeh>;<BAS>;<AFI>;IGNORE
+<UFE85> <waw>;<AHW>;<AIS>;IGNORE
+<UFE86> <waw>;<AHW>;<AFI>;IGNORE
+<UFEED> <waw>;<BAS>;<AIS>;IGNORE
+<UFEEE> <waw>;<BAS>;<AFI>;IGNORE
+<UFEEF> <alef_maksura>;<BAS>;<AIS>;IGNORE
+<UFEF0> <alef_maksura>;<BAS>;<AFI>;IGNORE
+<UFE89> "<alef_maksura><hamza>";"<BAS><BAS>";"<AIS><AIS>";IGNORE
+<UFE8A> "<alef_maksura><hamza>";"<BAS><BAS>";"<AFI><AIS>";IGNORE
+<UFE8B> "<alef_maksura><hamza>";"<BAS><BAS>";"<AII><AIS>";IGNORE
+<UFE8C> "<alef_maksura><hamza>";"<BAS><BAS>";"<AME><AIS>";IGNORE
+<UFEF1> <alef_maksura>;<AYE>;<AIS>;IGNORE
+<UFEF2> <alef_maksura>;<AYE>;<AFI>;IGNORE
+<UFEF3> <alef_maksura>;<AYE>;<AII>;IGNORE
+<UFEF4> <alef_maksura>;<AYE>;<AME>;IGNORE
+<UFBB0> <yeh_barree>;<YBA>;<AIS>;IGNORE
+<UFBB1> <yeh_barree>;<YBA>;<AFI>;IGNORE
+<UFBAE> <yeh_barree>;<BAS>;<AIS>;IGNORE
+<UFBAF> <yeh_barree>;<BAS>;<AFI>;IGNORE
+<UFEF5> "<lam><alef>";"<BAS><AMA>";"<AIS><AFI>";IGNORE
+<UFEF6> "<lam><alef>";"<BAS><AMA>";"<AFI><AFI>";IGNORE
+<UFEF7> "<lam><alef>";"<BAS><AHA>";"<AIS><AFI>";IGNORE
+<UFEF8> "<lam><alef>";"<BAS><AHA>";"<AFI><AFI>";IGNORE
+<UFEF9> "<lam><alef>";"<BAS><AHS>";"<AIS><AFI>";IGNORE
+<UFEFA> "<lam><alef>";"<BAS><AHS>";"<AFI><AFI>";IGNORE
+<UFEFB> "<lam><alef>";"<BAS><BAS>";"<AIS><AFI>";IGNORE
+<UFEFC> "<lam><alef>";"<BAS><BAS>";"<AFI><AFI>";IGNORE
+
+order_start <HEBREU>;forward;forward;forward;forward,position
+<U05D0> <alef_heb>;<BAS>;IGNORE;IGNORE
+<U05D1> <bet>;<BAS>;IGNORE;IGNORE
+<U05D2> <gimel>;<BAS>;IGNORE;IGNORE
+<U05D3> <dalet>;<BAS>;IGNORE;IGNORE
+<U05D4> <he>;<BAS>;IGNORE;IGNORE
+<U05D5> <vav>;<BAS>;IGNORE;IGNORE
+<U05D6> <zayin>;<BAS>;IGNORE;IGNORE
+<U05D7> <het>;<BAS>;IGNORE;IGNORE
+<U05D8> <tet>;<BAS>;IGNORE;IGNORE
+<U05D9> <yod>;<BAS>;IGNORE;IGNORE
+<U05DA> <kaf_fin>;<BAS>;IGNORE;IGNORE
+<U05DB> <kaf_heb>;<BAS>;IGNORE;IGNORE
+<U05DC> <lamed>;<BAS>;IGNORE;IGNORE
+<U05DD> <mem_fin>;<BAS>;IGNORE;IGNORE
+<U05DE> <mem>;<BAS>;IGNORE;IGNORE
+<U05DF> <nun_fin>;<BAS>;IGNORE;IGNORE
+<U05E0> <nun>;<BAS>;IGNORE;IGNORE
+<U05E1> <samekh>;<BAS>;IGNORE;IGNORE
+<U05E2> <ayin>;<BAS>;IGNORE;IGNORE
+<U05E3> <pe_fin>;<BAS>;IGNORE;IGNORE
+<U05E4> <pe>;<BAS>;IGNORE;IGNORE
+<U05E5> <tsadi_fin>;<BAS>;IGNORE;IGNORE
+<U05E6> <tsadi>;<BAS>;IGNORE;IGNORE
+<U05E7> <qof>;<BAS>;IGNORE;IGNORE
+<U05E8> <resh>;<BAS>;IGNORE;IGNORE
+<U05E9> <shin>;<BAS>;IGNORE;IGNORE
+<U05EA> <tav>;<BAS>;IGNORE;IGNORE
+
+order_start <GREC>;forward;backward;forward;forward,position
+<U0391> <ALPHA>;<BAS>;<CAP>;IGNORE
+<U0386> <ALPHA>;<TNS>;<CAP>;IGNORE
+<U0392> <BETA>;<BAS>;<CAP>;IGNORE
+<U0393> <GAMMA>;<BAS>;<CAP>;IGNORE
+<U03DC> <GAMMA>;<PCL>;<CAP>;IGNORE # digamma copte
+<U0394> <DELTA>;<BAS>;<CAP>;IGNORE
+<U03EA> <DELTA>;<PCL>;<CAP>;IGNORE # GANGIA COPTE
+<U0395> <EPSILON>;<BAS>;<CAP>;IGNORE
+<U0388> <EPSILON>;<TNS>;<CAP>;IGNORE
+<U0396> <ZETA>;<BAS>;<CAP>;IGNORE
+<U03E8> <ZETA>;<PCL>;<CAP>;IGNORE # HORI COPTE
+<U0397> <ETA>;<BAS>;<CAP>;IGNORE
+<U0389> <ETA>;<TNS>;<CAP>;IGNORE
+<U0398> <THETA>;<BAS>;<CAP>;IGNORE
+<U0399> <IOTA>;<BAS>;<CAP>;IGNORE
+<U038A> <IOTA>;<TNS>;<CAP>;IGNORE
+<U03AA> <IOTA>;<DLT>;<CAP>;IGNORE
+<U039A> <KAPPA>;<BAS>;<CAP>;IGNORE
+<U03DE> <KAPPA>;<PCL>;<CAP>;IGNORE # koppa copte
+<U03E6> <KAPPA>;<LIG>;<CAP>;IGNORE # KHEI COPTE
+<U039B> <LAMBDA>;<BAS>;<CAP>;IGNORE
+<U039C> <MU>;<BAS>;<CAP>;IGNORE
+<U039D> <NU>;<BAS>;<CAP>;IGNORE
+<U039E> <XI>;<BAS>;<CAP>;IGNORE
+<U039F> <OMICRON>;<BAS>;<CAP>;IGNORE
+<U038C> <OMICRON>;<TNS>;<CAP>;IGNORE
+<U03A0> <PI>;<BAS>;<CAP>;IGNORE
+<U03A1> <RHO>;<BAS>;<CAP>;IGNORE
+<U03C1> <RHO>;<BAS>;<CAP>;IGNORE
+<U03A3> <SIGMA>;<BAS>;<CAP>;IGNORE
+<U03DA> <SIGMA>;<PCL>;<CAP>;IGNORE # STIGMA ARCH.
+<U03EC> <SIGMA>;<LIG>;<CAP>;IGNORE # SHIMA COPTE
+<U03A4> <TAU>;<BAS>;<CAP>;IGNORE
+<U03EE> <TAU>;<PCL>;<CAP>;IGNORE # DEI COPTE
+<U03A5> <UPSILON>;<BAS>;<CAP>;IGNORE
+<U038E> <UPSILON>;<TNS>;<CAP>;IGNORE
+<U03AB> <UPSILON>;<DLT>;<CAP>;IGNORE
+<U03D4> <UPSILON>;<DTT>;<CAP>;IGNORE
+<U03D2> <UPSILON>;<OGO>;<CAP>;IGNORE
+<U03D3> <UPSILON>;<MAC>;<CAP>;IGNORE
+<U03A6> <PHI>;<BAS>;<CAP>;IGNORE
+<U03E4> <PHI>;<LIG>;<CAP>;IGNORE # FEI COPTE
+<U03A7> <CHI>;<BAS>;<CAP>;IGNORE
+<U03E0> <CHI>;<PCL>;<CAP>;IGNORE # sampi copte
+<U03A8> <PSI>;<BAS>;<CAP>;IGNORE
+<U03E2> <PSI>;<PCL>;<CAP>;IGNORE # SHEI COPTE
+<U03A9> <OMEGA>;<BAS>;<CAP>;IGNORE
+<U038F> <OMEGA>;<TNS>;<CAP>;IGNORE
+<U03B1> <ALPHA>;<BAS>;<AMI>;IGNORE
+<U03AC> <ALPHA>;<TNS>;<AMI>;IGNORE
+<U03B2> <BETA>;<BAS>;<AMI>;IGNORE
+<U03D0> <BETA>;<PCL>;<AMI>;IGNORE
+<U03B3> <GAMMA>;<BAS>;<AMI>;IGNORE
+<U03B4> <DELTA>;<BAS>;<AMI>;IGNORE
+<U03EB> <DELTA>;<BAS>;<AMI>;IGNORE # gangia copte
+<U03B5> <EPSILON>;<BAS>;<AMI>;IGNORE
+<U03AD> <EPSILON>;<TNS>;<AMI>;IGNORE
+<U03B6> <ZETA>;<BAS>;<AMI>;IGNORE
+<U03E9> <ZETA>;<PCL>;<AMI>;IGNORE # hori copte
+<U03B7> <ETA>;<BAS>;<AMI>;IGNORE
+<U03AE> <ETA>;<TNS>;<AMI>;IGNORE
+<U03B8> <THETA>;<BAS>;<AMI>;IGNORE
+<U03D1> <THETA>;<PCL>;<AMI>;IGNORE
+<U03B9> <IOTA>;<BAS>;<AMI>;IGNORE
+<U03AF> <IOTA>;<TNS>;<AMI>;IGNORE
+<U03CA> <IOTA>;<DLT>;<AMI>;IGNORE
+<U0390> <IOTA>;<DTT>;<AMI>;IGNORE
+<U03F3> <IOTA>;<OGO>;<AMI>;IGNORE # yot
+<U03BA> <KAPPA>;<BAS>;<AMI>;IGNORE
+<U03F0> <KAPPA>;<PCL>;<AMI>;IGNORE
+<U03E7> <KAPPA>;<LIG>;<AMI>;IGNORE # khei copte
+<U03BB> <LAMBDA>;<BAS>;<AMI>;IGNORE
+<U03BC> <MU>;<BAS>;<AMI>;IGNORE
+<U03BD> <NU>;<BAS>;<AMI>;IGNORE
+<U03BE> <XI>;<BAS>;<AMI>;IGNORE
+<U03BF> <OMICRON>;<BAS>;<AMI>;IGNORE
+<U03CC> <OMICRON>;<TNS>;<AMI>;IGNORE
+<U03C0> <PI>;<BAS>;<AMI>;IGNORE
+<U03D6> <PI>;<PCL>;<AMI>;IGNORE
+<U03F1> <RHO>;<PCL>;<AMI>;IGNORE
+<U03C3> <SIGMA>;<BAS>;<AMI>;IGNORE
+<U03C2> <SIGMA>;<PCL>;<AMI>;IGNORE
+<U03ED> <SIGMA>;<LIG>;<AMI>;IGNORE # shima copte
+<U03F2> <SIGMA>;<OGO>;<AMI>;IGNORE
+<U03C4> <TAU>;<BAS>;<AMI>;IGNORE
+<U03EF> <TAU>;<PCL>;<AMI>;IGNORE # dei copte
+<U03C5> <UPSILON>;<BAS>;<AMI>;IGNORE
+<U03CD> <UPSILON>;<TNS>;<AMI>;IGNORE
+<U03CB> <UPSILON>;<DLT>;<AMI>;IGNORE
+<U03B0> <UPSILON>;<DTT>;<AMI>;IGNORE
+<U03C6> <PHI>;<BAS>;<AMI>;IGNORE
+<U03D5> <PHI>;<PCL>;<AMI>;IGNORE
+<U03E5> <PHI>;<LIG>;<AMI>;IGNORE # fei copte
+<U03C7> <CHI>;<BAS>;<AMI>;IGNORE
+<U03C8> <PSI>;<BAS>;<AMI>;IGNORE
+<U03E3> <PSI>;<PCL>;<AMI>;IGNORE # shei copte
+<U03C9> <OMEGA>;<BAS>;<AMI>;IGNORE
+<U03CE> <OMEGA>;<TNS>;<AMI>;IGNORE
+
+order_start <CYRIL>;forward;forward;forward;forward,position
+<U0430> <CYR-A>;<BAS>;<MIN>;IGNORE
+<U04D1> <CYR-A>;<BRE>;<MIN>;IGNORE
+<U04D3> <CYR-A>;<REU>;<MIN>;IGNORE
+<U04D5> "<CYR-A><CYR-IE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+<U0431> <CYR-BE>;<BAS>;<MIN>;IGNORE
+<U0432> <CYR-VE>;<BAS>;<MIN>;IGNORE
+<U0433> <CYR-GHE>;<BAS>;<MIN>;IGNORE
+<U0491> <CYR-GHE>;<CRL>;<MIN>;IGNORE
+<U0493> <CYR-GHE>;<OBL>;<MIN>;IGNORE
+<U04F7> <CYR-GHE>;<CDI>;<MIN>;IGNORE
+<U0495> <CYR-GHE>;<HOK>;<MIN>;IGNORE
+<U0434> <CYR-DE>;<BAS>;<MIN>;IGNORE
+<U0501> <CYR-DE>;<PCL>;<MIN>;IGNORE   # komi DE
+<U0503> "<CYR-DE><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi DJE
+<U0453> <CYR-GZHE>;<BAS>;<MIN>;IGNORE
+<U0435> <CYR-IE>;<BAS>;<MIN>;IGNORE
+<U0450> <CYR-IE>;<GRA>;<MIN>;IGNORE
+<U04D7> <CYR-IE>;<BRE>;<MIN>;IGNORE
+<U04D9> <CYR-IE>;<PCL>;<MIN>;IGNORE
+<U04DB> <CYR-IE>;<PCL>;<MIN>;<REU>
+<U0452> <CYR-DJE>;<BAS>;<MIN>;IGNORE
+<U0454> <UKR-IE>;<BAS>;<MIN>;IGNORE
+<U0451> <CYR-IO>;<BAS>;<MIN>;IGNORE
+<U0436> <CYR-ZHE>;<BAS>;<MIN>;IGNORE
+<U0497> <CYR-ZHE>;<CDI>;<MIN>;IGNORE
+<U04C2> <CYR-ZHE>;<BRE>;<MIN>;IGNORE
+<U04DD> <CYR-ZHE>;<REU>;<MIN>;IGNORE
+<U0437> <CYR-ZE>;<BAS>;<MIN>;IGNORE
+<U0499> <CYR-ZE>;<CDI>;<MIN>;IGNORE
+<U04DF> <CYR-ZE>;<REU>;<MIN>;IGNORE
+<U0505> "<CYR-ZE><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi ZJE
+<U0455> <CYR-DZE>;<BAS>;<MIN>;IGNORE
+<U04E1> <CYR-DZE>;<PCL>;<MIN>;IGNORE
+<U0507> "<CYR-DZE><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi DZJE
+<U0438> <CYR-I>;<BAS>;<MIN>;IGNORE
+<U045D> <CYR-I>;<GRA>;<MIN>;IGNORE
+<U04E3> <CYR-I>;<MAC>;<MIN>;IGNORE
+<U04E5> <CYR-I>;<REU>;<MIN>;IGNORE
+<U0456> <UKR-I>;<BAS>;<MIN>;IGNORE
+<U0457> <UKR-YI>;<BAS>;<MIN>;IGNORE
+<U0439> <CYR-IBRE>;<BAS>;<MIN>;IGNORE
+<U048B> <CYR-IBRE>;<CDI>;<MIN>;IGNORE
+<U0458> <CYR-JE>;<BAS>;<MIN>;IGNORE
+<U043A> <CYR-KA>;<BAS>;<MIN>;IGNORE
+<U049B> <CYR-KA>;<CDI>;<MIN>;IGNORE
+<U049D> <CYR-KA>;<OBL>;<MIN>;IGNORE
+<U049F> <CYR-KA>;<MAC>;<MIN>;IGNORE
+<U04A1> <CYR-KA>;<PCL>;<MIN>;IGNORE
+<U04C4> <CYR-KA>;<HOK>;<MIN>;IGNORE
+<U043B> <CYR-EL>;<BAS>;<MIN>;IGNORE
+<U04C6> <CYR-EL>;<CDI>;<MIN>;IGNORE
+<U0509> "<CYR-EL><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi LJE
+<U0459> <CYR-LJE>;<BAS>;<MIN>;IGNORE
+<U043C> <CYR-EM>;<BAS>;<MIN>;IGNORE
+<U04CE> <CYR-EM>;<CDI>;<MIN>;IGNORE
+<U043D> <CYR-EN>;<BAS>;<MIN>;IGNORE
+<U04A3> <CYR-EN>;<CDI>;<MIN>;IGNORE
+<U04CA> <CYR-EN>;<CDI>;<MIN>;IGNORE
+<U04C8> <CYR-EN>;<HOK>;<MIN>;IGNORE
+<U04A5> "<CYR-EN><CYR-GHE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+<U050B> "<CYR-EN><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi NJE
+<U045A> <CYR-NJE>;<BAS>;<MIN>;IGNORE
+<U043E> <CYR-O>;<BAS>;<MIN>;IGNORE
+<U04E7> <CYR-O>;<REU>;<MIN>;IGNORE
+<U04E9> <CYR-O>;<PCL>;<MIN>;IGNORE
+<U04EB> <CYR-O>;<PCL>;<MIN>;<REU>
+<U043F> <CYR-PE>;<BAS>;<MIN>;IGNORE
+<U04A7> <CYR-PE>;<HOK>;<MIN>;IGNORE
+<U0440> <CYR-ER>;<BAS>;<MIN>;IGNORE
+<U048F> <CYR-ER>;<OBL>;<MIN>;IGNORE
+<U0441> <CYR-ES>;<BAS>;<MIN>;IGNORE
+<U04AB> <CYR-ES>;<CDI>;<MIN>;IGNORE
+<U050D> "<CYR-ES><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi SJE
+<U0442> <CYR-TE>;<BAS>;<MIN>;IGNORE
+<U04AD> <CYR-TE>;<CDI>;<MIN>;IGNORE
+<U050F> "<CYR-TE><CYR-JE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   # komi TJE
+<U04B5> "<CYR-TE><CYR-TSE>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+<U045C> <CYR-KJE>;<BAS>;<MIN>;IGNORE
+<U045B> <CYR-TSHE>;<BAS>;<MIN>;IGNORE
+<U0443> <CYR-OU>;<BAS>;<MIN>;IGNORE
+<U04EF> <CYR-OU>;<MAC>;<MIN>;IGNORE
+<U04AF> <CYR-OU>;<PCL>;<MIN>;IGNORE
+<U04B1> <CYR-OU>;<PCL>;<MIN>;<OBL>
+<U04F1> <CYR-OU>;<REU>;<MIN>;IGNORE
+<U04F3> <CYR-OU>;<DAC>;<MIN>;IGNORE
+<U045E> <CYR-OUBRE>;<BAS>;<MIN>;IGNORE
+<U0444> <CYR-EF>;<BAS>;<MIN>;IGNORE
+<U0445> <CYR-HA>;<BAS>;<MIN>;IGNORE
+<U04B3> <CYR-HA>;<CDI>;<MIN>;IGNORE
+<U04BB> <CYR-HA>;<PCL>;<MIN>;IGNORE
+<U04A9> <CYR-HA>;<PCL>;<MIN>;<CRL>    # abkhazian ha
+<U0446> <CYR-TSE>;<BAS>;<MIN>;IGNORE
+<U0447> <CYR-CHE>;<BAS>;<MIN>;IGNORE
+<U04B7> <CYR-CHE>;<CDI>;<MIN>;IGNORE
+<U04B9> <CYR-CHE>;<OBL>;<MIN>;IGNORE
+<U04CC> <CYR-CHE>;<CDI>;<MIN>;IGNORE
+<U04F5> <CYR-CHE>;<REU>;<MIN>;IGNORE
+<U04BD> <CYR-CHE>;<PCL>;<MIN>;IGNORE   # abkhazian che
+<U04BF> <CYR-CHE>;<PCL>;<MIN>;<CDI>    # abkhazian che with descender
+<U045F> <CYR-DCHE>;<BAS>;<MIN>;IGNORE
+<U0448> <CYR-SHA>;<BAS>;<MIN>;IGNORE
+<U0449> <CYR-SHTSHA>;<BAS>;<MIN>;IGNORE
+<U044A> <CYR-SIGDUR>;<BAS>;<MIN>;IGNORE
+<U044B> <CYR-YEROU>;<BAS>;<MIN>;IGNORE
+<U04F9> <CYR-YEROU>;<REU>;<MIN>;IGNORE
+<U044C> <CYR-SIGMOUIL>;<BAS>;<MIN>;IGNORE
+<U048D> <CYR-SIGMOUIL>;<OBL>;<MIN>;IGNORE
+<U044D> <CYR-E>;<BAS>;<MIN>;IGNORE
+<U04ED> <CYR-E>;<REU>;<MIN>;IGNORE
+<U044E> <CYR-YOU>;<BAS>;<MIN>;IGNORE
+<U044F> <CYR-YA>;<BAS>;<MIN>;IGNORE
+<U0410> <CYR-A>;<BAS>;<CAP>;IGNORE
+<U04D0> <CYR-A>;<BRE>;<CAP>;IGNORE
+<U04D2> <CYR-A>;<REU>;<CAP>;IGNORE
+<U04D4> "<CYR-A><CYR-IE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
+<U0411> <CYR-BE>;<BAS>;<CAP>;IGNORE
+<U0412> <CYR-VE>;<BAS>;<CAP>;IGNORE
+<U0413> <CYR-GHE>;<BAS>;<CAP>;IGNORE
+<U0490> <CYR-GHE>;<CRL>;<CAP>;IGNORE
+<U0492> <CYR-GHE>;<OBL>;<CAP>;IGNORE
+<U0494> <CYR-GHE>;<HOK>;<CAP>;IGNORE
+<U04F6> <CYR-GHE>;<CDI>;<CAP>;IGNORE
+<U0414> <CYR-DE>;<BAS>;<CAP>;IGNORE
+<U0500> <CYR-DE>;<PCL>;<CAP>;IGNORE   # komi DE
+<U0502> "<CYR-DE><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi DJE
+<U0403> <CYR-GZHE>;<BAS>;<CAP>;IGNORE
+<U0402> <CYR-DJE>;<BAS>;<CAP>;IGNORE
+<U0415> <CYR-IE>;<BAS>;<CAP>;IGNORE
+<U0400> <CYR-IE>;<GRA>;<CAP>;IGNORE
+<U04D6> <CYR-IE>;<BRE>;<CAP>;IGNORE
+<U04D8> <CYR-IE>;<PCL>;<CAP>;IGNORE
+<U04DA> <CYR-IE>;<PCL>;<CAP>;<REU>
+<U0404> <UKR-IE>;<BAS>;<CAP>;IGNORE
+<U0401> <CYR-IO>;<BAS>;<CAP>;IGNORE
+<U0416> <CYR-ZHE>;<BAS>;<CAP>;IGNORE
+<U0496> <CYR-ZHE>;<CDI>;<CAP>;IGNORE
+<U04C1> <CYR-ZHE>;<BRE>;<CAP>;IGNORE
+<U04DC> <CYR-ZHE>;<REU>;<CAP>;IGNORE
+<U0417> <CYR-ZE>;<BAS>;<CAP>;IGNORE
+<U0498> <CYR-ZE>;<CDI>;<CAP>;IGNORE
+<U04DE> <CYR-ZE>;<REU>;<CAP>;IGNORE
+<U0504> "<CYR-ZE><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi ZJE
+<U0405> <CYR-DZE>;<BAS>;<CAP>;IGNORE
+<U04E0> <CYR-DZE>;<PCL>;<CAP>;IGNORE
+<U0506> "<CYR-DZE><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi DZJE
+<U0418> <CYR-I>;<BAS>;<CAP>;IGNORE
+<U040D> <CYR-I>;<GRA>;<CAP>;IGNORE
+<U04E2> <CYR-I>;<MAC>;<CAP>;IGNORE
+<U04E4> <CYR-I>;<REU>;<CAP>;IGNORE
+<U0406> <UKR-I>;<BAS>;<CAP>;IGNORE
+<U0407> <UKR-YI>;<BAS>;<CAP>;IGNORE
+<U0419> <CYR-IBRE>;<BAS>;<CAP>;IGNORE
+<U048A> <CYR-IBRE>;<CDI>;<CAP>;IGNORE
+<U0408> <CYR-JE>;<BAS>;<CAP>;IGNORE
+<U041A> <CYR-KA>;<BAS>;<CAP>;IGNORE
+<U049A> <CYR-KA>;<CDI>;<CAP>;IGNORE
+<U049C> <CYR-KA>;<OBL>;<CAP>;IGNORE
+<U049E> <CYR-KA>;<MAC>;<CAP>;IGNORE
+<U04A0> <CYR-KA>;<PCL>;<CAP>;IGNORE
+<U04C3> <CYR-KA>;<HOK>;<CAP>;IGNORE
+<U041B> <CYR-EL>;<BAS>;<CAP>;IGNORE
+<U04C5> <CYR-EL>;<CDI>;<CAP>;IGNORE
+<U0508> "<CYR-EL><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi LJE
+<U0409> <CYR-LJE>;<BAS>;<CAP>;IGNORE
+<U041C> <CYR-EM>;<BAS>;<CAP>;IGNORE
+<U04CD> <CYR-EM>;<CDI>;<CAP>;IGNORE
+<U041D> <CYR-EN>;<BAS>;<CAP>;IGNORE
+<U04A2> <CYR-EN>;<CDI>;<CAP>;IGNORE
+<U04C7> <CYR-EN>;<HOK>;<CAP>;IGNORE
+<U04C9> <CYR-EN>;<CDI>;<CAP>;IGNORE
+<U04A4> "<CYR-EN><CYR-GHE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
+<U050A> "<CYR-EN><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi NJE
+<U040A> <CYR-NJE>;<BAS>;<CAP>;IGNORE
+<U041E> <CYR-O>;<BAS>;<CAP>;IGNORE
+<U04E6> <CYR-O>;<REU>;<CAP>;IGNORE
+<U04E8> <CYR-O>;<PCL>;<CAP>;IGNORE
+<U04EA> <CYR-O>;<PCL>;<CAP>;<REU>
+<U041F> <CYR-PE>;<BAS>;<CAP>;IGNORE
+<U04A6> <CYR-PE>;<HOK>;<CAP>;IGNORE
+<U0420> <CYR-ER>;<BAS>;<CAP>;IGNORE
+<U048E> <CYR-ER>;<OBL>;<CAP>;IGNORE
+<U0421> <CYR-ES>;<BAS>;<CAP>;IGNORE
+<U04AA> <CYR-ES>;<CDI>;<CAP>;IGNORE
+<U050C> "<CYR-ES><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi SJE
+<U0422> <CYR-TE>;<BAS>;<CAP>;IGNORE
+<U04AC> <CYR-TE>;<CDI>;<CAP>;IGNORE
+<U050E> "<CYR-TE><CYR-JE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   # komi TJE
+<U04B4> "<CYR-TE><CYR-TSE>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
+<U040C> <CYR-KJE>;<BAS>;<CAP>;IGNORE
+<U040B> <CYR-TSHE>;<BAS>;<CAP>;IGNORE
+<U0423> <CYR-OU>;<BAS>;<CAP>;IGNORE
+<U04EE> <CYR-OU>;<MAC>;<CAP>;IGNORE
+<U04AE> <CYR-OU>;<PCL>;<CAP>;IGNORE
+<U04B0> <CYR-OU>;<PCL>;<CAP>;<OBL>
+<U04F0> <CYR-OU>;<REU>;<CAP>;IGNORE
+<U04F2> <CYR-OU>;<DAC>;<CAP>;IGNORE
+<U040E> <CYR-OUBRE>;<BAS>;<CAP>;IGNORE
+<U0424> <CYR-EF>;<BAS>;<CAP>;IGNORE
+<U0425> <CYR-HA>;<BAS>;<CAP>;IGNORE
+<U04B2> <CYR-HA>;<CDI>;<CAP>;IGNORE
+<U04BA> <CYR-HA>;<PCL>;<CAP>;IGNORE
+<U04A8> <CYR-HA>;<PCL>;<CAP>;<CRL>    # abkhazian ha
+<U0426> <CYR-TSE>;<BAS>;<CAP>;IGNORE
+<U0427> <CYR-CHE>;<BAS>;<CAP>;IGNORE
+<U04B6> <CYR-CHE>;<CDI>;<CAP>;IGNORE
+<U04B8> <CYR-CHE>;<OBL>;<CAP>;IGNORE
+<U04CB> <CYR-CHE>;<CDI>;<CAP>;IGNORE
+<U04F4> <CYR-CHE>;<REU>;<CAP>;IGNORE
+<U04BC> <CYR-CHE>;<PCL>;<CAP>;IGNORE   # abkhazian che
+<U04BE> <CYR-CHE>;<PCL>;<CAP>;<CDI>    # abkhazian che with descender
+<U040F> <CYR-DCHE>;<BAS>;<CAP>;IGNORE
+<U0428> <CYR-SHA>;<BAS>;<CAP>;IGNORE
+<U0429> <CYR-SHTSHA>;<BAS>;<CAP>;IGNORE
+<U042A> <CYR-SIGDUR>;<BAS>;<CAP>;IGNORE
+<U04F8> <CYR-YEROU>;<REU>;<CAP>;IGNORE
+<U042B> <CYR-YEROU>;<BAS>;<CAP>;IGNORE
+<U042C> <CYR-SIGMOUIL>;<BAS>;<CAP>;IGNORE
+<U048C> <CYR-SIGMOUIL>;<OBL>;<CAP>;IGNORE
+<U042D> <CYR-E>;<BAS>;<CAP>;IGNORE
+<U04EC> <CYR-E>;<REU>;<CAP>;IGNORE
+<U042E> <CYR-YOU>;<BAS>;<CAP>;IGNORE
+<U042F> <CYR-YA>;<BAS>;<CAP>;IGNORE
+
+order_start <ARMENIAN>;forward;forward;forward;forward,position
+<U0561> <ARM-AYB>;<BAS>;<MIN>;IGNORE
+<U0562> <ARM-BEN>;<BAS>;<MIN>;IGNORE
+<U0563> <ARM-GIM>;<BAS>;<MIN>;IGNORE
+<U0564> <ARM-DA>;<BAS>;<MIN>;IGNORE
+<U0565> <ARM-ECH>;<BAS>;<MIN>;IGNORE
+<U0566> <ARM-ZA>;<BAS>;<MIN>;IGNORE
+<U0567> <ARM-E>;<BAS>;<MIN>;IGNORE
+<U0568> <ARM-AT>;<BAS>;<MIN>;IGNORE
+<U0569> <ARM-TO>;<BAS>;<MIN>;IGNORE
+<U056A> <ARM-ZHE>;<BAS>;<MIN>;IGNORE
+<U056B> <ARM-INI>;<BAS>;<MIN>;IGNORE
+<U056C> <ARM-LYUN>;<BAS>;<MIN>;IGNORE
+<U056D> <ARM-KHE>;<BAS>;<MIN>;IGNORE
+<U056E> <ARM-TSA>;<BAS>;<MIN>;IGNORE
+<U056F> <ARM-KEN>;<BAS>;<MIN>;IGNORE
+<U0570> <ARM-HO>;<BAS>;<MIN>;IGNORE
+<U0571> <ARM-DZA>;<BAS>;<MIN>;IGNORE
+<U0572> <ARM-GHAT>;<BAS>;<MIN>;IGNORE
+<U0573> <ARM-TCHE>;<BAS>;<MIN>;IGNORE
+<U0574> <ARM-MEN>;<BAS>;<MIN>;IGNORE
+<U0575> <ARM-HI>;<BAS>;<MIN>;IGNORE
+<U0576> <ARM-NU>;<BAS>;<MIN>;IGNORE
+<U0577> <ARM-SHA>;<BAS>;<MIN>;IGNORE
+<U0578> <ARM-VO>;<BAS>;<MIN>;IGNORE
+<U0579> <ARM-CHA>;<BAS>;<MIN>;IGNORE
+<U057A> <ARM-PE>;<BAS>;<MIN>;IGNORE
+<U057B> <ARM-JE>;<BAS>;<MIN>;IGNORE
+<U057C> <ARM-RA>;<BAS>;<MIN>;IGNORE
+<U057D> <ARM-SE>;<BAS>;<MIN>;IGNORE
+<U057E> <ARM-VEV>;<BAS>;<MIN>;IGNORE
+<U057F> <ARM-TYUN>;<BAS>;<MIN>;IGNORE
+<U0580> <ARM-RE>;<BAS>;<MIN>;IGNORE
+<U0581> <ARM-TSO>;<BAS>;<MIN>;IGNORE
+<U0582> <ARM-VYUN>;<BAS>;<MIN>;IGNORE
+<U0583> <ARM-PYUR>;<BAS>;<MIN>;IGNORE
+<U0584> <ARM-KE>;<BAS>;<MIN>;IGNORE
+<U0585> <ARM-O>;<BAS>;<MIN>;IGNORE
+<U0586> <ARM-FE>;<BAS>;<MIN>;IGNORE
+<U0531> <ARM-AYB>;<BAS>;<CAP>;IGNORE
+<U0532> <ARM-BEN>;<BAS>;<CAP>;IGNORE
+<U0533> <ARM-GIM>;<BAS>;<CAP>;IGNORE
+<U0534> <ARM-DA>;<BAS>;<CAP>;IGNORE
+<U0535> <ARM-ECH>;<BAS>;<CAP>;IGNORE
+<U0536> <ARM-ZA>;<BAS>;<CAP>;IGNORE
+<U0537> <ARM-E>;<BAS>;<CAP>;IGNORE
+<U0538> <ARM-AT>;<BAS>;<CAP>;IGNORE
+<U0539> <ARM-TO>;<BAS>;<CAP>;IGNORE
+<U053A> <ARM-ZHE>;<BAS>;<CAP>;IGNORE
+<U053B> <ARM-INI>;<BAS>;<CAP>;IGNORE
+<U053C> <ARM-LYUN>;<BAS>;<CAP>;IGNORE
+<U053D> <ARM-KHE>;<BAS>;<CAP>;IGNORE
+<U053E> <ARM-TSA>;<BAS>;<CAP>;IGNORE
+<U053F> <ARM-KEN>;<BAS>;<CAP>;IGNORE
+<U0540> <ARM-HO>;<BAS>;<CAP>;IGNORE
+<U0541> <ARM-DZA>;<BAS>;<CAP>;IGNORE
+<U0542> <ARM-GHAT>;<BAS>;<CAP>;IGNORE
+<U0543> <ARM-TCHE>;<BAS>;<CAP>;IGNORE
+<U0544> <ARM-MEN>;<BAS>;<CAP>;IGNORE
+<U0545> <ARM-HI>;<BAS>;<CAP>;IGNORE
+<U0546> <ARM-NU>;<BAS>;<CAP>;IGNORE
+<U0547> <ARM-SHA>;<BAS>;<CAP>;IGNORE
+<U0548> <ARM-VO>;<BAS>;<CAP>;IGNORE
+<U0549> <ARM-CHA>;<BAS>;<CAP>;IGNORE
+<U054A> <ARM-PE>;<BAS>;<CAP>;IGNORE
+<U054B> <ARM-JE>;<BAS>;<CAP>;IGNORE
+<U054C> <ARM-RA>;<BAS>;<CAP>;IGNORE
+<U054D> <ARM-SE>;<BAS>;<CAP>;IGNORE
+<U054E> <ARM-VEV>;<BAS>;<CAP>;IGNORE
+<U054F> <ARM-TYUN>;<BAS>;<CAP>;IGNORE
+<U0550> <ARM-RE>;<BAS>;<CAP>;IGNORE
+<U0551> <ARM-TSO>;<BAS>;<CAP>;IGNORE
+<U0552> <ARM-VYUN>;<BAS>;<CAP>;IGNORE
+<U0553> <ARM-PYUR>;<BAS>;<CAP>;IGNORE
+<U0554> <ARM-KE>;<BAS>;<CAP>;IGNORE
+<U0555> <ARM-O>;<BAS>;<CAP>;IGNORE
+<U0556> <ARM-FE>;<BAS>;<CAP>;IGNORE
+
+order_end
+
+END LC_COLLATE
