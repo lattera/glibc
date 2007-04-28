@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <sched.h>
 #include <sysdep.h>
 
@@ -25,11 +26,9 @@ sched_getcpu (void)
 {
 #ifdef __NR_getcpu
   unsigned int cpu;
-  INTERNAL_SYSCALL_DECL (err);
-  int r = INTERNAL_SYSCALL (getcpu, err, &cpu, NULL, NULL);
+  int r = INLINE_SYSCALL (getcpu, 3, &cpu, NULL, NULL);
 
-  return (INTERNAL_SYSCALL_ERROR (r, err)
-	  ? INTERNAL_SYSCALL_ERRNO (r, err) : cpu);
+  return r == -1 ? r : cpu;
 #else
   __set_errno (ENOSYS);
   return -1;

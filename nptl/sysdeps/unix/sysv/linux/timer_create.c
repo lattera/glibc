@@ -1,4 +1,4 @@
-/* Copyright (C) 2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003,2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -193,12 +193,11 @@ timer_create (clock_id, evp, timerid)
 						  PTHREAD_CREATE_DETACHED);
 
 	      /* Create the event structure for the kernel timer.  */
-	      struct sigevent sev;
-	      sev.sigev_value.sival_ptr = newp;
-	      sev.sigev_signo = SIGTIMER;
-	      sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
-	      /* This is the thread ID of the helper thread.  */
-	      sev._sigev_un._pad[0] = __helper_tid;
+	      struct sigevent sev =
+		{ .sigev_value.sival_ptr = newp,
+		  .sigev_signo = SIGTIMER,
+		  .sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID,
+		  ._sigev_un = { ._pad = { [0] = __helper_tid } } };
 
 	      /* Create the timer.  */
 	      INTERNAL_SYSCALL_DECL (err);
