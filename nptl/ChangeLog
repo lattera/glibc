@@ -1,5 +1,9 @@
 2007-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4392]
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Treat error
+	check mutexes like normal mutexes.
+
 	[BZ #4306]
 	* sysdeps/unix/sysv/linux/timer_create.c (timer_create):
 	Initialize the whole sigevent structure to appease valgrind.

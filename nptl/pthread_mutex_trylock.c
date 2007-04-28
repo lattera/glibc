@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -58,12 +58,6 @@ __pthread_mutex_trylock (mutex)
       break;
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
-      /* Check whether we already hold the mutex.  */
-      if (__builtin_expect (mutex->__data.__owner == id, 0))
-	return EDEADLK;
-
-      /* FALLTHROUGH */
-
     case PTHREAD_MUTEX_TIMED_NP:
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       /* Normal mutex.  */
@@ -75,7 +69,6 @@ __pthread_mutex_trylock (mutex)
       ++mutex->__data.__nusers;
 
       return 0;
-
 
     case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
     case PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP:
