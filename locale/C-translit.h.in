@@ -1,5 +1,5 @@
 /* Transliteration for the C locale.  -*-C-*-
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -94,6 +94,7 @@
 "\x2039"	"<"	/* <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK */
 "\x203a"	">"	/* <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
 "\x203c"	"!!"	/* <U203C> DOUBLE EXCLAMATION MARK */
+"\x2044"	"/"	/* <U2044> FRACTION SLASH */
 "\x2047"	"??"	/* <U2047> DOUBLE QUESTION MARK */
 "\x2048"	"?!"	/* <U2048> QUESTION EXCLAMATION MARK */
 "\x2049"	"!?"	/* <U2049> EXCLAMATION QUESTION MARK */

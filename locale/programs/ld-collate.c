@@ -3154,8 +3154,9 @@ error while adding equivalent collating symbol"));
 	      if (sp == NULL)
 		{
 		  lr_error (ldfile, _("\
-%s: unknown section name `%s'"),
-			    "LC_COLLATE", arg->val.str.startmb);
+%s: unknown section name `%.*s'"),
+			    "LC_COLLATE", (int) arg->val.str.lenmb,
+			    arg->val.str.startmb);
 		  /* We use the error section.  */
 		  collate->current_section = &collate->error_section;
 

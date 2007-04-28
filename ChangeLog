@@ -1,5 +1,11 @@
 2007-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (collate_read): Fix printing of
+	error message.
+
+	[BZ #3213]
+	* locale/C-translit.h.in: Add entry for U2044.
+
 	[BZ #4342]
 	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Allow
 	hexa-decimal floats without exponent.

@@ -1,3 +1,8 @@
+2007-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3213]
+	* locales/translit_neutral: Add entry for U2044.
+
 2007-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4411]
