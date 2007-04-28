@@ -1,3 +1,9 @@
+2007-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4102]
+	* sysdeps/posix/getaddrinfo.c (default_labels): Assign separate
+	label to Teredo tunnel addresses 2001://32.
+
 2007-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_read): Allow order_start
