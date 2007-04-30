@@ -1,3 +1,12 @@
+2007-04-30  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4349]
+	* malloc/malloc.c: Keep separate list for first blocks on the bin
+	lists with a given size.  This helps skipping over list elements
+	we know won't fit in two places.
+	Inspired by a patch by Tomash Brechko <tomash.brechko@gmail.com>.
+
 2007-04-28  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4102]

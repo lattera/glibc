@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -26,10 +26,6 @@
 * Version ptmalloc2-20011215
   based on:
   VERSION 2.7.0 Sun Mar 11 14:14:06 2001  Doug Lea  (dl at gee)
-
-   Note: There may be an updated version of this malloc obtainable at
-           http://www.malloc.de/malloc/ptmalloc2.tar.gz
-         Check before installing!
 
 * Quickstart
 
@@ -1781,6 +1777,10 @@ struct malloc_chunk {
 
   struct malloc_chunk* fd;         /* double links -- used only if free. */
   struct malloc_chunk* bk;
+
+  /* Only used for large blocks: pointer to next larger size.  */
+  struct malloc_chunk* fd_nextsize; /* double links -- used only if free. */
+  struct malloc_chunk* bk_nextsize;
 };
 
 
@@ -1881,7 +1881,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
 
 /* The smallest possible chunk */
-#define MIN_CHUNK_SIZE        (sizeof(struct malloc_chunk))
+#define MIN_CHUNK_SIZE        (offsetof(struct malloc_chunk, fd_nextsize))
 
 /* The smallest size we can malloc is an aligned minimal chunk */
 
@@ -2081,6 +2081,24 @@ typedef struct malloc_chunk* mbinptr;
   else {                                                               \
     FD->bk = BK;                                                       \
     BK->fd = FD;                                                       \
+    if (!in_smallbin_range (P->size)				       \
+	&& __builtin_expect (P->fd_nextsize != NULL, 0)) {	       \
+      assert (P->fd_nextsize->bk_nextsize == P);		       \
+      assert (P->bk_nextsize->fd_nextsize == P);		       \
+      if (FD->fd_nextsize == NULL) {				       \
+	if (P->fd_nextsize == P)				       \
+	  FD->fd_nextsize = FD->bk_nextsize = FD;		       \
+	else {							       \
+	  FD->fd_nextsize = P->fd_nextsize;			       \
+	  FD->bk_nextsize = P->bk_nextsize;			       \
+	  P->fd_nextsize->bk_nextsize = FD;			       \
+	  P->bk_nextsize->fd_nextsize = FD;			       \
+	}							       \
+      }	else {							       \
+	P->fd_nextsize->bk_nextsize = P->bk_nextsize;		       \
+	P->bk_nextsize->fd_nextsize = P->fd_nextsize;		       \
+      }								       \
+    }								       \
   }                                                                    \
 }
 
@@ -2797,7 +2815,31 @@ static void do_check_malloc_state(mstate av)
         /* lists are sorted */
         assert(p->bk == b ||
                (unsigned long)chunksize(p->bk) >= (unsigned long)chunksize(p));
-      }
+
+	if (!in_smallbin_range(size))
+	  {
+	    if (p->fd_nextsize != NULL)
+	      {
+		if (p->fd_nextsize == p)
+		  assert (p->bk_nextsize == p);
+		else
+		  {
+		    if (p->fd_nextsize == first (b))
+		      assert (chunksize (p) < chunksize (p->fd_nextsize));
+		    else
+		      assert (chunksize (p) > chunksize (p->fd_nextsize));
+
+		    if (p == first (b))
+		      assert (chunksize (p) > chunksize (p->bk_nextsize));
+		    else
+		      assert (chunksize (p) < chunksize (p->bk_nextsize));
+		  }
+	      }
+	    else
+	      assert (p->bk_nextsize == NULL);
+	  }
+      } else if (!in_smallbin_range(size))
+	assert (p->fd_nextsize == NULL && p->bk_nextsize == NULL);
       /* chunk is followed by a legal chain of inuse chunks */
       for (q = next_chunk(p);
            (q != av->top && inuse(q) &&
@@ -4149,6 +4191,11 @@ _int_malloc(mstate av, size_t bytes)
         unsorted_chunks(av)->bk = unsorted_chunks(av)->fd = remainder;
         av->last_remainder = remainder;
         remainder->bk = remainder->fd = unsorted_chunks(av);
+	if (!in_smallbin_range(remainder_size))
+	  {
+	    remainder->fd_nextsize = NULL;
+	    remainder->bk_nextsize = NULL;
+	  }
 
         set_head(victim, nb | PREV_INUSE |
 		 (av != &main_arena ? NON_MAIN_ARENA : 0));
@@ -4197,19 +4244,36 @@ _int_malloc(mstate av, size_t bytes)
           size |= PREV_INUSE;
           /* if smaller than smallest, bypass loop below */
 	  assert((bck->bk->size & NON_MAIN_ARENA) == 0);
-          if ((unsigned long)(size) <= (unsigned long)(bck->bk->size)) {
+	  if ((unsigned long)(size) < (unsigned long)(bck->bk->size)) {
             fwd = bck;
             bck = bck->bk;
+
+	    victim->fd_nextsize = fwd->fd;
+	    victim->bk_nextsize = fwd->fd->bk_nextsize;
+	    fwd->fd->bk_nextsize = victim->bk_nextsize->fd_nextsize = victim;
           }
           else {
 	    assert((fwd->size & NON_MAIN_ARENA) == 0);
-            while ((unsigned long)(size) < (unsigned long)(fwd->size)) {
-              fwd = fwd->fd;
-	      assert((fwd->size & NON_MAIN_ARENA) == 0);
-	    }
-            bck = fwd->bk;
+	    while ((unsigned long) size < fwd->size)
+	      {
+		fwd = fwd->fd_nextsize;
+		assert((fwd->size & NON_MAIN_ARENA) == 0);
+	      }
+
+	    if ((unsigned long) size == (unsigned long) fwd->size)
+	      /* Always insert in the second position.  */
+	      fwd = fwd->fd;
+	    else
+	      {
+		victim->fd_nextsize = fwd;
+		victim->bk_nextsize = fwd->bk_nextsize;
+		fwd->bk_nextsize = victim;
+		victim->bk_nextsize->fd_nextsize = victim;
+	      }
+	    bck = fwd->bk;
           }
-        }
+	} else
+	  victim->fd_nextsize = victim->bk_nextsize = victim;
       }
 
       mark_bin(av, victim_index);
@@ -4225,21 +4289,25 @@ _int_malloc(mstate av, size_t bytes)
 
     /*
       If a large request, scan through the chunks of current bin in
-      sorted order to find smallest that fits.  This is the only step
-      where an unbounded number of chunks might be scanned without doing
-      anything useful with them. However the lists tend to be short.
+      sorted order to find smallest that fits.  Use the skip list for this.
     */
 
     if (!in_smallbin_range(nb)) {
       bin = bin_at(av, idx);
 
       /* skip scan if empty or largest chunk is too small */
-      if ((victim = last(bin)) != bin &&
-          (unsigned long)(first(bin)->size) >= (unsigned long)(nb)) {
+      if ((victim = first(bin)) != bin &&
+          (unsigned long)(victim->size) >= (unsigned long)(nb)) {
 
+	victim = victim->bk_nextsize;
         while (((unsigned long)(size = chunksize(victim)) <
                 (unsigned long)(nb)))
-          victim = victim->bk;
+          victim = victim->bk_nextsize;
+
+	/* Avoid removing the first entry for a size so that the skip
+	   list does not have to be rerouted.  */
+	if (victim != last(bin) && victim->size == victim->fd->size)
+	  victim = victim->fd;
 
         remainder_size = size - nb;
         unlink(victim, bck, fwd);
@@ -4261,6 +4329,11 @@ _int_malloc(mstate av, size_t bytes)
 	  remainder->fd = fwd;
 	  bck->fd = remainder;
 	  fwd->bk = remainder;
+	  if (!in_smallbin_range(remainder_size))
+	    {
+	      remainder->fd_nextsize = NULL;
+	      remainder->bk_nextsize = NULL;
+	    }
           set_head(victim, nb | PREV_INUSE |
 		   (av != &main_arena ? NON_MAIN_ARENA : 0));
           set_head(remainder, remainder_size | PREV_INUSE);
@@ -4330,9 +4403,7 @@ _int_malloc(mstate av, size_t bytes)
         remainder_size = size - nb;
 
         /* unlink */
-        bck = victim->bk;
-        bin->bk = bck;
-        bck->fd = bin;
+        unlink(victim, bck, fwd);
 
         /* Exhaust */
         if (remainder_size < MINSIZE) {
@@ -4357,7 +4428,11 @@ _int_malloc(mstate av, size_t bytes)
           /* advertise as last remainder */
           if (in_smallbin_range(nb))
             av->last_remainder = remainder;
-
+	  if (!in_smallbin_range(remainder_size))
+	    {
+	      remainder->fd_nextsize = NULL;
+	      remainder->bk_nextsize = NULL;
+	    }
           set_head(victim, nb | PREV_INUSE |
 		   (av != &main_arena ? NON_MAIN_ARENA : 0));
           set_head(remainder, remainder_size | PREV_INUSE);
@@ -4580,8 +4655,13 @@ _int_free(mstate av, Void_t* mem)
 
       bck = unsorted_chunks(av);
       fwd = bck->fd;
-      p->bk = bck;
       p->fd = fwd;
+      p->bk = bck;
+      if (!in_smallbin_range(size))
+	{
+	  p->fd_nextsize = NULL;
+	  p->bk_nextsize = NULL;
+	}
       bck->fd = p;
       fwd->bk = p;
 
@@ -4748,6 +4828,11 @@ static void malloc_consolidate(av) mstate av;
             first_unsorted = unsorted_bin->fd;
             unsorted_bin->fd = p;
             first_unsorted->bk = p;
+
+            if (!in_smallbin_range (size)) {
+	      p->fd_nextsize = NULL;
+	      p->bk_nextsize = NULL;
+	    }
 
             set_head(p, size | PREV_INUSE);
             p->bk = unsorted_bin;
