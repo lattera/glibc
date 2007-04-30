@@ -793,7 +793,7 @@ ___printf_fp (FILE *fp,
   else
     {
       /* This is a special case.  We don't need a factor because the
-	 numbers are in the range of 0.0 <= fp < 8.0.  We simply
+	 numbers are in the range of 1.0 <= |fp| < 8.0.  We simply
 	 shift it to the right place and divide it by 1.0 to get the
 	 leading digit.	 (Of course this division is not really made.)	*/
       assert (0 <= exponent && exponent < 3 &&
@@ -1013,6 +1013,12 @@ ___printf_fp (FILE *fp,
 		  {
 		    *wstartp = '1';
 		    exponent += expsign == 0 ? 1 : -1;
+
+		    /* The above exponent adjustment could lead to 1.0e-00,
+		       e.g. for 0.999999999.  Make sure exponent 0 always
+		       uses + sign.  */
+		    if (exponent == 0)
+		      expsign = 0;
 		  }
 		else if (intdig_no == dig_max)
 		  {

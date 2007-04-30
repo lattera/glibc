@@ -1,5 +1,9 @@
 2007-04-30  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdio-common/printf_fp.c (___printf_fp): Don't print negative sign
+	for exponent 0.
+	* stdio-common/tfformat.c (sprint_doubles): Add a new test.
+
 	[BZ #4439]
 	* resolv/inet_ntop.c (inet_ntop4): Take terminating '\0' into
 	account in the size check.
