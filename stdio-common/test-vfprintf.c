@@ -1,5 +1,5 @@
 /* Tests of *printf for very large strings.
-   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -94,6 +94,7 @@ main (void)
       fprintf (fp, "%.*s", 30000, large);
       large[20000] = '\0';
       fprintf (fp, large);
+      fprintf (fp, "%-1.300000000s", "hello");
 
       if (fflush (fp) != 0 || ferror (fp) != 0 || fclose (fp) != 0)
 	{
@@ -108,11 +109,12 @@ main (void)
 		  setlocale (LC_ALL, NULL));
 	  exit (1);
 	}
-      else if (st.st_size != 99999)
+      else if (st.st_size != 50000 + 30000 + 19999 + 5)
 	{
 	  printf ("file size incorrect for locale %s: %jd instead of %jd\n",
 		  setlocale (LC_ALL, NULL),
-		  (intmax_t) st.st_size, (intmax_t) 99999);
+		  (intmax_t) st.st_size,
+		  (intmax_t) 50000 + 30000 + 19999 + 5);
 	  res = 1;
 	}
       else

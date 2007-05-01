@@ -3,6 +3,8 @@
 	[BZ #4438]
 	* stdio-common/vfprintf.c (process_string_arg): Don't overflow the
 	stack for large precisions.
+	* stdio-common/test-vfprintf.c (main): Add test for large
+	precision.
 
 2007-04-30  Jakub Jelinek  <jakub@redhat.com>
 
