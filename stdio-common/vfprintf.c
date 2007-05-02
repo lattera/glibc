@@ -1162,7 +1162,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		    /* In case we have a multibyte character set the	      \
 		       situation is more complicated.  We must not copy	      \
 		       bytes at the end which form an incomplete character. */\
-		    wchar_t ignore[1024];				      \
+		    size_t ignore_size = (unsigned) prec > 1024 ? 1024 : prec;\
+		    wchar_t ignore[ignore_size];			      \
 		    const char *str2 = string;				      \
 		    const char *strend = string + prec;			      \
 		    if (strend < string)				      \

@@ -1,3 +1,8 @@
+2007-05-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Use a VLA rather than
+	fixed length array for ignore.
+
 2007-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4438]
