@@ -1,3 +1,9 @@
+2007-05-01  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/pthreadtypes.h
+	[__USE_XOPEN2K]: Define pthread_rwlock_t and 
+	pthread_rwlockattr_t. 
+
 2007-02-02  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (PTR_MANGLE): Define.
