@@ -1236,20 +1236,83 @@ main (void)
 #endif
 
 #if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG >= DBL_MANT_DIG + 4
-  volatile long double ld5 = nextafter (0.0, 1.0) / 16.0L;
-  volatile double d5;
-  (void) &ld5;
-  int i;
-  for (i = 0; i <= 32; i++)
+  int oldmode = fegetround ();
+  int j;
+  for (j = 0; j < 4; j++)
     {
-      d5 = ld5 * i;
-      (void) &d5;
-      if (d5 != (i <= 8 ? 0 : i < 24 ? 1 : 2) * nextafter (0.0, 1.0))
+      int mode;
+      int i;
+      int k = 0;
+      const char *mstr;
+      switch (j)
 	{
-	  printf ("%La incorrectly rounded to %a\n", ld5 * i, d5);
-	  result = 1;
+#ifdef FE_TONEAREST
+	case 0:
+	  mode = FE_TONEAREST;
+	  mstr = "nearest";
+	  k = 8;
+	  break;
+#endif
+#ifdef FE_DOWNWARD
+	case 1:
+	  mode = FE_DOWNWARD;
+	  mstr = "-inf";
+	  break;
+#endif
+#ifdef FE_UPWARD
+	case 2:
+	  mode = FE_UPWARD;
+	  mstr = "+inf";
+	  k = 15;
+	  break;
+#endif
+#ifdef FE_TOWARDZERO
+	case 3:
+	  mode = FE_TOWARDZERO;
+	  mstr = "0";
+	  break;
+#endif
+	default:
+	  continue;
 	}
-    } 
+
+      volatile long double ld5 = nextafter (0.0, 1.0) / 16.0L;
+      volatile double d5;
+      (void) &ld5;
+      for (i = 0; i <= 32; i++)
+	{
+	  if (fesetround (mode))
+	    {
+	      printf ("failed to set rounding mode to %s\n", mstr);
+	      result = 1;
+	      break;
+	    }
+	  d5 = ld5 * i;
+	  (void) &d5;
+	  fesetround (oldmode);
+	  if (d5 != ((j == 0 && i == 8) ? 0 : (i + k) / 16)
+		    * nextafter (0.0, 1.0))
+	    {
+	      printf ("%La incorrectly rounded to %s as %a\n",
+		      ld5 * i, mstr, d5);
+	      result = 1;
+	    }
+	}
+    }
+
+  volatile long double ld7 = nextafterl (0.0L, 1.0L);
+  volatile double d7;
+  (void) &ld7;
+  fesetround (FE_UPWARD);
+  d7 = ld7;
+  (void) &d7;
+  fesetround (oldmode);
+
+  if (d7 != nextafter (0.0, 1.0))
+    {
+      printf ("%La incorrectly rounded upward to %a\n", ld7, d7);
+      result = 1;
+    }
 #endif
 
   return result;

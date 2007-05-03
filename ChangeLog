@@ -1,5 +1,45 @@
 2007-05-03  Jakub Jelinek  <jakub@redhat.com>
 
+	* soft-fp/op-common.h (FP_TRUNC): Replace raising of FP_EX_INEXACT
+	with setting the sticky bit.
+	* math/test-misc.c (main): Add more truncation tests.
+
+2007-04-14  Uros Bizjak  <ubizjak@gmail.com>
+
+	* soft-fp/floatunsidf.c (__floatunsidf): Use DFtype instead of
+	double in the function declaration.
+	* soft-fp/floatundidf.c (__floatundidf): Use DFtype instead of
+	double in the function declaration.
+	* soft-fp/floatunsisf.c (__floatunsisf): Use SFtype instead of
+	float in the function declaration.
+	* soft-fp/floatunsisf.c (__floatunsisf): Use SFtype instead of
+	float in the function declaration.
+
+	* soft-fp/extended.h (FP_UNPACK_RAW_E): Do not increase X##_e for
+	denormal operands.  Do not generate FP_EX_DENORM exception.
+	(FP_UNPACK_RAW_EP): Ditto.
+	(FP_UNPACK_SEMIRAW_E): Use FP_UNPACK_RAW_E instead of
+	undefined _FP_UNPACK_RAW_E.
+	(FP_UNPACK_SEMIRAW_EP): Use FP_UNPACK_RAW_EP instead of
+	undefined _FP_UNPACK_RAW_EP.
+	(FP_PACK_SEMIRAW_E): Use FP_PACK_RAW_E instead of
+	undefined _FP_PACK_RAW_E.
+	(FP_PACK_SEMIRAW_EP): Use FP_PACK_RAW_EP instead of
+	undefined _FP_PACK_RAW_EP.
+
+	* op-2.h (_FP_FRAC_COPY_2_2): Define as alias to _FP_FRAC_COPY_2.
+	* op-4.h (_FP_FRAC_COPY_2_2): Define as alias to _FP_FRAC_COPY_4.
+
+2007-04-16  Uros Bizjak  <ubizjak@gmail.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/op-common.h (FP_EXTEND): Do not abort when
+	_FP_EXPBIAS_##dfs == _FP_EXPBIAS_##sfs.  Handle denormals for
+	this case.
+	* soft-fp/op-common.h (FP_TRUNC): Ditto.
+
+2007-05-03  Jakub Jelinek  <jakub@redhat.com>
+
 	* math/test-misc.c (main): Add tests for rounding long double
 	values close to smallest double denormalized value to double.
 
