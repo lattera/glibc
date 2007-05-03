@@ -1,3 +1,14 @@
+2007-05-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Add tests for rounding long double
+	values close to smallest double denormalized value to double.
+
+2007-04-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/op-common.h (FP_TRUNC): Correct off-by-one error in
+	condition for truncating to 0.  Set sticky bit for such
+	truncation.
+
 2007-05-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/vfprintf.c (process_string_arg): Use a VLA rather than

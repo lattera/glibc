@@ -1211,8 +1211,11 @@ do {									     \
 	{								     \
 	  if (D##_e <= 0)						     \
 	    {								     \
-	      if (D##_e <= 1 - _FP_FRACBITS_##dfs)			     \
-		_FP_FRAC_SET_##swc(S, _FP_ZEROFRAC_##swc);		     \
+	      if (D##_e < 1 - _FP_FRACBITS_##dfs)			     \
+		{							     \
+		  _FP_FRAC_SET_##swc(S, _FP_ZEROFRAC_##swc);		     \
+		  _FP_FRAC_LOW_##swc(S) |= 1;				     \
+		}							     \
 	      else							     \
 		{							     \
 		  _FP_FRAC_HIGH_##sfs(S) |= _FP_IMPLBIT_SH_##sfs;	     \

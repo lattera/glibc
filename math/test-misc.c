@@ -1235,5 +1235,22 @@ main (void)
     }
 #endif
 
+#if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG >= DBL_MANT_DIG + 4
+  volatile long double ld5 = nextafter (0.0, 1.0) / 16.0L;
+  volatile double d5;
+  (void) &ld5;
+  int i;
+  for (i = 0; i <= 32; i++)
+    {
+      d5 = ld5 * i;
+      (void) &d5;
+      if (d5 != (i <= 8 ? 0 : i < 24 ? 1 : 2) * nextafter (0.0, 1.0))
+	{
+	  printf ("%La incorrectly rounded to %a\n", ld5 * i, d5);
+	  result = 1;
+	}
+    } 
+#endif
+
   return result;
 }
