@@ -1,3 +1,9 @@
+2007-05-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4114]
+	* locales/ast_ES: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add ast_ES.UTF-8 and ast_ES.
+
 2007-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4024]
