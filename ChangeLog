@@ -1,5 +1,8 @@
 2007-05-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (process_string_arg): Adjust call to
+	__mbsnrtowcs after last change.
+
 	* locale/programs/linereader.c (get_symname): Fix adding final NUL.
 	(get_ident): Likewise.
 

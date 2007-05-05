@@ -1173,8 +1173,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		    memset (&ps, '\0', sizeof (ps));			      \
 									      \
 		    while (str2 != NULL && str2 < strend)		      \
-		      if (__mbsnrtowcs (ignore, &str2, strend - str2, 1024,   \
-					&ps) == (size_t) -1)		      \
+		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
+					ignore_size, &ps) == (size_t) -1)     \
 			{						      \
 			  done = -1;					      \
 			  goto all_done;				      \
