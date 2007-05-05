@@ -523,8 +523,8 @@ get_symname (struct linereader *lr)
     {
       lr->token.tok = tok_bsymbol;
 
-      buf[bufact] = '\0';
       buf = xrealloc (buf, bufact + 1);
+      buf[bufact] = '\0';
 
       lr->token.val.str.startmb = buf;
       lr->token.val.str.lenmb = bufact - 1;
@@ -576,8 +576,8 @@ get_ident (struct linereader *lr)
     {
       lr->token.tok = tok_ident;
 
-      buf[bufact] = '\0';
       buf = xrealloc (buf, bufact + 1);
+      buf[bufact] = '\0';
 
       lr->token.val.str.startmb = buf;
       lr->token.val.str.lenmb = bufact;
