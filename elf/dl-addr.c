@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,137 +22,137 @@
 #include <ldsodefs.h>
 
 
+static void
+__attribute ((always_inline))
+determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
+		struct link_map **mapp, const ElfW(Sym) **symbolp)
+{
+  /* Now we know what object the address lies in.  */
+  info->dli_fname = match->l_name;
+  info->dli_fbase = (void *) match->l_map_start;
+
+  /* If this is the main program the information is incomplete.  */
+  if (__builtin_expect (match->l_name[0], 'a') == '\0'
+      && match->l_type == lt_executable)
+    info->dli_fname = _dl_argv[0];
+
+  const ElfW(Sym) *symtab
+    = (const ElfW(Sym) *) D_PTR (match, l_info[DT_SYMTAB]);
+  const char *strtab = (const char *) D_PTR (match, l_info[DT_STRTAB]);
+
+  ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
+
+  const ElfW(Sym) *matchsym = NULL;
+  if (match->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
+		    + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] != NULL)
+    {
+      /* We look at all symbol table entries referenced by the hash
+	 table.  */
+      for (Elf_Symndx bucket = 0; bucket < match->l_nbuckets; ++bucket)
+	{
+	  Elf32_Word symndx = match->l_gnu_buckets[bucket];
+	  if (symndx != 0)
+	    {
+	      const Elf32_Word *hasharr = &match->l_gnu_chain_zero[symndx];
+
+	      do
+		{
+		  /* The hash table never references local symbols so
+		     we can omit that test here.  */
+		  if ((symtab[symndx].st_shndx != SHN_UNDEF
+		       || symtab[symndx].st_value != 0)
+		      && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
+		      && DL_ADDR_SYM_MATCH (match, &symtab[symndx],
+					    matchsym, addr)
+		      && symtab[symndx].st_name < strtabsize)
+		    matchsym = (ElfW(Sym) *) &symtab[symndx];
+
+		  ++symndx;
+		}
+	      while ((*hasharr++ & 1u) == 0);
+	    }
+	}
+    }
+  else
+    {
+      const ElfW(Sym) *symtabend;
+      if (match->l_info[DT_HASH] != NULL)
+	symtabend = (symtab
+		     + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
+      else
+	/* There is no direct way to determine the number of symbols in the
+	   dynamic symbol table and no hash table is present.  The ELF
+	   binary is ill-formed but what shall we do?  Use the beginning of
+	   the string table which generally follows the symbol table.  */
+	symtabend = (const ElfW(Sym) *) strtab;
+
+      for (; (void *) symtab < (void *) symtabend; ++symtab)
+	if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+	     || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
+	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
+	    && (symtab->st_shndx != SHN_UNDEF
+		|| symtab->st_value != 0)
+	    && DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
+	    && symtab->st_name < strtabsize)
+	  matchsym = (ElfW(Sym) *) symtab;
+    }
+
+  if (mapp)
+    *mapp = match;
+  if (symbolp)
+    *symbolp = matchsym;
+
+  if (matchsym)
+    {
+      /* We found a symbol close by.  Fill in its name and exact
+	 address.  */
+      lookup_t matchl = LOOKUP_VALUE (match);
+
+      info->dli_sname = strtab + matchsym->st_name;
+      info->dli_saddr = DL_SYMBOL_ADDRESS (matchl, matchsym);
+    }
+  else
+    {
+      /* No symbol matches.  We return only the containing object.  */
+      info->dli_sname = NULL;
+      info->dli_saddr = NULL;
+    }
+}
+
+
 int
 internal_function
 _dl_addr (const void *address, Dl_info *info,
 	  struct link_map **mapp, const ElfW(Sym) **symbolp)
 {
   const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
+  int result = 0;
 
   /* Protect against concurrent loads and unloads.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
-  struct link_map *match = NULL;
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l; l = l->l_next)
       if (addr >= l->l_map_start && addr < l->l_map_end)
 	{
-	  /* We know ADDRESS lies within L if in any shared object.
-	     Make sure it isn't past the end of L's segments.  */
-	  size_t n = l->l_phnum;
-	  if (n > 0)
-	    {
-	      do
-		--n;
-	      while (l->l_phdr[n].p_type != PT_LOAD);
-	      if (addr >= (l->l_addr +
-			   l->l_phdr[n].p_vaddr + l->l_phdr[n].p_memsz))
-		/* Off the end of the highest-addressed shared object.  */
-		continue;
-	    }
-
-	  match = l;
-	  break;
+	  /* Make sure it lies within one of L's segments.  */
+	  int n = l->l_phnum;
+	  const ElfW(Addr) reladdr = addr - l->l_addr;
+	  while (--n >= 0)
+	    if (l->l_phdr[n].p_type == PT_LOAD)
+	      {
+		if (reladdr - l->l_phdr[n].p_vaddr >= 0
+		    && reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
+		  {
+		    determine_info (addr, l, info, mapp, symbolp);
+		    result = 1;
+		    goto out;
+		  }
+	      }
 	}
 
-  int result = 0;
-  if (match != NULL)
-    {
-      /* Now we know what object the address lies in.  */
-      info->dli_fname = match->l_name;
-      info->dli_fbase = (void *) match->l_map_start;
-
-      /* If this is the main program the information is incomplete.  */
-      if (__builtin_expect (match->l_name[0], 'a') == '\0'
-	  && match->l_type == lt_executable)
-	info->dli_fname = _dl_argv[0];
-
-      const ElfW(Sym) *symtab
-	= (const ElfW(Sym) *) D_PTR (match, l_info[DT_SYMTAB]);
-      const char *strtab = (const char *) D_PTR (match, l_info[DT_STRTAB]);
-
-      ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
-
-      const ElfW(Sym) *matchsym = NULL;
-      if (match->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
-			+ DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] != NULL)
-	{
-	  /* We look at all symbol table entries referenced by the
-	     hash table.  */
-	  for (Elf_Symndx bucket = 0; bucket < match->l_nbuckets; ++bucket)
-	    {
-	      Elf32_Word symndx = match->l_gnu_buckets[bucket];
-	      if (symndx != 0)
-		{
-		  const Elf32_Word *hasharr = &match->l_gnu_chain_zero[symndx];
-
-		  do
-		    {
-		      /* The hash table never references local symbols
-			 so we can omit that test here.  */
-		      if ((symtab[symndx].st_shndx != SHN_UNDEF
-			   || symtab[symndx].st_value != 0)
-			  && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
-			  && DL_ADDR_SYM_MATCH (match, &symtab[symndx],
-						matchsym, addr)
-			  && symtab[symndx].st_name < strtabsize)
-			matchsym = (ElfW(Sym) *) &symtab[symndx];
-
-		      ++symndx;
-		    }
-		  while ((*hasharr++ & 1u) == 0);
-		}
-	    }
-	}
-      else
-	{
-	  const ElfW(Sym) *symtabend;
-	  if (match->l_info[DT_HASH] != NULL)
-	    symtabend = (symtab
-			 + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
-	  else
-	    /* There is no direct way to determine the number of symbols in the
-	       dynamic symbol table and no hash table is present.  The ELF
-	       binary is ill-formed but what shall we do?  Use the beginning of
-	       the string table which generally follows the symbol table.  */
-	    symtabend = (const ElfW(Sym) *) strtab;
-
-	  for (; (void *) symtab < (void *) symtabend; ++symtab)
-	    if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-		 || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
-		&& ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
-		&& (symtab->st_shndx != SHN_UNDEF
-		    || symtab->st_value != 0)
-		&& DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
-		&& symtab->st_name < strtabsize)
-	      matchsym = (ElfW(Sym) *) symtab;
-	}
-
-      if (mapp)
-	*mapp = match;
-      if (symbolp)
-	*symbolp = matchsym;
-
-      if (matchsym)
-	{
-	  /* We found a symbol close by.  Fill in its name and exact
-	     address.  */
-	  lookup_t matchl = LOOKUP_VALUE (match);
-
-	  info->dli_sname = strtab + matchsym->st_name;
-	  info->dli_saddr = DL_SYMBOL_ADDRESS (matchl, matchsym);
-	}
-      else
-	{
-	  /* No symbol matches.  We return only the containing object.  */
-	  info->dli_sname = NULL;
-	  info->dli_saddr = NULL;
-	}
-
-      result = 1;
-    }
-
+ out:
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   return result;
