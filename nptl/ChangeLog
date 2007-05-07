@@ -1,5 +1,6 @@
 2007-05-06  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #4465]
 	* tst-cancel-wrappers.sh: Set C["fdatasync"] to 1.
 	* tst-cancel4.c (tf_fdatasync): New test.
 
