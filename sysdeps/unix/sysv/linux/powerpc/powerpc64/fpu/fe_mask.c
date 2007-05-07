@@ -1,5 +1,5 @@
-/* Procedure definition for FE_NOMASK_ENV.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Procedure definition for FE_MASK_ENV for Linux/ppc64.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,15 +19,25 @@
 
 #include <fenv.h>
 #include <errno.h>
-
-/* This is a generic stub. An OS specific override is required to set
-   the FE0/FE1 bits in the MSR.  MSR update is privileged, so this will
-   normally involve a syscall.  */
+#include <sysdep.h>
+#include <sys/syscall.h>
+#include <sys/prctl.h>
+#include <kernel-features.h>
 
 const fenv_t *
-__fe_nomask_env(void)
+__fe_mask_env (void)
 {
+#if defined PR_SET_FPEXC && defined PR_FP_EXC_DISABLED
+  int result;
+  INTERNAL_SYSCALL_DECL (err);
+  result = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_DISABLED);
+# ifndef __ASSUME_NEW_PRCTL_SYSCALL
+  if (INTERNAL_SYSCALL_ERROR_P (result, err)
+      && INTERNAL_SYSCALL_ERRNO (result, err) == EINVAL)
+    __set_errno (ENOSYS);
+# endif
+#else
   __set_errno (ENOSYS);
-  return FE_ENABLED_ENV;
+#endif
+  return FE_DFL_ENV;
 }
-stub_warning (__fe_nomask_env)

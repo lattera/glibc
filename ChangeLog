@@ -1,3 +1,31 @@
+2007-04-30  Steven Munroe  <sjmunroe@us.ibm.com>
+            Peter Bergner  <bergner@us.ibm.com>
+
+	* sysdeps/powerpc/bits/fenv.h: Declare __fe_mask_env extern.
+	Define FE_NOMASK_ENV as FE_EANBLED_ENV.  Define FE_MASK_ENV.
+	* sysdeps/powerpc/fpu/Makefile: Add fe_mask to libm-support.
+	* sysdeps/powerpc/fpu/fe_mask.c: New file.
+	* sysdeps/powerpc/fpu/fe_nomask.c: Correct comment.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept):
+	Call __fe_mask_env() if all FP exceptions disabled.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (feholdexcept): Copy high 32-bits
+	from old FPSCR to new fenv to propagate DFP rounding modes.
+	Call __fe_mask_env() if FP exceptions previously enabled.
+	* sysdeps/powerpc/fpu/fesetenv.c (fesetenv): Change mask to merge
+	exceptions from env.  Use __fe_nomask_env() or __fe_mask_env() when
+	transitioning from all exceptions disabled to any exception enabled
+	or visa versa.
+	* sysdeps/powerpc/fpu/feupdateenv.c (__feupdateenv): Change mask to
+	merge exceptions from env.  Call __fe_nomask_env or __fe_mask_env
+	when transitioning from all exceptions disabled to any exception
+	enabled or visa versa.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fe_nomask.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_mask.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_mask.c: New file.
+
 2007-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4465]

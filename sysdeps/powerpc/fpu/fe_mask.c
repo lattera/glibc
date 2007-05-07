@@ -1,5 +1,5 @@
-/* Procedure definition for FE_NOMASK_ENV.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Procedure definition for FE_MASK_ENV.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,14 @@
 #include <fenv.h>
 #include <errno.h>
 
-/* This is a generic stub. An OS specific override is required to set
+/* This is a generic stub. An OS specific override is required to clear
    the FE0/FE1 bits in the MSR.  MSR update is privileged, so this will
    normally involve a syscall.  */
 
 const fenv_t *
-__fe_nomask_env(void)
+__fe_mask_env(void)
 {
   __set_errno (ENOSYS);
-  return FE_ENABLED_ENV;
+  return FE_DFL_ENV;
 }
-stub_warning (__fe_nomask_env)
+stub_warning (__fe_mask_env)

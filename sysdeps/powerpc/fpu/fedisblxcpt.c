@@ -24,7 +24,7 @@ int
 fedisableexcept (int excepts)
 {
   fenv_union_t fe;
-  int result;
+  int result, new;
 
   result = fegetexcept ();
 
@@ -44,7 +44,11 @@ fedisableexcept (int excepts)
     fe.l[1] &= ~(1 << (31 - FPSCR_VE));
   fesetenv_register (fe.fenv);
 
-  if ((fegetexcept () & excepts) != 0)
+  new = fegetexcept ();
+  if (new == 0 && result != 0)
+    (void)__fe_mask_env ();
+
+  if ((new & excepts) != 0)
     result = -1;
   return result;
 }

@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01,07 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,8 +30,24 @@ __feupdateenv (const fenv_t *envp)
   new.fenv = *envp;
   old.fenv = fegetenv_register ();
 
-  /* Copy the set exceptions from `old' to `new'.  */
-  new.l[1] = (new.l[1] & 0xE00000FF) | (old.l[1] & 0x1FFFFF00);
+  /* Restore rounding mode and exception enable from *envp and merge
+     exceptions.  Leave fraction rounded/inexact and FP result/CC bits
+     unchanged.  */
+  new.l[1] = (old.l[1] & 0x1FFFFF00) | (new.l[1] & 0x1FF80FFF);
+  
+  /* If the old env has no eabled exceptions and the new env has any enabled
+     exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put
+     the hardware into "precise mode" and may cause the FPU to run slower on
+     some hardware.  */
+  if ((old.l[1] & 0x000000F8) == 0 && (new.l[1] & 0x000000F8) != 0)
+    (void)__fe_nomask_env ();
+  
+  /* If the old env had any eabled exceptions and the new env has no enabled
+     exceptions, then mask SIGFPE in the MSR FE0/FE1 bits.  This may allow the
+     FPU to run faster because it always takes the default action and can not 
+     generate SIGFPE. */
+  if ((old.l[1] & 0x000000F8) != 0 && (new.l[1] & 0x000000F8) == 0)
+    (void)__fe_mask_env ();
 
   /* Atomically enable and raise (if appropriate) exceptions set in `new'. */
   fesetenv_register (new.fenv);

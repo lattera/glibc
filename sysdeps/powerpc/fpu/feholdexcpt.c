@@ -22,17 +22,24 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  fenv_union_t u;
+  fenv_union_t old, new;
 
-  /* Get the current state.  */
-  u.fenv = *envp = fegetenv_register ();
+  /* Save the currently set exceptions.  */
+  old.fenv = *envp = fegetenv_register ();
 
-  /* Clear everything except for the rounding mode and non-IEEE arithmetic
+  /* Clear everything except for the rounding modes and non-IEEE arithmetic
      flag.  */
-  u.l[1] = u.l[1] & 7;
+  new.l[1] = old.l[1] & 7;
+  new.l[0] = old.l[0];
+  
+  /* If the old env had any eabled exceptions, then mask SIGFPE in the
+     MSR FE0/FE1 bits.  This may allow the FPU to run faster because it
+     always takes the default action and can not generate SIGFPE. */
+  if ((old.l[1] & 0x000000F8) != 0)
+    (void)__fe_mask_env ();
 
   /* Put the new state in effect.  */
-  fesetenv_register (u.fenv);
+  fesetenv_register (new.fenv);
 
   return 0;
 }
