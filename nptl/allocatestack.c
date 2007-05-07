@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -288,9 +288,14 @@ change_stack_perm (struct pthread *pd
 		 + (((((pd->stackblock_size - pd->guardsize) / 2)
 		      & pagemask) + pd->guardsize) & pagemask));
   size_t len = pd->stackblock + pd->stackblock_size - stack;
-#else
+#elif _STACK_GROWS_DOWN
   void *stack = pd->stackblock + pd->guardsize;
   size_t len = pd->stackblock_size - pd->guardsize;
+#elif _STACK_GROWS_UP
+  void *stack = pd->stackblock;
+  size_t len = (uintptr_t) pd - pd->guardsize - (uintptr_t) pd->stackblock;
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
   if (mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
     return errno;
@@ -570,8 +575,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	{
 #ifdef NEED_SEPARATE_REGISTER_STACK
 	  char *guard = mem + (((size - guardsize) / 2) & ~pagesize_m1);
-#else
+#elif _STACK_GROWS_DOWN
 	  char *guard = mem;
+# elif _STACK_GROWS_UP
+	  char *guard = (char *) (((uintptr_t) pd - guardsize) & ~pagesize_m1);
 #endif
 	  if (mprotect (guard, guardsize, PROT_NONE) != 0)
 	    {
@@ -618,9 +625,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 			oldguard + pd->guardsize - guard - guardsize,
 			prot) != 0)
 	    goto mprot_error;
-#else
+#elif _STACK_GROWS_DOWN
 	  if (mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
 			prot) != 0)
+	    goto mprot_error;
+#elif _STACK_GROWS_UP
+	  if (mprotect ((char *) pd - pd->guardsize,
+			pd->guardsize - guardsize, prot) != 0)
 	    goto mprot_error;
 #endif
 
@@ -661,8 +672,11 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #ifdef NEED_SEPARATE_REGISTER_STACK
   *stack = pd->stackblock;
   *stacksize = stacktop - *stack;
-#else
+#elif _STACK_GROWS_DOWN
   *stack = stacktop;
+#elif _STACK_GROWS_UP
+  *stack = pd->stackblock;
+  assert (*stack > 0);
 #endif
 
   return 0;
