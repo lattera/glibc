@@ -1,3 +1,7 @@
+2007-05-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (fdatasync): Add "C" to args.
+
 2007-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (process_string_arg): Optimize
