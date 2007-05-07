@@ -1,3 +1,10 @@
+2007-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_lock_wait): Fix race caused by reloading of futex value.
+	(__lll_robust_timedlock_wait): Likewise.
+	Reported by Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>.
+
 2007-05-06  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #4465]

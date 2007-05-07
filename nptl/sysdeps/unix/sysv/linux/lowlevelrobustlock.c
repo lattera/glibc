@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 
@@ -30,6 +30,10 @@ __lll_robust_lock_wait (int *futex)
   int oldval = *futex;
   int tid = THREAD_GETMEM (THREAD_SELF, tid);
 
+  /* If the futex changed meanwhile try locking again.  */
+  if (oldval == 0)
+    goto try;
+
   do
     {
       if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
@@ -41,6 +45,9 @@ __lll_robust_lock_wait (int *futex)
 	continue;
 
       lll_futex_wait (futex, newval);
+
+    try:
+      ;
     }
   while ((oldval = atomic_compare_and_exchange_val_acq (futex,
 							tid | FUTEX_WAITERS,
@@ -57,6 +64,11 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
     return EINVAL;
 
   int tid = THREAD_GETMEM (THREAD_SELF, tid);
+  int oldval = *futex;
+
+  /* If the futex changed meanwhile try locking again.  */
+  if (oldval == 0)
+    goto try;
 
   do
     {
@@ -80,7 +92,6 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
 	return ETIMEDOUT;
 
       /* Wait.  */
-      int oldval = *futex;
       if (__builtin_expect (oldval & FUTEX_OWNER_DIED, 0))
 	return oldval;
 
@@ -90,8 +101,13 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
 	continue;
 
       lll_futex_timed_wait (futex, newval, &rt);
+
+    try:
+      ;
     }
-  while (atomic_compare_and_exchange_bool_acq (futex, tid | FUTEX_WAITERS, 0));
+  while ((oldval = atomic_compare_and_exchange_val_acq (futex,
+							tid | FUTEX_WAITERS,
+							0)) != 0);
 
   return 0;
 }
