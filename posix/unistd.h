@@ -1062,7 +1062,7 @@ extern int lockf64 (int __fd, int __cmd, __off64_t __len) __wur;
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 /* Synchronize at least the data part of a file with the underlying
    media.  */
-extern int fdatasync (int __fildes) __THROW;
+extern int fdatasync (int __fildes);
 #endif /* Use POSIX199309 */
 
 
