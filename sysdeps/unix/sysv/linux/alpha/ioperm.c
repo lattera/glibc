@@ -32,6 +32,11 @@
    sparse address space would work (e.g., the Low Cost Alpha chip has an
    I/O address space that's 512MB large!).  */
 
+/* Make sure the ldbu/stb asms below are not expaneded to macros.  */
+#ifndef __alpha_bwx__
+asm(".arch ev56");
+#endif
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>

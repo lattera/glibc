@@ -42,7 +42,7 @@ strong_alias (__lrint, __llrintl)
 weak_alias (__lrintl, lrintl)
 weak_alias (__llrintl, llrintl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __lrint, lrintl, GLIBC_2_0);
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_0);
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __lrint, lrintl, GLIBC_2_1);
+compat_symbol (libm, __llrint, llrintl, GLIBC_2_1);
 #endif

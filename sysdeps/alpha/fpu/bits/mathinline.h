@@ -137,11 +137,14 @@ __NTH (__isnan (double __x))
   return isunordered (__x, __x);
 }
 
+#ifndef __NO_LONG_DOUBLE_MATH
 __MATH_INLINE int
 __NTH (__isnanl (long double __x))
 {
   return isunordered (__x, __x);
 }
+#endif
+
 #endif /* C99 */
 
 #endif /* __NO_MATH_INLINES */
