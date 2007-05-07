@@ -1,5 +1,9 @@
 2007-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (process_string_arg): Optimize
+	ridiculous precision in wide char code printing multi-byte string.
+	Reported by Jim Meyering <jim@meyering.net>.
+
 	[BZ #4131]
 	* elf/dl-addr.c (_dl_addr): Compare address with actual segment
 	boundaries to work around systems with overlapping binary loading.
