@@ -1,3 +1,24 @@
+2007-05-07  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__isnanl): Don't define
+	if __NO_LONG_DOUBLE_MATH.
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: If BWX insns not
+	available in the compiler, add .arch directive to ethe assembly.
+
+2007-05-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/s_nearbyint.c (nearbyintl): Fix version on
+	compat_symbol to GLIBC_2_1.
+	* sysdeps/alpha/fpu/s_fmin.S (fminl): Likewise.
+	* sysdeps/alpha/fpu/s_trunc.c (truncl): Likewise.
+	* sysdeps/alpha/fpu/s_fmax.S (fmaxl): Likewise.
+	* sysdeps/alpha/fpu/s_lrint.c (lrintl, llrintl): Likewise.
+	* sysdeps/alpha/fpu/s_lround.c (lroundl, llroundl): Likewise.
+	* sysdeps/alpha/fpu/s_round.c (roundl): Likewise.
+	* sysdeps/alpha/fpu/s_isnan.c (isnanl): Provide compat_symbol in
+	libc, not libm.
+	(__isnanl): New compat_symbol.
+
 2007-05-07  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
@@ -8,7 +29,7 @@
 	MMAP for __libc_enable_secure only, otherwise use MADV_DONTNEED.
 
 2007-04-30  Steven Munroe  <sjmunroe@us.ibm.com>
-            Peter Bergner  <bergner@us.ibm.com>
+	    Peter Bergner  <bergner@us.ibm.com>
 
 	* sysdeps/powerpc/bits/fenv.h: Declare __fe_mask_env extern.
 	Define FE_NOMASK_ENV as FE_EANBLED_ENV.  Define FE_MASK_ENV.
@@ -766,7 +787,7 @@
 
 2007-03-13  Richard Henderson  <rth@redhat.com>
 
-        * elf/dl-support.c (_dl_aux_init): Honor DL_PLATFORM_AUXV.
+	* elf/dl-support.c (_dl_aux_init): Honor DL_PLATFORM_AUXV.
 	* sysdeps/unix/sysv/linux/alpha/dl-auxv.h: New file.
 	* sysdeps/unix/sysv/linux/alpha/dl-support.c: New file.
 	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c (__libc_alpha_cache_shape):

@@ -53,6 +53,7 @@ weak_alias (__isnanf, isnanf)
 strong_alias (__isnan, __isnanl)
 weak_alias (__isnan, isnanl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __isnan, isnanl, GLIBC_2_0);
+#if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
+compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
 #endif

@@ -53,6 +53,6 @@ weak_alias (__fmax, fmax)
 strong_alias (__fmax, __fmaxl)
 weak_alias (__fmaxl, fmaxl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __fmax, fmaxl, GLIBC_2_0);
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __fmax, fmaxl, GLIBC_2_1);
 #endif

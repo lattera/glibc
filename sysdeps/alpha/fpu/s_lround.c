@@ -42,7 +42,7 @@ strong_alias (__lround, __llroundl)
 weak_alias (__lroundl, lroundl)
 weak_alias (__llroundl, llroundl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __lround, lroundl, GLIBC_2_0);
-compat_symbol (libm, __llround, llroundl, GLIBC_2_0);
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __lround, lroundl, GLIBC_2_1);
+compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
 #endif
