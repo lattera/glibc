@@ -48,7 +48,13 @@ do_test (void)
   pid_t p = __clone2 (f, st, sizeof (st), TEST_CLONE_FLAGS, 0);
 #else
   char st[128 * 1024] __attribute__ ((aligned));
+# if _STACK_GROWS_DOWN
   pid_t p = clone (f, st + sizeof (st), TEST_CLONE_FLAGS, 0);
+# elif _STACK_GROWS_UP
+  pid_t p = clone (f, st, TEST_CLONE_FLAGS, 0);
+# else
+#  error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+# endif
 #endif
   if (p == -1)
     {

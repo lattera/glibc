@@ -1,5 +1,9 @@
 2007-05-02  Carlos O'Donell  <carlos@systemhalted.org>
 
+	[BZ #4455]
+	* tst-align2.c (do_test): Add _STACK_GROWS_UP case.
+	* tst-getpid1.c (do_test): Likewise.
+
 	[BZ #4456]
 	* allocatestack.c (change_stack_perm): Add _STACK_GROWS_UP case.
 	(allocate_stack): Likewise.

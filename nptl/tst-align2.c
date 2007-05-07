@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,14 @@ do_test (void)
   char st[256 * 1024];
   pid_t p = __clone2 (f, st, sizeof (st), 0, 0);
 #else
-  char st[128 * 1024];
+  char st[128 * 1024] __attribute__ ((aligned));
+# if _STACK_GROWS_DOWN
   pid_t p = clone (f, st + sizeof (st), 0, 0);
+# elif _STACK_GROWS_UP
+  pid_t p = clone (f, st, 0, 0);
+# else
+#  error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+# endif
 #endif
   if (p == -1)
     {
