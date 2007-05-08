@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1999, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,16 +37,14 @@ strfry (char *string)
       init = 1;
     }
 
-  len = strlen (string);
+  len = strlen (string) - 1;
   for (i = 0; i < len; ++i)
     {
       int32_t j;
-      char c;
-
       __random_r (&rdata, &j);
-      j %= len;
+      j = j % len + 1;
 
-      c = string[i];
+      char c = string[i];
       string[i] = string[j];
       string[j] = c;
     }
