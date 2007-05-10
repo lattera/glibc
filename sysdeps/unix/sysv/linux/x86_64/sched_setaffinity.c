@@ -1,0 +1,14 @@
+#include <tls.h>
+
+#define RESET_VGETCPU_CACHE() \
+  do {			      \
+    asm volatile ("movl %0, %%fs:%P1\n\t"				      \
+		  "movl %0, %%fs:%P2"					      \
+		  :							      \
+		  : "ir" (0), "i" (offsetof (struct pthread,		      \
+					     header.vgetcpu_cache[0])),	      \
+		    "i" (offsetof (struct pthread,			      \
+				   header.vgetcpu_cache[1])));		\
+  } while (0)
+
+#include "../sched_setaffinity.c"

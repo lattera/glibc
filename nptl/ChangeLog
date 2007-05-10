@@ -1,3 +1,10 @@
+2007-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__pthread_setaffinity_new): If syscall was successful and
+	RESET_VGETCPU_CACHE is defined, use it before returning.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_setaffinity.c: New file.
+
 2007-05-10  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4455]

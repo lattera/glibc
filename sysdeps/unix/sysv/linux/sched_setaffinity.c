@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +68,14 @@ __sched_setaffinity_new (pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
 	return -1;
       }
 
-  return INLINE_SYSCALL (sched_setaffinity, 3, pid, cpusetsize, cpuset);
+  int result = INLINE_SYSCALL (sched_setaffinity, 3, pid, cpusetsize, cpuset);
+
+#ifdef RESET_VGETCPU_CACHE
+  if (result != -1)
+    RESET_VGETCPU_CACHE ();
+#endif
+
+  return result;
 }
 versioned_symbol (libc, __sched_setaffinity_new, sched_setaffinity,
 		  GLIBC_2_3_4);

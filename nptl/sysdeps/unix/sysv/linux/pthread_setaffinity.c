@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -79,6 +79,12 @@ __pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
 
   res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid, cpusetsize,
 			  cpuset);
+
+#ifdef RESET_VGETCPU_CACHE
+  if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+    RESET_VGETCPU_CACHE ();
+#endif
+
   return (INTERNAL_SYSCALL_ERROR_P (res, err)
 	  ? INTERNAL_SYSCALL_ERRNO (res, err)
 	  : 0);

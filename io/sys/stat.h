@@ -29,7 +29,7 @@
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_MISC \
-         || __USE_ATFILE
+         || defined __USE_ATFILE
 # if defined __USE_XOPEN || defined __USE_XOPEN2K
 #  define __need_time_t
 # endif

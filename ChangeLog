@@ -1,5 +1,10 @@
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c
+	(__sched_setaffinity_new): If syscall was successful and
+	RESET_VGETCPU_CACHE is defined, use it before returning.
+	* sysdeps/unix/sysv/linux/x86_64/sched_setaffinity.c: New file.
+
 	* io/sys/stat.h: Make sure struct timespec is defined for
 	__USE_ATFILE.
 
