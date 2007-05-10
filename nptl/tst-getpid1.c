@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stackinfo.h>
 
 #ifndef TEST_CLONE_FLAGS
 #define TEST_CLONE_FLAGS 0

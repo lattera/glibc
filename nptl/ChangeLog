@@ -1,3 +1,9 @@
+2007-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4455]
+	* tst-align2.c: Include stackinfo.h.
+	* tst-getpid1.c: Likewise.
+
 2007-05-02  Carlos O'Donell  <carlos@systemhalted.org>
 
 	[BZ #4455]

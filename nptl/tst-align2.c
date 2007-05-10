@@ -24,6 +24,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <tst-stack-align.h>
+#include <stackinfo.h>
 
 static int
 f (void *arg)
