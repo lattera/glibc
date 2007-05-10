@@ -28,7 +28,7 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
-#if defined __USE_XOPEN || defined __USE_MISC
+#if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_MISC
 # if defined __USE_XOPEN || defined __USE_XOPEN2K
 #  define __need_time_t
 # endif
@@ -352,6 +352,21 @@ extern int mkfifo (__const char *__path, __mode_t __mode)
    with FD.  */
 extern int mkfifoat (int __fd, __const char *__path, __mode_t __mode)
      __THROW __nonnull ((2));
+#endif
+
+#ifdef __USE_ATFILE
+/* Set file access and modification times relative to directory file
+   descriptor.  */
+extern int utimensat (int __fd, __const char *__path,
+		      __const struct timespec __times[2],
+		      int __flags)
+     __THROW __nonnull ((2));
+#endif
+
+#ifdef __USE_GNU
+/* XXX This will change to the macro for the next 2008 POSIX revision.  */
+/* Set file access and modification times of the file associated with FD.  */
+extern int futimens (int __fd, __const struct timespec __times[2]) __THROW;
 #endif
 
 /* To allow the `struct stat' structure and the file type `mode_t'

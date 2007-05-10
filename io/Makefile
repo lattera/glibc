@@ -51,7 +51,8 @@ routines :=								\
 	ftw ftw64 fts poll ppoll					\
 	posix_fadvise posix_fadvise64					\
 	posix_fallocate posix_fallocate64				\
-	sendfile sendfile64
+	sendfile sendfile64 \
+	utimensat futimens
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive

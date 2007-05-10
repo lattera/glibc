@@ -1,3 +1,28 @@
+2007-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Define UTIME_NOW and
+	UTIME_OMIT.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_UTIMENSAT.
+	* io/sys/stat.h: Declare utimensat, futimens.
+	* io/utimensat.c: New file.
+	* io/futimens.c: New file.
+	* sysdeps/unix/sysv/linux/utimensat.c: New file.
+	* sysdeps/unix/sysv/linux/futimens.c: New file.
+	* io/Makefile (routines): Add utimensat, futimens.
+	* io/Versions: Add utimensat, futimens to GLIBC_2.6.
+	* sysdeps/unix/sysv/linux/lutimes.c: New file.
+	* sysdeps/unix/sysv/linux/futimes.c: Use utimensat syscall if
+	available.
+
+	* include/sys/cdefs.h: Redefine __nonnull so that test for
+	incorrect parameters in the libc code itself are not omitted.
+
 2007-05-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Don't raise overflow

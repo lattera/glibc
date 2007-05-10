@@ -113,4 +113,7 @@ libc {
 
     ppoll;
   }
+  GLIBC_2.6 {
+    utimensat; futimens;
+  }
 }

@@ -458,3 +458,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020612
 # define __ASSUME_FUTEX_LOCK_PI	1
 #endif
+
+/* Support for utimensat syscall was added in 2.6.22.  */
+#if __LINUX_KERNEL_VERSION >= 0x020616
+# define __ASSUME_UTIMENSAT	1
+#endif
