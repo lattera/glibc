@@ -1,5 +1,8 @@
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/sys/stat.h: Make sure struct timespec is defined for
+	__USE_ATFILE.
+
 	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Define UTIME_NOW and
 	UTIME_OMIT.
 	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
