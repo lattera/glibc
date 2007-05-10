@@ -1,5 +1,8 @@
 2007-05-09  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Don't raise overflow
+	exception in addition to inexact when asked to raise only FE_INEXACT.
+
 	[BZ #3427]
 	* sysdeps/s390/fpu/feholdexcpt.c (feholdexcept): Don't clear exceptions
 	in *envp.
