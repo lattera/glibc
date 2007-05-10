@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -23,13 +23,14 @@
 
 int feholdexcept (fenv_t *envp)
 {
+  fexcept_t fpc;
   /* Store the environment.  */
   fegetenv (envp);
   /* Clear the current sticky bits as more than one exception
      may be generated.  */
-  envp->fpc &= ~(FPC_FLAGS_MASK | FPC_DXC_MASK);
+  fpc = envp->fpc & ~(FPC_FLAGS_MASK | FPC_DXC_MASK);
   /* Hold from generating fpu exceptions temporarily.  */
-  _FPU_SETCW ((envp->fpc & ~(FE_ALL_EXCEPT << FPC_EXCEPTION_MASK_SHIFT)));
+  _FPU_SETCW ((fpc & ~(FE_ALL_EXCEPT << FPC_EXCEPTION_MASK_SHIFT)));
   return 0;
 }
 libm_hidden_def (feholdexcept)
