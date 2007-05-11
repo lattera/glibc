@@ -137,7 +137,7 @@ add_to_global (struct link_map *new)
     }
 
   /* Now add the new entries.  */
-  unsigned int added = 0;
+  unsigned int new_nlist = ns->_ns_main_searchlist->r_nlist;
   for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     {
       struct link_map *map = new->l_searchlist.r_list[cnt];
@@ -145,14 +145,11 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  ns->_ns_main_searchlist->r_list[ns->_ns_main_searchlist->r_nlist
-					  + added]
-	    = map;
-	  ++added;
+	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
 	}
     }
   atomic_write_barrier ();
-  ns->_ns_main_searchlist->r_nlist += added;
+  ns->_ns_main_searchlist->r_nlist = new_nlist;
 
   return 0;
 }
