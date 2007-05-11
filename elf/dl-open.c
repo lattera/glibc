@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,17 +97,17 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  if (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc == 0)
+  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
+  if (ns->_ns_global_scope_alloc == 0)
     {
       /* This is the first dynamic object given global scope.  */
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add + 8;
+      ns->_ns_global_scope_alloc
+	= ns->_ns_main_searchlist->r_nlist + to_add + 8;
       new_global = (struct link_map **)
-	malloc (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-		* sizeof (struct link_map *));
+	malloc (ns->_ns_global_scope_alloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	{
-	  GL(dl_ns)[new->l_ns]._ns_global_scope_alloc = 0;
+	  ns->_ns_global_scope_alloc = 0;
 	nomem:
 	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
 			    N_("cannot extend global scope"));
@@ -115,29 +115,29 @@ add_to_global (struct link_map *new)
 	}
 
       /* Copy over the old entries.  */
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list
-	= memcpy (new_global,
-		  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		  (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist
+      ns->_ns_main_searchlist->r_list
+	= memcpy (new_global, ns->_ns_main_searchlist->r_list,
+		  (ns->_ns_main_searchlist->r_nlist
 		   * sizeof (struct link_map *)));
     }
-  else if (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add
-	   > GL(dl_ns)[new->l_ns]._ns_global_scope_alloc)
+  else if (ns->_ns_main_searchlist->r_nlist + to_add
+	   > ns->_ns_global_scope_alloc)
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
       new_global = (struct link_map **)
-	realloc (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		 ((GL(dl_ns)[new->l_ns]._ns_global_scope_alloc + to_add + 8)
+	realloc (ns->_ns_main_searchlist->r_list,
+		 ((ns->_ns_global_scope_alloc + to_add + 8)
 		  * sizeof (struct link_map *)));
       if (new_global == NULL)
 	goto nomem;
 
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc += to_add + 8;
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list = new_global;
+      ns->_ns_global_scope_alloc += to_add + 8;
+      ns->_ns_main_searchlist->r_list = new_global;
     }
 
   /* Now add the new entries.  */
+  unsigned int added = 0;
   for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     {
       struct link_map *map = new->l_searchlist.r_list[cnt];
@@ -145,11 +145,14 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list[GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist]
+	  ns->_ns_main_searchlist->r_list[ns->_ns_main_searchlist->r_nlist
+					  + added]
 	    = map;
-	  ++GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist;
+	  ++added;
 	}
     }
+  atomic_write_barrier ();
+  ns->_ns_main_searchlist->r_nlist += added;
 
   return 0;
 }
