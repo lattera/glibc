@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,8 +107,6 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 void
 _dl_close_worker (struct link_map *map)
 {
-  Lmid_t ns = map->l_ns;
-
   /* One less direct use.  */
   --map->l_direct_opencount;
 
@@ -131,11 +129,14 @@ _dl_close_worker (struct link_map *map)
       return;
     }
 
+  Lmid_t nsid = map->l_ns;
+  struct link_namespaces *ns = &GL(dl_ns)[nsid];
+
  retry:
   dl_close_state = pending;
 
   bool any_tls = false;
-  const unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
+  const unsigned int nloaded = ns->_ns_nloaded;
   char used[nloaded];
   char done[nloaded];
   struct link_map *maps[nloaded];
@@ -143,7 +144,7 @@ _dl_close_worker (struct link_map *map)
   /* Run over the list and assign indexes to the link maps and enter
      them into the MAPS array.  */
   int idx = 0;
-  for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+  for (struct link_map *l = ns->_ns_loaded; l != NULL; l = l->l_next)
     {
       l->l_idx = idx;
       maps[idx] = l;
@@ -220,11 +221,11 @@ _dl_close_worker (struct link_map *map)
     }
 
   /* Sort the entries.  */
-  _dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nloaded, used, ns);
+  _dl_sort_fini (ns->_ns_loaded, maps, nloaded, used, nsid);
 
   /* Call all termination functions at once.  */
 #ifdef SHARED
-  bool do_audit = GLRO(dl_naudit) > 0 && !GL(dl_ns)[ns]._ns_loaded->l_auditing;
+  bool do_audit = GLRO(dl_naudit) > 0 && !ns->_ns_loaded->l_auditing;
 #endif
   bool unload_any = false;
   unsigned int first_loaded = ~0;
@@ -233,7 +234,7 @@ _dl_close_worker (struct link_map *map)
       struct link_map *imap = maps[i];
 
       /* All elements must be in the same namespace.  */
-      assert (imap->l_ns == ns);
+      assert (imap->l_ns == nsid);
 
       if (!used[i])
 	{
@@ -248,7 +249,7 @@ _dl_close_worker (struct link_map *map)
 	      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS,
 				    0))
 		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
-				  imap->l_name, ns);
+				  imap->l_name, nsid);
 
 	      if (imap->l_info[DT_FINI_ARRAY] != NULL)
 		{
@@ -334,7 +335,7 @@ _dl_close_worker (struct link_map *map)
 		struct link_map *tmap = (struct link_map *)
 		  ((char *) imap->l_scope[cnt]
 		   - offsetof (struct link_map, l_searchlist));
-		assert (tmap->l_ns == ns);
+		assert (tmap->l_ns == nsid);
 		if (tmap->l_idx == IDX_STILL_USED)
 		  ++remain;
 		else
@@ -435,7 +436,7 @@ _dl_close_worker (struct link_map *map)
   /* Auditing checkpoint: we will start deleting objects.  */
   if (__builtin_expect (do_audit, 0))
     {
-      struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
+      struct link_map *head = ns->_ns_loaded;
       struct audit_ifaces *afct = GLRO(dl_audit);
       /* Do not call the functions for any auditing object.  */
       if (head->l_auditing == 0)
@@ -452,7 +453,7 @@ _dl_close_worker (struct link_map *map)
 #endif
 
   /* Notify the debugger we are about to remove some loaded objects.  */
-  struct r_debug *r = _dl_debug_initialize (0, ns);
+  struct r_debug *r = _dl_debug_initialize (0, nsid);
   r->r_state = RT_DELETE;
   _dl_debug_state ();
 
@@ -474,19 +475,18 @@ _dl_close_worker (struct link_map *map)
 	  if (__builtin_expect (imap->l_global, 0))
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
-	      unsigned int cnt = GL(dl_ns)[ns]._ns_main_searchlist->r_nlist;
+	      struct r_scope_elem *ns_msl = ns->_ns_main_searchlist;
+	      unsigned int cnt = ns_msl->r_nlist;
 
 	      do
 		--cnt;
-	      while (GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt] != imap);
+	      while (ns_msl->r_list[cnt] != imap);
 
 	      /* The object was already correctly registered.  */
-	      while (++cnt
-		     < GL(dl_ns)[ns]._ns_main_searchlist->r_nlist)
-		GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt - 1]
-		  = GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt];
+	      while (++cnt < ns_msl->r_nlist)
+		ns_msl->r_list[cnt - 1] = ns_msl->r_list[cnt];
 
-	      --GL(dl_ns)[ns]._ns_main_searchlist->r_nlist;
+	      --ns_msl->r_nlist;
 	    }
 
 	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */
@@ -581,12 +581,12 @@ _dl_close_worker (struct link_map *map)
 	  else
 	    {
 #ifdef SHARED
-	      assert (ns != LM_ID_BASE);
+	      assert (nsid != LM_ID_BASE);
 #endif
-	      GL(dl_ns)[ns]._ns_loaded = imap->l_next;
+	      ns->_ns_loaded = imap->l_next;
 	    }
 
-	  --GL(dl_ns)[ns]._ns_nloaded;
+	  --ns->_ns_nloaded;
 	  if (imap->l_next != NULL)
 	    imap->l_next->l_prev = imap->l_prev;
 
@@ -648,7 +648,7 @@ _dl_close_worker (struct link_map *map)
   /* Auditing checkpoint: we have deleted all objects.  */
   if (__builtin_expect (do_audit, 0))
     {
-      struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
+      struct link_map *head = ns->_ns_loaded;
       /* Do not call the functions for any auditing object.  */
       if (head->l_auditing == 0)
 	{
@@ -732,22 +732,22 @@ free_slotinfo (struct dtv_slotinfo_list **elemp)
 
 libc_freeres_fn (free_mem)
 {
-  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
-    if (__builtin_expect (GL(dl_ns)[ns]._ns_global_scope_alloc, 0) != 0
-	&& (GL(dl_ns)[ns]._ns_main_searchlist->r_nlist
+  for (Lmid_t nsid = 0; nsid < DL_NNS; ++nsid)
+    if (__builtin_expect (GL(dl_ns)[nsid]._ns_global_scope_alloc, 0) != 0
+	&& (GL(dl_ns)[nsid]._ns_main_searchlist->r_nlist
 	    // XXX Check whether we need NS-specific initial_searchlist
 	    == GLRO(dl_initial_searchlist).r_nlist))
       {
 	/* All object dynamically loaded by the program are unloaded.  Free
 	   the memory allocated for the global scope variable.  */
-	struct link_map **old = GL(dl_ns)[ns]._ns_main_searchlist->r_list;
+	struct link_map **old = GL(dl_ns)[nsid]._ns_main_searchlist->r_list;
 
 	/* Put the old map in.  */
-	GL(dl_ns)[ns]._ns_main_searchlist->r_list
+	GL(dl_ns)[nsid]._ns_main_searchlist->r_list
 	  // XXX Check whether we need NS-specific initial_searchlist
 	  = GLRO(dl_initial_searchlist).r_list;
 	/* Signal that the original map is used.  */
-	GL(dl_ns)[ns]._ns_global_scope_alloc = 0;
+	GL(dl_ns)[nsid]._ns_global_scope_alloc = 0;
 
 	/* Now free the old map.  */
 	free (old);

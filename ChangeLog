@@ -1,7 +1,10 @@
 2007-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close_worker): Help gcc to optimize by
+	adding new variables.
+
 	* elf/dl-open.c (add_to_global): Introduce variable ns to help gcc
-	optimize.  Complerely extend global scope array before making the
+	optimize.  Completely extend global scope array before making the
 	new entries visible.
 
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
