@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -268,6 +268,9 @@ struct pthread
 	       | EXITING_BITMASK | CANCEL_RESTMASK | TERMINATED_BITMASK))     \
    == (CANCELTYPE_BITMASK | CANCELED_BITMASK))
 
+  /* Flags.  Including those copied from the thread attribute.  */
+  int flags;
+
   /* We allocate one block of references here.  This should be enough
      to avoid allocating any memory dynamically for most applications.  */
   struct pthread_key_data
@@ -320,9 +323,6 @@ struct pthread
   struct pthread *joinid;
   /* Check whether a thread is detached.  */
 #define IS_DETACHED(pd) ((pd)->joinid == (pd))
-
-  /* Flags.  Including those copied from the thread attribute.  */
-  int flags;
 
   /* The result of the thread function.  */
   void *result;

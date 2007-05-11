@@ -1,5 +1,8 @@
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* descr.h (struct pthread): Rearrange members to fill hole in
+	64-bit layout.
+
 	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
 	(__pthread_setaffinity_new): If syscall was successful and
 	RESET_VGETCPU_CACHE is defined, use it before returning.

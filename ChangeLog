@@ -1,5 +1,12 @@
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/tst-getcpu.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=posix] (tests): Add
+	tst-getcpu.
+
+	* include/link.h: Move l_version and l_nversion members around to
+	fill gaps.
+
 	* scripts/check-c++-types.sh: Don't use -fnu89-inline option.
 
 	* sysdeps/unix/sysv/linux/sched_setaffinity.c

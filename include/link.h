@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -141,6 +141,10 @@ struct link_map
     /* Dependent object that first caused this object to be loaded.  */
     struct link_map *l_loader;
 
+    /* Array with version names.  */
+    struct r_found_version *l_versions;
+    unsigned int l_nversions;
+
     /* Symbol hash table.  */
     Elf_Symndx l_nbuckets;
     Elf32_Word l_gnu_bitmask_idxbits;
@@ -183,10 +187,6 @@ struct link_map
 				       is interested in the PLT interception.*/
     unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
 				   since it is removed.  */
-
-    /* Array with version names.  */
-    unsigned int l_nversions;
-    struct r_found_version *l_versions;
 
     /* Collected information about own RPATH directories.  */
     struct r_search_path_struct l_rpath_dirs;
