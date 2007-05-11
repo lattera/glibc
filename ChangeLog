@@ -1,5 +1,7 @@
 2007-05-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/check-c++-types.sh: Don't use -fnu89-inline option.
+
 	* sysdeps/unix/sysv/linux/sched_setaffinity.c
 	(__sched_setaffinity_new): If syscall was successful and
 	RESET_VGETCPU_CACHE is defined, use it before returning.

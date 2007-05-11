@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 #
 data=$1
 shift
-cxx="$*"
+cxx=$(echo $* | sed 's/-fgnu89-inline//')
 while read t; do
   echo -n "$t:"
   $cxx -S -xc++ -o - -D_GNU_SOURCE <(cat <<EOF
