@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -507,6 +507,9 @@ struct malloc_save_state {
   unsigned long trim_threshold;
   unsigned long top_pad;
   unsigned int  n_mmaps_max;
+#if MALLOC_DEBUG
+  unsigned int  n_mmaps_cmax;
+#endif
   unsigned long mmap_threshold;
   int           check_action;
   unsigned long max_sbrked_mem;
@@ -550,6 +553,9 @@ public_gET_STATe(void)
   ms->trim_threshold = mp_.trim_threshold;
   ms->top_pad = mp_.top_pad;
   ms->n_mmaps_max = mp_.n_mmaps_max;
+#if MALLOC_DEBUG
+  ms->n_mmaps_cmax = mp_.n_mmaps_cmax;
+#endif
   ms->mmap_threshold = mp_.mmap_threshold;
   ms->check_action = check_action;
   ms->max_sbrked_mem = main_arena.max_system_mem;
@@ -621,6 +627,9 @@ public_sET_STATe(Void_t* msptr)
   mp_.trim_threshold = ms->trim_threshold;
   mp_.top_pad = ms->top_pad;
   mp_.n_mmaps_max = ms->n_mmaps_max;
+#if MALLOC_DEBUG
+  mp_.n_mmaps_cmax = ms->n_mmaps_cmax;
+#endif
   mp_.mmap_threshold = ms->mmap_threshold;
   check_action = ms->check_action;
   main_arena.max_system_mem = ms->max_sbrked_mem;
