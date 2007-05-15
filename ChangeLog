@@ -1,6 +1,9 @@
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/malloc.c (largebin_index): Really have 32 buckets with 64 sizes.
+	* malloc/malloc.c: Use all small bin slots on 64-bit archs.
+
+	* malloc/malloc.c (largebin_index): Really have 32 buckets with 64
+	sizes.
 
 2007-05-13  Ulrich Drepper  <drepper@redhat.com>
 	* malloc/malloc.c [MALLOC_DEBUG]: Keep track of current maximum

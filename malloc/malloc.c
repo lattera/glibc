@@ -2125,21 +2125,36 @@ typedef struct malloc_chunk* mbinptr;
 
 #define NBINS             128
 #define NSMALLBINS         64
-#define SMALLBIN_WIDTH      8
-#define MIN_LARGE_SIZE    512
+#define SMALLBIN_WIDTH    MALLOC_ALIGNMENT
+#define MIN_LARGE_SIZE    (NSMALLBINS * SMALLBIN_WIDTH)
 
 #define in_smallbin_range(sz)  \
   ((unsigned long)(sz) < (unsigned long)MIN_LARGE_SIZE)
 
-#define smallbin_index(sz)     (((unsigned)(sz)) >> 3)
+#define smallbin_index(sz) \
+  (SMALLBIN_WIDTH == 16 ? (((unsigned)(sz)) >> 4) : (((unsigned)(sz)) >> 3))
 
-#define largebin_index(sz)                                                   \
+#define largebin_index_32(sz)                                                \
 (((((unsigned long)(sz)) >>  6) <= 38)?  56 + (((unsigned long)(sz)) >>  6): \
  ((((unsigned long)(sz)) >>  9) <= 20)?  91 + (((unsigned long)(sz)) >>  9): \
  ((((unsigned long)(sz)) >> 12) <= 10)? 110 + (((unsigned long)(sz)) >> 12): \
  ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
  ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
                                         126)
+
+// XXX It remains to be seen whether it is good to keep the widths of
+// XXX the buckets the same or whether it should be scaled by a factor
+// XXX of two as well.
+#define largebin_index_64(sz)                                                \
+(((((unsigned long)(sz)) >>  6) <= 48)?  48 + (((unsigned long)(sz)) >>  6): \
+ ((((unsigned long)(sz)) >>  9) <= 20)?  91 + (((unsigned long)(sz)) >>  9): \
+ ((((unsigned long)(sz)) >> 12) <= 10)? 110 + (((unsigned long)(sz)) >> 12): \
+ ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
+ ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
+                                        126)
+
+#define largebin_index(sz) \
+  (SIZE_SZ == 8 ? largebin_index_64 (sz) : largebin_index_32 (sz))
 
 #define bin_index(sz) \
  ((in_smallbin_range(sz)) ? smallbin_index(sz) : largebin_index(sz))
