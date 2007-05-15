@@ -1,5 +1,5 @@
 /* sem_post -- post to a POSIX semaphore.  Generic futex-using version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -31,12 +31,14 @@ __new_sem_post (sem_t *sem)
 {
   int *futex = (int *) sem;
 
-  int nr = atomic_increment_val (futex);
-  int err = lll_futex_wake (futex, nr);
-  if (__builtin_expect (err, 0) < 0)
+  if (atomic_increment_val (futex) == 1)
     {
-      __set_errno (-err);
-      return -1;
+      int err = lll_futex_wake (futex, 1);
+      if (__builtin_expect (err, 0) < 0)
+	{
+	  __set_errno (-err);
+	  return -1;
+	}
     }
   return 0;
 }

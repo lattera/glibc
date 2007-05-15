@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -37,12 +37,6 @@
 	.align	16
 	cfi_startproc
 sem_wait:
-	/* First check for cancellation.  */
-	movl	%fs:CANCELHANDLING, %eax
-	andl	$0xfffffff9, %eax
-	cmpl	$8, %eax
-	je	4f
-
 	pushq	%r12
 	cfi_adjust_cfa_offset(8)
 	cfi_offset(12, -16)
@@ -109,12 +103,5 @@ sem_wait:
 	cfi_restore(12)
 
 	retq
-
-4:	/* Canceled.  */
-	movq	$0xffffffffffffffff, %fs:RESULT
-	LOCK
-	orl	$0x10, %fs:CANCELHANDLING
-	movq	%fs:CLEANUP_JMP_BUF, %rdi
-	jmp	HIDDEN_JUMPTARGET (__pthread_unwind)
 	cfi_endproc
 	.size	sem_wait,.-sem_wait
