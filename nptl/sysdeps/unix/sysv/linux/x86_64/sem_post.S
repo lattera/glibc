@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,18 +41,15 @@ sem_post:
 	LOCK
 	xaddl	%edx, (%rdi)
 
-	testl	%edx, %edx
-	jne	2f
-
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %esi
-	movl	$1, %edx
+	incl	%edx
 	syscall
 
 	testq	%rax, %rax
 	js	1f
 
-2:	xorl	%eax, %eax
+	xorl	%eax, %eax
 	retq
 
 1:

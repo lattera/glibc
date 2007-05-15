@@ -14,3 +14,18 @@ syscall needed.
 
 - test with threaded process terminating and semadj (?) being applied
   only after all threads are gone
+
+
+
+- semaphore changes:
+
+  - sem_post should only wake one thread and only when the state of
+    the semaphore changed from 0 to 1
+
+    this also requires that sem_wait and sem_timedwait don't drop the
+    post if they get canceled.
+
+  - possibly add counter field.  This requires reviving the
+    differences between old and new semaphose funtions.  The old ones
+    stay as they are now.  The new once can use an additional field
+    wich is the counter for the number of waiters

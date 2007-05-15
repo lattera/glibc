@@ -1,12 +1,5 @@
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/sem_post.c: Only wake threads if old
-	value of semaphore was zero.
-	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/sem_post.c: Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_post.c: Likewise.
-	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
-
 	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Remove unnecessary
 	extra cancellation test.
 	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
