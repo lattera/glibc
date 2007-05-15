@@ -9,6 +9,7 @@
 	sizes.
 
 2007-05-13  Ulrich Drepper  <drepper@redhat.com>
+
 	* malloc/malloc.c [MALLOC_DEBUG]: Keep track of current maximum
 	number of mmaps.  n_mmaps_max is the target.
 	* malloc/hooks.c: Likewise.
