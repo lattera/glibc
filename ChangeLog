@@ -1,7 +1,11 @@
+2007-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Set to 2.6.90.
+
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* version.h (VERSION): Define to 6.
-	* include/features.h (__GLIBC_MINOR__): Likewise.
+	* version.h (VERSION): Define to 2.6.
+	* include/features.h (__GLIBC_MINOR__): Define to 6.
 
 	* malloc/malloc.c: Use all small bin slots on 64-bit archs.
 
