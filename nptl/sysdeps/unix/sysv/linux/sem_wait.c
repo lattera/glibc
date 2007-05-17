@@ -1,5 +1,5 @@
 /* sem_wait -- wait on a semaphore.  Generic futex-using version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -31,9 +31,6 @@
 int
 __new_sem_wait (sem_t *sem)
 {
-  /* First check for cancellation.  */
-  CANCELLATION_P (THREAD_SELF);
-
   int *futex = (int *) sem;
   int err;
 

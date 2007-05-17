@@ -1,5 +1,11 @@
 2007-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	Dummy files to prevent stub versions from being used.
+	* sysdeps/x86_64/fpu/k_cosl.c: New file.
+	* sysdeps/x86_64/fpu/k_rem_pio2l.c: New file.
+	* sysdeps/x86_64/fpu/k_sinl.c: New file.
+	* sysdeps/x86_64/fpu/k_tanl.c: New file.
+
 	* version.h (VERSION): Set to 2.6.90.
 
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
