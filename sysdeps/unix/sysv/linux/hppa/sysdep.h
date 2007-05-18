@@ -1,5 +1,6 @@
 /* Assembler macros for PA-RISC.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003, 2007 
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
    Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
@@ -40,7 +41,9 @@
 # define TREG_ASM "%r4" /* Cant clobber r3, it holds framemarker */
 # define SAVE_ASM_PIC	"       copy %%r19, %" TREG_ASM "\n"
 # define LOAD_ASM_PIC	"       copy %" TREG_ASM ", %%r19\n"
-# define USING_TREG	TREG_ASM,
+# define CLOB_TREG	TREG_ASM ,
+# define PIC_REG_DEF	register unsigned long __r19 asm("r19");
+# define PIC_REG_USE	, "r" (__r19)
 #else
 # define TREG %r3
 # define SAVE_PIC(SREG) nop ASM_LINE_SEP
@@ -49,7 +52,9 @@
 # define TREG_ASM 
 # define SAVE_ASM_PIC	"nop \n"
 # define LOAD_ASM_PIC	"nop \n"
-# define USING_TREG
+# define CLOB_TREG
+# define PIC_REG_DEF
+# define PIC_REG_USE
 #endif
 
 #ifdef __ASSEMBLER__
@@ -344,7 +349,7 @@ L(pre_end):					ASM_LINE_SEP	\
    TREG is clobbered and use that register to save/restore r19
    across the syscall. */
 
-#define CALL_CLOB_REGS	"%r1", "%r2", USING_TREG \
+#define CALL_CLOB_REGS	"%r1", "%r2", CLOB_TREG \
 		 	"%r20", "%r29", "%r31"
 
 #undef INLINE_SYSCALL
@@ -353,6 +358,7 @@ L(pre_end):					ASM_LINE_SEP	\
 	long __sys_res;							\
 	{								\
 		register unsigned long __res asm("r28");		\
+		PIC_REG_DEF						\
 		LOAD_ARGS_##nr(args)					\
 		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
@@ -361,7 +367,7 @@ L(pre_end):					ASM_LINE_SEP	\
 			"	ldi %1, %%r20\n"			\
 			LOAD_ASM_PIC					\
 			: "=r" (__res)					\
-			: "i" (SYS_ify(name)) ASM_ARGS_##nr		\
+			: "i" (SYS_ify(name)) PIC_REG_USE ASM_ARGS_##nr	\
 			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
 		);							\
 		__sys_res = (long)__res;				\
@@ -398,6 +404,7 @@ L(pre_end):					ASM_LINE_SEP	\
 	long __sys_res;							\
 	{								\
 		register unsigned long __res asm("r28");		\
+		PIC_REG_DEF						\
 		LOAD_ARGS_##nr(args)					\
 		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
@@ -406,7 +413,7 @@ L(pre_end):					ASM_LINE_SEP	\
 			"	ldi %1, %%r20\n"			\
 			LOAD_ASM_PIC					\
 			: "=r" (__res)					\
-			: "i" (SYS_ify(name)) ASM_ARGS_##nr		\
+			: "i" (SYS_ify(name)) PIC_REG_USE ASM_ARGS_##nr	\
 			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
 		);							\
 		__sys_res = (long)__res;				\
@@ -422,6 +429,7 @@ L(pre_end):					ASM_LINE_SEP	\
 	long __sys_res;							\
 	{								\
 		register unsigned long __res asm("r28");		\
+		PIC_REG_DEF						\
 		LOAD_ARGS_##nr(args)					\
 		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
@@ -430,7 +438,7 @@ L(pre_end):					ASM_LINE_SEP	\
 			"	copy %1, %%r20\n"			\
 			LOAD_ASM_PIC					\
 			: "=r" (__res)					\
-			: "r" (name) ASM_ARGS_##nr			\
+			: "r" (name) PIC_REG_USE ASM_ARGS_##nr		\
 			: "memory", CALL_CLOB_REGS CLOB_ARGS_##nr	\
 		);							\
 		__sys_res = (long)__res;				\

@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2003, 2007 
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,13 +59,14 @@ syscall (long int __sysno, ...)
   
   {
     register unsigned long int __res asm("r28");
+    PIC_REG_DEF
     LOAD_ARGS_6 (arg0, arg1, arg2, arg3, arg4, arg5)
     asm volatile (SAVE_ASM_PIC
 		  "	ble  0x100(%%sr2, %%r0)	\n"
 		  "	copy %1, %%r20		\n"
 		  LOAD_ASM_PIC
 		  : "=r" (__res)
-		  : "r" (__sysno) ASM_ARGS_6
+		  : "r" (__sysno) PIC_REG_USE ASM_ARGS_6
 		  : "memory", CALL_CLOB_REGS CLOB_ARGS_6);
     __sys_res = __res;
   }
