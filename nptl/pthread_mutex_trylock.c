@@ -84,9 +84,11 @@ __pthread_mutex_trylock (mutex)
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
-	      int newval
+	      int newval = id | (oldval & FUTEX_WAITERS);
+
+	      newval
 		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
-						       id, oldval);
+						       newval, oldval);
 
 	      if (newval != oldval)
 		{

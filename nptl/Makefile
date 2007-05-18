@@ -1,4 +1,4 @@
-# Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -209,9 +209,9 @@ tests = tst-typesizes \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	tst-cond20 tst-cond21 tst-cond22 \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
-	tst-robust6 tst-robust7 tst-robust8 \
-	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 \
-	tst-robustpi5 tst-robustpi6 tst-robustpi7 tst-robustpi8 \
+	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
+	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
+	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \

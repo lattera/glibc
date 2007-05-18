@@ -1,5 +1,16 @@
 2007-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4512]
+	* pthread_mutex_lock.c: Preserve FUTEX_WAITERS bit when dead owner
+	is detected.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	Patch in part by Atsushi Nemoto <anemo@mba.ocn.ne.jp>.
+
+	* Makefile (tests): Add tst-robust9 and tst-robustpi9.
+	* tst-robust9.c: New file.
+	* tst-robustpi9.c: New file.
+
 	* sysdeps/unix/sysv/linux/sem_wait.c (__new_sem_wait): Remove
 	unnecessary extra cancellation test.
 
