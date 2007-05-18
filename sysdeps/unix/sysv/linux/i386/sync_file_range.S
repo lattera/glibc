@@ -1,5 +1,5 @@
 /* Selective file content synch'ing.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,10 +63,10 @@ ENTRY (sync_file_range)
 
 	cmpl	$-4095, %eax
 	jae	SYSCALL_ERROR_LABEL
-L(pseudo_end):
-	ret
 #else
 	movl	$-ENOSYS, %eax
 	jmp	SYSCALL_ERROR_LABEL
 #endif
+L(pseudo_end):
+	ret
 PSEUDO_END (sync_file_range)

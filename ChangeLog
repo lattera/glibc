@@ -1,3 +1,8 @@
+2007-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Fix case where
+	__NR_sync_file_range is not defined.
+
 2007-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	Dummy files to prevent stub versions from being used.
