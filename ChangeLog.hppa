@@ -1,5 +1,10 @@
 2007-05-17  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/semaphore.h 
+	(SEM_VALUE_MAX): Remove.
+
+2007-05-17  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (PIC_REG_DEF): Define.
 	(PIC_REG_USE): Define.
 	(INLINE_SYSCALL): Use PIC_REG_DEF, PIC_REG_USE.

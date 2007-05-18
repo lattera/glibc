@@ -20,16 +20,10 @@
 # error "Never use <bits/semaphore.h> directly; include <semaphore.h> instead."
 #endif
 
-
 #define __SIZEOF_SEM_T	16
-
 
 /* Value returned if `sem_open' failed.  */
 #define SEM_FAILED      ((sem_t *) 0)
-
-/* Maximum value the semaphore can have.  */
-#define SEM_VALUE_MAX   ((int) ((~0u) >> 1))
-
 
 typedef union
 {
