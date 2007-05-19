@@ -1,5 +1,7 @@
 2007-05-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/mcheck.c (reallochook): If size==0, free the block.
+
 	* rt/tst-shm.c: Use fstat64 instead of fstat.
 
 	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Fix case where

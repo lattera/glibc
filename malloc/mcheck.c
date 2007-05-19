@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997,1999,2000-2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written May 1989 by Mike Haertel.
 
@@ -264,6 +264,12 @@ memalignhook (__malloc_size_t alignment, __malloc_size_t size,
 static __ptr_t
 reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
 {
+  if (size == 0)
+    {
+      freehook (ptr, caller);
+      return;
+    }
+
   struct hdr *hdr;
   __malloc_size_t osize;
 
