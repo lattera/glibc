@@ -1,3 +1,16 @@
+2007-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (__wait_lookup_done): New function.
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Add ptr_wait_lookup_done.
+	* init.c (pthread_functions): Initialize .ptr_wait_lookup_done.
+	* pthreadP.h: Declare __wait_lookup_done.
+	* sysdeps/i386/tls.h (tcbhead_t): Add gscope_flag.
+	Define macros to implement reference handling of global scope.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Initialize GL(dl_wait_lookup_done).
+
 2007-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4512]

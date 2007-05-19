@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -544,6 +544,8 @@ extern void __nptl_deallocate_tsd (void) attribute_hidden;
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
 extern void __free_stack_cache (void) attribute_hidden;
+
+extern void __wait_lookup_done (void) attribute_hidden;
 
 #ifdef SHARED
 # define PTHREAD_STATIC_FN_REQUIRE(name)

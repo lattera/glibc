@@ -486,6 +486,8 @@ struct rtld_global
 
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 
+  EXTERN void (*_dl_wait_lookup_done) (void);
+
 #ifdef SHARED
 };
 # define __rtld_global_attribute__

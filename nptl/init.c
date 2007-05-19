@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,27 +33,6 @@
 #include <shlib-compat.h>
 #include <smp.h>
 #include <lowlevellock.h>
-
-
-#ifndef __NR_set_tid_address
-/* XXX For the time being...  Once we can rely on the kernel headers
-   having the definition remove these lines.  */
-#if defined __s390__
-# define __NR_set_tid_address	252
-#elif defined __ia64__
-# define __NR_set_tid_address	1233
-#elif defined __i386__
-# define __NR_set_tid_address	258
-#elif defined __x86_64__
-# define __NR_set_tid_address	218
-#elif defined __powerpc__
-# define __NR_set_tid_address	232
-#elif defined __sparc__
-# define __NR_set_tid_address	166
-#else
-# error "define __NR_set_tid_address"
-#endif
-#endif
 
 
 /* Size and alignment of static TLS block.  */
@@ -138,7 +117,8 @@ static const struct pthread_functions pthread_functions =
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
     .ptr__nptl_setxid = __nptl_setxid,
     /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = __free_stack_cache
+    .ptr_freeres = __free_stack_cache,
+    .ptr_wait_lookup_done = __wait_lookup_done
   };
 # define ptr_pthread_functions &pthread_functions
 #else

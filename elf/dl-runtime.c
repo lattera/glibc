@@ -26,6 +26,8 @@
 #include <ldsodefs.h>
 #include <sysdep-cancel.h>
 #include "dynamic-link.h"
+#include <tls.h>
+
 
 #if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
     || ELF_MACHINE_NO_REL
@@ -97,10 +99,15 @@ _dl_fixup (
 	 not necessary for objects which cannot be unloaded or when
 	 we are not using any threads (yet).  */
       int flags = DL_LOOKUP_ADD_DEPENDENCY;
-      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+      if (!RTLD_SINGLE_THREAD_P)
 	{
-	  __rtld_mrlock_lock (l->l_scope_lock);
-	  flags |= DL_LOOKUP_SCOPE_LOCK;
+	  THREAD_GSCOPE_SET_FLAG ();
+
+	  if (l->l_type == lt_loaded)
+	    {
+	      __rtld_mrlock_lock (l->l_scope_lock);
+	      flags |= DL_LOOKUP_SCOPE_LOCK;
+	    }
 	}
 
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym, l->l_scope,
@@ -108,6 +115,10 @@ _dl_fixup (
 
       if ((flags & DL_LOOKUP_SCOPE_LOCK) != 0)
 	__rtld_mrlock_unlock (l->l_scope_lock);
+
+      /* We are done with the global scope.  */
+      if (!RTLD_SINGLE_THREAD_P)
+	THREAD_GSCOPE_RESET_FLAG ();
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
@@ -191,10 +202,15 @@ _dl_profile_fixup (
 	     not necessary for objects which cannot be unloaded or when
 	     we are not using any threads (yet).  */
 	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
-	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
+	  if (!RTLD_SINGLE_THREAD_P)
 	    {
-	      __rtld_mrlock_lock (l->l_scope_lock);
-	      flags |= DL_LOOKUP_SCOPE_LOCK;
+	      THREAD_GSCOPE_SET_FLAG ();
+
+	      if (l->l_type == lt_loaded)
+		{
+		  __rtld_mrlock_lock (l->l_scope_lock);
+		  flags |= DL_LOOKUP_SCOPE_LOCK;
+		}
 	    }
 
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l,
@@ -203,6 +219,10 @@ _dl_profile_fixup (
 
 	  if ((flags & DL_LOOKUP_SCOPE_LOCK) != 0)
 	    __rtld_mrlock_unlock (l->l_scope_lock);
+
+	  /* We are done with the global scope.  */
+	  if (!RTLD_SINGLE_THREAD_P)
+	    THREAD_GSCOPE_RESET_FLAG ();
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol

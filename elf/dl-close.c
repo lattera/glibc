@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <sysdep-cancel.h>
+#include <tls.h>
 
 
 /* Type of the constructor functions.  */
@@ -487,6 +488,9 @@ _dl_close_worker (struct link_map *map)
 		ns_msl->r_list[cnt - 1] = ns_msl->r_list[cnt];
 
 	      --ns_msl->r_nlist;
+
+	      if (!RTLD_SINGLE_THREAD_P)
+		THREAD_GSCOPE_WAIT ();
 	    }
 
 	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */

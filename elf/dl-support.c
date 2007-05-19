@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,6 +131,9 @@ ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
 int (*_dl_make_stack_executable_hook) (void **) internal_function
   = _dl_make_stack_executable;
 
+
+/* Function in libpthread to wait for termination of lookups.  */
+void (*_dl_wait_lookup_done) (void);
 
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
