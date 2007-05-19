@@ -267,7 +267,7 @@ reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
   if (size == 0)
     {
       freehook (ptr, caller);
-      return;
+      return NULL;
     }
 
   struct hdr *hdr;

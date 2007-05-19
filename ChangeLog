@@ -1,5 +1,8 @@
 2007-05-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (do_check_chunk): Correct check for mmaped block
+	not overlapping with arena.
+
 	* malloc/mcheck.c (reallochook): If size==0, free the block.
 
 	* rt/tst-shm.c: Use fstat64 instead of fstat.

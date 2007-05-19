@@ -2572,7 +2572,7 @@ static void do_check_chunk(av, p) mstate av; mchunkptr p;
 #if HAVE_MMAP
     /* address is outside main heap  */
     if (contiguous(av) && av->top != initial_top(av)) {
-      assert(((char*)p) < min_address || ((char*)p) > max_address);
+      assert(((char*)p) < min_address || ((char*)p) >= max_address);
     }
     /* chunk is page-aligned */
     assert(((p->prev_size + sz) & (mp_.pagesize-1)) == 0);
