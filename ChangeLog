@@ -1,5 +1,9 @@
-2007-05-18  Ulrich Drepper  <drepper@redhat.com>
+2007-05-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PRIVATE_FUTEX):
+	Define for kernel >= 2.6.22.
+
+2007-05-18  Ulrich Drepper  <drepper@redhat.com>
 	* elf/dl-close.c (_dl_close_worker): When removing object from
 	global scope, wait for all lookups to finish afterwards.
 	* elf/dl-open.c (add_to_global): When global scope array must
