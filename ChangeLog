@@ -1,5 +1,7 @@
 2007-05-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/tst-shm.c: Use fstat64 instead of fstat.
+
 	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Fix case where
 	__NR_sync_file_range is not defined.
 

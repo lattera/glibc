@@ -60,7 +60,7 @@ static void
 worker (int write_now)
 {
   struct timespec ts;
-  struct stat st;
+  struct stat64 st;
   int i;
   int fd = do_open ();
   char *mem;
@@ -68,8 +68,10 @@ worker (int write_now)
   if (fd == -1)
     exit (fd);
 
-  if (fstat (fd, &st) == -1 || st.st_size != 4000)
+  if (fstat64 (fd, &st) == -1)
     error (EXIT_FAILURE, 0, "stat failed");
+  if (st.st_size != 4000)
+    error (EXIT_FAILURE, 0, "size incorrect");
 
   mem = mmap (NULL, 4000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == NULL)
@@ -131,7 +133,7 @@ do_test (void)
   pid_t pid2;
   int status1;
   int status2;
-  struct stat st;
+  struct stat64 st;
 
   /* Create the shared memory object.  */
   fd = shm_open ("/shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
@@ -155,10 +157,15 @@ do_test (void)
       return 0;
     }
 
-  if (fstat (fd, &st) == -1 || st.st_size != 4000)
+  if (fstat64 (fd, &st) == -1)
     {
       shm_unlink ("/shm-test");
       error (EXIT_FAILURE, 0, "initial stat failed");
+    }
+  if (st.st_size != 4000)
+    {
+      shm_unlink ("/shm-test");
+      error (EXIT_FAILURE, 0, "initial size not correct");
     }
 
   /* Spawn to processes which will do the work.  */
