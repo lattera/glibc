@@ -1,3 +1,8 @@
+2007-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-robust9.c (do_test): Don't fail if ENABLE_PI and
+	pthread_mutex_init failed with ENOTSUP.
+
 2007-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (__wait_lookup_done): New function.

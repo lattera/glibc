@@ -54,6 +54,13 @@ do_test (void)
     }
 #endif
   err = pthread_mutex_init (&m, &ma);
+#ifdef ENABLE_PI
+  if (err == ENOTSUP)
+    {
+      puts ("PI robust mutexes not supported");
+      return 0;
+    }
+#endif
   if (err)
     {
       puts ("pthread_mutex_init");
