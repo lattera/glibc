@@ -2358,9 +2358,6 @@ struct malloc_par {
   /* Memory map support */
   int              n_mmaps;
   int              n_mmaps_max;
-#if MALLOC_DEBUG
-  int              n_mmaps_cmax;
-#endif
   int              max_n_mmaps;
   /* the mmap_threshold is dynamic, until the user sets
      it manually, at which point we need to disable any
@@ -2876,8 +2873,6 @@ static void do_check_malloc_state(mstate av)
   assert(total <= (unsigned long)(mp_.max_total_mem));
   assert(mp_.n_mmaps >= 0);
 #endif
-  assert(mp_.n_mmaps <= mp_.n_mmaps_cmax);
-  assert(mp_.n_mmaps_max <= mp_.n_mmaps_cmax);
   assert(mp_.n_mmaps <= mp_.max_n_mmaps);
 
   assert((unsigned long)(av->system_mem) <=
@@ -3475,13 +3470,6 @@ munmap_chunk(p) mchunkptr p;
     }
 
   mp_.n_mmaps--;
-#if MALLOC_DEBUG
-  if (mp_.n_mmaps_cmax > mp_.n_mmaps_max)
-    {
-      assert (mp_.n_mmaps_cmax == mp_.n_mmaps + 1);
-      mp_.n_mmaps_cmax = mp_.n_mmaps;
-    }
-#endif
   mp_.mmapped_mem -= total_size;
 
   int ret __attribute__ ((unused)) = munmap((char *)block, total_size);
@@ -5397,9 +5385,6 @@ mstate av; size_t n_elements; size_t* sizes; int opts; Void_t* chunks[];
   mp_.n_mmaps_max = 0;
   mem = _int_malloc(av, size);
   mp_.n_mmaps_max = mmx;   /* reset mmap */
-#if MALLOC_DEBUG
-  mp_.n_mmaps_cmax = mmx;
-#endif
   if (mem == 0)
     return 0;
 
@@ -5725,17 +5710,8 @@ int mALLOPt(param_number, value) int param_number; int value;
       res = 0;
     else
 #endif
-      {
-#if MALLOC_DEBUG
-	if (mp_.n_mmaps <= value)
-	  mp_.n_mmaps_cmax = value;
-	else
-	  mp_.n_mmaps_cmax = mp_.n_mmaps;
-#endif
-
-	mp_.n_mmaps_max = value;
-	mp_.no_dyn_threshold = 1;
-      }
+      mp_.n_mmaps_max = value;
+      mp_.no_dyn_threshold = 1;
     break;
 
   case M_CHECK_ACTION:

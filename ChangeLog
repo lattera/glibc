@@ -1,3 +1,20 @@
+2007-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/hooks.c (MALLOC_STATE_VERSION): Bump.
+	(public_sET_STATe): If ms->version < 3, put all chunks into
+	unsorted chunks and clear {fd,bk}_nextsize fields of largebin
+	chunks.
+
+	* malloc/malloc.c [MALLOC_DEBUG]: Revert 2007-05-13 changes.
+	* malloc/hooks.c: Likewise.
+	* malloc/arena.c: Likewise.
+	* malloc/malloc.c (do_check_malloc_state): Don't assert
+	n_mmaps is not greater than n_mmaps_max.  This removes the need
+	for the previous change.
+
+	* malloc/Makefile (CFLAGS-malloc.c): Revert accidental
+	2007-05-07 commit.
+
 2007-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PRIVATE_FUTEX):

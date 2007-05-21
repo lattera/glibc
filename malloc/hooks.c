@@ -496,7 +496,7 @@ free_starter(mem, caller) Void_t* mem; const Void_t *caller;
    then the hooks are reset to 0.  */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
-#define MALLOC_STATE_VERSION (0*0x100l + 2l) /* major*0x100 + minor */
+#define MALLOC_STATE_VERSION (0*0x100l + 3l) /* major*0x100 + minor */
 
 struct malloc_save_state {
   long          magic;
@@ -507,9 +507,6 @@ struct malloc_save_state {
   unsigned long trim_threshold;
   unsigned long top_pad;
   unsigned int  n_mmaps_max;
-#if MALLOC_DEBUG
-  unsigned int  n_mmaps_cmax;
-#endif
   unsigned long mmap_threshold;
   int           check_action;
   unsigned long max_sbrked_mem;
@@ -553,9 +550,6 @@ public_gET_STATe(void)
   ms->trim_threshold = mp_.trim_threshold;
   ms->top_pad = mp_.top_pad;
   ms->n_mmaps_max = mp_.n_mmaps_max;
-#if MALLOC_DEBUG
-  ms->n_mmaps_cmax = mp_.n_mmaps_cmax;
-#endif
   ms->mmap_threshold = mp_.mmap_threshold;
   ms->check_action = check_action;
   ms->max_sbrked_mem = main_arena.max_system_mem;
@@ -601,8 +595,9 @@ public_sET_STATe(Void_t* msptr)
       assert(ms->av[2*i+3] == 0);
       first(b) = last(b) = b;
     } else {
-      if(i<NSMALLBINS || (largebin_index(chunksize(ms->av[2*i+2]))==i &&
-			  largebin_index(chunksize(ms->av[2*i+3]))==i)) {
+      if(ms->version >= 3 &&
+	 (i<NSMALLBINS || (largebin_index(chunksize(ms->av[2*i+2]))==i &&
+			   largebin_index(chunksize(ms->av[2*i+3]))==i))) {
 	first(b) = ms->av[2*i+2];
 	last(b) = ms->av[2*i+3];
 	/* Make sure the links to the bins within the heap are correct.  */
@@ -622,14 +617,22 @@ public_sET_STATe(Void_t* msptr)
       }
     }
   }
+  if (ms->version < 3) {
+    /* Clear fd_nextsize and bk_nextsize fields.  */
+    b = unsorted_chunks(&main_arena)->fd;
+    while (b != unsorted_chunks(&main_arena)) {
+      if (!in_smallbin_range(chunksize(b))) {
+	b->fd_nextsize = NULL;
+	b->bk_nextsize = NULL;
+      }
+      b = b->fd;
+    }
+  }
   mp_.sbrk_base = ms->sbrk_base;
   main_arena.system_mem = ms->sbrked_mem_bytes;
   mp_.trim_threshold = ms->trim_threshold;
   mp_.top_pad = ms->top_pad;
   mp_.n_mmaps_max = ms->n_mmaps_max;
-#if MALLOC_DEBUG
-  mp_.n_mmaps_cmax = ms->n_mmaps_cmax;
-#endif
   mp_.mmap_threshold = ms->mmap_threshold;
   check_action = ms->check_action;
   main_arena.max_system_mem = ms->max_sbrked_mem;

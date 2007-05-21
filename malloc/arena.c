@@ -370,9 +370,6 @@ ptmalloc_init_minimal (void)
   mp_.top_pad        = DEFAULT_TOP_PAD;
 #endif
   mp_.n_mmaps_max    = DEFAULT_MMAP_MAX;
-#if MALLOC_DEBUG
-  mp_.n_mmaps_cmax   = DEFAULT_MMAP_MAX;
-#endif
   mp_.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
   mp_.trim_threshold = DEFAULT_TRIM_THRESHOLD;
   mp_.pagesize       = malloc_getpagesize;
