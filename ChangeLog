@@ -1,3 +1,16 @@
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c: Move cache information
+	handling to ...
+	* sysdeps/x86_64/cacheinfo.c: ... here.  New file.
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	cacheinfo.
+	* sysdeps/x86_64/memcpy.S: Complete rewrite.
+	* sysdeps/x86_64/mempcpy.S: Adjust appropriately.
+	Patch by Evandro Menezes <evandro.menezes@amd.com>.
+
+	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: New file.
+
 2007-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4525]

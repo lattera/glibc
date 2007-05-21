@@ -9,3 +9,7 @@ endif
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 endif
+
+ifeq ($(subdir),string)
+sysdep_routines += cacheinfo
+endif

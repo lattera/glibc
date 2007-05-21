@@ -1,3 +1,4 @@
+#define USE_AS_MEMPCPY
 #define memcpy __mempcpy
 #define __memcpy_chk __mempcpy_chk
 #include <sysdeps/x86_64/memcpy.S>
