@@ -1,5 +1,12 @@
 2007-05-21  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4525]
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add epoll_pwait.
+	* sysdeps/unix/sysv/linux/epoll_pwait.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list (epoll_pwait): Remove.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h (epoll_pwait): Declare.
+
 	[BZ #4514]
 	* stdio-common/vfprintf.c (vfprintf): Don't shadow workstart variable,
 	reinitialize workend at the start of each do_positional format spec

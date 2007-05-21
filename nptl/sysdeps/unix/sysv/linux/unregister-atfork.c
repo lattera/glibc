@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -104,7 +104,7 @@ __unregister_atfork (dso_handle)
       atomic_decrement (&deleted->handler->refcntr);
       unsigned int val;
       while ((val = deleted->handler->refcntr) != 0)
-	lll_futex_wait (&deleted->handler->refcntr, val, LLL_FUTEX_PRIVATE);
+	lll_futex_wait (&deleted->handler->refcntr, val);
 
       deleted = deleted->next;
     }
