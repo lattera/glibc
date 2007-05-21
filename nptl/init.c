@@ -117,8 +117,7 @@ static const struct pthread_functions pthread_functions =
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
     .ptr__nptl_setxid = __nptl_setxid,
     /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = __free_stack_cache,
-    .ptr_wait_lookup_done = __wait_lookup_done
+    .ptr_freeres = __free_stack_cache
   };
 # define ptr_pthread_functions &pthread_functions
 #else
@@ -365,6 +364,8 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;
+
+  GL(dl_wait_lookup_done) = &__wait_lookup_done;
 
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
