@@ -1,6 +1,4 @@
-/*
-   x86_64 cache info.
-
+/* x86_64 cache info.
    Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -202,7 +200,7 @@ handle_intel (int name, unsigned int maxidx)
   long int result = 0;
   bool no_level_2_or_3 = false;
   bool has_level_2 = false;
-  
+
   while (cnt++ < max)
     {
       unsigned int eax;
@@ -349,7 +347,8 @@ __cache_sysconf (int name)
 /* Half the core cache size for use in memory and string routines, typically
    L1 size. */
 long int __x86_64_core_cache_size_half attribute_hidden = 32 * 1024 / 2;
-/* Shared cache size for use in memory and string routines, typically L2 or L3 size. */
+/* Shared cache size for use in memory and string routines, typically
+   L2 or L3 size. */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 /* PREFETCHW support flag for use in memory and string routines. */
 int __x86_64_prefetchw attribute_hidden;
@@ -378,24 +377,25 @@ init_cacheinfo (void)
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     {
-      core = handle_intel (_SC_LEVEL1_DCACHE_SIZE, eax);
-      
+      core = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
+
       /* Try L3 first. */
       level  = 3;
-      shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, eax);
-      
+      shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, max_cpuid);
+
       if (shared <= 0)
         {
 	  /* Try L2 otherwise. */
           level  = 2;
-          shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, eax);
+          shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
-	
-      /* Figure out the number of logical threads that share the highest cache level. */	
+
+      /* Figure out the number of logical threads that share the
+	 highest cache level. */
       if (max_cpuid >= 4)
         {
 	  int i = 0;
-	  
+
 	  /* Query until desired cache level is enumerated. */
 	  do
 	    {
@@ -404,7 +404,7 @@ init_cacheinfo (void)
 		            : "0" (4), "2" (i++));
 	    }
           while (((eax >> 5) & 0x7) != level);
-			
+
 	  threads = ((eax >> 14) & 0x3ff) + 1;
 	}
       else
@@ -413,11 +413,12 @@ init_cacheinfo (void)
           asm volatile ("cpuid"
 		        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		        : "0" (1));
-			
+
 	  threads = (ebx >> 16) & 0xff;
 	}
-	 
-      /* Cap usage of highest cache level to the number of supported threads. */
+
+      /* Cap usage of highest cache level to the number of supported
+	 threads. */
       if (shared > 0 && threads > 0)
         shared /= threads;
     }
@@ -426,7 +427,7 @@ init_cacheinfo (void)
     {
       core   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       shared = handle_amd (_SC_LEVEL2_CACHE_SIZE);
-      
+
       asm volatile ("cpuid"
 		    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		    : "0" (0x80000000));

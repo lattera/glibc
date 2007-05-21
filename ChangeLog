@@ -1,5 +1,8 @@
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Pass correct value
+	as second parameter to handle_intel.
+
 	* nscd/aicache.c (addhstaiX): If reported TTL is zero don't cache
 	the entry.
 
@@ -51,6 +54,7 @@
 	Define for kernel >= 2.6.22.
 
 2007-05-18  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-close.c (_dl_close_worker): When removing object from
 	global scope, wait for all lookups to finish afterwards.
 	* elf/dl-open.c (add_to_global): When global scope array must

@@ -1,3 +1,15 @@
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Remove ptr_wait_lookup_done again.
+	* init.c (pthread_functions): Don't add .ptr_wait_lookup_done here.
+	(__pthread_initialize_minimal_internal): Initialize
+	_dl_wait_lookup_done pointer in _rtld_global directly.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Remove code to code _dl_wait_lookup_done.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_WAIT): The pointer is not
+	encrypted for now.
+
 2007-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-robust9.c (do_test): Don't fail if ENABLE_PI and

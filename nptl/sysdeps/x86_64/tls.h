@@ -357,10 +357,7 @@ typedef struct
 #define THREAD_GSCOPE_SET_FLAG() \
   THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
 #define THREAD_GSCOPE_WAIT() \
-  do { void (*ptr) (void) = GL(dl_wait_lookup_done);			      \
-       PTR_DEMANGLE (ptr);						      \
-       ptr ();								      \
-  } while (0)
+  GL(dl_wait_lookup_done) ()
 
 
 #endif /* __ASSEMBLER__ */

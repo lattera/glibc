@@ -71,12 +71,6 @@ __libc_pthread_init (ptr, reclaim, functions)
       dest->parr[cnt] = p;
     }
   __libc_pthread_functions_init = 1;
-
-# ifdef RTLD_NOT_MANGLED
-  GL(dl_wait_lookup_done) = functions->ptr_wait_lookup_done;
-# else
-  GL(dl_wait_lookup_done) = __libc_pthread_functions.ptr_wait_lookup_done;
-# endif
 #endif
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
