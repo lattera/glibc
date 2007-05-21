@@ -1627,6 +1627,8 @@ do_positional:
     /* Just a counter.  */
     size_t cnt;
 
+    free (workstart);
+    workstart = NULL;
 
     if (grouping == (const char *) -1)
       {
@@ -1801,7 +1803,9 @@ do_positional:
 	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	CHAR_T spec = specs[nspecs_done].info.spec;
-	CHAR_T *workstart = NULL;
+
+	workstart = NULL;
+	workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
 
 	/* Fill in last information.  */
 	if (specs[nspecs_done].width_arg != -1)
@@ -1897,8 +1901,7 @@ do_positional:
 	    break;
 	  }
 
-	if (__builtin_expect (workstart != NULL, 0))
-	  free (workstart);
+	free (workstart);
 	workstart = NULL;
 
 	/* Write the following constant string.  */
@@ -1926,7 +1929,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 {
   int done = 0;
-  CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
+  CHAR_T work_buffer[MAX (sizeof (info->width), sizeof (info->prec)) * 3];
   CHAR_T *const workend
     = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
   register CHAR_T *w;

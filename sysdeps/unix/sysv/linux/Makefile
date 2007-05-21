@@ -13,7 +13,7 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek umount umount2 readahead \
-		   setfsuid setfsgid makedev
+		   setfsuid setfsgid makedev epoll_pwait
 
 CFLAGS-gethostid.c = -fexceptions
 

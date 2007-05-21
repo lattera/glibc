@@ -1,5 +1,12 @@
 2007-05-21  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4514]
+	* stdio-common/vfprintf.c (vfprintf): Don't shadow workstart variable,
+	reinitialize workend at the start of each do_positional format spec
+	loop, free workstart before do_positional loops.
+	(printf_unknown): Fix size of work_buffer.
+	* stdio-common/tst-sprintf.c (main): Add 3 new testcases.
+
 	* malloc/hooks.c (MALLOC_STATE_VERSION): Bump.
 	(public_sET_STATe): If ms->version < 3, put all chunks into
 	unsorted chunks and clear {fd,bk}_nextsize fields of largebin

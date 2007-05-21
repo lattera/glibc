@@ -10,7 +10,6 @@ delete_module	EXTRA	delete_module	3	delete_module
 epoll_create	EXTRA	epoll_create	i:i	epoll_create
 epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
 epoll_wait	EXTRA	epoll_wait	Ci:ipii	epoll_wait
-epoll_pwait	EXTRA	epoll_pwait	Ci:ipiipi	epoll_pwait
 fdatasync	-	fdatasync	Ci:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
 fork		-	fork		i:	__libc_fork	__fork fork
