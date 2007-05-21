@@ -1,5 +1,8 @@
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/aicache.c (addhstaiX): If reported TTL is zero don't cache
+	the entry.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysconf.c: Move cache information
 	handling to ...
 	* sysdeps/x86_64/cacheinfo.c: ... here.  New file.
