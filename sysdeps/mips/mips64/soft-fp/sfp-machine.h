@@ -1,3 +1,6 @@
+#include <fenv.h>
+#include <fpu_control.h>
+
 #define _FP_W_TYPE_SIZE		64
 #define _FP_W_TYPE		unsigned long long
 #define _FP_WS_TYPE		signed long long
@@ -40,8 +43,32 @@
     R##_c = FP_CLS_NAN;						\
   } while (0)
 
-#define FP_EX_INVALID           (1 << 4)
-#define FP_EX_DIVZERO           (1 << 3)
-#define FP_EX_OVERFLOW          (1 << 2)
-#define FP_EX_UNDERFLOW         (1 << 1)
-#define FP_EX_INEXACT           (1 << 0)
+#define _FP_DECL_EX		fpu_control_t _fcw
+
+#define FP_ROUNDMODE		(_fcw & 0x3)
+
+#define FP_RND_NEAREST		FE_TONEAREST
+#define FP_RND_ZERO		FE_TOWARDZERO
+#define FP_RND_PINF		FE_UPWARD
+#define FP_RND_MINF		FE_DOWNWARD
+
+#define FP_EX_INVALID		FE_INVALID
+#define FP_EX_OVERFLOW		FE_OVERFLOW
+#define FP_EX_UNDERFLOW		FE_UNDERFLOW
+#define FP_EX_DIVZERO		FE_DIVBYZERO
+#define FP_EX_INEXACT		FE_INEXACT
+
+#ifdef __mips_hard_float
+#define FP_INIT_ROUNDMODE			\
+do {						\
+  _FPU_GETCW (_fcw);				\
+} while (0)
+
+#define FP_HANDLE_EXCEPTIONS			\
+do {						\
+  if (__builtin_expect (_fex, 0))		\
+    _FPU_SETCW (_fcw | _fex | (_fex << 10));	\
+} while (0)
+#else
+#define FP_INIT_ROUNDMODE	_fcw = FP_RND_NEAREST
+#endif
