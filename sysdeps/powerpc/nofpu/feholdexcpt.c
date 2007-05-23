@@ -1,6 +1,6 @@
 /* Store current floating-point environment and clear exceptions
    (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -33,11 +33,12 @@ feholdexcept (fenv_t *envp)
   u.fenv = *envp;
   /* Clear everything except the rounding mode.  */
   u.l[0] &= 0x3;
-
-  /* ?? Should we clear the disabled exceptions as well ?? */
+  /* Disable exceptions */
+  u.l[1] = FE_ALL_EXCEPT;
 
   /* Put the new state in effect.  */
-  fesetenv (envp);
+  fesetenv (&u.fenv);
 
   return 0;
 }
+libm_hidden_def (feholdexcept)

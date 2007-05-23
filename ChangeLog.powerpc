@@ -1,3 +1,9 @@
+2007-05-23  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/nofpu/feholdexcpt.c (feholdexcept): Disable
+	exceptions.  Use the updated env in fesetenv().
+	Add libm_hidden_def.
+
 2007-01-23  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #2749]
