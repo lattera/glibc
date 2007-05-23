@@ -304,7 +304,7 @@ do {									\
 
 auto inline void
 __attribute__ ((always_inline))
-elf_machine_reloc (struct link_map *map, ElfW(Word) r_info,
+elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 		   const ElfW(Sym) *sym, const struct r_found_version *version,
 		   void *reloc_addr, ElfW(Addr) r_addend, int inplace_p)
 {
