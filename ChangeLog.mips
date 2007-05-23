@@ -1,3 +1,12 @@
+2007-05-23  Atsushi Nemoto  <anemo@mba.ocn.ne.jp>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/readahead.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: New file.
+
 2007-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips64/n32/Implies: Add mips/mips64/soft-fp.
