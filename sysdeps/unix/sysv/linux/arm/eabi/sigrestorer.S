@@ -29,24 +29,49 @@
 
    Start the unwind tables at least one instruction before the signal
    trampoline, because the unwinder will assume we are returning after
-   a call site.  */
+   a call site.
 
+   Because the signal frame layout changed in 2.6.18, we provide two
+   copies of these functions with different unwind information.  */
+
+#ifndef __ASSUME_SIGFRAME_V2
 	.fnstart
 	.save {r0-r15}
 	.pad #12
 	nop
-ENTRY(__default_sa_restorer)
+ENTRY(__default_sa_restorer_v1)
+	mov	r7, $SYS_ify(sigreturn)
+	swi	0x0
+	.fnend
+#endif
+
+	.fnstart
+	.save {r0-r15}
+	.pad #32
+	nop
+ENTRY(__default_sa_restorer_v2)
 	mov	r7, $SYS_ify(sigreturn)
 	swi	0x0
 	.fnend
 
 #ifdef __NR_rt_sigreturn
 
+#ifndef __ASSUME_SIGFRAME_V2
 	.fnstart
 	.save {r0-r15}
 	.pad #168
 	nop
-ENTRY(__default_rt_sa_restorer)
+ENTRY(__default_rt_sa_restorer_v1)
+	mov	r7, $SYS_ify(rt_sigreturn)
+	swi	0x0
+	.fnend
+#endif
+
+	.fnstart
+	.save {r0-r15}
+	.pad #160
+	nop
+ENTRY(__default_rt_sa_restorer_v2)
 	mov	r7, $SYS_ify(rt_sigreturn)
 	swi	0x0
 	.fnend

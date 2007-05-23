@@ -1,3 +1,25 @@
+2007-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_SIGFRAME_V2): Define for 2.6.18 and later.
+	* sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S
+	(__default_sa_restorer): Rename to __default_sa_restorer_v1.
+	Don't define if __ASSUME_SIGFRAME_V2.
+	(__default_rt_sa_restorer): Rename to
+	__default_rt_sa_restorer_v1.  Don't define if
+	__ASSUME_SIGFRAME_V2.
+	(__default_sa_restorer_v2, __default_rt_sa_restorer_v2): New.
+	* sysdeps/unix/sysv/linux/arm/nptl/Versions
+	(__default_sa_restorer_v1, __default_rt_sa_restorer_v1,
+	__default_sa_restorer_v2, __default_rt_sa_restorer_v2): Add to
+	GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c [__ARM_EABI__]
+	(__default_sa_restorer_v1, __default_sa_restorer_v2,
+	__default_rt_sa_restorer_v1, __default_rt_sa_restorer_v2):
+	Declare.
+	(__default_sa_restorer, __default_rt_sa_restorer): Define as
+	macros depending on kernel version.
+
 2007-01-23  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (PTR_MANGLE, PTR_DEMANGLE):

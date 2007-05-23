@@ -36,8 +36,27 @@ int __libc_missing_rt_sigs;
 
 #define SA_RESTORER	0x04000000
 
+#ifdef __ARM_EABI__
+extern void __default_sa_restorer_v1(void);
+extern void __default_sa_restorer_v2(void);
+extern void __default_rt_sa_restorer_v1(void);
+extern void __default_rt_sa_restorer_v2(void);
+# ifdef __ASSUME_SIGFRAME_V2
+#  define __default_sa_restorer __default_sa_restorer_v2
+#  define __default_rt_sa_restorer __default_rt_sa_restorer_v2
+# else
+#  include <ldsodefs.h>
+#  define __default_sa_restorer (GLRO(dl_osversion) >= 0x020612	\
+				 ? __default_sa_restorer_v2	\
+				 : __default_sa_restorer_v1)
+#  define __default_rt_sa_restorer (GLRO(dl_osversion) >= 0x020612	\
+				    ? __default_rt_sa_restorer_v2	\
+				    : __default_rt_sa_restorer_v1)
+# endif
+#else
 extern void __default_sa_restorer(void);
 extern void __default_rt_sa_restorer(void);
+#endif
 
 /* When RT signals are in use we need to use a different return stub.  */
 #ifdef __NR_rt_sigreturn

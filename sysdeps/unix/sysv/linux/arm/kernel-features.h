@@ -46,4 +46,9 @@
 # define __ASSUME_VFORK_SYSCALL		1
 #endif
 
+/* The signal frame layout changed in 2.6.18.  */
+#if __LINUX_KERNEL_VERSION >= 132626
+# define __ASSUME_SIGFRAME_V2	1
+#endif
+
 #include_next <kernel-features.h>
