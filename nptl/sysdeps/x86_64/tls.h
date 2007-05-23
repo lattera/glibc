@@ -27,6 +27,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <sysdep.h>
+# include <kernel-features.h>
 
 
 /* Type for the dtv.  */
@@ -53,6 +54,9 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   unsigned long int vgetcpu_cache[2];
+#ifndef __ASSUME_PRIVATE_FUTEX
+  int private_futex;
+#endif
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */

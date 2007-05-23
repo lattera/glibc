@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,14 +17,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <kernel-features.h>
+#include <tcb-offsets.h>
+
 #ifndef UP
 # define LOCK lock
 #else
 # define LOCK
 #endif
 
-#define SYS_futex	202
-#define FUTEX_WAKE	1
+#define SYS_futex		202
+#define FUTEX_WAIT		0
+#define FUTEX_WAKE		1
+#define FUTEX_PRIVATE_FLAG	128
 
 	.comm	__fork_generation, 4, 4
 
@@ -74,10 +79,15 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAIT|FUTEX_PRIVATE_FLAG, %esi
 #else
+# if FUTEX_WAIT == 0
+	movl	%fs:PRIVATE_FUTEX, %esi
+# else
 	movl	$FUTEX_WAIT, %esi
+	orl	%fs:PRIVATE_FUTEX, %esi
+# endif
 #endif
 	movl	$SYS_futex, %eax
 	syscall
@@ -106,7 +116,12 @@ __pthread_once:
 
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE|FUTEX_PRIVATE_FLAG, %esi
+#else
 	movl	$FUTEX_WAKE, %esi
+	orl	%fs:PRIVATE_FUTEX, %esi
+#endif
 	movl	$SYS_futex, %eax
 	syscall
 
@@ -133,7 +148,12 @@ clear_once_control:
 	movl	$0, (%rdi)
 
 	movl	$0x7fffffff, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE|FUTEX_PRIVATE_FLAG, %esi
+#else
 	movl	$FUTEX_WAKE, %esi
+	orl	%fs:PRIVATE_FUTEX, %esi
+#endif
 	movl	$SYS_futex, %eax
 	syscall
 

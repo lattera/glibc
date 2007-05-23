@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <kernel-features.h>
+
 /* In libc.so we do not unconditionally use the lock prefix.  Only if
    the application is using threads.  */
 #ifndef UP
@@ -25,6 +27,19 @@
 	je	0f;							      \
 	lock;								      \
 0:
+#endif
+
+/* All locks in libc are private.  Use the kernel feature if possible.  */
+#define FUTEX_PRIVATE_FLAG	128
+#ifdef __ASSUME_PRIVATE_FUTEX
+# define FUTEX_WAIT		(0 | FUTEX_PRIVATE_FLAG)
+# define FUTEX_WAKE		(1 | FUTEX_PRIVATE_FLAG)
+#else
+# define LOAD_FUTEX_WAIT(reg) \
+	movl	%gs:PRIVATE_FUTEX, reg
+# define LOAD_FUTEX_WAKE(reg) \
+	movl	%gs:PRIVATE_FUTEX, reg ; \
+	orl	$FUTEX_WAKE, reg
 #endif
 
 #include "lowlevellock.S"

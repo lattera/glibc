@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,8 +32,22 @@
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
+#ifndef FUTEX_WAIT
+# define FUTEX_WAIT		0
+# define FUTEX_WAKE		1
+#endif
+
+#ifndef LOAD_FUTEX_WAIT
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg) \
+	xorl	reg, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg) \
+	movl	$FUTEX_WAIT, reg
+# endif
+# define LOAD_FUTEX_WAKE(reg) \
+	movl	$FUTEX_WAKE, reg
+#endif
 
 
 	.globl	__lll_mutex_lock_wait
@@ -55,7 +69,7 @@ __lll_mutex_lock_wait:
 	movl	$2, %edx
 	movl	%ecx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
-	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	LOAD_FUTEX_WAIT (%ecx)
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne 2f
@@ -151,7 +165,7 @@ __lll_mutex_timedlock_wait:
 
 	/* Futex call.  */
 	movl	%esp, %esi
-	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	LOAD_FUTEX_WAIT (%ecx)
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	movl	%eax, %ecx
@@ -252,7 +266,7 @@ __lll_mutex_unlock_wake:
 
 	movl	%eax, %ebx
 	movl	$0, (%eax)
-	movl	$FUTEX_WAKE, %ecx
+	LOAD_FUTEX_WAKE (%ecx)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
@@ -314,6 +328,8 @@ __lll_timedwait_tid:
 	jz	4f
 
 	movl	%esp, %esi
+	/* XXX The kernel so far uses global futex for the wakeup at
+	   all times.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax

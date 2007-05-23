@@ -1,3 +1,26 @@
+2007-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Check whether
+	private futexes are available.
+	* allocatestack.c (allocate_stack): Copy private_futex field from
+	current thread into the new stack.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevellock.S: Use private
+	futexes if they are available.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Adjust so that change
+	in libc-lowlevellock.S allow using private futexes.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Define
+	FUTEX_PRIVATE_FLAG.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Use private futexes
+	if they are available.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Likewise.
+	* sysdeps/x86_64/tcb-offsets.sym: Add PRIVATE_FUTEX.
+	* sysdeps/i386/tcb-offsets.sym: Likewise.
+	* sysdeps/x86_64/tls.h (tcbhead_t): Add private_futex field.
+	* sysdeps/i386/tls.h (tcbhead_t): Likewise.
+
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):

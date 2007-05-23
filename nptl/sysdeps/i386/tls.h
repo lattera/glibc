@@ -28,6 +28,7 @@
 # include <stdlib.h>
 # include <list.h>
 # include <sysdep.h>
+# include <kernel-features.h>
 
 
 /* Type for the dtv.  */
@@ -53,6 +54,9 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   int gscope_flag;
+#ifndef __ASSUME_PRIVATE_FUTEX
+  int private_futex;
+#endif
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1

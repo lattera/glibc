@@ -31,8 +31,23 @@
 #endif
 
 #define SYS_futex		202
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
+#ifndef FUTEX_WAIT
+# define FUTEX_WAIT		0
+# define FUTEX_WAKE		1
+#endif
+
+#ifndef LOAD_FUTEX_WAIT
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg) \
+	xorl	reg, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg) \
+	movl	$FUTEX_WAIT, reg
+# endif
+# define LOAD_FUTEX_WAKE(reg) \
+	movl	$FUTEX_WAKE, reg
+#endif
+
 
 /* For the calculation see asm/vsyscall.h.  */
 #define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
@@ -52,11 +67,7 @@ __lll_mutex_lock_wait:
 	cfi_offset(%rdx, -24)
 	xorq	%r10, %r10	/* No timeout.  */
 	movl	$2, %edx
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
+	LOAD_FUTEX_WAIT (%esi)
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne	2f
@@ -151,11 +162,7 @@ __lll_mutex_timedlock_wait:
 	je	8f
 
 	movq	%rsp, %r10
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
+	LOAD_FUTEX_WAIT (%esi)
 	movq	%r12, %rdi
 	movl	$SYS_futex, %eax
 	syscall
@@ -247,7 +254,7 @@ __lll_mutex_unlock_wake:
 	cfi_offset(%rdx, -24)
 
 	movl	$0, (%rdi)
-	movl	$FUTEX_WAKE, %esi
+	LOAD_FUTEX_WAKE (%esi)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
 	syscall
@@ -311,6 +318,8 @@ __lll_timedwait_tid:
 	jz	4f
 
 	movq	%rsp, %r10
+	/* XXX The kernel so far uses global futex for the wakeup at
+	   all times.  */
 #if FUTEX_WAIT == 0
 	xorl	%esi, %esi
 #else

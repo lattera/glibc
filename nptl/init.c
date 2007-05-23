@@ -276,6 +276,18 @@ __pthread_initialize_minimal_internal (void)
 #endif
     set_robust_list_not_avail ();
 
+#ifndef __ASSUME_PRIVATE_FUTEX
+  /* Private futexes are always used (at least internally) so that
+     doing the test once this early is beneficial.  */
+  {
+    int word;
+    res = INTERNAL_SYSCALL (futex, err, 3, &word,
+			    FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1);
+    if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+      THREAD_SETMEM (pd, header.private_futex, FUTEX_PRIVATE_FLAG);
+  }
+#endif
+
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
      purposes this is good enough.  */
