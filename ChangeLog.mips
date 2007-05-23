@@ -1,4 +1,4 @@
-2007-02-27  Richard Sandiford  <rsandifo@nildram.co.uk>
+2007-05-23  Richard Sandiford  <rsandifo@nildram.co.uk>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_reloc): Change type of
 	r_info argument to ElfW(Addr).
