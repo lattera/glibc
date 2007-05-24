@@ -1,3 +1,8 @@
+2007-05-24  Atsushi Nemoto  <anemo@mba.ocn.ne.jp>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c
+	(posix_fadvise): Fix high word of len argument.
+
 2007-05-23  Atsushi Nemoto  <anemo@mba.ocn.ne.jp>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: New file.
