@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -240,9 +240,9 @@ $(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
 	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
 		  \$$(compile-command.s)";			              \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
+		  \$$(compile-command.S) -DPTW";			      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
+		  \$$(compile-command.s) -DPTW";		              \
 	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.S \$$(before-compile); \
 		  \$$(compile-command.S)";				      \
 	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.s \$$(before-compile); \
@@ -253,7 +253,7 @@ $(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
 	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
+		  \$$(compile-command.c) -DPTW";			      \
 	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	   done; \

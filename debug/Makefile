@@ -1,4 +1,4 @@
-# Copyright (C) 1998-2001,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001,2004,2005,2006,2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
 	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
 	    wcstombs_chk \
-	    stack_chk_fail \
+	    stack_chk_fail fortify_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
 

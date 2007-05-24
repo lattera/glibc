@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,6 @@ void
 __attribute__ ((noreturn))
 __chk_fail (void)
 {
-  /* The loop is added only to keep gcc happy.  */
-  while (1)
-    __libc_message (2, "*** buffer overflow detected ***: %s terminated\n",
-		    __libc_argv[0] ?: "<unknown>");
+  __fortify_fail ("buffer overflow detected");
 }
 libc_hidden_def (__chk_fail)

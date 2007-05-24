@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,11 @@ extern char **__libc_argv attribute_hidden;
 
 void
 __attribute__ ((noreturn))
-__stack_chk_fail (void)
+__fortify_fail (msg)
+     const char *msg;
 {
-  __fortify_fail ("stack smashing detected");
+  /* The loop is added only to keep gcc happy.  */
+  while (1)
+    __libc_message (2, "*** %s ***: %s terminated\n",
+		    msg, __libc_argv[0] ?: "<unknown>");
 }

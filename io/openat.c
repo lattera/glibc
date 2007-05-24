@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <sys/stat.h>
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
@@ -67,5 +68,19 @@ __openat (fd, file, oflag)
 libc_hidden_def (__openat)
 weak_alias (__openat, openat)
 stub_warning (openat)
+
+
+int
+__openat_2 (fd, file, oflag)
+     int fd;
+     const char *file;
+     int oflag;
+{
+  if (oflag & O_CREAT)
+    __fortify_fail ("invalid openat call: O_CREAT without mode");
+
+  return __openat (file, oflag);
+}
+stub_warning (__openat_2)
 
 #include <stub-tag.h>

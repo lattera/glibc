@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -208,6 +208,12 @@ extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
 # ifdef __USE_LARGEFILE64
 extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
 # endif
+#endif
+
+
+/* Define some macros helping to catch common problems.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/fcntl2.h>
 #endif
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
+
+extern char **__libc_argv attribute_hidden;
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -51,4 +54,18 @@ libc_hidden_def (__open)
 stub_warning (open)
 
 weak_alias (__open, open)
+
+
+int
+__open_2 (file, oflag)
+     const char *file;
+     int oflag;
+{
+  if (oflag & O_CREAT)
+    __fortify_fail ("invalid open call: O_CREAT without mode");
+
+  return __open (file, oflag);
+}
+stub_warning (__open_2)
+
 #include <stub-tag.h>

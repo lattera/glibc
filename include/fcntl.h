@@ -24,6 +24,11 @@ extern int __openat64 (int __fd, __const char *__file, int __oflag, ...)
   __nonnull ((2));
 libc_hidden_proto (__openat64)
 
+extern int __open_2 (__const char *__path, int __oflag);
+extern int __open64_2 (__const char *__path, int __oflag);
+extern int __openat_2 (int __fd, __const char *__path, int __oflag);
+extern int __openat64_2 (int __fd, __const char *__path, int __oflag);
+
 
 /* Helper functions for the various *at functions.  For Linux.  */
 extern void __atfct_seterrno (int errval, int fd, const char *buf)

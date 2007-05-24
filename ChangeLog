@@ -1,3 +1,31 @@
+2007-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules (sysd-rules): Define PTW for ptw-* files.
+	* Versions: Define GLIBC_2.7 for libc.
+	* include/stdio.h: Declare __fortify_fail.
+	* debug/fortify_fail.c: New file.
+	* debug/Makefile (routines): Add fortify_fail.
+	* debug/chk_fail.c: Use __fortify_fail.
+	* debug/stack_chk_fail.c: Likewise.
+	* io/Versions: Export __open_2, __open64_2, __openat_2, and
+	__openat64_2 for GLIBC_2.7.
+	* io/fcntl.h: When compiling with fortification, include bits/fcntl2.h.
+	* io/open.c: Define *_2 variant of function which checks for O_CREAT
+	and fails if necessary.
+	* io/open64.c: Likewise.
+	* io/openat.c: Likewise.
+	* io/openat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/open64.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat64.c: Likewise.
+	* io/bits/fcntl2.h: New file.
+	* include/fcntl.h: Declare __open_2, __open64_2, __openat_2, and
+	__openat64_2.
+	* include/bits/fcntl2.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add open_2.
+	* sysdeps/unix/sysv/linux/open_2.c: New file.
+
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Pass correct value
