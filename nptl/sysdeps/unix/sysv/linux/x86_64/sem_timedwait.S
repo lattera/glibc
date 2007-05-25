@@ -73,10 +73,7 @@ sem_timedwait:
 	cfi_offset(14, -24)		/* %r14 */
 	jae	6f
 
-7:	call	__pthread_enable_asynccancel
-	movl	%eax, 16(%rsp)
-
-	xorl	%esi, %esi
+7:	xorl	%esi, %esi
 	movq	%rsp, %rdi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
@@ -98,6 +95,9 @@ sem_timedwait:
 
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
+
+	call	__pthread_enable_asynccancel
+	movl	%eax, 16(%rsp)
 
 	movq	%rsp, %r10
 	movq	%r12, %rdi

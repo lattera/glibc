@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -79,10 +79,7 @@ sem_timedwait:
 	jae	6f
 
 	cfi_offset(3, -16)		/* %ebx */
-7:	call	__pthread_enable_asynccancel
-	movl	%eax, 8(%esp)
-
-	xorl	%ecx, %ecx
+7:	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
 	movl	$SYS_gettimeofday, %eax
@@ -105,6 +102,10 @@ sem_timedwait:
 
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
+
+	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
+
 	movl	28(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	%esp, %esi

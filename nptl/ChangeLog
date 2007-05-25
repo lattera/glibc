@@ -1,4 +1,12 @@
-2007-04-24  Jakub Jelinek  <jakub@redhat.com>
+2007-05-25  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Move __pthread_enable_asynccancel right before futex syscall.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Likewise.
+
+2007-05-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/tls.h (THREAD_SET_PRIVATE_FUTEX,
 	THREAD_COPY_PRIVATE_FUTEX): Define.
