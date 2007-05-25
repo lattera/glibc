@@ -34,13 +34,13 @@ extern int __REDIRECT (__open_2, (__const char *__file, int __oflag),
   ({ int ___r;								      \
      /* If the compiler complains about an invalid type, excess elements, etc \
 	in the initialization this means a paraleter of the wrong type has    \
-	been passed to open. */					      \
+	been passed to open. */						      \
      int ___arr[] = { __VA_ARGS__ };					      \
-     if (__builtin_constant_p (flags) && (flags & O_CREAT) != 0)	      \
+     if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
        {								      \
 	 /* If the compile complains about the size of this array type the    \
 	    the mode parameter is missing since O_CREAT has been used.  */    \
-	 typedef int __open_missing_mode[(flags & O_CREAT) != 0		      \
+	 typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
 					 ? ((long int) sizeof (___arr)	      \
 					    - (long int) sizeof (int)) : 1];  \
        }								      \
@@ -66,11 +66,11 @@ extern int __open64_2 (__const char *__path, int __oflag);
 	in the initialization this means a paraleter of the wrong type has    \
 	been passed to open64. */					      \
      int ___arr[] = { __VA_ARGS__ };					      \
-     if (__builtin_constant_p (flags) && (flags & O_CREAT) != 0)	      \
+     if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
        {								      \
 	 /* If the compile complains about the size of this array type the    \
 	    the mode parameter is missing since O_CREAT has been used.  */    \
-	 typedef int __open_missing_mode[(flags & O_CREAT) != 0		      \
+	 typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
 					 ? ((long int) sizeof (___arr)	      \
 					    - (long int) sizeof (int)) : 1];  \
        }								      \
@@ -102,11 +102,11 @@ extern int __REDIRECT (__openat_2, (int __fd, __const char *__file,
 	in the initialization this means a paraleter of the wrong type has    \
 	been passed to openat. */					      \
      int ___arr[] = { __VA_ARGS__ };					      \
-     if (__builtin_constant_p (flags) && (flags & O_CREAT) != 0)	      \
+     if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
        {								      \
 	 /* If the compile complains about the size of this array type the    \
 	    the mode parameter is missing since O_CREAT has been used.  */    \
-	 typedef int __open_missing_mode[(flags & O_CREAT) != 0		      \
+	 typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
 					 ? ((long int) sizeof (___arr)	      \
 					    - (long int) sizeof (int)) : 1];  \
        }								      \
@@ -132,11 +132,11 @@ extern int __openat64_2 (int __fd, __const char *__path, int __oflag);
 	in the initialization this means a paraleter of the wrong type has    \
 	been passed to openat64. */					      \
      int ___arr[] = { __VA_ARGS__ };					      \
-     if (__builtin_constant_p (flags) && (flags & O_CREAT) != 0)	      \
+     if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
        {								      \
 	 /* If the compile complains about the size of this array type the    \
 	    the mode parameter is missing since O_CREAT has been used.  */    \
-	 typedef int __open_missing_mode[(flags & O_CREAT) != 0		      \
+	 typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
 					 ? ((long int) sizeof (___arr)	      \
 					    - (long int) sizeof (int)) : 1];  \
        }								      \

@@ -63,6 +63,15 @@ __open64_2 (file, oflag)
   if (oflag & O_CREAT)
     __fortify_fail ("invalid open64 call: O_CREAT without mode");
 
-  return __open64 (file, oflag);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (open, 2, file, oflag | O_LARGEFILE);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (open, 2, file, oflag | O_LARGEFILE);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 #endif

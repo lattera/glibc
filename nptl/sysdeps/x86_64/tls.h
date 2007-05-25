@@ -360,6 +360,7 @@ typedef struct
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
   THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
+#define THREAD_GSCOPE_GET_FLAG(descr) (descr)->header.gscope_flag
 #define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
 

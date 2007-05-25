@@ -454,16 +454,9 @@ union user_desc_init
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
   THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
-#ifdef PTR_DEMANGLE
-# define THREAD_GSCOPE_WAIT() \
-  do { void (*ptr) (void) = GL(dl_wait_lookup_done);			      \
-       PTR_DEMANGLE (ptr);						      \
-       ptr ();								      \
-  } while (0)
-#else
-# define THREAD_GSCOPE_WAIT() \
+#define THREAD_GSCOPE_GET_FLAG(descr) (descr)->header.gscope_flag
+#define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
-#endif
 
 
 #endif /* __ASSEMBLER__ */

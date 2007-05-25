@@ -1,3 +1,17 @@
+2007-05-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/tls.h (tcbhead_t): Add gscope_flag.
+	(THREAD_GSCOPE_FLAG_UNUSED, THREAD_GSCOPE_FLAG_USED,
+	THREAD_GSCOPE_FLAG_WAIT): Define.
+	(THREAD_GSCOPE_GET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/i386/tls.h (THREAD_GSCOPE_WAIT): Don't use
+	PTR_DEMANGLE.
+	(THREAD_GSCOPE_GET_FLAG): Define.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_GET_FLAG): Define.
+	* allocatestack.c (__wait_lookup_done): Use THREAD_GSCOPE_GET_FLAG
+	instead of ->header.gscope_flag directly.
+
 2007-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Check whether
