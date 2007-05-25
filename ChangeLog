@@ -1,3 +1,20 @@
+2007-05-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/bits/fcntl2.h (__open_2): Add nonnull attribute.
+	(open): Fix comment typos.  Don't call __open_2 if flags
+	is a compile time constant without O_CREAT.
+	(__open64_2): Add nonnull attribute.
+	(open64): Fix comment typos.  Don't call __open64_2 if flags
+	is a compile time constant without O_CREAT.
+	(__openat_2): Add nonnull attribute, fix nonnull attribute
+	on redirect.
+	(openat): Fix comment typos.  Don't call __openat_2 if flags
+	is a compile time constant without O_CREAT.
+	(__openat64_2): Add nonnull attribute, fix nonnull attribute
+	on redirect.
+	(openat64): Fix comment typos.  Don't call __openat64_2 if flags
+	is a compile time constant without O_CREAT.
+
 2007-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules (sysd-rules): Define PTW for ptw-* files.
