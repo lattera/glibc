@@ -1,4 +1,12 @@
-2007-05-24  Jakub Jelinek  <jakub@redhat.com>
+2007-04-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (THREAD_SET_PRIVATE_FUTEX,
+	THREAD_COPY_PRIVATE_FUTEX): Define.
+	* sysdeps/x86_64/tls.h (THREAD_SET_PRIVATE_FUTEX,
+	THREAD_COPY_PRIVATE_FUTEX): Define.
+	* allocatestack.c (allocate_stack): Use THREAD_COPY_PRIVATE_FUTEX.
+	* init.c (__pthread_initialize_minimal_internal): Use
+	THREAD_SET_PRIVATE_FUTEX.
 
 	* sysdeps/powerpc/tls.h (tcbhead_t): Add gscope_flag.
 	(THREAD_GSCOPE_FLAG_UNUSED, THREAD_GSCOPE_FLAG_USED,
