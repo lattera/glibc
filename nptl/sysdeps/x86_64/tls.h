@@ -364,14 +364,6 @@ typedef struct
 #define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
 
-#ifndef __ASSUME_PRIVATE_FUTEX
-# define THREAD_SET_PRIVATE_FUTEX(value) \
-  THREAD_SETMEM (THREAD_SELF, header.private_futex, value)
-# define THREAD_COPY_PRIVATE_FUTEX(descr) \
-  ((descr)->header.private_futex					      \
-   = THREAD_GETMEM (THREAD_SELF, header.private_futex))
-#endif
-
 #endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */

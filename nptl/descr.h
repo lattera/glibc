@@ -37,6 +37,7 @@
 #endif
 #define __need_res_state
 #include <resolv.h>
+#include <kernel-features.h>
 
 #ifndef TCB_ALIGNMENT
 # define TCB_ALIGNMENT	sizeof (double)
@@ -131,6 +132,9 @@ struct pthread
     struct
     {
       int multiple_threads;
+# ifndef __ASSUME_PRIVATE_FUTEX
+      int private_futex;
+# endif
     } header;
 #endif
 

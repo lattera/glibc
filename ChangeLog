@@ -1,3 +1,7 @@
+2007-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Include <sysdep.h>.
+
 2007-05-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/bits/fcntl2.h (__open_2): Add nonnull attribute.

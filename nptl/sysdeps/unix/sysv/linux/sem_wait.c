@@ -65,6 +65,7 @@ __new_sem_wait (sem_t *sem)
 	{
 	  __set_errno (-err);
 	  err = -1;
+	  break;
 	}
 
       if (atomic_decrement_if_positive (&isem->value) > 0)

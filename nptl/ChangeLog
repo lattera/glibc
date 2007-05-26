@@ -1,5 +1,17 @@
 2007-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sem_wait.c: Add missing break.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: Removed left-over
+	duplication of __sem_wait_cleanup.
+
+	* allocatestack.c: Revert last change.
+	* init.c: Likewise.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* descr.h [TLS_DTV_AT_TP] (struct pthread): Add private_futex field to
+	header structure.
+	* sysdeps/powerpc/tcb-offsets.sym: Add PRIVATE_FUTEX_OFFSET.
+
 	* sysdeps/unix/sysv/linux/internaltypes.h (struct pthread_barrier):
 	Add private field.
 	* sysdeps/unix/sysv/linux/lowlevelbarrier.sym: Add PRIVATE definition.

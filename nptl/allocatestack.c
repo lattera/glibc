@@ -376,9 +376,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
-#ifdef THREAD_COPY_PRIVATE_FUTEX
+#ifndef __ASSUME_PRIVATE_FUTEX
       /* The thread must know when private futexes are supported.  */
-      THREAD_COPY_PRIVATE_FUTEX (pd);
+      pd->header.private_futex = THREAD_GETMEM (THREAD_SELF,
+						header.private_futex);
 #endif
 
 #ifdef NEED_DL_SYSINFO

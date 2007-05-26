@@ -31,16 +31,6 @@
 extern void __sem_wait_cleanup (void *arg) attribute_hidden;
 
 
-void
-attribute_hidden
-__sem_wait_cleanup (void *arg)
-{
-  struct new_sem *isem = (struct new_sem *) arg;
-
-  atomic_decrement (&isem->nwaiters);
-}
-
-
 int
 sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
