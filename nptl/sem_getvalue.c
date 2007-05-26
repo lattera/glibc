@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,11 +27,11 @@ __new_sem_getvalue (sem, sval)
      sem_t *sem;
      int *sval;
 {
-  struct sem *isem = (struct sem *) sem;
+  struct new_sem *isem = (struct new_sem *) sem;
 
   /* XXX Check for valid SEM parameter.  */
 
-  *sval = isem->count;
+  *sval = isem->value;
 
   return 0;
 }

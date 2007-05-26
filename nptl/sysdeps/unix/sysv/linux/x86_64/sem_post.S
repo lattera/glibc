@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
+#include <structsem.h>
 
 #ifndef UP
 # define LOCK lock
@@ -37,19 +38,25 @@
 	.type	sem_post,@function
 	.align	16
 sem_post:
-	movl	$1, %edx
 	LOCK
-	xaddl	%edx, (%rdi)
+#if VALUE == 0
+	addl	$1, (%rdi)
+#else
+	addl	$1, VALUE(%rdi)
+#endif
+
+	cmpq	$0, NWAITERS(%rdi)
+	je	2f
 
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %esi
-	incl	%edx
+	movl	$1, %edx
 	syscall
 
 	testq	%rax, %rax
 	js	1f
 
-	xorl	%eax, %eax
+2:	xorl	%eax, %eax
 	retq
 
 1:

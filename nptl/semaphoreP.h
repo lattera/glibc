@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -60,8 +60,10 @@ extern int __sem_search (const void *a, const void *b) attribute_hidden;
 
 /* Prototypes of functions with multiple interfaces.  */
 extern int __new_sem_init (sem_t *sem, int pshared, unsigned int value);
+extern int __old_sem_init (sem_t *sem, int pshared, unsigned int value);
 extern int __new_sem_destroy (sem_t *sem);
 extern int __new_sem_post (sem_t *sem);
 extern int __new_sem_wait (sem_t *sem);
+extern int __old_sem_wait (sem_t *sem);
 extern int __new_sem_trywait (sem_t *sem);
 extern int __new_sem_getvalue (sem_t *sem, int *sval);

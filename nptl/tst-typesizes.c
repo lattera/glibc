@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
@@ -59,7 +59,8 @@ do_test (void)
   TEST_TYPE2 (pthread_rwlockattr_t, struct pthread_rwlockattr);
   TEST_TYPE2 (pthread_barrier_t, struct pthread_barrier);
   TEST_TYPE2 (pthread_barrierattr_t, struct pthread_barrierattr);
-  TEST_TYPE2 (sem_t, struct sem);
+  TEST_TYPE2 (sem_t, struct new_sem);
+  TEST_TYPE2 (sem_t, struct old_sem);
 
   return result;
 }

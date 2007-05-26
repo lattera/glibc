@@ -28,8 +28,65 @@
 #include <shlib-compat.h>
 
 
+void
+attribute_hidden
+__sem_wait_cleanup (void *arg)
+{
+  struct new_sem *isem = (struct new_sem *) arg;
+
+  atomic_decrement (&isem->nwaiters);
+}
+
+
 int
 __new_sem_wait (sem_t *sem)
+{
+  struct new_sem *isem = (struct new_sem *) sem;
+  int err;
+
+  if (atomic_decrement_if_positive (&isem->value) > 0)
+    return 0;
+
+  atomic_increment (&isem->nwaiters);
+
+  pthread_cleanup_push (__sem_wait_cleanup, isem);
+
+  while (1)
+    {
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
+
+      err = lll_futex_wait (&isem->value, 0);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
+
+      if (err != 0 && err != -EWOULDBLOCK)
+	{
+	  __set_errno (-err);
+	  err = -1;
+	}
+
+      if (atomic_decrement_if_positive (&isem->value) > 0)
+	{
+	  err = 0;
+	  break;
+	}
+    }
+
+  pthread_cleanup_pop (0);
+
+  atomic_decrement (&isem->nwaiters);
+
+  return err;
+}
+versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
+
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+int
+attribute_compat_text_section
+__old_sem_wait (sem_t *sem)
 {
   int *futex = (int *) sem;
   int err;
@@ -53,8 +110,5 @@ __new_sem_wait (sem_t *sem)
   return -1;
 }
 
-versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
-strong_alias (__new_sem_wait, __old_sem_wait)
 compat_symbol (libpthread, __old_sem_wait, sem_wait, GLIBC_2_0);
 #endif

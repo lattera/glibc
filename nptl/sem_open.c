@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -304,12 +304,14 @@ sem_open (const char *name, int oflag, ...)
       /* Create the initial file content.  */
       sem_t initsem;
 
-      struct sem *iinitsem = (struct sem *) &initsem;
-      iinitsem->count = value;
+      struct new_sem *iinitsem = (struct new_sem *) &initsem;
+      iinitsem->value = value;
+      iinitsem->private = 0;
+      iinitsem->nwaiters = 0;
 
       /* Initialize the remaining bytes as well.  */
-      memset ((char *) &initsem + sizeof (struct sem), '\0',
-	      sizeof (sem_t) - sizeof (struct sem));
+      memset ((char *) &initsem + sizeof (struct new_sem), '\0',
+	      sizeof (sem_t) - sizeof (struct new_sem));
 
       tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
       char *xxxxxx = __mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen);

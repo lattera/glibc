@@ -1,5 +1,5 @@
 /* sem_post -- post to a POSIX semaphore.  Generic futex-using version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -29,10 +29,33 @@
 int
 __new_sem_post (sem_t *sem)
 {
+  struct new_sem *isem = (struct new_sem *) sem;
+
+  int nr = atomic_increment_val (&isem->value);
+  atomic_full_barrier ();
+  if (isem->nwaiters > 0)
+    {
+      int err = lll_futex_wake (&isem->value, 1);
+      if (__builtin_expect (err, 0) < 0)
+	{
+	  __set_errno (-err);
+	  return -1;
+	}
+    }
+  return 0;
+}
+versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
+
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+int
+attribute_compat_text_section
+__old_sem_post (sem_t *sem)
+{
   int *futex = (int *) sem;
 
   int nr = atomic_increment_val (futex);
-  int err = lll_futex_wake (futex, nr);
+  int err = lll_futex_wake (futex, 1);
   if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);
@@ -40,8 +63,5 @@ __new_sem_post (sem_t *sem)
     }
   return 0;
 }
-versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
-strong_alias (__new_sem_post, __old_sem_post)
 compat_symbol (libpthread, __old_sem_post, sem_post, GLIBC_2_0);
 #endif

@@ -1,4 +1,33 @@
 2007-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* semaphoreP.h: Declare __old_sem_init and __old_sem_wait.
+	* sem_init.c (__new_sem_init): Rewrite to initialize all three
+	fields in the structure.
+	(__old_sem_init): New function.
+	* sem_open.c: Initialize all fields of the structure.
+	* sem_getvalue.c: Adjust for renamed element.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nptl]
+	(gen-as-const-headers): Add structsem.sym.
+	* sysdeps/unix/sysv/linux/structsem.sym: New file.
+	* sysdeps/unix/sysv/linux/internaltypes.h: Rename struct sem to
+	struct new_sem.  Add struct old_sem.
+	* sysdeps/unix/sysv/linux/sem_post.c: Wake only when there are waiters.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/sem_wait.c: Indicate that there are waiters.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
+	* Makefile (tests): Add tst-sem10, tst-sem11, tst-sem12.
+	* tst-sem10.c: New file.
+	* tst-sem11.c: New file.
+	* tst-sem12.c: New file.
+	* tst-typesizes.c: Test struct new_sem and struct old_sem instead
+	of struct sem.
+
+2007-05-25  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):

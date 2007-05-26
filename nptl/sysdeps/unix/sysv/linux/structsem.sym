@@ -1,0 +1,10 @@
+#include <stddef.h>
+#include <sched.h>
+#include <bits/pthreadtypes.h>
+#include "internaltypes.h"
+
+--
+
+VALUE		offsetof (struct new_sem, value)
+PRIVATE		offsetof (struct new_sem, private)
+NWAITERS	offsetof (struct new_sem, nwaiters)

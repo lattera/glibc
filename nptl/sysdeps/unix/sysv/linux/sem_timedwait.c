@@ -1,5 +1,5 @@
 /* sem_timedwait -- wait on a semaphore.  Generic futex-using version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -28,28 +28,39 @@
 #include <shlib-compat.h>
 
 
+extern void __sem_wait_cleanup (void *arg) attribute_hidden;
+
+
+void
+attribute_hidden
+__sem_wait_cleanup (void *arg)
+{
+  struct new_sem *isem = (struct new_sem *) arg;
+
+  atomic_decrement (&isem->nwaiters);
+}
+
+
 int
 sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
-  /* First check for cancellation.  */
-  CANCELLATION_P (THREAD_SELF);
-
-  int *futex = (int *) sem;
-  int val;
+  struct new_sem *isem = (struct new_sem *) sem;
   int err;
 
-  if (*futex > 0)
+  if (atomic_decrement_if_positive (&isem->value) > 0)
+    return 0;
+
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     {
-      val = atomic_decrement_if_positive (futex);
-      if (val > 0)
-	return 0;
+      __set_errno (EINVAL);
+      return -1;
     }
 
-  err = -EINVAL;
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
-    goto error_return;
+  atomic_increment (&isem->nwaiters);
 
-  do
+  pthread_cleanup_push (__sem_wait_cleanup, isem);
+
+  while (1)
     {
       struct timeval tv;
       struct timespec rt;
@@ -70,7 +81,11 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       /* Already timed out?  */
       err = -ETIMEDOUT;
       if (sec < 0)
-	goto error_return;
+	{
+	  __set_errno (ETIMEDOUT);
+	  err = -1;
+	  break;
+	}
 
       /* Do wait.  */
       rt.tv_sec = sec;
@@ -79,21 +94,28 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_timed_wait (futex, 0, &rt);
+      err = lll_futex_timed_wait (&isem->value, 0, &rt);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);
 
       if (err != 0 && err != -EWOULDBLOCK)
-	goto error_return;
+	{
+	  __set_errno (-err);
+	  err = -1;
+	  break;
+	}
 
-      val = atomic_decrement_if_positive (futex);
+      if (atomic_decrement_if_positive (&isem->value) > 0)
+	{
+	  err = 0;
+	  break;
+	}
     }
-  while (val <= 0);
 
-  return 0;
+  pthread_cleanup_pop (0);
 
- error_return:
-  __set_errno (-err);
-  return -1;
+  atomic_decrement (&isem->nwaiters);
+
+  return err;
 }
