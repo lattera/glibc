@@ -1,5 +1,8 @@
 2007-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S (sem_trywait): Tiny
+	optimization.
+
 	* sysdeps/unix/sysv/linux/sem_wait.c: Add missing break.
 	* sysdeps/unix/sysv/linux/sem_timedwait.c: Removed left-over
 	duplication of __sem_wait_cleanup.
