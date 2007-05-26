@@ -29,7 +29,7 @@
 #endif
 
 #define SYS_futex		240
-#define FUTEX_WAKE		1
+#define FUTEX_WAIT		0
 
 
 #if VALUE != 0
@@ -76,10 +76,15 @@ __new_sem_wait:
 6:	call	__pthread_enable_asynccancel
 	movl	%eax, (%esp)
 
+#if FUTEX_WAIT == 0
+	movl	PRIVATE(%ebx), %ecx
+#else
+	movl	$FUTEX_WAIT, %ecx
+	orl	PRIVATE(%ebx), %ecx
+#endif
 	xorl	%esi, %esi
+	xorl	%edx, %edx
 	movl	$SYS_futex, %eax
-	movl	%esi, %ecx
-	movl	%esi, %edx
 	ENTER_KERNEL
 	movl	%eax, %esi
 

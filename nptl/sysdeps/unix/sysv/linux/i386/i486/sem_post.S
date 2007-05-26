@@ -52,9 +52,10 @@ __new_sem_post:
 	cmpl	$0, NWAITERS(%ebx)
 	je	2f
 
-	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %ecx
+	orl	PRIVATE(%ebx), %ecx
 	movl	$1, %edx
+	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 	testl	%eax, %eax

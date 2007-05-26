@@ -30,7 +30,7 @@
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
-#define FUTEX_WAKE		1
+#define FUTEX_WAIT		0
 
 
 #if VALUE != 0
@@ -108,10 +108,15 @@ sem_timedwait:
 	movl	%eax, 8(%esp)
 
 	movl	28(%esp), %ebx	/* Load semaphore address.  */
-	xorl	%ecx, %ecx
+#if FUTEX_WAIT == 0
+	movl	PRIVATE(%ebx), %ecx
+#else
+	movl	$FUTEX_WAIT, %ecx
+	orl	PRIVATE(%ebx), %ecx
+#endif
 	movl	%esp, %esi
-	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
+	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	movl	%eax, %esi
 

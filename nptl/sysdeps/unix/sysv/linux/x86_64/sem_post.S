@@ -50,6 +50,7 @@ sem_post:
 
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %esi
+	orl	PRIVATE(%rdi), %esi
 	movl	$1, %edx
 	syscall
 

@@ -1,5 +1,13 @@
 2007-05-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Add private futex
+	support.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+
 	* semaphoreP.h: Declare __old_sem_init and __old_sem_wait.
 	* sem_init.c (__new_sem_init): Rewrite to initialize all three
 	fields in the structure.

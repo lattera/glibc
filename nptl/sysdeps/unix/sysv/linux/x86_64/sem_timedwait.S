@@ -116,7 +116,12 @@ sem_timedwait:
 #else
 	leaq	VALUE(%r12), %rdi
 #endif
+#if FUTEX_WAIT == 0
+	movl	PRIVATE(%rdi), %esi
+#else
 	movl	$FUTEX_WAIT, %esi
+	orl	PRIVATE(%rdi), %esi
+#endif
 	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
 	syscall

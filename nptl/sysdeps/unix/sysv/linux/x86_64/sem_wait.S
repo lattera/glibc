@@ -82,7 +82,12 @@ sem_wait:
 	xorq	%r10, %r10
 	movl	$SYS_futex, %eax
 	movq	%r13, %rdi
+#if FUTEX_WAIT == 0
+	movl	PRIVATE(%rdi), %esi
+#else
 	movl	$FUTEX_WAIT, %esi
+	orl	PRIVATE(%rdi), %esi
+#endif
 	xorl	%edx, %edx
 	syscall
 	movq	%rax, %r12
