@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,7 +32,7 @@ __pthread_rwlock_tryrdlock (rwlock)
 
   if (rwlock->__data.__writer == 0
       && (rwlock->__data.__nr_writers_queued == 0
-	  || rwlock->__data.__flags == 0))
+	  || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
     {
       if (__builtin_expect (++rwlock->__data.__nr_readers == 0, 0))
 	{

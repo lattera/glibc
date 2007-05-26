@@ -118,6 +118,11 @@ enum
    | PTHREAD_MUTEXATTR_PROTOCOL_MASK | PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
 
 
+/* Check whether rwlock prefers readers.   */
+#define PTHREAD_RWLOCK_PREFER_READER_P(rwlock) \
+  ((rwlock)->__data.__flags == 0)
+
+
 /* Bits used in robust mutex implementation.  */
 #define FUTEX_WAITERS		0x80000000
 #define FUTEX_OWNER_DIED	0x40000000

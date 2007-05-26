@@ -1,5 +1,10 @@
 2007-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h (PTHREAD_RWLOCK_PREFER_READER_P): Define.
+	* pthread_rwlock_rdlock.c: Use PTHREAD_RWLOCK_PREFER_READER_P.
+	* pthread_rwlock_timedrdlock.c: Likewise.
+	* pthread_rwlock_tryrdlock.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S (sem_trywait): Tiny
 	optimization.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -43,7 +43,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       if (rwlock->__data.__writer == 0
 	  /* ...and if either no writer is waiting or we prefer readers.  */
 	  && (!rwlock->__data.__nr_writers_queued
-	      || rwlock->__data.__flags == 0))
+	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
 	{
 	  /* Increment the reader counter.  Avoid overflow.  */
 	  if (++rwlock->__data.__nr_readers == 0)
