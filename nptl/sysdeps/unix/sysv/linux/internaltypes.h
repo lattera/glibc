@@ -96,6 +96,7 @@ struct pthread_barrier
   int lock;
   unsigned int left;
   unsigned int init_count;
+  int private;
 };
 
 

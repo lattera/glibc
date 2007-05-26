@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,6 +20,13 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <kernel-features.h>
+
+
+static const struct pthread_barrierattr default_attr =
+  {
+    .pshared = PTHREAD_PROCESS_PRIVATE
+  };
 
 
 int
@@ -33,17 +40,15 @@ pthread_barrier_init (barrier, attr, count)
   if (__builtin_expect (count == 0, 0))
     return EINVAL;
 
-  if (attr != NULL)
-    {
-      struct pthread_barrierattr *iattr;
+  struct pthread_barrierattr *iattr
+    = (attr != NULL
+       ? iattr = (struct pthread_barrierattr *) attr
+       : &default_attr);
 
-      iattr = (struct pthread_barrierattr *) attr;
-
-      if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
-	  && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
-	/* Invalid attribute.  */
-	return EINVAL;
-    }
+  if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
+      && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
+    /* Invalid attribute.  */
+    return EINVAL;
 
   ibarrier = (struct pthread_barrier *) barrier;
 
@@ -52,6 +57,15 @@ pthread_barrier_init (barrier, attr, count)
   ibarrier->left = count;
   ibarrier->init_count = count;
   ibarrier->curr_event = 0;
+
+#ifdef __ASSUME_PRIVATE_FUTEX
+  ibarrier->private = (iattr->pshared != PTHREAD_PROCESS_PRIVATE
+		       ? 0 : FUTEX_PRIVATE_FLAG);
+#else
+  ibarrier->private = (iattr->pshared != PTHREAD_PROCESS_PRIVATE
+		       ? 0 : THREAD_GETMEM (THREAD_SELF,
+					    header.private_futex));
+#endif
 
   return 0;
 }

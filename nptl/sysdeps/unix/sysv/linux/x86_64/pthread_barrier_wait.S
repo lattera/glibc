@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -65,9 +65,10 @@ pthread_barrier_wait:
 	   if the CURR_EVENT memory has meanwhile been changed.  */
 7:
 #if FUTEX_WAIT == 0
-	xorl	%esi, %esi
+	movl	PRIVATE(%rdi), %esi
 #else
 	movl	$FUTEX_WAIT, %esi
+	orl	PRIVATE(%rdi), %esi
 #endif
 	xorq	%r10, %r10
 8:	movl	$SYS_futex, %eax
@@ -116,6 +117,7 @@ pthread_barrier_wait:
 	   so 0x7fffffff is the highest value.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
+	orl	PRIVATE(%rdi), %esi
 	movl	$SYS_futex, %eax
 	syscall
 
