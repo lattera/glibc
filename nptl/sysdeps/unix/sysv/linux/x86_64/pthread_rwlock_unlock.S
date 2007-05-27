@@ -56,8 +56,8 @@ __pthread_rwlock_unlock:
 
 5:	movl	$0, WRITER(%rdi)
 
+	movl	$1, %edx
 	leaq	WRITERS_WAKEUP(%rdi), %r10
-	movq	%rsi, %rdx
 	cmpl	$0, WRITERS_QUEUED(%rdi)
 	jne	0f
 

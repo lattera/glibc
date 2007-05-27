@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,11 +20,13 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
 
 
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_PRIVATE_FLAG	128
 
 #ifndef UP
 # define LOCK lock
@@ -73,12 +75,20 @@ __pthread_rwlock_rdlock:
 #endif
 	jne	10f
 
-11:	addq	$READERS_WAKEUP, %rdi
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
+11:
+#if __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %esi
+	xorl	PSHARED(%rdi), %esi
 #else
+# if FUTEX_WAIT == 0
+	movl	PSHARED(%rdi), %esi
+# else
 	movl	$FUTEX_WAIT, %esi
+	orl	PSHARED(%rdi), %esi
+# endif
+	xorl	%fs:PRIVATE_FUTEX, %esi
 #endif
+	addq	$READERS_WAKEUP, %rdi
 	movl	$SYS_futex, %eax
 	syscall
 

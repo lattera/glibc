@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -61,9 +61,8 @@ __pthread_rwlock_unlock:
 
 5:	movl	$0, WRITER(%edi)
 
-	movl	$1, %ecx
+	movl	$1, %edx
 	leal	WRITERS_WAKEUP(%edi), %ebx
-	movl	%ecx, %edx
 	cmpl	$0, WRITERS_QUEUED(%edi)
 	jne	0f
 
@@ -83,7 +82,16 @@ __pthread_rwlock_unlock:
 #endif
 	jne	7f
 
-8:	movl	$SYS_futex, %eax
+8:
+#if __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAKE, %ecx
+	xorl	PSHARED(%edi), %ecx
+#else
+	movl	$FUTEX_WAKE, %ecx
+	orl	PSHARED(%edi), %ecx
+	xorl	%gs:PRIVATE_FUTEX, %ecx
+#endif
+	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 	xorl	%eax, %eax
