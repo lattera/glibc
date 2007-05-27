@@ -10,7 +10,7 @@
 	the new __shared element.
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h [__WORDSIZE=32]:
 	Likewise.
-	[__WORDSIZE=64]: Renamed __pad1 element int rwlock structire to
+	[__WORDSIZE=64]: Renamed __pad1 element int rwlock structure to
 	__shared, adjust names of other padding elements.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
 	* sysdeps/pthread/pthread.h: Adjust rwlock initializers.
