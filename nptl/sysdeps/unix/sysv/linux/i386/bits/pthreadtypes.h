@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,7 +128,10 @@ typedef union
     unsigned int __nr_writers_queued;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
-    unsigned int __flags;
+    unsigned char __flags;
+    unsigned char __shared;
+    unsigned char __pad1;
+    unsigned char __pad2;
     int __writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];

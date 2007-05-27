@@ -1,3 +1,31 @@
+2007-05-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c: Make it compile with older kernel headers.
+
+	* tst-initializers1.c: Show through exit code which test failed.
+
+	* pthread_rwlock_init.c: Also initialize __shared field.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Split __flags
+	element in rwlock structure into four byte elements.  One of them is
+	the new __shared element.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h [__WORDSIZE=32]:
+	Likewise.
+	[__WORDSIZE=64]: Renamed __pad1 element int rwlock structire to
+	__shared, adjust names of other padding elements.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/pthread/pthread.h: Adjust rwlock initializers.
+	* sysdeps/unix/sysv/linux/lowlevelrwlock.sym: Add PSHARED.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Define
+	FUTEX_PRIVATE_FLAG.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Change main
+	futex to use private operations if possible.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: Likewise.
+
 2007-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h (PTHREAD_RWLOCK_PREFER_READER_P): Define.

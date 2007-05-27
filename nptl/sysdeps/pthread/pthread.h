@@ -21,6 +21,7 @@
 #define _PTHREAD_H	1
 
 #include <features.h>
+#include <endian.h>
 #include <sched.h>
 #include <time.h>
 
@@ -120,21 +121,23 @@ enum
 };
 
 /* Read-write lock initializers.  */
-# if __WORDSIZE == 64
-#  define PTHREAD_RWLOCK_INITIALIZER \
+# define PTHREAD_RWLOCK_INITIALIZER \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-# else
-#  define PTHREAD_RWLOCK_INITIALIZER \
-  { { 0, 0, 0, 0, 0, 0, 0, 0 } }
-# endif
 # ifdef __USE_GNU
 #  if __WORDSIZE == 64
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,					      \
       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
 #  else
-#   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, 0 } }
+#   if __BYTE_ORDER == __LITTLE_ENDIAN
+#    define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, \
+      0, 0, 0, 0 } }
+#   else
+#    define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,\
+      0 } }
+#   endif
 #  endif
 # endif
 #endif  /* Unix98 or XOpen2K */
