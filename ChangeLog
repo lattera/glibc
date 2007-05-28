@@ -1,3 +1,8 @@
+2007-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimes.c (miss_utimensat): Don't define
+	if __NR_utimensat is not defined.
+
 2007-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Include <sysdep.h>.

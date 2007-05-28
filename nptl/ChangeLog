@@ -1,5 +1,8 @@
 2007-05-28  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstacksize.c: Include
+	unistd.h.
+
 	* sysdeps/i386/tls.h (THREAD_GSCOPE_RESET_FLAG): Use explicit
 	insn suffix.
 	(THREAD_GSCOPE_GET_FLAG): Remove.

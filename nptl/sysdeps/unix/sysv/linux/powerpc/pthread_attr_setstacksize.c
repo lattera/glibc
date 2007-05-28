@@ -1,3 +1,4 @@
+#include <unistd.h>	/* For __getpagesize.  */
 #define NEW_VERNUM GLIBC_2_6
 #define STACKSIZE_ADJUST \
   do {									      \
