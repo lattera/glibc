@@ -84,11 +84,11 @@ __pthread_rwlock_unlock:
 
 8:
 #if __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAKE, %ecx
-	xorl	PSHARED(%edi), %ecx
+	movzbl	PSHARED(%edi), %ecx
+	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAKE, %ecx
 #else
-	movl	$FUTEX_WAKE, %ecx
-	orl	PSHARED(%edi), %ecx
+	movzbl	PSHARED(%edi), %ecx
+	orl	$FUTEX_WAKE, %ecx
 	xorl	%gs:PRIVATE_FUTEX, %ecx
 #endif
 	movl	$SYS_futex, %eax

@@ -1021,10 +1021,10 @@ __wait_lookup_done (void)
   list_for_each (runp, &stack_used)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t == self || THREAD_GSCOPE_GET_FLAG (t) == THREAD_GSCOPE_FLAG_UNUSED)
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
 	continue;
 
-      int *const gscope_flagp = &THREAD_GSCOPE_GET_FLAG (t);
+      int *const gscope_flagp = &t->header.gscope_flag;
 
       /* We have to wait until this thread is done with the global
 	 scope.  First tell the thread that we are waiting and
@@ -1043,10 +1043,10 @@ __wait_lookup_done (void)
   list_for_each (runp, &__stack_user)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t == self || THREAD_GSCOPE_GET_FLAG (t) == THREAD_GSCOPE_FLAG_UNUSED)
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
 	continue;
 
-      int *const gscope_flagp = &THREAD_GSCOPE_GET_FLAG (t);
+      int *const gscope_flagp = &t->header.gscope_flag;
 
       /* We have to wait until this thread is done with the global
 	 scope.  First tell the thread that we are waiting and

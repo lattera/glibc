@@ -132,6 +132,7 @@ struct pthread
     struct
     {
       int multiple_threads;
+      int gscope_flag;
 # ifndef __ASSUME_PRIVATE_FUTEX
       int private_futex;
 # endif

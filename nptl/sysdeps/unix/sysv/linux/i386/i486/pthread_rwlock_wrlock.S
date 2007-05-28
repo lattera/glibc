@@ -77,14 +77,12 @@ __pthread_rwlock_wrlock:
 
 11:
 #if __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
-	xorl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
+	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
 #else
-# if FUTEX_WAIT == 0
-	movl	PSHARED(%ebx), %ecx
-# else
-	movl	$FUTEX_WAIT, %ecx
-	orl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
+# if FUTEX_WAIT != 0
+	orl	$FUTEX_WAIT, %ecx
 # endif
 	xorl	%gs:PRIVATE_FUTEX, %ecx
 #endif

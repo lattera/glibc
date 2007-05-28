@@ -65,7 +65,7 @@ pthread_rwlock_timedrdlock:
 	jne	14f
 	cmpl	$0, WRITERS_QUEUED(%ebp)
 	je	5f
-	cmpl	$0, FLAGS(%ebp)
+	cmpb	$0, FLAGS(%ebp)
 	je	5f
 
 	/* Check the value of the timeout parameter.  */
@@ -111,14 +111,12 @@ pthread_rwlock_timedrdlock:
 
 	movl	%esi, %edx
 #if __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
-	xorl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
+	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
 #else
-# if FUTEX_WAIT == 0
-	movl	PSHARED(%ebp), %ecx
-# else
-	movl	$FUTEX_WAIT, %ecx
-	orl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
+# if FUTEX_WAIT != 0
+	orl	$FUTEX_WAIT, %ecx
 # endif
 	xorl	%gs:PRIVATE_FUTEX, %ecx
 #endif

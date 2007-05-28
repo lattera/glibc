@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/s390 version.
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <list.h>
+# include <kernel-features.h>
 
 
 /* Type for the dtv.  */
@@ -50,6 +51,10 @@ typedef struct
   int multiple_threads;
   uintptr_t sysinfo;
   uintptr_t stack_guard;
+  int gscope_flag;
+#ifndef __ASSUME_PRIVATE_FUTEX
+  int private_futex;
+#endif
 } tcbhead_t;
 
 # ifndef __s390x__
@@ -167,6 +172,29 @@ typedef struct
   THREAD_GETMEM (THREAD_SELF, header.stack_guard)
 #define THREAD_SET_POINTER_GUARD(value)
 #define THREAD_COPY_POINTER_GUARD(descr)
+
+/* Get and set the global scope generation counter in struct pthread.  */
+#define THREAD_GSCOPE_FLAG_UNUSED 0
+#define THREAD_GSCOPE_FLAG_USED   1
+#define THREAD_GSCOPE_FLAG_WAIT   2
+#define THREAD_GSCOPE_RESET_FLAG() \
+  do									     \
+    { int __res								     \
+	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
+			       THREAD_GSCOPE_FLAG_UNUSED);		     \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_SET_FLAG() \
+  do									     \
+    {									     \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
+      atomic_write_barrier ();						     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_WAIT() \
+  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

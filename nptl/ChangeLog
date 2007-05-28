@@ -1,3 +1,42 @@
+2007-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (THREAD_GSCOPE_RESET_FLAG): Use explicit
+	insn suffix.
+	(THREAD_GSCOPE_GET_FLAG): Remove.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_GET_FLAG): Remove.
+	* allocatestack.c (__wait_lookup_done): Revert 2007-05-24
+	changes.
+	* sysdeps/powerpc/tls.h (tcbhead_t): Remove gscope_flag.
+	(THREAD_GSCOPE_GET_FLAG): Remove.
+	(THREAD_GSCOPE_RESET_FLAG): Use THREAD_SELF->header.gscope_flag
+	instead of THREAD_GSCOPE_GET_FLAG.
+	(THREAD_GSCOPE_SET_FLAG): Likewise.  Add atomic_write_barrier after
+	it.
+	* sysdeps/s390/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/sparc/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/sh/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/ia64/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+
+2007-05-24  Richard Henderson  <rth@redhat.com>
+
+	* descr.h (struct pthread): Add header.gscope_flag.
+	* sysdeps/alpha/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+
 2007-05-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c: Make it compile with older kernel headers.

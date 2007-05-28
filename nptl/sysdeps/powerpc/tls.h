@@ -63,11 +63,10 @@ typedef union dtv
 # include <nptl/descr.h>
 
 /* The stack_guard is accessed directly by GCC -fstack-protector code,
-   so it is a part of public ABI.  The dtv, pointer_guard and gscope_flag
-   fields are private.  */
+   so it is a part of public ABI.  The dtv and pointer_guard fields
+   are private.  */
 typedef struct
 {
-  int gscope_flag;
   uintptr_t pointer_guard;
   uintptr_t stack_guard;
   dtv_t *dtv;
@@ -181,24 +180,26 @@ register void *__thread_register __asm__ ("r13");
    different value to mean unset l_tls_offset.  */
 # define NO_TLS_OFFSET		-1
 
-/* Get and set the global scope generation counter in the TCB head.  */
+/* Get and set the global scope generation counter in struct pthread.  */
 #define THREAD_GSCOPE_FLAG_UNUSED 0
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
-#define THREAD_GSCOPE_GET_FLAG(descr) \
-  (((tcbhead_t *) ((char *) (descr)					     \
-		   + TLS_PRE_TCB_SIZE))[-1].gscope_flag)
 #define THREAD_GSCOPE_RESET_FLAG() \
   do									     \
     { int __res								     \
-	= atomic_exchange_rel (&THREAD_GSCOPE_GET_FLAG (THREAD_SELF),	     \
+	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
 			       THREAD_GSCOPE_FLAG_UNUSED);		     \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_GSCOPE_GET_FLAG (THREAD_SELF), 1);	     \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
     }									     \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  (THREAD_GSCOPE_GET_FLAG (THREAD_SELF) = THREAD_GSCOPE_FLAG_USED)
+  do									     \
+    {									     \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
+      atomic_write_barrier ();						     \
+    }									     \
+  while (0)
 #define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
 
