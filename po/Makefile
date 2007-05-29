@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2006
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2006,2007
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -71,11 +71,12 @@ ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
 endif
 
+po-sed-cmd = \
+  '/\/tst-/d;$(foreach S,[ch] cxx sh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))'
+
 # Omit tst-* files, and get only files with the given suffixes.
 libc.pot.files: FORCE
-	$(..)scripts/list-sources.sh .. | sed -n '/\/tst-/d;\
-	  $(foreach S,[ch] cxx sh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))' \
-	  > $@.new
+	$(..)scripts/list-sources.sh .. | sed -n $(po-sed-cmd) > $@.new
 	mv -f $@.new $@
 
 .SUFFIXES: .mo .po .pot
