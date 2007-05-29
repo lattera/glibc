@@ -1,3 +1,8 @@
+2007-05-29  Roland McGrath  <roland@redhat.com>
+
+	* po/Makefile (po-sed-cmd): New variable.
+	(libc.pot.files): Move sed command text in there, avoid \ inside ''.
+
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (get_mapping): Handle short replies instead
