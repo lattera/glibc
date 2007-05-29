@@ -5,6 +5,8 @@
 
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* crypt/md5-crypt.c: Fix comment.
+
 	* nscd/nscd_helper.c (get_mapping): Handle short replies instead
 	of crashing.  When this is the case or if the reply is malformed,
 	don't try to close the new file descriptor since it does not
