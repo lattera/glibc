@@ -271,9 +271,10 @@ get_mapping (request_type type, const char *key,
 
   mapfd = *(int *) CMSG_DATA (cmsg);
 
-  if (__builtin_expect (CMSG_FIRSTHDR (&msg)->cmsg_len
-			!= CMSG_LEN (sizeof (int)), 0))
-    goto out_close;
+  if (__builtin_expect (CMSG_FIRSTHDR (&msg) == NULL
+			|| (CMSG_FIRSTHDR (&msg)->cmsg_len
+			    != CMSG_LEN (sizeof (int))), 0))
+    goto out_close2;
 
   struct stat64 st;
   if (__builtin_expect (strcmp (resdata, key) != 0, 0)
