@@ -1,3 +1,20 @@
+2007-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internaltypes.h: Introduce
+	COND_NWAITERS_SHIFT.
+	* pthread_cond_destroy.c: Use COND_NWAITERS_SHIFT instead of
+	COND_CLOCK_BITS.
+	* pthread_cond_init.c: Likewise.
+	* pthread_cond_timedwait.c: Likewise.
+	* pthread_cond_wait.c: Likewise.
+	* pthread_condattr_getclock.c: Likewise.
+	* pthread_condattr_setclock.c: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 2007-05-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstacksize.c: Include

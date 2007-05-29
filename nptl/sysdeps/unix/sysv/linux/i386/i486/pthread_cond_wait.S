@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -80,7 +80,7 @@ __pthread_cond_wait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 	addl	$1, cond_futex(%ebx)
-	addl	$(1 << clock_bits), cond_nwaiters(%ebx)
+	addl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
 #define FRAME_SIZE 16
 	subl	$FRAME_SIZE, %esp
@@ -157,7 +157,7 @@ __pthread_cond_wait:
 	adcl	$0, woken_seq+4(%ebx)
 
 	/* Unlock */
-16:	subl	$(1 << clock_bits), cond_nwaiters(%ebx)
+16:	subl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
 	movl	total_seq(%ebx), %eax
@@ -165,7 +165,7 @@ __pthread_cond_wait:
 	cmpl	$0xffffffff, %eax
 	jne	17f
 	movl	cond_nwaiters(%ebx), %eax
-	andl	$~((1 << clock_bits) - 1), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
 	jne	17f
 
 	addl	$cond_nwaiters, %ebx
@@ -315,7 +315,7 @@ __condvar_w_cleanup:
 7:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-3:	subl	$(1 << clock_bits), cond_nwaiters(%ebx)
+3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
 	xorl	%edi, %edi
@@ -324,7 +324,7 @@ __condvar_w_cleanup:
 	cmpl	$0xffffffff, %eax
 	jne	4f
 	movl	cond_nwaiters(%ebx), %eax
-	andl	$~((1 << clock_bits) - 1), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
 	jne	4f
 
 	addl	$cond_nwaiters, %ebx

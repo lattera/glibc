@@ -13,4 +13,4 @@ wakeup_seq	offsetof (pthread_cond_t, __data.__wakeup_seq)
 woken_seq	offsetof (pthread_cond_t, __data.__woken_seq)
 dep_mutex	offsetof (pthread_cond_t, __data.__mutex)
 broadcast_seq	offsetof (pthread_cond_t, __data.__broadcast_seq)
-clock_bits	COND_CLOCK_BITS
+nwaiters_shift	COND_NWAITERS_SHIFT

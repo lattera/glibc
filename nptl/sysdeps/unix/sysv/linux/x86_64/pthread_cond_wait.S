@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -77,14 +77,14 @@ __condvar_cleanup:
 	incl	cond_futex(%rdi)
 6:	incq	woken_seq(%rdi)
 
-3:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
+3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
 	xorq	%r12, %r12
 	cmpq	$0xffffffffffffffff, total_seq(%rdi)
 	jne	4f
 	movl	cond_nwaiters(%rdi), %eax
-	andl	$~((1 << clock_bits) - 1), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
 	jne	4f
 
 	addq	$cond_nwaiters, %rdi
@@ -185,7 +185,7 @@ __pthread_cond_wait:
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
 	incl	cond_futex(%rdi)
-	addl	$(1 << clock_bits), cond_nwaiters(%rdi)
+	addl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -262,13 +262,13 @@ __pthread_cond_wait:
 	incq	woken_seq(%rdi)
 
 	/* Unlock */
-16:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
+16:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
 	cmpq	$0xffffffffffffffff, total_seq(%rdi)
 	jne	17f
 	movl	cond_nwaiters(%rdi), %eax
-	andl	$~((1 << clock_bits) - 1), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
 	jne	17f
 
 	addq	$cond_nwaiters, %rdi

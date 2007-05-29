@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -45,7 +45,7 @@ __pthread_cond_destroy (cond)
      pthread_cond_destroy needs to wait for them.  */
   unsigned int nwaiters = cond->__data.__nwaiters;
 
-  if (nwaiters >= (1 << COND_CLOCK_BITS))
+  if (nwaiters >= (1 << COND_NWAITERS_SHIFT))
     {
       /* Wake everybody on the associated mutex in case there are
          threads that have been requeued to it.
@@ -72,7 +72,7 @@ __pthread_cond_destroy (cond)
 
 	  nwaiters = cond->__data.__nwaiters;
 	}
-      while (nwaiters >= (1 << COND_CLOCK_BITS));
+      while (nwaiters >= (1 << COND_NWAITERS_SHIFT));
     }
 
   return 0;
