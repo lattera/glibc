@@ -1,5 +1,10 @@
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Checking
+	whether there are more than one thread makes no sense here since
+	we only call the slow path if the locks are taken.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevellock.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/internaltypes.h: Introduce
 	COND_NWAITERS_SHIFT.
 	* pthread_cond_destroy.c: Use COND_NWAITERS_SHIFT instead of

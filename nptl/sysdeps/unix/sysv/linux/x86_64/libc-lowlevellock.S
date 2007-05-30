@@ -19,16 +19,6 @@
 
 #include <kernel-features.h>
 
-/* In libc.so we do not unconditionally use the lock prefix.  Only if
-   the application is using threads.  */
-#ifndef UP
-# define LOCK \
-	cmpl	$0, __libc_multiple_threads(%rip); 			      \
-	je	0f;							      \
-	lock;								      \
-0:
-#endif
-
 /* All locks in libc are private.  Use the kernel feature if possible.  */
 #define FUTEX_PRIVATE_FLAG	128
 #ifdef __ASSUME_PRIVATE_FUTEX
