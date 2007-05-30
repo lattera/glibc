@@ -219,35 +219,6 @@ __lll_mutex_timedlock_wait:
 #endif
 
 
-#ifdef NOT_IN_libc
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
-	.align	16
-lll_unlock_wake_cb:
-	pushl	%ebx
-	pushl	%ecx
-	pushl	%edx
-
-	movl	20(%esp), %ebx
-	LOCK
-	subl	$1, (%ebx)
-	je	1f
-
-	movl	$FUTEX_WAKE, %ecx
-	movl	$1, %edx	/* Wake one thread.  */
-	movl	$SYS_futex, %eax
-	movl	$0, (%ebx)
-	ENTER_KERNEL
-
-1:	popl	%edx
-	popl	%ecx
-	popl	%ebx
-	ret
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
-#endif
-
-
 	.globl	__lll_mutex_unlock_wake
 	.type	__lll_mutex_unlock_wake,@function
 	.hidden	__lll_mutex_unlock_wake

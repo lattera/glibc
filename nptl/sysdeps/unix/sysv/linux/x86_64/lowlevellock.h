@@ -455,9 +455,6 @@ typedef int lll_lock_t;
 #define LLL_LOCK_INITIALIZER_LOCKED	(1)
 
 
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
-
-
 /* The states of a lock are:
     0  -  untaken
     1  -  taken by one user

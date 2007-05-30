@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,10 +38,6 @@ pthread_getattr_np (thread_id, attr)
   struct pthread *thread = (struct pthread *) thread_id;
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
   int ret = 0;
-
-  /* We have to handle cancellation in the following code since we are
-     locking another threads desriptor.  */
-  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &thread->lock);
 
   lll_lock (thread->lock);
 
@@ -174,8 +170,6 @@ pthread_getattr_np (thread_id, attr)
     }
 
   lll_unlock (thread->lock);
-
-  pthread_cleanup_pop (0);
 
   return ret;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -320,8 +320,6 @@ typedef int lll_lock_t;
 #define lll_lock(futex)         lll_mutex_lock (futex)
 #define lll_unlock(futex)       lll_mutex_unlock (futex)
 #define lll_islocked(futex)     lll_mutex_islocked (futex)
-
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 /* The states of a lock are:
     1  -  untaken

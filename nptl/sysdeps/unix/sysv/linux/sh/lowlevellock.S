@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -183,34 +183,6 @@ __lll_mutex_timedlock_wait:
 	.long	1000000000
 
 	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
-#endif
-
-
-#ifdef NOT_IN_libc
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
-	.align	5
-	cfi_startproc
-lll_unlock_wake_cb:
-	DEC	(@r4, r2)
-	tst	r2, r2
-	bt	1f
-
-	mov	#FUTEX_WAKE, r5
-	mov	#1, r6		/* Wake one thread.  */
-	mov	#0, r7
-	mov.l	r7, @r4		/* Stores 0.  */
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x14
-	SYSCALL_INST_PAD
-
-1:	
-	rts
-	 nop
-	cfi_endproc
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
 #endif
 
 

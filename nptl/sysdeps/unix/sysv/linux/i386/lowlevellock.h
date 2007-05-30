@@ -449,7 +449,6 @@ extern int __lll_lock_wait (int val, int *__futex)
      __attribute ((regparm (2))) attribute_hidden;
 extern int __lll_unlock_wake (int *__futex)
      __attribute ((regparm (1))) attribute_hidden;
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 
 /* The states of a lock are:

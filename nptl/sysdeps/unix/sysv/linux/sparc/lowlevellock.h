@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -239,8 +239,6 @@ __lll_robust_mutex_timedlock (int *futex, const struct timespec *abstime,
 
 /* Type for lock object.  */
 typedef int lll_lock_t;
-
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 /* Initializers for lock.  */
 #define LLL_LOCK_INITIALIZER		(0)

@@ -220,26 +220,6 @@ __lll_mutex_timedlock_wait:
 #endif
 
 
-#ifdef NOT_IN_libc
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
-	.align	16
-lll_unlock_wake_cb:
-	pushq	%rsi
-	pushq	%rdx
-
-	LOCK
-	addl	$1, (%rdi)
-	jng	1f
-
-	popq	%rdx
-	popq	%rsi
-	retq
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
-#endif
-
-
 	.globl	__lll_mutex_unlock_wake
 	.type	__lll_mutex_unlock_wake,@function
 	.hidden	__lll_mutex_unlock_wake
@@ -253,8 +233,7 @@ __lll_mutex_unlock_wake:
 	cfi_offset(%rsi, -16)
 	cfi_offset(%rdx, -24)
 
-	/* NB: the label '1' is needed by lll_unlock_wake_cb.  */
-1:	movl	$0, (%rdi)
+	movl	$0, (%rdi)
 	LOAD_FUTEX_WAKE (%esi)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax

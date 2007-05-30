@@ -1,5 +1,5 @@
 /* low level locking for pthread library.  SPARC version.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -76,20 +76,8 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
 }
 
 
-/* These don't get included in libc.so  */
+/* This function doesn't get included in libc.so  */
 #ifdef IS_IN_libpthread
-int
-lll_unlock_wake_cb (int *futex)
-{
-  int val = atomic_exchange_24_rel (futex, 0);
-
-  if (__builtin_expect (val > 1, 0))
-    lll_futex_wake (futex, 1);
-
-  return 0;
-}
-
-
 int
 __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {
@@ -127,5 +115,4 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 
   return 0;
 }
-
 #endif

@@ -1,8 +1,24 @@
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
-	(__lll_mutex_unlock_wake): Add back label '1' which went AWOL quite
-	some time ago.
+	* pthread_getattr_np.c: No need to install a cancellation handler,
+	this is no cancellation point.
+	* pthread_getschedparam.c: Likewise.
+	* pthread_setschedparam.c: Likewise.
+	* pthread_setschedprio.c: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Remove all traces of
+	lll_unlock_wake_cb.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lowlevellock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Checking
 	whether there are more than one thread makes no sense here since

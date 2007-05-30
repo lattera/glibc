@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -39,10 +39,6 @@ __pthread_setschedparam (threadid, policy, param)
 
   int result = 0;
 
-  /* We have to handle cancellation in the following code since we are
-     locking another threads desriptor.  */
-  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &pd->lock);
-
   lll_lock (pd->lock);
 
   struct sched_param p;
@@ -72,8 +68,6 @@ __pthread_setschedparam (threadid, policy, param)
     }
 
   lll_unlock (pd->lock);
-
-  pthread_cleanup_pop (0);
 
   return result;
 }
