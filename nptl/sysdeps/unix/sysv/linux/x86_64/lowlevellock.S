@@ -253,7 +253,8 @@ __lll_mutex_unlock_wake:
 	cfi_offset(%rsi, -16)
 	cfi_offset(%rdx, -24)
 
-	movl	$0, (%rdi)
+	/* NB: the label '1' is needed by lll_unlock_wake_cb.  */
+1:	movl	$0, (%rdi)
 	LOAD_FUTEX_WAKE (%esi)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax

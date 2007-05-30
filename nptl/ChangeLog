@@ -1,5 +1,9 @@
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_unlock_wake): Add back label '1' which went AWOL quite
+	some time ago.
+
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Checking
 	whether there are more than one thread makes no sense here since
 	we only call the slow path if the locks are taken.
