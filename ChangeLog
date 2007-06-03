@@ -1,3 +1,214 @@
+2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/970/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/970/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/fpu/Implies:
+	New file.
+
+2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: Move.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrint.S: To here.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrintf.S: Move.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrintf.S: To here.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llround.S: Move.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: To here.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llroundf.S: Move.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llroundf.S: To here.
+
+2007-05-22  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S
+	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S
+	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S
+	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S
+	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
+
+2007-05-21  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowexp.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.c: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowexp.c: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/w_sqrt.c: New file.
+
+2007-03-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S
+	[LONG_DOUBLE_COMPAT]: Add compat_symbol for llrintl@@GLIBC_2_1.
+
+2006-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S: New File
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrintf.S: New File
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: New File
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llroundf.S: New File
+
+2006-10-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowpow.c: New file.
+
+2006-10-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llround.S: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llroundf.S: New file.
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/Makefile: Moved.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/mpa.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile: To here.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Likewise.
+
+2006-09-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lrint.S: New file.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lround.S: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: New file.
+
+2006-09-28  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llroundf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: New file.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: New file.
+
+2006-08-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/Makefile: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/mpa.c: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile: New file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c: New file.
+
+2006-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_truncf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_truncf.S: New file.
+
+2006-03-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrintf.S: New file.
+
+2007-06-01  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memset.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: New file.
+
+2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/970/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5+/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power6/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power6x/Implies: New file.
+	* sysdeps/powerpc/powerpc64/970/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power5+/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6x/Implies: New file.
+
+2007-05-21  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memset.S: New file
+
+2007-03-13  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/memcpy.S: Improve aligned loop to minimize
+	branch miss-predicts. Ensure that cache line crossing does not impact
+	dispatch grouping.
+
+2006-12-13  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power4/memcopy.h: Replace with include
+	"../../powerpc32/power4/memcopy.h".
+	* sysdeps/powerpc/powerpc64/power4/wordcopy.c: Replace with include
+	"../../powerpc32/power4/wordcopy.c".
+
+2006-10-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/powerpc64/Makefile: Moved.
+	* sysdeps/powerpc/powerpc32/powerpc64/memcopy.h: Likewise.
+	* sysdeps/powerpc/powerpc32/powerpc64/wordcopy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/Makefile: To here.
+	* sysdeps/powerpc/powerpc32/power4/memcopy.h: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/wordcopy.c: Likewise.
+
+2006-09-10  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: New file.
+
+2006-08-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/wordcopy.c: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/Makefile: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/memcopy.h: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/wordcopy.c: New file.
+	* sysdeps/powerpc/powerpc64/power4/Makefile: New file.
+	* sysdeps/powerpc/powerpc64/power4/memcopy.h: New file.
+	* sysdeps/powerpc/powerpc64/power4/wordcopy.c: New file.
+	* sysdeps/powerpc/powerpc64/power6/wordcopy.c: New file.
+
+2006-07-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: New file.
+
+2006-03-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: New file.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: New file.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: New file.
+
 2007-05-29  Roland McGrath  <roland@redhat.com>
 
 	* po/Makefile (po-sed-cmd): New variable.
