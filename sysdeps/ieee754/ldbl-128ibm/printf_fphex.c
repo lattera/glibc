@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2004,2006
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2004,2006,2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -35,21 +35,24 @@ do {									      \
 									      \
       lo = ((long long)eldbl.ieee.mantissa2 << 32) | eldbl.ieee.mantissa3;    \
       hi = ((long long)eldbl.ieee.mantissa0 << 32) | eldbl.ieee.mantissa1;    \
-   /* If the lower double is not a denomal or zero then set the hidden	      \
-      53rd bit.  */							      \
-      if (eldbl.ieee.exponent2 > 0x001)					      \
-	{								      \
-	  lo |= (1ULL << 52);						      \
-	  lo = lo << 7; /* pre-shift lo to match ieee854.  */		      \
-	  /* The lower double is normalized separately from the upper.  We    \
-	     may need to adjust the lower manitissa to reflect this.  */      \
-	  ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;		      \
-	  if (ediff > 53)						      \
-	    lo = lo >> (ediff-53);					      \
-	}								      \
-  									      \
-      if ((eldbl.ieee.negative != eldbl.ieee.negative2)			      \
-	  && ((eldbl.ieee.exponent2 != 0) && (lo != 0L)))		      \
+      lo <<= 7; /* pre-shift lo to match ieee854.  */			      \
+      /* If the lower double is not a denomal or zero then set the hidden     \
+	 53rd bit.  */							      \
+      if (eldbl.ieee.exponent2 != 0)					      \
+	lo |= (1ULL << (52 + 7));					      \
+      else								      \
+	lo <<= 1;							      \
+      /* The lower double is normalized separately from the upper.  We	      \
+	 may need to adjust the lower manitissa to reflect this.  */	      \
+      ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;		      \
+      if (ediff > 53 + 63)						      \
+	lo = 0;								      \
+      else if (ediff > 53)						      \
+	lo = lo >> (ediff - 53);					      \
+      else if (eldbl.ieee.exponent2 == 0 && ediff < 53)			      \
+	lo = lo << (53 - ediff);					      \
+      if (eldbl.ieee.negative != eldbl.ieee.negative2			      \
+	  && (eldbl.ieee.exponent2 != 0 || lo != 0L))			      \
 	{								      \
 	  lo = (1ULL << 60) - lo;					      \
 	  if (hi == 0L)							      \

@@ -1,3 +1,14 @@
+2007-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c
+	(PRINT_FPHEX_LONG_DOUBLE): Fix printing numbers where lower double
+	is non-zero, but smaller than 2 * __DBL_MIN__.
+	* stdio-common/tst-sprintf2.c: New test.
+	* stdio-common/Makefile (tests): Add tst-sprintf2.
+
+	* math/test-misc.c (main): Don't run last batch of tests with
+	IBM long double format.
+
 2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/970/fpu/Implies: New file.

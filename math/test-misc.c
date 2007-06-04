@@ -1235,7 +1235,12 @@ main (void)
     }
 #endif
 
-#if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG >= DBL_MANT_DIG + 4
+/* Skip testing IBM long double format, for 2 reasons:
+   1) it only supports FE_TONEAREST
+   2) nextafter (0.0, 1.0) == nextafterl (0.0L, 1.0L), so
+      nextafter (0.0, 1.0) / 16.0L will be 0.0L.  */
+#if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG >= DBL_MANT_DIG + 4 \
+    && LDBL_MANT_DIG != 106
   int oldmode = fegetround ();
   int j;
   for (j = 0; j < 4; j++)
