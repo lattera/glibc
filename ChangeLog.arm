@@ -1,3 +1,20 @@
+2007-06-06  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/nptl/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT): Define.
+	(THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c
+	(lll_unlock_wake_cb): Delete.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+	(FUTEX_PRIVATE_FLAG): Define.
+	(lll_unlock_wake_cb): Delete prototype.
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h: Include
+	<endian.h>.
+	(pthread_rwlock_t): Shrink __flags and add __shared.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+	(RTLD_SINGLE_THREAD_P): Define.
+
 2007-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h

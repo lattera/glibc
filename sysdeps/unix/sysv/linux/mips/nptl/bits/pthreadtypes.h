@@ -20,6 +20,8 @@
 #ifndef _BITS_PTHREADTYPES_H
 #define _BITS_PTHREADTYPES_H	1
 
+#include <endian.h>
+
 #if _MIPS_SIM == _ABI64
 # define __SIZEOF_PTHREAD_ATTR_T 56
 # define __SIZEOF_PTHREAD_MUTEX_T 40
@@ -157,9 +159,9 @@ typedef union
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
     int __writer;
-    int __pad1;
+    int __shared;
+    unsigned long int __pad1;
     unsigned long int __pad2;
-    unsigned long int __pad3;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
@@ -173,9 +175,21 @@ typedef union
     unsigned int __writer_wakeup;
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
+#if __BYTE_ORDER == __BIG_ENDIAN
+    unsigned char __pad1;
+    unsigned char __pad2;
+    unsigned char __shared;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
-    unsigned int __flags;
+    unsigned char __flags;
+#else
+    /* FLAGS must stay at this position in the structure to maintain
+       binary compatibility.  */
+    unsigned char __flags;
+    unsigned char __shared;
+    unsigned char __pad1;
+    unsigned char __pad2;
+#endif
     int __writer;
   } __data;
 # endif
