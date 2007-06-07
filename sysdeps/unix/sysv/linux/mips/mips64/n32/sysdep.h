@@ -44,6 +44,10 @@
 
 #else   /* ! __ASSEMBLER__ */
 
+/* Convert X to a long long, without losing any bits if it is one
+   already or warning if it is a 32-bit pointer.  */
+#define ARGIFY(X) ((long long) (__typeof__ ((X) - (X))) (X))
+
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
@@ -102,7 +106,7 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
 	register long long __a3 asm("$7"); 				\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
@@ -124,8 +128,8 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
+	register long long __a1 asm("$5") = ARGIFY (arg2); 		\
 	register long long __a3 asm("$7"); 				\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
@@ -147,9 +151,9 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
-	register long long __a2 asm("$6") = (long long) arg3; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
+	register long long __a1 asm("$5") = ARGIFY (arg2); 		\
+	register long long __a2 asm("$6") = ARGIFY (arg3); 		\
 	register long long __a3 asm("$7"); 				\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
@@ -171,10 +175,10 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
-	register long long __a2 asm("$6") = (long long) arg3; 		\
-	register long long __a3 asm("$7") = (long long) arg4; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
+	register long long __a1 asm("$5") = ARGIFY (arg2); 		\
+	register long long __a2 asm("$6") = ARGIFY (arg3); 		\
+	register long long __a3 asm("$7") = ARGIFY (arg4); 		\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
 	cs_init								\
@@ -195,11 +199,11 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
-	register long long __a2 asm("$6") = (long long) arg3; 		\
-	register long long __a3 asm("$7") = (long long) arg4; 		\
-	register long long __a4 asm("$8") = (long long) arg5; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
+	register long long __a1 asm("$5") = ARGIFY (arg2); 		\
+	register long long __a2 asm("$6") = ARGIFY (arg3); 		\
+	register long long __a3 asm("$7") = ARGIFY (arg4); 		\
+	register long long __a4 asm("$8") = ARGIFY (arg5); 		\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
 	cs_init								\
@@ -220,12 +224,12 @@
 									\
 	{								\
 	register long long __v0 asm("$2") ncs_init;			\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
-	register long long __a2 asm("$6") = (long long) arg3; 		\
-	register long long __a3 asm("$7") = (long long) arg4; 		\
-	register long long __a4 asm("$8") = (long long) arg5; 		\
-	register long long __a5 asm("$9") = (long long) arg6; 		\
+	register long long __a0 asm("$4") = ARGIFY (arg1); 		\
+	register long long __a1 asm("$5") = ARGIFY (arg2); 		\
+	register long long __a2 asm("$6") = ARGIFY (arg3); 		\
+	register long long __a3 asm("$7") = ARGIFY (arg4); 		\
+	register long long __a4 asm("$8") = ARGIFY (arg5); 		\
+	register long long __a5 asm("$9") = ARGIFY (arg6); 		\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
 	cs_init								\
