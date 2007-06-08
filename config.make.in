@@ -117,7 +117,7 @@ LN_S = @LN_S@
 MSGFMT = @MSGFMT@
 
 # Script execution tools.
-BASH = @BASH@
+BASH = @BASH_SHELL@
 KSH = @KSH@
 AWK = @AWK@
 PERL = @PERL@

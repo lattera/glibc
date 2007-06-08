@@ -1,6 +1,7 @@
 2007-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Avoid variable named BASH.
+	* config.make.in: Likewise.
 	Patch in part by Mike Frysinger.
 
 2007-06-06  Jakub Jelinek  <jakub@redhat.com>
