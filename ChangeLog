@@ -8,6 +8,34 @@
 
 2007-06-04  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Remove
+	unused ily variable.  Fix nextafterl on +-__LDBL_MAX__ and +-Inf.
+	Remove unreachable code at the end.
+
+2007-06-01  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: Correct description of
+	ldbl-128ibm in comment.
+	(fpclassifyl): Correct classification of denormals.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Correct
+	return value for MIN denormal. Rewrite using long double math too
+	correctly handle denormals and canonicalize the results.
+
+2007-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c
+	(__mpn_construct_long_double): Fix conversion where result ought
+	to be smaller than __LDBL_MIN__, or the low double should be
+	denormal.  Fix decision where to negate low double - honor round
+	to even rules.
+	* stdio-common/tst-sprintf2.c: Include string.h.
+	(COMPARE_LDBL): Define.
+	(TEST): Also test whether a string hexadecimal float representation
+	can be parsed back to the number.
+	(main): Add a couple of further tests.
+
+2007-06-04  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c
 	(PRINT_FPHEX_LONG_DOUBLE): Fix printing numbers where lower double
 	is non-zero, but smaller than 2 * __DBL_MIN__.

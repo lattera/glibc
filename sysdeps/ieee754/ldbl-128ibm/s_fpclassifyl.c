@@ -1,5 +1,5 @@
 /* Return classification value corresponding to argument.
-   Copyright (C) 1997,1999,2002,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2002,2004,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997 and
    		  Jakub Jelinek <jj@ultra.linux.cz>, 1999.
@@ -30,14 +30,16 @@
    * -NaN	fffn nnnn nnnn nnnn xxxx xxxx xxxx xxxx
    * +Inf	7ff0 0000 0000 0000 xxxx xxxx xxxx xxxx
    * -Inf	fff0 0000 0000 0000 xxxx xxxx xxxx xxxx
-   * +0		0000 0000 0000 0000
-   * -0		8000 0000 0000 0000
-   * +normal	001n nnnn nnnn nnnn (smallest)
-   * -normal	801n nnnn nnnn nnnn (smallest)
-   * +normal	7fen nnnn nnnn nnnn (largest)
-   * -normal	ffen nnnn nnnn nnnn (largest)
-   * +denorm	000n nnnn nnnn nnnn
-   * -denorm	800n nnnn nnnn nnnn
+   * +0		0000 0000 0000 0000 xxxx xxxx xxxx xxxx
+   * -0		8000 0000 0000 0000 xxxx xxxx xxxx xxxx
+   * +normal	0360 0000 0000 0000 0000 0000 0000 0000 (smallest)
+   * -normal	8360 0000 0000 0000 0000 0000 0000 0000 (smallest)
+   * +normal	7fef ffff ffff ffff 7c8f ffff ffff fffe (largest)
+   * +normal	ffef ffff ffff ffff fc8f ffff ffff fffe (largest)
+   * +denorm	0360 0000 0000 0000 8000 0000 0000 0001 (largest)
+   * -denorm	8360 0000 0000 0000 0000 0000 0000 0001 (largest)
+   * +denorm	000n nnnn nnnn nnnn xxxx xxxx xxxx xxxx
+   * -denorm	800n nnnn nnnn nnnn xxxx xxxx xxxx xxxx
    */
 
 int
@@ -59,12 +61,23 @@ ___fpclassifyl (long double x)
       /* +/-zero or +/- normal or +/- denormal */
       if (hx & 0x7fffffffffffffffULL) {
 	  /* +/- normal or +/- denormal */
-	  if ((hx & 0x7ff0000000000000ULL) >= 0x0360000000000000ULL) {
+	  if ((hx & 0x7ff0000000000000ULL) > 0x0360000000000000ULL) {
 	      /* +/- normal */
 	      retval = FP_NORMAL;
 	  } else {
-	      /* +/- denormal */
-	      retval = FP_SUBNORMAL;
+	      if ((hx & 0x7ff0000000000000ULL) == 0x0360000000000000ULL) {
+		  if ((lx & 0x7fffffffffffffff)	/* lower is non-zero */
+		  && ((lx^hx) & 0x8000000000000000ULL)) { /* and sign differs */
+		      /* +/- denormal */
+		      retval = FP_SUBNORMAL;
+		  } else {
+		      /* +/- normal */
+		      retval = FP_NORMAL;
+		  }
+	      } else {
+		  /* +/- denormal */
+		  retval = FP_SUBNORMAL;
+	      }
 	  }
       } else {
 	  /* +/- zero */
