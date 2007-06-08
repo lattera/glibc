@@ -1,3 +1,9 @@
+2007-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sched_cpucount.c (__sched_cpucount): Allow using special
+	instruction for counting bits.
+	* sysdeps/x86_64/sched_cpucount.c: New file.
+
 2007-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Avoid variable named BASH.
