@@ -980,9 +980,9 @@ else
 fi])
 AC_SUBST(libc_cv_gcc_static_libgcc)
 
-AC_PATH_PROG(BASH, bash, no)
-if test "$BASH" != no &&
-   $BASH -c 'test "$BASH_VERSINFO" \
+AC_PATH_PROG(BASH_SHELL, bash, no)
+if test "$BASH_SHELL" != no &&
+   $BASH_SHELL -c 'test "$BASH_VERSINFO" \
 	     && test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
   libc_cv_have_bash2=yes
 else
@@ -991,7 +991,7 @@ fi
 AC_SUBST(libc_cv_have_bash2)
 
 dnl We need a ksh compatible shell for tzselect.
-if test "$BASH" = no; then
+if test "$BASH_SHELL" = no; then
   AC_PATH_PROG(KSH, ksh, no)
   if test "$KSH" = no; then
     libc_cv_have_ksh=no
@@ -999,7 +999,7 @@ if test "$BASH" = no; then
     libc_cv_have_ksh=yes
   fi
 else
-  KSH="$BASH"
+  KSH="$BASH_SHELL"
   AC_SUBST(KSH)
   libc_cv_have_ksh=yes
 fi

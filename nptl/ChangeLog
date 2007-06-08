@@ -1,3 +1,51 @@
+2007-06-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Add additional
+	parameter to lll_futex_wait, lll_futex_timed_wait, and
+	lll_futex_wake.  Change lll_futex_wait to call lll_futex_timed_wait.
+	Add lll_private_futex_wait, lll_private_futex_timed_wait, and
+	lll_private_futex_wake.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* allocatestack.c: Adjust use of lll_futex_* macros.
+	* init.c: Likewise.
+	* lowlevellock.h: Likewise.
+	* pthread_barrier_wait.c: Likewise.
+	* pthread_cond_broadcast.c: Likewise.
+	* pthread_cond_destroy.c: Likewise.
+	* pthread_cond_signal.c: Likewise.
+	* pthread_cond_timedwait.c: Likewise.
+	* pthread_cond_wait.c: Likewise.
+	* pthread_create.c: Likewise.
+	* pthread_mutex_lock.c: Likewise.
+	* pthread_mutex_setprioceiling.c: Likewise.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* pthread_rwlock_timedrdlock.c: Likewise.
+	* pthread_rwlock_timedwrlock.c: Likewise.
+	* pthread_rwlock_unlock.c: Likewise.
+	* sysdeps/alpha/tls.h: Likewise.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/pthread/aio_misc.h: Likewise.
+	* sysdeps/pthread/gai_misc.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/sparc/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/fork.c: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sem_post.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/pthread_once.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pthread_barrier_wait.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_post.c: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_getattr_np.c: No need to install a cancellation handler,
