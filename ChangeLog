@@ -1,5 +1,9 @@
 2007-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h: Make second parameter of
+	__sched_cpucount as const.
+	* posix/sched_cpucount.c: Adjust.
+
 	* posix/sched_cpucount.c (__sched_cpucount): Allow using special
 	instruction for counting bits.
 	* sysdeps/x86_64/sched_cpucount.c: New file.
