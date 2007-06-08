@@ -1,3 +1,11 @@
+2007-06-06  Jakub Jelinek  <jakub@redhat.com>
+
+	BZ #4586
+	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Treat
+	pseudo-zeros as zero.
+	* sysdeps/x86_64/ldbl2mpn.c: New file.
+	* sysdeps/ia64/ldbl2mpn.c: New file.
+
 2007-06-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c

@@ -449,7 +449,7 @@ union user_desc_init
 		    : "i" (offsetof (struct pthread, header.gscope_flag)),    \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		      \
+	lll_private_futex_wake (&THREAD_SELF->header.gscope_flag, 1);	      \
     }									      \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \

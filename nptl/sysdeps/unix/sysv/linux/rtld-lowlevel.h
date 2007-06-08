@@ -1,5 +1,5 @@
 /* Defintions for lowlevel handling in ld.so.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,7 @@ typedef int __rtld_mrlock_t;
 	    atomic_or (&(lock), __RTLD_MRLOCK_RWAIT);			      \
 	    oldval |= __RTLD_MRLOCK_RWAIT;				      \
 	  }								      \
-	lll_futex_wait (lock, oldval);					      \
+	lll_private_futex_wait (lock, oldval);				      \
       }									      \
   out:;									      \
   } while (0)
@@ -90,7 +90,7 @@ typedef int __rtld_mrlock_t;
 			  == (__RTLD_MRLOCK_INC | __RTLD_MRLOCK_WWAIT), 0))   \
       /* We have to wake all threads since there might be some queued	      \
 	 readers already.  */						      \
-      lll_futex_wake (&(lock), 0x7fffffff);				      \
+      lll_private_futex_wake (&(lock), 0x7fffffff);			      \
   } while (0)
 
 
@@ -119,7 +119,7 @@ typedef int __rtld_mrlock_t;
 	  }								      \
 	atomic_or (&(lock), __RTLD_MRLOCK_WWAIT);			      \
 	oldval |= __RTLD_MRLOCK_WWAIT;					      \
-	lll_futex_wait (lock, oldval);					      \
+	lll_private_futex_wait (lock, oldval);				      \
       }									      \
   out:;									      \
   } while (0)
@@ -129,7 +129,7 @@ typedef int __rtld_mrlock_t;
   do {				 \
     int oldval = atomic_exchange_and_add (&(lock), -__RTLD_MRLOCK_WRITER);    \
     if (__builtin_expect ((oldval & __RTLD_MRLOCK_RWAIT) != 0, 0))	      \
-      lll_futex_wake (&(lock), 0x7fffffff);				      \
+      lll_private_futex_wake (&(lock), 0x7fffffff);			      \
   } while (0)
 
 
@@ -142,12 +142,12 @@ typedef int __rtld_mrlock_t;
 	int val = word;							      \
 	if (val == 0)							      \
 	  break;							      \
-	lll_futex_wait (&(word), val);					      \
+	lll_private_futex_wait (&(word), val);				      \
       }									      \
   } while (0)
 
 
 #define __rtld_notify(word) \
-  lll_futex_wake (&(word), 1)
+  lll_private_futex_wake (&(word), 1)
 
 #endif

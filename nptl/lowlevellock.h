@@ -1,5 +1,5 @@
 /* Low level locking macros used in NPTL implementation.  Stub version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,16 +19,6 @@
    02111-1307 USA.  */
 
 #include <atomic.h>
-
-
-/* Implement generic mutex.  Basic futex syscall support is required:
-
-     lll_futex_wait(futex, value) - call sys_futex with FUTEX_WAIT
-				    and third parameter VALUE
-
-     lll_futex_wake(futex, value) - call sys_futex with FUTEX_WAKE
-				    and third parameter VALUE
-*/
 
 
 /* Mutex lock counter:
@@ -66,7 +56,9 @@ __generic_mutex_lock (int *mutex)
       if (v >= 0)
 	continue;
 
-      lll_futex_wait (mutex, v);
+      lll_futex_wait (mutex, v,
+		      // XYZ check mutex flag
+		      LLL_SHARED);
     }
 }
 
@@ -82,7 +74,9 @@ __generic_mutex_unlock (int *mutex)
 
   /* There are other threads waiting for this mutex, wake one of them
      up.  */
-  lll_futex_wake (mutex, 1);
+  lll_futex_wake (mutex, 1,
+		  // XYZ check mutex flag
+		  LLL_SHARED);
 }
 
 

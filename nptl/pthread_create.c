@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -385,7 +385,7 @@ start_thread (void *arg)
       /* Some other thread might call any of the setXid functions and expect
 	 us to reply.  In this case wait until we did that.  */
       do
-	lll_futex_wait (&pd->setxid_futex, 0);
+	lll_private_futex_wait (&pd->setxid_futex, 0);
       while (pd->cancelhandling & SETXID_BITMASK);
 
       /* Reset the value so that the stack can be reused.  */

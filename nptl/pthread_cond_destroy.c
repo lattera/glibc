@@ -59,14 +59,18 @@ __pthread_cond_destroy (cond)
 	  && cond->__data.__mutex != (void *) ~0l)
 	{
 	  pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
-	  lll_futex_wake (&mut->__data.__lock, INT_MAX);
+	  lll_futex_wake (&mut->__data.__lock, INT_MAX,
+			  // XYZ check mutex flag
+			  LLL_SHARED);
 	}
 
       do
 	{
 	  lll_mutex_unlock (cond->__data.__lock);
 
-	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters);
+	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters,
+			  // XYZ check mutex flag
+			  LLL_SHARED);
 
 	  lll_mutex_lock (cond->__data.__lock);
 

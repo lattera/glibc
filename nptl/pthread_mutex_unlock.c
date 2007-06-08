@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -240,7 +240,9 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 						   newval, oldval));
 
       if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
-	lll_futex_wake (&mutex->__data.__lock, 1);
+	lll_futex_wake (&mutex->__data.__lock, 1,
+			// XYZ check mutex flag
+			LLL_SHARED);
 
       int oldprio = newval >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
       return __pthread_tpp_change_priority (oldprio, -1);

@@ -153,7 +153,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
       /* Wait until woken by signal or broadcast.  */
       err = lll_futex_timed_wait (&cond->__data.__futex,
-				  futex_val, &rt);
+				  futex_val, &rt,
+				  // XYZ check mutex flag
+				  LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
@@ -196,7 +198,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
      and it can be successfully destroyed.  */
   if (cond->__data.__total_seq == -1ULL
       && cond->__data.__nwaiters < (1 << COND_NWAITERS_SHIFT))
-    lll_futex_wake (&cond->__data.__nwaiters, 1);
+    lll_futex_wake (&cond->__data.__nwaiters, 1,
+		    // XYZ check mutex flag
+		    LLL_SHARED);
 
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);

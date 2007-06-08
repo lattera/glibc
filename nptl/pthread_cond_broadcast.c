@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -69,7 +69,9 @@ __pthread_cond_broadcast (cond)
 	{
 	  /* The requeue functionality is not available.  */
 	wake_all:
-	  lll_futex_wake (&cond->__data.__futex, INT_MAX);
+	  lll_futex_wake (&cond->__data.__futex, INT_MAX,
+			  // XYZ check mutex flag
+			  LLL_SHARED);
 	}
 
       /* That's all.  */

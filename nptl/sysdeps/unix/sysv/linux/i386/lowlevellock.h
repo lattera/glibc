@@ -23,6 +23,8 @@
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
+#include <kernel-features.h>
+#include <tcb-offsets.h>
 
 #ifndef LOCK_INSTR
 # ifdef UP
@@ -39,6 +41,13 @@
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
 #define FUTEX_PRIVATE_FLAG	128
+
+
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE	0
+#define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
 
 /* Initializer for compatibility lock.  */
@@ -145,23 +154,11 @@ LLL_STUB_UNWIND_INFO_START					\
 LLL_STUB_UNWIND_INFO_END
 
 
-#define lll_futex_wait(futex, val) \
-  ({									      \
-    int __status;							      \
-    register __typeof (val) _val asm ("edx") = (val);			      \
-    __asm __volatile (LLL_EBX_LOAD					      \
-		      LLL_ENTER_KERNEL					      \
-		      LLL_EBX_LOAD					      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (0),	      \
-			"c" (FUTEX_WAIT), "d" (_val),			      \
-			"i" (offsetof (tcbhead_t, sysinfo))		      \
-		      : "memory");					      \
-    __status;								      \
-  })
+#define lll_futex_wait(futex, val, private) \
+  lll_futex_timed_wait (futex, val, NULL, private)
 
 
-#define lll_futex_timed_wait(futex, val, timeout)			      \
+#define lll_futex_timed_wait(futex, val, timeout, private) \
   ({									      \
     int __status;							      \
     register __typeof (val) _val asm ("edx") = (val);			      \
@@ -177,7 +174,7 @@ LLL_STUB_UNWIND_INFO_END
   })
 
 
-#define lll_futex_wake(futex, nr) \
+#define lll_futex_wake(futex, nr, private) \
   do {									      \
     int __ignore;							      \
     register __typeof (nr) _nr asm ("edx") = (nr);			      \
@@ -190,6 +187,77 @@ LLL_STUB_UNWIND_INFO_END
 			"i" (0) /* phony, to align next arg's number */,      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
+
+
+#define lll_private_futex_wait(futex, val) \
+  lll_private_futex_timed_wait (futex, val, NULL)
+
+
+#ifdef __ASSUME_PRIVATE_FUTEX
+# define lll_private_futex_timed_wait(futex, val, timeout) \
+  ({									      \
+    int __status;							      \
+    register __typeof (val) _val asm ("edx") = (val);			      \
+    __asm __volatile (LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__status)					      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (timeout),  \
+			"c" (FUTEX_WAIT | FUTEX_PRIVATE_FLAG)), "d" (_val),   \
+			"i" (offsetof (tcbhead_t, sysinfo))		      \
+		      : "memory");					      \
+    __status;								      \
+  })
+
+
+# define lll_private_futex_wake(futex, nr) \
+  do {									      \
+    int __ignore;							      \
+    register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    __asm __volatile (LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__ignore)					      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex),		      \
+			"c" (FUTEX_WAKE | FUTEX_PRIVATE_FLAG), "d" (_nr),     \
+			"i" (0) /* phony, to align next arg's number */,      \
+			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+  } while (0)
+#else
+# define lll_private_futex_timed_wait(futex, val, timeout) \
+  ({									      \
+    int __status;							      \
+    int __ignore;							      \
+    register __typeof (val) _val asm ("edx") = (val);			      \
+    __asm __volatile ("movl %%gs:%P7, %%ecx\n\t"			      \
+		      LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__status), "=c" (__ignore)		      \
+		      : LLL_EBX_REG (futex), "0" (SYS_futex), "S" (timeout),  \
+			"d" (_val), "i" (offsetof (tcbhead_t, sysinfo)),      \
+			"i" (PRIVATE_FUTEX)				      \
+		      : "memory");					      \
+    __status;								      \
+  })
+
+
+# define lll_private_futex_wake(futex, nr) \
+  do {									      \
+    int __ignore;							      \
+    int __ignore2;							      \
+    register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    __asm __volatile ("orl %%gs:%P7, %%ecx\n\t"				      \
+		      LLL_EBX_LOAD					      \
+		      LLL_ENTER_KERNEL					      \
+		      LLL_EBX_LOAD					      \
+		      : "=a" (__ignore), "=c" (__ignore2)		      \
+		      : LLL_EBX_REG (futex), "0" (SYS_futex),		      \
+			"1" (FUTEX_WAKE), "d" (_nr),			      \
+			"i" (offsetof (tcbhead_t, sysinfo)),		      \
+			"i" (PRIVATE_FUTEX));				      \
+  } while (0)
+#endif
 
 
 /* Does not preserve %eax and %ecx.  */
@@ -413,21 +481,6 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 				"c" (FUTEX_WAKE), "d" (_nr),		      \
 				"i" (FUTEX_OWNER_DIED),			      \
 				"i" (offsetof (tcbhead_t, sysinfo))); })
-
-
-#define lll_futex_wake(futex, nr) \
-  do {									      \
-    int __ignore;							      \
-    register __typeof (nr) _nr asm ("edx") = (nr);			      \
-    __asm __volatile (LLL_EBX_LOAD					      \
-		      LLL_ENTER_KERNEL					      \
-		      LLL_EBX_LOAD					      \
-		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (futex),		      \
-			"c" (FUTEX_WAKE), "d" (_nr),			      \
-			"i" (0) /* phony, to align next arg's number */,      \
-			"i" (offsetof (tcbhead_t, sysinfo)));		      \
-  } while (0)
 
 
 #define lll_mutex_islocked(futex) \

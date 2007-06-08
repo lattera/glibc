@@ -56,7 +56,9 @@ __new_sem_wait (sem_t *sem)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (&isem->value, 0);
+      err = lll_futex_wait (&isem->value, 0,
+			    // XYZ check mutex flag
+			    LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);
@@ -100,7 +102,8 @@ __old_sem_wait (sem_t *sem)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (futex, 0);
+      /* Always assume the semaphore is shared.  */
+      err = lll_futex_wait (futex, 0, LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);

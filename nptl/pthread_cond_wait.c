@@ -71,7 +71,9 @@ __condvar_cleanup (void *arg)
   if (cbuffer->cond->__data.__total_seq == -1ULL
       && cbuffer->cond->__data.__nwaiters < (1 << COND_NWAITERS_SHIFT))
     {
-      lll_futex_wake (&cbuffer->cond->__data.__nwaiters, 1);
+      lll_futex_wake (&cbuffer->cond->__data.__nwaiters, 1,
+		      // XYZ check mutex flag
+		      LLL_SHARED);
       destroying = 1;
     }
 
@@ -80,7 +82,9 @@ __condvar_cleanup (void *arg)
 
   /* Wake everybody to make sure no condvar signal gets lost.  */
   if (! destroying)
-    lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX);
+    lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX,
+		    // XYZ check mutex flag
+		    LLL_SHARED);
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
@@ -146,7 +150,9 @@ __pthread_cond_wait (cond, mutex)
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  */
-      lll_futex_wait (&cond->__data.__futex, futex_val);
+      lll_futex_wait (&cond->__data.__futex, futex_val,
+		      // XYZ check mutex flag
+		      LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
@@ -175,7 +181,9 @@ __pthread_cond_wait (cond, mutex)
      and it can be successfully destroyed.  */
   if (cond->__data.__total_seq == -1ULL
       && cond->__data.__nwaiters < (1 << COND_NWAITERS_SHIFT))
-    lll_futex_wake (&cond->__data.__nwaiters, 1);
+    lll_futex_wake (&cond->__data.__nwaiters, 1,
+		    // XYZ check mutex flag
+		    LLL_SHARED);
 
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);

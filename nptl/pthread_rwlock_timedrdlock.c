@@ -114,7 +114,9 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 
       /* Wait for the writer to finish.  */
       err = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
-				  waitval, &rt);
+				  waitval, &rt,
+				  // XYZ check mutex flag
+				  LLL_SHARED);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);

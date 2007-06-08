@@ -1,5 +1,5 @@
 /* sem_post -- post to a POSIX semaphore.  SPARC version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -39,7 +39,9 @@ __new_sem_post (sem_t *sem)
       nr = ++*futex;
       __sparc32_atomic_do_unlock24 (futex + 1);
     }
-  int err = lll_futex_wake (futex, nr);
+  int err = lll_futex_wake (futex, nr,
+			    // XYZ check mutex flag
+			    LLL_SHARED);
   if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);

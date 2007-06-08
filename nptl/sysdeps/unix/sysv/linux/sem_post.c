@@ -35,7 +35,9 @@ __new_sem_post (sem_t *sem)
   atomic_full_barrier ();
   if (isem->nwaiters > 0)
     {
-      int err = lll_futex_wake (&isem->value, 1);
+      int err = lll_futex_wake (&isem->value, 1,
+				// XYZ check mutex flag
+				LLL_SHARED);
       if (__builtin_expect (err, 0) < 0)
 	{
 	  __set_errno (-err);
@@ -55,7 +57,8 @@ __old_sem_post (sem_t *sem)
   int *futex = (int *) sem;
 
   int nr = atomic_increment_val (futex);
-  int err = lll_futex_wake (futex, 1);
+  /* We always have to assume it is a shared semaphore.  */
+  int err = lll_futex_wake (futex, 1, LLL_SHARED);
   if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);

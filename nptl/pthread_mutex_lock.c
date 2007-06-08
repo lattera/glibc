@@ -408,7 +408,9 @@ __pthread_mutex_lock (mutex)
 		  break;
 
 		if (oldval != ceilval)
-		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2);
+		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
+				  // XYZ check mutex flag
+				  LLL_SHARED);
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 							ceilval | 2, ceilval)

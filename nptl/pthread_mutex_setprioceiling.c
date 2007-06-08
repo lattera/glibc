@@ -1,5 +1,5 @@
 /* Set current priority ceiling of pthread_mutex_t.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 
@@ -80,7 +80,9 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
 	      break;
 
 	    if (oldval != ceilval)
-	      lll_futex_wait (&mutex->__data.__lock, ceilval | 2);
+	      lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
+			      // XYZ check mutex flag
+			      LLL_SHARED);
 	  }
 	while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						    ceilval | 2, ceilval)
@@ -110,7 +112,9 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
 			 | (prioceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT);
   atomic_full_barrier ();
 
-  lll_futex_wake (&mutex->__data.__lock, INT_MAX);
+  lll_futex_wake (&mutex->__data.__lock, INT_MAX,
+		  // XYZ check mutex flag
+		  LLL_SHARED);
 
   return 0;
 }

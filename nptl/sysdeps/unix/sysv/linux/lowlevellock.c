@@ -31,7 +31,9 @@ __lll_lock_wait (int *futex)
     {
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_wait (futex, 2);
+	lll_futex_wait (futex, 2,
+			// XYZ check mutex flag
+			LLL_SHARED);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 }
@@ -68,7 +70,9 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
       /* Wait.  */
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt);
+	lll_futex_timed_wait (futex, 2, &rt,
+			      // XYZ check mutex flag
+			      LLL_SHARED);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 
@@ -108,8 +112,9 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      /* Wait until thread terminates.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
+      /* Wait until thread terminates.  The kernel so far does not use
+	 the private futex operations for this.  */
+      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
 

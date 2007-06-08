@@ -949,7 +949,7 @@ __nptl_setxid (struct xid_command *cmdp)
   int cur = cmdp->cntr;
   while (cur != 0)
     {
-      lll_futex_wait (&cmdp->cntr, cur);
+      lll_private_futex_wait (&cmdp->cntr, cur);
       cur = cmdp->cntr;
     }
 
@@ -1035,7 +1035,7 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+	lll_private_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
@@ -1057,7 +1057,7 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+	lll_private_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 

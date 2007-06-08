@@ -441,7 +441,9 @@ pthread_mutex_timedlock (mutex, abstime)
 		      }
 
 		    lll_futex_timed_wait (&mutex->__data.__lock,
-					  ceilval | 2, &rt);
+					  ceilval | 2, &rt,
+					  // XYZ check mutex flag
+					  LLL_SHARED);
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
