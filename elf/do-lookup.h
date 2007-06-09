@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +29,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	     const struct r_found_version *const version, int flags,
 	     struct link_map *skip, int type_class)
 {
-  struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
+  /* Make sure we read the value before proceeding.  Otherwise we
+     might use r_list pointing to the initial scope and r_nlist being
+     the value after a resize.  That is the only path in dl-open.c not
+     protected by GSCOPE.  A read barrier here might be to expensive.  */
+  __asm volatile ("" : "+r" (n), "+m" (scope->r_list));
+  struct link_map **list = scope->r_list;
 
   do
     {

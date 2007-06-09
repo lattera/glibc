@@ -1,3 +1,8 @@
+2007-06-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h (do_lookup_x): Read r_nlist before r_list and
+	make sure gcc doesn't mess around with this.
+
 2007-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol_x): Remove use of r_nlist.
