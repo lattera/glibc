@@ -244,13 +244,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   size_t i = 0;
   if (__builtin_expect (skip_map != NULL, 0))
-    {
-      /* Search the relevant loaded objects for a definition.  */
-      while ((*scope)->r_list[i] != skip_map)
-	++i;
-
-      assert (i < (*scope)->r_nlist);
-    }
+    /* Search the relevant loaded objects for a definition.  */
+    while ((*scope)->r_list[i] != skip_map)
+      ++i;
 
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
