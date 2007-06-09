@@ -1,3 +1,9 @@
+2007-06-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Remove all to be removed
+	libraries from the global scope at once and call THREAD_GSCOPE_WAIT
+	at most once per _dl_close_worker.
+
 2007-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Make second parameter of

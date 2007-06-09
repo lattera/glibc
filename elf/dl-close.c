@@ -229,6 +229,7 @@ _dl_close_worker (struct link_map *map)
   bool do_audit = GLRO(dl_naudit) > 0 && !ns->_ns_loaded->l_auditing;
 #endif
   bool unload_any = false;
+  unsigned int unload_global = 0;
   unsigned int first_loaded = ~0;
   for (unsigned int i = 0; i < nloaded; ++i)
     {
@@ -292,6 +293,9 @@ _dl_close_worker (struct link_map *map)
 
 	  /* We indeed have an object to remove.  */
 	  unload_any = true;
+
+	  if (imap->l_global)
+	    ++unload_global;
 
 	  /* Remember where the first dynamically loaded object is.  */
 	  if (i < first_loaded)
@@ -458,6 +462,34 @@ _dl_close_worker (struct link_map *map)
   r->r_state = RT_DELETE;
   _dl_debug_state ();
 
+  if (unload_global)
+    {
+      /* Some objects are in the global scope list.  Remove them.  */
+      struct r_scope_elem *ns_msl = ns->_ns_main_searchlist;
+      unsigned int i;
+      unsigned int j = 0;
+      unsigned int cnt = ns_msl->r_nlist;
+
+      while (cnt > 0 && ns_msl->r_list[cnt - 1]->l_removed)
+	--cnt;
+
+      if (cnt + unload_global == ns_msl->r_nlist)
+	/* Speed up removing most recently added objects.  */
+	j = cnt;
+      else
+ 	for (i = 0; i < cnt; i++)
+	  if (ns_msl->r_list[i]->l_removed == 0)
+	    {
+	      if (i != j)
+		ns_msl->r_list[j] = ns_msl->r_list[i];
+	      j++;
+	    }
+      ns_msl->r_nlist = j;
+
+      if (!RTLD_SINGLE_THREAD_P)
+	THREAD_GSCOPE_WAIT ();
+    }
+
   size_t tls_free_start;
   size_t tls_free_end;
   tls_free_start = tls_free_end = NO_TLS_OFFSET;
@@ -473,25 +505,6 @@ _dl_close_worker (struct link_map *map)
 
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
-	  if (__builtin_expect (imap->l_global, 0))
-	    {
-	      /* This object is in the global scope list.  Remove it.  */
-	      struct r_scope_elem *ns_msl = ns->_ns_main_searchlist;
-	      unsigned int cnt = ns_msl->r_nlist;
-
-	      do
-		--cnt;
-	      while (ns_msl->r_list[cnt] != imap);
-
-	      /* The object was already correctly registered.  */
-	      while (++cnt < ns_msl->r_nlist)
-		ns_msl->r_list[cnt - 1] = ns_msl->r_list[cnt];
-
-	      --ns_msl->r_nlist;
-
-	      if (!RTLD_SINGLE_THREAD_P)
-		THREAD_GSCOPE_WAIT ();
-	    }
 
 	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */
 	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
