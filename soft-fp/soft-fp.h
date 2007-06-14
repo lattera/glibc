@@ -1,5 +1,5 @@
 /* Software floating-point emulation.
-   Copyright (C) 1997,1998,1999,2000,2002,2003,2005,2006
+   Copyright (C) 1997,1998,1999,2000,2002,2003,2005,2006,2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
@@ -187,6 +187,10 @@ typedef unsigned int UDItype __attribute__((mode(DI)));
 typedef unsigned int UHWtype __attribute__((mode(HI)));
 #elif _FP_W_TYPE_SIZE == 64
 typedef USItype UHWtype;
+#endif
+
+#ifndef CMPtype
+#define CMPtype		int
 #endif
 
 #define SI_BITS		(__CHAR_BIT__ * (int)sizeof(SItype))

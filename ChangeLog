@@ -1,3 +1,20 @@
+2007-06-14 Uros Bizjak <ubizjak@gmail.com>
+
+	* soft-fp/soft-fp.h (CMPtype): Define to "int" if undefined.
+	* soft-fp/eqdf2.c (__eqdf2): Use CMPtype instead of int
+	as the return type.  Change type of "r" variable to CMPtype.
+	* soft-fp/eqsf2.c (__eqsf2): Likewise.
+	* soft-fp/eqtf2.c (__eqtf2): Likewise.
+	* soft-fp/gedf2.c (__gedf2): Likewise.
+	* soft-fp/gesf2.c (__gesf2): Likewise.
+	* soft-fp/getf2.c (__getf2): Likewise.
+	* soft-fp/ledf2.c (__ledf2): Likewise.
+	* soft-fp/lesf2.c (__lesf2): Likewise.
+	* soft-fp/letf2.c (__letf2): Likewise.
+	* soft-fp/unorddf2 (__unorddf2): Likewise.
+	* soft-fp/unordsf2 (__unordsf2): Likewise.
+	* soft-fp/unordtf2 (__unordtf2): Likewise.
+
 2007-06-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h (do_lookup_x): Read r_nlist before r_list and
