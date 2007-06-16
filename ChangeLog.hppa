@@ -1,3 +1,9 @@
+2006-07-16  Jeff Bailey  <jbailey@raspberryginger.com>
+
+	* sysdeps/unix/sysv/linux/hppa/sys/procfs.h: Don't
+	include	asm/elf.h.  Declare elf_greg_t, elf_gregset_t,
+	elf_fpreg_t, and elf_fpregset_t.
+
 2007-06-16  Jeff Bailey  <jbailey@raspberryginger.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/configure.in: Require
