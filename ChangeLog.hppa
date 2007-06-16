@@ -1,3 +1,9 @@
+2007-06-16  Jeff Bailey  <jbailey@raspberryginger.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/configure.in: Require
+	at least kernel 2.6.9.
+	* sysdeps/unix/sysv/linux/hppa/nptl/configure: Rebuilt.
+
 2007-05-17  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/bits/semaphore.h 
