@@ -139,40 +139,72 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 	  if (nlmh->nlmsg_type == RTM_NEWADDR)
 	    {
 	      struct ifaddrmsg *ifam = (struct ifaddrmsg *) NLMSG_DATA (nlmh);
+	      struct rtattr *rta = IFA_RTA (ifam);
+	      size_t len = nlmh->nlmsg_len - NLMSG_LENGTH (sizeof (*ifam));
 
 	      switch (ifam->ifa_family)
 		{
+		  const void *local;
+		  const void *address;
+
 		case AF_INET:
-		  *seen_ipv4 = true;
+		  local = NULL;
+		  address = NULL;
+		  while (RTA_OK (rta, len))
+		    {
+		      switch (rta->rta_type)
+			{
+			case IFA_LOCAL:
+			  local = RTA_DATA (rta);
+			  break;
+
+			case IFA_ADDRESS:
+			  address = RTA_DATA (rta);
+			  goto out_v4;
+			}
+
+		      rta = RTA_NEXT (rta, len);
+		    }
+
+		  if (local != NULL)
+		    {
+		    out_v4:
+		      if (*(const in_addr_t *) (address ?: local)
+			  != htonl (INADDR_LOOPBACK))
+			*seen_ipv4 = true;
+		    }
 		  break;
+
 		case AF_INET6:
-		  *seen_ipv6 = true;
+		  local = NULL;
+		  address = NULL;
+		  while (RTA_OK (rta, len))
+		    {
+		      switch (rta->rta_type)
+			{
+			case IFA_LOCAL:
+			  local = RTA_DATA (rta);
+			  break;
+
+			case IFA_ADDRESS:
+			  address = RTA_DATA (rta);
+			  goto out_v6;
+			}
+
+		      rta = RTA_NEXT (rta, len);
+		    }
+
+		  if (local != NULL)
+		    {
+		    out_v6:
+		      if (!IN6_IS_ADDR_LOOPBACK (address ?: local))
+			*seen_ipv6 = true;
+		    }
 
 		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
 					 | IFA_F_TEMPORARY
 					 | IFA_F_HOMEADDRESS))
 		    {
-		      struct rtattr *rta = IFA_RTA (ifam);
-		      size_t len = (nlmh->nlmsg_len
-				    - NLMSG_LENGTH (sizeof (*ifam)));
-		      void *local = NULL;
-		      void *address = NULL;
-		      while (RTA_OK (rta, len))
-			{
-			  switch (rta->rta_type)
-			    {
-			    case IFA_LOCAL:
-			      local = RTA_DATA (rta);
-			      break;
-
-			    case IFA_ADDRESS:
-			      address = RTA_DATA (rta);
-			      break;
-			    }
-
-			  rta = RTA_NEXT (rta, len);
-			}
-
 		      struct in6ailist *newp = alloca (sizeof (*newp));
 		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
 					   ? in6ai_deprecated : 0)
@@ -203,7 +235,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
   close_not_cancel_no_status (fd);
 
-  if (in6ailist != NULL)
+  if (*seen_ipv6 && in6ailist != NULL)
     {
       *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
       if (*in6ai == NULL)
