@@ -81,7 +81,7 @@ call_gmon_start(void)
 }
 
 SECTION (".init");
-extern void _init (void);
+extern void __attribute__ ((section (".init"))) _init (void);
 void
 _init (void)
 {
@@ -107,7 +107,7 @@ asm ("\n/*@_init_EPILOG_ENDS*/");
 asm ("\n/*@_fini_PROLOG_BEGINS*/");
 
 SECTION (".fini");
-extern void _fini (void);
+extern void __attribute__ ((section (".fini"))) _fini (void);
 void
 _fini (void)
 {
