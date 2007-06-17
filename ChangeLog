@@ -1,3 +1,18 @@
+2007-06-16  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #4125]
+	* sysdeps/unix/sysv/linux/sys/ptrace.h
+	(PTRACE_O_TRACESYSGOOD, PTRACE_O_TRACEFORK,
+	PTRACE_O_TRACEVFORK, PTRACE_O_TRACECLONE, PTRACE_O_TRACEEXEC,
+	PTRACE_O_TRACEVFORKDONE, PTRACE_O_TRACEEXIT, PTRACE_O_MASK, 
+	PTRACE_EVENT_FORK, PTRACE_EVENT_VFORK, PTRACE_EVENT_CLONE,
+	PTRACE_EVENT_EXEC, PTRACE_EVENT_VFORK_DONE, PTRACE_EVENT_EXIT):
+	Define.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
+
 2007-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4599]
