@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,14 @@
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
 #include <tcb-offsets.h>
+#include <kernel-features.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_PRIVATE_FLAG	128
 
 
 	.text
@@ -59,7 +61,8 @@ pthread_rwlock_timedrdlock:
 	mov.l	@(WRITERS_QUEUED,r8), r0
 	tst	r0, r0
 	bt	5f
-	mov.l	@(FLAGS,r8), r0
+	mov	#FLAGS, r0
+	mov.b	@(r0,r8), r0
 	tst	r0, r0
 	bt	5f
 3:
@@ -117,7 +120,26 @@ pthread_rwlock_timedrdlock:
 
 	/* Futex call.  */
 	mov	r15, r7
-	mov	#FUTEX_WAIT, r5
+#if __ASSUME_PRIVATE_FUTEX
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAIT), r0
+	xor	r0, r5
+	extu.b	r5, r5
+#else
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
+# if FUTEX_WAIT != 0
+	mov	#FUTEX_WAIT, r0
+	or	r0, r5
+# endif
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r0
+	xor	r0, r5
+#endif
 	mov	r10, r6
 	mov	r8, r4
 	add	#READERS_WAKEUP, r4
@@ -176,6 +198,10 @@ pthread_rwlock_timedrdlock:
 	rts
 	 mov	r3, r0
 
+#if !__ASSUME_PRIVATE_FUTEX
+.Lpfoff:
+	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
+#endif
 	.align	2
 .L1k0:
 	.long	1000

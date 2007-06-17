@@ -1,3 +1,52 @@
+2007-06-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S:
+	(__pthread_rwlock_rdlock): Don't use non SH-3/4 instruction.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S:
+	(__pthread_rwlock_wrlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S:
+	(pthread_rwlock_timedrdlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S:
+	(pthread_rwlock_timedwrlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S:
+	(__pthread_rwlock_unlock): Likewise.
+
+2007-06-10  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tcb-offsets.sym: Add PRIVATE_FUTEX.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Include endian.h.
+	Split __flags into __flags, __shared, __pad1 and __pad2.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Use private
+        futexes if they are available.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Adjust so that change
+        in libc-lowlevellock.S allow using private futexes.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Define
+	FUTEX_PRIVATE_FLAG.  Add additional parameter to lll_futex_wait,
+	lll_futex_timed_wait and lll_futex_wake.  Change lll_futex_wait
+	to call lll_futex_timed_wait.  Add lll_private_futex_wait,
+	lll_private_futex_timed_wait and lll_private_futex_wake.
+	(lll_robust_mutex_unlock): Fix typo.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Use private
+        field in futex command setup.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Use
+	COND_NWAITERS_SHIFT instead of COND_CLOCK_BITS.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Use private futexes
+        if they are available.  Remove clear_once_control.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Use private
+	futexes if they are available.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Add private futex support.
+	Wake only when there are waiters.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Add private futex
+	support.  Indicate that there are waiters.  Remove unnecessary
+        extra cancellation test.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Likewise.  Removed
+	left-over duplication of __sem_wait_cleanup.
+
 2007-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Add additional

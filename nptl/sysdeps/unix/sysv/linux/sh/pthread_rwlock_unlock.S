@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,13 @@
 
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
+#include <kernel-features.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_PRIVATE_FLAG	128
 
 
 	.text
@@ -87,7 +89,24 @@ __pthread_rwlock_unlock:
 	bf	7f
 
 8:
-	mov	#FUTEX_WAKE, r5
+#if __ASSUME_PRIVATE_FUTEX
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAKE), r0
+	xor	r0, r5
+	extu.b	r5, r5
+#else
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
+	mov	#FUTEX_WAKE, r0
+	or	r0, r5
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r0
+	xor	r0, r5
+#endif
 	mov	#SYS_futex, r3
 	mov	#0, r7
 	extu.b	r3, r3
@@ -154,6 +173,10 @@ __pthread_rwlock_unlock:
 	bra	8b
 	 mov.l	@r15+, r4
 
+#if !__ASSUME_PRIVATE_FUTEX
+.Lpfoff:
+	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
+#endif
 	.align	2
 .Lwait8:	
 	.long	__lll_mutex_lock_wait-.Lwait8b

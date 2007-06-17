@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,7 +120,7 @@ __pthread_cond_timedwait:
 	mov.l	@(cond_futex,r8), r0
 	add	r2, r0
 	mov.l	r0, @(cond_futex,r8)
-	mov	#(1 << clock_bits), r2
+	mov	#(1 << nwaiters_shift), r2
 	mov.l	@(cond_nwaiters,r8), r0
 	add	r2, r0
 	mov.l	r0, @(cond_nwaiters,r8)
@@ -136,7 +136,7 @@ __pthread_cond_timedwait:
 #ifdef __NR_clock_gettime
 	/* Get the clock number.	 */
 	mov.l	@(cond_nwaiters,r8), r4
-	mov	#((1 << clock_bits) - 1), r0
+	mov	#((1 << nwaiters_shift) - 1), r0
 	and	r0, r4
 	/* Only clocks 0 and 1 are allowed.  Both are handled in the
 	   kernel.  */
@@ -323,7 +323,7 @@ __pthread_cond_timedwait:
 	mov.l	r1,@(woken_seq+4,r8)
 
 24:
-	mov	#(1 << clock_bits), r2
+	mov	#(1 << nwaiters_shift), r2
 	mov.l	@(cond_nwaiters,r8),r0
 	sub	r2, r0
 	mov.l	r0,@(cond_nwaiters,r8)
@@ -335,7 +335,7 @@ __pthread_cond_timedwait:
 	not	r0, r0
 	cmp/eq	#0, r0
 	bf/s	25f
-	 mov	#((1 << clock_bits) - 1), r1
+	 mov	#((1 << nwaiters_shift) - 1), r1
 	not	r1, r1
 	mov.l	@(cond_nwaiters,r8),r0
 	tst	r1, r0
@@ -557,7 +557,7 @@ __condvar_tw_cleanup:
 	mov.l	r1,@(woken_seq+4,r8)
 
 3:
-	mov	#(1 << clock_bits), r2
+	mov	#(1 << nwaiters_shift), r2
 	mov.l	@(cond_nwaiters,r8),r0
 	sub	r2, r0
 	mov.l	r0,@(cond_nwaiters,r8)
@@ -570,7 +570,7 @@ __condvar_tw_cleanup:
 	not	r0, r0
 	cmp/eq	#0, r0
 	bf/s	4f
-	 mov	#((1 << clock_bits) - 1), r1
+	 mov	#((1 << nwaiters_shift) - 1), r1
 	not	r1, r1
 	mov.l	@(cond_nwaiters,r8),r0
 	tst	r1, r0

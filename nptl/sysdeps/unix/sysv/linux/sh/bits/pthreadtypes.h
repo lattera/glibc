@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,6 +20,8 @@
 
 #ifndef _BITS_PTHREADTYPES_H
 #define _BITS_PTHREADTYPES_H	1
+
+#include <endian.h>
 
 #define __SIZEOF_PTHREAD_ATTR_T 36
 #define __SIZEOF_PTHREAD_MUTEX_T 24
@@ -127,9 +130,21 @@ typedef union
     unsigned int __writer_wakeup;
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
+#if __BYTE_ORDER == __BIG_ENDIAN
+    unsigned char __pad1;
+    unsigned char __pad2;
+    unsigned char __shared;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
-    unsigned int __flags;
+    unsigned char __flags;
+#else
+    /* FLAGS must stay at this position in the structure to maintain
+       binary compatibility.  */
+    unsigned char __flags;
+    unsigned char __shared;
+    unsigned char __pad1;
+    unsigned char __pad2;
+#endif
     pthread_t __writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];

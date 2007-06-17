@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,13 @@ pthread_barrier_wait:
 #if CURR_EVENT != 0
 	add	#CURR_EVENT, r4
 #endif
+#if FUTEX_WAIT == 0
+	mov.l	@(PRIVATE,r8), r5
+#else
 	mov	#FUTEX_WAIT, r5
+	mov.l	@(PRIVATE,r8), r0
+	or	r0, r5
+#endif
 	mov	#0, r7
 8:
 	mov	#SYS_futex, r3
@@ -118,6 +124,8 @@ pthread_barrier_wait:
 #endif
 	mov	#0, r7
 	mov	#FUTEX_WAKE, r5
+	mov.l	@(PRIVATE,r8), r0
+	or	r0, r5
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
