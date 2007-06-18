@@ -1400,6 +1400,11 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Iterate over all entries in the list.  The order is important.  */
       struct audit_ifaces *last_audit = NULL;
       struct audit_list *al = audit_list->next;
+
+      /* Since we start using the auditing DSOs right away we need to
+	 initialize the data structures now.  */
+      tcbp = init_tls ();
+
       do
 	{
 	  int tls_idx = GL(dl_tls_max_dtv_idx);
@@ -1409,11 +1414,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 	     always allocate the static block, we never defer it even if
 	     no DF_STATIC_TLS bit is set.  The reason is that we know
 	     glibc will use the static model.  */
-
-	  /* Since we start using the auditing DSOs right away we need to
-	     initialize the data structures now.  */
-	  tcbp = init_tls ();
-
 	  struct dlmopen_args dlmargs;
 	  dlmargs.fname = al->name;
 	  dlmargs.map = NULL;
