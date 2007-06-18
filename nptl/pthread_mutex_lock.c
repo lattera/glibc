@@ -43,7 +43,8 @@ __pthread_mutex_lock (mutex)
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   int retval = 0;
-  switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
+			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:

@@ -37,7 +37,8 @@ pthread_mutex_timedlock (mutex, abstime)
   /* We must not check ABSTIME here.  If the thread does not block
      abstime must not be checked for a valid value.  */
 
-  switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
+			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:

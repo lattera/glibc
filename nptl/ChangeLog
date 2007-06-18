@@ -1,3 +1,11 @@
+2007-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Define PTHREAD_MUTEX_TYPE.
+	* phtread_mutex_lock.c: Use PTHREAD_MUTEX_TYPE.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+
 2007-06-17  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/pthread/pt-initfini.c: Tell gcc about the nonstandard

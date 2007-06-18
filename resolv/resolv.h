@@ -110,21 +110,25 @@ struct __res_state {
 		nsaddr_list[MAXNS];	/* address of name server */
 # define nsaddr	nsaddr_list[0]		/* for backward compatibility */
 	u_short	id;			/* current message id */
+	/* 2 byte hole here.  */
 	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
 	char	defdname[256];		/* default domain (deprecated) */
 	u_long	pfcode;			/* RES_PRF_ flags - see below. */
 	unsigned ndots:4;		/* threshold for initial abs. query */
 	unsigned nsort:4;		/* number of elements in sort_list[] */
-	char	unused[3];
+	unsigned ipv6_unavail:1;	/* connecting to IPv6 server failed */
+	unsigned unused:23;
 	struct {
 		struct in_addr	addr;
 		u_int32_t	mask;
 	} sort_list[MAXRESOLVSORT];
+	/* 4 byte hole here on 64-bit architectures.  */
 	res_send_qhook qhook;		/* query hook */
 	res_send_rhook rhook;		/* response hook */
 	int	res_h_errno;		/* last one set for this context */
 	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
 	u_int	_flags;			/* PRIVATE: see below */
+	/* 4 byte hole here on 64-bit architectures.  */
 	union {
 		char	pad[52];	/* On an i386 this means 512b total. */
 		struct {

@@ -1,4 +1,17 @@
 2007-06-18  Jakub Jelinek  <jakub@redhat.com>
+            Tomas Janousek  <tjanouse@redhat.com>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4647]
+	* resolv/res_send.c (send_dg): Remove socket_pf.  Use ipv6_unavail
+	member in __res_state, only convaddr4to6 if nssocks[ns] is a PF_INET6
+	socket.
+	* resolv/resolv.h (__res_state): Add ipv6_unavail member.  Make
+	unused member a bitmap.
+	* resolv/res_init.c (__res_vinit): Reset ipv6_unavail if IPv6
+	servers are configured.
+
+2007-06-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): Don't call init_tls more than once.
 

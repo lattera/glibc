@@ -31,7 +31,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 {
   int newowner = 0;
 
-  switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
+			    PTHREAD_MUTEX_TIMED_NP))
     {
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Recursive mutex.  */

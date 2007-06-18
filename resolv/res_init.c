@@ -241,8 +241,8 @@ __res_vinit(res_state statp, int preinit) {
 	 line[sizeof(name) - 1] == '\t'))
 
 	if ((fp = fopen(_PATH_RESCONF, "rc")) != NULL) {
-		/* No threads use this stream.  */
-		__fsetlocking (fp, FSETLOCKING_BYCALLER);
+	    /* No threads use this stream.  */
+	    __fsetlocking (fp, FSETLOCKING_BYCALLER);
 	    /* read the config file */
 	    while (fgets_unlocked(buf, sizeof(buf), fp) != NULL) {
 		/* skip comments */
@@ -397,8 +397,11 @@ __res_vinit(res_state statp, int preinit) {
 	    if (nserv > 1)
 		statp->nscount = nserv;
 #ifdef _LIBC
-	    if (nservall - nserv > 0)
+	    if (nservall - nserv > 0) {
 		statp->_u._ext.nscount6 = nservall - nserv;
+		/* We try IPv6 servers again.  */
+		statp->ipv6_unavail = false;
+	    }
 #endif
 #ifdef RESOLVSORT
 	    statp->nsort = nsort;

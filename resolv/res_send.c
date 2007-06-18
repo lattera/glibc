@@ -813,17 +813,20 @@ send_dg(res_state statp,
 	struct pollfd pfd[1];
         int ptimeout;
 	struct sockaddr_in6 from;
-	static int socket_pf = 0;
 	socklen_t fromlen;
 	int resplen, seconds, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
-		if ((EXT(statp).nscount6 > 0) && (socket_pf != PF_INET)) {
+		if ((EXT(statp).nscount6 > 0) && !statp->ipv6_unavail) {
 			EXT(statp).nssocks[ns] =
 			    socket(PF_INET6, SOCK_DGRAM, 0);
-			socket_pf = EXT(statp).nssocks[ns] < 0 ? PF_INET
-			                                       : PF_INET6;
+			if (EXT(statp).nssocks[ns] < 0)
+			    statp->ipv6_unavail = errno == EAFNOSUPPORT;
+			/* If IPv6 socket and nsap is IPv4, make it
+			   IPv4-mapped */
+			else if (nsap->sin6_family == AF_INET)
+			    convaddr4to6(nsap);
 		}
 		if (EXT(statp).nssocks[ns] < 0)
 			EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
@@ -832,9 +835,7 @@ send_dg(res_state statp,
 			Perror(statp, stderr, "socket(dg)", errno);
 			return (-1);
 		}
-		/* If IPv6 socket and nsap is IPv4, make it IPv4-mapped */
-		if ((socket_pf == PF_INET6) && (nsap->sin6_family == AF_INET))
-			convaddr4to6(nsap);
+
 		/*
 		 * On a 4.3BSD+ machine (client and server,
 		 * actually), sending to a nameserver datagram
