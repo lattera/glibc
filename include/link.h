@@ -187,6 +187,9 @@ struct link_map
 				       is interested in the PLT interception.*/
     unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
 				   since it is removed.  */
+    unsigned int l_contiguous:1; /* Nonzero if inter-segment holes are
+				    mprotected or if no holes are present at
+				    all.  */
 
     /* Collected information about own RPATH directories.  */
     struct r_search_path_struct l_rpath_dirs;

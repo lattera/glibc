@@ -439,18 +439,18 @@ struct rtld_global
   EXTERN void (*_dl_rtld_unlock_recursive) (void *);
 #endif
 
-  /* Prevailing state of the stack, PF_X indicating it's executable.  */
-  EXTERN ElfW(Word) _dl_stack_flags;
-
   /* If loading a shared object requires that we make the stack executable
      when it was not, we do it by calling this function.
      It returns an errno code or zero on success.  */
   EXTERN int (*_dl_make_stack_executable_hook) (void **) internal_function;
 
-  /* Highest dtv index currently needed.  */
-  EXTERN size_t _dl_tls_max_dtv_idx;
+  /* Prevailing state of the stack, PF_X indicating it's executable.  */
+  EXTERN ElfW(Word) _dl_stack_flags;
+
   /* Flag signalling whether there are gaps in the module ID allocation.  */
   EXTERN bool _dl_tls_dtv_gaps;
+  /* Highest dtv index currently needed.  */
+  EXTERN size_t _dl_tls_max_dtv_idx;
   /* Information about the dtv slots.  */
   EXTERN struct dtv_slotinfo_list
   {
@@ -534,14 +534,14 @@ struct rtld_global_ro
 #define DL_DEBUG_HELP       (1 << 9)
 #define DL_DEBUG_PRELINK    (1 << 10)
 
-  /* Cached value of `getpagesize ()'.  */
-  EXTERN size_t _dl_pagesize;
-
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
   EXTERN const char *_dl_platform;
   EXTERN size_t _dl_platformlen;
+
+  /* Cached value of `getpagesize ()'.  */
+  EXTERN size_t _dl_pagesize;
 
   /* Copy of the content of `_dl_main_searchlist' at startup time.  */
   EXTERN struct r_scope_elem _dl_initial_searchlist;
@@ -570,9 +570,6 @@ struct rtld_global_ro
 
   /* Expected cache ID.  */
   EXTERN int _dl_correct_cache_id;
-
-  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
-  EXTERN int _dl_pointer_guard;
 
   /* Mask for hardware capabilities that are available.  */
   EXTERN uint64_t _dl_hwcap;
@@ -657,6 +654,9 @@ struct rtld_global_ro
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;
   unsigned int _dl_naudit;
+
+  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
+  EXTERN int _dl_pointer_guard;
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
@@ -1061,6 +1061,8 @@ extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid);
    but never touch anything.  Return null if it's not allocated yet.  */
 extern void *_dl_tls_get_addr_soft (struct link_map *l) internal_function;
 
+extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+     internal_function attribute_hidden;
 
 __END_DECLS
 

@@ -201,10 +201,10 @@ dl_open_worker (void *a)
       for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
 	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
 	  if (caller_dlopen >= (const void *) l->l_map_start
-	      && caller_dlopen < (const void *) l->l_map_end)
+	      && caller_dlopen < (const void *) l->l_map_end
+	      && (l->l_contiguous
+		  || _dl_addr_inside_object (l, (ElfW(Addr)) caller_dlopen)))
 	    {
-	      /* There must be exactly one DSO for the range of the virtual
-		 memory.  Otherwise something is really broken.  */
 	      assert (ns == l->l_ns);
 	      call_map = l;
 	      goto found_caller;
@@ -660,5 +660,23 @@ show_scope (struct link_map *new)
 
       _dl_printf ("\n");
     }
+}
+#endif
+
+#ifdef IS_IN_rtld
+/* Return non-zero if ADDR lies within one of L's segments.  */
+int
+internal_function
+_dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+{
+  int n = l->l_phnum;
+  const ElfW(Addr) reladdr = addr - l->l_addr;
+
+  while (--n >= 0)
+    if (l->l_phdr[n].p_type == PT_LOAD
+	&& reladdr - l->l_phdr[n].p_vaddr >= 0
+	&& reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
+      return 1;
+  return 0;
 }
 #endif

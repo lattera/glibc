@@ -98,10 +98,9 @@ do_sym (void *handle, const char *name, void *who,
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL;
 	 l = l->l_next)
-      if (caller >= l->l_map_start && caller < l->l_map_end)
+      if (caller >= l->l_map_start && caller < l->l_map_end
+	  && (l->l_contiguous || _dl_addr_inside_object (l, caller)))
 	{
-	  /* There must be exactly one DSO for the range of the virtual
-	     memory.  Otherwise something is really broken.  */
 	  match = l;
 	  break;
 	}

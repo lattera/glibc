@@ -1,3 +1,25 @@
+2007-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (rtld_global): Reorder some elements
+	to fill in holes
+	(rtld_global_ro): Likewise.
+
+2007-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Skip PT_LOAD checking if l_contiguous.
+	Move PT_LOAD checking to...
+	(_dl_addr_inside_object): ... here, new function.
+	* elf/dl-sym.c (do_sym): If not l_contiguous,
+	call _dl_addr_inside_object.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Likewise.
+	* dlfcn/dlinfo.c (dlinfo_doit): Likewise.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	(_dl_addr_inside_object): New function if IS_IN_rtld.
+	* elf/dl-load.c (_dl_map_object_from_fd): Set l_contiguous if no
+	holes are present or are PROT_NONE protected.
+	* include/link.h (struct link_map): Add l_contiguous field.
+	* sysdeps/generic/ldsodefs.h (_dl_addr_inside_object): New prototype.
+
 2007-06-18  Jakub Jelinek  <jakub@redhat.com>
             Tomas Janousek  <tjanouse@redhat.com>
             Ulrich Drepper  <drepper@redhat.com>

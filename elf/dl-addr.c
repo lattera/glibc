@@ -134,22 +134,12 @@ _dl_addr (const void *address, Dl_info *info,
   /* Find the highest-addressed object that ADDRESS is not below.  */
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l; l = l->l_next)
-      if (addr >= l->l_map_start && addr < l->l_map_end)
+      if (addr >= l->l_map_start && addr < l->l_map_end
+	  && (l->l_contiguous || _dl_addr_inside_object (l, addr)))
 	{
-	  /* Make sure it lies within one of L's segments.  */
-	  int n = l->l_phnum;
-	  const ElfW(Addr) reladdr = addr - l->l_addr;
-	  while (--n >= 0)
-	    if (l->l_phdr[n].p_type == PT_LOAD)
-	      {
-		if (reladdr - l->l_phdr[n].p_vaddr >= 0
-		    && reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
-		  {
-		    determine_info (addr, l, info, mapp, symbolp);
-		    result = 1;
-		    goto out;
-		  }
-	      }
+	  determine_info (addr, l, info, mapp, symbolp);
+	  result = 1;
+	  goto out;
 	}
 
  out:
@@ -158,3 +148,19 @@ _dl_addr (const void *address, Dl_info *info,
   return result;
 }
 libc_hidden_def (_dl_addr)
+
+/* Return non-zero if ADDR lies within one of L's segments.  */
+int
+internal_function
+_dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+{
+  int n = l->l_phnum;
+  const ElfW(Addr) reladdr = addr - l->l_addr;
+
+  while (--n >= 0)
+    if (l->l_phdr[n].p_type == PT_LOAD
+	&& reladdr - l->l_phdr[n].p_vaddr >= 0
+	&& reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
+      return 1;
+  return 0;
+}

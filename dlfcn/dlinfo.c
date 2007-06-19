@@ -1,5 +1,5 @@
 /* dlinfo -- Get information from the dynamic linker.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,9 +56,8 @@ dlinfo_doit (void *argsblock)
       /* Find the highest-addressed object that CALLER is not below.  */
       for (nsid = 0; nsid < DL_NNS; ++nsid)
 	for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
-	  if (caller >= l->l_map_start && caller < l->l_map_end)
-	    /* There must be exactly one DSO for the range of the virtual
-	       memory.  Otherwise something is really broken.  */
+	  if (caller >= l->l_map_start && caller < l->l_map_end
+	      && (l->l_contiguous || _dl_addr_inside_object (l, caller)))
 	    break;
 
       if (l == NULL)

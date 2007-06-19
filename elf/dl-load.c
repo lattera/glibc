@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2005, 2006  Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1223,6 +1223,8 @@ cannot allocate TLS data structures for initial thread");
 		      loadcmds[nloadcmds - 1].mapstart - c->mapend,
 		      PROT_NONE);
 
+	l->l_contiguous = 1;
+
 	goto postmap;
       }
 
@@ -1242,6 +1244,7 @@ cannot allocate TLS data structures for initial thread");
     /* Remember which part of the address space this object uses.  */
     l->l_map_start = c->mapstart + l->l_addr;
     l->l_map_end = l->l_map_start + maplength;
+    l->l_contiguous = !has_holes;
 
     while (c < &loadcmds[nloadcmds])
       {
