@@ -1,5 +1,37 @@
 2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (free_mem): Free _dl_scope_free_list.
+
+2007-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/link.h: Don't include rtld-lowlevel.h.
+	(struct link_map): Remove l_scope_lock.
+	* sysdeps/generic/ldsodefs.h: Don't include rtld-lowlevel.h.
+	(_dl_scope_free_list): New field (variable) in _rtld_global.
+	(DL_LOOKUP_SCOPE_LOCK): Remove.
+	(_dl_scope_free): New prototype.
+	* elf/dl-runtime.c (_dl_fixup): Don't use __rtld_mrlock_*lock.
+	Don't pass DL_LOOKUP_SCOPE_LOCK to _dl_lookup_symbol_x.
+	(_dl_profile_fixup): Likewise.
+	* elf/dl-sym.c (do_sym): Likewise.  Use wrapped _dl_lookup_symbol_x
+	whenever !RTLD_SINGLE_THREAD_P, use THREAD_GSCOPE_SET_FLAG and
+	THREAD_GSCOPE_RESET_FLAG around it.
+	* elf/dl-close.c (_dl_close_worker): Don't use
+	__rtld_mrlock_{change,done}.  Call _dl_scope_free on the old
+	scope.  Make sure THREAD_GSCOPE_WAIT () happens if any old
+	scopes were queued or if l_scope_mem has been abandoned.
+	* elf/dl-open.c (_dl_scope_free): New function.
+	(dl_open_worker): Use it.  Don't use __rtld_mrlock_{change,done}.
+	* elf/dl-support.c (_dl_scope_free_list): New variable.
+	* elf/dl-lookup.c (add_dependency): Remove flags argument.
+	Remove DL_LOOKUP_SCOPE_LOCK handling.
+	(_dl_lookup_symbol_x): Adjust caller.  Remove DL_LOOKUP_SCOPE_LOCK
+	handling.
+	* elf/dl-object.c (_dl_new_object): Don't use
+	__rtld_mrlock_initialize.
+
+2007-06-19  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/generic/ldsodefs.h (rtld_global): Reorder some elements
 	to fill in holes
 	(rtld_global_ro): Likewise.

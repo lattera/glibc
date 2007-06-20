@@ -100,21 +100,10 @@ _dl_fixup (
 	 we are not using any threads (yet).  */
       int flags = DL_LOOKUP_ADD_DEPENDENCY;
       if (!RTLD_SINGLE_THREAD_P)
-	{
-	  THREAD_GSCOPE_SET_FLAG ();
-
-	  if (l->l_type == lt_loaded)
-	    {
-	      __rtld_mrlock_lock (l->l_scope_lock);
-	      flags |= DL_LOOKUP_SCOPE_LOCK;
-	    }
-	}
+	THREAD_GSCOPE_SET_FLAG ();
 
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym, l->l_scope,
 				    version, ELF_RTYPE_CLASS_PLT, flags, NULL);
-
-      if ((flags & DL_LOOKUP_SCOPE_LOCK) != 0)
-	__rtld_mrlock_unlock (l->l_scope_lock);
 
       /* We are done with the global scope.  */
       if (!RTLD_SINGLE_THREAD_P)
@@ -203,22 +192,11 @@ _dl_profile_fixup (
 	     we are not using any threads (yet).  */
 	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
 	  if (!RTLD_SINGLE_THREAD_P)
-	    {
-	      THREAD_GSCOPE_SET_FLAG ();
-
-	      if (l->l_type == lt_loaded)
-		{
-		  __rtld_mrlock_lock (l->l_scope_lock);
-		  flags |= DL_LOOKUP_SCOPE_LOCK;
-		}
-	    }
+	    THREAD_GSCOPE_SET_FLAG ();
 
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l,
 					&defsym, l->l_scope, version,
 					ELF_RTYPE_CLASS_PLT, flags, NULL);
-
-	  if ((flags & DL_LOOKUP_SCOPE_LOCK) != 0)
-	    __rtld_mrlock_unlock (l->l_scope_lock);
 
 	  /* We are done with the global scope.  */
 	  if (!RTLD_SINGLE_THREAD_P)

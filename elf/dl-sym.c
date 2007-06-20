@@ -112,21 +112,21 @@ do_sym (void *handle, const char *name, void *who,
 	 the initial binary.  And then the more complex part
 	 where the object is dynamically loaded and the scope
 	 array can change.  */
-      if (match->l_type != lt_loaded || RTLD_SINGLE_THREAD_P)
+      if (RTLD_SINGLE_THREAD_P)
 	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
 					   match->l_scope, vers, 0,
 					   flags | DL_LOOKUP_ADD_DEPENDENCY,
 					   NULL);
       else
 	{
-	  __rtld_mrlock_lock (match->l_scope_lock);
-
 	  struct call_dl_lookup_args args;
 	  args.name = name;
 	  args.map = match;
 	  args.vers = vers;
-	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_SCOPE_LOCK;
+	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
 	  args.refp = &ref;
+
+	  THREAD_GSCOPE_SET_FLAG ();
 
 	  const char *objname;
 	  const char *errstring = NULL;
@@ -134,7 +134,7 @@ do_sym (void *handle, const char *name, void *who,
 	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
 					  call_dl_lookup, &args);
 
-	  __rtld_mrlock_unlock (match->l_scope_lock);
+	  THREAD_GSCOPE_RESET_FLAG ();
 
 	  if (__builtin_expect (errstring != NULL, 0))
 	    {

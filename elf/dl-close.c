@@ -229,6 +229,7 @@ _dl_close_worker (struct link_map *map)
   bool do_audit = GLRO(dl_naudit) > 0 && !ns->_ns_loaded->l_auditing;
 #endif
   bool unload_any = false;
+  bool scope_mem_left = false;
   unsigned int unload_global = 0;
   unsigned int first_loaded = ~0;
   for (unsigned int i = 0; i < nloaded; ++i)
@@ -405,18 +406,18 @@ _dl_close_worker (struct link_map *map)
 
 	      struct r_scope_elem **old = imap->l_scope;
 
-	      if (RTLD_SINGLE_THREAD_P)
-		imap->l_scope = newp;
-	      else
-		{
-		  __rtld_mrlock_change (imap->l_scope_lock);
-		  imap->l_scope = newp;
-		  __rtld_mrlock_done (imap->l_scope_lock);
-		}
+	      imap->l_scope = newp;
 
 	      /* No user anymore, we can free it now.  */
 	      if (old != imap->l_scope_mem)
-		free (old);
+		{
+		  if (_dl_scope_free (old))
+		    /* If _dl_scope_free used THREAD_GSCOPE_WAIT (),
+		       no need to repeat it.  */
+		    scope_mem_left = false;
+		}
+	      else
+		scope_mem_left = true;
 
 	      imap->l_scope_max = new_size;
 	    }
@@ -485,9 +486,21 @@ _dl_close_worker (struct link_map *map)
 	      j++;
 	    }
       ns_msl->r_nlist = j;
+    }
 
-      if (!RTLD_SINGLE_THREAD_P)
-	THREAD_GSCOPE_WAIT ();
+  if (!RTLD_SINGLE_THREAD_P
+      && (unload_global
+	  || scope_mem_left
+	  || (GL(dl_scope_free_list) != NULL
+	      && GL(dl_scope_free_list)->count)))
+    {
+      THREAD_GSCOPE_WAIT ();
+
+      /* Now we can free any queued old scopes.  */
+      struct dl_scope_free_list *fsl  = GL(dl_scope_free_list);
+      if (fsl != NULL)
+	while (fsl->count > 0)
+	  free (fsl->list[--fsl->count]);
     }
 
   size_t tls_free_start;
@@ -786,4 +799,8 @@ libc_freeres_fn (free_mem)
 	   malloc), and in the static library it's in .bss space.  */
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
     }
+
+  void *scope_free_list = GL(dl_scope_free_list);
+  GL(dl_scope_free_list) = NULL;
+  free (scope_free_list);
 }

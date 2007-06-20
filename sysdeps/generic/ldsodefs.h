@@ -38,7 +38,6 @@
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
-#include <rtld-lowlevel.h>
 
 __BEGIN_DECLS
 
@@ -488,6 +487,12 @@ struct rtld_global
 
   EXTERN void (*_dl_wait_lookup_done) (void);
 
+  /* Scopes to free after next THREAD_GSCOPE_WAIT ().  */
+  EXTERN struct dl_scope_free_list
+  {
+    size_t count;
+    struct r_scope_elem **list[50];
+  } *_dl_scope_free_list;
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -840,9 +845,7 @@ enum
     DL_LOOKUP_ADD_DEPENDENCY = 1,
     /* Return most recent version instead of default version for
        unversioned lookup.  */
-    DL_LOOKUP_RETURN_NEWEST = 2,
-    /* Set if the scopr lock in the UNDEF_MAP is taken.  */
-    DL_LOOKUP_SCOPE_LOCK = 4
+    DL_LOOKUP_RETURN_NEWEST = 2
   };
 
 /* Lookup versioned symbol.  */
@@ -1049,6 +1052,11 @@ extern int _dl_check_caller (const void *caller, enum allowmask mask)
 extern void *_dl_open (const char *name, int mode, const void *caller,
 		       Lmid_t nsid, int argc, char *argv[], char *env[])
      attribute_hidden;
+
+/* Free or queue for freeing scope OLD.  If other threads might be
+   in the middle of _dl_fixup, _dl_profile_fixup or dl*sym using the
+   old scope, OLD can't be freed until no thread is using it.  */
+extern int _dl_scope_free (struct r_scope_elem **old) attribute_hidden;
 
 /* Add module to slot information data.  */
 extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;

@@ -1,3 +1,8 @@
+2007-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: Remove mrlock
+	implementation.
+
 2007-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h: Define PTHREAD_MUTEX_TYPE.

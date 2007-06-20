@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995-2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,11 +84,6 @@ _dl_new_object (char *realname, const char *libname, int type,
      array dynamically.  */
   new->l_scope = new->l_scope_mem;
   new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
-
-  /* No need to initialize the scope lock if the initializer is zero.  */
-#if _RTLD_MRLOCK_INITIALIZER != 0
-  __rtld_mrlock_initialize (new->l_scope_lock);
-#endif
 
   /* Counter for the scopes we have to handle.  */
   idx = 0;
