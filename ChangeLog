@@ -1,3 +1,8 @@
+2007-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_domain_of.c (__nis_domain_of): Make the code a bit more
+	ISO C compliant.
+
 2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (free_mem): Free _dl_scope_free_list.
