@@ -1,3 +1,8 @@
+2007-06-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_getattr_np.c (pthread_getattr_np): Clear cpuset and
+	cpusetsize if pthread_getaffinity_np failed with ENOSYS.
+
 2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: Remove mrlock
