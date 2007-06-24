@@ -1,3 +1,8 @@
+2013-08-29  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Use
+	__executable_start symbol instead of _start.
+
 2013-08-29  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_HEADER)
