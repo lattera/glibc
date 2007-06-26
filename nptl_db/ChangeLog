@@ -1,3 +1,26 @@
+2007-05-16  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_get_info.c: Fake the results for TH->th_unique == 0.
+	* td_thr_validate.c: Likewise.
+	* td_thr_setgregs.c: Likewise.
+	* td_thr_setfpregs.c: Likewise.
+	* td_thr_getgregs.c: Likewise.
+	* td_thr_getfpregs.c: Likewise.
+	* td_thr_tlsbase.c: Likewise.
+
+	* structs.def: Add DB_VARIABLE (__nptl_initial_report_events).
+	* db_info.c: Add necessary declaration.
+	* td_thr_event_enable.c: Set __nptl_initial_report_events too.
+
+	* td_ta_thr_iter.c (iterate_thread_list): Make FAKE_EMPTY bool.
+	Use th_unique=0 in fake descriptor before initialization.
+
+	* td_ta_map_lwp2thr.c (__td_ta_lookup_th_unique): New function, broken
+	out of ...
+	(td_ta_map_lwp2thr): ... here, call it.  But don't before __stack_user
+	is initialized, then fake a handle with th_unique=0.
+	* thread_dbP.h: Declare it.
+
 2006-10-26  Pete Eberlein  <eberlein@us.ibm.com>
 
 	* nptl_db/db_info.c [TLS_DTV_AT_TP]: Fixed size init for dtvp

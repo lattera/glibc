@@ -1,5 +1,5 @@
 /* Get thread information.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -32,35 +32,49 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 
   LOG ("td_thr_get_info");
 
-  /* Copy the whole descriptor in once so we can access the several
-     fields locally.  Excess copying in one go is much better than
-     multiple ps_pdread calls.  */
-  err = DB_GET_STRUCT (copy, th->th_ta_p, th->th_unique, pthread);
-  if (err != TD_OK)
-    return err;
+  if (th->th_unique == 0)
+    {
+      /* Special case for the main thread before initialization.  */
+      copy = NULL;
+      tls = 0;
+      cancelhandling = 0;
+      schedprio = 0;
+      tid = 0;
+      err = DB_GET_VALUE (report_events, th->th_ta_p,
+			  __nptl_initial_report_events, 0);
+    }
+  else
+    {
+      /* Copy the whole descriptor in once so we can access the several
+	 fields locally.  Excess copying in one go is much better than
+	 multiple ps_pdread calls.  */
+      err = DB_GET_STRUCT (copy, th->th_ta_p, th->th_unique, pthread);
+      if (err != TD_OK)
+	return err;
 
-  err = DB_GET_FIELD_ADDRESS (tls, th->th_ta_p, th->th_unique,
-			      pthread, specific, 0);
-  if (err != TD_OK)
-    return err;
+      err = DB_GET_FIELD_ADDRESS (tls, th->th_ta_p, th->th_unique,
+				  pthread, specific, 0);
+      if (err != TD_OK)
+	return err;
 
-  err = DB_GET_FIELD_LOCAL (schedpolicy, th->th_ta_p, copy, pthread,
-			    schedpolicy, 0);
-  if (err != TD_OK)
-    return err;
-  err = DB_GET_FIELD_LOCAL (schedprio, th->th_ta_p, copy, pthread,
-			    schedparam_sched_priority, 0);
-  if (err != TD_OK)
-    return err;
-  err = DB_GET_FIELD_LOCAL (tid, th->th_ta_p, copy, pthread, tid, 0);
-  if (err != TD_OK)
-    return err;
-  err = DB_GET_FIELD_LOCAL (cancelhandling, th->th_ta_p, copy, pthread,
-			    cancelhandling, 0);
-  if (err != TD_OK)
-    return err;
-  err = DB_GET_FIELD_LOCAL (report_events, th->th_ta_p, copy, pthread,
-			    report_events, 0);
+      err = DB_GET_FIELD_LOCAL (schedpolicy, th->th_ta_p, copy, pthread,
+				schedpolicy, 0);
+      if (err != TD_OK)
+	return err;
+      err = DB_GET_FIELD_LOCAL (schedprio, th->th_ta_p, copy, pthread,
+				schedparam_sched_priority, 0);
+      if (err != TD_OK)
+	return err;
+      err = DB_GET_FIELD_LOCAL (tid, th->th_ta_p, copy, pthread, tid, 0);
+      if (err != TD_OK)
+	return err;
+      err = DB_GET_FIELD_LOCAL (cancelhandling, th->th_ta_p, copy, pthread,
+				cancelhandling, 0);
+      if (err != TD_OK)
+	return err;
+      err = DB_GET_FIELD_LOCAL (report_events, th->th_ta_p, copy, pthread,
+				report_events, 0);
+    }
   if (err != TD_OK)
     return err;
 
@@ -87,9 +101,10 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
   infop->ti_lid = tid == 0 ? ps_getpid (th->th_ta_p->ph) : (uintptr_t) tid;
   infop->ti_traceme = report_events != 0;
 
-  err = DB_GET_FIELD_LOCAL (infop->ti_startfunc, th->th_ta_p, copy, pthread,
-			    start_routine, 0);
-  if (err == TD_OK)
+  if (copy != NULL)
+    err = DB_GET_FIELD_LOCAL (infop->ti_startfunc, th->th_ta_p, copy, pthread,
+			      start_routine, 0);
+  if (copy != NULL && err == TD_OK)
     {
       uint32_t idx;
       for (idx = 0; idx < TD_EVENTSIZE; ++idx)

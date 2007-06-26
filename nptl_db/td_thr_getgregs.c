@@ -1,5 +1,5 @@
 /* Get a thread's general register set.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -28,6 +28,11 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t regset)
   td_err_e err;
 
   LOG ("td_thr_getgregs");
+
+  if (th->th_unique == 0)
+    /* Special case for the main thread before initialization.  */
+    return ps_lgetregs (th->th_ta_p->ph, ps_getpid (th->th_ta_p->ph),
+			regset) != PS_OK ? TD_ERR : TD_OK;
 
   /* We have to get the state and the PID for this thread.  */
   err = DB_GET_FIELD (cancelhandling, th->th_ta_p, th->th_unique, pthread,

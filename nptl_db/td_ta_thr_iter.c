@@ -1,5 +1,6 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2004,2007
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -24,7 +25,7 @@
 static td_err_e
 iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 		     void *cbdata_p, td_thr_state_e state, int ti_pri,
-		     psaddr_t head, int fake_empty)
+		     psaddr_t head, bool fake_empty)
 {
   td_err_e err;
   psaddr_t next, ofs;
@@ -41,13 +42,13 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 
   if (next == 0 && fake_empty)
     {
-      /* __pthread_initialize_minimal has not run.
-	 There is just the main thread to return.  */
-      td_thrhandle_t th;
-      err = td_ta_map_lwp2thr (ta, ps_getpid (ta->ph), &th);
-      if (err == TD_OK)
-	err = callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
-      return err;
+      /* __pthread_initialize_minimal has not run.  There is just the main
+	 thread to return.  We cannot rely on its thread register.  They
+	 sometimes contain garbage that would confuse us, left by the
+	 kernel at exec.  So if it looks like initialization is incomplete,
+	 we only fake a special descriptor for the initial thread.  */
+      td_thrhandle_t th = { ta, 0 };
+      return callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
     }
 
   /* Cache the offset from struct pthread to its list_t member.  */
@@ -136,13 +137,15 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
 
   err = DB_GET_SYMBOL (list, ta, __stack_user);
   if (err == TD_OK)
-    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri, list, 1);
+    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
+			       list, true);
 
   /* And the threads with stacks allocated by the implementation.  */
   if (err == TD_OK)
     err = DB_GET_SYMBOL (list, ta, stack_used);
   if (err == TD_OK)
-    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri, list, 0);
+    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
+			       list, false);
 
   return err;
 }

@@ -1,3 +1,9 @@
+2007-05-16  Roland McGrath  <roland@redhat.com>
+
+	* init.c (__nptl_initial_report_events): New variable.
+	(__pthread_initialize_minimal_internal): Initialize pd->report_events
+	to that.
+
 2007-06-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_getattr_np.c (pthread_getattr_np): Clear cpuset and

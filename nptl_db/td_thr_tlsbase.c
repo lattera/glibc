@@ -1,5 +1,5 @@
 /* Locate TLS data for a thread.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,29 @@ td_thr_tlsbase (const td_thrhandle_t *th,
   if (modid < 1)
     return TD_NOTLS;
 
+  psaddr_t pd = th->th_unique;
+  if (pd == 0)
+    {
+      /* This is the fake handle for the main thread before libpthread
+	 initialization.  We are using 0 for its th_unique because we can't
+	 trust that its thread register has been initialized.  But we need
+	 a real pointer to have any TLS access work.  In case of dlopen'd
+	 libpthread, initialization might not be for quite some time.  So
+	 try looking up the thread register now.  Worst case, it's nonzero
+	 uninitialized garbage and we get bogus results for TLS access
+	 attempted too early.  Tough.  */
+
+      td_thrhandle_t main_th;
+      err = __td_ta_lookup_th_unique (th->th_ta_p, ps_getpid (th->th_ta_p->ph),
+				      &main_th);
+      if (err == 0)
+	pd = main_th.th_unique;
+      if (pd == 0)
+	return TD_TLSDEFER;
+    }
+
   /* Get the DTV pointer from the thread descriptor.  */
-  err = DB_GET_FIELD (dtv, th->th_ta_p, th->th_unique, pthread, dtvp, 0);
+  err = DB_GET_FIELD (dtv, th->th_ta_p, pd, pthread, dtvp, 0);
   if (err != TD_OK)
     return err;
 

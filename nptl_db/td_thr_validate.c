@@ -1,5 +1,5 @@
 /* Validate a thread handle.
-   Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2004,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -75,16 +75,10 @@ td_thr_validate (const td_thrhandle_t *th)
       if (err == TD_OK)
 	err = check_thread_list (th, list, &uninit);
 
-      if (err == TD_NOTHR && uninit)
-	{
-	  /* __pthread_initialize_minimal has not run yet.
-	     But the main thread still has a valid ID.  */
-	  td_thrhandle_t main_th;
-	  err = td_ta_map_lwp2thr (th->th_ta_p,
-				   ps_getpid (th->th_ta_p->ph), &main_th);
-	  if (err == TD_OK && th->th_unique != main_th.th_unique)
-	    err = TD_NOTHR;
-	}
+      if (err == TD_NOTHR && uninit && th->th_unique == 0)
+	/* __pthread_initialize_minimal has not run yet.
+	   There is only the special case thread handle.  */
+	err = TD_OK;
     }
 
   return err;

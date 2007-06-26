@@ -1,5 +1,5 @@
 /* Private header for thread debug library
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -250,5 +250,8 @@ extern td_err_e _td_store_value_local (td_thragent_t *ta,
 
 extern td_err_e _td_check_sizeof (td_thragent_t *ta, uint32_t *sizep,
 				  int sizep_name) attribute_hidden;
+
+extern td_err_e __td_ta_lookup_th_unique (const td_thragent_t *ta,
+					  lwpid_t lwpid, td_thrhandle_t *th);
 
 #endif /* thread_dbP.h */

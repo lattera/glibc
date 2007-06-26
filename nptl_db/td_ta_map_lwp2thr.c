@@ -1,5 +1,5 @@
 /* Which thread is running on an LWP?
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,8 @@
 
 
 td_err_e
-td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
-		   lwpid_t lwpid, td_thrhandle_t *th)
+__td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
+			  lwpid_t lwpid, td_thrhandle_t *th)
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   ps_err_e err;
@@ -118,9 +118,6 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
 
   switch (ta->ta_howto)
     {
-    case ta_howto_unknown:
-      return TD_DBERR;
-
     default:
       return TD_DBERR;
 
@@ -132,6 +129,7 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
 				    0, regs, &addr);
       if (terr != TD_OK)
 	return terr;
+
       /* In this descriptor the nelem word is overloaded as the bias.  */
       addr += (int32_t) DB_DESC_NELEM (ta->ta_howto_data.reg);
       th->th_unique = addr;
@@ -143,22 +141,22 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
       if (&ps_get_thread_area == NULL)
 	return TD_NOCAPAB;
 
-       /* A la x86-64, there is a constant magic index for get_thread_area.  */
-       if (ps_get_thread_area (ta->ph, lwpid,
-			       ta->ta_howto_data.const_thread_area,
-			       &th->th_unique) != PS_OK)
-	 return TD_ERR;	/* XXX Other error value?  */
-       break;
+      /* A la x86-64, there is a magic index for get_thread_area.  */
+      if (ps_get_thread_area (ta->ph, lwpid,
+			      ta->ta_howto_data.const_thread_area,
+			      &th->th_unique) != PS_OK)
+	return TD_ERR;	/* XXX Other error value?  */
+      break;
 
-     case ta_howto_reg_thread_area:
+    case ta_howto_reg_thread_area:
       if (&ps_get_thread_area == NULL)
 	return TD_NOCAPAB;
 
-       /* A la i386, there is a register with an index for get_thread_area.  */
-       if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
-	 return TD_ERR;
-       terr = _td_fetch_value_local (ta, ta->ta_howto_data.reg_thread_area, -1,
-				     0, regs, &addr);
+      /* A la i386, a register holds the index for get_thread_area.  */
+      if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
+	return TD_ERR;
+      terr = _td_fetch_value_local (ta, ta->ta_howto_data.reg_thread_area,
+				    -1, 0, regs, &addr);
       if (terr != TD_OK)
 	return terr;
       /* In this descriptor the nelem word is overloaded as scale factor.  */
@@ -172,7 +170,40 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
     }
 
   /* Found it.  Now complete the `td_thrhandle_t' object.  */
-  th->th_ta_p = (td_thragent_t *) ta;
+  th->th_ta_p = ta;
 
   return TD_OK;
+}
+
+td_err_e
+td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
+		   lwpid_t lwpid, td_thrhandle_t *th)
+{
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+
+  /* We cannot rely on thread registers and such information at all
+     before __pthread_initialize_minimal has gotten far enough.  They
+     sometimes contain garbage that would confuse us, left by the kernel
+     at exec.  So if it looks like initialization is incomplete, we only
+     fake a special descriptor for the initial thread.  */
+
+  psaddr_t list;
+  td_err_e err = DB_GET_SYMBOL (list, ta, __stack_user);
+  if (err != TD_OK)
+    return err;
+
+  err = DB_GET_FIELD (list, ta, list, list_t, next, 0);
+  if (err != TD_OK)
+    return err;
+
+  if (list == 0)
+    {
+      if (ps_getpid (ta->ph) != lwpid)
+	return TD_ERR;
+      th->th_ta_p = ta;
+      th->th_unique = 0;
+      return TD_OK;
+    }
+
+  return __td_ta_lookup_th_unique (ta_arg, lwpid, th);
 }
