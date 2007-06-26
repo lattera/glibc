@@ -234,6 +234,9 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
 
 
+/* This can be set by the debugger before initialization is complete.  */
+static bool __nptl_initial_report_events;
+
 void
 __pthread_initialize_minimal_internal (void)
 {
@@ -297,6 +300,9 @@ __pthread_initialize_minimal_internal (void)
   INIT_LIST_HEAD (&__stack_user);
   list_add (&pd->list, &__stack_user);
 
+  /* Before initializing __stack_user, the debugger could not find us and
+     had to set __nptl_initial_report_events.  Propagate its setting.  */
+  THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
 
   /* Install the cancellation signal handler.  If for some reason we
      cannot install the handler we do not abort.  Maybe we should, but
