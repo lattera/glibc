@@ -90,7 +90,9 @@ enum __socket_type
 #define	PF_PPPOX	24	/* PPPoX sockets.  */
 #define	PF_WANPIPE	25	/* Wanpipe API sockets.  */
 #define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
-#define	PF_MAX		32	/* For now..  */
+#define	PF_IUCV		32	/* IUCV sockets.  */
+#define PF_RXRPC	33	/* RxRPC sockets.  */
+#define	PF_MAX		34	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -122,6 +124,8 @@ enum __socket_type
 #define	AF_PPPOX	PF_PPPOX
 #define	AF_WANPIPE	PF_WANPIPE
 #define	AF_BLUETOOTH	PF_BLUETOOTH
+#define	AF_IUCV		PF_IUCV
+#define AF_RXRPC	PF_RXRPC
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
