@@ -1634,7 +1634,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
     {
       ElfW(Ehdr) *ehdr;
       ElfW(Phdr) *phdr, *ph;
-      ElfW(Word) *abi_note, abi_note_buf[8];
+      ElfW(Word) *abi_note;
       unsigned int osversion;
       size_t maplength;
 
@@ -1751,20 +1751,37 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 
       /* Check .note.ABI-tag if present.  */
       for (ph = phdr; ph < &phdr[ehdr->e_phnum]; ++ph)
-	if (ph->p_type == PT_NOTE && ph->p_filesz == 32 && ph->p_align >= 4)
+	if (ph->p_type == PT_NOTE && ph->p_filesz >= 32 && ph->p_align >= 4)
 	  {
-	    if (ph->p_offset + 32 <= (size_t) fbp->len)
+	    ElfW(Addr) size = ph->p_filesz;
+
+	    if (ph->p_offset + size <= (size_t) fbp->len)
 	      abi_note = (void *) (fbp->buf + ph->p_offset);
 	    else
 	      {
+		abi_note = alloca (size);
 		__lseek (fd, ph->p_offset, SEEK_SET);
-		if (__libc_read (fd, (void *) abi_note_buf, 32) != 32)
+		if (__libc_read (fd, (void *) abi_note, size) != size)
 		  goto read_error;
-
-		abi_note = abi_note_buf;
 	      }
 
-	    if (memcmp (abi_note, &expected_note, sizeof (expected_note)))
+	    while (memcmp (abi_note, &expected_note, sizeof (expected_note)))
+	      {
+#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
+		ElfW(Addr) note_size = 3 * sizeof (ElfW(Word))
+				       + ROUND (abi_note[0])
+				       + ROUND (abi_note[1]);
+
+		if (size - 32 < note_size)
+		  {
+		    size = 0;
+		    break;
+		  }
+		size -= note_size;
+		abi_note = (void *) abi_note + note_size;
+	      }
+
+	    if (size == 0)
 	      continue;
 
 	    osversion = (abi_note[5] & 0xff) * 65536
