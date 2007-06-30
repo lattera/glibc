@@ -1,3 +1,9 @@
+007-06-29  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c: New file.
+	* sysdeps/s390/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: New file.
+
 2007-06-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (open_verify): Find .note.ABI-tag notes even
