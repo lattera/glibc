@@ -1,3 +1,7 @@
+2007-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_UNIX): Update comment.
+
 2007-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Add PF_RXRPC and AF_RXRPC.
