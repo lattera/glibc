@@ -471,7 +471,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		  || total + (sizeof (*result) << 3)
 		     >= (1UL << (sizeof (size_t) * 8 - cnt + 3))))
 	    _dl_signal_error (ENOMEM, NULL, NULL,
-			      N_("Xcannot create capability list"));
+			      N_("cannot create capability list"));
 
 	  total <<= cnt - 3;
 	}
