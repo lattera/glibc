@@ -75,14 +75,21 @@ __libc_memalign (size_t align, size_t n)
   alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + align - 1)
 			    & ~(align - 1));
 
-  if (alloc_ptr + n >= alloc_end)
+  if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
       size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
+      if (__builtin_expect (nup == 0, 0))
+	{
+	  if (n)
+	    return NULL;
+	  nup = GLRO(dl_pagesize);
+	}
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
-      assert (page != MAP_FAILED);
+      if (page == MAP_FAILED)
+	return NULL;
       if (page != alloc_end)
 	alloc_ptr = page;
       alloc_end = page + nup;
@@ -108,7 +115,14 @@ calloc (size_t nmemb, size_t size)
   /* New memory from the trivial malloc above is always already cleared.
      (We make sure that's true in the rare occasion it might not be,
      by clearing memory in free, below.)  */
-  return malloc (nmemb * size);
+  size_t bytes = nmemb * size;
+
+#define HALF_SIZE_T (((size_t) 1) << (8 * sizeof (size_t) / 2))
+  if (__builtin_expect ((nmemb | size) >= HALF_SIZE_T, 0)
+      && size != 0 && bytes / size != nmemb)
+    return NULL;
+
+  return malloc (bytes);
 }
 
 /* This will rarely be called.  */
@@ -264,7 +278,7 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
   while (*nptr >= '0' && *nptr <= '9')
     {
       unsigned long int digval = *nptr - '0';
-      if (result > LONG_MAX / 10
+      if (result > ULONG_MAX / 10
 	  || (result == ULONG_MAX / 10 && digval > ULONG_MAX % 10))
 	{
 	  errno = ERANGE;

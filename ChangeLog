@@ -1,3 +1,13 @@
+2007-07-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Add integer overflow check.
+	* elf/dl-minimal.c (__libc_memalign): Likewise.  Handle malloc (0).
+	Return NULL if mmap failed instead of asserting it does not.
+	(calloc): Check for integer overflow.
+
+	* elf/dl-minimal.c (__strtoul_internal): Fix parsing of numbers bigger
+	than LONG_MAX / 10.
+
 2007-07-03  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4702]
