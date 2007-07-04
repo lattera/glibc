@@ -26,7 +26,6 @@
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Add PF_IUCV and AF_IUCV.
 
-
 2007-06-29  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.c: New file.
