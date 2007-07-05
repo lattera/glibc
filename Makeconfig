@@ -856,7 +856,7 @@ $(common-objpfx)gnu/lib-names.stmp: $(..)scripts/lib-names.awk \
 				    $(common-objpfx)soversions.i
 	$(make-target-directory)
 	@rm -f ${@:stmp=T} $@
-	$(AWK) -f $^ > ${@:stmp=T}
+	LC_ALL=C $(AWK) -f $^ > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 endif

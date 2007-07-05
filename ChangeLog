@@ -1,3 +1,8 @@
+2007-07-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* Makeconfig ($(common-objpfx)gnu/lib-names.stmp): Use LC_ALL=C when
+	running awk script.
+
 2007-07-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-sysdep.c (_dl_important_hwcaps): Add integer overflow check.
