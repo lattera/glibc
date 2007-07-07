@@ -1,5 +1,10 @@
 2007-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wstrops.c (_IO_wstr_underflow): Clear errno before
+	returning WEOF.
+	* stdio-common/Makefile (tests): Add bug18a.
+	* stdio-common/bug18a.c: New file.
+
 	[BZ #4745]
 	* libio/strops.c (_IO_str_underflow): Clear errno before returning
 	EOF.

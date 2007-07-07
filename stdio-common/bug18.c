@@ -2,6 +2,12 @@
 #include <errno.h>
 #include <stdio.h>
 
+#ifndef CHAR
+# define CHAR char
+# define L(str) str
+# define SSCANF sscanf
+#endif
+
 
 static int
 do_test (void)
@@ -11,11 +17,11 @@ do_test (void)
 
   printf("checking sscanf\n");
 
-  char str[] = "7-11";
+  CHAR str[] = L("7-11");
   int i, j, n;
 
   i = j = n = 0;
-  sscanf (str, " %i - %i %n", &i, &j, &n);
+  SSCANF (str, L(" %i - %i %n"), &i, &j, &n);
   printf ("found %i-%i (length=%i)\n", i, j, n);
 
   int result = 0;
