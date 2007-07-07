@@ -1,3 +1,11 @@
+2007-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4745]
+	* libio/strops.c (_IO_str_underflow): Clear errno before returning
+	EOF.
+	* stdio-common/Makefile (tests): Add bug18.
+	* stdio-common/bug18.c: New file.
+
 2007-07-05  Mike Frysinger  <vapier@gentoo.org>
 
 	* Makeconfig ($(common-objpfx)gnu/lib-names.stmp): Use LC_ALL=C when
