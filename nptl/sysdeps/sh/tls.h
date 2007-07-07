@@ -26,6 +26,10 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
+# include <stdlib.h>
+# include <list.h>
+# include <sysdep.h>
+# include <kernel-features.h>
 
 /* Type for the dtv.  */
 typedef union dtv
