@@ -1,15 +1,14 @@
 2007-07-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* libio/wstrops.c (_IO_wstr_underflow): Clear errno before
-	returning WEOF.
-	* stdio-common/Makefile (tests): Add bug18a.
-	* stdio-common/bug18a.c: New file.
-
 	[BZ #4745]
-	* libio/strops.c (_IO_str_underflow): Clear errno before returning
-	EOF.
-	* stdio-common/Makefile (tests): Add bug18.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Add additional test for EOF
+	in loop to look for conversion specifier to avoid testing of
+	wrong errno value.
+	* stdio-common/Makefile (tests): Add bug18, bug18a, bug19, bug19a.
 	* stdio-common/bug18.c: New file.
+	* stdio-common/bug18a.c: New file.
+	* stdio-common/bug19.c: New file.
+	* stdio-common/bug19a.c: New file.
 
 2007-07-05  Mike Frysinger  <vapier@gentoo.org>
 

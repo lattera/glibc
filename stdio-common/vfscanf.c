@@ -530,12 +530,17 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	{
 	  /* Eat whitespace.  */
 	  int save_errno = errno;
-	  errno = 0;
+	  __set_errno (0);
 	  do
-	    if (__builtin_expect (inchar () == EOF && errno == EINTR, 0))
+	    /* We add the additional test for EOF here since otherwise
+	       inchar will restore the old errno value which might be
+	       EINTR but does not indicate an interrupt since nothing
+	       was read at this time.  */
+	    if (__builtin_expect ((c == EOF || inchar () == EOF)
+				  && errno == EINTR, 0))
 	      input_error ();
 	  while (ISSPACE (c));
-	  errno = save_errno;
+	  __set_errno (save_errno);
 	  ungetc (c, s);
 	  skip_space = 0;
 	}

@@ -1,5 +1,4 @@
-/* Copyright (C) 1993,1997-1999,2001-2004,2006,2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997-1999,2001-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -155,12 +154,7 @@ _IO_wstr_underflow (fp)
   if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
     return *fp->_wide_data->_IO_read_ptr;
   else
-    {
-      /* We have to reset errno since callers check for errno being
-	 EINTR and there has been no such problem here.  */
-      __set_errno (0);
-      return WEOF;
-    }
+    return WEOF;
 }
 
 
