@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,11 +97,13 @@ static const struct intel_02_cache_info
     { 0x45, _SC_LEVEL2_CACHE_SIZE, 2097152, 4, 32 },
     { 0x46, _SC_LEVEL3_CACHE_SIZE, 4194304, 4, 64 },
     { 0x47, _SC_LEVEL3_CACHE_SIZE, 8388608, 8, 64 },
+    { 0x48, _SC_LEVEL2_CACHE_SIZE, 3145728, 12, 64 },
     { 0x49, _SC_LEVEL2_CACHE_SIZE, 4194304, 16, 64 },
     { 0x4a, _SC_LEVEL3_CACHE_SIZE, 6291456, 12, 64 },
     { 0x4b, _SC_LEVEL3_CACHE_SIZE, 8388608, 16, 64 },
     { 0x4c, _SC_LEVEL3_CACHE_SIZE, 12582912, 12, 64 },
     { 0x4d, _SC_LEVEL3_CACHE_SIZE, 16777216, 16, 64 },
+    { 0x4e, _SC_LEVEL2_CACHE_SIZE, 6291456, 24, 64 },
     { 0x60, _SC_LEVEL1_DCACHE_SIZE, 16384, 8, 64 },
     { 0x66, _SC_LEVEL1_DCACHE_SIZE, 8192, 4, 64 },
     { 0x67, _SC_LEVEL1_DCACHE_SIZE, 16384, 4, 64 },

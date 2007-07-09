@@ -1,3 +1,8 @@
+2007-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Add new entries.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
 2007-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4745]
