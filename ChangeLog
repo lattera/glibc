@@ -1,3 +1,9 @@
+2007-07-09  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (NT_GNU_ABI_TAG): New macro.
+	(ELF_NOTE_ABI): Use it.
+	(NT_GNU_HWCAP, NT_GNU_BUILD_ID): New macros.
+
 2007-07-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Add new entries.
