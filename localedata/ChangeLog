@@ -1,3 +1,9 @@
+2007-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4773]
+	* Makefile: Add rules to build and run tst-strptime.
+	* tst-strptime.c: New file.
+
 2007-05-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/as_IN: Fix currency_symbol, abday for Sunday, abmon for

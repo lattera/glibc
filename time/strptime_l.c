@@ -264,18 +264,26 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 #endif
 
   const char *rp_backup;
+  const char *rp_longest;
   int cnt;
+  int cnt_longest;
   size_t val;
-  int have_I, is_pm;
-  int century, want_century;
+  int have_I;
+  int is_pm;
+  int century;
+  int want_century;
   int want_era;
-  int have_wday, want_xday;
+  int have_wday;
+  int want_xday;
   int have_yday;
-  int have_mon, have_mday;
-  int have_uweek, have_wweek;
+  int have_mon;
+  int have_mday;
+  int have_uweek;
+  int have_wweek;
   int week_no;
   size_t num_eras;
   struct era_entry *era;
+  enum ptime_locale_status decided_longest;
 
   have_I = is_pm = 0;
   century = -1;
@@ -325,81 +333,112 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'a':
 	case 'A':
 	  /* Match day of week.  */
+	  rp_longest = NULL;
+	  decided_longest = *decided;
+	  cnt_longest = -1;
 	  for (cnt = 0; cnt < 7; ++cnt)
 	    {
+	      const char *trp;
 #ifdef _NL_CURRENT
 	      if (*decided !=raw)
 		{
-		  if (match_string (_NL_CURRENT (LC_TIME, DAY_1 + cnt), rp))
+		  trp = rp;
+		  if (match_string (_NL_CURRENT (LC_TIME, DAY_1 + cnt), trp)
+		      && trp > rp_longest)
 		    {
+		      rp_longest = trp;
+		      cnt_longest = cnt;
 		      if (*decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, DAY_1 + cnt),
 				     weekday_name[cnt]))
-			*decided = loc;
-		      break;
+			decided_longest = loc;
 		    }
-		  if (match_string (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt), rp))
+		  trp = rp;
+		  if (match_string (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt), trp)
+		      && trp > rp_longest)
 		    {
+		      rp_longest = trp;
+		      cnt_longest = cnt;
 		      if (*decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt),
 				     ab_weekday_name[cnt]))
-			*decided = loc;
-		      break;
+			decided_longest = loc;
 		    }
 		}
 #endif
 	      if (*decided != loc
-		  && (match_string (weekday_name[cnt], rp)
-		      || match_string (ab_weekday_name[cnt], rp)))
+		  && (((trp = rp, match_string (weekday_name[cnt], trp))
+		       && trp > rp_longest)
+		      || ((trp = rp, match_string (ab_weekday_name[cnt], rp))
+			  && trp > rp_longest)))
 		{
-		  *decided = raw;
-		  break;
+		  rp_longest = trp;
+		  cnt_longest = cnt;
+		  decided_longest = raw;
 		}
 	    }
-	  if (cnt == 7)
+	  if (rp_longest == NULL)
 	    /* Does not match a weekday name.  */
 	    return NULL;
-	  tm->tm_wday = cnt;
+	  rp = rp_longest;
+	  *decided = decided_longest;
+	  tm->tm_wday = cnt_longest;
 	  have_wday = 1;
 	  break;
 	case 'b':
 	case 'B':
 	case 'h':
 	  /* Match month name.  */
+	  rp_longest = NULL;
+	  decided_longest = *decided;
+	  cnt_longest = -1;
 	  for (cnt = 0; cnt < 12; ++cnt)
 	    {
+	      const char *trp;
 #ifdef _NL_CURRENT
 	      if (*decided !=raw)
 		{
-		  if (match_string (_NL_CURRENT (LC_TIME, MON_1 + cnt), rp))
+		  trp = rp;
+		  if (match_string (_NL_CURRENT (LC_TIME, MON_1 + cnt), trp)
+		      && trp > rp_longest)
 		    {
+		      rp_longest = trp;
+		      cnt_longest = cnt;
 		      if (*decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, MON_1 + cnt),
 				     month_name[cnt]))
-			*decided = loc;
-		      break;
+			decided_longest = loc;
 		    }
-		  if (match_string (_NL_CURRENT (LC_TIME, ABMON_1 + cnt), rp))
+		  trp = rp;
+		  if (match_string (_NL_CURRENT (LC_TIME, ABMON_1 + cnt), trp)
+		      && trp > rp_longest)
 		    {
+		      rp_longest = trp;
+		      cnt_longest = cnt;
 		      if (*decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, ABMON_1 + cnt),
 				     ab_month_name[cnt]))
-			*decided = loc;
-		      break;
+			decided_longest = loc;
 		    }
 		}
 #endif
-	      if (match_string (month_name[cnt], rp)
-		  || match_string (ab_month_name[cnt], rp))
+	      if (*decided != loc
+		  && (((trp = rp, match_string (month_name[cnt], trp))
+		       && trp > rp_longest)
+		      || ((trp = rp, match_string (ab_month_name[cnt], trp))
+			  && trp > rp_longest)))
 		{
-		  *decided = raw;
-		  break;
+		  rp_longest = trp;
+		  cnt_longest = cnt;
+		  decided_longest = raw;
 		}
 	    }
-	  if (cnt == 12)
+	  if (rp_longest == NULL)
 	    /* Does not match a month name.  */
 	    return NULL;
-	  tm->tm_mon = cnt;
+	  rp = rp_longest;
+	  *decided = decided_longest;
+	  tm->tm_mon = cnt_longest;
 	  have_mon = 1;
 	  want_xday = 1;
 	  break;
