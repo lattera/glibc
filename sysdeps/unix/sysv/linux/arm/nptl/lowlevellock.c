@@ -55,7 +55,8 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      lll_futex_timed_wait (futex, 2, &rt);
+      // XYZ: Lost the lock to check whether it was private.
+      lll_futex_timed_wait (futex, 2, &rt, LLL_SHARED);
     }
   while (atomic_exchange_acq (futex, 2) != 0);
 
@@ -96,7 +97,8 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 	return ETIMEDOUT;
 
       /* Wait until thread terminates.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
+      // XYZ: Lost the lock to check whether it was private.
+      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
 

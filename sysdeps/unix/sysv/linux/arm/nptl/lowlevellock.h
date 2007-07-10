@@ -12,7 +12,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Libr	\ary; if not, write to the Free
+   License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
@@ -36,19 +36,19 @@
 #define FUTEX_TRYLOCK_PI	8
 #define FUTEX_PRIVATE_FLAG	128
 
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE	0
+#define LLL_SHARED	FUTEX_PRIVATE_FLAG
+
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
-#define lll_futex_wait(futexp, val) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAIT, (val), 0);		      \
-    __ret;								      \
-  })
+#define lll_futex_wait(futexp, val, private) \
+  lll_futex_timed_wait(futexp, val, NULL, private)
 
-#define lll_futex_timed_wait(futexp, val, timespec) \
+#define lll_futex_timed_wait(futexp, val, timespec, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
@@ -57,7 +57,7 @@
     __ret;								      \
   })
 
-#define lll_futex_wake(futexp, nr) \
+#define lll_futex_wake(futexp, nr, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
@@ -66,12 +66,57 @@
     __ret;								      \
   })
 
+#define lll_private_futex_wait(futexp, val) \
+  lll_private_futex_timed_wait(futexp, val, NULL)
+
+#ifdef __ASSUME_PRIVATE_FUTEX
+#define lll_private_futex_timed_wait(futexp, val, timespec) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), FUTEX_WAIT | FUTEX_PRIVATE_FLAG,      \
+			      (val), (timespec));			      \
+    __ret;								      \
+  })
+
+#define lll_private_futex_wake(futexp, nr) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), FUTEX_WAKE | FUTEX_PRIVATE_FLAG,      \
+			      (nr), (0));				      \
+    __ret;								      \
+  })
+#else
+#define lll_private_futex_timed_wait(futexp, val, timespec) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret, __op;						      \
+    __op = FUTEX_WAIT | THREAD_GETMEM (THREAD_SELF, header.private_futex);    \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), __op, (val), (timespec));	      \
+    __ret;								      \
+  })
+
+#define lll_private_futex_wake(futexp, nr) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret, __op;						      \
+    __op = FUTEX_WAKE | THREAD_GETMEM (THREAD_SELF, header.private_futex);    \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), __op, (nr), 0);			      \
+    __ret;								      \
+  })
+#endif
+
 #define lll_robust_mutex_dead(futexv) \
   do									      \
     {									      \
       int *__futexp = &(futexv);					      \
       atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      lll_futex_wake (__futexp, 1);					      \
+      lll_futex_wake (__futexp, 1, 0);					      \
     }									      \
   while (0)
 
@@ -88,7 +133,7 @@
 
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) \
+#define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
@@ -156,7 +201,7 @@ __lll_mutex_lock (int *futex)
   if (__builtin_expect (val != 0, 0))
     {
       while (atomic_exchange_acq (futex, 2) != 0)
-	lll_futex_wait (futex, 2);
+	lll_futex_wait (futex, 2, 0);
     }
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
@@ -182,7 +227,7 @@ __lll_mutex_cond_lock (int *futex)
   if (__builtin_expect (val != 0, 0))
     {
       while (atomic_exchange_acq (futex, 2) != 0)
-	lll_futex_wait (futex, 2);
+	lll_futex_wait (futex, 2, 0);
     }
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
@@ -229,7 +274,7 @@ __lll_mutex_unlock (int *futex)
 {
   int val = atomic_exchange_rel (futex, 0);
   if (__builtin_expect (val > 1, 0))
-    lll_futex_wake (futex, 1);
+    lll_futex_wake (futex, 1, 0);
 }
 #define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
 
@@ -239,7 +284,7 @@ __lll_robust_mutex_unlock (int *futex, int mask)
 {
   int val = atomic_exchange_rel (futex, 0);
   if (__builtin_expect (val & mask, 0))
-    lll_futex_wake (futex, 1);
+    lll_futex_wake (futex, 1, 0);
 }
 #define lll_robust_mutex_unlock(futex) \
   __lll_robust_mutex_unlock(&(futex), FUTEX_WAITERS)
@@ -249,7 +294,7 @@ static inline void __attribute__ ((always_inline))
 __lll_mutex_unlock_force (int *futex)
 {
   (void) atomic_exchange_rel (futex, 0);
-  lll_futex_wake (futex, 1);
+  lll_futex_wake (futex, 1, 0);
 }
 #define lll_mutex_unlock_force(futex) __lll_mutex_unlock_force(&(futex))
 
@@ -286,7 +331,7 @@ typedef int lll_lock_t;
   do {					\
     __typeof (tid) __tid;		\
     while ((__tid = (tid)) != 0)	\
-      lll_futex_wait (&(tid), __tid);	\
+      lll_futex_wait (&(tid), __tid, 0);\
   } while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)

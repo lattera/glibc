@@ -95,7 +95,7 @@
 # define F_NOTIFY	1026	/* Request notfications on a directory.	 */
 #endif
 
-/* For F_[GET|SET]FL.  */
+/* For F_[GET|SET]FD.  */
 #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
 
 /* For posix fcntl() and `l_type' field of a `struct flock' for lockf().  */

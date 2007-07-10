@@ -1,5 +1,5 @@
-/* Determine protocol families for which interfaces exist.  ARM Linux version.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+/* Determine protocol families for which interfaces exist.  Linux version.
+   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,17 +69,38 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
 
+#ifdef PAGE_SIZE
+  /* Help the compiler optimize out the malloc call if PAGE_SIZE
+     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
+  const size_t buf_size = PAGE_SIZE;
+#else
+  const size_t buf_size = __getpagesize ();
+#endif
+  bool use_malloc = false;
+  char *buf;
+
+  if (__libc_use_alloca (buf_size))
+    buf = alloca (buf_size);
+  else
+    {
+      buf = malloc (buf_size);
+      if (buf != NULL)
+	use_malloc = true;
+      else
+	goto out_fail;
+    }
+
+  struct iovec iov = { buf, buf_size };
+
   if (TEMP_FAILURE_RETRY (__sendto (fd, (void *) &req, sizeof (req), 0,
 				    (struct sockaddr *) &nladdr,
 				    sizeof (nladdr))) < 0)
-    return -1;
+    goto out_fail;
 
   *seen_ipv4 = false;
   *seen_ipv6 = false;
 
   bool done = false;
-  char buf[4096];
-  struct iovec iov = { buf, sizeof (buf) };
   struct in6ailist
   {
     struct in6addrinfo info;
@@ -99,10 +120,10 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
       if (read_len < 0)
-	return -1;
+	goto out_fail;
 
       if (msg.msg_flags & MSG_TRUNC)
-	return -1;
+	goto out_fail;
 
       struct nlmsghdr *nlmh;
       for (nlmh = (struct nlmsghdr *) buf;
@@ -116,40 +137,72 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 	  if (nlmh->nlmsg_type == RTM_NEWADDR)
 	    {
 	      struct ifaddrmsg *ifam = (struct ifaddrmsg *) NLMSG_DATA (nlmh);
+	      struct rtattr *rta = IFA_RTA (ifam);
+	      size_t len = nlmh->nlmsg_len - NLMSG_LENGTH (sizeof (*ifam));
 
 	      switch (ifam->ifa_family)
 		{
+		  const void *local;
+		  const void *address;
+
 		case AF_INET:
-		  *seen_ipv4 = true;
+		  local = NULL;
+		  address = NULL;
+		  while (RTA_OK (rta, len))
+		    {
+		      switch (rta->rta_type)
+			{
+			case IFA_LOCAL:
+			  local = RTA_DATA (rta);
+			  break;
+
+			case IFA_ADDRESS:
+			  address = RTA_DATA (rta);
+			  goto out_v4;
+			}
+
+		      rta = RTA_NEXT (rta, len);
+		    }
+
+		  if (local != NULL)
+		    {
+		    out_v4:
+		      if (*(const in_addr_t *) (address ?: local)
+			  != htonl (INADDR_LOOPBACK))
+			*seen_ipv4 = true;
+		    }
 		  break;
+
 		case AF_INET6:
-		  *seen_ipv6 = true;
+		  local = NULL;
+		  address = NULL;
+		  while (RTA_OK (rta, len))
+		    {
+		      switch (rta->rta_type)
+			{
+			case IFA_LOCAL:
+			  local = RTA_DATA (rta);
+			  break;
+
+			case IFA_ADDRESS:
+			  address = RTA_DATA (rta);
+			  goto out_v6;
+			}
+
+		      rta = RTA_NEXT (rta, len);
+		    }
+
+		  if (local != NULL)
+		    {
+		    out_v6:
+		      if (!IN6_IS_ADDR_LOOPBACK (address ?: local))
+			*seen_ipv6 = true;
+		    }
 
 		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
 					 | IFA_F_TEMPORARY
 					 | IFA_F_HOMEADDRESS))
 		    {
-		      struct rtattr *rta = IFA_RTA (ifam);
-		      size_t len = (nlmh->nlmsg_len
-				    - NLMSG_LENGTH (sizeof (*ifam)));
-		      void *local = NULL;
-		      void *address = NULL;
-		      while (RTA_OK (rta, len))
-			{
-			  switch (rta->rta_type)
-			    {
-			    case IFA_LOCAL:
-			      local = RTA_DATA (rta);
-			      break;
-
-			    case IFA_ADDRESS:
-			      address = RTA_DATA (rta);
-			      break;
-			    }
-
-			  rta = RTA_NEXT (rta, len);
-			}
-
 		      struct in6ailist *newp = alloca (sizeof (*newp));
 		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
 					   ? in6ai_deprecated : 0)
@@ -180,11 +233,11 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
   close_not_cancel_no_status (fd);
 
-  if (in6ailist != NULL)
+  if (*seen_ipv6 && in6ailist != NULL)
     {
       *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
       if (*in6ai == NULL)
-	return -1;
+	goto out_fail;
 
       *in6ailen = in6ailistlen;
 
@@ -196,7 +249,14 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
       while (in6ailist != NULL);
     }
 
+  if (use_malloc)
+    free (buf);
   return 0;
+
+out_fail:
+  if (use_malloc)
+    free (buf);
+  return -1;
 }
 
 

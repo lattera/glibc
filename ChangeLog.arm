@@ -1,3 +1,33 @@
+2007-07-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/nptl/tls.h (THREAD_GSCOPE_RESET_FLAG): Use
+	lll_private_futex_wake.
+	* sysdeps/unix/sysv/linux/arm/check_pf.c: Update from generic version.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c
+	(pthread_cancel_init): Add noinline and barriers.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c
+	(__lll_timedlock_wait): Update call to lll_futex_timed_wait.
+	(__lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h (LLL_PRIVATE,
+	LLL_SHARED): Define.
+	(lll_futex_wait): Use lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake, lll_futex_wake_unlock): Take a
+	PRIVATE argument.
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): New.
+	(lll_robust_mutex_dead,  __lll_mutex_lock, __lll_mutex_cond_lock,
+	__lll_mutex_unlock, __lll_robust_mutex_unlock,
+	__lll_mutex_unlock_force, lll_wait_tid): Update calls.
+	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c (clear_once_control,
+	__pthread_once): Use private futexes.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c
+	(pthread_cancel_init): Add noinline and barriers.
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Comment fix.
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/semaphore.h (SEM_VALUE_MAX):
+	Delete.
+
 2007-06-06  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/arm/nptl/tls.h (THREAD_GSCOPE_FLAG_UNUSED,

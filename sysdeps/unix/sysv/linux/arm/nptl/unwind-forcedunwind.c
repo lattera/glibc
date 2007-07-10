@@ -33,6 +33,7 @@ static void (*libgcc_s_sjlj_register) (struct SjLj_Function_Context *);
 static void (*libgcc_s_sjlj_unregister) (struct SjLj_Function_Context *);
 
 void
+__attribute_noinline__
 pthread_cancel_init (void)
 {
   void *resume, *personality, *forcedunwind, *getcfa;
@@ -40,7 +41,11 @@ pthread_cancel_init (void)
   void *sjlj_register, *sjlj_unregister;
 
   if (__builtin_expect (libgcc_s_getcfa != NULL, 1))
-    return;
+    {
+      /* Force gcc to reload all values.  */
+      asm volatile ("" ::: "memory");
+      return;
+    }
 
   handle = __libc_dlopen ("libgcc_s.so.1");
 
@@ -58,9 +63,13 @@ pthread_cancel_init (void)
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;
   libgcc_s_forcedunwind = forcedunwind;
-  libgcc_s_getcfa = getcfa;
   libgcc_s_sjlj_register = sjlj_register;
   libgcc_s_sjlj_unregister = sjlj_unregister;
+  /* Make sure libgcc_s_getcfa is written last.  Otherwise,
+     pthread_cancel_init might return early even when the pointer the
+     caller is interested in is not initialized yet.  */
+  atomic_write_barrier ();
+  libgcc_s_getcfa = getcfa;
 }
 
 void
@@ -68,6 +77,7 @@ _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__builtin_expect (libgcc_s_resume == NULL, 0))
     pthread_cancel_init ();
+
   libgcc_s_resume (exc);
 }
 
@@ -79,6 +89,7 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
 {
   if (__builtin_expect (libgcc_s_personality == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_personality (version, actions, exception_class,
 			       ue_header, context);
 }
@@ -89,6 +100,7 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 {
   if (__builtin_expect (libgcc_s_forcedunwind == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_forcedunwind (exc, stop, stop_argument);
 }
 
@@ -97,6 +109,7 @@ _Unwind_GetCFA (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getcfa == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_getcfa (context);
 }
 
@@ -105,6 +118,7 @@ _Unwind_SjLj_Register (struct SjLj_Function_Context *fc)
 {
   if (__builtin_expect (libgcc_s_sjlj_register == NULL, 0))
     pthread_cancel_init ();
+
   libgcc_s_sjlj_register (fc);
 }
 
@@ -113,5 +127,6 @@ _Unwind_SjLj_Unregister (struct SjLj_Function_Context *fc)
 {
   if (__builtin_expect (libgcc_s_sjlj_unregister == NULL, 0))
     pthread_cancel_init ();
+
   libgcc_s_sjlj_unregister (fc);
 }

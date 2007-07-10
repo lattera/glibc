@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -30,13 +30,18 @@ static _Unwind_Reason_Code (*libgcc_s_forcedunwind)
 static _Unwind_Word (*libgcc_s_getcfa) (struct _Unwind_Context *);
 
 void
+__attribute_noinline__
 pthread_cancel_init (void)
 {
   void *resume, *personality, *forcedunwind, *getcfa;
   void *handle;
 
   if (__builtin_expect (libgcc_s_getcfa != NULL, 1))
-    return;
+    {
+      /* Force gcc to reload all values.  */
+      asm volatile ("" ::: "memory");
+      return;
+    }
 
   handle = __libc_dlopen ("libgcc_s.so.1");
 
@@ -55,6 +60,10 @@ pthread_cancel_init (void)
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;
   libgcc_s_forcedunwind = forcedunwind;
+  /* Make sure libgcc_s_getcfa is written last.  Otherwise,
+     pthread_cancel_init might return early even when the pointer the
+     caller is interested in is not initialized yet.  */
+  atomic_write_barrier ();
   libgcc_s_getcfa = getcfa;
 }
 
@@ -92,6 +101,7 @@ __gcc_personality_v0 (_Unwind_State state,
 {
   if (__builtin_expect (libgcc_s_personality == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_personality (state, ue_header, context);
 }
 
@@ -101,6 +111,7 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 {
   if (__builtin_expect (libgcc_s_forcedunwind == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_forcedunwind (exc, stop, stop_argument);
 }
 
@@ -109,5 +120,6 @@ _Unwind_GetCFA (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getcfa == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_getcfa (context);
 }

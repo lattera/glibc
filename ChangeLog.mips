@@ -1,3 +1,10 @@
+2007-07-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Comment fix.
+
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/semaphore.h (SEM_VALUE_MAX):
+	Delete.
+
 2007-06-07  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h (ARGIFY): New.

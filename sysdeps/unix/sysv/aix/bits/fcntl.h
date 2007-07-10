@@ -79,7 +79,7 @@
 # define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */
 #endif
 
-/* For F_[GET|SET]FL.  */
+/* For F_[GET|SET]FD.  */
 #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
 
 /* For posix fcntl() and `l_type' field of a `struct flock' for lockf().  */
