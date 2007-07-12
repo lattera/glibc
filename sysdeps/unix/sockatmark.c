@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,5 +24,7 @@ int
 sockatmark (fd)
      int fd;
 {
-  return __ioctl (fd, SIOCATMARK);
+  int answ;
+
+  return __ioctl (fd, SIOCATMARK, &answ) == -1 ? -1 : answ;
 }

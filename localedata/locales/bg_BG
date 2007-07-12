@@ -40,9 +40,11 @@ category  "bg_BG:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-
 copy "i18n"
 
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_COLLATE
@@ -155,7 +157,7 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol           "<U0042><U0047><U004C><U0020>"
+int_curr_symbol           "<U0042><U0047><U004E><U0020>"
 currency_symbol           "<U043B><U0432>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U00A0>"

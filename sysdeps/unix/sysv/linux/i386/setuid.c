@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2000,2003,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <setxid.h>
 #include <linux/posix_types.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 
 #ifdef __NR_setuid32

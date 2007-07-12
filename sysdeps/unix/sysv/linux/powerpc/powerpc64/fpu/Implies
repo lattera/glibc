@@ -1,0 +1,2 @@
+# Override ldbl-opt with powerpc64 specific routines.
+powerpc/powerpc64/fpu

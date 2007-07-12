@@ -1,6 +1,7 @@
 /* Functions to compute MD5 message digest of files or memory blocks.
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995,1996,1997,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1999,2000,2001,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +32,7 @@
 # include <string.h>
 #else
 # ifndef HAVE_MEMCPY
-#  define memcpy(d, s, n) bcopy ((s), (d), (n))
+#  define memcpy(d, s, n) (bcopy ((s), (d), (n)), (d))
 # endif
 #endif
 

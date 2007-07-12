@@ -1,5 +1,5 @@
 /* hairy bits of Hurd file name lookup
-   Copyright (C) 1992,1993,1994,1995,1996,1997,1999,2001,2002,2003
+   Copyright (C) 1992,1993,1994,1995,1996,1997,1999,2001,2002,2003,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -247,7 +247,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  char *p;
 		  /* XXX want client's host */
 		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
-					 (natural_t *) &hostinfo,
+					 (integer_t *) &hostinfo,
 					 &hostinfocnt))
 		    return err;
 		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)

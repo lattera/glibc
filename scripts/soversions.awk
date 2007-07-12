@@ -1,15 +1,27 @@
-# awk script for shlib-versions.v.i -> soversions.i; see Makeconfig.
+# awk script for shlib-versions.v -> soversions.i; see Makeconfig.
 
-# Only lines matching `config' (set with -v) are relevant to us.
-config !~ $1 { next }
+BEGIN {
+  config = cpu "-" vendor "-" os;
+  configs[config] = "DEFAULT";
+}
+
+{ thiscf = $1 }
+
+$2 ~ /WORDSIZE[3264]/ {
+  if ((config ~ thiscf) && !othercf) {
+    othercf = $3;
+    sub(/@CPU@/, cpu, othercf);
+    sub(/@VENDOR@/, vendor, othercf);
+    sub(/@OS@/, os, othercf);
+    configs[othercf] = $2;
+  }
+  next;
+}
 
 # Obey the first matching DEFAULT line.
 $2 == "DEFAULT" {
-  if (!matched_default) {
-    matched_default = 1;
-    $1 = $2 = "";
-    default_setname = $0;
-  }
+  $1 = $2 = "";
+  default_set[++ndefault_set] = thiscf "\n" $0;
   next
 }
 
@@ -19,20 +31,42 @@ $2 == "DEFAULT" {
   lib = number = $2;
   sub(/=.*$/, "", lib);
   sub(/^.*=/, "", number);
-  if (lib in numbers) next;
-  numbers[lib] = number;
+  if ((thiscf FS lib) in numbers) next;
+  numbers[thiscf FS lib] = number;
+  order[thiscf FS lib] = ++order_n;
   if (NF > 2) {
     $1 = $2 = "";
-    versions[lib] = $0
+    versions[thiscf FS lib] = $0
   }
 }
 
 END {
-  for (lib in numbers) {
-    set = (lib in versions) ? versions[lib] : default_setname;
-    if (set)
-      print lib, numbers[lib], set;
-    else
-      print lib, numbers[lib];
+  for (elt in numbers) {
+    split(elt, x);
+    cf = x[1];
+    lib = x[2];
+    for (c in configs)
+      if (c ~ cf) {
+	if (elt in versions)
+	  set = versions[elt];
+	else {
+	  set = (c == config) ? default_setname : "";
+	  for (i = 1; i <= ndefault_set; ++i) {
+	    split(default_set[i], x, "\n");
+	    if (c ~ x[1]) {
+	      set = x[2];
+	      break;
+	    }
+	  }
+	}
+	line = set ? (lib FS numbers[elt] FS set) : (lib FS numbers[elt]);
+	if (!((c FS lib) in lineorder) || order[elt] < lineorder[c FS lib]) {
+	  lineorder[c FS lib] = order[elt];
+	  lines[c FS lib] = configs[c] FS line;
+	}
+      }
+  }
+  for (c in lines) {
+    print lines[c]
   }
 }

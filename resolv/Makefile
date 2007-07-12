@@ -1,4 +1,4 @@
-# Copyright (C) 1994,1995,1996,1997,1998,1999,2000,2001,2003,2004
+# Copyright (C) 1994,1995,1996,1997,1998,1999,2000,2001,2003,2004,2007
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -32,7 +32,7 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 	    res_hconf res_libc res-state
 
-tests = tst-aton tst-leaks
+tests = tst-aton tst-leaks tst-inet_ntop
 xtests = tst-leaks2
 
 generate := mtrace-tst-leaks tst-leaks.mtrace tst-leaks2.mtrace

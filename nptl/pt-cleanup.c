@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,7 +20,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include "pthreadP.h"
-#include "jmpbuf-unwind.h"
+#include <jmpbuf-unwind.h>
 
 void
 __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
@@ -61,4 +61,3 @@ __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
   THREAD_SETMEM (self, cleanup, cbuf);
 }
 hidden_def (__pthread_cleanup_upto)
-

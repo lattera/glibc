@@ -52,7 +52,7 @@ L(start_addresses):
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 
 	.section ".text"
-#ifdef PIC
+#if defined PIC && !defined HAVE_ASM_PPC_REL16
 L(start_addressesp):
 	.long	L(start_addresses)-L(branch)
 #endif
@@ -73,11 +73,19 @@ L(branch):
 	mtlr	r0
 	stw	r0,0(r1)
  /* Set r13 to point at the 'small data area', and put the address of
-    start_addresses in r8...  */
+    start_addresses in r8.  Also load the GOT pointer so that new PLT
+    calls work, like the one to __libc_start_main.  */
 #ifdef PIC
+# ifdef HAVE_ASM_PPC_REL16
+	addis	r30,r13,_GLOBAL_OFFSET_TABLE_-L(branch)@ha
+	addis	r8,r13,L(start_addresses)-L(branch)@ha
+	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-L(branch)@l
+	lwzu	r13,L(start_addresses)-L(branch)@l(r8)
+# else
 	lwz	r8,L(start_addressesp)-L(branch)(r13)
 	add	r8,r13,r8
 	lwz	r13,0(r8)
+# endif
 #else
 	lis	r8,L(start_addresses)@ha
 	lwzu	r13,L(start_addresses)@l(r8)

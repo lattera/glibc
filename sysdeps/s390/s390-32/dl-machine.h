@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  S390 Version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    Contributed by Carl Pederson & Martin Schwidefsky.
    This file is part of the GNU C Library.
 
@@ -20,7 +21,6 @@
 
 #ifndef dl_machine_h
 #define dl_machine_h
-
 
 #define ELF_MACHINE_NAME "s390"
 
@@ -112,7 +112,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = l;
@@ -125,124 +126,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-
-/* s390:
-   Arguments are in register.
-   r2 - r7 holds the original parameters for the function call, fixup
-   and trampoline code use r0-r5 and r14-15. For the correct function
-   call r2-r5 and r14-15 must be restored.
-   Arguments from the PLT are stored at 24(r15) and 28(r15)
-   and must be moved to r2 and r3 for the fixup call (see elf32-s390.c
-   in the binutils for the PLT code).
-   Fixup function address in r2.
-*/
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-  asm ( "\
-    .text\n\
-    .globl _dl_runtime_resolve\n\
-    .type _dl_runtime_resolve, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-    # save registers\n\
-    stm    2,5,32(15)\n\
-    st     14,48(15)\n\
-    lr     0,15\n\
-    ahi    15,-96\n\
-    " CFI_ADJUST_CFA_OFFSET(96)"\n\
-    st     0,0(15)\n\
-    # load args saved by PLT\n\
-    lm     2,3,120(15)\n\
-    basr   1,0\n\
-0:  ahi    1,1f-0b\n\
-    l      14,0(1)\n\
-    bas    14,0(14,1)   # call fixup\n\
-    lr     1,2          # function addr returned in r2\n\
-    # restore registers\n\
-    ahi    15,96\n\
-    " CFI_ADJUST_CFA_OFFSET(-96)" \n\
-    l      14,48(15)\n\
-    lm     2,5,32(15)\n\
-    br     1\n\
-1:  .long  fixup-1b\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-    .globl _dl_runtime_profile\n\
-    .type _dl_runtime_profile, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_profile:\n\
-    # save registers\n\
-    stm    2,5,32(15)\n\
-    st     14,48(15)\n\
-    lr     0,15\n\
-    ahi    15,-96\n\
-    " CFI_ADJUST_CFA_OFFSET(96)"\n\
-    st     0,0(15)\n\
-    # load args saved by PLT\n\
-    lm     2,3,120(15)\n\
-    # load return address as third parameter\n\
-    lr     4,14\n\
-    basr   1,0\n\
-0:  ahi    1,1f-0b\n\
-    l      14,0(1)\n\
-    bas    14,0(14,1)   # call fixup\n\
-    lr     1,2          # function addr returned in r2\n\
-    # restore registers\n\
-    ahi    15,96\n\
-    " CFI_ADJUST_CFA_OFFSET(-96)" \n\
-    l      14,48(15)\n\
-    lm     2,5,32(15)\n\
-    br     1\n\
-1:  .long  profile_fixup-1b\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_profile, .-_dl_runtime_profile\n\
-");
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-  asm ( "\
-    .text\n\
-    .globl _dl_runtime_resolve\n\
-    .globl _dl_runtime_profile\n\
-    .type _dl_runtime_resolve, @function\n\
-    .type _dl_runtime_profile, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-    # save registers\n\
-    stm    2,5,32(15)\n\
-    st     14,48(15)\n\
-    lr     0,15\n\
-    ahi    15,-96\n\
-    " CFI_ADJUST_CFA_OFFSET(96)"\n\
-    st     0,0(15)\n\
-    # load args saved by PLT\n\
-    lm     2,3,120(15)\n\
-    # load return address as third parameter\n\
-    lr     4,14\n\
-    basr   1,0\n\
-0:  ahi    1,1f-0b\n\
-    l      14,0(1)\n\
-    bas    14,0(14,1)   # call fixup\n\
-    lr     1,2          # function addr returned in r2\n\
-    # restore registers\n\
-    ahi    15,96\n\
-    " CFI_ADJUST_CFA_OFFSET(-96)" \n\
-    l      14,48(15)\n\
-    lm     2,5,32(15)\n\
-    br     1\n\
-1:  .long  fixup-1b\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-    .size _dl_runtime_profile, .-_dl_runtime_profile\n\
-");
-#endif
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
@@ -375,15 +258,20 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value;
 }
 
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER s390_32_gnu_pltenter
+#define ARCH_LA_PLTEXIT s390_32_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg)
@@ -417,17 +305,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 #endif
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
-      Elf32_Addr value = RESOLVE (&sym, version, r_type);
-
-# ifndef RTLD_BOOTSTRAP
-      if (sym)
-# endif
-	value += sym->st_value;
-#endif /* use TLS and !RTLD_BOOTSTRAP */
 
       switch (r_type)
 	{
@@ -539,7 +418,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
 }
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -547,7 +427,8 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
@@ -567,4 +448,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

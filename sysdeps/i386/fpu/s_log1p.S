@@ -31,9 +31,7 @@ ENTRY(__log1p)
 	fldl	4(%esp)
 
 #ifdef	PIC
-	call	1f
-1:	popl	%edx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
+	LOAD_PIC_REG (dx)
 #endif
 
 	fxam

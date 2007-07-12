@@ -16,9 +16,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <tcb-offsets.h>
+/* We want an #include_next, but we are the main source file.
+   So, #include ourselves and in that incarnation we can use #include_next.  */
+#ifndef INCLUDED_SELF
+# define INCLUDED_SELF
+# include <vfork.S>
+#else
 
-#define SAVE_PID \
+# include <tcb-offsets.h>
+
+# define SAVE_PID \
 	movl	%fs:PID, %esi;						      \
 	movl	$0x80000000, %ecx;					      \
 	movl	%esi, %edx;						      \
@@ -26,10 +33,11 @@
 	cmove	%ecx, %edx;						      \
 	movl	%edx, %fs:PID
 
-#define RESTORE_PID \
+# define RESTORE_PID \
 	testq	%rax, %rax;						      \
 	je	1f;							      \
 	movl	%esi, %fs:PID;						      \
 1:
 
-#include <sysdeps/unix/sysv/linux/x86_64/vfork.S>
+# include_next <vfork.S>
+#endif

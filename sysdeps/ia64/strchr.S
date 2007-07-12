@@ -108,5 +108,5 @@ ENTRY(strchr)
 	br.cond.sptk	.back
 END(strchr)
 
-weak_alias(strchr, index)
+weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)

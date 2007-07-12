@@ -24,7 +24,23 @@
 # include <mcheck.h>
 # include <stdint.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <libintl.h>
+#endif
+
+#ifdef _LIBC
+extern __typeof (malloc) __libc_malloc;
+extern __typeof (free) __libc_free;
+extern __typeof (realloc) __libc_realloc;
+libc_hidden_proto (__libc_malloc)
+libc_hidden_proto (__libc_realloc)
+libc_hidden_proto (__libc_free)
+libc_hidden_proto (__libc_memalign)
+#else
+# define __libc_malloc(sz) malloc (sz)
+# define __libc_free(ptr) free (ptr)
+# define __libc_realloc(ptr, sz) realloc (ptr, sz)
+# define __libc_memalign(al, sz) memalign (al, sz)
 #endif
 
 /* Old hook values.  */
@@ -197,7 +213,7 @@ freehook (__ptr_t ptr, const __ptr_t caller)
   if (old_free_hook != NULL)
     (*old_free_hook) (ptr, caller);
   else
-    free (ptr);
+    __libc_free (ptr);
   __free_hook = freehook;
 }
 
@@ -214,7 +230,7 @@ mallochook (__malloc_size_t size, const __ptr_t caller)
     hdr = (struct hdr *) (*old_malloc_hook) (sizeof (struct hdr) + size + 1,
 					     caller);
   else
-    hdr = (struct hdr *) malloc (sizeof (struct hdr) + size + 1);
+    hdr = (struct hdr *) __libc_malloc (sizeof (struct hdr) + size + 1);
   __malloc_hook = mallochook;
   if (hdr == NULL)
     return NULL;
@@ -245,7 +261,7 @@ memalignhook (__malloc_size_t alignment, __malloc_size_t size,
   if (old_memalign_hook != NULL)
     block = (*old_memalign_hook) (alignment, slop + size + 1, caller);
   else
-    block = memalign (alignment, slop + size + 1);
+    block = __libc_memalign (alignment, slop + size + 1);
   __memalign_hook = memalignhook;
   if (block == NULL)
     return NULL;
@@ -294,8 +310,8 @@ reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
 					      sizeof (struct hdr) + size + 1,
 					      caller);
   else
-    hdr = (struct hdr *) realloc ((__ptr_t) hdr,
-				  sizeof (struct hdr) + size + 1);
+    hdr = (struct hdr *) __libc_realloc ((__ptr_t) hdr,
+					 sizeof (struct hdr) + size + 1);
   __free_hook = freehook;
   __malloc_hook = mallochook;
   __memalign_hook = memalignhook;
@@ -355,8 +371,8 @@ mcheck (func)
   if (__malloc_initialized <= 0 && !mcheck_used)
     {
       /* We call malloc() once here to ensure it is initialized.  */
-      void *p = malloc (0);
-      free (p);
+      void *p = __libc_malloc (0);
+      __libc_free (p);
 
       old_free_hook = __free_hook;
       __free_hook = freehook;

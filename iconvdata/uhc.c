@@ -1,5 +1,5 @@
 /* Mapping tables for UHC handling.
-   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>, 1998.
 
@@ -3135,7 +3135,8 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	else								      \
 	  {								      \
 	    ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);			      \
-	    if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
+	    if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0)	      \
+		|| __builtin_expect (ch == 0x327e, 0))			      \
 	      {								      \
 		/* Illegal.  */						      \
 		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
@@ -3207,15 +3208,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
       {									      \
 	size_t written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);   \
 									      \
+	if (__builtin_expect (ch == 0x327e, 0)				      \
+	    || __builtin_expect (written == __UNKNOWN_10646_CHAR, 0))	      \
+	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
+	  }								      \
 	if (__builtin_expect (written == 0, 0))				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
-	  }								      \
-	if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0))	      \
-	  {								      \
-	    UNICODE_TAG_HANDLER (ch, 4);				      \
-	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 									      \
 	*outptr++ |= 0x80;						      \

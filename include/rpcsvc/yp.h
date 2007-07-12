@@ -14,5 +14,13 @@ libnsl_hidden_proto (xdr_ypresp_all)
 libnsl_hidden_proto (xdr_yppush_status)
 libnsl_hidden_proto (xdr_ypbind_resptype)
 libnsl_hidden_proto (xdr_ypbind_binding)
+libnsl_hidden_proto (xdr_ypreq_nokey)
+libnsl_hidden_proto (xdr_ypmaplist)
+libnsl_hidden_proto (xdr_ypreq_key)
+libnsl_hidden_proto (xdr_ypresp_val)
+libnsl_hidden_proto (xdr_ypresp_maplist)
+libnsl_hidden_proto (xdr_ypresp_order)
+libnsl_hidden_proto (xdr_ypbind_resp)
+libnsl_hidden_proto (xdr_ypresp_master)
 
 #endif

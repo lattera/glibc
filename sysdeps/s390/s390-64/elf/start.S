@@ -1,5 +1,5 @@
 /* Startup code compliant to the 64 bit S/390 ELF ABI.
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -78,12 +78,14 @@ _start:
 	la	%r7,160(%r15)
 	larl	%r6,__libc_csu_fini	# load pointer to __libc_csu_fini
 	larl	%r5,__libc_csu_init	# load pointer to __libc_csu_init
-	larl	%r2,main		# load pointer to main
 
 	/* Ok, now branch to the libc main routine.  */
 #ifdef PIC
+	larl	%r2,main@GOTENT		# load pointer to main
+	lg	%r2,0(%r2)
 	brasl	%r14,__libc_start_main@plt
 #else
+	larl	%r2,main		# load pointer to main
 	brasl	%r14,__libc_start_main
 #endif
 

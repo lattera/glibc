@@ -78,6 +78,12 @@ libc {
     getipv4sourcefilter; setipv4sourcefilter;
     getsourcefilter; setsourcefilter;
   }
+  GLIBC_2.5 {
+    inet6_opt_init; inet6_opt_append; inet6_opt_finish; inet6_opt_set_val;
+    inet6_opt_next; inet6_opt_find; inet6_opt_get_val;
+    inet6_rth_space; inet6_rth_init; inet6_rth_add; inet6_rth_reverse;
+    inet6_rth_segments; inet6_rth_getaddr;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __internal_endnetgrent; __internal_getnetgrent_r;

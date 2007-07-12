@@ -31,10 +31,6 @@
 /*
  * From: @(#)rpc_parse.c 1.8 89/02/22 (C) 1987 SMI
  */
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char parse_rcsid[] =
-  "$Id$";
-#endif
 
 /*
  * rpc_parse.c, Parser for the RPC protocol compiler
@@ -95,6 +91,7 @@ get_definition (void)
       def_const (defp);
       break;
     case TOK_EOF:
+      free (defp);
       return (NULL);
     default:
       error ("definition keyword expected");
@@ -306,7 +303,9 @@ def_union (definition *defp)
   case_list *cases;
 /*  case_list *tcase; */
   case_list **tailp;
+#if 0
   int flag;
+#endif
 
   defp->def_kind = DEF_UNION;
   scan (TOK_IDENT, &tok);
@@ -326,7 +325,9 @@ def_union (definition *defp)
       cases->case_name = tok.str;
       scan (TOK_COLON, &tok);
       /* now peek at next token */
+#if 0
       flag = 0;
+#endif
       if (peekscan (TOK_CASE, &tok))
 	{
 
@@ -343,6 +344,7 @@ def_union (definition *defp)
 	    }
 	  while (peekscan (TOK_CASE, &tok));
 	}
+#if 0
       else if (flag)
 	{
 
@@ -350,6 +352,7 @@ def_union (definition *defp)
 	  tailp = &cases->next;
 	  cases = ALLOC (case_list);
 	};
+#endif
 
       get_declaration (&dec, DEF_UNION);
       cases->case_decl = dec;

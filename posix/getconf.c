@@ -1,20 +1,18 @@
-/* Copyright (C) 1991, 92, 1995-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <unistd.h>
 #include <errno.h>
@@ -941,7 +939,53 @@ usage (void)
   fprintf (stderr,
 	   _("Usage: %s [-v specification] variable_name [pathname]\n"),
 	   __progname);
+  fprintf (stderr,
+	   _("       %s -a [pathname]\n"), __progname);
   exit (2);
+}
+
+static void
+print_all (const char *path)
+{
+  register const struct conf *c;
+  size_t clen;
+  long int value;
+  char *cvalue;
+  for (c = vars; c->name != NULL; ++c) {
+    printf("%-35s", c->name);
+    switch (c->call) {
+      case PATHCONF:
+        value = pathconf (path, c->call_name);
+        if (value != -1) {
+          printf("%ld", value);
+        }
+        printf("\n");
+        break;
+      case SYSCONF:
+        value = sysconf (c->call_name);
+        if (value == -1l) {
+          if (c->call_name == _SC_UINT_MAX
+            || c->call_name == _SC_ULONG_MAX)
+            printf ("%lu", value);
+        }
+        else {
+          printf ("%ld", value);
+        }
+        printf ("\n");
+        break;
+      case CONFSTR:
+        clen = confstr (c->call_name, (char *) NULL, 0);
+        cvalue = (char *) malloc (clen);
+        if (cvalue == NULL)
+          error (3, 0, _("memory exhausted"));
+        if (confstr (c->call_name, cvalue, clen) != clen)
+          error (3, errno, "confstr");
+        printf ("%.*s\n", (int) clen, cvalue);
+	free (cvalue);
+        break;
+    }
+  }
+  exit (0);
 }
 
 int
@@ -964,7 +1008,7 @@ main (int argc, char *argv[])
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
       fprintf (stderr, gettext ("Written by %s.\n"), "Roland McGrath");
       return 0;
     }
@@ -1048,6 +1092,16 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	  default:
 	    break;
 	}
+    }
+
+  if (argc > 1 && strcmp (argv[1], "-a") == 0)
+    {
+      if (argc == 2)
+	print_all ("/");
+      else if (argc == 3)
+	print_all (argv[2]);
+      else
+	usage ();
     }
 
   if (argc < 2 || argc > 3)

@@ -108,20 +108,20 @@ xdrstdio_destroy (XDR *xdrs)
 static bool_t
 xdrstdio_getlong (XDR *xdrs, long *lp)
 {
-  int32_t mycopy;
+  u_int32_t mycopy;
 
-  if (fread ((caddr_t) & mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
+  if (fread ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
-  *lp = (int32_t) ntohl (mycopy);
+  *lp = (long) ntohl (mycopy);
   return TRUE;
 }
 
 static bool_t
 xdrstdio_putlong (XDR *xdrs, const long *lp)
 {
-  long mycopy = htonl (*lp);
-  lp = &mycopy;
-  if (fwrite ((caddr_t) lp, 4, 1, (FILE *) xdrs->x_private) != 1)
+  int32_t mycopy = htonl ((u_int32_t) *lp);
+
+  if (fwrite ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
   return TRUE;
 }

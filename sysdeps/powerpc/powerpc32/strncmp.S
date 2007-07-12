@@ -47,6 +47,7 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 	lis	r7F7F, 0x7f7f
 	dcbt	0,rSTR2
 	clrlwi.	rTMP, rTMP, 30
+	cmplwi	cr1, rN, 0
 	lis	rFEFE, -0x101
 	bne	L(unaligned)
 /* We are word alligned so set up for two loops.  first a word
@@ -54,7 +55,8 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 	srwi.	rTMP, rN, 2
 	clrlwi	rN, rN, 30
 	addi	rFEFE, rFEFE, -0x101
-	addi	r7F7F, r7F7F, 0x7f7f	
+	addi	r7F7F, r7F7F, 0x7f7f
+	cmplwi	cr1, rN, 0	
 	beq	L(unaligned)
 
 	mtctr	rTMP	/* Power4 wants mtctr 1st in dispatch group.  */
@@ -122,16 +124,19 @@ L(tail):
 	addi	rSTR1, rSTR1, 4
 	bne-	cr1, L(different)
 	addi	rSTR2, rSTR2, 4
+	cmplwi	cr1, rN, 0
 L(unaligned):
 	mtctr   rN	/* Power4 wants mtctr 1st in dispatch group */
-	cmpwi	rN,0
-	lbz	rWORD1, 0(rSTR1)
-	lbz	rWORD2, 0(rSTR2)
-	bgt	L(u1)
+	bgt	cr1, L(uz)
 L(ux):
 	li	rRTN, 0
 	blr
-
+	.align 4
+L(uz):
+	lbz	rWORD1, 0(rSTR1)
+	lbz	rWORD2, 0(rSTR2)
+	nop
+	b	L(u1)
 L(u0):
 	lbzu	rWORD2, 1(rSTR2)
 L(u1):

@@ -49,6 +49,7 @@ tcsetattr (fd, optional_actions, termios_p)
 {
   struct __kernel_termios k_termios;
   unsigned long int cmd;
+  int retval;
 
   switch (optional_actions)
     {
@@ -80,6 +81,35 @@ tcsetattr (fd, optional_actions, termios_p)
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
 	  __KERNEL_NCCS * sizeof (cc_t));
 
-  return INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
+  retval = INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
+
+  if (retval == 0 && cmd == TCSETS)
+    {
+      /* The Linux kernel has a bug which silently ignore the invalid
+        c_cflag on pty. We have to check it here. */
+      int save = errno;
+      retval = INLINE_SYSCALL (ioctl, 3, fd, TCGETS, &k_termios);
+      if (retval)
+       {
+         /* We cannot verify if the setting is ok. We don't return
+            an error (?). */
+         __set_errno (save);
+         retval = 0;
+       }
+      else if ((termios_p->c_cflag & (PARENB | CREAD))
+              != (k_termios.c_cflag & (PARENB | CREAD))
+              || ((termios_p->c_cflag & CSIZE)
+                  && ((termios_p->c_cflag & CSIZE)
+                      != (k_termios.c_cflag & CSIZE))))
+       {
+         /* It looks like the Linux kernel silently changed the
+            PARENB/CREAD/CSIZE bits in c_cflag. Report it as an
+            error. */
+         __set_errno (EINVAL);
+         retval = -1;
+       }
+    }
+
+  return retval;
 }
 libc_hidden_def (tcsetattr)

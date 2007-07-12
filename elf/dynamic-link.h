@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <elf.h>
 #include <assert.h>
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 /* We pass reloc_addr as a pointer to void, as opposed to a pointer to
    ElfW(Addr), because not all architectures can assume that the
    relocated address is properly aligned, whereas the compiler is
@@ -31,26 +31,30 @@
    optimizing away alignment tests or using word instructions for
    copying memory, breaking the very code written to handle the
    unaligned cases.  */
-auto void __attribute__((always_inline))
+# if ! ELF_MACHINE_NO_REL
+auto inline void __attribute__((always_inline))
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
 		 void *const reloc_addr);
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
+elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
+			  void *const reloc_addr);
+# endif
+# if ! ELF_MACHINE_NO_RELA
+auto inline void __attribute__((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
 		  void *const reloc_addr);
-auto void __attribute__((always_inline))
-elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
-			  void *const reloc_addr);
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr);
+# endif
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc);
 # else
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc);
 # endif
@@ -64,7 +68,7 @@ elf_machine_lazy_rel (struct link_map *map,
 
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
-#ifndef RESOLVE
+#ifndef RESOLVE_MAP
 static
 #else
 auto
@@ -139,6 +143,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # endif
       ADJUST_DYN_INFO (DT_JMPREL);
       ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
+      ADJUST_DYN_INFO (DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
+		       + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM);
 # undef ADJUST_DYN_INFO
       assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }
@@ -199,7 +205,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 #endif
 }
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 # ifdef RTLD_BOOTSTRAP
 #  define ELF_DURING_STARTUP (1)

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 
 subdir		:= elf
 
-headers		= elf.h bits/elfclass.h link.h
-routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
+headers		= elf.h bits/elfclass.h link.h bits/link.h
+routines	= $(dl-routines) dl-support dl-iteratephdr \
 		  dl-addr enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-tsd
 
@@ -30,7 +30,7 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
 				  version profile conflict tls origin \
-				  execstack caller)
+				  execstack caller open close trampoline)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin
@@ -72,7 +72,7 @@ distribute	:= rtld-Rules \
 		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
 		   tst-tlsmod5.c tst-tlsmod6.c tst-tlsmod7.c tst-tlsmod8.c \
 		   tst-tlsmod9.c tst-tlsmod10.c tst-tlsmod11.c \
-		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c \
+		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c tst-alignmod2.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h \
@@ -83,7 +83,16 @@ distribute	:= rtld-Rules \
 		   tst-array2dep.c tst-piemod1.c \
 		   tst-execstack-mod.c tst-dlmodcount.c \
 		   check-textrel.c dl-sysdep.h test-dlopenrpathmod.c \
-		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c
+		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
+		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
+		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
+		   unload6mod1.c unload6mod2.c unload6mod3.c \
+		   unload7mod1.c unload7mod2.c \
+		   tst-auditmod1.c tst-audit.sh \
+		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
+		   tst-stackguard1.c tst-stackguard1-static.c \
+		   tst-array5.c tst-array5-static.c tst-array5dep.c \
+		   tst-array5.exp tst-leaks1.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -131,16 +140,19 @@ vpath %.c ../locale/programs
 endif
 endif
 
-tests = tst-tls1 tst-tls2 tst-tls9
+tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1
 ifeq (yes,$(have-initfini-array))
-tests += tst-array1 tst-array2 tst-array3 tst-array4
+tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 endif
 ifeq (yes,$(build-static))
-tests-static = tst-tls1-static tst-tls2-static
+tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
-	LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+       LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+endif
+ifeq (yes,$(have-initfini-array))
+tests-static += tst-array1-static tst-array5-static
 endif
 tests += $(tests-static)
 endif
@@ -152,9 +164,14 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
-	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
-	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
-	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3
+	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
+	 tst-tls-dlinfo \
+	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
+	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
+	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
+	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
+	 tst-audit1 tst-audit2 \
+	 tst-stackguard1 tst-addr1 tst-thrlock
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -165,6 +182,7 @@ endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests: $(objpfx)tst-pie1.out
 endif
+tests: $(objpfx)tst-leaks1-mem
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
@@ -182,15 +200,22 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
 		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
 		tst-tlsmod13 tst-tlsmod13a tst-tlsmod14a tst-tlsmod14b \
+		tst-tlsmod15a tst-tlsmod15b \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod $(modules-execstack-$(have-z-execstack)) \
+		tst-alignmod tst-alignmod2 \
+		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
-		tst-dlmopen1mod
+		tst-dlmopen1mod tst-auditmod1 \
+		unload3mod1 unload3mod2 unload3mod3 unload3mod4 \
+		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
+		unload6mod1 unload6mod2 unload6mod3 \
+		unload7mod1 unload7mod2 \
+		order2mod1 order2mod2 order2mod3 order2mod4
 ifeq (yes,$(have-initfini-array))
-modules-names += tst-array2dep
+modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
@@ -200,9 +225,13 @@ modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
 		       nodel2mod1 nodel2mod2 nodel2mod3
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
 modules-execstack-yes = tst-execstack-mod
-extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
 test-extras += $(modules-names)
+
+# filtmod1.so has a special rule
+modules-names-nobuild := filtmod1
+
 
 include ../Rules
 
@@ -420,6 +449,16 @@ $(objpfx)reldep8mod3.so: $(objpfx)reldep8mod1.so $(objpfx)reldep8mod2.so
 $(objpfx)nodel2mod3.so: $(objpfx)nodel2mod1.so $(objpfx)nodel2mod2.so
 $(objpfx)reldep9mod2.so: $(objpfx)reldep9mod1.so
 $(objpfx)reldep9mod3.so: $(objpfx)reldep9mod1.so $(objpfx)reldep9mod2.so
+$(objpfx)unload3mod1.so: $(objpfx)unload3mod3.so
+$(objpfx)unload3mod2.so: $(objpfx)unload3mod3.so
+$(objpfx)unload3mod3.so: $(objpfx)unload3mod4.so
+$(objpfx)unload4mod1.so: $(objpfx)unload4mod2.so $(objpfx)unload4mod3.so
+$(objpfx)unload4mod2.so: $(objpfx)unload4mod4.so $(objpfx)unload4mod3.so
+$(objpfx)unload6mod1.so: $(libdl)
+$(objpfx)unload6mod2.so: $(libdl)
+$(objpfx)unload6mod3.so: $(libdl)
+$(objpfx)unload7mod1.so: $(libdl)
+$(objpfx)unload7mod2.so: $(objpfx)unload7mod1.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -454,15 +493,14 @@ tst-tlsmod10.so-no-z-defs = yes
 tst-tlsmod12.so-no-z-defs = yes
 tst-tlsmod14a.so-no-z-defs = yes
 tst-tlsmod14b.so-no-z-defs = yes
+tst-tlsmod15a.so-no-z-defs = yes
 circlemod2.so-no-z-defs = yes
 circlemod3.so-no-z-defs = yes
 circlemod3a.so-no-z-defs = yes
 reldep8mod2.so-no-z-defs = yes
 reldep9mod1.so-no-z-defs = yes
-
-# filtmod1.so has a special rule
-$(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
-	$(build-module)
+unload3mod4.so-no-z-defs = yes
+unload4mod1.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -617,7 +655,7 @@ $(objpfx)dblunload: $(libdl)
 $(objpfx)dblunload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
 
 $(objpfx)reldep5: $(libdl)
-$(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod5.so
+$(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod6.so
 
 $(objpfx)reldep6: $(libdl)
 $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
@@ -664,13 +702,43 @@ $(objpfx)tst-tls12: $(objpfx)tst-tlsmod12.so
 $(objpfx)tst-tls13: $(libdl)
 $(objpfx)tst-tls13.out: $(objpfx)tst-tlsmod13a.so
 
-$(objpfx)tst-tls14:  $(objpfx)tst-tlsmod14a.so $(libdl)
-$(objpfx)tst-tls14.out:$(objpfx)tst-tlsmod14b.so
+$(objpfx)tst-tls14: $(objpfx)tst-tlsmod14a.so $(libdl)
+$(objpfx)tst-tls14.out: $(objpfx)tst-tlsmod14b.so
+
+$(objpfx)tst-tls15: $(libdl)
+$(objpfx)tst-tls15.out: $(objpfx)tst-tlsmod15a.so $(objpfx)tst-tlsmod15b.so
+
+$(objpfx)tst-tls-dlinfo: $(libdl)
+$(objpfx)tst-tls-dlinfo.out: $(objpfx)tst-tlsmod2.so
+
+
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
+CFLAGS-tst-align2.c = $(stack-align-test-flags)
 CFLAGS-tst-alignmod.c = $(stack-align-test-flags)
+CFLAGS-tst-alignmod2.c = $(stack-align-test-flags)
 $(objpfx)tst-align: $(libdl)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
+$(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
+
+$(objpfx)unload3: $(libdl)
+$(objpfx)unload3.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
+		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
+
+$(objpfx)unload4: $(libdl)
+$(objpfx)unload4.out: $(objpfx)unload4mod1.so $(objpfx)unload4mod3.so
+
+$(objpfx)unload5: $(libdl)
+$(objpfx)unload5.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
+		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
+
+$(objpfx)unload6: $(libdl)
+$(objpfx)unload6.out: $(objpfx)unload6mod1.so $(objpfx)unload6mod2.so \
+		      $(objpfx)unload6mod3.so
+
+$(objpfx)unload7: $(libdl)
+$(objpfx)unload7.out: $(objpfx)unload7mod1.so $(objpfx)unload7mod2.so
+unload7-ENV = MALLOC_PERTURB_=85
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
@@ -695,6 +763,10 @@ $(objpfx)tst-array1.out: $(objpfx)tst-array1
 	  $(objpfx)tst-array1 > $@
 	cmp $@ tst-array1.exp > /dev/null
 
+$(objpfx)tst-array1-static.out: $(objpfx)tst-array1-static
+	$(objpfx)tst-array1-static > $@
+	cmp $@ tst-array1.exp > /dev/null
+
 $(objpfx)tst-array2: $(objpfx)tst-array2dep.so
 $(objpfx)tst-array2.out: $(objpfx)tst-array2
 	$(elf-objpfx)$(rtld-installed-name) \
@@ -715,6 +787,17 @@ $(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
 	  $< > $@
 	cmp $@ tst-array4.exp > /dev/null
 
+$(objpfx)tst-array5: $(objpfx)tst-array5dep.so
+$(objpfx)tst-array5.out: $(objpfx)tst-array5
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)tst-array5 > $@
+	cmp $@ tst-array5.exp > /dev/null
+
+$(objpfx)tst-array5-static.out: $(objpfx)tst-array5-static
+	$(objpfx)tst-array5-static > $@
+	cmp $@ tst-array5-static.exp > /dev/null
+
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-tst-pie1.c += -fpie
 
@@ -732,10 +815,16 @@ $(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
 	  $(common-objpfx)libc_nonshared.a
+
+generated += tst-pie1 tst-pie1.out tst-pie1.o
 endif
 
 check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
+	$(native-compile)
+
+check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
+$(objpfx)check-localplt: check-localplt.c
 	$(native-compile)
 
 ifeq (yes,$(build-shared))
@@ -750,6 +839,28 @@ generated += check-textrel check-textrel.out
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
+check-data := $(firstword $(wildcard \
+	        $(foreach M,$(config-machine) $(base-machine),\
+			  ../scripts/data/localplt-$M-$(config-os).data)))
+ifneq (,$(check-data))
+tests: $(objpfx)check-localplt.out
+
+ifeq ($(have-thread-library),yes)
+thread-dso := $(filter-out %_nonshared.a, $(shared-thread-library))
+endif
+
+$(objpfx)check-localplt.out: $(objpfx)check-localplt $(common-objpfx)libc.so \
+			     $(common-objpfx)math/libm.so $(thread-dso) \
+			     $(common-objpfx)rt/librt.so \
+			     $(common-objpfx)dlfcn/libdl.so \
+			     $(check-data)
+	$(objpfx)check-localplt $(common-objpfx)libc.so \
+				$(common-objpfx)math/libm.so $(thread-dso) \
+				$(common-objpfx)rt/librt.so \
+				$(common-objpfx)dlfcn/libdl.so | \
+	  LC_ALL=C sort | \
+	  diff -u $(check-data) - > $@
+endif
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)
@@ -773,3 +884,37 @@ $(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-dlmopen3: $(libdl)
 $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
+
+$(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
+tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
+tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-global1: $(libdl)
+$(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
+
+$(objpfx)order2: $(libdl)
+$(objpfx)order2.out: $(objpfx)order2 $(objpfx)order2mod1.so \
+		     $(objpfx)order2mod2.so
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)order2 > $@
+	(echo "12345" | cmp $@ -) > /dev/null
+$(objpfx)order2mod1.so: $(objpfx)order2mod4.so
+$(objpfx)order2mod4.so: $(objpfx)order2mod3.so
+$(objpfx)order2mod2.so: $(objpfx)order2mod3.so
+order2mod2.so-no-z-defs = yes
+
+tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
+
+$(objpfx)tst-leaks1: $(libdl)
+$(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@
+
+tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
+
+$(objpfx)tst-addr1: $(libdl)
+
+$(objpfx)tst-thrlock: $(libdl) $(shared-thread-library)

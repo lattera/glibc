@@ -23,6 +23,7 @@
 # define STRING_TYPE char
 # define STRCOLL strcoll
 # define STRCOLL_L __strcoll_l
+# define USE_HIDDEN_DEF
 #endif
 
 #include "../locale/localeinfo.h"
@@ -35,6 +36,7 @@ STRCOLL (s1, s2)
 {
   return STRCOLL_L (s1, s2, _NL_CURRENT_LOCALE);
 }
-#if !defined WIDE_CHAR_VERSION
-libc_hidden_def (strcoll)
+
+#ifdef USE_HIDDEN_DEF
+libc_hidden_def (STRCOLL)
 #endif

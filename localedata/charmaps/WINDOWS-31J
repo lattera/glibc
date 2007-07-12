@@ -8,7 +8,7 @@
 % MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>, 2003.
 % Last changed: 2003-07-18
 
-alias CP932
+% alias CP932
 
 CHARMAP
 <U0000>     /x00         NULL

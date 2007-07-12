@@ -1,5 +1,6 @@
 /* `ptrace' debugger support interface.  Linux/SPARC version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -148,12 +149,11 @@ enum __ptrace_request
 #endif
 
   /* Continue and stop at the next (return from) syscall.  */
-  PTRACE_SYSCALL = 24
+  PTRACE_SYSCALL = 24,
 #define PTRACE_SYSCALL PTRACE_SYSCALL
 
 #if __WORDSIZE == 64
 
-  ,
   /* Get all floating point registers used by a processes.
      This is not supported on all machines.  */
    PTRACE_GETFPREGS = 25,
@@ -161,10 +161,26 @@ enum __ptrace_request
 
   /* Set all floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_SETFPREGS = 26
+   PTRACE_SETFPREGS = 26,
 #define PT_SETFPREGS PTRACE_SETFPREGS
 
 #endif
+
+  /* Set ptrace filter options.  */
+  PTRACE_SETOPTIONS = 0x4200,
+#define PT_SETOPTIONS PTRACE_SETOPTIONS
+
+  /* Get last ptrace message.  */
+  PTRACE_GETEVENTMSG = 0x4201,
+#define PT_GETEVENTMSG PTRACE_GETEVENTMSG
+
+  /* Get siginfo for process.  */
+  PTRACE_GETSIGINFO = 0x4202,
+#define PT_GETSIGINFO PTRACE_GETSIGINFO
+
+  /* Set new siginfo for process.  */
+  PTRACE_SETSIGINFO = 0x4203
+#define PT_SETSIGINFO PTRACE_SETSIGINFO
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values

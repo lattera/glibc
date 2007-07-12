@@ -1,5 +1,5 @@
 /* Test listing of network interface addresses.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,8 +62,8 @@ addr_string (struct sockaddr *sa, char *buf, size_t size)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct ifaddrs *ifaces, *ifa;
 
@@ -95,3 +95,6 @@ Name           Flags   Address         Netmask         Broadcast/Destination");
 
   return failures ? 1 : 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

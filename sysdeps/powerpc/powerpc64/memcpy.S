@@ -1,5 +1,5 @@
 /* Optimized memcpy implementation for PowerPC64.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     neg   0,3
     std   3,-16(1)
     std   31,-8(1)
+    cfi_offset(31,-8)
     andi. 11,3,7	/* check alignement of dst.  */
     clrldi 0,0,61	/* Number of bytes until the 1st doubleword of dst.  */
     clrldi 10,4,61	/* check alignement of src.  */

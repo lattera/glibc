@@ -1,5 +1,5 @@
 /* Implementation of the bindtextdomain(3) function
-   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,9 +60,7 @@
 /* Contains the default location of the message catalogs.  */
 extern const char _nl_default_dirname[];
 #ifdef _LIBC
-extern const char _nl_default_dirname_internal[] attribute_hidden;
-#else
-# define INTUSE(name) name
+libc_hidden_proto (_nl_default_dirname)
 #endif
 
 /* List with bindings of specific domains.  */
@@ -152,8 +150,8 @@ set_binding_values (domainname, dirnamep, codesetp)
 	      char *result = binding->dirname;
 	      if (strcmp (dirname, result) != 0)
 		{
-		  if (strcmp (dirname, INTUSE(_nl_default_dirname)) == 0)
-		    result = (char *) INTUSE(_nl_default_dirname);
+		  if (strcmp (dirname, _nl_default_dirname) == 0)
+		    result = (char *) _nl_default_dirname;
 		  else
 		    {
 #if defined _LIBC || defined HAVE_STRDUP
@@ -168,7 +166,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 		  if (__builtin_expect (result != NULL, 1))
 		    {
-		      if (binding->dirname != INTUSE(_nl_default_dirname))
+		      if (binding->dirname != _nl_default_dirname)
 			free (binding->dirname);
 
 		      binding->dirname = result;
@@ -209,7 +207,6 @@ set_binding_values (domainname, dirnamep, codesetp)
 			free (binding->codeset);
 
 		      binding->codeset = result;
-		      ++binding->codeset_cntr;
 		      modified = 1;
 		    }
 		}
@@ -222,7 +219,7 @@ set_binding_values (domainname, dirnamep, codesetp)
     {
       /* Simply return the default values.  */
       if (dirnamep)
-	*dirnamep = INTUSE(_nl_default_dirname);
+	*dirnamep = _nl_default_dirname;
       if (codesetp)
 	*codesetp = NULL;
     }
@@ -244,11 +241,11 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 	  if (dirname == NULL)
 	    /* The default value.  */
-	    dirname = INTUSE(_nl_default_dirname);
+	    dirname = _nl_default_dirname;
 	  else
 	    {
-	      if (strcmp (dirname, INTUSE(_nl_default_dirname)) == 0)
-		dirname = INTUSE(_nl_default_dirname);
+	      if (strcmp (dirname, _nl_default_dirname) == 0)
+		dirname = _nl_default_dirname;
 	      else
 		{
 		  char *result;
@@ -271,9 +268,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 	}
       else
 	/* The default value.  */
-	new_binding->dirname = (char *) INTUSE(_nl_default_dirname);
-
-      new_binding->codeset_cntr = 0;
+	new_binding->dirname = (char *) _nl_default_dirname;
 
       if (codesetp)
 	{
@@ -295,7 +290,6 @@ set_binding_values (domainname, dirnamep, codesetp)
 	      memcpy (result, codeset, len);
 #endif
 	      codeset = result;
-	      ++new_binding->codeset_cntr;
 	    }
 	  *codesetp = codeset;
 	  new_binding->codeset = (char *) codeset;
@@ -327,7 +321,7 @@ set_binding_values (domainname, dirnamep, codesetp)
       if (0)
 	{
 	failed_codeset:
-	  if (new_binding->dirname != INTUSE(_nl_default_dirname))
+	  if (new_binding->dirname != _nl_default_dirname)
 	    free (new_binding->dirname);
 	failed_dirname:
 	  free (new_binding);

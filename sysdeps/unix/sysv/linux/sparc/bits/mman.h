@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/SPARC version.
-   Copyright (C) 1997, 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2000,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,12 +57,14 @@
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
+# define MAP_GROWSDOWN	0x0200		/* Stack-like segment.  */
 # define MAP_DENYWRITE	0x0800		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
 # define MAP_LOCKED	0x0100		/* Lock the mapping.  */
 # define MAP_NORESERVE	0x0040		/* Don't check for reservations.  */
 # define _MAP_NEW	0x80000000	/* Binary compatibility with SunOS.  */
+# define MAP_POPULATE	0x8000		/* Populate (prefault) pagetables.  */
+# define MAP_NONBLOCK	0x10000		/* Do not block on IO.  */
 #endif
 
 /* Flags to `msync'.  */
@@ -78,6 +80,7 @@
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU
 # define MREMAP_MAYMOVE	1
+# define MREMAP_FIXED	2
 #endif
 
 /* Advice to `madvise'.  */
@@ -87,6 +90,10 @@
 # define MADV_SEQUENTIAL 2	/* Expect sequential page references.  */
 # define MADV_WILLNEED	 3	/* Will need these pages.  */
 # define MADV_DONTNEED	 4	/* Don't need these pages.  */
+# define MADV_FREE	 5	/* Content can be freed (Solaris).  */
+# define MADV_REMOVE	 9	/* Remove these pages and resources.  */
+# define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
+# define MADV_DOFORK	 11	/* Do inherit across fork.  */
 #endif
 
 /* The POSIX people had to invent similar names for the same things.  */

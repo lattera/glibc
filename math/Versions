@@ -94,7 +94,7 @@ libm {
   }
   GLIBC_2.1 {
     # mathematical functions
-    exp2; exp2f; exp2l;
+    exp2; exp2f; # exp2l; -- bug omitted this until GLIBC_2.4 (below)
     exp10; exp10f; exp10l;
     fdim; fdimf; fdiml;
     fma; fmaf; fmal;
@@ -160,5 +160,12 @@ libm {
 
     # fp environment function
     feenableexcept; fedisableexcept; fegetexcept;
+  }
+  GLIBC_2.4 {
+    # A bug in sysdeps/generic/w_exp2.c kept this from appearing
+    # in GLIBC_2.1 as it should have on platforms using that
+    # implementation file.  On others, sysdeps/CPU/Versions now
+    # puts exp2l in GLIBC_2.1, which will override this entry.
+    exp2l;
   }
 }

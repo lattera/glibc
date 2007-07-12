@@ -1,5 +1,5 @@
 /* Internal macros for atomic operations for GNU C Library.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -108,7 +108,7 @@
      __typeof (*(mem)) __value = (newvalue);				      \
 									      \
      do									      \
-       __oldval = (*__memp);						      \
+       __oldval = *__memp;						      \
      while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
 								    __value,  \
 								    __oldval),\
@@ -130,7 +130,7 @@
      __typeof (*(mem)) __value = (value);				      \
 									      \
      do									      \
-       __oldval = (*__memp);						      \
+       __oldval = *__memp;						      \
      while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
 								    __oldval  \
 								    + __value,\
@@ -140,6 +140,41 @@
      __oldval; })
 #endif
 
+
+
+#ifndef atomic_max
+# define atomic_max(mem, value) \
+  do {									      \
+    __typeof (*(mem)) __oldval;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __value = (value);				      \
+    do {								      \
+      __oldval = *__memp;						      \
+      if (__oldval >= __value)						      \
+	break;								      \
+    } while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,  \
+								     __value, \
+								     __oldval),\
+			       0));					      \
+  } while (0)
+#endif
+
+#ifndef atomic_min
+# define atomic_min(mem, value) \
+  do {									      \
+    __typeof (*(mem)) __oldval;						      \
+    __typeof (mem) __memp = (mem);					      \
+    __typeof (*(mem)) __value = (value);				      \
+    do {								      \
+      __oldval = *__memp;						      \
+      if (__oldval <= __value)						      \
+	break;								      \
+    } while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,  \
+								     __value, \
+								     __oldval),\
+			       0));					      \
+  } while (0)
+#endif
 
 #ifndef atomic_add
 # define atomic_add(mem, value) (void) atomic_exchange_and_add ((mem), (value))
@@ -238,6 +273,41 @@
      __oldval & __mask; })
 #endif
 
+/* Atomically *mem &= mask and return the old value of *mem.  */
+#ifndef atomic_and
+# define atomic_and(mem, mask) \
+  ({ __typeof (*(mem)) __oldval;					      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*(mem)) __mask = (mask);					      \
+									      \
+     do									      \
+       __oldval = (*__memp);						      \
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    & __mask, \
+								    __oldval),\
+			      0));					      \
+									      \
+     __oldval; })
+#endif
+
+/* Atomically *mem |= mask and return the old value of *mem.  */
+#ifndef atomic_or
+# define atomic_or(mem, mask) \
+  ({ __typeof (*(mem)) __oldval;					      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*(mem)) __mask = (mask);					      \
+									      \
+     do									      \
+       __oldval = (*__memp);						      \
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    | __mask, \
+								    __oldval),\
+			      0));					      \
+									      \
+     __oldval; })
+#endif
 
 #ifndef atomic_full_barrier
 # define atomic_full_barrier() __asm ("" ::: "memory")
@@ -251,6 +321,12 @@
 
 #ifndef atomic_write_barrier
 # define atomic_write_barrier() atomic_full_barrier ()
+#endif
+
+
+#ifndef atomic_forced_read
+# define atomic_forced_read(x) \
+  ({ __typeof (x) __x; __asm ("" : "=r" (__x) : "0" (x)); __x; })
 #endif
 
 

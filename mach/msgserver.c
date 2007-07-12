@@ -47,45 +47,7 @@
  * the rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.9  2002/02/18 20:56:35  roland
- * 2002-02-18  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/msgserver.c (__mach_msg_server_timeout) [! MACH_RCV_LARGE]:
- * 	Double MAX_SIZE and don't retry on MACH_RCV_TOO_LARGE.
- *
- * Revision 1.8  2002/02/17 07:13:32  roland
- * 2002-02-16  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/msgserver.c [NDR_CHAR_ASCII] (mig_reply_header_t): #define as
- * 	mig_reply_error_t for OSF Mach variant.
- *
- * Revision 1.7  2001/07/06 04:55:34  aj
- * Update to LGPL v2.1.
- *
- * Revision 1.6  2001/04/09 21:23:38  roland
- * 2001-04-07  Roland McGrath  <roland@frob.com>
- *
- * 	* mach/msgserver.c (__mach_msg_server_timeout): Add an assert.
- *
- * Revision 1.5  1996/12/20 01:32:35  drepper
- * Update from main archive 961219
- *
- * Revision 1.5  1996/12/19 20:23:45  drepper
- * Spelling corrections.
- *
- * Revision 1.4  1996/01/29 15:44:23  roland
- * Declare DEMUX arg with prototype.
- *
- * Revision 1.3  1995/01/21  15:00:57  roland
- * Converted to use weak aliases with macros from libc-symbols.h.
- *
- * Revision 1.2  1994/10/10  07:20:14  roland
- * Increase default MAX_SIZE to two pages.
- *
- * Revision 1.1  1993/12/06  23:25:25  roland
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.4  91/05/14  17:53:22  mrt
  * 	Correcting copyright

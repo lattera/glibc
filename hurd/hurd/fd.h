@@ -1,5 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993,94,95,96,97,98,99,2000,01,02
+   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -239,6 +239,22 @@ extern int _hurd_select (int nfds, struct pollfd *pollfds,
 			 fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 			 const struct timespec *timeout,
 			 const sigset_t *sigmask);
+
+/* Variant of file_name_lookup used in *at function implementations.
+   AT_FLAGS should contain only AT_SYMLINK_NOFOLLOW; other bits
+   cause EINVAL.  */
+extern file_t __file_name_lookup_at (int fd, int at_flags,
+				     const char *file_name,
+				     int flags, mode_t mode);
+
+/* Variant of file_name_split used in *at function implementations.  */
+extern file_t __file_name_split_at (int fd, const char *file_name,
+				    char **name);
+
+/* Variant of directory_name_split used in *at function implementations.  */
+extern file_t __directory_name_split_at (int fd, const char *directory_name,
+					 char **name);
+
 
 
 #endif	/* hurd/fd.h */

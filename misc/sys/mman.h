@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994-2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1994-2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -116,12 +116,6 @@ extern int mlockall (int __flags) __THROW;
 extern int munlockall (void) __THROW;
 
 #ifdef __USE_MISC
-/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
-   NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
-   differ from ADDR.  */
-extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
-		     int __may_move) __THROW;
-
 /* mincore returns the memory residency status of the pages in the
    current process's address space specified by [start, start + len).
    The status is returned in a vector of bytes.  The least significant
@@ -129,6 +123,16 @@ extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
    it is zero.  */
 extern int mincore (void *__start, size_t __len, unsigned char *__vec)
      __THROW;
+#endif
+
+#ifdef __USE_GNU
+/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
+   NEW_LEN.  If MREMAP_MAYMOVE is set in FLAGS the returned address
+   may differ from ADDR.  If MREMAP_FIXED is set in FLAGS the function
+   takes another paramter which is a fixed address at which the block
+   resides after a successful call.  */
+extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
+		     int __flags, ...) __THROW;
 
 /* Remap arbitrary pages of a shared backing store within an existing
    VMA.  */

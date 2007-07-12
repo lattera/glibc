@@ -57,7 +57,7 @@ static const char fd2string[] = "This file should stay opened";
 void
 do_prepare (int argc, char *argv[])
 {
-   char name_len;
+   size_t name_len;
 
    name_len = strlen (test_dir);
    name1 = malloc (name_len + sizeof ("/execXXXXXX"));

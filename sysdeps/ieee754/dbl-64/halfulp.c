@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2005 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@
 
 double __ieee754_sqrt(double x);
 
-int4 tab54[32] = {
+static const int4 tab54[32] = {
    262143, 11585, 1782, 511, 210, 107, 63, 42,
        30,    22,   17,  14,  12,  10,  9,  7,
         7,     6,    5,   5,   5,   4,  4,  4,

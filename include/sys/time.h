@@ -20,6 +20,7 @@ extern int __setitimer (enum __itimer_which __which,
 	attribute_hidden;
 extern int __utimes (__const char *__file, const struct timeval __tvp[2])
 	attribute_hidden;
+extern int __futimes (int fd, __const struct timeval tvp[2]) attribute_hidden;
 
 #ifndef NOT_IN_libc
 # define __gettimeofday(tv, tz) INTUSE(__gettimeofday) (tv, tz)

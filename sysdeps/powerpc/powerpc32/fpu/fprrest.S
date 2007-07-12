@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 /*
     Floating Point Registers (FPRs) restore routine
@@ -92,3 +92,4 @@ C_TEXT(_restfpr_29):	lwz	r0,8(r1)	#get return address from frame
 			lfd	fp30,-16(r1)	#restore f30
 			lfd	fp31,-8(r1)	#restore f31
 			blr			#return
+END (_restfpr_all)

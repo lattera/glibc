@@ -41,7 +41,7 @@ main (void)
 	{
 	  char elem[256];
 	  idx = symb_table[2 * i + 1];
-	  strncpy (elem, extra + idx + 1, extra[idx]);
+	  strncpy (elem, (const char *) (extra + idx + 1), extra[idx]);
 	  elem[extra[idx]] = '\0';
 	  printf ("Found a collating element: %s\n", elem);
 	  ++found;

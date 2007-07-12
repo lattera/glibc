@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return (long double)(a)
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -32,13 +32,13 @@ long double _q_dtoq(const double a)
   long double c;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_D(A, a);
+  FP_UNPACK_RAW_D(A, a);
 #if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
-  FP_CONV(Q,D,4,2,C,A);
+  FP_EXTEND(Q,D,4,2,C,A);
 #else
-  FP_CONV(Q,D,2,1,C,A);
+  FP_EXTEND(Q,D,2,1,C,A);
 #endif
-  FP_PACK_Q(c, C);
+  FP_PACK_RAW_Q(c, C);
   FP_HANDLE_EXCEPTIONS;
   return c;
 }

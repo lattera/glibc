@@ -66,6 +66,10 @@ END LC_COLLATE
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_MESSAGES
@@ -74,10 +78,10 @@ noexpr  "<U005E><U005B><U041D><U043D><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0052><U0055><U0052><U0020>"
+int_curr_symbol           "<U0052><U0055><U0042><U0020>"
 currency_symbol           "<U0440><U0443><U0431>"
 mon_decimal_point         "<U002E>"
-mon_thousands_sep         "<U0020>"
+mon_thousands_sep         "<U2002>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"
@@ -93,7 +97,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             "<U002C>"
-thousands_sep             "<U002E>"
+thousands_sep             "<U2002>"
 grouping                  3;3
 END LC_NUMERIC
 
@@ -112,18 +116,18 @@ abday   "<U0412><U0441><U043A>";/
         "<U0427><U0442><U0432>";/
         "<U041F><U0442><U043D>";/
         "<U0421><U0431><U0442>"
-mon     "<U042F><U043D><U0432><U0430><U0440><U044F>";/
-        "<U0424><U0435><U0432><U0440><U0430><U043B><U044F>";/
-        "<U041C><U0430><U0440><U0442><U0430>";/
-        "<U0410><U043F><U0440><U0435><U043B><U044F>";/
-        "<U041C><U0430><U044F>";/
-        "<U0418><U044E><U043D><U044F>";/
-        "<U0418><U044E><U043B><U044F>";/
-        "<U0410><U0432><U0433><U0443><U0441><U0442><U0430>";/
-        "<U0421><U0435><U043D><U0442><U044F><U0431><U0440><U044F>";/
-        "<U041E><U043A><U0442><U044F><U0431><U0440><U044F>";/
-        "<U041D><U043E><U044F><U0431><U0440><U044F>";/
-        "<U0414><U0435><U043A><U0430><U0431><U0440><U044F>"
+mon     "<U042F><U043D><U0432><U0430><U0440><U044C>";/
+        "<U0424><U0435><U0432><U0440><U0430><U043B><U044C>";/
+        "<U041C><U0430><U0440><U0442>";/
+        "<U0410><U043F><U0440><U0435><U043B><U044C>";/
+        "<U041C><U0430><U0439>";/
+        "<U0418><U044E><U043D><U044C>";/
+        "<U0418><U044E><U043B><U044C>";/
+        "<U0410><U0432><U0433><U0443><U0441><U0442>";/
+        "<U0421><U0435><U043D><U0442><U044F><U0431><U0440><U044C>";/
+        "<U041E><U043A><U0442><U044F><U0431><U0440><U044C>";/
+        "<U041D><U043E><U044F><U0431><U0440><U044C>";/
+        "<U0414><U0435><U043A><U0430><U0431><U0440><U044C>"
 abmon   "<U042F><U043D><U0432>";/
         "<U0424><U0435><U0432>";/
         "<U041C><U0430><U0440>";/
@@ -145,6 +149,8 @@ t_fmt_ampm ""
 date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
+first_weekday 2
+first_workday 2
 END LC_TIME
 
 LC_PAPER

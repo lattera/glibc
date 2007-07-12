@@ -1,4 +1,5 @@
-/* Copyright (C) 1994,1997,1999-2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999-2002, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,15 +28,6 @@
 
 #include "libioP.h"
 #include "strfile.h"
-
-
-typedef struct
-{
-  _IO_strfile f;
-  /* This is used for the characters which do not fit in the buffer
-     provided by the user.  */
-  wchar_t overflow_buf[64];
-} _IO_wstrnfile;
 
 
 static wint_t _IO_wstrn_overflow (_IO_FILE *fp, wint_t c) __THROW;
@@ -75,7 +67,7 @@ _IO_wstrn_overflow (fp, c)
 }
 
 
-static const struct _IO_jump_t _IO_wstrn_jumps =
+const struct _IO_jump_t _IO_wstrn_jumps attribute_hidden =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_wstr_finish),
@@ -135,8 +127,5 @@ _IO_vswprintf (string, maxlen, format, args)
 
   return ret;
 }
-
-#ifdef weak_alias
 weak_alias (_IO_vswprintf, __vswprintf)
-weak_alias (_IO_vswprintf, vswprintf)
-#endif
+ldbl_weak_alias (_IO_vswprintf, vswprintf)

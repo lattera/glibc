@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  Linux version.
-   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2003
+   Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2003, 2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -172,6 +172,7 @@ struct termios
 #define __MAX_BAUD B4000000
 #ifdef __USE_MISC
 # define CIBAUD	  002003600000		/* input baud rate (not used) */
+# define CMSPAR   010000000000		/* mark or space (stick) parity */
 # define CRTSCTS  020000000000		/* flow control */
 #endif
 

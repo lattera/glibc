@@ -1,7 +1,7 @@
 /* strchrnul (str, chr) -- Return pointer to first occurrence of CHR in STR
    or the final NUL byte.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -36,6 +36,8 @@ ENTRY (BP_SYM (__strchrnul))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
@@ -274,6 +276,8 @@ L(7):	testb %cl, %cl		/* is first byte CHR? */
 L(6):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	RETURN_BOUNDED_POINTER (STR(%esp))
 	popl %edi		/* restore saved register content */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

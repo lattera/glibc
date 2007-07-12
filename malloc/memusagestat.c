@@ -1,22 +1,20 @@
 /* Generate graphic from memory profiling data.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #define _FILE_OFFSET_BITS 64
 
@@ -83,8 +81,8 @@ static struct argp argp =
 
 struct entry
 {
-  size_t heap;
-  size_t stack;
+  uint64_t heap;
+  uint64_t stack;
   uint32_t time_low;
   uint32_t time_high;
 };
@@ -279,16 +277,16 @@ main (int argc, char *argv[])
 
   gdImageString (im_out, gdFontSmall, 38, ysize - 14, (unsigned char *) "0",
 		 blue);
-  snprintf(buf, sizeof (buf), heap_format, 0);
+  snprintf (buf, sizeof (buf), heap_format, 0);
   gdImageString (im_out, gdFontSmall, maxsize_heap < 1024 ? 32 : 26,
-		 ysize - 26, buf, red);
-  snprintf(buf, sizeof (buf), stack_format, 0);
+		 ysize - 26, (unsigned char *) buf, red);
+  snprintf (buf, sizeof (buf), stack_format, 0);
   gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26,
-		 buf, green);
+		 (unsigned char *) buf, green);
 
   if (string != NULL)
     gdImageString (im_out, gdFontLarge, (xsize - strlen (string) * 8) / 2,
-		   2, (char *) string, green);
+		   2, (unsigned char *) string, green);
 
   gdImageStringUp (im_out, gdFontSmall, 1, ysize / 2 - 10,
 		   (unsigned char *) "allocated", red);
@@ -301,9 +299,11 @@ main (int argc, char *argv[])
 		   (unsigned char *) "stack", green);
 
   snprintf (buf, sizeof (buf), heap_format, maxsize_heap / heap_scale);
-  gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6, 14, buf, red);
+  gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6, 14,
+		 (unsigned char *) buf, red);
   snprintf (buf, sizeof (buf), stack_format, maxsize_stack / stack_scale);
-  gdImageString (im_out, gdFontSmall, xsize - 37, 14, buf, green);
+  gdImageString (im_out, gdFontSmall, xsize - 37, 14,
+		 (unsigned char *) buf, green);
 
   for (line = 1; line <= 3; ++line)
     {
@@ -311,10 +311,10 @@ main (int argc, char *argv[])
 	(maxsize_heap / heap_scale);
       gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
 			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), heap_format, maxsize_heap / 4 * line / 
+      snprintf (buf, sizeof (buf), heap_format, maxsize_heap / 4 * line /
 		heap_scale);
       gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
+		     ysize - 26 - cnt, (unsigned char *) buf, red);
 
       cnt2 = ((ysize - 40) * (maxsize_stack / 4 * line / stack_scale)) /
 	(maxsize_stack / stack_scale);
@@ -324,11 +324,12 @@ main (int argc, char *argv[])
       snprintf (buf, sizeof (buf), stack_format, maxsize_stack / 4 * line /
 		stack_scale);
       gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
+		     (unsigned char *) buf, green);
     }
 
   snprintf (buf, sizeof (buf), "%llu", (unsigned long long) total);
-  gdImageString (im_out, gdFontSmall, xsize - 50, ysize - 14, buf, blue);
+  gdImageString (im_out, gdFontSmall, xsize - 50, ysize - 14,
+		 (unsigned char *) buf, blue);
 
   if (!time_based)
     {

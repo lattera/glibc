@@ -42,7 +42,7 @@ extern int __libc_alloca_cutoff (size_t size) __attribute__ ((const));
 			len = __newlen;					      \
 		      __newbuf; })
 #else
-# define extern_alloca(buf, len, newlen) \
+# define extend_alloca(buf, len, newlen) \
   __alloca (((len) = (newlen)))
 #endif
 

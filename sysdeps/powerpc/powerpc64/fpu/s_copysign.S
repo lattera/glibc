@@ -1,5 +1,5 @@
 /* Copy a sign bit between floating-point values.  PowerPC64 version.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 ENTRY(__copysign)
 	CALL_MCOUNT 0
@@ -28,7 +29,11 @@ ENTRY(__copysign)
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */
 	stdu	r1,-48(r1)
+	cfi_adjust_cfa_offset (48)
 	stfd	fp2,24(r1)
+	nop
+	nop
+	nop
 	ld	r3,24(r1)
 	cmpdi   r3,0
 	addi    r1,r1,48
@@ -39,13 +44,20 @@ L(0):	fnabs   fp1,fp1
 	blr
 	END (__copysign)
 
-weak_alias(__copysign,copysign)
+weak_alias (__copysign,copysign)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
-weak_alias(__copysign,copysignf)
+weak_alias (__copysign,copysignf)
 strong_alias(__copysign,__copysignf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__copysign,copysignl)
+weak_alias (__copysign,copysignl)
 strong_alias(__copysign,__copysignl)
+#endif
+#ifdef IS_IN_libm
+# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __copysign, copysignl, GLIBC_2_0)
+# endif
+#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+compat_symbol (libc, __copysign, copysignl, GLIBC_2_0)
 #endif

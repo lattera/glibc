@@ -62,4 +62,4 @@ ENTRY(__getcontext)
 
 END(__getcontext)
 
-weak_alias(__getcontext, getcontext)
+weak_alias (__getcontext, getcontext)

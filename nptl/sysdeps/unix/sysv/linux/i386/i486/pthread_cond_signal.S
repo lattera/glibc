@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,7 +31,9 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-#define FUTEX_REQUEUE		3
+#define FUTEX_WAKE_OP		5
+
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
 
 #define EINVAL			22
 
@@ -79,21 +81,46 @@ __pthread_cond_signal:
 	addl	$1, (%ebx)
 
 	/* Wake up one thread.  */
-	movl	$FUTEX_WAKE, %ecx
+	pushl	%esi
+	pushl	%ebp
+	movl	$FUTEX_WAKE_OP, %ecx
 	movl	$SYS_futex, %eax
 	movl	$1, %edx
+	movl	$1, %esi
+	movl	$FUTEX_OP_CLEAR_WAKE_IF_GT_ONE, %ebp
+	/* FIXME: Until Ingo fixes 4G/4G vDSO, 6 arg syscalls are broken for
+	   sysenter.
+	ENTER_KERNEL  */
+	int	$0x80
+	popl	%ebp
+	popl	%esi
+
+	/* For any kind of error, we try again with WAKE.
+	   The general test also covers running on old kernels.  */
+	cmpl	$-4095, %eax
+	jae	7f
+
+6:	xorl	%eax, %eax
+	popl	%edi
+	popl	%ebx
+	ret
+
+7:	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	/* %edx should be 1 already from $FUTEX_WAKE_OP syscall.
+	movl	$1, %edx  */
 	ENTER_KERNEL
 
 	/* Unlock.  Note that at this point %edi always points to
 	   cond_lock.  */
 4:	LOCK
 	subl	$1, (%edi)
-	jne	5f
+	je	6b
 
-6:	xorl	%eax, %eax
-	popl	%edi
-	popl	%ebx
-	ret
+	/* Unlock in loop requires wakeup.  */
+5:	movl	%edi, %eax
+	call	__lll_mutex_unlock_wake
+	jmp	6b
 
 	/* Initial locking failed.  */
 1:
@@ -105,10 +132,6 @@ __pthread_cond_signal:
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires wakeup.  */
-5:	movl	%edi, %eax
-	call	__lll_mutex_unlock_wake
-	jmp	6b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -39,8 +39,7 @@ nis_ping (const_nis_name dirname, unsigned int utime,
       res = nis_lookup (dirname, MASTER_ONLY);
       if (res == NULL || NIS_RES_STATUS (res) != NIS_SUCCESS)
 	{
-	  if (res)
-	    nis_freeresult (res);
+	  nis_freeresult (res);
 	  return;
 	}
       obj = res->objects.objects_val;
@@ -51,8 +50,7 @@ nis_ping (const_nis_name dirname, unsigned int utime,
   /* Check if obj is really a diryectory object */
   if (__type_of (obj) != NIS_DIRECTORY_OBJ)
     {
-      if (res != NULL)
-	nis_freeresult (res);
+      nis_freeresult (res);
       return;
     }
 
@@ -68,6 +66,5 @@ nis_ping (const_nis_name dirname, unsigned int utime,
 		   NIS_PING, (xdrproc_t) _xdr_ping_args,
 		   (caddr_t) &args, (xdrproc_t) xdr_void,
 		   (caddr_t) NULL, 0, NULL);
-  if (res)
-    nis_freeresult (res);
+  nis_freeresult (res);
 }

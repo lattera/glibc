@@ -1,5 +1,6 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995,96,97,98,99,2000,01,02,04 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +26,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <sys/param.h>
+#include <math_ldbl_opt.h>
 
 #ifndef FLOAT_TYPE
 # define FLOAT_TYPE double
@@ -55,10 +57,14 @@
 #  error "FLOAT_MIN_10_NORM must be precomputed"
 #  define FLOAT_MIN_10_NORM	exp10 (DBL_MIN_10_EXP)
 # endif
+#else
+# define LONG_DOUBLE_CVT
 #endif
 
 #define APPEND(a, b) APPEND2 (a, b)
 #define APPEND2(a, b) a##b
+#define __APPEND(a, b) __APPEND2 (a, b)
+#define __APPEND2(a, b) __##a##b
 
 #define FLOOR APPEND(floor, FLOAT_NAME_EXT)
 #define FABS APPEND(fabs, FLOAT_NAME_EXT)
@@ -67,7 +73,7 @@
 
 
 int
-APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
+__APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
      char *buf;
@@ -163,10 +169,9 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 
   return 0;
 }
-libc_hidden_def (APPEND (FUNC_PREFIX, fcvt_r))
 
 int
-APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
+__APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
      char *buf;
@@ -229,11 +234,32 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
       *sign = isfinite (value) ? signbit (value) != 0 : 0;
     }
   else
-    if (APPEND (FUNC_PREFIX, fcvt_r) (value, MIN (ndigit, NDIGIT_MAX) - 1,
-				      decpt, sign, buf, len))
+    if (__APPEND (FUNC_PREFIX, fcvt_r) (value, MIN (ndigit, NDIGIT_MAX) - 1,
+					decpt, sign, buf, len))
       return -1;
 
   *decpt += exponent;
   return 0;
 }
-libc_hidden_def (APPEND (FUNC_PREFIX, ecvt_r))
+
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+# ifdef LONG_DOUBLE_CVT
+#  define cvt_symbol(symbol) \
+  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
+	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
+#  define cvt_symbol_1(lib, local, symbol, version) \
+    versioned_symbol (lib, local, symbol, version)
+# else
+#  define cvt_symbol(symbol) \
+  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
+	      APPEND (q, symbol), GLIBC_2_0); \
+  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+#  define cvt_symbol_1(lib, local, symbol, version) \
+  compat_symbol (lib, local, symbol, version)
+# endif
+#else
+# define cvt_symbol(symbol) \
+  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+#endif
+cvt_symbol(fcvt_r);
+cvt_symbol(ecvt_r);

@@ -1,0 +1,327 @@
+/* Suspend until termination of a requests.
+   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2006
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+
+/* We use an UGLY hack to prevent gcc from finding us cheating.  The
+   implementations of aio_suspend and aio_suspend64 are identical and so
+   we want to avoid code duplication by using aliases.  But gcc sees
+   the different parameter lists and prints a warning.  We define here
+   a function so that aio_suspend64 has no prototype.  */
+#define aio_suspend64 XXX
+#include <aio.h>
+/* And undo the hack.  */
+#undef aio_suspend64
+
+#include <kaio_misc.h>
+
+#ifndef USE_KAIO
+#include <aio_suspend.c>
+#else
+
+#include <assert.h>
+#include <errno.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <sys/time.h>
+
+#include <bits/libc-lock.h>
+#include <sysdep-cancel.h>
+
+
+struct clparam
+{
+  const struct aiocb *const *list;
+  struct waitlist *waitlist;
+  struct requestlist **requestlist;
+#ifndef DONT_NEED_AIO_MISC_COND
+  pthread_cond_t *cond;
+#endif
+  int nent;
+};
+
+
+static void
+cleanup (void *arg)
+{
+#ifdef DONT_NEED_AIO_MISC_COND
+  /* Acquire the mutex.  If pthread_cond_*wait is used this would
+     happen implicitly.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
+#endif
+
+  const struct clparam *param = (const struct clparam *) arg;
+
+  /* Now remove the entry in the waiting list for all requests
+     which didn't terminate.  */
+  int cnt = param->nent;
+  while (cnt-- > 0)
+    if (param->list[cnt] != NULL
+	&& param->list[cnt]->__error_code == EINPROGRESS)
+      {
+	struct waitlist **listp;
+
+	assert (param->requestlist[cnt] != NULL);
+
+	/* There is the chance that we cannot find our entry anymore. This
+	   could happen if the request terminated and restarted again.  */
+	listp = &param->requestlist[cnt]->waiting;
+	while (*listp != NULL && *listp != &param->waitlist[cnt])
+	  listp = &(*listp)->next;
+
+	if (*listp != NULL)
+	  *listp = (*listp)->next;
+      }
+
+#ifndef DONT_NEED_AIO_MISC_COND
+  /* Release the conditional variable.  */
+  (void) pthread_cond_destroy (param->cond);
+#endif
+
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
+}
+
+
+int
+aio_suspend (list, nent, timeout)
+     const struct aiocb *const list[];
+     int nent;
+     const struct timespec *timeout;
+{
+  if (__builtin_expect (nent < 0, 0))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  struct waitlist waitlist[nent];
+  struct requestlist *requestlist[nent];
+#ifndef DONT_NEED_AIO_MISC_COND
+  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#endif
+  int cnt;
+  int result = 0;
+  int cntr = 1;
+  int total = 0, ktotal = 0;
+
+  /* Request the mutex.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
+
+  /* There is not yet a finished request.  Signal the request that
+     we are working for it.  */
+  for (cnt = 0; cnt < nent; ++cnt)
+    if (list[cnt] != NULL)
+      {
+	if (list[cnt]->__error_code == EINPROGRESS)
+	  {
+	    requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
+
+	    if (requestlist[cnt] != NULL)
+	      {
+#ifndef DONT_NEED_AIO_MISC_COND
+		waitlist[cnt].cond = &cond;
+#endif
+		waitlist[cnt].result = NULL;
+		waitlist[cnt].next = requestlist[cnt]->waiting;
+		waitlist[cnt].counterp = &cntr;
+		waitlist[cnt].sigevp = NULL;
+#ifdef BROKEN_THREAD_SIGNALS
+		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
+#endif
+		requestlist[cnt]->waiting = &waitlist[cnt];
+		total++;
+		if (requestlist[cnt]->kioctx != KCTX_NONE)
+		  ktotal++;
+	      }
+	    else
+	      /* We will never suspend.  */
+	      break;
+	  }
+	else
+	  /* We will never suspend.  */
+	  break;
+      }
+
+
+  /* Only if none of the entries is NULL or finished to be wait.  */
+  if (cnt == nent && total)
+    {
+      struct clparam clparam =
+	{
+	  .list = list,
+	  .waitlist = waitlist,
+	  .requestlist = requestlist,
+#ifndef DONT_NEED_AIO_MISC_COND
+	  .cond = &cond,
+#endif
+	  .nent = nent
+	};
+
+      pthread_cleanup_push (cleanup, &clparam);
+
+      if (!__kernel_thread_started && ktotal)
+	{
+	  /* If the kernel aio thread was not started yet all requests
+	     are served by the kernel and there are no other threads running,
+	     read events with mutex hold, so that nobody else can get them
+	     instead of us here.  */
+          if (SINGLE_THREAD_P && total == ktotal)
+	    {
+	      if (timeout == NULL)
+		{
+		  while (cntr == 1)
+		    __aio_wait_for_events (__aio_kioctx, NULL);
+		}
+	      else
+		{
+		  struct timeval now;
+		  struct timespec abstime, ts;
+
+		  __gettimeofday (&now, NULL);
+		  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+		  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
+		  if (abstime.tv_nsec >= 1000000000)
+		    {
+		      abstime.tv_nsec -= 1000000000;
+		      abstime.tv_sec += 1;
+		    }
+
+		  for (;;)
+		    {
+		      result = __aio_wait_for_events (__aio_kioctx, timeout);
+		      if (cntr < 1)
+			break;
+		      if (result == ETIMEDOUT)
+			break;
+
+		      __gettimeofday (&now, NULL);
+		      if (now.tv_sec > abstime.tv_sec
+			  || (now.tv_sec == abstime.tv_sec
+			      && now.tv_usec * 1000 >= abstime.tv_nsec))
+			break;
+
+		      ts.tv_nsec = abstime.tv_nsec - now.tv_usec * 1000;
+		      ts.tv_sec = abstime.tv_sec - now.tv_sec;
+		      if (abstime.tv_nsec < now.tv_usec * 1000)
+			{
+			  ts.tv_nsec += 1000000000;
+			  ts.tv_sec -= 1;
+			}
+		      timeout = &ts;
+		    }
+
+		  if (cntr < 1)
+		    result = 0;
+		  else
+		    result = ETIMEDOUT;
+		}
+	      total = 0;
+	    }
+ 	  else if (__aio_create_kernel_thread () < 0)
+	    {
+	      total = 0;
+	      __set_errno (ENOMEM);
+	      result = -1;
+	    }
+	}
+
+      if (total == 0)
+	/* Suspending was handled above.  */
+	;
+#ifdef DONT_NEED_AIO_MISC_COND
+      else
+	AIO_MISC_WAIT (result, cntr, timeout, 1);
+#else
+      else if (timeout == NULL)
+	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
+      else
+	{
+	  /* We have to convert the relative timeout value into an
+	     absolute time value with pthread_cond_timedwait expects.  */
+	  struct timeval now;
+	  struct timespec abstime;
+
+	  __gettimeofday (&now, NULL);
+	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
+	  if (abstime.tv_nsec >= 1000000000)
+	    {
+	      abstime.tv_nsec -= 1000000000;
+	      abstime.tv_sec += 1;
+	    }
+
+	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
+					   &abstime);
+	}
+#endif
+
+      pthread_cleanup_pop (0);
+    }
+
+  /* Now remove the entry in the waiting list for all requests
+     which didn't terminate.  */
+  while (cnt-- > 0)
+    if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
+      {
+	struct waitlist **listp;
+
+	assert (requestlist[cnt] != NULL);
+
+	/* There is the chance that we cannot find our entry anymore. This
+	   could happen if the request terminated and restarted again.  */
+	listp = &requestlist[cnt]->waiting;
+	while (*listp != NULL && *listp != &waitlist[cnt])
+	  listp = &(*listp)->next;
+
+	if (*listp != NULL)
+	  *listp = (*listp)->next;
+      }
+
+#ifndef DONT_NEED_AIO_MISC_COND
+  /* Release the conditional variable.  */
+  if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
+    /* This must never happen.  */
+    abort ();
+#endif
+
+  if (result != 0)
+    {
+#ifndef DONT_NEED_AIO_MISC_COND
+      /* An error occurred.  Possibly it's ETIMEDOUT.  We have to translate
+	 the timeout error report of `pthread_cond_timedwait' to the
+	 form expected from `aio_suspend'.  */
+      if (result == ETIMEDOUT)
+	__set_errno (EAGAIN);
+      else
+#endif
+	__set_errno (result);
+
+      result = -1;
+    }
+
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
+
+  return result;
+}
+
+weak_alias (aio_suspend, aio_suspend64)
+#endif

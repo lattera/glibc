@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -47,8 +47,7 @@ internal_ismember (const_nis_name principal, const_nis_name group)
   res = nis_lookup (buf, EXPAND_NAME|FOLLOW_LINKS);
   if (res == NULL || NIS_RES_STATUS (res) != NIS_SUCCESS)
     {
-      if (res)
-	nis_freeresult (res);
+      nis_freeresult (res);
       return 0;
     }
 

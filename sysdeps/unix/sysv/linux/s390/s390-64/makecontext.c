@@ -37,8 +37,6 @@
                +-----------------------+
              n | overflow parameters   | 160
                +-----------------------+
-             8 | trampoline            | 160+n
-               +-----------------------+
    The registers are set up like this:
      %r2-%r6: parameters 1 to 5
      %r7    : (*func) pointer
@@ -55,17 +53,16 @@
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
+  extern void __makecontext_ret (void);
   unsigned long *sp;
   va_list ap;
   int i;
 
-  sp = (long *) (((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size) & -8L);
-
-  /* Setup the trampoline.  */
-  *--sp = 0x0de7b904002807f9;
+  sp = (unsigned long *) (((unsigned long) ucp->uc_stack.ss_sp
+			   + ucp->uc_stack.ss_size) & -8L);
 
   /* Set the return address to trampoline.  */
-  ucp->uc_mcontext.gregs[14] = (long) sp;
+  ucp->uc_mcontext.gregs[14] = (long) __makecontext_ret;
 
   /* Set register parameters.  */
   va_start (ap, argc);
@@ -96,5 +93,13 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   /* Set stack pointer.  */
   ucp->uc_mcontext.gregs[15] = (long) sp;
 }
+
+asm(".text\n"
+    ".type __makecontext_ret,@function\n"
+    "__makecontext_ret:\n"
+    "      basr  %r14,%r7\n"
+    "      lgr   %r2,%r8\n"
+    "      br    %r9\n"
+    ".size __makecontext_ret, .-__makecontext_ret");
 
 weak_alias (__makecontext, makecontext)

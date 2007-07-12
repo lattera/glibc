@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return (long)a
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -28,9 +28,9 @@ long long _q_qtoll(const long double a)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);
-  long long r;
+  unsigned long long r;
 
-  FP_UNPACK_Q(A, a);
+  FP_UNPACK_RAW_Q(A, a);
   FP_TO_INT_Q(r, A, 64, 1);
   FP_HANDLE_EXCEPTIONS;
 

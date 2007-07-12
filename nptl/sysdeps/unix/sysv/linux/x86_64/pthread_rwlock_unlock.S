@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -56,7 +56,7 @@ __pthread_rwlock_unlock:
 
 5:	movl	$0, WRITER(%rdi)
 
-	movq	$1, %rsi
+	movl	$1, %esi
 	leaq	WRITERS_WAKEUP(%rdi), %r10
 	movq	%rsi, %rdx
 	cmpl	$0, WRITERS_QUEUED(%rdi)
@@ -78,11 +78,11 @@ __pthread_rwlock_unlock:
 #endif
 	jne	7f
 
-8:	movq	$SYS_futex, %rax
+8:	movl	$SYS_futex, %eax
 	movq	%r10, %rdi
 	syscall
 
-	xorq	%rax, %rax
+	xorl	%eax, %eax
 	retq
 
 	.align	16
@@ -94,7 +94,7 @@ __pthread_rwlock_unlock:
 #endif
 	jne	3f
 
-4:	xorq	%rax, %rax
+4:	xorl	%eax, %eax
 	retq
 
 1:

@@ -37,7 +37,7 @@ libc {
     tempnam; tmpfile; tmpnam; tmpnam_r;
 
     # v*
-    vfprintf; vfscanf; vprintf; 
+    vfprintf; vfscanf; vprintf;
   }
   GLIBC_2.1 {
     # p*
@@ -45,6 +45,9 @@ libc {
 
     # t*
     tmpfile; tmpfile64;
+  }
+  GLIBC_2.4 {
+    renameat;
   }
   GLIBC_PRIVATE {
     # global variables

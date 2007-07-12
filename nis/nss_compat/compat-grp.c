@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -59,12 +59,13 @@ struct blacklist_t
 struct ent_t
 {
   bool_t files;
+  enum nss_status setent_status;
   FILE *stream;
   struct blacklist_t blacklist;
 };
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = {TRUE, NULL, {NULL, 0, 0}};
+static ent_t ext_ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -89,7 +90,7 @@ init_nss_interface (void)
 }
 
 static enum nss_status
-internal_setgrent (ent_t *ent, int stayopen)
+internal_setgrent (ent_t *ent, int stayopen, int needent)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
@@ -137,8 +138,8 @@ internal_setgrent (ent_t *ent, int stayopen)
   else
     rewind (ent->stream);
 
-  if (status == NSS_STATUS_SUCCESS && nss_setgrent)
-    return nss_setgrent (stayopen);
+  if (needent && status == NSS_STATUS_SUCCESS && nss_setgrent)
+    ent->setent_status = nss_setgrent (stayopen);
 
   return status;
 }
@@ -154,7 +155,7 @@ _nss_compat_setgrent (int stayopen)
   if (ni == NULL)
     init_nss_interface ();
 
-  result = internal_setgrent (&ext_ent, stayopen);
+  result = internal_setgrent (&ext_ent, stayopen, 1);
 
   __libc_lock_unlock (lock);
 
@@ -208,6 +209,10 @@ getgrent_next_nss (struct group *result, ent_t *ent, char *buffer,
   if (!nss_getgrent_r)
     return NSS_STATUS_UNAVAIL;
 
+  /* If the setgrent call failed, say so.  */
+  if (ent->setent_status != NSS_STATUS_SUCCESS)
+    return ent->setent_status;
+
   do
     {
       enum nss_status status;
@@ -229,9 +234,10 @@ getgrnam_plusgroup (const char *name, struct group *result, ent_t *ent,
   if (!nss_getgrnam_r)
     return NSS_STATUS_UNAVAIL;
 
-  if (nss_getgrnam_r (name, result, buffer, buflen, errnop) !=
-      NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
+  enum nss_status status = nss_getgrnam_r (name, result, buffer, buflen,
+					   errnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
   if (in_blacklist (result->gr_name, strlen (result->gr_name), ent))
     return NSS_STATUS_NOTFOUND;
@@ -358,7 +364,7 @@ _nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen,
     init_nss_interface ();
 
   if (ext_ent.stream == NULL)
-    result = internal_setgrent (&ext_ent, 1);
+    result = internal_setgrent (&ext_ent, 1, 1);
 
   if (result == NSS_STATUS_SUCCESS)
     {
@@ -480,7 +486,7 @@ enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = {TRUE, NULL, {NULL, 0, 0}};
+  ent_t ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
   enum nss_status result;
 
   if (name[0] == '-' || name[0] == '+')
@@ -493,7 +499,7 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
 
   __libc_lock_unlock (lock);
 
-  result = internal_setgrent (&ent, 0);
+  result = internal_setgrent (&ent, 0, 0);
 
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getgrnam_r (name, grp, &ent, buffer, buflen, errnop);
@@ -551,7 +557,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 
@@ -574,13 +580,17 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       /* +group */
       if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
+	  /* Yes, no +1, see the memcpy call below.  */
+	  size_t len = strlen (result->gr_name);
+	  char buf[len];
 	  enum nss_status status;
 
 	  /* Store the group in the blacklist for the "+" at the end of
 	     /etc/group */
-	  blacklist_store_name (&result->gr_name[1], ent);
+	  memcpy (buf, &result->gr_name[1], len);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, ent,
 				       buffer, buflen, errnop);
+	  blacklist_store_name (buf, ent);
 	  if (status == NSS_STATUS_SUCCESS && result->gr_gid == gid)
 	    break;
 	  else
@@ -589,9 +599,11 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{
-	  enum nss_status status;
+	  if (!nss_getgrgid_r)
+	    return NSS_STATUS_UNAVAIL;
 
-	  status = nss_getgrgid_r (gid, result, buffer, buflen, errnop);
+	  enum nss_status status = nss_getgrgid_r (gid, result, buffer, buflen,
+						   errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	    return NSS_STATUS_NOTFOUND;
 	  else
@@ -606,7 +618,7 @@ enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = {TRUE, NULL, {NULL, 0, 0}};
+  ent_t ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
   enum nss_status result;
 
   __libc_lock_lock (lock);
@@ -616,7 +628,7 @@ _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
 
   __libc_lock_unlock (lock);
 
-  result = internal_setgrent (&ent, 0);
+  result = internal_setgrent (&ent, 0, 0);
 
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getgrgid_r (gid, grp, &ent, buffer, buflen, errnop);

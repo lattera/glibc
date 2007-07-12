@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Basic two-word fraction declaration and manipulation.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -12,6 +12,15 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
+   In addition to the permissions in the GNU Lesser General Public
+   License, the Free Software Foundation gives you unlimited
+   permission to link the compiled version of this file into
+   combinations with other programs, and to distribute those
+   combinations without any restriction coming from the use of this
+   file.  (The Lesser General Public License restrictions do apply in
+   other respects; for example, they cover modification of the file,
+   and distribution when not linked into a combine executable.)
+
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -19,8 +28,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 #define _FP_FRAC_DECL_2(X)	_FP_W_TYPE X##_f0, X##_f1
 #define _FP_FRAC_COPY_2(D,S)	(D##_f0 = S##_f0, D##_f1 = S##_f1)
@@ -29,61 +38,74 @@
 #define _FP_FRAC_LOW_2(X)	(X##_f0)
 #define _FP_FRAC_WORD_2(X,w)	(X##_f##w)
 
-#define _FP_FRAC_SLL_2(X,N)						\
-  do {									\
-    if ((N) < _FP_W_TYPE_SIZE)						\
-      {									\
-	if (__builtin_constant_p(N) && (N) == 1) 			\
-	  {								\
-	    X##_f1 = X##_f1 + X##_f1 + (((_FP_WS_TYPE)(X##_f0)) < 0);	\
-	    X##_f0 += X##_f0;						\
-	  }								\
-	else								\
-	  {								\
-	    X##_f1 = X##_f1 << (N) | X##_f0 >> (_FP_W_TYPE_SIZE - (N));	\
-	    X##_f0 <<= (N);						\
-	  }								\
-      }									\
-    else								\
-      {									\
-	X##_f1 = X##_f0 << ((N) - _FP_W_TYPE_SIZE);			\
-	X##_f0 = 0;							\
-      }									\
-  } while (0)
+#define _FP_FRAC_SLL_2(X,N)						    \
+(void)(((N) < _FP_W_TYPE_SIZE)						    \
+       ? ({								    \
+	    if (__builtin_constant_p(N) && (N) == 1)			    \
+	      {								    \
+		X##_f1 = X##_f1 + X##_f1 + (((_FP_WS_TYPE)(X##_f0)) < 0);   \
+		X##_f0 += X##_f0;					    \
+	      }								    \
+	    else							    \
+	      {								    \
+		X##_f1 = X##_f1 << (N) | X##_f0 >> (_FP_W_TYPE_SIZE - (N)); \
+		X##_f0 <<= (N);						    \
+	      }								    \
+	    0;								    \
+	  })								    \
+       : ({								    \
+	    X##_f1 = X##_f0 << ((N) - _FP_W_TYPE_SIZE);			    \
+	    X##_f0 = 0;							    \
+	  }))
+
 
 #define _FP_FRAC_SRL_2(X,N)						\
-  do {									\
-    if ((N) < _FP_W_TYPE_SIZE)						\
-      {									\
-	X##_f0 = X##_f0 >> (N) | X##_f1 << (_FP_W_TYPE_SIZE - (N));	\
-	X##_f1 >>= (N);							\
-      }									\
-    else								\
-      {									\
-	X##_f0 = X##_f1 >> ((N) - _FP_W_TYPE_SIZE);			\
-	X##_f1 = 0;							\
-      }									\
-  } while (0)
+(void)(((N) < _FP_W_TYPE_SIZE)						\
+       ? ({								\
+	    X##_f0 = X##_f0 >> (N) | X##_f1 << (_FP_W_TYPE_SIZE - (N));	\
+	    X##_f1 >>= (N);						\
+	  })								\
+       : ({								\
+	    X##_f0 = X##_f1 >> ((N) - _FP_W_TYPE_SIZE);			\
+	    X##_f1 = 0;							\
+	  }))
 
 /* Right shift with sticky-lsb.  */
-#define _FP_FRAC_SRS_2(X,N,sz)						\
-  do {									\
-    if ((N) < _FP_W_TYPE_SIZE)						\
-      {									\
-	X##_f0 = (X##_f1 << (_FP_W_TYPE_SIZE - (N)) | X##_f0 >> (N) |	\
-		  (__builtin_constant_p(N) && (N) == 1			\
-		   ? X##_f0 & 1						\
-		   : (X##_f0 << (_FP_W_TYPE_SIZE - (N))) != 0));	\
-	X##_f1 >>= (N);							\
-      }									\
-    else								\
-      {									\
-	X##_f0 = (X##_f1 >> ((N) - _FP_W_TYPE_SIZE) |			\
-		  (((X##_f1 << (2*_FP_W_TYPE_SIZE - (N))) |		\
-		    X##_f0) != 0));					\
-	X##_f1 = 0;							\
-      }									\
-  } while (0)
+#define _FP_FRAC_SRST_2(X,S, N,sz)					  \
+(void)(((N) < _FP_W_TYPE_SIZE)						  \
+       ? ({								  \
+	    S = (__builtin_constant_p(N) && (N) == 1			  \
+		 ? X##_f0 & 1						  \
+		 : (X##_f0 << (_FP_W_TYPE_SIZE - (N))) != 0);		  \
+	    X##_f0 = (X##_f1 << (_FP_W_TYPE_SIZE - (N)) | X##_f0 >> (N)); \
+	    X##_f1 >>= (N);						  \
+	  })								  \
+       : ({								  \
+	    S = ((((N) == _FP_W_TYPE_SIZE				  \
+		   ? 0							  \
+		   : (X##_f1 << (2*_FP_W_TYPE_SIZE - (N))))		  \
+		  | X##_f0) != 0);					  \
+	    X##_f0 = (X##_f1 >> ((N) - _FP_W_TYPE_SIZE));		  \
+	    X##_f1 = 0;							  \
+	  }))
+
+#define _FP_FRAC_SRS_2(X,N,sz)						  \
+(void)(((N) < _FP_W_TYPE_SIZE)						  \
+       ? ({								  \
+	    X##_f0 = (X##_f1 << (_FP_W_TYPE_SIZE - (N)) | X##_f0 >> (N) | \
+		      (__builtin_constant_p(N) && (N) == 1		  \
+		       ? X##_f0 & 1					  \
+		       : (X##_f0 << (_FP_W_TYPE_SIZE - (N))) != 0));	  \
+	    X##_f1 >>= (N);						  \
+	  })								  \
+       : ({								  \
+	    X##_f0 = (X##_f1 >> ((N) - _FP_W_TYPE_SIZE) |		  \
+		      ((((N) == _FP_W_TYPE_SIZE				  \
+			 ? 0						  \
+			 : (X##_f1 << (2*_FP_W_TYPE_SIZE - (N))))	  \
+			| X##_f0) != 0));				  \
+	    X##_f1 = 0;							  \
+	  }))
 
 #define _FP_FRAC_ADDI_2(X,I)	\
   __FP_FRAC_ADDI_2(X##_f1, X##_f0, I)
@@ -115,9 +137,9 @@
 #define _FP_FRAC_CLEAR_OVERP_2(fs,X)	(_FP_FRAC_HIGH_##fs(X) &= ~_FP_OVERFLOW_##fs)
 #define _FP_FRAC_EQ_2(X, Y)	(X##_f1 == Y##_f1 && X##_f0 == Y##_f0)
 #define _FP_FRAC_GT_2(X, Y)	\
-  (X##_f1 > Y##_f1 || X##_f1 == Y##_f1 && X##_f0 > Y##_f0)
+  (X##_f1 > Y##_f1 || (X##_f1 == Y##_f1 && X##_f0 > Y##_f0))
 #define _FP_FRAC_GE_2(X, Y)	\
-  (X##_f1 > Y##_f1 || X##_f1 == Y##_f1 && X##_f0 >= Y##_f0)
+  (X##_f1 > Y##_f1 || (X##_f1 == Y##_f1 && X##_f0 >= Y##_f0))
 
 #define _FP_ZEROFRAC_2		0, 0
 #define _FP_MINFRAC_2		0, 1
@@ -570,16 +592,13 @@
  */
 
 #define _FP_FRAC_ASSEMBLE_2(r, X, rsize)	\
-  do {						\
-    if (rsize <= _FP_W_TYPE_SIZE)		\
-      r = X##_f0;				\
-    else					\
-      {						\
-	r = X##_f1;				\
-	r <<= _FP_W_TYPE_SIZE;			\
-	r += X##_f0;				\
-      }						\
-  } while (0)
+(void)((rsize <= _FP_W_TYPE_SIZE)		\
+       ? ({ r = X##_f0; })			\
+       : ({					\
+	    r = X##_f1;				\
+	    r <<= _FP_W_TYPE_SIZE;		\
+	    r += X##_f0;			\
+	  }))
 
 #define _FP_FRAC_DISASSEMBLE_2(X, r, rsize)				\
   do {									\
@@ -591,20 +610,6 @@
  * Convert FP values between word sizes
  */
 
-#define _FP_FRAC_CONV_1_2(dfs, sfs, D, S)				\
-  do {									\
-    if (S##_c != FP_CLS_NAN)						\
-      _FP_FRAC_SRS_2(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs),	\
-		     _FP_WFRACBITS_##sfs);				\
-    else								\
-      _FP_FRAC_SRL_2(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs));	\
-    D##_f = S##_f0;							\
-  } while (0)
+#define _FP_FRAC_COPY_1_2(D, S)		(D##_f = S##_f0)
 
-#define _FP_FRAC_CONV_2_1(dfs, sfs, D, S)				\
-  do {									\
-    D##_f0 = S##_f;							\
-    D##_f1 = 0;								\
-    _FP_FRAC_SLL_2(D, (_FP_WFRACBITS_##dfs - _FP_WFRACBITS_##sfs));	\
-  } while (0)
-
+#define _FP_FRAC_COPY_2_1(D, S)		((D##_f0 = S##_f), (D##_f1 = 0))

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,11 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
+#ifndef NO_WEAK_ALIAS
 #define __socket P(__,socket)
+#else
+#define __socket socket
+#endif
 #endif
 
 #define PUSHARGS_1	mov.l r4,@-r15;	\
@@ -84,7 +88,6 @@
 #endif
 
 .globl __socket
-	cfi_startproc
 ENTRY (__socket)
 	/* This will not work in the case of a socket call being interrupted
 	   by a signal.  If the signal handler uses any stack the arguments
@@ -165,7 +168,6 @@ ENTRY (__socket)
 	bra	.Lsyscall_error
 	 nop
 #endif
-	cfi_endproc
 
 	.align 2
 .L1:
@@ -173,4 +175,6 @@ ENTRY (__socket)
 
 PSEUDO_END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

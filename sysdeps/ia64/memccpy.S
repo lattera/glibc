@@ -1,6 +1,6 @@
 /* Optimized version of the memccpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000,2001,2003,2006 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -183,27 +183,64 @@ ENTRY(memccpy)
 	br.ret.sptk.many b0
 
 .recovery1:
-	adds	src = -(MEMLAT + 6 + 1) * 8, asrc
+#if MEMLAT != 6
+# error "MEMLAT must be 6!"
+#endif
+	adds	src = -8, asrc
 	mov	loopcnt = ar.lc
-	mov	tmp = ar.ec ;;
+	mov	tmp = ar.ec
+	;;
+(p[0])	adds	src = -8, src
+	;;
+(p[1])	adds	src = -8, src
 	sub	sh1 = (MEMLAT + 6 + 1), tmp
-	shr.u	sh2 = sh2, 3
-	;; 
+	;;
+(p[2])	adds	src = -8, src
+	;;
+(p[3])	adds	src = -8, src
 	shl	loopcnt = loopcnt, 3
-	sub	src = src, sh2
+	;;
+(p[4])	adds	src = -8, src
+	;;
+(p[5])	adds	src = -8, src
 	shl	sh1 = sh1, 3
+	;;
+(p[6])	adds	src = -8, src
+	;;
+(p[7])	adds	src = -8, src
 	shl	tmp = tmp, 3
 	;;
+(p[8])	adds	src = -8, src
+	;;
+(p[9])	adds	src = -8, src
+	shr.u	sh2 = sh2, 3
+	;;
+(p[10])	adds	src = -8, src
+	;;
+(p[11])	adds	src = -8, src
 	add	len = len, loopcnt
-	add	src = sh1, src ;;
+	;;
+	sub	src = src, sh2
+	;;
 	add	len = tmp, len
-.back1:
+	add	src = sh1, src
 	br.cond.sptk .cpyfew
 
 .recovery2:
-	add	tmp = -(MEMLAT + 3) * 8, src
+#if MEMLAT != 6
+# error "MEMLAT must be 6!"
+#endif
+	add	tmp = -8, src
 (p7)	br.cond.spnt .gotit
 	;;
+(p[0])	add	tmp = -8, tmp ;;
+(p[1])	add	tmp = -8, tmp ;;
+(p[2])	add	tmp = -8, tmp ;;
+(p[3])	add	tmp = -8, tmp ;;
+(p[4])	add	tmp = -8, tmp ;;
+(p[5])	add	tmp = -8, tmp ;;
+(p[6])	add	tmp = -8, tmp ;;
+(p[7])	add	tmp = -8, tmp ;;
 	ld8	r[MEMLAT+2] = [tmp] ;;
 	xor	pos0[1] = r[MEMLAT+2], charx8 ;;
 	czx1.r	pos0[1] = pos0[1] ;;

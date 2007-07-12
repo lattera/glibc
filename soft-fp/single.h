@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Definitions for IEEE Single Precision.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -12,6 +12,15 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
+   In addition to the permissions in the GNU Lesser General Public
+   License, the Free Software Foundation gives you unlimited
+   permission to link the compiled version of this file into
+   combinations with other programs, and to distribute those
+   combinations without any restriction coming from the use of this
+   file.  (The Lesser General Public License restrictions do apply in
+   other respects; for example, they cover modification of the file,
+   and distribution when not linked into a combine executable.)
+
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -19,30 +28,36 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 #if _FP_W_TYPE_SIZE < 32
 #error "Here's a nickel kid.  Go buy yourself a real computer."
 #endif
 
+#define _FP_FRACTBITS_S		_FP_W_TYPE_SIZE
+
 #define _FP_FRACBITS_S		24
-#define _FP_FRACXBITS_S		(_FP_W_TYPE_SIZE - _FP_FRACBITS_S)
+#define _FP_FRACXBITS_S		(_FP_FRACTBITS_S - _FP_FRACBITS_S)
 #define _FP_WFRACBITS_S		(_FP_WORKBITS + _FP_FRACBITS_S)
-#define _FP_WFRACXBITS_S	(_FP_W_TYPE_SIZE - _FP_WFRACBITS_S)
+#define _FP_WFRACXBITS_S	(_FP_FRACTBITS_S - _FP_WFRACBITS_S)
 #define _FP_EXPBITS_S		8
 #define _FP_EXPBIAS_S		127
 #define _FP_EXPMAX_S		255
 #define _FP_QNANBIT_S		((_FP_W_TYPE)1 << (_FP_FRACBITS_S-2))
+#define _FP_QNANBIT_SH_S	((_FP_W_TYPE)1 << (_FP_FRACBITS_S-2+_FP_WORKBITS))
 #define _FP_IMPLBIT_S		((_FP_W_TYPE)1 << (_FP_FRACBITS_S-1))
+#define _FP_IMPLBIT_SH_S	((_FP_W_TYPE)1 << (_FP_FRACBITS_S-1+_FP_WORKBITS))
 #define _FP_OVERFLOW_S		((_FP_W_TYPE)1 << (_FP_WFRACBITS_S))
 
 /* The implementation of _FP_MUL_MEAT_S and _FP_DIV_MEAT_S should be
    chosen by the target machine.  */
 
+typedef float SFtype __attribute__((mode(SF)));
+
 union _FP_UNION_S
 {
-  float flt;
+  SFtype flt;
   struct {
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign : 1;
@@ -78,6 +93,18 @@ union _FP_UNION_S
     _FP_UNPACK_CANONICAL(S,1,X);	\
   } while (0)
 
+#define FP_UNPACK_SEMIRAW_S(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_1(S,X,val);		\
+    _FP_UNPACK_SEMIRAW(S,1,X);		\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_SP(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_1_P(S,X,val);	\
+    _FP_UNPACK_SEMIRAW(S,1,X);		\
+  } while (0)
+
 #define FP_PACK_S(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(S,1,X);		\
@@ -87,6 +114,19 @@ union _FP_UNION_S
 #define FP_PACK_SP(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(S,1,X);		\
+    if (!FP_INHIBIT_RESULTS)		\
+      _FP_PACK_RAW_1_P(S,val,X);	\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_S(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(S,1,X);		\
+    _FP_PACK_RAW_1(S,val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_SP(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(S,1,X);		\
     if (!FP_INHIBIT_RESULTS)		\
       _FP_PACK_RAW_1_P(S,val,X);	\
   } while (0)
@@ -102,6 +142,7 @@ union _FP_UNION_S
 
 #define FP_CMP_S(r,X,Y,un)	_FP_CMP(S,1,r,X,Y,un)
 #define FP_CMP_EQ_S(r,X,Y)	_FP_CMP_EQ(S,1,r,X,Y)
+#define FP_CMP_UNORD_S(r,X,Y)	_FP_CMP_UNORD(S,1,r,X,Y)
 
 #define FP_TO_INT_S(r,X,rsz,rsg)	_FP_TO_INT(S,1,r,X,rsz,rsg)
 #define FP_FROM_INT_S(X,r,rs,rt)	_FP_FROM_INT(S,1,X,r,rs,rt)

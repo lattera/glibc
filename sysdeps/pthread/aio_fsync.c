@@ -1,5 +1,5 @@
 /* Synchronize I/O in given file descriptor.
-   Copyright (C) 1997, 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,7 +30,7 @@
 #undef aio_fsync64
 #include <errno.h>
 
-#include "aio_misc.h"
+#include <aio_misc.h>
 
 
 int

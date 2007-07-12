@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux/ia64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,14 +75,6 @@ enum __ptrace_request
   PTRACE_SINGLEBLOCK = 12,
 #define PT_STEPBLOCK PTRACE_SINGLEBLOCK
 
-  /* Get siginfo for process.  */
-  PTRACE_GETSIGINFO = 13,
-#define PT_GETSIGINFO PTRACE_GETSIGINFO
-
-  /* Set new siginfo for process.  */
-  PTRACE_SETSIGINFO = 14,
-#define PT_GETSIGINFO PTRACE_GETSIGINFO
-
   /* Attach to a process that is already running. */
   PTRACE_ATTACH = 16,
 #define PT_ATTACH PTRACE_ATTACH
@@ -100,8 +92,24 @@ enum __ptrace_request
 #define PT_SETREGS PTRACE_SETREGS
 
   /* Continue and stop at the next (return from) syscall.  */
-  PTRACE_SYSCALL = 24
+  PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
+
+  /* Set ptrace filter options.  */
+  PTRACE_SETOPTIONS = 0x4200,
+#define PT_SETOPTIONS PTRACE_SETOPTIONS
+
+  /* Get last ptrace message.  */
+  PTRACE_GETEVENTMSG = 0x4201,
+#define PT_GETEVENTMSG PTRACE_GETEVENTMSG
+
+  /* Get siginfo for process.  */
+  PTRACE_GETSIGINFO = 0x4202,
+#define PT_GETSIGINFO PTRACE_GETSIGINFO
+
+  /* Set new siginfo for process.  */
+  PTRACE_SETSIGINFO = 0x4203
+#define PT_SETSIGINFO PTRACE_SETSIGINFO
 };
 
 /* pt_all_user_regs is used for PTRACE_GETREGS/PTRACE_SETREGS.  */

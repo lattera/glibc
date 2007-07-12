@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -26,8 +26,6 @@
  * I needed fmemopen() for an application that I currently work on,
  * but couldn't find it in libio. The following snippet of code is an
  * attempt to implement what glibc's documentation describes.
- *
- * No, it isn't really tested yet. :-)
  *
  *
  *
@@ -73,6 +71,7 @@
 #include <libio.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 #include "libioP.h"
@@ -128,7 +127,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
       if ((size_t) (c->pos + addnullc) == c->size)
 	{
 	  __set_errno (ENOSPC);
-	  return -1;
+	  return 0;
 	}
       s = c->size - c->pos - addnullc;
     }
@@ -166,7 +165,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
       break;
 
     case SEEK_END:
-      np = c->size - *p;
+      np = c->maxpos - *p;
       break;
 
     default:
@@ -176,9 +175,9 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
   if (np < 0 || (size_t) np > c->size)
     return -1;
 
-  c->pos = np;
+  *p = c->pos = np;
 
-  return np;
+  return 0;
 }
 
 
@@ -203,6 +202,13 @@ fmemopen (void *buf, size_t len, const char *mode)
   cookie_io_functions_t iof;
   fmemopen_cookie_t *c;
 
+  if (__builtin_expect (len == 0, 0))
+    {
+    einval:
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
   c = (fmemopen_cookie_t *) malloc (sizeof (fmemopen_cookie_t));
   if (c == NULL)
     return NULL;
@@ -220,7 +226,15 @@ fmemopen (void *buf, size_t len, const char *mode)
       c->buffer[0] = '\0';
     }
   else
-    c->buffer = buf;
+    {
+      if (__builtin_expect ((uintptr_t) len > -(uintptr_t) buf, 0))
+	{
+	  free (c);
+	  goto einval;
+	}
+
+      c->buffer = buf;
+    }
 
   c->size = len;
 

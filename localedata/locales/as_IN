@@ -1,0 +1,732 @@
+comment_char %
+escape_char /
+
+% Assamese locale for India.
+% Contributed by Masahide Washizawa <washi at jp ibm com>
+
+%%%%%%%%%%%%%
+LC_IDENTIFICATION
+title       "Assamese language locale for India"
+source      "IBM AP Linux Technology Center, Yamato Software Laboratory"
+address     "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
+contact     ""
+email       "bug-glibc@gnu.org"
+tel         ""
+fax         ""
+language    "Assamese"
+territory   "India"
+revision    "1.0"
+date        "2006-05-25"
+%
+category  "as_IN:2000";LC_IDENTIFICATION
+category  "as_IN:2000";LC_CTYPE
+category  "as_IN:2000";LC_COLLATE
+category  "as_IN:2000";LC_TIME
+category  "as_IN:2000";LC_NUMERIC
+category  "as_IN:2000";LC_MONETARY
+category  "as_IN:2000";LC_MESSAGES
+category  "as_IN:2000";LC_PAPER
+category  "as_IN:2000";LC_NAME
+category  "as_IN:2000";LC_ADDRESS
+category  "as_IN:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+%%%%%%%%%%%%%
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+%%%%%%%%%%%%%
+LC_COLLATE
+
+% Define collation weights as symbols
+collating-symbol <X0001>
+collating-symbol <X0005>
+collating-symbol <X000D>
+collating-symbol <X001D>
+collating-symbol <X0031>
+collating-symbol <X0041>
+collating-symbol <X0086>
+collating-symbol <X0087>
+collating-symbol <X008F>
+collating-symbol <X00C0>
+collating-symbol <X00D7>
+collating-symbol <X00D8>
+collating-symbol <X00E1>
+collating-symbol <X00E9>
+collating-symbol <X00F9>
+collating-symbol <X0507>
+collating-symbol <X0509>
+collating-symbol <X050B>
+collating-symbol <X050D>
+collating-symbol <X050F>
+collating-symbol <X0600>
+collating-symbol <X0764>
+collating-symbol <X076A>
+collating-symbol <X0782>
+collating-symbol <X078E>
+collating-symbol <X07AA>
+collating-symbol <X07C0>
+collating-symbol <X07C6>
+collating-symbol <X07EE>
+collating-symbol <X07F6>
+collating-symbol <X080B>
+collating-symbol <X083F>
+collating-symbol <X084D>
+collating-symbol <X0861>
+collating-symbol <X0863>
+collating-symbol <X0865>
+collating-symbol <X0867>
+collating-symbol <X0869>
+collating-symbol <X086B>
+collating-symbol <X08DF>
+collating-symbol <X08E1>
+collating-symbol <X08E9>
+collating-symbol <X08ED>
+collating-symbol <X08EF>
+collating-symbol <X08F5>
+collating-symbol <X08F7>
+collating-symbol <X09F7>
+collating-symbol <X0BB3>
+collating-symbol <X0BBB>
+collating-symbol <X0BBD>
+collating-symbol <X0BBF>
+collating-symbol <X0BC3>
+collating-symbol <X0BC9>
+collating-symbol <X1FB5>
+collating-symbol <X1FB7>
+collating-symbol <X233C>
+collating-symbol <X2342>
+collating-symbol <X2344>
+collating-symbol <X2370>
+collating-symbol <X2372>
+collating-symbol <X2374>
+collating-symbol <X2376>
+collating-symbol <X2378>
+collating-symbol <X237A>
+collating-symbol <X237C>
+collating-symbol <X237E>
+collating-symbol <X2380>
+collating-symbol <X2382>
+collating-symbol <X2600>
+collating-symbol <X2800>
+collating-symbol <X2A00>
+collating-symbol <X2C00>
+collating-symbol <X2E00>
+collating-symbol <X3000>
+collating-symbol <X3200>
+collating-symbol <X3400>
+collating-symbol <X3600>
+collating-symbol <X3800>
+collating-symbol <X3A00>
+collating-symbol <X3C00>
+collating-symbol <X3E00>
+collating-symbol <X4000>
+collating-symbol <X4200>
+collating-symbol <X4400>
+collating-symbol <X4600>
+collating-symbol <X4800>
+collating-symbol <X4A00>
+collating-symbol <X4C00>
+collating-symbol <X4E00>
+collating-symbol <X5000>
+collating-symbol <X5200>
+collating-symbol <X5400>
+collating-symbol <X5600>
+collating-symbol <X5800>
+collating-symbol <X6820>
+collating-symbol <X6822>
+collating-symbol <X6824>
+collating-symbol <X6826>
+collating-symbol <X6828>
+collating-symbol <X682A>
+collating-symbol <X682C>
+collating-symbol <X682E>
+collating-symbol <X6830>
+collating-symbol <X6832>
+collating-symbol <X6834>
+collating-symbol <X6836>
+collating-symbol <X6838>
+collating-symbol <X683A>
+collating-symbol <X683C>
+collating-symbol <X683E>
+collating-symbol <X6840>
+collating-symbol <X6842>
+collating-symbol <X6844>
+collating-symbol <X6846>
+collating-symbol <X6848>
+collating-symbol <X684A>
+collating-symbol <X684C>
+collating-symbol <X684E>
+collating-symbol <X6850>
+collating-symbol <X6852>
+collating-symbol <X6854>
+collating-symbol <X6856>
+collating-symbol <X6858>
+collating-symbol <X685A>
+collating-symbol <X685C>
+collating-symbol <X685E>
+collating-symbol <X6860>
+collating-symbol <X6862>
+collating-symbol <X6864>
+collating-symbol <X6866>
+collating-symbol <X6868>
+collating-symbol <X686A>
+collating-symbol <X686C>
+collating-symbol <X686E>
+collating-symbol <X6870>
+collating-symbol <X6872>
+collating-symbol <X6874>
+collating-symbol <X6876>
+collating-symbol <X6878>
+collating-symbol <X687A>
+collating-symbol <X687C>
+collating-symbol <X687E>
+collating-symbol <X6880>
+collating-symbol <X6882>
+collating-symbol <X6884>
+collating-symbol <X6886>
+collating-symbol <X6888>
+collating-symbol <X688A>
+collating-symbol <X688C>
+collating-symbol <X688E>
+collating-symbol <X6890>
+collating-symbol <X6892>
+collating-symbol <X6894>
+collating-symbol <X6896>
+collating-symbol <X6898>
+collating-symbol <X689A>
+collating-symbol <X689C>
+collating-symbol <X689E>
+collating-symbol <X6B20>
+collating-symbol <XE2E9>
+
+order_start forward;forward;forward;forward
+
+
+% collation weights in order
+
+<X0001>
+<X0005>
+<X000D>
+<X001D>
+<X0031>
+<X0041>
+<X0086>
+<X0087>
+<X008F>
+<X00C0>
+<X00D7>
+<X00D8>
+<X00E1>
+<X00E9>
+<X00F9>
+<X0507>
+<X0509>
+<X050B>
+<X050D>
+<X050F>
+<X0600>
+<X0764>
+<X076A>
+<X0782>
+<X078E>
+<X07AA>
+<X07C0>
+<X07C6>
+<X07EE>
+<X07F6>
+<X080B>
+<X083F>
+<X084D>
+<X0861>
+<X0863>
+<X0865>
+<X0867>
+<X0869>
+<X086B>
+<X08DF>
+<X08E1>
+<X08E9>
+<X08ED>
+<X08EF>
+<X08F5>
+<X08F7>
+<X09F7>
+<X0BB3>
+<X0BBB>
+<X0BBD>
+<X0BBF>
+<X0BC3>
+<X0BC9>
+<X1FB5>
+<X1FB7>
+<X233C>
+<X2342>
+<X2344>
+<X2370>
+<X2372>
+<X2374>
+<X2376>
+<X2378>
+<X237A>
+<X237C>
+<X237E>
+<X2380>
+<X2382>
+<X2600>
+<X2800>
+<X2A00>
+<X2C00>
+<X2E00>
+<X3000>
+<X3200>
+<X3400>
+<X3600>
+<X3800>
+<X3A00>
+<X3C00>
+<X3E00>
+<X4000>
+<X4200>
+<X4400>
+<X4600>
+<X4800>
+<X4A00>
+<X4C00>
+<X4E00>
+<X5000>
+<X5200>
+<X5400>
+<X5600>
+<X5800>
+<X6820>
+<X6822>
+<X6824>
+<X6826>
+<X6828>
+<X682A>
+<X682C>
+<X682E>
+<X6830>
+<X6832>
+<X6834>
+<X6836>
+<X6838>
+<X683A>
+<X683C>
+<X683E>
+<X6840>
+<X6842>
+<X6844>
+<X6846>
+<X6848>
+<X684A>
+<X684C>
+<X684E>
+<X6850>
+<X6852>
+<X6854>
+<X6856>
+<X6858>
+<X685A>
+<X685C>
+<X685E>
+<X6860>
+<X6862>
+<X6864>
+<X6866>
+<X6868>
+<X686A>
+<X686C>
+<X686E>
+<X6870>
+<X6872>
+<X6874>
+<X6876>
+<X6878>
+<X687A>
+<X687C>
+<X687E>
+<X6880>
+<X6882>
+<X6884>
+<X6886>
+<X6888>
+<X688A>
+<X688C>
+<X688E>
+<X6890>
+<X6892>
+<X6894>
+<X6896>
+<X6898>
+<X689A>
+<X689C>
+<X689E>
+<X6B20>
+<XE2E9>
+
+% assignment of characters to weights
+
+<U000F> IGNORE;IGNORE;IGNORE;<U000F>
+<U001E> IGNORE;IGNORE;IGNORE;<U001E>
+<U0008> IGNORE;IGNORE;IGNORE;<U0008>
+<U0017> IGNORE;IGNORE;IGNORE;<U0017>
+<U001F> IGNORE;IGNORE;IGNORE;<U001F>
+<U0010> IGNORE;IGNORE;IGNORE;<U0010>
+<U0007> IGNORE;IGNORE;IGNORE;<U0007>
+<U0016> IGNORE;IGNORE;IGNORE;<U0016>
+<U200D> IGNORE;IGNORE;IGNORE;<U200D>
+<U0015> IGNORE;IGNORE;IGNORE;<U0015>
+<U0006> IGNORE;IGNORE;IGNORE;<U0006>
+<U0001> IGNORE;IGNORE;IGNORE;<U0001>
+<U001D> IGNORE;IGNORE;IGNORE;<U001D>
+<U000E> IGNORE;IGNORE;IGNORE;<U000E>
+<U0018> IGNORE;IGNORE;IGNORE;<U0018>
+<U200C> IGNORE;IGNORE;IGNORE;<U200C>
+<U0004> IGNORE;IGNORE;IGNORE;<U0004>
+<U0013> IGNORE;IGNORE;IGNORE;<U0013>
+<U001A> IGNORE;IGNORE;IGNORE;<U001A>
+<U007F> IGNORE;IGNORE;IGNORE;<U007F>
+<U0012> IGNORE;IGNORE;IGNORE;<U0012>
+<U0003> IGNORE;IGNORE;IGNORE;<U0003>
+<U001B> IGNORE;IGNORE;IGNORE;<U001B>
+<U0011> IGNORE;IGNORE;IGNORE;<U0011>
+<U0002> IGNORE;IGNORE;IGNORE;<U0002>
+<U001C> IGNORE;IGNORE;IGNORE;<U001C>
+<U0014> IGNORE;IGNORE;IGNORE;<U0014>
+<U0019> IGNORE;IGNORE;IGNORE;<U0019>
+<U0005> IGNORE;IGNORE;IGNORE;<U0005>
+<U0000> IGNORE;IGNORE;IGNORE;<U0000>
+<U09BC> IGNORE;"<X00D7><X00E9>";"<X0005><X00C0>";IGNORE
+<U0981> IGNORE;"<X00D7><X00F9>";"<X0005><X00C0>";IGNORE
+<U0982> IGNORE;"<X00D8><X000D>";"<X0005><X00C0>";IGNORE
+<U0983> IGNORE;"<X00D8><X001D>";"<X0005><X00C0>";IGNORE
+<U0009> <X0507>;<X0005>;<X0005>;IGNORE
+<U000A> <X0509>;<X0005>;<X0005>;IGNORE
+<U000B> <X050B>;<X0005>;<X0005>;IGNORE
+<U000C> <X050D>;<X0005>;<X0005>;IGNORE
+<U000D> <X050F>;<X0005>;<X0005>;IGNORE
+<U0020> <X0600>;<X0005>;<X0005>;IGNORE
+<U0060> <X0764>;<X0005>;<X0005>;IGNORE
+<U005E> <X076A>;<X0005>;<X0005>;IGNORE
+<U005F> <X0782>;<X0005>;<X0005>;IGNORE
+<U002D> <X078E>;<X0005>;<X0005>;IGNORE
+<U002C> <X07AA>;<X0005>;<X0005>;IGNORE
+<U003B> <X07C0>;<X0005>;<X0005>;IGNORE
+<U003A> <X07C6>;<X0005>;<X0005>;IGNORE
+<U0021> <X07EE>;<X0005>;<X0005>;IGNORE
+<U003F> <X07F6>;<X0005>;<X0005>;IGNORE
+<U002E> <X080B>;<X0005>;<X0005>;IGNORE
+<U0027> <X083F>;<X0005>;<X0005>;IGNORE
+<U0022> <X084D>;<X0005>;<X0005>;IGNORE
+<U0028> <X0861>;<X0005>;<X0005>;IGNORE
+<U0029> <X0863>;<X0005>;<X0005>;IGNORE
+<U005B> <X0865>;<X0005>;<X0005>;IGNORE
+<U005D> <X0867>;<X0005>;<X0005>;IGNORE
+<U007B> <X0869>;<X0005>;<X0005>;IGNORE
+<U007D> <X086B>;<X0005>;<X0005>;IGNORE
+<U0040> <X08DF>;<X0005>;<X0005>;IGNORE
+<U002A> <X08E1>;<X0005>;<X0005>;IGNORE
+<U002F> <X08E9>;<X0005>;<X0005>;IGNORE
+<U005C> <X08ED>;<X0005>;<X0005>;IGNORE
+<U0026> <X08EF>;<X0005>;<X0005>;IGNORE
+<U0023> <X08F5>;<X0005>;<X0005>;IGNORE
+<U0025> <X08F7>;<X0005>;<X0005>;IGNORE
+<U09FA> <X09F7>;<X0005>;<X0005>;IGNORE
+<U002B> <X0BB3>;<X0005>;<X0005>;IGNORE
+<U003C> <X0BBB>;<X0005>;<X0005>;IGNORE
+<U003D> <X0BBD>;<X0005>;<X0005>;IGNORE
+<U003E> <X0BBF>;<X0005>;<X0005>;IGNORE
+<U007C> <X0BC3>;<X0005>;<X0005>;IGNORE
+<U007E> <X0BC9>;<X0005>;<X0005>;IGNORE
+<U09F8> <X1FB5>;<X0005>;<X0005>;IGNORE
+<U09F9> <X1FB7>;<X0005>;<X0005>;IGNORE
+<U0024> <X233C>;<X0005>;<X0005>;IGNORE
+<U09F2> <X2342>;<X0005>;<X0005>;IGNORE
+<U09F3> <X2344>;<X0005>;<X0005>;IGNORE
+<U0030> <X2370>;<X0005>;<X0005>;IGNORE
+<U09E6> <X2370>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0031> <X2372>;<X0005>;<X0005>;IGNORE
+<U09E7> <X2372>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U09F4> <X2372>;"<X0005><X00E1><X0041>";"<X0005><X0005><X00C0>";IGNORE
+<U0032> <X2374>;<X0005>;<X0005>;IGNORE
+<U09E8> <X2374>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U09F5> <X2374>;"<X0005><X00E1><X0041>";"<X0005><X0005><X00C0>";IGNORE
+<U0033> <X2376>;<X0005>;<X0005>;IGNORE
+<U09E9> <X2376>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U09F6> <X2376>;"<X0005><X00E1><X0041>";"<X0005><X0005><X00C0>";IGNORE
+<U0034> <X2378>;<X0005>;<X0005>;IGNORE
+<U09EA> <X2378>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U09F7> <X2378>;"<X0005><X00E1><X0041>";"<X0005><X0005><X00C0>";IGNORE
+<U0035> <X237A>;<X0005>;<X0005>;IGNORE
+<U09EB> <X237A>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0036> <X237C>;<X0005>;<X0005>;IGNORE
+<U09EC> <X237C>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0037> <X237E>;<X0005>;<X0005>;IGNORE
+<U09ED> <X237E>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0038> <X2380>;<X0005>;<X0005>;IGNORE
+<U09EE> <X2380>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0039> <X2382>;<X0005>;<X0005>;IGNORE
+<U09EF> <X2382>;"<X0005><X00E1><X0031>";"<X0005><X0005><X00C0>";IGNORE
+<U0061> <X2600>;<X0005>;<X0005>;IGNORE
+<U0041> <X2600>;<X0005>;<X008F>;IGNORE
+<U00E6> "<X2600><X2E00>";"<X0087><X0005>";"<X0005><X0005>";IGNORE
+<U00C6> "<X2600><X2E00>";"<X0087><X0005>";"<X0086><X0005>";IGNORE
+<U0062> <X2800>;<X0005>;<X0005>;IGNORE
+<U0042> <X2800>;<X0005>;<X008F>;IGNORE
+<U0063> <X2A00>;<X0005>;<X0005>;IGNORE
+<U0043> <X2A00>;<X0005>;<X008F>;IGNORE
+<U0064> <X2C00>;<X0005>;<X0005>;IGNORE
+<U0044> <X2C00>;<X0005>;<X008F>;IGNORE
+<U0065> <X2E00>;<X0005>;<X0005>;IGNORE
+<U0045> <X2E00>;<X0005>;<X008F>;IGNORE
+<U0066> <X3000>;<X0005>;<X0005>;IGNORE
+<U0046> <X3000>;<X0005>;<X008F>;IGNORE
+<U0067> <X3200>;<X0005>;<X0005>;IGNORE
+<U0047> <X3200>;<X0005>;<X008F>;IGNORE
+<U0068> <X3400>;<X0005>;<X0005>;IGNORE
+<U0048> <X3400>;<X0005>;<X008F>;IGNORE
+<U0069> <X3600>;<X0005>;<X0005>;IGNORE
+<U0049> <X3600>;<X0005>;<X008F>;IGNORE
+<U006A> <X3800>;<X0005>;<X0005>;IGNORE
+<U004A> <X3800>;<X0005>;<X008F>;IGNORE
+<U006B> <X3A00>;<X0005>;<X0005>;IGNORE
+<U004B> <X3A00>;<X0005>;<X008F>;IGNORE
+<U006C> <X3C00>;<X0005>;<X0005>;IGNORE
+<U004C> <X3C00>;<X0005>;<X008F>;IGNORE
+<U006D> <X3E00>;<X0005>;<X0005>;IGNORE
+<U004D> <X3E00>;<X0005>;<X008F>;IGNORE
+<U006E> <X4000>;<X0005>;<X0005>;IGNORE
+<U004E> <X4000>;<X0005>;<X008F>;IGNORE
+<U006F> <X4200>;<X0005>;<X0005>;IGNORE
+<U004F> <X4200>;<X0005>;<X008F>;IGNORE
+<U0070> <X4400>;<X0005>;<X0005>;IGNORE
+<U0050> <X4400>;<X0005>;<X008F>;IGNORE
+<U0071> <X4600>;<X0005>;<X0005>;IGNORE
+<U0051> <X4600>;<X0005>;<X008F>;IGNORE
+<U0072> <X4800>;<X0005>;<X0005>;IGNORE
+<U0052> <X4800>;<X0005>;<X008F>;IGNORE
+<U0073> <X4A00>;<X0005>;<X0005>;IGNORE
+<U0053> <X4A00>;<X0005>;<X008F>;IGNORE
+<U0074> <X4C00>;<X0005>;<X0005>;IGNORE
+<U0054> <X4C00>;<X0005>;<X008F>;IGNORE
+<U0075> <X4E00>;<X0005>;<X0005>;IGNORE
+<U0055> <X4E00>;<X0005>;<X008F>;IGNORE
+<U0076> <X5000>;<X0005>;<X0005>;IGNORE
+<U0056> <X5000>;<X0005>;<X008F>;IGNORE
+<U0077> <X5200>;<X0005>;<X0005>;IGNORE
+<U0057> <X5200>;<X0005>;<X008F>;IGNORE
+<U0078> <X5400>;<X0005>;<X0005>;IGNORE
+<U0058> <X5400>;<X0005>;<X008F>;IGNORE
+<U0079> <X5600>;<X0005>;<X0005>;IGNORE
+<U0059> <X5600>;<X0005>;<X008F>;IGNORE
+<U007A> <X5800>;<X0005>;<X0005>;IGNORE
+<U005A> <X5800>;<X0005>;<X008F>;IGNORE
+<U0985> <X6820>;<X0005>;<X0005>;IGNORE
+<U0986> <X6822>;<X0005>;<X0005>;IGNORE
+<U0987> <X6824>;<X0005>;<X0005>;IGNORE
+<U0988> <X6826>;<X0005>;<X0005>;IGNORE
+<U0989> <X6828>;<X0005>;<X0005>;IGNORE
+<U098A> <X682A>;<X0005>;<X0005>;IGNORE
+<U098B> <X682C>;<X0005>;<X0005>;IGNORE
+<U09E0> <X682E>;<X0005>;<X0005>;IGNORE
+<U098C> <X6830>;<X0005>;<X0005>;IGNORE
+<U09E1> <X6832>;<X0005>;<X0005>;IGNORE
+<U098F> <X6834>;<X0005>;<X0005>;IGNORE
+<U0990> <X6836>;<X0005>;<X0005>;IGNORE
+<U0993> <X6838>;<X0005>;<X0005>;IGNORE
+<U0994> <X683A>;<X0005>;<X0005>;IGNORE
+<U0995> <X683C>;<X0005>;<X0005>;IGNORE
+<U0996> <X683E>;<X0005>;<X0005>;IGNORE
+<U0997> <X6840>;<X0005>;<X0005>;IGNORE
+<U0998> <X6842>;<X0005>;<X0005>;IGNORE
+<U0999> <X6844>;<X0005>;<X0005>;IGNORE
+<U099A> <X6846>;<X0005>;<X0005>;IGNORE
+<U099B> <X6848>;<X0005>;<X0005>;IGNORE
+<U099C> <X684A>;<X0005>;<X0005>;IGNORE
+<U099D> <X684C>;<X0005>;<X0005>;IGNORE
+<U099E> <X684E>;<X0005>;<X0005>;IGNORE
+<U099F> <X6850>;<X0005>;<X0005>;IGNORE
+<U09A0> <X6852>;<X0005>;<X0005>;IGNORE
+<U09A1> <X6854>;<X0005>;<X0005>;IGNORE
+<U09DC> <X6854>;"<X0005><X00D7><X00E9>";"<X0005><X0005><X00C0>";IGNORE
+<U09A2> <X6856>;<X0005>;<X0005>;IGNORE
+<U09DD> <X6856>;"<X0005><X00D7><X00E9>";"<X0005><X0005><X00C0>";IGNORE
+<U09A3> <X6858>;<X0005>;<X0005>;IGNORE
+<U09A4> <X685A>;<X0005>;<X0005>;IGNORE
+<U09A5> <X685C>;<X0005>;<X0005>;IGNORE
+<U09A6> <X685E>;<X0005>;<X0005>;IGNORE
+<U09A7> <X6860>;<X0005>;<X0005>;IGNORE
+<U09A8> <X6862>;<X0005>;<X0005>;IGNORE
+<U09AA> <X6864>;<X0005>;<X0005>;IGNORE
+<U09AB> <X6866>;<X0005>;<X0005>;IGNORE
+<U09AC> <X6868>;<X0005>;<X0005>;IGNORE
+<U09AD> <X686A>;<X0005>;<X0005>;IGNORE
+<U09AE> <X686C>;<X0005>;<X0005>;IGNORE
+<U09AF> <X686E>;<X0005>;<X0005>;IGNORE
+<U09DF> <X686E>;"<X0005><X00D7><X00E9>";"<X0005><X0005><X00C0>";IGNORE
+<U09B0> <X6870>;<X0005>;<X0005>;IGNORE
+<U09F0> <X6872>;<X0005>;<X0005>;IGNORE
+<U09B2> <X6874>;<X0005>;<X0005>;IGNORE
+<U09F1> <X6876>;<X0005>;<X0005>;IGNORE
+<U09B6> <X6878>;<X0005>;<X0005>;IGNORE
+<U09B7> <X687A>;<X0005>;<X0005>;IGNORE
+<U09B8> <X687C>;<X0005>;<X0005>;IGNORE
+<U09B9> <X687E>;<X0005>;<X0005>;IGNORE
+% FIXME <U09BD> <X6880>;<X0005>;<X0005>;IGNORE
+%     <U09BD> (Bengali sign avagraha) is defined from Unicode4.0
+<U09BE> <X6882>;<X0005>;<X0005>;IGNORE
+<U09BF> <X6884>;<X0005>;<X0005>;IGNORE
+<U09C0> <X6886>;<X0005>;<X0005>;IGNORE
+<U09C1> <X6888>;<X0005>;<X0005>;IGNORE
+<U09C2> <X688A>;<X0005>;<X0005>;IGNORE
+<U09C3> <X688C>;<X0005>;<X0005>;IGNORE
+<U09C4> <X688E>;<X0005>;<X0005>;IGNORE
+<U09E2> <X6890>;<X0005>;<X0005>;IGNORE
+<U09E3> <X6892>;<X0005>;<X0005>;IGNORE
+<U09C7> <X6894>;<X0005>;<X0005>;IGNORE
+<U09C8> <X6896>;<X0005>;<X0005>;IGNORE
+<U09CB> <X6898>;<X0005>;<X0005>;IGNORE
+<U09CC> <X689A>;<X0005>;<X0005>;IGNORE
+<U09CD> <X689C>;<X0005>;<X0005>;IGNORE
+<U09D7> <X689E>;<X0005>;<X0005>;IGNORE
+<UNASSIGNED-09CE> "<XE2E9><X6B20>";<X0005>;"<X0005><X00C0>";IGNORE
+UNDEFINED IGNORE;IGNORE;IGNORE;%...
+
+order_end
+END LC_COLLATE
+
+%%%%%%%%%%%%%
+LC_NUMERIC
+copy "en_IN"
+END LC_NUMERIC
+
+%%%%%%%%%%%%%
+LC_MONETARY
+int_curr_symbol       "<U0049><U004E><U0052><U0020>"
+currency_symbol       "<U099F><U0995><U09BE>"
+mon_decimal_point     "<U002E>"
+mon_thousands_sep     "<U002C>"
+mon_grouping          3;2
+positive_sign         ""
+negative_sign         "<U002D>"
+int_frac_digits       2
+frac_digits           2
+p_cs_precedes         1
+p_sep_by_space        1
+n_cs_precedes         1
+n_sep_by_space        1
+p_sign_posn           1
+n_sign_posn           1
+int_p_cs_precedes     1
+int_p_sep_by_space    1
+int_n_cs_precedes     1
+int_n_sep_by_space    1
+int_p_sign_posn       1
+int_n_sign_posn       1
+END LC_MONETARY
+
+%%%%%%%%%%%%%
+LC_TIME
+abday   "<U09A6><U09C7><U0993>";/
+        "<U09B8><U09CB><U09AE>";/
+        "<U09AE><U0999><U09CD><U0997><U09B2>";/
+        "<U09AC><U09C1><U09A7>";/
+        "<U09AC><U09C3><U09B9><U09B7><U09CD><U09AA><U09A4><U09BF>";/
+        "<U09B6><U09C1><U0995><U09CD><U09F0>";/
+        "<U09B6><U09A8><U09BF>"
+day     "<U09A6><U09C7><U0993><U09AC><U09BE><U09F0>";/
+        "<U09B8><U09CB><U09AE><U09AC><U09BE><U09F0>";/
+        "<U09AE><U0999><U09CD><U0997><U09B2><U09AC><U09BE><U09F0>";/
+        "<U09AC><U09C1><U09A7><U09AC><U09BE><U09F0>";/
+        "<U09AC><U09C3><U09B9><U09B7><U09CD><U09AA><U09A4><U09BF><U09AC><U09BE><U09F0>";/
+        "<U09B6><U09C1><U0995><U09CD><U09F0><U09AC><U09BE><U09F0>";/
+        "<U09B6><U09A8><U09BF><U09AC><U09BE><U09F0>"
+abmon   "<U099C><U09BE><U09A8><U09C1><U09F1><U09BE><U09F0><U09C0>";/
+        "<U09AB><U09C7><U09AC><U09CD><U09F0><U09C1><U09F1><U09BE><U09F0><U09C0>";/
+        "<U09AE><U09BE><U09F0><U09CD><U099A>";/
+        "<U098F><U09AA><U09CD><U09F0><U09BF><U09B2>";/
+        "<U09AE><U09C7>";/
+        "<U099C><U09C1><U09A8>";/
+        "<U099C><U09C1><U09B2><U09BE><U0987>";/
+        "<U0986><U0997>";/
+        "<U099A><U09C7><U09AA><U09CD><U09A4><U09C7><U09AE><U09CD><U09AC><U09F0>";/
+        "<U0985><U0995><U09CD><U099F><U09CB><U09AC><U09F0>";/
+        "<U09A8><U09AD><U09C7><U09AE><U09CD><U09AC><U09F0>";/
+        "<U09A1><U09BF><U099A><U09C7><U09AE><U09CD><U09AC><U09F0>"
+mon     "<U099C><U09BE><U09A8><U09C1><U09F1><U09BE><U09F0><U09C0>";/
+        "<U09AB><U09C7><U09AC><U09CD><U09F0><U09C1><U09F1><U09BE><U09F0><U09C0>";/
+        "<U09AE><U09BE><U09F0><U09CD><U099A>";/
+        "<U098F><U09AA><U09CD><U09F0><U09BF><U09B2>";/
+        "<U09AE><U09C7>";/
+        "<U099C><U09C1><U09A8>";/
+        "<U099C><U09C1><U09B2><U09BE><U0987>";/
+        "<U0986><U0997><U09B7><U09CD><U099F>";/
+        "<U099A><U09C7><U09AA><U09CD><U09A4><U09C7><U09AE><U09CD><U09AC><U09F0>";/
+        "<U0985><U0995><U09CD><U099F><U09CB><U09AC><U09F0>";/
+        "<U09A8><U09AD><U09C7><U09AE><U09CD><U09AC><U09F0>";/
+        "<U09A1><U09BF><U099A><U09C7><U09AE><U09CD><U09AC><U09F0>"
+% d_fmt  "%e-%m-%Y"
+d_fmt    "<U0025><U0065><U002D><U0025><U006D><U002D><U0025><U0059>"
+% t_fmt  "%I.%M.%S %p"
+t_fmt    "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070>"
+% d_t_fmt"%e %B, %Y %I.%M.%S %p %Z"
+d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+am_pm    "<U09AA><U09C2><U09F0><U09CD><U09AC><U09CD><U09AC><U09BE><U09B9><U09CD><U09A8>";"<U0985><U09AA><U09F0><U09BE><U09B9><U09CD><U09A8>"  
+% t_fmt_ampm  "%I.%M.%S %p"
+t_fmt_ampm  "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070>"
+END LC_TIME
+
+%%%%%%%%%%%%%
+LC_MESSAGES
+yesstr   "<U09B9><U09DF>"
+nostr    "<U09A8><U09B9><U09DF>"
+yesexpr  "<U005E><U005B><U0079><U0059><U09B9><U005D><U002E><U002A>"
+noexpr   "<U005E><U005B><U006E><U004E><U09A8><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+%%%%%%%%%%%%%
+LC_PAPER
+copy "hi_IN"
+END LC_PAPER
+
+%%%%%%%%%%%%%
+LC_NAME
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_NAME category.
+%
+name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
+<U0025><U0067>"
+name_gen    ""
+name_mr     "<U09B6><U09CD><U09F0><U09C0>"
+name_mrs    "<U09B6><U09CD><U09F0><U09C0><U09AE><U09A4><U09C0>"
+name_miss   "<U0995><U09C1><U09AE><U09BE><U09F0><U09C0>"
+name_ms     "<U0995><U09C1><U09AE><U09BE><U09F0><U09C0>"
+END LC_NAME
+
+%%%%%%%%%%%%%
+LC_ADDRESS
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_ADDRESS
+postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
+<U0025><U0062><U0025><U0065><U0025><U0072>"
+END LC_ADDRESS
+
+%%%%%%%%%%%%%
+LC_TELEPHONE
+% This is the ISO_IEC TR14652 Locale definition for the
+tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020><U003B><U0025><U006C>"
+int_prefix  "<U0039><U0031>"
+int_select  "<U0030><U0030>"
+END LC_TELEPHONE
+
+%%%%%%%%%%%%%
+LC_MEASUREMENT
+copy "hi_IN"
+END LC_MEASUREMENT

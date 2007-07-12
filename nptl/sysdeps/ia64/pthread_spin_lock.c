@@ -25,7 +25,7 @@ pthread_spin_lock (lock)
 {
   int *p = (int *) lock;
 
-  while (__builtin_expect (__sync_val_compare_and_swap_si (p, 0, 1), 0))
+  while (__builtin_expect (__sync_val_compare_and_swap (p, 0, 1), 0))
     {
       /* Spin without using the atomic instruction.  */
       do

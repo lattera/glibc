@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <errno.h>
 #include <stdbool.h>
 #include "nsswitch.h"
@@ -173,9 +174,6 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	startp = (service_user *) -1l;
       else
 	{
-	  startp = nip;
-	  start_fct = fct.l;
-
 #ifdef NEED__RES
 	  /* The resolver code will really be used so we have to
 	     initialize it.  */
@@ -190,6 +188,11 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	  if (!_res_hconf.initialized)
 	    _res_hconf_init ();
 #endif /* need _res_hconf */
+
+	  start_fct = fct.l;
+	  /* Make sure start_fct is written before startp.  */
+	  atomic_write_barrier ();
+	  startp = nip;
 	}
     }
   else

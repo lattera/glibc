@@ -1,3 +1,14 @@
+2006-10-26  Pete Eberlein  <eberlein@us.ibm.com>
+
+	* nptl_db/db_info.c [TLS_DTV_AT_TP]: Fixed size init for dtvp
+	to sizeof a pointer, instead of sizeof the union.
+
+2006-02-03  Roland McGrath  <roland@redhat.com>
+
+	* structs.def: Add a descriptor for pointer.val field of dtv_t.
+	* td_thr_tlsbase.c (td_thr_tlsbase): Extract pointer.val field from
+	DTV slot.
+
 2004-09-09  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Don't abort if inferior's

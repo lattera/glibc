@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,5 +31,5 @@ mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
 }
 
 #else
-# include <sysdeps/generic/mq_getattr.c>
+# include <rt/mq_getattr.c>
 #endif

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004
+   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
@@ -269,6 +269,7 @@ _itoa (value, buflim, base, upper_case)
 
     default:
       {
+	char *bufend = buflim;
 #if BITS_PER_MP_LIMB == 64
 	mp_limb_t base_multiplier = brec->base_multiplier;
 	if (brec->flag)
@@ -454,6 +455,8 @@ _itoa (value, buflim, base, upper_case)
 	  }
 	while (n != 0);
 #endif
+	if (buflim == bufend)
+	  *--buflim = '0';
       }
       break;
     }

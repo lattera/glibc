@@ -60,6 +60,12 @@ svc_run (void)
 	return;
 
       my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
+      if (my_pollfd == NULL)
+	{
+	  perror (_("svc_run: - out of memory"));
+	  return;
+	}
+
       for (i = 0; i < svc_max_pollfd; ++i)
 	{
 	  my_pollfd[i].fd = svc_pollfd[i].fd;

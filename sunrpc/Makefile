@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1994-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -85,6 +85,7 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
+tests = tst-xdrmem tst-xdrmem2
 xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
@@ -107,28 +108,25 @@ librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
 
-CFLAGS-xbootparam_prot.c = -Wno-unused
-CFLAGS-xnlm_prot.c = -Wno-unused
-CFLAGS-xrstat.c = -Wno-unused
-CFLAGS-xyppasswd.c = -Wno-unused
-CFLAGS-xklm_prot.c = -Wno-unused
-CFLAGS-xrex.c = -Wno-unused
-CFLAGS-xsm_inter.c = -Wno-unused
-CFLAGS-xmount.c = -Wno-unused
-CFLAGS-xrusers.c = -Wno-unused
-CFLAGS-xspray.c = -Wno-unused
-CFLAGS-xnfs_prot.c = -Wno-unused
-CFLAGS-xrquota.c = -Wno-unused
-CFLAGS-xkey_prot.c = -Wno-unused
+CFLAGS-xbootparam_prot.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xnlm_prot.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xrstat.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xyppasswd.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xklm_prot.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xrex.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xsm_inter.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xmount.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xrusers.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xspray.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xnfs_prot.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xrquota.c = -Wno-unused $(PIC-ccflag)
+CFLAGS-xkey_prot.c = -Wno-unused $(PIC-ccflag)
 CFLAGS-auth_unix.c = -fexceptions
 CFLAGS-key_call.c = -fexceptions
 CFLAGS-pmap_rmt.c = -fexceptions
 CFLAGS-clnt_perr.c = -fexceptions
 CFLAGS-openchild.c = -fexceptions
 
-ifeq (yes,$(have_doors))
-CPPFLAGS-key_call.c += -DHAVE_DOORS=1
-endif
 CPPFLAGS += -D_RPC_THREAD_SAFE_
 
 include ../Rules

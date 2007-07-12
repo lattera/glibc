@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <unistd.h>
 #include <libintl.h>
 
@@ -75,6 +76,10 @@ struct statdata
   int debug_level;
   time_t runtime;
   unsigned long int client_queued;
+  int nthreads;
+  int max_nthreads;
+  int paranoia;
+  time_t restart_interval;
   int ndbs;
   struct dbstat dbs[lastdb];
 #ifdef HAVE_SELINUX
@@ -93,6 +98,10 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
   data.debug_level = debug_level;
   data.runtime = time (NULL) - start_time;
   data.client_queued = client_queued;
+  data.nthreads = nthreads;
+  data.max_nthreads = max_nthreads;
+  data.paranoia = paranoia;
+  data.restart_interval = restart_interval;
   data.ndbs = lastdb;
 
   for (cnt = 0; cnt < lastdb; ++cnt)
@@ -125,7 +134,8 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
   if (selinux_enabled)
     nscd_avc_cache_stats (&data.cstats);
 
-  if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
+  if (TEMP_FAILURE_RETRY (send (fd, &data, sizeof (data), MSG_NOSIGNAL))
+      != sizeof (data))
     {
       char buf[256];
       dbg_log (_("cannot write statistics: %s"),
@@ -143,8 +153,8 @@ receive_print_stats (void)
   int fd;
   int i;
   uid_t uid = getuid ();
-  const char *yesstr = nl_langinfo (YESSTR);
-  const char *nostr = nl_langinfo (NOSTR);
+  const char *yesstr = _("yes");
+  const char *nostr = _("no");
 
   /* Find out whether there is another user but root allowed to
      request statistics.  */
@@ -172,7 +182,8 @@ receive_print_stats (void)
   req.version = NSCD_VERSION;
   req.type = GETSTAT;
   req.key_len = 0;
-  nbytes = TEMP_FAILURE_RETRY (write (fd, &req, sizeof (request_header)));
+  nbytes = TEMP_FAILURE_RETRY (send (fd, &req, sizeof (request_header),
+				     MSG_NOSIGNAL));
   if (nbytes != sizeof (request_header))
     {
       int err = errno;
@@ -230,8 +241,9 @@ receive_print_stats (void)
 	    "%15lu  number of times clients had to wait\n"
 	    "%15s  paranoia mode enabled\n"
 	    "%15lu  restart internal\n"),
-	  nthreads, max_nthreads, data.client_queued,
-	  paranoia ? yesstr : nostr, (unsigned long int) restart_interval);
+	  data.nthreads, data.max_nthreads, data.client_queued,
+	  data.paranoia ? yesstr : nostr,
+	  (unsigned long int) data.restart_interval);
 
   for (i = 0; i < lastdb; ++i)
     {

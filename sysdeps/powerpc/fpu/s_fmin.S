@@ -31,13 +31,13 @@ ENTRY(__fmin)
 	blr
 END(__fmin)
 
-weak_alias(__fmin,fmin)
+weak_alias (__fmin,fmin)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
 strong_alias(__fmin,__fminf)
-weak_alias(__fmin,fminf)
+weak_alias (__fmin,fminf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__fmin,__fminl)
-weak_alias(__fmin,fminl)
+weak_alias (__fmin,__fminl)
+weak_alias (__fmin,fminl)
 #endif

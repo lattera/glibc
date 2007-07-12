@@ -1968,7 +1968,7 @@ msgid "Error while talking to callback proc"
 msgstr "Hiba amíg kommunikáltam a visszahívó folyamattal"
 
 #: timezone/zdump.c:268
-msgid "Error writing standard output"
+msgid "Error writing to standard output"
 msgstr "Hiba az alapértelmezett kimenetre írás során"
 
 #: inet/ruserpass.c:184
@@ -4025,7 +4025,7 @@ msgstr "a `%1$s' meghatározás nem végzõdhet `END %1$s' -re"
 
 #: locale/programs/ld-collate.c:1281 locale/programs/ld-ctype.c:1455
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "a `%s' és a `%.*s' nem érvényesek a szimbolikus tartományban"
 
 #: elf/sprof.c:762
@@ -4318,7 +4318,7 @@ msgid "cannot read statistics data"
 msgstr "nem lehet olvasni a statisztikai adatokat"
 
 #: locale/programs/repertoire.c:331
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "nem biztonságos új repertoár"
 
 #: elf/dl-load.c:784
@@ -4540,7 +4540,7 @@ msgstr "az eredeti szöveg kódolása"
 
 #: nscd/connections.c:366 nscd/connections.c:460
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "hiba a hívó azonosítás során: %s"
 
 #: locale/programs/ld-collate.c:3032
@@ -4984,7 +4984,7 @@ msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "nincs kimeneti szám meghatározva és nincs szabványos név a karakterkészletben"
 
 #: iconv/iconvconfig.c:308 locale/programs/localedef.c:236
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "nem jött létre kimeneti fájl, mert figyelmeztetést kaptam"
 
 #: locale/programs/charmap.c:493 locale/programs/charmap.c:673

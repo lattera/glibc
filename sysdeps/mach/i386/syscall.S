@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,3 +24,4 @@ ENTRY (syscall)
 	pushl %ecx		/* Push back return address.  */
 	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* lcall $7, $0 -- gas bug */
 	ret
+END (syscall)

@@ -1,10 +1,10 @@
 .file "modff.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,14 +35,16 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 2/02/00: Initial version
-// 4/04/00: Improved speed, corrected result for NaN input
+// 02/02/00 Initial version
+// 04/04/00 Improved speed, corrected result for NaN input
 // 12/22/00 Fixed so inexact flag is never set, and invalid is not set for 
 //            qnans nor for inputs larger than 2^63.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
 // API
 //==============================================================
@@ -97,8 +99,6 @@
 //    p13 --------------------------------------------------->|
 //
 
-#include "libm_support.h"
-
 // floating-point registers used: 
 MODF_NORM_F8               = f9
 MODF_FRACTION_PART         = f10
@@ -115,23 +115,17 @@ modf_exp        = r18
 // r33 = iptr
      
 
-.align 32
-.global modff#
-
 .section .text
-.proc  modff#
-.align 32
-
+GLOBAL_LIBM_ENTRY(modff)
 
 // Main path is p9, p11, p8 FALSE and p12 TRUE
 
 // Assume input is normalized and get signexp
 // Normalize input just in case
 // Form exponent bias 
-modff: 
 { .mfi
       getf.exp  modf_signexp = f8
-      fnorm          MODF_NORM_F8  = f8
+      fnorm.s0          MODF_NORM_F8  = f8
       addl           modf_GR_FFFF  = 0xffff, r0
 }
 // Get integer part of input
@@ -176,10 +170,10 @@ modff:
 { .mfb
 (p10) cmp.ge.unc p9,p12  = modf_exp, modf_GR_no_frac
 (p6)  fclass.m.unc p6,p7 = f8, 0x23
-(p8)  br.cond.spnt L(MODF_DENORM) ;;
+(p8)  br.cond.spnt MODF_DENORM ;;
 }
 
-L(MODF_COMMON):
+MODF_COMMON:
 // For HUGE set fraction to signed 0
 { .mfi
       nop.m 999
@@ -189,7 +183,7 @@ L(MODF_COMMON):
 // For HUGE set integer part to normalized input
 { .mfi
       nop.m 999
-(p9)  fnorm.s MODF_INTEGER_PART = MODF_NORM_F8
+(p9)  fnorm.s.s0 MODF_INTEGER_PART = MODF_NORM_F8
       nop.i 999 ;;
 }
 
@@ -201,7 +195,7 @@ L(MODF_COMMON):
 }
 { .mfi
       nop.m 999
-(p11) fnorm.s f8 = MODF_NORM_F8
+(p11) fnorm.s.s0 f8 = MODF_NORM_F8
       nop.i 999 ;;
 }
 
@@ -242,7 +236,7 @@ L(MODF_COMMON):
 // For NORMAL test if fraction part is zero; if so append correct sign
 { .mfi
       nop.m 999
-(p12) fcmp.eq.unc p7,p0 = MODF_NORM_F8, MODF_INTEGER_PART
+(p12) fcmp.eq.unc.s0 p7,p0 = MODF_NORM_F8, MODF_INTEGER_PART
       nop.i 999 ;;
 }
 
@@ -259,7 +253,7 @@ L(MODF_COMMON):
       br.ret.sptk    b0 ;;
 }
 
-L(MODF_DENORM):
+MODF_DENORM:
 // If x unorm get signexp from normalized input
 // If x unorm get integer part from normalized input
 { .mfi
@@ -278,8 +272,7 @@ L(MODF_DENORM):
 { .mfb
 (p10) cmp.ge.unc p9,p12  = modf_exp, modf_GR_no_frac
       nop.f 999
-      br.cond.spnt L(MODF_COMMON) ;;
+      br.cond.spnt MODF_COMMON ;;
 }
 
-.endp modff
-ASM_SIZE_DIRECTIVE(modff)
+GLOBAL_LIBM_END(modff)

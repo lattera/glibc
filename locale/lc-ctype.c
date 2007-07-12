@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -102,8 +102,8 @@ compat_symbol (libc, __ctype32_tolower, __ctype32_tolower, GLIBC_2_2);
 compat_symbol (libc, __ctype32_toupper, __ctype32_toupper, GLIBC_2_2);
 
   __ctype_b = current (uint16_t, CLASS, 128);
-  __ctype_toupper = current (uint32_t, TOUPPER, 128);
-  __ctype_tolower = current (uint32_t, TOLOWER, 128);
+  __ctype_toupper = current (int32_t, TOUPPER, 128);
+  __ctype_tolower = current (int32_t, TOLOWER, 128);
   __ctype32_b = current (uint32_t, CLASS32, 0);
   __ctype32_toupper = current (uint32_t, TOUPPER32, 0);
   __ctype32_tolower = current (uint32_t, TOLOWER32, 0);

@@ -155,12 +155,7 @@ libc_hidden_def (clnt_sperror)
 void
 clnt_perror (CLIENT * rpch, const char *msg)
 {
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) __fwprintf (stderr, L"%s", clnt_sperror (rpch, msg));
-  else
-#endif
-    (void) fputs (clnt_sperror (rpch, msg), stderr);
+  (void) __fxprintf (NULL, "%s", clnt_sperror (rpch, msg));
 }
 libc_hidden_def (clnt_perror)
 
@@ -289,12 +284,7 @@ libc_hidden_def (clnt_sperrno)
 void
 clnt_perrno (enum clnt_stat num)
 {
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) __fwprintf (stderr, L"%s", clnt_sperrno (num));
-  else
-#endif
-    (void) fputs (clnt_sperrno (num), stderr);
+  (void) __fxprintf (NULL, "%s", clnt_sperrno (num));
 }
 
 
@@ -337,12 +327,7 @@ libc_hidden_def (clnt_spcreateerror)
 void
 clnt_pcreateerror (const char *msg)
 {
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) __fwprintf (stderr, L"%s", clnt_spcreateerror (msg));
-  else
-#endif
-    (void) fputs (clnt_spcreateerror (msg), stderr);
+  (void) __fxprintf (NULL, "%s", clnt_spcreateerror (msg));
 }
 
 struct auth_errtab

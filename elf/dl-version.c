@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -77,7 +77,7 @@ find_needed (const char *name, struct link_map *map)
 
 static int
 internal_function
-match_symbol (const char *name, ElfW(Word) hash, const char *string,
+match_symbol (const char *name, Lmid_t ns, ElfW(Word) hash, const char *string,
 	      struct link_map *map, int verbose, int weak)
 {
   const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
@@ -90,9 +90,9 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   /* Display information about what we are doing while debugging.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_VERSIONS, 0))
     _dl_debug_printf ("\
-checking for version `%s' in file %s required by file %s\n",
+checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
 		      string, map->l_name[0] ? map->l_name : rtld_progname,
-		      name);
+		      map->l_ns, name, ns);
 
   if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {
@@ -242,7 +242,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 		  /* Match the symbol.  */
 		  result |= match_symbol ((*map->l_name
 					   ? map->l_name : rtld_progname),
-					  aux->vna_hash,
+					  map->l_ns, aux->vna_hash,
 					  strtab + aux->vna_name,
 					  needed->l_real, verbose,
 					  aux->vna_flags & VER_FLG_WEAK);

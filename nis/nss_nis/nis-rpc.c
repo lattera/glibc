@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1998,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2000,2002,2003,2004,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -35,59 +36,22 @@
 
 __libc_lock_define_initialized (static, lock)
 
-struct response_t
-{
-  struct response_t *next;
-  char val[0];
-};
+static intern_t intern;
 
-struct intern_t
-{
-  struct response_t *start;
-  struct response_t *next;
-};
-typedef struct intern_t intern_t;
-
-static intern_t intern = {NULL, NULL};
-
-static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval,
-        int invallen, char *indata)
-{
-  intern_t *intern = (intern_t *)indata;
-
-  if (instatus != YP_TRUE)
-    return 1;
-
-  if (inkey && inkeylen > 0 && inval && invallen > 0)
-    {
-      struct response_t *newp = malloc (sizeof (struct response_t)
-					+ invallen + 1);
-      if (newp == NULL)
-	return 1; /* We have no error code for out of memory */
-
-      if (intern->start == NULL)
-	intern->start = newp;
-      else
-	intern->next->next = newp;
-      intern->next = newp;
-
-      newp->next = NULL;
-      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
-    }
-
-  return 0;
-}
 
 static void
 internal_nis_endrpcent (intern_t *intern)
 {
-  while (intern->start != NULL)
+  struct response_t *curr = intern->next;
+
+  while (curr != NULL)
     {
-      intern->next = intern->start;
-      intern->start = intern->start->next;
-      free (intern->next);
+      struct response_t *last = curr;
+      curr = curr->next;
+      free (last);
     }
+
+  intern->next = intern->start = NULL;
 }
 
 static enum nss_status
@@ -102,10 +66,16 @@ internal_nis_setrpcent (intern_t *intern)
 
   internal_nis_endrpcent (intern);
 
-  ypcb.foreach = saveit;
-  ypcb.data = (char *)intern;
-  status = yperr2nss (yp_all(domainname, "rpc.bynumber", &ypcb));
+  ypcb.foreach = _nis_saveit;
+  ypcb.data = (char *) intern;
+  status = yperr2nss (yp_all (domainname, "rpc.bynumber", &ypcb));
+
+  /* Mark the last buffer as full.  */
+  if (intern->next != NULL)
+    intern->next->size = intern->offset;
+
   intern->next = intern->start;
+  intern->offset = 0;
 
   return status;
 }
@@ -138,29 +108,60 @@ _nss_nis_endrpcent (void)
 
 static enum nss_status
 internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
-			  int *errnop, intern_t *data)
+			  int *errnop, intern_t *intern)
 {
   struct parser_data *pdata = (void *) buffer;
   int parse_res;
   char *p;
 
-  if (data->start == NULL)
-    internal_nis_setrpcent (data);
+  if (intern->start == NULL)
+    internal_nis_setrpcent (intern);
+
+  if (intern->next == NULL)
+    /* Not one entry in the map.  */
+    return NSS_STATUS_NOTFOUND;
 
   /* Get the next entry until we found a correct one. */
   do
     {
-      if (data->next == NULL)
-	return NSS_STATUS_NOTFOUND;
+      struct response_t *bucket = intern->next;
 
-      p = strncpy (buffer, data->next->val, buflen);
-      while (isspace (*p))
-        ++p;
+      if (__builtin_expect (intern->offset >= bucket->size, 0))
+	{
+	  if (bucket->next == NULL)
+	    return NSS_STATUS_NOTFOUND;
+
+	  /* We look at all the content in the current bucket.  Go on
+	     to the next.  */
+	  bucket = intern->next = bucket->next;
+	  intern->offset = 0;
+	}
+
+      for (p = &bucket->mem[intern->offset]; isspace (*p); ++p)
+        ++intern->offset;
+
+      size_t len = strlen (p) + 1;
+      if (__builtin_expect (len > buflen, 0))
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* We unfortunately have to copy the data in the user-provided
+	 buffer because that buffer might be around for a very long
+	 time and the servent structure must remain valid.  If we would
+	 rely on the BUCKET memory the next 'setservent' or 'endservent'
+	 call would destroy it.
+
+	 The important thing is that it is a single NUL-terminated
+	 string.  This is what the parsing routine expects.  */
+      p = memcpy (buffer, &bucket->mem[intern->offset], len);
 
       parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen, errnop);
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	return NSS_STATUS_TRYAGAIN;
-      data->next = data->next->next;
+
+      intern->offset += len;
     }
   while (!parse_res);
 
@@ -186,21 +187,18 @@ enum nss_status
 _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 			 char *buffer, size_t buflen, int *errnop)
 {
-  intern_t data = {NULL, NULL};
-  enum nss_status status;
-  int found;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  status = internal_nis_setrpcent (&data);
-  if (status != NSS_STATUS_SUCCESS)
+  intern_t data = { NULL, NULL, 0 };
+  enum nss_status status = internal_nis_setrpcent (&data);
+  if (__builtin_expect (status != NSS_STATUS_SUCCESS, 0))
     return status;
 
-  found = 0;
+  int found = 0;
   while (!found &&
          ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop,
 					      &data)) == NSS_STATUS_SUCCESS))
@@ -226,53 +224,52 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   internal_nis_endrpcent (&data);
 
-  if (!found && status == NSS_STATUS_SUCCESS)
+  if (__builtin_expect (!found && status == NSS_STATUS_SUCCESS, 0))
     return NSS_STATUS_NOTFOUND;
-  else
-    return status;
+
+  return status;
 }
 
 enum nss_status
 _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 			   char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, nlen, parse_res;
-  char buf[32];
-
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%d", number);
+  char buf[32];
+  int nlen = snprintf (buf, sizeof (buf), "%d", number);
 
-  retval = yperr2nss (yp_match (domain, "rpc.bynumber", buf,
-				 nlen, &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "rpc.bynumber", buf, nlen, &result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen, errnop);
-
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_rpcent (p, rpc, (void  *) buffer, buflen,
+					   errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

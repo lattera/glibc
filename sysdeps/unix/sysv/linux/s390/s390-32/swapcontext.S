@@ -105,4 +105,4 @@ ENTRY(__swapcontext)
 	/* Return.  */
 	br	%r14
 END(__swapcontext)	
-weak_alias(__swapcontext, swapcontext)
+weak_alias (__swapcontext, swapcontext)

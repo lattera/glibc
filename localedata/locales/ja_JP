@@ -1672,6 +1672,7 @@ tojkata	(<U3041>,<U30A1>);(<U3042>,<U30A2>);(<U3043>,<U30A3>);/
 
 translit_start
 
+include "translit_combining";""
 include "translit_cjk_variants";""
 
 translit_end

@@ -41,6 +41,7 @@ struct hesiod_p {
 	void		(*res_set)(struct hesiod_p *, struct __res_state *,
 				   void (*)(void *));
 	struct __res_state * (*res_get)(struct hesiod_p *);
+	int		classes[2];	/* The class search order. */
 };
 
 #define MAX_HESRESP	1024

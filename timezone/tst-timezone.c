@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -42,9 +42,9 @@ static const struct test_times tests[] =
   { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
   { "America/Sao_Paulo", 1, 10800, {"BRT", "BRST" }},
   { "America/Chicago", 1, 21600, {"CST", "CDT" }},
-  { "America/Indianapolis", 1, 18000, {"EST", "EDT" }},
+  { "America/Indiana/Indianapolis", 1, 18000, {"EST", "EDT" }},
   { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},
-  { "Asia/Tokyo", 0, -32400, {"JST", "JST" }},
+  { "Asia/Tokyo", 1, -32400, {"JST", "JDT" }},
   { "Pacific/Auckland", 1, -43200, { "NZST", "NZDT" }},
   { NULL, 0, 0 }
 };

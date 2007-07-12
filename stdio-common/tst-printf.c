@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000, 2002
+/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000, 2002, 2006
      Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -273,6 +273,15 @@ I am ready for my first lesson today.";
 
   printf ("printf (\"%%hhu\", %u) = %hhu\n", UCHAR_MAX + 2, UCHAR_MAX + 2);
   printf ("printf (\"%%hu\", %u) = %hu\n", USHRT_MAX + 2, USHRT_MAX + 2);
+  printf ("printf (\"%%hhi\", %i) = %hhi\n", UCHAR_MAX + 2, UCHAR_MAX + 2);
+  printf ("printf (\"%%hi\", %i) = %hi\n", USHRT_MAX + 2, USHRT_MAX + 2);
+
+  printf ("printf (\"%%1$hhu\", %2$u) = %1$hhu\n",
+	  UCHAR_MAX + 2, UCHAR_MAX + 2);
+  printf ("printf (\"%%1$hu\", %2$u) = %1$hu\n", USHRT_MAX + 2, USHRT_MAX + 2);
+  printf ("printf (\"%%1$hhi\", %2$i) = %1$hhi\n",
+	  UCHAR_MAX + 2, UCHAR_MAX + 2);
+  printf ("printf (\"%%1$hi\", %2$i) = %1$hi\n", USHRT_MAX + 2, USHRT_MAX + 2);
 
   puts ("--- Should be no further output. ---");
   rfg1 ();

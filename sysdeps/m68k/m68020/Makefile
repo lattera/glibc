@@ -1,3 +1,0 @@
-ifeq ($(subdir),db2)
-CPPFLAGS += -DHAVE_SPINLOCKS=1 -DHAVE_ASSEM_MC68020_GCC=1
-endif

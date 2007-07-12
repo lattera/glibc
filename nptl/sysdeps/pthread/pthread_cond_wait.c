@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -50,10 +50,16 @@ __condvar_cleanup (void *arg)
   if (cbuffer->bc_seq == cbuffer->cond->__data.__broadcast_seq)
     {
       /* This thread is not waiting anymore.  Adjust the sequence counters
-	 appropriately.  */
-      ++cbuffer->cond->__data.__wakeup_seq;
+	 appropriately.  We do not increment WAKEUP_SEQ if this would
+	 bump it over the value of TOTAL_SEQ.  This can happen if a thread
+	 was woken and then canceled.  */
+      if (cbuffer->cond->__data.__wakeup_seq
+	  < cbuffer->cond->__data.__total_seq)
+	{
+	  ++cbuffer->cond->__data.__wakeup_seq;
+	  ++cbuffer->cond->__data.__futex;
+	}
       ++cbuffer->cond->__data.__woken_seq;
-      ++cbuffer->cond->__data.__futex;
     }
 
   cbuffer->cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;

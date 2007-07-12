@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -24,7 +24,8 @@ sysdep_routines += register-atfork unregister-atfork libc_pthread_init \
 libpthread-sysdep_routines += pt-fork pthread_mutex_cond_lock
 
 gen-as-const-headers += lowlevelcond.sym lowlevelrwlock.sym \
-			lowlevelbarrier.sym unwindbuf.sym
+			lowlevelbarrier.sym unwindbuf.sym \
+			lowlevelrobustlock.sym pthread-pi-defines.sym
 endif
 
 ifeq ($(subdir),posix)
@@ -32,3 +33,6 @@ CFLAGS-fork.c = -D_IO_MTSAFE_IO
 CFLAGS-getpid.o = -fomit-frame-pointer
 CFLAGS-getpid.os = -fomit-frame-pointer
 endif
+
+# Needed in both the signal and nptl subdir.
+CFLAGS-sigaction.c = -DWRAPPER_INCLUDE='<nptl/sigaction.c>'

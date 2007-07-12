@@ -1,10 +1,10 @@
 .file "libm_reduce.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,304 +20,310 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
-// History:  02/02/00 Initial Version
+// History:
+// 02/02/00 Initial Version
+// 05/13/02 Rescheduled for speed, changed interface to pass
+//          parameters in fp registers
+// 02/10/03 Reordered header: .section, .global, .proc, .align;
+//          used data8 for long double data storage
 //
-// *********************************************************************
-// *********************************************************************
+//*********************************************************************
+//*********************************************************************
 //
 // Function:   __libm_pi_by_two_reduce(x) return r, c, and N where
 //             x = N * pi/4 + (r+c) , where |r+c| <= pi/4.
 //             This function is not designed to be used by the
 //             general user.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Accuracy:       Returns double-precision values
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Resources Used:
 //
-//    Floating-Point Registers: f32-f70
+//    Floating-Point Registers:
+//      f8  = Input x, return value r
+//      f9  = return value c
+//      f32-f70
 //
 //    General Purpose Registers:
 //      r8  = return value N
-//      r32 = Address of x
-//      r33 = Address of where to place r and then c 
 //      r34-r64
 //
 //    Predicate Registers:      p6-p14
 //
-// *********************************************************************
+//*********************************************************************
 //
 // IEEE Special Conditions:
 //
-//    No condions should be raised. 
+//    No condions should be raised.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // I. Introduction
 // ===============
 //
 // For the forward trigonometric functions sin, cos, sincos, and
-// tan, the original algorithms for IA 64 handle arguments up to 
+// tan, the original algorithms for IA 64 handle arguments up to
 // 1 ulp less than 2^63 in magnitude. For double-extended arguments x,
-// |x| >= 2^63, this routine returns CASE, N and r_hi, r_lo where
-// 
+// |x| >= 2^63, this routine returns N and r_hi, r_lo where
+//
 //    x  is accurately approximated by
 //    2*K*pi  +  N * pi/2  +  r_hi + r_lo,  |r_hi+r_lo| <= pi/4.
 //    CASE = 1 or 2.
 //    CASE is 1 unless |r_hi + r_lo| < 2^(-33).
-// 
+//
 // The exact value of K is not determined, but that information is
 // not required in trigonometric function computations.
-// 
-// We first assume the argument x in question satisfies x >= 2^(63). 
+//
+// We first assume the argument x in question satisfies x >= 2^(63).
 // In particular, it is positive. Negative x can be handled by symmetry:
-// 
+//
 //   -x  is accurately approximated by
 //         -2*K*pi  +  (-N) * pi/2  -  (r_hi + r_lo),  |r_hi+r_lo| <= pi/4.
-// 
+//
 // The idea of the reduction is that
-// 
-// 	x  *  2/pi   =   N_big  +  N  +  f,	|f| <= 1/2
-// 
+//
+//       x  *  2/pi   =   N_big  +  N  +  f,      |f| <= 1/2
+//
 // Moreover, for double extended x, |f| >= 2^(-75). (This is an
 // non-obvious fact found by enumeration using a special algorithm
-// involving continued fraction.) The algorithm described below 
+// involving continued fraction.) The algorithm described below
 // calculates N and an accurate approximation of f.
-// 
-// Roughly speaking, an appropriate 256-bit (4 X 64) portion of 
+//
+// Roughly speaking, an appropriate 256-bit (4 X 64) portion of
 // 2/pi is multiplied with x to give the desired information.
-// 
+//
 // II. Representation of 2/PI
 // ==========================
-// 
+//
 // The value of 2/pi in binary fixed-point is
-// 
+//
 //            .101000101111100110......
-// 
+//
 // We store 2/pi in a table, starting at the position corresponding
-// to bit position 63 
-// 
+// to bit position 63
+//
 //   bit position  63 62 ... 0   -1 -2 -3 -4 -5 -6 -7  ....  -16576
-// 
-// 	 	0  0  ... 0  . 1  0  1  0  1  0  1  ....    X
-//                 
+//
+//              0  0  ... 0  . 1  0  1  0  1  0  1  ....    X
+//
 //                              ^
-// 	     	             |__ implied binary pt 
-// 
+//                               |__ implied binary pt
+//
 // III. Algorithm
 // ==============
-// 
+//
 // This describes the algorithm in the most natural way using
-// unsigned interger multiplication. The implementation section 
+// unsigned interger multiplication. The implementation section
 // describes how the integer arithmetic is simulated.
-// 
+//
 // STEP 0. Initialization
 // ----------------------
-// 
-// Let the input argument x be 
-// 
+//
+// Let the input argument x be
+//
 //     x = 2^m * ( 1. b_1 b_2 b_3 ... b_63 ),  63 <= m <= 16383.
-// 
-// The first crucial step is to fetch four 64-bit portions of 2/pi. 
+//
+// The first crucial step is to fetch four 64-bit portions of 2/pi.
 // To fulfill this goal, we calculate the bit position L of the
 // beginning of these 256-bit quantity by
-// 
+//
 //     L :=  62 - m.
-// 
-// Note that -16321 <= L <= -1 because 63 <= m <= 16383; and that 
+//
+// Note that -16321 <= L <= -1 because 63 <= m <= 16383; and that
 // the storage of 2/pi is adequate.
-// 
+//
 // Fetch P_1, P_2, P_3, P_4 beginning at bit position L thus:
-// 
+//
 //      bit position  L  L-1  L-2    ...  L-63
-// 
+//
 //      P_1    =      b   b    b     ...    b
-// 
+//
 // each b can be 0 or 1. Also, let P_0 be the two bits correspoding to
 // bit positions L+2 and L+1. So, when each of the P_j is interpreted
 // with appropriate scaling, we have
 //
 //      2/pi  =  P_big  + P_0 + (P_1 + P_2 + P_3 + P_4)  +  P_small
-// 
+//
 // Note that P_big and P_small can be ignored. The reasons are as follow.
 // First, consider P_big. If P_big = 0, we can certainly ignore it.
-// Otherwise, P_big >= 2^(L+3). Now, 
-// 
+// Otherwise, P_big >= 2^(L+3). Now,
+//
 //        P_big * ulp(x) >=  2^(L+3) * 2^(m-63)
-// 		      >=  2^(65-m  +  m-63 )
-// 		      >=  2^2
-// 
+//                   >=  2^(65-m  +  m-63 )
+//                   >=  2^2
+//
 // Thus, P_big * x is an integer of the form 4*K. So
-// 
-// 	x = 4*K * (pi/2) + x*(P_0 + P_1 + P_2 + P_3 + P_4)*(pi/2)
+//
+//       x = 4*K * (pi/2) + x*(P_0 + P_1 + P_2 + P_3 + P_4)*(pi/2)
 //                + x*P_small*(pi/2).
-// 
+//
 // Hence, P_big*x corresponds to information that can be ignored for
 // trigonometic function evaluation.
-// 
+//
 // Next, we must estimate the effect of ignoring P_small. The absolute
 // error made by ignoring P_small is bounded by
-// 
+//
 //       |P_small * x|  <=  ulp(P_4) * x
-// 		     <=  2^(L-255) * 2^(m+1)
-// 		     <=  2^(62-m-255 + m + 1)
-// 		     <=  2^(-192)
-// 
-// Since for double-extended precision, x * 2/pi = integer + f, 
+//                  <=  2^(L-255) * 2^(m+1)
+//                  <=  2^(62-m-255 + m + 1)
+//                  <=  2^(-192)
+//
+// Since for double-extended precision, x * 2/pi = integer + f,
 // 0.5 >= |f| >= 2^(-75), the relative error introduced by ignoring
 // P_small is bounded by 2^(-192+75) <= 2^(-117), which is acceptable.
-// 
+//
 // Further note that if x is split into x_hi + x_lo where x_lo is the
 // two bits corresponding to bit positions 2^(m-62) and 2^(m-63); then
-// 
-// 	P_0 * x_hi 
-// 
+//
+//       P_0 * x_hi
+//
 // is also an integer of the form 4*K; and thus can also be ignored.
 // Let M := P_0 * x_lo which is a small integer. The main part of the
 // calculation is really the multiplication of x with the four pieces
 // P_1, P_2, P_3, and P_4.
-// 
+//
 // Unless the reduced argument is extremely small in magnitude, it
 // suffices to carry out the multiplication of x with P_1, P_2, and
-// P_3. x*P_4 will be carried out and added on as a correction only 
+// P_3. x*P_4 will be carried out and added on as a correction only
 // when it is found to be needed. Note also that x*P_4 need not be
 // computed exactly. A straightforward multiplication suffices since
 // the rounding error thus produced would be bounded by 2^(-3*64),
 // that is 2^(-192) which is small enough as the reduced argument
 // is bounded from below by 2^(-75).
-// 
+//
 // Now that we have four 64-bit data representing 2/pi and a
 // 64-bit x. We first need to calculate a highly accurate product
 // of x and P_1, P_2, P_3. This is best understood as integer
 // multiplication.
-// 
-// 
+//
+//
 // STEP 1. Multiplication
 // ----------------------
-// 
-// 
+//
+//
 //                     ---------   ---------   ---------
-// 	             |  P_1  |   |  P_2  |   |  P_3  |
-// 	             ---------   ---------   ---------
-// 
+//                    |  P_1  |   |  P_2  |   |  P_3  |
+//                    ---------   ---------   ---------
+//
 //                                            ---------
-// 	      X                              |   X   |
-// 	                                     ---------
+//             X                              |   X   |
+//                                            ---------
 //      ----------------------------------------------------
 //
 //                                 ---------   ---------
-//	                         |  A_hi |   |  A_lo |
-//	                         ---------   ---------
+//                               |  A_hi |   |  A_lo |
+//                               ---------   ---------
 //
 //
 //                    ---------   ---------
-//	             |  B_hi |   |  B_lo |
-//	             ---------   ---------
+//                   |  B_hi |   |  B_lo |
+//                   ---------   ---------
 //
 //
-//        ---------   ---------  
-//	 |  C_hi |   |  C_lo |  
-//	 ---------   ---------  
+//        ---------   ---------
+//       |  C_hi |   |  C_lo |
+//       ---------   ---------
 //
 //      ====================================================
 //       ---------   ---------   ---------   ---------
-//	 |  S_0  |   |  S_1  |   |  S_2  |   |  S_3  |
-//	 ---------   ---------   ---------   ---------
+//       |  S_0  |   |  S_1  |   |  S_2  |   |  S_3  |
+//       ---------   ---------   ---------   ---------
 //
 //
 //
 // STEP 2. Get N and f
 // -------------------
-// 
+//
 // Conceptually, after the individual pieces S_0, S_1, ..., are obtained,
 // we have to sum them and obtain an integer part, N, and a fraction, f.
 // Here, |f| <= 1/2, and N is an integer. Note also that N need only to
 // be known to module 2^k, k >= 2. In the case when |f| is small enough,
 // we would need to add in the value x*P_4.
-// 
-// 
+//
+//
 // STEP 3. Get reduced argument
 // ----------------------------
-// 
+//
 // The value f is not yet the reduced argument that we seek. The
 // equation
-// 
-// 	x * 2/pi = 4K  + N  + f
-// 
+//
+//       x * 2/pi = 4K  + N  + f
+//
 // says that
-// 
+//
 //         x   =  2*K*pi  + N * pi/2  +  f * (pi/2).
-// 
+//
 // Thus, the reduced argument is given by
-// 
-// 	reduced argument =  f * pi/2.
-// 
+//
+//       reduced argument =  f * pi/2.
+//
 // This multiplication must be performed to extra precision.
-// 
+//
 // IV. Implementation
 // ==================
-// 
+//
 // Step 0. Initialization
 // ----------------------
-// 
+//
 // Set sgn_x := sign(x); x := |x|; x_lo := 2 lsb of x.
-// 
+//
 // In memory, 2/pi is stored contigously as
-// 
+//
 //  0x00000000 0x00000000 0xA2F....
 //                       ^
 //                       |__ implied binary bit
-// 
+//
 // Given x = 2^m * 1.xxxx...xxx; we calculate L := 62 - m. Thus
 // -1 <= L <= -16321. We fetch from memory 5 integer pieces of data.
-// 
+//
 // P_0 is the two bits corresponding to bit positions L+2 and L+1
 // P_1 is the 64-bit starting at bit position  L
 // P_2 is the 64-bit starting at bit position  L-64
 // P_3 is the 64-bit starting at bit position  L-128
 // P_4 is the 64-bit starting at bit position  L-192
-// 
+//
 // For example, if m = 63, P_0 would be 0 and P_1 would look like
 // 0xA2F...
-// 
+//
 // If m = 65, P_0 would be the two msb of 0xA, thus, P_0 is 10 in binary.
-// P_1 in binary would be  1 0 0 0 1 0 1 1 1 1 .... 
-//  
+// P_1 in binary would be  1 0 0 0 1 0 1 1 1 1 ....
+//
 // Step 1. Multiplication
 // ----------------------
-// 
+//
 // At this point, P_1, P_2, P_3, P_4 are integers. They are
 // supposed to be interpreted as
-// 
+//
 //  2^(L-63)     * P_1;
 //  2^(L-63-64)  * P_2;
 //  2^(L-63-128) * P_3;
 // 2^(L-63-192) * P_4;
-// 
+//
 // Since each of them need to be multiplied to x, we would scale
 // both x and the P_j's by some convenient factors: scale each
 // of P_j's up by 2^(63-L), and scale x down by 2^(L-63).
-// 
+//
 //   p_1 := fcvt.xf ( P_1 )
 //   p_2 := fcvt.xf ( P_2 ) * 2^(-64)
 //   p_3 := fcvt.xf ( P_3 ) * 2^(-128)
@@ -325,30 +331,30 @@
 //   x   := replace exponent of x by -1
 //          because 2^m    * 1.xxxx...xxx  * 2^(L-63)
 //          is      2^(-1) * 1.xxxx...xxx
-// 
+//
 // We are now faced with the task of computing the following
-// 
+//
 //                     ---------   ---------   ---------
-// 	             |  P_1  |   |  P_2  |   |  P_3  |
-// 	             ---------   ---------   ---------
-// 
+//                    |  P_1  |   |  P_2  |   |  P_3  |
+//                    ---------   ---------   ---------
+//
 //                                             ---------
-// 	      X                              |   X   |
-// 	                                     ---------
+//             X                              |   X   |
+//                                            ---------
 //       ----------------------------------------------------
-// 
+//
 //                                 ---------   ---------
-// 	                         |  A_hi |   |  A_lo |
-// 	                         ---------   ---------
-// 
+//                                |  A_hi |   |  A_lo |
+//                                ---------   ---------
+//
 //                     ---------   ---------
-// 	             |  B_hi |   |  B_lo |
-// 	             ---------   ---------
-// 
-//         ---------   ---------  
-// 	 |  C_hi |   |  C_lo |  
-// 	 ---------   ---------  
-// 
+//                    |  B_hi |   |  B_lo |
+//                    ---------   ---------
+//
+//         ---------   ---------
+//        |  C_hi |   |  C_lo |
+//        ---------   ---------
+//
 //      ====================================================
 //       -----------   ---------   ---------   ---------
 //       |    S_0  |   |  S_1  |   |  S_2  |   |  S_3  |
@@ -357,108 +363,108 @@
 //        |          |___ binary point
 //        |
 //        |___ possibly one more bit
-// 
+//
 // Let FPSR3 be set to round towards zero with widest precision
-// and exponent range. Unless an explicit FPSR is given, 
+// and exponent range. Unless an explicit FPSR is given,
 // round-to-nearest with widest precision and exponent range is
 // used.
-// 
+//
 // Define sigma_C := 2^63; sigma_B := 2^(-1); sigma_C := 2^(-65).
-// 
+//
 // Tmp_C := fmpy.fpsr3( x, p_1 );
 // If Tmp_C >= sigma_C then
 //    C_hi := Tmp_C;
 //    C_lo := x*p_1 - C_hi ...fma, exact
 // Else
 //    C_hi := fadd.fpsr3(sigma_C, Tmp_C) - sigma_C
-// 			...subtraction is exact, regardless
-// 			...of rounding direction
+//                   ...subtraction is exact, regardless
+//                   ...of rounding direction
 //    C_lo := x*p_1 - C_hi ...fma, exact
 // End If
-// 
+//
 // Tmp_B := fmpy.fpsr3( x, p_2 );
 // If Tmp_B >= sigma_B then
 //    B_hi := Tmp_B;
 //    B_lo := x*p_2 - B_hi ...fma, exact
 // Else
 //    B_hi := fadd.fpsr3(sigma_B, Tmp_B) - sigma_B
-// 			...subtraction is exact, regardless
-// 			...of rounding direction
+//                   ...subtraction is exact, regardless
+//                   ...of rounding direction
 //    B_lo := x*p_2 - B_hi ...fma, exact
 // End If
-// 
+//
 // Tmp_A := fmpy.fpsr3( x, p_3 );
 // If Tmp_A >= sigma_A then
 //    A_hi := Tmp_A;
 //    A_lo := x*p_3 - A_hi ...fma, exact
 // Else
 //    A_hi := fadd.fpsr3(sigma_A, Tmp_A) - sigma_A
-// 			...subtraction is exact, regardless
-// 			...of rounding direction
+//                   ...subtraction is exact, regardless
+//                   ...of rounding direction
 //    A_lo := x*p_3 - A_hi ...fma, exact
 // End If
-// 
+//
 // ...Note that C_hi is of integer value. We need only the
-// ...last few bits. Thus we can ensure C_hi is never a big 
+// ...last few bits. Thus we can ensure C_hi is never a big
 // ...integer, freeing us from overflow worry.
-// 
+//
 // Tmp_C := fadd.fpsr3( C_hi, 2^(70) ) - 2^(70);
 // ...Tmp_C is the upper portion of C_hi
 // C_hi := C_hi - Tmp_C
 // ...0 <= C_hi < 2^7
-// 
+//
 // Step 2. Get N and f
 // -------------------
-// 
-// At this point, we have all the components to obtain 
+//
+// At this point, we have all the components to obtain
 // S_0, S_1, S_2, S_3 and thus N and f. We start by adding
 // C_lo and B_hi. This sum together with C_hi gives a good
-// estimation of N and f. 
-// 
+// estimation of N and f.
+//
 // A := fadd.fpsr3( B_hi, C_lo )
 // B := max( B_hi, C_lo )
 // b := min( B_hi, C_lo )
-// 
-// a := (B - A) + b	...exact. Note that a is either 0
-// 			...or 2^(-64).
-// 
+//
+// a := (B - A) + b      ...exact. Note that a is either 0
+//                   ...or 2^(-64).
+//
 // N := round_to_nearest_integer_value( A );
-// f := A - N;		...exact because lsb(A) >= 2^(-64)
-// 			...and |f| <= 1/2.
-// 
-// f := f + a		...exact because a is 0 or 2^(-64);
-// 			...the msb of the sum is <= 1/2
-// 			...lsb >= 2^(-64).
-// 
+// f := A - N;            ...exact because lsb(A) >= 2^(-64)
+//                   ...and |f| <= 1/2.
+//
+// f := f + a            ...exact because a is 0 or 2^(-64);
+//                   ...the msb of the sum is <= 1/2
+//                   ...lsb >= 2^(-64).
+//
 // N := convert to integer format( C_hi + N );
 // M := P_0 * x_lo;
 // N := N + M;
-// 
+//
 // If sgn_x == 1 (that is original x was negative)
 // N := 2^10 - N
 // ...this maintains N to be non-negative, but still
 // ...equivalent to the (negated N) mod 4.
 // End If
-// 
+//
 // If |f| >= 2^(-33)
-// 
+//
 // ...Case 1
 // CASE := 1
 // g := A_hi + B_lo;
 // s_hi := f + g;
 // s_lo := (f - s_hi) + g;
-// 
+//
 // Else
-// 
+//
 // ...Case 2
 // CASE := 2
 // A := fadd.fpsr3( A_hi, B_lo )
 // B := max( A_hi, B_lo )
 // b := min( A_hi, B_lo )
-// 
-// a := (B - A) + b	...exact. Note that a is either 0
-// 			...or 2^(-128).
-// 
+//
+// a := (B - A) + b      ...exact. Note that a is either 0
+//                   ...or 2^(-128).
+//
 // f_hi := A + f;
 // f_lo := (f - f_hi) + A;
 // ...this is exact.
@@ -468,9 +474,9 @@
 // ...If f = 2^(-64), f-f_hi involves cancellation and is
 // ...exact. If f = -2^(-64), then A + f is exact. Hence
 // ...f-f_hi is -A exactly, giving f_lo = 0.
-// 
+//
 // f_lo := f_lo + a;
-// 
+//
 // If |f| >= 2^(-50) then
 //    s_hi := f_hi;
 //    s_lo := f_lo;
@@ -479,117 +485,111 @@
 //    s_hi := f_hi + f_lo
 //    s_lo := (f_hi - s_hi) + f_lo
 // End If
-// 
+//
 // End If
-// 
+//
 // Step 3. Get reduced argument
 // ----------------------------
-// 
+//
 // If sgn_x == 0 (that is original x is positive)
-// 
+//
 // D_hi := Pi_by_2_hi
 // D_lo := Pi_by_2_lo
 // ...load from table
-// 
+//
 // Else
-// 
+//
 // D_hi := neg_Pi_by_2_hi
 // D_lo := neg_Pi_by_2_lo
 // ...load from table
 // End If
-// 
-// r_hi :=  s_hi*D_hi
-// r_lo :=  s_hi*D_hi - r_hi   	...fma
-// r_lo := (s_hi*D_lo + r_lo) + s_lo*D_hi
-// 
-// Return  CASE, N, r_hi, r_lo
 //
+// r_hi :=  s_hi*D_hi
+// r_lo :=  s_hi*D_hi - r_hi         ...fma
+// r_lo := (s_hi*D_lo + r_lo) + s_lo*D_hi
+//
+// Return  N, r_hi, r_lo
+//
+FR_input_X = f8
+FR_r_hi    = f8
+FR_r_lo    = f9
 
-#include "libm_support.h"
-
-FR_X       = f32 
-FR_N       = f33 
-FR_p_1     = f34 
-FR_TWOM33  = f35 
-FR_TWOM50  = f36 
-FR_g       = f37 
-FR_p_2     = f38 
-FR_f       = f39 
-FR_s_lo    = f40 
-FR_p_3     = f41 
-FR_f_abs   = f42 
-FR_D_lo    = f43 
-FR_p_4     = f44 
-FR_D_hi    = f45 
-FR_Tmp2_C  = f46 
-FR_s_hi    = f47 
-FR_sigma_A = f48 
-FR_A       = f49 
-FR_sigma_B = f50 
-FR_B       = f51 
-FR_sigma_C = f52 
-FR_b       = f53 
-FR_ScaleP2 = f54 
-FR_ScaleP3 = f55 
-FR_ScaleP4 = f56 
-FR_Tmp_A   = f57 
-FR_Tmp_B   = f58 
-FR_Tmp_C   = f59 
-FR_A_hi    = f60 
-FR_f_hi    = f61 
-FR_r_hi    = f62 
-FR_A_lo    = f63 
-FR_B_hi    = f64 
-FR_a       = f65 
-FR_B_lo    = f66 
+FR_X       = f32
+FR_N       = f33
+FR_p_1     = f34
+FR_TWOM33  = f35
+FR_TWOM50  = f36
+FR_g       = f37
+FR_p_2     = f38
+FR_f       = f39
+FR_s_lo    = f40
+FR_p_3     = f41
+FR_f_abs   = f42
+FR_D_lo    = f43
+FR_p_4     = f44
+FR_D_hi    = f45
+FR_Tmp2_C  = f46
+FR_s_hi    = f47
+FR_sigma_A = f48
+FR_A       = f49
+FR_sigma_B = f50
+FR_B       = f51
+FR_sigma_C = f52
+FR_b       = f53
+FR_ScaleP2 = f54
+FR_ScaleP3 = f55
+FR_ScaleP4 = f56
+FR_Tmp_A   = f57
+FR_Tmp_B   = f58
+FR_Tmp_C   = f59
+FR_A_hi    = f60
+FR_f_hi    = f61
+FR_RSHF    = f62
+FR_A_lo    = f63
+FR_B_hi    = f64
+FR_a       = f65
+FR_B_lo    = f66
 FR_f_lo    = f67
-FR_r_lo    = f68 
-FR_C_hi    = f69 
-FR_C_lo    = f70 
+FR_N_fix   = f68
+FR_C_hi    = f69
+FR_C_lo    = f70
 
 GR_N       = r8
-GR_Address_of_Input  = r32 
-GR_Address_of_Outputs = r33 
-GR_Exp_x   = r36 
-GR_Temp    = r37 
-GR_BIASL63 = r38 
+GR_Exp_x   = r36
+GR_Temp    = r37
+GR_BIASL63 = r38
 GR_CASE    = r39
-GR_x_lo    = r40 
-GR_sgn_x   = r41 
+GR_x_lo    = r40
+GR_sgn_x   = r41
 GR_M       = r42
 GR_BASE    = r43
 GR_LENGTH1 = r44
 GR_LENGTH2 = r45
 GR_ASUB    = r46
 GR_P_0     = r47
-GR_P_1     = r48 
-GR_P_2     = r49 
-GR_P_3     = r50 
-GR_P_4     = r51 
+GR_P_1     = r48
+GR_P_2     = r49
+GR_P_3     = r50
+GR_P_4     = r51
 GR_START   = r52
 GR_SEGMENT = r53
 GR_A       = r54
-GR_B       = r55 
+GR_B       = r55
 GR_C       = r56
 GR_D       = r57
 GR_E       = r58
-GR_TEMP1   = r59 
-GR_TEMP2   = r60 
-GR_TEMP3   = r61 
-GR_TEMP4   = r62 
+GR_TEMP1   = r59
+GR_TEMP2   = r60
+GR_TEMP3   = r61
+GR_TEMP4   = r62
 GR_TEMP5   = r63
 GR_TEMP6   = r64
+GR_rshf    = r64
 
+RODATA
 .align 64
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
-Constants_Bits_of_2_by_pi:
-ASM_TYPE_DIRECTIVE(Constants_Bits_of_2_by_pi,@object)
+LOCAL_OBJECT_START(Constants_Bits_of_2_by_pi)
 data8 0x0000000000000000,0xA2F9836E4E441529
 data8 0xFC2757D1F534DDC0,0xDB6295993C439041
 data8 0xFE5163ABDEBBC561,0xB7246E3A424DD2E0
@@ -721,34 +721,33 @@ data8 0xB5D6DF8261DD9602,0x36169F3AC4A1A283
 data8 0x6DED727A8D39A9B8,0x825C326B5B2746ED
 data8 0x34007700D255F4FC,0x4D59018071E0E13F
 data8 0x89B295F364A8F1AE,0xA74B38FC4CEAB2BB
-ASM_SIZE_DIRECTIVE(Constants_Bits_of_2_by_pi)
+LOCAL_OBJECT_END(Constants_Bits_of_2_by_pi)
 
-Constants_Bits_of_pi_by_2:
-ASM_TYPE_DIRECTIVE(Constants_Bits_of_pi_by_2,@object)
-data4 0x2168C234,0xC90FDAA2,0x00003FFF,0x00000000
-data4 0x80DC1CD1,0xC4C6628B,0x00003FBF,0x00000000
-ASM_SIZE_DIRECTIVE(Constants_Bits_of_pi_by_2)
+LOCAL_OBJECT_START(Constants_Bits_of_pi_by_2)
+data8 0xC90FDAA22168C234,0x00003FFF
+data8 0xC4C6628B80DC1CD1,0x00003FBF
+LOCAL_OBJECT_END(Constants_Bits_of_pi_by_2)
 
 .section .text
-.proc __libm_pi_by_2_reduce#
 .global __libm_pi_by_2_reduce#
-.align 64 
+.proc __libm_pi_by_2_reduce#
+.align 32
 
-__libm_pi_by_2_reduce: 
+__libm_pi_by_2_reduce:
 
-//    X is at the address in Address_of_Input
-//    Place the two-piece result at the address in Address_of_Outputs
-//    r followed by c
-//    N is returned
+//    X is in f8
+//    Place the two-piece result r (r_hi) in f8 and c (r_lo) in f9
+//    N is returned in r8
 
-{ .mmf
-alloc  r34 = ar.pfs,2,34,0,0
-(p0)  ldfe  FR_X = [GR_Address_of_Input]
-(p0)  fsetc.s3 0x00,0x7F ;;
+{ .mfi
+      alloc  r34 = ar.pfs,2,34,0,0
+      fsetc.s3 0x00,0x7F     // Set sf3 to round to zero, 82-bit prec, td, ftz
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_BIASL63 = 0x1003E
+{ .mfi
+      addl           GR_BASE   = @ltoff(Constants_Bits_of_2_by_pi#), gp
+      nop.f 999
+      mov GR_BIASL63 = 0x1003E
 }
 ;;
 
@@ -765,73 +764,61 @@ alloc  r34 = ar.pfs,2,34,0,0
 //    Address_BASE = shladd(SEGMENT,3) + BASE
 
 
-
 { .mmi
-      nop.m 999
-(p0)  addl           GR_BASE   = @ltoff(Constants_Bits_of_2_by_pi#), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
+      getf.exp GR_Exp_x = FR_input_X
       ld8 GR_BASE = [GR_BASE]
-      nop.m 999
+      mov GR_TEMP5 = 0x0FFFE
+}
+;;
+
+//    Define sigma_C := 2^63; sigma_B := 2^(-1); sigma_A := 2^(-65).
+{ .mmi
+      getf.sig GR_x_lo = FR_input_X
+      mov GR_TEMP6 = 0x0FFBE
       nop.i 999
 }
 ;;
 
-
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP5 = 0x000000000000FFFE
-}
-{ .mmi
-	nop.m 999 ;;
-(p0)  setf.exp FR_sigma_B = GR_TEMP5
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP6 = 0x000000000000FFBE ;;
-}
-//    Define sigma_C := 2^63; sigma_B := 2^(-1); sigma_A := 2^(-65).
-{ .mfi
-(p0)  setf.exp FR_sigma_A = GR_TEMP6
-	nop.f 999
-	nop.i 999 ;;
-}
-//    Special Code for testing DE arguments 
-//    (p0)  movl GR_BIASL63 = 0x0000000000013FFE
-//    (p0)  movl GR_x_lo = 0xFFFFFFFFFFFFFFFF
-//    (p0)  setf.exp FR_X = GR_BIASL63
-//    (p0)  setf.sig FR_ScaleP3 = GR_x_lo
-//    (p0)  fmerge.se FR_X = FR_X,FR_ScaleP3
+//    Special Code for testing DE arguments
+//          movl GR_BIASL63 = 0x0000000000013FFE
+//          movl GR_x_lo = 0xFFFFFFFFFFFFFFFF
+//          setf.exp FR_X = GR_BIASL63
+//          setf.sig FR_ScaleP3 = GR_x_lo
+//          fmerge.se FR_X = FR_X,FR_ScaleP3
 //    Set sgn_x := sign(x); x := |x|; x_lo := 2 lsb of x.
 //    2/pi is stored contigously as
 //    0x00000000 0x00000000.0xA2F....
 //    M = EXP - BIAS  ( M >= 63)
 //    Given x = 2^m * 1.xxxx...xxx; we calculate L := 62 - m.
 //    Thus -1 <= L <= -16321.
-{ .mmf
-(p0)  getf.exp GR_Exp_x = FR_X
-(p0)  getf.sig GR_x_lo = FR_X
-(p0)  fabs FR_X = FR_X ;;
+{ .mmi
+      setf.exp FR_sigma_B = GR_TEMP5
+      setf.exp FR_sigma_A = GR_TEMP6
+      extr.u GR_M = GR_Exp_x,0,17
 }
+;;
+
 { .mii
-(p0)  and  GR_x_lo = 0x03,GR_x_lo
-(p0)  extr.u GR_M = GR_Exp_x,0,17 ;;
-(p0)  sub  GR_START = GR_M,GR_BIASL63
+      and  GR_x_lo = 0x03,GR_x_lo
+      sub  GR_START = GR_M,GR_BIASL63
+      add  GR_BASE = 8,GR_BASE           // To effectively add 1 to SEGMENT
 }
+;;
+
+{ .mii
+      and  GR_LENGTH1 = 0x3F,GR_START
+      shr.u  GR_SEGMENT = GR_START,6
+      nop.i 999
+}
+;;
+
 { .mmi
-	nop.m 999 ;;
-(p0)  and  GR_LENGTH1 = 0x3F,GR_START
-(p0)  shr.u  GR_SEGMENT = GR_START,6
+      shladd GR_BASE = GR_SEGMENT,3,GR_BASE
+      sub  GR_LENGTH2 = 0x40,GR_LENGTH1
+      cmp.le p6,p7 = 0x2,GR_LENGTH1
 }
-{ .mmi
-	nop.m 999 ;;
-(p0)  add  GR_SEGMENT = 0x1,GR_SEGMENT
-(p0)  sub  GR_LENGTH2 = 0x40,GR_LENGTH1
-}
+;;
+
 //    P_0 is the two bits corresponding to bit positions L+2 and L+1
 //    P_1 is the 64-bit starting at bit position  L
 //    P_2 is the 64-bit starting at bit position  L-64
@@ -849,13 +836,13 @@ alloc  r34 = ar.pfs,2,34,0,0
 //    P_4 is made up of Clo and Dhi
 //    P_4 = deposit Dlo, position 0, length2  into P_4, position length1
 //          deposit Ehi, position length2, length1 into P_4, position 0
-{ .mmi
-(p0)  cmp.le.unc p6,p7 = 0x2,GR_LENGTH1 ;;
-(p0)  shladd GR_BASE = GR_SEGMENT,3,GR_BASE
-(p7)  cmp.eq.unc p8,p9 = 0x1,GR_LENGTH1 ;;
+{ .mfi
+      ld8 GR_A = [GR_BASE],8
+      fabs FR_X = FR_input_X
+(p7)  cmp.eq.unc p8,p9 = 0x1,GR_LENGTH1
 }
-{ .mmi
-	nop.m 999
+;;
+
 //    ld_64 A at Base and increment Base by 8
 //    ld_64 B at Base and increment Base by 8
 //    ld_64 C at Base and increment Base by 8
@@ -866,31 +853,35 @@ alloc  r34 = ar.pfs,2,34,0,0
 //    A, B, C, D, and E look like    | length1 | length2   |
 //                                    ---------------------
 //                                       hi        lo
-(p0)  ld8 GR_A = [GR_BASE],8
-(p0)  extr.u GR_sgn_x = GR_Exp_x,17,1 ;;
+{ .mlx
+      ld8 GR_B = [GR_BASE],8
+      movl GR_rshf = 0x43e8000000000000   // 1.10000 2^63 for right shift N_fix
 }
-{ .mmf
-	nop.m 999
-(p0)  ld8 GR_B = [GR_BASE],8
-(p0)  fmerge.se FR_X = FR_sigma_B,FR_X ;;
+;;
+
+{ .mmi
+      ld8 GR_C = [GR_BASE],8
+      nop.m 999
+(p8)  extr.u GR_Temp = GR_A,63,1
 }
-{ .mii
-(p0)  ld8 GR_C = [GR_BASE],8
-(p8)  extr.u GR_Temp = GR_A,63,1 ;;
-(p0)  shl GR_TEMP1 = GR_A,GR_LENGTH1
-}
-{ .mii
-(p0)  ld8 GR_D = [GR_BASE],8
+;;
+
 //    If length1 >= 2,
 //       P_0 = deposit Ahi, position length2, 2 bit into P_0 at position 0.
-(p6)     shr.u GR_P_0 = GR_A,GR_LENGTH2 ;;
-(p0)  shl GR_TEMP2 = GR_B,GR_LENGTH1
-}
 { .mii
-(p0)  ld8 GR_E = [GR_BASE],-40
-(p0)  shr.u GR_P_1 = GR_B,GR_LENGTH2 ;;
-(p0)  shr.u GR_P_2 = GR_C,GR_LENGTH2
+      ld8 GR_D = [GR_BASE],8
+      shl GR_TEMP1 = GR_A,GR_LENGTH1   // MM instruction
+(p6)  shr.u GR_P_0 = GR_A,GR_LENGTH2   // MM instruction
 }
+;;
+
+{ .mii
+      ld8 GR_E = [GR_BASE],-40
+      shl GR_TEMP2 = GR_B,GR_LENGTH1   // MM instruction
+      shr.u GR_P_1 = GR_B,GR_LENGTH2   // MM instruction
+}
+;;
+
 //    Else
 //       Load 16 bit of ASUB from (Base_Address_of_A - 2)
 //       P_0 = ASUB & 0x3
@@ -900,43 +891,56 @@ alloc  r34 = ar.pfs,2,34,0,0
 //          Deposit element 63 from Ahi and place in element 0 of P_0.
 //       Endif
 //    Endif
+
 { .mii
 (p7)  ld2 GR_ASUB = [GR_BASE],8
-(p0)  shl GR_TEMP3 = GR_C,GR_LENGTH1 ;;
-(p0)  shl GR_TEMP4 = GR_D,GR_LENGTH1
+      shl GR_TEMP3 = GR_C,GR_LENGTH1   // MM instruction
+      shr.u GR_P_2 = GR_C,GR_LENGTH2   // MM instruction
 }
+;;
+
 { .mii
-	nop.m 999
-(p0)  shr.u GR_P_3 = GR_D,GR_LENGTH2 ;;
-(p0)  shr.u GR_P_4 = GR_E,GR_LENGTH2
+      setf.d FR_RSHF = GR_rshf         // Form right shift const 1.100 * 2^63
+      shl GR_TEMP4 = GR_D,GR_LENGTH1   // MM instruction
+      shr.u GR_P_3 = GR_D,GR_LENGTH2   // MM instruction
 }
-{ .mii
+;;
+
+{ .mmi
 (p7)  and GR_P_0 = 0x03,GR_ASUB
-(p6)     and GR_P_0 = 0x03,GR_P_0 ;;
-(p0)  or GR_P_1 = GR_P_1,GR_TEMP1
+(p6)  and GR_P_0 = 0x03,GR_P_0
+      shr.u GR_P_4 = GR_E,GR_LENGTH2   // MM instruction
 }
+;;
+
 { .mmi
-(p8)  and GR_P_0 = 0x1,GR_P_0 ;;
-(p0)  or GR_P_2 = GR_P_2,GR_TEMP2
-(p8)  shl GR_P_0 = GR_P_0,0x1 ;;
+      nop.m 999
+      or GR_P_1 = GR_P_1,GR_TEMP1
+(p8)  and GR_P_0 = 0x1,GR_P_0
 }
-{ .mii
-	nop.m 999
-(p0)  or GR_P_3 = GR_P_3,GR_TEMP3
-(p8)  or GR_P_0 = GR_P_0,GR_Temp
-}
+;;
+
 { .mmi
-(p0)  setf.sig FR_p_1 = GR_P_1 ;;
-(p0)  setf.sig FR_p_2 = GR_P_2
-(p0)  or GR_P_4 = GR_P_4,GR_TEMP4 ;;
+      setf.sig FR_p_1 = GR_P_1
+      or GR_P_2 = GR_P_2,GR_TEMP2
+(p8)  shladd GR_P_0 = GR_P_0,1,GR_Temp
 }
+;;
+
+{ .mmf
+      setf.sig FR_p_2 = GR_P_2
+      or GR_P_3 = GR_P_3,GR_TEMP3
+      fmerge.se FR_X = FR_sigma_B,FR_X
+}
+;;
+
 { .mmi
-	nop.m 999 ;;
-(p0)  setf.sig FR_p_3 = GR_P_3
-(p0)  pmpy2.r GR_M = GR_P_0,GR_x_lo
+      setf.sig FR_p_3 = GR_P_3
+      or GR_P_4 = GR_P_4,GR_TEMP4
+      pmpy2.r GR_M = GR_P_0,GR_x_lo
 }
-{ .mlx
-(p0)  setf.sig FR_p_4 = GR_P_4
+;;
+
 //    P_1, P_2, P_3, P_4 are integers. They should be
 //    2^(L-63)     * P_1;
 //    2^(L-63-64)  * P_2;
@@ -954,18 +958,18 @@ alloc  r34 = ar.pfs,2,34,0,0
 //             |  P_1  |   |  P_2  |   |  P_3  |
 //             ---------   ---------   ---------
 //                                           ---------
-//	      X                              |   X   |
-//	                                     ---------
+//            X                              |   X   |
+//                                           ---------
 //      ----------------------------------------------------
 //                               ---------   ---------
-//	                         |  A_hi |   |  A_lo |
-//	                         ---------   ---------
+//                               |  A_hi |   |  A_lo |
+//                               ---------   ---------
 //                   ---------   ---------
-//	             |  B_hi |   |  B_lo |
-//	             ---------   ---------
+//                   |  B_hi |   |  B_lo |
+//                   ---------   ---------
 //       ---------   ---------
-//	 |  C_hi |   |  C_lo |
-//	 ---------   ---------
+//       |  C_hi |   |  C_lo |
+//       ---------   ---------
 //     ====================================================
 //    -----------   ---------   ---------   ---------
 //    |    S_0  |   |  S_1  |   |  S_2  |   |  S_3  |
@@ -977,52 +981,55 @@ alloc  r34 = ar.pfs,2,34,0,0
 //    and exponent range. Unless an explicit FPSR is given,
 //    round-to-nearest with widest precision and exponent range is
 //    used.
-(p0)  movl GR_TEMP1 = 0x000000000000FFBF
-}
 { .mmi
-	nop.m 999 ;;
-(p0)  setf.exp FR_ScaleP2 = GR_TEMP1
-	nop.i 999
+      setf.sig FR_p_4 = GR_P_4
+      mov GR_TEMP1 = 0x0FFBF
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP4 = 0x000000000001003E
-}
+;;
+
 { .mmi
-	nop.m 999 ;;
-(p0)  setf.exp FR_sigma_C = GR_TEMP4
-	nop.i 999
+      setf.exp FR_ScaleP2 = GR_TEMP1
+      mov GR_TEMP2 = 0x0FF7F
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP2 = 0x000000000000FF7F ;;
+;;
+
+{ .mmi
+      setf.exp FR_ScaleP3 = GR_TEMP2
+      mov GR_TEMP4 = 0x1003E
+      nop.i 999
 }
+;;
+
 { .mmf
-	nop.m 999
-(p0)  setf.exp FR_ScaleP3 = GR_TEMP2
-(p0)  fcvt.xuf.s1 FR_p_1 = FR_p_1 ;;
+      setf.exp FR_sigma_C = GR_TEMP4
+      mov GR_Temp = 0x0FFDE
+      fcvt.xuf.s1 FR_p_1 = FR_p_1
 }
+;;
+
 { .mfi
-	nop.m 999
-(p0)  fcvt.xuf.s1 FR_p_2 = FR_p_2
-	nop.i 999
+      setf.exp FR_TWOM33 = GR_Temp
+      fcvt.xuf.s1 FR_p_2 = FR_p_2
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_Temp = 0x000000000000FFDE ;;
-}
-{ .mmf
-	nop.m 999
-(p0)  setf.exp FR_TWOM33 = GR_Temp
-(p0)  fcvt.xuf.s1 FR_p_3 = FR_p_3 ;;
-}
+;;
+
 { .mfi
-	nop.m 999
-(p0)  fcvt.xuf.s1 FR_p_4 = FR_p_4
-	nop.i 999 ;;
+      nop.m 999
+      fcvt.xuf.s1 FR_p_3 = FR_p_3
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
+      nop.m 999
+      fcvt.xuf.s1 FR_p_4 = FR_p_4
+      nop.i 999
+}
+;;
+
 //    Tmp_C := fmpy.fpsr3( x, p_1 );
 //    Tmp_B := fmpy.fpsr3( x, p_2 );
 //    Tmp_A := fmpy.fpsr3( x, p_3 );
@@ -1048,55 +1055,62 @@ alloc  r34 = ar.pfs,2,34,0,0
 //      Exact, regardless ...of rounding direction
 //      A_lo := x*p_3 - A_hi ...fma, exact
 //    Endif
-(p0)  fmpy.s3 FR_Tmp_C = FR_X,FR_p_1
-	nop.i 999 ;;
-}
 { .mfi
-	nop.m 999
-(p0)  fmpy.s1 FR_p_2 = FR_p_2,FR_ScaleP2
-	nop.i 999
+      nop.m 999
+      fmpy.s3 FR_Tmp_C = FR_X,FR_p_1
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_Temp = 0x0000000000000400
+;;
+
+{ .mfi
+      mov GR_TEMP3 = 0x0FF3F
+      fmpy.s1 FR_p_2 = FR_p_2,FR_ScaleP2
+      nop.i 999
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP3 = 0x000000000000FF3F ;;
-}
+;;
+
 { .mmf
-	nop.m 999
-(p0)  setf.exp FR_ScaleP4 = GR_TEMP3
-(p0)  fmpy.s1 FR_p_3 = FR_p_3,FR_ScaleP3 ;;
+      setf.exp FR_ScaleP4 = GR_TEMP3
+      mov GR_TEMP4 = 0x10045
+      fmpy.s1 FR_p_3 = FR_p_3,FR_ScaleP3
 }
-{ .mlx
-	nop.m 999
-(p0)  movl GR_TEMP4 = 0x0000000000010045 ;;
+;;
+
+{ .mfi
+      nop.m 999
+      fadd.s3 FR_C_hi = FR_sigma_C,FR_Tmp_C   // For Tmp_C < sigma_C case
+      nop.i 999
 }
+;;
+
 { .mmf
-	nop.m 999
-(p0)  setf.exp FR_Tmp2_C = GR_TEMP4
-(p0)  fmpy.s3 FR_Tmp_B = FR_X,FR_p_2 ;;
+      setf.exp FR_Tmp2_C = GR_TEMP4
+      nop.m 999
+      fmpy.s3 FR_Tmp_B = FR_X,FR_p_2
+}
+;;
+
+{ .mfi
+      addl           GR_BASE   = @ltoff(Constants_Bits_of_pi_by_2#), gp
+      fcmp.ge.s1 p12,  p9 = FR_Tmp_C,FR_sigma_C
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p0)  fcmp.ge.unc.s1 p12,  p9 = FR_Tmp_C,FR_sigma_C
-	nop.i 999 ;;
+      nop.m 999
+      fmpy.s3 FR_Tmp_A = FR_X,FR_p_3
+      nop.i 99
 }
+;;
+
 { .mfi
-	nop.m 999
-(p0)  fmpy.s3 FR_Tmp_A = FR_X,FR_p_3
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
+      ld8 GR_BASE = [GR_BASE]
 (p12) mov FR_C_hi = FR_Tmp_C
-	nop.i 999 ;;
+      nop.i 999
 }
 { .mfi
-(p0)  addl           GR_BASE   = @ltoff(Constants_Bits_of_pi_by_2#), gp
-(p9)  fadd.s3 FR_C_hi = FR_sigma_C,FR_Tmp_C
-	nop.i 999
+      nop.m 999
+(p9)  fsub.s1 FR_C_hi = FR_C_hi,FR_sigma_C
+      nop.i 999
 }
 ;;
 
@@ -1114,97 +1128,106 @@ alloc  r34 = ar.pfs,2,34,0,0
 //      Load from table
 //   End If
 
-
-{ .mmi
-      ld8 GR_BASE = [GR_BASE]
+{ .mfi
       nop.m 999
+      fmpy.s1 FR_p_4 = FR_p_4,FR_ScaleP4
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+      fadd.s3 FR_B_hi = FR_sigma_B,FR_Tmp_B     // For Tmp_B < sigma_B case
       nop.i 999
 }
 ;;
 
+{ .mfi
+      nop.m 999
+      fadd.s3 FR_A_hi = FR_sigma_A,FR_Tmp_A     // For Tmp_A < sigma_A case
+      nop.i 999
+}
+;;
 
 { .mfi
-(p0) ldfe FR_D_hi = [GR_BASE],16
-(p0)  fmpy.s1 FR_p_4 = FR_p_4,FR_ScaleP4
-	nop.i 999 ;;
+      nop.m 999
+      fcmp.ge.s1 p13, p10 = FR_Tmp_B,FR_sigma_B
+      nop.i 999
 }
 { .mfi
-(p0) ldfe FR_D_lo = [GR_BASE],0
-(p0)  fcmp.ge.unc.s1 p13, p10 = FR_Tmp_B,FR_sigma_B
-	nop.i 999 ;;
+      nop.m 999
+      fms.s1 FR_C_lo = FR_X,FR_p_1,FR_C_hi
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
+      ldfe FR_D_hi = [GR_BASE],16
+      fcmp.ge.s1 p14, p11 = FR_Tmp_A,FR_sigma_A
+      nop.i 999
+}
+;;
+
+{ .mfi
+      ldfe FR_D_lo = [GR_BASE]
 (p13) mov FR_B_hi = FR_Tmp_B
-	nop.i 999
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p12) fms.s1 FR_C_lo = FR_X,FR_p_1,FR_C_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p10) fadd.s3 FR_B_hi = FR_sigma_B,FR_Tmp_B
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p9)  fsub.s1 FR_C_hi = FR_C_hi,FR_sigma_C
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fcmp.ge.unc.s1 p14, p11 = FR_Tmp_A,FR_sigma_A
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p14) mov FR_A_hi = FR_Tmp_A
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p11) fadd.s3 FR_A_hi = FR_sigma_A,FR_Tmp_A
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p9)  fms.s1 FR_C_lo = FR_X,FR_p_1,FR_C_hi
-(p0)  cmp.eq.unc p12,p9 = 0x1,GR_sgn_x
-}
-{ .mfi
-	nop.m 999
-(p13) fms.s1 FR_B_lo = FR_X,FR_p_2,FR_B_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
+      nop.m 999
 (p10) fsub.s1 FR_B_hi = FR_B_hi,FR_sigma_B
-	nop.i 999
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p14) mov FR_A_hi = FR_Tmp_A
+      nop.i 999
 }
 { .mfi
-	nop.m 999
+      nop.m 999
+(p11) fsub.s1 FR_A_hi = FR_A_hi,FR_sigma_A
+      nop.i 999
+}
+;;
+
 //    Note that C_hi is of integer value. We need only the
 //    last few bits. Thus we can ensure C_hi is never a big
 //    integer, freeing us from overflow worry.
 //    Tmp_C := fadd.fpsr3( C_hi, 2^(70) ) - 2^(70);
 //    Tmp_C is the upper portion of C_hi
-(p0)  fadd.s3 FR_Tmp_C = FR_C_hi,FR_Tmp2_C
-	nop.i 999 ;;
+{ .mfi
+      nop.m 999
+      fadd.s3 FR_Tmp_C = FR_C_hi,FR_Tmp2_C
+      tbit.z p12,p9 = GR_Exp_x, 17
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fms.s1 FR_B_lo = FR_X,FR_p_2,FR_B_hi
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p14) fms.s1 FR_A_lo = FR_X,FR_p_3,FR_A_hi
-	nop.i 999
+      nop.m 999
+      fadd.s3 FR_A = FR_B_hi,FR_C_lo
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
-(p11) fsub.s1 FR_A_hi = FR_A_hi,FR_sigma_A
-	nop.i 999 ;;
+      nop.m 999
+      fms.s1 FR_A_lo = FR_X,FR_p_3,FR_A_hi
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
+      nop.m 999
+      fsub.s1 FR_Tmp_C = FR_Tmp_C,FR_Tmp2_C
+      nop.i 999
+}
+;;
+
 //    *******************
 //    Step 2. Get N and f
 //    *******************
@@ -1215,168 +1238,213 @@ alloc  r34 = ar.pfs,2,34,0,0
 //    A := fadd.fpsr3( B_hi, C_lo )
 //    B := max( B_hi, C_lo )
 //    b := min( B_hi, C_lo )
-(p0)  fadd.s3 FR_A = FR_B_hi,FR_C_lo
-	nop.i 999
-}
 { .mfi
-	nop.m 999
-(p10) fms.s1 FR_B_lo = FR_X,FR_p_2,FR_B_hi
-	nop.i 999 ;;
+      nop.m 999
+      fmax.s1 FR_B = FR_B_hi,FR_C_lo
+      nop.i 999
 }
+;;
+
+// We use a right-shift trick to get the integer part of A into the rightmost
+// bits of the significand by adding 1.1000..00 * 2^63.  This operation is good
+// if |A| < 2^61, which it is in this case.  We are doing this to save a few
+// cycles over using fcvt.fx followed by fnorm.  The second step of the trick
+// is to subtract the same constant to float the rounded integer into a fp reg.
+
 { .mfi
-	nop.m 999
-(p0)  fsub.s1 FR_Tmp_C = FR_Tmp_C,FR_Tmp2_C
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fmax.s1 FR_B = FR_B_hi,FR_C_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fmin.s1 FR_b = FR_B_hi,FR_C_lo
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p11) fms.s1 FR_A_lo = FR_X,FR_p_3,FR_A_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
+      nop.m 999
 //    N := round_to_nearest_integer_value( A );
-(p0)  fcvt.fx.s1 FR_N = FR_A
-	nop.i 999 ;;
+      fma.s1 FR_N_fix = FR_A, f1, FR_RSHF
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmin.s1 FR_b = FR_B_hi,FR_C_lo
+      nop.i 999
 }
 { .mfi
-	nop.m 999
+      nop.m 999
 //    C_hi := C_hi - Tmp_C ...0 <= C_hi < 2^7
-(p0)  fsub.s1 FR_C_hi = FR_C_hi,FR_Tmp_C
-	nop.i 999 ;;
+      fsub.s1 FR_C_hi = FR_C_hi,FR_Tmp_C
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
+      nop.m 999
 //    a := (B - A) + b: Exact - note that a is either 0 or 2^(-64).
-(p0)  fsub.s1 FR_a = FR_B,FR_A
-	nop.i 999 ;;
+      fsub.s1 FR_a = FR_B,FR_A
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
+      nop.m 999
+      fms.s1 FR_N = FR_N_fix, f1, FR_RSHF
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fadd.s1 FR_a = FR_a,FR_b
+      nop.i 999
+}
+;;
+
 //    f := A - N; Exact because lsb(A) >= 2^(-64) and |f| <= 1/2.
-(p0)  fnorm.s1 FR_N = FR_N
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fadd.s1 FR_a = FR_a,FR_b
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fsub.s1 FR_f = FR_A,FR_N
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
 //    N := convert to integer format( C_hi + N );
 //    M := P_0 * x_lo;
 //    N := N + M;
-(p0)  fadd.s1 FR_N = FR_N,FR_C_hi
-	nop.i 999 ;;
+{ .mfi
+      nop.m 999
+      fsub.s1 FR_f = FR_A,FR_N
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-//    f = f + a	Exact because a is 0 or 2^(-64);
+      nop.m 999
+      fadd.s1 FR_N = FR_N,FR_C_hi
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fsub.s1 FR_D_hi = f0, FR_D_hi
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p9)  fsub.s1 FR_D_lo = f0, FR_D_lo
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fadd.s1 FR_g = FR_A_hi,FR_B_lo          // For Case 1, g=A_hi+B_lo
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+      fadd.s3 FR_A = FR_A_hi,FR_B_lo          // For Case 2, A=A_hi+B_lo w/ sf3
+      nop.i 999
+}
+;;
+
+{ .mfi
+      mov GR_Temp = 0x0FFCD                   // For Case 2, exponent of 2^-50
+      fmax.s1 FR_B = FR_A_hi,FR_B_lo          // For Case 2, B=max(A_hi,B_lo)
+      nop.i 999
+}
+;;
+
+//    f = f + a      Exact because a is 0 or 2^(-64);
 //    the msb of the sum is <= 1/2 and lsb >= 2^(-64).
-(p0)  fadd.s1 FR_f = FR_f,FR_a
-	nop.i 999
+{ .mfi
+      setf.exp FR_TWOM50 = GR_Temp            // For Case 2, form 2^-50
+      fcvt.fx.s1 FR_N = FR_N
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-//
-//    Create 2**(-33)
-//
-(p0)  fcvt.fx.s1 FR_N = FR_N
-	nop.i 999 ;;
+      nop.m 999
+      fadd.s1 FR_f = FR_f,FR_a
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmin.s1 FR_b = FR_A_hi,FR_B_lo          // For Case 2, b=min(A_hi,B_lo)
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fsub.s1 FR_a = FR_B,FR_A                // For Case 2, a=B-A
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fadd.s1 FR_s_hi = FR_f,FR_g             // For Case 1, s_hi=f+g
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p0)  fabs FR_f_abs = FR_f
-	nop.i 999 ;;
+      nop.m 999
+      fadd.s1 FR_f_hi = FR_A,FR_f             // For Case 2, f_hi=A+f
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fabs FR_f_abs = FR_f
+      nop.i 999
+}
+;;
+
+{ .mfi
+      getf.sig GR_N = FR_N
+      fsetc.s3 0x7F,0x40                 // Reset sf3 to user settings + td
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fsub.s1 FR_s_lo = FR_f,FR_s_hi          // For Case 1, s_lo=f-s_hi
+      nop.i 999
 }
 { .mfi
-(p0)  getf.sig GR_N = FR_N
-	nop.f 999
-	nop.i 999 ;;
+      nop.m 999
+      fsub.s1 FR_f_lo = FR_f,FR_f_hi          // For Case 2, f_lo=f-f_hi
+      nop.i 999
 }
-{ .mii
-	nop.m 999
-	nop.i 999 ;;
-(p0)  add GR_N = GR_N,GR_M ;;
+;;
+
+{ .mfi
+      nop.m 999
+      fmpy.s1 FR_r_hi = FR_s_hi,FR_D_hi       // For Case 1, r_hi=s_hi*D_hi
+      nop.i 999
 }
+{ .mfi
+      nop.m 999
+      fadd.s1 FR_a = FR_a,FR_b                // For Case 2, a=a+b
+      nop.i 999
+}
+;;
+
+
 //    If sgn_x == 1 (that is original x was negative)
 //       N := 2^10 - N
 //       this maintains N to be non-negative, but still
 //       equivalent to the (negated N) mod 4.
 //    End If
-{ .mii
-(p12) sub GR_N = GR_Temp,GR_N
-(p0) cmp.eq.unc p12,p9 = 0x0,GR_sgn_x ;;
-	nop.i 999
+{ .mfi
+      add GR_N = GR_N,GR_M
+      fcmp.ge.s1 p13, p10 = FR_f_abs,FR_TWOM33
+      mov GR_Temp = 0x00400
+}
+;;
+
+{ .mfi
+(p9)  sub GR_N = GR_Temp,GR_N
+      fadd.s1 FR_s_lo = FR_s_lo,FR_g           // For Case 1, s_lo=s_lo+g
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p0)  fcmp.ge.unc.s1 p13, p10 = FR_f_abs,FR_TWOM33
-	nop.i 999 ;;
+      nop.m 999
+      fadd.s1 FR_f_lo = FR_f_lo,FR_A           // For Case 2, f_lo=f_lo+A
+      nop.i 999
 }
-{ .mfi
-	nop.m 999
-(p9) fsub.s1 FR_D_hi = f0, FR_D_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p10)    fadd.s3 FR_A = FR_A_hi,FR_B_lo
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p13)    fadd.s1 FR_g = FR_A_hi,FR_B_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p10)    fmax.s1 FR_B = FR_A_hi,FR_B_lo
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p9) fsub.s1 FR_D_lo = f0, FR_D_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p10)    fmin.s1 FR_b = FR_A_hi,FR_B_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0) fsetc.s3 0x7F,0x40
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p10)    movl GR_Temp = 0x000000000000FFCD ;;
-}
-{ .mmf
-	nop.m 999
-(p10)    setf.exp FR_TWOM50 = GR_Temp
-(p10)    fadd.s1 FR_f_hi = FR_A,FR_f ;;
-}
-{ .mfi
-	nop.m 999
-//       a := (B - A) + b	Exact.
+;;
+
+//       a := (B - A) + b      Exact.
 //       Note that a is either 0 or 2^(-128).
 //       f_hi := A + f;
 //       f_lo := (f - f_hi) + A
@@ -1387,68 +1455,32 @@ alloc  r34 = ar.pfs,2,34,0,0
 //       exact. If f = -2^(-64), then A + f is exact. Hence
 //       f-f_hi is -A exactly, giving f_lo = 0.
 //       f_lo := f_lo + a;
-(p10)    fsub.s1 FR_a = FR_B,FR_A
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p13)    fadd.s1 FR_s_hi = FR_f,FR_g
-	nop.i 999 ;;
-}
-{ .mlx
-	nop.m 999
+
 //    If |f| >= 2^(-33)
 //       Case 1
 //       CASE := 1
 //       g := A_hi + B_lo;
 //       s_hi := f + g;
 //       s_lo := (f - s_hi) + g;
-(p13)    movl GR_CASE = 0x1 ;;
-}
-{ .mlx
-	nop.m 999
 //   Else
 //       Case 2
 //       CASE := 2
 //       A := fadd.fpsr3( A_hi, B_lo )
 //       B := max( A_hi, B_lo )
 //       b := min( A_hi, B_lo )
-(p10)    movl GR_CASE = 0x2
+
+{ .mfi
+      nop.m 999
+(p10) fcmp.ge.unc.s1 p14, p11 = FR_f_abs,FR_TWOM50
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p10)    fsub.s1 FR_f_lo = FR_f,FR_f_hi
-	nop.i 999 ;;
+      nop.m 999
+(p13) fms.s1 FR_r_lo = FR_s_hi,FR_D_hi,FR_r_hi //For Case 1, r_lo=s_hi*D_hi+r_hi
+      nop.i 999
 }
-{ .mfi
-	nop.m 999
-(p10)    fadd.s1 FR_a = FR_a,FR_b
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p13)    fsub.s1 FR_s_lo = FR_f,FR_s_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p13)    fadd.s1 FR_s_lo = FR_s_lo,FR_g
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p10)    fcmp.ge.unc.s1 p14, p11 = FR_f_abs,FR_TWOM50
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//       Create 2**(-50)
-(p10)    fadd.s1 FR_f_lo = FR_f_lo,FR_A
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
+;;
+
 //       If |f| >= 2^(-50) then
 //          s_hi := f_hi;
 //          s_lo := f_lo;
@@ -1457,84 +1489,90 @@ alloc  r34 = ar.pfs,2,34,0,0
 //          s_hi := f_hi + f_lo
 //          s_lo := (f_hi - s_hi) + f_lo
 //       End If
-(p14)  mov FR_s_hi = FR_f_hi
-	nop.i 999 ;;
+{ .mfi
+      nop.m 999
+(p14) mov FR_s_hi = FR_f_hi
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p10)    fadd.s1 FR_f_lo = FR_f_lo,FR_a
-	nop.i 999 ;;
+      nop.m 999
+(p10) fadd.s1 FR_f_lo = FR_f_lo,FR_a
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p14) mov FR_s_lo = FR_f_lo
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p14)  mov FR_s_lo = FR_f_lo
-	nop.i 999
+      nop.m 999
+(p11) fadd.s1 FR_f_lo = FR_f_lo,FR_A_lo
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p11) fma.s1 FR_f_lo = FR_X,FR_p_4,FR_f_lo
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p13) fma.s1 FR_r_lo = FR_s_hi,FR_D_lo,FR_r_lo //For Case 1, r_lo=s_hi*D_lo+r_lo
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p11)  fadd.s1 FR_f_lo = FR_f_lo,FR_A_lo
-	nop.i 999 ;;
+      nop.m 999
+(p11) fadd.s1 FR_s_hi = FR_f_hi,FR_f_lo
+      nop.i 999
 }
-{ .mfi
-	nop.m 999
-(p11)  fma.s1 FR_f_lo = FR_X,FR_p_4,FR_f_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p11)  fadd.s1 FR_s_hi = FR_f_hi,FR_f_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
+;;
+
 //   r_hi :=  s_hi*D_hi
 //   r_lo :=  s_hi*D_hi - r_hi  with fma
 //   r_lo := (s_hi*D_lo + r_lo) + s_lo*D_hi
-(p0) fmpy.s1 FR_r_hi = FR_s_hi,FR_D_hi
-	nop.i 999
+{ .mfi
+      nop.m 999
+(p10) fmpy.s1 FR_r_hi = FR_s_hi,FR_D_hi
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p11)  fsub.s1 FR_s_lo = FR_f_hi,FR_s_hi
-	nop.i 999 ;;
+      nop.m 999
+(p11) fsub.s1 FR_s_lo = FR_f_hi,FR_s_hi
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p10) fms.s1 FR_r_lo = FR_s_hi,FR_D_hi,FR_r_hi
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p0) fms.s1 FR_r_lo = FR_s_hi,FR_D_hi,FR_r_hi
-	nop.i 999
+      nop.m 999
+(p11) fadd.s1 FR_s_lo = FR_s_lo,FR_f_lo
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
-(p11)  fadd.s1 FR_s_lo = FR_s_lo,FR_f_lo
-	nop.i 999 ;;
+      nop.m 999
+(p10) fma.s1 FR_r_lo = FR_s_hi,FR_D_lo,FR_r_lo
+      nop.i 999
 }
-{ .mmi
-	nop.m 999 ;;
+;;
+
 //   Return  N, r_hi, r_lo
 //   We do not return CASE
-(p0) stfe [GR_Address_of_Outputs] = FR_r_hi,16
-	nop.i 999 ;;
+{ .mfb
+      nop.m 999
+      fma.s1 FR_r_lo = FR_s_lo,FR_D_hi,FR_r_lo
+      br.ret.sptk   b0
 }
-{ .mfi
-	nop.m 999
-(p0) fma.s1 FR_r_lo = FR_s_hi,FR_D_lo,FR_r_lo
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0) fma.s1 FR_r_lo = FR_s_lo,FR_D_hi,FR_r_lo
-	nop.i 999 ;;
-}
-{ .mmi
-	nop.m 999 ;;
-(p0) stfe [GR_Address_of_Outputs] = FR_r_lo,-16
-	nop.i 999
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-(p0) br.ret.sptk   b0 ;;
-}
+;;
 
-.endp __libm_pi_by_2_reduce
-ASM_SIZE_DIRECTIVE(__libm_pi_by_2_reduce)
+.endp __libm_pi_by_2_reduce#

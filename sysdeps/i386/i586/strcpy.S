@@ -1,5 +1,5 @@
 /* strcpy/stpcpy implementation for i586.
-   Copyright (C) 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -39,11 +39,16 @@ ENTRY (BP_SYM (STRCPY))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 
 	movl	DEST(%esp), %edi
+	cfi_rel_offset (edi, 8)
 	movl	SRC(%esp), %esi
+	cfi_rel_offset (esi, 4)
 	CHECK_BOUNDS_LOW (%edi, DEST(%esp))
 	CHECK_BOUNDS_LOW (%esi, SRC(%esp))
 
@@ -51,11 +56,14 @@ ENTRY (BP_SYM (STRCPY))
 	leal	-1(%esi), %ecx
 
 	movl	$magic, %ebx
+	cfi_rel_offset (ebx, 0)
 	andl	$3, %ecx
 
 #ifdef PIC
 	call	2f
+	cfi_adjust_cfa_offset (4)
 2:	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	/* 0xb is the distance between 2: and 1: but we avoid writing
 	   1f-2b because the assembler generates worse code.  */
 	leal	0xb(%edx,%ecx,8), %ecx
@@ -153,8 +161,14 @@ L(end2):
 #endif
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

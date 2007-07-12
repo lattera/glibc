@@ -87,8 +87,11 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 			return (-1);
 		}
 		*ahost = ahostbuf;
-	} else
+	} else {
 		*ahost = NULL;
+		__set_errno (ENOENT);
+		return -1;
+	}
 	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
 	s = __socket(res0->ai_family, res0->ai_socktype, 0);
@@ -111,7 +114,8 @@ retry:
 		port = 0;
 	} else {
 		char num[32];
-		int s2, sa2len;
+		int s2;
+		socklen_t sa2len;
 
 		s2 = __socket(res0->ai_family, res0->ai_socktype, 0);
 		if (s2 < 0) {
@@ -136,7 +140,7 @@ retry:
 			port = atoi(servbuff);
 		(void) sprintf(num, "%u", port);
 		(void) __write(s, num, strlen(num)+1);
-		{ int len = sizeof (from);
+		{ socklen_t len = sizeof (from);
 		  s3 = TEMP_FAILURE_RETRY (accept(s2, (struct sockaddr *)&from,
 						  &len));
 		  __close(s2);

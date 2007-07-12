@@ -1,5 +1,5 @@
 /* Test and measure memccpy functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -109,8 +109,8 @@ do_test (size_t align1, size_t align2, int c, size_t len, size_t n,
   if (align2 + len >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) (buf1 + align1);
+  s2 = (char *) (buf2 + align2);
 
   for (i = 0; i < len - 1; ++i)
     {

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h	      \
-	   sys/sysmacros.h spawn.h
+	   sys/sysmacros.h spawn.h bits/unistd.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
@@ -65,7 +65,8 @@ routines :=								      \
 	spawnattr_getpgroup spawnattr_setpgroup spawn spawnp spawni	      \
 	spawnattr_getsigmask spawnattr_getschedpolicy spawnattr_getschedparam \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
-	posix_madvise
+	posix_madvise							      \
+	get_child_max
 
 include ../Makeconfig
 
@@ -80,10 +81,16 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
+		   bug-regex25 bug-regex26 bug-regex27 bug-regex28 \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
-		   bug-ga1 tst-vfork1 tst-vfork2 tst-waitid \
-		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf
+		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
+		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf \
+		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
+		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
+		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
+		   tst-execvp3 tst-execvp4 tst-rfc3484 tst-rfc3484-2 \
+		   tst-getaddrinfo3
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -102,7 +109,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-regex21-mem bug-regex21.mtrace \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
-	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem
+	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
+	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist
 
 include ../Rules
 
@@ -135,20 +143,31 @@ CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sleep.c = -fexceptions
 CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitid.c = -fexceptions
+CFLAGS-waitid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
 CFLAGS-wordexp.c = -fexceptions
+CFLAGS-wordexp.os = -fomit-frame-pointer
 CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
 CFLAGS-spawn.c = -fexceptions
+CFLAGS-spawn.os = -fomit-frame-pointer
 CFLAGS-spawnp.c = -fexceptions
+CFLAGS-spawnp.os = -fomit-frame-pointer
 CFLAGS-spawni.c = -fexceptions
+CFLAGS-spawni.os = -fomit-frame-pointer
 CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
 CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
+CFLAGS-execve.os = -fomit-frame-pointer
+CFLAGS-fexecve.os = -fomit-frame-pointer
+CFLAGS-execv.os = -fomit-frame-pointer
+CFLAGS-execle.os = -fomit-frame-pointer
+CFLAGS-execl.os = -fomit-frame-pointer
+CFLAGS-execvp.os = -fomit-frame-pointer
+CFLAGS-execlp.os = -fomit-frame-pointer
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
@@ -157,6 +176,7 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = `pwd`
+tst-vfork3-ARGS = --test-dir=$(objpfx)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
@@ -171,11 +191,14 @@ bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex22-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex23-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex25-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex26-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
 bug-glob1-ARGS = "$(objpfx)"
+tst-execvp3-ARGS = --test-dir=$(objpfx)
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
@@ -198,13 +221,13 @@ ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
-  $(objpfx)bug-glob2-mem
+  $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem
 xtests: $(objpfx)bug-ga2-mem
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
-	  '$(patsubst %,-I../%,$(sorted-subdirs)) -I../include -I.. $(+sysdep-includes) $(sysincludes)' > $@
+	  '$(patsubst %,-I../%,$(sorted-subdirs)) -I../include $(+sysdep-includes) $(sysincludes) -I..' > $@
 
 annexc-CFLAGS = -O
 $(objpfx)annexc: annexc.c
@@ -224,6 +247,11 @@ bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
 
 $(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@
+
+tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace
+
+$(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace > $@
 
 # tst-rxspencer.mtrace is generated only when run without --utf8
 # option, since otherwise the file has almost 100M and takes very long
@@ -263,12 +291,16 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 $(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@
 
-$(inst_libexecdir)/getconf: $(objpfx)getconf FORCE
+$(inst_libexecdir)/getconf: $(objpfx)getconf $(objpfx)getconf.speclist FORCE
 	$(addprefix $(..)./scripts/mkinstalldirs ,\
 		    $(filter-out $(wildcard $@),$@))
-	for spec in `LC_ALL=C GETCONF_DIR=/dev/null \
-		     $(run-program-prefix) $< \
-		     _POSIX_V6_WIDTH_RESTRICTED_ENVS`; do \
-		$(INSTALL_PROGRAM) $< $@/$$spec.new; \
-		mv -f $@/$$spec.new $@/$$spec; \
+	for spec in `cat $(objpfx)getconf.speclist`; do \
+	  $(INSTALL_PROGRAM) $< $@/$$spec.new; \
+	  mv -f $@/$$spec.new $@/$$spec; \
 	done
+
+$(objpfx)getconf.speclist: getconf.speclist.h
+	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
+	  | sed -n -e '/START_OF_STRINGS/,$${/POSIX_V6_/{s/^[^"]*"//;s/".*$$//;p}}' \
+	  > $@.new
+	mv -f $@.new $@

@@ -42,7 +42,7 @@ ENTRY(__ieee754_log10l)
 	fxam
 	fnstsw
 	fld	%st		// x : x : log10(2)
-	andb	$1,%ah
+	testb	$1, %ah
 	jnz	3f		// in case x is NaN or ±Inf
 4:	fsubl	MO(one)		// x-1 : x : log10(2)
 	fld	%st		// x-1 : x-1 : x : log10(2)
@@ -59,7 +59,8 @@ ENTRY(__ieee754_log10l)
 	fyl2x			// log10(x)
 	ret
 
-3:	jp	4b		// in case x is ±Inf
+3:	testb	$4, %ah
+	jnz	4b		// in case x is ±Inf
 	fstp	%st(1)
 	fstp	%st(1)
 	ret

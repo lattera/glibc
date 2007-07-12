@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  IA-64 version.
-   Copyright (C) 1995-1997, 2000-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 2000-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -123,7 +123,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_resolve)->ip;
       else
 	{
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
@@ -139,133 +140,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-
-/*
-   This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns. `fixup()' takes two
-   arguments, however profile_fixup() takes three.
-
-   The ABI specifies that we will never see more than 8 input
-   registers to a function call, thus it is safe to simply allocate
-   those, and simpler than playing stack games.
-					                     - 12/09/99 Jes
- */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name)			     \
-  extern void tramp_name (void);					     \
-  asm (									     \
-"	.global " #tramp_name "#\n"					     \
-"	.proc " #tramp_name "#\n"					     \
-#tramp_name ":\n"							     \
-"	{ .mmi\n"							     \
-"	  .prologue\n"							     \
-"	  .save ar.pfs, r40\n"						     \
-"	  alloc loc0 = ar.pfs, 8, 6, 3, 0\n"				     \
-"	  adds r2 = -144, r12\n"					     \
-"	  adds r3 = -128, r12\n"					     \
-"	}\n"								     \
-"	{ .mii\n"							     \
-"	  .fframe 160\n"						     \
-"	  adds r12 = -160, r12\n"					     \
-"	  .save rp, r41\n"						     \
-"	  mov loc1 = b0\n"						     \
-"	  .body\n"							     \
-"	  mov out2 = b0		/* needed by fixup_profile */\n"	     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mfb\n"							     \
-"	  mov loc2 = r8		/* preserve struct value register */\n"	     \
-"	  nop.f 0\n"							     \
-"	  nop.b 0\n"							     \
-"	}\n"								     \
-"	{ .mii\n"							     \
-"	  mov loc3 = r9		/* preserve language specific register */\n" \
-"	  mov loc4 = r10	/* preserve language specific register */\n" \
-"	  mov loc5 = r11	/* preserve language specific register */\n" \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  stf.spill [r2] = f8, 32\n"					     \
-"	  stf.spill [r3] = f9, 32\n"					     \
-"	  mov out0 = r16\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  stf.spill [r2] = f10, 32\n"					     \
-"	  stf.spill [r3] = f11, 32\n"					     \
-"	  shl out1 = r15, 4\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  stf.spill [r2] = f12, 32\n"					     \
-"	  stf.spill [r3] = f13, 32\n"					     \
-"	  shladd out1 = r15, 3, out1\n"					     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmb\n"							     \
-"	  stf.spill [r2] = f14\n"					     \
-"	  stf.spill [r3] = f15\n"					     \
-"	  br.call.sptk.many b0 = " #fixup_name "#\n"			     \
-"	}\n"								     \
-"	{ .mii\n"							     \
-"	  ld8 r9 = [ret0], 8\n"						     \
-"	  adds r2 = 16, r12\n"						     \
-"	  adds r3 = 32, r12\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  ldf.fill f8 = [r2], 32\n"					     \
-"	  ldf.fill f9 = [r3], 32\n"					     \
-"	  mov b0 = loc1\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  ldf.fill f10 = [r2], 32\n"					     \
-"	  ldf.fill f11 = [r3], 32\n"					     \
-"	  mov b6 = r9\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  ldf.fill f12 = [r2], 32\n"					     \
-"	  ldf.fill f13 = [r3], 32\n"					     \
-"	  mov ar.pfs = loc0\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mmi\n"							     \
-"	  ldf.fill f14 = [r2], 32\n"					     \
-"	  ldf.fill f15 = [r3], 32\n"					     \
-"	  .restore sp		/* pop the unwind frame state */\n"	     \
-"	  adds r12 = 160, r12\n"					     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	{ .mii\n"							     \
-"	  mov r9 = loc3		/* restore language specific register */\n"  \
-"	  mov r10 = loc4	/* restore language specific register */\n"  \
-"	  mov r11 = loc5	/* restore language specific register */\n"  \
-"	}\n"								     \
-"	{ .mii\n"							     \
-"	  ld8 gp = [ret0]\n"						     \
-"	  mov r8 = loc2		/* restore struct value register */\n"	     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	/* An alloc is needed for the break system call to work.\n"	     \
-"	   We don't care about the old value of the pfs register.  */\n"     \
-"	{ .mmb\n"							     \
-"	  .prologue\n"							     \
-"	  .body\n"							     \
-"	  alloc r2 = ar.pfs, 0, 0, 8, 0\n"				     \
-"	  br.sptk.many b6\n"						     \
-"	  ;;\n"								     \
-"	}\n"								     \
-"	.endp " #tramp_name "#\n");
-
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE 				\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);		\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);		\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
-#endif
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER ia64_gnu_pltenter
+#define ARCH_LA_PLTEXIT ia64_gnu_pltexit
 
 /* Undo the adds out0 = 16, sp below to get at the value we want in
    __libc_stack_end.  */
@@ -454,34 +331,29 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define ELF_MACHINE_START_ADDRESS(map, start)	\
   DL_STATIC_FUNCTION_ADDRESS (map, start)
 
-#define elf_machine_profile_fixup_plt(l, reloc, rel_addr, value) \
-  elf_machine_fixup_plt (l, reloc, rel_addr, value)
-
-#define elf_machine_profile_plt(reloc_addr) ((Elf64_Addr) (reloc_addr))
-
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
-static inline Elf64_Addr __attribute__ ((always_inline))
+static inline struct fdesc __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *l, lookup_t t,
 		       const Elf64_Rela *reloc,
-		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+		       Elf64_Addr *reloc_addr, struct fdesc value)
 {
   /* l is the link_map for the caller, t is the link_map for the object
    * being called */
   /* got has already been relocated in elf_get_dynamic_info() */
-  reloc_addr[1] = t->l_info[DT_PLTGOT]->d_un.d_ptr;
+  reloc_addr[1] = value.gp;
   /* we need a "release" here to ensure that the gp is visible before
      the code entry point is updated: */
-  ((volatile Elf64_Addr *) reloc_addr)[0] = value;
-  return (Elf64_Addr) reloc_addr;
+  ((volatile Elf64_Addr *) reloc_addr)[0] = value.ip;
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */
-static inline Elf64_Addr
+static inline struct fdesc
 elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
-		       Elf64_Addr value)
+		       struct fdesc value)
 {
   /* No need to handle rel vs rela since IA64 is rela only */
-  return value + reloc->r_addend;
+  return (struct fdesc) { value.ip + reloc->r_addend, value.gp };
 }
 
 #endif /* !dl_machine_h */
@@ -552,7 +424,8 @@ elf_machine_rela (struct link_map *map,
 	    ;/* No adjustment.  */
 	  else if (r_type == R_IA64_IPLTLSB)
 	    {
-	      elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr, value);
+	      elf_machine_fixup_plt (NULL, NULL, reloc, reloc_addr,
+				     DL_FIXUP_MAKE_VALUE (sym_map, value));
 	      return;
 	    }
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_FPTR64LSB))

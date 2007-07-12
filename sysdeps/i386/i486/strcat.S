@@ -1,6 +1,6 @@
 /* strcat(dest, src) -- Append SRC on the end of DEST.
    For Intel 80x86, x>=4.
-   Copyright (C) 1994,1995,1996,1997,2000,2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997,2000,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@ipd.info.uni-karlsruhe.de>.
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -35,6 +35,7 @@ ENTRY (BP_SYM (strcat))
 	ENTER
 
 	pushl %edi		/* Save callee-safe register.  */
+	cfi_adjust_cfa_offset (4)
 
 	movl DEST(%esp), %edx
 	movl SRC(%esp), %ecx
@@ -66,6 +67,7 @@ ENTRY (BP_SYM (strcat))
 	/* Now we are aligned.  Begin scan loop.  */
 	jmp L(1)
 
+	cfi_rel_offset (edi, 0)
 	ALIGN(4)
 
 L(4):	addl $16,%edx		/* increment destination pointer for round */
@@ -263,6 +265,8 @@ L(8):	/* GKM FIXME: check high bounds */
 	movl DEST(%esp), %eax	/* start address of destination is result */
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 	popl %edi		/* restore saved register */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

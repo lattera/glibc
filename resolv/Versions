@@ -39,7 +39,7 @@ libc {
     h_errno; __resp;
 %endif
 
-    __res_maybe_init;
+    __res_maybe_init; __res_iclose;
   }
 }
 

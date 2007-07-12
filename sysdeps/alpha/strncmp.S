@@ -61,8 +61,10 @@ $aligned:
 	ornot	t0, t3, t0	# .. e1 :
 	cmpbge	zero, t1, t7	# e0    : bits set iff null found
 	beq	a2, $eoc	# .. e1 : check end of count
-	subq	a2, 1, a2	# e0    :
+	unop			# e0    :
 	bne	t7, $eos	# .. e1 :
+	unop			# e0    :
+	beq	t10, $ant_loop	# .. e1 :
 
 	/* Aligned compare main loop.
 	   On entry to this basic block:
@@ -74,13 +76,30 @@ $a_loop:
 	bne	t2, $wordcmp	# .. e1 (zdb)
 	ldq_u	t1, 8(a1)	# e0    :
 	ldq_u	t0, 8(a0)	# .. e1 :
+	subq	a2, 1, a2	# e0    :
+	addq	a1, 8, a1	# .. e1 :
+	addq	a0, 8, a0	# e0    :
+	beq	a2, $eoc	# .. e1 :
+	cmpbge	zero, t1, t7	# e0    :
+	beq	t7, $a_loop	# .. e1 :
+	unop			# e0    :
+	br	$eos		# .. e1 :
+
+	/* Alternate aligned compare loop, for when there's no trailing
+	   bytes on the count.  We have to avoid reading too much data.  */
+$ant_loop:
+	xor	t0, t1, t2	# e0	:
+	bne	t2, $wordcmp	# .. e1 (zdb)
+	subq	a2, 1, a2	# e0    :
+	beq	a2, $zerolength	# .. e1 :
+	ldq_u	t1, 8(a1)	# e0    :
+	ldq_u	t0, 8(a0)	# .. e1 :
 	addq	a1, 8, a1	# e0    :
 	addq	a0, 8, a0	# .. e1 :
 	cmpbge	zero, t1, t7	# e0    :
-	beq	a2, $eoc	# .. e1 :
-	subq	a2, 1, a2	# e0    :
-	beq	t7, $a_loop	# .. e1 :
-	br	$eos		# e1    :
+	beq	t7, $ant_loop	# .. e1 :
+	unop			# e0	:
+	br	$eos		# .. e1 :
 
 	/* The two strings are not co-aligned.  Align s1 and cope.  */
 $unaligned:
@@ -184,6 +203,8 @@ $u_final:
 $eoc:
 	mskql	t0, t10, t0
 	mskql	t1, t10, t1
+	unop
+	cmpbge	zero, t1, t7
 
 	/* We've found a zero somewhere in a word we just read.
 	   On entry to this basic block:
@@ -203,6 +224,7 @@ $eos:
 
 	/* Here we have two differing co-aligned words in t0 & t1.
 	   Bytewise compare them and return (t0 > t1 ? 1 : -1).  */
+	.align 3
 $wordcmp:
 	cmpbge	t0, t1, t2	# e0    : comparison yields bit mask of ge
 	cmpbge	t1, t0, t3	# .. e1 :
@@ -216,6 +238,7 @@ $wordcmp:
 $done:
 	ret			# e1    :
 
+	.align 3
 $zerolength:
 	clr	v0
 	ret

@@ -1,5 +1,5 @@
 /* Helper functions for parsing printf format strings.
-   Copyright (C) 1995-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,2002,2003,2004,2006 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,8 @@ __find_specmb (const UCHAR_T *format, mbstate_t *ps)
 
       /* Remove any hints of a wrong encoding.  */
       ps->__count = 0;
-      if (! isascii (*format) && (len = __mbrlen (format, MB_CUR_MAX, ps)) > 0)
+      if (! isascii (*format)
+	  && (len = __mbrlen ((const CHAR_T *) format, MB_CUR_MAX, ps)) > 0)
 	format += len;
       else
 	++format;

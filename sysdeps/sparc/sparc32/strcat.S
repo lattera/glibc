@@ -38,36 +38,14 @@
 
 	.text
 	.align		4
-10:	cmp		%o4, 2
-	be		1f
-	 cmp		%o4, 3
-	ldub		[%o1], %o5
-	add		%o1, 1, %o1
-	stb		%o5, [%o0]
-	be		3f
-	 cmp		%o5, 0
-	be		0f
-	 add		%o0, 1, %o0
-1:	lduh		[%o1], %o5
-	add		%o1, 2, %o1
-	srl		%o5, 8, %o4
-	cmp		%o4, 0
-	stb		%o4, [%o0]
-	bne,a		2f
-	 stb		%o5, [%o0 + 1]
-	retl
-	 mov		%g2, %o0
-2:	andcc		%o5, 0xff, %o5
-	bne		4f
-	 add		%o0, 2, %o0
-	retl
-	 mov 		%g2, %o0
-3:	bne		4f
-	 add		%o0, 1, %o0
-	retl
-	 mov		%g2, %o0
 
-11:	ldub		[%o0], %o5
+ENTRY(strcat)
+	mov		%o0, %g2
+	andcc		%o0, 3, %g0
+	be		30f
+	 sethi		%hi(0x80808080), %o4
+
+	ldub		[%o0], %o5
 	cmp		%o5, 0
 	be		1f
 	 add		%o0, 1, %o0
@@ -93,12 +71,7 @@
 	b		3f
 	 sub		%o0, 1, %o0
 
-ENTRY(strcat)
-	mov		%o0, %g2
-	andcc		%o0, 3, %g0
-	bne		11b
-	 sethi		%hi(0x80808080), %o4
-	or		%o4, %lo(0x80808080), %o3
+30:	or		%o4, %lo(0x80808080), %o3
 7:	sethi		%hi(0x01010101), %o4
 8:	or		%o4, %lo(0x01010101), %o2
 9:	ld		[%o0], %o5
@@ -128,8 +101,39 @@ ENTRY(strcat)
 	 ld		[%o0], %o5
 	sub		%o0, 1, %o0
 3:	andcc		%o1, 3, %o4
-	bne		10b
-4:	 andcc		%o0, 3, %g3
+	be		4f
+	 nop
+
+	cmp		%o4, 2
+	be		11f
+	 cmp		%o4, 3
+	ldub		[%o1], %o5
+	add		%o1, 1, %o1
+	stb		%o5, [%o0]
+	be		13f
+	 cmp		%o5, 0
+	be		0f
+	 add		%o0, 1, %o0
+11:	lduh		[%o1], %o5
+	add		%o1, 2, %o1
+	srl		%o5, 8, %o4
+	cmp		%o4, 0
+	stb		%o4, [%o0]
+	bne,a		12f
+	 stb		%o5, [%o0 + 1]
+	retl
+	 mov		%g2, %o0
+12:	andcc		%o5, 0xff, %o5
+	bne		4f
+	 add		%o0, 2, %o0
+	retl
+	 mov 		%g2, %o0
+13:	bne		4f
+	 add		%o0, 1, %o0
+	retl
+	 mov		%g2, %o0
+
+4:	andcc		%o0, 3, %g3
 	bne		12f
 1:	ld		[%o1], %o5
 	add		%o1, 4, %o1

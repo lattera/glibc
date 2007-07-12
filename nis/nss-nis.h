@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@
 
 
 /* Convert YP error number to NSS error number.  */
-extern const enum nss_status __yperr2nss_tab[];
-extern const unsigned int __yperr2nss_count;
+extern const enum nss_status __yperr2nss_tab[] attribute_hidden;
+extern const unsigned int __yperr2nss_count attribute_hidden;
 
 static inline enum nss_status
 yperr2nss (int errval)
@@ -36,16 +36,24 @@ yperr2nss (int errval)
   return __yperr2nss_tab[(unsigned int) errval];
 }
 
-#define NSS_FLAG_SET			1
-#define NSS_FLAG_NETID_AUTHORITATIVE	2
-#define NSS_FLAG_SERVICES_AUTHORITATIVE	4
-extern int _nis_default_nss_flags attribute_hidden;
-extern int _nis_check_default_nss (void) attribute_hidden;
 
-extern inline __attribute__((always_inline)) int
-_nis_default_nss (void)
+struct response_t
 {
-  return _nis_default_nss_flags ?: _nis_check_default_nss ();
-}
+  struct response_t *next;
+  size_t size;
+  char mem[0];
+};
+
+typedef struct intern_t
+{
+  struct response_t *start;
+  struct response_t *next;
+  size_t offset;
+} intern_t;
+
+
+extern int _nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
+			int invallen, char *indata) attribute_hidden;
+
 
 #endif /* nis/nss-nis.h */

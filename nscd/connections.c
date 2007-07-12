@@ -1,22 +1,20 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
 #include <assert.h>
@@ -39,6 +37,9 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
+#ifdef HAVE_SENDFILE
+# include <sys/sendfile.h>
+#endif
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/un.h>
@@ -46,10 +47,9 @@
 #include "nscd.h"
 #include "dbg_log.h"
 #include "selinux.h"
-
-
-/* Number of bytes of data we initially reserve for each hash table bucket.  */
-#define DEFAULT_DATASIZE_PER_BUCKET 1024
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 
 /* Wrapper functions with error checking for standard functions.  */
@@ -68,6 +68,7 @@ static gid_t *server_groups;
 # define NGROUPS 32
 #endif
 static int server_ngroups;
+static volatile int sighup_pending;
 
 static pthread_attr_t attr;
 
@@ -100,10 +101,13 @@ struct database_dyn dbs[lastdb] =
 {
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 1,
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -115,10 +119,13 @@ struct database_dyn dbs[lastdb] =
   },
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 1,
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
@@ -130,10 +137,13 @@ struct database_dyn dbs[lastdb] =
   },
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 0,		/* Not used.  */
     .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
@@ -181,20 +191,252 @@ static int sock;
 unsigned long int client_queued;
 
 
+ssize_t
+writeall (int fd, const void *buf, size_t len)
+{
+  size_t n = len;
+  ssize_t ret;
+  do
+    {
+      ret = TEMP_FAILURE_RETRY (send (fd, buf, n, MSG_NOSIGNAL));
+      if (ret <= 0)
+	break;
+      buf = (const char *) buf + ret;
+      n -= ret;
+    }
+  while (n > 0);
+  return ret < 0 ? ret : len - n;
+}
+
+
+#ifdef HAVE_SENDFILE
+ssize_t
+sendfileall (int tofd, int fromfd, off_t off, size_t len)
+{
+  ssize_t n = len;
+  ssize_t ret;
+
+  do
+    {
+      ret = TEMP_FAILURE_RETRY (sendfile (tofd, fromfd, &off, n));
+      if (ret <= 0)
+	break;
+      n -= ret;
+    }
+  while (n > 0);
+  return ret < 0 ? ret : len - n;
+}
+#endif
+
+
+enum usekey
+  {
+    use_not = 0,
+    /* The following three are not really used, they are symbolic constants.  */
+    use_first = 16,
+    use_begin = 32,
+    use_end = 64,
+
+    use_he = 1,
+    use_he_begin = use_he | use_begin,
+    use_he_end = use_he | use_end,
+#if SEPARATE_KEY
+    use_key = 2,
+    use_key_begin = use_key | use_begin,
+    use_key_end = use_key | use_end,
+    use_key_first = use_key_begin | use_first,
+#endif
+    use_data = 3,
+    use_data_begin = use_data | use_begin,
+    use_data_end = use_data | use_end,
+    use_data_first = use_data_begin | use_first
+  };
+
+
+static int
+check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
+	   enum usekey use, ref_t start, size_t len)
+{
+  assert (len >= 2);
+
+  if (start > first_free || start + len > first_free
+      || (start & BLOCK_ALIGN_M1))
+    return 0;
+
+  if (usemap[start] == use_not)
+    {
+      /* Add the start marker.  */
+      usemap[start] = use | use_begin;
+      use &= ~use_first;
+
+      while (--len > 0)
+	if (usemap[++start] != use_not)
+	  return 0;
+	else
+	  usemap[start] = use;
+
+      /* Add the end marker.  */
+      usemap[start] = use | use_end;
+    }
+  else if ((usemap[start] & ~use_first) == ((use | use_begin) & ~use_first))
+    {
+      /* Hash entries can't be shared.  */
+      if (use == use_he)
+	return 0;
+
+      usemap[start] |= (use & use_first);
+      use &= ~use_first;
+
+      while (--len > 1)
+	if (usemap[++start] != use)
+	  return 0;
+
+      if (usemap[++start] != (use | use_end))
+	return 0;
+    }
+  else
+    /* Points to a wrong object or somewhere in the middle.  */
+    return 0;
+
+  return 1;
+}
+
+
+/* Verify data in persistent database.  */
+static int
+verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
+{
+  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb);
+
+  time_t now = time (NULL);
+
+  struct database_pers_head *head = mem;
+  struct database_pers_head head_copy = *head;
+
+  /* Check that the header that was read matches the head in the database.  */
+  if (readhead != NULL && memcmp (head, readhead, sizeof (*head)) != 0)
+    return 0;
+
+  /* First some easy tests: make sure the database header is sane.  */
+  if (head->version != DB_VERSION
+      || head->header_size != sizeof (*head)
+      /* We allow a timestamp to be one hour ahead of the current time.
+	 This should cover daylight saving time changes.  */
+      || head->timestamp > now + 60 * 60 + 60
+      || (head->gc_cycle & 1)
+      || (size_t) head->module > INT32_MAX / sizeof (ref_t)
+      || (size_t) head->data_size > INT32_MAX - head->module * sizeof (ref_t)
+      || head->first_free < 0
+      || head->first_free > head->data_size
+      || (head->first_free & BLOCK_ALIGN_M1) != 0
+      || head->maxnentries < 0
+      || head->maxnsearched < 0)
+    return 0;
+
+  uint8_t *usemap = calloc (head->first_free, 1);
+  if (usemap == NULL)
+    return 0;
+
+  const char *data = (char *) &head->array[roundup (head->module,
+						    ALIGN / sizeof (ref_t))];
+
+  nscd_ssize_t he_cnt = 0;
+  for (nscd_ssize_t cnt = 0; cnt < head->module; ++cnt)
+    {
+      ref_t work = head->array[cnt];
+
+      while (work != ENDREF)
+	{
+	  if (! check_use (data, head->first_free, usemap, use_he, work,
+			   sizeof (struct hashentry)))
+	    goto fail;
+
+	  /* Now we know we can dereference the record.  */
+	  struct hashentry *here = (struct hashentry *) (data + work);
+
+	  ++he_cnt;
+
+	  /* Make sure the record is for this type of service.  */
+	  if (here->type >= LASTREQ
+	      || serv2db[here->type] != &dbs[dbnr])
+	    goto fail;
+
+	  /* Validate boolean field value.  */
+	  if (here->first != false && here->first != true)
+	    goto fail;
+
+	  if (here->len < 0)
+	    goto fail;
+
+	  /* Now the data.  */
+	  if (here->packet < 0
+	      || here->packet > head->first_free
+	      || here->packet + sizeof (struct datahead) > head->first_free)
+	    goto fail;
+
+	  struct datahead *dh = (struct datahead *) (data + here->packet);
+
+	  if (! check_use (data, head->first_free, usemap,
+			   use_data | (here->first ? use_first : 0),
+			   here->packet, dh->allocsize))
+	    goto fail;
+
+	  if (dh->allocsize < sizeof (struct datahead)
+	      || dh->recsize > dh->allocsize
+	      || (dh->notfound != false && dh->notfound != true)
+	      || (dh->usable != false && dh->usable != true))
+	    goto fail;
+
+	  if (here->key < here->packet + sizeof (struct datahead)
+	      || here->key > here->packet + dh->allocsize
+	      || here->key + here->len > here->packet + dh->allocsize)
+	    {
+#if SEPARATE_KEY
+	      /* If keys can appear outside of data, this should be done
+		 instead.  But gc doesn't mark the data in that case.  */
+	      if (! check_use (data, head->first_free, usemap,
+			       use_key | (here->first ? use_first : 0),
+			       here->key, here->len))
+#endif
+		goto fail;
+	    }
+
+	  work = here->next;
+	}
+    }
+
+  if (he_cnt != head->nentries)
+    goto fail;
+
+  /* See if all data and keys had at least one reference from
+     he->first == true hashentry.  */
+  for (ref_t idx = 0; idx < head->first_free; ++idx)
+    {
+#if SEPARATE_KEY
+      if (usemap[idx] == use_key_begin)
+	goto fail;
+#endif
+      if (usemap[idx] == use_data_begin)
+	goto fail;
+    }
+
+  /* Finally, make sure the database hasn't changed since the first test.  */
+  if (memcmp (mem, &head_copy, sizeof (*head)) != 0)
+    goto fail;
+
+  free (usemap);
+  return 1;
+
+fail:
+  free (usemap);
+  return 0;
+}
+
+
 /* Initialize database information structures.  */
 void
 nscd_init (void)
 {
-  struct sockaddr_un sock_addr;
-  size_t cnt;
-
-  /* Secure mode and unprivileged mode are incompatible */
-  if (server_user != NULL && secure_in_use)
-    {
-      dbg_log (_("Cannot run nscd in secure mode as unprivileged user"));
-      exit (1);
-    }
-
   /* Look up unprivileged uid/gid/groups before we start listening on the
      socket  */
   if (server_user != NULL)
@@ -204,7 +446,7 @@ nscd_init (void)
     /* No configuration for this value, assume a default.  */
     nthreads = 2 * lastdb;
 
-  for (cnt = 0; cnt < lastdb; ++cnt)
+  for (size_t cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
       {
 	pthread_rwlock_init (&dbs[cnt].lock, NULL);
@@ -227,7 +469,7 @@ nscd_init (void)
 		  fail_db:
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename, strerror (errno));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
 		else if (head.module == 0 && head.data_size == 0)
 		  {
@@ -240,22 +482,39 @@ nscd_init (void)
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename,
 			     _("header size does not match"));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
 		else if ((total = (sizeof (head)
 				   + roundup (head.module * sizeof (ref_t),
 					      ALIGN)
 				   + head.data_size))
-			 > st.st_size)
+			 > st.st_size
+			 || total < sizeof (head))
 		  {
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename,
 			     _("file size does not match"));
-		    dbs[cnt].persistent = 0;
+		    unlink (dbs[cnt].db_filename);
 		  }
-		else if ((mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
-				      MAP_SHARED, fd, 0)) == MAP_FAILED)
+		/* Note we map with the maximum size allowed for the
+		   database.  This is likely much larger than the
+		   actual file size.  This is OK on most OSes since
+		   extensions of the underlying file will
+		   automatically translate more pages available for
+		   memory access.  */
+		else if ((mem = mmap (NULL, dbs[cnt].max_db_size,
+				      PROT_READ | PROT_WRITE,
+				      MAP_SHARED, fd, 0))
+			 == MAP_FAILED)
 		  goto fail_db;
+		else if (!verify_persistent_db (mem, &head, cnt))
+		  {
+		    munmap (mem, total);
+		    dbg_log (_("invalid persistent database file \"%s\": %s"),
+			     dbs[cnt].db_filename,
+			     _("verification failed"));
+		    unlink (dbs[cnt].db_filename);
+		  }
 		else
 		  {
 		    /* Success.  We have the database.  */
@@ -378,20 +637,23 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		if (offset % ps != 0)
 		  {
 		    towrite = MIN (remaining, ps - (offset % ps));
-		    pwrite (fd, tmpbuf, towrite, offset);
+		    if (pwrite (fd, tmpbuf, towrite, offset) != towrite)
+		      goto write_fail;
 		    offset += towrite;
 		    remaining -= towrite;
 		  }
 
 		while (remaining > ps)
 		  {
-		    pwrite (fd, tmpbuf, ps, offset);
+		    if (pwrite (fd, tmpbuf, ps, offset) == -1)
+		      goto write_fail;
 		    offset += ps;
 		    remaining -= ps;
 		  }
 
-		if (remaining > 0)
-		  pwrite (fd, tmpbuf, remaining, offset);
+		if (remaining > 0
+		    && pwrite (fd, tmpbuf, remaining, offset) != remaining)
+		  goto write_fail;
 
 		/* Create the header of the file.  */
 		struct database_pers_head head =
@@ -407,10 +669,13 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 
 		if ((TEMP_FAILURE_RETRY (write (fd, &head, sizeof (head)))
 		     != sizeof (head))
-		    || ftruncate (fd, total) != 0
-		    || (mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
+		    || (TEMP_FAILURE_RETRY_VAL (posix_fallocate (fd, 0, total))
+			!= 0)
+		    || (mem = mmap (NULL, dbs[cnt].max_db_size,
+				    PROT_READ | PROT_WRITE,
 				    MAP_SHARED, fd, 0)) == MAP_FAILED)
 		  {
+		  write_fail:
 		    unlink (dbs[cnt].db_filename);
 		    dbg_log (_("cannot write to database file %s: %s"),
 			     dbs[cnt].db_filename, strerror (errno));
@@ -461,7 +726,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	    dbs[cnt].head = xmalloc (sizeof (struct database_pers_head)
 				     + (dbs[cnt].suggested_module
 					* sizeof (ref_t)));
-	    memset (dbs[cnt].head, '\0', sizeof (dbs[cnt].head));
+	    memset (dbs[cnt].head, '\0', sizeof (struct database_pers_head));
 	    assert (~ENDREF == 0);
 	    memset (dbs[cnt].head->array, '\xff',
 		    dbs[cnt].suggested_module * sizeof (ref_t));
@@ -478,9 +743,9 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	if (dbs[cnt].check_file)
 	  {
 	    /* We need the modification date of the file.  */
-	    struct stat st;
+	    struct stat64 st;
 
-	    if (stat (dbs[cnt].filename, &st) < 0)
+	    if (stat64 (dbs[cnt].filename, &st) < 0)
 	      {
 		/* We cannot stat() the file, disable file checking.  */
 		dbg_log (_("cannot stat() file `%s': %s"),
@@ -497,15 +762,16 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
   if (sock < 0)
     {
       dbg_log (_("cannot open socket: %s"), strerror (errno));
-      exit (1);
+      exit (errno == EACCES ? 4 : 1);
     }
   /* Bind a name to the socket.  */
+  struct sockaddr_un sock_addr;
   sock_addr.sun_family = AF_UNIX;
   strcpy (sock_addr.sun_path, _PATH_NSCDSOCKET);
   if (bind (sock, (struct sockaddr *) &sock_addr, sizeof (sock_addr)) < 0)
     {
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
-      exit (1);
+      exit (errno == EACCES ? 4 : 1);
     }
 
   /* We don't want to get stuck on accept.  */
@@ -551,9 +817,10 @@ close_sockets (void)
 
 
 static void
-invalidate_cache (char *key)
+invalidate_cache (char *key, int fd)
 {
   dbtype number;
+  int32_t resp;
 
   if (strcmp (key, "passwd") == 0)
     number = pwddb;
@@ -567,10 +834,19 @@ invalidate_cache (char *key)
       res_init ();
     }
   else
-    return;
+    {
+      resp = EINVAL;
+      writeall (fd, &resp, sizeof (resp));
+      return;
+    }
 
   if (dbs[number].enabled)
-    prune_cache (&dbs[number], LONG_MAX);
+    prune_cache (&dbs[number], LONG_MAX, fd);
+  else
+    {
+      resp = 0;
+      writeall (fd, &resp, sizeof (resp));
+    }
 }
 
 
@@ -588,9 +864,14 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
   iov[0].iov_len = strlen (key) + 1;
 
   /* Prepare the control message to transfer the descriptor.  */
-  char buf[CMSG_SPACE (sizeof (int))];
+  union
+  {
+    struct cmsghdr hdr;
+    char bytes[CMSG_SPACE (sizeof (int))];
+  } buf;
   struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
-			.msg_control = buf, .msg_controllen = sizeof (buf) };
+			.msg_control = buf.bytes,
+			.msg_controllen = sizeof (buf) };
   struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
 
   cmsg->cmsg_level = SOL_SOCKET;
@@ -603,7 +884,10 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 
   /* Send the control message.  We repeat when we are interrupted but
      everything else is ignored.  */
-  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, 0));
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, MSG_NOSIGNAL));
 
   if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
@@ -660,8 +944,9 @@ cannot handle old request version %d; current version is %d"),
       if (!db->enabled)
 	{
 	  /* No, sent the prepared record.  */
-	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
-					 db->disabled_iov->iov_len))
+	  if (TEMP_FAILURE_RETRY (send (fd, db->disabled_iov->iov_base,
+					db->disabled_iov->iov_len,
+					MSG_NOSIGNAL))
 	      != (ssize_t) db->disabled_iov->iov_len
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
@@ -688,8 +973,34 @@ cannot handle old request version %d; current version is %d"),
       if (cached != NULL)
 	{
 	  /* Hurray it's in the cache.  */
-	  if (TEMP_FAILURE_RETRY (write (fd, cached->data, cached->recsize))
-	      != cached->recsize
+	  ssize_t nwritten;
+
+#ifdef HAVE_SENDFILE
+	  if (db->mmap_used || !cached->notfound)
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) cached->data > (char *) db->data);
+	      assert ((char *) cached->data - (char *) db->head
+		      + cached->recsize
+		      <= (sizeof (struct database_pers_head)
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
+	      nwritten = sendfileall (fd, db->wr_fd,
+				      (char *) cached->data
+				      - (char *) db->head, cached->recsize);
+# ifndef __ASSUME_SENDFILE
+	      if (nwritten == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    nwritten = writeall (fd, cached->data, cached->recsize);
+
+	  if (nwritten != cached->recsize
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */
@@ -759,29 +1070,28 @@ cannot handle old request version %d; current version is %d"),
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
-      if (! secure_in_use)
-	{
-	  /* Get the callers credentials.  */
+      {
+	/* Get the callers credentials.  */
 #ifdef SO_PEERCRED
-	  struct ucred caller;
-	  socklen_t optlen = sizeof (caller);
+	struct ucred caller;
+	socklen_t optlen = sizeof (caller);
 
-	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
-	    {
-	      char buf[256];
+	if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
+	  {
+	    char buf[256];
 
-	      dbg_log (_("error getting callers id: %s"),
-		       strerror_r (errno, buf, sizeof (buf)));
-	      break;
-	    }
+	    dbg_log (_("error getting caller's id: %s"),
+		     strerror_r (errno, buf, sizeof (buf)));
+	    break;
+	  }
 
-	  uid = caller.uid;
+	uid = caller.uid;
 #else
-	  /* Some systems have no SO_PEERCRED implementation.  They don't
-	     care about security so we don't as well.  */
-	  uid = 0;
+	/* Some systems have no SO_PEERCRED implementation.  They don't
+	   care about security so we don't as well.  */
+	uid = 0;
 #endif
-	}
+      }
 
       /* Accept shutdown, getstat and invalidate only from root.  For
 	 the stat call also allow the user specified in the config file.  */
@@ -793,7 +1103,7 @@ cannot handle old request version %d; current version is %d"),
       else if (uid == 0)
 	{
 	  if (req->type == INVALIDATE)
-	    invalidate_cache (key);
+	    invalidate_cache (key, fd);
 	  else
 	    termination_handler (0);
 	}
@@ -880,7 +1190,7 @@ cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
   /* Second, change back to the old user if we changed it.  */
   if (server_user != NULL)
     {
-      if (setuid (old_uid) != 0)
+      if (setresuid (old_uid, old_uid, old_uid) != 0)
 	{
 	  dbg_log (_("\
 cannot change to old UID: %s; disabling paranoia mode"),
@@ -890,7 +1200,7 @@ cannot change to old UID: %s; disabling paranoia mode"),
 	  return;
 	}
 
-      if (setgid (old_gid) != 0)
+      if (setresgid (old_gid, old_gid, old_gid) != 0)
 	{
 	  dbg_log (_("\
 cannot change to old GID: %s; disabling paranoia mode"),
@@ -941,7 +1251,9 @@ cannot change to old working directory: %s; disabling paranoia mode"),
       setuid (server_uid);
       setgid (server_gid);
     }
-  chdir ("/");
+  if (chdir ("/") != 0)
+    dbg_log (_("cannot change current working directory to \"/\": %s"),
+	     strerror (errno));
   paranoia = 0;
 }
 
@@ -1018,6 +1330,10 @@ nscd_run (void *p)
 	      if (readylist == NULL && to == ETIMEDOUT)
 		{
 		  --nready;
+
+		  if (sighup_pending)
+		    goto sighup_prune;
+
 		  pthread_mutex_unlock (&readylist_lock);
 		  goto only_prune;
 		}
@@ -1025,6 +1341,34 @@ nscd_run (void *p)
 	  else
 	    /* No need to timeout.  */
 	    pthread_cond_wait (&readylist_cond, &readylist_lock);
+	}
+
+      if (sighup_pending)
+	{
+	  --nready;
+	  pthread_cond_signal (&readylist_cond);
+	sighup_prune:
+	  sighup_pending = 0;
+	  pthread_mutex_unlock (&readylist_lock);
+
+	  /* Prune the password database.  */
+	  if (dbs[pwddb].enabled)
+	    prune_cache (&dbs[pwddb], LONG_MAX, -1);
+
+	  /* Prune the group database.  */
+	  if (dbs[grpdb].enabled)
+	    prune_cache (&dbs[grpdb], LONG_MAX, -1);
+
+	  /* Prune the host database.  */
+	  if (dbs[hstdb].enabled)
+	    prune_cache (&dbs[hstdb], LONG_MAX, -1);
+
+	  /* Re-locking.  */
+	  pthread_mutex_lock (&readylist_lock);
+
+	  /* One more thread available.  */
+	  ++nready;
+	  continue;
 	}
 
       struct fdlist *it = readylist->next;
@@ -1073,25 +1417,7 @@ nscd_run (void *p)
 #ifdef SO_PEERCRED
       pid_t pid = 0;
 
-      if (secure_in_use)
-	{
-	  struct ucred caller;
-	  socklen_t optlen = sizeof (caller);
-
-	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
-	    {
-	      dbg_log (_("error getting callers id: %s"),
-		       strerror_r (errno, buf, sizeof (buf)));
-	      goto close_and_out;
-	    }
-
-	  if (req.type < GETPWBYNAME || req.type > LASTDBREQ
-	      || serv2db[req.type]->secure)
-	    uid = caller.uid;
-
-	  pid = caller.pid;
-	}
-      else if (__builtin_expect (debug_level > 0, 0))
+      if (__builtin_expect (debug_level > 0, 0))
 	{
 	  struct ucred caller;
 	  socklen_t optlen = sizeof (caller);
@@ -1155,8 +1481,7 @@ handle_request: request received (Version = %d)"), req.version);
 	  /* The pthread_cond_timedwait() call timed out.  It is time
 		 to clean up the cache.  */
 	  assert (my_number < lastdb);
-	  prune_cache (&dbs[my_number],
-		       prune_ts.tv_sec + (prune_ts.tv_nsec >= 500000000));
+	  prune_cache (&dbs[my_number], time (NULL), -1);
 
 	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
 	    /* Should never happen.  */
@@ -1217,7 +1542,7 @@ fd_ready (int fd)
 	{
 	  /* We got another thread.  */
 	  ++nthreads;
-	  /* The new thread might new a kick.  */
+	  /* The new thread might need a kick.  */
 	  do_signal = true;
 	}
 
@@ -1280,18 +1605,24 @@ main_loop_poll (void)
 	      /* We have a new incoming connection.  Accept the connection.  */
 	      int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
 
-	      /* use the descriptor if we have not reached the limit.  */
-	      if (fd >= 0 && firstfree < nconns)
+	      /* Use the descriptor if we have not reached the limit.  */
+	      if (fd >= 0)
 		{
-		  conns[firstfree].fd = fd;
-		  conns[firstfree].events = POLLRDNORM;
-		  starttime[firstfree] = now;
-		  if (firstfree >= nused)
-		    nused = firstfree + 1;
+		  if (firstfree < nconns)
+		    {
+		      conns[firstfree].fd = fd;
+		      conns[firstfree].events = POLLRDNORM;
+		      starttime[firstfree] = now;
+		      if (firstfree >= nused)
+			nused = firstfree + 1;
 
-		  do
-		    ++firstfree;
-		  while (firstfree < nused && conns[firstfree].fd != -1);
+		      do
+			++firstfree;
+		      while (firstfree < nused && conns[firstfree].fd != -1);
+		    }
+		  else
+		    /* We cannot use the connection so close it.  */
+		    close (fd);
 		}
 
 	      --n;
@@ -1402,10 +1733,9 @@ main_loop_epoll (int efd)
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */
-	    struct epoll_event ev = { 0, };
-	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, &ev);
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, NULL);
 
-	    /* Get a worked to handle the request.  */
+	    /* Get a worker to handle the request.  */
 	    fd_ready (revs[cnt].data.fd);
 
 	    /* Reset the time.  */
@@ -1425,8 +1755,7 @@ main_loop_epoll (int efd)
 	if (cnt != sock && starttime[cnt] != 0 && starttime[cnt] < laststart)
 	  {
 	    /* We are waiting for this one for too long.  Close it.  */
-	    struct epoll_event ev = {0, };
-	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, &ev);
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, NULL);
 
 	    (void) close (cnt);
 
@@ -1579,23 +1908,49 @@ begin_drop_privileges (void)
 static void
 finish_drop_privileges (void)
 {
+#if defined HAVE_LIBAUDIT && defined HAVE_LIBCAP
+  /* We need to preserve the capabilities to connect to the audit daemon.  */
+  cap_t new_caps = preserve_capabilities ();
+#endif
+
   if (setgroups (server_ngroups, server_groups) == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       error (EXIT_FAILURE, errno, _("setgroups failed"));
     }
 
-  if (setgid (server_gid) == -1)
+  int res;
+  if (paranoia)
+    res = setresgid (server_gid, server_gid, old_gid);
+  else
+    res = setgid (server_gid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setgid");
-      exit (1);
+      exit (4);
     }
 
-  if (setuid (server_uid) == -1)
+  if (paranoia)
+    res = setresuid (server_uid, server_uid, old_uid);
+  else
+    res = setuid (server_uid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setuid");
-      exit (1);
+      exit (4);
     }
+
+#if defined HAVE_LIBAUDIT && defined HAVE_LIBCAP
+  /* Remove the temporary capabilities.  */
+  install_real_capabilities (new_caps);
+#endif
+}
+
+/* Handle the HUP signal which will force a dump of the cache */
+void
+sighup_handler (int signum)
+{
+  sighup_pending = 1;
 }

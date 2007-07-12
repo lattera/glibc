@@ -3801,7 +3801,7 @@ msgstr "Ο ορισμός `%1$s' δεν τελειώνει με `END %1$s'"
 
 #: locale/programs/ld-collate.c:1268 locale/programs/ld-ctype.c:1454
 #, fuzzy, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "Τα <%s> και <%s> είναι μη αποδεκτά ονόματα για όριο"
 
 #: elf/sprof.c:762
@@ -4118,7 +4118,7 @@ msgstr "αδύνατη η ανάγνωση δεδομένων στατιστικών"
 
 #: locale/programs/repertoire.c:331
 #, fuzzy
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr "αδυναμία ανάγνωσης πίνακα ρεπερτορίου `%s'"
 
 #: elf/dl-load.c:776
@@ -4329,7 +4329,7 @@ msgstr "κωδικοποίηση για το αρχικό κείμενο"
 
 #: nscd/connections.c:361 nscd/connections.c:453
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr "σφάλμα στη λήψη της ταυτότητας αυτού που κάλεσε: %s"
 
 #: locale/programs/ld-collate.c:3013
@@ -4771,7 +4771,7 @@ msgid "no output digits defined and none of the standard names in the charmap"
 msgstr ""
 
 #: locale/programs/localedef.c:236
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr "δεν παράχθηκε αρχείο εξόδου επειδή εκδόθηκαν προειδοποιήσεις"
 
 #: locale/programs/charmap.c:488 locale/programs/charmap.c:668 locale/programs/charmap.c:764
@@ -5587,7 +5587,7 @@ msgstr "yp_update: αδυναμία λήψης διεύθυνσης διακομιστή\n"
 #~ msgid "while writing database file"
 #~ msgstr "κατά την εγγραφή αρχείου βάσεως δεδομένων"
 
-#~ msgid "%s: Error writing standard output "
+#~ msgid "%s: Error writing to standard output "
 #~ msgstr "%s: Σφάλμα κατά την εγγραφή στην κανονική έξοδο "
 
 #~ msgid "Cputime limit exceeded"

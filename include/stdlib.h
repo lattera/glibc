@@ -10,6 +10,8 @@
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
 
+__BEGIN_DECLS
+
 extern __typeof (strtol_l) __strtol_l;
 extern __typeof (strtoul_l) __strtoul_l;
 extern __typeof (strtoll_l) __strtoll_l;
@@ -23,10 +25,6 @@ libc_hidden_proto (abort)
 libc_hidden_proto (getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
-libc_hidden_proto (ecvt_r)
-libc_hidden_proto (fcvt_r)
-libc_hidden_proto (qecvt_r)
-libc_hidden_proto (qfcvt_r)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
 libc_hidden_proto (__secure_getenv)
@@ -95,8 +93,8 @@ extern int __cxa_atexit_internal (void (*func) (void *), void *arg, void *d)
 
 extern void __cxa_finalize (void *d);
 
-extern int __posix_memalign (void **memptr, size_t alignment, size_t size)
-     __attribute_malloc__;
+extern int __posix_memalign (void **memptr, size_t alignment, size_t size);
+
 extern void *__libc_memalign (size_t alignment, size_t size)
      __attribute_malloc__;
 
@@ -142,48 +140,70 @@ libc_hidden_proto (____strtoul_l_internal)
 libc_hidden_proto (____strtoull_l_internal)
 
 extern __inline double
-__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    __locale_t __loc)
+__NTH (__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   __locale_t __loc))
 {
   return ____strtod_l_internal (__nptr, __endptr, 0, __loc);
 }
 extern __inline long int
-__strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    int __base, __locale_t __loc)
+__NTH (__strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   int __base, __locale_t __loc))
 {
   return ____strtol_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 extern __inline unsigned long int
-__strtoul_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base, __locale_t __loc)
+__NTH (__strtoul_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoul_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 extern __inline float
-__strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	    __locale_t __loc)
+__NTH (__strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
+		   __locale_t __loc))
 {
   return ____strtof_l_internal (__nptr, __endptr, 0, __loc);
 }
 extern __inline long double
-__strtold_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     __locale_t __loc)
+__NTH (__strtold_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, __locale_t __loc))
 {
   return ____strtold_l_internal (__nptr, __endptr, 0, __loc);
 }
 __extension__ extern __inline long long int
-__strtoll_l (__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base, __locale_t __loc)
+__NTH (__strtoll_l (__const char *__restrict __nptr,
+		    char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoll_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 __extension__ extern __inline unsigned long long int
-__strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
-	      int __base, __locale_t __loc)
+__NTH (__strtoull_l (__const char * __restrict __nptr,
+		     char **__restrict __endptr, int __base, __locale_t __loc))
 {
   return ____strtoull_l_internal (__nptr, __endptr, __base, 0, __loc);
 }
 
+extern char *__ecvt (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign);
+extern char *__fcvt (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign);
+extern char *__gcvt (double __value, int __ndigit, char *__buf);
+extern int __ecvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign, char *__restrict __buf,
+		     size_t __len);
+extern int __fcvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		     int *__restrict __sign, char *__restrict __buf,
+		     size_t __len);
+extern char *__qecvt (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign);
+extern char *__qfcvt (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign);
+extern char *__qgcvt (long double __value, int __ndigit, char *__buf);
+extern int __qecvt_r (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign,
+		      char *__restrict __buf, size_t __len);
+extern int __qfcvt_r (long double __value, int __ndigit,
+		      int *__restrict __decpt, int *__restrict __sign,
+		      char *__restrict __buf, size_t __len);
 
 # ifndef NOT_IN_libc
 #  undef MB_CUR_MAX
@@ -194,8 +214,10 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 
 #endif
 
-extern void * __default_morecore (ptrdiff_t);
+extern void *__default_morecore (ptrdiff_t) __THROW;
 libc_hidden_proto (__default_morecore)
+
+__END_DECLS
 
 #undef __Need_M_And_C
 

@@ -42,7 +42,7 @@ static char *name;
 void
 do_prepare (int argc, char *argv[])
 {
-   char name_len;
+   size_t name_len;
 
    name_len = strlen (test_dir);
    name = malloc (name_len + sizeof ("/fcntlXXXXXX"));

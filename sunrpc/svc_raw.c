@@ -66,7 +66,7 @@ static bool_t svcraw_reply (SVCXPRT *, struct rpc_msg *);
 static bool_t svcraw_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
 static void svcraw_destroy (SVCXPRT *);
 
-static struct xp_ops server_ops =
+static const struct xp_ops server_ops =
 {
   svcraw_recv,
   svcraw_stat,
@@ -89,7 +89,7 @@ svcraw_create (void)
     }
   srp->server.xp_sock = 0;
   srp->server.xp_port = 0;
-  srp->server.xp_ops = &server_ops;
+  srp->server.xp_ops = (struct xp_ops *) &server_ops;
   srp->server.xp_verf.oa_base = srp->verf_body;
   INTUSE(xdrmem_create) (&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE,
 			 XDR_FREE);

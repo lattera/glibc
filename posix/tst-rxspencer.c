@@ -1,5 +1,5 @@
 /* Regular expression tests.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -127,14 +127,15 @@ mb_frob_string (const char *str, const char *letters)
 }
 
 /* Like mb_frob_string, but don't replace anything between
-   [: and :], [. and .] or [= and =].  */
+   [: and :], [. and .] or [= and =] or characters escaped
+   with a backslash.  */
 
 static char *
 mb_frob_pattern (const char *str, const char *letters)
 {
   char *ret, *dst;
   const char *src;
-  int in_class = 0;
+  int in_class = 0, escaped = 0;
 
   if (str == NULL)
     return NULL;
@@ -144,7 +145,18 @@ mb_frob_pattern (const char *str, const char *letters)
     return NULL;
 
   for (src = str, dst = ret; *src; ++src)
-    if (!in_class && strchr (letters, *src))
+    if (*src == '\\')
+      {
+	escaped ^= 1;
+	*dst++ = *src;
+      }
+    else if (escaped)
+      {
+	escaped = 0;
+	*dst++ = *src;
+	continue;
+      }
+    else if (!in_class && strchr (letters, *src))
       dst = mb_replace (dst, *src);
     else
       {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
    This file is part of the GNU C Library.
 
@@ -27,7 +27,7 @@
 #include <sys/profil.h>
 
 #ifndef SIGPROF
-# include <sysdeps/generic/sprofil.c>
+# include <gmon/sprofil.c>
 #else
 
 #include <libc-internal.h>
@@ -181,14 +181,14 @@ profil_count_uint (void *pcp)
    interrupted code.  */
 #define profil_counter		profil_counter_ushort
 #define profil_count(pc)	profil_count (pc, 0)
-#include "profil-counter.h"
+#include <profil-counter.h>
 
 #undef profil_counter
 #undef profil_count
 
 #define profil_counter		profil_counter_uint
 #define profil_count(pc)	profil_count (pc, 1)
-#include "profil-counter.h"
+#include <profil-counter.h>
 
 static int
 insert (int i, unsigned long int start, unsigned long int end, struct prof *p,

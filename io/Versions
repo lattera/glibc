@@ -97,4 +97,20 @@ libc {
     # n*
     nftw; nftw64;
   }
+  GLIBC_2.4 {
+    eaccess;
+
+    faccessat;
+    fchmodat;
+    fchownat;
+    __fxstatat; __fxstatat64;
+    linkat;
+    mkdirat; mkfifoat; __xmknodat;
+    openat; openat64;
+    readlinkat;
+    symlinkat;
+    unlinkat;
+
+    ppoll;
+  }
 }

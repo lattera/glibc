@@ -43,7 +43,7 @@
 	.text
 	.align	4
 	.globl	__divqu
-	.type	__divqu, @function
+	.type	__divqu, @funcnoplt
 	.usepv	__divqu, no
 
 	cfi_startproc
@@ -240,7 +240,7 @@ $y_is_neg:
 	/* If we get here, Y is so big that bit 63 is set.  The results
 	   from the divide will be completely wrong.  Fortunately, the
 	   quotient must be either 0 or 1, so just compute it directly.  */
-	cmpult	Y, X, RV
+	cmpule	Y, X, RV
 	excb
 	mt_fpcr	$f3
 	ldt	$f0, 0(sp)

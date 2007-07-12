@@ -1,5 +1,5 @@
-/* toutf8.c	Convert strings from system locale into UTF-8.
- * Copyright (C) 2002, 2003, 2004  Simon Josefsson
+/* toutf8.c --- Convert strings from system locale into UTF-8.
+ * Copyright (C) 2002, 2003, 2004, 2005  Simon Josefsson
  *
  * This file is part of GNU Libidn.
  *
@@ -23,33 +23,36 @@
 # include "config.h"
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/param.h>
-
+/* Get prototypes. */
 #include "stringprep.h"
+
+/* Get fprintf. */
+#include <stdio.h>
+
+/* Get getenv. */
+#include <stdlib.h>
+
+/* Get strlen. */
+#include <string.h>
+
+/* Get iconv_string. */
+#include "iconvme.h"
 
 #ifdef _LIBC
 # define HAVE_ICONV 1
 # define LOCALE_WORKS 1
-# define ICONV_CONST
 #endif
 
-#ifdef HAVE_ICONV
-# include <iconv.h>
+#if LOCALE_WORKS
+# include <langinfo.h>
+# include <locale.h>
+#endif
 
-# if LOCALE_WORKS
-#  include <langinfo.h>
-#  include <locale.h>
-# endif
-
-# ifdef _LIBC
-#  define stringprep_locale_charset() nl_langinfo (CODESET)
-# else
+#ifdef _LIBC
+# define stringprep_locale_charset() nl_langinfo (CODESET)
+#else
 /**
- * stringprep_locale_charset:
+ * stringprep_locale_charset - return charset used in current locale
  *
  * Find out current locale charset.  The function respect the CHARSET
  * environment variable, but typically uses nl_langinfo(CODESET) when
@@ -76,19 +79,19 @@ stringprep_locale_charset (void)
   if (charset && *charset)
     return charset;
 
-#  ifdef LOCALE_WORKS
+# ifdef LOCALE_WORKS
   charset = nl_langinfo (CODESET);
 
   if (charset && *charset)
     return charset;
-#  endif
+# endif
 
   return "ASCII";
 }
-# endif
+#endif
 
 /**
- * stringprep_convert:
+ * stringprep_convert - encode string using new character set
  * @str: input zero-terminated string.
  * @to_codeset: name of destination character set.
  * @from_codeset: name of origin character set, as used by @str.
@@ -103,132 +106,21 @@ char *
 stringprep_convert (const char *str,
 		    const char *to_codeset, const char *from_codeset)
 {
-  iconv_t cd;
-  char *dest;
-  char *outp;
-  ICONV_CONST char *p;
-  size_t inbytes_remaining;
-  size_t outbytes_remaining;
-  size_t err;
-  size_t outbuf_size;
-  int have_error = 0;
-
-  if (strcmp (to_codeset, from_codeset) == 0)
-    {
-#if defined HAVE_STRDUP || defined _LIBC
-      return strdup (str);
+#if HAVE_ICONV
+  return iconv_string (str, from_codeset, to_codeset);
 #else
-      char *p;
-      p = malloc (strlen (str) + 1);
-      if (!p)
-	return NULL;
-      return strcpy (p, str);
-#endif
-    }
-
-  cd = iconv_open (to_codeset, from_codeset);
-
-  if (cd == (iconv_t) - 1)
-    return NULL;
-
-  p = (ICONV_CONST char *) str;
-
-  inbytes_remaining = strlen (p);
-  /* Guess the maximum length the output string can have.  */
-  outbuf_size = (inbytes_remaining + 1) * MAX (7, MB_CUR_MAX);
-
-  outp = dest = malloc (outbuf_size);
-  if (dest == NULL)
-    goto out;
-  outbytes_remaining = outbuf_size - 1;	/* -1 for NUL */
-
-again:
-
-  err = iconv (cd, (ICONV_CONST char **) &p, &inbytes_remaining,
-	       &outp, &outbytes_remaining);
-
-  if (err == (size_t) - 1)
-    {
-      switch (errno)
-	{
-	case EINVAL:
-	  /* Incomplete text, do not report an error */
-	  break;
-
-	case E2BIG:
-	  {
-	    size_t used = outp - dest;
-	    char *newdest;
-
-	    outbuf_size *= 2;
-	    newdest = realloc (dest, outbuf_size);
-	    if (newdest == NULL)
-	      {
-		have_error = 1;
-		goto out;
-	      }
-	    dest = newdest;
-
-	    outp = dest + used;
-	    outbytes_remaining = outbuf_size - used - 1; /* -1 for NUL */
-
-	    goto again;
-	  }
-	  break;
-
-	case EILSEQ:
-	  have_error = 1;
-	  break;
-
-	default:
-	  have_error = 1;
-	  break;
-	}
-    }
-
-  *outp = '\0';
-
-  if (*p != '\0')
-    have_error = 1;
-
- out:
-  iconv_close (cd);
-
-  if (have_error)
-    {
-      free (dest);
-      dest = NULL;
-    }
-
-  return dest;
-}
-
-#else /* HAVE_ICONV */
-
-const char *
-stringprep_locale_charset ()
-{
-  return "ASCII";
-}
-
-char *
-stringprep_convert (const char *str,
-		    const char *to_codeset, const char *from_codeset)
-{
   char *p;
   fprintf (stderr, "libidn: warning: libiconv not installed, cannot "
 	   "convert data to UTF-8\n");
   p = malloc (strlen (str) + 1);
   if (!p)
     return NULL;
-  strcpy (p, str);
-  return p;
+  return strcpy (p, str);
+#endif
 }
 
-#endif /* HAVE_ICONV */
-
 /**
- * stringprep_locale_to_utf8:
+ * stringprep_locale_to_utf8 - convert locale encoded string to UTF-8
  * @str: input zero terminated string.
  *
  * Convert string encoded in the locale's character set into UTF-8 by
@@ -244,7 +136,7 @@ stringprep_locale_to_utf8 (const char *str)
 }
 
 /**
- * stringprep_utf8_to_locale:
+ * stringprep_utf8_to_locale - encode UTF-8 string to locale encoding
  * @str: input zero terminated string.
  *
  * Convert string encoded in UTF-8 into the locale's character set by

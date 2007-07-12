@@ -1,5 +1,5 @@
 /* Return base 10 logarithm of complex float value.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 
 static _Complex float internal_clog10f (_Complex float x);
 
-#include <sysdeps/generic/s_clog10f.c>
+#include <math/s_clog10f.c>
 #include "cfloat-compat.h"
 
 #undef __clog10f

@@ -1,5 +1,5 @@
 /* Test interface name <-> index conversions.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <Philip.Blundell@pobox.com>.
 
@@ -24,8 +24,8 @@
 #include <string.h>
 #include <net/if.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int failures = 0;
   struct if_nameindex *idx = if_nameindex (), *p;
@@ -63,3 +63,6 @@ main (void)
   if_freenameindex (idx);
   return failures ? 1 : 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

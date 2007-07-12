@@ -1,14 +1,30 @@
 #ifndef _DLFCN_H
 #include <dlfcn/dlfcn.h>
 #include <link.h>		/* For ElfW.  */
+#include <stdbool.h>
 
 /* Internally used flag.  */
 #define __RTLD_DLOPEN	0x80000000
 #define __RTLD_SPROF	0x40000000
 #define __RTLD_OPENEXEC	0x20000000
 #define __RTLD_CALLMAP	0x10000000
+#define __RTLD_AUDIT	0x08000000
 
 #define __LM_ID_CALLER	-2
+
+#ifdef SHARED
+/* Locally stored program arguments.  */
+extern int __dlfcn_argc attribute_hidden;
+extern char **__dlfcn_argv attribute_hidden;
+#else
+/* These variables are defined and initialized in the startup code.  */
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
+
+# define __dlfcn_argc __libc_argc
+# define __dlfcn_argv __libc_argv
+#endif
+
 
 /* Now define the internal interfaces.  */
 
@@ -29,18 +45,8 @@ extern int _dl_addr (const void *address, Dl_info *info,
 libc_hidden_proto (_dl_addr)
 #endif
 
-/* Open the shared object NAME, relocate it, and run its initializer if it
-   hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
-   the object is already opened, returns its existing map.  */
-extern void *_dl_open (const char *name, int mode, const void *caller,
-		       Lmid_t nsid)
-     internal_function;
-libc_hidden_proto (_dl_open)
-
 /* Close an object previously opened by _dl_open.  */
-extern void _dl_close (void *map)
-     internal_function;
-libc_hidden_proto (_dl_close)
+extern void _dl_close (void *map) attribute_hidden;
 
 /* Look up NAME in shared object HANDLE (which may be RTLD_DEFAULT or
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns
@@ -62,9 +68,10 @@ extern void *_dl_vsym (void *handle, const char *name, const char *version,
    and the error code passed is the return value and *OBJNAME is set to
    the object name which experienced the problems.  ERRSTRING if nonzero
    points to a malloc'ed string which the caller has to free after use.
-   ARGS is passed as argument to OPERATE.  */
+   ARGS is passed as argument to OPERATE.  MALLOCEDP is set to true only
+   if the returned string is allocated using the libc's malloc.  */
 extern int _dl_catch_error (const char **objname, const char **errstring,
-			    void (*operate) (void *),
+			    bool *mallocedp, void (*operate) (void *),
 			    void *args)
      internal_function;
 

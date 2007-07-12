@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +19,7 @@
 #define __ASSEMBLY__
 
 #include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
+#include <jmpbuf-offsets.h>
 
 
 ENTRY(__longjmp)
@@ -54,6 +52,11 @@ ENTRY(__longjmp)
 	ldt     $f7, JB_F7*8(a0)
 	ldt     $f8, JB_F8*8(a0)
 	ldt     $f9, JB_F9*8(a0)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE(ra, t1)
+	PTR_DEMANGLE2(t0, t1)
+	PTR_DEMANGLE2(fp, t1)
+#endif
 	cmoveq  v0, 1, v0
 	mov     t0, sp
 	ret

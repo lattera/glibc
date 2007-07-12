@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1996,1997,1999,2000  Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1996,1997,1999,2000, 2006  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@
 wint_t
 __getwc_unlocked (FILE *fp)
 {
-  CHECK_FILE (fp, EOF);
+  CHECK_FILE (fp, WEOF);
   return _IO_getwc_unlocked (fp);
 }
 

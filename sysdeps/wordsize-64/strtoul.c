@@ -3,7 +3,7 @@
 #define strtoull strtoull_XXX
 #define strtouq strtouq_XXX
 
-#include <sysdeps/generic/strtoul.c>
+#include <stdlib/strtoul.c>
 
 #undef __strtoull_internal
 #undef strtoull

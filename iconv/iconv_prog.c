@@ -1,22 +1,20 @@
 /* Convert text in given files from the specified from-set to the to-set.
-   Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <argp.h>
 #include <assert.h>
@@ -185,12 +183,12 @@ main (int argc, char *argv[])
   if (strchr (from_code, '/') != NULL)
     /* The from-name might be a charmap file name.  Try reading the
        file.  */
-    from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0);
+    from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0, 0);
 
   if (strchr (orig_to_code, '/') != NULL)
     /* The to-name might be a charmap file name.  Try reading the
        file.  */
-    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1,0, 0);
+    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1, 0, 0, 0);
 
 
   /* Determine output file.  */
@@ -239,26 +237,30 @@ main (int argc, char *argv[])
 	      if (from_wrong)
 		{
 		  if (to_wrong)
-		    error (EXIT_FAILURE, 0,
+		    error (0, 0,
 			   _("\
-conversion from `%s' and to `%s' are not supported"),
+conversions from `%s' and to `%s' are not supported"),
 			   from_pretty, to_pretty);
 		  else
-		    error (EXIT_FAILURE, 0,
+		    error (0, 0,
 			   _("conversion from `%s' is not supported"),
 			   from_pretty);
 		}
 	      else
 		{
 		  if (to_wrong)
-		    error (EXIT_FAILURE, 0,
+		    error (0, 0,
 			   _("conversion to `%s' is not supported"),
 			   to_pretty);
 		  else
-		    error (EXIT_FAILURE, 0,
+		    error (0, 0,
 			   _("conversion from `%s' to `%s' is not supported"),
 			   from_pretty, to_pretty);
 		}
+
+	      argp_help (&argp, stderr, ARGP_HELP_SEE,
+			 program_invocation_short_name);
+	      exit (1);
 	    }
 	  else
 	    error (EXIT_FAILURE, errno,
@@ -424,7 +426,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 

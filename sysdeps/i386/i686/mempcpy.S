@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to following byte.
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2002,2004,2005 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,9 +43,11 @@ ENTRY (BP_SYM (__mempcpy))
 
 	movl	LEN(%esp), %ecx
 	movl	%edi, %eax
+	cfi_register (edi, eax)
 	movl	DEST(%esp), %edi
 	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	movl	%esi, %edx
+	cfi_register (esi, edx)
 	movl	SRC(%esp), %esi
 	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 	cld
@@ -58,7 +60,9 @@ ENTRY (BP_SYM (__mempcpy))
 2:	rep
 	movsl
 	xchgl	%edi, %eax
+	cfi_restore (edi)
 	movl	%edx, %esi
+	cfi_restore (esi)
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 
 	LEAVE

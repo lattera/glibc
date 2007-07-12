@@ -7729,6 +7729,13 @@
 
 	* Versions.def [ld]: Add GLIBC_2.2.1.
 
+2001-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/memusage.c (me): If not SUID/SGID, allow creating new
+	$MEMUSAGE_OUTPUT file.
+	* sysdeps/generic/segfault.c (segfault.c): If not SUID/SGID, allow
+	creating new $SEGFAULT_OUTPUT_NAME file.
+
 2001-01-10  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-libc.c (do_dlopen): Call DL_STATIC_INIT for static binaries.
@@ -8129,6 +8136,11 @@
 	* resolv/Versions: Fix bracing.
 	* sysdeps/powerpc/soft-fp/Versions: Likewise.
 	* sysdeps/sparc/sparc64/soft-fp/Versions: Likewise.
+
+2001-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/setlocale.c (setlocale): Don't allocate/free category name
+	unnecessarily.
 
 2001-01-02  Franz Sirl	<Franz.Sirl-kernel@lauterbach.com>
 

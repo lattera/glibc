@@ -24,16 +24,7 @@
  * rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.5  1996/12/20 01:32:34  drepper
- * Update from main archive 961219
- *
- * Revision 1.5  1996/12/19 20:23:39  drepper
- * Spelling corrections.
- *
- * Revision 1.4  1993/12/17 06:14:52  mib
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.3  92/04/01  19:38:02  rpd
  * 	Added err_codes_device.

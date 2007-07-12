@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <string.h>	/* For the real memset prototype.  */
+
 
 /* Tolerate non-threads versions of Posix */
 #ifndef SA_ONESHOT

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ extern int __new_glob (const char *__pattern, int __flags,
 		       glob_t *__pglob);
 extern void __new_globfree (glob_t *__pglob);
 
-#include <sysdeps/generic/glob.c>
+#include <posix/glob.c>
 
 #undef glob
 #undef globfree

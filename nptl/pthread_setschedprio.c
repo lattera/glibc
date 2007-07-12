@@ -47,6 +47,11 @@ pthread_setschedprio (threadid, prio)
 
   lll_lock (pd->lock);
 
+  /* If the thread should have higher priority because of some
+     PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
+  if (__builtin_expect (pd->tpp != NULL, 0) && pd->tpp->priomax > prio)
+    param.sched_priority = pd->tpp->priomax;
+
   /* Try to set the scheduler information.  */
   if (__builtin_expect (sched_setparam (pd->tid, &param) == -1, 0))
     result = errno;
@@ -54,6 +59,7 @@ pthread_setschedprio (threadid, prio)
     {
       /* We succeeded changing the kernel information.  Reflect this
 	 change in the thread descriptor.  */
+      param.sched_priority = prio;
       memcpy (&pd->schedparam, &param, sizeof (struct sched_param));
       pd->flags |= ATTR_FLAG_SCHED_SET;
     }

@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -24,15 +24,6 @@
 #include <gconv.h>
 #include <stdint.h>
 
-/* Conversion table.  */
-extern const uint16_t __jis0208_to_ucs[];
-
-extern const char __jisx0208_from_ucs4_lat1[256][2];
-extern const char __jisx0208_from_ucs4_greek[0xc1][2];
-extern const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[];
-extern const char __jisx0208_from_ucs_tab[][2];
-
-
 /* Struct for table with indeces in UCS mapping table.  */
 struct jisx0208_ucs_idx
 {
@@ -40,6 +31,18 @@ struct jisx0208_ucs_idx
   uint16_t end;
   uint16_t idx;
 };
+
+
+/* Conversion table.  */
+extern const uint16_t __jis0208_to_ucs[];
+
+#define JIS0208_LAT1_MIN 0xa2
+#define JIS0208_LAT1_MAX 0xf7
+extern const char __jisx0208_from_ucs4_lat1[JIS0208_LAT1_MAX + 1
+					    - JIS0208_LAT1_MIN][2];
+extern const char __jisx0208_from_ucs4_greek[0xc1][2];
+extern const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[];
+extern const char __jisx0208_from_ucs_tab[][2];
 
 
 static inline uint32_t
@@ -80,8 +83,8 @@ ucs4_to_jisx0208 (uint32_t wch, char *s, size_t avail)
   if (avail < 2)
     return 0;
 
-  if (ch < 0x100)
-    cp = __jisx0208_from_ucs4_lat1[ch];
+  if (ch >= JIS0208_LAT1_MIN && ch <= JIS0208_LAT1_MAX)
+    cp = __jisx0208_from_ucs4_lat1[ch - JIS0208_LAT1_MIN];
   else if (ch >= 0x391 && ch <= 0x451)
     cp = __jisx0208_from_ucs4_greek[ch - 0x391];
   else

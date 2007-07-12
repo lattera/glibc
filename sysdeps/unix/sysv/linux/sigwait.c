@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2002-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,8 +58,11 @@ do_sigwait (const sigset_t *set, int *sig)
      real size of the user-level sigset_t.  */
 #ifdef INTERNAL_SYSCALL
   INTERNAL_SYSCALL_DECL (err);
-  ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, CHECK_SIGSET (set),
-			  NULL, NULL, _NSIG / 8);
+  do
+    ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, CHECK_SIGSET (set),
+			    NULL, NULL, _NSIG / 8);
+  while (INTERNAL_SYSCALL_ERROR_P (ret, err)
+	 && INTERNAL_SYSCALL_ERRNO (ret, err) == EINTR);
   if (! INTERNAL_SYSCALL_ERROR_P (ret, err))
     {
       *sig = ret;
@@ -68,8 +71,10 @@ do_sigwait (const sigset_t *set, int *sig)
   else
     ret = INTERNAL_SYSCALL_ERRNO (ret, err);
 #else
-  ret = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			NULL, NULL, _NSIG / 8);
+  do
+    ret = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			  NULL, NULL, _NSIG / 8);
+  while (ret == -1 && errno == EINTR);
   if (ret != -1)
     {
       *sig = ret;

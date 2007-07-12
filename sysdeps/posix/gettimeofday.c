@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-1997,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,6 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/time.h>
-
-#ifndef HAVE_GNU_LD
-#define __daylight	daylight
-#define __timezone	timezone
-#define __tzname	tzname
-#endif
 
 #undef __gettimeofday
 

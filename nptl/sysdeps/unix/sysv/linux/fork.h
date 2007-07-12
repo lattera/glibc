@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,7 +41,7 @@ struct fork_handler
 };
 
 /* The single linked list of all currently registered for handlers.  */
-extern struct fork_handler *__fork_handlers;
+extern struct fork_handler *__fork_handlers attribute_hidden;
 
 
 /* Function to call to unregister fork handlers.  */

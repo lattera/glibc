@@ -1,5 +1,5 @@
 /* Table for builtin transformation mapping.
-   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,6 +20,7 @@
 
 #include <endian.h>
 #include <limits.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <gconv_int.h>
@@ -27,16 +28,16 @@
 #include <assert.h>
 
 
-static struct builtin_map
+static const struct builtin_map
 {
   const char *name;
   __gconv_fct fct;
   __gconv_btowc_fct btowc_fct;
 
-  int min_needed_from;
-  int max_needed_from;
-  int min_needed_to;
-  int max_needed_to;
+  int8_t min_needed_from;
+  int8_t max_needed_from;
+  int8_t min_needed_to;
+  int8_t max_needed_to;
 
 } map[] =
 {

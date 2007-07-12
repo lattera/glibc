@@ -1,5 +1,5 @@
 /* Test and measure strspn functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -104,8 +104,8 @@ do_test (size_t align, size_t pos, size_t len)
   if (align + pos + 10 >= page_size || len > 240 || ! len)
     return;
 
-  acc = buf2 + (random () & 255);
-  s = buf1 + align;
+  acc = (char *) (buf2 + (random () & 255));
+  s = (char *) (buf1 + align);
 
   for (i = 0; i < len; ++i)
     {
@@ -183,7 +183,7 @@ do_random_tests (void)
 	  else if (i == pos + align)
 	    {
 	      p[i] = random () & 255;
-	      if (strchr (acc, p[i]))
+	      if (strchr ((char *) acc, p[i]))
 		p[i] = '\0';
 	    }
 	  else if (i < align || i > pos + align)
@@ -193,11 +193,13 @@ do_random_tests (void)
 	}
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align, acc) != (pos < len ? pos : len))
+	if (CALL (impl, (char *) (p + align),
+		  (char *) acc) != (pos < len ? pos : len))
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd, %zd, %zd) %zd != %zd",
 		   n, impl->name, align, acc, alen, pos, len,
-		   CALL (impl, p + align, acc), (pos < len ? pos : len));
+		   CALL (impl, (char *) (p + align), (char *) acc),
+		   (pos < len ? pos : len));
 	    ret = 1;
 	  }
     }

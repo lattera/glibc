@@ -1,5 +1,5 @@
 /* ix87 specific implementation of complex exponential function for double.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -71,9 +71,7 @@ ENTRY(__cexp)
 	fnstsw
 	fldl	16(%esp)		/* y : x */
 #ifdef  PIC
-        call    1f
-1:      popl    %ecx
-        addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
+	LOAD_PIC_REG (cx)
 #endif
 	movb	%ah, %dh
 	andb	$0x45, %ah

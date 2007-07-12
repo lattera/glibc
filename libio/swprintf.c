@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1995,1997,1998,1999,2000,2003
+/* Copyright (C) 1991,1995,1997,1998,1999,2000,2003,2004,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,13 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <libioP.h>
 #include <stdarg.h>
 #include <wchar.h>
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS3 */
 int
-swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
+__swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
 {
   va_list arg;
   int done;
@@ -34,3 +35,4 @@ swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
 
   return done;
 }
+ldbl_strong_alias (__swprintf, swprintf)

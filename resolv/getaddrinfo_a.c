@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "gai_misc.h"
+#include <gai_misc.h>
 
 
 /* We need this special structure to handle asynchronous I/O.  */
@@ -96,7 +96,9 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
     }
   else if (mode == GAI_WAIT)
     {
+#ifndef DONT_NEED_GAI_MISC_COND
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#endif
       struct waitlist waitlist[ent];
       int oldstate;
 
@@ -104,7 +106,9 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
       for (cnt = 0; cnt < ent; ++cnt)
 	if (requests[cnt] != NULL)
 	  {
+#ifndef DONT_NEED_GAI_MISC_COND
 	    waitlist[cnt].cond = &cond;
+#endif
 	    waitlist[cnt].next = requests[cnt]->waiting;
 	    waitlist[cnt].counterp = &total;
 	    waitlist[cnt].sigevp = NULL;
@@ -119,15 +123,24 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
       while (total > 0)
-	pthread_cond_wait (&cond, &__gai_requests_mutex);
+	{
+#ifdef DONT_NEED_GAI_MISC_COND
+	  int result;
+	  GAI_MISC_WAIT (result, total, NULL, 1);
+#else
+	  pthread_cond_wait (&cond, &__gai_requests_mutex);
+#endif
+	}
 
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
 
+#ifndef DONT_NEED_GAI_MISC_COND
       /* Release the conditional variable.  */
       if (pthread_cond_destroy (&cond) != 0)
 	/* This must never happen.  */
 	abort ();
+#endif
     }
   else
     {
@@ -147,7 +160,9 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
 	  for (cnt = 0; cnt < ent; ++cnt)
 	    if (requests[cnt] != NULL)
 	      {
+#ifndef DONT_NEED_GAI_MISC_COND
 		waitlist->list[cnt].cond = NULL;
+#endif
 		waitlist->list[cnt].next = requests[cnt]->waiting;
 		waitlist->list[cnt].counterp = &waitlist->counter;
 		waitlist->list[cnt].sigevp = &waitlist->sigev;

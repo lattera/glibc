@@ -1,5 +1,5 @@
 /* Compute cubic root of double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Dirk Alboth <dirka@uni-paderborn.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -89,9 +89,9 @@ ENTRY(__cbrt)
 
 #ifdef PIC
 	pushl	%ebx
-	call	3f
-3:	popl	%ebx
-	addl    $_GLOBAL_OFFSET_TABLE_+[.-3b], %ebx
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 0)
+	LOAD_PIC_REG (bx)
 #endif
 
 	cmpl	$0x00100000, %eax
@@ -178,13 +178,17 @@ ENTRY(__cbrt)
 	fdivp	%st, %st(1)		/* u*(t2+2*xm)/(2*t2+xm) */
 	fmull	MOX(16+factor,%ecx)	/* u*(t2+2*xm)/(2*t2+xm)*FACT */
 	pushl	%eax
+	cfi_adjust_cfa_offset (4)
 	fildl	(%esp)			/* xe/3 : u*(t2+2*xm)/(2*t2+xm)*FACT */
 	fxch				/* u*(t2+2*xm)/(2*t2+xm)*FACT : xe/3 */
 	fscale				/* u*(t2+2*xm)/(2*t2+xm)*FACT*2^xe/3 */
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 #ifdef PIC
 	movl	12(%esp), %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 #else
 	movl	8(%esp), %eax
 #endif

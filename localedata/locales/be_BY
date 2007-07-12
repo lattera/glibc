@@ -62,6 +62,10 @@ END LC_COLLATE
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
 END LC_CTYPE
 
 LC_MESSAGES

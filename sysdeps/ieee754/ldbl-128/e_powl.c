@@ -220,7 +220,7 @@ __ieee754_powl (x, y)
 	{
 	  if (((ix - 0x3fff0000) | p.parts32.w1 | p.parts32.w2 | p.parts32.w3)
 	      == 0)
-	    return y - y;	/* inf**+-1 is NaN */
+	    return y - y;	/* +-1**inf is NaN */
 	  else if (ix >= 0x3fff0000)	/* (|x|>1)**+-inf = inf,0 */
 	    return (hy >= 0) ? y : zero;
 	  else			/* (|x|<1)**-,+inf = inf,0 */

@@ -22,4 +22,31 @@
 #define _dl_cache_check_flags(flags) \
   ((flags) == _DL_CACHE_DEFAULT_ID)
 
+#define EMUL_HACK "/emul/ia32-linux"
+
+#define arch_startup(argc, argv) unlink (EMUL_HACK LD_SO_CACHE)
+
+#define add_arch_dirs(config_file) \
+  do {							\
+    int save_verbose = opt_verbose;			\
+    opt_verbose = 0;					\
+							\
+    parse_conf (config_file, EMUL_HACK, true);		\
+							\
+    /* Always add the standard search paths.  */	\
+    add_system_dir (EMUL_HACK SLIBDIR);			\
+    if (strcmp (SLIBDIR, LIBDIR))			\
+      add_system_dir (EMUL_HACK LIBDIR);		\
+							\
+    char emul_config_file[strlen (config_file)		\
+			  + sizeof EMUL_HACK];		\
+    strcpy (mempcpy (emul_config_file, EMUL_HACK,	\
+		     strlen (EMUL_HACK)), config_file);	\
+							\
+    if (! access (emul_config_file, R_OK))		\
+      parse_conf (emul_config_file, EMUL_HACK, true);	\
+							\
+    opt_verbose = save_verbose;				\
+  } while (0)
+
 #include_next <dl-cache.h>

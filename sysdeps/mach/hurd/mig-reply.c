@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1995,1996,1997,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #define GETPORT \
   mach_port_t *portloc = \
     (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY)
-#define reply_port (use_threadvar ? *portloc : global_reply_port)
+#define reply_port (*(use_threadvar ? portloc : &global_reply_port))
 
 static int use_threadvar;
 static mach_port_t global_reply_port;

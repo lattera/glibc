@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1997,1998,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <libioP.h>
 #include <stdarg.h>
 #include <stdio.h>
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS4 */
 int
-__sprintf_chk (char *s, int flags, size_t slen, const char *format, ...)
+___sprintf_chk (char *s, int flags, size_t slen, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -33,3 +35,4 @@ __sprintf_chk (char *s, int flags, size_t slen, const char *format, ...)
 
   return done;
 }
+ldbl_strong_alias (___sprintf_chk, __sprintf_chk)

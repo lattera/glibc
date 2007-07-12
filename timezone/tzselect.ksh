@@ -1,11 +1,11 @@
 #! @KSH@
 
-# '@(#)tzselect.ksh	1.7'
+# '@(#)tzselect.ksh	1.8'
 
 # Ask the user about the time zone, and output the resulting TZ value to stdout.
 # Interact with the user via stderr and stdin.
 
-# Contributed by Paul Eggert <eggert@twinsun.com>.
+# Contributed by Paul Eggert.
 
 # Porting notes:
 #

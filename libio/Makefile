@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002,2003,2004,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 subdir	:= libio
 
 headers	:= stdio.h libio.h _G_config.h bits/stdio.h bits/stdio-lock.h \
-	   bits/sys_errlist.h bits/stdio2.h
+	   bits/sys_errlist.h bits/stdio2.h bits/stdio-ldbl.h bits/libio-ldbl.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
@@ -35,7 +35,7 @@ routines	:=							      \
 	iofputws iofputws_u iogetwline iowpadn ioungetwc putwc putwc_u	      \
 	putwchar putwchar_u putchar putchar_u fwprintf swprintf vwprintf      \
 	wprintf wscanf fwscanf vwscanf vswprintf iovswscanf swscanf wgenops   \
-	wstrops wfileops iofwide fwide					      \
+	wstrops wfileops iofwide fwide wmemstream			      \
 									      \
 	clearerr feof ferror fileno fputc freopen fseek getc getchar	      \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
@@ -54,7 +54,11 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-freopen bug-rewind bug-rewind2 bug-ungetc bug-fseek \
 	tst-mmap-eofsync tst-mmap-fflushsync bug-mmap-fflush \
 	tst-mmap2-eofsync tst-mmap-offend bug-fopena+ bug-wfflush \
-	bug-ungetc2 bug-ftell bug-ungetc3 bug-ungetc4
+	bug-ungetc2 bug-ftell bug-ungetc3 bug-ungetc4 tst-fopenloc2 \
+	tst-memstream1 tst-memstream2 \
+	tst-wmemstream1 tst-wmemstream2 \
+	bug-memstream1 bug-wmemstream1 \
+	tst-setvbuf1
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.

@@ -36,8 +36,8 @@
 #define __need___va_list
 #include <stdarg.h>
 
-
-#define	_PATH_LOG	"/dev/log"
+/* This file defines _PATH_LOG.  */
+#include <bits/syslog-path.h>
 
 /*
  * priorities/facilities are encoded into a single 32-bit quantity, where the
@@ -168,7 +168,7 @@ CODE facilitynames[] =
 
 __BEGIN_DECLS
 
-/* Close desriptor used to write to system logger.
+/* Close descriptor used to write to system logger.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
@@ -188,7 +188,7 @@ extern int setlogmask (int __mask) __THROW;
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern void syslog (int __pri, __const char *__fmt, ...)
-     __attribute__ ((__format__(__printf__, 2, 3)));
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
 #ifdef __USE_BSD
 /* Generate a log message using FMT and using arguments pointed to by AP.
@@ -198,7 +198,16 @@ extern void syslog (int __pri, __const char *__fmt, ...)
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
-     __attribute__ ((__format__(__printf__, 2, 0)));
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+#endif
+
+
+/* Define some macros helping to catch buffer overflows.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/syslog.h>
+#endif
+#ifdef __LDBL_COMPAT
+# include <bits/syslog-ldbl.h>
 #endif
 
 __END_DECLS

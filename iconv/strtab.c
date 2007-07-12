@@ -1,5 +1,5 @@
 /* C string table handling.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    This program is free software; you can redistribute it and/or modify
@@ -326,7 +326,7 @@ strtabfinalize (struct Strtab *st, size_t *size)
   copylen = 1;
   copystrings (st->root, &endp, &copylen);
   assert (copylen == st->total + 1);
-  assert (endp = retval + st->total + 1);
+  assert (endp == retval + st->total + 1);
   *size = copylen;
 
   return retval;

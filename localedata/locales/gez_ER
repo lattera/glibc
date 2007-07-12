@@ -110,7 +110,7 @@ country_num   232
 % country_car   unknown
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U130D><U12D5><U12DD>"
-lang_ab       "<U0067><U0065><U007A>"
+%lang_ab       "<U0067><U0065><U007A>"
 lang_term     "<U0067><U0065><U007A>"
 %
 % Petter Reinholdtsen reports uncommenting the below breaks compilation

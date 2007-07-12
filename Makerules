@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -56,22 +56,6 @@ ifndef +included-Makeconfig
 include $(..)Makeconfig
 endif
 
-# `configure' writes a definition of `config-sysdirs' in `config.make'.
-sysdirs = $(strip $(full_config_sysdirs))
-
-+sysdir_pfx = $(common-objpfx)
-
-export sysdirs := $(sysdirs)
-
-+sysdep_dirs := $(full_config_sysdirs)
-ifdef objdir
-+sysdep_dirs := $(objdir) $(+sysdep_dirs)
-endif
-
-# Add -I switches to get the right sysdep directories.
-# `+includes' in Makeconfig references $(+sysdep-includes).
-+sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
-
 # This variable is used in ``include $(o-iterator)'' after defining
 # $(o-iterator-doit) to produce some desired rule using $o for the object
 # suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
@@ -94,7 +78,7 @@ vpath %.x $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
 
-sysdep-makefiles := $(wildcard $(full_config_sysdirs:=/Makefile))
+sysdep-makefiles := $(wildcard $(sysdirs:=/Makefile))
 ifneq (,$(sysdep-makefiles))
 include $(sysdep-makefiles)
 endif
@@ -165,7 +149,7 @@ ifndef subdir
 $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(common-before-compile)
 	rm -f $@T $@.dT
 	(echo '# Generated from $*.make.c by Makerules.'; \
-	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -E -DASSEMBLER $< \
 	       -MD -MP -MT '$$(common-objpfx)$*.make' -MF $@.dT \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \
@@ -183,6 +167,7 @@ sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
 endif
 
 
+ifdef gen-as-const-headers
 # Generating headers for assembly constants.
 # We need this defined early to get into before-compile before
 # it's used in sysd-rules, below.
@@ -201,6 +186,16 @@ $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
 vpath %.sym $(sysdirs)
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+
+tests += $(gen-as-const-headers:%.sym=test-as-const-%)
+generated += $(gen-as-const-headers:%.sym=test-as-const-%.c)
+$(objpfx)test-as-const-%.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
+			    %.sym $(common-objpfx)%.h
+	($(AWK) '{ sub(/^/, "asconst_", $$2); print; }' $(filter %.h,$^); \
+	 $(AWK) -v test=1 -f $< $(filter %.sym,$^); \
+	 echo '#include "$(..)test-skeleton.c"') > $@T
+	mv -f $@T $@
+endif
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the
@@ -208,11 +203,71 @@ before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 # later directory would be chosen over a .c file in an earlier directory,
 # which does not preserve the desired sysdeps ordering behavior.
 
-# It matters that this set of rules, for compiling from sources in
-# the current directory (the $srcdir/$subdir) come before the
-# generated sysdep rules in included from sysd-rules below.  When
-# compiling in the source tree, generated sources go into the current
-# directory, and those should be chosen before any sources in sysdeps.
+# System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
+# patterns matching sysdep directories whose assembly source files should
+# be suppressed.
+ifdef inhibit-sysdep-asm
+define open-check-inhibit-asm
+case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
+endef
+close-check-inhibit-asm = ;; esac ;
+endif
+
+-include $(common-objpfx)sysd-rules
+ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
+# The value of $(+sysdep_dirs) the sysd-rules was computed for
+# differs from the one we are using now.  So force a rebuild of sysd-rules.
+sysd-rules-force = FORCE
+FORCE:
+endif
+$(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
+			    $(sysdep-makefiles) $(sysd-rules-force)
+	-@rm -f $@T
+	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
+	 for dir in $(config-sysdirs); do				      \
+	   case "$$dir" in						      \
+	   /*) ;;							      \
+	   *) dir="\$$(..)$$dir" ;;					      \
+	   esac;							      \
+	   for o in $(all-object-suffixes); do \
+	     $(open-check-inhibit-asm) \
+	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
+	     $(close-check-inhibit-asm)	\
+	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	   done; \
+	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force); \
+	   	 	\$$(do-install)"; 				      \
+	 done;								      \
+	 echo 'sysd-rules-done = t') > $@T
+	mv -f $@T $@
+
+ifndef sysd-rules-done
+# Don't do deps until this exists, because it provides rules to make the deps.
+no_deps=t
+endif
+
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
@@ -227,6 +282,12 @@ include $(o-iterator)
 
 define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: %.cc $(before-compile); $$(compile-command.cc)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
@@ -255,69 +316,6 @@ object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 endif
 
-# System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
-# patterns matching sysdep directories whose assembly source files should
-# be suppressed.
-ifdef inhibit-sysdep-asm
-define open-check-inhibit-asm
-case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
-endef
-close-check-inhibit-asm = ;; esac ;
-endif
-
--include $(+sysdir_pfx)sysd-rules
-ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
-# The value of $(+sysdep_dirs) the sysd-rules was computed for
-# differs from the one we are using now.  So force a rebuild of sysd-rules.
-sysd-rules-force = FORCE
-FORCE:
-endif
-$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
-			  $(wildcard $(foreach dir,$(sysdirs),\
-					       $(dir)/Makefile))\
-			  $(sysd-rules-force)
-	-@rm -f $@T
-	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
-	 for dir in $(config-sysdirs:%='$$(..)%'); do			      \
-	   for o in $(all-object-suffixes); do \
-	     $(open-check-inhibit-asm) \
-	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     $(close-check-inhibit-asm)	\
-	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	   done; \
-	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
-	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
-	 done;								      \
-	 echo 'sysd-rules-done = t') > $@T
-	mv -f $@T $@
-
-ifndef sysd-rules-done
-# Don't do deps until this exists, because it provides rules to make the deps.
-no_deps=t
-endif
-
-# This is used by the m_%.[Sc] pattern rules in sysd-rules.
-define +make-include-of-dep
-echo '#include <$<>' > $@T
-mv -f $@T $@
-endef
-
 # Generate version maps, but wait until sysdep-subdirs is known
 ifeq ($(sysd-sorted-done),t)
 ifeq ($(versioning),yes)
@@ -328,7 +326,7 @@ postclean-generated += sysd-versions Versions.all abi-versions.h \
 		       Versions.def.v.i Versions.def.v Versions.v.i Versions.v
 
 ifndef avoid-generated
-ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
+ifneq ($(sysd-versions-subdirs),$(sorted-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
@@ -338,21 +336,22 @@ $(common-objpfx)Versions.def.v.i: $(..)Versions.def \
 $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 			      $(common-objpfx)soversions.i \
 			      $(common-objpfx)Versions.def.v
-	{ while read lib version setname; do \
+	{ while read which lib version setname; do \
+	    test x"$$which" = xDEFAULT || continue; \
 	    test -z "$$setname" || echo "$$lib : $$setname"; \
 	  done < $(word 2,$^); \
 	  cat $(word 3,$^); \
 	} | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@
 # See %.v/%.v.i implicit rules in Makeconfig.
-$(common-objpfx)Versions.v.i: $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
+$(common-objpfx)Versions.v.i: $(wildcard $(subdirs:%=$(..)%/Versions)) \
 			      $(wildcard $(sysdirs:%=%/Versions)) \
 			      $(common-objpfx)abi-versions.h \
 			      $(sysd-versions-force)
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(common-objpfx)Versions.v \
 			       $(..)scripts/versions.awk
-	( echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
+	( echo 'sysd-versions-subdirs = $(subdirs) $(config-sysdirs)' ; \
 	  cat $(word 2,$^) \
 	  | LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
 			    -v move_if_change='$(move-if-change)' \
@@ -368,9 +367,11 @@ compile-mkdep-flags = -MD -MP -MF $@.dt -MT $@
 compile-command.S = $(compile.S) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
+compile-command.cc = $(compile.cc) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+compile.cc = $(CXX) $< -c $(CXXFLAGS) $(CPPFLAGS)
 compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
@@ -486,12 +487,18 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		  -Wl,--verbose 2>&1 | \
 	  sed > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
-	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
+	      $(if $(filter yes,$(have-hash-style)), \
+		   -e 's/^.*\.gnu\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
+		   -e '/^[ 	]*\.hash[ 	]*:.*$$/{h;d;}' \
+		   -e '/DATA_SEGMENT_ALIGN/{H;g}' \
+		, \
+		   -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
+	       ) \
 	      -e 's/^.*\*(\.dynbss).*$$/& \
 		 PROVIDE(__start___libc_freeres_ptrs = .); \
 		 *(__libc_freeres_ptrs) \
 		 PROVIDE(__stop___libc_freeres_ptrs = .);/'\
-	      -e 's/^.*\*(\.jcr).*$$/& \
+	      -e 's@^.*\*(\.jcr).*$$@& \
 		 PROVIDE(__start___libc_subfreeres = .);\
 		 __libc_subfreeres : { *(__libc_subfreeres) }\
 		 PROVIDE(__stop___libc_subfreeres = .);\
@@ -500,7 +507,8 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 PROVIDE(__stop___libc_atexit = .);\
 		 PROVIDE(__start___libc_thread_subfreeres = .);\
 		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\
-		 PROVIDE(__stop___libc_thread_subfreeres = .);/'
+		 PROVIDE(__stop___libc_thread_subfreeres = .);\
+		 /DISCARD/ : { *(.gnu.glibc-stub.*) }@'
 	mv -f $@T $@
 common-generated += shlib.lds
 
@@ -549,6 +557,11 @@ ifeq (yes,$(elf))
 define build-module
 $(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist)
+endef
+define build-module-asneeded
+$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
+	  $(csu-objpfx)abi-note.o \
+	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed
 endef
 else
 ifneq (,$(findstring aix,$(config-os)))
@@ -663,18 +676,25 @@ include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
 
 
-# The makefile may define $(modules-names) # to build additional
-# modules.
+# The makefile may define $(modules-names) to build additional modules.
+# These are built with $(build-module), except any in $(modules-names-nobuild).
 ifdef modules-names
 # extra-lib.mk is included once for each extra lib to define rules
 # to build it, and to add its objects to the various variables.
 # During its evaluation, $(lib) is set to the name of the library.
 extra-modules-left := $(modules-names)
 include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
+
+extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
+$(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
+		$(objpfx)%.os $(common-objpfx)shlib.lds \
+		$(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+	$(build-module)
 endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
+	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
 	     $(addsuffix .d,$(tests) $(xtests) $(test-srcs))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
@@ -970,7 +990,7 @@ $(inst_libdir)/libc.so: $(common-objpfx)format.lds \
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
 	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
-	      ')' \
+	      ' AS_NEEDED (' $(slibdir)/$(rtld-installed-name) ') )' \
 	) > $@.new
 	mv -f $@.new $@
 
@@ -1093,8 +1113,21 @@ $(addprefix $(inst_datadir)/,$(install-data)): $(inst_datadir)/%: % $(+force)
 endif
 headers := $(strip $(headers))
 ifdef headers
-$(addprefix $(inst_includedir)/,$(headers)): $(inst_includedir)/%: % $(+force)
+# This implicit rule installs headers from the source directory.
+# It may be ignored in preference to rules from sysd-rules to find
+# headers in the sysdeps tree.
+$(inst_includedir)/%.h: $(objpfx)%.h $(+force)
 	$(do-install)
+$(inst_includedir)/%.h: %.h $(+force)
+	$(do-install)
+$(inst_includedir)/%.h: $(..)include/%.h $(+force)
+	$(do-install)
+headers-nonh := $(filter-out %.h,$(headers))
+ifdef headers-nonh
+$(addprefix $(inst_includedir)/,$(headers-nonh)): $(inst_includedir)/%: \
+						 % $(+force)
+	$(do-install)
+endif	# headers-nonh
 endif	# headers
 
 .PHONY: install-bin-nosubdir install-bin-script-nosubdir \
@@ -1160,9 +1193,9 @@ xcheck: xtests
 
 all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
-cpp-srcs-left = $(all-nonlib:=.c)
+cpp-srcs-left = $(all-nonlib:=.c) $(all-nonlib:=.cc)
 lib := nonlib
-include $(patsubst %,$(..)cppflags-iterator.mk,$(all-nonlib))
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
 
 # The include magic above causes those files to use this variable for flags.
@@ -1261,18 +1294,12 @@ endif
 
 endif
 
-# There's no good place to put this - here will do.
-ifeq ($(filter %posix, $(sysdirs)),)
-L_tmpnam  = 1
-TMP_MAX   = 0
-L_ctermid = 1
-L_cuserid = 1
-else
-L_tmpnam  = 20
-TMP_MAX   = 238328
-L_ctermid = 9
-L_cuserid = 9
-endif
+# These will have been set by sysdeps/posix/Makefile.
+L_tmpnam  ?= 1
+TMP_MAX   ?= 0
+L_ctermid ?= 1
+L_cuserid ?= 1
+
 stdio_lim = $(common-objpfx)bits/stdio_lim.h
 
 $(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
@@ -1315,14 +1342,7 @@ ifndef no_deps
 endif
 common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
 
-.PHONY: TAGS
-TAGS: $(objpfx)distinfo $(..)MakeTAGS
-	$(MAKE) $(addprefix -f ,$^) $@
-
-$(..)po/%.pot: $(objpfx)distinfo $(..)MakeTAGS FORCE
-	$(MAKE) $(addprefix -f ,$(filter-out FORCE,$^)) $@
 FORCE:
-
 
 .PHONY: echo-headers
 echo-headers:
@@ -1356,8 +1376,8 @@ common-mostlyclean:
 						      $(test-srcs)) \
 				     $(addsuffix -bp.out,$(tests) $(xtests) \
 							 $(test-srcs)))
-	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
-				     $(install-lib.so) \
+	-rm -f $(addprefix $(objpfx),$(extra-objs) $(extra-test-objs) \
+				     $(install-lib) $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
 	-rm -f core
 	-rm -f $(objpfx)rtld-*.os
@@ -1373,7 +1393,6 @@ common-clean: common-mostlyclean
 	-rm -f $(objpfx)*.d $(objpfx)*.dt
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
-	-rm -f $(objpfx)distinfo
 
 # Produce a file `stubs' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
@@ -1384,43 +1403,19 @@ ifdef objpfx
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(objpfx)stubs
 endif
-$(objpfx)stubs: $(+depfiles)
-ifneq (,$(strip $(+depfiles)))
-# Use /dev/null since `...` might expand to empty.
-	c=`($(patsubst %/,cd % &&,$(objpfx)) \
-	    sed -n -e 's@\$$(common-objpfx)@$(common-objpfx)@g' \
-		   -e 's@\$$(objpfx)@$(objpfx)@g' \
-		   -e '/stub-tag\.h/{; g; s/./&/p; }' \
-		   -e '/:/{x; s/^.*$$//; x; }' \
-		   -e 's/^.*://;s/\\$$//;s/^ *\([^ ][^ ]*\) .*$$/\1/' \
-		   -e '/^[^ ][^ ]*$$/{G;s/^.*\n\(..*\)/\1/;s/\n//;h; }' \
-		   $(patsubst $(objpfx)%,%,$^)) | sort | uniq`; \
-	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	    $$c /dev/null > $@T
+objs-for-stubs := $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
+		  $(addprefix $(objpfx),$(extra-objs))
+$(objpfx)stubs: $(objs-for-stubs)
+ifneq (,$(strip $(objs-for-stubs)))
+	(cd $(objpfx).; $(OBJDUMP) -h $(patsubst $(objpfx)%,%,$^)) | \
+	$(AWK) '/\.gnu\.glibc-stub\./ { \
+	          sub(/\.gnu\.glibc-stub\./, "", $$2); \
+		  stubs[$$2] = 1; } \
+		END { for (s in stubs) print "#define __stub_" s }' > $@T
 	mv -f $@T $@
 else
 	> $@
 endif
-
-# This information is not used for making distributions any more.
-# But it's used by MakeTAGS for making TAGS files and the .pot files.
-$(objpfx)distinfo: Makefile $(..)Makerules \
-		   $(wildcard $(foreach dir,$(sysdirs),$(dir)/Makefile))
-	$(make-target-directory)
-	$(distinfo-vars)
-	mv -f $@.new $@
-
-define distinfo-vars
-rm -f $@.new
-echo > $@.new 'subdir := $(subdir)'
-$(foreach var,subdir-dirs sources elided-routines sysdep_routines \
-	      headers sysdep_headers distribute dont_distribute generated \
-	      others tests xtests test-srcs extra-libs versioned \
-	      $(extra-libs:%=%-routines) \
-	      $(addprefix install-,lib lib.so data bin bin-script sbin others),
-echo >> $@.new '$(subdir)-$(var) := $($(var))'
-echo >> $@.new '$(var) = $$($(subdir)-$(var))')
-endef
 
 ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))

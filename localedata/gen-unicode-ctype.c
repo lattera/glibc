@@ -638,7 +638,7 @@ output_tables (const char *filename, const char *version)
   fprintf (stream, "source    \"UnicodeData.txt, PropList.txt\"\n");
   fprintf (stream, "address   \"\"\n");
   fprintf (stream, "contact   \"\"\n");
-  fprintf (stream, "email     \"bug-glibc@gnu.org\"\n");
+  fprintf (stream, "email     \"bug-glibc-locales@gnu.org\"\n");
   fprintf (stream, "tel       \"\"\n");
   fprintf (stream, "fax       \"\"\n");
   fprintf (stream, "language  \"\"\n");

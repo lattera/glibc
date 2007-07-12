@@ -1179,6 +1179,9 @@ The abbreviated month name according to the current locale.
 @item %B
 The full month name according to the current locale.
 
+Using @code{%B} together with @code{%d} produces grammatically
+incorrect results for some locales.
+
 @item %c
 The preferred calendar time representation for the current locale.
 

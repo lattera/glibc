@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -51,6 +51,7 @@ ENTRY (BP_SYM (memset))
 
 	cld
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	movl	DEST(%esp), %edx
 	movl	LEN(%esp), %ecx
 	CHECK_BOUNDS_BOTH_WIDE (%edx, DEST(%esp), %ecx)
@@ -61,18 +62,19 @@ ENTRY (BP_SYM (memset))
 #endif
 	jecxz	1f
 	movl	%edx, %edi
+	cfi_rel_offset (edi, 0)
 	andl	$3, %edx
-	jz	2f
-	jnp	3f
-	stosb
+	jz	2f	/* aligned */
+	jp	3f	/* misaligned at 3, store just one byte below */
+	stosb		/* misaligned at 1 or 2, store two bytes */
 	decl	%ecx
 	jz	1f
 3:	stosb
 	decl	%ecx
 	jz	1f
-	xorl	$3, %edx
-	jz	2f
-	stosb
+	xorl	$1, %edx
+	jnz	2f	/* was misaligned at 2 or 3, now aligned */
+	stosb		/* was misaligned at 1, store third byte */
 	decl	%ecx
 2:	movl	%ecx, %edx
 	shrl	$2, %ecx
@@ -92,6 +94,8 @@ ENTRY (BP_SYM (memset))
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 #if BZERO_P
@@ -101,3 +105,9 @@ ENTRY (BP_SYM (memset))
 #endif
 END (BP_SYM (memset))
 libc_hidden_builtin_def (memset)
+
+#if defined PIC && !defined NOT_IN_libc && !BZERO_P
+strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
+	.section .gnu.warning.__memset_zero_constant_len_parameter
+	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
+#endif

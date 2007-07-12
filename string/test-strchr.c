@@ -101,10 +101,10 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   if (pos < len)
     {
       buf1[align + pos] = seek_char;
-      result = buf1 + align + pos;
+      result = (char *) (buf1 + align + pos);
     }
   else if (seek_char == 0)
-    result = buf1 + align + len;
+    result = (char *) (buf1 + align + len);
   else
     result = NULL;
 
@@ -112,7 +112,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
     printf ("Length %4zd, alignment %2zd:", pos, align);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, buf1 + align, seek_char, result);
+    do_one_test (impl, (char *) (buf1 + align), seek_char, result);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -166,18 +166,18 @@ do_random_tests (void)
 	}
 
       if (pos <= len)
-	result = p + pos + align;
+	result = (char *) (p + pos + align);
       else if (seek_char == 0)
-	result = p + len + align;
+	result = (char *) (p + len + align);
       else
 	result = NULL;
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align, seek_char) != result)
+	if (CALL (impl, (char *) (p + align), seek_char) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd, %zd) %p != %p, p %p",
 		   n, impl->name, align, seek_char, len, pos,
-		   CALL (impl, p + align, seek_char), result, p);
+		   CALL (impl, (char *) (p + align), seek_char), result, p);
 	    ret = 1;
 	  }
     }

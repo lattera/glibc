@@ -1,1 +1,1 @@
-#include <sysdeps/generic/getdents.c>
+#include <dirent/getdents.c>

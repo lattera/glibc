@@ -1,5 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-99, 2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-99, 2000, 2003-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,16 +14,15 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 1 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #define _ASM
-#define _SETJMP_H
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
 #else
-# include <bits/setjmp.h>
+# include <jmpbuf-offsets.h>
 #endif
 #include <bp-sym.h>
 #include <bp-asm.h>
@@ -34,15 +33,25 @@ ENTRY (BP_SYM (__longjmp))
 #ifndef __NO_VMX__
 # ifdef PIC
 	mflr    r6
+	cfi_register (lr,r6)
+#  ifdef HAVE_ASM_PPC_REL16
+	bcl	20,31,1f
+1:	mflr	r5
+	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@ha
+	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@l
+#  else
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r5
+#  endif
 #  ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
 	mtlr    r6
+	cfi_same_value (lr)
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 #  else
-	lwz     r5,_rtld_global_ro@got(r5)
+	lwz     r5,_dl_hwcap@got(r5)
 	mtlr    r6
+	cfi_same_value (lr)
 	lwz     r5,0(r5)
 #  endif
 # else
@@ -105,7 +114,11 @@ aligned_restore_vmx:
 	lvx	v31,0,r6
 L(no_vmx):
 #endif
+#ifdef PTR_DEMANGLE
+	lwz r24,(JB_GPR1*4)(r3)
+#else
 	lwz r1,(JB_GPR1*4)(r3)
+#endif
 	lwz r0,(JB_LR*4)(r3)
 	lwz r14,((JB_GPRS+0)*4)(r3)
 	lfd fp14,((JB_FPRS+0*2)*4)(r3)
@@ -121,6 +134,10 @@ L(no_vmx):
 	lfd fp19,((JB_FPRS+5*2)*4)(r3)
 	lwz r20,((JB_GPRS+6)*4)(r3)
 	lfd fp20,((JB_FPRS+6*2)*4)(r3)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE3 (r1, r24, r25)
+	PTR_DEMANGLE2 (r0, r25)
+#endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)
 	lfd fp21,((JB_FPRS+7*2)*4)(r3)

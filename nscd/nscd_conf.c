@@ -1,24 +1,23 @@
-/* Copyright (c) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998,2000,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
 #include <errno.h>
+#include <error.h>
 #include <libintl.h>
 #include <malloc.h>
 #include <pwd.h>
@@ -45,6 +44,18 @@ const char *dbnames[lastdb] =
   [hstdb] = "hosts"
 };
 
+
+static int
+find_db (const char *name)
+{
+  for (int cnt = 0; cnt < lastdb; ++cnt)
+    if (strcmp (name, dbnames[cnt]) == 0)
+      return cnt;
+
+  error (0, 0, _("database %s is not supported\n"), name);
+  return -1;
+}
+
 int
 nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 {
@@ -52,6 +63,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
   char *line, *cp, *entry, *arg1, *arg2;
   size_t len;
   int cnt;
+  const unsigned int initial_error_message_count = error_message_count;
 
   /* Open the configuration file.  */
   fp = fopen (fname, "r");
@@ -91,7 +103,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
       ++arg1;
       *cp = '\0';
       if (strlen (entry) == 0)
-	dbg_log (_("Parse error: %s"), line);
+	error (0, 0, _("Parse error: %s"), line);
       while (isspace (*arg1) && *arg1 != '\0')
 	++arg1;
       cp = arg1;
@@ -112,64 +124,49 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 
       if (strcmp (entry, "positive-time-to-live") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		dbs[cnt].postimeout = atol (arg2);
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    dbs[idx].postimeout = atol (arg2);
 	}
       else if (strcmp (entry, "negative-time-to-live") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		dbs[cnt].negtimeout = atol (arg2);
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    dbs[idx].negtimeout = atol (arg2);
 	}
       else if (strcmp (entry, "suggested-size") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		dbs[cnt].suggested_module = atol (arg2);
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    dbs[idx].suggested_module = atol (arg2);
 	}
       else if (strcmp (entry, "enable-cache") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		if (strcmp (arg2, "no") == 0)
-		  dbs[cnt].enabled = 0;
-		else if (strcmp (arg2, "yes") == 0)
-		  dbs[cnt].enabled = 1;
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].enabled = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].enabled = 1;
+	    }
 	}
       else if (strcmp (entry, "check-files") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		if (strcmp (arg2, "no") == 0)
-		  dbs[cnt].check_file = 0;
-		else if (strcmp (arg2, "yes") == 0)
-		  dbs[cnt].check_file = 1;
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].check_file = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].check_file = 1;
+	    }
+	}
+      else if (strcmp (entry, "max-db-size") == 0)
+	{
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    dbs[idx].max_db_size = atol (arg2);
 	}
       else if (strcmp (entry, "logfile") == 0)
 	set_logfile (arg1);
@@ -191,14 +188,14 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
       else if (strcmp (entry, "server-user") == 0)
         {
           if (!arg1)
-            dbg_log (_("Must specify user name for server-user option"));
+            error (0, 0, _("Must specify user name for server-user option"));
           else
             server_user = xstrdup (arg1);
         }
       else if (strcmp (entry, "stat-user") == 0)
         {
           if (arg1 == NULL)
-            dbg_log (_("Must specify user name for stat-user option"));
+            error (0, 0, _("Must specify user name for stat-user option"));
           else
 	    {
 	      stat_user = xstrdup (arg1);
@@ -210,31 +207,25 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
         }
       else if (strcmp (entry, "persistent") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		if (strcmp (arg2, "no") == 0)
-		  dbs[cnt].persistent = 0;
-		else if (strcmp (arg2, "yes") == 0)
-		  dbs[cnt].persistent = 1;
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].persistent = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].persistent = 1;
+	    }
 	}
       else if (strcmp (entry, "shared") == 0)
 	{
-	  for (cnt = 0; cnt < lastdb; ++cnt)
-	    if (strcmp (arg1, dbnames[cnt]) == 0)
-	      {
-		if (strcmp (arg2, "no") == 0)
-		  dbs[cnt].shared = 0;
-		else if (strcmp (arg2, "yes") == 0)
-		  dbs[cnt].shared = 1;
-		break;
-	      }
-	  if (cnt == lastdb)
-	    dbg_log ("database %s is not supported\n", arg1);
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].shared = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].shared = 1;
+	    }
 	}
       else if (strcmp (entry, "reload-count") == 0)
 	{
@@ -248,7 +239,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	      else if (count >= 0)
 	    reload_count = count;
 	      else
-		dbg_log (_("invalid value for 'reload-count': %u"), count);
+		error (0, 0, _("invalid value for 'reload-count': %u"), count);
 	    }
 	}
       else if (strcmp (entry, "paranoia") == 0)
@@ -263,10 +254,21 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	  if (arg1 != NULL)
 	    restart_interval = atol (arg1);
 	  else
-            dbg_log (_("Must specify value for restart-interval option"));
+            error (0, 0, _("Must specify value for restart-interval option"));
+	}
+      else if (strcmp (entry, "auto-propagate") == 0)
+	{
+	  int idx = find_db (arg1);
+	  if (idx >= 0)
+	    {
+	      if (strcmp (arg2, "no") == 0)
+		dbs[idx].propagate = 0;
+	      else if (strcmp (arg2, "yes") == 0)
+		dbs[idx].propagate = 1;
+	    }
 	}
       else
-	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);
+	error (0, 0, _("Unknown option: %s %s %s"), entry, arg1, arg2);
     }
   while (!feof_unlocked (fp));
 
@@ -279,7 +281,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
       oldcwd = get_current_dir_name ();
       if (oldcwd == NULL)
 	{
-	  dbg_log (_("\
+	  error (0, 0, _("\
 cannot get current working directory: %s; disabling paranoia mode"),
 		   strerror (errno));
 	  paranoia = 0;
@@ -290,10 +292,26 @@ cannot get current working directory: %s; disabling paranoia mode"),
   if (max_nthreads < nthreads)
     max_nthreads = nthreads;
 
+  for (cnt = 0; cnt < lastdb; ++cnt)
+    {
+      size_t datasize = (sizeof (struct database_pers_head)
+			 + roundup (dbs[cnt].suggested_module
+				    * sizeof (ref_t), ALIGN)
+			 + (dbs[cnt].suggested_module
+			    * DEFAULT_DATASIZE_PER_BUCKET));
+      if (datasize > dbs[cnt].max_db_size)
+	{
+	  error (0, 0, _("maximum file size for %s database too small"),
+		   dbnames[cnt]);
+	  dbs[cnt].max_db_size = datasize;
+	}
+
+    }
+
   /* Free the buffer.  */
   free (line);
   /* Close configuration file.  */
   fclose (fp);
 
-  return 0;
+  return error_message_count != initial_error_message_count;
 }

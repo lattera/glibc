@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -281,7 +281,7 @@ __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
-# ifdef __USE_ISOC99
+# if defined __USE_ISOC99 && !defined __LDBL_COMPAT
 __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 # endif
 
@@ -353,10 +353,13 @@ __MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
 
 /* Multiply-add function computed as a ternary operation.  */
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
-__END_NAMESPACE_C99
+#endif /* Use ISO C99.  */
 
-# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+__END_NAMESPACE_C99
+#endif
+
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
-# endif
-#endif /* Use ISO C99.  */
+#endif

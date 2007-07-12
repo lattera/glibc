@@ -1,5 +1,5 @@
 /* ix87 specific implementation of complex exponential function for double.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -71,9 +71,7 @@ ENTRY(__cexpf)
 	fnstsw
 	flds	8(%esp)			/* y : x */
 #ifdef  PIC
-        call    1f
-1:      popl    %ecx
-        addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
+	LOAD_PIC_REG (cx)
 #endif
 	movb	%ah, %dh
 	andb	$0x45, %ah
@@ -114,10 +112,13 @@ ENTRY(__cexpf)
 	fmulp	%st, %st(3)	/* sin(y) : e^x : e^x * cos(y) */
 	fmulp	%st, %st(1)	/* e^x * sin(y) : e^x * cos(y) */
 	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
 	fstps	4(%esp)
 	fstps	(%esp)
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	ret
 
 	/* We have to reduce the argument to fsincos.  */
@@ -133,10 +134,13 @@ ENTRY(__cexpf)
 	fmulp	%st, %st(3)
 	fmulp	%st, %st(1)
 	subl	$8, %esp
+	cfi_adjust_cfa_offset (8)
 	fstps	4(%esp)
 	fstps	(%esp)
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	ret
 
 	/* The real part is +-inf.  We must make further differences.  */
@@ -210,12 +214,14 @@ ENTRY(__cexpf)
 	   +-Inf+-0i.  */
 	.align ALIGNARG(4)
 4:	subl	$4, %esp
+	cfi_adjust_cfa_offset (4)
 	fstps	(%esp)
 	shrl	$6, %edx
 	fstp	%st(0)
 	andl	$8, %edx
 	movl	MOX(huge_nan_null_null,%edx,1), %eax
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	ret
 
 	/* The real part is +-Inf, the imaginary is also is not finite.  */

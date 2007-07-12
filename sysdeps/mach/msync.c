@@ -1,5 +1,5 @@
 /* msync -- Synchronize mapped memory to external storage.  Mach version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
    define the VM_SYNC_* bits when we include <mach/mach_types.h>.  */
 
 #ifndef VM_SYNC_SYNCHRONOUS
-# include <sysdeps/generic/msync.c>
+# include <misc/msync.c>
 #else
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the

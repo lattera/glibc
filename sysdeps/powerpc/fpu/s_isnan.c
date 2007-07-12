@@ -1,5 +1,5 @@
 /* Return 1 if argument is a NaN, else 0.
-   Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #define __GI___isnanf __GI___Xisnanf
 
 #include "math.h"
+#include <math_ldbl_opt.h>
 #include <fenv_libc.h>
 
 #undef __isnanf

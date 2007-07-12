@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1998, 2000-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2000-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -179,45 +179,46 @@ enum nss_status
 _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
 			   char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, parse_res;
-
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  retval = yperr2nss (yp_match (domain, "protocols.byname", name,
-                                strlen (name), &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "protocols.byname", name, strlen (name),
+			&result, &len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_protoent (p, proto, data, buflen, errnop);
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_protoent (p, proto, (void *) buffer, buflen,
+					     errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
@@ -231,42 +232,43 @@ enum nss_status
 _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
 			     char *buffer, size_t buflen, int *errnop)
 {
-  struct parser_data *data = (void *) buffer;
-  enum nss_status retval;
-  char *domain, *result, *p;
-  int len, nlen, parse_res;
-  char buf[32];
-
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%d", number);
+  char buf[32];
+  int nlen = snprintf (buf, sizeof (buf), "%d", number);
 
-  retval = yperr2nss (yp_match (domain, "protocols.bynumber", buf,
-                                nlen, &result, &len));
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "protocols.bynumber", buf, nlen, &result,
+			&len);
 
-  if (retval != NSS_STATUS_SUCCESS)
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {
+      enum nss_status retval = yperr2nss (yperr);
+
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
     {
       free (result);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  p = strncpy (buffer, result, len);
+  char *p = strncpy (buffer, result, len);
   buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_protoent (p, proto, data, buflen, errnop);
-  if (parse_res < 1)
+  int parse_res = _nss_files_parse_protoent (p, proto, (void *) buffer, buflen,
+					     errnop);
+  if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;

@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
@@ -529,24 +529,38 @@ __inline_mathcodeNP (tanh, __x, \
 
 __inline_mathcodeNP (floor, __x, \
   register long double __value;						      \
-  __volatile unsigned short int __cw;					      \
-  __volatile unsigned short int __cwtmp;				      \
-  __asm __volatile ("fnstcw %0" : "=m" (__cw));				      \
-  __cwtmp = (__cw & 0xf3ff) | 0x0400; /* rounding down */		      \
-  __asm __volatile ("fldcw %0" : : "m" (__cwtmp));			      \
-  __asm __volatile ("frndint" : "=t" (__value) : "0" (__x));		      \
-  __asm __volatile ("fldcw %0" : : "m" (__cw));				      \
+  register int __ignore;						      \
+  unsigned short int __cw;						      \
+  unsigned short int __cwtmp;						      \
+  __asm __volatile ("fnstcw %3\n\t"					      \
+		    "movzwl %3, %1\n\t"					      \
+		    "andl $0xf3ff, %1\n\t"				      \
+		    "orl $0x0400, %1\n\t"	/* rounding down */	      \
+		    "movw %w1, %2\n\t"					      \
+		    "fldcw %2\n\t"					      \
+		    "frndint\n\t"					      \
+		    "fldcw %3"						      \
+		    : "=t" (__value), "=&q" (__ignore), "=m" (__cwtmp),	      \
+		      "=m" (__cw)					      \
+		    : "0" (__x));					      \
   return __value)
 
 __inline_mathcodeNP (ceil, __x, \
   register long double __value;						      \
-  __volatile unsigned short int __cw;					      \
-  __volatile unsigned short int __cwtmp;				      \
-  __asm __volatile ("fnstcw %0" : "=m" (__cw));				      \
-  __cwtmp = (__cw & 0xf3ff) | 0x0800; /* rounding up */			      \
-  __asm __volatile ("fldcw %0" : : "m" (__cwtmp));			      \
-  __asm __volatile ("frndint" : "=t" (__value) : "0" (__x));		      \
-  __asm __volatile ("fldcw %0" : : "m" (__cw));				      \
+  register int __ignore;						      \
+  unsigned short int __cw;						      \
+  unsigned short int __cwtmp;						      \
+  __asm __volatile ("fnstcw %3\n\t"					      \
+		    "movzwl %3, %1\n\t"					      \
+		    "andl $0xf3ff, %1\n\t"				      \
+		    "orl $0x0800, %1\n\t"	/* rounding up */	      \
+		    "movw %w1, %2\n\t"					      \
+		    "fldcw %2\n\t"					      \
+		    "frndint\n\t"					      \
+		    "fldcw %3"						      \
+		    : "=t" (__value), "=&q" (__ignore), "=m" (__cwtmp),	      \
+		      "=m" (__cw)					      \
+		    : "0" (__x));					      \
   return __value)
 
 #ifdef __FAST_MATH__

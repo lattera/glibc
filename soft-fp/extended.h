@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Definitions for IEEE Extended Precision.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 
@@ -9,6 +9,15 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
+   In addition to the permissions in the GNU Lesser General Public
+   License, the Free Software Foundation gives you unlimited
+   permission to link the compiled version of this file into
+   combinations with other programs, and to distribute those
+   combinations without any restriction coming from the use of this
+   file.  (The Lesser General Public License restrictions do apply in
+   other respects; for example, they cover modification of the file,
+   and distribution when not linked into a combine executable.)
+
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -16,8 +25,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 #if _FP_W_TYPE_SIZE < 32
 #error "Here's a nickel, kid. Go buy yourself a real computer."
@@ -39,16 +48,22 @@
 
 #define _FP_QNANBIT_E		\
 	((_FP_W_TYPE)1 << (_FP_FRACBITS_E-2) % _FP_W_TYPE_SIZE)
+#define _FP_QNANBIT_SH_E		\
+	((_FP_W_TYPE)1 << (_FP_FRACBITS_E-2+_FP_WORKBITS) % _FP_W_TYPE_SIZE)
 #define _FP_IMPLBIT_E		\
 	((_FP_W_TYPE)1 << (_FP_FRACBITS_E-1) % _FP_W_TYPE_SIZE)
+#define _FP_IMPLBIT_SH_E		\
+	((_FP_W_TYPE)1 << (_FP_FRACBITS_E-1+_FP_WORKBITS) % _FP_W_TYPE_SIZE)
 #define _FP_OVERFLOW_E		\
 	((_FP_W_TYPE)1 << (_FP_WFRACBITS_E % _FP_W_TYPE_SIZE))
+
+typedef float XFtype __attribute__((mode(XF)));
 
 #if _FP_W_TYPE_SIZE < 64
 
 union _FP_UNION_E
 {
-   long double flt;
+   XFtype flt;
    struct 
    {
 #if __BYTE_ORDER == __BIG_ENDIAN
@@ -143,8 +158,20 @@ union _FP_UNION_E
 
 #define FP_UNPACK_EP(X,val)		\
   do {					\
-    FP_UNPACK_RAW_2_P(X,val);		\
+    FP_UNPACK_RAW_EP(X,val);		\
     _FP_UNPACK_CANONICAL(E,4,X);	\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_E(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_E(X,val);		\
+    _FP_UNPACK_SEMIRAW(E,4,X);		\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_EP(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_EP(X,val);		\
+    _FP_UNPACK_SEMIRAW(E,4,X);		\
   } while (0)
 
 #define FP_PACK_E(val,X)		\
@@ -157,6 +184,18 @@ union _FP_UNION_E
   do {					\
     _FP_PACK_CANONICAL(E,4,X);		\
     FP_PACK_RAW_EP(val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_E(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(E,4,X);		\
+    _FP_PACK_RAW_E(val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_EP(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(E,4,X);		\
+    _FP_PACK_RAW_EP(val,X);		\
   } while (0)
 
 #define FP_ISSIGNAN_E(X)	_FP_ISSIGNAN(E,4,X)
@@ -224,6 +263,7 @@ union _FP_UNION_E
 
 #define FP_CMP_E(r,X,Y,un)	_FP_CMP(E,4,r,X,Y,un)
 #define FP_CMP_EQ_E(r,X,Y)	_FP_CMP_EQ(E,4,r,X,Y)
+#define FP_CMP_UNORD_E(r,X,Y)	_FP_CMP_UNORD(E,4,r,X,Y)
 
 #define FP_TO_INT_E(r,X,rsz,rsg)	_FP_TO_INT(E,4,r,X,rsz,rsg)
 #define FP_FROM_INT_E(X,r,rs,rt)	_FP_FROM_INT(E,4,X,r,rs,rt)
@@ -234,7 +274,7 @@ union _FP_UNION_E
 #else   /* not _FP_W_TYPE_SIZE < 64 */
 union _FP_UNION_E
 {
-  long double flt /* __attribute__((mode(TF))) */ ;
+  XFtype flt;
   struct {
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned long pad : (_FP_W_TYPE_SIZE - 1 - _FP_EXPBITS_E);
@@ -323,6 +363,18 @@ union _FP_UNION_E
     _FP_UNPACK_CANONICAL(E,2,X);	\
   } while (0)
 
+#define FP_UNPACK_SEMIRAW_E(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_E(X,val);		\
+    _FP_UNPACK_SEMIRAW(E,2,X);		\
+  } while (0)
+
+#define FP_UNPACK_SEMIRAW_EP(X,val)	\
+  do {					\
+    _FP_UNPACK_RAW_EP(X,val);		\
+    _FP_UNPACK_SEMIRAW(E,2,X);		\
+  } while (0)
+
 #define FP_PACK_E(val,X)		\
   do {					\
     _FP_PACK_CANONICAL(E,2,X);		\
@@ -333,6 +385,18 @@ union _FP_UNION_E
   do {					\
     _FP_PACK_CANONICAL(E,2,X);		\
     FP_PACK_RAW_EP(val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_E(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(E,2,X);		\
+    _FP_PACK_RAW_E(val,X);		\
+  } while (0)
+
+#define FP_PACK_SEMIRAW_EP(val,X)	\
+  do {					\
+    _FP_PACK_SEMIRAW(E,2,X);		\
+    _FP_PACK_RAW_EP(val,X);		\
   } while (0)
 
 #define FP_ISSIGNAN_E(X)	_FP_ISSIGNAN(E,2,X)
@@ -378,6 +442,7 @@ union _FP_UNION_E
  
 #define FP_CMP_E(r,X,Y,un)	_FP_CMP(E,2,r,X,Y,un)
 #define FP_CMP_EQ_E(r,X,Y)	_FP_CMP_EQ(E,2,r,X,Y)
+#define FP_CMP_UNORD_E(r,X,Y)	_FP_CMP_UNORD(E,2,r,X,Y)
 
 #define FP_TO_INT_E(r,X,rsz,rsg)	_FP_TO_INT(E,2,r,X,rsz,rsg)
 #define FP_FROM_INT_E(X,r,rs,rt)	_FP_FROM_INT(E,2,X,r,rs,rt)

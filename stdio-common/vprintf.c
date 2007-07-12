@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,15 +19,16 @@
 #include <stdarg.h>
 #undef	__OPTIMIZE__	/* Avoid inline `vprintf' function.  */
 #include <stdio.h>
+#include <libioP.h>
 
 #undef	vprintf
 
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-vprintf (format, arg)
-     const char *format;
-     __gnuc_va_list arg;
+__vprintf (const char *format, __gnuc_va_list arg)
 {
   return vfprintf (stdout, format, arg);
 }
+
+ldbl_strong_alias (__vprintf, vprintf)

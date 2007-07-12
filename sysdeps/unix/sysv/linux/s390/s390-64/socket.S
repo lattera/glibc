@@ -128,6 +128,7 @@ L(socket_cancel):
 	j	4b
 #endif
 
+	SYSCALL_ERROR_HANDLER
 END (__socket)
 
 #ifndef NO_WEAK_ALIAS

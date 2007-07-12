@@ -1,5 +1,6 @@
 /* Return information about the filesystem on which FD resides.
-   Copyright (C) 1996,1997,1998,2000,2001,2004 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2000,2001,2004,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +23,7 @@
 #include <sys/stat.h>
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 
 extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,

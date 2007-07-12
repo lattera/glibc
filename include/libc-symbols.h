@@ -1,6 +1,7 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000-2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,8 +32,6 @@
    * ASM_GLOBAL_DIRECTIVE with `.globl' or `.global'.
    * ASM_TYPE_DIRECTIVE_PREFIX with `@' or `#' or whatever for .type,
      or leave it undefined if there is no .type directive.
-   * HAVE_GNU_LD if using GNU ld, with support for weak symbols in a.out,
-   and for symbol set and warning messages extensions in a.out and ELF.
    * HAVE_ELF if using ELF, which supports weak symbols using `.weak'.
    * HAVE_ASM_WEAK_DIRECTIVE if we have weak symbols using `.weak'.
    * HAVE_ASM_WEAKEXT_DIRECTIVE if we have weak symbols using `.weakext'.
@@ -56,7 +55,7 @@
 #include <config.h>
 
 /* The symbols in all the user (non-_) macros are C symbols.
-   HAVE_GNU_LD without HAVE_ELF implies a.out.  */
+   NO HAVE_ELF implies a.out.  */
 
 #if defined HAVE_ASM_WEAK_DIRECTIVE || defined HAVE_ASM_WEAKEXT_DIRECTIVE
 # define HAVE_WEAK_SYMBOLS
@@ -220,55 +219,48 @@
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
-#ifdef HAVE_GNU_LD
-# ifdef HAVE_ELF
+#ifdef HAVE_ELF
 
 /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
-#  ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
-#   define __make_section_unallocated(section_string)	\
+# ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
+#  define __make_section_unallocated(section_string)	\
   asm (".section " section_string "\n\t.previous");
-#  elif defined HAVE_ASM_POPSECTION_DIRECTIVE
-#   define __make_section_unallocated(section_string)	\
+# elif defined HAVE_ASM_POPSECTION_DIRECTIVE
+#  define __make_section_unallocated(section_string)	\
   asm (".pushsection " section_string "\n\t.popsection");
-#  else
-#   define __make_section_unallocated(section_string)
-#  endif
+# else
+#  define __make_section_unallocated(section_string)
+# endif
 
 /* Tacking on "\n\t#" to the section name makes gcc put it's bogus
    section attributes on what looks like a comment to the assembler.  */
-#  ifdef HAVE_SECTION_QUOTES
-#   define __sec_comment "\"\n\t#\""
-#  else
-#   define __sec_comment "\n\t#"
-#  endif
-#  define link_warning(symbol, msg) \
+# ifdef HAVE_SECTION_QUOTES
+#  define __sec_comment "\"\n\t#\""
+# else
+#  define __sec_comment "\n\t#"
+# endif
+# define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((used, section (".gnu.warning." #symbol __sec_comment))) \
     = msg;
-#  define libc_freeres_ptr(decl) \
+# define libc_freeres_ptr(decl) \
   __make_section_unallocated ("__libc_freeres_ptrs, \"aw\", %nobits") \
   decl __attribute__ ((section ("__libc_freeres_ptrs" __sec_comment)))
-#  define __libc_freeres_fn_section \
+# define __libc_freeres_fn_section \
   __attribute__ ((section ("__libc_freeres_fn")))
-# else /* Not ELF: a.out */
-#  ifdef HAVE_XCOFF
+#else /* Not ELF: a.out */
+# ifdef HAVE_XCOFF
 /* XCOFF does not support .stabs.
    The native aix linker will remove the .stab and .stabstr sections
    The gnu linker will have a fatal error if there is a relocation for
    symbol in the .stab section.  Silently disable this macro.  */
-#   define link_warning(symbol, msg)
-#  else
-#   define link_warning(symbol, msg)		\
+#  define link_warning(symbol, msg)
+# else
+#  define link_warning(symbol, msg)		\
      asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
           ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
-#  endif /* XCOFF */
-#  define libc_freeres_ptr(decl) decl
-#  define __libc_freeres_fn_section
-# endif
-#else
-/* We will never be heard; they will all die horribly.  */
-# define link_warning(symbol, msg)
+# endif /* XCOFF */
 # define libc_freeres_ptr(decl) decl
 # define __libc_freeres_fn_section
 #endif
@@ -279,6 +271,7 @@
 
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
+  __make_section_unallocated (".gnu.glibc-stub." #name) \
   link_warning (name, \
 		"warning: " #name " is not implemented and will always fail")
 
@@ -324,92 +317,79 @@ for linking")
 
 */
 
-#ifdef HAVE_GNU_LD
-
 /* Symbol set support macros.  */
 
-# ifdef HAVE_ELF
+#ifdef HAVE_ELF
 
 /* Make SYMBOL, which is in the text segment, an element of SET.  */
-#  define text_set_element(set, symbol)	_elf_set_element(set, symbol)
+# define text_set_element(set, symbol)	_elf_set_element(set, symbol)
 /* Make SYMBOL, which is in the data segment, an element of SET.  */
-#  define data_set_element(set, symbol)	_elf_set_element(set, symbol)
+# define data_set_element(set, symbol)	_elf_set_element(set, symbol)
 /* Make SYMBOL, which is in the bss segment, an element of SET.  */
-#  define bss_set_element(set, symbol)	_elf_set_element(set, symbol)
+# define bss_set_element(set, symbol)	_elf_set_element(set, symbol)
 
 /* These are all done the same way in ELF.
    There is a new section created for each set.  */
-#  ifdef SHARED
+# ifdef SHARED
 /* When building a shared library, make the set section writable,
    because it will need to be relocated at run time anyway.  */
-#   define _elf_set_element(set, symbol) \
+#  define _elf_set_element(set, symbol) \
   static const void *__elf_set_##set##_element_##symbol##__ \
     __attribute__ ((used, section (#set))) = &(symbol)
-#  else
-#   define _elf_set_element(set, symbol) \
+# else
+#  define _elf_set_element(set, symbol) \
   static const void *const __elf_set_##set##_element_##symbol##__ \
     __attribute__ ((used, section (#set))) = &(symbol)
-#  endif
+# endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to
    be able to use the set's contents.  */
-#  define symbol_set_define(set)	symbol_set_declare(set)
+# define symbol_set_define(set)	symbol_set_declare(set)
 
 /* Declare SET for use in this module, if defined in another module.
    In a shared library, this is always local to that shared object.
    For static linking, the set might be wholly absent and so we use
    weak references.  */
-#  define symbol_set_declare(set) \
+# define symbol_set_declare(set) \
   extern char const __start_##set[] __symbol_set_attribute; \
   extern char const __stop_##set[] __symbol_set_attribute;
-#  ifdef SHARED
-#   define __symbol_set_attribute attribute_hidden
-#  else
-#   define __symbol_set_attribute __attribute__ ((weak))
-#  endif
+# ifdef SHARED
+#  define __symbol_set_attribute attribute_hidden
+# else
+#  define __symbol_set_attribute __attribute__ ((weak))
+# endif
 
 /* Return a pointer (void *const *) to the first element of SET.  */
-#  define symbol_set_first_element(set)	((void *const *) (&__start_##set))
+# define symbol_set_first_element(set)	((void *const *) (&__start_##set))
 
 /* Return true iff PTR (a void *const *) has been incremented
    past the last element in SET.  */
-#  define symbol_set_end_p(set, ptr) ((ptr) >= (void *const *) &__stop_##set)
+# define symbol_set_end_p(set, ptr) ((ptr) >= (void *const *) &__stop_##set)
 
-# else	/* Not ELF: a.out.  */
+#else	/* Not ELF: a.out.  */
 
-#  ifdef HAVE_XCOFF
+# ifdef HAVE_XCOFF
 /* XCOFF does not support .stabs.
    The native aix linker will remove the .stab and .stabstr sections
    The gnu linker will have a fatal error if there is a relocation for
    symbol in the .stab section.  Silently disable these macros.  */
-#   define text_set_element(set, symbol)
-#   define data_set_element(set, symbol)
-#   define bss_set_element(set, symbol)
-#  else
-#   define text_set_element(set, symbol)	\
+#  define text_set_element(set, symbol)
+#  define data_set_element(set, symbol)
+#  define bss_set_element(set, symbol)
+# else
+#  define text_set_element(set, symbol)	\
     asm (".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
-#   define data_set_element(set, symbol)	\
+#  define data_set_element(set, symbol)	\
     asm (".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
-#   define bss_set_element(set, symbol)	?error Must use initialized data.
-#  endif /* XCOFF */
-#  define symbol_set_define(set)	void *const (set)[1];
-#  define symbol_set_declare(set)	extern void *const (set)[1];
-
-#  define symbol_set_first_element(set)	&(set)[1]
-#  define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
-
-# endif	/* ELF.  */
-#else
-/* We cannot do anything in generial.  */
-# define text_set_element(set, symbol) asm ("")
-# define data_set_element(set, symbol) asm ("")
-# define bss_set_element(set, symbol) asm ("")
-# define symbol_set_define(set)		void *const (set)[1];
+#  define bss_set_element(set, symbol)	?error Must use initialized data.
+# endif /* XCOFF */
+# define symbol_set_define(set)	void *const (set)[1];
 # define symbol_set_declare(set)	extern void *const (set)[1];
 
 # define symbol_set_first_element(set)	&(set)[1]
 # define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
-#endif	/* Have GNU ld.  */
+
+#endif	/* ELF.  */
 
 #if DO_VERSIONING
 # define symbol_version(real, name, version) \
@@ -523,7 +503,7 @@ for linking")
    }
    libc_hidden_weak (foo)
 
-   Simularly for global data. If references to foo within libc.so should
+   Similarly for global data.  If references to foo within libc.so should
    always go to foo defined in libc.so, then in include/foo.h you add:
 
    libc_hidden_proto (foo)
@@ -538,7 +518,7 @@ for linking")
    int foo = INITIAL_FOO_VALUE;
    libc_hidden_data_weak (foo)
 
-   If foo is normally just an alias (strong or weak) of some other function,
+   If foo is normally just an alias (strong or weak) to some other function,
    you should use the normal strong_alias first, then add libc_hidden_def
    or libc_hidden_weak:
 
@@ -582,78 +562,23 @@ for linking")
 #  define hidden_proto(name, attrs...) \
   __hidden_proto (name, __GI_##name, ##attrs)
 #  define __hidden_proto(name, internal, attrs...) \
-  extern __typeof (name) internal; \
   extern __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
   __hidden_proto_hiddenattr (attrs);
 #  define __hidden_asmname(name) \
   __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
 #  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
 #  define __hidden_asmname2(prefix, name) #prefix name
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define __hidden_def1(original, alias)			\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
-  .set C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_def1(original, alias)	 ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  .set C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#   else
-#     define __hidden_dot_def1(original, alias)
-#   endif
-#  else
-#   define __hidden_def1(original, alias)			\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define __hidden_dot_def1(original, alias)	ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#   else
-#    define __hidden_dot_def1(original, alias)
-#   endif
-#  endif
-#  define __hidden_def2(...) #__VA_ARGS__
-#  define __hidden_def3(...) __hidden_def2 (__VA_ARGS__)
-#  define hidden_def(name)					\
-  __asm__ (__hidden_def3 (__hidden_def1 (__GI_##name, name) \
-  __hidden_dot_def1 (__GI_##name, name)));
-#  define hidden_data_def(name)					\
-  __asm__ (__hidden_def3 (__hidden_def1 (__GI_##name, name)));
-#  define hidden_ver(local, name)				\
-  __asm__ (__hidden_def3 (__hidden_def1 (local, __GI_##name) \
-  __hidden_dot_def1 (local, __GI_##name)));
-#  define hidden_data_ver(local, name)				\
-  __asm__ (__hidden_def3 (__hidden_def1 (local, __GI_##name)));
-#  ifdef HAVE_WEAK_SYMBOLS
-#   ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#    define __hidden_weak1(original, alias)			\
-  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#    ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_weak1(original, alias)	ASM_LINE_SEP	\
-  .weakext C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#    else
-#     define __hidden_dot_weak1(original, alias)
-#    endif
-#   else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-#    define __hidden_weak1(original, alias)			\
-  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#    ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_weak1(original, alias)	ASM_LINE_SEP	\
-  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#    else
-#     define __hidden_dot_weak1(original, alias)
-#    endif
-#   endif
-#   define hidden_weak(name)					\
-  __asm__ (__hidden_def3 (__hidden_weak1 (__GI_##name, name) \
-  __hidden_dot_weak1 (__GI_##name, name)));
-#   define hidden_data_weak(name)					\
-  __asm__ (__hidden_def3 (__hidden_weak1 (__GI_##name, name)));
-#  else
-#   define hidden_weak(name) hidden_def (name)
-#  endif
+#  define __hidden_ver1(local, internal, name) \
+  extern __typeof (name) __EI_##name __asm__(__hidden_asmname (#internal)); \
+  extern __typeof (name) __EI_##name \
+	__attribute__((alias (__hidden_asmname (#local))))
+#  define hidden_ver(local, name)	__hidden_ver1(local, __GI_##name, name);
+#  define hidden_data_ver(local, name)	hidden_ver(local, name)
+#  define hidden_def(name)		__hidden_ver1(__GI_##name, name, name);
+#  define hidden_data_def(name)		hidden_def(name)
+#  define hidden_weak(name) \
+	__hidden_ver1(__GI_##name, name, name) __attribute__((weak));
+#  define hidden_data_weak(name)	hidden_weak(name)
 # else
 /* For assembly, we need to do the opposite of what we do in C:
    in assembly gcc __REDIRECT stuff is not in place, so functions
@@ -760,6 +685,24 @@ for linking")
 # define libresolv_hidden_data_def(name)
 # define libresolv_hidden_data_weak(name)
 # define libresolv_hidden_data_ver(local, name)
+#endif
+
+#if defined NOT_IN_libc && defined IS_IN_librt
+# define librt_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define librt_hidden_def(name) hidden_def (name)
+# define librt_hidden_weak(name) hidden_weak (name)
+# define librt_hidden_ver(local, name) hidden_ver (local, name)
+# define librt_hidden_data_def(name) hidden_data_def (name)
+# define librt_hidden_data_weak(name) hidden_data_weak (name)
+# define librt_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define librt_hidden_proto(name, attrs...)
+# define librt_hidden_def(name)
+# define librt_hidden_weak(name)
+# define librt_hidden_ver(local, name)
+# define librt_hidden_data_def(name)
+# define librt_hidden_data_weak(name)
+# define librt_hidden_data_ver(local, name)
 #endif
 
 #if defined NOT_IN_libc && defined IS_IN_libdl

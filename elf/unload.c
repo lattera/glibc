@@ -9,11 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAPS ((struct link_map *) _r_debug.r_map)
+
 #define OUT \
-  for (map = _r_debug.r_map; map != NULL; map = map->l_next)		      \
+  for (map = MAPS; map != NULL; map = map->l_next)			      \
     if (map->l_type == lt_loaded)					      \
-      printf ("name = \"%s\", opencount = %d\n",			      \
-	      map->l_name, (int) map->l_opencount);			      \
+      printf ("name = \"%s\", direct_opencount = %d\n",			      \
+	      map->l_name, (int) map->l_direct_opencount);		      \
   fflush (stdout)
 
 typedef struct

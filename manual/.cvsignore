@@ -9,6 +9,6 @@ glibc-*
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
 texis top-menu.texi chapters.texi summary.texi stamp-*
-distinfo dir-add.texinfo
+distinfo dir-add.texinfo dir-add.texi
 
 libm-err.texi

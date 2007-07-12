@@ -1,5 +1,5 @@
 /* Shift a limb left, low level routine.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #include <bp-sym.h>
@@ -67,6 +67,7 @@ L(boom): tweq    r0,r0
 /* We imitate a case statement, by using (yuk!) fixed-length code chunks,
    of size 4*12 bytes.  We have to do this (or something) to make this PIC.  */
 L(big):	mflr    r9
+	cfi_register(lr,r9)
 	bltl-   cr0,L(boom)	# Never taken, only used to set LR.
 	slwi    r10,r6,4
 	mflr    r12
@@ -75,7 +76,8 @@ L(big):	mflr    r9
 	add     r10,r8,r10
 	mtctr   r10
 	addi	r5,r5,-1
-	mtlr    r9
+	mtlr	r9
+	cfi_same_value (lr)
 	bctr
 
 L(end2):slw	r0,r10,r6

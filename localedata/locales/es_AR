@@ -52,7 +52,7 @@ copy "es_ES"
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "es_ES"
 END LC_CTYPE
 
 LC_MESSAGES
@@ -80,8 +80,8 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point        "<U002C>"
-thousands_sep        ""
-grouping             0;0
+thousands_sep        "<U002E>"
+grouping             3;3
 END LC_NUMERIC
 
 LC_TIME

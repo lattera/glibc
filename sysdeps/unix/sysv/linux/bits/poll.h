@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,10 @@
 #endif
 
 #ifdef __USE_GNU
-/* This is an extension for Linux.  */
+/* These are extensions for Linux.  */
 # define POLLMSG	0x400
+# define POLLREMOVE	0x1000
+# define POLLRDHUP	0x2000
 #endif
 
 /* Event types always implicitly polled for.  These bits need not be set in

@@ -26,7 +26,7 @@
 /* Build a non-versioned object for rtld-*.  */
 ENTRY (BP_SYM (_setjmp))
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET(BP_SYM (__sigsetjmp))
+	b BP_SYM (__sigsetjmp@local)
 END (BP_SYM (_setjmp))
 libc_hidden_def (_setjmp)
 #else
@@ -37,7 +37,7 @@ symbol_version (__novmx_setjmp,_setjmp,GLIBC_2.0);
 
 ENTRY (BP_SYM (__novmx_setjmp))
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET(BP_SYM (__novmx__sigsetjmp))
+	b BP_SYM (__novmx__sigsetjmp@local)
 END (BP_SYM (__novmx_setjmp))
 libc_hidden_def (__novmx_setjmp)
 # endif /* defined SHARED  && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */
@@ -48,12 +48,12 @@ default_symbol_version (__vmx_setjmp,_setjmp,GLIBC_2.3.4)
    if HAVE_CLEANUP_JMP_BUF is defined */
 ENTRY (BP_SYM (__GI__setjmp))
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET(BP_SYM (__vmx__sigsetjmp))
+	b BP_SYM (__vmx__sigsetjmp@local)
 END (BP_SYM (__GI__setjmp))
 
 ENTRY (BP_SYM (__vmx_setjmp))
 	li r4,0			/* Set second argument to 0.  */
-	b JUMPTARGET(BP_SYM (__vmx__sigsetjmp))
+	b BP_SYM (__vmx__sigsetjmp@local)
 END (BP_SYM (__vmx_setjmp))
 libc_hidden_def (__vmx_setjmp)
 #endif /* !NOT_IN_libc */

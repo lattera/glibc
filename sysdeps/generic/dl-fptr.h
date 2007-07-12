@@ -36,6 +36,8 @@ struct fdesc_table
     struct fdesc fdesc[0];
   };
 
+struct link_map;
+
 extern ElfW(Addr) _dl_boot_fptr_table [];
 
 extern ElfW(Addr) _dl_make_fptr (struct link_map *, const ElfW(Sym) *,

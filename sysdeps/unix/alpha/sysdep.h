@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -242,9 +242,10 @@ __LABEL(name)						\
 	register long _sc_0 inline_syscall_r0_asm;		\
 	register long _sc_16 __asm__("$16");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
+	_sc_16 = _tmp_16;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3"				\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -261,10 +262,12 @@ __LABEL(name)						\
 	register long _sc_16 __asm__("$16");			\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -282,11 +285,14 @@ __LABEL(name)						\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -305,12 +311,16 @@ __LABEL(name)						\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6"			\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -330,13 +340,18 @@ __LABEL(name)						\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
 	register long _sc_20 __asm__("$20");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
+	register long _tmp_20 = (long) (arg5);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
-	_sc_20 = (long) (arg5);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
+	_sc_20 = _tmp_20;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -357,14 +372,20 @@ __LABEL(name)						\
 	register long _sc_19 __asm__("$19");			\
 	register long _sc_20 __asm__("$20");			\
 	register long _sc_21 __asm__("$21");			\
+	register long _tmp_16 = (long) (arg1);			\
+	register long _tmp_17 = (long) (arg2);			\
+	register long _tmp_18 = (long) (arg3);			\
+	register long _tmp_19 = (long) (arg4);			\
+	register long _tmp_20 = (long) (arg5);			\
+	register long _tmp_21 = (long) (arg6);			\
 								\
 	_sc_0 = name;						\
-	_sc_16 = (long) (arg1);					\
-	_sc_17 = (long) (arg2);					\
-	_sc_18 = (long) (arg3);					\
-	_sc_19 = (long) (arg4);					\
-	_sc_20 = (long) (arg5);					\
-	_sc_21 = (long) (arg6);					\
+	_sc_16 = _tmp_16;					\
+	_sc_17 = _tmp_17;					\
+	_sc_18 = _tmp_18;					\
+	_sc_19 = _tmp_19;					\
+	_sc_20 = _tmp_20;					\
+	_sc_21 = _tmp_21;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"		\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -375,5 +396,43 @@ __LABEL(name)						\
 	   : inline_syscall_clobbers);				\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
+
+/* Pointer mangling support.  Note that tls access is slow enough that
+   we don't deoptimize things by placing the pointer check value there.  */
+
+#include <stdint.h>
+
+#if defined NOT_IN_libc && defined IS_IN_rtld
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)				\
+	ldah	tmp, __pointer_chk_guard_local($29) !gprelhigh;	\
+	ldq	tmp, __pointer_chk_guard_local(tmp) !gprellow;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)				\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var)	\
+  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#elif defined PIC
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(dst, src, tmp)		\
+	ldq	tmp, __pointer_chk_guard;	\
+	xor	src, tmp, dst
+#  define PTR_MANGLE2(dst, src, tmp)		\
+	xor	src, tmp, dst
+#  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
+#  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
+# else
+extern uintptr_t __pointer_chk_guard attribute_relro;
+#  define PTR_MANGLE(var)	\
+	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard)
+#  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#endif
 
 #endif /* ASSEMBLER */

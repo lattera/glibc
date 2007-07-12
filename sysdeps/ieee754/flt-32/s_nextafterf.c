@@ -18,7 +18,7 @@ static char rcsid[] = "$NetBSD: s_nextafterf.c,v 1.4 1995/05/10 20:48:01 jtc Exp
 #endif
 
 #include "math.h"
-#include "math_private.h"
+#include <math_private.h>
 #include <float.h>
 
 #ifdef __STDC__
@@ -40,9 +40,12 @@ static char rcsid[] = "$NetBSD: s_nextafterf.c,v 1.4 1995/05/10 20:48:01 jtc Exp
 	   return x+y;
 	if(x==y) return y;		/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
+	    float u;
 	    SET_FLOAT_WORD(x,(hy&0x80000000)|1);/* return +-minsubnormal */
-	    y = x*x;
-	    if(y==x) return y; else return x;	/* raise underflow flag */
+	    u = math_opt_barrier (x);
+	    u = u*u;
+	    math_force_eval (u);		/* raise underflow flag */
+	    return x;
 	}
 	if(hx>=0) {				/* x > 0 */
 	    if(hx>hy) {				/* x > y, x -= ulp */
@@ -61,15 +64,12 @@ static char rcsid[] = "$NetBSD: s_nextafterf.c,v 1.4 1995/05/10 20:48:01 jtc Exp
 	if(hy>=0x7f800000) {
 	  x = x+x;	/* overflow  */
 	  if (FLT_EVAL_METHOD != 0)
-	    asm ("" : "=m"(x) : "m"(x));
+	    asm ("" : "+m"(x));
 	  return x;	/* overflow  */
 	}
-	if(hy<0x00800000) {		/* underflow */
-	    y = x*x;
-	    if(y!=x) {		/* raise underflow flag */
-	        SET_FLOAT_WORD(y,hx);
-		return y;
-	    }
+	if(hy<0x00800000) {
+	    float u = x*x;			/* underflow */
+	    math_force_eval (u);		/* raise underflow flag */
 	}
 	SET_FLOAT_WORD(x,hx);
 	return x;

@@ -226,6 +226,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	SIOCSIFADDR	_IOW('i', 12, struct ifreq)	/* set ifnet address */
 #define	OSIOCGIFADDR	_IOWR('i',13, struct ifreq)	/* get ifnet address */
 #define	SIOCGIFADDR	_IOWR('i',33, struct ifreq)	/* get ifnet address */
+#define	SIOCGIFHWADDR	_IOWR('i',39, struct ifreq)	/* get hwaddress */
 #define	SIOCSIFDSTADDR	_IOW('i', 14, struct ifreq)	/* set p-p address */
 #define	OSIOCGIFDSTADDR	_IOWR('i',15, struct ifreq)	/* get p-p address */
 #define	SIOCGIFDSTADDR	_IOWR('i',34, struct ifreq)	/* get p-p address */

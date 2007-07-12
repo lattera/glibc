@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004
+/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,13 +19,13 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <libio/iolibio.h>
+#include <libioP.h>
 #define vsprintf(s, f, a) INTUSE(_IO_vsprintf) (s, f, a)
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-sprintf (char *s, const char *format, ...)
+__sprintf (char *s, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -36,6 +36,6 @@ sprintf (char *s, const char *format, ...)
 
   return done;
 }
-libc_hidden_def (sprintf)
-
-strong_alias(sprintf, _IO_sprintf)
+ldbl_hidden_def (__sprintf, sprintf)
+ldbl_strong_alias (__sprintf, sprintf)
+ldbl_strong_alias (__sprintf, _IO_sprintf)

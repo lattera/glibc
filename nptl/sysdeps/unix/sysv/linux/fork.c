@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -167,8 +167,11 @@ __libc_fork (void)
 	    allp->handler->child_handler ();
 
 	  /* Note that we do not have to wake any possible waiter.
-	     This is the only thread in the new process.  */
-	  --allp->handler->refcntr;
+ 	     This is the only thread in the new process.  The count
+ 	     may have been bumped up by other threads doing a fork.
+ 	     We reset it to 1, to avoid waiting for non-existing
+ 	     thread(s) to release the count.  */
+	  allp->handler->refcntr = 1;
 
 	  /* XXX We could at this point look through the object pool
 	     and mark all objects not on the __fork_handlers list as

@@ -1,21 +1,19 @@
-/* Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #define PROCINFO_CLASS static
 #include <alloca.h>
@@ -39,10 +37,16 @@
 #include <glob.h>
 #include <libgen.h>
 
-#include "ldconfig.h"
-#include "dl-cache.h"
+#include <ldconfig.h>
+#include <dl-cache.h>
 
-#include "dl-procinfo.h"
+#include <dl-procinfo.h>
+
+#ifdef _DL_FIRST_PLATFORM
+# define _DL_FIRST_EXTRA (_DL_FIRST_PLATFORM + _DL_PLATFORMS_COUNT)
+#else
+# define _DL_FIRST_EXTRA _DL_HWCAP_COUNT
+#endif
 
 #ifndef LD_SO_CONF
 # define LD_SO_CONF SYSCONFDIR "/ld.so.conf"
@@ -115,6 +119,9 @@ static const char *config_file;
 /* Mask to use for important hardware capabilities.  */
 static unsigned long int hwcap_mask = HWCAP_IMPORTANT;
 
+/* Configuration-defined capabilities defined in kernel vDSOs.  */
+static const char *hwcap_extra[64 - _DL_FIRST_EXTRA];
+
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *)
@@ -165,10 +172,10 @@ is_hwcap_platform (const char *name)
   if (hwcap_idx != -1)
     return 1;
 
-#ifdef USE_TLS
-  if (strcmp (name, "tls") == 0)
-    return 1;
-#endif
+  for (hwcap_idx = _DL_FIRST_EXTRA; hwcap_idx < 64; ++hwcap_idx)
+    if (hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA] != NULL
+	&& !strcmp (name, hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA]))
+      return 1;
 
   return 0;
 }
@@ -203,11 +210,11 @@ path_hwcap (const char *path)
 	  h = _dl_string_platform (ptr + 1);
 	  if (h == (uint64_t) -1)
 	    {
-#ifdef USE_TLS
-	      if (strcmp (ptr + 1, "tls") == 0)
-		h = 63;
-	      else
-#endif
+	      for (h = _DL_FIRST_EXTRA; h < 64; ++h)
+		if (hwcap_extra[h - _DL_FIRST_EXTRA] != NULL
+		    && !strcmp (ptr + 1, hwcap_extra[h - _DL_FIRST_EXTRA]))
+		  break;
+	      if (h == 64)
 		break;
 	    }
 	}
@@ -279,7 +286,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Andreas Jaeger");
 }
@@ -636,7 +643,7 @@ search_dir (const struct dir_entry *entry)
   if (opt_verbose)
     {
       if (hwcap != 0)
-	printf ("%s: (hwcap: 0x%" PRIx64 ")\n", entry->path, hwcap);
+	printf ("%s: (hwcap: %#.16" PRIx64 ")\n", entry->path, hwcap);
       else
 	printf ("%s:\n", entry->path);
     }
@@ -686,10 +693,23 @@ search_dir (const struct dir_entry *entry)
 #endif
 	      !is_hwcap_platform (direntry->d_name)))
 	continue;
-      len = strlen (entry->path) + strlen (direntry->d_name);
+      len = strlen (direntry->d_name);
+      /* Skip temporary files created by the prelink program.  Files with
+	 names like these are never really DSOs we want to look at.  */
+      if (len >= sizeof (".#prelink#") - 1)
+	{
+	  if (strcmp (direntry->d_name + len - sizeof (".#prelink#") + 1,
+		      ".#prelink#") == 0)
+	    continue;
+	  if (len >= sizeof (".#prelink#.XXXXXX") - 1
+	      && memcmp (direntry->d_name + len - sizeof (".#prelink#.XXXXXX")
+			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
+	    continue;
+	}
+      len += strlen (entry->path) + 2;
       if (len > file_name_len)
 	{
-	  file_name_len = len + 1;
+	  file_name_len = len;
 	  file_name = alloca (file_name_len);
 	  if (!opt_chroot)
 	    real_file_name = file_name;
@@ -697,10 +717,10 @@ search_dir (const struct dir_entry *entry)
       sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
       if (opt_chroot)
 	{
-	  len = strlen (dir_name) + strlen (direntry->d_name);
+	  len = strlen (dir_name) + strlen (direntry->d_name) + 2;
 	  if (len > real_file_name_len)
 	    {
-	      real_file_name_len = len + 1;
+	      real_file_name_len = len;
 	      real_file_name = alloca (real_file_name_len);
 	    }
 	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
@@ -944,17 +964,19 @@ search_dirs (void)
 
 
 static void parse_conf_include (const char *config_file, unsigned int lineno,
-				bool do_chroot, const char *pattern);
+				const char *prefix, bool do_chroot,
+				const char *pattern);
 
 /* Parse configuration file.  */
 static void
-parse_conf (const char *filename, bool do_chroot)
+parse_conf (const char *filename, const char *prefix, bool do_chroot)
 {
   FILE *file = NULL;
   char *line = NULL;
   const char *canon;
   size_t len = 0;
   unsigned int lineno;
+  size_t prefix_len = prefix ? strlen (prefix) : 0;
 
   if (do_chroot && opt_chroot)
     {
@@ -1015,7 +1037,61 @@ parse_conf (const char *filename, bool do_chroot)
 	  cp += 8;
 	  while ((dir = strsep (&cp, " \t")) != NULL)
 	    if (dir[0] != '\0')
-	      parse_conf_include (filename, lineno, do_chroot, dir);
+	      parse_conf_include (filename, lineno, prefix, do_chroot, dir);
+	}
+      else if (prefix != NULL)
+	{
+	  size_t cp_len = strlen (cp);
+	  char new_cp [prefix_len + cp_len + 1];
+	  memcpy (mempcpy (new_cp, prefix, prefix_len), cp, cp_len + 1);
+	  add_dir (new_cp);
+	}
+      else if (!strncasecmp (cp, "hwcap", 5) && isblank (cp[5]))
+	{
+	  cp += 6;
+	  char *p, *name = NULL;
+	  unsigned long int n = strtoul (cp, &cp, 0);
+	  if (cp != NULL && isblank (*cp))
+	    while ((p = strsep (&cp, " \t")) != NULL)
+	      if (p[0] != '\0')
+		{
+		  if (name == NULL)
+		    name = p;
+		  else
+		    {
+		      name = NULL;
+		      break;
+		    }
+		}
+	  if (name == NULL)
+	    {
+	      error (EXIT_FAILURE, 0, _("%s:%u: bad syntax in hwcap line"),
+		     filename, lineno);
+	      break;
+	    }
+	  if (n >= (64 - _DL_FIRST_EXTRA))
+	    error (EXIT_FAILURE, 0,
+		   _("%s:%u: hwcap index %lu above maximum %u"),
+		   filename, lineno, n, 64 - _DL_FIRST_EXTRA - 1);
+	  if (hwcap_extra[n] == NULL)
+	    {
+	      for (unsigned long int h = 0; h < (64 - _DL_FIRST_EXTRA); ++h)
+		if (hwcap_extra[h] != NULL && !strcmp (name, hwcap_extra[h]))
+		  error (EXIT_FAILURE, 0,
+			 _("%s:%u: hwcap index %lu already defined as %s"),
+			 filename, lineno, h, name);
+	      hwcap_extra[n] = xstrdup (name);
+	    }
+	  else
+	    {
+	      if (strcmp (name, hwcap_extra[n]))
+		error (EXIT_FAILURE, 0,
+		       _("%s:%u: hwcap index %lu already defined as %s"),
+		       filename, lineno, n, hwcap_extra[n]);
+	      if (opt_verbose)
+		error (0, 0, _("%s:%u: duplicate hwcap %lu %s"),
+		       filename, lineno, n, name);
+	    }
 	}
       else
 	add_dir (cp);
@@ -1031,7 +1107,7 @@ parse_conf (const char *filename, bool do_chroot)
    config files to read.  */
 static void
 parse_conf_include (const char *config_file, unsigned int lineno,
-		    bool do_chroot, const char *pattern)
+		    const char *prefix, bool do_chroot, const char *pattern)
 {
   if (opt_chroot && pattern[0] != '/')
     error (EXIT_FAILURE, 0,
@@ -1061,7 +1137,7 @@ parse_conf_include (const char *config_file, unsigned int lineno,
     {
     case 0:
       for (size_t i = 0; i < gl.gl_pathc; ++i)
-	parse_conf (gl.gl_pathv[i], false);
+	parse_conf (gl.gl_pathv[i], prefix, false);
       globfree64 (&gl);
       break;
 
@@ -1101,6 +1177,8 @@ main (int argc, char **argv)
 {
   int remaining;
 
+  arch_startup (argc, argv);
+
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
@@ -1118,12 +1196,16 @@ main (int argc, char **argv)
 	  add_dir (argv[i]);
     }
 
+#ifdef USE_TLS
+  hwcap_extra[63 - _DL_FIRST_EXTRA] = "tls";
+#endif
+
   set_hwcap ();
 
   if (opt_chroot)
     {
       /* Normalize the path a bit, we might need it for printing later.  */
-      char *endp = strchr (opt_chroot, '\0');
+      char *endp = rawmemchr (opt_chroot, '\0');
       while (endp > opt_chroot && endp[-1] == '/')
 	--endp;
       *endp = '\0';
@@ -1209,12 +1291,14 @@ main (int argc, char **argv)
 
   if (!opt_only_cline)
     {
-      parse_conf (config_file, true);
+      parse_conf (config_file, NULL, true);
 
       /* Always add the standard search paths.  */
       add_system_dir (SLIBDIR);
       if (strcmp (SLIBDIR, LIBDIR))
 	add_system_dir (LIBDIR);
+
+      add_arch_dirs (config_file);
     }
 
   search_dirs ();

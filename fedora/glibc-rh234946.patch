@@ -1,0 +1,32 @@
+2006-12-25  Sripathi Kodi  <sripathik@in.ibm.com>
+
+	* include/link.h: Declare new flag l_fini_called in struct link_map.
+	* elf/dl-fini.c: In _dl_fini, set l_fini_called to 1 instead of 
+	l_init_called to 0.
+
+--- libc/elf/dl-fini.c	2006-12-22 01:54:22.000000000 -0600
++++ libc/elf/dl-fini.c	2006-12-24 22:51:52.000000000 -0600
+@@ -215,10 +215,10 @@ _dl_fini (void)
+ 	{
+ 	  l = maps[i];
+ 
+-	  if (l->l_init_called)
++	  if (l->l_init_called && !l->l_fini_called)
+ 	    {
+ 	      /* Make sure nothing happens if we are called twice.  */
+-	      l->l_init_called = 0;
++	      l->l_fini_called = 1;
+ 
+ 	      /* Is there a destructor function?  */
+ 	      if (l->l_info[DT_FINI_ARRAY] != NULL
+--- libc/include/link.h	2006-12-22 01:54:22.000000000 -0600
++++ libc/include/link.h	2006-12-24 22:53:29.000000000 -0600
+@@ -185,6 +185,8 @@ struct link_map
+     unsigned int l_contiguous:1; /* Nonzero if inter-segment holes are
+ 				    mprotected or if no holes are present at
+ 				    all.  */
++    unsigned int l_fini_called:1; /* Nonzero if _dl_fini has processed
++				     this object */
+ 
+     /* Array with version names.  */
+     unsigned int l_nversions;

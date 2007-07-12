@@ -79,7 +79,7 @@ run_test (const char *pattern, struct re_registers *regs)
       exit (1);
     }
 
-  pat.translate = (char *) casetable;
+  pat.translate = (unsigned char *) casetable;
 
   err = re_compile_pattern (pattern, strlen (pattern), &pat);
   if (err != NULL)

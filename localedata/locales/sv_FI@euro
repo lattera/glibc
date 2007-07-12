@@ -39,7 +39,7 @@ category  "sv_FI@euro:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "sv_FI"
 END LC_CTYPE
 
 LC_COLLATE

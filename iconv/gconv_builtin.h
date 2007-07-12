@@ -1,5 +1,5 @@
 /* Builtin transformations.
-   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -17,6 +17,9 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+/* All encoding named must be in upper case.  There must be no extra
+   spaces.  */
 
 BUILTIN_ALIAS ("UCS4//", "ISO-10646/UCS4/")
 BUILTIN_ALIAS ("UCS-4//", "ISO-10646/UCS4/")

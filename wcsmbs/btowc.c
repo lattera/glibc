@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <dlfcn.h>
 #include <gconv.h>
 #include <stdio.h>
@@ -24,6 +25,8 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 #include <limits.h>
+
+#include <sysdep.h>
 
 
 wint_t
@@ -37,15 +40,24 @@ __btowc (c)
   if (c < SCHAR_MIN || c > UCHAR_MAX || c == EOF)
     return WEOF;
 
+  /* We know that only ASCII compatible encodings are used for the
+     locale and that the wide character encoding is ISO 10646.  */
+  if (isascii (c))
+    return (wint_t) c;
+
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+  __gconv_btowc_fct btowc_fct = fcts->towc->__btowc_fct;
 
   if (__builtin_expect (fcts->towc_nsteps == 1, 1)
-      && __builtin_expect (fcts->towc->__btowc_fct != NULL, 1))
+      && __builtin_expect (btowc_fct != NULL, 1))
     {
       /* Use the shortcut function.  */
-      return DL_CALL_FCT (fcts->towc->__btowc_fct,
-			  (fcts->towc, (unsigned char) c));
+#ifdef PTR_DEMANGLE
+      if (fcts->towc->__shlib_handle != NULL)
+	PTR_DEMANGLE (btowc_fct);
+#endif
+      return DL_CALL_FCT (btowc_fct, (fcts->towc, (unsigned char) c));
     }
   else
     {
@@ -72,9 +84,13 @@ __btowc (c)
       /* Create the input string.  */
       inbuf[0] = c;
 
-      status = DL_CALL_FCT (fcts->towc->__fct,
-			    (fcts->towc, &data, &inptr, inptr + 1,
-			     NULL, &dummy, 0, 1));
+      __gconv_fct fct = fcts->towc->__fct;
+#ifdef PTR_DEMANGLE
+      if (fcts->towc->__shlib_handle != NULL)
+	PTR_DEMANGLE (fct);
+#endif
+      status = DL_CALL_FCT (fct, (fcts->towc, &data, &inptr, inptr + 1,
+				  NULL, &dummy, 0, 1));
 
       if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
 	  && status != __GCONV_EMPTY_INPUT)

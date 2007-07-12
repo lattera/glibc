@@ -3768,7 +3768,7 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:1184 locale/programs/ld-ctype.c:1263
 #, c-format
-msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr ""
 
 #: elf/sprof.c:763
@@ -3988,7 +3988,7 @@ msgid "cannot read statistics data"
 msgstr ""
 
 #: locale/programs/repertoire.c:331
-msgid "cannot safe new repertoire map"
+msgid "cannot save new repertoire map"
 msgstr ""
 
 #: nscd/cache.c:150 nscd/connections.c:151
@@ -4188,7 +4188,7 @@ msgstr ""
 
 #: nscd/connections.c:360 nscd/connections.c:451
 #, c-format
-msgid "error getting callers id: %s"
+msgid "error getting caller's id: %s"
 msgstr ""
 
 #: locale/programs/ld-collate.c:2787
@@ -4600,7 +4600,7 @@ msgid ""
 msgstr ""
 
 #: locale/programs/localedef.c:229
-msgid "no output file produced because warning were issued"
+msgid "no output file produced because warnings were issued"
 msgstr ""
 
 #: locale/programs/charmap.c:438 locale/programs/charmap.c:589

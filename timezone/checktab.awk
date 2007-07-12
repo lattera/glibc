@@ -1,8 +1,8 @@
 # Check tz tables for consistency.
 
-# @(#)checktab.awk	1.6
+# @(#)checktab.awk	1.7
 
-# Contributed by Paul Eggert <eggert@twinsun.com>.
+# Contributed by Paul Eggert.
 
 BEGIN {
 	FS = "\t"

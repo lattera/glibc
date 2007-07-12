@@ -23,11 +23,15 @@ ENTRY (__copysign)
 {
 	fmerge.s fret0 = farg1, farg0
 	br.ret.sptk.many rp
-}	
+}
 END (__copysign)
 
 strong_alias (__copysign, __copysignf)
 strong_alias (__copysign, __copysignl)
+
+strong_alias (__copysign, __libm_copysign)
+strong_alias (__copysign, __libm_copysignf)
+strong_alias (__copysign, __libm_copysignl)
 
 weak_alias (__copysign, copysign)
 weak_alias (__copysignf, copysignf)

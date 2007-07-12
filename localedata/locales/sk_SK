@@ -60,6 +60,10 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
 END LC_CTYPE
 
 % Triedenie
@@ -178,6 +182,8 @@ am_pm   	"";""
 date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
+
+week		7;19971201;4
 
 END LC_TIME
 

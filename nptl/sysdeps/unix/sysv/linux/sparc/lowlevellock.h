@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -30,6 +30,11 @@
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
 #define FUTEX_CMP_REQUEUE	4
+#define FUTEX_WAKE_OP		5
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
+#define FUTEX_LOCK_PI		6
+#define FUTEX_UNLOCK_PI		7
+#define FUTEX_TRYLOCK_PI	8
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -76,15 +81,38 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
+#define lll_robust_mutex_dead(futexv) \
+  do									      \
+    {									      \
+      int *__futexp = &(futexv);					      \
+      atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
+      lll_futex_wake (__futexp, 1);					      \
+    }									      \
+  while (0)
+
+/* Returns non-zero if error happened, zero if success.  */
 #ifdef __sparc32_atomic_do_lock
-#error SPARC < v9 does not support compare and swap which is essential for futex based locking
+/* Avoid FUTEX_WAKE_OP if supporting pre-v9 CPUs.  */
+# define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) 1
+#else
+# define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
+			      (futexp), FUTEX_WAKE_OP, (nr_wake),	      \
+			      (nr_wake2), (futexp2),			      \
+			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
+  })
 #endif
 
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_trylock (int *futex)
 {
-  return atomic_compare_and_exchange_val_acq (futex, 1, 0) != 0;
+  return atomic_compare_and_exchange_val_24_acq (futex, 1, 0) != 0;
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
@@ -92,47 +120,71 @@ static inline int
 __attribute__ ((always_inline))
 __lll_mutex_cond_trylock (int *futex)
 {
-  return atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0;
+  return atomic_compare_and_exchange_val_24_acq (futex, 2, 0) != 0;
 }
 #define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))
 
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_trylock (int *futex, int id)
+{
+  return atomic_compare_and_exchange_val_acq (futex, id, 0) != 0;
+}
+#define lll_robust_mutex_trylock(futex, id) \
+  __lll_robust_mutex_trylock (&(futex), id)
+
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;
-
+extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
 
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_lock (int *futex)
 {
-  int val = atomic_compare_and_exchange_val_acq (futex, 1, 0);
+  int val = atomic_compare_and_exchange_val_24_acq (futex, 1, 0);
 
   if (__builtin_expect (val != 0, 0))
     __lll_lock_wait (futex);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_lock (int *futex, int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_lock_wait (futex);
+  return result;
+}
+#define lll_robust_mutex_lock(futex, id) \
+  __lll_robust_mutex_lock (&(futex), id)
 
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_cond_lock (int *futex)
 {
-  int val = atomic_compare_and_exchange_val_acq (futex, 2, 0);
+  int val = atomic_compare_and_exchange_val_24_acq (futex, 2, 0);
 
   if (__builtin_expect (val != 0, 0))
     __lll_lock_wait (futex);
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
+#define lll_robust_mutex_cond_lock(futex, id) \
+  __lll_robust_mutex_lock (&(futex), (id) | FUTEX_WAITERS)
+
 
 extern int __lll_timedlock_wait (int *futex, const struct timespec *)
      attribute_hidden;
-
+extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
+     attribute_hidden;
 
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
-  int val = atomic_compare_and_exchange_val_acq (futex, 1, 0);
+  int val = atomic_compare_and_exchange_val_24_acq (futex, 1, 0);
   int result = 0;
 
   if (__builtin_expect (val != 0, 0))
@@ -142,18 +194,39 @@ __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 #define lll_mutex_timedlock(futex, abstime) \
   __lll_mutex_timedlock (&(futex), abstime)
 
+static inline int
+__attribute__ ((always_inline))
+__lll_robust_mutex_timedlock (int *futex, const struct timespec *abstime,
+			      int id)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
+    result = __lll_robust_timedlock_wait (futex, abstime);
+  return result;
+}
+#define lll_robust_mutex_timedlock(futex, abstime, id) \
+  __lll_robust_mutex_timedlock (&(futex), abstime, id)
+
 #define lll_mutex_unlock(lock) \
   ((void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = atomic_exchange_rel (__futex, 0);			      \
+    int __val = atomic_exchange_24_rel (__futex, 0);			      \
     if (__builtin_expect (__val > 1, 0))				      \
+      lll_futex_wake (__futex, 1);					      \
+  }))
+
+#define lll_robust_mutex_unlock(lock) \
+  ((void) ({								      \
+    int *__futex = &(lock);						      \
+    int __val = atomic_exchange_rel (__futex, 0);			      \
+    if (__builtin_expect (__val & FUTEX_WAITERS, 0))			      \
       lll_futex_wake (__futex, 1);					      \
   }))
 
 #define lll_mutex_unlock_force(lock) \
   ((void) ({								      \
     int *__futex = &(lock);						      \
-    (void) atomic_exchange_rel (__futex, 0);				      \
+    (void) atomic_exchange_24_rel (__futex, 0);				      \
     lll_futex_wake (__futex, 1);					      \
   }))
 

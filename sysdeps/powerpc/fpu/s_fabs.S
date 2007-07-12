@@ -25,13 +25,13 @@ ENTRY(__fabs)
 	blr
 END(__fabs)
 
-weak_alias(__fabs,fabs)
+weak_alias (__fabs,fabs)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
 strong_alias(__fabs,__fabsf)
-weak_alias(__fabs,fabsf)
+weak_alias (__fabs,fabsf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__fabs,__fabsl)
-weak_alias(__fabs,fabsl)
+weak_alias (__fabs,__fabsl)
+weak_alias (__fabs,fabsl)
 #endif

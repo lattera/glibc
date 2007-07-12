@@ -1,21 +1,19 @@
-/* Copyright (C) 1996-1999, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _CHARMAP_H
 #define _CHARMAP_H
@@ -71,7 +69,8 @@ extern bool enc_not_ascii_compatible;
 
 /* Prototypes for charmap handling functions.  */
 extern struct charmap_t *charmap_read (const char *filename, int verbose,
-				       int be_quiet, int use_default);
+				       int error_not_found, int be_quiet,
+				       int use_default);
 
 /* Return the value stored under the given key in the hashing table.  */
 extern struct charseq *charmap_find_value (const struct charmap_t *charmap,

@@ -1,6 +1,5 @@
 /* Notify initiator of AIO request.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2001, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -144,15 +143,24 @@ __aio_notify (struct requestlist *req)
     {
       struct waitlist *next = waitlist->next;
 
-      /* Decrement the counter.  This is used in both cases.  */
-      --*waitlist->counterp;
-
       if (waitlist->sigevp == NULL)
-	pthread_cond_signal (waitlist->cond);
+	{
+	  if (waitlist->result != NULL && aiocbp->__return_value == -1)
+	    *waitlist->result = -1;
+
+#ifdef DONT_NEED_AIO_MISC_COND
+	  AIO_MISC_NOTIFY (waitlist);
+#else
+	  /* Decrement the counter.  */
+	  --*waitlist->counterp;
+
+	  pthread_cond_signal (waitlist->cond);
+#endif
+	}
       else
 	/* This is part of a asynchronous `lio_listio' operation.  If
 	   this request is the last one, send the signal.  */
-	if (*waitlist->counterp == 0)
+	if (--*waitlist->counterp == 0)
 	  {
 #ifdef BROKEN_THREAD_SIGNALS
 	    __aio_notify_only (waitlist->sigevp, waitlist->caller_pid);

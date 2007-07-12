@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000-2003,2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -44,7 +44,7 @@ enum
 
 static const struct
 {
-  size_t len;
+  uint32_t len;
   /* Adjust the size if new elements are added.  */
   const char name[12];
 } keywords[] =
@@ -154,42 +154,21 @@ fmtmsg (long int classification, const char *label, int severity,
       int do_action = (print & action_mask) && action != MM_NULLACT;
       int do_tag = (print & tag_mask) && tag != MM_NULLTAG;
 
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	{
-	  if (__fwprintf (stderr, L"%s%s%s%s%s%s%s%s%s%s\n",
-			  do_label ? label : "",
-			  do_label
-			  && (do_severity | do_text | do_action | do_tag)
-			  ? ": " : "",
-			  do_severity ? severity_rec->string : "",
-			  do_severity && (do_text | do_action | do_tag)
-			  ? ": " : "",
-			  do_text ? text : "",
-			  do_text && (do_action | do_tag) ? "\n" : "",
-			  do_action ? "TO FIX: " : "",
-			  do_action ? action : "",
-			  do_action && do_tag ? "  " : "",
-			  do_tag ? tag : "") < 0)
-	    /* Oh, oh.  An error occurred during the output.  */
-	    result = MM_NOMSG;
-	}
-      else
-#endif
-	if (fprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
-		     do_label ? label : "",
-		     do_label && (do_severity | do_text | do_action | do_tag)
-		     ? ": " : "",
-		     do_severity ? severity_rec->string : "",
-		     do_severity && (do_text | do_action | do_tag) ? ": " : "",
-		     do_text ? text : "",
-		     do_text && (do_action | do_tag) ? "\n" : "",
-		     do_action ? "TO FIX: " : "",
-		     do_action ? action : "",
-		     do_action && do_tag ? "  " : "",
-		     do_tag ? tag : "") < 0)
-	  /* Oh, oh.  An error occurred during the output.  */
-	  result = MM_NOMSG;
+      if (__fxprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
+		      do_label ? label : "",
+		      do_label && (do_severity | do_text | do_action | do_tag)
+		      ? ": " : "",
+		      do_severity ? severity_rec->string : "",
+		      do_severity && (do_text | do_action | do_tag)
+		      ? ": " : "",
+		      do_text ? text : "",
+		      do_text && (do_action | do_tag) ? "\n" : "",
+		      do_action ? "TO FIX: " : "",
+		      do_action ? action : "",
+		      do_action && do_tag ? "  " : "",
+		      do_tag ? tag : "") < 0)
+	/* Oh, oh.  An error occurred during the output.  */
+	result = MM_NOMSG;
     }
 
   if (classification & MM_CONSOLE)
@@ -316,7 +295,7 @@ internal_addseverity (int severity, const char *string)
   int result = MM_OK;
 
   /* First see if there is already a record for the severity level.  */
-  for (runp = severity_list, lastp = NULL; runp != NULL; runp = runp-> next)
+  for (runp = severity_list, lastp = NULL; runp != NULL; runp = runp->next)
     if (runp->severity == severity)
       break;
     else
@@ -324,9 +303,6 @@ internal_addseverity (int severity, const char *string)
 
   if (runp != NULL)
     {
-      /* Release old string.  */
-      free ((char *) runp->string);
-
       if (string != NULL)
 	/* Change the string.  */
 	runp->string = string;
@@ -367,33 +343,16 @@ int
 addseverity (int severity, const char *string)
 {
   int result;
-  const char *new_string;
 
   /* Prevent illegal SEVERITY values.  */
   if (severity <= MM_INFO)
     return MM_NOTOK;
-
-  if (string == NULL)
-    /* We want to remove the severity class.  */
-    new_string = NULL;
-  else
-    {
-      new_string = __strdup (string);
-
-      if (new_string == NULL)
-	/* Allocation failed or illegal value.  */
-	return MM_NOTOK;
-    }
 
   /* Protect the global data.  */
   __libc_lock_lock (lock);
 
   /* Do the real work.  */
   result = internal_addseverity (severity, string);
-
-  if (result != MM_OK)
-    /* Free the allocated string.  */
-    free ((char *) new_string);
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);
@@ -411,7 +370,6 @@ libc_freeres_fn (free_mem)
       {
 	/* This is data we have to release.  */
 	struct severity_info *here = runp;
-	free ((char *) runp->string);
 	runp = runp->next;
 	free (here);
       }

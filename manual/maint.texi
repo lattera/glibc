@@ -232,16 +232,6 @@ of @file{sysdeps} implements.  For example,
 directory contains various network-oriented operations which only make
 sense to put in the library on systems that support the Internet.@refill
 
-@item Dist
-
-This file contains the names of files (relative to the subdirectory of
-@file{sysdeps} in which it appears) which should be included in the
-distribution.  List any new files used by rules in the @file{Makefile}
-in the same directory, or header files used by the source files in that
-directory.  You don't need to list files that are implementations
-(either C or assembly source) of routines whose names are given in the
-machine-independent makefiles in the main source tree.
-
 @item configure
 
 This file is a shell script fragment to be run at configuration time.

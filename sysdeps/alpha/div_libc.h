@@ -34,6 +34,12 @@
 #define RV	t12
 #define RA	t9
 
+/* The secureplt format does not allow the division routines to be called
+   via plt; there aren't enough registers free to be clobbered.  Avoid 
+   setting the symbol type to STT_FUNC, so that the linker won't be tempted
+   to create a plt entry.  */
+#define funcnoplt notype
+
 /* None of these functions should use implicit anything.  */
 	.set	nomacro
 	.set	noat

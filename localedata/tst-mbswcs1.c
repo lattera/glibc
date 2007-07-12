@@ -1,5 +1,5 @@
 /* Test restarting behaviour of mbrtowc.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@ilog.fr>.
 
@@ -37,7 +37,7 @@
 int
 main (void)
 {
-  unsigned char buf[6] = { 0x25,  0xe2, 0x82, 0xac,  0xce, 0xbb };
+  const unsigned char buf[6] = { 0x25,  0xe2, 0x82, 0xac,  0xce, 0xbb };
   mbstate_t state;
   wchar_t wc = 42;
   size_t n;
@@ -52,12 +52,12 @@ main (void)
 
   memset (&state, '\0', sizeof (state));
 
-  show (mbrtowc (&wc, buf + 0, 1, &state), 1, 37);
-  show (mbrtowc (&wc, buf + 1, 1, &state), -2, 37);
-  show (mbrtowc (&wc, buf + 2, 3, &state), 2, 8364);
-  show (mbrtowc (&wc, buf + 4, 1, &state), -2, 8364);
-  show (mbrtowc (&wc, buf + 5, 1, &state), 1, 955);
-  show (mbrtowc (&wc, buf + 5, 1, &state), -1, 955);
+  show (mbrtowc (&wc, (const char *) buf + 0, 1, &state), 1, 37);
+  show (mbrtowc (&wc, (const char *) buf + 1, 1, &state), -2, 37);
+  show (mbrtowc (&wc, (const char *) buf + 2, 3, &state), 2, 8364);
+  show (mbrtowc (&wc, (const char *) buf + 4, 1, &state), -2, 8364);
+  show (mbrtowc (&wc, (const char *) buf + 5, 1, &state), 1, 955);
+  show (mbrtowc (&wc, (const char *) buf + 5, 1, &state), -1, 955);
 
   return result;
 }

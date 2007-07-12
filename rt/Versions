@@ -19,7 +19,7 @@ librt {
   }
   GLIBC_2.3.4 {
     # m*
-    mq_open; mq_close; mq_unlink; mq_getattr; mq_setattr; 
+    mq_open; mq_close; mq_unlink; mq_getattr; mq_setattr;
     mq_notify; mq_send; mq_receive; mq_timedsend; mq_timedreceive;
   }
 }

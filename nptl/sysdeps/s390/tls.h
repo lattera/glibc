@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/s390 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 
 #include <dl-sysdep.h>
 #ifndef __ASSEMBLER__
+# include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -32,7 +33,11 @@
 typedef union dtv
 {
   size_t counter;
-  void *pointer;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
 } dtv_t;
 
 
@@ -43,9 +48,9 @@ typedef struct
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
   int multiple_threads;
-# ifdef NEED_DL_SYSINFO
   uintptr_t sysinfo;
-# endif
+  uintptr_t stack_guard;
+  int gscope_flag;
 } tcbhead_t;
 
 # ifndef __s390x__
@@ -76,11 +81,13 @@ typedef struct
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
-/* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+/* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
+   because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole
+   struct pthread even when not linked with -lpthread.  */
+# define TLS_INIT_TCB_SIZE sizeof (struct pthread)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+# define TLS_INIT_TCB_ALIGN __alignof__ (struct pthread)
 
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (struct pthread)
@@ -150,6 +157,43 @@ typedef struct
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
+
+/* Set the stack guard field in TCB head.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+#define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->header.stack_guard						      \
+   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+
+/* s390 doesn't have HP_TIMING_*, so for the time being
+   use stack_guard as pointer_guard.  */
+#define THREAD_GET_POINTER_GUARD() \
+  THREAD_GETMEM (THREAD_SELF, header.stack_guard)
+#define THREAD_SET_POINTER_GUARD(value)
+#define THREAD_COPY_POINTER_GUARD(descr)
+
+/* Get and set the global scope generation counter in struct pthread.  */
+#define THREAD_GSCOPE_FLAG_UNUSED 0
+#define THREAD_GSCOPE_FLAG_USED   1
+#define THREAD_GSCOPE_FLAG_WAIT   2
+#define THREAD_GSCOPE_RESET_FLAG() \
+  do									     \
+    { int __res								     \
+	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
+			       THREAD_GSCOPE_FLAG_UNUSED);		     \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_SET_FLAG() \
+  do									     \
+    {									     \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
+      atomic_write_barrier ();						     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_WAIT() \
+  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

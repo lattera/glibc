@@ -1,5 +1,5 @@
 /* Round to int floating-point values.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,13 +21,14 @@
    when it's coded in C.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	.section	".toc","aw"
 .LC0:	/* 2**52 */
 	.tc FD_43300000_0[TC],0x4330000000000000
 	.section	".text"
 
-ENTRY (__rint)
+EALIGN (__rint, 4, 0)
 	CALL_MCOUNT 0
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
@@ -38,13 +39,14 @@ ENTRY (__rint)
 	bng-	cr6,.L4
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-	blr
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = 0.0; */
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsub	fp1,fp13,fp1	/* x = TWO52 - x;  */
-	fsub	fp0,fp1,fp13	/* x = - (x - TWO52);  */
-	fneg	fp1,fp0
-	blr
+	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
+	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = -0.0; */
 	END (__rint)
 
 weak_alias (__rint, rint)
@@ -52,4 +54,7 @@ weak_alias (__rint, rint)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__rint, rintl)
 strong_alias (__rint, __rintl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __rint, rintl, GLIBC_2_0)
 #endif

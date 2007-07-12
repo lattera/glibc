@@ -51,7 +51,7 @@ copy "pt_PT"
 END LC_MONETARY
 
 LC_CTYPE
-copy "i18n"
+copy "pt_PT"
 END LC_CTYPE
 
 LC_NUMERIC

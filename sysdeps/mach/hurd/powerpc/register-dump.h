@@ -1,5 +1,5 @@
 /* Dump registers.  PowerPC/Hurd version.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,7 +113,7 @@ register_dump (int fd, struct sigcontext *ctx)
     }
 
   /* Write the output.  */
-  write (fd, buffer, sizeof(buffer));
+  write (fd, buffer, sizeof(buffer) - 1);
 }
 
 #define REGISTER_DUMP \

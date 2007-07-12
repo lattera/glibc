@@ -327,31 +327,74 @@ fnmatch (pattern, string, flags)
     {
       mbstate_t ps;
       size_t n;
+      const char *p;
       wchar_t *wpattern;
       wchar_t *wstring;
 
       /* Convert the strings into wide characters.  */
       memset (&ps, '\0', sizeof (ps));
-      n = mbsrtowcs (NULL, &pattern, 0, &ps);
-      if (__builtin_expect (n == (size_t) -1, 0))
-	/* Something wrong.
-	   XXX Do we have to set `errno' to something which mbsrtows hasn't
-	   already done?  */
-	return -1;
-      wpattern = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
-      assert (mbsinit (&ps));
-      (void) mbsrtowcs (wpattern, &pattern, n + 1, &ps);
+      p = pattern;
+#ifdef _LIBC
+      n = strnlen (pattern, 1024);
+#else
+      n = strlen (pattern);
+#endif
+      if (__builtin_expect (n < 1024, 1))
+	{
+	  wpattern = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+	  n = mbsrtowcs (wpattern, &p, n + 1, &ps);
+	  if (__builtin_expect (n == (size_t) -1, 0))
+	    /* Something wrong.
+	       XXX Do we have to set `errno' to something which mbsrtows hasn't
+	       already done?  */
+	    return -1;
+	  if (p)
+	    memset (&ps, '\0', sizeof (ps));
+	}
+      if (__builtin_expect (p != NULL, 0))
+	{
+	  n = mbsrtowcs (NULL, &pattern, 0, &ps);
+	  if (__builtin_expect (n == (size_t) -1, 0))
+	    /* Something wrong.
+	       XXX Do we have to set `errno' to something which mbsrtows hasn't
+	       already done?  */
+	    return -1;
+	  wpattern = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+	  assert (mbsinit (&ps));
+	  (void) mbsrtowcs (wpattern, &pattern, n + 1, &ps);
+	}
 
       assert (mbsinit (&ps));
-      n = mbsrtowcs (NULL, &string, 0, &ps);
-      if (__builtin_expect (n == (size_t) -1, 0))
-	/* Something wrong.
-	   XXX Do we have to set `errno' to something which mbsrtows hasn't
-	   already done?  */
-	return -1;
-      wstring = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
-      assert (mbsinit (&ps));
-      (void) mbsrtowcs (wstring, &string, n + 1, &ps);
+#ifdef _LIBC
+      n = strnlen (string, 1024);
+#else
+      n = strlen (string);
+#endif
+      p = string;
+      if (__builtin_expect (n < 1024, 1))
+	{
+	  wstring = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+	  n = mbsrtowcs (wstring, &p, n + 1, &ps);
+	  if (__builtin_expect (n == (size_t) -1, 0))
+	    /* Something wrong.
+	       XXX Do we have to set `errno' to something which mbsrtows hasn't
+	       already done?  */
+	    return -1;
+	  if (p)
+	    memset (&ps, '\0', sizeof (ps));
+	}
+      if (__builtin_expect (p != NULL, 0))
+	{
+	  n = mbsrtowcs (NULL, &string, 0, &ps);
+	  if (__builtin_expect (n == (size_t) -1, 0))
+	    /* Something wrong.
+	       XXX Do we have to set `errno' to something which mbsrtows hasn't
+	       already done?  */
+	    return -1;
+	  wstring = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+	  assert (mbsinit (&ps));
+	  (void) mbsrtowcs (wstring, &string, n + 1, &ps);
+	}
 
       return internal_fnwmatch (wpattern, wstring, wstring + n,
 				flags & FNM_PERIOD, flags);

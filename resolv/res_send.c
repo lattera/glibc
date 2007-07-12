@@ -267,8 +267,8 @@ res_nameinquery(const char *name, int type, int class,
 		cp += n;
 		if (cp + 2 * INT16SZ > eom)
 			return (-1);
-		ttype = ns_get16(cp); cp += INT16SZ;
-		tclass = ns_get16(cp); cp += INT16SZ;
+		NS_GET16(ttype, cp);
+		NS_GET16(tclass, cp);
 		if (ttype == type && tclass == class &&
 		    ns_samename(tname, name) == 1)
 			return (1);
@@ -292,9 +292,6 @@ int
 res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		 const u_char *buf2, const u_char *eom2)
 {
-	const u_char *cp = buf1 + HFIXEDSZ;
-	int qdcount = ntohs(((HEADER*)buf1)->qdcount);
-
 	if (buf1 + HFIXEDSZ > eom1 || buf2 + HFIXEDSZ > eom2)
 		return (-1);
 
@@ -306,8 +303,16 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	    (((HEADER *)buf2)->opcode == ns_o_update))
 		return (1);
 
-	if (qdcount != ntohs(((HEADER*)buf2)->qdcount))
+	/* Note that we initially do not convert QDCOUNT to the host byte
+	   order.  We can compare it with the second buffer's QDCOUNT
+	   value without doing this.  */
+	int qdcount = ((HEADER*)buf1)->qdcount;
+	if (qdcount != ((HEADER*)buf2)->qdcount)
 		return (0);
+
+	qdcount = htons (qdcount);
+	const u_char *cp = buf1 + HFIXEDSZ;
+
 	while (qdcount-- > 0) {
 		char tname[MAXDNAME+1];
 		int n, ttype, tclass;
@@ -318,8 +323,8 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		cp += n;
 		if (cp + 2 * INT16SZ > eom1)
 			return (-1);
-		ttype = ns_get16(cp);	cp += INT16SZ;
-		tclass = ns_get16(cp); cp += INT16SZ;
+		NS_GET16(ttype, cp);
+		NS_GET16(tclass, cp);
 		if (!res_nameinquery(tname, ttype, tclass, buf2, eom2))
 			return (0);
 	}
@@ -381,7 +386,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				}
 			}
 		if (needclose)
-			res_nclose(statp);
+			__res_iclose(statp, false);
 	}
 
 	/*
@@ -488,7 +493,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 					done = 1;
 					break;
 				case res_nextns:
-					res_nclose(statp);
+					__res_iclose(statp, false);
 					goto next_ns;
 				case res_done:
 					return (resplen);
@@ -553,7 +558,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		 */
 		if ((v_circuit && (statp->options & RES_USEVC) == 0) ||
 		    (statp->options & RES_STAYOPEN) == 0) {
-			res_nclose(statp);
+			__res_iclose(statp, false);
 		}
 		if (statp->rhook) {
 			int done = 0, loops = 0;
@@ -570,7 +575,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 					done = 1;
 					break;
 				case res_nextns:
-					res_nclose(statp);
+					__res_iclose(statp, false);
 					goto next_ns;
 				case res_modified:
 					/* give the hook another try */
@@ -589,7 +594,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
  next_ns: ;
 	   } /*foreach ns*/
 	} /*foreach retry*/
-	res_nclose(statp);
+	__res_iclose(statp, false);
 	if (!v_circuit) {
 		if (!gotsomewhere)
 			__set_errno (ECONNREFUSED);	/* no nameservers found */
@@ -632,19 +637,19 @@ send_vc(res_state statp,
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_in6 peer;
-		int size = sizeof peer;
+		socklen_t size = sizeof peer;
 
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)&peer, &size) < 0 ||
 		    !sock_eq(&peer, nsap)) {
-			res_nclose(statp);
+		  __res_iclose(statp, false);
 			statp->_flags &= ~RES_F_VC;
 		}
 	}
 
 	if (statp->_vcsock < 0 || (statp->_flags & RES_F_VC) == 0) {
 		if (statp->_vcsock >= 0)
-			res_nclose(statp);
+		  __res_iclose(statp, false);
 
 		statp->_vcsock = socket(nsap->sin6_family, SOCK_STREAM, 0);
 		if (statp->_vcsock < 0) {
@@ -654,11 +659,13 @@ send_vc(res_state statp,
 		}
 		__set_errno (0);
 		if (connect(statp->_vcsock, (struct sockaddr *)nsap,
-			    sizeof *nsap) < 0) {
+			    nsap->sin6_family == AF_INET
+			    ? sizeof (struct sockaddr_in)
+			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno,
 			       (struct sockaddr *) nsap);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		statp->_flags |= RES_F_VC;
@@ -667,14 +674,14 @@ send_vc(res_state statp,
 	/*
 	 * Send length & message
 	 */
-	putshort((u_short)buflen, (u_char*)&len);
+	ns_put16((u_short)buflen, (u_char*)&len);
 	evConsIovec(&len, INT16SZ, &iov[0]);
 	evConsIovec((void*)buf, buflen, &iov[1]);
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, 2))
 	    != (INT16SZ + buflen)) {
 		*terrno = errno;
 		Perror(statp, stderr, "write failed", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	/*
@@ -692,7 +699,7 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read failed", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		/*
 		 * A long running process might get its TCP
 		 * connection reset if the remote server was
@@ -704,10 +711,8 @@ send_vc(res_state statp,
 		 */
 		if (*terrno == ECONNRESET && !connreset) {
 			connreset = 1;
-			res_nclose(statp);
 			goto same_ns;
 		}
-		res_nclose(statp);
 		return (0);
 	}
 	resplen = ns_get16(ans);
@@ -716,7 +721,7 @@ send_vc(res_state statp,
 			ans = malloc (MAXPACKET);
 			if (ans == NULL) {
 				*terrno = ENOMEM;
-				res_nclose(statp);
+				__res_iclose(statp, false);
 				return (0);
 			}
 			anssiz = MAXPACKET;
@@ -741,7 +746,7 @@ send_vc(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; undersized: %d\n", len));
 		*terrno = EMSGSIZE;
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	cp = ans;
@@ -752,7 +757,7 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
-		res_nclose(statp);
+		__res_iclose(statp, false);
 		return (0);
 	}
 	if (truncating) {
@@ -809,7 +814,8 @@ send_dg(res_state statp,
         int ptimeout;
 	struct sockaddr_in6 from;
 	static int socket_pf = 0;
-	int fromlen, resplen, seconds, n;
+	socklen_t fromlen;
+	int resplen, seconds, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
@@ -844,7 +850,7 @@ send_dg(res_state statp,
 			    sizeof *nsap) < 0) {
 			Aerror(statp, stderr, "connect(dg)", errno,
 			       (struct sockaddr *) nsap);
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (0);
 		}
 		/* Make socket non-blocking.  */
@@ -873,10 +879,13 @@ send_dg(res_state statp,
 	pfd[0].events = POLLOUT;
  wait:
 	if (need_recompute) {
+	recompute_resend:
 		evNowTime(&now);
 		if (evCmpTime(finish, now) <= 0) {
-			Perror(statp, stderr, "select", errno);
-			res_nclose(statp);
+		poll_err_out:
+			Perror(statp, stderr, "poll", errno);
+		err_out:
+			__res_iclose(statp, false);
 			return (0);
 		}
 		evSubTime(&timeout, &finish, &now);
@@ -898,26 +907,18 @@ send_dg(res_state statp,
 		return (0);
 	}
 	if (n < 0) {
-		if (errno == EINTR) {
-		recompute_resend:
-			evNowTime(&now);
-			if (evCmpTime(finish, now) > 0) {
-				evSubTime(&timeout, &finish, &now);
-				goto wait;
-			}
-		}
-		Perror(statp, stderr, "poll", errno);
-		res_nclose(statp);
-		return (0);
+		if (errno == EINTR)
+			goto recompute_resend;
+
+		goto poll_err_out;
 	}
 	__set_errno (0);
 	if (pfd[0].revents & POLLOUT) {
-		if (send(pfd[0].fd, (char*)buf, buflen, 0) != buflen) {
+		if (send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL) != buflen) {
 			if (errno == EINTR || errno == EAGAIN)
 				goto recompute_resend;
 			Perror(statp, stderr, "send", errno);
-			res_nclose(statp);
-			return (0);
+			goto err_out;
 		}
 		pfd[0].events = POLLIN;
 		++nwritten;
@@ -947,8 +948,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			res_nclose(statp);
-			return (0);
+			goto err_out;
 		}
 		*gotsomewhere = 1;
 		if (resplen < HFIXEDSZ) {
@@ -959,8 +959,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				resplen));
 			*terrno = EMSGSIZE;
-			res_nclose(statp);
-			return (0);
+			goto err_out;
 		}
 		if (hp->id != anhp->id) {
 			/*
@@ -1007,10 +1006,18 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "server rejected query:\n"),
 				ans, (resplen > anssiz) ? anssiz : resplen);
-			res_nclose(statp);
+		next_ns:
+			__res_iclose(statp, false);
 			/* don't retry if called from dig */
 			if (!statp->pfcode)
 				return (0);
+		}
+		if (anhp->rcode == NOERROR && anhp->ancount == 0
+		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
+			DprintQ(statp->options & RES_DEBUG,
+				(stdout, "referred query:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto next_ns;
 		}
 		if (!(statp->options & RES_IGNTC) && anhp->tc) {
 			/*
@@ -1020,7 +1027,7 @@ send_dg(res_state statp,
 			Dprint(statp->options & RES_DEBUG,
 			       (stdout, ";; truncated answer\n"));
 			*v_circuit = 1;
-			res_nclose(statp);
+			__res_iclose(statp, false);
 			return (1);
 		}
 		/*
@@ -1030,8 +1037,11 @@ send_dg(res_state statp,
 		return (resplen);
 	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
 		/* Something went wrong.  We can stop trying.  */
-		res_nclose(statp);
-		return (0);
+		goto err_out;
+	}
+	else {
+	  	/* poll should not have returned > 0 in this case.  */
+		abort ();
 	}
 }
 
@@ -1047,8 +1057,13 @@ Aerror(const res_state statp, FILE *file, const char *string, int error,
 
 		fprintf(file, "res_send: %s ([%s].%u): %s\n",
 			string,
-			inet_ntop(address->sa_family, address->sa_data,
-				  tmp, sizeof tmp),
+			(address->sa_family == AF_INET
+			 ? inet_ntop(address->sa_family,
+				     &((const struct sockaddr_in *) address)->sin_addr,
+				     tmp, sizeof tmp)
+			 : inet_ntop(address->sa_family,
+				     &((const struct sockaddr_in6 *) address)->sin6_addr,
+				     tmp, sizeof tmp)),
 			(address->sa_family == AF_INET
 			 ? ntohs(((struct sockaddr_in *) address)->sin_port)
 			 : address->sa_family == AF_INET6

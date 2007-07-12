@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -26,8 +26,6 @@ __pthread_cond_init (cond, cond_attr)
      pthread_cond_t *cond;
      const pthread_condattr_t *cond_attr;
 {
-  /* Note that we don't need the PSHARED information from COND-ATTR.
-     Conditional variables are always usable in multiple processes.  */
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
   cond->__data.__lock = LLL_MUTEX_LOCK_INITIALIZER;

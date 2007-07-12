@@ -859,6 +859,8 @@ translit_start
 <U137A>    <U0060><U0039><U0030>
 <U137B>    <U0060><U0031><U0030><U0030>
 <U137C>    <U0060><U0031><U0030><U0030><U0030><U0030>
+
+include  "translit_combining";""
 translit_end
 %
 END LC_CTYPE

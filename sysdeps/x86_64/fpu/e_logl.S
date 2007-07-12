@@ -38,8 +38,12 @@ limit:	.double 0.29
 ENTRY(__ieee754_logl)
 	fldln2			// log(2)
 	fldt	8(%rsp)		// x : log(2)
+	fxam
+	fnstsw
 	fld	%st		// x : x : log(2)
-	fsubl	MO(one)		// x-1 : x : log(2)
+	testb	$1, %ah
+	jnz	3f		// in case x is NaN or +-Inf
+4:	fsubl	MO(one)		// x-1 : x : log(2)
 	fld	%st		// x-1 : x-1 : x : log(2)
 	fabs			// |x-1| : x-1 : x : log(2)
 	fcompl	MO(limit)	// x-1 : x : log(2)
@@ -52,5 +56,11 @@ ENTRY(__ieee754_logl)
 
 2:	fstp	%st(0)		// x : log(2)
 	fyl2x			// log(x)
+	ret
+
+3:	testb	$4, %ah
+	jnz	4b		// in case x is +-Inf
+	fstp	%st(1)
+	fstp	%st(1)
 	ret
 END (__ieee754_logl)

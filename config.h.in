@@ -8,11 +8,6 @@
 # error "glibc must not be compiled with -ffast-math"
 #endif
 
-/* Define if using GNU ld, with support for weak symbols in a.out,
-   and for symbol set and warning messages extensions in a.out and ELF.
-   This implies HAVE_WEAK_SYMBOLS; set by --with-gnu-ld.  */
-#undef	HAVE_GNU_LD
-
 /* Define if using ELF, which supports weak symbols.
    This implies HAVE_ASM_WEAK_DIRECTIVE and NO_UNDERSCORES; set by
    --with-elf.  */
@@ -20,6 +15,12 @@
 
 /* Define if building with SELinux support.  Set by --with-selinux.  */
 #undef	HAVE_SELINUX
+
+/* Defined if building with SELinux support & audit libs are detected. */
+#undef	HAVE_LIBAUDIT
+
+/* Defined if building with SELinux support & libcap libs are detected.  */
+#undef  HAVE_LIBCAP
 
 /* Define if using XCOFF. Set by --with-xcoff.  */
 #undef	HAVE_XCOFF
@@ -46,9 +47,6 @@
 
 /* Define if __attribute__((section("foo"))) puts quotes around foo.  */
 #undef  HAVE_SECTION_QUOTES
-
-/* Define if using the GNU assembler, gas.  */
-#undef	HAVE_GNU_AS
 
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
@@ -93,13 +91,6 @@
 
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
-
-/* Define if gcc uses DWARF2 unwind information for exception support.  */
-#undef	HAVE_DWARF2_UNWIND_INFO
-
-/* Define if gcc uses DWARF2 unwind information for exception support
-   with static variable. */
-#undef	HAVE_DWARF2_UNWIND_INFO_STATIC
 
 /* Define if the compiler supports __builtin_expect.  */
 #undef	HAVE_BUILTIN_EXPECT
@@ -155,10 +146,6 @@
 /* Define if binutils support TLS handling.  */
 #undef	HAVE_TLS_SUPPORT
 
-/* Define if the linker supports .preinit_array/.init_array/.fini_array
-   sections.  */
-#undef	HAVE_INITFINI_ARRAY
-
 /* Define if the compiler's exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 
@@ -182,10 +169,6 @@
 
 /* Override abi-tags ABI version if necessary.  */
 #undef  __ABI_TAG_VERSION
-
-/* An extension in gcc 2.96 and up allows the subtraction of two
-   local labels.  */
-#undef	HAVE_SUBTRACT_LOCAL_LABELS
 
 /* bash 2.0 introduced the _XXX_GNU_nonoption_argv_flags_ variable to help
    getopt determine whether a parameter is a flag or not.  This features
@@ -216,6 +199,15 @@
 
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
+
+/* Define if your assembler and linker support R_PPC_REL16* relocs.  */
+#undef HAVE_ASM_PPC_REL16
+
+/* Define if your compiler defaults to -msecure-plt mode on ppc.  */
+#undef HAVE_PPC_SECURE_PLT
+
+/* Define if __stack_chk_guard canary should be randomized at program startup.  */
+#undef ENABLE_STACKGUARD_RANDOMIZE
 
 /*
  */

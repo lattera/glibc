@@ -593,6 +593,8 @@ LC_CTYPE
 copy "i18n"
 space <U1361>
 translit_start
+include "translit_combining";""
+
 % hoy-sadis followed by a vowel
 <U1205><U12A0>    <U0068><U0027><U0065>
 <U1205><U12A1>    <U0068><U0027><U0075>

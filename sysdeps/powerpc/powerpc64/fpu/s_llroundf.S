@@ -1,5 +1,5 @@
 /* llroundf function.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 	
 /* long long [r3] llroundf (float x [fp1])
    IEEE 1003.1 llroundf function.  IEEE specifies "roundf to the nearest 
-   integer value, roundfing halfway cases away from zero, regardless of
-   the current roundfing mode."  However PowerPC Architecture defines
+   integer value, rounding halfway cases away from zero, regardless of
+   the current rounding mode."  However PowerPC Architecture defines
    "roundf to Nearest" as "Choose the best approximation. In case of a 
    tie, choose the one that is even (least significant bit o).". 
    So we can't use the PowerPC "round to Nearest" mode. Instead we set

@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "testobj.h"
 
@@ -22,4 +23,10 @@ preload (int a)
   if (fp != NULL)
     return fp (a) + 10;
   return 10;
+}
+
+void
+p (void)
+{
+  puts ("hello world");
 }

@@ -40,10 +40,14 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-#define __socket P(__,socket)
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
-.globl __socket
+	.globl		__syscall_error
 ENTRY (__socket)
 
 	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
@@ -72,18 +76,19 @@ ENTRY (__socket)
 	add %sp, 68, %o1		/* arg 2: parameter block */
 	LOADSYSCALL(socketcall)
 	t 0x10
-        bcs __syscall_error_handler
-	 nop
-	retl
+	bcc 1f
+	 mov %o7, %g1
+	call __syscall_error
+	 mov %g1, %o7
+1:	jmpl %o7 + 8, %g0
 	 nop
 
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
-	cfi_startproc
 	save %sp, -96, %sp
-	cfi_def_cfa_register (%fp)
+	cfi_def_cfa_register(%fp)
 	cfi_window_save
-	cfi_register (%o7, %i7)
+	cfi_register(%o7, %i7)
 	CENABLE
 	 nop
 	mov %o0, %l0
@@ -91,18 +96,22 @@ ENTRY (__socket)
 	mov P(SOCKOP_,socket), %o0
 	LOADSYSCALL(socketcall)
 	t 0x10
-	bcs __syscall_error_handler2
+	bcc 1f
 	 mov %o0, %l1
-	CDISABLE
+	CDISABLE;
+	 mov %l0, %o0;
+	call __syscall_error;
+	 mov %l1, %o0;
+	b 1f
+	 mov -1, %l1;
+1:	CDISABLE
 	 mov %l0, %o0
-	jmpl %i7 + 8, %g0
+2:	jmpl %i7 + 8, %g0
 	 restore %g0, %l1, %o0
-	cfi_endproc
-	SYSCALL_ERROR_HANDLER2
 #endif
-
-	SYSCALL_ERROR_HANDLER
 
 END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

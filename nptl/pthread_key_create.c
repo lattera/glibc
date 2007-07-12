@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,45 +19,36 @@
 
 #include <errno.h>
 #include "pthreadP.h"
+#include <atomic.h>
 
-
-/* Internal mutex for __pthread_keys table handling.  */
-lll_lock_t __pthread_keys_lock = LLL_LOCK_INITIALIZER;
 
 int
 __pthread_key_create (key, destr)
      pthread_key_t *key;
      void (*destr) (void *);
 {
-  int result = EAGAIN;
-  size_t cnt;
-
-  lll_lock (__pthread_keys_lock);
-
   /* Find a slot in __pthread_kyes which is unused.  */
-  for (cnt = 0; cnt < PTHREAD_KEYS_MAX; ++cnt)
-    if (KEY_UNUSED (__pthread_keys[cnt].seq)
-	&& KEY_USABLE (__pthread_keys[cnt].seq))
-      {
-	/* We found an unused slot.  */
-	++__pthread_keys[cnt].seq;
+  for (size_t cnt = 0; cnt < PTHREAD_KEYS_MAX; ++cnt)
+    {
+      uintptr_t seq = __pthread_keys[cnt].seq;
 
-	/* Remember the destructor.  */
-	__pthread_keys[cnt].destr = destr;
+      if (KEY_UNUSED (seq) && KEY_USABLE (seq)
+	  /* We found an unused slot.  Try to allocate it.  */
+	  && ! atomic_compare_and_exchange_bool_acq (&__pthread_keys[cnt].seq,
+						     seq + 1, seq))
+	{
+	  /* Remember the destructor.  */
+	  __pthread_keys[cnt].destr = destr;
 
-	/* Return the key to the caller.  */
-	*key = cnt;
+	  /* Return the key to the caller.  */
+	  *key = cnt;
 
-	/* The call succeeded.  */
-	result = 0;
+	  /* The call succeeded.  */
+	  return 0;
+	}
+    }
 
-	/* We found a key and can stop now.  */
-	break;
-      }
-
-  lll_unlock (__pthread_keys_lock);
-
-  return result;
+  return EAGAIN;
 }
 strong_alias (__pthread_key_create, pthread_key_create)
 strong_alias (__pthread_key_create, __pthread_key_create_internal)

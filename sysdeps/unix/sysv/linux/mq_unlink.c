@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,5 +50,5 @@ mq_unlink (const char *name)
 }
 
 #else
-# include <sysdeps/generic/mq_unlink.c>
+# include <rt/mq_unlink.c>
 #endif

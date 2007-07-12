@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -242,7 +242,8 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 					 : _dl_runtime_resolve);
 	  Elf32_Word offset;
 
-	  if (profile && _dl_name_match_p (GLRO(dl_profile), map))
+	  if (profile && GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;

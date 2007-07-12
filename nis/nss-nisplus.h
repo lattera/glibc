@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -26,8 +26,8 @@
 
 
 /* Convert NIS+ error number to NSS error number.  */
-extern const enum nss_status __niserr2nss_tab[];
-extern const unsigned int __niserr2nss_count;
+extern const enum nss_status __niserr2nss_tab[] attribute_hidden;
+extern const unsigned int __niserr2nss_count attribute_hidden;
 
 static inline enum nss_status
 niserr2nss (int errval)

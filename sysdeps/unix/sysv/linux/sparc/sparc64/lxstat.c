@@ -1,1 +1,1 @@
-#include "../../lxstat.c"
+#include "../../i386/lxstat.c"

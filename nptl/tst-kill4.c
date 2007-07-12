@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -35,12 +35,29 @@ tf (void *a)
 int
 do_test (void)
 {
+  pthread_attr_t at;
+  if (pthread_attr_init (&at) != 0)
+    {
+      puts ("attr_create failed");
+      exit (1);
+    }
+
+  /* Limit thread stack size, because if it is too large, pthread_join
+     will free it immediately rather than put it into stack cache.  */
+  if (pthread_attr_setstacksize (&at, 2 * 1024 * 1024) != 0)
+    {
+      puts ("setstacksize failed");
+      exit (1);
+    }
+
   pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
+  if (pthread_create (&th, &at, tf, NULL) != 0)
     {
       puts ("create failed");
       exit (1);
     }
+
+  pthread_attr_destroy (&at);
 
   if (pthread_join (th, NULL) != 0)
     {

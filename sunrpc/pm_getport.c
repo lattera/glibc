@@ -38,6 +38,8 @@ static char sccsid[] = "@(#)pmap_getport.c 1.9 87/08/11 Copyr 1984 Sun Micro";
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
+#include <stdbool.h>
+#include <unistd.h>
 #include <rpc/rpc.h>
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
@@ -47,6 +49,41 @@ static const struct timeval timeout =
 {5, 0};
 static const struct timeval tottimeout =
 {60, 0};
+
+/*
+ * Create a socket that is locally bound to a non-reserve port. For
+ * any failures, -1 is returned which will cause the RPC code to
+ * create the socket.
+ */
+int
+internal_function
+__get_socket (struct sockaddr_in *saddr)
+{
+  int so = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  if (so < 0)
+    return -1;
+
+  struct sockaddr_in laddr;
+  socklen_t namelen = sizeof (laddr);
+  laddr.sin_family = AF_INET;
+  laddr.sin_port = 0;
+  laddr.sin_addr.s_addr = htonl (INADDR_ANY);
+
+  int cc = __bind (so, (struct sockaddr *) &laddr, namelen);
+  if (__builtin_expect (cc < 0, 0))
+    {
+    fail:
+      __close (so);
+      return -1;
+    }
+
+  cc = __connect (so, (struct sockaddr *) saddr, namelen);
+  if (__builtin_expect (cc < 0, 0))
+    goto fail;
+
+  return so;
+}
+
 
 /*
  * Find the mapped port for program,version.
@@ -64,11 +101,18 @@ pmap_getport (address, program, version, protocol)
   int socket = -1;
   CLIENT *client;
   struct pmap parms;
+  bool closeit = false;
 
   address->sin_port = htons (PMAPPORT);
   if (protocol == IPPROTO_TCP)
-    client = INTUSE(clnttcp_create) (address, PMAPPROG, PMAPVERS, &socket,
-				     RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+    {
+      /* Don't need a reserved port to get ports from the portmapper.  */
+      socket = __get_socket(address);
+      if (socket != -1)
+	closeit = true;
+      client = INTUSE(clnttcp_create) (address, PMAPPROG, PMAPVERS, &socket,
+				       RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+    }
   else
     client = INTUSE(clntudp_bufcreate) (address, PMAPPROG, PMAPVERS, timeout,
 					&socket, RPCSMALLMSGSIZE,
@@ -93,7 +137,9 @@ pmap_getport (address, program, version, protocol)
 	}
       CLNT_DESTROY (client);
     }
-  /* (void)close(socket); CLNT_DESTROY already closed it */
+  /* We only need to close the socket here if we opened  it.  */
+  if (closeit)
+    (void) __close (socket);
   address->sin_port = 0;
   return port;
 }

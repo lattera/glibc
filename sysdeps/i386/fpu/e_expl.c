@@ -24,8 +24,8 @@
 
 #include <math_private.h>
 
-static long double c0 = 1.44268798828125L;
-static long double c1 = 7.05260771340735992468e-6L;
+static const long double c0 = 1.44268798828125L;
+static const long double c1 = 7.05260771340735992468e-6L;
 
 long double
 __ieee754_expl (long double x)

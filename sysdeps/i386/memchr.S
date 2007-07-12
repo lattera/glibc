@@ -1,7 +1,6 @@
-/* memchr (str, chr, len) -- Return pointer to first occurrence of CHR in STR less
-   than LEN.
-   For Intel 80x86, x>=3.
-   Copyright (C) 1994-1998, 2000, 2003 Free Software Foundation, Inc.
+/* memchr (str, chr, len) -- Return pointer to first occurrence of CHR in STR
+	 less than LEN.  For Intel 80x86, x>=3.
+   Copyright (C) 1994-1998, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -45,12 +44,16 @@ ENTRY (BP_SYM (__memchr))
 
 	/* Save callee-safe registers used in this function.  */
 	pushl %esi
+	cfi_adjust_cfa_offset (4)
 	pushl %edi
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 
 	/* Load parameters into registers.  */
 	movl STR(%esp), %eax	/* str: pointer to memory block.  */
 	movl CHR(%esp), %edx	/* c: byte we are looking for.  */
 	movl LEN(%esp), %esi	/* len: length of memory block.  */
+	cfi_rel_offset (esi, 4)
 	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	/* If my must not test more than three characters test
@@ -320,7 +323,11 @@ L(9):
 	RETURN_BOUNDED_POINTER (STR(%esp))
 #endif
 L(pop):	popl %edi		/* pop saved registers */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 
 	LEAVE
 	RET_PTR

@@ -1229,6 +1229,42 @@ They are not yet documented.}
 @comment errno ???/???
 @end deftypevr
 
+@comment errno.h
+@comment Linux: Required key not available
+@deftypevr Macro int ENOKEY
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux: Key has expired
+@deftypevr Macro int EKEYEXPIRED
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux: Key has been revoked
+@deftypevr Macro int EKEYREVOKED
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux: Key was rejected by service
+@deftypevr Macro int EKEYREJECTED
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux: Owner died
+@deftypevr Macro int EOWNERDEAD
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux: State not recoverable
+@deftypevr Macro int ENOTRECOVERABLE
+@comment errno ???/???
+@end deftypevr
+
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 

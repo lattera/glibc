@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,99, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep-cancel.h>
 #include <socketcall.h>
@@ -39,15 +39,20 @@
 #define NARGS 3
 #endif
 
+/* 0(r1) and 4(r1) are reserved by the ABI, 8(r1), 12(r1), 16(r1) are used
+   for temp saves.  44(r1) is used to save r30.  */
 #define stackblock 20
 
 #ifndef __socket
-#define __socket P(__,socket)
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 	.text
 ENTRY(__socket)
-	cfi_startproc
 	stwu r1,-48(r1)
 	cfi_adjust_cfa_offset(48)
 #if NARGS >= 1
@@ -69,12 +74,6 @@ ENTRY(__socket)
 	stw  r8,20+stackblock(r1)
 #endif
 #if NARGS >= 7
-	stw  r9,24+stackblock(r1)
-#endif
-#if NARGS >= 8
-	stw  r10,28+stackblock(r1)
-#endif
-#if NARGS >= 9
 #error too many arguments!
 #endif
 
@@ -94,6 +93,7 @@ ENTRY(__socket)
 	mflr	r9
 	stw	r9,52(r1)
 	cfi_offset (lr, 4)
+	CGOTSETUP
 	CENABLE
 	stw	r3,16(r1)
 	li	r3,P(SOCKOP_,socket)
@@ -107,13 +107,15 @@ ENTRY(__socket)
 	lwz	r4,52(r1)
 	lwz	r0,12(r1)
 	lwz	r3,8(r1)
+	CGOTRESTORE
 	mtlr	r4
 	mtcr	r0
 	addi	r1,r1,48
 	PSEUDO_RET
 #endif
-	cfi_endproc
 
 PSEUDO_END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

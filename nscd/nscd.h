@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -58,16 +58,18 @@ typedef enum
 struct database_dyn
 {
   pthread_rwlock_t lock;
+  pthread_mutex_t prunelock;
 
   int enabled;
   int check_file;
   int persistent;
   int shared;
-  const char *filename;
+  int propagate;
+  const char filename[12];
   const char *db_filename;
   time_t file_mtime;
   size_t suggested_module;
-  int secure;
+  size_t max_db_size;
 
   unsigned long int postimeout;	/* In seconds.  */
   unsigned long int negtimeout;	/* In seconds.  */
@@ -94,6 +96,17 @@ struct database_dyn
 /* Path used when not using persistent storage.  */
 #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
 
+/* Maximum alignment requirement we will encounter.  */
+#define BLOCK_ALIGN_LOG 3
+#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
+#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
+
+/* Default value for the maximum size of the database files.  */
+#define DEFAULT_MAX_DB_SIZE	(32 * 1024 * 1024)
+
+/* Number of bytes of data we initially reserve for each hash table bucket.  */
+#define DEFAULT_DATASIZE_PER_BUCKET 1024
+
 
 /* Global variables.  */
 extern struct database_dyn dbs[lastdb];
@@ -109,9 +122,6 @@ extern const struct iovec hst_iov_disabled;
 extern int nthreads;
 /* Maximum number of threads to use.  */
 extern int max_nthreads;
-
-/* Tables for which we cache data with uid.  */
-extern int secure_in_use; /* Is one of the above 1?  */
 
 /* User name to run server processes as.  */
 extern const char *server_user;
@@ -175,7 +185,7 @@ extern struct datahead *cache_search (request_type, void *key, size_t len,
 extern int cache_add (int type, const void *key, size_t len,
 		      struct datahead *packet, bool first,
 		      struct database_dyn *table, uid_t owner);
-extern void prune_cache (struct database_dyn *table, time_t now);
+extern void prune_cache (struct database_dyn *table, time_t now, int fd);
 
 /* pwdcache.c */
 extern void addpwbyname (struct database_dyn *db, int fd, request_header *req,
@@ -235,5 +245,15 @@ extern void gc (struct database_dyn *db);
 
 /* nscd_setup_thread.c */
 extern void setup_thread (struct database_dyn *db);
+
+
+/* Special version of TEMP_FAILURE_RETRY for functions returning error
+   values.  */
+#define TEMP_FAILURE_RETRY_VAL(expression) \
+  (__extension__							      \
+    ({ long int __result;						      \
+       do __result = (long int) (expression);				      \
+       while (__result == EINTR);					      \
+       __result; }))
 
 #endif /* nscd.h */

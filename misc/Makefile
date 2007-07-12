@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,13 @@ subdir	:= misc
 headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   sys/ptrace.h sys/file.h sys/dir.h sys/cdefs.h \
 	   ar.h a.out.h libgen.h stab.h bits/stab.def sgtty.h \
-	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
+	   ttyent.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h \
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
 	   sys/select.h ustat.h sys/ustat.h bits/ustat.h sys/sysinfo.h \
-	   regexp.h bits/select.h bits/mman.h sys/xattr.h
+	   regexp.h bits/select.h bits/mman.h sys/xattr.h \
+	   syslog.h sys/syslog.h \
+	   bits/syslog.h bits/syslog-ldbl.h bits/syslog-path.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
@@ -47,7 +49,7 @@ routines := brk sbrk sstk ioctl \
 	    gtty stty \
 	    ptrace \
 	    fstab mntent mntent_r \
-	    utimes lutimes futimes \
+	    utimes lutimes futimes futimesat \
 	    truncate ftruncate truncate64 ftruncate64 \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
@@ -65,6 +67,8 @@ routines := brk sbrk sstk ioctl \
 
 distribute := device-nrs.h
 
+generated := tst-error1.mtrace tst-error1-mem
+
 include ../Makeconfig
 
 aux := init-misc
@@ -73,7 +77,11 @@ install-lib := libbsd-compat.a libg.a
 endif
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch
+tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
+	 tst-error1 tst-pselect tst-insremque tst-mntent2
+ifeq (no,$(cross-compiling))
+tests: $(objpfx)tst-error1-mem
+endif
 
 CFLAGS-tsearch.c = $(uses-callbacks)
 CFLAGS-lsearch.c = $(uses-callbacks)
@@ -106,3 +114,8 @@ endif
 ifeq ($(build-bounded),yes)
 $(objpfx)tst-tsearch-bp: $(common-objpfx)math/libm_b.a
 endif
+
+tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace
+tst-error1-ARGS = $(objpfx)tst-error1.out
+$(objpfx)tst-error1-mem: $(objpfx)tst-error1.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-error1.mtrace > $@

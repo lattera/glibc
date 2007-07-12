@@ -38,6 +38,8 @@ extern int __printf_chk (int, const char *, ...);
 extern int __fprintf_chk (FILE *, int, const char *, ...);
 extern int __vprintf_chk (int, const char *, _G_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
+extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
+extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
 
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);
@@ -77,6 +79,8 @@ extern int __ftrylockfile (FILE *__stream);
 extern int __getc_unlocked (FILE *__fp);
 extern wint_t __getwc_unlocked (FILE *__fp);
 
+extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
 extern __const char *__const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;
@@ -124,6 +128,7 @@ libc_hidden_proto (open_memstream)
 libc_hidden_proto (__libc_fatal)
 libc_hidden_proto (__vsprintf_chk)
 libc_hidden_proto (__vsnprintf_chk)
+libc_hidden_proto (__vfprintf_chk)
 
 #  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
   && defined HAVE_VISIBILITY_ATTRIBUTE && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE\

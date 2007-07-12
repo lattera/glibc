@@ -1,6 +1,6 @@
 /* DWARF2 exception handling and frame unwind runtime interface routines.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-   Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005,2006
+   	Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -25,6 +25,7 @@
 #include <error.h>
 #include <libintl.h>
 #include <dwarf2.h>
+#include <stdio.h>
 #include <unwind.h>
 #include <unwind-pe.h>
 #include <unwind-dw2-fde.h>
@@ -256,7 +257,7 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
 		  _Unwind_FrameState *fs)
 {
   const unsigned char *aug = cie->augmentation;
-  const unsigned char *p = aug + strlen (aug) + 1;
+  const unsigned char *p = aug + strlen ((const char *) aug) + 1;
   const unsigned char *ret = NULL;
   _Unwind_Word utmp;
 
@@ -837,9 +838,16 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	case DW_CFA_restore_state:
 	  {
 	    struct frame_state_reg_info *old_rs = fs->regs.prev;
-	    fs->regs = *old_rs;
-	    old_rs->prev = unused_rs;
-	    unused_rs = old_rs;
+#ifdef _LIBC
+	    if (old_rs == NULL)
+	      __libc_fatal ("invalid DWARF unwind data");
+	    else
+#endif
+	      {
+		fs->regs = *old_rs;
+		old_rs->prev = unused_rs;
+		unused_rs = old_rs;
+	      }
 	  }
 	  break;
 
@@ -897,12 +905,16 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_GNU_window_save:
-	  /* ??? Hardcoded for SPARC register window configuration.  */
+	  /* ??? Hardcoded for SPARC register window configuration.
+	     At least do not do anything for archs which explicitly
+	     define a lower register number.  */
+#if DWARF_FRAME_REGISTERS >= 32
 	  for (reg = 16; reg < 32; ++reg)
 	    {
 	      fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	      fs->regs.reg[reg].loc.offset = (reg - 16) * sizeof (void *);
 	    }
+#endif
 	  break;
 
 	case DW_CFA_GNU_args_size:

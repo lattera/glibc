@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -44,7 +44,7 @@ NAME (void)								      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  NaN_var = zero_var/zero_var;						      \
+  NaN_var = zero_var / zero_var;					      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &zero_var;							      \
@@ -103,21 +103,51 @@ NAME (void)								      \
   check (#FLOAT " isinf (-HUGE_VALx) == -1", isinf (x1) == -1);		      \
 }
 
+#define TEST_TRUNC(NAME, FLOAT, DOUBLE) \
+void									      \
+NAME (void)								      \
+{									      \
+  volatile DOUBLE Inf_var, NaN_var, zero_var, one_var;			      \
+  FLOAT x1, x2;								      \
+									      \
+  zero_var = 0.0;							      \
+  one_var = 1.0;							      \
+  NaN_var = zero_var / zero_var;					      \
+  Inf_var = one_var / zero_var;						      \
+									      \
+  (void) &NaN_var;							      \
+  (void) &Inf_var;							      \
+									      \
+  x1 = (FLOAT) NaN_var;							      \
+  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") NaN", isnan (x1) != 0);	      \
+  x2 = (FLOAT) Inf_var;							      \
+  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") Inf", isinf (x2) != 0);	      \
+}
+
 TEST_FUNC (float_test, float, nanf, FLT_EPSILON, HUGE_VALF)
 TEST_FUNC (double_test, double, nan, DBL_EPSILON, HUGE_VAL)
+TEST_TRUNC (truncdfsf_test, float, double)
 #ifndef NO_LONG_DOUBLE
 TEST_FUNC (ldouble_test, long double, nanl, LDBL_EPSILON, HUGE_VALL)
+TEST_TRUNC (trunctfsf_test, float, long double)
+TEST_TRUNC (trunctfdf_test, double, long double)
 #endif
 
 int
-main (void)
+do_test (void)
 {
   float_test ();
   double_test ();
+  truncdfsf_test();
 
 #ifndef NO_LONG_DOUBLE
   ldouble_test ();
+  trunctfsf_test();
+  trunctfdf_test();
 #endif
 
   return errors != 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

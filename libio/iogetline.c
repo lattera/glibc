@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,2000,2001,2002,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +74,8 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
 	  int c = __uflow (fp);
 	  if (c == EOF)
 	    {
-	      if (eof) *eof = c;
+	      if (eof)
+		*eof = c;
 	      break;
 	    }
 	  if (c == delim)
@@ -89,31 +91,31 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
 	  *ptr++ = c;
 	  n--;
 	}
-	else
-	  {
-	    char *t;
-	    if ((_IO_size_t) len >= n)
-	      len = n;
-	    t = (char *) memchr ((void *) fp->_IO_read_ptr, delim, len);
-	    if (t != NULL)
-	      {
-		_IO_size_t old_len = ptr-buf;
-		len = t - fp->_IO_read_ptr;
-		if (extract_delim >= 0)
-		  {
-		    ++t;
-		    if (extract_delim > 0)
-		      ++len;
-		  }
-		memcpy ((void *) ptr, (void *) fp->_IO_read_ptr, len);
-		fp->_IO_read_ptr = t;
-		return old_len + len;
-	      }
-	    memcpy ((void *) ptr, (void *) fp->_IO_read_ptr, len);
-	    fp->_IO_read_ptr += len;
-	    ptr += len;
-	    n -= len;
-	  }
+      else
+	{
+	  char *t;
+	  if ((_IO_size_t) len >= n)
+	    len = n;
+	  t = (char *) memchr ((void *) fp->_IO_read_ptr, delim, len);
+	  if (t != NULL)
+	    {
+	      _IO_size_t old_len = ptr-buf;
+	      len = t - fp->_IO_read_ptr;
+	      if (extract_delim >= 0)
+		{
+		  ++t;
+		  if (extract_delim > 0)
+		    ++len;
+		}
+	      memcpy ((void *) ptr, (void *) fp->_IO_read_ptr, len);
+	      fp->_IO_read_ptr = t;
+	      return old_len + len;
+	    }
+	  memcpy ((void *) ptr, (void *) fp->_IO_read_ptr, len);
+	  fp->_IO_read_ptr += len;
+	  ptr += len;
+	  n -= len;
+	}
     }
   return ptr - buf;
 }

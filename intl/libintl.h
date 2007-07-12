@@ -1,5 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995-1999, 2000-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
@@ -37,19 +37,21 @@ __BEGIN_DECLS
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-extern char *gettext (__const char *__msgid) __THROW;
+extern char *gettext (__const char *__msgid)
+     __THROW __attribute_format_arg__ (1);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
 extern char *dgettext (__const char *__domainname, __const char *__msgid)
-     __THROW;
+     __THROW __attribute_format_arg__ (2);
 extern char *__dgettext (__const char *__domainname, __const char *__msgid)
      __THROW __attribute_format_arg__ (2);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
 extern char *dcgettext (__const char *__domainname,
-			__const char *__msgid, int __category) __THROW;
+			__const char *__msgid, int __category)
+     __THROW __attribute_format_arg__ (2);
 extern char *__dcgettext (__const char *__domainname,
 			  __const char *__msgid, int __category)
      __THROW __attribute_format_arg__ (2);

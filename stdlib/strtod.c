@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 
 
 #ifndef FLOAT
+# include <math_ldbl_opt.h>
 # define FLOAT double
 # ifdef USE_WIDE_CHAR
 #  define STRTOF wcstod
@@ -68,3 +69,15 @@ STRTOF (nptr, endptr)
 {
   return INTERNAL(STRTOF_L) (nptr, endptr, 0, _NL_CURRENT_LOCALE);
 }
+
+#ifdef LONG_DOUBLE_COMPAT
+# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+#  ifdef USE_WIDE_CHAR
+compat_symbol (libc, wcstod, wcstold, GLIBC_2_0);
+compat_symbol (libc, __wcstod_internal, __wcstold_internal, GLIBC_2_0);
+#  else
+compat_symbol (libc, strtod, strtold, GLIBC_2_0);
+compat_symbol (libc, __strtod_internal, __strtold_internal, GLIBC_2_0);
+#  endif
+# endif
+#endif

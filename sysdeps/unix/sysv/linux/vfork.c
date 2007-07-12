@@ -1,1 +1,1 @@
-#include <sysdeps/generic/vfork.c>
+#include <posix/vfork.c>

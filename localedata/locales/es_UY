@@ -52,7 +52,7 @@ copy "es_ES"
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "es_ES"
 END LC_CTYPE
 
 LC_MESSAGES
@@ -62,7 +62,7 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "<U0055><U0059><U0055><U0020>"
-currency_symbol      "<U004E><U0024>"
+currency_symbol      "<U0024>"
 mon_decimal_point    "<U002C>"
 mon_thousands_sep    "<U002E>"
 mon_grouping         3;3

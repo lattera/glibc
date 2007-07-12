@@ -1,22 +1,19 @@
-/* Copyright (C) 1999, 2000, 2001, 2002, 2003
-	Free Software Foundation, Inc.
+/* Copyright (C) 1999-2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <error.h>
@@ -32,8 +29,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "ldconfig.h"
-#include "dl-cache.h"
+#include <ldconfig.h>
+#include <dl-cache.h>
 
 struct cache_entry
 {
@@ -99,7 +96,7 @@ print_entry (const char *lib, int flag, unsigned int osversion,
       break;
     }
   if (hwcap != 0)
-    printf (", hwcap: 0x%" PRIx64, hwcap);
+    printf (", hwcap: %#.16" PRIx64, hwcap);
   if (osversion != 0)
     {
       static const char *const abi_tag_os[] =
@@ -108,7 +105,9 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 	[1] = "Hurd",
 	[2] = "Solaris",
 	[3] = "FreeBSD",
-	[4] = N_("Unknown OS")
+	[4] = "kNetBSD",
+	[5] = "Syllable",
+	[6] = N_("Unknown OS")
       };
 #define MAXTAG (sizeof abi_tag_os / sizeof abi_tag_os[0] - 1)
       unsigned int os = osversion >> 24;
@@ -421,7 +420,7 @@ save_cache (const char *cache_name)
   if (opt_format != 2)
     {
       if (write (fd, file_entries, file_entries_size)
-	  != (ssize_t)file_entries_size)
+	  != (ssize_t) file_entries_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
   if (opt_format != 0)
@@ -430,15 +429,16 @@ save_cache (const char *cache_name)
       if (opt_format != 2)
 	{
 	  char zero[pad];
-	  if (write (fd, zero, pad) != (ssize_t)pad)
+	  memset (zero, '\0', pad);
+	  if (write (fd, zero, pad) != (ssize_t) pad)
 	    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
 	}
       if (write (fd, file_entries_new, file_entries_new_size)
-	  != (ssize_t)file_entries_new_size)
+	  != (ssize_t) file_entries_new_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
 
-  if (write (fd, strings, total_strlen) != (ssize_t)total_strlen)
+  if (write (fd, strings, total_strlen) != (ssize_t) total_strlen)
     error (EXIT_FAILURE, errno, _("Writing of cache data failed."));
 
   close (fd);
@@ -455,6 +455,7 @@ save_cache (const char *cache_name)
 	   cache_name);
 
   /* Free all allocated memory.  */
+  free (file_entries_new);
   free (file_entries);
   free (strings);
 

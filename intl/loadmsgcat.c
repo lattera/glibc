@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -752,146 +752,6 @@ get_sysdep_segment_value (name)
   return NULL;
 }
 
-/* Initialize the codeset dependent parts of an opened message catalog.
-   Return the header entry.  */
-const char *
-internal_function
-_nl_init_domain_conv (domain_file, domain, domainbinding)
-     struct loaded_l10nfile *domain_file;
-     struct loaded_domain *domain;
-     struct binding *domainbinding;
-{
-  /* Find out about the character set the file is encoded with.
-     This can be found (in textual form) in the entry "".  If this
-     entry does not exist or if this does not contain the `charset='
-     information, we will assume the charset matches the one the
-     current locale and we don't have to perform any conversion.  */
-  char *nullentry;
-  size_t nullentrylen;
-
-  /* Preinitialize fields, to avoid recursion during _nl_find_msg.  */
-  domain->codeset_cntr =
-    (domainbinding != NULL ? domainbinding->codeset_cntr : 0);
-#ifdef _LIBC
-  domain->conv = (__gconv_t) -1;
-#else
-# if HAVE_ICONV
-  domain->conv = (iconv_t) -1;
-# endif
-#endif
-  domain->conv_tab = NULL;
-
-  /* Get the header entry.  */
-  nullentry = _nl_find_msg (domain_file, domainbinding, "", &nullentrylen);
-
-  if (nullentry != NULL)
-    {
-#if defined _LIBC || HAVE_ICONV
-      const char *charsetstr;
-
-      charsetstr = strstr (nullentry, "charset=");
-      if (charsetstr != NULL)
-	{
-	  size_t len;
-	  char *charset;
-	  const char *outcharset;
-
-	  charsetstr += strlen ("charset=");
-	  len = strcspn (charsetstr, " \t\n");
-
-	  charset = (char *) alloca (len + 1);
-# if defined _LIBC || HAVE_MEMPCPY
-	  *((char *) mempcpy (charset, charsetstr, len)) = '\0';
-# else
-	  memcpy (charset, charsetstr, len);
-	  charset[len] = '\0';
-# endif
-
-	  /* The output charset should normally be determined by the
-	     locale.  But sometimes the locale is not used or not correctly
-	     set up, so we provide a possibility for the user to override
-	     this.  Moreover, the value specified through
-	     bind_textdomain_codeset overrides both.  */
-	  if (domainbinding != NULL && domainbinding->codeset != NULL)
-	    outcharset = domainbinding->codeset;
-	  else
-	    {
-	      outcharset = getenv ("OUTPUT_CHARSET");
-	      if (outcharset == NULL || outcharset[0] == '\0')
-		{
-# ifdef _LIBC
-		  outcharset = _NL_CURRENT (LC_CTYPE, CODESET);
-# else
-#  if HAVE_ICONV
-		  extern const char *locale_charset PARAMS ((void));
-		  outcharset = locale_charset ();
-#  endif
-# endif
-		}
-	    }
-
-# ifdef _LIBC
-	  /* We always want to use transliteration.  */
-	  outcharset = norm_add_slashes (outcharset, "TRANSLIT");
-	  charset = norm_add_slashes (charset, "");
-	  if (__gconv_open (outcharset, charset, &domain->conv,
-			    GCONV_AVOID_NOCONV)
-	      != __GCONV_OK)
-	    domain->conv = (__gconv_t) -1;
-# else
-#  if HAVE_ICONV
-	  /* When using GNU libc >= 2.2 or GNU libiconv >= 1.5,
-	     we want to use transliteration.  */
-#   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
-       || _LIBICONV_VERSION >= 0x0105
-	  if (strchr (outcharset, '/') == NULL)
-	    {
-	      char *tmp;
-
-	      len = strlen (outcharset);
-	      tmp = (char *) alloca (len + 10 + 1);
-	      memcpy (tmp, outcharset, len);
-	      memcpy (tmp + len, "//TRANSLIT", 10 + 1);
-	      outcharset = tmp;
-
-	      domain->conv = iconv_open (outcharset, charset);
-
-	      freea (outcharset);
-	    }
-	  else
-#   endif
-	    domain->conv = iconv_open (outcharset, charset);
-#  endif
-# endif
-
-	  freea (charset);
-	}
-#endif /* _LIBC || HAVE_ICONV */
-    }
-
-  return nullentry;
-}
-
-/* Frees the codeset dependent parts of an opened message catalog.  */
-void
-internal_function
-_nl_free_domain_conv (domain)
-     struct loaded_domain *domain;
-{
-  if (domain->conv_tab != NULL && domain->conv_tab != (char **) -1)
-    free (domain->conv_tab);
-
-#ifdef _LIBC
-  if (domain->conv != (__gconv_t) -1)
-    __gconv_close (domain->conv);
-#else
-# if HAVE_ICONV
-  if (domain->conv != (iconv_t) -1)
-    iconv_close (domain->conv);
-# endif
-#endif
-}
-
 /* Load the message catalogs specified by FILENAME.  If it is no valid
    message catalog do nothing.  */
 void
@@ -913,6 +773,7 @@ _nl_load_domain (domain_file, domainbinding)
   struct loaded_domain *domain;
   int revision;
   const char *nullentry;
+  size_t nullentrylen;
 
   __libc_lock_lock_recursive (lock);
   if (domain_file->decided != 0)
@@ -920,8 +781,8 @@ _nl_load_domain (domain_file, domainbinding)
       /* There are two possibilities:
 
          + is is the same thread calling again during this
-	   initialization via _nl_init_domain_conv and _nl_find_msg.  We
-	   have initialized everything this call needs.
+	   initialization via _nl_find_msg.  We have initialized
+	   everything this call needs.
 
 	 + this is another thread which tried to initialize this object.
            Not necessary anymore since if the lock is available this
@@ -1388,12 +1249,12 @@ _nl_load_domain (domain_file, domainbinding)
       goto out;
     }
 
-  /* Now initialize the character set converter from the character set
-     the file is encoded with (found in the header entry) to the domain's
-     specified character set or the locale's character set.  */
-  nullentry = _nl_init_domain_conv (domain_file, domain, domainbinding);
+  /* No caches of converted translations so far.  */
+  domain->conversions = NULL;
+  domain->nconversions = 0;
 
-  /* Also look for a plural specification.  */
+  /* Get the header entry and look for a plural specification.  */
+  nullentry = _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
   EXTRACT_PLURAL_EXPRESSION (nullentry, &domain->plural, &domain->nplurals);
 
  out:
@@ -1412,10 +1273,23 @@ internal_function __libc_freeres_fn_section
 _nl_unload_domain (domain)
      struct loaded_domain *domain;
 {
+  size_t i;
+
   if (domain->plural != &__gettext_germanic_plural)
     __gettext_free_exp (domain->plural);
 
-  _nl_free_domain_conv (domain);
+  for (i = 0; i < domain->nconversions; i++)
+    {
+      struct converted_domain *convd = &domain->conversions[i];
+
+      free ((char *) convd->encoding);
+      if (convd->conv_tab != NULL && convd->conv_tab != (char **) -1)
+	free (convd->conv_tab);
+      if (convd->conv != (__gconv_t) -1)
+	__gconv_close (convd->conv);
+    }
+  if (domain->conversions != NULL)
+    free (domain->conversions);
 
   if (domain->malloced)
     free (domain->malloced);

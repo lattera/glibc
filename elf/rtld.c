@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,9 +34,10 @@
 #include <hp-timing.h>
 #include <bits/libc-lock.h>
 #include "dynamic-link.h"
-#include "dl-librecon.h"
+#include <dl-librecon.h>
 #include <unsecvars.h>
 #include <dl-cache.h>
+#include <dl-osinfo.h>
 #include <dl-procinfo.h>
 #include <tls.h>
 
@@ -60,6 +61,9 @@ static void print_missing_version (int errcode, const char *objname,
 /* Print the various times we collected.  */
 static void print_statistics (hp_timing_t *total_timep);
 
+/* Add audit objects.  */
+static void process_dl_audit (char *str);
+
 /* This is a list of all the modes the dynamic loader can be in.  */
 enum mode { normal, list, verify, trace };
 
@@ -68,16 +72,39 @@ enum mode { normal, list, verify, trace };
    all the entries.  */
 static void process_envvars (enum mode *modep);
 
-int _dl_argc attribute_relro attribute_hidden;
 #ifdef DL_ARGV_NOT_RELRO
+int _dl_argc attribute_hidden;
 char **_dl_argv = NULL;
+/* Nonzero if we were run directly.  */
+unsigned int _dl_skip_args attribute_hidden;
 #else
+int _dl_argc attribute_relro attribute_hidden;
 char **_dl_argv attribute_relro = NULL;
+unsigned int _dl_skip_args attribute_relro attribute_hidden;
 #endif
 INTDEF(_dl_argv)
 
-/* Nonzero if we were run directly.  */
-unsigned int _dl_skip_args attribute_relro attribute_hidden;
+#ifndef THREAD_SET_STACK_GUARD
+/* Only exported for architectures that don't store the stack guard canary
+   in thread local area.  */
+uintptr_t __stack_chk_guard attribute_relro;
+#endif
+
+/* Only exported for architectures that don't store the pointer guard
+   value in thread local area.  */
+uintptr_t __pointer_chk_guard_local
+     attribute_relro attribute_hidden __attribute__ ((nocommon));
+#ifndef THREAD_SET_POINTER_GUARD
+strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
+#endif
+
+
+/* List of auditing DSOs.  */
+static struct audit_list
+{
+  const char *name;
+  struct audit_list *next;
+} *audit_list;
 
 #ifndef HAVE_INLINED_SYSCALLS
 /* Set nonzero during loading and initialization of executable and
@@ -124,27 +151,17 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
+    ._dl_pointer_guard = 1,
 
     /* Function pointers.  */
-    ._dl_get_origin = _dl_get_origin,
-    ._dl_dst_count = _dl_dst_count,
-    ._dl_dst_substitute = _dl_dst_substitute,
-    ._dl_map_object = _dl_map_object,
-    ._dl_map_object_deps = _dl_map_object_deps,
-    ._dl_relocate_object = _dl_relocate_object,
-    ._dl_check_map_versions = _dl_check_map_versions,
-    ._dl_init = _dl_init,
-    ._dl_debug_state = _dl_debug_state,
-#ifndef MAP_COPY
-    ._dl_unload_cache = _dl_unload_cache,
-#endif
     ._dl_debug_printf = _dl_debug_printf,
     ._dl_catch_error = _dl_catch_error,
     ._dl_signal_error = _dl_signal_error,
-    ._dl_start_profile = _dl_start_profile,
     ._dl_mcount = _dl_mcount_internal,
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
-    ._dl_check_caller = _dl_check_caller
+    ._dl_check_caller = _dl_check_caller,
+    ._dl_open = _dl_open,
+    ._dl_close = _dl_close
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -267,10 +284,10 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
+  GL(dl_rtld_map).l_relocated = 1;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
-  GL(dl_rtld_map).l_opencount = 1;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
@@ -286,7 +303,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
   GL(dl_rtld_map).l_tls_modid = 1;
 # else
-  assert (info->l.l_tls_modid == 0);
 #  if NO_TLS_OFFSET != 0
   GL(dl_rtld_map).l_tls_offset = NO_TLS_OFFSET;
 #  endif
@@ -348,8 +364,6 @@ _dl_start (void *arg)
 #define RTLD_BOOTSTRAP
 #define RESOLVE_MAP(sym, version, flags) \
   ((*(sym))->st_shndx == SHN_UNDEF ? 0 : &bootstrap_map)
-#define RESOLVE(sym, version, flags) \
-  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
 #include "dynamic-link.h"
 
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
@@ -373,6 +387,9 @@ _dl_start (void *arg)
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
+# endif
+# if USE___THREAD
+  bootstrap_map.l_tls_modid = 0;
 # endif
 #endif
 
@@ -472,7 +489,7 @@ _dl_start (void *arg)
 	  while (remaining-- > 0)
 	    *p++ = '\0';
 	}
-#endif
+# endif
 
 	/* Install the pointer to the dtv.  */
 
@@ -515,6 +532,7 @@ _dl_start (void *arg)
 
       ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
     }
+  bootstrap_map.l_relocated = 1;
 
   /* Please note that we don't allow profiling of this object and
      therefore need not test whether we have to allocate the array
@@ -566,6 +584,19 @@ struct map_args
   struct link_map *map;
 };
 
+struct dlmopen_args
+{
+  const char *fname;
+  struct link_map *map;
+};
+
+struct lookup_args
+{
+  const char *name;
+  struct link_map *map;
+  void *result;
+};
+
 /* Arguments to version_check_doit.  */
 struct version_check_args
 {
@@ -588,6 +619,28 @@ map_doit (void *a)
   args->map = _dl_map_object (args->loader, args->str,
 			      args->is_preloaded, lt_library, 0, args->mode,
 			      LM_ID_BASE);
+}
+
+static void
+dlmopen_doit (void *a)
+{
+  struct dlmopen_args *args = (struct dlmopen_args *) a;
+  args->map = _dl_open (args->fname, RTLD_LAZY | __RTLD_DLOPEN | __RTLD_AUDIT,
+			dl_main, LM_ID_NEWLM, _dl_argc, INTUSE(_dl_argv),
+			__environ);
+}
+
+static void
+lookup_doit (void *a)
+{
+  struct lookup_args *args = (struct lookup_args *) a;
+  const ElfW(Sym) *ref = NULL;
+  args->result = NULL;
+  lookup_t l = _dl_lookup_symbol_x (args->name, args->map, &ref,
+				    args->map->l_local_scope, NULL, 0,
+				    DL_LOOKUP_RETURN_NEWEST, NULL);
+  if (ref != NULL)
+    args->result = DL_SYMBOL_ADDRESS (l, ref);
 }
 
 static void
@@ -648,6 +701,80 @@ match_version (const char *string, struct link_map *map)
   return 0;
 }
 
+#ifdef USE_TLS
+static bool tls_init_tp_called;
+
+static void *
+init_tls (void)
+{
+  /* Number of elements in the static TLS block.  */
+  GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
+
+  /* Do not do this twice.  The audit interface might have required
+     the DTV interfaces to be set up early.  */
+  if (GL(dl_initial_dtv) != NULL)
+    return NULL;
+
+  /* Allocate the array which contains the information about the
+     dtv slots.  We allocate a few entries more than needed to
+     avoid the need for reallocation.  */
+  size_t nelem = GL(dl_tls_max_dtv_idx) + 1 + TLS_SLOTINFO_SURPLUS;
+
+  /* Allocate.  */
+  GL(dl_tls_dtv_slotinfo_list) = (struct dtv_slotinfo_list *)
+    calloc (sizeof (struct dtv_slotinfo_list)
+	    + nelem * sizeof (struct dtv_slotinfo), 1);
+  /* No need to check the return value.  If memory allocation failed
+     the program would have been terminated.  */
+
+  struct dtv_slotinfo *slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
+  GL(dl_tls_dtv_slotinfo_list)->len = nelem;
+  GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+
+  /* Fill in the information from the loaded modules.  No namespace
+     but the base one can be filled at this time.  */
+  assert (GL(dl_ns)[LM_ID_BASE + 1]._ns_loaded == NULL);
+  int i = 0;
+  for (struct link_map *l = GL(dl_ns)[LM_ID_BASE]._ns_loaded; l != NULL;
+       l = l->l_next)
+    if (l->l_tls_blocksize != 0)
+      {
+	/* This is a module with TLS data.  Store the map reference.
+	   The generation counter is zero.  */
+	slotinfo[i].map = l;
+	/* slotinfo[i].gen = 0; */
+	++i;
+      }
+  assert (i == GL(dl_tls_max_dtv_idx));
+
+  /* Compute the TLS offsets for the various blocks.  */
+  _dl_determine_tlsoffset ();
+
+  /* Construct the static TLS block and the dtv for the initial
+     thread.  For some platforms this will include allocating memory
+     for the thread descriptor.  The memory for the TLS block will
+     never be freed.  It should be allocated accordingly.  The dtv
+     array can be changed if dynamic loading requires it.  */
+  void *tcbp = _dl_allocate_tls_storage ();
+  if (tcbp == NULL)
+    _dl_fatal_printf ("\
+cannot allocate TLS data structures for initial thread");
+
+  /* Store for detection of the special case by __tls_get_addr
+     so it knows not to pass this dtv to the normal realloc.  */
+  GL(dl_initial_dtv) = GET_DTV (tcbp);
+
+  /* And finally install it for the main thread.  If ld.so itself uses
+     TLS we know the thread pointer was initialized earlier.  */
+  const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
+  if (__builtin_expect (lossage != NULL, 0))
+    _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
+  tls_init_tp_called = true;
+
+  return tcbp;
+}
+#endif
+
 #ifdef _LIBC_REENTRANT
 /* _dl_error_catch_tsd points to this for the single-threaded case.
    It's reset by the thread library for multithreaded programs.  */
@@ -659,14 +786,49 @@ _dl_initial_error_catch_tsd (void)
 }
 #endif
 
+
+static unsigned int
+do_preload (char *fname, struct link_map *main_map, const char *where)
+{
+  const char *objname;
+  const char *err_str = NULL;
+  struct map_args args;
+  bool malloced;
+
+  args.str = fname;
+  args.loader = main_map;
+  args.is_preloaded = 1;
+  args.mode = 0;
+
+  unsigned int old_nloaded = GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
+
+  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit, &args);
+  if (__builtin_expect (err_str != NULL, 0))
+    {
+      _dl_error_printf ("\
+ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
+			fname, where);
+      /* No need to call free, this is still before
+	 the libc's malloc is used.  */
+    }
+  else if (GL(dl_ns)[LM_ID_BASE]._ns_nloaded != old_nloaded)
+    /* It is no duplicate.  */
+    return 1;
+
+  /* Nothing loaded.  */
+  return 0;
+}
+
 #if defined SHARED && defined _LIBC_REENTRANT \
     && defined __rtld_lock_default_lock_recursive
-static void rtld_lock_default_lock_recursive (void *lock)
+static void
+rtld_lock_default_lock_recursive (void *lock)
 {
   __rtld_lock_default_lock_recursive (lock);
 }
 
-static void rtld_lock_default_unlock_recursive (void *lock)
+static void
+rtld_lock_default_unlock_recursive (void *lock)
 {
   __rtld_lock_default_unlock_recursive (lock);
 }
@@ -687,8 +849,6 @@ dl_main (const ElfW(Phdr) *phdr,
 {
   const ElfW(Phdr) *ph;
   enum mode mode;
-  struct link_map **preloads;
-  unsigned int npreloads;
   struct link_map *main_map;
   size_t file_size;
   char *file;
@@ -702,7 +862,7 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t diff;
 #endif
 #ifdef USE_TLS
-  void *tcbp;
+  void *tcbp = NULL;
 #endif
 
 #ifdef _LIBC_REENTRANT
@@ -790,6 +950,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    INTUSE(_dl_argv) += 2;
 	  }
+	else if (! strcmp (INTUSE(_dl_argv)[1], "--audit") && _dl_argc > 2)
+	  {
+	    process_dl_audit (INTUSE(_dl_argv)[2]);
+
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    INTUSE(_dl_argv) += 2;
+	  }
 	else
 	  break;
 
@@ -822,10 +990,6 @@ of this helper program; chances are you did not intend to run this program.\n\
       --_dl_argc;
       ++INTUSE(_dl_argv);
 
-      /* Initialize the data structures for the search paths for shared
-	 objects.  */
-      _dl_init_paths (library_path);
-
       /* The initialization of _dl_stack_flags done below assumes the
 	 executable's PT_GNU_STACK may have been honored by the kernel, and
 	 so a PT_GNU_STACK with PF_X set means the stack started out with
@@ -850,12 +1014,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  const char *objname;
 	  const char *err_str = NULL;
 	  struct map_args args;
+	  bool malloced;
 
 	  args.str = rtld_progname;
 	  args.loader = NULL;
 	  args.is_preloaded = 0;
 	  args.mode = __RTLD_OPENEXEC;
-	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+	  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit,
+				  &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    /* We don't free the returned string, the programs stops
 	       anyway.  */
@@ -887,10 +1053,10 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      _dl_new_object ((char *) "", "", lt_executable, NULL, 0, LM_ID_BASE);
-      main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      if (main_map == NULL)
-	_dl_fatal_printf ("cannot allocate memory for link map\n");
+      main_map = _dl_new_object ((char *) "", "", lt_executable, NULL,
+				 __RTLD_OPENEXEC, LM_ID_BASE);
+      assert (main_map != NULL);
+      assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
       main_map->l_phdr = phdr;
       main_map->l_phnum = phnum;
       main_map->l_entry = *user_entry;
@@ -918,8 +1084,6 @@ of this helper program; chances are you did not intend to run this program.\n\
   main_map->l_text_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   main_map->l_map_start = ~0;
-  /* We opened the file, account for it.  */
-  ++main_map->l_opencount;
   /* And it was opened directly.  */
   ++main_map->l_direct_opencount;
 
@@ -991,8 +1155,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    main_map->l_text_end = allocend;
 	}
 	break;
-#ifdef USE_TLS
+
       case PT_TLS:
+#ifdef USE_TLS
 	if (ph->p_memsz > 0)
 	  {
 	    /* Note that in the case the dynamic linker we duplicate work
@@ -1012,8 +1177,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    /* This image gets the ID one.  */
 	    GL(dl_tls_max_dtv_idx) = main_map->l_tls_modid = 1;
 	  }
-	break;
+#else
+	_dl_fatal_printf ("\
+ld.so does not support TLS, but program uses it!\n");
 #endif
+	break;
+
       case PT_GNU_STACK:
 	GL(dl_stack_flags) = ph->p_flags;
 	break;
@@ -1045,6 +1214,26 @@ of this helper program; chances are you did not intend to run this program.\n\
   else
     assert (GL(dl_rtld_map).l_libname); /* How else did we get here?  */
 
+  /* If the current libname is different from the SONAME, add the
+     latter as well.  */
+  if (GL(dl_rtld_map).l_info[DT_SONAME] != NULL
+      && strcmp (GL(dl_rtld_map).l_libname->name,
+		 (const char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
+		 + GL(dl_rtld_map).l_info[DT_SONAME]->d_un.d_val) != 0)
+    {
+      static struct libname_list newname;
+      newname.name = ((char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
+		      + GL(dl_rtld_map).l_info[DT_SONAME]->d_un.d_ptr);
+      newname.next = NULL;
+      newname.dont_free = 1;
+
+      assert (GL(dl_rtld_map).l_libname->next == NULL);
+      GL(dl_rtld_map).l_libname->next = &newname;
+    }
+  /* The ld.so must be relocated since otherwise loading audit modules
+     will fail since they reuse the very same ld.so.  */
+  assert (GL(dl_rtld_map).l_relocated);
+
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
@@ -1069,10 +1258,110 @@ of this helper program; chances are you did not intend to run this program.\n\
       _exit (has_interp ? 0 : 2);
     }
 
-  if (! rtld_is_main)
-    /* Initialize the data structures for the search paths for shared
-       objects.  */
-    _dl_init_paths (library_path);
+  struct link_map **first_preload = &GL(dl_rtld_map).l_next;
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+  /* Set up the data structures for the system-supplied DSO early,
+     so they can influence _dl_init_paths.  */
+  if (GLRO(dl_sysinfo_dso) != NULL)
+    {
+      /* Do an abridged version of the work _dl_map_object_from_fd would do
+	 to map in the object.  It's already mapped and prelinked (and
+	 better be, since it's read-only and so we couldn't relocate it).
+	 We just want our data structures to describe it as if we had just
+	 mapped and relocated it normally.  */
+      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
+					   0, LM_ID_BASE);
+      if (__builtin_expect (l != NULL, 1))
+	{
+	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
+
+	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
+		       + GLRO(dl_sysinfo_dso)->e_phoff);
+	  l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
+	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
+	    {
+	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
+	      if (ph->p_type == PT_DYNAMIC)
+		{
+		  l->l_ld = (void *) ph->p_vaddr;
+		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+		}
+	      else if (ph->p_type == PT_LOAD)
+		{
+		  if (! l->l_addr)
+		    l->l_addr = ph->p_vaddr;
+		  if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
+		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
+		  if ((ph->p_flags & PF_X)
+			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
+		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
+		}
+	      else
+		/* There must be no TLS segment.  */
+		assert (ph->p_type != PT_TLS);
+	    }
+	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
+	  l->l_addr = l->l_map_start - l->l_addr;
+	  l->l_map_end += l->l_addr;
+	  l->l_text_end += l->l_addr;
+	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
+	  elf_get_dynamic_info (l, dyn_temp);
+	  _dl_setup_hash (l);
+	  l->l_relocated = 1;
+
+	  /* Initialize l_local_scope to contain just this map.  This allows
+	     the use of dl_lookup_symbol_x to resolve symbols within the vdso.
+	     So we create a single entry list pointing to l_real as its only
+	     element */
+	  l->l_local_scope[0]->r_nlist = 1;
+	  l->l_local_scope[0]->r_list = &l->l_real;
+
+	  /* Now that we have the info handy, use the DSO image's soname
+	     so this object can be looked up by name.  Note that we do not
+	     set l_name here.  That field gives the file name of the DSO,
+	     and this DSO is not associated with any file.  */
+	  if (l->l_info[DT_SONAME] != NULL)
+	    {
+	      /* Work around a kernel problem.  The kernel cannot handle
+		 addresses in the vsyscall DSO pages in writev() calls.  */
+	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
+				     + l->l_info[DT_SONAME]->d_un.d_val);
+	      size_t len = strlen (dsoname);
+	      char *copy = malloc (len);
+	      if (copy == NULL)
+		_dl_fatal_printf ("out of memory\n");
+	      l->l_libname->name = memcpy (copy, dsoname, len);
+	    }
+
+	  /* Rearrange the list so this DSO appears after rtld_map.  */
+	  assert (l->l_next == NULL);
+	  assert (l->l_prev == main_map);
+	  GL(dl_rtld_map).l_next = l;
+	  l->l_prev = &GL(dl_rtld_map);
+	  first_preload = &l->l_next;
+
+	  /* We have a prelinked DSO preloaded by the system.  */
+	  GLRO(dl_sysinfo_map) = l;
+# ifdef NEED_DL_SYSINFO
+	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
+	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
+# endif
+	}
+    }
+#endif
+
+#ifdef DL_SYSDEP_OSCHECK
+  DL_SYSDEP_OSCHECK (dl_fatal);
+#endif
+
+  /* Initialize the data structures for the search paths for shared
+     objects.  */
+  _dl_init_paths (library_path);
+
+  /* Initialize _r_debug.  */
+  struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr,
+					    LM_ID_BASE);
+  r->r_state = RT_CONSISTENT;
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  Note that at this point the global chain of link maps contains
@@ -1101,6 +1390,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   GL(dl_rtld_map).l_phdr = rtld_phdr;
   GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
 
+
   /* PT_GNU_RELRO is usually the last phdr.  */
   size_t cnt = rtld_ehdr->e_phnum;
   while (cnt-- > 0)
@@ -1111,11 +1401,229 @@ of this helper program; chances are you did not intend to run this program.\n\
 	break;
       }
 
+#ifdef USE_TLS
+  /* Add the dynamic linker to the TLS list if it also uses TLS.  */
+  if (GL(dl_rtld_map).l_tls_blocksize != 0)
+    /* Assign a module ID.  Do this before loading any audit modules.  */
+    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+#endif
+
+  /* If we have auditing DSOs to load, do it now.  */
+  if (__builtin_expect (audit_list != NULL, 0))
+    {
+      /* Iterate over all entries in the list.  The order is important.  */
+      struct audit_ifaces *last_audit = NULL;
+      struct audit_list *al = audit_list->next;
+
+#ifdef USE_TLS
+      /* Since we start using the auditing DSOs right away we need to
+	 initialize the data structures now.  */
+      tcbp = init_tls ();
+#endif
+      do
+	{
+#ifdef USE_TLS
+	  int tls_idx = GL(dl_tls_max_dtv_idx);
+
+	  /* Now it is time to determine the layout of the static TLS
+	     block and allocate it for the initial thread.  Note that we
+	     always allocate the static block, we never defer it even if
+	     no DF_STATIC_TLS bit is set.  The reason is that we know
+	     glibc will use the static model.  */
+#endif
+	  struct dlmopen_args dlmargs;
+	  dlmargs.fname = al->name;
+	  dlmargs.map = NULL;
+
+	  const char *objname;
+	  const char *err_str = NULL;
+	  bool malloced;
+	  (void) _dl_catch_error (&objname, &err_str, &malloced, dlmopen_doit,
+				  &dlmargs);
+	  if (__builtin_expect (err_str != NULL, 0))
+	    {
+	    not_loaded:
+	      _dl_error_printf ("\
+ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
+				al->name, err_str);
+	      if (malloced)
+		free ((char *) err_str);
+	    }
+	  else
+	    {
+	      struct lookup_args largs;
+	      largs.name = "la_version";
+	      largs.map = dlmargs.map;
+
+	      /* Check whether the interface version matches.  */
+	      (void) _dl_catch_error (&objname, &err_str, &malloced,
+				      lookup_doit, &largs);
+
+	      unsigned int (*laversion) (unsigned int);
+	      unsigned int lav;
+	      if  (err_str == NULL
+		   && (laversion = largs.result) != NULL
+		   && (lav = laversion (LAV_CURRENT)) > 0
+		   && lav <= LAV_CURRENT)
+		{
+		  /* Allocate structure for the callback function pointers.
+		     This call can never fail.  */
+		  union
+		  {
+		    struct audit_ifaces ifaces;
+#define naudit_ifaces 8
+		    void (*fptr[naudit_ifaces]) (void);
+		  } *newp = malloc (sizeof (*newp));
+
+		  /* Names of the auditing interfaces.  All in one
+		     long string.  */
+		  static const char audit_iface_names[] =
+		    "la_activity\0"
+		    "la_objsearch\0"
+		    "la_objopen\0"
+		    "la_preinit\0"
+#if __ELF_NATIVE_CLASS == 32
+		    "la_symbind32\0"
+#elif __ELF_NATIVE_CLASS == 64
+		    "la_symbind64\0"
+#else
+# error "__ELF_NATIVE_CLASS must be defined"
+#endif
+#define STRING(s) __STRING (s)
+		    "la_" STRING (ARCH_LA_PLTENTER) "\0"
+		    "la_" STRING (ARCH_LA_PLTEXIT) "\0"
+		    "la_objclose\0";
+		  unsigned int cnt = 0;
+		  const char *cp = audit_iface_names;
+		  do
+		    {
+		      largs.name = cp;
+		      (void) _dl_catch_error (&objname, &err_str, &malloced,
+					      lookup_doit, &largs);
+
+		      /* Store the pointer.  */
+		      if (err_str == NULL && largs.result != NULL)
+			{
+			  newp->fptr[cnt] = largs.result;
+
+			  /* The dynamic linker link map is statically
+			     allocated, initialize the data now.   */
+			  GL(dl_rtld_map).l_audit[cnt].cookie
+			    = (intptr_t) &GL(dl_rtld_map);
+			}
+		      else
+			newp->fptr[cnt] = NULL;
+		      ++cnt;
+
+		      cp = (char *) rawmemchr (cp, '\0') + 1;
+		    }
+		  while (*cp != '\0');
+		  assert (cnt == naudit_ifaces);
+
+		  /* Now append the new auditing interface to the list.  */
+		  newp->ifaces.next = NULL;
+		  if (last_audit == NULL)
+		    last_audit = GLRO(dl_audit) = &newp->ifaces;
+		  else
+		    last_audit = last_audit->next = &newp->ifaces;
+		  ++GLRO(dl_naudit);
+
+		  /* Mark the DSO as being used for auditing.  */
+		  dlmargs.map->l_auditing = 1;
+		}
+	      else
+		{
+		  /* We cannot use the DSO, it does not have the
+		     appropriate interfaces or it expects something
+		     more recent.  */
+#ifndef NDEBUG
+		  Lmid_t ns = dlmargs.map->l_ns;
+#endif
+		  _dl_close (dlmargs.map);
+
+		  /* Make sure the namespace has been cleared entirely.  */
+		  assert (GL(dl_ns)[ns]._ns_loaded == NULL);
+		  assert (GL(dl_ns)[ns]._ns_nloaded == 0);
+
+#ifdef USE_TLS
+		  GL(dl_tls_max_dtv_idx) = tls_idx;
+#endif
+		  goto not_loaded;
+		}
+	    }
+
+	  al = al->next;
+	}
+      while (al != audit_list->next);
+
+      /* If we have any auditing modules, announce that we already
+	 have two objects loaded.  */
+      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+	{
+	  struct link_map *ls[2] = { main_map, &GL(dl_rtld_map) };
+
+	  for (unsigned int outer = 0; outer < 2; ++outer)
+	    {
+	      struct audit_ifaces *afct = GLRO(dl_audit);
+	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+		{
+		  if (afct->objopen != NULL)
+		    {
+		      ls[outer]->l_audit[cnt].bindflags
+			= afct->objopen (ls[outer], LM_ID_BASE,
+					 &ls[outer]->l_audit[cnt].cookie);
+
+		      ls[outer]->l_audit_any_plt
+			|= ls[outer]->l_audit[cnt].bindflags != 0;
+		    }
+
+		  afct = afct->next;
+		}
+	    }
+	}
+    }
+
+  /* Set up debugging before the debugger is notified for the first time.  */
+#ifdef ELF_MACHINE_DEBUG_SETUP
+  /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
+  ELF_MACHINE_DEBUG_SETUP (main_map, r);
+  ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
+#else
+  if (main_map->l_info[DT_DEBUG] != NULL)
+    /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
+       with the run-time address of the r_debug structure  */
+    main_map->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
+  /* Fill in the pointer in the dynamic linker's own dynamic section, in
+     case you run gdb on the dynamic linker directly.  */
+  if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
+    GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+#endif
+
+  /* We start adding objects.  */
+  r->r_state = RT_ADD;
+  _dl_debug_state ();
+
+  /* Auditing checkpoint: we are ready to signal that the initial map
+     is being constructed.  */
+  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+    {
+      struct audit_ifaces *afct = GLRO(dl_audit);
+      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+	{
+	  if (afct->activity != NULL)
+	    afct->activity (&main_map->l_audit[cnt].cookie, LA_ACT_ADD);
+
+	  afct = afct->next;
+	}
+    }
+
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also
      be used when security is enabled.  */
-  preloads = NULL;
-  npreloads = 0;
+  assert (*first_preload == NULL);
+  struct link_map **preloads = NULL;
+  unsigned int npreloads = 0;
 
   if (__builtin_expect (preloadlist != NULL, 0))
     {
@@ -1134,14 +1642,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	if (p[0] != '\0'
 	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
 		|| strchr (p, '/') == NULL))
-	  {
-	    struct link_map *new_map = _dl_map_object (main_map, p, 1,
-						       lt_library, 0, 0,
-						       LM_ID_BASE);
-	    if (++new_map->l_opencount == 1)
-	      /* It is no duplicate.  */
-	      ++npreloads;
-	  }
+	  npreloads += do_preload (p, main_map, "LD_PRELOAD");
 
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (diff, start, stop);
@@ -1213,41 +1714,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      runp = file;
 	      while ((p = strsep (&runp, ": \t\n")) != NULL)
 		if (p[0] != '\0')
-		  {
-		    const char *objname;
-		    const char *err_str = NULL;
-		    struct map_args args;
-
-		    args.str = p;
-		    args.loader = main_map;
-		    args.is_preloaded = 1;
-		    args.mode = 0;
-
-		    (void) _dl_catch_error (&objname, &err_str, map_doit,
-					    &args);
-		    if (__builtin_expect (err_str != NULL, 0))
-		      {
-			_dl_error_printf ("\
-ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
-					  p, preload_file);
-			/* No need to call free, this is still before
-			   the libc's malloc is used.  */
-		      }
-		    else if (++args.map->l_opencount == 1)
-		      /* It is no duplicate.  */
-		      ++npreloads;
-		  }
+		  npreloads += do_preload (p, main_map, preload_file);
 	    }
 
 	  if (problem != NULL)
 	    {
 	      char *p = strndupa (problem, file_size - (problem - file));
-	      struct link_map *new_map = _dl_map_object (main_map, p, 1,
-							 lt_library, 0, 0,
-							 LM_ID_BASE);
-	      if (++new_map->l_opencount == 1)
-		/* It is no duplicate.  */
-		++npreloads;
+
+	      npreloads += do_preload (p, main_map, preload_file);
 	    }
 
 	  HP_TIMING_NOW (stop);
@@ -1259,12 +1733,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	}
     }
 
-  if (__builtin_expect (npreloads, 0) != 0)
+  if (__builtin_expect (*first_preload != NULL, 0))
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
-      struct link_map *l;
+      struct link_map *l = *first_preload;
       preloads = __alloca (npreloads * sizeof preloads[0]);
-      l = GL(dl_rtld_map).l_next; /* End of the chain before preloads.  */
       i = 0;
       do
 	{
@@ -1273,79 +1746,6 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	} while (l);
       assert (i == npreloads);
     }
-
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
-  struct link_map *sysinfo_map = NULL;
-  if (GLRO(dl_sysinfo_dso) != NULL)
-    {
-      /* Do an abridged version of the work _dl_map_object_from_fd would do
-	 to map in the object.  It's already mapped and prelinked (and
-	 better be, since it's read-only and so we couldn't relocate it).
-	 We just want our data structures to describe it as if we had just
-	 mapped and relocated it normally.  */
-      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
-					   0, LM_ID_BASE);
-      if (__builtin_expect (l != NULL, 1))
-	{
-	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
-
-	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
-		       + GLRO(dl_sysinfo_dso)->e_phoff);
-	  l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
-	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
-	    {
-	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
-	      if (ph->p_type == PT_DYNAMIC)
-		{
-		  l->l_ld = (void *) ph->p_vaddr;
-		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
-		}
-	      else if (ph->p_type == PT_LOAD)
-		{
-		  if (! l->l_addr)
-		    l->l_addr = ph->p_vaddr;
-		  else if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
-		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
-		  else if ((ph->p_flags & PF_X)
-			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
-		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
-		}
-	    }
-	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
-	  l->l_addr = l->l_map_start - l->l_addr;
-	  l->l_map_end += l->l_addr;
-	  l->l_text_end += l->l_addr;
-	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
-	  elf_get_dynamic_info (l, dyn_temp);
-	  _dl_setup_hash (l);
-	  l->l_relocated = 1;
-
-	  /* Now that we have the info handy, use the DSO image's soname
-	     so this object can be looked up by name.  Note that we do not
-	     set l_name here.  That field gives the file name of the DSO,
-	     and this DSO is not associated with any file.  */
-	  if (l->l_info[DT_SONAME] != NULL)
-	    {
-	      /* Work around a kernel problem.  The kernel cannot handle
-		 addresses in the vsyscall DSO pages in writev() calls.  */
-	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
-				     + l->l_info[DT_SONAME]->d_un.d_val);
-	      size_t len = strlen (dsoname);
-	      char *copy = malloc (len);
-	      if (copy == NULL)
-		_dl_fatal_printf ("out of memory\n");
-	      l->l_libname->name = memcpy (copy, dsoname, len);
-	    }
-
-	  /* We have a prelinked DSO preloaded by the system.  */
-	  sysinfo_map = l;
-# ifdef NEED_DL_SYSINFO
-	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
-	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
-# endif
-	}
-    }
-#endif
 
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
@@ -1356,14 +1756,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
 
-  /* Mark all objects as being in the global scope and set the open
-     counter.  */
+  /* Mark all objects as being in the global scope.  */
   for (i = main_map->l_searchlist.r_nlist; i > 0; )
-    {
-      --i;
-      main_map->l_searchlist.r_list[i]->l_global = 1;
-      ++main_map->l_searchlist.r_list[i]->l_opencount;
-    }
+    main_map->l_searchlist.r_list[--i]->l_global = 1;
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
@@ -1373,18 +1768,22 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
   /* Remove _dl_rtld_map from the chain.  */
   GL(dl_rtld_map).l_prev->l_next = GL(dl_rtld_map).l_next;
-  if (GL(dl_rtld_map).l_next)
+  if (GL(dl_rtld_map).l_next != NULL)
     GL(dl_rtld_map).l_next->l_prev = GL(dl_rtld_map).l_prev;
 
-  if (__builtin_expect (GL(dl_rtld_map).l_opencount > 1, 1))
+  for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
+    if (main_map->l_searchlist.r_list[i] == &GL(dl_rtld_map))
+      break;
+
+  bool rtld_multiple_ref = false;
+  if (__builtin_expect (i < main_map->l_searchlist.r_nlist, 1))
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the
 	 chain in symbol search order because gdb uses the chain's order as
 	 its symbol search order.  */
-      i = 1;
-      while (main_map->l_searchlist.r_list[i] != &GL(dl_rtld_map))
-	++i;
+      rtld_multiple_ref = true;
+
       GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
       if (__builtin_expect (mode, normal) == normal)
 	{
@@ -1392,10 +1791,10 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 				    ? main_map->l_searchlist.r_list[i + 1]
 				    : NULL);
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
-	  if (sysinfo_map != NULL
-	      && GL(dl_rtld_map).l_prev->l_next == sysinfo_map
-	      && GL(dl_rtld_map).l_next != sysinfo_map)
-	    GL(dl_rtld_map).l_prev = sysinfo_map;
+	  if (GLRO(dl_sysinfo_map) != NULL
+	      && GL(dl_rtld_map).l_prev->l_next == GLRO(dl_sysinfo_map)
+	      && GL(dl_rtld_map).l_next != GLRO(dl_sysinfo_map))
+	    GL(dl_rtld_map).l_prev = GLRO(dl_sysinfo_map);
 #endif
 	}
       else
@@ -1425,20 +1824,6 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
   }
 
 #ifdef USE_TLS
-  /* Now it is time to determine the layout of the static TLS block
-     and allocate it for the initial thread.  Note that we always
-     allocate the static block, we never defer it even if no
-     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
-     use the static model.  First add the dynamic linker to the list
-     if it also uses TLS.  */
-  if (GL(dl_rtld_map).l_tls_blocksize != 0)
-    /* Assign a module ID.  */
-    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
-
-# ifndef TLS_INIT_TP_EXPENSIVE
-#  define TLS_INIT_TP_EXPENSIVE 0
-# endif
-
   /* We do not initialize any of the TLS functionality unless any of the
      initial modules uses TLS.  This makes dynamic loading of modules with
      TLS impossible, but to support it requires either eagerly doing setup
@@ -1446,58 +1831,34 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
      an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
      used.  Trying to do it lazily is too hairy to try when there could be
      multiple threads (from a non-TLS-using libpthread).  */
-  if (!TLS_INIT_TP_EXPENSIVE || GL(dl_tls_max_dtv_idx) > 0)
-    {
-      struct link_map *l;
-      size_t nelem;
-      struct dtv_slotinfo *slotinfo;
-
-      /* Number of elements in the static TLS block.  */
-      GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
-
-      /* Allocate the array which contains the information about the
-	 dtv slots.  We allocate a few entries more than needed to
-	 avoid the need for reallocation.  */
-      nelem = GL(dl_tls_max_dtv_idx) + 1 + TLS_SLOTINFO_SURPLUS;
-
-      /* Allocate.  */
-      GL(dl_tls_dtv_slotinfo_list) = (struct dtv_slotinfo_list *)
-	malloc (sizeof (struct dtv_slotinfo_list)
-		+ nelem * sizeof (struct dtv_slotinfo));
-      /* No need to check the return value.  If memory allocation failed
-	 the program would have been terminated.  */
-
-      slotinfo = memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
-			 nelem * sizeof (struct dtv_slotinfo));
-      GL(dl_tls_dtv_slotinfo_list)->len = nelem;
-      GL(dl_tls_dtv_slotinfo_list)->next = NULL;
-
-      /* Fill in the information from the loaded modules.  */
-      for (l = main_map, i = 0; l != NULL; l = l->l_next)
-	if (l->l_tls_blocksize != 0)
-	  /* This is a module with TLS data.  Store the map reference.
-	     The generation counter is zero.  */
-	  slotinfo[++i].map = l;
-      assert (i == GL(dl_tls_max_dtv_idx));
-
-      /* Compute the TLS offsets for the various blocks.  */
-      _dl_determine_tlsoffset ();
-
-      /* Construct the static TLS block and the dtv for the initial
-	 thread.  For some platforms this will include allocating memory
-	 for the thread descriptor.  The memory for the TLS block will
-	 never be freed.  It should be allocated accordingly.  The dtv
-	 array can be changed if dynamic loading requires it.  */
-      tcbp = _dl_allocate_tls_storage ();
-      if (tcbp == NULL)
-	_dl_fatal_printf ("\
-cannot allocate TLS data structures for initial thread");
-
-      /* Store for detection of the special case by __tls_get_addr
-	 so it knows not to pass this dtv to the normal realloc.  */
-      GL(dl_initial_dtv) = GET_DTV (tcbp);
-    }
+  bool was_tls_init_tp_called = tls_init_tp_called;
+  if (tcbp == NULL)
+    tcbp = init_tls ();
 #endif
+
+  /* Set up the stack checker's canary.  */
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
+#ifdef THREAD_SET_STACK_GUARD
+  THREAD_SET_STACK_GUARD (stack_chk_guard);
+#else
+  __stack_chk_guard = stack_chk_guard;
+#endif
+
+  /* Set up the pointer guard as well, if necessary.  */
+  if (GLRO(dl_pointer_guard))
+    {
+      // XXX If it is cheap, we should use a separate value.
+      uintptr_t pointer_chk_guard = stack_chk_guard;
+#ifndef HP_TIMING_NONAVAIL
+      hp_timing_t now;
+      HP_TIMING_NOW (now);
+      pointer_chk_guard ^= now;
+#endif
+#ifdef THREAD_SET_POINTER_GUARD
+      THREAD_SET_POINTER_GUARD (pointer_chk_guard);
+#endif
+      __pointer_chk_guard_local = pointer_chk_guard;
+    }
 
   if (__builtin_expect (mode, normal) != normal)
     {
@@ -1618,7 +1979,7 @@ cannot allocate TLS data structures for initial thread");
 	  }
       else
 	{
-	  /* If LD_WARN is set warn about undefined symbols.  */
+	  /* If LD_WARN is set, warn about undefined symbols.  */
 	  if (GLRO(dl_lazy) >= 0 && GLRO(dl_verbose))
 	    {
 	      /* We have to do symbol dependency testing.  */
@@ -1628,7 +1989,7 @@ cannot allocate TLS data structures for initial thread");
 	      args.lazy = GLRO(dl_lazy);
 
 	      l = main_map;
-	      while (l->l_next)
+	      while (l->l_next != NULL)
 		l = l->l_next;
 	      do
 		{
@@ -1639,14 +2000,18 @@ cannot allocate TLS data structures for initial thread");
 					 &args);
 		    }
 		  l = l->l_prev;
-		} while (l);
+		}
+	      while (l != NULL);
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
-		  && GL(dl_rtld_map).l_opencount > 1)
-		_dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
-				     0, 0);
-	    }
-
+		  && rtld_multiple_ref)
+		{
+		  /* Mark the link map as not yet relocated again.  */
+		  GL(dl_rtld_map).l_relocated = 0;
+		  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
+				       0, 0);
+		}
+            }
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
 	  if (version_info)
 	    {
@@ -1724,7 +2089,8 @@ cannot allocate TLS data structures for initial thread");
     }
 
   if (main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]
-      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0))
+      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0)
+      && ! __builtin_expect (GLRO(dl_dynamic_weak), 0))
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
@@ -1777,35 +2143,8 @@ cannot allocate TLS data structures for initial thread");
     }
 
 
-  /* Initialize _r_debug.  */
-  struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
-  {
-    struct link_map *l = main_map;
-
-#ifdef ELF_MACHINE_DEBUG_SETUP
-
-    /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
-
-    ELF_MACHINE_DEBUG_SETUP (l, r);
-    ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
-
-#else
-
-    if (l->l_info[DT_DEBUG] != NULL)
-      /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-	 with the run-time address of the r_debug structure  */
-      l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-
-    /* Fill in the pointer in the dynamic linker's own dynamic section, in
-       case you run gdb on the dynamic linker directly.  */
-    if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
-      GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-#endif
-  }
-
   /* Now set up the variable which helps the assembler startup code.  */
   GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist = &main_map->l_searchlist;
-  GL(dl_ns)[LM_ID_BASE]._ns_global_scope[0] = &main_map->l_searchlist;
 
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */
@@ -1813,8 +2152,6 @@ cannot allocate TLS data structures for initial thread");
 
   if (prelinked)
     {
-      struct link_map *l;
-
       if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
 	{
 	  ElfW(Rela) *conflict, *conflictend;
@@ -1837,11 +2174,17 @@ cannot allocate TLS data structures for initial thread");
 
 
       /* Mark all the objects so we know they have been already relocated.  */
-      for (l = main_map; l != NULL; l = l->l_next)
+      for (struct link_map *l = main_map; l != NULL; l = l->l_next)
 	{
 	  l->l_relocated = 1;
 	  if (l->l_relro_size)
 	    _dl_protect_relro (l);
+
+#ifdef USE_TLS
+	  /* Add object to slot information data if necessasy.  */
+	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
+	    _dl_add_to_slotinfo (l);
+#endif
 	}
 
       _dl_sysdep_start_cleanup ();
@@ -1857,18 +2200,16 @@ cannot allocate TLS data structures for initial thread");
 	 the dynamic linker out of order because it has no copy relocs (we
 	 know that because it is self-contained).  */
 
-      struct link_map *l;
       int consider_profiling = GLRO(dl_profile) != NULL;
 #ifndef HP_TIMING_NONAVAIL
       hp_timing_t start;
       hp_timing_t stop;
-      hp_timing_t add;
 #endif
 
       /* If we are profiling we also must do lazy reloaction.  */
       GLRO(dl_lazy) |= consider_profiling;
 
-      l = main_map;
+      struct link_map *l = main_map;
       while (l->l_next)
 	l = l->l_next;
 
@@ -1889,6 +2230,12 @@ cannot allocate TLS data structures for initial thread");
 	  if (l != &GL(dl_rtld_map))
 	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy),
 				 consider_profiling);
+
+#ifdef USE_TLS
+	  /* Add object to slot information data if necessasy.  */
+	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
+	    _dl_add_to_slotinfo (l);
+#endif
 
 	  l = l->l_prev;
 	}
@@ -1911,17 +2258,6 @@ cannot allocate TLS data structures for initial thread");
       if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
 	/* We must prepare the profiling.  */
 	_dl_start_profile ();
-
-      if (GL(dl_rtld_map).l_opencount > 1)
-	{
-	  /* There was an explicit ref to the dynamic linker as a shared lib.
-	     Re-relocate ourselves with user-controlled symbol definitions.  */
-	  HP_TIMING_NOW (start);
-	  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
-	  HP_TIMING_NOW (stop);
-	  HP_TIMING_DIFF (add, start, stop);
-	  HP_TIMING_ACCUM_NT (relocate_time, add);
-	}
     }
 
 #ifndef NONTLS_INIT_TP
@@ -1929,25 +2265,75 @@ cannot allocate TLS data structures for initial thread");
 #endif
 
 #ifdef USE_TLS
-  if (GL(dl_tls_max_dtv_idx) > 0 || USE___THREAD || !TLS_INIT_TP_EXPENSIVE)
-    {
-      /* Now that we have completed relocation, the initializer data
-	 for the TLS blocks has its final values and we can copy them
-	 into the main thread's TLS area, which we allocated above.  */
-      _dl_allocate_tls_init (tcbp);
+  if (!was_tls_init_tp_called && GL(dl_tls_max_dtv_idx) > 0)
+    ++GL(dl_tls_generation);
 
-      /* And finally install it for the main thread.  If ld.so itself uses
-	 TLS we know the thread pointer was initialized earlier.  */
+  /* Now that we have completed relocation, the initializer data
+     for the TLS blocks has its final values and we can copy them
+     into the main thread's TLS area, which we allocated above.  */
+  _dl_allocate_tls_init (tcbp);
+
+  /* And finally install it for the main thread.  If ld.so itself uses
+     TLS we know the thread pointer was initialized earlier.  */
+  if (! tls_init_tp_called)
+    {
       const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
       if (__builtin_expect (lossage != NULL, 0))
-	_dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
+	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
+			  lossage);
     }
-  else
+#else
+  NONTLS_INIT_TP;
 #endif
-    NONTLS_INIT_TP;
 
-  /* Notify the debugger that all objects are now mapped in.  */
-  r->r_state = RT_ADD;
+  if (! prelinked && rtld_multiple_ref)
+    {
+      /* There was an explicit ref to the dynamic linker as a shared lib.
+	 Re-relocate ourselves with user-controlled symbol definitions.
+
+	 We must do this after TLS initialization in case after this
+	 re-relocation, we might call a user-supplied function
+	 (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
+
+#ifndef HP_TIMING_NONAVAIL
+      hp_timing_t start;
+      hp_timing_t stop;
+      hp_timing_t add;
+#endif
+
+      HP_TIMING_NOW (start);
+      /* Mark the link map as not yet relocated again.  */
+      GL(dl_rtld_map).l_relocated = 0;
+      _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+      HP_TIMING_NOW (stop);
+      HP_TIMING_DIFF (add, start, stop);
+      HP_TIMING_ACCUM_NT (relocate_time, add);
+    }
+
+#ifdef SHARED
+  /* Auditing checkpoint: we have added all objects.  */
+  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+    {
+      struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+      /* Do not call the functions for any auditing object.  */
+      if (head->l_auditing == 0)
+	{
+	  struct audit_ifaces *afct = GLRO(dl_audit);
+	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+	    {
+	      if (afct->activity != NULL)
+		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_CONSISTENT);
+
+	      afct = afct->next;
+	    }
+	}
+    }
+#endif
+
+  /* Notify the debugger all new objects are now ready to go.  We must re-get
+     the address since by now the variable might be in another object.  */
+  r = _dl_debug_initialize (0, LM_ID_BASE);
+  r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
 #ifndef MAP_COPY
@@ -2079,6 +2465,32 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
     }
 }
 
+static void
+process_dl_audit (char *str)
+{
+  /* The parameter is a colon separated list of DSO names.  */
+  char *p;
+
+  while ((p = (strsep) (&str, ":")) != NULL)
+    if (p[0] != '\0'
+	&& (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
+	    || strchr (p, '/') == NULL))
+      {
+	/* This is using the local malloc, not the system malloc.  The
+	   memory can never be freed.  */
+	struct audit_list *newp = malloc (sizeof (*newp));
+	newp->name = p;
+
+	if (audit_list == NULL)
+	  audit_list = newp->next = newp;
+	else
+	  {
+	    newp->next = audit_list->next;
+	    audit_list = audit_list->next = newp;
+	  }
+      }
+}
+
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
@@ -2121,7 +2533,12 @@ process_envvars (enum mode *modep)
 	case 5:
 	  /* Debugging of the dynamic linker?  */
 	  if (memcmp (envline, "DEBUG", 5) == 0)
-	    process_dl_debug (&envline[6]);
+	    {
+	      process_dl_debug (&envline[6]);
+	      break;
+	    }
+	  if (memcmp (envline, "AUDIT", 5) == 0)
+	    process_dl_audit (&envline[6]);
 	  break;
 
 	case 7:
@@ -2205,7 +2622,13 @@ process_envvars (enum mode *modep)
 #endif
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
-	    GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
+	    {
+	      GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
+	      break;
+	    }
+
+	  if (memcmp (envline, "POINTER_GUARD", 13) == 0)
+	    GLRO(dl_pointer_guard) = envline[14] != '0';
 	  break;
 
 	case 14:

@@ -1,5 +1,5 @@
 /* Test and measure memchr functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -89,7 +89,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
     {
       buf1[align + pos] = seek_char;
       buf1[align + len] = -seek_char;
-      result = buf1 + align + pos;
+      result = (char *) (buf1 + align + pos);
     }
   else
     {
@@ -101,7 +101,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
     printf ("Length %4zd, alignment %2zd:", pos, align);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, buf1 + align, seek_char, len, result);
+    do_one_test (impl, (char *) (buf1 + align), seek_char, len, result);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -144,16 +144,17 @@ do_random_tests (void)
 	}
 
       if (pos < len)
-	result = p + pos + align;
+	result = (char *) (p + pos + align);
       else
 	result = NULL;
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align, seek_char, len) != result)
+	if (CALL (impl, (char *) (p + align), seek_char, len) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd, %zd) %p != %p, p %p",
 		   n, impl->name, align, seek_char, len, pos,
-		   CALL (impl, p + align, seek_char, len), result, p);
+		   CALL (impl, (char *) (p + align), seek_char, len),
+		   result, p);
 	    ret = 1;
 	  }
     }

@@ -1,21 +1,19 @@
-/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -245,7 +243,7 @@ main (int argc, char *argv[])
 FATAL: system does not define `_POSIX2_LOCALEDEF'")));
 
   /* Process charmap file.  */
-  charmap = charmap_read (charmap_file, verbose, be_quiet, 1);
+  charmap = charmap_read (charmap_file, verbose, 1, be_quiet, 1);
 
   /* Add the first entry in the locale list.  */
   memset (&global, '\0', sizeof (struct localedef_t));
@@ -290,7 +288,7 @@ cannot write output files to `%s'"), output_path));
     }
   else
     WITH_CUR_LOCALE (error (4, 0, _("\
-no output file produced because warning were issued")));
+no output file produced because warnings were issued")));
 
   /* This exit status is prescribed by POSIX.2 4.35.7.  */
   exit (error_message_count != 0);
@@ -389,7 +387,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -532,7 +530,7 @@ normalize_codeset (codeset, name_len)
 
 
 struct localedef_t *
-add_to_readlist (int locale, const char *name, const char *repertoire_name,
+add_to_readlist (int category, const char *name, const char *repertoire_name,
 		 int generate, struct localedef_t *copy_locale)
 {
   struct localedef_t *runp = locales;
@@ -563,39 +561,39 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
     }
 
   if (generate
-      && (runp->needed & (1 << locale)) != 0
-      && (runp->avail & (1 << locale)) == 0)
+      && (runp->needed & (1 << category)) != 0
+      && (runp->avail & (1 << category)) == 0)
     WITH_CUR_LOCALE (error (5, 0, _("\
 circular dependencies between locale definitions")));
 
   if (copy_locale != NULL)
     {
-      if (runp->categories[locale].generic != NULL)
+      if (runp->categories[category].generic != NULL)
 	WITH_CUR_LOCALE (error (5, 0, _("\
 cannot add already read locale `%s' a second time"), name));
       else
-	runp->categories[locale].generic =
-	  copy_locale->categories[locale].generic;
+	runp->categories[category].generic =
+	  copy_locale->categories[category].generic;
     }
 
-  runp->needed |= 1 << locale;
+  runp->needed |= 1 << category;
 
   return runp;
 }
 
 
 struct localedef_t *
-find_locale (int locale, const char *name, const char *repertoire_name,
+find_locale (int category, const char *name, const char *repertoire_name,
 	     const struct charmap_t *charmap)
 {
   struct localedef_t *result;
 
   /* Find the locale, but do not generate it since this would be a bug.  */
-  result = add_to_readlist (locale, name, repertoire_name, 0, NULL);
+  result = add_to_readlist (category, name, repertoire_name, 0, NULL);
 
   assert (result != NULL);
 
-  if ((result->avail & (1 << locale)) == 0
+  if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
     WITH_CUR_LOCALE (error (4, errno, _("\
 cannot open locale definition file `%s'"), result->name));
@@ -605,17 +603,17 @@ cannot open locale definition file `%s'"), result->name));
 
 
 struct localedef_t *
-load_locale (int locale, const char *name, const char *repertoire_name,
+load_locale (int category, const char *name, const char *repertoire_name,
 	     const struct charmap_t *charmap, struct localedef_t *copy_locale)
 {
   struct localedef_t *result;
 
   /* Generate the locale if it does not exist.  */
-  result = add_to_readlist (locale, name, repertoire_name, 1, copy_locale);
+  result = add_to_readlist (category, name, repertoire_name, 1, copy_locale);
 
   assert (result != NULL);
 
-  if ((result->avail & (1 << locale)) == 0
+  if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
     WITH_CUR_LOCALE (error (4, errno, _("\
 cannot open locale definition file `%s'"), result->name));

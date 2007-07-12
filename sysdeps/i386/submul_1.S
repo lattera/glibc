@@ -1,6 +1,6 @@
 /* i80386 __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
    the result from a second limb vector.
-   Copyright (C) 1992, 1994, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992,1994,1997,1998,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -39,9 +39,17 @@ ENTRY (BP_SYM (__mpn_submul_1))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 12)
+	cfi_rel_offset (esi, 8)
+	cfi_rel_offset (ebp, 4)
+	cfi_rel_offset (ebx, 0)
 
 	movl	RES(%esp), %res_ptr
 	movl	S1(%esp), %s1_ptr
@@ -72,9 +80,17 @@ L(oop):
 	movl	%ebp, %eax
 
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	ret

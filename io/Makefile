@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1992-2002,2003,2005,2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,38 +26,47 @@ headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   poll.h sys/poll.h bits/poll.h \
 	   utime.h ftw.h fts.h sys/sendfile.h
 
-routines :=							      \
-	utime							      \
-	mkfifo							      \
-	stat fstat lstat mknod stat64 fstat64 lstat64		      \
-	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64	      \
-	statfs fstatfs statfs64 fstatfs64			      \
-	statvfs fstatvfs statvfs64 fstatvfs64			      \
-	umask chmod fchmod lchmod mkdir				      \
-	open open64 close read write lseek lseek64 access euidaccess  \
-	fcntl flock lockf lockf64				      \
-	dup dup2 pipe						      \
-	creat creat64						      \
-	chdir fchdir						      \
-	getcwd getwd getdirname					      \
-	chown fchown lchown					      \
-	ttyname ttyname_r isatty				      \
-	link symlink readlink					      \
-	unlink rmdir						      \
-	ftw ftw64 fts poll					      \
-	posix_fadvise posix_fadvise64				      \
-	posix_fallocate posix_fallocate64			      \
+routines :=								\
+	utime								\
+	mkfifo mkfifoat							\
+	stat fstat lstat stat64 fstat64 lstat64 fstatat fstatat64	\
+	xstat fxstat lxstat xstat64 fxstat64 lxstat64			\
+	mknod mknodat xmknod xmknodat					\
+	fxstatat fxstatat64						\
+	statfs fstatfs statfs64 fstatfs64				\
+	statvfs fstatvfs statvfs64 fstatvfs64				\
+	umask chmod fchmod lchmod fchmodat				\
+	mkdir mkdirat							\
+	open open64 openat openat64 close				\
+	read write lseek lseek64 access euidaccess faccessat		\
+	fcntl flock lockf lockf64					\
+	dup dup2 pipe							\
+	creat creat64							\
+	chdir fchdir							\
+	getcwd getwd getdirname						\
+	chown fchown lchown fchownat					\
+	ttyname ttyname_r isatty					\
+	link linkat symlink symlinkat readlink readlinkat		\
+	unlink unlinkat rmdir						\
+	ftw ftw64 fts poll ppoll					\
+	posix_fadvise posix_fadvise64					\
+	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
+static-only-routines = stat fstat lstat stat64 fstat64 lstat64	\
+		       fstatat fstatat64 mknod mknodat
 
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
-		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs
+		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
+		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
+		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
+		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
+		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5
 
 distribute	:= ftwtest-sh
 
@@ -65,6 +74,7 @@ include ../Rules
 
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-ppoll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c = -fexceptions
 CFLAGS-statfs.c = -fexceptions
 CFLAGS-fstatfs.c = -fexceptions
@@ -88,6 +98,9 @@ CFLAGS-mknod.c = -DHAVE_DOT_HIDDEN
 CFLAGS-stat64.c = -DHAVE_DOT_HIDDEN
 CFLAGS-fstat64.c = -DHAVE_DOT_HIDDEN
 CFLAGS-lstat64.c = -DHAVE_DOT_HIDDEN
+CFLAGS-fstatat.c = -DHAVE_DOT_HIDDEN
+CFLAGS-fstatat64.c = -DHAVE_DOT_HIDDEN
+CFLAGS-mknodat.c = -DHAVE_DOT_HIDDEN
 endif
 
 test-stat2-ARGS = Makefile . $(objpfx)test-stat2

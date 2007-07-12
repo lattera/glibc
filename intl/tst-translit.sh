@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of transliteration in gettext functions.
-# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -24,6 +24,9 @@ objpfx=$2
 
 LC_ALL=C
 export LC_ALL
+
+# Create the locale directories.
+mkdir -p ${objpfx}localedir/existing-locale/LC_MESSAGES
 
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/translit.mo \
        translit.po

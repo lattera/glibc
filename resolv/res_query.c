@@ -69,6 +69,7 @@ static const char sccsid[] = "@(#)res_query.c	8.1 (Berkeley) 6/4/93";
 static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
@@ -151,6 +152,7 @@ __libc_res_nquery(res_state statp,
 			free (buf);
 		return (n);
 	}
+	assert (answerp == NULL || (void *) *answerp == (void *) answer);
 	n = __libc_res_nsend(statp, buf, n, answer, anslen, answerp);
 	if (use_malloc)
 		free (buf);
@@ -162,6 +164,10 @@ __libc_res_nquery(res_state statp,
 		RES_SET_H_ERRNO(statp, TRY_AGAIN);
 		return (n);
 	}
+
+	if (answerp != NULL)
+	  /* __libc_res_nsend might have reallocated the buffer.  */
+	  hp = (HEADER *) *answerp;
 
 	if (hp->rcode != NOERROR || ntohs(hp->ancount) == 0) {
 #ifdef DEBUG

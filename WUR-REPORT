@@ -1,0 +1,45 @@
+<unistd.h>:
+
+lssek:   Probably should be __wur but lseek(fd,SEEK_SET,0) will succeed if
+         the descriptor is fine.
+lseek64: same
+
+setuid:  will always succeed given correct privileges, so there might
+         be places which don't check for it.
+setreuid: same
+seteuid: same
+setgid:  same
+setregid: same
+setegid: same
+setresuid: same
+setresgid: same
+
+
+<stdio.h>:
+
+setvbuf:   if stream and buffer are fine and other parameters constant,
+           it cannot really fail.
+fseek:     see lseek
+fseeko:    likewise
+fgetpos:   similarly
+fsetpos:   likewise
+
+
+<stdlib.h>:
+
+atexit:    it is guaranteed that a certain number of handlers can be
+           registered, so some calls might need not be checked
+on_exit:   same
+random functions:  one might want to discard a number of results.  In any
+           case, no security problem
+
+
+putenv:    probably SHOULD be marked, but we'll wait a bit.
+setenv:    likewise
+unsetenv:  likewise
+clearenv:  likewise
+
+mbstowcs:  probably SHOULD be marked
+wcstombs:  likewise
+
+ptsname_r: probably SHOULD be marked

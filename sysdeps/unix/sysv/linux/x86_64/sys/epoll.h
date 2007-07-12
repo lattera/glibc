@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,9 +98,12 @@ extern int epoll_ctl (int __epfd, int __op, int __fd,
    "events" parameter is a buffer that will contain triggered
    events. The "maxevents" is the maximum number of events to be
    returned ( usually size of "events" ). The "timeout" parameter
-   specifies the maximum wait time in milliseconds (-1 == infinite).  */
+   specifies the maximum wait time in milliseconds (-1 == infinite).
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern int epoll_wait (int __epfd, struct epoll_event *__events,
-		       int __maxevents, int __timeout) __THROW;
+		       int __maxevents, int __timeout);
 
 __END_DECLS
 

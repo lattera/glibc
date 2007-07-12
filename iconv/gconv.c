@@ -1,6 +1,6 @@
 /* Convert characters in input buffer using conversion descriptor to
    output buffer.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997-2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,10 +20,13 @@
    02111-1307 USA.  */
 
 #include <assert.h>
-#include <gconv_int.h>
-#include <sys/param.h>
 #include <dlfcn.h>
 #include <stddef.h>
+#include <sys/param.h>
+
+#include <gconv_int.h>
+#include <sysdep.h>
+
 
 int
 internal_function
@@ -45,9 +48,15 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
   cd->__data[last_step].__outbuf = outbuf != NULL ? *outbuf : NULL;
   cd->__data[last_step].__outbufend = outbufend;
 
+  __gconv_fct fct = cd->__steps->__fct;
+#ifdef PTR_DEMANGLE
+  if (cd->__steps->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
+
   if (inbuf == NULL || *inbuf == NULL)
     /* We just flush.  */
-    result = DL_CALL_FCT (cd->__steps->__fct,
+    result = DL_CALL_FCT (fct,
 			  (cd->__steps, cd->__data, NULL, NULL, NULL,
 			   irreversible,
 			   cd->__data[last_step].__outbuf == NULL ? 2 : 1, 0));
@@ -60,7 +69,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
       do
 	{
 	  last_start = *inbuf;
-	  result = DL_CALL_FCT (cd->__steps->__fct,
+	  result = DL_CALL_FCT (fct,
 				(cd->__steps, cd->__data, inbuf, inbufend,
 				 NULL, irreversible, 0, 0));
 	}

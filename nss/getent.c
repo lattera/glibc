@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -21,22 +21,23 @@
 
 #include <aliases.h>
 #include <argp.h>
-#include <grp.h>
-#include <pwd.h>
-#include <shadow.h>
 #include <ctype.h>
 #include <error.h>
+#include <grp.h>
 #include <libintl.h>
 #include <locale.h>
+#include <mcheck.h>
 #include <netdb.h>
+#include <pwd.h>
+#include <shadow.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ether.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include <netinet/ether.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 /* Get libc version number.  */
 #include <version.h>
@@ -83,7 +84,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"), "Thorsten Kukuk");
 }
 
@@ -279,9 +280,9 @@ hosts_keys (int number, char *key[])
       char addr[IN6ADDRSZ];
 
       if (inet_pton (AF_INET6, key[i], &addr) > 0)
-	host = gethostbyaddr (addr, sizeof (addr), AF_INET6);
+	host = gethostbyaddr (addr, IN6ADDRSZ, AF_INET6);
       else if (inet_pton (AF_INET, key[i], &addr) > 0)
-	host = gethostbyaddr (addr, sizeof (addr), AF_INET);
+	host = gethostbyaddr (addr, INADDRSZ, AF_INET);
       else if ((host = gethostbyname2 (key[i], AF_INET6)) == NULL)
 	host = gethostbyname2 (key[i], AF_INET);
 
@@ -409,6 +410,8 @@ netgroup_keys (int number, char *key[])
 	  putchar_unlocked ('\n');
 	}
     }
+
+  endnetgrent ();
 
   return result;
 }
@@ -757,12 +760,27 @@ D(shadow)
 static error_t
 parse_option (int key, char *arg, struct argp_state *state)
 {
-  int i;
+  char *endp;
   switch (key)
     {
     case 's':
-      for (i = 0; databases[i].name; ++i)
-	__nss_configure_lookup (databases[i].name, arg);
+      endp = strchr (arg, ':');
+      if (endp == NULL)
+	/* No specific database, change them all.  */
+	for (int i = 0; databases[i].name != NULL; ++i)
+	  __nss_configure_lookup (databases[i].name, arg);
+      else
+	{
+	  int i;
+	  for (i = 0; databases[i].name != NULL; ++i)
+	    if (strncmp (databases[i].name, arg, endp - arg) == 0)
+	      {
+		__nss_configure_lookup (databases[i].name, endp + 1);
+		break;
+	      }
+	  if (databases[i].name == NULL)
+	    error (EXIT_FAILURE, 0, gettext ("Unknown database name"));
+	}
       break;
 
     default:
@@ -776,31 +794,20 @@ parse_option (int key, char *arg, struct argp_state *state)
 static char *
 more_help (int key, const char *text, void *input)
 {
-  int len;
-  char *long_doc, *doc, *p;
-
   switch (key)
     {
+      size_t len;
+      char *doc;
+      FILE *fp;
+
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-#if 0
-      return xstrdup (gettext ("\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
-#endif
-      long_doc = _("Supported databases:");
-      len = strlen (long_doc) + 2;
-
-      for (int i = 0; databases[i].name; ++i)
-	len += strlen (databases[i].name) + 1;
-
-      doc = (char *) malloc (len);
-      if (doc != NULL)
+      fp = open_memstream (&doc, &len);
+      if (fp != NULL)
 	{
-	  p = stpcpy (doc, long_doc);
-	  *p++ = '\n';
+	  fputs_unlocked (_("Supported databases:\n"), fp);
 
-	  for (int i = 0, col = 0; databases[i].name; ++i)
+	  for (int i = 0, col = 0; databases[i].name != NULL; ++i)
 	    {
 	      len = strlen (databases[i].name);
 	      if (i != 0)
@@ -808,17 +815,18 @@ For bug reporting instructions, please see:\n\
 		  if (col + len > 72)
 		    {
 		      col = 0;
-		      *p++ = '\n';
+		      fputc_unlocked ('\n', fp);
 		    }
 		  else
-		    *p++ = ' ';
+		    fputc_unlocked (' ', fp);
 		}
 
-	      p = mempcpy (p, databases[i].name, len);
+	      fputs_unlocked (databases[i].name, fp);
 	      col += len + 1;
 	    }
 
-	  return doc;
+	  if (fclose (fp) == 0)
+	    return doc;
 	}
       break;
 
@@ -833,7 +841,8 @@ For bug reporting instructions, please see:\n\
 int
 main (int argc, char *argv[])
 {
-  int remaining, i;
+  /* Debugging support.  */
+  mtrace ();
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -841,6 +850,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   /* Parse and process arguments.  */
+  int remaining;
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   if ((argc - remaining) < 1)
@@ -850,7 +860,7 @@ main (int argc, char *argv[])
       return 1;
     }
 
-  for (i = 0; databases[i].name; ++i)
+  for (int i = 0; databases[i].name; ++i)
     if (argv[remaining][0] == databases[i].name[0]
 	&& !strcmp (argv[remaining], databases[i].name))
       return databases[i].func (argc - remaining - 1, &argv[remaining + 1]);

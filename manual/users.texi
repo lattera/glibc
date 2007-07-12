@@ -1690,6 +1690,9 @@ extended information about users, adding an entry using this function
 would inevitably leave out much of the important information.
 @c Then how are programmers to modify the password file? -zw
 
+The group and user ID fields are left empty if the group or user name
+starts with a - or +.
+
 The function @code{putpwent} is declared in @file{pwd.h}.
 @end deftypefun
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -43,11 +43,18 @@ typedef union
 } pthread_attr_t;
 
 
+typedef struct __pthread_internal_list
+{
+  struct __pthread_internal_list *__prev;
+  struct __pthread_internal_list *__next;
+} __pthread_list_t;
+
+
 /* Data structures for mutex handling.  The structure of the attribute
    type is not exposed on purpose.  */
 typedef union
 {
-  struct
+  struct __pthread_mutex_s
   {
     int __lock;
     unsigned int __count;
@@ -57,6 +64,8 @@ typedef union
        binary compatibility.  */
     int __kind;
     int __spins;
+    __pthread_list_t __list;
+#define __PTHREAD_MUTEX_HAVE_PREV	1
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

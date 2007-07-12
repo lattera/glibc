@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,8 +45,5 @@ _IO_vsscanf (string, format, args)
   ret = INTUSE(_IO_vfscanf) ((_IO_FILE *) &sf._sbf, format, args, NULL);
   return ret;
 }
-
-#ifdef weak_alias
-weak_alias (_IO_vsscanf, __vsscanf)
-weak_alias (_IO_vsscanf, vsscanf)
-#endif
+ldbl_weak_alias (_IO_vsscanf, __vsscanf)
+ldbl_weak_alias (_IO_vsscanf, vsscanf)

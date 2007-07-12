@@ -2114,7 +2114,7 @@ order_end
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "en_GB"
 END LC_CTYPE
 
 LC_MONETARY

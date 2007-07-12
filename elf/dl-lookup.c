@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include "dl-hash.h"
+#include <dl-hash.h>
 #include <dl-machine.h>
+#include <sysdep-cancel.h>
 #include <bits/libc-lock.h>
 #include <tls.h>
 
@@ -72,6 +73,16 @@ struct sym_val
 #include "do-lookup.h"
 
 
+static uint_fast32_t
+dl_new_hash (const char *s)
+{
+  uint_fast32_t h = 5381;
+  for (unsigned char c = *s; c != '\0'; c = *++s)
+    h = h * 33 + c;
+  return h & 0xffffffff;
+}
+
+
 /* Add extra dependency on MAP to UNDEF_MAP.  */
 static int
 internal_function
@@ -91,11 +102,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   /* Make sure nobody can unload the object while we are at it.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  /* Don't create cross-reference between modules which are
-     dynamically loaded by the same dlopen() call.  */
-  if (undef_map->l_opencount == 0 && map->l_opencount == 0)
-    goto out;
-
   /* Avoid references to objects which cannot be unloaded anyway.  */
   if (map->l_type != lt_loaded
       || (map->l_flags_1 & DF_1_NODELETE) != 0)
@@ -107,14 +113,13 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   if (undef_map->l_type != lt_loaded
       || (undef_map->l_flags_1 & DF_1_NODELETE) != 0)
     {
-      ++map->l_opencount;
       map->l_flags_1 |= DF_1_NODELETE;
       goto out;
     }
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
-  if (undef_map->l_searchlist.r_list != NULL)
+  if (undef_map->l_initfini != NULL)
     {
       list = undef_map->l_initfini;
 
@@ -172,19 +177,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
       if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
 
-      if (map->l_searchlist.r_list != NULL)
-	/* And increment the counter in the referenced object.  */
-	++map->l_opencount;
-      else
-	/* We have to bump the counts for all dependencies since so far
-	   this object was only a normal or transitive dependency.
-	   Now it might be closed with _dl_close() directly.  */
-	for (list = map->l_initfini; *list != NULL; ++list)
-	  ++(*list)->l_opencount;
-
-      /* As if it is opened through _dl_open.  */
-      ++map->l_direct_opencount;
-
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\
@@ -209,14 +201,17 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected);
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME, perhaps with a requested version for the symbol.  */
+   UNDEF_NAME, perhaps with a requested version for the symbol.
+
+   We must never have calls to the audit functions inside this function
+   or in any function which gets called.  If this would happen the audit
+   code might create a thread which can throw off all the scope locking.  */
 lookup_t
 internal_function
 _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
@@ -225,7 +220,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 		     const struct r_found_version *version,
 		     int type_class, int flags, struct link_map *skip_map)
 {
-  const unsigned long int hash = _dl_elf_hash (undef_name);
+  const uint_fast32_t new_hash = dl_new_hash (undef_name);
+  unsigned long int old_hash = 0xffffffff;
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope = symbol_scope;
 
@@ -233,23 +229,20 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed if we look
      up a versioned symbol.  */
-  assert (version == NULL || flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
+  assert (version == NULL || (flags & ~(DL_LOOKUP_ADD_DEPENDENCY)) == 0);
 
   size_t i = 0;
   if (__builtin_expect (skip_map != NULL, 0))
-    {
-      /* Search the relevant loaded objects for a definition.  */
-      while ((*scope)->r_list[i] != skip_map)
-	++i;
-
-      assert (i < (*scope)->r_nlist);
-    }
+    /* Search the relevant loaded objects for a definition.  */
+    while ((*scope)->r_list[i] != skip_map)
+      ++i;
 
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
     {
-      int res = do_lookup_x (undef_name, hash, *ref, &current_value, *scope,
-			     start, version, flags, skip_map, type_class);
+      int res = do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+			     &current_value, *scope, start, version, flags,
+			     skip_map, type_class);
       if (res > 0)
 	break;
 
@@ -320,9 +313,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  struct sym_val protected_value = { NULL, NULL };
 
 	  for (scope = symbol_scope; *scope != NULL; i = 0, ++scope)
-	    if (do_lookup_x (undef_name, hash, *ref, &protected_value,
-			     *scope, i, version, flags, skip_map,
-			     ELF_RTYPE_CLASS_PLT) != 0)
+	    if (do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+			     &protected_value, *scope, i, version, flags,
+			     skip_map, ELF_RTYPE_CLASS_PLT) != 0)
 	      break;
 
 	  if (protected_value.s != NULL && protected_value.m != undef_map)
@@ -345,16 +338,15 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return _dl_lookup_symbol_x (undef_name, undef_map, ref,
-				  symbol_scope, version, type_class,
-				  flags, skip_map);
+      return _dl_lookup_symbol_x (undef_name, undef_map, ref, symbol_scope,
+				  version, type_class, flags, skip_map);
 
   /* The object is used.  */
   current_value.m->l_used = 1;
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
+    _dl_debug_bindings (undef_name, undef_map, ref,
 			&current_value, version, type_class, protected);
 
   *ref = current_value.s;
@@ -371,6 +363,31 @@ _dl_setup_hash (struct link_map *map)
   Elf_Symndx *hash;
   Elf_Symndx nchain;
 
+  if (__builtin_expect (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
+  				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
+				    + DT_EXTRANUM + DT_VALNUM] != NULL, 1))
+    {
+      Elf32_Word *hash32
+	= (void *) D_PTR (map, l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
+				      + DT_THISPROCNUM + DT_VERSIONTAGNUM
+				      + DT_EXTRANUM + DT_VALNUM]);
+      map->l_nbuckets = *hash32++;
+      Elf32_Word symbias = *hash32++;
+      Elf32_Word bitmask_nwords = *hash32++;
+      /* Must be a power of two.  */
+      assert ((bitmask_nwords & (bitmask_nwords - 1)) == 0);
+      map->l_gnu_bitmask_idxbits = bitmask_nwords - 1;
+      map->l_gnu_shift = *hash32++;
+
+      map->l_gnu_bitmask = (ElfW(Addr) *) hash32;
+      hash32 += __ELF_NATIVE_CLASS / 32 * bitmask_nwords;
+
+      map->l_gnu_buckets = hash32;
+      hash32 += map->l_nbuckets;
+      map->l_gnu_chain_zero = hash32 - symbias;
+      return;
+    }
+
   if (!map->l_info[DT_HASH])
     return;
   hash = (void *) D_PTR (map, l_info[DT_HASH]);
@@ -386,8 +403,7 @@ _dl_setup_hash (struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected)
 {
@@ -395,11 +411,13 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
   if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
-      _dl_debug_printf ("binding file %s to %s: %s symbol `%s'",
+      _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
 			(reference_name[0]
 			 ? reference_name
 			 : (rtld_progname ?: "<main program>")),
+			undef_map->l_ns,
 			value->m->l_name[0] ? value->m->l_name : rtld_progname,
+			value->m->l_ns,
 			protected ? "protected" : "normal", undef_name);
       if (version)
 	_dl_debug_printf_c (" [%s]\n", version->name);
@@ -416,9 +434,10 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	   || GLRO(dl_trace_prelink_map) == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
 	  && undef_map != GL(dl_ns)[LM_ID_BASE]._ns_loaded)
 	{
-	  const unsigned long int hash = _dl_elf_hash (undef_name);
+	  const uint_fast32_t new_hash = dl_new_hash (undef_name);
+	  unsigned long int old_hash = 0xffffffff;
 
-	  do_lookup_x (undef_name, hash, *ref, &val,
+	  do_lookup_x (undef_name, new_hash, &old_hash, *ref, &val,
 		       undef_map->l_local_scope[0], 0, version, 0, NULL,
 		       type_class);
 

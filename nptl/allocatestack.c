@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,7 +33,7 @@
 #ifndef NEED_SEPARATE_REGISTER_STACK
 
 /* Most architectures have exactly one stack pointer.  Some have more.  */
-# define STACK_VARIABLES void *stackaddr
+# define STACK_VARIABLES void *stackaddr = NULL
 
 /* How to pass the values to the 'create_thread' function.  */
 # define STACK_VARIABLES_ARGS stackaddr
@@ -52,7 +52,7 @@
 
 /* We need two stacks.  The kernel will place them but we have to tell
    the kernel about the size of the reserved address space.  */
-# define STACK_VARIABLES void *stackaddr; size_t stacksize
+# define STACK_VARIABLES void *stackaddr = NULL; size_t stacksize = 0
 
 /* How to pass the values to the 'create_thread' function.  */
 # define STACK_VARIABLES_ARGS stackaddr, stacksize
@@ -211,6 +211,45 @@ get_cached_stack (size_t *sizep, void **memp)
 }
 
 
+/* Free stacks until cache size is lower than LIMIT.  */
+static void
+free_stacks (size_t limit)
+{
+  /* We reduce the size of the cache.  Remove the last entries until
+     the size is below the limit.  */
+  list_t *entry;
+  list_t *prev;
+
+  /* Search from the end of the list.  */
+  list_for_each_prev_safe (entry, prev, &stack_cache)
+    {
+      struct pthread *curr;
+
+      curr = list_entry (entry, struct pthread, list);
+      if (FREE_P (curr))
+	{
+	  /* Unlink the block.  */
+	  list_del (entry);
+
+	  /* Account for the freed memory.  */
+	  stack_cache_actsize -= curr->stackblock_size;
+
+	  /* Free the memory associated with the ELF TLS.  */
+	  _dl_deallocate_tls (TLS_TPADJ (curr), false);
+
+	  /* Remove this block.  This should never fail.  If it does
+	     something is really wrong.  */
+	  if (munmap (curr->stackblock, curr->stackblock_size) != 0)
+	    abort ();
+
+	  /* Maybe we have freed enough.  */
+	  if (stack_cache_actsize <= limit)
+	    break;
+	}
+    }
+}
+
+
 /* Add a stack frame which is not used anymore to the stack.  Must be
    called with the cache lock held.  */
 static inline void
@@ -224,40 +263,15 @@ queue_stack (struct pthread *stack)
 
   stack_cache_actsize += stack->stackblock_size;
   if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
-    {
-      /* We reduce the size of the cache.  Remove the last entries
-	 until the size is below the limit.  */
-      list_t *entry;
-      list_t *prev;
+    free_stacks (stack_cache_maxsize);
+}
 
-      /* Search from the end of the list.  */
-      list_for_each_prev_safe (entry, prev, &stack_cache)
-	{
-	  struct pthread *curr;
 
-	  curr = list_entry (entry, struct pthread, list);
-	  if (FREE_P (curr))
-	    {
-	      /* Unlink the block.  */
-	      list_del (entry);
-
-	      /* Account for the freed memory.  */
-	      stack_cache_actsize -= curr->stackblock_size;
-
-	      /* Free the memory associated with the ELF TLS.  */
-	      _dl_deallocate_tls (TLS_TPADJ (curr), false);
-
-	      /* Remove this block.  This should never fail.  If it
-		 does something is really wrong.  */
-	      if (munmap (curr->stackblock, curr->stackblock_size) != 0)
-		abort ();
-
-	      /* Maybe we have freed enough.  */
-	      if (stack_cache_actsize <= stack_cache_maxsize)
-		break;
-	    }
-	}
-    }
+/* This function is called indirectly from the freeres code in libc.  */
+void
+__free_stack_cache (void)
+{
+  free_stacks (0);
 }
 
 
@@ -406,8 +420,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* Make sure the size of the stack is enough for the guard and
 	 eventually the thread descriptor.  */
       guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
-      if (__builtin_expect (size < (guardsize + __static_tls_size
-				    + MINIMAL_REST_STACK + pagesize_m1 + 1),
+      if (__builtin_expect (size < ((guardsize + __static_tls_size
+				     + MINIMAL_REST_STACK + pagesize_m1)
+				    & ~pagesize_m1),
 			    0))
 	/* The stack is too small (or the guard too large).  */
 	return EINVAL;
@@ -621,6 +636,18 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
      stillborn thread could be canceled while the lock is taken.  */
   pd->lock = LLL_LOCK_INITIALIZER;
 
+  /* The robust mutex lists also need to be initialized
+     unconditionally because the cleanup for the previous stack owner
+     might have happened in the kernel.  */
+  pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
+				  - offsetof (pthread_mutex_t,
+					      __data.__list.__next));
+  pd->robust_head.list_op_pending = NULL;
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
+  pd->robust_prev = &pd->robust_head;
+#endif
+  pd->robust_head.list = &pd->robust_head;
+
   /* We place the thread descriptor at the end of the stack.  */
   *pdp = pd;
 
@@ -729,9 +756,7 @@ __reclaim_stacks (void)
   list_t *runp;
   list_for_each (runp, &stack_used)
     {
-      struct pthread *curp;
-
-      curp = list_entry (runp, struct pthread, list);
+      struct pthread *curp = list_entry (runp, struct pthread, list);
       if (curp != self)
 	{
 	  /* This marks the stack as free.  */
@@ -743,6 +768,13 @@ __reclaim_stacks (void)
 	  /* Account for the size of the stack.  */
 	  stack_cache_actsize += curp->stackblock_size;
 	}
+    }
+
+  /* Reset the PIDs in any cached stacks.  */
+  list_for_each (runp, &stack_cache)
+    {
+      struct pthread *curp = list_entry (runp, struct pthread, list);
+      curp->pid = self->pid;
     }
 
   /* Add the stack of all running threads to the cache.  */
@@ -817,6 +849,46 @@ __find_thread_by_id (pid_t tid)
 }
 #endif
 
+
+static void
+internal_function
+setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
+{
+  if (! IS_DETACHED (t))
+    {
+      int ch;
+      do
+	{
+	  ch = t->cancelhandling;
+
+	  /* If the thread is exiting right now, ignore it.  */
+	  if ((ch & EXITING_BITMASK) != 0)
+	    return;
+	}
+      while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
+						   ch | SETXID_BITMASK, ch));
+    }
+
+  int val;
+  INTERNAL_SYSCALL_DECL (err);
+#if __ASSUME_TGKILL
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  t->tid, SIGSETXID);
+#else
+# ifdef __NR_tgkill
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  t->tid, SIGSETXID);
+  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
+#endif
+
+  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
+    atomic_increment (&cmdp->cntr);
+}
+
+
 int
 attribute_hidden
 __nptl_setxid (struct xid_command *cmdp)
@@ -827,8 +899,6 @@ __nptl_setxid (struct xid_command *cmdp)
   __xidcmd = cmdp;
   cmdp->cntr = 0;
 
-  INTERNAL_SYSCALL_DECL (err);
-
   struct pthread *self = THREAD_SELF;
 
   /* Iterate over the list with system-allocated threads first.  */
@@ -836,54 +906,20 @@ __nptl_setxid (struct xid_command *cmdp)
   list_for_each (runp, &stack_used)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t != self)
-	{
-	  int val;
-#if __ASSUME_TGKILL
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-#else
-# ifdef __NR_tgkill
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
-	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
-# endif
-	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
-#endif
+      if (t == self)
+	continue;
 
-	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
-	    atomic_increment (&cmdp->cntr);
-	}
+      setxid_signal_thread (cmdp, t);
     }
 
   /* Now the list with threads using user-allocated stacks.  */
   list_for_each (runp, &__stack_user)
     {
       struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t != self)
-	{
-	  int val;
-#if __ASSUME_TGKILL
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-#else
-# ifdef __NR_tgkill
-	  val = INTERNAL_SYSCALL (tgkill, err, 3,
-				  THREAD_GETMEM (THREAD_SELF, pid),
-				  t->tid, SIGSETXID);
-	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
-	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
-# endif
-	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
-#endif
+      if (t == self)
+	continue;
 
-	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
-	    atomic_increment (&cmdp->cntr);
-	}
+      setxid_signal_thread (cmdp, t);
     }
 
   int cur = cmdp->cntr;
@@ -895,6 +931,7 @@ __nptl_setxid (struct xid_command *cmdp)
 
   /* This must be last, otherwise the current thread might not have
      permissions to send SIGSETXID syscall to the other threads.  */
+  INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL_NCS (cmdp->syscall_no, err, 3,
 				 cmdp->id[0], cmdp->id[1], cmdp->id[2]);
   if (INTERNAL_SYSCALL_ERROR_P (result, err))
@@ -920,7 +957,8 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
 # endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv[map->l_tls_modid].pointer = dest;
+  dtv[map->l_tls_modid].pointer.val = dest;
+  dtv[map->l_tls_modid].pointer.is_static = true;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
@@ -941,6 +979,63 @@ __pthread_init_static_tls (struct link_map *map)
   /* Now the list with threads using user-allocated stacks.  */
   list_for_each (runp, &__stack_user)
     init_one_static_tls (list_entry (runp, struct pthread, list), map);
+
+  lll_unlock (stack_cache_lock);
+}
+
+
+void
+attribute_hidden
+__wait_lookup_done (void)
+{
+  lll_lock (stack_cache_lock);
+
+  struct pthread *self = THREAD_SELF;
+
+  /* Iterate over the list with system-allocated threads first.  */
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
+	continue;
+
+      int *const gscope_flagp = &t->header.gscope_flag;
+
+      /* We have to wait until this thread is done with the global
+	 scope.  First tell the thread that we are waiting and
+	 possibly have to be woken.  */
+      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
+						THREAD_GSCOPE_FLAG_WAIT,
+						THREAD_GSCOPE_FLAG_USED))
+	continue;
+
+      do
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+    }
+
+  /* Now the list with threads using user-allocated stacks.  */
+  list_for_each (runp, &__stack_user)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
+	continue;
+
+      int *const gscope_flagp = &t->header.gscope_flag;
+
+      /* We have to wait until this thread is done with the global
+	 scope.  First tell the thread that we are waiting and
+	 possibly have to be woken.  */
+      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
+						THREAD_GSCOPE_FLAG_WAIT,
+						THREAD_GSCOPE_FLAG_USED))
+	continue;
+
+      do
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+    }
 
   lll_unlock (stack_cache_lock);
 }

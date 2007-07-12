@@ -48,6 +48,7 @@
 	.global _start
 	.type _start,#function
 _start:
+	cfi_startproc
 
 #ifdef SHARED
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7
@@ -59,6 +60,7 @@ _start:
      drop their arguments.  */
 	mov	%g0, %fp
 	sub	%sp, 6*8, %sp
+	cfi_adjust_cfa_offset(6*8)
 
   /* Extract the arguments and environment as encoded on the stack.  The
      argument info starts after one register window (16 words) past the SP,
@@ -92,4 +94,12 @@ _start:
   /* Die very horribly if exit returns.  */
 	illtrap	0
 
+	cfi_endproc
+
 	.size _start, .-_start
+
+/* Define a symbol for the first piece of initialized data.  */
+	.data
+	.globl	__data_start
+__data_start:
+weak_alias (__data_start, data_start)

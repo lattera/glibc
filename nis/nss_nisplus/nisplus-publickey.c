@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1999,2001,2003,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -37,7 +37,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
 {
   nis_result *res;
   enum nss_status retval;
-  char buf[NIS_MAXNAMELEN+2];
+  char buf[NIS_MAXNAMELEN + 2];
   size_t slen;
   char *domain, *cptr;
   int len;
@@ -91,20 +91,20 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
       return retval;
     }
 
-  if (res->objects.objects_len > 1)
+  if (NIS_RES_NUMOBJ (res) > 1)
     {
       /*
        * More than one principal with same uid?
        * something wrong with cred table. Should be unique
        * Warn user and continue.
        */
-      printf (_("DES entry for netname %s not unique\n"), netname);
+      syslog (LOG_ERR, _("DES entry for netname %s not unique\n"), netname);
       nis_freeresult (res);
       return NSS_STATUS_SUCCESS;
     }
 
-  len = ENTRY_LEN (res->objects.objects_val, 3);
-  memcpy (pkey, ENTRY_VAL (res->objects.objects_val,3), len);
+  len = ENTRY_LEN (NIS_RES_OBJECT (res), 3);
+  memcpy (pkey, ENTRY_VAL (NIS_RES_OBJECT (res),3), len);
   pkey[len] = 0;
   cptr = strchr (pkey, ':');
   if (cptr)
@@ -114,13 +114,14 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
 			   int *errnop)
 {
   nis_result *res;
   enum nss_status retval;
-  char buf[NIS_MAXNAMELEN+2];
+  char buf[NIS_MAXNAMELEN + 2];
   size_t slen;
   char *domain, *cptr;
   int len;
@@ -154,7 +155,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
       buf[slen] = '\0';
     }
 
-  res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
+  res = nis_list (buf, USE_DGRAM | NO_AUTHINFO | FOLLOW_LINKS | FOLLOW_PATH,
 		  NULL, NULL);
 
   if (res == NULL)
@@ -172,20 +173,20 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
       return retval;
     }
 
-  if (res->objects.objects_len > 1)
+  if (NIS_RES_NUMOBJ (res) > 1)
     {
       /*
        * More than one principal with same uid?
        * something wrong with cred table. Should be unique
        * Warn user and continue.
        */
-      printf (_("DES entry for netname %s not unique\n"), netname);
+      syslog (LOG_ERR, _("DES entry for netname %s not unique\n"), netname);
       nis_freeresult (res);
       return NSS_STATUS_SUCCESS;
     }
 
-  len = ENTRY_LEN (res->objects.objects_val, 4);
-  memcpy (buf, ENTRY_VAL (res->objects.objects_val,4), len);
+  len = ENTRY_LEN (NIS_RES_OBJECT (res), 4);
+  memcpy (buf, ENTRY_VAL (NIS_RES_OBJECT (res), 4), len);
   buf[len] = '\0';
   cptr = strchr (buf, ':');
   if (cptr)
@@ -203,6 +204,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
 
   return NSS_STATUS_SUCCESS;
 }
+
 
 /* Parse information from the passed string.
    The format of the string passed is gid,grp,grp, ...  */
@@ -224,8 +226,12 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
   gidlen = 0;
 
   /* After strtoul() ep should point to the marker ',', which means
-     here starts a new value. */
-  while (ep != NULL && *ep == ',')
+     here starts a new value.
+
+     The Sun man pages show that GIDLIST should contain at least NGRPS
+     elements.  Limiting the number written by this value is the best
+     we can do.  */
+  while (ep != NULL && *ep == ',' && gidlen < NGRPS)
     {
       ep++;
       s = ep;
@@ -242,9 +248,9 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 {
   char *domain;
   nis_result *res;
-  char sname[NIS_MAXNAMELEN+2]; /*  search criteria + table name */
+  char sname[NIS_MAXNAMELEN + 2]; /*  search criteria + table name */
   size_t slen;
-  char principal[NIS_MAXNAMELEN+1];
+  char principal[NIS_MAXNAMELEN + 1];
   int len;
 
   /* 1.  Get home domain of user. */
@@ -255,10 +261,6 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   ++domain;  /* skip '@' */
 
   /* 2.  Get user's nisplus principal name.  */
-  if ((strlen (netname) + strlen (domain)+45) >
-      (size_t) NIS_MAXNAMELEN)
-    return NSS_STATUS_UNAVAIL;
-
   slen = snprintf (sname, NIS_MAXNAMELEN,
 		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
 		   netname, domain);
@@ -309,7 +311,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (res->objects.objects_len > 1)
+  if (NIS_RES_NUMOBJ (res) > 1)
     /*
      * A netname belonging to more than one principal?
      * Something wrong with cred table. should be unique.
@@ -319,8 +321,8 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 	    _("netname2user: DES entry for %s in directory %s not unique"),
 	    netname, domain);
 
-  len = ENTRY_LEN (res->objects.objects_val, 0);
-  strncpy (principal, ENTRY_VAL (res->objects.objects_val, 0), len);
+  len = ENTRY_LEN (NIS_RES_OBJECT (res), 0);
+  strncpy (principal, ENTRY_VAL (NIS_RES_OBJECT (res), 0), len);
   principal[len] = '\0';
   nis_freeresult (res);
 
@@ -332,15 +334,16 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
    *     LOCAL entry in **local** cred table.
    */
   domain = nis_local_directory ();
-  if ((strlen (principal) + strlen (domain) + 45) > (size_t) NIS_MAXNAMELEN)
+  if (strlen (principal) + strlen (domain) + 45 > (size_t) NIS_MAXNAMELEN)
     {
       syslog (LOG_ERR, _("netname2user: principal name `%s' too long"),
 	      principal);
       return NSS_STATUS_UNAVAIL;
     }
 
-  slen = sprintf (sname, "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
-		  principal, domain);
+  slen = snprintf (sname, sizeof  (sname),
+		   "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
+		   principal, domain);
 
   if (sname[slen - 1] != '.')
     {
@@ -382,7 +385,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (res->objects.objects_len > 1)
+  if (NIS_RES_NUMOBJ (res) > 1)
     /*
      * A principal can have more than one LOCAL entry?
      * Something wrong with cred table.
@@ -392,15 +395,16 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 	    _("netname2user: LOCAL entry for %s in directory %s not unique"),
 	    netname, domain);
   /* Fetch the uid */
-  *uidp = strtoul (ENTRY_VAL (res->objects.objects_val, 2), NULL, 10);
+  *uidp = strtoul (ENTRY_VAL (NIS_RES_OBJECT (res), 2), NULL, 10);
 
   if (*uidp == 0)
     {
       syslog (LOG_ERR, _("netname2user: should not have uid 0"));
+      nis_freeresult (res);
       return NSS_STATUS_NOTFOUND;
     }
 
-  parse_grp_str (ENTRY_VAL (res->objects.objects_val, 3),
+  parse_grp_str (ENTRY_VAL (NIS_RES_OBJECT (res), 3),
 		 gidp, gidlenp, gidlist, errnop);
 
   nis_freeresult (res);

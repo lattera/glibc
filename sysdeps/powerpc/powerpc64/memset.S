@@ -62,8 +62,7 @@ EALIGN (BP_SYM (memset), 5, 0)
 #define rNEG64	r8	/* Constant -64 for clearing with dcbz.  */
 #define rCLS	r8	/* Cache line size obtained from static.  */
 #define rCLM	r9	/* Cache line size mask to check for cache alignment.  */
-
-___memset:
+L(_memset):
 #if __BOUNDED_POINTERS__
 	cmpldi	cr1, rRTN, 0
 	CHECK_BOUNDS_BOTH_WIDE (rMEMP0, rTMP, rTMP2, rLEN)
@@ -282,11 +281,11 @@ ENTRY (BP_SYM (__bzero))
 	mr	r4,r3
 	/* Tell memset that we don't want a return value.  */
 	li	r3,0
-	b	___memset
+	b	L(_memset)
 #else
 	mr	r5,r4
 	li	r4,0
-	b	___memset
+	b	L(_memset)
 #endif
 END_GEN_TB (BP_SYM (__bzero),TB_TOCLESS)
 

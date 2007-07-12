@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <shlib-compat.h>
 #include <bp-checks.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 extern int __new_getrlimit (enum __rlimit_resource resource,
 			    struct rlimit *__unbounded rlimits);

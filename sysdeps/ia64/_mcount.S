@@ -72,6 +72,7 @@ LEAF(_mcount)
 	mov b7 = loc0
 	mov rp = in2
 	;;
+	mov r3 = in0
 	mov r8 = loc2
 	mov r15 = loc3
 	mov b6 = r2
@@ -81,10 +82,10 @@ END(_mcount)
 LOCAL_LEAF(_mcount_ret_helper)
 	.prologue
 	.altrp b7
-	.save ar.pfs, r40
+	.save ar.pfs, r3
 	.body
-	alloc r2 = ar.pfs, 0, 0, 9, 0
-	mov ar.pfs = r40
+	alloc r2 = ar.pfs, 0, 0, 8, 0
+	mov ar.pfs = r3
 	br b7
 END(_mcount_ret_helper)
 

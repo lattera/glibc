@@ -44,10 +44,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0xa28c1003l)
+  if (l != -0x5d73effdl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0xa28c1003l, l);
+	      __LINE__ - 4, -0x5d73effdl, l);
       result = 1;
     }
 
@@ -60,10 +60,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0x9e88f474l)
+  if (l != -0x61770b8cl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0x9e88f474l, l);
+	      __LINE__ - 4, -0x61770b8cl, l);
       result = 1;
     }
 
@@ -92,10 +92,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0xeb7a1fa3l)
+  if (l != -0x1485e05dl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0xeb7a1fa3l, l);
+	      __LINE__ - 4, -0x1485e05dl, l);
       result = 1;
     }
 
@@ -171,10 +171,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0xa28c1003l)
+  if (l != -0x5d73effdl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0xa28c1003l, l);
+	      __LINE__ - 4, -0x5d73effdl, l);
       result = 1;
     }
 
@@ -187,10 +187,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0x9e88f474l)
+  if (l != -0x61770b8cl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0x9e88f474l, l);
+	      __LINE__ - 4, -0x61770b8cl, l);
       result = 1;
     }
 
@@ -231,10 +231,10 @@ main (void)
     }
 
   l = mrand48 ();
-  if (l != 0xeb7a1fa3l)
+  if (l != -0x1485e05dl)
     {
       printf ("mrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0xeb7a1fa3l, l);
+	      __LINE__ - 4, -0x1485e05dl, l);
       result = 1;
     }
 
@@ -287,10 +287,10 @@ main (void)
     }
 
   l = jrand48 (xs);
-  if (l != 0xf568c7a0l)
+  if (l != -0xa973860l)
     {
       printf ("jrand48() in line %d failed: expected %lx, seen %lx\n",
-	      __LINE__ - 4, 0xf568c7a0l, l);
+	      __LINE__ - 4, -0xa973860l, l);
       result = 1;
     }
 

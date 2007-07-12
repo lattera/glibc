@@ -1,5 +1,5 @@
 /* Test for notification mechanism in lio_listio.
-   Copyright (C) 2000,02 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,13 +24,18 @@
 #include <unistd.h>
 #include <errno.h>
 
-int flag;
+static pthread_barrier_t b;
 
 
 static void
 thrfct (sigval_t arg)
 {
-  flag = 1;
+  int e = pthread_barrier_wait (&b);
+  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("child: barrier_wait failed");
+      exit (1);
+    }
 }
 
 
@@ -51,6 +56,12 @@ do_test (int argc, char *argv[])
     }
 
   unlink (name);
+
+  if (pthread_barrier_init (&b, NULL, 2) != 0)
+    {
+      puts ("barrier_init failed");
+      return 1;
+    }
 
   arr[0] = &cb;
 
@@ -82,9 +93,10 @@ do_test (int argc, char *argv[])
       return 1;
     }
 
-  if (flag != 0)
+  int e = pthread_barrier_wait (&b);
+  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("thread created, should not have happened");
+      puts ("parent: barrier_wait failed");
       return 1;
     }
 

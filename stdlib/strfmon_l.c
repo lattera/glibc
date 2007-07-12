@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the given locale.
-   Copyright (C) 1996, 1997, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2002, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -23,10 +23,8 @@
 #include <langinfo.h>
 #include <locale.h>
 #include <monetary.h>
-#ifdef USE_IN_LIBIO
-# include "../libio/libioP.h"
-# include "../libio/strfile.h"
-#endif
+#include "../libio/libioP.h"
+#include "../libio/strfile.h"
 #include <printf.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -91,13 +89,9 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	      va_list ap)
 {
   struct locale_data *current = loc->__locales[LC_MONETARY];
-#ifdef USE_IN_LIBIO
   _IO_strfile f;
-# ifdef _IO_MTSAFE_IO
+#ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
-# endif
-#else
-  FILE f;
 #endif
   struct printf_info info;
   char *dest;			/* Pointer so copy the output.  */
@@ -278,7 +272,8 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
       if (*fmt == 'L')
 	{
 	  ++fmt;
-	  is_long_double = 1;
+	  if (!__ldbl_is_dbl)
+	    is_long_double = 1;
 	}
 
       /* Handle format specifier.  */
@@ -491,23 +486,21 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	    }
 
 	  if (print_curr_symbol)
-	    {
-	      out_string (currency_symbol);
+	    out_string (currency_symbol);
 
-	      if (sign_posn == 4)
-		{
-		  if (sep_by_space == 2)
-		    out_char (space_char);
-		  out_string (sign_string);
-		  if (sep_by_space == 1)
-		    /* POSIX.2 and SUS are not clear on this case, but C99
-		       says a space follows the adjacent-symbol-and-sign */
-		    out_char (' ');
-		}
-	      else
-		if (sep_by_space == 1)
-		  out_char (space_char);
+	  if (sign_posn == 4)
+	    {
+	      if (print_curr_symbol && sep_by_space == 2)
+		out_char (space_char);
+	      out_string (sign_string);
+	      if (sep_by_space == 1)
+		/* POSIX.2 and SUS are not clear on this case, but C99
+		   says a space follows the adjacent-symbol-and-sign */
+		out_char (' ');
 	    }
+	  else
+	    if (print_curr_symbol && sep_by_space == 1)
+	      out_char (space_char);
 	}
       else
 	if (sign_posn != 0 && sign_posn != 2 && sign_posn != 3
@@ -515,30 +508,13 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	  out_string (sign_string);
 
       /* Print the number.  */
-#ifdef USE_IN_LIBIO
-# ifdef _IO_MTSAFE_IO
+#ifdef _IO_MTSAFE_IO
       f._sbf._f._lock = &lock;
-# endif
+#endif
       INTUSE(_IO_init) ((_IO_FILE *) &f, 0);
       _IO_JUMPS ((struct _IO_FILE_plus *) &f) = &_IO_str_jumps;
       INTUSE(_IO_str_init_static) ((_IO_strfile *) &f, dest,
 				   (s + maxsize) - dest, dest);
-#else
-      memset ((void *) &f, 0, sizeof (f));
-      f.__magic = _IOMAGIC;
-      f.__mode.__write = 1;
-      /* The buffer size is one less than MAXLEN
-	 so we have space for the null terminator.  */
-      f.__bufp = f.__buffer = (char *) dest;
-      f.__bufsize = (s + maxsize) - dest;
-      f.__put_limit = f.__buffer + f.__bufsize;
-      f.__get_limit = f.__buffer;
-      /* After the buffer is full (MAXLEN characters have been written),
-	 any more characters written will go to the bit bucket.  */
-      f.__room_funcs = __default_room_functions;
-      f.__io_funcs.__write = NULL;
-      f.__seen = 1;
-#endif
       /* We clear the last available byte so we can find out whether
 	 the numeric representation is too long.  */
       s[maxsize - 1] = '\0';
@@ -583,12 +559,13 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 		  || (sign_posn == 0 && sep_by_space == 1))
 		out_char (space_char);
 	      out_nstring (currency_symbol, currency_symbol_len);
-	      if (sign_posn == 4)
-		{
-		  if (sep_by_space == 2)
-		    out_char (' ');
-		  out_string (sign_string);
-		}
+	    }
+	    
+	  if (sign_posn == 4)
+	    {
+	      if (sep_by_space == 2)
+		out_char (' ');
+	      out_string (sign_string);
 	    }
 	}
 
@@ -633,7 +610,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 }
 
 ssize_t
-__strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
+___strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 {
   va_list ap;
 
@@ -645,4 +622,5 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 
   return res;
 }
-weak_alias (__strfmon_l, strfmon_l)
+ldbl_strong_alias (___strfmon_l, __strfmon_l)
+ldbl_weak_alias (___strfmon_l, strfmon_l)

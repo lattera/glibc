@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -112,6 +113,8 @@ typedef __timer_t timer_t;
       (defined __USE_POSIX199309 || defined __USE_MISC)) ||	\
       defined __need_timespec)
 # define __timespec_defined	1
+
+# include <bits/types.h>	/* This defines __time_t for us.  */
 
 /* POSIX.1b structure for a time value.  This is like a `struct timeval' but
    has nanoseconds instead of microseconds.  */

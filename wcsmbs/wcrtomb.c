@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
@@ -24,7 +25,7 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <assert.h>
+#include <sysdep.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -60,20 +61,24 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     }
 
   /* Tell where we want to have the result.  */
-  data.__outbuf = s;
-  data.__outbufend = s + MB_CUR_MAX;
+  data.__outbuf = (unsigned char *) s;
+  data.__outbufend = (unsigned char *) s + MB_CUR_MAX;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+  __gconv_fct fct = fcts->tomb->__fct;
+#ifdef PTR_DEMANGLE
+  if (fcts->tomb->__shlib_handle != NULL)
+    PTR_DEMANGLE (fct);
+#endif
 
   /* If WC is the NUL character we write into the output buffer the byte
      sequence necessary for PS to get into the initial state, followed
      by a NUL byte.  */
   if (wc == L'\0')
     {
-      status = DL_CALL_FCT (fcts->tomb->__fct,
-			    (fcts->tomb, &data, NULL, NULL,
-			     NULL, &dummy, 1, 1));
+      status = DL_CALL_FCT (fct, (fcts->tomb, &data, NULL, NULL,
+				  NULL, &dummy, 1, 1));
 
       if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
 	*data.__outbuf++ = '\0';
@@ -83,7 +88,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
       /* Do a normal conversion.  */
       const unsigned char *inbuf = (const unsigned char *) &wc;
 
-      status = DL_CALL_FCT (fcts->tomb->__fct,
+      status = DL_CALL_FCT (fct,
 			    (fcts->tomb, &data, &inbuf,
 			     inbuf + sizeof (wchar_t), NULL, &dummy, 0, 1));
     }

@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ while test $# -gt 0; do
     printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2004"
+" "2006"
     printf $"Written by %s and %s.
 " "Roland McGrath" "Ulrich Drepper"
     exit 0
@@ -144,13 +144,17 @@ for file do
   *) file=./$file
      ;;
   esac
-  if test ! -f "$file"; then
+  if test ! -e "$file"; then
     echo "ldd: ${file}:" $"No such file or directory" >&2
+    result=1
+  elif test ! -f "$file"; then
+    echo "ldd: ${file}:" $"not regular file" >&2
     result=1
   elif test -r "$file"; then
     test -x "$file" || echo 'ldd:' $"\
 warning: you do not have execution permission for" "\`$file'" >&2
     RTLD=
+    ret=1
     for rtld in ${RTLDLIST}; do
       if test -x $rtld; then
 	verify_out=`${rtld} --verify "$file"`
@@ -160,12 +164,6 @@ warning: you do not have execution permission for" "\`$file'" >&2
 	esac
       fi
     done
-    if test -z "${RTLD}"; then
-      set ${RTLDLIST}
-      RTLD=$1
-      verify_out=`${RTLD} --verify "$file"`
-      ret=$?
-    fi
     case $ret in
     0)
       # If the program exits with exit code 5, it means the process has been

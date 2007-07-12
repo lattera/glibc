@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -308,7 +308,7 @@ _dl_dprintf (int fd, const char *fmt, ...)
 /* Test whether given NAME matches any of the names of the given object.  */
 int
 internal_function
-_dl_name_match_p (const char *name, struct link_map *map)
+_dl_name_match_p (const char *name, const struct link_map *map)
 {
   if (strcmp (name, map->l_name) == 0)
     return 1;

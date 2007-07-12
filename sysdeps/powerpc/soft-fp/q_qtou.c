@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return (unsigned int)a
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -30,7 +30,7 @@ unsigned int _q_qtou(const long double a)
   FP_DECL_Q(A);
   unsigned int r;
 
-  FP_UNPACK_Q(A, a);
+  FP_UNPACK_RAW_Q(A, a);
   FP_TO_INT_Q(r, A, 32, -1);
   FP_HANDLE_EXCEPTIONS;
 

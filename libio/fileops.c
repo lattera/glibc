@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1997-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -174,14 +175,8 @@ _IO_new_file_close_it (fp)
   close_status = _IO_SYSCLOSE (fp);
 
   /* Free buffer. */
-  if (fp->_mode <= 0)
-    {
-      INTUSE(_IO_setb) (fp, NULL, NULL, 0);
-      _IO_setg (fp, NULL, NULL, NULL);
-      _IO_setp (fp, NULL, NULL);
-    }
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  else
+  if (fp->_mode > 0)
     {
       if (_IO_have_wbackup (fp))
 	INTUSE(_IO_free_wbackup_area) (fp);
@@ -190,6 +185,9 @@ _IO_new_file_close_it (fp)
       _IO_wsetp (fp, NULL, NULL);
     }
 #endif
+  INTUSE(_IO_setb) (fp, NULL, NULL, 0);
+  _IO_setg (fp, NULL, NULL, NULL);
+  _IO_setp (fp, NULL, NULL);
 
   INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
@@ -399,6 +397,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	  /* And now the transliteration.  */
 	  cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
 
+	  /* From now on use the wide character callback functions.  */
+	  ((struct _IO_FILE_plus *) fp)->vtable = fp->_wide_data->_wide_vtable;
+
 	  /* Set the mode now.  */
 	  result->_mode = 1;
 	}
@@ -472,7 +473,7 @@ _IO_file_setbuf_mmap (fp, p, len)
   return result;
 }
 
-static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
+static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t);
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
@@ -826,10 +827,10 @@ _IO_new_file_overflow (f, ch)
       return EOF;
     }
   /* If currently reading or no buffer allocated. */
-  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0 || f->_IO_write_base == 0)
+  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0 || f->_IO_write_base == NULL)
     {
       /* Allocate a buffer if needed. */
-      if (f->_IO_write_base == 0)
+      if (f->_IO_write_base == NULL)
 	{
 	  INTUSE(_IO_doallocbuf) (f);
 	  _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
@@ -1281,7 +1282,7 @@ _IO_new_file_xsputn (f, data, n)
   register const char *s = (const char *) data;
   _IO_size_t to_do = n;
   int must_flush = 0;
-  _IO_size_t count;
+  _IO_size_t count = 0;
 
   if (n <= 0)
     return 0;
@@ -1290,7 +1291,6 @@ _IO_new_file_xsputn (f, data, n)
      (or the filebuf is unbuffered), use sys_write directly. */
 
   /* First figure out how much space is available in the buffer. */
-  count = f->_IO_write_end - f->_IO_write_ptr; /* Space available. */
   if ((f->_flags & _IO_LINE_BUF) && (f->_flags & _IO_CURRENTLY_PUTTING))
     {
       count = f->_IO_buf_end - f->_IO_write_ptr;
@@ -1308,6 +1308,9 @@ _IO_new_file_xsputn (f, data, n)
 	    }
 	}
     }
+  else if (f->_IO_write_end > f->_IO_write_ptr)
+    count = f->_IO_write_end - f->_IO_write_ptr; /* Space available. */
+
   /* Then fill the buffer. */
   if (count > 0)
     {
@@ -1338,7 +1341,9 @@ _IO_new_file_xsputn (f, data, n)
       _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (_IO_OVERFLOW (f, EOF) == EOF)
-	return n - to_do;
+	/* If nothing else has to be written we must not signal the
+	   caller that everything has been written.  */
+	return to_do == 0 ? EOF : n - to_do;
 
       /* Try to maintain alignment: write a whole number of blocks.
 	 dont_write is what gets left over. */
@@ -1464,8 +1469,7 @@ _IO_file_xsgetn (fp, data, n)
 }
 INTDEF(_IO_file_xsgetn)
 
-static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_mmap (fp, data, n)
      _IO_FILE *fp;
@@ -1524,8 +1528,7 @@ _IO_file_xsgetn_mmap (fp, data, n)
   return s - (char *) data;
 }
 
-static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_maybe_mmap (fp, data, n)
      _IO_FILE *fp;

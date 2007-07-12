@@ -1,6 +1,6 @@
 /* strrchr (str, ch) -- Return pointer to last occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994-1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -35,10 +35,14 @@ ENTRY (BP_SYM (strrchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 	pushl %esi
+	cfi_adjust_cfa_offset (4)
 
 	xorl %eax, %eax
 	movl STR(%esp), %esi
+	cfi_rel_offset (esi, 0)
 	movl CHR(%esp), %ecx
 	CHECK_BOUNDS_LOW (%esi, STR(%esp))
 
@@ -299,20 +303,20 @@ L(21):	addl $4, %esi
 	   returned.  */
 
 L(20):	cmpb %cl, %dl		/* is first byte == C? */
-	jne L(24)			/* no => skip */
+	jne L(24)		/* no => skip */
 	movl %esi, %eax		/* store address as result */
 L(24):	testb %dl, %dl		/* is first byte == NUL? */
 	jz L(2)			/* yes => return */
 
 	cmpb %cl, %dh		/* is second byte == C? */
-	jne L(25)			/* no => skip */
+	jne L(25)		/* no => skip */
 	leal 1(%esi), %eax	/* store address as result */
 L(25):	testb %dh, %dh		/* is second byte == NUL? */
 	jz L(2)			/* yes => return */
 
 	shrl $16,%edx		/* make upper bytes accessible */
 	cmpb %cl, %dl		/* is third byte == C */
-	jne L(26)			/* no => skip */
+	jne L(26)		/* no => skip */
 	leal 2(%esi), %eax	/* store address as result */
 L(26):	testb %dl, %dl		/* is third byte == NUL */
 	jz L(2)			/* yes => return */
@@ -324,7 +328,11 @@ L(26):	testb %dl, %dl		/* is third byte == NUL */
 L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	RETURN_BOUNDED_POINTER (STR(%esp))
 	popl %esi		/* restore saved register content */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

@@ -1,5 +1,6 @@
 /* Startup code compliant to the ELF s390 ABI.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006
+   Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -88,9 +89,9 @@ _start:
 	l       %r12,.L5-.Llit(%r13)    # load .got pointer
 	la	%r6,0(%r13,%r6)
 	la	%r5,0(%r13,%r5)
-	la	%r2,0(%r13,%r2)
-	la	%r1,0(%r13,%r1)
 	la	%r12,0(%r13,%r12)
+	l	%r2,0(%r12,%r2)
+	la	%r1,0(%r13,%r1)
 #endif
 
 	/* ok, now branch to the libc main routine */
@@ -108,7 +109,7 @@ _start:
 #else
 .L1:    .long  __libc_csu_init-.Llit
 .L2:    .long  __libc_csu_fini-.Llit
-.L3:    .long  main-.Llit
+.L3:    .long  main@GOT
 .L4:    .long  __libc_start_main@plt-.Llit
 .L5:    .long  _GLOBAL_OFFSET_TABLE_-.Llit
 #endif

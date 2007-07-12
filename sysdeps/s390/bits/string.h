@@ -51,7 +51,7 @@ strlen (__const char *__str)
 			  "0: srst  %0,%1\n"
 			  "   jo    0b\n"
 			  : "+&a" (__ptr), "+&a" (__tmp) : 
-			  : "cc", "0" );
+			  : "cc", "memory", "0" );
     return (size_t) (__ptr - __str);
 }
 #endif
@@ -105,7 +105,7 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 #endif
                             "4:"
                             : "+&a" (__ptr), "+&a" (__n) : "a" (__diff)
-                            : "cc", "0" );
+                            : "cc", "memory", "0" );
     }
     return __ret;
 }
@@ -134,7 +134,7 @@ strcat(char *__dest, const char *__src)
 			  "0: mvst  %0,%1\n"
 			  "   jo    0b"
 			  : "+&a" (__ptr), "+&a" (__src) :
-			  : "cc", "0" );
+			  : "cc", "memory", "0" );
     return __ret;
 }
 #endif
@@ -157,7 +157,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 			    "0: srst  %0,%1\n"
 			  "   jo    0b\n"
 			    : "+&a" (__ptr), "+&a" (__tmp) :
-			    : "cc", "0" );
+			    : "cc", "memory", "0" );
 
       __diff = (size_t) (__ptr - __src);
       __tmp = (char *) __src;
@@ -175,7 +175,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
                             "   stc   0,1(%2,%0)\n"
 			    "2:"
                             : "+&a" (__tmp), "+&a" (__n) : "a" (__diff)
-                            : "cc", "0" );
+                            : "cc", "memory", "0" );
 
     }
     return __ret;
@@ -200,7 +200,7 @@ memchr (__const void *__str, int __c, size_t __n)
                           "   la    %0,0\n"
                           "1:"
 			  : "+&a" (__ptr), "+&a" (__tmp) : "d" (__c)
-			  : "cc", "0" );
+			  : "cc", "memory", "0" );
     return __ptr;
 }
 #endif
@@ -222,7 +222,7 @@ strcmp (__const char *__s1, __const char *__s2)
 			  "   ipm   %0\n"
 			  "   srl   %0,28"
 			  : "=d" (__ret), "+&a" (__p1), "+&a" (__p2) : 
-			  : "cc", "0" );
+			  : "cc", "memory", "0" );
     __ret = (__ret == 0) ? 0 : (__ret == 1) ? -1 : 1;
     return __ret;
 }

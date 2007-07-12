@@ -66,7 +66,7 @@ static void authdes_destroy (AUTH *);
 static bool_t synchronize (struct sockaddr *, struct rpc_timeval *)
      internal_function;
 
-static struct auth_ops authdes_ops = {
+static const struct auth_ops authdes_ops = {
   authdes_nextverf,
   authdes_marshal,
   authdes_validate,
@@ -107,14 +107,14 @@ authdes_create (const char *servername, u_int window,
   /* syncaddr   - optional addr of host to sync with */
   /* ckey       - optional conversation key to use */
 {
-  u_char pkey_data[1024];
+  char pkey_data[1024];
   netobj pkey;
 
   if (!getpublickey (servername, pkey_data))
     return NULL;
 
-  pkey.n_bytes = (char *) pkey_data;
-  pkey.n_len = strlen ((char *) pkey_data) + 1;
+  pkey.n_bytes = pkey_data;
+  pkey.n_len = strlen (pkey_data) + 1;
   return INTUSE(authdes_pk_create) (servername, &pkey, window, syncaddr, ckey);
 }
 
@@ -174,7 +174,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
       if (key_gendes (&auth->ah_key) < 0)
 	{
 	  debug ("authdes_create: unable to gen conversation key");
-	  return NULL;
+	  goto failed;
 	}
     }
   else
@@ -185,7 +185,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
    */
   auth->ah_cred.oa_flavor = AUTH_DES;
   auth->ah_verf.oa_flavor = AUTH_DES;
-  auth->ah_ops = &authdes_ops;
+  auth->ah_ops = (struct auth_ops *) &authdes_ops;
   auth->ah_private = (caddr_t) ad;
 
   if (!authdes_refresh (auth))
@@ -237,7 +237,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
   des_block cryptbuf[2];
   des_block ivec;
   int status;
-  unsigned int len;
+  int len;
   register int32_t *ixdr;
   struct timeval tval;
 

@@ -40,6 +40,18 @@
 # include <libio/iolibio.h>
 # define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
 # define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
+extern __typeof (malloc) __libc_malloc;
+extern __typeof (free) __libc_free;
+extern __typeof (realloc) __libc_realloc;
+libc_hidden_proto (__libc_malloc)
+libc_hidden_proto (__libc_realloc)
+libc_hidden_proto (__libc_free)
+libc_hidden_proto (__libc_memalign)
+#else
+# define __libc_malloc(sz) malloc (sz)
+# define __libc_free(ptr) free (ptr)
+# define __libc_realloc(ptr, sz) realloc (ptr, sz)
+# define __libc_memalign(al, sz) memalign (al, sz)
 #endif
 
 #ifndef attribute_hidden
@@ -154,7 +166,7 @@ tr_freehook (ptr, caller)
   if (tr_old_free_hook != NULL)
     (*tr_old_free_hook) (ptr, caller);
   else
-    free (ptr);
+    __libc_free (ptr);
   __free_hook = tr_freehook;
   __libc_lock_unlock (lock);
 }
@@ -173,7 +185,7 @@ tr_mallochook (size, caller)
   if (tr_old_malloc_hook != NULL)
     hdr = (__ptr_t) (*tr_old_malloc_hook) (size, caller);
   else
-    hdr = (__ptr_t) malloc (size);
+    hdr = (__ptr_t) __libc_malloc (size);
   __malloc_hook = tr_mallochook;
 
   tr_where (caller);
@@ -209,7 +221,7 @@ tr_reallochook (ptr, size, caller)
   if (tr_old_realloc_hook != NULL)
     hdr = (__ptr_t) (*tr_old_realloc_hook) (ptr, size, caller);
   else
-    hdr = (__ptr_t) realloc (ptr, size);
+    hdr = (__ptr_t) __libc_realloc (ptr, size);
   __free_hook = tr_freehook;
   __malloc_hook = tr_mallochook;
   __realloc_hook = tr_reallochook;
@@ -251,7 +263,7 @@ tr_memalignhook (alignment, size, caller)
   if (tr_old_memalign_hook != NULL)
     hdr = (__ptr_t) (*tr_old_memalign_hook) (alignment, size, caller);
   else
-    hdr = (__ptr_t) memalign (alignment, size);
+    hdr = (__ptr_t) __libc_memalign (alignment, size);
   __memalign_hook = tr_memalignhook;
   __malloc_hook = tr_mallochook;
 

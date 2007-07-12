@@ -5,7 +5,7 @@ if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and
 # linker.
 echo "$as_me:$LINENO: checking for SH TLS support" >&5
-echo $ECHO_N "checking for sh TLS support... $ECHO_C" >&6
+echo $ECHO_N "checking for SH TLS support... $ECHO_C" >&6
 if test "${libc_cv_sh_tls+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else

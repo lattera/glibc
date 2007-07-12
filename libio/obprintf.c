@@ -1,5 +1,6 @@
 /* Print output of stream to given obstack.
-   Copyright (C) 1996,1997,1999-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002,2003,2004,2005,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -23,6 +24,7 @@
 #include <stdlib.h>
 #endif
 #include "libioP.h"
+#include "strfile.h"
 #include <assert.h>
 #include <string.h>
 #include <errno.h>
@@ -174,9 +176,7 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   return result;
 }
-#ifdef weak_alias
-weak_alias (_IO_obstack_vprintf, obstack_vprintf)
-#endif
+ldbl_weak_alias (_IO_obstack_vprintf, obstack_vprintf)
 
 
 int
@@ -189,6 +189,4 @@ _IO_obstack_printf (struct obstack *obstack, const char *format, ...)
   va_end (ap);
   return result;
 }
-#ifdef weak_alias
-weak_alias (_IO_obstack_printf, obstack_printf)
-#endif
+ldbl_weak_alias (_IO_obstack_printf, obstack_printf)

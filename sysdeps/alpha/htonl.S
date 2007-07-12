@@ -41,4 +41,4 @@ ENTRY(htonl)
 
 	END(htonl)
 
-weak_alias(htonl, ntohl)
+weak_alias (htonl, ntohl)

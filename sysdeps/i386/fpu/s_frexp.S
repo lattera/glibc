@@ -1,5 +1,5 @@
 /* ix87 specific frexp implementation for double.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -63,9 +63,7 @@ ENTRY (BP_SYM (__frexp))
 
 	fldl	VAL0(%esp)
 #ifdef	PIC
-	call	3f
-3:	popl	%edx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-3b], %edx
+	LOAD_PIC_REG (dx)
 #endif
 	fmull	MO(two54)
 	movl	$-54, %ecx

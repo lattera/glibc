@@ -1,4 +1,5 @@
-# Copyright (C) 1991-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003, 2005, 2006
+# Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +27,7 @@ all:
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-mallocstate
+	 tst-mallocstate tst-mcheck tst-mallocfork
 test-srcs = tst-mtrace
 
 distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \
@@ -78,6 +79,7 @@ endif
 ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
+others: $(objpfx)memusage
 install-bin = memusagestat
 install-bin-script += memusage
 generated += memusagestat memusage
@@ -101,6 +103,8 @@ $(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
 
 include ../Rules
 
+CFLAGS-mcheck-init.c = $(PIC-ccflag)
+
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 	-rm -f $@
 	$(patsubst %/,cd % &&,$(objpfx)) \
@@ -118,8 +122,12 @@ endif
 endif
 endif
 
+tst-mcheck-ENV = MALLOC_CHECK_=3
+
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
+
+sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
 
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
@@ -130,12 +138,12 @@ $(objpfx)mtrace: mtrace.pl
 $(objpfx)memusage: memusage.sh
 	rm -f $@.new
 	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
-	    -e 's|@SLIBDIR@|$(slibdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	    -e 's|@SLIBDIR@|$(sLIBdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 
 # The implementation uses `dlsym'
-$(objpfx)libmemusage.so: $(common-objpfx)dlfcn/libdl.so
+$(objpfx)libmemusage.so: $(common-objpfx)dlfcn/libdl.so $(elfobjdir)/ld.so
 
 # Extra dependencies
 $(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c

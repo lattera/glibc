@@ -46,6 +46,9 @@ t2 (void)
   return result;
 }
 
+volatile double nanval;
+
+
 static int
 F (void)
 {
@@ -53,8 +56,9 @@ F (void)
   wchar_t wbuf[10];
   int result;
 
-  snprintf (buf, sizeof buf, "%f %F", DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX,
-	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX);
+  nanval = NAN;
+
+  snprintf (buf, sizeof buf, "%f %F", nanval, nanval);
   result = strcmp (buf, "nan NAN") != 0;
   printf ("expected \"nan NAN\", got \"%s\"\n", buf);
 
@@ -62,9 +66,7 @@ F (void)
   result |= strcmp (buf, "inf INF") != 0;
   printf ("expected \"inf INF\", got \"%s\"\n", buf);
 
-  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F",
-	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX,
-	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX);
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F", nanval, nanval);
   result |= wcscmp (wbuf, L"nan NAN") != 0;
   printf ("expected L\"nan NAN\", got L\"%S\"\n", wbuf);
 

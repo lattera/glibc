@@ -1,0 +1,92 @@
+2004-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Use */lib64 even for ia64.
+	* sysdeps/unix/sysv/linux/configure: Rebuilt.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Change /lib64/ld*
+	into /lib/ld*.  Add LD_LIBRARY_VERSION.
+	* sysdeps/unix/sysv/linux/ia64/ldconfig.h
+	(SYSDEP_KNOWN_INTERPRETER_NAMES): Add /lib64/ld-linux-ia64.so.2.
+	* sysdeps/unix/sysv/linux/ia64/dl-cache.h: Include sparc-linux
+	dl-cache.h instead of generic dl-cache.h.
+
+--- libc/sysdeps/unix/sysv/linux/configure.jj	2003-03-23 03:10:04.000000000 +0100
++++ libc/sysdeps/unix/sysv/linux/configure	2004-05-14 15:54:35.669802684 +0200
+@@ -225,7 +225,7 @@ case "$prefix" in
+   # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib
+   case $machine in
+   sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 | \
+-  mips/mips64/n64/* )
++  mips/mips64/n64/* | ia64 )
+     libc_cv_slibdir="/lib64"
+     if test "$libdir" = '${exec_prefix}/lib'; then
+       libdir='${exec_prefix}/lib64';
+--- libc/sysdeps/unix/sysv/linux/configure.in.jj	2003-03-23 03:10:04.000000000 +0100
++++ libc/sysdeps/unix/sysv/linux/configure.in	2004-05-14 15:53:44.355998785 +0200
+@@ -158,7 +158,7 @@ case "$prefix" in
+   # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib
+   case $machine in
+   sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 | \
+-  mips/mips64/n64/* )
++  mips/mips64/n64/* | ia64 )
+     libc_cv_slibdir="/lib64"
+     if test "$libdir" = '${exec_prefix}/lib'; then
+       libdir='${exec_prefix}/lib64';
+--- libc/sysdeps/unix/sysv/linux/ia64/dl-procinfo.c.jj	2004-05-14 15:42:09.307560515 +0200
++++ libc/sysdeps/unix/sysv/linux/ia64/dl-procinfo.c	2003-09-30 00:23:24.000000000 +0200
+@@ -0,0 +1,5 @@
++#ifdef IS_IN_ldconfig
++#include <sysdeps/i386/dl-procinfo.c>
++#else
++#include <sysdeps/generic/dl-procinfo.c>
++#endif
+--- libc/sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed.jj	2002-01-17 07:49:28.000000000 +0100
++++ libc/sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed	2004-05-14 16:21:03.041325040 +0200
+@@ -1 +1,4 @@
+-s_^\(RTLDLIST=\)\([^ 	]*\)-ia64\(\.so\.[0-9.]*\)[ 	]*$_\1"\2-ia64\3 \2\3"_
++/LD_TRACE_LOADED_OBJECTS=1/a\
++add_env="$add_env LD_LIBRARY_VERSION=\\$verify_out"
++s_^\(RTLDLIST=\)/lib64/ld\([^ 	]*\)-ia64\(\.so\.[0-9.]*\)[ 	]*$_\1"/lib/ld\2-ia64\3 /lib/ld\2\3"_
++s_^\(RTLDLIST=\)\([^"][^ 	]*\)-ia64\(\.so\.[0-9.]*\)[ 	]*$_\1"\2-ia64\3 \2\3"_
+--- libc/sysdeps/unix/sysv/linux/ia64/ldconfig.h.jj	2001-07-06 06:56:17.000000000 +0200
++++ libc/sysdeps/unix/sysv/linux/ia64/ldconfig.h	2004-05-14 15:45:40.103783087 +0200
+@@ -1,4 +1,4 @@
+-/* Copyright (C) 2001 Free Software Foundation, Inc.
++/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+@@ -19,7 +19,8 @@
+ #include <sysdeps/generic/ldconfig.h>
+ 
+ #define SYSDEP_KNOWN_INTERPRETER_NAMES \
+-  { "/lib/ld-linux.so.2", FLAG_ELF_LIBC6 },
++  { "/lib/ld-linux.so.2", FLAG_ELF_LIBC6 }, \
++  { "/lib64/ld-linux-ia64.so.2", FLAG_ELF_LIBC6 },
+ #define SYSDEP_KNOWN_LIBRARY_NAMES \
+   { "libc.so.6", FLAG_ELF_LIBC6 },	\
+   { "libm.so.6", FLAG_ELF_LIBC6 },
+--- libc/sysdeps/unix/sysv/linux/ia64/dl-cache.h.jj	2001-07-06 06:56:17.000000000 +0200
++++ libc/sysdeps/unix/sysv/linux/ia64/dl-cache.h	2004-05-14 15:41:11.658891907 +0200
+@@ -1,5 +1,5 @@
+ /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
+-   Copyright (C) 2000 Free Software Foundation, Inc.
++   Copyright (C) 2000, 2004 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+@@ -22,4 +22,4 @@
+ #define _dl_cache_check_flags(flags) \
+   ((flags) == _DL_CACHE_DEFAULT_ID)
+ 
+-#include_next <dl-cache.h>
++#include <sysdeps/unix/sysv/linux/sparc/dl-cache.h>
+--- libc/sysdeps/unix/sysv/linux/ia64/dl-procinfo.h.jj	2004-05-14 15:42:13.018895395 +0200
++++ libc/sysdeps/unix/sysv/linux/ia64/dl-procinfo.h	2003-07-23 00:06:23.000000000 +0200
+@@ -0,0 +1,5 @@
++#ifdef IS_IN_ldconfig
++#include <sysdeps/unix/sysv/linux/i386/dl-procinfo.h>
++#else
++#include <sysdeps/generic/dl-procinfo.h>
++#endif

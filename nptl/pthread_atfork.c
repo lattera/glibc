@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,7 +38,8 @@
 #include <fork.h>
 
 /* This is defined by newer gcc version unique for each module.  */
-extern void *__dso_handle __attribute__ ((__weak__));
+extern void *__dso_handle __attribute__ ((__weak__,
+					  __visibility__ ("hidden")));
 
 
 /* Hide the symbol so that no definition but the one locally in the

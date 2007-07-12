@@ -1,6 +1,6 @@
 /* rawmemchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994,95,96,97,98,99,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -43,6 +43,8 @@ ENTRY (BP_SYM (__rawmemchr))
 
 	/* Save callee-safe register used in this function.  */
 	pushl %edi
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 
 	/* Load parameters into registers.  */
 	movl STR(%esp), %eax
@@ -217,6 +219,8 @@ L(9):
 	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	RETURN_BOUNDED_POINTER (STR(%esp))
 	popl %edi		/* pop saved register */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

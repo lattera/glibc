@@ -1,5 +1,5 @@
 /* Conversion from and to IBM862.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -24,6 +24,6 @@
 #define TABLES <ibm862.h>
 
 #define CHARSET_NAME	"IBM862//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define HAS_HOLES	0	/* All 256 character are defined.  */
 
 #include <8bit-gap.c>

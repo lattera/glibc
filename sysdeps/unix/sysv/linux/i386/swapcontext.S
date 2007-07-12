@@ -109,4 +109,4 @@ L(pseudo_end):
 	ret
 PSEUDO_END(__swapcontext)
 
-weak_alias(__swapcontext, swapcontext)
+weak_alias (__swapcontext, swapcontext)

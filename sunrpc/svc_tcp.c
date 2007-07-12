@@ -165,7 +165,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
       (void) __bind (sock, (struct sockaddr *) &addr, len);
     }
   if ((__getsockname (sock, (struct sockaddr *) &addr, &len) != 0) ||
-      (__listen (sock, 2) != 0))
+      (__listen (sock, SOMAXCONN) != 0))
     {
       perror (_("svc_tcp.c - cannot getsockname or listen"));
       if (madesock)
@@ -176,12 +176,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
   xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
   if (r == NULL || xprt == NULL)
     {
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s", _("svctcp_create: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("svctcp_create: out of memory\n"), stderr);
+      (void) __fxprintf (NULL, "%s", _("svctcp_create: out of memory\n"));
       mem_free (r, sizeof (*r));
       mem_free (xprt, sizeof (SVCXPRT));
       return NULL;
@@ -219,13 +214,8 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
   cd = (struct tcp_conn *) mem_alloc (sizeof (struct tcp_conn));
   if (xprt == (SVCXPRT *) NULL || cd == NULL)
     {
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",
-			   _("svc_tcp: makefd_xprt: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("svc_tcp: makefd_xprt: out of memory\n"), stderr);
+      (void) __fxprintf (NULL, "%s",
+			 _("svc_tcp: makefd_xprt: out of memory\n"));
       mem_free (xprt, sizeof (SVCXPRT));
       mem_free (cd, sizeof (struct tcp_conn));
       return NULL;

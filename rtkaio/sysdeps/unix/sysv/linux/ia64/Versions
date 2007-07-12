@@ -1,0 +1,9 @@
+%ifdef HAVE_FORCED_UNWIND
+librtkaio {
+  GLIBC_2.3.3 {
+    # Changed timer_t.
+    timer_create; timer_delete; timer_getoverrun; timer_gettime;
+    timer_settime;
+  }
+}
+%endif

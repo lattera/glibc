@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-1998, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -24,18 +24,11 @@
 
 #define TRIMDOMAINS_MAX	4
 
-enum Name_Service
-{
-  SERVICE_NONE = 0,
-  SERVICE_BIND, SERVICE_HOSTS, SERVICE_NIS,
-  SERVICE_MAX
-};
-
 struct hconf
 {
   int initialized;
-  int num_services;
-  enum Name_Service service[SERVICE_MAX];
+  int unused1;
+  int unused2[4];
   int num_trimdomains;
   const char *trimdomain[TRIMDOMAINS_MAX];
   unsigned int flags;

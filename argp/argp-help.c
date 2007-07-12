@@ -1,5 +1,6 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -48,7 +49,8 @@ char *alloca ();
 #include <stdarg.h>
 #include <ctype.h>
 #include <limits.h>
-#ifdef USE_IN_LIBIO
+#ifdef _LIBC
+# include <../libio/libioP.h>
 # include <wchar.h>
 #endif
 
@@ -127,40 +129,37 @@ struct uparams
   int header_col;
   int usage_indent;
   int rmargin;
-
-  int valid;			/* True when the values in here are valid.  */
 };
 
 /* This is a global variable, as user options are only ever read once.  */
 static struct uparams uparams = {
   DUP_ARGS, DUP_ARGS_NOTE,
   SHORT_OPT_COL, LONG_OPT_COL, DOC_OPT_COL, OPT_DOC_COL, HEADER_COL,
-  USAGE_INDENT, RMARGIN,
-  0
+  USAGE_INDENT, RMARGIN
 };
 
 /* A particular uparam, and what the user name is.  */
 struct uparam_name
 {
-  const char *name;		/* User name.  */
-  int is_bool;			/* Whether it's `boolean'.  */
-  size_t uparams_offs;		/* Location of the (int) field in UPARAMS.  */
+  const char name[14];		/* User name.  */
+  bool is_bool;			/* Whether it's `boolean'.  */
+  uint8_t uparams_offs;		/* Location of the (int) field in UPARAMS.  */
 };
 
 /* The name-field mappings we know about.  */
 static const struct uparam_name uparam_names[] =
 {
-  { "dup-args",       1, offsetof (struct uparams, dup_args) },
-  { "dup-args-note",  1, offsetof (struct uparams, dup_args_note) },
-  { "short-opt-col",  0, offsetof (struct uparams, short_opt_col) },
-  { "long-opt-col",   0, offsetof (struct uparams, long_opt_col) },
-  { "doc-opt-col",    0, offsetof (struct uparams, doc_opt_col) },
-  { "opt-doc-col",    0, offsetof (struct uparams, opt_doc_col) },
-  { "header-col",     0, offsetof (struct uparams, header_col) },
-  { "usage-indent",   0, offsetof (struct uparams, usage_indent) },
-  { "rmargin",        0, offsetof (struct uparams, rmargin) },
-  { 0 }
+  { "dup-args",       true, offsetof (struct uparams, dup_args) },
+  { "dup-args-note",  true, offsetof (struct uparams, dup_args_note) },
+  { "short-opt-col",  false, offsetof (struct uparams, short_opt_col) },
+  { "long-opt-col",   false, offsetof (struct uparams, long_opt_col) },
+  { "doc-opt-col",    false, offsetof (struct uparams, doc_opt_col) },
+  { "opt-doc-col",    false, offsetof (struct uparams, opt_doc_col) },
+  { "header-col",     false, offsetof (struct uparams, header_col) },
+  { "usage-indent",   false, offsetof (struct uparams, usage_indent) },
+  { "rmargin",        false, offsetof (struct uparams, rmargin) }
 };
+#define nuparam_names (sizeof (uparam_names) / sizeof (uparam_names[0]))
 
 /* Read user options from the environment, and fill in UPARAMS appropiately.  */
 static void
@@ -216,22 +215,27 @@ fill_in_uparams (const struct argp_state *state)
 		SKIPWS (arg);
 	      }
 
-	    for (un = uparam_names; un->name; un++)
+	    un = uparam_names;
+	    size_t u;
+	    for (u = 0; u < nuparam_names; ++un, ++u)
 	      if (strlen (un->name) == var_len
 		  && strncmp (var, un->name, var_len) == 0)
 		{
 		  if (unspec && !un->is_bool)
 		    __argp_failure (state, 0, 0,
-				    dgettext (state->root_argp->argp_domain, "\
+				    dgettext (state == NULL ? NULL
+					      : state->root_argp->argp_domain,
+					      "\
 %.*s: ARGP_HELP_FMT parameter requires a value"),
 				    (int) var_len, var);
 		  else
 		    *(int *)((char *)&uparams + un->uparams_offs) = val;
 		  break;
 		}
-	    if (! un->name)
+	    if (u == nuparam_names)
 	      __argp_failure (state, 0, 0,
-			      dgettext (state->root_argp->argp_domain, "\
+			      dgettext (state == NULL ? NULL
+					: state->root_argp->argp_domain, "\
 %.*s: Unknown ARGP_HELP_FMT parameter"),
 			      (int) var_len, var);
 
@@ -242,7 +246,8 @@ fill_in_uparams (const struct argp_state *state)
 	else if (*var)
 	  {
 	    __argp_failure (state, 0, 0,
-			    dgettext (state->root_argp->argp_domain,
+			    dgettext (state == NULL ? NULL
+				      : state->root_argp->argp_domain,
 				      "Garbage in ARGP_HELP_FMT: %s"), var);
 	    break;
 	  }
@@ -668,9 +673,9 @@ hol_cluster_cmp (const struct hol_cluster *cl1, const struct hol_cluster *cl2)
 {
   /* If one cluster is deeper than the other, use its ancestor at the same
      level, so that finding the common ancestor is straightforward.  */
-  while (cl1->depth < cl2->depth)
+  while (cl1->depth > cl2->depth)
     cl1 = cl1->parent;
-  while (cl2->depth < cl1->depth)
+  while (cl2->depth > cl1->depth)
     cl2 = cl2->parent;
 
   /* Now reduce both clusters to their ancestors at the point where both have
@@ -758,9 +763,9 @@ hol_entry_cmp (const struct hol_entry *entry1,
       const char *long2 = hol_entry_first_long (entry2);
 
       if (doc1)
-	doc1 = canon_doc_option (&long1);
+	doc1 = long1 != NULL && canon_doc_option (&long1);
       if (doc2)
-	doc2 = canon_doc_option (&long2);
+	doc2 = long2 != NULL && canon_doc_option (&long2);
 
       if (doc1 != doc2)
 	/* `documentation' options always follow normal options (or
@@ -983,7 +988,7 @@ static const char *
 filter_doc (const char *doc, int key, const struct argp *argp,
 	    const struct argp_state *state)
 {
-  if (argp->help_filter)
+  if (argp && argp->help_filter)
     /* We must apply a user filter to this output.  */
     {
       void *input = __argp_input (argp, state);
@@ -1101,7 +1106,9 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 	    __argp_fmtstream_putc (stream, '-');
 	    __argp_fmtstream_putc (stream, *so);
 	    if (!have_long_opt || uparams.dup_args)
-	      arg (real, " %s", "[%s]", state->root_argp->argp_domain, stream);
+	      arg (real, " %s", "[%s]",
+		   state == NULL ? NULL : state->root_argp->argp_domain,
+		   stream);
 	    else if (real->arg)
 	      hhstate->suppressed_dup_arg = 1;
 	  }
@@ -1121,26 +1128,22 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 	       have been done on the original; but documentation options
 	       should be pretty rare anyway...  */
 	    __argp_fmtstream_puts (stream,
-				   dgettext (state->root_argp->argp_domain,
+				   dgettext (state == NULL ? NULL
+					     : state->root_argp->argp_domain,
 					     opt->name));
 	  }
     }
   else
     /* A real long option.  */
     {
-      int first_long_opt = 1;
-
       __argp_fmtstream_set_wmargin (stream, uparams.long_opt_col);
       for (opt = real, num = entry->num; num > 0; opt++, num--)
 	if (opt->name && ovisible (opt))
 	  {
 	    comma (uparams.long_opt_col, &pest);
 	    __argp_fmtstream_printf (stream, "--%s", opt->name);
-	    if (first_long_opt || uparams.dup_args)
-	      arg (real, "=%s", "[=%s]", state->root_argp->argp_domain,
-		   stream);
-	    else if (real->arg)
-	      hhstate->suppressed_dup_arg = 1;
+	    arg (real, "=%s", "[=%s]",
+		 state == NULL ? NULL : state->root_argp->argp_domain, stream);
 	  }
     }
 
@@ -1159,7 +1162,8 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
     }
   else
     {
-      const char *tstr = real->doc ? dgettext (state->root_argp->argp_domain,
+      const char *tstr = real->doc ? dgettext (state == NULL ? NULL
+					       : state->root_argp->argp_domain,
 					       real->doc) : 0;
       const char *fstr = filter_doc (tstr, real->key, entry->argp, state);
       if (fstr && *fstr)
@@ -1207,7 +1211,8 @@ hol_help (struct hol *hol, const struct argp_state *state,
 
   if (hhstate.suppressed_dup_arg && uparams.dup_args_note)
     {
-      const char *tstr = dgettext (state->root_argp->argp_domain, "\
+      const char *tstr = dgettext (state == NULL ? NULL
+				   : state->root_argp->argp_domain, "\
 Mandatory or optional arguments to long options are also mandatory or \
 optional for any corresponding short options.");
       const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_DUP_ARGS_NOTE,
@@ -1554,8 +1559,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
   __flockfile (stream);
 #endif
 
-  if (! uparams.valid)
-    fill_in_uparams (state);
+  fill_in_uparams (state);
 
   fs = __argp_make_fmtstream (stream, 0, uparams.rmargin, 0);
   if (! fs)
@@ -1763,33 +1767,26 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 
 	  va_start (ap, fmt);
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stream, 0) > 0)
-	    {
-	      char *buf;
+#ifdef _LIBC
+	  char *buf;
 
-	      if (__asprintf (&buf, fmt, ap) < 0)
-		buf = NULL;
+	  if (_IO_vasprintf (&buf, fmt, ap) < 0)
+	    buf = NULL;
 
-	      __fwprintf (stream, L"%s: %s\n",
-			  state ? state->name : __argp_short_program_name (),
-			  buf);
+	  __fxprintf (stream, "%s: %s\n",
+		      state ? state->name : __argp_short_program_name (), buf);
 
-	      free (buf);
-	    }
-	  else
+	  free (buf);
+#else
+	  fputs_unlocked (state ? state->name : __argp_short_program_name (),
+			  stream);
+	  putc_unlocked (':', stream);
+	  putc_unlocked (' ', stream);
+
+	  vfprintf (stream, fmt, ap);
+
+	  putc_unlocked ('\n', stream);
 #endif
-	    {
-	      fputs_unlocked (state
-			      ? state->name : __argp_short_program_name (),
-			      stream);
-	      putc_unlocked (':', stream);
-	      putc_unlocked (' ', stream);
-
-	      vfprintf (stream, fmt, ap);
-
-	      putc_unlocked ('\n', stream);
-	    }
 
 	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
 
@@ -1827,41 +1824,34 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	  __flockfile (stream);
 #endif
 
-#ifdef USE_IN_LIBIO
-	  if (_IO_fwide (stream, 0) > 0)
-	    __fwprintf (stream, L"%s",
-			state ? state->name : __argp_short_program_name ());
-	  else
+#ifdef _LIBC
+	  __fxprintf (stream, "%s",
+		      state ? state->name : __argp_short_program_name ());
+#else
+	  fputs_unlocked (state ? state->name : __argp_short_program_name (),
+			  stream);
 #endif
-	    fputs_unlocked (state
-			    ? state->name : __argp_short_program_name (),
-			    stream);
 
 	  if (fmt)
 	    {
 	      va_list ap;
 
 	      va_start (ap, fmt);
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stream, 0) > 0)
-		{
-		  char *buf;
+#ifdef _LIBC
+	      char *buf;
 
-		  if (__asprintf (&buf, fmt, ap) < 0)
-		    buf = NULL;
+	      if (_IO_vasprintf (&buf, fmt, ap) < 0)
+		buf = NULL;
 
-		  __fwprintf (stream, L": %s", buf);
+	      __fxprintf (stream, ": %s", buf);
 
-		  free (buf);
-		}
-	      else
+	      free (buf);
+#else
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
+
+	      vfprintf (stream, fmt, ap);
 #endif
-		{
-		  putc_unlocked (':', stream);
-		  putc_unlocked (' ', stream);
-
-		  vfprintf (stream, fmt, ap);
-		}
 
 	      va_end (ap);
 	    }
@@ -1870,21 +1860,18 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	    {
 	      char buf[200];
 
-#ifdef USE_IN_LIBIO
-	      if (_IO_fwide (stream, 0) > 0)
-		__fwprintf (stream, L": %s",
-			    __strerror_r (errnum, buf, sizeof (buf)));
-	      else
-#endif
-		{
-		  putc_unlocked (':', stream);
-		  putc_unlocked (' ', stream);
-#if defined _LIBC || defined HAVE_STRERROR_R
-		  fputs (__strerror_r (errnum, buf, sizeof (buf)), stream);
+#ifdef _LIBC
+	      __fxprintf (stream, ": %s",
+			  __strerror_r (errnum, buf, sizeof (buf)));
 #else
-		  fputs (strerror (errnum), stream);
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
+# ifdef HAVE_STRERROR_R
+	      fputs (__strerror_r (errnum, buf, sizeof (buf)), stream);
+# else
+	      fputs (strerror (errnum), stream);
+# endif
 #endif
-		}
 	    }
 
 #ifdef USE_IN_LIBIO

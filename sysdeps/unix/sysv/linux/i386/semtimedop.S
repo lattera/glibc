@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -32,22 +32,34 @@
 ENTRY (BP_SYM (semtimedop))
 
 	pushl	%ebp
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 
 	movl	$SYSOP_semtimedop, %ebx
+	cfi_rel_offset (ebx, 4)
 	movl	SEMID(%esp), %ecx
 	movl	NSOPS(%esp), %edx
 	movl	SOPS(%esp), %edi
+	cfi_rel_offset (edi, 0)
 	movl	TIMEOUT(%esp), %ebp
+	cfi_rel_offset (ebp, 8)
 	movl	$__NR_ipc, %eax
 
 	ENTER_KERNEL
 
 	/* Restore registers.  */
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax

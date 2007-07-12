@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000, 2002, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,35 +86,20 @@ _IO_wfile_doallocate (fp)
      _IO_FILE *fp;
 {
   _IO_size_t size;
-  int couldbetty;
   wchar_t *p;
-  struct _G_stat64 st;
 
   /* Allocate room for the external buffer.  */
   if (fp->_IO_buf_base == NULL)
     INTUSE(_IO_file_doallocate) (fp);
 
-  if (fp->_fileno < 0 || _IO_SYSSTAT (fp, &st) < 0)
-    {
-      couldbetty = 0;
-      size = _IO_BUFSIZ;
-#if 0
-      /* do not try to optimise fseek() */
-      fp->_flags |= __SNPT;
-#endif
-    }
-  else
-    {
-      couldbetty = S_ISCHR (st.st_mode);
-#if _IO_HAVE_ST_BLKSIZE
-      size = st.st_blksize <= 0 ? _IO_BUFSIZ : st.st_blksize;
-#else
-      size = _IO_BUFSIZ;
-#endif
-    }
+  /* If narrow buffer is user allocated (set by setvbuf etc.),
+     use that size as the size of the wide buffer, when it is
+     allocated by _IO_file_doallocate, multiply that by size
+     of the wide character.  */
+  size = fp->_IO_buf_end - fp->_IO_buf_base;
+  if ((fp->_flags & _IO_USER_BUF))
+    size = (size + sizeof (wchar_t) - 1) / sizeof (wchar_t);
   ALLOC_WBUF (p, size * sizeof (wchar_t), EOF);
   INTUSE(_IO_wsetb) (fp, p, p + size, 1);
-  if (couldbetty && isatty (fp->_fileno))
-    fp->_flags |= _IO_LINE_BUF;
   return 1;
 }

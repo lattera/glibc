@@ -1,4 +1,5 @@
-/* Copyright (C) 2000,01,02,03,04 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -23,6 +24,7 @@
 #include <sysdeps/s390/s390-32/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
+#include <tls.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -111,8 +113,8 @@
 0:  lcr   %r0,%r2;							      \
     basr  %r1,0;							      \
 1:  al    %r1,2f-1b(%r1);						      \
-    l     %r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1)			      \
-    ear   %r2,%a0							      \
+    l     %r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1);			      \
+    ear   %r2,%a0;							      \
     st    %r0,0(%r1,%r2);						      \
     lhi   %r2,-1;							      \
     br    %r14;								      \
@@ -147,19 +149,28 @@
 	arg 3		4	     call-clobbered
 	arg 4		5	     call-clobbered
 	arg 5		6	     call-saved
+	arg 6		7	     call-saved
 
    (Of course a function with say 3 arguments does not have entries for
    arguments 4 and 5.)
-   S390 does not need to do ANY stack operations to get its parameters
-   right.
+   For system calls with 6 parameters a stack operation is required
+   to load the 6th parameter to register 7. Call saved register 7 is
+   moved to register 0 and back to avoid an additional stack frame.
  */
 
 #define DO_CALL(syscall, args)						      \
+  .if args > 5;								      \
+    lr %r0,%r7;								      \
+    l %r7,96(%r15);							      \
+  .endif;								      \
   .if SYS_ify (syscall) < 256;						      \
     svc SYS_ify (syscall);						      \
   .else;								      \
     lhi %r1,SYS_ify (syscall);						      \
     svc 0;								      \
+  .endif;								      \
+  .if args > 5;								      \
+    lr %r7,%r0;								      \
   .endif
 
 #define ret                                                                   \
@@ -253,6 +264,9 @@
 #define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
 	DECLARGS_4(arg1, arg2, arg3, arg4) \
 	register unsigned long gpr6 asm ("6") = (unsigned long)(arg5);
+#define DECLARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
+	DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
+	register unsigned long gpr7 asm ("7") = (unsigned long)(arg6);
 
 #define ASMFMT_0
 #define ASMFMT_1 , "0" (gpr2)
@@ -260,5 +274,28 @@
 #define ASMFMT_3 , "0" (gpr2), "d" (gpr3), "d" (gpr4)
 #define ASMFMT_4 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5)
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
+#define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
+
+
+/* Pointer mangling support.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+/* We cannot use the thread descriptor because in ld.so we use setjmp
+   earlier than the descriptor is initialized.  */
+#else
+/* For the time being just use stack_guard rather than a separate
+   pointer_guard.  */
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg, tmpreg) \
+  ear     tmpreg,%a0;			\
+  x       reg,STACK_GUARD(tmpreg)
+#  define PTR_MANGLE2(reg, tmpreg) \
+  x       reg,STACK_GUARD(tmpreg)
+#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
+# else
+#  define PTR_MANGLE(var) \
+  (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
+#endif
 
 #endif /* _LINUX_S390_SYSDEP_H */

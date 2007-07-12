@@ -1,5 +1,5 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,7 +25,7 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 

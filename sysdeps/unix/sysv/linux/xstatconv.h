@@ -1,5 +1,6 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1997,2000,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 #ifndef STAT_IS_KERNEL_STAT
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);

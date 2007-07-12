@@ -1,5 +1,5 @@
 /* Subroutines needed for unwinding stack frames for exception handling.  */
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006
    Free Software Foundation, Inc.
    Contributed by Jason Merrill <jason@cygnus.com>.
 
@@ -595,7 +595,7 @@ end_fde_sort (struct object *ob, struct fde_accumulator *accu, size_t count)
 {
   fde_compare_t fde_compare;
 
-  if (accu->linear && accu->linear->count != count)
+  if (accu->linear->count != count)
     abort ();
 
   if (ob->s.b.mixed_encoding)

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +28,8 @@ extern const struct _IO_jump_t _IO_strn_jumps attribute_hidden;
    string FORMAT, writing no more than MAXLEN characters.  */
 /* VARARGS5 */
 int
-__vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
-		 const char *format, va_list args)
+___vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
+		  const char *format, va_list args)
 {
   /* XXX Maybe for less strict version do not fail immediately.
      Though, maxlen is supposed to be the size of buffer pointed
@@ -67,4 +68,5 @@ __vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
     *sf.f._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
-libc_hidden_def (__vsnprintf_chk)
+ldbl_hidden_def (___vsnprintf_chk, __vsnprintf_chk)
+ldbl_strong_alias (___vsnprintf_chk, __vsnprintf_chk)

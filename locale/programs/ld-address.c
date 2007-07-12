@@ -1,21 +1,19 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -224,16 +222,28 @@ No definition for %s category found"), "LC_ADDRESS"));
 
   if (address->lang_ab == NULL)
     {
-      if (verbose && ! nothing)
+      if ((cnt == sizeof (iso639) / sizeof (iso639[0])
+	   || iso639[cnt].ab[0] != '\0')
+	  && verbose && ! nothing)
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
 				"LC_ADDRESS", "lang_ab"));
       address->lang_ab = "";
     }
   else if (address->lang_ab[0] == '\0')
     {
-      if (verbose)
+      if ((cnt == sizeof (iso639) / sizeof (iso639[0])
+	   || iso639[cnt].ab[0] != '\0')
+	  && verbose)
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
 				"LC_ADDRESS", "lang_ab"));
+    }
+  else if (cnt < sizeof (iso639) / sizeof (iso639[0])
+	   && iso639[cnt].ab[0] == '\0')
+    {
+      WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be defined"),
+			      "LC_ADDRESS", "lang_ab"));
+
+      address->lang_ab = "";
     }
   else
     {

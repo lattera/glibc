@@ -48,6 +48,8 @@ please let me know.
 	malloc/libmemprof.so.  How can I fix this?
 1.20.	Which tools should I use for MIPS?
 1.21.	Which compiler should I use for powerpc64?
+1.22.	`make' fails when running rpcgen the first time,
+	what is going on? How do I fix this?
 
 2. Installation and configuration issues
 
@@ -572,6 +574,20 @@ For details check also my page <http://www.suse.de/~aj/glibc-mips.html>.
 
 {SM} You want to use at least gcc 3.2 (together with the right versions
 of all the other tools, of course).
+
+
+1.22.	`make' fails when running rpcgen the first time,
+	what is going on? How do I fix this?
+
+{CO} The first invocation of rpcgen is also the first use of the recently
+compiled dynamic loader.  If there is any problem with the dynamic loader
+it will more than likely fail to run rpcgen properly. This could be due to
+any number of problems.
+
+The only real solution is to debug the loader and determine the problem
+yourself. Please remember that for each architecture there may be various
+patches required to get glibc HEAD into a runnable state. The best course
+of action is to determine if you have all the required patches.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

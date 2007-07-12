@@ -89,12 +89,27 @@
 # define __arch_atomic_decrement_if_positive_64(mem) \
     ({ abort (); (*mem)--; })
 
+#ifdef _ARCH_PWR4
+/*
+ * Newer powerpc64 processors support the new "light weight" sync (lwsync)
+ * So if the build is using -mcpu=[power4,power5,power5+,970] we can
+ * safely use lwsync.
+ */
+# define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
+/*
+ * "light weight" sync can also be used for the release barrier.
+ */
+# ifndef UP
+#  define __ARCH_REL_INSTR	"lwsync"
+# endif
+#else
 /*
  * Older powerpc32 processors don't support the new "light weight"
  * sync (lwsync).  So the only safe option is to use normal sync
  * for all powerpc32 applications.
  */
 # define atomic_read_barrier()	__asm ("sync" ::: "memory")
+#endif
 
 /*
  * Include the rest of the atomic ops macros which are common to both

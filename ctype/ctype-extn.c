@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1997,1999,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 #include <ctype.h>
 
 #define __ctype_tolower \
-  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
+  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
 #define __ctype_toupper \
-  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
+  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
 
 /* Real function versions of the non-ANSI ctype functions.  isblank is
    now in ISO C99 but we leave it here.  */

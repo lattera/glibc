@@ -1,5 +1,5 @@
 /* Configuration of lookup functions.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* The ia64 need more information from the symbol lookup function
-   than just the address. */
-#define DL_LOOKUP_RETURNS_MAP
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
+
+#include <dl-fptr.h>
 
 /* We do not support copy relocations for IA-64.  */
 #define DL_NO_COPY_RELOCS
@@ -59,3 +58,15 @@ extern void _dl_unmap (struct link_map *map);
 
 #define DL_DT_INIT_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)
 #define DL_DT_FINI_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)
+/* The type of the return value of fixup/profile_fixup.  */
+#define DL_FIXUP_VALUE_TYPE struct fdesc
+/* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address
+   and a link map.  */
+#define DL_FIXUP_MAKE_VALUE(map, addr) \
+  ((struct fdesc) { (addr), (map)->l_info[DT_PLTGOT]->d_un.d_ptr })
+/* Extract the code address from a value of type DL_FIXUP_MAKE_VALUE.
+ */
+#define DL_FIXUP_VALUE_CODE_ADDR(value) (value).ip
+
+#define DL_FIXUP_VALUE_ADDR(value) ((uintptr_t) &(value))
+#define DL_FIXUP_ADDR_VALUE(addr) (*(struct fdesc *) (addr))

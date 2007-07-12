@@ -1,5 +1,5 @@
 /* longjmp cleanup function for unwinding past signal handlers.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,10 @@
    02111-1307 USA.  */
 
 #include <hurd.h>
-#include "thread_state.h"
-#include <setjmp.h>
+#include <thread_state.h>
+#include <jmpbuf-unwind.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 /* _hurd_setup_sighandler puts a link on the `active resources' chain so that
@@ -70,11 +71,19 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
 
       struct hurd_userlink *link;
 
+      inline uintptr_t demangle_ptr (uintptr_t x)
+	{
+# ifdef PTR_DEMANGLE
+	  PTR_DEMANGLE (x);
+# endif
+	  return x;
+	}
+
       /* Continue _longjmp_unwind's job of running the unwind
 	 forms for frames being unwound, since we will not
 	 return to its loop like this one, which called us.  */
       for (link = ss->active_resources;
-	   link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link);
+	   link && _JMPBUF_UNWINDS (env[0].__jmpbuf, link, demangle_ptr);
 	   link = link->thread.next)
 	if (_hurd_userlink_unlink (link))
 	  {
@@ -111,7 +120,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
       link = (void *) &scp[1];
       assert (! link->resource.next && ! link->resource.prevp);
       assert (link->thread.next == ss->active_resources);
-      assert (link->thread.prevp = &ss->active_resources);
+      assert (link->thread.prevp == &ss->active_resources);
       if (link->thread.next)
 	link->thread.next->thread.prevp = &link->thread.next;
       ss->active_resources = link;

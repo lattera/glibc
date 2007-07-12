@@ -5,3 +5,10 @@ libc {
     __align_cpy_8; __align_cpy_16;
   }
 }
+libm {
+  GLIBC_2.1 {
+    # A generic bug got this omitted from other configurations' version
+    # sets, but we always had it.
+    exp2l;
+  }
+}

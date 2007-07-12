@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,6 @@ __BEGIN_DECLS
 /* Extract the category and item index from a constructed `nl_item' value.  */
 #define _NL_ITEM_CATEGORY(item)		((int) (item) >> 16)
 #define _NL_ITEM_INDEX(item)		((int) (item) & 0xffff)
-
 
 /* Enumeration of locale items that can be queried with `nl_langinfo'.  */
 enum
@@ -565,6 +564,13 @@ enum
   /* This marks the highest value used.  */
   _NL_NUM
 };
+
+/* This macro produces an item you can pass to `nl_langinfo' or
+   `nl_langinfo_l' to get the name of the locale in use for CATEGORY.  */
+#define _NL_LOCALE_NAME(category)	_NL_ITEM ((category), -1)
+#ifdef __USE_GNU
+# define NL_LOCALE_NAME(category)	_NL_LOCALE_NAME (category)
+#endif
 
 
 /* Return the current locale's value for ITEM.

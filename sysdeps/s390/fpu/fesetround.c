@@ -1,5 +1,5 @@
 /* Set current rounding direction.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -35,3 +35,4 @@ fesetround (int round)
 
   return 0;
 }
+libm_hidden_def (fesetround)

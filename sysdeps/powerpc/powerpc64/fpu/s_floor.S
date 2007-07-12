@@ -1,5 +1,5 @@
 /* Floor function.  PowerPC64 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,14 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	.section	".toc","aw"
 .LC0:	/* 2**52 */
 	.tc FD_43300000_0[TC],0x4330000000000000
 	.section	".text"
 
-ENTRY (__floor)
+EALIGN (__floor, 4, 0)
 	CALL_MCOUNT 0
 	mffs	fp11		/* Save current FPU rounding mode.  */
 	lfd	fp13,.LC0@toc(2)
@@ -37,15 +38,16 @@ ENTRY (__floor)
 	ble-	cr6,.L4
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-	fcmpu	cr5,fp1,fp12	/* if (x > 0.0)  */
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = 0.0; */
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
-	bnelr+	cr5
-	fmr	fp1,fp12	/* x must be +0.0 for the 0.0 case.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = -0.0; */
 .L9:
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */	
 	blr
@@ -56,4 +58,7 @@ weak_alias (__floor, floor)
 #ifdef NO_LONG_DOUBLE
 weak_alias (__floor, floorl)
 strong_alias (__floor, __floorl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __floor, floorl, GLIBC_2_0)
 #endif

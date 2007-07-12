@@ -1,4 +1,5 @@
-# Copyright (C) 1995-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2000,2002,2003,2004,2005,2006
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +22,7 @@
 #
 subdir	:= wcsmbs
 
-headers	:= wchar.h
+headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h
 distribute := wcwidth.h wcsmbsload.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
@@ -40,14 +41,14 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsmbsload mbsrtowcs_l
 
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
-	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs
+	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2
 
 include ../Rules
 
 CFLAGS-wcwidth.c = -I../wctype
 CFLAGS-wcswidth.c = -I../wctype
 
-strtox-CFLAGS = -I../include -I../stdlib
+strtox-CFLAGS = -I../include
 CFLAGS-wcstol.c = $(strtox-CFLAGS)
 CFLAGS-wcstoul.c = $(strtox-CFLAGS)
 CFLAGS-wcstoll.c = $(strtox-CFLAGS)
@@ -62,7 +63,12 @@ CFLAGS-wcstoull_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstod_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
+CFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
+
+# We need to find the default version of strtold_l in stdlib.
+CPPFLAGS-wcstold_l.c = -I../stdlib
 
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-wcrtomb-ENV = LOCPATH=$(common-objpfx)localedata
+tst-mbrtowc2-ENV = LOCPATH=$(common-objpfx)localedata

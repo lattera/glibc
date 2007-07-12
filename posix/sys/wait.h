@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1994,1996-2001,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,11 +43,11 @@ __BEGIN_DECLS
    as well as POSIX.1 use of `int' for the status word.  */
 
 #  if defined __GNUC__ && !defined __cplusplus
-#   define __WAIT_INT(status)						      \
-  (__extension__ ({ union { __typeof(status) __in; int __i; } __u;	      \
-		    __u.__in = (status); __u.__i; }))
+#   define __WAIT_INT(status) \
+  (__extension__ (((union { __typeof(status) __in; int __i; }) \
+                   { .__in = (status) }).__i))
 #  else
-#   define __WAIT_INT(status)	(*(int *) &(status))
+#   define __WAIT_INT(status)	(*(__const int *) &(status))
 #  endif
 
 /* This is the type of the argument to `wait'.  The funky union

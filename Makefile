@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@ endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
+%/preconfigure: %/preconfigure.in aclocal.m4; $(autoconf-it)
 
 endif # $(AUTOCONF) = no
 
@@ -64,7 +65,7 @@ endif # $(AUTOCONF) = no
 		   subdir_update-abi subdir_check-abi 			\
 		   subdir_echo-headers 					\
 		   subdir_install					\
-		   subdir_testclean					\
+		   subdir_objs subdir_stubs subdir_testclean		\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := limits.h values.h features.h gnu-versions.h bits/libc-lock.h \
@@ -157,13 +158,26 @@ others: $(common-objpfx)testrun.sh
 
 subdir-stubs := $(foreach dir,$(subdirs),$(common-objpfx)$(dir)/stubs)
 
+ifeq ($(biarch),no)
+installed-stubs = $(inst_includedir)/gnu/stubs.h
+else
+installed-stubs = $(inst_includedir)/gnu/stubs-$(biarch).h
+
+$(inst_includedir)/gnu/stubs.h: include/stubs-biarch.h $(+force)
+	$(make-target-directory)
+	$(INSTALL_DATA) $< $@
+
+install-others-nosubdir: $(installed-stubs)
+endif
+
+
 # Since stubs.h is never needed when building the library, we simplify the
 # hairy installation process by producing it in place only as the last part
 # of the top-level `make install'.  It depends on subdir_install, which
 # iterates over all the subdirs; subdir_install in each subdir depends on
 # the subdir's stubs file.  Having more direct dependencies would result in
 # extra iterations over the list for subdirs and many recursive makes.
-$(inst_includedir)/gnu/stubs.h: include/stubs-prologue.h subdir_install
+$(installed-stubs): include/stubs-prologue.h subdir_install
 	$(make-target-directory)
 	@rm -f $(objpfx)stubs.h
 	(sed '/^@/d' $<; LC_ALL=C sort $(subdir-stubs)) > $(objpfx)stubs.h
@@ -189,7 +203,13 @@ all-subdirs-targets := $(foreach dir,$(subdirs),\
 # The action for each of those is to cd into the directory and make the
 # target there.
 $(all-subdirs-targets):
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+	$(MAKE) $(PARALLELMFLAGS) $(subdir-target-args) $(@F)
+
+define subdir-target-args
+subdir=$(@D)$(if $($(@D)-srcdir),\
+-C $($(@D)-srcdir) ..=`pwd`/,\
+-C $(@D) ..=../)
+endef
 
 .PHONY: $(+subdir_targets) $(all-subdirs-targets)
 
@@ -223,19 +243,72 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
-tests: $(objpfx)c++-types-check.out
+tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 check-data := $(firstword $(wildcard \
 	        $(foreach M,$(config-machine) $(base-machine),\
 			  scripts/data/c++-types-$M-$(config-os).data)))
 ifneq (,$(check-data))
-$(objpfx)c++-types-check.out: $(check-data)
-	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
+$(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
+	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
 else
 $(objpfx)c++-types-check.out:
 	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
 	@echo "not run" > $@
 endif
+endif
+
+$(objpfx)check-local-headers.out: scripts/check-local-headers.sh
+	scripts/check-local-headers.sh "$(includedir)" "$(objpfx)" > $@
+
+ifneq ($(PERL),no)
+installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
+		    crypt/crypt.h ctype/ctype.h debug/execinfo.h \
+		    dirent/dirent.h dlfcn/dlfcn.h elf/elf.h elf/link.h \
+		    gmon/sys/gmon.h gmon/sys/gmon_out.h gmon/sys/profil.h \
+		    grp/grp.h iconv/iconv.h iconv/gconv.h \
+		    $(wildcard inet/netinet/*.h) \
+		    $(wildcard inet/arpa/*.h inet/protocols/*.h) \
+		    inet/aliases.h inet/ifaddrs.h inet/netinet/ip6.h \
+		    inet/netinet/icmp6.h intl/libintl.h io/sys/stat.h \
+		    io/sys/statfs.h io/sys/vfs.h io/sys/statvfs.h \
+		    io/fcntl.h io/sys/fcntl.h io/poll.h io/sys/poll.h \
+		    io/utime.h io/ftw.h io/fts.h io/sys/sendfile.h \
+		    libio/stdio.h libio/libio.h locale/locale.h \
+		    locale/langinfo.h locale/xlocale.h login/utmp.h \
+		    login/lastlog.h login/pty.h malloc/malloc.h \
+		    malloc/obstack.h malloc/mcheck.h math/math.h \
+		    math/complex.h math/fenv.h math/tgmath.h misc/sys/uio.h \
+		    $(wildcard nis/rpcsvc/*.h) nptl_db/thread_db.h \
+		    nptl/sysdeps/pthread/pthread.h nptl/semaphore.h \
+		    nss/nss.h posix/sys/utsname.h posix/sys/times.h \
+		    posix/sys/wait.h posix/sys/types.h posix/unistd.h \
+		    posix/glob.h posix/regex.h posix/wordexp.h posix/fnmatch.h\
+		    posix/getopt.h posix/tar.h posix/sys/unistd.h \
+		    posix/sched.h posix/re_comp.h posix/wait.h \
+		    posix/cpio.h posix/spawn.h pwd/pwd.h resolv/resolv.h \
+		    resolv/netdb.h $(wildcard resolv/arpa/*.h) \
+		    resource/sys/resource.h resource/sys/vlimit.h \
+		    resource/sys/vtimes.h resource/ulimit.h rt/aio.h \
+		    rt/mqueue.h setjmp/setjmp.h shadow/shadow.h \
+		    signal/signal.h signal/sys/signal.h socket/sys/socket.h \
+		    socket/sys/un.h stdio-common/printf.h \
+		    stdio-common/stdio_ext.h stdlib/stdlib.h stdlib/alloca.h \
+		    stdlib/monetary.h stdlib/fmtmsg.h stdlib/ucontext.h \
+		    sysdeps/generic/inttypes.h sysdeps/generic/stdint.h \
+		    stdlib/errno.h stdlib/sys/errno.h string/string.h \
+		    string/strings.h string/memory.h string/endian.h \
+		    string/argz.h string/envz.h string/byteswap.h \
+		    $(wildcard sunrpc/rpc/*.h sunrpc/rpcsvc/*.h) \
+		    sysvipc/sys/ipc.h sysvipc/sys/msg.h sysvipc/sys/sem.h \
+		    sysvipc/sys/shm.h termios/termios.h \
+		    termios/sys/termios.h termios/sys/ttychars.h time/time.h \
+		    time/sys/time.h time/sys/timeb.h wcsmbs/wchar.h \
+		    wctype/wctype.h
+
+tests: $(objpfx)begin-end-check.out
+$(objpfx)begin-end-check.out: scripts/begin-end-check.pl
+	$(PERL) scripts/begin-end-check.pl $(installed-headers) > $@
 endif
 
 # The realclean target is just like distclean for the parent, but we want
@@ -259,6 +332,15 @@ ifdef objdir
 endif
 	-rm -f $(sysdep-$(distclean-1))
 
+# Make the TAGS file for Emacs users.
+
+.PHONY: TAGS
+TAGS:
+	scripts/list-sources.sh | sed -n '/Makefile/p;\
+	  $(foreach S,[chsSyl] cxx sh bash pl,\
+		    $(subst .,\.,/.$S\(.in\)*$$/p;))' \
+	| $(ETAGS) -o $@ -
+
 # Make the distribution tarfile.
 .PHONY: dist tag-for-dist
 
@@ -276,26 +358,30 @@ endif
 files-for-dist := README FAQ INSTALL NOTES configure
 
 tag-of-stem = glibc-$(subst .,_,$*)
+dist-selector = -r $(tag-of-stem)
 
 # Add-ons in the main repository but distributed in their own tar files.
-dist-separate = libidn linuxthreads
-
-# Directories in each add-on.
-dist-separate-libidn = libidn
-dist-separate-linuxthreads = linuxthreads linuxthreads_db
+dist-separate = libidn
 
 glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 					      $(foreach D,$(dist-separate),\
 							$D/configure)
 	@rm -fr glibc-$*
-	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
+	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(sysdeps-add-ons)) \
+			 -name configure`
+	cvs $(CVSOPTS) -Q export -d glibc-$* $(dist-selector) libc
+# Touch all the configure scripts going into the tarball since cvs export
+# might have delivered configure.in newer than configure.
+	find glibc-$* -name configure -print | xargs touch
 	$(dist-do-separate-dirs)
 	tar cf glibc-$*.tar glibc-$*
 	rm -fr glibc-$*
 define dist-do-separate-dirs
 $(foreach dir,$(dist-separate),
-	tar cf glibc-$(dir)-$*.tar -C glibc-$* $(dist-separate-$(dir))
-	rm -rf $(addprefix glibc-$*/,$(dist-separate-$(dir)))
+	@rm -fr glibc-$(dir)-$*
+	mv glibc-$*/$(dir) glibc-$(dir)-$*
+	tar cf glibc-$(dir)-$*.tar glibc-$(dir)-$*
+	rm -fr glibc-$(dir)-$*
 )
 endef
 
@@ -313,7 +399,7 @@ tag-%: $(files-for-dist)
 
 define format-me
 @rm -f $@
-makeinfo --no-validate --no-warn --no-headers $< -o $@
+makeinfo --no-validate --plaintext --no-number-sections $< -o $@
 -chmod a-w $@
 endef
 INSTALL: manual/install.texi; $(format-me)
@@ -327,7 +413,7 @@ ifeq ($(with-cvs),yes)
 endif
 FORCE:
 
-iconvdata/% localedata/% po/% manual/%:
+iconvdata/% localedata/% po/% manual/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 # glibc 2.0 contains some header files which aren't used with glibc 2.1

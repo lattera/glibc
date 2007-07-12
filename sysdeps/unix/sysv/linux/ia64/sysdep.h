@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
    Based on code originally written by David Mosberger-Tang
@@ -204,7 +205,7 @@
     register long _r8 __asm ("r8");					      \
     register long _r10 __asm ("r10");					      \
     register long _r15 __asm ("r15") = name;				      \
-    register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private; \
+    register void *_b7 __asm ("b7") = ((tcbhead_t *)__thread_self)->__private;\
     long _retval;							      \
     LOAD_REGS_##nr							      \
     /*									      \
@@ -359,5 +360,25 @@
 #endif
 
 #endif /* not __ASSEMBLER__ */
+
+/* Pointer mangling support.  */
+#if defined NOT_IN_libc && defined IS_IN_rtld
+/* We cannot use the thread descriptor because in ld.so we use setjmp
+   earlier than the descriptor is initialized.  */
+#else
+# ifdef __ASSEMBLER__
+#  define PTR_MANGLE(reg, tmpreg) \
+        add	tmpreg=-16,r13		\
+        ;;				\
+        ld8	tmpreg=[tmpreg]		\
+        ;;				\
+        xor	reg=reg, tmpreg
+#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
+# else
+#  define PTR_MANGLE(var) \
+  (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
+# endif
+#endif
 
 #endif /* linux/ia64/sysdep.h */

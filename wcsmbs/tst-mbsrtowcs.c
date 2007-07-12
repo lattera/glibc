@@ -1,5 +1,5 @@
 /* Test NUL handling of mbsrtowcs.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -32,7 +32,7 @@ main (void)
   mbstate_t state;
   memset (&state, '\0', sizeof (state));
 
-  const char *in = buf;
+  const char *in = (const char *) buf;
   size_t n = mbsrtowcs (out, &in, sizeof (out) / sizeof (wchar_t), &state);
 
   int result = 0;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,9 +33,7 @@ __pthread_mutexattr_settype (attr, kind)
 
   iattr = (struct pthread_mutexattr *) attr;
 
-  /* We use bit 31 to signal whether the mutex is going to be
-     process-shared or not.  */
-  iattr->mutexkind = (iattr->mutexkind & 0x80000000) | kind;
+  iattr->mutexkind = (iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_BITS) | kind;
 
   return 0;
 }

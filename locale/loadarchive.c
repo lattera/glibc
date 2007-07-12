@@ -1,5 +1,5 @@
 /* Code to load locale data from the locale archive file.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -185,9 +185,9 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	    memcpy (__mempcpy (__mempcpy (newname, name, p - name),
 			       normalized_codeset, normlen),
 		    rest, restlen);
-	    free ((char *) normalized_codeset);
 	    name = newname;
 	  }
+	free ((char *) normalized_codeset);
       }
   }
 

@@ -1,5 +1,5 @@
 /* pause -- suspend the process until a signal arrives.  POSIX.1 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
+
 int
 __libc_pause (void)
 {
@@ -39,3 +40,18 @@ __libc_pause (void)
 weak_alias (__libc_pause, pause)
 
 LIBC_CANCEL_HANDLED ();		/* sigsuspend handles our cancellation.  */
+
+#ifndef NO_CANCELLATION
+# include <not-cancel.h>
+
+int
+__pause_nocancel (void)
+{
+  sigset_t set;
+
+  __sigemptyset (&set);
+  __sigprocmask (SIG_BLOCK, NULL, &set);
+
+  return sigsuspend_not_cancel (&set);
+}
+#endif

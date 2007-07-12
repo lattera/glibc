@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,9 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+#ifndef dl_machine_h
+#define dl_machine_h
 
 #define ELF_MACHINE_NAME "sparc64"
 
@@ -88,7 +91,7 @@ elf_machine_load_address (void)
 
 /* We have 4 cases to handle.  And we code different code sequences
    for each one.  I love V9 code models...  */
-static inline void
+static inline void __attribute__ ((always_inline))
 sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
 		   Elf64_Addr *reloc_addr, Elf64_Addr value,
 		   Elf64_Addr high, int t)
@@ -212,7 +215,7 @@ sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
     }
 }
 
-static inline Elf64_Addr
+static inline Elf64_Addr __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, Elf64_Addr value)
@@ -233,236 +236,21 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value;
 }
 
-#ifdef RESOLVE
-
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   MAP is the object containing the reloc.  */
-
-static inline void
-elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg)
-{
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  const unsigned long int r_type = ELF64_R_TYPE_ID (reloc->r_info);
-
-#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
-  if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
-    *reloc_addr = map->l_addr + reloc->r_addend;
-# ifndef RTLD_BOOTSTRAP
-  else if (r_type == R_SPARC_NONE) /* Who is Wilbur? */
-    return;
-# endif
-  else
-#endif
-    {
-#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
-      const Elf64_Sym *const refsym = sym;
-#endif
-      Elf64_Addr value;
-#ifndef RESOLVE_CONFLICT_FIND_MAP
-      if (sym->st_shndx != SHN_UNDEF &&
-	  ELF64_ST_BIND (sym->st_info) == STB_LOCAL)
-	value = map->l_addr;
-      else
-	{
-	  value = RESOLVE (&sym, version, r_type);
-	  if (sym)
-	    value += sym->st_value;
-	}
-#else
-      value = 0;
-#endif
-      value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
-
-      switch (r_type)
-	{
-#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
-	case R_SPARC_COPY:
-	  if (sym == NULL)
-	    /* This can happen in trace mode if an object could not be
-	       found.  */
-	    break;
-	  if (sym->st_size > refsym->st_size
-	      || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
-	    {
-	      const char *strtab;
-
-	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
-%s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				rtld_progname ?: "<program name unknown>",
-				strtab + refsym->st_name);
-	    }
-	  memcpy (reloc_addr_arg, (void *) value,
-		  MIN (sym->st_size, refsym->st_size));
-	  break;
-#endif
-	case R_SPARC_64:
-	case R_SPARC_GLOB_DAT:
-	  *reloc_addr = value;
-	  break;
-#ifndef RTLD_BOOTSTRAP
-	case R_SPARC_8:
-	  *(char *) reloc_addr = value;
-	  break;
-	case R_SPARC_16:
-	  *(short *) reloc_addr = value;
-	  break;
-	case R_SPARC_32:
-	  *(unsigned int *) reloc_addr = value;
-	  break;
-	case R_SPARC_DISP8:
-	  *(char *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
-	  break;
-	case R_SPARC_DISP16:
-	  *(short *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
-	  break;
-	case R_SPARC_DISP32:
-	  *(unsigned int *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
-	  break;
-	case R_SPARC_WDISP30:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & 0xc0000000) |
-	     ((value - (Elf64_Addr) reloc_addr) >> 2));
-	  break;
-
-	/* MEDLOW code model relocs */
-	case R_SPARC_LO10:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & ~0x3ff) |
-	     (value & 0x3ff));
-	  break;
-	case R_SPARC_HI22:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
-	     (value >> 10));
-	  break;
-	case R_SPARC_OLO10:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & ~0x1fff) |
-	     (((value & 0x3ff) + ELF64_R_TYPE_DATA (reloc->r_info)) & 0x1fff));
-	  break;
-
-	/* MEDMID code model relocs */
-	case R_SPARC_H44:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
-	     (value >> 22));
-	  break;
-	case R_SPARC_M44:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & ~0x3ff) |
-	     ((value >> 12) & 0x3ff));
-	  break;
-	case R_SPARC_L44:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & ~0xfff) |
-	     (value & 0xfff));
-	  break;
-
-	/* MEDANY code model relocs */
-	case R_SPARC_HH22:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
-	     (value >> 42));
-	  break;
-	case R_SPARC_HM10:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & ~0x3ff) |
-	     ((value >> 32) & 0x3ff));
-	  break;
-	case R_SPARC_LM22:
-	  *(unsigned int *) reloc_addr =
-	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
-	     ((value >> 10) & 0x003fffff));
-	  break;
-#endif
-	case R_SPARC_JMP_SLOT:
-#ifdef RESOLVE_CONFLICT_FIND_MAP
-	  /* R_SPARC_JMP_SLOT conflicts against .plt[32768+]
-	     relocs should be turned into R_SPARC_64 relocs
-	     in .gnu.conflict section.
-	     r_addend non-zero does not mean it is a .plt[32768+]
-	     reloc, instead it is the actual address of the function
-	     to call.  */
-	  sparc64_fixup_plt (NULL, reloc, reloc_addr, value, 0, 0);
-#else
-	  sparc64_fixup_plt (map, reloc, reloc_addr, value,
-			     reloc->r_addend, 0);
-#endif
-	  break;
-#ifndef RTLD_BOOTSTRAP
-	case R_SPARC_UA16:
-	  ((unsigned char *) reloc_addr_arg) [0] = value >> 8;
-	  ((unsigned char *) reloc_addr_arg) [1] = value;
-	  break;
-	case R_SPARC_UA32:
-	  ((unsigned char *) reloc_addr_arg) [0] = value >> 24;
-	  ((unsigned char *) reloc_addr_arg) [1] = value >> 16;
-	  ((unsigned char *) reloc_addr_arg) [2] = value >> 8;
-	  ((unsigned char *) reloc_addr_arg) [3] = value;
-	  break;
-	case R_SPARC_UA64:
-	  if (! ((long) reloc_addr_arg & 3))
-	    {
-	      /* Common in .eh_frame */
-	      ((unsigned int *) reloc_addr_arg) [0] = value >> 32;
-	      ((unsigned int *) reloc_addr_arg) [1] = value;
-	      break;
-	    }
-	  ((unsigned char *) reloc_addr_arg) [0] = value >> 56;
-	  ((unsigned char *) reloc_addr_arg) [1] = value >> 48;
-	  ((unsigned char *) reloc_addr_arg) [2] = value >> 40;
-	  ((unsigned char *) reloc_addr_arg) [3] = value >> 32;
-	  ((unsigned char *) reloc_addr_arg) [4] = value >> 24;
-	  ((unsigned char *) reloc_addr_arg) [5] = value >> 16;
-	  ((unsigned char *) reloc_addr_arg) [6] = value >> 8;
-	  ((unsigned char *) reloc_addr_arg) [7] = value;
-	  break;
-#endif
-#if !defined RTLD_BOOTSTRAP || defined _NDEBUG
-	default:
-	  _dl_reloc_bad_type (map, r_type, 0);
-	  break;
-#endif
-	}
-    }
-}
-
-static inline void
-elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   void *const reloc_addr_arg)
-{
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  *reloc_addr = l_addr + reloc->r_addend;
-}
-
-static inline void
-elf_machine_lazy_rel (struct link_map *map,
-		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
-{
-  switch (ELF64_R_TYPE (reloc->r_info))
-    {
-    case R_SPARC_NONE:
-      break;
-    case R_SPARC_JMP_SLOT:
-      break;
-    default:
-      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
-      break;
-    }
-}
-
-#endif	/* RESOLVE */
-
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+# define elf_machine_type_class(type) \
+  ((((type) == R_SPARC_JMP_SLOT						      \
+     || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
+    * ELF_RTYPE_CLASS_PLT)						      \
+   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+# define elf_machine_type_class(type) \
   ((((type) == R_SPARC_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT
@@ -487,74 +275,67 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       extern void _dl_runtime_profile_1 (void);
       Elf64_Addr res0_addr, res1_addr;
       unsigned int *plt = (void *) D_PTR (l, l_info[DT_PLTGOT]);
-      int i = 0;
 
-      if (! profile)
+      if (__builtin_expect(profile, 0))
+	{
+	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
+	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
+
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
+	    GL(dl_profile_map) = l;
+	}
+      else
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_resolve_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_resolve_1;
 	}
-      else
-	{
-	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
-	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
-	    GL(dl_profile_map) = l;
-	}
 
       /* PLT0 looks like:
 
-	 save	%sp, -192, %sp
-	 sethi	%hh(_dl_runtime_{resolve,profile}_0), %l0
-	 sethi	%lm(_dl_runtime_{resolve,profile}_0), %l1
-	 or	%l0, %hm(_dl_runtime_{resolve,profile}_0), %l0
-	 or	%l1, %lo(_dl_runtime_{resolve,profile}_0), %l1
-	 sllx	%l0, 32, %l0
-	 jmpl	%l0 + %l1, %l6
-	  sethi	%hi(0xffc00), %l2
+         sethi	%uhi(_dl_runtime_{resolve,profile}_0), %g4
+	 sethi	%hi(_dl_runtime_{resolve,profile}_0), %g5
+	 or	%g4, %ulo(_dl_runtime_{resolve,profile}_0), %g4
+	 or	%g5, %lo(_dl_runtime_{resolve,profile}_0), %g5
+	 sllx	%g4, 32, %g4
+	 add	%g4, %g5, %g5
+	 jmpl	%g5, %g4
+	  nop
        */
 
-      plt[0] = 0x9de3bf40;
-      plt[1] = 0x21000000 | (res0_addr >> (64 - 22));
-      plt[2] = 0x23000000 | ((res0_addr >> 10) & 0x003fffff);
-      plt[3] = 0xa0142000 | ((res0_addr >> 32) & 0x3ff);
-      plt[4] = 0xa2146000 | (res0_addr & 0x3ff);
-      plt[5] = 0xa12c3020;
-      plt[6] = 0xadc40011;
-      plt[7] = 0x250003ff;
+      plt[0] = 0x09000000 | (res0_addr >> (64 - 22));
+      plt[1] = 0x0b000000 | ((res0_addr >> 10) & 0x003fffff);
+      plt[2] = 0x88112000 | ((res0_addr >> 32) & 0x3ff);
+      plt[3] = 0x8a116000 | (res0_addr & 0x3ff);
+      plt[4] = 0x89293020;
+      plt[5] = 0x8a010005;
+      plt[6] = 0x89c14000;
+      plt[7] = 0x01000000;
 
       /* PLT1 looks like:
 
-	 save	%sp, -192, %sp
-	 sethi	%hh(_dl_runtime_{resolve,profile}_1), %l0
-	 sethi	%lm(_dl_runtime_{resolve,profile}_1), %l1
-	 or	%l0, %hm(_dl_runtime_{resolve,profile}_1), %l0
-	 or	%l1, %lo(_dl_runtime_{resolve,profile}_1), %l1
-	 sllx	%l0, 32, %l0
-	 jmpl	%l0 + %l1, %l6
-	  srlx	%g1, 12, %o1
+         sethi	%uhi(_dl_runtime_{resolve,profile}_1), %g4
+	 sethi	%hi(_dl_runtime_{resolve,profile}_1), %g5
+	 or	%g4, %ulo(_dl_runtime_{resolve,profile}_1), %g4
+	 or	%g5, %lo(_dl_runtime_{resolve,profile}_1), %g5
+	 sllx	%g4, 32, %g4
+	 add	%g4, %g5, %g5
+	 jmpl	%g5, %g4
+	  nop
        */
 
-      plt[8 + 0] = 0x9de3bf40;
-      if (__builtin_expect (((res1_addr + 4) >> 32) & 0x3ff, 0))
-	i = 1;
-      else
-	res1_addr += 4;
-      plt[8 + 1] = 0x21000000 | (res1_addr >> (64 - 22));
-      plt[8 + 2] = 0x23000000 | ((res1_addr >> 10) & 0x003fffff);
-      if (__builtin_expect (i, 0))
-	plt[8 + 3] = 0xa0142000 | ((res1_addr >> 32) & 0x3ff);
-      else
-	plt[8 + 3] = 0xa12c3020;
-      plt[8 + 4] = 0xa2146000 | (res1_addr & 0x3ff);
-      if (__builtin_expect (i, 0))
-	plt[8 + 5] = 0xa12c3020;
-      plt[8 + 5 + i] = 0xadc40011;
-      plt[8 + 6 + i] = 0x9330700c;
+      plt[8] = 0x09000000 | (res1_addr >> (64 - 22));
+      plt[9] = 0x0b000000 | ((res1_addr >> 10) & 0x003fffff);
+      plt[10] = 0x88112000 | ((res1_addr >> 32) & 0x3ff);
+      plt[11] = 0x8a116000 | (res1_addr & 0x3ff);
+      plt[12] = 0x89293020;
+      plt[13] = 0x8a010005;
+      plt[14] = 0x89c14000;
+      plt[15] = 0x01000000;
 
       /* Now put the magic cookie at the beginning of .PLT2
 	 Entry .PLT3 is unused by this implementation.  */
-      *((struct link_map **)(&plt[16 + 0])) = l;
+      *((struct link_map **)(&plt[16])) = l;
 
       if (__builtin_expect (l->l_info[VALIDX(DT_GNU_PRELINKED)] != NULL, 0)
 	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
@@ -600,68 +381,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name)	\
-  asm ("\n"						\
-"	.text\n"					\
-"	.globl	" #tramp_name "_0\n"			\
-"	.type	" #tramp_name "_0, @function\n"		\
-"	.align	32\n"					\
-"\t" #tramp_name "_0:\n"				\
-"	! sethi   %hi(1047552), %l2 - Done in .PLT0\n"	\
-"	ldx	[%l6 + 32 + 8], %o0\n"			\
-"	sub     %g1, %l6, %l0\n"			\
-"	xor     %l2, -1016, %l2\n"			\
-"	sethi   %hi(5120), %l3	! 160 * 32\n"		\
-"	add     %l0, %l2, %l0\n"			\
-"	sethi   %hi(32768), %l4\n"			\
-"	udivx   %l0, %l3, %l3\n"			\
-"	sllx    %l3, 2, %l1\n"				\
-"	add     %l1, %l3, %l1\n"			\
-"	sllx    %l1, 10, %l2\n"				\
-"	sub	%l4, 4, %l4	! No thanks to Sun for not obeying their own ABI\n" \
-"	sllx    %l1, 5, %l1\n"				\
-"	sub     %l0, %l2, %l0\n"			\
-"	udivx   %l0, 24, %l0\n"				\
-"	add     %l0, %l4, %l0\n"			\
-"	add     %l1, %l0, %l1\n"			\
-"	add     %l1, %l1, %l0\n"			\
-"	add     %l0, %l1, %l0\n"			\
-"	mov	%i7, %o2\n"				\
-"	call	" #fixup_name "\n"			\
-"	 sllx    %l0, 3, %o1\n"				\
-"	jmp	%o0\n"					\
-"	 restore\n"					\
-"	.size	" #tramp_name "_0, . - " #tramp_name "_0\n" \
-"\n"							\
-"	.globl	" #tramp_name "_1\n"			\
-"	.type	" #tramp_name "_1, @function\n"		\
-"	! tramp_name_1 + 4 needs to be .align 32\n"	\
-"\t" #tramp_name "_1:\n"				\
-"	sub	%l6, 4, %l6\n"				\
-"	! srlx	%g1, 12, %o1 - Done in .PLT1\n"		\
-"	ldx	[%l6 + 12], %o0\n"			\
-"	add	%o1, %o1, %o3\n"			\
-"	sub	%o1, 96, %o1	! No thanks to Sun for not obeying their own ABI\n" \
-"	mov	%i7, %o2\n"				\
-"	call	" #fixup_name "\n"			\
-"	 add	%o1, %o3, %o1\n"			\
-"	jmp	%o0\n"					\
-"	 restore\n"					\
-"	.size	" #tramp_name "_1, . - " #tramp_name "_1\n" \
-"	.previous\n");
-
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, fixup);
-#endif
 
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
@@ -763,3 +482,291 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	 add	%sp, 6*8, %sp\n"					\
 "	.size	_dl_start_user, . - _dl_start_user\n"			\
 "	.previous\n");
+
+#endif /* dl_machine_h */
+
+#define ARCH_LA_PLTENTER	sparc64_gnu_pltenter
+#define ARCH_LA_PLTEXIT		sparc64_gnu_pltexit
+
+#ifdef RESOLVE_MAP
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   MAP is the object containing the reloc.  */
+
+auto inline void
+__attribute__ ((always_inline))
+elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
+		  const Elf64_Sym *sym, const struct r_found_version *version,
+		  void *const reloc_addr_arg)
+{
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+  const Elf64_Sym *const refsym = sym;
+#endif
+  Elf64_Addr value;
+  const unsigned long int r_type = ELF64_R_TYPE_ID (reloc->r_info);
+#if !defined RESOLVE_CONFLICT_FIND_MAP
+  struct link_map *sym_map = NULL;
+#endif
+
+#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
+     reference weak so static programs can still link.  This declaration
+     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
+     because rtld.c contains the common defn for _dl_rtld_map, which is
+     incompatible with a weak decl in the same file.  */
+  weak_extern (_dl_rtld_map);
+#endif
+
+  if (__builtin_expect (r_type == R_SPARC_NONE, 0))
+    return;
+
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+  if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
+    {
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+      if (map != &_dl_rtld_map) /* Already done in rtld itself. */
+# endif
+	*reloc_addr += map->l_addr + reloc->r_addend;
+      return;
+    }
+#endif
+
+#ifndef RESOLVE_CONFLICT_FIND_MAP
+  if (__builtin_expect (ELF64_ST_BIND (sym->st_info) == STB_LOCAL, 0)
+      && sym->st_shndx != SHN_UNDEF)
+    {
+      value = map->l_addr;
+    }
+  else
+    {
+      sym_map = RESOLVE_MAP (&sym, version, r_type);
+      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+    }
+#else
+  value = 0;
+#endif
+
+  value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
+
+  switch (r_type)
+    {
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+    case R_SPARC_COPY:
+      if (sym == NULL)
+	/* This can happen in trace mode if an object could not be
+	   found.  */
+	break;
+      if (sym->st_size > refsym->st_size
+	  || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
+	{
+	  const char *strtab;
+
+	  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+	  _dl_error_printf ("\
+%s: Symbol `%s' has different size in shared object, consider re-linking\n",
+			    rtld_progname ?: "<program name unknown>",
+			    strtab + refsym->st_name);
+	}
+      memcpy (reloc_addr_arg, (void *) value,
+	      MIN (sym->st_size, refsym->st_size));
+      break;
+#endif
+    case R_SPARC_64:
+    case R_SPARC_GLOB_DAT:
+      *reloc_addr = value;
+      break;
+    case R_SPARC_JMP_SLOT:
+#ifdef RESOLVE_CONFLICT_FIND_MAP
+      /* R_SPARC_JMP_SLOT conflicts against .plt[32768+]
+	 relocs should be turned into R_SPARC_64 relocs
+	 in .gnu.conflict section.
+	 r_addend non-zero does not mean it is a .plt[32768+]
+	 reloc, instead it is the actual address of the function
+	 to call.  */
+      sparc64_fixup_plt (NULL, reloc, reloc_addr, value, 0, 0);
+#else
+      sparc64_fixup_plt (map, reloc, reloc_addr, value, reloc->r_addend, 0);
+#endif
+      break;
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+    && !defined RESOLVE_CONFLICT_FIND_MAP
+    case R_SPARC_TLS_DTPMOD64:
+      /* Get the information from the link map returned by the
+	 resolv function.  */
+      if (sym_map != NULL)
+	*reloc_addr = sym_map->l_tls_modid;
+      break;
+    case R_SPARC_TLS_DTPOFF64:
+      /* During relocation all TLS symbols are defined and used.
+	 Therefore the offset is already correct.  */
+      *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
+      break;
+    case R_SPARC_TLS_TPOFF64:
+      /* The offset is negative, forward from the thread pointer.  */
+      /* We know the offset of object the symbol is contained in.
+	 It is a negative value which will be added to the
+	 thread pointer.  */
+      if (sym != NULL)
+	{
+	  CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr = sym->st_value - sym_map->l_tls_offset
+	    + reloc->r_addend;
+	}
+      break;
+# ifndef RTLD_BOOTSTRAP
+    case R_SPARC_TLS_LE_HIX22:
+    case R_SPARC_TLS_LE_LOX10:
+      if (sym != NULL)
+	{
+	  CHECK_STATIC_TLS (map, sym_map);
+	  value = sym->st_value - sym_map->l_tls_offset
+	    + reloc->r_addend;
+	  if (r_type == R_SPARC_TLS_LE_HIX22)
+	    *reloc_addr = (*reloc_addr & 0xffc00000)
+	      | (((~value) >> 10) & 0x3fffff);
+	  else
+	    *reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
+	      | 0x1c00;
+	}
+      break;
+# endif
+#endif
+#ifndef RTLD_BOOTSTRAP
+    case R_SPARC_8:
+      *(char *) reloc_addr = value;
+      break;
+    case R_SPARC_16:
+      *(short *) reloc_addr = value;
+      break;
+    case R_SPARC_32:
+      *(unsigned int *) reloc_addr = value;
+      break;
+    case R_SPARC_DISP8:
+      *(char *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
+      break;
+    case R_SPARC_DISP16:
+      *(short *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
+      break;
+    case R_SPARC_DISP32:
+      *(unsigned int *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
+      break;
+    case R_SPARC_WDISP30:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & 0xc0000000) |
+	 (((value - (Elf64_Addr) reloc_addr) >> 2) & 0x3fffffff));
+      break;
+
+      /* MEDLOW code model relocs */
+    case R_SPARC_LO10:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & ~0x3ff) |
+	 (value & 0x3ff));
+      break;
+    case R_SPARC_HI22:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & 0xffc00000) |
+	 ((value >> 10) & 0x3fffff));
+      break;
+    case R_SPARC_OLO10:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & ~0x1fff) |
+	 (((value & 0x3ff) + ELF64_R_TYPE_DATA (reloc->r_info)) & 0x1fff));
+      break;
+
+      /* MEDMID code model relocs */
+    case R_SPARC_H44:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & 0xffc00000) |
+	 ((value >> 22) & 0x3fffff));
+      break;
+    case R_SPARC_M44:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & ~0x3ff) |
+	 ((value >> 12) & 0x3ff));
+      break;
+    case R_SPARC_L44:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & ~0xfff) |
+	 (value & 0xfff));
+      break;
+
+      /* MEDANY code model relocs */
+    case R_SPARC_HH22:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & 0xffc00000) |
+	 (value >> 42));
+      break;
+    case R_SPARC_HM10:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & ~0x3ff) |
+	 ((value >> 32) & 0x3ff));
+      break;
+    case R_SPARC_LM22:
+      *(unsigned int *) reloc_addr =
+	((*(unsigned int *)reloc_addr & 0xffc00000) |
+	 ((value >> 10) & 0x003fffff));
+      break;
+    case R_SPARC_UA16:
+      ((unsigned char *) reloc_addr_arg) [0] = value >> 8;
+      ((unsigned char *) reloc_addr_arg) [1] = value;
+      break;
+    case R_SPARC_UA32:
+      ((unsigned char *) reloc_addr_arg) [0] = value >> 24;
+      ((unsigned char *) reloc_addr_arg) [1] = value >> 16;
+      ((unsigned char *) reloc_addr_arg) [2] = value >> 8;
+      ((unsigned char *) reloc_addr_arg) [3] = value;
+      break;
+    case R_SPARC_UA64:
+      if (! ((long) reloc_addr_arg & 3))
+	{
+	  /* Common in .eh_frame */
+	  ((unsigned int *) reloc_addr_arg) [0] = value >> 32;
+	  ((unsigned int *) reloc_addr_arg) [1] = value;
+	  break;
+	}
+      ((unsigned char *) reloc_addr_arg) [0] = value >> 56;
+      ((unsigned char *) reloc_addr_arg) [1] = value >> 48;
+      ((unsigned char *) reloc_addr_arg) [2] = value >> 40;
+      ((unsigned char *) reloc_addr_arg) [3] = value >> 32;
+      ((unsigned char *) reloc_addr_arg) [4] = value >> 24;
+      ((unsigned char *) reloc_addr_arg) [5] = value >> 16;
+      ((unsigned char *) reloc_addr_arg) [6] = value >> 8;
+      ((unsigned char *) reloc_addr_arg) [7] = value;
+      break;
+#endif
+#if !defined RTLD_BOOTSTRAP || defined _NDEBUG
+    default:
+      _dl_reloc_bad_type (map, r_type, 0);
+      break;
+#endif
+    }
+}
+
+auto inline void
+__attribute__ ((always_inline))
+elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
+			   void *const reloc_addr_arg)
+{
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
+  *reloc_addr = l_addr + reloc->r_addend;
+}
+
+auto inline void
+__attribute__ ((always_inline))
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
+{
+  switch (ELF64_R_TYPE (reloc->r_info))
+    {
+    case R_SPARC_NONE:
+      break;
+    case R_SPARC_JMP_SLOT:
+      break;
+    default:
+      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
+      break;
+    }
+}
+
+#endif	/* RESOLVE_MAP */

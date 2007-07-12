@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1995,1996,1997,2001,2002,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,15 @@ routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
 
 elide-routines.os = bb_init_func bb_exit_func
 
-tests	:= tst-sprofil
+include ../Makeconfig
+
+tests	= tst-sprofil
+ifeq ($(build-profile),yes)
+tests	+= tst-profile-static
+tests-static	+= tst-profile-static
+
+LDFLAGS-tst-profile-static = -profile
+endif
 
 # The mcount code won't work without a frame pointer.
 CFLAGS-mcount.c := -fno-omit-frame-pointer

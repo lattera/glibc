@@ -2,17 +2,17 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 
 static int
 do_test (void)
 {
-  int i;
-  for (i = 0; i < 1000;)
+  for (int i = 0; i < 1000;)
     {
       printf ("round %d\n",++i);
 
-      void *h = dlopen ("tst-tlsmod13a.so", RTLD_LAZY);
+      void *h = dlopen ("$ORIGIN/tst-tlsmod13a.so", RTLD_LAZY);
       if (h == NULL)
 	{
 	  printf ("cannot load: %s\n", dlerror ());

@@ -74,7 +74,7 @@ static bool_t clntraw_freeres (CLIENT *, xdrproc_t, caddr_t);
 static bool_t clntraw_control (CLIENT *, int, char *);
 static void clntraw_destroy (CLIENT *);
 
-static struct clnt_ops client_ops =
+static const struct clnt_ops client_ops =
 {
   clntraw_call,
   clntraw_abort,
@@ -127,7 +127,7 @@ clntraw_create (u_long prog, u_long vers)
   /*
    * create client handle
    */
-  client->cl_ops = &client_ops;
+  client->cl_ops = (struct clnt_ops *) &client_ops;
   client->cl_auth = INTUSE(authnone_create) ();
   return client;
 }

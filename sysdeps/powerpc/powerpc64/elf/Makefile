@@ -2,10 +2,10 @@
 
 # Need to prevent gcc from using fprs in code used during dynamic linking.
 
-CFLAGS-dl-runtime.os := -msoft-float
-CFLAGS-dl-lookup.os := -msoft-float
-CFLAGS-dl-misc.os := -msoft-float
-CFLAGS-rtld-mempcpy.os := -msoft-float
-CFLAGS-rtld-memmove.os := -msoft-float
-CFLAGS-rtld-memchr.os := -msoft-float
-CFLAGS-rtld-strnlen.os := -msoft-float
+CFLAGS-dl-runtime.os = $(no-special-regs)
+CFLAGS-dl-lookup.os = $(no-special-regs)
+CFLAGS-dl-misc.os = $(no-special-regs)
+CFLAGS-rtld-mempcpy.os = $(no-special-regs)
+CFLAGS-rtld-memmove.os = $(no-special-regs)
+CFLAGS-rtld-memchr.os = $(no-special-regs)
+CFLAGS-rtld-strnlen.os = $(no-special-regs)

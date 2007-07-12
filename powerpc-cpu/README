@@ -1,0 +1,98 @@
+Powerpc-cpu add-on V0.1
+
+What is it:
+
+The powerpc-cpu directory is an add-on for the GNU C Library (glibc).
+It provides additional platform/cpu specific optimizations when the
+--with-cpu= configure option is specified.  On the glibc configure,
+specifying --with-cpu=<cpu_type>, inserts the -mcpu=<cpu_type> option
+for all 'C' compiles in the glibc make.  It also inserts <cpu_type>
+specific directories into the source search path for glibc.  Source from
+these <cpu_type> specific directories and override header or code source
+from glibc.
+
+How do I use it:
+
+To build glibc with this add-on you need to configure glibc specifying both
+--enable-add-ons=powerpc-cpu,.. and --with-cpu=<cpu_type> options.  The
+add-on source can be a direct subdirectory of glibc (i.e.
+./libc/powerpc-cpu) which allows the short name, or a separate directory
+from glibc, this requires a fully qualified path. (i.e.
+--enable-add-ons=$HOME/powerpc-cpu,..).
+
+If you specify multiple add-ons, powerpc-cpu should be first to insure that
+any optimizations can override the corresponding source files from mainline
+glibc. For example: "--enable-add-ons=powerpc-cpu,nptl".
+
+How do I extent it:
+
+The optimized source code is found in the sysdeps/powerpc/powerpc32 and
+sysdeps/powerpc/powerpc64 subdirectories.  These directories support the 32-
+and 64-bit ELF ABIs of the powerpc platform.  The next directory level is
+"<cpu_type>" where the names match supported gcc -mcpu= options.  When
+--with-cpu=<cpu_type> is specified, the <cpu_type> must match one of the
+directories at this level.
+
+The mechanism is generalized and can be extended to any "cpu-type" that is
+accepted by gcc's -mcpu= option.  To support another "cpu_type" simply add a
+directory of the form:
+
+./powerpc-cpu/sysdeps/powerpc/powerpc32/<cpu_type>
+
+and for 64-bit implementations also:
+
+./powerpc-cpu/sysdeps/powerpc/powerpc64/<cpu_type>
+
+See the GCC online documentation <http://gcc.gnu.org/onlinedocs> 
+3.17.24 "IBM RS/6000 and PowerPC Options" for the complete list of -mcpu=
+options.
+
+Currently supported cpu_types are:
+
+power4
+power5
+power5+
+power6
+970
+
+The --with-cpu=<cpu_type> option requires that corresponding directory
+./powerpc-cpu/sysdeps/powerpc/powerpc[32|64]/<cpu_type> exists.  This
+directory can be empty in which case you get the benefit of -mcpu=<cpu_type>
+which implies -mtune=<cpu_type>.  To override source implementation from
+glibc mainline simple provide an alternative implementation with the same
+name in the appropriate ./<cpu_type> subdirectory. 
+
+So far 970, power4, power5, power5+, and power6 are enabled with specific
+assembler implementations and have corresponding directories for both
+powerpc32 and powerpc64.  For 64-bit <cpu_types>, implementations of the
+32-bit ABI can share code exploiting 64-bit instructions from the generic
+cpu_type powerpc64 (directory sysdeps/powerpc/powerpc32/powerpc64).
+Specifically an "Implies" file, can be included in any
+sysdeps/powerpc/powerpc32/<cpu_type> directory where <cpu_type> is a 64-bit
+processor.  This is useful when the implementation wants to exploit 64-bit
+instructions in 32-bit mode.
+
+Special note: While this add-on is currently focused on powerpc, the
+mechanism is general enough to be used by any platform which also supports
+gcc's -mcpu= option.  Simply add the appropriate ./sysdeps/<target>/<cpu_type>
+directories.
+
+Special note: Currently the "970" implementation is implied to the power4
+implementation.  The internal micro-architecture of the 970 chip is based on
+the power4 design and scheduling for integer and floating point
+units are the same for power4 and 970.  Any 970 unique codes would be specific
+to Altivec/VMX exploitation which we don't have any examples of yet.
+
+Special note: The directory search order has changed for glibc-2.4. So if your
+optimization needs to override source files in mainline
+./sysdeps/powerpc/powerpc[32|64]/fpu, additional tricks are needed.
+
+Normally ./sysdeps/powerpc/powerpc[32|64]/fpu from mainline will be searched
+before ./powerpc-cpu/sysdeps/powerpc/powerpc[32|64]/<cpu_type>/fpu. However
+./powerpc-cpu/sysdeps/unix/sysv/linux/powerpc/powerpc[32|64]/<cpu_type>/fpu
+will be searched before either.  So add an "Implies" file containing
+"powerpc/powerpc[32|64]/<cpu_type>/fpu" in
+./powerpc-cpu/sysdeps/unix/sysv/linux/powerpc/powerpc[32|64]/<cpu_type>/fpu as
+a work around. You will need to repeat this for each <cpu_type> that needs to
+override mainline.
+

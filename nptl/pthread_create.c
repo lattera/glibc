@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -52,7 +52,7 @@ unsigned int __nptl_nthreads = 1;
 #include "allocatestack.c"
 
 /* Code to create the thread.  */
-#include "createthread.c"
+#include <createthread.c>
 
 
 struct pthread *
@@ -206,6 +206,15 @@ __free_tcb (struct pthread *pd)
 	   running thread is gone.  */
 	abort ();
 
+      /* Free TPP data.  */
+      if (__builtin_expect (pd->tpp != NULL, 0))
+	{
+	  struct priority_protection_data *tpp = pd->tpp;
+
+	  pd->tpp = NULL;
+	  free (tpp);
+	}
+
       /* Queue the stack memory block for reuse and exit the process.  The
 	 kernel will signal via writing to the address returned by
 	 QUEUE-STACK when the stack is available.  */
@@ -228,6 +237,32 @@ start_thread (void *arg)
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
+
+#ifdef __NR_set_robust_list
+# ifndef __ASSUME_SET_ROBUST_LIST
+  if (__set_robust_list_avail >= 0)
+# endif
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      /* This call should never fail because the initial call in init.c
+	 succeeded.  */
+      INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
+			sizeof (struct robust_list_head));
+    }
+#endif
+
+  /* If the parent was running cancellation handlers while creating
+     the thread the new thread inherited the signal mask.  Reset the
+     cancellation signal mask.  */
+  if (__builtin_expect (pd->parent_cancelhandling & CANCELING_BITMASK, 0))
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      sigset_t mask;
+      __sigemptyset (&mask);
+      __sigaddset (&mask, SIGCANCEL);
+      (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &mask,
+			       NULL, _NSIG / 8);
+    }
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
@@ -310,10 +345,52 @@ start_thread (void *arg)
      the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
+#ifndef __ASSUME_SET_ROBUST_LIST
+  /* If this thread has any robust mutexes locked, handle them now.  */
+# if __WORDSIZE == 64
+  void *robust = pd->robust_head.list;
+# else
+  __pthread_slist_t *robust = pd->robust_list.__next;
+# endif
+  /* We let the kernel do the notification if it is able to do so.
+     If we have to do it here there for sure are no PI mutexes involved
+     since the kernel support for them is even more recent.  */
+  if (__set_robust_list_avail < 0
+      && __builtin_expect (robust != (void *) &pd->robust_head, 0))
+    {
+      do
+	{
+	  struct __pthread_mutex_s *this = (struct __pthread_mutex_s *)
+	    ((char *) robust - offsetof (struct __pthread_mutex_s,
+					 __list.__next));
+	  robust = *((void **) robust);
+
+# ifdef __PTHREAD_MUTEX_HAVE_PREV
+	  this->__list.__prev = NULL;
+# endif
+	  this->__list.__next = NULL;
+
+	  lll_robust_mutex_dead (this->__lock);
+	}
+      while (robust != (void *) &pd->robust_head);
+    }
+#endif
+
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))
     /* Free the TCB.  */
     __free_tcb (pd);
+  else if (__builtin_expect (pd->cancelhandling & SETXID_BITMASK, 0))
+    {
+      /* Some other thread might call any of the setXid functions and expect
+	 us to reply.  In this case wait until we did that.  */
+      do
+	lll_futex_wait (&pd->setxid_futex, 0);
+      while (pd->cancelhandling & SETXID_BITMASK);
+
+      /* Reset the value so that the stack can be reused.  */
+      pd->setxid_futex = 0;
+    }
 
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
@@ -347,17 +424,15 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
      void *arg;
 {
   STACK_VARIABLES;
-  const struct pthread_attr *iattr;
-  struct pthread *pd;
-  int err;
 
-  iattr = (struct pthread_attr *) attr;
+  const struct pthread_attr *iattr = (struct pthread_attr *) attr;
   if (iattr == NULL)
     /* Is this the best idea?  On NUMA machines this could mean
        accessing far-away memory.  */
     iattr = &default_attr;
 
-  err = ALLOCATE_STACK (iattr, &pd);
+  struct pthread *pd = NULL;
+  int err = ALLOCATE_STACK (iattr, &pd);
   if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
        invalid or we could not allocate memory.  */
@@ -401,19 +476,29 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   pd->schedpolicy = self->schedpolicy;
   pd->schedparam = self->schedparam;
 
+  /* Copy the stack guard canary.  */
+#ifdef THREAD_COPY_STACK_GUARD
+  THREAD_COPY_STACK_GUARD (pd);
+#endif
+
+  /* Copy the pointer guard value.  */
+#ifdef THREAD_COPY_POINTER_GUARD
+  THREAD_COPY_POINTER_GUARD (pd);
+#endif
+
   /* Determine scheduling parameters for the thread.  */
   if (attr != NULL
       && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
     {
-      INTERNAL_SYSCALL_DECL (err);
+      INTERNAL_SYSCALL_DECL (scerr);
 
       /* Use the scheduling parameters the user provided.  */
       if (iattr->flags & ATTR_FLAG_POLICY_SET)
 	pd->schedpolicy = iattr->schedpolicy;
       else if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
 	{
-	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, err, 1, 0);
+	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, scerr, 1, 0);
 	  pd->flags |= ATTR_FLAG_POLICY_SET;
 	}
 
@@ -422,14 +507,14 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 		sizeof (struct sched_param));
       else if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
 	{
-	  INTERNAL_SYSCALL (sched_getparam, err, 2, 0, &pd->schedparam);
+	  INTERNAL_SYSCALL (sched_getparam, scerr, 2, 0, &pd->schedparam);
 	  pd->flags |= ATTR_FLAG_SCHED_SET;
 	}
 
       /* Check for valid priorities.  */
-      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, err, 1,
+      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, scerr, 1,
 				      iattr->schedpolicy);
-      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, err, 1,
+      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, scerr, 1,
 				      iattr->schedpolicy);
       if (pd->schedparam.sched_priority < minprio
 	  || pd->schedparam.sched_priority > maxprio)

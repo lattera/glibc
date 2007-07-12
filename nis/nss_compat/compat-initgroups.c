@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -36,7 +36,6 @@ static service_user *ni;
 static enum nss_status (*nss_initgroups_dyn) (const char *, gid_t,
 					      long int *, long int *,
 					      gid_t **, long int, int *);
-static enum nss_status (*nss_setgrent) (int stayopen);
 static enum nss_status (*nss_getgrnam_r) (const char *name,
 					  struct group * grp, char *buffer,
 					  size_t buflen, int *errnop);
@@ -45,7 +44,6 @@ static enum nss_status (*nss_getgrgid_r) (gid_t gid, struct group * grp,
 					  int *errnop);
 static enum nss_status (*nss_getgrent_r) (struct group * grp, char *buffer,
 					  size_t buflen, int *errnop);
-static enum nss_status (*nss_endgrent) (void);
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -92,11 +90,9 @@ init_nss_interface (void)
       && __nss_database_lookup ("group_compat", NULL, "nis", &ni) >= 0)
     {
       nss_initgroups_dyn = __nss_lookup_function (ni, "initgroups_dyn");
-      nss_setgrent = __nss_lookup_function (ni, "setgrent");
       nss_getgrnam_r = __nss_lookup_function (ni, "getgrnam_r");
       nss_getgrgid_r = __nss_lookup_function (ni, "getgrgid_r");
       nss_getgrent_r = __nss_lookup_function (ni, "getgrent_r");
-      nss_endgrent = __nss_lookup_function (ni, "endgrent");
     }
 
   __libc_lock_unlock (lock);

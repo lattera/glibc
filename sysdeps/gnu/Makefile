@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004,2005,2006
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -32,12 +32,13 @@ endif
 
 ifeq ($(subdir),stdio-common)
 
-vpath errlist.c $(full_config_sysdirs)
+errlist-c = $(firstword $(wildcard $(addsuffix /errlist.c,$(sysdirs) .)))
+
 ifeq ($(versioning),yes)
-$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(common-objpfx)Versions.v.i $(before-compile)
 else
-$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(before-compile)
 endif
 	$(make-target-directory)
@@ -45,8 +46,7 @@ endif
 	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
 	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
 	       -f $(..)sysdeps/gnu/errlist-compat.awk \
-	       $(wildcard $(patsubst %,$(..)%/Versions,\
-		 $(config-sysdirs) $(add-ons))) > $@T
+	       $(wildcard $(sysdirs:=/Versions)) > $@T
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@T
 	mv -f $@T $@
@@ -57,7 +57,8 @@ $(objpfx)errlist-compat.h: $(objpfx)errlist-compat.c
 generated += errlist-compat.c errlist-compat.h
 
 # This will force the generation above to happy if need be.
-$(foreach o,.d $(object-suffixes),$(objpfx)errlist$o):$(objpfx)errlist-compat.h
+$(foreach o,$(object-suffixes) $(object-suffixes:=.d),\
+	  $(objpfx)errlist$o): $(objpfx)errlist-compat.h
 endif
 
 ifeq ($(subdir),login)

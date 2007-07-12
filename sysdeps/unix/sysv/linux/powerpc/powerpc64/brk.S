@@ -1,5 +1,5 @@
 /* brk system call for Linux.  PowerPC64 version.
-   Copyright (C) 1995,96,97,99, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,99, 2000,02, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 #include <sysdep.h>
 #define _ERRNO_H	1
@@ -33,6 +33,7 @@ ENTRY (BP_SYM (__brk))
 	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em.  */
 
 	stdu    r1,-64(r1)
+	cfi_adjust_cfa_offset (64)
 	std	r3,48(r1)
 	DO_CALL(SYS_ify(brk))
 	ld     r6,48(r1)

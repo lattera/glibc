@@ -150,4 +150,4 @@ ENTRY(__setcontext)
 	ret
 END(__setcontext)
 
-weak_alias(__setcontext, setcontext)
+weak_alias (__setcontext, setcontext)

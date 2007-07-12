@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -705,6 +705,11 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 
 #ifdef i386
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("rdtsc" : "=A" (Var))
+#elif defined __x86_64__
+# define HP_TIMING_NOW(Var) \
+  ({ unsigned int _hi, _lo; \
+     asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
+     (Var) = ((unsigned long long int) _hi << 32) | _lo; })
 #elif defined __ia64__
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mov %0=ar.itc" : "=r" (Var) : : "memory")
 #else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004
+/* Copyright (C) 1996,1997,1999,2000,2002,2003,2004,2005,2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
@@ -41,41 +41,37 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *netgrp,
 static void
 internal_nis_endnetgrent (struct __netgrent *netgrp)
 {
-  if (netgrp->data != NULL)
-    {
-      free (netgrp->data);
-      netgrp->data = NULL;
-      netgrp->data_size = 0;
-      netgrp->cursor = NULL;
-    }
+  free (netgrp->data);
+  netgrp->data = NULL;
+  netgrp->data_size = 0;
+  netgrp->cursor = NULL;
 }
+
 
 enum nss_status
 _nss_nis_setnetgrent (const char *group, struct __netgrent *netgrp)
 {
-  char *domain;
   int len;
   enum nss_status status;
 
   status = NSS_STATUS_SUCCESS;
 
-  if (group == NULL || group[0] == '\0')
+  if (__builtin_expect (group == NULL || group[0] == '\0', 0))
     return NSS_STATUS_UNAVAIL;
 
-  if (yp_get_default_domain (&domain))
+  char *domain;
+  if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
-
-  internal_nis_endnetgrent (netgrp);
 
   status = yperr2nss (yp_match (domain, "netgroup", group, strlen (group),
 				&netgrp->data, &len));
-  if (status == NSS_STATUS_SUCCESS)
+  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
     {
       /* Our implementation of yp_match already allocates a buffer
 	 which is one byte larger than the value in LEN specifies
 	 and the last byte is filled with NUL.  So we can simply
 	 use that buffer.  */
-      assert (len > 0);
+      assert (len >= 0);
       assert (malloc_usable_size (netgrp->data) >= len + 1);
       assert (netgrp->data[len] == '\0');
 
@@ -95,13 +91,11 @@ _nss_nis_endnetgrent (struct __netgrent *netgrp)
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
 			int *errnop)
 {
-  if (result->cursor == NULL)
-    return NSS_STATUS_NOTFOUND;
-
   return _nss_netgroup_parseline (&result->cursor, result, buffer, buflen,
 				  errnop);
 }

@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of gettext functions.
-# Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -26,7 +26,7 @@ LC_ALL=C
 export LC_ALL
 
 # Generate the test data.
-test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
+mkdir -p ${objpfx}domaindir
 # Create the locale directories.
 test -d ${objpfx}domaindir/lang1 || {
   mkdir ${objpfx}domaindir/lang1

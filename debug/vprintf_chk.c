@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,7 +24,7 @@
 
 /* Write formatted output to stdout from the format string FORMAT.  */
 int
-__vprintf_chk (int flag, const char *format, va_list ap)
+___vprintf_chk (int flag, const char *format, va_list ap)
 {
   int done;
 
@@ -40,3 +40,4 @@ __vprintf_chk (int flag, const char *format, va_list ap)
 
   return done;
 }
+ldbl_strong_alias (___vprintf_chk, __vprintf_chk)

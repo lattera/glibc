@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -86,13 +86,13 @@ pthread_rwlock_timedwrlock:
 
 	/* Get current time.  */
 11:	movq	%rsp, %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
-	movq	$1000, %rdi
+	movl	$1000, %edi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
 	movq	8(%r13), %rdi
@@ -108,11 +108,15 @@ pthread_rwlock_timedwrlock:
 	movq	%rcx, (%rsp)	/* Store relative timeout.  */
 	movq	%rdi, 8(%rsp)
 
-	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 	movq	%rsp, %r10
 	movl	%r14d, %edx
 	leaq	WRITERS_WAKEUP(%r12), %rdi
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 	movq	%rax, %rdx
 17:
@@ -132,11 +136,11 @@ pthread_rwlock_timedwrlock:
 	cmpq	$-ETIMEDOUT, %rdx
 	jne	2b
 
-18:	movq	$ETIMEDOUT, %rdx
+18:	movl	$ETIMEDOUT, %edx
 	jmp	9f
 
 
-5:	xorq	%rdx, %rdx
+5:	xorl	%edx, %edx
 	movl	%fs:TID, %eax
 	movl	%eax, WRITER(%r12)
 9:	LOCK
@@ -164,7 +168,7 @@ pthread_rwlock_timedwrlock:
 
 14:	cmpl	%fs:TID, %eax
 	jne	3b
-20:	movq	$EDEADLK, %rdx
+20:	movl	$EDEADLK, %edx
 	jmp	9b
 
 6:
@@ -178,7 +182,7 @@ pthread_rwlock_timedwrlock:
 
 	/* Overflow.  */
 4:	decl	WRITERS_QUEUED(%r12)
-	movq	$EAGAIN, %rdx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 10:
@@ -202,6 +206,6 @@ pthread_rwlock_timedwrlock:
 16:	movq	$-ETIMEDOUT, %rdx
 	jmp	17b
 
-19:	movq	$EINVAL, %rdx
+19:	movl	$EINVAL, %edx
 	jmp	9b
 	.size	pthread_rwlock_timedwrlock,.-pthread_rwlock_timedwrlock

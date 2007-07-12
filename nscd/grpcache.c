@@ -1,22 +1,20 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
 #include <assert.h>
@@ -32,10 +30,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 #include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 /* This is the standard reply in case the service is disabled.  */
 static const gr_response_header disabled =
@@ -107,7 +109,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     case.  */
 	  total = sizeof (notfound);
 
-	  written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
+	  written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+					      MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
 	  /* If we cannot permanently store the result, so be it.  */
@@ -167,7 +170,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       char *gr_name;
       char *cp;
       const size_t key_len = strlen (key);
-      const size_t buf_len = 3 + sizeof (grp->gr_gid) + key_len + 1;
+      const size_t buf_len = 3 * sizeof (grp->gr_gid) + key_len + 1;
       char *buf = alloca (buf_len);
       ssize_t n;
       size_t cnt;
@@ -276,6 +279,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		  /* Adjust pointers into the memory block.  */
 		  gr_name = (char *) newp + (gr_name - (char *) dataset);
 		  cp = (char *) newp + (cp - (char *) dataset);
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
 		  dataset = memcpy (newp, dataset, total + n);
 		  alloca_used = false;
@@ -292,7 +296,30 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     unnecessarily let the receiver wait.  */
 	  assert (fd != -1);
 
-	  written = TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+#ifdef HAVE_SENDFILE
+	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) &dataset->resp > (char *) db->data);
+	      assert ((char *) &dataset->resp - (char *) db->head
+		      + total
+		      <= (sizeof (struct database_pers_head)
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
+	      written = sendfileall (fd, db->wr_fd,
+				     (char *) &dataset->resp
+				     - (char *) db->head, total);
+# ifndef __ASSUME_SENDFILE
+	      if (written == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    written = writeall (fd, &dataset->resp, total);
 	}
 
       /* Add the record to the database.  But only if it has not been
@@ -316,10 +343,10 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     marked with FIRST first.  Otherwise we end up with
 	     dangling "pointers" in case a latter hash entry cannot be
 	     added.  */
-	  bool first = req->type == GETGRBYNAME;
+	  bool first = true;
 
 	  /* If the request was by GID, add that entry first.  */
-	  if (req->type != GETGRBYNAME)
+	  if (req->type == GETGRBYGID)
 	    {
 	      if (cache_add (GETGRBYGID, cp, key_offset, &dataset->head, true,
 			     db, owner) < 0)
@@ -329,12 +356,14 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		  dataset->head.usable = false;
 		  goto out;
 		}
+
+	      first = false;
 	    }
 	  /* If the key is different from the name add a separate entry.  */
 	  else if (strcmp (key_copy, gr_name) != 0)
 	    {
 	      if (cache_add (GETGRBYNAME, key_copy, key_len + 1,
-			     &dataset->head, first, db, owner) < 0)
+			     &dataset->head, true, db, owner) < 0)
 		{
 		  /* Could not allocate memory.  Make sure the data gets
 		     discarded.  */
@@ -346,11 +375,13 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	    }
 
 	  /* We have to add the value for both, byname and byuid.  */
-	  if (__builtin_expect (cache_add (GETGRBYNAME, gr_name, gr_name_len,
-					   &dataset->head, first, db, owner)
-				== 0, 1))
+	  if ((req->type == GETGRBYNAME || db->propagate)
+	      && __builtin_expect (cache_add (GETGRBYNAME, gr_name,
+					      gr_name_len,
+					      &dataset->head, first, db, owner)
+				   == 0, 1))
 	    {
-	      if (req->type == GETGRBYNAME)
+	      if (req->type == GETGRBYNAME && db->propagate)
 		(void) cache_add (GETGRBYGID, cp, key_offset, &dataset->head,
 				  req->type != GETGRBYNAME, db, owner);
 	    }
@@ -429,11 +460,10 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-#define INCR 1024
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
-	  buflen += INCR;
+	  buflen *= 2;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -454,7 +484,7 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
       else
 	/* Allocate a new buffer on the stack.  If possible combine it
 	   with the previously allocated buffer.  */
-	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
+	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
 #if 0

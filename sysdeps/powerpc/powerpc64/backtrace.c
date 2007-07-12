@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,3 +67,4 @@ __backtrace (void **array, int size)
   return count;
 }
 weak_alias (__backtrace, backtrace)
+libc_hidden_def (__backtrace)

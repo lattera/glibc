@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -502,24 +502,31 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 
 			    idx = 0;
 			    elem = hash % table_size;
-			    second = hash % (table_size - 2);
-			    while (symb_table[2 * elem] != 0)
+			    if (symb_table[2 * elem] != 0)
 			      {
-				/* First compare the hashing value.  */
-				if (symb_table[2 * elem] == hash
-				    && c1 == extra[symb_table[2 * elem + 1]]
-				    && memcmp (str,
-					       &extra[symb_table[2 * elem + 1]
-						     + 1], c1) == 0)
-				  {
-				    /* Yep, this is the entry.  */
-				    idx = symb_table[2 * elem + 1];
-				    idx += 1 + extra[idx];
-				    break;
-				  }
+				second = hash % (table_size - 2) + 1;
 
-				/* Next entry.  */
-				elem += second;
+				do
+				  {
+				    /* First compare the hashing value.  */
+				    if (symb_table[2 * elem] == hash
+					&& (c1
+					    == extra[symb_table[2 * elem + 1]])
+					&& memcmp (str,
+						   &extra[symb_table[2 * elem
+								     + 1]
+							  + 1], c1) == 0)
+				      {
+					/* Yep, this is the entry.  */
+					idx = symb_table[2 * elem + 1];
+					idx += 1 + extra[idx];
+					break;
+				      }
+
+				    /* Next entry.  */
+				    elem += second;
+				  }
+				while (symb_table[2 * elem] != 0);
 			      }
 
 			    if (symb_table[2 * elem] != 0)
@@ -714,25 +721,30 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 
 				idx = 0;
 				elem = hash % table_size;
-				second = hash % (table_size - 2);
-				while (symb_table[2 * elem] != 0)
+				if (symb_table[2 * elem] != 0)
 				  {
-				/* First compare the hashing value.  */
-				    if (symb_table[2 * elem] == hash
-					&& (c1
-					    == extra[symb_table[2 * elem + 1]])
-					&& memcmp (str,
-						   &extra[symb_table[2 * elem + 1]
-							 + 1], c1) == 0)
-				      {
-					/* Yep, this is the entry.  */
-					idx = symb_table[2 * elem + 1];
-					idx += 1 + extra[idx];
-					break;
-				      }
+				    second = hash % (table_size - 2) + 1;
 
-				    /* Next entry.  */
-				    elem += second;
+				    do
+				      {
+					/* First compare the hashing value.  */
+					if (symb_table[2 * elem] == hash
+					    && (c1
+						== extra[symb_table[2 * elem + 1]])
+					    && memcmp (str,
+						       &extra[symb_table[2 * elem + 1]
+							      + 1], c1) == 0)
+					  {
+					    /* Yep, this is the entry.  */
+					    idx = symb_table[2 * elem + 1];
+					    idx += 1 + extra[idx];
+					    break;
+					  }
+
+					/* Next entry.  */
+					elem += second;
+				      }
+				    while (symb_table[2 * elem] != 0);
 				  }
 
 				if (symb_table[2 * elem] != 0)

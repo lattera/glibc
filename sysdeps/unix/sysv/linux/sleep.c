@@ -1,5 +1,5 @@
 /* Implementation of the POSIX sleep function using nanosleep.
-   Copyright (C) 1996, 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <time.h>
 #include <signal.h>
+#include <string.h>	/* For the real memset prototype.  */
 #include <unistd.h>
 #include <sys/param.h>
 

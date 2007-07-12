@@ -28,6 +28,7 @@
 #include <internaltypes.h>
 #include <nptl/pthreadP.h>
 #include "kernel-posix-timers.h"
+#include "kernel-posix-cpu-timers.h"
 
 
 #ifdef __NR_timer_create
@@ -58,6 +59,12 @@ timer_create (clock_id, evp, timerid)
   if  (__no_posix_timers >= 0)
 # endif
     {
+      clockid_t syscall_clockid = (clock_id == CLOCK_PROCESS_CPUTIME_ID
+				   ? MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED)
+				   : clock_id == CLOCK_THREAD_CPUTIME_ID
+				   ? MAKE_THREAD_CPUCLOCK (0, CPUCLOCK_SCHED)
+				   : clock_id);
+
       /* If the user wants notification via a thread we need to handle
 	 this special.  */
       if (evp == NULL
@@ -88,7 +95,7 @@ timer_create (clock_id, evp, timerid)
 	    }
 
 	  kernel_timer_t ktimerid;
-	  int retval = INLINE_SYSCALL (timer_create, 3, clock_id, evp,
+	  int retval = INLINE_SYSCALL (timer_create, 3, syscall_clockid, evp,
 				       &ktimerid);
 
 # ifndef __ASSUME_POSIX_TIMERS
@@ -196,8 +203,8 @@ timer_create (clock_id, evp, timerid)
 	      /* Create the timer.  */
 	      INTERNAL_SYSCALL_DECL (err);
 	      int res;
-	      res = INTERNAL_SYSCALL (timer_create, err, 3, clock_id, &sev,
-				      &newp->ktimerid);
+	      res = INTERNAL_SYSCALL (timer_create, err, 3,
+				      syscall_clockid, &sev, &newp->ktimerid);
 	      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
 		{
 		  *timerid = (timer_t) newp;

@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ gr16-19: 000000000000010% 000000000000011% 000000000000012% 000000000000013%\n\
 gr20-23: 000000000000014% 000000000000015% 000000000000016% 000000000000017%\n\
 gr24-27: 000000000000018% 000000000000019% 00000000000001a% 00000000000001b%\n\
 gr28-31: 00000000000001c% 00000000000001d% 00000000000001e% 00000000000001f%\n\
-fscr=0000071%\n\
+fscr=000000000000050%\n\
 fp0-3:   000000000000030% 000000000000031% 000000000000032% 000000000000033%\n\
 fp4-7:   000000000000034% 000000000000035% 000000000000036% 000000000000037%\n\
 fp8-11:  000000000000038% 000000000000038% 00000000000003a% 00000000000003b%\n\
@@ -104,7 +104,7 @@ register_dump (int fd, struct sigcontext *ctx)
   char buffer[sizeof(dumpform)];
   char *bufferpos;
   unsigned regno;
-  unsigned *regs = (unsigned *)(ctx->regs);
+  unsigned long *regs = (unsigned long *)(ctx->regs);
 
   memcpy(buffer, dumpform, sizeof(dumpform));
 
@@ -117,7 +117,7 @@ register_dump (int fd, struct sigcontext *ctx)
     }
 
   /* Write the output.  */
-  write (fd, buffer, sizeof(buffer));
+  write (fd, buffer, sizeof(buffer) - 1);
 }
 
 

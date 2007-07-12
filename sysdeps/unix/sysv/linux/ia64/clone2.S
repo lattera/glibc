@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,12 @@ ENTRY(__clone2)
 	.prologue
 	alloc r2=ar.pfs,8,1,6,0
 	cmp.eq p6,p0=0,in0
+	cmp.eq p7,p0=0,in1
 	mov r8=EINVAL
 	mov out0=in3		/* Flags are first syscall argument.	*/
 	mov out1=in1		/* Stack address.			*/
-(p6)	br.cond.spnt.many __syscall_error
+(p6)	br.cond.spnt.many __syscall_error	/* no NULL function pointers */
+(p7)	br.cond.spnt.many __syscall_error	/* no NULL stack pointers */
 	;;
 	mov out2=in2		/* Stack size.				*/
 	mov out3=in5		/* Parent TID Pointer			*/

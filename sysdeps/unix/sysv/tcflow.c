@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-#include "sysv_termio.h"
+#include <sysv_termio.h>
 
 /* Suspend or restart transmission on FD.  */
 int

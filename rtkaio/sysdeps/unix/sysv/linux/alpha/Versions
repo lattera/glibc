@@ -1,0 +1,6 @@
+librtkaio {
+  GLIBC_2.3 {
+    # AIO functions.
+    aio_cancel; aio_cancel64;
+  }
+}

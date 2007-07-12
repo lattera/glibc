@@ -1,5 +1,5 @@
 /* Regular expression tests.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -170,22 +170,22 @@ static struct test_s
   {ERE, "[^k]\\B[^k]", "kBk", 0, -1},
   {ERE, "[^C]\\B[^C]", "CCCABA", 0, 3},
   {ERE, "[^C]\\B[^C]", "CBC", 0, -1},
-  {ERE, ".(\\b|\\B).", "=~AB", 0, 1},
+  {ERE, ".(\\b|\\B).", "=~AB", 0, 0},
   {ERE, ".(\\b|\\B).", "A=C", 0, 0},
   {ERE, ".(\\b|\\B).", "ABC", 0, 0},
-  {ERE, ".(\\b|\\B).", "=~\\!", 0, -1},
-  {ERE, "[^k](\\b|\\B)[^k]", "=~AB", 0, 1},
+  {ERE, ".(\\b|\\B).", "=~\\!", 0, 0},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~AB", 0, 0},
   {ERE, "[^k](\\b|\\B)[^k]", "A=C", 0, 0},
   {ERE, "[^k](\\b|\\B)[^k]", "ABC", 0, 0},
-  {ERE, "[^k](\\b|\\B)[^k]", "=~kBD", 0, 3},
-  {ERE, "[^k](\\b|\\B)[^k]", "=~\\!", 0, -1},
-  {ERE, "[^k](\\b|\\B)[^k]", "=~kB", 0, -1},
-  {ERE, "[^C](\\b|\\B)[^C]", "=~AB", 0, 1},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~kBD", 0, 0},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~\\!", 0, 0},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~kB", 0, 0},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~AB", 0, 0},
   {ERE, "[^C](\\b|\\B)[^C]", "A=C", 0, 0},
   {ERE, "[^C](\\b|\\B)[^C]", "ABC", 0, 0},
-  {ERE, "[^C](\\b|\\B)[^C]", "=~CBD", 0, 3},
-  {ERE, "[^C](\\b|\\B)[^C]", "=~\\!", 0, -1},
-  {ERE, "[^C](\\b|\\B)[^C]", "=~CB", 0, -1},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~CBD", 0, 0},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~\\!", 0, 0},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~CB", 0, 0},
   {ERE, "\\b([A]|[!]|.B)", "A=AC", 0, 0},
   {ERE, "\\b([A]|[!]|.B)", "=AC", 0, 1},
   {ERE, "\\b([A]|[!]|.B)", "!AC", 0, 1},

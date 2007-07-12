@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -56,4 +56,3 @@ sem_trywait:
 	orl	$-1, %eax
 	retq
 	.size	sem_trywait,.-sem_trywait
-	versioned_symbol(libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1)

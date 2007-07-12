@@ -1,5 +1,5 @@
 /* Configuration of lookup functions.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Some platforms need more information from the symbol lookup function
-   than just the address.  But this is not generally the case.
-
-   However, because of how _dl_sym and _dl_tls_symaddr are written, every
-   platform needs it when we support TLS.  */
-
-#include <tls.h>		/* Defines USE_TLS (or doesn't).  */
-
-#ifdef USE_TLS
-# define DL_LOOKUP_RETURNS_MAP
-#else
-# undef DL_LOOKUP_RETURNS_MAP
-#endif
+/* The type of the return value of fixup/profile_fixup.  */
+#define DL_FIXUP_VALUE_TYPE ElfW(Addr)
+/* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address
+   and a link map.  */
+#define DL_FIXUP_MAKE_VALUE(map, addr) (addr)
+/* Extract the code address from a value of type DL_FIXUP_MAKE_VALUE.
+ */
+#define DL_FIXUP_VALUE_CODE_ADDR(value) (value)
+#define DL_FIXUP_VALUE_ADDR(value) (value)
+#define DL_FIXUP_ADDR_VALUE(addr) (addr)

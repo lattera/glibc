@@ -1,5 +1,5 @@
 /* PowerPC-specific implementation of profiling support.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
+   02110-1301 USA.  */
 
 /* This would be bad.  */
 #ifdef PROF
@@ -24,30 +24,25 @@
 
 #include <sysdep.h>
 
-/* We do profiling as described in the SYSV ELF ABI, _mcount is called
-   with the address of a data word in r0 (that is different for every
-   routine, initialised to 0, and otherwise unused).  The caller has put
-   the address the caller will return to in the usual place on the stack,
-   4(r1).  _mcount is responsible for ensuring that when it returns no
-   argument-passing registers are disturbed, and that the LR is set back
-   to (what the caller sees as) 4(r1).
+/* We do profiling as described in the SYSV ELF ABI, except that glibc
+   _mcount manages its own counters.  The caller has put the address the
+   caller will return to in the usual place on the stack, 4(r1).  _mcount
+   is responsible for ensuring that when it returns no argument-passing
+   registers are disturbed, and that the LR is set back to (what the
+   caller sees as) 4(r1).
 
    This is intended so that the following code can be inserted at the
    front of any routine without changing the routine:
 
 	.data
-	.align	2
-   0:	.long	0
-	.previous
 	mflr	r0
-	lis	r11,0b@ha
 	stw	r0,4(r1)
-	addi	r0,r11,0b@l
 	bl	_mcount
 */
 
 ENTRY(_mcount)
 	stwu	r1,-48(r1)
+	cfi_adjust_cfa_offset (48)
 /* We need to save the parameter-passing registers.  */
 	stw	r3, 12(r1)
 	stw	r4, 16(r1)
@@ -61,8 +56,9 @@ ENTRY(_mcount)
 	stw	r9, 36(r1)
 	stw	r10,40(r1)
 	stw	r4, 44(r1)
+	cfi_offset (lr, -4)
 	stw	r5,  8(r1)
-	bl	JUMPTARGET(__mcount_internal)
+	bl	__mcount_internal@local
 	nop
  /* Restore the registers...  */
 	lwz     r6,  8(r1)

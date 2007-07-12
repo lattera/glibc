@@ -88,7 +88,7 @@ static bool_t clntunix_freeres (CLIENT *, xdrproc_t, caddr_t);
 static bool_t clntunix_control (CLIENT *, int, char *);
 static void clntunix_destroy (CLIENT *);
 
-static struct clnt_ops unix_ops =
+static const struct clnt_ops unix_ops =
 {
   clntunix_call,
   clntunix_abort,
@@ -125,13 +125,7 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
   if (h == NULL || ct == NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",
-			   _("clntunix_create: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("clntunix_create: out of memory\n"), stderr);
+      (void) __fxprintf (NULL, "%s", _("clntunix_create: out of memory\n"));
       ce->cf_stat = RPC_SYSTEMERROR;
       ce->cf_error.re_errno = ENOMEM;
       goto fooy;
@@ -198,7 +192,7 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
    */
   INTUSE(xdrrec_create) (&(ct->ct_xdrs), sendsz, recvsz,
 			 (caddr_t) ct, readunix, writeunix);
-  h->cl_ops = &unix_ops;
+  h->cl_ops = (struct clnt_ops *) &unix_ops;
   h->cl_private = (caddr_t) ct;
   h->cl_auth = INTUSE(authnone_create) ();
   return h;

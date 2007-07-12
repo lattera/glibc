@@ -36,6 +36,14 @@
 # define add_system_dir(dir) add_dir (dir)
 #endif
 
+#ifndef arch_startup
+# define arch_startup(argc, argv) do { } while (0)
+#endif
+
+#ifndef add_arch_dirs
+# define add_arch_dirs(config_file) do { } while (0)
+#endif
+
 #define CACHEMAGIC "ld.so-1.7.0"
 
 /* libc5 and glibc 2.0/2.1 use the same format.  For glibc 2.2 another

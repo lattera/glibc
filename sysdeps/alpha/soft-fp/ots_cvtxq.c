@@ -1,5 +1,5 @@
 /* Software floating-point emulation: float to integer conversion.
-   Copyright (C) 1997,1999,2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -26,14 +26,15 @@ _OtsCvtXQ (long al, long ah, long _round)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);
-  long r, s;
+  unsigned long r;
+  long s;
 
   /* If bit 3 is set, then integer overflow detection is requested.  */
   s = _round & 8 ? 1 : -1;
   _round = _round & 3;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q(A, a);
+  FP_UNPACK_RAW_Q(A, a);
   FP_TO_INT_Q(r, A, 64, s);
 
   if (s > 0 && (_fex &= FP_EX_INVALID))

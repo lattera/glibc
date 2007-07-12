@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -83,6 +83,8 @@ static pthread_barrier_t b2;
 #ifndef IPC_ADDVAL
 # define IPC_ADDVAL 0
 #endif
+
+#define WRITE_BUFFER_SIZE 4096
 
 /* Cleanup handling test.  */
 static int cl_called;
@@ -220,7 +222,7 @@ tf_write  (void *arg)
   ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
-  char buf[100000];
+  char buf[WRITE_BUFFER_SIZE];
   memset (buf, '\0', sizeof (buf));
   s = write (fd, buf, sizeof (buf));
 
@@ -266,7 +268,7 @@ tf_writev  (void *arg)
   ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
-  char buf[100000];
+  char buf[WRITE_BUFFER_SIZE];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
   s = writev (fd, iov, 1);
@@ -515,6 +517,53 @@ tf_poll (void *arg)
   pthread_cleanup_pop (0);
 
   printf ("%s: poll returns with %d (%s)\n", __FUNCTION__, s,
+	  strerror (errno));
+
+  exit (1);
+}
+
+
+static void *
+tf_ppoll (void *arg)
+{
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  struct pollfd rfs[1] = { [0] = { .fd = fd, .events = POLLIN } };
+
+  int s;
+  pthread_cleanup_push (cl, NULL);
+
+  s = ppoll (rfs, 1, NULL, NULL);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: ppoll returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
 
   exit (1);
@@ -1522,6 +1571,47 @@ tf_fsync (void *arg)
 
 
 static void *
+tf_fdatasync (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which fdatasync()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempfd = open ("Makefile", O_RDONLY);
+  if (tempfd == -1)
+    {
+      printf ("%s: cannot open Makefile\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  fdatasync (tempfd);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: fdatasync returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
 tf_msync (void *arg)
 {
   if (arg == NULL)
@@ -2004,6 +2094,7 @@ static struct
   ADD_TEST (select, 2, 0),
   ADD_TEST (pselect, 2, 0),
   ADD_TEST (poll, 2, 0),
+  ADD_TEST (ppoll, 2, 0),
   ADD_TEST (write, 2, 0),
   ADD_TEST (writev, 2, 0),
   ADD_TEST (sleep, 2, 0),
@@ -2028,6 +2119,7 @@ static struct
   ADD_TEST (pread, 2, 1),
   ADD_TEST (pwrite, 2, 1),
   ADD_TEST (fsync, 2, 1),
+  ADD_TEST (fdatasync, 2, 1),
   ADD_TEST (msync, 2, 1),
   ADD_TEST (sendto, 2, 1),
   ADD_TEST (sendmsg, 2, 1),
@@ -2043,11 +2135,29 @@ static struct
 static int
 do_test (void)
 {
-  if (pipe (fds) != 0)
+  int val;
+  socklen_t len;
+
+  if (socketpair (AF_UNIX, SOCK_STREAM, PF_UNIX, fds) != 0)
     {
-      puts ("pipe failed");
+      perror ("socketpair");
       exit (1);
     }
+
+  val = 1;
+  len = sizeof(val);
+  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
+  if (getsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, &len) < 0)
+    {
+      perror ("getsockopt");
+      exit (1);
+    }
+  if (val >= WRITE_BUFFER_SIZE)
+    {
+      puts ("minimum write buffer size too large");
+      exit (1);
+    }
+  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
 
   int result = 0;
   size_t cnt;

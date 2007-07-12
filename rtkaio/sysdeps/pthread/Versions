@@ -1,0 +1,7 @@
+%ifdef HAVE_FORCED_UNWIND
+librtkaio {
+  GLIBC_2.4 {
+    lio_listio; lio_listio64;
+  }
+}
+%endif

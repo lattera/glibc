@@ -11,7 +11,6 @@
 
 /*
  * from: @(#)fdlibm.h 5.1 93/09/24
- * $Id$
  */
 
 #ifndef _MATH_PRIVATE_H_
@@ -192,6 +191,10 @@ extern int    __kernel_rem_pio2 (double*,double*,int,int,int, const int32_t*);
 /* internal functions.  */
 extern double __copysign (double x, double __y);
 
+#if __GNUC_PREREQ (4, 0)
+extern inline double __copysign (double x, double y)
+{ return __builtin_copysign (x, y); }
+#endif
 
 /* ieee style elementary float functions */
 extern float __ieee754_sqrtf (float);
@@ -235,6 +238,10 @@ extern int   __kernel_rem_pio2f (float*,float*,int,int,int, const int32_t*);
 /* internal functions.  */
 extern float __copysignf (float x, float __y);
 
+#if __GNUC_PREREQ (4, 0)
+extern inline float __copysignf (float x, float y)
+{ return __builtin_copysignf (x, y); }
+#endif
 
 /* ieee style elementary long double functions */
 extern long double __ieee754_sqrtl (long double);
@@ -298,6 +305,12 @@ extern long double fabsl (long double x);
 extern void __sincosl (long double, long double *, long double *);
 extern long double __logbl (long double x);
 extern long double __significandl (long double x);
+
+#if __GNUC_PREREQ (4, 0)
+extern inline long double __copysignl (long double x, long double y)
+{ return __builtin_copysignl (x, y); }
+#endif
+
 #endif
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
@@ -318,5 +331,11 @@ extern double __mpcos1 (double __x);
 extern double __slowexp (double __x);
 extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
+
+#ifndef math_opt_barrier
+#define math_opt_barrier(x) \
+({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
+#define math_force_eval(x) __asm __volatile ("" : : "m" (x))
+#endif
 
 #endif /* _MATH_PRIVATE_H_ */

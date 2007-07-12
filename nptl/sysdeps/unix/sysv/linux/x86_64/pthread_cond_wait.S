@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -67,9 +67,15 @@ __condvar_cleanup:
 	cmpl	4(%r8), %edx
 	jne	3f
 
+	/* We increment the wakeup_seq counter only if it is lower than
+	   total_seq.  If this is not the case the thread was woken and
+	   then canceled.  In this case we ignore the signal.  */
+	movq	total_seq(%rdi), %rax
+	cmpq	wakeup_seq(%rdi), %rax
+	jbe	6f
 	incq	wakeup_seq(%rdi)
-	incq	woken_seq(%rdi)
 	incl	cond_futex(%rdi)
+6:	incq	woken_seq(%rdi)
 
 3:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
 
@@ -82,12 +88,12 @@ __condvar_cleanup:
 	jne	4f
 
 	addq	$cond_nwaiters, %rdi
-	movq	$SYS_futex, %rax
-	movq	$FUTEX_WAKE, %rsi
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %esi
 	movl	$1, %edx
 	syscall
 	subq	$cond_nwaiters, %rdi
-	movq	$1, %r12
+	movl	$1, %r12d
 
 4:	LOCK
 #if cond_lock == 0
@@ -105,9 +111,9 @@ __condvar_cleanup:
 2:	testq	%r12, %r12
 	jnz	5f
 	addq	$cond_futex, %rdi
-	movq	$FUTEX_WAKE, %rsi
+	movl	$FUTEX_WAKE, %esi
 	movl	$0x7fffffff, %edx
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 
 5:	movq	16(%r8), %rdi
@@ -170,7 +176,7 @@ __pthread_cond_wait:
 
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	callq	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax
@@ -215,8 +221,12 @@ __pthread_cond_wait:
 	xorq	%r10, %r10
 	movq	%r12, %rdx
 	addq	$cond_futex-cond_lock, %rdi
-	movq	$SYS_futex, %rax
-	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
+	movl	$SYS_futex, %eax
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 	syscall
 
 	movl	(%rsp), %edi
@@ -262,8 +272,8 @@ __pthread_cond_wait:
 	jne	17f
 
 	addq	$cond_nwaiters, %rdi
-	movq	$SYS_futex, %rax
-	movq	$FUTEX_WAKE, %rsi
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %esi
 	movl	$1, %edx
 	syscall
 	subq	$cond_nwaiters, %rdi

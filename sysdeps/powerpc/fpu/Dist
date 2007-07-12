@@ -1,4 +1,0 @@
-fe_nomask.c
-fenv_const.c
-fenv_libc.h
-t_sqrt.c

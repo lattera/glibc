@@ -1,0 +1,25 @@
+librtkaio {
+  GLIBC_2.1 {
+    # AIO functions.
+    aio_cancel; aio_cancel64; aio_error; aio_error64; aio_fsync; aio_fsync64;
+    aio_init; aio_read; aio_read64; aio_return; aio_return64; aio_suspend;
+    aio_suspend64; aio_write; aio_write64; lio_listio; lio_listio64;
+  }
+  GLIBC_2.2 {
+    # c*
+    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+    clock_nanosleep;
+
+    # s*
+    shm_open; shm_unlink;
+
+    # t*
+    timer_create; timer_delete; timer_getoverrun; timer_gettime;
+    timer_settime;
+  }
+  GLIBC_2.3.4 {
+    # m*
+    mq_open; mq_close; mq_unlink; mq_getattr; mq_setattr;
+    mq_notify; mq_send; mq_receive; mq_timedsend; mq_timedreceive;
+  }
+}

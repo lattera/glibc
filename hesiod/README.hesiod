@@ -71,6 +71,14 @@ will want to create your own.  It should look something like:
 
   rhs=.your.domain
   lhs=.ns
+  classes=in,hs
+
+The optional classes settings specifies which DNS classes Hesiod
+should do lookups in.  Possible values are IN (the preferred class)
+and  HS (the deprecated class, still used by some sites).
+You may specify both classes separated by a comma to try one class
+first and then the other if no entry is available in the first
+class.  The default value of the classes variable is `IN,HS'.
 
 The value of rhs can be overridden by the environment variable
 `HES_DOMAIN'.

@@ -1,5 +1,5 @@
 /* Handle loading/unloading of shared object for transformation.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -29,6 +29,7 @@
 #include <sys/param.h>
 
 #include <gconv_int.h>
+#include <sysdep.h>
 
 
 #ifdef DEBUG
@@ -129,6 +130,14 @@ __gconv_find_shlib (const char *name)
 		{
 		  found->init_fct = __libc_dlsym (found->handle, "gconv_init");
 		  found->end_fct = __libc_dlsym (found->handle, "gconv_end");
+
+#ifdef PTR_MANGLE
+		  PTR_MANGLE (found->fct);
+		  if (found->init_fct != NULL)
+		    PTR_MANGLE (found->init_fct);
+		  if (found->end_fct !=  NULL)
+		    PTR_MANGLE (found->end_fct);
+#endif
 
 		  /* We have succeeded in loading the shared object.  */
 		  found->counter = 1;

@@ -25,28 +25,7 @@
  * the rights to redistribute these changes.
  */
 /*
- * HISTORY
- * $Log$
- * Revision 1.3  1997/03/16 17:43:08  drepper
- * (mach_error_fn_t): Comment out declaration; it appears to be entirely
- * unused dead code.
- *
- * Revision 1.3  1997/03/14 15:27:35  thomas
- * Wed Mar  5 10:40:05 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
- *
- * 	* mach/mach/mach_traps.h: Include <mach/kern_return.h>.
- *
- * 	* mach/mach/error.h (mach_error_fn_t): Comment out declaration; it
- * 	appears to be entirely unused dead code.
- *
- * Revision 1.2  1996/12/20 01:32:36  drepper
- * Update from main archive 961219
- *
- * Revision 1.2  1996/12/19 20:23:56  drepper
- * Spelling corrections.
- *
- * Revision 1.1  1993/12/17 21:40:28  roland
- * entered into RCS
+ * (pre-GNU) HISTORY
  *
  * Revision 2.6  93/01/14  17:41:31  danner
  * 	Standardized include symbol name.

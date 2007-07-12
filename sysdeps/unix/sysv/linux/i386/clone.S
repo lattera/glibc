@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,98,99,2000,02,03,04 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,02,03,04,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -83,18 +83,29 @@ ENTRY (BP_SYM (__clone))
 
 	/* Do the system call */
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
+
 	movl	TLS+12(%esp),%esi
+	cfi_rel_offset (esi, 4)
 	movl	PTID+12(%esp),%edx
 	movl	FLAGS+12(%esp),%ebx
+	cfi_rel_offset (ebx, 8)
 	movl	CTID+12(%esp),%edi
+	cfi_rel_offset (edi, 0)
 	movl	$SYS_ify(clone),%eax
 
 #ifdef RESET_PID
 	/* Remember the flag value.  */
 	movl	%ebx, (%ecx)
 #endif
+
+	/* End FDE now, because in the child the unwind info will be
+	   wrong.  */
+	cfi_endproc
 
 	int	$0x80
 	popl	%edi
@@ -125,7 +136,7 @@ L(here):
 #endif
 	movl	%eax, %ebx
 	movl	$SYS_ify(exit), %eax
-	int	$0x80
+	ENTER_KERNEL
 
 #ifdef RESET_PID
 	.subsection 2
@@ -142,6 +153,7 @@ L(nomoregetpid):
 	.previous
 #endif
 
+	cfi_startproc
 PSEUDO_END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))

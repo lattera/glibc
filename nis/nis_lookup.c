@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -21,6 +22,8 @@
 #include <rpcsvc/nis.h>
 #include "nis_xdr.h"
 #include "nis_intern.h"
+#include <libnsl.h>
+
 
 nis_result *
 nis_lookup (const_nis_name name, const unsigned int flags)
@@ -61,36 +64,16 @@ nis_lookup (const_nis_name name, const unsigned int flags)
       req.ns_object.ns_object_len = 0;
       req.ns_object.ns_object_val = NULL;
 
-      status = __nisfind_server (req.ns_name, &dir);
-      if (status != NIS_SUCCESS)
+      status = __prepare_niscall (req.ns_name, &dir, &bptr, flags);
+      if (__builtin_expect (status != NIS_SUCCESS, 0))
 	{
 	  NIS_RES_STATUS (res) = status;
-	  return res;
-	}
-
-      status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
-				 dir->do_servers.do_servers_len, flags);
-      if (status != NIS_SUCCESS)
-	{
-	  NIS_RES_STATUS (res) = status;
-	  nis_free_directory (dir);
-	  return res;
-	}
-
-      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
-	{
-	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
-	    {
-	      __nisbind_destroy (&bptr);
-	      nis_free_directory (dir);
-	      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
-	      return res;
-	    }
+	  goto out;
 	}
 
       do
 	{
-	  static struct timeval RPCTIMEOUT = {10, 0};
+	  static const struct timeval RPCTIMEOUT = {10, 0};
 	  enum clnt_stat result;
 
 	again:
@@ -107,11 +90,9 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 
 	      if (NIS_RES_STATUS (res) == NIS_SUCCESS)
 		{
-		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
-			flags & FOLLOW_LINKS) /* We are following links */
+		    if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ
+			&& (flags & FOLLOW_LINKS)) /* We are following links */
 		      {
-			if (count_links)
-			  free (req.ns_name);
 			/* if we hit the link limit, bail */
 			if (count_links > NIS_MAXLINKS)
 			  {
@@ -120,55 +101,68 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			  }
 			++count_links;
 			req.ns_name =
-			  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
-			if (req.ns_name == NULL)
-			  return NULL;
+			  strdupa (NIS_RES_OBJECT (res)->LI_data.li_name);
 
-			nis_freeresult (res);
-			res = calloc (1, sizeof (nis_result));
-			if (res == NULL)
-			  {
-			    __nisbind_destroy (&bptr);
-			    return NULL;
-			  }
+			/* The following is a non-obvious optimization.  A
+			   nis_freeresult call would call xdr_free as the
+			   following code.  But it also would unnecessarily
+			   free the result structure.  We avoid this here
+			   along with the necessary tests.  */
+			xdr_free ((xdrproc_t) _xdr_nis_result, (char *) res);
+			memset (res, '\0', sizeof (*res));
 
 			link_first_try = 1; /* Try at first the old binding */
 			goto again;
 		      }
 		}
 	      else
-		if ((NIS_RES_STATUS (res) == NIS_SYSTEMERROR) ||
-		    (NIS_RES_STATUS (res) == NIS_NOSUCHNAME) ||
-		    (NIS_RES_STATUS (res) == NIS_NOT_ME))
+		if (NIS_RES_STATUS (res) == NIS_SYSTEMERROR
+		    || NIS_RES_STATUS (res) == NIS_NOSUCHNAME
+		    || NIS_RES_STATUS (res) == NIS_NOT_ME)
 		  {
 		    if (link_first_try)
 		      {
 			__nisbind_destroy (&bptr);
 			nis_free_directory (dir);
+			/* Otherwise __nisfind_server will not do anything.  */
+			dir = NULL;
 
-			if (__nisfind_server (req.ns_name, &dir) != NIS_SUCCESS)
-			  return res;
-
-			if (__nisbind_create (&bptr,
-					      dir->do_servers.do_servers_val,
-					      dir->do_servers.do_servers_len,
-					      flags) != NIS_SUCCESS)
-			  {
-			    nis_free_directory (dir);
-			    return res;
-			  }
+			if (__nisfind_server (req.ns_name, 1, &dir, &bptr,
+					      flags & ~MASTER_ONLY)
+			    != NIS_SUCCESS)
+			  goto out;
 		      }
 		    else
 		      if (__nisbind_next (&bptr) != NIS_SUCCESS)
-			break; /* No more servers to search */
+			{
+			  /* No more servers to search.  Try parent.  */
+			  const char *ndomain = __nis_domain_of (req.ns_name);
+			  req.ns_name = strdupa (ndomain);
+			  if (strcmp (req.ns_name, ".") == 0)
+			    {
+			      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
+			      goto out;
+			    }
+
+			  __nisbind_destroy (&bptr);
+			  nis_free_directory (dir);
+			  dir = NULL;
+			  status = __prepare_niscall (req.ns_name, &dir,
+						      &bptr, flags);
+			  if (__builtin_expect (status != NIS_SUCCESS, 0))
+			    {
+			      NIS_RES_STATUS (res) = status;
+			      goto out;
+			    }
+			  goto again;
+			}
 
 		    while (__nisbind_connect (&bptr) != NIS_SUCCESS)
 		      {
 			if (__nisbind_next (&bptr) != NIS_SUCCESS)
 			  {
-			    __nisbind_destroy (&bptr);
 			    nis_free_directory (dir);
-			    return res;
+			    goto out;
 			  }
 		      }
 		    goto again;
@@ -185,7 +179,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
       if (status != NIS_SUCCESS)
 	{
 	  NIS_RES_STATUS (res) = status;
-	  return res;
+	  goto out;
 	}
 
       switch (NIS_RES_STATUS (res))
@@ -217,6 +211,7 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	}
     }
 
+ out:
   if (names != namebuf)
     nis_freenames (names);
 

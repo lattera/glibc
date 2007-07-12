@@ -37,7 +37,7 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
 
 /* This file provides the machine-dependent definitions of the _MCOUNT_DECL
    and MCOUNT macros.  */
-#include "machine-gmon.h"
+#include <machine-gmon.h>
 
 #include <atomic.h>
 

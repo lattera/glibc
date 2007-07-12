@@ -125,12 +125,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
  err_out:
   if (buf == NULL)
     return -1;
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) __fwprintf (stderr, L"%s", buf);
-  else
-#endif
-    (void) fputs (buf, stderr);
+  (void) __fxprintf (NULL, "%s", buf);
   free (buf);
   return -1;
 }
@@ -189,12 +184,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
  err_out2:
   if (buf == NULL)
     exit (1);
-#ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    __fwprintf (stderr, L"%s", buf);
-  else
-#endif
-    fputs (buf, stderr);
+  __fxprintf (NULL, "%s", buf);
   free (buf);
   exit (1);
 }

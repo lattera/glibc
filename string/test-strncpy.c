@@ -1,5 +1,5 @@
 /* Test and measure strncpy functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -124,8 +124,8 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char)
   if (align2 + len >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) (buf1 + align1);
+  s2 = (char *) (buf2 + align2);
 
   for (i = 0; i < len; ++i)
     s1[i] = 32 + 23 * i % (max_char - 32);
@@ -215,7 +215,9 @@ do_random_tests (void)
       FOR_EACH_IMPL (impl, 1)
 	{
 	  memset (p2 - 64, '\1', 512 + 64);
-	  res = CALL (impl, p2 + align2, p1 + align1, size);
+	  res = (unsigned char *) CALL (impl,
+					(char *) (p2 + align2),
+					(char *) (p1 + align1), size);
 	  if (res != STRNCPY_RESULT (p2 + align2, len, size))
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",

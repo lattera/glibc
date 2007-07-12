@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1994-1996,1998,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1994-1996,1998,2001,2002,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,13 +61,7 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 		  assertion) >= 0)
     {
       /* Print the message.  */
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s", buf);
-      else
-#endif
-	(void) fputs (buf, stderr);
-
+      (void) __fxprintf (NULL, "%s", buf);
       (void) fflush (stderr);
 
       /* We have to free the buffer since the application might catch the

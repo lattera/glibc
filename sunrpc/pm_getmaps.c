@@ -44,9 +44,12 @@ static char sccsid[] = "@(#)pmap_getmaps.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
 #include <libintl.h>
+#include <unistd.h>
+
 
 /*
  * Get a copy of the current port maps.
@@ -56,13 +59,19 @@ struct pmaplist *
 pmap_getmaps (struct sockaddr_in *address)
 {
   struct pmaplist *head = (struct pmaplist *) NULL;
-  int socket = -1;
   struct timeval minutetimeout;
   CLIENT *client;
+  bool closeit = false;
 
   minutetimeout.tv_sec = 60;
   minutetimeout.tv_usec = 0;
   address->sin_port = htons (PMAPPORT);
+
+  /* Don't need a reserved port to get ports from the portmapper.  */
+  int socket = __get_socket (address);
+  if (socket != -1)
+    closeit = true;
+
   client = INTUSE(clnttcp_create) (address, PMAPPROG,
 				   PMAPVERS, &socket, 50, 500);
   if (client != (CLIENT *) NULL)
@@ -75,7 +84,9 @@ pmap_getmaps (struct sockaddr_in *address)
 	}
       CLNT_DESTROY (client);
     }
-  /* (void)close(socket); CLNT_DESTROY already closed it */
+  /* We only need to close the socket here if we opened  it.  */
+  if (closeit)
+    (void) __close (socket);
   address->sin_port = 0;
   return head;
 }

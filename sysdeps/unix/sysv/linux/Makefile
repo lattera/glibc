@@ -24,9 +24,11 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/quota.h sys/fsuid.h \
 		  scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h sys/pci.h \
 		  sys/ultrasound.h sys/raw.h sys/personality.h sys/epoll.h \
-		  bits/a.out.h
+		  bits/a.out.h sys/inotify.h
 
 install-others += $(inst_includedir)/bits/syscall.h
+
+tests += tst-clone
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 # For bi-arch platforms, the CPU/Makefile defines {32,64}bit-predefine and
@@ -107,11 +109,6 @@ ifeq ($(subdir),termios)
 sysdep_headers += termio.h
 endif
 
-ifeq ($(subdir),stdio-common)
-# Just disable the auto generation in sysdeps/generic
-inhibit-siglist := yes
-endif
-
 ifeq ($(subdir),posix)
 sysdep_headers += bits/initspin.h
 
@@ -152,6 +149,11 @@ CFLAGS-mq_receive.c += -fexceptions
 endif
 
 ifeq ($(subdir),nscd)
-CFLAGS-connections.c += -DHAVE_EPOLL
+CFLAGS-connections.c += -DHAVE_EPOLL -DHAVE_SENDFILE
+CFLAGS-pwdcache.c += -DHAVE_SENDFILE
+CFLAGS-grpcache.c += -DHAVE_SENDFILE
+CFLAGS-hstcache.c += -DHAVE_SENDFILE
+CFLAGS-aicache.c += -DHAVE_SENDFILE
+CFLAGS-initgrcache.c += -DHAVE_SENDFILE
 CFLAGS-gai.c += -DNEED_NETLINK
 endif

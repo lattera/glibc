@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  SuperH
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005 Free Software Foundation, Inc.
    Contributed by NIIBE Yutaka <gniibe@m17n.org>
    This file is part of the GNU C Library.
 
@@ -22,14 +22,25 @@
 
 	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(_mcount)
 	ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(_mcount),function)
+	cfi_startproc
 	.align	5
 C_LABEL(_mcount)
 	/* Save registers.  */
 	mov.l	r4,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r4, 0)
 	mov.l	r5,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r5, 0)
 	mov.l	r6,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r6, 0)
 	mov.l	r7,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r7, 0)
 	sts.l	pr,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 
 	mov.l	@(20,r15),r4
 	sts	pr,r5
@@ -61,6 +72,7 @@ C_LABEL(_mcount)
 #else
 1:	.long	C_SYMBOL_NAME(__mcount_internal)
 #endif
+	cfi_endproc
 ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(_mcount))
 
 #undef mcount

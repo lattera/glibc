@@ -1,4 +1,4 @@
-# Copyright (C) 1991,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+# Copyright (C) 1991,1995-2001,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 subdir	:= socket
 
 headers	:= sys/socket.h sys/un.h bits/sockaddr.h bits/socket.h \
-	   sys/socketvar.h net/if.h
+	   bits/socket2.h sys/socketvar.h net/if.h
 
 routines := accept bind connect getpeername getsockname getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\

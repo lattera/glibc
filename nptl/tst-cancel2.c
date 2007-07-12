@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,11 +33,7 @@ tf (void *arg)
      write blocks.  */
   char buf[100000];
 
-  if (write (fd[1], buf, sizeof (buf)) == sizeof (buf))
-    {
-      puts ("write succeeded");
-      return (void *) 1l;
-    }
+  while (write (fd[1], buf, sizeof (buf)) > 0);
 
   return (void *) 42l;
 }

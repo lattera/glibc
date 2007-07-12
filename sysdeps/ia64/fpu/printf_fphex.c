@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,4 +78,4 @@ do {									      \
 	}								      \
 } while (0)
 
-#include <sysdeps/generic/printf_fphex.c>
+#include <stdio-common/printf_fphex.c>

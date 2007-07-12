@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 #ifdef __NR_getuid32
 # if __ASSUME_32BITUIDS == 0

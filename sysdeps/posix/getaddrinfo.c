@@ -36,23 +36,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <arpa/inet.h>
-#include <sys/socket.h>
+#include <net/if.h>
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
-#include <net/if.h>
+#include <unistd.h>
 #include <nsswitch.h>
+#include <bits/libc-lock.h>
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
@@ -68,7 +72,7 @@ extern int __idna_to_unicode_lzlz (const char *input, char **output,
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
 
 #ifndef UNIX_PATH_MAX
-#define UNIX_PATH_MAX  108
+# define UNIX_PATH_MAX  108
 #endif
 
 struct gaih_service
@@ -121,7 +125,8 @@ struct gaih
   {
     int family;
     int (*gaih)(const char *name, const struct gaih_service *service,
-		const struct addrinfo *req, struct addrinfo **pai);
+		const struct addrinfo *req, struct addrinfo **pai,
+		unsigned int *naddrs);
   };
 
 static const struct addrinfo default_hints =
@@ -176,9 +181,9 @@ gaih_local (const char *name, const struct gaih_service *service,
       if (! tp->name[0])
 	{
 	  if (req->ai_socktype)
-	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	    return GAIH_OKIFUNSPEC | -EAI_SOCKTYPE;
 	  else
-	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	}
     }
 
@@ -196,10 +201,10 @@ gaih_local (const char *name, const struct gaih_service *service,
   (*pai)->ai_addrlen = sizeof (struct sockaddr_un);
   (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
 
-#if SALEN
+#ifdef _HAVE_SA_LEN
   ((struct sockaddr_un *) (*pai)->ai_addr)->sun_len =
     sizeof (struct sockaddr_un);
-#endif /* SALEN */
+#endif /* _HAVE_SA_LEN */
 
   ((struct sockaddr_un *)(*pai)->ai_addr)->sun_family = AF_LOCAL;
   memset(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, 0, UNIX_PATH_MAX);
@@ -248,9 +253,10 @@ gaih_local (const char *name, const struct gaih_service *service,
 }
 #endif	/* 0 */
 
+
 static int
 gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
-	       const struct addrinfo *req, struct gaih_servtuple *st)
+		const struct addrinfo *req, struct gaih_servtuple *st)
 {
   struct servent *s;
   size_t tmpbuflen = 1024;
@@ -361,9 +367,11 @@ typedef enum nss_status (*nss_getcanonname_r)
    int *errnop, int *h_errnop);
 extern service_user *__nss_hosts_database attribute_hidden;
 
+
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
-	   const struct addrinfo *req, struct addrinfo **pai)
+	   const struct addrinfo *req, struct addrinfo **pai,
+	   unsigned int *naddrs)
 {
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
@@ -387,16 +395,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
       if (! tp->name[0])
 	{
 	  if (req->ai_socktype)
-	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	    return GAIH_OKIFUNSPEC | -EAI_SOCKTYPE;
 	  else
-	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	}
     }
 
+  int port = 0;
   if (service != NULL)
     {
       if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
-	return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 
       if (service->num < 0)
 	{
@@ -440,68 +449,46 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  pst = &(newp->next);
 		}
 	      if (st == (struct gaih_servtuple *) &nullserv)
-		return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+		return GAIH_OKIFUNSPEC | -EAI_SERVICE;
 	    }
 	}
       else
 	{
-	  if (req->ai_socktype || req->ai_protocol)
-	    {
-	      st = __alloca (sizeof (struct gaih_servtuple));
-	      st->next = NULL;
-	      st->socktype = tp->socktype;
-	      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-			      ? req->ai_protocol : tp->protocol);
-	      st->port = htons (service->num);
-	    }
-	  else
-	    {
-	      /* Neither socket type nor protocol is set.  Return all
-		 socket types we know about.  */
-	      struct gaih_servtuple **lastp = &st;
-	      for (tp = gaih_inet_typeproto + 1; tp->name[0]; ++tp)
-		if ((tp->protoflag & GAI_PROTO_NOSERVICE) == 0)
-		  {
-		    struct gaih_servtuple *newp;
-
-		    newp = __alloca (sizeof (struct gaih_servtuple));
-		    newp->next = NULL;
-		    newp->socktype = tp->socktype;
-		    newp->protocol = tp->protocol;
-		    newp->port = htons (service->num);
-
-		    *lastp = newp;
-		    lastp = &newp->next;
-		  }
-	    }
+	  port = htons (service->num);
+	  goto got_port;
 	}
-    }
-  else if (req->ai_socktype || req->ai_protocol)
-    {
-      st = __alloca (sizeof (struct gaih_servtuple));
-      st->next = NULL;
-      st->socktype = tp->socktype;
-      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-		      ? req->ai_protocol : tp->protocol);
-      st->port = 0;
     }
   else
     {
-      /* Neither socket type nor protocol is set.  Return all socket types
-	 we know about.  */
-      struct gaih_servtuple **lastp = &st;
-      for (++tp; tp->name[0]; ++tp)
+    got_port:
+
+      if (req->ai_socktype || req->ai_protocol)
 	{
-	  struct gaih_servtuple *newp;
+	  st = __alloca (sizeof (struct gaih_servtuple));
+	  st->next = NULL;
+	  st->socktype = tp->socktype;
+	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+			  ? req->ai_protocol : tp->protocol);
+	  st->port = port;
+	}
+      else
+	{
+	  /* Neither socket type nor protocol is set.  Return all socket types
+	     we know about.  */
+	  struct gaih_servtuple **lastp = &st;
+	  for (++tp; tp->name[0]; ++tp)
+	    {
+	      struct gaih_servtuple *newp;
 
-	  newp = __alloca (sizeof (struct gaih_servtuple));
-	  newp->next = NULL;
-	  newp->socktype = tp->socktype;
-	  newp->protocol = tp->protocol;
-	  newp->port = 0;
+	      newp = __alloca (sizeof (struct gaih_servtuple));
+	      newp->next = NULL;
+	      newp->socktype = tp->socktype;
+	      newp->protocol = tp->protocol;
+	      newp->port = port;
 
-	  *lastp = newp;
-	  lastp = &newp->next;
+	      *lastp = newp;
+	      lastp = &newp->next;
+	    }
 	}
     }
 
@@ -546,7 +533,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    at->family = AF_INET;
-	  else if (req->ai_family == AF_INET6 && req->ai_flags & AI_V4MAPPED)
+	  else if (req->ai_family == AF_INET6 && (req->ai_flags & AI_V4MAPPED))
 	    {
 	      at->addr[3] = at->addr[0];
 	      at->addr[2] = htonl (0xffff);
@@ -557,23 +544,19 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  else
 	    return -EAI_ADDRFAMILY;
 
-	dupname:
 	  if (req->ai_flags & AI_CANONNAME)
-	    {
-	      canon = strdup (name);
-	      if (canon == NULL)
-		return -EAI_MEMORY;
-	    }
+	    canon = name;
 	}
-
-      if (at->family == AF_UNSPEC)
+      else if (at->family == AF_UNSPEC)
 	{
-	  char *namebuf = strdupa (name);
-	  char *scope_delim;
+	  char *namebuf = (char *) name;
+	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
 
-	  scope_delim = strchr (namebuf, SCOPE_DELIMITER);
-	  if (scope_delim != NULL)
-	    *scope_delim = '\0';
+	  if (__builtin_expect (scope_delim != NULL, 0))
+	    {
+	      namebuf = alloca (scope_delim - name + 1);
+	      *((char *) __mempcpy (namebuf, name, scope_delim - name)) = '\0';
+	    }
 
 	  if (inet_pton (AF_INET6, namebuf, at->addr) > 0)
 	    {
@@ -612,7 +595,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		}
 
-	      goto dupname;
+	      if (req->ai_flags & AI_CANONNAME)
+		canon = name;
 	    }
 	}
 
@@ -629,7 +613,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  /* If we do not have to look for IPv4 and IPv6 together, use
 	     the simple, old functions.  */
-	  if (req->ai_family == AF_INET || req->ai_family == AF_INET6)
+	  if (req->ai_family == AF_INET
+	      || (req->ai_family == AF_INET6
+		  && ((req->ai_flags & AI_V4MAPPED) == 0
+		      || (req->ai_flags & AI_ALL) == 0)))
 	    {
 	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
@@ -680,7 +667,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				    h->h_length);
 			  else
 			    {
-			      int32_t *addr = (uint32_t *) (*pat)->addr;
+			      uint32_t *addr = (uint32_t *) (*pat)->addr;
 			      addr[3] = *(uint32_t *) h->h_addr_list[i];
 			      addr[2] = htonl (0xffff);
 			      addr[1] = 0;
@@ -703,7 +690,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		  /* We made requests but they turned out no data.
 		     The name is known, though.  */
-		  return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+		  return GAIH_OKIFUNSPEC | -EAI_NODATA;
 		}
 
 	      goto process_list;
@@ -770,7 +757,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  free (air);
 
 		  if (at->family == AF_UNSPEC)
-		    return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+		    return GAIH_OKIFUNSPEC | -EAI_NONAME;
 
 		  goto process_list;
 		}
@@ -888,8 +875,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		     AF_INET6.  Try to find a useful one for both.  */
 		  if (inet6_status == NSS_STATUS_TRYAGAIN)
 		    status = NSS_STATUS_TRYAGAIN;
-		  else if (status == NSS_STATUS_UNAVAIL &&
-			   inet6_status != NSS_STATUS_UNAVAIL)
+		  else if (status == NSS_STATUS_UNAVAIL
+			   && inet6_status != NSS_STATUS_UNAVAIL)
 		    status = inet6_status;
 		}
 
@@ -912,13 +899,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      /* We made requests but they turned out no data.  The name
 		 is known, though.  */
-	      return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+	      return GAIH_OKIFUNSPEC | -EAI_NODATA;
 	    }
 	}
 
     process_list:
       if (at->family == AF_UNSPEC)
-	return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+	return GAIH_OKIFUNSPEC | -EAI_NONAME;
     }
   else
     {
@@ -1039,9 +1026,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      }
 	  }
 
-	if (at2->family == AF_INET6)
+	family = at2->family;
+	if (family == AF_INET6)
 	  {
-	    family = AF_INET6;
 	    socklen = sizeof (struct sockaddr_in6);
 
 	    /* If we looked up IPv4 mapped address discard them here if
@@ -1053,17 +1040,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      goto ignore;
 	  }
 	else
-	  {
-	    family = AF_INET;
-	    socklen = sizeof (struct sockaddr_in);
-	  }
+	  socklen = sizeof (struct sockaddr_in);
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
 	    struct addrinfo *ai;
 	    ai = *pai = malloc (sizeof (struct addrinfo) + socklen);
 	    if (ai == NULL)
-	      return -EAI_MEMORY;
+	      {
+		free ((char *) canon);
+		return -EAI_MEMORY;
+	      }
 
 	    ai->ai_flags = req->ai_flags;
 	    ai->ai_family = family;
@@ -1076,10 +1063,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    ai->ai_canonname = (char *) canon;
 	    canon = NULL;
 
-#if SALEN
+#ifdef _HAVE_SA_LEN
 	    ai->ai_addr->sa_len = socklen;
-#endif /* SALEN */
+#endif /* _HAVE_SA_LEN */
 	    ai->ai_addr->sa_family = family;
+
+	    /* In case of an allocation error the list must be NULL
+	       terminated.  */
+	    ai->ai_next = NULL;
 
 	    if (family == AF_INET6)
 	      {
@@ -1104,7 +1095,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	    pai = &(ai->ai_next);
 	  }
-	*pai = NULL;
+
+	++*naddrs;
 
       ignore:
 	at2 = at2->next;
@@ -1113,7 +1105,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
   return 0;
 }
 
-static struct gaih gaih[] =
+#if 0
+static const struct gaih gaih[] =
   {
     { PF_INET6, gaih_inet },
     { PF_INET, gaih_inet },
@@ -1122,6 +1115,7 @@ static struct gaih gaih[] =
 #endif
     { PF_UNSPEC, NULL }
   };
+#endif
 
 struct sort_result
 {
@@ -1129,6 +1123,7 @@ struct sort_result
   struct sockaddr_storage source_addr;
   uint8_t source_addr_len;
   bool got_source_addr;
+  uint8_t source_addr_flags;
 };
 
 
@@ -1162,7 +1157,7 @@ get_scope (const struct sockaddr_storage *ss)
 	 169.254/16 and 127/8 are link-local.  */
       if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
 	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && addr[1] == 16)
+      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
 	       || (addr[0] == 192 && addr[1] == 168))
 	scope = 5;
       else
@@ -1176,59 +1171,96 @@ get_scope (const struct sockaddr_storage *ss)
 }
 
 
-/* XXX The system administrator should be able to install other
-   tables.  We need to make this configurable.  The problem is that
-   the kernel is also involved since it needs the same table.  */
-static const struct prefixlist
+struct prefixentry
 {
   struct in6_addr prefix;
   unsigned int bits;
   int val;
-} default_labels[] =
+};
+
+
+/* The label table.  */
+static const struct prefixentry *labels;
+
+/* Default labels.  */
+static const struct prefixentry default_labels[] =
   {
     /* See RFC 3484 for the details.  */
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 } } },
       128, 0 },
-    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       16, 2 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       96, 3 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 } } },
       96, 4 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    /* The next two entries differ from RFC 3484.  We need to treat
+       IPv6 site-local addresses special because they are never NATed,
+       unlike site-locale IPv4 addresses.  If this would not happen, on
+       machines which have only IPv4 and IPv6 site-local addresses, the
+       sorting would prefer the IPv6 site-local addresses, causing
+       unnecessary delays when trying to connect to a global IPv6 address
+       through a site-local IPv6 address.  */
+    { { .in6_u
+	= { .u6_addr8 = { 0xfe, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
+      10, 5 },
+    { { .in6_u
+	= { .u6_addr8 = { 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
+      7, 6 },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
+      32, 7 },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       0, 1 }
   };
 
 
-static const struct prefixlist default_precedence[] =
+/* The precedence table.  */
+static const struct prefixentry *precedence;
+
+/* The default precedences.  */
+static const struct prefixentry default_precedence[] =
   {
     /* See RFC 3484 for the details.  */
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 } } },
       128, 50 },
-    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       16, 30 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       96, 20 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 } } },
       96, 10 },
-    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
-				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+    { { .in6_u
+	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       0, 40 }
   };
 
 
 static int
-match_prefix (const struct sockaddr_storage *ss, const struct prefixlist *list,
-	      int default_val)
+match_prefix (const struct sockaddr_storage *ss,
+	      const struct prefixentry *list, int default_val)
 {
   int idx;
   struct sockaddr_in6 in6_mem;
@@ -1263,10 +1295,10 @@ match_prefix (const struct sockaddr_storage *ss, const struct prefixlist *list,
   for (idx = 0; ; ++idx)
     {
       unsigned int bits = list[idx].bits;
-      uint8_t *mask = list[idx].prefix.s6_addr;
-      uint8_t *val = in6->sin6_addr.s6_addr;
+      const uint8_t *mask = list[idx].prefix.s6_addr;
+      const uint8_t *val = in6->sin6_addr.s6_addr;
 
-      while (bits > 8)
+      while (bits >= 8)
 	{
 	  if (*mask != *val)
 	    break;
@@ -1292,7 +1324,7 @@ static int
 get_label (const struct sockaddr_storage *ss)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, default_labels, INT_MAX);
+  return match_prefix (ss, labels, INT_MAX);
 }
 
 
@@ -1300,7 +1332,20 @@ static int
 get_precedence (const struct sockaddr_storage *ss)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, default_precedence, 0);
+  return match_prefix (ss, precedence, 0);
+}
+
+
+/* Find last bit set in a word.  */
+static int
+fls (uint32_t a)
+{
+  uint32_t mask;
+  int n = 0;
+  for (n = 0, mask = 1 << 31; n < 32; mask >>= 1, ++n)
+    if ((a & mask) != 0)
+      break;
+  return n;
 }
 
 
@@ -1338,11 +1383,27 @@ rfc3484_sort (const void *p1, const void *p2)
     }
 
 
-  /* Rule 3: Avoid deprecated addresses.
-     That's something only the kernel could decide.  */
+  /* Rule 3: Avoid deprecated addresses.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_deprecated)
+	  && (a2->source_addr_flags & in6ai_deprecated))
+	return -1;
+      if ((a1->source_addr_flags & in6ai_deprecated)
+	  && !(a2->source_addr_flags & in6ai_deprecated))
+	return 1;
+    }
 
-  /* Rule 4: Prefer home addresses.
-     Another thing only the kernel can decide.  */
+  /* Rule 4: Prefer home addresses.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_homeaddress)
+	  && (a2->source_addr_flags & in6ai_homeaddress))
+	return 1;
+      if ((a1->source_addr_flags & in6ai_homeaddress)
+	  && !(a2->source_addr_flags & in6ai_homeaddress))
+	return -1;
+    }
 
   /* Rule 5: Prefer matching label.  */
   if (a1->got_source_addr)
@@ -1374,8 +1435,18 @@ rfc3484_sort (const void *p1, const void *p2)
     return 1;
 
 
-  /* Rule 7: Prefer native transport.
-     XXX How to recognize tunnels?  */
+  /* Rule 7: Prefer native transport.  */
+  if (a1->got_source_addr)
+    {
+      if (!(a1->source_addr_flags & in6ai_temporary)
+	  && (a2->source_addr_flags & in6ai_temporary))
+	return -1;
+      if ((a1->source_addr_flags & in6ai_temporary)
+	  && !(a2->source_addr_flags & in6ai_temporary))
+	return 1;
+
+      /* XXX Do we need to check anything beside temporary addresses?  */
+    }
 
 
   /* Rule 8: Prefer smaller scope.  */
@@ -1407,8 +1478,10 @@ rfc3484_sort (const void *p1, const void *p2)
 	  in2_dst = (struct sockaddr_in *) a2->dest_addr->ai_addr;
 	  in2_src = (struct sockaddr_in *) &a2->source_addr;
 
-	  bit1 = ffs (in1_dst->sin_addr.s_addr ^ in1_src->sin_addr.s_addr);
-	  bit2 = ffs (in2_dst->sin_addr.s_addr ^ in2_src->sin_addr.s_addr);
+	  bit1 = fls (ntohl (in1_dst->sin_addr.s_addr
+			     ^ in1_src->sin_addr.s_addr));
+	  bit2 = fls (ntohl (in2_dst->sin_addr.s_addr
+			     ^ in2_src->sin_addr.s_addr));
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
@@ -1435,10 +1508,10 @@ rfc3484_sort (const void *p1, const void *p2)
 
 	  if (i < 4)
 	    {
-	      bit1 = ffs (in1_dst->sin6_addr.s6_addr32[i]
-			  ^ in1_src->sin6_addr.s6_addr32[i]);
-	      bit2 = ffs (in2_dst->sin6_addr.s6_addr32[i]
-			  ^ in2_src->sin6_addr.s6_addr32[i]);
+	      bit1 = fls (ntohl (in1_dst->sin6_addr.s6_addr32[i]
+				 ^ in1_src->sin6_addr.s6_addr32[i]));
+	      bit2 = fls (ntohl (in2_dst->sin6_addr.s6_addr32[i]
+				 ^ in2_src->sin6_addr.s6_addr32[i]));
 	    }
 	}
 
@@ -1454,14 +1527,341 @@ rfc3484_sort (const void *p1, const void *p2)
 }
 
 
+static int
+in6aicmp (const void *p1, const void *p2)
+{
+  struct in6addrinfo *a1 = (struct in6addrinfo *) p1;
+  struct in6addrinfo *a2 = (struct in6addrinfo *) p2;
+
+  return memcmp (a1->addr, a2->addr, sizeof (a1->addr));
+}
+
+
+/* Name of the config file for RFC 3484 sorting (for now).  */
+#define GAICONF_FNAME "/etc/gai.conf"
+
+
+/* Nozero if we are supposed to reload the config file automatically
+   whenever it changed.  */
+static int gaiconf_reload_flag;
+
+/* Last modification time.  */
+static struct timespec gaiconf_mtime;
+
+
+libc_freeres_fn(fini)
+{
+  if (labels != default_labels)
+    {
+      const struct prefixentry *old = labels;
+      labels = default_labels;
+      free ((void *) old);
+    }
+
+  if (precedence != default_precedence)
+    {
+      const struct prefixentry *old = precedence;
+      precedence = default_precedence;
+      free ((void *) old);
+    }
+}
+
+
+struct prefixlist
+{
+  struct prefixentry entry;
+  struct prefixlist *next;
+};
+
+
+static void
+free_prefixlist (struct prefixlist *list)
+{
+  while (list != NULL)
+    {
+      struct prefixlist *oldp = list;
+      list = list->next;
+      free (oldp);
+    }
+}
+
+
+static int
+prefixcmp (const void *p1, const void *p2)
+{
+  const struct prefixentry *e1 = (const struct prefixentry *) p1;
+  const struct prefixentry *e2 = (const struct prefixentry *) p2;
+
+  if (e1->bits < e2->bits)
+    return 1;
+  if (e1->bits == e2->bits)
+    return 0;
+  return -1;
+}
+
+
+static void
+gaiconf_init (void)
+{
+  struct prefixlist *labellist = NULL;
+  size_t nlabellist = 0;
+  bool labellist_nullbits = false;
+  struct prefixlist *precedencelist = NULL;
+  size_t nprecedencelist = 0;
+  bool precedencelist_nullbits = false;
+
+  FILE *fp = fopen (GAICONF_FNAME, "rc");
+  if (fp != NULL)
+    {
+      struct stat64 st;
+      if (__fxstat64 (_STAT_VER, fileno (fp), &st) != 0)
+	{
+	  fclose (fp);
+	  goto no_file;
+	}
+
+      char *line = NULL;
+      size_t linelen = 0;
+
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (!feof_unlocked (fp))
+	{
+	  ssize_t n = __getline (&line, &linelen, fp);
+	  if (n <= 0)
+	    break;
+
+	  /* Handle comments.  No escaping possible so this is easy.  */
+	  char *cp = strchr (line, '#');
+	  if (cp != NULL)
+	    *cp = '\0';
+
+	  cp = line;
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *cmd = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+	  size_t cmdlen = cp - cmd;
+
+	  if (*cp != '\0')
+	    *cp++ = '\0';
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *val1 = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+	  size_t val1len = cp - cmd;
+
+	  /* We always need at least two values.  */
+	  if (val1len == 0)
+	    continue;
+
+	  if (*cp != '\0')
+	    *cp++ = '\0';
+	  while (isspace (*cp))
+	    ++cp;
+
+	  char *val2 = cp;
+	  while (*cp != '\0' && !isspace (*cp))
+	    ++cp;
+
+	  /*  Ignore the rest of the line.  */
+	  *cp = '\0';
+
+	  struct prefixlist **listp;
+	  size_t *lenp;
+	  bool *nullbitsp;
+	  switch (cmdlen)
+	    {
+	    case 5:
+	      if (strcmp (cmd, "label") == 0)
+		{
+		  struct in6_addr prefix;
+		  unsigned long int bits;
+		  unsigned long int val;
+		  char *endp;
+
+		  listp = &labellist;
+		  lenp = &nlabellist;
+		  nullbitsp = &labellist_nullbits;
+
+		new_elem:
+		  bits = 128;
+		  __set_errno (0);
+		  cp = strchr (val1, '/');
+		  if (cp != NULL)
+		    *cp++ = '\0';
+		  if (inet_pton (AF_INET6, val1, &prefix)
+		      && (cp == NULL
+			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && bits <= INT_MAX
+		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && val <= INT_MAX)
+		    {
+		      struct prefixlist *newp = malloc (sizeof (*newp));
+		      if (newp == NULL)
+			{
+			  free (line);
+			  fclose (fp);
+			  goto no_file;
+			}
+
+		      memcpy (&newp->entry.prefix, &prefix, sizeof (prefix));
+		      newp->entry.bits = bits;
+		      newp->entry.val = val;
+		      newp->next = *listp;
+		      *listp = newp;
+		      ++*lenp;
+		      *nullbitsp |= bits == 0;
+		    }
+		}
+	      break;
+
+	    case 6:
+	      if (strcmp (cmd, "reload") == 0)
+		gaiconf_reload_flag = strcmp (val1, "yes") == 0;
+	      break;
+
+	    case 10:
+	      if (strcmp (cmd, "precedence") == 0)
+		{
+		  listp = &precedencelist;
+		  lenp = &nprecedencelist;
+		  nullbitsp = &precedencelist_nullbits;
+		  goto new_elem;
+		}
+	      break;
+	    }
+	}
+
+      free (line);
+
+      fclose (fp);
+
+      /* Create the array for the labels.  */
+      struct prefixentry *new_labels;
+      if (nlabellist > 0)
+	{
+	  if (!labellist_nullbits)
+	    ++nlabellist;
+	  new_labels = malloc (nlabellist * sizeof (*new_labels));
+	  if (new_labels == NULL)
+	    goto no_file;
+
+	  int i = nlabellist;
+	  if (!labellist_nullbits)
+	    {
+	      --i;
+	      memset (&new_labels[i].prefix, '\0', sizeof (struct in6_addr));
+	      new_labels[i].bits = 0;
+	      new_labels[i].val = 1;
+	    }
+
+	  struct prefixlist *l = labellist;
+	  while (i-- > 0)
+	    {
+	      new_labels[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_prefixlist (labellist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_labels, nlabellist, sizeof (*new_labels), prefixcmp);
+	}
+      else
+	new_labels = (struct prefixentry *) default_labels;
+
+      struct prefixentry *new_precedence;
+      if (nprecedencelist > 0)
+	{
+	  if (!precedencelist_nullbits)
+	    ++nprecedencelist;
+	  new_precedence = malloc (nprecedencelist * sizeof (*new_precedence));
+	  if (new_precedence == NULL)
+	    {
+	      if (new_labels != default_labels)
+		free (new_labels);
+	      goto no_file;
+	    }
+
+	  int i = nprecedencelist;
+	  if (!precedencelist_nullbits)
+	    {
+	      --i;
+	      memset (&new_precedence[i].prefix, '\0',
+		      sizeof (struct in6_addr));
+	      new_precedence[i].bits = 0;
+	      new_precedence[i].val = 40;
+	    }
+
+	  struct prefixlist *l = precedencelist;
+	  while (i-- > 0)
+	    {
+	      new_precedence[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_prefixlist (precedencelist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_precedence, nprecedencelist, sizeof (*new_labels),
+		 prefixcmp);
+	}
+      else
+	new_precedence = (struct prefixentry *) default_precedence;
+
+      /* Now we are ready to replace the values.  */
+      const struct prefixentry *old = labels;
+      labels = new_labels;
+      if (old != default_labels)
+	free ((void *) old);
+
+      old = precedence;
+      precedence = new_precedence;
+      if (old != default_precedence)
+	free ((void *) old);
+
+      gaiconf_mtime = st.st_mtim;
+    }
+  else
+    {
+    no_file:
+      free_prefixlist (labellist);
+      free_prefixlist (precedencelist);
+
+      /* If we previously read the file but it is gone now, free the
+	 old data and use the builtin one.  Leave the reload flag
+	 alone.  */
+      fini ();
+    }
+}
+
+
+static void
+gaiconf_reload (void)
+{
+  struct stat64 st;
+  if (__xstat64 (_STAT_VER, GAICONF_FNAME, &st) != 0
+      || memcmp (&st.st_mtim, &gaiconf_mtime, sizeof (gaiconf_mtime)) != 0)
+    gaiconf_init ();
+}
+
+
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
 {
-  int i = 0, j = 0, last_i = 0;
+  int i = 0, last_i = 0;
   int nresults = 0;
-  struct addrinfo *p = NULL, **end;
-  struct gaih *g = gaih, *pg = NULL;
+  struct addrinfo *p = NULL;
   struct gaih_service gaih_service, *pservice;
   struct addrinfo local_hints;
 
@@ -1489,15 +1889,23 @@ getaddrinfo (const char *name, const char *service,
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
 
+  struct in6addrinfo *in6ai = NULL;
+  size_t in6ailen;
+  bool seen_ipv4 = false;
+  bool seen_ipv6 = false;
+  /* We might need information about what kind of interfaces are available.
+     But even if AI_ADDRCONFIG is not used, if the user requested IPv6
+     addresses we have to know whether an address is deprecated or
+     temporary.  */
+  if ((hints->ai_flags & AI_ADDRCONFIG) || hints->ai_family == PF_UNSPEC
+      || hints->ai_family == PF_INET6)
+    /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
+       cannot cache the results since new interfaces could be added at
+       any time.  */
+    __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
-      /* Determine whether we have IPv4 or IPv6 interfaces or both.
-	 We cannot cache the results since new interfaces could be
-	 added at any time.  */
-      bool seen_ipv4;
-      bool seen_ipv6;
-      __check_pf (&seen_ipv4, &seen_ipv6);
-
       /* Now make a decision on what we return, if anything.  */
       if (hints->ai_family == PF_UNSPEC && (seen_ipv4 || seen_ipv6))
 	{
@@ -1512,8 +1920,11 @@ getaddrinfo (const char *name, const char *service,
 	}
       else if ((hints->ai_family == PF_INET && ! seen_ipv4)
 	       || (hints->ai_family == PF_INET6 && ! seen_ipv6))
-	/* We cannot possibly return a valid answer.  */
-	return EAI_NONAME;
+	{
+	  /* We cannot possibly return a valid answer.  */
+	  free (in6ai);
+	  return EAI_NONAME;
+	}
     }
 
   if (service && service[0])
@@ -1524,7 +1935,10 @@ getaddrinfo (const char *name, const char *service,
       if (*c != '\0')
 	{
 	  if (hints->ai_flags & AI_NUMERICSERV)
-	    return EAI_NONAME;
+	    {
+	      free (in6ai);
+	      return EAI_NONAME;
+	    }
 
 	  gaih_service.num = -1;
 	}
@@ -1534,11 +1948,21 @@ getaddrinfo (const char *name, const char *service,
   else
     pservice = NULL;
 
+  struct addrinfo **end;
   if (pai)
     end = &p;
   else
     end = NULL;
 
+  unsigned int naddrs = 0;
+#if 0
+  /* If we would support more protocols than just IPv4 and IPv6 we
+     would iterate over a table with appropriate callback functions.
+     Since we currently only handle IPv4 and IPv6 this is not
+     necessary.  */
+  const struct gaih *g = gaih;
+  const struct gaih *pg = NULL;
+  int j = 0;
   while (g->gaih)
     {
       if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
@@ -1547,7 +1971,7 @@ getaddrinfo (const char *name, const char *service,
 	  if (pg == NULL || pg->gaih != g->gaih)
 	    {
 	      pg = g;
-	      i = g->gaih (name, pservice, hints, end);
+	      i = g->gaih (name, pservice, hints, end, &naddrs);
 	      if (i != 0)
 		{
 		  /* EAI_NODATA is a more specific result as it says that
@@ -1562,6 +1986,7 @@ getaddrinfo (const char *name, const char *service,
 		    }
 
 		  freeaddrinfo (p);
+		  free (in6ai);
 
 		  return -(i & GAIH_EAI);
 		}
@@ -1577,15 +2002,55 @@ getaddrinfo (const char *name, const char *service,
     }
 
   if (j == 0)
-    return EAI_FAMILY;
-
-  if (nresults > 1)
     {
+      free (in6ai);
+      return EAI_FAMILY;
+    }
+#else
+  if (hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET
+      || hints->ai_family == AF_INET6)
+    {
+      last_i = gaih_inet (name, pservice, hints, end, &naddrs);
+      if (last_i != 0)
+	{
+	  freeaddrinfo (p);
+	  free (in6ai);
+
+	  return -(last_i & GAIH_EAI);
+	}
+      if (end)
+	while (*end)
+	  {
+	    end = &((*end)->ai_next);
+	    ++nresults;
+	  }
+    }
+  else
+    {
+      free (in6ai);
+      return EAI_FAMILY;
+    }
+#endif
+
+  if (naddrs > 1)
+    {
+      /* Read the config file.  */
+      __libc_once_define (static, once);
+      __typeof (once) old_once = once;
+      __libc_once (once, gaiconf_init);
+      if (old_once && gaiconf_reload_flag)
+	gaiconf_reload ();
+
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
+
+      /* If we have information about deprecated and temporary address
+	 sort the array now.  */
+      if (in6ai != NULL)
+	qsort (in6ai, in6ailen, sizeof (*in6ai), in6aicmp);
 
       for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
@@ -1601,9 +2066,12 @@ getaddrinfo (const char *name, const char *service,
 		      results[i - 1].source_addr_len);
 	      results[i].source_addr_len = results[i - 1].source_addr_len;
 	      results[i].got_source_addr = results[i - 1].got_source_addr;
+	      results[i].source_addr_flags = results[i - 1].source_addr_flags;
 	    }
 	  else
 	    {
+	      results[i].source_addr_flags = 0;
+
 	      /* We overwrite the type with SOCK_DGRAM since we do not
 		 want connect() to connect to the other side.  If we
 		 cannot determine the source address remember this
@@ -1618,6 +2086,20 @@ getaddrinfo (const char *name, const char *service,
 		{
 		  results[i].source_addr_len = sl;
 		  results[i].got_source_addr = true;
+
+		  if (q->ai_family == PF_INET6 && in6ai != NULL)
+		    {
+		      /* See whether the address is the list of deprecated
+			 or temporary addresses.  */
+		      struct in6addrinfo tmp;
+		      memcpy (tmp.addr, q->ai_addr, IN6ADDRSZ);
+
+		      struct in6addrinfo *found
+			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),
+				   in6aicmp);
+		      if (found != NULL)
+			results[i].source_addr_flags = found->flags;
+		    }
 		}
 	      else
 		/* Just make sure that if we have to process the same
@@ -1650,6 +2132,8 @@ getaddrinfo (const char *name, const char *service,
       /* Fill in the canonical name into the new first entry.  */
       p->ai_canonname = canonname;
     }
+
+  free (in6ai);
 
   if (p)
     {

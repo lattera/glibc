@@ -22,7 +22,7 @@
 #ifndef UP
 # define LOCK \
 	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET; 			      \
-	je,pt	0f;							      \
+	je	0f;							      \
 	lock;								      \
 0:
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,9 @@
    02111-1307 USA.  */
 
 
+#include <limits.h>
+#include <atomic.h>
+
 #ifndef GETSP
 # warning "GETSP is not defined for this architecture."
 # define GETSP 0
@@ -32,4 +35,17 @@
     low = usecs & 0xffffffff;						      \
     high = usecs >> 32;							      \
   }
+#endif
+
+#if LONG_BIT == 32
+# define memusage_cntr_t uatomic32_t
+#else
+# define memusage_cntr_t uatomic64_t
+#endif
+#ifndef memusage_size_t
+# if LONG_BIT == 32
+#  define memusage_size_t uatomic32_t
+# else
+#  define memusage_size_t uatomic64_t
+# endif
 #endif

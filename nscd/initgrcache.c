@@ -1,22 +1,20 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
 #include <errno.h>
@@ -26,8 +24,12 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <dbg_log.h>
-#include <nscd.h>
+
+#include "dbg_log.h"
+#include "nscd.h"
+#ifdef HAVE_SENDFILE
+# include <kernel-features.h>
+#endif
 
 #include "../nss/nsswitch.h"
 
@@ -105,6 +107,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
   long int start = 0;
   bool all_tryagain = true;
+  bool any_success = false;
 
   /* This is temporary memory, we need not (ad must not) call
      mempool_alloc.  */
@@ -156,6 +159,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
 	__libc_fatal ("illegal status in internal_getgrouplist");
 
+      any_success |= status == NSS_STATUS_SUCCESS;
+
       if (status != NSS_STATUS_SUCCESS
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
 	 break;
@@ -169,7 +174,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   ssize_t total;
   ssize_t written;
  out:
-  if (start == 0)
+  if (!any_success)
     {
       /* Nothing found.  Create a negative result record.  */
       written = total = sizeof (notfound);
@@ -188,7 +193,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
 	  if (fd != -1)
-	    written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
+	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+						MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
 	  /* If we cannot permanently store the result, so be it.  */
@@ -343,7 +349,30 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	     unnecessarily let the receiver wait.  */
 	  assert (fd != -1);
 
-	  written = TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+#ifdef HAVE_SENDFILE
+	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) &dataset->resp > (char *) db->data);
+	      assert ((char *) &dataset->resp - (char *) db->head
+		      + total
+		      <= (sizeof (struct database_pers_head)
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
+	      written = sendfileall (fd, db->wr_fd,
+				     (char *) &dataset->resp
+				     - (char *) db->head, total);
+# ifndef __ASSUME_SENDFILE
+	      if (written == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    written = writeall (fd, &dataset->resp, total);
 	}
 
 

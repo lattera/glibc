@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include "config.h"
 #include <error.h>
 #include <errno.h>
 #include <libintl.h>
@@ -26,10 +27,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <syslog.h>
+#include <unistd.h>
+#include <sys/prctl.h>
 #include <selinux/av_permissions.h>
 #include <selinux/avc.h>
 #include <selinux/flask.h>
 #include <selinux/selinux.h>
+#ifdef HAVE_LIBAUDIT
+# include <libaudit.h>
+#endif
 
 #include "dbg_log.h"
 #include "selinux.h"
@@ -66,6 +72,11 @@ static struct avc_entry_ref aeref;
 /* Thread to listen for SELinux status changes via netlink.  */
 static pthread_t avc_notify_thread;
 
+#ifdef HAVE_LIBAUDIT
+/* Prototype for supporting the audit daemon */
+static void log_callback (const char *fmt, ...);
+#endif
+
 /* Prototypes for AVC callback functions.  */
 static void *avc_create_thread (void (*run) (void));
 static void avc_stop_thread (void *thread);
@@ -77,7 +88,11 @@ static void avc_free_lock (void *lock);
 /* AVC callback structures for use in avc_init.  */
 static const struct avc_log_callback log_cb =
 {
+#ifdef HAVE_LIBAUDIT
+  .func_log = log_callback,
+#else
   .func_log = dbg_log,
+#endif
   .func_audit = NULL
 };
 static const struct avc_thread_callback thread_cb =
@@ -93,6 +108,137 @@ static const struct avc_lock_callback lock_cb =
   .func_free_lock = avc_free_lock
 };
 
+#ifdef HAVE_LIBAUDIT
+/* The audit system's netlink socket descriptor */
+static int audit_fd = -1;
+
+/* When an avc denial occurs, log it to audit system */
+static void
+log_callback (const char *fmt, ...)
+{
+  if (audit_fd >= 0)
+    {
+      va_list ap;
+      va_start (ap, fmt);
+
+      char *buf;
+      int e = vasprintf (&buf, fmt, ap);
+      if (e < 0)
+	{
+	  buf = alloca (BUFSIZ);
+	  vsnprintf (buf, BUFSIZ, fmt, ap);
+	}
+
+      /* FIXME: need to attribute this to real user, using getuid for now */
+      audit_log_user_avc_message (audit_fd, AUDIT_USER_AVC, buf, NULL, NULL,
+				  NULL, getuid ());
+
+      if (e >= 0)
+	free (buf);
+
+      va_end (ap);
+    }
+}
+
+/* Initialize the connection to the audit system */
+static void
+audit_init (void)
+{
+  audit_fd = audit_open ();
+  if (audit_fd < 0
+      /* If kernel doesn't support audit, bail out */
+      && errno != EINVAL && errno != EPROTONOSUPPORT && errno != EAFNOSUPPORT)
+    dbg_log (_("Failed opening connection to the audit subsystem: %m"));
+}
+
+
+# ifdef HAVE_LIBCAP
+static const cap_value_t new_cap_list[] =
+  { CAP_AUDIT_WRITE };
+#  define nnew_cap_list (sizeof (new_cap_list) / sizeof (new_cap_list[0]))
+static const cap_value_t tmp_cap_list[] =
+  { CAP_AUDIT_WRITE, CAP_SETUID, CAP_SETGID };
+#  define ntmp_cap_list (sizeof (tmp_cap_list) / sizeof (tmp_cap_list[0]))
+
+cap_t
+preserve_capabilities (void)
+{
+  if (getuid () != 0)
+    /* Not root, then we cannot preserve anything.  */
+    return NULL;
+
+  if (prctl (PR_SET_KEEPCAPS, 1) == -1)
+    {
+      dbg_log (_("Failed to set keep-capabilities"));
+      error (EXIT_FAILURE, errno, _("prctl(KEEPCAPS) failed"));
+      /* NOTREACHED */
+    }
+
+  cap_t tmp_caps = cap_init ();
+  cap_t new_caps;
+  if (tmp_caps != NULL)
+    new_caps = cap_init ();
+
+  if (tmp_caps == NULL || new_caps == NULL)
+    {
+      if (tmp_caps != NULL)
+	cap_free (tmp_caps);
+
+      dbg_log (_("Failed to initialize drop of capabilities"));
+      error (EXIT_FAILURE, 0, _("cap_init failed"));
+    }
+
+  /* There is no reason why these should not work.  */
+  cap_set_flag (new_caps, CAP_PERMITTED, nnew_cap_list,
+		(cap_value_t *) new_cap_list, CAP_SET);
+  cap_set_flag (new_caps, CAP_EFFECTIVE, nnew_cap_list,
+		(cap_value_t *) new_cap_list, CAP_SET);
+
+  cap_set_flag (tmp_caps, CAP_PERMITTED, ntmp_cap_list,
+		(cap_value_t *) tmp_cap_list, CAP_SET);
+  cap_set_flag (tmp_caps, CAP_EFFECTIVE, ntmp_cap_list,
+		(cap_value_t *) tmp_cap_list, CAP_SET);
+
+  int res = cap_set_proc (tmp_caps);
+
+  cap_free (tmp_caps);
+
+  if (__builtin_expect (res != 0, 0))
+    {
+      cap_free (new_caps);
+      dbg_log (_("Failed to drop capabilities\n"));
+      error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
+    }
+
+  return new_caps;
+}
+
+void
+install_real_capabilities (cap_t new_caps)
+{
+  /* If we have no capabilities there is nothing to do here.  */
+  if (new_caps == NULL)
+    return;
+
+  if (cap_set_proc (new_caps))
+    {
+      cap_free (new_caps);
+      dbg_log (_("Failed to drop capabilities"));
+      error (EXIT_FAILURE, 0, _("cap_set_proc failed"));
+      /* NOTREACHED */
+    }
+
+  cap_free (new_caps);
+
+  if (prctl (PR_SET_KEEPCAPS, 0) == -1)
+    {
+      dbg_log (_("Failed to unset keep-capabilities"));
+      error (EXIT_FAILURE, errno, _("prctl(KEEPCAPS) failed"));
+      /* NOTREACHED */
+    }
+}
+# endif /* HAVE_LIBCAP */
+#endif /* HAVE_LIBAUDIT */
 
 /* Determine if we are running on an SELinux kernel. Set selinux_enabled
    to the result.  */
@@ -182,6 +328,9 @@ nscd_avc_init (void)
     error (EXIT_FAILURE, errno, _("Failed to start AVC"));
   else
     dbg_log (_("Access Vector Cache (AVC) started"));
+#ifdef HAVE_LIBAUDIT
+  audit_init ();
+#endif
 }
 
 
@@ -262,6 +411,9 @@ void
 nscd_avc_destroy (void)
 {
   avc_destroy ();
+#ifdef HAVE_LIBAUDIT
+  audit_close (audit_fd);
+#endif
 }
 
 #endif /* HAVE_SELINUX */

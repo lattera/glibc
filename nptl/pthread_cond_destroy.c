@@ -44,15 +44,35 @@ __pthread_cond_destroy (cond)
      broadcasted, but still are using the pthread_cond_t structure,
      pthread_cond_destroy needs to wait for them.  */
   unsigned int nwaiters = cond->__data.__nwaiters;
-  while (nwaiters >= (1 << COND_CLOCK_BITS))
+
+  if (nwaiters >= (1 << COND_CLOCK_BITS))
     {
-      lll_mutex_unlock (cond->__data.__lock);
+      /* Wake everybody on the associated mutex in case there are
+         threads that have been requeued to it.
+         Without this, pthread_cond_destroy could block potentially
+         for a long time or forever, as it would depend on other
+         thread's using the mutex.
+         When all threads waiting on the mutex are woken up, pthread_cond_wait
+         only waits for threads to acquire and release the internal
+         condvar lock.  */
+      if (cond->__data.__mutex != NULL
+	  && cond->__data.__mutex != (void *) ~0l)
+	{
+	  pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
+	  lll_futex_wake (&mut->__data.__lock, INT_MAX);
+	}
 
-      lll_futex_wait (&cond->__data.__nwaiters, nwaiters);
+      do
+	{
+	  lll_mutex_unlock (cond->__data.__lock);
 
-      lll_mutex_lock (cond->__data.__lock);
+	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters);
 
-      nwaiters = cond->__data.__nwaiters;
+	  lll_mutex_lock (cond->__data.__lock);
+
+	  nwaiters = cond->__data.__nwaiters;
+	}
+      while (nwaiters >= (1 << COND_CLOCK_BITS));
     }
 
   return 0;

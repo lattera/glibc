@@ -49,6 +49,14 @@ LC_COLLATE
 copy "iso14651_t1"
 END LC_COLLATE
 
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
+END LC_CTYPE
+
 LC_MESSAGES
 yesexpr "<U005E><U005B><U0053><U0073><U0079><U0059><U005D><U002E><U002A>"
 noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
@@ -71,10 +79,6 @@ n_sep_by_space            1
 p_sign_posn               1
 n_sign_posn               1
 END LC_MONETARY
-
-LC_CTYPE
-copy "i18n"
-END LC_CTYPE
 
 LC_NUMERIC
 decimal_point             "<U002C>"

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
+#include <pthread-pi-defines.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex		240
@@ -97,6 +98,11 @@ __pthread_cond_broadcast:
 	mov	r8, r4
 	bt/s	9f
 	 add	#cond_futex, r4
+
+	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
+	mov.l	@(MUTEX_KIND,r9), r0
+	tst	#PI_BIT, r0
+	bf	9f
 
 	/* Wake up all threads.  */
 	mov	#FUTEX_CMP_REQUEUE, r5

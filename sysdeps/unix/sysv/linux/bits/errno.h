@@ -1,5 +1,5 @@
 /* Error constants.  Linux specific version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,15 @@
 /* Linux has no ENOTSUP error code.  */
 # define ENOTSUP EOPNOTSUPP
 
-/* Linux also had no ECANCELED error code.  Since it is not used here
-   we define it to an invalid value.  */
+/* Older Linux versions also had no ECANCELED error code.  */
 # ifndef ECANCELED
 #  define ECANCELED	125
+# endif
+
+/* Support for error codes to support robust mutexes was added later, too.  */
+# ifndef EOWNERDEAD
+#  define EOWNERDEAD		130
+#  define ENOTRECOVERABLE	131
 # endif
 
 # ifndef __ASSEMBLER__

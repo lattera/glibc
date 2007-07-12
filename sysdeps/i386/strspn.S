@@ -1,7 +1,7 @@
 /* strcspn (str, ss) -- Return the length of the initial segment of STR
 			which contains only characters from SS.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994-1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -46,69 +46,133 @@ ENTRY (BP_SYM (strspn))
 	xorl %ecx, %ecx		/* %ecx = 0 !!! */
 
 	pushl %ecx		/* make a 256 bytes long block filled with 0 */
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* These immediate values make the label 2 */
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* to be aligned on a 16 byte boundary to */
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* get a better performance of the loop.  */
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 
 /* For understanding the following code remember that %ecx == 0 now.
    Although all the following instruction only modify %cl we always
@@ -172,6 +236,7 @@ L(6):	incl %eax
 L(5):	incl %eax
 
 L(4):	addl $256, %esp		/* remove stopset */
+	cfi_adjust_cfa_offset (-256)
 	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	subl %edx, %eax		/* we have to return the number of valid
 				   characters, so compute distance to first

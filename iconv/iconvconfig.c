@@ -1,22 +1,20 @@
 /* Generate fastloading iconv module configuration files.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000-2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <argp.h>
 #include <assert.h>
@@ -341,7 +339,7 @@ main (int argc, char *argv[])
   if (status == 0)
     status = write_output ();
   else
-    error (1, 0, _("no output file produced because warning were issued"));
+    error (1, 0, _("no output file produced because warnings were issued"));
 
   return status;
 }
@@ -397,7 +395,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2004");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -985,11 +983,11 @@ next_prime (uint32_t seed)
 
    Offset   Length       Description
    0000     4            Magic header bytes
-   0004     4            Offset of string table (stoff)
-   0008     4            Offset of name hashing table (hoff)
-   000C     4            Hashing table size (hsize)
-   0010     4            Offset of module table (moff)
-   0014     4            Offset of other conversion module table (ooff)
+   0004     2            Offset of string table (stoff)
+   0006     2            Offset of name hashing table (hoff)
+   0008     2            Hashing table size (hsize)
+   000A     2            Offset of module table (moff)
+   000C     2            Offset of other conversion module table (ooff)
 
    stoff    ???          String table
 
@@ -1013,6 +1011,34 @@ next_prime (uint32_t seed)
                               module name offset
                          (following last entry with step count 0)
 */
+
+static struct hash_entry *hash_table;
+static size_t hash_size;
+
+/* Function to insert the names.  */
+static void name_insert (const void *nodep, VISIT value, int level)
+{
+  struct name *name;
+  unsigned int idx;
+  unsigned int hval2;
+
+  if (value != leaf && value != postorder)
+    return;
+
+  name = *(struct name **) nodep;
+  idx = name->hashval % hash_size;
+  hval2 = 1 + name->hashval % (hash_size - 2);
+
+  while (hash_table[idx].string_offset != 0)
+    if ((idx += hval2) >= hash_size)
+      idx -= hash_size;
+
+  hash_table[idx].string_offset = strtaboffset (name->strent);
+
+  assert (name->module_idx != -1);
+  hash_table[idx].module_idx = name->module_idx;
+}
+
 static int
 write_output (void)
 {
@@ -1020,8 +1046,6 @@ write_output (void)
   char *string_table;
   size_t string_table_size;
   struct gconvcache_header header;
-  struct hash_entry *hash_table;
-  size_t hash_size;
   struct module_entry *module_table;
   char *extra_table;
   char *cur_extra_table;
@@ -1033,31 +1057,6 @@ write_output (void)
   char finalname[prefix_len + sizeof GCONV_MODULES_CACHE];
   char tmpfname[(output_file == NULL ? sizeof finalname : output_file_len + 1)
 		+ strlen (".XXXXXX")];
-
-  /* Function to insert the names.  */
-  auto void
-  name_insert (const void *nodep, VISIT value, int level)
-    {
-      struct name *name;
-      unsigned int idx;
-      unsigned int hval2;
-
-      if (value != leaf && value != postorder)
-	return;
-
-      name = *(struct name **) nodep;
-      idx = name->hashval % hash_size;
-      hval2 = 1 + name->hashval % (hash_size - 2);
-
-      while (hash_table[idx].string_offset != 0)
-	if ((idx += hval2) >= hash_size)
-	  idx -= hash_size;
-
-      hash_table[idx].string_offset = strtaboffset (name->strent);
-
-      assert (name->module_idx != -1);
-      hash_table[idx].module_idx = name->module_idx;
-    }
 
   /* Open the output file.  */
   if (output_file == NULL)
@@ -1177,6 +1176,9 @@ write_output (void)
 	  cur_extra_table += sizeof (gidx_t);
 	}
     }
+
+  /* Clear padding.  */
+  memset (&header, 0, sizeof (struct gconvcache_header));
 
   header.magic = GCONVCACHE_MAGIC;
 

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,10 @@
 #include <assert.h>
 #include <dl-tls.h>
 
+/* Translate a processor specific dynamic tag to the index
+   in l_info array.  */
+#define DT_PPC(x) (DT_PPC_##x - DT_LOPROC + DT_NUM)
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)
@@ -32,24 +36,38 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
   return ehdr->e_machine == EM_PPC;
 }
 
+/* Return the value of the GOT pointer.  */
+static inline Elf32_Addr * __attribute__ ((const))
+ppc_got (void)
+{
+  Elf32_Addr *got;
+#ifdef HAVE_ASM_PPC_REL16
+  asm ("bcl 20,31,1f\n"
+       "1:	mflr %0\n"
+       "	addis %0,%0,_GLOBAL_OFFSET_TABLE_-1b@ha\n"
+       "	addi %0,%0,_GLOBAL_OFFSET_TABLE_-1b@l\n"
+       : "=b" (got) : : "lr");
+#else
+  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
+       : "=l" (got));
+#endif
+  return got;
+}
 
 /* Return the link-time address of _DYNAMIC, stored as
    the first value in the GOT. */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((const))
 elf_machine_dynamic (void)
 {
-  Elf32_Addr *got;
-  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
-       : "=l"(got));
-  return *got;
+  return *ppc_got ();
 }
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((const))
 elf_machine_load_address (void)
 {
-  unsigned int *got;
-  unsigned int *branchaddr;
+  Elf32_Addr *branchaddr;
+  Elf32_Addr runtime_dynamic;
 
   /* This is much harder than you'd expect.  Possibly I'm missing something.
      The 'obvious' way:
@@ -80,179 +98,23 @@ elf_machine_load_address (void)
      the address ourselves. That gives us the following code: */
 
   /* Get address of the 'b _DYNAMIC@local'...  */
-  asm ("bl 0f ;"
+  asm ("bcl 20,31,0f;"
        "b _DYNAMIC@local;"
        "0:"
-       : "=l"(branchaddr));
-
-  /* ... and the address of the GOT.  */
-  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
-       : "=l"(got));
+       : "=l" (branchaddr));
 
   /* So now work out the difference between where the branch actually points,
      and the offset of that location in memory from the start of the file.  */
-  return ((Elf32_Addr)branchaddr - *got
-	  + ((int)(*branchaddr << 6 & 0xffffff00) >> 6));
+  runtime_dynamic = ((Elf32_Addr) branchaddr
+		     + ((Elf32_Sword) (*branchaddr << 6 & 0xffffff00) >> 6));
+
+  return runtime_dynamic - elf_machine_dynamic ();
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
 
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  It is called
-   from code built in the PLT by elf_machine_runtime_setup.  */
-#if !defined PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.section \".text\"	\n\
-	.align 2	\n\
-	.globl _dl_runtime_resolve	\n\
-	.type _dl_runtime_resolve,@function	\n\
-_dl_runtime_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-	stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 0	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 0,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-	lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve	\n\
-	\n\
-	.align 2	\n\
-	.globl _dl_prof_resolve	\n\
-	.type _dl_prof_resolve,@function	\n\
-_dl_prof_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-        stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 5	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 5,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl profile_fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-        lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_prof_resolve,.-_dl_prof_resolve	\n\
- # Undo '.section text'.\n\
-	.previous	\n\
-");
-#else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.section \".text\"	\n\
-	.align 2	\n\
-	.globl _dl_runtime_resolve	\n\
-	.globl _dl_prof_resolve	\n\
-	.type _dl_runtime_resolve,@function	\n\
-	.type _dl_prof_resolve,@function	\n\
-_dl_runtime_resolve:	\n\
-_dl_prof_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-	stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 0	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 0,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-	lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve	\n\
-");
-#endif
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
@@ -298,13 +160,69 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 /* The PowerPC never uses REL relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
-/* Set up the loaded object described by L so its unrelocated PLT
+/* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.
    Also install a small trampoline to be used by entries that have
    been relocated to an address too far away for a single branch.  */
 extern int __elf_machine_runtime_setup (struct link_map *map,
 					int lazy, int profile);
-#define elf_machine_runtime_setup __elf_machine_runtime_setup
+
+static inline int
+elf_machine_runtime_setup (struct link_map *map,
+			   int lazy, int profile)
+{
+  if (map->l_info[DT_JMPREL] == 0)
+    return lazy;
+
+  if (map->l_info[DT_PPC(GOT)] == 0)
+    /* Handle old style PLT.  */
+    return __elf_machine_runtime_setup (map, lazy, profile);
+
+  /* New style non-exec PLT consisting of an array of addresses.  */
+  map->l_info[DT_PPC(GOT)]->d_un.d_ptr += map->l_addr;
+  if (lazy)
+    {
+      Elf32_Addr *plt, *got, glink;
+      Elf32_Word num_plt_entries;
+      void (*dlrr) (void);
+      extern void _dl_runtime_resolve (void);
+      extern void _dl_prof_resolve (void);
+
+      if (__builtin_expect (!profile, 1))
+	dlrr = _dl_runtime_resolve;
+      else
+	{
+	  if (GLRO(dl_profile) != NULL
+	      &&_dl_name_match_p (GLRO(dl_profile), map))
+	    GL(dl_profile_map) = map;
+	  dlrr = _dl_prof_resolve;
+	}
+      got = (Elf32_Addr *) map->l_info[DT_PPC(GOT)]->d_un.d_ptr;
+      glink = got[1];
+      got[1] = (Elf32_Addr) dlrr;
+      got[2] = (Elf32_Addr) map;
+
+      /* Relocate everything in .plt by the load address offset.  */
+      plt = (Elf32_Addr *) D_PTR (map, l_info[DT_PLTGOT]);
+      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+			 / sizeof (Elf32_Rela));
+
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .plt section.
+	 The prelinker saved us at got[1] address of .glink
+	 section's start.  */
+      if (glink)
+	{
+	  glink += map->l_addr;
+	  while (num_plt_entries-- != 0)
+	    *plt++ = glink, glink += 4;
+	}
+      else
+	while (num_plt_entries-- != 0)
+	  *plt++ += map->l_addr;
+    }
+  return lazy;
+}
 
 /* Change the PLT entry whose reloc is 'reloc' to call the actual routine.  */
 extern Elf32_Addr __elf_machine_fixup_plt (struct link_map *map,
@@ -317,7 +235,12 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
-  return __elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
+  if (map->l_info[DT_PPC(GOT)] == 0)
+    /* Handle old style PLT.  */
+    return __elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
+
+  *reloc_addr = finaladdr;
+  return finaladdr;
 }
 
 /* Return the final value of a plt relocation.  */
@@ -328,9 +251,14 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value + reloc->r_addend;
 }
 
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER ppc32_gnu_pltenter
+#define ARCH_LA_PLTEXIT ppc32_gnu_pltexit
+
 #endif /* dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Do the actual processing of a reloc, once its target address
    has been determined.  */
@@ -353,7 +281,7 @@ extern void _dl_reloc_overflow (struct link_map *map,
    LOADADDR is the load address of the object; INFO is an array indexed
    by DT_* of the .dynamic section info.  */
 
-inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg)
@@ -381,16 +309,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     value = map->l_addr;
   else
     {
-# if defined USE_TLS && !defined RTLD_BOOTSTRAP
       sym_map = RESOLVE_MAP (&sym, version, r_type);
-      value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-# else
-      value = RESOLVE (&sym, version, r_type);
-#  ifndef RTLD_BOOTSTRAP
-      if (sym != NULL)
-#  endif
-	value += sym->st_value;
-# endif
+      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
     }
   value += reloc->r_addend;
 #else
@@ -443,11 +363,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       break;
 #endif /* USE_TLS etc. */
 
-#ifdef RESOLVE_CONFLICT_FIND_MAP
     case R_PPC_JMP_SLOT:
+#ifdef RESOLVE_CONFLICT_FIND_MAP
       RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
-      /* FALLTHROUGH */
 #endif
+      if (map->l_info[DT_PPC(GOT)] != 0)
+	{
+	  *reloc_addr = value;
+	  break;
+	}
+      /* FALLTHROUGH */
 
     default:
       __process_machine_rela (map, reloc, sym_map, sym, refsym,
@@ -455,7 +380,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
 }
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -463,7 +388,7 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
@@ -474,4 +399,4 @@ elf_machine_lazy_rel (struct link_map *map,
    DT_RELA table.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

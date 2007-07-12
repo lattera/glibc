@@ -1,6 +1,6 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,9 +25,11 @@
 ENTRY(__lrintf)
 	flds	4(%esp)
 	subl	$4, %esp
+	cfi_adjust_cfa_offset (4)
 	fistpl	(%esp)
 	fwait
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	ret
 END(__lrintf)
 weak_alias (__lrintf, lrintf)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,99, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   write to the Free Software Foundation, Inc., 51 Franklin Street, 
+   Fifth Floor, Boston MA 02110-1301, USA.  */
 
 #include <sysdep-cancel.h>
 #include <socketcall.h>
@@ -41,18 +41,17 @@
 
 #define stackblock 80 /* offset to socket parm area.  */
 
-#ifndef socket
-/* If this is just socket.S leave it alone! */
-#else
 #ifndef __socket
-#define __socket P(__,socket)
-#endif
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 	.text
 ENTRY(__socket)
 	CALL_MCOUNT NARGS
-	cfi_startproc
 	stdu r1,-144(r1)
 	cfi_adjust_cfa_offset(144)
 #if NARGS >= 1
@@ -117,7 +116,8 @@ ENTRY(__socket)
 	addi	r1,r1,144
 	PSEUDO_RET
 #endif
-	cfi_endproc
 PSEUDO_END (__socket)
 
+#ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)
+#endif

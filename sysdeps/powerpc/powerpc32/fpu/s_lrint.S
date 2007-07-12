@@ -1,5 +1,5 @@
 /* Round double to long int.  PowerPC32 version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,15 +18,18 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 /* long int[r3] __lrint (double x[fp1])  */
-ENTRY (__lrint)	
+ENTRY (__lrint)
+	stwu	r1,-16(r1)
 	fctiw	fp13,fp1
-	stfd	fp13,-8(r1)
+	stfd	fp13,8(r1)
 	nop	/* Insure the following load is in a different dispatch group */
 	nop	/* to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,-4(r1)	
+	lwz	r3,12(r1)
+	addi	r1,r1,16
 	blr
 	END (__lrint)
 
@@ -38,4 +41,7 @@ weak_alias (__lrint, lrintf)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__lrint, __lrintl)
 weak_alias (__lrint, lrintl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __lrint, lrintl, GLIBC_2_1)
 #endif

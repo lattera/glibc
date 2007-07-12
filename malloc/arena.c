@@ -1,5 +1,6 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -18,13 +19,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* $Id$ */
+#include <stdbool.h>
 
 /* Compile-time constants.  */
 
 #define HEAP_MIN_SIZE (32*1024)
 #ifndef HEAP_MAX_SIZE
-#define HEAP_MAX_SIZE (1024*1024) /* must be a power of two */
+# ifdef DEFAULT_MMAP_THRESHOLD_MAX
+#  define HEAP_MAX_SIZE (2 * DEFAULT_MMAP_THRESHOLD_MAX)
+# else
+#  define HEAP_MAX_SIZE (1024*1024) /* must be a power of two */
+# endif
 #endif
 
 /* HEAP_MIN_SIZE and HEAP_MAX_SIZE limit the size of mmap()ed heaps
@@ -55,8 +60,19 @@ typedef struct _heap_info {
   mstate ar_ptr; /* Arena for this heap. */
   struct _heap_info *prev; /* Previous heap. */
   size_t size;   /* Current size in bytes. */
-  size_t pad;    /* Make sure the following data is properly aligned. */
+  size_t mprotect_size;	/* Size in bytes that has been mprotected
+			   PROT_READ|PROT_WRITE.  */
+  /* Make sure the following data is properly aligned, particularly
+     that sizeof (heap_info) + 2 * SIZE_SZ is a multiple of
+     MALLOC_ALIGNMENT. */
+  char pad[-6 * SIZE_SZ & MALLOC_ALIGN_MASK];
 } heap_info;
+
+/* Get a compile-time error if the heap_info padding is not correct
+   to make alignment work as expected in sYSMALLOc.  */
+extern int sanity_check_heap_info_alignment[(sizeof (heap_info)
+					     + 2 * SIZE_SZ) % MALLOC_ALIGNMENT
+					    ? -1 : 1];
 
 /* Thread specific data */
 
@@ -208,6 +224,10 @@ free_atfork(Void_t* mem, const Void_t *caller)
     (void)mutex_unlock(&ar_ptr->mutex);
 }
 
+
+/* Counter for number of times the list is locked by the same thread.  */
+static unsigned int atfork_recursive_cntr;
+
 /* The following two functions are registered via thread_atfork() to
    make sure that the mutexes remain in a consistent state in the
    fork()ed version of a thread.  Also adapt the malloc and free hooks
@@ -221,7 +241,18 @@ ptmalloc_lock_all (void)
 
   if(__malloc_initialized < 1)
     return;
-  (void)mutex_lock(&list_lock);
+  if (mutex_trylock(&list_lock))
+    {
+      Void_t *my_arena;
+      tsd_getspecific(arena_key, my_arena);
+      if (my_arena == ATFORK_ARENA_PTR)
+	/* This is the same thread which already locks the global list.
+	   Just bump the counter.  */
+	goto out;
+
+      /* This thread has to wait its turn.  */
+      (void)mutex_lock(&list_lock);
+    }
   for(ar_ptr = &main_arena;;) {
     (void)mutex_lock(&ar_ptr->mutex);
     ar_ptr = ar_ptr->next;
@@ -234,6 +265,8 @@ ptmalloc_lock_all (void)
   /* Only the current thread may perform malloc/free calls now. */
   tsd_getspecific(arena_key, save_arena);
   tsd_setspecific(arena_key, ATFORK_ARENA_PTR);
+ out:
+  ++atfork_recursive_cntr;
 }
 
 static void
@@ -242,6 +275,8 @@ ptmalloc_unlock_all (void)
   mstate ar_ptr;
 
   if(__malloc_initialized < 1)
+    return;
+  if (--atfork_recursive_cntr != 0)
     return;
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;
@@ -256,7 +291,7 @@ ptmalloc_unlock_all (void)
 
 #ifdef __linux__
 
-/* In LinuxThreads, unlocking a mutex in the child process after a
+/* In NPTL, unlocking a mutex in the child process after a
    fork() is currently unsafe, whereas re-initializing it is safe and
    does not leak resources.  Therefore, a special atfork handler is
    installed for the child. */
@@ -279,6 +314,7 @@ ptmalloc_unlock_all2 (void)
     if(ar_ptr == &main_arena) break;
   }
   mutex_init(&list_lock);
+  atfork_recursive_cntr = 0;
 }
 
 #else
@@ -353,8 +389,6 @@ libc_hidden_proto (_dl_open_hook);
 # endif
 
 # if defined SHARED && defined USE_TLS && !USE___THREAD
-# include <stdbool.h>
-
 /* This is called by __pthread_initialize_minimal when it needs to use
    malloc to set up the TLS state.  We cannot do the full work of
    ptmalloc_init (below) until __pthread_initialize_minimal has finished,
@@ -482,8 +516,13 @@ ptmalloc_init (void)
 		s = &envline[7];
 	      break;
 	    case 8:
-	      if (! secure && memcmp (envline, "TOP_PAD_", 8) == 0)
-		mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+	      if (! secure)
+		{
+		  if (memcmp (envline, "TOP_PAD_", 8) == 0)
+		    mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+		  else if (memcmp (envline, "PERTURB_", 8) == 0)
+		    mALLOPt(M_PERTURB, atoi(&envline[9]));
+		}
 	      break;
 	    case 9:
 	      if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
@@ -510,6 +549,8 @@ ptmalloc_init (void)
 	mALLOPt(M_TRIM_THRESHOLD, atoi(s));
       if((s = getenv("MALLOC_TOP_PAD_")))
 	mALLOPt(M_TOP_PAD, atoi(s));
+      if((s = getenv("MALLOC_PERTURB_")))
+	mALLOPt(M_PERTURB, atoi(s));
       if((s = getenv("MALLOC_MMAP_THRESHOLD_")))
 	mALLOPt(M_MMAP_THRESHOLD, atoi(s));
       if((s = getenv("MALLOC_MMAP_MAX_")))
@@ -517,8 +558,8 @@ ptmalloc_init (void)
     }
   s = getenv("MALLOC_CHECK_");
 #endif
-  if(s) {
-    if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
+  if(s && s[0]) {
+    mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     if (check_action != 0)
       __malloc_check_init();
   }
@@ -654,6 +695,7 @@ new_heap(size, top_pad) size_t size, top_pad;
   }
   h = (heap_info *)p2;
   h->size = size;
+  h->mprotect_size = size;
   THREAD_STAT(stat_n_heaps++);
   return h;
 }
@@ -674,19 +716,36 @@ grow_heap(h, diff) heap_info *h; long diff;
   if(diff >= 0) {
     diff = (diff + page_mask) & ~page_mask;
     new_size = (long)h->size + diff;
-    if(new_size > HEAP_MAX_SIZE)
+    if((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
       return -1;
-    if(mprotect((char *)h + h->size, diff, PROT_READ|PROT_WRITE) != 0)
-      return -2;
+    if((unsigned long) new_size > h->mprotect_size) {
+      if (mprotect((char *)h + h->mprotect_size,
+		   (unsigned long) new_size - h->mprotect_size,
+		   PROT_READ|PROT_WRITE) != 0)
+	return -2;
+      h->mprotect_size = new_size;
+    }
   } else {
     new_size = (long)h->size + diff;
     if(new_size < (long)sizeof(*h))
       return -1;
     /* Try to re-map the extra heap space freshly to save memory, and
        make it inaccessible. */
-    if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE,
-                    MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
-      return -2;
+#ifdef _LIBC
+    if (__builtin_expect (__libc_enable_secure, 0))
+#else
+    if (1)
+#endif
+      {
+	if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE,
+			MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
+	  return -2;
+	h->mprotect_size = new_size;
+      }
+#ifdef _LIBC
+    else
+      madvise ((char *)h + new_size, -diff, MADV_DONTNEED);
+#endif
     /*fprintf(stderr, "shrink %p %08lx\n", h, new_size);*/
   }
   h->size = new_size;
@@ -759,6 +818,48 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
   return 1;
 }
 
+/* Create a new arena with initial size "size".  */
+
+static mstate
+_int_new_arena(size_t size)
+{
+  mstate a;
+  heap_info *h;
+  char *ptr;
+  unsigned long misalign;
+
+  h = new_heap(size + (sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT),
+	       mp_.top_pad);
+  if(!h) {
+    /* Maybe size is too large to fit in a single heap.  So, just try
+       to create a minimally-sized arena and let _int_malloc() attempt
+       to deal with the large request via mmap_chunk().  */
+    h = new_heap(sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT, mp_.top_pad);
+    if(!h)
+      return 0;
+  }
+  a = h->ar_ptr = (mstate)(h+1);
+  malloc_init_state(a);
+  /*a->next = NULL;*/
+  a->system_mem = a->max_system_mem = h->size;
+  arena_mem += h->size;
+#ifdef NO_THREADS
+  if((unsigned long)(mp_.mmapped_mem + arena_mem + main_arena.system_mem) >
+     mp_.max_total_mem)
+    mp_.max_total_mem = mp_.mmapped_mem + arena_mem + main_arena.system_mem;
+#endif
+
+  /* Set up the top chunk, with proper alignment. */
+  ptr = (char *)(a + 1);
+  misalign = (unsigned long)chunk2mem(ptr) & MALLOC_ALIGN_MASK;
+  if (misalign > 0)
+    ptr += MALLOC_ALIGNMENT - misalign;
+  top(a) = (mchunkptr)ptr;
+  set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
+
+  return a;
+}
+
 static mstate
 internal_function
 #if __STD_C
@@ -825,48 +926,6 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
       THREAD_STAT(++(a->stat_lock_loop));
     }
   (void)mutex_unlock(&list_lock);
-
-  return a;
-}
-
-/* Create a new arena with initial size "size".  */
-
-mstate
-_int_new_arena(size_t size)
-{
-  mstate a;
-  heap_info *h;
-  char *ptr;
-  unsigned long misalign;
-
-  h = new_heap(size + (sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT),
-	       mp_.top_pad);
-  if(!h) {
-    /* Maybe size is too large to fit in a single heap.  So, just try
-       to create a minimally-sized arena and let _int_malloc() attempt
-       to deal with the large request via mmap_chunk().  */
-    h = new_heap(sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT, mp_.top_pad);
-    if(!h)
-      return 0;
-  }
-  a = h->ar_ptr = (mstate)(h+1);
-  malloc_init_state(a);
-  /*a->next = NULL;*/
-  a->system_mem = a->max_system_mem = h->size;
-  arena_mem += h->size;
-#ifdef NO_THREADS
-  if((unsigned long)(mp_.mmapped_mem + arena_mem + main_arena.system_mem) >
-     mp_.max_total_mem)
-    mp_.max_total_mem = mp_.mmapped_mem + arena_mem + main_arena.system_mem;
-#endif
-
-  /* Set up the top chunk, with proper alignment. */
-  ptr = (char *)(a + 1);
-  misalign = (unsigned long)chunk2mem(ptr) & MALLOC_ALIGN_MASK;
-  if (misalign > 0)
-    ptr += MALLOC_ALIGNMENT - misalign;
-  top(a) = (mchunkptr)ptr;
-  set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
 
   return a;
 }

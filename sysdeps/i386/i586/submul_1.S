@@ -1,6 +1,6 @@
 /* Pentium __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
    the result from a second limb vector.
-   Copyright (C) 1992, 94, 96, 97, 98, 00 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 96, 97, 98, 00, 2005 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -38,15 +38,22 @@
 ENTRY (BP_SYM (__mpn_submul_1))
 	ENTER
 
-	pushl	%edi
-	pushl	%esi
+	pushl	%res_ptr
+	cfi_adjust_cfa_offset (4)
+	pushl	%s1_ptr
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebp
-	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
+	pushl	%s2_limb
+	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp), %res_ptr
+	cfi_rel_offset (res_ptr, 12)
 	movl	S1(%esp), %s1_ptr
+	cfi_rel_offset (s1_ptr, 8)
 	movl	SIZE(%esp), %size
 	movl	S2LIMB(%esp), %s2_limb
+	cfi_rel_offset (s2_limb, 0)
 #if __BOUNDED_POINTERS__
 	shll	$2, %sizeP	/* convert limbs to bytes */
 	CHECK_BOUNDS_BOTH_WIDE (%res_ptr, RES(%esp), %sizeP)
@@ -57,6 +64,7 @@ ENTRY (BP_SYM (__mpn_submul_1))
 	leal	(%s1_ptr,%size,4), %s1_ptr
 	negl	%size
 	xorl	%ebp, %ebp
+	cfi_rel_offset (ebp, 4)
 	ALIGN (3)
 
 L(oop):	adcl	$0, %ebp
@@ -78,10 +86,18 @@ L(oop):	adcl	$0, %ebp
 
 	adcl	$0, %ebp
 	movl	%ebp, %eax
-	popl	%ebx
+	popl	%s2_limb
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (s2_limb)
 	popl	%ebp
-	popl	%esi
-	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
+	popl	%s1_ptr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (s1_ptr)
+	popl	%res_ptr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (res_ptr)
 
 	LEAVE
 	ret

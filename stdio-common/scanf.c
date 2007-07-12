@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002, 2004
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,7 +26,7 @@
 /* Read formatted input from stdin according to the format string FORMAT.  */
 /* VARARGS1 */
 int
-scanf (const char *format, ...)
+__scanf (const char *format, ...)
 {
   va_list arg;
   int done;
@@ -37,3 +37,4 @@ scanf (const char *format, ...)
 
   return done;
 }
+ldbl_strong_alias (__scanf, scanf)

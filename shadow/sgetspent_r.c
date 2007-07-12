@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 struct spent_data {};
 
 /* Predicate which always returns false, needed below.  */
-#define FALSE(arg) 0
+#define FALSEP(arg) 0
 
 
 #include <nss/nss_files/files-parse.c>
@@ -77,7 +77,7 @@ LINE_PARSER
 	 INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (long int),
 			       (long int) -1);
 	 if (*line != '\0')
-	   INT_FIELD_MAYBE_NULL (result->sp_flag, FALSE, 0, 10,
+	   INT_FIELD_MAYBE_NULL (result->sp_flag, FALSEP, 0, 10,
 				 (unsigned long int), ~0ul)
 	 else
 	   result->sp_flag = ~0ul;

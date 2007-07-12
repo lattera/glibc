@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1997,1998,2000,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1998,2000,2003,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <sys/ptrace.h>
 #include <sys/user.h>
 #include <stdarg.h>
+#include <signal.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -87,6 +88,19 @@ ptrace (enum __ptrace_request request, ...)
 	 that `data' is valid for at least one word.  */
       (void) CHECK_1 ((int *) data);
 #endif
+      break;
+
+    case PTRACE_GETSIGINFO:
+    case PTRACE_SETSIGINFO:
+      (void) CHECK_1 ((siginfo_t *) data);
+      break;
+
+    case PTRACE_GETEVENTMSG:
+      (void) CHECK_1 ((unsigned long *) data);
+      break;
+
+    case PTRACE_SETOPTIONS:
+      (void) CHECK_1 ((long *) data);
       break;
 
     case PTRACE_TRACEME:

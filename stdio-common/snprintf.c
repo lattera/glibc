@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +19,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-
-#include <libio/libioP.h>
+#include <libioP.h>
 #define __vsnprintf(s, l, f, a) _IO_vsnprintf (s, l, f, a)
 
 /* Write formatted output into S, according to the format
@@ -37,4 +37,4 @@ __snprintf (char *s, size_t maxlen, const char *format, ...)
 
   return done;
 }
-weak_alias (__snprintf, snprintf)
+ldbl_weak_alias (__snprintf, snprintf)

@@ -626,8 +626,7 @@ static const unsigned int poweroften[10]=
 
 /* takes an XeY precision/size value, returns a string representation. */
 static const char *
-precsize_ntoa(prec)
-	u_int8_t prec;
+precsize_ntoa (u_int8_t prec)
 {
 	static char retbuf[sizeof "90000000.00"];	/* XXX nonreentrant */
 	unsigned long val;
@@ -644,8 +643,7 @@ precsize_ntoa(prec)
 
 /* converts ascii size/precision X * 10**Y(cm) to 0xXY.  moves pointer. */
 static u_int8_t
-precsize_aton(strptr)
-	const char **strptr;
+precsize_aton (const char **strptr)
 {
 	unsigned int mval = 0, cmval = 0;
 	u_int8_t retval = 0;
@@ -686,9 +684,7 @@ precsize_aton(strptr)
 
 /* converts ascii lat/lon to unsigned encoded 32-bit number.  moves pointer. */
 static u_int32_t
-latlon2ul(latlonstrptr,which)
-	const char **latlonstrptr;
-	int *which;
+latlon2ul (const char **latlonstrptr, int *which)
 {
 	const char *cp;
 	u_int32_t retval;
@@ -900,7 +896,7 @@ loc_ntoa(binary, ascii)
 	const u_char *binary;
 	char *ascii;
 {
-	static char *error = "?";
+	static const char error[] = "?";
 	static char tmpbuf[sizeof
 "1000 60 60.000 N 1000 60 60.000 W -12345678.00m 90000000.00m 90000000.00m 90000000.00m"];
 	const u_char *cp = binary;
@@ -980,11 +976,11 @@ loc_ntoa(binary, ascii)
 	altmeters = (altval / 100) * altsign;
 
 	if ((sizestr = strdup(precsize_ntoa(sizeval))) == NULL)
-		sizestr = error;
+		sizestr = (char *) error;
 	if ((hpstr = strdup(precsize_ntoa(hpval))) == NULL)
-		hpstr = error;
+		hpstr = (char *) error;
 	if ((vpstr = strdup(precsize_ntoa(vpval))) == NULL)
-		vpstr = error;
+		vpstr = (char *) error;
 
 	sprintf(ascii,
 	      "%d %.2d %.2d.%.3d %c %d %.2d %.2d.%.3d %c %d.%.2dm %sm %sm %sm",
@@ -992,11 +988,11 @@ loc_ntoa(binary, ascii)
 		longdeg, longmin, longsec, longsecfrac, eastwest,
 		altmeters, altfrac, sizestr, hpstr, vpstr);
 
-	if (sizestr != error)
+	if (sizestr != (char *) error)
 		free(sizestr);
-	if (hpstr != error)
+	if (hpstr != (char *) error)
 		free(hpstr);
-	if (vpstr != error)
+	if (vpstr != (char *) error)
 		free(vpstr);
 
 	return (ascii);

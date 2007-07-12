@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 2000,02, 05 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
 
@@ -345,14 +345,14 @@ punct = %04x  alnum = %04x\n",
 	  || getline (&resline, &reslinelen, stdin) <= 0)
 	break;
 
-      inp = strchr (inpline, '\n');
+      inp = (unsigned char *) strchr (inpline, '\n');
       if (inp != NULL)
 	*inp = '\0';
-      resp = strchr (resline, '\n');
+      resp = (unsigned char *) strchr (resline, '\n');
       if (resp != NULL)
 	*resp = '\0';
 
-      inp = inpline;
+      inp = (unsigned char *) inpline;
       while (*inp != ' ' && *inp != '\t' && *inp && *inp != '\n'
 	     && *inp != '\0')
 	++inp;
@@ -371,11 +371,11 @@ punct = %04x  alnum = %04x\n",
 	if (strcmp (inpline, classes[n].name) == 0)
 	  break;
 
-      resp = resline;
+      resp = (unsigned char *) resline;
       while (*resp == ' ' || *resp == '\t')
 	++resp;
 
-      if (strlen (inp) != strlen (resp))
+      if (strlen ((char *) inp) != strlen ((char *) resp))
 	{
 	  printf ("lines \"%.20s\"... and \"%.20s\" have not the same length\n",
 		  inp, resp);
@@ -384,7 +384,7 @@ punct = %04x  alnum = %04x\n",
 
       if (n < nclasses)
 	{
-	  if (strspn (resp, "01") != strlen (resp))
+	  if (strspn ((char *) resp, "01") != strlen ((char *) resp))
 	    {
 	      printf ("result string \"%s\" malformed\n", resp);
 	      continue;
