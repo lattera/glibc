@@ -2273,14 +2273,17 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 	      if (counting)
 		{
 		  si->dls_cnt++;
-		  si->dls_size += r->dirnamelen;
+		  si->dls_size += r->dirnamelen < 2 ? r->dirnamelen : 2;
 		}
 	      else
 		{
 		  Dl_serpath *const sp = &si->dls_serpath[idx++];
 		  sp->dls_name = allocptr;
-		  allocptr = __mempcpy (allocptr,
-					r->dirname, r->dirnamelen - 1);
+		  if (r->dirnamelen < 2)
+		    *allocptr++ = r->dirnamelen ? '/' : '.';
+		  else
+		    allocptr = __mempcpy (allocptr,
+					  r->dirname, r->dirnamelen - 1);
 		  *allocptr++ = '\0';
 		  sp->dls_flags = flags;
 		}

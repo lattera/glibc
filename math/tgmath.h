@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,202 +53,187 @@
 /* The tgmath real type for T, where E is 0 if T is an integer type and
    1 for a floating type.  */
 # define __tgmath_real_type_sub(T, E) \
-  __typeof__(*(0 ? (__typeof__ (0 ? (double *) 0 : (void *) (E))) 0	      \
-		 : (__typeof__ (0 ? (T *) 0 : (void *) (!(E)))) 0))
+  __typeof__ (*(0 ? (__typeof__ (0 ? (double *) 0 : (void *) (E))) 0	      \
+		  : (__typeof__ (0 ? (T *) 0 : (void *) (!(E)))) 0))
 
 /* The tgmath real type of EXPR.  */
 # define __tgmath_real_type(expr) \
-  __tgmath_real_type_sub(__typeof__(expr), __floating_type(__typeof__(expr)))
+  __tgmath_real_type_sub (__typeof__ ((__typeof__ (expr)) 0),		      \
+			  __floating_type (__typeof__ (expr)))
 
 
 /* We have two kinds of generic macros: to support functions which are
    only defined on real valued parameters and those which are defined
    for complex functions as well.  */
 # define __TGMATH_UNARY_REAL_ONLY(Val, Fct) \
-     (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
-		       if (sizeof (Val) == sizeof (double)		      \
-			   || __builtin_classify_type (Val) != 8)	      \
-			 __tgmres = Fct (Val);				      \
-		       else if (sizeof (Val) == sizeof (float))		      \
-			 __tgmres = Fct##f (Val);			      \
-		       else						      \
-			 __tgmres = __tgml(Fct) (Val);			      \
-		       __tgmres; }))
+     (__extension__ ((sizeof (Val) == sizeof (double)			      \
+		      || __builtin_classify_type (Val) != 8)		      \
+		     ? (__tgmath_real_type (Val)) Fct (Val)		      \
+		     : (sizeof (Val) == sizeof (float))			      \
+		     ? (__tgmath_real_type (Val)) Fct##f (Val)		      \
+		     : (__tgmath_real_type (Val)) __tgml(Fct) (Val)))
 
 # define __TGMATH_UNARY_REAL_RET_ONLY(Val, RetType, Fct) \
-     (__extension__ ({ RetType __tgmres;				      \
-		       if (sizeof (Val) == sizeof (double)		      \
-			   || __builtin_classify_type (Val) != 8)	      \
-			 __tgmres = Fct (Val);				      \
-		       else if (sizeof (Val) == sizeof (float))		      \
-			 __tgmres = Fct##f (Val);			      \
-		       else						      \
-			 __tgmres = __tgml(Fct) (Val);			      \
-		       __tgmres; }))
+     (__extension__ ((sizeof (Val) == sizeof (double)			      \
+		      || __builtin_classify_type (Val) != 8)		      \
+		     ? (RetType) Fct (Val)				      \
+		     : (sizeof (Val) == sizeof (float))			      \
+		     ? (RetType) Fct##f (Val)				      \
+		     : (RetType) __tgml(Fct) (Val)))
 
 # define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ ({ __tgmath_real_type (Val1) __tgmres;		      \
-		       if (sizeof (Val1) == sizeof (double)		      \
-			   || __builtin_classify_type (Val1) != 8)	      \
-			 __tgmres = Fct (Val1, Val2);			      \
-		       else if (sizeof (Val1) == sizeof (float))	      \
-			 __tgmres = Fct##f (Val1, Val2);		      \
-		       else						      \
-			 __tgmres = __tgml(Fct) (Val1, Val2);		      \
-		       __tgmres; }))
+     (__extension__ ((sizeof (Val1) == sizeof (double)			      \
+		      || __builtin_classify_type (Val1) != 8)		      \
+		     ? (__tgmath_real_type (Val1)) Fct (Val1, Val2)	      \
+		     : (sizeof (Val1) == sizeof (float))		      \
+		     ? (__tgmath_real_type (Val1)) Fct##f (Val1, Val2)	      \
+		     : (__tgmath_real_type (Val1)) __tgml(Fct) (Val1, Val2)))
 
 # define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
-				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
-		       if ((sizeof (Val1) > sizeof (double)		      \
-			    || sizeof (Val2) > sizeof (double))		      \
-			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
-			 __tgmres = __tgml(Fct) (Val1, Val2);		      \
-		       else if (sizeof (Val1) == sizeof (double)	      \
-				|| sizeof (Val2) == sizeof (double)	      \
-				|| __builtin_classify_type (Val1) != 8	      \
-				|| __builtin_classify_type (Val2) != 8)	      \
-			 __tgmres = Fct (Val1, Val2);			      \
-		       else						      \
-			 __tgmres = Fct##f (Val1, Val2);		      \
-		       __tgmres; }))
+     (__extension__ (((sizeof (Val1) > sizeof (double)			      \
+		       || sizeof (Val2) > sizeof (double))		      \
+		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       __tgml(Fct) (Val1, Val2)				      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			|| __builtin_classify_type (Val1) != 8		      \
+			|| __builtin_classify_type (Val2) != 8)		      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       Fct (Val1, Val2)					      \
+		     : (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       Fct##f (Val1, Val2)))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
-				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
-		       if ((sizeof (Val1) > sizeof (double)		      \
-			    || sizeof (Val2) > sizeof (double))		      \
-			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
-			 __tgmres = __tgml(Fct) (Val1, Val2, Val3);	      \
-		       else if (sizeof (Val1) == sizeof (double)	      \
-				|| sizeof (Val2) == sizeof (double)	      \
-				|| __builtin_classify_type (Val1) != 8	      \
-				|| __builtin_classify_type (Val2) != 8)	      \
-			 __tgmres = Fct (Val1, Val2, Val3);		      \
-		       else						      \
-			 __tgmres = Fct##f (Val1, Val2, Val3);		      \
-		       __tgmres; }))
+     (__extension__ (((sizeof (Val1) > sizeof (double)			      \
+		       || sizeof (Val2) > sizeof (double))		      \
+		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       __tgml(Fct) (Val1, Val2, Val3)			      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			|| __builtin_classify_type (Val1) != 8		      \
+			|| __builtin_classify_type (Val2) != 8)		      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       Fct (Val1, Val2, Val3)				      \
+		     : (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+		       Fct##f (Val1, Val2, Val3)))
 
 # define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
-				+ (__tgmath_real_type (Val2)) 0		      \
-				+ (__tgmath_real_type (Val3)) 0) __tgmres;    \
-		       if ((sizeof (Val1) > sizeof (double)		      \
-			    || sizeof (Val2) > sizeof (double)		      \
-			    || sizeof (Val3) > sizeof (double))		      \
-			   && __builtin_classify_type ((Val1) + (Val2)	      \
-						       + (Val3)) == 8)	      \
-			 __tgmres = __tgml(Fct) (Val1, Val2, Val3);	      \
-		       else if (sizeof (Val1) == sizeof (double)	      \
-				|| sizeof (Val2) == sizeof (double)	      \
-				|| sizeof (Val3) == sizeof (double)	      \
-				|| __builtin_classify_type (Val1) != 8	      \
-				|| __builtin_classify_type (Val2) != 8	      \
-				|| __builtin_classify_type (Val3) != 8)	      \
-			 __tgmres = Fct (Val1, Val2, Val3);		      \
-		       else						      \
-			 __tgmres = Fct##f (Val1, Val2, Val3);		      \
-		       __tgmres; }))
+     (__extension__ (((sizeof (Val1) > sizeof (double)			      \
+		       || sizeof (Val2) > sizeof (double)		      \
+		       || sizeof (Val3) > sizeof (double))		      \
+		      && __builtin_classify_type ((Val1) + (Val2) + (Val3))   \
+			 == 8)						      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0	      \
+				   + (__tgmath_real_type (Val3)) 0))	      \
+		       __tgml(Fct) (Val1, Val2, Val3)			      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			|| sizeof (Val3) == sizeof (double)		      \
+			|| __builtin_classify_type (Val1) != 8		      \
+			|| __builtin_classify_type (Val2) != 8		      \
+			|| __builtin_classify_type (Val3) != 8)		      \
+		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0	      \
+				   + (__tgmath_real_type (Val3)) 0))	      \
+		       Fct (Val1, Val2, Val3)				      \
+		     : (__typeof ((__tgmath_real_type (Val1)) 0		      \
+				   + (__tgmath_real_type (Val2)) 0	      \
+				   + (__tgmath_real_type (Val3)) 0))	      \
+		       Fct##f (Val1, Val2, Val3)))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
-     (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
-		       if (sizeof (__real__ (Val)) > sizeof (double)	      \
-			   && __builtin_classify_type (__real__ (Val)) == 8)  \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = __tgml(Fct) (Val);		      \
-			   else						      \
-			     __tgmres = __tgml(Cfct) (Val);		      \
-			 }						      \
-		       else if (sizeof (__real__ (Val)) == sizeof (double)    \
-				|| __builtin_classify_type (__real__ (Val))   \
-				   != 8)				      \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = Fct (Val);			      \
-			   else						      \
-			     __tgmres = Cfct (Val);			      \
-			 }						      \
-		       else						      \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = Fct##f (Val);			      \
-			   else						      \
-			     __tgmres = Cfct##f (Val);			      \
-			 }						      \
-		       __tgmres; }))
+     (__extension__ ((sizeof (__real__ (Val)) == sizeof (double)	      \
+		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
+		     ? ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__tgmath_real_type (Val)) Fct (Val)		      \
+			: (__tgmath_real_type (Val)) Cfct (Val))	      \
+		     : (sizeof (__real__ (Val)) == sizeof (float))	      \
+		     ? ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__tgmath_real_type (Val)) Fct##f (Val)	      \
+			: (__tgmath_real_type (Val)) Cfct##f (Val))	      \
+		     : ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__tgmath_real_type (Val)) __tgml(Fct) (Val)	      \
+			: (__tgmath_real_type (Val)) __tgml(Cfct) (Val))))
+
+# define __TGMATH_UNARY_IMAG(Val, Cfct) \
+     (__extension__ ((sizeof (__real__ (Val)) == sizeof (double)	      \
+		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
+		     ? (__typeof__ ((__tgmath_real_type (Val)) 0	      \
+				    + _Complex_I)) Cfct (Val)		      \
+		     : (sizeof (__real__ (Val)) == sizeof (float))	      \
+		     ? (__typeof__ ((__tgmath_real_type (Val)) 0	      \
+				    + _Complex_I)) Cfct##f (Val)	      \
+		     : (__typeof__ ((__tgmath_real_type (Val)) 0	      \
+				    + _Complex_I)) __tgml(Cfct) (Val)))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct) \
-     (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
-		       if (sizeof (__real__ (Val)) > sizeof (double)	      \
-			   && __builtin_classify_type (__real__ (Val)) == 8)  \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = __tgml(Fct) (Val);		      \
-			   else						      \
-			     __tgmres = __tgml(Cfct) (Val);		      \
-			 }						      \
-		       else if (sizeof (__real__ (Val)) == sizeof (double)    \
-				|| __builtin_classify_type (__real__ (Val))   \
-				   != 8)				      \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = Fct (Val);			      \
-			   else						      \
-			     __tgmres = Cfct (Val);			      \
-			 }						      \
-		       else						      \
-			 {						      \
-			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
-			     __tgmres = Fct##f (Val);			      \
-			   else						      \
-			     __tgmres = Cfct##f (Val);			      \
-			 }						      \
-		       __real__ __tgmres; }))
+     (__extension__ ((sizeof (__real__ (Val)) == sizeof (double)	      \
+		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
+		     ? ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  Fct (Val)					      \
+			: (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  Cfct (Val))					      \
+		     : (sizeof (__real__ (Val)) == sizeof (float))	      \
+		     ? ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  Fct##f (Val)					      \
+			: (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  Cfct##f (Val))				      \
+		     : ((sizeof (__real__ (Val)) == sizeof (Val))	      \
+			? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  __tgml(Fct) (Val)				      \
+			: (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
+			  __tgml(Cfct) (Val))))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
-     (__extension__ ({ __typeof((__tgmath_real_type (Val1)) 0		      \
-				+ (__tgmath_real_type (Val2)) 0) __tgmres;    \
-		       if ((sizeof (__real__ (Val1)) > sizeof (double)	      \
-			    || sizeof (__real__ (Val2)) > sizeof (double))    \
-			   && __builtin_classify_type (__real__ (Val1)	      \
-						       + __real__ (Val2))     \
-			      == 8)					      \
-			 {						      \
-			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
-			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
-			     __tgmres = __tgml(Fct) (Val1, Val2);	      \
-			   else						      \
-			     __tgmres = __tgml(Cfct) (Val1, Val2);	      \
-			 }						      \
-		       else if (sizeof (__real__ (Val1)) == sizeof (double)   \
-				|| sizeof (__real__ (Val2)) == sizeof(double) \
-				|| (__builtin_classify_type (__real__ (Val1)) \
-				    != 8)				      \
-				|| (__builtin_classify_type (__real__ (Val2)) \
-				    != 8))				      \
-			 {						      \
-			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
-			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
-			     __tgmres = Fct (Val1, Val2);		      \
-			   else						      \
-			     __tgmres = Cfct (Val1, Val2);		      \
-			 }						      \
-		       else						      \
-			 {						      \
-			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
-			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
-			     __tgmres = Fct##f (Val1, Val2);		      \
-			   else						      \
-			     __tgmres = Cfct##f (Val1, Val2);		      \
-			 }						      \
-		       __tgmres; }))
+     (__extension__ (((sizeof (__real__ (Val1)) > sizeof (double)	      \
+		       || sizeof (__real__ (Val2)) > sizeof (double))	      \
+		      && __builtin_classify_type (__real__ (Val1)	      \
+						  + __real__ (Val2)) == 8)    \
+		     ? ((sizeof (__real__ (Val1)) == sizeof (Val1)	      \
+			 && sizeof (__real__ (Val2)) == sizeof (Val2))	      \
+			? (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  __tgml(Fct) (Val1, Val2)			      \
+			: (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  __tgml(Cfct) (Val1, Val2))			      \
+		     : (sizeof (__real__ (Val1)) == sizeof (double)	      \
+			|| sizeof (__real__ (Val2)) == sizeof (double)	      \
+			|| __builtin_classify_type (__real__ (Val1)) != 8     \
+			|| __builtin_classify_type (__real__ (Val2)) != 8)    \
+		     ? ((sizeof (__real__ (Val1)) == sizeof (Val1)	      \
+			 && sizeof (__real__ (Val2)) == sizeof (Val2))	      \
+			? (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  Fct (Val1, Val2)				      \
+			: (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  Cfct (Val1, Val2))				      \
+		     : ((sizeof (__real__ (Val1)) == sizeof (Val1)	      \
+			 && sizeof (__real__ (Val2)) == sizeof (Val2))	      \
+			? (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  Fct##f (Val1, Val2)				      \
+			: (__typeof ((__tgmath_real_type (Val1)) 0	      \
+				   + (__tgmath_real_type (Val2)) 0))	      \
+			  Cfct##f (Val1, Val2))))
 #else
 # error "Unsupported compiler; you cannot use <tgmath.h>"
 #endif
@@ -447,10 +432,10 @@
 #define carg(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, carg, carg)
 
 /* Complex conjugate of Z.  */
-#define conj(Val) __TGMATH_UNARY_REAL_IMAG (Val, conj, conj)
+#define conj(Val) __TGMATH_UNARY_IMAG (Val, conj)
 
 /* Projection of Z onto the Riemann sphere.  */
-#define cproj(Val) __TGMATH_UNARY_REAL_IMAG (Val, cproj, cproj)
+#define cproj(Val) __TGMATH_UNARY_IMAG (Val, cproj)
 
 
 /* Decomposing complex values.  */

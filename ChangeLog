@@ -1,3 +1,54 @@
+2007-07-12  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4775]
+	* math/tgmath.h (__tgmath_real_type_sub): Formatting.
+	(__tgmath_real_type): Fix if expr is const int or other const
+	qualified integral type.
+	(__TGMATH_UNARY_REAL_ONLY): Rewritten to avoid using statement
+	expressions and handle const qualified arguments.
+	(__TGMATH_BINARY_FIRST_REAL_ONLY, __TGMATH_UNARY_REAL_IMAG,
+	__TGMATH_UNARY_REAL_IMAG_RET_REAL): Likewise.
+	(__TGMATH_UNARY_REAL_RET_ONLY): Rewritten to avoid using
+	statement expressions.
+	(__TGMATH_BINARY_REAL_ONLY, __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY,
+	__TGMATH_TERNARY_REAL_ONLY, __TGMATH_BINARY_REAL_IMAG): Likewise.
+	(__TGMATH_UNARY_IMAG): Define.
+	(conj, cproj): Use __TGMATH_UNARY_IMAG macro.
+	* math/Makefile (tests): Add test-tgmath2.
+	(CFLAGS-test-tgmath2.c): Add.
+	* math/test-tgmath.c (fy, dy, ly, fz, dz, lz, count_cdouble,
+	count_cfloat, count_cldouble): New variables.
+	(NCCALLS): Define.
+	(main): Check number of complex calls as well.
+	(F(compile_test)): Add complex tests and tests with const qualified
+	arguments.
+	(y, z, ccount): Define.
+	(F(cacos), F(casin), F(catan), F(ccos), F(csin), F(ctan), F(cacosh),
+	F(casinh), F(catanh), F(ccosh), F(csinh), F(ctanh), F(cexp), F(clog),
+	F(csqrt), F(cpow), F(cabs), F(carg), F(creal), F(cimag), F(conj),
+	F(cproj)): New functions.
+	* math/test-tgmath2.c: New test.
+
+2007-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4776]
+	* elf/dl-load.c (_dl_rtld_di_serinfo): Output / in LD_LIBRARY_PATH,
+	RPATH etc. as "/" rather than "", don't segfault on empty paths,
+	instead output ".".
+	* dlfcn/Makefile (distribute): Add glreflib3.c.
+	(module-names): Add glreflib3.
+	($(objpfx)tst-dlinfo.out): Depend on glreflib3.so rather than
+	glreflib1.so.
+	(LDFLAGS_glreflib3.so): New.
+	* dlfcn/tst-dlinfo.c (do_test): Load glreflib3.so instead of
+	glreflib1.so.
+	* dlfcn/glreflib3.c: New file.
+
+	* intl/finddomain.c (_nl_find_domain): If _nl_explode_name
+	returned -1, return NULL.
+	* intl/explodename.c (_nl_explode_name): Return -1 if
+	_nl_normalize_codeset failed.
+
 2007-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4773]

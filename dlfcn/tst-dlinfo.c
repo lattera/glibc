@@ -29,7 +29,7 @@ do_test (void)
 {
   int status = 0;
 
-  void *handle = dlopen ("glreflib1.so", RTLD_NOW);
+  void *handle = dlopen ("glreflib3.so", RTLD_NOW);
   if (handle == NULL)
     error (EXIT_FAILURE, 0, "cannot load: glreflib1.so: %s", dlerror ());
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -108,7 +108,9 @@ _nl_explode_name (name, language, modifier, territory, codeset,
 	    {
 	      *normalized_codeset = _nl_normalize_codeset (*codeset,
 							   cp - *codeset);
-	      if (strcmp (*codeset, *normalized_codeset) == 0)
+	      if (*normalized_codeset == NULL)
+		return -1;
+	      else if (strcmp (*codeset, *normalized_codeset) == 0)
 		free ((char *) *normalized_codeset);
 	      else
 		mask |= XPG_NORM_CODESET;

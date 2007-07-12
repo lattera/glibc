@@ -23,7 +23,8 @@ libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
 		   dlmopen dlfcn
 routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
-distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
+distribute	:= dlopenold.c glreflib1.c glreflib2.c glreflib3.c \
+		   failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c modstatic2.c \
 		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c bug-atexit1-lib.c \
@@ -43,8 +44,8 @@ tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
 	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
 	bug-atexit3 tstatexit
 endif
-modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
-		errmsg1mod modatexit modcxaatexit \
+modules-names = glreflib1 glreflib2 glreflib3 failtestmod defaultmod1 \
+		defaultmod2 errmsg1mod modatexit modcxaatexit \
 		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
 		bug-atexit2-lib bug-atexit3-lib
 
@@ -83,7 +84,8 @@ $(objpfx)tst-dladdr: $(libdl)
 $(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so
 
 $(objpfx)tst-dlinfo: $(libdl)
-$(objpfx)tst-dlinfo.out: $(objpfx)glreflib1.so
+$(objpfx)tst-dlinfo.out: $(objpfx)glreflib3.so
+LDFLAGS-glreflib3.so = -Wl,-rpath,:
 
 LDFLAGS-default = $(LDFLAGS-rdynamic)
 $(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
