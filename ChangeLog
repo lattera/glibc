@@ -49,6 +49,27 @@
 	* intl/explodename.c (_nl_explode_name): Return -1 if
 	_nl_normalize_codeset failed.
 
+2007-07-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memset.S: Update comments.
+	Specify .machine power6 to get ISA-V2.0 branch hints.  Unroll loops
+	and avoid branch misspredicts for > 31 bytes memset case.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Likewise.
+	Remove toc ref to __cache_line_size.
+
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Specify .machine power4
+	to get ISA-V2.0 branch hints.
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S: Likewise
+	* sysdeps/powerpc/powerpc32/power4/memset.S: Likewise
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memset.S: Likewise.
+	Remove toc ref to __cache_line_size.
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S:
+	Include math_ldbl_opt.h.
+
 2007-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4773]

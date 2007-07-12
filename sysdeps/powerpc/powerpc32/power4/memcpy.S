@@ -34,6 +34,7 @@
    possible when both source and destination are word aligned.
    Each case has an optimized unrolled loop.   */
 
+	.machine power4
 EALIGN (BP_SYM (memcpy), 5, 0)
 	CALL_MCOUNT
 

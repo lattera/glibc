@@ -36,6 +36,7 @@
    posible when both source and destination are doubleword aligned.
    Each case has a optimized unrolled loop.   */
 
+	.machine power4
 EALIGN (BP_SYM (memcpy), 5, 0)
 	CALL_MCOUNT 3
 

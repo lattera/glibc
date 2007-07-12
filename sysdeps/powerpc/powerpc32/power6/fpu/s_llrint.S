@@ -18,6 +18,7 @@
    02110-1301 USA.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 /* long long int[r3, r4] __llrint (double x[fp1])  */
 ENTRY (__llrint)	

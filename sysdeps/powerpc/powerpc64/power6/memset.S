@@ -1,4 +1,4 @@
-/* Optimized memset implementation for PowerPC64.
+/* Optimized 64-bit memset implementation for POWER6.
    Copyright (C) 1997, 1999, 2000, 2002, 2003, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -22,12 +22,6 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
-	.section	".toc","aw"
-.LC0:
-	.tc __cache_line_size[TC],__cache_line_size
-	.section	".text"
-	.align 2
-
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
 
@@ -35,7 +29,8 @@
    cache line (256 bits). There is a special case for setting cache lines
    to 0, to take advantage of the dcbz instruction.  */
 
-EALIGN (BP_SYM (memset), 5, 0)
+	.machine power6
+EALIGN (BP_SYM (memset), 7, 0)
 	CALL_MCOUNT 3
 
 #define rTMP	r0
@@ -53,10 +48,7 @@ EALIGN (BP_SYM (memset), 5, 0)
 #endif
 #define rALIGN	r7	/* Number of bytes we are setting now (when aligning). */
 #define rMEMP2	r8
-
-#define rNEG64	r8	/* Constant -64 for clearing with dcbz.  */
-#define rCLS	r8	/* Cache line size obtained from static.  */
-#define rCLM	r9	/* Cache line size mask to check for cache alignment.  */
+#define rMEMP3	r9	/* Alt mem pointer.  */
 L(_memset):
 #if __BOUNDED_POINTERS__
 	cmpldi	cr1, rRTN, 0
@@ -70,7 +62,7 @@ L(b0):
 	cmpldi	cr1, rLEN, 8
 	andi.	rALIGN, rMEMP0, 7
 	mr	rMEMP, rMEMP0
-	ble-	cr1, L(small)
+	ble	cr1, L(small)
 
 /* Align to doubleword boundary.  */
 	cmpldi	cr5, rLEN, 31
@@ -131,75 +123,217 @@ L(caligned):
 	clrrdi.	rALIGN, rLEN, 5
 	mtcrf	0x01, rLEN
 	beq	cr1, L(zloopstart) /* Special case for clearing memory using dcbz.  */
-L(nondcbz):
-	srdi	rTMP, rALIGN, 5
-	mtctr	rTMP
 	beq	L(medium)	/* We may not actually get to do a full line.  */
-	clrldi.	rLEN, rLEN, 59
-	add	rMEMP, rMEMP, rALIGN
-	li	rNEG64, -0x40
-	bdz	L(cloopdone)
+	.align 4
+/* Storing a non-zero "c" value. We are aligned at a sector (32-byte)
+   boundary may not be at cache line (128-byte) boundary.  */
+L(nzloopstart):
+/* memset in 32-byte chunks until we get to a cache line boundary.
+   If rLEN is less then the distance to the next cache-line boundary use
+   cacheAligned1 code to finish the tail.  */
+	cmpldi	cr1,rLEN,128
 
-        .align 4
-L(c3):	dcbtst	rNEG64, rMEMP
-	std	rCHR, -8(rMEMP)
-	std	rCHR, -16(rMEMP)
-	std	rCHR, -24(rMEMP)
-	stdu	rCHR, -32(rMEMP)
-	bdnz	L(c3)
-        .align 4
-L(cloopdone):
-	std	rCHR, -8(rMEMP)
-	std	rCHR, -16(rMEMP)
-	cmpldi	cr1, rLEN, 16
-	std	rCHR, -24(rMEMP)
-	stdu	rCHR, -32(rMEMP)
-	beqlr
-	add	rMEMP, rMEMP, rALIGN
-	b	L(medium_tail2)
-
-	.align 5
-/* Clear lines of memory in 128-byte chunks.  */
-L(zloopstart):
-/* If the remaining length is less the 32 bytes, don't bother getting
-	 the cache line size.  */
-	beq	L(medium)
-	li      rCLS,128  /* cache line size is 128 */
-
-/* Now we know the cache line size, and it is not 32-bytes, but
-	 we may not yet be aligned to the cache line. May have a partial
-	 line to fill, so touch it 1st.  */
-	dcbt	0,rMEMP
-L(getCacheAligned):
-	cmpldi	cr1,rLEN,32
 	andi.	rTMP,rMEMP,127
-	blt		cr1,L(handletail32)
-	beq		L(cacheAligned)
-	addi	rMEMP,rMEMP,32
+	blt	cr1,L(cacheAligned1)
+	addi	rMEMP3,rMEMP,32
+	beq	L(nzCacheAligned)
 	addi	rLEN,rLEN,-32
-	std		rCHR,-32(rMEMP)
-	std		rCHR,-24(rMEMP)
-	std		rCHR,-16(rMEMP)
-	std		rCHR,-8(rMEMP)
-	b		L(getCacheAligned)
+	std	rCHR,0(rMEMP)
+	std	rCHR,8(rMEMP)
+	std	rCHR,16(rMEMP)
+	addi	rMEMP,rMEMP,32
+	andi.	rTMP,rMEMP3,127
+	std	rCHR,-8(rMEMP3)
+
+	beq	L(nzCacheAligned)
+	addi	rLEN,rLEN,-32
+	std	rCHR,0(rMEMP3)
+	addi	rMEMP,rMEMP,32
+	std	rCHR,8(rMEMP3)
+	andi.	rTMP,rMEMP,127
+	std	rCHR,16(rMEMP3)
+	std	rCHR,24(rMEMP3)
+
+	beq	L(nzCacheAligned)
+	addi	rLEN,rLEN,-32
+	std	rCHR,32(rMEMP3)
+	addi	rMEMP,rMEMP,32
+	cmpldi	cr1,rLEN,128
+	std	rCHR,40(rMEMP3)
+	cmpldi	cr6,rLEN,256
+	li	rMEMP2,128
+	std	rCHR,48(rMEMP3)
+	std	rCHR,56(rMEMP3)
+	blt	cr1,L(cacheAligned1)
+	b	L(nzCacheAligned128)
+
+/* Now we are aligned to the cache line and can use dcbtst.  */
+        .align 4
+L(nzCacheAligned):
+	cmpldi	cr1,rLEN,128
+	blt	cr1,L(cacheAligned1)
+	b	L(nzCacheAligned128)
+        .align 5
+L(nzCacheAligned128):
+	cmpldi	cr1,rLEN,256
+	addi	rMEMP3,rMEMP,64
+	std	rCHR,0(rMEMP)
+	std	rCHR,8(rMEMP)
+	std	rCHR,16(rMEMP)
+	std	rCHR,24(rMEMP)
+	std	rCHR,32(rMEMP)
+	std	rCHR,40(rMEMP)
+	std	rCHR,48(rMEMP)
+	std	rCHR,56(rMEMP)
+	addi	rMEMP,rMEMP3,64
+	addi	rLEN,rLEN,-128
+	std	rCHR,0(rMEMP3)
+	std	rCHR,8(rMEMP3)
+	std	rCHR,16(rMEMP3)
+	std	rCHR,24(rMEMP3)
+	std	rCHR,32(rMEMP3)
+	std	rCHR,40(rMEMP3)
+	std	rCHR,48(rMEMP3)
+	std	rCHR,56(rMEMP3)
+	bge	cr1,L(nzCacheAligned128)
+	dcbtst	0,rMEMP
+	b	L(cacheAligned1)
+	.align 5
+/* Storing a zero "c" value. We are aligned at a sector (32-byte)
+   boundary but may not be at cache line (128-byte) boundary.  If the
+   remaining length spans a full cache line we can use the Data cache
+   block zero instruction. */
+L(zloopstart):
+/* memset in 32-byte chunks until we get to a cache line boundary.
+   If rLEN is less then the distance to the next cache-line boundary use
+   cacheAligned1 code to finish the tail.  */
+	cmpldi	cr1,rLEN,128
+	beq	L(medium)
+L(getCacheAligned):
+	andi.	rTMP,rMEMP,127
+	nop
+	blt	cr1,L(cacheAligned1)
+	addi	rMEMP3,rMEMP,32
+	beq	L(cacheAligned)
+	addi	rLEN,rLEN,-32
+	std	rCHR,0(rMEMP)
+	std	rCHR,8(rMEMP)
+	std	rCHR,16(rMEMP)
+	addi	rMEMP,rMEMP,32
+	andi.	rTMP,rMEMP3,127
+	std	rCHR,-8(rMEMP3)
+L(getCacheAligned2):
+	beq	L(cacheAligned)
+	addi	rLEN,rLEN,-32
+	std	rCHR,0(rMEMP3)
+	std	rCHR,8(rMEMP3)
+	addi	rMEMP,rMEMP,32
+	andi.	rTMP,rMEMP,127
+	std	rCHR,16(rMEMP3)
+	std	rCHR,24(rMEMP3)
+L(getCacheAligned3):
+	beq	L(cacheAligned)
+	addi	rLEN,rLEN,-32
+	std	rCHR,32(rMEMP3)
+	addi	rMEMP,rMEMP,32
+	cmpldi	cr1,rLEN,128
+	std	rCHR,40(rMEMP3)
+	cmpldi	cr6,rLEN,256
+	li	rMEMP2,128
+	std	rCHR,48(rMEMP3)
+	std	rCHR,56(rMEMP3)
+	blt	cr1,L(cacheAligned1)
+	blt	cr6,L(cacheAligned128)
+	b	L(cacheAlignedx)
 
 /* Now we are aligned to the cache line and can use dcbz.  */
-        .align 4
+        .align 5
 L(cacheAligned):
-	cmpld	cr1,rLEN,rCLS
-	blt		cr1,L(handletail32)
+	cmpldi	cr1,rLEN,128
+	cmpldi	cr6,rLEN,256
+	blt	cr1,L(cacheAligned1)
+	li	rMEMP2,128
+L(cacheAlignedx):
+	cmpldi	cr5,rLEN,640
+	blt	cr6,L(cacheAligned128)
+	bgt	cr5,L(cacheAligned512)
+	cmpldi	cr6,rLEN,512
 	dcbz	0,rMEMP
-	subf	rLEN,rCLS,rLEN
-	add		rMEMP,rMEMP,rCLS
-	b		L(cacheAligned)
+	cmpldi	cr1,rLEN,384
+	dcbz	rMEMP2,rMEMP
+	addi	rMEMP,rMEMP,256
+	addi	rLEN,rLEN,-256
+	blt	cr1,L(cacheAligned1)
+	blt	cr6,L(cacheAligned128)
+	b	L(cacheAligned256)
+	.align 5
+/* A simple loop for the longer (>640 bytes) lengths.  This form limits
+   the branch miss-predicted to exactly 1 at loop exit.*/
+L(cacheAligned512):
+	cmpli	cr1,rLEN,128
+	blt	cr1,L(cacheAligned1)
+	dcbz	0,rMEMP
+	addi	rLEN,rLEN,-128
+	addi	rMEMP,rMEMP,128
+	b	L(cacheAligned512)
+        .align 5
+L(cacheAligned256):
 
-/* We are here because the cache line size was set and was not 32-bytes
-   and the remainder (rLEN) is less than the actual cache line size.
-   So set up the preconditions for L(nondcbz) and go there.  */
+	cmpldi	cr6,rLEN,512
+
+	dcbz	0,rMEMP
+	cmpldi	cr1,rLEN,384
+	dcbz	rMEMP2,rMEMP
+	addi	rMEMP,rMEMP,256
+	addi	rLEN,rLEN,-256
+
+	bge	cr6,L(cacheAligned256)
+
+	blt	cr1,L(cacheAligned1)
+        .align 4
+L(cacheAligned128):
+	dcbz	0,rMEMP
+	addi	rMEMP,rMEMP,128
+	addi	rLEN,rLEN,-128
+        nop
+L(cacheAligned1):
+	cmpldi	cr1,rLEN,32
+	blt	cr1,L(handletail32)
+	addi	rMEMP3,rMEMP,32
+	addi	rLEN,rLEN,-32
+	std	rCHR,0(rMEMP)
+	std	rCHR,8(rMEMP)
+	std	rCHR,16(rMEMP)
+	addi	rMEMP,rMEMP,32
+	cmpldi	cr1,rLEN,32
+	std	rCHR,-8(rMEMP3)
+L(cacheAligned2):
+	blt	cr1,L(handletail32)
+	addi	rLEN,rLEN,-32
+	std	rCHR,0(rMEMP3)
+	std	rCHR,8(rMEMP3)
+	addi	rMEMP,rMEMP,32
+	cmpldi	cr1,rLEN,32
+	std	rCHR,16(rMEMP3)
+	std	rCHR,24(rMEMP3)
+	nop
+L(cacheAligned3):
+	blt	cr1,L(handletail32)
+	addi	rMEMP,rMEMP,32
+	addi	rLEN,rLEN,-32
+	std	rCHR,32(rMEMP3)
+	std	rCHR,40(rMEMP3)
+	std	rCHR,48(rMEMP3)
+	std	rCHR,56(rMEMP3)
+
+/* We are here because the length or remainder (rLEN) is less than the
+   cache line/sector size and does not justify aggressive loop unrolling.
+   So set up the preconditions for L(medium) and go there.  */
         .align 3
 L(handletail32):
-	clrrwi.	rALIGN, rLEN, 5
-	b		L(nondcbz)
+	cmpldi	cr1,rLEN,0
+	beqlr   cr1
+	b	L(medium)
 
 	.align 5
 L(small):
@@ -237,10 +371,10 @@ L(medium_tail):
 	bt-	31, L(medium_31t)
 	bt-	30, L(medium_30t)
 L(medium_30f):
-	bt-	29, L(medium_29t)
+	bt	29, L(medium_29t)
 L(medium_29f):
-	bge-	cr1, L(medium_27t)
-	bflr-	28
+	bge	cr1, L(medium_27t)
+	bflr	28
 	std	rCHR, -8(rMEMP)
 	blr
 
@@ -252,12 +386,12 @@ L(medium_30t):
 	bf-	29, L(medium_29f)
 L(medium_29t):
 	stwu	rCHR, -4(rMEMP)
-	blt-	cr1, L(medium_27f)
+	blt	cr1, L(medium_27f)
 L(medium_27t):
 	std	rCHR, -8(rMEMP)
 	stdu	rCHR, -16(rMEMP)
 L(medium_27f):
-	bflr-	28
+	bflr	28
 L(medium_28t):
 	std	rCHR, -8(rMEMP)
 	blr

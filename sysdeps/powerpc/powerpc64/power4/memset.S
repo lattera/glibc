@@ -22,12 +22,6 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
-	.section	".toc","aw"
-.LC0:
-	.tc __cache_line_size[TC],__cache_line_size
-	.section	".text"
-	.align 2
-
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
 
@@ -35,6 +29,7 @@
    cache line (256 bits). There is a special case for setting cache lines
    to 0, to take advantage of the dcbz instruction.  */
 
+	.machine power4
 EALIGN (BP_SYM (memset), 5, 0)
 	CALL_MCOUNT 3
 
