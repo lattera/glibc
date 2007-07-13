@@ -1,4 +1,4 @@
-2007-06-07  Steven Munroe  <sjmunroe@us.ibm.com>
+2007-07-13  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/nofpu/Makefile: Remove fe_nomask from libm-support.
 
