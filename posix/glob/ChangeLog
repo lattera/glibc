@@ -1,3 +1,7 @@
+2007-07-13  Roland McGrath  <roland@redhat.com>
+
+	* configure: Regenerated.
+
 Sat Jul 20 21:55:31 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	Win32 hacks from <Rob_Tulloh@tivoli.com>.
@@ -20,4 +24,3 @@ Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
  	only for ?s, not for *s.  Fix from Chet Ramey.
-
