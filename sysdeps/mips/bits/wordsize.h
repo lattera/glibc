@@ -17,3 +17,6 @@
    02111-1307 USA.  */
 
 #define __WORDSIZE	_MIPS_SZPTR
+#if _MIPS_SIM == _ABI64
+# define __WORDSIZE_COMPAT32	1
+#endif
