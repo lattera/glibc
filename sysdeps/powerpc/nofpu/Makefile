@@ -6,7 +6,7 @@ sysdep_routines += $(gcc-single-routines) $(gcc-double-routines) \
 endif
 
 ifeq ($(subdir),math)
-libm-support += fenv_const fe_nomask
+libm-support += fenv_const
 CPPFLAGS += -I../soft-fp/
 # The follow CFLAGS are a work around for GCC Bugzilla Bug 29253
 # "expand_abs wrong default code for floating point"

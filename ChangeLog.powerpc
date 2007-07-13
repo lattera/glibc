@@ -1,3 +1,7 @@
+2007-06-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/nofpu/Makefile: Remove fe_nomask from libm-support.
+
 2007-05-23  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/nofpu/feholdexcpt.c (feholdexcept): Disable
