@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  SH version.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,14 +36,14 @@ ENTRY (_setjmp)
 	mov.l	3f, r1
 	mov.l	@(r0,r1), r1
 	jmp	@r1
-	 mov	#0, r0
+	 mov	#0, r5
 	.align	2
 3:
 	.long	C_SYMBOL_NAME(__sigsetjmp@GOT)
 #else
 	mov.l	1f, r1
 	jmp	@r1
-	 mov	#0, r0
+	 mov	#0, r5
 	.align	2
 1:
 	.long	C_SYMBOL_NAME(__sigsetjmp)

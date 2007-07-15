@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,12 +32,12 @@
 ENTRY(__clone)
 	/* sanity check arguments.  */
 	tst	r4, r4
-	bf/s	1f
+	bt/s	0f
 	 tst	r5, r5
-	bf/s	1f
-	 mov	#-EINVAL,r0
+	bf	1f
+0:
 	bra	.Lsyscall_error
-	 nop
+	 mov	#-EINVAL,r0
 1:
 	/* insert the args onto the new stack */
 	mov.l	r7, @-r5
