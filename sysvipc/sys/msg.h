@@ -1,4 +1,5 @@
-/* Copyright (C) 1995-1997,1999,2000,2003,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997,1999,2000,2003,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +21,9 @@
 #define _SYS_MSG_H
 
 #include <features.h>
+
+#define __need_size_t
+#include <stddef.h>
 
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>

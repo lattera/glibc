@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -339,6 +339,8 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# define __need_size_t
+# include <stddef.h>
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system

@@ -26,6 +26,7 @@
 #error "Must have `_GNU_SOURCE' feature test macro to use this file"
 #endif
 
+#define __need_size_t
 #define __need_NULL
 #include <stddef.h>
 

@@ -184,15 +184,7 @@ Also, the Single Unix Specification generally requires more types to
 be included in headers (if _XOPEN_SOURCE is defined appropriately)
 than ISO C permits.
 
-<ctype.h> should not declare size_t.
-
-<signal.h> should not declare size_t.
-
-<stdio.h> should not declare or use wchar_t or wint_t.
-
 <wchar.h> does not support AMD1; to support it, the functions
 fwprintf, fwscanf, wprintf, wscanf, swprintf, swscanf, vfwprintf,
 vwprintf, vswprintf and fwide would need to be declared when
 __STDC_VERSION__ >= 199409L and not just for C99.
-
-<wctype.h> should not declare size_t.

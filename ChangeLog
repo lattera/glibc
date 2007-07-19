@@ -1,5 +1,16 @@
 2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* bits/types.h: Don't include stddef.h, don't define __need_size_t.
+	* signal/signal.h <__USE_BSD || __USE_XOPEN_EXTENDED>: Define
+	__need_size_t and include stddef.h.
+	* sysvipc/sys/msg.h: Likewise.
+	* posix/sched.h: Likewise.
+	* hurd/hurd/signal.h (__need_size_t): Define.
+
+	* CONFORMANCE: ctype.h and wctype.h no longer define size_t,
+	neither does signal.h in pedantic ISO C namespaces.  stdio.h
+	no longer defines wint_t or wchar_t.
+
 	* libio/libioP.h (_IO_acquire_lock_clear_flags2_fct): New function.
 	* debug/vfwprintf_chk.c (__vfwprintf_chk): Use
 	_IO_acquire_lock_clear_flags2 instead of _IO_acquire_lock.

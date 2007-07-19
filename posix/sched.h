@@ -25,6 +25,9 @@
 /* Get type definitions.  */
 #include <bits/types.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 #define __need_timespec
 #include <time.h>
 

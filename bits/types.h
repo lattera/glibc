@@ -1,5 +1,5 @@
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,6 @@
 
 #include <features.h>
 #include <bits/wordsize.h>
-
-#define __need_size_t
-#include <stddef.h>
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
