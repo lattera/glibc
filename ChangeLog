@@ -1,5 +1,19 @@
 2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* libio/libioP.h (_IO_acquire_lock_clear_flags2_fct): New function.
+	* debug/vfwprintf_chk.c (__vfwprintf_chk): Use
+	_IO_acquire_lock_clear_flags2 instead of _IO_acquire_lock.
+	* debug/vprintf_chk.c (__vprintf_chk): Likewise.
+	* debug/vwprintf_chk.c (__vwprintf_chk): Likewise.
+	* debug/vfprintf_chk.c (__vfprintf_chk): Likewise.
+	* debug/fwprintf_chk.c (__fwprintf_chk): Likewise.
+	* debug/printf_chk.c (__printf_chk): Likewise.
+	* debug/fprintf_chk.c (__fprintf_chk): Likewise.
+	* debug/wprintf_chk.c (__wprintf_chk): Likewise.
+
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock_clear_flags2):
+	Define.
+
 	* bits/confname.h (_CS_POSIX_V6_WIDTH_RESTRICTED_ENVS): Define.
 	* posix/getconf.c (vars): Add POSIX_V6_WIDTH_RESTRICTED_ENVS.
 
@@ -8,8 +22,6 @@
 	[BZ #4792]
 	* stdlib/stdlib.h (realloc): Remove __attribute_malloc__.
 	* malloc/malloc.h (realloc): Likewise.
-
-2007-07-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/iopopen.c (_IO_new_proc_open): Don't close child_std_end
 	if one of proc_file_chain streams has that fileno.

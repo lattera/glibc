@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,7 +29,7 @@ __fwprintf_chk (FILE *fp, int flag, const wchar_t *format, ...)
   va_list ap;
   int done;
 
-  _IO_acquire_lock (fp);
+  _IO_acquire_lock_clear_flags2 (fp);
   if (flag > 0)
     fp->_flags2 |= _IO_FLAGS2_FORTIFY;
 

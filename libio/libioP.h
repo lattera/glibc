@@ -968,3 +968,13 @@ _IO_acquire_lock_fct (_IO_FILE **p)
   if ((fp->_flags & _IO_USER_LOCK) == 0)
     _IO_funlockfile (fp);
 }
+
+static inline void
+__attribute__ ((__always_inline__))
+_IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
+{
+  _IO_FILE *fp = *p;
+  fp->_flags &= ~_IO_FLAGS2_FORTIFY;
+  if ((fp->_flags & _IO_USER_LOCK) == 0)
+    _IO_funlockfile (fp);
+}

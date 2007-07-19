@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2006
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,7 +28,7 @@ ___vprintf_chk (int flag, const char *format, va_list ap)
 {
   int done;
 
-  _IO_acquire_lock (stdout);
+  _IO_acquire_lock_clear_flags2 (stdout);
   if (flag > 0)
     stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
 

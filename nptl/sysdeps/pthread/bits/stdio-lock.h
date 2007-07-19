@@ -1,5 +1,5 @@
 /* Thread package specific definitions of stream lock type.  NPTL version.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,9 +94,15 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 	__attribute__((cleanup (_IO_acquire_lock_fct)))			      \
 	= (_fp);							      \
     _IO_flockfile (_IO_acquire_lock_file);
-
+#  define _IO_acquire_lock_clear_flags2(_fp) \
+  do {									      \
+    _IO_FILE *_IO_acquire_lock_file					      \
+	__attribute__((cleanup (_IO_acquire_lock_clear_flags2_fct)))	      \
+	= (_fp);							      \
+    _IO_flockfile (_IO_acquire_lock_file);
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled
+#  define _IO_acquire_lock_clear_flags2(_fp) _IO_acquire_lock (_fp)
 # endif
 # define _IO_release_lock(_fp) ; } while (0)
 
