@@ -607,7 +607,7 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;
 #endif
 
-#if defined __USE_ISOC99 || defined __USE_UNIX98
+#if defined __USE_ISOC95 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 
 /* Select orientation for stream.  */
@@ -674,7 +674,7 @@ extern int swscanf (__const wchar_t *__restrict __s,
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 
 __END_NAMESPACE_C99
-#endif /* Use ISO C99 and Unix98. */
+#endif /* Use ISO C95, C99 and Unix98. */
 
 #ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99

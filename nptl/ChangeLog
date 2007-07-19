@@ -1,3 +1,8 @@
+2007-07-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock_clear_flags2):
+	Define.
+
 2007-07-06  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/tls.h: Include stdlib.h, list.h, sysdep.h and

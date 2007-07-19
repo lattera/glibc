@@ -85,10 +85,8 @@ of the C standard (as indicated by __STDC_VERSION__):
 GCC options		Standard version
 -ansi			ISO/IEC 9899:1990
 -std=c89		ISO/IEC 9899:1990
--std=iso9899:199409	ISO/IEC 9899:1990 as amended by Amd.1:1995 *
+-std=iso9899:199409	ISO/IEC 9899:1990 as amended by Amd.1:1995
 -std=c99		ISO/IEC 9899:1999
-
-* glibc does not support this standard version.
 
 (Note that -std=c99 is not available in GCC 2.95.2, and that no
 version of GCC presently existing implements the full C99 standard.)
@@ -183,8 +181,3 @@ Note that the _t suffix is reserved by POSIX, but not by pure ISO C.
 Also, the Single Unix Specification generally requires more types to
 be included in headers (if _XOPEN_SOURCE is defined appropriately)
 than ISO C permits.
-
-<wchar.h> does not support AMD1; to support it, the functions
-fwprintf, fwscanf, wprintf, wscanf, swprintf, swscanf, vfwprintf,
-vwprintf, vswprintf and fwide would need to be declared when
-__STDC_VERSION__ >= 199409L and not just for C99.

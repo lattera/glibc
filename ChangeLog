@@ -1,3 +1,11 @@
+2007-07-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_ISOC95): New define.
+	* wcsmbs/wchar.h (fwprintf, fwscanf, wprintf, wscanf, swprintf,
+	swscanf, vfwprintf, vwprintf, vswprintf, fwide): Define even
+	for -std=iso9899:199409.
+	* CONFORMANCE: Remove comments about unsupported AMD1.
+
 2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/sched_cpucount.c: New file.
