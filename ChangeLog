@@ -1,5 +1,10 @@
 2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ia64/sched_cpucount.c: New file.
+	* sysdeps/powerpc/sched_cpucount.c: New file.
+
+2007-07-17  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/bits/sched.h (__sched_cpucount): Add
 	__BEGIN_DECLS/__END_DECLS around the prototype.
 	* bits/sched.h (__sched_cpucount): Likewise.  Make second argument
