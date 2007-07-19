@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2002, 2003, 2004, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -169,7 +170,15 @@ _IO_new_proc_open (fp, command, mode)
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
       for (p = proc_file_chain; p; p = p->next)
-	_IO_close (_IO_fileno ((_IO_FILE *) p));
+	{
+	  int fd = _IO_fileno ((_IO_FILE *) p);
+
+	  /* If any stream from previous popen() calls has fileno
+	     child_std_end, it has been already closed by the dup2 syscall
+	     above.  */
+	  if (fd != child_std_end)
+	    _IO_close (fd);
+	}
 
       _IO_execl ("/bin/sh", "sh", "-c", command, (char *) 0);
       _IO__exit (127);
