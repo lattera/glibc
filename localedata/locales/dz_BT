@@ -1293,7 +1293,7 @@ d_fmt        "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y<U0F5F>/
 
 % Appropriate time representation  "%H:%M:%S"
 t_fmt        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>/
-%   H<U0F40><U0F66><U0F62><U0F0B><U0F58>/
+%H<U0F40><U0F66><U0F62><U0F0B><U0F58>/
 %M<U0F40><U0F66><U0F62><U0F0B><U0F46>%S"
 
 % AM/PM signs

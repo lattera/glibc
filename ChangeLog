@@ -1,3 +1,8 @@
+2007-07-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* bits/confname.h (_CS_POSIX_V6_WIDTH_RESTRICTED_ENVS): Define.
+	* posix/getconf.c (vars): Add POSIX_V6_WIDTH_RESTRICTED_ENVS.
+
 2007-07-16  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4792]

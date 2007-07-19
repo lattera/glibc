@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993,1995-1998,2000,2001,2003,2004
+   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -509,7 +509,8 @@ enum
 #define _CS_PATH		_CS_PATH
 
     _CS_V6_WIDTH_RESTRICTED_ENVS,
-# define _CS_V6_WIDTH_RESTRICTED_ENVS	_CS_V6_WIDTH_RESTRICTED_ENVS
+#define _CS_V6_WIDTH_RESTRICTED_ENVS	_CS_V6_WIDTH_RESTRICTED_ENVS
+#define _CS_POSIX_V6_WIDTH_RESTRICTED_ENVS	_CS_V6_WIDTH_RESTRICTED_ENVS
 
     _CS_GNU_LIBC_VERSION,
 #define _CS_GNU_LIBC_VERSION	_CS_GNU_LIBC_VERSION
