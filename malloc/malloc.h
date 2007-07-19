@@ -1,5 +1,6 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996,97,99,2000,2002-2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2002-2004, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,8 +55,11 @@ extern void *calloc __MALLOC_P ((size_t __nmemb, size_t __size))
 
 /* Re-allocate the previously allocated block in __ptr, making the new
    block SIZE bytes long.  */
+/* __attribute_malloc__ is not used, because if realloc returns
+   the same pointer that was passed to it, aliasing needs to be allowed
+   between objects pointed by the old and new pointers.  */
 extern void *realloc __MALLOC_P ((void *__ptr, size_t __size))
-       __attribute_malloc__ __attribute_warn_unused_result__;
+       __attribute_warn_unused_result__;
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free __MALLOC_P ((void *__ptr));
