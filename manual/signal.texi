@@ -1966,7 +1966,7 @@ writing.)
 #include <signal.h>
 #include <stdio.h>
 
-struct two_words @{ int a, b; @} memory;
+volatile struct two_words @{ int a, b; @} memory;
 
 void
 handler(int signum)

@@ -1,5 +1,8 @@
 2007-07-20  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4816]
+	* manual/signal.texi (Non-atomic Example): Make memory var volatile.
+
 	[BZ #4813]
 	* login/forkpty.c (forkpty): Close master and slave fds on
 	fork failure.  Patch by
