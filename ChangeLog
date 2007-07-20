@@ -1,3 +1,10 @@
+2007-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4813]
+	* login/forkpty.c (forkpty): Close master and slave fds on
+	fork failure.  Patch by
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>.
+
 2007-07-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/features.h (__USE_ISOC95): New define.
@@ -10,8 +17,6 @@
 
 	* sysdeps/ia64/sched_cpucount.c: New file.
 	* sysdeps/powerpc/sched_cpucount.c: New file.
-
-2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h (__sched_cpucount): Add
 	__BEGIN_DECLS/__END_DECLS around the prototype.

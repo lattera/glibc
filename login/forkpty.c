@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -38,6 +38,8 @@ forkpty (amaster, name, termp, winp)
   switch (pid = fork ())
     {
     case -1:
+      close (master);
+      close (slave);
       return -1;
     case 0:
       /* Child.  */
