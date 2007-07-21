@@ -210,8 +210,13 @@ enum
 #define	MSG_ERRQUEUE	MSG_ERRQUEUE
     MSG_NOSIGNAL	= 0x4000, /* Do not generate SIGPIPE.  */
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
-    MSG_MORE		= 0x8000  /* Sender will send more.  */
+    MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
+
+    MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
+                                           descriptor received through
+                                           SCM_RIGHTS.  */
+#define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
   };
 
 
