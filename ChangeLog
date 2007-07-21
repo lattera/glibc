@@ -1,5 +1,8 @@
 2007-07-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_helper.c (get_mapping): Use MSG_CMSG_CLOEXEC for
+	descriptor received from nscd.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define MSG_CMSG_CLOEXEC.
 
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define O_CLOEXEC.

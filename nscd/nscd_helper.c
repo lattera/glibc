@@ -265,7 +265,11 @@ get_mapping (request_type type, const char *key,
   if (wait_on_socket (sock) <= 0)
     goto out_close2;
 
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0))
+# ifndef MSG_CMSG_CLOEXEC
+#  define MSG_CMSG_CLOEXEC 0
+# endif
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg,
+						       MSG_CMSG_CLOEXEC))
 			!= keylen, 0))
     goto out_close2;
 
