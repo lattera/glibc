@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/IA64.
-   Copyright (C) 1999, 2000, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@
 # define O_DIRECTORY	0200000	/* must be a directory */
 # define O_NOFOLLOW	0400000 /* don't follow links */
 # define O_NOATIME	01000000 /* Do not set atime.  */
+# define O_CLOEXEC	02000000 /* Set close_on_exec.  */
 #endif
 
 #ifdef __USE_LARGEFILE64

@@ -1,3 +1,14 @@
+2007-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define MSG_CMSG_CLOEXEC.
+
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define O_CLOEXEC.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+
 2007-07-20  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4816]
