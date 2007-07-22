@@ -1,3 +1,8 @@
+2012-11-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	[BZ #3665]
+	* sysdeps/mach/hurd/bits/errno.h: Regenerated.
+
 2012-11-04  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* csu/libc-start.c (LIBC_START_MAIN): Conditionalize use of

@@ -212,8 +212,8 @@ enum __error_t_codes
 #define	EPROTO          _HURD_ERRNO (116)/* Protocol error */
 	ETIME           = _HURD_ERRNO (117),
 #define	ETIME           _HURD_ERRNO (117)/* Timer expired */
-	ECANCELED       = _HURD_ERRNO (118),
-#define	ECANCELED       _HURD_ERRNO (118)/* Operation canceled */
+	ECANCELED       = _HURD_ERRNO (119),
+#define	ECANCELED       _HURD_ERRNO (119)/* Operation canceled */
 
 	/* Errors from <mach/message.h>.  */
 	EMACH_SEND_IN_PROGRESS          = 0x10000001,
@@ -297,7 +297,7 @@ enum __error_t_codes
 
 };
 
-#define	_HURD_ERRNOS	119
+#define	_HURD_ERRNOS	120
 
 /* User-visible type of error codes.  It is ok to use `int' or
    `kern_return_t' for these, but with `error_t' the debugger prints
