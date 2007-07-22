@@ -1,3 +1,13 @@
+2007-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_fopen): Recognize 'e' flag and set
+	O_CLOEXEC is needed.
+	* nis/nss_compat/compat-grp.c: Use 'e' flag when opening file.
+	Avoid additional fcntl to set O_CLOEXEC if not needed.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
 2007-07-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* manual/errno.texi: Change ECANCELED value to 119.

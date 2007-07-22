@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999, 2001-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -27,6 +27,7 @@
 #include <string.h>
 #include <rpc/types.h>
 #include <bits/libc-lock.h>
+#include <kernel-features.h>
 
 static service_user *ni;
 static enum nss_status (*nss_setgrent) (int stayopen);
@@ -70,6 +71,19 @@ static ent_t ext_ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
 
+/* Positive if O_CLOEXEC is supported, negative if it is not supported,
+   zero if it is still undecided.  This variable is shared with the
+   other compat functions.  */
+#ifdef __ASSUME_O_CLOEXEC
+# define __compat_have_cloexec 1
+#else
+# ifdef O_CLOEXEC
+int __compat_have_cloexec;
+# else
+#  define __compat_have_cloexec -1
+# endif
+#endif
+
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
 static int in_blacklist (const char *, int, ent_t *);
@@ -107,21 +121,36 @@ internal_setgrent (ent_t *ent, int stayopen, int needent)
 
   if (ent->stream == NULL)
     {
-      ent->stream = fopen ("/etc/group", "rm");
+      ent->stream = fopen ("/etc/group", "rme");
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
       else
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */
-	  int result, flags;
+	  int result = 0;
 
-	  result = flags = fcntl (fileno_unlocked (ent->stream), F_GETFD, 0);
-	  if (result >= 0)
+	  if (__compat_have_cloexec <= 0)
 	    {
-	      flags |= FD_CLOEXEC;
-	      result = fcntl (fileno_unlocked (ent->stream), F_SETFD, flags);
+	      int flags;
+	      result = flags = fcntl (fileno_unlocked (ent->stream), F_GETFD,
+				      0);
+	      if (result >= 0)
+		{
+#if defined O_CLOEXEC && !defined __ASSUME_O_CLOEXEC
+		  if (__compat_have_cloexec == 0)
+		    __compat_have_cloexec = (flags & FD_CLOEXEC) ? 1 : -1;
+
+		  if (__compat_have_cloexec < 0)
+#endif
+		    {
+		      flags |= FD_CLOEXEC;
+		      result = fcntl (fileno_unlocked (ent->stream), F_SETFD,
+				      flags);
+		    }
+		}
 	    }
+
 	  if (result < 0)
 	    {
 	      /* Something went wrong.  Close the stream and return a
