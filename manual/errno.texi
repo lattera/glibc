@@ -984,7 +984,7 @@ This error code has no purpose.
 @comment errno.h
 @comment POSIX.1: Operation canceled
 @deftypevr Macro int ECANCELED
-@comment errno 118
+@comment errno 119
 Operation canceled; an asynchronous operation was canceled before it
 completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 the normal result is for the operations affected to complete with this

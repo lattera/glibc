@@ -1,5 +1,7 @@
 2007-07-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* manual/errno.texi: Change ECANCELED value to 119.
+
 	* mach/lock-intern.h: Include <sys/cdefs.h>.
 
 	* sysdeps/mach/hurd/sigaction.c (__sigaction): Check ACT != NULL before
