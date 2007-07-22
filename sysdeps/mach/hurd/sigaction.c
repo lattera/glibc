@@ -68,7 +68,7 @@ __sigaction (sig, act, oact)
       __spin_lock (&ss->lock);
       pending = ss->pending & ~ss->blocked;
     }
-  else if (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL)
+  else if (act != NULL && (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL))
     /* We are changing to an action that might be to ignore SIG signals.
        If SIG is blocked and pending and the new action is to ignore it, we
        must remove it from the pending set now; if the action is changed

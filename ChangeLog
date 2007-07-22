@@ -1,3 +1,21 @@
+2007-07-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* mach/lock-intern.h: Include <sys/cdefs.h>.
+
+	* sysdeps/mach/hurd/sigaction.c (__sigaction): Check ACT != NULL before
+	reading A.
+
+        * sysdeps/mach/hurd/sigsuspend.c (sigsuspend_not_cancel): Define alias
+        to __sigsuspend.
+
+	* sysdeps/mach/i386/sysdep.h: Include <dl-sysdep.h> and <tls.h>.
+
+2006-06-13  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* sysdeps/mach/hurd/tls.h: Change `ASSEMBLER' conditional to
+	`__ASSEMBLER__'.
+	* sysdeps/mach/hurd/i386/tls.h: Likewise.
+
 2007-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (get_mapping): Use MSG_CMSG_CLOEXEC for

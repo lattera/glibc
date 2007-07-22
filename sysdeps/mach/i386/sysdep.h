@@ -16,6 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
+#include <dl-sysdep.h>
+#include <tls.h>
+
 #define LOSE asm volatile ("hlt")
 
 #define SNARF_ARGS(entry_sp, argc, argv, envp)				      \

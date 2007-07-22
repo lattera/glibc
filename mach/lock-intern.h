@@ -19,6 +19,7 @@
 #ifndef _LOCK_INTERN_H
 #define	_LOCK_INTERN_H
 
+#include <sys/cdefs.h>
 #include <machine-lock.h>
 
 #ifndef _EXTERN_INLINE
