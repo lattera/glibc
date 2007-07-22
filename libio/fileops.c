@@ -320,6 +320,11 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	case 'c':
 	  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 	  break;
+#ifdef O_CLOEXEC
+	case 'e':
+	  oflags |= O_CLOEXEC;
+	  break;
+#endif
 	default:
 	  /* Ignore.  */
 	  continue;
