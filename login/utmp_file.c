@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <utmp.h>
 #include <not-cancel.h>
+#include <kernel-features.h>
 
 #include "utmp-private.h"
 #include "utmp-equal.h"
@@ -140,24 +141,47 @@ setutent_file (void)
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-      file_fd = open_not_cancel_2 (file_name, O_RDWR | O_LARGEFILE);
+#ifdef O_CLOEXEC
+# define O_flags O_LARGEFILE | O_CLOEXEC
+#else
+# define O_flags O_LARGEFILE
+#endif
+      file_fd = open_not_cancel_2 (file_name, O_RDWR | O_flags);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = open_not_cancel_2 (file_name, O_RDONLY | O_LARGEFILE);
+	  file_fd = open_not_cancel_2 (file_name, O_RDONLY | O_flags);
 	  if (file_fd == -1)
 	    return 0;
 	}
 
-      /* We have to make sure the file is `closed on exec'.  */
-      result = fcntl_not_cancel (file_fd, F_GETFD, 0);
-      if (result >= 0)
-	result = fcntl_not_cancel (file_fd, F_SETFD, result | FD_CLOEXEC);
-      if (result == -1)
+#ifndef __ASSUME_O_CLOEXEC
+# ifdef O_CLOEXEC
+      static int have_o_cloexec;
+
+      if (have_o_cloexec <= 0)
+# endif
 	{
-	  close_not_cancel_no_status (file_fd);
-	  return 0;
+	  /* We have to make sure the file is `closed on exec'.  */
+	  result = fcntl_not_cancel (file_fd, F_GETFD, 0);
+	  if (result >= 0)
+	    {
+# ifdef O_CLOEXEC
+	      if (have_o_cloexec == 0)
+		have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
+# endif
+
+	      result = fcntl_not_cancel (file_fd, F_SETFD,
+					 result | FD_CLOEXEC);
+	    }
+
+	  if (result == -1)
+	    {
+	      close_not_cancel_no_status (file_fd);
+	      return 0;
+	    }
 	}
+#endif
     }
 
   __lseek64 (file_fd, 0, SEEK_SET);

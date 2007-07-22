@@ -1,5 +1,7 @@
 2007-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* login/utmp_file.c (setutent_file): Use O_CLOEXEC if possible.
+
 	* libio/fileops.c (_IO_new_file_fopen): Recognize 'e' flag and set
 	O_CLOEXEC is needed.
 	* nis/nss_compat/compat-grp.c: Use 'e' flag when opening file.
