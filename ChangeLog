@@ -1,3 +1,8 @@
+2007-07-22  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/fcntl.h [__USE_GNU] (O_CLOEXEC): New macro.
+	* hurd/port2fd.c (_hurd_port2fd): Implement O_CLOEXEC.
+
 2007-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/utmp_file.c (setutent_file): Use O_CLOEXEC if possible.
