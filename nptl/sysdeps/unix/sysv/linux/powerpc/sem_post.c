@@ -1,5 +1,5 @@
 /* sem_post -- post to a POSIX semaphore.  Powerpc version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -33,7 +33,7 @@ __new_sem_post (sem_t *sem)
 
   __asm __volatile (__lll_rel_instr ::: "memory");
   int nr = atomic_increment_val (futex);
-  int err = lll_futex_wake (futex, nr);
+  int err = lll_futex_wake (futex, nr, LLL_SHARED);
   if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);

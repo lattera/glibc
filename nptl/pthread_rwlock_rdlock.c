@@ -77,7 +77,9 @@ __pthread_rwlock_rdlock (rwlock)
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer to finish.  */
-      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval);
+      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval, 
+		      // XYZ check mutex flag
+		      LLL_SHARED);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);

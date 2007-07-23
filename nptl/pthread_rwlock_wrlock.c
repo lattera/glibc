@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -68,7 +68,9 @@ __pthread_rwlock_wrlock (rwlock)
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer or reader(s) to finish.  */
-      lll_futex_wait (&rwlock->__data.__writer_wakeup, waitval);
+      lll_futex_wait (&rwlock->__data.__writer_wakeup, waitval,
+		      // XYZ check mutex flag
+		      LLL_SHARED);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
