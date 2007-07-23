@@ -20,11 +20,13 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
 
 
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_PRIVATE_FLAG	128
 
 #ifndef UP
 # define LOCK lock
@@ -72,7 +74,7 @@ __pthread_rwlock_wrlock:
 	jne	10f
 
 11:
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %esi
 	xorl	PSHARED(%rdi), %esi
 #else

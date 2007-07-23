@@ -76,7 +76,7 @@ __pthread_rwlock_rdlock:
 	jne	10f
 
 11:
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %esi
 	xorl	PSHARED(%rdi), %esi
 #else
