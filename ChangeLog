@@ -1,3 +1,11 @@
+2007-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (tests): Add tst-posix_fallocate.
+	* io/tst-posix_fallocate.c: New file.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_FALLOCATE.
+
 2007-07-22  Roland McGrath  <roland@frob.com>
 
 	* hurd/getdport.c: Add missing copyright year update.

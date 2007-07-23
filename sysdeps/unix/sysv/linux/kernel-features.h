@@ -468,3 +468,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020616
 # define __ASSUME_PRIVATE_FUTEX	1
 #endif
+
+/* Support for fallocate was added in 2.6.23.  */
+#if __LINUX_KERNEL_VERSION >= 0x020617
+# define __ASSUME_FALLOCATE	1
+#endif
