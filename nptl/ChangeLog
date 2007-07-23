@@ -1,3 +1,13 @@
+2007-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: Fix
+	compilation when unconditionally using private futexes.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: Likewise.
+
 2007-07-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock_clear_flags2):
