@@ -834,12 +834,13 @@ force-install:
 
 # $(install-lib) are installed from the object directory into $(libdir);
 # files in $(install-lib) matching `lib%.a' are ranlib'd after installation
-# unless they also appear in $(non-lib.a).  $(install-data) are installed
-# as they are into $(datadir).  $(headers) are installed as they are in
+# unless they also appear in $(non-lib.a).  $(install-data) are installed as
+# they are into $(datadir).  $(headers) are installed as they are in
 # $(includedir).  $(install-bin), $(install-bin-script) and $(install-sbin)
 # are installed from the object directory into $(bindir), $(bindir) and
-# $(sbindir), respectively.  $(install-others) are absolute path names of
-# files to install; rules to install them are defined elsewhere.
+# $(sbindir), respectively.  $(install-others) and $(install-others-programs)
+# are absolute path names of files to install; rules to install them are
+# defined elsewhere.
 
 # The simple library name to install libc.a under.
 # This could be defined by a sysdep Makefile.
@@ -1144,6 +1145,7 @@ install-lib-nosubdir: $(addprefix $(inst_libdir)/,\
 install-data-nosubdir: $(addprefix $(inst_datadir)/,$(install-data))
 install-headers-nosubdir: $(addprefix $(inst_includedir)/,$(headers))
 install-others-nosubdir: $(install-others)
+install-others-programs-nosubdir: $(install-others-programs)
 
 # We need all the `-nosubdir' targets so that `install' in the parent
 # doesn't depend on several things which each iterate over the subdirs.
@@ -1152,14 +1154,12 @@ install-others-nosubdir: $(install-others)
 install-%:: install-%-nosubdir ;
 
 .PHONY: install install-no-libc.a-nosubdir
-ifeq ($(build-programs),yes)
-install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
-			    install-bin-nosubdir install-bin-script-nosubdir \
-			    install-lib-nosubdir install-others-nosubdir \
-			    install-rootsbin-nosubdir install-sbin-nosubdir
-else
-install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
+install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir \
 			    install-lib-nosubdir install-others-nosubdir
+ifeq ($(build-programs),yes)
+install-no-libc.a-nosubdir: install-bin-nosubdir install-bin-script-nosubdir \
+			    install-rootsbin-nosubdir install-sbin-nosubdir \
+			    install-others-programs-nosubdir
 endif
 install: install-no-libc.a-nosubdir
 

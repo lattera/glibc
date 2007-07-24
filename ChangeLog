@@ -1,3 +1,16 @@
+2007-07-24  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (install-others-programs-nosubdir): New target.
+	(install-no-libc.a-nosubdir): Depend on it.
+
+	* iconv/Makefile (install-others-programs): Set this instead of
+	install-others.
+	* login/Makefile (install-others-programs): Likewise.
+	* posix/Makefile (install-others-programs): Likewise.
+
+	* Makerules (install-no-libc.a-nosubdir): Clean up conditional
+	dependencies.
+
 2007-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/Makefile (tests): Add tst-posix_fallocate.
