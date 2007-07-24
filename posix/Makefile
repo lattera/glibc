@@ -98,7 +98,7 @@ tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
-install-others	:= $(inst_libexecdir)/getconf
+install-others-programs	:= $(inst_libexecdir)/getconf
 
 before-compile	:= testcases.h ptestcases.h
 
