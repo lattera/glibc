@@ -1936,6 +1936,137 @@ output_weightwc (struct obstack *pool, struct locale_collate_t *collate,
   return retval | ((elem->section->ruleidx & 0x7f) << 24);
 }
 
+/* If localedef is every threaded, this would need to be __thread var.  */
+static struct
+{
+  struct obstack *weightpool;
+  struct obstack *extrapool;
+  struct obstack *indpool;
+  struct locale_collate_t *collate;
+  struct collidx_table *tablewc;
+} atwc;
+
+static void add_to_tablewc (uint32_t ch, struct element_t *runp);
+
+static void
+add_to_tablewc (uint32_t ch, struct element_t *runp)
+{
+  if (runp->wcnext == NULL && runp->nwcs == 1)
+    {
+      int32_t weigthidx = output_weightwc (atwc.weightpool, atwc.collate,
+					   runp);
+      collidx_table_add (atwc.tablewc, ch, weigthidx);
+    }
+  else
+    {
+      /* As for the singlebyte table, we recognize sequences and
+	 compress them.  */
+      struct element_t *lastp;
+
+      collidx_table_add (atwc.tablewc, ch,
+			 -(obstack_object_size (atwc.extrapool)
+			 / sizeof (uint32_t)));
+
+      do
+	{
+	  /* Store the current index in the weight table.  We know that
+	     the current position in the `extrapool' is aligned on a
+	     32-bit address.  */
+	  int32_t weightidx;
+	  int added;
+
+	  /* Find out wether this is a single entry or we have more than
+	     one consecutive entry.  */
+	  if (runp->wcnext != NULL
+	      && runp->nwcs == runp->wcnext->nwcs
+	      && wmemcmp ((wchar_t *) runp->wcs,
+			  (wchar_t *)runp->wcnext->wcs,
+			  runp->nwcs - 1) == 0
+	      && (runp->wcs[runp->nwcs - 1]
+		  == runp->wcnext->wcs[runp->nwcs - 1] + 1))
+	    {
+	      int i;
+	      struct element_t *series_startp = runp;
+	      struct element_t *curp;
+
+	      /* Now add first the initial byte sequence.  */
+	      added = (1 + 1 + 2 * (runp->nwcs - 1)) * sizeof (int32_t);
+	      if (sizeof (int32_t) == sizeof (int))
+		obstack_make_room (atwc.extrapool, added);
+
+	      /* More than one consecutive entry.  We mark this by having
+		 a negative index into the indirect table.  */
+	      obstack_int32_grow_fast (atwc.extrapool,
+				       -(obstack_object_size (atwc.indpool)
+					 / sizeof (int32_t)));
+	      obstack_int32_grow_fast (atwc.extrapool, runp->nwcs - 1);
+
+	      do
+		runp = runp->wcnext;
+	      while (runp->wcnext != NULL
+		     && runp->nwcs == runp->wcnext->nwcs
+		     && wmemcmp ((wchar_t *) runp->wcs,
+				 (wchar_t *)runp->wcnext->wcs,
+				 runp->nwcs - 1) == 0
+		     && (runp->wcs[runp->nwcs - 1]
+			 == runp->wcnext->wcs[runp->nwcs - 1] + 1));
+
+	      /* Now walk backward from here to the beginning.  */
+	      curp = runp;
+
+	      for (i = 1; i < runp->nwcs; ++i)
+		obstack_int32_grow_fast (atwc.extrapool, curp->wcs[i]);
+
+	      /* Now find the end of the consecutive sequence and
+		 add all the indeces in the indirect pool.  */
+	      do
+		{
+		  weightidx = output_weightwc (atwc.weightpool, atwc.collate,
+					       curp);
+		  obstack_int32_grow (atwc.indpool, weightidx);
+
+		  curp = curp->wclast;
+		}
+	      while (curp != series_startp);
+
+	      /* Add the final weight.  */
+	      weightidx = output_weightwc (atwc.weightpool, atwc.collate,
+					   curp);
+	      obstack_int32_grow (atwc.indpool, weightidx);
+
+	      /* And add the end byte sequence.  Without length this
+		 time.  */
+	      for (i = 1; i < curp->nwcs; ++i)
+		obstack_int32_grow (atwc.extrapool, curp->wcs[i]);
+	    }
+	  else
+	    {
+	      /* A single entry.  Simply add the index and the length and
+		 string (except for the first character which is already
+		 tested for).  */
+	      int i;
+
+	      /* Output the weight info.  */
+	      weightidx = output_weightwc (atwc.weightpool, atwc.collate,
+					   runp);
+
+	      added = (1 + 1 + runp->nwcs - 1) * sizeof (int32_t);
+	      if (sizeof (int) == sizeof (int32_t))
+		obstack_make_room (atwc.extrapool, added);
+
+	      obstack_int32_grow_fast (atwc.extrapool, weightidx);
+	      obstack_int32_grow_fast (atwc.extrapool, runp->nwcs - 1);
+	      for (i = 1; i < runp->nwcs; ++i)
+		obstack_int32_grow_fast (atwc.extrapool, runp->wcs[i]);
+	    }
+
+	  /* Next entry.  */
+	  lastp = runp;
+	  runp = runp->wcnext;
+	}
+      while (runp != NULL);
+    }
+}
 
 void
 collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
@@ -2293,132 +2424,21 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
      with the same wide character and add them one after the other to
      the table.  In case we have more than one sequence starting with
      the same byte we have to use extra indirection.  */
-  {
-    auto void add_to_tablewc (uint32_t ch, struct element_t *runp);
+  tablewc.p = 6;
+  tablewc.q = 10;
+  collidx_table_init (&tablewc);
 
-    void add_to_tablewc (uint32_t ch, struct element_t *runp)
-      {
-	if (runp->wcnext == NULL && runp->nwcs == 1)
-	  {
-	    int32_t weigthidx = output_weightwc (&weightpool, collate, runp);
-	    collidx_table_add (&tablewc, ch, weigthidx);
-	  }
-	else
-	  {
-	    /* As for the singlebyte table, we recognize sequences and
-	       compress them.  */
-	    struct element_t *lastp;
+  atwc.weightpool = &weightpool;
+  atwc.extrapool = &extrapool;
+  atwc.indpool = &indirectpool;
+  atwc.collate = collate;
+  atwc.tablewc = &tablewc;
 
-	    collidx_table_add (&tablewc, ch,
-			       -(obstack_object_size (&extrapool) / sizeof (uint32_t)));
+  wchead_table_iterate (&collate->wcheads, add_to_tablewc);
 
-	    do
-	      {
-		/* Store the current index in the weight table.  We know that
-		   the current position in the `extrapool' is aligned on a
-		   32-bit address.  */
-		int32_t weightidx;
-		int added;
+  memset (&atwc, 0, sizeof (atwc));
 
-		/* Find out wether this is a single entry or we have more than
-		   one consecutive entry.  */
-		if (runp->wcnext != NULL
-		    && runp->nwcs == runp->wcnext->nwcs
-		    && wmemcmp ((wchar_t *) runp->wcs,
-				(wchar_t *)runp->wcnext->wcs,
-				runp->nwcs - 1) == 0
-		    && (runp->wcs[runp->nwcs - 1]
-			== runp->wcnext->wcs[runp->nwcs - 1] + 1))
-		  {
-		    int i;
-		    struct element_t *series_startp = runp;
-		    struct element_t *curp;
-
-		    /* Now add first the initial byte sequence.  */
-		    added = (1 + 1 + 2 * (runp->nwcs - 1)) * sizeof (int32_t);
-		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_make_room (&extrapool, added);
-
-		    /* More than one consecutive entry.  We mark this by having
-		       a negative index into the indirect table.  */
-		    obstack_int32_grow_fast (&extrapool,
-					     -(obstack_object_size (&indirectpool)
-					       / sizeof (int32_t)));
-		    obstack_int32_grow_fast (&extrapool, runp->nwcs - 1);
-
-		    do
-		      runp = runp->wcnext;
-		    while (runp->wcnext != NULL
-			   && runp->nwcs == runp->wcnext->nwcs
-			   && wmemcmp ((wchar_t *) runp->wcs,
-				       (wchar_t *)runp->wcnext->wcs,
-				       runp->nwcs - 1) == 0
-			   && (runp->wcs[runp->nwcs - 1]
-			       == runp->wcnext->wcs[runp->nwcs - 1] + 1));
-
-		    /* Now walk backward from here to the beginning.  */
-		    curp = runp;
-
-		    for (i = 1; i < runp->nwcs; ++i)
-		      obstack_int32_grow_fast (&extrapool, curp->wcs[i]);
-
-		    /* Now find the end of the consecutive sequence and
-		       add all the indeces in the indirect pool.  */
-		    do
-		      {
-			weightidx = output_weightwc (&weightpool, collate,
-						     curp);
-			obstack_int32_grow (&indirectpool, weightidx);
-
-			curp = curp->wclast;
-		      }
-		    while (curp != series_startp);
-
-		    /* Add the final weight.  */
-		    weightidx = output_weightwc (&weightpool, collate, curp);
-		    obstack_int32_grow (&indirectpool, weightidx);
-
-		    /* And add the end byte sequence.  Without length this
-		       time.  */
-		    for (i = 1; i < curp->nwcs; ++i)
-		      obstack_int32_grow (&extrapool, curp->wcs[i]);
-		  }
-		else
-		  {
-		    /* A single entry.  Simply add the index and the length and
-		       string (except for the first character which is already
-		       tested for).  */
-		    int i;
-
-		    /* Output the weight info.  */
-		    weightidx = output_weightwc (&weightpool, collate, runp);
-
-		    added = (1 + 1 + runp->nwcs - 1) * sizeof (int32_t);
-		    if (sizeof (int) == sizeof (int32_t))
-		      obstack_make_room (&extrapool, added);
-
-		    obstack_int32_grow_fast (&extrapool, weightidx);
-		    obstack_int32_grow_fast (&extrapool, runp->nwcs - 1);
-		    for (i = 1; i < runp->nwcs; ++i)
-		      obstack_int32_grow_fast (&extrapool, runp->wcs[i]);
-		  }
-
-		/* Next entry.  */
-		lastp = runp;
-		runp = runp->wcnext;
-	      }
-	    while (runp != NULL);
-	  }
-      }
-
-    tablewc.p = 6;
-    tablewc.q = 10;
-    collidx_table_init (&tablewc);
-
-    wchead_table_iterate (&collate->wcheads, add_to_tablewc);
-
-    collidx_table_finalize (&tablewc);
-  }
+  collidx_table_finalize (&tablewc);
 
   /* Now add the four tables.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEWC));

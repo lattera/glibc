@@ -50,6 +50,31 @@
 #define LLL_PRIVATE	0
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ({ unsigned int __fl = ((private) ^ FUTEX_PRIVATE_FLAG);		      \
+	asm ("andl %%fs:%P1, %0" : "+r" (__fl)				      \
+	     : "i" offsetof (struct pthread, header.private_futex));	      \
+	__fl | (fl); })
+# endif	      
+#endif
 
 /* Initializer for compatibility lock.  */
 #define LLL_MUTEX_LOCK_INITIALIZER		(0)
@@ -169,7 +194,8 @@ LLL_STUB_UNWIND_INFO_END
     register __typeof (val) _val __asm ("edx") = (val);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
+		      : "0" (SYS_futex), "D" (futex),			      \
+			"S" (__lll_private_flag (FUTEX_WAIT, private)),	      \
 		        "d" (_val), "r" (__to)				      \
 		      : "memory", "cc", "r11", "cx");			      \
     __status;								      \
@@ -182,73 +208,21 @@ LLL_STUB_UNWIND_INFO_END
     register __typeof (nr) _nr __asm ("edx") = (nr);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAKE),	      \
+		      : "0" (SYS_futex), "D" (futex),			      \
+			"S" (__lll_private_flag (FUTEX_WAKE, private)),	      \
 			"d" (_nr)					      \
 		      : "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
 
 
 #define lll_private_futex_wait(futex, val) \
-  lll_private_futex_timed_wait (futex, val, NULL)
+  lll_futex_timed_wait (futex, val, NULL, LLL_PRIVATE)
 
+#define lll_private_futex_timed_wait(futex, val, timeout) \
+  lll_futex_timed_wait (futex, val, timeout, LLL_PRIVATE)
 
-#ifdef __ASSUME_PRIVATE_FUTEX
-# define lll_private_futex_timed_wait(futex, val, timeout) \
-  ({									      \
-    register const struct timespec *__to __asm ("r10") = timeout;	      \
-    int __status;							      \
-    register __typeof (val) _val __asm ("edx") = (val);			      \
-    __asm __volatile ("syscall"						      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex),			      \
-			"S" (FUTEX_WAIT | FUTEX_PRIVATE_FLAG),		      \
-		        "d" (_val), "r" (__to)				      \
-		      : "memory", "cc", "r11", "cx");			      \
-    __status;								      \
-  })
-
-
-# define lll_private_futex_wake(futex, nr) \
-  do {									      \
-    int __ignore;							      \
-    register __typeof (nr) _nr __asm ("edx") = (nr);			      \
-    __asm __volatile ("syscall"						      \
-		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (futex),			      \
-			"S" (FUTEX_WAKE | FUTEX_PRIVATE_FLAG),		      \
-			"d" (_nr)					      \
-		      : "memory", "cc", "r10", "r11", "cx");		      \
-  } while (0)
-#else
-# define lll_private_futex_timed_wait(futex, val, timeout) \
-  ({									      \
-    register const struct timespec *__to __asm ("r10") = timeout;	      \
-    int __status;							      \
-    int __ignore;							      \
-    register __typeof (val) _val __asm ("edx") = (val);			      \
-    __asm __volatile ("movl %%fs:%P3, %%esi\n\t"			      \
-		      "syscall"						      \
-		      : "=a" (__status), "=S" (__ignore)		      \
-		      : "0" (SYS_futex), "i" (PRIVATE_FUTEX), "D" (futex),    \
-		        "d" (_val), "r" (__to)				      \
-		      : "memory", "cc", "r11", "cx");			      \
-    __status;								      \
-  })
-
-
-# define lll_private_futex_wake(futex, nr) \
-  do {									      \
-    int __ignore;							      \
-    int __ignore2;							      \
-    register __typeof (nr) _nr __asm ("edx") = (nr);			      \
-    __asm __volatile ("orl %%fs:%P3, %%esi\n\t"				      \
-		      "syscall"						      \
-		      : "=a" (__ignore), "=S" (__ignore2)		      \
-		      : "0" (SYS_futex), "i" (PRIVATE_FUTEX), "D" (futex),    \
-			"1" (FUTEX_WAKE), "d" (_nr)			      \
-		      : "memory", "cc", "r10", "r11", "cx");		      \
-  } while (0)
-#endif
+#define lll_private_futex_wake(futex, nr) \
+  lll_futex_wake (futex, nr, LLL_PRIVATE)
 
 
 /* Does not preserve %eax and %ecx.  */

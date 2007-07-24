@@ -45,40 +45,55 @@
 #define LLL_PRIVATE	0
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
+	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
+# endif	      
+#endif
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
 #define lll_futex_wait(futexp, val, private) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int opt_flags = (FUTEX_WAIT | LLL_SHARED) ^ private;		      \
-    long int __ret;							      \
-									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), opt_flags, (val), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
-  })
+  lll_futex_timed_wait (futexp, val, NULL, private)
 
 #define lll_futex_timed_wait(futexp, val, timespec, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
-    long int opt_flags = (FUTEX_WAIT | LLL_SHARED) ^ private;		      \
     long int __ret;							      \
 									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), opt_flags, (val), (timespec));	      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4, (futexp),		      \
+			      __lll_private_flag (FUTEX_WAIT, private),	      \
+			      (val), (timespec));			      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
 #define lll_futex_wake(futexp, nr, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
-    long int opt_flags = (FUTEX_WAKE | LLL_SHARED) ^ private;		      \
     long int __ret;							      \
 									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), opt_flags, (nr), 0);		      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4, (futexp),		      \
+			      __lll_private_flag (FUTEX_WAKE, private),	      \
+			      (nr), 0);					      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
@@ -109,66 +124,24 @@
 #define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
-    long int opt_flags = (FUTEX_WAKE_OP | LLL_SHARED) ^ private;	      \
-    long int opt_flag2 = (FUTEX_OP_CLEAR_WAKE_IF_GT_ONE | LLL_SHARED)	      \
-                          ^ private;					      \
     long int __ret;							      \
 									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
-			      (futexp), opt_flags, (nr_wake),		      \
-			      (nr_wake2), (futexp2),			      \
-			      opt_flag2);				      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (FUTEX_WAKE_OP, private),    \
+			      (nr_wake), (nr_wake2), (futexp2),		      \
+			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
   
   
 #define lll_private_futex_wait(futexp, val) \
-  lll_private_futex_timed_wait (futexp, val, NULL)
+  lll_futex_timed_wait (futexp, val, NULL, LLL_PRIVATE)
 
+#define lll_private_futex_timed_wait(futexp, val, timeout) \
+  lll_futex_timed_wait (futexp, val, timeout, LLL_PRIVATE)
 
-#ifdef __ASSUME_PRIVATE_FUTEX  
-# define lll_private_futex_timed_wait(futexp, val, timeout) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), (FUTEX_WAIT | FUTEX_PRIVATE_FLAG),    \
-			      (val), (timeout));			      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
-  })
-
-# define lll_private_futex_wake(futexp, val) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), (FUTEX_WAKE | FUTEX_PRIVATE_FLAG),    \
-			      (val), 0);				      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
-  })
-#else
-# define lll_private_futex_timed_wait(futexp, val, timeout) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAIT, (val), (timeout));	      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
-  })
-
-# define lll_private_futex_wake(futexp, val) \
-  ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
-    long int __ret;							      \
-									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
-			      (futexp), FUTEX_WAKE, (val), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
-  })
-#endif
+#define lll_private_futex_wake(futexp, val) \
+  lll_futex_wake (futexp, val, LLL_PRIVATE)
 
 #ifdef UP
 # define __lll_acq_instr	""

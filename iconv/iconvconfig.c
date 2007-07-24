@@ -1012,6 +1012,34 @@ next_prime (uint32_t seed)
                               module name offset
                          (following last entry with step count 0)
 */
+
+static struct hash_entry *hash_table;
+static size_t hash_size;
+
+/* Function to insert the names.  */
+static void name_insert (const void *nodep, VISIT value, int level)
+{
+  struct name *name;
+  unsigned int idx;
+  unsigned int hval2;
+
+  if (value != leaf && value != postorder)
+    return;
+
+  name = *(struct name **) nodep;
+  idx = name->hashval % hash_size;
+  hval2 = 1 + name->hashval % (hash_size - 2);
+
+  while (hash_table[idx].string_offset != 0)
+    if ((idx += hval2) >= hash_size)
+      idx -= hash_size;
+
+  hash_table[idx].string_offset = strtaboffset (name->strent);
+
+  assert (name->module_idx != -1);
+  hash_table[idx].module_idx = name->module_idx;
+}
+
 static int
 write_output (void)
 {
@@ -1019,8 +1047,6 @@ write_output (void)
   char *string_table;
   size_t string_table_size;
   struct gconvcache_header header;
-  struct hash_entry *hash_table;
-  size_t hash_size;
   struct module_entry *module_table;
   char *extra_table;
   char *cur_extra_table;
@@ -1032,31 +1058,6 @@ write_output (void)
   char finalname[prefix_len + sizeof GCONV_MODULES_CACHE];
   char tmpfname[(output_file == NULL ? sizeof finalname : output_file_len + 1)
 		+ strlen (".XXXXXX")];
-
-  /* Function to insert the names.  */
-  auto void
-  name_insert (const void *nodep, VISIT value, int level)
-    {
-      struct name *name;
-      unsigned int idx;
-      unsigned int hval2;
-
-      if (value != leaf && value != postorder)
-	return;
-
-      name = *(struct name **) nodep;
-      idx = name->hashval % hash_size;
-      hval2 = 1 + name->hashval % (hash_size - 2);
-
-      while (hash_table[idx].string_offset != 0)
-	if ((idx += hval2) >= hash_size)
-	  idx -= hash_size;
-
-      hash_table[idx].string_offset = strtaboffset (name->strent);
-
-      assert (name->module_idx != -1);
-      hash_table[idx].module_idx = name->module_idx;
-    }
 
   /* Open the output file.  */
   if (output_file == NULL)

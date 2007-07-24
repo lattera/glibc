@@ -1,3 +1,20 @@
+2007-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(__lll_private_flag): Define.
+	(lll_futex_wait): Define as a wrapper around lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake, lll_futex_wake_unlock): Use
+	__lll_private_flag.
+	(lll_private_futex_wait, lll_private_futex_timedwait,
+	lll_private_futex_wake): Define as wrapper around non-_private
+	macros.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(__lll_private_flag): Define.
+	(lll_futex_timed_wait, lll_futex_wake): Use __lll_private_flag.
+	(lll_private_futex_wait, lll_private_futex_timedwait,
+	lll_private_futex_wake): Define as wrapper around non-_private
+	macros.
+
 2007-07-10  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock): Add LLL_SHARED
