@@ -112,7 +112,7 @@ pthread_rwlock_timedwrlock:
 
 #ifdef __ASSUME_PRIVATE_FUTEX
 	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %esi
-	xorl	PSHARED(%rdi), %esi
+	xorl	PSHARED(%r12), %esi
 #else
 # if FUTEX_WAIT == 0
 	movl	PSHARED(%r12), %esi

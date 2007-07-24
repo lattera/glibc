@@ -1,3 +1,10 @@
+2007-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: Fix
+	code used when private futexes are assumed.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Likewise.
+
 2007-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
