@@ -1,3 +1,25 @@
+2007-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/posix_fallocate64.c: Undefine
+	__posix_fallocate64_l64 before alias handling.
+	* sysdeps/unix/sysv/linux/posix_fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/posix_fallocate64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate64.c: New file.
+
+	* io/tst-posix_fallocate.c: Include <fcntl.h>.
+
+2007-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-collate.c (atwc): New variable.
+	(add_to_tablewc): New toplevel function, moved from collate_output.
+	(collate_output): Remove add_to_tablewc nested function.
+
+	* iconv/iconvconfig.c (hash_table, hash_size): New toplevel vars.
+	(name_insert): New function.
+	(write_output): Remove hash_table and hash_size vars and name_insert
+	nested function.
+
 2007-07-24  Roland McGrath  <roland@redhat.com>
 
 	* Makerules (install-others-programs-nosubdir): New target.
