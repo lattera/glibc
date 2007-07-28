@@ -1,5 +1,9 @@
 2007-07-20  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4772]
+	* time/strptime_l.c (__strptime_internal): Silently ignore
+	strftime modifiers and field width in recursive calls.
+
 	* include/time.h (enum ptime_locale_status): Remove.
 	(__strptime_internal): Remove decided and era_cnt arguments,
 	add statep argument.
