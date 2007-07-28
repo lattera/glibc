@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ clear_once_control (void *arg)
   pthread_once_t *once_control = (pthread_once_t *) arg;
 
   *once_control = 0;
-  lll_futex_wake (once_control, INT_MAX);
+  lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
 }
 
 int
@@ -72,7 +72,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 	break;
 
       /* Same generation, some other thread was faster. Wait.  */
-      lll_futex_wait (once_control, oldval);
+      lll_futex_wait (once_control, oldval, LLL_PRIVATE);
     }
 
   /* This thread is the first here.  Do the initialization.
@@ -88,7 +88,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   atomic_increment (once_control);
 
   /* Wake up all other threads.  */
-  lll_futex_wake (once_control, INT_MAX);
+  lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
 
   return 0;
 }
