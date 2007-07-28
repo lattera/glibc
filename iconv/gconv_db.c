@@ -1,5 +1,6 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -756,7 +757,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
     {
       /* Both character sets are the same.  */
       __libc_lock_unlock (__gconv_lock);
-      return __GCONV_NOCONV;
+      return __GCONV_NULCONV;
     }
 
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,

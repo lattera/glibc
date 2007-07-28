@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -114,6 +114,12 @@ enum
   GCONV_AVOID_NOCONV = 1 << 0
 };
 
+/* When GCONV_AVOID_NOCONV is set and no conversion is needed,
+   __GCONV_NULCONV should be returned.  */
+enum
+{
+  __GCONV_NULCONV = -1
+};
 
 /* Global variables.  */
 

@@ -1,3 +1,39 @@
+2007-07-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/gconv_int.h (__GCONV_NULCONV): New internal only error code.
+	* iconv/gconv_cache.c (__gconv_lookup_cache): Return __GCONV_NULCONV
+	if from and to charsets are the same.
+	* iconv/gconv_db.c (__gconv_find_transform): Likewise.
+	* intl/dcigettext.c (_nl_find_msg): Return NULL even if __gconv_open
+	returns __GCONV_NOCONV, but not for __GCONV_NULCONV.
+
+2007-07-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h: Only define wint_t if __need_wint_t.
+	Don't define wint_t when __need_mbstate_t unless it
+	is necessary.
+	(__mbstate_t): Use __WINT_TYPE__ rather than wint_t
+	in the typedef if possible.
+	* wctype/wctype.h (wint_t): Define by including
+	wchar.h with __need_wint_t instead of including stddef.h
+	with __need_wint_t and as fallback definining it ourselves.
+	* iconv/gconv.h (__need_wint_t): Define before including
+	wchar.h.
+	* sysdeps/gnu/_G_config.h: Don't include gconv.h if not _LIBC
+	or _GLIBCPP_USE_WCHAR_T.
+	(__need_wchar_t): Don't define
+	if not _LIBC or _GLIBCPP_USE_WCHAR_T.
+	(__need_wint_t): Don't define before including stddef.h,
+	define before including wchar.h only if _LIBC or
+	_GLIBCPP_USE_WCHAR_T.
+	(_G_iconv_t): Don't define if not _LIBC or _GLIBCPP_USE_WCHAR_T.
+	* sysdeps/mach/hurd/_G_config.h: Likewise.
+	* sysdeps/generic/_G_config.h: Likewise.
+	* libio/libio.h (__wunderflow, __wuflow, __woverflow): Only
+	prototype if _LIBC or _GLIBCPP_USE_WCHAR_T.
+	(_IO_getwc_unlocked, _IO_putwc_unlocked): Only define
+	if _LIBC or _GLIBCPP_USE_WCHAR_T.
+
 2007-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/posix_fallocate64.c: Undefine

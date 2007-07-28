@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2000-2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 
 #include <features.h>
 #define __need_mbstate_t
+#define __need_wint_t
 #include <wchar.h>
 #define __need_size_t
 #define __need_wchar_t

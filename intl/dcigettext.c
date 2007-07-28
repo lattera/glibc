@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -948,7 +948,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 			/* If the output encoding is the same there is
 			   nothing to do.  Otherwise do not use the
 			   translation at all.  */
-			if (__builtin_expect (r != __GCONV_NOCONV, 1))
+			if (__builtin_expect (r != __GCONV_NULCONV, 1))
 			  return NULL;
 
 			convd->conv = (__gconv_t) -1;

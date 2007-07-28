@@ -8,19 +8,15 @@
 
 #include <bits/types.h>
 #define __need_size_t
-#define __need_wchar_t
-#define __need_wint_t
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+# define __need_wchar_t
+#endif
 #define __need_NULL
 #include <stddef.h>
-#ifndef _WINT_T
-/* Integral type unchanged by default argument promotions that can
-   hold any value corresponding to members of the extended character
-   set, as well as at least one value that does not correspond to any
-   member of the extended character set.  */
-# define _WINT_T
-typedef unsigned int wint_t;
-#endif
 #define __need_mbstate_t
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+# define __need_wint_t
+#endif
 #include <wchar.h>
 #define _G_size_t	size_t
 typedef struct
@@ -41,7 +37,8 @@ typedef struct
 #define _G_wchar_t	wchar_t
 #define _G_wint_t	wint_t
 #define _G_stat64	stat
-#include <gconv.h>
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+# include <gconv.h>
 typedef union
 {
   struct __gconv_info __cd;
@@ -51,6 +48,7 @@ typedef union
     struct __gconv_step_data __data;
   } __combined;
 } _G_iconv_t;
+#endif
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));

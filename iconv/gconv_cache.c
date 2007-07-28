@@ -1,5 +1,5 @@
 /* Cache handling for iconv modules.
-   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -285,7 +285,7 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
 
   /* Avoid copy-only transformations if the user requests.   */
   if (__builtin_expect (flags & GCONV_AVOID_NOCONV, 0) && fromidx == toidx)
-    return __GCONV_NOCONV;
+    return __GCONV_NULCONV;
 
   /* If there are special conversions available examine them first.  */
   if (fromidx != 0 && toidx != 0

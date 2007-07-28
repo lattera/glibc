@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1995,1997-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -413,9 +413,11 @@ extern "C" {
 extern int __underflow (_IO_FILE *);
 extern int __uflow (_IO_FILE *);
 extern int __overflow (_IO_FILE *, int);
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 extern _IO_wint_t __wunderflow (_IO_FILE *);
 extern _IO_wint_t __wuflow (_IO_FILE *);
 extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
+#endif
 
 #if  __GNUC__ >= 3
 # define _IO_BE(expr, res) __builtin_expect ((expr), res)
@@ -435,15 +437,17 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
     ? __overflow (_fp, (unsigned char) (_ch)) \
     : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
-#define _IO_getwc_unlocked(_fp) \
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+# define _IO_getwc_unlocked(_fp) \
   (_IO_BE ((_fp)->_wide_data->_IO_read_ptr >= (_fp)->_wide_data->_IO_read_end,\
 	   0) \
    ? __wuflow (_fp) : (_IO_wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
-#define _IO_putwc_unlocked(_wch, _fp) \
+# define _IO_putwc_unlocked(_wch, _fp) \
   (_IO_BE ((_fp)->_wide_data->_IO_write_ptr \
 	   >= (_fp)->_wide_data->_IO_write_end, 0) \
    ? __woverflow (_fp, _wch) \
    : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
+#endif
 
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
