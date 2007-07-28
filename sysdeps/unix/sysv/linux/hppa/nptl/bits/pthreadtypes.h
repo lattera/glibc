@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,13 +19,14 @@
 #ifndef _BITS_PTHREADTYPES_H
 #define _BITS_PTHREADTYPES_H	1
 
-/* Linuxthread type sizes:
+/* Linuxthread type sizes (bytes):
    sizeof(pthread_attr_t) = 0x24 (36)
    sizeof(pthread_mutex_t) = 0x30 (48)
    sizeof(pthread_mutexattr_t) = 0x4 (4)
    sizeof(pthread_cond_t) = 0x30 (48)
-   	= Grew to 64 bytes in NPTL.
-   No pthread_cond_compat_t ...
+	= Expanded to 64 bytes in NPTL. 
+   sizeof(pthread_cond_compat_t) = 0xc (12)
+	= Did not exist in Linuxthreads.
    sizeof(pthread_condattr_t) = 0x4 (4)
    sizeof(pthread_rwlock_t) = 0x40 (64)
    sizeof(pthread_rwlockattr_t) = 0x8 (8)
@@ -52,9 +53,9 @@ typedef unsigned long int pthread_t;
    implementation. For NPTL we use LWS Compare and 
    Exchange to implement primitives. */
 #if 0
-typedef struct {
+typedef volatile struct {
 	int lock[4];
-} __atomic_lock_t;
+} __attribute__ ((aligned(16))) __atomic_lock_t;
 #endif
 
 typedef union
@@ -149,7 +150,10 @@ typedef union
     unsigned int __nr_writers_queued;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
-    unsigned int __flags;
+    unsigned char __pad2;
+    unsigned char __pad1;
+    unsigned char __shared;
+    unsigned char __flags;
     int __writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];

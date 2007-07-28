@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/hppa version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,11 +117,12 @@ typedef struct
    	__self - 1;				\
    })
 
-/* FIXME */
-/* Magic for libthread_db to know how to do THREAD_SELF.  */
+/* Magic for libthread_db to know how to do THREAD_SELF.
+   Our thread pointer is stored in cr27.  See asm/elf.h for the offset into
+   elf_gregset_t.  The thread descriptor is sizeof (struct pthread) away.  */
 # define DB_THREAD_SELF \
-  REGISTER (32, 32, 32 * 4, -sizeof (struct pthread))
-
+  REGISTER (32, 32, 53 * 4, -sizeof (struct pthread))
+ 
 /* Access to data in the thread descriptor is easy.  */
 # define THREAD_GETMEM(descr, member) \
   descr->member
@@ -145,6 +146,29 @@ static inline void __set_cr27(struct pthread *cr27)
 	"copy	%0, %%r26"
 	: : "r" (cr27) : "r26" );
 }
+
+/* Get and set the global scope generation counter in struct pthread.  */
+#define THREAD_GSCOPE_FLAG_UNUSED 0
+#define THREAD_GSCOPE_FLAG_USED   1
+#define THREAD_GSCOPE_FLAG_WAIT   2
+#define THREAD_GSCOPE_RESET_FLAG() \
+  do									     \
+    { int __res								     \
+	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
+			       THREAD_GSCOPE_FLAG_UNUSED);		     \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
+	lll_private_futex_wake (&THREAD_SELF->header.gscope_flag, 1);	     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_SET_FLAG() \
+  do									     \
+    {									     \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
+      atomic_write_barrier ();						     \
+    }									     \
+  while (0)
+#define THREAD_GSCOPE_WAIT() \
+  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

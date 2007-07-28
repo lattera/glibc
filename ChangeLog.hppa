@@ -1,4 +1,33 @@
-2006-07-16  Jeff Bailey  <jbailey@raspberryginger.com>
+2007-07-28  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/internaltypes.h: Remove.
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h
+	(pthread_rwlock_t): Split __flags into __pad2, __pad1, __shared,
+	and __flags. Update comments. Update copyright.
+	* sysdeps/hppa/nptl/tls.h: Define THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RSEET_FLAG, THREAD_GSCOPE_SET_FLAG, THREAD_GSCOPE_WAIT.
+	Update copyright.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c: Update copyright.
+	(__lll_lock_wait): Call lll_futex_wait with LLL_SHARED.
+	(__lll_timedlock_wait): Call lll_futex_timed_wait with LLL_SHARED.
+	(lll_unlock_Wake_cb): Use lll_private_futex_wake.
+	(___lll_timedwait_tid): Call lll_futex_timed_wait with LLL_SAHRED.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Define
+	FUTEX_PRIVATE_FLAG, LLL_PRIVATE, LLL_SHARED, lll_private_futex_wait,
+	lll_private_futex_timed_wait, lll_private_Futex_wake. Add private
+	argument to lll_futex_wait, lll_futex_timed_wait, lll_futex_wake,
+	lll_futex_wake_unlock.
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread_once.c: Update copyright.
+	(clear_once_control): Use lll_private_futex_wake.
+	(__pthread_once): Use lll_private_futex_wait, and
+	lll_private_futex_wake.
+
+2007-07-28  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/hppa/nptl/tls.h (DB_THREAD_SELF): Fix definition.
+
+2007-06-16  Jeff Bailey  <jbailey@raspberryginger.com>
 
 	* sysdeps/unix/sysv/linux/hppa/sys/procfs.h: Don't
 	include	asm/elf.h.  Declare elf_greg_t, elf_gregset_t,

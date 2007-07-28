@@ -1,5 +1,5 @@
 /* low level locking for pthread library.  Generic futex-using version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -31,7 +31,7 @@ __lll_lock_wait (lll_lock_t *futex)
     {
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_wait (futex, 2);
+	lll_futex_wait (futex, 2, LLL_SHARED);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 }
@@ -68,7 +68,7 @@ __lll_timedlock_wait (lll_lock_t *futex, const struct timespec *abstime)
       /* Wait.  */
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt);
+	lll_futex_timed_wait (futex, 2, &rt, LLL_SHARED);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
   return 0;
@@ -83,7 +83,7 @@ lll_unlock_wake_cb (lll_lock_t *futex)
   int val = atomic_exchange_rel (futex, 0);
 
   if (__builtin_expect (val > 1, 0))
-    lll_futex_wake (futex, 1);
+    lll_private_futex_wake (futex, 1);
   return 0;
 }
 
@@ -119,7 +119,7 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 	return ETIMEDOUT;
 
       /* Wait until thread terminates.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
+      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
 
