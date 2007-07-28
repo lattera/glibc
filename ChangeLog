@@ -1,3 +1,18 @@
+2007-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/time.h (enum ptime_locale_status): Remove.
+	(__strptime_internal): Remove decided and era_cnt arguments,
+	add statep argument.
+	* time/strptime_l.c (__strptime_internal): Remove decided
+	and era_cnt arguments, add statep argument.  Don't recompute
+	any fields in recursive calls, only update caller's tm
+	and state, if recursive call fails, don't change tm nor
+	any state.
+	(get_alt_number): Adjust.
+	(recursive): Adjust caller.
+	(strptime): Likewise.
+	* time/strptime.c (strptime): Likewise.
+
 2007-07-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/gconv_int.h (__GCONV_NULCONV): New internal only error code.

@@ -98,12 +98,12 @@ localtime_r (t, tp)
   ({									      \
      __label__ do_normal;						      \
 									      \
-     if (*decided != raw)						      \
+     if (s.decided != raw)						      \
        {								      \
 	 val = _nl_parse_alt_digit (&rp HELPER_LOCALE_ARG);		      \
-	 if (val == -1 && *decided != loc)				      \
+	 if (val == -1 && s.decided != loc)				      \
 	   {								      \
-	     *decided = loc;						      \
+	     s.decided = loc;						      \
 	     goto do_normal;						      \
 	   }								      \
 	if (val < from || val > to)					      \
@@ -123,8 +123,7 @@ localtime_r (t, tp)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
-   && (rp = __strptime_internal (rp, (new_fmt), tm,			      \
-				 decided, era_cnt LOCALE_ARG)) != NULL)
+   && (rp = __strptime_internal (rp, (new_fmt), tm, &s LOCALE_ARG)) != NULL)
 
 
 #ifdef _LIBC
@@ -251,12 +250,11 @@ internal_function
 #else
 static char *
 #endif
-__strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
+__strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
      const char *rp;
      const char *fmt;
-     struct tm *tm;
-     enum ptime_locale_status *decided;
-     int era_cnt;
+     struct tm *tmp;
+     void *statep;
      LOCALE_PARAM_DECL
 {
 #ifdef _LIBC
@@ -268,32 +266,48 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
   int cnt;
   int cnt_longest;
   size_t val;
-  int have_I;
-  int is_pm;
-  int century;
-  int want_century;
-  int want_era;
-  int have_wday;
-  int want_xday;
-  int have_yday;
-  int have_mon;
-  int have_mday;
-  int have_uweek;
-  int have_wweek;
-  int week_no;
   size_t num_eras;
-  struct era_entry *era;
-  enum ptime_locale_status decided_longest;
+  struct era_entry *era = NULL;
+  enum ptime_locale_status { not, loc, raw } decided_longest;
+  struct __strptime_state
+  {
+    unsigned int have_I : 1;
+    unsigned int have_wday : 1;
+    unsigned int have_yday : 1;
+    unsigned int have_mon : 1;
+    unsigned int have_mday : 1;
+    unsigned int have_uweek : 1;
+    unsigned int have_wweek : 1;
+    unsigned int is_pm : 1;
+    unsigned int want_century : 1;
+    unsigned int want_era : 1;
+    unsigned int want_xday : 1;
+    enum ptime_locale_status decided : 2;
+    signed char week_no;
+    signed char century;
+    int era_cnt;
+  } s;
+  struct tm tmb;
+  struct tm *tm;
 
-  have_I = is_pm = 0;
-  century = -1;
-  want_century = 0;
-  want_era = 0;
-  era = NULL;
-  week_no = 0;
-
-  have_wday = want_xday = have_yday = have_mon = have_mday = have_uweek = 0;
-  have_wweek = 0;
+  if (statep == NULL)
+    {
+      memset (&s, 0, sizeof (s));
+      s.century = -1;
+      s.era_cnt = -1;
+#ifdef _NL_CURRENT
+      s.decided = not;
+#else
+      s.decided = raw;
+#endif
+      tm = tmp;
+    }
+  else
+    {
+      s = *(struct __strptime_state *) statep;
+      tmb = *tmp;
+      tm = &tmb;
+    }
 
   while (*fmt != '\0')
     {
@@ -334,13 +348,13 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'A':
 	  /* Match day of week.  */
 	  rp_longest = NULL;
-	  decided_longest = *decided;
+	  decided_longest = s.decided;
 	  cnt_longest = -1;
 	  for (cnt = 0; cnt < 7; ++cnt)
 	    {
 	      const char *trp;
 #ifdef _NL_CURRENT
-	      if (*decided !=raw)
+	      if (s.decided !=raw)
 		{
 		  trp = rp;
 		  if (match_string (_NL_CURRENT (LC_TIME, DAY_1 + cnt), trp)
@@ -348,7 +362,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		    {
 		      rp_longest = trp;
 		      cnt_longest = cnt;
-		      if (*decided == not
+		      if (s.decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, DAY_1 + cnt),
 				     weekday_name[cnt]))
 			decided_longest = loc;
@@ -359,14 +373,14 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		    {
 		      rp_longest = trp;
 		      cnt_longest = cnt;
-		      if (*decided == not
+		      if (s.decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt),
 				     ab_weekday_name[cnt]))
 			decided_longest = loc;
 		    }
 		}
 #endif
-	      if (*decided != loc
+	      if (s.decided != loc
 		  && (((trp = rp, match_string (weekday_name[cnt], trp))
 		       && trp > rp_longest)
 		      || ((trp = rp, match_string (ab_weekday_name[cnt], rp))
@@ -381,22 +395,22 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    /* Does not match a weekday name.  */
 	    return NULL;
 	  rp = rp_longest;
-	  *decided = decided_longest;
+	  s.decided = decided_longest;
 	  tm->tm_wday = cnt_longest;
-	  have_wday = 1;
+	  s.have_wday = 1;
 	  break;
 	case 'b':
 	case 'B':
 	case 'h':
 	  /* Match month name.  */
 	  rp_longest = NULL;
-	  decided_longest = *decided;
+	  decided_longest = s.decided;
 	  cnt_longest = -1;
 	  for (cnt = 0; cnt < 12; ++cnt)
 	    {
 	      const char *trp;
 #ifdef _NL_CURRENT
-	      if (*decided !=raw)
+	      if (s.decided !=raw)
 		{
 		  trp = rp;
 		  if (match_string (_NL_CURRENT (LC_TIME, MON_1 + cnt), trp)
@@ -404,7 +418,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		    {
 		      rp_longest = trp;
 		      cnt_longest = cnt;
-		      if (*decided == not
+		      if (s.decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, MON_1 + cnt),
 				     month_name[cnt]))
 			decided_longest = loc;
@@ -415,14 +429,14 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		    {
 		      rp_longest = trp;
 		      cnt_longest = cnt;
-		      if (*decided == not
+		      if (s.decided == not
 			  && strcmp (_NL_CURRENT (LC_TIME, ABMON_1 + cnt),
 				     ab_month_name[cnt]))
 			decided_longest = loc;
 		    }
 		}
 #endif
-	      if (*decided != loc
+	      if (s.decided != loc
 		  && (((trp = rp, match_string (month_name[cnt], trp))
 		       && trp > rp_longest)
 		      || ((trp = rp, match_string (ab_month_name[cnt], trp))
@@ -437,78 +451,78 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    /* Does not match a month name.  */
 	    return NULL;
 	  rp = rp_longest;
-	  *decided = decided_longest;
+	  s.decided = decided_longest;
 	  tm->tm_mon = cnt_longest;
-	  have_mon = 1;
-	  want_xday = 1;
+	  s.have_mon = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'c':
 	  /* Match locale's date and time format.  */
 #ifdef _NL_CURRENT
-	  if (*decided != raw)
+	  if (s.decided != raw)
 	    {
 	      if (!recursive (_NL_CURRENT (LC_TIME, D_T_FMT)))
 		{
-		  if (*decided == loc)
+		  if (s.decided == loc)
 		    return NULL;
 		  else
 		    rp = rp_backup;
 		}
 	      else
 		{
-		  if (*decided == not &&
+		  if (s.decided == not &&
 		      strcmp (_NL_CURRENT (LC_TIME, D_T_FMT), HERE_D_T_FMT))
-		    *decided = loc;
-		  want_xday = 1;
+		    s.decided = loc;
+		  s.want_xday = 1;
 		  break;
 		}
-	      *decided = raw;
+	      s.decided = raw;
 	    }
 #endif
 	  if (!recursive (HERE_D_T_FMT))
 	    return NULL;
-	  want_xday = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'C':
 	  /* Match century number.  */
 	match_century:
 	  get_number (0, 99, 2);
-	  century = val;
-	  want_xday = 1;
+	  s.century = val;
+	  s.want_xday = 1;
 	  break;
 	case 'd':
 	case 'e':
 	  /* Match day of month.  */
 	  get_number (1, 31, 2);
 	  tm->tm_mday = val;
-	  have_mday = 1;
-	  want_xday = 1;
+	  s.have_mday = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'F':
 	  if (!recursive ("%Y-%m-%d"))
 	    return NULL;
-	  want_xday = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'x':
 #ifdef _NL_CURRENT
-	  if (*decided != raw)
+	  if (s.decided != raw)
 	    {
 	      if (!recursive (_NL_CURRENT (LC_TIME, D_FMT)))
 		{
-		  if (*decided == loc)
+		  if (s.decided == loc)
 		    return NULL;
 		  else
 		    rp = rp_backup;
 		}
 	      else
 		{
-		  if (*decided == not
+		  if (s.decided == not
 		      && strcmp (_NL_CURRENT (LC_TIME, D_FMT), HERE_D_FMT))
-		    *decided = loc;
-		  want_xday = 1;
+		    s.decided = loc;
+		  s.want_xday = 1;
 		  break;
 		}
-	      *decided = raw;
+	      s.decided = raw;
 	    }
 #endif
 	  /* Fall through.  */
@@ -516,14 +530,14 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  /* Match standard day format.  */
 	  if (!recursive (HERE_D_FMT))
 	    return NULL;
-	  want_xday = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'k':
 	case 'H':
 	  /* Match hour in 24-hour clock.  */
 	  get_number (0, 23, 2);
 	  tm->tm_hour = val;
-	  have_I = 0;
+	  s.have_I = 0;
 	  break;
 	case 'l':
 	  /* Match hour in 12-hour clock.  GNU extension.  */
@@ -531,20 +545,20 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  /* Match hour in 12-hour clock.  */
 	  get_number (1, 12, 2);
 	  tm->tm_hour = val % 12;
-	  have_I = 1;
+	  s.have_I = 1;
 	  break;
 	case 'j':
 	  /* Match day number of year.  */
 	  get_number (1, 366, 3);
 	  tm->tm_yday = val - 1;
-	  have_yday = 1;
+	  s.have_yday = 1;
 	  break;
 	case 'm':
 	  /* Match number of month.  */
 	  get_number (1, 12, 2);
 	  tm->tm_mon = val - 1;
-	  have_mon = 1;
-	  want_xday = 1;
+	  s.have_mon = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'M':
 	  /* Match minute.  */
@@ -560,52 +574,55 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'p':
 	  /* Match locale's equivalent of AM/PM.  */
 #ifdef _NL_CURRENT
-	  if (*decided != raw)
+	  if (s.decided != raw)
 	    {
 	      if (match_string (_NL_CURRENT (LC_TIME, AM_STR), rp))
 		{
 		  if (strcmp (_NL_CURRENT (LC_TIME, AM_STR), HERE_AM_STR))
-		    *decided = loc;
+		    s.decided = loc;
+		  s.is_pm = 0;
 		  break;
 		}
 	      if (match_string (_NL_CURRENT (LC_TIME, PM_STR), rp))
 		{
 		  if (strcmp (_NL_CURRENT (LC_TIME, PM_STR), HERE_PM_STR))
-		    *decided = loc;
-		  is_pm = 1;
+		    s.decided = loc;
+		  s.is_pm = 1;
 		  break;
 		}
-	      *decided = raw;
+	      s.decided = raw;
 	    }
 #endif
 	  if (!match_string (HERE_AM_STR, rp))
 	    {
 	      if (match_string (HERE_PM_STR, rp))
-		is_pm = 1;
+		s.is_pm = 1;
 	      else
 		return NULL;
 	    }
+	  else
+	    s.is_pm = 0;
 	  break;
 	case 'r':
 #ifdef _NL_CURRENT
-	  if (*decided != raw)
+	  if (s.decided != raw)
 	    {
 	      if (!recursive (_NL_CURRENT (LC_TIME, T_FMT_AMPM)))
 		{
-		  if (*decided == loc)
+		  if (s.decided == loc)
 		    return NULL;
 		  else
 		    rp = rp_backup;
 		}
 	      else
 		{
-		  if (*decided == not &&
+		  if (s.decided == not &&
 		      strcmp (_NL_CURRENT (LC_TIME, T_FMT_AMPM),
 			      HERE_T_FMT_AMPM))
-		    *decided = loc;
+		    s.decided = loc;
 		  break;
 		}
-	      *decided = raw;
+	      s.decided = raw;
 	    }
 #endif
 	  if (!recursive (HERE_T_FMT_AMPM))
@@ -644,11 +661,11 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  break;
 	case 'X':
 #ifdef _NL_CURRENT
-	  if (*decided != raw)
+	  if (s.decided != raw)
 	    {
 	      if (!recursive (_NL_CURRENT (LC_TIME, T_FMT)))
 		{
-		  if (*decided == loc)
+		  if (s.decided == loc)
 		    return NULL;
 		  else
 		    rp = rp_backup;
@@ -656,10 +673,10 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      else
 		{
 		  if (strcmp (_NL_CURRENT (LC_TIME, T_FMT), HERE_T_FMT))
-		    *decided = loc;
+		    s.decided = loc;
 		  break;
 		}
-	      *decided = raw;
+	      s.decided = raw;
 	    }
 #endif
 	  /* Fall through.  */
@@ -670,7 +687,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'u':
 	  get_number (1, 7, 1);
 	  tm->tm_wday = val % 7;
-	  have_wday = 1;
+	  s.have_wday = 1;
 	  break;
 	case 'g':
 	  get_number (0, 99, 2);
@@ -687,13 +704,13 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  break;
 	case 'U':
 	  get_number (0, 53, 2);
-	  week_no = val;
-	  have_uweek = 1;
+	  s.week_no = val;
+	  s.have_uweek = 1;
 	  break;
 	case 'W':
 	  get_number (0, 53, 2);
-	  week_no = val;
-	  have_wweek = 1;
+	  s.week_no = val;
+	  s.have_wweek = 1;
 	  break;
 	case 'V':
 	  get_number (0, 53, 2);
@@ -704,7 +721,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  /* Match number of weekday.  */
 	  get_number (0, 6, 1);
 	  tm->tm_wday = val;
-	  have_wday = 1;
+	  s.have_wday = 1;
 	  break;
 	case 'y':
 	match_year_in_century:
@@ -714,15 +731,15 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	     values in the range 69-99 refer to the twentieth century.  */
 	  tm->tm_year = val >= 69 ? val : val + 100;
 	  /* Indicate that we want to use the century, if specified.  */
-	  want_century = 1;
-	  want_xday = 1;
+	  s.want_century = 1;
+	  s.want_xday = 1;
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
 	  get_number (0, 9999, 4);
 	  tm->tm_year = val - 1900;
-	  want_century = 0;
-	  want_xday = 1;
+	  s.want_century = 0;
+	  s.want_xday = 1;
 	  break;
 	case 'Z':
 	  /* XXX How to handle this?  */
@@ -769,7 +786,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    {
 	    case 'c':
 	      /* Match locale's alternate date and time format.  */
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
 		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT);
 
@@ -778,7 +795,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
 		  if (!recursive (fmt))
 		    {
-		      if (*decided == loc)
+		      if (s.decided == loc)
 			return NULL;
 		      else
 			rp = rp_backup;
@@ -786,27 +803,27 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		  else
 		    {
 		      if (strcmp (fmt, HERE_D_T_FMT))
-			*decided = loc;
-		      want_xday = 1;
+			s.decided = loc;
+		      s.want_xday = 1;
 		      break;
 		    }
-		  *decided = raw;
+		  s.decided = raw;
 		}
 	      /* The C locale has no era information, so use the
 		 normal representation.  */
 	      if (!recursive (HERE_D_T_FMT))
 		return NULL;
-	      want_xday = 1;
+	      s.want_xday = 1;
 	      break;
 	    case 'C':
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
-		  if (era_cnt >= 0)
+		  if (s.era_cnt >= 0)
 		    {
-		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      era = _nl_select_era_entry (s.era_cnt HELPER_LOCALE_ARG);
 		      if (era != NULL && match_string (era->era_name, rp))
 			{
-			  *decided = loc;
+			  s.decided = loc;
 			  break;
 			}
 		      else
@@ -815,43 +832,43 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
 		  num_eras = _NL_CURRENT_WORD (LC_TIME,
 					       _NL_TIME_ERA_NUM_ENTRIES);
-		  for (era_cnt = 0; era_cnt < (int) num_eras;
-		       ++era_cnt, rp = rp_backup)
+		  for (s.era_cnt = 0; s.era_cnt < (int) num_eras;
+		       ++s.era_cnt, rp = rp_backup)
 		    {
-		      era = _nl_select_era_entry (era_cnt
+		      era = _nl_select_era_entry (s.era_cnt
 						  HELPER_LOCALE_ARG);
 		      if (era != NULL && match_string (era->era_name, rp))
 			{
-			  *decided = loc;
+			  s.decided = loc;
 			  break;
 			}
 		    }
-		  if (era_cnt != (int) num_eras)
+		  if (s.era_cnt != (int) num_eras)
 		    break;
 
-		  era_cnt = -1;
-		  if (*decided == loc)
+		  s.era_cnt = -1;
+		  if (s.decided == loc)
 		    return NULL;
 
-		  *decided = raw;
+		  s.decided = raw;
 		}
 	      /* The C locale has no era information, so use the
 		 normal representation.  */
 	      goto match_century;
  	    case 'y':
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
 		  get_number(0, 9999, 4);
 		  tm->tm_year = val;
-		  want_era = 1;
-		  want_xday = 1;
-		  want_century = 1;
+		  s.want_era = 1;
+		  s.want_xday = 1;
+		  s.want_century = 1;
 
-		  if (era_cnt >= 0)
+		  if (s.era_cnt >= 0)
 		    {
-		      assert (*decided == loc);
+		      assert (s.decided == loc);
 
-		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      era = _nl_select_era_entry (s.era_cnt HELPER_LOCALE_ARG);
 		      bool match = false;
 		      if (era != NULL)
 			{
@@ -870,9 +887,9 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
 		  num_eras = _NL_CURRENT_WORD (LC_TIME,
 					       _NL_TIME_ERA_NUM_ENTRIES);
-		  for (era_cnt = 0; era_cnt < (int) num_eras; ++era_cnt)
+		  for (s.era_cnt = 0; s.era_cnt < (int) num_eras; ++s.era_cnt)
 		    {
-		      era = _nl_select_era_entry (era_cnt
+		      era = _nl_select_era_entry (s.era_cnt
 						  HELPER_LOCALE_ARG);
 		      if (era != NULL)
 			{
@@ -883,58 +900,58 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 					   - (int64_t) era->start_date[0])
 					  * era->absolute_direction))
 			    {
-			      *decided = loc;
+			      s.decided = loc;
 			      break;
 			    }
 			}
 		    }
-		  if (era_cnt != (int) num_eras)
+		  if (s.era_cnt != (int) num_eras)
 		    break;
 
-		  era_cnt = -1;
-		  if (*decided == loc)
+		  s.era_cnt = -1;
+		  if (s.decided == loc)
 		    return NULL;
 
-		  *decided = raw;
+		  s.decided = raw;
 		}
 
 	      goto match_year_in_century;
 	    case 'Y':
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
 		  num_eras = _NL_CURRENT_WORD (LC_TIME,
 					       _NL_TIME_ERA_NUM_ENTRIES);
-		  for (era_cnt = 0; era_cnt < (int) num_eras;
-		       ++era_cnt, rp = rp_backup)
+		  for (s.era_cnt = 0; s.era_cnt < (int) num_eras;
+		       ++s.era_cnt, rp = rp_backup)
 		    {
-		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      era = _nl_select_era_entry (s.era_cnt HELPER_LOCALE_ARG);
 		      if (era != NULL && recursive (era->era_format))
 			break;
 		    }
-		  if (era_cnt == (int) num_eras)
+		  if (s.era_cnt == (int) num_eras)
 		    {
-		      era_cnt = -1;
-		      if (*decided == loc)
+		      s.era_cnt = -1;
+		      if (s.decided == loc)
 			return NULL;
 		      else
 			rp = rp_backup;
 		    }
 		  else
 		    {
-		      *decided = loc;
-		      era_cnt = -1;
+		      s.decided = loc;
+		      s.era_cnt = -1;
 		      break;
 		    }
 
-		  *decided = raw;
+		  s.decided = raw;
 		}
 	      get_number (0, 9999, 4);
 	      tm->tm_year = val - 1900;
-	      want_century = 0;
-	      want_xday = 1;
+	      s.want_century = 0;
+	      s.want_xday = 1;
 	      break;
 	    case 'x':
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
 		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_D_FMT);
 
@@ -943,7 +960,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
 		  if (!recursive (fmt))
 		    {
-		      if (*decided == loc)
+		      if (s.decided == loc)
 			return NULL;
 		      else
 			rp = rp_backup;
@@ -951,16 +968,16 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		  else
 		    {
 		      if (strcmp (fmt, HERE_D_FMT))
-			*decided = loc;
+			s.decided = loc;
 		      break;
 		    }
-		  *decided = raw;
+		  s.decided = raw;
 		}
 	      if (!recursive (HERE_D_FMT))
 		return NULL;
 	      break;
 	    case 'X':
-	      if (*decided != raw)
+	      if (s.decided != raw)
 		{
 		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_T_FMT);
 
@@ -969,7 +986,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
 		  if (!recursive (fmt))
 		    {
-		      if (*decided == loc)
+		      if (s.decided == loc)
 			return NULL;
 		      else
 			rp = rp_backup;
@@ -977,10 +994,10 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		  else
 		    {
 		      if (strcmp (fmt, HERE_T_FMT))
-			*decided = loc;
+			s.decided = loc;
 		      break;
 		    }
-		  *decided = raw;
+		  s.decided = raw;
 		}
 	      if (!recursive (HERE_T_FMT))
 		return NULL;
@@ -1007,29 +1024,29 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      /* Match day of month using alternate numeric symbols.  */
 	      get_alt_number (1, 31, 2);
 	      tm->tm_mday = val;
-	      have_mday = 1;
-	      want_xday = 1;
+	      s.have_mday = 1;
+	      s.want_xday = 1;
 	      break;
 	    case 'H':
 	      /* Match hour in 24-hour clock using alternate numeric
 		 symbols.  */
 	      get_alt_number (0, 23, 2);
 	      tm->tm_hour = val;
-	      have_I = 0;
+	      s.have_I = 0;
 	      break;
 	    case 'I':
 	      /* Match hour in 12-hour clock using alternate numeric
 		 symbols.  */
 	      get_alt_number (1, 12, 2);
 	      tm->tm_hour = val % 12;
-	      have_I = 1;
+	      s.have_I = 1;
 	      break;
 	    case 'm':
 	      /* Match month using alternate numeric symbols.  */
 	      get_alt_number (1, 12, 2);
 	      tm->tm_mon = val - 1;
-	      have_mon = 1;
-	      want_xday = 1;
+	      s.have_mon = 1;
+	      s.want_xday = 1;
 	      break;
 	    case 'M':
 	      /* Match minutes using alternate numeric symbols.  */
@@ -1043,13 +1060,13 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      break;
 	    case 'U':
 	      get_alt_number (0, 53, 2);
-	      week_no = val;
-	      have_uweek = 1;
+	      s.week_no = val;
+	      s.have_uweek = 1;
 	      break;
 	    case 'W':
 	      get_alt_number (0, 53, 2);
-	      week_no = val;
-	      have_wweek = 1;
+	      s.week_no = val;
+	      s.have_wweek = 1;
 	      break;
 	    case 'V':
 	      get_alt_number (0, 53, 2);
@@ -1060,13 +1077,13 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      /* Match number of weekday using alternate numeric symbols.  */
 	      get_alt_number (0, 6, 1);
 	      tm->tm_wday = val;
-	      have_wday = 1;
+	      s.have_wday = 1;
 	      break;
 	    case 'y':
 	      /* Match year within century using alternate numeric symbols.  */
 	      get_alt_number (0, 99, 2);
 	      tm->tm_year = val >= 69 ? val : val + 100;
-	      want_xday = 1;
+	      s.want_xday = 1;
 	      break;
 	    default:
 	      return NULL;
@@ -1077,24 +1094,33 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	}
     }
 
-  if (have_I && is_pm)
-    tm->tm_hour += 12;
-
-  if (century != -1)
+  if (statep != NULL)
     {
-      if (want_century)
-	tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
-      else
-	/* Only the century, but not the year.  Strange, but so be it.  */
-	tm->tm_year = (century - 19) * 100;
+      /* Recursive invocation, returning success, so
+	 update parent's struct tm and state.  */
+      *(struct __strptime_state *) statep = s;
+      *tmp = tmb;
+      return (char *) rp;
     }
 
-  if (era_cnt != -1)
+  if (s.have_I && s.is_pm)
+    tm->tm_hour += 12;
+
+  if (s.century != -1)
     {
-      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+      if (s.want_century)
+	tm->tm_year = tm->tm_year % 100 + (s.century - 19) * 100;
+      else
+	/* Only the century, but not the year.  Strange, but so be it.  */
+	tm->tm_year = (s.century - 19) * 100;
+    }
+
+  if (s.era_cnt != -1)
+    {
+      era = _nl_select_era_entry (s.era_cnt HELPER_LOCALE_ARG);
       if (era == NULL)
 	return NULL;
-      if (want_era)
+      if (s.want_era)
 	tm->tm_year = (era->start_date[0]
 		       + ((tm->tm_year - era->offset)
 			  * era->absolute_direction));
@@ -1103,68 +1129,68 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	tm->tm_year = era->start_date[0];
     }
   else
-    if (want_era)
+    if (s.want_era)
       {
 	/* No era found but we have seen an E modifier.  Rectify some
 	   values.  */
-	if (want_century && century == -1 && tm->tm_year < 69)
+	if (s.want_century && s.century == -1 && tm->tm_year < 69)
 	  tm->tm_year += 100;
       }
 
-  if (want_xday && !have_wday)
+  if (s.want_xday && !s.have_wday)
     {
-      if ( !(have_mon && have_mday) && have_yday)
+      if ( !(s.have_mon && s.have_mday) && s.have_yday)
 	{
 	  /* We don't have tm_mon and/or tm_mday, compute them.  */
 	  int t_mon = 0;
 	  while (__mon_yday[__isleap(1900 + tm->tm_year)][t_mon] <= tm->tm_yday)
 	      t_mon++;
-	  if (!have_mon)
+	  if (!s.have_mon)
 	      tm->tm_mon = t_mon - 1;
-	  if (!have_mday)
+	  if (!s.have_mday)
 	      tm->tm_mday =
 		(tm->tm_yday
 		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
-	  have_mon = 1;
-	  have_mday = 1;
+	  s.have_mon = 1;
+	  s.have_mday = 1;
 	}
       /* Don't crash in day_of_the_week if tm_mon is uninitialized.  */
-      if (have_mon || (unsigned) tm->tm_mon <= 11)
+      if (s.have_mon || (unsigned) tm->tm_mon <= 11)
 	day_of_the_week (tm);
     }
 
-  if (want_xday && !have_yday && (have_mon || (unsigned) tm->tm_mon <= 11))
+  if (s.want_xday && !s.have_yday && (s.have_mon || (unsigned) tm->tm_mon <= 11))
     day_of_the_year (tm);
 
-  if ((have_uweek || have_wweek) && have_wday)
+  if ((s.have_uweek || s.have_wweek) && s.have_wday)
     {
       int save_wday = tm->tm_wday;
       int save_mday = tm->tm_mday;
       int save_mon = tm->tm_mon;
-      int w_offset = have_uweek ? 0 : 1;
+      int w_offset = s.have_uweek ? 0 : 1;
 
       tm->tm_mday = 1;
       tm->tm_mon = 0;
       day_of_the_week (tm);
-      if (have_mday)
+      if (s.have_mday)
 	tm->tm_mday = save_mday;
-      if (have_mon)
+      if (s.have_mon)
 	tm->tm_mon = save_mon;
 
-      if (!have_yday)
+      if (!s.have_yday)
 	tm->tm_yday = ((7 - (tm->tm_wday - w_offset)) % 7
-		       + (week_no - 1) *7
+		       + (s.week_no - 1) *7
 		       + save_wday - w_offset);
 
-      if (!have_mday || !have_mon)
+      if (!s.have_mday || !s.have_mon)
 	{
 	  int t_mon = 0;
 	  while (__mon_yday[__isleap(1900 + tm->tm_year)][t_mon]
 		 <= tm->tm_yday)
 	    t_mon++;
-	  if (!have_mon)
+	  if (!s.have_mon)
 	    tm->tm_mon = t_mon - 1;
-	  if (!have_mday)
+	  if (!s.have_mday)
 	      tm->tm_mday =
 		(tm->tm_yday
 		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
@@ -1184,14 +1210,7 @@ strptime (buf, format, tm LOCALE_PARAM)
      struct tm *tm;
      LOCALE_PARAM_DECL
 {
-  enum ptime_locale_status decided;
-
-#ifdef _NL_CURRENT
-  decided = not;
-#else
-  decided = raw;
-#endif
-  return __strptime_internal (buf, format, tm, &decided, -1 LOCALE_ARG);
+  return __strptime_internal (buf, format, tm, NULL LOCALE_ARG);
 }
 
 #ifdef _LIBC

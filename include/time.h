@@ -93,17 +93,10 @@ extern int __getclktck (void);
 
 
 /* strptime support.  */
-/* Status of lookup: do we use the locale data or the raw data?  */
-#ifndef __cplusplus
-/* C++ cannot deal with using 'not'.  */
-enum ptime_locale_status { not, loc, raw };
-
 extern char * __strptime_internal (const char *rp, const char *fmt,
-				   struct tm *tm,
-				   enum ptime_locale_status *decided,
-				   int era_cnt, __locale_t locparam)
+				   struct tm *tm, void *statep,
+				   __locale_t locparam)
      internal_function;
-#endif
 
 extern double __difftime (time_t time1, time_t time0);
 
