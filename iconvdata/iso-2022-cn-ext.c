@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN-EXT.
-   Copyright (C) 2000-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -304,8 +304,8 @@ enum
       {									      \
 	/* This is a character from CNS 11643 plane 3 or higher.	      \
 	   XXX Currently GB7590 and GB13132 are not supported.  */	      \
-	char buf[3];							      \
-	const char *tmp = buf;						      \
+	unsigned char buf[3];						      \
+	const unsigned char *tmp = buf;					      \
 									      \
 	buf[1] = inptr[2];						      \
 	buf[2] = inptr[3];						      \
@@ -426,7 +426,7 @@ enum
       }									      \
     else								      \
       {									      \
-	char buf[2];							      \
+	unsigned char buf[2];						      \
 	int used;							      \
 									      \
 	if (set == GB2312_set || ((ann & SO_ann) != CNS11643_1_ann	      \
@@ -456,7 +456,7 @@ enum
 	      used = CNS11643_2_set;					      \
 	    else							      \
 	      {								      \
-		char tmpbuf[3];						      \
+		unsigned char tmpbuf[3];				      \
 									      \
 		switch (0)						      \
 		  {							      \

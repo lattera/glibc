@@ -35,31 +35,50 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_PRIVATE_FLAG	128
+
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE	0
+#define LLL_SHARED	FUTEX_PRIVATE_FLAG
+
+
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
+	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
+# endif	      
+#endif
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
-#define lll_futex_wait(futex, val) \
-  ({									      \
-     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex); \
-     register unsigned long int __r3 asm ("3") = FUTEX_WAIT;		      \
-     register unsigned long int __r4 asm ("4") = (unsigned long int) (val);   \
-     register unsigned long int __r5 asm ("5") = 0ul;			      \
-     register unsigned long __result asm ("2");				      \
-									      \
-    __asm __volatile ("svc %b1"						      \
-		      : "=d" (__result)					      \
-		      : "i" (SYS_futex), "0" (__r2), "d" (__r3),	      \
-			"d" (__r4), "d" (__r5)				      \
-		      : "cc", "memory" );				      \
-    __result;								      \
-  })
+#define lll_futex_wait(futex, val, private) \
+  lll_futex_timed_wait (futex, val, NULL, private)
 
-
-#define lll_futex_timed_wait(futex, val, timespec) \
+#define lll_futex_timed_wait(futex, val, timespec, private) \
   ({									      \
     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
-    register unsigned long int __r3 asm ("3") = FUTEX_WAIT;		      \
+    register unsigned long int __r3 asm ("3")				      \
+      = __lll_private_flag (FUTEX_WAIT, private);			      \
     register unsigned long int __r4 asm ("4") = (unsigned long int) (val);    \
     register unsigned long int __r5 asm ("5") = (unsigned long int)(timespec);\
     register unsigned long int __result asm ("2");			      \
@@ -73,10 +92,11 @@
   })
 
 
-#define lll_futex_wake(futex, nr) \
+#define lll_futex_wake(futex, nr, private) \
   ({									      \
     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
-    register unsigned long int __r3 asm ("3") = FUTEX_WAKE;		      \
+    register unsigned long int __r3 asm ("3")				      \
+      __lll_private_flag (FUTEX_WAKE, private);				      \
     register unsigned long int __r4 asm ("4") = (unsigned long int) (nr);     \
     register unsigned long int __result asm ("2");			      \
 									      \
@@ -94,7 +114,7 @@
       int *__futexp = &(futexv);					      \
 									      \
       atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      lll_futex_wake (__futexp, 1);					      \
+      lll_futex_wake (__futexp, 1, LLL_SHARED);				      \
     }									      \
   while (0)
 
@@ -271,7 +291,7 @@ __lll_mutex_unlock (int *futex)
 
   lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
   if (oldval > 1)
-    lll_futex_wake (futex, 1);
+    lll_futex_wake (futex, 1, LLL_SHARED);
 }
 #define lll_mutex_unlock(futex) \
   __lll_mutex_unlock(&(futex))
@@ -286,7 +306,7 @@ __lll_robust_mutex_unlock (int *futex, int mask)
 
   lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
   if (oldval & mask)
-    lll_futex_wake (futex, 1);
+    lll_futex_wake (futex, 1, LLL_SHARED);
 }
 #define lll_robust_mutex_unlock(futex) \
   __lll_robust_mutex_unlock(&(futex), FUTEX_WAITERS)
@@ -297,7 +317,7 @@ __attribute__ ((always_inline))
 __lll_mutex_unlock_force (int *futex)
 {
   *futex = 0;
-  lll_futex_wake (futex, 1);
+  lll_futex_wake (futex, 1, LLL_SHARED);
 }
 #define lll_mutex_unlock_force(futex) \
   __lll_mutex_unlock_force(&(futex))
@@ -338,7 +358,7 @@ __lll_wait_tid (int *ptid)
   int tid;
 
   while ((tid = *ptid) != 0)
-    lll_futex_wait (ptid, tid);
+    lll_futex_wait (ptid, tid, LLL_SHARED);
 }
 #define lll_wait_tid(tid) __lll_wait_tid(&(tid))
 

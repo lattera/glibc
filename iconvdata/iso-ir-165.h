@@ -1,6 +1,6 @@
 /* Tables for conversion to and from ISO-IR-165.
    converting from UCS using gaps.
-   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -72,7 +72,7 @@ extern const char __isoir165_from_tab[];
 
 static inline size_t
 __attribute ((always_inline))
-ucs4_to_isoir165 (uint32_t wch, char *s, size_t avail)
+ucs4_to_isoir165 (uint32_t wch, unsigned char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   const char *cp;

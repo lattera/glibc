@@ -13213,8 +13213,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 #define BODY \
   {									      \
     uint32_t ch = get32 (inptr);					      \
-    unsigned char buf[2];						      \
-    const unsigned char *cp = buf;					      \
+    char buf[2];							      \
+    const char *cp = buf;						      \
 									      \
     if (ch <= L'\x7f')							      \
       /* It's plain ASCII.  */						      \

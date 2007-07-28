@@ -1,3 +1,35 @@
+2007-07-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconvdata/gbk.c (BODY): Make buf and cp char instead of unsigned
+	char array resp. pointer.
+	* iconvdata/iso-2022-kr.c (BODY): Make buf unsigned char instead of
+	char array.
+	* iconvdata/cns11643.h (cns11643_to_ucs4): Change first argument
+	to const unsigned char **.
+	(ucs4_to_cns11643): Change second argument to unsigned char *.
+	* iconvdata/euc-tw.c (BODY): Change endp type to
+	const unsigned char *.
+	* iconvdata/iso-ir-165.h (ucs4_to_isoir165): Change second argument
+	to unsigned char *.
+	* iconvdata/ibm1008_420.c (LOOP_NEED_FLAGS): Don't define.
+	* iconvdata/iso-2022-cn.c (BODY): Change buf to unsigned char array.
+	* iconvdata/iso-2022-cn-ext.c (BODY): Change buf, tmpbuf, tmp
+	types to unsigned char pointers/arrays instead of char.
+	* iconvdata/jis0201.h (ucs4_to_jisx0201): Change second argument
+	to unsigned char *.
+	* iconvdata/jis0208.h (ucs4_to_jisx0208): Likewise.
+	* iconvdata/jis0212.h: Include assert.h.
+	(ucs4_to_jisx0212): Change second argument to unsigned char *.
+	assert that if cp[0] is not '\0', cp[1] is not '\0' either instead
+	of trying to handle that.
+	* iconvdata/euc-kr.c (euckr_from_ucs4): Initialize also cp[1] to
+	shut up a warning.
+	* iconvdata/euc-jp-ms.c (from_ucs4_lat1, from_ucs4_greek,
+	from_ucs4_cjk, from_ucs4_cjkcpt, from_ucs4_extra): Change type to
+	two dimensional const unsigned char arrays.
+	(BODY): Cast "" to (const unsigned char *) for assignment to cp.
+	Initialize endp to inptr to shut up a warning.
+
 2007-07-20  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4772]

@@ -1,5 +1,5 @@
 /* Mapping tables for EUCJP-MS handling.
-   Copyright (C) 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2003,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>, 2003.
 
@@ -158,7 +158,7 @@ static const uint16_t cjk_block_ibm[268] =
  /* 0x8ff4fd */ 0xfa2d, 0x9ed1
 };
 
-static const char from_ucs4_lat1[256][2] =
+static const unsigned char from_ucs4_lat1[256][2] =
 {
   /* start = 0x0000, end = 0x00ff */
   [    0] = "\x00\x00",  [    1] = "\x01\x00",  [    2] = "\x02\x00",
@@ -244,7 +244,7 @@ static const char from_ucs4_lat1[256][2] =
   [  255] = "\xab\x73"
 };
 
-static const char from_ucs4_greek[864][2] =
+static const unsigned char from_ucs4_greek[864][2] =
 {
   /* start = 0x0100, end = 0x045f */
   [    0] = "\xaa\x27",  [    1] = "\xab\x27",  [    2] = "\xaa\x25",
@@ -351,7 +351,7 @@ static const char from_ucs4_greek[864][2] =
   [  860] = "\xa7\x7c",  [  862] = "\xa7\x7d",  [  863] = "\xa7\x7e"
 };
 
-static const char from_ucs4_cjk[32662][2] =
+static const unsigned char from_ucs4_cjk[32662][2] =
 {
   /* start = 0x2010, end = 0x9fa5 */
   [    0] = "\xa1\xbe",  [    4] = "\xa1\xbd",  [    5] = "\xa1\xbd",
@@ -4556,7 +4556,7 @@ static const char from_ucs4_cjk[32662][2] =
   [32661] = "\xed\x63"
 };
 
-static const char from_ucs4_cjkcpt[261][2] =
+static const unsigned char from_ucs4_cjkcpt[261][2] =
 {
   /* start = 0xf929, end = 0xfa2d */
   [    0] = "\xf4\x45",  [  179] = "\xf4\x72",  [  229] = "\xf4\x34",
@@ -4573,7 +4573,7 @@ static const char from_ucs4_cjkcpt[261][2] =
   [  260] = "\xf4\x7d"
 };
 
-static const char from_ucs4_extra[229][2] =
+static const unsigned char from_ucs4_extra[229][2] =
 {
   /* start = 0xff01, end = 0xffe5 */
   [    0] = "\xa1\xaa",  [    1] = "\xf4\x2a",  [    2] = "\xa1\xf4",
@@ -4719,7 +4719,7 @@ static const char from_ucs4_extra[229][2] =
 	  }								      \
 	else								      \
 	  {								      \
-	    const unsigned char *endp;					      \
+	    const unsigned char *endp = inptr;				      \
 	    int mblen = 1;						      \
 									      \
 	    if (__builtin_expect(ch == 0x8f, 0))			      \
@@ -4758,7 +4758,7 @@ static const char from_ucs4_extra[229][2] =
 		              ch = __UNKNOWN_10646_CHAR;		      \
 		          }						      \
 		        else						      \
-			    ch = __UNKNOWN_10646_CHAR;			      \
+			  ch = __UNKNOWN_10646_CHAR;			      \
 		      }							      \
 		    else if (ch2 <= 0xfe)				      \
 		      {							      \
@@ -4766,7 +4766,7 @@ static const char from_ucs4_extra[229][2] =
 		        endp = inptr + mblen;				      \
 		      }							      \
 		    else						      \
-		        ch = __UNKNOWN_10646_CHAR;			      \
+		      ch = __UNKNOWN_10646_CHAR;			      \
 		  }							      \
 	      }								      \
 	    else if (__builtin_expect(0xa1 <= ch, 1))			      \
@@ -4804,10 +4804,10 @@ static const char from_ucs4_extra[229][2] =
 		    endp = inptr + mblen;				      \
 		  }							      \
 	        else							      \
-		    ch = __UNKNOWN_10646_CHAR;				      \
+		  ch = __UNKNOWN_10646_CHAR;				      \
 	      }								      \
 	    else							      \
-	        ch = __UNKNOWN_10646_CHAR;				      \
+	      ch = __UNKNOWN_10646_CHAR;				      \
 									      \
 	    if (__builtin_expect (ch, 1) == 0)				      \
 	      {								      \
@@ -4880,7 +4880,7 @@ static const char from_ucs4_extra[229][2] =
 	  {								      \
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 	    /* Illegal character.  */					      \
-	    cp = "";							      \
+	    cp = (const unsigned char *) "";				      \
 	  }								      \
       }									      \
     else								      \

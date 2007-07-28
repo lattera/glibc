@@ -1,5 +1,6 @@
 /* Mapping tables for EUC-TW handling.
-   Copyright (C) 1998, 1999, 2000-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2003, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -74,7 +75,7 @@
 	if (ch == 0x8e)							      \
 	  {								      \
 	    /* This is code set 2: CNS 11643, planes 1 to 16.  */	      \
-	    const char *endp = inptr + 1;				      \
+	    const unsigned char *endp = inptr + 1;			      \
 									      \
 	    ch = cns11643_to_ucs4 (&endp, inend - inptr - 1, 0x80);	      \
 									      \

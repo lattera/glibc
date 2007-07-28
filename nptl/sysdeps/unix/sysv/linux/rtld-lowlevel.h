@@ -33,12 +33,12 @@
 	int val = word;							      \
 	if (val == 0)							      \
 	  break;							      \
-	lll_private_futex_wait (&(word), val);				      \
+	lll_futex_wait (&(word), val, LLL_PRIVATE);			      \
       }									      \
   } while (0)
 
 
 #define __rtld_notify(word) \
-  lll_private_futex_wake (&(word), 1)
+  lll_futex_wake (&(word), 1, LLL_PRIVATE)
 
 #endif

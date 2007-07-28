@@ -36,6 +36,39 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_PRIVATE_FLAG	128
+
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE	0
+#define LLL_SHARED	FUTEX_PRIVATE_FLAG
+
+
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
+	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
+# endif	      
+#endif
+
 
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP          asm ("hint @pause")
@@ -43,18 +76,22 @@
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
-#define lll_futex_wait(futex, val) lll_futex_timed_wait (futex, val, 0)
+#define lll_futex_wait(futex, val, private) \
+  lll_futex_timed_wait (futex, val, NULL, private)
 
-#define lll_futex_timed_wait(ftx, val, timespec)			\
+#define lll_futex_timed_wait(ftx, val, timespec, private)		\
 ({									\
-   DO_INLINE_SYSCALL(futex, 4, (long) (ftx), FUTEX_WAIT, (int) (val),	\
-		     (long) (timespec));				\
+   DO_INLINE_SYSCALL(futex, 4, (long) (ftx),				\
+		     __lll_private_flag (FUTEX_WAIT, private),		\
+		     (int) (val), (long) (timespec));			\
    _r10 == -1 ? -_retval : _retval;					\
 })
 
-#define lll_futex_wake(ftx, nr)						\
+#define lll_futex_wake(ftx, nr, private)				\
 ({									\
-   DO_INLINE_SYSCALL(futex, 3, (long) (ftx), FUTEX_WAKE, (int) (nr));	\
+   DO_INLINE_SYSCALL(futex, 3, (long) (ftx),				\
+		     __lll_private_flag (FUTEX_WAKE, private),		\
+		     (int) (nr));					\
    _r10 == -1 ? -_retval : _retval;					\
 })
 
@@ -188,7 +225,7 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
     int __val = atomic_exchange_rel (__futex, 0);	\
 							\
     if (__builtin_expect (__val > 1, 0))		\
-      lll_futex_wake (__futex, 1);			\
+      lll_futex_wake (__futex, 1, LLL_SHARED);		\
   }))
 #define lll_mutex_unlock(futex) \
   __lll_mutex_unlock(&(futex))
@@ -200,7 +237,7 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
     int __val = atomic_exchange_rel (__futex, 0);	\
 							\
     if (__builtin_expect (__val & FUTEX_WAITERS, 0))	\
-      lll_futex_wake (__futex, 1);			\
+      lll_futex_wake (__futex, 1, LLL_SHARED);		\
   }))
 #define lll_robust_mutex_unlock(futex) \
   __lll_robust_mutex_unlock(&(futex))
@@ -210,7 +247,7 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
   ((void) ({					\
     int *__futex = (futex);			\
     (void) atomic_exchange_rel (__futex, 0);	\
-    lll_futex_wake (__futex, 1);		\
+    lll_futex_wake (__futex, 1, LLL_SHARED);	\
   }))
 #define lll_mutex_unlock_force(futex) \
   __lll_mutex_unlock_force(&(futex))
@@ -241,12 +278,12 @@ typedef int lll_lock_t;
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
 #define lll_wait_tid(tid) \
-  do						\
-    {						\
-      __typeof (tid) __tid;			\
-      while ((__tid = (tid)) != 0)		\
-	lll_futex_wait (&(tid), __tid);		\
-    }						\
+  do							\
+    {							\
+      __typeof (tid) __tid;				\
+      while ((__tid = (tid)) != 0)			\
+	lll_futex_wait (&(tid), __tid, LLL_SHARED);	\
+    }							\
   while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)

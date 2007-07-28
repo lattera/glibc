@@ -1,5 +1,6 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998, 1999, 2000-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2003, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -46,7 +47,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  cp[1] |= 0x80;
 	}
       else
-	cp[0] = '\0';
+	cp[0] = cp[1] = '\0';
     }
   else
     {

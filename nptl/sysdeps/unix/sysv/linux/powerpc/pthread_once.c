@@ -30,7 +30,7 @@ clear_once_control (void *arg)
   pthread_once_t *once_control = (pthread_once_t *) arg;
 
   *once_control = 0;
-  lll_private_futex_wake (once_control, INT_MAX);
+  lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
 }
 
 
@@ -74,7 +74,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 	break;
 
       /* Same generation, some other thread was faster. Wait.  */
-      lll_private_futex_wait (once_control, oldval);
+      lll_futex_wait (once_control, oldval, LLL_PRIVATE);
     }
 
 
@@ -92,7 +92,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   atomic_increment (once_control);
 
   /* Wake up all other threads.  */
-  lll_private_futex_wake (once_control, INT_MAX);
+  lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
 
   return 0;
 }

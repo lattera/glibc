@@ -1,5 +1,5 @@
 /* Access functions for JISX0212 conversion.
-   Copyright (C) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,7 @@
 #ifndef _JIS0212_H
 #define _JIS0212_H	1
 
+#include <assert.h>
 #include <gconv.h>
 #include <stdint.h>
 
@@ -79,7 +80,7 @@ jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 
 static inline size_t
 __attribute ((always_inline))
-ucs4_to_jisx0212 (uint32_t wch, char *s, size_t avail)
+ucs4_to_jisx0212 (uint32_t wch, unsigned char *s, size_t avail)
 {
   const struct jisx0212_idx *rp = __jisx0212_from_ucs_idx;
   unsigned int ch = (unsigned int) wch;
@@ -98,14 +99,11 @@ ucs4_to_jisx0212 (uint32_t wch, char *s, size_t avail)
     return __UNKNOWN_10646_CHAR;
 
   s[0] = cp[0];
-  if (cp[1] != '\0')
-    {
-      if (avail < 2)
-	return 0;
+  assert (cp[1] != '\0');
+  if (avail < 2)
+    return 0;
 
-      s[1] = cp[1];
-    }
-
+  s[1] = cp[1];
   return 2;
 }
 

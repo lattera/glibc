@@ -134,15 +134,6 @@
   })
   
   
-#define lll_private_futex_wait(futexp, val) \
-  lll_futex_timed_wait (futexp, val, NULL, LLL_PRIVATE)
-
-#define lll_private_futex_timed_wait(futexp, val, timeout) \
-  lll_futex_timed_wait (futexp, val, timeout, LLL_PRIVATE)
-
-#define lll_private_futex_wake(futexp, val) \
-  lll_futex_wake (futexp, val, LLL_PRIVATE)
-
 #ifdef UP
 # define __lll_acq_instr	""
 # define __lll_rel_instr	""

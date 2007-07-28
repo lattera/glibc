@@ -71,8 +71,8 @@
       : (fl))								      \
    : ({ unsigned int __fl = ((private) ^ FUTEX_PRIVATE_FLAG);		      \
 	asm ("andl %%fs:%P1, %0" : "+r" (__fl)				      \
-	     : "i" offsetof (struct pthread, header.private_futex));	      \
-	__fl | (fl); })
+	     : "i" (offsetof (struct pthread, header.private_futex)));	      \
+	__fl | (fl); }))
 # endif	      
 #endif
 
@@ -214,15 +214,6 @@ LLL_STUB_UNWIND_INFO_END
 		      : "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
 
-
-#define lll_private_futex_wait(futex, val) \
-  lll_futex_timed_wait (futex, val, NULL, LLL_PRIVATE)
-
-#define lll_private_futex_timed_wait(futex, val, timeout) \
-  lll_futex_timed_wait (futex, val, timeout, LLL_PRIVATE)
-
-#define lll_private_futex_wake(futex, nr) \
-  lll_futex_wake (futex, nr, LLL_PRIVATE)
 
 
 /* Does not preserve %eax and %ecx.  */

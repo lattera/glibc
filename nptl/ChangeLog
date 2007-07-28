@@ -1,3 +1,88 @@
+2007-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* allocatestack.c (__nptl_setxid, __wait_lookup_done): Replace
+	lll_private_futex_* (*) with lll_futex_* (*, LLL_PRIVATE).
+	* pthread_create.c (start_thread): Likewise.
+	* init.c (sighandler_setxid): Likewise.
+	* sysdeps/alpha/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/ia64/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/i386/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/s390/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/powerpc/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/sparc/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/sh/tls.h (THREAD_GSCOPE_RESET_FLAG): Likewise.
+	* sysdeps/pthread/aio_misc.h (AIO_MISC_NOTIFY, AIO_MISC_WAIT):
+	Likewise.
+	* sysdeps/pthread/gai_misc.h (GAI_MISC_NOTIFY, GAI_MISC_WAIT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c (__unregister_atfork):
+	Likewise.
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_waitzero,
+	__rtld_notify): Likewise.
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (clear_once_control,
+	__pthread_once): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pthread_once.c (clear_once_control,
+	__pthread_once): Add LLL_PRIVATE as last argument to lll_futex_*.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (FUTEX_PRIVATE_FLAG,
+	LLL_PRIVATE, LLL_SHARED, __lll_private_flag): Define.
+	(lll_futex_wait): Add private argument, define as wrapper around
+	lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake): Add private argument,
+	use __lll_private_flag macro.
+	(lll_robust_mutex_dead, __lll_mutex_unlock, __lll_robust_mutex_unlock,
+	__lll_mutex_unlock_force): Pass LLL_SHARED as last arg to lll_futex_*.
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c (clear_once_control,
+	__pthread_once): Add LLL_PRIVATE as last argument to lll_futex_*.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (FUTEX_PRIVATE_FLAG,
+	LLL_PRIVATE, LLL_SHARED, __lll_private_flag): Define.
+	(lll_futex_wait): Add private argument, define as wrapper around
+	lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake): Add private argument,
+	use __lll_private_flag macro.
+	(__lll_mutex_unlock, __lll_robust_mutex_unlock, lll_wait_tid,
+	__lll_mutex_unlock_force): Pass LLL_SHARED as last arg to lll_futex_*.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (__lll_private_flag):
+	Define.
+	(lll_futex_timed_wait, lll_futex_wake): Use it.
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): Removed.
+	* sysdeps/unix/sysv/linux/s390/pthread_once.c (clear_once_control,
+	__pthread_once): Add LLL_PRIVATE as last argument to lll_futex_*.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (FUTEX_PRIVATE_FLAG,
+	LLL_PRIVATE, LLL_SHARED, __lll_private_flag): Define.
+	(lll_futex_wait): Add private argument, define as wrapper around
+	lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake): Add private argument,
+	use __lll_private_flag macro.
+	(lll_robust_mutex_dead, __lll_mutex_unlock, __lll_robust_mutex_unlock,
+	lll_wait_tid, __lll_mutex_unlock_force): Pass LLL_SHARED as last arg
+	to lll_futex_*.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): Removed.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (__lll_private_flag):
+	Fix !__ASSUME_PRIVATE_FUTEX non-constant private case.
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): Removed.
+	* sysdeps/unix/sysv/linux/sparc/pthread_once.c (clear_once_control,
+	__pthread_once): Add LLL_PRIVATE as last argument to lll_futex_*.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (FUTEX_PRIVATE_FLAG,
+	LLL_PRIVATE, LLL_SHARED, __lll_private_flag): Define.
+	(lll_futex_wait): Add private argument, define as wrapper around
+	lll_futex_timed_wait.
+	(lll_futex_timed_wait, lll_futex_wake): Add private argument,
+	use __lll_private_flag macro.
+	(lll_robust_mutex_dead, __lll_mutex_unlock, __lll_robust_mutex_unlock,
+	lll_wait_tid, __lll_mutex_unlock_force): Pass LLL_SHARED as last arg
+	to lll_futex_*.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (__lll_private_flag):
+	Define.
+	(lll_futex_timed_wait, lll_futex_wake): Use it.
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): Removed.
+
 2007-07-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/tls.h (tcbhead_t): Move gscope_flag to the end

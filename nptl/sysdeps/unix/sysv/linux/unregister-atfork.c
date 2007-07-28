@@ -104,7 +104,7 @@ __unregister_atfork (dso_handle)
       atomic_decrement (&deleted->handler->refcntr);
       unsigned int val;
       while ((val = deleted->handler->refcntr) != 0)
-	lll_private_futex_wait (&deleted->handler->refcntr, val);
+	lll_futex_wait (&deleted->handler->refcntr, val, LLL_PRIVATE);
 
       deleted = deleted->next;
     }

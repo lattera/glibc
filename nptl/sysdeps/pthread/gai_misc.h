@@ -31,7 +31,7 @@
 #define GAI_MISC_NOTIFY(waitlist) \
   do {									      \
     if (*waitlist->counterp > 0 && --*waitlist->counterp == 0)		      \
-      lll_private_futex_wake (waitlist->counterp, 1);			      \
+      lll_futex_wake (waitlist->counterp, 1, LLL_PRIVATE);		      \
   } while (0)
 
 #define GAI_MISC_WAIT(result, futex, timeout, cancel) \
@@ -50,8 +50,8 @@
 	int status;							      \
 	do								      \
 	  {								      \
-	    status = lll_private_futex_timed_wait (futexaddr, oldval,	      \
-						   timeout);		      \
+	    status = lll_futex_timed_wait (futexaddr, oldval, timeout,	      \
+					   LLL_PRIVATE);		      \
 	    if (status != -EWOULDBLOCK)					      \
 	      break;							      \
 									      \

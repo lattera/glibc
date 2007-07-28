@@ -385,7 +385,7 @@ start_thread (void *arg)
       /* Some other thread might call any of the setXid functions and expect
 	 us to reply.  In this case wait until we did that.  */
       do
-	lll_private_futex_wait (&pd->setxid_futex, 0);
+	lll_futex_wait (&pd->setxid_futex, 0, LLL_PRIVATE);
       while (pd->cancelhandling & SETXID_BITMASK);
 
       /* Reset the value so that the stack can be reused.  */

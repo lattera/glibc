@@ -176,7 +176,6 @@ static const char __from_ibm420_to_ibm1008[256] =
     *outptr++ = ch;							      \
     ++inptr;								      \
   }
-#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -190,7 +189,6 @@ static const char __from_ibm420_to_ibm1008[256] =
     *outptr++ = ch;							      \
     ++inptr;								      \
   }
-#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 /* Now define the toplevel functions.  */
