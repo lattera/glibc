@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -51,15 +51,10 @@ logout (const char *line)
       bzero (ut->ut_host, sizeof ut->ut_host);
 #endif
 #if _HAVE_UT_TV - 0
-  if (sizeof (ut->ut_tv) == sizeof (struct timeval))
-    __gettimeofday ((struct timeval *) &ut->ut_tv, NULL);
-  else
-    {
       struct timeval tv;
       __gettimeofday (&tv, NULL);
       ut->ut_tv.tv_sec = tv.tv_sec;
       ut->ut_tv.tv_usec = tv.tv_usec;
-    }
 #else
       ut->ut_time = time (NULL);
 #endif

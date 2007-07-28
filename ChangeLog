@@ -1,5 +1,13 @@
 2007-07-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* locale/programs/ld-monetary.c (monetary_finish): Avoid range check
+	for int_frac_digits and frac_digits.
+
+	* login/logout.c (logout): Avoid aliasing violation.
+	* login/logwtmp.c (logwtmp): Likewise.
+
+	* libio/genops.c (_IO_un_link): Avoid aliasing violation.
+
 	* nscd/selinux.c (preserve_capabilities): Initialize new_caps
 	to avoid warning.
 	* iconv/gconv_open.c (__gconv_open): Initialize ptr to avoid

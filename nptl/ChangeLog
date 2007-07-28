@@ -1,3 +1,7 @@
+2007-07-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-locale2.c (useless): Add return statement.
+
 2007-07-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* allocatestack.c (__nptl_setxid, __wait_lookup_done): Replace

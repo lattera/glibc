@@ -64,23 +64,29 @@ _IO_un_link (fp)
 {
   if (fp->file._flags & _IO_LINKED)
     {
-      struct _IO_FILE_plus **f;
+      struct _IO_FILE **f;
 #ifdef _IO_MTSAFE_IO
       _IO_cleanup_region_start_noarg (flush_cleanup);
       _IO_lock_lock (list_all_lock);
       run_fp = (_IO_FILE *) fp;
       _IO_flockfile ((_IO_FILE *) fp);
 #endif
-      for (f = &INTUSE(_IO_list_all); *f;
-	   f = (struct _IO_FILE_plus **) &(*f)->file._chain)
+      if (INTUSE(_IO_list_all) == NULL)
+	;
+      else if (fp == INTUSE(_IO_list_all))
 	{
-	  if (*f == fp)
+	  INTUSE(_IO_list_all)
+	    = (struct _IO_FILE_plus *) INTUSE(_IO_list_all)->file._chain;
+	  ++_IO_list_all_stamp;
+	}
+      else
+	for (f = &INTUSE(_IO_list_all)->file._chain; *f; f = &(*f)->_chain)
+	  if (*f == (_IO_FILE *) fp)
 	    {
-	      *f = (struct _IO_FILE_plus *) fp->file._chain;
+	      *f = fp->file._chain;
 	      ++_IO_list_all_stamp;
 	      break;
 	    }
-	}
       fp->file._flags &= ~_IO_LINKED;
 #ifdef _IO_MTSAFE_IO
       _IO_funlockfile ((_IO_FILE *) fp);
