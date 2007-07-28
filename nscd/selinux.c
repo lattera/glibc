@@ -180,7 +180,7 @@ preserve_capabilities (void)
     }
 
   cap_t tmp_caps = cap_init ();
-  cap_t new_caps;
+  cap_t new_caps = NULL;
   if (tmp_caps != NULL)
     new_caps = cap_init ();
 

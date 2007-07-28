@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997,1998,1999,2000,2001,2004,2005
+   Copyright (C) 1997,1998,1999,2000,2001,2004,2005,2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -56,7 +56,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  /* Make copy without the error handling description.  */
 	  char *newtoset = (char *) alloca (errhand - toset + 1);
 	  char *tok;
-	  char *ptr;
+	  char *ptr = NULL /* Work around a bogus warning */;
 
 	  newtoset[errhand - toset] = '\0';
 	  toset = memcpy (newtoset, toset, errhand - toset);

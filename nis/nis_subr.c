@@ -112,7 +112,7 @@ nis_getnames (const_nis_name name)
   size_t name_len = strlen (name);
   char *path;
   int pos = 0;
-  char *saveptr;
+  char *saveptr = NULL;
   int have_point;
   const char *cp;
   const char *cp2;

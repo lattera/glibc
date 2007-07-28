@@ -1,5 +1,14 @@
 2007-07-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* nscd/selinux.c (preserve_capabilities): Initialize new_caps
+	to avoid warning.
+	* iconv/gconv_open.c (__gconv_open): Initialize ptr to avoid
+	warning.
+	* nis/nis_subr.c (nis_getnames): Initialize saveptr to avoid
+	warning.
+	* resolv/inet_ntop.c (inet_ntop6): Initialize best.len and cur.len
+	to avoid warnings.
+
 	* nss/nsswitch.c (__nss_lookup_function): Don't cast &ni->known to
 	void **.
 	* nss/nsswitch.h (service_user): Use void * type for KNOWN field.
