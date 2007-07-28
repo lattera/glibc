@@ -1,5 +1,66 @@
 2007-07-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* nss/nsswitch.c (__nss_lookup_function): Don't cast &ni->known to
+	void **.
+	* nss/nsswitch.h (service_user): Use void * type for KNOWN field.
+
+	* nss/nss_files/files-hosts.c (LINE_PARSER): Cast host_addr to
+	char * to avoid warning.
+	* nis/nss_nis/nis-hosts.c (LINE_PARSER): Likewise.
+
+	* timezone/Makefile (CFLAGS-zdump.c): Add -fwrapv.
+
+	* locale/programs/ld-ctype.c (ctype_finish, set_class_defaults,
+	allocate_arrays): Cast second argument to charmap_find_symbol
+	to char * to avoid warnings.
+
+	* locale/programs/repertoire.c (repertoire_new_char): Change
+	from_nr, to_nr and cnt to unsigned long, adjust printf format
+	string.
+
+	* locale/programs/ld-collate.c (insert_value, handle_ellipsis):
+	Cast second argument to new_element to char * to avoid warnings.
+
+	* locale/weightwc.h (findidx): Cast &extra[-i] to const int32_t *.
+
+	* intl/gettextP.h (struct loaded_domain): Change plural to const
+	struct expression *.
+	* intl/plural-eval.c (plural_eval): Change first argument to
+	const struct expression *.
+	* intl/plural-exp.c (EXTRACT_PLURAL_EXPRESSION): Change first
+	argument to const struct expression **.
+	* intl/plural-exp.h (EXTRACT_PLURAL_EXPRESSION, plural_eval): Adjust
+	prototypes.
+	* intl/loadmsgcat (_nl_unload_domain): Cast away const
+	in call to __gettext_free_exp.
+
+	* posix/fnmatch.c (fnmatch): Rearrange code to avoid maybe
+	unitialized wstring/wpattern var warnings.
+
+	* posix/runtests.c (struct a_test): Make data field const char *.
+
+	* stdio-common/tst-sprintf2.c (main): Don't declere u, v and buf
+	vars if not LDBL_MANT_DIG >= 106.
+
+	* stdio-common/Makefile (CFLAGS-vfwprintf.c): Add -Wno-unitialized.
+
+	* stdio-common/vfprintf.c (vfprintf): Cast first arugment to
+	__find_specmb to avoid warning.
+
+	* rt/tst-mqueue1.c (do_one_test): Add casts to avoid warnings.
+
+	* debug/test-strcpy_chk.c (do_tests, do_random_tests): Add casts
+	to avoid warnings.
+
+	* sysdeps/ieee754/ldbl-96/s_roundl.c (huge): Add L suffix to
+	initializer.
+
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Only define
+	tv var when it will be actually used.
+
+	* sunrpc/rpc_cmsg.c (xdr_callmsg): Cast IXDR_PUT_* to void
+	to avoid warnings.
+
 	* iconvdata/gbk.c (BODY): Make buf and cp char instead of unsigned
 	char array resp. pointer.
 	* iconvdata/iso-2022-kr.c (BODY): Make buf unsigned char instead of

@@ -141,8 +141,8 @@ do_test (size_t align1, size_t align2, size_t len, size_t dlen, int max_char)
   if (align2 + len >= page_size)
     return;
 
-  s1 = buf1 + align1;
-  s2 = buf2 + align2;
+  s1 = (char *) buf1 + align1;
+  s2 = (char *) buf2 + align2;
 
   for (i = 0; i < len; i++)
     s1[i] = 32 + 23 * i % (max_char - 32);
@@ -233,7 +233,9 @@ do_random_tests (void)
 		  chk_fail_ok = 1;
 		  if (setjmp (chk_fail_buf) == 0)
 		    {
-		      res = CALL (impl, p2 + align2, p1 + align1, dlen);
+		      res = (unsigned char *)
+			    CALL (impl, (char *) p2 + align2,
+				  (char *) p1 + align1, dlen);
 		      printf ("Iteration %zd - did not __chk_fail\n", n);
 		      chk_fail_ok = 0;
 		      ret = 1;
@@ -242,7 +244,8 @@ do_random_tests (void)
 	      continue;
 	    }
 	  memset (p2 - 64, '\1', 512 + 64);
-	  res = CALL (impl, p2 + align2, p1 + align1, dlen);
+	  res = (unsigned char *)
+		CALL (impl, (char *) p2 + align2, (char *) p1 + align1, dlen);
 	  if (res != STRCPY_RESULT (p2 + align2, len))
 	    {
 	      printf ("\

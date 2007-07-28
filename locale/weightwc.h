@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001,2003,2004,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -31,7 +31,7 @@ findidx (const wint_t **cpp)
 
   /* Oh well, more than one sequence starting with this byte.
      Search for the correct one.  */
-  const int32_t *cp = &extra[-i];
+  const int32_t *cp = (const int32_t *) &extra[-i];
   while (1)
     {
       size_t nhere;

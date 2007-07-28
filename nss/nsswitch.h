@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +67,7 @@ typedef struct service_user
   /* Link to the underlying library object.  */
   service_library *library;
   /* Collection of known functions.  */
-  struct entry *known;
+  void *known;
   /* Name of the service (`files', `dns', `nis', ...).  */
   char name[0];
 } service_user;

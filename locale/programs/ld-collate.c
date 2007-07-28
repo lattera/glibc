@@ -990,7 +990,8 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 	  uint32_t wcs[2] = { wc, 0 };
 
 	  /* We have to allocate an entry.  */
-	  elem = new_element (collate, seq != NULL ? seq->bytes : NULL,
+	  elem = new_element (collate,
+			      seq != NULL ? (char *) seq->bytes : NULL,
 			      seq != NULL ? seq->nbytes : 0,
 			      wc == ILLEGAL_CHAR_VALUE ? NULL : wcs,
 			      symstr, symlen, 1);
@@ -1385,7 +1386,8 @@ order for `%.*s' already defined at %s:%Zu"),
 
 		      /* We have to allocate an entry.  */
 		      elem = new_element (collate,
-					  seq != NULL ? seq->bytes : NULL,
+					  seq != NULL
+					  ? (char *) seq->bytes : NULL,
 					  seq != NULL ? seq->nbytes : 0,
 					  wc == ILLEGAL_CHAR_VALUE
 					  ? NULL : wcs, buf, lenfrom, 1);

@@ -1,5 +1,5 @@
 /* Round long double to integer away from zero.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,7 +23,7 @@
 #include "math_private.h"
 
 
-static const long double huge = 1.0e4930;
+static const long double huge = 1.0e4930L;
 
 
 long double

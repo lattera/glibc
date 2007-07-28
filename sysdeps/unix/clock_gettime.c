@@ -1,5 +1,5 @@
 /* clock_gettime -- Get the current time from a POSIX clockid_t.  Unix version.
-   Copyright (C) 1999-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999-2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +93,6 @@ int
 clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   int retval = -1;
-  struct timeval tv;
 
   switch (clock_id)
     {
@@ -103,9 +102,12 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
 #ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
-      retval = gettimeofday (&tv, NULL);
-      if (retval == 0)
-	TIMEVAL_TO_TIMESPEC (&tv, tp);
+      {
+	struct timeval tv;
+	retval = gettimeofday (&tv, NULL);
+	if (retval == 0)
+	  TIMEVAL_TO_TIMESPEC (&tv, tp);
+      }
       break;
 #endif
 

@@ -1298,7 +1298,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   memset (&mbstate, '\0', sizeof (mbstate_t));
 
   /* Find the first format specifier.  */
-  f = lead_str_end = __find_specmb (format, &mbstate);
+  f = lead_str_end = __find_specmb ((const UCHAR_T *) format, &mbstate);
 #endif
 
   /* Lock stream.  */

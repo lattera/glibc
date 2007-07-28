@@ -36,7 +36,7 @@ struct a_test
 {
   int expected;
   const char * pattern;
-  const unsigned char * data;
+  const char * data;
 };
 
 static const struct a_test the_tests[] =

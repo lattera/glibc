@@ -6,8 +6,10 @@
 int
 main (void)
 {
+#if LDBL_MANT_DIG >= 106
   volatile union { long double l; long long x[2]; } u, v;
   char buf[64];
+#endif
   int result = 0;
 
 #if LDBL_MANT_DIG == 106 || LDBL_MANT_DIG == 113

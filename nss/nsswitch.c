@@ -281,7 +281,7 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
      enough to a pointer to our structure to use as a lookup key that
      will be passed to `known_compare' (above).  */
 
-  found = __tsearch (&fct_name, (void **) &ni->known, &known_compare);
+  found = __tsearch (&fct_name, &ni->known, &known_compare);
   if (*found != &fct_name)
     /* The search found an existing structure in the tree.  */
     result = ((known_function *) *found)->fct_ptr;
@@ -298,7 +298,7 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	remove_from_tree:
 	  /* Oops.  We can't instantiate this node properly.
 	     Remove it from the tree.  */
-	  __tdelete (&fct_name, (void **) &ni->known, &known_compare);
+	  __tdelete (&fct_name, &ni->known, &known_compare);
 	  result = NULL;
 	}
       else

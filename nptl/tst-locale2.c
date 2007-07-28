@@ -11,4 +11,5 @@ useless (void *a)
 {
   pthread_t th;
   pthread_create (&th, 0, useless, a);
+  return NULL;
 }

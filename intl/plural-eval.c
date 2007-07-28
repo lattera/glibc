@@ -1,5 +1,5 @@
 /* Plural expression evaluation.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,14 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-static unsigned long int plural_eval (struct expression *pexp,
+static unsigned long int plural_eval (const struct expression *pexp,
 				      unsigned long int n)
      internal_function;
 
 static unsigned long int
 internal_function
 plural_eval (pexp, n)
-     struct expression *pexp;
+     const struct expression *pexp;
      unsigned long int n;
 {
   switch (pexp->nargs)

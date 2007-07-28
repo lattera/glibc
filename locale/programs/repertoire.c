@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2004,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -393,7 +393,7 @@ repertoire_new_char (struct linereader *lr, hash_table *ht, hash_table *rt,
   const char *cp;
   char *buf = NULL;
   int prefix_len, len1, len2;
-  unsigned int from_nr, to_nr, cnt;
+  unsigned long int from_nr, to_nr, cnt;
 
   if (to == NULL)
     {
@@ -462,7 +462,7 @@ hexadecimal range format should use only capital characters"));
     {
       uint32_t this_value = value + (cnt - from_nr);
 
-      obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",
+      obstack_printf (ob, decimal_ellipsis ? "%.*s%0*ld" : "%.*s%0*lX",
 		      prefix_len, from, len1 - prefix_len, cnt);
       obstack_1grow (ob, '\0');
 

@@ -88,7 +88,7 @@ LINE_PARSER
      return 0;
 
    /* Store a pointer to the address in the expected form.  */
-   entdata->h_addr_ptrs[0] = entdata->host_addr;
+   entdata->h_addr_ptrs[0] = (char *) entdata->host_addr;
    entdata->h_addr_ptrs[1] = NULL;
    result->h_addr_list = entdata->h_addr_ptrs;
 

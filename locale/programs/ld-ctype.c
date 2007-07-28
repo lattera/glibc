@@ -649,7 +649,8 @@ character <SP> not defined in character map")));
 	    /* Find the UCS value for `bytes'.  */
 	    int inner;
 	    uint32_t wch;
-	    struct charseq *seq = charmap_find_symbol (charmap, bytes, nbytes);
+	    struct charseq *seq
+	      = charmap_find_symbol (charmap, (char *) bytes, nbytes);
 
 	    if (seq == NULL)
 	      wch = ILLEGAL_CHAR_VALUE;
@@ -750,7 +751,7 @@ character <SP> not defined in character map")));
       for (cnt = 0; cnt < 10; ++cnt)
 	{
 	  ctype->mbdigits[cnt] = charmap_find_symbol (charmap,
-						      digits + cnt, 1);
+						      (char *) digits + cnt, 1);
 	  if (ctype->mbdigits[cnt] == NULL)
 	    {
 	      ctype->mbdigits[cnt] = charmap_find_symbol (charmap,
@@ -3470,7 +3471,8 @@ set_class_defaults (struct locale_ctype_t *ctype,
       for (cnt = ctype->outdigits_act; cnt < 10; ++cnt)
 	{
 	  ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
-							 digits + cnt, 1);
+							 (char *) digits + cnt,
+							 1);
 
 	  if (ctype->mboutdigits[cnt] == NULL)
 	    ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
@@ -4025,7 +4027,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 		int inner;
 		uint32_t wch;
 		struct charseq *seq =
-		  charmap_find_symbol (charmap, bytes, nbytes);
+		  charmap_find_symbol (charmap, (char *) bytes, nbytes);
 
 		if (seq == NULL)
 		  wch = ILLEGAL_CHAR_VALUE;

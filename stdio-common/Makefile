@@ -78,6 +78,7 @@ $(objpfx)tst-printf.out: $(objpfx)tst-printf tst-printf.sh
 endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
+CFLAGS-vfwprintf.c = -Wno-uninitialized
 CFLAGS-tst-printf.c = -Wno-format
 CFLAGS-tstdiomisc.c = -Wno-format
 CFLAGS-scanf4.c = -Wno-format

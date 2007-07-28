@@ -1,5 +1,5 @@
 /* Test message queue passing.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -85,7 +85,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
   else
     result |= check_attrs (&attr, nonblock, 0);
 
-  if (mq_receive (q, &v[0], 1, NULL) != -1)
+  if (mq_receive (q, (char *) &v[0], 1, NULL) != -1)
     {
       puts ("mq_receive on O_WRONLY mqd_t unexpectedly succeeded");
       result = 1;
@@ -109,9 +109,9 @@ do_one_test (mqd_t q, const char *name, int nonblock)
   for (int i = 0; i < 10; ++i)
     {
       if (i & 1)
-	ret = mq_send (q, &v[i], 1, v[i] >> 4);
+	ret = mq_send (q, (char *) &v[i], 1, v[i] >> 4);
       else
-	ret = mq_timedsend (q, &v[i], 1, v[i] >> 4, &ts);
+	ret = mq_timedsend (q, (char *) &v[i], 1, v[i] >> 4, &ts);
 
       if (ret)
 	{
@@ -120,7 +120,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 	}
     }
 
-  ret = mq_timedsend (q, &v[10], 1, 8, &ts);
+  ret = mq_timedsend (q, (char *) &v[10], 1, 8, &ts);
   if (ret != -1)
     {
       puts ("mq_timedsend on full queue did not fail");
@@ -135,7 +135,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 
   if (nonblock)
     {
-      ret = mq_send (q, &v[10], 1, 8);
+      ret = mq_send (q, (char *) &v[10], 1, 8);
       if (ret != -1)
 	{
 	  puts ("mq_send on full non-blocking queue did not fail");
@@ -194,7 +194,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
       unsigned int prio;
       ssize_t rets;
 
-      if (mq_send (q, &v[0], 1, 1) != -1)
+      if (mq_send (q, (char *) &v[0], 1, 1) != -1)
 	{
 	  puts ("mq_send on O_RDONLY mqd_t unexpectedly succeeded");
 	  result = 1;
@@ -208,9 +208,9 @@ do_one_test (mqd_t q, const char *name, int nonblock)
       for (int i = 0; i < 10; ++i)
 	{
 	  if (i & 1)
-	    rets = mq_receive (q, &vr[i], 1, &prio);
+	    rets = mq_receive (q, (char *) &vr[i], 1, &prio);
 	  else
-	    rets = mq_timedreceive (q, &vr[i], 1, &prio, &ts);
+	    rets = mq_timedreceive (q, (char *) &vr[i], 1, &prio, &ts);
 
 	  if (rets != 1)
 	    {
@@ -236,7 +236,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 	  result = 1;
 	}
 
-      rets = mq_timedreceive (q, &vr[10], 1, &prio, &ts);
+      rets = mq_timedreceive (q, (char *) &vr[10], 1, &prio, &ts);
       if (rets != -1)
 	{
 	  puts ("mq_timedreceive on empty queue did not fail");
@@ -251,7 +251,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 
       if (nonblock)
 	{
-	  ret = mq_receive (q, &vr[10], 1, &prio);
+	  ret = mq_receive (q, (char *) &vr[10], 1, &prio);
 	  if (ret != -1)
 	    {
 	      puts ("mq_receive on empty non-blocking queue did not fail");

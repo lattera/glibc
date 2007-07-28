@@ -67,27 +67,27 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
 			+ RNDUP (cmsg->rm_call.cb_verf.oa_length));
       if (buf != NULL)
 	{
-	  IXDR_PUT_LONG (buf, cmsg->rm_xid);
-	  IXDR_PUT_ENUM (buf, cmsg->rm_direction);
+	  (void) IXDR_PUT_LONG (buf, cmsg->rm_xid);
+	  (void) IXDR_PUT_ENUM (buf, cmsg->rm_direction);
 	  if (cmsg->rm_direction != CALL)
 	    return FALSE;
-	  IXDR_PUT_LONG (buf, cmsg->rm_call.cb_rpcvers);
+	  (void) IXDR_PUT_LONG (buf, cmsg->rm_call.cb_rpcvers);
 	  if (cmsg->rm_call.cb_rpcvers != RPC_MSG_VERSION)
 	    return FALSE;
-	  IXDR_PUT_LONG (buf, cmsg->rm_call.cb_prog);
-	  IXDR_PUT_LONG (buf, cmsg->rm_call.cb_vers);
-	  IXDR_PUT_LONG (buf, cmsg->rm_call.cb_proc);
+	  (void) IXDR_PUT_LONG (buf, cmsg->rm_call.cb_prog);
+	  (void) IXDR_PUT_LONG (buf, cmsg->rm_call.cb_vers);
+	  (void) IXDR_PUT_LONG (buf, cmsg->rm_call.cb_proc);
 	  oa = &cmsg->rm_call.cb_cred;
-	  IXDR_PUT_ENUM (buf, oa->oa_flavor);
-	  IXDR_PUT_INT32 (buf, oa->oa_length);
+	  (void) IXDR_PUT_ENUM (buf, oa->oa_flavor);
+	  (void) IXDR_PUT_INT32 (buf, oa->oa_length);
 	  if (oa->oa_length)
 	    {
 	      memcpy ((caddr_t) buf, oa->oa_base, oa->oa_length);
 	      buf = (int32_t *) ((char *) buf + RNDUP (oa->oa_length));
 	    }
 	  oa = &cmsg->rm_call.cb_verf;
-	  IXDR_PUT_ENUM (buf, oa->oa_flavor);
-	  IXDR_PUT_INT32 (buf, oa->oa_length);
+	  (void) IXDR_PUT_ENUM (buf, oa->oa_flavor);
+	  (void) IXDR_PUT_INT32 (buf, oa->oa_length);
 	  if (oa->oa_length)
 	    {
 	      memcpy ((caddr_t) buf, oa->oa_base, oa->oa_length);

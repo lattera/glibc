@@ -1276,7 +1276,7 @@ _nl_unload_domain (domain)
   size_t i;
 
   if (domain->plural != &__gettext_germanic_plural)
-    __gettext_free_exp (domain->plural);
+    __gettext_free_exp ((struct expression *) domain->plural);
 
   for (i = 0; i < domain->nconversions; i++)
     {

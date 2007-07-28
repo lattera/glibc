@@ -351,10 +351,14 @@ fnmatch (pattern, string, flags)
 	       already done?  */
 	    return -1;
 	  if (p)
-	    memset (&ps, '\0', sizeof (ps));
+	    {
+	      memset (&ps, '\0', sizeof (ps));
+	      goto prepare_wpattern;
+	    }
 	}
-      if (__builtin_expect (p != NULL, 0))
+      else
 	{
+	prepare_wpattern:
 	  n = mbsrtowcs (NULL, &pattern, 0, &ps);
 	  if (__builtin_expect (n == (size_t) -1, 0))
 	    /* Something wrong.
@@ -383,10 +387,14 @@ fnmatch (pattern, string, flags)
 	       already done?  */
 	    return -1;
 	  if (p)
-	    memset (&ps, '\0', sizeof (ps));
+	    {
+	      memset (&ps, '\0', sizeof (ps));
+	      goto prepare_wstring;
+	    }
 	}
-      if (__builtin_expect (p != NULL, 0))
+      else
 	{
+	prepare_wstring:
 	  n = mbsrtowcs (NULL, &string, 0, &ps);
 	  if (__builtin_expect (n == (size_t) -1, 0))
 	    /* Something wrong.

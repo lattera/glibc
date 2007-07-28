@@ -1,5 +1,5 @@
 /* Expression parsing for plural form selection.
-   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005, 2007 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
    This file is part of the GNU C Library.
 
@@ -99,7 +99,7 @@ void
 internal_function
 EXTRACT_PLURAL_EXPRESSION (nullentry, pluralp, npluralsp)
      const char *nullentry;
-     struct expression **pluralp;
+     const struct expression **pluralp;
      unsigned long int *npluralsp;
 {
   if (nullentry != NULL)
