@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <sys/stat.h>
 
 static void do_prepare (void);
