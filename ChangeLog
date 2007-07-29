@@ -1,5 +1,8 @@
 2007-07-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4860]
+	* io/Makefile (headers): Add bits/fcntl2.h.
+
 	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ZERO_S): Optimize
 	using gcc builtin.
 	(__CPU_EQUAL_S): Likewise.
