@@ -986,7 +986,9 @@ ___printf_fp (FILE *fp,
 	    if (*wtp != decimalwc)
 	      /* Round up.  */
 	      (*wtp)++;
-	    else if (__builtin_expect (spec == 'g' && type == 'f' && info->alt,
+	    else if (__builtin_expect (spec == 'g' && type == 'f' && info->alt
+				       && wtp == wstartp + 1
+				       && wstartp[0] == L'0',
 				       0))
 	      /* This is a special case: the rounded number is 1.0,
 		 the format is 'g' or 'G', and the alternative format
