@@ -1,5 +1,8 @@
 2007-07-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/getconf.c (vars): Add missing _SC_LEVEL4_CACHE_LINESIZE
+	entry.
+
 	[BZ 4858]
 	* stdio-common/printf_fp.c (___printf_fp): Fix special case of
 	#.0g and value rounded to 1.0.
