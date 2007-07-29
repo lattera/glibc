@@ -1,3 +1,16 @@
+2007-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (routines): Add sched_cpualloc and sched_cpufree.
+	(tests): Add tst-cpuset.
+	* posix/sched_cpualloc.c: New file.
+	* posix/sched_cpufree.c: New file.
+	* posix/tst-cpuset.c: New file.
+	* posix/Versions: Export __sched_cpualloc and __sched_cpufree for
+	GLIBC_2.7.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define __CPU_*_S macros.
+	* posix/sched.h: Define old CPU_* macros in temers of __CPU_*_S
+	macros.  Define CPU_*_S macros.
+
 2007-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c (vars): Add missing _SC_LEVEL4_CACHE_LINESIZE
