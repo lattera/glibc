@@ -104,7 +104,7 @@ struct __sched_param
 # define __CPU_SETSIZE	1024
 # define __NCPUBITS	(8 * sizeof (__cpu_mask))
 
-/* Type for array elements in 'cpu_set'.  */
+/* Type for array elements in 'cpu_set_t'.  */
 typedef unsigned long int __cpu_mask;
 
 /* Basic access functions.  */
@@ -118,7 +118,11 @@ typedef struct
 } cpu_set_t;
 
 /* Access functions for CPU masks.  */
-# define __CPU_ZERO_S(setsize, cpusetp) \
+# if __GNUC_PREREQ (2, 91)
+#  define __CPU_ZERO_S(setsize, cpusetp) \
+  do __builtin_memset (cpusetp, '\0', setsize); while (0)
+# else
+#  define __CPU_ZERO_S(setsize, cpusetp) \
   do {									      \
     size_t __i;								      \
     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
@@ -126,6 +130,7 @@ typedef struct
     for (__i = 0; __i < __imax; ++__i)					      \
       __arr->__bits[__i] = 0;						      \
   } while (0)
+# endif
 # define __CPU_SET_S(cpu, setsize, cpusetp) \
   ({ size_t __cpu = (cpu);						      \
      __cpu < 8 * (setsize)						      \
@@ -142,7 +147,11 @@ typedef struct
 # define __CPU_COUNT_S(setsize, cpusetp) \
   __sched_cpucount (setsize, cpusetp)
 
-# define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
+# if __GNUC_PREREQ (2, 91)
+#  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
+  (__builtin_memcmp (cpusetp1, cpusetp2, setsize) == 0)
+# else
+#  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
   ({ cpu_set_t *__arr1 = (cpusetp1);					      \
      cpu_set_t *__arr2 = (cpusetp2);					      \
      size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
@@ -151,6 +160,7 @@ typedef struct
        if (__arr1->__bits[__i] != __arr2->__bits[__i])			      \
 	 break;								      \
      __i == __imax; })
+# endif
 
 # define __CPU_OP_S(setsize, destset, srcset1, srcset2, op) \
   ({ cpu_set_t *__dest = (destset);					      \

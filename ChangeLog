@@ -1,5 +1,9 @@
 2007-07-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ZERO_S): Optimize
+	using gcc builtin.
+	(__CPU_EQUAL_S): Likewise.
+
 	* posix/Makefile (routines): Add sched_cpualloc and sched_cpufree.
 	(tests): Add tst-cpuset.
 	* posix/sched_cpualloc.c: New file.
