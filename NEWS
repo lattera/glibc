@@ -1,13 +1,21 @@
-GNU C Library NEWS -- history of user-visible changes.  2006-10-11
+GNU C Library NEWS -- history of user-visible changes.  2006-09-29
 Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
 
-Version 2.6
+Version 2.5.1
 
-* New Linux interfaces: epoll_pwait.
+* The following bugs are resolved with this release:
+
+  2337, 2749, 3213, 3291, 3306, 3320, 3322, 3334, 3348, 3352, 3369, 3429,
+  3451, 3458, 3559, 3632, 3664, 3673, 3674, 3747, 3842, 3851, 3855, 3884,
+  3902, 3919, 3944, 3954, 3955, 3957, 3995, 4069, 4070, 4074, 4076, 4101,
+  4102, 4130, 4131, 4181, 4342, 4344, 4364, 4368, 4381, 4405, 4406, 4411,
+  4438, 4439, 4465, 4512, 4514, 4586, 4702, 4858
+
+  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
 
 
 Version 2.5

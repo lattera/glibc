@@ -19,7 +19,7 @@ extern int rtld_errno attribute_hidden;
 
 # else
 
-#  include <tls.h>
+#  include <tls.h>		/* Defines USE_TLS.  */
 
 #  if USE___THREAD
 #   undef  errno

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003,2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -741,18 +741,18 @@ __END_NAMESPACE_STD
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the canonical absolute name of the
-   existing named file.  */
+   named file.  The last file name component need not exist, and may be a
+   symlink to a nonexistent file.  */
 extern char *canonicalize_file_name (__const char *__name)
      __THROW __nonnull ((1)) __wur;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-/* Return the canonical absolute name of file NAME.  The last file name
-   component need not exist, and may be a symlink to a nonexistent file.
-   If RESOLVED is null, the result is malloc'd; otherwise, if the canonical
-   name is PATH_MAX chars or more, returns null with `errno' set to
-   ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
-   name in RESOLVED.  */
+/* Return the canonical absolute name of file NAME.  If RESOLVED is
+   null, the result is malloc'd; otherwise, if the canonical name is
+   PATH_MAX chars or more, returns null with `errno' set to
+   ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars,
+   returns the name in RESOLVED.  */
 extern char *realpath (__const char *__restrict __name,
 		       char *__restrict __resolved) __THROW __wur;
 #endif

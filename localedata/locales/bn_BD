@@ -13,8 +13,8 @@ tel        ""
 fax        ""
 language   "Bengali/Bangla"
 territory  "Bangladesh"
-revision   "0.3"
-date       "2005-01-18"
+revision   "0.5"
+date       "2007-01-10"
 
 category "bn_BD:2001";LC_IDENTIFICATION
 category "bn_BD:2001";LC_COLLATE
@@ -101,8 +101,8 @@ abmon       "<U099C><U09BE><U09A8><U09C1>";/
             "<U09A8><U09AD><U09C7>";/
             "<U09A1><U09BF><U09B8><U09C7>"
 
-mon         "<U099C><U09BE><U09A8><U09C1><U09DF><U09BE><U09B0><U098F>";/
-            "<U09AB><U09C7><U09AC><U09CD><U09B0><U09C1><U09DF><U09BE><U09B0><U098F>";/
+mon         "<U099C><U09BE><U09A8><U09C1><U09DF><U09BE><U09B0><U09BF>";/
+            "<U09AB><U09C7><U09AC><U09CD><U09B0><U09C1><U09DF><U09BE><U09B0><U09BF>";/
             "<U09AE><U09BE><U09B0><U09CD><U099A>";/
             "<U098F><U09AA><U09CD><U09B0><U09BF><U09B2>";/
             "<U09AE><U09C7>";/

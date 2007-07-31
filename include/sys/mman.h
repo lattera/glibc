@@ -12,4 +12,7 @@ extern int __mprotect (void *__addr, size_t __len, int __prot);
 /* This one is Linux specific.  */
 extern void *__mremap (void *__addr, size_t __old_len,
 		       size_t __new_len, int __flags, ...);
+
+libc_hidden_proto (madvise);
+
 #endif

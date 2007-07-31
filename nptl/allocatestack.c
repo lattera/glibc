@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -979,6 +979,63 @@ __pthread_init_static_tls (struct link_map *map)
   /* Now the list with threads using user-allocated stacks.  */
   list_for_each (runp, &__stack_user)
     init_one_static_tls (list_entry (runp, struct pthread, list), map);
+
+  lll_unlock (stack_cache_lock);
+}
+
+
+void
+attribute_hidden
+__wait_lookup_done (void)
+{
+  lll_lock (stack_cache_lock);
+
+  struct pthread *self = THREAD_SELF;
+
+  /* Iterate over the list with system-allocated threads first.  */
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
+	continue;
+
+      int *const gscope_flagp = &t->header.gscope_flag;
+
+      /* We have to wait until this thread is done with the global
+	 scope.  First tell the thread that we are waiting and
+	 possibly have to be woken.  */
+      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
+						THREAD_GSCOPE_FLAG_WAIT,
+						THREAD_GSCOPE_FLAG_USED))
+	continue;
+
+      do
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+    }
+
+  /* Now the list with threads using user-allocated stacks.  */
+  list_for_each (runp, &__stack_user)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
+	continue;
+
+      int *const gscope_flagp = &t->header.gscope_flag;
+
+      /* We have to wait until this thread is done with the global
+	 scope.  First tell the thread that we are waiting and
+	 possibly have to be woken.  */
+      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
+						THREAD_GSCOPE_FLAG_WAIT,
+						THREAD_GSCOPE_FLAG_USED))
+	continue;
+
+      do
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+    }
 
   lll_unlock (stack_cache_lock);
 }

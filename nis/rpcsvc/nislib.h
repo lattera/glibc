@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -272,12 +272,13 @@ struct dir_binding
 typedef struct dir_binding dir_binding;
 
 extern nis_error __nisbind_create (dir_binding *, const nis_server *,
-				   unsigned int, unsigned int) __THROW;
+				   unsigned int, unsigned int, unsigned int,
+				   unsigned int) __THROW;
 extern nis_error __nisbind_connect (dir_binding *) __THROW;
 extern nis_error __nisbind_next (dir_binding *) __THROW;
 extern void __nisbind_destroy (dir_binding *) __THROW;
-extern nis_error __nisfind_server (const_nis_name, int, directory_obj **)
-     __THROW;
+extern nis_error __nisfind_server (const_nis_name, int, directory_obj **,
+				   dir_binding *, unsigned int) __THROW;
 
 #endif
 

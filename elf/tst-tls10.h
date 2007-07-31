@@ -1,7 +1,8 @@
 #include <tls.h>
 #include <stdlib.h>
 
-#if defined HAVE___THREAD && defined HAVE_TLS_MODEL_ATTRIBUTE
+#if defined USE_TLS && defined HAVE___THREAD \
+    && defined HAVE_TLS_MODEL_ATTRIBUTE
 # define USE_TLS__THREAD
 
 struct A

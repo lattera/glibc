@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1888,9 +1887,8 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
-	     prefix or no exponent this is an error.  */
-	  if (__builtin_expect (wpsize == 0
-				|| (is_hexa && (wpsize == 2 || ! got_e)), 0))
+	     prefix this is an error.  */
+	  if (__builtin_expect (wpsize == 0 || (is_hexa && wpsize == 2), 0))
 	    conv_error ();
 
 	scan_float:

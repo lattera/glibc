@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <tls.h>
 
-#if HAVE___THREAD
+#if USE_TLS && HAVE___THREAD
 
 struct tls_obj
 {

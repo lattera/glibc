@@ -4127,7 +4127,9 @@ log_test (void)
   TEST_f_f (log, 1, 0);
 
   TEST_f_f (log, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log, minus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log, plus_infty, plus_infty);
+  TEST_f_f (log, nan_value, nan_value);
 
   TEST_f_f (log, M_El, 1);
   TEST_f_f (log, 1.0 / M_El, -1);
@@ -4157,6 +4159,7 @@ log10_test (void)
 
   /* log10 (x) == NaN plus invalid exception if x < 0.  */
   TEST_f_f (log10, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log10, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log10, plus_infty, plus_infty);
   TEST_f_f (log10, nan_value, nan_value);
@@ -4188,6 +4191,7 @@ log1p_test (void)
 
   TEST_f_f (log1p, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (log1p, -2, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log1p, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log1p, plus_infty, plus_infty);
   TEST_f_f (log1p, nan_value, nan_value);
@@ -4218,6 +4222,7 @@ log2_test (void)
   TEST_f_f (log2, 1, 0);
 
   TEST_f_f (log2, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log2, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log2, plus_infty, plus_infty);
   TEST_f_f (log2, nan_value, nan_value);
@@ -4614,6 +4619,17 @@ pow_test (void)
 
   /* pow (x, NaN) == NaN.  */
   TEST_ff_f (pow, 3.0, nan_value, nan_value);
+  TEST_ff_f (pow, minus_zero, nan_value, nan_value);
+  TEST_ff_f (pow, plus_infty, nan_value, nan_value);
+  TEST_ff_f (pow, -3.0, nan_value, nan_value);
+  TEST_ff_f (pow, minus_infty, nan_value, nan_value);
+
+  TEST_ff_f (pow, nan_value, 3.0, nan_value);
+  TEST_ff_f (pow, nan_value, -3.0, nan_value);
+  TEST_ff_f (pow, nan_value, plus_infty, nan_value);
+  TEST_ff_f (pow, nan_value, minus_infty, nan_value);
+  TEST_ff_f (pow, nan_value, 2.5, nan_value);
+  TEST_ff_f (pow, nan_value, -2.5, nan_value);
 
   TEST_ff_f (pow, 1, plus_infty, 1);
   TEST_ff_f (pow, -1, plus_infty, 1);

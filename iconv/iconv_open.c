@@ -1,5 +1,5 @@
 /* Get descriptor for character set conversion.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,7 @@ iconv_open (const char *tocode, const char *fromcode)
   int res;
 
   /* Normalize the name.  We remove all characters beside alpha-numeric,
-     '_', '-', '/', and '.'.  */
+     '_', '-', '/', '.', and ':'.  */
   tocode_len = strlen (tocode);
   tocode_conv = (char *) alloca (tocode_len + 3);
   strip (tocode_conv, tocode);

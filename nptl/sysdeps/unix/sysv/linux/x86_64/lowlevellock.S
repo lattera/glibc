@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -164,7 +164,7 @@ __lll_mutex_timedlock_wait:
 8:				/* NB: %edx == 2 */
 	xorl	%eax, %eax
 	LOCK
-	cmpxchgl %edx, (%rdi)
+	cmpxchgl %edx, (%r12)
 	jnz	7f
 
 6:	addq	$16, %rsp

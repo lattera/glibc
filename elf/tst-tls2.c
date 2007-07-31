@@ -3,18 +3,21 @@
 
 #include <tls.h>
 
-#include "tls-macros.h"
+#ifdef USE_TLS
+# include "tls-macros.h"
 
 
 /* Two 'int' variables in TLS.  */
 VAR_INT_DEF(foo);
 VAR_INT_DEF(bar);
+#endif
 
 
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)
 {
+#ifdef USE_TLS
   int result = 0;
   int *ap, *bp;
 
@@ -79,6 +82,9 @@ do_test (void)
     }
 
   return result;
+#else
+  return 0;
+#endif
 }
 
 

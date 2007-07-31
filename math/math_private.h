@@ -332,4 +332,10 @@ extern double __slowexp (double __x);
 extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
 
+#ifndef math_opt_barrier
+#define math_opt_barrier(x) \
+({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
+#define math_force_eval(x) __asm __volatile ("" : : "m" (x))
+#endif
+
 #endif /* _MATH_PRIVATE_H_ */

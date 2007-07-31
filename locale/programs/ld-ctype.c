@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1866,6 +1866,9 @@ find_translit (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (locale != NULL);
   ctype = locale->categories[LC_CTYPE].ctype;
 
+  if (ctype == NULL)
+    return NULL;
+
   if (ctype->translit != NULL)
     result = find_translit2 (ctype, charmap, wch);
 
@@ -3036,7 +3039,7 @@ set_class_defaults (struct locale_ctype_t *ctype,
 	    {
 	      if (!be_quiet)
 		WITH_CUR_LOCALE (error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
+%s: character `%s' not defined in charmap while needed as default value"),
 					"LC_CTYPE", tmp));
 	    }
 	  else if (seq->nbytes != 1)
@@ -3161,8 +3164,8 @@ set_class_defaults (struct locale_ctype_t *ctype,
 	{
 	  if (!be_quiet)
 	    WITH_CUR_LOCALE (error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-				    "LC_CTYPE", "<newline>"));
+character `%s' not defined while needed as default value"),
+				    "<newline>"));
 	}
       else if (seq->nbytes != 1)
 	WITH_CUR_LOCALE (error (0, 0, _("\

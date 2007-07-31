@@ -81,7 +81,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
-		   bug-regex25 bug-regex26 tst-nice tst-nanosleep tst-regex2 \
+		   bug-regex25 bug-regex26 bug-regex27 bug-regex28 \
+		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
 		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf \

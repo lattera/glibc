@@ -271,7 +271,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 
   /* If the protocol is given, we could try if our NIS server knows
      about services.byservicename map. If yes, we only need one query.  */
-  size_t keylen = strlen (name) + 1 + (protocol ? strlen (protocol) : 0);
+  size_t keylen = strlen (name) + (protocol ? 1 + strlen (protocol) : 0);
   char key[keylen + 1];
 
   /* key is: "name/proto" */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -134,13 +134,17 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
   if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct parser_data);
+  buffer += pad;
+
   struct parser_data *data = (void *) buffer;
-  if (__builtin_expect (buflen < sizeof *data + 1, 0))
+  if (__builtin_expect (buflen < sizeof *data + 1 + pad, 0))
     {
       *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
+  buflen -= pad;
 
   /* Get the next entry until we found a correct one. */
   const size_t linebuflen = buffer + buflen - data->linebuffer;
@@ -234,6 +238,9 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *h_errnop, int flags)
 {
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct parser_data);
+  buffer += pad;
+
   struct parser_data *data = (void *) buffer;
 
   if (name == NULL)
@@ -246,12 +253,13 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  if (buflen < sizeof *data + 1)
+  if (buflen < sizeof *data + 1 + pad)
     {
       *h_errnop = NETDB_INTERNAL;
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
+  buflen -= pad;
 
   /* Convert name to lowercase.  */
   size_t namlen = strlen (name);
@@ -352,13 +360,17 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
   if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct parser_data);
+  buffer += pad;
+
   struct parser_data *data = (void *) buffer;
-  if (__builtin_expect (buflen < sizeof *data + 1, 0))
+  if (__builtin_expect (buflen < sizeof *data + 1 + pad, 0))
     {
       *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
+  buflen -= pad;
 
   char *buf = inet_ntoa (*(const struct in_addr *) addr);
 

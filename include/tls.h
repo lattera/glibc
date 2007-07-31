@@ -5,7 +5,8 @@
 
 #include_next <tls.h>
 
-#if HAVE___THREAD && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+#if USE_TLS && HAVE___THREAD \
+    && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 
 # define USE___THREAD 1
 

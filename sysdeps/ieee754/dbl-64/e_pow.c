@@ -106,20 +106,28 @@ double __ieee754_pow(double x, double y) {
     else
       return y < 0 ? 1.0/ABS(x) : 0.0;                               /* return 0 */
   }
+
+  qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
+  qy = v.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
+
+  if (qx >= 0x7ff00000 && (qx > 0x7ff00000 || u.i[LOW_HALF] != 0)) return NaNQ.x;
+  if (qy >= 0x7ff00000 && (qy > 0x7ff00000 || v.i[LOW_HALF] != 0))
+    return x == 1.0 ? 1.0 : NaNQ.x;
+
   /* if x<0 */
   if (u.i[HIGH_HALF] < 0) {
     k = checkint(y);
     if (k==0) {
-      if ((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] == 0) {
+      if (qy == 0x7ff00000) {
 	if (x == -1.0) return 1.0;
 	else if (x > -1.0) return v.i[HIGH_HALF] < 0 ? INF.x : 0.0;
 	else return v.i[HIGH_HALF] < 0 ? 0.0 : INF.x;
       }
-      else if (u.i[HIGH_HALF] == 0xfff00000 && u.i[LOW_HALF] == 0)
+      else if (qx == 0x7ff00000)
 	return y < 0 ? 0.0 : INF.x;
       return NaNQ.x;                              /* y not integer and x<0 */
     }
-    else if (u.i[HIGH_HALF] == 0xfff00000 && u.i[LOW_HALF] == 0)
+    else if (qx == 0x7ff00000)
       {
 	if (k < 0)
 	  return y < 0 ? nZERO.x : nINF.x;
@@ -129,14 +137,6 @@ double __ieee754_pow(double x, double y) {
     return (k==1)?__ieee754_pow(-x,y):-__ieee754_pow(-x,y); /* if y even or odd */
   }
   /* x>0 */
-  qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
-  qy = v.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
-
-  if (qx > 0x7ff00000 || (qx == 0x7ff00000 && u.i[LOW_HALF] != 0)) return NaNQ.x;
-                                                                 /*  if 0<x<2^-0x7fe */
-  if (qy > 0x7ff00000 || (qy == 0x7ff00000 && v.i[LOW_HALF] != 0))
-    return x == 1.0 ? 1.0 : NaNQ.x;
-                                                                 /*  if y<2^-0x7fe   */
 
   if (qx == 0x7ff00000)                              /* x= 2^-0x3ff */
     {if (y == 0) return NaNQ.x;

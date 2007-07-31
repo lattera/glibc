@@ -2,7 +2,8 @@
 
 #include <tls.h>
 
-#include "tls-macros.h"
+#ifdef USE_TLS
+# include "tls-macros.h"
 
 
 COMMON_INT_DEF(baz);
@@ -34,3 +35,4 @@ in_dso (int n, int *caller_bazp)
 
   return result;
 }
+#endif

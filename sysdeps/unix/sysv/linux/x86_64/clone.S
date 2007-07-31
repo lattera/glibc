@@ -89,9 +89,6 @@ L(pseudo_end):
 	ret
 
 L(thread_start):
-	cfi_startproc;
-	/* Clearing frame pointer is insufficient, use CFI.  */
-	cfi_undefined (rip);
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
@@ -116,7 +113,6 @@ L(thread_start):
 	/* Call exit with return value from function call. */
 	movq	%rax, %rdi
 	call	HIDDEN_JUMPTARGET (_exit)
-	cfi_endproc;
 
 	cfi_startproc;
 PSEUDO_END (BP_SYM (__clone))

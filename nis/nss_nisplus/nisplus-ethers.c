@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1998,2000-2003,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000-2003,2005,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -256,7 +257,8 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {
@@ -322,7 +324,8 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
 	    addr->ether_addr_octet[4], addr->ether_addr_octet[5],
 	    tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {

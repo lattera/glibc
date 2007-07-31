@@ -10,6 +10,7 @@
 static int
 do_test (void)
 {
+#ifdef USE_TLS
   static const char modname[] = "tst-tlsmod3.so";
   int result = 0;
   int (*fp) (void);
@@ -51,6 +52,9 @@ do_test (void)
     }
 
   return result;
+#else
+  return 0;
+#endif
 }
 
 

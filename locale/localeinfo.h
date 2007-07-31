@@ -215,7 +215,9 @@ __libc_tsd_define (extern, LOCALE)
    we can use __thread variables.  So only in that case do we attempt this.  */
 #if !defined SHARED && defined HAVE___THREAD && defined HAVE_WEAK_SYMBOLS
 # include <tls.h>
-# define NL_CURRENT_INDIRECT	1
+# if USE_TLS
+#  define NL_CURRENT_INDIRECT	1
+# endif
 #endif
 
 #ifdef NL_CURRENT_INDIRECT

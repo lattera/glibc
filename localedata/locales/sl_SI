@@ -2126,8 +2126,8 @@ noexpr  "<U005E><U005B><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0053><U0049><U0054><U0020>"
-currency_symbol           "<U0053><U0049><U0054>"
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U20AC>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U0020>"
 mon_grouping              3;3
@@ -2136,11 +2136,11 @@ negative_sign             "<U002D>"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
-p_sep_by_space            2
+p_sep_by_space            1
 n_cs_precedes             0
-n_sep_by_space            2
-p_sign_posn               2
-n_sign_posn               2
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC

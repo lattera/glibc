@@ -1,5 +1,5 @@
 /* Access functions for KS C 5601-1992 based encoding conversion.
-   Copyright (C) 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #define KSC5601_HANGUL 2350
 #define KSC5601_HANJA  4888
-#define KSC5601_SYMBOL  988
+#define KSC5601_SYMBOL  989
 
 #include <gconv.h>
 #include <stdint.h>

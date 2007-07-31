@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2005, 2006  Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1078,6 +1078,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  break;
 
 	case PT_TLS:
+#ifdef USE_TLS
 	  if (ph->p_memsz == 0)
 	    /* Nothing to do for an empty segment.  */
 	    break;
@@ -1105,7 +1106,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      break;
 	    }
 
-#ifdef SHARED
+# ifdef SHARED
 	  if (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0)
 	    /* We are loading the executable itself when the dynamic linker
 	       was executed directly.  The setup will happen later.  */
@@ -1114,7 +1115,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  /* In a static binary there is no way to tell if we dynamically
 	     loaded libpthread.  */
 	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
-#endif
+# endif
 	    {
 	      /* We have not yet loaded libpthread.
 		 We can do the TLS setup right now!  */
@@ -1147,6 +1148,7 @@ cannot allocate TLS data structures for initial thread");
 	      _dl_deallocate_tls (tcb, 1);
 	      goto call_lose;
 	    }
+#endif
 
 	  /* Uh-oh, the binary expects TLS support but we cannot
 	     provide it.  */
@@ -1223,6 +1225,8 @@ cannot allocate TLS data structures for initial thread");
 		      loadcmds[nloadcmds - 1].mapstart - c->mapend,
 		      PROT_NONE);
 
+	l->l_contiguous = 1;
+
 	goto postmap;
       }
 
@@ -1242,6 +1246,7 @@ cannot allocate TLS data structures for initial thread");
     /* Remember which part of the address space this object uses.  */
     l->l_map_start = c->mapstart + l->l_addr;
     l->l_map_end = l->l_map_start + maplength;
+    l->l_contiguous = !has_holes;
 
     while (c < &loadcmds[nloadcmds])
       {
@@ -1385,7 +1390,7 @@ cannot allocate TLS data structures for initial thread");
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
-#ifdef SHARED
+#if defined HAVE_Z_RELRO && defined SHARED
       if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
 	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
@@ -1422,9 +1427,11 @@ cannot enable executable stack as shared object requires");
 	}
     }
 
+#ifdef USE_TLS
   /* Adjust the address of the TLS initialization image.  */
   if (l->l_tls_initimage != NULL)
     l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+#endif
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   if (__builtin_expect (__close (fd) != 0, 0))
@@ -1928,10 +1935,11 @@ open_path (const char *name, size_t namelen, int preloaded,
 	 must not be freed using the general free() in libc.  */
       if (sps->malloced)
 	free (sps->dirs);
-
+#ifdef HAVE_Z_RELRO
       /* rtld_search_dirs is attribute_relro, therefore avoid writing
 	 into it.  */
       if (sps != &rtld_search_dirs)
+#endif
 	sps->dirs = (void *) -1;
     }
 

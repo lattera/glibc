@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -465,8 +465,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     char *aliases[MAX_NR_ALIASES];
     unsigned char host_addr[16];	/* IPv4 or IPv6 */
     char *h_addr_ptrs[0];
-  } *host_data = (struct host_data *) buffer;
-  int linebuflen = buflen - sizeof (struct host_data);
+  } *host_data;
+  int linebuflen;
   register const HEADER *hp;
   const u_char *end_of_message, *cp;
   int n, ancount, qdcount;
@@ -478,8 +478,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   u_char packtmp[NS_MAXCDNAME];
   int have_to_map = 0;
   int32_t ttl = 0;
-
-  if (__builtin_expect (linebuflen, 0) < 0)
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
+  buffer += pad;
+  if (__builtin_expect (buflen < sizeof (struct host_data) + pad, 0))
     {
       /* The buffer is too small.  */
     too_small:
@@ -487,6 +488,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
+  host_data = (struct host_data *) buffer;
+  linebuflen = buflen - sizeof (struct host_data);
+  if (buflen - sizeof (struct host_data) != linebuflen)
+    linebuflen = INT_MAX;
 
   tname = qname;
   result->h_name = NULL;

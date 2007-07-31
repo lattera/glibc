@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -472,7 +473,7 @@ _IO_file_setbuf_mmap (fp, p, len)
   return result;
 }
 
-static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
+static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t);
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
@@ -1468,8 +1469,7 @@ _IO_file_xsgetn (fp, data, n)
 }
 INTDEF(_IO_file_xsgetn)
 
-static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_mmap (fp, data, n)
      _IO_FILE *fp;
@@ -1528,8 +1528,7 @@ _IO_file_xsgetn_mmap (fp, data, n)
   return s - (char *) data;
 }
 
-static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_maybe_mmap (fp, data, n)
      _IO_FILE *fp;

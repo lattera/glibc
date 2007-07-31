@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -39,6 +39,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 {
   size_t userlen = strlen (user) + 1;
   int gc_cycle;
+  int nretries = 0;
 
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
@@ -46,44 +47,49 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
   mapped = __nscd_get_map_ref (GETFDGR, "group", &__gr_map_handle, &gc_cycle);
 
  retry:;
-  const initgr_response_header *initgr_resp = NULL;
   char *respdata = NULL;
   int retval = -1;
   int sock = -1;
+  initgr_response_header initgr_resp;
 
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (INITGROUPS, user,
-							  userlen, mapped);
+      struct datahead *found = __nscd_cache_search (INITGROUPS, user,
+						    userlen, mapped);
       if (found != NULL)
 	{
-	  initgr_resp = &found->data[0].initgrdata;
-	  respdata = (char *) (initgr_resp + 1);
+	  respdata = (char *) (&found->data[0].initgrdata + 1);
+	  initgr_resp = found->data[0].initgrdata;
 	  char *recend = (char *) found->data + found->recsize;
 
-	  if (respdata + initgr_resp->ngrps * sizeof (int32_t) > recend)
+	  /* Now check if we can trust initgr_resp fields.  If GC is
+	     in progress, it can contain anything.  */
+	  if (mapped->head->gc_cycle != gc_cycle)
+	    {
+	      retval = -2;
+	      goto out;
+	    }
+
+	  if (respdata + initgr_resp.ngrps * sizeof (int32_t) > recend)
 	    goto out;
 	}
     }
 
   /* If we do not have the cache mapped, try to get the data over the
      socket.  */
-  initgr_response_header initgr_resp_mem;
-  if (initgr_resp == NULL)
+  if (respdata == NULL)
     {
-      sock = __nscd_open_socket (user, userlen, INITGROUPS, &initgr_resp_mem,
-				 sizeof (initgr_resp_mem));
+      sock = __nscd_open_socket (user, userlen, INITGROUPS, &initgr_resp,
+				 sizeof (initgr_resp));
       if (sock == -1)
 	{
 	  /* nscd not running or wrong version.  */
 	  __nss_not_use_nscd_group = 1;
 	  goto out;
 	}
-
-      initgr_resp = &initgr_resp_mem;
     }
 
-  if (initgr_resp->found == 1)
+  if (initgr_resp.found == 1)
     {
       /* The following code assumes that gid_t and int32_t are the
 	 same size.  This is the case for al existing implementation.
@@ -91,40 +97,40 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	 doesn't use memcpy but instead copies each array element one
 	 by one.  */
       assert (sizeof (int32_t) == sizeof (gid_t));
-      assert (initgr_resp->ngrps >= 0);
+      assert (initgr_resp.ngrps >= 0);
 
       /* Make sure we have enough room.  We always count GROUP in even
 	 though we might not end up adding it.  */
-      if (*size < initgr_resp->ngrps + 1)
+      if (*size < initgr_resp.ngrps + 1)
 	{
 	  gid_t *newp = realloc (*groupsp,
-				 (initgr_resp->ngrps + 1) * sizeof (gid_t));
+				 (initgr_resp.ngrps + 1) * sizeof (gid_t));
 	  if (newp == NULL)
 	    /* We cannot increase the buffer size.  */
 	    goto out_close;
 
 	  *groupsp = newp;
-	  *size = initgr_resp->ngrps + 1;
+	  *size = initgr_resp.ngrps + 1;
 	}
 
       if (respdata == NULL)
 	{
 	  /* Read the data from the socket.  */
-	  if ((size_t) __readall (sock, *groupsp, initgr_resp->ngrps
+	  if ((size_t) __readall (sock, *groupsp, initgr_resp.ngrps
 						  * sizeof (gid_t))
-	      == initgr_resp->ngrps * sizeof (gid_t))
-	    retval = initgr_resp->ngrps;
+	      == initgr_resp.ngrps * sizeof (gid_t))
+	    retval = initgr_resp.ngrps;
 	}
       else
 	{
 	  /* Just copy the data.  */
-	  retval = initgr_resp->ngrps;
+	  retval = initgr_resp.ngrps;
 	  memcpy (*groupsp, respdata, retval * sizeof (gid_t));
 	}
     }
   else
     {
-      if (__builtin_expect (initgr_resp->found == -1, 0))
+      if (__builtin_expect (initgr_resp.found == -1, 0))
 	{
 	  /* The daemon does not cache this database.  */
 	  __nss_not_use_nscd_group = 1;
@@ -153,19 +159,21 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0)
+      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  __nscd_unmap (mapped);
+	  if (atomic_decrement_val (&mapped->counter) == 0)
+	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      goto retry;
+      if (retval != -1)
+	goto retry;
     }
 
   return retval;

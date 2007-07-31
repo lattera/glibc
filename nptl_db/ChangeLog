@@ -3,10 +3,6 @@
 	* nptl_db/db_info.c [TLS_DTV_AT_TP]: Fixed size init for dtvp
 	to sizeof a pointer, instead of sizeof the union.
 
-2006-10-27  Ulrich Drepper  <drepper@redhat.com>
-
-	* structs.def: USE_TLS support is now default.
-
 2006-02-03  Roland McGrath  <roland@redhat.com>
 
 	* structs.def: Add a descriptor for pointer.val field of dtv_t.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -1571,6 +1571,47 @@ tf_fsync (void *arg)
 
 
 static void *
+tf_fdatasync (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which fdatasync()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempfd = open ("Makefile", O_RDONLY);
+  if (tempfd == -1)
+    {
+      printf ("%s: cannot open Makefile\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  fdatasync (tempfd);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: fdatasync returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
 tf_msync (void *arg)
 {
   if (arg == NULL)
@@ -2078,6 +2119,7 @@ static struct
   ADD_TEST (pread, 2, 1),
   ADD_TEST (pwrite, 2, 1),
   ADD_TEST (fsync, 2, 1),
+  ADD_TEST (fdatasync, 2, 1),
   ADD_TEST (msync, 2, 1),
   ADD_TEST (sendto, 2, 1),
   ADD_TEST (sendmsg, 2, 1),

@@ -1,5 +1,5 @@
 /* Header for nscd SELinux access controls.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -23,7 +23,7 @@
 
 #include "nscd.h"
 #ifdef HAVE_LIBCAP
-# include <sys/capabilities.h>
+# include <sys/capability.h>
 #endif
 
 #ifdef HAVE_SELINUX

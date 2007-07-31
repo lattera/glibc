@@ -159,8 +159,8 @@ endif
 ifeq (yes,$(build-shared))
 tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 constload1 order $(tests-vis-$(have-protected)) noload filter unload \
-	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
-	 nodlopen nodlopen2 neededtest neededtest2 \
+	 reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
+	 $(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
@@ -175,6 +175,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
+tests-nodelete-yes = nodelete nodelete2
+tests-nodlopen-yes = nodlopen nodlopen2
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
@@ -184,9 +186,8 @@ tests: $(objpfx)tst-leaks1-mem
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
-		nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
-		nodel2mod1 nodel2mod2 nodel2mod3 \
-		nodlopenmod nodlopenmod2 filtmod1 filtmod2 \
+		$(modules-nodelete-$(have-z-nodelete)) \
+		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
 		reldep4mod1 reldep4mod2 reldep4mod3 reldep4mod4 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
@@ -220,6 +221,9 @@ ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 endif
 modules-vis-yes = vismod1 vismod2 vismod3
+modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
+		       nodel2mod1 nodel2mod2 nodel2mod3
+modules-nodlopen-yes = nodlopenmod nodlopenmod2
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.

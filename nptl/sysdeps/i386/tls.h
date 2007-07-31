@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/i386 version.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,6 +51,7 @@ typedef struct
   uintptr_t sysinfo;
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
+  int gscope_flag;
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
@@ -64,6 +65,9 @@ typedef struct
 #ifndef HAVE_TLS_SUPPORT
 # error "TLS support is required."
 #endif
+
+/* Signal that TLS support is available.  */
+#define USE_TLS	1
 
 /* Alignment requirement for the stack.  For IA-32 this is governed by
    the SSE memory functions.  */
@@ -430,6 +434,26 @@ union user_desc_init
   ((descr)->header.pointer_guard					      \
    = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
 
+
+/* Get and set the global scope generation counter in the TCB head.  */
+#define THREAD_GSCOPE_FLAG_UNUSED 0
+#define THREAD_GSCOPE_FLAG_USED   1
+#define THREAD_GSCOPE_FLAG_WAIT   2
+#define THREAD_GSCOPE_RESET_FLAG() \
+  do									      \
+    { int __res;							      \
+      asm volatile ("xchgl %0, %%gs:%P1"				      \
+		    : "=r" (__res)					      \
+		    : "i" (offsetof (struct pthread, header.gscope_flag)),    \
+		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		      \
+    }									      \
+  while (0)
+#define THREAD_GSCOPE_SET_FLAG() \
+  THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
+#define THREAD_GSCOPE_WAIT() \
+  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

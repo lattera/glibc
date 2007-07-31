@@ -1,5 +1,5 @@
 /* Mapping tables for JOHAB handling.
-   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -239,7 +239,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (__builtin_expect (ch2 < 0x31, 0)			      \
 		    || (__builtin_expect (ch2 > 0x7e, 0) && ch2 < 0x91)	      \
 		    || __builtin_expect (ch2, 0) == 0xff		      \
-		    || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe5)	      \
+		    || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe8)	      \
 		    || (__builtin_expect (ch, 0) == 0xda		      \
 			&& ch2 > 0xa0 && ch2 < 0xd4)			      \
 		    || (__builtin_expect (ch, 0) == 0xde && ch2 > 0xf1))      \
@@ -386,7 +386,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		break;							      \
 	      }								      \
 	    if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0)	      \
-		|| (outptr[0] == 0x22 && outptr[1] > 0x65))		      \
+		|| (outptr[0] == 0x22 && outptr[1] > 0x68))		      \
 	      {								      \
 		UNICODE_TAG_HANDLER (ch, 4);				      \
 		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \

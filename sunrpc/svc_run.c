@@ -51,52 +51,42 @@ void
 svc_run (void)
 {
   int i;
-  struct pollfd *my_pollfd = NULL;
-  int last_max_pollfd = 0;
 
   for (;;)
     {
-      int max_pollfd = svc_max_pollfd;
-      if (max_pollfd == 0 && svc_pollfd == NULL)
-	break;
+      struct pollfd *my_pollfd;
 
-      if (last_max_pollfd != max_pollfd)
+      if (svc_max_pollfd == 0 && svc_pollfd == NULL)
+	return;
+
+      my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
+      if (my_pollfd == NULL)
 	{
-	  struct pollfd *new_pollfd
-	    = realloc (my_pollfd, sizeof (struct pollfd) * max_pollfd);
-
-	  if (new_pollfd == NULL)
-	    {
-	      perror (_("svc_run: - out of memory"));
-	      break;
-	    }
-
-	  my_pollfd = new_pollfd;
-	  last_max_pollfd = max_pollfd;
+	  perror (_("svc_run: - out of memory"));
+	  return;
 	}
 
-      for (i = 0; i < max_pollfd; ++i)
+      for (i = 0; i < svc_max_pollfd; ++i)
 	{
 	  my_pollfd[i].fd = svc_pollfd[i].fd;
 	  my_pollfd[i].events = svc_pollfd[i].events;
 	  my_pollfd[i].revents = 0;
 	}
 
-      switch (i = __poll (my_pollfd, max_pollfd, -1))
+      switch (i = __poll (my_pollfd, svc_max_pollfd, -1))
 	{
 	case -1:
+	  free (my_pollfd);
 	  if (errno == EINTR)
 	    continue;
 	  perror (_("svc_run: - poll failed"));
-	  break;
+	  return;
 	case 0:
+	  free (my_pollfd);
 	  continue;
 	default:
 	  INTUSE(svc_getreq_poll) (my_pollfd, i);
-	  continue;
+	  free (my_pollfd);
 	}
-      break;
     }
-
-  free (my_pollfd);
 }

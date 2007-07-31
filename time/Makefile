@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1991-2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,8 @@ distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
-	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1
+	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
+	   tst-strptime3
 
 include ../Rules
 

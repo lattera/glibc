@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1999, 2001, 2004, 2005
+   Copyright (C) 1996, 1997, 1999, 2001, 2004, 2005, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -155,10 +155,11 @@ ENTRY(__ieee754_powf)
 2:	/* y is a real number.  */
 	fxch			// x : y
 	fldl	MO(one)		// 1.0 : x : y
-	fld	%st(1)		// x : 1.0 : x : y
-	fsub	%st(1)		// x-1 : 1.0 : x : y
-	fabs			// |x-1| : 1.0 : x : y
-	fcompl	MO(limit)	// 1.0 : x : y
+	fldl	MO(limit)	// 0.29 : 1.0 : x : y
+	fld	%st(2)		// x : 0.29 : 1.0 : x : y
+	fsub	%st(2)		// x-1 : 0.29 : 1.0 : x : y
+	fabs			// |x-1| : 0.29 : 1.0 : x : y
+	fucompp			// 1.0 : x : y
 	fnstsw
 	fxch			// x : 1.0 : y
 	sahf
@@ -191,9 +192,10 @@ ENTRY(__ieee754_powf)
 	// y == ±inf
 	.align ALIGNARG(4)
 12:	fstp	%st(0)		// pop y
-	flds	4(%esp)		// x
-	fabs
-	fcompl	MO(one)		// < 1, == 1, or > 1
+	fldl	MO(one)		// 1
+	flds	4(%esp)		// x : 1
+	fabs			// abs(x) : 1
+	fucompp			// < 1, == 1, or > 1
 	fnstsw
 	andb	$0x45, %ah
 	cmpb	$0x45, %ah

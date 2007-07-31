@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2003, 2005, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -182,7 +183,7 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
 
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, pwd_tablename_val);
 
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM, NULL, NULL);
 
   if (result == NULL)
     {

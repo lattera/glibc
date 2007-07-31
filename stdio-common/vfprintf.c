@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1025,10 +1025,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const char *mbs = (const char *) string;			      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = prec != -1 ? (size_t) prec : strlen (mbs);		      \
+	    len = prec != -1 ? __strnlen (mbs, (size_t) prec) : strlen (mbs); \
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
-	       enough for the wide character version.  */		      \
+	       enough for the wide character version.  Each byte in the	      \
+	       multi-byte string can produce at most one wide character.  */  \
 	    if (__libc_use_alloca (len * sizeof (wchar_t)))		      \
 	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 	    else if ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))    \
@@ -1159,19 +1160,26 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		else							      \
 		  {							      \
 		    /* In case we have a multibyte character set the	      \
-		       situation is more compilcated.  We must not copy	      \
+		       situation is more complicated.  We must not copy	      \
 		       bytes at the end which form an incomplete character. */\
-		    wchar_t ignore[prec];				      \
+		    size_t ignore_size = (unsigned) prec > 1024 ? 1024 : prec;\
+		    wchar_t ignore[ignore_size];			      \
 		    const char *str2 = string;				      \
-		    mbstate_t ps;					      \
+		    const char *strend = string + prec;			      \
+		    if (strend < string)				      \
+		      strend = (const char *) UINTPTR_MAX;		      \
 									      \
+		    mbstate_t ps;					      \
 		    memset (&ps, '\0', sizeof (ps));			      \
-		    if (__mbsnrtowcs (ignore, &str2, prec, prec, &ps)	      \
-			== (size_t) -1)					      \
-		      {							      \
-			done = -1;					      \
-			goto all_done;					      \
-		      }							      \
+									      \
+		    while (str2 != NULL && str2 < strend)		      \
+		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
+					ignore_size, &ps) == (size_t) -1)     \
+			{						      \
+			  done = -1;					      \
+			  goto all_done;				      \
+			}						      \
+									      \
 		    if (str2 == NULL)					      \
 		      len = strlen (string);				      \
 		    else						      \
@@ -1618,6 +1626,8 @@ do_positional:
     /* Just a counter.  */
     size_t cnt;
 
+    free (workstart);
+    workstart = NULL;
 
     if (grouping == (const char *) -1)
       {
@@ -1792,7 +1802,9 @@ do_positional:
 	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	CHAR_T spec = specs[nspecs_done].info.spec;
-	CHAR_T *workstart = NULL;
+
+	workstart = NULL;
+	workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
 
 	/* Fill in last information.  */
 	if (specs[nspecs_done].width_arg != -1)
@@ -1888,8 +1900,7 @@ do_positional:
 	    break;
 	  }
 
-	if (__builtin_expect (workstart != NULL, 0))
-	  free (workstart);
+	free (workstart);
 	workstart = NULL;
 
 	/* Write the following constant string.  */
@@ -1917,7 +1928,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 {
   int done = 0;
-  CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
+  CHAR_T work_buffer[MAX (sizeof (info->width), sizeof (info->prec)) * 3];
   CHAR_T *const workend
     = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
   register CHAR_T *w;

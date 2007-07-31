@@ -1,5 +1,6 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996-2001, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003, 2004, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,30 +56,14 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (af, addr, entdata->host_addr) <= 0)
-     {
-       if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
-	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-	 map_v4v6_address ((char *) entdata->host_addr,
-			   (char *) entdata->host_addr);
-       else if (af == AF_INET
-		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-	 {
-	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
-	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
-	   else if (IN6_IS_ADDR_LOOPBACK (entdata->host_addr))
-	     {
-	       in_addr_t localhost = htonl (INADDR_LOOPBACK);
-	       memcpy (entdata->host_addr, &localhost, sizeof (localhost));
-	     }
-	   else
-	     /* Illegal address: ignore line.  */
-	     return 0;
-	 }
-       else
-	 /* Illegal address: ignore line.  */
-	 return 0;
-     }
+   if (inet_pton (af, addr, entdata->host_addr) <= 0
+       && (af != AF_INET6 || (flags & AI_V4MAPPED) == 0
+	   || inet_pton (AF_INET, addr, entdata->host_addr) <= 0
+	   || (map_v4v6_address ((char *) entdata->host_addr,
+				 (char *) entdata->host_addr),
+	       0)))
+     /* Illegal address: ignore line.  */
+     return 0;
 
    /* We always return entries of the requested form.  */
    result->h_addrtype = af;
@@ -102,6 +87,10 @@ _nss_files_get##name##_r (proto,					      \
 {									      \
   enum nss_status status;						      \
 									      \
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct hostent_data);    \
+  buffer += pad;							      \
+  buflen = buflen > pad ? buflen - pad : 0;				      \
+									      \
   __libc_lock_lock (lock);						      \
 									      \
   /* Reset file pointer to beginning or open file.  */			      \
@@ -122,7 +111,8 @@ _nss_files_get##name##_r (proto,					      \
 	{								      \
 	  /* We have to get all host entries from the file.  */		      \
 	  const size_t tmp_buflen = MIN (buflen, 4096);			      \
-	  char tmp_buffer[tmp_buflen];					      \
+	  char tmp_buffer[tmp_buflen]					      \
+	    __attribute__ ((__aligned__ (__alignof__ (struct hostent_data))));\
 	  struct hostent tmp_result_buf;				      \
 	  int naddrs = 1;						      \
 	  int naliases = 0;						      \

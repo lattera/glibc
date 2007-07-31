@@ -1,42 +1,38 @@
 comment_char %
 escape_char  /
 %
-% Serbian Language in Jekavian dialect Locale for Serbia and Montenegro
-% Source: sr_YU locale
+% Serbian Language locale for Montenegro
+% Source: sr_YU, sr_CS locale
 % Address:
 %
 % Contact: Danilo Segan
-% Email: dsegan@gmx.net
-% Tel: +381 63 8626082
+% Email: danilo@gnome.org
+% Tel: +381 63 323456
 % Fax: none
 % Language: sr
-% Territory: CS
-% Revision: 1.0
-% Date: 2003-08-13
+% Territory: ME
+% Revision: 1.2
+% Date: 2006-10-11
 % Application: general
 % Users: general
 % Charset: UTF-8, ISO-8859-5
 % Distribution and use is free, also
 % for commercial purposes.
-%
-% TODO:
-% -- fix LC_COLLATE to work correctly for latin alphabet too
-%
 
 LC_IDENTIFICATION
-title      "Serbian locale for Serbia and Montenegro"
-source     "sr_YU locale"
+title      "Serbian locale for Montenegro"
+source     "sr_YU, sr_CS locale"
 address    ""
 contact    "Danilo Segan"
 email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
 language   "Serbian"
-territory  "Serbia and Montenegro"
-revision   "1.1"
-date       "2004-01-10"
+territory  "Montenegro"
+revision   "1.2"
+date       "2006-10-11"
 audience   "general"
-application   ""
+application   "GNU locale"
 abbreviation  ""
 %
 category  i18n:1997;LC_IDENTIFICATION
@@ -54,19 +50,33 @@ category  i18n:1997;LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "sr_CS"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
-copy "sr_CS"
+copy "sr_RS"
 END LC_COLLATE
 
 LC_MONETARY
-copy "sr_CS"
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U20AC>"
+mon_decimal_point         "<U002C>"
+mon_thousands_sep         "<U002E>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<U002D>"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-copy "sr_CS"
+copy "sr_RS"
 END LC_NUMERIC
 
 LC_TIME
@@ -110,31 +120,46 @@ t_fmt_ampm "<U0025><U0054>"
 date_fmt  "<U0025><U0061><U002c><U0020><U0025><U0065><U002E><U0020>/
 <U0025><U0062><U0020><U0025><U0059><U002E><U0020><U0020><U0025><U0048>/
 <U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A><U000A>"
-week    7;19971201;4
+% week    7;19971201;4
 first_weekday 2
 first_workday 2
 END LC_TIME
 
 LC_MESSAGES
-copy "sr_CS"
+copy "sr_RS"
 END LC_MESSAGES
 
 LC_PAPER
-copy "sr_CS"
+copy "sr_RS"
 END LC_PAPER
 
 LC_NAME
-copy "sr_CS"
+copy "sr_RS"
 END LC_NAME
 
 LC_ADDRESS
-copy "sr_CS"
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+country_ab2   "<U004D><U0045>"
+country_ab3   "<U004D><U004E><U0045>"
+country_post  "<U004D><U004E><U0045>"
+country_name  "<U0426><U0440><U043D><U0430><U0020><U0413><U043E><U0440><U0430>"
+country_num   499
+country_car   "<U004D><U004E><U0045>"
+country_isbn  "<U0038><U0036>"
+lang_name     "<U0441><U0440><U043F><U0441><U043A><U0438>"
+lang_term     "<U0073><U0072><U0070>"
+lang_lib      "<U0073><U0063><U0063>"
+lang_ab	      "<U0073><U0072>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-copy "sr_CS"
+copy "sr_RS"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-copy "sr_CS"
+copy "sr_RS"
 END LC_MEASUREMENT

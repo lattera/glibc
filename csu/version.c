@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ static const char __libc_version[] = VERSION;
 
 static const char banner[] =
 "GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
-Copyright (C) 2007 Free Software Foundation, Inc.\n\
+Copyright (C) 2006 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
@@ -33,6 +33,9 @@ Compiled by GNU CC version "__VERSION__".\n"
 #include "version-info.h"
 #ifdef GLIBC_OLDEST_ABI
 "The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
+#endif
+#ifdef USE_TLS
+"Thread-local storage support included.\n"
 #endif
 "For bug reporting instructions, please see:\n\
 <http://www.gnu.org/software/libc/bugs.html>.\n";

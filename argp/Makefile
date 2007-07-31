@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 2002, 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1997, 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ distribute	= argp-fmtstream.h argp-namefrob.h
 routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
 				     pvh xinl eexst)
 
-tests		= argp-test tst-argp1 bug-argp1
+tests		= argp-test tst-argp1 bug-argp1 tst-argp2
 
 CFLAGS-argp-help.c = $(uses-callbacks) -fexceptions
 CFLAGS-argp-parse.c = $(uses-callbacks)

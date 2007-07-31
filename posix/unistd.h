@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,9 @@ __BEGIN_DECLS
 #define _POSIX2_LOCALEDEF       200112L
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN2K
+# define _XOPEN_VERSION	600
+#elif defined __USE_UNIX98
 # define _XOPEN_VERSION	500
 #else
 # define _XOPEN_VERSION	4
@@ -559,7 +561,7 @@ extern long int pathconf (__const char *__path, int __name)
 extern long int fpathconf (int __fd, int __name) __THROW;
 
 /* Get the value of the system variable NAME.  */
-extern long int sysconf (int __name) __THROW;
+extern long int sysconf (int __name) __THROW __attribute__ ((__const__));
 
 #ifdef	__USE_POSIX2
 /* Get the value of the string-valued system variable NAME.  */
@@ -1060,7 +1062,7 @@ extern int lockf64 (int __fd, int __cmd, __off64_t __len) __wur;
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 /* Synchronize at least the data part of a file with the underlying
    media.  */
-extern int fdatasync (int __fildes) __THROW;
+extern int fdatasync (int __fildes);
 #endif /* Use POSIX199309 */
 
 

@@ -55,8 +55,8 @@ static const struct argp_option options[] =
   { "time", 't', NULL, 0, N_("Generate output linear to time (default is linear to number of function calls)") },
   { "total", 'T', NULL, 0,
     N_("Also draw graph for total memory consumption") },
-  { "x-size", 'x', "VALUE", 0, N_("Make output graphic VALUE pixels wide") },
-  { "y-size", 'y', "VALUE", 0, N_("Make output graphic VALUE pixels high") },
+  { "x-size", 'x', "VALUE", 0, N_("make output graphic VALUE pixel wide") },
+  { "y-size", 'y', "VALUE", 0, N_("make output graphic VALUE pixel high") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -81,8 +81,8 @@ static struct argp argp =
 
 struct entry
 {
-  uint64_t heap;
-  uint64_t stack;
+  size_t heap;
+  size_t stack;
   uint32_t time_low;
   uint32_t time_high;
 };

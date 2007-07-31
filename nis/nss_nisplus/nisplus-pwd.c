@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2001, 2002, 2003, 2005, 2006
+/* Copyright (C) 1997, 1999, 2001, 2002, 2003, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
@@ -311,7 +311,7 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
 
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, pwd_tablename_val);
 
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM, NULL, NULL);
 
   if (result == NULL)
     {
@@ -370,7 +370,7 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
   snprintf (buf, sizeof (buf), "[uid=%lu],%s",
 	    (unsigned long int) uid, pwd_tablename_val);
 
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM, NULL, NULL);
 
   if (result == NULL)
     {

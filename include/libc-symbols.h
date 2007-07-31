@@ -114,13 +114,6 @@
 #  define _weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
-/* Same as WEAK_ALIAS, but mark symbol as hidden.  */
-#  define weak_hidden_alias(name, aliasname) \
-  _weak_hidden_alias (name, aliasname)
-#  define _weak_hidden_alias(name, aliasname) \
-  extern __typeof (name) aliasname \
-    __attribute__ ((weak, alias (#name), __visibility__ ("hidden")));
-
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
 #  define weak_extern(symbol) _weak_extern (weak symbol)
 #  define _weak_extern(expr) _Pragma (#expr)
@@ -128,7 +121,6 @@
 # else
 
 #  define weak_alias(name, aliasname) strong_alias(name, aliasname)
-#  define weak_hidden_alias(name, aliasname) strong_alias(name, aliasname)
 #  define weak_extern(symbol) /* Nothing. */
 
 # endif
@@ -294,42 +286,27 @@ requires at runtime the shared libraries from the glibc version used \
 for linking")
 #endif
 
-/* Declare SYMBOL to be TYPE (`function' or `object') of SIZE bytes
-   alias to ORIGINAL, when the assembler supports such declarations
-   (such as in ELF).
+/* Declare SYMBOL to be TYPE (`function' or `object') and of SIZE bytes,
+   when the assembler supports such declarations (such as in ELF).
    This is only necessary when defining something in assembly, or playing
    funny alias games where the size should be other than what the compiler
    thinks it is.  */
-#define declare_symbol_alias(symbol, original, type, size) \
-  declare_symbol_alias_1 (symbol, original, type, size)
+#define declare_symbol(symbol, type, size) \
+  declare_symbol_1 (symbol, type, size)
 #ifdef ASM_TYPE_DIRECTIVE_PREFIX
 # ifdef __ASSEMBLER__
-#  define declare_symbol_alias_1(symbol, original, type, size) \
-    strong_alias (original, symbol); \
+#  define declare_symbol_1(symbol, type, size) \
     .type C_SYMBOL_NAME (symbol), \
-	  declare_symbol_alias_1_paste (ASM_TYPE_DIRECTIVE_PREFIX, type); \
-    .size C_SYMBOL_NAME (symbol), size
-#  define declare_symbol_alias_1_paste(a, b) \
-  declare_symbol_alias_1_paste_1 (a,b)
-#  define declare_symbol_alias_1_paste_1(a,b)	a##b
+	  declare_symbol_1_paste (ASM_TYPE_DIRECTIVE_PREFIX, type), size
+#  define declare_symbol_1_paste(a, b)	declare_symbol_1_paste_1 (a,b)
+#  define declare_symbol_1_paste_1(a,b)	a##b
 # else /* Not __ASSEMBLER__.  */
-#  define declare_symbol_alias_1(symbol, original, type, size) \
-    asm (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE) \
-	 " " __SYMBOL_PREFIX #symbol \
-	 "\n\t" declare_symbol_alias_1_alias (symbol, original) \
-	 "\n\t.type " __SYMBOL_PREFIX #symbol ", " \
-	 declare_symbol_alias_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
+#  define declare_symbol_1(symbol, type, size) \
+    asm (".type " __SYMBOL_PREFIX #symbol ", " \
+	 declare_symbol_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
 	 "\n\t.size " __SYMBOL_PREFIX #symbol ", " #size);
-#  define declare_symbol_alias_1_stringify(x) \
-  declare_symbol_alias_1_stringify_1 (x)
-#  define declare_symbol_alias_1_stringify_1(x) #x
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define declare_symbol_alias_1_alias(symbol, original) \
-	 ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX #original
-#  else
-#   define declare_symbol_alias_1_alias(symbol, original) \
-	 __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX #original
-#  endif /* HAVE_ASM_SET_DIRECTIVE */
+#  define declare_symbol_1_stringify(x) declare_symbol_1_stringify_1 (x)
+#  define declare_symbol_1_stringify_1(x) #x
 # endif /* __ASSEMBLER__ */
 #else
 # define declare_symbol_1(symbol, type, size) /* Nothing.  */
@@ -454,7 +431,8 @@ for linking")
   strong_alias(real, name)
 #endif
 
-#if defined SHARED || defined LIBC_NONSHARED
+#if defined HAVE_VISIBILITY_ATTRIBUTE \
+    && (defined SHARED || defined LIBC_NONSHARED)
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
 # define attribute_hidden
@@ -466,7 +444,11 @@ for linking")
 # define attribute_tls_model_ie
 #endif
 
-#define attribute_relro __attribute__ ((section (".data.rel.ro")))
+#ifdef HAVE_Z_RELRO
+# define attribute_relro __attribute__ ((section (".data.rel.ro")))
+#else
+# define attribute_relro
+#endif
 
 /* Handling on non-exported internal names.  We have to do this only
    for shared code.  */
@@ -475,9 +457,14 @@ for linking")
 # define INTDEF(name) strong_alias (name, name##_internal)
 # define INTVARDEF(name) \
   _INTVARDEF (name, name##_internal)
-# define _INTVARDEF(name, aliasname) \
+# if defined HAVE_VISIBILITY_ATTRIBUTE
+#  define _INTVARDEF(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((alias (#name), \
 						   visibility ("hidden")));
+# else
+#  define _INTVARDEF(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
+# endif
 # define INTDEF2(name, newname) strong_alias (name, newname##_internal)
 # define INTVARDEF2(name, newname) _INTVARDEF (name, newname##_internal)
 #else
@@ -562,10 +549,16 @@ for linking")
    versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
    libc_hidden_ver (__real_foo, foo)  */
 
-#if defined SHARED && defined DO_VERSIONING && !defined NO_HIDDEN
+#if defined SHARED && defined DO_VERSIONING \
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
 # ifndef __ASSEMBLER__
-#  define __hidden_proto_hiddenattr(attrs...) \
+#  if !defined HAVE_VISIBILITY_ATTRIBUTE \
+      || defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#   define __hidden_proto_hiddenattr(attrs...)
+#  else
+#   define __hidden_proto_hiddenattr(attrs...) \
   __attribute__ ((visibility ("hidden"), ##attrs))
+#  endif
 #  define hidden_proto(name, attrs...) \
   __hidden_proto (name, __GI_##name, ##attrs)
 #  define __hidden_proto(name, internal, attrs...) \

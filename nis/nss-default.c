@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2001, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2001, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -54,6 +55,7 @@ static const struct
 static void
 init (void)
 {
+  int saved_errno = errno;
   FILE *fp = fopen (default_nss, "rc");
   if (fp != NULL)
     {
@@ -111,6 +113,7 @@ init (void)
 
       fclose (fp);
     }
+  __set_errno (saved_errno);
 }
 
 

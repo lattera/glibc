@@ -1618,7 +1618,7 @@ static Void_t*   memalign_check(size_t alignment, size_t bytes,
 				const Void_t *caller);
 #ifndef NO_THREADS
 # ifdef _LIBC
-#  if USE___THREAD || !defined SHARED
+#  if USE___THREAD || (defined USE_TLS && !defined SHARED)
     /* These routines are never needed in this configuration.  */
 #   define NO_STARTER
 #  endif
@@ -2741,19 +2741,8 @@ static void do_check_malloc_state(mstate av)
   for (i = 0; i < NFASTBINS; ++i) {
     p = av->fastbins[i];
 
-    /* The following test can only be performed for the main arena.
-       While mallopt calls malloc_consolidate to get rid of all fast
-       bins (especially those larger than the new maximum) this does
-       only happen for the main arena.  Trying to do this for any
-       other arena would mean those arenas have to be locked and
-       malloc_consolidate be called for them.  This is excessive.  And
-       even if this is acceptable to somebody it still cannot solve
-       the problem completely since if the arena is locked a
-       concurrent malloc call might create a new arena which then
-       could use the newly invalid fast bins.  */
-
     /* all bins past max_fast are empty */
-    if (av == &main_arena && i > max_fast_bin)
+    if (i > max_fast_bin)
       assert(p == 0);
 
     while (p != 0) {
@@ -2896,13 +2885,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
       is one SIZE_SZ unit larger than for normal chunks, because there
       is no following chunk whose prev_size field could be used.
     */
-#if 1
-    /* See the front_misalign handling below, for glibc there is no
-       need for further alignments.  */
-    size = (nb + SIZE_SZ + pagemask) & ~pagemask;
-#else
     size = (nb + SIZE_SZ + MALLOC_ALIGN_MASK + pagemask) & ~pagemask;
-#endif
     tried_mmap = true;
 
     /* Don't try if size wraps around 0 */
@@ -2920,12 +2903,6 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           address argument for later munmap in free() and realloc().
         */
 
-#if 1
-	/* For glibc, chunk2mem increases the address by 2*SIZE_SZ and
-	   MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
-	   aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
-        assert (((INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK) == 0);
-#else
         front_misalign = (INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK;
         if (front_misalign > 0) {
           correction = MALLOC_ALIGNMENT - front_misalign;
@@ -2933,12 +2910,10 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           p->prev_size = correction;
           set_head(p, (size - correction) |IS_MMAPPED);
         }
-        else
-#endif
-	  {
-	    p = (mchunkptr)mm;
-	    set_head(p, size|IS_MMAPPED);
-	  }
+        else {
+          p = (mchunkptr)mm;
+          set_head(p, size|IS_MMAPPED);
+        }
 
         /* update statistics */
 
@@ -4122,6 +4097,7 @@ _int_malloc(mstate av, size_t bytes)
   for(;;) {
 
     int iters = 0;
+    bool any_larger = false;
     while ( (victim = unsorted_chunks(av)->bk) != unsorted_chunks(av)) {
       bck = victim->bk;
       if (__builtin_expect (victim->size <= 2 * SIZE_SZ, 0)
@@ -4218,6 +4194,8 @@ _int_malloc(mstate av, size_t bytes)
       fwd->bk = victim;
       bck->fd = victim;
 
+      if (size >= nb + MINSIZE)
+	any_larger = true;
 #define MAX_ITERS	10000
       if (++iters >= MAX_ITERS)
 	break;
@@ -4706,15 +4684,7 @@ static void malloc_consolidate(av) mstate av;
       reused anyway.
     */
 
-#if 0
-    /* It is wrong to limit the fast bins to search using get_max_fast
-       because, except for the main arena, all the others might have
-       blocks in the high fast bins.  It's not worth it anyway, just
-       search all bins all the time.  */
     maxfb = &(av->fastbins[fastbin_index(get_max_fast ())]);
-#else
-    maxfb = &(av->fastbins[NFASTBINS - 1]);
-#endif
     fb = &(av->fastbins[0]);
     do {
       if ( (p = *fb) != 0) {

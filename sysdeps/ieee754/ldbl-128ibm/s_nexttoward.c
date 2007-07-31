@@ -26,7 +26,7 @@ static char rcsid[] = "$NetBSD: $";
  */
 
 #include "math.h"
-#include "math_private.h"
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 
@@ -55,10 +55,12 @@ static char rcsid[] = "$NetBSD: $";
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */
-	    double x2;
+	    double u;
 	    INSERT_WORDS(x,(u_int32_t)((hy>>32)&0x80000000),1);/* return +-minsub */
-	    x2 = x*x;
-	    if(x2==x) return x2; else return x;	/* raise underflow flag */
+	    u = math_opt_barrier (x);
+	    u = u * u;
+	    math_force_eval (u);		/* raise underflow flag */
+	    return x;
 	}
 	if(hx>=0) {				/* x > 0 */
 	    if (hy<0||(ix>>20)>(iy>>52)
@@ -89,16 +91,13 @@ static char rcsid[] = "$NetBSD: $";
 	if(hy>=0x7ff00000) {
 	  x = x+x;	/* overflow  */
 	  if (FLT_EVAL_METHOD != 0 && FLT_EVAL_METHOD != 1)
-	    /* Force conversion to float.  */
-	    asm ("" : "=m"(x) : "m"(x));
+	    /* Force conversion to double.  */
+	    asm ("" : "+m"(x));
 	  return x;
 	}
-	if(hy<0x00100000) {		/* underflow */
-	    double x2 = x*x;
-	    if(x2!=x) {		/* raise underflow flag */
-	        INSERT_WORDS(x2,hx,lx);
-		return x2;
-	    }
+	if(hy<0x00100000) {
+	    double u = x*x;			/* underflow */
+	    math_force_eval (u);		/* raise underflow flag */
 	}
 	INSERT_WORDS(x,hx,lx);
 	return x;

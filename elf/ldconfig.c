@@ -24,7 +24,6 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <libintl.h>
-#include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -287,7 +286,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2007");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Andreas Jaeger");
 }
@@ -559,7 +558,7 @@ manual_link (char *library)
   /* Do some sanity checks first.  */
   if (lstat64 (real_library, &stat_buf))
     {
-      error (0, errno, _("Cannot lstat %s"), library);
+      error (0, errno, _("Can't lstat %s"), library);
       free (path);
       return;
     }
@@ -707,10 +706,10 @@ search_dir (const struct dir_entry *entry)
 			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
 	    continue;
 	}
-      len += strlen (entry->path);
+      len += strlen (entry->path) + 2;
       if (len > file_name_len)
 	{
-	  file_name_len = len + 1;
+	  file_name_len = len;
 	  file_name = alloca (file_name_len);
 	  if (!opt_chroot)
 	    real_file_name = file_name;
@@ -718,10 +717,10 @@ search_dir (const struct dir_entry *entry)
       sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
       if (opt_chroot)
 	{
-	  len = strlen (dir_name) + strlen (direntry->d_name);
+	  len = strlen (dir_name) + strlen (direntry->d_name) + 2;
 	  if (len > real_file_name_len)
 	    {
-	      real_file_name_len = len + 1;
+	      real_file_name_len = len;
 	      real_file_name = alloca (real_file_name_len);
 	    }
 	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
@@ -1167,14 +1166,9 @@ set_hwcap (void)
 int
 main (int argc, char **argv)
 {
-  /* Set locale via LC_ALL.  */
-  setlocale (LC_ALL, "");
-
-  /* Set the text message domain.  */
-  textdomain (_libc_intl_domainname);
+  int remaining;
 
   /* Parse and process arguments.  */
-  int remaining;
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   /* Remaining arguments are additional directories if opt_manual_link
@@ -1191,7 +1185,9 @@ main (int argc, char **argv)
 	  add_dir (argv[i]);
     }
 
+#ifdef USE_TLS
   hwcap_extra[63 - _DL_FIRST_EXTRA] = "tls";
+#endif
 
   set_hwcap ();
 

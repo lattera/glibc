@@ -10,6 +10,7 @@
 static int
 do_test (void)
 {
+#ifdef USE_TLS
   static const char modname1[] = "$ORIGIN/tst-tlsmod3.so";
   static const char modname2[] = "$ORIGIN/tst-tlsmod4.so";
   int result = 0;
@@ -164,6 +165,9 @@ do_test (void)
     }
 
   return result;
+#else
+  return 0;
+#endif
 }
 
 

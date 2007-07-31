@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006.
-# Revision: 1.52
+# Revision: 1.54
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.5\n"
 "POT-Creation-Date: 2006-09-29 11:38-0700\n"
-"PO-Revision-Date: 2006-11-09 13:51+0100\n"
+"PO-Revision-Date: 2006-12-30 18:53+0100\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -1407,7 +1407,7 @@ msgstr "misslyckades ta status (fstat)"
 
 #: inet/rcmd.c:492
 msgid "bad owner"
-msgstr "olämplig ägare"
+msgstr "felaktig ägare"
 
 #: inet/rcmd.c:494
 msgid "writeable by other than owner"
@@ -1451,7 +1451,7 @@ msgstr "teckenuppsättningsfil \"%s\" finns inte"
 #: locale/programs/charmap.c:194
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "standardteckenuppsättningsfil \"%s\" inte hittad"
+msgstr "standardteckenuppsättningsfil \"%s\" finns inte"
 
 #: locale/programs/charmap.c:257
 #, c-format
@@ -1540,7 +1540,7 @@ msgstr "definition av \"%1$s\" slutar inte med \"END %1$s\""
 
 #: locale/programs/charmap.c:642
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
-msgstr "endast definition av \"WIDTH\" får följa definitionen av \"CHARMAP\""
+msgstr "endast definition av \"WIDTH\" får komma efter definitionen av \"CHARMAP\""
 
 #: locale/programs/charmap.c:650 locale/programs/charmap.c:713
 #, c-format
@@ -1630,7 +1630,7 @@ msgstr "%s: fält \"%s\" är inte definierat"
 #: locale/programs/ld-name.c:116 locale/programs/ld-telephone.c:116
 #, c-format
 msgid "%s: field `%s' must not be empty"
-msgstr "%s: fält \"%s\" kan inte vara tomt"
+msgstr "%s: fält \"%s\" får inte vara tomt"
 
 #: locale/programs/ld-address.c:167
 #, c-format
@@ -1640,7 +1640,7 @@ msgstr "%s: ogiltig kontrollsekvens \"%%%c\" i fält \"%s\" "
 #: locale/programs/ld-address.c:218
 #, c-format
 msgid "%s: terminology language code `%s' not defined"
-msgstr "%s: terminologilandskod \"%s\" inte definierad"
+msgstr "%s: terminologispråkkod \"%s\" inte definierad"
 
 #: locale/programs/ld-address.c:243
 #, c-format
@@ -1800,12 +1800,12 @@ msgstr "%s: bytesekvens för första tecknet är inte mindre än den för sista 
 #: locale/programs/ld-collate.c:1273
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
-msgstr "%s: symboliskt intervall kan inte vara omedelbart efter \"order_start\""
+msgstr "%s: symboliskt intervall får inte vara omedelbart efter \"order_start\""
 
 #: locale/programs/ld-collate.c:1277
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
-msgstr "%s: symboliskt intervall kan inte omedelbart följas av \"order_end\""
+msgstr "%s: symboliskt intervall får inte omedelbart följas av \"order_end\""
 
 #: locale/programs/ld-collate.c:1297 locale/programs/ld-ctype.c:1475
 #, c-format
@@ -2119,7 +2119,7 @@ msgstr "%s: dubbla definitioner av \"default_missing\""
 
 #: locale/programs/ld-ctype.c:2863
 msgid "previous definition was here"
-msgstr "föregående definition var här"
+msgstr "här var föregående definition"
 
 #: locale/programs/ld-ctype.c:2885
 #, c-format
@@ -2354,7 +2354,7 @@ msgstr "avslutande skräp vid radslutet"
 
 #: locale/programs/linereader.c:297
 msgid "garbage at end of number"
-msgstr "skräp i slutet av nummer"
+msgstr "skräp i slutet av tal"
 
 #: locale/programs/linereader.c:409
 msgid "garbage at end of character code specification"
@@ -2567,9 +2567,9 @@ msgid ""
 "                       locale path    : %s\n"
 "%s"
 msgstr ""
-"Systemets kataloger för teckentabeller: %s\n"
-"                     repertoartabeller: %s\n"
-"                       lokal-sökväg   : %s\n"
+"Systemets kataloger för teckentabeller   : %s\n"
+"                        repertoartabeller: %s\n"
+"                          lokal-sökväg   : %s\n"
 "%s"
 
 #: locale/programs/localedef.c:566
@@ -2673,7 +2673,7 @@ msgstr "kan inte lägga till till lokalarkiv"
 #: locale/programs/locarchive.c:977
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "fil \"%s\" för lokalalias hittas inte"
+msgstr "fil \"%s\" för lokalalias finns inte"
 
 #: locale/programs/locarchive.c:1121
 #, c-format
@@ -2717,7 +2717,7 @@ msgstr "argumentet till \"%s\" måste vara ett enskilt tecken"
 
 #: locale/programs/locfile.c:251
 msgid "syntax error: not inside a locale definition section"
-msgstr "syntaxfel: inte inne i en lokaldefinition"
+msgstr "syntaxfel: inte inne i en lokalsektion"
 
 #: locale/programs/locfile.c:625
 #, c-format
@@ -2764,7 +2764,7 @@ msgstr "kan inte spara ny repertoartabell"
 #: locale/programs/repertoire.c:342
 #, c-format
 msgid "repertoire map file `%s' not found"
-msgstr "hittar inte repertoartabell \"%s\""
+msgstr "hittar inte repertoarfiltabell \"%s\""
 
 #: locale/programs/repertoire.c:449
 #, c-format
@@ -2859,7 +2859,7 @@ msgid ""
 "For bug reporting instructions, please see:\n"
 "<http://www.gnu.org/software/libc/bugs.html>."
 msgstr ""
-"UsageAnvändning: memusage [FLAGGA]... PROGRAM [PROGRAMFLAGGA]...\n"
+"Användning: memusage [FLAGGA]... PROGRAM [PROGRAMFLAGGA]...\n"
 "Spåra minnesanvändning för PROGRAM.\n"
 "\n"
 "   -n,--progname=NAMN     Namn på program att spåra\n"
@@ -2922,7 +2922,7 @@ msgstr "Titelsträng att använda i resultatgrafiken"
 
 #: malloc/memusagestat.c:55
 msgid "Generate output linear to time (default is linear to number of function calls)"
-msgstr "Generera utdata linjär i tiden (standardvärde är linjär mot anta funktionsanrop)"
+msgstr "Generera utdata linjär i tiden (standardvärde är linjär mot antal funktionsanrop)"
 
 #: malloc/memusagestat.c:57
 msgid "Also draw graph for total memory consumption"
@@ -2930,11 +2930,11 @@ msgstr "Visa också en graf av totala minnesåtgången"
 
 #: malloc/memusagestat.c:58
 msgid "make output graphic VALUE pixel wide"
-msgstr "gör resultatgrafiken VALUE pixlar bred"
+msgstr "gör resultatgrafiken ANTAL pixlar bred"
 
 #: malloc/memusagestat.c:59
 msgid "make output graphic VALUE pixel high"
-msgstr "gör resultatgrafiken VALUE pixlar hög"
+msgstr "gör resultatgrafiken ANTAL pixlar hög"
 
 #: malloc/memusagestat.c:64
 msgid "Generate graphic from memory profiling data"
@@ -3016,7 +3016,7 @@ msgstr "Objekt med samma namn existerar"
 
 #: nis/nis_error.h:16
 msgid "Not master server for this domain"
-msgstr "Ingen huvudserver för denna domän"
+msgstr "Inte huvudserver för denna domän"
 
 #: nis/nis_error.h:17
 msgid "Invalid object for operation"
@@ -3207,7 +3207,7 @@ msgstr "Huvudserver:\n"
 
 #: nis/nis_print.c:175
 msgid "Replicate :\n"
-msgstr "Replikerad:\n"
+msgstr "Replikera:\n"
 
 #: nis/nis_print.c:176
 #, c-format
@@ -3404,7 +3404,7 @@ msgstr "Antal objekt      : %u\n"
 #: nis/nis_print.c:377
 #, c-format
 msgid "Object #%d:\n"
-msgstr "Objekt #%d:\n"
+msgstr "Objekt nr %d:\n"
 
 #: nis/nis_print_group_entry.c:117
 #, c-format
@@ -3437,7 +3437,7 @@ msgstr "    Inga rekursiva medlemmar\n"
 
 #: nis/nis_print_group_entry.c:149 nis/nis_print_group_entry.c:165
 msgid "    Explicit nonmembers:\n"
-msgstr "    Explicit icke-medlemmar:\n"
+msgstr "    Explicita icke-medlemmar:\n"
 
 #: nis/nis_print_group_entry.c:154
 msgid "    No explicit nonmembers\n"
@@ -3609,7 +3609,7 @@ msgstr "beskär %s cache; tid %ld"
 #: nscd/cache.c:289
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
-msgstr "överväger %s post \"%s\", tidsgräns %<PRIu64>"
+msgstr "överväger %s-post \"%s\", tidsgräns %<PRIu64>"
 
 #: nscd/connections.c:469 nscd/connections.c:481 nscd/connections.c:493
 #: nscd/connections.c:512
@@ -3692,7 +3692,7 @@ msgstr "ge åtkomst till FD %d, för %s"
 #: nscd/connections.c:904
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
-msgstr "Kan inte hantera äldre förfrågansversion %d, nuvarande version är %d"
+msgstr "kan inte hantera äldre förfrågansversion %d, nuvarande version är %d"
 
 #: nscd/connections.c:954 nscd/connections.c:1007
 #, c-format
@@ -3851,7 +3851,7 @@ msgstr "Invalidera den angivna cachen"
 
 #: nscd/nscd.c:105
 msgid "TABLE,yes"
-msgstr "TABELL,yes"
+msgstr "TABELL,ja"
 
 #: nscd/nscd.c:106
 msgid "Use separate cache for each user"
@@ -5073,7 +5073,7 @@ msgstr "Avbruten (SIGABRT)"
 
 #: sysdeps/generic/siglist.h:35 sysdeps/unix/siglist.c:34
 msgid "Floating point exception"
-msgstr "Aritmetiskt fel"
+msgstr "Flyttalsfel"
 
 #: sysdeps/generic/siglist.h:36 sysdeps/unix/siglist.c:35
 msgid "Killed"
@@ -5359,7 +5359,7 @@ msgstr "Kodfil upptagen"
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
 #: sysdeps/gnu/errlist.c:307
 msgid "File too large"
-msgstr "Fil för stor"
+msgstr "För stor fil"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
@@ -5514,7 +5514,7 @@ msgstr "Adressfamiljen stöds inte av protokollet"
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
 #: sysdeps/gnu/errlist.c:555
 msgid "Address already in use"
-msgstr "Adressen upptagen"
+msgstr "Adressen redan upptagen"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
@@ -5577,7 +5577,7 @@ msgstr "Transportslutpunkten är inte förbunden"
 #. TRANS without first specifying a destination for the data with @code{connect}.
 #: sysdeps/gnu/errlist.c:658
 msgid "Destination address required"
-msgstr "Destination krävs"
+msgstr "Destinationsadress krävs"
 
 #. TRANS The socket has already been shut down.
 #: sysdeps/gnu/errlist.c:667
@@ -5612,7 +5612,7 @@ msgstr "För många nivåer av symboliska länkar"
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
 #: sysdeps/gnu/errlist.c:717
 msgid "File name too long"
-msgstr "Filnamn för långt"
+msgstr "För långt filnamn"
 
 #. TRANS The remote host for a requested network connection is down.
 #: sysdeps/gnu/errlist.c:726
@@ -6147,7 +6147,7 @@ msgstr "%s: användning är %s [ --version ] [ -v ] [ -c [startår,}slutår ] zo
 #: timezone/zdump.c:301
 #, c-format
 msgid "%s: wild -c argument %s\n"
-msgstr "%s: flaggan -c har okänt argument %s\n"
+msgstr "%s: argument \"%s\" till flaggan -c har fel format\n"
 
 #: timezone/zdump.c:392
 msgid "Error writing to standard output"
@@ -6226,7 +6226,7 @@ msgstr "%s: Kan inte länka från %s till %s: %s\n"
 
 #: timezone/zic.c:774 timezone/zic.c:776
 msgid "same rule name in multiple files"
-msgstr "samma regel i flera filer"
+msgstr "samma regelnamn i flera filer"
 
 #: timezone/zic.c:817
 msgid "unruly zone"
@@ -6262,7 +6262,7 @@ msgstr "%s: \"Leap\"-rad i fil %s som inte är skottsekundsfil\n"
 #: timezone/zic.c:904 timezone/zic.c:1325 timezone/zic.c:1350
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panik: ogiltigt l_value %d\n"
+msgstr "%s: panik: Ogiltigt l_value %d\n"
 
 #: timezone/zic.c:912
 #, c-format
@@ -6292,7 +6292,7 @@ msgstr "namnlös regel"
 
 #: timezone/zic.c:991
 msgid "invalid saved time"
-msgstr "ogiltigt sparad tid"
+msgstr "ogiltig sparad tid"
 
 #: timezone/zic.c:1010
 msgid "wrong number of fields on Zone line"

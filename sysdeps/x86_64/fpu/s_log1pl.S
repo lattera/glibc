@@ -45,7 +45,7 @@ ENTRY(__log1pl)
 	fxam
 	fnstsw
 	fld	%st
-	andb	$1,%ah
+	testb	$1, %ah
 	jnz	3f		// in case x is NaN or ±Inf
 4:
 	fabs
@@ -62,7 +62,8 @@ ENTRY(__log1pl)
 2:	fyl2xp1
 	ret
 
-3:	jp	4b		// in case x is ±Inf
+3:	testb	$4, %ah
+	jnz	4b		// in case x is ±Inf
 	fstp	%st(1)
 	fstp	%st(1)
 	ret
