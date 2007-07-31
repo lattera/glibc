@@ -1,3 +1,8 @@
+2007-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Use /sys
+	filesystem to determine which processors are online.
+
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate): Fix
