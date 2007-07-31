@@ -1,3 +1,8 @@
+2007-07-30  Roland McGrath  <roland@redhat.com>
+
+	* manual/libc.texinfo: Update copyrights, formatting magic, and
+	@dircategory.  From Karl Berry <karl@freefriends.org>.
+
 2007-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4860]
