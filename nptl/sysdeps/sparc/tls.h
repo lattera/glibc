@@ -27,6 +27,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <list.h>
+# include <kernel-features.h>
 
 /* Type for the dtv.  */
 typedef union dtv
@@ -54,6 +55,9 @@ typedef struct
   uintptr_t pointer_guard;
 #if __WORDSIZE != 64
   int gscope_flag;
+#endif
+#ifndef __ASSUME_PRIVATE_FUTEX
+  int private_futex;
 #endif
 } tcbhead_t;
 

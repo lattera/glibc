@@ -1,3 +1,7 @@
+2007-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/tls.h (tcbhead_t): Add private_futex field.
+
 2007-07-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-locale2.c (useless): Add return statement.
