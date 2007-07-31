@@ -32,7 +32,7 @@
 	* posix/getconf.c (vars): Add missing _SC_LEVEL4_CACHE_LINESIZE
 	entry.
 
-	[BZ 4858]
+	[BZ #4858]
 	* stdio-common/printf_fp.c (___printf_fp): Fix special case of
 	#.0g and value rounded to 1.0.
 	* stdio-common/tfformat.c (sprint_doubles): Add two new tests.
