@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996-2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,7 +21,9 @@
 #include <alloca.h>
 #include <assert.h>
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <mntent.h>
 #include <paths.h>
 #include <stdio.h>
@@ -32,6 +34,7 @@
 #include <sys/sysinfo.h>
 
 #include <atomic.h>
+#include <not-cancel.h>
 
 
 /* How we can determine the number of available processors depends on
@@ -71,6 +74,53 @@ __get_nprocs ()
   int result = 1;
 
   /* XXX Here will come a test for the new system call.  */
+
+  /* Try to use the sysfs filesystem.  It has actual information about
+     online processors.  */
+  DIR *dir = __opendir ("/sys/devices/system/cpu");
+  if (dir != NULL)
+    {
+      int dfd = dirfd (dir);
+      int count = 0;
+      struct dirent64 *d;
+
+      while ((d = __readdir64 (dir)) != NULL)
+	/* NB: the sysfs has d_type support.  */
+	if (d->d_type == DT_DIR && strncmp (d->d_name, "cpu", 3) == 0)
+	  {
+	    char *endp;
+	    unsigned long int nr = strtoul (d->d_name + 3, &endp, 10);
+	    if (nr != ULONG_MAX && endp != d->d_name + 3 && *endp == '\0')
+	      {
+		/* Try reading the online file.  */
+		char oname[_D_ALLOC_NAMLEN (d) + sizeof "/online"];
+		strcpy (stpcpy (oname, d->d_name), "/online");
+
+		/* We unconditionally use openat since the "online"
+		   file became readable only after the openat system
+		   call was introduced.  */
+		char buf[1];
+		int fd = openat_not_cancel_3 (dfd, oname, O_RDONLY);
+
+		/* If we cannot read the online file we have to assume
+		   the CPU is online.  */
+		if (fd < 0)
+		  ++count;
+		else
+		  {
+		    if (read_not_cancel (fd, buf, sizeof (buf)) < 0
+			|| buf[0] == '1')
+		      ++count;
+
+		    close_not_cancel_no_status (fd);
+		  }
+	      }
+	  }
+
+      __closedir (dir);
+
+      return count;
+    }
 
   /* The /proc/stat format is more uniform, use it by default.  */
   FILE *fp = fopen ("/proc/stat", "rc");
