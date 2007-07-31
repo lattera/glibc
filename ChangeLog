@@ -1,5 +1,8 @@
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate): Fix
+	syscall arguments count.
+
 	* stdio-common/tfformat.c (sprint_doubles): Add 12 new tests.
 
 2007-07-30  Roland McGrath  <roland@redhat.com>
