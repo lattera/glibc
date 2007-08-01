@@ -1,3 +1,9 @@
+2007-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Using
+	/proc is faster and sufficient.  /sys is still needed for
+	__get_nprocs_conf.
+
 2007-08-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list (fallocate): Add fallocate

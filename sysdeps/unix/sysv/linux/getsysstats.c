@@ -68,9 +68,11 @@
 #endif
 
 
-static int
-count_processors_in_proc (void)
+int
+__get_nprocs ()
 {
+  /* XXX Here will come a test for the new system call.  */
+
   char buffer[8192];
   int result = 1;
 
@@ -101,62 +103,6 @@ count_processors_in_proc (void)
     }
 
   return result;
-}
-
-
-int
-__get_nprocs ()
-{
-  /* XXX Here will come a test for the new system call.  */
-
-  /* Try to use the sysfs filesystem.  It has actual information about
-     online processors.  */
-  DIR *dir = __opendir ("/sys/devices/system/cpu");
-  if (dir != NULL)
-    {
-      int dfd = dirfd (dir);
-      int count = 0;
-      struct dirent64 *d;
-
-      while ((d = __readdir64 (dir)) != NULL)
-	/* NB: the sysfs has d_type support.  */
-	if (d->d_type == DT_DIR && strncmp (d->d_name, "cpu", 3) == 0)
-	  {
-	    char *endp;
-	    unsigned long int nr = strtoul (d->d_name + 3, &endp, 10);
-	    if (nr != ULONG_MAX && endp != d->d_name + 3 && *endp == '\0')
-	      {
-		/* Try reading the online file.  */
-		char oname[_D_ALLOC_NAMLEN (d) + sizeof "/online"];
-		strcpy (stpcpy (oname, d->d_name), "/online");
-
-		/* We unconditionally use openat since the "online"
-		   file became readable only after the openat system
-		   call was introduced.  */
-		char buf[1];
-		int fd = openat_not_cancel_3 (dfd, oname, O_RDONLY);
-
-		/* If we cannot read the online file we have to assume
-		   the CPU is online.  */
-		if (fd < 0)
-		  ++count;
-		else
-		  {
-		    if (read_not_cancel (fd, buf, sizeof (buf)) < 0
-			|| buf[0] == '1')
-		      ++count;
-
-		    close_not_cancel_no_status (fd);
-		  }
-	      }
-	  }
-
-      __closedir (dir);
-
-      return count;
-    }
-
-  return count_processors_in_proc ();
 }
 weak_alias (__get_nprocs, get_nprocs)
 
@@ -206,7 +152,7 @@ __get_nprocs_conf ()
       fclose (fp);
     }
 #else
-  result = count_processors_in_proc ();
+  result = __get_nprocs ();
 #endif
 
   return result;
