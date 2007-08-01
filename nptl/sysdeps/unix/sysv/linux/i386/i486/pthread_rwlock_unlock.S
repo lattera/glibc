@@ -117,7 +117,7 @@ __pthread_rwlock_unlock:
 #if MUTEX == 0
 	movl	%edi, %ecx
 #else
-	leal	MUTEX(%edx), %ecx
+	leal	MUTEX(%edi), %ecx
 #endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
@@ -126,7 +126,7 @@ __pthread_rwlock_unlock:
 #if MUTEX == 0
 	movl	%edi, %eax
 #else
-	leal	MUTEX(%edx), %eax
+	leal	MUTEX(%edi), %eax
 #endif
 	call	__lll_mutex_unlock_wake
 	jmp	4b
@@ -135,7 +135,7 @@ __pthread_rwlock_unlock:
 #if MUTEX == 0
 	movl	%edi, %eax
 #else
-	leal	MUTEX(%edx), %eax
+	leal	MUTEX(%edi), %eax
 #endif
 	call	__lll_mutex_unlock_wake
 	jmp	8b

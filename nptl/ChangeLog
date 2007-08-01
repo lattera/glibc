@@ -1,3 +1,13 @@
+2007-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Copy futex retval to %esi rather than
+	%ecx.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S
+	(pthread_rwlock_timedwrlock): Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S
+	(__pthread_rwlock_unlock): Fix MUTEX != 0 args to __lll_*.
+
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/tls.h (tcbhead_t): Add private_futex field.

@@ -124,7 +124,7 @@ pthread_rwlock_timedrdlock:
 	leal	READERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	movl	%eax, %ecx
+	movl	%eax, %esi
 17:
 
 	/* Reget the lock.  */
@@ -139,7 +139,7 @@ pthread_rwlock_timedrdlock:
 	jnz	12f
 
 13:	subl	$1, READERS_QUEUED(%ebp)
-	cmpl	$-ETIMEDOUT, %ecx
+	cmpl	$-ETIMEDOUT, %esi
 	jne	2b
 
 18:	movl	$ETIMEDOUT, %ecx
@@ -217,7 +217,7 @@ pthread_rwlock_timedrdlock:
 	call	__lll_mutex_lock_wait
 	jmp	13b
 
-16:	movl	$-ETIMEDOUT, %ecx
+16:	movl	$-ETIMEDOUT, %esi
 	jmp	17b
 
 19:	movl	$EINVAL, %ecx
