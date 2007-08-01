@@ -1,7 +1,8 @@
 2007-07-31  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Use /sys
-	filesystem to determine which processors are online.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs_conf): Count
+	total processors using sysfs.
+	(__get_nprocs): Use sysfs to determine which processors are online.
 
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 

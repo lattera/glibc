@@ -67,12 +67,46 @@
   while (0)
 #endif
 
-int
-__get_nprocs ()
+
+static int
+count_processors_in_proc (void)
 {
   char buffer[8192];
   int result = 1;
 
+  /* The /proc/stat format is more uniform, use it by default.  */
+  FILE *fp = fopen ("/proc/stat", "rc");
+  if (fp != NULL)
+    {
+      /* No threads use this stream.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      result = 0;
+      while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
+	if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
+	  ++result;
+
+      fclose (fp);
+    }
+  else
+    {
+      fp = fopen ("/proc/cpuinfo", "rc");
+      if (fp != NULL)
+	{
+	  /* No threads use this stream.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+	  GET_NPROCS_PARSER (fp, buffer, result);
+	  fclose (fp);
+	}
+    }
+
+  return result;
+}
+
+
+int
+__get_nprocs ()
+{
   /* XXX Here will come a test for the new system call.  */
 
   /* Try to use the sysfs filesystem.  It has actual information about
@@ -122,66 +156,61 @@ __get_nprocs ()
       return count;
     }
 
-  /* The /proc/stat format is more uniform, use it by default.  */
-  FILE *fp = fopen ("/proc/stat", "rc");
-  if (fp != NULL)
-    {
-      /* No threads use this stream.  */
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-      result = 0;
-      while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
-	if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
-	  ++result;
-
-      fclose (fp);
-    }
-  else
-    {
-      fp = fopen ("/proc/cpuinfo", "rc");
-      if (fp != NULL)
-	{
-	  /* No threads use this stream.  */
-	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-	  GET_NPROCS_PARSER (fp, buffer, result);
-	  fclose (fp);
-	}
-    }
-
-  return result;
+  return count_processors_in_proc ();
 }
 weak_alias (__get_nprocs, get_nprocs)
 
 
-#ifdef GET_NPROCS_CONF_PARSER
 /* On some architectures it is possible to distinguish between configured
    and active cpus.  */
 int
 __get_nprocs_conf ()
 {
-  char buffer[8192];
-  int result = 1;
-
   /* XXX Here will come a test for the new system call.  */
 
+  /* Try to use the sysfs filesystem.  It has actual information about
+     online processors.  */
+  DIR *dir = __opendir ("/sys/devices/system/cpu");
+  if (dir != NULL)
+    {
+      int count = 0;
+      struct dirent64 *d;
+
+      while ((d = __readdir64 (dir)) != NULL)
+	/* NB: the sysfs has d_type support.  */
+	if (d->d_type == DT_DIR && strncmp (d->d_name, "cpu", 3) == 0)
+	  {
+	    char *endp;
+	    unsigned long int nr = strtoul (d->d_name + 3, &endp, 10);
+	    if (nr != ULONG_MAX && endp != d->d_name + 3 && *endp == '\0')
+	      ++count;
+	  }
+
+      __closedir (dir);
+
+      return count;
+    }
+
+  int result = 1;
+
+#ifdef GET_NPROCS_CONF_PARSER
   /* If we haven't found an appropriate entry return 1.  */
   FILE *fp = fopen ("/proc/cpuinfo", "rc");
   if (fp != NULL)
     {
+      char buffer[8192];
+
       /* No threads use this stream.  */
       __fsetlocking (fp, FSETLOCKING_BYCALLER);
       GET_NPROCS_CONF_PARSER (fp, buffer, result);
       fclose (fp);
     }
+#else
+  result = count_processors_in_proc ();
+#endif
 
   return result;
 }
-#else
-/* As far as I know Linux has no separate numbers for configured and
-   available processors.  So make the `get_nprocs_conf' function an
-   alias.  */
-strong_alias (__get_nprocs, __get_nprocs_conf)
-#endif
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 /* General function to get information about memory status from proc
