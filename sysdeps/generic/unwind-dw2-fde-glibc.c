@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    This file is part of the GNU C Library.
@@ -235,10 +235,11 @@ _Unwind_IteratePhdrCallback (struct dl_phdr_info *info, size_t size, void *ptr)
   if (data->ret != NULL)
     {
       unsigned int encoding = get_fde_encoding (data->ret);
+      _Unwind_Ptr func;
       read_encoded_value_with_base (encoding,
 				    base_from_cb_data (encoding, data),
-				    data->ret->pc_begin,
-				    (_Unwind_Ptr *)&data->func);
+				    data->ret->pc_begin, &func);
+      data->func = (void *) func;
     }
   return 1;
 }

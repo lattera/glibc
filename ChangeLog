@@ -1,3 +1,20 @@
+2007-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-strtod2.c (do_test): Use %tu in fmt string for ptrdiff_t
+	value.
+
+	* stdio-common/tst-fmemopen2.c (do_test): Avoid fmt string warning
+	if off_t is different rank from size_t.
+
+	* sysdeps/generic/unwind-dw2.c (extract_cie_info, execute_cfa_program,
+	uw_frame_state_for): Avoid type punning warnings.
+	* sysdeps/generic/unwind-dw2-fde-glibc.c
+	(_Unwind_IteratePhdrCallback): Likewise.
+	* sysdeps/generic/unwind-dw2-fde.c (_Unwind_Find_FDE): Likewise.
+	(binary_search_single_encoding_fdes, binary_search_mixed_encoding_fdes,
+	get_cie_encoding, linear_search_fdes): Don't mix char and unsigned char
+	pointers.
+
 2007-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs_conf): Count

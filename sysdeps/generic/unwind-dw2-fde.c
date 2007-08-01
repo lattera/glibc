@@ -1,5 +1,5 @@
 /* Subroutines needed for unwinding stack frames for exception handling.  */
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006, 2007
    Free Software Foundation, Inc.
    Contributed by Jason Merrill <jason@cygnus.com>.
 
@@ -301,7 +301,8 @@ get_cie_encoding (struct dwarf_cie *cie)
   if (aug[0] != 'z')
     return DW_EH_PE_absptr;
 
-  p = aug + strlen (aug) + 1;		/* Skip the augmentation string.  */
+  /* Skip the augmentation string.  */
+  p = aug + strlen ((const char *) aug) + 1;
   p = read_uleb128 (p, &utmp);		/* Skip code alignment.  */
   p = read_sleb128 (p, &stmp);		/* Skip data alignment.  */
   p++;					/* Skip return address column.  */
@@ -838,7 +839,7 @@ linear_search_fdes (struct object *ob, fde *this_fde, void *pc)
       else
 	{
 	  _Unwind_Ptr mask;
-	  const char *p;
+	  const unsigned char *p;
 
 	  p = read_encoded_value_with_base (encoding, base,
 					    this_fde->pc_begin, &pc_begin);
@@ -908,7 +909,7 @@ binary_search_single_encoding_fdes (struct object *ob, void *pc)
       size_t i = (lo + hi) / 2;
       fde *f = vec->array[i];
       _Unwind_Ptr pc_begin, pc_range;
-      const char *p;
+      const unsigned char *p;
 
       p = read_encoded_value_with_base (encoding, base, f->pc_begin,
 					&pc_begin);
@@ -936,7 +937,7 @@ binary_search_mixed_encoding_fdes (struct object *ob, void *pc)
       size_t i = (lo + hi) / 2;
       fde *f = vec->array[i];
       _Unwind_Ptr pc_begin, pc_range;
-      const char *p;
+      const unsigned char *p;
       int encoding;
 
       encoding = get_fde_encoding (f);
@@ -1046,6 +1047,7 @@ _Unwind_Find_FDE (void *pc, struct dwarf_eh_bases *bases)
   if (f)
     {
       int encoding;
+      _Unwind_Ptr func;
 
       bases->tbase = ob->tbase;
       bases->dbase = ob->dbase;
@@ -1054,7 +1056,8 @@ _Unwind_Find_FDE (void *pc, struct dwarf_eh_bases *bases)
       if (ob->s.b.mixed_encoding)
 	encoding = get_fde_encoding (f);
       read_encoded_value_with_base (encoding, base_from_object (encoding, ob),
-				    f->pc_begin, (_Unwind_Ptr *)&bases->func);
+				    f->pc_begin, &func);
+      bases->func = (void *) func;
     }
 
   return f;

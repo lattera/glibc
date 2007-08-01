@@ -1,3 +1,7 @@
+2007-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-strptime.c (do_test): Use %tu in fmt string for ptrdiff_t value.
+
 2007-07-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/ar_SA (d_t_fmt, d_fmt, t_fmt, t_fmt_ampm): Replace %.1d

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -130,8 +130,8 @@ do_test (void)
       result = 1;
     }
 
-  ts.tv_nsec = 0x100001000LL;
-  if (ts.tv_nsec != 0x100001000LL)
+  ts.tv_nsec = (__typeof (ts.tv_nsec)) 0x100001000LL;
+  if ((__typeof (ts.tv_nsec)) 0x100001000LL != 0x100001000LL)
     ts.tv_nsec = 2000000000;
 
   e = pthread_rwlock_timedrdlock (&r, &ts);

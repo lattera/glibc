@@ -15,7 +15,7 @@ do_test (void)
   static const char s[] = "\
 \x54\x68\xb8\x6e\x67\x20\x6d\xad\xea\x69\x20\x6d\xe9\x74";
   char *r = strptime (s, "%b", &tm);
-  printf ("r = %p, r-s = %ju, tm.tm_mon = %d\n", r, r - s, tm.tm_mon);
+  printf ("r = %p, r-s = %tu, tm.tm_mon = %d\n", r, r - s, tm.tm_mon);
   return r == NULL || r - s != 14 || tm.tm_mon != 10;
 }
 

@@ -32,7 +32,7 @@ do_test (void)
 	}
       if (ep != tests[i].str + tests[i].offset)
 	{
-	  printf ("test %zu strtod parsed %ju characters, expected %zu\n",
+	  printf ("test %zu strtod parsed %tu characters, expected %zu\n",
 		  i, ep - tests[i].str, tests[i].offset);
 	  status = 1;
 	}

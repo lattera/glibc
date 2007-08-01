@@ -1,5 +1,7 @@
 2007-07-30  Jakub Jelinek  <jakub@redhat.com>
 
+	* tst-rwlock14.c (do_test): Avoid warnings on 32-bit arches.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S
 	(pthread_rwlock_timedrdlock): Copy futex retval to %esi rather than
 	%ecx.
