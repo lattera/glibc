@@ -1,3 +1,10 @@
+2007-08-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (fallocate): Add fallocate
+	syscall as __fallocate64.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate64.c: New file.
+
 2007-07-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/tst-strtod2.c (do_test): Use %tu in fmt string for ptrdiff_t
