@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,31 +19,36 @@
 
 #include <sysdep.h>
 #include <pthread-errnos.h>
+#include <lowlevellock.h>
 #include <lowlevelrobustlock.h>
+#include <kernel-features.h>
 
 	.text
 
-#ifndef LOCK
-# ifdef UP
-#  define LOCK
-# else
-#  define LOCK lock
-# endif
-#endif
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 #define FUTEX_WAITERS		0x80000000
 #define FUTEX_OWNER_DIED	0x40000000
 
+#ifdef __ASSUME_PRIVATE_FUTEX
+# define LOAD_FUTEX_WAIT(reg) \
+	xorl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
+#else
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg) \
+	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
+	andl	%gs:PRIVATE_FUTEX, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg) \
+	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
+	andl	%gs:PRIVATE_FUTEX, reg ; \
+	orl	$FUTEX_WAIT, reg
+# endif
+#endif
 
-	.globl	__lll_robust_mutex_lock_wait
-	.type	__lll_robust_mutex_lock_wait,@function
-	.hidden	__lll_robust_mutex_lock_wait
+	.globl	__lll_robust_lock_wait
+	.type	__lll_robust_lock_wait,@function
+	.hidden	__lll_robust_lock_wait
 	.align	16
-__lll_robust_mutex_lock_wait:
+__lll_robust_lock_wait:
 	cfi_startproc
 	pushl	%edx
 	cfi_adjust_cfa_offset(4)
@@ -55,9 +60,9 @@ __lll_robust_mutex_lock_wait:
 	cfi_offset(%ebx, -12)
 	cfi_offset(%esi, -16)
 
-	movl	%ecx, %ebx
+	movl	%edx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
-	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	LOAD_FUTEX_WAIT (%ecx)
 
 4:	movl	%eax, %edx
 	orl	$FUTEX_WAITERS, %edx
@@ -98,14 +103,14 @@ __lll_robust_mutex_lock_wait:
 	cfi_restore(%edx)
 	ret
 	cfi_endproc
-	.size	__lll_robust_mutex_lock_wait,.-__lll_robust_mutex_lock_wait
+	.size	__lll_robust_lock_wait,.-__lll_robust_lock_wait
 
 
-	.globl	__lll_robust_mutex_timedlock_wait
-	.type	__lll_robust_mutex_timedlock_wait,@function
-	.hidden	__lll_robust_mutex_timedlock_wait
+	.globl	__lll_robust_timedlock_wait
+	.type	__lll_robust_timedlock_wait,@function
+	.hidden	__lll_robust_timedlock_wait
 	.align	16
-__lll_robust_mutex_timedlock_wait:
+__lll_robust_timedlock_wait:
 	cfi_startproc
 	/* Check for a valid timeout value.  */
 	cmpl	$1000000000, 4(%edx)
@@ -136,7 +141,7 @@ __lll_robust_mutex_timedlock_wait:
 	/* Get current time.  */
 	movl	%esp, %ebx
 	xorl	%ecx, %ecx
-	movl	$SYS_gettimeofday, %eax
+	movl	$__NR_gettimeofday, %eax
 	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
@@ -177,7 +182,8 @@ __lll_robust_mutex_timedlock_wait:
 2:
 	/* Futex call.  */
 	movl	%esp, %esi
-	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	movl	20(%esp), %ecx
+	LOAD_FUTEX_WAIT (%ecx)
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	movl	%eax, %ecx
@@ -224,4 +230,4 @@ __lll_robust_mutex_timedlock_wait:
 8:	movl	$ETIMEDOUT, %eax
 	jmp	6b
 	cfi_endproc
-	.size	__lll_robust_mutex_timedlock_wait,.-__lll_robust_mutex_timedlock_wait
+	.size	__lll_robust_timedlock_wait,.-__lll_robust_timedlock_wait

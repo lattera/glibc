@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,38 +17,39 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
-
-
-static int once_lock = LLL_LOCK_INITIALIZER;
-
-
 int
-__pthread_once (once_control, init_routine)
-     pthread_once_t *once_control;
-     void (*init_routine) (void);
+pthread_barrier_init (barrier, attr, count)
+     pthread_barrier_t *barrier;
+     const pthread_barrierattr_t *attr;
+     unsigned int count;
 {
-  /* XXX Depending on whether the LOCK_IN_ONCE_T is defined use a
-     global lock variable or one which is part of the pthread_once_t
-     object.  */
-  if (*once_control == PTHREAD_ONCE_INIT)
+  union sparc_pthread_barrier *ibarrier;
+
+  if (__builtin_expect (count == 0, 0))
+    return EINVAL;
+
+  struct pthread_barrierattr *iattr = (struct pthread_barrierattr *) attr;
+  if (iattr != NULL)
     {
-      lll_lock (once_lock, LLL_PRIVATE);
-
-      /* XXX This implementation is not complete.  It doesn't take
-	 cancelation and fork into account.  */
-      if (*once_control == PTHREAD_ONCE_INIT)
-	{
-	  init_routine ();
-
-	  *once_control = !PTHREAD_ONCE_INIT;
-	}
-
-      lll_unlock (once_lock, LLL_PRIVATE);
+      if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
+	  && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
+	/* Invalid attribute.  */
+	return EINVAL;
     }
+
+  ibarrier = (union sparc_pthread_barrier *) barrier;
+
+  /* Initialize the individual fields.  */
+  ibarrier->b.lock = LLL_LOCK_INITIALIZER;
+  ibarrier->b.left = count;
+  ibarrier->b.init_count = count;
+  ibarrier->b.curr_event = 0;
+  ibarrier->s.left_lock = 0;
+  ibarrier->s.pshared = (iattr && iattr->pshared == PTHREAD_PROCESS_SHARED);
 
   return 0;
 }
-strong_alias (__pthread_once, pthread_once)

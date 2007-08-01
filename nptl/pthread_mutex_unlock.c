@@ -47,7 +47,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  */
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
-	  || ! lll_mutex_islocked (mutex->__data.__lock))
+	  || ! lll_islocked (mutex->__data.__lock))
 	return EPERM;
       /* FALLTHROUGH */
 
@@ -61,7 +61,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	--mutex->__data.__nusers;
 
       /* Unlock.  */
-      lll_mutex_unlock (mutex->__data.__lock);
+      lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
       break;
 
     case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
@@ -92,7 +92,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
     case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
       if ((mutex->__data.__lock & FUTEX_TID_MASK)
 	  != THREAD_GETMEM (THREAD_SELF, tid)
-	  || ! lll_mutex_islocked (mutex->__data.__lock))
+	  || ! lll_islocked (mutex->__data.__lock))
 	return EPERM;
 
       /* If the previous owner died and the caller did not succeed in
@@ -115,7 +115,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	--mutex->__data.__nusers;
 
       /* Unlock.  */
-      lll_robust_mutex_unlock (mutex->__data.__lock);
+      lll_robust_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
 
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
@@ -161,7 +161,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
     case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
       if ((mutex->__data.__lock & FUTEX_TID_MASK)
 	  != THREAD_GETMEM (THREAD_SELF, tid)
-	  || ! lll_mutex_islocked (mutex->__data.__lock))
+	  || ! lll_islocked (mutex->__data.__lock))
 	return EPERM;
 
       /* If the previous owner died and the caller did not succeed in

@@ -183,7 +183,7 @@ __libc_fork (void)
 	}
 
       /* Initialize the fork lock.  */
-      __fork_lock = (lll_lock_t) LLL_LOCK_INITIALIZER;
+      __fork_lock = LLL_LOCK_INITIALIZER;
     }
   else
     {

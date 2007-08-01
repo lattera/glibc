@@ -19,18 +19,9 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
-#define SYS_futex		202
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 
 /* For the calculation see asm/vsyscall.h.  */
 #define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
@@ -301,7 +292,9 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires wakeup.  */
@@ -309,7 +302,9 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	4b
 
 	/* Locking in loop failed.  */
@@ -317,7 +312,9 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
@@ -328,7 +325,9 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
@@ -345,7 +344,9 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 
 17:	movq	(%rsp), %rax
 	jmp	18b

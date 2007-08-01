@@ -57,8 +57,7 @@ __new_sem_wait (sem_t *sem)
       int oldtype = __pthread_enable_asynccancel ();
 
       err = lll_futex_wait (&isem->value, 0,
-			    // XYZ check mutex flag
-			    LLL_SHARED);
+			    isem->private ^ FUTEX_PRIVATE_FLAG);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);

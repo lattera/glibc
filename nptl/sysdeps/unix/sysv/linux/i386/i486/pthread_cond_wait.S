@@ -19,18 +19,9 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 
 
 	.text
@@ -202,11 +193,13 @@ __pthread_cond_wait:
 1:
 .LSbl1:
 #if cond_lock == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	cond_lock(%ebx), %ecx
+	leal	cond_lock(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
@@ -217,17 +210,21 @@ __pthread_cond_wait:
 #else
 	leal	cond_lock(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	4b
 
 	/* Locking in loop failed.  */
 5:
 #if cond_lock == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	cond_lock(%ebx), %ecx
+	leal	cond_lock(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_lock_wait
 	jmp	6b
 
 	/* Unlock after loop requires wakeup.  */
@@ -237,7 +234,9 @@ __pthread_cond_wait:
 #else
 	leal	cond_lock(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
@@ -257,7 +256,9 @@ __pthread_cond_wait:
 #else
 	leal	cond_lock(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 
 	movl	%esi, %eax
 	jmp	14b
@@ -287,11 +288,13 @@ __condvar_w_cleanup:
 	jz	1f
 
 #if cond_lock == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	cond_lock(%ebx), %ecx
+	leal	cond_lock(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_lock_wait
 
 1:	movl	broadcast_seq(%ebx), %eax
 	cmpl	12(%esp), %eax
@@ -348,7 +351,9 @@ __condvar_w_cleanup:
 #else
 	leal	cond_lock(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
 2:	testl	%edi, %edi

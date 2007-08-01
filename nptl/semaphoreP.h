@@ -48,7 +48,7 @@ extern pthread_once_t __namedsem_once attribute_hidden;
 extern void *__sem_mappings attribute_hidden;
 
 /* Lock to protect the search tree.  */
-extern lll_lock_t __sem_mappings_lock attribute_hidden;
+extern int __sem_mappings_lock attribute_hidden;
 
 
 /* Initializer for mountpoint.  */

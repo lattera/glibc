@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,7 +33,7 @@ __pthread_cond_broadcast_2_0 (cond)
     {
       pthread_cond_t *newcond;
 
-#if LLL_MUTEX_LOCK_INITIALIZER == 0
+#if LLL_LOCK_INITIALIZER == 0
       newcond = (pthread_cond_t *) calloc (sizeof (pthread_cond_t), 1);
       if (newcond == NULL)
 	return ENOMEM;

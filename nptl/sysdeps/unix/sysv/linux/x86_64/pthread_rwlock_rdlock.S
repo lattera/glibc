@@ -18,21 +18,10 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
 #include <kernel-features.h>
-
-
-#define SYS_futex		202
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_PRIVATE_FLAG	128
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
 
 
 	.text
@@ -123,11 +112,11 @@ __pthread_rwlock_rdlock:
 	movq	%rdx, %rax
 	retq
 
-1:
+1:	movl	PSHARED(%rdi), %esi
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	callq	__lll_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -139,11 +128,11 @@ __pthread_rwlock_rdlock:
 	movl	$EDEADLK, %edx
 	jmp	9b
 
-6:
+6:	movl	PSHARED(%rdi), %esi
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	callq	__lll_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -159,21 +148,21 @@ __pthread_rwlock_rdlock:
 	movl	$EAGAIN, %edx
 	jmp	9b
 
-10:
+10:	movl	PSHARED(%rdi), %esi
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	callq	__lll_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
 	jmp	11b
 
-12:
+12:	movl	PSHARED(%rdi), %esi
 #if MUTEX == 0
 	addq	$MUTEX, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	callq	__lll_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif

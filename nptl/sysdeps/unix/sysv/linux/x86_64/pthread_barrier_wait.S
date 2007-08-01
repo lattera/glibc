@@ -18,17 +18,8 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelbarrier.h>
-
-#define SYS_futex	202
-#define FUTEX_WAIT	0
-#define FUTEX_WAKE	1
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
 
 
 	.text
@@ -142,21 +133,29 @@ pthread_barrier_wait:
 
 	retq
 
-1:	addq	$MUTEX, %rdi
-	callq	__lll_mutex_lock_wait
+1:	movl	PRIVATE(%rdi), %esi
+	addq	$MUTEX, %rdi
+	xorl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 	subq	$MUTEX, %rdi
 	jmp	2b
 
-4:	addq	$MUTEX, %rdi
-	callq	__lll_mutex_unlock_wake
+4:	movl	PRIVATE(%rdi), %esi
+	addq	$MUTEX, %rdi
+	xorl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	5b
 
-6:	addq	$MUTEX, %rdi
-	callq	__lll_mutex_unlock_wake
+6:	movl	PRIVATE(%rdi), %esi
+	addq	$MUTEX, %rdi
+	xorl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	subq	$MUTEX, %rdi
 	jmp	7b
 
-9:	addq	$MUTEX, %rdi
-	callq	__lll_mutex_unlock_wake
+9:	movl	PRIVATE(%rdi), %esi
+	addq	$MUTEX, %rdi
+	xorl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	10b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

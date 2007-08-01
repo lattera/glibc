@@ -28,7 +28,7 @@ __pthread_cond_init (cond, cond_attr)
 {
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
-  cond->__data.__lock = LLL_MUTEX_LOCK_INITIALIZER;
+  cond->__data.__lock = LLL_LOCK_INITIALIZER;
   cond->__data.__futex = 0;
   cond->__data.__nwaiters = (icond_attr != NULL
 			     && ((icond_attr->value

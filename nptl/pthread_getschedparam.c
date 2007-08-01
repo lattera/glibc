@@ -38,7 +38,7 @@ __pthread_getschedparam (threadid, policy, param)
 
   int result = 0;
 
-  lll_lock (pd->lock);
+  lll_lock (pd->lock, LLL_PRIVATE);
 
   /* The library is responsible for maintaining the values at all
      times.  If the user uses a interface other than
@@ -68,7 +68,7 @@ __pthread_getschedparam (threadid, policy, param)
       memcpy (param, &pd->schedparam, sizeof (struct sched_param));
     }
 
-  lll_unlock (pd->lock);
+  lll_unlock (pd->lock, LLL_PRIVATE);
 
   return result;
 }

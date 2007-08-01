@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,24 +19,11 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_REQUEUE		3
-#define FUTEX_CMP_REQUEUE	4
-
-#define EINVAL			22
-
+#include <pthread-errnos.h>
 
 	.text
 
@@ -141,21 +128,27 @@ __pthread_cond_broadcast:
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	cond_lock(%ebx), %ecx
+	leal	cond_lock(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
 5:	leal	cond_lock-cond_futex(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	6b
 
 	/* Unlock in loop requires waekup.  */
 7:	leal	cond_lock-cond_futex(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	8b
 
 9:	/* The futex requeue functionality is not available.  */

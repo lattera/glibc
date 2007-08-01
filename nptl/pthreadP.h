@@ -151,7 +151,7 @@ hidden_proto (__stack_user)
 
 /* Attribute handling.  */
 extern struct pthread_attr *__attr_list attribute_hidden;
-extern lll_lock_t __attr_list_lock attribute_hidden;
+extern int __attr_list_lock attribute_hidden;
 
 /* First available RT signal.  */
 extern int __current_sigrtmin attribute_hidden;

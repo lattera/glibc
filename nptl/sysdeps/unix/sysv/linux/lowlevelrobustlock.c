@@ -25,7 +25,7 @@
 
 
 int
-__lll_robust_lock_wait (int *futex)
+__lll_robust_lock_wait (int *futex, int private)
 {
   int oldval = *futex;
   int tid = THREAD_GETMEM (THREAD_SELF, tid);
@@ -44,9 +44,7 @@ __lll_robust_lock_wait (int *futex)
 	  && atomic_compare_and_exchange_bool_acq (futex, newval, oldval))
 	continue;
 
-      lll_futex_wait (futex, newval,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wait (futex, newval, private);
 
     try:
       ;
@@ -59,7 +57,8 @@ __lll_robust_lock_wait (int *futex)
 
 
 int
-__lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
+__lll_robust_timedlock_wait (int *futex, const struct timespec *abstime,
+			     int private)
 {
   /* Reject invalid timeouts.  */
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
@@ -102,9 +101,7 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
 	  && atomic_compare_and_exchange_bool_acq (futex, newval, oldval))
 	continue;
 
-      lll_futex_timed_wait (futex, newval, &rt,
-			    // XYZ check mutex flag
-			    LLL_SHARED);
+      lll_futex_timed_wait (futex, newval, &rt, private);
 
     try:
       ;

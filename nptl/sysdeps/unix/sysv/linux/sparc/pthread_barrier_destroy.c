@@ -17,38 +17,29 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
-
-
-static int once_lock = LLL_LOCK_INITIALIZER;
-
-
 int
-__pthread_once (once_control, init_routine)
-     pthread_once_t *once_control;
-     void (*init_routine) (void);
+pthread_barrier_destroy (barrier)
+     pthread_barrier_t *barrier;
 {
-  /* XXX Depending on whether the LOCK_IN_ONCE_T is defined use a
-     global lock variable or one which is part of the pthread_once_t
-     object.  */
-  if (*once_control == PTHREAD_ONCE_INIT)
-    {
-      lll_lock (once_lock, LLL_PRIVATE);
+  union sparc_pthread_barrier *ibarrier;
+  int result = EBUSY;
 
-      /* XXX This implementation is not complete.  It doesn't take
-	 cancelation and fork into account.  */
-      if (*once_control == PTHREAD_ONCE_INIT)
-	{
-	  init_routine ();
+  ibarrier = (union sparc_pthread_barrier *) barrier;
 
-	  *once_control = !PTHREAD_ONCE_INIT;
-	}
+  int private = ibarrier->s.pshared ? LLL_SHARED : LLL_PRIVATE;
 
-      lll_unlock (once_lock, LLL_PRIVATE);
-    }
+  lll_lock (ibarrier->b.lock, private);
 
-  return 0;
+  if (__builtin_expect (ibarrier->b.left == ibarrier->b.init_count, 1))
+    /* The barrier is not used anymore.  */
+    result = 0;
+  else
+    /* Still used, return with an error.  */
+    lll_unlock (ibarrier->b.lock, private);
+
+  return result;
 }
-strong_alias (__pthread_once, pthread_once)

@@ -45,7 +45,7 @@ __condvar_cleanup (void *arg)
   unsigned int destroying;
 
   /* We are going to modify shared data.  */
-  lll_mutex_lock (cbuffer->cond->__data.__lock);
+  lll_lock (cbuffer->cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   if (cbuffer->bc_seq == cbuffer->cond->__data.__broadcast_seq)
     {
@@ -78,7 +78,7 @@ __condvar_cleanup (void *arg)
     }
 
   /* We are done.  */
-  lll_mutex_unlock (cbuffer->cond->__data.__lock);
+  lll_unlock (cbuffer->cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* Wake everybody to make sure no condvar signal gets lost.  */
   if (! destroying)
@@ -102,13 +102,13 @@ __pthread_cond_wait (cond, mutex)
   int err;
 
   /* Make sure we are along.  */
-  lll_mutex_lock (cond->__data.__lock);
+  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* Now we can release the mutex.  */
   err = __pthread_mutex_unlock_usercnt (mutex, 0);
   if (__builtin_expect (err, 0))
     {
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
       return err;
     }
 
@@ -144,7 +144,7 @@ __pthread_cond_wait (cond, mutex)
       unsigned int futex_val = cond->__data.__futex;
 
       /* Prepare to wait.  Release the condvar futex.  */
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
@@ -158,7 +158,7 @@ __pthread_cond_wait (cond, mutex)
       __pthread_disable_asynccancel (cbuffer.oldtype);
 
       /* We are going to look at shared data again, so get the lock.  */
-      lll_mutex_lock (cond->__data.__lock);
+      lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
       /* If a broadcast happened, we are done.  */
       if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
@@ -186,7 +186,7 @@ __pthread_cond_wait (cond, mutex)
 		    LLL_SHARED);
 
   /* We are done with the condvar.  */
-  lll_mutex_unlock (cond->__data.__lock);
+  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* The cancellation handling is back to normal, remove the handler.  */
   __pthread_cleanup_pop (&buffer, 0);

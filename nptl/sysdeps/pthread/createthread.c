@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -60,7 +60,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
     /* We Make sure the thread does not run far by forcing it to get a
        lock.  We lock it here too so that the new thread cannot continue
        until we tell it to.  */
-    lll_lock (pd->lock);
+    lll_lock (pd->lock, LLL_PRIVATE);
 
   /* One more thread.  We cannot have the thread do this itself, since it
      might exist but not have been scheduled yet by the time we've returned
@@ -223,7 +223,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	      __nptl_create_event ();
 
 	      /* And finally restart the new thread.  */
-	      lll_unlock (pd->lock);
+	      lll_unlock (pd->lock, LLL_PRIVATE);
 	    }
 
 	  return res;
@@ -250,7 +250,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
   if (res == 0 && stopped)
     /* And finally restart the new thread.  */
-    lll_unlock (pd->lock);
+    lll_unlock (pd->lock, LLL_PRIVATE);
 
   return res;
 }

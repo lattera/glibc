@@ -28,7 +28,7 @@ __pthread_rwlock_tryrdlock (rwlock)
 {
   int result = EBUSY;
 
-  lll_mutex_lock (rwlock->__data.__lock);
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   if (rwlock->__data.__writer == 0
       && (rwlock->__data.__nr_writers_queued == 0
@@ -43,7 +43,7 @@ __pthread_rwlock_tryrdlock (rwlock)
 	result = 0;
     }
 
-  lll_mutex_unlock (rwlock->__data.__lock);
+  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   return result;
 }

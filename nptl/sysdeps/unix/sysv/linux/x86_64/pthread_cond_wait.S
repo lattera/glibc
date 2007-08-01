@@ -19,18 +19,9 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
-#define SYS_futex		202
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 
 
 	.text
@@ -58,7 +49,9 @@ __condvar_cleanup:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
@@ -105,7 +98,9 @@ __condvar_cleanup:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
 2:	testq	%r12, %r12
@@ -307,7 +302,9 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires wakeup.  */
@@ -315,7 +312,9 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	4b
 
 	/* Locking in loop failed.  */
@@ -323,7 +322,9 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
@@ -334,7 +335,9 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
@@ -351,7 +354,9 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	/* XYZ */
+	movl	$LLL_SHARED, %esi
+	callq	__lll_unlock_wake
 
 13:	movq	%r10, %rax
 	jmp	14b

@@ -18,20 +18,9 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
-
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
 
 
 	.text
@@ -88,7 +77,7 @@ pthread_rwlock_timedrdlock:
 	/* Get current time.  */
 11:	movl	%esp, %ebx
 	xorl	%ecx, %ecx
-	movl	$SYS_gettimeofday, %eax
+	movl	$__NR_gettimeofday, %eax
 	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
@@ -142,11 +131,11 @@ pthread_rwlock_timedrdlock:
 	cmpl	$-ETIMEDOUT, %esi
 	jne	2b
 
-18:	movl	$ETIMEDOUT, %ecx
+18:	movl	$ETIMEDOUT, %edx
 	jmp	9f
 
 
-5:	xorl	%ecx, %ecx
+5:	xorl	%edx, %edx
 	addl	$1, NR_READERS(%ebp)
 	je	8f
 9:	LOCK
@@ -157,7 +146,7 @@ pthread_rwlock_timedrdlock:
 #endif
 	jne	6f
 
-7:	movl	%ecx, %eax
+7:	movl	%edx, %eax
 
 	addl	$8, %esp
 	popl	%ebp
@@ -168,16 +157,17 @@ pthread_rwlock_timedrdlock:
 
 1:
 #if MUTEX == 0
-	movl	%ebp, %ecx
+	movl	%ebp, %edx
 #else
-	leal	MUTEX(%ebp), %ecx
+	leal	MUTEX(%ebp), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	movl	PSHARED(%ebp), %ecx
+	call	__lll_lock_wait
 	jmp	2b
 
 14:	cmpl	%gs:TID, %eax
 	jne	3b
-	movl	$EDEADLK, %ecx
+	movl	$EDEADLK, %edx
 	jmp	9b
 
 6:
@@ -186,17 +176,18 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	movl	PSHARED(%ebp), %ecx
+	call	__lll_unlock_wake
 	jmp	7b
 
 	/* Overflow.  */
 8:	subl	$1, NR_READERS(%ebp)
-	movl	$EAGAIN, %ecx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 	/* Overflow.  */
 4:	subl	$1, READERS_QUEUED(%ebp)
-	movl	$EAGAIN, %ecx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 10:
@@ -205,21 +196,23 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	movl	PSHARED(%ebp), %ecx
+	call	__lll_unlock_wake
 	jmp	11b
 
 12:
 #if MUTEX == 0
-	movl	%ebp, %ecx
+	movl	%ebp, %edx
 #else
-	leal	MUTEX(%ebp), %ecx
+	leal	MUTEX(%ebp), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	movl	PSHARED(%ebp), %ecx
+	call	__lll_lock_wait
 	jmp	13b
 
 16:	movl	$-ETIMEDOUT, %esi
 	jmp	17b
 
-19:	movl	$EINVAL, %ecx
+19:	movl	$EINVAL, %edx
 	jmp	9b
 	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock

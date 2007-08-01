@@ -147,7 +147,7 @@ __sem_search (const void *a, const void *b)
 void *__sem_mappings attribute_hidden;
 
 /* Lock to protect the search tree.  */
-lll_lock_t __sem_mappings_lock attribute_hidden = LLL_LOCK_INITIALIZER;
+int __sem_mappings_lock attribute_hidden = LLL_LOCK_INITIALIZER;
 
 
 /* Search for existing mapping and if possible add the one provided.  */
@@ -161,7 +161,7 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
   if (__fxstat64 (_STAT_VER, fd, &st) == 0)
     {
       /* Get the lock.  */
-      lll_lock (__sem_mappings_lock);
+      lll_lock (__sem_mappings_lock, LLL_PRIVATE);
 
       /* Search for an existing mapping given the information we have.  */
       struct inuse_sem *fake;
@@ -210,7 +210,7 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
 	}
 
       /* Release the lock.  */
-      lll_unlock (__sem_mappings_lock);
+      lll_unlock (__sem_mappings_lock, LLL_PRIVATE);
     }
 
   if (result != existing && existing != SEM_FAILED && existing != MAP_FAILED)

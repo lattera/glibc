@@ -1,1 +1,1 @@
-#include "../../../../../../../pthread_barrier_wait.c"
+#include "../../pthread_barrier_wait.c"

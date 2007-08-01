@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -26,7 +26,7 @@ extern unsigned long int __fork_generation attribute_hidden;
 extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
 /* Lock to protect allocation and deallocation of fork handlers.  */
-extern lll_lock_t __fork_lock attribute_hidden;
+extern int __fork_lock attribute_hidden;
 
 /* Elements of the fork handler lists.  */
 struct fork_handler

@@ -33,7 +33,7 @@ __pthread_cond_broadcast (cond)
      pthread_cond_t *cond;
 {
   /* Make sure we are alone.  */
-  lll_mutex_lock (cond->__data.__lock);
+  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* Are there any waiters to be woken?  */
   if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
@@ -47,7 +47,7 @@ __pthread_cond_broadcast (cond)
       ++cond->__data.__broadcast_seq;
 
       /* We are done.  */
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
       /* Do not use requeue for pshared condvars.  */
       if (cond->__data.__mutex == (void *) ~0l)
@@ -79,7 +79,7 @@ __pthread_cond_broadcast (cond)
     }
 
   /* We are done.  */
-  lll_mutex_unlock (cond->__data.__lock);
+  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   return 0;
 }

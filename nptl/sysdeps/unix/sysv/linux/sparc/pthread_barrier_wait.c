@@ -70,25 +70,9 @@ pthread_barrier_wait (barrier)
   unsigned int init_count = ibarrier->b.init_count;
 
   /* If this was the last woken thread, unlock.  */
-  if (__atomic_is_v9 || ibarrier->s.pshared == 0)
-    {
-      if (atomic_increment_val (&ibarrier->b.left) == init_count)
-	/* We are done.  */
-	lll_unlock (ibarrier->b.lock, private);
-    }
-  else
-    {
-      unsigned int left;
-      /* Slightly more complicated.  On pre-v9 CPUs, atomic_increment_val
-	 is only atomic for threads within the same process, not for
-	 multiple processes.  */
-      __sparc32_atomic_do_lock24 (&ibarrier->s.left_lock);
-      left = ++ibarrier->b.left;
-      __sparc32_atomic_do_unlock24 (&ibarrier->s.left_lock);
-      if (left == init_count)
-        /* We are done.  */
-	lll_unlock (ibarrier->b.lock, private);
-    }
+  if (atomic_increment_val (&ibarrier->b.left) == init_count)
+    /* We are done.  */
+    lll_unlock (ibarrier->b.lock, private);
 
   return result;
 }

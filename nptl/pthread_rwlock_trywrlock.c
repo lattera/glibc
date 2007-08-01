@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,7 +28,7 @@ __pthread_rwlock_trywrlock (rwlock)
 {
   int result = EBUSY;
 
-  lll_mutex_lock (rwlock->__data.__lock);
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
     {
@@ -36,7 +36,7 @@ __pthread_rwlock_trywrlock (rwlock)
       result = 0;
     }
 
-  lll_mutex_unlock (rwlock->__data.__lock);
+  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   return result;
 }

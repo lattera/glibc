@@ -18,18 +18,8 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelbarrier.h>
-
-#define SYS_futex	240
-#define FUTEX_WAIT	0
-#define FUTEX_WAKE	1
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
-
 
 	.text
 
@@ -152,19 +142,27 @@ pthread_barrier_wait:
 	popl	%ebx
 	ret
 
-1:	leal	MUTEX(%ebx), %ecx
-	call	__lll_mutex_lock_wait
+1:	movl	PRIVATE(%ebx), %ecx
+	leal	MUTEX(%ebx), %edx
+	xorl	$LLL_SHARED, %ecx
+	call	__lll_lock_wait
 	jmp	2b
 
-4:	leal	MUTEX(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+4:	movl	PRIVATE(%ebx), %ecx
+	leal	MUTEX(%ebx), %eax
+	xorl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	5b
 
-6:	leal	MUTEX(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+6:	movl	PRIVATE(%ebx), %ecx
+	leal	MUTEX(%ebx), %eax
+	xorl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	7b
 
-9:	leal	MUTEX(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+9:	movl	PRIVATE(%ebx), %ecx
+	leal	MUTEX(%ebx), %eax
+	xorl	$LLL_SHARED, %ecx
+	call	__lll_unlock_wake
 	jmp	10b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

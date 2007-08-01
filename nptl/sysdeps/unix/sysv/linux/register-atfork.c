@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -24,7 +24,7 @@
 
 
 /* Lock to protect allocation and deallocation of fork handlers.  */
-lll_lock_t __fork_lock = LLL_LOCK_INITIALIZER;
+int __fork_lock = LLL_LOCK_INITIALIZER;
 
 
 /* Number of pre-allocated handler entries.  */
@@ -85,7 +85,7 @@ __register_atfork (prepare, parent, child, dso_handle)
      void *dso_handle;
 {
   /* Get the lock to not conflict with other allocations.  */
-  lll_lock (__fork_lock);
+  lll_lock (__fork_lock, LLL_PRIVATE);
 
   struct fork_handler *newp = fork_handler_alloc ();
 
@@ -102,7 +102,7 @@ __register_atfork (prepare, parent, child, dso_handle)
     }
 
   /* Release the lock.  */
-  lll_unlock (__fork_lock);
+  lll_unlock (__fork_lock, LLL_PRIVATE);
 
   return newp == NULL ? ENOMEM : 0;
 }
@@ -112,7 +112,7 @@ libc_hidden_def (__register_atfork)
 libc_freeres_fn (free_mem)
 {
   /* Get the lock to not conflict with running forks.  */
-  lll_lock (__fork_lock);
+  lll_lock (__fork_lock, LLL_PRIVATE);
 
   /* No more fork handlers.  */
   __fork_handlers = NULL;
@@ -123,7 +123,7 @@ libc_freeres_fn (free_mem)
   memset (&fork_handler_pool, '\0', sizeof (fork_handler_pool));
 
   /* Release the lock.  */
-  lll_unlock (__fork_lock);
+  lll_unlock (__fork_lock, LLL_PRIVATE);
 
   /* We can free the memory after releasing the lock.  */
   while (runp != NULL)

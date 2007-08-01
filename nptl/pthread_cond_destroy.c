@@ -27,13 +27,13 @@ __pthread_cond_destroy (cond)
      pthread_cond_t *cond;
 {
   /* Make sure we are alone.  */
-  lll_mutex_lock (cond->__data.__lock);
+  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
     {
       /* If there are still some waiters which have not been
 	 woken up, this is an application bug.  */
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
       return EBUSY;
     }
 
@@ -66,13 +66,13 @@ __pthread_cond_destroy (cond)
 
       do
 	{
-	  lll_mutex_unlock (cond->__data.__lock);
+	  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
 	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters,
 			  // XYZ check mutex flag
 			  LLL_SHARED);
 
-	  lll_mutex_lock (cond->__data.__lock);
+	  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
 	  nwaiters = cond->__data.__nwaiters;
 	}

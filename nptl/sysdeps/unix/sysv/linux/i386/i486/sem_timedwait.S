@@ -21,16 +21,7 @@
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
 #include <structsem.h>
-
-#ifndef UP
-# define LOCK lock
-#else
-# define
-#endif
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
+#include <lowlevellock.h>
 
 
 #if VALUE != 0
@@ -82,7 +73,7 @@ sem_timedwait:
 7:	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
-	movl	$SYS_gettimeofday, %eax
+	movl	$__NR_gettimeofday, %eax
 	ENTER_KERNEL
 
 	/* Compute relative timeout.  */

@@ -56,7 +56,8 @@ pthread_mutex_timedlock (mutex, abstime)
 	}
 
       /* We have to get the mutex.  */
-      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+      result = lll_timedlock (mutex->__data.__lock, abstime,
+			      /* XYZ */ LLL_SHARED);
 
       if (result != 0)
 	goto out;
@@ -76,14 +77,15 @@ pthread_mutex_timedlock (mutex, abstime)
     case PTHREAD_MUTEX_TIMED_NP:
     simple:
       /* Normal mutex.  */
-      result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+      result = lll_timedlock (mutex->__data.__lock, abstime,
+			      /* XYZ */ LLL_SHARED);
       break;
 
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       if (! __is_smp)
 	goto simple;
 
-      if (lll_mutex_trylock (mutex->__data.__lock) != 0)
+      if (lll_trylock (mutex->__data.__lock) != 0)
 	{
 	  int cnt = 0;
 	  int max_cnt = MIN (MAX_ADAPTIVE_COUNT,
@@ -92,7 +94,8 @@ pthread_mutex_timedlock (mutex, abstime)
 	    {
 	      if (cnt++ >= max_cnt)
 		{
-		  result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+		  result = lll_timedlock (mutex->__data.__lock, abstime,
+					  /* XYZ */ LLL_SHARED);
 		  break;
 		}
 
@@ -100,7 +103,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      BUSY_WAIT_NOP;
 #endif
 	    }
-	  while (lll_mutex_trylock (mutex->__data.__lock) != 0);
+	  while (lll_trylock (mutex->__data.__lock) != 0);
 
 	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
 	}
@@ -174,15 +177,15 @@ pthread_mutex_timedlock (mutex, abstime)
 		}
 	    }
 
-	  result = lll_robust_mutex_timedlock (mutex->__data.__lock, abstime,
-					       id);
+	  result = lll_robust_timedlock (mutex->__data.__lock, abstime, id,
+					 /* XYZ */ LLL_SHARED);
 
 	  if (__builtin_expect (mutex->__data.__owner
 				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
 	    {
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
-	      lll_mutex_unlock (mutex->__data.__lock);
+	      lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }

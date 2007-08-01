@@ -20,18 +20,8 @@
 #include <unwindbuf.h>
 #include <sysdep.h>
 #include <kernel-features.h>
+#include <lowlevellock.h>
 
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_PRIVATE_FLAG	128
 
 	.comm	__fork_generation, 4, 4
 

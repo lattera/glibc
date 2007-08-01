@@ -18,19 +18,9 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
-
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-
-#ifndef UP
-# define LOCK lock
-#else
-# define LOCK
-#endif
 
 
 	.text
@@ -108,7 +98,7 @@ __pthread_rwlock_rdlock:
 13:	subl	$1, READERS_QUEUED(%ebx)
 	jmp	2b
 
-5:	xorl	%ecx, %ecx
+5:	xorl	%edx, %edx
 	addl	$1, NR_READERS(%ebx)
 	je	8f
 9:	LOCK
@@ -120,24 +110,25 @@ __pthread_rwlock_rdlock:
 	jne	6f
 7:
 
-	movl	%ecx, %eax
+	movl	%edx, %eax
 	popl	%ebx
 	popl	%esi
 	ret
 
 1:
 #if MUTEX == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	MUTEX(%ebx), %ecx
+	leal	MUTEX(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	movl	PSHARED(%ebx), %ecx
+	call	__lll_lock_wait
 	jmp	2b
 
 14:	cmpl	%gs:TID, %eax
 	jne	3b
 	/* Deadlock detected.  */
-	movl	$EDEADLK, %ecx
+	movl	$EDEADLK, %edx
 	jmp	9b
 
 6:
@@ -146,17 +137,18 @@ __pthread_rwlock_rdlock:
 #else
 	leal	MUTEX(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	movl	PSHARED(%ebx), %ecx
+	call	__lll_unlock_wake
 	jmp	7b
 
 	/* Overflow.  */
 8:	subl	$1, NR_READERS(%ebx)
-	movl	$EAGAIN, %ecx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 	/* Overflow.  */
 4:	subl	$1, READERS_QUEUED(%ebx)
-	movl	$EAGAIN, %ecx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 10:
@@ -165,16 +157,18 @@ __pthread_rwlock_rdlock:
 #else
 	leal	MUTEX(%ebx), %eax
 #endif
-	call	__lll_mutex_unlock_wake
+	movl	PSHARED(%ebx), %ecx
+	call	__lll_unlock_wake
 	jmp	11b
 
 12:
 #if MUTEX == 0
-	movl	%ebx, %ecx
+	movl	%ebx, %edx
 #else
-	leal	MUTEX(%ebx), %ecx
+	leal	MUTEX(%ebx), %edx
 #endif
-	call	__lll_mutex_lock_wait
+	movl	PSHARED(%ebx), %ecx
+	call	__lll_lock_wait
 	jmp	13b
 	.size	__pthread_rwlock_rdlock,.-__pthread_rwlock_rdlock
 

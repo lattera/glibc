@@ -40,7 +40,7 @@ pthread_barrier_init (barrier, attr, count)
   if (__builtin_expect (count == 0, 0))
     return EINVAL;
 
-  struct pthread_barrierattr *iattr
+  const struct pthread_barrierattr *iattr
     = (attr != NULL
        ? iattr = (struct pthread_barrierattr *) attr
        : &default_attr);

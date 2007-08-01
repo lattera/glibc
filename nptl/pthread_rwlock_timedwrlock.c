@@ -33,7 +33,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
   int result = 0;
 
   /* Make sure we are along.  */
-  lll_mutex_lock (rwlock->__data.__lock);
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   while (1)
     {
@@ -100,16 +100,14 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
       int waitval = rwlock->__data.__writer_wakeup;
 
       /* Free the lock.  */
-      lll_mutex_unlock (rwlock->__data.__lock);
+      lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       /* Wait for the writer or reader(s) to finish.  */
       err = lll_futex_timed_wait (&rwlock->__data.__writer_wakeup,
-				  waitval, &rt,
-				  // XYZ check mutex flag
-				  LLL_SHARED);
+				  waitval, &rt, rwlock->__data.__shared);
 
       /* Get the lock.  */
-      lll_mutex_lock (rwlock->__data.__lock);
+      lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       /* To start over again, remove the thread from the writer list.  */
       --rwlock->__data.__nr_writers_queued;
@@ -123,7 +121,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
     }
 
   /* We are done, free the lock.  */
-  lll_mutex_unlock (rwlock->__data.__lock);
+  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   return result;
 }

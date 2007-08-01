@@ -85,8 +85,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       int oldtype = __pthread_enable_asynccancel ();
 
       err = lll_futex_timed_wait (&isem->value, 0, &rt,
-				  // XYZ check mutex flag
-				  LLL_SHARED);
+				  isem->private ^ FUTEX_PRIVATE_FLAG);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);

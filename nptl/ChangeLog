@@ -1,3 +1,447 @@
+2007-07-31  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c (__new_sem_post):
+	Use __asm __volatile (__lll_acq_instr ::: "memory") instead of
+	atomic_full_barrier.
+
+2007-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* allocatestack.c (stack_cache_lock): Change type to int.
+	(get_cached_stack, allocate_stack, __deallocate_stack,
+	__make_stacks_executable, __find_thread_by_id, __nptl_setxid,
+	__pthread_init_static_tls, __wait_lookup_done): Add LLL_PRIVATE
+	as second argument to lll_lock and lll_unlock macros on
+	stack_cache_lock.
+	* pthread_create.c (__find_in_stack_list): Likewise.
+	(start_thread): Similarly with pd->lock.  Use lll_robust_dead
+	macro instead of lll_robust_mutex_dead, pass LLL_SHARED to it
+	as second argument.
+	* descr.h (struct pthread): Change lock and setxid_futex field
+	type to int.
+	* old_pthread_cond_broadcast.c (__pthread_cond_broadcast_2_0): Use
+	LLL_LOCK_INITIALIZER instead of LLL_MUTEX_LOCK_INITIALIZER.
+	* old_pthread_cond_signal.c (__pthread_cond_signal_2_0): Likewise.
+	* old_pthread_cond_timedwait.c (__pthread_cond_timedwait_2_0):
+	Likewise.
+	* old_pthread_cond_wait.c (__pthread_cond_wait_2_0): Likewise.
+	* pthread_cond_init.c (__pthread_cond_init): Likewise.
+	* pthreadP.h (__attr_list_lock): Change type to int.
+	* pthread_attr_init.c (__attr_list_lock): Likewise.
+	* pthread_barrier_destroy.c (pthread_barrier_destroy): Pass
+	ibarrier->private ^ FUTEX_PRIVATE_FLAG as second argument to
+	lll_{,un}lock.
+	* pthread_barrier_wait.c (pthread_barrier_wait): Likewise and
+	also for lll_futex_{wake,wait}.
+	* pthread_barrier_init.c (pthread_barrier_init): Make iattr
+	a pointer to const.
+	* pthread_cond_broadcast.c (__pthread_cond_broadcast): Pass
+	LLL_SHARED as second argument to lll_{,un}lock.
+	* pthread_cond_destroy.c (__pthread_cond_destroy): Likewise.
+	* pthread_cond_signal.c (__pthread_cond_singal): Likewise.
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait): Likewise.
+	* pthread_cond_wait.c (__condvar_cleanup, __pthread_cond_wait):
+	Likewise.
+	* pthread_getattr_np.c (pthread_getattr_np): Add LLL_PRIVATE
+	as second argument to lll_{,un}lock macros on pd->lock.
+	* pthread_getschedparam.c (__pthread_getschedparam): Likewise.
+	* pthread_setschedparam.c (__pthread_setschedparam): Likewise.
+	* pthread_setschedprio.c (pthread_setschedprio): Likewise.
+	* tpp.c (__pthread_tpp_change_priority, __pthread_current_priority):
+	Likewise.
+	* sysdeps/pthread/createthread.c (do_clone, create_thread):
+	Likewise.
+	* pthread_once.c (once_lock): Change type to int.
+	(__pthread_once): Pass LLL_PRIVATE as second argument to
+	lll_{,un}lock macros on once_lock.
+	* pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock): Use
+	lll_{,un}lock macros instead of lll_mutex_{,un}lock, pass
+	rwlock->__data.__shared as second argument to them and similarly
+	for lll_futex_w*.
+	* pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+	* pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock): Likewise.
+	* pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock): Likewise.
+	* pthread_rwlock_unlock.c (__pthread_rwlock_unlock): Likewise.
+	* pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock): Likewise.
+	* sem_close.c (sem_close): Pass LLL_PRIVATE as second argument
+	to lll_{,un}lock macros on __sem_mappings_lock.
+	* sem_open.c (check_add_mapping): Likewise.
+	(__sem_mappings_lock): Change type to int.
+	* semaphoreP.h (__sem_mappings_lock): Likewise.
+	* pthread_mutex_lock.c (LLL_MUTEX_LOCK, LLL_MUTEX_TRYLOCK,
+	LLL_ROBUST_MUTEX_LOCK): Use lll_{,try,robust_}lock macros
+	instead of lll_*mutex_*, pass LLL_SHARED as last
+	argument.
+	(__pthread_mutex_lock): Use lll_unlock instead of lll_mutex_unlock,
+	pass LLL_SHARED as last argument.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c (LLL_MUTEX_LOCK,
+	LLL_MUTEX_TRYLOCK, LLL_ROBUST_MUTEX_LOCK): Use
+	lll_{cond_,cond_try,robust_cond}lock macros instead of lll_*mutex_*,
+	pass LLL_SHARED as last argument.
+	* pthread_mutex_timedlock.c (pthread_mutex_timedlock): Use
+	lll_{timed,try,robust_timed,un}lock instead of lll_*mutex*, pass
+	LLL_SHARED as last argument.
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Similarly.
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt):
+	Similarly.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_lock,
+	__libc_lock_lock_recursive, __libc_lock_unlock,
+	__libc_lock_unlock_recursive): Pass LLL_PRIVATE as second
+	argument to lll_{,un}lock.
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_lock_lock,
+	_IO_lock_unlock): Likewise.
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Don't use
+	compound literal.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c (__unregister_atfork):
+	Pass LLL_PRIVATE as second argument to lll_{,un}lock macros on
+	__fork_lock.
+	* sysdeps/unix/sysv/linux/register-atfork.c (__register_atfork,
+	free_mem): Likewise.
+	(__fork_lock): Change type to int.
+	* sysdeps/unix/sysv/linux/fork.h (__fork_lock): Likewise.
+	* sysdeps/unix/sysv/linux/sem_post.c (__new_sem_post): Pass
+	isem->private ^ FUTEX_PRIVATE_FLAG as second argument to
+	lll_futex_wake.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c (sem_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sem_wait.c (__new_sem_wait): Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait_private):
+	New function.
+	(__lll_lock_wait, __lll_timedlock_wait): Add private argument and
+	pass it through to lll_futex_*wait, only compile in when
+	IS_IN_libpthread.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): Add private
+	argument and pass it through to lll_futex_*wait.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Renamed all
+	lll_mutex_* resp. lll_robust_mutex_* macros to lll_* resp.
+	lll_robust_*.  Renamed all __lll_mutex_* resp. __lll_robust_mutex_*
+	inline functions to __lll_* resp. __lll_robust_*.
+	(LLL_MUTEX_LOCK_INITIALIZER): Remove.
+	(lll_mutex_dead): Add private argument.
+	(__lll_lock_wait_private): New prototype.
+	(__lll_lock_wait, __lll_robust_lock_wait, __lll_lock_timedwait,
+	__lll_robust_lock_timedwait): Add private argument to prototypes.
+	(__lll_lock): Add private argument, if it is constant LLL_PRIVATE,
+	call __lll_lock_wait_private, otherwise pass private to
+	__lll_lock_wait.
+	(__lll_robust_lock, __lll_cond_lock, __lll_timedlock,
+	__lll_robust_timedlock): Add private argument, pass it to
+	__lll_*wait functions.
+	(__lll_unlock): Add private argument, if it is constant LLL_PRIVATE,
+	call __lll_unlock_wake_private, otherwise pass private to
+	__lll_unlock_wake.
+	(__lll_robust_unlock): Add private argument, pass it to
+	__lll_robust_unlock_wake.
+	(lll_lock, lll_robust_lock, lll_cond_lock, lll_timedlock,
+	lll_robust_timedlock, lll_unlock, lll_robust_unlock): Add private
+	argument, pass it through to __lll_* inline function.
+	(__lll_mutex_unlock_force, lll_mutex_unlock_force): Remove.
+	(lll_lock_t): Remove.
+	(__lll_cond_wait, __lll_cond_timedwait, __lll_cond_wake,
+	__lll_cond_broadcast, lll_cond_wait, lll_cond_timedwait,
+	lll_cond_wake, lll_cond_broadcast): Remove.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Allow including
+	the header from assembler.  Renamed all lll_mutex_* resp.
+	lll_robust_mutex_* macros to lll_* resp. lll_robust_*.
+	(LOCK, FUTEX_CMP_REQUEUE, FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE): Define.
+	(LLL_MUTEX_LOCK_INITIALIZER, LLL_MUTEX_LOCK_INITIALIZER_LOCKED,
+	LLL_MUTEX_LOCK_INITIALIZER_WAITERS): Remove.
+	(__lll_mutex_lock_wait, __lll_mutex_timedlock_wait,
+	__lll_mutex_unlock_wake, __lll_lock_wait, __lll_unlock_wake):
+	Remove prototype.
+	(__lll_trylock_asm, __lll_lock_asm_start, __lll_unlock_asm): Define.
+	(lll_robust_trylock, lll_cond_trylock): Use LLL_LOCK_INITIALIZER*
+	rather than LLL_MUTEX_LOCK_INITIALIZER* macros.
+	(lll_trylock): Likewise, use __lll_trylock_asm, pass
+	MULTIPLE_THREADS_OFFSET as another asm operand.
+	(lll_lock): Add private argument, use __lll_lock_asm_start, pass
+	MULTIPLE_THREADS_OFFSET as last asm operand, call
+	__lll_lock_wait_private if private is constant LLL_PRIVATE,
+	otherwise pass private as another argument to __lll_lock_wait.
+	(lll_robust_lock, lll_cond_lock, lll_robust_cond_lock,
+	lll_timedlock, lll_robust_timedlock): Add private argument, pass
+	private as another argument to __lll_*lock_wait call.
+	(lll_unlock): Add private argument, use __lll_unlock_asm, pass
+	MULTIPLE_THREADS_OFFSET as another asm operand, call
+	__lll_unlock_wake_private if private is constant LLL_PRIVATE,
+	otherwise pass private as another argument to __lll_unlock_wake.
+	(lll_robust_unlock): Add private argument, pass private as another
+	argument to __lll_unlock_wake.
+	(lll_robust_dead): Add private argument, use __lll_private_flag
+	macro.
+	(lll_islocked): Use LLL_LOCK_INITIALIZER instead of
+	LLL_MUTEX_LOCK_INITIALIZER.
+	(lll_lock_t): Remove.
+	(LLL_LOCK_INITIALIZER_WAITERS): Define.
+	(__lll_cond_wait, __lll_cond_timedwait, __lll_cond_wake,
+	__lll_cond_broadcast, lll_cond_wait, lll_cond_timedwait,
+	lll_cond_wake, lll_cond_broadcast): Remove.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Revert
+	2007-05-2{3,9} changes.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Include
+	kernel-features.h and lowlevellock.h.
+	(LOAD_PRIVATE_FUTEX_WAIT): Define.
+	(LOAD_FUTEX_WAIT): Rewritten.
+	(LOCK, SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Don't
+	define.
+	(__lll_lock_wait_private, __lll_unlock_wake_private): New functions.
+	(__lll_mutex_lock_wait): Rename to ...
+	(__lll_lock_wait): ... this.  Take futex addr from %edx instead of
+	%ecx, %ecx is now private argument.  Don't compile in for libc.so.
+	(__lll_mutex_timedlock_wait): Rename to ...
+	(__lll_timedlock_wait): ... this.  Use __NR_gettimeofday.  %esi
+	contains private argument.  Don't compile in for libc.so.
+	(__lll_mutex_unlock_wake): Rename to ...
+	(__lll_unlock_wake): ... this.  %ecx contains private argument.
+	Don't compile in for libc.so.
+	(__lll_timedwait_tid): Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S: Include
+	kernel-features.h and lowlevellock.h.
+	(LOAD_FUTEX_WAIT): Define.
+	(LOCK, SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Don't
+	define.
+	(__lll_robust_mutex_lock_wait): Rename to ...
+	(__lll_robust_lock_wait): ... this.  Futex addr is now in %edx
+	argument, %ecx argument contains private.  Use LOAD_FUTEX_WAIT
+	macro.
+	(__lll_robust_mutex_timedlock_wait): Rename to ...
+	(__lll_robust_timedlock_wait): ... this.  Use __NR_gettimeofday.
+	%esi argument contains private, use LOAD_FUTEX_WAIT macro.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(pthread_barrier_wait): Rename __lll_mutex_* to __lll_*, pass
+	PRIVATE(%ebx) ^ LLL_SHARED as private argument in %ecx to
+	__lll_lock_wait and __lll_unlock_wake, pass MUTEX(%ebx) address
+	to __lll_lock_wait in %edx.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S:
+	Include lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_REQUEUE,
+	FUTEX_CMP_REQUEUE, EINVAL, LOCK): Don't define.
+	(__pthread_cond_broadcast): Rename __lll_mutex_* to __lll_*, pass
+	cond_lock address in %edx rather than %ecx to __lll_lock_wait,
+	pass LLL_SHARED in %ecx to both __lll_lock_wait and
+	__lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S:
+	Include lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE, EINVAL, LOCK): Don't define.
+	(__pthread_cond_signal): Rename __lll_mutex_* to __lll_*, pass
+	cond_lock address in %edx rather than %ecx to __lll_lock_wait,
+	pass LLL_SHARED in %ecx to both __lll_lock_wait and
+	__lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S:
+	Include lowlevellock.h.
+	(SYS_futex, SYS_gettimeofday, FUTEX_WAIT, FUTEX_WAKE, LOCK):
+	Don't define.
+	(__pthread_cond_timedwait): Rename __lll_mutex_* to __lll_*, pass
+	cond_lock address in %edx rather than %ecx to __lll_lock_wait,
+	pass LLL_SHARED in %ecx to both __lll_lock_wait and
+	__lll_unlock_wake.  Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_cond_wait, __condvar_w_cleanup): Rename __lll_mutex_*
+	to __lll_*, pass cond_lock address in %edx rather than %ecx to
+	__lll_lock_wait, pass LLL_SHARED in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_rwlock_rdlock): Rename __lll_mutex_* to __lll_*, pass
+	MUTEX(%ebx) address in %edx rather than %ecx to
+	__lll_lock_wait, pass PSHARED(%ebx) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.  Move return value from %ecx to %edx
+	register.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, SYS_gettimeofday, FUTEX_WAIT, FUTEX_WAKE, LOCK):
+	Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*, pass
+	MUTEX(%ebp) address in %edx rather than %ecx to
+	__lll_lock_wait, pass PSHARED(%ebp) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.  Move return value from %ecx to %edx
+	register.  Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, SYS_gettimeofday, FUTEX_WAIT, FUTEX_WAKE, LOCK):
+	Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*, pass
+	MUTEX(%ebp) address in %edx rather than %ecx to
+	__lll_lock_wait, pass PSHARED(%ebp) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.  Move return value from %ecx to %edx
+	register.  Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_rwlock_unlock): Rename __lll_mutex_* to __lll_*, pass
+	MUTEX(%edi) address in %edx rather than %ecx to
+	__lll_lock_wait, pass PSHARED(%edi) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*, pass
+	MUTEX(%ebx) address in %edx rather than %ecx to
+	__lll_lock_wait, pass PSHARED(%ebx) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.  Move return value from %ecx to %edx
+	register.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Don't
+	define.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Include lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAKE): Don't define.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, SYS_gettimeofday, FUTEX_WAIT): Don't define.
+	(sem_timedwait): Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Include
+	lowlevellock.h.
+	(LOCK): Don't define.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAIT): Don't define.
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c: Wake only when there
+	are waiters.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevellock.S: Revert
+	2007-05-2{3,9} changes.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Include
+	kernel-features.h and lowlevellock.h.
+	(LOAD_PRIVATE_FUTEX_WAIT): Define.
+	(LOAD_FUTEX_WAIT): Rewritten.
+	(LOCK, SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Don't define.
+	(__lll_lock_wait_private, __lll_unlock_wake_private): New functions.
+	(__lll_mutex_lock_wait): Rename to ...
+	(__lll_lock_wait): ... this.  %esi is now private argument.
+	Don't compile in for libc.so.
+	(__lll_mutex_timedlock_wait): Rename to ...
+	(__lll_timedlock_wait): ... this.  %esi contains private argument.
+	Don't compile in for libc.so.
+	(__lll_mutex_unlock_wake): Rename to ...
+	(__lll_unlock_wake): ... this.  %esi contains private argument.
+	Don't compile in for libc.so.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: Include
+	kernel-features.h and lowlevellock.h.
+	(LOAD_FUTEX_WAIT): Define.
+	(LOCK, SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Don't define.
+	(__lll_robust_mutex_lock_wait): Rename to ...
+	(__lll_robust_lock_wait): ... this.  %esi argument contains private.
+	Use LOAD_FUTEX_WAIT macro.
+	(__lll_robust_mutex_timedlock_wait): Rename to ...
+	(__lll_robust_timedlock_wait): ... this. %esi argument contains
+	private, use LOAD_FUTEX_WAIT macro.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_barrier_wait.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(pthread_barrier_wait): Rename __lll_mutex_* to __lll_*, pass
+	PRIVATE(%rdi) ^ LLL_SHARED as private argument in %esi to
+	__lll_lock_wait and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S:
+	Include lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_REQUEUE,
+	FUTEX_CMP_REQUEUE, EINVAL, LOCK): Don't define.
+	(__pthread_cond_broadcast): Rename __lll_mutex_* to __lll_*,
+	pass LLL_SHARED in %esi to both __lll_lock_wait and
+	__lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S:
+	Include lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_WAKE_OP,
+	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE, EINVAL, LOCK): Don't define.
+	(__pthread_cond_signal): Rename __lll_mutex_* to __lll_*,
+	pass LLL_SHARED in %esi to both __lll_lock_wait and
+	__lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_cond_timedwait): Rename __lll_mutex_* to __lll_*,
+	pass LLL_SHARED in %esi to both __lll_lock_wait and
+	__lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, LOCK): Don't define.
+	(__pthread_cond_wait, __condvar_cleanup): Rename __lll_mutex_*
+	to __lll_*, pass LLL_SHARED in %esi to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG, LOCK):
+	Don't define.
+	(__pthread_rwlock_rdlock): Rename __lll_mutex_* to __lll_*,
+	pass PSHARED(%rdi) in %esi to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG, LOCK):
+	Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*,
+	pass PSHARED(%rdi) in %esi to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG, LOCK):
+	Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*,
+	pass PSHARED(%rdi) in %esi to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG, LOCK):
+	Don't define.
+	(__pthread_rwlock_unlock): Rename __lll_mutex_* to __lll_*,
+	pass PSHARED(%rdi) in %esi to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S:
+	Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG, LOCK):
+	Don't define.
+	(__pthread_rwlock_wrlock): Rename __lll_mutex_* to __lll_*,
+	pass PSHARED(%rdi) in %ecx to both __lll_lock_wait
+	and __lll_unlock_wake.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Don't
+	define.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Include lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAKE): Don't define.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAIT): Don't define.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Include
+	lowlevellock.h.
+	(LOCK): Don't define.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Include
+	lowlevellock.h.
+	(LOCK, SYS_futex, FUTEX_WAIT): Don't define.
+	* sysdeps/unix/sysv/linux/sparc/internaltypes.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/pthread_barrier_destroy.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/pthread_barrier_init.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/pthread_barrier_wait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lowlevellock.c
+	(__lll_lock_wait_private): New function.
+	(__lll_lock_wait, __lll_timedlock_wait): Add private argument, pass
+	it to lll_futex_*wait.  Don't compile in for libc.so.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pthread_barrier_init.c:
+	Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pthread_barrier_wait.c
+	(struct sparc_pthread_barrier): Remove.
+	(pthread_barrier_wait): Use union sparc_pthread_barrier instead of
+	struct sparc_pthread_barrier.  Pass
+	ibarrier->s.pshared ? LLL_SHARED : LLL_PRIVATE to lll_{,un}lock
+	and lll_futex_wait macros.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/pthread_barrier_init.c:
+	Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/pthread_barrier_wait.c:
+	Include sparc pthread_barrier_wait.c instead of generic one.
+
 2007-07-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-rwlock14.c (do_test): Avoid warnings on 32-bit arches.

@@ -48,7 +48,7 @@ __pthread_mutex_trylock (mutex)
 	  return 0;
 	}
 
-      if (lll_mutex_trylock (mutex->__data.__lock) == 0)
+      if (lll_trylock (mutex->__data.__lock) == 0)
 	{
 	  /* Record the ownership.  */
 	  mutex->__data.__owner = id;
@@ -62,7 +62,7 @@ __pthread_mutex_trylock (mutex)
     case PTHREAD_MUTEX_TIMED_NP:
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       /* Normal mutex.  */
-      if (lll_mutex_trylock (mutex->__data.__lock) != 0)
+      if (lll_trylock (mutex->__data.__lock) != 0)
 	break;
 
       /* Record the ownership.  */
@@ -140,7 +140,7 @@ __pthread_mutex_trylock (mutex)
 		}
 	    }
 
-	  oldval = lll_robust_mutex_trylock (mutex->__data.__lock, id);
+	  oldval = lll_robust_trylock (mutex->__data.__lock, id);
 	  if (oldval != 0 && (oldval & FUTEX_OWNER_DIED) == 0)
 	    {
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
@@ -154,7 +154,7 @@ __pthread_mutex_trylock (mutex)
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
 	      if (oldval == id)
-		lll_mutex_unlock (mutex->__data.__lock);
+		lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }

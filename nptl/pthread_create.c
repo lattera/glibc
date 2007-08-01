@@ -63,7 +63,7 @@ __find_in_stack_list (pd)
   list_t *entry;
   struct pthread *result = NULL;
 
-  lll_lock (stack_cache_lock);
+  lll_lock (stack_cache_lock, LLL_PRIVATE);
 
   list_for_each (entry, &stack_used)
     {
@@ -90,7 +90,7 @@ __find_in_stack_list (pd)
 	  }
       }
 
-  lll_unlock (stack_cache_lock);
+  lll_unlock (stack_cache_lock, LLL_PRIVATE);
 
   return result;
 }
@@ -284,9 +284,9 @@ start_thread (void *arg)
 	  int oldtype = CANCEL_ASYNC ();
 
 	  /* Get the lock the parent locked to force synchronization.  */
-	  lll_lock (pd->lock);
+	  lll_lock (pd->lock, LLL_PRIVATE);
 	  /* And give it up right away.  */
-	  lll_unlock (pd->lock);
+	  lll_unlock (pd->lock, LLL_PRIVATE);
 
 	  CANCEL_RESET (oldtype);
 	}
@@ -370,7 +370,7 @@ start_thread (void *arg)
 # endif
 	  this->__list.__next = NULL;
 
-	  lll_robust_mutex_dead (this->__lock);
+	  lll_robust_dead (this->__lock, /* XYZ */ LLL_SHARED);
 	}
       while (robust != (void *) &pd->robust_head);
     }

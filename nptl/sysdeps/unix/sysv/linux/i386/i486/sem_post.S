@@ -21,15 +21,7 @@
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
 #include <structsem.h>
-
-#ifndef UP
-# define LOCK lock
-#else
-# define
-#endif
-
-#define SYS_futex		240
-#define FUTEX_WAKE		1
+#include <lowlevellock.h>
 
 
 	.text

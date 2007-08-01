@@ -42,7 +42,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     void *__self = THREAD_SELF;						      \
     if ((_name).owner != __self)					      \
       {									      \
-        lll_lock ((_name).lock);					      \
+	lll_lock ((_name).lock, LLL_PRIVATE);				      \
         (_name).owner = __self;						      \
       }									      \
     ++(_name).cnt;							      \
@@ -72,7 +72,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     if (--(_name).cnt == 0)						      \
       {									      \
         (_name).owner = NULL;						      \
-        lll_unlock ((_name).lock);					      \
+	lll_unlock ((_name).lock, LLL_PRIVATE);				      \
       }									      \
   } while (0)
 

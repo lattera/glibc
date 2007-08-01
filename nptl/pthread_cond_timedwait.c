@@ -54,13 +54,13 @@ __pthread_cond_timedwait (cond, mutex, abstime)
     return EINVAL;
 
   /* Make sure we are along.  */
-  lll_mutex_lock (cond->__data.__lock);
+  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* Now we can release the mutex.  */
   int err = __pthread_mutex_unlock_usercnt (mutex, 0);
   if (err)
     {
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
       return err;
     }
 
@@ -146,7 +146,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       unsigned int futex_val = cond->__data.__futex;
 
       /* Prepare to wait.  Release the condvar futex.  */
-      lll_mutex_unlock (cond->__data.__lock);
+      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
@@ -161,7 +161,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       __pthread_disable_asynccancel (cbuffer.oldtype);
 
       /* We are going to look at shared data again, so get the lock.  */
-      lll_mutex_lock(cond->__data.__lock);
+      lll_lock(cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
       /* If a broadcast happened, we are done.  */
       if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
@@ -203,7 +203,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 		    LLL_SHARED);
 
   /* We are done with the condvar.  */
-  lll_mutex_unlock (cond->__data.__lock);
+  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
 
   /* The cancellation handling is back to normal, remove the handler.  */
   __pthread_cleanup_pop (&buffer, 0);

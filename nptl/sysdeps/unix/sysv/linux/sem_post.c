@@ -36,8 +36,7 @@ __new_sem_post (sem_t *sem)
   if (isem->nwaiters > 0)
     {
       int err = lll_futex_wake (&isem->value, 1,
-				// XYZ check mutex flag
-				LLL_SHARED);
+				isem->private ^ FUTEX_PRIVATE_FLAG);
       if (__builtin_expect (err, 0) < 0)
 	{
 	  __set_errno (-err);

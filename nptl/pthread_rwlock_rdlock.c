@@ -32,7 +32,7 @@ __pthread_rwlock_rdlock (rwlock)
   int result = 0;
 
   /* Make sure we are along.  */
-  lll_mutex_lock (rwlock->__data.__lock);
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   while (1)
     {
@@ -74,21 +74,20 @@ __pthread_rwlock_rdlock (rwlock)
       int waitval = rwlock->__data.__readers_wakeup;
 
       /* Free the lock.  */
-      lll_mutex_unlock (rwlock->__data.__lock);
+      lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       /* Wait for the writer to finish.  */
-      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval, 
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval,
+		      rwlock->__data.__shared);
 
       /* Get the lock.  */
-      lll_mutex_lock (rwlock->__data.__lock);
+      lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       --rwlock->__data.__nr_readers_queued;
     }
 
   /* We are done, free the lock.  */
-  lll_mutex_unlock (rwlock->__data.__lock);
+  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
   return result;
 }

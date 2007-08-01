@@ -27,9 +27,9 @@
 
 
 #ifndef LLL_MUTEX_LOCK
-# define LLL_MUTEX_LOCK(mutex) lll_mutex_lock (mutex)
-# define LLL_MUTEX_TRYLOCK(mutex) lll_mutex_trylock (mutex)
-# define LLL_ROBUST_MUTEX_LOCK(mutex, id) lll_robust_mutex_lock (mutex, id)
+# define LLL_MUTEX_LOCK(mutex) lll_lock (mutex, /* XYZ */ LLL_SHARED)
+# define LLL_MUTEX_TRYLOCK(mutex) lll_trylock (mutex)
+# define LLL_ROBUST_MUTEX_LOCK(mutex, id) lll_robust_lock (mutex, id, /* XYZ */ LLL_SHARED)
 #endif
 
 
@@ -198,7 +198,7 @@ __pthread_mutex_lock (mutex)
 	    {
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
-	      lll_mutex_unlock (mutex->__data.__lock);
+	      lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }

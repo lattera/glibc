@@ -228,7 +228,7 @@ typedef pthread_key_t __libc_key_t;
 /* Lock the named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_lock(NAME) \
-  ({ lll_lock (NAME); 0; })
+  ({ lll_lock (NAME, LLL_PRIVATE); 0; })
 #else
 # define __libc_lock_lock(NAME) \
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
@@ -245,7 +245,7 @@ typedef pthread_key_t __libc_key_t;
     void *self = THREAD_SELF;						      \
     if ((NAME).owner != self)						      \
       {									      \
-	lll_lock ((NAME).lock);						      \
+	lll_lock ((NAME).lock, LLL_PRIVATE);				      \
 	(NAME).owner = self;						      \
       }									      \
     ++(NAME).cnt;							      \
@@ -299,7 +299,7 @@ typedef pthread_key_t __libc_key_t;
 /* Unlock the named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_unlock(NAME) \
-  lll_unlock (NAME)
+  lll_unlock (NAME, LLL_PRIVATE)
 #else
 # define __libc_lock_unlock(NAME) \
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
@@ -315,7 +315,7 @@ typedef pthread_key_t __libc_key_t;
     if (--(NAME).cnt == 0)						      \
       {									      \
 	(NAME).owner = NULL;						      \
-	lll_unlock ((NAME).lock);					      \
+	lll_unlock ((NAME).lock, LLL_PRIVATE);				      \
       }									      \
   } while (0)
 #else

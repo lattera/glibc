@@ -27,7 +27,7 @@
 int
 __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
-  lll_mutex_lock (rwlock->__data.__lock);
+  lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
   if (rwlock->__data.__writer)
     rwlock->__data.__writer = 0;
   else
@@ -37,23 +37,21 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
       if (rwlock->__data.__nr_writers_queued)
 	{
 	  ++rwlock->__data.__writer_wakeup;
-	  lll_mutex_unlock (rwlock->__data.__lock);
+	  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 	  lll_futex_wake (&rwlock->__data.__writer_wakeup, 1,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+			  rwlock->__data.__shared);
 	  return 0;
 	}
       else if (rwlock->__data.__nr_readers_queued)
 	{
 	  ++rwlock->__data.__readers_wakeup;
-	  lll_mutex_unlock (rwlock->__data.__lock);
+	  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 	  lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+			  rwlock->__data.__shared);
 	  return 0;
 	}
     }
-  lll_mutex_unlock (rwlock->__data.__lock);
+  lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
   return 0;
 }
 

@@ -29,11 +29,37 @@
 int
 __new_sem_post (sem_t *sem)
 {
+  struct new_sem *isem = (struct new_sem *) sem;
+
+  __asm __volatile (__lll_rel_instr ::: "memory");
+  atomic_increment (&isem->value);
+  __asm __volatile (__lll_acq_instr ::: "memory");
+  if (isem->nwaiters > 0)
+    {
+      int err = lll_futex_wake (&isem->value, 1,
+				isem->private ^ FUTEX_PRIVATE_FLAG);
+      if (__builtin_expect (err, 0) < 0)
+	{
+	  __set_errno (-err);
+	  return -1;
+	}
+    }
+  return 0;
+}
+versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+
+int
+attribute_compat_text_section
+__old_sem_post (sem_t *sem)
+{
   int *futex = (int *) sem;
 
   __asm __volatile (__lll_rel_instr ::: "memory");
   int nr = atomic_increment_val (futex);
-  int err = lll_futex_wake (futex, nr, LLL_SHARED);
+  /* We always have to assume it is a shared semaphore.  */
+  int err = lll_futex_wake (futex, 1, LLL_SHARED);
   if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);
@@ -41,8 +67,6 @@ __new_sem_post (sem_t *sem)
     }
   return 0;
 }
-versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
-strong_alias (__new_sem_post, __old_sem_post)
+
 compat_symbol (libpthread, __old_sem_post, sem_post, GLIBC_2_0);
 #endif

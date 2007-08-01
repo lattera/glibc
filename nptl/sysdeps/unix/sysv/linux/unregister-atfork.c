@@ -54,7 +54,7 @@ __unregister_atfork (dso_handle)
      that there couldn't have been another thread deleting something.
      The __unregister_atfork function is only called from the
      dlclose() code which itself serializes the operations.  */
-  lll_lock (__fork_lock);
+  lll_lock (__fork_lock, LLL_PRIVATE);
 
   /* We have to create a new list with all the entries we don't remove.  */
   struct deleted_handler
@@ -89,7 +89,7 @@ __unregister_atfork (dso_handle)
   while (runp != NULL);
 
   /* Release the lock.  */
-  lll_unlock (__fork_lock);
+  lll_unlock (__fork_lock, LLL_PRIVATE);
 
   /* Walk the list of all entries which have to be deleted.  */
   while (deleted != NULL)

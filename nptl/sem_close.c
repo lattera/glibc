@@ -47,7 +47,7 @@ sem_close (sem)
   int result = 0;
 
   /* Get the lock.  */
-  lll_lock (__sem_mappings_lock);
+  lll_lock (__sem_mappings_lock, LLL_PRIVATE);
 
   /* Locate the entry for the mapping the caller provided.  */
   rec = NULL;
@@ -75,7 +75,7 @@ sem_close (sem)
     }
 
   /* Release the lock.  */
-  lll_unlock (__sem_mappings_lock);
+  lll_unlock (__sem_mappings_lock, LLL_PRIVATE);
 
   return result;
 }

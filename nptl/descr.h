@@ -309,10 +309,10 @@ struct pthread
   int parent_cancelhandling;
 
   /* Lock to synchronize access to the descriptor.  */
-  lll_lock_t lock;
+  int lock;
 
   /* Lock for synchronizing setxid calls.  */
-  lll_lock_t setxid_futex;
+  int setxid_futex;
 
 #if HP_TIMING_AVAIL
   /* Offset of the CPU clock at start thread start time.  */
