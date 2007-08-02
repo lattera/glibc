@@ -110,7 +110,7 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
 	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
-	     tst-vfork3-mem tst-vfork3.mtrace
+	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist
 
 include ../Rules
 
@@ -291,12 +291,16 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 $(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@
 
-$(inst_libexecdir)/getconf: $(objpfx)getconf FORCE
+$(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
+			    $(objpfx)getconf.speclist FORCE
 	$(addprefix $(..)./scripts/mkinstalldirs ,\
 		    $(filter-out $(wildcard $@),$@))
-	for spec in `LC_ALL=C GETCONF_DIR=/dev/null \
-		     $(run-program-prefix) $< \
-		     _POSIX_V6_WIDTH_RESTRICTED_ENVS`; do \
-		$(INSTALL_PROGRAM) $< $@/$$spec.new; \
-		mv -f $@/$$spec.new $@/$$spec; \
-	done
+	while read spec; do \
+	  ln -f $< $@/$$spec.new || $(INSTALL_PROGRAM) $< $@/$$spec.new; \
+	  mv -f $@/$$spec.new $@/$$spec; \
+	done < $(objpfx)getconf.speclist
+
+$(objpfx)getconf.speclist: $(objpfx)getconf
+	LC_ALL=C GETCONF_DIR=/dev/null \
+	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS > $@.new
+	mv -f $@.new
