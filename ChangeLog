@@ -1,3 +1,7 @@
+2007-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/mqueue.h: Change const to __const and add nonnull attributes.
+
 2007-08-02  Roland McGrath  <roland@redhat.com>
 
 	* posix/Makefile ($(inst_libexecdir)/getconf): Make hard links to
