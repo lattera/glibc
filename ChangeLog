@@ -1,3 +1,12 @@
+2007-08-02  Roland McGrath  <roland@redhat.com>
+
+	* posix/Makefile ($(inst_libexecdir)/getconf): Make hard links to
+	$(inst_bindir)/getconf if possible.
+
+	* posix/Makefile ($(objpfx)getconf.speclist): New target.
+	(generated): Add it.
+	($(inst_libexecdir)/getconf): Use it.
+
 2007-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Using
