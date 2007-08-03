@@ -17,16 +17,12 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
 #include <tcb-offsets.h>
 #include <kernel-features.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_PRIVATE_FLAG	128
 
 
 	.text
@@ -145,10 +141,12 @@ __pthread_rwlock_wrlock:
 #if MUTEX != 0
 	add	#MUTEX, r5
 #endif
-	mov	r2, r4
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r6
+	extu.b	r6, r6
 	mov.l	.Lwait4, r1
 	bsrf	r1
-	 nop
+	 mov	r2, r4
 .Lwait4b:
 	bra	2b
 	 nop
@@ -166,6 +164,9 @@ __pthread_rwlock_wrlock:
 #if MUTEX != 0
 	add	#MUTEX, r4
 #endif
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
 	mov.l	.Lwake4, r1
 	bsrf	r1
 	 nop
@@ -192,6 +193,9 @@ __pthread_rwlock_wrlock:
 #if MUTEX != 0
 	add	#MUTEX, r4
 #endif
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
 	mov.l	.Lwake5, r1
 	bsrf	r1
 	 nop
@@ -204,23 +208,25 @@ __pthread_rwlock_wrlock:
 #if MUTEX != 0
 	add	#MUTEX, r5
 #endif
-	mov	r2, r4
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r6
+	extu.b	r6, r6
 	mov.l	.Lwait5, r1
 	bsrf	r1
-	 nop
+	 mov	r2, r4
 .Lwait5b:
 	bra	13b
 	 nop
 
 	.align	2
 .Lwait4:
-	.long	__lll_mutex_lock_wait-.Lwait4b
+	.long	__lll_lock_wait-.Lwait4b
 .Lwake4:
-	.long	__lll_mutex_unlock_wake-.Lwake4b
+	.long	__lll_unlock_wake-.Lwake4b
 .Lwait5:
-	.long	__lll_mutex_lock_wait-.Lwait5b
+	.long	__lll_lock_wait-.Lwait5b
 .Lwake5:
-	.long	__lll_mutex_unlock_wake-.Lwake5b
+	.long	__lll_unlock_wake-.Lwake5b
 	.globl	pthread_rwlock_wrlock
 pthread_rwlock_wrlock = __pthread_rwlock_wrlock
 

@@ -1,4 +1,5 @@
-/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,31 +19,64 @@
 
 #include <sysdep.h>
 #include <pthread-errnos.h>
+#include <lowlevellock.h>
 #include <lowlevelrobustlock.h>
+#include <kernel-features.h>
 #include "lowlevel-atomic.h"
 
 	.text
 
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 #define FUTEX_WAITERS		0x80000000
 #define FUTEX_OWNER_DIED	0x40000000
 
+#ifdef __ASSUME_PRIVATE_FUTEX
+# define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), tmp; \
+	extu.b	tmp, tmp; \
+	xor	tmp, reg
+#else
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg	; \
+	mov	#FUTEX_WAIT, tmp ; \
+	or	tmp, reg
+# endif
+#endif
 
-	.globl	__lll_robust_mutex_lock_wait
-	.type	__lll_robust_mutex_lock_wait,@function
-	.hidden	__lll_robust_mutex_lock_wait
+	.globl	__lll_robust_lock_wait
+	.type	__lll_robust_lock_wait,@function
+	.hidden	__lll_robust_lock_wait
 	.align	5
 	cfi_startproc
-__lll_robust_mutex_lock_wait:
+__lll_robust_lock_wait:
 	mov.l	r8, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r8, 0)
 	mov	r5, r8
 	mov	#0, r7		/* No timeout.  */
-	mov	#FUTEX_WAIT, r5
+	mov	r6, r5
+	LOAD_FUTEX_WAIT (r5, r0, r1)
 
 4:
 	mov	r4, r6
@@ -90,21 +124,24 @@ __lll_robust_mutex_lock_wait:
 	.long	FUTEX_WAITERS
 .Ltidoff:
 	.word	TID - TLS_PRE_TCB_SIZE
-	.size	__lll_robust_mutex_lock_wait,.-__lll_robust_mutex_lock_wait
+	.size	__lll_robust_lock_wait,.-__lll_robust_lock_wait
 
 
-	.globl	__lll_robust_mutex_timedlock_wait
-	.type	__lll_robust_mutex_timedlock_wait,@function
-	.hidden	__lll_robust_mutex_timedlock_wait
+	.globl	__lll_robust_timedlock_wait
+	.type	__lll_robust_timedlock_wait,@function
+	.hidden	__lll_robust_timedlock_wait
 	.align	5
 	cfi_startproc
-__lll_robust_mutex_timedlock_wait:
+__lll_robust_timedlock_wait:
 	/* Check for a valid timeout value.  */
 	mov.l	@(4,r6), r1
 	mov.l	.L1g, r0
 	cmp/hs	r0, r1
 	bt	3f
 
+	mov.l	r11, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r11, 0)
 	mov.l	r10, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r10, 0)
@@ -114,6 +151,7 @@ __lll_robust_mutex_timedlock_wait:
 	mov.l	r8, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r8, 0)
+	mov	r7, r11
 	mov	r4, r10
 	mov	r6, r9
 	mov	r5, r8
@@ -126,7 +164,7 @@ __lll_robust_mutex_timedlock_wait:
 	/* Get current time.  */
 	mov	r15, r4
 	mov	#0, r5
-	mov	#SYS_gettimeofday, r3
+	mov	#__NR_gettimeofday, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
 
@@ -167,7 +205,8 @@ __lll_robust_mutex_timedlock_wait:
 
 2:
 	mov	r8, r4
-	mov	#FUTEX_WAIT, r5
+	mov	r11, r5
+	LOAD_FUTEX_WAIT (r5, r0, r1)
 	mov	r10, r6
 	mov	r15, r7
 	mov	#SYS_futex, r3
@@ -196,8 +235,9 @@ __lll_robust_mutex_timedlock_wait:
 	add	#8, r15
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
+	mov.l	@r15+, r10
 	rts
-	 mov.l	@r15+, r10
+	 mov.l	@r15+, r11
 
 7:
 	/* Check whether the time expired.  */
@@ -221,4 +261,4 @@ __lll_robust_mutex_timedlock_wait:
 	.word	TID - TLS_PRE_TCB_SIZE
 .L1k:
 	.word	1000
-	.size	__lll_robust_mutex_timedlock_wait,.-__lll_robust_mutex_timedlock_wait
+	.size	__lll_robust_timedlock_wait,.-__lll_robust_timedlock_wait

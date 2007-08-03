@@ -143,7 +143,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 
   if (retval == NULL)
     /* This means we are out of core.  */
-    return NULL;
+    goto out;
 
   if (retval->decided <= 0)
     _nl_load_domain (retval, domainbinding);
@@ -159,6 +159,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 	}
     }
 
+out:
   /* The space for normalized_codeset is dynamically allocated.  Free it.  */
   if (mask & XPG_NORM_CODESET)
     free ((void *) normalized_codeset);

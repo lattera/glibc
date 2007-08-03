@@ -949,7 +949,10 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 			   nothing to do.  Otherwise do not use the
 			   translation at all.  */
 			if (__builtin_expect (r != __GCONV_NULCONV, 1))
-			  return NULL;
+			  {
+			    free ((char *) encoding);
+			    return NULL;
+			  }
 
 			convd->conv = (__gconv_t) -1;
 		      }

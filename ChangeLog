@@ -1,5 +1,15 @@
 2007-08-03  Jakub Jelinek  <jakub@redhat.com>
 
+	* intl/dcigettext.c (_nl_find_msg): Free encoding if __gconv_open
+	failed.
+	* intl/finddomain.c (_nl_find_domain): Free normalized_codeset
+	on failure.
+
+	* elf/dl-load.c (decompose_rpath): Free copy if result couldn't be
+	allocated.
+
+2007-08-03  Jakub Jelinek  <jakub@redhat.com>
+
 	* rt/mqueue.h (mq_timedreceive, mq_timedsend): Fix nonnull argument
 	numbers.
 

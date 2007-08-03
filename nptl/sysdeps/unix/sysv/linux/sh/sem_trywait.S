@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
+#include <lowlevellock.h>
 #include "lowlevel-atomic.h"
 
 
@@ -60,15 +61,19 @@ __new_sem_trywait:
 	mov.l	.Lerrno1, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
-	add	r1, r0
-	mov.l	r8, @r0
+	bra	.Lexit
+	 add	r1, r0
+	.align	2
+.Lerrno1:
+	.long	errno@GOTTPOFF
+.Lexit:
 #else
 	mov.l	.Lerrloc1, r1
 	bsrf	r1
 	 nop
 .Lerrloc1b:
-	mov.l	r8, @r0
 #endif
+	mov.l	r8, @r0
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
 	mov.l	@r15+, r12
@@ -78,10 +83,7 @@ __new_sem_trywait:
 	.align	2
 .Lgot1:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if USE___THREAD
-.Lerrno1:
-	.long	errno@GOTTPOFF
-#else
+#if !USE___THREAD
 .Lerrloc1:
 	.long	__errno_location@PLT-(.Lerrloc1b-.)
 #endif

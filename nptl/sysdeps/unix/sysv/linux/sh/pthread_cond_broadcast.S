@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,18 +18,12 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_REQUEUE		3
-#define FUTEX_CMP_REQUEUE	4
-
-#define EINVAL			22
 
 	.text
 
@@ -162,10 +156,12 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov.l	.Lmwait5, r1
+	mov	#LLL_SHARED, r6
+	extu.b	r6, r6
+	mov.l	.Lwait5, r1
 	bsrf	r1
 	 mov	r2, r4
-.Lmwait5b:
+.Lwait5b:
 	bra	2b
 	 nop
 
@@ -175,10 +171,11 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake5, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake5, r1
 	bsrf	r1
-	 nop
-.Lmwake5b:
+	 extu.b	r5, r5
+.Lwake5b:
 	bra	6b
 	 nop
 
@@ -188,10 +185,11 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake6, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake6, r1
 	bsrf	r1
-	 nop
-.Lmwake6b:
+	 extu.b	r5, r5
+.Lwake6b:
 	bra	8b
 	 nop
 
@@ -208,12 +206,12 @@ __pthread_cond_broadcast:
 	 nop
 
 	.align	2
-.Lmwait5:
-	.long	__lll_mutex_lock_wait-.Lmwait5b
-.Lmwake5:
-	.long	__lll_mutex_unlock_wake-.Lmwake5b
-.Lmwake6:
-	.long	__lll_mutex_unlock_wake-.Lmwake6b
+.Lwait5:
+	.long	__lll_lock_wait-.Lwait5b
+.Lwake5:
+	.long	__lll_unlock_wake-.Lwake5b
+.Lwake6:
+	.long	__lll_unlock_wake-.Lwake6b
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

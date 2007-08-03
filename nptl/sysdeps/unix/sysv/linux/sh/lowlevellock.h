@@ -19,19 +19,24 @@
 #ifndef _LOWLEVELLOCK_H
 #define _LOWLEVELLOCK_H	1
 
+#ifndef __ASSEMBLER__
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
 #include <kernel-features.h>
+#endif
 
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_CMP_REQUEUE	4
+#define FUTEX_WAKE_OP		5
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
 #define FUTEX_PRIVATE_FLAG	128
 
+#define FUTEX_OP_CLEAR_WAKE_IF_GT_ONE	((4 << 24) | 1)
 
 /* Values for 'private' parameter of locking macros.  Yes, the
    definition seems to be backwards.  But it is not.  The bit will be
@@ -64,20 +69,30 @@
 # endif	      
 #endif
 
+#ifndef __ASSEMBLER__
 
 /* Initializer for compatibility lock.  */
-#define LLL_MUTEX_LOCK_INITIALIZER		(0)
-#define LLL_MUTEX_LOCK_INITIALIZER_LOCKED	(1)
-#define LLL_MUTEX_LOCK_INITIALIZER_WAITERS	(2)
+#define LLL_LOCK_INITIALIZER		(0)
+#define LLL_LOCK_INITIALIZER_LOCKED	(1)
+#define LLL_LOCK_INITIALIZER_WAITERS	(2)
 
-extern int __lll_mutex_lock_wait (int val, int *__futex) attribute_hidden;
-extern int __lll_mutex_timedlock_wait (int val, int *__futex,
-				       const struct timespec *abstime)
-     attribute_hidden;
-extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
+extern int __lll_lock_wait_private (int val, int *__futex)
+  attribute_hidden;
+extern int __lll_lock_wait (int val, int *__futex, int private)
+  attribute_hidden;
+extern int __lll_timedlock_wait (int val, int *__futex,
+				 const struct timespec *abstime, int private)
+  attribute_hidden;
+extern int __lll_robust_lock_wait (int val, int *__futex, int private)
+  attribute_hidden;
+extern int __lll_robust_timedlock_wait (int val, int *__futex,
+					const struct timespec *abstime,
+					int private)
+  attribute_hidden;
+extern int __lll_unlock_wake_private (int *__futex) attribute_hidden;
+extern int __lll_unlock_wake (int *__futex, int private) attribute_hidden;
 
-
-#define lll_mutex_trylock(futex) \
+#define lll_trylock(futex) \
   ({ unsigned char __result; \
      __asm __volatile ("\
 	.align 2\n\
@@ -94,12 +109,12 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	negc %0,%0"\
 	: "=r" (__result) \
 	: "r" (&(futex)), \
-	  "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), \
-	  "r" (LLL_MUTEX_LOCK_INITIALIZER) \
+	  "r" (LLL_LOCK_INITIALIZER_LOCKED), \
+	  "r" (LLL_LOCK_INITIALIZER) \
 	: "r0", "r1", "r2", "t", "memory"); \
      __result; })
 
-#define lll_robust_mutex_trylock(futex, id)	\
+#define lll_robust_trylock(futex, id)	\
   ({ unsigned char __result; \
      __asm __volatile ("\
 	.align 2\n\
@@ -117,11 +132,11 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "=r" (__result) \
 	: "r" (&(futex)), \
 	  "r" (id), \
-	  "r" (LLL_MUTEX_LOCK_INITIALIZER) \
+	  "r" (LLL_LOCK_INITIALIZER) \
 	: "r0", "r1", "r2", "t", "memory"); \
      __result; })
 
-#define lll_mutex_cond_trylock(futex) \
+#define lll_cond_trylock(futex) \
   ({ unsigned char __result; \
      __asm __volatile ("\
 	.align 2\n\
@@ -138,13 +153,13 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	negc %0,%0"\
 	: "=r" (__result) \
 	: "r" (&(futex)), \
-	  "r" (LLL_MUTEX_LOCK_INITIALIZER_WAITERS), \
-	  "r" (LLL_MUTEX_LOCK_INITIALIZER) \
+	  "r" (LLL_LOCK_INITIALIZER_WAITERS), \
+	  "r" (LLL_LOCK_INITIALIZER) \
 	: "r0", "r1", "r2", "t", "memory"); \
      __result; })
 
-#define lll_mutex_lock(futex) \
-  (void) ({ int __result, val, *__futex = &(futex); \
+#define lll_lock(futex, private) \
+  (void) ({ int __result, *__futex = &(futex); \
 	    __asm __volatile ("\
 		.align 2\n\
 		mova 1f,r0\n\
@@ -159,10 +174,17 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		: "=&r" (__result) : "r" (1), "r" (__futex) \
 		: "r0", "r1", "t", "memory"); \
 	    if (__result) \
-	      __lll_mutex_lock_wait (__result, __futex); })
+	      { \
+		if (__builtin_constant_p (private) \
+		    && (private) == LLL_PRIVATE) \
+		  __lll_lock_wait_private (__result, __futex); \
+	        else \
+		  __lll_lock_wait (__result, __futex, (private));	\
+	      } \
+    })
 
-#define lll_robust_mutex_lock(futex, id)		    \
-  ({ int __result, val, *__futex = &(futex); \
+#define lll_robust_lock(futex, id, private) \
+  ({ int __result, *__futex = &(futex); \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
@@ -177,13 +199,13 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "=&r" (__result) : "r" (id), "r" (__futex) \
 	: "r0", "r1", "t", "memory"); \
      if (__result) \
-       __result = __lll_robust_mutex_lock_wait (__result, __futex); \
+       __result = __lll_robust_lock_wait (__result, __futex, private); \
      __result; })
 
 /* Special version of lll_mutex_lock which causes the unlock function to
    always wakeup waiters.  */
-#define lll_mutex_cond_lock(futex) \
-  (void) ({ int __result, val, *__futex = &(futex); \
+#define lll_cond_lock(futex, private) \
+  (void) ({ int __result, *__futex = &(futex); \
 	    __asm __volatile ("\
 		.align 2\n\
 		mova 1f,r0\n\
@@ -198,10 +220,10 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		: "=&r" (__result) : "r" (2), "r" (__futex) \
 		: "r0", "r1", "t", "memory"); \
 	    if (__result) \
-	      __lll_mutex_lock_wait (__result, __futex); })
+	      __lll_lock_wait (__result, __futex, private); })
 
-#define lll_robust_mutex_cond_lock(futex, id)	    \
-  ({ int __result, val, *__futex = &(futex); \
+#define lll_robust_cond_lock(futex, id, private) \
+  ({ int __result, *__futex = &(futex); \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
@@ -216,11 +238,11 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "=&r" (__result) : "r" (id | FUTEX_WAITERS), "r" (__futex) \
 	: "r0", "r1", "t", "memory"); \
       if (__result) \
-	__result = __lll_robust_mutex_lock_wait (__result, __futex); \
+	__result = __lll_robust_lock_wait (__result, __futex, private); \
       __result; })
 
-#define lll_mutex_timedlock(futex, timeout) \
-  ({ int __result, val, *__futex = &(futex); \
+#define lll_timedlock(futex, timeout, private) \
+  ({ int __result, *__futex = &(futex); \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
@@ -235,11 +257,11 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "=&r" (__result) : "r" (1), "r" (__futex) \
 	: "r0", "r1", "t", "memory"); \
     if (__result) \
-      __result = __lll_mutex_timedlock_wait (__result, __futex, timeout); \
+      __result = __lll_timedlock_wait (__result, __futex, timeout, private); \
     __result; })
 
-#define lll_robust_mutex_timedlock(futex, timeout, id)	\
-  ({ int __result, val, *__futex = &(futex); \
+#define lll_robust_timedlock(futex, timeout, id, private) \
+  ({ int __result, *__futex = &(futex); \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
@@ -254,11 +276,11 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	: "=&r" (__result) : "r" (id), "r" (__futex) \
 	: "r0", "r1", "t", "memory"); \
     if (__result) \
-      __result = __lll_robust_mutex_timedlock_wait (__result, __futex, \
-						    timeout);	       \
+      __result = __lll_robust_timedlock_wait (__result, __futex, \
+					      timeout, private); \
     __result; })
 
-#define lll_mutex_unlock(futex) \
+#define lll_unlock(futex, private) \
   (void) ({ int __result, *__futex = &(futex); \
 	    __asm __volatile ("\
 		.align 2\n\
@@ -272,9 +294,16 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		: "=&r" (__result) : "r" (__futex) \
 		: "r0", "r1", "memory"); \
 	    if (__result) \
-	      __lll_mutex_unlock_wake (__futex); })
+	      { \
+		if (__builtin_constant_p (private) \
+		    && (private) == LLL_PRIVATE) \
+		  __lll_unlock_wake_private (__futex); \
+	        else \
+		  __lll_unlock_wake (__futex, (private)); \
+	      } \
+    })
 
-#define lll_robust_mutex_unlock(futex) \
+#define lll_robust_unlock(futex, private) \
   (void) ({ int __result, *__futex = &(futex); \
 	    __asm __volatile ("\
 		.align 2\n\
@@ -288,9 +317,9 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		: "=&r" (__result) : "r" (__futex), "r" (FUTEX_WAITERS) \
 		: "r0", "r1", "memory");	\
 	    if (__result) \
-	      __lll_mutex_unlock_wake (__futex); })
+	      __lll_unlock_wake (__futex, private); })
 
-#define lll_robust_mutex_dead(futex) \
+#define lll_robust_dead(futex, private)		       \
   (void) ({ int __ignore, *__futex = &(futex); \
 	    __asm __volatile ("\
 		.align 2\n\
@@ -303,22 +332,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	     1: mov r1,r15"\
 		: "=&r" (__ignore) : "r" (__futex), "r" (FUTEX_OWNER_DIED) \
 		: "r0", "r1", "memory");	\
-	    lll_futex_wake (__futex, 1, LLL_SHARED); })
-
-#define lll_mutex_islocked(futex) \
-  (futex != 0)
-
-
-/* We have a separate internal lock implementation which is not tied
-   to binary compatibility.  */
-
-/* Type for lock object.  */
-typedef int lll_lock_t;
-
-/* Initializers for lock.  */
-#define LLL_LOCK_INITIALIZER		(0)
-#define LLL_LOCK_INITIALIZER_LOCKED	(1)
-
+	    lll_futex_wake (__futex, 1, private); })
 
 # ifdef NEED_SYSCALL_INST_PAD
 #  define SYSCALL_WITH_INST_PAD "\
@@ -367,25 +381,14 @@ typedef int lll_lock_t;
   } while (0)
 
 
-/* The states of a lock are:
-    0  -  untaken
-    1  -  taken by one user
-    2  -  taken by more users */
-
-#define lll_trylock(futex) lll_mutex_trylock (futex)
-#define lll_lock(futex) lll_mutex_lock (futex)
-#define lll_unlock(futex) lll_mutex_unlock (futex)
-
 #define lll_islocked(futex) \
   (futex != LLL_LOCK_INITIALIZER)
-
 
 /* The kernel notifies a process with uses CLONE_CLEARTID via futex
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero
    afterwards.  */
 
-extern int __lll_wait_tid (int *tid) attribute_hidden;
 #define lll_wait_tid(tid) \
   do {									      \
     __typeof (tid) *__tid = &(tid);					      \
@@ -407,24 +410,6 @@ extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
       }									      \
     __result; })
 
-
-/* Conditional variable handling.  */
-
-extern void __lll_cond_wait (pthread_cond_t *cond) attribute_hidden;
-extern int __lll_cond_timedwait (pthread_cond_t *cond,
-				 const struct timespec *abstime)
-     attribute_hidden;
-extern void __lll_cond_wake (pthread_cond_t *cond) attribute_hidden;
-extern void __lll_cond_broadcast (pthread_cond_t *cond) attribute_hidden;
-
-
-#define lll_cond_wait(cond) \
-  __lll_cond_wait (cond)
-#define lll_cond_timedwait(cond, abstime) \
-  __lll_cond_timedwait (cond, abstime)
-#define lll_cond_wake(cond) \
-  __lll_cond_wake (cond)
-#define lll_cond_broadcast(cond) \
-  __lll_cond_broadcast (cond)
+#endif  /* !__ASSEMBLER__ */
 
 #endif  /* lowlevellock.h */

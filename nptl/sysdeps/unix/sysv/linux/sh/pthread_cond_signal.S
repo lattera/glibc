@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,16 +18,11 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_REQUEUE		3
-
-#define EINVAL			22
 
 	.text
 
@@ -108,10 +103,12 @@ __pthread_cond_signal:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov.l	.Lmwait4, r1
+	mov	#LLL_SHARED, r6
+	extu.b	r6, r6
+	mov.l	.Lwait4, r1
 	bsrf	r1
 	 mov	r2, r4
-.Lmwait4b:
+.Lwait4b:
 	bra	2b
 	 nop
 
@@ -121,18 +118,19 @@ __pthread_cond_signal:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake4, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake4, r1
 	bsrf	r1
-	 nop
-.Lmwake4b:
+	 extu.b	r5, r5
+.Lwake4b:
 	bra	6b
 	 nop
 
 	.align	2
-.Lmwait4:
-	.long	__lll_mutex_lock_wait-.Lmwait4b
-.Lmwake4:
-	.long	__lll_mutex_unlock_wake-.Lmwake4b
+.Lwait4:
+	.long	__lll_lock_wait-.Lwait4b
+.Lwake4:
+	.long	__lll_unlock_wake-.Lwake4b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

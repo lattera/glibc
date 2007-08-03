@@ -578,6 +578,7 @@ decompose_rpath (struct r_search_path_struct *sps,
 						  * sizeof (*result));
   if (result == NULL)
     {
+      free (copy);
       errstring = N_("cannot create cache for search path");
     signal_error:
       _dl_signal_error (ENOMEM, NULL, NULL, errstring);

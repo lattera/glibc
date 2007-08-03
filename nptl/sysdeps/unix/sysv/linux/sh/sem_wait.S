@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,9 @@
 #include <pthread-errnos.h>
 #include <tcb-offsets.h>
 #include <structsem.h>
+#include <lowlevellock.h>
 #include "lowlevel-atomic.h"
 
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
 
 #if VALUE != 0
 # error "code needs to be rewritten for VALUE != 0"
@@ -138,24 +135,26 @@ __new_sem_wait:
 	mov.l	.Lerrno0, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
-	add	r1, r0
-	mov.l	r8, @r0
+	bra	.Lexit
+	 add	r1, r0
+	.align	2
+.Lerrno0:
+	.long	errno@GOTTPOFF
+.Lexit:
 #else
 	mov.l	.Lerrloc0, r1
 	bsrf	r1
 	 nop
 .Lerrloc0b:
-	mov.l	r8, @r0
 #endif
+	mov.l	r8, @r0
 	bra	9b
 	 mov	#-1, r0
 
+	.align	2
 .Lgot0:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if USE___THREAD
-.Lerrno0:
-	.long	errno@GOTTPOFF
-#else
+#if !USE___THREAD
 .Lerrloc0:
 	.long	__errno_location@PLT-(.Lerrloc0b-.)
 #endif

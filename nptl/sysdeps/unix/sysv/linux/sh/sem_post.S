@@ -20,13 +20,9 @@
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
 #include <structsem.h>
+#include <lowlevellock.h>
 #include "lowlevel-atomic.h"
 
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
 
 	.text
 
@@ -65,7 +61,12 @@ __new_sem_post:
 	mov.l	.Lerrno3, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
-	add	r1, r0
+	bra	.Lexit
+	 add	r1, r0
+	.align	2
+.Lerrno3:
+	.long	errno@GOTTPOFF
+.Lexit:
 #else
 	mov.l	.Lerrloc3, r1
 	bsrf	r1
@@ -81,10 +82,7 @@ __new_sem_post:
 	.align	2
 .Lgot3:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if USE___THREAD
-.Lerrno3:
-	.long	errno@GOTTPOFF
-#else
+#if !USE___THREAD
 .Lerrloc3:
 	.long	__errno_location@PLT-(.Lerrloc3b-.)
 #endif

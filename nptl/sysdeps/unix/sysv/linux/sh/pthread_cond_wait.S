@@ -18,13 +18,9 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-
 
 	.text
 
@@ -267,10 +263,12 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov.l	.Lmwait0, r1
+	mov	#LLL_SHARED, r6
+	extu.b	r6, r6
+	mov.l	.Lwait0, r1
 	bsrf	r1
 	 mov	r2, r4
-.Lmwait0b:
+.Lwait0b:
 	bra	2b
 	 nop
 3:
@@ -279,10 +277,11 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake0, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake0, r1
 	bsrf	r1
-	 nop
-.Lmwake0b:
+	 extu.b	r5, r5
+.Lwake0b:
 	bra	4b
 	 nop
 
@@ -292,10 +291,12 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov.l	.Lmwait1, r1
+	mov	#LLL_SHARED, r6
+	extu.b	r6, r6
+	mov.l	.Lwait1, r1
 	bsrf	r1
 	 mov	r2, r4
-.Lmwait1b:
+.Lwait1b:
 	bra	6b
 	 nop
 
@@ -305,10 +306,11 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake1, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake1, r1
 	bsrf	r1
-	 nop
-.Lmwake1b:
+	 extu.b	r5, r5
+.Lwake1b:
 	bra	11b
 	 nop
 
@@ -327,26 +329,27 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake2, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake2, r1
 	bsrf	r1
-	 nop
-.Lmwake2b:
+	 extu.b	r5, r5
+.Lwake2b:
 
 13:
 	bra	14b
 	 mov.l	@(12,r15), r0
 
 	.align	2
-.Lmwait0:
-	.long	__lll_mutex_lock_wait-.Lmwait0b
-.Lmwake0:
-	.long	__lll_mutex_unlock_wake-.Lmwake0b
-.Lmwait1:
-	.long	__lll_mutex_lock_wait-.Lmwait1b
-.Lmwake1:
-	.long	__lll_mutex_unlock_wake-.Lmwake1b
-.Lmwake2:
-	.long	__lll_mutex_unlock_wake-.Lmwake2b
+.Lwait0:
+	.long	__lll_lock_wait-.Lwait0b
+.Lwake0:
+	.long	__lll_unlock_wake-.Lwake0b
+.Lwait1:
+	.long	__lll_lock_wait-.Lwait1b
+.Lwake1:
+	.long	__lll_unlock_wake-.Lwake1b
+.Lwake2:
+	.long	__lll_unlock_wake-.Lwake2b
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
@@ -371,10 +374,12 @@ __condvar_w_cleanup:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov.l	.Lmwait3, r1
+	mov	#LLL_SHARED, r6
+	extu.b	r6, r6
+	mov.l	.Lwait3, r1
 	bsrf	r1
 	 mov	r2, r4
-.Lmwait3b:
+.Lwait3b:
 
 1:
 	mov.l	@(broadcast_seq,r8), r0
@@ -464,10 +469,11 @@ __condvar_w_cleanup:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
-	mov.l	.Lmwake3, r1
+	mov	#LLL_SHARED, r5
+	mov.l	.Lwake3, r1
 	bsrf	r1
-	 nop
-.Lmwake3b:
+	 extu.b	r5, r5
+.Lwake3b:
 
 2:
 	/* Wake up all waiters to make sure no signal gets lost.  */
@@ -500,10 +506,10 @@ __condvar_w_cleanup:
 	sleep
 
 	.align	2
-.Lmwait3:
-	.long   __lll_mutex_lock_wait-.Lmwait3b
-.Lmwake3:
-        .long   __lll_mutex_unlock_wake-.Lmwake3b
+.Lwait3:
+	.long   __lll_lock_wait-.Lwait3b
+.Lwake3:
+        .long   __lll_unlock_wake-.Lwake3b
 .Lmlocki3:
 	.long   __pthread_mutex_cond_lock-.Lmlocki3b
 .Lresume:

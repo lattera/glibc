@@ -17,17 +17,12 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
 #include <tcb-offsets.h>
 #include <kernel-features.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_PRIVATE_FLAG	128
 
 
 	.text
@@ -92,7 +87,7 @@ pthread_rwlock_timedrdlock:
 	/* Get current time.  */
 	mov	r15, r4
 	mov	#0, r5
-	mov	#SYS_gettimeofday, r3
+	mov	#__NR_gettimeofday, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
 
@@ -213,10 +208,12 @@ pthread_rwlock_timedrdlock:
 #if MUTEX != 0
 	add	#MUTEX, r5
 #endif
-	mov	r2, r4
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r6
+	extu.b	r6, r6
 	mov.l	.Lwait2, r1
 	bsrf	r1
-	 nop
+	 mov	r2, r4
 .Lwait2b:
 	bra	2b
 	 nop
@@ -239,6 +236,9 @@ pthread_rwlock_timedrdlock:
 #if MUTEX != 0
 	add	#MUTEX, r4
 #endif
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
 	mov.l	.Lwake2, r1
 	bsrf	r1
 	 nop
@@ -267,6 +267,9 @@ pthread_rwlock_timedrdlock:
 #if MUTEX != 0
 	add	#MUTEX, r4
 #endif
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r5
+	extu.b	r5, r5
 	mov.l	.Lwake3, r1
 	bsrf	r1
 	 nop
@@ -279,10 +282,12 @@ pthread_rwlock_timedrdlock:
 #if MUTEX != 0
 	add	#MUTEX, r5
 #endif
-	mov	r2, r4
+	mov	#PSHARED, r0
+	mov.b	@(r0,r8), r6
+	extu.b	r6, r6
 	mov.l	.Lwait3, r1
 	bsrf	r1
-	 nop
+	 mov	r2, r4
 .Lwait3b:
 	bra	13b
 	 nop
@@ -297,11 +302,11 @@ pthread_rwlock_timedrdlock:
 
 	.align	2
 .Lwait2:
-	.long	__lll_mutex_lock_wait-.Lwait2b
+	.long	__lll_lock_wait-.Lwait2b
 .Lwake2:
-	.long	__lll_mutex_unlock_wake-.Lwake2b
+	.long	__lll_unlock_wake-.Lwake2b
 .Lwait3:
-	.long	__lll_mutex_lock_wait-.Lwait3b
+	.long	__lll_lock_wait-.Lwait3b
 .Lwake3:
-	.long	__lll_mutex_unlock_wake-.Lwake3b
+	.long	__lll_unlock_wake-.Lwake3b
 	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock

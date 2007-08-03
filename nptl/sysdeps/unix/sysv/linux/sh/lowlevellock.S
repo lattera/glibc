@@ -18,45 +18,112 @@
 
 #include <sysdep.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
+#include <lowlevellock.h>
 #include "lowlevel-atomic.h"
 
 	.text
 
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#ifndef FUTEX_WAIT
-# define FUTEX_WAIT		0
-# define FUTEX_WAKE		1
-#endif
-
-#ifndef LOAD_FUTEX_WAIT
-# if FUTEX_WAIT == 0
-#  define LOAD_FUTEX_WAIT(reg,tmp) \
-	xor	reg, reg
-# else
-#  define LOAD_FUTEX_WAIT(reg,tmp) \
-	mov	#FUTEX_WAIT, reg; \
+#ifdef __ASSUME_PRIVATE_FUTEX
+# define LOAD_PRIVATE_FUTEX_WAIT(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg; \
 	extu.b	reg, reg
+# define LOAD_PRIVATE_FUTEX_WAKE(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg; \
+	extu.b	reg, reg
+# define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), tmp; \
+	extu.b	tmp, tmp; \
+	xor	tmp, reg
+# define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), tmp; \
+	extu.b	tmp, tmp; \
+	xor	tmp, reg
+#else
+# if FUTEX_WAIT == 0
+#  define LOAD_PRIVATE_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, reg	; \
+	add	reg, tmp 	; \
+	bra	98f		; \
+	 mov.l	@tmp, reg	; \
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:
+# else
+#  define LOAD_PRIVATE_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, reg	; \
+	add	reg, tmp 	; \
+	mov.l	@tmp, reg	; \
+	bra	98f		; \
+	 mov	#FUTEX_WAIT, tmp ; \
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	or	tmp, reg
+# endif
+# define LOAD_PRIVATE_FUTEX_WAKE(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, reg	; \
+	add	reg, tmp 	; \
+	mov.l	@tmp, reg	; \
+	bra	98f		; \
+	 mov	#FUTEX_WAKE, tmp ; \
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	or	tmp, reg
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg	; \
+	mov	#FUTEX_WAIT, tmp ; \
+	or	tmp, reg
 # endif
 # define LOAD_FUTEX_WAKE(reg,tmp) \
-	mov	#FUTEX_WAKE, reg; \
-	extu.b	reg, reg
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg	; \
+	mov	#FUTEX_WAKE, tmp ; \
+	or	tmp, reg
 #endif
 
-
-	.globl	__lll_mutex_lock_wait
-	.type	__lll_mutex_lock_wait,@function
-	.hidden	__lll_mutex_lock_wait
+	.globl	__lll_lock_wait_private
+	.type	__lll_lock_wait_private,@function
+	.hidden	__lll_lock_wait_private
 	.align	5
 	cfi_startproc
-__lll_mutex_lock_wait:
+__lll_lock_wait_private:
 	mov.l	r8, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r8, 0)
 	mov	r4, r6
 	mov	r5, r8
 	mov	#0, r7		/* No timeout.  */
-	LOAD_FUTEX_WAIT (r5, r0)
+	LOAD_PRIVATE_FUTEX_WAIT (r5, r0, r1)
 
 	mov	#2, r4
 	cmp/eq	r4, r6
@@ -79,22 +146,67 @@ __lll_mutex_lock_wait:
 	ret
 	 mov	r2, r0
 	cfi_endproc
-	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
-
+	.size	__lll_lock_wait_private,.-__lll_lock_wait_private
 
 #ifdef NOT_IN_libc
-	.globl	__lll_mutex_timedlock_wait
-	.type	__lll_mutex_timedlock_wait,@function
-	.hidden	__lll_mutex_timedlock_wait
+	.globl	__lll_lock_wait
+	.type	__lll_lock_wait,@function
+	.hidden	__lll_lock_wait
 	.align	5
 	cfi_startproc
-__lll_mutex_timedlock_wait:
+__lll_lock_wait:
+	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r9, 0)
+	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
+	mov	r6, r9
+	mov	r4, r6
+	mov	r5, r8
+	mov	#0, r7		/* No timeout.  */
+	mov	r9, r5
+	LOAD_FUTEX_WAIT (r5, r0, r1)
+
+	mov	#2, r4
+	cmp/eq	r4, r6
+	bf	2f
+
+1:
+	mov	r8, r4
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+
+2:
+	mov	#2, r6
+	XCHG (r6, @r8, r2)
+	tst	r2, r2
+	bf	1b
+
+	mov.l	@r15+, r8
+	mov.l	@r15+, r9
+	ret
+	 mov	r2, r0
+	cfi_endproc
+	.size	__lll_lock_wait,.-__lll_lock_wait
+
+	.globl	__lll_timedlock_wait
+	.type	__lll_timedlock_wait,@function
+	.hidden	__lll_timedlock_wait
+	.align	5
+	cfi_startproc
+__lll_timedlock_wait:
 	/* Check for a valid timeout value.  */
 	mov.l	@(4,r6), r1
 	mov.l	.L1g, r0
 	cmp/hs	r0, r1
 	bt	3f
 
+	mov.l	r11, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r11, 0)
 	mov.l	r10, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r10, 0)
@@ -104,6 +216,7 @@ __lll_mutex_timedlock_wait:
 	mov.l	r8, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r8, 0)
+	mov	r7, r11
 	mov	r4, r10
 	mov	r6, r9
 	mov	r5, r8
@@ -116,7 +229,7 @@ __lll_mutex_timedlock_wait:
 	/* Get current time.  */
 	mov	r15, r4
 	mov	#0, r5
-	mov	#SYS_gettimeofday, r3
+	mov	#__NR_gettimeofday, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
 
@@ -149,7 +262,8 @@ __lll_mutex_timedlock_wait:
 	bt	8f
 
 	mov	r8, r4
-	LOAD_FUTEX_WAIT (r5, r0)
+	mov	r11, r5
+	LOAD_FUTEX_WAIT (r5, r0, r1)
 	mov	r10, r6
 	mov	r15, r7
 	mov	#SYS_futex, r3
@@ -169,8 +283,9 @@ __lll_mutex_timedlock_wait:
 	add	#8, r15
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
+	mov.l	@r15+, r10
 	rts
-	 mov.l	@r15+, r10
+	 mov.l	@r15+, r11
 7:
 	/* Check whether the time expired.  */
 	mov	#-ETIMEDOUT, r1
@@ -198,17 +313,16 @@ __lll_mutex_timedlock_wait:
 .L1g:
 	.long	1000000000
 
-	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
+	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif
 
-
-	.globl	__lll_mutex_unlock_wake
-	.type	__lll_mutex_unlock_wake,@function
-	.hidden	__lll_mutex_unlock_wake
+	.globl	__lll_unlock_wake_private
+	.type	__lll_unlock_wake_private,@function
+	.hidden	__lll_unlock_wake_private
 	.align	5
 	cfi_startproc
-__lll_mutex_unlock_wake:
-	LOAD_FUTEX_WAKE (r5, r0)
+__lll_unlock_wake_private:
+	LOAD_PRIVATE_FUTEX_WAKE (r5, r0, r1)
 	mov	#1, r6		/* Wake one thread.  */
 	mov	#0, r7
 	mov.l	r7, @r4		/* Stores 0.  */
@@ -219,10 +333,28 @@ __lll_mutex_unlock_wake:
 	rts
 	 nop
 	cfi_endproc
-	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake
-
+	.size	__lll_unlock_wake_private,.-__lll_unlock_wake_private
 
 #ifdef NOT_IN_libc
+	.globl	__lll_unlock_wake
+	.type	__lll_unlock_wake,@function
+	.hidden	__lll_unlock_wake
+	.align	5
+	cfi_startproc
+__lll_unlock_wake:
+	LOAD_FUTEX_WAKE (r5, r0, r1)
+	mov	#1, r6		/* Wake one thread.  */
+	mov	#0, r7
+	mov.l	r7, @r4		/* Stores 0.  */
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+	rts
+	 nop
+	cfi_endproc
+	.size	__lll_unlock_wake,.-__lll_unlock_wake
+
 	.globl	__lll_timedwait_tid
 	.type	__lll_timedwait_tid,@function
 	.hidden	__lll_timedwait_tid
@@ -246,7 +378,7 @@ __lll_timedwait_tid:
 	/* Get current time.  */
 	mov	r15, r4
 	mov	#0, r5
-	mov	#SYS_gettimeofday, r3
+	mov	#__NR_gettimeofday, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
 

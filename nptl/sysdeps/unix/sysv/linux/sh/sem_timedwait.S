@@ -21,12 +21,9 @@
 #include <pthread-errnos.h>
 #include <tcb-offsets.h>
 #include <structsem.h>
+#include <lowlevellock.h>
 #include "lowlevel-atomic.h"
 
-
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
 
 #if VALUE != 0
 # error "code needs to be rewritten for VALUE != 0"
@@ -81,7 +78,7 @@ sem_timedwait:
 	/* Compute relative timeout.  */
 	mov	r15, r4
 	mov	#0, r5
-	mov	#SYS_gettimeofday, r3
+	mov	#__NR_gettimeofday, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
 
@@ -180,15 +177,19 @@ sem_timedwait:
 	mov.l	.Lerrno2, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
-	add	r1, r0
-	mov.l	r10, @r0
+	bra	.Lexit
+	 add	r1, r0
+	.align	2
+.Lerrno2:
+ 	.long	errno@GOTTPOFF
+.Lexit:
 #else
 	mov.l	.Lerrloc2, r1
 	bsrf	r1
 	 nop
 .Lerrloc2b:
-	mov.l	r10, @r0
 #endif
+	mov.l	r10, @r0
 	DEC (@(NWAITERS,r8), r2)
 	bra	10b
 	 mov	#-1, r0
@@ -200,10 +201,7 @@ sem_timedwait:
 	.long	1000000000
 .Lgot2:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if USE___THREAD
-.Lerrno2:
-	.long	errno@GOTTPOFF
-#else
+#if !USE___THREAD
 .Lerrloc2:
 	.long	__errno_location@PLT-(.Lerrloc2b-.)
 #endif

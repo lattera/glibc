@@ -17,13 +17,9 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevellock.h>
 #include <lowlevelbarrier.h>
 #include "lowlevel-atomic.h"
-
-#define SYS_futex	240
-#define FUTEX_WAIT	0
-#define FUTEX_WAKE	1
-
 
 	.text
 
@@ -152,6 +148,10 @@ pthread_barrier_wait:
 	 mov.l	@r15+, r9
 
 1:
+	mov.l	@(PRIVATE,r8), r6
+	mov	#LLL_SHARED, r0
+	extu.b	r0, r0
+	xor	r0, r6
 	mov	r2, r4
 	mov	r8, r5
 	mov.l	.Lwait0, r1
@@ -162,6 +162,10 @@ pthread_barrier_wait:
 	 nop
 
 4:
+	mov.l	@(PRIVATE,r8), r5
+	mov	#LLL_SHARED, r0
+	extu.b	r0, r0
+	xor	r0, r5
 	mov	r8, r4
 	mov.l	.Lwake0, r1
 	bsrf	r1
@@ -172,6 +176,10 @@ pthread_barrier_wait:
 
 6:
 	mov	r6, r9
+	mov.l	@(PRIVATE,r8), r5
+	mov	#LLL_SHARED, r0
+	extu.b	r0, r0
+	xor	r0, r5
 	mov	r8, r4
 	mov.l	.Lwake1, r1
 	bsrf	r1
@@ -182,6 +190,10 @@ pthread_barrier_wait:
 
 9:	
 	mov	r6, r9
+	mov.l	@(PRIVATE,r8), r5
+	mov	#LLL_SHARED, r0
+	extu.b	r0, r0
+	xor	r0, r5
 	mov	r8, r4
 	mov.l	.Lwake2, r1
 	bsrf	r1
@@ -194,11 +206,11 @@ pthread_barrier_wait:
 .Lall:
 	.long	0x7fffffff
 .Lwait0:
-	.long	__lll_mutex_lock_wait-.Lwait0b
+	.long	__lll_lock_wait-.Lwait0b
 .Lwake0:
-	.long	__lll_mutex_unlock_wake-.Lwake0b
+	.long	__lll_unlock_wake-.Lwake0b
 .Lwake1:
-	.long	__lll_mutex_unlock_wake-.Lwake1b
+	.long	__lll_unlock_wake-.Lwake1b
 .Lwake2:
-	.long	__lll_mutex_unlock_wake-.Lwake2b
+	.long	__lll_unlock_wake-.Lwake2b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait
