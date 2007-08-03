@@ -80,14 +80,14 @@ extern ssize_t mq_timedreceive (mqd_t __mqdes, char *__restrict __msg_ptr,
 				size_t __msg_len,
 				unsigned int *__restrict __msg_prio,
 				__const struct timespec *__restrict __abs_timeout)
-  __nonnull ((1, 4));
+  __nonnull ((2, 5));
 
 /* Add message pointed by MSG_PTR to message queue MQDES, stop blocking
    on full message queue if ABS_TIMEOUT expires.  */
 extern int mq_timedsend (mqd_t __mqdes, __const char *__msg_ptr,
 			 size_t __msg_len, unsigned int __msg_prio,
 			 __const struct timespec *__abs_timeout)
-  __nonnull ((1, 4));
+  __nonnull ((2, 5));
 #endif
 
 __END_DECLS
