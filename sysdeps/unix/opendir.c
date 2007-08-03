@@ -155,9 +155,7 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
     allocation = (BUFSIZ < sizeof (struct dirent64)
 		  ? sizeof (struct dirent64) : BUFSIZ);
 
-  const int pad = -sizeof (DIR) % __alignof__ (struct dirent64);
-
-  DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation + pad);
+  DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation);
   if (dirp == NULL)
   lose:
     {
@@ -169,14 +167,15 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
 	}
       return NULL;
     }
-  memset (dirp, '\0', sizeof (DIR));
-  dirp->data = (char *) (dirp + 1) + pad;
-  dirp->allocation = allocation;
-  dirp->fd = fd;
 
+  dirp->allocation = allocation;
 #ifndef NOT_IN_libc
   __libc_lock_init (dirp->lock);
 #endif
+  dirp->fd = fd;
+  dirp->size = 0;
+  dirp->offset = 0;
+  dirp->filepos = 0;
 
   return dirp;
 }

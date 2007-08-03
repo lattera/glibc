@@ -1,7 +1,10 @@
 2007-08-02  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/dirstream.h (struct __dirstream): Move lock member
-	to fill a hole on 64-bit platforms.
+	* sysdeps/unix/opendir.c (__alloc_dir): Don't initialize ->data.
+	Avoid memset, add explicit initialization.
+	* sysdeps/unix/dirstream.h (struct __dirstream): Move data elemtn
+	to the end and change into zero-sized array.
+	Move lock member to fill a hole on 64-bit platforms.
 
 	* stdlib/stdlib.h: Remove __strto*_internal prototypes and strto*
 	inline functions.

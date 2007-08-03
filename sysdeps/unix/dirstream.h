@@ -17,7 +17,6 @@
    02111-1307 USA.  */
 
 #ifndef	_DIRSTREAM_H
-
 #define	_DIRSTREAM_H	1
 
 #include <sys/types.h>
@@ -35,12 +34,14 @@ struct __dirstream
 
     __libc_lock_define (, lock) /* Mutex lock for this structure.  */
 
-    char *data;			/* Directory block.  */
     size_t allocation;		/* Space allocated for the block.  */
     size_t size;		/* Total valid data in the block.  */
     size_t offset;		/* Current offset into the block.  */
 
     off_t filepos;		/* Position of next entry to read.  */
+
+    /* Directory block.  */
+    char data[0] __attribute__ ((aligned (__alignof__ (void*))));
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->fd)
