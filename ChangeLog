@@ -1,3 +1,7 @@
+2007-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/aio.h: Add __nonnull attributes.
+
 2007-08-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Properly handle -0.
