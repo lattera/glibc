@@ -31,6 +31,7 @@
 
 #include <dirstream.h>
 #include <not-cancel.h>
+#include <kernel-features.h>
 
 
 /* opendir() must not accidentally open something other than a directory.
@@ -110,7 +111,11 @@ __opendir (const char *name)
 	 }
     }
 
-  int fd = open_not_cancel_2 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE);
+  int flags = O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE;
+#ifdef O_CLOEXEC
+  flags |= O_CLOEXEC;
+#endif
+  int fd = open_not_cancel_2 (name, flags);
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
@@ -138,12 +143,33 @@ __opendir (const char *name)
 weak_alias (__opendir, opendir)
 
 
+#ifdef __ASSUME_O_CLOEXEC
+# define check_have_o_cloexec(fd) 1
+#else
+static int
+check_have_o_cloexec (int fd)
+{
+  if (__have_o_cloexec == 0)
+    __have_o_cloexec = (__fcntl (fd, F_GETFD, 0) & FD_CLOEXEC) == 0 ? -1 : 1;
+  return __have_o_cloexec > 0;
+}
+#endif
+
+
 DIR *
 internal_function
 __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
 {
-  if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
-    goto lose;
+  /* We always have to set the close-on-exit flag if the user provided
+     the file descriptor.  Otherwise only if we have no working
+     O_CLOEXEC support.  */
+#ifdef O_CLOEXEC
+  if (! close_fd || ! check_have_o_cloexec (fd))
+#endif
+    {
+      if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
+	goto lose;
+    }
 
   size_t allocation;
 #ifdef _STATBUF_ST_BLKSIZE

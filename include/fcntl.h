@@ -41,4 +41,8 @@ extern void __atfct_seterrno_2 (int errval, int fd1, const char *buf1,
 /* Flag determining whether the *at system calls are available.  */
 extern int __have_atfcts attribute_hidden;
 
+#ifdef O_CLOEXEC
+extern int __have_o_cloexec attribute_hidden;
+#endif
+
 #endif

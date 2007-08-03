@@ -1,5 +1,14 @@
 2007-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/Makefile (aux): Add have_o_cloexec.
+	* include/fcntl.h: Declare __have_o_cloexec.
+	* io/have_o_cloexec.c: New file.
+	* sysdeps/unix/opendir.c (__opendir): Use O_CLOEXEC is available.
+	(__alloc_dir): If O_CLOEXEC has been used, don't duplicate the
+	fcntl call if not necessary.
+	* login/utmp_file.c (setutent_file): Use __have_o_cloexec instead
+	of local variable.
+
 	* sysdeps/unix/opendir.c (__alloc_dir): Don't initialize ->data.
 	Avoid memset, add explicit initialization.
 	* sysdeps/unix/dirstream.h (struct __dirstream): Move data elemtn

@@ -157,9 +157,7 @@ setutent_file (void)
 
 #ifndef __ASSUME_O_CLOEXEC
 # ifdef O_CLOEXEC
-      static int have_o_cloexec;
-
-      if (have_o_cloexec <= 0)
+      if (__have_o_cloexec <= 0)
 # endif
 	{
 	  /* We have to make sure the file is `closed on exec'.  */
@@ -167,8 +165,8 @@ setutent_file (void)
 	  if (result >= 0)
 	    {
 # ifdef O_CLOEXEC
-	      if (have_o_cloexec == 0)
-		have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
+	      if (__have_o_cloexec == 0)
+		__have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
 # endif
 
 	      result = fcntl_not_cancel (file_fd, F_SETFD,
