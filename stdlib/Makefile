@@ -68,7 +68,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
 		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
 		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
-		   tst-makecontext tst-strtod4
+		   tst-makecontext tst-strtod4 tst-strtod5
 
 include ../Makeconfig
 
@@ -115,6 +115,7 @@ test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
 tst-strtod3-ENV = LOCPATH=$(common-objpfx)localedata
 tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
+tst-strtod5-ENV = LOCPATH=$(common-objpfx)localedata
 testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.

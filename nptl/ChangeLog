@@ -1,3 +1,121 @@
+2007-08-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Remove
+	definitions for private futexes.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Include
+	kernel-features.h and lowlevellock.h.  Use private futexes if
+	they are available.
+	(__lll_lock_wait_private, __lll_unlock_wake_private): New.
+	(__lll_mutex_lock_wait): Rename to
+	(__lll_lock_wait): ... this.  Don't compile in for libc.so.
+	(__lll_mutex_timedlock_wait): Rename to ...
+	(__lll_timedlock_wait): ... this.  Use __NR_gettimeofday.
+	Don't compile in for libc.so.
+	(__lll_mutex_unlock_wake): Rename to ...
+	(__lll_unlock_wake): ... this.  Don't compile in for libc.so.
+	(__lll_timedwait_tid): Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Allow including
+	the header from assembler.  Renamed all lll_mutex_* resp.
+	lll_robust_mutex_* macros to lll_* resp. lll_robust_*.
+	Renamed all LLL_MUTEX_LOCK_* macros to LLL_LOCK_*.
+	(FUTEX_CMP_REQUEUE, FUTEX_WAKE_OP, FUTEX_OP_CLEAR_WAKE_IF_GT_ONE):
+	Define.
+	(__lll_lock_wait_private): Add prototype.
+	(__lll_lock_wait, __lll_timedlock_wait, __lll_robust_lock_wait,
+	__lll_robust_timedlock_wait, __lll_unlock_wake_private,
+	__lll_unlock_wake): Likewise.
+	(lll_lock): Add private argument.  Call __lll_lock_wait_private
+	if private is constant LLL_PRIVATE.
+	(lll_robust_lock, lll_cond_lock, lll_robust_cond_lock,
+	lll_timedlock, lll_robust_timedlock): Add private argument.
+	(lll_unlock): Add private argument.  Call __lll_unlock_wake_private
+	if private is constant LLL_PRIVATE.
+	(lll_robust_unlock, lll_robust_dead): Add private argument.
+	(lll_lock_t): Remove.
+	(__lll_cond_wait, __lll_cond_timedwait, __lll_cond_wake,
+	__lll_cond_broadcast, lll_cond_wait, lll_cond_timedwait,
+	lll_cond_wake, lll_cond_broadcast): Remove.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S: Include
+	kernel-features.h and lowlevellock.h.
+	(SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Remove.
+	(LOAD_FUTEX_WAIT): Define.
+	(__lll_robust_mutex_lock_wait): Rename to ...
+	(__lll_robust_lock_wait): ... this.  Add private argument.
+	Use LOAD_FUTEX_WAIT macro.
+	(__lll_robust_mutex_timedlock_wait): Rename to ...
+	(__lll_robust_timedlock_wait): ... this.    Add private argument.
+	Use __NR_gettimeofday.  Use LOAD_FUTEX_WAIT macro.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Remove.
+	(pthread_barrier_wait): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Include
+	lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_REQUEUE,
+	FUTEX_CMP_REQUEUE, EINVAL): Remove.
+	(__pthread_cond_broadcast): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Include
+	lowlevellock.h and pthread-errnos.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_REQUEUE, EINVAL): Remove.
+	(__pthread_cond_signal): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Include
+	lowlevellock.h.
+	(SYS_futex, SYS_gettimeofday, FUTEX_WAIT, FUTEX_WAKE): Remove.
+	(__pthread_cond_timedwait): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.  Use __NR_gettimeofday.
+	(__condvar_tw_cleanup): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE): Remove.
+	(__pthread_cond_wait): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	( __condvar_w_cleanup): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Remove.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Remove.
+	(__pthread_rwlock_rdlock): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Include
+	lowlevellock.h.
+	(SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE,
+	FUTEX_PRIVATE_FLAG): Remove.
+	(pthread_rwlock_timedrdlock): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.  Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Include
+	lowlevellock.h.
+	(SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE,
+	FUTEX_PRIVATE_FLAG): Remove.
+	(pthread_rwlock_timedwrlock): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.  Use __NR_gettimeofday.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Remove.
+	(__pthread_rwlock_unlock): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Include
+	lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Remove.
+	(__pthread_rwlock_wrlock): Use __lll_{lock,unlock}_* instead of
+	__lll_mutex_{lock,unlock}_*.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Include lowlevellock.h.
+	(SYS_futex, FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG): Remove.
+	(__new_sem_post): Use standard initial exec code sequences.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Include
+	lowlevellock.h.
+	(SYS_gettimeofday, SYS_futex, FUTEX_WAIT, FUTEX_WAKE,
+	FUTEX_PRIVATE_FLAG): Remove.
+	(sem_timedwait): Use __NR_gettimeofday.  Use standard initial
+	exec code sequences.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Include lowlevellock.h.
+	(__new_sem_trywait): Use standard initial exec code sequences.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Include lowlevellock.h.
+	(__new_sem_wait): Use standard initial exec code sequences.
+
 2007-07-31  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/sem_post.c (__new_sem_post):

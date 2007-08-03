@@ -1,5 +1,10 @@
 2007-08-03  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Properly handle -0.
+	* stdlib/Makefile (tests): Add tst-strtod5.
+	(tst-strtod5-ENV): New.
+	* stdlib/tst-strtod5.c: New file.
+
 	* intl/dcigettext.c (_nl_find_msg): Free encoding if __gconv_open
 	failed.
 	* intl/finddomain.c (_nl_find_domain): Free normalized_codeset

@@ -700,7 +700,8 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 #endif
       /* If TP is at the start of the digits, there was no correctly
 	 grouped prefix of the string; so no number found.  */
-      RETURN (0.0, tp == start_of_digits ? (base == 16 ? cp - 1 : nptr) : tp);
+      RETURN (negative ? -0.0 : 0.0,
+	      tp == start_of_digits ? (base == 16 ? cp - 1 : nptr) : tp);
     }
 
   /* Remember first significant digit and read following characters until the
@@ -759,7 +760,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (tp < startp)
 	    /* The number is validly grouped, but consists
 	       only of zeroes.  The whole value is zero.  */
-	    RETURN (0.0, tp);
+	    RETURN (negative ? -0.0 : 0.0, tp);
 
 	  /* Recompute DIG_NO so we won't read more digits than
 	     are properly grouped.  */
@@ -862,7 +863,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		    {
 		      /* Overflow or underflow.  */
 		      __set_errno (ERANGE);
-		      result = (exp_negative ? 0.0 :
+		      result = (exp_negative ? (negative ? -0.0 : 0.0) :
 				negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
 		    }
 
