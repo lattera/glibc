@@ -28,13 +28,6 @@ libc_hidden_proto (qsort)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
 libc_hidden_proto (__secure_getenv)
-libc_hidden_proto (__strtof_internal)
-libc_hidden_proto (__strtod_internal)
-libc_hidden_proto (__strtold_internal)
-libc_hidden_proto (__strtol_internal)
-libc_hidden_proto (__strtoll_internal)
-libc_hidden_proto (__strtoul_internal)
-libc_hidden_proto (__strtoull_internal)
 
 extern long int __random (void);
 extern void __srandom (unsigned int __seed);
@@ -99,6 +92,44 @@ extern void *__libc_memalign (size_t alignment, size_t size)
      __attribute_malloc__;
 
 extern int __libc_system (const char *line);
+
+
+extern double __strtod_internal (__const char *__restrict __nptr,
+				 char **__restrict __endptr, int __group)
+     __THROW __nonnull ((1)) __wur;
+extern float __strtof_internal (__const char *__restrict __nptr,
+				char **__restrict __endptr, int __group)
+     __THROW __nonnull ((1)) __wur;
+extern long double __strtold_internal (__const char *__restrict __nptr,
+				       char **__restrict __endptr,
+				       int __group)
+     __THROW __nonnull ((1)) __wur;
+extern long int __strtol_internal (__const char *__restrict __nptr,
+				   char **__restrict __endptr,
+				   int __base, int __group)
+     __THROW __nonnull ((1)) __wur;
+extern unsigned long int __strtoul_internal (__const char *__restrict __nptr,
+					     char **__restrict __endptr,
+					     int __base, int __group)
+     __THROW __nonnull ((1)) __wur;
+__extension__
+extern long long int __strtoll_internal (__const char *__restrict __nptr,
+					 char **__restrict __endptr,
+					 int __base, int __group)
+     __THROW __nonnull ((1)) __wur;
+__extension__
+extern unsigned long long int __strtoull_internal (__const char *
+						   __restrict __nptr,
+						   char **__restrict __endptr,
+						   int __base, int __group)
+     __THROW __nonnull ((1)) __wur;
+libc_hidden_proto (__strtof_internal)
+libc_hidden_proto (__strtod_internal)
+libc_hidden_proto (__strtold_internal)
+libc_hidden_proto (__strtol_internal)
+libc_hidden_proto (__strtoll_internal)
+libc_hidden_proto (__strtoul_internal)
+libc_hidden_proto (__strtoull_internal)
 
 extern double ____strtod_l_internal (__const char *__restrict __nptr,
 				     char **__restrict __endptr, int __group,

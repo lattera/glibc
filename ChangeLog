@@ -1,5 +1,17 @@
 2007-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/dirstream.h (struct __dirstream): Move lock member
+	to fill a hole on 64-bit platforms.
+
+	* stdlib/stdlib.h: Remove __strto*_internal prototypes and strto*
+	inline functions.
+	* include/stdlib.h: Add __strto*_internal prototypes here.
+	* wcsmbs/wchar.h: Remove __wcsto*_internal prototypes and wcsto*
+	inline functions.
+	* include/wchar.h: Add __wcsto*_internal prototypes.
+	* sysdeps/generic/inttypes.h: No need to protect the declaration
+	of the __strto*_internal and __wcsto*_internal members here.
+
 	* rt/mqueue.h: Change const to __const and add nonnull attributes.
 
 2007-08-02  Roland McGrath  <roland@redhat.com>

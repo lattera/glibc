@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,14 +33,14 @@ struct __dirstream
   {
     int fd;			/* File descriptor.  */
 
+    __libc_lock_define (, lock) /* Mutex lock for this structure.  */
+
     char *data;			/* Directory block.  */
     size_t allocation;		/* Space allocated for the block.  */
     size_t size;		/* Total valid data in the block.  */
     size_t offset;		/* Current offset into the block.  */
 
     off_t filepos;		/* Position of next entry to read.  */
-
-    __libc_lock_define (, lock) /* Mutex lock for this structure.  */
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->fd)
