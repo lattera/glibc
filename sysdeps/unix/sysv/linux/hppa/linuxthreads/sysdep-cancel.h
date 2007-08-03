@@ -206,7 +206,11 @@ L(pre_end):						ASM_LINE_SEP	\
 # endif
 
 # ifndef __ASSEMBLER__
- extern int __local_multiple_threads attribute_hidden;
+#  if !defined NOT_IN_libc || defined IS_IN_libpthread
+extern int __local_multiple_threads attribute_hidden;
+#  else
+extern int __local_multiple_threads;
+#  endif
 #  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 # else
 /* This ALT version requires newer kernel support */

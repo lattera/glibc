@@ -1,3 +1,9 @@
+2007-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/sysdep-cancel.h:
+	(__local_multiple_threads): Declare as hidden only in libc and
+	in libpthread.
+
 2007-07-28  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/internaltypes.h: Remove.
