@@ -1,5 +1,8 @@
 2007-08-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/opendir.c (__alloc_dir): Correct order of DIR
+	elements during initialization.
+
 	* po/pl.po: Updated translation from translation team.
 	* po/tr.po: Likewise.
 

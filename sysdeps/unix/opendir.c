@@ -194,11 +194,11 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
       return NULL;
     }
 
-  dirp->allocation = allocation;
+  dirp->fd = fd;
 #ifndef NOT_IN_libc
   __libc_lock_init (dirp->lock);
 #endif
-  dirp->fd = fd;
+  dirp->allocation = allocation;
   dirp->size = 0;
   dirp->offset = 0;
   dirp->filepos = 0;
