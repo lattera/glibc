@@ -1,3 +1,7 @@
+2007-08-04  Roland McGrath  <roland@redhat.com>
+
+	* posix/Makefile ($(objpfx)getconf.speclist): Fix typo.
+
 2007-08-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/bits/fcntl2.h (open, open64, openat, openat64): Add
