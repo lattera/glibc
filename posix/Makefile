@@ -303,4 +303,4 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 $(objpfx)getconf.speclist: $(objpfx)getconf
 	LC_ALL=C GETCONF_DIR=/dev/null \
 	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS > $@.new
-	mv -f $@.new
+	mv -f $@.new $@
