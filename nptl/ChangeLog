@@ -1,3 +1,11 @@
+2007-08-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (PSEUDO):
+	Don't use CGOTSETUP and CGOTRESTORE macros.
+	(CGOTSETUP, CGOTRESTORE): Remove.
+	<IS_IN_rtld> (CENABLE, CDISABLE): Don't use JUMPTARGET, branch to
+	@local symbol.
+
 2007-08-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Remove

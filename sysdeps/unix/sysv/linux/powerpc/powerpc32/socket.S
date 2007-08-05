@@ -1,4 +1,5 @@
-/* Copyright (C) 1995,96,97,99, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997, 1999, 2003, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +94,6 @@ ENTRY(__socket)
 	mflr	r9
 	stw	r9,52(r1)
 	cfi_offset (lr, 4)
-	CGOTSETUP
 	CENABLE
 	stw	r3,16(r1)
 	li	r3,P(SOCKOP_,socket)
@@ -107,7 +107,6 @@ ENTRY(__socket)
 	lwz	r4,52(r1)
 	lwz	r0,12(r1)
 	lwz	r3,8(r1)
-	CGOTRESTORE
 	mtlr	r4
 	mtcr	r0
 	addi	r1,r1,48

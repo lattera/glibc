@@ -1,3 +1,8 @@
+2007-08-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (__socket):
+	Don't use CGOTSETUP and CGOTRESTORE macros.
+
 2007-08-04  Roland McGrath  <roland@redhat.com>
 
 	* posix/Makefile ($(objpfx)getconf.speclist): Fix typo.

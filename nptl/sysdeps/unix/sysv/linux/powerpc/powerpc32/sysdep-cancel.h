@@ -1,5 +1,5 @@
 /* Cancellable system call stubs.  Linux/PowerPC version.
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>, 2003.
 
@@ -44,7 +44,6 @@
     mflr 9;								\
     stw 9,52(1);							\
     cfi_offset (lr, 4);							\
-    CGOTSETUP;								\
     DOCARGS_##args;	/* save syscall args around CENABLE.  */	\
     CENABLE;								\
     stw 3,16(1);	/* store CENABLE return value (MASK).  */	\
@@ -58,7 +57,6 @@
     lwz 4,52(1);							\
     lwz 0,12(1);	/* restore CR/R3. */				\
     lwz 3,8(1);								\
-    CGOTRESTORE;							\
     mtlr 4;								\
     mtcr 0;								\
     addi 1,1,48;
@@ -84,9 +82,6 @@
 # define DOCARGS_6	stw 8,40(1); DOCARGS_5
 # define UNDOCARGS_6	lwz 8,40(1); UNDOCARGS_5
 
-# define CGOTSETUP
-# define CGOTRESTORE
-
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl __pthread_enable_asynccancel@local
 #  define CDISABLE	bl __pthread_disable_asynccancel@local
@@ -94,20 +89,8 @@
 #  define CENABLE	bl __libc_enable_asynccancel@local
 #  define CDISABLE	bl __libc_disable_asynccancel@local
 # elif defined IS_IN_librt
-#  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel)
-#  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
-#  if defined HAVE_AS_REL16 && defined PIC
-#   undef CGOTSETUP
-#   define CGOTSETUP							\
-    bcl 20,31,1f;							\
- 1: stw 30,44(1);							\
-    mflr 30;								\
-    addis 30,30,_GLOBAL_OFFSET_TABLE-1b@ha;				\
-    addi 30,30,_GLOBAL_OFFSET_TABLE-1b@l
-#   undef CGOTRESTORE
-#   define CGOTRESTORE							\
-    lwz 30,44(1)
-#  endif
+#  define CENABLE	bl __librt_enable_asynccancel@local
+#  define CDISABLE	bl __librt_disable_asynccancel@local
 # else
 #  error Unsupported library
 # endif
