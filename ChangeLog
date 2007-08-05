@@ -1,3 +1,7 @@
+2007-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/zh_CN.po: Updated translation from translation team.
+
 2007-08-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (__socket):
