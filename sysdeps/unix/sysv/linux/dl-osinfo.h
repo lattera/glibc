@@ -1,5 +1,6 @@
 /* Operating system specific code for generic dynamic loader functions.  Linux.
-   Copyright (C) 2000,2001,2002,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2000,2001,2002,2004,2005,2006,2007
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,11 +52,9 @@ _dl_discover_osversion (void)
 
       static const struct
       {
-	ElfW(Word) vendorlen;
-	ElfW(Word) datalen;
-	ElfW(Word) type;
+	ElfW(Nhdr) hdr;
 	char vendor[8];
-      } expected_note = { sizeof "Linux", sizeof (ElfW(Word)), 0, "Linux" };
+      } expected_note = { { sizeof "Linux", sizeof (ElfW(Word)), 0 }, "Linux" };
       const ElfW(Phdr) *const phdr = GLRO(dl_sysinfo_map)->l_phdr;
       const ElfW(Word) phnum = GLRO(dl_sysinfo_map)->l_phnum;
       for (uint_fast16_t i = 0; i < phnum; ++i)
@@ -63,20 +62,15 @@ _dl_discover_osversion (void)
 	  {
 	    const ElfW(Addr) start = (phdr[i].p_vaddr
 				      + GLRO(dl_sysinfo_map)->l_addr);
-	    const struct
-	    {
-	      ElfW(Word) vendorlen;
-	      ElfW(Word) datalen;
-	      ElfW(Word) type;
-	    } *note = (const void *) start;
+	    const ElfW(Nhdr) *note = (const void *) start;
 	    while ((ElfW(Addr)) (note + 1) - start < phdr[i].p_memsz)
 	      {
 		if (!memcmp (note, &expected_note, sizeof expected_note))
 		  return *(const ElfW(Word) *) ((const void *) note
 						+ sizeof expected_note);
-#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
+#define ROUND(len) (((len) + sizeof note->n_type - 1) & -sizeof note->n_type)
 		note = ((const void *) (note + 1)
-			+ ROUND (note->vendorlen) + ROUND (note->datalen));
+			+ ROUND (note->n_namesz) + ROUND (note->n_descsz));
 	      }
 	  }
     }
