@@ -1,3 +1,9 @@
+2007-08-06  Maciej W. Rozycki  <macro@linux-mips.org>
+
+	* sysdeps/unix/sysv/linux/mips/dl-cache.h (_DL_CACHE_DEFAULT_ID):
+	New macros for the (n)64 and n32 ABIs.
+	(_dl_cache_check_flags): Define if _DL_CACHE_DEFAULT_ID has been.
+
 2007-07-13  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/mips/bits/wordsize.h [_MIPS_SIM == _ABI64]:
