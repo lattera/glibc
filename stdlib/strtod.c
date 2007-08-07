@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2006,2007 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,6 +69,9 @@ STRTOF (nptr, endptr)
 {
   return INTERNAL(STRTOF_L) (nptr, endptr, 0, _NL_CURRENT_LOCALE);
 }
+#if defined _LIBC
+libc_hidden_def (STRTOF)
+#endif
 
 #ifdef LONG_DOUBLE_COMPAT
 # if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)

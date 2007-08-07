@@ -19,6 +19,13 @@ extern __typeof (strtoull_l) __strtoull_l;
 extern __typeof (strtod_l) __strtod_l;
 extern __typeof (strtof_l) __strtof_l;
 extern __typeof (strtold_l) __strtold_l;
+libc_hidden_proto (__strtol_l)
+libc_hidden_proto (__strtoul_l)
+libc_hidden_proto (__strtoll_l)
+libc_hidden_proto (__strtoull_l)
+libc_hidden_proto (__strtod_l)
+libc_hidden_proto (__strtof_l)
+libc_hidden_proto (__strtold_l)
 
 libc_hidden_proto (exit)
 libc_hidden_proto (abort)
@@ -170,48 +177,13 @@ libc_hidden_proto (____strtoll_l_internal)
 libc_hidden_proto (____strtoul_l_internal)
 libc_hidden_proto (____strtoull_l_internal)
 
-extern __inline double
-__NTH (__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
-		   __locale_t __loc))
-{
-  return ____strtod_l_internal (__nptr, __endptr, 0, __loc);
-}
-extern __inline long int
-__NTH (__strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
-		   int __base, __locale_t __loc))
-{
-  return ____strtol_l_internal (__nptr, __endptr, __base, 0, __loc);
-}
-extern __inline unsigned long int
-__NTH (__strtoul_l (__const char *__restrict __nptr,
-		    char **__restrict __endptr, int __base, __locale_t __loc))
-{
-  return ____strtoul_l_internal (__nptr, __endptr, __base, 0, __loc);
-}
-extern __inline float
-__NTH (__strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
-		   __locale_t __loc))
-{
-  return ____strtof_l_internal (__nptr, __endptr, 0, __loc);
-}
-extern __inline long double
-__NTH (__strtold_l (__const char *__restrict __nptr,
-		    char **__restrict __endptr, __locale_t __loc))
-{
-  return ____strtold_l_internal (__nptr, __endptr, 0, __loc);
-}
-__extension__ extern __inline long long int
-__NTH (__strtoll_l (__const char *__restrict __nptr,
-		    char **__restrict __endptr, int __base, __locale_t __loc))
-{
-  return ____strtoll_l_internal (__nptr, __endptr, __base, 0, __loc);
-}
-__extension__ extern __inline unsigned long long int
-__NTH (__strtoull_l (__const char * __restrict __nptr,
-		     char **__restrict __endptr, int __base, __locale_t __loc))
-{
-  return ____strtoull_l_internal (__nptr, __endptr, __base, 0, __loc);
-}
+libc_hidden_proto (strtof)
+libc_hidden_proto (strtod)
+libc_hidden_proto (strtold)
+libc_hidden_proto (strtol)
+libc_hidden_proto (strtoll)
+libc_hidden_proto (strtoul)
+libc_hidden_proto (strtoull)
 
 extern char *__ecvt (double __value, int __ndigit, int *__restrict __decpt,
 		     int *__restrict __sign);

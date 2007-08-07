@@ -15,6 +15,13 @@ extern __typeof (wcstod_l) __wcstod_l;
 extern __typeof (wcstof_l) __wcstof_l;
 extern __typeof (wcstold_l) __wcstold_l;
 extern __typeof (wcsftime_l) __wcsftime_l;
+libc_hidden_proto (__wcstol_l)
+libc_hidden_proto (__wcstoul_l)
+libc_hidden_proto (__wcstoll_l)
+libc_hidden_proto (__wcstoull_l)
+libc_hidden_proto (__wcstod_l)
+libc_hidden_proto (__wcstof_l)
+libc_hidden_proto (__wcstold_l)
 libc_hidden_proto (__wcsftime_l)
 
 
@@ -51,6 +58,13 @@ libc_hidden_proto (__wcstol_internal)
 libc_hidden_proto (__wcstoll_internal)
 libc_hidden_proto (__wcstoul_internal)
 libc_hidden_proto (__wcstoull_internal)
+libc_hidden_proto (wcstof)
+libc_hidden_proto (wcstod)
+libc_hidden_proto (wcstold)
+libc_hidden_proto (wcstol)
+libc_hidden_proto (wcstoll)
+libc_hidden_proto (wcstoul)
+libc_hidden_proto (wcstoull)
 
 libc_hidden_proto (__wcscasecmp_l)
 libc_hidden_proto (__wcsncasecmp_l)

@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2006,2007 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,8 @@ long double ____new_wcstold_internal (const wchar_t *, wchar_t **, int);
 long double __new_wcstold (const wchar_t *, wchar_t **);
 libc_hidden_proto (____new_strtold_internal)
 libc_hidden_proto (____new_wcstold_internal)
+libc_hidden_proto (__new_strtold)
+libc_hidden_proto (__new_wcstold)
 #else
 # define NEW(x) x
 #endif

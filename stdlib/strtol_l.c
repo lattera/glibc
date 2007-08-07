@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -561,4 +561,5 @@ __strtol_l (nptr, endptr, base, loc)
 {
   return INTERNAL (__strtol_l) (nptr, endptr, base, 0, loc);
 }
+libc_hidden_def (__strtol_l)
 weak_alias (__strtol_l, strtol_l)

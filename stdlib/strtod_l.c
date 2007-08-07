@@ -1599,6 +1599,10 @@ __STRTOF (nptr, endptr, loc)
 {
   return ____STRTOF_INTERNAL (nptr, endptr, 0, loc);
 }
+#if defined _LIBC
+libc_hidden_def (__STRTOF)
+libc_hidden_ver (__STRTOF, STRTOF)
+#endif
 weak_alias (__STRTOF, STRTOF)
 
 #ifdef LONG_DOUBLE_COMPAT

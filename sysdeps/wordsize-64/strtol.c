@@ -11,4 +11,6 @@
 strong_alias (__strtol_internal, __strtoll_internal)
 libc_hidden_ver (__strtol_internal, __strtoll_internal)
 weak_alias (strtol, strtoll)
+libc_hidden_ver (strtol, strtoll)
 weak_alias (strtol, strtoq)
+libc_hidden_ver (strtol, strtoq)

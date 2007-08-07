@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001,2002,2003,2004
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001,2002,2003,2004,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -109,3 +109,4 @@ strtol (nptr, endptr, base)
 {
   return INTERNAL (__strtol_l) (nptr, endptr, base, 0, _NL_CURRENT_LOCALE);
 }
+libc_hidden_def (strtol)

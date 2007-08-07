@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,9 @@ extern long double ____new_strtold_l (const char *, char **, __locale_t);
 # define __STRTOF	____new_strtold_l
 # define ____STRTOF_INTERNAL ____strtold_l_internal
 #endif
+extern __typeof (__STRTOF) STRTOF;
+libc_hidden_proto (__STRTOF)
+libc_hidden_proto (STRTOF)
 #define MPN2FLOAT	__mpn_construct_long_double
 #define FLOAT_HUGE_VAL	HUGE_VALL
 # define SET_MANTISSA(flt, mant) \
