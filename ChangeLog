@@ -1,3 +1,7 @@
+2007-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
 2007-08-06  Roland McGrath  <roland@redhat.com>
 
 	* include/stdlib.h: Add libc_hidden_proto for strto*, __strto*_l.
