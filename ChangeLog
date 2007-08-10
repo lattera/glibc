@@ -1,6 +1,13 @@
+2007-08-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/ioctls.h (NLDLY, TABDLY, BSDLY, VTDLY):
+	New macros.
+	(NLDELAY, CRDELAY, TBDELAY, BSDELAY, VTDELAY): Define to those.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 2007-08-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC is
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC if
 	available.
 
 2007-08-10  Jakub Jelinek  <jakub@redhat.com>
