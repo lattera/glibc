@@ -38,7 +38,7 @@ ENTRY (sched_getcpu)
 	movq	$VSYSCALL_ADDR_vgetcpu, %rax
 	callq	*%rax
 
-	cmpq	$-4095, %rdi
+	cmpq	$-4095, %rax
 	jae	SYSCALL_ERROR_LABEL
 
 	movl	(%rsp), %eax
