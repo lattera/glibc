@@ -1,3 +1,10 @@
+2007-08-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c (___new_strtold_l,
+	___new_wcstold_l): New weak aliases.
+	(strtold_l, wcstold_l): Use them as second argument for
+	long_double_symbol.
+
 2007-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: Use correct

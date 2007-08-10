@@ -57,10 +57,12 @@ libc_hidden_proto (STRTOF)
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <math_ldbl_opt.h>
 # ifdef USE_WIDE_CHAR
-long_double_symbol (libc, __new_wcstold_l, wcstold_l);
+weak_alias (____new_wcstold_l, ___new_wcstold_l);
+long_double_symbol (libc, ___new_wcstold_l, wcstold_l);
 long_double_symbol (libc, ____new_wcstold_l, __wcstold_l);
 # else
-long_double_symbol (libc, __new_strtold_l, strtold_l);
+weak_alias (____new_strtold_l, ___new_strtold_l);
+long_double_symbol (libc, ___new_strtold_l, strtold_l);
 long_double_symbol (libc, ____new_strtold_l, __strtold_l);
 # endif
 #endif
