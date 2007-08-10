@@ -1,3 +1,8 @@
+2007-08-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC is
+	available.
+
 2007-08-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c (___new_strtold_l,
