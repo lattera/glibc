@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996,97,98,99,2002,2006 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2002,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -27,6 +27,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <kernel-features.h>
+
 #include "nsswitch.h"
 
 /* Locks the static variables in this file.  */
@@ -46,29 +48,44 @@ internal_setent (void)
 
   if (stream == NULL)
     {
-      stream = fopen ("/etc/aliases", "r");
+      stream = fopen ("/etc/aliases", "re");
 
       if (stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
       else
 	{
-	  /* We have to make sure the file is  `closed on exec'.  */
-	  int result, flags;
+#if !defined O_CLOEXEC || !defined __ASSUME_O_CLOEXEC
+# ifdef O_CLOEXEC
+	  if (__have_o_cloexec <= 0)
+# endif
+	    {
+	      /* We have to make sure the file is  `closed on exec'.  */
+	      int result;
+	      int flags;
 
-	  result = flags = fcntl (fileno (stream), F_GETFD, 0);
-	  if (result >= 0)
-	    {
-	      flags |= FD_CLOEXEC;
-	      result = fcntl (fileno (stream), F_SETFD, flags);
+	      result = flags = fcntl (fileno (stream), F_GETFD, 0);
+	      if (result >= 0)
+		{
+# ifdef O_CLOEXEC
+		  if (__have_o_cloexec == 0)
+		    __have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
+		  if (__have_o_cloexec < 0)
+# endif
+		    {
+		      flags |= FD_CLOEXEC;
+		      result = fcntl (fileno (stream), F_SETFD, flags);
+		    }
+		}
+	      if (result < 0)
+		{
+		  /* Something went wrong.  Close the stream and return a
+		     failure.  */
+		  fclose (stream);
+		  stream = NULL;
+		  status = NSS_STATUS_UNAVAIL;
+		}
 	    }
-	  if (result < 0)
-	    {
-	      /* Something went wrong.  Close the stream and return a
-		 failure.  */
-	      fclose (stream);
-	      stream = NULL;
-	      status = NSS_STATUS_UNAVAIL;
-	    }
+#endif
 	}
     }
   else

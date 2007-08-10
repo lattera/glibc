@@ -7,6 +7,12 @@
 
 2007-08-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/nss_files/files-XXX.c (internal_setent): Use O_CLOEXEC if
+	possible.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+	* nss/Makefile (libnss_files-routines): Add files-have_o_cloexec.
+	* nss/nss_files/files-have_o_cloexec.c: New file.
+
 	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC if
 	available.
 
