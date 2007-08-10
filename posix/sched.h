@@ -103,7 +103,7 @@ extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 # define CPU_ALLOC_SIZE(count) __CPU_ALLOC_SIZE (count)
 # define CPU_ALLOC(count) __CPU_ALLOC (count)
-# define CPU_FREE(count) __CPU_FREE (count)
+# define CPU_FREE(cpuset) __CPU_FREE (cpuset)
 
 
 /* Set the CPU affinity for a task */

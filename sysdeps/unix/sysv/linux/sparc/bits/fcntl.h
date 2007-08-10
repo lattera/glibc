@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -49,6 +49,7 @@
 # define O_NOFOLLOW	0x20000 /* don't follow links */
 # define O_DIRECT	0x100000 /* direct disk access hint */
 # define O_NOATIME	0x200000 /* Do not set atime.  */
+# define O_CLOEXEC	0x400000 /* Set close_on_exit.  */
 #endif
 
 #ifdef __USE_LARGEFILE64
