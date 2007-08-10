@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,96,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,96,97,98,99,2001,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,25 +284,30 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define		ODDP		0x00000040	/* get/send odd parity */
 #define		EVENP		0x00000080	/* get/send even parity */
 #define		ANYP		0x000000c0	/* get any parity/send none */
-#define		NLDELAY		0x00000300	/* \n delay */
+#define		NLDLY		0x00000300	/* \n delay */
+#define		NLDELAY		NLDLY		/* traditional BSD name */
 #define			NL0	0x00000000
 #define			NL1	0x00000100	/* tty 37 */
 #define			NL2	0x00000200	/* vt05 */
 #define			NL3	0x00000300
-#define		TBDELAY		0x00000c00	/* horizontal tab delay */
+#define		TABDLY		0x00000c00	/* horizontal tab delay */
+#define		TBDELAY		TABDLY		/* traditional BSD name */
 #define			TAB0	0x00000000
 #define			TAB1	0x00000400	/* tty 37 */
 #define			TAB2	0x00000800
 #define		XTABS		0x00000c00	/* expand tabs on output */
-#define		CRDELAY		0x00003000	/* \r delay */
+#define		CRDLY		0x00003000	/* \r delay */
+#define		CRDELAY		CRDLY		/* traditional BSD name */
 #define			CR0	0x00000000
 #define			CR1	0x00001000	/* tn 300 */
 #define			CR2	0x00002000	/* tty 37 */
 #define			CR3	0x00003000	/* concept 100 */
-#define		VTDELAY		0x00004000	/* vertical tab delay */
+#define		VTDLY		0x00004000	/* vertical tab delay */
+#define		VTDELAY		VTDLY		/* traditional BSD name */
 #define			FF0	0x00000000
 #define			FF1	0x00004000	/* tty 37 */
-#define		BSDELAY		0x00008000	/* \b delay */
+#define		BSDLY		0x00008000	/* \b delay */
+#define		BSDELAY		BSDLY		/* traditional BSD name */
 #define			BS0	0x00000000
 #define			BS1	0x00008000
 #define		ALLDELAY	(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
