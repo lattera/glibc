@@ -187,7 +187,7 @@ shm_open (const char *name, int oflag, mode_t mode)
 
 	  if (__builtin_expect (flags, 0) >= 0)
 	    {
-# ifndef O_CLOEXEC
+# ifdef O_CLOEXEC
 	      if (have_o_cloexec == 0)
 		have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
 	      if (have_o_cloexec < 0)
