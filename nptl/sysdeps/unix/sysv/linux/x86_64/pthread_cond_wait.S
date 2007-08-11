@@ -49,8 +49,10 @@ __condvar_cleanup:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
@@ -81,9 +83,19 @@ __condvar_cleanup:
 	jne	4f
 
 	addq	$cond_nwaiters, %rdi
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %esi
+	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
 	movl	$1, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
 	syscall
 	subq	$cond_nwaiters, %rdi
 	movl	$1, %r12d
@@ -98,16 +110,28 @@ __condvar_cleanup:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
 2:	testq	%r12, %r12
 	jnz	5f
 	addq	$cond_futex, %rdi
-	movl	$FUTEX_WAKE, %esi
+	cmpq	$-1, dep_mutex-cond_futex(%rdi)
 	movl	$0x7fffffff, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
 	movl	$SYS_futex, %eax
 	syscall
 
@@ -216,12 +240,20 @@ __pthread_cond_wait:
 	xorq	%r10, %r10
 	movq	%r12, %rdx
 	addq	$cond_futex-cond_lock, %rdi
-	movl	$SYS_futex, %eax
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
+	cmpq	$-1, dep_mutex-cond_futex(%rdi)
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAIT, %eax
+	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
 #else
-	movl	$FUTEX_WAIT, %esi
+	movl	$FUTEX_WAIT, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+# if FUTEX_WAIT != 0
+	orl	$FUTEX_WAIT, %esi
+# endif
 #endif
+	movl	$SYS_futex, %eax
 	syscall
 
 	movl	(%rsp), %edi
@@ -267,9 +299,19 @@ __pthread_cond_wait:
 	jne	17f
 
 	addq	$cond_nwaiters, %rdi
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %esi
+	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
 	movl	$1, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
 	syscall
 	subq	$cond_nwaiters, %rdi
 
@@ -302,8 +344,10 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_lock_wait
 	jmp	2b
 
@@ -312,8 +356,10 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 	jmp	4b
 
@@ -322,8 +368,10 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
@@ -335,8 +383,10 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 	jmp	11b
 
@@ -354,8 +404,10 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 
 13:	movq	%r10, %rax

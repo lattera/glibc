@@ -47,12 +47,13 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
 
   /* Check whether we already hold the mutex.  */
   bool locked = false;
+  int kind = PTHREAD_MUTEX_TYPE (mutex);
   if (mutex->__data.__owner == THREAD_GETMEM (THREAD_SELF, tid))
     {
-      if (mutex->__data.__kind == PTHREAD_MUTEX_PP_ERRORCHECK_NP)
+      if (kind == PTHREAD_MUTEX_PP_ERRORCHECK_NP)
 	return EDEADLK;
 
-      if (mutex->__data.__kind == PTHREAD_MUTEX_PP_RECURSIVE_NP)
+      if (kind == PTHREAD_MUTEX_PP_RECURSIVE_NP)
 	locked = true;
     }
 
@@ -81,8 +82,7 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
 
 	    if (oldval != ceilval)
 	      lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
-			      // XYZ check mutex flag
-			      LLL_SHARED);
+			      PTHREAD_MUTEX_PSHARED (mutex));
 	  }
 	while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						    ceilval | 2, ceilval)
@@ -113,8 +113,7 @@ pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
   atomic_full_barrier ();
 
   lll_futex_wake (&mutex->__data.__lock, INT_MAX,
-		  // XYZ check mutex flag
-		  LLL_SHARED);
+		  PTHREAD_MUTEX_PSHARED (mutex));
 
   return 0;
 }

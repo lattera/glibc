@@ -107,14 +107,14 @@
   while (0)
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val) \
+#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
 									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
-			      (futexp), FUTEX_CMP_REQUEUE, (nr_wake),	      \
-			      (nr_move), (mutex), (val));		      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (FUTEX_CMP_REQUEUE, private),\
+			      (nr_wake), (nr_move), (mutex), (val));	      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 

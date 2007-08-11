@@ -103,18 +103,20 @@ do									\
 while (0)
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val)		     \
+#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private)	     \
 ({									     \
-   DO_INLINE_SYSCALL(futex, 6, (long) (ftx), FUTEX_CMP_REQUEUE,		     \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx),				     \
+		     __lll_private_flag (FUTEX_CMP_REQUEUE, private),	     \
 		     (int) (nr_wake), (int) (nr_move), (long) (mutex),	     \
 		     (int) val);					     \
    _r10 == -1;								     \
 })
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_wake_unlock(ftx, nr_wake, nr_wake2, ftx2)		     \
+#define lll_futex_wake_unlock(ftx, nr_wake, nr_wake2, ftx2, private)	     \
 ({									     \
-   DO_INLINE_SYSCALL(futex, 6, (long) (ftx), FUTEX_WAKE_OP,		     \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx),				     \
+		     __lll_private_flag (FUTEX_WAKE_OP, private),	     \
 		     (int) (nr_wake), (int) (nr_wake2), (long) (ftx2),	     \
 		     FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);			     \
    _r10 == -1;								     \

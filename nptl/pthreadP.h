@@ -96,9 +96,22 @@ enum
   PTHREAD_MUTEX_PP_ADAPTIVE_NP
   = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_ADAPTIVE_NP
 };
+#define PTHREAD_MUTEX_PSHARED_BIT 128
 
 #define PTHREAD_MUTEX_TYPE(m) \
-  ((m)->__data.__kind)
+  ((m)->__data.__kind & 127)
+
+#if LLL_PRIVATE == 0 && LLL_SHARED == 128
+# define PTHREAD_MUTEX_PSHARED(m) \
+  ((m)->__data.__kind & 128)
+#else
+# define PTHREAD_MUTEX_PSHARED(m) \
+  (((m)->__data.__kind & 128) ? LLL_SHARED : LLL_PRIVATE)
+#endif
+
+/* The kernel when waking robust mutexes on exit never uses
+   FUTEX_PRIVATE_FLAG FUTEX_WAKE.  */
+#define PTHREAD_ROBUST_MUTEX_PSHARED(m) LLL_SHARED
 
 /* Ceiling in __data.__lock.  __data.__lock is signed, so don't
    use the MSB bit in there, but in the mask also include that bit,

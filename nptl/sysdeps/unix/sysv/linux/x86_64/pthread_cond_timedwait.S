@@ -186,12 +186,20 @@ __pthread_cond_timedwait:
 	movl	%eax, (%rsp)
 
 	leaq	24(%rsp), %r10
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
+	cmpq	$-1, dep_mutex(%rdi)
 	movq	%r12, %rdx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAIT, %eax
+	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+# if FUTEX_WAIT != 0
+	orl	$FUTEX_WAIT, %esi
+# endif
+#endif
 	addq	$cond_futex, %rdi
 	movl	$SYS_futex, %eax
 	syscall
@@ -251,9 +259,19 @@ __pthread_cond_timedwait:
 	jne	25f
 
 	addq	$cond_nwaiters, %rdi
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %esi
+	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
 	movl	$1, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
 	syscall
 	subq	$cond_nwaiters, %rdi
 
@@ -292,8 +310,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_lock_wait
 	jmp	2b
 
@@ -302,8 +322,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 	jmp	4b
 
@@ -312,8 +334,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
@@ -325,8 +349,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 	jmp	11b
 
@@ -344,8 +370,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	/* XYZ */
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 
 17:	movq	(%rsp), %rax

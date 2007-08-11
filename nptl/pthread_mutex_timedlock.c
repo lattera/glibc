@@ -57,7 +57,7 @@ pthread_mutex_timedlock (mutex, abstime)
 
       /* We have to get the mutex.  */
       result = lll_timedlock (mutex->__data.__lock, abstime,
-			      /* XYZ */ LLL_SHARED);
+			      PTHREAD_MUTEX_PSHARED (mutex));
 
       if (result != 0)
 	goto out;
@@ -78,7 +78,7 @@ pthread_mutex_timedlock (mutex, abstime)
     simple:
       /* Normal mutex.  */
       result = lll_timedlock (mutex->__data.__lock, abstime,
-			      /* XYZ */ LLL_SHARED);
+			      PTHREAD_MUTEX_PSHARED (mutex));
       break;
 
     case PTHREAD_MUTEX_ADAPTIVE_NP:
@@ -95,7 +95,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      if (cnt++ >= max_cnt)
 		{
 		  result = lll_timedlock (mutex->__data.__lock, abstime,
-					  /* XYZ */ LLL_SHARED);
+					  PTHREAD_MUTEX_PSHARED (mutex));
 		  break;
 		}
 
@@ -152,16 +152,15 @@ pthread_mutex_timedlock (mutex, abstime)
 	  /* Check whether we already hold the mutex.  */
 	  if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
 	    {
-	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
+	      int kind = PTHREAD_MUTEX_TYPE (mutex);
+	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
 		{
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 		  return EDEADLK;
 		}
 
-	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
+	      if (kind == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
 		{
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
@@ -178,14 +177,15 @@ pthread_mutex_timedlock (mutex, abstime)
 	    }
 
 	  result = lll_robust_timedlock (mutex->__data.__lock, abstime, id,
-					 /* XYZ */ LLL_SHARED);
+					 PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 
 	  if (__builtin_expect (mutex->__data.__owner
 				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
 	    {
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
-	      lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
+	      lll_unlock (mutex->__data.__lock,
+			  PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }
@@ -446,8 +446,7 @@ pthread_mutex_timedlock (mutex, abstime)
 
 		    lll_futex_timed_wait (&mutex->__data.__lock,
 					  ceilval | 2, &rt,
-					  // XYZ check mutex flag
-					  LLL_SHARED);
+					  PTHREAD_MUTEX_PSHARED (mutex));
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,

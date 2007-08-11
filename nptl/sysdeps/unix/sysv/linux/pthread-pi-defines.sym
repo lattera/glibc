@@ -4,3 +4,4 @@
 
 MUTEX_KIND	offsetof (pthread_mutex_t, __data.__kind)
 PI_BIT		PTHREAD_MUTEX_PRIO_INHERIT_NP
+PS_BIT		PTHREAD_MUTEX_PSHARED_BIT

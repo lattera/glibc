@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -119,6 +120,12 @@ __pthread_mutex_init (mutex, mutexattr)
     default:
       break;
     }
+
+  /* The kernel when waking robust mutexes on exit never uses
+     FUTEX_PRIVATE_FLAG FUTEX_WAKE.  */
+  if ((imutexattr->mutexkind & (PTHREAD_MUTEXATTR_FLAG_PSHARED
+				| PTHREAD_MUTEXATTR_FLAG_ROBUST)) != 0)
+    mutex->__data.__kind |= PTHREAD_MUTEX_PSHARED_BIT;
 
   /* Default values: mutex not used yet.  */
   // mutex->__count = 0;	already done by memset

@@ -115,16 +115,15 @@ __pthread_mutex_trylock (mutex)
 	  /* Check whether we already hold the mutex.  */
 	  if (__builtin_expect ((oldval & FUTEX_TID_MASK) == id, 0))
 	    {
-	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
+	      int kind = PTHREAD_MUTEX_TYPE (mutex);
+	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
 		{
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 		  return EDEADLK;
 		}
 
-	      if (mutex->__data.__kind
-		  == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
+	      if (kind == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
 		{
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
@@ -154,7 +153,8 @@ __pthread_mutex_trylock (mutex)
 	      /* This mutex is now not recoverable.  */
 	      mutex->__data.__count = 0;
 	      if (oldval == id)
-		lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
+		lll_unlock (mutex->__data.__lock,
+			    PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }

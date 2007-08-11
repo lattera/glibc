@@ -61,7 +61,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	--mutex->__data.__nusers;
 
       /* Unlock.  */
-      lll_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
+      lll_unlock (mutex->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex));
       break;
 
     case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
@@ -115,7 +115,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	--mutex->__data.__nusers;
 
       /* Unlock.  */
-      lll_robust_unlock (mutex->__data.__lock, /* XYZ */ LLL_SHARED);
+      lll_robust_unlock (mutex->__data.__lock,
+			 PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
@@ -242,8 +243,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
 	lll_futex_wake (&mutex->__data.__lock, 1,
-			// XYZ check mutex flag
-			LLL_SHARED);
+			PTHREAD_MUTEX_PSHARED (mutex));
 
       int oldprio = newval >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
       return __pthread_tpp_change_priority (oldprio, -1);

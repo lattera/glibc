@@ -26,14 +26,17 @@ int
 __pthread_cond_destroy (cond)
      pthread_cond_t *cond;
 {
+  int pshared = (cond->__data.__mutex == (void *) ~0l)
+		? LLL_SHARED : LLL_PRIVATE;
+
   /* Make sure we are alone.  */
-  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+  lll_lock (cond->__data.__lock, pshared);
 
   if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
     {
       /* If there are still some waiters which have not been
 	 woken up, this is an application bug.  */
-      lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+      lll_unlock (cond->__data.__lock, pshared);
       return EBUSY;
     }
 
@@ -60,19 +63,16 @@ __pthread_cond_destroy (cond)
 	{
 	  pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
 	  lll_futex_wake (&mut->__data.__lock, INT_MAX,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+			  PTHREAD_MUTEX_PSHARED (mut));
 	}
 
       do
 	{
-	  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+	  lll_unlock (cond->__data.__lock, pshared);
 
-	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+	  lll_futex_wait (&cond->__data.__nwaiters, nwaiters, pshared);
 
-	  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+	  lll_lock (cond->__data.__lock, pshared);
 
 	  nwaiters = cond->__data.__nwaiters;
 	}

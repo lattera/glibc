@@ -533,7 +533,7 @@ LLL_STUB_UNWIND_INFO_END
   while (0)
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val) \
+#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private) \
   ({ int __res;								      \
      register int __nr_move __asm ("r10") = nr_move;			      \
      register void *__mutex __asm ("r8") = mutex;			      \
@@ -541,7 +541,8 @@ LLL_STUB_UNWIND_INFO_END
      __asm __volatile ("syscall"					      \
 		       : "=a" (__res)					      \
 		       : "0" (__NR_futex), "D" ((void *) ftx),		      \
-			 "S" (FUTEX_CMP_REQUEUE), "d" (nr_wake),	      \
+			 "S" (__lll_private_flag (FUTEX_CMP_REQUEUE,	      \
+						  private)), "d" (nr_wake),   \
 			 "r" (__nr_move), "r" (__mutex), "r" (__val)	      \
 		       : "cx", "r11", "cc", "memory");			      \
      __res < 0; })

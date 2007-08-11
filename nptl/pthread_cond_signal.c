@@ -32,8 +32,11 @@ int
 __pthread_cond_signal (cond)
      pthread_cond_t *cond;
 {
+  int pshared = (cond->__data.__mutex == (void *) ~0l)
+		? LLL_SHARED : LLL_PRIVATE;
+
   /* Make sure we are alone.  */
-  lll_lock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+  lll_lock (cond->__data.__lock, pshared);
 
   /* Are there any waiters to be woken?  */
   if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
@@ -45,18 +48,14 @@ __pthread_cond_signal (cond)
       /* Wake one.  */
       if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex, 1,
 						     1, &cond->__data.__lock,
-						     // XYZ check mutex flag
-						     LLL_SHARED),
-						     0))
+						     pshared), 0))
 	return 0;
 
-      lll_futex_wake (&cond->__data.__futex, 1,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wake (&cond->__data.__futex, 1, pshared);
     }
 
   /* We are done.  */
-  lll_unlock (cond->__data.__lock, /* XYZ */ LLL_SHARED);
+  lll_unlock (cond->__data.__lock, pshared);
 
   return 0;
 }

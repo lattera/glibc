@@ -93,7 +93,7 @@
   ({									      \
     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
     register unsigned long int __r3 asm ("3")				      \
-      __lll_private_flag (FUTEX_WAKE, private);				      \
+      = __lll_private_flag (FUTEX_WAKE, private);			      \
     register unsigned long int __r4 asm ("4") = (unsigned long int) (nr);     \
     register unsigned long int __result asm ("2");			      \
 									      \
@@ -117,10 +117,11 @@
 
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(futex, nr_wake, nr_move, mutex, val) \
+#define lll_futex_requeue(futex, nr_wake, nr_move, mutex, val, private) \
   ({									      \
     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
-    register unsigned long int __r3 asm ("3") = FUTEX_CMP_REQUEUE;	      \
+    register unsigned long int __r3 asm ("3")				      \
+      = __lll_private_flag (FUTEX_CMP_REQUEUE, private);		      \
     register unsigned long int __r4 asm ("4") = (long int) (nr_wake);	      \
     register unsigned long int __r5 asm ("5") = (long int) (nr_move);	      \
     register unsigned long int __r6 asm ("6") = (unsigned long int) (mutex);  \
@@ -137,10 +138,11 @@
 
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_wake_unlock(futex, nr_wake, nr_wake2, futex2) \
+#define lll_futex_wake_unlock(futex, nr_wake, nr_wake2, futex2, private) \
   ({									      \
     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex);  \
-    register unsigned long int __r3 asm ("3") = FUTEX_WAKE_OP;	      \
+    register unsigned long int __r3 asm ("3")				      \
+      = __lll_private_flag (FUTEX_WAKE_OP, private);			      \
     register unsigned long int __r4 asm ("4") = (long int) (nr_wake);	      \
     register unsigned long int __r5 asm ("5") = (long int) (nr_wake2);	      \
     register unsigned long int __r6 asm ("6") = (unsigned long int) (futex2); \
