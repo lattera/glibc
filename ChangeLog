@@ -1,3 +1,8 @@
+2007-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): We really don't need
+	an atime update for the files we read.
+
 2007-08-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* shadow/lckpwdf.c (__lckpwdf): Use O_CLOEXEC if possible.

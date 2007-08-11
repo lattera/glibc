@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,11 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result = MAP_FAILED;
   struct stat64 st;
-  int fd = __open (file, O_RDONLY);
+  int oflags = O_RDONLY;
+#ifdef O_NOATIME
+  oflags |= O_NOATIME;
+#endif
+  int fd = __open (file, oflags);
   if (fd >= 0)
     {
       if (__fxstat64 (_STAT_VER, fd, &st) >= 0)
