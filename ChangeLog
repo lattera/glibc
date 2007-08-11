@@ -7,7 +7,7 @@
 
 	* shadow/lckpwdf.c (__lckpwdf): Use O_CLOEXEC if possible.
 
-	* nscd/connections.c: Use O_CLOEXEC is possible.  Use mkostemp
+	* nscd/connections.c: Use O_CLOEXEC if possible.  Use mkostemp
 	instead of mkstemp.
 
 	* misc/Makefile (routines): Add mkostemp and mkostemp64.
