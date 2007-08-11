@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2001, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,9 +37,8 @@
 #endif
 #ifndef __GT_FILE
 # define __GT_FILE	0
-# define __GT_BIGFILE	1
-# define __GT_DIR	2
-# define __GT_NOCREATE	3
+# define __GT_DIR	1
+# define __GT_NOCREATE	2
 #endif
 
 #if STDC_HEADERS || _LIBC
@@ -220,12 +219,11 @@ static const char letters[] =
 			at the time of the call.
    __GT_FILE:		create the file using open(O_CREAT|O_EXCL)
 			and return a read-write fd.  The file is mode 0600.
-   __GT_BIGFILE:	same as __GT_FILE but use open64().
    __GT_DIR:		create a directory, which will be mode 0700.
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-__gen_tempname (char *tmpl, int kind)
+__gen_tempname (char *tmpl, int flags, int kind)
 {
   int len;
   char *XXXXXX;
@@ -298,11 +296,9 @@ __gen_tempname (char *tmpl, int kind)
       switch (kind)
 	{
 	case __GT_FILE:
-	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-	  break;
-
-	case __GT_BIGFILE:
-	  fd = __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+	  fd = __open (tmpl,
+		       (flags & ~ACCESSPERMS)
+		       | O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	  break;
 
 	case __GT_DIR:

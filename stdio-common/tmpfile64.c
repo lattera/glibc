@@ -1,3 +1,3 @@
-#define GEN_THIS	__GT_BIGFILE
-#define tmpfile		tmpfile64
+#define FLAGS	O_LARGEFILE
+#define tmpfile	tmpfile64
 #include <tmpfile.c>

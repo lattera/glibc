@@ -1,3 +1,29 @@
+2007-08-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Use O_CLOEXEC is possible.  Use mkostemp
+	instead of mkstemp.
+
+	* misc/Makefile (routines): Add mkostemp and mkostemp64.
+	* misc/Versions: Export mkostemp and mkostemp64 for GLIBC_2.7.
+	* misc/mkostemp.c: New file.
+	* misc/mkostemp64.c: New file.
+	* stdlib/stdlib.h: Declare the new functions.
+	* sysdeps/posix/tempname.c: Add new parameter which is added to
+	the flags for open.  Remove __GT_BIGFILE handling.
+	* stdio-common/tempname.c: Likewise.
+	* include/stdio.h: Adjust __gen_tempname prototype.
+	Renumber __GT_* constants.
+	* libio/oldtmpfile.c: Adjust for __gen_tempname interface change.
+	* misc/mkdtemp.c: Likewise.
+	* misc/mkstemp.c: Likewise.
+	* misc/mkstemp64.c: Likewise.
+	* misc/mktemp.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+
 2007-08-10  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/bits/ioctls.h (NLDLY, TABDLY, BSDLY, VTDLY):

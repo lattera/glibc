@@ -1,5 +1,6 @@
 /* Open a stdio stream on an anonymous temporary file.  Generic/POSIX version.
-   Copyright (C) 1991,93,1996-2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991,1993,1996-2000,2002,2003,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -28,9 +30,6 @@
 # endif
 #endif
 
-#ifndef GEN_THIS
-# define GEN_THIS __GT_FILE
-#endif
 
 /* This returns a new stream opened on a temporary file (generated
    by tmpnam).  The file is opened with mode "w+b" (binary read/write).
@@ -45,7 +44,11 @@ tmpfile (void)
 
   if (__path_search (buf, FILENAME_MAX, NULL, "tmpf", 0))
     return NULL;
-  fd = __gen_tempname (buf, GEN_THIS);
+  int flags = 0;
+#ifdef FLAGS
+  flags = FLAGS;
+#endif
+  fd = __gen_tempname (buf, flags, __GT_FILE);
   if (fd < 0)
     return NULL;
 
@@ -59,7 +62,7 @@ tmpfile (void)
   return f;
 }
 
-#if defined USE_IN_LIBIO && GEN_THIS == __GT_FILE /* Not for tmpfile64.  */
+#if defined USE_IN_LIBIO && !defined FLAGS /* Not for tmpfile64.  */
 # undef tmpfile
 # include <shlib-compat.h>
 versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);

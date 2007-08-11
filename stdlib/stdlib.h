@@ -614,6 +614,28 @@ extern int mkstemp64 (char *__template) __nonnull ((1)) __wur;
 extern char *mkdtemp (char *__template) __THROW __nonnull ((1)) __wur;
 #endif
 
+#ifdef __USE_GNU
+/* Generate a unique temporary file name from TEMPLATE similar to
+   mkstemp.  But allow the caller to pass additional flags which are
+   used in the open call to create the file..
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+# ifndef __USE_FILE_OFFSET64
+extern int mkostemp (char *__template, int __flags) __nonnull ((1)) __wur;
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (mkostemp, (char *__template, int __flags), mkostemp64)
+     __nonnull ((1)) __wur;
+#  else
+#   define mkostemp mkostemp64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int mkostemp64 (char *__template, int __flags) __nonnull ((1)) __wur;
+# endif
+#endif
+
 
 __BEGIN_NAMESPACE_STD
 /* Execute the given line as a shell command.

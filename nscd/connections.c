@@ -468,6 +468,13 @@ fail:
 }
 
 
+#ifdef O_CLOEXEC
+# define EXTRA_O_FLAGS O_CLOEXEC
+#else
+# define EXTRA_O_FLAGS 0
+#endif
+
+
 /* Initialize database information structures.  */
 void
 nscd_init (void)
@@ -490,7 +497,7 @@ nscd_init (void)
 	if (dbs[cnt].persistent)
 	  {
 	    /* Try to open the appropriate file on disk.  */
-	    int fd = open (dbs[cnt].db_filename, O_RDWR);
+	    int fd = open (dbs[cnt].db_filename, O_RDWR | EXTRA_O_FLAGS);
 	    if (fd != -1)
 	      {
 		struct stat64 st;
@@ -569,7 +576,8 @@ nscd_init (void)
 		    /* We also need a read-only descriptor.  */
 		    if (dbs[cnt].shared)
 		      {
-			dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
+			dbs[cnt].ro_fd = open (dbs[cnt].db_filename,
+					       O_RDONLY | EXTRA_O_FLAGS);
 			if (dbs[cnt].ro_fd == -1)
 			  dbg_log (_("\
 cannot create read-only descriptor for \"%s\"; no mmap"),
@@ -606,22 +614,23 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	    if (dbs[cnt].persistent)
 	      {
 		fd = open (dbs[cnt].db_filename,
-			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC,
+			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC | EXTRA_O_FLAGS,
 			   S_IRUSR | S_IWUSR);
 		if (fd != -1 && dbs[cnt].shared)
-		  ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
+		  ro_fd = open (dbs[cnt].db_filename,
+				O_RDONLY | EXTRA_O_FLAGS);
 	      }
 	    else
 	      {
 		char fname[] = _PATH_NSCD_XYZ_DB_TMP;
-		fd = mkstemp (fname);
+		fd = mkostemp (fname, EXTRA_O_FLAGS);
 
 		/* We do not need the file name anymore after we
 		   opened another file descriptor in read-only mode.  */
 		if (fd != -1)
 		  {
 		    if (dbs[cnt].shared)
-		      ro_fd = open (fname, O_RDONLY);
+		      ro_fd = open (fname, O_RDONLY | EXTRA_O_FLAGS);
 
 		    unlink (fname);
 		  }
@@ -740,6 +749,11 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	      }
 	  }
 
+#if !defined O_CLOEXEC || !defined __ASSUME_O_CLOEXEC
+	/* We do not check here whether the O_CLOEXEC provided to the
+	   open call was successful or not.  The two fcntl calls are
+	   only performed once each per process start-up and therefore
+	   is not noticeable at all.  */
 	if (paranoia
 	    && ((dbs[cnt].wr_fd != -1
 		 && fcntl (dbs[cnt].wr_fd, F_SETFD, FD_CLOEXEC) == -1)
@@ -751,6 +765,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 		     strerror (errno));
 	    paranoia = 0;
 	  }
+#endif
 
 	if (dbs[cnt].head == NULL)
 	  {

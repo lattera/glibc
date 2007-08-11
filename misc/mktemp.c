@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ char *
 mktemp (template)
      char *template;
 {
-  if (__gen_tempname (template, __GT_NOCREATE) < 0)
+  if (__gen_tempname (template, 0, __GT_NOCREATE) < 0)
     /* We return the null string if we can't find a unique file name.  */
     template[0] = '\0';
 

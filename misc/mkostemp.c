@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifndef __GT_FILE
+# define __GT_FILE 0
+#endif
 
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
 int
-mkstemp64 (template)
+mkostemp (template, flags)
      char *template;
+     int flags;
 {
-  return __gen_tempname (template, O_LARGEFILE, __GT_FILE);
+  return __gen_tempname (template, flags, __GT_FILE);
 }

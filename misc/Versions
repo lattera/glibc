@@ -134,4 +134,7 @@ libc {
     futimesat;
     __syslog_chk; __vsyslog_chk;
   }
+  GLIBC_2.7 {
+    mkostemp; mkostemp64;
+  }
 }
