@@ -1,5 +1,5 @@
 /* Handle locking of password file.
-   Copyright (C) 1996,98,2000,02 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,6 +25,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/file.h>
+
+#include <kernel-features.h>
 
 
 /* Name of the lock file.  */
@@ -96,20 +98,38 @@ __lckpwdf (void)
   /* Prevent problems caused by multiple threads.  */
   __libc_lock_lock (lock);
 
-  lock_fd = __open (PWD_LOCKFILE, O_WRONLY | O_CREAT, 0600);
+  int oflags = O_WRONLY | O_CREAT;
+#ifdef O_CLOEXEC
+  oflags |= O_CLOEXEC;
+#endif
+  lock_fd = __open (PWD_LOCKFILE, oflags, 0600);
   if (lock_fd == -1)
     /* Cannot create lock file.  */
     RETURN_CLOSE_FD (-1);
 
-  /* Make sure file gets correctly closed when process finished.  */
-  flags = __fcntl (lock_fd, F_GETFD, 0);
-  if (flags == -1)
-    /* Cannot get file flags.  */
-    RETURN_CLOSE_FD (-1);
-  flags |= FD_CLOEXEC;		/* Close on exit.  */
-  if (__fcntl (lock_fd, F_SETFD, flags) < 0)
-    /* Cannot set new flags.  */
-    RETURN_CLOSE_FD (-1);
+#ifndef __ASSUME_O_CLOEXEC
+# ifdef O_CLOEXEC
+  if (__have_o_cloexec <= 0)
+# endif
+    {
+      /* Make sure file gets correctly closed when process finished.  */
+      flags = __fcntl (lock_fd, F_GETFD, 0);
+      if (flags == -1)
+	/* Cannot get file flags.  */
+	RETURN_CLOSE_FD (-1);
+# ifdef O_CLOEXEC
+      if (__have_o_cloexec == 0)
+	__have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
+      if (__have_o_cloexec < 0)
+# endif
+	{
+	  flags |= FD_CLOEXEC;		/* Close on exit.  */
+	  if (__fcntl (lock_fd, F_SETFD, flags) < 0)
+	    /* Cannot set new flags.  */
+	    RETURN_CLOSE_FD (-1);
+	}
+    }
+#endif
 
   /* Now we have to get exclusive write access.  Since multiple
      process could try this we won't stop when it first fails.

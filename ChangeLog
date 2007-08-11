@@ -1,5 +1,7 @@
 2007-08-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* shadow/lckpwdf.c (__lckpwdf): Use O_CLOEXEC if possible.
+
 	* nscd/connections.c: Use O_CLOEXEC is possible.  Use mkostemp
 	instead of mkstemp.
 
