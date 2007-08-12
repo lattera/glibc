@@ -2456,9 +2456,8 @@ For example:
 @end smallexample
 
 @noindent
-@xref{Macro Varargs, , Macros with Variable Numbers of Arguments,
-gcc.info, Using GNU CC}, for details.  But this is limited to macros,
-and does not apply to real functions at all.
+@xref{Variadic Macros,,, cpp, The C preprocessor}, for details.
+But this is limited to macros, and does not apply to real functions at all.
 
 Before calling @code{vprintf} or the other functions listed in this
 section, you @emph{must} call @code{va_start} (@pxref{Variadic

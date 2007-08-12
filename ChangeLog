@@ -1,3 +1,8 @@
+2007-08-12  Roland McGrath  <roland@redhat.com>
+
+	* manual/stdio.texi (Variable Arguments Output): Fix xref to gcc manual.
+	From: Karl Berry <karl@freefriends.org>.
+
 2007-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-misc.c (_dl_sysdep_read_whole_file): We really don't need
