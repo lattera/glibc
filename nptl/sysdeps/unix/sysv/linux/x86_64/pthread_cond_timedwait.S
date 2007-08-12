@@ -23,6 +23,8 @@
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
 
+#include <kernel-features.h>
+
 /* For the calculation see asm/vsyscall.h.  */
 #define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 

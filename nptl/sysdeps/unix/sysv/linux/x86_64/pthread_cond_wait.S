@@ -23,6 +23,8 @@
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
 
+#include <kernel-features.h>
+
 
 	.text
 
