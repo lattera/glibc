@@ -1,5 +1,4 @@
-/* Resolve function pointers to VDSO functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,20 +16,24 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-
-#ifndef _LIBC_VDSO_H
-#define _LIBC_VDSO_H
-
 #ifdef SHARED
+# include <dl-vdso.h>
+# include <bits/libc-vdso.h>
 
-extern void *__vdso_gettimeofday attribute_hidden;
+int (*__vdso_gettimeofday) (struct timeval *, void *) attribute_hidden;
 
-extern void *__vdso_clock_gettime;
+int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
 
-extern void *__vdso_clock_getres;
 
-extern void *__vdso_get_tbfreq;
+static inline void
+_libc_vdso_platform_setup (void)
+{
+  __vdso_gettimeofday = _dl_vdso_vsym ("gettimeofday", "LINUX_2.6");
 
+  __vdso_clock_gettime = _dl_vdso_vsym ("clock_gettime", "LINUX_2.6");
+}
+
+# define VDSO_SETUP _libc_vdso_platform_setup
 #endif
 
-#endif /* _LIBC_VDSO_H */
+#include <csu/libc-start.c>

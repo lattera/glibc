@@ -6,4 +6,7 @@ libc {
 
     modify_ldt;
   }
+  GLIBC_PRIVATE {
+    __vdso_clock_gettime;
+  }
 }

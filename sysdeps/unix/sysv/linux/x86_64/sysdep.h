@@ -68,14 +68,14 @@
 
 /* We don't want the label for the error handle to be global when we define
    it here.  */
-#ifdef PIC
-# define SYSCALL_ERROR_LABEL 0f
-#else
-# define SYSCALL_ERROR_LABEL syscall_error
-#endif
+# ifdef PIC
+#  define SYSCALL_ERROR_LABEL 0f
+# else
+#  define SYSCALL_ERROR_LABEL syscall_error
+# endif
 
-#undef	PSEUDO
-#define	PSEUDO(name, syscall_name, args)				      \
+# undef	PSEUDO
+# define PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
@@ -83,40 +83,40 @@
     jae SYSCALL_ERROR_LABEL;						      \
   L(pseudo_end):
 
-#undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
+# undef	PSEUDO_END
+# define PSEUDO_END(name)						      \
   SYSCALL_ERROR_HANDLER							      \
   END (name)
 
-#undef	PSEUDO_NOERRNO
-#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+# undef	PSEUDO_NOERRNO
+# define PSEUDO_NOERRNO(name, syscall_name, args) \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args)
 
-#undef	PSEUDO_END_NOERRNO
-#define	PSEUDO_END_NOERRNO(name) \
+# undef	PSEUDO_END_NOERRNO
+# define PSEUDO_END_NOERRNO(name) \
   END (name)
 
-#define ret_NOERRNO ret
+# define ret_NOERRNO ret
 
-#undef	PSEUDO_ERRVAL
-#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+# undef	PSEUDO_ERRVAL
+# define PSEUDO_ERRVAL(name, syscall_name, args) \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
     negq %rax
 
-#undef	PSEUDO_END_ERRVAL
-#define	PSEUDO_END_ERRVAL(name) \
+# undef	PSEUDO_END_ERRVAL
+# define PSEUDO_END_ERRVAL(name) \
   END (name)
 
-#define ret_ERRVAL ret
+# define ret_ERRVAL ret
 
-#ifndef PIC
-#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#elif RTLD_PRIVATE_ERRNO
-# define SYSCALL_ERROR_HANDLER			\
+# ifndef PIC
+#  define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+# elif RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER			\
 0:						\
   leaq rtld_errno(%rip), %rcx;			\
   xorl %edx, %edx;				\
@@ -124,13 +124,13 @@
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
-#elif USE___THREAD
-# ifndef NOT_IN_libc
-#  define SYSCALL_ERROR_ERRNO __libc_errno
-# else
-#  define SYSCALL_ERROR_ERRNO errno
-# endif
-# define SYSCALL_ERROR_HANDLER			\
+# elif USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+#  define SYSCALL_ERROR_HANDLER			\
 0:						\
   movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
   xorl %edx, %edx;				\
@@ -138,10 +138,10 @@
   movl %edx, %fs:(%rcx);			\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
-#elif defined _LIBC_REENTRANT
+# elif defined _LIBC_REENTRANT
 /* Store (- %rax) into errno through the GOT.
    Note that errno occupies only 4 bytes.  */
-# define SYSCALL_ERROR_HANDLER			\
+#  define SYSCALL_ERROR_HANDLER			\
 0:						\
   xorl %edx, %edx;				\
   subq %rax, %rdx;				\
@@ -158,15 +158,15 @@
 
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
-#else /* Not _LIBC_REENTRANT.  */
-# define SYSCALL_ERROR_HANDLER			\
+# else /* Not _LIBC_REENTRANT.  */
+#  define SYSCALL_ERROR_HANDLER			\
 0:movq errno@GOTPCREL(%RIP), %rcx;		\
   xorl %edx, %edx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
-#endif	/* PIC */
+# endif	/* PIC */
 
 /* The Linux/x86-64 kernel expects the system call parameters in
    registers according to the following table:
@@ -204,25 +204,25 @@
 
     Syscalls of more than 6 arguments are not supported.  */
 
-#undef	DO_CALL
-#define DO_CALL(syscall_name, args)		\
+# undef	DO_CALL
+# define DO_CALL(syscall_name, args)		\
     DOARGS_##args				\
     movl $SYS_ify (syscall_name), %eax;		\
     syscall;
 
-#define DOARGS_0 /* nothing */
-#define DOARGS_1 /* nothing */
-#define DOARGS_2 /* nothing */
-#define DOARGS_3 /* nothing */
-#define DOARGS_4 movq %rcx, %r10;
-#define DOARGS_5 DOARGS_4
-#define DOARGS_6 DOARGS_5
+# define DOARGS_0 /* nothing */
+# define DOARGS_1 /* nothing */
+# define DOARGS_2 /* nothing */
+# define DOARGS_3 /* nothing */
+# define DOARGS_4 movq %rcx, %r10;
+# define DOARGS_5 DOARGS_4
+# define DOARGS_6 DOARGS_5
 
 #else	/* !__ASSEMBLER__ */
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) \
+# undef INLINE_SYSCALL
+# define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
     unsigned long resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, ), 0))	      \
@@ -232,10 +232,10 @@
       }									      \
     (long) resultvar; })
 
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+# undef INTERNAL_SYSCALL_DECL
+# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+# define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     unsigned long resultvar;						      \
     LOAD_ARGS_##nr (args)						      \
@@ -245,68 +245,122 @@
     : "=a" (resultvar)							      \
     : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
     (long) resultvar; })
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) \
+# undef INTERNAL_SYSCALL
+# define INTERNAL_SYSCALL(name, err, nr, args...) \
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+# undef INTERNAL_SYSCALL_ERROR_P
+# define INTERNAL_SYSCALL_ERROR_P(val, err) \
   ((unsigned long) (val) >= -4095L)
 
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
+# undef INTERNAL_SYSCALL_ERRNO
+# define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
-#define LOAD_ARGS_0()
-#define LOAD_REGS_0
-#define ASM_ARGS_0
+# ifdef SHARED
+#  define INLINE_VSYSCALL(name, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    __label__ iserr;							      \
+    INTERNAL_SYSCALL_DECL (sc_err);					      \
+    long int sc_ret;							      \
+									      \
+    if (__vdso_##name != NULL)						      \
+      {									      \
+	sc_ret = __vdso_##name (args);					      \
+	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+	  goto out;							      \
+	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
+	  goto iserr;							      \
+      }									      \
+									      \
+    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
+    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+      {									      \
+      iserr:								      \
+        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
+        sc_ret = -1L;							      \
+      }									      \
+  out:									      \
+    sc_ret;								      \
+  })
+#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    long int v_ret;							      \
+									      \
+    if (__vdso_##name != NULL)						      \
+      {									      \
+	v_ret = __vdso_##name (args);					      \
+	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
+	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
+	  goto out;							      \
+      }									      \
+    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
+  out:									      \
+    v_ret;								      \
+  })
 
-#define LOAD_ARGS_1(a1)					\
+/* List of system calls which are supported as vsyscalls.  */
+#  define HAVE_CLOCK_GETTIME_VSYSCALL	1
+
+# else
+#  define INLINE_VSYSCALL(name, nr, args...) \
+  INLINE_SYSCALL (name, nr, ##args)
+#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  INTERNAL_SYSCALL (name, err, nr, ##args)
+# endif
+
+# define LOAD_ARGS_0()
+# define LOAD_REGS_0
+# define ASM_ARGS_0
+
+# define LOAD_ARGS_1(a1)				\
   long int __arg1 = (long) (a1);			\
   LOAD_ARGS_0 ()
-#define LOAD_REGS_1					\
+# define LOAD_REGS_1					\
   register long int _a1 asm ("rdi") = __arg1;		\
   LOAD_REGS_0
-#define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
+# define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
 
-#define LOAD_ARGS_2(a1, a2)				\
+# define LOAD_ARGS_2(a1, a2)				\
   long int __arg2 = (long) (a2);			\
   LOAD_ARGS_1 (a1)
-#define LOAD_REGS_2					\
+# define LOAD_REGS_2					\
   register long int _a2 asm ("rsi") = __arg2;		\
   LOAD_REGS_1
-#define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
+# define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
 
-#define LOAD_ARGS_3(a1, a2, a3)				\
+# define LOAD_ARGS_3(a1, a2, a3)			\
   long int __arg3 = (long) (a3);			\
   LOAD_ARGS_2 (a1, a2)
-#define LOAD_REGS_3					\
+# define LOAD_REGS_3					\
   register long int _a3 asm ("rdx") = __arg3;		\
   LOAD_REGS_2
-#define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
+# define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
 
-#define LOAD_ARGS_4(a1, a2, a3, a4)			\
+# define LOAD_ARGS_4(a1, a2, a3, a4)			\
   long int __arg4 = (long) (a4);			\
   LOAD_ARGS_3 (a1, a2, a3)
-#define LOAD_REGS_4					\
+# define LOAD_REGS_4					\
   register long int _a4 asm ("r10") = __arg4;		\
   LOAD_REGS_3
-#define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
+# define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
 
-#define LOAD_ARGS_5(a1, a2, a3, a4, a5)			\
+# define LOAD_ARGS_5(a1, a2, a3, a4, a5)		\
   long int __arg5 = (long) (a5);			\
   LOAD_ARGS_4 (a1, a2, a3, a4)
-#define LOAD_REGS_5					\
+# define LOAD_REGS_5					\
   register long int _a5 asm ("r8") = __arg5;		\
   LOAD_REGS_4
-#define ASM_ARGS_5	ASM_ARGS_4, "r" (_a5)
+# define ASM_ARGS_5	ASM_ARGS_4, "r" (_a5)
 
-#define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)		\
+# define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)		\
   long int __arg6 = (long) (a6);			\
   LOAD_ARGS_5 (a1, a2, a3, a4, a5)
-#define LOAD_REGS_6					\
+# define LOAD_REGS_6					\
   register long int _a6 asm ("r9") = __arg6;		\
   LOAD_REGS_5
-#define ASM_ARGS_6	ASM_ARGS_5, "r" (_a6)
+# define ASM_ARGS_6	ASM_ARGS_5, "r" (_a6)
 
 #endif	/* __ASSEMBLER__ */
 

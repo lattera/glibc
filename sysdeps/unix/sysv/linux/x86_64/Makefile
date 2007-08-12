@@ -13,3 +13,7 @@ endif
 ifeq ($(subdir),csu)
 gen-as-const-headers += ucontext_i.sym
 endif
+
+ifeq ($(subdir),elf)
+sysdep_routines += dl-vdso
+endif

@@ -24,23 +24,6 @@
 #include <bp-start.h>
 #include <bp-sym.h>
 
-int __cache_line_size attribute_hidden;
-/* The main work is done in the generic function.  */
-#define LIBC_START_MAIN generic_start_main
-#define LIBC_START_DISABLE_INLINE
-#define LIBC_START_MAIN_AUXVEC_ARG
-#define MAIN_AUXVEC_ARG
-#define INIT_MAIN_ARGS
-#include <csu/libc-start.c>
-
-struct startup_info
-  {
-    void *__unbounded sda_base;
-    int (*main) (int, char **, char **, void *);
-    int (*init) (int, char **, char **, void *);
-    void (*fini) (void);
-  };
-
 
 #ifdef SHARED
 # include <sys/time.h>
@@ -69,7 +52,27 @@ static inline void _libc_vdso_platform_setup (void)
     __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_vdso_get_tbfreq",
 				       "LINUX_2.6.15");
   }
+
+# define VDSO_SETUP _libc_vdso_platform_setup
 #endif
+
+
+int __cache_line_size attribute_hidden;
+/* The main work is done in the generic function.  */
+#define LIBC_START_MAIN generic_start_main
+#define LIBC_START_DISABLE_INLINE
+#define LIBC_START_MAIN_AUXVEC_ARG
+#define MAIN_AUXVEC_ARG
+#define INIT_MAIN_ARGS
+#include <csu/libc-start.c>
+
+struct startup_info
+  {
+    void *__unbounded sda_base;
+    int (*main) (int, char **, char **, void *);
+    int (*init) (int, char **, char **, void *);
+    void (*fini) (void);
+  };
 
 int
 /* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
@@ -117,10 +120,7 @@ int
 	__cache_line_size = av->a_un.a_val;
 	break;
       }
-#ifdef SHARED
-  /* Resolve and initialize function pointers for VDSO functions.  */
-  _libc_vdso_platform_setup ();
-#endif
+
   return generic_start_main (stinfo->main, argc, ubp_av, auxvec,
 			     stinfo->init, stinfo->fini, rtld_fini,
 			     stack_on_entry);

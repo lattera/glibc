@@ -8,5 +8,5 @@ gen-as-const-headers += ucontext_i.sym
 endif
 
 ifeq ($(subdir),elf)
-routines += dl-vdso
+sysdep_routines += dl-vdso
 endif

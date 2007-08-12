@@ -138,16 +138,18 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
      functions are using thread functions if these are available and
      we need to setup errno.  */
   __pthread_initialize_minimal ();
-#endif
 
-# ifndef SHARED
   /* Set up the stack checker's canary.  */
   uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
-#  ifdef THREAD_SET_STACK_GUARD
+# ifdef THREAD_SET_STACK_GUARD
   THREAD_SET_STACK_GUARD (stack_chk_guard);
-#  else
+# else
   __stack_chk_guard = stack_chk_guard;
-#  endif
+# endif
+#endif
+
+#ifdef VDSO_SETUP
+  VDSO_SETUP ();
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

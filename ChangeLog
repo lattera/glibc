@@ -1,3 +1,28 @@
+2007-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: Move to...
+	* sysdeps/unix/sysv/linux/dl-vdso.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.h: Move to...
+	* sysdeps/unix/sysv/linux/dl-vdso.h: ...here.
+	* csu/libc-start.c: Pretty printing.
+	Use VDSO_SETUP if defined.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Define VDSO_SETUP
+	and let generic code call into _libc_vdso_platform_setup.
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Pretty printing.
+	Define INLINE_VSYSCALL and INTERNAL_VSYSCALL.
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Export __vdso_clock_gettime
+	for GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile [subdir=elf]
+	(sysdep_rountines): Add dl-vdso.
+
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Use sysdep_routines instead
+	of routines.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Add
+	attribute_hidden to __vdso_gettimeofday prototype.
+
 2007-08-12  Roland McGrath  <roland@redhat.com>
 
 	* manual/stdio.texi (Variable Arguments Output): Fix xref to gcc manual.
