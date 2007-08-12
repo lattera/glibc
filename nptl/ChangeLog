@@ -1,3 +1,9 @@
+2007-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Include
+	<kernel-features.h>.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+
 2007-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h (PTHREAD_ROBUST_MUTEX_PSHARED): Define.
