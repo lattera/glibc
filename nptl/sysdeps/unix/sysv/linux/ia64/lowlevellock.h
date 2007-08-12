@@ -154,6 +154,7 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 	  __lll_lock_wait_private (__futex);				      \
 	else								      \
 	  __lll_lock_wait (__futex, private);				      \
+      }									      \
   }))
 #define lll_lock(futex, private) __lll_lock (&(futex), private)
 

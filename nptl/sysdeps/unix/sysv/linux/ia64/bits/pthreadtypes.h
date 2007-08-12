@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -126,9 +126,9 @@ typedef union
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
     int __writer;
-    int __pad1;
+    int __shared;
+    unsigned long int __pad1;
     unsigned long int __pad2;
-    unsigned long int __pad3;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;

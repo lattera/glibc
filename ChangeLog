@@ -1,3 +1,8 @@
+2007-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Include stddef.h
+	with __need_size_t.
+
 2007-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-vdso.c (_dl_vdso_vsym): Expect

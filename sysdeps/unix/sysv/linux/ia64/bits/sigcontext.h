@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003, 2004
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, July 2000
@@ -25,6 +25,8 @@
 #ifndef _BITS_SIGCONTEXT_H
 #define _BITS_SIGCONTEXT_H 1
 
+#define __need_size_t
+#include <stddef.h>
 #include <bits/sigstack.h>
 
 struct ia64_fpreg
