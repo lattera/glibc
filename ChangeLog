@@ -1,5 +1,14 @@
 2007-08-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/dl-vdso.c (_dl_vdso_vsym): Expect
+	r_found_version structure as second parameter.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION): Define.
+	(_dl_vdso_vsym): Change type of second parameter accordingly.
+	* sysdeps/unix/sysv/linux/x86-64/libc-start.c
+	(_libc_vdso_platform_setup): Adjust.
+	* sysdeps/unix/sysv/linux/pwoerpc/libc-start.c
+	(_libc_vdso_platform_setup): Likewise.
+
 	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: Move to...
 	* sysdeps/unix/sysv/linux/dl-vdso.c: ...here.
 	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.h: Move to...

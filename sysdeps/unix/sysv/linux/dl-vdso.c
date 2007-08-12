@@ -1,5 +1,5 @@
 /* ELF symbol resolve functions for VDSO objects.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 void *
 internal_function
-_dl_vdso_vsym (const char *name, const char *version)
+_dl_vdso_vsym (const char *name, const struct r_found_version *vers)
 {
   struct link_map *map = GLRO (dl_sysinfo_map);
   void *value = NULL;
@@ -37,19 +37,11 @@ _dl_vdso_vsym (const char *name, const char *version)
       memset (&wsym, 0, sizeof (ElfW (Sym)));
       wsym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
 
-      /* Compute hash value to the version string.  */
-      struct r_found_version vers;
-      vers.name = version;
-      vers.hidden = 1;
-      vers.hash = _dl_elf_hash (version);
-      /* We don't have a specific file where the symbol can be found.  */
-      vers.filename = NULL;
-
       /* Search the scope of the vdso map.  */
       const ElfW (Sym) *ref = &wsym;
       lookup_t result = GLRO (dl_lookup_symbol_x) (name, map, &ref,
 						   map->l_local_scope,
-						   &vers, 0, 0, NULL);
+						   vers, 0, 0, NULL);
 
       if (ref != NULL)
 	value = DL_SYMBOL_ADDRESS (result, ref);

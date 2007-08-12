@@ -1,5 +1,5 @@
 /* ELF symbol resolve functions for VDSO objects.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,25 @@
 #ifndef _DL_VDSO_H
 #define _DL_VDSO_H	1
 
+#include <assert.h>
+#include <dl-hash.h>
+#include <ldsodefs.h>
+
+
+/* Create version number record for lookup.  */
+#define PREPARE_VERSION(var, vname, vhash) \
+  struct r_found_version var;						      \
+  var.name = vname;							      \
+  var.hidden = 1;							      \
+  var.hash = vhash;							      \
+  assert (var.hash == _dl_elf_hash (vname));				      \
+  /* We don't have a specific file where the symbol can be found.  */	      \
+  var.filename = NULL
+
+
 /* Functions for resolving symbols in the VDSO link map.  */
-extern void *_dl_vdso_vsym (const char *name, const char *version)
+extern void *_dl_vdso_vsym (const char *name,
+			    const struct r_found_version *version)
      internal_function attribute_hidden;
 
 #endif /* dl-vdso.h */

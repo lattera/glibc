@@ -28,9 +28,11 @@ int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  __vdso_gettimeofday = _dl_vdso_vsym ("gettimeofday", "LINUX_2.6");
+  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
 
-  __vdso_clock_gettime = _dl_vdso_vsym ("clock_gettime", "LINUX_2.6");
+  __vdso_gettimeofday = _dl_vdso_vsym ("gettimeofday", &linux26);
+
+  __vdso_clock_gettime = _dl_vdso_vsym ("clock_gettime", &linux26);
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup
