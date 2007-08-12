@@ -1,3 +1,27 @@
+2007-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h
+	[__WORDSIZE=32] (pthread_rwlock_t): Split __flags element into four
+	byte elements.  One of them is the new __shared element.
+	[__WORDSIZE=64] (pthread_rwlock_t): Renamed __pad1 element to __shared,
+	adjust names of other padding elements.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h
+	[__WORDSIZE=32] (pthread_rwlock_t): Split __flags element into four
+	byte elements.  One of them is the new __shared element.
+	[__WORDSIZE=64] (pthread_rwlock_t): Renamed __pad1 element to __shared,
+	adjust names of other padding elements.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h (pthread_rwlock_t):
+	Renamed __pad1 element to __shared, adjust names of other padding
+	elements.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
+	(pthread_rwlock_t): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__lll_lock): Fix a
+	typo.
+
+2007-08-09  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/pthread_spin_unlock.c: New file.
+
 2007-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Include

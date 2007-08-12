@@ -41,7 +41,7 @@
 	(_dl_vdso_vsym): Change type of second parameter accordingly.
 	* sysdeps/unix/sysv/linux/x86-64/libc-start.c
 	(_libc_vdso_platform_setup): Adjust.
-	* sysdeps/unix/sysv/linux/pwoerpc/libc-start.c
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c
 	(_libc_vdso_platform_setup): Likewise.
 
 	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: Move to...
