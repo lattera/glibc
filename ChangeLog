@@ -1,3 +1,33 @@
+2007-08-01  Andreas Jaeger  <aj@suse.de>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (opt_ignore_aux_cache): Add new option.
+	(options): Add option.
+	(parse_opt): Handle option.
+	(manual_link): Adjust process_file caller.  Call implicit_soname.
+	(search_dir): Formatting.  Use and populate auxiliary cache.
+	(main): Load and save auxiliary cache.
+	* elf/readlib.c (process_file): Add stat_buf argument.  Pass struct
+	stat64 from fstat64 to caller.
+	(implicit_soname): New function.
+	* elf/readelflib.c (process_elf_file): If DT_SONAME is not present,
+	leave *soname as NULL.
+	* elf/cache.c: Include libgen.h.
+	(print_entry, print_cache, compare, save_cache, add_to_cache):
+	Formatting and cleanups.
+	(aux_cache_entry_id, aux_cache_entry, aux_cache_file_entry,
+	aux_cache_file): New structures.
+	(AUX_CACHEMAGIC): Define.
+	(primes): New array.
+	(aux_hash_size, aux_hash): New variables.
+	(aux_cache_entry_id_hash, nextprime, init_aux_cache,
+	search_aux_cache, insert_to_aux_cache, add_to_aux_cache,
+	load_aux_cache, save_aux_cache): New functions.
+	* sysdeps/generic/ldconfig.h (_PATH_LDCONFIG_AUX_CACHE): Define.
+	(init_aux_cache, search_aux_cache, add_to_aux_cache,
+	load_aux_cache, save_aux_cache, implicit_soname): New prototypes.
+	(process_file): Adjust prototype.
+
 2007-08-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Include stddef.h

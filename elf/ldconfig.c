@@ -112,6 +112,9 @@ static char *opt_chroot;
 /* Manually link given shared libraries.  */
 static int opt_manual_link;
 
+/* Should we ignore an old auxiliary cache file?  */
+static int opt_ignore_aux_cache;
+
 /* Cache file to use.  */
 static char *cache_file;
 
@@ -142,6 +145,7 @@ static const struct argp_option options[] =
   { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
   { NULL, 'l', NULL, 0, N_("Manually link individual libraries."), 0},
   { "format", 'c', N_("FORMAT"), 0, N_("Format to use: new, old or compat (default)"), 0},
+  { "ignore-aux-cache", 'i', NULL, 0, N_("Ignore auxiliary cache file"), 0},
   { NULL, 0, NULL, 0, NULL, 0 }
 };
 
@@ -238,9 +242,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case 'C':
       cache_file = arg;
+      /* Ignore auxiliary cache since we use non-standard cache.  */
+      opt_ignore_aux_cache = 1;
       break;
     case 'f':
       config_file = arg;
+      break;
+    case 'i':
+      opt_ignore_aux_cache = 1;
       break;
     case 'l':
       opt_manual_link = 1;
@@ -518,7 +527,7 @@ manual_link (char *library)
   if (libname)
     {
       /* Successfully split names.  Check if path is just "/" to avoid
-         an empty path.  */
+	 an empty path.  */
       if (libname == path)
 	{
 	  libname = library + 1;
@@ -572,14 +581,17 @@ manual_link (char *library)
       free (path);
       return;
     }
+
   if (process_file (real_library, library, libname, &flag, &osversion,
-		    &soname, 0))
+		    &soname, 0, &stat_buf))
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
       free (path);
       return;
     }
+  if (soname == NULL)
+    soname = implicit_soname (libname, flag);
   create_links (real_path, path, libname, soname);
   free (soname);
   free (path);
@@ -625,23 +637,7 @@ struct dlib_entry
 static void
 search_dir (const struct dir_entry *entry)
 {
-  DIR *dir;
-  struct dirent64 *direntry;
-  char *file_name, *dir_name, *real_file_name, *real_name;
-  int file_name_len, real_file_name_len, len;
-  char *soname;
-  struct dlib_entry *dlibs;
-  struct dlib_entry *dlib_ptr;
-  struct stat64 lstat_buf, stat_buf;
-  int is_link, is_dir;
   uint64_t hwcap = path_hwcap (entry->path);
-  unsigned int osversion;
-
-  file_name_len = PATH_MAX;
-  file_name = alloca (file_name_len);
-
-  dlibs = NULL;
-
   if (opt_verbose)
     {
       if (hwcap != 0)
@@ -650,6 +646,11 @@ search_dir (const struct dir_entry *entry)
 	printf ("%s:\n", entry->path);
     }
 
+  char *dir_name;
+  char *real_file_name;
+  size_t real_file_name_len;
+  size_t file_name_len = PATH_MAX;
+  char *file_name = alloca (file_name_len);
   if (opt_chroot)
     {
       dir_name = chroot_canon (opt_chroot, entry->path);
@@ -663,6 +664,7 @@ search_dir (const struct dir_entry *entry)
       real_file_name = file_name;
     }
 
+  DIR *dir;
   if (dir_name == NULL || (dir = opendir (dir_name)) == NULL)
     {
       if (opt_verbose)
@@ -672,6 +674,8 @@ search_dir (const struct dir_entry *entry)
       return;
     }
 
+  struct dirent64 *direntry;
+  struct dlib_entry *dlibs = NULL;
   while ((direntry = readdir64 (dir)) != NULL)
     {
       int flag;
@@ -695,7 +699,8 @@ search_dir (const struct dir_entry *entry)
 #endif
 	      !is_hwcap_platform (direntry->d_name)))
 	continue;
-      len = strlen (direntry->d_name);
+
+      size_t len = strlen (direntry->d_name);
       /* Skip temporary files created by the prelink program.  Files with
 	 names like these are never really DSOs we want to look at.  */
       if (len >= sizeof (".#prelink#") - 1)
@@ -727,7 +732,10 @@ search_dir (const struct dir_entry *entry)
 	    }
 	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
 	}
+
+      struct stat64 lstat_buf;
 #ifdef _DIRENT_HAVE_D_TYPE
+      /* We optimize and try to do the lstat call only if needed.  */
       if (direntry->d_type != DT_UNKNOWN)
 	lstat_buf.st_mode = DTTOIF (direntry->d_type);
       else
@@ -738,9 +746,11 @@ search_dir (const struct dir_entry *entry)
 	    continue;
 	  }
 
-      is_link = S_ISLNK (lstat_buf.st_mode);
+      struct stat64 stat_buf;
+      int is_dir;
+      int is_link = S_ISLNK (lstat_buf.st_mode);
       if (is_link)
-        {
+	{
 	  /* In case of symlink, we check if the symlink refers to
 	     a directory. */
 	  if (__builtin_expect (stat64 (real_file_name, &stat_buf), 0))
@@ -754,6 +764,12 @@ search_dir (const struct dir_entry *entry)
 	      continue;
 	    }
 	  is_dir = S_ISDIR (stat_buf.st_mode);
+
+	  /* lstat_buf is later stored, update contents.  */
+	  lstat_buf.st_dev = stat_buf.st_dev;
+	  lstat_buf.st_ino = stat_buf.st_ino;
+	  lstat_buf.st_size = stat_buf.st_size;
+	  lstat_buf.st_ctime = stat_buf.st_ctime;
 	}
       else
 	is_dir = S_ISDIR (lstat_buf.st_mode);
@@ -767,36 +783,28 @@ search_dir (const struct dir_entry *entry)
 	  new_entry->path = xstrdup (file_name);
 	  new_entry->flag = entry->flag;
 	  new_entry->next = NULL;
-	  if (is_link)
-	    {
-	      new_entry->ino = stat_buf.st_ino;
-	      new_entry->dev = stat_buf.st_dev;
-	    }
-	  else
-	    {
 #ifdef _DIRENT_HAVE_D_TYPE
-	      /* We have filled in lstat only #ifndef
-		 _DIRENT_HAVE_D_TYPE.  Fill it in if needed.  */
-	      if (direntry->d_type != DT_UNKNOWN
-		  && __builtin_expect (lstat64 (real_file_name, &lstat_buf),
-				       0))
-		{
-		  error (0, errno, _("Cannot lstat %s"), file_name);
-		  free (new_entry->path);
-		  free (new_entry);
-		  continue;
-		}
-#endif
-
-	      new_entry->ino = lstat_buf.st_ino;
-	      new_entry->dev = lstat_buf.st_dev;
+	  /* We have filled in lstat only #ifndef
+	     _DIRENT_HAVE_D_TYPE.  Fill it in if needed.  */
+	  if (!is_link
+	      && direntry->d_type != DT_UNKNOWN
+	      && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
+	    {
+	      error (0, errno, _("Cannot lstat %s"), file_name);
+	      free (new_entry->path);
+	      free (new_entry);
+	      continue;
 	    }
+#endif
+	  new_entry->ino = lstat_buf.st_ino;
+	  new_entry->dev = lstat_buf.st_dev;
 	  add_single_dir (new_entry, 0);
 	  continue;
 	}
       else if (!S_ISREG (lstat_buf.st_mode) && !is_link)
 	continue;
 
+      char *real_name;
       if (opt_chroot && is_link)
 	{
 	  real_name = chroot_canon (opt_chroot, file_name);
@@ -810,14 +818,36 @@ search_dir (const struct dir_entry *entry)
       else
 	real_name = real_file_name;
 
-      if (process_file (real_name, file_name, direntry->d_name, &flag,
-			&osversion, &soname, is_link))
+#ifdef _DIRENT_HAVE_D_TYPE
+      /* Call lstat64 if not done yet.  */
+      if (!is_link
+	  && direntry->d_type != DT_UNKNOWN
+	  && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
 	{
-	  if (real_name != real_file_name)
-	    free (real_name);
+	  error (0, errno, _("Cannot lstat %s"), file_name);
 	  continue;
 	}
+#endif
 
+      /* First search whether the auxiliary cache contains this
+	 library already and it's not changed.  */
+      char *soname;
+      unsigned int osversion;
+      if (!search_aux_cache (&lstat_buf, &flag, &osversion, &soname))
+	{
+	  if (process_file (real_name, file_name, direntry->d_name, &flag,
+			    &osversion, &soname, is_link, &lstat_buf))
+	    {
+	      if (real_name != real_file_name)
+		free (real_name);
+	      continue;
+	    }
+	  else if (opt_build_cache)
+	    add_to_aux_cache (&lstat_buf, flag, osversion, soname);
+	}
+
+      if (soname == NULL)
+	soname = implicit_soname (direntry->d_name, flag);
 
       /* A link may just point to itself.  */
       if (is_link)
@@ -834,7 +864,7 @@ search_dir (const struct dir_entry *entry)
 		  || strncmp (real_base_name, soname, len) != 0)
 		is_link = 0;
 	    }
-        }
+	}
 
       if (real_name != real_file_name)
 	free (real_name);
@@ -849,6 +879,7 @@ search_dir (const struct dir_entry *entry)
 	  && (entry->flag == FLAG_ELF_LIBC5
 	      || entry->flag == FLAG_ELF_LIBC6))
 	flag = entry->flag;
+
       /* Some sanity checks to print warnings.  */
       if (opt_verbose)
 	{
@@ -864,6 +895,7 @@ search_dir (const struct dir_entry *entry)
 	}
 
       /* Add library to list.  */
+      struct dlib_entry *dlib_ptr;
       for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
 	{
 	  /* Is soname already in list?  */
@@ -888,12 +920,13 @@ search_dir (const struct dir_entry *entry)
 			dlib_ptr->flag = flag;
 		      else
 			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
-			       dlib_ptr->name, direntry->d_name, entry->path);
+			       dlib_ptr->name, direntry->d_name,
+			       entry->path);
 		    }
 		  free (dlib_ptr->name);
-		  dlib_ptr->osversion = osversion;
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;
+		  dlib_ptr->osversion = osversion;
 		}
 	      /* Don't add this library, abort loop.  */
 	      /* Also free soname, since it's dynamically allocated.  */
@@ -906,10 +939,10 @@ search_dir (const struct dir_entry *entry)
 	{
 	  dlib_ptr = (struct dlib_entry *)xmalloc (sizeof (struct dlib_entry));
 	  dlib_ptr->name = xstrdup (direntry->d_name);
-	  dlib_ptr->flag = flag;
-	  dlib_ptr->osversion = osversion;
 	  dlib_ptr->soname = soname;
+	  dlib_ptr->flag = flag;
 	  dlib_ptr->is_link = is_link;
+	  dlib_ptr->osversion = osversion;
 	  /* Add at head of list.  */
 	  dlib_ptr->next = dlibs;
 	  dlibs = dlib_ptr;
@@ -920,6 +953,7 @@ search_dir (const struct dir_entry *entry)
 
   /* Now dlibs contains a list of all libs - add those to the cache
      and created all symbolic links.  */
+  struct dlib_entry *dlib_ptr;
   for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
     {
       /* Don't create links to links.  */
@@ -1246,7 +1280,7 @@ main (int argc, char **argv)
   if (opt_chroot)
     {
       /* Canonicalize the directory name of cache_file, not cache_file,
-         because we'll rename a temporary cache file to it.  */
+	 because we'll rename a temporary cache file to it.  */
       char *p = strrchr (cache_file, '/');
       char *canon = chroot_canon (opt_chroot,
 				  p ? (*p = '\0', cache_file) : "/");
@@ -1293,10 +1327,18 @@ main (int argc, char **argv)
 	add_system_dir (LIBDIR);
     }
 
+  if (! opt_ignore_aux_cache)
+    load_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+  else
+    init_aux_cache ();
+
   search_dirs ();
 
   if (opt_build_cache)
-    save_cache (cache_file);
+    {
+      save_cache (cache_file);
+      save_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+    }
 
   return 0;
 }

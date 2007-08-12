@@ -231,11 +231,5 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	}
     }
 
-  /* We reach this point only if the file doesn't contain a DT_SONAME
-     or if we can't classify the library.  If it doesn't have a
-     soname, return the name of the library.  */
-  if (*soname == NULL)
-    *soname = xstrdup (lib);
-
   return 0;
 }

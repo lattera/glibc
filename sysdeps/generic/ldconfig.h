@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -35,6 +35,9 @@
 #define FLAG_MIPS64_LIBN32	0x0600
 #define FLAG_MIPS64_LIBN64	0x0700
 
+/* Name of auxiliary cache.  */
+#define _PATH_LDCONFIG_AUX_CACHE "/var/cache/ldconfig/aux-cache"
+
 /* Declared in cache.c.  */
 extern void print_cache (const char *cache_name);
 
@@ -45,10 +48,24 @@ extern void save_cache (const char *cache_name);
 extern void add_to_cache (const char *path, const char *lib, int flags,
 			  unsigned int osversion, uint64_t hwcap);
 
+extern void init_aux_cache (void);
+
+extern void load_aux_cache (const char *aux_cache_name);
+
+extern int search_aux_cache (struct stat64 *stat_buf, int *flags,
+			     unsigned int *osversion, char **soname);
+
+extern void add_to_aux_cache (struct stat64 *stat_buf, int flags,
+			      unsigned int osversion, const char *soname);
+
+extern void save_aux_cache (const char *aux_cache_name);
+
 /* Declared in readlib.c.  */
 extern int process_file (const char *real_file_name, const char *file_name,
 			 const char *lib, int *flag, unsigned int *osversion,
-			 char **soname, int is_link);
+			 char **soname, int is_link, struct stat64 *stat_buf);
+
+extern char *implicit_soname (const char *lib, int flag);
 
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib, int *flag,
