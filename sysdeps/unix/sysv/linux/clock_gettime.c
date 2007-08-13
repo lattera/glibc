@@ -1,5 +1,5 @@
 /* clock_gettime -- Get current time from a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,11 +133,19 @@ maybe_syscall_gettime_cpu (clockid_t clock_id, struct timespec *tp)
 	{
 	  if (e == EINVAL)
 	    {
+# ifdef HAVE_CLOCK_GETRES_VSYSCALL
 	      /* Check whether the kernel supports CPU clocks at all.
 		 If not, record it for the future.  */
 	      r = INTERNAL_VSYSCALL (clock_getres, err, 2,
+				     MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
+				     NULL);
+# else
+	      /* Check whether the kernel supports CPU clocks at all.
+		 If not, record it for the future.  */
+	      r = INTERNAL_SYSCALL (clock_getres, err, 2,
 				    MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
 				    NULL);
+# endif
 	      if (INTERNAL_SYSCALL_ERROR_P (r, err))
 		__libc_missing_posix_cpu_timers = 1;
 	    }

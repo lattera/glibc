@@ -1,5 +1,8 @@
 2007-08-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/clock_gettime.c (maybe_syscall_gettime_cpu):
+	Build fix for systems which might lack POSIX timer support.
+
 	* sysdeps/unix/sysv/linux/x86_64/libc-start.c
 	(_libc_vdso_platform_setup): Mangle function pointers before storing
 	them.
