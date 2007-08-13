@@ -1,3 +1,7 @@
+2007-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i786/Implies: New file.
+
 2007-08-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* allocatestack.c: Include kernel-features.h.
