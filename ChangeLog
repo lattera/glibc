@@ -1,3 +1,11 @@
+2007-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c
+	(_libc_vdso_platform_setup): If vDSO is not available point
+	__vdso_gettimeofday to the vsyscall.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S [SHARED]: Use
+	__vdso_gettimeofday instead of vsyscall.
+
 2007-08-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/servicescache.c: Include kernel-features.h.
