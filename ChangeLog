@@ -1,3 +1,15 @@
+2007-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c
+	(_libc_vdso_platform_setup): Mangle function pointers before storing
+	them.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INLINE_VSYSCALL):
+	Demangle vdso pointer before use.
+	(INTERNAL_VSYSCALL): Likewise.
+
+	* elf/cache.c (primes): Mark as const.
+	Noted by Roland McGrath.
+
 2007-08-01  Andreas Jaeger  <aj@suse.de>
 	    Jakub Jelinek  <jakub@redhat.com>
 
