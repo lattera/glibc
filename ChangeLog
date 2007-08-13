@@ -1,5 +1,8 @@
 2007-08-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-dst.h: No need for _dl_dst_count, _dl_dst_substitute,
+	and _dl_get_origin defines anymore.
+
 	* sysdeps/unix/sysv/linux/clock_gettime.c (maybe_syscall_gettime_cpu):
 	Build fix for systems which might lack POSIX timer support.
 

@@ -29,9 +29,6 @@
       __cnt = _dl_dst_count (__sf, is_path);			      \
 									      \
     __cnt; })
-#ifndef IS_IN_rtld
-# define _dl_dst_count GLRO(dl_dst_count)
-#endif
 
 
 /* Guess from the number of DSTs the length of the result string.  */
@@ -78,9 +75,4 @@
       origin_len = (origin && origin != (char *) -1 ? strlen (origin) : 0);   \
     }									      \
   else
-#endif
-
-#ifndef IS_IN_rtld
-# define _dl_get_origin GLRO(dl_get_origin)
-# define _dl_dst_substitute GLRO(dl_dst_substitute)
 #endif
