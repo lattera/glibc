@@ -24,6 +24,7 @@
 #include <bits/pthreadtypes.h>
 #include <atomic.h>
 #include <sysdep.h>
+#include <kernel-features.h>
 
 
 #define __NR_futex		394
