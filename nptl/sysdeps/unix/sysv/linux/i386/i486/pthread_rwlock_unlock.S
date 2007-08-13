@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <lowlevelrwlock.h>
+#include <kernel-features.h>
 
 
 	.text

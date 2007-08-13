@@ -24,6 +24,7 @@
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
 #include <atomic.h>
+#include <kernel-features.h>
 
 #define SYS_futex		238
 #define FUTEX_WAIT		0

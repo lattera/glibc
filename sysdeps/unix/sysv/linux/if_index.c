@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005
+/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,6 +28,7 @@
 #include <sys/ioctl.h>
 #include <bits/libc-lock.h>
 #include <not-cancel.h>
+#include <kernel-features.h>
 
 #include "netlinkaccess.h"
 

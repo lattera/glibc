@@ -33,6 +33,7 @@
 #include <sysdep.h>
 #include <time.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 #include "netlinkaccess.h"
 

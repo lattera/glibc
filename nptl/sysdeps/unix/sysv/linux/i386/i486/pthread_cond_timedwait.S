@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
 
 
 	.text

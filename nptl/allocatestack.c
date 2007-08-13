@@ -28,6 +28,7 @@
 #include <dl-sysdep.h>
 #include <tls.h>
 #include <lowlevellock.h>
+#include <kernel-features.h>
 
 
 #ifndef NEED_SEPARATE_REGISTER_STACK

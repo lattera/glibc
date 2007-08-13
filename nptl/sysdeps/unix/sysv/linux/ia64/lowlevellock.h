@@ -25,6 +25,7 @@
 #include <bits/pthreadtypes.h>
 #include <ia64intrin.h>
 #include <atomic.h>
+#include <kernel-features.h>
 
 #define __NR_futex		1230
 #define FUTEX_WAIT		0

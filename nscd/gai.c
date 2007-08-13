@@ -17,6 +17,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <kernel-features.h>
+
 /* This file uses the getaddrinfo code but it compiles it without NSCD
    support.  We just need a few symbol renames.  */
 #define __inet_aton inet_aton

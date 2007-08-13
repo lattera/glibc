@@ -24,6 +24,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <kernel-features.h>
 
 #include "nscd.h"
 #include "dbg_log.h"

@@ -33,6 +33,7 @@
 #include <shlib-compat.h>
 #include <smp.h>
 #include <lowlevellock.h>
+#include <kernel-features.h>
 
 
 /* Size and alignment of static TLS block.  */

@@ -27,6 +27,7 @@
 #include <atomic.h>
 #include <libc-internal.h>
 #include <resolv.h>
+#include <kernel-features.h>
 
 #include <shlib-compat.h>
 

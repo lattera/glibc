@@ -21,6 +21,7 @@
 #include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
 
 
 	.text

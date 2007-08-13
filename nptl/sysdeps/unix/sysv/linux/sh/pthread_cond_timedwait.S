@@ -22,6 +22,7 @@
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
+#include <kernel-features.h>
 
 	.text
 

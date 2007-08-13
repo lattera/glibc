@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <string.h>
+#include <kernel-features.h>
 #include "pthreadP.h"
 
 static const struct pthread_mutexattr default_attr =

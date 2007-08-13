@@ -1,3 +1,5 @@
+#include <kernel-features.h>
+
 #include "../../i386/xstat.c"
 
 #ifdef __NR_stat64

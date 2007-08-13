@@ -1,5 +1,6 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1997,2000,2002,2003,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +21,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
+#include <kernel-features.h>
 
 #ifdef STAT_IS_KERNEL_STAT
 
