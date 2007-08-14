@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -155,12 +156,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
 	{
 	  /* Need to reinitialize .plt to undo prelinking.  */
-	  int do_flush;
 	  Elf32_Rela *rela = (Elf32_Rela *) D_PTR (l, l_info[DT_JMPREL]);
 	  Elf32_Rela *relaend
 	    = (Elf32_Rela *) ((char *) rela
 			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
-	  do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
+#if !defined RTLD_BOOTSTRAP && !defined __sparc_v9__
+	  /* Note that we don't mask the hwcap here, as the flush is
+	     essential to functionality on those cpu's that implement it.
+	     For sparcv9 we can assume flush is present.  */
+	  const int do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
+#else
+	  const int do_flush = 1;
+#endif
 
 	  /* prelink must ensure there are no R_SPARC_NONE relocs left
 	     in .rela.plt.  */
@@ -305,20 +312,11 @@ _dl_start_user:\n\
 	.size   _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
-static inline Elf32_Addr
+static inline __attribute__ ((always_inline)) Elf32_Addr
 sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
-		 Elf32_Addr value, int t)
+		 Elf32_Addr value, int t, int do_flush)
 {
   Elf32_Sword disp = value - (Elf32_Addr) reloc_addr;
-#ifndef RTLD_BOOTSTRAP
-  /* Note that we don't mask the hwcap here, as the flush is essential to
-     functionality on those cpu's that implement it.  */
-  int do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
-#else
-  /* Unfortunately, this is necessary, so that we can ensure
-     ld.so will not execute corrupt PLT entry instructions. */
-  const int do_flush = 1;
-#endif
 
   if (0 && disp >= -0x800000 && disp < 0x800000)
     {
@@ -354,7 +352,15 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  return sparc_fixup_plt (reloc, reloc_addr, value, 1);
+#ifdef __sparc_v9__
+  /* Sparc v9 can assume flush is always present.  */
+  const int do_flush = 1;
+#else
+  /* Note that we don't mask the hwcap here, as the flush is essential to
+     functionality on those cpu's that implement it.  */
+  const int do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
+#endif
+  return sparc_fixup_plt (reloc, reloc_addr, value, 1, do_flush);
 }
 
 /* Return the final value of a plt relocation.  */
@@ -455,9 +461,21 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       *reloc_addr = value;
       break;
     case R_SPARC_JMP_SLOT:
-      /* At this point we don't need to bother with thread safety,
-	 so we can optimize the first instruction of .plt out.  */
-      sparc_fixup_plt (reloc, reloc_addr, value, 0);
+      {
+#if !defined RTLD_BOOTSTRAP && !defined __sparc_v9__
+	/* Note that we don't mask the hwcap here, as the flush is
+	   essential to functionality on those cpu's that implement
+	   it.  For sparcv9 we can assume flush is present.  */
+	const int do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
+#else
+	/* Unfortunately, this is necessary, so that we can ensure
+	   ld.so will not execute corrupt PLT entry instructions. */
+	const int do_flush = 1;
+#endif
+	/* At this point we don't need to bother with thread safety,
+	   so we can optimize the first instruction of .plt out.  */
+	sparc_fixup_plt (reloc, reloc_addr, value, 0, do_flush);
+      }
       break;
 #if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
     && !defined RESOLVE_CONFLICT_FIND_MAP

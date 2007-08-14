@@ -36,9 +36,9 @@ __lll_lock_wait_private (int *futex)
   while (atomic_compare_and_exchange_val_24_acq (futex, 2, 0) != 0);
 }
 
-#ifdef IS_IN_libpthread
-/* These functions don't get included in libc.so  */
 
+/* These functions don't get included in libc.so  */
+#ifdef IS_IN_libpthread
 void
 __lll_lock_wait (int *futex, int private)
 {
@@ -121,8 +121,9 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      /* Wait until thread terminates.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
+      /* Wait until thread terminates.  The kernel so far does not use
+	 the private futex operations for this.  */
+      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
 

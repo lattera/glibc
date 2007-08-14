@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -85,7 +85,7 @@ ENTRY (__clone)
 	st	%i0, [%g2+%lo(errno)]
 #endif
 #else
-	call	__errno_location
+	call	HIDDEN_JUMPTARGET(__errno_location)
 	 nop
 	st	%i0, [%o0]
 #endif
@@ -112,7 +112,7 @@ __thread_start:
 	mov	%g0, %fp	/* terminate backtrace */
 	call	%g2
 	 mov	%g3,%o0
-	call	_exit,0
+	call	HIDDEN_JUMPTARGET(_exit),0
 	 nop
 	cfi_endproc
 

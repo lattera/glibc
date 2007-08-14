@@ -1,5 +1,10 @@
 2007-08-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Comment fix.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lowlevellock.c
+	(__lll_timedwait_tid): Pass LLL_SHARED as 4th argument to
+	lll_futex_timed_wait.
+
 	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (__lll_unlock,
 	__lll_robust_unlock): Rewrite as macros instead of inline functions.
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (__lll_unlock,

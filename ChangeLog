@@ -1,5 +1,17 @@
 2007-08-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup): No
+	need to check GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH on sparcv9.
+	(sparc_fixup_plt): Add do_flush argument instead of figuring whether
+	flush should be used or not inside of the function.
+	(elf_machine_fixup_plt, elf_machine_rela): Adjust caller.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone,
+	__thread_start): Use HIDDEN_JUMPTARGET.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone,
+	__thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (JUMPTARGET): Define.
+
 	* sysdeps/ieee754/ldbl-64-128/strtold_l.c (__STRTOF): Declare.
 	Add libc_hidden_proto.
 	(STRTOF): Add libc_hidden_proto.
