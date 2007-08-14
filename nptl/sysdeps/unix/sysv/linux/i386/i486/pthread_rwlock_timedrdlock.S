@@ -100,7 +100,7 @@ pthread_rwlock_timedrdlock:
 	movl	%edx, 4(%esp)
 
 	movl	%esi, %edx
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	movzbl	PSHARED(%ebp), %ecx
 	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
 #else

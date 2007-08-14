@@ -1,3 +1,40 @@
+2007-08-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (__lll_private_flag):
+	Fix a pasto.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Pass LLL_PRIVATE to lll_* and or
+	FUTEX_PRIVATE_FLAG into SYS_futex op if cv is process private.
+	Don't use FUTEX_CMP_REQUEUE if dep_mutex is not process private.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S
+	(__pthread_cond_signal): Pass LLL_PRIVATE to lll_* and or
+	FUTEX_PRIVATE_FLAG into SYS_futex op if cv is process private.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Include
+	kernel-features.h.
+	(__pthread_cond_wait, __condvar_w_cleanup): Pass LLL_PRIVATE to
+	lll_* and or FUTEX_PRIVATE_FLAG into SYS_futex op if cv is
+	process private.  Switch DW_CFA_advance_loc1 and some
+	DW_CFA_advance_loc .eh_frame opcodes to DW_CFA_advance_loc4.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait, __condvar_tw_cleanup): Pass LLL_PRIVATE to
+	lll_* and or FUTEX_PRIVATE_FLAG into SYS_futex op if cv is
+	process private.  Switch DW_CFA_advance_loc{1,2} and some
+	DW_CFA_advance_loc .eh_frame opcodes to DW_CFA_advance_loc4.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Use
+	#ifdef __ASSUME_PRIVATE_FUTEX instead of #if __ASSUME_PRIVATE_FUTEX.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Compare %r8 instead of
+	dep_mutex-cond_*(%rdi) with $-1.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
+	(__pthread_cond_signal): Xor FUTEX_WAKE_OP with FUTEX_WAKE instead
+	of oring.
+
 2007-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i786/Implies: New file.

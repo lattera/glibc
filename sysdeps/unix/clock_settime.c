@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <ldsodefs.h>
 
 
-#if HP_TIMING_AVAIL
+#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
 /* Clock frequency of the processor.  We make it a 64-bit variable
    because some jokers are already playing with processors with more
    than 4GHz.  */
@@ -33,10 +33,8 @@ static hp_timing_t freq;
 /* This function is defined in the thread library.  */
 extern void __pthread_clock_settime (clockid_t clock_id, hp_timing_t offset)
      __attribute__ ((__weak__));
-#endif
 
 
-#if HP_TIMING_AVAIL
 static int
 hp_timing_settime (clockid_t clock_id, const struct timespec *tp)
 {

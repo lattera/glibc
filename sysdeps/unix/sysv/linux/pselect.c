@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -26,10 +26,12 @@
 
 
 #ifdef __NR_pselect6
+# ifndef __ASSUME_PSELECT
 static int __generic_pselect (int nfds, fd_set *readfds, fd_set *writefds,
 			      fd_set *exceptfds,
 			      const struct timespec *timeout,
 			      const sigset_t *sigmask);
+# endif
 
 
 int

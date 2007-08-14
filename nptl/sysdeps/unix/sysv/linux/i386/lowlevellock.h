@@ -83,7 +83,7 @@
       ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
       : (fl))								      \
    : ({ unsigned int __fl = ((private) ^ FUTEX_PRIVATE_FLAG);		      \
-	asm ("andl %%fs:%P1, %0" : "+r" (__fl)				      \
+	asm ("andl %%gs:%P1, %0" : "+r" (__fl)				      \
 	     : "i" (offsetof (struct pthread, header.private_futex)));	      \
 	__fl | (fl); }))
 # endif	      

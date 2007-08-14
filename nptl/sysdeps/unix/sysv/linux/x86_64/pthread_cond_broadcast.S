@@ -132,7 +132,7 @@ __pthread_cond_broadcast:
 
 	/* Unlock in loop requires wakeup.  */
 7:	addq	$cond_lock-cond_futex, %rdi
-	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	cmpq	$-1, %r8
 	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
@@ -141,7 +141,7 @@ __pthread_cond_broadcast:
 	jmp	8b
 
 9:	/* The futex requeue functionality is not available.  */
-	cmpq	$-1, dep_mutex-cond_futex(%rdi)
+	cmpq	$-1, %r8
 	movl	$0x7fffffff, %edx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	movl	$FUTEX_WAKE, %eax

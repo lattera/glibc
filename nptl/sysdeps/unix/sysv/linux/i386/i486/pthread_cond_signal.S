@@ -70,7 +70,18 @@ __pthread_cond_signal:
 	/* Wake up one thread.  */
 	pushl	%esi
 	pushl	%ebp
-	movl	$FUTEX_WAKE_OP, %ecx
+#if FUTEX_PRIVATE_FLAG > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex-cond_futex(%ebx)
+	sete	%cl
+	subl	$1, %ecx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	andl	$FUTEX_PRIVATE_FLAG, %ecx
+#else
+	andl	%gs:PRIVATE_FUTEX, %ecx
+#endif
+	addl	$FUTEX_WAKE_OP, %ecx
 	movl	$SYS_futex, %eax
 	movl	$1, %edx
 	movl	$1, %esi
@@ -92,7 +103,9 @@ __pthread_cond_signal:
 	popl	%ebx
 	ret
 
-7:	movl	$FUTEX_WAKE, %ecx
+7:	/* %ecx should be either FUTEX_WAKE_OP or
+	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
+	xorl	$(FUTEX_WAKE ^ FUTEX_WAKE_OP), %ecx
 	movl	$SYS_futex, %eax
 	/* %edx should be 1 already from $FUTEX_WAKE_OP syscall.
 	movl	$1, %edx  */
@@ -106,8 +119,16 @@ __pthread_cond_signal:
 
 	/* Unlock in loop requires wakeup.  */
 5:	movl	%edi, %eax
-	/* XYZ */
-	movl	$LLL_SHARED, %ecx
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex-cond_futex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
 	call	__lll_unlock_wake
 	jmp	6b
 
@@ -118,8 +139,16 @@ __pthread_cond_signal:
 #else
 	leal	cond_lock(%edi), %edx
 #endif
-	/* XYZ */
-	movl	$LLL_SHARED, %ecx
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex(%edi)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
 	call	__lll_lock_wait
 	jmp	2b
 

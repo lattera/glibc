@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -26,9 +26,11 @@
 
 
 #ifdef __NR_ppoll
+# ifndef __ASSUME_PPOLL
 static int __generic_ppoll (struct pollfd *fds, nfds_t nfds,
 			    const struct timespec *timeout,
 			    const sigset_t *sigmask);
+# endif
 
 
 int

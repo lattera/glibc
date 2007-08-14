@@ -428,29 +428,37 @@
 # define __ASSUME_TMPFS_NAME	1
 #endif
 
-/* pselect was introduced just after 2.6.16-rc1.  Due to the way the
-   kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
+/* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way
+   the kernel versions are advertised we can only rely on 2.6.17 to have
+   the code.  On x86_64 and SH this appeared first in 2.6.19-rc1,
+   on ia64 in 2.6.22-rc1 and on alpha just after 2.6.22-rc1.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && ((!defined __x86_64__ && !defined __sh__ && !defined __ia64__ \
+	 && !defined __alpha__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020613 \
+	    && (defined __x86_64__ || defined __sh__)) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020616 && defined __ia64__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
 # define __ASSUME_PSELECT	1
-#endif
-
-/* ppoll was introduced just after 2.6.16-rc1.  Due to the way the
-   kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
-# define __ASSUME_PPOLL	1
+# define __ASSUME_PPOLL		1
 #endif
 
 /* The *at syscalls were introduced just after 2.6.16-rc1.  Due to the way the
    kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611
+   the code.  On PPC they were introduced in 2.6.17-rc1, on SH in 2.6.19-rc1
+   and on Alpha just after 2.6.22-rc1.  */
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && ((!defined __sh__ && !defined __alpha__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020613 && defined __sh__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
 # define __ASSUME_ATFCTS	1
 #endif
 
 /* Support for inter-process robust mutexes was added in 2.6.17.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611
+#if __LINUX_KERNEL_VERSION >= 0x020611 \
+    && ((!defined __sh__ && !defined __alpha__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020613 && defined __sh__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
 # define __ASSUME_SET_ROBUST_LIST	1
 #endif
 
@@ -459,8 +467,11 @@
 # define __ASSUME_FUTEX_LOCK_PI	1
 #endif
 
-/* Support for utimensat syscall was added in 2.6.22.  */
-#if __LINUX_KERNEL_VERSION >= 0x020616
+/* Support for utimensat syscall was added in 2.6.22, on alpha and s390
+   only after 2.6.22-rc1.  */
+#if __LINUX_KERNEL_VERSION >= 0x020616 \
+    && ((!defined __sh__ && !defined __alpha__) \
+	|| __LINUX_KERNEL_VERSION >= 0x020617)
 # define __ASSUME_UTIMENSAT	1
 #endif
 
@@ -469,7 +480,10 @@
 # define __ASSUME_PRIVATE_FUTEX	1
 #endif
 
-/* Support for fallocate was added in 2.6.23.  */
-#if __LINUX_KERNEL_VERSION >= 0x020617
+/* Support for fallocate was added in 2.6.23, on s390
+   only after 2.6.23-rc1.  */
+#if __LINUX_KERNEL_VERSION >= 0x020617 \
+    && ((!defined __s390__ && !defined __alpha__) \
+	|| (__LINUX_KERNEL_VERSION >= 0x020618 && defined __s390__))
 # define __ASSUME_FALLOCATE	1
 #endif

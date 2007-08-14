@@ -71,6 +71,7 @@ _dl_discover_osversion (void)
 #define ROUND(len) (((len) + sizeof note->n_type - 1) & -sizeof note->n_type)
 		note = ((const void *) (note + 1)
 			+ ROUND (note->n_namesz) + ROUND (note->n_descsz));
+#undef ROUND
 	      }
 	  }
     }

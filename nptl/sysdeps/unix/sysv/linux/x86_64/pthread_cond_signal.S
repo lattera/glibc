@@ -87,7 +87,7 @@ __pthread_cond_signal:
 
 7:	/* %esi should be either FUTEX_WAKE_OP or
 	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
-	xorl	$(FUTEX_WAKE | FUTEX_WAKE_OP), %esi
+	xorl	$(FUTEX_WAKE ^ FUTEX_WAKE_OP), %esi
 	movl	$SYS_futex, %eax
 	/* %rdx should be 1 already from $FUTEX_WAKE_OP syscall.
 	movl	$1, %edx  */

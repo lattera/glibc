@@ -21,9 +21,14 @@
 #define _DL_VDSO_H	1
 
 #include <assert.h>
-#include <dl-hash.h>
 #include <ldsodefs.h>
 
+#ifdef NDEBUG
+# define CHECK_HASH(var) do {} while (0)
+#else
+# include <dl-hash.h>
+# define CHECK_HASH(var) assert (var.hash == _dl_elf_hash (var.name))
+#endif
 
 /* Create version number record for lookup.  */
 #define PREPARE_VERSION(var, vname, vhash) \
@@ -31,7 +36,7 @@
   var.name = vname;							      \
   var.hidden = 1;							      \
   var.hash = vhash;							      \
-  assert (var.hash == _dl_elf_hash (vname));				      \
+  CHECK_HASH (var);							      \
   /* We don't have a specific file where the symbol can be found.  */	      \
   var.filename = NULL
 

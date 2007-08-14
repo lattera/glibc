@@ -83,11 +83,18 @@ __pthread_cond_broadcast:
 	je	9f
 
 	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
-	testl	$PI_BIT, MUTEX_KIND(%edi)
+	/* XXX: The kernel only supports FUTEX_CMP_REQUEUE to the same
+	   type of futex (private resp. shared).  */
+	testl	$(PI_BIT | PS_BIT), MUTEX_KIND(%edi)
 	jne	9f
 
 	/* Wake up all threads.  */
-	movl	$FUTEX_CMP_REQUEUE, %ecx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$(FUTEX_CMP_REQUEUE|FUTEX_PRIVATE_FLAG), %ecx
+#else
+	movl	%gs:PRIVATE_FUTEX, %ecx
+	orl	$FUTEX_CMP_REQUEUE, %ecx
+#endif
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %esi
 	movl	$1, %edx
@@ -132,28 +139,63 @@ __pthread_cond_broadcast:
 #else
 	leal	cond_lock(%ebx), %edx
 #endif
-	/* XYZ */
-	movl	$LLL_SHARED, %ecx
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
 	call	__lll_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
 5:	leal	cond_lock-cond_futex(%ebx), %eax
-	/* XYZ */
-	movl	$LLL_SHARED, %ecx
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex-cond_futex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
 	call	__lll_unlock_wake
 	jmp	6b
 
 	/* Unlock in loop requires waekup.  */
 7:	leal	cond_lock-cond_futex(%ebx), %eax
-	/* XYZ */
-	movl	$LLL_SHARED, %ecx
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex-cond_futex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
 	call	__lll_unlock_wake
 	jmp	8b
 
 9:	/* The futex requeue functionality is not available.  */
 	movl	$0x7fffffff, %edx
-	movl	$FUTEX_WAKE, %ecx
+#if FUTEX_PRIVATE_FLAG > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex-cond_futex(%ebx)
+	sete	%cl
+	subl	$1, %ecx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	andl	$FUTEX_PRIVATE_FLAG, %ecx
+#else
+	andl	%gs:PRIVATE_FUTEX, %ecx
+#endif
+	addl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	jmp	10b
