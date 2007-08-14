@@ -1,3 +1,7 @@
+2007-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: New file.  From the translation team.
+
 2007-08-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PSELECT,
