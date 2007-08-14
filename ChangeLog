@@ -1,3 +1,7 @@
+2007-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-misc.c: Undo last change.  The kernel won't allow it.
+
 2007-08-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* stdlib/strtold_l.c: Include wchar.h if needed.  Add libc_hidden_def.
