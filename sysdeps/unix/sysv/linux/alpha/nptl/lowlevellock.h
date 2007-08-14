@@ -226,23 +226,23 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
   __lll_robust_timedlock (&(futex), abstime, id, private)
 
 
-static inline void __attribute__ ((always_inline))
-__lll_unlock (int *futex, int private)
-{
-  int val = atomic_exchange_rel (futex, 0);
-  if (__builtin_expect (val > 1, 0))
-    lll_futex_wake (futex, 1, private);
-}
+#define __lll_unlock(futex, private) \
+  (void)							\
+    ({ int *__futex = (futex);					\
+    ({ int __oldval = atomic_exchange_rel (__futex, 0);		\
+       if (__builtin_expect (__oldval > 1, 0))			\
+	 lll_futex_wake (__futex, 1, private);			\
+    })
 #define lll_unlock(futex, private) __lll_unlock(&(futex), private)
 
 
-static inline void __attribute__ ((always_inline))
-__lll_robust_unlock (int *futex, int private)
-{
-  int val = atomic_exchange_rel (futex, 0);
-  if (__builtin_expect (val & FUTEX_WAITERS, 0))
-    lll_futex_wake (futex, 1, private);
-}
+#define __lll_robust_unlock(futex, private) \
+  (void)							\
+    ({ int *__futex = (futex);					\
+       int __oldval = atomic_exchange_rel (__futex, 0);		\
+       if (__builtin_expect (__oldval & FUTEX_WAITERS, 0))	\
+	 lll_futex_wake (__futex, 1, private);			\
+    })
 #define lll_robust_unlock(futex, private) \
   __lll_robust_unlock(&(futex), private)
 
