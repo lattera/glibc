@@ -291,31 +291,29 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
   __lll_robust_timedlock (&(futex), abstime, id, private)
 
 
-static inline void
-__attribute__ ((always_inline))
-__lll_unlock (int *futex, int private)
-{
-  int oldval;
-  int newval = 0;
-
-  lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
-  if (__builtin_expect (oldval > 1, 0))
-    lll_futex_wake (futex, 1, private);
-}
+#define __lll_unlock(futex, private) \
+  (void)								      \
+    ({ int __oldval;							      \
+       int __newval = 0;						      \
+       int *__futexp = (futex);						      \
+									      \
+       lll_compare_and_swap (__futexp, __oldval, __newval, "slr %2,%2");      \
+       if (__builtin_expect (__oldval > 1, 0))				      \
+	 lll_futex_wake (__futexp, 1, private);				      \
+    })
 #define lll_unlock(futex, private) __lll_unlock(&(futex), private)
 
 
-static inline void
-__attribute__ ((always_inline))
-__lll_robust_unlock (int *futex, int private)
-{
-  int oldval;
-  int newval = 0;
-
-  lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
-  if (__builtin_expect (oldval & FUTEX_WAITERS, 0))
-    lll_futex_wake (futex, 1, private);
-}
+#define __lll_robust_unlock(futex, private) \
+  (void)								      \
+    ({ int __oldval;							      \
+       int __newval = 0;						      \
+       int *__futexp = (futex);						      \
+									      \
+       lll_compare_and_swap (__futexp, __oldval, __newval, "slr %2,%2");      \
+       if (__builtin_expect (__oldval & FUTEX_WAITERS, 0))		      \
+	 lll_futex_wake (__futexp, 1, private);				      \
+    })
 #define lll_robust_unlock(futex, private) \
   __lll_robust_unlock(&(futex), private)
 
@@ -331,15 +329,15 @@ __lll_robust_unlock (int *futex, int private)
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
-static inline void
-__attribute__ ((always_inline))
-__lll_wait_tid (int *ptid)
-{
-  int tid;
-
-  while ((tid = *ptid) != 0)
-    lll_futex_wait (ptid, tid, LLL_SHARED);
-}
+#define __lll_wait_tid(ptid) \
+  do									      \
+    {									      \
+      int __tid;							      \
+									      \
+      while ((__tid = *ptid) != 0)					      \
+	lll_futex_wait (ptid, __tid, LLL_SHARED);			      \
+    }									      \
+  while (0)
 #define lll_wait_tid(tid) __lll_wait_tid(&(tid))
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)

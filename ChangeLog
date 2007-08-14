@@ -1,3 +1,12 @@
+2007-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c (__STRTOF): Declare.
+	Add libc_hidden_proto.
+	(STRTOF): Add libc_hidden_proto.
+	(___new_strtold_l, ___new_wcstold_l): New weak aliases.
+	(strtold_l, wcstold_l): Use them as second argument for
+	long_double_symbol.
+
 2007-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-misc.c: Undo last change.  The kernel won't allow it.
