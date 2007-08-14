@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <xlocale.h>
+
+#if defined _LIBC || defined HAVE_WCHAR_H
+# include <wchar.h>
+#endif
 
 #ifdef USE_WIDE_CHAR
 # define STRING_TYPE	wchar_t
@@ -55,4 +59,8 @@ __STRTOLD (const STRING_TYPE *nptr, STRING_TYPE **endptr, __locale_t loc)
 {
   return INTERNAL (__STRTOD) (nptr, endptr, 0, loc);
 }
+#if defined _LIBC
+libc_hidden_def (__STRTOLD)
+libc_hidden_ver (__STRTOLD, STRTOLD)
+#endif
 weak_alias (__STRTOLD, STRTOLD)
