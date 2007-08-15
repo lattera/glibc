@@ -93,13 +93,24 @@ __pthread_cond_broadcast:
 	bt/s	9f
 	 add	#cond_futex, r4
 
-	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
+	/* XXX: The kernel only supports FUTEX_CMP_REQUEUE to the same
+	   type of futex (private resp. shared).  */
 	mov.l	@(MUTEX_KIND,r9), r0
-	tst	#PI_BIT, r0
+	tst	#(PI_BIT|PS_BIT), r0
 	bf	9f
 
 	/* Wake up all threads.  */
-	mov	#FUTEX_CMP_REQUEUE, r5
+#ifdef __ASSUME_PRIVATE_FUTEX
+	mov	#(FUTEX_CMP_REQUEUE|FUTEX_PRIVATE_FLAG), r5
+	extu.b	r5, r5
+#else
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r5
+	mov	#FUTEX_CMP_REQUEUE, r0
+	or	r0, r5
+#endif
 	mov	#1, r6
 	mov	#-1, r7
 	shlr	r7		/* r7 = 0x7fffffff */
@@ -156,7 +167,12 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
+99:	
 	extu.b	r6, r6
 	mov.l	.Lwait5, r1
 	bsrf	r1
@@ -171,7 +187,12 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lwake5, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -185,7 +206,12 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov	#-1, r0
+	cmp/eq	r0, r9
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lwake6, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -194,7 +220,22 @@ __pthread_cond_broadcast:
 	 nop
 
 9:
-	mov	#FUTEX_WAKE, r5
+	mov	#-1, r0
+	cmp/eq	r0, r9
+	bt/s	99f
+	 mov	#FUTEX_WAKE, r5
+#ifdef __ASSUME_PRIVATE_FUTEX
+	mov	#(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), r5
+	extu.b	r5, r5
+#else
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r5
+	mov	#FUTEX_WAKE, r0
+	or	r0, r5
+#endif
+99:	
 	mov	#-1, r6
 	shlr	r6		/* r6 = 0x7fffffff */
 	mov	#0, r7
@@ -204,6 +245,11 @@ __pthread_cond_broadcast:
 	SYSCALL_INST_PAD
 	bra	10b
 	 nop
+
+#ifndef __ASSUME_PRIVATE_FUTEX
+.Lpfoff:
+	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
+#endif
 
 	.align	2
 .Lwait5:
