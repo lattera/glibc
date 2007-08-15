@@ -94,7 +94,7 @@ __pthread_once:
 	bf	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAIT), r5
 	extu.b	r5, r5
 #else
@@ -168,7 +168,7 @@ __pthread_once:
 	INC (@r9, r2)
 	/* Wake up all other threads.  */
 	mov	r9, r4
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAKE), r5
 	extu.b	r5, r5
 #else
@@ -213,7 +213,7 @@ __pthread_once:
 	mov	#0, r7
 	mov.l	r7, @r9
 	mov	r9, r4
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAKE), r5
 #else
 	stc	gbr, r1
@@ -239,7 +239,7 @@ __pthread_once:
 	sleep
 	cfi_endproc
 
-#if !__ASSUME_PRIVATE_FUTEX
+#ifndef __ASSUME_PRIVATE_FUTEX
 .Lpfoff:
 	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
 #endif

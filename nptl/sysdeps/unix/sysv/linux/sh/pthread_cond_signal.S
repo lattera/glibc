@@ -74,11 +74,60 @@ __pthread_cond_signal:
 	/* Wake up one thread.  */
 	mov	r8, r4
 	add	#cond_futex, r4
-	mov	#FUTEX_WAKE, r5
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bt/s	99f
+	 mov	#FUTEX_WAKE_OP, r5
+#ifdef __ASSUME_PRIVATE_FUTEX
+	mov	#(FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG), r5
+	extu.b	r5, r5
+#else
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r5
+	mov	#FUTEX_WAKE_OP, r0
+	or	r0, r5
+#endif
+99:
 	mov	#1, r6
 	mov	#0, r7
+	mov	r8, r0
+	add	#cond_lock, r0
+	mov.l	.Lfutexop, r1
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+
+	/* For any kind of error, we try again with WAKE.
+	   The general test also covers running on old kernels.  */
+	mov	r0, r1
+	mov	#-12, r2
+	shad	r2, r1
+	not	r1, r1
+	tst	r1, r1
+	bt	7f
+
+6:
+	mov	#0, r0
+	lds.l	@r15+, pr
+	rts
+	 mov.l	@r15+, r8
+
+#ifndef __ASSUME_PRIVATE_FUTEX
+.Lpfoff:
+	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
+#endif
+	.align	2
+.Lfutexop:
+	.long	FUTEX_OP_CLEAR_WAKE_IF_GT_ONE
+
+7:
+	/* r5 should be either FUTEX_WAKE_OP or
+	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
+	mov	#(FUTEX_WAKE ^ FUTEX_WAKE_OP), r0
+	xor	r0, r5
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
@@ -90,27 +139,7 @@ __pthread_cond_signal:
 	DEC (@r8, r2)
 #endif
 	tst	r2, r2
-	bf	5f
-6:
-	mov	#0, r0
-	lds.l	@r15+, pr
-	rts
-	 mov.l	@r15+, r8
-
-1:
-	/* Initial locking failed.  */
-	mov	r8, r5
-#if cond_lock != 0
-	add	#cond_lock, r5
-#endif
-	mov	#LLL_SHARED, r6
-	extu.b	r6, r6
-	mov.l	.Lwait4, r1
-	bsrf	r1
-	 mov	r2, r4
-.Lwait4b:
-	bra	2b
-	 nop
+	bt	6b
 
 5:
 	/* Unlock in loop requires wakeup.  */
@@ -118,12 +147,37 @@ __pthread_cond_signal:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lwake4, r1
 	bsrf	r1
 	 extu.b	r5, r5
 .Lwake4b:
 	bra	6b
+	 nop
+
+1:
+	/* Initial locking failed.  */
+	mov	r8, r5
+#if cond_lock != 0
+	add	#cond_lock, r5
+#endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r6
+	mov	#LLL_SHARED, r6
+99:	
+	extu.b	r6, r6
+	mov.l	.Lwait4, r1
+	bsrf	r1
+	 mov	r2, r4
+.Lwait4b:
+	bra	2b
 	 nop
 
 	.align	2

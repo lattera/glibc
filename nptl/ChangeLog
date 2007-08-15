@@ -1,3 +1,31 @@
+2007-08-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Pass LLL_PRIVATE to lll_* and or
+	FUTEX_PRIVATE_FLAG into SYS_futex op if cv is process private.
+	Don't use FUTEX_CMP_REQUEUE if dep_mutex is not process private.
+	* sysdeps/unix/sysv/linux/shpthread_cond_signal.S
+	(__pthread_cond_signal): Pass LLL_PRIVATE to lll_* and or
+	FUTEX_PRIVATE_FLAG into SYS_futex op if cv is process private.
+	Use FUTEX_WAKE_OP.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Include
+	kernel-features.h and tcb-offsets.h.
+	(__pthread_cond_wait, __condvar_w_cleanup): Pass LLL_PRIVATE to
+	lll_* and or FUTEX_PRIVATE_FLAG into SYS_futex op if cv is
+	process private.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Include
+	tcb-offsets.h.
+	(__pthread_cond_timedwait, __condvar_tw_cleanup): Pass LLL_PRIVATE
+	to lll_* and or FUTEX_PRIVATE_FLAG into SYS_futex op if cv is
+	process private.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Use #ifdef
+	__ASSUME_PRIVATE_FUTEX instead of #if __ASSUME_PRIVATE_FUTEX.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+
 2007-08-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevellock.c: Comment fix.

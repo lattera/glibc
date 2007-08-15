@@ -21,8 +21,9 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
-#include "lowlevel-atomic.h"
 #include <kernel-features.h>
+#include <tcb-offsets.h>
+#include "lowlevel-atomic.h"
 
 	.text
 
@@ -230,7 +231,22 @@ __pthread_cond_timedwait:
 
 	mov	r15, r7
 	add	#16, r7
-	mov	#FUTEX_WAIT, r5
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bt/s	99f
+	 mov	#FUTEX_WAIT, r5
+#ifdef __ASSUME_PRIVATE_FUTEX
+	mov	#(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), r5
+	extu.b	r5, r5
+#else
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r5
+	mov	#FUTEX_WAIT, r0
+	or	r0, r5
+#endif
+99:	
 	mov.l	@(8,r15), r6
 	mov	r8, r4
 	add	#cond_futex, r4
@@ -339,7 +355,22 @@ __pthread_cond_timedwait:
 
 	mov	r8, r4
 	add	#cond_nwaiters, r4
-	mov	#FUTEX_WAKE, r5
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bt/s	99f
+	 mov	#FUTEX_WAKE, r5
+#ifdef __ASSUME_PRIVATE_FUTEX
+	mov	#(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), r5
+	extu.b	r5, r5
+#else
+	stc	gbr, r1
+	mov.w	.Lpfoff, r2
+	add	r2, r1
+	mov.l	@r1, r5
+	mov	#FUTEX_WAKE, r0
+	or	r0, r5
+#endif
+99:	
 	mov	#1, r6
 	mov	#0, r7
 	mov	#SYS_futex, r3
@@ -379,6 +410,10 @@ __pthread_cond_timedwait:
 	rts
 	 mov.l	@r15+, r8
 
+#ifndef __ASSUME_PRIVATE_FUTEX
+.Lpfoff:
+	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
+#endif
 .L1k:
 	.word	1000
 	.align	2
@@ -399,7 +434,12 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
+99:	
 	extu.b	r6, r6
 	mov.l	.Lwait2, r1
 	bsrf	r1
@@ -414,7 +454,12 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lmwait2, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -428,7 +473,12 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
+99:	
 	extu.b	r6, r6
 	mov.l	.Lwait3, r1
 	bsrf	r1
@@ -443,7 +493,12 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lmwait3, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -466,7 +521,12 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lmwait4, r1
 	bsrf	r1
 	 extu.b	r5, r5
@@ -510,7 +570,12 @@ __condvar_tw_cleanup:
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r6
 	mov	#LLL_SHARED, r6
+99:	
 	extu.b	r6, r6
 	mov.l	.Lwait5, r1
 	bsrf	r1
@@ -605,7 +670,12 @@ __condvar_tw_cleanup:
 #if cond_lock != 0
 	add	#cond_lock, r4
 #endif
+	mov.l	@(dep_mutex,r8), r0
+	cmp/eq	#-1, r0
+	bf/s	99f
+	 mov	#LLL_PRIVATE, r5
 	mov	#LLL_SHARED, r5
+99:	
 	mov.l	.Lmwait5, r1
 	bsrf	r1
 	 extu.b	r5, r5

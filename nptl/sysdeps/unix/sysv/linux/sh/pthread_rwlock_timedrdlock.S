@@ -115,7 +115,7 @@ pthread_rwlock_timedrdlock:
 
 	/* Futex call.  */
 	mov	r15, r7
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	mov	#PSHARED, r0
 	mov.b	@(r0,r8), r5
 	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAIT), r0
@@ -193,7 +193,7 @@ pthread_rwlock_timedrdlock:
 	rts
 	 mov	r3, r0
 
-#if !__ASSUME_PRIVATE_FUTEX
+#ifndef __ASSUME_PRIVATE_FUTEX
 .Lpfoff:
 	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
 #endif

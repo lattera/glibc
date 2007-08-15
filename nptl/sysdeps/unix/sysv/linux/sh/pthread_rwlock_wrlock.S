@@ -72,7 +72,7 @@ __pthread_rwlock_wrlock:
 11:
 	mov	r8, r4
 	add	#WRITERS_WAKEUP, r4
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	mov	#PSHARED, r0
 	mov.b	@(r0,r8), r5
 	mov	#(FUTEX_PRIVATE_FLAG|FUTEX_WAIT), r0
@@ -174,7 +174,7 @@ __pthread_rwlock_wrlock:
 	bra	7b
 	 mov	#0, r3
 
-#if !__ASSUME_PRIVATE_FUTEX
+#ifndef __ASSUME_PRIVATE_FUTEX
 .Lpfoff:
 	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE
 #endif
