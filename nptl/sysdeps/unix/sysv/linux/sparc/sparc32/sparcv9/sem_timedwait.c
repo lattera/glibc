@@ -1,1 +1,1 @@
-#include "../../../sem_timedwait.c"
+#include "../../sem_timedwait.c"

@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,9 @@ int
 __feraiseexcept (int excepts)
 {
   static const struct {
-    double zero, one, max, min, sixteen, pi;
+    double zero, one, max, min, pi;
   } c = {
-    0.0, 1.0, DBL_MAX, DBL_MIN, 16.0, M_PI
+    0.0, 1.0, DBL_MAX, DBL_MIN, M_PI
   };
   double d;
 
@@ -66,7 +66,7 @@ __feraiseexcept (int excepts)
   if ((FE_UNDERFLOW & excepts) != 0)
     {
       __asm ("" : "=e" (d) : "0" (c.min));
-      d /= c.sixteen;
+      d *= d;
       __asm __volatile ("" : : "e" (d));
     }
 

@@ -15,4 +15,20 @@ union sparc_pthread_barrier
     } s;
 };
 
+struct sparc_new_sem
+{
+  unsigned int value;
+  unsigned char lock;
+  unsigned char private;
+  unsigned char pad[2];
+  unsigned long int nwaiters;
+};
+
+struct sparc_old_sem
+{
+  unsigned int value;
+  unsigned char lock;
+  unsigned char private;
+};
+
 #endif

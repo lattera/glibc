@@ -1,3 +1,38 @@
+2007-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/internaltypes.h (sparc_new_sem,
+	sparc_old_sem): New structs.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_wait.c
+	(__sem_wait_cleanup): New function.
+	(__new_sem_wait): Use sparc_new_sem structure.  Bump and afterwards
+	decrease nwaiters.  Register __sem_wait_cleanup as cleanup handler.
+	Pass isem->private ^ FUTEX_PRIVATE_FLAG as last argument to
+	lll_futex_wait.
+	(__old_sem_wait): New function.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_wait.c: Include
+	nptl/sysdeps/unix/sysv/linux/sparc version.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_timedwait.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_post.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_trywait.c
+	(__new_sem_trywait): Use sparc_old_sem structure.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_timedwait.c
+	(sem_timedwait): Use sparc_new_sem structure.  Bump and afterwards
+	decrease nwaiters.  Register __sem_wait_cleanup as cleanup handler.
+	Pass isem->private ^ FUTEX_PRIVATE_FLAG as last argument to
+	lll_futex_timed_wait.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_post.c (__new_sem_post):
+	Use sparc_new_sem structure.  Only wake if nwaiters > 0.  Pass
+	isem->private ^ FUTEX_PRIVATE_FLAG as last argument to
+	lll_futex_wake.
+	(__old_sem_post): New function.
+	* sysdeps/unix/sysv/linux/sparc/sem_wait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sem_init.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sem_timedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/sem_init.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_init.c: Remove.
+
 2007-08-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S

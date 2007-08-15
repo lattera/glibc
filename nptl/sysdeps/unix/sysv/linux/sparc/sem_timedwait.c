@@ -1,5 +1,5 @@
-/* sem_timedwait -- wait on a semaphore.  SPARC version.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+/* sem_timedwait -- wait on a semaphore.  Generic futex-using version.
+   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -36,20 +36,8 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
   struct sparc_new_sem *isem = (struct sparc_new_sem *) sem;
   int err;
-  int val;
 
-  if (__atomic_is_v9)
-    val = atomic_decrement_if_positive (&isem->value);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      val = isem->value;
-      if (val > 0)
-        isem->value = val - 1;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
-
-  if (val > 0)
+  if (atomic_decrement_if_positive (&isem->value) > 0)
     return 0;
 
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
@@ -58,14 +46,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       return -1;
     }
 
-  if (__atomic_is_v9)
-    atomic_increment (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters++;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
+  atomic_increment (&isem->nwaiters);
 
   pthread_cleanup_push (__sem_wait_cleanup, isem);
 
@@ -116,18 +97,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
 	  break;
 	}
 
-      if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (&isem->value);
-      else
-	{
-	  __sparc32_atomic_do_lock24 (&isem->lock);
-	  val = isem->value;
-	  if (val > 0)
-	    isem->value = val - 1;
-	  __sparc32_atomic_do_unlock24 (&isem->lock);
-	}
-
-      if (val > 0)
+      if (atomic_decrement_if_positive (&isem->value) > 0)
 	{
 	  err = 0;
 	  break;
@@ -136,14 +106,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
 
   pthread_cleanup_pop (0);
 
-  if (__atomic_is_v9)
-    atomic_decrement (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters--;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
+  atomic_decrement (&isem->nwaiters);
 
   return err;
 }

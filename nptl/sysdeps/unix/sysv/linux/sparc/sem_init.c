@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,16 +18,12 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <string.h>
 #include <semaphore.h>
 #include <lowlevellock.h>
 #include <shlib-compat.h>
 #include "semaphoreP.h"
-
-struct sparc_sem
-{
-  struct sem s;
-  unsigned char lock;
-};
+#include <kernel-features.h>
 
 
 int
@@ -44,20 +40,54 @@ __new_sem_init (sem, pshared, value)
     }
 
   /* Map to the internal type.  */
-  struct sparc_sem *isem = (struct sparc_sem *) sem;
+  struct sparc_new_sem *isem = (struct sparc_new_sem *) sem;
 
-  /* Use the value the user provided.  */
-  isem->s.count = value;
-
-  isem->lock = 0;
-
-  /* We can completely ignore the PSHARED parameter since inter-process
-     use needs no special preparation.  */
+  /* Use the values the user provided.  */
+  memset (isem, '\0', sizeof (*isem));
+  isem->value = value;
+#ifdef __ASSUME_PRIVATE_FUTEX
+  isem->private = pshared ? 0 : FUTEX_PRIVATE_FLAG;
+#else
+  isem->private = pshared ? 0 : THREAD_GETMEM (THREAD_SELF,
+					       header.private_futex);
+#endif
 
   return 0;
 }
 versioned_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
+
+
+
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-strong_alias (__new_sem_init, __old_sem_init)
+int
+attribute_compat_text_section
+__old_sem_init (sem, pshared, value)
+     sem_t *sem;
+     int pshared;
+     unsigned int value;
+{
+  /* Parameter sanity check.  */
+  if (__builtin_expect (value > SEM_VALUE_MAX, 0))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  /* Map to the internal type.  */
+  struct sparc_old_sem *isem = (struct sparc_old_sem *) sem;
+
+  /* Use the value the user provided.  */
+  memset (isem, '\0', sizeof (*isem));
+  isem->value = value;
+
+#ifdef __ASSUME_PRIVATE_FUTEX
+  isem->private = pshared ? 0 : FUTEX_PRIVATE_FLAG;
+#else
+  isem->private = pshared ? 0 : THREAD_GETMEM (THREAD_SELF,
+					       header.private_futex);
+#endif
+
+  return 0;
+}
 compat_symbol (libpthread, __old_sem_init, sem_init, GLIBC_2_0);
 #endif

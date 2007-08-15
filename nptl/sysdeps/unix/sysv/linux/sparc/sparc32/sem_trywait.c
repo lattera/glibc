@@ -1,5 +1,5 @@
 /* sem_trywait -- wait on a semaphore.  SPARC version.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -30,20 +30,20 @@
 int
 __new_sem_trywait (sem_t *sem)
 {
-  int *futex = (int *) sem;
+  struct sparc_old_sem *isem = (struct sparc_old_sem *) sem;
   int val;
 
-  if (*futex > 0)
+  if (isem->value > 0)
     {
       if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (futex);
+	val = atomic_decrement_if_positive (&isem->value);
       else
 	{
-	  __sparc32_atomic_do_lock24 (futex + 1);
-	  val = *futex;
+	  __sparc32_atomic_do_lock24 (&isem->lock);
+	  val = isem->value;
 	  if (val > 0)
-	    *futex = val - 1;
-	  __sparc32_atomic_do_unlock24 (futex + 1);
+	    isem->value = val - 1;
+	  __sparc32_atomic_do_unlock24 (&isem->lock);
 	}
       if (val > 0)
 	return 0;

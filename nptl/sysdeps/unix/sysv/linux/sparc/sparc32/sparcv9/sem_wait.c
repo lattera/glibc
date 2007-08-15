@@ -1,1 +1,1 @@
-#include "../../../sem_wait.c"
+#include "../../sem_wait.c"

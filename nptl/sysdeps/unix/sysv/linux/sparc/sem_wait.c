@@ -34,14 +34,7 @@ __sem_wait_cleanup (void *arg)
 {
   struct sparc_new_sem *isem = (struct sparc_new_sem *) arg;
 
-  if (__atomic_is_v9)
-    atomic_decrement (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters--;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
+  atomic_decrement (&isem->nwaiters);
 }
 
 
@@ -50,28 +43,11 @@ __new_sem_wait (sem_t *sem)
 {
   struct sparc_new_sem *isem = (struct sparc_new_sem *) sem;
   int err;
-  int val;
 
-  if (__atomic_is_v9)
-    val = atomic_decrement_if_positive (&isem->value);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      val = isem->value;
-      if (val > 0)
-	isem->value = val - 1;
-      else
-	isem->nwaiters++;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
-
-  if (val > 0)
+  if (atomic_decrement_if_positive (&isem->value) > 0)
     return 0;
 
-  if (__atomic_is_v9)
-    atomic_increment (&isem->nwaiters);
-  else
-    /* Already done above while still holding isem->lock.  */;
+  atomic_increment (&isem->nwaiters);
 
   pthread_cleanup_push (__sem_wait_cleanup, isem);
 
@@ -93,18 +69,7 @@ __new_sem_wait (sem_t *sem)
 	  break;
 	}
 
-      if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (&isem->value);
-      else
-	{
-	  __sparc32_atomic_do_lock24 (&isem->lock);
-	  val = isem->value;
-	  if (val > 0)
-	    isem->value = val - 1;
-	  __sparc32_atomic_do_unlock24 (&isem->lock);
-	}
-
-      if (val > 0)
+      if (atomic_decrement_if_positive (&isem->value) > 0)
 	{
 	  err = 0;
 	  break;
@@ -113,14 +78,7 @@ __new_sem_wait (sem_t *sem)
 
   pthread_cleanup_pop (0);
 
-  if (__atomic_is_v9)
-    atomic_decrement (&isem->nwaiters);
-  else
-    {
-      __sparc32_atomic_do_lock24 (&isem->lock);
-      isem->nwaiters--;
-      __sparc32_atomic_do_unlock24 (&isem->lock);
-    }
+  atomic_decrement (&isem->nwaiters);
 
   return err;
 }
@@ -134,28 +92,16 @@ __old_sem_wait (sem_t *sem)
 {
   struct sparc_old_sem *isem = (struct sparc_old_sem *) sem;
   int err;
-  int val;
 
   do
     {
-      if (__atomic_is_v9)
-	val = atomic_decrement_if_positive (&isem->value);
-      else
-	{
-	  __sparc32_atomic_do_lock24 (&isem->lock);
-	  val = isem->value;
-	  if (val > 0)
-	    isem->value = val - 1;
-	  __sparc32_atomic_do_unlock24 (&isem->lock);
-	}
-
-      if (val > 0)
+      if (atomic_decrement_if_positive (&isem->value) > 0)
 	return 0;
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (futex, 0,
+      err = lll_futex_wait (&isem->value, 0,
 			    isem->private ^ FUTEX_PRIVATE_FLAG);
 
       /* Disable asynchronous cancellation.  */
