@@ -1,5 +1,5 @@
 /* -mlong-double-64 compatibility mode for <stdlib.h> functions.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,6 @@ __END_NAMESPACE_C99
 #ifdef __USE_GNU
 __LDBL_REDIR1_DECL (strtold_l, strtod_l)
 #endif
-
-__LDBL_REDIR1_DECL (__strtold_internal, __strtod_internal)
 
 #if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
 # ifdef __USE_MISC

@@ -1,5 +1,5 @@
 /* -mlong-double-64 compatibility mode for <wchar.h> functions.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,8 +47,6 @@ __END_NAMESPACE_C99
 #ifdef __USE_GNU
 __LDBL_REDIR1_DECL (wcstold_l, wcstod_l);
 #endif
-
-__LDBL_REDIR1_DECL (__wcstold_internal, __wcstod_internal);
 
 #if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
 __LDBL_REDIR_DECL (__swprintf_chk)

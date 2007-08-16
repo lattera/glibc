@@ -1,5 +1,8 @@
 2007-08-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdlib/bits/stdlib-ldbl.h (__strtold_internal): Remove.
+	* wcsmbs/bits/wchar-ldbl.h (__wcstold_internal): Remove.
+
 	* sysdeps/sparc/sparc32/sparcv9b/memcpy.S: Moved to...
 	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: ... here.  New
 	file.
