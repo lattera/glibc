@@ -1,5 +1,8 @@
 2007-08-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/Makefile ($(objpfx)ld.so): Use readelf -s and awk instead of nm -u
+	to check for undefined symbols.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone):
 	If the syscall fails, set errno to the actual returned error number
 	rather than EINVAL.
