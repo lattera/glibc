@@ -1,3 +1,16 @@
+2007-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/sparcv9b/memcpy.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: ... here.  New
+	file.
+	(ASI_PNF, ASI_BLK_P): Don't define.
+	* sysdeps/sparc/sparc32/sparcv9v/memcpy.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memcpy.S: ... here.  New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9v/memset.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memset.S: ... here.  New
+	file.
+
 2007-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept): Fix raising
