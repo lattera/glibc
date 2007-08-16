@@ -1,5 +1,12 @@
 2007-08-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone):
+	If the syscall fails, set errno to the actual returned error number
+	rather than EINVAL.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): If
+	arguments are incorrect, set errno to EINVAL, if the syscall
+	fails, set errno to the actual returned error number.
+
 	* stdlib/bits/stdlib-ldbl.h (__strtold_internal): Remove.
 	* wcsmbs/bits/wchar-ldbl.h (__wcstold_internal): Remove.
 

@@ -41,9 +41,9 @@ ENTRY (__clone)
 
 	/* sanity check arguments */
 	orcc	%i0,%g0,%g2
-	be	.Lerror
+	be	.Leinval
 	 orcc	%i1,%g0,%o1
-	be	.Lerror
+	be	.Leinval
 	 mov	%i2,%o0
 
 	/* The child_stack is the top of the stack, allocate one
@@ -70,9 +70,11 @@ ENTRY (__clone)
 	jmpl	%i7 + 8, %g0
 	 restore %o0,%g0,%o0
 
+.Leinval:
+	mov	EINVAL, %o0
 .Lerror:
 	call	HIDDEN_JUMPTARGET(__errno_location)
-	 or	%g0,EINVAL,%i0
+	 mov	%o0, %i0
 	st	%i0,[%o0]
 	jmpl	%i7 + 8, %g0
 	 restore %g0,-1,%o0
