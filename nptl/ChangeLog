@@ -1,3 +1,10 @@
+2007-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h
+	(__lll_robust_timedlock): Pass private as last argument to
+	__lll_robust_timedlock_wait.
+	(__lll_unlock): Fix a pasto.
+
 2007-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/internaltypes.h (sparc_new_sem,
