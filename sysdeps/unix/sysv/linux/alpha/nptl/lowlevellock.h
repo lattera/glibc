@@ -219,7 +219,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
 {
   int result = 0;
   if (atomic_compare_and_exchange_bool_acq (futex, id, 0) != 0)
-    result = __lll_robust_timedlock_wait (futex, abstime);
+    result = __lll_robust_timedlock_wait (futex, abstime, private);
   return result;
 }
 #define lll_robust_timedlock(futex, abstime, id, private) \
@@ -229,7 +229,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
 #define __lll_unlock(futex, private) \
   (void)							\
     ({ int *__futex = (futex);					\
-    ({ int __oldval = atomic_exchange_rel (__futex, 0);		\
+       int __oldval = atomic_exchange_rel (__futex, 0);		\
        if (__builtin_expect (__oldval > 1, 0))			\
 	 lll_futex_wake (__futex, 1, private);			\
     })
