@@ -41,7 +41,7 @@ test_einval (void)
   int fd, ret, err;
   const char file[] = "./grantpt-einval";
 
-  fd = open (file, O_RDWR | O_CREAT);
+  fd = open (file, O_RDWR | O_CREAT, 0600);
   if (fd == -1)
     {
       printf ("open(\"%s\", O_RDWR) failed\nerrno %d (%s)\n",
