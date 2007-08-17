@@ -1,3 +1,8 @@
+2007-08-16  Andreas Jaeger  <aj@suse.de>
+
+	* locale/localeinfo.h: Make _nl_category_name_idxs extern.
+        Reported by Peter Festner <peter.festner@ewetel.net>.
+
 2007-08-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* login/tst-grantpt.c (test_einval): Add 3rd argument to open.
