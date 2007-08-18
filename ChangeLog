@@ -1,3 +1,7 @@
+2007-08-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
 2007-08-16  Andreas Jaeger  <aj@suse.de>
 
 	* locale/localeinfo.h: Make _nl_category_name_idxs extern.
