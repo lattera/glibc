@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +80,10 @@ _init (int argc, char **argv, char **envp)
   /* First the initialization which normally would be done by the
      dynamic linker.  */
   _dl_non_dynamic_init ();
+#endif
+
+#ifdef VDSO_SETUP
+  VDSO_SETUP ();
 #endif
 
   __init_misc (argc, argv, envp);

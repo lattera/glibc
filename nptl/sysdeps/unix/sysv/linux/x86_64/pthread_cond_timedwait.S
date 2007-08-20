@@ -134,8 +134,15 @@ __pthread_cond_timedwait:
 	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
 	   kernel.  */
 	leaq	24(%rsp), %rsi
-	movl	$__NR_clock_gettime, %eax
+	movq	__vdso_clock_gettime@GOTPCREL(%rip), %rax
+	movq	(%rax), %rax
+	PTR_DEMANGLE (%rax)
+	jz	26f
+	call	*%rax
+	jmp	27f
+26:	movl	$__NR_clock_gettime, %eax
 	syscall
+27:
 # ifndef __ASSUME_POSIX_TIMERS
 	cmpq	$-ENOSYS, %rax
 	je	19f

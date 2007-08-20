@@ -46,4 +46,4 @@ _libc_vdso_platform_setup (void)
 # define VDSO_SETUP _libc_vdso_platform_setup
 #endif
 
-#include <csu/libc-start.c>
+#include "../init-first.c"

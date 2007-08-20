@@ -148,10 +148,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 # endif
 #endif
 
-#ifdef VDSO_SETUP
-  VDSO_SETUP ();
-#endif
-
   /* Register the destructor of the dynamic linker if there is any.  */
   if (__builtin_expect (rtld_fini != NULL, 1))
     __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
