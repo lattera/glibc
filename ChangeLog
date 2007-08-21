@@ -1,3 +1,10 @@
+2007-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4937]
+	* elf/do-lookup.h (do_lookup_x): Minimal improvement in hash
+	lookup loop.  Suggested by John Reiser.
+
+
 2007-08-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Include tls.h.
