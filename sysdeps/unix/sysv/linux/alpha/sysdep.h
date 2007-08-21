@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2004
+/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
@@ -28,6 +28,8 @@
 
 /* There is some commonality.  */
 #include <sysdeps/unix/alpha/sysdep.h>
+
+#include <tls.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
