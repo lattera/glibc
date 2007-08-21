@@ -1,5 +1,9 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4925]
+	* debug/pcprofiledump.c: Turn on internationalization by calling
+	setlocale.  Patch mostly by Benno Schulenberg.
+
 	[BZ #4936]
 	* iconv/gconv.c (__gconv): If flush was successful, clear rest of
 	the state.
