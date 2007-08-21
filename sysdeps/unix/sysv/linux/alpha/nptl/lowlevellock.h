@@ -94,12 +94,12 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
-#define lll_robust_dead(futexv) \
+#define lll_robust_dead(futexv, private) \
   do									      \
     {									      \
       int *__futexp = &(futexv);					      \
       atomic_or (__futexp, FUTEX_OWNER_DIED);				      \
-      lll_futex_wake (__futexp, 1, LLL_SHARED);				      \
+      lll_futex_wake (__futexp, 1, private);				      \
     }									      \
   while (0)
 
