@@ -190,7 +190,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  const Elf32_Word *hasharr = &map->l_gnu_chain_zero[bucket];
 
 		  do
-		    if ((*hasharr & ~1u) == (new_hash & ~1u))
+		    if (((*hasharr ^ new_hash) >> 1) == 0)
 		      {
 			symidx = hasharr - map->l_gnu_chain_zero;
 			sym = check_match (&symtab[symidx]);
