@@ -1,5 +1,14 @@
+2007-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4936]
+	* iconv/gconv.c (__gconv): If flush was successful, clear rest of
+	the state.
+	* iconvdata/Makefile: Add rules to build and run bug-iconv5.
+	* iconvdata/bug-iconv5.c: New file.
+
 2007-08-04  Carlos O'Donell  <carlos@systemhalted.org>
 
+	[BZ #4896]
 	* elf/elf.h: Define R_PARISC_PLABEL21L, R_PARISC_PLABEL14R,
 	R_PARISC_GNU_VTENTRY, R_PARISC_GNU_VTINHERIT, R_PARISC_TLS_GD21L,
 	R_PARISC_TLS_GD14R, R_PARISC_TLS_GDCALL, R_PARISC_TLS_LDM21L,
