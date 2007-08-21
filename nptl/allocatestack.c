@@ -794,6 +794,26 @@ __reclaim_stacks (void)
 
 	  /* Account for the size of the stack.  */
 	  stack_cache_actsize += curp->stackblock_size;
+
+	  if (curp->specific_used)
+	    {
+	      /* Clear the thread-specific data.  */
+	      memset (curp->specific_1stblock, '\0',
+		      sizeof (curp->specific_1stblock));
+
+	      curp->specific_used = false;
+
+	      for (size_t cnt = 1; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
+		if (curp->specific[cnt] != NULL)
+		  {
+		    memset (curp->specific[cnt], '\0',
+			    sizeof (curp->specific_1stblock));
+
+		    /* We have allocated the block which we do not
+		       free here so re-set the bit.  */
+		    curp->specific_used = true;
+		  }
+	    }
 	}
     }
 
