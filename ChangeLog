@@ -1,5 +1,9 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4588]
+	* stdio-common/tempnam.c: Fix comment, it is not checked that
+	TMPDIR points to a writable directory.
+
 	[BZ #4726]
 	* resolv/res_send.c (__libc_res_nsend): Initialize all of the
 	memory allocated for the name server address.
