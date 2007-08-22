@@ -425,9 +425,12 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				EXT(statp).nsaddrs[n] =
 				    malloc(sizeof (struct sockaddr_in6));
 			if (EXT(statp).nsaddrs[n] != NULL) {
-				memcpy(EXT(statp).nsaddrs[n],
-				       &statp->nsaddr_list[ns],
-				       sizeof (struct sockaddr_in));
+				memset (mempcpy(EXT(statp).nsaddrs[n],
+						&statp->nsaddr_list[ns],
+						sizeof (struct sockaddr_in)),
+					'\0',
+					sizeof (struct sockaddr_in6)
+					- sizeof (struct sockaddr_in));
 				EXT(statp).nssocks[n] = -1;
 				n++;
 			}

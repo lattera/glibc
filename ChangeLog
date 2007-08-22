@@ -1,5 +1,9 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4726]
+	* resolv/res_send.c (__libc_res_nsend): Initialize all of the
+	memory allocated for the name server address.
+
 	[BZ #4946]
 	* nscd/connections.c (handle_request): Using sendfile always
 	requires that mmap is used for the database.
