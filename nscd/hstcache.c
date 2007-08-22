@@ -221,7 +221,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	 the current cache handling cannot handle and it is more than
 	 questionable whether it is worthwhile complicating the cache
 	 handling just for handling such a special case. */
-      if (he == NULL && hst->h_addr_list[1] == NULL)
+      if (he == NULL && h_addr_list_cnt == 1)
 	{
 	  dataset = (struct dataset *) mempool_alloc (db,
 						      total + req->key_len);

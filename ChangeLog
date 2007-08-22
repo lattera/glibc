@@ -1,5 +1,7 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/hstcache.c (cache_addhst): Minimal optimization.
+
 	[BZ #4925]
 	* debug/pcprofiledump.c: Turn on internationalization by calling
 	setlocale.  Patch mostly by Benno Schulenberg.
