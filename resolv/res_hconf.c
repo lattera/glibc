@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -361,6 +361,7 @@ _res_hconf_init (void)
 }
 
 
+#ifndef NOT_IN_libc
 /* List of known interfaces.  */
 libc_freeres_ptr (
 static struct netaddr
@@ -532,3 +533,4 @@ _res_hconf_trim_domains (struct hostent *hp)
   for (i = 0; hp->h_aliases[i]; ++i)
     _res_hconf_trim_domain (hp->h_aliases[i]);
 }
+#endif

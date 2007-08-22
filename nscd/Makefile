@@ -35,7 +35,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
-		xmalloc xstrdup aicache initgrcache gai
+		xmalloc xstrdup aicache initgrcache gai res_hconf
 
 ifeq ($(have-thread-library),yes)
 
@@ -122,6 +122,7 @@ CFLAGS-gai.c += $(nscd-cflags)
 CFLAGS-servicescache.c += $(nscd-cflags)
 CFLAGS-getsrvbynm_r.c += $(nscd-cflags)
 CFLAGS-getsrvbypt_r.c += $(nscd-cflags)
+CFLAGS-res_hconf.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 relro-LDFLAGS += -Wl,-z,now

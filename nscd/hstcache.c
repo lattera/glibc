@@ -196,7 +196,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 
       /* Determine the number of addresses.  */
       h_addr_list_cnt = 0;
-      for (cnt = 0; hst->h_addr_list[cnt]; ++cnt)
+      while (hst->h_addr_list[h_addr_list_cnt] != NULL)
 	++h_addr_list_cnt;
 
       if (h_addr_list_cnt == 0)

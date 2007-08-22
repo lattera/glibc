@@ -1,5 +1,13 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4814]
+	* resolv/res_hconf.c: Prepare for compiling outside libc.
+	* nscd/res_hconf.c: New file.
+	* nscd/Makefile (nscd-modules): Add res_hconf.  Add rules to build
+	the new file.
+	* nscd/gethstbynm2_r.c (NEED__RES_HCONF): Define.
+	* nscd/gethstbyad_r.c (NEED__RES_HCONF): Likewise.
+
 	* nscd/hstcache.c (cache_addhst): Minimal optimization.
 
 	[BZ #4925]
