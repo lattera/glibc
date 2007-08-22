@@ -1,5 +1,5 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -42,7 +42,7 @@
 /* Get code to possibly dump the content of all registers.  */
 #include <register-dump.h>
 
-/* We'll use tis a lot.  */
+/* We'll use this a lot.  */
 #define WRITE_STRING(s) write (fd, s, strlen (s))
 
 /* Name of the output file.  */
@@ -67,7 +67,7 @@ write_strsignal (int fd, int signal)
 
 
 /* This function is called when a segmentation fault is caught.  The system
-   is in an instable state now.  This means especially that malloc() might
+   is in an unstable state now.  This means especially that malloc() might
    not work anymore.  */
 static void
 catch_segfault (int signal, SIGCONTEXT ctx)

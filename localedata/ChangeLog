@@ -1,3 +1,8 @@
+2007-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4557]
+	* locales/as_IN: Change <UNASSIGNED-09CE> to <U09CE>.
+
 2007-08-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/translit_combining: Add U0141 and U0142.

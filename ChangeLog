@@ -1,5 +1,8 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4582]
+	* debug/segfault.c: Fix typos in comments.
+
 	[BZ #4588]
 	* stdio-common/tempnam.c: Fix comment, it is not checked that
 	TMPDIR points to a writable directory.
