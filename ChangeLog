@@ -1,5 +1,10 @@
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4905]
+	* nscd/hstcache.c (cache_addhst): When reloading an entry which
+	suddenly has two or more addresses, ignore it and remove the old
+	entry.
+
 	[BZ #4814]
 	* resolv/res_hconf.c: Prepare for compiling outside libc.
 	* nscd/res_hconf.c: New file.
