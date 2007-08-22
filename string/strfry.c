@@ -42,7 +42,7 @@ strfry (char *string)
     {
       int32_t j;
       __random_r (&rdata, &j);
-      j = j % len + 1;
+      j = j % (len - i) + i;
 
       char c = string[i];
       string[i] = string[j];

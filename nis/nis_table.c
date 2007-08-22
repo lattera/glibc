@@ -372,7 +372,8 @@ nis_list (const_nis_name name, unsigned int flags,
 					     &bptr);
 		if (clnt_status != NIS_SUCCESS)
 		  {
-		    NIS_RES_STATUS (res) = clnt_status;
+		    if (clnt_status == NIS_NOMEMORY)
+		      NIS_RES_STATUS (res) = clnt_status;
 		    ++done;
 		  }
 		else
@@ -452,10 +453,14 @@ nis_list (const_nis_name name, unsigned int flags,
 		  ++done;
 		else
 		  {
-		    NIS_RES_STATUS (res)
+		    clnt_status
 		      = __follow_path (&tablepath, &tableptr, ibreq, &bptr);
-		    if (NIS_RES_STATUS (res) != NIS_SUCCESS)
-		      ++done;
+		    if (clnt_status != NIS_SUCCESS)
+		      {
+			if (clnt_status == NIS_NOMEMORY)
+			  NIS_RES_STATUS (res) = clnt_status;
+			++done;
+		      }
 		  }
 	      }
 	    break;
