@@ -1,5 +1,9 @@
 2007-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4554]
+	* locales/wo_SN: New file.
+	* SUPPORTED: Add wo_SN entry.
+
 	[BZ #4557]
 	* locales/as_IN: Change <UNASSIGNED-09CE> to <U09CE>.
 
