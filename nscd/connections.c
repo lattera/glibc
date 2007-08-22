@@ -1016,7 +1016,7 @@ cannot handle old request version %d; current version is %d"),
 	  ssize_t nwritten;
 
 #ifdef HAVE_SENDFILE
-	  if (db->mmap_used || !cached->notfound)
+	  if (__builtin_expect (db->mmap_used, 1))
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) cached->data > (char *) db->data);
