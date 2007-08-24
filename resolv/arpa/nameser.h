@@ -424,6 +424,11 @@ typedef enum __ns_cert_types {
 #define NS_NXT_MAX 127
 
 /*
+ * EDNS0 extended flags, host order.
+ */
+#define NS_OPT_DNSSEC_OK        0x8000U
+
+/*
  * Inline versions of get/put short/long.  Pointer is advanced.
  */
 #define NS_GET16(s, cp) do { \
