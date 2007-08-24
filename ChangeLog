@@ -1,5 +1,9 @@
 2007-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(_libc_vdso_platform_setup): Avoid using exported variable by using
+	alias.
+
 	* resolv/arpa/nameser.h (NS_OPT_DNSSEC_OK): Define.
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: No reason to mark
