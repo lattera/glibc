@@ -1,3 +1,9 @@
+2007-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: No reason to mark
+	fallocate64 as EXTRA< it is not referenced if the symbol isn't
+	defined.
+
 2007-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Correctly
