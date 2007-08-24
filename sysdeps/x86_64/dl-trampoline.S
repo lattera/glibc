@@ -1,5 +1,5 @@
 /* PLT trampolines.  x86-64 version.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,13 +120,14 @@ _dl_runtime_profile:
 	leaq 104(%rsp), %rsi
 	movq %rsp, %rbx
 	cfi_def_cfa_register (1)
+	movq %r10, %rcx
+	addq $8, %r10
+	andq $0xfffffffffffffff0, %r10
 	subq %r10, %rsp
 	movq %rsp, %rdi
-	movq %r10, %rcx
 	shrq $3, %rcx
 	rep
 	movsq
-	andq $0xfffffffffffffff0, %rsp
 	movq 32(%rbx), %rcx
 	movq 40(%rbx), %rsi
 	movq 48(%rbx), %rdi

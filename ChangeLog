@@ -1,5 +1,8 @@
 2007-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Correctly
+	align stack for call if pltexit is to be used.
+
 	[BZ #3924]
 	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Correctly
 	align for function call in case pltexit has to be called later.
