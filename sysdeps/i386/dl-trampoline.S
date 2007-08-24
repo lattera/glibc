@@ -111,9 +111,10 @@ _dl_runtime_profile:
 	cfi_rel_offset (esi, 0)
 	leal 44(%esp), %esi
 	movl %ebx, %ecx
+	orl $4, %ebx		# Increase frame size if necessary to align
+				# stack for the function call
 	movl %esp, %edi
 	subl %ebx, %edi
-	andl $0xfffffff0, %edi	# Align stack
 	movl %esp, %ebx
 	cfi_def_cfa_register (ebx)
 	movl %edi, %esp
