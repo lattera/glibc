@@ -1,5 +1,7 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* config.make.in (datarootdir): Add to shut up configure.
+
 	* sysdeps/x86_64/cacheinfo.c (handle_amd): Fix computation of
 	associativity for fully-associative caches.
 
