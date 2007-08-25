@@ -18,7 +18,7 @@
 	* resolv/arpa/nameser.h (NS_OPT_DNSSEC_OK): Define.
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: No reason to mark
-	fallocate64 as EXTRA< it is not referenced if the symbol isn't
+	fallocate64 as EXTRA.  It is not referenced if the symbol isn't
 	defined.
 
 2007-08-23  Ulrich Drepper  <drepper@redhat.com>
