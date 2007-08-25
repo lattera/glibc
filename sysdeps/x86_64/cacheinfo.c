@@ -296,14 +296,13 @@ handle_amd (int name)
       return (ecx & 0xf000) == 0 ? 0 : (ecx >> 6) & 0x3fffc00;
 
     case _SC_LEVEL2_CACHE_ASSOC:
-      ecx >>= 12;
-      switch (ecx & 0xf)
+      switch ((ecx >> 12) & 0xf)
         {
         case 0:
         case 1:
         case 2:
         case 4:
-	  return ecx & 0xf;
+	  return (ecx >> 12) & 0xf;
 	case 6:
 	  return 8;
 	case 8:
@@ -319,7 +318,7 @@ handle_amd (int name)
 	case 14:
 	  return 128;
 	case 15:
-	  return (ecx << 6) & 0x3fffc00;
+	  return ((ecx >> 6) & 0x3fffc00) / (ecx & 0xff);
 	default:
 	  return 0;
         }
@@ -332,14 +331,13 @@ handle_amd (int name)
       return (edx & 0xf000) == 0 ? 0 : (edx & 0x3ffc0000) << 1;
 
     case _SC_LEVEL3_CACHE_ASSOC:
-      edx >>= 12;
-      switch (edx & 0xf)
+      switch ((edx >> 12) & 0xf)
 	{
 	case 0:
 	case 1:
 	case 2:
 	case 4:
-	  return edx & 0xf;
+	  return (edx >> 12) & 0xf;
 	case 6:
 	  return 8;
 	case 8:
@@ -355,7 +353,7 @@ handle_amd (int name)
 	case 14:
 	  return 128;
 	case 15:
-	  return (edx & 0x3ffc0) << 13;
+	  return ((edx & 0x3ffc0000) << 1) / (edx & 0xff);
 	default:
 	  return 0;
 	}

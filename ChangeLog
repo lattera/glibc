@@ -1,5 +1,8 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/cacheinfo.c (handle_amd): Fix computation of
+	associativity for fully-associative caches.
+
 	* sysdeps/x86_64/cacheinfo.c (handle_amd): Handle L3 cache
 	requests.  Fill on more associativity values for L2.
 	Patch mostly by Evandro Menezes.
