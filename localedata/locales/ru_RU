@@ -81,7 +81,7 @@ LC_MONETARY
 int_curr_symbol           "<U0052><U0055><U0042><U0020>"
 currency_symbol           "<U0440><U0443><U0431>"
 mon_decimal_point         "<U002E>"
-mon_thousands_sep         "<U2002>"
+mon_thousands_sep         "<U00A0>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"
@@ -97,7 +97,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             "<U002C>"
-thousands_sep             "<U2002>"
+thousands_sep             "<U00A0>"
 grouping                  3;3
 END LC_NUMERIC
 

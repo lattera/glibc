@@ -1,3 +1,9 @@
+2007-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3842]
+	* locales/ru_RU: Use U00A0 instead of U2002 for thousands separator.
+	The latter might be more correct but usually cannot be displayed.
+
 2007-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4554]
