@@ -195,8 +195,9 @@ xdr_ypmaplist (XDR *xdrs, ypmaplist *objp)
 {
   if (!xdr_mapname (xdrs, &objp->map))
     return FALSE;
-  return xdr_pointer (xdrs, (char **) &objp->next, sizeof (ypmaplist),
-		      (xdrproc_t) xdr_ypmaplist);
+  /* Prevent gcc warning about alias violation.  */
+  char **tp = (void *) &objp->next;
+  return xdr_pointer (xdrs, tp, sizeof (ypmaplist), (xdrproc_t) xdr_ypmaplist);
 }
 libnsl_hidden_def (xdr_ypmaplist)
 
@@ -205,8 +206,9 @@ xdr_ypresp_maplist (XDR *xdrs, ypresp_maplist *objp)
 {
   if (!xdr_ypstat (xdrs, &objp->stat))
     return FALSE;
-  return xdr_pointer (xdrs, (char **) &objp->maps, sizeof (ypmaplist),
-		      (xdrproc_t) xdr_ypmaplist);
+  /* Prevent gcc warning about alias violation.  */
+  char **tp = (void *) &objp->maps;
+  return xdr_pointer (xdrs, tp, sizeof (ypmaplist), (xdrproc_t) xdr_ypmaplist);
 }
 libnsl_hidden_def (xdr_ypresp_maplist)
 

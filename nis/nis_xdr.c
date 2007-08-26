@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -87,7 +87,7 @@ _xdr_nis_server (XDR *xdrs, nis_server *objp)
   bool_t res = xdr_nis_name (xdrs, &objp->name);
   if (__builtin_expect (res, TRUE))
     {
-      res = xdr_array (xdrs, (char **) &objp->ep.ep_val, &objp->ep.ep_len,
+      res = xdr_array (xdrs, (void *) &objp->ep.ep_val, &objp->ep.ep_len,
 		       ~0, sizeof (endpoint), (xdrproc_t) xdr_endpoint);
       if (__builtin_expect (res, TRUE))
 	{
@@ -108,7 +108,7 @@ _xdr_directory_obj (XDR *xdrs, directory_obj *objp)
       res = xdr_nstype (xdrs, &objp->do_type);
       if (__builtin_expect (res, TRUE))
 	{
-	  res = xdr_array (xdrs, (char **) &objp->do_servers.do_servers_val,
+	  res = xdr_array (xdrs, (void *) &objp->do_servers.do_servers_val,
 			   &objp->do_servers.do_servers_len, ~0,
 			   sizeof (nis_server), (xdrproc_t) _xdr_nis_server);
 	  if (__builtin_expect (res, TRUE))
@@ -116,7 +116,7 @@ _xdr_directory_obj (XDR *xdrs, directory_obj *objp)
 	      res = xdr_uint32_t (xdrs, &objp->do_ttl);
 	      if (__builtin_expect (res, TRUE))
 		res = xdr_array (xdrs,
-				 (char **) &objp->do_armask.do_armask_val,
+				 (void *) &objp->do_armask.do_armask_val,
 				 &objp->do_armask.do_armask_len, ~0,
 				 sizeof (oar_mask), (xdrproc_t) xdr_oar_mask);
 	    }
@@ -140,7 +140,7 @@ xdr_entry_obj (XDR *xdrs, entry_obj *objp)
 {
   bool_t res = xdr_string (xdrs, &objp->en_type, ~0);
   if (__builtin_expect (res, TRUE))
-    res = xdr_array (xdrs, (char **) &objp->en_cols.en_cols_val,
+    res = xdr_array (xdrs, (void *) &objp->en_cols.en_cols_val,
 		     &objp->en_cols.en_cols_len, ~0,
 		     sizeof (entry_col), (xdrproc_t) xdr_entry_col);
   return res;
@@ -151,7 +151,7 @@ xdr_group_obj (XDR *xdrs, group_obj *objp)
 {
   bool_t res = xdr_u_int (xdrs, &objp->gr_flags);
   if (__builtin_expect (res, TRUE))
-    res = xdr_array (xdrs, (char **) &objp->gr_members.gr_members_val,
+    res = xdr_array (xdrs, (void *) &objp->gr_members.gr_members_val,
 		     &objp->gr_members.gr_members_len, ~0,
 		     sizeof (nis_name), (xdrproc_t) _xdr_nis_name);
   return res;
@@ -163,7 +163,7 @@ xdr_link_obj (XDR *xdrs, link_obj *objp)
   bool_t res = xdr_zotypes (xdrs, &objp->li_rtype);
   if (__builtin_expect (res, TRUE))
     {
-      res = xdr_array (xdrs, (char **) &objp->li_attrs.li_attrs_val,
+      res = xdr_array (xdrs, (void *) &objp->li_attrs.li_attrs_val,
 		       &objp->li_attrs.li_attrs_len, ~0,
 		       sizeof (nis_attr), (xdrproc_t) xdr_nis_attr);
       if (__builtin_expect (res, TRUE))
@@ -197,7 +197,7 @@ xdr_table_obj (XDR *xdrs, table_obj *objp)
 	  res = xdr_u_char (xdrs, &objp->ta_sep);
 	  if (__builtin_expect (res, TRUE))
 	    {
-	      res = xdr_array (xdrs, (char **) &objp->ta_cols.ta_cols_val,
+	      res = xdr_array (xdrs, (void *) &objp->ta_cols.ta_cols_val,
 			       &objp->ta_cols.ta_cols_len, ~0,
 			       sizeof (table_col), (xdrproc_t) xdr_table_col);
 	      if (__builtin_expect (res, TRUE))
@@ -296,7 +296,7 @@ _xdr_nis_result (XDR *xdrs, nis_result *objp)
   bool_t res = xdr_nis_error (xdrs, &objp->status);
   if (__builtin_expect (res, TRUE))
     {
-      res = xdr_array (xdrs, (char **) &objp->objects.objects_val,
+      res = xdr_array (xdrs, (void *) &objp->objects.objects_val,
 		       &objp->objects.objects_len, ~0,
 		       sizeof (nis_object), (xdrproc_t) _xdr_nis_object);
       if (__builtin_expect (res, TRUE))
@@ -327,7 +327,7 @@ _xdr_ns_request (XDR *xdrs, ns_request *objp)
 {
   bool_t res = xdr_nis_name (xdrs, &objp->ns_name);
   if (__builtin_expect (res, TRUE))
-    res = xdr_array (xdrs, (char **) &objp->ns_object.ns_object_val,
+    res = xdr_array (xdrs, (void *) &objp->ns_object.ns_object_val,
 		     &objp->ns_object.ns_object_len, 1,
 		     sizeof (nis_object), (xdrproc_t) _xdr_nis_object);
   return res;
@@ -339,7 +339,7 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
   bool_t res = xdr_nis_name (xdrs, &objp->ibr_name);
   if (__builtin_expect (res, TRUE))
     {
-      res = xdr_array (xdrs, (char **) &objp->ibr_srch.ibr_srch_val,
+      res = xdr_array (xdrs, (void *) &objp->ibr_srch.ibr_srch_val,
 		       &objp->ibr_srch.ibr_srch_len, ~0,
 		       sizeof (nis_attr), (xdrproc_t) xdr_nis_attr);
       if (__builtin_expect (res, TRUE))
@@ -347,14 +347,14 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
 	  res = xdr_u_int (xdrs, &objp->ibr_flags);
 	  if (__builtin_expect (res, TRUE))
 	    {
-	      res = xdr_array (xdrs, (char **) &objp->ibr_obj.ibr_obj_val,
+	      res = xdr_array (xdrs, (void *) &objp->ibr_obj.ibr_obj_val,
 			       &objp->ibr_obj.ibr_obj_len, 1,
 			       sizeof (nis_object),
 			       (xdrproc_t) _xdr_nis_object);
 	      if (__builtin_expect (res, TRUE))
 		{
 		  res = xdr_array (xdrs,
-				   (char **) &objp->ibr_cbhost.ibr_cbhost_val,
+				   (void *) &objp->ibr_cbhost.ibr_cbhost_val,
 				   &objp->ibr_cbhost.ibr_cbhost_len, 1,
 				   sizeof (nis_server),
 				   (xdrproc_t) _xdr_nis_server);
@@ -406,7 +406,7 @@ _xdr_nis_tag (XDR *xdrs, nis_tag *objp)
 bool_t
 _xdr_nis_taglist (XDR *xdrs, nis_taglist *objp)
 {
-  return xdr_array (xdrs, (char **) &objp->tags.tags_val,
+  return xdr_array (xdrs, (void *) &objp->tags.tags_val,
 		    &objp->tags.tags_len, ~0, sizeof (nis_tag),
 		    (xdrproc_t) _xdr_nis_tag);
 }
@@ -452,7 +452,7 @@ libnsl_hidden_def (xdr_obj_p)
 bool_t
 xdr_cback_data (XDR *xdrs, cback_data *objp)
 {
-  return xdr_array (xdrs, (char **)&objp->entries.entries_val,
+  return xdr_array (xdrs, (void *) &objp->entries.entries_val,
 		    &objp->entries.entries_len, ~0,
 		    sizeof (obj_p), (xdrproc_t) xdr_obj_p);
 }

@@ -1,5 +1,19 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_xdr.c (_xdr_nis_server): Work around gcc alias warning.
+	(_xdr_directory_obj): Likewise.
+	(xdr_entry_obj): Likewise.
+	(xdr_group_obj): Likewise.
+	(xdr_link_obj): Likewise.
+	(xdr_table_obj): Likewise.
+	(_xdr_nis_result): Likewise.
+	(_xdr_ns_request): Likewise.
+	(_xdr_ib_request): Likewise.
+	(_xdr_nis_taglist): Likewise.
+	(xdr_cback_data): Likewise.
+	* nis/yp_xdr.c (xdr_ypmaplist): Work around gcc warning.
+	(xdr_ypresp_maplist): Likewise.
+
 	* stdio-common/Makefile: Avoid format string warning for tst-sprint.
 
 	* posix/regex_internal.h: Prevent some declarations and definitions
