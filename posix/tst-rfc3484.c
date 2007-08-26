@@ -26,6 +26,7 @@ __idna_to_ascii_lz (const char *input, char **output, int flags)
 int
 __idna_to_unicode_lzlz (const char *input, char **output, int flags)
 {
+  *output = NULL;
   return 0;
 }
 

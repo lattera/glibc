@@ -1,5 +1,8 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-rfc3484.c (__idna_to_unicode_lzlz): Initialize *OUTPUT.
+	* posix/tst-rfc3484-2.c (__idna_to_unicode_lzlz): Likewise.
+
 	* debug/Makefile: Disable format checking when compiling tst-chk?.c.
 
 	* config.make.in (datarootdir): Add to shut up configure.
