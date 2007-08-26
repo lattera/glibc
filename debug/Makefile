@@ -72,6 +72,11 @@ CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 
+# We know these tests have problems with format strings, this is what
+# we are testing.  Disable that warning.
+CFLAGS-tst-chk1.c = -Wno-format
+CFLAGS-tst-chk2.c = -Wno-format
+CFLAGS-tst-chk3.c = -Wno-format
 tst-chk1-ENV = LOCPATH=$(common-objpfx)localedata
 tst-chk2-ENV = LOCPATH=$(common-objpfx)localedata
 tst-chk3-ENV = LOCPATH=$(common-objpfx)localedata
