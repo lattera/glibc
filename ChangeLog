@@ -1,5 +1,8 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex_internal.h: Prevent some declarations and definitions
+	to be seen when used in tests.
+
 	* posix/tst-rfc3484.c (__idna_to_unicode_lzlz): Initialize *OUTPUT.
 	* posix/tst-rfc3484-2.c (__idna_to_unicode_lzlz): Likewise.
 

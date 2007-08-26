@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -385,18 +385,20 @@ typedef struct re_dfa_t re_dfa_t;
 # endif
 #endif
 
+#ifndef NOT_IN_libc
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len)
      internal_function;
-#ifdef RE_ENABLE_I18N
+# ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static int build_wcs_upper_buffer (re_string_t *pstr) internal_function;
-#endif /* RE_ENABLE_I18N */
+# endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags)
      internal_function __attribute ((pure));
+#endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
 #define re_string_fetch_byte(pstr) \
@@ -732,15 +734,16 @@ re_string_wchar_at (const re_string_t *pstr, int idx)
   return (wint_t) pstr->wcs[idx];
 }
 
+# ifndef NOT_IN_libc
 static int
 internal_function __attribute ((pure))
 re_string_elem_size_at (const re_string_t *pstr, int idx)
 {
-# ifdef _LIBC
+#  ifdef _LIBC
   const unsigned char *p, *extra;
   const int32_t *table, *indirect;
   int32_t tmp;
-#  include <locale/weight.h>
+#   include <locale/weight.h>
   uint_fast32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 
   if (nrules != 0)
@@ -755,9 +758,10 @@ re_string_elem_size_at (const re_string_t *pstr, int idx)
       return p - pstr->mbs - idx;
     }
   else
-# endif /* _LIBC */
+#  endif /* _LIBC */
     return 1;
 }
+# endif
 #endif /* RE_ENABLE_I18N */
 
 #endif /*  _REGEX_INTERNAL_H */
