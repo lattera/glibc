@@ -1,5 +1,7 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makerules: Use -p option with mkdir.
+
 	* nis/nis_xdr.c (_xdr_nis_server): Work around gcc alias warning.
 	(_xdr_directory_obj): Likewise.
 	(xdr_entry_obj): Likewise.

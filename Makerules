@@ -732,7 +732,9 @@ MAKEFLAGS := $(MAKEFLAGS)r
 # Generic rule for making directories.
 %/:
 # mkdir isn't smart enough to strip a trailing /.
-	mkdir $(@:%/=%)
+# We always require a mkdir which supports the -p option to avoid error
+# messages in case of races.
+	mkdir -p $(@:%/=%)
 
 # Make sure that object files are not removed
 # when they are intermediates between sources and library members.
