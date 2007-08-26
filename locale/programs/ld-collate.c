@@ -2518,7 +2518,9 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  uint32_t namelen = strlen (runp->name);
 	  uint32_t hash = elem_hash (runp->name, namelen);
 	  size_t idx = hash % elem_size;
+#ifndef NDEBUG
 	  size_t start_idx = idx;
+#endif
 
 	  if (elem_table[idx * 2] != 0)
 	    {

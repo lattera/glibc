@@ -1,5 +1,8 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (collate_output): Avoid warning if
+	NDEBUG is defined.
+
 	* Makerules: Use -p option with mkdir.
 
 	* nis/nis_xdr.c (_xdr_nis_server): Work around gcc alias warning.
