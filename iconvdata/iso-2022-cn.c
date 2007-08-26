@@ -264,6 +264,9 @@ enum
     else								      \
       {									      \
 	unsigned char buf[2];						      \
+	/* Fake initialization to keep gcc quiet.  */			      \
+	asm ("" : "=m" (buf));						      \
+									      \
 	int used;							      \
 	size_t written = 0;						      \
 									      \

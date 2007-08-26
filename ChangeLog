@@ -1,5 +1,9 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/iso-2022-kr.c (BODY): Fake initialization of array buf
+	to keep gcc quiet.
+	* iconvdata/iso-2022-cn.c (BODY): Likewise.
+
 	* locale/programs/ld-collate.c (collate_output): Avoid warning if
 	NDEBUG is defined.
 
