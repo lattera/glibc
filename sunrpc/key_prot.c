@@ -115,7 +115,7 @@ xdr_unixcred (XDR * xdrs, unixcred * objp)
     return FALSE;
   if (!INTUSE(xdr_u_int) (xdrs, &objp->gid))
     return FALSE;
-  if (!INTUSE(xdr_array) (xdrs, (char **) &objp->gids.gids_val,
+  if (!INTUSE(xdr_array) (xdrs, (void *) &objp->gids.gids_val,
 			  (u_int *) & objp->gids.gids_len, MAXGIDS,
 			  sizeof (u_int), (xdrproc_t) INTUSE(xdr_u_int)))
     return FALSE;

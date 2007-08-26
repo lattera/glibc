@@ -9,7 +9,8 @@
 
 	* Makerules: Use -p option with mkdir.
 
-	* nis/nis_xdr.c (_xdr_nis_server): Work around gcc alias warning.
+	* sunrpc/key_prot.c (xdr_unixcred): Work around gcc alias warning.
+	* nis/nis_xdr.c (_xdr_nis_server): Likewise.
 	(_xdr_directory_obj): Likewise.
 	(xdr_entry_obj): Likewise.
 	(xdr_group_obj): Likewise.
@@ -20,7 +21,7 @@
 	(_xdr_ib_request): Likewise.
 	(_xdr_nis_taglist): Likewise.
 	(xdr_cback_data): Likewise.
-	* nis/yp_xdr.c (xdr_ypmaplist): Work around gcc warning.
+	* nis/yp_xdr.c (xdr_ypmaplist): Likewise.
 	(xdr_ypresp_maplist): Likewise.
 
 	* stdio-common/Makefile: Avoid format string warning for tst-sprint.
