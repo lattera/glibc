@@ -1,5 +1,7 @@
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile: Avoid format string warning for tst-sprint.
+
 	* posix/regex_internal.h: Prevent some declarations and definitions
 	to be seen when used in tests.
 

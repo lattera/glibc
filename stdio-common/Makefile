@@ -94,6 +94,8 @@ CFLAGS-cuserid.c = -fexceptions
 CFLAGS-errlist.c = $(fno-unit-at-a-time)
 CFLAGS-siglist.c = $(fno-unit-at-a-time)
 
+# We know the test has a format string problem.
+CFLAGS-tst-sprintf.c = -Wno-format
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata
