@@ -1,3 +1,8 @@
+2007-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list
+	(personality): Change caller to EXTRA.
+
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/iso-2022-kr.c (BODY): Fake initialization of array buf
