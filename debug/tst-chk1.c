@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -742,6 +742,75 @@ do_test (void)
 
   CHK_FAIL_START
   if (fgets_unlocked (buf, l0 + sizeof (buf) + 1, stdin) != buf)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  rewind (stdin);
+
+  if (fread (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread (buf, sizeof (buf), 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread (buf, sizeof (buf), l0 + 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fread (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fread (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread_unlocked (buf, sizeof (buf), 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, 1, 4, stdin) != 4
+      || memcmp (buf, "abcdFGHI\na", 10))
+    FAIL ();
+  if (fread_unlocked (buf, 4, 1, stdin) != 1
+      || memcmp (buf, "efghFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread_unlocked (buf, sizeof (buf), l0 + 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fread_unlocked (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fread_unlocked (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
     FAIL ();
   CHK_FAIL_END
 #endif

@@ -39,4 +39,7 @@ libc {
   GLIBC_2.5 {
     __readlinkat_chk;
   }
+  GLIBC_2.7 {
+    __fread_chk; __fread_unlocked_chk;
+  }
 }

@@ -98,6 +98,27 @@ fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
   return __fgets_alias (__s, __n, __stream);
 }
 
+extern size_t __fread_chk (void *__restrict __ptr, size_t __ptrlen,
+			   size_t __size, size_t __n,
+			   FILE *__restrict __stream) __wur;
+extern size_t __REDIRECT (__fread_alias,
+			  (void *__restrict __ptr, size_t __size,
+			   size_t __n, FILE *__restrict __stream),
+			  fread) __wur;
+
+__extern_always_inline __wur size_t
+fread (void *__restrict __ptr, size_t __size, size_t __n,
+       FILE *__restrict __stream)
+{
+  if (__bos0 (__ptr) != (size_t) -1
+      && (!__builtin_constant_p (__size)
+	  || !__builtin_constant_p (__n)
+	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2))
+	  || __size * __n > __bos0 (__ptr)))
+    return __fread_chk (__ptr, __bos0 (__ptr), __size, __n, __stream);
+  return __fread_alias (__ptr, __size, __n, __stream);
+}
+
 #ifdef __USE_GNU
 extern char *__fgets_unlocked_chk (char *__restrict __s, size_t __size,
 				   int __n, FILE *__restrict __stream) __wur;
@@ -112,5 +133,51 @@ fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
       && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
     return __fgets_unlocked_chk (__s, __bos (__s), __n, __stream);
   return __fgets_unlocked_alias (__s, __n, __stream);
+}
+#endif
+
+#ifdef __USE_MISC
+# undef fread_unlocked
+extern size_t __fread_unlocked_chk (void *__restrict __ptr, size_t __ptrlen,
+				    size_t __size, size_t __n,
+				    FILE *__restrict __stream) __wur;
+extern size_t __REDIRECT (__fread_unlocked_alias,
+			  (void *__restrict __ptr, size_t __size,
+			   size_t __n, FILE *__restrict __stream),
+			  fread_unlocked) __wur;
+
+__extern_always_inline __wur size_t
+fread_unlocked (void *__restrict __ptr, size_t __size, size_t __n,
+		FILE *__restrict __stream)
+{
+  if (__bos0 (__ptr) != (size_t) -1
+      && (!__builtin_constant_p (__size)
+	  || !__builtin_constant_p (__n)
+	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2))
+	  || __size * __n > __bos0 (__ptr)))
+    return __fread_unlocked_chk (__ptr, __bos0 (__ptr), __size, __n, __stream);
+
+# ifdef __USE_EXTERN_INLINES
+  if (__builtin_constant_p (__size)
+      && __builtin_constant_p (__n)
+      && (__size | __n) < (((size_t) 1) << (8 * sizeof (size_t) / 2))
+      && __size * __n <= 8)
+    {
+      size_t __cnt = __size * __n;
+      char *__cptr = (char *) __ptr;
+      if (__cnt == 0)
+	return 0;
+
+      for (; __cnt > 0; --__cnt)
+	{
+	  int __c = _IO_getc_unlocked (__stream);
+	  if (__c == EOF)
+	    break;
+	  *__cptr++ = __c;
+	}
+      return (__cptr - (char *) __ptr) / __size;
+    }
+# endif
+  return __fread_unlocked_alias (__ptr, __size, __n, __stream);
 }
 #endif

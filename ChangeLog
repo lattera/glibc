@@ -1,3 +1,19 @@
+2007-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/bits/stdio2.h (__fread_chk, __fread_unlocked_chk): New
+	prototypes.
+	(__fread_alias, __fread_unlocked_alias): New aliases.
+	(fread): New extern inline.
+	(fread_unlocked): Likewise.  Undef macro before definition of
+	the inline function.
+	* debug/Makefile (routines): Add fread_chk and fread_u_chk.
+	(CFLAGS-fread_chk.c, CFLAGS-fread_u_chk.c): Add.
+	* debug/Versions (libc): Export __fread_chk@@GLIBC_2.7
+	and __fread_unlocked_chk@@GLIBC_2.7.
+	* debug/fread_chk.c: New file.
+	* debug/fread_u_chk.c: New file.
+	* debug/tst-chk1.c (do_test): Add fread and fread_unlocked tests.
+
 2007-08-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list
