@@ -28,10 +28,7 @@ int
 __feraiseexcept (int x)
 {
   __sim_exceptions |= x;
-  if (x == 0 || __sim_disabled_exceptions & x)
-    /* Ignore exception.  */
-    ;
-  else
+  if (x & ~__sim_disabled_exceptions)
     raise (SIGFPE);
   return 0;
 }

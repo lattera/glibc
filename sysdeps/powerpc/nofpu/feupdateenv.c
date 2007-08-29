@@ -21,12 +21,12 @@
 
 #include "soft-fp.h"
 #include "soft-supp.h"
+#include <signal.h>
 #include <bp-sym.h>
 
 int
 __feupdateenv (const fenv_t *envp)
 {
-  fenv_union_t u;
   int saved_exceptions;
 
   /* Save currently set exceptions.  */
@@ -37,6 +37,8 @@ __feupdateenv (const fenv_t *envp)
 
   /* Raise old exceptions.  */
   __sim_exceptions |= saved_exceptions;
+  if (saved_exceptions & ~__sim_disabled_exceptions)
+    raise (SIGFPE);
 
   return 0;
 }

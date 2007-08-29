@@ -1,3 +1,13 @@
+2007-08-29  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fsetexcptflg.c (__fesetexceptflag): Do not
+	clobber other exceptions.
+	* sysdeps/powerpc/nofpu/feupdateenv.c (__feupdateenv): Raise new
+	exceptions.
+	* sysdeps/powerpc/nofpu/fraiseexcpt.c (__feraiseexcept): Handle
+	multiple new exceptions if some are disabled.
+	* sysdeps/powerpc/nofpu/sim-full.c (__simulate_exceptions): Likewise.
+
 2007-07-13  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/nofpu/Makefile: Remove fe_nomask from libm-support.
