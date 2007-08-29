@@ -41,6 +41,9 @@
 #ifndef IFA_F_HOMEADDRESS
 # define IFA_F_HOMEADDRESS 0
 #endif
+#ifndef IFA_F_OPTIMISTIC
+# define IFA_F_OPTIMISTIC 0
+#endif
 
 
 static int
@@ -203,10 +206,13 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
 		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
 					 | IFA_F_TEMPORARY
-					 | IFA_F_HOMEADDRESS))
+					 | IFA_F_HOMEADDRESS
+					 | IFA_F_OPTIMISTIC))
 		    {
 		      struct in6ailist *newp = alloca (sizeof (*newp));
-		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
+		      newp->info.flags = (((ifam->ifa_flags
+					    & (IFA_F_DEPRECATED
+					       | IFA_F_OPTIMISTIC))
 					   ? in6ai_deprecated : 0)
 					  | ((ifam->ifa_flags
 					      & IFA_F_TEMPORARY)
