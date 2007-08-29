@@ -907,9 +907,14 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
     return;
 
   /* We need to send some data along with the descriptor.  */
-  struct iovec iov[1];
+  uint64_t mapsize = (db->head->data_size
+		      + roundup (db->head->module * sizeof (ref_t), ALIGN)
+		      + sizeof (struct database_pers_head));
+  struct iovec iov[2];
   iov[0].iov_base = key;
   iov[0].iov_len = strlen (key) + 1;
+  iov[1].iov_base = &mapsize;
+  iov[1].iov_len = sizeof (mapsize);
 
   /* Prepare the control message to transfer the descriptor.  */
   union
@@ -917,7 +922,7 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
     struct cmsghdr hdr;
     char bytes[CMSG_SPACE (sizeof (int))];
   } buf;
-  struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
+  struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 2,
 			.msg_control = buf.bytes,
 			.msg_controllen = sizeof (buf) };
   struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);

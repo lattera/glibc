@@ -1,5 +1,9 @@
 2007-08-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (send_ro_fd): Also transfer file size.
+	* nscd/nscd_helper.c (get_mapping): If nscd also transfers the
+	file size don't call fstat.
+
 	* nscd/nscd_helper.c (get_mapping): Avoid the pread call, just go
 	ahead and map the file.  This should always be correct and we can
 	catch problems later.
