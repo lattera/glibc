@@ -286,45 +286,44 @@ get_mapping (request_type type, const char *key,
       || __builtin_expect (st.st_size < sizeof (struct database_pers_head), 0))
     goto out_close;
 
-  struct database_pers_head head;
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__pread (mapfd, &head,
-						     sizeof (head), 0))
-			!= sizeof (head), 0))
-    goto out_close;
-
-  if (__builtin_expect (head.version != DB_VERSION, 0)
-      || __builtin_expect (head.header_size != sizeof (head), 0)
-      /* This really should not happen but who knows, maybe the update
-	 thread got stuck.  */
-      || __builtin_expect (! head.nscd_certainly_running
-			   && head.timestamp + MAPPING_TIMEOUT < time (NULL),
-			   0))
-    goto out_close;
-
-  size_t size = (sizeof (head) + roundup (head.module * sizeof (ref_t), ALIGN)
-		 + head.data_size);
-
-  if (__builtin_expect (st.st_size < size, 0))
-    goto out_close;
-
   /* The file is large enough, map it now.  */
-  void *mapping = __mmap (NULL, size, PROT_READ, MAP_SHARED, mapfd, 0);
+  void *mapping = __mmap (NULL, st.st_size, PROT_READ, MAP_SHARED, mapfd, 0);
   if (__builtin_expect (mapping != MAP_FAILED, 1))
     {
-      /* Allocate a record for the mapping.  */
-      struct mapped_database *newp = malloc (sizeof (*newp));
-      if (newp == NULL)
+      /* Check whether the database is correct and up-to-date.  */
+      struct database_pers_head *head = mapping;
+
+      if (__builtin_expect (head->version != DB_VERSION, 0)
+	  || __builtin_expect (head->header_size != sizeof (*head), 0)
+	  /* This really should not happen but who knows, maybe the update
+	     thread got stuck.  */
+	  || __builtin_expect (! head->nscd_certainly_running
+			       && (head->timestamp + MAPPING_TIMEOUT
+				   < time (NULL)), 0))
 	{
-	  /* Ugh, after all we went through the memory allocation failed.  */
-	  __munmap (mapping, size);
+	out_unmap:
+	  __munmap (mapping, st.st_size);
 	  goto out_close;
 	}
 
+      size_t size = (sizeof (*head) + roundup (head->module * sizeof (ref_t),
+					       ALIGN)
+		     + head->data_size);
+
+      if (__builtin_expect (st.st_size < size, 0))
+	goto out_unmap;
+
+      /* Allocate a record for the mapping.  */
+      struct mapped_database *newp = malloc (sizeof (*newp));
+      if (newp == NULL)
+	/* Ugh, after all we went through the memory allocation failed.  */
+	goto out_unmap;
+
       newp->head = mapping;
-      newp->data = ((char *) mapping + head.header_size
-		    + roundup (head.module * sizeof (ref_t), ALIGN));
+      newp->data = ((char *) mapping + head->header_size
+		    + roundup (head->module * sizeof (ref_t), ALIGN));
       newp->mapsize = size;
-      newp->datasize = head.data_size;
+      newp->datasize = head->data_size;
       /* Set counter to 1 to show it is usable.  */
       newp->counter = 1;
 

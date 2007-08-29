@@ -1,3 +1,9 @@
+2007-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (get_mapping): Avoid the pread call, just go
+	ahead and map the file.  This should always be correct and we can
+	catch problems later.
+
 2007-08-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/bits/stdio2.h (__fread_chk, __fread_unlocked_chk): New
