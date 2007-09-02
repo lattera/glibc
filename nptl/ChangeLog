@@ -1,3 +1,10 @@
+2007-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__pthread_cond_wait): Fix unlocking of internal lock after mutex
+	unlocking failed.
+	Patch by Luca Barbieri <luca.barbieri@gmail.com>.
+
 2007-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4938]

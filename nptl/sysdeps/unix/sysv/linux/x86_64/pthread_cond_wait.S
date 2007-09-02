@@ -401,7 +401,7 @@ __pthread_cond_wait:
 #else
 	decl	cond_lock(%rdi)
 #endif
-	jne	13f
+	je	13f
 
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
