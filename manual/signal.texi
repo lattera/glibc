@@ -2317,7 +2317,7 @@ The @var{signum} argument is an invalid or unsupported number.
 You do not have the privilege to send a signal to the process or any of
 the processes in the process group named by @var{pid}.
 
-@item ESCRH
+@item ESRCH
 The @var{pid} argument does not refer to an existing process or group.
 @end table
 @end deftypefun
