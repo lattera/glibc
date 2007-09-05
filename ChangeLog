@@ -1,3 +1,8 @@
+2007-09-05  Roland McGrath  <roland@redhat.com>
+
+	* manual/signal.texi (Signaling Another Process): Typo fix.
+	From Karl Berry <karl@freefriends.org>.
+
 2007-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/check_pf.c (IFA_F_OPTIMISTIC): Define to
