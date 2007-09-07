@@ -295,6 +295,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define			TAB0	0x00000000
 #define			TAB1	0x00000400	/* tty 37 */
 #define			TAB2	0x00000800
+#define			TAB3	0x00000c00
 #define		XTABS		0x00000c00	/* expand tabs on output */
 #define		CRDLY		0x00003000	/* \r delay */
 #define		CRDELAY		CRDLY		/* traditional BSD name */

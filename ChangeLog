@@ -1,3 +1,7 @@
+2007-09-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/ioctls.h (TAB3): New macro.
+
 2007-09-05  Roland McGrath  <roland@redhat.com>
 
 	* manual/signal.texi (Signaling Another Process): Typo fix.
