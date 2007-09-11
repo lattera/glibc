@@ -301,6 +301,10 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 	done < $(objpfx)getconf.speclist
 
 $(objpfx)getconf.speclist: $(objpfx)getconf
+ifeq (no,$(cross-compiling))
 	LC_ALL=C GETCONF_DIR=/dev/null \
 	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS > $@.new
+else
+	> $@.new
+endif
 	mv -f $@.new $@

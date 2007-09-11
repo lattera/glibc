@@ -1,3 +1,8 @@
+2007-09-11  Roland McGrath  <roland@redhat.com>
+
+	* posix/Makefile ($(objpfx)getconf.speclist): Make it empty if cross
+	compiling.
+
 2007-09-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/ioctls.h (TAB3): New macro.
