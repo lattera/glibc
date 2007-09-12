@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maciej W. Rozycki <macro@ds2.pg.gda.pl>, 2000.
 
@@ -30,7 +30,7 @@ extern int _test_and_set (int *p, int v) __THROW;
 #ifdef __USE_EXTERN_INLINES
 
 # ifndef _EXTERN_INLINE
-#  define _EXTERN_INLINE extern __inline
+#  define _EXTERN_INLINE __extern_inline
 # endif
 
 _EXTERN_INLINE int

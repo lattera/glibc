@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2002, 2003, 2004, 2006
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2002, 2003, 2004, 2006, 2007
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -51,6 +51,7 @@
 # define O_DIRECT	0x8000	/* Direct disk access hint.  */
 # define O_DIRECTORY	0x10000	/* Must be a directory.	 */
 # define O_NOATIME	0x40000	/* Do not set atime.  */
+# define O_CLOEXEC     02000000 /* Set close_on_exec.  */
 #endif
 
 /* For now Linux has no synchronisity options for data and read operations.

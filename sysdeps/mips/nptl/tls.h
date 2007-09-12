@@ -166,7 +166,7 @@ typedef struct
 	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
 			       THREAD_GSCOPE_FLAG_UNUSED);		     \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
     }									     \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \

@@ -23,6 +23,8 @@
 /* There is some commonality.  */
 #include <sysdeps/unix/mips/mips64/n64/sysdep.h>
 
+#include <tls.h>
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax

@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005, 2006
+   Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -63,7 +63,7 @@ enum __socket_type
 /* Protocol families.  */
 #define	PF_UNSPEC	0	/* Unspecified.  */
 #define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
-#define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
+#define	PF_UNIX		PF_LOCAL /* POSIX name for PF_LOCAL.  */
 #define	PF_FILE		PF_LOCAL /* Another non-standard name for PF_LOCAL.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_AX25		3	/* Amateur Radio AX.25.  */
@@ -90,7 +90,9 @@ enum __socket_type
 #define	PF_PPPOX	24	/* PPPoX sockets.  */
 #define	PF_WANPIPE	25	/* Wanpipe API sockets.  */
 #define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
-#define	PF_MAX		32	/* For now..  */
+#define	PF_IUCV		32	/* IUCV sockets.  */
+#define PF_RXRPC	33	/* RxRPC sockets.  */
+#define	PF_MAX		34	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -122,6 +124,8 @@ enum __socket_type
 #define	AF_PPPOX	PF_PPPOX
 #define	AF_WANPIPE	PF_WANPIPE
 #define	AF_BLUETOOTH	PF_BLUETOOTH
+#define	AF_IUCV		PF_IUCV
+#define AF_RXRPC	PF_RXRPC
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -206,8 +210,13 @@ enum
 #define	MSG_ERRQUEUE	MSG_ERRQUEUE
     MSG_NOSIGNAL	= 0x4000, /* Do not generate SIGPIPE.  */
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
-    MSG_MORE		= 0x8000  /* Sender will send more.  */
+    MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
+
+    MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
+                                           descriptor received through
+                                           SCM_RIGHTS.  */
+#define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
   };
 
 
@@ -259,7 +268,7 @@ extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
 				      struct cmsghdr *__cmsg) __THROW;
 #ifdef __USE_EXTERN_INLINES
 # ifndef _EXTERN_INLINE
-#  define _EXTERN_INLINE extern __inline
+#  define _EXTERN_INLINE __extern_inline
 # endif
 _EXTERN_INLINE struct cmsghdr *
 __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
