@@ -1,5 +1,6 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995-1998, 2000, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +50,7 @@
 # define O_NOFOLLOW	0100000	/* Do not follow links.	 */
 # define O_DIRECT	0200000	/* Direct disk access.	*/
 # define O_NOATIME     01000000 /* Do not set atime.  */
+# define O_CLOEXEC     02000000 /* Set close_on_exec.  */
 #endif
 
 /* For now Linux has synchronisity options for data and read operations.

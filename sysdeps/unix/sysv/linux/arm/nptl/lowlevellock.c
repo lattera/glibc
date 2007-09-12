@@ -22,8 +22,36 @@
 #include <lowlevellock.h>
 #include <sys/time.h>
 
+void
+__lll_lock_wait_private (int *futex)
+{
+  do
+    {
+      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+      if (oldval != 0)
+	lll_futex_wait (futex, 2, LLL_PRIVATE);
+    }
+  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+}
+
+
+/* These functions don't get included in libc.so  */
+#ifdef IS_IN_libpthread
+void
+__lll_lock_wait (int *futex, int private)
+{
+  do
+    {
+      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+      if (oldval != 0)
+	lll_futex_wait (futex, 2, private);
+    }
+  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+}
+
+
 int
-__lll_timedlock_wait (int *futex, const struct timespec *abstime)
+__lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 {
   struct timespec rt;
 
@@ -56,16 +84,14 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
 	return ETIMEDOUT;
 
       // XYZ: Lost the lock to check whether it was private.
-      lll_futex_timed_wait (futex, 2, &rt, LLL_SHARED);
+      lll_futex_timed_wait (futex, 2, &rt, private);
     }
-  while (atomic_exchange_acq (futex, 2) != 0);
+  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 
   return 0;
 }
 
 
-/* This function doesn't get included in libc.so  */
-#ifdef IS_IN_libpthread
 int
 __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {

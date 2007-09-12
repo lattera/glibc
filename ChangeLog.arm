@@ -1,3 +1,50 @@
+2007-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/nptl/tls.h (THREAD_GSCOPE_RESET_FLAG): Use
+	lll_futex_wake not lll_private_futex_wake.
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (O_CLOEXEC): Define.
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h: Include <tls.h>
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.c
+	(__lll_lock_wait_private, __lll_lock_wait): New.
+	(__lll_timedlock_wait): Don't include in libc.so;  Take private
+	argument.  Use atomic_compare_and_exchange_bool_acq.
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Renamed all
+	lll_mutex_* resp. lll_robust_mutex_* macros to lll_*
+	resp. lll_robust_*.  Renamed all LLL_MUTEX_LOCK_* macros to
+	LLL_LOCK_*.  Include <kernel-features.h>.
+	(LLL_LOCK_INITIALIZER): Remove duplicate definition.
+	(__lll_private_flag): Define.
+	(lll_futex_timed_wait): Pass private flag to syscall.
+	(lll_futex_wake): Likewise.
+	(lll_private_futex_wait, lll_private_futex_timed_wait,
+	lll_private_futex_wake): Remove.
+	(lll_robust_dead, lll_futex_requeue): Take private arguments.
+	(lll_futex_wake_unlock): Pass private flag to syscall.
+	(__lll_robust_trylock): Convert to macro.
+	(__lll_robust_lock_wait): Add private argument.
+	(__lll_lock_wait_private, __lll_lock_wait): Declare.
+	(__lll_lock): Convert to macro.  Take private argument.
+	(__lll_cond_lock): Likewise.
+	(lll_lock, lll_cond_lock): Take private arguments.
+	(__lll_robust_lock): Take private argument.
+	(__lll_timedlock_wait, __lll_robust_timedlock_wait): Take private
+	arguments.
+	(__lll_timedlock, __lll_robust_timedlock): Convert to macros.
+	Take private arguments.
+	(lll_timedlock, lll_robust_timedlock): Take private arguments.
+	(__lll_unlock, __lll_robust_unlock): Convert to macros.  Take
+	private arguments.
+	(lll_unlock, lll_robust_unlock): Take private arguments.
+	(__lll_mutex_unlock_force, lll_mutex_unlock_force, lll_lock_t,
+	lll_trylock, lll_lock, lll_unlock, lll_islocked): Remove.
+	(lll_wait_tid): Pass LLL_SHARED to lll_futex_wait.
+	(__lll_cond_wait, __lll_cond_timedwait, __lll_cond_wake,
+	__lll_cond_broadcast, lll_cond_wait, lll_cond_timedwait,
+	lll_cond_wake, lll_cond_broadcast): Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c
+	(clear_once_control, __pthread_once): Use lll_futex_wake not
+	lll_private_futex_wake.
+
 2007-07-10  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/arm/nptl/tls.h (THREAD_GSCOPE_RESET_FLAG): Use

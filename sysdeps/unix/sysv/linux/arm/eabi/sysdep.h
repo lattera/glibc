@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006
+/* Copyright (C) 2005, 2006, 2007
    Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -24,6 +24,8 @@
 #define _LINUX_ARM_EABI_SYSDEP_H 1
 
 #include <arm/sysdep.h>
+
+#include <tls.h>
 
 #if __NR_SYSCALL_BASE != 0
 # error Kernel headers are too old
