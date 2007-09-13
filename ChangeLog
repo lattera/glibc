@@ -1,3 +1,7 @@
+2007-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/cs.po: Update from translation team.
+
 2007-09-11  Roland McGrath  <roland@redhat.com>
 
 	* posix/Makefile ($(objpfx)getconf.speclist): Make it empty if cross
