@@ -1,3 +1,8 @@
+2007-09-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* inet/inet_net.c: Reset digit to 0 for inputs starting with "0x".
+	* inet/tst-network.c (tests): Add edge case tests for "0", "0x", "0x0".
+
 2007-09-14  Mike Frysinger  <vapier@gentoo.org>
 
 	* inet/tst-network.c: Increment ERRORS for failing tests.
