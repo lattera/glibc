@@ -61,6 +61,7 @@ main (void)
 
       if (res != tests[i].number)
 	{
+	  ++errors;
 	  printf ("Test failed for inet_network (\"%s\"):\n",
 		  tests[i].network);
 	  printf ("Expected return value %u (0x%x) but got %u (0x%x).\n",
