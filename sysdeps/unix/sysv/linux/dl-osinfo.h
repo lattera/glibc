@@ -121,7 +121,7 @@ _dl_discover_osversion (void)
       version <<= 8;
       version |= here;
 
-      if (*cp++ != '.')
+      if (*cp++ != '.' || parts == 3)
 	/* Another part following?  */
 	break;
     }
