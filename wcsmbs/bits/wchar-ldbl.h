@@ -48,7 +48,7 @@ __END_NAMESPACE_C99
 __LDBL_REDIR1_DECL (wcstold_l, wcstod_l);
 #endif
 
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
 __LDBL_REDIR_DECL (__swprintf_chk)
 __LDBL_REDIR_DECL (__vswprintf_chk)
 # if __USE_FORTIFY_LEVEL > 1

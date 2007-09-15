@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #ifndef _WCHAR_H
-# error "Never include <bits/wchar.h> directly; use <wchar.h> instead."
+# error "Never include <bits/wchar2.h> directly; use <wchar.h> instead."
 #endif
 
 
@@ -198,12 +198,28 @@ extern int __swprintf_chk (wchar_t *__restrict __s, size_t __n,
 			   __const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 6))) */;
 
+extern int __REDIRECT_NTH (__swprintf_alias,
+			   (wchar_t *__restrict __s, size_t __n,
+			    __const wchar_t *__restrict __fmt, ...),
+			    swprintf);
+
+#ifdef __va_arg_pack
+__extern_always_inline int
+__NTH (swprintf (wchar_t *__restrict __s, size_t __n,
+		 __const wchar_t *__restrict __fmt, ...))
+{
+  if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
+    return __swprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1, __bos (__s),
+			   __fmt, __va_arg_pack ());
+  return __swprintf_alias (__s, __n, __fmt, __va_arg_pack ());
+}
+#elif !defined __cplusplus
 /* XXX We might want to have support in gcc for swprintf.  */
-#define swprintf(s, n, ...) \
+# define swprintf(s, n, ...) \
   (__bos (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1			      \
    ? __swprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1, __bos (s), __VA_ARGS__)   \
    : swprintf (s, n, __VA_ARGS__))
-
+#endif
 
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    int __flag, size_t __s_len,
@@ -211,10 +227,20 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 
-#define vswprintf(s, n, fmt, ap) \
-  (__bos (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1			      \
-   ? __vswprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1, __bos (s), fmt, ap)      \
-   : vswprintf (s, n, fmt, ap))
+extern int __REDIRECT_NTH (__vswprintf_alias,
+			   (wchar_t *__restrict __s, size_t __n,
+			    __const wchar_t *__restrict __fmt,
+			    __gnuc_va_list __ap), vswprintf);
+
+__extern_always_inline int
+__NTH (vswprintf (wchar_t *__restrict __s, size_t __n,
+		  __const wchar_t *__restrict __fmt, __gnuc_va_list __ap))
+{
+  if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
+    return __vswprintf_chk (__s, __n,  __USE_FORTIFY_LEVEL - 1, __bos (__s),
+			    __fmt, __ap);
+  return __vswprintf_alias (__s, __n, __fmt, __ap);
+}
 
 
 #if __USE_FORTIFY_LEVEL > 1
@@ -229,14 +255,38 @@ extern int __vfwprintf_chk (__FILE *__restrict __stream, int __flag,
 extern int __vwprintf_chk (int __flag, __const wchar_t *__restrict __format,
 			   __gnuc_va_list __ap);
 
-# define wprintf(...) \
+# ifdef __va_arg_pack
+__extern_always_inline int
+wprintf (__const wchar_t *__restrict __fmt, ...)
+{
+  return __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+}
+
+__extern_always_inline int
+fwprintf (__FILE *__restrict __stream, __const wchar_t *__restrict __fmt, ...)
+{
+  return __fwprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
+			 __va_arg_pack ());
+}
+# elif !defined __cplusplus
+#  define wprintf(...) \
   __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-# define fwprintf(stream, ...) \
+#  define fwprintf(stream, ...) \
   __fwprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-# define vwprintf(format, ap) \
-  __vwprintf_chk (__USE_FORTIFY_LEVEL - 1, format, ap)
-# define vfwprintf(stream, format, ap) \
-  __vfwprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, format, ap)
+# endif
+
+__extern_always_inline int
+vwprintf (__const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+{
+  return __vwprintf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __ap);
+}
+
+__extern_always_inline int
+vfwprintf (__FILE *__restrict __stream,
+	   __const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+{
+  return __vfwprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
+}
 
 #endif
 

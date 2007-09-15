@@ -1,5 +1,5 @@
 /* -mlong-double-64 compatibility mode for stdio functions.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ __LDBL_REDIR_DECL (obstack_printf)
 __LDBL_REDIR_DECL (obstack_vprintf)
 #endif
 
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
 __LDBL_REDIR_DECL (__sprintf_chk)
 __LDBL_REDIR_DECL (__vsprintf_chk)
 # if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98

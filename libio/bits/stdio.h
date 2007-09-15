@@ -21,7 +21,7 @@
 # error "Never include <bits/stdio.h> directly; use <stdio.h> instead."
 #endif
 
-#ifdef __cplusplus
+#ifndef __extern_inline
 # define __STDIO_INLINE inline
 #else
 # define __STDIO_INLINE __extern_inline
@@ -29,12 +29,16 @@
 
 
 #ifdef __USE_EXTERN_INLINES
+/* For -D_FORTIFY_SOURCE{,=2} bits/stdio2.h will define a different
+   inline.  */
+# if !(__USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline)
 /* Write formatted output to stdout from argument list ARG.  */
 __STDIO_INLINE int
 vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }
+# endif
 
 /* Read a character from stdin.  */
 __STDIO_INLINE int
@@ -135,7 +139,8 @@ __NTH (ferror_unlocked (FILE *__stream))
 #endif /* Use extern inlines.  */
 
 
-#if defined __USE_MISC && defined __GNUC__ && defined __OPTIMIZE__
+#if defined __USE_MISC && defined __GNUC__ && defined __OPTIMIZE__ \
+    && !defined __cplusplus
 /* Perform some simple optimizations.  */
 # define fread_unlocked(ptr, size, n, stream) \
   (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \

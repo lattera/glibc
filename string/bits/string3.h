@@ -20,27 +20,40 @@
 # error "Never use <bits/string3.h> directly; include <string.h> instead."
 #endif
 
+__warndecl (__warn_memset_zero_len,
+	    "memset used with constant zero length parameter; this could be due to transposed parameters");
+
+#ifndef __cplusplus
 /* XXX This is temporarily.  We should not redefine any of the symbols
    and instead integrate the error checking into the original
    definitions.  */
-#undef memcpy
-#undef memmove
-#undef memset
-#undef strcat
-#undef strcpy
-#undef strncat
-#undef strncpy
-#ifdef __USE_GNU
-# undef mempcpy
-# undef stpcpy
-#endif
-#ifdef __USE_BSD
-# undef bcopy
-# undef bzero
+# undef memcpy
+# undef memmove
+# undef memset
+# undef strcat
+# undef strcpy
+# undef strncat
+# undef strncpy
+# ifdef __USE_GNU
+#  undef mempcpy
+#  undef stpcpy
+# endif
+# ifdef __USE_BSD
+#  undef bcopy
+#  undef bzero
+# endif
 #endif
 
 
-#define memcpy(dest, src, len) \
+#ifdef __cplusplus
+__extern_always_inline void *
+__NTH (memcpy (void *__restrict __dest, __const void *__restrict __src,
+	       size_t __len))
+{
+  return __builtin___memcpy_chk (__dest, __src, __len, __bos0 (__dest));
+}
+#else
+# define memcpy(dest, src, len) \
   ((__bos0 (dest) != (size_t) -1)					\
    ? __builtin___memcpy_chk (dest, src, len, __bos0 (dest))		\
    : __memcpy_ichk (dest, src, len))
@@ -50,9 +63,17 @@ __NTH (__memcpy_ichk (void *__restrict __dest, __const void *__restrict __src,
 {
   return __builtin___memcpy_chk (__dest, __src, __len, __bos0 (__dest));
 }
+#endif
 
-
-#define memmove(dest, src, len) \
+#ifdef __cplusplus
+__extern_always_inline void *
+__NTH (memmove (void *__restrict __dest, __const void *__restrict __src,
+		size_t __len))
+{
+  return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
+}
+#else
+# define memmove(dest, src, len) \
   ((__bos0 (dest) != (size_t) -1)					\
    ? __builtin___memmove_chk (dest, src, len, __bos0 (dest))		\
    : __memmove_ichk (dest, src, len))
@@ -61,10 +82,18 @@ __NTH (__memmove_ichk (void *__dest, __const void *__src, size_t __len))
 {
   return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
-
+#endif
 
 #ifdef __USE_GNU
-# define mempcpy(dest, src, len) \
+# ifdef __cplusplus
+__extern_always_inline void *
+__NTH (mempcpy (void *__restrict __dest, __const void *__restrict __src,
+		size_t __len))
+{
+  return __builtin___mempcpy_chk (__dest, __src, __len, __bos0 (__dest));
+}
+# else
+#  define mempcpy(dest, src, len) \
   ((__bos0 (dest) != (size_t) -1)					\
    ? __builtin___mempcpy_chk (dest, src, len, __bos0 (dest))		\
    : __mempcpy_ichk (dest, src, len))
@@ -74,6 +103,7 @@ __NTH (__mempcpy_ichk (void *__restrict __dest,
 {
   return __builtin___mempcpy_chk (__dest, __src, __len, __bos0 (__dest));
 }
+# endif
 #endif
 
 
@@ -82,9 +112,19 @@ __NTH (__mempcpy_ichk (void *__restrict __dest,
    especially problematic if the intended fill value is zero.  In this
    case no work is done at all.  We detect these problems by referring
    non-existing functions.  */
-__warndecl (__warn_memset_zero_len,
-	    "memset used with constant zero length parameter; this could be due to transposed parameters");
-#define memset(dest, ch, len) \
+#ifdef __cplusplus
+__extern_always_inline void *
+__NTH (memset (void *__dest, int __ch, size_t __len))
+{
+  if (__builtin_constant_p (__len) && __len == 0)
+    {
+      __warn_memset_zero_len ();
+      return __dest;
+    }
+  return __builtin___memset_chk (__dest, __ch, __len, __bos0 (__dest));
+}
+#else
+# define memset(dest, ch, len) \
   (__builtin_constant_p (len) && (len) == 0				      \
    ? (__warn_memset_zero_len (), (void) (ch), (void) (len), (void *) (dest))  \
    : ((__bos0 (dest) != (size_t) -1)					      \
@@ -95,20 +135,41 @@ __NTH (__memset_ichk (void *__dest, int __ch, size_t __len))
 {
   return __builtin___memset_chk (__dest, __ch, __len, __bos0 (__dest));
 }
+#endif
 
 #ifdef __USE_BSD
-# define bcopy(src, dest, len) ((void) \
+# ifdef __cplusplus
+__extern_always_inline void
+__NTH (bcopy (__const void *__restrict __src, void *__restrict __dest,
+	      size_t __len))
+{
+  __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
+}
+__extern_always_inline void
+__NTH (bzero (void *__dest, size_t __len))
+{
+  __builtin___memset_chk (__dest, '\0', __len, __bos0 (__dest));
+}
+# else
+#  define bcopy(src, dest, len) ((void) \
   ((__bos0 (dest) != (size_t) -1)					\
    ? __builtin___memmove_chk (dest, src, len, __bos0 (dest))		\
    : __memmove_ichk (dest, src, len)))
-# define bzero(dest, len) ((void) \
+#  define bzero(dest, len) ((void) \
   ((__bos0 (dest) != (size_t) -1)					\
    ? __builtin___memset_chk (dest, '\0', len, __bos0 (dest))		\
    : __memset_ichk (dest, '\0', len)))
+# endif
 #endif
 
-
-#define strcpy(dest, src) \
+#ifdef __cplusplus
+__extern_always_inline char *
+__NTH (strcpy (char *__restrict __dest, __const char *__restrict __src))
+{
+  return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
+}
+#else
+# define strcpy(dest, src) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___strcpy_chk (dest, src, __bos (dest))			\
    : __strcpy_ichk (dest, src))
@@ -117,10 +178,17 @@ __NTH (__strcpy_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
 }
-
+#endif
 
 #ifdef __USE_GNU
-# define stpcpy(dest, src) \
+# ifdef __cplusplus
+__extern_always_inline char *
+__NTH (stpcpy (char *__restrict __dest, __const char *__restrict __src))
+{
+  return __builtin___stpcpy_chk (__dest, __src, __bos (__dest));
+}
+# else
+#  define stpcpy(dest, src) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___stpcpy_chk (dest, src, __bos (dest))			\
    : __stpcpy_ichk (dest, src))
@@ -129,10 +197,19 @@ __NTH (__stpcpy_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___stpcpy_chk (__dest, __src, __bos (__dest));
 }
+# endif
 #endif
 
 
-#define strncpy(dest, src, len) \
+#ifdef __cplusplus
+__extern_always_inline char *
+__NTH (strncpy (char *__restrict __dest, __const char *__restrict __src,
+		size_t __len))
+{
+  return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+}
+#else
+# define strncpy(dest, src, len) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___strncpy_chk (dest, src, len, __bos (dest))		\
    : __strncpy_ichk (dest, src, len))
@@ -142,7 +219,7 @@ __NTH (__strncpy_ichk (char *__restrict __dest, __const char *__restrict __src,
 {
   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
 }
-
+#endif
 
 // XXX We have no corresponding builtin yet.
 extern char *__stpncpy_chk (char *__dest, __const char *__src, size_t __n,
@@ -161,7 +238,14 @@ __NTH (stpncpy (char *__dest, __const char *__src, size_t __n))
 }
 
 
-#define strcat(dest, src) \
+#ifdef __cplusplus
+__extern_always_inline char *
+__NTH (strcat (char *__restrict __dest, __const char *__restrict __src))
+{
+  return __builtin___strcat_chk (__dest, __src, __bos (__dest));
+}
+#else
+# define strcat(dest, src) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___strcat_chk (dest, src, __bos (dest))			\
    : __strcat_ichk (dest, src))
@@ -170,9 +254,18 @@ __NTH (__strcat_ichk (char *__restrict __dest, __const char *__restrict __src))
 {
   return __builtin___strcat_chk (__dest, __src, __bos (__dest));
 }
+#endif
 
 
-#define strncat(dest, src, len) \
+#ifdef __cplusplus
+__extern_always_inline char *
+__NTH (strncat (char *__restrict __dest, __const char *__restrict __src,
+		size_t __len))
+{
+  return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+}
+#else
+# define strncat(dest, src, len) \
   ((__bos (dest) != (size_t) -1)					\
    ? __builtin___strncat_chk (dest, src, len, __bos (dest))		\
    : __strncat_ichk (dest, src, len))
@@ -182,3 +275,4 @@ __NTH (__strncat_ichk (char *__restrict __dest, __const char *__restrict __src,
 {
   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
 }
+#endif

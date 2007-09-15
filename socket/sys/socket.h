@@ -1,5 +1,6 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991,92,1994-2001,2003,2005 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,1994-2001,2003,2005,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -233,7 +234,7 @@ extern int isfdtype (int __fd, int __fdtype) __THROW;
 
 
 /* Define some macros helping to catch buffer overflows.  */
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
 # include <bits/socket2.h>
 #endif
 

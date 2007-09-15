@@ -132,7 +132,8 @@ __MATHDECL (_Mdouble_,creal, (_Mdouble_complex_ __z));
 /* Now some optimized versions.  GCC has handy notations for these
    functions.  Recent GCC handles these as builtin functions so does
    not need inlines.  */
-#if defined __GNUC__ && !__GNUC_PREREQ (2, 97) && defined __OPTIMIZE__
+#if defined __GNUC__ && !__GNUC_PREREQ (2, 97) && defined __OPTIMIZE__ \
+    && defined __extern_inline
 
 /* Imaginary part of Z.  */
 __extern_inline _Mdouble_

@@ -870,7 +870,7 @@ extern int getloadavg (double __loadavg[], int __nelem)
 
 
 /* Define some macros helping to catch buffer overflows.  */
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
 # include <bits/stdlib.h>
 #endif
 #ifdef __LDBL_COMPAT

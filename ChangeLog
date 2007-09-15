@@ -1,3 +1,107 @@
+2007-09-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__va_arg_pack): Define for GCC 4.3+.
+	* misc/bits/syslog.h (syslog): When __va_arg_pack is defined,
+	implement as __extern_always_inline function.
+	(vsyslog): Define as __extern_always_inline function unconditionally.
+	* libio/bits/stdio2.h (sprintf, snprintf, printf, fprintf):
+	When __va_arg_pack is defined, implement as __extern_always_inline
+	functions.
+	(vsprintf, vsnprintf, vprintf, vfprintf): Define as
+	__extern_always_inline functions unconditionally.
+	* libio/bits/stdio.h (vprintf): Ifdef out the inline when
+	bits/stdio2.h will be included.
+	* wcsmbs/bits/wchar2.h (__swprintf_alias): New redirect.
+	(swprintf, wprintf, fwprintf): When __va_arg_pack is defined,
+	implement as __extern_always_inline functions.
+	(vswprintf, vwprintf, vfwprintf): Define as
+	__extern_always_inline functions unconditionally.
+	* debug/tst-chk1.c (do_test): Enable remaining tests for C++.
+
+2007-09-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline): Only
+	define in C++ for GCC 4.3+, in C++ always use __gnu_inline__
+	attribute.
+	* include/features.h (__USE_EXTERN_INLINES): Define only when
+	__extern_inline is defined.
+	* stdlib/stdlib.h: Include bits/stdlib.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	* misc/sys/syslog.h: Include bits/syslog.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	* socket/sys/socket.h: Include bits/socket2.h when
+	__extern_always_inline is defined instead of when not __cplusplus.
+	* libio/stdio.h: Include bits/stdio2.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	* posix/unistd.h: Include bits/unistd.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	* string/string.h: Include bits/string3.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	* wcsmbs/wchar.h: Include bits/wchar2.h when __extern_always_inline
+	is defined instead of when not __cplusplus.
+	(btowc, wctob): Don't guard the inlines with ifndef __cplusplus.
+	* io/fcntl.h: Don't include bits/fcntl2.h if __extern_always_inline
+	is not defined.
+	* misc/bits/syslog-ldbl.h: Guard *_chk stuff with
+	defined __extern_always_inline instead of !defined __cplusplus.
+	* libio/bits/stdio-ldbl.h: Likewise.
+	* wcsmbs/bits/wchar-ldbl.h: Likewise.
+	* misc/bits/syslog.h (syslog): Don't define for C++.
+	(vsyslog): Use __extern_always_inline function for C++ instead of
+	a macro.
+	* libio/bits/stdio.h (__STDIO_INLINE): Define to __extern_inline
+	whenever that macro is defined.
+	(vprintf): Don't provide the inline for C++.
+	(fread_unlocked, fwrite_unlocked): Don't define the macros for C++.
+	* libio/bits/stdio2.h (sprintf, snprintf, printf, fprintf): Don't
+	define the macros for C++.
+	(vsprintf, vsnprintf, vprintf, vfprintf): Define as
+	__extern_always_inline functions for C++.
+	* io/sys/stat.h (stat, lstat, fstat, fstatat, mknod, mknodat,
+	stat64, lstat64, fstat64, fstatat64): Don't define if not
+	__USE_EXTERN_INLINES.
+	* wcsmbs/bits/wchar2.h: Fix #error message.
+	(swprintf, wprintf, fwprintf): Don't define the macros for C++.
+	(vswprintf, vwprintf, vfwprintf): Define using
+	__extern_always_inline functions for C++.
+	* string/bits/string3.h: Don't #undef macros if __cplusplus.
+	(memcpy, memmove, mempcpy, memset, bcopy, bzero, strcpy, stpcpy,
+	strncpy, strcat, strncat): Define as __extern_always_inline
+	functions instead of macros for C++.
+	* math/bits/cmathcalls.h: Guard __extern_inline routines with
+	defined __extern_inline.
+	* sysdeps/alpha/fpu/bits/mathinline.h (__MATH_INLINE): Define
+	to __extern_inline whenever that macro is defined.
+	* sysdeps/ia64/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/i386/i486/bits/string.h (__STRING_INLINE): Likewise.
+	* sysdeps/s390/bits/string.h (__STRING_INLINE): Likewise.
+	* sysdeps/s390/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/powerpc/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/x86_64/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h (__MATH_INLINE): Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (gnu_dev_major,
+	gnu_dev_minor, gnu_dev_makedev): Remove __extern_inline from
+	prototypes.  Only provide __extern_inline routines if
+	__USE_EXTERN_INLINES.
+	* debug/Makefile: Add rules to build and run tst-{,lfs}chk{4,5,6}
+	tests.
+	* debug/tst-chk1.c (do_prepare, do_test): Allow compilation as C++.
+	For now avoid some *printf tests in C++.  Skip all testing
+	if __USE_FORTIFY_LEVEL is defined, but __extern_always_inline macro
+	is not.
+	* debug/tst-chk4.cc: New file.
+	* debug/tst-chk5.cc: New file.
+	* debug/tst-chk6.cc: New file.
+	* debug/tst-lfschk4.cc: New file.
+	* debug/tst-lfschk5.cc: New file.
+	* debug/tst-lfschk6.cc: New file.
+	* include/wchar.h (__vfwprintf_chk, __vswprintf_chk): Avoid
+	prototypes in C++.
+	* include/stdio.h (__sprintf_chk, __snprintf_chk, __vsprintf_chk,
+	__vsnprintf_chk, __printf_chk, __fprintf_chk, __vprintf_chk,
+	__vfprintf_chk, __fgets_unlocked_chk, __fgets_chk): Likewise.
+
 2007-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/cs.po: Update from translation team.

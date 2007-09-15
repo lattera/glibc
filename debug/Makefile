@@ -79,15 +79,37 @@ CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-chk1.c = -Wno-format
 CFLAGS-tst-chk2.c = -Wno-format
 CFLAGS-tst-chk3.c = -Wno-format
+CFLAGS-tst-chk4.cc = -Wno-format
+CFLAGS-tst-chk5.cc = -Wno-format
+CFLAGS-tst-chk6.cc = -Wno-format
+CFLAGS-tst-lfschk1.c = -Wno-format
+CFLAGS-tst-lfschk2.c = -Wno-format
+CFLAGS-tst-lfschk3.c = -Wno-format
+CFLAGS-tst-lfschk4.cc = -Wno-format
+CFLAGS-tst-lfschk5.cc = -Wno-format
+CFLAGS-tst-lfschk6.cc = -Wno-format
 tst-chk1-ENV = LOCPATH=$(common-objpfx)localedata
 tst-chk2-ENV = LOCPATH=$(common-objpfx)localedata
 tst-chk3-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk4-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk5-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk6-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk1-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk2-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk3-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk4-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk5-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk6-ENV = LOCPATH=$(common-objpfx)localedata
+LDFLAGS-tst-chk4 = -lstdc++
+LDFLAGS-tst-chk5 = -lstdc++
+LDFLAGS-tst-chk6 = -lstdc++
+LDFLAGS-tst-lfschk4 = -lstdc++
+LDFLAGS-tst-lfschk5 = -lstdc++
+LDFLAGS-tst-lfschk6 = -lstdc++
 
 tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
-	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk
+	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \
+	tst-chk4 tst-chk5 tst-chk6 tst-lfschk4 tst-lfschk5 tst-lfschk6
 
 extra-libs = libSegFault libpcprofile
 extra-libs-others = $(extra-libs)

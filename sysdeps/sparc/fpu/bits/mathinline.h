@@ -128,7 +128,7 @@
 
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) && defined __OPTIMIZE__
 
-# ifdef __cplusplus
+# ifndef __extern_inline
 #  define __MATH_INLINE __inline
 # else
 #  define __MATH_INLINE __extern_inline

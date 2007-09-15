@@ -212,7 +212,8 @@ extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
 
 
 /* Define some macros helping to catch common problems.  */
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline \
+    && !defined __cplusplus
 # include <bits/fcntl2.h>
 #endif
 

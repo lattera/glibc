@@ -27,6 +27,7 @@ extern int __vsscanf (__const char *__restrict __s,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
+#ifndef __cplusplus
 extern int __sprintf_chk (char *, int, size_t, const char *, ...) __THROW;
 extern int __snprintf_chk (char *, size_t, int, size_t, const char *, ...)
      __THROW;
@@ -40,6 +41,7 @@ extern int __vprintf_chk (int, const char *, _G_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
 extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
+#endif
 
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);

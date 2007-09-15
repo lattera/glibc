@@ -28,17 +28,17 @@
    they need.  */
 #ifdef __GLIBC_HAVE_LONG_LONG
 __extension__
-__extern_inline unsigned int gnu_dev_major (unsigned long long int __dev)
+extern unsigned int gnu_dev_major (unsigned long long int __dev)
      __THROW;
 __extension__
-__extern_inline unsigned int gnu_dev_minor (unsigned long long int __dev)
+extern unsigned int gnu_dev_minor (unsigned long long int __dev)
      __THROW;
 __extension__
-__extern_inline unsigned long long int gnu_dev_makedev (unsigned int __major,
-							unsigned int __minor)
+extern unsigned long long int gnu_dev_makedev (unsigned int __major,
+					       unsigned int __minor)
      __THROW;
 
-# if defined __GNUC__ && __GNUC__ >= 2
+# if defined __GNUC__ && __GNUC__ >= 2 && defined __USE_EXTERN_INLINES
 __extension__ __extern_inline unsigned int
 __NTH (gnu_dev_major (unsigned long long int __dev))
 {

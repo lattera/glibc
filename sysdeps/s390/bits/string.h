@@ -31,7 +31,7 @@
     && defined __GNUC__ && __GNUC__ >= 2
 
 #ifndef __STRING_INLINE
-# ifdef __cplusplus
+# ifndef __extern_inline
 #  define __STRING_INLINE inline
 # else
 #  define __STRING_INLINE __extern_inline

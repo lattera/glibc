@@ -444,7 +444,7 @@ extern int __xmknodat (int __ver, int __fd, __const char *__path,
 		       __mode_t __mode, __dev_t *__dev)
      __THROW __nonnull ((3, 5));
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#if defined __GNUC__ && __GNUC__ >= 2 && defined __USE_EXTERN_INLINES
 /* Inlined versions of the real stat and mknod functions.  */
 
 __extern_inline int
