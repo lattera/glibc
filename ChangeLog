@@ -1,3 +1,9 @@
+2007-09-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i586/memcpy.S (__memcpy_chk): New definition.
+	* sysdeps/i386/i586/mempcpy.S (__memcpy_chk): New definition.
+	* sysdeps/i386/i586/memset.S (__memset_chk): New definition.
+
 2007-09-15  Mike Frysinger  <vapier@gentoo.org>
 
 	* inet/inet_net.c: Reset digit to 0 for inputs starting with "0x".
