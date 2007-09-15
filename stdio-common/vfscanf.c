@@ -60,12 +60,13 @@
 #define NOSKIP		0x0020	/* do not skip blanks */
 #define NUMBER_SIGNED	0x0040	/* signed integer */
 #define GROUP		0x0080	/* ': group numbers */
-#define MALLOC		0x0100	/* a: malloc strings */
+#define GNU_MALLOC	0x0100	/* a: malloc strings */
 #define CHAR		0x0200	/* hh: char */
 #define I18N		0x0400	/* I: use locale's digits */
 #define HEXA_FLOAT	0x0800	/* hexadecimal float */
 #define READ_POINTER	0x1000	/* this is a pointer value */
-
+#define POSIX_MALLOC	0x2000	/* m: malloc strings */
+#define MALLOC		(GNU_MALLOC | POSIX_MALLOC)
 
 #include <locale/localeinfo.h>
 #include <libioP.h>
@@ -146,6 +147,21 @@
 			  if (done == 0) done = EOF;			      \
 			  goto errout;					      \
 			} while (0)
+#define add_ptr_to_free(ptr)						      \
+  do									      \
+    {									      \
+      if (ptrs_to_free == NULL						      \
+	  || ptrs_to_free->count == (sizeof (ptrs_to_free->ptrs)	      \
+				     / sizeof (ptrs_to_free->ptrs[0])))	      \
+	{								      \
+	  struct ptrs_to_free *new_ptrs = alloca (sizeof (*ptrs_to_free));    \
+	  new_ptrs->count = 0;						      \
+	  new_ptrs->next = ptrs_to_free;				      \
+	  ptrs_to_free = new_ptrs;					      \
+	}								      \
+      ptrs_to_free->ptrs[ptrs_to_free->count++] = (ptr);		      \
+    }									      \
+  while (0)
 #define ARGCHECK(s, format)						      \
   do									      \
     {									      \
@@ -169,6 +185,12 @@
   _IO_funlockfile (S);							      \
   __libc_cleanup_region_end (0)
 
+struct ptrs_to_free
+{
+  size_t count;
+  struct ptrs_to_free *next;
+  char **ptrs[32];
+};
 
 /* Read formatted input from S according to the format string
    FORMAT, using the argument list in ARG.
@@ -218,6 +240,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #else
   const char *thousands;
 #endif
+  struct ptrs_to_free *ptrs_to_free = NULL;
   /* State for the conversions.  */
   mbstate_t state;
   /* Integral holding variables.  */
@@ -493,8 +516,11 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    }
 	  /* String conversions (%s, %[) take a `char **'
 	     arg and fill it in with a malloc'd pointer.  */
-	  flags |= MALLOC;
+	  flags |= GNU_MALLOC;
 	  break;
+        case L_('m'):
+          flags |= POSIX_MALLOC;
+          break;
 	case L_('z'):
 	  if (need_longlong && sizeof (size_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
@@ -741,6 +767,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  if (flags & MALLOC)					      \
 		    {							      \
 		      /* The string is to be stored in a malloc'd buffer.  */ \
+		      /* For %mS using char ** is actually wrong, but	      \
+			 shouldn't make a difference on any arch glibc	      \
+			 supports and would unnecessarily complicate	      \
+			 things. */					      \
 		      strptr = ARG (char **);				      \
 		      if (strptr == NULL)				      \
 			conv_error ();					      \
@@ -748,6 +778,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      strsize = 100;					      \
 		      *strptr = (char *) malloc (strsize * sizeof (Type));    \
 		      Str = (Type *) *strptr;				      \
+		      if (Str != NULL)					      \
+			add_ptr_to_free (strptr);			      \
+		      else if (flags & POSIX_MALLOC)			      \
+			goto reteof;					      \
 		    }							      \
 		  else							      \
 		    Str = ARG (Type *);					      \
@@ -796,10 +830,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 						       strleng + MB_CUR_MAX);
 			    if (newstr == NULL)
 			      {
+				if (flags & POSIX_MALLOC)
+				  goto reteof;
 				/* We lose.  Oh well.  Terminate the
 				   string and stop converting,
 				   so at least we don't skip any input.  */
 				((char *) (*strptr))[strleng] = '\0';
+				strptr = NULL;
 				++done;
 				conv_error ();
 			      }
@@ -843,10 +880,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      str = (char *) realloc (*strptr, strsize + 1);
 			      if (str == NULL)
 				{
+				  if (flags & POSIX_MALLOC)
+				    goto reteof;
 				  /* We lose.  Oh well.  Terminate the
 				     string and stop converting,
 				     so at least we don't skip any input.  */
 				  ((char *) (*strptr))[strsize - 1] = '\0';
+				  strptr = NULL;
 				  ++done;
 				  conv_error ();
 				}
@@ -886,10 +926,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      newstr = (char *) realloc (*strptr, strleng + n + 1);
 		      if (newstr == NULL)
 			{
+			  if (flags & POSIX_MALLOC)
+			    goto reteof;
 			  /* We lose.  Oh well.  Terminate the string
 			     and stop converting, so at least we don't
 			     skip any input.  */
 			  ((char *) (*strptr))[strleng] = '\0';
+			  strptr = NULL;
 			  ++done;
 			  conv_error ();
 			}
@@ -911,6 +954,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      if (cp != NULL)
 			*strptr = cp;
 		    }
+		  strptr = NULL;
 
 		  ++done;
 		}
@@ -964,10 +1008,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 							* sizeof (wchar_t));
 			    if (wstr == NULL)
 			      {
+				if (flags & POSIX_MALLOC)
+				  goto reteof;
 				/* We lose.  Oh well.  Terminate the string
 				   and stop converting, so at least we don't
 				   skip any input.  */
 				((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				strptr = NULL;
 				++done;
 				conv_error ();
 			      }
@@ -1033,10 +1080,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 						       * sizeof (wchar_t)));
 			  if (wstr == NULL)
 			    {
+			      if (flags & POSIX_MALLOC)
+				goto reteof;
 			      /* We lose.  Oh well.  Terminate the
 				 string and stop converting, so at
 				 least we don't skip any input.  */
 			      ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+			      strptr = NULL;
 			      ++done;
 			      conv_error ();
 			    }
@@ -1072,6 +1122,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    if (cp != NULL)
 		      *strptr = (char *) cp;
 		  }
+		strptr = NULL;
 
 		++done;
 	      }
@@ -2219,10 +2270,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 						  * sizeof (wchar_t));
 			      if (wstr == NULL)
 				{
+				  if (flags & POSIX_MALLOC)
+				    goto reteof;
 				  /* We lose.  Oh well.  Terminate the string
 				     and stop converting, so at least we don't
 				     skip any input.  */
 				  ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				  strptr = NULL;
 				  ++done;
 				  conv_error ();
 				}
@@ -2298,10 +2352,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 						   * sizeof (wchar_t)));
 			      if (wstr == NULL)
 				{
+				  if (flags & POSIX_MALLOC)
+				    goto reteof;
 				  /* We lose.  Oh well.  Terminate the
 				     string and stop converting,
 				     so at least we don't skip any input.  */
 				  ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				  strptr = NULL;
 				  ++done;
 				  conv_error ();
 				}
@@ -2349,6 +2406,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      if (cp != NULL)
 			*strptr = (char *) cp;
 		    }
+		  strptr = NULL;
 
 		  ++done;
 		}
@@ -2435,10 +2493,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 							 strleng + MB_CUR_MAX);
 			      if (newstr == NULL)
 				{
+				  if (flags & POSIX_MALLOC)
+				    goto reteof;
 				  /* We lose.  Oh well.  Terminate the string
 				     and stop converting, so at least we don't
 				     skip any input.  */
 				  ((char *) (*strptr))[strleng] = '\0';
+				  strptr = NULL;
 				  ++done;
 				  conv_error ();
 				}
@@ -2497,10 +2558,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 				  newsize = strsize + 1;
 				  goto allocagain;
 				}
+			      if (flags & POSIX_MALLOC)
+				goto reteof;
 			      /* We lose.  Oh well.  Terminate the
 				 string and stop converting,
 				 so at least we don't skip any input.  */
 			      ((char *) (*strptr))[strsize - 1] = '\0';
+			      strptr = NULL;
 			      ++done;
 			      conv_error ();
 			    }
@@ -2537,10 +2601,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      newstr = (char *) realloc (*strptr, strleng + n + 1);
 		      if (newstr == NULL)
 			{
+			  if (flags & POSIX_MALLOC)
+			    goto reteof;
 			  /* We lose.  Oh well.  Terminate the string
 			     and stop converting, so at least we don't
 			     skip any input.  */
 			  ((char *) (*strptr))[strleng] = '\0';
+			  strptr = NULL;
 			  ++done;
 			  conv_error ();
 			}
@@ -2562,6 +2629,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      if (cp != NULL)
 			*strptr = cp;
 		    }
+		  strptr = NULL;
 
 		  ++done;
 		}
@@ -2600,6 +2668,31 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
   if (errp != NULL)
     *errp |= errval;
 
+  if (done == EOF)
+    {
+  reteof:
+      if (__builtin_expect (ptrs_to_free != NULL, 0))
+	{
+	  struct ptrs_to_free *p = ptrs_to_free;
+	  while (p != NULL)
+	    {
+	      for (size_t cnt = 0; cnt < p->count; ++cnt)
+		{
+		  free (*p->ptrs[cnt]);
+		  *p->ptrs[cnt] = NULL;
+		}
+	      p = p->next;
+	      free (ptrs_to_free);
+	      ptrs_to_free = p;
+	    }
+	}
+      return EOF;
+    }
+  else if (__builtin_expect (strptr != NULL, 0))
+    {
+      free (*strptr);
+      *strptr = NULL;
+    }
   return done;
 }
 

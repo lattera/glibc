@@ -1,3 +1,8 @@
+2007-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Add support for 'm'
+	modifier.  Patch by Jakub Jelinek.
+
 2007-08-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_routines): Add
