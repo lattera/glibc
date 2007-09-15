@@ -1,3 +1,7 @@
+2007-09-14  Mike Frysinger  <vapier@gentoo.org>
+
+	* inet/tst-network.c: Increment ERRORS for failing tests.
+
 2007-09-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/sys/cdefs.h (__va_arg_pack): Define for GCC 4.3+.
