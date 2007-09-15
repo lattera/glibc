@@ -55,7 +55,7 @@ again:
 	if (*cp == '0')
 		digit = 1, base = 8, cp++;
 	if (*cp == 'x' || *cp == 'X')
-		base = 16, cp++;
+		digit = 0, base = 16, cp++;
 	while ((c = *cp) != 0) {
 		if (isdigit(c)) {
 			if (base == 8 && (c == '8' || c == '9'))
