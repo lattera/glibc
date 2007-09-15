@@ -30,7 +30,7 @@ extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
 extern int __have_fallocate attribute_hidden;
 #endif
 
-extern int __fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
+extern int __call_fallocate (int fd, int mode, __off64_t offset, __off64_t len)
      attribute_hidden;
 
 /* Reserve storage for the data of the file associated with FD.  */
@@ -42,7 +42,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
   if (__builtin_expect (__have_fallocate >= 0, 1))
 # endif
     {
-      int res = __fallocate64 (fd, 0, offset, len);
+      int res = __call_fallocate (fd, 0, offset, len);
 
       if (! res)
 	return 0;

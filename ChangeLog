@@ -1,3 +1,13 @@
+2007-08-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_routines): Add
+	call_fallocate in misc subdir.
+	* sysdeps/unix/sysv/linux/i386/call_fallocate.S: New file.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (fallocate64): Remove.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate.c: Use __call_fallocate
+	instead of __fallocate64.
+	* sysdeps/unix/sysv/linux/i386/posix_fallocate64.c: Likewise.
+
 2007-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* rt/Versions (librt): Export __mq_open_2@@GLIBC_2.7.
