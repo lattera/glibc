@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1997-2004, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= rt
 
-headers	:= aio.h mqueue.h bits/mqueue.h
+headers	:= aio.h mqueue.h bits/mqueue.h bits/mqueue2.h
 
 aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\

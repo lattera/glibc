@@ -22,4 +22,7 @@ librt {
     mq_open; mq_close; mq_unlink; mq_getattr; mq_setattr;
     mq_notify; mq_send; mq_receive; mq_timedsend; mq_timedreceive;
   }
+  GLIBC_2.7 {
+   __mq_open_2;
+  }
 }

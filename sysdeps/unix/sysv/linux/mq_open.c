@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <mqueue.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <sysdep.h>
 
 #ifdef __NR_mq_open
@@ -32,7 +33,7 @@
    attributes.  If the fourth argument is NULL, default attributes are
    used.  */
 mqd_t
-mq_open (const char *name, int oflag, ...)
+__mq_open (const char *name, int oflag, ...)
 {
   if (name[0] != '/')
     {
@@ -54,7 +55,16 @@ mq_open (const char *name, int oflag, ...)
 
   return INLINE_SYSCALL (mq_open, 4, name + 1, oflag, mode, attr);
 }
+strong_alias (__mq_open, mq_open);
 
+mqd_t
+__mq_open_2 (const char *name, int oflag)
+{
+  if (oflag & O_CREAT)
+    __fortify_fail ("invalid mq_open call: O_CREAT without mode and attr");
+
+  return __mq_open (name, oflag);
+}
 #else
 # include <rt/mq_open.c>
 #endif

@@ -25,161 +25,149 @@
    appropriate third/fourth parameter.  */
 #ifndef __USE_FILE_OFFSET64
 extern int __open_2 (__const char *__path, int __oflag) __nonnull ((1));
+extern int __REDIRECT (__open_alias, (__const char *__path, int __oflag, ...),
+		       open) __nonnull ((1));
 #else
-extern int __REDIRECT (__open_2, (__const char *__file, int __oflag),
+extern int __REDIRECT (__open_2, (__const char *__path, int __oflag),
 		       __open64_2) __nonnull ((1));
+extern int __REDIRECT (__open_alias, (__const char *__path, int __oflag, ...),
+		       open64) __nonnull ((1));
 #endif
+__errordecl (__open_too_many_args,
+	     "open can be called either with 2 or 3 arguments, not more");
+__errordecl (__open_missing_mode,
+	     "open with O_CREAT in second argument needs 3 arguments");
 
-#define open(fname, flags, ...) \
-  (__extension__							      \
-    ({ int ___r;							      \
-       /* If the compiler complains about an invalid type, excess elements,   \
-	  etc. in the initialization this means a parameter of the wrong type \
-	  has been passed to open. */					      \
-       int ___arr[] = { __VA_ARGS__ };					      \
-       if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type the \
-	      mode parameter is missing since O_CREAT has been used.  */      \
-	   typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
-					   ? ((long int) sizeof (___arr)      \
-					      - (long int) sizeof (int)) : 1];\
-	 }								      \
-       if (sizeof (___arr) == 0)					      \
-	 {								      \
-	   if (__builtin_constant_p (flags) && ((flags) & O_CREAT) == 0)      \
-	     ___r = open (fname, flags);				      \
-	   else     							      \
-	     ___r = __open_2 (fname, flags);				      \
-	 }								      \
-       else								      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type too \
-	      many parameters have been passed to open.  */		      \
-	   typedef int __open_too_many_args[-(sizeof (___arr)		      \
-					      > sizeof (int))];		      \
-	   ___r = open (fname, flags, ___arr[0]);			      \
-	 }								      \
-       ___r;								      \
-    }))
+__extern_always_inline int
+open (__const char *__path, int __oflag, ...)
+{
+  if (__va_arg_pack_len () > 1)
+    __open_too_many_args ();
+
+  if (__builtin_constant_p (__oflag))
+    {
+      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+	{
+	  __open_missing_mode ();
+	  return __open_2 (__path, __oflag);
+	}
+      return __open_alias (__path, __oflag, __va_arg_pack ());
+    }
+
+  if (__va_arg_pack_len () < 1)
+    return __open_2 (__path, __oflag);
+
+  return __open_alias (__path, __oflag, __va_arg_pack ());
+}
 
 
 #ifdef __USE_LARGEFILE64
 extern int __open64_2 (__const char *__path, int __oflag) __nonnull ((1));
+extern int __REDIRECT (__open64_alias, (__const char *__path, int __oflag,
+					...), open64) __nonnull ((1));
+__errordecl (__open64_too_many_args,
+	     "open64 can be called either with 2 or 3 arguments, not more");
+__errordecl (__open64_missing_mode,
+	     "open64 with O_CREAT in second argument needs 3 arguments");
 
-# define open64(fname, flags, ...) \
-  (__extension__							      \
-    ({ int ___r;							      \
-       /* If the compiler complains about an invalid type, excess elements,   \
-	  etc. in the initialization this means a parameter of the wrong type \
-	  has been passed to open64. */					      \
-       int ___arr[] = { __VA_ARGS__ };					      \
-       if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type the \
-	      mode parameter is missing since O_CREAT has been used.  */      \
-	   typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
-					   ? ((long int) sizeof (___arr)      \
-					      - (long int) sizeof (int)) : 1];\
-	 }								      \
-       if (sizeof (___arr) == 0)					      \
-	 {								      \
-	   if (__builtin_constant_p (flags) && ((flags) & O_CREAT) == 0)      \
-	     ___r = open64 (fname, flags);				      \
-	   else     							      \
-	     ___r = __open64_2 (fname, flags);				      \
-	 }								      \
-       else								      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type too \
-	      many parameters have been passed to open64.  */		      \
-	   typedef int __open_too_many_args[-(sizeof (___arr)		      \
-					      > sizeof (int))];		      \
-	   ___r = open64 (fname, flags, ___arr[0]);			      \
-	 }								      \
-       ___r;								      \
-    }))
+__extern_always_inline int
+open64 (__const char *__path, int __oflag, ...)
+{
+  if (__va_arg_pack_len () > 1)
+    __open64_too_many_args ();
+
+  if (__builtin_constant_p (__oflag))
+    {
+      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+	{
+	  __open64_missing_mode ();
+	  return __open64_2 (__path, __oflag);
+	}
+      return __open64_alias (__path, __oflag, __va_arg_pack ());
+    }
+
+  if (__va_arg_pack_len () < 1)
+    return __open64_2 (__path, __oflag);
+
+  return __open64_alias (__path, __oflag, __va_arg_pack ());
+}
 #endif
+
 
 #ifdef __USE_ATFILE
 # ifndef __USE_FILE_OFFSET64
 extern int __openat_2 (int __fd, __const char *__path, int __oflag)
      __nonnull ((2));
+extern int __REDIRECT (__openat_alias, (int __fd, __const char *__path,
+					int __oflag, ...), openat)
+     __nonnull ((2));
 # else
-extern int __REDIRECT (__openat_2, (int __fd, __const char *__file,
+extern int __REDIRECT (__openat_2, (int __fd, __const char *__path,
 				    int __oflag), __openat64_2)
      __nonnull ((2));
+extern int __REDIRECT (__openat_alias, (int __fd, __const char *__path,
+					int __oflag, ...), openat64)
+     __nonnull ((2));
 # endif
+__errordecl (__openat_too_many_args,
+	     "openat can be called either with 3 or 4 arguments, not more");
+__errordecl (__openat_missing_mode,
+	     "openat with O_CREAT in third argument needs 4 arguments");
 
-# define openat(fd, fname, flags, ...) \
-  (__extension__							      \
-    ({ int ___r;							      \
-       /* If the compiler complains about an invalid type, excess elements,   \
-	  etc. in the initialization this means a parameter of the wrong type \
-	  has been passed to openat. */					      \
-       int ___arr[] = { __VA_ARGS__ };					      \
-       if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type the \
-	      mode parameter is missing since O_CREAT has been used.  */      \
-	   typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
-					   ? ((long int) sizeof (___arr)      \
-					      - (long int) sizeof (int)) : 1];\
-	 }								      \
-       if (sizeof (___arr) == 0)					      \
-	 {								      \
-	   if (__builtin_constant_p (flags) && ((flags) & O_CREAT) == 0)      \
-	     ___r = openat (fd, fname, flags);				      \
-	   else     							      \
-	     ___r = __openat_2 (fd, fname, flags);			      \
-	 }								      \
-       else								      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type too \
-	      many parameters have been passed to openat.  */		      \
-	   typedef int __open_too_many_args[-(sizeof (___arr)		      \
-					      > sizeof (int))];		      \
-	   ___r = openat (fd, fname, flags, ___arr[0]);			      \
-	 }								      \
-       ___r;								      \
-    }))
+__extern_always_inline int
+openat (int __fd, __const char *__path, int __oflag, ...)
+{
+  if (__va_arg_pack_len () > 1)
+    __openat_too_many_args ();
+
+  if (__builtin_constant_p (__oflag))
+    {
+      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+	{
+	  __openat_missing_mode ();
+	  return __openat_2 (__fd, __path, __oflag);
+	}
+      return __openat_alias (__fd, __path, __oflag, __va_arg_pack ());
+    }
+
+  if (__va_arg_pack_len () < 1)
+    return __openat_2 (__fd, __path, __oflag);
+
+  return __openat_alias (__fd, __path, __oflag, __va_arg_pack ());
+}
 
 
 # ifdef __USE_LARGEFILE64
 extern int __openat64_2 (int __fd, __const char *__path, int __oflag)
      __nonnull ((2));
+extern int __REDIRECT (__openat64_alias, (int __fd, __const char *__path,
+					  int __oflag, ...), openat64)
+     __nonnull ((2));
+__errordecl (__openat64_too_many_args,
+	     "openat64 can be called either with 3 or 4 arguments, not more");
+__errordecl (__openat64_missing_mode,
+	     "openat64 with O_CREAT in third argument needs 4 arguments");
 
-#  define openat64(fd, fname, flags, ...) \
-  (__extension__							      \
-    ({ int ___r;							      \
-       /* If the compiler complains about an invalid type, excess elements,   \
-	  etc. in the initialization this means a parameter of the wrong type \
-	  has been passed to openat64. */				      \
-       int ___arr[] = { __VA_ARGS__ };					      \
-       if (__builtin_constant_p (flags) && ((flags) & O_CREAT) != 0)	      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type the \
-	      mode parameter is missing since O_CREAT has been used.  */      \
-	   typedef int __open_missing_mode[((flags) & O_CREAT) != 0	      \
-					   ? ((long int) sizeof (___arr)      \
-					      - (long int) sizeof (int)) : 1];\
-	 }								      \
-       if (sizeof (___arr) == 0)					      \
-	 {								      \
-	   if (__builtin_constant_p (flags) && ((flags) & O_CREAT) == 0)      \
-	     ___r = openat64 (fd, fname, flags);			      \
-	   else     							      \
-	     ___r = __openat64_2 (fd, fname, flags);			      \
-	 }								      \
-       else								      \
-	 {								      \
-	   /* If the compiler complains about the size of this array type too \
-	      many parameters have been passed to openat64.  */		      \
-	   typedef int __open_too_many_args[-(sizeof (___arr)		      \
-					      > sizeof (int))];		      \
-	   ___r = openat64 (fd, fname, flags, ___arr[0]);		      \
-	 }								      \
-       ___r;								      \
-    }))
+__extern_always_inline int
+openat64 (int __fd, __const char *__path, int __oflag, ...)
+{
+  if (__va_arg_pack_len () > 1)
+    __openat64_too_many_args ();
+
+  if (__builtin_constant_p (__oflag))
+    {
+      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () < 1)
+	{
+	  __openat64_missing_mode ();
+	  return __openat64_2 (__fd, __path, __oflag);
+	}
+      return __openat64_alias (__fd, __path, __oflag, __va_arg_pack ());
+    }
+
+  if (__va_arg_pack_len () < 1)
+    return __openat64_2 (__fd, __path, __oflag);
+
+  return __openat64_alias (__fd, __path, __oflag, __va_arg_pack ());
+}
 # endif
 #endif

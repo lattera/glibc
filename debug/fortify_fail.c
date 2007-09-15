@@ -32,3 +32,4 @@ __fortify_fail (msg)
     __libc_message (2, "*** %s ***: %s terminated\n",
 		    msg, __libc_argv[0] ?: "<unknown>");
 }
+libc_hidden_def (__fortify_fail)
