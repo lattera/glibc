@@ -295,10 +295,7 @@
 
 /* GCC 4.3 and above allow passing all anonymous arguments of an
    __extern_always_inline function to some other vararg function.  */
-#if __GNUC_PREREQ (4,3) \
-    || (defined __GNUC_RH_RELEASE__ && __GNUC__ == 4 \
-	&& __GNUC_MINOR__ == 1 && __GNUC_PATCHLEVEL__ == 2 \
-	&& __GNUC_RH_RELEASE__ >= 23)
+#if __GNUC_PREREQ (4,3)
 # define __va_arg_pack() __builtin_va_arg_pack ()
 # define __va_arg_pack_len() __builtin_va_arg_pack_len ()
 #endif
