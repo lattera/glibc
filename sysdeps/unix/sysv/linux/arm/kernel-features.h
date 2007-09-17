@@ -52,3 +52,7 @@
 #endif
 
 #include_next <kernel-features.h>
+
+/* These syscalls are not implemented yet for ARM.  */
+#undef __ASSUME_PSELECT
+#undef __ASSUME_PPOLL
