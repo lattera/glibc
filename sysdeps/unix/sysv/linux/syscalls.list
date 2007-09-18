@@ -66,14 +66,14 @@ setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
-splice		EXTRA	splice		i:iPiPii	splice
+splice		EXTRA	splice		Ci:iPiPii	splice
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
-tee		EXTRA	tee		i:iiii	tee
+tee		EXTRA	tee		Ci:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	uselib
-vmsplice	EXTRA	vmsplice	i:iPii	vmsplice
+vmsplice	EXTRA	vmsplice	Ci:iPii	vmsplice
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
