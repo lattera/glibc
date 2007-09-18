@@ -1,5 +1,10 @@
 2007-09-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc32/elf/start.S: Remove cfi_* markup.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__thread_start): Likewise.
+
 	* sysdeps/generic/ldsodefs.h (DL_LOOKUP_GSCOPE_LOCK): New definition.
 	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Or in
 	DL_LOOKUP_GSCOPE_LOCK into flags after THREAD_GSCOPE_SET_FLAG ().

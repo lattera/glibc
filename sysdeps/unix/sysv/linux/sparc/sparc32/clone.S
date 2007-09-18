@@ -82,8 +82,6 @@ END(__clone)
 
 	.type	__thread_start,@function
 __thread_start:
-	cfi_startproc
-
 #ifdef RESET_PID
 	sethi	%hi(CLONE_THREAD), %l0
 	andcc	%g4, %l0, %g0
@@ -103,8 +101,6 @@ __thread_start:
 	 mov	%g3,%o0
 	call	HIDDEN_JUMPTARGET(_exit),0
 	 nop
-
-	cfi_endproc
 
 	.size	__thread_start, .-__thread_start
 
