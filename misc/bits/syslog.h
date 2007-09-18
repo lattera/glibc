@@ -27,9 +27,9 @@ extern void __syslog_chk (int __pri, int __flag, __const char *__fmt, ...)
 
 #ifdef __va_arg_pack
 __extern_always_inline void
-syslog (int __pri, int __flag, __const char *__fmt, ...)
+syslog (int __pri, __const char *__fmt, ...)
 {
-  return __syslog_chk (__pri, __flag, __fmt, __va_arg_pack ());
+  return __syslog_chk (__pri, __USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
 }
 #elif !defined __cplusplus
 # define syslog(pri, ...) \

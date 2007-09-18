@@ -1,3 +1,9 @@
+2007-09-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/bits/syslog.h (syslog): Remove extraneous argument from
+	the inline, pass __USE_FORTIFY_LEVEL - 1 as second argument to
+	__syslog_chk.
+
 2007-09-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/charmap-dir.c (charmap_aliases): Use %ms instead of
