@@ -1,5 +1,8 @@
 2007-09-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* locale/programs/charmap-dir.c (charmap_aliases): Use %ms instead of
+	%as in fscanf format strings.
+
 	* sysdeps/sparc/sparc32/elf/start.S: Remove cfi_* markup.
 	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__thread_start): Likewise.
