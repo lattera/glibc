@@ -35,7 +35,11 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 jn yn ilogb remquo lrint lround llrint llround nexttowardf \
 		 nexttoward conj cacos cacosh casin catan catanh ccos ccosh \
 		 casinh cexp clog cproj csin csinh csqrt ctan ctanh cpow \
-		 cabs carg cimag creal clog10
+		 cabs carg cimag creal clog10 \
+		 isoc99_scanf isoc99_fscanf isoc99_sscanf \
+		 isoc99_vscanf isoc99_vfscanf isoc99_vsscanf \
+		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
+		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)

@@ -43,6 +43,22 @@ extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
 #endif
 
+extern int __isoc99_fscanf (FILE *__restrict __stream,
+			    __const char *__restrict __format, ...) __wur;
+extern int __isoc99_scanf (__const char *__restrict __format, ...) __wur;
+extern int __isoc99_sscanf (__const char *__restrict __s,
+			    __const char *__restrict __format, ...) __THROW;
+extern int __isoc99_vfscanf (FILE *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __wur;
+extern int __isoc99_vscanf (__const char *__restrict __format,
+			    _G_va_list __arg) __wur;
+extern int __isoc99_vsscanf (__const char *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __THROW;
+libc_hidden_proto (__isoc99_vsscanf)
+libc_hidden_proto (__isoc99_vfscanf)
+
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);
 extern FILE *__old_tmpfile (void);

@@ -1,5 +1,5 @@
 /* Prototypes for compatibility double == long double entry points.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@cygnus.com>, 2006.
 
@@ -61,6 +61,18 @@ NLDBL_DECL (qecvt);
 NLDBL_DECL (qfcvt);
 NLDBL_DECL (qgcvt);
 NLDBL_DECL (__vstrfmon_l);
+NLDBL_DECL (__isoc99_scanf);
+NLDBL_DECL (__isoc99_fscanf);
+NLDBL_DECL (__isoc99_sscanf);
+NLDBL_DECL (__isoc99_vscanf);
+NLDBL_DECL (__isoc99_vfscanf);
+NLDBL_DECL (__isoc99_vsscanf);
+NLDBL_DECL (__isoc99_wscanf);
+NLDBL_DECL (__isoc99_fwscanf);
+NLDBL_DECL (__isoc99_swscanf);
+NLDBL_DECL (__isoc99_vwscanf);
+NLDBL_DECL (__isoc99_vfwscanf);
+NLDBL_DECL (__isoc99_vswscanf);
 
 /* This one does not exist in the normal interface, only
    __nldbl___vstrfmon really exists.  */

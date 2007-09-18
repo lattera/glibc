@@ -143,6 +143,9 @@
 # define _IO_FLAGS2_FORTIFY 4
 #endif
 #define _IO_FLAGS2_USER_WBUF 8
+#ifdef _LIBC
+# define _IO_FLAGS2_SCANF_STD 16
+#endif
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
 #define _IO_SKIPWS 01

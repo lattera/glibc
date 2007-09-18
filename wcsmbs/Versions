@@ -24,4 +24,8 @@ libc {
     # w*
     wcschrnul; wmempcpy;
   }
+  GLIBC_2.7 {
+    __isoc99_wscanf; __isoc99_vwscanf; __isoc99_fwscanf; __isoc99_vfwscanf;
+    __isoc99_swscanf; __isoc99_vswscanf;
+  }
 }

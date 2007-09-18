@@ -1,7 +1,129 @@
+2007-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/stdio.h (__isoc99_fscanf, __isoc99_scanf,
+	__isoc99_sscanf, __isoc99_vscanf): New prototypes.
+	(__isoc99_vsscanf, __isoc99_vfscanf): New prototypes, add
+	libc_hidden_proto.
+	* include/wchar.h (__isoc99_fwscanf, __isoc99_wscanf,
+	__isoc99_swscanf, __isoc99_vwscanf): New prototypes.
+	(__isoc99_vswscanf, __isoc99_vfwscanf): New prototypes,
+	add libc_hidden_proto.
+	* libio/stdio.h (fscanf, scanf, sscanf, vfscanf, vscanf,
+	vsscanf): Redirect to __isoc99_* if strict ISO C99 or POSIX
+	conformance requested.
+	* wcsmbs/wchar.h (fwscanf, wscanf, swscanf, vfwscanf, vwscanf,
+	vswscanf): Redirect to __isoc99_* if strict ISO C99 or POSIX
+	conformance requested.
+	* libio/bits/stdio-ldbl.h (fscanf, scanf, sscanf, vfscanf, vscanf,
+	vsscanf): Redirect to __nldbl___isoc99_* if strict ISO C99 or POSIX
+	conformance requested.
+	* wcsmbs/bits/wchar-ldbl.h (fwscanf, wscanf, swscanf, vfwscanf,
+	vwscanf, vswscanf): Redirect to __nldbl___isoc99_* if strict
+	ISO C99 or POSIX conformance requested.
+	* stdio-common/Versions (libc): Export __isoc99_scanf@@GLIBC_2.7,
+	__isoc99_vscanf@@GLIBC_2.7, __isoc99_fscanf@@GLIBC_2.7,
+	__isoc99_vfscanf@@GLIBC_2.7, __isoc99_sscanf@@GLIBC_2.7
+	and __isoc99_vsscanf@@GLIBC_2.7.
+	* stdio-common/Makefile (routines): Add isoc99_scanf, isoc99_vscanf,
+	isoc99_fscanf, isoc99_vfscanf, isoc99_sscanf and isoc99_vsscanf.
+	(tests): Add scanf14.
+	(CFLAGS-vfprintf.c, CFLAGS-fprintf.c, CFLAGS-printf.c,
+	CFLAGS-vfwprintf.c, CFLAGS-vfscanf.c, CFLAGS-vfwscanf.c,
+	CFLAGS-fscanf.c, CFLAGS-scanf.c, CFLAGS-isoc99_vfscanf.c,
+	CFLAGS-isoc99_vscanf.c, CFLAGS-isoc99_fscanf.c,
+	CFLAGS-isoc99_scanf.c): Add $(exceptions).
+	(CFLAGS-scanf15.c): Add various -I paths to prevent the compiler
+	from using internal headers.
+	* wcsmbs/Versions (libc): Export __isoc99_wscanf@@GLIBC_2.7,
+	__isoc99_vwscanf@@GLIBC_2.7, __isoc99_fwscanf@@GLIBC_2.7,
+	__isoc99_vfwscanf@@GLIBC_2.7, __isoc99_swscanf@@GLIBC_2.7
+	and __isoc99_vswscanf@@GLIBC_2.7.
+	* wcsmbs/Makefile (routines): Add isoc99_wscanf, isoc99_vwscanf,
+	isoc99_fwscanf, isoc99_vfwscanf, isoc99_swscanf and isoc99_vswscanf.
+	(CFLAGS-isoc99_wscanf.c, CFLAGS-isoc99_fwscanf.c,
+	CFLAGS-isoc99_vwscanf.c, CFLAGS-isoc99_vfwscanf.c): Add $(exceptions).
+	(CPPFLAGS): Add -D_IO_MTSAFE_IO if needed.
+	* stdio-common/isoc99_scanf.c: New file.
+	* stdio-common/isoc99_vsscanf.c: New file.
+	* stdio-common/isoc99_vscanf.c: New file.
+	* stdio-common/isoc99_vfscanf.c: New file.
+	* stdio-common/isoc99_fscanf.c: New file.
+	* stdio-common/isoc99_sscanf.c: New file.
+	* wcsmbs/isoc99_fwscanf.c: New file.
+	* wcsmbs/isoc99_vswscanf.c: New file.
+	* wcsmbs/isoc99_swscanf.c: New file.
+	* wcsmbs/isoc99_wscanf.c: New file.
+	* wcsmbs/isoc99_vwscanf.c: New file.
+	* wcsmbs/isoc99_vfwscanf.c: New file.
+	* libio/libio.h (_IO_FLAGS2_SCANF_STD): Define.
+	* libio/libioP.h (_IO_acquire_lock_clear_flags2_fct): Also
+	clear _IO_FLAGS2_SCANF_STD bit from _flags2.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Don't
+	handle %as, %aS and %a[ if _IO_FLAGS2_SCANF_STD is set in _flags2.
+	* stdio-common/scanf14.c: New test.
+	* stdio-common/scanf15.c: New test.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	isoc99_scanf, isoc99_fscanf, isoc99_sscanf,
+	isoc99_vscanf, isoc99_vfscanf, isoc99_vsscanf,
+	isoc99_wscanf, isoc99_fwscanf, isoc99_swscanf,
+	isoc99_vwscanf, isoc99_vfwscanf and isoc99_vswscanf.
+	* sysdeps/ieee754/ldbl-opt/Versions (libc): Export
+	__nldbl___isoc99_scanf@@GLIBC_2.7,
+	__nldbl___isoc99_fscanf@@GLIBC_2.7,
+	__nldbl___isoc99_sscanf@@GLIBC_2.7,
+	__nldbl___isoc99_vscanf@@GLIBC_2.7,
+	__nldbl___isoc99_vfscanf@@GLIBC_2.7,
+	__nldbl___isoc99_vsscanf@@GLIBC_2.7,
+	__nldbl___isoc99_wscanf@@GLIBC_2.7,
+	__nldbl___isoc99_fwscanf@@GLIBC_2.7,
+	__nldbl___isoc99_swscanf@@GLIBC_2.7,
+	__nldbl___isoc99_vwscanf@@GLIBC_2.7,
+	__nldbl___isoc99_vfwscanf@@GLIBC_2.7
+	and __nldbl___isoc99_vswscanf@@GLIBC_2.7.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (__isoc99_scanf,
+	__isoc99_fscanf, __isoc99_sscanf, __isoc99_vscanf,
+	__isoc99_vfscanf, __isoc99_vsscanf, __isoc99_wscanf,
+	__isoc99_fwscanf, __isoc99_swscanf, __isoc99_vwscanf,
+	__isoc99_vfwscanf, __isoc99_vswscanf): Add NLDBL_DECL.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c
+	(__nldbl___isoc99_scanf, __nldbl___isoc99_fscanf,
+	__nldbl___isoc99_sscanf, __nldbl___isoc99_vscanf,
+	__nldbl___isoc99_vfscanf, __nldbl___isoc99_vsscanf,
+	__nldbl___isoc99_wscanf, __nldbl___isoc99_fwscanf,
+	__nldbl___isoc99_swscanf, __nldbl___isoc99_vwscanf,
+	__nldbl___isoc99_vfwscanf, __nldbl___isoc99_vswscanf): New
+	functions.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vfscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_swscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_wscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_scanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_sscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vsscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_fwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vfwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vswscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_vscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isoc99_fscanf.c: New file.
+
+	* stdio-common/Makefile (tests): Add scanf13.
+	(scanf13-ENV): New.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Handle
+	m modifier followed by l.
+	(STRING_ARG): Add width argument.
+	(_IO_vfscanf_internal) <case L_('c')>: Handle %mc.
+	<case L_('C')>: Handle %mlc and %mC.
+	<case L_('s'), case L_('S'), case L_('[')>: Adjust STRING_ARG
+	arguments.
+	* stdio-common/scanf13.c: New test.
+
+	* libio/libioP.h (_IO_acquire_lock_clear_flags2_fct): Clear
+	the _IO_FLAGS2_FORTIFY bit from _flags2 rather than _flags.
+
 2007-09-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Correct return value
-	type __THROW marker of splice, vmsplice, and tee.
+	type and __THROW marker of splice, vmsplice, and tee.
 	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.

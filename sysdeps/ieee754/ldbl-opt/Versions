@@ -65,6 +65,14 @@ libc {
     __nldbl___swprintf_chk; __nldbl___vswprintf_chk; __nldbl___fwprintf_chk;
     __nldbl___wprintf_chk; __nldbl___vfwprintf_chk; __nldbl___vwprintf_chk;
   }
+  GLIBC_2.7 {
+    __nldbl___isoc99_scanf; __nldbl___isoc99_fscanf;
+    __nldbl___isoc99_sscanf; __nldbl___isoc99_vscanf;
+    __nldbl___isoc99_vfscanf; __nldbl___isoc99_vsscanf;
+    __nldbl___isoc99_wscanf; __nldbl___isoc99_fwscanf;
+    __nldbl___isoc99_swscanf; __nldbl___isoc99_vwscanf;
+    __nldbl___isoc99_vfwscanf; __nldbl___isoc99_vswscanf;
+  }
 }
 libm {
   NLDBL_VERSION {

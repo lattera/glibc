@@ -1,5 +1,5 @@
 /* *printf* family compatibility routines for IEEE double as long double
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@cygnus.com>, 2006.
 
@@ -50,6 +50,10 @@ libc_hidden_proto (__nldbl___vsprintf_chk)
 libc_hidden_proto (__nldbl___vswprintf_chk)
 libc_hidden_proto (__nldbl___vstrfmon)
 libc_hidden_proto (__nldbl___vstrfmon_l)
+libc_hidden_proto (__nldbl___isoc99_vsscanf)
+libc_hidden_proto (__nldbl___isoc99_vfscanf)
+libc_hidden_proto (__nldbl___isoc99_vswscanf)
+libc_hidden_proto (__nldbl___isoc99_vfwscanf)
 
 static void
 __nldbl_cleanup (void *arg)
@@ -780,6 +784,153 @@ attribute_compat_text_section
 __nldbl_vsyslog (int pri, const char *fmt, va_list ap)
 {
   __nldbl___vsyslog_chk (pri, -1, fmt, ap);
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vfscanf (FILE *s, const char *fmt, va_list ap)
+{
+  int res;
+  set_no_long_double ();
+  res = __isoc99_vfscanf (s, fmt, ap);
+  clear_no_long_double ();
+  return res;
+}
+libc_hidden_def (__nldbl___isoc99_vfscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_sscanf (const char *s, const char *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vsscanf (s, fmt, arg);
+  va_end (arg);
+
+  return done;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vsscanf (const char *string, const char *fmt, va_list ap)
+{
+  int res;
+  __no_long_double = 1;
+  res = __isoc99_vsscanf (string, fmt, ap);
+  __no_long_double = 0;
+  return res;
+}
+libc_hidden_def (__nldbl___isoc99_vsscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vscanf (const char *fmt, va_list ap)
+{
+  return __nldbl___isoc99_vfscanf (stdin, fmt, ap);
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_fscanf (FILE *stream, const char *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vfscanf (stream, fmt, arg);
+  va_end (arg);
+
+  return done;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_scanf (const char *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vfscanf (stdin, fmt, arg);
+  va_end (arg);
+
+  return done;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vfwscanf (FILE *s, const wchar_t *fmt, va_list ap)
+{
+  int res;
+  set_no_long_double ();
+  res = __isoc99_vfwscanf (s, fmt, ap);
+  clear_no_long_double ();
+  return res;
+}
+libc_hidden_def (__nldbl___isoc99_vfwscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_swscanf (const wchar_t *s, const wchar_t *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vswscanf (s, fmt, arg);
+  va_end (arg);
+
+  return done;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vswscanf (const wchar_t *string, const wchar_t *fmt,
+			   va_list ap)
+{
+  int res;
+  __no_long_double = 1;
+  res = __isoc99_vswscanf (string, fmt, ap);
+  __no_long_double = 0;
+  return res;
+}
+libc_hidden_def (__nldbl___isoc99_vswscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_vwscanf (const wchar_t *fmt, va_list ap)
+{
+  return __nldbl___isoc99_vfwscanf (stdin, fmt, ap);
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_fwscanf (FILE *stream, const wchar_t *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vfwscanf (stream, fmt, arg);
+  va_end (arg);
+
+  return done;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc99_wscanf (const wchar_t *fmt, ...)
+{
+  va_list arg;
+  int done;
+
+  va_start (arg, fmt);
+  done = __nldbl___isoc99_vfwscanf (stdin, fmt, arg);
+  va_end (arg);
+
+  return done;
 }
 
 #if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)

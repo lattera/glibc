@@ -410,6 +410,34 @@ extern int scanf (__const char *__restrict __format, ...) __wur;
 /* Read formatted input from S.  */
 extern int sscanf (__const char *__restrict __s,
 		   __const char *__restrict __format, ...) __THROW;
+
+#if defined __USE_ISOC99 && !defined __USE_GNU \
+    && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
+    && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+# ifdef __REDIRECT
+/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
+   GNU extension which conflicts with valid %a followed by letter
+   s, S or [.  */
+extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
+				__const char *__restrict __format, ...),
+		       __isoc99_fscanf) __wur;
+extern int __REDIRECT (scanf, (__const char *__restrict __format, ...),
+		       __isoc99_scanf) __wur;
+extern int __REDIRECT (sscanf, (__const char *__restrict __s,
+				__const char *__restrict __format, ...),
+		       __isoc99_sscanf) __THROW;
+# else
+extern int __isoc99_fscanf (FILE *__restrict __stream,
+			    __const char *__restrict __format, ...) __wur;
+extern int __isoc99_scanf (__const char *__restrict __format, ...) __wur;
+extern int __isoc99_sscanf (__const char *__restrict __s,
+			    __const char *__restrict __format, ...) __THROW;
+#  define fscanf __isoc99_fscanf
+#  define scanf __isoc99_scanf
+#  define sscanf __isoc99_sscanf
+# endif
+#endif
+
 __END_NAMESPACE_STD
 
 #ifdef	__USE_ISOC99
@@ -433,6 +461,42 @@ extern int vscanf (__const char *__restrict __format, _G_va_list __arg)
 extern int vsscanf (__const char *__restrict __s,
 		    __const char *__restrict __format, _G_va_list __arg)
      __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
+
+# if !defined __USE_GNU \
+     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
+     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+#  ifdef __REDIRECT
+/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
+   GNU extension which conflicts with valid %a followed by letter
+   s, S or [.  */
+extern int __REDIRECT (vfscanf,
+		       (FILE *__restrict __s,
+			__const char *__restrict __format, _G_va_list __arg),
+		       __isoc99_vfscanf)
+     __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
+extern int __REDIRECT (vscanf, (__const char *__restrict __format,
+				_G_va_list __arg), __isoc99_vfscanf)
+     __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
+extern int __REDIRECT (vsscanf,
+		       (__const char *__restrict __s,
+			__const char *__restrict __format, _G_va_list __arg),
+		       __isoc99_vsscanf)
+     __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
+#  else
+extern int __isoc99_vfscanf (FILE *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __wur;
+extern int __isoc99_vscanf (__const char *__restrict __format,
+			    _G_va_list __arg) __wur;
+extern int __isoc99_vsscanf (__const char *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __THROW;
+#   define vfscanf __isoc99_vfscanf
+#   define vscanf __isoc99_vsscanf
+#   define vsscanf __isoc99_vsscanf
+#  endif
+# endif
+
 __END_NAMESPACE_C99
 #endif /* Use ISO C9x.  */
 

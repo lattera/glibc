@@ -28,9 +28,17 @@ __LDBL_REDIR_DECL (sprintf)
 __LDBL_REDIR_DECL (vfprintf)
 __LDBL_REDIR_DECL (vprintf)
 __LDBL_REDIR_DECL (vsprintf)
+#if defined __USE_ISOC99 && !defined __USE_GNU \
+    && !defined __REDIRECT \
+    && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+__LDBL_REDIR1_DECL (fscanf, __nldbl___isoc99_fscanf)
+__LDBL_REDIR1_DECL (scanf, __nldbl___isoc99_scanf)
+__LDBL_REDIR1_DECL (sscanf, __nldbl___isoc99_sscanf)
+#else
 __LDBL_REDIR_DECL (fscanf)
 __LDBL_REDIR_DECL (scanf)
 __LDBL_REDIR_DECL (sscanf)
+#endif
 __END_NAMESPACE_STD
 
 #if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98
@@ -42,9 +50,16 @@ __END_NAMESPACE_C99
 
 #ifdef	__USE_ISOC99
 __BEGIN_NAMESPACE_C99
+# if !defined __USE_GNU && !defined __REDIRECT \
+     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+__LDBL_REDIR1_DECL (vfscanf, __nldbl___isoc99_vfscanf)
+__LDBL_REDIR1_DECL (vscanf, __nldbl___isoc99_vscanf)
+__LDBL_REDIR1_DECL (vsscanf, __nldbl___isoc99_vsscanf)
+# else
 __LDBL_REDIR_DECL (vfscanf)
 __LDBL_REDIR_DECL (vsscanf)
 __LDBL_REDIR_DECL (vscanf)
+# endif
 __END_NAMESPACE_C99
 #endif
 
