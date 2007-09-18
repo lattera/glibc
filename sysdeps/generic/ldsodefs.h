@@ -845,7 +845,9 @@ enum
     DL_LOOKUP_ADD_DEPENDENCY = 1,
     /* Return most recent version instead of default version for
        unversioned lookup.  */
-    DL_LOOKUP_RETURN_NEWEST = 2
+    DL_LOOKUP_RETURN_NEWEST = 2,
+    /* Set if dl_lookup* called with GSCOPE lock held.  */
+    DL_LOOKUP_GSCOPE_LOCK = 4,
   };
 
 /* Lookup versioned symbol.  */

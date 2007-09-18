@@ -286,6 +286,8 @@ struct link_map
     ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
 
+    unsigned long long int l_serial;
+
     /* Audit information.  This array apparent must be the last in the
        structure.  Never add something after it.  */
     struct auditstate

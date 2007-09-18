@@ -103,6 +103,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   else
     GL(dl_ns)[nsid]._ns_loaded = new;
   ++GL(dl_ns)[nsid]._ns_nloaded;
+  new->l_serial = GL(dl_load_adds);
   ++GL(dl_load_adds);
 
   /* If we have no loader the new object acts as it.  */

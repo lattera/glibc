@@ -100,7 +100,10 @@ _dl_fixup (
 	 we are not using any threads (yet).  */
       int flags = DL_LOOKUP_ADD_DEPENDENCY;
       if (!RTLD_SINGLE_THREAD_P)
-	THREAD_GSCOPE_SET_FLAG ();
+	{
+	  THREAD_GSCOPE_SET_FLAG ();
+	  flags |= DL_LOOKUP_GSCOPE_LOCK;
+	}
 
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym, l->l_scope,
 				    version, ELF_RTYPE_CLASS_PLT, flags, NULL);
@@ -192,7 +195,10 @@ _dl_profile_fixup (
 	     we are not using any threads (yet).  */
 	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
 	  if (!RTLD_SINGLE_THREAD_P)
-	    THREAD_GSCOPE_SET_FLAG ();
+	    {
+	      THREAD_GSCOPE_SET_FLAG ();
+	      flags |= DL_LOOKUP_GSCOPE_LOCK;
+	    }
 
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l,
 					&defsym, l->l_scope, version,

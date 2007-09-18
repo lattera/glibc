@@ -1,3 +1,19 @@
+2007-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (DL_LOOKUP_GSCOPE_LOCK): New definition.
+	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Or in
+	DL_LOOKUP_GSCOPE_LOCK into flags after THREAD_GSCOPE_SET_FLAG ().
+	* elf/dl-sym.c (do_sym): Likewise.
+	* include/link.h (struct link_map): Add l_serial field.
+	* elf/dl-object.c (_dl_new_object): Initialize l_serial.
+	* elf/dl-lookup.c (add_dependency): Add flags argument.
+	Remember map->l_serial, if DL_LOOKUP_GSCOPE_LOCK is among
+	flags, use THREAD_GSCOPE_RESET_FLAG before and
+	THREAD_GSCOPE_SET_FLAG after
+	__rtld_lock_lock_recursive (GL(dl_load_lock)) to avoid deadlock.
+	Don't dereference map until it has been found on some list.
+	If map->l_serial changed, return -1.
+
 2007-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/stdio.h (__isoc99_fscanf, __isoc99_scanf,

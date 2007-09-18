@@ -123,7 +123,8 @@ do_sym (void *handle, const char *name, void *who,
 	  args.name = name;
 	  args.map = match;
 	  args.vers = vers;
-	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
+	  args.flags
+	    = flags | DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_GSCOPE_LOCK;
 	  args.refp = &ref;
 
 	  THREAD_GSCOPE_SET_FLAG ();
