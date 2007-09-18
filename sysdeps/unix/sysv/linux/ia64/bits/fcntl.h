@@ -215,17 +215,17 @@ extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
 
 
 /* Splice address range into a pipe.  */
-extern int vmsplice (int __fdout, const struct iovec *__iov, size_t __count,
-		     unsigned int __flags);
+extern ssize_t vmsplice (int __fdout, const struct iovec *__iov,
+			 size_t __count, unsigned int __flags);
 
 /* Splice two files together.  */
-extern int splice (int __fdin, __off64_t *__offin, int __fdout,
-		   __off64_t *__offout, size_t __len, unsigned int __flags)
-    __THROW;
+extern ssize_t splice (int __fdin, __off64_t *__offin, int __fdout,
+		       __off64_t *__offout, size_t __len,
+		       unsigned int __flags);
 
 /* In-kernel implementation of tee for pipe buffers.  */
-extern int tee (int __fdin, int __fdout, size_t __len, unsigned int __flags)
-    __THROW;
+extern ssize_t tee (int __fdin, int __fdout, size_t __len,
+		    unsigned int __flags);
 
 #endif
 
