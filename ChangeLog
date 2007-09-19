@@ -1,5 +1,8 @@
 2007-09-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Avoid unnecessary
+	open/close when determining source addresses.
+
 	* crypt/Makefile (libcrypt-routines): Add sha256-crypt, sha256,
 	sha512-crypt, and sha512.
 	(tests): Add sha256test, sha256c-test, sha512test, and sha512c-test.

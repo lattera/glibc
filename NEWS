@@ -1,9 +1,39 @@
-GNU C Library NEWS -- history of user-visible changes.  2007-4-25
+GNU C Library NEWS -- history of user-visible changes.  2007-9-19
 Copyright (C) 1992-2006, 2007 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
+
+Version 2.7
+
+* More checking functions: fread, fread_unlocked, open*, mq_open.
+  Implemented by Jakub Jelinek and Ulrich Drepper.
+
+* Extend fortification to C++.  Implemented by Jakub Jelinek.
+
+* Implement 'm' modifier for scanf.  Add stricter C99/SUS compliance
+  by not recognizing 'a' as a modifier when those specs are requested.
+  Implemented by Jakub Jelinek.
+
+* PPC optimizations to math and string functions.
+  Implemented by Steven Munroe.
+
+* New interfaces: mkostemp, mkostemp64.  Like mkstemp* but allow additonal
+  options to be passed.  Implemented by Ulrich Drepper.
+
+* More CPU set manipulation functions.  Implemented by Ulrich Drepper.
+
+* Handle private futexes in the NPTL implementation.
+  Implemented by Jakub Jelinek and Ulrich Drepper.
+
+* Add support for O_CLOEXEC.  Implement in Hurd.  Use throughout libc.
+  Implemented by Roland McGrath and Ulrich Drepper.
+
+* Linux/x86-64 vDSO support.  Implemented by Ulrich Drepper.
+
+* SHA-256 and SHA-512 based password encryption.
+  Implemented by Ulrich Drepper.
 
 Version 2.6
 
