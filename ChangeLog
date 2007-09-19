@@ -1,5 +1,8 @@
 2007-09-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-lookup.c (add_dependency): Handle failing memory
+	allocation for dependency list.  Remove unnecessary check.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Avoid unnecessary
 	open/close when determining source addresses.
 

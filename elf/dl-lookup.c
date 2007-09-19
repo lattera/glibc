@@ -162,8 +162,8 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	goto out_check;
 
       /* Avoid references to objects which cannot be unloaded anyway.  */
-      if (map->l_type != lt_loaded
-	  || (map->l_flags_1 & DF_1_NODELETE) != 0)
+      assert (map->l_type == lt_loaded);
+      if ((map->l_flags_1 & DF_1_NODELETE) != 0)
 	goto out;
 
       /* If the object with the undefined reference cannot be removed ever
@@ -197,13 +197,13 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	}
 
       /* If we didn't manage to allocate memory for the list this is
-	 no fatal mistake.  We simply increment the use counter of the
-	 referenced object and don't record the dependencies.  This
-	 means this increment can never be reverted and the object
-	 will never be unloaded.  This is semantically the correct
+	 no fatal mistake.  We simply make sure the referenced object
+	 cannot be unloaded.  This is semantically the correct
 	 behavior.  */
       if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
+      else
+	map->l_flags_1 |= DF_1_NODELETE;
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
