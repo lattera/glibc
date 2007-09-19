@@ -1,3 +1,22 @@
+2007-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/Makefile (libcrypt-routines): Add sha256-crypt, sha256,
+	sha512-crypt, and sha512.
+	(tests): Add sha256test, sha256c-test, sha512test, and sha512c-test.
+	(distribute): Add sha256.h and sha512.h.
+	* crypt/crypt-entry.c (crypt): Recognize the new $5$ and $6$ prefixes
+	and call the appropriate code.
+	* crypt/sha256-crypt.c: New file.
+	* crypt/sha256.c: New file.
+	* crypt/sha256.h: New file.
+	* crypt/sha256c-test.c: New file.
+	* crypt/sha256test.c: New file.
+	* crypt/sha512-crypt.c: New file.
+	* crypt/sha512.c: New file.
+	* crypt/sha512.h: New file.
+	* crypt/sha512c-test.c: New file.
+	* crypt/sha512test.c: New file.
+
 2007-09-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/bits/syslog.h (syslog): Remove extraneous argument from
@@ -11,8 +30,10 @@
 
 	* sysdeps/sparc/sparc32/elf/start.S: Remove cfi_* markup.
 	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__thread_start): Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__thread_start):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__thread_start):
+	Likewise.
 
 	* sysdeps/generic/ldsodefs.h (DL_LOOKUP_GSCOPE_LOCK): New definition.
 	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Or in

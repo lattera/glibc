@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2000, 2001, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,12 +26,13 @@ headers := crypt.h
 extra-libs := libcrypt
 extra-libs-others := $(extra-libs)
 
-libcrypt-routines := crypt-entry md5-crypt md5 crypt crypt_util
+libcrypt-routines := crypt-entry md5-crypt md5 sha256-crypt sha256 \
+		     sha512-crypt sha512 crypt crypt_util
 
-tests := cert md5test md5c-test
+tests := cert md5test md5c-test sha256test sha256c-test sha512test sha512c-test
 
 distribute := ufc-crypt.h crypt-private.h ufc.c speeds.c README.ufc-crypt \
-	      Banner md5.h
+	      Banner md5.h sha256.h sha512.h
 
 include ../Makeconfig
 
@@ -40,6 +41,8 @@ routines += $(libcrypt-routines)
 endif
 
 $(objpfx)md5test: $(objpfx)md5.o
+$(objpfx)sha256test: $(objpfx)sha256.o
+$(objpfx)sha512test: $(objpfx)sha512.o
 
 include ../Rules
 
