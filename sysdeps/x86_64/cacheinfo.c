@@ -398,13 +398,13 @@ __cache_sysconf (int name)
 }
 
 
-/* Half the core cache size for use in memory and string routines, typically
-   L1 size. */
-long int __x86_64_core_cache_size_half attribute_hidden = 32 * 1024 / 2;
+/* Half the data cache size for use in memory and string routines, typically
+   L1 size.  */
+long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
 /* Shared cache size for use in memory and string routines, typically
-   L2 or L3 size. */
+   L2 or L3 size.  */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
-/* PREFETCHW support flag for use in memory and string routines. */
+/* PREFETCHW support flag for use in memory and string routines.  */
 int __x86_64_prefetchw attribute_hidden;
 
 
@@ -419,7 +419,7 @@ init_cacheinfo (void)
   unsigned int edx;
   int max_cpuid;
   int max_cpuid_ex;
-  long int core = -1;
+  long int data = -1;
   long int shared = -1;
   unsigned int level;
   unsigned int threads = 0;
@@ -431,26 +431,26 @@ init_cacheinfo (void)
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     {
-      core = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
+      data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
 
-      /* Try L3 first. */
+      /* Try L3 first.  */
       level  = 3;
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, max_cpuid);
 
       if (shared <= 0)
         {
-	  /* Try L2 otherwise. */
+	  /* Try L2 otherwise.  */
           level  = 2;
           shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
 
       /* Figure out the number of logical threads that share the
-	 highest cache level. */
+	 highest cache level.  */
       if (max_cpuid >= 4)
         {
 	  int i = 0;
 
-	  /* Query until desired cache level is enumerated. */
+	  /* Query until desired cache level is enumerated.  */
 	  do
 	    {
               asm volatile ("cpuid"
@@ -463,7 +463,7 @@ init_cacheinfo (void)
 	}
       else
         {
-	  /* Assume that all logical threads share the highest cache level. */
+	  /* Assume that all logical threads share the highest cache level.  */
           asm volatile ("cpuid"
 		        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		        : "0" (1));
@@ -472,33 +472,73 @@ init_cacheinfo (void)
 	}
 
       /* Cap usage of highest cache level to the number of supported
-	 threads. */
+	 threads.  */
       if (shared > 0 && threads > 0)
         shared /= threads;
     }
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
     {
-      core   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
-      shared = handle_amd (_SC_LEVEL2_CACHE_SIZE);
+      data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
+      long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
+      shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
 
+      /* Get maximum extended function. */
       asm volatile ("cpuid"
 		    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		    : "0" (0x80000000));
+
+      if (shared <= 0)
+	/* No shared L3 cache.  All we have is the L2 cache.  */
+	shared = core;
+      else
+	{
+	  /* Figure out the number of logical threads that share L3.  */
+	  if (max_cpuid_ex >= 0x80000008)
+	    {
+	      /* Get width of APIC ID.  */
+	      asm volatile ("cpuid"
+			    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx),
+			      "=d" (edx)
+			    : "0" (0x80000008));
+	      threads = 1 << ((ecx >> 12) & 0x0f);
+	    }
+
+	  if (threads == 0)
+	    {
+	      /* If APIC ID width is not available, use logical
+		 processor count.  */
+	      asm volatile ("cpuid"
+			    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx),
+			      "=d" (edx)
+			    : "0" (0x00000001));
+
+	      if ((edx & (1 << 28)) != 0)
+		threads = (ebx >> 16) & 0xff;
+	    }
+
+	  /* Cap usage of highest cache level to the number of
+	     supported threads.  */
+	  if (threads > 0)
+	    shared /= threads;
+
+	  /* Account for exclusive L2 and L3 caches.  */
+	  shared += core;
+	}
 
       if (max_cpuid_ex >= 0x80000001)
 	{
 	  asm volatile ("cpuid"
 			: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 			: "0" (0x80000001));
-	  /*  PREFETCHW     || 3DNow! */
+	  /*  PREFETCHW     || 3DNow!  */
 	  if ((ecx & 0x100) || (edx & 0x80000000))
 	    __x86_64_prefetchw = -1;
 	}
     }
 
-  if (core > 0)
-    __x86_64_core_cache_size_half = core / 2;
+  if (data > 0)
+    __x86_64_data_cache_size_half = data / 2;
 
   if (shared > 0)
     __x86_64_shared_cache_size_half = shared / 2;

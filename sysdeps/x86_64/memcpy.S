@@ -114,15 +114,15 @@ L(1d):					/* 16-byte loop */
 	.p2align 4
 
 L(1loop):
-	movq	  (%rsi), %rcx
-	movq	8 (%rsi), %r8
-	movq	%rcx,   (%rdi)
-	movq	 %r8, 8 (%rdi)
+	movq	 (%rsi), %rcx
+	movq	8(%rsi), %r8
+	movq	%rcx,  (%rdi)
+	movq	 %r8, 8(%rdi)
 
 	subl	$16, %edx
 
-	leaq	16 (%rsi), %rsi
-	leaq	16 (%rdi), %rdi
+	leaq	16(%rsi), %rsi
+	leaq	16(%rdi), %rdi
 
 	jnz	L(1loop)
 
@@ -140,19 +140,19 @@ L(exit):				/* exit */
 
 L(1after):
 #ifndef USE_AS_MEMPCPY
-	movq	%rax, RETVAL (%rsp)	/* save return value */
+	movq	%rax, RETVAL(%rsp)	/* save return value */
 #endif
 
 /* Align to the natural word size. */
 
 L(aligntry):
-	movl	%esi, %ecx      	/* align by destination */
+	movl	%esi, %ecx      	/* align by source */
 
 	andl	$7, %ecx
 	jz	L(alignafter)  		/* already aligned */
 
 L(align):		      		/* align */
-	leaq	-8 (%rcx, %rdx), %rdx	/* calculate remaining bytes */
+	leaq	-8(%rcx, %rdx), %rdx	/* calculate remaining bytes */
 	subl	$8, %ecx
 
 	.p2align 4
@@ -163,8 +163,8 @@ L(alignloop):				/* 1-byte alignment loop */
 
 	incl	%ecx
 
-	leaq	1 (%rsi), %rsi
-	leaq	1 (%rdi), %rdi
+	leaq	1(%rsi), %rsi
+	leaq	1(%rdi), %rdi
 
 	jnz	L(alignloop)
 
@@ -172,7 +172,7 @@ L(alignloop):				/* 1-byte alignment loop */
 
 L(alignafter):
 
-/* Loop to handle mid-sized blocks. */
+/* Handle mid-sized blocks. */
 
 L(32try):				/* up to 1KB */
 	cmpq	$1024, %rdx
@@ -188,15 +188,15 @@ L(32):					/* 32-byte loop */
 L(32loop):
 	decl	%ecx
 
-	movq	(%rsi), %rax
-	movq	 8 (%rsi), %r8
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %r8
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
 
-	movq	%rax, (%rdi)
-	movq	 %r8,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	 %r8,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
 
 	leaq	32(%rsi), %rsi
 	leaq	32(%rdi), %rdi
@@ -205,18 +205,18 @@ L(32loop):
 
 	decl	%ecx
 
-	movq	   (%rsi), %rax
-	movq	 8 (%rsi), %r8
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %r8
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
 
-	movq	%rax,    (%rdi)
-	movq	 %r8,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	 %r8,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
 
-	leaq	32 (%rsi), %rsi
-	leaq	32 (%rdi), %rdi
+	leaq	32(%rsi), %rsi
+	leaq	32(%rdi), %rdi
 
 	jnz	L(32loop)
 
@@ -229,9 +229,9 @@ L(32skip):
 
 	movq	%rdi, %rax
 #else
-	movq	RETVAL (%rsp), %rax
+	movq	RETVAL(%rsp), %rax
 	jnz	L(1)
-	
+
 	rep
 #endif
 	retq				/* exit */
@@ -245,11 +245,11 @@ L(32after):
 	larger blocks are excluded when building for RTLD.
 */
 
-/* Handle large blocks smaller than 1/2 L1. */
+/* Handle blocks smaller than 1/2 L1. */
 
 L(fasttry):				/* first 1/2 L1 */
 #ifndef NOT_IN_libc			/* only up to this algorithm outside of libc.so */
-	movq	__x86_64_core_cache_size_half (%rip), %r11
+	movq	__x86_64_data_cache_size_half(%rip), %r11
 	cmpq	%rdx, %r11		/* calculate the smaller of */
 	cmovaq	%rdx, %r11		/* remaining bytes and 1/2 L1 */
 #endif
@@ -282,7 +282,7 @@ L(fastskip):
 
 	movq	%rdi, %rax
 #else
-	movq	RETVAL (%rsp), %rax
+	movq	RETVAL(%rsp), %rax
 	jnz	L(1)
 
 	rep
@@ -308,16 +308,16 @@ L(pre):					/* 64-byte with prefetching */
 	shrq	$6, %rcx
 	jz	L(preskip)
 
-	movq	%r14, SAVE0 (%rsp)
+	movq	%r14, SAVE0(%rsp)
 	cfi_rel_offset (%r14, SAVE0)
-	movq	%r13, SAVE1 (%rsp)
+	movq	%r13, SAVE1(%rsp)
 	cfi_rel_offset (%r13, SAVE1)
-	movq	%r12, SAVE2 (%rsp)
+	movq	%r12, SAVE2(%rsp)
 	cfi_rel_offset (%r12, SAVE2)
-	movq	%rbx, SAVE3 (%rsp)
+	movq	%rbx, SAVE3(%rsp)
 	cfi_rel_offset (%rbx, SAVE3)
 
-	cmpl	$0, __x86_64_prefetchw (%rip)
+	cmpl	$0, __x86_64_prefetchw(%rip)
 	jz	L(preloop)		/* check if PREFETCHW OK */
 
 	.p2align 4
@@ -339,45 +339,45 @@ L(prewloop):				/* cache-line in state M */
 	prefetcht0	 0 + 896 (%rsi)
 	prefetcht0	64 + 896 (%rsi)
 
-	movq	%rax,    (%rdi)
-	movq	%rbx,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
-	movq	%r11, 32 (%rdi)
-	movq	%r12, 40 (%rdi)
-	movq	%r13, 48 (%rdi)
-	movq	%r14, 56 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	%rbx,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
+	movq	%r11, 32(%rdi)
+	movq	%r12, 40(%rdi)
+	movq	%r13, 48(%rdi)
+	movq	%r14, 56(%rdi)
 
-	leaq	64 (%rsi), %rsi
-	leaq	64 (%rdi), %rdi
+	leaq	64(%rsi), %rsi
+	leaq	64(%rdi), %rdi
 
 	jz	L(prebail)
 
 	decq	%rcx
 
-	movq	   (%rsi), %rax
-	movq	 8 (%rsi), %rbx
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
-	movq	32 (%rsi), %r11
-	movq	40 (%rsi), %r12
-	movq	48 (%rsi), %r13
-	movq	56 (%rsi), %r14
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %rbx
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
+	movq	32(%rsi), %r11
+	movq	40(%rsi), %r12
+	movq	48(%rsi), %r13
+	movq	56(%rsi), %r14
 
-	movq	%rax,    (%rdi)
-	movq	%rbx,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
-	movq	%r11, 32 (%rdi)
-	movq	%r12, 40 (%rdi)
-	movq	%r13, 48 (%rdi)
-	movq	%r14, 56 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	%rbx,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
+	movq	%r11, 32(%rdi)
+	movq	%r12, 40(%rdi)
+	movq	%r13, 48(%rdi)
+	movq	%r14, 56(%rdi)
 
-	prefetchw	896 - 64 (%rdi)
-	prefetchw	896 -  0 (%rdi)
+	prefetchw	896 - 64(%rdi)
+	prefetchw	896 -  0(%rdi)
 
-	leaq	64 (%rsi), %rsi
-	leaq	64 (%rdi), %rdi
+	leaq	64(%rsi), %rsi
+	leaq	64(%rdi), %rdi
 
 	jnz	L(prewloop)
 	jmp	L(prebail)
@@ -389,26 +389,26 @@ L(prewloop):				/* cache-line in state M */
 L(preloop):				/* cache-line in state E */
 	decq	%rcx
 
-	movq	   (%rsi), %rax
-	movq	 8 (%rsi), %rbx
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
-	movq	32 (%rsi), %r11
-	movq	40 (%rsi), %r12
-	movq	48 (%rsi), %r13
-	movq	56 (%rsi), %r14
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %rbx
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
+	movq	32(%rsi), %r11
+	movq	40(%rsi), %r12
+	movq	48(%rsi), %r13
+	movq	56(%rsi), %r14
 
-	prefetcht0	896 +  0 (%rsi)
-	prefetcht0	896 + 64 (%rsi)
+	prefetcht0	896 +  0(%rsi)
+	prefetcht0	896 + 64(%rsi)
 
-	movq	%rax,    (%rdi)
-	movq	%rbx,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
-	movq	%r11, 32 (%rdi)
-	movq	%r12, 40 (%rdi)
-	movq	%r13, 48 (%rdi)
-	movq	%r14, 56 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	%rbx,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
+	movq	%r11, 32(%rdi)
+	movq	%r12, 40(%rdi)
+	movq	%r13, 48(%rdi)
+	movq	%r14, 56(%rdi)
 
 	leaq	64 (%rsi), %rsi
 	leaq	64 (%rdi), %rdi
@@ -417,40 +417,40 @@ L(preloop):				/* cache-line in state E */
 
 	decq	%rcx
 
-	movq	   (%rsi), %rax
-	movq	 8 (%rsi), %rbx
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
-	movq	32 (%rsi), %r11
-	movq	40 (%rsi), %r12
-	movq	48 (%rsi), %r13
-	movq	56 (%rsi), %r14
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %rbx
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
+	movq	32(%rsi), %r11
+	movq	40(%rsi), %r12
+	movq	48(%rsi), %r13
+	movq	56(%rsi), %r14
 
-	prefetcht0	896 - 64 (%rdi)
-	prefetcht0	896 -  0 (%rdi)
+	prefetcht0	896 - 64(%rdi)
+	prefetcht0	896 -  0(%rdi)
 
-	movq	%rax,    (%rdi)
-	movq	%rbx,  8 (%rdi)
-	movq	 %r9, 16 (%rdi)
-	movq	%r10, 24 (%rdi)
-	movq	%r11, 32 (%rdi)
-	movq	%r12, 40 (%rdi)
-	movq	%r13, 48 (%rdi)
-	movq	%r14, 56 (%rdi)
+	movq	%rax,   (%rdi)
+	movq	%rbx,  8(%rdi)
+	movq	 %r9, 16(%rdi)
+	movq	%r10, 24(%rdi)
+	movq	%r11, 32(%rdi)
+	movq	%r12, 40(%rdi)
+	movq	%r13, 48(%rdi)
+	movq	%r14, 56(%rdi)
 
-	leaq	64 (%rsi), %rsi
-	leaq	64 (%rdi), %rdi
+	leaq	64(%rsi), %rsi
+	leaq	64(%rdi), %rdi
 
 	jnz	L(preloop)
 
 L(prebail):
-	movq	SAVE3 (%rsp), %rbx
+	movq	SAVE3(%rsp), %rbx
 	cfi_restore (%rbx)
-	movq	SAVE2 (%rsp), %r12
+	movq	SAVE2(%rsp), %r12
 	cfi_restore (%r12)
-	movq	SAVE1 (%rsp), %r13
+	movq	SAVE1(%rsp), %r13
 	cfi_restore (%r13)
-	movq	SAVE0 (%rsp), %r14
+	movq	SAVE0(%rsp), %r14
 	cfi_restore (%r14)
 
 /*       .p2align 4 */
@@ -466,7 +466,7 @@ L(preskip):
 
 	movq	%rdi, %rax
 #else
-	movq	RETVAL (%rsp), %rax
+	movq	RETVAL(%rsp), %rax
 	jnz	L(1)
 
 	rep
@@ -477,7 +477,7 @@ L(preskip):
 
 L(preafter):
 
-/* Loop to handle huge blocks. */
+/* Handle huge blocks. */
 
 L(NTtry):
 
@@ -486,69 +486,69 @@ L(NT):					/* non-temporal 128-byte */
 	shrq	$7, %rcx
 	jz	L(NTskip)
 
-	movq	%r14, SAVE0 (%rsp)
+	movq	%r14, SAVE0(%rsp)
 	cfi_rel_offset (%r14, SAVE0)
-	movq	%r13, SAVE1 (%rsp)
+	movq	%r13, SAVE1(%rsp)
 	cfi_rel_offset (%r13, SAVE1)
-	movq	%r12, SAVE2 (%rsp)
+	movq	%r12, SAVE2(%rsp)
 	cfi_rel_offset (%r12, SAVE2)
 
        .p2align 4
 
 L(NTloop):
-	prefetchnta	768 (%rsi)
-	prefetchnta	832 (%rsi)
+	prefetchnta	768(%rsi)
+	prefetchnta	832(%rsi)
 
 	decq	%rcx
 
-	movq	   (%rsi), %rax
-	movq	 8 (%rsi), %r8
-	movq	16 (%rsi), %r9
-	movq	24 (%rsi), %r10
-	movq	32 (%rsi), %r11
-	movq	40 (%rsi), %r12
-	movq	48 (%rsi), %r13
-	movq	56 (%rsi), %r14
+	movq	  (%rsi), %rax
+	movq	 8(%rsi), %r8
+	movq	16(%rsi), %r9
+	movq	24(%rsi), %r10
+	movq	32(%rsi), %r11
+	movq	40(%rsi), %r12
+	movq	48(%rsi), %r13
+	movq	56(%rsi), %r14
 
-	movntiq	%rax,    (%rdi)
-	movntiq	 %r8,  8 (%rdi)
-	movntiq	 %r9, 16 (%rdi)
-	movntiq	%r10, 24 (%rdi)
-	movntiq	%r11, 32 (%rdi)
-	movntiq	%r12, 40 (%rdi)
-	movntiq	%r13, 48 (%rdi)
-	movntiq	%r14, 56 (%rdi)
+	movntiq	%rax,   (%rdi)
+	movntiq	 %r8,  8(%rdi)
+	movntiq	 %r9, 16(%rdi)
+	movntiq	%r10, 24(%rdi)
+	movntiq	%r11, 32(%rdi)
+	movntiq	%r12, 40(%rdi)
+	movntiq	%r13, 48(%rdi)
+	movntiq	%r14, 56(%rdi)
 
-	movq	 64 (%rsi), %rax
-	movq	 72 (%rsi), %r8
-	movq	 80 (%rsi), %r9
-	movq	 88 (%rsi), %r10
-	movq	 96 (%rsi), %r11
-	movq	104 (%rsi), %r12
-	movq	112 (%rsi), %r13
-	movq	120 (%rsi), %r14
+	movq	 64(%rsi), %rax
+	movq	 72(%rsi), %r8
+	movq	 80(%rsi), %r9
+	movq	 88(%rsi), %r10
+	movq	 96(%rsi), %r11
+	movq	104(%rsi), %r12
+	movq	112(%rsi), %r13
+	movq	120(%rsi), %r14
 
-	movntiq	%rax,  64 (%rdi)
-	movntiq	 %r8,  72 (%rdi)
-	movntiq	 %r9,  80 (%rdi)
-	movntiq	%r10,  88 (%rdi)
-	movntiq	%r11,  96 (%rdi)
-	movntiq	%r12, 104 (%rdi)
-	movntiq	%r13, 112 (%rdi)
-	movntiq	%r14, 120 (%rdi)
+	movntiq	%rax,  64(%rdi)
+	movntiq	 %r8,  72(%rdi)
+	movntiq	 %r9,  80(%rdi)
+	movntiq	%r10,  88(%rdi)
+	movntiq	%r11,  96(%rdi)
+	movntiq	%r12, 104(%rdi)
+	movntiq	%r13, 112(%rdi)
+	movntiq	%r14, 120(%rdi)
 
-	leaq	128 (%rsi), %rsi
-	leaq	128 (%rdi), %rdi
+	leaq	128(%rsi), %rsi
+	leaq	128(%rdi), %rdi
 
 	jnz	L(NTloop)
 
 	sfence				/* serialize memory stores */
 
-	movq	SAVE2 (%rsp), %r12
+	movq	SAVE2(%rsp), %r12
 	cfi_restore (%r12)
-	movq	SAVE1 (%rsp), %r13
+	movq	SAVE1(%rsp), %r13
 	cfi_restore (%r13)
-	movq	SAVE0 (%rsp), %r14
+	movq	SAVE0(%rsp), %r14
 	cfi_restore (%r14)
 
 L(NTskip):
@@ -558,7 +558,7 @@ L(NTskip):
 
 	movq	%rdi, %rax
 #else
-	movq	RETVAL (%rsp), %rax
+	movq	RETVAL(%rsp), %rax
 	jnz	L(1)
 
 	rep

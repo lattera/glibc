@@ -1,3 +1,13 @@
+2007-09-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_data_cache_size_half): Renamed
+	from __x86_64_core_cache_size_half.
+	(init_cacheinfo): Compute shared cache size for AMD processors with
+	shared L3 correctly.
+	* sysdeps/x86_64/memcpy.S: Adjust for __x86_64_data_cache_size_half
+	name change.
+	Patch in large parts by Evandro Menezes.
+
 2007-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (add_dependency): Handle failing memory
