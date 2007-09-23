@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,13 +28,16 @@ __wcsnlen (s, maxlen)
 {
   size_t len = 0;
 
-  while (s[len] != L'\0' && maxlen > 0)
+  while (maxlen > 0 && s[len] != L'\0')
     {
-      if (s[++len] == L'\0' || --maxlen == 0)
+      ++len;
+      if (--maxlen == 0 || s[len] == L'\0')
 	return len;
-      if (s[++len] == L'\0' || --maxlen == 0)
+      ++len;
+      if (--maxlen == 0 || s[len] == L'\0')
 	return len;
-      if (s[++len] == L'\0' || --maxlen == 0)
+      ++len;
+      if (--maxlen == 0 || s[len] == L'\0')
 	return len;
       ++len;
       --maxlen;

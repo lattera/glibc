@@ -1,5 +1,11 @@
 2007-09-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4963]
+	* wcsmbs/wcsnlen.c: Don't reference before checking the length.
+	* string/stratcliff.c: Make usable to test wide char functions.
+	* wcsmbs/wcsatcliff.c: New file.
+	* wcsmbs/Makefiel (tests): Add wcsatcliff.
+
 	[BZ #4972]
 	* iconvdata/Makefile (modules): Add MAC-CENTRALEUROPE.
 	(distribute): Add mac-centraleurope.c.
