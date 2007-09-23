@@ -18,8 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <errno.h>
 #include <iconv.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,28 +32,49 @@
 iconv_t
 iconv_open (const char *tocode, const char *fromcode)
 {
-  char *tocode_conv;
-  char *fromcode_conv;
-  size_t tocode_len;
-  size_t fromcode_len;
-  __gconv_t cd;
-  int res;
-
   /* Normalize the name.  We remove all characters beside alpha-numeric,
      '_', '-', '/', '.', and ':'.  */
-  tocode_len = strlen (tocode);
-  tocode_conv = (char *) alloca (tocode_len + 3);
+  size_t tocode_len = strlen (tocode) + 3;
+  char *tocode_conv;
+  bool tocode_usealloca = __libc_use_alloca (tocode_len);
+  if (tocode_usealloca)
+    tocode_conv = (char *) alloca (tocode_len);
+  else
+    {
+      tocode_conv = (char *) malloc (tocode_len);
+      if (tocode_conv == NULL)
+	return (iconv_t) -1;
+    }
   strip (tocode_conv, tocode);
   tocode = (tocode_conv[2] == '\0' && tocode[0] != '\0'
 	    ? upstr (tocode_conv, tocode) : tocode_conv);
 
-  fromcode_len = strlen (fromcode);
-  fromcode_conv = (char *) alloca (fromcode_len + 3);
+  size_t fromcode_len = strlen (fromcode) + 3;
+  char *fromcode_conv;
+  bool fromcode_usealloca = __libc_use_alloca (fromcode_len);
+  if (fromcode_usealloca)
+    fromcode_conv = (char *) alloca (fromcode_len);
+  else
+    {
+      fromcode_conv = (char *) malloc (fromcode_len);
+      if (fromcode_conv == NULL)
+	{
+	  if (! tocode_usealloca)
+	    free (tocode_conv);
+	  return (iconv_t) -1;
+	}
+    }
   strip (fromcode_conv, fromcode);
   fromcode = (fromcode_conv[2] == '\0' && fromcode[0] != '\0'
 	      ? upstr (fromcode_conv, fromcode) : fromcode_conv);
 
-  res = __gconv_open (tocode, fromcode, &cd, 0);
+  __gconv_t cd;
+  int res = __gconv_open (tocode, fromcode, &cd, 0);
+
+  if (! fromcode_usealloca)
+    free (fromcode_conv);
+  if (! tocode_usealloca)
+    free (tocode_conv);
 
   if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
     {
@@ -59,7 +82,7 @@ iconv_open (const char *tocode, const char *fromcode)
       if (res == __GCONV_NOCONV || res == __GCONV_NODB)
 	__set_errno (EINVAL);
 
-      return (iconv_t) -1;
+      cd = (iconv_t) -1;
     }
 
   return (iconv_t) cd;

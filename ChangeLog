@@ -1,3 +1,8 @@
+2007-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5043]
+	* iconv/iconv_open.c (iconv_open): For large codeset names use malloc.
+
 2007-09-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (__x86_64_data_cache_size_half): Renamed
