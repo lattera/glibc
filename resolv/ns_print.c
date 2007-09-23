@@ -112,6 +112,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 
 	const char *comment;
 	char tmp[100];
+	char errbuf[40];
 	int len, x;
 
 	/*
@@ -174,11 +175,11 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		rdata += len;
 		T(addstr(" ", 1, &buf, &buflen));
 
-		    
+
 		/* Second word, optional in ISDN records. */
 		if (type == ns_t_isdn && rdata == edata)
 			break;
-		    
+
 		T(len = charstr(rdata, edata, &buf, &buflen));
 		if (len == 0)
 			goto formerr;
@@ -596,7 +597,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 			}
 			else
 				leader = " ";
-	
+
 			for (n = 0; n < len; n += 48) {
 				T(addstr(leader, strlen(leader),
 					 &buf, &buflen));
@@ -625,8 +626,48 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 	    }
 
+	case ns_t_a6: {
+		struct in6_addr a;
+		int pbyte, pbit;
+
+		/* prefix length */
+		if (rdlen == 0U) goto formerr;
+		len = SPRINTF((tmp, "%d ", *rdata));
+		T(addstr(tmp, len, &buf, &buflen));
+		pbit = *rdata;
+		if (pbit > 128) goto formerr;
+		pbyte = (pbit & ~7) / 8;
+		rdata++;
+
+		/* address suffix: provided only when prefix len != 128 */
+		if (pbit < 128) {
+			if (rdata + pbyte >= edata) goto formerr;
+			memset(&a, 0, sizeof(a));
+			memcpy(&a.s6_addr[pbyte], rdata, sizeof(a) - pbyte);
+			(void) inet_ntop(AF_INET6, &a, buf, buflen);
+			addlen(strlen(buf), &buf, &buflen);
+			rdata += sizeof(a) - pbyte;
+		}
+
+		/* prefix name: provided only when prefix len > 0 */
+		if (pbit == 0)
+			break;
+		if (rdata >= edata) goto formerr;
+		T(addstr(" ", 1, &buf, &buflen));
+		T(addname(msg, msglen, &rdata, origin, &buf, &buflen));
+
+		break;
+	    }
+
+	case ns_t_opt: {
+		len = SPRINTF((tmp, "%u bytes", class));
+		T(addstr(tmp, len, &buf, &buflen));
+		break;
+	    }
+
 	default:
-		comment = "unknown RR type";
+		snprintf (errbuf, sizeof (errbuf), "unknown RR type %d", type);
+		comment = errbuf;
 		goto hexify;
 	}
 	return (buf - obuf);

@@ -1,5 +1,8 @@
 2007-09-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/ns_print.c (ns_sprintrrf): Handle ns_t_a6 and ns_t_opt.
+	Provide better error message in case the type is unknown.
+
 	[BZ #4963]
 	* wcsmbs/wcsnlen.c: Don't reference before checking the length.
 	* string/stratcliff.c: Make usable to test wide char functions.
