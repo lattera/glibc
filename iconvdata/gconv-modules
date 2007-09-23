@@ -1911,3 +1911,8 @@ module	INTERNAL		MIK//			MIK		1
 #	from			to			module		cost
 module	BRF//			INTERNAL		BRF		1
 module	INTERNAL		BRF//			BRF		1
+
+#	from			to			module		cost
+alias	CP1282//		MAC-CENTRALEUROPE//
+module	MAC-CENTRALEUROPE//	INTERNAL		MAC-CENTRALEUROPE 1
+module	INTERNAL		MAC-CENTRALEUROPE//	MAC-CENTRALEUROPE 1

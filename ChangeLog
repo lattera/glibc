@@ -1,5 +1,14 @@
 2007-09-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4972]
+	* iconvdata/Makefile (modules): Add MAC-CENTRALEUROPE.
+	(distribute): Add mac-centraleurope.c.
+	(gen-8bit-gap-modules): Add mac-centraleurope.
+	* iconvdata/mac-centraleurope.c: New file.
+	* iconvdata/gconv-modules: Add entries for MAC-CENTRALEUROPE.
+	* iconvdata/TESTS: Likewise.
+	* iconvdata/tst-tables.sh: Likewise.
+
 	[BZ #5043]
 	* iconv/iconv_open.c (iconv_open): For large codeset names use malloc.
 
