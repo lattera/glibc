@@ -1,3 +1,8 @@
+2007-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4972]
+	* charaps/MAC-CENTRALEUROPE: New file.
+
 2007-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3842]
