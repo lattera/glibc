@@ -15,7 +15,6 @@ escape_char  /
 % Date: 1996-10-15
 % Users: general
 % Repertoiremap: mnemonic.ds
-% Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
 
@@ -30,7 +29,7 @@ fax        ""
 language   "German"
 territory  "Switzerland"
 revision   "1.0"
-date       "2000-06-29"
+date       "2007-09-23"
 %
 category  "de_CH:2000";LC_IDENTIFICATION
 category  "de_CH:2000";LC_CTYPE
@@ -114,7 +113,7 @@ mon     "<U004A><U0061><U006E><U0075><U0061><U0072>";/
         "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
         "<U0044><U0065><U007A><U0065><U006D><U0062><U0065><U0072>"
 d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
+d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
