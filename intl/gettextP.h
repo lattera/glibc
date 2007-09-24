@@ -147,6 +147,7 @@ struct loaded_domain
   /* Cache of charset conversions of the translated strings.  */
   struct converted_domain *conversions;
   size_t nconversions;
+  __libc_rwlock_define (, conversions_lock);
 
   const struct expression *plural;
   unsigned long int nplurals;
