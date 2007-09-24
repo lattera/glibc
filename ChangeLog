@@ -1,3 +1,8 @@
+2007-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Use
+	close_not_cancel_no_status instead of close.
+
 2007-09-13  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #5028]

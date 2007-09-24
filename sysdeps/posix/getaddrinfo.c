@@ -1975,7 +1975,7 @@ getaddrinfo (const char *name, const char *service,
 		{
 		  if (fd != -1)
 		  close_retry:
-		    close (fd);
+		    close_not_cancel_no_status (fd);
 		  af = q->ai_family;
 		  fd = __socket (af, SOCK_DGRAM, IPPROTO_IP);
 		}
