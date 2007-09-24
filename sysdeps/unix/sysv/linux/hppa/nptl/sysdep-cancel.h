@@ -173,7 +173,7 @@ L(pre_end):						ASM_LINE_SEP	\
 #   define CDISABLE	.import __libc_disable_asynccancel,code ASM_LINE_SEP \
 			bl __libc_disable_asynccancel,%r2 ASM_LINE_SEP
 #  endif
-# else
+# elif defined IS_IN_librt
 #  ifdef PIC
 #   define CENABLE .import __librt_enable_asynccancel,code ASM_LINE_SEP \
 			bl __librt_enable_asynccancel,%r2 ASM_LINE_SEP
@@ -185,14 +185,18 @@ L(pre_end):						ASM_LINE_SEP	\
 #   define CDISABLE .import __librt_disable_asynccancel,code ASM_LINE_SEP \
 			bl __librt_disable_asynccancel,%r2 ASM_LINE_SEP
 #  endif
+# else
+#  error Unsupported library
 # endif
 
 # ifdef IS_IN_libpthread
 #  define __local_multiple_threads __pthread_multiple_threads
 # elif !defined NOT_IN_libc
 #  define __local_multiple_threads __libc_multiple_threads
-# else
+# elif IS_IN_librt
 #  define __local_multiple_threads __librt_multiple_threads
+# else
+#  error Unsupported library
 # endif
 
 # ifndef __ASSEMBLER__

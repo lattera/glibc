@@ -1,3 +1,13 @@
+2007-09-24  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/tls.h: Fix comment.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Fix comment format.
+	[__USE_GNU] (O_CLOEXEC): Define.
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Issue error
+	if the library is unsupported.
+	[ASSEMBLER && IS_IN_librt]: Define CENABLE, CDISABLE, and
+	__local_multiple_threads.
+
 2007-08-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/sysdep-cancel.h:

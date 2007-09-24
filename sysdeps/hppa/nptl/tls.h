@@ -170,6 +170,6 @@ static inline void __set_cr27(struct pthread *cr27)
 #define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
 
-#endif /* __ASSEMBLER__ */
+#endif /* !__ASSEMBLER__ */
 
 #endif	/* tls.h */
