@@ -1,5 +1,6 @@
 2007-09-13  Aurelien Jarno  <aurelien@aurel32.net>
 
+	[BZ #5028]
 	* posix/regcomp.c (lookup_collation_sequence_value): check that
 	nrules != 0 for multibyte chars.
 
