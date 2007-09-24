@@ -2747,7 +2747,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
       return elem;
     }
 
-  /* Local function for parse_bracket_exp used in _LIBC environement.
+  /* Local function for parse_bracket_exp used in _LIBC environment.
      Look up the collation sequence value of BR_ELEM.
      Return the value if succeeded, UINT_MAX otherwise.  */
 
@@ -2771,7 +2771,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	}
       else if (br_elem->type == MB_CHAR)
 	{
-	  return __collseq_table_lookup (collseqwc, br_elem->opr.wch);
+	  if (nrules != 0)
+	    return __collseq_table_lookup (collseqwc, br_elem->opr.wch);
 	}
       else if (br_elem->type == COLL_SYM)
 	{
