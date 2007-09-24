@@ -1,3 +1,12 @@
+2007-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5058]
+	* intl/gettextP.h (struct loaded_domain): Add conversions_lock member.
+	* intl/loadmsgcat.c (_nl_load_domain): Initialize conversions_lock.
+	(_nl_unload_domain): Finalize conversions_lock.
+	* intl/dcigettext.c (_nl_find_msg): Take conversions_lock before
+	handling table of known conversions.
+
 2007-09-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Use
@@ -6,7 +15,7 @@
 2007-09-13  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #5028]
-	* posix/regcomp.c (lookup_collation_sequence_value): check that
+	* posix/regcomp.c (lookup_collation_sequence_value): Check that
 	nrules != 0 for multibyte chars.
 
 2007-09-23  Ulrich Drepper  <drepper@redhat.com>

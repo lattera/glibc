@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1252,6 +1252,7 @@ _nl_load_domain (domain_file, domainbinding)
   /* No caches of converted translations so far.  */
   domain->conversions = NULL;
   domain->nconversions = 0;
+  __libc_rwlock_init (domain->conversions_lock);
 
   /* Get the header entry and look for a plural specification.  */
   nullentry = _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
@@ -1290,6 +1291,7 @@ _nl_unload_domain (domain)
     }
   if (domain->conversions != NULL)
     free (domain->conversions);
+  __libc_rwlock_fini (domain->conversions_lock);
 
   if (domain->malloced)
     free (domain->malloced);
