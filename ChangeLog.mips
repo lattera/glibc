@@ -1,3 +1,8 @@
+2007-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Correct return value
+	type and __THROW marker of splice, vmsplice, and tee.
+
 2007-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/nptl/tls.h (THREAD_GSCOPE_RESET_FLAG): Pass
