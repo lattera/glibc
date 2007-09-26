@@ -131,9 +131,18 @@
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
-#define __warndecl(name, msg) extern void name (void)
-#define __errordecl(name, msg) extern void name (void)
 
+#if __GNUC_PREREQ (4,3)
+# define __warndecl(name, msg) \
+  extern void name (void) __attribute__((__warning__ (msg)))
+# define __warnattr(msg) __attribute__((__warning__ (msg)))
+# define __errordecl(name, msg) \
+  extern void name (void) __attribute__((__error__ (msg)))
+#else
+# define __warndecl(name, msg) extern void name (void)
+# define __warnattr(msg)
+# define __errordecl(name, msg) extern void name (void)
+#endif
 
 /* Support for flexible arrays.  */
 #if __GNUC_PREREQ (2,97)

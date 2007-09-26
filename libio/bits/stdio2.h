@@ -131,14 +131,16 @@ vfprintf (FILE *__restrict __stream,
 #endif
 
 extern char *__gets_chk (char *__str, size_t) __wur;
-extern char *__REDIRECT (__gets_alias, (char *__str), gets) __wur;
+extern char *__REDIRECT (__gets_warn, (char *__str), gets)
+     __wur __warnattr ("please use fgets or getline instead, gets can't "
+		       "specify buffer size");
 
 __extern_always_inline __wur char *
 gets (char *__str)
 {
   if (__bos (__str) != (size_t) -1)
     return __gets_chk (__str, __bos (__str));
-  return __gets_alias (__str);
+  return __gets_warn (__str);
 }
 
 extern char *__fgets_chk (char *__restrict __s, size_t __size, int __n,
@@ -146,13 +148,23 @@ extern char *__fgets_chk (char *__restrict __s, size_t __size, int __n,
 extern char *__REDIRECT (__fgets_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets) __wur;
+extern char *__REDIRECT (__fgets_chk_warn,
+			 (char *__restrict __s, size_t __size, int __n,
+			  FILE *__restrict __stream), __fgets_chk)
+     __wur __warnattr ("fgets called with bigger size than length "
+		       "of destination buffer");
 
 __extern_always_inline __wur char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__bos (__s) != (size_t) -1
-      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
-    return __fgets_chk (__s, __bos (__s), __n, __stream);
+  if (__bos (__s) != (size_t) -1)
+    {
+      if (!__builtin_constant_p (__n) || __n <= 0)
+	return __fgets_chk (__s, __bos (__s), __n, __stream);
+
+      if ((size_t) __n > __bos (__s))
+	return __fgets_chk_warn (__s, __bos (__s), __n, __stream);
+    }
   return __fgets_alias (__s, __n, __stream);
 }
 
@@ -163,17 +175,28 @@ extern size_t __REDIRECT (__fread_alias,
 			  (void *__restrict __ptr, size_t __size,
 			   size_t __n, FILE *__restrict __stream),
 			  fread) __wur;
+extern size_t __REDIRECT (__fread_chk_warn,
+			  (void *__restrict __ptr, size_t __ptrlen,
+			   size_t __size, size_t __n,
+			   FILE *__restrict __stream),
+			  __fread_chk)
+     __wur __warnattr ("fread called with bigger size * nmemb than length "
+		       "of destination buffer");
 
 __extern_always_inline __wur size_t
 fread (void *__restrict __ptr, size_t __size, size_t __n,
        FILE *__restrict __stream)
 {
-  if (__bos0 (__ptr) != (size_t) -1
-      && (!__builtin_constant_p (__size)
+  if (__bos0 (__ptr) != (size_t) -1)
+    {
+      if (!__builtin_constant_p (__size)
 	  || !__builtin_constant_p (__n)
-	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2))
-	  || __size * __n > __bos0 (__ptr)))
-    return __fread_chk (__ptr, __bos0 (__ptr), __size, __n, __stream);
+	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2)))
+	return __fread_chk (__ptr, __bos0 (__ptr), __size, __n, __stream);
+
+      if (__size * __n > __bos0 (__ptr))
+	return __fread_chk_warn (__ptr, __bos0 (__ptr), __size, __n, __stream);
+    }
   return __fread_alias (__ptr, __size, __n, __stream);
 }
 
@@ -183,13 +206,23 @@ extern char *__fgets_unlocked_chk (char *__restrict __s, size_t __size,
 extern char *__REDIRECT (__fgets_unlocked_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets_unlocked) __wur;
+extern char *__REDIRECT (__fgets_unlocked_chk_warn,
+			 (char *__restrict __s, size_t __size, int __n,
+			  FILE *__restrict __stream), __fgets_unlocked_chk)
+     __wur __warnattr ("fgets_unlocked called with bigger size than length "
+		       "of destination buffer");
 
 __extern_always_inline __wur char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__bos (__s) != (size_t) -1
-      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
-    return __fgets_unlocked_chk (__s, __bos (__s), __n, __stream);
+  if (__bos (__s) != (size_t) -1)
+    {
+      if (!__builtin_constant_p (__n) || __n <= 0)
+	return __fgets_unlocked_chk (__s, __bos (__s), __n, __stream);
+
+      if ((size_t) __n > __bos (__s))
+	return __fgets_unlocked_chk_warn (__s, __bos (__s), __n, __stream);
+    }
   return __fgets_unlocked_alias (__s, __n, __stream);
 }
 #endif
@@ -203,17 +236,30 @@ extern size_t __REDIRECT (__fread_unlocked_alias,
 			  (void *__restrict __ptr, size_t __size,
 			   size_t __n, FILE *__restrict __stream),
 			  fread_unlocked) __wur;
+extern size_t __REDIRECT (__fread_unlocked_chk_warn,
+			  (void *__restrict __ptr, size_t __ptrlen,
+			   size_t __size, size_t __n,
+			   FILE *__restrict __stream),
+			  __fread_unlocked_chk)
+     __wur __warnattr ("fread_unlocked called with bigger size * nmemb than "
+		       "length of destination buffer");
 
 __extern_always_inline __wur size_t
 fread_unlocked (void *__restrict __ptr, size_t __size, size_t __n,
 		FILE *__restrict __stream)
 {
-  if (__bos0 (__ptr) != (size_t) -1
-      && (!__builtin_constant_p (__size)
+  if (__bos0 (__ptr) != (size_t) -1)
+    {
+      if (!__builtin_constant_p (__size)
 	  || !__builtin_constant_p (__n)
-	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2))
-	  || __size * __n > __bos0 (__ptr)))
-    return __fread_unlocked_chk (__ptr, __bos0 (__ptr), __size, __n, __stream);
+	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2)))
+	return __fread_unlocked_chk (__ptr, __bos0 (__ptr), __size, __n,
+				     __stream);
+
+      if (__size * __n > __bos0 (__ptr))
+	return __fread_unlocked_chk_warn (__ptr, __bos0 (__ptr), __size, __n,
+					  __stream);
+    }
 
 # ifdef __USE_EXTERN_INLINES
   if (__builtin_constant_p (__size)

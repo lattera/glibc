@@ -1,3 +1,56 @@
+2007-09-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__warndecl, __errordecl): For GCC 4.3+ define
+	with __warning__/__error__ attributes.
+	(__warnattr): Define.
+	* stdlib/bits/stdlib.h (__realpath_chk_warn, __ptsname_r_chk_warn,
+	__mbstowcs_chk_warn, __wcstombs_chk_warn): New aliases with
+	__warnattr.
+	(realpath, ptsname_r, mbstowcs, wcstombs): Call __*_chk_warn instead
+	of __*_chk if compile time detectable overflow is found.
+	* libio/bits/stdio2.h (__fgets_chk_warn, __fread_chk_warn,
+	__fgets_unlocked_chk_warn, __fread_unlocked_chk_warn): New aliases
+	with __warnattr.
+	(fgets, fread, fgets_unlocked, fread_unlocked): Call __*_chk_warn
+	instead of __*_chk if compile time detectable overflow is found.
+	(__gets_alias): Rename to...
+	(__gets_warn): ... this.  Add __warnattr.
+	(gets): Call __gets_warn instead of __gets_alias.
+	* socket/bits/socket2.h (__recv_chk_warn, __recvfrom_chk_warn): New
+	aliases with __warnattr.
+	(recv, recvfrom): Call __*_chk_warn instead of __*_chk if compile
+	time detectable overflow is found.
+	* posix/bits/unistd.h (__read_chk_warn, __pread_chk_warn,
+	__pread64_chk_warn, __readlink_chk_warn, __readlinkat_chk_warn,
+	__getcwd_chk_warn, __confstr_chk_warn, __getgroups_chk_warn,
+	__ttyname_r_chk_warn, __getlogin_r_chk_warn, __gethostname_chk_warn,
+	__getdomainname_chk_warn): New aliases with __warnattr.
+	(read, pread, pread64, readlink, readlinkat, getcwd, confstr,
+	getgroups, ttyname_r, getlogin_r, gethostname, getdomainname): Call
+	__*_chk_warn instead of __*_chk if compile time detectable overflow
+	is found.
+	(__getgroups_chk): Rename argument to __listlen from listlen.
+	(__getwd_alias): Rename to...
+	(__getwd_warn): ... this.  Add __warnattr.
+	(getwd): Call __getwd_warn instead of __getwd_alias.
+	* wcsmbs/bits/wchar2.h (__wmemcpy_chk_warn, __wmemmove_chk_warn,
+	__wmempcpy_chk_warn, __wmemset_chk_warn, __wcsncpy_chk_warn,
+	__wcpncpy_chk_warn, __fgetws_chk_warn, __fgetws_unlocked_chk_warn,
+	__mbsrtowcs_chk_warn, __wcsrtombs_chk_warn, __mbsnrtowcs_chk_warn,
+	__wcsnrtombs_chk_warn): New aliases with __warnattr.
+	(wmemcpy, wmemmove, wmempcpy, wmemset, mbsrtowcs, wcsrtombs,
+	mbsnrtowcs, wcsnrtombs): Call __*_chk_warn instead of __*_chk if
+	compile time detectable overflow is found.
+	(wcsncpy, wcpncpy): Likewise.  For constant __n fix check whether
+	to use __*_chk or not.
+	(fgetws, fgetws_unlocked): Divide __bos by sizeof (wchar_t), both
+	in comparisons which function should be called and in __*_chk*
+	arguments.  Call __*_chk_warn instead of __*_chk if compile time
+	detectable overflow is found.
+	(swprintf, vswprintf): Divide __bos by sizeof (wchar_t) in
+	__*_chk argument.
+	* debug/tst-chk1.c (do_test): Add a few more tests.
+
 2007-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5058]

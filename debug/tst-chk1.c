@@ -317,6 +317,14 @@ do_test (void)
   CHK_FAIL_START
   snprintf (buf + 8, l0 + 3, "%d", num2);
   CHK_FAIL_END
+
+  CHK_FAIL_START
+  swprintf (wbuf + 8, 3, L"%d", num1);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  swprintf (wbuf + 8, l0 + 3, L"%d", num1);
+  CHK_FAIL_END
 # endif
 
   memcpy (buf, str1 + 2, l0 + 9);
@@ -514,11 +522,15 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
+  wmemcpy (wbuf + 9, L"abcdefghij", l0 + 10);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
   wmemmove (wbuf + 2, wbuf + 1, l0 + 9);
   CHK_FAIL_END
 
   CHK_FAIL_START
-    wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
+  wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -535,6 +547,14 @@ do_test (void)
 
   CHK_FAIL_START
   wcsncpy (wbuf + 7, L"X", l0 + 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcsncpy (wbuf + 9, L"XABCDEFGH", 8);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcpncpy (wbuf + 9, L"XABCDEFGH", 8);
   CHK_FAIL_END
 
   CHK_FAIL_START
