@@ -1,3 +1,15 @@
+2007-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add KOI8-RU.
+	(distribute): Add koi8-ru.c.
+	(gen-8bit-gap-modules): Add koi8-ru.
+	* iconvdata/koi8-ru.c: New file.
+	* iconvdata/gconv-modules: Add entries for KOI8-RU.
+	* iconvdata/TESTS: Likewise.
+	* iconvdata/tst-tables.sh: Likewise.
+
+	* iconvdata/koi8-r.c (HAS_HOLES): Define to 0.
+
 2007-09-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/sys/cdefs.h (__warndecl, __errordecl): For GCC 4.3+ define

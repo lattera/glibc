@@ -210,6 +210,7 @@ cat <<EOF |
   MIK
   BRF
   MAC-CENTRALEUROPE
+  KOI8-RU
   #
   # Multibyte encodings come here
   #

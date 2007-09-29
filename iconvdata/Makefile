@@ -59,7 +59,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971 	 \
 	   IBM5347 IBM9030 IBM9066 IBM9448 IBM12712 IBM16804             \
 	   IBM1364 IBM1371 IBM1388 IBM1390 IBM1399 ISO_11548-1 MIK BRF	 \
-	   MAC-CENTRALEUROPE
+	   MAC-CENTRALEUROPE KOI8-RU
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -240,7 +240,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
 			iso8859-11 ibm866nav pt154 rk1048 mik brf \
-			mac-centraleurope
+			mac-centraleurope koi8-ru
 
 gen-special-modules := iso8859-7jp
 

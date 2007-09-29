@@ -1,3 +1,7 @@
+2007-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/KOI8-RU: New file.
+
 2007-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4556]
