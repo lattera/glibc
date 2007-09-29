@@ -491,7 +491,7 @@ struct rtld_global
   EXTERN struct dl_scope_free_list
   {
     size_t count;
-    struct r_scope_elem **list[50];
+    void *list[50];
   } *_dl_scope_free_list;
 #ifdef SHARED
 };
@@ -1058,7 +1058,7 @@ extern void *_dl_open (const char *name, int mode, const void *caller,
 /* Free or queue for freeing scope OLD.  If other threads might be
    in the middle of _dl_fixup, _dl_profile_fixup or dl*sym using the
    old scope, OLD can't be freed until no thread is using it.  */
-extern int _dl_scope_free (struct r_scope_elem **old) attribute_hidden;
+extern int _dl_scope_free (void *) attribute_hidden;
 
 /* Add module to slot information data.  */
 extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;

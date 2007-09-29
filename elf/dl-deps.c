@@ -1,5 +1,6 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <atomic.h>
 #include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
@@ -465,15 +467,17 @@ _dl_map_object_deps (struct link_map *map,
 	{
 	  needed[nneeded++] = NULL;
 
-	  l->l_initfini = (struct link_map **)
+	  struct link_map **l_initfini = (struct link_map **)
 	    malloc ((2 * nneeded + 1) * sizeof needed[0]);
-	  if (l->l_initfini == NULL)
+	  if (l_initfini == NULL)
 	    _dl_signal_error (ENOMEM, map->l_name, NULL,
 			      N_("cannot allocate dependency list"));
-	  l->l_initfini[0] = l;
-	  memcpy (&l->l_initfini[1], needed, nneeded * sizeof needed[0]);
-	  memcpy (&l->l_initfini[nneeded + 1], l->l_initfini,
+	  l_initfini[0] = l;
+	  memcpy (&l_initfini[1], needed, nneeded * sizeof needed[0]);
+	  memcpy (&l_initfini[nneeded + 1], l_initfini,
 		  nneeded * sizeof needed[0]);
+	  atomic_write_barrier ();
+	  l->l_initfini = l_initfini;
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */
@@ -487,25 +491,26 @@ _dl_map_object_deps (struct link_map *map,
   if (errno == 0 && errno_saved != 0)
     __set_errno (errno_saved);
 
+  struct link_map **old_l_initfini = NULL;
   if (map->l_initfini != NULL && map->l_type == lt_loaded)
     {
       /* This object was previously loaded as a dependency and we have
 	 a separate l_initfini list.  We don't need it anymore.  */
       assert (map->l_searchlist.r_list == NULL);
-      free (map->l_initfini);
+      old_l_initfini = map->l_initfini;
     }
 
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
-  map->l_initfini =
+  struct link_map **l_initfini =
     (struct link_map **) malloc ((2 * nlist + 1)
 				 * sizeof (struct link_map *));
-  if (map->l_initfini == NULL)
+  if (l_initfini == NULL)
     _dl_signal_error (ENOMEM, map->l_name, NULL,
 		      N_("cannot allocate symbol search list"));
 
 
-  map->l_searchlist.r_list = &map->l_initfini[nlist + 1];
+  map->l_searchlist.r_list = &l_initfini[nlist + 1];
   map->l_searchlist.r_nlist = nlist;
 
   for (nlist = 0, runp = known; runp; runp = runp->next)
@@ -546,10 +551,10 @@ _dl_map_object_deps (struct link_map *map,
 Filters not supported with LD_TRACE_PRELINKING"));
 	    }
 
-	  cnt = _dl_build_local_scope (map->l_initfini, l);
+	  cnt = _dl_build_local_scope (l_initfini, l);
 	  assert (cnt <= nlist);
 	  for (j = 0; j < cnt; j++)
-	    map->l_initfini[j]->l_reserved = 0;
+	    l_initfini[j]->l_reserved = 0;
 
 	  l->l_local_scope[0] =
 	    (struct r_scope_elem *) malloc (sizeof (struct r_scope_elem)
@@ -561,35 +566,50 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  l->l_local_scope[0]->r_nlist = cnt;
 	  l->l_local_scope[0]->r_list =
 	    (struct link_map **) (l->l_local_scope[0] + 1);
-	  memcpy (l->l_local_scope[0]->r_list, map->l_initfini,
+	  memcpy (l->l_local_scope[0]->r_list, l_initfini,
 		  cnt * sizeof (struct link_map *));
 	}
     }
 
   /* Maybe we can remove some relocation dependencies now.  */
   assert (map->l_searchlist.r_list[0] == map);
-  for (i = 0; i < map->l_reldepsact; ++i)
+  struct link_map_reldeps *l_reldeps = NULL;
+  if (map->l_reldeps != NULL)
     {
-      unsigned int j;
+      for (i = 1; i < nlist; ++i)
+	map->l_searchlist.r_list[i]->l_reserved = 1;
 
-      for (j = 1; j < nlist; ++j)
-	if (map->l_searchlist.r_list[j] == map->l_reldeps[i])
+      struct link_map **list = &map->l_reldeps->list[0];
+      for (i = 0; i < map->l_reldeps->act; ++i)
+	if (list[i]->l_reserved)
 	  {
-	    /* A direct or transitive dependency is also on the list
-	       of relocation dependencies.  Remove the latter.  */
-	    for (j = i + 1; j < map->l_reldepsact; ++j)
-	      map->l_reldeps[j - 1] = map->l_reldeps[j];
-
-	    --map->l_reldepsact;
-
-	    /* Account for the '++i' performed by the 'for'.  */
-	    --i;
-	    break;
+	    /* Need to allocate new array of relocation dependencies.  */
+	    struct link_map_reldeps *l_reldeps;
+	    l_reldeps = malloc (sizeof (*l_reldeps)
+	    			+ map->l_reldepsmax
+				  * sizeof (struct link_map *));
+	    if (l_reldeps == NULL)
+	      /* Bad luck, keep the reldeps duplicated between
+		 map->l_reldeps->list and map->l_initfini lists.  */
+	      ;
+	    else
+	      {
+		unsigned int j = i;
+		memcpy (&l_reldeps->list[0], &list[0],
+			i * sizeof (struct link_map *));
+		for (i = i + 1; i < map->l_reldeps->act; ++i)
+		  if (!list[i]->l_reserved)
+		    l_reldeps->list[j++] = list[i];
+		l_reldeps->act = j;
+	      }
 	  }
+
+      for (i = 1; i < nlist; ++i)
+	map->l_searchlist.r_list[i]->l_reserved = 0;
     }
 
   /* Now determine the order in which the initialization has to happen.  */
-  memcpy (map->l_initfini, map->l_searchlist.r_list,
+  memcpy (l_initfini, map->l_searchlist.r_list,
 	  nlist * sizeof (struct link_map *));
   /* We can skip looking for the binary itself which is at the front
      of the search list.  Look through the list backward so that circular
@@ -602,7 +622,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
 
       /* Find the place in the initfini list where the map is currently
 	 located.  */
-      for (j = 1; map->l_initfini[j] != l; ++j)
+      for (j = 1; l_initfini[j] != l; ++j)
 	;
 
       /* Find all object for which the current one is a dependency and
@@ -611,19 +631,18 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	{
 	  struct link_map **runp;
 
-	  runp = map->l_initfini[k]->l_initfini;
+	  runp = l_initfini[k]->l_initfini;
 	  if (runp != NULL)
 	    {
 	      while (*runp != NULL)
 		if (__builtin_expect (*runp++ == l, 0))
 		  {
-		    struct link_map *here = map->l_initfini[k];
+		    struct link_map *here = l_initfini[k];
 
 		    /* Move it now.  */
-		    memmove (&map->l_initfini[j] + 1,
-			     &map->l_initfini[j],
+		    memmove (&l_initfini[j] + 1, &l_initfini[j],
 			     (k - j) * sizeof (struct link_map *));
-		    map->l_initfini[j] = here;
+		    l_initfini[j] = here;
 
 		    /* Don't insert further matches before the last
 		       entry moved to the front.  */
@@ -635,7 +654,18 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	}
     }
   /* Terminate the list of dependencies.  */
-  map->l_initfini[nlist] = NULL;
+  l_initfini[nlist] = NULL;
+  atomic_write_barrier ();
+  map->l_initfini = l_initfini;
+  if (l_reldeps != NULL)
+    {
+      atomic_write_barrier ();
+      void *old_l_reldeps = map->l_reldeps;
+      map->l_reldeps = l_reldeps;
+      _dl_scope_free (old_l_reldeps);
+    }
+  if (old_l_initfini != NULL)
+    _dl_scope_free (old_l_initfini);
 
   if (errno_reason)
     _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,

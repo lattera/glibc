@@ -166,7 +166,7 @@ add_to_global (struct link_map *new)
 }
 
 int
-_dl_scope_free (struct r_scope_elem **old)
+_dl_scope_free (void *old)
 {
   struct dl_scope_free_list *fsl;
 #define DL_SCOPE_FREE_LIST_SIZE (sizeof (fsl->list) / sizeof (fsl->list[0]))

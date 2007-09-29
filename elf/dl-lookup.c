@@ -88,20 +88,50 @@ static int
 internal_function
 add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 {
-  struct link_map **list;
   struct link_map *runp;
-  unsigned int act;
   unsigned int i;
   int result = 0;
-  unsigned long long int serial;
 
   /* Avoid self-references and references to objects which cannot be
      unloaded anyway.  */
   if (undef_map == map)
     return 0;
 
+  /* Avoid references to objects which cannot be unloaded anyway.  */
+  assert (map->l_type == lt_loaded);
+  if ((map->l_flags_1 & DF_1_NODELETE) != 0)
+    return 0;
+
+  struct link_map_reldeps *l_reldeps
+    = atomic_forced_read (undef_map->l_reldeps);
+
+  /* Make sure l_reldeps is read before l_initfini.  */
+  atomic_read_barrier ();
+
+  /* Determine whether UNDEF_MAP already has a reference to MAP.  First
+     look in the normal dependencies.  */
+  struct link_map **l_initfini = atomic_forced_read (undef_map->l_initfini);
+  if (l_initfini != NULL)
+    {
+      for (i = 0; l_initfini[i] != NULL; ++i)
+	if (l_initfini[i] == map)
+	  return 0;
+    }
+
+  /* No normal dependency.  See whether we already had to add it
+     to the special list of dynamic dependencies.  */
+  unsigned int l_reldepsact = 0;
+  if (l_reldeps != NULL)
+    {
+      struct link_map **list = &l_reldeps->list[0];
+      l_reldepsact = l_reldeps->act;
+      for (i = 0; i < l_reldepsact; ++i)
+	if (list[i] == map)
+	  return 0;
+    }
+
   /* Save serial number of the target MAP.  */
-  serial = map->l_serial;
+  unsigned long long serial = map->l_serial;
 
   /* Make sure nobody can unload the object while we are at it.  */
   if (__builtin_expect (flags & DL_LOOKUP_GSCOPE_LOCK, 0))
@@ -110,38 +140,52 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	 here, that can result in ABBA deadlock.  */
       THREAD_GSCOPE_RESET_FLAG ();
       __rtld_lock_lock_recursive (GL(dl_load_lock));
-      THREAD_GSCOPE_SET_FLAG ();
       /* While MAP value won't change, after THREAD_GSCOPE_RESET_FLAG ()
 	 it can e.g. point to unallocated memory.  So avoid the optimizer
 	 treating the above read from MAP->l_serial as ensurance it
 	 can safely dereference it.  */
       map = atomic_forced_read (map);
+
+      /* From this point on it is unsafe to dereference MAP, until it
+	 has been found in one of the lists.  */
+
+      /* Redo the l_initfini check in case undef_map's l_initfini
+	 changed in the mean time.  */
+      if (undef_map->l_initfini != l_initfini
+	  && undef_map->l_initfini != NULL)
+	{
+	  l_initfini = undef_map->l_initfini;
+	  for (i = 0; l_initfini[i] != NULL; ++i)
+	    if (l_initfini[i] == map)
+	      goto out_check;
+	}
+
+      /* Redo the l_reldeps check if undef_map's l_reldeps changed in
+	 the mean time.  */
+      if (undef_map->l_reldeps != NULL)
+	{
+	  if (undef_map->l_reldeps != l_reldeps)
+	    {
+	      struct link_map **list = &undef_map->l_reldeps->list[0];
+	      l_reldepsact = undef_map->l_reldeps->act;
+	      for (i = 0; i < l_reldepsact; ++i)
+		if (list[i] == map)
+		  goto out_check;
+	    }
+	  else if (undef_map->l_reldeps->act > l_reldepsact)
+	    {
+	      struct link_map **list
+		= &undef_map->l_reldeps->list[0];
+	      i = l_reldepsact;
+	      l_reldepsact = undef_map->l_reldeps->act;
+	      for (; i < l_reldepsact; ++i)
+		if (list[i] == map)
+		  goto out_check;
+	    }
+	}
     }
   else
     __rtld_lock_lock_recursive (GL(dl_load_lock));
-
-  /* From this point on it is unsafe to dereference MAP, until it
-     has been found in one of the lists.  */
-
-  /* Determine whether UNDEF_MAP already has a reference to MAP.  First
-     look in the normal dependencies.  */
-  if (undef_map->l_initfini != NULL)
-    {
-      list = undef_map->l_initfini;
-
-      for (i = 0; list[i] != NULL; ++i)
-	if (list[i] == map)
-	  goto out_check;
-    }
-
-  /* No normal dependency.  See whether we already had to add it
-     to the special list of dynamic dependencies.  */
-  list = undef_map->l_reldeps;
-  act = undef_map->l_reldepsact;
-
-  for (i = 0; i < act; ++i)
-    if (list[i] == map)
-      goto out_check;
 
   /* The object is not yet in the dependency list.  Before we add
      it make sure just one more time the object we are about to
@@ -161,8 +205,8 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
       if (map->l_serial != serial)
 	goto out_check;
 
-      /* Avoid references to objects which cannot be unloaded anyway.  */
-      assert (map->l_type == lt_loaded);
+      /* Redo the NODELETE check, as when dl_load_lock wasn't held
+	 yet this could have changed.  */
       if ((map->l_flags_1 & DF_1_NODELETE) != 0)
 	goto out;
 
@@ -177,33 +221,46 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	}
 
       /* Add the reference now.  */
-      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
+      if (__builtin_expect (l_reldepsact >= undef_map->l_reldepsmax, 0))
 	{
 	  /* Allocate more memory for the dependency list.  Since this
 	     can never happen during the startup phase we can use
 	     `realloc'.  */
-	  void *newp;
+	  struct link_map_reldeps *newp;
+	  unsigned int max
+	    = undef_map->l_reldepsmax ? undef_map->l_reldepsmax * 2 : 10;
 
-	  undef_map->l_reldepsmax += 5;
-	  newp = realloc (undef_map->l_reldeps,
-			  undef_map->l_reldepsmax
-			  * sizeof (struct link_map *));
-
-	  if (__builtin_expect (newp != NULL, 1))
-	    undef_map->l_reldeps = (struct link_map **) newp;
+	  newp = malloc (sizeof (*newp) + max * sizeof (struct link_map *));
+	  if (newp == NULL)
+	    {
+	      /* If we didn't manage to allocate memory for the list this is
+		 no fatal problem.  We simply make sure the referenced object
+		 cannot be unloaded.  This is semantically the correct
+		 behavior.  */
+	      map->l_flags_1 |= DF_1_NODELETE;
+	      goto out;
+	    }
 	  else
-	    /* Correct the addition.  */
-	    undef_map->l_reldepsmax -= 5;
+	    {
+	      if (l_reldepsact)
+		memcpy (&newp->list[0], &undef_map->l_reldeps->list[0],
+			l_reldepsact * sizeof (struct link_map *));
+	      newp->list[l_reldepsact] = map;
+	      newp->act = l_reldepsact + 1;
+	      atomic_write_barrier ();
+	      void *old = undef_map->l_reldeps;
+	      undef_map->l_reldeps = newp;
+	      undef_map->l_reldepsmax = max;
+	      if (old)
+		_dl_scope_free (old);
+	    }
 	}
-
-      /* If we didn't manage to allocate memory for the list this is
-	 no fatal mistake.  We simply make sure the referenced object
-	 cannot be unloaded.  This is semantically the correct
-	 behavior.  */
-      if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
-	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
       else
-	map->l_flags_1 |= DF_1_NODELETE;
+	{
+	  undef_map->l_reldeps->list[l_reldepsact] = map;
+	  atomic_write_barrier ();
+	  undef_map->l_reldeps->act = l_reldepsact + 1;
+	}
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
@@ -222,6 +279,9 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
  out:
   /* Release the lock.  */
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
+  if (__builtin_expect (flags & DL_LOOKUP_GSCOPE_LOCK, 0))
+    THREAD_GSCOPE_SET_FLAG ();
 
   return result;
 

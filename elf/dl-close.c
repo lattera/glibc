@@ -203,9 +203,9 @@ _dl_close_worker (struct link_map *map)
 	}
       /* And the same for relocation dependencies.  */
       if (l->l_reldeps != NULL)
-	for (unsigned int j = 0; j < l->l_reldepsact; ++j)
+	for (unsigned int j = 0; j < l->l_reldeps->act; ++j)
 	  {
-	    struct link_map *jmap = l->l_reldeps[j];
+	    struct link_map *jmap = l->l_reldeps->list[j];
 
 	    if (jmap->l_idx != IDX_STILL_USED)
 	      {
@@ -497,7 +497,7 @@ _dl_close_worker (struct link_map *map)
       THREAD_GSCOPE_WAIT ();
 
       /* Now we can free any queued old scopes.  */
-      struct dl_scope_free_list *fsl  = GL(dl_scope_free_list);
+      struct dl_scope_free_list *fsl = GL(dl_scope_free_list);
       if (fsl != NULL)
 	while (fsl->count > 0)
 	  free (fsl->list[--fsl->count]);

@@ -1,3 +1,25 @@
+2007-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct dl_scope_free_list): Store
+	void * pointers instead of struct link_map **.
+	(_dl_scope_free): Change argument type to void *.
+	* include/link.h (struct link_map): Change type of l_reldeps
+	to struct link_map_reldeps, move l_reldepsact into that
+	struct too.
+	* elf/dl-deps.c: Include atomic.h.
+	(_dl_map_object_deps): Only change l->l_initfini when it is
+	fully populated, use _dl_scope_free for freeing it.  Optimize
+	removal of libs from reldeps by using l_reserved flag, when
+	some removal is needed, allocate a new list instead of
+	reallocating and free the old with _dl_scope_free.  Adjust
+	for l_reldeps and l_reldepsact changes.
+	* elf/dl-lookup.c (add_dependency): Likewise.  Reorganize to allow
+	searching in l_initfini and l_reldeps without holding dl_load_lock.
+	* elf/dl-fini.c (_dl_sort_fini): Adjust for l_reldeps and
+	l_reldepsact changes.
+	* elf/dl-close.c (_dl_close_worker): Likewise.
+	* elf/dl-open.c (_dl_scope_free): Change argument type to void *.
+
 2007-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add KOI8-RU.

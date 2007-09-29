@@ -240,8 +240,11 @@ struct link_map
 
     /* List of the dependencies introduced through symbol binding.  */
     unsigned int l_reldepsmax;
-    unsigned int l_reldepsact;
-    struct link_map **l_reldeps;
+    struct link_map_reldeps
+      {
+	unsigned int act;
+	struct link_map *list[];
+      } *l_reldeps;
 
     /* Various flag words.  */
     ElfW(Word) l_feature_1;

@@ -82,8 +82,8 @@ _dl_sort_fini (struct link_map *l, struct link_map **maps, size_t nmaps,
 
 	    if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
 	      {
-		unsigned int m = maps[k]->l_reldepsact;
-		struct link_map **relmaps = maps[k]->l_reldeps;
+		unsigned int m = maps[k]->l_reldeps->act;
+		struct link_map **relmaps = &maps[k]->l_reldeps->list[0];
 
 		while (m-- > 0)
 		  {
