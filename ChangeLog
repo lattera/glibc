@@ -1,3 +1,7 @@
+2007-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Add several new entries.
+
 2007-09-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct dl_scope_free_list): Store
