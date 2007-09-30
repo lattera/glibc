@@ -1842,7 +1842,8 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
 
       while (osect != sect)
 	if (osect->rules != NULL
-	    && memcmp (osect->rules, sect->rules, nrules) == 0)
+	    && memcmp (osect->rules, sect->rules,
+		       nrules * sizeof (osect->rules[0])) == 0)
 	  break;
 	else
 	  osect = osect->next;
