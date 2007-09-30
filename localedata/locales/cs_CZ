@@ -301,10 +301,10 @@ order_start forward;forward;forward;forward
 
 % <CAPITAL> or <SMALL> letters first:
 
-<CAPITAL>
-<CAPITAL-SMALL>
 <SMALL-CAPITAL>
 <SMALL>
+<CAPITAL>
+<CAPITAL-SMALL>
 
 % Accents:
 % Poøadí akcentù: nahoøe, dole, vzadu, vpøedu, uvnitø nebo pøes písmeno

@@ -147,7 +147,7 @@ int_select "00"
 int_prefix "599"
 END LC_TELEPHONE
 
-LC_CTYPE
+LC_NAME
 % Todo
 copy "en_DK"
-END LC_CTYPE
+END LC_NAME
