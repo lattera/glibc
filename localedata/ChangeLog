@@ -1,5 +1,7 @@
 2007-09-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/cs_SR: Removed.
+
 	* locales/lo_LA: Add missing collating element o-e.
 
 	* locales/is_IS: Cleanup.  Remove invalid collation entries.
