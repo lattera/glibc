@@ -1920,3 +1920,10 @@ module	INTERNAL		MAC-CENTRALEUROPE//	MAC-CENTRALEUROPE 1
 #	from			to			module		cost
 module	KOI8-RU//		INTERNAL		KOI8-RU		1
 module	INTERNAL		KOI8-RU//		KOI8-RU		1
+
+#	from			to			module		cost
+alias	ISO_8859-9E//		ISO-8859-9E//
+alias	ISO8859-9E//		ISO-8859-9E//
+alias	ISO88599E//		ISO-8859-9E//
+module	ISO-8859-9E//		INTERNAL		ISO8859-9E	1
+module	INTERNAL		ISO-8859-9E//		ISO8859-9E	1
