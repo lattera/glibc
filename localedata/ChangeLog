@@ -1,5 +1,7 @@
 2007-09-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/en_GB: Change first weekday and workday to Monday.
+
 	* locales/iso14651_t1_common: Add rules for Georgian.
 
 	* locales/ber_DZ: New file.
