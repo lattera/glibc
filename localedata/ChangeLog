@@ -3,10 +3,12 @@
 	* locales/lo_LA: Add missing collating element o-e.
 
 	* locales/is_IS: Cleanup.  Remove invalid collation entries.
+	* locales/lv_LV: Likewise.
 
 	* locales/fa_IR: Add missing collating element Alef-Hamza.
 
 	* locales/da_DK: Add missing collating symbol ETH.
+	* locales/nb_NO: Likewise.
 
 	* locales/sa_IN: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add sa_IN.

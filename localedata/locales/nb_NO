@@ -59,6 +59,7 @@ collating-symbol <MIN-CAP>
 collating-symbol <ae>
 collating-symbol <o-stroke>
 collating-symbol <a-ring>
+collating-symbol <ETH>
 
 reorder-after <RES-1>
 <CAP>
