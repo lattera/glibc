@@ -230,6 +230,7 @@ collating-element <ho-o> from "<U0EC2><U0EAB>"
 collating-element <ho-ai-maimuan> from "<U0EC3><U0EAB>"
 collating-element <ho-ai-maimalai> from "<U0EC4><U0EAB>"
 
+collating-element <o-e> from "<U0EC0><U0EAD>"
 collating-element <o-ae> from "<U0EC1><U0EAD>"
 collating-element <o-o> from "<U0EC2><U0EAD>"
 collating-element <o-ai-maimuan> from "<U0EC3><U0EAD>"
@@ -601,10 +602,10 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 
 <U0EDD>        <U0EDC>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER HHOr
 <mhor-e>           "<U0EDD><U0EC0>";<BLANK>;<BLANK>;<BLANK>
-<mor-ae>          "<U0EDD><U0EC1>";<BLANK>;<BLANK>;<BLANK>
-<mor-o>           "<U0EDD><U0EC2>";<BLANK>;<BLANK>;<BLANK>
-<mor-ai-maimuan>  "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
-<mor-ai-maimalai> "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
+<mor-ae>           "<U0EDD><U0EC1>";<BLANK>;<BLANK>;<BLANK>
+<mor-o>            "<U0EDD><U0EC2>";<BLANK>;<BLANK>;<BLANK>
+<mor-ai-maimuan>   "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
+<mor-ai-maimalai>  "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
 
 % order of Lao vowels
