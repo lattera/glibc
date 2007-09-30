@@ -87,7 +87,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             "<U002C>"
-thousands_sep             ""
+thousands_sep             "<U0020>"
 grouping                  0;0
 END LC_NUMERIC
 
