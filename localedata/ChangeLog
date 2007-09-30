@@ -1,3 +1,26 @@
+2007-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add rules for Georgian.
+
+	* locales/ber_DZ: New file.
+	* locales/fil_PH: New file.
+	* locales/fur_IT: New file.
+	* locales/fy_DE: New file.
+	* locales/ha_NG: New file.
+	* locales/ig_NG: New file.
+	* locales/ik_CA: New file.
+	* locales/iu_CA: New file.
+	* locales/li_BE: New file.
+	* locales/li_NL: New file.
+	* locales/nds_DE: New file.
+	* locales/nds_NL: New file.
+	* locales/pap_AN: New file.
+	* locales/sc_IT: New file.
+	* locales/tk_TM: New file.
+	* locales/ug_CN: New file.
+	* locales/yo_NG: New file.
+	* SUPPORTED: Add the new locales.
+
 2007-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/ISO-8859-9E: New file.

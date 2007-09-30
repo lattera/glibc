@@ -2381,7 +2381,7 @@ msgstr "Tipo de Tabela      : %s\n"
 
 #: posix/../sysdeps/posix/gai_strerror.c:31
 msgid "Temporary failure in name resolution"
-msgstr "Falha temporário na resolução de nome"
+msgstr "Falha temporária na resolução de nome"
 
 #: stdio-common/../sysdeps/unix/siglist.c:40
 #: sysdeps/unix/sysv/linux/siglist.h:34
