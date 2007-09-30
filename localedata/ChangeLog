@@ -1,5 +1,7 @@
 2007-09-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/is_IS: Cleanup.  Remove invalid collation entries.
+
 	* locales/fa_IR: Add missing collating element Alef-Hamza.
 
 	* locales/da_DK: Add missing collating symbol ETH.
