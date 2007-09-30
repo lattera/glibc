@@ -101,6 +101,7 @@ collating-symbol <ALT1>
 collating-symbol <ALT2>
 
 collating-element <Alef-Madda> from "<U0627><U0653>"
+collating-element <Alef-Hamza> from "<U0627><U0654>"
 collating-element <Alef-HamzaBelow> from "<U0627><U0655>"
 collating-element <Waw-Hamza> from "<U0648><U0654>"
 collating-element <AlefMaksura-Hamza> from "<U0649><U0654>"
