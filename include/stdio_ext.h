@@ -4,8 +4,19 @@
 
 extern int __fsetlocking_internal (FILE *__fp, int __type) attribute_hidden;
 
-#ifndef NOT_IN_libc
-# define __fsetlocking(fp, type) INTUSE(__fsetlocking) (fp, type)
-#endif
+#define __fsetlocking(fp, type) \
+  ({ int __result = ((fp->_flags & _IO_USER_LOCK)			\
+		     ? FSETLOCKING_BYCALLER : FSETLOCKING_INTERNAL);	\
+									\
+     if (type != FSETLOCKING_QUERY)					\
+       {								\
+	 fp->_flags &= ~_IO_USER_LOCK;					\
+	 if (type == FSETLOCKING_BYCALLER)				\
+	   fp->_flags |= _IO_USER_LOCK;					\
+       }								\
+									\
+     __result;								\
+  })
+
 
 #endif

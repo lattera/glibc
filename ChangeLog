@@ -1,3 +1,7 @@
+2007-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdio_ext.h (__fsetlocking): Define as macro.
+
 2007-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_finish): Compare all bytes
