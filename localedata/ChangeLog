@@ -1,3 +1,7 @@
+2007-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* de_DE.in: Adjust for correct handling of backward direction sorting.
+
 2007-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4941]

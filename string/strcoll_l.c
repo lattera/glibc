@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -128,7 +128,7 @@ STRCOLL (s1, s2, l)
 
      Please note that the localedef programs makes sure that `position'
      is not used at the first level.  */
-  if (! __libc_use_alloca (s1len + s2len))
+  if (! __libc_use_alloca ((s1len + s2len) * (sizeof (int32_t) + 1)))
     {
       idx1arr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
       idx2arr = &idx1arr[s1len];
@@ -186,7 +186,10 @@ STRCOLL (s1, s2, l)
 		    /* The last pushed character was handled.  Continue
 		       with forward characters.  */
 		    if (idx1cnt < idx1max)
-		      idx1now = idx1cnt;
+		      {
+			idx1now = idx1cnt;
+			backw1_stop = ~0ul;
+		      }
 		    else
 		      /* Nothing anymore.  The backward sequence ended with
 			 the last sequence in the string.  Note that seq1len
@@ -245,7 +248,10 @@ STRCOLL (s1, s2, l)
 		    /* The last pushed character was handled.  Continue
 		       with forward characters.  */
 		    if (idx2cnt < idx2max)
-		      idx2now = idx2cnt;
+		      {
+			idx2now = idx2cnt;
+			backw2_stop = ~0ul;
+		      }
 		    else
 		      /* Nothing anymore.  The backward sequence ended with
 			 the last sequence in the string.  Note that seq2len
@@ -370,7 +376,10 @@ STRCOLL (s1, s2, l)
 			/* The last pushed character was handled.  Continue
 			   with forward characters.  */
 			if (idx1cnt < idx1max)
-			  idx1now = idx1cnt;
+			  {
+			    idx1now = idx1cnt;
+			    backw1_stop = ~0ul;
+			  }
 			else
 			  {
 			    /* Nothing anymore.  The backward sequence
@@ -426,7 +435,10 @@ STRCOLL (s1, s2, l)
 			/* The last pushed character was handled.  Continue
 			   with forward characters.  */
 			if (idx2cnt < idx2max)
-			  idx2now = idx2cnt;
+			  {
+			    idx2now = idx2cnt;
+			    backw2_stop = ~0ul;
+			  }
 			else
 			  {
 			    /* Nothing anymore.  The backward sequence
