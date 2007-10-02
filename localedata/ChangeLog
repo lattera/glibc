@@ -30,9 +30,10 @@
 
 	* locales/en_GB: Change first weekday and workday to Monday.
 	* locales/da_DK: Likewise.
-	* locales/et_EE: Likewise.
 	* locales/nb_NO: Likewise.
 	* locales/nn_NO: Likewise.
+	[BZ #4705]
+	* locales/et_EE: Likewise.
 
 	* locales/iso14651_t1_common: Add rules for Georgian.
 
