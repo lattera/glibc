@@ -2,6 +2,9 @@
 
 	* de_DE.in: Adjust for correct handling of backward direction sorting.
 
+	* fr_FR.in: New file.
+	* Makefile: Add rules to run fr_FR sorting test.
+
 2007-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4941]
