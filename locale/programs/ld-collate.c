@@ -1545,9 +1545,10 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
      or in none.  */
   for (i = 0; i < nrules; ++i)
     for (sect = collate->sections; sect != NULL; sect = sect->next)
-      if (sect->rules != NULL
+      if (sect != collate->current_section
+	  && sect->rules != NULL
 	  && ((sect->rules[i] & sort_position)
-	      != (collate->sections->rules[i] & sort_position)))
+	      != (collate->current_section->rules[i] & sort_position)))
 	{
 	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: `position' must be used for a specific level in all sections or none"),
@@ -3214,13 +3215,16 @@ error while adding equivalent collating symbol"));
 		    {
 		      /* Insert sp in the collate->sections list,
 			 right after collate->current_section.  */
-		      if (collate->current_section == NULL)
-			collate->current_section = sp;
-		      else
+		      if (collate->current_section != NULL)
 			{
 			  sp->next = collate->current_section->next;
 			  collate->current_section->next = sp;
 			}
+		      else if (collate->sections == NULL)
+			/* This is the first section to be defined.  */
+			collate->sections = sp;
+
+		      collate->current_section = sp;
 		    }
 
 		  /* Next should come the end of the line or a semicolon.  */

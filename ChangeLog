@@ -1,3 +1,11 @@
+2007-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #645]
+	* locale/programs/ld-collate.c (collate_finish): Compare against last
+	used section which is known to have rules defined.
+	(collate_read): After order_start, correctly record order of sections
+	and queue sections up.
+
 2007-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5071]
