@@ -29,9 +29,10 @@
 	* locales/cs_CZ: Sort lowercase before uppercase.
 
 	* locales/en_GB: Change first weekday and workday to Monday.
-	* locales/da_DK: Likewise.
 	* locales/nb_NO: Likewise.
 	* locales/nn_NO: Likewise.
+	[BZ #4833]
+	* locales/da_DK: Likewise.
 	[BZ #4705]
 	* locales/et_EE: Likewise.
 

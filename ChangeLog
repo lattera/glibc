@@ -1,5 +1,10 @@
 2007-10-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5071]
+	* malloc/malloc.c (mremap_chunk): Avoid resizing of new block has
+	the same number of pages.
+	Patch by Tomash Brechko <tomash.brechko@gmail.com>.
+
 	* locale/programs/ld-collate.c (collate_read): After initial copy
 	statement, continue in state 0.
 
