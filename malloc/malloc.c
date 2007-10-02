@@ -3503,6 +3503,10 @@ mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
   /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
   new_size = (new_size + offset + SIZE_SZ + page_mask) & ~page_mask;
 
+  /* No need to remap if the number of pages does not change.  */
+  if (size + offset == new_size)
+    return p;
+
   cp = (char *)mremap((char *)p - offset, size + offset, new_size,
                       MREMAP_MAYMOVE);
 

@@ -1,5 +1,8 @@
 2007-10-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4941]
+	* locales/oc_FR: Fix Thursday abday and August mon and abmon data.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add ber_MA.UTF-8.
 
 	* locales/am_ET (LC_COLLATE): Define new script after copy.
