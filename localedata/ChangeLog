@@ -1,3 +1,7 @@
+2007-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/am_ET (LC_COLLATE): Define new script after copy.
+
 2007-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/cs_SR: Removed.

@@ -56,13 +56,13 @@ END LC_IDENTIFICATION
 
 LC_COLLATE
 %
-%  The ETHIOPIC script declaration must come first.
-%
-script <ETHIOPIC>
-%
 % Copy the template from ISO/IEC 14651
 %
 copy "iso14651_t1"
+%
+%  The ETHIOPIC script declaration must come first.
+%
+script <ETHIOPIC>
 %
 %  Correcting Unicode's linguistic ordering to the traditional.
 %

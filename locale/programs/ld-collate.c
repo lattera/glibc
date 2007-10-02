@@ -2660,7 +2660,6 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
   if (nowtok == tok_copy)
     {
-      state = 2;
       now = lr_token (ldfile, charmap, result, NULL, verbose);
       if (now->tok != tok_string)
 	{
@@ -3327,7 +3326,9 @@ error while adding equivalent collating symbol"));
 		  was_ellipsis = tok_none;
 		}
 	    }
-	  else if (state != 2 && state != 3)
+	  else if (state == 0 && copy_locale == NULL)
+	    goto err_label;
+	  else if (state != 0 && state != 2 && state != 3)
 	    goto err_label;
 	  state = 3;
 
@@ -3796,7 +3797,7 @@ error while adding equivalent collating symbol"));
 	  /* Next we assume `LC_COLLATE'.  */
 	  if (!ignore_content)
 	    {
-	      if (state == 0)
+	      if (state == 0 && copy_locale == NULL)
 		/* We must either see a copy statement or have
 		   ordering values.  */
 		lr_error (ldfile,
