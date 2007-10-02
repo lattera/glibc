@@ -1,5 +1,8 @@
 2007-10-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strcoll_l.c (STRCOLL): Correct handling of switching from
+	backward to forward direction.
+
 	* string/strcoll_l.c (STRCOLL): Correct test for alloca use.
 
 	[BZ #645]
