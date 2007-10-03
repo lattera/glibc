@@ -274,10 +274,10 @@ extern int __swprintf_chk (wchar_t *__restrict __s, size_t __n,
 			   __const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 6))) */;
 
-extern int __REDIRECT_NTH (__swprintf_alias,
-			   (wchar_t *__restrict __s, size_t __n,
-			    __const wchar_t *__restrict __fmt, ...),
-			    swprintf);
+extern int __REDIRECT_NTH_LDBL (__swprintf_alias,
+				(wchar_t *__restrict __s, size_t __n,
+				 __const wchar_t *__restrict __fmt, ...),
+				swprintf);
 
 #ifdef __va_arg_pack
 __extern_always_inline int
@@ -305,10 +305,10 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 
-extern int __REDIRECT_NTH (__vswprintf_alias,
-			   (wchar_t *__restrict __s, size_t __n,
-			    __const wchar_t *__restrict __fmt,
-			    __gnuc_va_list __ap), vswprintf);
+extern int __REDIRECT_NTH_LDBL (__vswprintf_alias,
+				(wchar_t *__restrict __s, size_t __n,
+				 __const wchar_t *__restrict __fmt,
+				 __gnuc_va_list __ap), vswprintf);
 
 __extern_always_inline int
 __NTH (vswprintf (wchar_t *__restrict __s, size_t __n,

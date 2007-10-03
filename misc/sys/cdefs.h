@@ -360,6 +360,10 @@
   extern __typeof (name) name __asm (__ASMNAME (#alias));
 #  define __LDBL_REDIR_DECL(name) \
   extern __typeof (name) name __asm (__ASMNAME ("__nldbl_" #name));
+#  define __REDIRECT_LDBL(name, proto, alias) \
+  __LDBL_REDIR1 (name, proto, __nldbl_##alias)
+#  define __REDIRECT_NTH_LDBL(name, proto, alias) \
+  __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
 # endif
 #endif
 #if !defined __LDBL_COMPAT || !defined __REDIRECT
@@ -368,6 +372,11 @@
 # define __LDBL_REDIR1_NTH(name, proto, alias) name proto __THROW
 # define __LDBL_REDIR_NTH(name, proto) name proto __THROW
 # define __LDBL_REDIR_DECL(name)
+# ifdef __REDIRECT
+#  define __REDIRECT_LDBL(name, proto, alias) __REDIRECT (name, proto, alias)
+#  define __REDIRECT_NTH_LDBL(name, proto, alias) \
+  __REDIRECT_NTH (name, proto, alias)
+# endif
 #endif
 
 #endif	 /* sys/cdefs.h */
