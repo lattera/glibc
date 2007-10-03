@@ -1,3 +1,8 @@
+2007-10-03  Jakub Jelinek
+
+	* misc/sys/cdefs.h (__extern_always_inline): For GCC 4.3+
+	add __artificial__ attribute.
+
 2007-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strcoll_l.c (STRCOLL): Correct handling of switching from
