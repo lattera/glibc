@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test nl_langinfo.
-# Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2003, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -287,7 +287,7 @@ fr_FR.ISO-8859-1     D_T_FMT     "%a %d %b %Y %T %Z"
 fr_FR.ISO-8859-1     D_FMT       "%d.%m.%Y"
 fr_FR.ISO-8859-1     T_FMT       "%T"
 fr_FR.ISO-8859-1     RADIXCHAR   ,
-fr_FR.ISO-8859-1     THOUSEP     ""
+fr_FR.ISO-8859-1     THOUSEP     " "
 fr_FR.ISO-8859-1     YESEXPR     ^[oOyY].*
 fr_FR.ISO-8859-1     NOEXPR      ^[nN].*
 ja_JP.EUC-JP         ABDAY_1     Æü
