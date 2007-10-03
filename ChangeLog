@@ -1,5 +1,9 @@
 2007-10-03  Jakub Jelinek
 
+	* string/bits/string3.h (memcpy, memmove, mempcpy, memset, bcopy,
+	bzero, strcpy, stpcpy, strncpy, strcat, strncat): Use
+	__extern_always_inline functions unconditionally, drop macros.
+
 	* misc/sys/cdefs.h (__REDIRECT_LDBL, __REDIRECT_NTH_LDBL): New macros.
 	* wcsmbs/bits/wchar2.h (__swprintf_alias, __vswprintf_alias): Use
 	__REDIRECT_NTH_LDBL macro rather than __REDIRECT_NTH.
