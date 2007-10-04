@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #ifndef	_ERROR_H
-# error "Never include <bits/error2.h> directly; use <error.h> instead."
+# error "Never include <bits/error.h> directly; use <error.h> instead."
 #endif
 
 

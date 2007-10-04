@@ -1,3 +1,9 @@
+2007-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/error.h: Remove support for use outside of libc.  We have to
+	include <features.h> now.  Include <bits/error.h> if possible.
+	* misc/bits/error.h: New file.
+
 2007-10-03  Jakub Jelinek
 
 	* string/bits/string3.h (memcpy, memmove, mempcpy, memset, bcopy,
