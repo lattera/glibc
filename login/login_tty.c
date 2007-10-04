@@ -31,6 +31,7 @@
 static char sccsid[] = "@(#)login_tty.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 
+#include <errno.h>
 #include <sys/param.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -63,9 +64,12 @@ login_tty(fd)
 	    }
 	}
 #endif
-	(void) dup2(fd, 0);
-	(void) dup2(fd, 1);
-	(void) dup2(fd, 2);
+	while (dup2(fd, 0) == -1 && errno == EBUSY)
+	  ;
+	while (dup2(fd, 1) == -1 && errno == EBUSY)
+	  ;
+	while (dup2(fd, 2) == -1 && errno == EBUSY)
+	  ;
 	if (fd > 2)
 		(void) close(fd);
 	return (0);
