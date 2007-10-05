@@ -1,3 +1,17 @@
+2007-10-04  Jakub Jelinek
+
+	* stdlib/msort.c: Include stdint.h.
+	(struct msort_param): New type.
+	(msort_with_tmp): Use struct msort_param pointer for unchanging
+	parameters.  Add optimized handling for several common sizes
+	and indirect sorting mode.
+	(qsort): Adjust msort_with_tmp callers.  For big S use indirect
+	sorting.
+	Suggested by Belazougui Djamel .
+
+	* stdlib/Makefile (tests): Add tst-qsort2.
+	* stdlib/tst-qsort2.c: New test.
+
 2007-10-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/login_tty.c (login_tty): The Linux kernel can return EBUSY
