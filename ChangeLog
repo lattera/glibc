@@ -1,5 +1,17 @@
 2007-10-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/gnu/netinet/tcp.h: Define TCP_MD5SIG, TCP_MD5SIG_MAXKEYLEN,
+	struct tcp_md5sig.  Extend struct tcp_info according to recent kernels.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add eventfd,
+	evetnfd_read, eventfd_write.
+	* sysdeps/unix/sysv/linux/eventfd.c: New file.
+	* sysdeps/unix/sysv/linux/eventfd_read.c: New file.
+	* sysdeps/unix/sysv/linux/eventfd_write.c: New file.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/Versions: Export eventfd, evetnfd_read,
+	eventfd_write for GLIBC_2.7.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add signalfd.
 	* sysdeps/unix/sysv/linux/signalfd.c: New file.
 	* sysdeps/unix/sysv/linux/sys/signalfd.h: New file.

@@ -50,6 +50,7 @@
 #define TCP_INFO	 11	/* Information about this connection. */
 #define	TCP_QUICKACK	 12	/* Bock/reenable quick ACKs.  */
 #define TCP_CONGESTION	 13	/* Congestion control algorithm.  */
+#define TCP_MD5SIG	 14	/* TCP MD5 Signature (RFC2385) */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
@@ -219,6 +220,24 @@ struct tcp_info
   u_int32_t	tcpi_snd_cwnd;
   u_int32_t	tcpi_advmss;
   u_int32_t	tcpi_reordering;
+
+  u_int32_t	tcpi_rcv_rtt;
+  u_int32_t	tcpi_rcv_space;
+
+  u_int32_t	tcpi_total_retrans;
+};
+
+
+/* For TCP_MD5SIG socket option.  */
+#define TCP_MD5SIG_MAXKEYLEN	80
+
+struct tcp_md5sig
+{
+  struct __kernel_sockaddr_storage tcpm_addr;	/* Address associated.  */
+  u_int16_t	__tcpm_pad1;			/* Zero.  */
+  u_int16_t	tcpm_keylen;			/* Key length.  */
+  u_int32_t	__tcpm_pad2;			/* Zero.  */
+  u_int8_t	tcpm_key[TCP_MD5SIG_MAXKEYLEN];	/* Key (binary).  */
 };
 
 #endif /* Misc.  */

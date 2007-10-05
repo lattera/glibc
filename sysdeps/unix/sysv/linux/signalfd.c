@@ -23,8 +23,18 @@
 
 
 int
-signalfd (int fd, const sigset_t *mask)
+signalfd (int fd, const sigset_t *mask, int flags)
 {
+  /* The system call has no flag parameter which is bad.  So we have
+     to wait until we have to support to pass additional values to the
+     kernel (sys_indirect) before implementing setting flags like
+     O_NONBLOCK etc.  */
+  if (flags != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
 #ifdef __NR_signalfd
   return INLINE_SYSCALL (signalfd, 3, fd, mask, _NSIG / 8);
 #else
