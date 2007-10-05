@@ -1305,7 +1305,7 @@ extern char *__strdup (__const char *__string) __THROW __attribute_malloc__;
 #  define __strdup(s) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
-		     ? (char *) calloc (1, 1)				      \
+		     ? (char *) calloc ((size_t) 1, (size_t) 1)		      \
 		     : ({ size_t __len = strlen (s) + 1;		      \
 			  char *__retval = (char *) malloc (__len);	      \
 			  if (__retval != NULL)				      \
@@ -1325,7 +1325,7 @@ extern char *__strndup (__const char *__string, size_t __n)
 #  define __strndup(s, n) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
-		     ? (char *) calloc (1, 1)				      \
+		     ? (char *) calloc ((size_t) 1, (size_t) 1)		      \
 		     : ({ size_t __len = strlen (s) + 1;		      \
 			  size_t __n = (n);				      \
 			  char *__retval;				      \

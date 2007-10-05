@@ -1,5 +1,11 @@
 2007-10-05  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5113]
+	* string/bits/string2.h (__strdup): Cast parameters to calloc to
+	avoid warning with -Wconversion.
+	(__strndup): Likewise.
+	Patch to 50% by Christian Iseli <christian.iseli@licr.org>.
+
 	[BZ #5112]
 	* nscd/connections.c (restart): Don't resync if database is
 	disabled.  Patch mostly by Brian De Wolf <bldewolf@csupomona.edu>.
