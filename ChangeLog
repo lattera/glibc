@@ -1,5 +1,18 @@
 2007-10-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/zic.c: Update from tzcode2007h.
+
+	[BZ #5063]
+	* timezone/africa: Update from tzdata2007h.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timzeone/zone.tab: Likewise.
+
 	[BZ #5104]
 	* elf/do-lookup.h (do_lookup_x): Don't ignore STT_COMMON symbols.
 
@@ -22,7 +35,7 @@
 	* sysdeps/unix/sysv/linux/eventfd_read.c: New file.
 	* sysdeps/unix/sysv/linux/eventfd_write.c: New file.
 	* sysdeps/unix/sysv/linux/sys/eventfd.h: New file.
-	* sysdeps/unix/sysv/linux/Versions: Export eventfd, evetnfd_read,
+	* sysdeps/unix/sysv/linux/Versions: Export eventfd, eventfd_read,
 	eventfd_write for GLIBC_2.7.
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add signalfd.

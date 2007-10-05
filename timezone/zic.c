@@ -3,7 +3,7 @@
 ** 2006-07-17 by Arthur David Olson.
 */
 
-static char	elsieid[] = "@(#)zic.c	8.11";
+static char	elsieid[] = "@(#)zic.c	8.14";
 
 #include "private.h"
 #include "locale.h"
@@ -114,7 +114,7 @@ static void	associate P((void));
 static int	ciequal P((const char * ap, const char * bp));
 static void	convert P((long val, char * buf));
 static void	convert64 P((zic_t val, char * buf));
-static void	dolink P((const char * fromfile, const char * tofile));
+static void	dolink P((const char * fromfield, const char * tofield));
 static void	doabbr P((char * abbr, const char * format,
 			const char * letters, int isdst, int doquotes));
 static void	eat P((const char * name, int num));
@@ -628,26 +628,26 @@ _("%s: More than one -L option specified\n"),
 }
 
 static void
-dolink(fromfile, tofile)
-const char * const	fromfile;
-const char * const	tofile;
+dolink(fromfield, tofield)
+const char * const	fromfield;
+const char * const	tofield;
 {
 	register char *	fromname;
 	register char *	toname;
 
-	if (fromfile[0] == '/')
-		fromname = ecpyalloc(fromfile);
+	if (fromfield[0] == '/')
+		fromname = ecpyalloc(fromfield);
 	else {
 		fromname = ecpyalloc(directory);
 		fromname = ecatalloc(fromname, "/");
-		fromname = ecatalloc(fromname, fromfile);
+		fromname = ecatalloc(fromname, fromfield);
 	}
-	if (tofile[0] == '/')
-		toname = ecpyalloc(tofile);
+	if (tofield[0] == '/')
+		toname = ecpyalloc(tofield);
 	else {
 		toname = ecpyalloc(directory);
 		toname = ecatalloc(toname, "/");
-		toname = ecatalloc(toname, tofile);
+		toname = ecatalloc(toname, tofield);
 	}
 	/*
 	** We get to be careful here since
@@ -666,7 +666,7 @@ const char * const	tofile;
 		if (result != 0 &&
 			access(fromname, F_OK) == 0 &&
 			!itsdir(fromname)) {
-				const char *s = tofile;
+				const char *s = tofield;
 				register char * symlinkcontents = NULL;
 
 				while ((s = strchr(s+1, '/')) != NULL)
@@ -926,7 +926,8 @@ const char *		string;
 const char * const	errstring;
 const int		signable;
 {
-	int	hh, mm, ss, sign;
+	long	hh;
+	int	mm, ss, sign;
 
 	if (string == NULL || *string == '\0')
 		return 0;
@@ -936,27 +937,32 @@ const int		signable;
 		sign = -1;
 		++string;
 	} else	sign = 1;
-	if (sscanf(string, scheck(string, "%d"), &hh) == 1)
+	if (sscanf(string, scheck(string, "%ld"), &hh) == 1)
 		mm = ss = 0;
-	else if (sscanf(string, scheck(string, "%d:%d"), &hh, &mm) == 2)
+	else if (sscanf(string, scheck(string, "%ld:%d"), &hh, &mm) == 2)
 		ss = 0;
-	else if (sscanf(string, scheck(string, "%d:%d:%d"),
+	else if (sscanf(string, scheck(string, "%ld:%d:%d"),
 		&hh, &mm, &ss) != 3) {
 			error(errstring);
 			return 0;
 	}
-	if ((hh < 0 || hh >= HOURSPERDAY ||
+	if (hh < 0 ||
 		mm < 0 || mm >= MINSPERHOUR ||
-		ss < 0 || ss > SECSPERMIN) &&
-		!(hh == HOURSPERDAY && mm == 0 && ss == 0)) {
+		ss < 0 || ss > SECSPERMIN) {
 			error(errstring);
 			return 0;
 	}
-	if (noise && hh == HOURSPERDAY)
+	if (LONG_MAX / SECSPERHOUR < hh) {
+		error(_("time overflow"));
+		return 0;
+	}
+	if (noise && hh == HOURSPERDAY && mm == 0 && ss == 0)
 		warning(_("24:00 not handled by pre-1998 versions of zic"));
-	return eitol(sign) *
-		(eitol(hh * MINSPERHOUR + mm) *
-		eitol(SECSPERMIN) + eitol(ss));
+	if (noise && (hh > HOURSPERDAY ||
+		(hh == HOURSPERDAY && (mm != 0 || ss != 0))))
+warning(_("values over 24 hours not handled by pre-2007 versions of zic"));
+	return oadd(eitol(sign) * hh * eitol(SECSPERHOUR),
+		    eitol(sign) * (eitol(mm) * eitol(SECSPERMIN) + eitol(ss)));
 }
 
 static void
@@ -2269,6 +2275,10 @@ const int		ttisgmt;
 	*/
 	if (typecnt >= TZ_MAX_TYPES) {
 		error(_("too many local time types"));
+		exit(EXIT_FAILURE);
+	}
+	if (! (-1L - 2147483647L <= gmtoff && gmtoff <= 2147483647L)) {
+		error(_("UTC offset out of range"));
 		exit(EXIT_FAILURE);
 	}
 	gmtoffs[i] = gmtoff;
