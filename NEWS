@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2007-9-19
+GNU C Library NEWS -- history of user-visible changes.  2007-10-5
 Copyright (C) 1992-2006, 2007 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -24,6 +24,9 @@ Version 2.7
 
 * More CPU set manipulation functions.  Implemented by Ulrich Drepper.
 
+* New Linux interfaces: signalfd, eventfd, eventfd_read, and eventfd_write.
+  Implemented by Ulrich Drepper.
+
 * Handle private futexes in the NPTL implementation.
   Implemented by Jakub Jelinek and Ulrich Drepper.
 
@@ -33,6 +36,13 @@ Version 2.7
 * Linux/x86-64 vDSO support.  Implemented by Ulrich Drepper.
 
 * SHA-256 and SHA-512 based password encryption.
+  Implemented by Ulrich Drepper.
+
+* New locales: ber_DZ, ber_MA, en_NG, fil_PH, fur_IT, fy_DE, ha_NG, ig_NG,
+  ik_CA, iu_CA, li_BE, li_NL, nds_DE, nds_NL, pap_AN, sc_IT, tk_TM, ug_CN,
+  yo_NG.
+
++ New iconv modules: MAC-CENTRALEUROPE, ISO-8859-9E, KOI8-RU.
   Implemented by Ulrich Drepper.
 
 Version 2.6

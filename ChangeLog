@@ -1,5 +1,8 @@
 2007-10-05  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5104]
+	* elf/do-lookup.h (do_lookup_x): Don't ignore STT_COMMON symbols.
+
 	[BZ #5113]
 	* string/bits/string2.h (__strdup): Cast parameters to calloc to
 	avoid warning with -Wconversion.

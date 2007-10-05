@@ -87,8 +87,9 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	  return NULL;
 
 	if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC
+			      && ELFW(ST_TYPE) (sym->st_info) != STT_COMMON
 			      && ELFW(ST_TYPE) (sym->st_info) != STT_TLS, 0))
-	  /* Ignore all but STT_NOTYPE, STT_OBJECT and STT_FUNC
+	  /* Ignore all but STT_NOTYPE, STT_OBJECT, STT_FUNC, and STT_COMMON
 	     entries (and STT_TLS if TLS is supported) since these
 	     are no code/data definitions.  */
 	  return NULL;
