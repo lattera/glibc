@@ -1284,14 +1284,15 @@ cannot change to old working directory: %s; disabling paranoia mode"),
 
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
-    {
-      /* Make sure nobody keeps using the database.  */
-      dbs[cnt].head->timestamp = 0;
+    if (!dbs[cnt].enabled)
+      {
+	/* Make sure nobody keeps using the database.  */
+	dbs[cnt].head->timestamp = 0;
 
-      if (dbs[cnt].persistent)
-	// XXX async OK?
-	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
-    }
+	if (dbs[cnt].persistent)
+	  // XXX async OK?
+	  msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+      }
 
   /* The preparations are done.  */
   execv ("/proc/self/exe", argv);
