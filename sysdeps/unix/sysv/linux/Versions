@@ -130,7 +130,7 @@ libc {
     epoll_pwait; sync_file_range; sched_getcpu;
   }
   GLIBC_2.7 {
-    signalfd;
+    eventfd; eventfd_read; eventfd_write; signalfd;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

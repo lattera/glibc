@@ -17,7 +17,7 @@
 	* sysdeps/unix/sysv/linux/sys/signalfd.h: New file.
 	* sysdeps/unix/sysv/linux/Versions: Export signalfd for GLIBC_2.7.
 
-2007-10-04  Jakub Jelinek
+2007-10-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/msort.c: Include stdint.h.
 	(struct msort_param): New type.
@@ -41,7 +41,7 @@
 	include <features.h> now.  Include <bits/error.h> if possible.
 	* misc/bits/error.h: New file.
 
-2007-10-03  Jakub Jelinek
+2007-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/bits/string3.h (memcpy, memmove, mempcpy, memset, bcopy,
 	bzero, strcpy, stpcpy, strncpy, strcat, strncat): Use
