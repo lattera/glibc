@@ -1,3 +1,12 @@
+2007-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5010]
+	* sunrpc/svc.c (struct svc_callout): Add sc_mapped element.
+	(svc_register): Initialize sc_mapped.  Set to TRUE if call to
+	map service succeeded.
+	(svc_is_mapped): New function.
+	(svc_unregister): Use it before trying to unmap service.
+
 2007-10-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/zic.c: Update from tzcode2007h.

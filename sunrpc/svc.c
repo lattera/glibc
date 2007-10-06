@@ -61,6 +61,7 @@ struct svc_callout {
   rpcprog_t sc_prog;
   rpcvers_t sc_vers;
   void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
+  bool_t sc_mapped;
 };
 #ifdef _RPC_THREAD_SAFE_
 #define svc_head RPC_THREAD_VARIABLE(svc_head_s)
@@ -160,6 +161,17 @@ done:
   return s;
 }
 
+
+static bool_t
+svc_is_mapped (rpcprog_t prog, rpcvers_t vers)
+{
+  struct svc_callout *prev;
+  register struct svc_callout *s;
+  s = svc_find (prog, vers, &prev);
+  return s!= NULL_SVC && s->sc_mapped;
+}
+
+
 /* Add a service program to the callout list.
    The dispatch routine will be called when a rpc request for this
    program number comes in. */
@@ -185,12 +197,18 @@ svc_register (SVCXPRT * xprt, rpcprog_t prog, rpcvers_t vers,
   s->sc_vers = vers;
   s->sc_dispatch = dispatch;
   s->sc_next = svc_head;
+  s->sc_mapped = FALSE;
   svc_head = s;
 
 pmap_it:
   /* now register the information with the local binder service */
   if (protocol)
-    return pmap_set (prog, vers, protocol, xprt->xp_port);
+    {
+      if (! pmap_set (prog, vers, protocol, xprt->xp_port))
+	return FALSE;
+
+      s->sc_mapped = TRUE;
+    }
 
   return TRUE;
 }
@@ -214,7 +232,8 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   s->sc_next = NULL_SVC;
   mem_free ((char *) s, (u_int) sizeof (struct svc_callout));
   /* now unregister the information with the local binder service */
-  pmap_unset (prog, vers);
+  if (! svc_is_mapped (prog, vers))
+    pmap_unset (prog, vers);
 }
 libc_hidden_def (svc_unregister)
 
