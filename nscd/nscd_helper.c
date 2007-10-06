@@ -416,7 +416,8 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
   unsigned long int hash = __nis_hash (key, keylen) % mapped->head->module;
   size_t datasize = mapped->datasize;
 
-  ref_t work = mapped->head->array[hash];
+  ref_t first = mapped->head->array[hash];
+  ref_t work = first;
   while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
@@ -454,6 +455,10 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	}
 
       work = here->next;
+      /* Prevent endless loops.  This should never happen but perhaps
+	 the database got corrupted, accidentally or deliberately.  */
+      if (work == first)
+	break;
     }
 
   return NULL;
