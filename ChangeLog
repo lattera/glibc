@@ -1,6 +1,7 @@
 2007-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (__nscd_cache_search): Prevent endless loops.
+	* nscd/connections.c (verify_persistent_db): Recognize circular lists.
 
 	[BZ #4407]
 	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Fix *signgamp for -0.0.

@@ -378,7 +378,8 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
   nscd_ssize_t he_cnt = 0;
   for (nscd_ssize_t cnt = 0; cnt < head->module; ++cnt)
     {
-      ref_t work = head->array[cnt];
+      ref_t first = head->array[cnt];
+      ref_t work = first;
 
       while (work != ENDREF)
 	{
@@ -437,6 +438,10 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 	    }
 
 	  work = here->next;
+
+	  if (work == first)
+	    /* A circular list, this must not happen.  */
+	    goto fail;
 	}
     }
 
