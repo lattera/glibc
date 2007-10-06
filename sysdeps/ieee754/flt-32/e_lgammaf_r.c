@@ -164,7 +164,12 @@ static float zero=  0.0000000000e+00;
 	*signgamp = 1;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7f800000) return x*x;
-	if(ix==0) return one/fabsf(x);
+	if(ix==0)
+	  {
+	    if (hx < 0)
+	      *signgamp = -1;
+	    return one/fabsf(x);
+	  }
 	if(ix<0x1c800000) {	/* |x|<2**-70, return -log(|x|) */
 	    if(hx<0) {
 	        *signgamp = -1;

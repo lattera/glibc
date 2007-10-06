@@ -228,7 +228,12 @@ static double zero=  0.00000000000000000000e+00;
 	*signgamp = 1;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7ff00000) return x*x;
-	if((ix|lx)==0) return one/fabs(x);
+	if((ix|lx)==0)
+	  {
+	    if (hx < 0)
+	      *signgamp = -1;
+	    return one/fabs(x);
+	  }
 	if(ix<0x3b900000) {	/* |x|<2**-70, return -log(|x|) */
 	    if(hx<0) {
 	        *signgamp = -1;

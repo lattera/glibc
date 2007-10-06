@@ -1,5 +1,11 @@
 2007-10-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4407]
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Fix *signgamp for -0.0.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Likewise.
+	* math/libm-test.inc: Add test for this case.
+
 	[BZ #5010]
 	* sunrpc/svc.c (struct svc_callout): Add sc_mapped element.
 	(svc_register): Initialize sc_mapped.  Set to TRUE if call to
@@ -29,7 +35,7 @@
 	* string/bits/string2.h (__strdup): Cast parameters to calloc to
 	avoid warning with -Wconversion.
 	(__strndup): Likewise.
-	Patch to 50% by Christian Iseli <christian.iseli@licr.org>.
+	Half the patch by Christian Iseli <christian.iseli@licr.org>.
 
 	[BZ #5112]
 	* nscd/connections.c (restart): Don't resync if database is

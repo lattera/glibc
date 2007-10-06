@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -3221,6 +3221,9 @@ lgamma_test (void)
 
   TEST_f_f (lgamma, plus_infty, plus_infty);
   TEST_f_f (lgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("signgam for lgamma(0) == 1", signgam, 1, 0, 0, 0);
+  TEST_f_f (lgamma, minus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("signgam for lgamma(-0) == -1", signgam, -1, 0, 0, 0);
   TEST_f_f (lgamma, nan_value, nan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */

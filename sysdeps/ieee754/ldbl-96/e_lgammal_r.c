@@ -11,9 +11,9 @@
 
 /* Long double expansions are
   Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-  and are incorporated herein by permission of the author.  The author 
+  and are incorporated herein by permission of the author.  The author
   reserves the right to distribute this material elsewhere under different
-  copying permissions.  These modifications are distributed here under 
+  copying permissions.  These modifications are distributed here under
   the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -302,7 +302,11 @@ __ieee754_lgammal_r (x, signgamp)
   ix = se & 0x7fff;
 
   if ((ix | i0 | i1) == 0)
-    return one / fabsl (x);
+    {
+      if (se & 0x8000)
+	*signgamp = -1;
+      return one / fabsl (x);
+    }
 
   ix = (ix << 16) | (i0 >> 16);
 
