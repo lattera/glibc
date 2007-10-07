@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -134,7 +134,7 @@ const struct locale_data _nl_C_LC_TIME attribute_hidden =
     { .wstr = (const uint32_t *) L"" },
     { .wstr = (const uint32_t *) L"" },
     { .string = "\7" },
-    { .word = 19971130 },
+    { .word = 19971201 },
     { .string = "\4" },
     { .string = "\7" },
     { .string = "\1" },

@@ -1,5 +1,8 @@
 2007-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #181]
+	* locale/C-time.c: Set week_1stday data to 19971201.
+
 	[BZ #2633]
 	* wcsmbs/wchar.h: Move many C99 functions into std namespace.
 
