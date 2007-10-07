@@ -1,3 +1,14 @@
+2007-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/error.h: Use __const instead of const.
+	* misc/bits/error.h: Likewise.
+
+2007-10-07  Andreas Jaeger  <aj@suse.de>
+
+	* include/bits/error.h: New file.
+
+	* misc/bits/error.h (error_at_line): Fix prototype.
+
 2007-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3924]
