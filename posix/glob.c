@@ -454,9 +454,10 @@ glob (pattern, flags, errfunc, pglob)
 	  dirlen = 0;
 	}
     }
-  else if (filename == pattern)
+  else if (filename == pattern
+	   || (filename == pattern + 1 && pattern[0] == '\\'))
     {
-      /* "/pattern".  */
+      /* "/pattern" or "\\/pattern".  */
       dirname = "/";
       dirlen = 1;
       ++filename;

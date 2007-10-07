@@ -1,6 +1,6 @@
 /* Test the GNU extensions in glob which allow the user to provide callbacks
    for the filesystem access functions.
-   Copyright (C) 2001-2002 Free Software Foundation, Inc.
+   Copyright (C) 2001-2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -102,6 +102,16 @@ find_file (const char *s)
 {
   int level = 1;
   long int idx = 0;
+
+  while (s[0] == '/')
+    {
+      if (s[1] == '\0')
+	{
+	  s = ".";
+	  break;
+	}
+      ++s;
+    }
 
   if (strcmp (s, ".") == 0)
     return 0;
@@ -438,6 +448,12 @@ main (void)
 	"dir2lev1/dir1lev2/..",
 	"dir2lev1/dir1lev2/.dir",
 	"dir2lev1/dir1lev2/.foo");
+
+  test ("\\/*", GLOB_ALTDIRFUNC,
+	"/dir1lev1",
+	"/dir2lev1",
+	"/file1lev1",
+	"/file2lev1");
 
   globfree (&gl);
 

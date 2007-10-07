@@ -1,5 +1,10 @@
 2007-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5103]
+	* posix/glob.c (glob): Recognize patterns starting \/.
+	* posix/tst-gnuglob.c (find_file): Handle absolute path names.
+	(main): Add test for pattern starting \/.
+
 	* misc/error.h: Use __const instead of const.
 	* misc/bits/error.h: Likewise.
 
