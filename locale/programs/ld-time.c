@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -508,7 +508,7 @@ No definition for %s category found"), "LC_TIME"));
 
   if (time->first_workday == '\0')
     /* The definition does not specify this so the default is used.  */
-    time->first_workday = 1;
+    time->first_workday = 2;
   else if (time->first_workday > time->week_ndays)
     WITH_CUR_LOCALE (error (0, 0, _("\
 %s: values for field `%s' must not be larger than %d"),
