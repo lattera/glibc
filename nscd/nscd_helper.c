@@ -416,8 +416,10 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
   unsigned long int hash = __nis_hash (key, keylen) % mapped->head->module;
   size_t datasize = mapped->datasize;
 
-  ref_t first = mapped->head->array[hash];
-  ref_t work = first;
+  ref_t trail = mapped->head->array[hash];
+  ref_t work = trail;
+  int tick = 0;
+
   while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
@@ -457,8 +459,21 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
       work = here->next;
       /* Prevent endless loops.  This should never happen but perhaps
 	 the database got corrupted, accidentally or deliberately.  */
-      if (work == first)
+      if (work == trail)
 	break;
+      if (tick)
+	{
+	  struct hashentry *trailelem;
+	  trailelem = (struct hashentry *) (mapped->data + trail);
+
+#ifndef _STRING_ARCH_unaligned
+	  /* We have to redo the checks.  Maybe the data changed.  */
+	  if ((uintptr_t) trailelem & (__alignof__ (*trailelem) - 1))
+	    return NULL;
+#endif
+	  trail = trailelem->next;
+	}
+      tick = 1 - tick;
     }
 
   return NULL;

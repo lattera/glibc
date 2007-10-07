@@ -1,5 +1,10 @@
 2007-10-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3924]
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix a few
+	more little bugs in creating the stack frame when pltexit has to
+	be called.
+
 	* nscd/nscd_helper.c (__nscd_cache_search): Prevent endless loops.
 	* nscd/connections.c (verify_persistent_db): Recognize circular lists.
 

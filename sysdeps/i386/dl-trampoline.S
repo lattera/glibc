@@ -113,6 +113,7 @@ _dl_runtime_profile:
 	movl %ebx, %ecx
 	orl $4, %ebx		# Increase frame size if necessary to align
 				# stack for the function call
+	andl $~3, %ebx
 	movl %esp, %edi
 	subl %ebx, %edi
 	movl %esp, %ebx
@@ -121,9 +122,9 @@ _dl_runtime_profile:
 	shrl $2, %ecx
 	rep
 	movsl
-	movl (%edi), %esi
+	movl (%ebx), %esi
 	cfi_restore (esi)
-	movl 4(%edi), %edi
+	movl 4(%ebx), %edi
 	cfi_restore (edi)
 	/*
 	   %ebx+40  return address
