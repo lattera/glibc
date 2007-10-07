@@ -1,5 +1,8 @@
 2007-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2633]
+	* wcsmbs/wchar.h: Move many C99 functions into std namespace.
+
 	[BZ #5103]
 	* posix/glob.c (glob): Recognize patterns starting \/.
 	* posix/tst-gnuglob.c (find_file): Handle absolute path names.
