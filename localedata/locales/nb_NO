@@ -15,15 +15,13 @@ comment_char    %
 % Date: 1996-10-15
 % Application: general
 % Users: general
-% Repertoiremap: mnemonic.ds
-% Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Norwegian (Bokmal) locale for Norway"
 source     "Norsk Standardiseringsforbund"
-address    "University Library,, Drammensveien 41, N-9242 Oslo, Norge"
+address    "University Library, Drammensveien 41, N-9242 Oslo, Norge"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -66,6 +64,9 @@ reorder-after <RES-1>
 <CAP-MIN>
 <MIN-CAP>
 
+reorder-after <OBL>
+<ETH>
+
 reorder-after <z>
 <ae>
 <o-stroke>
@@ -73,31 +74,33 @@ reorder-after <z>
 
 reorder-after <U0178>
 <U00DC> <y>;<U00DC>;<CAP>;IGNORE
-<U00FC> <y>;<U00DC>;<MIN>;IGNORE
 <U0170> <y>;<U0170>;<CAP>;IGNORE
+reorder-after <U00FF>
+<U00FC> <y>;<U00DC>;<MIN>;IGNORE
 <U0171> <y>;<U0170>;<MIN>;IGNORE
 
 reorder-after <U017B>
 <U00C6> <ae>;<BAS>;<CAP>;IGNORE
-<U00E6> <ae>;<BAS>;<MIN>;IGNORE
 <U01FC> <ae>;<ACA>;<CAP>;IGNORE
-<U01FD> <ae>;<ACA>;<MIN>;IGNORE
 <U01E2> <ae>;<MAC>;<CAP>;IGNORE
-<U01E3> <ae>;<MAC>;<MIN>;IGNORE
 <U00C4> <ae>;<PCL>;<CAP>;IGNORE
-<U00E4> <ae>;<PCL>;<MIN>;IGNORE
 <U00D8> <o-stroke>;<BAS>;<CAP>;IGNORE
-<U00F8> <o-stroke>;<BAS>;<MIN>;IGNORE
 <U01FE> <o-stroke>;<ACA>;<CAP>;IGNORE
-<U01FF> <o-stroke>;<ACA>;<MIN>;IGNORE
 <U00D6> <o-stroke>;<REU>;<CAP>;IGNORE
-<U00F6> <o-stroke>;<REU>;<MIN>;IGNORE
 <U0150> <o-stroke>;<DAC>;<CAP>;IGNORE
-<U0151> <o-stroke>;<DAC>;<MIN>;IGNORE
 <U00C5> <a-ring>;<BAS>;<CAP>;IGNORE
-<U00E5> <a-ring>;<BAS>;<MIN>;IGNORE
 <A-A>   <a-ring>;<A-A>;<CAP>;IGNORE
 <A-a>   <a-ring>;<A-A>;<CAP-MIN>;IGNORE
+reorder-after <U017C>
+<U00E6> <ae>;<BAS>;<MIN>;IGNORE
+<U01FD> <ae>;<ACA>;<MIN>;IGNORE
+<U01E3> <ae>;<MAC>;<MIN>;IGNORE
+<U00E4> <ae>;<PCL>;<MIN>;IGNORE
+<U00F8> <o-stroke>;<BAS>;<MIN>;IGNORE
+<U01FF> <o-stroke>;<ACA>;<MIN>;IGNORE
+<U00F6> <o-stroke>;<REU>;<MIN>;IGNORE
+<U0151> <o-stroke>;<DAC>;<MIN>;IGNORE
+<U00E5> <a-ring>;<BAS>;<MIN>;IGNORE
 <a-A>   <a-ring>;<A-A>;<MIN-CAP>;IGNORE
 <a-a>   <a-ring>;<A-A>;<MIN>;IGNORE
 
@@ -105,15 +108,14 @@ reorder-after <U017B>
 %  removed from latest iso14651 tables.
 reorder-after <U0162>
 <U00DE> "<t><h>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
+reorder-after <U0163>
 <U00FE> "<t><h>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
-
-reorder-after <OBL>
-<ETH>
 
 reorder-after <U0064>
 <U0110> <d>;<OBL>;<CAP>;IGNORE
-<U0111> <d>;<OBL>;<MIN>;IGNORE
 <U00D0> <d>;<ETH>;<CAP>;IGNORE
+reorder-after <U0044>
+<U0111> <d>;<OBL>;<MIN>;IGNORE
 <U00F0> <d>;<ETH>;<MIN>;IGNORE
 
 reorder-end
@@ -132,7 +134,7 @@ LC_MONETARY
 int_curr_symbol         "<U004E><U004F><U004B><U0020>"
 currency_symbol         "<U006B><U0072>"
 mon_decimal_point       "<U002C>"
-mon_thousands_sep       "<U002E>"
+mon_thousands_sep       "<U00A0>"
 mon_grouping            3;3
 positive_sign           ""
 negative_sign           "<U002D>"
@@ -148,15 +150,15 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point           "<U002C>"
-thousands_sep           "<U002E>"
+thousands_sep           "<U00A0>"
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "<U0073><U00F8><U006E>";"<U006D><U0061><U006E>";/
-            "<U0074><U0069><U0072>";"<U006F><U006E><U0073>";/
-            "<U0074><U006F><U0072>";"<U0066><U0072><U0065>";/
-            "<U006C><U00F8><U0072>"
+abday       "<U0073><U00F8><U002E>";"<U006D><U0061><U002E>";/
+            "<U0074><U0069><U002E>";"<U006F><U006E><U002E>";/
+            "<U0074><U006F><U002E>";"<U0066><U0072><U002E>";/
+            "<U006C><U00F8><U002E>"
 day         "<U0073><U00F8><U006E><U0064><U0061><U0067>";/
             "<U006D><U0061><U006E><U0064><U0061><U0067>";/
             "<U0074><U0069><U0072><U0073><U0064><U0061><U0067>";/
@@ -164,12 +166,12 @@ day         "<U0073><U00F8><U006E><U0064><U0061><U0067>";/
             "<U0074><U006F><U0072><U0073><U0064><U0061><U0067>";/
             "<U0066><U0072><U0065><U0064><U0061><U0067>";/
             "<U006C><U00F8><U0072><U0064><U0061><U0067>"
-abmon       "<U006A><U0061><U006E>";"<U0066><U0065><U0062>";/
-            "<U006D><U0061><U0072>";"<U0061><U0070><U0072>";/
-            "<U006D><U0061><U0069>";"<U006A><U0075><U006E>";/
-            "<U006A><U0075><U006C>";"<U0061><U0075><U0067>";/
-            "<U0073><U0065><U0070>";"<U006F><U006B><U0074>";/
-            "<U006E><U006F><U0076>";"<U0064><U0065><U0073>"
+abmon       "<U006A><U0061><U006E><U002E>";"<U0066><U0065><U0062><U002E>";/
+            "<U006D><U0061><U0072><U0073>";"<U0061><U0070><U0072><U0069><U006C>";/
+            "<U006D><U0061><U0069>";"<U006A><U0075><U006E><U0069>";/
+            "<U006A><U0075><U006C><U0069>";"<U0061><U0075><U0067><U002E>";/
+            "<U0073><U0065><U0070><U002E>";"<U006F><U006B><U0074><U002E>";/
+            "<U006E><U006F><U0076><U002E>";"<U0064><U0065><U0073><U002E>"
 mon         "<U006A><U0061><U006E><U0075><U0061><U0072>";/
             "<U0066><U0065><U0062><U0072><U0075><U0061><U0072>";/
             "<U006D><U0061><U0072><U0073>";/
@@ -183,14 +185,22 @@ mon         "<U006A><U0061><U006E><U0075><U0061><U0072>";/
             "<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
             "<U0064><U0065><U0073><U0065><U006D><U0062><U0065><U0072>"
 % usual date representation
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0059>"
-t_fmt       "<U0025><U0054>"
+% %a %d. %b %Y kl. %H.%M %z
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U002E><U0020><U0025><U0062>/
+<U0020><U0025><U0059><U0020><U006B><U006C><U002E><U0020><U0025><U0048>/
+<U002E><U0025><U004D><U0020><U0025><U007A>"
+% %d. %b %Y
+d_fmt  "<U0025><U0064><U002E><U0020><U0025><U0062><U0020><U0025><U0059>"
+% kl. %H.%M %z
+t_fmt        "<U006B><U006C><U002E><U0020><U0025><U0048><U002E><U0025>/
+<U004D><U0020><U0025><U007A>"
 am_pm       "";""
 t_fmt_ampm  ""
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+% %a %d. %b %H:%M:%S %z %Y
+date_fmt       "<U0025><U0061><U0020><U0025><U0064><U002E><U0020><U0025>/
+<U0062><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
+<U0020><U0025><U007A><U0020><U0025><U0059>"
+
 week    7;19971201;4
 first_weekday 1
 first_workday 1

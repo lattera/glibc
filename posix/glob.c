@@ -455,7 +455,8 @@ glob (pattern, flags, errfunc, pglob)
 	}
     }
   else if (filename == pattern
-	   || (filename == pattern + 1 && pattern[0] == '\\'))
+	   || (filename == pattern + 1 && pattern[0] == '\\'
+	       && (flags & GLOB_NOESCAPE) == 0))
     {
       /* "/pattern" or "\\/pattern".  */
       dirname = "/";
