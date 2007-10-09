@@ -76,6 +76,8 @@ END LC_CTYPE
 
 LC_COLLATE
 
+define DIACRIT_FORWARD
+
 % Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
 
@@ -153,6 +155,10 @@ t_fmt_ampm ""
 date_fmt	"<U0025><U0061><U0020><U0025><U002D><U0064><U002E><U0020>/
 <U0025><U0062><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U005A><U0020><U0025><U0059>"
+
+week    7;19971201;4
+first_weekday 1
+first_workday 1
 END LC_TIME
 
 LC_MESSAGES
