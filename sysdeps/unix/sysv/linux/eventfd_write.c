@@ -24,5 +24,6 @@
 int
 eventfd_write (int fd, eventfd_t value)
 {
-  return write (fd, &value, sizeof (eventfd_t)) != sizeof (eventfd_t) ? -1 : 0;
+  return __write (fd, &value,
+		  sizeof (eventfd_t)) != sizeof (eventfd_t) ? -1 : 0;
 }
