@@ -1,3 +1,19 @@
+2007-10-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/en_US: Add first_weekday and first_workday.
+	* locales/cs_CZ: Likewise.
+	* locales/fur_IT: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/i18n: Likewise.
+	* locales/li_BE: Likewise.
+	* locales/li_NL: Likewise.
+	* locales/nds_DE: Likewise.
+	* locales/nds_NL: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/sk_SK: Likewise.
+
 2007-10-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/de_DE: Set first week day to Monday.
