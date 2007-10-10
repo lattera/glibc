@@ -1,3 +1,8 @@
+2007-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Work around problem
+	with some Pentium Ds.
+
 2007-10-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/eventfd_read.c (eventfd_read): Use

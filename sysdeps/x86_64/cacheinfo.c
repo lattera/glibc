@@ -456,6 +456,13 @@ init_cacheinfo (void)
               asm volatile ("cpuid"
 		            : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		            : "0" (4), "2" (i++));
+
+	      /* There seems to be a bug in at least some Pentium Ds
+		 which sometimes fail to iterate all cache parameters.
+		 Do not loop indefinitely here, stop in this case and
+		 assume there is no such information.  */
+	      if ((eax & 0x1f) == 0)
+		goto intel_bug_no_cache_info;
 	    }
           while (((eax >> 5) & 0x7) != level);
 
@@ -463,6 +470,7 @@ init_cacheinfo (void)
 	}
       else
         {
+	intel_bug_no_cache_info:
 	  /* Assume that all logical threads share the highest cache level.  */
           asm volatile ("cpuid"
 		        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
