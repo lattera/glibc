@@ -1,3 +1,11 @@
+2007-10-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_rwlock_init): Inside of
+	libc.so just clear NAME.
+	(__libc_rwlock_fini): Nop inside of libc.so.
+	* tst-initializers1.c (main): Test if PTHREAD_RWLOCK_INITIALIZER is
+	all zeros.
+
 2007-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S

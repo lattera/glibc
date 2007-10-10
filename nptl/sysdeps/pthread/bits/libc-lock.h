@@ -172,8 +172,15 @@ typedef pthread_key_t __libc_key_t;
 # define __libc_lock_init(NAME) \
   __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
 #endif
-#define __libc_rwlock_init(NAME) \
+#if defined SHARED && !defined NOT_IN_libc
+/* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER, 0) is
+   inefficient.  */
+# define __libc_rwlock_init(NAME) \
+  (__builtin_memset (&(NAME), '\0', sizeof (NAME)), 0)
+#else
+# define __libc_rwlock_init(NAME) \
   __libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0)
+#endif
 
 /* Same as last but this time we initialize a recursive mutex.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
@@ -214,8 +221,12 @@ typedef pthread_key_t __libc_key_t;
 # define __libc_lock_fini(NAME) \
   __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
 #endif
-#define __libc_rwlock_fini(NAME) \
+#if defined SHARED && !defined NOT_IN_libc
+# define __libc_rwlock_fini(NAME) ((void) 0)
+#else
+# define __libc_rwlock_fini(NAME) \
   __libc_maybe_call (__pthread_rwlock_destroy, (&(NAME)), 0)
+#endif
 
 /* Finalize recursive named lock.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
