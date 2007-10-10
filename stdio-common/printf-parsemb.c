@@ -46,35 +46,6 @@
 
 
 
-/* Find the next spec in FORMAT, or the end of the string.  Returns
-   a pointer into FORMAT, to a '%' or a '\0'.  */
-const UCHAR_T *
-#ifdef COMPILE_WPRINTF
-__find_specwc (const UCHAR_T *format)
-#else
-__find_specmb (const UCHAR_T *format, mbstate_t *ps)
-#endif
-{
-#ifdef COMPILE_WPRINTF
-  return (const UCHAR_T *) __wcschrnul ((const CHAR_T *) format, L'%');
-#else
-  while (*format != L_('\0') && *format != L_('%'))
-    {
-      int len;
-
-      /* Remove any hints of a wrong encoding.  */
-      ps->__count = 0;
-      if (! isascii (*format)
-	  && (len = __mbrlen ((const CHAR_T *) format, MB_CUR_MAX, ps)) > 0)
-	format += len;
-      else
-	++format;
-    }
-  return format;
-#endif
-}
-
-
 /* FORMAT must point to a '%' at the beginning of a spec.  Fills in *SPEC
    with the parsed details.  POSN is the number of arguments already
    consumed.  At most MAXTYPES - POSN types are filled in TYPES.  Return
@@ -87,8 +58,7 @@ __parse_one_specwc (const UCHAR_T *format, size_t posn,
 		    struct printf_spec *spec, size_t *max_ref_arg)
 #else
 __parse_one_specmb (const UCHAR_T *format, size_t posn,
-		    struct printf_spec *spec, size_t *max_ref_arg,
-		    mbstate_t *ps)
+		    struct printf_spec *spec, size_t *max_ref_arg)
 #endif
 {
   unsigned int n;
@@ -403,7 +373,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 #ifdef COMPILE_WPRINTF
       spec->next_fmt = __find_specwc (format);
 #else
-      spec->next_fmt = __find_specmb (format, ps);
+      spec->next_fmt = __find_specmb (format);
 #endif
     }
 

@@ -209,11 +209,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   CHAR_T *workstart = NULL;
   CHAR_T *workend;
 
-  /* State for restartable multibyte character handling functions.  */
-#ifndef COMPILE_WPRINTF
-  mbstate_t mbstate;
-#endif
-
   /* We have to save the original argument pointer.  */
   va_list ap_save;
 
@@ -1294,11 +1289,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Find the first format specifier.  */
   f = lead_str_end = __find_specwc ((const UCHAR_T *) format);
 #else
-  /* Put state for processing format string in initial state.  */
-  memset (&mbstate, '\0', sizeof (mbstate_t));
-
   /* Find the first format specifier.  */
-  f = lead_str_end = __find_specmb ((const UCHAR_T *) format, &mbstate);
+  f = lead_str_end = __find_specmb ((const UCHAR_T *) format);
 #endif
 
   /* Lock stream.  */
@@ -1591,7 +1583,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 #ifdef COMPILE_WPRINTF
       f = __find_specwc ((end_of_spec = ++f));
 #else
-      f = __find_specmb ((end_of_spec = ++f), &mbstate);
+      f = __find_specmb ((end_of_spec = ++f));
 #endif
 
       /* Write the following constant string.  */
@@ -1674,8 +1666,7 @@ do_positional:
 #ifdef COMPILE_WPRINTF
 	nargs += __parse_one_specwc (f, nargs, &specs[nspecs], &max_ref_arg);
 #else
-	nargs += __parse_one_specmb (f, nargs, &specs[nspecs], &max_ref_arg,
-				     &mbstate);
+	nargs += __parse_one_specmb (f, nargs, &specs[nspecs], &max_ref_arg);
 #endif
       }
 

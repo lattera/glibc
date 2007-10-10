@@ -1,3 +1,17 @@
+2007-10-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf-parse.h: Include string.h and wchar.h.
+	(__find_specwc): Change into __extern_always_inline function.
+	(__find_specmb): Likewise.  Remove ps argument.  Use __strchrnul.
+	(__parse_one_specmb): Remove ps argument.
+	* stdio-common/vfprintf.c (vfprintf): Remove mbstate variable.
+	Adjust __find_specmb and __parse_one_specmb callers.
+	* stdio-common/printf-prs.c (parse_printf_format): Likewise.
+	* stdio-common/printf-parsemb.c (__find_specwc, __find_specmb):
+	Removed.
+	(__parse_one_specmb): Remove ps argument, adjust __find_specmb
+	caller.
+
 2007-10-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Work around problem
