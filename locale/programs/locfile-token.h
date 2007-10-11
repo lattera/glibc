@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2005,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -115,7 +115,8 @@ enum token_t
   tok_ifdef,
   tok_ifndef,
   tok_else,
-  tok_elif,
+  tok_elifdef,
+  tok_elifndef,
   tok_endif,
   tok_lc_monetary,
   tok_int_curr_symbol,
