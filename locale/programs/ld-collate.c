@@ -181,6 +181,14 @@ struct symbol_t
 #include "3level.h"
 
 
+/* Simple name list for the preprocessor.  */
+struct name_list
+{
+  struct name_list *next;
+  char str[0];
+};
+
+
 /* The real definition of the struct for the LC_COLLATE locale.  */
 struct locale_collate_t
 {
@@ -240,12 +248,24 @@ struct locale_collate_t
   /* The arrays with the collation sequence order.  */
   unsigned char mbseqorder[256];
   struct collseq_table wcseqorder;
+
+  /* State of the preprocessor.  */
+  enum
+    {
+      else_none = 0,
+      else_ignore,
+      else_seen
+    }
+    else_action;
 };
 
 
 /* We have a few global variables which are used for reading all
    LC_COLLATE category descriptions in all files.  */
 static uint32_t nrules;
+
+/* List of defined preprocessor symbols.  */
+static struct name_list *defined;
 
 
 /* We need UTF-8 encoding of numbers.  */
@@ -2622,6 +2642,43 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 }
 
 
+static enum token_t
+skip_to (struct linereader *ldfile, struct locale_collate_t *collate,
+	 const struct charmap_t *charmap, int to_endif)
+{
+  while (1)
+    {
+      struct token *now = lr_token (ldfile, charmap, NULL, NULL, 0);
+      enum token_t nowtok = now->tok;
+
+      if (nowtok == tok_eof || nowtok == tok_end)
+	return nowtok;
+
+      if (nowtok == tok_ifdef || nowtok == tok_ifndef)
+	{
+	  lr_error (ldfile, _("%s: nested conditionals not supported"),
+		    "LC_COLLATE");
+	  nowtok = skip_to (ldfile, collate, charmap, tok_endif);
+	  if (nowtok == tok_eof || nowtok == tok_end)
+	    return nowtok;
+	}
+      else if ((!to_endif && (nowtok == tok_else || nowtok == tok_elifdef
+			      || nowtok == tok_elifndef))
+	       || nowtok == tok_endif)
+	{
+	  lr_ignore_rest (ldfile, 1);
+	  return nowtok;
+	}
+      else if (nowtok == tok_else)
+	{
+	  lr_error (ldfile, _("%s: more then one 'else'"), "LC_COLLATE");
+	}
+
+      lr_ignore_rest (ldfile, 0);
+    }
+}
+
+
 void
 collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      const struct charmap_t *charmap, const char *repertoire_name,
@@ -2658,6 +2715,38 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
+
+  while (nowtok == tok_define)
+    {
+      if (ignore_content)
+	{
+	  lr_ignore_rest (ldfile, 0);
+	  continue;
+	}
+
+      arg = lr_token (ldfile, charmap, result, NULL, verbose);
+      if (arg->tok != tok_ident)
+	SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
+      else
+	{
+	  /* Simply add the new symbol.  */
+	  struct name_list *newsym = xmalloc (sizeof (*newsym)
+					  + arg->val.str.lenmb + 1);
+	  memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
+	  newsym->str[arg->val.str.lenmb] = '\0';
+	  newsym->next = defined;
+	  defined = newsym;
+
+	  lr_ignore_rest (ldfile, 1);
+	}
+
+      do
+	{
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
+	  nowtok = now->tok;
+	}
+      while (nowtok == tok_eol);
+    }
 
   if (nowtok == tok_copy)
     {
@@ -3798,6 +3887,7 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_end:
+	seen_end:
 	  /* Next we assume `LC_COLLATE'.  */
 	  if (!ignore_content)
 	    {
@@ -3838,6 +3928,180 @@ error while adding equivalent collating symbol"));
 	  lr_ignore_rest (ldfile, arg->tok == tok_lc_collate);
 	  return;
 
+	case tok_define:
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
+	  if (arg->tok != tok_ident)
+	    goto err_label;
+
+	  /* Simply add the new symbol.  */
+	  struct name_list *newsym = xmalloc (sizeof (*newsym)
+					      + arg->val.str.lenmb + 1);
+	  memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
+	  newsym->str[arg->val.str.lenmb] = '\0';
+	  newsym->next = defined;
+	  defined = newsym;
+
+	  lr_ignore_rest (ldfile, 1);
+	  break;
+
+	case tok_undef:
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
+	  if (arg->tok != tok_ident)
+	    goto err_label;
+
+	  /* Remove _all_ occurrences of the symbol from the list.  */
+	  struct name_list *prevdef = NULL;
+	  struct name_list *curdef = defined;
+	  while (curdef != NULL)
+	    if (strncmp (arg->val.str.startmb, curdef->str,
+			 arg->val.str.lenmb) == 0
+		&& curdef->str[arg->val.str.lenmb] == '\0')
+	      {
+		if (prevdef == NULL)
+		  defined = curdef->next;
+		else
+		  prevdef->next = curdef->next;
+
+		struct name_list *olddef = curdef;
+		curdef = curdef->next;
+
+		free (olddef);
+	      }
+	    else
+	      {
+		prevdef = curdef;
+		curdef = curdef->next;
+	      }
+
+	  lr_ignore_rest (ldfile, 1);
+	  break;
+
+	case tok_ifdef:
+	case tok_ifndef:
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	found_ifdef:
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
+	  if (arg->tok != tok_ident)
+	    goto err_label;
+	  lr_ignore_rest (ldfile, 1);
+
+	  if (collate->else_action == else_none)
+	    {
+	      curdef = defined;
+	      while (curdef != NULL)
+		if (strncmp (arg->val.str.startmb, curdef->str,
+			     arg->val.str.lenmb) == 0
+		    && curdef->str[arg->val.str.lenmb] == '\0')
+		  break;
+
+	      if ((nowtok == tok_ifdef && curdef != NULL)
+		  || (nowtok == tok_ifndef && curdef == NULL))
+		{
+		  /* We have to use the if-branch.  */
+		  collate->else_action = else_ignore;
+		}
+	      else
+		{
+		  /* We have to use the else-branch, if there is one.  */
+		  nowtok = skip_to (ldfile, collate, charmap, 0);
+		  if (nowtok == tok_else)
+		    collate->else_action = else_seen;
+		  else if (nowtok == tok_elifdef)
+		    {
+		      nowtok = tok_ifdef;
+		      goto found_ifdef;
+		    }
+		  else if (nowtok == tok_elifndef)
+		    {
+		      nowtok = tok_ifndef;
+		      goto found_ifdef;
+		    }
+		  else if (nowtok == tok_eof)
+		    goto seen_eof;
+		  else if (nowtok == tok_end)
+		    goto seen_end;
+		}
+	    }
+	  else
+	    {
+	      /* XXX Should it really become necessary to support nested
+		 preprocessor handling we will push the state here.  */
+	      lr_error (ldfile, _("%s: nested conditionals not supported"),
+			"LC_COLLATE");
+	      nowtok = skip_to (ldfile, collate, charmap, 1);
+	      if (nowtok == tok_eof)
+		goto seen_eof;
+	      else if (nowtok == tok_end)
+		goto seen_end;
+	    }
+	  break;
+
+	case tok_elifdef:
+	case tok_elifndef:
+	case tok_else:
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  lr_ignore_rest (ldfile, 1);
+
+	  if (collate->else_action == else_ignore)
+	    {
+	      /* Ignore everything until the endif.  */
+	      nowtok = skip_to (ldfile, collate, charmap, 1);
+	      if (nowtok == tok_eof)
+		goto seen_eof;
+	      else if (nowtok == tok_end)
+		goto seen_end;
+	    }
+	  else
+	    {
+	      assert (collate->else_action == else_none);
+	      lr_error (ldfile, _("\
+%s: '%s' without matching 'ifdef' or 'ifndef'"), "LC_COLLATE",
+			nowtok == tok_else ? "else"
+			: nowtok == tok_elifdef ? "elifdef" : "elifndef");
+	    }
+	  break;
+
+	case tok_endif:
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  lr_ignore_rest (ldfile, 1);
+
+	  if (collate->else_action != else_ignore
+	      && collate->else_action != else_seen)
+	    lr_error (ldfile, _("\
+%s: 'endif' without matching 'ifdef' or 'ifndef'"), "LC_COLLATE");
+
+	  /* XXX If we support nested preprocessor directives we pop
+	     the state here.  */
+	  collate->else_action = else_none;
+	  break;
+
 	default:
 	err_label:
 	  SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
@@ -3848,6 +4112,7 @@ error while adding equivalent collating symbol"));
       nowtok = now->tok;
     }
 
+ seen_eof:
   /* When we come here we reached the end of the file.  */
   lr_error (ldfile, _("%s: premature end of file"), "LC_COLLATE");
 }

@@ -1,3 +1,10 @@
+2007-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locfile-token.h: Remove tok_elif, add tok_elifdef
+	and tok_elifndef.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/ld-collate.c: Implement primitive preprocessor.
+
 2007-10-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/printf-parse.h: Include string.h and wchar.h.

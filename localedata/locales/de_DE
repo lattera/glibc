@@ -76,6 +76,8 @@ END LC_CTYPE
 
 LC_COLLATE
 
+define DIACRIT_FORWARD
+
 % Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
 

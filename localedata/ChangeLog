@@ -1,3 +1,10 @@
+2007-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: If DIACRIT_FORWARD is defined, define
+	second level of <LATIN> script as forward.
+	* locales/de_DE: Define DIACRIT_FORWARD.
+	* de_DE.in: Revert last change.
+
 2007-10-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/en_US: Add first_weekday and first_workday.

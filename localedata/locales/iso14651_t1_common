@@ -1121,7 +1121,11 @@ order_start <SPECIAL>;forward;backward;forward;forward,position
 <U009E> IGNORE;IGNORE;IGNORE;<U009E>
 <U009F> IGNORE;IGNORE;IGNORE;<U009F>
 
+ifdef DIACRIT_FORWARD
+order_start <LATIN>;forward;forward;forward;forward,position
+else
 order_start <LATIN>;forward;backward;forward;forward,position
+endif
 #
 <U00A0> <U0020>;<BAS>;<MIN>;IGNORE # 170<NBSP>
 #
