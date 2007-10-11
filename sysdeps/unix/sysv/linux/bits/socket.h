@@ -21,7 +21,7 @@
 #ifndef __BITS_SOCKET_H
 #define __BITS_SOCKET_H
 
-#if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
+#ifndef _SYS_SOCKET_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 

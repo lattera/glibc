@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2001, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2001, 2003, 2004, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -210,9 +211,6 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 
 #define INET_ADDRSTRLEN 16
 #define INET6_ADDRSTRLEN 46
-
-/* Get the definition of the macro to define the common sockaddr members.  */
-#include <bits/socket.h>
 
 
 /* Structure describing an Internet socket address.  */

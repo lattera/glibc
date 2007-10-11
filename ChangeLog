@@ -1,3 +1,13 @@
+2007-10-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/gnu/netinet/tcp.h: Include sys/socket.h if __USE_MISC.
+	(struct tcp_md5sig): Change tcpm_addr type to struct sockaddr_storage.
+
+	* inet/netinet/in.h: Don't include bits/socket.h.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Only check _SYS_SOCKET_H
+	macro.
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Likewise.
+
 2007-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locfile-token.h: Remove tok_elif, add tok_elifdef

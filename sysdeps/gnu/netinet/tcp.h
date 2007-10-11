@@ -54,6 +54,7 @@
 
 #ifdef __USE_MISC
 # include <sys/types.h>
+# include <sys/socket.h>
 
 # ifdef __FAVOR_BSD
 typedef	u_int32_t tcp_seq;
@@ -233,7 +234,7 @@ struct tcp_info
 
 struct tcp_md5sig
 {
-  struct __kernel_sockaddr_storage tcpm_addr;	/* Address associated.  */
+  struct sockaddr_storage tcpm_addr;		/* Address associated.  */
   u_int16_t	__tcpm_pad1;			/* Zero.  */
   u_int16_t	tcpm_keylen;			/* Key length.  */
   u_int32_t	__tcpm_pad2;			/* Zero.  */
