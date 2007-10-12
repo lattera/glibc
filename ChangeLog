@@ -1,3 +1,7 @@
+2007-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/Makefile (headers): Add bits/error.h.
+
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/fnmatch_loop.c: Take rule index returned as part of
