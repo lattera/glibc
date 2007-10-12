@@ -2719,25 +2719,24 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
   while (nowtok == tok_define)
     {
       if (ignore_content)
-	{
-	  lr_ignore_rest (ldfile, 0);
-	  continue;
-	}
-
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);
-      if (arg->tok != tok_ident)
-	SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
+	lr_ignore_rest (ldfile, 0);
       else
 	{
-	  /* Simply add the new symbol.  */
-	  struct name_list *newsym = xmalloc (sizeof (*newsym)
-					  + arg->val.str.lenmb + 1);
-	  memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
-	  newsym->str[arg->val.str.lenmb] = '\0';
-	  newsym->next = defined;
-	  defined = newsym;
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
+	  if (arg->tok != tok_ident)
+	    SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
+	  else
+	    {
+	      /* Simply add the new symbol.  */
+	      struct name_list *newsym = xmalloc (sizeof (*newsym)
+						  + arg->val.str.lenmb + 1);
+	      memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
+	      newsym->str[arg->val.str.lenmb] = '\0';
+	      newsym->next = defined;
+	      defined = newsym;
 
-	  lr_ignore_rest (ldfile, 1);
+	      lr_ignore_rest (ldfile, 1);
+	    }
 	}
 
       do
