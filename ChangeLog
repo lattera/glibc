@@ -1,3 +1,8 @@
+2007-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): Optimize a bit.
+	(skip_to): Fix problems with parameter of elifdef/elifndef.
+
 2007-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_simple.c: Add some branch prediction.
