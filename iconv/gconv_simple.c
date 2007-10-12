@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997-2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -880,7 +880,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint32_t wc = *((const uint32_t *) inptr);				      \
 									      \
-    if (wc < 0x80)							      \
+    if (__builtin_expect (wc < 0x80, 1))				      \
       /* It's an one byte sequence.  */					      \
       *outptr++ = (unsigned char) wc;					      \
     else if (__builtin_expect (wc <= 0x7fffffff, 1))			      \
@@ -940,21 +940,19 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t ch;							      \
-    uint_fast32_t cnt;							      \
-    uint_fast32_t i;							      \
-									      \
     /* Next input byte.  */						      \
-    ch = *inptr;							      \
+    uint32_t ch = *inptr;						      \
 									      \
-    if (ch < 0x80)							      \
+    if (__builtin_expect (ch < 0x80, 1))				      \
       {									      \
 	/* One byte sequence.  */					      \
-	cnt = 1;							      \
 	++inptr;							      \
       }									      \
     else								      \
       {									      \
+	uint_fast32_t cnt;						      \
+	uint_fast32_t i;						      \
+									      \
 	if (ch >= 0xc2 && ch < 0xe0)					      \
 	  {								      \
 	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
