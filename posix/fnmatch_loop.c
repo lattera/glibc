@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004,2005,
-   2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1996-2001,2003-2005,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -418,14 +418,19 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends)
 			    /* We found a table entry.  Now see whether the
 			       character we are currently at has the same
 			       equivalance class value.  */
-			    int len = weights[idx];
+			    int len = weights[idx & 0xffffff];
 			    int32_t idx2;
 			    const UCHAR *np = (const UCHAR *) n;
 
 			    idx2 = findidx (&np);
-			    if (idx2 != 0 && len == weights[idx2])
+			    if (idx2 != 0
+				&& (idx >> 24) == (idx2 >> 24)
+				&& len == weights[idx2 & 0xffffff])
 			      {
 				int cnt = 0;
+
+				idx &= 0xffffff;
+				idx2 &= 0xffffff;
 
 				while (cnt < len
 				       && (weights[idx + 1 + cnt]

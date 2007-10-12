@@ -3378,7 +3378,7 @@ build_equiv_class (bitset_t sbcset, const unsigned char *name)
 
       /* Build single byte matcing table for this equivalence class.  */
       char_buf[1] = (unsigned char) '\0';
-      len = weights[idx1];
+      len = weights[idx1 & 0xffffff];
       for (ch = 0; ch < SBC_MAX; ++ch)
 	{
 	  char_buf[0] = ch;
@@ -3390,11 +3390,15 @@ build_equiv_class (bitset_t sbcset, const unsigned char *name)
 	  if (idx2 == 0)
 	    /* This isn't a valid character.  */
 	    continue;
-	  if (len == weights[idx2])
+	  /* Compare only if the length matches and the collation rule
+	     index is the same.  */
+	  if (len == weights[idx2 & 0xffffff] && (idx1 >> 24) == (idx2 >> 24))
 	    {
 	      int cnt = 0;
+
 	      while (cnt <= len &&
-		     weights[idx1 + 1 + cnt] == weights[idx2 + 1 + cnt])
+		     weights[(idx1 & 0xffffff) + 1 + cnt]
+		     == weights[(idx2 & 0xffffff) + 1 + cnt])
 		++cnt;
 
 	      if (cnt > len)

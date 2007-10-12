@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -3825,7 +3825,6 @@ check_node_accept_bytes (const re_dfa_t *dfa, int node_idx,
 	  const int32_t *table, *indirect;
 	  const unsigned char *weights, *extra;
 	  const char *collseqwc;
-	  int32_t idx;
 	  /* This #include defines a local function!  */
 #  include <locale/weight.h>
 
@@ -3883,15 +3882,20 @@ check_node_accept_bytes (const re_dfa_t *dfa, int node_idx,
 		_NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
 	      indirect = (const int32_t *)
 		_NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
-	      idx = findidx (&cp);
+	      int32_t idx = findidx (&cp);
 	      if (idx > 0)
 		for (i = 0; i < cset->nequiv_classes; ++i)
 		  {
 		    int32_t equiv_class_idx = cset->equiv_classes[i];
-		    size_t weight_len = weights[idx];
-		    if (weight_len == weights[equiv_class_idx])
+		    size_t weight_len = weights[idx & 0xffffff];
+		    if (weight_len == weights[equiv_class_idx & 0xffffff]
+			&& (idx >> 24) == (equiv_class_idx >> 24))
 		      {
 			int cnt = 0;
+
+			idx &= 0xffffff;
+			equiv_class_idx &= 0xffffff;
+
 			while (cnt <= weight_len
 			       && (weights[equiv_class_idx + 1 + cnt]
 				   == weights[idx + 1 + cnt]))

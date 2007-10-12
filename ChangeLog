@@ -1,5 +1,10 @@
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Take rule index returned as part of
+	findidx return value into account when accessing weights.
+	* posix/regcomp.c: Likewise.
+	* posix/regexec.c: Likewise.
+
 	* locale/programs/ld-collate.c (collate_read): Optimize a bit.
 	(skip_to): Fix problems with parameter of elifdef/elifndef.
 
