@@ -1,3 +1,8 @@
+2007-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): If ignore_content
+	and nowtok is tok_define, eat any tok_eol tokens.
+
 2007-10-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/gnu/netinet/tcp.h: Include sys/socket.h if __USE_MISC.
