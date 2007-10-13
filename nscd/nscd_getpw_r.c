@@ -211,8 +211,8 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
     }
   else
     {
-      /* The `errno' to some value != ERANGE.  */
-      __set_errno (ENOENT);
+      /* Set errno to 0 to indicate no error, just no found record.  */
+      __set_errno (0);
       /* Even though we have not found anything, the result is zero.  */
       retval = 0;
     }

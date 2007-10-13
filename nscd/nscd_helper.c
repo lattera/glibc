@@ -39,7 +39,7 @@
 
 
 /* Extra time we wait if the socket is still receiving data.  This
-   value is in microseconds.  Note that the other side is nscd on the
+   value is in milliseconds.  Note that the other side is nscd on the
    local machine and it is already transmitting data.  So the wait
    time need not be long.  */
 #define EXTRA_RECEIVE_TIME 200

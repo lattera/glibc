@@ -1,5 +1,13 @@
 2007-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #3195]
+	* nscd/nscd_getai.c (__nscd_getai): Set errno to 0 in case we found
+	no entry.
+	* nscd/nscd_getgr.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Optimize a bit: use simpler
 	read mechanism when there are no group members and avoid no-op
 	read syscall in this case.

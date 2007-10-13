@@ -301,8 +301,8 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
     }
   else
     {
-      /* The `errno' to some value != ERANGE.  */
-      __set_errno (ENOENT);
+      /* Set errno to 0 to indicate no error, just no found record.  */
+      __set_errno (0);
       /* Even though we have not found anything, the result is zero.  */
       retval = 0;
     }
