@@ -113,8 +113,7 @@ repertoire_read (const char *filename)
 		      filename);
 	      repfile = lr_open (buf, repertoiremap_hash);
 
-	      if (repfile == NULL)
-		free (buf);
+	      free (buf);
 	    }
 	}
 

@@ -1,5 +1,8 @@
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/repertoire.c (repertoire_read): Always free
+	memory for repertoire file name [Coverity CID 270].
+
 	* elf/cache.c (save_aux_cache): Free memory allocated for
 	temporary file name [Coverity CID 267].
 
