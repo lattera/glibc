@@ -2,7 +2,8 @@
 
 	[BZ #4359]
 	* libio/__freading.c (__freading): Don't return true for
-	write-only streams.
+	write-only streams.  For read/write streams, check whether we
+	performed a read operation already.
 
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
