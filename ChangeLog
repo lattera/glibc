@@ -1,3 +1,8 @@
+2007-10-13  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (_nl_find_msg): Unlock the conversions_lock
+	when we cannot recode the message.
+
 2007-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4359]

@@ -974,6 +974,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
 			   translation at all.  */
 			if (__builtin_expect (r != __GCONV_NULCONV, 1))
 			  {
+			    __libc_rwlock_unlock (domain->conversions_lock);
 			    free ((char *) encoding);
 			    return NULL;
 			  }
