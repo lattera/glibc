@@ -800,5 +800,6 @@ save_aux_cache (const char *aux_cache_name)
 
 out_fail:
   /* Free allocated memory.  */
+  free (temp_name);
   free (file_entries);
 }
