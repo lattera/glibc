@@ -1,3 +1,9 @@
+2007-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4359]
+	* libio/__freading.c (__freading): Don't return true for
+	write-only streams.
+
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/repertoire.c (repertoire_read): Always free

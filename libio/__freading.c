@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 int
 __freading (FILE *fp)
 {
-  return ((fp->_flags & _IO_NO_WRITES)
-	  || (fp->_flags & _IO_CURRENTLY_PUTTING) == 0);
+  return (((fp->_flags & _IO_NO_WRITES)
+	   || (fp->_flags & _IO_CURRENTLY_PUTTING) == 0)
+	  && (fp->_flags & _IO_NO_READS) == 0);
 }
