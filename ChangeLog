@@ -1,5 +1,9 @@
 2007-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Optimize a bit: use simpler
+	read mechanism when there are no group members and avoid no-op
+	read syscall in this case.
+
 	[BZ #3242]
 	* nscd/nscd_helper.c (wait_on_socket): Take timeout as parameter.
 	(__readall): If reading failed due to EAGAIN error wait a bit

@@ -190,26 +190,37 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       /* Read the length information, group name, and password.  */
       if (gr_name == NULL)
 	{
-	  /* Allocate array to store lengths.  */
-	  if (lensize == 0)
+	  /* Handle a simple, usual case: no group members.  */
+	  if (__builtin_expect (gr_resp.gr_mem_cnt == 0, 1))
 	    {
-	      lensize = gr_resp.gr_mem_cnt * sizeof (uint32_t);
-	      len = (uint32_t *) alloca (lensize);
+	      size_t n = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+	      if (__builtin_expect (__readall (sock, resultbuf->gr_name, n)
+				    != (ssize_t) n, 0))
+		goto out_close;
 	    }
-	  else if (gr_resp.gr_mem_cnt * sizeof (uint32_t) > lensize)
-	    len = extend_alloca (len, lensize,
-				 gr_resp.gr_mem_cnt * sizeof (uint32_t));
+	  else
+	    {
+	      /* Allocate array to store lengths.  */
+	      if (lensize == 0)
+		{
+		  lensize = gr_resp.gr_mem_cnt * sizeof (uint32_t);
+		  len = (uint32_t *) alloca (lensize);
+		}
+	      else if (gr_resp.gr_mem_cnt * sizeof (uint32_t) > lensize)
+		len = extend_alloca (len, lensize,
+				     gr_resp.gr_mem_cnt * sizeof (uint32_t));
 
-	  vec[0].iov_base = (void *) len;
-	  vec[0].iov_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
-	  vec[1].iov_base = resultbuf->gr_name;
-	  vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
-	  total_len = vec[0].iov_len + vec[1].iov_len;
+	      vec[0].iov_base = (void *) len;
+	      vec[0].iov_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
+	      vec[1].iov_base = resultbuf->gr_name;
+	      vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+	      total_len = vec[0].iov_len + vec[1].iov_len;
 
-	  /* Get this data.  */
-	  size_t n = __readvall (sock, vec, 2);
-	  if (__builtin_expect (n != total_len, 0))
-	    goto out_close;
+	      /* Get this data.  */
+	      size_t n = __readvall (sock, vec, 2);
+	      if (__builtin_expect (n != total_len, 0))
+		goto out_close;
+	    }
 	}
       else
 	/* We already have the data.  Just copy the group name and
@@ -251,37 +262,42 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	}
 
       retval = 0;
-      if (gr_name == NULL)
+
+      /* If there are no group members TOTAL_LEN is zero.  */
+      if (total_len > 0)
 	{
-	  size_t n = __readall (sock, resultbuf->gr_mem[0], total_len);
-	  if (__builtin_expect (n != total_len, 0))
+	  if (gr_name == NULL)
 	    {
-	      /* The `errno' to some value != ERANGE.  */
-	      __set_errno (ENOENT);
-	      retval = ENOENT;
+	      size_t n = __readall (sock, resultbuf->gr_mem[0], total_len);
+	      if (__builtin_expect (n != total_len, 0))
+		{
+		  /* The `errno' to some value != ERANGE.  */
+		  __set_errno (ENOENT);
+		  retval = ENOENT;
+		}
+	      else
+		*result = resultbuf;
 	    }
 	  else
-	    *result = resultbuf;
-	}
-      else
-	{
-	  /* Copy the group member names.  */
-	  memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
-
-	  /* Try to detect corrupt databases.  */
-	  if (resultbuf->gr_name[gr_name_len - 1] != '\0'
-	      || resultbuf->gr_passwd[gr_resp.gr_passwd_len - 1] != '\0'
-	      || ({for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
-		     if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
-		       break;
-	  	   cnt < gr_resp.gr_mem_cnt; }))
 	    {
-	      /* We cannot use the database.  */
-	      retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
-	      goto out_close;
-	    }
+	      /* Copy the group member names.  */
+	      memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
 
-	  *result = resultbuf;
+	      /* Try to detect corrupt databases.  */
+	      if (resultbuf->gr_name[gr_name_len - 1] != '\0'
+		  || resultbuf->gr_passwd[gr_resp.gr_passwd_len - 1] != '\0'
+		  || ({for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
+			if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
+			  break;
+		      cnt < gr_resp.gr_mem_cnt; }))
+		{
+		  /* We cannot use the database.  */
+		  retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
+		  goto out_close;
+		}
+
+	      *result = resultbuf;
+	    }
 	}
     }
   else
