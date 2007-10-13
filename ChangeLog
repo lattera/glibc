@@ -4,6 +4,8 @@
 	* libio/__freading.c (__freading): Don't return true for
 	write-only streams.  For read/write streams, check whether we
 	performed a read operation already.
+	* libio/Makefile (tests): Add tst-ext2.
+	* libio/tst-ext2.c: New file.
 
 2007-10-12  Ulrich Drepper  <drepper@redhat.com>
 
