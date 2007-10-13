@@ -1,3 +1,11 @@
+2007-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3242]
+	* nscd/nscd_helper.c (wait_on_socket): Take timeout as parameter.
+	(__readall): If reading failed due to EAGAIN error wait a bit
+	and possibly try again.
+	(__readvall): Likewise.
+
 2007-10-13  Bruno Haible  <bruno@clisp.org>
 
 	* intl/dcigettext.c (_nl_find_msg): Unlock the conversions_lock

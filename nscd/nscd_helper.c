@@ -38,6 +38,45 @@
 #include "nscd-client.h"
 
 
+/* Extra time we wait if the socket is still receiving data.  This
+   value is in microseconds.  Note that the other side is nscd on the
+   local machine and it is already transmitting data.  So the wait
+   time need not be long.  */
+#define EXTRA_RECEIVE_TIME 200
+
+
+static int
+wait_on_socket (int sock, long int usectmo)
+{
+  struct pollfd fds[1];
+  fds[0].fd = sock;
+  fds[0].events = POLLIN | POLLERR | POLLHUP;
+  int n = __poll (fds, 1, usectmo);
+  if (n == -1 && __builtin_expect (errno == EINTR, 0))
+    {
+      /* Handle the case where the poll() call is interrupted by a
+	 signal.  We cannot just use TEMP_FAILURE_RETRY since it might
+	 lead to infinite loops.  */
+      struct timeval now;
+      (void) __gettimeofday (&now, NULL);
+      long int end = now.tv_sec * 1000 + usectmo + (now.tv_usec + 500) / 1000;
+      long int timeout = usectmo;
+      while (1)
+	{
+	  n = __poll (fds, 1, timeout);
+	  if (n != -1 || errno != EINTR)
+	    break;
+
+	  /* Recompute the timeout time.  */
+	  (void) __gettimeofday (&now, NULL);
+	  timeout = end - (now.tv_sec * 1000 + (now.tv_usec + 500) / 1000);
+	}
+    }
+
+  return n;
+}
+
+
 ssize_t
 __readall (int fd, void *buf, size_t len)
 {
@@ -45,9 +84,17 @@ __readall (int fd, void *buf, size_t len)
   ssize_t ret;
   do
     {
+    again:
       ret = TEMP_FAILURE_RETRY (__read (fd, buf, n));
       if (ret <= 0)
-	break;
+	{
+	  if (__builtin_expect (ret < 0 && errno == EAGAIN, 0)
+	      /* The socket is still receiving data.  Wait a bit more.  */
+	      && wait_on_socket (fd, EXTRA_RECEIVE_TIME) > 0)
+	    goto again;
+
+	  break;
+	}
       buf = (char *) buf + ret;
       n -= ret;
     }
@@ -61,7 +108,15 @@ __readvall (int fd, const struct iovec *iov, int iovcnt)
 {
   ssize_t ret = TEMP_FAILURE_RETRY (__readv (fd, iov, iovcnt));
   if (ret <= 0)
-    return ret;
+    {
+      if (__builtin_expect (ret == 0 || errno != EAGAIN, 1))
+	/* A genuine error or no data to read.  */
+	return ret;
+
+      /* The data has not all yet been received.  Do as if we have not
+	 read anything yet.  */
+      ret = 0;
+    }
 
   size_t total = 0;
   for (int i = 0; i < iovcnt; ++i)
@@ -83,9 +138,17 @@ __readvall (int fd, const struct iovec *iov, int iovcnt)
 	    }
 	  iovp->iov_base = (char *) iovp->iov_base + r;
 	  iovp->iov_len -= r;
+	again:
 	  r = TEMP_FAILURE_RETRY (__readv (fd, iovp, iovcnt));
 	  if (r <= 0)
-	    break;
+	    {
+	      if (__builtin_expect (r < 0 && errno == EAGAIN, 0)
+		  /* The socket is still receiving data.  Wait a bit more.  */
+		  && wait_on_socket (fd, EXTRA_RECEIVE_TIME) > 0)
+		goto again;
+
+	      break;
+	    }
 	  ret += r;
 	}
       while (ret < total);
@@ -187,36 +250,6 @@ __nscd_unmap (struct mapped_database *mapped)
 }
 
 
-static int
-wait_on_socket (int sock)
-{
-  struct pollfd fds[1];
-  fds[0].fd = sock;
-  fds[0].events = POLLIN | POLLERR | POLLHUP;
-  int n = __poll (fds, 1, 5 * 1000);
-  if (n == -1 && __builtin_expect (errno == EINTR, 0))
-    {
-      /* Handle the case where the poll() call is interrupted by a
-	 signal.  We cannot just use TEMP_FAILURE_RETRY since it might
-	 lead to infinite loops.  */
-      struct timeval now;
-      (void) __gettimeofday (&now, NULL);
-      long int end = (now.tv_sec + 5) * 1000 + (now.tv_usec + 500) / 1000;
-      while (1)
-	{
-	  long int timeout = end - (now.tv_sec * 1000
-				    + (now.tv_usec + 500) / 1000);
-	  n = __poll (fds, 1, timeout);
-	  if (n != -1 || errno != EINTR)
-	    break;
-	  (void) __gettimeofday (&now, NULL);
-	}
-    }
-
-  return n;
-}
-
-
 /* Try to get a file descriptor for the shared meory segment
    containing the database.  */
 static struct mapped_database *
@@ -265,7 +298,7 @@ get_mapping (request_type type, const char *key,
 
   msg.msg_controllen = cmsg->cmsg_len;
 
-  if (wait_on_socket (sock) <= 0)
+  if (wait_on_socket (sock, 5 * 1000) <= 0)
     goto out_close2;
 
 # ifndef MSG_CMSG_CLOEXEC
@@ -497,7 +530,7 @@ __nscd_open_socket (const char *key, size_t keylen, request_type type,
   if (sock >= 0)
     {
       /* Wait for data.  */
-      if (wait_on_socket (sock) > 0)
+      if (wait_on_socket (sock, 5 * 1000) > 0)
 	{
 	  ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, response,
 						       responselen));
