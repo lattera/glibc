@@ -2,8 +2,8 @@
 
 	* sysdeps/posix/getaddrinfo.c (struct sort_result): Add
 	service_order.
-	(rfc3484_sort): Make sure that even of qsort doesn't support
-	stable sorting it is stable by comparing service_order.
+	(rfc3484_sort): Make sure that even if qsort doesn't support
+	stable sorting out sorting here is stable by comparing service_order.
 	(getaddrinfo): Initialize service_order.
 	* posix/tst-rfc3484.c (do_test): Adjust for addition of
 	service_order field to sorting structure.
