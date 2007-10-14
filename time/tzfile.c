@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006
+/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -50,7 +50,6 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-static struct ttinfo *find_transition (time_t timer) internal_function;
 static void compute_tzname_max (size_t) internal_function;
 
 static size_t num_transitions;
@@ -537,6 +536,9 @@ find_transition (time_t timer)
 {
   size_t i;
 
+  __tzname[0] = NULL;
+  __tzname[1] = NULL;
+
   if (num_transitions == 0 || timer < transitions[0])
     {
       /* TIMER is before any transition (or there are no transitions).
@@ -544,12 +546,34 @@ find_transition (time_t timer)
 	 (or the first if they're all DST types).  */
       i = 0;
       while (i < num_types && types[i].isdst)
-	++i;
+	{
+	  if (__tzname[1] == NULL)
+	    __tzname[1] = __tzstring (&zone_names[types[i].idx]);
+
+	  ++i;
+	}
+
       if (i == num_types)
 	i = 0;
+      __tzname[0] = __tzstring (&zone_names[types[i].idx]);
+      if (__tzname[1] == NULL)
+	{
+	  size_t j = i;
+	  while (j < num_types)
+	    if (types[j].isdst)
+	      {
+		__tzname[1] = __tzstring (&zone_names[types[j].idx]);
+		break;
+	      }
+	    else
+	      ++j;
+	}
     }
   else if (timer >= transitions[num_transitions - 1])
-    i = type_idxs[num_transitions - 1];
+    {
+      i = num_transitions - 1;
+      goto found;
+    }
   else
     {
       /* Find the first transition after TIMER, and
@@ -602,6 +626,26 @@ find_transition (time_t timer)
 
     found:
       /* assert (timer >= transitions[i - 1] && timer < transitions[i]); */
+      __tzname[types[type_idxs[i - 1]].isdst]
+	= __tzstring (&zone_names[types[type_idxs[i - 1]].idx]);
+      size_t j = i;
+      while (j < num_transitions)
+	{
+	  int type = type_idxs[j];
+	  int dst = types[type].isdst;
+	  int idx = types[type].idx;
+
+	  if (__tzname[dst] == NULL)
+	    {
+	      __tzname[dst] = __tzstring (&zone_names[idx]);
+
+	      if (__tzname[1 - dst] != NULL)
+		break;
+	    }
+
+	  ++j;
+	}
+
       i = type_idxs[i - 1];
     }
 
@@ -620,22 +664,7 @@ __tzfile_compute (time_t timer, int use_localtime,
       struct ttinfo *info = find_transition (timer);
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
-      __tzname[0] = NULL;
-      __tzname[1] = NULL;
-      for (i = num_transitions; i > 0; )
-	{
-	  int type = type_idxs[--i];
-	  int dst = types[type].isdst;
-	  int idx = types[type].idx;
 
-	  if (__tzname[dst] == NULL)
-	    {
-	      __tzname[dst] = __tzstring (&zone_names[idx]);
-
-	      if (__tzname[1 - dst] != NULL)
-		break;
-	    }
-	}
       if (__tzname[0] == NULL)
 	{
 	  /* This should only happen if there are no transition rules.
@@ -647,7 +676,8 @@ __tzfile_compute (time_t timer, int use_localtime,
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
       tp->tm_isdst = info->isdst;
-      tp->tm_zone = __tzstring (&zone_names[info->idx]);
+      assert (strcmp (&zone_names[info->idx], __tzname[tp->tm_isdst]) == 0);
+      tp->tm_zone = __tzname[tp->tm_isdst];
       tp->tm_gmtoff = info->offset;
     }
 

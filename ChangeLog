@@ -1,3 +1,12 @@
+2007-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1140]
+	* time/tzfile.c (__tzfile_compute): Compute tzname[] values based
+	on the specified time and not the last entries in the file.  Move
+	code to determine tzname[] to...
+	(find_transition): ...here.  Add ugly guess for times before the
+	first transition.
+
 2007-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3195]
