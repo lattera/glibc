@@ -1,5 +1,11 @@
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (struct sort_result): Add
+	service_order.
+	(rfc3484_sort): Make sure that even of qsort doesn't support
+	stable sorting it is stable by comparing service_order.
+	(getaddrinfo): Initialize service_order.
+
 	* include/time.h: Declare __tzset_parse_tz and __tzset_compute.
 	* time/tzset.c (tzset_internal): Break TZ string parsing out into
 	__tzset_parse_tz and updating of daylight, timezone, tzname into

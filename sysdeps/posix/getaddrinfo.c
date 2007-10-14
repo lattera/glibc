@@ -1002,6 +1002,7 @@ struct sort_result
 {
   struct addrinfo *dest_addr;
   struct sockaddr_storage source_addr;
+  size_t service_order;
   uint8_t source_addr_len;
   bool got_source_addr;
   uint8_t source_addr_flags;
@@ -1403,8 +1404,11 @@ rfc3484_sort (const void *p1, const void *p2)
     }
 
 
-  /* Rule 10: Otherwise, leave the order unchanged.  */
-  return 0;
+  /* Rule 10: Otherwise, leave the order unchanged.  To ensure this
+     compare with the value indicating the order in which the entries
+     have been received from the services.  NB: no two entries can have
+     the same order so the test will never return zero.  */
+  return a1->service_order < a2->service_order ? -1 : 1;
 }
 
 
@@ -1951,6 +1955,7 @@ getaddrinfo (const char *name, const char *service,
 	{
 	  results[i].dest_addr = q;
 	  results[i].got_source_addr = false;
+	  results[i].service_order = i;
 
 	  /* If we just looked up the address for a different
 	     protocol, reuse the result.  */
