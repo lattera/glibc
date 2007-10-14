@@ -10,6 +10,13 @@ main (int argc, char *argv[])
   char *line = NULL;
   size_t len = 0;
 
+  if (argc == 1)
+    {
+      static char *new_argv[] = { NULL, (char *) "/dev/stdin", NULL };
+      argv = new_argv;
+      argc = 2;
+    }
+
   for (n = 1; n < argc; ++n)
     {
       FILE *fp = fopen (argv[n], "r");

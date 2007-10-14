@@ -1,3 +1,9 @@
+2007-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4098]
+	* locales/pl_PL: Change abmon, abday, and d_fmt according to
+	results of vote.
+
 2007-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: If DIACRIT_FORWARD is defined, define
