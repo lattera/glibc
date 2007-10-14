@@ -62,6 +62,7 @@ static long int rule_stdoff;
 static long int rule_dstoff;
 static size_t num_leaps;
 static struct leap *leaps;
+static char *tzspec;
 
 #include <endian.h>
 #include <byteswap.h>
@@ -113,6 +114,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   size_t leaps_idx;
   int was_using_tzfile = __use_tzfile;
   int trans_width = 4;
+  size_t tzspec_len;
 
   if (sizeof (time_t) != 4 && sizeof (time_t) != 8)
     abort ();
@@ -241,10 +243,18 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 		& ~(__alignof__ (struct leap) - 1));
   leaps_idx = total_size;
   total_size += num_leaps * sizeof (struct leap);
+  tzspec_len = (trans_width == 8
+		? st.st_size - (ftello (f)
+				+ num_transitions * (8 + 1)
+				+ num_types * 6
+				+ chars
+				+ num_leaps * 8
+				+ num_isstd
+				+ num_isgmt) - 1 : 0);
 
   /* Allocate enough memory including the extra block requested by the
      caller.  */
-  transitions = (time_t *) malloc (total_size + extra);
+  transitions = (time_t *) malloc (total_size + tzspec_len + extra);
   if (transitions == NULL)
     goto lose;
 
@@ -253,6 +263,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   types = (struct ttinfo *) ((char *) transitions + types_idx);
   zone_names = (char *) types + num_types * sizeof (struct ttinfo);
   leaps = (struct leap *) ((char *) transitions + leaps_idx);
+  if (trans_width == 8)
+    tzspec = (char *) leaps + num_leaps * sizeof (struct leap);
+  else
+    tzspec = NULL;
   if (extra > 0)
     *extrap = (char *) &leaps[num_leaps];
 
@@ -356,11 +370,16 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   while (i < num_types)
     types[i++].isgmt = 0;
 
-  /* XXX When a version 2 file is available it can contain a POSIX TZ-style
-     formatted string which specifies how times past the last one specified
-     are supposed to be handled.  We might want to handle this at some
-     point.  But it might be overhead since most/all? files have an
-     open-ended last entry.  */
+  /* Read the POSIX TZ-style information if possible.  */
+  if (tzspec != NULL)
+    {
+      /* Skip over the newline first.  */
+      if (getc_unlocked (f) != '\n'
+	  || fread_unlocked (tzspec, 1, tzspec_len - 1, f) != tzspec_len - 1)
+	tzspec = NULL;
+      else
+	tzspec[tzspec_len - 1] = '\0';
+    }
 
   fclose (f);
 
@@ -530,128 +549,6 @@ __tzfile_default (const char *std, const char *dst,
   compute_tzname_max (stdlen + dstlen);
 }
 
-static struct ttinfo *
-internal_function
-find_transition (time_t timer)
-{
-  size_t i;
-
-  __tzname[0] = NULL;
-  __tzname[1] = NULL;
-
-  if (num_transitions == 0 || timer < transitions[0])
-    {
-      /* TIMER is before any transition (or there are no transitions).
-	 Choose the first non-DST type
-	 (or the first if they're all DST types).  */
-      i = 0;
-      while (i < num_types && types[i].isdst)
-	{
-	  if (__tzname[1] == NULL)
-	    __tzname[1] = __tzstring (&zone_names[types[i].idx]);
-
-	  ++i;
-	}
-
-      if (i == num_types)
-	i = 0;
-      __tzname[0] = __tzstring (&zone_names[types[i].idx]);
-      if (__tzname[1] == NULL)
-	{
-	  size_t j = i;
-	  while (j < num_types)
-	    if (types[j].isdst)
-	      {
-		__tzname[1] = __tzstring (&zone_names[types[j].idx]);
-		break;
-	      }
-	    else
-	      ++j;
-	}
-    }
-  else if (timer >= transitions[num_transitions - 1])
-    {
-      i = num_transitions - 1;
-      goto found;
-    }
-  else
-    {
-      /* Find the first transition after TIMER, and
-	 then pick the type of the transition before it.  */
-      size_t lo = 0;
-      size_t hi = num_transitions - 1;
-      /* Assume that DST is changing twice a year and guess initial
-	 search spot from it.
-	 Half of a gregorian year has on average 365.2425 * 86400 / 2
-	 = 15778476 seconds.  */
-      i = (transitions[num_transitions - 1] - timer) / 15778476;
-      if (i < num_transitions)
-	{
-	  i = num_transitions - 1 - i;
-	  if (timer < transitions[i])
-	    {
-	      if (i < 10 || timer >= transitions[i - 10])
-		{
-		  /* Linear search.  */
-		  while (timer < transitions[i - 1])
-		    --i;
-		  goto found;
-		}
-	      hi = i - 10;
-	    }
-	  else
-	    {
-	      if (i + 10 >= num_transitions || timer < transitions[i + 10])
-		{
-		  /* Linear search.  */
-		  while (timer >= transitions[i])
-		    ++i;
-		  goto found;
-		}
-	      lo = i + 10;
-	    }
-	}
-
-      /* Binary search.  */
-      /* assert (timer >= transitions[lo] && timer < transitions[hi]); */
-      while (lo + 1 < hi)
-	{
-	  i = (lo + hi) / 2;
-	  if (timer < transitions[i])
-	    hi = i;
-	  else
-	    lo = i;
-	}
-      i = hi;
-
-    found:
-      /* assert (timer >= transitions[i - 1] && timer < transitions[i]); */
-      __tzname[types[type_idxs[i - 1]].isdst]
-	= __tzstring (&zone_names[types[type_idxs[i - 1]].idx]);
-      size_t j = i;
-      while (j < num_transitions)
-	{
-	  int type = type_idxs[j];
-	  int dst = types[type].isdst;
-	  int idx = types[type].idx;
-
-	  if (__tzname[dst] == NULL)
-	    {
-	      __tzname[dst] = __tzstring (&zone_names[idx]);
-
-	      if (__tzname[1 - dst] != NULL)
-		break;
-	    }
-
-	  ++j;
-	}
-
-      i = type_idxs[i - 1];
-    }
-
-  return &types[i];
-}
-
 void
 __tzfile_compute (time_t timer, int use_localtime,
 		  long int *leap_correct, int *leap_hit,
@@ -661,7 +558,139 @@ __tzfile_compute (time_t timer, int use_localtime,
 
   if (use_localtime)
     {
-      struct ttinfo *info = find_transition (timer);
+      __tzname[0] = NULL;
+      __tzname[1] = NULL;
+
+      if (num_transitions == 0 || timer < transitions[0])
+	{
+	  /* TIMER is before any transition (or there are no transitions).
+	     Choose the first non-DST type
+	     (or the first if they're all DST types).  */
+	  i = 0;
+	  while (i < num_types && types[i].isdst)
+	    {
+	      if (__tzname[1] == NULL)
+		__tzname[1] = __tzstring (&zone_names[types[i].idx]);
+
+	      ++i;
+	    }
+
+	  if (i == num_types)
+	    i = 0;
+	  __tzname[0] = __tzstring (&zone_names[types[i].idx]);
+	  if (__tzname[1] == NULL)
+	    {
+	      size_t j = i;
+	      while (j < num_types)
+		if (types[j].isdst)
+		  {
+		    __tzname[1] = __tzstring (&zone_names[types[j].idx]);
+		    break;
+		  }
+		else
+		  ++j;
+	    }
+	}
+      else if (timer >= transitions[num_transitions - 1])
+	{
+	  if (tzspec == NULL)
+	    {
+	    use_last:
+	      i = num_transitions - 1;
+	      goto found;
+	    }
+
+	  /* Parse the POSIX TZ-style string.  */
+	  __tzset_parse_tz (tzspec);
+
+	  /* Convert to broken down structure.  If this fails do not
+	     use the string.  */
+	  if (! __offtime (&timer, 0, tp))
+	    goto use_last;
+
+	  /* Use the rules from the TZ string to compute the change.  */
+	  __tz_compute (timer, tp, 1);
+
+	  *leap_correct = 0L;
+	  *leap_hit = 0;
+	  return;
+	}
+      else
+	{
+	  /* Find the first transition after TIMER, and
+	     then pick the type of the transition before it.  */
+	  size_t lo = 0;
+	  size_t hi = num_transitions - 1;
+	  /* Assume that DST is changing twice a year and guess initial
+	     search spot from it.
+	     Half of a gregorian year has on average 365.2425 * 86400 / 2
+	     = 15778476 seconds.  */
+	  i = (transitions[num_transitions - 1] - timer) / 15778476;
+	  if (i < num_transitions)
+	    {
+	      i = num_transitions - 1 - i;
+	      if (timer < transitions[i])
+		{
+		  if (i < 10 || timer >= transitions[i - 10])
+		    {
+		      /* Linear search.  */
+		      while (timer < transitions[i - 1])
+			--i;
+		      goto found;
+		    }
+		  hi = i - 10;
+		}
+	      else
+		{
+		  if (i + 10 >= num_transitions || timer < transitions[i + 10])
+		    {
+		      /* Linear search.  */
+		      while (timer >= transitions[i])
+			++i;
+		      goto found;
+		    }
+		  lo = i + 10;
+		}
+	    }
+
+	  /* Binary search.  */
+	  /* assert (timer >= transitions[lo] && timer < transitions[hi]); */
+	  while (lo + 1 < hi)
+	    {
+	      i = (lo + hi) / 2;
+	      if (timer < transitions[i])
+		hi = i;
+	      else
+		lo = i;
+	    }
+	  i = hi;
+
+	found:
+	  /* assert (timer >= transitions[i - 1] && timer < transitions[i]); */
+	  __tzname[types[type_idxs[i - 1]].isdst]
+	    = __tzstring (&zone_names[types[type_idxs[i - 1]].idx]);
+	  size_t j = i;
+	  while (j < num_transitions)
+	    {
+	      int type = type_idxs[j];
+	      int dst = types[type].isdst;
+	      int idx = types[type].idx;
+
+	      if (__tzname[dst] == NULL)
+		{
+		  __tzname[dst] = __tzstring (&zone_names[idx]);
+
+		  if (__tzname[1 - dst] != NULL)
+		    break;
+		}
+
+	      ++j;
+	    }
+
+	  i = type_idxs[i - 1];
+	}
+
+      struct ttinfo *info = &types[i];
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
 

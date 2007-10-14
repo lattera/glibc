@@ -46,6 +46,9 @@ extern void __tzfile_compute (time_t timer, int use_localtime,
 			      struct tm *tp);
 extern void __tzfile_default (const char *std, const char *dst,
 			      long int stdoff, long int dstoff);
+extern void __tzset_parse_tz (const char *tz);
+extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
+     __THROW internal_function;
 
 /* Subroutine of `mktime'.  Return the `time_t' representation of TP and
    normalize TP, given that a `struct tm *' maps to a `time_t' as performed

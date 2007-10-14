@@ -264,9 +264,9 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       retval = 0;
 
       /* If there are no group members TOTAL_LEN is zero.  */
-      if (total_len > 0)
+      if (gr_name == NULL)
 	{
-	  if (gr_name == NULL)
+	  if (total_len > 0)
 	    {
 	      size_t n = __readall (sock, resultbuf->gr_mem[0], total_len);
 	      if (__builtin_expect (n != total_len, 0))
@@ -278,26 +278,26 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      else
 		*result = resultbuf;
 	    }
-	  else
+	}
+      else
+	{
+	  /* Copy the group member names.  */
+	  memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
+
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->gr_name[gr_name_len - 1] != '\0'
+	      || resultbuf->gr_passwd[gr_resp.gr_passwd_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
+		    if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
+		      break;
+		  cnt < gr_resp.gr_mem_cnt; }))
 	    {
-	      /* Copy the group member names.  */
-	      memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
-
-	      /* Try to detect corrupt databases.  */
-	      if (resultbuf->gr_name[gr_name_len - 1] != '\0'
-		  || resultbuf->gr_passwd[gr_resp.gr_passwd_len - 1] != '\0'
-		  || ({for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
-			if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
-			  break;
-		      cnt < gr_resp.gr_mem_cnt; }))
-		{
-		  /* We cannot use the database.  */
-		  retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
-		  goto out_close;
-		}
-
-	      *result = resultbuf;
+	      /* We cannot use the database.  */
+	      retval = mapped->head->gc_cycle != gc_cycle ? -2 : -1;
+	      goto out_close;
 	    }
+
+	  *result = resultbuf;
 	}
     }
   else

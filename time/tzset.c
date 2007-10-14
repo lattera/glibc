@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002,2003,2004,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,6 @@ static tz_rule tz_rules[2];
 
 
 static void compute_change (tz_rule *rule, int year) __THROW internal_function;
-static void tz_compute (const struct tm *tm) __THROW internal_function;
 static void tzset_internal (int always, int explicit)
      __THROW internal_function;
 
@@ -92,7 +91,7 @@ __tzstring (const char *s)
 {
   char *p;
   struct tzstring_l *t, *u, *new;
-  size_t len = strlen(s);
+  size_t len = strlen (s);
 
   /* Walk the list and look for a match.  If this string is the same
      as the end of an already-allocated string, it can share space. */
@@ -140,79 +139,33 @@ __tzname_max ()
 
 static char *old_tz;
 
-/* Interpret the TZ envariable.  */
 static void
 internal_function
-tzset_internal (always, explicit)
-     int always;
-     int explicit;
+update_vars (void)
 {
-  static int is_initialized;
-  register const char *tz;
+  __daylight = tz_rules[0].offset != tz_rules[1].offset;
+  __timezone = -tz_rules[0].offset;
+  __tzname[0] = (char *) tz_rules[0].name;
+  __tzname[1] = (char *) tz_rules[1].name;
+
+  /* Keep __tzname_cur_max up to date.  */
+  size_t len0 = strlen (__tzname[0]);
+  size_t len1 = strlen (__tzname[1]);
+  if (len0 > __tzname_cur_max)
+    __tzname_cur_max = len0;
+  if (len1 > __tzname_cur_max)
+    __tzname_cur_max = len1;
+}
+
+/* Parse the POSIX TZ-style string.  */
+void
+__tzset_parse_tz (tz)
+     const char *tz;
+{
   register size_t l;
   char *tzbuf;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
-
-  if (is_initialized && !always)
-    return;
-  is_initialized = 1;
-
-  /* Examine the TZ environment variable.  */
-  tz = getenv ("TZ");
-  if (tz == NULL && !explicit)
-    /* Use the site-wide default.  This is a file name which means we
-       would not see changes to the file if we compare only the file
-       name for change.  We want to notice file changes if tzset() has
-       been called explicitly.  Leave TZ as NULL in this case.  */
-    tz = TZDEFAULT;
-  if (tz && *tz == '\0')
-    /* User specified the empty string; use UTC explicitly.  */
-    tz = "Universal";
-
-  /* A leading colon means "implementation defined syntax".
-     We ignore the colon and always use the same algorithm:
-     try a data file, and if none exists parse the 1003.1 syntax.  */
-  if (tz && *tz == ':')
-    ++tz;
-
-  /* Check whether the value changes since the last run.  */
-  if (old_tz != NULL && tz != NULL && strcmp (tz, old_tz) == 0)
-    /* No change, simply return.  */
-    return;
-
-  if (tz == NULL)
-    /* No user specification; use the site-wide default.  */
-    tz = TZDEFAULT;
-
-  tz_rules[0].name = NULL;
-  tz_rules[1].name = NULL;
-
-  /* Save the value of `tz'.  */
-  if (old_tz != NULL)
-    free (old_tz);
-  old_tz = tz ? __strdup (tz) : NULL;
-
-  /* Try to read a data file.  */
-  __tzfile_read (tz, 0, NULL);
-  if (__use_tzfile)
-    return;
-
-  /* No data file found.  Default to UTC if nothing specified.  */
-
-  if (tz == NULL || *tz == '\0'
-      || (TZDEFAULT != NULL && strcmp (tz, TZDEFAULT) == 0))
-    {
-      tz_rules[0].name = tz_rules[1].name = "UTC";
-      tz_rules[0].type = tz_rules[1].type = J0;
-      tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
-      tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
-      tz_rules[0].secs = tz_rules[1].secs = 0;
-      tz_rules[0].offset = tz_rules[1].offset = 0L;
-      tz_rules[0].change = tz_rules[1].change = (time_t) -1;
-      tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
-      goto out;
-    }
 
   /* Clear out old state and reset to unnamed UTC.  */
   memset (tz_rules, 0, sizeof tz_rules);
@@ -413,20 +366,81 @@ tzset_internal (always, explicit)
     }
 
  out:
-  __daylight = tz_rules[0].offset != tz_rules[1].offset;
-  __timezone = -tz_rules[0].offset;
-  __tzname[0] = (char *) tz_rules[0].name;
-  __tzname[1] = (char *) tz_rules[1].name;
+  update_vars ();
+}
 
-  {
-    /* Keep __tzname_cur_max up to date.  */
-    size_t len0 = strlen (__tzname[0]);
-    size_t len1 = strlen (__tzname[1]);
-    if (len0 > __tzname_cur_max)
-      __tzname_cur_max = len0;
-    if (len1 > __tzname_cur_max)
-      __tzname_cur_max = len1;
-  }
+/* Interpret the TZ envariable.  */
+static void
+internal_function
+tzset_internal (always, explicit)
+     int always;
+     int explicit;
+{
+  static int is_initialized;
+  register const char *tz;
+
+  if (is_initialized && !always)
+    return;
+  is_initialized = 1;
+
+  /* Examine the TZ environment variable.  */
+  tz = getenv ("TZ");
+  if (tz == NULL && !explicit)
+    /* Use the site-wide default.  This is a file name which means we
+       would not see changes to the file if we compare only the file
+       name for change.  We want to notice file changes if tzset() has
+       been called explicitly.  Leave TZ as NULL in this case.  */
+    tz = TZDEFAULT;
+  if (tz && *tz == '\0')
+    /* User specified the empty string; use UTC explicitly.  */
+    tz = "Universal";
+
+  /* A leading colon means "implementation defined syntax".
+     We ignore the colon and always use the same algorithm:
+     try a data file, and if none exists parse the 1003.1 syntax.  */
+  if (tz && *tz == ':')
+    ++tz;
+
+  /* Check whether the value changes since the last run.  */
+  if (old_tz != NULL && tz != NULL && strcmp (tz, old_tz) == 0)
+    /* No change, simply return.  */
+    return;
+
+  if (tz == NULL)
+    /* No user specification; use the site-wide default.  */
+    tz = TZDEFAULT;
+
+  tz_rules[0].name = NULL;
+  tz_rules[1].name = NULL;
+
+  /* Save the value of `tz'.  */
+  if (old_tz != NULL)
+    free (old_tz);
+  old_tz = tz ? __strdup (tz) : NULL;
+
+  /* Try to read a data file.  */
+  __tzfile_read (tz, 0, NULL);
+  if (__use_tzfile)
+    return;
+
+  /* No data file found.  Default to UTC if nothing specified.  */
+
+  if (tz == NULL || *tz == '\0'
+      || (TZDEFAULT != NULL && strcmp (tz, TZDEFAULT) == 0))
+    {
+      tz_rules[0].name = tz_rules[1].name = "UTC";
+      tz_rules[0].type = tz_rules[1].type = J0;
+      tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
+      tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
+      tz_rules[0].secs = tz_rules[1].secs = 0;
+      tz_rules[0].offset = tz_rules[1].offset = 0L;
+      tz_rules[0].change = tz_rules[1].change = (time_t) -1;
+      tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
+      update_vars ();
+      return;
+    }
+
+  __tzset_parse_tz (tz);
 }
 
 /* Figure out the exact time (as a time_t) in YEAR
@@ -523,13 +537,34 @@ compute_change (rule, year)
 
 /* Figure out the correct timezone for TM and set `__tzname',
    `__timezone', and `__daylight' accordingly.  */
-static void
+void
 internal_function
-tz_compute (tm)
-     const struct tm *tm;
+__tz_compute (timer, tm, use_localtime)
+     time_t timer;
+     struct tm *tm;
+     int use_localtime;
 {
   compute_change (&tz_rules[0], 1900 + tm->tm_year);
   compute_change (&tz_rules[1], 1900 + tm->tm_year);
+
+  if (use_localtime)
+    {
+      int isdst;
+
+      /* We have to distinguish between northern and southern
+	 hemisphere.  For the latter the daylight saving time
+	 ends in the next year.  */
+      if (__builtin_expect (tz_rules[0].change
+			    > tz_rules[1].change, 0))
+	isdst = (timer < tz_rules[1].change
+		 || timer >= tz_rules[0].change);
+      else
+	isdst = (timer >= tz_rules[0].change
+		 && timer < tz_rules[1].change);
+      tm->tm_isdst = isdst;
+      tm->tm_zone = __tzname[isdst];
+      tm->tm_gmtoff = tz_rules[isdst].offset;
+    }
 }
 
 /* Reinterpret the TZ environment variable and set `tzname'.  */
@@ -583,35 +618,14 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
       if (! __offtime (timer, 0, tp))
 	tp = NULL;
       else
-	tz_compute (tp);
+	__tz_compute (*timer, tp, use_localtime);
       leap_correction = 0L;
       leap_extra_secs = 0;
     }
 
   if (tp)
     {
-      if (use_localtime)
-	{
-	  if (!__use_tzfile)
-	    {
-	      int isdst;
-
-	      /* We have to distinguish between northern and southern
-		 hemisphere.  For the latter the daylight saving time
-		 ends in the next year.  */
-	      if (__builtin_expect (tz_rules[0].change
-				    > tz_rules[1].change, 0))
-		isdst = (*timer < tz_rules[1].change
-			 || *timer >= tz_rules[0].change);
-	      else
-		isdst = (*timer >= tz_rules[0].change
-			 && *timer < tz_rules[1].change);
-	      tp->tm_isdst = isdst;
-	      tp->tm_zone = __tzname[isdst];
-	      tp->tm_gmtoff = tz_rules[isdst].offset;
-	    }
-	}
-      else
+      if (! use_localtime)
 	{
 	  tp->tm_isdst = 0;
 	  tp->tm_zone = "GMT";

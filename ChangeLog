@@ -1,5 +1,23 @@
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/time.h: Declare __tzset_parse_tz and __tzset_compute.
+	* time/tzset.c (tzset_internal): Break TZ string parsing out into
+	__tzset_parse_tz and updating of daylight, timezone, tzname into
+	update_vars.
+	(__tz_compute): Renamed from tz_compute.  Take additional parameters.
+	(__tz_convert): Updating of tm_isdst, tm_zone, and tm_gmtoff now
+	happens in __tz_compute.
+	* time/tzfile.c (__tzfile_read): Also read TZ string.
+	(find_transition): Fold into __tzfile_compute.
+	(__tzfile_compute): For times beyond the last transition try to
+	use the TZ string.
+	* timezone/tst-timezone.c: Information in daylight and tzname does
+	change for Asia/Tokyo timezone with more concrete information.
+	Remove the test.
+
+	* include/stdio.h: Add libc_hidden_proto for ftello.
+	* libio/ftello.c: Add libc_hidden_def.
+
 	[BZ #1140]
 	* time/tzfile.c (__tzfile_compute): Compute tzname[] values based
 	on the specified time and not the last entries in the file.  Move
