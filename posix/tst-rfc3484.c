@@ -93,6 +93,7 @@ do_test (void)
       memcpy(&results[i].source_addr, &so, sizeof (so));
       results[i].source_addr_len = sizeof (so);
       results[i].source_addr_flags = 0;
+      results[i].service_order = i;
     }
 
   qsort (results, naddrs, sizeof (results[0]), rfc3484_sort);

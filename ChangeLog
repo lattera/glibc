@@ -7,6 +7,7 @@
 	(getaddrinfo): Initialize service_order.
 	* posix/tst-rfc3484.c (do_test): Adjust for addition of
 	service_order field to sorting structure.
+	* posix/tst-rfc3484-2.c (do_test): Likewise.
 
 	* include/time.h: Declare __tzset_parse_tz and __tzset_compute.
 	* time/tzset.c (tzset_internal): Break TZ string parsing out into
