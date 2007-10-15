@@ -215,7 +215,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
       map = 1;
 
       result->h_addrtype = AF_INET;
-      result->h_length = INADDRSZ;;
+      result->h_length = INADDRSZ;
     }
 
   status = getanswer_r (host_buffer.buf, n, name, type, result, buffer, buflen,
@@ -836,5 +836,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
  no_recovery:
   *h_errnop = NO_RECOVERY;
   *errnop = ENOENT;
-  return NSS_STATUS_TRYAGAIN;
+  /* Special case here: if the resolver sent a result but it only
+     contains a CNAME while we are looking for a T_A or T_AAAA record,
+     we fail with NOTFOUND instead of TRYAGAIN.  */
+  return ((qtype == T_A || qtype == T_AAAA) && ap != host_data->aliases
+	   ? NSS_STATUS_NOTFOUND : NSS_STATUS_TRYAGAIN);
 }

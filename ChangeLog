@@ -1,3 +1,10 @@
+2007-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3425]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Fail with
+	NSS_STATUS_NOTFOUND if the server replied with only a CNAME and no
+	address record to T_A/T_AAAA requests.
+
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/glob.c: Reimplement link_exists_p to use fstatat64.
