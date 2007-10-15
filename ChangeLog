@@ -1,5 +1,7 @@
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/glob.c: Add some branch prediction throughout.
+
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Store result of successful
 	read from nscd.
 

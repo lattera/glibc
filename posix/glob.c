@@ -774,7 +774,7 @@ glob (pattern, flags, errfunc, pglob)
 
       /* Return the directory if we don't check for error or if it exists.  */
       if ((flags & GLOB_NOCHECK)
-	  || (((flags & GLOB_ALTDIRFUNC)
+	  || (((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 	       ? ((*pglob->gl_stat) (dirname, &st) == 0
 		  && S_ISDIR (st.st_mode))
 	       : (__stat64 (dirname, &st64) == 0 && S_ISDIR (st64.st_mode)))))
@@ -846,7 +846,7 @@ glob (pattern, flags, errfunc, pglob)
 	    *(char *) &dirname[--dirlen] = '\0';
 	}
 
-      if ((flags & GLOB_ALTDIRFUNC) != 0)
+      if (__builtin_expect ((flags & GLOB_ALTDIRFUNC) != 0, 0))
 	{
 	  /* Use the alternative access functions also in the recursive
 	     call.  */
@@ -1030,7 +1030,7 @@ glob (pattern, flags, errfunc, pglob)
       struct_stat64 st64;
 
       for (i = oldcount; i < pglob->gl_pathc + pglob->gl_offs; ++i)
-	if (((flags & GLOB_ALTDIRFUNC)
+	if ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	     ? ((*pglob->gl_stat) (pglob->gl_pathv[i], &st) == 0
 		&& S_ISDIR (st.st_mode))
 	     : (__stat64 (pglob->gl_pathv[i], &st64) == 0
@@ -1233,7 +1233,7 @@ link_exists_p (const char *dir, size_t dirlen, const char *fname,
   mempcpy (mempcpy (mempcpy (fullname, dir, dirlen), "/", 1),
 	   fname, fnamelen + 1);
 
-  return (((flags & GLOB_ALTDIRFUNC)
+  return ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	   ? (*pglob->gl_stat) (fullname, &st)
 	   : __stat64 (fullname, &st64)) == 0);
 }
@@ -1290,7 +1290,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
       mempcpy (mempcpy (mempcpy (fullname, directory, dirlen),
 			"/", 1),
 	       pattern, patlen + 1);
-      if (((flags & GLOB_ALTDIRFUNC)
+      if ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	   ? (*pglob->gl_stat) (fullname, &st)
 	   : __stat64 (fullname, &st64)) == 0)
 	/* We found this file to be existing.  Now tell the rest
@@ -1299,7 +1299,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
     }
   else
     {
-      stream = ((flags & GLOB_ALTDIRFUNC)
+      stream = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 		? (*pglob->gl_opendir) (directory)
 		: opendir (directory));
       if (stream == NULL)
@@ -1333,7 +1333,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		}
 	      d64buf;
 
-	      if (flags & GLOB_ALTDIRFUNC)
+	      if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 		{
 		  struct dirent *d32 = (*pglob->gl_readdir) (stream);
 		  if (d32 != NULL)
@@ -1347,7 +1347,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	      else
 		d = __readdir64 (stream);
 #else
-	      struct dirent *d = ((flags & GLOB_ALTDIRFUNC)
+	      struct dirent *d = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 				  ? ((struct dirent *)
 				     (*pglob->gl_readdir) (stream))
 				  : __readdir (stream));
@@ -1485,7 +1485,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
   if (stream != NULL)
     {
       save = errno;
-      if (flags & GLOB_ALTDIRFUNC)
+      if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 	(*pglob->gl_closedir) (stream);
       else
 	closedir (stream);
