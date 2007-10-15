@@ -1,5 +1,8 @@
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Store result of successful
+	read from nscd.
+
 	* sysdeps/posix/getaddrinfo.c (struct sort_result): Add
 	service_order.
 	(rfc3484_sort): Make sure that even if qsort doesn't support

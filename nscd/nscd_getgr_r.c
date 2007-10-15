@@ -266,18 +266,16 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       /* If there are no group members TOTAL_LEN is zero.  */
       if (gr_name == NULL)
 	{
-	  if (total_len > 0)
+	  if (total_len > 0
+	      && __builtin_expect (__readall (sock, resultbuf->gr_mem[0],
+					      total_len) != total_len, 0))
 	    {
-	      size_t n = __readall (sock, resultbuf->gr_mem[0], total_len);
-	      if (__builtin_expect (n != total_len, 0))
-		{
-		  /* The `errno' to some value != ERANGE.  */
-		  __set_errno (ENOENT);
-		  retval = ENOENT;
-		}
-	      else
-		*result = resultbuf;
+	      /* The `errno' to some value != ERANGE.  */
+	      __set_errno (ENOENT);
+	      retval = ENOENT;
 	    }
+	  else
+	    *result = resultbuf;
 	}
       else
 	{
