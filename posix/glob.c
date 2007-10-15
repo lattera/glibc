@@ -1222,21 +1222,42 @@ weak_alias (__glob_pattern_p, glob_pattern_p)
    allocated with alloca to be recycled.  */
 #if !defined _LIBC || !defined GLOB_ONLY_P
 static int
-link_exists_p (const char *dir, size_t dirlen, const char *fname,
-	       glob_t *pglob, int flags)
+__attribute_noinline__
+link_exists2_p (const char *dir, size_t dirlen, const char *fname,
+	       glob_t *pglob
+# ifndef _LIBC
+		, int flags
+# endif
+		)
 {
   size_t fnamelen = strlen (fname);
   char *fullname = (char *) __alloca (dirlen + 1 + fnamelen + 1);
   struct stat st;
+# ifndef _LIBC
   struct_stat64 st64;
+# endif
 
   mempcpy (mempcpy (mempcpy (fullname, dir, dirlen), "/", 1),
 	   fname, fnamelen + 1);
 
+# ifdef _LIBC
+  return (*pglob->gl_stat) (fullname, &st) == 0;
+# else
   return ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	   ? (*pglob->gl_stat) (fullname, &st)
 	   : __stat64 (fullname, &st64)) == 0);
+# endif
 }
+# ifdef _LIBC
+#  define link_exists_p(dfd, dirname, dirnamelen, fname, pglob, flags) \
+  (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)			      \
+   ? link_exists2_p (dirname, dirnamelen, fname, pglob)			      \
+   : ({ struct stat64 st64;						      \
+       __fxstatat64 (_STAT_VER, dfd, fname, &st64, 0) == 0; }))
+# else
+#  define link_exists_p(dfd, dirname, dirnamelen, fname, pglob, flags) \
+  link_exists2_p (dirname, dirnamelen, fname, pglob, flags)
+# endif
 #endif
 
 
@@ -1311,6 +1332,10 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	}
       else
 	{
+#ifdef _LIBC
+	  int dfd = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
+		     ? -1 : dirfd ((DIR *) stream));
+#endif
 	  int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			   | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
 #if defined _AMIGA || defined VMS
@@ -1369,7 +1394,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		  /* If the file we found is a symlink we have to
 		     make sure the target file exists.  */
 		  if (!DIRENT_MIGHT_BE_SYMLINK (d)
-		      || link_exists_p (directory, dirlen, name, pglob,
+		      || link_exists_p (dfd, directory, dirlen, name, pglob,
 					flags))
 		    {
 		      if (cur == names->count)
