@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include "nsswitch.h"
+#include "sysdep.h"
 #ifdef USE_NSCD
 # include <nscd/nscd_proto.h>
 #endif
@@ -120,6 +121,7 @@ int
 INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
 {
+  static bool startp_initialized;
   static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
@@ -167,11 +169,15 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     }
 #endif
 
-  if (startp == NULL)
+  if (! startp_initialized)
     {
       no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, &fct.ptr);
       if (no_more)
-	startp = (service_user *) -1l;
+	{
+	  void *tmp_ptr = (service_user *) -1l;
+	  PTR_MANGLE (tmp_ptr);
+	  startp = tmp_ptr;
+	}
       else
 	{
 #ifdef NEED__RES
@@ -189,16 +195,26 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	    _res_hconf_init ();
 #endif /* need _res_hconf */
 
-	  start_fct = fct.l;
-	  /* Make sure start_fct is written before startp.  */
-	  atomic_write_barrier ();
-	  startp = nip;
+	  void *tmp_ptr = fct.l;
+	  PTR_MANGLE (tmp_ptr);
+	  start_fct = tmp_ptr;
+	  tmp_ptr = nip;
+	  PTR_MANGLE (tmp_ptr);
+	  startp = tmp_ptr;
 	}
+
+      /* Make sure start_fct and startp are written before
+	 startp_initialized.  */
+      atomic_write_barrier ();
+      startp_initialized = true;
     }
   else
     {
       fct.l = start_fct;
-      no_more = (nip = startp) == (service_user *) -1l;
+      PTR_DEMANGLE (fct.l);
+      nip = startp;
+      PTR_DEMANGLE (nip);
+      no_more = nip == (service_user *) -1l;
     }
 
   while (no_more == 0)
