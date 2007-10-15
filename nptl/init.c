@@ -284,7 +284,7 @@ __pthread_initialize_minimal_internal (void)
   /* Private futexes are always used (at least internally) so that
      doing the test once this early is beneficial.  */
   {
-    int word;
+    int word = 0;
     word = INTERNAL_SYSCALL (futex, err, 3, &word,
 			    FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1);
     if (!INTERNAL_SYSCALL_ERROR_P (word, err))
