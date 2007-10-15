@@ -1,5 +1,8 @@
 2007-10-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Mangle start and start_fct
+	pointers.
+
 	[BZ #3425]
 	* resolv/nss_dns/dns-host.c (getanswer_r): Fail with
 	NSS_STATUS_NOTFOUND if the server replied with only a CNAME and no
