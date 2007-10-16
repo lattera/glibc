@@ -1,3 +1,8 @@
+2007-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Take extra memory requested by caller
+	into account when copying TZ string.
+
 2007-10-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/memset.S (memset): Fix sse2_nt_move

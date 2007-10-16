@@ -264,7 +264,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   zone_names = (char *) types + num_types * sizeof (struct ttinfo);
   leaps = (struct leap *) ((char *) transitions + leaps_idx);
   if (trans_width == 8)
-    tzspec = (char *) leaps + num_leaps * sizeof (struct leap);
+    tzspec = (char *) leaps + num_leaps * sizeof (struct leap) + extra;
   else
     tzspec = NULL;
   if (extra > 0)

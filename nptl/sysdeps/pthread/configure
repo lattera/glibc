@@ -24,8 +24,8 @@ echo "$as_me: error: CFI directive support in assembler is required" >&2;}
 fi
 
 
-echo "$as_me:$LINENO: checking for forced unwind support" >&5
-echo $ECHO_N "checking for forced unwind support... $ECHO_C" >&6
+{ echo "$as_me:$LINENO: checking for forced unwind support" >&5
+echo $ECHO_N "checking for forced unwind support... $ECHO_C" >&6; }
 if test "${libc_cv_forced_unwind+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -48,39 +48,36 @@ _Unwind_GetCFA (context)
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>conftest.er1
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
   ac_status=$?
   grep -v '^ *+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
   libc_cv_forced_unwind=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-libc_cv_forced_unwind=no
+	libc_cv_forced_unwind=no
 fi
-rm -f conftest.err conftest.$ac_objext \
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:$LINENO: result: $libc_cv_forced_unwind" >&5
-echo "${ECHO_T}$libc_cv_forced_unwind" >&6
+{ echo "$as_me:$LINENO: result: $libc_cv_forced_unwind" >&5
+echo "${ECHO_T}$libc_cv_forced_unwind" >&6; }
 if test $libc_cv_forced_unwind = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_FORCED_UNWIND 1
@@ -88,8 +85,8 @@ _ACEOF
 
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS -Werror -fexceptions"
-  echo "$as_me:$LINENO: checking for C cleanup handling" >&5
-echo $ECHO_N "checking for C cleanup handling... $ECHO_C" >&6
+  { echo "$as_me:$LINENO: checking for C cleanup handling" >&5
+echo $ECHO_N "checking for C cleanup handling... $ECHO_C" >&6; }
 if test "${libc_cv_c_cleanup+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -113,39 +110,36 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>conftest.er1
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
   ac_status=$?
   grep -v '^ *+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
   libc_cv_c_cleanup=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-libc_cv_c_cleanup=no
+	libc_cv_c_cleanup=no
 fi
-rm -f conftest.err conftest.$ac_objext \
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:$LINENO: result: $libc_cv_c_cleanup" >&5
-echo "${ECHO_T}$libc_cv_c_cleanup" >&6
+{ echo "$as_me:$LINENO: result: $libc_cv_c_cleanup" >&5
+echo "${ECHO_T}$libc_cv_c_cleanup" >&6; }
   CFLAGS="$old_CFLAGS"
   if test $libc_cv_c_cleanup = no; then
     { { echo "$as_me:$LINENO: error: the compiler must support C cleanup handling" >&5
