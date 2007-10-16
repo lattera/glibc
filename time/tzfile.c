@@ -596,7 +596,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 	  if (tzspec == NULL)
 	    {
 	    use_last:
-	      i = num_transitions - 1;
+	      i = num_transitions;
 	      goto found;
 	    }
 
@@ -666,7 +666,8 @@ __tzfile_compute (time_t timer, int use_localtime,
 	  i = hi;
 
 	found:
-	  /* assert (timer >= transitions[i - 1] && timer < transitions[i]); */
+	  /* assert (timer >= transitions[i - 1]
+	     && (i == num_transitions || timer < transitions[i])); */
 	  __tzname[types[type_idxs[i - 1]].isdst]
 	    = __tzstring (&zone_names[types[type_idxs[i - 1]].idx]);
 	  size_t j = i;
