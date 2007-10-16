@@ -1,3 +1,12 @@
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #5184]
+	* time/strftime_l.c: Include stdbool.h.
+	(my_strftime): New wrapper, old function renamed to...
+	(__strftime_internal): ... new function.  Add tzset_called
+	argument, pass it down to recursive calls, don't call tzset ()
+	if already true, set to true after call to tzset ().
+						
 2007-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Take extra memory requested by caller
