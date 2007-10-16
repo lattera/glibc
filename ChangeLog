@@ -1,3 +1,7 @@
+2007-10-15  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
 2007-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (REENTRANT_NAME): Mangle start and start_fct
