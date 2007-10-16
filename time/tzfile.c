@@ -243,7 +243,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 		& ~(__alignof__ (struct leap) - 1));
   leaps_idx = total_size;
   total_size += num_leaps * sizeof (struct leap);
-  tzspec_len = (trans_width == 8
+  tzspec_len = (sizeof (time_t) == 8 && trans_width == 8
 		? st.st_size - (ftello (f)
 				+ num_transitions * (8 + 1)
 				+ num_types * 6
@@ -263,14 +263,14 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   types = (struct ttinfo *) ((char *) transitions + types_idx);
   zone_names = (char *) types + num_types * sizeof (struct ttinfo);
   leaps = (struct leap *) ((char *) transitions + leaps_idx);
-  if (trans_width == 8)
+  if (sizeof (time_t) == 8 && trans_width == 8)
     tzspec = (char *) leaps + num_leaps * sizeof (struct leap) + extra;
   else
     tzspec = NULL;
   if (extra > 0)
     *extrap = (char *) &leaps[num_leaps];
 
-  if (sizeof (time_t) == 4 || trans_width == 8)
+  if (sizeof (time_t) == 4 || __builtin_expect (trans_width == 8, 1))
     {
       if (__builtin_expect (fread_unlocked (transitions, trans_width + 1,
 					    num_transitions, f)

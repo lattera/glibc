@@ -1,3 +1,8 @@
+2007-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Help the compiler recognize
+	unreachable code on 32-bit machines.
+
 2007-10-16  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #5184]
