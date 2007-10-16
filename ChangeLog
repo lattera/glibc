@@ -1,10 +1,27 @@
+2007-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_shared_cache_size): Define.
+	(init_cacheinfo): Initialize it.
+	* sysdeps/x86_64/memset.S: Use __x86_64_shared_cache_size.
+	Always define bzero.
+	Remove non-glibc code.
+	* sysdeps/x86_64/bzero.S: Make an empty file.
+
+2007-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/cacheinfo.c
+	(__x86_64_preferred_memory_instruction): New.
+	(init_cacheinfo): Initialize __x86_64_preferred_memory_instruction.
+
+	* sysdeps/x86_64/memset.S: Rewrite.
+
 2007-10-15  Roland McGrath  <roland@redhat.com>
 
 	* po/libc.pot: Regenerated.
 
 2007-10-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* nss/getXXbyYY_r.c (REENTRANT_NAME): Mangle start and start_fct
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Mangle startp and start_fct
 	pointers.
 
 	[BZ #3425]
