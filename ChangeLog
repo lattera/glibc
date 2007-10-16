@@ -1,3 +1,8 @@
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memset.S: Jump from bzero to memset using
+	a local label rather than HIDDEN_JUMPTARGET.
+
 2007-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (__x86_64_shared_cache_size): Define.
