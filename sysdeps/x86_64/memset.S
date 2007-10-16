@@ -915,7 +915,7 @@ L(sse2_nt_move):
 #else
 	movslq (%r11,%r8,4),%rcx
 	lea   (%rcx,%r11,1),%r11
-	jmpq   *(%r11)
+	jmpq   *%r11
 #endif
 
 	.balign     16

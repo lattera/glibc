@@ -1,5 +1,8 @@
 2007-10-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/x86_64/memset.S (memset): Fix sse2_nt_move
+	PIC indirect jump.
+
 	* sysdeps/x86_64/memset.S: Jump from bzero to memset using
 	a local label rather than HIDDEN_JUMPTARGET.
 
