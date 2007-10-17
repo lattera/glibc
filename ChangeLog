@@ -1,5 +1,10 @@
 2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5186]
+	* time/tzset.c (__tz_convert): Don't force testing for a change of
+	TZ if not called from localtime.  But then also see whether the
+	file changed, in case __use_tzfile is set.
+
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define F_DUPFD_CLOEXEC.
 	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
