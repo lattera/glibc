@@ -1,5 +1,11 @@
 2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/memset.S: Revert to old version for now.  The cost is
+	too high for the improvements.
+
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
 	* time/tzfile.c (__tzfile_read): Read POSIX TZ string if available
 	even when time_t is 32-bit.
 	(__tzfile_compute): Override POSIX TZ string STD/DST zone names if
