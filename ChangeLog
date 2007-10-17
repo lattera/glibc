@@ -1,3 +1,11 @@
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Read POSIX TZ string if available
+	even when time_t is 32-bit.
+	(__tzfile_compute): Override POSIX TZ string STD/DST zone names if
+	timezone data read by __tzfile_default.  Ensure __tzname[0] is
+	always set after the search.
+
 2007-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Help the compiler recognize
@@ -11,11 +19,16 @@
 	(__strftime_internal): ... new function.  Add tzset_called
 	argument, pass it down to recursive calls, don't call tzset ()
 	if already true, set to true after call to tzset ().
-						
+
 2007-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Take extra memory requested by caller
 	into account when copying TZ string.
+
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (__tzfile_compute): For use_last case set i to
+	num_transition rather than num_transitions - 1.
 
 2007-10-16  Jakub Jelinek  <jakub@redhat.com>
 
