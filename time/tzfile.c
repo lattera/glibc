@@ -371,14 +371,52 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     types[i++].isgmt = 0;
 
   /* Read the POSIX TZ-style information if possible.  */
-  if (tzspec != NULL)
+  if (sizeof (time_t) == 8 && tzspec != NULL)
     {
       /* Skip over the newline first.  */
       if (getc_unlocked (f) != '\n'
-	  || fread_unlocked (tzspec, 1, tzspec_len - 1, f) != tzspec_len - 1)
+	  || (fread_unlocked (tzspec, 1, tzspec_len - 1, f)
+	      != tzspec_len - 1))
 	tzspec = NULL;
       else
 	tzspec[tzspec_len - 1] = '\0';
+    }
+  else if (sizeof (time_t) == 4 && tzhead.tzh_version != '\0')
+    {
+      /* Get the TZ string.  */
+      if (__builtin_expect (fread_unlocked ((void *) &tzhead, sizeof (tzhead),
+					    1, f) != 1, 0)
+	  || (memcmp (tzhead.tzh_magic, TZ_MAGIC, sizeof (tzhead.tzh_magic))
+	      != 0))
+	goto lose;
+
+      size_t num_transitions2 = (size_t) decode (tzhead.tzh_timecnt);
+      size_t num_types2 = (size_t) decode (tzhead.tzh_typecnt);
+      size_t chars2 = (size_t) decode (tzhead.tzh_charcnt);
+      size_t num_leaps2 = (size_t) decode (tzhead.tzh_leapcnt);
+      size_t num_isstd2 = (size_t) decode (tzhead.tzh_ttisstdcnt);
+      size_t num_isgmt2 = (size_t) decode (tzhead.tzh_ttisgmtcnt);
+
+      /* Position the stream before the second header.  */
+      size_t to_skip = (num_transitions2 * (8 + 1)
+			+ num_types2 * 6
+			+ chars2
+			+ num_leaps2 * 12
+			+ num_isstd2
+			+ num_isgmt2);
+      off_t off;
+      if (fseek (f, to_skip, SEEK_CUR) != 0
+	  || (off = ftello (f)) < 0
+	  || st.st_size < off + 2)
+	goto lose;
+
+      tzspec_len = st.st_size - off - 1;
+      char *tzstr = alloca (tzspec_len);
+      if (getc_unlocked (f) != '\n'
+	  || (fread_unlocked (tzstr, 1, tzspec_len - 1, f) != tzspec_len - 1))
+	goto lose;
+      tzstr[tzspec_len - 1] = '\0';
+      tzspec = __tzstring (tzstr);
     }
 
   fclose (f);
@@ -561,7 +599,7 @@ __tzfile_compute (time_t timer, int use_localtime,
       __tzname[0] = NULL;
       __tzname[1] = NULL;
 
-      if (num_transitions == 0 || timer < transitions[0])
+      if (__builtin_expect (num_transitions == 0 || timer < transitions[0], 0))
 	{
 	  /* TIMER is before any transition (or there are no transitions).
 	     Choose the first non-DST type
@@ -591,9 +629,9 @@ __tzfile_compute (time_t timer, int use_localtime,
 		  ++j;
 	    }
 	}
-      else if (timer >= transitions[num_transitions - 1])
+      else if (__builtin_expect (timer >= transitions[num_transitions - 1], 0))
 	{
-	  if (tzspec == NULL)
+	  if (__builtin_expect (tzspec == NULL, 0))
 	    {
 	    use_last:
 	      i = num_transitions;
@@ -605,11 +643,21 @@ __tzfile_compute (time_t timer, int use_localtime,
 
 	  /* Convert to broken down structure.  If this fails do not
 	     use the string.  */
-	  if (! __offtime (&timer, 0, tp))
+	  if (__builtin_expect (! __offtime (&timer, 0, tp), 0))
 	    goto use_last;
 
 	  /* Use the rules from the TZ string to compute the change.  */
 	  __tz_compute (timer, tp, 1);
+
+	  /* If tzspec comes from posixrules loaded by __tzfile_default,
+	     override the STD and DST zone names with the ones user
+	     requested in TZ envvar.  */
+	  if (__builtin_expect (zone_names == (char *) &leaps[num_leaps], 0))
+	    {
+	      assert (num_types == 2);
+	      __tzname[0] = __tzstring (zone_names);
+	      __tzname[1] = __tzstring (&zone_names[strlen (zone_names) + 1]);
+	    }
 
 	  *leap_correct = 0L;
 	  *leap_hit = 0;
@@ -687,6 +735,9 @@ __tzfile_compute (time_t timer, int use_localtime,
 
 	      ++j;
 	    }
+
+	  if (__builtin_expect (__tzname[0] == NULL, 0))
+	    __tzname[0] = __tzname[1];
 
 	  i = type_idxs[i - 1];
 	}
