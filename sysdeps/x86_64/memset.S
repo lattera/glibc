@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Optimized version for x86-64.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -24,37 +24,35 @@
 #include "bp-sym.h"
 #include "bp-asm.h"
 
-/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
-#define BZERO_P (defined memset)
-
 /* This is somehow experimental and could made dependend on the cache
    size.  */
 #define LARGE $120000
 
         .text
-#if !BZERO_P && defined PIC && !defined NOT_IN_libc
+#ifndef NOT_IN_libc
+ENTRY(bzero)
+	mov	%rsi,%rdx	/* Adjust parameter.  */
+	xorl	%esi,%esi	/* Fill with 0s.  */
+	jmp	L(memset_entry)
+END(bzero)
+#endif
+
+#if defined PIC && !defined NOT_IN_libc
 ENTRY (__memset_chk)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__memset_chk)
 #endif
 ENTRY (memset)
-#if BZERO_P
-	mov	%rsi,%rdx	/* Adjust parameter.  */
-	xorl	%esi,%esi	/* Fill with 0s.  */
-#endif
+L(memset_entry):
 	cmp	$0x7,%rdx	/* Check for small length.  */
 	mov	%rdi,%rcx	/* Save ptr as return value.  */
 	jbe	7f
 
-#if BZERO_P
-	mov	%rsi,%r8	/* Just copy 0.  */
-#else
 	/* Populate 8 bit data to full 64-bit.  */
 	movabs	$0x0101010101010101,%r8
 	movzbl	%sil,%eax
 	imul	%rax,%r8
-#endif
 	test	$0x7,%edi	/* Check for alignment.  */
 	je	2f
 
@@ -109,12 +107,8 @@ ENTRY (memset)
 	dec	%rdx
 	jne	8b
 9:
-#if BZERO_P
-	nop
-#else
 	/* Load result (only if used as memset).  */
 	mov	%rdi,%rax	/* start address of destination is result */
-#endif
 	retq
 
 	.p2align 4
@@ -135,11 +129,9 @@ ENTRY (memset)
 	jmp	4b
 
 END (memset)
-#if !BZERO_P
 libc_hidden_builtin_def (memset)
-#endif
 
-#if !BZERO_P && defined PIC && !defined NOT_IN_libc
+#if defined PIC && !defined NOT_IN_libc
 strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
 	.section .gnu.warning.__memset_zero_constant_len_parameter
 	.string "memset used with constant zero length parameter; this could be due to transposed parameters"

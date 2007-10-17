@@ -404,10 +404,13 @@ long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
 /* Shared cache size for use in memory and string routines, typically
    L2 or L3 size.  */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
+#ifdef NOT_USED_RIGHT_NOW
 long int __x86_64_shared_cache_size attribute_hidden = 1024 * 1024;
+#endif
 /* PREFETCHW support flag for use in memory and string routines.  */
 int __x86_64_prefetchw attribute_hidden;
 
+#ifdef NOT_USED_RIGHT_NOW
 /* Instructions preferred for memory and string routines.
 
   0: Regular instructions
@@ -417,6 +420,7 @@ int __x86_64_prefetchw attribute_hidden;
 
   */
 int __x86_64_preferred_memory_instruction attribute_hidden;
+#endif
 
 
 static void
@@ -459,12 +463,14 @@ init_cacheinfo (void)
 		    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		    : "0" (1));
 
+#ifdef NOT_USED_RIGHT_NOW
       /* Intel prefers SSSE3 instructions for memory/string rountines
 	 if they are avaiable.  */
       if ((ecx & 0x200))
 	__x86_64_preferred_memory_instruction = 3;
       else
 	__x86_64_preferred_memory_instruction = 2;
+#endif
 
       /* Figure out the number of logical threads that share the
 	 highest cache level.  */
@@ -570,6 +576,8 @@ init_cacheinfo (void)
   if (shared > 0)
     {
       __x86_64_shared_cache_size_half = shared / 2;
+#ifdef NOT_USED_RIGHT_NOW
       __x86_64_shared_cache_size = shared;
+#endif
     }
 }

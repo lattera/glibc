@@ -1,7 +1,10 @@
 2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/cacheinfo.c: Comment out code added in support of
+	new memset.
 	* sysdeps/x86_64/memset.S: Revert to old version for now.  The cost is
-	too high for the improvements.
+	too high for the improvements.  Implement bzero unconditionally for
+	use in libc.
 
 2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
