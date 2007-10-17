@@ -1,3 +1,8 @@
+2007-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S (__old_sem_post): New
+	routine instead of an alias to __new_sem_post.
+
 2007-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* init.c (__pthread_initialize_minimal): Initialize word to appease

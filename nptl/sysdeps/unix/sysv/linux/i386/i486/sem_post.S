@@ -86,7 +86,26 @@ __new_sem_post:
 	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 	.global	__old_sem_post
-__old_sem_post = __new_sem_post
+	.type	__old_sem_post,@function
+__old_sem_post:
+	pushl	%ebx
+
+	movl	8(%esp), %ebx
+	LOCK
+	addl	$1, (%ebx)
+
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %ecx
+	movl	$1, %edx
+	ENTER_KERNEL
+
+	testl	%eax, %eax
+	js	1b
+
+	xorl	%eax, %eax
+	popl	%ebx
+	ret
+	.size	__old_sem_post,.-__old_sem_post
 	compat_symbol(libpthread, __old_sem_post, sem_post, GLIBC_2_0)
 #endif
 
