@@ -163,6 +163,11 @@
 #define	F_SETLK		8	/* Set record locking info (non-blocking).  */
 #define	F_SETLKW	9	/* Set record locking info (blocking).  */
 
+#ifdef __USE_GNU
+# define F_DUPFD_CLOEXEC 1030	/* Duplicate, set FD_CLOEXEC on new one.  */
+#endif
+
+
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
 #define	FD_CLOEXEC	1	/* Close on exec.  */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1997,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1997,1999,2000,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@ __libc_fcntl (int fd, int cmd, ...)
       /* First the descriptor-based commands, which do no RPCs.  */
 
     case F_DUPFD:		/* Duplicate the file descriptor.  */
+    case F_DUPFD_CLOEXEC:
       {
 	struct hurd_fd *new;
 	io_t port, ctty;
@@ -63,6 +64,12 @@ __libc_fcntl (int fd, int cmd, ...)
 	flags = d->flags;
 	ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
 	port = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
+
+	if (cmd == F_DUPFD_CLOEXEC)
+	  flags |= FD_CLOEXEC;
+	else
+	  /* Duplication clears the FD_CLOEXEC flag.  */
+	  flags &= ~FD_CLOEXEC;
 
 	/* Get a new file descriptor.  The third argument to __fcntl is the
 	   minimum file descriptor number for it.  */
@@ -82,8 +89,7 @@ __libc_fcntl (int fd, int cmd, ...)
 	    /* Install the ports and flags in the new descriptor.  */
 	    if (ctty != MACH_PORT_NULL)
 	      _hurd_port_set (&new->ctty, ctty);
-	    /* Duplication clears the FD_CLOEXEC flag.  */
-	    new->flags = flags & ~FD_CLOEXEC;
+	    new->flags = flags;
 	    _hurd_port_locked_set (&new->port, port); /* Unlocks NEW.  */
 	  }
 
