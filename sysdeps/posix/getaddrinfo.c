@@ -1426,9 +1426,12 @@ in6aicmp (const void *p1, const void *p2)
 #define GAICONF_FNAME "/etc/gai.conf"
 
 
-/* Nozero if we are supposed to reload the config file automatically
+/* Non-zero if we are supposed to reload the config file automatically
    whenever it changed.  */
 static int gaiconf_reload_flag;
+
+/* Non-zero if gaiconf_reload_flag was ever set to true.  */
+static int gaiconf_reload_flag_ever_set;
 
 /* Last modification time.  */
 static struct timespec gaiconf_mtime;
@@ -1611,7 +1614,11 @@ gaiconf_init (void)
 
 	    case 6:
 	      if (strcmp (cmd, "reload") == 0)
-		gaiconf_reload_flag = strcmp (val1, "yes") == 0;
+		{
+		  gaiconf_reload_flag = strcmp (val1, "yes") == 0;
+		  if (gaiconf_reload_flag)
+		    gaiconf_reload_flag_ever_set = 1;
+		}
 	      break;
 
 	    case 10:
@@ -1934,9 +1941,6 @@ getaddrinfo (const char *name, const char *service,
       __libc_once_define (static, once);
       __typeof (once) old_once = once;
       __libc_once (once, gaiconf_init);
-      if (old_once && gaiconf_reload_flag)
-	gaiconf_reload ();
-
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
       struct addrinfo *q;
@@ -2055,7 +2059,18 @@ getaddrinfo (const char *name, const char *service,
 
       /* We got all the source addresses we can get, now sort using
 	 the information.  */
-      qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+      if (__builtin_expect (gaiconf_reload_flag_ever_set, 0))
+	{
+	  __libc_lock_define_initialized (static, lock);
+
+	  __libc_lock_lock (lock);
+	  if (old_once && gaiconf_reload_flag)
+	    gaiconf_reload ();
+	  qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+	  __libc_lock_unlock (lock);
+	}
+      else
+	qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
 
       /* Queue the results up as they come out of sorting.  */
       q = p = results[0].dest_addr;

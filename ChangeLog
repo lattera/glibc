@@ -1,3 +1,9 @@
+2007-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): When sorting addresses
+	and admin selects to be able to replace the gai.conf file, lock
+	data structures around the qsort call.
+
 2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c: Comment out code added in support of
