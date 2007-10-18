@@ -413,7 +413,7 @@ send_again:
 	{
 	  fromlen = sizeof (struct sockaddr);
 	  inlen = __recvfrom (cu->cu_sock, cu->cu_inbuf,
-			      (int) cu->cu_recvsz, 0,
+			      (int) cu->cu_recvsz, MSG_DONTWAIT,
 			      (struct sockaddr *) &from, &fromlen);
 	}
       while (inlen < 0 && errno == EINTR);
