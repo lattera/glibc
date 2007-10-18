@@ -1,3 +1,9 @@
+2007-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Don't block in recvfrom call
+	even if the poll result indicates there is data to read.
+	Patch by Jeff Moyer <jmoyer@redhat.com>.
+
 2007-10-18  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (NT_PPC_VMX): New macro.
