@@ -1,3 +1,8 @@
+2007-10-17  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Correct return value
+	type and __THROW marker of splice, vmsplice, and tee.
+
 2007-09-24  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/nptl/tls.h: Fix comment.
