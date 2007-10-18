@@ -1,3 +1,8 @@
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+
+	* version.h (VERSION): Set to 2.7.90.
+
 2007-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/memset.S (bzero): Renamed to __bzero.  Add
