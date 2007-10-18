@@ -1,5 +1,8 @@
-2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+2007-10-18  Roland McGrath  <roland@redhat.com>
 
+	* elf/elf.h (NT_PPC_VMX): New macro.
+
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Set to 2.7.90.
 
