@@ -30,11 +30,12 @@
 
         .text
 #ifndef NOT_IN_libc
-ENTRY(bzero)
+ENTRY(__bzero)
 	mov	%rsi,%rdx	/* Adjust parameter.  */
 	xorl	%esi,%esi	/* Fill with 0s.  */
 	jmp	L(memset_entry)
-END(bzero)
+END(__bzero)
+weak_alias (__bzero, bzero)
 #endif
 
 #if defined PIC && !defined NOT_IN_libc

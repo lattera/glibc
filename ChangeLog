@@ -1,3 +1,8 @@
+2007-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memset.S (bzero): Renamed to __bzero.  Add
+	weak_alias.
+
 2007-10-17  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/bits/fcntl.h [__USE_GNU__] (F_DUPFD_CLOEXEC): New.
