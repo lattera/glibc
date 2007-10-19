@@ -24,7 +24,7 @@
 
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 7
+#define _DL_HWCAP_COUNT 8
 
 static inline int
 __attribute__ ((unused))
@@ -66,7 +66,7 @@ _dl_string_hwcap (const char *str)
 #include <bits/wordsize.h>
 #define HWCAP_IMPORTANT_V9	(__WORDSIZE == 64 ? 0 : HWCAP_SPARC_V9)
 #define HWCAP_IMPORTANT		(HWCAP_IMPORTANT_V9 | HWCAP_SPARC_ULTRA3 \
-				 | HWCAP_SPARC_BLKINIT)
+				 | HWCAP_SPARC_BLKINIT | HWCAP_SPARC_N2)
 
 /* There are no different platforms defined.  */
 #define _dl_platform_string(idx) ""

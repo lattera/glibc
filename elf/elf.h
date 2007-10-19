@@ -1278,6 +1278,7 @@ typedef struct
 #define HWCAP_SPARC_V9		16	/* The CPU is v9, so v8plus is ok.  */
 #define HWCAP_SPARC_ULTRA3	32
 #define HWCAP_SPARC_BLKINIT	64	/* Sun4v with block-init/load-twin.  */
+#define HWCAP_SPARC_N2		128
 
 /* MIPS R3000 specific definitions.  */
 

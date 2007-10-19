@@ -1,3 +1,17 @@
+2007-10-06  David S. Miller  <davem@davemloft.net>
+
+	* configure.in: Add sparcv9v2 and sparc64v2.
+	* scripts/config.sub: Likewise.
+	* configure: Regenerate.
+	* elf/elf.h (HWCAP_SPARC_N2): New.
+	* sysdeps/sparc/dl-procinfo.h (_DL_HWCAP_COUNT): Bump to 8.
+	* sysdeps/sparc/dl-procinfo.c (_dl_sparc_cap_flags): Add 'v9v2'.
+	(HWCAP_IMPORTANT): Add HWCAP_SPARC_N2.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memset.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v2/memset.S: New file.
+
 2007-10-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/clnt_udp.c (clntudp_call): Don't block in recvfrom call

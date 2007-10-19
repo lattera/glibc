@@ -277,8 +277,8 @@ case $basic_machine in
 	| pyramid \
 	| sh | sh[1234] | sh[24]a | sh[23]e | sh[34]eb | shbe | shle | sh[1234]le | sh3ele \
 	| sh64 | sh64le \
-	| sparc | sparc64 | sparc64b | sparc64v | sparc86x | sparclet | sparclite \
-	| sparcv8 | sparcv9 | sparcv9b | sparcv9v \
+	| sparc | sparc64 | sparc64b | sparc64v | sparc64v2 | sparc86x | sparclet | sparclite \
+	| sparcv8 | sparcv9 | sparcv9b | sparcv9v | sparcv9v2 \
 	| strongarm \
 	| tahoe | thumb | tic4x | tic80 | tron \
 	| v850 | v850e \
@@ -361,9 +361,9 @@ case $basic_machine in
 	| romp-* | rs6000-* \
 	| sh-* | sh[1234]-* | sh[24]a-* | sh[23]e-* | sh[34]eb-* | shbe-* \
 	| shle-* | sh[1234]le-* | sh3ele-* | sh64-* | sh64le-* \
-	| sparc-* | sparc64-* | sparc64b-* | sparc64v-* | sparc86x-* | sparclet-* \
+	| sparc-* | sparc64-* | sparc64b-* | sparc64v-* | sparc64v2-* | sparc86x-* | sparclet-* \
 	| sparclite-* \
-	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | strongarm-* | sv1-* | sx?-* \
+	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | sparcv9v2-* | strongarm-* | sv1-* | sx?-* \
 	| tahoe-* | thumb-* \
 	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
 	| tron-* \
@@ -1129,7 +1129,7 @@ case $basic_machine in
 	sh[1234] | sh[24]a | sh[34]eb | sh[1234]le | sh[23]ele)
 		basic_machine=sh-unknown
 		;;
-	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v)
+	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v | sparcv9v2)
 		basic_machine=sparc-sun
 		;;
 	cydra)
