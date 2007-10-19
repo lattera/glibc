@@ -23,22 +23,32 @@
 #include <lowlevellock.h>
 #include <sys/time.h>
 
-
 void
-__lll_lock_wait (lll_lock_t *futex)
+__lll_lock_wait (lll_lock_t *futex, int private)
 {
   do
     {
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_wait (futex, 2, LLL_SHARED);
+	lll_futex_wait (futex, 2, private);
     }
-  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+  while (atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0);
 }
 
+void
+__lll_lock_wait_private (lll_lock_t *futex)
+{
+  do
+    {
+      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+      if (oldval != 0)
+	lll_futex_wait (futex, 2, LLL_PRIVATE);
+    }
+  while (atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0);
+}
 
 int
-__lll_timedlock_wait (lll_lock_t *futex, const struct timespec *abstime)
+__lll_timedlock_wait (lll_lock_t *futex, const struct timespec *abstime, int private)
 {
   /* Reject invalid timeouts.  */
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
@@ -68,7 +78,7 @@ __lll_timedlock_wait (lll_lock_t *futex, const struct timespec *abstime)
       /* Wait.  */
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt, LLL_SHARED);
+	lll_futex_timed_wait (futex, 2, &rt, private);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
   return 0;

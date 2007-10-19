@@ -1,3 +1,69 @@
+2007-10-18  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c
+	(__lll_lock_wait): Add private argument. Pass private
+	to lll_futex_wait. Use atomic_compare_and_exchange_val_acq.
+	(__lll_lock_wait_private): New function.
+	(__lll_timedlock_wait): Add private argument. Pass private
+	to lll_futex_timed_wait.
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h:
+	Include kernel-features.h and tls.h.
+	(FUTEX_WAITERS): Define.
+	(FUTEX_OWNER_DIED): Define.
+	(FUTEX_TID_MASK): Define.
+	(__lll_private_flag): Define.
+	(lll_futex_timed_wait): Use __lll_private_flag.
+	(lll_futex_wake): Use __lll_private_flag.
+	(lll_futex_requeue): Use __lll_private_flag.
+	(lll_robust_mutex_dead): Rename to...
+	(lll_robust_dead): ... this. Add private argument. Pass private
+	to lll_futex_wake.
+	(lll_futex_wake_unlock): Use __lll_private_flag.
+	(__lll_mutex_trylock): Remove.
+	(lll_mutex_tryock): Remove.
+	(__lll_robust_mutex_trylock): Rename to...
+	(__lll_robust_trylock): ... this.
+	(lll_robust_mutex_trylock): Rename to...
+	(lll_robust_trylock): ... this. Call __lll_robust_trylock.
+	(__lll_mutex_cond_trylock): Rename to...
+	(__lll_cond_trylock): ... this.
+	(lll_mutex_cond_trylock): Rename to...
+	(lll_cond_trylock): ... this. Call __lll_cond_trylock.
+	(__lll_mutex_lock): Add private argument.
+	(__lll_robust_mutex_lock): Remove.
+	(lll_mutex_lock): Define.
+	(__lll_robust_lock): Define.
+	(lll_robust_mutex_lock): Remove.
+	(__lll_mutex_cond_lock): Remove.
+	(lll_robust_lock) Define.
+	(lll_robust_cond_lock): Define.
+	(lll_robust_mutex_cond_lock): Remove.
+	(__lll_cond_lock): Define.
+	(lll_cond_lock): Define.
+	(__lll_mutex_timedlock): Remove.
+	(__lll_timedlock): Define.
+	(lll_timedlock): Define.
+	(lll_robust_mutex_timedlock): Remove.
+	(lll_robust_timedlock): Define.
+	(__lll_mutex_unlock): Remove.
+	(__lll_unlock): Define.
+	(__lll_robust_mutex_unlock): Remove.
+	(__lll_robust_unlock): Define.
+	(lll_robust_mutex_unlock): Remove.
+	(lll_robust_unlock): Define.
+	(__lll_mutex_unlock_force): Remove.
+	(lll_mutex_unlock_force): Remove.
+	(lll_islocked): Remove.
+	(lll_mutex_islocked): Rename to...
+	(lll_islocked): ... this.
+	(lll_trylock): Remove.
+	(lll_unlock): Remove.
+	(lll_wait_tid): Format whitespace.
+	(lll_cond_wait): Remove.
+	(lll_cond_timedwait): Remove.
+	(lll_cond_wake): Remove.
+	(lll_cond_broadcast): Remove.
+
 2007-10-17  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Correct return value
