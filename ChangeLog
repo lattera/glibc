@@ -1,3 +1,7 @@
+2007-10-19  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile ($(objpfx)ld.so): Use $(AWK).
+
 2007-10-06  David S. Miller  <davem@davemloft.net>
 
 	* configure.in: Add sparcv9v2 and sparc64v2.
