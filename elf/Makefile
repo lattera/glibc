@@ -308,7 +308,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
 	rm -f $@.lds
 	readelf -s $@ \
-	  | awk '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
+	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
 
 # interp.c exists just to get this string into the libraries.
 CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"' \
