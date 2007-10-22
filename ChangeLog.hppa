@@ -1,3 +1,7 @@
+2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.
+
 2007-10-18  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c
