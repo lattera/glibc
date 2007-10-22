@@ -1,3 +1,17 @@
+2007-10-21  Andreas Jaeger  <aj@suse.de>
+
+	* manual/texinfo.tex: Update to latest version.
+
+	* manual/sysinfo.texi (System Parameters): Fix Formatting.
+
+	* manual/arith.texi (Status bit operations): Fix formatting.
+
+	* manual/errno.texi (Error Messages): Fix formatting.
+
+	* manual/sysinfo.texi (System Parameters): Fix formatting.
+
+	* manual/libc.texinfo: Update VERSION and UPDATED.
+
 2007-10-19  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile ($(objpfx)ld.so): Use $(AWK).

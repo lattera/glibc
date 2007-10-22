@@ -19,8 +19,8 @@
 
 @c sold 0.06/1.09, print run out 21may96
 @set EDITION 0.11
-@set VERSION 2.6
-@set UPDATED 2006-12-03
+@set VERSION 2.7
+@set UPDATED 2007-09-09
 @set ISBN 1-882114-55-8
 
 @copying

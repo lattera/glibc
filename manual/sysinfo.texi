@@ -1066,8 +1066,7 @@ The symbols used in this section are declared in the file @file{sysctl.h}.
 
 @comment sysctl.h
 @comment BSD
-@deftypefun int sysctl (int *@var{names}, int @var{nlen}, void *@var{oldval},
-        size_t *@var{oldlenp}, void *@var{newval}, size_t @var{newlen})
+@deftypefun int sysctl (int *@var{names}, int @var{nlen}, void *@var{oldval}, size_t *@var{oldlenp}, void *@var{newval}, size_t @var{newlen})
 
 @code{sysctl} gets or sets a specified system parameter.  There are so
 many of these parameters that it is not practical to list them all here,

@@ -778,8 +778,7 @@ non-zero value otherwise.
 
 @comment fenv.h
 @comment ISO
-@deftypefun int fesetexceptflag (const fexcept_t *@var{flagp}, int
-@var{excepts})
+@deftypefun int fesetexceptflag (const fexcept_t *@var{flagp}, int @var{excepts})
 This function restores the flags for the exceptions indicated by
 @var{excepts} to the values stored in the variable pointed to by
 @var{flagp}.
