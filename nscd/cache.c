@@ -229,22 +229,9 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
       return;
     }
 
-  /* This function can be called from the cleanup thread but also in
-     response to an invalidate command.  Make sure only one thread is
-     running.  When not serving INVALIDATE request, no need for the
-     second to wait around.  */
-  if (fd == -1)
-    {
-      if (pthread_mutex_trylock (&table->prunelock) != 0)
-	/* The work is already being done.  */
-	return;
-    }
-  else
-    pthread_mutex_lock (&table->prunelock);
-
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
-  if (table->check_file)
+  if (table->check_file && now != LONG_MAX)
     {
       struct stat64 st;
 
@@ -269,6 +256,21 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	}
     }
 
+  /* This function can be called from the cleanup thread but also in
+     response to an invalidate command.  Make sure only one thread is
+     running.  When not serving INVALIDATE request, no need for the
+     second thread to wait around.  */
+  if (__builtin_expect (pthread_mutex_trylock (&table->prunelock) != 0, 0))
+    {
+      /* The work is already being done.  */
+      if (fd == -1)
+	return;
+
+      /* We have to wait until the thread is done and then run again
+	 so that the large NOW value invalidates all entries.  */
+      pthread_mutex_lock (&table->prunelock);
+    }
+
   /* We run through the table and find values which are not valid anymore.
 
      Note that for the initial step, finding the entries to be removed,
@@ -285,6 +287,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
     dbg_log (_("pruning %s cache; time %ld"),
 	     dbnames[table - dbs], (long int) now);
 
+  time_t next_timeout = LONG_MAX;
   do
     {
       ref_t run = table->head->array[--cnt];
@@ -363,14 +366,17 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		}
 	    }
 	  else
-	    assert (dh->usable);
+	    {
+	      assert (dh->usable);
+	      next_timeout = MIN (next_timeout, dh->timeout);
+	    }
 
 	  run = runp->next;
 	}
     }
   while (cnt > 0);
 
-  if (fd != -1)
+  if (__builtin_expect (fd != -1, 0))
     {
       /* Reply to the INVALIDATE initiator that the cache has been
 	 invalidated.  */
