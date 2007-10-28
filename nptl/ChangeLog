@@ -1,3 +1,19 @@
+2007-10-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5220]
+	* sysdeps/unix/sysv/linux/kernel-posix-timers.h: Declare
+	__active_timer_sigev_thread and __active_timer_sigev_thread_lock.
+	(struct timer): Add next element.
+	* sysdeps/unix/sysv/linux/timer_create.c: For SIGEV_THREAD timers,
+	enqueue timer structure into __active_timer_sigev_thread list.
+	* sysdeps/unix/sysv/linux/timer_delete.c: For SIGEV_THREAD timers,
+	remove timer struct from __active_timer_sigev_thread.
+	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
+	Before using timer structure make sure it is still on the
+	__active_timer_sigev_thread list.  Keep lock until done.
+	Define __active_timer_sigev_thread and
+	__active_timer_sigev_thread_lock.
+
 2007-10-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/malloc-machine.h: Define ATFORK_MEM.

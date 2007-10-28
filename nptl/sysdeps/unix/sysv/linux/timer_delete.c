@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -54,6 +54,27 @@ timer_delete (timerid)
 
       if (res == 0)
 	{
+	  if (kt->sigev_notify == SIGEV_THREAD)
+	    {
+	      /* Remove the timer from the list.  */
+	      pthread_mutex_lock (&__active_timer_sigev_thread_lock);
+	      if (__active_timer_sigev_thread == kt)
+		__active_timer_sigev_thread = kt->next;
+	      else
+		{
+		  struct timer *prevp = __active_timer_sigev_thread;
+		  while (prevp->next != NULL)
+		    if (prevp->next == kt)
+		      {
+			prevp->next = kt->next;
+			break;
+		      }
+		    else
+		      prevp = prevp->next;
+		}
+	      pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
+	    }
+
 # ifndef __ASSUME_POSIX_TIMERS
 	  /* We know the syscall support is available.  */
 	  __no_posix_timers = 1;

@@ -206,6 +206,13 @@ timer_create (clock_id, evp, timerid)
 				      syscall_clockid, &sev, &newp->ktimerid);
 	      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
 		{
+		  /* Add to the queue of active timers with thread
+		     delivery.  */
+		  pthread_mutex_lock (&__active_timer_sigev_thread_lock);
+		  newp->next = __active_timer_sigev_thread;
+		  __active_timer_sigev_thread = newp;
+		  pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
+
 		  *timerid = (timer_t) newp;
 		  return 0;
 		}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -35,6 +35,11 @@ extern pthread_once_t __helper_once attribute_hidden;
 /* TID of the helper thread.  */
 extern pid_t __helper_tid attribute_hidden;
 
+/* List of active SIGEV_THREAD timers.  */
+extern struct timer *__active_timer_sigev_thread attribute_hidden;
+/* Lock for the __active_timer_sigev_thread.  */
+extern pthread_mutex_t __active_timer_sigev_thread_lock attribute_hidden;
+
 
 /* Type of timers in the kernel.  */
 typedef int kernel_timer_t;
@@ -57,4 +62,7 @@ struct timer
   void (*thrfunc) (sigval_t);
   sigval_t sival;
   pthread_attr_t attr;
+
+  /* Next element in list of active SIGEV_THREAD timers.  */
+  struct timer *next;
 };

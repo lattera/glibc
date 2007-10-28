@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -25,6 +25,12 @@
 #include <kernel-features.h>
 #include <nptl/pthreadP.h>
 #include "kernel-posix-timers.h"
+
+
+/* List of active SIGEV_THREAD timers.  */
+struct timer *__active_timer_sigev_thread;
+/* Lock for the __active_timer_sigev_thread.  */
+pthread_mutex_t __active_timer_sigev_thread_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
 struct thread_start_data
@@ -95,19 +101,36 @@ timer_helper_thread (void *arg)
 	  if (si.si_code == SI_TIMER)
 	    {
 	      struct timer *tk = (struct timer *) si.si_ptr;
-	      struct thread_start_data *td = malloc (sizeof (*td));
 
-	      /* There is not much we can do if the allocation fails.  */
-	      if (td != NULL)
+	      /* Check the timer is still used and will not go away
+		 while we are reading the values here.  */
+	      pthread_mutex_lock (&__active_timer_sigev_thread_lock);
+
+	      struct timer *runp = __active_timer_sigev_thread;
+	      while (runp != NULL)
+		if (runp == tk)
+		  break;
+		else
+		  runp = runp->next;
+
+	      if (runp != NULL)
 		{
-		  /* That is the signal we are waiting for.  */
-		  td->thrfunc = tk->thrfunc;
-		  td->sival = tk->sival;
+		  struct thread_start_data *td = malloc (sizeof (*td));
 
-		  pthread_t th;
-		  (void) pthread_create (&th, &tk->attr, timer_sigev_thread,
-					 td);
+		  /* There is not much we can do if the allocation fails.  */
+		  if (td != NULL)
+		    {
+		      /* This is the signal we are waiting for.  */
+		      td->thrfunc = tk->thrfunc;
+		      td->sival = tk->sival;
+
+		      pthread_t th;
+		      (void) pthread_create (&th, &tk->attr,
+					     timer_sigev_thread, td);
+		    }
 		}
+
+	      pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
 	    }
 	  else if (si.si_code == SI_TKILL)
 	    /* The thread is canceled.  */

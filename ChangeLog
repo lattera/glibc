@@ -1,5 +1,9 @@
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5204]
+	* crypt/sha256c-test.c: Define TIMEOUT to 6 for ancient hardware.
+	* crypt/sha512c-test.c: Likewise.
+
 	[BZ #5225]
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Don't misuse wp pointer
 	to keep track of end of %[ format string element.
