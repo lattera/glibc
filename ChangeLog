@@ -3,6 +3,8 @@
 	[BZ #5225]
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Don't misuse wp pointer
 	to keep track of end of %[ format string element.
+	* stdio-common/Makefile (tests): Add bug20.
+	* stdio-common/bug20.c: New file.
 
 	[BZ #5222]
 	* elf/dl-load.c (_dl_rtld_di_serinfo): Correct handling of short
