@@ -78,7 +78,7 @@ canonical FQDN.
 
 In some contexts, the host name is called a ``node name.''
 
-For more information on DNS host naming, @xref{Host Names}.
+For more information on DNS host naming, see @ref{Host Names}.
 
 @pindex hostname
 @pindex hostid

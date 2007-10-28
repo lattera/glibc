@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <2005-09-23 13:25:42 drepper>
+Time-stamp: <2007-10-27 18:37:51 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -12,12 +12,10 @@ GNU project.  There is an easy to use WWW interface available at
 
        http://sourceware.org/bugzilla/
 
-I would appreciate it very much if you could verify the problem was not
-reported before by looking through the database.  To make the information
-in this database as useful as possible please report bugs always using the
-`glibcbug' shell script which gets installed with GNU libc.  Before reporting
-a bug please check the FAQ since it discusses also a lot of problematic
-situations.
+I would appreciate it very much if you could verify the problem was
+not reported before by looking through the database. Before reporting
+a bug please check the FAQ since it discusses also a lot of
+problematic situations.
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

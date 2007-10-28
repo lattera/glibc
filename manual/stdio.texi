@@ -3907,7 +3907,7 @@ In GNU C, there is a special construct you can use to let the compiler
 know that a function uses a @code{scanf}-style format string.  Then it
 can check the number and types of arguments in each call to the
 function, and warn you when they do not match the format string.
-For details, @xref{Function Attributes, , Declaring Attributes of Functions,
+For details, see @ref{Function Attributes, , Declaring Attributes of Functions,
 gcc.info, Using GNU CC}.
 
 @node EOF and Errors

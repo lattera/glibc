@@ -277,7 +277,7 @@ a file as a process image.  You can use these functions to make a child
 process execute a new program after it has been forked.
 
 To see the effects of @code{exec} from the point of view of the called
-program, @xref{Program Basics}.
+program, see @ref{Program Basics}.
 
 @pindex unistd.h
 The functions in this family differ in how you specify the arguments,

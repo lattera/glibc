@@ -287,12 +287,12 @@ down the build process and need more disk space.
 failure should be looked into.  Depending on the failures, you probably
 should not install the library at all.
 
-You should consider using the `glibcbug' script to report the failure,
-providing as much detail as possible.  If you run a test directly, please
-remember to set up the environment correctly.  You want to test the compiled
-library - and not your installed one.  The best way is to copy the exact
-command line which failed and run the test from the subdirectory for this
-test in the sources.
+You should consider reporting it in bugzilla
+<http://sourceware.org/bugzilla/> providing as much detail as possible.
+If you run a test directly, please remember to set up the environment
+correctly. You want to test the compiled library - and not your installed
+one. The best way is to copy the exact command line which failed and run
+the test from the subdirectory for this test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
 - Some compilers produce buggy code.  No compiler gets single precision

@@ -2274,7 +2274,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 	      if (counting)
 		{
 		  si->dls_cnt++;
-		  si->dls_size += r->dirnamelen < 2 ? r->dirnamelen : 2;
+		  si->dls_size += MAX (2, r->dirnamelen);
 		}
 	      else
 		{

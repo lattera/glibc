@@ -90,7 +90,7 @@ more meaning than the system administrator gives to it.
 @item priority
 This tells how important the content of the message is.  Examples of
 defined priority values are: debug, informational, warning, critical.
-For the complete list, @xref{syslog; vsyslog}.  Except for
+For the complete list, see @ref{syslog; vsyslog}.  Except for
 the fact that the priorities have a defined order, the meaning of each
 of these priorities is entirely determined by the system administrator.
 

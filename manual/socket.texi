@@ -2070,7 +2070,7 @@ access to connect to the socket.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int listen (int @var{socket}, unsigned int @var{n})
+@deftypefun int listen (int @var{socket}, int @var{n})
 The @code{listen} function enables the socket @var{socket} to accept
 connections, thus making it a server socket.
 

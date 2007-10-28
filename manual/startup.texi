@@ -31,7 +31,7 @@ system, and telling the system the program is done.
 
 A program starts another program with the @code{exec} family of system calls.
 This chapter looks at program startup from the execee's point of view.  To
-see the event from the execor's point of view, @xref{Executing a File}.
+see the event from the execor's point of view, see @ref{Executing a File}.
 
 @menu
 * Program Arguments::           Parsing your program's command-line arguments.
@@ -309,9 +309,9 @@ character, since this is assumed to terminate the string.
 
 The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
-@file{stdlib.h}.  All of the following functions can be safely used in
-multi-threaded programs.  It is made sure that concurrent modifications
-to the environment do not lead to errors.
+@file{stdlib.h}.  Modifications of enviroment variables are not
+allowed in Multi-threaded programs.  The @code{getenv} function
+can be safely used in multi-threaded programs
 @pindex stdlib.h
 
 @comment stdlib.h

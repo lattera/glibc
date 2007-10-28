@@ -212,7 +212,7 @@ Note that the clock can wrap around.  On a 32bit system with
 same value approximately every 72 minutes.
 
 For additional functions to examine a process' use of processor time,
-and to control it, @xref{Resource Usage And Limitation}.
+and to control it, see @ref{Resource Usage And Limitation}.
 
 
 @menu
