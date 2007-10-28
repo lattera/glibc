@@ -160,6 +160,10 @@ static void           (*save_free_hook) (__malloc_ptr_t __ptr,
 					 __const __malloc_ptr_t);
 static Void_t*        save_arena;
 
+#ifdef ATFORK_MEM
+ATFORK_MEM;
+#endif
+
 /* Magic value for the thread-specific arena pointer when
    malloc_atfork() is in use.  */
 
