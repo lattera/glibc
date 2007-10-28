@@ -1,3 +1,13 @@
+2007-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/malloc-machine.h: Define ATFORK_MEM.
+	Redefine thread_atfork for use of ATFORK_MEM.
+	* sysdeps/unix/sysv/linux/fork.h: Define __linkin_atfork.
+	* sysdeps/unix/sysv/linux/register-atfork.c (__linkin_atfork): New
+	function.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c (__unregister_atfork):
+	Use atomic operation when removing first element of list.
+
 2007-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S (__old_sem_post): New

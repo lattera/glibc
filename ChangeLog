@@ -1,5 +1,8 @@
 2007-10-27  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #5040]
+	* sysdeps/unix/sysv/linux/sys/epoll.h (EPOLLRDHUP): Add value.
+
 	[BZ #3112]
 	* sysdeps/ia64/backtrace.c (init): Free shared library if incorrect.
 	(__cleanup): Free shared library when exiting.
