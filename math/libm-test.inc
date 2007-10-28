@@ -487,11 +487,24 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   else
     {
       diff = FUNC(fabs) (computed - expected);
-      /* ilogb (0) isn't allowed.  */
-      if (expected == 0.0)
-	ulp = diff / FUNC(ldexp) (1.0, - MANT_DIG);
-      else
-	ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
+      switch (fpclassify (expected))
+	{
+	case FP_ZERO:
+	  /* ilogb (0) isn't allowed. */
+	  ulp = diff / FUNC(ldexp) (1.0, - MANT_DIG);
+	  break;
+	case FP_NORMAL:
+	  ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
+	  break;
+	case FP_SUBNORMAL:
+	  ulp = (FUNC(ldexp) (diff, MANT_DIG)
+		 / FUNC(ldexp) (1.0, FUNC(ilogb) (expected)));
+	  break;
+	default:
+	  /* It should never happen. */
+	  abort ();
+	  break;
+	}
       set_max_error (ulp, curr_max_error);
       print_diff = 1;
       if ((exceptions & IGNORE_ZERO_INF_SIGN) == 0
