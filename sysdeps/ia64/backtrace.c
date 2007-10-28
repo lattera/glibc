@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -33,17 +33,18 @@ struct trace_arg
 #ifdef SHARED
 static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
 static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
+static void *libgcc_handle;
 
 static void
 init (void)
 {
-  void *handle = __libc_dlopen ("libgcc_s.so.1");
+  libgcc_handle = __libc_dlopen ("libgcc_s.so.1");
 
-  if (handle == NULL)
+  if (libgcc_handle == NULL)
     return;
 
-  unwind_backtrace = __libc_dlsym (handle, "_Unwind_Backtrace");
-  unwind_getip = __libc_dlsym (handle, "_Unwind_GetIP");
+  unwind_backtrace = __libc_dlsym (libgcc_handle, "_Unwind_Backtrace");
+  unwind_getip = __libc_dlsym (libgcc_handle, "_Unwind_GetIP");
   if (unwind_getip == NULL)
     unwind_backtrace = NULL;
 }
@@ -91,3 +92,17 @@ __backtrace (array, size)
 }
 weak_alias (__backtrace, backtrace)
 libc_hidden_def (__backtrace)
+
+
+#ifdef SHARED
+/* Free all resources if necessary.  */
+libc_freeres_fn (free_mem)
+{
+  unwind_backtrace = NULL;
+  if (libgcc_handle != NULL)
+    {
+      __libc_dlclose (libgcc_handle);
+      libgcc_handle = NULL;
+    }
+}
+#endif

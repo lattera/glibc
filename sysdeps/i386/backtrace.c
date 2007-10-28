@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 1998, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2003-2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -36,21 +36,26 @@ static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
 static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
 static _Unwind_Ptr (*unwind_getcfa) (struct _Unwind_Context *);
 static _Unwind_Ptr (*unwind_getgr) (struct _Unwind_Context *, int);
+static void *libgcc_handle;
 
 static void
 init (void)
 {
-  void *handle = __libc_dlopen ("libgcc_s.so.1");
+  libgcc_handle = __libc_dlopen ("libgcc_s.so.1");
 
-  if (handle == NULL)
+  if (libgcc_handle == NULL)
     return;
 
-  unwind_backtrace = __libc_dlsym (handle, "_Unwind_Backtrace");
-  unwind_getip = __libc_dlsym (handle, "_Unwind_GetIP");
-  unwind_getcfa = __libc_dlsym (handle, "_Unwind_GetCFA");
-  unwind_getgr = __libc_dlsym (handle, "_Unwind_GetGR");
+  unwind_backtrace = __libc_dlsym (libgcc_handle, "_Unwind_Backtrace");
+  unwind_getip = __libc_dlsym (libgcc_handle, "_Unwind_GetIP");
+  unwind_getcfa = __libc_dlsym (libgcc_handle, "_Unwind_GetCFA");
+  unwind_getgr = __libc_dlsym (libgcc_handle, "_Unwind_GetGR");
   if (unwind_getip == NULL || unwind_getgr == NULL || unwind_getcfa == NULL)
-    unwind_backtrace = NULL;
+    {
+      unwind_backtrace = NULL;
+      __libc_dlclose (libgcc_handle);
+      libgcc_handle = NULL;
+    }
 }
 #else
 # define unwind_backtrace _Unwind_Backtrace
@@ -142,3 +147,17 @@ __backtrace (array, size)
 }
 weak_alias (__backtrace, backtrace)
 libc_hidden_def (__backtrace)
+
+
+#ifdef SHARED
+/* Free all resources if necessary.  */
+libc_freeres_fn (free_mem)
+{
+  unwind_backtrace = NULL;
+  if (libgcc_handle != NULL)
+    {
+      __libc_dlclose (libgcc_handle);
+      libgcc_handle = NULL;
+    }
+}
+#endif
