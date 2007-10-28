@@ -67,10 +67,21 @@ __unregister_atfork (dso_handle)
      It's a single linked list so readers are.  */
   do
     {
+    again:
       if (runp->dso_handle == dso_handle)
 	{
 	  if (lastp == NULL)
-	    __fork_handlers = runp->next;
+	    {
+	      /* We have to use an atomic operation here because
+		 __linkin_atfork also uses one.  */
+	      if (catomic_compare_and_exchange_bool_acq (&__fork_handlers,
+							 runp->next, runp)
+		  != 0)
+		{
+		  runp = __fork_handlers;
+		  goto again;
+		}
+	    }
 	  else
 	    lastp->next = runp->next;
 

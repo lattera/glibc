@@ -55,3 +55,6 @@ extern int __register_atfork (void (*__prepare) (void),
 			      void (*__child) (void),
 			      void *dso_handle);
 libc_hidden_proto (__register_atfork)
+
+/* Add a new element to the fork list.  */
+extern void __linkin_atfork (struct fork_handler *newp) attribute_hidden;

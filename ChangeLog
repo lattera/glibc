@@ -1,3 +1,10 @@
+2007-10-23  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5208]
+	* sysdeps/unix/sysv/linux/readahead.c (__readahead): Use
+	__LONG_LONG_PAIR to handle little endian byte order.
+	Suggested by abhishekrai@google.com
+
 2007-10-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/arena.c [!NO_THREADS]: Use ATFORK_MEM if defined.
