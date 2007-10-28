@@ -1,3 +1,8 @@
+2007-10-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5224]
+	* locales/ig_NG: Add missing collating elements and symbols.
+
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4098]

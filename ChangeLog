@@ -1,5 +1,9 @@
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5225]
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Don't misuse wp pointer
+	to keep track of end of %[ format string element.
+
 	[BZ #5222]
 	* elf/dl-load.c (_dl_rtld_di_serinfo): Correct handling of short
 	path elements in counting mode.

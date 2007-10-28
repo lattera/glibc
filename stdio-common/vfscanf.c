@@ -272,7 +272,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	{								    \
 	  CHAR_T *old = wp;						    \
 	  wpmax = (UCHAR_MAX + 1 > 2 * wpmax ? UCHAR_MAX + 1 : 2 * wpmax);  \
-	  wp = (CHAR_T *) alloca (wpmax * sizeof (wchar_t));		    \
+	  wp = (CHAR_T *) alloca (wpmax * sizeof (CHAR_T));		    \
 	  if (old != NULL)						    \
 	    MEMCPY (wp, old, wpsize);					    \
 	}								    \
@@ -2314,7 +2314,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  if (__builtin_expect (fc == L'\0', 0))
 	    conv_error ();
-	  wp = (wchar_t *) f - 1;
+	  wchar_t *twend = (wchar_t *) f - 1;
 #else
 	  /* Fill WP with byte flags indexed by character.
 	     We will use this flag map for matching input characters.  */
@@ -2365,9 +2365,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  /* Test whether it's in the scanlist.  */
 		  runp = tw;
-		  while (runp < wp)
+		  while (runp < twend)
 		    {
-		      if (runp[0] == L'-' && runp[1] != '\0' && runp + 1 != wp
+		      if (runp[0] == L'-' && runp[1] != '\0'
+			  && runp + 1 != twend
 			  && runp != tw
 			  && (unsigned int) runp[-1] <= (unsigned int) runp[1])
 			{
@@ -2405,7 +2406,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			}
 		    }
 
-		  if (runp == wp && !not_in)
+		  if (runp == twend && !not_in)
 		    {
 		      ungetc (c, s);
 		      goto out;
@@ -2590,9 +2591,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  /* Test whether it's in the scanlist.  */
 		  runp = tw;
-		  while (runp < wp)
+		  while (runp < twend)
 		    {
-		      if (runp[0] == L'-' && runp[1] != '\0' && runp + 1 != wp
+		      if (runp[0] == L'-' && runp[1] != '\0'
+			  && runp + 1 != twend
 			  && runp != tw
 			  && (unsigned int) runp[-1] <= (unsigned int) runp[1])
 			{
@@ -2630,7 +2632,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			}
 		    }
 
-		  if (runp == wp && !not_in)
+		  if (runp == twend && !not_in)
 		    {
 		      ungetc (c, s);
 		      goto out2;

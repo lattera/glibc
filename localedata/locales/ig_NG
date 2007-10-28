@@ -117,6 +117,11 @@ collating-element <O_2'> from "<U1ECC><U0301>"
 collating-element <o_2'> from "<U1ECD><U0301>"
 collating-element <O_2`> from "<U1ECC><U0300>"
 collating-element <o_2`> from "<U1ECD><U0300>"
+collating-symbol  <s-h-ig>
+collating-element <S-H> from "<U0053><U0048>"
+collating-element <S-h> from "<U0053><U0068>"
+collating-element <s-H> from "<U0073><U0048>"
+collating-element <s-h> from "<U0073><U0068>"
 collating-symbol  <ubelowdot>
 collating-element <U_>  from "<U0055><U0323>"
 collating-element <u_>  from "<U0075><U0323>"
