@@ -62,6 +62,14 @@ extern int __old_gethostbyaddr_r (__const void *__restrict __addr,
 				  struct hostent **__restrict __result,
 				  int *__restrict __h_errnop);
 
+extern int __gethostbyaddr2_r (__const void *__restrict __addr,
+			       socklen_t __len, int __type,
+			       struct hostent *__restrict __result_buf,
+			       char *__restrict __buf, size_t __buflen,
+			       struct hostent **__restrict __result,
+			       int *__restrict __h_errnop,
+			       int32_t *ttlp);
+
 extern int __gethostbyname_r (__const char *__restrict __name,
 			      struct hostent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
@@ -83,6 +91,13 @@ extern int __old_gethostbyname2_r (__const char *__restrict __name, int __af,
 				   char *__restrict __buf, size_t __buflen,
 				   struct hostent **__restrict __result,
 				   int *__restrict __h_errnop);
+
+extern int __gethostbyname3_r (__const char *__restrict __name, int __af,
+			       struct hostent *__restrict __result_buf,
+			       char *__restrict __buf, size_t __buflen,
+			       struct hostent **__restrict __result,
+			       int *__restrict __h_errnop,
+			       int32_t *ttlp, char **canonp);
 
 extern int __getnetent_r (struct netent *__restrict __result_buf,
 			  char *__restrict __buf, size_t __buflen,
