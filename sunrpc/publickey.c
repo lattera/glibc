@@ -1,5 +1,5 @@
 /* Get public or secret key from key server.
-   Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -71,7 +71,7 @@ getpublickey (const char *name, char *key)
     {
       status = (*fct.f) (name, key, &errno);
 
-      no_more = __nss_next (&nip, "getpublickey", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getpublickey", NULL, &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;
@@ -114,7 +114,7 @@ getsecretkey (const char *name, char *key, const char *passwd)
     {
       status = (*fct.f) (name, key, passwd, &errno);
 
-      no_more = __nss_next (&nip, "getsecretkey", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getsecretkey", NULL, &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;

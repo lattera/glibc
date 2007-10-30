@@ -110,7 +110,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   size_t tmpbuf4len = 0;
   char *tmpbuf4 = NULL;
   char *canon = NULL;
-  int32_t ttl = UINT32_MAX;
+  int32_t ttl = INT32_MAX;
   ssize_t total = 0;
   char *key_copy = NULL;
   bool alloca_used = false;
@@ -163,7 +163,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      rc4 = 0;
 	      status[1] = DL_CALL_FCT (fct, (key, AF_INET, &th[1], tmpbuf4,
 					     tmpbuf4len, &rc4, &herrno,
-					     ttl == UINT32_MAX ? &ttl : NULL,
+					     ttl == INT32_MAX ? &ttl : NULL,
 					     canon == NULL ? &canon : NULL));
 	      if (rc4 != ERANGE || herrno != NETDB_INTERNAL)
 		break;
@@ -233,9 +233,9 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		      int rc;
 		      while (1)
 			{
-			  rc = __gethostbyaddr_r (addr, addrlen, addrfamily,
-						  &he_mem, tmpbuf, tmpbuflen,
-						  &he, &herrno);
+			  rc = __gethostbyaddr2_r (addr, addrlen, addrfamily,
+						   &he_mem, tmpbuf, tmpbuflen,
+						   &he, &herrno, NULL);
 			  if (rc != ERANGE || herrno != NETDB_INTERNAL)
 			    break;
 			  tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
@@ -285,7 +285,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = time (NULL) + MIN (db->postimeout, ttl);
+	      dataset->head.timeout = time (NULL) + (ttl == INT32_MAX
+						     ? db->postimeout : ttl);
 
 	      dataset->resp.version = NSCD_VERSION;
 	      dataset->resp.found = 1;

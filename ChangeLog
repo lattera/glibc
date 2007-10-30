@@ -1,3 +1,51 @@
+2007-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (nscd-modules): Replace gethstbynm2_r with
+	gethstbynm3_r.
+	* nscd/gethstbynm2_r.c: Remove.
+	* nscd/gethstbynm3_r.c: New file.
+	* nscd/aicache.c (addhstaiX): Use __gethostbyaddr2_r instead of
+	__gethostbyaddr_r.
+	* nscd/gethstbyad_r.c: Generate __gethostbyaddr2_r function.  Define
+	__gethostbyaddr_r compatibility wrapper.
+	* nscd/hstcache.c (cache_addhst): Add ttl parameter.  Use it when
+	determining timeout of entry.
+	(lookup): Take new parameter and pass it to __gethostbyname3_r and
+	__gethostbyaddr2_r.
+	(addhstbyX): Pass reference to variable for TTL to lookup and
+	cache_addhst.
+	* nss/Versions [glibc] (GLIBC_PRIVATE): Export __nss_passwd_lookup2,
+	__nss_group_lookup2, __nss_hosts_lookup2, __nss_services_lookup2,
+	and __nss_next2.  Remove __nss_services_lookup.
+	* nss/XXX-lookup.c: Name function now *_lookup2.  Add new parameter.
+	Add compat wrapper.
+	* nss/getXXbyYY_r.c: Changes to call new *_lookup2 functions and
+	__nss_next2.
+	* nss/getXXent_r.c: Likewise.
+	* nss/getnssent_r.c: Likewise.
+	* nss/nsswitch.c (__nss_lookup): Add new parameter.  If first function
+	does not exist in module, try the optional second name.
+	(__nss_next2): New function.
+	(__nss_next): Now wrapper around __nss_next2.
+	* nss/nsswitch.h: Adjust __nss_lookup prototype.
+	Declare __nss_next2.
+	Adjust definition of db_lookup_function type.
+	* nss/service-lookup.c: Define NO_COMPAT.
+	* include/netdb.h: Declare __gethostbyaddr2_r and __gethostbyname3_r.
+	* inet/ether_hton.c: Use __nss_next2 instead of __nss_next.
+	* inet/ether_ntoh.c: Likewise.
+	* sunrpc/netname.c: Likewise.
+	* sunrpc/publickey.c: Likewise.
+	* inet/getnetgrent.c: Likewise.  Adjust calls to __nss_lookup.
+	* inet/gethstbyad_r.c (DB_LOOKUP_FCT): Change to __nss_hosts_lookup2.
+	* inet/gethstbynm2_r.c (DB_LOOKUP_FCT): Likewise.
+	* inet/gethstbynm_r.c (DB_LOOKUP_FCT): Likewise.
+	* inet/gethstent_r.c (DB_LOOKUP_FCT): Likewise.
+
+	* nscd/aicache.c (addhstaiX): Fix default TTL handling.
+
+	* inet/getnetgrent.c (setup): Encrypt static pointer.
+
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5204]

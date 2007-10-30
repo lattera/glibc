@@ -25,10 +25,13 @@
 
 
 #define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyname2
+#define FUNCTION_NAME	gethostbyname3
+#define FUNCTION2_NAME	gethostbyname2
 #define DATABASE_NAME	hosts
 #define ADD_PARAMS	const char *name, int af
+#define EXTRA_PARAMS	, int32_t *ttlp, char **canonp
 #define ADD_VARIABLES	name, af
+#define EXTRA_VARIABLES	, ttlp, canonp
 #define NEED_H_ERRNO	1
 #define NEED__RES_HCONF 1
 
@@ -39,3 +42,12 @@
 #define __inet_aton inet_aton
 
 #include "../nss/getXXbyYY_r.c"
+
+
+int
+__gethostbyname2_r (const char *name, int af, struct hostent *ret, char *buf,
+		    size_t buflen, struct hostent **result, int *h_errnop)
+{
+  return __gethostbyname3_r (name, af, ret, buf, buflen, result, h_errnop,
+			     NULL, NULL);
+}

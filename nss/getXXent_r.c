@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2002,2004,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -64,7 +64,7 @@
 #define STRINGIZE1(Name) #Name
 
 #ifndef DB_LOOKUP_FCT
-# define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
+# define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup2)
 # define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
 # define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
 #endif
@@ -113,7 +113,8 @@ static STAYOPEN_TMP;
 __libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
+extern int DB_LOOKUP_FCT (service_user **nip, const char *name,
+			  const char *name2, void **fctp)
      internal_function;
 libc_hidden_proto (DB_LOOKUP_FCT)
 

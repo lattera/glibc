@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -176,7 +176,7 @@ netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
     {
       status = (*fct.f) (netname, uidp, gidp, gidlenp, gidlist);
 
-      no_more = __nss_next (&nip, "netname2user", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "netname2user", NULL, &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;

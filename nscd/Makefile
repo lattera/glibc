@@ -32,7 +32,7 @@ include ../Makeconfig
 vpath %.c ../locale/programs
 
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
-		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
+		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm3_r \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
 		xmalloc xstrdup aicache initgrcache gai res_hconf
@@ -106,7 +106,7 @@ CFLAGS-getgrnam_r.c += $(nscd-cflags)
 CFLAGS-getgrgid_r.c += $(nscd-cflags)
 CFLAGS-hstcache.c += $(nscd-cflags)
 CFLAGS-gethstbyad_r.c += $(nscd-cflags)
-CFLAGS-gethstbynm2_r.c += $(nscd-cflags)
+CFLAGS-gethstbynm3_r.c += $(nscd-cflags)
 CFLAGS-dbg_log.c += $(nscd-cflags)
 CFLAGS-nscd_conf.c += $(nscd-cflags)
 CFLAGS-nscd_stat.c += $(nscd-cflags)

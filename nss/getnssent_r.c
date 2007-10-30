@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ setup (const char *func_name, db_lookup_function lookup_fct,
   int no_more;
   if (*startp == NULL)
     {
-      no_more = lookup_fct (nip, func_name, fctp);
+      no_more = lookup_fct (nip, func_name, NULL, fctp);
       *startp = no_more ? (service_user *) -1l : *nip;
     }
   else if (*startp == (service_user *) -1l)
@@ -42,7 +42,7 @@ setup (const char *func_name, db_lookup_function lookup_fct,
 	/* Reset to the beginning of the service list.  */
 	*nip = *startp;
       /* Look up the first function.  */
-      no_more = __nss_lookup (nip, func_name, fctp);
+      no_more = __nss_lookup (nip, func_name, NULL, fctp);
     }
   return no_more;
 }
@@ -80,8 +80,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
       else
 	status = DL_CALL_FCT (fct.f, (0));
 
-      no_more = __nss_next (nip, func_name, &fct.ptr,
-			    status, 0);
+      no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, status, 0);
       if (is_last_nip)
 	*last_nip = *nip;
     }
@@ -120,7 +119,7 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
 	/* We have processed all services which were used.  */
 	break;
 
-      no_more = __nss_next (nip, func_name, &fct.ptr, 0, 1);
+      no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, 0, 1);
     }
   *last_nip = *nip = NULL;
 }
@@ -177,8 +176,8 @@ __nss_getent_r (const char *getent_func_name,
 
       do
 	{
-	  no_more = __nss_next (nip, getent_func_name, &fct.ptr,
-				status, 0);
+	  no_more = __nss_next2 (nip, getent_func_name, NULL, &fct.ptr,
+				 status, 0);
 
 	  if (is_last_nip)
 	    *last_nip = *nip;
@@ -192,8 +191,7 @@ __nss_getent_r (const char *getent_func_name,
 		void *ptr;
 	      } sfct;
 
-	      no_more = __nss_lookup (nip, setent_func_name,
-				      &sfct.ptr);
+	      no_more = __nss_lookup (nip, setent_func_name, NULL, &sfct.ptr);
 
 	      if (! no_more)
 	        {

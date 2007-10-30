@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2005
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2005, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,13 +18,16 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <bits/libc-lock.h>
 #include <errno.h>
 #include <netdb.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "netgroup.h"
 #include "nsswitch.h"
+#include <sysdep.h>
 
 
 /* Protect above variable against multiple uses at the same time.  */
@@ -44,25 +47,32 @@ static int
 setup (void **fctp, service_user **nipp)
 {
   /* Remember the first service_entry, it's always the same.  */
+  static bool startp_initialized;
   static service_user *startp;
   int no_more;
 
-  if (startp == NULL)
+  if (!startp_initialized)
     {
       /* Executing this more than once at the same time must yield the
 	 same result every time.  So we need no locking.  */
       no_more = __nss_netgroup_lookup (nipp, "setnetgrent", fctp);
       startp = no_more ? (service_user *) -1 : *nipp;
+      PTR_MANGLE (startp);
+      atomic_write_barrier ();
+      startp_initialized = true;
     }
-  else if (startp == (service_user *) -1)
-    /* No services at all.  */
-    return 1;
   else
     {
+      service_user *nip = startp;
+      PTR_DEMANGLE (nip);
+      if (nip == (service_user *) -1)
+	/* No services at all.  */
+	return 1;
+
       /* Reset to the beginning of the service list.  */
-      *nipp = startp;
+      *nipp = nip;
       /* Look up the first function.  */
-      no_more = __nss_lookup (nipp, "setnetgrent", fctp);
+      no_more = __nss_lookup (nipp, "setnetgrent", NULL, fctp);
     }
   return no_more;
 }
@@ -122,11 +132,12 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
     {
       assert (datap->data == NULL);
 
-      /* Ignore status, we force check in `__nss_next'.  */
+      /* Ignore status, we force check in `__nss_next2'.  */
       status = (*fct.f) (group, datap);
 
       service_user *old_nip = datap->nip;
-      no_more = __nss_next (&datap->nip, "setnetgrent", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&datap->nip, "setnetgrent", NULL, &fct.ptr,
+			     status, 0);
 
       if (status == NSS_STATUS_SUCCESS && ! no_more)
 	{
@@ -423,8 +434,8 @@ innetgr (const char *netgroup, const char *host, const char *user,
 	    break;
 
 	  /* Look for the next service.  */
-	  no_more = __nss_next (&entry.nip, "setnetgrent",
-				&setfct.ptr, status, 0);
+	  no_more = __nss_next2 (&entry.nip, "setnetgrent", NULL,
+				 &setfct.ptr, status, 0);
 	}
 
       if (result == 0 && entry.needed_groups != NULL)

@@ -110,7 +110,8 @@ libc_hidden_proto (__nss_database_lookup)
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
    an error occurred or no such function exists.  */
-extern int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
+extern int __nss_lookup (service_user **ni, const char *fct_name,
+			 const char *fct2_name, void **fctp) attribute_hidden;
 
 /* Determine the next step in the lookup process according to the
    result STATUS of the call to the last function returned by
@@ -125,9 +126,12 @@ extern int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
    services.  In other words, only if all four lookup results have
    the action RETURN associated the lookup process stops before the
    natural end.  */
+extern int __nss_next2 (service_user **ni, const char *fct_name,
+			const char *fct2_name, void **fctp, int status,
+			int all_values) attribute_hidden;
+libc_hidden_proto (__nss_next2)
 extern int __nss_next (service_user **ni, const char *fct_name, void **fctp,
 		       int status, int all_values);
-libc_hidden_proto (__nss_next)
 
 /* Search for the service described in NI for a function named FCT_NAME
    and return a pointer to this function if successful.  */
@@ -139,7 +143,8 @@ libc_hidden_proto (__nss_lookup_function)
 extern void __nss_disable_nscd (void);
 
 
-typedef int (*db_lookup_function) (service_user **, const char *, void **)
+typedef int (*db_lookup_function) (service_user **, const char *, const char *,
+				   void **)
      internal_function;
 typedef enum nss_status (*setent_function) (int);
 typedef enum nss_status (*endent_function) (void);

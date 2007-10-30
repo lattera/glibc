@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1999,2001,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -72,7 +72,7 @@ ether_ntohost (char *hostname, const struct ether_addr *addr)
 
       status = (*fct.f) (addr, &etherent, buffer, sizeof buffer, &errno);
 
-      no_more = __nss_next (&nip, "getntohost_r", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getntohost_r", NULL, &fct.ptr, status, 0);
     }
 
   if (status == NSS_STATUS_SUCCESS)

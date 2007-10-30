@@ -42,11 +42,17 @@
 |* DATABASE_NAME - name of the database the function accesses	   *|
 |*		   (e.g., host, services, ...)			   *|
 |*								   *|
-|* ADD_PARAMS    - additional parameter, can vary in number	   *|
+|* ADD_PARAMS    - additional parameters, can vary in number	   *|
 |*								   *|
-|* ADD_VARIABLES - names of additional parameter		   *|
+|* ADD_VARIABLES - names of additional parameters		   *|
 |*								   *|
 |* Optionally the following vars can be defined:		   *|
+|*								   *|
+|* EXTRA_PARAMS  - optional parameters, can vary in number	   *|
+|*								   *|
+|* EXTRA_VARIABLES - names of optional parameter		   *|
+|*								   *|
+|* FUNCTION_NAME - alternative name of the non-reentrant function  *|
 |*								   *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
 |*		   the global `h_errno' variable.		   *|
@@ -62,6 +68,11 @@
 
 /* To make the real sources a bit prettier.  */
 #define REENTRANT_NAME APPEND_R (FUNCTION_NAME)
+#ifdef FUNCTION2_NAME
+# define REENTRANT2_NAME APPEND_R (FUNCTION2_NAME)
+#else
+# define REENTRANT2_NAME NULL
+#endif
 #define APPEND_R(name) APPEND_R1 (name)
 #define APPEND_R1(name) name##_r
 #define INTERNAL(name) INTERNAL1 (name)
@@ -80,12 +91,17 @@
 
 #define FUNCTION_NAME_STRING STRINGIZE (FUNCTION_NAME)
 #define REENTRANT_NAME_STRING STRINGIZE (REENTRANT_NAME)
+#ifdef FUNCTION2_NAME
+# define REENTRANT2_NAME_STRING STRINGIZE (REENTRANT2_NAME)
+#else
+# define REENTRANT2_NAME_STRING NULL
+#endif
 #define DATABASE_NAME_STRING STRINGIZE (DATABASE_NAME)
 #define STRINGIZE(name) STRINGIZE1 (name)
 #define STRINGIZE1(name) #name
 
 #ifndef DB_LOOKUP_FCT
-# define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
+# define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup2)
 # define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
 # define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
 #endif
@@ -101,6 +117,13 @@
 # define H_ERRNO_VAR_P NULL
 #endif
 
+#ifndef EXTRA_PARAMS
+# define EXTRA_PARAMS
+#endif
+#ifndef EXTRA_VARIABLES
+# define EXTRA_VARIABLES
+#endif
+
 #ifdef HAVE_AF
 # define AF_VAL af
 #else
@@ -109,17 +132,20 @@
 
 /* Type of the lookup function we need here.  */
 typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
-					    size_t, int * H_ERRNO_PARM);
+					    size_t, int * H_ERRNO_PARM
+					    EXTRA_PARAMS);
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
+extern int DB_LOOKUP_FCT (service_user **nip, const char *name,
+			  const char *name2, void **fctp)
      internal_function;
 libc_hidden_proto (DB_LOOKUP_FCT)
 
 
 int
 INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
-			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
+			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM
+			   EXTRA_PARAMS)
 {
   static bool startp_initialized;
   static service_user *startp;
@@ -171,7 +197,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   if (! startp_initialized)
     {
-      no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, &fct.ptr);
+      no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING,
+			       REENTRANT2_NAME_STRING, &fct.ptr);
       if (no_more)
 	{
 	  void *tmp_ptr = (service_user *) -1l;
@@ -224,7 +251,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif
 
       status = DL_CALL_FCT (fct.l, (ADD_VARIABLES, resbuf, buffer, buflen,
-				    &errno H_ERRNO_VAR));
+				    &errno H_ERRNO_VAR EXTRA_VARIABLES));
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
@@ -238,8 +265,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	  && errno == ERANGE)
 	break;
 
-      no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
-			    &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, REENTRANT_NAME_STRING,
+			     REENTRANT2_NAME_STRING, &fct.ptr, status, 0);
     }
 
 #ifdef HANDLE_DIGITS_DOTS
@@ -274,10 +301,11 @@ done:
 }
 
 
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1_2)
-#define OLD(name) OLD1 (name)
-#define OLD1(name) __old_##name
+#ifndef FUNCTION2_NAME
+# include <shlib-compat.h>
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1_2)
+#  define OLD(name) OLD1 (name)
+#  define OLD1(name) __old_##name
 
 int
 attribute_compat_text_section
@@ -293,19 +321,20 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   return ret;
 }
 
-#define do_symbol_version(real, name, version) \
+#  define do_symbol_version(real, name, version) \
   compat_symbol (libc, real, name, version)
 do_symbol_version (OLD (REENTRANT_NAME), REENTRANT_NAME, GLIBC_2_0);
-#endif
+# endif
 
 /* As INTERNAL (REENTRANT_NAME) may be hidden, we need an alias
    in between so that the REENTRANT_NAME@@GLIBC_2.1.2 is not
    hidden too.  */
 strong_alias (INTERNAL (REENTRANT_NAME), NEW (REENTRANT_NAME));
 
-#define do_default_symbol_version(real, name, version) \
+# define do_default_symbol_version(real, name, version) \
   versioned_symbol (libc, real, name, version)
 do_default_symbol_version (NEW (REENTRANT_NAME),
 			   REENTRANT_NAME, GLIBC_2_1_2);
+#endif
 
 static_link_warning (REENTRANT_NAME)

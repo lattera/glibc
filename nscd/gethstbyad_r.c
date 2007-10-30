@@ -20,12 +20,25 @@
 
 
 #define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyaddr
+#define FUNCTION_NAME	gethostbyaddr2
+#define FUNCTION2_NAME	gethostbyaddr
 #define DATABASE_NAME	hosts
 #define ADD_PARAMS	const void *addr, socklen_t len, int type
+#define EXTRA_PARAMS	, int32_t *ttlp
 #define ADD_VARIABLES	addr, len, type
+#define EXTRA_VARIABLES , ttlp
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
 #define NEED__RES_HCONF 1
 
 #include "../nss/getXXbyYY_r.c"
+
+
+int
+__gethostbyaddr_r (const void *addr, socklen_t len, int type,
+		   struct hostent *result_buf, char *buf, size_t buflen,
+		   struct hostent **result, int *h_errnop)
+{
+  return __gethostbyaddr2_r (addr, len, type, result_buf, buf, buflen,
+			     result, h_errnop, NULL);
+}

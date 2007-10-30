@@ -80,7 +80,8 @@ static const hst_response_header notfound =
 static void
 cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      const void *key, struct hostent *hst, uid_t owner,
-	      struct hashentry *he, struct datahead *dh, int errval)
+	      struct hashentry *he, struct datahead *dh, int errval,
+	      int32_t ttl)
 {
   ssize_t total;
   ssize_t written;
@@ -131,7 +132,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = t + db->negtimeout;
+	      dataset->head.timeout = t + (ttl == INT32_MAX
+					   ? db->negtimeout : ttl);
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -247,7 +249,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = t + db->postimeout;
+      dataset->head.timeout = t + (ttl == INT32_MAX ? db->postimeout : ttl);
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -423,19 +425,19 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 
 static int
 lookup (int type, void *key, struct hostent *resultbufp, char *buffer,
-	size_t buflen, struct hostent **hst)
+	size_t buflen, struct hostent **hst, int32_t *ttlp)
 {
   if (type == GETHOSTBYNAME)
-    return __gethostbyname2_r (key, AF_INET, resultbufp, buffer, buflen, hst,
-			       &h_errno);
+    return __gethostbyname3_r (key, AF_INET, resultbufp, buffer, buflen, hst,
+			       &h_errno, ttlp, NULL);
   if (type == GETHOSTBYNAMEv6)
-    return __gethostbyname2_r (key, AF_INET6, resultbufp, buffer, buflen, hst,
-			       &h_errno);
+    return __gethostbyname3_r (key, AF_INET6, resultbufp, buffer, buflen, hst,
+			       &h_errno, ttlp, NULL);
   if (type == GETHOSTBYADDR)
-    return __gethostbyaddr_r (key, NS_INADDRSZ, AF_INET, resultbufp, buffer,
-			      buflen, hst, &h_errno);
-  return __gethostbyaddr_r (key, NS_IN6ADDRSZ, AF_INET6, resultbufp, buffer,
-			    buflen, hst, &h_errno);
+    return __gethostbyaddr2_r (key, NS_INADDRSZ, AF_INET, resultbufp, buffer,
+			       buflen, hst, &h_errno, ttlp);
+  return __gethostbyaddr2_r (key, NS_IN6ADDRSZ, AF_INET6, resultbufp, buffer,
+			     buflen, hst, &h_errno, ttlp);
 }
 
 
@@ -453,6 +455,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
   struct hostent *hst;
   bool use_malloc = false;
   int errval = 0;
+  int32_t ttl = INT32_MAX;
 
   if (__builtin_expect (debug_level > 0, 0))
     {
@@ -470,7 +473,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) str);
     }
 
-  while (lookup (req->type, key, &resultbuf, buffer, buflen, &hst) != 0
+  while (lookup (req->type, key, &resultbuf, buffer, buflen, &hst, &ttl) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && (errval = errno) == ERANGE)
     {
@@ -504,7 +507,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   cache_addhst (db, fd, req, key, hst, uid, he, dh,
-		h_errno == TRY_AGAIN ? errval : 0);
+		h_errno == TRY_AGAIN ? errval : 0, ttl);
 
   if (use_malloc)
     free (buffer);

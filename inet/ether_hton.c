@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -71,7 +71,7 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
 
       status = (*fct.f) (hostname, &etherent, buffer, sizeof buffer, &errno);
 
-      no_more = __nss_next (&nip, "gethostton_r", &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "gethostton_r", NULL, &fct.ptr, status, 0);
     }
 
   if (status == NSS_STATUS_SUCCESS)
