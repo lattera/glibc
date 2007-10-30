@@ -1,5 +1,12 @@
 2007-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/Versions [libresolv] (GLIBC_PRIVATE): Add
+	_nss_dns_getnetbyaddr2_r.
+	* resolv/nss_dns/dns-host.c: Define _nss_dns_getnetbyaddr2_r.  Pass
+	extra parameter to getanswer_r.
+	(_nss_dns_getnetbyaddr_r): Now a wrapper around
+	_nss_dns_getnetbyaddr2_r.
+
 	* nscd/Makefile (nscd-modules): Replace gethstbynm2_r with
 	gethstbynm3_r.
 	* nscd/gethstbynm2_r.c: Remove.
