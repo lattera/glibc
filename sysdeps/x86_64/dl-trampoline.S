@@ -62,8 +62,8 @@ _dl_runtime_resolve:
 	.align 16
 	cfi_startproc
 _dl_runtime_profile:
-	subq $80, %rsp
-	cfi_adjust_cfa_offset(96) # Incorporate PLT
+	subq $88, %rsp
+	cfi_adjust_cfa_offset(104) # Incorporate PLT
 	movq %rax, (%rsp)	# Preserve registers otherwise clobbered.
 	movq %rdx, 8(%rsp)
 	movq %r8, 16(%rsp)
@@ -72,16 +72,16 @@ _dl_runtime_profile:
 	movq %rsi, 40(%rsp)
 	movq %rdi, 48(%rsp)
 	movq %rbp, 56(%rsp)	# Information for auditors.
-	leaq 96(%rsp), %rax
+	leaq 104(%rsp), %rax
 	movq %rax, 64(%rsp)
 	leaq 8(%rsp), %rcx
-	movq 96(%rsp), %rdx	# Load return address if needed
-	movq 88(%rsp), %rsi	# Copy args pushed by PLT in register.
+	movq 104(%rsp), %rdx	# Load return address if needed
+	movq 96(%rsp), %rsi	# Copy args pushed by PLT in register.
 	movq %rsi,%r11		# Multiply by 24
 	addq %r11,%rsi
 	addq %r11,%rsi
 	shlq $3, %rsi
-	movq 80(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
+	movq 88(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
 	leaq 72(%rsp), %r8
 	call _dl_profile_fixup	# Call resolver.
 	movq %rax, %r11		# Save return value
@@ -95,14 +95,15 @@ _dl_runtime_profile:
 	movq 32(%rsp), %rcx
 	movq 40(%rsp), %rsi
 	movq 48(%rsp), %rdi
-	addq $96,%rsp		# Adjust stack
-	cfi_adjust_cfa_offset (-96)
+	addq $104,%rsp		# Adjust stack
+	cfi_adjust_cfa_offset (-104)
 	jmp *%r11		# Jump to function address.
 
 	/*
-	    +96     return address
-	    +88     PLT2
-	    +80     PLT1
+	    +104     return address
+	    +96     PLT2
+	    +88     PLT1
+	    +80     free
 	    +72     free
 	    +64     %rsp
 	    +56     %rbp
@@ -112,14 +113,14 @@ _dl_runtime_profile:
 	    +24     %r9
 	    +16     %r8
 	    +8      %rdx
-	   %esp     %rax
+	   %rsp     %rax
 	*/
-	cfi_adjust_cfa_offset (96)
+	cfi_adjust_cfa_offset (104)
 1:	movq %rbx, 72(%rsp)
-	cfi_rel_offset (1, 72)
-	leaq 104(%rsp), %rsi
+	cfi_rel_offset (rbx, 72)
+	leaq 112(%rsp), %rsi
 	movq %rsp, %rbx
-	cfi_def_cfa_register (1)
+	cfi_def_cfa_register (%rbx)
 	movq %r10, %rcx
 	addq $8, %r10
 	andq $0xfffffffffffffff0, %r10
@@ -133,7 +134,7 @@ _dl_runtime_profile:
 	movq 48(%rbx), %rdi
 	call *%r11
 	movq %rbx, %rsp
-	cfi_def_cfa_register (7)
+	cfi_def_cfa_register (%rsp)
 	subq $72, %rsp
 	cfi_adjust_cfa_offset (72)
 	movq %rsp, %rcx
@@ -147,9 +148,10 @@ _dl_runtime_profile:
 	fstpt 48(%rcx)
 	fstpt 64(%rcx)
 	/*
-	    +168    return address
-	    +160    PLT2
-	    +152    PLT1
+	    +176    return address
+	    +168    PLT2
+	    +160    PLT1
+	    +152    free
 	    +144    free
 	    +136    %rsp
 	    +128    %rbp
@@ -164,17 +166,17 @@ _dl_runtime_profile:
 	    +32     %xmm1 result
 	    +16     %xmm0 result
 	    +8      %rdx result
-	   %esp     %rax result
+	   %rsp     %rax result
 	*/
 	leaq 80(%rsp), %rdx
 	movq 144(%rsp), %rbx
-	cfi_restore (1)
-	movq 160(%rsp), %rsi	# Copy args pushed by PLT in register.
+	cfi_restore (rbx)
+	movq 168(%rsp), %rsi	# Copy args pushed by PLT in register.
 	movq %rsi,%r11		# Multiply by 24
 	addq %r11,%rsi
 	addq %r11,%rsi
 	shlq $3, %rsi
-	movq 152(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
+	movq 160(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
 	call _dl_call_pltexit
 	movq (%rsp), %rax
 	movq 8(%rsp), %rdx
@@ -182,8 +184,8 @@ _dl_runtime_profile:
 	movups 32(%rsp), %xmm1
 	fldt 64(%rsp)
 	fldt 48(%rsp)
-	addq $168, %rsp
-	cfi_adjust_cfa_offset (-168)
+	addq $176, %rsp
+	cfi_adjust_cfa_offset (-176)
 	retq
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile

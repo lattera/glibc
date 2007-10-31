@@ -1,5 +1,8 @@
 2007-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Make sure
+	stack is properly aligned for the target function.
+	Correct unwind info.
 	* elf/rtld.c (dl_main): Initialize stack and pointer guard early
 	when using auditing libraries.
 
