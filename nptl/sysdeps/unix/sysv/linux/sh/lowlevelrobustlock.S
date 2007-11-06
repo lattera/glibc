@@ -42,7 +42,7 @@
 	add	tmp2, tmp 	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
-	 mov	#FUTEX_PRIVATE_FLAG, tmp
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
 98:	extu.b	tmp, tmp	; \
 	xor	tmp, reg	; \
@@ -54,7 +54,7 @@
 	add	tmp2, tmp 	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
-	 mov	#FUTEX_PRIVATE_FLAG, tmp
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
 98:	extu.b	tmp, tmp	; \
 	xor	tmp, reg	; \

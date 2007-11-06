@@ -381,7 +381,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       else
 	tzspec[tzspec_len - 1] = '\0';
     }
-  else if (sizeof (time_t) == 4 && tzhead.tzh_version != '\0')
+  else if (sizeof (time_t) == 4 && tzhead.tzh_version[0] != '\0')
     {
       /* Get the TZ string.  */
       if (__builtin_expect (fread_unlocked ((void *) &tzhead, sizeof (tzhead),

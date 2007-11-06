@@ -76,7 +76,7 @@
 	add	tmp2, tmp 	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
-	 mov	#FUTEX_PRIVATE_FLAG, tmp
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
 98:	extu.b	tmp, tmp	; \
 	xor	tmp, reg	; \
@@ -88,7 +88,7 @@
 	add	tmp2, tmp 	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
-	 mov	#FUTEX_PRIVATE_FLAG, tmp
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
 98:	extu.b	tmp, tmp	; \
 	xor	tmp, reg	; \
@@ -96,13 +96,13 @@
 	mov	#FUTEX_WAIT, tmp ; \
 	or	tmp, reg
 # endif
-# define LOAD_FUTEX_WAKE(reg,tmp) \
+# define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
 	add	tmp2, tmp 	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
-	 mov	#FUTEX_PRIVATE_FLAG, tmp
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
 98:	extu.b	tmp, tmp	; \
 	xor	tmp, reg	; \

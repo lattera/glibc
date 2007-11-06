@@ -1,3 +1,10 @@
+2007-11-03  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (LOAD_FUTEX_WAIT): Add
+	missing line continuations.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S (LOAD_FUTEX_WAIT,
+	LOAD_FUTEX_WAKE): Likewise.  Also add missing 3rd parameter.
+
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5220]
