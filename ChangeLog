@@ -1,3 +1,9 @@
+2007-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/selinux.c (nscd_request_avc_has_perm): When compiled with
+	old headers, don't call avc_has_perm if we don't have the
+	permission information.
+
 2007-11-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* elf/rtld.c (dl_main): Use the page size to find the map start.

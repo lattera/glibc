@@ -368,6 +368,14 @@ nscd_request_avc_has_perm (int fd, request_type req)
       goto out;
     }
 
+#ifndef NSCD__GETSERV
+  if (perms[req] == 0)
+    {
+      dbg_log (_("compile-time support for database policy missing"));
+      goto out;
+    }
+#endif
+
   rc = avc_has_perm (ssid, tsid, SECCLASS_NSCD, perms[req], &aeref, NULL) < 0;
 
 out:
