@@ -98,8 +98,7 @@ __register_atfork (prepare, parent, child, dso_handle)
       newp->child_handler = child;
       newp->dso_handle = dso_handle;
 
-      newp->next = __fork_handlers;
-      __fork_handlers = newp;
+      __linkin_atfork (newp);
     }
 
   /* Release the lock.  */

@@ -1166,7 +1166,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  ElfW(Addr) allocend;
 
 	  /* Remember where the main program starts in memory.  */
-	  mapstart = (main_map->l_addr + (ph->p_vaddr & ~(ph->p_align - 1)));
+	  mapstart = (main_map->l_addr
+		      + (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1)));
 	  if (main_map->l_map_start > mapstart)
 	    main_map->l_map_start = mapstart;
 
