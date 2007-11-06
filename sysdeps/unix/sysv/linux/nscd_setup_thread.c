@@ -23,7 +23,7 @@
 #include <sysdep.h>
 
 
-void
+int
 setup_thread (struct database_dyn *db)
 {
 #ifdef __NR_set_tid_address
@@ -43,6 +43,8 @@ setup_thread (struct database_dyn *db)
     /* We know the kernel can reset this field when nscd terminates.
        So, set the field to a nonzero value which indicates that nscd
        is certainly running and clients can skip the test.  */
-    db->head->nscd_certainly_running = 1;
+    return db->head->nscd_certainly_running = 1;
 #endif
+
+  return 0;
 }

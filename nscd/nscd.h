@@ -59,7 +59,9 @@ typedef enum
 struct database_dyn
 {
   pthread_rwlock_t lock;
-  pthread_mutex_t prunelock;
+  pthread_cond_t prune_cond;
+  pthread_mutex_t prune_lock;
+  time_t wakeup_time;
 
   int enabled;
   int check_file;
@@ -109,6 +111,11 @@ struct database_dyn
 
 /* Number of bytes of data we initially reserve for each hash table bucket.  */
 #define DEFAULT_DATASIZE_PER_BUCKET 1024
+
+
+/* Number of seconds between two cache pruning runs if we do not have
+   better information when it is really needed.  */
+#define CACHE_PRUNE_INTERVAL	15
 
 
 /* Global variables.  */
@@ -189,7 +196,7 @@ extern struct datahead *cache_search (request_type, void *key, size_t len,
 extern int cache_add (int type, const void *key, size_t len,
 		      struct datahead *packet, bool first,
 		      struct database_dyn *table, uid_t owner);
-extern void prune_cache (struct database_dyn *table, time_t now, int fd);
+extern time_t prune_cache (struct database_dyn *table, time_t now, int fd);
 
 /* pwdcache.c */
 extern void addpwbyname (struct database_dyn *db, int fd, request_header *req,
@@ -258,7 +265,7 @@ extern void gc (struct database_dyn *db);
 
 
 /* nscd_setup_thread.c */
-extern void setup_thread (struct database_dyn *db);
+extern int setup_thread (struct database_dyn *db);
 
 
 /* Special version of TEMP_FAILURE_RETRY for functions returning error

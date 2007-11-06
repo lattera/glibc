@@ -20,8 +20,9 @@
 #include <nscd.h>
 
 
-void
+int
 setup_thread (struct database_dyn *db)
 {
   /* Nothing.  */
+  return 0;
 }

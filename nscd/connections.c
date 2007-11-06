@@ -104,7 +104,7 @@ struct database_dyn dbs[lastdb] =
 {
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -123,7 +123,7 @@ struct database_dyn dbs[lastdb] =
   },
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -142,7 +142,7 @@ struct database_dyn dbs[lastdb] =
   },
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -161,7 +161,7 @@ struct database_dyn dbs[lastdb] =
   },
   [servdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -208,10 +208,6 @@ static struct
   [GETSERVBYPORT] = { true, &dbs[servdb] },
   [GETFDSERV] = { false, &dbs[servdb] }
 };
-
-
-/* Number of seconds between two cache pruning runs.  */
-#define CACHE_PRUNE_INTERVAL	15
 
 
 /* Initial number of threads to use.  */
@@ -495,7 +491,7 @@ nscd_init (void)
 
   if (nthreads == -1)
     /* No configuration for this value, assume a default.  */
-    nthreads = 2 * lastdb;
+    nthreads = 4;
 
   for (size_t cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
@@ -898,7 +894,11 @@ invalidate_cache (char *key, int fd)
     }
 
   if (dbs[number].enabled)
-    prune_cache (&dbs[number], LONG_MAX, fd);
+    {
+      pthread_mutex_lock (&dbs[number].prune_lock);
+      prune_cache (&dbs[number], LONG_MAX, fd);
+      pthread_mutex_unlock (&dbs[number].prune_lock);
+    }
   else
     {
       resp = 0;
@@ -970,9 +970,13 @@ cannot handle old request version %d; current version is %d"),
       return;
     }
 
-  /* Make the SELinux check before we go on to the standard checks.  */
+  /* Perform the SELinux check before we go on to the standard checks.  */
   if (selinux_enabled && nscd_request_avc_has_perm (fd, req->type) != 0)
-    return;
+    {
+      if (debug_level > 0)
+	dbg_log (_("request not handled due to missing permission"));
+      return;
+    }
 
   struct database_dyn *db = reqinfo[req->type].db;
 
@@ -1336,7 +1340,7 @@ static struct fdlist *readylist;
 /* Conditional variable and mutex to signal availability of entries in
    READYLIST.  The condvar is initialized dynamically since we might
    use a different clock depending on availability.  */
-static pthread_cond_t readylist_cond;
+static pthread_cond_t readylist_cond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t readylist_lock = PTHREAD_MUTEX_INITIALIZER;
 
 /* The clock to use with the condvar.  */
@@ -1346,32 +1350,76 @@ static clockid_t timeout_clock = CLOCK_REALTIME;
 static unsigned long int nready;
 
 
-/* This is the main loop.  It is replicated in different threads but the
-   `poll' call makes sure only one thread handles an incoming connection.  */
+/* Function for the clean-up threads.  */
 static void *
 __attribute__ ((__noreturn__))
-nscd_run (void *p)
+nscd_run_prune (void *p)
 {
   const long int my_number = (long int) p;
-  const int run_prune = my_number < lastdb && dbs[my_number].enabled;
+  assert (dbs[my_number].enabled);
+
+  int dont_need_update = setup_thread (&dbs[my_number]);
+
+  /* We are running.  */
+  dbs[my_number].head->timestamp = time (NULL);
+
   struct timespec prune_ts;
-  int to = 0;
-  char buf[256];
+  if (clock_gettime (timeout_clock, &prune_ts) == -1)
+    /* Should never happen.  */
+    abort ();
 
-  if (run_prune)
+  /* Compute the initial timeout time.  Prevent all the timers to go
+     off at the same time by adding a db-based value.  */
+  prune_ts.tv_sec += CACHE_PRUNE_INTERVAL + my_number;
+
+  pthread_mutex_lock (&dbs[my_number].prune_lock);
+  while (1)
     {
-      setup_thread (&dbs[my_number]);
+      /* Wait, but not forever.  */
+      int e = pthread_cond_timedwait (&dbs[my_number].prune_cond,
+				      &dbs[my_number].prune_lock,
+				      &prune_ts);
+      assert (e == 0 || e == ETIMEDOUT);
 
-      /* We are running.  */
-      dbs[my_number].head->timestamp = time (NULL);
+      time_t next_wait;
+      time_t now = time (NULL);
+      if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time)
+	{
+	  next_wait = prune_cache (&dbs[my_number], now, -1);
+	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
+	  /* If clients cannot determine for sure whether nscd is running
+	     we need to wake up occasionally to update the timestamp.
+	     Wait 90% of the update period.  */
+#define UPDATE_MAPPING_TIMEOUT (MAPPING_TIMEOUT * 9 / 10)
+	  if (__builtin_expect (! dont_need_update, 0))
+	    next_wait = MIN (UPDATE_MAPPING_TIMEOUT, next_wait);
+
+	  /* Make it known when we will wake up again.  */
+	  dbs[my_number].wakeup_time = now + next_wait;
+	}
+      else
+	/* The cache was just pruned.  Do not do it again now.  Just
+	   use the new timeout value.  */
+	next_wait = dbs[my_number].wakeup_time - now;
 
       if (clock_gettime (timeout_clock, &prune_ts) == -1)
 	/* Should never happen.  */
 	abort ();
 
-      /* Compute timeout time.  */
-      prune_ts.tv_sec += CACHE_PRUNE_INTERVAL;
+      /* Compute next timeout time.  */
+      prune_ts.tv_sec += next_wait;
     }
+}
+
+
+/* This is the main loop.  It is replicated in different threads but
+   the the use of the ready list makes sure only one thread handles an
+   incoming connection.  */
+static void *
+__attribute__ ((__noreturn__))
+nscd_run_worker (void *p)
+{
+  char buf[256];
 
   /* Initial locking.  */
   pthread_mutex_lock (&readylist_lock);
@@ -1382,26 +1430,7 @@ nscd_run (void *p)
   while (1)
     {
       while (readylist == NULL)
-	{
-	  if (run_prune)
-	    {
-	      /* Wait, but not forever.  */
-	      to = pthread_cond_timedwait (&readylist_cond, &readylist_lock,
-					   &prune_ts);
-
-	      /* If we were woken and there is no work to be done,
-		 just start pruning.  */
-	      if (readylist == NULL && to == ETIMEDOUT)
-		{
-		  --nready;
-		  pthread_mutex_unlock (&readylist_lock);
-		  goto only_prune;
-		}
-	    }
-	  else
-	    /* No need to timeout.  */
-	    pthread_cond_wait (&readylist_cond, &readylist_lock);
-	}
+	pthread_cond_wait (&readylist_cond, &readylist_lock);
 
       struct fdlist *it = readylist->next;
       if (readylist->next == readylist)
@@ -1504,28 +1533,6 @@ handle_request: request received (Version = %d)"), req.version);
       /* We are done.  */
       close (fd);
 
-      /* Check whether we should be pruning the cache. */
-      assert (run_prune || to == 0);
-      if (to == ETIMEDOUT)
-	{
-	only_prune:
-	  /* The pthread_cond_timedwait() call timed out.  It is time
-		 to clean up the cache.  */
-	  assert (my_number < lastdb);
-	  prune_cache (&dbs[my_number], time (NULL), -1);
-
-	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
-	    /* Should never happen.  */
-	    abort ();
-
-	  /* Compute next timeout time.  */
-	  prune_ts.tv_sec += CACHE_PRUNE_INTERVAL;
-
-	  /* In case the list is emtpy we do not want to run the prune
-	     code right away again.  */
-	  to = 0;
-	}
-
       /* Re-locking.  */
       pthread_mutex_lock (&readylist_lock);
 
@@ -1568,7 +1575,7 @@ fd_ready (int fd)
       /* Try to start another thread to help out.  */
       pthread_t th;
       if (nthreads < max_nthreads
-	  && pthread_create (&th, &attr, nscd_run,
+	  && pthread_create (&th, &attr, nscd_run_worker,
 			     (void *) (long int) nthreads) == 0)
 	{
 	  /* We got another thread.  */
@@ -1828,10 +1835,6 @@ start_threads (void)
 	timeout_clock = CLOCK_MONOTONIC;
 #endif
 
-  pthread_cond_init (&readylist_cond, &condattr);
-  pthread_condattr_destroy (&condattr);
-
-
   /* Create the attribute for the threads.  They are all created
      detached.  */
   pthread_attr_init (&attr);
@@ -1843,19 +1846,46 @@ start_threads (void)
   if (debug_level == 0)
     nthreads = MAX (nthreads, lastdb);
 
-  int nfailed = 0;
+  /* Create the threads which prune the databases.  */
+  // XXX Ideally this work would be done by some of the worker threads.
+  // XXX But this is problematic since we would need to be able to wake
+  // XXX them up explicitly as well as part of the group handling the
+  // XXX ready-list.  This requires an operation where we can wait on
+  // XXX two conditional variables at the same time.  This operation
+  // XXX does not exist (yet).
+  for (long int i = 0; i < lastdb; ++i)
+    {
+      /* Initialize the conditional variable.  */
+      if (pthread_cond_init (&dbs[i].prune_cond, &condattr) != 0)
+	{
+	  dbg_log (_("could not initialize conditional variable"));
+	  exit (1);
+	}
+
+      pthread_t th;
+      if (dbs[i].enabled
+	  && pthread_create (&th, &attr, nscd_run_prune, (void *) i) != 0)
+	{
+	  dbg_log (_("could not start clean-up thread; terminating"));
+	  exit (1);
+	}
+    }
+
+  pthread_condattr_destroy (&condattr);
+
   for (long int i = 0; i < nthreads; ++i)
     {
       pthread_t th;
-      if (pthread_create (&th, &attr, nscd_run, (void *) (i - nfailed)) != 0)
-	++nfailed;
-    }
-  if (nthreads - nfailed < lastdb)
-    {
-      /* We could not start enough threads.  */
-      dbg_log (_("could only start %d threads; terminating"),
-	       nthreads - nfailed);
-      exit (1);
+      if (pthread_create (&th, &attr, nscd_run_worker, NULL) != 0)
+	{
+	  if (i == 0)
+	    {
+	      dbg_log (_("could not start any worker thread; terminating"));
+	      exit (1);
+	    }
+
+	  break;
+	}
     }
 
   /* Determine how much room for descriptors we should initially

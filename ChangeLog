@@ -1,8 +1,41 @@
+2007-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Check herrno after IPv4 lookup only
+	when the lookup call failed.
+
+	* nscd/nscd.h (struct database_dyn): Rename prunelock to prune_lock.
+	Add prune_cond and wakeup_time.
+	(CACHE_PRUNE_INTERNAL): Define.
+	Update declarations of prune_cache and setup_thread.
+	* nscd/connections.c (dbs): Update initializers.
+	(CACHE_PRUNE_INTERNAL): Moved to nscd.h.
+	(nscd_init): Default number of threads is now 4.
+	(invalidate_cache): Take lock before calling prune_cache.
+	(handle_request): If SELinux forbids the request, say so.
+	(readylist_cond): Use static initializer.
+	(nscd_run_prune): New function.  Used only by pruning threads.
+	(nscd_run_worder): Renamed from nscd_run.  Remove support for pruning
+	here.
+	(fd_ready): Update nscd_run reference.
+	(start_threads): No need to initialize readylist_cond.
+	Start pruning threads separately.
+	* nscd/nscd_setup_thread.c: Change return value type to int and always
+	return 0.
+	* sysdeps/unix/sysv/linux/nscd_setup_thread.c: Change return value type
+	to int and return nonzero value if we can use the TID address hack.
+	* nscd/cache.c (cache_add): If next wakeup time of cleanup thread for
+	the database is later than the new entry's timeout, update the
+	wakeup time and wake the cleanup thread.
+	(prune_cache): Return seconds the next entry in the database is still
+	valid.  Remove locking for pruning here.
+	* nscd/nscd.conf: Document default number of threads.
+
 2007-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Make sure
 	stack is properly aligned for the target function.
 	Correct unwind info.
+
 	* elf/rtld.c (dl_main): Initialize stack and pointer guard early
 	when using auditing libraries.
 

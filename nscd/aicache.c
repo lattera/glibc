@@ -157,7 +157,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      tmpbuf4 = tmpbuf6;
 	    }
 
-	  /* Next collect IPv4 information first.  */
+	  /* Next collect IPv4 information.  */
 	  while (1)
 	    {
 	      rc4 = 0;
@@ -170,7 +170,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      tmpbuf4 = extend_alloca (tmpbuf4, tmpbuf4len, 2 * tmpbuf4len);
 	    }
 
-	  if (rc4 != 0 || herrno == NETDB_INTERNAL)
+	  if (rc4 != 0 && herrno == NETDB_INTERNAL)
 	    goto out;
 
 	  if (status[0] == NSS_STATUS_SUCCESS

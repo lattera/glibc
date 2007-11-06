@@ -197,6 +197,20 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	   (char *) &table->head->array[hash] - (char *) table->head
 	   + sizeof (ref_t), MS_ASYNC);
 
+  /* Perhaps the prune thread for the data is not running in a long
+     time.  Wake it if necessary.  */
+  time_t next_wakeup = table->wakeup_time;
+  while (next_wakeup + CACHE_PRUNE_INTERVAL > packet->timeout)
+    if (atomic_compare_and_exchange_bool_acq (&table->wakeup_time,
+					      packet->timeout,
+					      next_wakeup) == 0)
+      {
+	pthread_cond_signal (&table->prune_cond);
+	break;
+      }
+    else
+      next_wakeup = table->wakeup_time;
+
   return 0;
 }
 
@@ -212,7 +226,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
    actually remove them.  This is complicated by the way we have to
    free the data structures since some hash table entries share the same
    data.  */
-void
+time_t
 prune_cache (struct database_dyn *table, time_t now, int fd)
 {
   size_t cnt = table->head->module;
@@ -226,7 +240,9 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	  int32_t resp = 0;
 	  writeall (fd, &resp, sizeof (resp));
 	}
-      return;
+
+      /* No need to do this again anytime soon.  */
+      return 24 * 60 * 60;
     }
 
   /* If we check for the modification of the underlying file we invalidate
@@ -254,21 +270,6 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	      table->file_mtime = st.st_mtime;
 	    }
 	}
-    }
-
-  /* This function can be called from the cleanup thread but also in
-     response to an invalidate command.  Make sure only one thread is
-     running.  When not serving INVALIDATE request, no need for the
-     second thread to wait around.  */
-  if (__builtin_expect (pthread_mutex_trylock (&table->prunelock) != 0, 0))
-    {
-      /* The work is already being done.  */
-      if (fd == -1)
-	return;
-
-      /* We have to wait until the thread is done and then run again
-	 so that the large NOW value invalidates all entries.  */
-      pthread_mutex_lock (&table->prunelock);
     }
 
   /* We run through the table and find values which are not valid anymore.
@@ -473,5 +474,5 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   if (any)
     gc (table);
 
-  pthread_mutex_unlock (&table->prunelock);
+  return next_timeout - now;
 }
