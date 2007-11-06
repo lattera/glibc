@@ -747,7 +747,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      int temp = width;						      \
 	      width = prec;						      \
-	      PAD (L_('0'));;						      \
+	      PAD (L_('0'));						      \
 	      width = temp;						      \
 	    }								      \
 									      \
@@ -1499,18 +1499,24 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (prec > width
 	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
 	{
-	  if (__libc_use_alloca ((prec + 32) * sizeof (CHAR_T)))
-	    workend = ((CHAR_T *) alloca ((prec + 32) * sizeof (CHAR_T)))
-		      + (prec + 32);
+	  if (__builtin_expect (prec > ~((size_t) 0) - 31, 0))
+	    {
+	      done = -1;
+	      goto all_done;
+	    }
+	  size_t needed = ((size_t) prec + 32) * sizeof (CHAR_T);
+
+	  if (__libc_use_alloca (needed))
+	    workend = (((CHAR_T *) alloca (needed)) + ((size_t) prec + 32));
 	  else
 	    {
-	      workstart = (CHAR_T *) malloc ((prec + 32) * sizeof (CHAR_T));
+	      workstart = (CHAR_T *) malloc (needed);
 	      if (workstart == NULL)
 		{
 		  done = -1;
 		  goto all_done;
 		}
-	      workend = workstart + (prec + 32);
+	      workend = workstart + ((size_t) prec + 32);
 	    }
 	}
       JUMP (*f, step2_jumps);

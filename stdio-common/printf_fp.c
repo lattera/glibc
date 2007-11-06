@@ -808,7 +808,7 @@ ___printf_fp (FILE *fp,
   {
     int width = info->width;
     wchar_t *wstartp, *wcp;
-    int chars_needed;
+    size_t chars_needed;
     int expscale;
     int intdig_max, intdig_no = 0;
     int fracdig_min;
@@ -823,7 +823,7 @@ ___printf_fp (FILE *fp,
 	type = info->spec;
 	intdig_max = 1;
 	fracdig_min = fracdig_max = info->prec < 0 ? 6 : info->prec;
-	chars_needed = 1 + 1 + fracdig_max + 1 + 1 + 4;
+	chars_needed = 1 + 1 + (size_t) fracdig_max + 1 + 1 + 4;
 	/*	       d   .	 ddd	     e	 +-  ddd  */
 	dig_max = INT_MAX;		/* Unlimited.  */
 	significant = 1;		/* Does not matter here.  */
@@ -838,12 +838,12 @@ ___printf_fp (FILE *fp,
 	  {
 	    intdig_max = exponent + 1;
 	    /* This can be really big!	*/  /* XXX Maybe malloc if too big? */
-	    chars_needed = exponent + 1 + 1 + fracdig_max;
+	    chars_needed = (size_t) exponent + 1 + 1 + (size_t) fracdig_max;
 	  }
 	else
 	  {
 	    intdig_max = 1;
-	    chars_needed = 1 + 1 + fracdig_max;
+	    chars_needed = 1 + 1 + (size_t) fracdig_max;
 	  }
       }
     else
@@ -858,7 +858,7 @@ ___printf_fp (FILE *fp,
 	      type = isupper (info->spec) ? 'E' : 'e';
 	    fracdig_max = dig_max - 1;
 	    intdig_max = 1;
-	    chars_needed = 1 + 1 + fracdig_max + 1 + 1 + 4;
+	    chars_needed = 1 + 1 + (size_t) fracdig_max + 1 + 1 + 4;
 	  }
 	else
 	  {
@@ -870,7 +870,7 @@ ___printf_fp (FILE *fp,
 	       zeros can be as many as would be required for
 	       exponential notation with a negative two-digit
 	       exponent, which is 4.  */
-	    chars_needed = dig_max + 1 + 4;
+	    chars_needed = (size_t) dig_max + 1 + 4;
 	  }
 	fracdig_min = info->alt ? fracdig_max : 0;
 	significant = 0;		/* We count significant digits.	 */
@@ -888,16 +888,17 @@ ___printf_fp (FILE *fp,
        it is possible that we need two more characters in front of all the
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
+    size_t wbuffer_to_alloc = (2 + (size_t) chars_needed) * sizeof (wchar_t);
     buffer_malloced = ! __libc_use_alloca (chars_needed * 2 * sizeof (wchar_t));
     if (__builtin_expect (buffer_malloced, 0))
       {
-	wbuffer = (wchar_t *) malloc ((2 + chars_needed) * sizeof (wchar_t));
+	wbuffer = (wchar_t *) malloc (wbuffer_to_alloc);
 	if (wbuffer == NULL)
 	  /* Signal an error to the caller.  */
 	  return -1;
       }
     else
-      wbuffer = (wchar_t *) alloca ((2 + chars_needed) * sizeof (wchar_t));
+      wbuffer = (wchar_t *) alloca (wbuffer_to_alloc);
     wcp = wstartp = wbuffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */

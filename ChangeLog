@@ -1,5 +1,10 @@
 2007-11-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Compute necessary buffer size
+	with size_t type.
+	* stdio-common/printf_fp.c (__print_fp): Change chars_needed type to
+	size_t.  Add casts where needed.
+
 	* nscd/selinux.c (nscd_request_avc_has_perm): When compiled with
 	old headers, don't call avc_has_perm if we don't have the
 	permission information.
