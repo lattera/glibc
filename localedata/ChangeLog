@@ -1,5 +1,7 @@
 2007-11-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/dz_BT: Fix representation of data.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add bo_CN and bo_IN.
 	* locales/bo_CN: New file.
 	* locales/bo_IN: New file.

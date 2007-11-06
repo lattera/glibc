@@ -1209,13 +1209,13 @@ END LC_COLLATE
 
 LC_MONETARY
 
-int_curr_symbol         "BTN "
+int_curr_symbol         "<U0042><U0054><U004E> "
 currency_symbol    "<U0F51><U0F44><U0F74><U0F63><U0F0B><U0F40><U0FB2><U0F58><U0F0B>"
-mon_decimal_point       "."
-mon_thousands_sep       ","
+mon_decimal_point       "<U002E>"
+mon_thousands_sep       "<U002C>"
 mon_grouping            3;2;
 positive_sign           ""
-negative_sign           "-"
+negative_sign           "<U002D>"
 int_frac_digits         3
 frac_digits             3
 p_cs_precedes           1
@@ -1229,8 +1229,8 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point           "."
-thousands_sep           ","
+decimal_point           "<U002E>"
+thousands_sep           "<U002C>"
 grouping                3;2
 
 END LC_NUMERIC
@@ -1283,26 +1283,28 @@ mon      "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F51><U0F44><U0F0B><U0F54><U0F0B>
 
 
 % Appropriate date & time representation
-d_t_fmt      "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y<U0F5F><U0F63>%m<U0F5A><U0F7A><U0F66>/
-%d<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%H<U0F40><U0F66><U0F62><U0F0B><U0F58>/
-%M<U0F40><U0F66><U0F62><U0F0B><U0F46>%S"
+d_t_fmt      "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C><U0025><U0079>/
+<U0F5F><U0F63><U0025><U006D><U0F5A><U0F7A><U0F66><U0025><U0064>/
+<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51><U0025><U0048><U0F40>/
+<U0F66><U0F62><U0F0B><U0F58><U0025><U004D>/
+<U0F40><U0F66><U0F62><U0F0B><U0F46><U0025><U0053>"
 
 % Appropriate date representation
-d_fmt        "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y<U0F5F>/
-<U0F63>%m<U0F5A><U0F7A><U0F66>%d"
+d_fmt        "<U0F54><U0F66><U0FB1><U0F72><U0F0B><U0F63><U0F7C><U0025><U0079>/
+<U0F5F><U0F63><U0025><U006D><U0F5A><U0F7A><U0F66><U0025><U0064>"
 
 % Appropriate time representation  "%H:%M:%S"
 t_fmt        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>/
-%H<U0F40><U0F66><U0F62><U0F0B><U0F58>/
-%M<U0F40><U0F66><U0F62><U0F0B><U0F46>%S"
+<U0025><U0048><U0F40><U0F66><U0F62><U0F0B><U0F58>/
+<U0025><U004D><U0F40><U0F66><U0F62><U0F0B><U0F46><U0025><U0053>"
 
 % AM/PM signs
 am_pm   "<U0F44><U0F66><U0F0B><U0F46>";"<U0F55><U0FB1><U0F72><U0F0B><U0F46>"
 
 % Appropriate 12-hour clock representation  "%I:%M:%S %p"
 t_fmt_ampm        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>/
-%I<U0F40><U0F66><U0F62><U0F0B><U0F58>/
-%M<U0F40><U0F66><U0F62><U0F0B><U0F46>%S %p"
+<U0025><U0049><U0F40><U0F66><U0F62><U0F0B><U0F58><U0025><U004D>/
+<U0F40><U0F66><U0F62><U0F0B><U0F46><U0025><U0053><U0020><U0025><U0070>"
 
 
 END LC_TIME
@@ -1332,7 +1334,8 @@ measurement    1
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "%p%t%g%t%m%t%f"
+name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
 name_gen    ""
 name_miss   "<U0F58><U0F7C>"
 name_mr     "<U0F55><U0F7C>"
