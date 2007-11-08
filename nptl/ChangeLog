@@ -1,3 +1,9 @@
+2007-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5245]
+	* sysdeps/pthread/createthread.c (do_clone): Translate clone error
+	if necessary.
+
 2007-11-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5245]

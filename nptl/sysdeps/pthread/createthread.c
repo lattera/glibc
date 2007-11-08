@@ -56,8 +56,8 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   PREPARE_CREATE;
 #endif
 
-  if (stopped)
-    /* We Make sure the thread does not run far by forcing it to get a
+  if (__builtin_expect (stopped != 0, 0))
+    /* We make sure the thread does not run far by forcing it to get a
        lock.  We lock it here too so that the new thread cannot continue
        until we tell it to.  */
     lll_lock (pd->lock, LLL_PRIVATE);
@@ -84,7 +84,8 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
       if (IS_DETACHED (pd))
 	__deallocate_stack (pd);
 
-      return errno;
+      /* We have to translate error codes.  */
+      return errno == ENOMEM ? EAGAIN : errno;
     }
 
   /* Now we have the possibility to set scheduling parameters etc.  */
