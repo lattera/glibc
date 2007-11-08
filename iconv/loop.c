@@ -225,7 +225,12 @@
       }									      \
     /* If any of them recognized the input continue with the loop.  */	      \
     if (result != __GCONV_ILLEGAL_INPUT)				      \
-      continue;								      \
+      {									      \
+	if (__builtin_expect (result == __GCONV_FULL_OUTPUT, 0))	      \
+	  break;							      \
+									      \
+	continue;							      \
+      }									      \
 									      \
     /* Next see whether we have to ignore the error.  If not, stop.  */	      \
     if (! ignore_errors_p ())						      \

@@ -1,3 +1,11 @@
+2007-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5277]
+	* iconv/loop.c (STANDARD_TO_LOOP_ERR_HANDLER): If conversion failed
+	because output buffer is too small break, don't loop.
+	* iconvdata/Makefile (tests): Add bug-iconv6.
+	* iconvdata/bug-iconv6.c: New file.
+
 2007-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Compute necessary buffer size

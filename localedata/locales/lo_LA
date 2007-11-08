@@ -602,10 +602,10 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 
 <U0EDD>        <U0EDC>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER HHOr
 <mhor-e>           "<U0EDD><U0EC0>";<BLANK>;<BLANK>;<BLANK>
-<mor-ae>           "<U0EDD><U0EC1>";<BLANK>;<BLANK>;<BLANK>
-<mor-o>            "<U0EDD><U0EC2>";<BLANK>;<BLANK>;<BLANK>
-<mor-ai-maimuan>   "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
-<mor-ai-maimalai>  "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
+<mhor-ae>          "<U0EDD><U0EC1>";<BLANK>;<BLANK>;<BLANK>
+<mhor-o>           "<U0EDD><U0EC2>";<BLANK>;<BLANK>;<BLANK>
+<mhor-ai-maimuan>  "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
+<mhor-ai-maimalai> "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
 
 % order of Lao vowels
