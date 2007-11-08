@@ -462,7 +462,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      mem = ARCH_RETRY_MMAP (size);
 	      if (__builtin_expect (mem == MAP_FAILED, 0))
 #endif
-		return errno;
+		{
+		  if (errno == ENOMEM)
+		    errno = EAGAIN;
+
+		  return errno;
+		}
 	    }
 
 	  /* SIZE is guaranteed to be greater than zero.

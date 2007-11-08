@@ -1,3 +1,11 @@
+2007-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5245]
+	* allocatestack.c (allocate_stack): Change ENOMEM error in case
+	mmap failed to EAGAIN.
+	* Makefile (tests): Add tst-basic7.
+	* tst-basic7.c: New file.
+
 2007-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/register-atfork.c (__register_atfork):

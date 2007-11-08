@@ -127,6 +127,7 @@ L(memset_entry):
 	add	$0x40,%rcx
 	dec	%rax
 	jne	11b
+	sfence
 	jmp	4b
 
 END (memset)

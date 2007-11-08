@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 %
 % Uyghur language locale for China
-% Source: 
+% Source:
 % Contact: Pablo Saratxaga
 % Email: pablo@mandriva.com
 % Language: ug
@@ -56,8 +56,8 @@ LC_COLLATE
 % U+0224, U+0225 are also similar to ztail and are sorted the same.
 %
 % new arabic writting uses some extra letters too.
-% all vowels are noted, and in beginning of the word there is a 
-% "yeh with hamza" (U+0626) in the front; should it be ignored 
+% all vowels are noted, and in beginning of the word there is a
+% "yeh with hamza" (U+0626) in the front; should it be ignored
 % in sorting?
 %
 % arabic     old latin       turkic (from azeri, which has same phonemes)
@@ -107,7 +107,7 @@ collating-symbol  <htail>
 collating-symbol  <ktail>
 collating-symbol  <ztail>
 collating-symbol  <obar>
-collating-symbol  <udiaresis>
+collating-symbol  <udiaeresis>
 
 collating-element <h,> from "<U0068><U0321>"
 collating-element <H,> from "<U0048><U0321>"
@@ -238,7 +238,7 @@ reorder-after <U0648>
 <U06D0> <ar_e>;<BAS>;<MIN>;IGNORE
 <U06CC> <ar_i>;<BAS>;<MIN>;IGNORE
 <U064A> <ar_y>;<BAS>;<MIN>;IGNORE
- 
+
 reorder-end
 
 END LC_COLLATE
@@ -330,4 +330,3 @@ LC_ADDRESS
 % FIXME
 copy "en_DK"
 END LC_ADDRESS
-
