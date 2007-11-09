@@ -1,5 +1,12 @@
 2007-11-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5240]
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_timedlock_wait):
+	If we time out, try one last time to lock the futex to avoid
+	losing a wakeup signal.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+
 	[BZ #5245]
 	* sysdeps/pthread/createthread.c (do_clone): Translate clone error
 	if necessary.

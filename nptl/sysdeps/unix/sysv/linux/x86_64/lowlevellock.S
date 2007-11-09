@@ -199,14 +199,16 @@ __lll_timedlock_wait:
 	addq	$1000000000, %rsi
 	decq	%rdi
 4:	testq	%rdi, %rdi
-	js	5f		/* Time is already up.  */
+	movq	$-ETIMEDOUT, %rcx
+	movl	$2, %edx
+	js	8f		/* Time is already up.  */
 
 	/* Futex call.  */
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
 
 	movl	$1, %eax
-	movl	$2, %edx
+				/* NB: $edx has been loaded early.  */
 	LOCK
 	cmpxchgl %edx, (%r12)
 

@@ -59,10 +59,10 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
+  struct timespec rt;
   do
     {
       struct timeval tv;
-      struct timespec rt;
 
       /* Get the current time.  */
       (void) __gettimeofday (&tv, NULL);
@@ -76,18 +76,21 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 	  --rt.tv_sec;
 	}
 
-      /* Already timed out?  */
-      if (rt.tv_sec < 0)
-	return ETIMEDOUT;
+      /* If timed out do not go to sleep.  */
+      if (__builtin_expect (rt.tv_sec >= 0, 1))
+	{
+	  /* Wait.  */
+	  int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+	  if (oldval != 0)
+	    lll_futex_timed_wait (futex, 2, &rt, private);
+	}
 
-      /* Wait.  */
-      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
-      if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt, private);
+      if (atomic_compare_and_exchange_bool_acq (futex, 2, 0) == 0)
+	return 0;
     }
-  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+  while (rt.tv_sec >= 0);
 
-  return 0;
+  return ETIMEDOUT;
 }
 
 

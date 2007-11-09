@@ -203,7 +203,7 @@ __lll_timedlock_wait:
 	addl	$1000000000, %edx
 	subl	$1, %ecx
 4:	testl	%ecx, %ecx
-	js	5f		/* Time is already up.  */
+	js	9f		/* Time is already up.  */
 
 	/* Store relative timeout.  */
 	movl	%ecx, (%esp)
@@ -271,6 +271,10 @@ __lll_timedlock_wait:
 
 5:	movl	$ETIMEDOUT, %eax
 	jmp	6b
+
+9:	movl	$-ETIMEDOUT, %ecx
+	movl	$2, %edx
+	jmp	8b
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif
