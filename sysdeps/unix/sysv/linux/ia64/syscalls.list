@@ -4,6 +4,9 @@ umount2		-	umount		2	__umount2	umount2
 
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
+creat		-	creat		Ci:si	__libc_creat	creat creat64
+open		-	open		Ci:siv	__libc_open	__open open __open64 open64
+
 # semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget

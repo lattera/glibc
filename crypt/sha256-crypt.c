@@ -129,9 +129,8 @@ __sha256_crypt_r (key, salt, buffer, buflen)
   /* Add the key string.  */
   __sha256_process_bytes (key, key_len, &ctx);
 
-  /* The last part is the salt string.  This must be at most 8
-     characters and it ends at the first `$' character (for
-     compatibility with existing implementations).  */
+  /* The last part is the salt string.  This must be at most 16
+     characters and it ends at the first `$' character.  */
   __sha256_process_bytes (salt, salt_len, &ctx);
 
 

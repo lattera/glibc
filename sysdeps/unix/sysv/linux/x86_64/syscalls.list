@@ -1,13 +1,13 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 arch_prctl	EXTRA	arch_prctl	i:ii	__arch_prctl	arch_prctl
+creat		-	creat		Ci:si	__libc_creat	creat creat64
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
-
-# semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget
 msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
+open		-	open		Ci:siv	__libc_open	__open open __open64 open64
 shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt

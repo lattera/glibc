@@ -1,3 +1,54 @@
+2007-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/open64.c: Move __open64_2 implementation to..
+	* sysdeps/unix/sysv/linux/open64_2.c: ...here.  New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines): Add
+	open64_2.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add open and creat
+	entries.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/wordsize-64/alphasort.c: New file.
+	* sysdeps/wordsize-64/alphasort64.c: New file.
+	* sysdeps/wordsize-64/fseeko.c: New file.
+	* sysdeps/wordsize-64/fseeko64.c: New file.
+	* sysdeps/wordsize-64/ftello.c: New file.
+	* sysdeps/wordsize-64/ftello64.c: New file.
+	* sysdeps/wordsize-64/ftw.c: New file.
+	* sysdeps/wordsize-64/ftw64.c: New file.
+	* sysdeps/wordsize-64/iofgetpos.c: New file.
+	* sysdeps/wordsize-64/iofgetpos64.c: New file.
+	* sysdeps/wordsize-64/iofopen.c: New file.
+	* sysdeps/wordsize-64/iofopen64.c: New file.
+	* sysdeps/wordsize-64/iofsetpos.c: New file.
+	* sysdeps/wordsize-64/iofsetpos64.c: New file.
+	* sysdeps/wordsize-64/lockf.c: New file.
+	* sysdeps/wordsize-64/lockf64.c: New file.
+	* sysdeps/wordsize-64/mkostemp.c: New file.
+	* sysdeps/wordsize-64/mkostemp64.c: New file.
+	* sysdeps/wordsize-64/mkstemp.c: New file.
+	* sysdeps/wordsize-64/mkstemp64.c: New file.
+	* sysdeps/wordsize-64/scandir.c: New file.
+	* sysdeps/wordsize-64/scandir64.c: New file.
+	* sysdeps/wordsize-64/tmpfile.c: New file.
+	* sysdeps/wordsize-64/tmpfile64.c: New file.
+	* sysdeps/wordsize-64/versionsort.c: New file.
+	* sysdeps/wordsize-64/versionsort64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/aio_read.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/aio_read64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/aio_write.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/aio_write64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/creat64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdirentries.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdirentries64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/lio_listio.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/lio_listio64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/open64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat64.c: New file.
+
+	* crypt/sha256-crypt.c: Fix a comment.
+	* crypt/sha512-crypt.c: Likewise.
+
 2007-11-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/memset.S: Add sfence after movnti.

@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1995-1997,1999,2000,2002,2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,38 +16,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <stdarg.h>
 #include <stdio.h>
-#include <sysdep-cancel.h>
 
-/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
-   a third argument is the file protection.  */
+
 int
-__libc_open64 (const char *file, int oflag, ...)
+__open64_2 (file, oflag)
+     const char *file;
+     int oflag;
 {
-  int mode = 0;
-
   if (oflag & O_CREAT)
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
-    }
+    __fortify_fail ("invalid open64 call: O_CREAT without mode");
 
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (open, 3, file, oflag | O_LARGEFILE, mode);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (open, 3, file, oflag | O_LARGEFILE, mode);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return __open64 (file, oflag);
 }
-weak_alias (__libc_open64, __open64)
-libc_hidden_weak (__open64)
-weak_alias (__libc_open64, open64)
