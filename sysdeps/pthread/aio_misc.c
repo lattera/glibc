@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -512,7 +512,8 @@ handle_fildes_io (void *arg)
 	     by signals.  */
 	  if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_READ)
 	    {
-	      if (aiocbp->aiocb.aio_lio_opcode & 128)
+	      if (sizeof (off_t) != sizeof (off64_t)
+		  && aiocbp->aiocb.aio_lio_opcode & 128)
 		aiocbp->aiocb.__return_value =
 		  TEMP_FAILURE_RETRY (__pread64 (fildes, (void *)
 						 aiocbp->aiocb64.aio_buf,
@@ -537,7 +538,8 @@ handle_fildes_io (void *arg)
 	    }
 	  else if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_WRITE)
 	    {
-	      if (aiocbp->aiocb.aio_lio_opcode & 128)
+	      if (sizeof (off_t) != sizeof (off64_t)
+		  && aiocbp->aiocb.aio_lio_opcode & 128)
 		aiocbp->aiocb.__return_value =
 		  TEMP_FAILURE_RETRY (__pwrite64 (fildes, (const void *)
 						  aiocbp->aiocb64.aio_buf,

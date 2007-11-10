@@ -1,5 +1,8 @@
 2007-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Avoid unnecessary
+	complications for 64-bit platforms.
+
 	* sysdeps/unix/sysv/linux/open64.c: Move __open64_2 implementation to..
 	* sysdeps/unix/sysv/linux/open64_2.c: ...here.  New file.
 	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines): Add
