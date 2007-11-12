@@ -12,7 +12,9 @@ struct in6addrinfo
     in6ai_deprecated = 1,
     in6ai_temporary = 2,
     in6ai_homeaddress = 4
-  } flags;
+  } flags:8;
+  uint8_t prefixlen;
+  uint16_t :16;
   uint32_t addr[4];
 };
 
