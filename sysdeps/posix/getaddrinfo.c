@@ -1006,6 +1006,7 @@ struct sort_result
   uint8_t source_addr_len;
   bool got_source_addr;
   uint8_t source_addr_flags;
+  uint8_t prefixlen;
 };
 
 
@@ -1223,7 +1224,7 @@ static int
 fls (uint32_t a)
 {
   uint32_t mask;
-  int n = 0;
+  int n;
   for (n = 0, mask = 1 << 31; n < 32; mask >>= 1, ++n)
     if ((a & mask) != 0)
       break;
@@ -1350,20 +1351,31 @@ rfc3484_sort (const void *p1, const void *p2)
 	  assert (a1->source_addr.ss_family == PF_INET);
 	  assert (a2->source_addr.ss_family == PF_INET);
 
-	  struct sockaddr_in *in1_dst;
-	  struct sockaddr_in *in1_src;
-	  struct sockaddr_in *in2_dst;
-	  struct sockaddr_in *in2_src;
+	  /* Outside of subnets, as defined by the network masks,
+	     common address prefixes for IPv4 addresses make no sense.
+	     So, define a non-zero value only if source and
+	     destination address are on the same subnet.  */
+	  struct sockaddr_in *in1_dst
+	    = (struct sockaddr_in *) a1->dest_addr->ai_addr;
+	  in_addr_t in1_dst_addr = ntohl (in1_dst->sin_addr.s_addr);
+	  struct sockaddr_in *in1_src
+	    = (struct sockaddr_in *) &a1->source_addr;
+	  in_addr_t in1_src_addr = ntohl (in1_src->sin_addr.s_addr);
+	  in_addr_t netmask1 = 0xffffffffu << (32 - a1->prefixlen);
 
-	  in1_dst = (struct sockaddr_in *) a1->dest_addr->ai_addr;
-	  in1_src = (struct sockaddr_in *) &a1->source_addr;
-	  in2_dst = (struct sockaddr_in *) a2->dest_addr->ai_addr;
-	  in2_src = (struct sockaddr_in *) &a2->source_addr;
+	  if ((in1_src_addr & netmask1) == (in1_dst_addr & netmask1))
+	    bit1 = fls (in1_dst_addr ^ in1_src_addr);
 
-	  bit1 = fls (ntohl (in1_dst->sin_addr.s_addr
-			     ^ in1_src->sin_addr.s_addr));
-	  bit2 = fls (ntohl (in2_dst->sin_addr.s_addr
-			     ^ in2_src->sin_addr.s_addr));
+	  struct sockaddr_in *in2_dst
+	    = (struct sockaddr_in *) a2->dest_addr->ai_addr;
+	  in_addr_t in2_dst_addr = ntohl (in2_dst->sin_addr.s_addr);
+	  struct sockaddr_in *in2_src
+	    = (struct sockaddr_in *) &a2->source_addr;
+	  in_addr_t in2_src_addr = ntohl (in2_src->sin_addr.s_addr);
+	  in_addr_t netmask2 = 0xffffffffu << (32 - a2->prefixlen);
+
+	  if ((in2_src_addr & netmask2) == (in2_dst_addr & netmask2))
+	    bit2 = fls (in2_dst_addr ^ in2_src_addr);
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
@@ -1799,63 +1811,42 @@ getaddrinfo (const char *name, const char *service,
   int sockfd = -1;
   pid_t nl_pid;
 #endif
-  /* We might need information about what kind of interfaces are available.
-     But even if AI_ADDRCONFIG is not used, if the user requested IPv6
-     addresses we have to know whether an address is deprecated or
-     temporary.  */
-  if ((hints->ai_flags & AI_ADDRCONFIG) || hints->ai_family == PF_UNSPEC
-      || hints->ai_family == PF_INET6)
-    {
-      /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
-	 cannot cache the results since new interfaces could be added at
-	 any time.  */
-      __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+  /* We might need information about what interfaces are available.
+     Also determine whether we have IPv4 or IPv6 interfaces or both.  We
+     cannot cache the results since new interfaces could be added at
+     any time.  */
+  __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
 #ifdef HAVE_NETLINK_ROUTE
-      if (! __no_netlink_support)
+  if (! __no_netlink_support)
+    {
+      sockfd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+
+      struct sockaddr_nl nladdr;
+      memset (&nladdr, '\0', sizeof (nladdr));
+      nladdr.nl_family = AF_NETLINK;
+
+      socklen_t addr_len = sizeof (nladdr);
+
+      if (sockfd >= 0
+	  && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
+	  && __getsockname (sockfd, (struct sockaddr *) &nladdr,
+			    &addr_len) == 0
+	  && make_request (sockfd, nladdr.nl_pid, &seen_ipv4, &seen_ipv6,
+			   in6ai, in6ailen) == 0)
 	{
-	  sockfd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
-
-	  struct sockaddr_nl nladdr;
-	  memset (&nladdr, '\0', sizeof (nladdr));
-	  nladdr.nl_family = AF_NETLINK;
-
-	  socklen_t addr_len = sizeof (nladdr);
-
-	  if (sockfd >= 0
-	      && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-	      && __getsockname (sockfd, (struct sockaddr *) &nladdr,
-				&addr_len) == 0
-	      && make_request (sockfd, nladdr.nl_pid, &seen_ipv4, &seen_ipv6,
-			       in6ai, in6ailen) == 0)
-	    {
-	      /* It worked.  */
-	      nl_pid = nladdr.nl_pid;
-	      goto got_netlink_socket;
-	    }
-
-	  if (sockfd >= 0)
-	    close_not_cancel_no_status (sockfd);
-
-#if __ASSUME_NETLINK_SUPPORT == 0
-	  /* Remember that there is no netlink support.  */
-	  if (errno != EMFILE && errno != ENFILE)
-	    __no_netlink_support = 1;
-#else
-	  else
-	    {
-	      if (errno != EMFILE && errno != ENFILE)
-		sockfd = -2;
-
-	      /* We cannot determine what interfaces are available.  Be
-		 pessimistic.  */
-	      seen_ipv4 = true;
-	      seen_ipv6 = true;
-	      return;
-	    }
-#endif
+	  /* It worked.  */
+	  nl_pid = nladdr.nl_pid;
+	  goto got_netlink_socket;
 	}
-#endif
+
+      if (sockfd >= 0)
+	close_not_cancel_no_status (sockfd);
+
+      /* Remember that there is no netlink support.  */
+      if (errno != EMFILE && errno != ENFILE)
+	__no_netlink_support = 1;
     }
+#endif
 
 #ifdef HAVE_NETLINK_ROUTE
  got_netlink_socket:
@@ -1958,7 +1949,6 @@ getaddrinfo (const char *name, const char *service,
       for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
 	  results[i].dest_addr = q;
-	  results[i].got_source_addr = false;
 	  results[i].service_order = i;
 
 	  /* If we just looked up the address for a different
@@ -1971,10 +1961,13 @@ getaddrinfo (const char *name, const char *service,
 	      results[i].source_addr_len = results[i - 1].source_addr_len;
 	      results[i].got_source_addr = results[i - 1].got_source_addr;
 	      results[i].source_addr_flags = results[i - 1].source_addr_flags;
+	      results[i].prefixlen = results[i - 1].prefixlen;
 	    }
 	  else
 	    {
+	      results[i].got_source_addr = false;
 	      results[i].source_addr_flags = 0;
+	      results[i].prefixlen = 0;
 
 	      /* We overwrite the type with SOCK_DGRAM since we do not
 		 want connect() to connect to the other side.  If we
@@ -2005,22 +1998,39 @@ getaddrinfo (const char *name, const char *service,
 		  results[i].source_addr_len = sl;
 		  results[i].got_source_addr = true;
 
-		  if (q->ai_family == AF_INET6 && in6ai != NULL)
+		  if (in6ai != NULL)
 		    {
 		      /* See whether the source address is on the list of
 			 deprecated or temporary addresses.  */
 		      struct in6addrinfo tmp;
-		      struct sockaddr_in6 *sin6p
-			= (struct sockaddr_in6 *) &results[i].source_addr;
-		      memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
+
+		      if (q->ai_family == AF_INET && af == AF_INET)
+			{
+			  struct sockaddr_in *sinp
+			    = (struct sockaddr_in *) &results[i].source_addr;
+			  tmp.addr[0] = 0;
+			  tmp.addr[1] = 0;
+			  tmp.addr[2] = htonl (0xffff);
+			  tmp.addr[3] = sinp->sin_addr.s_addr;
+			}
+		      else
+			{
+			  struct sockaddr_in6 *sin6p
+			    = (struct sockaddr_in6 *) &results[i].source_addr;
+			  memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
+			}
 
 		      struct in6addrinfo *found
 			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),
 				   in6aicmp);
 		      if (found != NULL)
-			results[i].source_addr_flags = found->flags;
+			{
+			  results[i].source_addr_flags = found->flags;
+			  results[i].prefixlen = found->prefixlen;
+			}
 		    }
-		  else if (q->ai_family == AF_INET && af == AF_INET6)
+
+		  if (q->ai_family == AF_INET && af == AF_INET6)
 		    {
 		      /* We have to convert the address.  The socket is
 			 IPv6 and the request is for IPv4.  */
@@ -2029,10 +2039,17 @@ getaddrinfo (const char *name, const char *service,
 		      struct sockaddr_in *sin
 			= (struct sockaddr_in *) &results[i].source_addr;
 		      assert (IN6_IS_ADDR_V4MAPPED (sin6->sin6_addr.s6_addr32));
+		      sin->sin_family = AF_INET;
+		      /* We do not have to initialize sin_port since this
+			 fields has the same position and size in the IPv6
+			 structure.  */
+		      assert (offsetof (struct sockaddr_in, sin_port)
+			      == offsetof (struct sockaddr_in6, sin6_port));
+		      assert (sizeof (sin->sin_port)
+			      == sizeof (sin6->sin6_port));
 		      memcpy (&sin->sin_addr,
 			      &sin6->sin6_addr.s6_addr32[3], INADDRSZ);
-		      results[i].source_addr_len = INADDRSZ;
-		      sin->sin_family = AF_INET;
+		      results[i].source_addr_len = sizeof (struct sockaddr_in);
 		    }
 		}
 	      else if (errno == EAFNOSUPPORT && af == AF_INET6
