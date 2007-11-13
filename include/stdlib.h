@@ -32,6 +32,7 @@ libc_hidden_proto (abort)
 libc_hidden_proto (getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
+libc_hidden_proto (qsort_r)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
 libc_hidden_proto (__secure_getenv)
@@ -83,7 +84,7 @@ extern int __add_to_environ (const char *name, const char *value,
 			     const char *combines, int replace);
 
 extern void _quicksort (void *const pbase, size_t total_elems,
-			size_t size, __compar_fn_t cmp);
+			size_t size, __compar_d_fn_t cmp, void *arg);
 
 extern int __on_exit (void (*__func) (int __status, void *__arg), void *__arg);
 

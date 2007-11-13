@@ -88,7 +88,7 @@ typedef struct
 
 void
 _quicksort (void *const pbase, size_t total_elems, size_t size,
-	    __compar_fn_t cmp)
+	    __compar_d_fn_t cmp, void *arg)
 {
   register char *base_ptr = (char *) pbase;
 
@@ -120,13 +120,13 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 
 	  char *mid = lo + size * ((hi - lo) / size >> 1);
 
-	  if ((*cmp) ((void *) mid, (void *) lo) < 0)
+	  if ((*cmp) ((void *) mid, (void *) lo, arg) < 0)
 	    SWAP (mid, lo, size);
-	  if ((*cmp) ((void *) hi, (void *) mid) < 0)
+	  if ((*cmp) ((void *) hi, (void *) mid, arg) < 0)
 	    SWAP (mid, hi, size);
 	  else
 	    goto jump_over;
-	  if ((*cmp) ((void *) mid, (void *) lo) < 0)
+	  if ((*cmp) ((void *) mid, (void *) lo, arg) < 0)
 	    SWAP (mid, lo, size);
 	jump_over:;
 
@@ -138,10 +138,10 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 	     that this algorithm runs much faster than others. */
 	  do
 	    {
-	      while ((*cmp) ((void *) left_ptr, (void *) mid) < 0)
+	      while ((*cmp) ((void *) left_ptr, (void *) mid, arg) < 0)
 		left_ptr += size;
 
-	      while ((*cmp) ((void *) mid, (void *) right_ptr) < 0)
+	      while ((*cmp) ((void *) mid, (void *) right_ptr, arg) < 0)
 		right_ptr -= size;
 
 	      if (left_ptr < right_ptr)
@@ -214,7 +214,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
        and the operation speeds up insertion sort's inner loop. */
 
     for (run_ptr = tmp_ptr + size; run_ptr <= thresh; run_ptr += size)
-      if ((*cmp) ((void *) run_ptr, (void *) tmp_ptr) < 0)
+      if ((*cmp) ((void *) run_ptr, (void *) tmp_ptr, arg) < 0)
         tmp_ptr = run_ptr;
 
     if (tmp_ptr != base_ptr)
@@ -226,7 +226,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
     while ((run_ptr += size) <= end_ptr)
       {
 	tmp_ptr = run_ptr - size;
-	while ((*cmp) ((void *) run_ptr, (void *) tmp_ptr) < 0)
+	while ((*cmp) ((void *) run_ptr, (void *) tmp_ptr, arg) < 0)
 	  tmp_ptr -= size;
 
 	tmp_ptr += size;

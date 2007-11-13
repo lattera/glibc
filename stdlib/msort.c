@@ -30,7 +30,8 @@ struct msort_param
 {
   size_t s;
   size_t var;
-  __compar_fn_t cmp;
+  __compar_d_fn_t cmp;
+  void *arg;
   char *t;
 };
 static void msort_with_tmp (const struct msort_param *p, void *b, size_t n);
@@ -54,13 +55,14 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 
   char *tmp = p->t;
   const size_t s = p->s;
-  __compar_fn_t cmp = p->cmp;
+  __compar_d_fn_t cmp = p->cmp;
+  void *arg = p->arg;
   switch (p->var)
     {
     case 0:
       while (n1 > 0 && n2 > 0)
 	{
-	  if ((*cmp) (b1, b2) <= 0)
+	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
 	      *(uint32_t *) tmp = *(uint32_t *) b1;
 	      b1 += sizeof (uint32_t);
@@ -78,7 +80,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
     case 1:
       while (n1 > 0 && n2 > 0)
 	{
-	  if ((*cmp) (b1, b2) <= 0)
+	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
 	      *(uint64_t *) tmp = *(uint64_t *) b1;
 	      b1 += sizeof (uint64_t);
@@ -100,7 +102,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 	  unsigned long *bl;
 
 	  tmp += s;
-	  if ((*cmp) (b1, b2) <= 0)
+	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
 	      bl = (unsigned long *) b1;
 	      b1 += s;
@@ -119,7 +121,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
     case 3:
       while (n1 > 0 && n2 > 0)
 	{
-	  if ((*cmp) (*(const void **) b1, *(const void **) b2) <= 0)
+	  if ((*cmp) (*(const void **) b1, *(const void **) b2, arg) <= 0)
 	    {
 	      *(void **) tmp = *(void **) b1;
 	      b1 += sizeof (void *);
@@ -137,7 +139,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
     default:
       while (n1 > 0 && n2 > 0)
 	{
-	  if ((*cmp) (b1, b2) <= 0)
+	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
 	      tmp = (char *) __mempcpy (tmp, b1, s);
 	      b1 += s;
@@ -158,8 +160,9 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
   memcpy (b, p->t, (n - n2) * s);
 }
 
+
 void
-qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
+qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
 {
   size_t size = n * s;
   char *tmp = NULL;
@@ -207,7 +210,7 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
       /* If the memory requirements are too high don't allocate memory.  */
       if (size / pagesize > (size_t) phys_pages)
 	{
-	  _quicksort (b, n, s, cmp);
+	  _quicksort (b, n, s, cmp, arg);
 	  return;
 	}
 
@@ -219,15 +222,16 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
 	{
 	  /* Couldn't get space, so use the slower algorithm
 	     that doesn't need a temporary array.  */
-	  _quicksort (b, n, s, cmp);
+	  _quicksort (b, n, s, cmp, arg);
 	  return;
 	}
       p.t = tmp;
     }
 
   p.s = s;
-  p.cmp = cmp;
   p.var = 4;
+  p.cmp = cmp;
+  p.arg = arg;
 
   if (s > 32)
     {
@@ -269,7 +273,7 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
 	    while (kp != ip);
 
 	    tp[j] = jp;
-	    memcpy (jp, tmp_storage, s); 
+	    memcpy (jp, tmp_storage, s);
 	  }
     }
   else
@@ -290,5 +294,13 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
       msort_with_tmp (&p, b, n);
     }
   free (tmp);
+}
+libc_hidden_def (qsort_r)
+
+
+void
+qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
+{
+  return qsort_r (b, n, s, (__compar_d_fn_t) cmp, NULL);
 }
 libc_hidden_def (qsort)

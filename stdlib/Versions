@@ -94,6 +94,9 @@ libc {
     # Silent change in SUS.
     realpath;
   }
+  GLIBC_2.8 {
+    qsort_r;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

@@ -1,5 +1,16 @@
 2007-11-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/stdlib.h: Define __compar_d_fn_t.  Declare qsort_r.
+	* include/stdlib.h: Add hidden_proto for qsort_t and adjust protoype
+	for _quicksort.
+	* stdlib/msort.c (qsort): Now a wrapper around qsort_r.
+	(qsort_r): Renamed from qsort.  Take additional parameter and pass it
+	on as third parameter to compare function and _quicksort.
+	* stdlib/qsort.c (_quicksort): Take additional parameter and pass on
+	to the compare function.
+	* stdlib/Versions [libc] (GLIBC_2.8): Add qsort_r.
+	* Versions.def: Add GLIBC_2.8 for libc.
+
 	* posix/tst-rfc3484.c: Adjust for addition of prefixlen field.
 	* posix/tst-rfc3484-2.c: Likewise.
 
