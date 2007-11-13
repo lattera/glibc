@@ -1,3 +1,8 @@
+2007-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/kernel-features.h: Moved to...
+	* sysdeps/mach/hurd/kernel-features.h: ...here.
+
 2007-09-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i586/memcpy_chk.S: New file.
