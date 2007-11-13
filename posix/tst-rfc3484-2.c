@@ -99,6 +99,7 @@ do_test (void)
   results[0].source_addr_len = sizeof (so1);
   results[0].source_addr_flags = 0;
   results[0].service_order = 0;
+  results[0].prefixlen = 16;
   memcpy (&results[0].source_addr, &so1, sizeof (so1));
 
   results[1].dest_addr = &ai2;
@@ -106,6 +107,7 @@ do_test (void)
   results[1].source_addr_len = sizeof (so2);
   results[1].source_addr_flags = 0;
   results[1].service_order = 1;
+  results[1].prefixlen = 16;
   memcpy (&results[1].source_addr, &so2, sizeof (so2));
 
 
@@ -125,6 +127,7 @@ do_test (void)
   results[1].source_addr_len = sizeof (so1);
   results[1].source_addr_flags = 0;
   results[1].service_order = 1;
+  results[1].prefixlen = 16;
   memcpy (&results[1].source_addr, &so1, sizeof (so1));
 
   results[0].dest_addr = &ai2;
@@ -132,6 +135,7 @@ do_test (void)
   results[0].source_addr_len = sizeof (so2);
   results[0].source_addr_flags = 0;
   results[0].service_order = 0;
+  results[0].prefixlen = 16;
   memcpy (&results[0].source_addr, &so2, sizeof (so2));
 
 
