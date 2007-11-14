@@ -22,6 +22,7 @@
 /* This file uses the getaddrinfo code but it compiles it without NSCD
    support.  We just need a few symbol renames.  */
 #define __inet_aton inet_aton
+#define __ioctl ioctl
 #define __getsockname getsockname
 #define __socket socket
 #define __recvmsg recvmsg
@@ -36,6 +37,7 @@
 
 /* Support code.  */
 #include <check_pf.c>
+#include <check_native.c>
 #ifdef HAVE_LIBIDN
 # include <libidn/idn-stub.c>
 #endif

@@ -1,3 +1,7 @@
+2007-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/gai.c (__ioctl): Define.  Include check_native.c.
+
 2007-11-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/cs.po: Update from translation team.
