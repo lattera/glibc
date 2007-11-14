@@ -1,5 +1,8 @@
 2007-11-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/cache.c (prune_cache): If cache is empty, instruct caller
+	to wake up in 24 hours.
+
 	* nscd/gai.c (__ioctl): Define.  Include check_native.c.
 
 2007-11-13  Ulrich Drepper  <drepper@redhat.com>

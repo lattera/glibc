@@ -288,7 +288,8 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
     dbg_log (_("pruning %s cache; time %ld"),
 	     dbnames[table - dbs], (long int) now);
 
-  time_t next_timeout = LONG_MAX;
+#define NO_TIMEOUT LONG_MAX
+  time_t next_timeout = NO_TIMEOUT;
   do
     {
       ref_t run = table->head->array[--cnt];
@@ -474,5 +475,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   if (any)
     gc (table);
 
-  return next_timeout - now;
+  /* If there is no entry in the database and we therefore have no new
+     timeout value, tell the caller to wake up in 24 hours.  */
+  return next_timeout == NO_TIMEOUT ? 24 * 60 * 60 : next_timeout - now;
 }
