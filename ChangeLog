@@ -1,6 +1,7 @@
 2007-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
+	* po/nl.po: Likewise.
 
 	* nscd/cache.c (prune_cache): If cache is empty, instruct caller
 	to wake up in 24 hours.
