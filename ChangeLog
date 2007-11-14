@@ -1,5 +1,8 @@
 2007-11-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/cs.po: Update from translation team.
+	* po/pl.po: Likewise.
+
 	* include/ifaddrs.h: Remove in6ai_temporary.
 	(struct in6addrinfo): Add index element.
 	Declare __check_native.
