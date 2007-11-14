@@ -1,5 +1,21 @@
 2007-11-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/ifaddrs.h: Remove in6ai_temporary.
+	(struct in6addrinfo): Add index element.
+	Declare __check_native.
+	* inet/Makefile (aux): Add check_native.
+	* sysdeps/unix/sysv/linux/check_native.c: New file.
+	* sysdeps/unix/sysv/linux/check_pf.c: No need to recognize
+	IFA_F_TEMPORARY.  Pass back ifa_index.
+	* sysdeps/posix/getaddrinfo.c: Remove netlink compatibility code.
+	(rfc3484_sort): Add new parameter.  Implement rule 7 correctly:
+	call __check_native if necessary.
+	(getaddrinfo): Fill in index field.  Use qsort_r instead of qsort
+	to sort addresses.  Pass information about the results.
+	* posix/tst-rfc3484.c: Adjust for addition of index field and change
+	of rfc3484_sort interface.
+	* posix/tst-rfc3484-2.c: Likewise.
+
 	* stdlib/stdlib.h: Define __compar_d_fn_t.  Declare qsort_r.
 	* include/stdlib.h: Add hidden_proto for qsort_t and adjust protoype
 	for _quicksort.

@@ -35,9 +35,6 @@
 #include <kernel-features.h>
 
 
-#ifndef IFA_F_TEMPORARY
-# define IFA_F_TEMPORARY IFA_F_SECONDARY
-#endif
 #ifndef IFA_F_HOMEADDRESS
 # define IFA_F_HOMEADDRESS 0
 #endif
@@ -190,12 +187,10 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 				       | IFA_F_OPTIMISTIC))
 				   ? in6ai_deprecated : 0)
 				  | ((ifam->ifa_flags
-				      & IFA_F_TEMPORARY)
-				     ? in6ai_temporary : 0)
-				  | ((ifam->ifa_flags
 				      & IFA_F_HOMEADDRESS)
 				     ? in6ai_homeaddress : 0));
 	      newp->info.prefixlen = ifam->ifa_prefixlen;
+	      newp->info.index = ifam->ifa_index;
 	      if (ifam->ifa_family == AF_INET)
 		{
 		  newp->info.addr[0] = 0;

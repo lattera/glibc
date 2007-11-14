@@ -49,7 +49,7 @@ routines := htonl htons		\
 	    getipv4sourcefilter setipv4sourcefilter \
 	    getsourcefilter setsourcefilter inet6_opt inet6_rth
 
-aux := check_pf ifreq
+aux := check_pf check_native ifreq
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 	 tst-gethnm test-ifaddrs bug-if1 test-inet6_opt

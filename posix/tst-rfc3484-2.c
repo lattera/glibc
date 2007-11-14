@@ -18,6 +18,12 @@ __check_pf (bool *p1, bool *p2, struct in6addrinfo **in6ai, size_t *in6ailen)
   *in6ai = NULL;
   *in6ailen = 0;
 }
+void
+attribute_hidden
+__check_native (uint32_t a1_index, int *a1_native,
+		uint32_t a2_index, int *a2_native)
+{
+}
 int
 __idna_to_ascii_lz (const char *input, char **output, int flags)
 {
@@ -100,6 +106,7 @@ do_test (void)
   results[0].source_addr_flags = 0;
   results[0].service_order = 0;
   results[0].prefixlen = 16;
+  results[0].index = 0;
   memcpy (&results[0].source_addr, &so1, sizeof (so1));
 
   results[1].dest_addr = &ai2;
@@ -108,10 +115,12 @@ do_test (void)
   results[1].source_addr_flags = 0;
   results[1].service_order = 1;
   results[1].prefixlen = 16;
+  results[1].index = 0;
   memcpy (&results[1].source_addr, &so2, sizeof (so2));
 
 
-  qsort (results, 2, sizeof (results[0]), rfc3484_sort);
+  struct sort_result_combo combo = { .results = results, .nresults = 2 };
+  qsort_r (results, 2, sizeof (results[0]), rfc3484_sort, &combo);
 
   int result = 0;
   if (results[0].dest_addr->ai_family == AF_INET6)
@@ -128,6 +137,7 @@ do_test (void)
   results[1].source_addr_flags = 0;
   results[1].service_order = 1;
   results[1].prefixlen = 16;
+  results[1].index = 0;
   memcpy (&results[1].source_addr, &so1, sizeof (so1));
 
   results[0].dest_addr = &ai2;
@@ -136,10 +146,11 @@ do_test (void)
   results[0].source_addr_flags = 0;
   results[0].service_order = 0;
   results[0].prefixlen = 16;
+  results[0].index = 0;
   memcpy (&results[0].source_addr, &so2, sizeof (so2));
 
 
-  qsort (results, 2, sizeof (results[0]), rfc3484_sort);
+  qsort_r (results, 2, sizeof (results[0]), rfc3484_sort, &combo);
 
   if (results[0].dest_addr->ai_family == AF_INET6)
     {

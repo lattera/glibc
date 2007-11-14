@@ -61,10 +61,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
 
-#ifdef HAVE_NETLINK_ROUTE
-# include <kernel-features.h>
-#endif
-
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
 extern int __idna_to_unicode_lzlz (const char *input, char **output,
@@ -1007,6 +1003,14 @@ struct sort_result
   bool got_source_addr;
   uint8_t source_addr_flags;
   uint8_t prefixlen;
+  uint32_t index;
+  int32_t native;
+};
+
+struct sort_result_combo
+{
+  struct sort_result *results;
+  int nresults;
 };
 
 
@@ -1233,10 +1237,11 @@ fls (uint32_t a)
 
 
 static int
-rfc3484_sort (const void *p1, const void *p2)
+rfc3484_sort (const void *p1, const void *p2, void *arg)
 {
   const struct sort_result *a1 = (const struct sort_result *) p1;
   const struct sort_result *a2 = (const struct sort_result *) p2;
+  struct sort_result_combo *src = (struct sort_result_combo *) arg;
 
   /* Rule 1: Avoid unusable destinations.
      We have the got_source_addr flag set if the destination is reachable.  */
@@ -1321,14 +1326,34 @@ rfc3484_sort (const void *p1, const void *p2)
   /* Rule 7: Prefer native transport.  */
   if (a1->got_source_addr)
     {
-      if (!(a1->source_addr_flags & in6ai_temporary)
-	  && (a2->source_addr_flags & in6ai_temporary))
-	return -1;
-      if ((a1->source_addr_flags & in6ai_temporary)
-	  && !(a2->source_addr_flags & in6ai_temporary))
-	return 1;
+      /* The same interface index means the same interface which means
+	 there is no difference in transport.  This should catch many
+	 (most?) cases.  */
+      if (a1->index != a2->index)
+	{
+	  if (a1->native == -1 || a2->native == -1)
+	    {
+	      /* If we do not have the information use 'native' as the
+		 default.  */
+	      int a1_native = 0;
+	      int a2_native = 0;
+	      __check_native (a1->index, &a1_native, a2->index, &a2_native);
 
-      /* XXX Do we need to check anything beside temporary addresses?  */
+	      /* Fill in the results in all the records.  */
+	      for (int i = 0; i < src->nresults; ++i)
+		{
+		  if (a1->native == -1 && src->results[i].index == a1->index)
+		    src->results[i].native = a1_native;
+		  if (a2->native == -1 && src->results[i].index == a2->index)
+		    src->results[i].native = a2_native;
+		}
+	    }
+
+	  if (a1->native && !a2->native)
+	    return -1;
+	  if (!a1->native && a2->native)
+	    return 1;
+	}
     }
 
 
@@ -1759,16 +1784,6 @@ gaiconf_reload (void)
 }
 
 
-#if HAVE_NETLINK_ROUTE
-# if __ASSUME_NETLINK_SUPPORT == 0
-/* Defined in ifaddrs.c.  */
-extern int __no_netlink_support attribute_hidden;
-# else
-#  define __no_netlink_support 0
-# endif
-#endif
-
-
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
@@ -1807,50 +1822,12 @@ getaddrinfo (const char *name, const char *service,
   size_t in6ailen = 0;
   bool seen_ipv4 = false;
   bool seen_ipv6 = false;
-#ifdef HAVE_NETLINK_ROUTE
-  int sockfd = -1;
-  pid_t nl_pid;
-#endif
   /* We might need information about what interfaces are available.
      Also determine whether we have IPv4 or IPv6 interfaces or both.  We
      cannot cache the results since new interfaces could be added at
      any time.  */
   __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
-#ifdef HAVE_NETLINK_ROUTE
-  if (! __no_netlink_support)
-    {
-      sockfd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 
-      struct sockaddr_nl nladdr;
-      memset (&nladdr, '\0', sizeof (nladdr));
-      nladdr.nl_family = AF_NETLINK;
-
-      socklen_t addr_len = sizeof (nladdr);
-
-      if (sockfd >= 0
-	  && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-	  && __getsockname (sockfd, (struct sockaddr *) &nladdr,
-			    &addr_len) == 0
-	  && make_request (sockfd, nladdr.nl_pid, &seen_ipv4, &seen_ipv6,
-			   in6ai, in6ailen) == 0)
-	{
-	  /* It worked.  */
-	  nl_pid = nladdr.nl_pid;
-	  goto got_netlink_socket;
-	}
-
-      if (sockfd >= 0)
-	close_not_cancel_no_status (sockfd);
-
-      /* Remember that there is no netlink support.  */
-      if (errno != EMFILE && errno != ENFILE)
-	__no_netlink_support = 1;
-    }
-#endif
-
-#ifdef HAVE_NETLINK_ROUTE
- got_netlink_socket:
-#endif
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
       /* Now make a decision on what we return, if anything.  */
@@ -1938,7 +1915,7 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *last = NULL;
       char *canonname = NULL;
 
-      /* If we have information about deprecated and temporary address
+      /* If we have information about deprecated and temporary addresses
 	 sort the array now.  */
       if (in6ai != NULL)
 	qsort (in6ai, in6ailen, sizeof (*in6ai), in6aicmp);
@@ -1950,6 +1927,7 @@ getaddrinfo (const char *name, const char *service,
 	{
 	  results[i].dest_addr = q;
 	  results[i].service_order = i;
+	  results[i].native = -1;
 
 	  /* If we just looked up the address for a different
 	     protocol, reuse the result.  */
@@ -1962,12 +1940,14 @@ getaddrinfo (const char *name, const char *service,
 	      results[i].got_source_addr = results[i - 1].got_source_addr;
 	      results[i].source_addr_flags = results[i - 1].source_addr_flags;
 	      results[i].prefixlen = results[i - 1].prefixlen;
+	      results[i].index = results[i - 1].index;
 	    }
 	  else
 	    {
 	      results[i].got_source_addr = false;
 	      results[i].source_addr_flags = 0;
 	      results[i].prefixlen = 0;
+	      results[i].index = 0xffffffffu;
 
 	      /* We overwrite the type with SOCK_DGRAM since we do not
 		 want connect() to connect to the other side.  If we
@@ -2027,6 +2007,7 @@ getaddrinfo (const char *name, const char *service,
 			{
 			  results[i].source_addr_flags = found->flags;
 			  results[i].prefixlen = found->prefixlen;
+			  results[i].index = found->index;
 			}
 		    }
 
@@ -2076,6 +2057,8 @@ getaddrinfo (const char *name, const char *service,
 
       /* We got all the source addresses we can get, now sort using
 	 the information.  */
+      struct sort_result_combo src
+	= { .results = results, .nresults = nresults };
       if (__builtin_expect (gaiconf_reload_flag_ever_set, 0))
 	{
 	  __libc_lock_define_initialized (static, lock);
@@ -2083,11 +2066,11 @@ getaddrinfo (const char *name, const char *service,
 	  __libc_lock_lock (lock);
 	  if (old_once && gaiconf_reload_flag)
 	    gaiconf_reload ();
-	  qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+	  qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
 	  __libc_lock_unlock (lock);
 	}
       else
-	qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+	qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
 
       /* Queue the results up as they come out of sorting.  */
       q = p = results[0].dest_addr;
