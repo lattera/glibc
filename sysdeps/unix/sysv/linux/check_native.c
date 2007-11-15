@@ -105,7 +105,6 @@ __check_native (uint32_t a1_index, int *a1_native,
     goto out_fail;
 
   bool done = false;
-  int v4fd = -1;
   do
     {
       struct msghdr msg =
@@ -134,60 +133,25 @@ __check_native (uint32_t a1_index, int *a1_native,
 
 	  if (nlmh->nlmsg_type == RTM_NEWLINK)
 	    {
-	      /* A RTM_NEWLINK message can have IFLA_STATS data. We need to
-		 know the size before creating the list to allocate enough
-		 memory.  */
 	      struct ifinfomsg *ifim = (struct ifinfomsg *) NLMSG_DATA (nlmh);
-	      struct rtattr *rta = IFLA_RTA (ifim);
-	      size_t rtasize = IFLA_PAYLOAD (nlmh);
-	      int index = ifim->ifi_index;
+	      int native = (ifim->ifi_type != ARPHRD_TUNNEL6
+			    && ifim->ifi_type != ARPHRD_TUNNEL
+			    && ifim->ifi_type != ARPHRD_SIT);
 
-	      if (a1_index == index || a2_index == index)
-		while (RTA_OK (rta, rtasize))
-		  {
-		    char *rta_data = RTA_DATA (rta);
-		    size_t rta_payload = RTA_PAYLOAD (rta);
+	      if (a1_index == ifim->ifi_index)
+		{
+		  *a1_native = native;
+		  a1_index = 0xffffffffu;
+		}
+	      if (a2_index == ifim->ifi_index)
+		{
+		  *a2_native = native;
+		  a2_index = 0xffffffffu;
+		}
 
-		    if (rta->rta_type == IFLA_IFNAME)
-		      {
-			struct ifreq ifr;
-			*((char *) mempcpy (ifr.ifr_name, rta_data,
-					    rta_payload))= '\0';
-
-			if (v4fd == -1)
-			  {
-			    v4fd = __socket (AF_INET, SOCK_DGRAM, 0);
-			    if (v4fd == -1)
-			      return;
-			  }
-
-			if (__ioctl (v4fd, SIOCGIFHWADDR, &ifr) >= 0)
-			  {
-			    int native
-			      = (ifr.ifr_hwaddr.sa_family != ARPHRD_TUNNEL6
-				 && ifr.ifr_hwaddr.sa_family != ARPHRD_TUNNEL
-				 && ifr.ifr_hwaddr.sa_family != ARPHRD_SIT);
-
-			    if (a1_index == index)
-			      {
-				*a1_native = native;
-				a1_index = 0xffffffffu;
-			      }
-			    if (a2_index == index)
-			      {
-				*a2_native = native;
-				a2_index = 0xffffffffu;
-			      }
-
-			    if (a1_index == 0xffffffffu
-				&& a2_index == 0xffffffffu)
-			      goto out;
-			  }
-			break;
-		      }
-
-		    rta = RTA_NEXT (rta, rtasize);
-		  }
+	      if (a1_index == 0xffffffffu
+		  && a2_index == 0xffffffffu)
+		goto out;
 	    }
 	  else if (nlmh->nlmsg_type == NLMSG_DONE)
 	    /* We found the end, leave the loop.  */
@@ -198,8 +162,6 @@ __check_native (uint32_t a1_index, int *a1_native,
 
  out:
   close_not_cancel_no_status (fd);
-  if (v4fd != -1)
-    close_not_cancel_no_status (v4fd);
 
   return;
 

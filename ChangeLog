@@ -1,5 +1,8 @@
 2007-11-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/check_native.c (__check_native): Simplify
+	significantly.  The device type is also part of the ifinfomsg data.
+
 	* po/sv.po: Update from translation team.
 	* po/nl.po: Likewise.
 
