@@ -1,3 +1,8 @@
+2007-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
+	Add sys/signalfd.h and sys/eventfd.h.
+
 2007-11-15  Bruno Haible  <bruno@clisp.org>
 
 	[BZ #5346]
