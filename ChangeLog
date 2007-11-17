@@ -1,3 +1,13 @@
+2007-11-15  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #5346]
+	* intl/dcigettext.c (struct known_translation_t): Turn msgid into a
+	union.
+	(transcmp): Use the appropriate part of s1->msgid and s2->msgid.
+	(DCIGETTEXT): Change the allocation of the 'search' variable so that
+	it needs only fixed stack space. Delay the initialization of
+	msgid_len until it is needed.
+
 2007-11-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/dbl-64/sincos.tbl: Fix size of union.
