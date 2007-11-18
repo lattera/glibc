@@ -1,3 +1,7 @@
+2007-11-18  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/fcntl.h (O_CLOEXEC): Fix value.
+
 2007-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/zh_CN.po: Update from translation team.
