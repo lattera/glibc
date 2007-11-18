@@ -1,5 +1,7 @@
 2007-11-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/zh_CN.po: Update from translation team.
+
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
 	Add sys/signalfd.h and sys/eventfd.h.
 
