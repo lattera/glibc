@@ -1520,7 +1520,7 @@ If @var{denominator} is zero, @code{fmod} signals a domain error.
 @comment math.h
 @comment BSD
 @deftypefunx {long double} dreml (long double @var{numerator}, long double @var{denominator})
-These functions are like @code{fmod} except that they rounds the
+These functions are like @code{fmod} except that they round the
 internal quotient @var{n} to the nearest integer instead of towards zero
 to an integer.  For example, @code{drem (6.5, 2.3)} returns @code{-0.4},
 which is @code{6.5} minus @code{6.9}.

@@ -1,5 +1,8 @@
 2007-11-18  Roland McGrath  <roland@frob.com>
 
+	* manual/arith.texi (Remainder Functions): Spelling fix.
+	From Shaun Silk <genix@mysoul.com.au>.
+
 	* sysdeps/mach/hurd/bits/fcntl.h (O_CLOEXEC): Fix value.
 
 2007-11-17  Ulrich Drepper  <drepper@redhat.com>
