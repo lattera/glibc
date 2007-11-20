@@ -1,3 +1,9 @@
+2007-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_cleanup_push,
+	pthread_cleanup_push_defer_np): Add extra (void *) cast to shut up
+	g++ 4.1 and 4.2 -Wstrict-aliasing warnings.
+
 2007-11-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5240]
