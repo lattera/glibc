@@ -1,5 +1,17 @@
 2007-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (defaults_scopes, scopes): New variables.
+	(get_scope): For IPv4 scope, use scopes table.
+	(fini): Free scopes table if necessary.
+	(free_scopelist): New function.
+	(scopecmp): New function.
+	(gaiconf_init): Also handle scopev4 entries.
+	* posix/tst-rfc3484.c (do_test): Initialize scopes.
+	* posix/tst-rfc3484-2.c (do_test): Likewise.
+	* posix/gai.conf: Document scopev4 defaults.
+	* posix/Makefile (tests): Add tst-rfc3484-3.
+	* posix/tst-rfc3484-3.c: New file.
+
 	* sysdeps/posix/getaddrinfo.c (default_labels): Describe entry for
 	Teredo tunnels.
 	* posix/gai.conf: Update for current default tables.

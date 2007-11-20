@@ -53,21 +53,32 @@ service_user *__nss_hosts_database attribute_hidden;
 
 struct sockaddr_in addrs[] =
 {
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a86d1d) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a85d03) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a82c3d) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a86002) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a802f3) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a80810) } },
-  { .sin_family = AF_INET, .sin_addr = { h (0xc0a85e02) } }
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a86d1d) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a85d03) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a82c3d) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a86002) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a802f3) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a80810) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xa0a85e02) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xac162311) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0x0a324572) } }
 };
 #define naddrs (sizeof (addrs) / sizeof (addrs[0]))
 static struct addrinfo ais[naddrs];
 static struct sort_result results[naddrs];
 
-static int expected[naddrs] =
+static const int expected[naddrs] =
   {
-    6, 1, 0, 3, 2, 4, 5
+    8, 0, 1, 2, 3, 4, 5, 6, 7
+  };
+
+static const struct scopeentry new_scopes[] =
+  {
+    { { { 169, 254, 0, 0 } }, h (0xffff0000), 2 },
+    { { { 127, 0, 0, 0 } }, h (0xff000000), 2 },
+    { { { 10, 0, 0, 0 } }, h (0xff000000), 5 },
+    { { { 192, 168, 0, 0 } }, h(0xffff0000), 5 },
+    { { { 0, 0, 0, 0 } }, h (0x00000000), 14 }
   };
 
 
@@ -85,11 +96,11 @@ do_test (void)
 {
   labels = default_labels;
   precedence = default_precedence;
-  scopes= default_scopes;
+  scopes= new_scopes;
 
   struct sockaddr_in so;
   so.sin_family = AF_INET;
-  so.sin_addr.s_addr = h (0xc0a85f19);
+  so.sin_addr.s_addr = h (0x0aa85f19);
 
   for (int i = 0; i < naddrs; ++i)
     {

@@ -1014,6 +1014,38 @@ struct sort_result_combo
 };
 
 
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define htonl_c(n) n
+#else
+# define htonl_c(n) __bswap_constant_32 (n)
+#endif
+
+static const struct scopeentry
+{
+  union
+  {
+    char addr[4];
+    uint32_t addr32;
+  };
+  uint32_t netmask;
+  int32_t scope;
+} default_scopes[] =
+  {
+    /* Link-local addresses: scope 2.  */
+    { { { 169, 254, 0, 0 } }, htonl_c (0xffff0000), 2 },
+    { { { 127, 0, 0, 0 } }, htonl_c (0xff000000), 2 },
+    /* Site-local addresses: scope 5.  */
+    { { { 10, 0, 0, 0 } }, htonl_c (0xff000000), 5 },
+    { { { 172, 16, 0, 0 } }, htonl_c (0xfff00000), 5 },
+    { { { 192, 168, 0, 0 } }, htonl_c (0xffff0000), 5 },
+    /* Default: scope 14.  */
+    { { { 0, 0, 0, 0 } }, htonl_c (0x00000000), 14 }
+  };
+
+/* The label table.  */
+static const struct scopeentry *scopes;
+
+
 static int
 get_scope (const struct sockaddr_storage *ss)
 {
@@ -1038,17 +1070,17 @@ get_scope (const struct sockaddr_storage *ss)
   else if (ss->ss_family == PF_INET)
     {
       const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
-      const uint8_t *addr = (const uint8_t *) &in->sin_addr;
 
-      /* RFC 3484 specifies how to map IPv6 addresses to scopes.
-	 169.254/16 and 127/8 are link-local.  */
-      if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
-	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
-	       || (addr[0] == 192 && addr[1] == 168))
-	scope = 5;
-      else
-	scope = 14;
+      size_t cnt = 0;
+      while (1)
+	{
+	  if ((in->sin_addr.s_addr & scopes[cnt].netmask)
+	      == scopes[cnt].addr32)
+	    return scopes[cnt].scope;
+
+	  ++cnt;
+	}
+      /* NOTREACHED */
     }
   else
     /* XXX What is a good default?  */
@@ -1490,6 +1522,13 @@ libc_freeres_fn(fini)
       precedence = default_precedence;
       free ((void *) old);
     }
+
+  if (scopes != default_scopes)
+    {
+      const struct scopeentry *old = scopes;
+      scopes = default_scopes;
+      free ((void *) old);
+    }
 }
 
 
@@ -1500,12 +1539,31 @@ struct prefixlist
 };
 
 
+struct scopelist
+{
+  struct scopeentry entry;
+  struct scopelist *next;
+};
+
+
 static void
 free_prefixlist (struct prefixlist *list)
 {
   while (list != NULL)
     {
       struct prefixlist *oldp = list;
+      list = list->next;
+      free (oldp);
+    }
+}
+
+
+static void
+free_scopelist (struct scopelist *list)
+{
+  while (list != NULL)
+    {
+      struct scopelist *oldp = list;
       list = list->next;
       free (oldp);
     }
@@ -1526,6 +1584,20 @@ prefixcmp (const void *p1, const void *p2)
 }
 
 
+static int
+scopecmp (const void *p1, const void *p2)
+{
+  const struct scopeentry *e1 = (const struct scopeentry *) p1;
+  const struct scopeentry *e2 = (const struct scopeentry *) p2;
+
+  if (e1->netmask > e2->netmask)
+    return -1;
+  if (e1->netmask == e2->netmask)
+    return 0;
+  return 1;
+}
+
+
 static void
 gaiconf_init (void)
 {
@@ -1535,6 +1607,9 @@ gaiconf_init (void)
   struct prefixlist *precedencelist = NULL;
   size_t nprecedencelist = 0;
   bool precedencelist_nullbits = false;
+  struct scopelist *scopelist =  NULL;
+  size_t nscopelist = 0;
+  bool scopelist_nullbits = false;
 
   FILE *fp = fopen (GAICONF_FNAME, "rc");
   if (fp != NULL)
@@ -1625,7 +1700,7 @@ gaiconf_init (void)
 			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
 			  || errno != ERANGE)
 		      && *endp == '\0'
-		      && bits <= INT_MAX
+		      && bits <= 128
 		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
 			  || errno != ERANGE)
 		      && *endp == '\0'
@@ -1656,6 +1731,73 @@ gaiconf_init (void)
 		  gaiconf_reload_flag = strcmp (val1, "yes") == 0;
 		  if (gaiconf_reload_flag)
 		    gaiconf_reload_flag_ever_set = 1;
+		}
+	      break;
+
+	    case 7:
+	      if (strcmp (cmd, "scopev4") == 0)
+		{
+		  struct in6_addr prefix;
+		  unsigned long int bits;
+		  unsigned long int val;
+		  char *endp;
+
+		  bits = 32;
+		  __set_errno (0);
+		  cp = strchr (val1, '/');
+		  if (cp != NULL)
+		    *cp++ = '\0';
+		  if (inet_pton (AF_INET6, val1, &prefix))
+		    {
+		      if (IN6_IS_ADDR_V4MAPPED (&prefix)
+			  && (cp == NULL
+			      || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			      || errno != ERANGE)
+			  && *endp == '\0'
+			  && bits >= 96
+			  && bits <= 128
+			  && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			      || errno != ERANGE)
+			  && *endp == '\0'
+			  && val <= INT_MAX)
+			{
+			  struct scopelist *newp;
+			new_scope:
+			  newp = malloc (sizeof (*newp));
+			  if (newp == NULL)
+			    {
+			      free (line);
+			      fclose (fp);
+			      goto no_file;
+			    }
+
+			  newp->entry.netmask = htonl (bits != 96
+						       ? (0xffffffff
+							  << (128 - bits))
+						       : 0);
+			  newp->entry.addr32 = (prefix.s6_addr32[3]
+						& newp->entry.netmask);
+			  newp->entry.scope = val;
+			  newp->next = scopelist;
+			  scopelist = newp;
+			  ++nscopelist;
+			  scopelist_nullbits |= bits == 96;
+			}
+		    }
+		  else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
+			   && (cp == NULL
+			       || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			       || errno != ERANGE)
+			   && *endp == '\0'
+			   && bits <= 32
+			   && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			       || errno != ERANGE)
+			   && *endp == '\0'
+			   && val <= INT_MAX)
+		    {
+		      bits += 96;
+		      goto new_scope;
+		    }
 		}
 	      break;
 
@@ -1742,11 +1884,51 @@ gaiconf_init (void)
 
 	  /* Sort the entries so that the most specific ones are at
 	     the beginning.  */
-	  qsort (new_precedence, nprecedencelist, sizeof (*new_labels),
+	  qsort (new_precedence, nprecedencelist, sizeof (*new_precedence),
 		 prefixcmp);
 	}
       else
 	new_precedence = (struct prefixentry *) default_precedence;
+
+      struct scopeentry *new_scopes;
+      if (nscopelist > 0)
+	{
+	  if (!scopelist_nullbits)
+	    ++nscopelist;
+	  new_scopes = malloc (nscopelist * sizeof (*new_scopes));
+	  if (new_scopes == NULL)
+	    {
+	      if (new_labels != default_labels)
+		free (new_labels);
+	      if (new_precedence != default_precedence)
+		free (new_precedence);
+	      goto no_file;
+	    }
+
+	  int i = nscopelist;
+	  if (!scopelist_nullbits)
+	    {
+	      --i;
+	      new_scopes[i].addr32 = 0;
+	      new_scopes[i].netmask = 0;
+	      new_scopes[i].scope = 14;
+	    }
+
+	  struct scopelist *l = scopelist;
+	  while (i-- > 0)
+	    {
+	      new_scopes[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_scopelist (scopelist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_scopes, nscopelist, sizeof (*new_scopes),
+		 scopecmp);
+	}
+      else
+	new_scopes = (struct scopeentry *) default_scopes;
 
       /* Now we are ready to replace the values.  */
       const struct prefixentry *old = labels;
@@ -1759,6 +1941,11 @@ gaiconf_init (void)
       if (old != default_precedence)
 	free ((void *) old);
 
+      const struct scopeentry *oldscope = scopes;
+      scopes = new_scopes;
+      if (oldscope != default_scopes)
+	free ((void *) oldscope);
+
       gaiconf_mtime = st.st_mtim;
     }
   else
@@ -1766,6 +1953,7 @@ gaiconf_init (void)
     no_file:
       free_prefixlist (labellist);
       free_prefixlist (precedencelist);
+      free_scopelist (scopelist);
 
       /* If we previously read the file but it is gone now, free the
 	 old data and use the builtin one.  Leave the reload flag
