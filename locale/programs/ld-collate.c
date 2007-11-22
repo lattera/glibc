@@ -4008,6 +4008,8 @@ error while adding equivalent collating symbol"));
 			     arg->val.str.lenmb) == 0
 		    && curdef->str[arg->val.str.lenmb] == '\0')
 		  break;
+		else
+		  curdef = curdef->next;
 
 	      if ((nowtok == tok_ifdef && curdef != NULL)
 		  || (nowtok == tok_ifndef && curdef == NULL))
