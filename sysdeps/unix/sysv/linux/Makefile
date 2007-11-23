@@ -122,7 +122,7 @@ ifeq ($(subdir),inet)
 sysdep_headers += netinet/if_fddi.h netinet/if_tr.h \
 		  netipx/ipx.h netash/ash.h netax25/ax25.h netatalk/at.h \
 		  netrom/netrom.h netpacket/packet.h netrose/rose.h \
-		  neteconet/ec.h
+		  neteconet/ec.h netiucv/iucv.h
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.

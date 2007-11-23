@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include <netipx/ipx.h>
 #include <netpacket/packet.h>
 #include <netrose/rose.h>
+#include <netiucv/iucv.h>
 #include <sys/un.h>
 
 int
@@ -47,6 +48,10 @@ __libc_sa_len (sa_family_t af)
       return sizeof (struct sockaddr_in6);
     case AF_IPX:
       return sizeof (struct sockaddr_ipx);
+#ifdef NEED_AF_IUCV
+    case AF_IUCV:
+      return sizeof (struct sockaddr_iucv);
+#endif
     case AF_LOCAL:
       return sizeof (struct sockaddr_un);
     case AF_PACKET:

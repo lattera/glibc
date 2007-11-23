@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,10 @@ __opensock (void)
       { AF_APPLETALK, "net/appletalk" },
       { AF_ECONET, "sys/net/econet" },
       { AF_ASH, "sys/net/ash" },
-      { AF_X25, "net/x25" }
+      { AF_X25, "net/x25" },
+#ifdef NEED_AF_IUCV
+      { AF_IUCV, "net/iucv" }
+#endif
     };
 #define nafs (sizeof (afs) / sizeof (afs[0]))
   char fname[sizeof "/proc/" + 14];

@@ -1,3 +1,14 @@
+2007-11-23  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=inet] (sysdep_headers):
+	Add netiucv/iucv.h.
+	* sysdeps/unix/sysv/linux/netiucv/iucv.h: New file.
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Add AF_IUCV
+	protocol.
+	* sysdeps/unix/sysv/linux/sa_len.c (__libc_sa_len): Likewise.
+	* sysdeps/unix/sysv/linux/s390/opensock.c: New file.
+	* sysdeps/unix/sysv/linux/s390/sa_len.c: New file.
+
 2007-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5382]
