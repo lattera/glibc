@@ -5,6 +5,7 @@
 	* nscd/connections.c (start_threads): Use NSCD_THREAD_STACKSIZE.
 	* nscd/mem.c (gc): Don't allocate arrays on stack if it can
 	overflow it.
+	Partially based on a patch by Petr Baudis <pasky@suse.cz>.
 
 	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):
 	Return zero in case thread library is not NPTL.
