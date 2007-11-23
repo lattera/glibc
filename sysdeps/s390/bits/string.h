@@ -40,8 +40,10 @@
 
 #define _HAVE_STRING_ARCH_strlen 1
 #ifndef _FORCE_INLINES
+#define strlen(str) __strlen_g ((str))
+
 __STRING_INLINE size_t
-strlen (__const char *__str)
+__strlen_g (__const char *__str)
 {
     char *__ptr, *__tmp;
 
@@ -59,8 +61,10 @@ strlen (__const char *__str)
 /* Copy SRC to DEST.  */
 #define _HAVE_STRING_ARCH_strcpy 1
 #ifndef _FORCE_INLINES
+#define strcpy(dest, src) __strcpy_g ((dest), (src))
+
 __STRING_INLINE char *
-strcpy (char *__dest, __const char *__src)
+__strcpy_g (char *__dest, __const char *__src)
 {
     char *tmp = __dest;
 
@@ -75,8 +79,10 @@ strcpy (char *__dest, __const char *__src)
 
 #define _HAVE_STRING_ARCH_strncpy 1
 #ifndef _FORCE_INLINES
+#define strncpy(dest, src, n) __strncpy_g ((dest), (src), (n))
+
 __STRING_INLINE char *
-strncpy (char *__dest, __const char *__src, size_t __n)
+__strncpy_g (char *__dest, __const char *__src, size_t __n)
 {
     char *__ret = __dest;
     char *__ptr;
@@ -114,8 +120,10 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 /* Append SRC onto DEST.  */
 #define _HAVE_STRING_ARCH_strcat 1
 #ifndef _FORCE_INLINES
+#define strcat(dest, src) __strcat_g ((dest), (src))
+
 __STRING_INLINE char *
-strcat(char *__dest, const char *__src)
+__strcat_g(char *__dest, const char *__src)
 {
     char *__ret = __dest;
     char *__ptr, *__tmp;
@@ -142,8 +150,10 @@ strcat(char *__dest, const char *__src)
 /* Append no more than N characters from SRC onto DEST.  */
 #define _HAVE_STRING_ARCH_strncat 1
 #ifndef _FORCE_INLINES
+#define strncat(dest, src, n) __strncat_g ((dest), (src), (n))
+
 __STRING_INLINE char *
-strncat (char *__dest, __const char *__src, size_t __n)
+__strncat_g (char *__dest, __const char *__src, size_t __n)
 {
     char *__ret = __dest;
     char *__ptr, *__tmp;

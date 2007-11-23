@@ -11,6 +11,9 @@
 
 2007-11-22  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
+	* sysdeps/s390/bits/string.h (strlen, strcpy, strncpy, strcat,
+	strncat): Define as macros to avoid compile errors.
+
 	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:  Add open and
 	creat entries.
 
