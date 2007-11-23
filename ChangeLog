@@ -1,5 +1,11 @@
 2007-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5378]
+	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss): Don't
+	use result of nss_getgrgid_r if nothing was found.  For other
+	error return with a failure.
+	Partially based on a patch by Petr Baudis <pasky@suse.cz>.
+
 	* locale/programs/ld-collate.c (collate_read): Fix loop to match
 	macro name.
 

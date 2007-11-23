@@ -303,10 +303,19 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 		else
 		  tmpbuf = extend_alloca (tmpbuf, tmplen, 2 * tmplen);
 
-	      if (!in_blacklist (grpbuf.gr_name,
-				 strlen (grpbuf.gr_name), ent))
-		check_and_add_group (user, group, start, size, groupsp,
-				     limit, &grpbuf);
+	      if (__builtin_expect  (status != NSS_STATUS_NOTFOUND, 1))
+		{
+		  if (__builtin_expect  (status != NSS_STATUS_SUCCESS, 0))
+		    {
+		      free (mygroups);
+		      return status;
+		    }
+
+		  if (!in_blacklist (grpbuf.gr_name,
+				     strlen (grpbuf.gr_name), ent))
+		    check_and_add_group (user, group, start, size, groupsp,
+					 limit, &grpbuf);
+		}
 	    }
 
 	  free (mygroups);
