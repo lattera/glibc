@@ -377,9 +377,6 @@ static struct netaddr
   } u;
 } *ifaddrs);
 
-/* We need to protect the dynamic buffer handling.  */
-__libc_lock_define_initialized (static, lock);
-
 /* Reorder addresses returned in a hostent such that the first address
    is an address on the local subnet, if there is such an address.
    Otherwise, nothing is changed.
@@ -393,6 +390,8 @@ _res_hconf_reorder_addrs (struct hostent *hp)
   int i, j;
   /* Number of interfaces.  */
   static int num_ifs = -1;
+  /* We need to protect the dynamic buffer handling.  */
+  __libc_lock_define_initialized (static, lock);
 
   /* Only reorder if we're supposed to.  */
   if ((_res_hconf.flags & HCONF_FLAG_REORDER) == 0)
@@ -411,8 +410,6 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 
       /* Initialize interface table.  */
 
-      num_ifs = 0;
-
       /* The SIOCGIFNETMASK ioctl will only work on an AF_INET socket.  */
       sd = __socket (AF_INET, SOCK_DGRAM, 0);
       if (sd < 0)
@@ -421,45 +418,56 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Get lock.  */
       __libc_lock_lock (lock);
 
-      /* Get a list of interfaces.  */
-      __ifreq (&ifr, &num, sd);
-      if (!ifr)
-	goto cleanup;
-
-      ifaddrs = malloc (num * sizeof (ifaddrs[0]));
-      if (!ifaddrs)
-	goto cleanup1;
-
-      /* Copy usable interfaces in ifaddrs structure.  */
-      for (cur_ifr = ifr, i = 0; i < num; cur_ifr = __if_nextreq (cur_ifr), ++i)
+      /* Recheck, somebody else might have done the work by done.  */
+      if (num_ifs <= 0)
 	{
-	  if (cur_ifr->ifr_addr.sa_family != AF_INET)
-	    continue;
+	  int new_num_ifs = 0;
 
-	  ifaddrs[num_ifs].addrtype = AF_INET;
-	  ifaddrs[num_ifs].u.ipv4.addr =
-	    ((struct sockaddr_in *) &cur_ifr->ifr_addr)->sin_addr.s_addr;
+	  /* Get a list of interfaces.  */
+	  __ifreq (&ifr, &num, sd);
+	  if (!ifr)
+	    goto cleanup;
 
-	  if (__ioctl (sd, SIOCGIFNETMASK, cur_ifr) < 0)
-	    continue;
+	  ifaddrs = malloc (num * sizeof (ifaddrs[0]));
+	  if (!ifaddrs)
+	    goto cleanup1;
 
-	  ifaddrs[num_ifs].u.ipv4.mask =
-	    ((struct sockaddr_in *) &cur_ifr->ifr_netmask)->sin_addr.s_addr;
+	  /* Copy usable interfaces in ifaddrs structure.  */
+	  for (cur_ifr = ifr, i = 0; i < num;
+	       cur_ifr = __if_nextreq (cur_ifr), ++i)
+	    {
+	      if (cur_ifr->ifr_addr.sa_family != AF_INET)
+		continue;
 
-	  /* Now we're committed to this entry.  */
-	  ++num_ifs;
+	      ifaddrs[new_num_ifs].addrtype = AF_INET;
+	      ifaddrs[new_num_ifs].u.ipv4.addr =
+		((struct sockaddr_in *) &cur_ifr->ifr_addr)->sin_addr.s_addr;
+
+	      if (__ioctl (sd, SIOCGIFNETMASK, cur_ifr) < 0)
+		continue;
+
+	      ifaddrs[new_num_ifs].u.ipv4.mask =
+		((struct sockaddr_in *) &cur_ifr->ifr_netmask)->sin_addr.s_addr;
+
+	      /* Now we're committed to this entry.  */
+	      ++new_num_ifs;
+	    }
+	  /* Just keep enough memory to hold all the interfaces we want.  */
+	  ifaddrs = realloc (ifaddrs, new_num_ifs * sizeof (ifaddrs[0]));
+	  assert (ifaddrs != NULL);
+
+	cleanup1:
+	  __if_freereq (ifr, num);
+
+	cleanup:
+	  /* Release lock, preserve error value, and close socket.  */
+	  save = errno;
+
+	  num_ifs = new_num_ifs;
+
+	  __libc_lock_unlock (lock);
 	}
-      /* Just keep enough memory to hold all the interfaces we want.  */
-      ifaddrs = realloc (ifaddrs, num_ifs * sizeof (ifaddrs[0]));
-      assert (ifaddrs != NULL);
 
-    cleanup1:
-      __if_freereq (ifr, num);
-
-    cleanup:
-      /* Release lock, preserve error value, and close socket.  */
-      save = errno;
-      __libc_lock_unlock (lock);
       __close (sd);
     }
 

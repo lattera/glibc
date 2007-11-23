@@ -1,5 +1,9 @@
 2007-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5375]
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix locking when
+	initializing interface list.
+
 	[BZ #5378]
 	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss): Don't
 	use result of nss_getgrgid_r if nothing was found.  For other
