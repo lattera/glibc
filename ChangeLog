@@ -9,6 +9,11 @@
 	* sysdeps/unix/sysv/linux/s390/opensock.c: New file.
 	* sysdeps/unix/sysv/linux/s390/sa_len.c: New file.
 
+2007-11-22  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:  Add open and
+	creat entries.
+
 2007-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5382]
