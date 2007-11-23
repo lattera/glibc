@@ -55,6 +55,10 @@ typedef enum
 #define RESTART_INTERVAL (60 * 60)
 
 
+/* Stack size for worker threads.  */
+#define NSCD_THREAD_STACKSIZE 1024 * 1024 * (sizeof (void *) / 4)
+
+
 /* Structure describing dynamic part of one database.  */
 struct database_dyn
 {

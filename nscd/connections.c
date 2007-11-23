@@ -1840,7 +1840,7 @@ start_threads (void)
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
   /* Use 1MB stacks, twice as much for 64-bit architectures.  */
-  pthread_attr_setstacksize (&attr, 1024 * 1024 * (sizeof (void *) / 4));
+  pthread_attr_setstacksize (&attr, NSCD_THREAD_STACKSIZE);
 
   /* We allow less than LASTDB threads only for debugging.  */
   if (debug_level == 0)

@@ -31,7 +31,7 @@ setup_thread (struct database_dyn *db)
   char buf[100];
   if (confstr (_CS_GNU_LIBPTHREAD_VERSION, buf, sizeof (buf)) >= sizeof (buf)
       || strncmp (buf, "NPTL", 4) != 0)
-    return;
+    return 0;
 
   /* Do not try this at home, kids.  We play with the SETTID address
      even thought the process is multi-threaded.  This can only work

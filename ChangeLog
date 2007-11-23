@@ -1,5 +1,14 @@
 2007-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5382]
+	* nscd/nscd.h (NSCD_THREAD_STACKSIZE): Define.
+	* nscd/connections.c (start_threads): Use NSCD_THREAD_STACKSIZE.
+	* nscd/mem.c (gc): Don't allocate arrays on stack if it can
+	overflow it.
+
+	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):
+	Return zero in case thread library is not NPTL.
+
 	[BZ #5375]
 	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix locking when
 	initializing interface list.
