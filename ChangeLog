@@ -1,3 +1,7 @@
+2007-11-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/check_native.c: Include <asm/types.h>.
+
 2007-11-23  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/Makefile [subdir=inet] (sysdep_headers):
@@ -22,12 +26,12 @@
 	[BZ #5382]
 	* nscd/nscd.h (NSCD_THREAD_STACKSIZE): Define.
 	* nscd/connections.c (start_threads): Use NSCD_THREAD_STACKSIZE.
-	* nscd/mem.c (gc): Don't allocate arrays on stack if it can
+	* nscd/mem.c (gc): Don't allocate arrays on the stack if they can
 	overflow it.
 	Partially based on a patch by Petr Baudis <pasky@suse.cz>.
 
 	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):
-	Return zero in case thread library is not NPTL.
+	Return zero in case the thread library is not NPTL.
 
 	[BZ #5375]
 	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix locking when
