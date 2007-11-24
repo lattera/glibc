@@ -27,13 +27,11 @@
 void
 __lll_lock_wait_private (int *futex)
 {
-  do
-    {
-      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
-      if (oldval != 0)
-	lll_futex_wait (futex, 2, LLL_PRIVATE);
-    }
-  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+  if (*futex == 2)
+    lll_futex_wait (futex, 2, LLL_PRIVATE);
+
+  while (atomic_exchange_acq (futex, 2) != 0)
+    lll_futex_wait (futex, 2, LLL_PRIVATE);
 }
 
 
@@ -42,13 +40,11 @@ __lll_lock_wait_private (int *futex)
 void
 __lll_lock_wait (int *futex, int private)
 {
-  do
-    {
-      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
-      if (oldval != 0)
-	lll_futex_wait (futex, 2, private);
-    }
-  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
+  if (*futex == 2)
+    lll_futex_wait (futex, 2, private);
+
+  while (atomic_exchange_acq (futex, 2) != 0)
+    lll_futex_wait (futex, 2, private);
 }
 
 
@@ -59,8 +55,8 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
-  struct timespec rt;
-  do
+  /* Try locking.  */
+  while (atomic_exchange_acq (futex, 2) != 0)
     {
       struct timeval tv;
 
@@ -68,6 +64,7 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
       (void) __gettimeofday (&tv, NULL);
 
       /* Compute relative timeout.  */
+      struct timespec rt;
       rt.tv_sec = abstime->tv_sec - tv.tv_sec;
       rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
       if (rt.tv_nsec < 0)
@@ -76,21 +73,14 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 	  --rt.tv_sec;
 	}
 
-      /* If timed out do not go to sleep.  */
-      if (__builtin_expect (rt.tv_sec >= 0, 1))
-	{
-	  /* Wait.  */
-	  int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
-	  if (oldval != 0)
-	    lll_futex_timed_wait (futex, 2, &rt, private);
-	}
+      if (rt.tv_sec < 0)
+	return ETIMEDOUT;
 
-      if (atomic_compare_and_exchange_bool_acq (futex, 2, 0) == 0)
-	return 0;
+      /* Wait.  */
+      lll_futex_timed_wait (futex, 2, &rt, private);
     }
-  while (rt.tv_sec >= 0);
 
-  return ETIMEDOUT;
+  return 0;
 }
 
 

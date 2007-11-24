@@ -184,6 +184,12 @@ __lll_timedlock_wait:
 	movl	%ecx, %ebp
 	movl	%edx, %edi
 
+	movl	$2, %edx
+	xchgl	%edx, (%ebp)
+
+	test	%edx, %edx
+	je	6f
+
 1:
 	/* Get current time.  */
 	movl	%esp, %ebx
@@ -203,36 +209,30 @@ __lll_timedlock_wait:
 	addl	$1000000000, %edx
 	subl	$1, %ecx
 4:	testl	%ecx, %ecx
-	js	9f		/* Time is already up.  */
+	js	2f		/* Time is already up.  */
 
 	/* Store relative timeout.  */
 	movl	%ecx, (%esp)
 	movl	%edx, 4(%esp)
 
-	movl	%ebp, %ebx
-
-	movl	$1, %eax
-	movl	$2, %edx
-	LOCK
-	cmpxchgl %edx, (%ebx)
-
-	testl	%eax, %eax
-	je	8f
-
 	/* Futex call.  */
+	movl	%ebp, %ebx
+	movl	$2, %edx
 	movl	%esp, %esi
 	movl	16(%esp), %ecx
 	LOAD_FUTEX_WAIT (%ecx)
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	movl	%eax, %ecx
 
-8:				/* NB: %edx == 2 */
-	xorl	%eax, %eax
-	LOCK
-	cmpxchgl %edx, (%ebx)
+	/* NB: %edx == 2 */
+	xchgl	%edx, (%ebp)
 
-	jnz	7f
+	testl	%edx, %edx
+	je	6f
+
+	cmpl	$-ETIMEDOUT, %eax
+	jne	1b
+2:	movl	$ETIMEDOUT, %edx
 
 6:	addl	$8, %esp
 	cfi_adjust_cfa_offset(-8)
@@ -248,33 +248,11 @@ __lll_timedlock_wait:
 	popl	%edi
 	cfi_adjust_cfa_offset(-4)
 	cfi_restore(%edi)
+	movl	%edx, %eax
 	ret
 
 3:	movl	$EINVAL, %eax
 	ret
-
-	cfi_adjust_cfa_offset(24)
-	cfi_offset(%edi, -8)
-	cfi_offset(%esi, -12)
-	cfi_offset(%ebx, -16)
-	cfi_offset(%ebp, -20)
-	/* Check whether the time expired.  */
-7:	cmpl	$-ETIMEDOUT, %ecx
-	je	5f
-
-	/* Make sure the current holder knows we are going to sleep.  */
-	movl	%edx, %eax
-	xchgl	%eax, (%ebx)
-	testl	%eax, %eax
-	jz	6b
-	jmp	1b
-
-5:	movl	$ETIMEDOUT, %eax
-	jmp	6b
-
-9:	movl	$-ETIMEDOUT, %ecx
-	movl	$2, %edx
-	jmp	8b
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif
