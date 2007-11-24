@@ -1,3 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+creat		-	creat		Ci:si	__libc_creat	creat creat64
 getrlimit	-	ugetrlimit	i:ip	__getrlimit	getrlimit getrlimit64
+open		-	open		Ci:siv	__libc_open	__open open __open64 open64

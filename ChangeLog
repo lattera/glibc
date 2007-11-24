@@ -1,5 +1,8 @@
 2007-11-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Add open
+	and creat system calls.
+
 	* sysdeps/unix/sysv/linux/check_native.c: Include <asm/types.h>.
 
 2007-11-23  Martin Schwidefsky  <schwidefsky@de.ibm.com>
