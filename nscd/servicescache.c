@@ -272,6 +272,8 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
+	      else
+		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;

@@ -110,7 +110,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   bool all_tryagain = true;
   bool any_success = false;
 
-  /* This is temporary memory, we need not (ad must not) call
+  /* This is temporary memory, we need not (and must not) call
      mempool_alloc.  */
   // XXX This really should use alloca.  need to change the backends.
   gid_t *groups = (gid_t *) malloc (size * sizeof (gid_t));
@@ -338,6 +338,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
+	      else
+		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;
