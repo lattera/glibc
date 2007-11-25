@@ -7,7 +7,7 @@
 	Clear array before use.
 
 	* nscd/aicache.c (addhstaiX): Update statistics counter in case
-	memory allocate failed.
+	memory allocation failed.
 	* nscd/hstcache.c (cache_addhst): Likewise.
 	* nscd/grpcache.c (cache_addgr): Likewise.
 	* nscd/servicescache.c (cache_addserv): Likewise.
