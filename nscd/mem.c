@@ -74,10 +74,6 @@ sort_he_data (const void *p1, const void *p2)
 #define ALLBITS ((((BITMAP_T) 1) << BITS) - 1)
 #define HIGHBIT (((BITMAP_T) 1) << (BITS - 1))
 
-/* Maximum size of stack frames we allow the thread to use.  We use
-   80% of the thread stack size.  */
-#define MAX_STACK_USE ((8 * NSCD_THREAD_STACKSIZE) / 10)
-
 
 static void
 markrange (BITMAP_T *mark, ref_t start, size_t len)
@@ -129,7 +125,11 @@ gc (struct database_dyn *db)
 
   BITMAP_T *mark;
   bool mark_use_malloc;
-  size_t stack_used = 0;
+  /* In prune_cache we are also using a dynamically allocated array.
+     If the array in the caller is too large we have malloc'ed it.  */
+  size_t stack_used = sizeof (bool) * db->head->module;
+  if (__builtin_expect (stack_used > MAX_STACK_USE, 0))
+    stack_used = 0;
   size_t memory_needed = ((db->head->first_free / BLOCK_ALIGN + BITS - 1)
 			  / BITS) * sizeof (BITMAP_T);
   if (memory_needed <= MAX_STACK_USE)

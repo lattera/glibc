@@ -58,6 +58,10 @@ typedef enum
 /* Stack size for worker threads.  */
 #define NSCD_THREAD_STACKSIZE 1024 * 1024 * (sizeof (void *) / 4)
 
+/* Maximum size of stack frames we allow the thread to use.  We use
+   80% of the thread stack size.  */
+#define MAX_STACK_USE ((8 * NSCD_THREAD_STACKSIZE) / 10)
+
 
 /* Structure describing dynamic part of one database.  */
 struct database_dyn

@@ -1,3 +1,14 @@
+2007-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (MAX_STACK_USE): Define.
+	* nscd/mem.c (MAX_STACK_USE): Remove definition here.
+	(gc): Initialize stack_used based on allocation in prune_cache.
+	* nscd/cache.c (prune_cache): Use heap for mark array if necessary.
+	Clear array bfore use.
+
+	* nscd/aicache.c (addhstaiX): Update statistics counter in case
+	memory allocate failed.
+
 2007-11-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Add open

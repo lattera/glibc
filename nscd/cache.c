@@ -36,6 +36,10 @@
 #include "dbg_log.h"
 
 
+/* Wrapper functions with error checking for standard functions.  */
+extern void *xcalloc (size_t n, size_t s);
+
+
 /* Number of times a value is reloaded without being used.  UINT_MAX
    means unlimited.  */
 unsigned int reload_count = DEFAULT_RELOAD_LIMIT;
@@ -278,7 +282,20 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
      we don't need to get any lock.  It is at all timed assured that the
      linked lists are set up correctly and that no second thread prunes
      the cache.  */
-  bool mark[cnt];
+  bool *mark;
+  size_t memory_needed = cnt * sizeof (bool);
+  bool mark_use_alloca;
+  if (__builtin_expect (memory_needed <= MAX_STACK_USE, 1))
+    {
+      mark = alloca (cnt * sizeof (bool));
+      memset (mark, '\0', memory_needed);
+      mark_use_alloca = true;
+    }
+  else
+    {
+      mark = xcalloc (1, memory_needed);
+      mark_use_alloca = false;
+    }
   size_t first = cnt + 1;
   size_t last = 0;
   char *const data = table->data;
@@ -470,6 +487,9 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	    }
 	}
     }
+
+  if (__builtin_expect (mark_use_alloca, 0))
+    free (mark);
 
   /* Run garbage collection if any entry has been removed or replaced.  */
   if (any)
