@@ -1,6 +1,7 @@
 2007-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Declare fsync also for Unix98.
+	* posix/regex.h (REG_ENOSYS): Likewise.
 
 2007-11-25  Ulrich Drepper  <drepper@redhat.com>
 
