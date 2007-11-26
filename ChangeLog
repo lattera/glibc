@@ -1,3 +1,7 @@
+2007-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: Declare fsync also for Unix98.
+
 2007-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.h (MAX_STACK_USE): Define.

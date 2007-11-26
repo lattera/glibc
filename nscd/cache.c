@@ -488,7 +488,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	}
     }
 
-  if (__builtin_expect (mark_use_alloca, 0))
+  if (__builtin_expect (! mark_use_alloca, 0))
     free (mark);
 
   /* Run garbage collection if any entry has been removed or replaced.  */

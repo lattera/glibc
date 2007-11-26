@@ -915,13 +915,13 @@ extern char *getpass (__const char *__prompt) __nonnull ((1));
 #endif /* Use BSD || X/Open.  */
 
 
-#if defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_BSD || defined __USE_XOPEN || defined __USE_UNIX98
 /* Make all changes done to FD actually appear on disk.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int fsync (int __fd);
-#endif /* Use BSD || X/Open.  */
+#endif /* Use BSD || X/Open || Unix98.  */
 
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
