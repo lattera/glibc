@@ -2,6 +2,7 @@
 
 	* posix/unistd.h: Declare fsync also for Unix98.
 	* posix/regex.h (REG_ENOSYS): Likewise.
+	* wcsmbs/wchar.h: Define __need_file also for __USE_XOPEN2K.
 
 2007-11-25  Ulrich Drepper  <drepper@redhat.com>
 
