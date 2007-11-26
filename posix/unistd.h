@@ -915,7 +915,7 @@ extern char *getpass (__const char *__prompt) __nonnull ((1));
 #endif /* Use BSD || X/Open.  */
 
 
-#if defined __USE_BSD || defined __USE_XOPEN || defined __USE_UNIX98
+#if defined __USE_BSD || defined __USE_XOPEN || defined __USE_XOPEN2K
 /* Make all changes done to FD actually appear on disk.
 
    This function is a cancellation point and therefore not marked with
