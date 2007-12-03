@@ -1,5 +1,8 @@
 2007-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/tst-setcontext.c: Catch the case where the links gets
+	messed up and we do not reach main again.
+
 	* po/ca.po: Update from translation team.
 
 2007-11-26  Ulrich Drepper  <drepper@redhat.com>

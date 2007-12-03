@@ -123,9 +123,26 @@ test_stack(volatile int a, volatile int b,
 
 volatile int global;
 
+
+static int back_in_main;
+
+
+static void
+check_called (void)
+{
+  if (back_in_main == 0)
+    {
+      puts ("program did no reach main again");
+      _exit (1);
+    }
+}
+
+
 int
 main (void)
 {
+  atexit (check_called);
+
   char st1[32768];
 
   puts ("making contexts");
@@ -185,6 +202,7 @@ main (void)
       exit (1);
     }
   puts ("back at main program");
+  back_in_main = 1;
 
   if (was_in_f1 == 0)
     {
