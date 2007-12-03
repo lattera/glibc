@@ -35,11 +35,6 @@ ENTRY(__makecontext)
 	movl	%ecx, oEIP(%eax)
 	addl	oSS_SIZE(%eax), %edx
 
-	/* Put the next context on the new stack (from the uc_link
-	   element).  */
-	movl	oLINK(%eax), %ecx
-	movl	%ecx, -4(%edx)
-
 	/* Remember the number of parameters for the exit handler since
 	   it has to remove them.  We store the number in the EBX register
 	   which the function we will call must preserve.  */
@@ -50,8 +45,19 @@ ENTRY(__makecontext)
 	negl	%ecx
 	leal	-8(%edx,%ecx,4), %edx
 	negl	%ecx
+
+	/* Align the stack.  */
+	addl	$16, %edx
+	andl	$0xfffffff0, %edx
+	subl	$4, %edx
+
 	/* Store the future stack pointer.  */
 	movl	%edx, oESP(%eax)
+
+	/* Put the next context on the new stack (from the uc_link
+	   element).  */
+	movl	oLINK(%eax), %eax
+	movl	%eax, 4(%edx,%ecx,4)
 
 	/* Copy all the parameters.  */
 	jecxz	2f
