@@ -1,5 +1,8 @@
 2007-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5439]
+	* sysdeps/unix/sysv/linux/sys/signalfd.h: Fix use of __nonnull.
+
 	[BZ #5435]
 	* sysdeps/unix/sysv/linux/i386/makecontext.S: Align stack.
 
