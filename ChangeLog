@@ -1,3 +1,7 @@
+2007-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ca.po: Update from translation team.
+
 2007-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Declare fsync also for __USE_XOPEN2K.
