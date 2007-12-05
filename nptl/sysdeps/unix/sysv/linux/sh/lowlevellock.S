@@ -225,6 +225,12 @@ __lll_timedlock_wait:
 	add	#-8, r15
 	cfi_adjust_cfa_offset(8)
 
+	mov	#2, r2
+	XCHG (r2, @r8, r3)
+
+	tst	r3, r3
+	bt	6f
+	
 1:
 	/* Get current time.  */
 	mov	r15, r4
@@ -250,16 +256,10 @@ __lll_timedlock_wait:
 	add	#-1, r2
 4:
 	cmp/pz	r2
-	bf	5f		/* Time is already up.  */
+	bf	2f		/* Time is already up.  */
 
 	mov.l	r2, @r15	/* Store relative timeout.  */
 	mov.l	r3, @(4,r15)
-
-	mov	#1, r3
-	mov	#2, r4
-	CMPXCHG (r3, @r8, r4, r2)
-	tst	r2, r2
-	bt	8f
 
 	mov	r8, r4
 	mov	r11, r5
@@ -272,39 +272,29 @@ __lll_timedlock_wait:
 	SYSCALL_INST_PAD
 	mov	r0, r5
 
-8:
-	mov	#0, r3
-	mov	#2, r4
-	CMPXCHG (r3, @r8, r4, r2)
-	bf/s	7f
-	 mov	#0, r0
+	mov	#2, r2
+	XCHG (r2, @r8, r3)
+
+	tst	r3, r3
+	bt/s	6f
+	 mov	#-ETIMEDOUT, r1
+	cmp/eq	r5, r1
+	bf	1b
+
+2:	mov	#ETIMEDOUT, r3
 
 6:
+	mov	r3, r0
 	add	#8, r15
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
 	mov.l	@r15+, r10
 	rts
 	 mov.l	@r15+, r11
-7:
-	/* Check whether the time expired.  */
-	mov	#-ETIMEDOUT, r1
-	cmp/eq	r5, r1
-	bt	5f
 
-	/* Make sure the current holder knows we are going to sleep.  */
-	XCHG (r2, @r8, r3)
-	tst	r3, r3
-	bt/s	6b
-	 mov	#0, r0
-	bra	1b
-	 nop
 3:
 	rts
 	 mov	#EINVAL, r0
-5:
-	bra	6b
-	 mov	#ETIMEDOUT, r0
 	cfi_endproc
 
 .L1k:
