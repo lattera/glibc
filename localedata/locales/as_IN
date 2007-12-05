@@ -2,13 +2,12 @@ comment_char %
 escape_char /
 
 % Assamese locale for India.
-% Contributed by Masahide Washizawa <washi at jp ibm com>
 
 %%%%%%%%%%%%%
 LC_IDENTIFICATION
 title       "Assamese language locale for India"
-source      "IBM AP Linux Technology Center, Yamato Software Laboratory"
-address     "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
+source      "Amitakhya Phukan, Red Hat"
+address     ""
 contact     ""
 email       "bug-glibc@gnu.org"
 tel         ""
@@ -678,7 +677,7 @@ d_fmt    "<U0025><U0065><U002D><U0025><U006D><U002D><U0025><U0059>"
 t_fmt    "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070>"
 % d_t_fmt"%e %B, %Y %I.%M.%S %p %Z"
 d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
-am_pm    "<U09AA><U09C2><U09F0><U09CD><U09AC><U09CD><U09AC><U09BE><U09B9><U09CD><U09A8>";"<U0985><U09AA><U09F0><U09BE><U09B9><U09CD><U09A8>"  
+am_pm    "<U09AA><U09C2><U09F0><U09CD><U09AC><U09CD><U09AC><U09BE><U09B9><U09CD><U09A8>";"<U0985><U09AA><U09F0><U09BE><U09B9><U09CD><U09A8>"
 % t_fmt_ampm  "%I.%M.%S %p"
 t_fmt_ampm  "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U0070>"
 END LC_TIME

@@ -1,3 +1,8 @@
+2007-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/si_LK (mon): Fix February and November spelling.
+	Patch by Danishka Navin <snavin@redhat.com>.
+
 2007-11-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5238]
