@@ -1,3 +1,10 @@
+2007-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5455]
+	* sysdeps/pthread/pthread.h [!__EXCEPTIONS] (pthread_cleanup_pop):
+	Allow label before pthread_cleanup_pop.
+	(pthread_cleanup_pop_restore_np): Likewise.
+
 2007-12-04  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_timedlock_wait):

@@ -1,3 +1,24 @@
+2007-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5441]
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Don't free ptrs_to_free
+	structure, it's allocated with alloca.
+	* stdio-common/Makefile (tests): Add bug21.
+	* stdio-common/bug21.c: New file.
+
+2007-12-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #5452]
+	* sysdeps/unix/sysv/linux/bits/sched.h: Use __extension__
+	  keyword for gcc's braced-groups.
+
+2007-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5454]
+	* inet/ether_line.c: Strip hostname of whitespaces.
+	* inet/Makefile (tests): Add tst-ether_line.
+	* inet/tst-ether_line.c: New file.
+
 2007-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5439]

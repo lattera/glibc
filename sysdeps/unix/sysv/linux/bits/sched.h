@@ -132,17 +132,21 @@ typedef struct
   } while (0)
 # endif
 # define __CPU_SET_S(cpu, setsize, cpusetp) \
-  ({ size_t __cpu = (cpu);						      \
-     __cpu < 8 * (setsize)						      \
-     ? ((cpusetp)->__bits[__CPUELT (__cpu)] |= __CPUMASK (__cpu)) : 0; })
+  (__extension__							      \
+   ({ size_t __cpu = (cpu);						      \
+      __cpu < 8 * (setsize)						      \
+      ? ((cpusetp)->__bits[__CPUELT (__cpu)] |= __CPUMASK (__cpu)) : 0; }))
 # define __CPU_CLR_S(cpu, setsize, cpusetp) \
-  ({ size_t __cpu = (cpu);						      \
-     __cpu < 8 * (setsize)						      \
-     ? ((cpusetp)->__bits[__CPUELT (__cpu)] &= ~__CPUMASK (__cpu)) : 0; })
+  (__extension__							      \
+   ({ size_t __cpu = (cpu);						      \
+      __cpu < 8 * (setsize)						      \
+      ? ((cpusetp)->__bits[__CPUELT (__cpu)] &= ~__CPUMASK (__cpu)) : 0; }))
 # define __CPU_ISSET_S(cpu, setsize, cpusetp) \
-  ({ size_t __cpu = (cpu);						      \
-     __cpu < 8 * (setsize)						      \
-     ? (((cpusetp)->__bits[__CPUELT (__cpu)] & __CPUMASK (__cpu))) != 0 : 0; })
+  (__extension__							      \
+   ({ size_t __cpu = (cpu);						      \
+      __cpu < 8 * (setsize)						      \
+      ? (((cpusetp)->__bits[__CPUELT (__cpu)] & __CPUMASK (__cpu))) != 0      \
+      : 0; }))
 
 # define __CPU_COUNT_S(setsize, cpusetp) \
   __sched_cpucount (setsize, cpusetp)
@@ -152,25 +156,27 @@ typedef struct
   (__builtin_memcmp (cpusetp1, cpusetp2, setsize) == 0)
 # else
 #  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
-  ({ cpu_set_t *__arr1 = (cpusetp1);					      \
-     cpu_set_t *__arr2 = (cpusetp2);					      \
-     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
-     size_t __i;							      \
-     for (__i = 0; __i < __imax; ++__i)					      \
-       if (__arr1->__bits[__i] != __arr2->__bits[__i])			      \
-	 break;								      \
-     __i == __imax; })
+  (__extension__							      \
+   ({ cpu_set_t *__arr1 = (cpusetp1);					      \
+      cpu_set_t *__arr2 = (cpusetp2);					      \
+      size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
+      size_t __i;							      \
+      for (__i = 0; __i < __imax; ++__i)				      \
+	if (__arr1->__bits[__i] != __arr2->__bits[__i])			      \
+	  break;							      \
+      __i == __imax; }))
 # endif
 
 # define __CPU_OP_S(setsize, destset, srcset1, srcset2, op) \
-  ({ cpu_set_t *__dest = (destset);					      \
-     cpu_set_t *__arr1 = (srcset1);					      \
-     cpu_set_t *__arr2 = (srcset2);					      \
-     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
-     size_t __i;							      \
-     for (__i = 0; __i < __imax; ++__i)					      \
-       __dest->__bits[__i] = __arr1->__bits[__i] op __arr2->__bits[__i];      \
-     __dest; })
+  (__extension__							      \
+   ({ cpu_set_t *__dest = (destset);					      \
+      cpu_set_t *__arr1 = (srcset1);					      \
+      cpu_set_t *__arr2 = (srcset2);					      \
+      size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
+      size_t __i;							      \
+      for (__i = 0; __i < __imax; ++__i)				      \
+	__dest->__bits[__i] = __arr1->__bits[__i] op __arr2->__bits[__i];     \
+      __dest; }))
 
 # define __CPU_ALLOC_SIZE(count) \
   ((((count) + __NCPUBITS - 1) / __NCPUBITS) * 8)

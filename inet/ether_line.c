@@ -61,19 +61,20 @@ ether_line (const char *line, struct ether_addr *addr, char *hostname)
 	++line;
     }
 
-  /* Remove trailing white space.  */
-  cp = __strchrnul (line, '#');
-  while (cp > line && isspace (cp[-1]))
-    --cp;
+  /* Skip initial whitespace.  */
+  while (isspace (*line))
+    ++line;
 
-  if (cp == line)
+  if (*line == '#' || *line == '\0')
     /* No hostname.  */
     return -1;
 
+  /* The hostname is up to the next non-space character.  */
   /* XXX This can cause trouble because the hostname might be too long
      but we have no possibility to check it here.  */
-  memcpy (hostname, line, cp - line);
-  hostname [cp - line] = '\0';
+  while (*line != '\0' && *line != '#' && !isspace (*line))
+    *hostname++ = *line++;
+  *hostname = '\0';
 
   return 0;
 }

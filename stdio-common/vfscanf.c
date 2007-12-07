@@ -2845,7 +2845,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  *p->ptrs[cnt] = NULL;
 		}
 	      p = p->next;
-	      free (ptrs_to_free);
 	      ptrs_to_free = p;
 	    }
 	}
