@@ -1,5 +1,13 @@
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5427]
+	* iconvdata/hp-roman9.c: New file.
+	* iconvdata/Makefile: Add rules for hp-roman9.c.
+	* iconvdata/tst-tables.sh: Add HP-ROMAN9.
+
+	* iconvdata/hp-roman8.c: Use 8bit-gap instead of 8bit-generic.
+	* iconvdata/Makefile: Adjust appropriately.
+
 	[BZ #5441]
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Don't free ptrs_to_free
 	structure, it's allocated with alloca.
@@ -10,7 +18,7 @@
 
 	[BZ #5452]
 	* sysdeps/unix/sysv/linux/bits/sched.h: Use __extension__
-	  keyword for gcc's braced-groups.
+	keyword for gcc's braced-groups.
 
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 

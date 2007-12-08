@@ -25,7 +25,7 @@ subdir	:= iconvdata
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		 \
 	   ISO8859-11 ISO8859-13 ISO8859-14 ISO8859-15 ISO8859-16	 \
-	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 EBCDIC-AT-DE		 \
+	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 HP-ROMAN9 EBCDIC-AT-DE	 \
 	   EBCDIC-AT-DE-A EBCDIC-CA-FR EUC-KR UHC JOHAB libJIS libKSC	 \
 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
 	   EBCDIC-DK-NO-A EBCDIC-ES EBCDIC-ES-A EBCDIC-ES-S EBCDIC-FI-SE \
@@ -198,7 +198,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
 	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
 	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c   \
-	      brf.c mac-centraleurope.c
+	      brf.c mac-centraleurope.c hp-roman9.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -217,7 +217,7 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 # We can build the conversion tables for numerous charsets automatically.
 
 gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
-		    hp-roman8 ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr	    \
+		    ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr		    \
 		    ebcdic-dk-no ebcdic-dk-no-a ebcdic-es ebcdic-es-a	    \
 		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
 		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
@@ -241,7 +241,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
 			iso8859-11 ibm866nav pt154 rk1048 mik brf \
-			mac-centraleurope koi8-ru
+			mac-centraleurope koi8-ru hp-roman8 hp-roman9
 
 gen-special-modules := iso8859-7jp
 

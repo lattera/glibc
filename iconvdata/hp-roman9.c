@@ -1,7 +1,7 @@
-/* Conversion from and to HP-ROMAN8.
-   Copyright (C) 1997, 1998, 2007 Free Software Foundation, Inc.
+/* Conversion from and to HP-ROMAN9.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,9 +21,9 @@
 #include <stdint.h>
 
 /* Specify the conversion table.  */
-#define TABLES <hp-roman8.h>
+#define TABLES <hp-roman9.h>
 
-#define CHARSET_NAME	"HP-ROMAN8//"
+#define CHARSET_NAME	"HP-ROMAN9//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>
