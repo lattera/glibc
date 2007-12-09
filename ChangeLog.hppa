@@ -1,3 +1,9 @@
+2007-12-05  Jeff Bailey  <jeffbailey@google.com>
+
+       * sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h
+         (__lll_unlock): Use define instead of inline function.
+	 (__lll_robust_unlock): Likewise.
+
 2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.
