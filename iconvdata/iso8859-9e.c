@@ -18,11 +18,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Get the conversion table.  */
 #include <stdint.h>
-#include <iso8859-9e.h>
+
+/* Specify the conversion table.  */
+#define TABLES <iso8859-9e.h>
 
 #define CHARSET_NAME "ISO-8859-9E//"
 #define HAS_HOLES	0	/* All 256 character are defined.  */
 
-#include <8bit-generic.c>
+#include <8bit-gap.c>

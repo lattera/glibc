@@ -64,6 +64,19 @@
     } while (0)
 #define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
 
+#define done_add(val) \
+  do {									      \
+    unsigned int _val = val;						      \
+    assert ((unsigned int) done < (unsigned int) INT_MAX);		      \
+    if (__builtin_expect ((unsigned int) INT_MAX - (unsigned int) done	      \
+			  < _val, 0))					      \
+      {									      \
+	done = -1;							      \
+	goto all_done;							      \
+      }									      \
+    done += _val;							      \
+  } while (0)
+
 #ifndef COMPILE_WPRINTF
 # define vfprintf	_IO_vfprintf_internal
 # define CHAR_T		char
@@ -76,7 +89,7 @@
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \
   if (width > 0)							      \
-    done += INTUSE(_IO_padn) (s, (Padchar), width)
+    done_add (INTUSE(_IO_padn) (s, (Padchar), width))
 # define PUTC(C, F)	_IO_putc_unlocked (C, F)
 # define ORIENT		if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
 			  return -1
@@ -95,7 +108,7 @@
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \
   if (width > 0)							      \
-    done += _IO_wpadn (s, (Padchar), width)
+    done_add (_IO_wpadn (s, (Padchar), width))
 # define PUTC(C, F)	_IO_putwc_unlocked (C, F)
 # define ORIENT		if (_IO_fwide (s, 1) != 1) return -1
 
@@ -116,20 +129,21 @@
   do									      \
     {									      \
       register const INT_T outc = (Ch);					      \
-      if (PUTC (outc, s) == EOF)					      \
+      if (PUTC (outc, s) == EOF || done == INT_MAX)			      \
 	{								      \
 	  done = -1;							      \
 	  goto all_done;						      \
 	}								      \
-      else								      \
-	++done;								      \
+      ++done;								      \
     }									      \
   while (0)
 
 #define outstring(String, Len)						      \
   do									      \
     {									      \
-      if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len))		      \
+      assert ((size_t) done <= (size_t) INT_MAX);			      \
+      if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len)		      \
+	  || (size_t) INT_MAX - (size_t) done < (size_t) (Len))		      \
 	{								      \
 	  done = -1;							      \
 	  goto all_done;						      \
@@ -811,7 +825,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    goto all_done;						      \
 	  }								      \
 									      \
-	done += function_done;						      \
+	done_add (function_done);					      \
       }									      \
       break;								      \
 									      \
@@ -865,7 +879,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    goto all_done;						      \
 	  }								      \
 									      \
-	done += function_done;						      \
+	done_add (function_done);					      \
       }									      \
       break;								      \
 									      \
@@ -1893,7 +1907,7 @@ do_positional:
 		  goto all_done;
 		}
 
-	      done += function_done;
+	      done_add (function_done);
 	    }
 	    break;
 	  }

@@ -1,9 +1,35 @@
+2007-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5424]
+	* stdio-common/vfprintf.c: Do not overflow when adding to done.
+	* stdio-common/Makefile (tests): Add bug22.
+	* stdio-common/bug22.c: New file.
+
+	[BZ #5451]
+	* time/getdate.c: Fix filling in default values.
+	* time/bug-getdate1.c: New file.
+	* time/Makefile: Add rules to build and run bug-getdate1.
+
+	* iconvdata/ebcdic-is-friss.c: Use 8bit-gap instead of 8bit-generic.
+	* iconvdata/ebcdic-es.c: Likewise.
+	* iconvdata/ebcdic-es-a.c: Likewise.
+	* iconvdata/ebcdic-uk.c: Likewise.
+	* iconvdata/iso8859-16.c: Likewise.
+	* iconvdata/viscii.c: Likewise.
+	* iconvdata/iso8859-9e.c: Likewise.
+	* iconvdata/Makefile: Adjust appropriately.
+
+	[BZ #5428]
+	* wcsmbs/wchar.h: Unconditionally undefine __need_mbstate and
+	__need_wint_t.
+
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5427]
 	* iconvdata/hp-roman9.c: New file.
 	* iconvdata/Makefile: Add rules for hp-roman9.c.
 	* iconvdata/tst-tables.sh: Add HP-ROMAN9.
+	* iconvdata/gconv-modules: Likewise.
 
 	* iconvdata/hp-roman8.c: Use 8bit-gap instead of 8bit-generic.
 	* iconvdata/Makefile: Adjust appropriately.

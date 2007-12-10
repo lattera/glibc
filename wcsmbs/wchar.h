@@ -839,4 +839,9 @@ __END_DECLS
 
 #endif	/* _WCHAR_H defined */
 
+/* Undefined all __need_* constants in case we are included to get those
+   constants but the whole file was already read.  */
+#undef __need_mbstate_t
+#undef __need_wint_t
+
 #endif /* wchar.h  */

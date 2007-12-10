@@ -212,28 +212,31 @@ __getdate_r (const char *string, struct tm *tp)
       tp->tm_sec = tm.tm_sec;
     }
 
-  /* If no date is given, today is assumed if the given hour is
-     greater than the current hour and tomorrow is assumed if
-     it is less.  */
-  if (tp->tm_hour >= 0 && tp->tm_hour <= 23
-      && tp->tm_year == INT_MIN && tp->tm_mon == INT_MIN
-      && tp->tm_mday == INT_MIN && tp->tm_wday == INT_MIN)
-    {
-      tp->tm_year = tm.tm_year;
-      tp->tm_mon = tm.tm_mon;
-      tp->tm_mday = tm.tm_mday + ((tp->tm_hour - tm.tm_hour) < 0 ? 1 : 0);
-      mday_ok = 1;
-    }
-
   /* Fill in the gaps.  */
-  if (tp->tm_year == INT_MIN)
-    tp->tm_year = tm.tm_year;
   if (tp->tm_hour == INT_MIN)
     tp->tm_hour = 0;
   if (tp->tm_min == INT_MIN)
     tp->tm_min = 0;
   if (tp->tm_sec == INT_MIN)
     tp->tm_sec = 0;
+
+  /* If no date is given, today is assumed if the given hour is
+     greater than the current hour and tomorrow is assumed if
+     it is less.  */
+  if (tp->tm_hour >= 0 && tp->tm_hour <= 23
+      && tp->tm_mon == INT_MIN
+      && tp->tm_mday == INT_MIN && tp->tm_wday == INT_MIN)
+    {
+      tp->tm_mon = tm.tm_mon;
+      tp->tm_mday = tm.tm_mday + ((tp->tm_hour - tm.tm_hour) < 0 ? 1 : 0);
+      mday_ok = 1;
+    }
+
+  /* More fillers.  */
+  if (tp->tm_year == INT_MIN)
+    tp->tm_year = tm.tm_year;
+  if (tp->tm_mon == INT_MIN)
+    tp->tm_mon = tm.tm_mon;
 
   /* Check if the day of month is within range, and if the time can be
      represented in a time_t.  We make use of the fact that the mktime

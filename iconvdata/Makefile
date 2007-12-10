@@ -217,13 +217,11 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 # We can build the conversion tables for numerous charsets automatically.
 
 gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
-		    ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr		    \
-		    ebcdic-dk-no ebcdic-dk-no-a ebcdic-es ebcdic-es-a	    \
-		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
-		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
+		    ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr ebcdic-dk-no   \
+		    ebcdic-dk-no-a ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a  \
+		    ebcdic-fr ebcdic-it ebcdic-pt ebcdic-us \
 		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
-		    ibm891 ibm903 ibm904 ibm905 ibm1047 iso8859-16 viscii   \
-		    iso8859-9e
+		    ibm891 ibm903 ibm904 ibm905 ibm1047   \
 
 gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \
@@ -240,8 +238,10 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
-			iso8859-11 ibm866nav pt154 rk1048 mik brf \
-			mac-centraleurope koi8-ru hp-roman8 hp-roman9
+			iso8859-11 ibm866nav pt154 rk1048 mik brf	   \
+			mac-centraleurope koi8-ru hp-roman8 hp-roman9	   \
+			ebcdic-es ebcdic-es-a ebcdic-is-friss ebcdic-uk    \
+			iso8859-16 viscii iso8859-9e
 
 gen-special-modules := iso8859-7jp
 

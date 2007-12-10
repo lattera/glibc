@@ -1927,3 +1927,10 @@ alias	ISO8859-9E//		ISO-8859-9E//
 alias	ISO88599E//		ISO-8859-9E//
 module	ISO-8859-9E//		INTERNAL		ISO8859-9E	1
 module	INTERNAL		ISO-8859-9E//		ISO8859-9E	1
+
+#	from			to			module		cost
+alias	ROMAN9//		HP-ROMAN9//
+alias	R9//			HP-ROMAN9//
+alias	HPROMAN9//		HP-ROMAN9//
+module	HP-ROMAN9//		INTERNAL		HP-ROMAN9	1
+module	INTERNAL		HP-ROMAN9//		HP-ROMAN9	1

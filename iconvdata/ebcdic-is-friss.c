@@ -1,5 +1,5 @@
 /* Conversion from and to EBCDIC-IS-FRISS.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -20,10 +20,10 @@
 
 #include <stdint.h>
 
-/* Get the conversion table.  */
-#include <ebcdic-is-friss.h>
+/* Specify the conversion table.  */
+#define TABLES <ebcdic-is-friss.h>
 
 #define CHARSET_NAME	"EBCDIC-IS-FRISS//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
-#include <8bit-generic.c>
+#include <8bit-gap.c>

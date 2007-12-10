@@ -1,5 +1,5 @@
 /* Conversion from and to ISO 8859-16.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -18,11 +18,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Get the conversion table.  */
 #include <stdint.h>
-#include <iso8859-16.h>
+
+/* Specify the conversion table.  */
+#define TABLES <iso8859-16.h>
 
 #define CHARSET_NAME "ISO-8859-16//"
 #define HAS_HOLES	0	/* All 256 character are defined.  */
 
-#include <8bit-generic.c>
+#include <8bit-gap.c>
