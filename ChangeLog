@@ -1,3 +1,11 @@
+2007-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Use ADJ_OFFSET_SS_READ if
+	possible.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ADJ_OFFSET_SS_READ): Define for 2.6.24.
+	* sysdeps/unix/sysv/linux/sys/timex.h (ADJ_OFFSET_SS_READ): Define.
+
 2007-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5424]

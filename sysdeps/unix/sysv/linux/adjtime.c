@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2002, 2004
+/* Copyright (C) 1995, 1996, 1997, 1998, 2002, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,6 +21,8 @@
 #include <limits.h>
 #include <sys/time.h>
 #include <sys/timex.h>
+
+#include <kernel-features.h>
 
 #define MAX_SEC	(INT_MAX / 1000000L - 2)
 #define MIN_SEC	(INT_MIN / 1000000L + 2)
@@ -69,13 +71,29 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
 	  return -1;
 	}
       tntx.offset = tmp.tv_usec + tmp.tv_sec * 1000000L;
+#ifdef ADJ_OFFSET_SS_READ
+      tntx.modes = ADJ_OFFSET_SS_READ;
+#else
       tntx.modes = ADJ_OFFSET_SINGLESHOT;
+#endif
     }
   else
     tntx.modes = 0;
 
-  if (ADJTIMEX (&tntx) < 0)
-    return -1;
+#if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
+ again:
+#endif
+  if (__builtin_expect (ADJTIMEX (&tntx) < 0, 0))
+    {
+#if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
+      if (itv && errno == EINVAL && tntx.modes == ADJ_OFFSET_SS_READ)
+	{
+	  tntx.modes = ADJ_OFFSET_SINGLESHOT;
+	  goto again;
+	}
+#endif
+      return -1;
+    }
 
   if (otv)
     {

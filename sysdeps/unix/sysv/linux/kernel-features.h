@@ -487,3 +487,8 @@
 	|| (__LINUX_KERNEL_VERSION >= 0x020618 && defined __s390__))
 # define __ASSUME_FALLOCATE	1
 #endif
+
+/* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
+#if __LINUX_KERNEL_VERSION >= 0x020618
+# define __ASSUME_ADJ_OFFSET_SS_READ	1
+#endif
