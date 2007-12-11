@@ -1,3 +1,7 @@
+2007-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/UTF-8: Add Unicode 5.1 entries.
+
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5427]
