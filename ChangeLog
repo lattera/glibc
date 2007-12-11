@@ -1,3 +1,8 @@
+2007-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): sYSMALLOc might fail, in this
+	case don't call alloc_perturb.
+
 2007-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/adjtime.c: Use ADJ_OFFSET_SS_READ if

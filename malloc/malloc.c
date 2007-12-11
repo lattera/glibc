@@ -4475,7 +4475,7 @@ _int_malloc(mstate av, size_t bytes)
 
       We require that av->top always exists (i.e., has size >=
       MINSIZE) after initialization, so if it would otherwise be
-      exhuasted by current request, it is replenished. (The main
+      exhausted by current request, it is replenished. (The main
       reason for ensuring it exists is that we may need MINSIZE space
       to put in fenceposts in sysmalloc.)
     */
@@ -4515,7 +4515,7 @@ _int_malloc(mstate av, size_t bytes)
     */
     else {
       void *p = sYSMALLOc(nb, av);
-      if (__builtin_expect (perturb_byte, 0))
+      if (p != NULL && __builtin_expect (perturb_byte, 0))
 	alloc_perturb (p, bytes);
       return p;
     }
