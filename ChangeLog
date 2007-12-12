@@ -1,3 +1,9 @@
+2007-12-01  Jim Meyering  <meyering@redhat.com>
+
+	* posix/regcomp.c (optimize_utf8): Fix a typo, s/idx/ctx_type/,
+	that would inhibit utf8-optimization of a regexp containing line-
+	or buffer-anchors, e.g., `^', `$'.
+
 2007-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/bug-getdate1.c (do_test): Don't use century values which
