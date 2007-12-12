@@ -3,6 +3,7 @@
 	[BZ #5465]
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S [!SHARED]
 	(__pthread_cond_timedwait): Don't use VDSO.
+	Patch by Michal Januszewski.
 
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 

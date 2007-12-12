@@ -1,3 +1,13 @@
+2007-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmsp/HP-THAI8: New file.
+
+	[BZ #5464]
+	* charmaps/HP-GREEK8: New file.
+
+	[BZ #5463]
+	* charmaps/HP-TURKISH8: New file.
+
 2007-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/UTF-8: Add Unicode 5.1 entries.

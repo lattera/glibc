@@ -1,5 +1,22 @@
 2007-12-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/hp-thai8.c: New file.
+	* iconvdata/Makefile: Add rules for hp-thai8.c.
+	* iconvdata/tst-tables.sh: Add entry for HP-THAI8.
+	* iconvdata/gconv-modules: Likewise.
+
+	[BZ #5464]
+	* iconvdata/hp-greek8.c: New file.
+	* iconvdata/Makefile: Add rules for hp-greek8.c.
+	* iconvdata/tst-tables.sh: Add entry for HP-GREEK8.
+	* iconvdata/gconv-modules: Likewise.
+
+	[BZ #5463]
+	* iconvdata/hp-turkish8.c: New file.
+	* iconvdata/Makefile: Add rules for hp-turkish8.c.
+	* iconvdata/tst-tables.sh: Add entry for HP-TURKISH8.
+	* iconvdata/gconv-modules: Likewise.
+
 	* malloc/arena.c (grow_heap): Split out code to shrink heap into...
 	(shrink_heap): ... this new function.
 	(heap_trim): Call shrink_heap instead of grow_heap.
