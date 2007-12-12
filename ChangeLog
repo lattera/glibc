@@ -1,3 +1,8 @@
+2007-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/bug-getdate1.c (do_test): Don't use century values which
+	aren't valid on 32-bit systems.
+
 2007-12-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/i486/bits/string.h (memmove): Define as macro.

@@ -115,13 +115,13 @@ do_test (int argc, char *argv[])
   res |= process_getdate_on ("25 3");
 
   output_to_template_file ("%C");
-  res |= process_getdate_on ("98");
+  res |= process_getdate_on ("20");
 
   output_to_template_file ("%C %y %m");
-  res |= process_getdate_on ("98 3 2");
+  res |= process_getdate_on ("20 3 2");
 
   output_to_template_file ("%C %y");
-  res |= process_getdate_on ("21 5");
+  res |= process_getdate_on ("20 5");
 
   /*
    * The following testcase reproduces the problem:

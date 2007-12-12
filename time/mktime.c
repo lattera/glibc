@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert <eggert@twinsun.com>.
 
@@ -372,7 +372,7 @@ __mktime_internal (struct tm *tp,
       int diff = approx_biennia - approx_requested_biennia;
       int abs_diff = diff < 0 ? - diff : diff;
 
-      /* IRIX 4.0.5 cc miscaculates TIME_T_MIN / 3: it erroneously
+      /* IRIX 4.0.5 cc miscalculates TIME_T_MIN / 3: it erroneously
 	 gives a positive value of 715827882.  Setting a variable
 	 first then doing math on it seems to work.
 	 (ghazi@caip.rutgers.edu) */
