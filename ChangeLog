@@ -1,3 +1,16 @@
+2007-12-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (memmove): Define as macro.
+	(memmove): Rename to __memmove_g, with __asm__ ("memmove").
+	* sysdeps/s390/bits/string.h (__strlen_g, __strcpy_g, __strncpy_g,
+	__strcat_g, __strncat_g): Add __asm__.
+
+2007-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5477]
+	* io/fchmodat.c: Fix typo in stub_warning use.
+	Patch by Petr Salinger.
+
 2007-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/hp-thai8.c: New file.

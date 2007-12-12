@@ -1,5 +1,5 @@
 /* Change the protections of file relative to open directory.  Stub version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,6 @@ fchmodat (fd, file, mode, flag)
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (fchownat)
+stub_warning (fchmodat)
 
 #include <stub-tag.h>

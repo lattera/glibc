@@ -42,6 +42,8 @@
 #ifndef _FORCE_INLINES
 #define strlen(str) __strlen_g ((str))
 
+__STRING_INLINE size_t __strlen_g (__const char *) __asm__ ("strlen");
+
 __STRING_INLINE size_t
 __strlen_g (__const char *__str)
 {
@@ -63,6 +65,8 @@ __strlen_g (__const char *__str)
 #ifndef _FORCE_INLINES
 #define strcpy(dest, src) __strcpy_g ((dest), (src))
 
+__STRING_INLINE char *__strcpy_g (char *, __const char *) __asm ("strcpy");
+
 __STRING_INLINE char *
 __strcpy_g (char *__dest, __const char *__src)
 {
@@ -80,6 +84,9 @@ __strcpy_g (char *__dest, __const char *__src)
 #define _HAVE_STRING_ARCH_strncpy 1
 #ifndef _FORCE_INLINES
 #define strncpy(dest, src, n) __strncpy_g ((dest), (src), (n))
+
+__STRING_INLINE char *__strncpy_g (char *, __const char *, size_t)
+     __asm__ ("strncpy");
 
 __STRING_INLINE char *
 __strncpy_g (char *__dest, __const char *__src, size_t __n)
@@ -122,8 +129,10 @@ __strncpy_g (char *__dest, __const char *__src, size_t __n)
 #ifndef _FORCE_INLINES
 #define strcat(dest, src) __strcat_g ((dest), (src))
 
+__STRING_INLINE char *__strcat_g (char *, __const char *) __asm__ ("strcat");
+
 __STRING_INLINE char *
-__strcat_g(char *__dest, const char *__src)
+__strcat_g (char *__dest, __const char *__src)
 {
     char *__ret = __dest;
     char *__ptr, *__tmp;
@@ -151,6 +160,9 @@ __strcat_g(char *__dest, const char *__src)
 #define _HAVE_STRING_ARCH_strncat 1
 #ifndef _FORCE_INLINES
 #define strncat(dest, src, n) __strncat_g ((dest), (src), (n))
+
+__STRING_INLINE char *__strncat_g (char *, __const char *, size_t)
+     __asm__ ("strncat");
 
 __STRING_INLINE char *
 __strncat_g (char *__dest, __const char *__src, size_t __n)

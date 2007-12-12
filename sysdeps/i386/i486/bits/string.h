@@ -145,8 +145,13 @@ __memcpy_g (void *__dest, __const void *__src, size_t __n)
 #ifndef _FORCE_INLINES
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
+#define memmove(dest, src, n) __memmove_g (dest, src, n)
+
+__STRING_INLINE void *__memmove_g (void *, __const void *, size_t)
+     __asm__ ("memmove");
+
 __STRING_INLINE void *
-memmove (void *__dest, __const void *__src, size_t __n)
+__memmove_g (void *__dest, __const void *__src, size_t __n)
 {
   register unsigned long int __d0, __d1, __d2;
   register void *__tmp = __dest;
