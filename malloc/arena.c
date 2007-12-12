@@ -704,8 +704,8 @@ new_heap(size, top_pad) size_t size, top_pad;
   return h;
 }
 
-/* Grow or shrink a heap.  size is automatically rounded up to a
-   multiple of the page size if it is positive. */
+/* Grow a heap.  size is automatically rounded up to a
+   multiple of the page size. */
 
 static int
 #if __STD_C
@@ -717,41 +717,55 @@ grow_heap(h, diff) heap_info *h; long diff;
   size_t page_mask = malloc_getpagesize - 1;
   long new_size;
 
-  if(diff >= 0) {
-    diff = (diff + page_mask) & ~page_mask;
-    new_size = (long)h->size + diff;
-    if((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
-      return -1;
-    if((unsigned long) new_size > h->mprotect_size) {
-      if (mprotect((char *)h + h->mprotect_size,
-		   (unsigned long) new_size - h->mprotect_size,
-		   PROT_READ|PROT_WRITE) != 0)
+  diff = (diff + page_mask) & ~page_mask;
+  new_size = (long)h->size + diff;
+  if((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
+    return -1;
+  if((unsigned long) new_size > h->mprotect_size) {
+    if (mprotect((char *)h + h->mprotect_size,
+		 (unsigned long) new_size - h->mprotect_size,
+		 PROT_READ|PROT_WRITE) != 0)
+      return -2;
+    h->mprotect_size = new_size;
+  }
+
+  h->size = new_size;
+  return 0;
+}
+
+/* Shrink a heap.  */
+
+static int
+#if __STD_C
+shrink_heap(heap_info *h, long diff)
+#else
+shrink_heap(h, diff) heap_info *h; long diff;
+#endif
+{
+  long new_size;
+
+  new_size = (long)h->size - diff;
+  if(new_size < (long)sizeof(*h))
+    return -1;
+  /* Try to re-map the extra heap space freshly to save memory, and
+     make it inaccessible. */
+#ifdef _LIBC
+  if (__builtin_expect (__libc_enable_secure, 0))
+#else
+  if (1)
+#endif
+    {
+      if((char *)MMAP((char *)h + new_size, diff, PROT_NONE,
+		      MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
 	return -2;
       h->mprotect_size = new_size;
     }
-  } else {
-    new_size = (long)h->size + diff;
-    if(new_size < (long)sizeof(*h))
-      return -1;
-    /* Try to re-map the extra heap space freshly to save memory, and
-       make it inaccessible. */
 #ifdef _LIBC
-    if (__builtin_expect (__libc_enable_secure, 0))
-#else
-    if (1)
+  else
+    madvise ((char *)h + new_size, diff, MADV_DONTNEED);
 #endif
-      {
-	if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE,
-			MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
-	  return -2;
-	h->mprotect_size = new_size;
-      }
-#ifdef _LIBC
-    else
-      madvise ((char *)h + new_size, -diff, MADV_DONTNEED);
-#endif
-    /*fprintf(stderr, "shrink %p %08lx\n", h, new_size);*/
-  }
+  /*fprintf(stderr, "shrink %p %08lx\n", h, new_size);*/
+
   h->size = new_size;
   return 0;
 }
@@ -811,7 +825,7 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
   if(extra < (long)pagesz)
     return 0;
   /* Try to shrink. */
-  if(grow_heap(heap, -extra) != 0)
+  if(shrink_heap(heap, extra) != 0)
     return 0;
   ar_ptr->system_mem -= extra;
   arena_mem -= extra;

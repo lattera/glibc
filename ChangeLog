@@ -1,5 +1,9 @@
 2007-12-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/arena.c (grow_heap): Split out code to shrink heap into...
+	(shrink_heap): ... this new function.
+	(heap_trim): Call shrink_heap instead of grow_heap.
+
 	* malloc/malloc.c (_int_malloc): sYSMALLOc might fail, in this
 	case don't call alloc_perturb.
 
