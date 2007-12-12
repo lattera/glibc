@@ -1,5 +1,7 @@
 2007-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-basic7.c: Allocate memory for the stack.
+
 	[BZ #5465]
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S [!SHARED]
 	(__pthread_cond_timedwait): Don't use VDSO.
