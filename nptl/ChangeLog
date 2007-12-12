@@ -1,3 +1,9 @@
+2007-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5465]
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S [!SHARED]
+	(__pthread_cond_timedwait): Don't use VDSO.
+
 2007-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5455]

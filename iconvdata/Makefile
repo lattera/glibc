@@ -32,7 +32,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
-	   IBM874 CP737 CP775 ISO-2022-KR				 \
+	   IBM874 CP737 CP775 ISO-2022-KR HP-TURKISH8 HP-THAI8 HP-GREEK8 \
 	   KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
@@ -198,7 +198,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
 	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
 	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c   \
-	      brf.c mac-centraleurope.c hp-roman9.c
+	      brf.c mac-centraleurope.c hp-roman9.c hp-turkish8.c	    \
+	      hp-thai8.c hp-greek8.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -241,7 +242,8 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-11 ibm866nav pt154 rk1048 mik brf	   \
 			mac-centraleurope koi8-ru hp-roman8 hp-roman9	   \
 			ebcdic-es ebcdic-es-a ebcdic-is-friss ebcdic-uk    \
-			iso8859-16 viscii iso8859-9e
+			iso8859-16 viscii iso8859-9e hp-turkish8	   \
+			hp-thai8 hp-greek8
 
 gen-special-modules := iso8859-7jp
 

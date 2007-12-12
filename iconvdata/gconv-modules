@@ -1934,3 +1934,22 @@ alias	R9//			HP-ROMAN9//
 alias	HPROMAN9//		HP-ROMAN9//
 module	HP-ROMAN9//		INTERNAL		HP-ROMAN9	1
 module	INTERNAL		HP-ROMAN9//		HP-ROMAN9	1
+
+#	from			to			module		cost
+alias	TURKISH8//		HP-TURKISH8//
+alias	HPTURKISH8//		HP-TURKISH8//
+alias	OSF10010006//		HP-TURKISH8//
+module	HP-TURKISH8//		INTERNAL		HP-TURKISH8	1
+module	INTERNAL		HP-TURKISH8//		HP-TURKISH8	1
+
+#	from			to			module		cost
+alias	THAI8//			HP-THAI8//
+alias	HPTHAI8//		HP-THAI8//
+module	HP-THAI8//		INTERNAL		HP-THAI8	1
+module	INTERNAL		HP-THAI8//		HP-THAI8	1
+
+#	from			to			module		cost
+alias	HPGREEK8//		HP-GREEK8//
+alias	OSF10010004//		HP-GREEK8//
+module	HP-GREEK8//		INTERNAL		HP-GREEK8	1
+module	INTERNAL		HP-GREEK8//		HP-GREEK8	1
