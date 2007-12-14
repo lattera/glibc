@@ -1,3 +1,10 @@
+2007-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL_ERROR_P):
+	First cast argument to long
+	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: Functions
+	return long.
+
 2007-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/nl_langinfo.c (nl_langinfo): Just call __nl_langinfo_l.

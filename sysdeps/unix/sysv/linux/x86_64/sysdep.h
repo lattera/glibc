@@ -224,34 +224,34 @@
 # undef INLINE_SYSCALL
 # define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
-    unsigned long resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
+    unsigned long int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, ), 0))	      \
       {									      \
 	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
-	resultvar = (unsigned long) -1;					      \
+	resultvar = (unsigned long int) -1;				      \
       }									      \
-    (long) resultvar; })
+    (long int) resultvar; })
 
 # undef INTERNAL_SYSCALL_DECL
 # define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 # define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
-    unsigned long resultvar;						      \
+    unsigned long int resultvar;					      \
     LOAD_ARGS_##nr (args)						      \
     LOAD_REGS_##nr							      \
     asm volatile (							      \
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
     : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
-    (long) resultvar; })
+    (long int) resultvar; })
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...) \
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
 # undef INTERNAL_SYSCALL_ERROR_P
 # define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long) (val) >= -4095L)
+  ((unsigned long int) (long int) (val) >= -4095L)
 
 # undef INTERNAL_SYSCALL_ERRNO
 # define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
@@ -319,7 +319,7 @@
 # define ASM_ARGS_0
 
 # define LOAD_ARGS_1(a1)				\
-  long int __arg1 = (long) (a1);			\
+  long int __arg1 = (long int) (a1);			\
   LOAD_ARGS_0 ()
 # define LOAD_REGS_1					\
   register long int _a1 asm ("rdi") = __arg1;		\
@@ -327,7 +327,7 @@
 # define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
 
 # define LOAD_ARGS_2(a1, a2)				\
-  long int __arg2 = (long) (a2);			\
+  long int __arg2 = (long int) (a2);			\
   LOAD_ARGS_1 (a1)
 # define LOAD_REGS_2					\
   register long int _a2 asm ("rsi") = __arg2;		\
@@ -335,7 +335,7 @@
 # define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
 
 # define LOAD_ARGS_3(a1, a2, a3)			\
-  long int __arg3 = (long) (a3);			\
+  long int __arg3 = (long int) (a3);			\
   LOAD_ARGS_2 (a1, a2)
 # define LOAD_REGS_3					\
   register long int _a3 asm ("rdx") = __arg3;		\
@@ -343,7 +343,7 @@
 # define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
 
 # define LOAD_ARGS_4(a1, a2, a3, a4)			\
-  long int __arg4 = (long) (a4);			\
+  long int __arg4 = (long int) (a4);			\
   LOAD_ARGS_3 (a1, a2, a3)
 # define LOAD_REGS_4					\
   register long int _a4 asm ("r10") = __arg4;		\
@@ -351,7 +351,7 @@
 # define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
 
 # define LOAD_ARGS_5(a1, a2, a3, a4, a5)		\
-  long int __arg5 = (long) (a5);			\
+  long int __arg5 = (long int) (a5);			\
   LOAD_ARGS_4 (a1, a2, a3, a4)
 # define LOAD_REGS_5					\
   register long int _a5 asm ("r8") = __arg5;		\
@@ -359,7 +359,7 @@
 # define ASM_ARGS_5	ASM_ARGS_4, "r" (_a5)
 
 # define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)		\
-  long int __arg6 = (long) (a6);			\
+  long int __arg6 = (long int) (a6);			\
   LOAD_ARGS_5 (a1, a2, a3, a4, a5)
 # define LOAD_REGS_6					\
   register long int _a6 asm ("r9") = __arg6;		\

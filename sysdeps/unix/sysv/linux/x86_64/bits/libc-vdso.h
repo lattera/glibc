@@ -25,10 +25,10 @@
 
 #ifdef SHARED
 
-extern int (*__vdso_gettimeofday) (struct timeval *, void *)
+extern long int (*__vdso_gettimeofday) (struct timeval *, void *)
   attribute_hidden;
 
-extern int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+extern long int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
 
 #endif
 
