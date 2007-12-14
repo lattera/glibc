@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -42,9 +42,8 @@
 
 /* If it is not possible to allocate memory there retry without that
    flag.  */
-#define ARCH_RETRY_MMAP(size) \
-  mmap (NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC,			      \
-	MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
+#define ARCH_RETRY_MMAP(size, prot) \
+  mmap (NULL, size, prot, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
 
 
 /* XXX Until we have a better place keep the definitions here.  */

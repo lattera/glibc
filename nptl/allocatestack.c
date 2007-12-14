@@ -459,7 +459,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
 	    {
 #ifdef ARCH_RETRY_MMAP
-	      mem = ARCH_RETRY_MMAP (size);
+	      mem = ARCH_RETRY_MMAP (size, prot);
 	      if (__builtin_expect (mem == MAP_FAILED, 0))
 #endif
 		{

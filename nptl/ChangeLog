@@ -1,3 +1,10 @@
+2007-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/pthreaddef.h (ARCH_RETRY_MMAP): Take additional
+	parameter.  Passed it as permission to mmap.
+	* allocatestack.c (allocate_stack): Pass prot as second parameter
+	to ARCH_RETRY_MMAP.
+
 2007-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-basic7.c: Allocate memory for the stack.
