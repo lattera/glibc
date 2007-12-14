@@ -1,3 +1,10 @@
+2007-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/nl_langinfo.c (nl_langinfo): Just call __nl_langinfo_l.
+	* locale/nl_langinfo_l.c: Real implementation, copied from
+	nl_langinfo.c.
+	* include/langinfo.h: Add libc_hidden_proto for __nl_langinfo_l.
+
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
 	* posix/regcomp.c (optimize_utf8): Fix a typo, s/idx/ctx_type/,

@@ -27,64 +27,10 @@
 
 /* Return a string with the data for locale-dependent parameter ITEM.  */
 
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-char *
-__nl_langinfo_l (item, l)
-     nl_item item;
-     __locale_t l;
-#else
 char *
 nl_langinfo (item)
      nl_item item;
-#endif
 {
-  int category = _NL_ITEM_CATEGORY (item);
-  unsigned int index = _NL_ITEM_INDEX (item);
-  const struct locale_data *data;
-
-  if (category < 0 || category == LC_ALL || category >= __LC_LAST)
-    /* Bogus category: bogus item.  */
-    return (char *) "";
-
-  /* Special case value for NL_LOCALE_NAME (category).
-     This is not a real item index in the string table.  */
-  if (index == _NL_ITEM_INDEX (_NL_LOCALE_NAME (category)))
-    {
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define THISLOCALE l
-#else
-# define THISLOCALE _NL_CURRENT_LOCALE
-#endif
-      return (char *) THISLOCALE->__names[category];
-    }
-
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-  data = l->__locales[category];
-#elif defined NL_CURRENT_INDIRECT
-  /* Make direct reference to every _nl_current_CATEGORY symbol,
-     since we know only at runtime which categories are used.  */
-  switch (category)
-    {
-# define DEFINE_CATEGORY(category, category_name, items, a) \
-      case category: data = *_nl_current_##category; break;
-# include "categories.def"
-# undef	DEFINE_CATEGORY
-    default:			/* Should be impossible.  */
-      return (char *) "";
-    }
-#else
-  data = _NL_CURRENT_DATA (category);
-#endif
-
-  if (index >= data->nstrings)
-    /* Bogus index for this category: bogus item.  */
-    return (char *) "";
-
-  /* Return the string for the specified item.  */
-  return (char *) data->values[index].string;
+  return __nl_langinfo_l (item, _NL_CURRENT_LOCALE);
 }
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-weak_alias (__nl_langinfo_l, nl_langinfo_l)
-#else
 libc_hidden_def (nl_langinfo)
-#endif
