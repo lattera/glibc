@@ -2,6 +2,9 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL_ERROR_P):
 	First cast argument to long
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_gettimeofday):
+	Return long.
+	(__vdso_clock_gettime): Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: Functions
 	return long.
 

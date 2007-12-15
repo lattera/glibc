@@ -20,9 +20,9 @@
 # include <dl-vdso.h>
 # include <bits/libc-vdso.h>
 
-int (*__vdso_gettimeofday) (struct timeval *, void *) attribute_hidden;
+long int (*__vdso_gettimeofday) (struct timeval *, void *) attribute_hidden;
 
-int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
+long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
   __attribute__ ((nocommon));
 strong_alias (__vdso_clock_gettime, __GI___vdso_clock_gettime attribute_hidden)
 
