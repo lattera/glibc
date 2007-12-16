@@ -1,3 +1,13 @@
+2007-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_mTRIm): Iterate over all arenas and call
+	mTRIm for all of them.
+	(mTRIm): Additionally iterate over all free blocks and use madvise
+	to free memory for all those blocks which contain at least one
+	memory page.
+
+	* malloc/malloc.c (do_check_malloc_state): Minimal cleanups.
+
 2007-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL_ERROR_P):

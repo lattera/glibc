@@ -1592,7 +1592,7 @@ static Void_t*  _int_pvalloc(mstate, size_t);
 static Void_t** _int_icalloc(mstate, size_t, size_t, Void_t**);
 static Void_t** _int_icomalloc(mstate, size_t, size_t*, Void_t**);
 #endif
-static int      mTRIm(size_t);
+static int      mTRIm(mstate, size_t);
 static size_t   mUSABLe(Void_t*);
 static void     mSTATs(void);
 static int      mALLOPt(int, int);
@@ -2739,8 +2739,6 @@ static void do_check_malloc_state(mstate av)
   mchunkptr p;
   mchunkptr q;
   mbinptr b;
-  unsigned int binbit;
-  int empty;
   unsigned int idx;
   INTERNAL_SIZE_T size;
   unsigned long total = 0;
@@ -2810,8 +2808,8 @@ static void do_check_malloc_state(mstate av)
 
     /* binmap is accurate (except for bin 1 == unsorted_chunks) */
     if (i >= 2) {
-      binbit = get_binmap(av,i);
-      empty = last(b) == b;
+      unsigned int binbit = get_binmap(av,i);
+      int empty = last(b) == b;
       if (!binbit)
         assert(empty);
       else if (!empty)
@@ -4013,13 +4011,22 @@ public_cFREe(Void_t* m)
 int
 public_mTRIm(size_t s)
 {
-  int result;
+  int result = 0;
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
-  (void)mutex_lock(&main_arena.mutex);
-  result = mTRIm(s);
-  (void)mutex_unlock(&main_arena.mutex);
+
+  mstate ar_ptr = &main_arena;
+  do
+    {
+      (void) mutex_lock (&ar_ptr->mutex);
+      result |= mTRIm (ar_ptr, s);
+      (void) mutex_unlock (&ar_ptr->mutex);
+
+      ar_ptr = ar_ptr->next;
+    }
+  while (ar_ptr != &main_arena);
+
   return result;
 }
 
@@ -5489,20 +5496,60 @@ _int_pvalloc(av, bytes) mstate av, size_t bytes;
 */
 
 #if __STD_C
-int mTRIm(size_t pad)
+static int mTRIm(mstate av, size_t pad)
 #else
-int mTRIm(pad) size_t pad;
+static int mTRIm(av, pad) mstate av; size_t pad;
 #endif
 {
-  mstate av = &main_arena; /* already locked */
-
   /* Ensure initialization/consolidation */
-  malloc_consolidate(av);
+  malloc_consolidate (av);
+
+  const size_t ps = mp_.pagesize;
+  int psindex = bin_index (ps);
+  const size_t psm1 = ps - 1;
+
+  int result = 0;
+  for (int i = 1; i < NBINS; ++i)
+    if (i == 1 || i >= psindex)
+      {
+        mbinptr bin = bin_at (av, i);
+
+        for (mchunkptr p = last (bin); p != bin; p = p->bk)
+	  {
+	    INTERNAL_SIZE_T size = chunksize (p);
+
+	    if (size > psm1 + sizeof (struct malloc_chunk))
+	      {
+		/* See whether the chunk contains at least one unused page.  */
+		char *paligned_mem = (char *) (((uintptr_t) p
+						+ sizeof (struct malloc_chunk)
+						+ psm1) & ~psm1);
+
+		assert ((char *) chunk2mem (p) + 4 * SIZE_SZ <= paligned_mem);
+		assert ((char *) p + size > paligned_mem);
+
+		/* This is the size we could potentially free.  */
+		size -= paligned_mem - (char *) p;
+
+		if (size > psm1)
+		  {
+#ifdef MALLOC_DEBUG
+		    /* When debugging we simulate destroying the memory
+		       content.  */
+		    memset (paligned_mem, 0x89, size & ~psm1);
+#endif
+		    madvise (paligned_mem, size & ~psm1, MADV_DONTNEED);
+
+		    result = 1;
+		  }
+	      }
+	  }
+      }
 
 #ifndef MORECORE_CANNOT_TRIM
-  return sYSTRIm(pad, av);
+  return result | (av == &main_arena ? sYSTRIm (pad, av) : 0);
 #else
-  return 0;
+  return result;
 #endif
 }
 
