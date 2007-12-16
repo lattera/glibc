@@ -5,6 +5,8 @@
 	(mTRIm): Additionally iterate over all free blocks and use madvise
 	to free memory for all those blocks which contain at least one
 	memory page.
+	* malloc/tst-trim1.c: New file.
+	* malloc/Makefile (tests): Add tst-trim1.
 
 	* malloc/malloc.c (do_check_malloc_state): Minimal cleanups.
 
