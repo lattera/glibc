@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1999,2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,7 @@
 int
 ether_line (const char *line, struct ether_addr *addr, char *hostname)
 {
-  size_t cnt;
-  char *cp;
-
-  for (cnt = 0; cnt < 6; ++cnt)
+  for (size_t cnt = 0; cnt < 6; ++cnt)
     {
       unsigned int number;
       char ch;
