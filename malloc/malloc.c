@@ -3886,6 +3886,12 @@ public_cALLOc(size_t n, size_t elem_size)
       oldtopsize < mp_.sbrk_base + av->max_system_mem - (char *)oldtop)
     oldtopsize = (mp_.sbrk_base + av->max_system_mem - (char *)oldtop);
 #endif
+  if (av != &main_arena)
+    {
+      heap_info *heap = heap_for_ptr (oldtop);
+      if (oldtopsize < (char *) heap + heap->mprotect_size - (char *) oldtop)
+	oldtopsize = (char *) heap + heap->mprotect_size - (char *) oldtop;
+    }
 #endif
   mem = _int_malloc(av, sz);
 

@@ -1,3 +1,9 @@
+2007-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_cALLOc): For arena other than
+	main_arena, count all bytes inside the mprotect_size range of the
+	heap as uninitialized.
+
 2007-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/tst-execstack.c (do_test): Don't fail if SELinux forbids
