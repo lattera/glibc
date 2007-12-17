@@ -27,8 +27,8 @@ int
 forkpty (amaster, name, termp, winp)
      int *amaster;
      char *name;
-     struct termios *termp;
-     struct winsize *winp;
+     const struct termios *termp;
+     const struct winsize *winp;
 {
   int master, slave, pid;
 

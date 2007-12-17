@@ -1,3 +1,15 @@
+2007-12-17  Roland McGrath  <roland@redhat.com>
+
+	* inet/ether_line.c (ether_line): Remove unused variable.
+
+2007-12-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* login/forkpty.c (forkpty): Add const qualifier to parameters termp
+	and winp.
+	* login/openpty.c (openpty): Likewise.
+	* login/pty.h (openpty, forkpty): Likewise.
+	* manual/terminal.texi (openpty, forkpty): Likewise.
+
 2007-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_cALLOc): For arena other than

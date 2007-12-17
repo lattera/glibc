@@ -2075,7 +2075,7 @@ These functions, derived from BSD, are available in the separate
 
 @comment pty.h
 @comment BSD
-@deftypefun int openpty (int *@var{amaster}, int *@var{aslave}, char *@var{name}, struct termios *@var{termp}, struct winsize *@var{winp})
+@deftypefun int openpty (int *@var{amaster}, int *@var{aslave}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
 This function allocates and opens a pseudo-terminal pair, returning the
 file descriptor for the master in @var{*amaster}, and the file
 descriptor for the slave in @var{*aslave}.  If the argument @var{name}
@@ -2106,7 +2106,7 @@ device instead.
 
 @comment pty.h
 @comment BSD
-@deftypefun int forkpty (int *@var{amaster}, char *@var{name}, struct termios *@var{termp}, struct winsize *@var{winp})
+@deftypefun int forkpty (int *@var{amaster}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
 This function is similar to the @code{openpty} function, but in
 addition, forks a new process (@pxref{Creating a Process}) and makes the
 newly opened slave pseudo-terminal device the controlling terminal
