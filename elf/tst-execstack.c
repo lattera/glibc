@@ -2,6 +2,7 @@
    on load of a DSO that requires executable stacks.  */
 
 #include <dlfcn.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -45,9 +46,43 @@ waiter_thread (void *arg)
 }
 #endif
 
+
+static bool allow_execstack = true;
+
+
 static int
 do_test (void)
 {
+  /* Check whether SELinux is enabled and disallows executable stacks.  */
+  FILE *fp = fopen ("/selinux/enforce", "r");
+  if (fp != NULL)
+    {
+      char *line = NULL;
+      size_t linelen = 0;
+
+      bool enabled = false;
+      ssize_t n = getline (&line, &linelen, fp);
+      if (n > 0 && line[0] != '0')
+	enabled = true;
+
+      fclose (fp);
+
+      if (enabled)
+	{
+	  fp = fopen ("/selinux/booleans/allow_execstack", "r");
+	  if (fp != NULL)
+	    {
+	      n = getline (&line, &linelen, fp);
+	      if (n > 0 && line[0] == '0')
+		allow_execstack = false;
+	    }
+
+	  fclose (fp);
+	}
+    }
+
+  printf ("executable stacks %sallowed\n", allow_execstack ? "" : "not ");
+
   static void *f;		/* Address of this is used in other threads. */
 
 #if USE_PTHREADS
@@ -77,7 +112,7 @@ do_test (void)
   if (h == NULL)
     {
       printf ("cannot load: %s\n", dlerror ());
-      return 1;
+      return allow_execstack;
     }
 
   f = dlsym (h, "tryme");
@@ -113,10 +148,10 @@ do_test (void)
      Let them run to test it.  */
   pthread_barrier_wait (&go_barrier);
 
-  pthread_exit (0);
+  pthread_exit (! allow_execstack);
 #endif
 
-  return 0;
+  return ! allow_execstack;
 }
 
 static void
