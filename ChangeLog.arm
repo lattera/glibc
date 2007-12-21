@@ -1,3 +1,14 @@
+2007-12-21  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: Use the i386 version.
+	* sysdeps/unix/sysv/linux/arm/register-dump.h (register_dump): Update
+	to use ucontext.
+	(REGISTER_DUMP): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h (SIGCONTEXT,
+	SIGCONTEXT_EXTRA_ARGS, GET_PC, GET_FRAME, GET_STACK): Likewise.
+	(sigaction, __sigaction): Define.
+	* sysdeps/unix/sysv/linux/arm/bits/armsigctx.h: Delete.
+
 2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.

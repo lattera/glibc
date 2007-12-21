@@ -17,35 +17,34 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <bits/armsigctx.h>
+#include <sys/ucontext.h>
 #include "kernel-features.h"
 
-#define SIGCONTEXT int _a2, int _a3, int _a4, union k_sigcontext
-#define SIGCONTEXT_EXTRA_ARGS _a2, _a3, _a4,
+#define SIGCONTEXT siginfo_t *_si, struct ucontext *
+#define SIGCONTEXT_EXTRA_ARGS _si,
 
 /* The sigcontext structure changed between 2.0 and 2.1 kernels.  On any
    modern system we should be able to assume that the "new" format will be
    in use.  */
-#if __LINUX_KERNEL_VERSION > 131328
 
-#define GET_PC(ctx)	((void *) ctx.v21.arm_pc)
-#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME ((void *) ctx.v21.arm_fp)
-#define GET_STACK(ctx)	((void *) ctx.v21.arm_sp)
-
-#else
-
-#define GET_PC(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
-			 ctx.v20.reg.ARM_pc : ctx.v21.arm_pc))
-#define GET_FRAME(ctx)	\
-	ADVANCE_STACK_FRAME((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
-			 ctx.v20.reg.ARM_fp : ctx.v21.arm_fp))
-#define GET_STACK(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
-			 ctx.v20.reg.ARM_sp : ctx.v21.arm_sp))
-
-#endif
+#define GET_PC(ctx)	((void *) (ctx)->uc_mcontext.arm_pc)
+#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME ((void *) ctx->uc_mcontext.arm_fp)
+#define GET_STACK(ctx)	((void *) (ctx)->uc_mcontext.arm_sp)
 
 #define ADVANCE_STACK_FRAME(frm)	\
 			((struct layout *)frm - 1)
 
 #define CALL_SIGHANDLER(handler, signo, ctx) \
   (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
+
+/* There is no reliable way to get the sigcontext unless we use a
+   three-argument signal handler.  */
+#define __sigaction(sig, act, oact) ({ \
+  (act)->sa_flags |= SA_SIGINFO; \
+  (__sigaction) (sig, act, oact); \
+})
+
+#define sigaction(sig, act, oact) ({ \
+  (act)->sa_flags |= SA_SIGINFO; \
+  (sigaction) (sig, act, oact); \
+})
