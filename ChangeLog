@@ -1,3 +1,8 @@
+2007-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): New entry 0x3f.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
 2007-12-17  Roland McGrath  <roland@redhat.com>
 
 	* inet/ether_line.c (ether_line): Remove unused variable.
