@@ -48,6 +48,7 @@ static const struct intel_02_cache_info
     { 0x3c, _SC_LEVEL2_CACHE_SIZE,   262144,  4, 64 },
     { 0x3d, _SC_LEVEL2_CACHE_SIZE,   393216,  6, 64 },
     { 0x3e, _SC_LEVEL2_CACHE_SIZE,   524288,  4, 64 },
+    { 0x3f, _SC_LEVEL2_CACHE_SIZE,   262144,  2, 64 },
     { 0x41, _SC_LEVEL2_CACHE_SIZE,   131072,  4, 32 },
     { 0x42, _SC_LEVEL2_CACHE_SIZE,   262144,  4, 32 },
     { 0x43, _SC_LEVEL2_CACHE_SIZE,   524288,  4, 32 },
