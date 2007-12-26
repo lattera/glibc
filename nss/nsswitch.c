@@ -150,7 +150,7 @@ __nss_lookup (service_user **ni, const char *fct_name, const char *fct2_name,
 {
   *fctp = __nss_lookup_function (*ni, fct_name);
   if (*fctp == NULL && fct2_name != NULL)
-    *fctp = __nss_lookup_function (*ni, fct_name);
+    *fctp = __nss_lookup_function (*ni, fct2_name);
 
   while (*fctp == NULL
 	 && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
@@ -160,7 +160,7 @@ __nss_lookup (service_user **ni, const char *fct_name, const char *fct2_name,
 
       *fctp = __nss_lookup_function (*ni, fct_name);
       if (*fctp == NULL && fct2_name != NULL)
-	*fctp = __nss_lookup_function (*ni, fct_name);
+	*fctp = __nss_lookup_function (*ni, fct2_name);
     }
 
   return *fctp != NULL ? 0 : (*ni)->next == NULL ? 1 : -1;
