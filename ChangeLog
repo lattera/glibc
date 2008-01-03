@@ -1,5 +1,8 @@
 2008-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Fix
+	recognition of interface family.
+
 	* posix/getconf.c: Update copyright year.
 	* nss/getent.c: Likewise.
 	* iconv/iconvconfig.c: Likewise.

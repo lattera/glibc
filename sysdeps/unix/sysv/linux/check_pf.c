@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -168,7 +168,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 		{
 		  address = local;
 		out:
-		  if (ifam->ifa_family != AF_INET)
+		  if (ifam->ifa_family == AF_INET)
 		    {
 		      if (*(const in_addr_t *) address
 			  != htonl (INADDR_LOOPBACK))
