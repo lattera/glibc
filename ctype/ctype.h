@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -79,11 +79,11 @@ enum
    doesn't fit into an `unsigned char'.  But today more important is that
    the arrays are also used for multi-byte character sets.  */
 extern __const unsigned short int **__ctype_b_loc (void)
-     __attribute__ ((__const));
+     __THROW __attribute__ ((__const));
 extern __const __int32_t **__ctype_tolower_loc (void)
-     __attribute__ ((__const));
+     __THROW __attribute__ ((__const));
 extern __const __int32_t **__ctype_toupper_loc (void)
-     __attribute__ ((__const));
+     __THROW __attribute__ ((__const));
 
 #define __isctype(c, type) \
   ((*__ctype_b_loc ())[(int) (c)] & (unsigned short int) type)
