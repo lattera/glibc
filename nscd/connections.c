@@ -1,5 +1,6 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005, 2006, 2007, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -1297,7 +1298,7 @@ cannot change to old working directory: %s; disabling paranoia mode"),
 
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
-    if (!dbs[cnt].enabled)
+    if (dbs[cnt].enabled)
       {
 	/* Make sure nobody keeps using the database.  */
 	dbs[cnt].head->timestamp = 0;
