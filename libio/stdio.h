@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991,1994-2004,2005,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -492,7 +492,7 @@ extern int __isoc99_vsscanf (__const char *__restrict __s,
 			     __const char *__restrict __format,
 			     _G_va_list __arg) __THROW;
 #   define vfscanf __isoc99_vfscanf
-#   define vscanf __isoc99_vsscanf
+#   define vscanf __isoc99_vscanf
 #   define vsscanf __isoc99_vsscanf
 #  endif
 # endif
