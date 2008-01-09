@@ -3772,8 +3772,9 @@ public_mEMALIGn(size_t alignment, size_t bytes)
     } else {
 #if USE_ARENAS
       /* ... or sbrk() has failed and there is still a chance to mmap() */
-      ar_ptr = arena_get2(ar_ptr->next ? ar_ptr : 0, bytes);
+      mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void)mutex_unlock(&ar_ptr->mutex);
+      ar_ptr = arena_get2(prev, bytes);
       if(ar_ptr) {
         p = _int_memalign(ar_ptr, alignment, bytes);
         (void)mutex_unlock(&ar_ptr->mutex);

@@ -29,6 +29,8 @@ __rpc_thread_destroy (void)
 		free (tvp->svcraw_private_s);
 		free (tvp->authdes_cache_s);
 		free (tvp->authdes_lru_s);
+		free (tvp->svc_xports_s);
+		free (tvp->svc_pollfd_s);
 		if (tvp != &__libc_tsd_RPC_VARS_mem)
 			free (tvp);
 		__libc_tsd_set (RPC_VARS, NULL);
