@@ -1,5 +1,5 @@
 /* Conversion from and to IBM937.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -272,6 +272,7 @@ enum
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *curcsp
 #define INIT_PARAMS		int curcs = *curcsp & ~7
+#define REINIT_PARAMS		curcs = *curcsp & ~7
 #define UPDATE_PARAMS		*curcsp = curcs
 #include <iconv/loop.c>
 

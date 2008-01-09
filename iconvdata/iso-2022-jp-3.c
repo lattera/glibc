@@ -1,5 +1,6 @@
 /* Conversion module for ISO-2022-JP-3.
-   Copyright (C) 1998-1999, 2000-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-1999, 2000-2002, 2004, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998,
    and Bruno Haible <bruno@clisp.org>, 2002.
@@ -759,6 +760,12 @@ static const struct
 #define EXTRA_LOOP_DECLS	, int *statep
 #define INIT_PARAMS		int set = *statep & CURRENT_SEL_MASK;	      \
 				uint32_t lasttwo = *statep >> 6
+#define REINIT_PARAMS		do					      \
+				  {					      \
+				    set = *statep & CURRENT_SEL_MASK;	      \
+				    lasttwo = *statep >> 6;		      \
+				  }					      \
+				while (0)
 #define UPDATE_PARAMS		*statep = set | (lasttwo << 6)
 #include <iconv/loop.c>
 

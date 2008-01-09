@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -174,6 +174,15 @@
 # define EXTRA_LOOP_DECLS
 #endif
 
+/* Allow using UPDATE_PARAMS in macros where #ifdef UPDATE_PARAMS test
+   isn't possible.  */
+#ifndef UPDATE_PARAMS
+# define UPDATE_PARAMS do { } while (0)
+#endif
+#ifndef REINIT_PARAMS
+# define REINIT_PARAMS do { } while (0)
+#endif
+
 
 /* To make it easier for the writers of the modules, we define a macro
    to test whether we have to ignore errors.  */
@@ -214,6 +223,10 @@
 	 case we are not doing any error recovery outself.  */		      \
       break;								      \
 									      \
+    /* If needed, flush any conversion state, so that __gconv_transliterate   \
+       starts with current shift state.  */				      \
+    UPDATE_PARAMS;							      \
+									      \
     /* First try the transliteration methods.  */			      \
     for (trans = step_data->__trans; trans != NULL; trans = trans->__next)    \
       {									      \
@@ -223,6 +236,9 @@
 	if (result != __GCONV_ILLEGAL_INPUT)				      \
 	  break;							      \
       }									      \
+									      \
+    REINIT_PARAMS;							      \
+									      \
     /* If any of them recognized the input continue with the loop.  */	      \
     if (result != __GCONV_ILLEGAL_INPUT)				      \
       {									      \
@@ -319,9 +335,7 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
   /* Update the pointers pointed to by the parameters.  */
   *inptrp = inptr;
   *outptrp = outptr;
-#ifdef UPDATE_PARAMS
   UPDATE_PARAMS;
-#endif
 
   return result;
 }
@@ -492,6 +506,7 @@ gconv_btowc (struct __gconv_step *step, unsigned char c)
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
+#undef REINIT_PARAMS
 #undef ONEBYTE_BODY
 #undef UNPACK_BYTES
 #undef CLEAR_STATE

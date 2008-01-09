@@ -1,5 +1,6 @@
 /* Conversion module for ISO-2022-KR.
-   Copyright (C) 1998, 1999, 2000-2002, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2007, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -261,6 +262,7 @@ enum
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp
+#define REINIT_PARAMS		set = *setp
 #define UPDATE_PARAMS		*setp = set
 #include <iconv/loop.c>
 

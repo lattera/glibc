@@ -715,8 +715,7 @@ static const cvlist_t conversion_lists[4] =
 	       list that depends on the current language tag.  */	      \
 	    cvlist_t conversion_list;					      \
 	    unsigned char buf[2];					      \
-									      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    int res = __GCONV_ILLEGAL_INPUT;				      \
 									      \
 	    if (var == iso2022jp2)					      \
 	      conversion_list = conversion_lists[tag >> 8];		      \
@@ -735,7 +734,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 3 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -746,13 +745,13 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 3 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = ESC;					      \
 		      *outptr++ = 'N';					      \
 		      *outptr++ = ch - 0x80;				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -774,7 +773,7 @@ static const cvlist_t conversion_lists[4] =
 				  if (__builtin_expect (outptr + 3 > outend,  \
 							0))		      \
 				    {					      \
-				      result = __GCONV_FULL_OUTPUT;	      \
+				      res = __GCONV_FULL_OUTPUT;	      \
 				      break;				      \
 				    }					      \
 				  *outptr++ = ESC;			      \
@@ -785,13 +784,13 @@ static const cvlist_t conversion_lists[4] =
 									      \
 			      if (__builtin_expect (outptr + 3 > outend, 0))  \
 				{					      \
-				  result = __GCONV_FULL_OUTPUT;		      \
+				  res = __GCONV_FULL_OUTPUT;		      \
 				  break;				      \
 				}					      \
 			      *outptr++ = ESC;				      \
 			      *outptr++ = 'N';				      \
 			      *outptr++ = res;				      \
-			      result = __GCONV_OK;			      \
+			      res = __GCONV_OK;				      \
 			      break;					      \
 			    }						      \
 			}						      \
@@ -810,7 +809,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 3 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -821,11 +820,11 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0];				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -837,7 +836,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 3 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -848,12 +847,12 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0];				      \
 		      *outptr++ = buf[1];				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -869,7 +868,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 4 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -881,12 +880,12 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0];				      \
 		      *outptr++ = buf[1];				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -903,7 +902,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 3 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -914,12 +913,12 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0];				      \
 		      *outptr++ = buf[1];				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -936,7 +935,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 4 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -948,12 +947,12 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0];				      \
 		      *outptr++ = buf[1];				      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -972,7 +971,7 @@ static const cvlist_t conversion_lists[4] =
 			{						      \
 			  if (__builtin_expect (outptr + 3 > outend, 0))      \
 			    {						      \
-			      result = __GCONV_FULL_OUTPUT;		      \
+			      res = __GCONV_FULL_OUTPUT;		      \
 			      break;					      \
 			    }						      \
 			  *outptr++ = ESC;				      \
@@ -983,11 +982,11 @@ static const cvlist_t conversion_lists[4] =
 									      \
 		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
 			{						      \
-			  result = __GCONV_FULL_OUTPUT;			      \
+			  res = __GCONV_FULL_OUTPUT;			      \
 			  break;					      \
 			}						      \
 		      *outptr++ = buf[0] - 0x80;			      \
-		      result = __GCONV_OK;				      \
+		      res = __GCONV_OK;					      \
 		      break;						      \
 		    }							      \
 									      \
@@ -996,13 +995,16 @@ static const cvlist_t conversion_lists[4] =
 		default:						      \
 		  abort ();						      \
 		}							      \
-	    while (result == __GCONV_ILLEGAL_INPUT			      \
+	    while (res == __GCONV_ILLEGAL_INPUT				      \
 		   && (conversion_list = CVLIST_REST (conversion_list)) != 0);\
 									      \
-	    if (result == __GCONV_FULL_OUTPUT)				      \
-	      break;							      \
+	    if (res == __GCONV_FULL_OUTPUT)				      \
+	      {								      \
+		result = res;						      \
+		break;							      \
+	      }								      \
 									      \
-	    if (result == __GCONV_ILLEGAL_INPUT)			      \
+	    if (res == __GCONV_ILLEGAL_INPUT)				      \
 	      {								      \
 		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
@@ -1017,6 +1019,13 @@ static const cvlist_t conversion_lists[4] =
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
 				int set2 = *setp & CURRENT_ASSIGN_MASK;	      \
 				int tag = *setp & CURRENT_TAG_MASK;
+#define REINIT_PARAMS		do					      \
+				  {					      \
+				    set = *setp & CURRENT_SEL_MASK;	      \
+				    set2 = *setp & CURRENT_ASSIGN_MASK;	      \
+				    tag = *setp & CURRENT_TAG_MASK;	      \
+				  }					      \
+				while (0)
 #define UPDATE_PARAMS		*setp = set | set2 | tag
 #include <iconv/loop.c>
 

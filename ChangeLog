@@ -5,6 +5,29 @@
 	* stdlib/Makefile: Add rules to build and run tst-makecontext2.
 	* stdlib/tst-makecontext2.c: New test.
 
+008-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/loop.c (UPDATE_PARAMS): Define to empty statement if not
+	defined.
+	(REINIT_PARAMS): Likewise.  Undefine before end of file.
+	(STANDARD_TO_LOOP_ERR_HANDLER): Use UPDATE_PARAMS before calling
+	transliteration hooks and REINIT_PARAMS afterwards.
+	* iconvdata/iso-2022-jp.c (BODY): Use a separate variable for
+	status.
+	(REINIT_PARAMS): Define.
+	* iconvdata/ibm1364.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm930.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm933.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm935.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm937.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm939.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-cn.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-cn-ext.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-jp-3.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-kr.c (REINIT_PARAMS): Likewise.
+	* iconvdata/Makefile: Add rules to build and run tst-iconv7.c.
+	* iconvdata/tst-iconv7.c: New test.
+
 2008-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h (vscanf): Fix definition for loser compilers.

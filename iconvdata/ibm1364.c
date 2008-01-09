@@ -1,5 +1,5 @@
 /* Conversion from and to IBM1364.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2005.
 
@@ -387,6 +387,7 @@ enum
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *curcsp
 #define INIT_PARAMS		int curcs = *curcsp & ~7
+#define REINIT_PARAMS		curcs = *curcsp & ~7
 #define UPDATE_PARAMS		*curcsp = curcs
 #include <iconv/loop.c>
 

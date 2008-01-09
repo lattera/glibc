@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN-EXT.
-   Copyright (C) 2000-2002, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -648,6 +648,12 @@ enum
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = (*setp >> 3) & CURRENT_MASK; \
 				int ann = (*setp >> 3) & ~CURRENT_MASK
+#define REINIT_PARAMS		do					      \
+				  {					      \
+				    set = (*setp >> 3) & CURRENT_MASK;	      \
+				    ann = (*setp >> 3) & ~CURRENT_MASK;	      \
+				  }					      \
+				while (0)
 #define UPDATE_PARAMS		*setp = (set | ann) << 3
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
