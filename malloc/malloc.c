@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -3553,9 +3553,10 @@ public_mALLOc(size_t bytes)
     /* Maybe the failure is due to running out of mmapped areas. */
     if(ar_ptr != &main_arena) {
       (void)mutex_unlock(&ar_ptr->mutex);
-      (void)mutex_lock(&main_arena.mutex);
-      victim = _int_malloc(&main_arena, bytes);
-      (void)mutex_unlock(&main_arena.mutex);
+      ar_ptr = &main_arena;
+      (void)mutex_lock(&ar_ptr->mutex);
+      victim = _int_malloc(ar_ptr, bytes);
+      (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
       /* ... or sbrk() has failed and there is still a chance to mmap() */
@@ -3760,17 +3761,19 @@ public_mEMALIGn(size_t alignment, size_t bytes)
   if(!ar_ptr)
     return 0;
   p = _int_memalign(ar_ptr, alignment, bytes);
-  (void)mutex_unlock(&ar_ptr->mutex);
   if(!p) {
     /* Maybe the failure is due to running out of mmapped areas. */
     if(ar_ptr != &main_arena) {
-      (void)mutex_lock(&main_arena.mutex);
-      p = _int_memalign(&main_arena, alignment, bytes);
-      (void)mutex_unlock(&main_arena.mutex);
+      (void)mutex_unlock(&ar_ptr->mutex);
+      ar_ptr = &main_arena;
+      (void)mutex_lock(&ar_ptr->mutex);
+      p = _int_memalign(ar_ptr, alignment, bytes);
+      (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
       /* ... or sbrk() has failed and there is still a chance to mmap() */
       ar_ptr = arena_get2(ar_ptr->next ? ar_ptr : 0, bytes);
+      (void)mutex_unlock(&ar_ptr->mutex);
       if(ar_ptr) {
         p = _int_memalign(ar_ptr, alignment, bytes);
         (void)mutex_unlock(&ar_ptr->mutex);
