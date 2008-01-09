@@ -1,3 +1,10 @@
+2008-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/makecontext.S (__makecontext): Avoid
+	clobbering memory at or above uc_stack.ss_sp + uc_stack.ss_size.
+	* stdlib/Makefile: Add rules to build and run tst-makecontext2.
+	* stdlib/tst-makecontext2.c: New test.
+
 2008-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h (vscanf): Fix definition for loser compilers.
