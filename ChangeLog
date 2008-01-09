@@ -1,5 +1,9 @@
 2008-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5545]
+	* sunrpc/clnt_perr.c (clnt_sperror): Don't use fixed size buffer.
+	(clnt_spcreateerror): Likewise.
+
 	[BZ #5553]
 	* malloc/malloc.c (public_mALLOc): Set ar_ptr when trying main_arena.
 	(public_mEMALIGn): Likewise.

@@ -60,36 +60,21 @@ static char *auth_errmsg (enum auth_stat stat) internal_function;
 static char *buf;
 #endif
 
-static char *
-_buf (void)
-{
-  if (buf == NULL)
-    buf = (char *) malloc (256);
-  return buf;
-}
-
 /*
  * Print reply error info
  */
 char *
 clnt_sperror (CLIENT * rpch, const char *msg)
 {
-  char chrbuf[1024];
   struct rpc_err e;
-  char *err;
-  char *str = _buf ();
-  char *strstart = str;
-  int len;
-
-  if (str == NULL)
-    return NULL;
   CLNT_GETERR (rpch, &e);
 
-  len = sprintf (str, "%s: ", msg);
-  str += len;
+  const char *errstr = clnt_sperrno (e.re_status);
 
-  str = stpcpy (str, clnt_sperrno (e.re_status));
-
+  char chrbuf[1024];
+  char *str;
+  char *tmpstr;
+  int res;
   switch (e.re_status)
     {
     case RPC_SUCCESS:
@@ -105,50 +90,52 @@ clnt_sperror (CLIENT * rpch, const char *msg)
     case RPC_PMAPFAILURE:
     case RPC_PROGNOTREGISTERED:
     case RPC_FAILED:
+      res = __asprintf (&str, "%s: %s\n", msg, errstr);
       break;
 
     case RPC_CANTSEND:
     case RPC_CANTRECV:
-      len = sprintf (str, "; errno = %s", __strerror_r (e.re_errno,
-							chrbuf, sizeof chrbuf));
-      str += len;
+      res = __asprintf (&str, "%s: %s; errno = %s\n",
+			msg, errstr, __strerror_r (e.re_errno,
+						   chrbuf, sizeof chrbuf));
       break;
 
     case RPC_VERSMISMATCH:
-      len= sprintf (str, _("; low version = %lu, high version = %lu"),
-		    e.re_vers.low, e.re_vers.high);
-      str += len;
+      res = __asprintf (&str,
+			_("%s: %s; low version = %lu, high version = %lu"),
+			msg, errstr, e.re_vers.low, e.re_vers.high);
       break;
 
     case RPC_AUTHERROR:
-      err = auth_errmsg (e.re_why);
-      str = stpcpy (str, _ ("; why = "));
-      if (err != NULL)
-	{
-	  str = stpcpy (str, err);
-	}
+      tmpstr = auth_errmsg (e.re_why);
+      if (tmpstr != NULL)
+	res = __asprintf (&str, _("%s: %s; why = %s\n"), msg, errstr, tmpstr);
       else
-	{
-	  len = sprintf (str, _("(unknown authentication error - %d)"),
-			 (int) e.re_why);
-	  str += len;
-	}
+	res = __asprintf (&str, _("\
+%s: %s; why = (unknown authentication error - %d)\n"),
+			  msg, errstr, (int) e.re_why);
       break;
 
     case RPC_PROGVERSMISMATCH:
-      len = sprintf (str, _("; low version = %lu, high version = %lu"),
-		     e.re_vers.low, e.re_vers.high);
-      str += len;
+      res = __asprintf (&str,
+			_("%s: %s; low version = %lu, high version = %lu"),
+			msg, errstr, e.re_vers.low, e.re_vers.high);
       break;
 
     default:			/* unknown */
-      len = sprintf (str, "; s1 = %lu, s2 = %lu", e.re_lb.s1, e.re_lb.s2);
-      str += len;
+      res = __asprintf (&str, "%s: %s; s1 = %lu, s2 = %lu",
+			msg, errstr, e.re_lb.s1, e.re_lb.s2);
       break;
     }
-  *str = '\n';
-  *++str = '\0';
-  return (strstart);
+
+  if (res < 0)
+    return NULL;
+
+  char *oldbuf = buf;
+  buf = str;
+  free (oldbuf);
+
+  return str;
 }
 libc_hidden_def (clnt_sperror)
 
@@ -291,35 +278,36 @@ clnt_perrno (enum clnt_stat num)
 char *
 clnt_spcreateerror (const char *msg)
 {
-  char chrbuf[1024];
-  char *str = _buf ();
-  char *cp;
-  int len;
-  struct rpc_createerr *ce;
+  struct rpc_createerr *ce = &get_rpc_createerr ();
 
-  if (str == NULL)
-    return NULL;
-  ce = &get_rpc_createerr ();
-  len = sprintf (str, "%s: ", msg);
-  cp = str + len;
-  cp = stpcpy (cp, clnt_sperrno (ce->cf_stat));
+  char chrbuf[1024];
+  const char *connector = "";
+  const char *errstr = "";
   switch (ce->cf_stat)
     {
     case RPC_PMAPFAILURE:
-      cp = stpcpy (stpcpy (cp, " - "),
-		   clnt_sperrno (ce->cf_error.re_status));
+      connector = " - ";
+      errstr = clnt_sperrno (ce->cf_error.re_status);
       break;
 
     case RPC_SYSTEMERROR:
-      cp = stpcpy (stpcpy (cp, " - "),
-		   __strerror_r (ce->cf_error.re_errno,
-				 chrbuf, sizeof chrbuf));
+      connector = " - ";
+      errstr = __strerror_r (ce->cf_error.re_errno, chrbuf, sizeof chrbuf);
       break;
+
     default:
       break;
     }
-  *cp = '\n';
-  *++cp = '\0';
+
+  char *str;
+  if (__asprintf (&str, "%s: %s%s%s\n",
+		  msg, clnt_sperrno (ce->cf_stat), connector, errstr) < 0)
+    return NULL;
+
+  char *oldbuf = buf;
+  buf = str;
+  free (oldbuf);
+
   return str;
 }
 libc_hidden_def (clnt_spcreateerror)
