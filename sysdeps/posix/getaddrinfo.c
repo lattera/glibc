@@ -997,8 +997,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 struct sort_result
 {
   struct addrinfo *dest_addr;
-  struct sockaddr_storage source_addr;
-  size_t service_order;
+  /* Using sockaddr_storage is for now overkill.  We only support IPv4
+     and IPv6 so far.  If this changes at some point we can adjust the
+     type here.  */
+  struct sockaddr_in6 source_addr;
   uint8_t source_addr_len;
   bool got_source_addr;
   uint8_t source_addr_flags;
@@ -1047,13 +1049,11 @@ static const struct scopeentry *scopes;
 
 
 static int
-get_scope (const struct sockaddr_storage *ss)
+get_scope (const struct sockaddr_in6 *in6)
 {
   int scope;
-  if (ss->ss_family == PF_INET6)
+  if (in6->sin6_family == PF_INET6)
     {
-      const struct sockaddr_in6 *in6 = (const struct sockaddr_in6 *) ss;
-
       if (! IN6_IS_ADDR_MULTICAST (&in6->sin6_addr))
 	{
 	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr))
@@ -1067,9 +1067,9 @@ get_scope (const struct sockaddr_storage *ss)
       else
 	scope = in6->sin6_addr.s6_addr[1] & 0xf;
     }
-  else if (ss->ss_family == PF_INET)
+  else if (in6->sin6_family == PF_INET)
     {
-      const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
+      const struct sockaddr_in *in = (const struct sockaddr_in *) in6;
 
       size_t cnt = 0;
       while (1)
@@ -1179,18 +1179,15 @@ static const struct prefixentry default_precedence[] =
 
 
 static int
-match_prefix (const struct sockaddr_storage *ss,
+match_prefix (const struct sockaddr_in6 *in6,
 	      const struct prefixentry *list, int default_val)
 {
   int idx;
   struct sockaddr_in6 in6_mem;
-  const struct sockaddr_in6 *in6;
 
-  if (ss->ss_family == PF_INET6)
-    in6 = (const struct sockaddr_in6 *) ss;
-  else if (ss->ss_family == PF_INET)
+  if (in6->sin6_family == PF_INET)
     {
-      const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
+      const struct sockaddr_in *in = (const struct sockaddr_in *) in6;
 
       /* Convert to IPv6 address.  */
       in6_mem.sin6_family = PF_INET6;
@@ -1209,7 +1206,7 @@ match_prefix (const struct sockaddr_storage *ss,
 
       in6 = &in6_mem;
     }
-  else
+  else if (in6->sin6_family != PF_INET6)
     return default_val;
 
   for (idx = 0; ; ++idx)
@@ -1241,18 +1238,18 @@ match_prefix (const struct sockaddr_storage *ss,
 
 
 static int
-get_label (const struct sockaddr_storage *ss)
+get_label (const struct sockaddr_in6 *in6)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, labels, INT_MAX);
+  return match_prefix (in6, labels, INT_MAX);
 }
 
 
 static int
-get_precedence (const struct sockaddr_storage *ss)
+get_precedence (const struct sockaddr_in6 *in6)
 {
   /* XXX What is a good default value?  */
-  return match_prefix (ss, precedence, 0);
+  return match_prefix (in6, precedence, 0);
 }
 
 
@@ -1272,9 +1269,11 @@ fls (uint32_t a)
 static int
 rfc3484_sort (const void *p1, const void *p2, void *arg)
 {
-  const struct sort_result *a1 = (const struct sort_result *) p1;
-  const struct sort_result *a2 = (const struct sort_result *) p2;
+  const size_t idx1 = *(const size_t *) p1;
+  const size_t idx2 = *(const size_t *) p2;
   struct sort_result_combo *src = (struct sort_result_combo *) arg;
+  struct sort_result *a1 = &src->results[idx1];
+  struct sort_result *a2 = &src->results[idx2];
 
   /* Rule 1: Avoid unusable destinations.
      We have the got_source_addr flag set if the destination is reachable.  */
@@ -1287,10 +1286,10 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
   /* Rule 2: Prefer matching scope.  Only interesting if both
      destination addresses are IPv6.  */
   int a1_dst_scope
-    = get_scope ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+    = get_scope ((struct sockaddr_in6 *) a1->dest_addr->ai_addr);
 
   int a2_dst_scope
-    = get_scope ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+    = get_scope ((struct sockaddr_in6 *) a2->dest_addr->ai_addr);
 
   if (a1->got_source_addr)
     {
@@ -1330,11 +1329,11 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
   if (a1->got_source_addr)
     {
       int a1_dst_label
-	= get_label ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+	= get_label ((struct sockaddr_in6 *) a1->dest_addr->ai_addr);
       int a1_src_label = get_label (&a1->source_addr);
 
       int a2_dst_label
-	= get_label ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+	= get_label ((struct sockaddr_in6 *) a2->dest_addr->ai_addr);
       int a2_src_label = get_label (&a2->source_addr);
 
       if (a1_dst_label == a1_src_label && a2_dst_label != a2_src_label)
@@ -1346,9 +1345,9 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 
   /* Rule 6: Prefer higher precedence.  */
   int a1_prec
-    = get_precedence ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+    = get_precedence ((struct sockaddr_in6 *) a1->dest_addr->ai_addr);
   int a2_prec
-    = get_precedence ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+    = get_precedence ((struct sockaddr_in6 *) a2->dest_addr->ai_addr);
 
   if (a1_prec > a2_prec)
     return -1;
@@ -1406,8 +1405,8 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 
       if (a1->dest_addr->ai_family == PF_INET)
 	{
-	  assert (a1->source_addr.ss_family == PF_INET);
-	  assert (a2->source_addr.ss_family == PF_INET);
+	  assert (a1->source_addr.sin6_family == PF_INET);
+	  assert (a2->source_addr.sin6_family == PF_INET);
 
 	  /* Outside of subnets, as defined by the network masks,
 	     common address prefixes for IPv4 addresses make no sense.
@@ -1437,8 +1436,8 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
-	  assert (a1->source_addr.ss_family == PF_INET6);
-	  assert (a2->source_addr.ss_family == PF_INET6);
+	  assert (a1->source_addr.sin6_family == PF_INET6);
+	  assert (a2->source_addr.sin6_family == PF_INET6);
 
 	  struct sockaddr_in6 *in1_dst;
 	  struct sockaddr_in6 *in1_src;
@@ -1478,7 +1477,7 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
      compare with the value indicating the order in which the entries
      have been received from the services.  NB: no two entries can have
      the same order so the test will never return zero.  */
-  return a1->service_order < a2->service_order ? -1 : 1;
+  return idx1 < idx2 ? -1 : 1;
 }
 
 
@@ -2100,6 +2099,7 @@ getaddrinfo (const char *name, const char *service,
       __libc_once (once, gaiconf_init);
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
+      size_t order[nresults];
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
@@ -2115,8 +2115,8 @@ getaddrinfo (const char *name, const char *service,
       for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
 	  results[i].dest_addr = q;
-	  results[i].service_order = i;
 	  results[i].native = -1;
+	  order[i] = i;
 
 	  /* If we just looked up the address for a different
 	     protocol, reuse the result.  */
@@ -2255,16 +2255,16 @@ getaddrinfo (const char *name, const char *service,
 	  __libc_lock_lock (lock);
 	  if (old_once && gaiconf_reload_flag)
 	    gaiconf_reload ();
-	  qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
+	  qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
 	  __libc_lock_unlock (lock);
 	}
       else
-	qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
+	qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
 
       /* Queue the results up as they come out of sorting.  */
-      q = p = results[0].dest_addr;
+      q = p = results[order[0]].dest_addr;
       for (i = 1; i < nresults; ++i)
-	q = q->ai_next = results[i].dest_addr;
+	q = q->ai_next = results[order[i]].dest_addr;
       q->ai_next = NULL;
 
       /* Fill in the canonical name into the new first entry.  */

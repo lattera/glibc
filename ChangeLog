@@ -1,3 +1,21 @@
+2008-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (sort_results): Remove service_order
+	field.  Use sockaddr_in6 for source_addr.
+	(get_scope): Change type of parameter to sockaddr_in6.  Adjust.
+	(match_prefix): Likewise.
+	(get_label): Likewise.
+	(get_precedence): Likewise.
+	(rfc3484_sort): Change to use indirect access to results array.
+	Adjust to use of sockaddr_in6.  Replace service_order test with
+	simple index comparison.
+	(getaddrinfo): Define order array.  Initialize it.  Don't initialize
+	service_order field.  Adjust qsort_t calls.  Access sorted result
+	array indirectly through order array.
+	* posix/tst-rfc3484.c: Adjust for change of rfc3484_sort.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
+
 2008-01-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5541]

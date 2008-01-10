@@ -100,31 +100,32 @@ do_test (void)
 
 
   struct sort_result results[2];
+  size_t order[2];
 
   results[0].dest_addr = &ai1;
   results[0].got_source_addr = true;
   results[0].source_addr_len = sizeof (so1);
   results[0].source_addr_flags = 0;
-  results[0].service_order = 0;
   results[0].prefixlen = 16;
   results[0].index = 0;
   memcpy (&results[0].source_addr, &so1, sizeof (so1));
+  order[0] = 0;
 
   results[1].dest_addr = &ai2;
   results[1].got_source_addr = true;
   results[1].source_addr_len = sizeof (so2);
   results[1].source_addr_flags = 0;
-  results[1].service_order = 1;
   results[1].prefixlen = 16;
   results[1].index = 0;
   memcpy (&results[1].source_addr, &so2, sizeof (so2));
+  order[1] = 1;
 
 
   struct sort_result_combo combo = { .results = results, .nresults = 2 };
-  qsort_r (results, 2, sizeof (results[0]), rfc3484_sort, &combo);
+  qsort_r (order, 2, sizeof (order[0]), rfc3484_sort, &combo);
 
   int result = 0;
-  if (results[0].dest_addr->ai_family == AF_INET6)
+  if (results[order[0]].dest_addr->ai_family == AF_INET6)
     {
       puts ("wrong order in first test");
       result |= 1;
@@ -136,24 +137,24 @@ do_test (void)
   results[1].got_source_addr = true;
   results[1].source_addr_len = sizeof (so1);
   results[1].source_addr_flags = 0;
-  results[1].service_order = 1;
   results[1].prefixlen = 16;
   results[1].index = 0;
   memcpy (&results[1].source_addr, &so1, sizeof (so1));
+  order[1] = 1;
 
   results[0].dest_addr = &ai2;
   results[0].got_source_addr = true;
   results[0].source_addr_len = sizeof (so2);
   results[0].source_addr_flags = 0;
-  results[0].service_order = 0;
   results[0].prefixlen = 16;
   results[0].index = 0;
   memcpy (&results[0].source_addr, &so2, sizeof (so2));
+  order[0] = 0;
 
 
-  qsort_r (results, 2, sizeof (results[0]), rfc3484_sort, &combo);
+  qsort_r (order, 2, sizeof (order[0]), rfc3484_sort, &combo);
 
-  if (results[0].dest_addr->ai_family == AF_INET6)
+  if (results[order[0]].dest_addr->ai_family == AF_INET6)
     {
       puts ("wrong order in second test");
       result |= 1;
