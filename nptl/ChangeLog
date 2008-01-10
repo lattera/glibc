@@ -1,3 +1,11 @@
+2008-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread-errnos.sym: Add EOVERFLOW.
+	* sysdeps/unix/sysv/linux/structsem.sym: Add SEM_VALUE_MAX.
+	* sysdeps/unix/sysv/linux/sem_post.c: Don't overflow value field.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
+
 2007-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/pthreaddef.h (ARCH_RETRY_MMAP): Take additional

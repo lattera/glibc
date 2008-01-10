@@ -3781,7 +3781,8 @@ public_mEMALIGn(size_t alignment, size_t bytes)
       }
 #endif
     }
-  }
+  } else
+    (void)mutex_unlock(&ar_ptr->mutex);
   assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
   return p;

@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stddef.h>
 #include <sched.h>
 #include <bits/pthreadtypes.h>
@@ -8,3 +9,4 @@
 VALUE		offsetof (struct new_sem, value)
 PRIVATE		offsetof (struct new_sem, private)
 NWAITERS	offsetof (struct new_sem, nwaiters)
+SEM_VALUE_MAX	SEM_VALUE_MAX

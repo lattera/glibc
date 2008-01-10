@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -30,12 +30,21 @@
 	.type	sem_post,@function
 	.align	16
 sem_post:
+#if VALUE == 0
+	movl	(%rdi), %eax
+#else
+	movl	VALUE(%rdi), %eax
+#endif
+0:	cmpl	$SEM_VALUE_MAX, %eax
+	je	3f
+	leal	1(%eax), %esi
 	LOCK
 #if VALUE == 0
-	addl	$1, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	addl	$1, VALUE(%rdi)
+	cmpxchgl %esi, VALUE(%rdi)
 #endif
+	jnz	0b
 
 	cmpq	$0, NWAITERS(%rdi)
 	je	2f
@@ -54,13 +63,28 @@ sem_post:
 
 1:
 #if USE___THREAD
-	movq	errno@gottpoff(%rip), %rdx
-	movl	$EINVAL, %fs:(%rdx)
+	movl	$EINVAL, %eax
 #else
 	callq	__errno_location@plt
-	movl	$EINVAL, (%rax)
+	movl	$EINVAL, %edx
+#endif
+	jmp	4f
+
+3:
+#if USE___THREAD
+	movl	$EOVERFLOW, %eax
+#else
+	callq	__errno_location@plt
+	movl	$EOVERFLOW, %edx
 #endif
 
+4:
+#if USE___THREAD
+	movq	errno@gottpoff(%rip), %rdx
+	movl	%eax, %fs:(%rdx)
+#else
+	movl	%edx, (%rax)
+#endif
 	orl	$-1, %eax
 	retq
 	.size	sem_post,.-sem_post

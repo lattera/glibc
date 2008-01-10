@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -34,12 +34,21 @@ __new_sem_post:
 
 	movl	8(%esp), %ebx
 
+#if VALUE == 0
+	movl	(%ebx), %eax
+#else
+	movl	VALUE(%ebx), %eax
+#endif
+0:	cmpl	$SEM_VALUE_MAX, %eax
+	je	3f
+	leal	1(%eax), %edx
 	LOCK
 #if VALUE == 0
-	addl	$1, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	addl	$1, VALUE(%ebx)
+	cmpxchgl %edx, VALUE(%ebx)
 #endif
+	jnz	0b
 
 	cmpl	$0, NWAITERS(%ebx)
 	je	2f
@@ -77,6 +86,32 @@ __new_sem_post:
 #else
 	call	__errno_location@plt
 	movl	$EINVAL, (%eax)
+#endif
+
+	orl	$-1, %eax
+	popl	%ebx
+	ret
+
+3:
+#ifdef PIC
+	call	__i686.get_pc_thunk.bx
+#else
+	movl	$5f, %ebx
+5:
+#endif
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+#if USE___THREAD
+# ifdef NO_TLS_DIRECT_SEG_REFS
+	movl	errno@gotntpoff(%ebx), %edx
+	addl	%gs:0, %edx
+	movl	$EOVERFLOW, (%edx)
+# else
+	movl	errno@gotntpoff(%ebx), %edx
+	movl	$EOVERFLOW, %gs:(%edx)
+# endif
+#else
+	call	__errno_location@plt
+	movl	$EOVERFLOW, (%eax)
 #endif
 
 	orl	$-1, %eax
