@@ -1,3 +1,8 @@
+2008-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Store result of
+	native interface lookup in all the relevant places.
+
 2008-01-10  Jakub Jelinek  <jakub@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 

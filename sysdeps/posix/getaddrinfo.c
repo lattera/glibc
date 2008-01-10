@@ -1363,27 +1363,54 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 	 (most?) cases.  */
       if (a1->index != a2->index)
 	{
-	  if (a1->native == -1 || a2->native == -1)
+	  int a1_native = a1->native;
+	  int a2_native = a2->native;
+
+	  if (a1_native == -1 || a2_native == -1)
 	    {
-	      /* If we do not have the information use 'native' as the
-		 default.  */
-	      int a1_native = 0;
-	      int a2_native = 0;
-	      __check_native (a1->index, &a1_native, a2->index, &a2_native);
+	      uint32_t a1_index;
+	      if (a1_native == -1)
+		{
+		  /* If we do not have the information use 'native' as
+		     the default.  */
+		  a1_native = 0;
+		  a1_index = a1->index;
+		}
+	      else
+		a1_index = 0xffffffffu;
+
+	      uint32_t a2_index;
+	      if (a2_native == -1)
+		{
+		  /* If we do not have the information use 'native' as
+		     the default.  */
+		  a2_native = 0;
+		  a2_index = a2->index;
+		}
+	      else
+		a2_index = 0xffffffffu;
+
+	      __check_native (a1_index, &a1_native, a2_index, &a2_native);
 
 	      /* Fill in the results in all the records.  */
 	      for (int i = 0; i < src->nresults; ++i)
-		{
-		  if (a1->native == -1 && src->results[i].index == a1->index)
+		if (src->results[i].index == a1_index)
+		  {
+		    assert (src->results[i].native == -1
+			    || src->results[i].native == a1_native);
 		    src->results[i].native = a1_native;
-		  if (a2->native == -1 && src->results[i].index == a2->index)
+		  }
+		else if (src->results[i].index == a2_index)
+		  {
+		    assert (src->results[i].native == -1
+			    || src->results[i].native == a2_native);
 		    src->results[i].native = a2_native;
-		}
+		  }
 	    }
 
-	  if (a1->native && !a2->native)
+	  if (a1_native && !a2_native)
 	    return -1;
-	  if (!a1->native && a2->native)
+	  if (!a1_native && a2_native)
 	    return 1;
 	}
     }
