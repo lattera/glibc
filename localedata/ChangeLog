@@ -1,3 +1,8 @@
+2008-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5520]
+	* locales/ga_IE: Fix May, June, November and December entries in mon.
+
 2007-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmsp/HP-THAI8: New file.
