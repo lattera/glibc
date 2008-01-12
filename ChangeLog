@@ -1,3 +1,10 @@
+2008-01-11  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5600]
+	* sysdeps/unix/sysv/linux/sys/signalfd.h (struct
+	signalfd_siginfo): Use 64-bit type for ssi_ptr to sync with Linux
+	kernel header.
+
 2008-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Store result of
