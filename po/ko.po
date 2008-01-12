@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.7\n"
 "POT-Creation-Date: 2007-10-15 21:18-0700\n"
-"PO-Revision-Date: 2007-11-16 00:59+0900\n"
+"PO-Revision-Date: 2008-01-12 19:59+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -3272,7 +3272,7 @@ msgstr "열의 수             : %d\n"
 #: nis/nis_print.c:271
 #, c-format
 msgid "Character Separator : %c\n"
-msgstr "문자 구분자 : %c\n"
+msgstr "문자 구분           : %c\n"
 
 #: nis/nis_print.c:272
 #, c-format
@@ -5994,11 +5994,11 @@ msgstr "원격 입출력 오류"
 
 #: sysdeps/gnu/errlist.c:1397
 msgid "No medium found"
-msgstr "매개물이 없음"
+msgstr "미디어가 없음"
 
 #: sysdeps/gnu/errlist.c:1405
 msgid "Wrong medium type"
-msgstr "잘못된 매개체 타입"
+msgstr "잘못된 미디어 종류"
 
 #: sysdeps/gnu/errlist.c:1413
 msgid "Required key not available"
