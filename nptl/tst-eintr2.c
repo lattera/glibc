@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -109,7 +109,7 @@ do_test (void)
   printf ("main: mutex_lock returned: %s\n",
 	  strerror_r (e, buf, sizeof (buf)));
 
-  return 0;
+  return 1;
 }
 
 #define EXPECTED_SIGNAL SIGALRM
