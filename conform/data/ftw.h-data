@@ -22,4 +22,5 @@ function int nftw (const char*, int (*) (const char *, const struct stat*, int, 
 allow-header sys/stat.h
 
 allow *_t
+allow FTW*
 #endif

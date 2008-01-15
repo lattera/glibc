@@ -1,5 +1,14 @@
 2008-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/fmtmsg.h-data: Add missing allows.
+	* conform/data/ftw.h-data: Likewise.
+	* conform/data/inttypes.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/net/if.h-data: Likewise.
+	* conform/data/netinet/in.h-data: Likewise.
+	* conform/data/sys/socket.h-data: Likewise.
+
 	[BZ #5614]
 	* string/bits/string2.h (__strtok_r_1c): Always update *__NEXTP.
 	(__strtok_r): Simplify.

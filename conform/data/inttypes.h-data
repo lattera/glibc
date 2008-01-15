@@ -136,6 +136,8 @@ macro INTMAX_C
 macro UINTMAX_C
 
 // The following expressions are not entirely correct but the current
-// fnamtch implementation doesn't grok the right form.
+// poorfnmatch implementation doesn't grok the right form.
 allow INT*
 allow UINT*
+allow PRI[Xa-z]*
+allow SCN[Xa-z]*

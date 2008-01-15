@@ -180,6 +180,8 @@ function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
 function int sigwait (const sigset_t*, int*)
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
 
+// The following expressions are not entirely correct but the current
+// poorfnmatch implementation doesn't grok the right form.
 allow SIG*
 allow sa_*
 allow uc_*

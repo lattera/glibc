@@ -59,4 +59,5 @@ macro MM_NOCON
 function int fmtmsg (long, const char*, int, const char*, const char*, const char*)
 
 allow *_t
+allow MM_*
 #endif

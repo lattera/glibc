@@ -12,4 +12,5 @@ function {struct if_nameindex*} if_nameindex (void)
 function void if_freenameindex (struct if_nameindex*)
 
 allow *_t
+allow IF_*
 #endif

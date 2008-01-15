@@ -357,4 +357,6 @@ allow scalbl
 #endif
 
 allow *_t
+// The following expressions are not entirely correct but the current
+// poorfnmatch implementation doesn't grok the right form.
 allow FP_*

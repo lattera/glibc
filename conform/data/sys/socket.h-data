@@ -118,4 +118,10 @@ allow msg_*
 allow cmsg_*
 allow l_*
 allow SO*
+allow AF_*
+allow CMSG_*
+allow MSG_*
+allow PF_*
+allow SCM_*
+allow SHUT_*
 #endif

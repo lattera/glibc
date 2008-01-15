@@ -59,7 +59,7 @@ function uint32_t ntohl (uint32_t)
 function uint16_t ntohs (uint16_t)
 
 allow-header inttypes.h
-allow-header arpa/inet.h
+allow-header sys/socket.h
 
 constant INET6_ADDRSTRLEN 46
 
@@ -83,8 +83,12 @@ macro IN6_IS_ADDR_MC_SITELOCAL
 macro IN6_IS_ADDR_MC_ORGLOCAL
 macro IN6_IS_ADDR_MC_GLOBAL
 
+allow IMPLINK_*
 allow IN_*
+allow IN6_*
+allow INADDR_*
 allow IP_*
+allow IPV6_*
 allow IPPORT_*
 allow IPPROTO_*
 allow SOCK_*
