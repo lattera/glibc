@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995-2001, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2003, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -840,9 +840,13 @@ test_strtok_r (void)
   equal(strtok_r((char *)NULL, ",", &cp), "c", 29);
   check(strtok_r((char *)NULL, ",", &cp) == NULL, 30);
   equal(one+6, "gh", 31);			/* Stomped past end? */
-  equal(one, "a", 32);			/* Stomped old tokens? */
+  equal(one, "a", 32);				/* Stomped old tokens? */
   equal(one+2, "b", 33);
   equal(one+4, "c", 34);
+  strcpy (one, ":::");
+  cp = NULL;
+  check (strtok_r (one, ":", &cp) == NULL, 35);	/* Must store pointer in cp. */
+  check (strtok_r (NULL, ":", &cp) == NULL, 36);
 }
 
 static void

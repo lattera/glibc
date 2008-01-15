@@ -1,3 +1,11 @@
+2008-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5614]
+	* string/bits/string2.h (__strtok_r_1c): Always update *__NEXTP.
+	(__strtok_r): Simplify.
+	* string/tester.c (test_strtok_r): Add test case for futile search
+	with single-character seach string.
+
 2008-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ko.po: Update from translation team.

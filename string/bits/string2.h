@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997-2003, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1163,10 +1163,9 @@ __strpbrk_c3 (__const char *__s, int __accept1, int __accept2,
 # ifndef _HAVE_STRING_ARCH_strtok_r
 #  define __strtok_r(s, sep, nextp) \
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
-		  ? (((__const char *) (sep))[0] != '\0'		      \
-		     && ((__const char *) (sep))[1] == '\0'		      \
-		     ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)  \
-		     : __strtok_r (s, sep, nextp))			      \
+		  && ((__const char *) (sep))[0] != '\0'		      \
+		  && ((__const char *) (sep))[1] == '\0'		      \
+		  ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)     \
 		  : __strtok_r (s, sep, nextp)))
 # endif
 
@@ -1189,8 +1188,8 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 	    __s[-1] = '\0';
 	    break;
 	  }
-      *__nextp = __s;
     }
+  *__nextp = __s;
   return __result;
 }
 # if defined __USE_POSIX || defined __USE_MISC
