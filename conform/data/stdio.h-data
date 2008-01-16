@@ -67,7 +67,9 @@ function int getchar_unlocked ()
 function int getopt (int, char *const[], const char *)
 #endif
 function {char*} gets (char*)
+#ifndef XOPEN2K
 function int getw (FILE*)
+#endif
 function int pclose (FILE*)
 function void perror (const char*)
 function {FILE*} popen (const char*, const char*)
@@ -77,7 +79,9 @@ function int putchar (int)
 function int putc_unlocked (int, FILE*)
 function int putchar_unlocked (int)
 function int puts (const char*)
+#ifndef XOPEN2K
 function int putw (int, FILE*)
+#endif
 function int remove (const char*)
 function int rename (const char*, const char*)
 function void rewind (FILE*)

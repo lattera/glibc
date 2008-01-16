@@ -17,7 +17,7 @@ function size_t strcspn (const char*, const char*)
 function {char*} strdup (const char*)
 function {char*} strerror (int)
 #ifdef XOPEN2K
-function {char*} strerror_r (int, char*, size_t)
+function int strerror_r (int, char*, size_t)
 #endif
 function size_t strlen (const char*)
 function {char*} strncat (char*, const char*, size_t)

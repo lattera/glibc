@@ -55,6 +55,10 @@ element {struct addrinfo} {struct addrinfo*} ai_next
 macro AI_PASSIVE
 macro AI_CANONNAME
 macro AI_NUMERICHOST
+macro AI_V4MAPPED
+macro AI_ALL
+macro AI_ADDRCONFIG
+macro AI_NUMERICSERV
 
 macro NI_NOFQDN
 macro NI_NUMERICHOST
@@ -71,6 +75,7 @@ macro EAI_NONAME
 macro EAI_SERVICE
 macro EAI_SOCKTYPE
 macro EAI_SYSTEM
+macro EAI_OVERFLOW
 
 function void endhostent (void)
 function void endnetent (void)

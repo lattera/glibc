@@ -18,6 +18,7 @@ function int sem_wait (sem_t*)
 allow-header fcntl.h
 allow-header sys/types.h
 # endif
+allow-header time.h
 
 allow sem_*
 allow SEM_*

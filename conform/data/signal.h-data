@@ -203,3 +203,5 @@ allow SS_*
 allow SV_*
 allow TRAP_*
 allow *_t
+
+allow-header time.h

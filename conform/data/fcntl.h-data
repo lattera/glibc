@@ -87,8 +87,8 @@ function int creat (const char*, mode_t)
 function int fcntl (int, int, ...)
 function int open (const char*, int, ...)
 #ifdef XOPEN2K
-function int posix_fadvise (int, off_t, size_t, int)
-function int posix_fallocate (int, off_t, size_t)
+function int posix_fadvise (int, off_t, off_t, int)
+function int posix_fallocate (int, off_t, off_t)
 #endif
 
 allow-header sys/stat.h

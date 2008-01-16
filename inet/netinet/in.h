@@ -195,13 +195,17 @@ struct in6_addr
   {
     union
       {
-	uint8_t	u6_addr8[16];
-	uint16_t u6_addr16[8];
-	uint32_t u6_addr32[4];
-      } in6_u;
-#define s6_addr			in6_u.u6_addr8
-#define s6_addr16		in6_u.u6_addr16
-#define s6_addr32		in6_u.u6_addr32
+	uint8_t	__u6_addr8[16];
+#if defined __USE_MISC || defined __USE_GNU
+	uint16_t __u6_addr16[8];
+	uint32_t __u6_addr32[4];
+#endif
+      } __in6_u;
+#define s6_addr			__in6_u.__u6_addr8
+#if defined __USE_MISC || defined __USE_GNU
+# define s6_addr16		__in6_u.__u6_addr16
+# define s6_addr32		__in6_u.__u6_addr32
+#endif
   };
 
 extern const struct in6_addr in6addr_any;        /* :: */
@@ -238,6 +242,7 @@ struct sockaddr_in6
   };
 
 
+#if defined __USE_MISC || defined __USE_GNU
 /* IPv4 multicast request.  */
 struct ip_mreq
   {
@@ -259,6 +264,8 @@ struct ip_mreq_source
     /* IP address of interface.  */
     struct in_addr imr_sourceaddr;
   };
+#endif
+
 
 /* Likewise, for IPv6.  */
 struct ipv6_mreq
@@ -271,6 +278,7 @@ struct ipv6_mreq
   };
 
 
+#if defined __USE_MISC || defined __USE_GNU
 /* Multicast group request.  */
 struct group_req
   {
@@ -337,6 +345,7 @@ struct group_filter
 				   - sizeof (struct sockaddr_storage)	      \
 				   + ((numsrc)				      \
 				      * sizeof (struct sockaddr_storage)))
+#endif
 
 
 /* Get system-specific definitions.  */
@@ -422,12 +431,14 @@ extern uint16_t htons (uint16_t __hostshort)
 	 && (((__const uint32_t *) (a))[2] == ((__const uint32_t *) (b))[2])  \
 	 && (((__const uint32_t *) (a))[3] == ((__const uint32_t *) (b))[3]))
 
+#if defined __USE_MISC || defined __USE_GNU
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport (int __sockfd, struct sockaddr_in *__sock_in) __THROW;
 
 /* The IPv6 version of this function.  */
 extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
      __THROW;
+#endif
 
 
 #define IN6_IS_ADDR_MC_NODELOCAL(a) \
@@ -450,6 +461,8 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 	(IN6_IS_ADDR_MULTICAST(a)					      \
 	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0xe))
 
+
+#ifdef __USE_GNU
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {
@@ -465,7 +478,6 @@ struct ip6_mtuinfo
   };
 
 
-#ifdef __USE_GNU
 /* Obsolete hop-by-hop and Destination Options Processing (RFC 2292).  */
 extern int inet6_option_space (int __nbytes)
      __THROW __attribute_deprecated__;

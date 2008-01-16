@@ -1,3 +1,32 @@
+2008-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5607]
+	* conform/data/fcntl.h-data: Fix posix_fadvise and posix_fallocate
+	prototypes.
+	* conform/data/limits.h-data: Adjust limits changed in v6 and add
+	additional suffixes.
+	* conform/data/mqueue.h-data: Fix typo in mq_curmsgs entry.
+	Add optional functions mq_timedreceive and mq_timedsend.
+	* conform/data/netdb.h-data: Add more AI_* and EAI_* constants.
+	* conform/data/pthread.h-data: Fix prototype of
+	pthread_condattr_setclock.  pthread_sigmask is not required in v6.
+	* conform/data/semaphore.h-data: Allow time.h definitions.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/stdio.h-data: getw and putw are not required in v6.
+	* conform/data/stdlib.h-data: Change setstate prototype.
+	* conform/data/string.h-data: Fix strerror_r prototype.
+	* conform/data/time.h-data: Fix typo in TIMER_ABSTIME definition.
+	* conform/data/unistd.h-data: pthread_atfork not required in v6.
+	Fix readlink prototype.
+	* conform/data/netinet/in.h-data: Add const to in6addr_any and
+	in6addr_loopback.
+	* inet/netinet/in.h: Cleanup namespace.
+	* posix/regex.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+
 2008-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/fmtmsg.h-data: Add missing allows.

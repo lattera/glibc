@@ -57,7 +57,11 @@ constant _POSIX_CLOCKRES_MIN <= 20000000
 optional-constant _POSIX_AIO_LISTIO_MAX	2
 optional-constant _POSIX_AIO_MAX 1
 optional-constant _POSIX_ARG_MAX 4096
+#ifdef XOPEN2K
+optional-constant _POSIX_CHILD_MAX 25
+#else
 optional-constant _POSIX_CHILD_MAX 6
+#endif
 optional-constant _POSIX_DELAYTIMER_MAX 32
 optional-constant _POSIX_LINK_MAX 8
 optional-constant _POSIX_LOGIN_NAME_MAX 9
@@ -66,8 +70,16 @@ optional-constant _POSIX_MAX_INPUT 255
 optional-constant _POSIX_MQ_OPEN_MAX 8
 optional-constant _POSIX_MQ_PRIO_MAX 32
 optional-constant _POSIX_NAME_MAX 14
+#ifdef XOPEN2K
+optional-constant _POSIX_NGROUPS_MAX 8
+#else
 optional-constant _POSIX_NGROUPS_MAX 0
+#endif
+#ifdef XOPEN2K
+optional-constant _POSIX_OPEN_MAX 20
+#else
 optional-constant _POSIX_OPEN_MAX 16
+#endif
 optional-constant _POSIX_PATH_MAX 256
 optional-constant _POSIX_PIPE_BUF 512
 optional-constant _POSIX2_RE_DUP_MAX 255
@@ -126,3 +138,6 @@ optional-constant NL_SETMAX >= 255
 optional-constant NL_TEXTMAX
 optional-constant NZERO >= 20
 optional-constant TMP_MAX >= 10000
+
+allow *_MAX
+allow *_MIN

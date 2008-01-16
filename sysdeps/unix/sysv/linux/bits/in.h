@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,16 +43,18 @@
 #define IP_ADD_SOURCE_MEMBERSHIP 39 /* ip_mreq_source: join source group */
 #define IP_DROP_SOURCE_MEMBERSHIP 40 /* ip_mreq_source: leave source group */
 #define IP_MSFILTER 41
-#define MCAST_JOIN_GROUP 42	/* group_req: join any-source group */
-#define MCAST_BLOCK_SOURCE 43	/* group_source_req: block from given group */
-#define MCAST_UNBLOCK_SOURCE 44	/* group_source_req: unblock from given group*/
-#define MCAST_LEAVE_GROUP 45	/* group_req: leave any-source group */
-#define MCAST_JOIN_SOURCE_GROUP 46 /* group_source_req: join source-spec gr */
-#define MCAST_LEAVE_SOURCE_GROUP 47 /* group_source_req: leave source-spec gr*/
-#define MCAST_MSFILTER 48
+#if defined __USE_MISC || defined __USE_GNU
+# define MCAST_JOIN_GROUP 42	/* group_req: join any-source group */
+# define MCAST_BLOCK_SOURCE 43	/* group_source_req: block from given group */
+# define MCAST_UNBLOCK_SOURCE 44 /* group_source_req: unblock from given group*/
+# define MCAST_LEAVE_GROUP 45	/* group_req: leave any-source group */
+# define MCAST_JOIN_SOURCE_GROUP 46 /* group_source_req: join source-spec gr */
+# define MCAST_LEAVE_SOURCE_GROUP 47 /* group_source_req: leave source-spec gr*/
+# define MCAST_MSFILTER 48
 
-#define MCAST_EXCLUDE   0
-#define MCAST_INCLUDE   1
+# define MCAST_EXCLUDE   0
+# define MCAST_INCLUDE   1
+#endif
 
 #define IP_ROUTER_ALERT    5	/* bool */
 #define IP_PKTINFO         8	/* bool */
@@ -76,6 +78,7 @@
 #define IP_DEFAULT_MULTICAST_LOOP       1
 #define IP_MAX_MEMBERSHIPS              20
 
+#if defined __USE_MISC || defined __USE_GNU
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
    source route (this gets put into the header proper).  */
@@ -100,6 +103,7 @@ struct in_pktinfo
     struct in_addr ipi_spec_dst;	/* Routing destination address  */
     struct in_addr ipi_addr;		/* Header destination address  */
   };
+#endif
 
 /* Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
    The first word in the comment at the right is the data type used;

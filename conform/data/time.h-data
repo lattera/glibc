@@ -29,7 +29,7 @@ element {struct itimerspec} {struct timespec} it_interval
 element {struct itimerspec} {struct timespec} it_value
 
 constant CLOCK_REALTIME
-constant TIME_ABSTIME
+constant TIMER_ABSTIME
 constant CLOCK_MONOTONIC
 
 type clock_t

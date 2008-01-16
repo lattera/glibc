@@ -61,7 +61,7 @@ struct stat
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
 #if __WORDSIZE == 64
-    int pad0;
+    int __pad0;
 #endif
     __dev_t st_rdev;		/* Device number, if device.  */
 #if __WORDSIZE == 32
@@ -129,7 +129,7 @@ struct stat64
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
 #if __WORDSIZE == 64
-    int pad0;
+    int __pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;		/* Size of file, in bytes.  */
 #else

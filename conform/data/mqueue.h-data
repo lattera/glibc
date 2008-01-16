@@ -8,7 +8,7 @@ type {struct mq_attr}
 element {struct mq_attr} long mq_flags
 element {struct mq_attr} long mq_maxmsg
 element {struct mq_attr} long mq_msgsize
-element {struct mq_attr} long mq_curmsg
+element {struct mq_attr} long mq_curmsgs
 
 function int mq_close (mqd_t)
 function int mq_getattr (mqd_t, struct mq_attr*)
@@ -18,6 +18,10 @@ function ssize_t mq_receive (mqd_t, char*, size_t, unsigned int*)
 function int mq_send (mqd_t, const char*, size_t, unsigned int)
 function int mq_setattr (mqd_t, const struct mq_attr*, struct mq_attr*)
 function int mq_unlink (const char*)
+#ifdef XOPEN2K
+optional-function ssize_t mq_timedreceive (mqd_t, char*, size_t, unsigned int*, const struct timespec*)
+optional-function int mq_timedsend (mqd_t, const char*, size_t, unsigned int, const struct timespec*)
+#endif
 
 allow-header fcntl.h
 allow-header signal.h

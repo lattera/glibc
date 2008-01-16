@@ -337,10 +337,12 @@ function {long int} pathconf (const char*, int)
 function int pause (void)
 function int pipe (int[2])
 function ssize_t pread (int, void*, size_t, off_t)
+#ifndef XOPEN2K
 function int pthread_atfork (void(*)(void), void(*)(void), void(*)(void))
+#endif
 function ssize_t pwrite (int, const void*, size_t, off_t)
 function ssize_t read (int, void*, size_t)
-function int readlink (const char*, char*, size_t)
+function ssize_t readlink (const char*, char*, size_t)
 function int rmdir (const char*)
 function {void*} sbrk (intptr_t)
 function int setegid (gid_t)

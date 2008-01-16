@@ -84,7 +84,7 @@ function int pthread_condattr_destroy (pthread_condattr_t*)
 optional-function int pthread_condattr_getclock (const pthread_condattr_t*, clockid_t*)
 function int pthread_condattr_getpshared (const pthread_condattr_t*, int*)
 function int pthread_condattr_init (pthread_condattr_t*)
-optional-function int pthread_condattr_setclock (const pthread_condattr_t*, clockid_t*)
+optional-function int pthread_condattr_setclock (pthread_condattr_t*, clockid_t)
 function int pthread_condattr_setpshared (pthread_condattr_t*, int)
 function int pthread_create (pthread_t*, const pthread_attr_t*, void *(*) (void*), void*)
 function int pthread_detach (pthread_t)
@@ -140,7 +140,9 @@ function int pthread_setconcurrency (int)
 # endif
 function int pthread_setschedparam (pthread_t, int, const struct sched_param*)
 function int pthread_setspecific (pthread_key_t, const void*)
+#ifndef XOPEN2K
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
+#endif
 function int pthread_spin_destroy (pthread_spinlock_t*)
 function int pthread_spin_init (pthread_spinlock_t*, int)
 function int pthread_spin_lock (pthread_spinlock_t*)
