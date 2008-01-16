@@ -26,6 +26,11 @@
 	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
 	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/posix/getaddrinfo.c (default_labels): Adjust for change
+	of names of in in6_addr.
+	(default_precedence): Likewise.
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c: Include <stddef.h> for
+	NULL definition.
 
 2008-01-15  Ulrich Drepper  <drepper@redhat.com>
 
