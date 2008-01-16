@@ -42,7 +42,7 @@ extern int __getpagesize (void) __THROW __attribute__ ((__const__));
 /* Type to count number of attaches.  */
 typedef unsigned short int shmatt_t;
 
-/* Data structure describing a set of semaphores.  */
+/* Data structure describing a shared memory segment.  */
 struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */

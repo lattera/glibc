@@ -1,5 +1,18 @@
 2008-01-16  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5628]
+	* bits/shm.h: Fix comment describing shmid_ds.
+	* sysdeps/gnu/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Likewise.
+	Patch by Hareesh Nagarajan <hareesh.nagarajan@gmail.com>.
+
 	[BZ #5607]
 	* conform/data/fcntl.h-data: Fix posix_fadvise and posix_fallocate
 	prototypes.
