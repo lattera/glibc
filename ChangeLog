@@ -1,3 +1,17 @@
+2007-10-23  Alexandre Oliva  <aoliva@redhat.com>
+
+	* include/link.h (FORCED_DYNAMIC_TLS_OFFSET): Define.
+	* elf/dl-close.c (_dl_close): Check for it.
+	* elf/dl-reloc.c (CHECK_STATIC_TLS): Likewise.
+	(_dl_allocate_static_tls): Likewise.
+	* elf/dl-tls.c (_dl_allocate_tls_init): Likewise.
+	(__tls_get_addr): Protect from race conditions in setting l_tls_offset
+	to it.
+	* elf/tst-tls16.c: New file.
+	* elf/tst-tlsmod16a.c: New file.
+	* elf/tst-tlsmod16b.c: New file.
+	* elf/Makefile: Add rules to build and run tst-tls16.
+
 2008-01-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5628]

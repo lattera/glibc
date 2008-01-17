@@ -47,8 +47,10 @@ void
 internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
-  /* If the alignment requirements are too high fail.  */
-  if (map->l_tls_align > GL(dl_tls_static_align))
+  /* If we've already used the variable with dynamic access, or if the
+     alignment requirements are too high, fail.  */
+  if (map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET
+      || map->l_tls_align > GL(dl_tls_static_align))
     {
     fail:
       _dl_signal_error (0, map->l_name, NULL, N_("\
@@ -255,10 +257,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
        an attempt to allocate it in surplus space on the fly.  If that
        can't be done, we fall back to the error that DF_STATIC_TLS is
        intended to produce.  */
-#define CHECK_STATIC_TLS(map, sym_map)					      \
-    do {								      \
-      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
-	_dl_allocate_static_tls (sym_map);				      \
+#define CHECK_STATIC_TLS(map, sym_map)					\
+    do {								\
+      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET	\
+			    || ((sym_map)->l_tls_offset			\
+				== FORCED_DYNAMIC_TLS_OFFSET), 0))	\
+	_dl_allocate_static_tls (sym_map);				\
     } while (0)
 
 #include "dynamic-link.h"

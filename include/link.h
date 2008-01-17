@@ -279,6 +279,15 @@ struct link_map
 #ifndef NO_TLS_OFFSET
 # define NO_TLS_OFFSET	0
 #endif
+#ifndef FORCED_DYNAMIC_TLS_OFFSET
+# if NO_TLS_OFFSET == 0
+#  define FORCED_DYNAMIC_TLS_OFFSET 1
+# elif NO_TLS_OFFSET == -1
+#  define FORCED_DYNAMIC_TLS_OFFSET -2
+# else
+#  error "FORCED_DYNAMIC_TLS_OFFSET is not defined"
+# endif
+#endif
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */

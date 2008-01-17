@@ -531,7 +531,8 @@ _dl_close_worker (struct link_map *map)
 		/* All dynamically loaded modules with TLS are unloaded.  */
 		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
 
-	      if (imap->l_tls_offset != NO_TLS_OFFSET)
+	      if (imap->l_tls_offset != NO_TLS_OFFSET
+		  && imap->l_tls_offset != FORCED_DYNAMIC_TLS_OFFSET)
 		{
 		  /* Collect a contiguous chunk built from the objects in
 		     this search list, going in either direction.  When the

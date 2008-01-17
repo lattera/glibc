@@ -165,7 +165,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
-	 tst-tls-dlinfo \
+	 tst-tls16 tst-tls-dlinfo \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
@@ -199,7 +199,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
 		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
 		tst-tlsmod13 tst-tlsmod13a tst-tlsmod14a tst-tlsmod14b \
-		tst-tlsmod15a tst-tlsmod15b \
+		tst-tlsmod15a tst-tlsmod15b tst-tlsmod16a tst-tlsmod16b \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
@@ -492,6 +492,7 @@ tst-tlsmod12.so-no-z-defs = yes
 tst-tlsmod14a.so-no-z-defs = yes
 tst-tlsmod14b.so-no-z-defs = yes
 tst-tlsmod15a.so-no-z-defs = yes
+tst-tlsmod16b.so-no-z-defs = yes
 circlemod2.so-no-z-defs = yes
 circlemod3.so-no-z-defs = yes
 circlemod3a.so-no-z-defs = yes
@@ -710,6 +711,9 @@ $(objpfx)tst-tls-dlinfo: $(libdl)
 $(objpfx)tst-tls-dlinfo.out: $(objpfx)tst-tlsmod2.so
 
 
+
+$(objpfx)tst-tls16: $(libdl)
+$(objpfx)tst-tls16.out: $(objpfx)tst-tlsmod16a.so $(objpfx)tst-tlsmod16b.so
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
 CFLAGS-tst-align2.c = $(stack-align-test-flags)
