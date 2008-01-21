@@ -1,3 +1,9 @@
+2008-01-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdsock.c (_hurd_socket_server): Return the standard
+	error EAFNOSUPPORT rather than non-standard EPFNOSUPPORT.
+	* sunrpc/bindrsvprt.c (bindresvport): Likewise.
+
 2007-10-23  Alexandre Oliva  <aoliva@redhat.com>
 
 	* include/link.h (FORCED_DYNAMIC_TLS_OFFSET): Define.
