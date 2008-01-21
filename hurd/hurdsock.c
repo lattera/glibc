@@ -92,7 +92,7 @@ _hurd_socket_server (int domain, int dead)
 
   if (server == MACH_PORT_NULL && errno == ENOENT)
     /* If the server node is absent, we don't support that protocol.  */
-    errno = EPFNOSUPPORT;
+    errno = EAFNOSUPPORT;
 
   __mutex_unlock (&lock);
   HURD_CRITICAL_END;

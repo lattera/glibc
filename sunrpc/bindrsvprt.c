@@ -61,7 +61,7 @@ bindresvport (int sd, struct sockaddr_in *sin)
     }
   else if (sin->sin_family != AF_INET)
     {
-      __set_errno (EPFNOSUPPORT);
+      __set_errno (EAFNOSUPPORT);
       return -1;
     }
 
