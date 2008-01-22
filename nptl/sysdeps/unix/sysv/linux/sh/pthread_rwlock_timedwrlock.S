@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -225,6 +225,7 @@ pthread_rwlock_timedwrlock:
 	bra	9b
 	 mov	#EDEADLK, r3
 6:
+	mov	r3, r10
 	mov	r8, r4
 #if MUTEX != 0
 	add	#MUTEX, r4
@@ -237,7 +238,7 @@ pthread_rwlock_timedwrlock:
 	 nop
 .Lwake6b:
 	bra	7b
-	 mov	#0, r3
+	 mov	r10, r3
 
 .Ltidoff:
 	.word	TID - TLS_PRE_TCB_SIZE
@@ -266,6 +267,7 @@ pthread_rwlock_timedwrlock:
 	 nop
 
 12:
+	mov	r3, r10
 	mov	r8, r5
 #if MUTEX != 0
 	add	#MUTEX, r5
@@ -278,7 +280,7 @@ pthread_rwlock_timedwrlock:
 	 mov	r2, r4
 .Lwait7b:
 	bra	13b
-	 nop
+	 mov	r10, r3
 
 16:
 	bra	17b

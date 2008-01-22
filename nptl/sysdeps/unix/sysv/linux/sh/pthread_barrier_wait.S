@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,7 +86,7 @@ pthread_barrier_wait:
 	   initial count unlock the object.  */
 	mov	#1, r3
 	mov.l	@(INIT_COUNT,r8), r4
-	XADD	(r3, @(LEFT,r8), r2)
+	XADD	(r3, @(LEFT,r8), r2, r5)
 	add	#-1, r4
 	cmp/eq	r2, r4
 	bf	10f
@@ -131,7 +131,7 @@ pthread_barrier_wait:
 	   initial count unlock the object.  */
 	mov	#1, r3
 	mov.l	@(INIT_COUNT,r8), r4
-	XADD	(r3, @(LEFT,r8), r2)
+	XADD	(r3, @(LEFT,r8), r2, r5)
 	add	#-1, r4
 	cmp/eq	r2, r4
 	bf	5f
@@ -144,7 +144,7 @@ pthread_barrier_wait:
 	mov	#-1, r0		/* == PTHREAD_BARRIER_SERIAL_THREAD */
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
-	ret
+	rts
 	 mov.l	@r15+, r9
 
 1:

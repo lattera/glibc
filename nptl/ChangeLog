@@ -1,3 +1,22 @@
+2008-01-22  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Don't overflow value field.
+
+2008-01-21  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevel-atomic.h (XADD): Use
+	a scratch register.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S
+	(__lll_lock_wait_private): Fix typo.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S
+	(pthread_barrier_wait): Likewise.  Adjust XADD use.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S (__new_sem_post):
+	Adjust XADD use.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Return correct return value.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S
+	(pthread_rwlock_timedwrlock): Likewise.  
+
 2008-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-eintr2.c (do_test): make sure that if mutex_lock in main

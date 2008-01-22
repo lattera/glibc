@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,16 @@
 	.type	__new_sem_post,@function
 	.align	5
 __new_sem_post:
-	mov	#1, r3
-	XADD (r3, @(VALUE,r4), r2)
+	mov.l	@(VALUE,r4), r2
+0:
+	mov.l	.Lmax, r1
+	cmp/eq	r1, r2
+	bt/s	3f
+	 mov	r2, r3
+	mov	r3, r5
+	add	#1, r5
+	CMPXCHG (r3, @(VALUE,r4), r5, r2)
+	bf	0b
 	mov.l	@(NWAITERS,r4), r2
 	tst	r2, r2
 	bt	2f
@@ -52,7 +60,15 @@ __new_sem_post:
 	 mov	#0, r0
 
 1:
-	mov	#EINVAL, r2
+	bra	4f
+	 mov	#EINVAL, r2
+
+3:
+	mov	#EOVERFLOW, r2
+4:	
+	mov.l	r12, @-r15
+	mov.l	r8, @-r15
+	sts.l	pr, @-r15
 	mova	.Lgot3, r0
 	mov.l	.Lgot3, r12
 	add	r0, r12
@@ -67,19 +83,24 @@ __new_sem_post:
 .Lerrno3:
 	.long	errno@GOTTPOFF
 .Lexit:
+	mov.l	r2, @r0
 #else
+	mov	r2, r8
 	mov.l	.Lerrloc3, r1
 	bsrf	r1
 	 nop
 .Lerrloc3b:
+	mov	r8, @r0
 #endif
-	mov.l	r2, @r0
 	lds.l	@r15+, pr
+	mov.l	@r15+, r8
 	mov.l	@r15+, r12
 	rts
 	 mov	#-1, r0
 
 	.align	2
+.Lmax:
+	.long	SEM_VALUE_MAX
 .Lgot3:
 	.long	_GLOBAL_OFFSET_TABLE_
 #if !USE___THREAD

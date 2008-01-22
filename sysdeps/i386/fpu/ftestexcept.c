@@ -26,7 +26,7 @@
 int
 fetestexcept (int excepts)
 {
-  int temp;
+  short temp;
   int xtemp = 0;
 
   /* Get current exceptions.  */
