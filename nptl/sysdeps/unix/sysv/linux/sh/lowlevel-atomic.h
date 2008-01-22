@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,14 +44,16 @@
 	mov.l	reg, mem; \
 99:	mov	r1, r15
 
-#define	XADD(reg, mem, old) \
+#define	XADD(reg, mem, old, tmp) \
 	.align	2; \
 	mova	99f, r0; \
+	nop; \
 	mov	r15, r1; \
-	mov	_IMM6, r15; \
+	mov	_IMM8, r15; \
 98:	mov.l	mem, old; \
-	add	old, reg; \
-	mov.l	reg, mem; \
+	mov	reg, tmp; \
+	add	old, tmp; \
+	mov.l	tmp, mem; \
 99:	mov	r1, r15
 
 #define	XCHG(reg, mem, old) \
