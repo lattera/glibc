@@ -1,3 +1,7 @@
+2008-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ko.po: Update from translation team.
+
 2008-01-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/ftestexcept.c (fetestexcept): Use short for fnstsw.
