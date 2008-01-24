@@ -2299,6 +2299,7 @@ esac
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
+base_os=''
 
 # config.guess on some IBM machines says `rs6000' instead of `powerpc'.
 # Unify this here.
@@ -2554,7 +2555,7 @@ echo $ECHO_N "checking sysdep dirs... $ECHO_C" >&6; }
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
-case "$os" in
+test "x$base_os" != x || case "$os" in
 gnu*)
   base_os=mach/hurd ;;
 netbsd* | 386bsd* | freebsd* | bsdi*)
@@ -2573,8 +2574,6 @@ aix4.3*)
   base_os=unix/sysv/aix/aix4.3 ;;
 none)
   base_os=standalone ;;
-*)
-  base_os='' ;;
 esac
 
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
