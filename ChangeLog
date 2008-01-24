@@ -1,3 +1,8 @@
+2008-01-24  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Let configure fragments set base_os.
+	* configure: Regenerated.
+
 2008-01-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ko.po: Update from translation team.
