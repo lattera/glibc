@@ -1,6 +1,6 @@
 # Subroutine makefile for compiling libc modules linked into dynamic linker.
 
-# Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2005, 2006, 2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -93,9 +93,12 @@ else
 # These are the basic compilation rules corresponding to the Makerules ones.
 # The sysd-rules generated makefile already defines pattern rules for rtld-%
 # targets built from sysdeps source files.
-$(objpfx)rtld-%.os: %.S $(before-compile); $(compile-command.S)
-$(objpfx)rtld-%.os: %.s $(before-compile); $(compile-command.s)
-$(objpfx)rtld-%.os: %.c $(before-compile); $(compile-command.c)
+$(objpfx)rtld-%.os: %.S $(before-compile)
+	$(compile-command.S) $(rtld-CPPFLAGS)
+$(objpfx)rtld-%.os: %.s $(before-compile)
+	$(compile-command.s) $(rtld-CPPFLAGS)
+$(objpfx)rtld-%.os: %.c $(before-compile)
+	$(compile-command.c) $(rtld-CPPFLAGS)
 
 # The rules for generated source files.
 $(objpfx)rtld-%.os: $(objpfx)%.S $(before-compile); $(compile-command.S)
@@ -118,16 +121,7 @@ ifdef rtld-depfiles
 -include $(rtld-depfiles)
 endif
 
-# Just in case we wind up e.g. regenerating dependencies for non-rtld objects,
-# we don't unconditionally modify the flags.  For rtld-% targets, use the
-# special flags set below.
-CFLAGS   += $(if $(filter rtld-%,$(@F)),$(CFLAGS-rtld))
-CPPFLAGS += $(if $(filter rtld-%,$(@F)),$(CPPFLAGS-rtld))
-
-
 # This here is the whole point of all the shenanigans.
-CPPFLAGS-rtld := -DNOT_IN_libc=1 -DIS_IN_rtld=1
-CFLAGS-rtld := # blah
-
+rtld-CPPFLAGS := -DNOT_IN_libc=1 -DIS_IN_rtld=1
 
 endif

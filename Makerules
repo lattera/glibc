@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007, 2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -207,10 +207,9 @@ endif
 # patterns matching sysdep directories whose assembly source files should
 # be suppressed.
 ifdef inhibit-sysdep-asm
-define open-check-inhibit-asm
-case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
+define check-inhibit-asm
+case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) asm= ;; esac;
 endef
-close-check-inhibit-asm = ;; esac ;
 endif
 
 -include $(common-objpfx)sysd-rules
@@ -229,36 +228,22 @@ $(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
 	   /*) ;;							      \
 	   *) dir="\$$(..)$$dir" ;;					      \
 	   esac;							      \
-	   for o in $(all-object-suffixes); do \
-	     $(open-check-inhibit-asm) \
-	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.S \$$(before-compile); \
-		  \$$(compile-command.S) -DPTW";			      \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s) -DPTW";		              \
-	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.S \$$(before-compile); \
-		  \$$(compile-command.S)";				      \
-	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.s \$$(before-compile); \
-		  \$$(compile-command.s)";			              \
-	     $(close-check-inhibit-asm)	\
-	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
-		  \$$(compile-command.c) -DPTW";			      \
-	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.c \$$(before-compile); \
-		  \$$(compile-command.c)";				      \
-	   done; \
-	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force); \
-	   	 	\$$(do-install)"; 				      \
+	   asm='.S .s';							      \
+	   $(check-inhibit-asm)						      \
+	   for o in $(all-object-suffixes); do				      \
+	     set $(subst :, ,$(sysd-rules-patterns));			      \
+	     while [ $$# -ge 2 ]; do					      \
+	       t=$$1; shift; 						      \
+	       d=$$1; shift;						      \
+	       v=$${t%%%}; [ x"$$v" = x ] || v="\$$($${v}CPPFLAGS)";	      \
+	       for s in $$asm .c; do					      \
+		 echo "\$$(objpfx)$$t$$o: $$dir/$$d$$s \$$(before-compile)";  \
+		 echo "	\$$(compile-command$$s) $$v";			      \
+	       done;							      \
+	     done;							      \
+	   done;							      \
+	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force)";	      \
+	   echo "	\$$(do-install)"; 				      \
 	 done;								      \
 	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@

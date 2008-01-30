@@ -1,3 +1,13 @@
+2008-01-29  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (sysd-rules-patterns): New variable.
+	* Makerules ($(common-objpfx)sysd-rules): Drive the loop from that.
+	(check-inhibit-asm): New canned sequence, replaces ...
+	(open-check-inhibit-asm, close-check-inhibit-asm): ... these, removed.
+	* elf/rtld-Rules ($(objpfx)rtld-%.os): Use $(rtld-CPPFLAGS) in commands.
+	(rtld-CPPFLAGS): Renamed from CPPFLAGS-rtld.
+	(CFLAGS-rtld): Variable removed.
+
 2008-01-24  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Let configure fragments set base_os.

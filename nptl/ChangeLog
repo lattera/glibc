@@ -1,3 +1,7 @@
+2008-01-29  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (ptw-CPPFLAGS, sysd-rules-patterns): New variables.
+
 2008-01-22  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sem_post.S: Don't overflow value field.
@@ -15,7 +19,7 @@
 	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S
 	(pthread_rwlock_timedrdlock): Return correct return value.
 	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S
-	(pthread_rwlock_timedwrlock): Likewise.  
+	(pthread_rwlock_timedwrlock): Likewise.
 
 2008-01-15  Ulrich Drepper  <drepper@redhat.com>
 

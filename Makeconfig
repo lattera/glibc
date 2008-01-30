@@ -1,4 +1,5 @@
-# Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-2003,2004,2005,2006,2007,2008
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -930,6 +931,12 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk \
 	mv -f $@-tmp $@
 $(all-Depend-files): ;
 endif
+
+# This gives partial TARGET:SOURCE pattern pairs to have rules
+# emitted into sysd-rules.  A sysdeps Makeconfig fragment can
+# add its own special object file prefix to this list with e.g. foo-%:%
+# to have foo-*.? compiled from *.? using $(foo-CPPFLAGS).
+sysd-rules-patterns := %:% rtld-%:% m_%:s_%
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
 sysdep-makeconfigs := $(wildcard $(+sysdep_dirs:=/Makeconfig))
