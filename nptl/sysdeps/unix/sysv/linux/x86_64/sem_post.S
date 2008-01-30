@@ -37,7 +37,7 @@ sem_post:
 #endif
 0:	cmpl	$SEM_VALUE_MAX, %eax
 	je	3f
-	leal	1(%eax), %esi
+	leal	1(%rax), %esi
 	LOCK
 #if VALUE == 0
 	cmpxchgl %esi, (%rdi)
