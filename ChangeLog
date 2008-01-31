@@ -1,5 +1,7 @@
 2008-01-30  Roland McGrath  <roland@redhat.com>
 
+	* manual/libc.texinfo: Update back-cover text.
+
 	* elf/elf.h (NT_386_TLS): New macro.
 
 2008-01-29  Roland McGrath  <roland@redhat.com>

@@ -30,7 +30,7 @@ This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for version @value{VERSION}.
 
 Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002,
-2003, 2007 Free Software Foundation, Inc.
+2003, 2007, 2008 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2 or
@@ -41,9 +41,9 @@ and ``GNU Lesser General Public License'', the Front-Cover texts being
 copy of the license is included in the section entitled "GNU Free
 Documentation License".
 
-(a) The FSF's Back-Cover Text is: ``You are free to copy and modify
-this GNU Manual. Buying copies from GNU Press supports the FSF in
-developing GNU and promoting software freedom.''
+(a) The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
 @end copying
 
 @iftex
