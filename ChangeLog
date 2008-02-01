@@ -1,5 +1,10 @@
 2008-01-31  Roland McGrath  <roland@redhat.com>
 
+	[BZ #5442]
+	* configure.in: Use -print-file-name if it yields a directory,
+	for each of include and include-fixed.
+	* configure: Regenerated.
+
 	* Makeconfig (sysd-rules-targets): New variable.
 	* sysdeps/unix/make-syscalls.sh: Use it in the rules emitted.
 	* sysdeps/unix/Makefile (omit-deps): Append variants for each target.
