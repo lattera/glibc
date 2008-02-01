@@ -944,6 +944,9 @@ ifneq (,$(sysdep-makeconfigs))
 include $(sysdep-makeconfigs)
 endif
 
+# Compute just the target patterns.  Makeconfig has set sysd-rules-patterns.
+sysd-rules-targets := $(foreach p,$(sysd-rules-patterns),\
+		      		$(firstword $(subst :, ,$p)))
 
 endif # Makeconfig not yet included
 

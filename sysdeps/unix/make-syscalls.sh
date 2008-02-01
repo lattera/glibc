@@ -146,9 +146,8 @@ shared-only-routines += $file
     ;;
   *)
     echo "\
-\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o) \
-\$(foreach o,\$(object-suffixes),\$(objpfx)ptw-$file\$o) \
-\$(objpfx)rtld-$file.os: \\"
+\$(foreach p,\$(sysd-rules-targets),\
+\$(foreach o,\$(object-suffixes),\$(objpfx)\$(patsubst %,\$p,$file)\$o)): \\"
     ;;
   esac
 
@@ -216,7 +215,8 @@ shared-only-routines += $file
   done
 
   # And finally, pipe this all into the compiler.
-  echo '	) | $(compile-syscall)'
+  echo '	) | $(compile-syscall) '"\
+\$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))"
 
   case $weak in
   *@*)

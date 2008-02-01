@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003, 2006
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003, 2006, 2008
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -260,7 +260,7 @@ ifndef inhibit-unix-syscalls
 # which specifies objects to be compiled as simple Unix system calls.
 
 -include $(common-objpfx)sysd-syscalls
-omit-deps += $(unix-syscalls)
+omit-deps += $(foreach t,$(sysd-rules-targets),$(unix-syscalls:%=$t))
 
 ifeq (misc,$(subdir))
 sysdep_routines += $(unix-extra-syscalls)

@@ -1,3 +1,9 @@
+2008-01-31  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (sysd-rules-targets): New variable.
+	* sysdeps/unix/make-syscalls.sh: Use it in the rules emitted.
+	* sysdeps/unix/Makefile (omit-deps): Append variants for each target.
+
 2008-01-30  Roland McGrath  <roland@redhat.com>
 
 	* manual/libc.texinfo: Update back-cover text.
