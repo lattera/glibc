@@ -220,7 +220,8 @@ sysd-rules-force = FORCE
 FORCE:
 endif
 $(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
-			    $(sysdep-makefiles) $(sysd-rules-force)
+			    $(sysdep-makefiles) $(sysdep-makeconfigs) \
+			    $(sysd-rules-force)
 	-@rm -f $@T
 	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
 	 for dir in $(config-sysdirs); do				      \
