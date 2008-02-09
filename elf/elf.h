@@ -606,6 +606,7 @@ typedef struct
 #define NT_PRFPXREG	20		/* Contains copy of fprxregset struct */
 #define NT_PRXFPREG	0x46e62b7f	/* Contains copy of user_fxsr_struct */
 #define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
+#define NT_PPC_SPE	0x101		/* PowerPC SPE/EVR registers */
 #define NT_386_TLS	0x200		/* i386 TLS slots (struct user_desc) */
 
 /* Legal values for the note segment descriptor types for object files.  */
