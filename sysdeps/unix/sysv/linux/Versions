@@ -132,6 +132,9 @@ libc {
   GLIBC_2.7 {
     eventfd; eventfd_read; eventfd_write; signalfd;
   }
+  GLIBC_2.8 {
+    timerfd_create; timerfd_settime; timerfd_gettime;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

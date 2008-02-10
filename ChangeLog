@@ -1,3 +1,13 @@
+2008-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers): Add
+	sys/timerfd.h.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add timerfd_create,
+	timerfd_gettime, timerfd_settime.
+	* sysdeps/unix/sysv/linux/Versions: Add timerfd_create,
+	timerfd_gettime, timerfd_settime for GLIBC_2.8.
+
 2008-02-08  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (NT_PPC_SPE): New macro.

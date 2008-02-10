@@ -25,7 +25,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/quota.h sys/fsuid.h \
 		  scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h sys/pci.h \
 		  sys/ultrasound.h sys/raw.h sys/personality.h sys/epoll.h \
-		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h
+		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h \
+		  sys/timerfd.h
 
 install-others += $(inst_includedir)/bits/syscall.h
 

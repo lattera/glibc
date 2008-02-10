@@ -94,3 +94,7 @@ fremovexattr	-	fremovexattr	i:is	fremovexattr
 mq_timedsend	-	mq_timedsend	Ci:ipiip	__GI_mq_timedsend	mq_timedsend
 mq_timedreceive	-	mq_timedreceive	Ci:ipipp	__GI_mq_timedreceive	mq_timedreceive
 mq_setattr	-	mq_getsetattr	i:ipp	__GI_mq_setattr	mq_setattr
+
+timerfd_create	EXTRA	timerfd_create	i:ii	timerfd_create
+timerfd_settime	EXTRA	timerfd_settime	i:iipp	timerfd_settime
+timerfd_gettime	EXTRA	timerfd_gettime	i:ip	timerfd_gettime
