@@ -612,7 +612,7 @@ struct gaicb
 #  define EAI_IDN_ENCODE  -105	/* IDN encoding failed.  */
 # endif
 
-# ifdef __USE_GNU
+# ifdef __USE_MISC
 #  define NI_MAXHOST      1025
 #  define NI_MAXSERV      32
 # endif
