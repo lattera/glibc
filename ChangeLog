@@ -1,3 +1,7 @@
+2008-02-19  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (SHT_GNU_ATTRIBUTES): New macro.
+
 2008-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5737]
