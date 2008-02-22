@@ -50,6 +50,9 @@ please let me know.
 1.21.	Which compiler should I use for powerpc64?
 1.22.	`make' fails when running rpcgen the first time,
 	what is going on? How do I fix this?
+1.23.	Why do I get:
+	`#error "glibc cannot be compiled without optimization"',
+	when trying to compile GNU libc with GNU CC?
 
 2. Installation and configuration issues
 
@@ -484,12 +487,12 @@ down the build process and need more disk space.
 failure should be looked into.  Depending on the failures, you probably
 should not install the library at all.
 
-You should consider using the `glibcbug' script to report the failure,
-providing as much detail as possible.  If you run a test directly, please
-remember to set up the environment correctly.  You want to test the compiled
-library - and not your installed one.  The best way is to copy the exact
-command line which failed and run the test from the subdirectory for this
-test in the sources.
+You should consider reporting it in bugzilla
+<http://sourceware.org/bugzilla/> providing as much detail as possible.
+If you run a test directly, please remember to set up the environment
+correctly. You want to test the compiled library - and not your installed
+one. The best way is to copy the exact command line which failed and run
+the test from the subdirectory for this test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
 - Some compilers produce buggy code.  No compiler gets single precision
@@ -588,6 +591,32 @@ The only real solution is to debug the loader and determine the problem
 yourself. Please remember that for each architecture there may be various
 patches required to get glibc HEAD into a runnable state. The best course
 of action is to determine if you have all the required patches.
+
+
+1.23.	Why do I get:
+	`#error "glibc cannot be compiled without optimization"',
+	when trying to compile GNU libc with GNU CC?
+
+{AJ,CO} There are a couple of reasons why the GNU C library will not work
+correctly if it is not complied with optimzation.
+
+In the early startup of the dynamic loader (_dl_start), before
+relocation of the PLT, you cannot make function calls. You must inline
+the functions you will use during early startup, or call compiler
+builtins (__builtin_*).
+
+Without optimizations enabled GNU CC will not inline functions. The
+early startup of the dynamic loader will make function calls via an
+unrelocated PLT and crash. 
+
+Without auditing the dynamic linker code it would be difficult to remove
+this requirement. 
+
+Another reason is that nested functions must be inlined in many cases to
+avoid executable stacks.
+
+In practice there is no reason to compile without optimizations, therefore
+we require that GNU libc be compiled with optimizations enabled.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -1957,6 +1986,7 @@ Answers were given by:
 {AO} Alexandre Oliva, <aoliva@redhat.com>
 {BH} Bruno Haible, <haible@clisp.cons.org>
 {SM} Steven Munroe, <sjmunroe@us.ibm.com>
+{CO} Carlos O'Donell, <carlos@systemhalted.org>
 
 Local Variables:
  mode:outline

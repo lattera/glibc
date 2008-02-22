@@ -1,3 +1,10 @@
+2008-02-22  Andreas Jaeger  <aj@suse.de>,
+	    Carlos O'Donell <carlos@systemhalted.org>
+
+	[BZ #5012]
+	* FAQ.in: Describe why glibc needs to be compiled with
+	optimization.
+
 2008-02-19  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (SHT_GNU_ATTRIBUTES): New macro.
