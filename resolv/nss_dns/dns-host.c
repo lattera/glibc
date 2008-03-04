@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -386,11 +386,7 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   if (status != NSS_STATUS_SUCCESS)
-    {
-      *h_errnop = h_errno;
-      *errnop = errno;
-      return status;
-    }
+    return status;
 
 #ifdef SUNSECURITY
   This is not implemented because it is not possible to use the current
