@@ -170,4 +170,8 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2 "<U0043><U0041>"
 country_ab3 "<U0043><U0041><U004E>"
 country_num 124
+lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
+lang_ab       "<U0065><U006E>"
+lang_term     "<U0065><U006E><U0067>"
+lang_lib      "<U0065><U006E><U0067>"
 END LC_ADDRESS
