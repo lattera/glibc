@@ -1186,7 +1186,7 @@ void     public_cFREe();
 
   Malloc_trim returns 1 if it actually released any memory, else 0.
   On systems that do not support "negative sbrks", it will always
-  rreturn 0.
+  return 0.
 */
 #if __STD_C
 int      public_mTRIm(size_t);

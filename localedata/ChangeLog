@@ -1,3 +1,13 @@
+2008-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_CA: Add language information in LC_ADDRESS section.
+	* locales/fr_CA: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/iu_CA: Likewise.
+
+	[BZ #5627]
+	* locales/shs_CA: New file.
+
 2008-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5520]
