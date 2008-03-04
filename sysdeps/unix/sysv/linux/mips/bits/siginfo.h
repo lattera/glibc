@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/MIPS version.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005
+   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2008
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -70,6 +70,22 @@ typedef struct siginfo
 	    __uid_t si_uid;	/* Real user ID of sending process.  */
 	  } _kill;
 
+	/* POSIX.1b timers.  */
+	struct
+	  {
+	    int si_tid;		/* Timer ID.  */
+	    int si_overrun;	/* Overrun count.  */
+	    sigval_t si_sigval;	/* Signal value.  */
+	  } _timer;
+
+	/* POSIX.1b signals.  */
+	struct
+	  {
+	    __pid_t si_pid;	/* Sending process ID.  */
+	    __uid_t si_uid;	/* Real user ID of sending process.  */
+	    sigval_t si_sigval;	/* Signal value.  */
+	  } _rt;
+
 	/* SIGCHLD.  */
 	struct
 	  {
@@ -89,24 +105,9 @@ typedef struct siginfo
 	/* SIGPOLL.  */
 	struct
 	  {
-	    int si_band;	/* Band event for SIGPOLL.  */
+	    long int si_band;	/* Band event for SIGPOLL.  */
 	    int si_fd;
 	  } _sigpoll;
-
-	/* POSIX.1b timers.  */
-	struct
-	  {
-	    unsigned int _timer1;
-	    unsigned int _timer2;
-	  } _timer;
-
-	/* POSIX.1b signals.  */
-	struct
-	  {
-	    __pid_t si_pid;	/* Sending process ID.  */
-	    __uid_t si_uid;	/* Real user ID of sending process.  */
-	    sigval_t si_sigval;	/* Signal value.  */
-	  } _rt;
       } _sifields;
   } siginfo_t;
 
@@ -114,6 +115,8 @@ typedef struct siginfo
 /* X/Open requires some more fields with fixed names.  */
 # define si_pid		_sifields._kill.si_pid
 # define si_uid		_sifields._kill.si_uid
+# define si_timerid	_sifields._timer.si_tid
+# define si_overrun	_sifields._timer.si_overrun
 # define si_status	_sifields._sigchld.si_status
 # define si_utime	_sifields._sigchld.si_utime
 # define si_stime	_sifields._sigchld.si_stime
@@ -265,12 +268,12 @@ enum
 
 /* Structure to transport application-defined values with signals.  */
 # define __SIGEV_MAX_SIZE	64
-# define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
+# if __WORDSIZE == 64
+#  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
+# else
+#  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
+# endif
 
-/* Forward declaration of the `pthread_attr_t' type.  */
-struct __pthread_attr_s;
-
-/* XXX This one might need to change!!!  */
 typedef struct sigevent
   {
     sigval_t sigev_value;
@@ -280,6 +283,10 @@ typedef struct sigevent
     union
       {
 	int _pad[__SIGEV_PAD_SIZE];
+
+	/* When SIGEV_SIGNAL and SIGEV_THREAD_ID set, LWP ID of the
+	   thread to receive the signal.  */
+	__pid_t _tid;
 
 	struct
 	  {

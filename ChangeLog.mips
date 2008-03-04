@@ -1,3 +1,14 @@
+2008-03-04  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (struct siginfo):
+	Reorganize to match other architectures.  Replace _timer._timer1
+	and _timer._timer2 with _timer.si_tid, _timer.si_overrun, and
+	_timer.si_sigval.  Correct the type of _sigpoll.si_band.
+	(si_timerid, si_overrun): Define.
+	(__SIGEV_PAD_SIZE): Correct for __WORDSIZE == 64.
+	(__pthread_attr_s): Remove declaration.
+	(struct sigevent): Remove XXX.  Add _tid.
+
 2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.
