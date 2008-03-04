@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -119,6 +119,9 @@ struct database_dyn
 
 /* Number of bytes of data we initially reserve for each hash table bucket.  */
 #define DEFAULT_DATASIZE_PER_BUCKET 1024
+
+/* Default module of hash table.  */
+#define DEFAULT_SUGGESTED_MODULE 211
 
 
 /* Number of seconds between two cache pruning runs if we do not have

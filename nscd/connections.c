@@ -1,6 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004, 2005, 2006, 2007, 2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1998-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -112,7 +111,8 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
-    .reset_res = 0,
+    .suggested_module = DEFAULT_SUGGESTED_MODULE,
+   .reset_res = 0,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -131,6 +131,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .suggested_module = DEFAULT_SUGGESTED_MODULE,
     .reset_res = 0,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
@@ -150,6 +151,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 0,		/* Not used.  */
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .suggested_module = DEFAULT_SUGGESTED_MODULE,
     .reset_res = 1,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
@@ -169,6 +171,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 0,		/* Not used.  */
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .suggested_module = DEFAULT_SUGGESTED_MODULE,
     .reset_res = 0,
     .filename = "/etc/services",
     .db_filename = _PATH_NSCD_SERVICES_DB,
@@ -346,7 +349,7 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
   struct database_pers_head head_copy = *head;
 
   /* Check that the header that was read matches the head in the database.  */
-  if (readhead != NULL && memcmp (head, readhead, sizeof (*head)) != 0)
+  if (memcmp (head, readhead, sizeof (*head)) != 0)
     return 0;
 
   /* First some easy tests: make sure the database header is sane.  */
@@ -356,6 +359,7 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 	 This should cover daylight saving time changes.  */
       || head->timestamp > now + 60 * 60 + 60
       || (head->gc_cycle & 1)
+      || head->module == 0
       || (size_t) head->module > INT32_MAX / sizeof (ref_t)
       || (size_t) head->data_size > INT32_MAX - head->module * sizeof (ref_t)
       || head->first_free < 0
@@ -506,6 +510,7 @@ nscd_init (void)
 	    int fd = open (dbs[cnt].db_filename, O_RDWR | EXTRA_O_FLAGS);
 	    if (fd != -1)
 	      {
+		char *msg = NULL;
 		struct stat64 st;
 		void *mem;
 		size_t total;
@@ -514,23 +519,26 @@ nscd_init (void)
 						      sizeof (head)));
 		if (n != sizeof (head) || fstat64 (fd, &st) != 0)
 		  {
+		  fail_db_errno:
+		    /* The code is single-threaded at this point so
+		       using strerror is just fine.  */
+		    msg = strerror (errno);
 		  fail_db:
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
-			     dbs[cnt].db_filename, strerror (errno));
+			     dbs[cnt].db_filename, msg);
 		    unlink (dbs[cnt].db_filename);
 		  }
 		else if (head.module == 0 && head.data_size == 0)
 		  {
-		    /* The file has been created, but the head has not been
-		       initialized yet.  Remove the old file.  */
-		    unlink (dbs[cnt].db_filename);
+		    /* The file has been created, but the head has not
+		       been initialized yet.  */
+		    msg = _("uninitialized header");
+		    goto fail_db;
 		  }
 		else if (head.header_size != (int) sizeof (head))
 		  {
-		    dbg_log (_("invalid persistent database file \"%s\": %s"),
-			     dbs[cnt].db_filename,
-			     _("header size does not match"));
-		    unlink (dbs[cnt].db_filename);
+		    msg = _("header size does not match");
+		    goto fail_db;
 		  }
 		else if ((total = (sizeof (head)
 				   + roundup (head.module * sizeof (ref_t),
@@ -539,10 +547,8 @@ nscd_init (void)
 			 > st.st_size
 			 || total < sizeof (head))
 		  {
-		    dbg_log (_("invalid persistent database file \"%s\": %s"),
-			     dbs[cnt].db_filename,
-			     _("file size does not match"));
-		    unlink (dbs[cnt].db_filename);
+		    msg = _("file size does not match");
+		    goto fail_db;
 		  }
 		/* Note we map with the maximum size allowed for the
 		   database.  This is likely much larger than the
@@ -554,14 +560,12 @@ nscd_init (void)
 				      PROT_READ | PROT_WRITE,
 				      MAP_SHARED, fd, 0))
 			 == MAP_FAILED)
-		  goto fail_db;
+		  goto fail_db_errno;
 		else if (!verify_persistent_db (mem, &head, cnt))
 		  {
 		    munmap (mem, total);
-		    dbg_log (_("invalid persistent database file \"%s\": %s"),
-			     dbs[cnt].db_filename,
-			     _("verification failed"));
-		    unlink (dbs[cnt].db_filename);
+		    msg = _("verification failed");
+		    goto fail_db;
 		  }
 		else
 		  {

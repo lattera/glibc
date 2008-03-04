@@ -1,5 +1,17 @@
 2008-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5818]
+	* nscd/connections.c (dbs): Add initializers for .suggested_module.
+	(verify_persistent_db): Remove one unnecessary test and add a new one
+	for bad configuration.
+	(nscd_init): Improve error reported when persistent database cannot
+	be reused.
+	* nscd/nscd.h (DEFAULT_SUGGESTED_MODULE): Define.
+	* nscd/nscd_conf.c (nscd_parse_file): Provide default values for
+	.suggested_module and .max_db_size and case config file says the
+	values are zero.
+	* nscd/nscd_helper.c (get_mapping): Fail if hash table module is zero.
+
 	[BZ #5854]
 	* nis/ypclnt.c (yp_order): Fix handling of return value of
 	do_ypcall_tr call.

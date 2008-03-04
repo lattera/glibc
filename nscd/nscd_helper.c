@@ -1,5 +1,4 @@
-/* Copyright (C) 1998-2002,2003,2004,2005,2006,2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1998-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -339,6 +338,9 @@ get_mapping (request_type type, const char *key,
 
       if (__builtin_expect (head->version != DB_VERSION, 0)
 	  || __builtin_expect (head->header_size != sizeof (*head), 0)
+	  /* Catch some misconfiguration.  The server should catch
+	     them now but some older versions did not.  */
+	  || __builtin_expect (head->module == 0, 0)
 	  /* This really should not happen but who knows, maybe the update
 	     thread got stuck.  */
 	  || __builtin_expect (! head->nscd_certainly_running

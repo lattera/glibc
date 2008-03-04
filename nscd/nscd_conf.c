@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000, 2003-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2003-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -140,7 +140,8 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	{
 	  int idx = find_db (arg1);
 	  if (idx >= 0)
-	    dbs[idx].suggested_module = atol (arg2);
+	    dbs[idx].suggested_module
+	      = atol (arg2) ?: DEFAULT_SUGGESTED_MODULE;
 	}
       else if (strcmp (entry, "enable-cache") == 0)
 	{
@@ -168,7 +169,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	{
 	  int idx = find_db (arg1);
 	  if (idx >= 0)
-	    dbs[idx].max_db_size = atol (arg2);
+	    dbs[idx].max_db_size = atol (arg2) ?: DEFAULT_MAX_DB_SIZE;
 	}
       else if (strcmp (entry, "logfile") == 0)
 	set_logfile (arg1);
