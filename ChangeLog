@@ -1,5 +1,10 @@
 2008-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5854]
+	* nis/ypclnt.c (yp_order): Fix handling of return value of
+	do_ypcall_tr call.
+	Patch by Jeff Moyer <jmoyer@redhat.com>.
+
 	* po/fr.po: Update from translation team.
 
 2008-02-22  Andreas Jaeger  <aj@suse.de>,

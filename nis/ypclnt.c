@@ -634,7 +634,7 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
 			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_order,
 			 (caddr_t) &resp);
 
-  if (result == YPERR_SUCCESS)
+  if (result != YPERR_SUCCESS)
     return result;
 
   *outorder = resp.ordernum;
