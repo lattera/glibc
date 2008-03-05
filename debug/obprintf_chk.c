@@ -20,11 +20,9 @@
    02111-1307 USA.  */
 
 
-#ifdef __STDC__
 #include <stdlib.h>
-#endif
-#include "libioP.h"
-#include "strfile.h"
+#include <libioP.h>
+#include "../libio/strfile.h"
 #include <assert.h>
 #include <string.h>
 #include <errno.h>
@@ -39,94 +37,16 @@ struct _IO_obstack_file
   struct obstack *obstack;
 };
 
-
-static int
-_IO_obstack_overflow (_IO_FILE *fp, int c)
-{
-  struct obstack *obstack = ((struct _IO_obstack_file *) fp)->obstack;
-  int size;
-
-  /* Make room for another character.  This might as well allocate a
-     new chunk a memory and moves the old contents over.  */
-  assert (c != EOF);
-  obstack_1grow (obstack, c);
-
-  /* Setup the buffer pointers again.  */
-  fp->_IO_write_base = obstack_base (obstack);
-  fp->_IO_write_ptr = obstack_next_free (obstack);
-  size = obstack_room (obstack);
-  fp->_IO_write_end = fp->_IO_write_ptr + size;
-  /* Now allocate the rest of the current chunk.  */
-  obstack_blank_fast (obstack, size);
-
-  return c;
-}
-
-
-static _IO_size_t
-_IO_obstack_xsputn (_IO_FILE *fp, const void *data, _IO_size_t n)
-{
-  struct obstack *obstack = ((struct _IO_obstack_file *) fp)->obstack;
-
-  if (fp->_IO_write_ptr + n > fp->_IO_write_end)
-    {
-      int size;
-
-      /* We need some more memory.  First shrink the buffer to the
-	 space we really currently need.  */
-      obstack_blank_fast (obstack, fp->_IO_write_ptr - fp->_IO_write_end);
-
-      /* Now grow for N bytes, and put the data there.  */
-      obstack_grow (obstack, data, n);
-
-      /* Setup the buffer pointers again.  */
-      fp->_IO_write_base = obstack_base (obstack);
-      fp->_IO_write_ptr = obstack_next_free (obstack);
-      size = obstack_room (obstack);
-      fp->_IO_write_end = fp->_IO_write_ptr + size;
-      /* Now allocate the rest of the current chunk.  */
-      obstack_blank_fast (obstack, size);
-    }
-  else
-    fp->_IO_write_ptr = __mempcpy (fp->_IO_write_ptr, data, n);
-
-  return n;
-}
-
-
-/* the jump table.  */
-const struct _IO_jump_t _IO_obstack_jumps attribute_hidden =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, NULL),
-  JUMP_INIT(overflow, _IO_obstack_overflow),
-  JUMP_INIT(underflow, NULL),
-  JUMP_INIT(uflow, NULL),
-  JUMP_INIT(pbackfail, NULL),
-  JUMP_INIT(xsputn, _IO_obstack_xsputn),
-  JUMP_INIT(xsgetn, NULL),
-  JUMP_INIT(seekoff, NULL),
-  JUMP_INIT(seekpos, NULL),
-  JUMP_INIT(setbuf, NULL),
-  JUMP_INIT(sync, NULL),
-  JUMP_INIT(doallocate, NULL),
-  JUMP_INIT(read, NULL),
-  JUMP_INIT(write, NULL),
-  JUMP_INIT(seek, NULL),
-  JUMP_INIT(close, NULL),
-  JUMP_INIT(stat, NULL),
-  JUMP_INIT(showmanyc, NULL),
-  JUMP_INIT(imbue, NULL)
-};
-
+extern const struct _IO_jump_t _IO_obstack_jumps attribute_hidden;
 
 int
-_IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
+__obstack_vprintf_chk (struct obstack *obstack, int flags, const char *format,
+		       va_list args)
 {
   struct obstack_FILE
     {
       struct _IO_obstack_file ofile;
-  } new_f;
+    } new_f;
   int result;
   int size;
   int room;
@@ -168,6 +88,11 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   new_f.ofile.obstack = obstack;
 
+  /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  if (flags > 0)
+    new_f.ofile.file.file._flags2 |= _IO_FLAGS2_FORTIFY;
+
   result = INTUSE(_IO_vfprintf) (&new_f.ofile.file.file, format, args);
 
   /* Shrink the buffer to the space we really currently need.  */
@@ -176,17 +101,17 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   return result;
 }
-ldbl_weak_alias (_IO_obstack_vprintf, obstack_vprintf)
+libc_hidden_def (__obstack_vprintf_chk)
 
 
 int
-_IO_obstack_printf (struct obstack *obstack, const char *format, ...)
+__obstack_printf_chk (struct obstack *obstack, int flags, const char *format,
+		      ...)
 {
   int result;
   va_list ap;
   va_start (ap, format);
-  result = _IO_obstack_vprintf (obstack, format, ap);
+  result = __obstack_vprintf_chk (obstack, flags, format, ap);
   va_end (ap);
   return result;
 }
-ldbl_weak_alias (_IO_obstack_printf, obstack_printf)

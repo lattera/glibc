@@ -93,6 +93,11 @@ extern int __nldbl___vsnprintf_chk (char *__restrict, size_t, int, size_t,
 extern int __nldbl___vswprintf_chk (wchar_t *__restrict, size_t, int, size_t,
 				    const wchar_t *__restrict, __gnuc_va_list)
   __THROW;
+extern int __nldbl___vasprintf_chk (char **, int, const char *, _G_va_list)
+  __THROW;
+extern int __nldbl___vdprintf_chk (int, int, const char *, _G_va_list);
+extern int __nldbl___obstack_vprintf_chk (struct obstack *, int, const char *,
+					  _G_va_list) __THROW;
 extern void __nldbl___vsyslog_chk (int, int, const char *, va_list);
 
 

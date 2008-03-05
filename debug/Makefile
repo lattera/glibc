@@ -1,4 +1,4 @@
-# Copyright (C) 1998-2001,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001,2004-2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,8 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    confstr_chk getgroups_chk ttyname_r_chk getlogin_r_chk \
 	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
 	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
-	    wcstombs_chk \
+	    wcstombs_chk asprintf_chk vasprintf_chk dprintf_chk \
+	    vdprintf_chk obprintf_chk \
 	    stack_chk_fail fortify_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
@@ -51,6 +52,11 @@ CFLAGS-sprintf_chk.c = -D_IO_MTSAFE_IO
 CFLAGS-snprintf_chk.c = -D_IO_MTSAFE_IO
 CFLAGS-vsprintf_chk.c = -D_IO_MTSAFE_IO
 CFLAGS-vsnprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-asprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-vasprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-obprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-dprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-vdprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-printf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-fprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-vprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)

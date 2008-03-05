@@ -1,5 +1,5 @@
 /* Checking macros for stdio functions.
-   Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -127,6 +127,93 @@ vfprintf (FILE *__restrict __stream,
 {
   return __vfprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
+
+# ifdef __USE_GNU
+
+extern int __asprintf_chk (char **__restrict __ptr, int __flag,
+			   __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 4))) __wur;
+extern int __vasprintf_chk (char **__restrict __ptr, int __flag,
+			    __const char *__restrict __fmt, _G_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 0))) __wur;
+extern int __dprintf_chk (int __fd, int __flag, __const char *__restrict __fmt,
+			  ...) __attribute__ ((__format__ (__printf__, 3, 4)));
+extern int __vdprintf_chk (int __fd, int __flag,
+			   __const char *__restrict __fmt, _G_va_list __arg)
+     __attribute__ ((__format__ (__printf__, 3, 0)));
+extern int __obstack_printf_chk (struct obstack *__restrict __obstack,
+				 int __flag, __const char *__restrict __format,
+				 ...)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 4)));
+extern int __obstack_vprintf_chk (struct obstack *__restrict __obstack,
+				  int __flag,
+				  __const char *__restrict __format,
+				  _G_va_list __args)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 0)));
+
+#  ifdef __va_arg_pack
+__extern_always_inline int
+__NTH (asprintf (char **__restrict __ptr, __const char *__restrict __fmt, ...))
+{
+  return __asprintf_chk (__ptr, __USE_FORTIFY_LEVEL - 1, __fmt,
+			 __va_arg_pack ());
+}
+
+__extern_always_inline int
+__NTH (__asprintf (char **__restrict __ptr, __const char *__restrict __fmt,
+		   ...))
+{
+  return __asprintf_chk (__ptr, __USE_FORTIFY_LEVEL - 1, __fmt,
+			 __va_arg_pack ());
+}
+
+__extern_always_inline int
+dprintf (int __fd, __const char *__restrict __fmt, ...)
+{
+  return __dprintf_chk (__fd, __USE_FORTIFY_LEVEL - 1, __fmt,
+			__va_arg_pack ());
+}
+
+__extern_always_inline int
+__NTH (obstack_printf (struct obstack *__restrict __obstack,
+		       __const char *__restrict __fmt, ...))
+{
+  return __obstack_printf_chk (__obstack, __USE_FORTIFY_LEVEL - 1, __fmt,
+			       __va_arg_pack ());
+}
+#  elif !defined __cplusplus
+#   define asprintf(ptr, ...) \
+  __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#   define __asprintf(ptr, ...) \
+  __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#   define dprintf(fd, ...) \
+  __dprintf_chk (fd, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#   define obstack_printf(obstack, ...) \
+  __obstack_printf_chk (obstack, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#  endif
+
+__extern_always_inline int
+__NTH (vasprintf (char **__restrict __ptr, __const char *__restrict __fmt,
+		  _G_va_list __ap))
+{
+  return __vasprintf_chk (__ptr, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
+}
+
+__extern_always_inline int
+vdprintf (int __fd, __const char *__restrict __fmt, _G_va_list __ap)
+{
+  return __vdprintf_chk (__fd, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
+}
+
+__extern_always_inline int
+__NTH (obstack_vprintf (struct obstack *__restrict __obstack,
+			__const char *__restrict __fmt, _G_va_list __ap))
+{
+  return __obstack_vprintf_chk (__obstack, __USE_FORTIFY_LEVEL - 1, __fmt,
+				__ap);
+}
+
+# endif
 
 #endif
 

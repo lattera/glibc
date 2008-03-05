@@ -41,6 +41,14 @@ extern int __vprintf_chk (int, const char *, _G_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
 extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
+extern int __asprintf_chk (char **, int, const char *, ...) __THROW;
+extern int __vasprintf_chk (char **, int, const char *, _G_va_list) __THROW;
+extern int __dprintf_chk (int, int, const char *, ...);
+extern int __vdprintf_chk (int, int, const char *, _G_va_list);
+extern int __obstack_printf_chk (struct obstack *, int, const char *, ...)
+     __THROW;
+extern int __obstack_vprintf_chk (struct obstack *, int, const char *,
+				  _G_va_list) __THROW;
 #endif
 
 extern int __isoc99_fscanf (FILE *__restrict __stream,
@@ -149,6 +157,9 @@ libc_hidden_proto (__libc_fatal)
 libc_hidden_proto (__vsprintf_chk)
 libc_hidden_proto (__vsnprintf_chk)
 libc_hidden_proto (__vfprintf_chk)
+libc_hidden_proto (__vasprintf_chk)
+libc_hidden_proto (__vdprintf_chk)
+libc_hidden_proto (__obstack_vprintf_chk)
 
 #  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
   && !defined NO_HIDDEN

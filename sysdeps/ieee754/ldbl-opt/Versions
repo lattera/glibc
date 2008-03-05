@@ -73,6 +73,11 @@ libc {
     __nldbl___isoc99_swscanf; __nldbl___isoc99_vwscanf;
     __nldbl___isoc99_vfwscanf; __nldbl___isoc99_vswscanf;
   }
+  GLIBC_2.8 {
+    __nldbl___asprintf_chk; __nldbl___vasprintf_chk;
+    __nldbl___dprintf_chk; __nldbl___vdprintf_chk;
+    __nldbl___obstack_printf_chk; __nldbl___obstack_vprintf_chk;
+  }
 }
 libm {
   NLDBL_VERSION {

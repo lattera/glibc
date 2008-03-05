@@ -42,6 +42,10 @@ libc {
   GLIBC_2.7 {
     __fread_chk; __fread_unlocked_chk;
   }
+  GLIBC_2.8 {
+    __asprintf_chk; __vasprintf_chk;  __dprintf_chk; __vdprintf_chk;
+    __obstack_printf_chk; __obstack_vprintf_chk;
+  }
   GLIBC_PRIVATE {
     __fortify_fail;
   }

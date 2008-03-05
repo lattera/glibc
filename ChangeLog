@@ -1,3 +1,50 @@
+2008-03-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/stdio.h (__asprintf_chk, __dprintf_chk,
+	__obstack_printf_chk): New prototypes.
+	(__vasprintf_chk, __vdprintf_chk,
+	__obstack_vprintf_chk): Likewise.
+	Add libc_hidden_proto.
+	* libio/obprintf.c
+	(_IO_obstack_jumps): No longer static, add attribute_hidden.
+	* libio/bits/stdio-ldbl.h (__asprintf_chk, __dprintf_chk,
+	__obstack_printf_chk, __vasprintf_chk, __vdprintf_chk,
+	__obstack_vprintf_chk): Add __LDBL_REDIR_DECL.
+	* libio/bits/stdio2.h (__asprintf_chk, __dprintf_chk,
+	__obstack_printf_chk, __vasprintf_chk, __vdprintf_chk,
+	__obstack_vprintf_chk): New prototypes.
+	(asprintf, __asprintf, dprintf, obstack_printf, vasprintf, vdprintf,
+	obstack_vprintf): New inlines.
+	* debug/dprintf_chk.c: New file.
+	* debug/vdprintf_chk.c: New file.
+	* debug/asprintf_chk.c: New file.
+	* debug/vasprintf_chk.c: New file.
+	* debug/obprintf_chk.c: New file.
+	* debug/tst-chk1.c (do_test): Add asprintf and obstack_printf tests.
+	* debug/Versions (__asprintf_chk, __dprintf_chk, __obstack_printf_chk,
+	__vasprintf_chk, __vdprintf_chk, __obstack_vprintf_chk): Export
+	@@GLIBC_2.8.
+	* debug/Makefile: Build asprintf_chk, vasprintf_chk, dprintf_chk,
+	vdprintf_chk and obprintf_chk, set CFLAGS for them.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c (__nldbl___vasprintf_chk,
+	__nldbl___vdprintf_chk, __nldbl___obstack_vprintf_chk): Add
+	libc_hidden_proto.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (__nldbl___vasprintf_chk,
+	__nldbl___vdprintf_chk, __nldbl___obstack_vprintf_chk): New prototypes.
+	* sysdeps/ieee754/ldbl-opt/Versions (__nldbl___asprintf_chk,
+	__nldbl___vasprintf_chk, __nldbl___dprintf_chk, __nldbl___vdprintf_chk,
+	__nldbl___obstack_printf_chk, __nldbl___obstack_vprintf_chk): Export
+	@@GLIBC_2.8.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add asprintf_chk,
+	vasprintf_chk, dprintf_chk, vdprintf_chk, obstack_printf_chk and
+	obstack_vprintf_chk.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_vprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_printf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vdprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vasprintf_chk.c: New file.
+
 2008-03-04  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5779]
