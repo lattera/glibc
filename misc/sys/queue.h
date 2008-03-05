@@ -271,6 +271,14 @@ struct {								\
 		(var);							\
 		(var) = ((var)->field.stqe_next))
 
+#define	STAILQ_CONCAT(head1, head2) do {				\
+	if (!STAILQ_EMPTY((head2))) {					\
+		*(head1)->stqh_last = (head2)->stqh_first;		\
+		(head1)->stqh_last = (head2)->stqh_last;		\
+		STAILQ_INIT((head2));					\
+	}								\
+} while (/*CONSTCOND*/0)
+
 /*
  * Singly-linked Tail queue access methods.
  */
@@ -433,6 +441,15 @@ struct {								\
 	for ((var) = (*(((struct headname *)((head)->tqh_last))->tqh_last));	\
 		(var);							\
 		(var) = (*(((struct headname *)((var)->field.tqe_prev))->tqh_last)))
+
+#define	TAILQ_CONCAT(head1, head2, field) do {				\
+	if (!TAILQ_EMPTY(head2)) {					\
+		*(head1)->tqh_last = (head2)->tqh_first;		\
+		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\
+		(head1)->tqh_last = (head2)->tqh_last;			\
+		TAILQ_INIT((head2));					\
+	}								\
+} while (/*CONSTCOND*/0)
 
 /*
  * Tail queue access methods.
