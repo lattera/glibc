@@ -1,3 +1,23 @@
+2008-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/rtld-memset.c: New file.
+
+2008-2-26  Harsha Jagasia  <harsha.jagasia@amd.com>
+
+	* sysdeps/x86_64/cacheinfo.c (NOT_USED_RIGHT_NOW): Remove ifdef guards.
+
+	* sysdeps/x86_64/memset.S: Rewrite non-SSE code path as tuned for AMD
+	Barcelona machine.  Make default fall through branch of
+	__x86_64_preferred_memory_instruction check as the integer code path.
+
+2007-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/cacheinfo.c
+	(__x86_64_preferred_memory_instruction): New variable.
+	(init_cacheinfo): Initialize __x86_64_preferred_memory_instruction.
+
+	* sysdeps/x86_64/memset.S: Rewrite.
+
 2008-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/stdio.h (__asprintf_chk, __dprintf_chk,
@@ -309,7 +329,7 @@
 	* stdlib/Makefile: Add rules to build and run tst-makecontext2.
 	* stdlib/tst-makecontext2.c: New test.
 
-008-01-08  Jakub Jelinek  <jakub@redhat.com>
+2008-01-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/loop.c (UPDATE_PARAMS): Define to empty statement if not
 	defined.
@@ -392,7 +412,7 @@
 
 2007-12-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/malloc.c (public_cALLOc): For arena other than
+	* malloc/malloc.c (public_cALLOc): For arenas other than
 	main_arena, count all bytes inside the mprotect_size range of the
 	heap as uninitialized.
 
