@@ -1,3 +1,9 @@
+2008-03-08  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Clear DF bit in thread state's eflags.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 2008-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5774]
