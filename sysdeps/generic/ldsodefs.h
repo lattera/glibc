@@ -656,6 +656,9 @@ struct rtld_global_ro
 		     Lmid_t nsid, int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
   void *(*_dl_tls_get_addr_soft) (struct link_map *);
+#ifdef HAVE_DL_DISCOVER_OSVERSION
+  int (*_dl_discover_osversion) (void);
+#endif
 
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;

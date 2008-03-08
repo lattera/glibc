@@ -1,5 +1,17 @@
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5786]
+	* elf/dl-sysdep.c: Undefine ROUND after use.
+	* sysdeps/generic/ldsodefs.h [HAVE_DL_DISCOVER_OSVERSION]
+	(struct rtld_global_ro): Add _dl_tls_get_addr_soft element.
+	* elf/rtld.c (rtld_global_ro): Initialize _dl_discover_osversion.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Move _dl_discover_osversion
+	to ...
+	* sysdeps/unix/sysv/linux/dl-sysdep.c: ...here.
+	* sysdeps/unix/sysv/linux/dl-sysdep.h: Declare _dl_discover_osversion
+	if necessary.
+	* sysdeps/unix/sysv/linux/sysconf.c: Handle _SC_ARG_MAX here.
+
 	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Add
 	_dl_tls_get_addr_soft element.
 	* elf/rtld.c (rtld_global_ro): Initialize _dl_tls_get_addr_soft.

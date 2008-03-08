@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  Linux version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,3 +25,12 @@
    we aren't making direct use of it.  So enable this across the board.  */
 
 #define NEED_DL_SYSINFO_DSO	1
+
+
+/* The _dl_discover_osversion function is so far only needed in sysconf
+   to check for kernels later than 2.6.23.  */
+#if !defined ASSEMBLER && __LINUX_KERNEL_VERSION < 0x020617
+/* Get version of the OS.  */
+extern int _dl_discover_osversion (void) attribute_hidden;
+# define HAVE_DL_DISCOVER_OSVERSION	1
+#endif

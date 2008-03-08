@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,9 @@
 #include <sysdep.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/resource.h>
 #include <not-cancel.h>
+#include <ldsodefs.h>
 
 static long int posix_sysconf (int name);
 
@@ -69,6 +71,22 @@ __sysconf (int name)
 	return _POSIX_VERSION;
       }
 #endif
+
+    case _SC_ARG_MAX:
+#if __LINUX_KERNEL_VERSION < 0x020617
+      /* Determine whether this is a kernel 2.6.23 or later.  Only
+	 then do we have an argument limit determined by the stack
+	 size.  */
+      if (GLRO(dl_discover_osversion) () >= 0x020617)
+#endif
+	{
+	  /* Use getrlimit to get the stack limit.  */
+	  struct rlimit rlimit;
+	  if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
+	    return MAX (ARG_MAX, rlimit.rlim_cur / 4);
+	}
+
+      return ARG_MAX;
 
     case _SC_NGROUPS_MAX:
       /* Try to read the information from the /proc/sys/kernel/ngroups_max

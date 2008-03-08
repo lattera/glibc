@@ -758,7 +758,6 @@ __tls_get_addr (GET_ADDR_ARGS)
 /* Look up the module's TLS block as for __tls_get_addr,
    but never touch anything.  Return null if it's not allocated yet.  */
 void *
-attribute_hidden
 _dl_tls_get_addr_soft (struct link_map *l)
 {
   if (__builtin_expect (l->l_tls_modid == 0, 0))

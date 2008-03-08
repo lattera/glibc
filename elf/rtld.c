@@ -162,7 +162,10 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_check_caller = _dl_check_caller,
     ._dl_open = _dl_open,
     ._dl_close = _dl_close,
-    ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft
+    ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
+#ifdef HAVE_DL_DISCOVER_OSVERSION
+    ._dl_discover_osversion = _dl_discover_osversion
+#endif
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
