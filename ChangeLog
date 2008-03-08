@@ -1,5 +1,13 @@
 2008-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5774]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Consume closing brace
+	on NAN(...) sequence.
+	* stdlib/Makefile (tests): Add tst-strtod6.
+	* stdlib/tst-strtod6.c: New file.
+
+	* inet/inet6_opt.c (inet6_opt_init): Check extlen for overflow.
+
 	[BZ #5762]
 	* posix/getopt.c (_getopt_internal_r): Clarify error message by
 	putting offending option character in quotes.  Clean up error

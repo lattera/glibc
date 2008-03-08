@@ -594,6 +594,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  mant = STRTOULL (startp + 1, &endp, 0);
 		  if (endp == cp)
 		    SET_MANTISSA (retval, mant);
+
+		  /* Consume the closing brace.  */
+		  ++cp;
 		}
 	    }
 

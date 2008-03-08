@@ -34,7 +34,7 @@ inet6_opt_init (void *extbuf, socklen_t extlen)
 {
   if (extbuf != NULL)
     {
-      if (extlen <= 0 || (extlen % 8) != 0)
+      if (extlen <= 0 || (extlen % 8) != 0 || extlen > 256 * 8)
 	return -1;
 
       /* Fill in the length in units of 8 octets.  */
