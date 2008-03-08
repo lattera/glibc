@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 1991,1995,1996,1998-2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1998-2003,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,10 @@
 
 #include <unistd.h>
 #include <errno.h>
+
 #include "pathconf.h"
 #include "linux_fsinfo.h"
+#include <not-cancel.h>
 
 static long int posix_pathconf (const char *file, int name);
 
@@ -45,6 +47,9 @@ __pathconf (const char *file, int name)
 
     case _PC_2_SYMLINKS:
       return __statfs_symlinks (__statfs (file, &fsbuf), &fsbuf);
+
+    case _PC_CHOWN_RESTRICTED:
+      return __statfs_chown_restricted (__statfs (file, &fsbuf), &fsbuf);
 
     default:
       return posix_pathconf (file, name);
@@ -178,4 +183,45 @@ __statfs_symlinks (int result, const struct statfs *fsbuf)
     default:
       return 1;
     }
+}
+
+
+/* Used like: return __statfs_chown_restricted (__statfs (name, &buf), &buf);*/
+long int
+__statfs_chown_restricted (int result, const struct statfs *fsbuf)
+{
+  if (result < 0)
+    {
+      if (errno == ENOSYS)
+	/* Not possible, return the default value.  */
+	return 1;
+
+      /* Some error occured.  */
+      return -1;
+    }
+
+  int fd;
+  long int retval = 1;
+  switch (fsbuf->f_type)
+    {
+    case XFS_SUPER_MAGIC:
+      /* Read the value from /proc/sys/fs/xfs/restrict_chown.  If we cannot
+	 read it default to assume the restriction is in place.  */
+      fd = open_not_cancel_2 ("/proc/sys/fs/xfs/restrict_chown", O_RDONLY);
+      if (fd != -1)
+	{
+	  char buf[2];
+	  if (TEMP_FAILURE_RETRY (read_not_cancel (fd, buf, 2)) == 2
+	      && buf[0] >= '0' && buf[0] <= '1')
+	    retval = buf[0] - '0';
+
+	  close_not_cancel_no_status (fd);
+	}
+      break;
+
+    default:
+      break;
+    }
+
+  return retval;
 }

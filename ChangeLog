@@ -1,8 +1,18 @@
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5778]
+	* sysdeps/unix/sysv/linux/pathconf.h: Declare
+	__statfs_chown_restricted.
+	* sysdeps/unix/sysv/linux/fpathconf.c: Call __statfs_chown_restricted
+	for _PC_CHOWN_RESTRICTED.
+	* sysdeps/unix/sysv/linux/pathconf.c: Likewise.
+	Implement __statfs_chown_restricted.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Change
+	_POSIX_CHOWN_RESTRICTED value to zero.
+
 	* sysdeps/x86_64/rtld-memset.c: New file.
 
-2008-2-26  Harsha Jagasia  <harsha.jagasia@amd.com>
+2008-02-26  Harsha Jagasia  <harsha.jagasia@amd.com>
 
 	* sysdeps/x86_64/cacheinfo.c (NOT_USED_RIGHT_NOW): Remove ifdef guards.
 

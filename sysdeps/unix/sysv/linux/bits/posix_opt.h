@@ -1,5 +1,6 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996,1997,1999,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2002,2003,2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,8 +52,8 @@
 /* Setting of memory protections is supported.  */
 #define	_POSIX_MEMORY_PROTECTION	200112L
 
-/* Only root can change owner of file.  */
-#define	_POSIX_CHOWN_RESTRICTED	1
+/* Some filesystems allow all users to change file ownership.  */
+#define	_POSIX_CHOWN_RESTRICTED	0
 
 /* `c_cc' member of 'struct termios' structure can be disabled by
    using the value _POSIX_VDISABLE.  */
