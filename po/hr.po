@@ -599,7 +599,7 @@ msgstr "%s: smeće pri kraju završnog datuma u znakovnom nizu %Zd u `era' polju
 
 #: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
-msgid "%s: illegal option -- %c\n"
+msgid "%s: illegal option -- '%c'\n"
 msgstr "%s: nedozvoljena opcija -- %c\n"
 
 #: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738 locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445 locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329 locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303 locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236 locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
@@ -629,7 +629,7 @@ msgstr "%s: neispravan broj pravila za sortiranje"
 
 #: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: nedozvoljena opcija -- %c\n"
 
 #: locale/programs/ld-time.c:330
@@ -754,37 +754,37 @@ msgstr "%s: brojčani kod zemlje `%d' nije ispravan"
 
 #: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr "%s: opcija `%c%s' ne dopušta argument\n"
 
 #: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr "%s: opcija `%s' je nejednoznačna\n"
 
 #: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070 posix/getopt.c:1082
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr "%s: opcija `%s' zahtijeva argument\n"
 
 #: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr "%s: opcija `--%s' ne dopušta argument\n"
 
 #: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr "%s: opcija `-W %s' ne dopušta argument\n"
 
 #: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr "%s: opcija `-W %s' je nejednoznačna\n"
 
 #: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136 posix/getopt.c:1147
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: opcija zahtijeva argument -- %c\n"
 
 #: locale/programs/ld-collate.c:1327 locale/programs/ld-collate.c:3675
@@ -949,12 +949,12 @@ msgstr ""
 
 #: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr "%s: neprepoznata opcija `%c%s'\n"
 
 #: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr "%s: neprepoznata opcija `--%s'\n"
 
 #: timezone/zic.c:449

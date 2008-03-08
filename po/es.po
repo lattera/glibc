@@ -3920,38 +3920,38 @@ msgstr "Variable no reconocida `%s'"
 
 #: posix/getopt.c:692 posix/getopt.c:711
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr "%s: la opción `%s' es ambigua\n"
 
 #: posix/getopt.c:744 posix/getopt.c:748
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr "%s: la opción `--%s' no admite ningún argumento\n"
 
 #: posix/getopt.c:757 posix/getopt.c:762
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr "%s: la opción `%c%s' no admite ningún argumento\n"
 
 #: posix/getopt.c:807 posix/getopt.c:829 posix/getopt.c:1159
 #: posix/getopt.c:1181
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr "%s: la opción `%s' requiere un argumento\n"
 
 #: posix/getopt.c:867 posix/getopt.c:870
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr "%s: opción no reconocida `--%s'\n"
 
 #: posix/getopt.c:878 posix/getopt.c:881
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr "%s: opción no reconocida `%c%s'\n"
 
 #: posix/getopt.c:936 posix/getopt.c:939
 #, c-format
-msgid "%s: illegal option -- %c\n"
+msgid "%s: illegal option -- '%c'\n"
 msgstr "%s: opción ilegal -- %c\n"
 
 # ¿Qué tiene de malo "inválida"? sv
@@ -3970,23 +3970,23 @@ msgstr "%s: opción ilegal -- %c\n"
 #
 #: posix/getopt.c:945 posix/getopt.c:948
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: opción inválida -- %c\n"
 
 #: posix/getopt.c:1003 posix/getopt.c:1022 posix/getopt.c:1234
 #: posix/getopt.c:1255
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: la opción requiere un argumento --%c\n"
 
 #: posix/getopt.c:1074 posix/getopt.c:1093
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr "%s: la opción `-W %s' es ambigua\n"
 
 #: posix/getopt.c:1117 posix/getopt.c:1138
 #, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr "%s: la opción `-W %s' no admite ningún argumento\n"
 
 #: posix/regcomp.c:150

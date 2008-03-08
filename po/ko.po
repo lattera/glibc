@@ -4330,59 +4330,59 @@ msgstr "인식할 수 없는 변수 `%s'"
 
 #: posix/getopt.c:571 posix/getopt.c:587
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr "%s: `%s' 옵션은 모호한 옵션입니다\n"
 
 #: posix/getopt.c:620 posix/getopt.c:624
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr "%s: `--%s' 옵션은 인수를 허용하지 않습니다\n"
 
 #: posix/getopt.c:633 posix/getopt.c:638
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr "%s: `%c%s' 옵션은 인수를 허용하지 않습니다\n"
 
 #: posix/getopt.c:681 posix/getopt.c:700 posix/getopt.c:1016
 #: posix/getopt.c:1035
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr "%s: `%s' 옵션은 인수가 필요합니다\n"
 
 #: posix/getopt.c:738 posix/getopt.c:741
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr "%s: 인식할 수 없는 옵션 `--%s'\n"
 
 #: posix/getopt.c:749 posix/getopt.c:752
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr "%s: 인식할 수 없는 옵션 `%c%s'\n"
 
 #: posix/getopt.c:804 posix/getopt.c:807
 #, c-format
-msgid "%s: illegal option -- %c\n"
+msgid "%s: illegal option -- '%c'\n"
 msgstr "%s: 잘못된 옵션 -- %c\n"
 
 #: posix/getopt.c:813 posix/getopt.c:816
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: 부적절한 옵션 -- %c\n"
 
 #: posix/getopt.c:868 posix/getopt.c:884 posix/getopt.c:1088
 #: posix/getopt.c:1106
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: 이 옵션은 인수가 필요합니다 -- %c\n"
 
 #: posix/getopt.c:937 posix/getopt.c:953
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr "%s: `-W %s' 옵션은 모호한 옵션입니다\n"
 
 #: posix/getopt.c:977 posix/getopt.c:995
 #, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr "%s: `-W %s' 옵션은 인수를 허용하지 않습니다\n"
 
 #: posix/regcomp.c:135

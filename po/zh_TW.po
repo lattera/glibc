@@ -3545,59 +3545,59 @@ msgstr "無法識別的變數 `%s'"
 
 #: posix/getopt.c:692 posix/getopt.c:711
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr "%s: 選項 `%s' 含義不清\n"
 
 #: posix/getopt.c:744 posix/getopt.c:748
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr "%s: 選項 `--%s' 不允許附加引數\n"
 
 #: posix/getopt.c:757 posix/getopt.c:762
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr "%s: 選項 `%c%s' 不允許附加引數\n"
 
 #: posix/getopt.c:807 posix/getopt.c:829 posix/getopt.c:1159
 #: posix/getopt.c:1181
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr "%s: 選項 `%s' 需要一個引數\n"
 
 #: posix/getopt.c:867 posix/getopt.c:870
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr "%s: 未知的選項 `--%s'\n"
 
 #: posix/getopt.c:878 posix/getopt.c:881
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr "%s: 未知的選項 `%c%s'\n"
 
 #: posix/getopt.c:936 posix/getopt.c:939
 #, c-format
-msgid "%s: illegal option -- %c\n"
+msgid "%s: illegal option -- '%c'\n"
 msgstr "%s: 不合法的選項 -- %c\n"
 
 #: posix/getopt.c:945 posix/getopt.c:948
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: 不適用的選項 -- %c\n"
 
 #: posix/getopt.c:1003 posix/getopt.c:1022 posix/getopt.c:1234
 #: posix/getopt.c:1255
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: 選項需要一個引數 -- %c\n"
 
 #: posix/getopt.c:1074 posix/getopt.c:1093
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr "%s: 選項 `-W %s' 含義不清\n"
 
 #: posix/getopt.c:1117 posix/getopt.c:1138
 #, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr "%s: 選項 `-W %s' 不允許附加引數\n"
 
 #: posix/regcomp.c:150

@@ -3448,59 +3448,59 @@ msgstr "Нераспазнаная пераменная \"%s\""
 
 #: posix/getopt.c:692 posix/getopt.c:704
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr ""
 
 #: posix/getopt.c:737 posix/getopt.c:741
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr ""
 
 #: posix/getopt.c:750 posix/getopt.c:755
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr ""
 
 #: posix/getopt.c:791 posix/getopt.c:804 posix/getopt.c:1093
 #: posix/getopt.c:1106
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr ""
 
 #: posix/getopt.c:842 posix/getopt.c:845
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr ""
 
 #: posix/getopt.c:853 posix/getopt.c:856
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr ""
 
 #: posix/getopt.c:903 posix/getopt.c:906
 #, c-format
-msgid "%s: illegal option -- %c\n"
-msgstr "%s: недапушчальны выраб -- %c\n"
+msgid "%s: illegal option -- '%c'\n"
+msgstr "%s: недапушчальны выраб -- '%c'\n"
 
 #: posix/getopt.c:912 posix/getopt.c:915
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr ""
 
 #: posix/getopt.c:962 posix/getopt.c:973 posix/getopt.c:1159
 #: posix/getopt.c:1172
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr ""
 
 #: posix/getopt.c:1025 posix/getopt.c:1036
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr ""
 
 #: posix/getopt.c:1060 posix/getopt.c:1072
 #, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr ""
 
 #: posix/regcomp.c:136

@@ -1,5 +1,27 @@
 2008-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5762]
+	* posix/getopt.c (_getopt_internal_r): Clarify error message by
+	putting offending option character in quotes.  Clean up error
+	messages.
+	* po/be.po: Adjust msgstr in translation file.
+	* po/bg.po: Likewise.
+	* po/ca.po: Likewise.
+	* po/cs.po: Likewise.
+	* po/da.po: Likewise.
+	* po/de.po: Likewise.
+	* po/es.po: Likewise.
+	* po/fr.po: Likewise.
+	* po/hr.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/nl.po: Likewise.
+	* po/rw.po: Likewise.
+	* po/sk.po: Likewise.
+	* po/sv.po: Likewise.
+	* po/tr.po: Likewise.
+	* po/zh_CN.po: Likewise.
+	* po/zh_TW.po: Likewise.
+
 	[BZ #5760]
 	* inet/inet6_opt.c (inet6_opt_init): Fix ip6h_len computation.
 	Patch by Roland Bless <roland@bless.de>.
