@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  i386 version.
-   Copyright (C) 1994,1995,1996,1997,1998,1999,2005
+   Copyright (C) 1994,1995,1996,1997,1998,1999,2005,2008
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,6 +21,7 @@
 #include <hurd/signal.h>
 #include <hurd/userlink.h>
 #include <thread_state.h>
+#include <mach/machine/eflags.h>
 #include <assert.h>
 #include <errno.h>
 #include "hurdfault.h"
@@ -217,6 +218,9 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     }
   /* We pass the handler function to the trampoline code in %edx.  */
   state->basic.edx = (int) handler;
+
+  /* The x86 ABI says the DF bit is clear on entry to any function.  */
+  state->basic.efl &= ~EFL_DF;
 
   return scp;
 }
