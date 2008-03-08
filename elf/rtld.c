@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,7 +161,8 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
     ._dl_check_caller = _dl_check_caller,
     ._dl_open = _dl_open,
-    ._dl_close = _dl_close
+    ._dl_close = _dl_close,
+    ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous

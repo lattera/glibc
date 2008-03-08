@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -655,6 +655,7 @@ struct rtld_global_ro
   void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
 		     Lmid_t nsid, int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
+  void *(*_dl_tls_get_addr_soft) (struct link_map *);
 
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;
@@ -1069,7 +1070,7 @@ extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid);
 
 /* Look up the module's TLS block as for __tls_get_addr,
    but never touch anything.  Return null if it's not allocated yet.  */
-extern void *_dl_tls_get_addr_soft (struct link_map *l) internal_function;
+extern void *_dl_tls_get_addr_soft (struct link_map *l) attribute_hidden;
 
 extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
      internal_function attribute_hidden;

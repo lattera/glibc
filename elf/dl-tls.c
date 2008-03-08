@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -758,7 +758,7 @@ __tls_get_addr (GET_ADDR_ARGS)
 /* Look up the module's TLS block as for __tls_get_addr,
    but never touch anything.  Return null if it's not allocated yet.  */
 void *
-internal_function
+attribute_hidden
 _dl_tls_get_addr_soft (struct link_map *l)
 {
   if (__builtin_expect (l->l_tls_modid == 0, 0))

@@ -57,7 +57,6 @@ ld {
     _dl_allocate_tls; _dl_deallocate_tls;
     _dl_get_tls_static_info; _dl_allocate_tls_init;
     _dl_tls_setup; _dl_rtld_di_serinfo;
-    _dl_tls_get_addr_soft;
     _dl_make_stack_executable;
     # Only here for gdb while a better method is developed.
     _dl_debug_state;

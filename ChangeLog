@@ -1,5 +1,15 @@
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Add
+	_dl_tls_get_addr_soft element.
+	* elf/rtld.c (rtld_global_ro): Initialize _dl_tls_get_addr_soft.
+	* elf/Versions (ld): Don't export _dl_tls_get_addr_soft.
+	* dlfcn/dlinfo.c (dlinfo_doit): Access dl_tls_get_addr_soft through
+	GLRO.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Likewise.
+	* elf/dl-tls.c (_dl_tls_get_addr_soft): Use attribute_hidden instead
+	of internal_function.
+
 	* stdlib/Makefile (aux): Add tens_in_limb.
 	* stdlib/strtod_l.c: Move _tens_in_limb definition to...
 	* stdlib/tens_in_limb.c: ...here.  New file.
