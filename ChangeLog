@@ -1,5 +1,9 @@
 2008-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5760]
+	* inet/inet6_opt.c (inet6_opt_init): Fix ip6h_len computation.
+	Patch by Roland Bless <roland@bless.de>.
+
 	* sysdeps/unix/sysv/linux/dl-sysdep.c: Avoid unnecessary code for
 	.o file.
 	* elf/Makefile (routines): Add dl-sysdep.
