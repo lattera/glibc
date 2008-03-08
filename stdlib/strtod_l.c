@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007
+   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -148,23 +148,7 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 # error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
-
-/* Local data structure.  */
-static const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
-{    0,                   10,                   100,
-     1000,                10000,                100000L,
-     1000000L,            10000000L,            100000000L,
-     1000000000L
-#if BITS_PER_MP_LIMB > 32
-	        ,	  10000000000ULL,       100000000000ULL,
-     1000000000000ULL,    10000000000000ULL,    100000000000000ULL,
-     1000000000000000ULL, 10000000000000000ULL, 100000000000000000ULL,
-     1000000000000000000ULL, 10000000000000000000ULL
-#endif
-#if BITS_PER_MP_LIMB > 64
-  #error "Need to expand tens_in_limb table to" MAX_DIG_PER_LIMB
-#endif
-};
+extern const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1];
 
 #ifndef	howmany
 #define	howmany(x,y)		(((x)+((y)-1))/(y))

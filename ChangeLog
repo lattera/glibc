@@ -1,5 +1,9 @@
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/Makefile (aux): Add tens_in_limb.
+	* stdlib/strtod_l.c: Move _tens_in_limb definition to...
+	* stdlib/tens_in_limb.c: ...here.  New file.
+
 	[BZ #5778]
 	* sysdeps/unix/sysv/linux/pathconf.h: Declare
 	__statfs_chown_restricted.

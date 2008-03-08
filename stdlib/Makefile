@@ -52,7 +52,7 @@ routines	:=							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
-aux =	grouping groupingwc
+aux =	grouping groupingwc tens_in_limb
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
