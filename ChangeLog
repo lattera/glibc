@@ -13,7 +13,7 @@
 
 	[BZ #5774]
 	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Consume closing brace
-	on NAN(...) sequence.
+	of NAN(...) sequence.
 	* stdlib/Makefile (tests): Add tst-strtod6.
 	* stdlib/tst-strtod6.c: New file.
 
