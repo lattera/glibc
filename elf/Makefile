@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1995-2007, 2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ subdir		:= elf
 headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(dl-routines) dl-support dl-iteratephdr \
 		  dl-addr enbl-secure dl-profstub \
-		  dl-origin dl-libc dl-sym dl-tsd
+		  dl-origin dl-libc dl-sym dl-tsd dl-sysdep
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -33,7 +33,8 @@ dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 				  execstack caller open close trampoline)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin
+elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
+		    dl-sysdep
 shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program

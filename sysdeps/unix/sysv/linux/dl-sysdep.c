@@ -27,7 +27,8 @@
 #include <ldsodefs.h>
 #include <kernel-features.h>
 
-#define DL_SYSDEP_INIT frob_brk ()
+#ifdef SHARED
+# define DL_SYSDEP_INIT frob_brk ()
 
 static inline void
 frob_brk (void)
@@ -56,7 +57,8 @@ frob_brk (void)
 #endif
 }
 
-#include <elf/dl-sysdep.c>
+# include <elf/dl-sysdep.c>
+#endif
 
 
 int
