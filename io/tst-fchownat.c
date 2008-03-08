@@ -19,14 +19,17 @@ static int dir_fd;
 static void
 prepare (void)
 {
-#if _POSIX_CHOWN_RESTRICTED > 0
-  uid_t uid = getuid ();
-  if (uid != 0)
-    {
-      puts ("need root privileges");
-      exit (0);
-    }
+#if _POSIX_CHOWN_RESTRICTED == 0
+  if (pathconf (test_dir, _PC_CHOWN_RESTRICTED) != 0)
 #endif
+    {
+      uid_t uid = getuid ();
+      if (uid != 0)
+	{
+	  puts ("need root privileges");
+	  exit (0);
+	}
+    }
 
   size_t test_dir_len = strlen (test_dir);
   static const char dir_name[] = "/tst-fchownat.XXXXXX";

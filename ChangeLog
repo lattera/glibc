@@ -13,6 +13,8 @@
 	Implement __statfs_chown_restricted.
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Change
 	_POSIX_CHOWN_RESTRICTED value to zero.
+	* io/tst-fchownat.c: Correctly handle _POSIX_CHOWN_RESTRICTED
+	defined to zero.
 
 	* sysdeps/x86_64/rtld-memset.c: New file.
 
