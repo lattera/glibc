@@ -1,5 +1,10 @@
 2008-03-08  Roland McGrath  <roland@frob.com>
 
+	* hurd/hurdsig.c (_hurd_internal_post_signal): When normal rules would
+	ignore a signal that came from a machine exception, treat it as a
+	fatal core-dump signal instead.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
 	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
 	Clear DF bit in thread state's eflags.
 	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.

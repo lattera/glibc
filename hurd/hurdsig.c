@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2005
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,2001,2002,2005,2008
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -743,6 +743,11 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       break;
 
     case ignore:
+      if (detail->exc)
+	/* Blocking or ignoring a machine exception is fatal.
+	   Otherwise we could just spin on the faulting instruction.  */
+	goto fatal;
+
       /* Nobody cares about this signal.  If there was a call to resume
 	 above in SIGCONT processing and we've left a thread suspended,
 	 now's the time to set it going. */
@@ -759,6 +764,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	 Nothing to do but die; BSD gets SIGILL in this case.  */
       detail->code = signo;	/* XXX ? */
       signo = SIGILL;
+
+    fatal:
       act = core;
       /* FALLTHROUGH */
 
