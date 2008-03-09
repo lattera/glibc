@@ -1,3 +1,8 @@
+2008-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5602]
+	* locales/pt_PT: Fix mon_decimal_point.
+
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5777]
