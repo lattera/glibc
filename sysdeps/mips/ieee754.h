@@ -83,7 +83,7 @@ union ieee754_double
 	unsigned int mantissa1:32;
 #endif				/* Big endian.  */
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int mantissa0:20;
 	unsigned int exponent:11;
 	unsigned int negative:1;
@@ -109,7 +109,7 @@ union ieee754_double
 	unsigned int mantissa0:19;
 	unsigned int mantissa1:32;
 #else
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int mantissa0:19;
 	unsigned int quiet_nan:1;
 	unsigned int exponent:11;
@@ -203,7 +203,7 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 #endif
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;
@@ -232,7 +232,7 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 #endif
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;
@@ -272,7 +272,7 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 #endif				/* Big endian.  */
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int mantissa0:20;
 	unsigned int exponent:11;
 	unsigned int negative:1;
@@ -298,7 +298,7 @@ union ieee854_long_double
 	unsigned int mantissa0:19;
 	unsigned int mantissa1:32;
 #else
-# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+# if	__FLOAT_WORD_ORDER == __BIG_ENDIAN
 	unsigned int mantissa0:19;
 	unsigned int quiet_nan:1;
 	unsigned int exponent:11;

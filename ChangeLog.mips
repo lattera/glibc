@@ -1,3 +1,10 @@
+2008-03-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5753]
+	* sysdeps/mips/ieee754.h: Use protected namespace
+	__BIG_ENDIAN/__LITTLE_ENDIAN.
+	Patch by Aurelien Jarno <aurelien@aurel32.net>.
+
 2008-03-04  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (struct siginfo):
