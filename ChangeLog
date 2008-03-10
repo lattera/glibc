@@ -1,3 +1,11 @@
+2008-03-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5753]
+	* sysdeps/ia64/ieee754.h: Use protected namespace
+	__BIG_ENDIAN/__LITTLE_ENDIAN.
+	* sysdeps/ieee754/ieee754.h: Likewise.
+	Patch by Aurelien Jarno <aurelien@aurel32.net>.
+
 2008-03-08  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): When normal rules would
