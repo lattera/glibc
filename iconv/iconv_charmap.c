@@ -1,5 +1,5 @@
 /* Convert using charmaps and possibly iconv().
-   Copyright (C) 2001, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -94,7 +94,8 @@ static int process_file (struct convtable *tbl, FILE *input, FILE *output);
 int
 charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
 		    const char *to_code, struct charmap_t *to_charmap,
-		    int argc, int remaining, char *argv[], FILE *output)
+		    int argc, int remaining, char *argv[],
+		    const char *output_file)
 {
   struct convtable *cvtbl;
   int status = EXIT_SUCCESS;
@@ -131,6 +132,17 @@ charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
   /* If we couldn't generate a table stop now.  */
   if (cvtbl == NULL)
     return EXIT_FAILURE;
+
+  /* Determine output file.  */
+  FILE *output;
+  if (output_file != NULL && strcmp (output_file, "-") != 0)
+    {
+      output = fopen (output_file, "w");
+      if (output == NULL)
+	error (EXIT_FAILURE, errno, _("cannot open output file"));
+    }
+  else
+    output = stdout;
 
   /* We can now start the conversion.  */
   if (remaining == argc)
