@@ -1,3 +1,15 @@
+2008-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5903]
+	* iconv/iconv_charmap.c (charmap_conversion): Pass name of output file
+	not stream for output file.  Open output file here.
+	* iconv/iconv_prog.c (process_lock): Take pointer to output stream
+	and output file name.
+	(process_fd): Likewise.
+	(process_file): Likewise.
+	(main): Adjust callers of changed functions.
+	* iconv/iconv_prog.h: Adjust prototype.
+
 2008-03-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #5753]

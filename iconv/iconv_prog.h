@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -36,7 +36,7 @@ extern int charmap_conversion (const char *from_code,
 			       const char *to_code,
 			       struct charmap_t *to_charmap,
 			       int argc, int remaining, char *argv[],
-			       FILE *output);
+			       const char *output_file);
 
 
 #endif	/* iconv_prog.h */

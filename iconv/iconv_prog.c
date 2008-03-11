@@ -108,9 +108,12 @@ static int list;
 int omit_invalid;
 
 /* Prototypes for the functions doing the actual work.  */
-static int process_block (iconv_t cd, char *addr, size_t len, FILE *output);
-static int process_fd (iconv_t cd, int fd, FILE *output);
-static int process_file (iconv_t cd, FILE *input, FILE *output);
+static int process_block (iconv_t cd, char *addr, size_t len, FILE **output,
+			  const char *output_file);
+static int process_fd (iconv_t cd, int fd, FILE **output,
+		       const char *output_file);
+static int process_file (iconv_t cd, FILE *input, FILE **output,
+			 const char *output_file);
 static void print_known_names (void) internal_function;
 
 
@@ -119,7 +122,6 @@ main (int argc, char *argv[])
 {
   int status = EXIT_SUCCESS;
   int remaining;
-  FILE *output;
   iconv_t cd;
   const char *orig_to_code;
   struct charmap_t *from_charmap = NULL;
@@ -192,16 +194,6 @@ main (int argc, char *argv[])
     to_charmap = charmap_read (orig_to_code, /*0, 1,*/1, 0, 0, 0);
 
 
-  /* Determine output file.  */
-  if (output_file != NULL && strcmp (output_file, "-") != 0)
-    {
-      output = fopen (output_file, "w");
-      if (output == NULL)
-	error (EXIT_FAILURE, errno, _("cannot open output file"));
-    }
-  else
-    output = stdout;
-
   /* At this point we have to handle two cases.  The first one is
      where a charmap is used for the from- or to-charset, or both.  We
      handle this special since it is very different from the sane way of
@@ -210,7 +202,7 @@ main (int argc, char *argv[])
   if (from_charmap != NULL || to_charmap != NULL)
     /* Construct the conversion table and do the conversion.  */
     status = charmap_conversion (from_code, from_charmap, to_code, to_charmap,
-				 argc, remaining, argv, output);
+				 argc, remaining, argv, output_file);
   else
     {
       /* Let's see whether we have these coded character sets.  */
@@ -268,12 +260,16 @@ conversions from `%s' and to `%s' are not supported"),
 		   _("failed to start conversion processing"));
 	}
 
+      /* The output file.  Will be opened when we are ready to produce
+	 output.  */
+      FILE *output = NULL;
+
       /* Now process the remaining files.  Write them to stdout or the file
 	 specified with the `-o' parameter.  If we have no file given as
 	 the parameter process all from stdin.  */
       if (remaining == argc)
 	{
-	  if (process_file (cd, stdin, output) != 0)
+	  if (process_file (cd, stdin, &output, output_file) != 0)
 	    status = EXIT_FAILURE;
 	}
       else
@@ -316,7 +312,8 @@ conversions from `%s' and to `%s' are not supported"),
 			 _("error while closing input `%s'"),
 			 argv[remaining]);
 
-		ret = process_block (cd, addr, st.st_size, output);
+		ret = process_block (cd, addr, st.st_size, &output,
+				     output_file);
 
 		/* We don't need the input data anymore.  */
 		munmap ((void *) addr, st.st_size);
@@ -336,7 +333,7 @@ conversions from `%s' and to `%s' are not supported"),
 #endif	/* _POSIX_MAPPED_FILES */
 	      {
 		/* Read the file in pieces.  */
-		ret = process_fd (cd, fd, output);
+		ret = process_fd (cd, fd, &output, output_file);
 
 		/* Now close the file.  */
 		close (fd);
@@ -355,11 +352,11 @@ conversions from `%s' and to `%s' are not supported"),
 	      }
 	  }
 	while (++remaining < argc);
-    }
 
-  /* Close the output file now.  */
-  if (fclose (output))
-    error (EXIT_FAILURE, errno, _("error while closing output file"));
+      /* Close the output file now.  */
+      if (output != NULL && fclose (output))
+	error (EXIT_FAILURE, errno, _("error while closing output file"));
+    }
 
   return status;
 }
@@ -433,7 +430,43 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
 
 static int
-process_block (iconv_t cd, char *addr, size_t len, FILE *output)
+write_output (const char *outbuf, const char *outptr, FILE **output,
+	      const char *output_file)
+{
+  /* We have something to write out.  */
+  int errno_save = errno;
+
+  if (*output == NULL)
+    {
+      /* Determine output file.  */
+      if (output_file != NULL && strcmp (output_file, "-") != 0)
+	{
+	  *output = fopen (output_file, "w");
+	  if (output == NULL)
+	    error (EXIT_FAILURE, errno, _("cannot open output file"));
+	}
+      else
+	*output = stdout;
+    }
+
+  if (fwrite (outbuf, 1, outptr - outbuf, *output) < (size_t) (outptr - outbuf)
+      || ferror (*output))
+    {
+      /* Error occurred while printing the result.  */
+      error (0, 0, _("\
+conversion stopped due to problem in writing the output"));
+      return -1;
+    }
+
+  errno = errno_save;
+
+  return 0;
+}
+
+
+static int
+process_block (iconv_t cd, char *addr, size_t len, FILE **output,
+	       const char *output_file)
 {
 #define OUTBUF_SIZE	32768
   const char *start = addr;
@@ -460,20 +493,9 @@ process_block (iconv_t cd, char *addr, size_t len, FILE *output)
 
       if (outptr != outbuf)
 	{
-	  /* We have something to write out.  */
-	  int errno_save = errno;
-
-	  if (fwrite (outbuf, 1, outptr - outbuf, output)
-	      < (size_t) (outptr - outbuf)
-	      || ferror (output))
-	    {
-	      /* Error occurred while printing the result.  */
-	      error (0, 0, _("\
-conversion stopped due to problem in writing the output"));
-	      return -1;
-	    }
-
-	  errno = errno_save;
+	  ret = write_output (outbuf, outptr, output, output_file);
+	  if (ret != 0)
+	    break;
 	}
 
       if (n != (size_t) -1)
@@ -486,20 +508,9 @@ conversion stopped due to problem in writing the output"));
 
 	  if (outptr != outbuf)
 	    {
-	      /* We have something to write out.  */
-	      int errno_save = errno;
-
-	      if (fwrite (outbuf, 1, outptr - outbuf, output)
-		  < (size_t) (outptr - outbuf)
-		  || ferror (output))
-		{
-		  /* Error occurred while printing the result.  */
-		  error (0, 0, _("\
-conversion stopped due to problem in writing the output"));
-		  return -1;
-		}
-
-	      errno = errno_save;
+	      ret = write_output (outbuf, outptr, output, output_file);
+	      if (ret != 0)
+		break;
 	    }
 
 	  if (n != (size_t) -1)
@@ -543,7 +554,7 @@ incomplete character or shift sequence at end of buffer"));
 
 
 static int
-process_fd (iconv_t cd, int fd, FILE *output)
+process_fd (iconv_t cd, int fd, FILE **output, const char *output_file)
 {
   /* we have a problem with reading from a desriptor since we must not
      provide the iconv() function an incomplete character or shift
@@ -617,16 +628,16 @@ process_fd (iconv_t cd, int fd, FILE *output)
       }
 
   /* Now we have all the input in the buffer.  Process it in one run.  */
-  return process_block (cd, inbuf, actlen, output);
+  return process_block (cd, inbuf, actlen, output, output_file);
 }
 
 
 static int
-process_file (iconv_t cd, FILE *input, FILE *output)
+process_file (iconv_t cd, FILE *input, FILE **output, const char *output_file)
 {
   /* This should be safe since we use this function only for `stdin' and
      we haven't read anything so far.  */
-  return process_fd (cd, fileno (input), output);
+  return process_fd (cd, fileno (input), output, output_file);
 }
 
 
