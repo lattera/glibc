@@ -1,3 +1,10 @@
+2008-03-14  Carlos O'Donell  <carlos@codesourcery.com>
+	    Guy Martin <gmsoft@tuxicoman.be>
+
+	[BZ #5923]
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Pass 
+	timespec and futexp.
+
 2008-02-22  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/Makefile: Remove.

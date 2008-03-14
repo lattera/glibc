@@ -111,7 +111,7 @@ typedef int lll_lock_t;
   lll_private_futex_timed_wait (futex, val, NULL)
 
 #ifdef __ASSUME_PRIVATE_FUTEX
-# define lll_private_futex_timed_wait(futex, val, timeout) \
+# define lll_private_futex_timed_wait(futexp, val, timespec) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
