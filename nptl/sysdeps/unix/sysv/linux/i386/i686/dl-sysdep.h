@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  IA-32 version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,15 @@ extern void _dl_sysinfo_int80 (void) attribute_hidden;
        CFI_ENDPROC "\n"							      \
        ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80\n\t"		      \
        ".previous");
+#endif
+
+
+/* The _dl_discover_osversion function is so far only needed in sysconf
+   to check for kernels later than 2.6.23.  */
+#if !defined ASSEMBLER && __LINUX_KERNEL_VERSION < 0x020617
+/* Get version of the OS.  */
+extern int _dl_discover_osversion (void) attribute_hidden;
+# define HAVE_DL_DISCOVER_OSVERSION	1
 #endif
 
 #endif	/* dl-sysdep.h */

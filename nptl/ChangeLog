@@ -1,3 +1,10 @@
+2008-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Define
+	HAVE_DL_DISCOVER_OSVERSION.
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: Likewise.
+
 2008-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5778]
