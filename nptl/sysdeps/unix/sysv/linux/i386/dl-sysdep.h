@@ -69,5 +69,5 @@ extern void _dl_sysinfo_int80 (void) attribute_hidden;
 extern int _dl_discover_osversion (void) attribute_hidden;
 # define HAVE_DL_DISCOVER_OSVERSION	1
 #endif
-n
+
 #endif	/* dl-sysdep.h */
