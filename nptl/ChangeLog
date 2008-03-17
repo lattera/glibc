@@ -1,3 +1,10 @@
+2008-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: Use __ASSEMBLER__ instead
+	of ASSEMBLER.
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Likewise.
+
 2008-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Define
