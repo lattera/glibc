@@ -86,8 +86,7 @@ x_inline (XDR *xdrs, u_int len)
   else
     {
       /* Free the earlier space and allocate new area */
-      if (xdrs->x_private)
-	free (xdrs->x_private);
+      free (xdrs->x_private);
       if ((xdrs->x_private = (caddr_t) malloc (len)) == NULL)
 	{
 	  xdrs->x_base = 0;
@@ -157,7 +156,6 @@ xdr_sizeof (xdrproc_t func, void *data)
   x.x_base = (caddr_t) 0;
 
   stat = func (&x, data);
-  if (x.x_private)
-    free (x.x_private);
+  free (x.x_private);
   return stat == TRUE ? x.x_handy : 0;
 }

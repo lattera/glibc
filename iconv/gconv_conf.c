@@ -529,8 +529,7 @@ __gconv_get_path (void)
 
       __gconv_path_elem = result ?: (struct path_elem *) &empty_path_elem;
 
-      if (cwd != NULL)
-	free (cwd);
+      free (cwd);
     }
 
   __libc_lock_unlock (lock);

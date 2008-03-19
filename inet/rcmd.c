@@ -826,8 +826,7 @@ __validuser2_sa(hostf, ra, ralen, luser, ruser, rhost)
 	}
     }
 
-    if (buf != NULL)
-      free (buf);
+    free (buf);
 
     return retval;
 }

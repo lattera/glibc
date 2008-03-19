@@ -396,6 +396,5 @@ _mcleanup (void)
     write_gmon ();
 
   /* free the memory. */
-  if (_gmonparam.tos != NULL)
-    free (_gmonparam.tos);
+  free (_gmonparam.tos);
 }

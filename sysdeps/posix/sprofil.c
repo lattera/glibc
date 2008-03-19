@@ -322,8 +322,7 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
   for (i = 0; i < profcnt; ++i)
     if (add_region (p[i], (flags & PROF_UINT) != 0) < 0)
       {
-	if (prof_info.region)
-	  free (prof_info.region);
+	free (prof_info.region);
 	prof_info.num_regions = 0;
 	prof_info.region = NULL;
 	return -1;

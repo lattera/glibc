@@ -859,8 +859,7 @@ non-symbolic character value should not be used"));
       if (illegal_string)
 	{
 	  free (buf);
-	  if (buf2 != NULL)
-	    free (buf2);
+	  free (buf2);
 	  lr->token.val.str.startmb = NULL;
 	  lr->token.val.str.lenmb = 0;
 	  lr->token.val.str.startwc = NULL;

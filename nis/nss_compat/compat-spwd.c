@@ -113,10 +113,8 @@ init_nss_interface (void)
 static void
 give_spwd_free (struct spwd *pwd)
 {
-  if (pwd->sp_namp != NULL)
-    free (pwd->sp_namp);
-  if (pwd->sp_pwdp != NULL)
-    free (pwd->sp_pwdp);
+  free (pwd->sp_namp);
+  free (pwd->sp_pwdp);
 
   memset (pwd, '\0', sizeof (struct spwd));
   pwd->sp_warn = -1;

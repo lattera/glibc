@@ -553,8 +553,7 @@ save_for_wbackup (fp, end_p)
 		  needed_size * sizeof (wchar_t));
 #endif
 	}
-      if (fp->_wide_data->_IO_save_base)
-	free (fp->_wide_data->_IO_save_base);
+      free (fp->_wide_data->_IO_save_base);
       fp->_wide_data->_IO_save_base = new_buffer;
       fp->_wide_data->_IO_save_end = new_buffer + avail + needed_size;
     }

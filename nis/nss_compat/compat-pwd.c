@@ -116,16 +116,11 @@ init_nss_interface (void)
 static void
 give_pwd_free (struct passwd *pwd)
 {
-  if (pwd->pw_name != NULL)
-    free (pwd->pw_name);
-  if (pwd->pw_passwd != NULL)
-    free (pwd->pw_passwd);
-  if (pwd->pw_gecos != NULL)
-    free (pwd->pw_gecos);
-  if (pwd->pw_dir != NULL)
-    free (pwd->pw_dir);
-  if (pwd->pw_shell != NULL)
-    free (pwd->pw_shell);
+  free (pwd->pw_name);
+  free (pwd->pw_passwd);
+  free (pwd->pw_gecos);
+  free (pwd->pw_dir);
+  free (pwd->pw_shell);
 
   memset (pwd, '\0', sizeof (struct passwd));
 }

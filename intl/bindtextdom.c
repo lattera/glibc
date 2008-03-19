@@ -203,8 +203,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 		  if (__builtin_expect (result != NULL, 1))
 		    {
-		      if (binding->codeset != NULL)
-			free (binding->codeset);
+		      free (binding->codeset);
 
 		      binding->codeset = result;
 		      modified = 1;

@@ -29,12 +29,9 @@ _nl_cleanup_time (struct locale_data *locale)
       locale->private.time = NULL;
       locale->private.cleanup = NULL;
 
-      if (data->eras != NULL)
-	free (data->eras);
-      if (data->alt_digits != NULL)
-	free (data->alt_digits);
-      if (data->walt_digits != NULL)
-	free (data->walt_digits);
+      free (data->eras);
+      free (data->alt_digits);
+      free (data->walt_digits);
 
       free (data);
     }

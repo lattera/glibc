@@ -1184,8 +1184,7 @@ parse_conf_include (const char *config_file, unsigned int lineno,
       break;
     }
 
-  if (copy)
-    free (copy);
+  free (copy);
 }
 
 /* Honour LD_HWCAP_MASK.  */

@@ -1236,8 +1236,7 @@ _nl_load_domain (domain_file, domainbinding)
       /* This is an invalid revision.  */
     invalid:
       /* This is an invalid .mo file.  */
-      if (domain->malloced)
-	free (domain->malloced);
+      free (domain->malloced);
 #ifdef HAVE_MMAP
       if (use_mmap)
 	munmap ((caddr_t) data, size);
@@ -1289,12 +1288,10 @@ _nl_unload_domain (domain)
       if (convd->conv != (__gconv_t) -1)
 	__gconv_close (convd->conv);
     }
-  if (domain->conversions != NULL)
-    free (domain->conversions);
+  free (domain->conversions);
   __libc_rwlock_fini (domain->conversions_lock);
 
-  if (domain->malloced)
-    free (domain->malloced);
+  free (domain->malloced);
 
 # ifdef _POSIX_MAPPED_FILES
   if (domain->use_mmap)

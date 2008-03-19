@@ -366,8 +366,7 @@ stringprep (char *in,
 
   do
     {
-      if (ucs4)
-	free (ucs4);
+      free (ucs4);
       ucs4 = stringprep_utf8_to_ucs4 (in, -1, &ucs4len);
       maxucs4len = ucs4len + adducs4len;
       uint32_t *newp = realloc (ucs4, maxucs4len * sizeof (uint32_t));
@@ -449,8 +448,7 @@ stringprep_profile (const char *in,
 
   do
     {
-      if (str)
-	free (str);
+      free (str);
       str = (char *) malloc (len);
       if (str == NULL)
 	return STRINGPREP_MALLOC_ERROR;

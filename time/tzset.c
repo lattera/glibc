@@ -414,8 +414,7 @@ tzset_internal (always, explicit)
   tz_rules[1].name = NULL;
 
   /* Save the value of `tz'.  */
-  if (old_tz != NULL)
-    free (old_tz);
+  free (old_tz);
   old_tz = tz ? __strdup (tz) : NULL;
 
   /* Try to read a data file.  */

@@ -300,8 +300,7 @@ save_for_backup (fp, end_p)
 	memcpy (new_buffer + avail,
 		fp->_IO_read_base + least_mark,
 		needed_size);
-      if (fp->_IO_save_base)
-	free (fp->_IO_save_base);
+      free (fp->_IO_save_base);
       fp->_IO_save_base = new_buffer;
       fp->_IO_save_end = new_buffer + avail + needed_size;
     }
