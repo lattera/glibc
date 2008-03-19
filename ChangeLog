@@ -1,3 +1,25 @@
+2008-02-10  Jim Meyering  <meyering@redhat.com>
+
+	Remove useless "if" before "free":
+	* elf/ldconfig.c (parse_conf_include): Likewise.
+	* gmon/gmon.c (weak_alias): Likewise.
+	* iconv/gconv_conf.c (__gconv_get_path): Likewise.
+	* inet/rcmd.c (__validuser2_sa): Likewise.
+	* intl/bindtextdom.c (set_binding_values): Likewise.
+	* intl/loadmsgcat.c (_nl_load_domain, _nl_unload_domain): Likewise.
+	* libio/genops.c (save_for_backup): Likewise.
+	* libio/wgenops.c (save_for_wbackup): Likewise.
+	* locale/programs/ld-collate.c (collate_read): Likewise.
+	* locale/programs/linereader.c (get_string): Likewise.
+	* nis/nss_compat/compat-pwd.c (give_pwd_free): Likewise.
+	* nis/nss_compat/compat-spwd.c (give_spwd_free): Likewise.
+	* resolv/res_debug.c (do_section): Likewise.
+	* sunrpc/xdr_sizeof.c (x_inline, xdr_sizeof): Likewise.
+	* sysdeps/mach/hurd/if_index.c (libc_hidden_def): Likewise.
+	* sysdeps/posix/sprofil.c (__sprofil): Likewise.
+	* time/lc-time-cleanup.c (_nl_cleanup_time): Likewise.
+	* time/tzset.c (tzset_internal): Likewise.
+
 2008-03-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-sysdep.h: Use __ASSEMBLER__ instead
