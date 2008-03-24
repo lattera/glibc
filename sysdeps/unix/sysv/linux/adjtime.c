@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2002, 2004, 2007
+/* Copyright (C) 1995, 1996, 1997, 1998, 2002, 2004, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -71,14 +71,16 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
 	  return -1;
 	}
       tntx.offset = tmp.tv_usec + tmp.tv_sec * 1000000L;
+      tntx.modes = ADJ_OFFSET_SINGLESHOT;
+    }
+  else
+    {
 #ifdef ADJ_OFFSET_SS_READ
       tntx.modes = ADJ_OFFSET_SS_READ;
 #else
-      tntx.modes = ADJ_OFFSET_SINGLESHOT;
+      tntx.modes = 0;
 #endif
     }
-  else
-    tntx.modes = 0;
 
 #if defined ADJ_OFFSET_SS_READ && !defined __ASSUME_ADJ_OFFSET_SS_READ
  again:

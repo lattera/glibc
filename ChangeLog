@@ -1,5 +1,8 @@
 2008-03-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/adjtime.c: Correctly use
+	ADJ_OFFSET_SS_READ.
+
 	* sysdeps/unix/sysv/linux/bits/sched.h: Add new CLONE_* flags,
 	remove CLONE_STOPPED.
 
