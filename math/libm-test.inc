@@ -4481,6 +4481,11 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, -0.5, minus_zero);
   TEST_f_f (nearbyint, -1.5, -2.0);
 
+  TEST_f_f (nearbyint, 262144.75, 262145.0);
+  TEST_f_f (nearbyint, 262142.75, 262143.0);
+  TEST_f_f (nearbyint, 524286.75, 524287.0);
+  TEST_f_f (nearbyint, 524288.75, 524289.0);
+
   END (nearbyint);
 }
 
@@ -4852,6 +4857,10 @@ rint_test (void)
   TEST_f_f (rint, -0.1, -0.0);
   TEST_f_f (rint, -0.25, -0.0);
   TEST_f_f (rint, -0.625, -1.0);
+  TEST_f_f (rint, 262144.75, 262145.0);
+  TEST_f_f (rint, 262142.75, 262143.0);
+  TEST_f_f (rint, 524286.75, 524287.0);
+  TEST_f_f (rint, 524288.75, 524289.0);
 #ifdef TEST_LDOUBLE
   /* The result can only be represented in long double.  */
   TEST_f_f (rint, 4503599627370495.5L, 4503599627370496.0L);
