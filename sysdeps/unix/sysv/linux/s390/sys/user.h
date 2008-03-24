@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,2005 Free Software Foundation, Inc.
+/* Copyright (C) 2000,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ struct _user_regs_struct
   unsigned long orig_gpr2;		/* Original gpr2.  */
   struct _user_fpregs_struct fp_regs;	/* Floating point registers.  */
   struct _user_per_struct per_info;	/* Hardware tracing registers.  */
-  unsigned long ieee_instruction_pointer; 
+  unsigned long ieee_instruction_pointer;	/* Always 0.  */
 };
 
 struct user {

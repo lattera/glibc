@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -43,13 +43,7 @@ fesetenv (const fenv_t *envp)
   else
     env = (*envp);
 
-  /* The S/390 IEEE fpu doesn't have a register for the ieee
-     instruction pointer. The operating system is required to keep an
-     instruction pointer on a per process base. We read and write this
-     value with the ptrace interface.  */
   _FPU_SETCW (env.fpc);
-  ptrace (PTRACE_POKEUSER, getpid (), PT_IEEE_IP,
-	  env.ieee_instruction_pointer);
 
   /* Success.  */
   return 0;

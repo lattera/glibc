@@ -1,3 +1,12 @@
+2008-03-07  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Remove PTRACE_PEEKUSER
+	ptrace call to get the ieee_instruction_pointer from the kernel.
+	* sysdeps/s390/fpu/fesetenv.c (fesetenv): Remove PTRACE_POKEUSER
+	ptrace call to set the ieee_instructtion_pointer.
+	* sysdeps/unix/sysv/linux/s390/sys/user.h (struct _user_regs_struct):
+	Add comment that ieee_instruction_pointer is always 0.
+
 2008-03-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #5857]
