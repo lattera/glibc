@@ -44,6 +44,27 @@ LC_COLLATE
 % Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
 
+% customize sorting required for mr_IN
+collating-element <dv_ksha> from "<U0915><U094D><U0937>"
+collating-element <dv_dnya> from "<U091C><U094D><U091E>"
+collating-element <dv_shra> from "<U0936><U094D><U0930>"
+
+collating-symbol <d_ksha>
+collating-symbol <d_dnya>
+collating-symbol <d_shra>
+
+reorder-after <d_ha>
+<d_ksha>
+<d_dnya>
+<d_shra>
+
+reorder-after <U0939>
+<dv_ksha> <d_ksha>;<BAS>;<MIN>;IGNORE 
+<dv_dnya> <d_dnya>;<BAS>;<MIN>;IGNORE 
+<dv_shra> <d_shra>;<BAS>;<MIN>;IGNORE
+
+reorder-end
+
 END LC_COLLATE
 
 LC_MONETARY

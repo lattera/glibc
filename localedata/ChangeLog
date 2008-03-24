@@ -1,3 +1,9 @@
+2008-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add support for Devanagari script.
+	* locales/mr_IN: Adjust Devanagari sorting for mr_IN.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
 2008-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5602]

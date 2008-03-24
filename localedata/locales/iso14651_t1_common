@@ -60,6 +60,7 @@ script <GREC>
 script <CYRIL>
 script <ARMENIAN>
 script <GEORGIAN>
+script <DEVANAGARI>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -460,6 +461,105 @@ collating-symbol <GEORG-WE>
 collating-symbol <GEORG-HAR>
 collating-symbol <GEORG-HOE>
 collating-symbol <GEORG-FI>
+#
+# <DEVANAGARI>
+#
+# dvd- denotes vowel modifier
+# dm-  denotes matras
+# dvw- denotes vowels
+# <NKT> denotes Nukta characters
+# <NUM> denotes Numerals
+#
+# defning symbols
+collating-symbol <NUM>
+collating-symbol <NKT>
+collating-symbol <dv-abbrevation>
+collating-symbol <dom> 
+collating-symbol <dvw-shorta> 
+collating-symbol <dvw-a> 
+collating-symbol <dvw-aa> 
+collating-symbol <dvw-i> 
+collating-symbol <dvw-ii> 
+collating-symbol <dvw-u> 
+collating-symbol <dvw-uu> 
+collating-symbol <dvw-vocalicr> 
+collating-symbol <dvw-vocalicrr> 
+collating-symbol <dvw-vocalicl> 
+collating-symbol <dvw-vocalicll> 
+collating-symbol <dvw-candrae> 
+collating-symbol <dvw-shorte> 
+collating-symbol <dvw-e> 
+collating-symbol <dvw-ai> 
+collating-symbol <dvw-candrao> 
+collating-symbol <dvw-shorto> 
+collating-symbol <dvw-o> 
+collating-symbol <dvw-au> 
+collating-symbol <d_ka> 
+collating-symbol <d_kha> 
+collating-symbol <d_ga> 
+collating-symbol <d_gga> 
+collating-symbol <d_gha> 
+collating-symbol <d_nga> 
+collating-symbol <d_ca> 
+collating-symbol <d_cha> 
+collating-symbol <d_ja> 
+collating-symbol <d_jja> 
+collating-symbol <d_jha> 
+collating-symbol <d_nya> 
+collating-symbol <d_tta> 
+collating-symbol <d_ttha> 
+collating-symbol <d_dda> 
+collating-symbol <d_ddda> 
+collating-symbol <d_ddha> 
+collating-symbol <d_nna> 
+collating-symbol <d_ta> 
+collating-symbol <d_tha> 
+collating-symbol <d_da> 
+collating-symbol <d_dha> 
+collating-symbol <d_na> 
+collating-symbol <d_pa> 
+collating-symbol <d_pha> 
+collating-symbol <d_ba> 
+collating-symbol <d_bba>
+collating-symbol <d_bha> 
+collating-symbol <d_ma> 
+collating-symbol <d_ya> 
+collating-symbol <d_ra> 
+collating-symbol <d_la> 
+collating-symbol <d_lla> 
+collating-symbol <d_va> 
+collating-symbol <d_sha> 
+collating-symbol <d_ssa> 
+collating-symbol <d_sa> 
+collating-symbol <d_ha> 
+collating-symbol <d_avagrah> 
+collating-symbol <d_glo-stop> 
+collating-symbol <dm-aa> 
+collating-symbol <dm-i> 
+collating-symbol <dm-ii> 
+collating-symbol <dm-u> 
+collating-symbol <dm-uu>
+collating-symbol <dm-vocalicr> 
+collating-symbol <dm-vocalicrr> 
+collating-symbol <dm-vocalicl> 
+collating-symbol <dm-vocalicll> 
+collating-symbol <dm-candrae> 
+collating-symbol <dm-shorte> 
+collating-symbol <dm-e> 
+collating-symbol <dm-ai> 
+collating-symbol <dm-candrao> 
+collating-symbol <dm-shorto> 
+collating-symbol <dm-o> 
+collating-symbol <dm-au> 
+collating-symbol <dvd-anuswara> 
+collating-symbol <dvd-chandrabindu>
+collating-symbol <dvd-visarg>
+collating-symbol <d_halant>
+collating-symbol <d_udatta>
+collating-symbol <d_anudatta>
+collating-symbol <dv-grave>
+collating-symbol <dv-acute>
+
 
 # Ordre des symboles internes / Order of internal symbols
 #
@@ -872,6 +972,98 @@ collating-symbol <GEORG-FI>
 <GEORG-HAE>
 <GEORG-HOE>
 <GEORG-FI>
+#
+#<DEVANAGARI>
+#
+# collation weights in order
+<NKT>
+<NUM>
+<d_udatta>
+<d_anudatta>
+<dv-grave>
+<dv-acute>
+<dv-abbrevation>
+<dom> 
+<dvw-shorta> 
+<dvw-a> 
+<dvw-aa> 
+<dvw-i> 
+<dvw-ii> 
+<dvw-u> 
+<dvw-uu> 
+<dvw-vocalicr> 
+<dvw-vocalicrr> 
+<dvw-vocalicl> 
+<dvw-vocalicll> 
+<dvw-candrae> 
+<dvw-shorte> 
+<dvw-e> 
+<dvw-ai> 
+<dvw-candrao> 
+<dvw-shorto> 
+<dvw-o> 
+<dvw-au> 
+<d_ka> 
+<d_kha> 
+<d_ga> 
+<d_gga> 
+<d_gha> 
+<d_nga> 
+<d_ca> 
+<d_cha> 
+<d_ja> 
+<d_jja> 
+<d_jha> 
+<d_nya> 
+<d_tta> 
+<d_ttha> 
+<d_dda> 
+<d_ddda> 
+<d_ddha> 
+<d_nna> 
+<d_ta> 
+<d_tha> 
+<d_da> 
+<d_dha> 
+<d_na> 
+<d_pa> 
+<d_pha> 
+<d_ba> 
+<d_bba>
+<d_bha> 
+<d_ma> 
+<d_ya> 
+<d_ra> 
+<d_la> 
+<d_lla> 
+<d_va> 
+<d_sha> 
+<d_ssa> 
+<d_sa> 
+<d_ha> 
+<d_avagrah> 
+<d_glo-stop> 
+<dm-aa> 
+<dm-i> 
+<dm-ii> 
+<dm-u> 
+<dm-uu>
+<dm-vocalicr> 
+<dm-vocalicrr> 
+<dm-vocalicl> 
+<dm-vocalicll> 
+<dm-candrae> 
+<dm-shorte> 
+<dm-e> 
+<dm-ai> 
+<dm-candrao> 
+<dm-shorto> 
+<dm-o> 
+<dm-au> 
+<dvd-anuswara>
+<dvd-chandrabindu>
+<dvd-visarg>
+<d_halant>
 
 order_start <SPECIAL>;forward;backward;forward;forward,position
 #
@@ -2638,6 +2830,116 @@ order_start <GEORGIAN>;forward;forward;forward;forward,position
 <U2D23> <GEORG-WE>;<BAS>;<ANO>;IGNORE
 <U2D24> <GEORG-HAR>;<BAS>;<ANO>;IGNORE
 <U2D25> <GEORG-HOE>;<BAS>;<ANO>;IGNORE
+
+order_start <DEVANAGARI>;forward;forward;forward;forward,position
+<U0970> <dv-abbrevation>;<BAS>;<MIN>;IGNORE
+<U0966> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0967> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0968> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0969> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096A> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096B> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096C> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096D> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096E> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U096F> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0950> <dom> ;<BAS>;<MIN>;IGNORE 
+<U0904>  <dvw-shorta> ;<BAS>;<MIN>;IGNORE
+<U0905> <dvw-a> ;<BAS>;<MIN>;IGNORE
+<U0906> <dvw-aa> ;<BAS>;<MIN>;IGNORE
+<U0907> <dvw-i> ;<BAS>;<MIN>;IGNORE
+<U0908> <dvw-ii> ;<BAS>;<MIN>;IGNORE
+<U0909> <dvw-u> ;<BAS>;<MIN>;IGNORE
+<U090A> <dvw-uu>;<BAS>;<MIN>;IGNORE 
+<U090B> <dvw-vocalicr>;<BAS>;<MIN>;IGNORE 
+<U0960> <dvw-vocalicrr>;<BAS>;<MIN>;IGNORE 
+<U090C> <dvw-vocalicl>;<BAS>;<MIN>;IGNORE 
+<U0961> <dvw-vocalicll>;<BAS>;<MIN>;IGNORE 
+<U090D> <dvw-candrae>;<BAS>;<MIN>;IGNORE 
+<U090E> <dvw-shorte>;<BAS>;<MIN>;IGNORE 
+<U090F> <dvw-e>;<BAS>;<MIN>;IGNORE 
+<U0910> <dvw-ai>;<BAS>;<MIN>;IGNORE 
+<U0911> <dvw-candrao>;<BAS>;<MIN>;IGNORE 
+<U0912> <dvw-shorto>;<BAS>;<MIN>;IGNORE 
+<U0913> <dvw-o>;<BAS>;<MIN>;IGNORE 
+<U0914> <dvw-au>;<BAS>;<MIN>;IGNORE
+<U0915> <d_ka>;<BAS>;<MIN>;IGNORE 
+<U0958> <d_ka>;"<BAS><NKT>";"<MIN><MIN>";IGNORE 
+<U0916> <d_kha>;<BAS>;<MIN>;IGNORE 
+<U0959> <d_kha>;"<BAS><NKT>";"<MIN><MIN>";IGNORE 
+<U0917> <d_ga>;<BAS>;<MIN>;IGNORE 
+<U095A> <d_ga>;"<BAS><NKT>";"<MIN><MIN>";IGNORE 
+<U097B> <d_gga>;<BAS>;<MIN>;IGNORE 
+<U0918> <d_gha>;<BAS>;<MIN>;IGNORE
+<U0919> <d_nga>;<BAS>;<MIN>;IGNORE 
+<U091A> <d_ca>;<BAS>;<MIN>;IGNORE 
+<U091B> <d_cha>;<BAS>;<MIN>;IGNORE 
+<U091C> <d_ja>;<BAS>;<MIN>;IGNORE 
+<U095B> <d_ja>;"<BAS><NKT>";"<MIN><MIN>";IGNORE 
+<U097C> <d_jja>;<BAS>;<MIN>;IGNORE 
+<U091D> <d_jha>;<BAS>;<MIN>;IGNORE 
+<U091E> <d_nya>;<BAS>;<MIN>;IGNORE 
+<U091F> <d_tta>;<BAS>;<MIN>;IGNORE 
+<U0920> <d_ttha>;<BAS>;<MIN>;IGNORE 
+<U0921> <d_dda>;<BAS>;<MIN>;IGNORE 
+<U095C> <d_dda>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U097E> <d_ddda>;<BAS>;<MIN>;IGNORE 
+<U0922> <d_ddha>;<BAS>;<MIN>;IGNORE 
+<U095D> <d_ddha>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U0923> <d_nna>;<BAS>;<MIN>;IGNORE 
+<U0924> <d_ta>;<BAS>;<MIN>;IGNORE 
+<U0925> <d_tha>;<BAS>;<MIN>;IGNORE 
+<U0926> <d_da>;<BAS>;<MIN>;IGNORE 
+<U0927> <d_dha>;<BAS>;<MIN>;IGNORE 
+<U0928> <d_na>;<BAS>;<MIN>;IGNORE 
+<U0929> <d_na>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U092A> <d_pa>;<BAS>;<MIN>;IGNORE 
+<U092B> <d_pha>;<BAS>;<MIN>;IGNORE 
+<U095E> <d_pha>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U092C> <d_ba>;<BAS>;<MIN>;IGNORE 
+<U097F> <d_bba>;<BAS>;<MIN>;IGNORE 
+<U092D> <d_bha>;<BAS>;<MIN>;IGNORE 
+<U092E> <d_ma>;<BAS>;<MIN>;IGNORE 
+<U092F> <d_ya>;<BAS>;<MIN>;IGNORE 
+<U095F> <d_ya>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U0930> <d_ra>;<BAS>;<MIN>;IGNORE 
+<U0931> <d_ra>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U0932> <d_la>;<BAS>;<MIN>;IGNORE 
+<U0933> <d_lla>;<BAS>;<MIN>;IGNORE 
+<U0934> <d_lla>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U0935> <d_va>;<BAS>;<MIN>;IGNORE 
+<U0936> <d_sha>;<BAS>;<MIN>;IGNORE 
+<U0937> <d_ssa>;<BAS>;<MIN>;IGNORE 
+<U0938> <d_sa>;<BAS>;<MIN>;IGNORE 
+<U0939> <d_ha>;<BAS>;<MIN>;IGNORE 
+<U093D> <d_avagrah>;<BAS>;<MIN>;IGNORE 
+<U097D> <d_glo-stop>;<BAS>;<MIN>;IGNORE 
+<U093E> <dm-aa>;<BAS>;<MIN>;IGNORE 
+<U093F> <dm-i>;<BAS>;<MIN>;IGNORE 
+<U0940> <dm-ii>;<BAS>;<MIN>;IGNORE 
+<U0941> <dm-u>;<BAS>;<MIN>;IGNORE 
+<U0942> <dm-uu>;<BAS>;<MIN>;IGNORE
+<U0943> <dm-vocalicr>;<BAS>;<MIN>;IGNORE 
+<U0944> <dm-vocalicrr>;<BAS>;<MIN>;IGNORE 
+<U0962> <dm-vocalicl>;<BAS>;<MIN>;IGNORE 
+<U0963> <dm-vocalicll>;<BAS>;<MIN>;IGNORE 
+<U0945> <dm-candrae>;<BAS>;<MIN>;IGNORE 
+<U0946>  <dm-shorte>;<BAS>;<MIN>;IGNORE 
+<U0947> <dm-e>;<BAS>;<MIN>;IGNORE 
+<U0948> <dm-ai>;<BAS>;<MIN>;IGNORE 
+<U0949> <dm-candrao>;<BAS>;<MIN>;IGNORE 
+<U094A> <dm-shorto>;<BAS>;<MIN>;IGNORE 
+<U094B> <dm-o>;<BAS>;<MIN>;IGNORE 
+<U094C> <dm-au>;<BAS>;<MIN>;IGNORE 
+<U0902> <dvd-anuswara>;<BAS>;<MIN>;IGNORE
+<U0901> <dvd-chandrabindu>;<BAS>;<MIN>;IGNORE
+<U0903> <dvd-visarg>;<BAS>;<MIN>;IGNORE
+<U094D> <d_halant>;<BAS>;<MIN>;IGNORE
+<U093C> IGNORE;<NKT>;<MIN>;IGNORE 
+<U0951> IGNORE;<d_udatta>;<MIN>;IGNORE
+<U0952> IGNORE;<d_anudatta>;<MIN>;IGNORE
+<U0953> IGNORE;<dv-grave>;<MIN>;IGNORE
+<U0954> IGNORE;<dv-acute>;<MIN>;IGNORE
 
 order_end
 
