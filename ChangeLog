@@ -1,5 +1,12 @@
 2008-03-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_call.c (nis_server_cache_search): Save errno around stat
+	call.
+	(__nisfind_server): Similar for open readColdStartFile call.
+	Patch partially by Jim Meyering.
+	* nss/nss_files/files-XXX.c (_nss_files_getXXent_r): Save errno
+	around internal_setent call.
+
 	* po/vi.po: New Vietnamese translation.
 
 	* sysdeps/unix/sysv/linux/adjtime.c: Correctly use

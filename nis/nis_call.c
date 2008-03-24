@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2004, 2005, 2006, 2007
+/* Copyright (C) 1997, 1998, 2001, 2004, 2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
@@ -592,8 +592,10 @@ nis_server_cache_search (const_nis_name name, int search_parent,
   XDR xdrs;
   struct stat64 st;
 
+  int saved_errno = errno;
   if (stat64 ("/var/nis/NIS_COLD_START", &st) < 0)
     st.st_mtime = nis_cold_start_mtime + 1;
+  __set_errno (saved_errno);
 
   __libc_lock_lock (nis_server_cache_lock);
 
@@ -741,7 +743,9 @@ __nisfind_server (const_nis_name name, int search_parent,
       return result;
     }
 
+  int saved_errno = errno;
   *dir = readColdStartFile ();
+  __set_errno (saved_errno);
   if (*dir == NULL)
     /* No /var/nis/NIS_COLD_START->no NIS+ installed.  */
     return NIS_UNAVAIL;

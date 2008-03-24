@@ -1,5 +1,6 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996-1999,2001,2002,2004,2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2001,2002,2004,2007,2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -254,7 +255,11 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
   /* Be prepared that the set*ent function was not called before.  */
   if (stream == NULL)
     {
+      int save_errno = errno;
+
       status = internal_setent (0);
+
+      __set_errno (errno);
 
       if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
 	{
