@@ -1,3 +1,9 @@
+2008-03-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/gai.conf: Fix comment for scope nullbits.
+	* sysdeps/posix/getaddrinfo.c (gaiconf_init): If /bits is not present,
+	default to 128 bits for v4 mapped addresses.
+
 2008-03-07  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Remove PTRACE_PEEKUSER

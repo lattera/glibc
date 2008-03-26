@@ -1775,6 +1775,7 @@ gaiconf_init (void)
 		    *cp++ = '\0';
 		  if (inet_pton (AF_INET6, val1, &prefix))
 		    {
+		      bits = 128;
 		      if (IN6_IS_ADDR_V4MAPPED (&prefix)
 			  && (cp == NULL
 			      || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
