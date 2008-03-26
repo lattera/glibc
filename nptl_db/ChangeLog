@@ -1,5 +1,6 @@
 2008-03-25  Roland McGrath  <roland@redhat.com>
 
+	[BZ #5983]
 	* structs.def: Add pid field of struct pthread.
 	* td_ta_thr_iter.c (iterate_thread_list): Take new arg MATCH_PID.
 	If a thread's pid does not match nor is < 0 while its tid matches
