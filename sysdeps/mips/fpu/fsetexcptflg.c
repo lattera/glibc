@@ -24,7 +24,7 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  fexcept_t temp;
+  fpu_control_t temp;
 
   /* Get the current exceptions.  */
   _FPU_GETCW (temp);

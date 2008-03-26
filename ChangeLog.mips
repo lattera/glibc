@@ -1,3 +1,10 @@
+2008-03-26  David Stephenson  <david.stephenson@sicortex.com>
+	    Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/mips/fpu/fesetround.c (fesetround): Use fpu_control_t.
+	* sysdeps/mips/fpu/fgetexcptflg.c (fegetexceptflag): Likewise.
+	* sysdeps/mips/fpu/fsetexcptflg.c (fesetexceptflag): Likewise.
+
 2008-03-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #5753]

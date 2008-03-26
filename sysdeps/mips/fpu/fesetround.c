@@ -24,7 +24,7 @@
 int
 fesetround (int round)
 {
-  unsigned short int cw;
+  fpu_control_t cw;
 
   if ((round & ~0x3) != 0)
     /* ROUND is no valid rounding mode.  */
