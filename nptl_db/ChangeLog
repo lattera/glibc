@@ -1,3 +1,11 @@
+2008-03-25  Roland McGrath  <roland@redhat.com>
+
+	* structs.def: Add pid field of struct pthread.
+	* td_ta_thr_iter.c (iterate_thread_list): Take new arg MATCH_PID.
+	If a thread's pid does not match nor is < 0 while its tid matches
+	nor is < 0 and equal to -MATCH_PID, ignore it.
+	* td_thr_validate.c (td_thr_validate): Validate thread's pid/tid.
+
 2007-05-16  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_get_info.c: Fake the results for TH->th_unique == 0.
