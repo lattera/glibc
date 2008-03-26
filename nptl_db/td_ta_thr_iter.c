@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999,2000,2001,2002,2003,2004,2007
+   Copyright (C) 1999,2000,2001,2002,2003,2004,2007,2008
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
@@ -25,7 +25,7 @@
 static td_err_e
 iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 		     void *cbdata_p, td_thr_state_e state, int ti_pri,
-		     psaddr_t head, bool fake_empty)
+		     psaddr_t head, bool fake_empty, pid_t match_pid)
 {
   td_err_e err;
   psaddr_t next, ofs;
@@ -78,28 +78,48 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
       if (ps_pdread (ta->ph, addr, copy, ta->ta_sizeof_pthread) != PS_OK)
 	return TD_ERR;
 
-      err = DB_GET_FIELD_LOCAL (schedpolicy, ta, copy, pthread,
-				schedpolicy, 0);
-      if (err != TD_OK)
-	break;
-      err = DB_GET_FIELD_LOCAL (schedprio, ta, copy, pthread,
-				schedparam_sched_priority, 0);
-      if (err != TD_OK)
-	break;
-
-      /* Now test whether this thread matches the specified conditions.  */
-
-      /* Only if the priority level is as high or higher.  */
-      int descr_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
-		       ? 0 : (uintptr_t) schedprio);
-      if (descr_pri >= ti_pri)
+      /* Verify that this thread's pid field matches the child PID.
+	 If its pid field is negative, it's about to do a fork or it
+	 is the sole thread in a fork child.  */
+      psaddr_t pid;
+      err = DB_GET_FIELD_LOCAL (pid, ta, copy, pthread, pid, 0);
+      if (err == TD_OK && (pid_t) (uintptr_t) pid < 0)
 	{
-	  /* Yep, it matches.  Call the callback function.  */
-	  td_thrhandle_t th;
-	  th.th_ta_p = (td_thragent_t *) ta;
-	  th.th_unique = addr;
-	  if (callback (&th, cbdata_p) != 0)
-	    return TD_DBERR;
+	  if (-(pid_t) (uintptr_t) pid == match_pid)
+	    /* It is about to do a fork, but is really still the parent PID.  */
+	    pid = (psaddr_t) (uintptr_t) match_pid;
+	  else
+	    /* It must be a fork child, whose new PID is in the tid field.  */
+	    err = DB_GET_FIELD_LOCAL (pid, ta, copy, pthread, tid, 0);
+	}
+      if (err != TD_OK)
+	break;
+
+      if ((pid_t) (uintptr_t) pid == match_pid)
+	{
+	  err = DB_GET_FIELD_LOCAL (schedpolicy, ta, copy, pthread,
+				    schedpolicy, 0);
+	  if (err != TD_OK)
+	    break;
+	  err = DB_GET_FIELD_LOCAL (schedprio, ta, copy, pthread,
+				    schedparam_sched_priority, 0);
+	  if (err != TD_OK)
+	    break;
+
+	  /* Now test whether this thread matches the specified conditions.  */
+
+	  /* Only if the priority level is as high or higher.  */
+	  int descr_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
+			   ? 0 : (uintptr_t) schedprio);
+	  if (descr_pri >= ti_pri)
+	    {
+	      /* Yep, it matches.  Call the callback function.  */
+	      td_thrhandle_t th;
+	      th.th_ta_p = (td_thragent_t *) ta;
+	      th.th_unique = addr;
+	      if (callback (&th, cbdata_p) != 0)
+		return TD_DBERR;
+	    }
 	}
 
       /* Get the pointer to the next element.  */
@@ -135,17 +155,18 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
      have to iterate over both lists separately.  We start with the
      list of threads with user-defined stacks.  */
 
+  pid_t pid = ps_getpid (ta->ph);
   err = DB_GET_SYMBOL (list, ta, __stack_user);
   if (err == TD_OK)
     err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-			       list, true);
+			       list, true, pid);
 
   /* And the threads with stacks allocated by the implementation.  */
   if (err == TD_OK)
     err = DB_GET_SYMBOL (list, ta, stack_used);
   if (err == TD_OK)
     err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-			       list, false);
+			       list, false, pid);
 
   return err;
 }

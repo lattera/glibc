@@ -1,5 +1,6 @@
 /* Validate a thread handle.
-   Copyright (C) 1999,2001,2002,2003,2004,2007 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2004,2007,2008
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -79,6 +80,29 @@ td_thr_validate (const td_thrhandle_t *th)
 	/* __pthread_initialize_minimal has not run yet.
 	   There is only the special case thread handle.  */
 	err = TD_OK;
+    }
+
+  if (err == TD_OK)
+    {
+      /* Verify that this is not a stale element in a fork child.  */
+      pid_t match_pid = ps_getpid (th->th_ta_p->ph);
+      psaddr_t pid;
+      err = DB_GET_FIELD (pid, th->th_ta_p, th->th_unique, pthread, pid, 0);
+      if (err == TD_OK && (pid_t) (uintptr_t) pid < 0)
+	{
+	  /* This was a thread that was about to fork, or it is the new sole
+	     thread in a fork child.  In the latter case, its tid was stored
+	     via CLONE_CHILD_SETTID and so is already the proper child PID.  */
+	  if (-(pid_t) (uintptr_t) pid == match_pid)
+	    /* It is about to do a fork, but is really still the parent PID.  */
+	    pid = (psaddr_t) (uintptr_t) match_pid;
+	  else
+	    /* It must be a fork child, whose new PID is in the tid field.  */
+	    err = DB_GET_FIELD (pid, th->th_ta_p, th->th_unique,
+				pthread, tid, 0);
+	}
+      if (err == TD_OK && (pid_t) (uintptr_t) pid != match_pid)
+	err = TD_NOTHR;
     }
 
   return err;

@@ -1,5 +1,5 @@
 /* List of types and symbols in libpthread examined by libthread_db.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ DB_STRUCT (pthread)
 DB_STRUCT_FIELD (pthread, list)
 DB_STRUCT_FIELD (pthread, report_events)
 DB_STRUCT_FIELD (pthread, tid)
+DB_STRUCT_FIELD (pthread, pid)
 DB_STRUCT_FIELD (pthread, start_routine)
 DB_STRUCT_FIELD (pthread, cancelhandling)
 DB_STRUCT_FIELD (pthread, schedpolicy)
