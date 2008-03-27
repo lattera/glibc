@@ -17,8 +17,6 @@ sigstack	-	sigstack	2	sigstack
 vfork		-	vfork		0	__vfork		vfork
 
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
-open		-	open		Ci:siv	__libc_open	__open open !__libc_open64 __open64 open64
-open64		open	-
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept

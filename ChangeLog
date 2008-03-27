@@ -1,3 +1,15 @@
+2008-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Add open
+	and creat system calls.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove open system
+	call.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Remove open and creat
+	system calls.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+
 2008-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefined ARG_MAX if
