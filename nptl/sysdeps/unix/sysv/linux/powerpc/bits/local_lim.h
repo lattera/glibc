@@ -1,5 +1,6 @@
 /* Minimum guaranteed maximum values for system limits.  Linux/PPC version.
-   Copyright (C) 1993-1998,2000,2002-2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1993-1998,2000,2002-2004,2006,2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +32,9 @@
 #ifndef OPEN_MAX
 # define __undef_OPEN_MAX
 #endif
+#ifndef ARG_MAX
+# define __undef_ARG_MAX
+#endif
 
 /* The kernel sources contain a file with all the needed information.  */
 #include <linux/limits.h>
@@ -49,6 +53,11 @@
 #ifdef __undef_OPEN_MAX
 # undef OPEN_MAX
 # undef __undef_OPEN_MAX
+#endif
+/* Have to remove ARG_MAX?  */
+#ifdef __undef_ARG_MAX
+# undef ARG_MAX
+# undef __undef_ARG_MAX
 #endif
 
 /* The number of data keys per process.  */

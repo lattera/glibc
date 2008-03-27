@@ -1,3 +1,13 @@
+2008-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefined ARG_MAX if
+	<linux/limits.h> has defined it.
+	* sysdeps/unix/sysv/linux/sys/param.h: Define NCARGS to the legacy
+	ARG_MAX value and prevent ARG_MAX from being defined by the kernel
+	headers.
+	* sysdeps/unix/sysv/linux/sysconf.c: Define legacy_ARG_MAX and use
+	it instead of ARG_MAX.
+
 2008-03-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/gai.conf: Fix comment for scope nullbits.

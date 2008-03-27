@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1997,2000,2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997,2000,2001,2003,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +19,19 @@
 #ifndef _SYS_PARAM_H
 #define _SYS_PARAM_H	1
 
+#ifndef ARG_MAX
+# define __undef_ARG_MAX
+#endif
+
 #include <limits.h>
 #include <linux/limits.h>
 #include <linux/param.h>
+
+/* The kernel headers defines ARG_MAX.  The value is wrong, though.  */
+#ifndef __undef_ARG_MAX
+# undef ARG_MAX
+# undef __undef_ARG_MAX
+#endif
 
 /* BSD names for some <limits.h> values.  */
 
@@ -31,12 +41,12 @@
 #endif
 #define	MAXSYMLINKS	20
 #define	CANBSIZ		MAX_CANON
-#define	NCARGS		ARG_MAX
 #define MAXPATHLEN	PATH_MAX
-/* The following is not really correct but it is a value we used for a
+/* The following are not really correct but it is a value we used for a
    long time and which seems to be usable.  People should not use NOFILE
-   anyway.  */
+   and NCARGS anyway.  */
 #define NOFILE		256
+#define	NCARGS		131072
 
 
 #include <sys/types.h>

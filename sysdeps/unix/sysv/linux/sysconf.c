@@ -27,6 +27,11 @@
 #include <not-cancel.h>
 #include <ldsodefs.h>
 
+/* Legacy value of ARG_MAX.  The macro is now not defined since the
+   actual value varies based on the stack size.  */
+#define legacy_ARG_MAX 131072
+
+
 static long int posix_sysconf (int name);
 
 
@@ -83,10 +88,10 @@ __sysconf (int name)
 	  /* Use getrlimit to get the stack limit.  */
 	  struct rlimit rlimit;
 	  if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
-	    return MAX (ARG_MAX, rlimit.rlim_cur / 4);
+	    return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
 	}
 
-      return ARG_MAX;
+      return legacy_ARG_MAX;
 
     case _SC_NGROUPS_MAX:
       /* Try to read the information from the /proc/sys/kernel/ngroups_max

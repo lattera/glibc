@@ -1,3 +1,12 @@
+2008-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefined ARG_MAX if
+	<linux/limits.h> has defined it.
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h: Likewise.
+
 2008-03-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: Use __ASSEMBLER__ instead
