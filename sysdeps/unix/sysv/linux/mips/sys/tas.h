@@ -40,17 +40,19 @@ __NTH (_test_and_set (int *p, int v))
 
   __asm__ __volatile__
     ("/* Inline test and set */\n"
-     "1:\n\t"
      ".set	push\n\t"
 #if _MIPS_SIM == _ABIO32
      ".set	mips2\n\t"
 #endif
+     "sync\n\t"
+     "1:\n\t"
      "ll	%0,%3\n\t"
      "move	%1,%4\n\t"
      "beq	%0,%4,2f\n\t"
      "sc	%1,%2\n\t"
-     ".set	pop\n\t"
      "beqz	%1,1b\n"
+     "sync\n\t"
+     ".set	pop\n\t"
      "2:\n\t"
      "/* End test and set */"
      : "=&r" (r), "=&r" (t), "=m" (*p)
