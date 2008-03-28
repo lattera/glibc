@@ -33,14 +33,16 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  This must be inlined in a function which
-   uses global data.  */
+/* Return the link-time address of _DYNAMIC.
+   This must be inlined in a function which uses global data.  */
 static inline Elf32_Addr
 elf_machine_dynamic (void)
 {
-  register Elf32_Addr *got asm ("%a5");
-  return *got;
+  Elf32_Addr addr;
+
+  asm ("move.l _DYNAMIC@GOT.w(%%a5), %0"
+       : "=a" (addr));
+  return addr;
 }
 
 

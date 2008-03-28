@@ -1,3 +1,9 @@
+2008-03-28  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	Explicitly get address of _DYNAMIC.
+	* sysdeps/m68k/dl-machine.h (elf_machine_dynamic): Retrieve _DYNAMIC
+	from GOT instead of assuming value at GOT pointer.
+
 2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.
