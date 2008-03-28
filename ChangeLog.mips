@@ -1,4 +1,9 @@
-2008-03-27  Robin Randhawa  <robin@mips.com>
+2008-03-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/local_lim.h: Undefine
+	ARG_MAX if <linux/limits.h> has defined it.
+
+2008-03-28  Robin Randhawa  <robin@mips.com>
 
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Added memory
 	barriers to enforce strict ordering on weakly ordered systems.
