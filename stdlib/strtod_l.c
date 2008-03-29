@@ -1028,7 +1028,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   if (__builtin_expect (exponent < MIN_10_EXP - (DIG + 1), 0))
     {
       __set_errno (ERANGE);
-      return 0.0;
+      return negative ? -0.0 : 0.0;
     }
 
   if (int_no > 0)

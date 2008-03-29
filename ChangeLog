@@ -1,3 +1,10 @@
+2008-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5995]
+	* stdlib/strtod_l.c: Use correct sign for result in one more
+	underflow case.
+	Patch by Eric Blake <ebb9@byu.net>.
+
 2008-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Add open
