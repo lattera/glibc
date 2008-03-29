@@ -1,5 +1,9 @@
 2008-03-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/getopt.c (_getopt_internal_r): Remove old POSIX-demanded
+	error message.  POSIX today does not require the messages to be in
+	a specific form.  Suggested by Jim Meyering <jim@meyering.net>.
+
 	[BZ #5979]
 	* sunrpc/auth_unix.c: Unify printed strings.
 	* sunrpc/clnt_tcp.c: Likewise.

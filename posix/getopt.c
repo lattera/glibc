@@ -792,30 +792,16 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	if (print_errors)
 	  {
 #if defined _LIBC && defined USE_IN_LIBIO
-	      char *buf;
-	      int n;
+	    char *buf;
+	    int n;
 #endif
 
-	    if (d->__posixly_correct)
-	      {
 #if defined _LIBC && defined USE_IN_LIBIO
-		n = __asprintf (&buf, _("%s: illegal option -- '%c'\n"),
-				argv[0], c);
+	    n = __asprintf (&buf, _("%s: invalid option -- '%c'\n"),
+			    argv[0], c);
 #else
-		fprintf (stderr, _("%s: illegal option -- '%c'\n"), argv[0],
-			 c);
+	    fprintf (stderr, _("%s: invalid option -- '%c'\n"), argv[0], c);
 #endif
-	      }
-	    else
-	      {
-#if defined _LIBC && defined USE_IN_LIBIO
-		n = __asprintf (&buf, _("%s: invalid option -- '%c'\n"),
-				argv[0], c);
-#else
-		fprintf (stderr, _("%s: invalid option -- '%c'\n"), argv[0],
-			 c);
-#endif
-	      }
 
 #if defined _LIBC && defined USE_IN_LIBIO
 	    if (n >= 0)
