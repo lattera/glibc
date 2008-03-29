@@ -149,7 +149,8 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   buf = mem_alloc (((MAX (sendsz, recvsz) + 3) / 4) * 4);
   if (xprt == NULL || su == NULL || buf == NULL)
     {
-      (void) __fxprintf (NULL, "%s", _("svcudp_create: out of memory\n"));
+      (void) __fxprintf (NULL, "%s: %s",
+			 "svcudp_create",  _("out of memory\n"));
       mem_free (xprt, sizeof (SVCXPRT));
       mem_free (su, sizeof (*su));
       mem_free (buf, ((MAX (sendsz, recvsz) + 3) / 4) * 4);

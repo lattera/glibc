@@ -103,7 +103,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
 	*addrp = target = calloc (c, elsize);
 	if (target == NULL)
 	  {
-	    (void) __fxprintf (NULL, "%s", _("xdr_array: out of memory\n"));
+	    (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
 	    return FALSE;
 	  }
 	break;

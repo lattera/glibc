@@ -100,7 +100,7 @@ static const struct argp_option options[] =
     N_("Do not fork and display messages on the current tty") },
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
-  { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
+  { "statistics", 'g', NULL, 0, N_("Print current configuration statistics") },
   { "invalidate", 'i', N_("TABLE"), 0,
     N_("Invalidate the specified cache") },
   { "secure", 'S', N_("TABLE,yes"), OPTION_HIDDEN,

@@ -82,8 +82,7 @@ xdr_reference (xdrs, pp, size, proc)
 	*pp = loc = (caddr_t) calloc (1, size);
 	if (loc == NULL)
 	  {
-	    (void) __fxprintf (NULL, "%s",
-			       _("xdr_reference: out of memory\n"));
+	    (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
 	    return FALSE;
 	  }
 	break;

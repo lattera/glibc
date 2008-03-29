@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -779,7 +779,7 @@ handle_copy (struct linereader *ldfile, const struct charmap_t *charmap,
 
   now = lr_token (ldfile, charmap, result, NULL, verbose);
   if (now->tok != tok_string)
-    lr_error (ldfile, _("expect string argument for `copy'"));
+    lr_error (ldfile, _("expecting string argument for `copy'"));
   else if (!ignore_content)
     {
       if (now->val.str.startmb == NULL)

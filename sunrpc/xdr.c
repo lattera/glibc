@@ -563,7 +563,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
 	}
       if (sp == NULL)
 	{
-	  (void) __fxprintf (NULL, "%s", _("xdr_bytes: out of memory\n"));
+	  (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
 	  return FALSE;
 	}
       /* fall into ... */
@@ -715,7 +715,7 @@ xdr_string (xdrs, cpp, maxsize)
 	*cpp = sp = (char *) mem_alloc (nodesize);
       if (sp == NULL)
 	{
-	  (void) __fxprintf (NULL, "%s", _("xdr_string: out of memory\n"));
+	  (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
 	  return FALSE;
 	}
       sp[size] = 0;

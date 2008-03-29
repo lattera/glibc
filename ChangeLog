@@ -1,5 +1,21 @@
 2008-03-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5979]
+	* sunrpc/auth_unix.c: Unify printed strings.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* locale/programs/ld-time.c (time_finish): Unify messages.
+	* locale/programs/locfile.c (handle_copy): Fix typo.
+	* nscd/nscd.c (options): Fix typo.
+
 	[BZ #5995]
 	* stdlib/strtod_l.c: Use correct sign for result in one more
 	underflow case.

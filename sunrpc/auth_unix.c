@@ -111,7 +111,7 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
   if (auth == NULL || au == NULL)
     {
 no_memory:
-      (void) __fxprintf (NULL, "%s", _("authunix_create: out of memory\n"));
+      (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
       mem_free (auth, sizeof (*auth));
       mem_free (au, sizeof (*au));
       return NULL;

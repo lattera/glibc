@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -433,7 +433,7 @@ No definition for %s category found"), "LC_TIME"));
 			   && !__isleap (time->era_entries[idx].stop_date[0])))
 		      && !be_quiet)
 			  WITH_CUR_LOCALE (error (0, 0, _("\
-%s: stopping date is invalid in string %Zd in `era' field"),
+%s: invalid stopping date in string %Zd in `era' field"),
 						  "LC_TIME", idx + 1));
 		}
 	    }

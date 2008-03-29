@@ -136,7 +136,8 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   if (cl == NULL || cu == NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) __fxprintf (NULL, "%s", _("clntudp_create: out of memory\n"));
+      (void) __fxprintf (NULL, "%s: %s",
+			 "clntudp_create", _("out of memory\n"));
       ce->cf_stat = RPC_SYSTEMERROR;
       ce->cf_error.re_errno = ENOMEM;
       goto fooy;
