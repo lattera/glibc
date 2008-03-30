@@ -1,5 +1,7 @@
 2008-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/nl.po: Update from translation team.
+
 	* sysdeps/unix/opendir.c (__alloc_dir): If allocation fails for size
 	provided through st_blksize, try the default size before giving up.
 
