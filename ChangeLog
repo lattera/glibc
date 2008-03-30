@@ -1,3 +1,11 @@
+2008-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* intl/dcigettext.c (_nl_find_msg): Reread nconversions after
+	acquiring wrlock.  Do conv_tab allocation while holding lock.
+	* intl/Makefile: Add rules to build and run tst-gettext6.
+	* intl/tst-gettext6.c: New test.
+	* intl/tst-gettext6.sh: New file.
+
 2008-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.

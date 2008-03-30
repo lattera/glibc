@@ -133,7 +133,8 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \
 	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1 \
 	   vi_VN.TCVN5712-1 nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 \
-	   tr_TR.UTF-8 cs_CZ.UTF-8 zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8
+	   tr_TR.UTF-8 cs_CZ.UTF-8 zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 \
+	   ja_JP.UTF-8
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
 CHARMAPS := $(shell echo "$(LOCALES)" | \
 		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2003, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003, 2005, 2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,11 +32,11 @@ distribute = gmo.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     tst-codeset.sh tstcodeset.po \
 	     tst-gettext3.sh \
 	     tst-gettext4.sh tst-gettext4-de.po tst-gettext4-fr.po \
-	     tst-gettext5.sh
+	     tst-gettext5.sh tst-gettext6.sh
 
 include ../Makeconfig
 
-multithread-test-srcs := tst-gettext4 tst-gettext5
+multithread-test-srcs := tst-gettext4 tst-gettext5 tst-gettext6
 test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset tst-gettext3
 ifeq ($(have-thread-library),yes)
 test-srcs += $(multithread-test-srcs)
@@ -67,7 +67,8 @@ ifneq ($(strip $(MSGFMT)),:)
 tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out \
        $(objpfx)tst-codeset.out $(objpfx)tst-gettext3.out
 ifeq ($(have-thread-library),yes)
-tests: $(objpfx)tst-gettext4.out $(objpfx)tst-gettext5.out
+tests: $(objpfx)tst-gettext4.out $(objpfx)tst-gettext5.out \
+       $(objpfx)tst-gettext6.out
 endif
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-gettext
@@ -90,6 +91,8 @@ $(objpfx)tst-gettext4.out: tst-gettext4.sh $(objpfx)tst-gettext4
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 $(objpfx)tst-gettext5.out: tst-gettext5.sh $(objpfx)tst-gettext5
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
+$(objpfx)tst-gettext6.out: tst-gettext6.sh $(objpfx)tst-gettext6
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 endif
 endif
 
@@ -104,6 +107,7 @@ CFLAGS-tst-codeset.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext3.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext4.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext5.c = -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext6.c = -DOBJPFX=\"$(objpfx)\"
 
 ifeq ($(have-thread-library),yes)
 ifeq (yes,$(build-shared))
@@ -122,6 +126,7 @@ $(objpfx)tst-codeset.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext3.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext4.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext5.out: $(objpfx)tst-gettext.out
+$(objpfx)tst-gettext6.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'LOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
