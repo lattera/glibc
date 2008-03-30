@@ -297,7 +297,7 @@ __gen_tempname (char *tmpl, int flags, int kind)
 	{
 	case __GT_FILE:
 	  fd = __open (tmpl,
-		       (flags & ~ACCESSPERMS)
+		       (flags & ~O_ACCMODE)
 		       | O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	  break;
 
