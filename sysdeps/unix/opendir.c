@@ -171,6 +171,8 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
 	goto lose;
     }
 
+  const size_t default_allocation = (BUFSIZ < sizeof (struct dirent64)
+				     ? sizeof (struct dirent64) : BUFSIZ);
   size_t allocation;
 #ifdef _STATBUF_ST_BLKSIZE
   if (__builtin_expect ((size_t) statp->st_blksize >= sizeof (struct dirent64),
@@ -178,20 +180,30 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
     allocation = statp->st_blksize;
   else
 #endif
-    allocation = (BUFSIZ < sizeof (struct dirent64)
-		  ? sizeof (struct dirent64) : BUFSIZ);
+    allocation = default_allocation;
 
   DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation);
   if (dirp == NULL)
-  lose:
     {
-      if (close_fd)
+#ifdef _STATBUF_ST_BLKSIZE
+      if (allocation == statp->st_blksize
+	  && allocation != default_allocation)
 	{
-	  int save_errno = errno;
-	  close_not_cancel_no_status (fd);
-	  __set_errno (save_errno);
+	  allocation = default_allocation;
+	  dirp = (DIR *) malloc (sizeof (DIR) + allocation);
 	}
-      return NULL;
+      if (dirp == NULL)
+#endif
+      lose:
+	{
+	  if (close_fd)
+	    {
+	      int save_errno = errno;
+	      close_not_cancel_no_status (fd);
+	      __set_errno (save_errno);
+	    }
+	  return NULL;
+	}
     }
 
   dirp->fd = fd;
