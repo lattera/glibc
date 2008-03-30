@@ -1513,7 +1513,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (prec > width
 	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
 	{
-	  if (__builtin_expect (prec > ~((size_t) 0) - 31, 0))
+	  if (__builtin_expect (prec > ~((size_t) 0) / sizeof (CHAR_T) - 31,
+				0))
 	    {
 	      done = -1;
 	      goto all_done;

@@ -1,5 +1,7 @@
 2008-03-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Correct overflow test.
+
 	[BZ #5939]
 	* sysdeps/posix/tempname.c (__gen_tempname): Correct flag selection.
 
