@@ -26,7 +26,6 @@ strfry (char *string)
 {
   static int init;
   static struct random_data rdata;
-  size_t len, i;
 
   if (!init)
     {
@@ -37,17 +36,18 @@ strfry (char *string)
       init = 1;
     }
 
-  len = strlen (string) - 1;
-  for (i = 0; i < len; ++i)
-    {
-      int32_t j;
-      __random_r (&rdata, &j);
-      j = j % (len - i) + i;
+  size_t len = strlen (string);
+  if (len > 0)
+    for (size_t i = 0; i < len - 1; ++i)
+      {
+	int32_t j;
+	__random_r (&rdata, &j);
+	j = j % (len - i) + i;
 
-      char c = string[i];
-      string[i] = string[j];
-      string[j] = c;
-    }
+	char c = string[i];
+	string[i] = string[j];
+	string[j] = c;
+      }
 
   return string;
 }
