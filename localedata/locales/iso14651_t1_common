@@ -61,6 +61,7 @@ script <CYRIL>
 script <ARMENIAN>
 script <GEORGIAN>
 script <DEVANAGARI>
+script <GUJARATI>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -560,6 +561,96 @@ collating-symbol <d_anudatta>
 collating-symbol <dv-grave>
 collating-symbol <dv-acute>
 
+#<GUJARATI>
+#
+# Added Akhand Characters in sorting as per requirement of mr_IN
+# gvd- denotes vowel modifier
+# gm-  denotes matras
+# gvw- denotes vowels
+# <GNKT> denotes Nukta characters
+
+collating-element <gu-ksha> from "<U0A95><U0ACD><U0AB7>"
+collating-element <gu-dnya> from "<U0A9C><U0ACD><U0A9E>"
+collating-element <gu-shra> from "<U0AB6><U0ACD><U0AB0>"
+collating-element <gu-tra>  from "<U0AA4><U0ACD><U0AB0>"
+
+# defning symbols
+collating-symbol <GNKT>
+collating-symbol <gom> 
+collating-symbol <gvw-a> 
+collating-symbol <gvw-aa> 
+collating-symbol <gvw-i> 
+collating-symbol <gvw-ii> 
+collating-symbol <gvw-u> 
+collating-symbol <gvw-uu> 
+collating-symbol <gvw-vocalicr> 
+collating-symbol <gvw-vocalicrr> 
+collating-symbol <gvw-vocalicl> 
+collating-symbol <gvw-vocalicll> 
+collating-symbol <gvw-candrae> 
+collating-symbol <gvw-e> 
+collating-symbol <gvw-ai> 
+collating-symbol <gvw-candrao> 
+collating-symbol <gvw-o> 
+collating-symbol <gvw-au> 
+collating-symbol <g-ka> 
+collating-symbol <g-kha> 
+collating-symbol <g-ga> 
+collating-symbol <g-gha> 
+collating-symbol <g-nga> 
+collating-symbol <g-ca> 
+collating-symbol <g-cha> 
+collating-symbol <g-ja> 
+collating-symbol <g-jha> 
+collating-symbol <g-nya> 
+collating-symbol <g-tta> 
+collating-symbol <g-ttha> 
+collating-symbol <g-dda> 
+collating-symbol <g-ddha> 
+collating-symbol <g-nna> 
+collating-symbol <g-ta> 
+collating-symbol <g-tha> 
+collating-symbol <g-da> 
+collating-symbol <g-dha> 
+collating-symbol <g-na> 
+collating-symbol <g-pa> 
+collating-symbol <g-pha> 
+collating-symbol <g-ba> 
+collating-symbol <g-bha> 
+collating-symbol <g-ma> 
+collating-symbol <g-ya> 
+collating-symbol <g-ra> 
+collating-symbol <g-la> 
+collating-symbol <g-lla> 
+collating-symbol <g-va> 
+collating-symbol <g-sha> 
+collating-symbol <g-ssa> 
+collating-symbol <g-sa> 
+collating-symbol <g-ha> 
+collating-symbol <g-ksha>
+collating-symbol <g-dnya>
+collating-symbol <g-shra>
+collating-symbol <g-tra>
+collating-symbol <g-avagrah> 
+collating-symbol <gm-aa> 
+collating-symbol <gm-i> 
+collating-symbol <gm-ii> 
+collating-symbol <gm-u> 
+collating-symbol <gm-uu>
+collating-symbol <gm-vocalicr> 
+collating-symbol <gm-vocalicrr> 
+collating-symbol <gm-vocalicl> 
+collating-symbol <gm-vocalicll> 
+collating-symbol <gm-candrae> 
+collating-symbol <gm-e> 
+collating-symbol <gm-ai> 
+collating-symbol <gm-candrao> 
+collating-symbol <gm-o> 
+collating-symbol <gm-au> 
+collating-symbol <gvd-anuswara> 
+collating-symbol <gvd-chandrabindu>
+collating-symbol <gvd-visarg>
+collating-symbol <g-halant>
 
 # Ordre des symboles internes / Order of internal symbols
 #
@@ -1064,6 +1155,87 @@ collating-symbol <dv-acute>
 <dvd-chandrabindu>
 <dvd-visarg>
 <d_halant>
+#
+# <GUJARATI>
+#
+# collation weights in order
+
+<GNKT>
+<gom> 
+<gvw-a> 
+<gvw-aa> 
+<gvw-i> 
+<gvw-ii> 
+<gvw-u> 
+<gvw-uu> 
+<gvw-vocalicr> 
+<gvw-vocalicrr> 
+<gvw-vocalicl> 
+<gvw-vocalicll> 
+<gvw-candrae> 
+<gvw-e> 
+<gvw-ai> 
+<gvw-candrao> 
+<gvw-o> 
+<gvw-au> 
+<g-ka> 
+<g-kha> 
+<g-ga> 
+<g-gha> 
+<g-nga> 
+<g-ca> 
+<g-cha> 
+<g-ja> 
+<g-jha> 
+<g-nya> 
+<g-tta> 
+<g-ttha> 
+<g-dda>  
+<g-ddha> 
+<g-nna> 
+<g-ta> 
+<g-tha> 
+<g-da> 
+<g-dha> 
+<g-na> 
+<g-pa> 
+<g-pha> 
+<g-ba> 
+<g-bha> 
+<g-ma> 
+<g-ya> 
+<g-ra> 
+<g-la> 
+<g-lla> 
+<g-va> 
+<g-sha> 
+<g-ssa> 
+<g-sa> 
+<g-ha> 
+<g-ksha>
+<g-dnya>
+<g-shra>
+<g-tra>
+<g-avagrah> 
+<gm-aa> 
+<gm-i> 
+<gm-ii> 
+<gm-u> 
+<gm-uu>
+<gm-vocalicr> 
+<gm-vocalicrr> 
+<gm-vocalicl> 
+<gm-vocalicll> 
+<gm-candrae> 
+<gm-e> 
+<gm-ai> 
+<gm-candrao> 
+<gm-o> 
+<gm-au> 
+<gvd-anuswara>
+<gvd-chandrabindu>
+<gvd-visarg>
+<g-halant>
 
 order_start <SPECIAL>;forward;backward;forward;forward,position
 #
@@ -2940,6 +3112,94 @@ order_start <DEVANAGARI>;forward;forward;forward;forward,position
 <U0952> IGNORE;<d_anudatta>;<MIN>;IGNORE
 <U0953> IGNORE;<dv-grave>;<MIN>;IGNORE
 <U0954> IGNORE;<dv-acute>;<MIN>;IGNORE
+
+order_start  <GUJARATI>;forward;forward;forward;forward,position
+<U0AE6> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AE7> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AE8> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AE9> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AEA> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AEB> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AEC> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AED> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AEE> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AEF> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0AD0> <gom> ;<BAS>;<MIN>;IGNORE 
+<U0A85> <gvw-a> ;<BAS>;<MIN>;IGNORE
+<U0A86> <gvw-aa> ;<BAS>;<MIN>;IGNORE
+<U0A87> <gvw-i> ;<BAS>;<MIN>;IGNORE
+<U0A88> <gvw-ii> ;<BAS>;<MIN>;IGNORE
+<U0A89> <gvw-u> ;<BAS>;<MIN>;IGNORE
+<U0A8A> <gvw-uu>;<BAS>;<MIN>;IGNORE 
+<U0A8B> <gvw-vocalicr>;<BAS>;<MIN>;IGNORE 
+<U0AE0> <gvw-vocalicrr>;<BAS>;<MIN>;IGNORE 
+<U0A8C> <gvw-vocalicl>;<BAS>;<MIN>;IGNORE 
+<U0AE1> <gvw-vocalicll>;<BAS>;<MIN>;IGNORE 
+<U0A8D> <gvw-candrae>;<BAS>;<MIN>;IGNORE 
+<U0A8F> <gvw-e>;<BAS>;<MIN>;IGNORE 
+<U0A90> <gvw-ai>;<BAS>;<MIN>;IGNORE 
+<U0A91> <gvw-candrao>;<BAS>;<MIN>;IGNORE 
+<U0A93> <gvw-o>;<BAS>;<MIN>;IGNORE 
+<U0A94> <gvw-au>;<BAS>;<MIN>;IGNORE
+<U0A95> <g-ka>;<BAS>;<MIN>;IGNORE 
+<U0A96> <g-kha>;<BAS>;<MIN>;IGNORE 
+<U0A97> <g-ga>;<BAS>;<MIN>;IGNORE 
+<U0A98> <g-gha>;<BAS>;<MIN>;IGNORE
+<U0A99> <g-nga>;<BAS>;<MIN>;IGNORE 
+<U0A9A> <g-ca>;<BAS>;<MIN>;IGNORE 
+<U0A9B> <g-cha>;<BAS>;<MIN>;IGNORE 
+<U0A9C> <g-ja>;<BAS>;<MIN>;IGNORE 
+<U0A9D> <g-jha>;<BAS>;<MIN>;IGNORE 
+<U0A9E> <g-nya>;<BAS>;<MIN>;IGNORE 
+<U0A9F> <g-tta>;<BAS>;<MIN>;IGNORE 
+<U0AA0> <g-ttha>;<BAS>;<MIN>;IGNORE 
+<U0AA1> <g-dda>;<BAS>;<MIN>;IGNORE 
+<U0AA2> <g-ddha>;<BAS>;<MIN>;IGNORE 
+<U0AA3> <g-nna>;<BAS>;<MIN>;IGNORE 
+<U0AA4> <g-ta>;<BAS>;<MIN>;IGNORE 
+<U0AA5> <g-tha>;<BAS>;<MIN>;IGNORE 
+<U0AA6> <g-da>;<BAS>;<MIN>;IGNORE 
+<U0AA7> <g-dha>;<BAS>;<MIN>;IGNORE 
+<U0AA8> <g-na>;<BAS>;<MIN>;IGNORE 
+<U0AAA> <g-pa>;<BAS>;<MIN>;IGNORE 
+<U0AAB> <g-pha>;<BAS>;<MIN>;IGNORE 
+<U0AAC> <g-ba>;<BAS>;<MIN>;IGNORE 
+<U0AAD> <g-bha>;<BAS>;<MIN>;IGNORE 
+<U0AAE> <g-ma>;<BAS>;<MIN>;IGNORE 
+<U0AAF> <g-ya>;<BAS>;<MIN>;IGNORE 
+<U0AB0> <g-ra>;<BAS>;<MIN>;IGNORE 
+<U0AB2> <g-la>;<BAS>;<MIN>;IGNORE 
+<U0AB3> <g-lla>;<BAS>;<MIN>;IGNORE 
+<U0AB5> <g-va>;<BAS>;<MIN>;IGNORE 
+<U0AB6> <g-sha>;<BAS>;<MIN>;IGNORE 
+<U0AB7> <g-ssa>;<BAS>;<MIN>;IGNORE 
+<U0AB8> <g-sa>;<BAS>;<MIN>;IGNORE 
+<U0AB9>   <g-ha>;<BAS>;<MIN>;IGNORE 
+<gu-ksha> <g-ksha>;<BAS>;<MIN>;IGNORE 
+<gu-dnya> <g-dnya>;<BAS>;<MIN>;IGNORE 
+<gu-shra> <g-shra>;<BAS>;<MIN>;IGNORE
+<gu-tra> <g-tra>;<BAS>;<MIN>;IGNORE
+<U0ABD> <g-avagrah>;<BAS>;<MIN>;IGNORE 
+<U0ABE> <gm-aa>;<BAS>;<MIN>;IGNORE 
+<U0ABF> <gm-i>;<BAS>;<MIN>;IGNORE 
+<U0AC0> <gm-ii>;<BAS>;<MIN>;IGNORE 
+<U0AC1> <gm-u>;<BAS>;<MIN>;IGNORE 
+<U0AC2> <gm-uu>;<BAS>;<MIN>;IGNORE
+<U0AC3> <gm-vocalicr>;<BAS>;<MIN>;IGNORE 
+<U0AC4> <gm-vocalicrr>;<BAS>;<MIN>;IGNORE 
+<U0AE2> <gm-vocalicl>;<BAS>;<MIN>;IGNORE 
+<U0AE3> <gm-vocalicll>;<BAS>;<MIN>;IGNORE 
+<U0AC5> <gm-candrae>;<BAS>;<MIN>;IGNORE 
+<U0AC7> <gm-e>;<BAS>;<MIN>;IGNORE 
+<U0AC8> <gm-ai>;<BAS>;<MIN>;IGNORE 
+<U0AC9> <gm-candrao>;<BAS>;<MIN>;IGNORE 
+<U0ACB> <gm-o>;<BAS>;<MIN>;IGNORE 
+<U0ACC> <gm-au>;<BAS>;<MIN>;IGNORE 
+<U0A82> <gvd-anuswara>;<BAS>;<MIN>;IGNORE
+<U0A81> <gvd-chandrabindu>;<BAS>;<MIN>;IGNORE
+<U0A83> <gvd-visarg>;<BAS>;<MIN>;IGNORE
+<U0ACD> <g-halant>;<BAS>;<MIN>;IGNORE
+<U0ABC> IGNORE;<GNKT>;<MIN>;IGNORE
 
 order_end
 

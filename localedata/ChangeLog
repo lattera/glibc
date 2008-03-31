@@ -1,3 +1,8 @@
+2008-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add support for Gujarati script.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
 2008-03-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (LOCALES): Add ja_JP.UTF-8.
