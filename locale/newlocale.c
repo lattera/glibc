@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999, 2000-2002, 2004, 2005, 2006
+   Copyright (C) 1996, 1997, 1999, 2000-2002, 2004, 2005, 2006, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -30,7 +30,7 @@
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define (extern , __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
 
 
 /* Use this when we come along an error.  */
@@ -162,7 +162,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     }
 
   /* Protect global data.  */
-  __libc_lock_lock (__libc_setlocale_lock);
+  __libc_rwlock_wrlock (__libc_setlocale_lock);
 
   /* Now process all categories we are interested in.  */
   names_len = 0;
@@ -183,7 +183,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 		  _nl_remove_locale (cnt, result.__locales[cnt]);
 
               /* Critical section left.  */
-              __libc_lock_unlock (__libc_setlocale_lock);
+              __libc_rwlock_unlock (__libc_setlocale_lock);
 	      return NULL;
 	    }
 
@@ -263,7 +263,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     }
 
   /* Critical section left.  */
-  __libc_lock_unlock (__libc_setlocale_lock);
+  __libc_rwlock_unlock (__libc_setlocale_lock);
 
   /* Update the special members.  */
  update:

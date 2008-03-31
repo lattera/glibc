@@ -1,3 +1,7 @@
+2008-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (LOCALES): Add ja_JP.UTF-8.
+
 2008-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add support for Devanagari script.

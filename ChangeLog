@@ -1,3 +1,14 @@
+2008-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5443]
+	* intl/dcigettext.c (__dcigettext): Get reader lock for locale data
+	before looking for translation.
+	* locale/duplocale.c: Transform __libc_setlocale_lock into rwlock.
+	* locale/freelocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	Based partially on a patch by ryo@np.css.fujitsu.com.
+
 2008-03-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* intl/dcigettext.c (_nl_find_msg): Reread nconversions after

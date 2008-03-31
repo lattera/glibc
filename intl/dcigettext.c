@@ -1,5 +1,6 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -449,6 +450,11 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	    : n == 1 ? (char *) msgid1 : (char *) msgid2);
 #endif
 
+#ifdef _LIBC
+  __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
+  __libc_rwlock_rdlock (__libc_setlocale_lock);
+#endif
+
   __libc_rwlock_rdlock (_nl_state_lock);
 
   /* If DOMAINNAME is NULL, we are interested in the default domain.  If
@@ -466,7 +472,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   search.category = category;
 # ifdef HAVE_PER_THREAD_LOCALE
 #  ifdef _LIBC
-  localename = __current_locale_name (category);
+  localename = strdupa (__current_locale_name (category));
 #  endif
   search.localename = localename;
 # endif
@@ -489,6 +495,9 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
       else
 	retval = (char *) (*foundp)->translation;
 
+# ifdef _LIBC
+      __libc_rwlock_unlock (__libc_setlocale_lock);
+# endif
       __libc_rwlock_unlock (_nl_state_lock);
       return retval;
     }
@@ -548,6 +557,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	  /* We cannot get the current working directory.  Don't signal an
 	     error but simply return the default string.  */
 	  FREE_BLOCKS (block_list);
+	  __libc_rwlock_unlock (__libc_setlocale_lock);
 	  __libc_rwlock_unlock (_nl_state_lock);
 	  __set_errno (saved_errno);
 	  return (plural == 0
@@ -614,6 +624,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	{
 	no_translation:
 	  FREE_BLOCKS (block_list);
+	  __libc_rwlock_unlock (__libc_setlocale_lock);
 	  __libc_rwlock_unlock (_nl_state_lock);
 	  __set_errno (saved_errno);
 	  return (plural == 0
@@ -727,6 +738,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      if (plural)
 		retval = plural_lookup (domain, n, retval, retlen);
 
+	      __libc_rwlock_unlock (__libc_setlocale_lock);
 	      __libc_rwlock_unlock (_nl_state_lock);
 	      return retval;
 	    }

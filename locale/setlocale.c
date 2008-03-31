@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006
+/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -123,7 +123,7 @@ static void (*const _nl_category_postload[]) (void) =
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define_initialized (, __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define_initialized (, __libc_setlocale_lock attribute_hidden)
 
 /* Defined in loadmsgcat.c.  */
 extern int _nl_msg_cat_cntr;
@@ -314,7 +314,7 @@ setlocale (int category, const char *locale)
 	}
 
       /* Protect global data.  */
-      __libc_lock_lock (__libc_setlocale_lock);
+      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       /* Load the new data for each category.  */
       while (category-- > 0)
@@ -381,7 +381,7 @@ setlocale (int category, const char *locale)
 	    free ((char *) newnames[category]);
 
       /* Critical section left.  */
-      __libc_lock_unlock (__libc_setlocale_lock);
+      __libc_rwlock_unlock (__libc_setlocale_lock);
 
       /* Free the resources (the locale path variable).  */
       free (locale_path);
@@ -394,7 +394,7 @@ setlocale (int category, const char *locale)
       const char *newname[1] = { locale };
 
       /* Protect global data.  */
-      __libc_lock_lock (__libc_setlocale_lock);
+      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       if (CATEGORY_USED (category))
 	{
@@ -446,7 +446,7 @@ setlocale (int category, const char *locale)
 	}
 
       /* Critical section left.  */
-      __libc_lock_unlock (__libc_setlocale_lock);
+      __libc_rwlock_unlock (__libc_setlocale_lock);
 
       /* Free the resources (the locale path variable.  */
       free (locale_path);

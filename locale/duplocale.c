@@ -1,5 +1,5 @@
 /* Duplicate handle for selection of locales.
-   Copyright (C) 1997, 2000, 2001, 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997,2000,2001,2002,2005,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,7 +27,7 @@
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define (extern , __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
 
 
 __locale_t
@@ -54,7 +54,7 @@ __duplocale (__locale_t dataset)
       char *namep = (char *) (result + 1);
 
       /* We modify global data (the usage counts).  */
-      __libc_lock_lock (__libc_setlocale_lock);
+      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if (cnt != LC_ALL)
@@ -78,7 +78,7 @@ __duplocale (__locale_t dataset)
       result->__ctype_toupper = dataset->__ctype_toupper;
 
       /* It's done.  */
-      __libc_lock_unlock (__libc_setlocale_lock);
+      __libc_rwlock_unlock (__libc_setlocale_lock);
     }
 
   return result;
