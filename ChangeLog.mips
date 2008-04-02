@@ -1,3 +1,11 @@
+2008-04-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Add 
+	truncate and ftruncate systems calls.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/ftruncate64.c: Make an
+	empty file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/truncate64.c: Ditto.
+
 2008-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/bits/local_lim.h: Undefine
