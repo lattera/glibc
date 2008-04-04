@@ -55,7 +55,7 @@ typedef uintmax_t uatomic_max_t;
 #define LWS "0xb0"
 #define LWS_CAS "0"
 /* Note r31 is the link register */
-#define LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
+#define LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31"
 #define ASM_EAGAIN "11" 
 
 #if __ASSUME_LWS_CAS
@@ -76,7 +76,7 @@ typedef uintmax_t uatomic_max_t;
 	"stw	%%r28, %0			\n\t"			\
         "sub	%%r0, %%r21, %%r21		\n\t"			\
 	"stw	%%r21, %1			\n\t"			\
-	: "=m" (lws_ret), "=m" (lws_errno), "=m" (*mem)			\
+	: "=m" (lws_ret), "=m" (lws_errno), "+m" (*mem)			\
         : "r" (mem), "r" (oldval), "r" (newval)				\
 	: LWS_CLOBBER							\
      );									\

@@ -1,3 +1,9 @@
+2008-04-04  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Remove
+	memory contraint and instead indicate that *mem is
+	written to.
+
 2008-03-24  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/sys/user.h: New file.
