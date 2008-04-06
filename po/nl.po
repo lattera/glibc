@@ -1,14 +1,15 @@
-# Translation of libc-2.7 to Dutch.
-# Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
+# Dutch translations for libc.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the glibc package.
 #
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2004.
-# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007.
+# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-15 21:18-0700\n"
-"PO-Revision-Date: 2008-03-30 20:00+0200\n"
+"PO-Revision-Date: 2008-04-05 22:04+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -322,7 +323,7 @@ msgstr ""
 "\n"
 "  -?,--help          deze hulptekst tonen\n"
 "     --usage         een korte gebruikssamenvatting tonen\n"
-"  -V,--version       versie-informatie tonen\n"
+"  -V,--version       programmaversie tonen\n"
 "\n"
 "Voor het rapporteren van gebreken in dit programma, zie:\n"
 "  <http://www.gnu.org/software/libc/bugs.html>.\\n"
@@ -940,7 +941,7 @@ msgstr ""
 "  -u, --unused            ongebruikte directe afhankelijkheden tonen\n"
 "  -v, --verbose           breedsprakige uitvoer\n"
 "\n"
-"      --version           versie-informatie tonen\n"
+"      --version           programmaversie tonen\n"
 "      --help              deze hulptekst tonen\n"
 "\n"
 "Voor het rapporteren van fouten, zie:\n"
@@ -1442,23 +1443,23 @@ msgstr "Teken ligt buiten bereik voor UTF-8"
 #: locale/programs/charmap-dir.c:59
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr "kan tekenskaartmap '%s' niet lezen"
+msgstr "kan tekensetdefinitiesmap '%s' niet lezen"
 
 #: locale/programs/charmap.c:138
 #, c-format
 msgid "character map file `%s' not found"
-msgstr "kan tekenskaartbestand '%s' niet vinden"
+msgstr "kan tekensetdefinitiebestand '%s' niet vinden"
 
 #: locale/programs/charmap.c:195
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "kan standaard-tekenskaartbestand '%s' niet vinden"
+msgstr "kan standaard tekensetdefinitiebestand '%s' niet vinden"
 
 #: locale/programs/charmap.c:258
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
 msgstr ""
-"tekenskaart '%s' is niet ASCII-compatibel;\n"
+"tekensetdefinitie '%s' is niet ASCII-compatibel;\n"
 "de taalregio voldoet niet aan ISO C\n"
 
 #: locale/programs/charmap.c:337
@@ -1722,7 +1723,7 @@ msgstr "%s: syntaxfout"
 #: locale/programs/ld-collate.c:417
 #, c-format
 msgid "`%.*s' already defined in charmap"
-msgstr "'%.*s' is al gedefinieerd in tekenskaart"
+msgstr "'%.*s' is al gedefinieerd in tekensetdefinitie"
 
 #: locale/programs/ld-collate.c:426
 #, c-format
@@ -1983,7 +1984,7 @@ msgstr "%s: 'endif' zonder bijpassende 'ifdef' of 'ifndef'"
 #: locale/programs/ld-ctype.c:439
 #, c-format
 msgid "No character set name specified in charmap"
-msgstr "Geen tekensetnaam aangegeven in tekenskaart"
+msgstr "Geen tekensetnaam aangegeven in tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:468
 #, c-format
@@ -2023,7 +2024,7 @@ msgstr "<SP>-teken mag niet in klasse '%s' zitten"
 #: locale/programs/ld-ctype.c:599
 #, c-format
 msgid "character <SP> not defined in character map"
-msgstr "<SP>-teken is niet gedefinieerd in tekenskaart"
+msgstr "<SP>-teken is niet gedefinieerd in tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:714
 #, c-format
@@ -2033,12 +2034,12 @@ msgstr "het aantal items in de cijferscategorie is geen veelvoud van tien"
 #: locale/programs/ld-ctype.c:763
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
-msgstr "er zijn geen invoercijfers gedefinieerd en geen van de standaardnamen zit in de tekenskaart"
+msgstr "er zijn geen invoercijfers gedefinieerd en geen van de standaardnamen zit in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:828
 #, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
-msgstr "niet alle tekens gebruikt in 'outdigit' zijn beschikbaar in de tekenskaart"
+msgstr "niet alle tekens in 'outdigit' zijn beschikbaar in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:845
 #, c-format
@@ -2058,12 +2059,12 @@ msgstr "implementatiegrens: er zijn niet meer dan %Zd tekenklasses toegestaan"
 #: locale/programs/ld-ctype.c:1277
 #, c-format
 msgid "character map `%s' already defined"
-msgstr "tekenskaart '%s' is al gedefinieerd"
+msgstr "tekensetdefinitie '%s' is al gedefinieerd"
 
 #: locale/programs/ld-ctype.c:1283
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
-msgstr "implementatiegrens: er zijn niet meer dan %d tekenskaarten toegestaan"
+msgstr "implementatiegrens: er zijn niet meer dan %d tekensetdefinities toegestaan"
 
 #: locale/programs/ld-ctype.c:1548 locale/programs/ld-ctype.c:1673
 #: locale/programs/ld-ctype.c:1779 locale/programs/ld-ctype.c:2471
@@ -2102,7 +2103,7 @@ msgstr "%s: syntaxfout in definitie van nieuwe tekenklasse"
 #: locale/programs/ld-ctype.c:2318
 #, c-format
 msgid "%s: syntax error in definition of new character map"
-msgstr "%s: syntaxfout in definitie van nieuwe tekenskaart"
+msgstr "%s: syntaxfout in nieuwe tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:2493
 msgid "ellipsis range must be marked by two operands of same type"
@@ -2161,7 +2162,7 @@ msgstr "%s: teken '%s' is niet gedefinieerd maar is nodig als standaardwaarde"
 #: locale/programs/ld-ctype.c:3297 locale/programs/ld-ctype.c:3364
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
-msgstr "%s: teken '%s' in de tekenskaart is niet te representeren met één byte"
+msgstr "%s: teken '%s' in de tekensetdefinitie is niet te representeren met één byte"
 
 #: locale/programs/ld-ctype.c:3408 locale/programs/ld-ctype.c:3433
 #, c-format
@@ -2171,7 +2172,7 @@ msgstr "%s: teken '%s' is nodig als standaardwaarde maar niet te representeren m
 #: locale/programs/ld-ctype.c:3489
 #, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
-msgstr "er zijn geen uitvoercijfers gedefinieerd en geen van de standaardnamen zit in de tekenskaart"
+msgstr "er zijn geen uitvoercijfers gedefinieerd en geen van de standaardnamen zit in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:3780
 #, c-format
@@ -2380,7 +2381,7 @@ msgstr "niet-symbolische tekenwaarden zouden niet gebruikt moeten worden"
 #: locale/programs/linereader.c:816
 #, c-format
 msgid "symbol `%.*s' not in charmap"
-msgstr "symbool '%.*s' zit niet in de tekenskaart"
+msgstr "symbool '%.*s' zit niet in de tekensetdefinitie"
 
 #: locale/programs/linereader.c:837
 #, c-format
@@ -2393,11 +2394,11 @@ msgstr "Systeeminformatie:"
 
 #: locale/programs/locale.c:76
 msgid "Write names of available locales"
-msgstr "namen van de beschikbare taalregio's tonen"
+msgstr "namen van beschikbare taalregio's tonen"
 
 #: locale/programs/locale.c:78
 msgid "Write names of available charmaps"
-msgstr "namen van de beschikbare tekenskaarten tonen"
+msgstr "namen van beschikbare tekensetdefinities tonen"
 
 #: locale/programs/locale.c:79
 msgid "Modify output format:"
@@ -2570,9 +2571,9 @@ msgid ""
 "                       locale path    : %s\n"
 "%s"
 msgstr ""
-"Systeemmap voor tekenskaarten: %s\n"
-"       voor repertoirekaarten: %s\n"
-"       en het taalregiopad is: %s\n"
+"Systeemmap voor tekensetdefinities: %s\n"
+"            voor repertoirekaarten: %s\n"
+"            en het taalregiopad is: %s\n"
 "\n"
 "%s"
 
@@ -2880,7 +2881,7 @@ msgstr ""
 "\n"
 "  -?,--help              deze hulptekst tonen\n"
 "     --usage             een korte gebruikssamenvatting tonen\n"
-"  -V,--version           versie-informatie tonen\n"
+"  -V,--version           programmaversie tonen\n"
 "\n"
 " De volgende opties zijn alleen bij grafische uitvoer van toepassing:\n"
 "  -t,--time-based        de grafiek lineair in de tijd maken\n"
