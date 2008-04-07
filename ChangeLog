@@ -1,3 +1,8 @@
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5475]
+	* resolv/res_init.c: Handle scope IDs in resolv.conf.
+
 2008-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/mtrace.pl: Use $@ instead of $* to keep perl 5.10 quiet.

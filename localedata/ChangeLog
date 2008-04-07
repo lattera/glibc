@@ -1,3 +1,8 @@
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5478]
+	* locales/hu_HU: Fix name_fmt.
+
 2008-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add support for Gujarati script.
