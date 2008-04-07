@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1995-1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995-1999, 2002, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +24,6 @@
 #include <wcsmbs/wcsmbsload.h>
 
 
-/* Common state for all non-restartable conversion functions.  */
-mbstate_t __no_r_state attribute_hidden;
-
 /* Convert the multibyte character at S, which is no longer
    than N characters, to its `wchar_t' representation, placing
    this n *PWC and returning its length.
@@ -38,6 +36,7 @@ int
 mbtowc (wchar_t *pwc, const char *s, size_t n)
 {
   int result;
+  static mbstate_t state;
 
   /* If S is NULL the function has to return null or not null
      depending on the encoding having a state depending encoding or
@@ -51,7 +50,7 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
 
       /* This is an extension in the Unix standard which does not directly
 	 violate ISO C.  */
-      memset (&__no_r_state, '\0', sizeof __no_r_state);
+      memset (&state, '\0', sizeof state);
 
       result = fcts->towc->__stateful;
     }
@@ -63,7 +62,7 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
     }
   else
     {
-      result = __mbrtowc (pwc, s, n, &__no_r_state);
+      result = __mbrtowc (pwc, s, n, &state);
 
       /* The `mbrtowc' functions tell us more than we need.  Fold the -1
 	 and -2 result into -1.  */

@@ -1,3 +1,15 @@
+2008-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/mbtowc.c (__no_r_state): Remove.
+	(mbtowc): New static state variable.  Use it instead of
+	__no_r_state.
+	* stdlib/wctomb.c (__no_r_state): Remove extern decl.
+	(__wctomb_state): New hidden variable.
+	(wctomb): Use __wctomb_state instead of __no_r_state.
+	* debug/wctomb_chk.c (__no_r_state): Remove extern decl.
+	(__wctomb_state): New extern decl.
+	(__wctomb_chk): Use __wctomb_state instead of __no_r_state.
+
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5475]
