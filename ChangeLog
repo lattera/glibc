@@ -1,3 +1,7 @@
+2008-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/mtrace.pl: Use $@ instead of $* to keep perl 5.10 quiet.
+
 2008-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.
