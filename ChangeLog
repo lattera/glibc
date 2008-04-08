@@ -1,3 +1,8 @@
+2008-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): Ignore script lines
+	as well when ignoring the whole category.
+
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6042]
