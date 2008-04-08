@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2003, 2005-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -3195,6 +3195,14 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_script:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* We get told about the scripts we know.  */
 	  arg = lr_token (ldfile, charmap, result, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
