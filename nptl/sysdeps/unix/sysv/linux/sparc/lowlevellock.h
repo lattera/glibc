@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -120,7 +120,7 @@
 /* Returns non-zero if error happened, zero if success.  */
 #ifdef __sparc32_atomic_do_lock
 /* Avoid FUTEX_WAKE_OP if supporting pre-v9 CPUs.  */
-# define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) 1
+# define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) 1
 #else
 # define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									      \

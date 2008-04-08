@@ -1,3 +1,10 @@
+2008-04-08  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #6020]
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h
+	(lll_futex_wake_unlock): Add private argument to the pre-v9 macro.
+	Patch by Sunil Amitkumar Janki <devel.sjanki@gmail.com>.
+
 2008-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefined ARG_MAX if
