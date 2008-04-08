@@ -1,5 +1,8 @@
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6040]
+	* locales/fr_FR: Fix abmon, abday, d_ftm, grouping.
+
 	[BZ #6004]
 	* locales/iso14651_t1_common: Fix first weight for U+1E60, U+1E62,
 	U+1E64, U+1E66, and U+1E68.

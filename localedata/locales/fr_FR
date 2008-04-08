@@ -3,33 +3,35 @@ escape_char  /
 %
 % French Language Locale for France
 % Source: RAP
-% Address: Sankt Jo//rgens Alle 8
-%    DK-1615 Ko//benhavn V, Danmark
-% Contact: Keld Simonsen
-% Email: Keld.Simonsen@dkuug.dk
-% Tel: +45 - 31226543
-% Fax: +45 - 33256543
 % Language: fr
+% Contact: Traduc.org
+% Address: 18, rue Cavendish
+%          75019 Paris
+% Email: traduc@traduc.org
 % Territory: FR
-% Revision: 4.3
-% Date: 1996-10-15
+% Revision: 4.4
+% Date: 2008-03-02
 % Users: general
 % Charset: ISO-8859-1
+% Authors:
+% 2000-06-28, keld.simonsen@dkuug.dk
+% 2008-03-02, stephane.raimbault@gmail.com
+%
 % Distribution and use is free, also
 % for commercial purposes.
 
 LC_IDENTIFICATION
 title      "French locale for France"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
-contact    "Keld Simonsen"
+address    ""
+contact    "Traduc.org"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "French"
 territory  "France"
 revision   "1.0"
-date       "2000-06-28"
+date       "2008-03-15"
 %
 category  "fr_FR:2000";LC_IDENTIFICATION
 category  "fr_FR:2000";LC_CTYPE
@@ -72,7 +74,7 @@ int_curr_symbol           "<U0045><U0055><U0052><U0020>"
 currency_symbol           "<U20AC>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U0020>"
-mon_grouping              3;3
+mon_grouping              3
 positive_sign             ""
 negative_sign             "<U002D>"
 int_frac_digits           2
@@ -88,14 +90,17 @@ END LC_MONETARY
 LC_NUMERIC
 decimal_point             "<U002C>"
 thousands_sep             "<U0020>"
-grouping                  0;0
+grouping                  3
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U0064><U0069><U006D>";"<U006C><U0075><U006E>";/
-        "<U006D><U0061><U0072>";"<U006D><U0065><U0072>";/
-        "<U006A><U0065><U0075>";"<U0076><U0065><U006E>";/
-        "<U0073><U0061><U006D>"
+abday   "<U0064><U0069><U006D><U002E>";/
+        "<U006C><U0075><U006E><U002E>";/
+        "<U006D><U0061><U0072><U002E>";/
+        "<U006D><U0065><U0072><U002E>";/
+        "<U006A><U0065><U0075><U002E>";/
+        "<U0076><U0065><U006E><U002E>";/
+        "<U0073><U0061><U006D><U002E>"
 day     "<U0064><U0069><U006D><U0061><U006E><U0063><U0068><U0065>";/
         "<U006C><U0075><U006E><U0064><U0069>";/
         "<U006D><U0061><U0072><U0064><U0069>";/
@@ -103,12 +108,18 @@ day     "<U0064><U0069><U006D><U0061><U006E><U0063><U0068><U0065>";/
         "<U006A><U0065><U0075><U0064><U0069>";/
         "<U0076><U0065><U006E><U0064><U0072><U0065><U0064><U0069>";/
         "<U0073><U0061><U006D><U0065><U0064><U0069>"
-abmon   "<U006A><U0061><U006E>";"<U0066><U00E9><U0076>";/
-        "<U006D><U0061><U0072>";"<U0061><U0076><U0072>";/
-        "<U006D><U0061><U0069>";"<U006A><U0075><U006E>";/
-        "<U006A><U0075><U0069>";"<U0061><U006F><U00FB>";/
-        "<U0073><U0065><U0070>";"<U006F><U0063><U0074>";/
-        "<U006E><U006F><U0076>";"<U0064><U00E9><U0063>"
+abmon   "<U006A><U0061><U006E><U0076><U002E>";/
+        "<U0066><U00E9><U0076><U0072><U002E>";/
+        "<U006D><U0061><U0072><U0073>";/
+        "<U0061><U0076><U0072><U0069><U006C>";/
+        "<U006D><U0061><U0069>";/
+        "<U006A><U0075><U0069><U006E>";/
+        "<U006A><U0075><U0069><U006C><U002E>";/
+        "<U0061><U006F><U00FB><U0074>";/
+        "<U0073><U0065><U0070><U0074><U002E>";/
+        "<U006F><U0063><U0074><U002E>";/
+        "<U006E><U006F><U0076><U002E>";/
+        "<U0064><U00E9><U0063><U002E>"
 mon     "<U006A><U0061><U006E><U0076><U0069><U0065><U0072>";/
         "<U0066><U00E9><U0076><U0072><U0069><U0065><U0072>";/
         "<U006D><U0061><U0072><U0073>";/
@@ -122,7 +133,7 @@ mon     "<U006A><U0061><U006E><U0076><U0069><U0065><U0072>";/
         "<U006E><U006F><U0076><U0065><U006D><U0062><U0072><U0065>";/
         "<U0064><U00E9><U0063><U0065><U006D><U0062><U0072><U0065>"
 d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
+d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
