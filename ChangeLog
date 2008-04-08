@@ -1,3 +1,10 @@
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6042]
+	* sysdeps/unix/sysv/linux/net/ethernet.h: Add a few more
+	ETHERTYPE_* definitions.
+	Patch partly by Aurelien Jarno <aurelien@aurel32.net>.
+
 2008-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/mbtowc.c (__no_r_state): Remove.

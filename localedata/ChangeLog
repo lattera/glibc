@@ -1,5 +1,9 @@
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6021]
+	* locales/es_ES: Fix p_cs_precedes and n_cs_precedes.
+	Use common collation definition.
+
 	[BZ #6040]
 	* locales/fr_FR: Fix abmon, abday, d_ftm, grouping.
 
