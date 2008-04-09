@@ -1,3 +1,8 @@
+2008-02-14  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork): Record return
+	PC save.
+
 2008-04-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss_files/files-XXX.c (_nss_files_getXXent_r): Restore saved errno.
