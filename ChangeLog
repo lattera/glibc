@@ -1,3 +1,16 @@
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/tst-makecontext.c: Change parameter to cf to negative
+	value to check for correct sign extension.
+
+	[BZ #5436]
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
+	Copy 64-bit parameter values even though this is not required in
+	the standard.
+
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S (__vfork): Record return
+	PC save.
+
 2008-02-14  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork): Record return

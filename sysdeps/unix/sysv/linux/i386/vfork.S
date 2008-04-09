@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2004, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -34,6 +34,7 @@ ENTRY (__vfork)
 	/* Pop the return PC value into ECX.  */
 	popl	%ecx
 	cfi_adjust_cfa_offset (-4)
+	cfi_register (%eip, %ecx)
 
 #ifdef SAVE_PID
 	SAVE_PID

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ ENTRY (__vfork)
 	   is preserved by the syscall and that we're allowed to destroy. */
 	popq	%rdi
 	cfi_adjust_cfa_offset(-8)
+	cfi_register(%rip, %rdi)
 
 #ifdef SAVE_PID
 	SAVE_PID

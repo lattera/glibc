@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -78,31 +78,39 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   sp[idx_uc_link] = (unsigned long int) ucp->uc_link;
 
   va_start (ap, argc);
-  /* Handle arguments.  */
+  /* Handle arguments.
+
+     The standard says the parameters must all be int values.  This is
+     an historic accident and would be done differently today.  For
+     x86-64 all integer values are passed as 64-bit values and
+     therefore extending the API to copy 64-bit values instead of
+     32-bit ints makes sense.  It does not break existing
+     functionality and it does not violate the standard which says
+     that passing non-int values means undefined behavior.  */
   for (i = 0; i < argc; ++i)
     switch (i)
       {
       case 0:
-	ucp->uc_mcontext.gregs [REG_RDI] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_RDI] = va_arg (ap, long int);
 	break;
       case 1:
-	ucp->uc_mcontext.gregs [REG_RSI] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_RSI] = va_arg (ap, long int);
 	break;
       case 2:
-	ucp->uc_mcontext.gregs [REG_RDX] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_RDX] = va_arg (ap, long int);
 	break;
       case 3:
-	ucp->uc_mcontext.gregs [REG_RCX] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_RCX] = va_arg (ap, long int);
 	break;
       case 4:
-	ucp->uc_mcontext.gregs [REG_R8] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_R8] = va_arg (ap, long int);
 	break;
       case 5:
-	ucp->uc_mcontext.gregs [REG_R9] = va_arg (ap, int);
+	ucp->uc_mcontext.gregs[REG_R9] = va_arg (ap, long int);
 	break;
       default:
 	/* Put value on stack.  */
-	sp[(i - 5)] = va_arg (ap, int);
+	sp[i - 5] = va_arg (ap, unsigned long int);
 	break;
       }
   va_end (ap);
