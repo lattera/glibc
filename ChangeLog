@@ -1,5 +1,8 @@
 2008-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4314]
+	* sysdeps/i386/i686/memcpy.S: Optimize copying of aligned buffers.
+
 	[BZ #5209]
 	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't return
 	an error value.
