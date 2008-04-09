@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996-2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996-2000, 2002, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,11 @@ fwrite_unlocked (buf, size, count, fp)
   if (_IO_fwide (fp, -1) == -1)
     {
       written = _IO_sputn (fp, (const char *) buf, request);
-      if (written == request)
+      /* We have written all of the input in case the return value indicates
+	 this or EOF is returned.  The latter is a special case where we
+	 simply did not manage to flush the buffer.  But the data is in the
+	 buffer and therefore written as far as fwrite is concerned.  */
+      if (written == request || written == EOF)
 	return count;
     }
 

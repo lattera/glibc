@@ -1,3 +1,10 @@
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5998]
+	* libio/iofwrite.c (_IO_fwrite): Return correct count if flushing
+	in line-buffered stream failed.
+	* libio/iofwrite_u.c (fwrite_unlocked): Likewise.
+
 2008-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6024]
