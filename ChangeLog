@@ -1,7 +1,7 @@
 2008-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5209]
-	* sysdeps/unix/sysv/syscalls.list: times syscalls doesn't return
+	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't return
 	an error value.
 
 	* stdlib/tst-makecontext.c: Change parameter to cf to negative

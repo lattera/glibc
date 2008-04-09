@@ -1,3 +1,7 @@
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-langinfo.sh: Adjust for latest fr_FR locale changes.
+
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6021]
