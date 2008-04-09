@@ -1,5 +1,10 @@
 2008-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6024]
+	* scripts/abi-versions.awk: If the version specified by
+	--enable-oldest-abi is older than the first version for this
+	architecture, use the default version.
+
 	* locale/programs/ld-collate.c (collate_read): Ignore script lines
 	as well when ignoring the whole category.
 

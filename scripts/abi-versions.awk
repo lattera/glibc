@@ -30,6 +30,9 @@ $2 == "=" {
 
   printf "#define ABI_%s_%s\tABI_%s_%s\n", libid, oldid, libid, newid;
   printf "#define VERSION_%s_%s\t%s\n", libid, oldid, new;
+
+  if ("GLIBC_" oldest_abi == old)
+    oldest_abi = "default";
   next;
 }
 
