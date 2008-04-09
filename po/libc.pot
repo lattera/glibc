@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.6.90\n"
-"POT-Creation-Date: 2007-10-15 21:18-0700\n"
+"Project-Id-Version: libc 2.7.90\n"
+"POT-Creation-Date: 2008-04-09 08:07-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgid ""
 "[OUTPUT-FILE [INPUT-FILE]...]"
 msgstr ""
 
-#: catgets/gencat.c:232 debug/pcprofiledump.c:204 iconv/iconv_prog.c:411
+#: catgets/gencat.c:232 debug/pcprofiledump.c:204 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:380 locale/programs/localedef.c:371
 #: login/programs/pt_chown.c:88 malloc/memusagestat.c:526 nss/makedb.c:231
 msgid ""
@@ -138,7 +138,7 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:246 debug/xtrace.sh:64 elf/ldconfig.c:296
-#: elf/ldd.bash.in:39 elf/sprof.c:355 iconv/iconv_prog.c:426
+#: elf/ldd.bash.in:39 elf/sprof.c:355 iconv/iconv_prog.c:423
 #: iconv/iconvconfig.c:395 locale/programs/locale.c:275
 #: locale/programs/localedef.c:387 login/programs/pt_chown.c:59
 #: malloc/memusage.sh:71 nscd/nscd.c:406 nss/getent.c:83 nss/makedb.c:245
@@ -151,7 +151,7 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:251 debug/xtrace.sh:68 elf/ldconfig.c:301 elf/sprof.c:361
-#: iconv/iconv_prog.c:431 iconv/iconvconfig.c:400 locale/programs/locale.c:280
+#: iconv/iconv_prog.c:428 iconv/iconvconfig.c:400 locale/programs/locale.c:280
 #: locale/programs/localedef.c:392 malloc/memusage.sh:75 nscd/nscd.c:411
 #: nss/getent.c:88 nss/makedb.c:250 posix/getconf.c:1017
 #, c-format
@@ -162,7 +162,7 @@ msgstr ""
 msgid "*standard input*"
 msgstr ""
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:158 iconv/iconv_prog.c:298
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:170 iconv/iconv_prog.c:294
 #: nss/makedb.c:170
 #, c-format
 msgid "cannot open input file `%s'"
@@ -351,7 +351,7 @@ msgstr ""
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ""
 
-#: elf/cache.c:134 elf/ldconfig.c:1270
+#: elf/cache.c:134 elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr ""
@@ -395,7 +395,7 @@ msgstr ""
 msgid "cannot create scope list"
 msgstr ""
 
-#: elf/dl-close.c:724
+#: elf/dl-close.c:725
 msgid "shared object not open"
 msgstr ""
 
@@ -626,29 +626,29 @@ msgstr ""
 msgid "invalid target namespace in dlmopen()"
 msgstr ""
 
-#: elf/dl-reloc.c:54
+#: elf/dl-reloc.c:56
 msgid "cannot allocate memory in static TLS block"
 msgstr ""
 
-#: elf/dl-reloc.c:196
+#: elf/dl-reloc.c:198
 msgid "cannot make segment writable for relocation"
 msgstr ""
 
-#: elf/dl-reloc.c:277
+#: elf/dl-reloc.c:281
 #, c-format
 msgid "%s: no PLTREL found in object %s\n"
 msgstr ""
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:292
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr ""
 
-#: elf/dl-reloc.c:304
+#: elf/dl-reloc.c:308
 msgid "cannot restore segment prot after reloc"
 msgstr ""
 
-#: elf/dl-reloc.c:329
+#: elf/dl-reloc.c:333
 msgid "cannot apply additional memory protection after relocation"
 msgstr ""
 
@@ -656,11 +656,11 @@ msgstr ""
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr ""
 
-#: elf/dl-sysdep.c:469 elf/dl-sysdep.c:481
+#: elf/dl-sysdep.c:475 elf/dl-sysdep.c:487
 msgid "cannot create capability list"
 msgstr ""
 
-#: elf/dl-tls.c:825
+#: elf/dl-tls.c:848
 msgid "cannot create TLS data structures"
 msgstr ""
 
@@ -873,17 +873,17 @@ msgstr ""
 msgid "%s:%u: cannot read directory %s"
 msgstr ""
 
-#: elf/ldconfig.c:1223
+#: elf/ldconfig.c:1222
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr ""
 
-#: elf/ldconfig.c:1249
+#: elf/ldconfig.c:1248
 #, c-format
 msgid "Can't chdir to /"
 msgstr ""
 
-#: elf/ldconfig.c:1291
+#: elf/ldconfig.c:1290
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr ""
@@ -1120,28 +1120,33 @@ msgstr ""
 msgid "cannot allocate symbol data"
 msgstr ""
 
-#: iconv/iconv_charmap.c:176 iconv/iconv_prog.c:316
+#: iconv/iconv_charmap.c:142 iconv/iconv_prog.c:446
+#, c-format
+msgid "cannot open output file"
+msgstr ""
+
+#: iconv/iconv_charmap.c:188 iconv/iconv_prog.c:312
 #, c-format
 msgid "error while closing input `%s'"
 msgstr ""
 
-#: iconv/iconv_charmap.c:450
+#: iconv/iconv_charmap.c:462
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr ""
 
-#: iconv/iconv_charmap.c:469 iconv/iconv_prog.c:526
+#: iconv/iconv_charmap.c:481 iconv/iconv_prog.c:537
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr ""
 
-#: iconv/iconv_charmap.c:514 iconv/iconv_charmap.c:550 iconv/iconv_prog.c:569
-#: iconv/iconv_prog.c:605
+#: iconv/iconv_charmap.c:526 iconv/iconv_charmap.c:562 iconv/iconv_prog.c:580
+#: iconv/iconv_prog.c:616
 #, c-format
 msgid "error while reading the input"
 msgstr ""
 
-#: iconv/iconv_charmap.c:532 iconv/iconv_prog.c:587
+#: iconv/iconv_charmap.c:544 iconv/iconv_prog.c:598
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr ""
@@ -1194,62 +1199,57 @@ msgstr ""
 msgid "[FILE...]"
 msgstr ""
 
-#: iconv/iconv_prog.c:200
-#, c-format
-msgid "cannot open output file"
-msgstr ""
-
-#: iconv/iconv_prog.c:242
+#: iconv/iconv_prog.c:234
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:247
+#: iconv/iconv_prog.c:239
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:254
+#: iconv/iconv_prog.c:246
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:258
+#: iconv/iconv_prog.c:250
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:268
+#: iconv/iconv_prog.c:260
 #, c-format
 msgid "failed to start conversion processing"
 msgstr ""
 
-#: iconv/iconv_prog.c:362
+#: iconv/iconv_prog.c:358
 #, c-format
 msgid "error while closing output file"
 msgstr ""
 
-#: iconv/iconv_prog.c:471 iconv/iconv_prog.c:497
+#: iconv/iconv_prog.c:456
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr ""
 
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:533
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr ""
 
-#: iconv/iconv_prog.c:530
+#: iconv/iconv_prog.c:541
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr ""
 
-#: iconv/iconv_prog.c:533
+#: iconv/iconv_prog.c:544
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr ""
 
-#: iconv/iconv_prog.c:779
+#: iconv/iconv_prog.c:790
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -1483,7 +1483,7 @@ msgid "no symbolic name given for end of range"
 msgstr ""
 
 #: locale/programs/charmap.c:610 locale/programs/ld-address.c:600
-#: locale/programs/ld-collate.c:2767 locale/programs/ld-collate.c:3924
+#: locale/programs/ld-collate.c:2767 locale/programs/ld-collate.c:3928
 #: locale/programs/ld-ctype.c:2232 locale/programs/ld-ctype.c:2984
 #: locale/programs/ld-identification.c:452
 #: locale/programs/ld-measurement.c:238 locale/programs/ld-messages.c:332
@@ -1510,7 +1510,7 @@ msgid "%s: error in state machine"
 msgstr ""
 
 #: locale/programs/charmap.c:850 locale/programs/ld-address.c:616
-#: locale/programs/ld-collate.c:2764 locale/programs/ld-collate.c:4115
+#: locale/programs/ld-collate.c:2764 locale/programs/ld-collate.c:4121
 #: locale/programs/ld-ctype.c:2229 locale/programs/ld-ctype.c:3001
 #: locale/programs/ld-identification.c:468
 #: locale/programs/ld-measurement.c:254 locale/programs/ld-messages.c:348
@@ -1534,7 +1534,7 @@ msgid ""
 "same: %d vs %d"
 msgstr ""
 
-#: locale/programs/charmap.c:993 locale/programs/ld-collate.c:3047
+#: locale/programs/charmap.c:993 locale/programs/ld-collate.c:3045
 #: locale/programs/repertoire.c:419
 msgid "invalid names for character range"
 msgstr ""
@@ -1643,7 +1643,7 @@ msgstr ""
 msgid "%s: unknown character in field `%s'"
 msgstr ""
 
-#: locale/programs/ld-address.c:597 locale/programs/ld-collate.c:3922
+#: locale/programs/ld-address.c:597 locale/programs/ld-collate.c:3926
 #: locale/programs/ld-ctype.c:2981 locale/programs/ld-identification.c:449
 #: locale/programs/ld-measurement.c:235 locale/programs/ld-messages.c:330
 #: locale/programs/ld-monetary.c:941 locale/programs/ld-name.c:305
@@ -1656,7 +1656,7 @@ msgstr ""
 #: locale/programs/ld-address.c:607 locale/programs/ld-collate.c:542
 #: locale/programs/ld-collate.c:594 locale/programs/ld-collate.c:890
 #: locale/programs/ld-collate.c:903 locale/programs/ld-collate.c:2733
-#: locale/programs/ld-collate.c:2754 locale/programs/ld-collate.c:4105
+#: locale/programs/ld-collate.c:2754 locale/programs/ld-collate.c:4111
 #: locale/programs/ld-ctype.c:1960 locale/programs/ld-ctype.c:2219
 #: locale/programs/ld-ctype.c:2806 locale/programs/ld-ctype.c:2992
 #: locale/programs/ld-identification.c:459
@@ -1763,7 +1763,7 @@ msgstr ""
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1369 locale/programs/ld-collate.c:3858
+#: locale/programs/ld-collate.c:1369 locale/programs/ld-collate.c:3862
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr ""
@@ -1804,7 +1804,7 @@ msgstr ""
 msgid "too many errors; giving up"
 msgstr ""
 
-#: locale/programs/ld-collate.c:2659 locale/programs/ld-collate.c:4044
+#: locale/programs/ld-collate.c:2659 locale/programs/ld-collate.c:4050
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr ""
@@ -1824,112 +1824,112 @@ msgstr ""
 msgid "%s: duplicate declaration of section `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3027
+#: locale/programs/ld-collate.c:3025
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3159
+#: locale/programs/ld-collate.c:3155
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3172
+#: locale/programs/ld-collate.c:3168
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3182
+#: locale/programs/ld-collate.c:3178
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3191
+#: locale/programs/ld-collate.c:3187
 msgid "error while adding equivalent collating symbol"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3221
+#: locale/programs/ld-collate.c:3225
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3269
+#: locale/programs/ld-collate.c:3273
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3298
+#: locale/programs/ld-collate.c:3302
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3326
+#: locale/programs/ld-collate.c:3330
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3353
+#: locale/programs/ld-collate.c:3357
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3407 locale/programs/ld-collate.c:3537
-#: locale/programs/ld-collate.c:3900
+#: locale/programs/ld-collate.c:3411 locale/programs/ld-collate.c:3541
+#: locale/programs/ld-collate.c:3904
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3470
+#: locale/programs/ld-collate.c:3474
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3488
+#: locale/programs/ld-collate.c:3492
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3499
+#: locale/programs/ld-collate.c:3503
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3551 locale/programs/ld-collate.c:3912
+#: locale/programs/ld-collate.c:3555 locale/programs/ld-collate.c:3916
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3585 locale/programs/ld-collate.c:3783
+#: locale/programs/ld-collate.c:3589 locale/programs/ld-collate.c:3787
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3650
+#: locale/programs/ld-collate.c:3654
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3846
+#: locale/programs/ld-collate.c:3850
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3896
+#: locale/programs/ld-collate.c:3900
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3915
+#: locale/programs/ld-collate.c:3919
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr ""
 
-#: locale/programs/ld-collate.c:4077
+#: locale/programs/ld-collate.c:4083
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:4095
+#: locale/programs/ld-collate.c:4101
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr ""
@@ -2260,7 +2260,7 @@ msgstr ""
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr ""
 
-#: locale/programs/ld-time.c:407
+#: locale/programs/ld-time.c:407 locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr ""
@@ -2268,11 +2268,6 @@ msgstr ""
 #: locale/programs/ld-time.c:416
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
-msgstr ""
-
-#: locale/programs/ld-time.c:435
-#, c-format
-msgid "%s: stopping date is invalid in string %Zd in `era' field"
 msgstr ""
 
 #: locale/programs/ld-time.c:444
@@ -2686,7 +2681,7 @@ msgid "cannot create output file `%s' for category `%s'"
 msgstr ""
 
 #: locale/programs/locfile.c:782
-msgid "expect string argument for `copy'"
+msgid "expecting string argument for `copy'"
 msgstr ""
 
 #: locale/programs/locfile.c:786
@@ -3503,251 +3498,265 @@ msgstr ""
 msgid "yp_update: cannot get server address\n"
 msgstr ""
 
-#: nscd/aicache.c:77 nscd/hstcache.c:468
+#: nscd/aicache.c:77 nscd/hstcache.c:473
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr ""
 
-#: nscd/aicache.c:79 nscd/hstcache.c:470
+#: nscd/aicache.c:79 nscd/hstcache.c:475
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr ""
 
-#: nscd/cache.c:146
+#: nscd/cache.c:150
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
 msgstr ""
 
-#: nscd/cache.c:148
+#: nscd/cache.c:152
 msgid " (first)"
 msgstr ""
 
-#: nscd/cache.c:256 nscd/connections.c:810
+#: nscd/cache.c:263 nscd/connections.c:811
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr ""
 
-#: nscd/cache.c:285
+#: nscd/cache.c:305
 #, c-format
 msgid "pruning %s cache; time %ld"
 msgstr ""
 
-#: nscd/cache.c:312
+#: nscd/cache.c:334
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr ""
 
-#: nscd/connections.c:521 nscd/connections.c:533 nscd/connections.c:545
-#: nscd/connections.c:564
+#: nscd/connections.c:527
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr ""
 
 #: nscd/connections.c:535
+msgid "uninitialized header"
+msgstr ""
+
+#: nscd/connections.c:540
 msgid "header size does not match"
 msgstr ""
 
-#: nscd/connections.c:547
+#: nscd/connections.c:550
 msgid "file size does not match"
 msgstr ""
 
-#: nscd/connections.c:566
+#: nscd/connections.c:567
 msgid "verification failed"
 msgstr ""
 
-#: nscd/connections.c:580
+#: nscd/connections.c:581
 #, c-format
 msgid ""
 "suggested size of table for database %s larger than the persistent "
 "database's table"
 msgstr ""
 
-#: nscd/connections.c:591 nscd/connections.c:673
+#: nscd/connections.c:592 nscd/connections.c:674
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr ""
 
-#: nscd/connections.c:652
+#: nscd/connections.c:653
 #, c-format
 msgid ""
 "database for %s corrupted or simultaneously used; remove %s manually if "
 "necessary and restart"
 msgstr ""
 
-#: nscd/connections.c:659
+#: nscd/connections.c:660
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr ""
 
-#: nscd/connections.c:662
+#: nscd/connections.c:663
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr ""
 
-#: nscd/connections.c:733
+#: nscd/connections.c:734
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr ""
 
-#: nscd/connections.c:772
+#: nscd/connections.c:773
 #, c-format
 msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:823
+#: nscd/connections.c:824
 #, c-format
 msgid "cannot open socket: %s"
 msgstr ""
 
-#: nscd/connections.c:840
+#: nscd/connections.c:841
 #, c-format
 msgid "cannot change socket to nonblocking mode: %s"
 msgstr ""
 
-#: nscd/connections.c:848
+#: nscd/connections.c:849
 #, c-format
 msgid "cannot set socket to close on exec: %s"
 msgstr ""
 
-#: nscd/connections.c:859
+#: nscd/connections.c:860
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr ""
 
-#: nscd/connections.c:955
+#: nscd/connections.c:960
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr ""
 
-#: nscd/connections.c:967
+#: nscd/connections.c:972
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr ""
 
-#: nscd/connections.c:1009 nscd/connections.c:1062
+#: nscd/connections.c:982
+msgid "request not handled due to missing permission"
+msgstr ""
+
+#: nscd/connections.c:1018 nscd/connections.c:1071
 #, c-format
 msgid "cannot write result: %s"
 msgstr ""
 
-#: nscd/connections.c:1145
+#: nscd/connections.c:1154
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr ""
 
-#: nscd/connections.c:1204
+#: nscd/connections.c:1213
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1218
+#: nscd/connections.c:1227
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1258
+#: nscd/connections.c:1267
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1268
+#: nscd/connections.c:1277
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1281
+#: nscd/connections.c:1290
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1310
+#: nscd/connections.c:1319
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1319
+#: nscd/connections.c:1328
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr ""
 
-#: nscd/connections.c:1437
+#: nscd/connections.c:1471
 #, c-format
 msgid "short read while reading request: %s"
 msgstr ""
 
-#: nscd/connections.c:1468
+#: nscd/connections.c:1502
 #, c-format
 msgid "key length in request too long: %d"
 msgstr ""
 
-#: nscd/connections.c:1481
+#: nscd/connections.c:1515
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr ""
 
-#: nscd/connections.c:1490
+#: nscd/connections.c:1524
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr ""
 
-#: nscd/connections.c:1495
+#: nscd/connections.c:1529
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr ""
 
-#: nscd/connections.c:1856
-#, c-format
-msgid "could only start %d threads; terminating"
+#: nscd/connections.c:1866
+msgid "could not initialize conditional variable"
 msgstr ""
 
-#: nscd/connections.c:1904 nscd/connections.c:1905 nscd/connections.c:1922
-#: nscd/connections.c:1931 nscd/connections.c:1949 nscd/connections.c:1960
-#: nscd/connections.c:1971
+#: nscd/connections.c:1874
+msgid "could not start clean-up thread; terminating"
+msgstr ""
+
+#: nscd/connections.c:1888
+msgid "could not start any worker thread; terminating"
+msgstr ""
+
+#: nscd/connections.c:1939 nscd/connections.c:1940 nscd/connections.c:1957
+#: nscd/connections.c:1966 nscd/connections.c:1984 nscd/connections.c:1995
+#: nscd/connections.c:2006
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr ""
 
-#: nscd/connections.c:1923
+#: nscd/connections.c:1958
 #, c-format
 msgid "initial getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:1932
+#: nscd/connections.c:1967
 #, c-format
 msgid "getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:1950
+#: nscd/connections.c:1985
 #, c-format
 msgid "setgroups failed"
 msgstr ""
 
-#: nscd/grpcache.c:402 nscd/hstcache.c:418 nscd/initgrcache.c:412
-#: nscd/pwdcache.c:397 nscd/servicescache.c:343
+#: nscd/grpcache.c:404 nscd/hstcache.c:422 nscd/initgrcache.c:414
+#: nscd/pwdcache.c:399 nscd/servicescache.c:345
 #, c-format
 msgid "short write in %s: %s"
 msgstr ""
 
-#: nscd/grpcache.c:445 nscd/initgrcache.c:78
+#: nscd/grpcache.c:447 nscd/initgrcache.c:78
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:447 nscd/initgrcache.c:80
+#: nscd/grpcache.c:449 nscd/initgrcache.c:80
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:524
+#: nscd/grpcache.c:526
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr ""
 
-#: nscd/mem.c:383
+#: nscd/mem.c:422
 #, c-format
 msgid "freed %zu bytes in %s cache"
 msgstr ""
 
-#: nscd/mem.c:512
+#: nscd/mem.c:557
 #, c-format
 msgid "no more memory for database '%s'"
 msgstr ""
@@ -3773,7 +3782,7 @@ msgid "Shut the server down"
 msgstr ""
 
 #: nscd/nscd.c:103
-msgid "Print current configuration statistic"
+msgid "Print current configuration statistics"
 msgstr ""
 
 #: nscd/nscd.c:104
@@ -3860,37 +3869,37 @@ msgstr ""
 msgid "Parse error: %s"
 msgstr ""
 
-#: nscd/nscd_conf.c:193
+#: nscd/nscd_conf.c:194
 #, c-format
 msgid "Must specify user name for server-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:200
+#: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:244
+#: nscd/nscd_conf.c:245
 #, c-format
 msgid "invalid value for 'reload-count': %u"
 msgstr ""
 
-#: nscd/nscd_conf.c:259
+#: nscd/nscd_conf.c:260
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr ""
 
-#: nscd/nscd_conf.c:273
+#: nscd/nscd_conf.c:274
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr ""
 
-#: nscd/nscd_conf.c:286
+#: nscd/nscd_conf.c:287
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/nscd_conf.c:306
+#: nscd/nscd_conf.c:307
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr ""
@@ -3989,17 +3998,17 @@ msgid ""
 "%15s  check /etc/%s for changes\n"
 msgstr ""
 
-#: nscd/pwdcache.c:440
+#: nscd/pwdcache.c:442
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:442
+#: nscd/pwdcache.c:444
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:520
+#: nscd/pwdcache.c:522
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
@@ -4075,7 +4084,11 @@ msgstr ""
 msgid "Error getting sid from context"
 msgstr ""
 
-#: nscd/selinux.c:399
+#: nscd/selinux.c:374
+msgid "compile-time support for database policy missing"
+msgstr ""
+
+#: nscd/selinux.c:407
 #, c-format
 msgid ""
 "\n"
@@ -4091,12 +4104,12 @@ msgid ""
 "%15u  CAV misses\n"
 msgstr ""
 
-#: nscd/servicescache.c:390
+#: nscd/servicescache.c:392
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr ""
 
-#: nscd/servicescache.c:392
+#: nscd/servicescache.c:394
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr ""
@@ -4220,61 +4233,56 @@ msgstr ""
 msgid "Unrecognized variable `%s'"
 msgstr ""
 
-#: posix/getopt.c:571 posix/getopt.c:587
+#: posix/getopt.c:570 posix/getopt.c:586
 #, c-format
-msgid "%s: option `%s' is ambiguous\n"
+msgid "%s: option '%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:620 posix/getopt.c:624
+#: posix/getopt.c:619 posix/getopt.c:623
 #, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
+msgid "%s: option '--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:633 posix/getopt.c:638
+#: posix/getopt.c:632 posix/getopt.c:637
 #, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgid "%s: option '%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:681 posix/getopt.c:700 posix/getopt.c:1016
-#: posix/getopt.c:1035
+#: posix/getopt.c:680 posix/getopt.c:699 posix/getopt.c:1002
+#: posix/getopt.c:1021
 #, c-format
-msgid "%s: option `%s' requires an argument\n"
+msgid "%s: option '%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:738 posix/getopt.c:741
+#: posix/getopt.c:737 posix/getopt.c:740
 #, c-format
-msgid "%s: unrecognized option `--%s'\n"
+msgid "%s: unrecognized option '--%s'\n"
 msgstr ""
 
-#: posix/getopt.c:749 posix/getopt.c:752
+#: posix/getopt.c:748 posix/getopt.c:751
 #, c-format
-msgid "%s: unrecognized option `%c%s'\n"
+msgid "%s: unrecognized option '%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:804 posix/getopt.c:807
+#: posix/getopt.c:800 posix/getopt.c:803
 #, c-format
-msgid "%s: illegal option -- %c\n"
+msgid "%s: invalid option -- '%c'\n"
 msgstr ""
 
-#: posix/getopt.c:813 posix/getopt.c:816
+#: posix/getopt.c:853 posix/getopt.c:870 posix/getopt.c:1073
+#: posix/getopt.c:1091
 #, c-format
-msgid "%s: invalid option -- %c\n"
+msgid "%s: option requires an argument -- '%c'\n"
 msgstr ""
 
-#: posix/getopt.c:868 posix/getopt.c:884 posix/getopt.c:1088
-#: posix/getopt.c:1106
+#: posix/getopt.c:923 posix/getopt.c:939
 #, c-format
-msgid "%s: option requires an argument -- %c\n"
+msgid "%s: option '-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:937 posix/getopt.c:953
+#: posix/getopt.c:963 posix/getopt.c:981
 #, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
-msgstr ""
-
-#: posix/getopt.c:977 posix/getopt.c:995
-#, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgid "%s: option '-W %s' doesn't allow an argument\n"
 msgstr ""
 
 #: posix/regcomp.c:135
@@ -4429,150 +4437,143 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: sunrpc/auth_unix.c:114
-msgid "authunix_create: out of memory\n"
+#: sunrpc/auth_unix.c:114 sunrpc/clnt_tcp.c:131 sunrpc/clnt_udp.c:140
+#: sunrpc/clnt_unix.c:128 sunrpc/svc_tcp.c:179 sunrpc/svc_tcp.c:218
+#: sunrpc/svc_udp.c:153 sunrpc/svc_unix.c:176 sunrpc/svc_unix.c:215
+#: sunrpc/xdr.c:566 sunrpc/xdr.c:718 sunrpc/xdr_array.c:106
+#: sunrpc/xdr_rec.c:156 sunrpc/xdr_ref.c:85
+msgid "out of memory\n"
 msgstr ""
 
 #: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:105 sunrpc/clnt_perr.c:121
 #, c-format
-msgid "; low version = %lu, high version = %lu"
+msgid "%s: %s; low version = %lu, high version = %lu"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:125
-msgid "; why = "
-msgstr ""
-
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:112
 #, c-format
-msgid "(unknown authentication error - %d)"
+msgid "%s: %s; why = %s\n"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:172
+#: sunrpc/clnt_perr.c:114
+#, c-format
+msgid "%s: %s; why = (unknown authentication error - %d)\n"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:159
 msgid "RPC: Success"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:175
+#: sunrpc/clnt_perr.c:162
 msgid "RPC: Can't encode arguments"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:179
+#: sunrpc/clnt_perr.c:166
 msgid "RPC: Can't decode result"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:183
+#: sunrpc/clnt_perr.c:170
 msgid "RPC: Unable to send"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:187
+#: sunrpc/clnt_perr.c:174
 msgid "RPC: Unable to receive"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:191
+#: sunrpc/clnt_perr.c:178
 msgid "RPC: Timed out"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:195
+#: sunrpc/clnt_perr.c:182
 msgid "RPC: Incompatible versions of RPC"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:199
+#: sunrpc/clnt_perr.c:186
 msgid "RPC: Authentication error"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:203
+#: sunrpc/clnt_perr.c:190
 msgid "RPC: Program unavailable"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:207
+#: sunrpc/clnt_perr.c:194
 msgid "RPC: Program/version mismatch"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:211
+#: sunrpc/clnt_perr.c:198
 msgid "RPC: Procedure unavailable"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:215
+#: sunrpc/clnt_perr.c:202
 msgid "RPC: Server can't decode arguments"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:219
+#: sunrpc/clnt_perr.c:206
 msgid "RPC: Remote system error"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:223
+#: sunrpc/clnt_perr.c:210
 msgid "RPC: Unknown host"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:227
+#: sunrpc/clnt_perr.c:214
 msgid "RPC: Unknown protocol"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:231
+#: sunrpc/clnt_perr.c:218
 msgid "RPC: Port mapper failure"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:235
+#: sunrpc/clnt_perr.c:222
 msgid "RPC: Program not registered"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:239
+#: sunrpc/clnt_perr.c:226
 msgid "RPC: Failed (unspecified error)"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:280
+#: sunrpc/clnt_perr.c:267
 msgid "RPC: (unknown error code)"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:342
+#: sunrpc/clnt_perr.c:330
 msgid "Authentication OK"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:333
 msgid "Invalid client credential"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:337
 msgid "Server rejected credential"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:341
 msgid "Invalid client verifier"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:345
 msgid "Server rejected verifier"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:349
 msgid "Client credential too weak"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:353
 msgid "Invalid server verifier"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:369
+#: sunrpc/clnt_perr.c:357
 msgid "Failed (unspecified error)"
 msgstr ""
 
 #: sunrpc/clnt_raw.c:117
 msgid "clnt_raw.c: fatal header serialization error"
-msgstr ""
-
-#: sunrpc/clnt_tcp.c:131
-msgid "clnttcp_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/clnt_udp.c:139
-msgid "clntudp_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/clnt_unix.c:128
-msgid "clntunix_create: out of memory\n"
 msgstr ""
 
 #: sunrpc/pm_getmaps.c:83
@@ -4859,14 +4860,6 @@ msgstr ""
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:179
-msgid "svctcp_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/svc_tcp.c:218
-msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr ""
-
 #: sunrpc/svc_udp.c:128
 msgid "svcudp_create: socket creation problem"
 msgstr ""
@@ -4875,39 +4868,35 @@ msgstr ""
 msgid "svcudp_create - cannot getsockname"
 msgstr ""
 
-#: sunrpc/svc_udp.c:152
-msgid "svcudp_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/svc_udp.c:174
+#: sunrpc/svc_udp.c:175
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr ""
 
-#: sunrpc/svc_udp.c:474
+#: sunrpc/svc_udp.c:475
 msgid "enablecache: cache already enabled"
 msgstr ""
 
-#: sunrpc/svc_udp.c:480
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache"
 msgstr ""
 
-#: sunrpc/svc_udp.c:489
+#: sunrpc/svc_udp.c:490
 msgid "enablecache: could not allocate cache data"
 msgstr ""
 
-#: sunrpc/svc_udp.c:497
+#: sunrpc/svc_udp.c:498
 msgid "enablecache: could not allocate cache fifo"
 msgstr ""
 
-#: sunrpc/svc_udp.c:532
+#: sunrpc/svc_udp.c:533
 msgid "cache_set: victim not found"
 msgstr ""
 
-#: sunrpc/svc_udp.c:543
+#: sunrpc/svc_udp.c:544
 msgid "cache_set: victim alloc failed"
 msgstr ""
 
-#: sunrpc/svc_udp.c:550
+#: sunrpc/svc_udp.c:551
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr ""
 
@@ -4917,34 +4906,6 @@ msgstr ""
 
 #: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
-msgstr ""
-
-#: sunrpc/svc_unix.c:176
-msgid "svcunix_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/svc_unix.c:215
-msgid "svc_unix: makefd_xprt: out of memory\n"
-msgstr ""
-
-#: sunrpc/xdr.c:566
-msgid "xdr_bytes: out of memory\n"
-msgstr ""
-
-#: sunrpc/xdr.c:718
-msgid "xdr_string: out of memory\n"
-msgstr ""
-
-#: sunrpc/xdr_array.c:106
-msgid "xdr_array: out of memory\n"
-msgstr ""
-
-#: sunrpc/xdr_rec.c:156
-msgid "xdrrec_create: out of memory\n"
-msgstr ""
-
-#: sunrpc/xdr_ref.c:86
-msgid "xdr_reference: out of memory\n"
 msgstr ""
 
 #: sysdeps/generic/siglist.h:29 sysdeps/unix/siglist.c:27

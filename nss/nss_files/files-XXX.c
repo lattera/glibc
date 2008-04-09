@@ -259,7 +259,7 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 
       status = internal_setent (0);
 
-      __set_errno (errno);
+      __set_errno (save_errno);
 
       if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
 	{
