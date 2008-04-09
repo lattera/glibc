@@ -11,6 +11,6 @@ settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 signal		-	signal		i:ii	signal
 stime		-	stime		i:p	stime
 time		-	time		Ei:P	time
-times		-	times		i:p	__times	times
+times		-	times		Ei:p	__times	times
 ulimit		-	ulimit		i:ii	ulimit
 utime		-	utime		i:sP	utime
