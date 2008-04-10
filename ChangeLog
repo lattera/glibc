@@ -1,3 +1,17 @@
+2008-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5768]
+	* sysdeps/powerpc/fpu/Makefile (libm-tests): Add test-powerpc-snan.
+	* sysdeps/powerpc/fpu/test-powerpc-snan.c: New file.
+
+2008-02-18  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5768]
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.c: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.c: Removed.
+
 2008-04-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/tst-makecontext.c (othervar): New variable.
