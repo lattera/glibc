@@ -159,7 +159,7 @@ tests += $(tests-static)
 endif
 ifeq (yes,$(build-shared))
 tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	 constload1 order $(tests-vis-$(have-protected)) noload filter unload \
+	 constload1 order vismain noload filter unload \
 	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
 	 nodlopen nodlopen2 neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
@@ -175,7 +175,6 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-stackguard1 tst-addr1 tst-thrlock
 #	 reldep9
 test-srcs = tst-pathopt
-tests-vis-yes = vismain
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
@@ -184,7 +183,7 @@ endif
 tests: $(objpfx)tst-leaks1-mem
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
-		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
+		dep1 dep2 dep3 dep4 vismod1 vismod2 vismod3 \
 		nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
 		nodel2mod1 nodel2mod2 nodel2mod3 \
 		nodlopenmod nodlopenmod2 filtmod1 filtmod2 \
@@ -220,7 +219,6 @@ endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 endif
-modules-vis-yes = vismod1 vismod2 vismod3
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
@@ -855,9 +853,9 @@ endif
 
 $(objpfx)check-localplt.out: $(objpfx)check-localplt \
 			     $(common-objpfx)libc.so \
- 		    	     $(common-objpfx)math/libm.so $(thread-dso) \
- 		    	     $(common-objpfx)rt/librt.so \
- 		    	     $(common-objpfx)dlfcn/libdl.so \
+		    	     $(common-objpfx)math/libm.so $(thread-dso) \
+		    	     $(common-objpfx)rt/librt.so \
+		    	     $(common-objpfx)dlfcn/libdl.so \
 			     $(check-data)
 	$(dir $<)$(notdir $<) $(filter-out $< $(check-data),$^) | \
 	  LC_ALL=C sort | \

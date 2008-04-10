@@ -1,3 +1,9 @@
+2008-02-22  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/Makefile (tests): Substitute tests-vis-yes here.
+	(tests-vis-yes): Delete.
+	(modules-name, modules-vis-yes): Similarly.
+
 2008-02-12  Pete Eberlein  <eberlein@us.ibm.com>
 
 	[BZ #4407]
