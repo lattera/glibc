@@ -1,3 +1,8 @@
+2008-04-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-makecontext.c (othervar): New variable.
+	(cf): Test sign extending the argument to long.
+
 2008-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnan.S: New file.

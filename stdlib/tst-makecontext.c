@@ -26,11 +26,12 @@ char st1[8192];
 __thread int thr;
 
 int somevar = -76;
+long othervar = -78L;
 
 void
 cf (int i)
 {
-  if (i != -78 || thr != 94)
+  if (i != othervar || thr != 94)
     {
       printf ("i %d thr %d\n", i, thr);
       exit (1);
