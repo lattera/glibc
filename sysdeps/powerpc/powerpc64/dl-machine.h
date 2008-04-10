@@ -246,30 +246,35 @@ BODY_PREFIX "_dl_start_user:\n"						\
 "	" END_2(_dl_start_user) "\n"					\
 "	.popsection");
 
-/* Nonzero iff TYPE should not be allowed to resolve to one of
-   the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_lookup_noexec_p(type) ((type) == R_PPC64_COPY)
+/* ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to
+   one of the main executable's symbols, as for a COPY reloc.
 
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_PPC64_JMP_SLOT)
+   To make function pointer comparisons work on most targets, the
+   relevant ABI states that the address of a non-local function in a
+   dynamically linked executable is the address of the PLT entry for
+   that function.  This is quite reasonable since using the real
+   function address in a non-PIC executable would typically require
+   dynamic relocations in .text, something to be avoided.  For such
+   functions, the linker emits a SHN_UNDEF symbol in the executable
+   with value equal to the PLT entry address.  Normally, SHN_UNDEF
+   symbols have a value of zero, so this is a clue to ld.so that it
+   should treat these symbols specially.  For relocations not in
+   ELF_RTYPE_CLASS_PLT (eg. those on function pointers), ld.so should
+   use the value of the executable SHN_UNDEF symbol, ie. the PLT entry
+   address.  For relocations in ELF_RTYPE_CLASS_PLT (eg. the relocs in
+   the PLT itself), ld.so should use the value of the corresponding
+   defined symbol in the object that defines the function, ie. the
+   real function address.  This complicates ld.so in that there are
+   now two possible values for a given symbol, and it gets even worse
+   because protected symbols need yet another set of rules.
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
-   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc.  */
+   On PowerPC64 we don't need any of this.  The linker won't emit
+   SHN_UNDEF symbols with non-zero values.  ld.so can make all
+   relocations behave "normally", ie. always use the real address
+   like PLT relocations.  So always set ELF_RTYPE_CLASS_PLT.  */
 
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
-#define elf_machine_type_class(type)					      \
-  /* This covers all the TLS relocs, though most won't appear.  */	      \
-  (((((type) >= R_PPC64_DTPMOD64 && (type) <= R_PPC64_TPREL16_HIGHESTA)	      \
-    || (type) == R_PPC64_ADDR24) * ELF_RTYPE_CLASS_PLT)			      \
-   | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
-#else
 #define elf_machine_type_class(type) \
-  ((((type) == R_PPC64_ADDR24) * ELF_RTYPE_CLASS_PLT)	\
-   | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
-#endif
+  (ELF_RTYPE_CLASS_PLT | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC64_JMP_SLOT

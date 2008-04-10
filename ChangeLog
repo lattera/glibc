@@ -1,3 +1,9 @@
+2008-02-21  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_type_class):
+	Always set ELF_RTYPE_CLASS_PLT.
+	(elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p): Delete.
+
 2008-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/hp-timing.c: New file.
