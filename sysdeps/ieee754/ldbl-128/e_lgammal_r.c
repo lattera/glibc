@@ -772,6 +772,12 @@ __ieee754_lgammal_r (x, signgamp)
   if (! __finitel (x))
     return x * x;
 
+  if (x == 0.0L)
+    {
+      if (__signbitl (x))
+        *signgamp = -1;
+    }
+
   if (x < 0.0L)
     {
       q = -x;

@@ -1,3 +1,9 @@
+2008-02-12  Pete Eberlein  <eberlein@us.ibm.com>
+
+	[BZ #4407]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Preserve sign in signgamp when x is zero.
+
 2007-10-26  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: New File.
