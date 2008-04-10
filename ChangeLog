@@ -1,3 +1,13 @@
+2008-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_isnan.S: New file.
+
 2008-02-22  Alan Modra  <amodra@bigpond.net.au>
 
 	* elf/Makefile (tests): Substitute tests-vis-yes here.

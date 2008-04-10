@@ -34,6 +34,9 @@ Version 2.8
 
 * ARG_MAX is not anymore constant on Linux.  Use sysconf(_SC_ARG_MAX).
   Implemented by Ulrich Drepper.
+
+* Faster sqrt and sqrtf implemention for some PPC variants.
+  Implemented by Stephen Munroe.
 
 Version 2.7
 

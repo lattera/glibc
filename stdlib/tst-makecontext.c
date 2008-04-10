@@ -25,6 +25,8 @@ ucontext_t ucp;
 char st1[8192];
 __thread int thr;
 
+int somevar = -76;
+
 void
 cf (int i)
 {
@@ -54,7 +56,7 @@ do_test (void)
   ucp.uc_link = NULL;
   ucp.uc_stack.ss_sp = st1;
   ucp.uc_stack.ss_size = sizeof st1;
-  makecontext (&ucp, (void (*) (void)) cf, 1, -78);
+  makecontext (&ucp, (void (*) (void)) cf, 1, somevar - 2);
   if (setcontext (&ucp) != 0)
     {
       puts ("setcontext failed");
