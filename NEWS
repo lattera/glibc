@@ -1,5 +1,5 @@
-GNU C Library NEWS -- history of user-visible changes.  2007-12-12
-Copyright (C) 1992-2006, 2007 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2008-4-9
+Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
@@ -10,6 +10,30 @@ Version 2.8
 * New locales: bo_CN, bo_IN.
 
 * New encoding: HP-ROMAN9, HP-GREEK8, HP-THAI8, HP-TURKISH8.
+
+* Sorting rules for some Indian languages (Devanagari and Gujarati).
+  Implemented by Pravin Satpute.
+
+* IPV6 addresses in /etc/resolv.conf can now have a scope ID
+
+* nscd caches now all timeouts for DNS entries
+  Implemented by Ulrich Drepper.
+
+* nscd is more efficient and wakes up less often.
+  Implemented by Ulrich Drepper.
+
+* More checking functions: asprintf, dprintf, obstack_printf, vasprintf,
+  vdprintf, and obstack_vprintf.
+  Implemented by Jakub Jelinek.
+
+* Faster memset for x86-64.
+  Implemented by Harsha Jagasia and H.J. Lu.
+
+* Faster memcpy on x86.
+  Implemented by Ulrich Drepper.
+
+* ARG_MAX is not anymore constant on Linux.  Use sysconf(_SC_ARG_MAX).
+  Implemented by Ulrich Drepper.
 
 Version 2.7
 
