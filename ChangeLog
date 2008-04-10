@@ -68,8 +68,8 @@
 	buffers.
 
 	[BZ #5209]
-	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't return
-	an error value.
+	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't have
+	a reserved error value.
 
 	* stdlib/tst-makecontext.c: Change parameter to cf to negative
 	value to check for correct sign extension.
