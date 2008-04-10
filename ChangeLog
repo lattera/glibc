@@ -1,3 +1,10 @@
+2008-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h: New file.
+	* sysdeps/powerpc/powerpc64/hp-timing.h [_ARCH_PWR4] (HP_TIMING_NOW):
+	For ISA 2.01 and later replace mftb with mfspr 268.
+
 2008-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #5768]
@@ -51,7 +58,8 @@
 2008-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4314]
-	* sysdeps/i386/i686/memcpy.S: Optimize copying of aligned buffers.
+	* sysdeps/i386/i686/memcpy.S: Optimize copying of equally aligned
+	buffers.
 
 	[BZ #5209]
 	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't return

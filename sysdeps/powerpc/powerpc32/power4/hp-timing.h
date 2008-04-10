@@ -85,11 +85,23 @@ typedef unsigned long long int hp_timing_t;
    running in this moment.  This could be changed by using a barrier like
    'lwsync' right before the `mftb' instruciton.  But we are not interested
    in accurate clock cycles here so we don't do this.  */
-#ifdef _ARCH_PWR4
-#define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mfspr %0,268" : "=r" (Var))
-#else
-#define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mftb %0" : "=r" (Var))
-#endif
+
+#define HP_TIMING_NOW(Var)						\
+  do {									\
+        union { long long ll; long ii[2]; } _var;			\
+	long tmp;							\
+        __asm__ __volatile__ (						\
+		"1:	mfspr	%0,269;"				\
+		"	mfspr	%1,268;"				\
+		"	mfspr	%2,269;"				\
+		"	cmpw	%0,%2;"					\
+		"	bne	1b;"					\
+		: "=r" (_var.ii[0]), "=r" (_var.ii[1]) , "=r" (tmp)	\
+		: : "cr0"						\
+		);							\
+	Var = _var.ll;							\
+  } while (0)
+
 
 /* Use two 'mftb' instructions in a row to find out how long it takes.
    On current POWER4, POWER5, and 970 processors mftb take ~10 cycles.  */
