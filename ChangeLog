@@ -1,3 +1,17 @@
+2008-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* timzeone/asia: Update from tzdata2008b.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/zone.tab: Likewise.
+	* timezone/private.h: Update from tzcode2008a.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 2008-01-24  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #5741]
