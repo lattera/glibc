@@ -1,3 +1,14 @@
+2008-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h (__GLIBC_MINOR__): Bump to 8.
+
+	* sysdeps/powerpc/powerpc32/fpu/s_lroundf.S: Remove duplicate comment.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundf.S: Likewise.
+
 2008-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #5443]
