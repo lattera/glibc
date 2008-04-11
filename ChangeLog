@@ -1,6 +1,6 @@
 2007-11-20  Ryan S. Arnold  <rsa@us.ibm.com>
 
-	[BZ4997]
+	[BZ #4997]
 	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Fixed erroneous
 	result when x is +/-nextafter(+/-0.5,-/+1) i.e. all 1's in the
 	mantissa.
