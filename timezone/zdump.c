@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	8.4";
+static char	elsieid[] = "@(#)zdump.c	8.6";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -88,6 +88,9 @@ static char	elsieid[] = "@(#)zdump.c	8.4";
 #define SECSPERNYEAR	(SECSPERDAY * DAYSPERNYEAR)
 #define SECSPERLYEAR	(SECSPERNYEAR + SECSPERDAY)
 
+#ifndef HAVE_GETTEXT
+#define HAVE_GETTEXT 0
+#endif
 #if HAVE_GETTEXT
 #include "locale.h"	/* for setlocale */
 #include "libintl.h"
@@ -129,13 +132,9 @@ static char	elsieid[] = "@(#)zdump.c	8.4";
 #define TZ_DOMAIN "tz"
 #endif /* !defined TZ_DOMAIN */
 
-#ifndef P
-#define P(x)	x
-#endif /* !defined P */
-
 extern char **	environ;
-extern int	getopt P((int argc, char * const argv[],
-			const char * options));
+extern int	getopt(int argc, char * const argv[],
+			const char * options);
 extern char *	optarg;
 extern int	optind;
 extern char *	tzname[2];
@@ -146,15 +145,15 @@ static size_t	longest;
 static char *	progname;
 static int	warned;
 
-static char *	abbr P((struct tm * tmp));
-static void	abbrok P((const char * abbrp, const char * zone));
-static long	delta P((struct tm * newp, struct tm * oldp));
-static void	dumptime P((const struct tm * tmp));
-static time_t	hunt P((char * name, time_t lot, time_t	hit));
-static void	setabsolutes P((void));
-static void	show P((char * zone, time_t t, int v));
-static const char *	tformat P((void));
-static time_t	yeartot P((long y));
+static char *	abbr(struct tm * tmp);
+static void	abbrok(const char * abbrp, const char * zone);
+static long	delta(struct tm * newp, struct tm * oldp);
+static void	dumptime(const struct tm * tmp);
+static time_t	hunt(char * name, time_t lot, time_t	hit);
+static void	setabsolutes(void);
+static void	show(char * zone, time_t t, int v);
+static const char *	tformat(void);
+static time_t	yeartot(long y);
 
 #ifndef TYPECHECK
 #define my_localtime	localtime
@@ -394,7 +393,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 }
 
 static void
-setabsolutes()
+setabsolutes(void)
 {
 	if (0.5 == (time_t) 0.5) {
 		/*
@@ -592,7 +591,7 @@ struct tm *	tmp;
 */
 
 static const char *
-tformat()
+tformat(void)
 {
 	if (0.5 == (time_t) 0.5) {	/* floating */
 		if (sizeof (time_t) > sizeof (double))
