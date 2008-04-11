@@ -14,4 +14,7 @@ libc {
     # Helper routines
     __gnu_Unwind_Find_exidx;
   }
+  GLIBC_2.8 {
+    __gnu_mcount_nc;
+  }
 }

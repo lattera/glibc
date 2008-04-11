@@ -1,3 +1,9 @@
+2008-04-11  Paul Brook  <paul@codesourcery.com>
+	    Sandra Loosemore  <sandra@codesourcery.com>
+
+	* sysdeps/arm/eabi/machine-gmon.h: New file.
+	* sysdeps/arm/eabi/Versions: Add __gnu_mcount_nc.
+
 2007-12-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/profil-counter.h: Use the i386 version.
