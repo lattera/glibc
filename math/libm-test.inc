@@ -4300,6 +4300,17 @@ lround_test (void)
 # endif
   TEST_f_l (lround, 2097152.5, 2097153);
   TEST_f_l (lround, -2097152.5, -2097153);
+  /* nextafter(0.5,-1)  */
+  TEST_f_l (lround, 0x1.fffffffffffffp-2, 0);
+  /* nextafter(-0.5,1)  */
+  TEST_f_l (lround, -0x1.fffffffffffffp-2, 0);
+#else
+  /* nextafter(0.5,-1)  */
+  TEST_f_l (lround, 0x1.fffffp-2, 0);
+  /* nextafter(-0.5,1)  */
+  TEST_f_l (lround, -0x1.fffffp-2, 0);
+  TEST_f_l (lround, 0x1.fffffep+23, 16777215);
+  TEST_f_l (lround, -0x1.fffffep+23, -16777215);
 #endif
   END (lround);
 }
@@ -4359,7 +4370,39 @@ llround_test (void)
   TEST_f_L (llround, 4294967295.5, 4294967296LL);
   /* 0x200000000 */
   TEST_f_L (llround, 8589934591.5, 8589934592LL);
+
+  /* nextafter(0.5,-1)  */
+  TEST_f_L (llround, 0x1.fffffffffffffp-2, 0);
+  /* nextafter(-0.5,1)  */
+  TEST_f_L (llround, -0x1.fffffffffffffp-2, 0);
+  /* On PowerPC an exponent of '52' is the largest incrementally
+   * representable sequence of whole-numbers in the 'double' range.  We test
+   * lround to make sure that a guard bit set during the lround operation
+   * hasn't forced an erroneous shift giving us an incorrect result.  The odd
+   * numbers between +-(2^52+1 and 2^53-1) are affected since they have the
+   * rightmost bit set.  */
+  /* +-(2^52+1)  */
+  TEST_f_L (llround, 0x1.0000000000001p+52,4503599627370497LL);
+  TEST_f_L (llround, -0x1.0000000000001p+52,-4503599627370497LL);
+  /* +-(2^53-1): Input is the last (positive and negative) incrementally
+   * representable whole-number in the 'double' range that might round
+   * erroneously.  */
+  TEST_f_L (llround, 0x1.fffffffffffffp+52, 9007199254740991LL);
+  TEST_f_L (llround, -0x1.fffffffffffffp+52, -9007199254740991LL);
+#else
+  /* nextafter(0.5,-1)  */
+  TEST_f_L (llround, 0x1.fffffep-2, 0);
+  /* nextafter(-0.5,1)  */
+  TEST_f_L (llround, -0x1.fffffep-2, 0);
+  /* As above, on PowerPC an exponent of '23' is the largest incrementally
+   * representable sequence of whole-numbers in the 'float' range.
+   * Likewise, numbers between +-(2^23+1 and 2^24-1) are affected.  */
+  TEST_f_L (llround, 0x1.000002p+23,8388609);
+  TEST_f_L (llround, -0x1.000002p+23,-8388609);
+  TEST_f_L (llround, 0x1.fffffep+23, 16777215);
+  TEST_f_L (llround, -0x1.fffffep+23, -16777215);
 #endif
+
 
 #ifdef TEST_LDOUBLE
   /* The input can only be represented in long double.  */

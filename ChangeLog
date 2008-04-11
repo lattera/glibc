@@ -1,3 +1,17 @@
+2007-11-20  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ4997]
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Fixed erroneous
+	result when x is +/-nextafter(+/-0.5,-/+1) i.e. all 1's in the
+	mantissa.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S (__llround):
+	Likewise.  Also account for when x is an odd number between 2^52
+	and 2^53-1.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S (__llroundf): Likewise.
+	* math/libm-test.inc (lround_test, llround_test): Added test cases to
+	detect aforementioned erroneous conditions.
+
 2008-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* configure.in: Check for -fno-section-anchors in addition to

@@ -1,5 +1,5 @@
 /* lround function.  PowerPC32 version.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,10 @@
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
 
-	.section	.rodata.cst8,"aM",@progbits,8
+	.section	.rodata.cst4,"aM",@progbits,4
 	.align	2
-.LC0:	/* 0.0 */
-	.long 0x00000000
-.LC1:	/* 0.5 */
+.LC0:	/* 0.5 */
 	.long 0x3f000000
-
 	.section	".text"
 	
 /* long [r3] lround (float x [fp1])
@@ -37,7 +34,10 @@
    tie, choose the one that is even (least significant bit o).". 
    So we can't use the PowerPC "round to Nearest" mode. Instead we set
    "round toward Zero" mode and round by adding +-0.5 before rounding
-   to the integer value.  */
+   to the integer value.  It is necessary to detect when x is
+   (+-)0x1.fffffffffffffp-2 because adding +-0.5 in this case will
+   cause an erroneous shift, carry and round.  We simply return 0 if
+   0.5 > x > -0.5.  */
 
 ENTRY (__lround)
 	stwu    r1,-16(r1)
@@ -49,40 +49,40 @@ ENTRY (__lround)
 	bcl	20,31,1f
 1:	mflr	r9
 	addis	r9,r9,.LC0-1b@ha
-	addi	r9,r9,.LC0-1b@l
+	lfs	fp10,.LC0-1b@l(r9)
 # else
 	bl	_GLOBAL_OFFSET_TABLE_@local-4
 	mflr	r10
 	lwz	r9,.LC0@got(10)
+	lfs	fp10,0(r9)
 # endif
 	mtlr	r11
 	cfi_same_value (lr)
-	lfs	fp12,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfs	fp12,.LC0@l(r9)
+	lfs	fp10,.LC0@l(r9)
 #endif
-#ifdef SHARED
-	lfs	fp10,.LC1-.LC0(r9)
-#else
-	lis	r9,.LC1@ha
-	lfs	fp10,.LC1@l(r9)
-#endif
-	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
-	ble-	cr6,.L4
-	fadd	fp1,fp1,fp10	/* x+= 0.5;  */
-.L9:
-	fctiwz	fp2,fp1		/* Convert To Integer DW lround toward 0.  */
-	stfd	fp2,8(r1)
+	fabs	fp2, fp1	/* Get the absolute value of x.  */
+	fsub	fp12,fp10,fp10	/* Compute 0.0.  */
+	fcmpu	cr6, fp2, fp10	/* if |x| < 0.5  */
+	fcmpu	cr3, fp1, fp12	/* x is negative? x < 0.0  */
+	blt-	cr6,.Lretzero
+	fadd	fp3,fp2,fp10	/* |x|+=0.5 bias to prepare to round.  */
+	bge	cr3,.Lconvert	/* x is positive so don't negate x.  */
+	fnabs	fp3,fp3		/* -(|x|+=0.5)  */ 
+.Lconvert:
+	fctiwz	fp4,fp3		/* Convert to Integer word lround toward 0.  */
+	stfd	fp4,8(r1)
 	nop	/* Ensure the following load is in a different dispatch  */
 	nop	/* group to avoid pipe stall on POWER4&5.  */
 	nop
-	lwz	r3,12(r1)
+	lwz	r3,12(r1)	/* Load return as integer.  */
+.Lout:
 	addi	r1,r1,16
 	blr
-.L4:
-	fsub	fp1,fp1,fp10	/* x-= 0.5;  */
-	b	.L9
+.Lretzero:			/* when 0.5 > x > -0.5  */
+	li	r3,0		/* return 0.  */
+	b	.Lout
 	END (__lround)
 
 weak_alias (__lround, lround)
