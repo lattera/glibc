@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright 1995-2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -287,6 +287,8 @@ BODY_PREFIX "_dl_start_user:\n"						\
 #define GLINK_INITIAL_ENTRY_WORDS 8
 
 #define PPC_DCBST(where) asm volatile ("dcbst 0,%0" : : "r"(where) : "memory")
+#define PPC_DCBT(where) asm volatile ("dcbt 0,%0" : : "r"(where) : "memory")
+#define PPC_DCBF(where) asm volatile ("dcbf 0,%0" : : "r"(where) : "memory")
 #define PPC_SYNC asm volatile ("sync" : : : "memory")
 #define PPC_ISYNC asm volatile ("sync; isync" : : : "memory")
 #define PPC_ICBI(where) asm volatile ("icbi 0,%0" : : "r"(where) : "memory")
@@ -408,6 +410,11 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
   Elf64_Addr offset = 0;
 
+  PPC_DCBT (&plt->fd_aux);
+  PPC_DCBT (&plt->fd_func);
+  PPC_DCBT (&rel->fd_aux);
+  PPC_DCBT (&rel->fd_func);
+
   /* If sym_map is NULL, it's a weak undefined sym;  Leave the plt zero.  */
   if (sym_map == NULL)
     return 0;
@@ -430,13 +437,12 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
 
   plt->fd_aux = rel->fd_aux + offset;
   plt->fd_toc = rel->fd_toc + offset;
-  PPC_DCBST (&plt->fd_aux);
-  PPC_DCBST (&plt->fd_toc);
-  PPC_SYNC;
+  PPC_DCBF (&plt->fd_toc);
+  PPC_ISYNC;
 
   plt->fd_func = rel->fd_func + offset;
   PPC_DCBST (&plt->fd_func);
-  PPC_SYNC;
+  PPC_ISYNC;
 
   return finaladdr;
 }

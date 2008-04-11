@@ -1,3 +1,11 @@
+2008-01-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5741]
+	* sysdeps/powerpc/powerpc64/dl-machine.h (PPC_DCBT, PPC_DCBF):
+	Define additonal Data Cache Block instruction macros.
+	(elf_machine_fixup_plt): Add dcbt for opd and plt entries.
+	Replace dcbst with dcbf and sync with sync/isync.
+
 2008-02-21  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_type_class):
