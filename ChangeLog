@@ -1,5 +1,8 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/configure.in: Bump minimal kernel
+	version for ppc64 to 2.4.21 since without it makecontext will fail.
+
 	* elf/tls-macros.h [__powerpc64__] (__TLS_GET_ADDR): Define according
 	to the ABI in use.
 	[__powerpc64__] (TLS_LD): Use __TLS_GET_ADDR instead of
