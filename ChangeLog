@@ -1,9 +1,10 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/tls-macros.h (__TLS_GET_ADDR): Define according to the ABI
-	in use.
-	(TLS_LD): Use __TLS_GET_ADDR instead of .__tls_get_addr.
-	(TLS_GD): Likewise.
+	* elf/tls-macros.h [__powerpc64__] (__TLS_GET_ADDR): Define according
+	to the ABI in use.
+	[__powerpc64__] (TLS_LD): Use __TLS_GET_ADDR instead of
+	.__tls_get_addr.
+	[__powerpc64__] (TLS_GD): Likewise.
 
 2007-11-20  Ryan S. Arnold  <rsa@us.ibm.com>
 
