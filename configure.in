@@ -1614,11 +1614,11 @@ EOF
   AC_SUBST(libc_cv_hashstyle)
 fi
 
-AC_CACHE_CHECK(for -fno-toplevel-reorder, libc_cv_fno_toplevel_reorder, [dnl
+AC_CACHE_CHECK(for -fno-toplevel-reorder -fno-section-anchors, libc_cv_fno_toplevel_reorder, [dnl
 cat > conftest.c <<EOF
 int foo;
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder -fno-section-anchors
 			    conftest.c 1>&AS_MESSAGE_LOG_FD])
 then
   libc_cv_fno_toplevel_reorder=yes
@@ -1627,7 +1627,7 @@ else
 fi
 rm -f conftest*])
 if test $libc_cv_fno_toplevel_reorder = yes; then
-  fno_unit_at_a_time=-fno-toplevel-reorder
+  fno_unit_at_a_time="-fno-toplevel-reorder -fno-section-anchors"
 else
   fno_unit_at_a_time=-fno-unit-at-a-time
 fi

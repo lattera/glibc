@@ -5067,7 +5067,7 @@ echo "$as_me: WARNING:
 if test -n "$sysheaders"; then
   SYSINCLUDES=-nostdinc
   for d in include include-fixed; do
-    i=`$CC -print-file-name="$d"` && test "x$i" != "x$d" &&
+    i=`$CC -print-file-name="$d"` && test "x$i" != x && test "x$i" != "x$d" &&
     SYSINCLUDES="$SYSINCLUDES -isystem $i"
   done
   SYSINCLUDES="$SYSINCLUDES \
@@ -6411,15 +6411,15 @@ echo "${ECHO_T}$libc_cv_hashstyle" >&6; }
 
 fi
 
-{ echo "$as_me:$LINENO: checking for -fno-toplevel-reorder" >&5
-echo $ECHO_N "checking for -fno-toplevel-reorder... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking for -fno-toplevel-reorder -fno-section-anchors" >&5
+echo $ECHO_N "checking for -fno-toplevel-reorder -fno-section-anchors... $ECHO_C" >&6; }
 if test "${libc_cv_fno_toplevel_reorder+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
 int foo;
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder -fno-section-anchors
 			    conftest.c 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -6436,7 +6436,7 @@ fi
 { echo "$as_me:$LINENO: result: $libc_cv_fno_toplevel_reorder" >&5
 echo "${ECHO_T}$libc_cv_fno_toplevel_reorder" >&6; }
 if test $libc_cv_fno_toplevel_reorder = yes; then
-  fno_unit_at_a_time=-fno-toplevel-reorder
+  fno_unit_at_a_time="-fno-toplevel-reorder -fno-section-anchors"
 else
   fno_unit_at_a_time=-fno-unit-at-a-time
 fi
