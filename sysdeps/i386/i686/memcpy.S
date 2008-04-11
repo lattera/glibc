@@ -71,10 +71,10 @@ ENTRY (BP_SYM (memcpy))
 1:	pushl	%eax
 	movl	%ecx, %eax
 	shrl	$2, %ecx
+	andl	$3, %eax
 	rep
 	movsl
 	movl	%eax, %ecx
-	andl	$3, %ecx
 	rep
 	movsb
 	popl	%eax

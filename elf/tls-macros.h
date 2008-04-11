@@ -813,12 +813,17 @@ register void *__gp __asm__("$29");
         : "=b" (__result) );  \
       __result;  \
   })
+# ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#  define __TLS_GET_ADDR ".__tls_get_addr"
+# else
+#  define __TLS_GET_ADDR "__tls_get_addr"
+# endif
 /* PowerPC64 Local Dynamic TLS access.  */
 #  define TLS_LD(x) \
   ({  int * __result;  \
       asm (  \
         "  addi  3,2," #x "@got@tlsld\n"  \
-        "  bl    .__tls_get_addr\n"  \
+        "  bl    " __TLS_GET_ADDR "\n"  \
         "  nop   \n"  \
         "  addis %0,3," #x "@dtprel@ha\n"  \
         "  addi  %0,%0," #x "@dtprel@l\n"  \
@@ -834,7 +839,7 @@ register void *__gp __asm__("$29");
   ({  int * __result;  \
       asm (  \
         "  addi  3,2," #x "@got@tlsgd\n"  \
-        "  bl    .__tls_get_addr\n"  \
+        "  bl    " __TLS_GET_ADDR "\n"  \
         "  nop   \n"  \
         "  mr    %0,3\n"  \
         : "=b" (__result) :  \
