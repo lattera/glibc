@@ -1,3 +1,10 @@
+2008-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #5443]
+	* time/era.c: Transform __libc_setlocale_lock into rwlock.
+	* time/alt_digit.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+
 2008-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.8.

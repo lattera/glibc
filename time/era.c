@@ -1,5 +1,5 @@
 /* Helper functions used by strftime/strptime to handle locale-specific "eras".
-   Copyright (C) 1995-2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <string.h>
 
 /* Some of the functions here must not be used while setlocale is called.  */
-__libc_lock_define (extern, __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 #define CURRENT(item)		(current->values[_NL_ITEM_INDEX (item)].string)
 #define CURRENT_WORD(item)	(current->values[_NL_ITEM_INDEX (item)].word)
@@ -45,7 +45,7 @@ _nl_init_era_entries (struct locale_data *current)
   if (CURRENT_WORD (_NL_TIME_ERA_NUM_ENTRIES) == 0)
     return;
 
-  __libc_lock_lock (__libc_setlocale_lock);
+  __libc_rwlock_wrlock (__libc_setlocale_lock);
 
   if (current->private.time == NULL)
     {
@@ -135,7 +135,7 @@ _nl_init_era_entries (struct locale_data *current)
     }
 
  out:
-  __libc_lock_unlock (__libc_setlocale_lock);
+  __libc_rwlock_unlock (__libc_setlocale_lock);
 }
 
 struct era_entry *

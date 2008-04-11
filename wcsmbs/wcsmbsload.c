@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2004,2005,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -145,7 +145,7 @@ __wcsmbs_getfct (const char *to, const char *from, size_t *nstepsp)
 
 
 /* Some of the functions here must not be used while setlocale is called.  */
-__libc_lock_define (extern, __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 /* Load conversion functions for the currently selected locale.  */
 void
@@ -153,7 +153,7 @@ internal_function
 __wcsmbs_load_conv (struct locale_data *new_category)
 {
   /* Acquire the lock.  */
-  __libc_lock_lock (__libc_setlocale_lock);
+  __libc_rwlock_wrlock (__libc_setlocale_lock);
 
   /* We should repeat the test since while we waited some other thread
      might have run this function.  */
@@ -211,7 +211,7 @@ __wcsmbs_load_conv (struct locale_data *new_category)
 	}
     }
 
-  __libc_lock_unlock (__libc_setlocale_lock);
+  __libc_rwlock_unlock (__libc_setlocale_lock);
 }
 
 
