@@ -1,5 +1,8 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/fpu/e_sqrt.c: Avoid call to fetestexcept.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+
 	* scripts/data/localplt-powerpc64-linux-gnu.data: New file.
 
 	* sysdeps/powerpc/fpu/fenv_libc.h: Add libm_hidden_proto for

@@ -1,5 +1,5 @@
 /* Double-precision floating point square root.
-   Copyright (C) 1997, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2003, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,7 +150,9 @@ __slow_ieee754_sqrt (x)
          FE_INVALID_SQRT.  */
 #ifdef FE_INVALID_SQRT
       feraiseexcept (FE_INVALID_SQRT);
-      if (!fetestexcept (FE_INVALID))
+
+      fenv_union_t u = { .fenv = fegetenv_register () };
+      if ((u.l[1] & FE_INVALID) == 0)
 #endif
 	feraiseexcept (FE_INVALID);
       x = a_nan.value;
@@ -172,7 +174,7 @@ __ieee754_sqrt (x)
   /* If the CPU is 64-bit we can use the optional FP instructions.  */
   if (__CPU_HAS_FSQRT)
     {
-      /* Volatile is required to prevent the compiler from moving the 
+      /* Volatile is required to prevent the compiler from moving the
          fsqrt instruction above the branch.  */
       __asm __volatile ("	fsqrt	%0,%1\n"
 				:"=f" (z):"f" (x));
