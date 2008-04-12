@@ -1,5 +1,7 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/data/localplt-powerpc64-linux-gnu.data: New file.
+
 	* sysdeps/powerpc/fpu/fenv_libc.h: Add libm_hidden_proto for
 	__fe_nomask_env.
 	* sysdeps/powerpc/fpu/fe_nomask.c: Add libm_hidden_def.
