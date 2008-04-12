@@ -72,11 +72,11 @@ __NTH (__signbit (double __x))
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[0] < 0;
 }
-#  if defined __powerpc64__ && defined __LONGDOUBLE128
+#  ifdef __LONGDOUBLE128
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
 {
-  __extension__ union { long double __d; long int __i[2]; } __u = { __d: __x };
+  __extension__ union { long double __d; int __i[4]; } __u = { __d: __x };
   return __u.__i[0] < 0;
 }
 #  endif

@@ -1,5 +1,7 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h (__signbitl):
+	Also use for 32-bit.
 	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c (__nearbyintl): Use
 	__nextafter instead of nextafter to avoid local PLT.
 	* sysdeps/powerpc/fpu/e_sqrt.c: Avoid call to fetestexcept.
