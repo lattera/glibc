@@ -4,7 +4,8 @@
 
 	* sysdeps/powerpc/fpu/fenv_libc.h: Add libm_hidden_proto for
 	__fe_nomask_env.
-	* sysdeps/powerpc/fpu/fe_nomask.c: Add libm_hidden_def.
+	* sysdeps/powerpc/fpu/fe_nomask.c: Add libm_hidden_def.  Include
+	<fenv_libc.h> instead of <fenv.h>.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c: Likewise.
 
