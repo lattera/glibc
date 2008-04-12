@@ -34,6 +34,6 @@ static char rcsid[] = "$NetBSD: $";
 	long double x;
 #endif
 {
-	return __ieee754_scalbl(x,(long double) -ilogbl(x));
+	return __ieee754_scalbl(x,(long double) -__ilogbl(x));
 }
 weak_alias (__significandl, significandl)

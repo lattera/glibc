@@ -1,5 +1,5 @@
 /* Quad-precision floating point e^x.
-   Copyright (C) 1999,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999,2004,2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
    Partly based on double-precision code
@@ -148,15 +148,15 @@ __ieee754_expl (long double x)
       fesetround (FE_TONEAREST);
 #endif
 
-      n = roundl(x*M_1_LN2);
+      n = __roundl (x*M_1_LN2);
       x = x-n*M_LN2_0;
       xl = n*M_LN2_1;
 
-      tval1 = roundl(x*TWO8);
+      tval1 = __roundl (x*TWO8);
       x -= __expl_table[T_EXPL_ARG1+2*tval1];
       xl -= __expl_table[T_EXPL_ARG1+2*tval1+1];
 
-      tval2 = roundl(x*TWO15);
+      tval2 = __roundl (x*TWO15);
       x -= __expl_table[T_EXPL_ARG2+2*tval2];
       xl -= __expl_table[T_EXPL_ARG2+2*tval2+1];
 

@@ -1,5 +1,5 @@
 /* Disable floating-point exceptions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@geoffk.org>, 2000.
 
@@ -26,7 +26,7 @@ fedisableexcept (int excepts)
   fenv_union_t fe;
   int result, new;
 
-  result = fegetexcept ();
+  result = __fegetexcept ();
 
   if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID)
     excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
@@ -44,7 +44,7 @@ fedisableexcept (int excepts)
     fe.l[1] &= ~(1 << (31 - FPSCR_VE));
   fesetenv_register (fe.fenv);
 
-  new = fegetexcept ();
+  new = __fegetexcept ();
   if (new == 0 && result != 0)
     (void)__fe_mask_env ();
 

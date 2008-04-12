@@ -4,6 +4,7 @@
 /* Now define the internal interfaces.  */
 
 extern int __feclearexcept (int __excepts);
+extern int __fegetexcept (void);
 extern int __fegetexceptflag (fexcept_t *__flagp, int __excepts);
 extern int __feraiseexcept (int __excepts);
 extern int __fesetexceptflag (__const fexcept_t *__flagp, int __excepts);

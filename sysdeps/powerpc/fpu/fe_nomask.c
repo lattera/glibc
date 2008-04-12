@@ -1,5 +1,5 @@
 /* Procedure definition for FE_NOMASK_ENV.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 #include <errno.h>
 
 /* This is a generic stub. An OS specific override is required to set
@@ -30,4 +30,5 @@ __fe_nomask_env(void)
   __set_errno (ENOSYS);
   return FE_ENABLED_ENV;
 }
+libm_hidden_def (__fe_nomask_env)
 stub_warning (__fe_nomask_env)

@@ -1,5 +1,35 @@
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h: Add libm_hidden_proto for
+	__fe_nomask_env.
+	* sysdeps/powerpc/fpu/fe_nomask.c: Add libm_hidden_def.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c: Likewise.
+
+	* sysdeps/powerpc/bits/fenv.h: Make safe for C++.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h: New file.
+	* sysdeps/powerpc/fpu/fegetexcept.c (__fegetexcept): Rename
+	function from fegetexcept and make old name weak alias.
+	* include/fenv.h: Declare __fegetexcept.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c: Use __fegetexcept instead of
+	fegetexcept.
+	* sysdeps/powerpc/fpu/feenablxcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c (__feraiseexcept): Avoid call
+	to fetestexcept.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Use __frexpl
+	instead of frexpl to avoid local PLT.
+	* math/s_significandl.c (__significandl): Use __ilogbl instead of
+	ilogbl to avoid local PLT.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (__expm1l): Use __ldexpl
+	instead of ldexpl to avoid local PLT.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (__ieee754_expl): Use
+	__roundl not roundl to avoid local PLT.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Use function names which avoid
+	local PLTs.  Use __sincosl instead of separate sinl and cosl
+	calls.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/configure.in: Bump minimal kernel
 	version for ppc64 to 2.4.21 since without it makecontext will fail.
 

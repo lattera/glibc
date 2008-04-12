@@ -22,23 +22,170 @@ if test -n "$sysheaders"; then
 fi
 
 
-echo "$as_me:$LINENO: checking for egrep" >&5
-echo $ECHO_N "checking for egrep... $ECHO_C" >&6
-if test "${ac_cv_prog_egrep+set}" = set; then
+{ echo "$as_me:$LINENO: checking for grep that handles long lines and -e" >&5
+echo $ECHO_N "checking for grep that handles long lines and -e... $ECHO_C" >&6; }
+if test "${ac_cv_path_GREP+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if echo a | (grep -E '(a|b)') >/dev/null 2>&1
-    then ac_cv_prog_egrep='grep -E'
-    else ac_cv_prog_egrep='egrep'
+  # Extract the first word of "grep ggrep" to use in msg output
+if test -z "$GREP"; then
+set dummy grep ggrep; ac_prog_name=$2
+if test "${ac_cv_path_GREP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_path_GREP_found=false
+# Loop through the user's path and test for each of PROGNAME-LIST
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_prog in grep ggrep; do
+  for ac_exec_ext in '' $ac_executable_extensions; do
+    ac_path_GREP="$as_dir/$ac_prog$ac_exec_ext"
+    { test -f "$ac_path_GREP" && $as_test_x "$ac_path_GREP"; } || continue
+    # Check for GNU ac_path_GREP and select it if it is found.
+  # Check for GNU $ac_path_GREP
+case `"$ac_path_GREP" --version 2>&1` in
+*GNU*)
+  ac_cv_path_GREP="$ac_path_GREP" ac_path_GREP_found=:;;
+*)
+  ac_count=0
+  echo $ECHO_N "0123456789$ECHO_C" >"conftest.in"
+  while :
+  do
+    cat "conftest.in" "conftest.in" >"conftest.tmp"
+    mv "conftest.tmp" "conftest.in"
+    cp "conftest.in" "conftest.nl"
+    echo 'GREP' >> "conftest.nl"
+    "$ac_path_GREP" -e 'GREP$' -e '-(cannot match)-' < "conftest.nl" >"conftest.out" 2>/dev/null || break
+    diff "conftest.out" "conftest.nl" >/dev/null 2>&1 || break
+    ac_count=`expr $ac_count + 1`
+    if test $ac_count -gt ${ac_path_GREP_max-0}; then
+      # Best one so far, save it but keep looking for a better one
+      ac_cv_path_GREP="$ac_path_GREP"
+      ac_path_GREP_max=$ac_count
     fi
+    # 10*(2^10) chars as input seems more than enough
+    test $ac_count -gt 10 && break
+  done
+  rm -f conftest.in conftest.tmp conftest.nl conftest.out;;
+esac
+
+
+    $ac_path_GREP_found && break 3
+  done
+done
+
+done
+IFS=$as_save_IFS
+
+
 fi
-echo "$as_me:$LINENO: result: $ac_cv_prog_egrep" >&5
-echo "${ECHO_T}$ac_cv_prog_egrep" >&6
- EGREP=$ac_cv_prog_egrep
+
+GREP="$ac_cv_path_GREP"
+if test -z "$GREP"; then
+  { { echo "$as_me:$LINENO: error: no acceptable $ac_prog_name could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&5
+echo "$as_me: error: no acceptable $ac_prog_name could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+else
+  ac_cv_path_GREP=$GREP
+fi
 
 
-echo "$as_me:$LINENO: checking installed Linux kernel header files" >&5
-echo $ECHO_N "checking installed Linux kernel header files... $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_path_GREP" >&5
+echo "${ECHO_T}$ac_cv_path_GREP" >&6; }
+ GREP="$ac_cv_path_GREP"
+
+
+{ echo "$as_me:$LINENO: checking for egrep" >&5
+echo $ECHO_N "checking for egrep... $ECHO_C" >&6; }
+if test "${ac_cv_path_EGREP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
+   then ac_cv_path_EGREP="$GREP -E"
+   else
+     # Extract the first word of "egrep" to use in msg output
+if test -z "$EGREP"; then
+set dummy egrep; ac_prog_name=$2
+if test "${ac_cv_path_EGREP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_path_EGREP_found=false
+# Loop through the user's path and test for each of PROGNAME-LIST
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_prog in egrep; do
+  for ac_exec_ext in '' $ac_executable_extensions; do
+    ac_path_EGREP="$as_dir/$ac_prog$ac_exec_ext"
+    { test -f "$ac_path_EGREP" && $as_test_x "$ac_path_EGREP"; } || continue
+    # Check for GNU ac_path_EGREP and select it if it is found.
+  # Check for GNU $ac_path_EGREP
+case `"$ac_path_EGREP" --version 2>&1` in
+*GNU*)
+  ac_cv_path_EGREP="$ac_path_EGREP" ac_path_EGREP_found=:;;
+*)
+  ac_count=0
+  echo $ECHO_N "0123456789$ECHO_C" >"conftest.in"
+  while :
+  do
+    cat "conftest.in" "conftest.in" >"conftest.tmp"
+    mv "conftest.tmp" "conftest.in"
+    cp "conftest.in" "conftest.nl"
+    echo 'EGREP' >> "conftest.nl"
+    "$ac_path_EGREP" 'EGREP$' < "conftest.nl" >"conftest.out" 2>/dev/null || break
+    diff "conftest.out" "conftest.nl" >/dev/null 2>&1 || break
+    ac_count=`expr $ac_count + 1`
+    if test $ac_count -gt ${ac_path_EGREP_max-0}; then
+      # Best one so far, save it but keep looking for a better one
+      ac_cv_path_EGREP="$ac_path_EGREP"
+      ac_path_EGREP_max=$ac_count
+    fi
+    # 10*(2^10) chars as input seems more than enough
+    test $ac_count -gt 10 && break
+  done
+  rm -f conftest.in conftest.tmp conftest.nl conftest.out;;
+esac
+
+
+    $ac_path_EGREP_found && break 3
+  done
+done
+
+done
+IFS=$as_save_IFS
+
+
+fi
+
+EGREP="$ac_cv_path_EGREP"
+if test -z "$EGREP"; then
+  { { echo "$as_me:$LINENO: error: no acceptable $ac_prog_name could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&5
+echo "$as_me: error: no acceptable $ac_prog_name could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+else
+  ac_cv_path_EGREP=$EGREP
+fi
+
+
+   fi
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_path_EGREP" >&5
+echo "${ECHO_T}$ac_cv_path_EGREP" >&6; }
+ EGREP="$ac_cv_path_EGREP"
+
+
+{ echo "$as_me:$LINENO: checking installed Linux kernel header files" >&5
+echo $ECHO_N "checking installed Linux kernel header files... $ECHO_C" >&6; }
 if test "${libc_cv_linux2010+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -62,8 +209,8 @@ fi
 rm -f conftest*
 
 fi
-echo "$as_me:$LINENO: result: $libc_cv_linux2010" >&5
-echo "${ECHO_T}$libc_cv_linux2010" >&6
+{ echo "$as_me:$LINENO: result: $libc_cv_linux2010" >&5
+echo "${ECHO_T}$libc_cv_linux2010" >&6; }
 if test "$libc_cv_linux2010" != '2.0.10 or later'; then
   { { echo "$as_me:$LINENO: error: GNU libc requires kernel header files from
 Linux 2.0.10 or later to be installed before configuring.
@@ -120,7 +267,7 @@ case "$machine" in
     arch_minimum_kernel=2.0.10
     ;;
   powerpc/powerpc64)
-    arch_minimum_kernel=2.4.19
+    arch_minimum_kernel=2.4.21
     ;;
   s390/s390-32)
     libc_cv_gcc_unwind_find_fde=yes
@@ -166,8 +313,8 @@ else
 fi
 
 if test -n "$minimum_kernel"; then
-  echo "$as_me:$LINENO: checking for kernel header at least $minimum_kernel" >&5
-echo $ECHO_N "checking for kernel header at least $minimum_kernel... $ECHO_C" >&6
+  { echo "$as_me:$LINENO: checking for kernel header at least $minimum_kernel" >&5
+echo $ECHO_N "checking for kernel header at least $minimum_kernel... $ECHO_C" >&6; }
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat >conftest.$ac_ext <<_ACEOF
@@ -189,8 +336,8 @@ else
 fi
 rm -f conftest*
 
-  echo "$as_me:$LINENO: result: $libc_minimum_kernel" >&5
-echo "${ECHO_T}$libc_minimum_kernel" >&6
+  { echo "$as_me:$LINENO: result: $libc_minimum_kernel" >&5
+echo "${ECHO_T}$libc_minimum_kernel" >&6; }
   if test "$libc_minimum_kernel" = ok; then
     cat >>confdefs.h <<_ACEOF
 #define __LINUX_KERNEL_VERSION $decnum
@@ -333,8 +480,8 @@ if test $host = $build; then
   else
     ac_prefix=$ac_default_prefix
   fi
-  echo "$as_me:$LINENO: checking for symlinks in ${ac_prefix}/include" >&5
-echo $ECHO_N "checking for symlinks in ${ac_prefix}/include... $ECHO_C" >&6
+  { echo "$as_me:$LINENO: checking for symlinks in ${ac_prefix}/include" >&5
+echo $ECHO_N "checking for symlinks in ${ac_prefix}/include... $ECHO_C" >&6; }
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message
@@ -355,8 +502,8 @@ Delete the links and re-run configure, or better still, move the entire
 ${ac_prefix}/include directory out of the way." >&2;}
    { (exit 1); exit 1; }; }
   else
-    echo "$as_me:$LINENO: result: ok" >&5
-echo "${ECHO_T}ok" >&6
+    { echo "$as_me:$LINENO: result: ok" >&5
+echo "${ECHO_T}ok" >&6; }
   fi
 fi
 

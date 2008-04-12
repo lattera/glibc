@@ -1,5 +1,5 @@
 /* Get floating-point exceptions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@geoffk.org>, 2000.
 
@@ -21,13 +21,13 @@
 #include <fenv_libc.h>
 
 int
-fegetexcept (void)
+__fegetexcept (void)
 {
   fenv_union_t fe;
   int result = 0;
 
   fe.fenv = fegetenv_register ();
- 
+
   if (fe.l[1] & (1 << (31 - FPSCR_XE)))
       result |= FE_INEXACT;
   if (fe.l[1] & (1 << (31 - FPSCR_ZE)))
@@ -41,3 +41,4 @@ fegetexcept (void)
 
   return result;
 }
+weak_alias (__fegetexcept, fegetexcept)

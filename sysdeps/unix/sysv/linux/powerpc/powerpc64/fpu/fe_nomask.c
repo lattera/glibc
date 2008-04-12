@@ -1,5 +1,5 @@
 /* Procedure definition for FE_NOMASK_ENV for Linux/ppc64.
-   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 #include <errno.h>
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -41,3 +41,4 @@ __fe_nomask_env (void)
 #endif
   return FE_ENABLED_ENV;
 }
+libm_hidden_def (__fe_nomask_env)

@@ -768,16 +768,15 @@ __ieee754_j0l (long double x)
      = 1/sqrt(2) * (sin(x) - cos(x))
      sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
      cf. Fdlibm.  */
-  c = cosl (xx);
-  s = sinl (xx);
+  __sincosl (xx, &s, &c);
   ss = s - c;
   cc = s + c;
-  z = -cosl (xx + xx);
+  z = -__cosl (xx + xx);
   if ((s * c) < 0)
     cc = z / ss;
   else
     ss = z / cc;
-  z = ONEOSQPI * (p * cc - q * ss) / sqrtl (xx);
+  z = ONEOSQPI * (p * cc - q * ss) / __ieee754_sqrtl (xx);
   return z;
 }
 
@@ -836,7 +835,7 @@ long double
       /* 0 <= x <= 2 */
       z = xx * xx;
       p = neval (z, Y0_2N, NY0_2N) / deval (z, Y0_2D, NY0_2D);
-      p = TWOOPI * logl(x) * __ieee754_j0l(x) + p;
+      p = TWOOPI * __ieee754_logl (x) * __ieee754_j0l (x) + p;
       return p;
     }
 
@@ -908,15 +907,14 @@ long double
      = 1/sqrt(2) * (sin(x) - cos(x))
      sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
      cf. Fdlibm.  */
-  c = cosl (x);
-  s = sinl (x);
+  __sincosl (x, &s, &c);
   ss = s - c;
   cc = s + c;
-  z = -cosl (x + x);
+  z = -__cosl (x + x);
   if ((s * c) < 0)
     cc = z / ss;
   else
     ss = z / cc;
-  z = ONEOSQPI * (p * ss + q * cc) / sqrtl (x);
+  z = ONEOSQPI * (p * ss + q * cc) / __ieee754_sqrtl (x);
   return z;
 }

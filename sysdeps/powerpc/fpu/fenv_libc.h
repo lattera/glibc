@@ -1,5 +1,5 @@
 /* Internal libc stuff for floating point environment routines.
-   Copyright (C) 1997, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #define _FENV_LIBC_H	1
 
 #include <fenv.h>
+
+libm_hidden_proto (__fe_nomask_env)
 
 /* The sticky bits in the FPSCR indicating exceptions have occurred.  */
 #define FPSCR_STICKY_BITS ((FE_ALL_EXCEPT | FE_ALL_INVALID) & ~FE_INVALID)
@@ -137,5 +139,5 @@ enum {
    ({ float f; asm volatile ("fmuls %0,%1,%2" \
 			     : "=f"(f) \
 			     : "f" (x), "f"((float)1.0)); f; })
- 
+
 #endif /* fenv_libc.h */
