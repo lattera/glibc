@@ -1,6 +1,6 @@
 /* Round to int long double floating-point values without raising inexact.
    IBM extended format long double version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,8 +84,8 @@ __nearbyintl (x)
 	    {
 	      /* Else the high double is pre rounded and we need to
 	         adjust for that.  */
-	      
-	      tau = nextafter (u.dd[0], 0.0);
+
+	      tau = __nextafter (u.dd[0], 0.0);
 	      tau = (u.dd[0] - tau) * 2.0;
 	      high = u.dd[0] - tau;
 	      low = u.dd[1] + tau;
@@ -106,7 +106,7 @@ __nearbyintl (x)
 	    {
 	      /* Else the high double is pre rounded and we need to
 	         adjust for that.  */
-	      tau = nextafter (u.dd[0], 0.0);
+	      tau = __nextafter (u.dd[0], 0.0);
 	      tau = (u.dd[0] - tau) * 2.0;
 	      high = u.dd[0] - tau;
 	      low = u.dd[1] + tau;
