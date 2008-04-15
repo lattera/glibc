@@ -155,7 +155,7 @@ __old_sem_wait (sem_t *sem)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (futex, 0,
+      err = lll_futex_wait (&isem->value, 0,
 			    isem->private ^ FUTEX_PRIVATE_FLAG);
 
       /* Disable asynchronous cancellation.  */
