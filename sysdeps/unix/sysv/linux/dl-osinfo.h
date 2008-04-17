@@ -19,6 +19,7 @@
 
 #include <kernel-features.h>
 #include <dl-sysdep.h>
+#include <fcntl.h>
 #include <stdint.h>
 
 #ifndef MIN

@@ -1,3 +1,7 @@
+2008-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include fcntl.h.
+
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h (__signbitl):
