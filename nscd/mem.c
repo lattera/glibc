@@ -1,5 +1,5 @@
 /* Cache memory handling.
-   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -196,6 +196,31 @@ gc (struct database_dyn *db)
 	}
     }
   assert (cnt == db->head->nentries);
+
+  /* Go through the list of in-flight memory blocks.  */
+  struct mem_in_flight *mrunp = mem_in_flight_list;
+  while (mrunp != NULL)
+    {
+      /* NB: There can be no race between this test and another thread
+        setting the field to the index we are looking for because
+        this would require the other thread to also have the memlock
+        for the database.
+
+	NB2: we do not have to look at latter blocks (higher indices) if
+	earlier blocks are not in flight.  They are always allocated in
+	sequence.  */
+      for (enum in_flight idx = IDX_result_data;
+	   idx < IDX_last && mrunp->block[idx].dbidx == db - dbs; ++idx)
+	{
+	 assert ((char *) mrunp->block[idx].blockaddr > db->data);
+	 assert ((char *) mrunp->block[idx].blockaddr
+		 + mrunp->block[0].blocklen <= db->data + db->memsize);
+	 markrange (mark, (char *) mrunp->block[idx].blockaddr -  db->data,
+		    mrunp->block[idx].blocklen);
+	}
+
+      mrunp = mrunp->next;
+    }
 
   /* Sort the entries by the addresses of the referenced data.  All
      the entries pointing to the same DATAHEAD object will have the
@@ -503,7 +528,7 @@ gc (struct database_dyn *db)
 
 
 void *
-mempool_alloc (struct database_dyn *db, size_t len)
+mempool_alloc (struct database_dyn *db, size_t len, enum in_flight idx)
 {
   /* Make sure LEN is a multiple of our maximum alignment so we can
      keep track of used memory is multiples of this alignment value.  */
@@ -567,6 +592,12 @@ mempool_alloc (struct database_dyn *db, size_t len)
       db->head->first_free += len;
 
       db->last_alloc_failed = false;
+
+      /* Remember that we have allocated this memory.  */
+      assert (idx >= 0 && idx < IDX_last);
+      mem_in_flight.block[idx].dbidx = db - dbs;
+      mem_in_flight.block[idx].blocklen = len;
+      mem_in_flight.block[idx].blockaddr = res;
     }
 
   pthread_mutex_unlock (&db->memlock);

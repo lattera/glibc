@@ -1,3 +1,34 @@
+2008-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5209]
+	* sysdeps/unix/sysv/linux/times.c: New file.
+
+	[BZ #5381]
+	* nscd/nscd.h: Define enum in_flight, mem_in_flight, and
+	mem_in_flight_list variables.  Add new parameter to mempool_alloc
+	prototype.
+	* nscd/mem.c (mempool_alloc): Take additional parameter.  Initialize
+	appropriate mem_in_flight element.
+	(gc): Take allocations which have not yet been committed to the
+	database into account.
+	* nscd/cache.c (cache_add): Add new parameter to mempool_alloc call.
+	Reset mem_in_flight before returning.
+	* nscd/connections.c (nscd_run_worker): Initialize mem_in_flight and
+	cue it up in mem_in_flight_list.
+	* nscd/aicache.c: Adjust mempool_alloc call.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/servicescache.c: Likewise.
+	* nscd/Makefile (nscd-flags): Until ld is fixed, use -fpic instead
+	of -fpie.
+
+	* nscd/connections.c (handle_request): Provide better error message
+	in case SELinux forbids the service.
+
+	* version.h (VERSION): Bump to 2.8.90.
+
 2008-04-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include fcntl.h.

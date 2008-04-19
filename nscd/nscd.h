@@ -181,6 +181,31 @@ extern uid_t old_uid;
 extern gid_t old_gid;
 
 
+/* Memory allocation in flight.  Each thread can have a limited number
+   of allocation in flight.  No need to create dynamic data
+   structures.  We use fixed indices.  */
+enum in_flight
+  {
+    IDX_result_data = 0,
+    /* Keep the IDX_record_data entry last at all times.  */
+    IDX_record_data = 1,
+    IDX_last
+  };
+extern __thread struct mem_in_flight
+{
+  struct
+  {
+    int dbidx;
+    nscd_ssize_t blocklen;
+    void *blockaddr;
+  } block[IDX_last];
+
+  struct mem_in_flight *next;
+} mem_in_flight;
+/* Global list of the mem_in_flight variables of all the threads.  */
+extern struct mem_in_flight *mem_in_flight_list;
+
+
 /* Prototypes for global functions.  */
 
 /* nscd.c */
@@ -271,7 +296,8 @@ extern void readdservbyport (struct database_dyn *db, struct hashentry *he,
 			     struct datahead *dh);
 
 /* mem.c */
-extern void *mempool_alloc (struct database_dyn *db, size_t len);
+extern void *mempool_alloc (struct database_dyn *db, size_t len,
+			    enum in_flight idx);
 extern void gc (struct database_dyn *db);
 
 

@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -262,7 +262,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		{
 		  dataset = (struct dataset *) mempool_alloc (db,
 							      total
-							      + req->key_len);
+							      + req->key_len,
+							      IDX_result_data);
 		  if (dataset == NULL)
 		    ++db->head->addfailed;
 		}
@@ -338,7 +339,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		      struct dataset *newp
 			= (struct dataset *) mempool_alloc (db,
 							    total
-							    + req->key_len);
+							    + req->key_len,
+							    IDX_result_data);
 		      if (__builtin_expect (newp != NULL, 1))
 			{
 			  /* Adjust pointer into the memory block.  */
@@ -424,7 +426,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       if (fd != -1)
 	TEMP_FAILURE_RETRY (send (fd, &notfound, total, MSG_NOSIGNAL));
 
-      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
+      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
+			       IDX_result_data);
       /* If we cannot permanently store the result, so be it.  */
       if (dataset != NULL)
 	{

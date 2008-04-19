@@ -1,3 +1,8 @@
+2008-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/UTF-8: Update for Unicode v5.1.
+	* locales/i18n: Update for Unicode 5.
+
 2008-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-langinfo.sh: Adjust for latest fr_FR locale changes.

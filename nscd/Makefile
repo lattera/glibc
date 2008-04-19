@@ -1,4 +1,4 @@
-# Copyright (C) 1998,2000,2002,2003,2004,2005,2006,2007
+# Copyright (C) 1998,2000,2002,2003,2004,2005,2006,2007,2008
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -90,7 +90,8 @@ CFLAGS-nscd_initgroups.c = -fexceptions
 
 nscd-cflags = -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
 ifeq (yesyes,$(have-fpie)$(build-shared))
-nscd-cflags += -fpie
+#nscd-cflags += -fpie
+nscd-cflags += -fpic
 endif
 ifeq (yes,$(have-ssp))
 nscd-cflags += -fstack-protector

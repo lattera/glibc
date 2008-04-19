@@ -225,6 +225,11 @@ static int sock;
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
 
+/* Data structure for recording in-flight memory allocation.  */
+__thread struct mem_in_flight mem_in_flight;
+/* Global list of the mem_in_flight variables of all the threads.  */
+struct mem_in_flight *mem_in_flight_list;
+
 
 ssize_t
 writeall (int fd, const void *buf, size_t len)
@@ -964,7 +969,7 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 
 /* Handle new request.  */
 static void
-handle_request (int fd, request_header *req, void *key, uid_t uid)
+handle_request (int fd, request_header *req, void *key, uid_t uid, pid_t pid)
 {
   if (__builtin_expect (req->version, NSCD_VERSION) != NSCD_VERSION)
     {
@@ -979,7 +984,31 @@ cannot handle old request version %d; current version is %d"),
   if (selinux_enabled && nscd_request_avc_has_perm (fd, req->type) != 0)
     {
       if (debug_level > 0)
-	dbg_log (_("request not handled due to missing permission"));
+	{
+#ifdef SO_PEERCRED
+# ifdef PATH_MAX
+	  char buf[PATH_MAX];
+# else
+	  char buf[4096];
+# endif
+
+	  snprintf (buf, sizeof (buf), "/proc/%ld/exe", (long int) pid);
+	  ssize_t n = readlink (buf, buf, sizeof (buf) - 1);
+
+	  if (n <= 0)
+	    dbg_log (_("\
+request from %ld not handled due to missing permission"), (long int) pid);
+	  else
+	    {
+	      buf[n] = '\0';
+	      dbg_log (_("\
+request from '%s' [%ld] not handled due to missing permission"),
+		       buf, (long int) pid);
+	    }
+#else
+	  dbg_log (_("request not handled due to missing permission"));
+#endif
+	}
       return;
     }
 
@@ -1426,6 +1455,16 @@ nscd_run_worker (void *p)
 {
   char buf[256];
 
+  /* Initialize the memory-in-flight list.  */
+  for (enum in_flight idx = 0; idx < IDX_last; ++idx)
+    mem_in_flight.block[idx].dbidx = -1;
+  /* And queue this threads structure.  */
+  do
+    mem_in_flight.next = mem_in_flight_list;
+  while (atomic_compare_and_exchange_bool_acq (&mem_in_flight_list,
+					       &mem_in_flight,
+					       mem_in_flight.next) != 0);
+
   /* Initial locking.  */
   pthread_mutex_lock (&readylist_lock);
 
@@ -1491,6 +1530,8 @@ nscd_run_worker (void *p)
 	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) == 0)
 	    pid = caller.pid;
 	}
+#else
+      const pid_t pid = 0;
 #endif
 
       /* It should not be possible to crash the nscd with a silly
@@ -1531,7 +1572,7 @@ handle_request: request received (Version = %d)"), req.version);
 	    }
 
 	  /* Phew, we got all the data, now process it.  */
-	  handle_request (fd, &req, keybuf, uid);
+	  handle_request (fd, &req, keybuf, uid, pid);
 	}
 
     close_and_out:

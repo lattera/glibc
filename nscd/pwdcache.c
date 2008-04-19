@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1998-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -120,7 +120,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
 						MSG_NOSIGNAL));
 
-	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
+	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
+				   IDX_result_data);
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (dataset != NULL)
 	    {
@@ -199,7 +200,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 
       if (he == NULL)
 	{
-	  dataset = (struct dataset *) mempool_alloc (db, total + n);
+	  dataset = (struct dataset *) mempool_alloc (db, total + n,
+						      IDX_result_data);
 	  if (dataset == NULL)
 	    ++db->head->addfailed;
 	}
@@ -270,7 +272,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      /* We have to create a new record.  Just allocate
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
-		= (struct dataset *) mempool_alloc (db, total + n);
+		= (struct dataset *) mempool_alloc (db, total + n,
+						    IDX_result_data);
 	      if (newp != NULL)
 		{
 		  /* Adjust pointer into the memory block.  */
