@@ -1,3 +1,7 @@
+2008-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (__res_nopt): Use NS_PUT16 instead of ns_put16.
+
 2008-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5209]

@@ -238,17 +238,13 @@ __res_nopt(res_state statp,
 
 	*cp++ = 0;	/* "." */
 
-	ns_put16(T_OPT, cp);	/* TYPE */
-	cp += INT16SZ;
-	ns_put16(anslen & 0xffff, cp);	/* CLASS = UDP payload size */
-	cp += INT16SZ;
+	NS_PUT16(T_OPT, cp);	/* TYPE */
+	NS_PUT16(anslen & 0xffff, cp);	/* CLASS = UDP payload size */
 	*cp++ = NOERROR;	/* extended RCODE */
 	*cp++ = 0;		/* EDNS version */
 	/* XXX Once we support DNSSEC we change the flag value here.  */
-	ns_put16(flags, cp);
-	cp += INT16SZ;
-	ns_put16(0, cp);	/* RDLEN */
-	cp += INT16SZ;
+	NS_PUT16(flags, cp);
+	NS_PUT16(0, cp);	/* RDLEN */
 	hp->arcount = htons(ntohs(hp->arcount) + 1);
 
 	return cp - buf;
