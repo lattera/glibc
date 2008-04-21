@@ -45,7 +45,6 @@
 #include <sys/mman.h>
 
 #include <linux/version.h>
-#include <asm/page.h>
 #include <sys/sysctl.h>
 
 #define PATH_ARM_SYSTYPE	"/etc/arm_systype"

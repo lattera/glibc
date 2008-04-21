@@ -1,3 +1,7 @@
+2008-04-21  Khem Raj  <kraj@mvista.com>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: Don't include asm/page.h.
+
 2008-04-21  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h (DOCARGS_6,
