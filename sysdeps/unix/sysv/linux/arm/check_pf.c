@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,11 +35,11 @@
 #include <kernel-features.h>
 
 
-#ifndef IFA_F_TEMPORARY
-# define IFA_F_TEMPORARY IFA_F_SECONDARY
-#endif
 #ifndef IFA_F_HOMEADDRESS
 # define IFA_F_HOMEADDRESS 0
+#endif
+#ifndef IFA_F_OPTIMISTIC
+# define IFA_F_OPTIMISTIC 0
 #endif
 
 
@@ -140,89 +140,67 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 	      struct rtattr *rta = IFA_RTA (ifam);
 	      size_t len = nlmh->nlmsg_len - NLMSG_LENGTH (sizeof (*ifam));
 
-	      switch (ifam->ifa_family)
+	      if (ifam->ifa_family != AF_INET
+		  && ifam->ifa_family != AF_INET6)
+		continue;
+
+	      const void *local = NULL;
+	      const void *address = NULL;
+	      while (RTA_OK (rta, len))
 		{
-		  const void *local;
-		  const void *address;
-
-		case AF_INET:
-		  local = NULL;
-		  address = NULL;
-		  while (RTA_OK (rta, len))
+		  switch (rta->rta_type)
 		    {
-		      switch (rta->rta_type)
-			{
-			case IFA_LOCAL:
-			  local = RTA_DATA (rta);
-			  break;
+		    case IFA_LOCAL:
+		      local = RTA_DATA (rta);
+		      break;
 
-			case IFA_ADDRESS:
-			  address = RTA_DATA (rta);
-			  goto out_v4;
-			}
-
-		      rta = RTA_NEXT (rta, len);
+		    case IFA_ADDRESS:
+		      address = RTA_DATA (rta);
+		      goto out;
 		    }
 
-		  if (local != NULL)
+		  rta = RTA_NEXT (rta, len);
+		}
+
+	      if (local != NULL)
+		{
+		  address = local;
+		out:
+		  if (ifam->ifa_family == AF_INET)
 		    {
-		    out_v4:
-		      if (*(const in_addr_t *) (address ?: local)
+		      if (*(const in_addr_t *) address
 			  != htonl (INADDR_LOOPBACK))
 			*seen_ipv4 = true;
 		    }
-		  break;
-
-		case AF_INET6:
-		  local = NULL;
-		  address = NULL;
-		  while (RTA_OK (rta, len))
+		  else
 		    {
-		      switch (rta->rta_type)
-			{
-			case IFA_LOCAL:
-			  local = RTA_DATA (rta);
-			  break;
-
-			case IFA_ADDRESS:
-			  address = RTA_DATA (rta);
-			  goto out_v6;
-			}
-
-		      rta = RTA_NEXT (rta, len);
-		    }
-
-		  if (local != NULL)
-		    {
-		    out_v6:
-		      if (!IN6_IS_ADDR_LOOPBACK (address ?: local))
+		      if (!IN6_IS_ADDR_LOOPBACK (address))
 			*seen_ipv6 = true;
 		    }
-
-		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
-					 | IFA_F_TEMPORARY
-					 | IFA_F_HOMEADDRESS))
-		    {
-		      struct in6ailist *newp = alloca (sizeof (*newp));
-		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
-					   ? in6ai_deprecated : 0)
-					  | ((ifam->ifa_flags
-					      & IFA_F_TEMPORARY)
-					     ? in6ai_temporary : 0)
-					  | ((ifam->ifa_flags
-					      & IFA_F_HOMEADDRESS)
-					     ? in6ai_homeaddress : 0));
-		      memcpy (newp->info.addr, address ?: local,
-			      sizeof (newp->info.addr));
-		      newp->next = in6ailist;
-		      in6ailist = newp;
-		      ++in6ailistlen;
-		    }
-		  break;
-		default:
-		  /* Ignore.  */
-		  break;
 		}
+
+	      struct in6ailist *newp = alloca (sizeof (*newp));
+	      newp->info.flags = (((ifam->ifa_flags
+				    & (IFA_F_DEPRECATED
+				       | IFA_F_OPTIMISTIC))
+				   ? in6ai_deprecated : 0)
+				  | ((ifam->ifa_flags
+				      & IFA_F_HOMEADDRESS)
+				     ? in6ai_homeaddress : 0));
+	      newp->info.prefixlen = ifam->ifa_prefixlen;
+	      newp->info.index = ifam->ifa_index;
+	      if (ifam->ifa_family == AF_INET)
+		{
+		  newp->info.addr[0] = 0;
+		  newp->info.addr[1] = 0;
+		  newp->info.addr[2] = htonl (0xffff);
+		  newp->info.addr[3] = *(const in_addr_t *) address;
+		}
+	      else
+		memcpy (newp->info.addr, address, sizeof (newp->info.addr));
+	      newp->next = in6ailist;
+	      in6ailist = newp;
+	      ++in6ailistlen;
 	    }
 	  else if (nlmh->nlmsg_type == NLMSG_DONE)
 	    /* We found the end, leave the loop.  */
