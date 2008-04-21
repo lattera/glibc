@@ -1,3 +1,7 @@
+2008-04-21  Khem Raj  <kraj@mvista.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/shm.h: New file.
+
 2008-04-11  Paul Brook  <paul@codesourcery.com>
 	    Sandra Loosemore  <sandra@codesourcery.com>
 
