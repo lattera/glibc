@@ -73,6 +73,9 @@
 # define DOCARGS_5	DOCARGS_4
 # define UNDOCARGS_5	UNDOCARGS_4
 
+# define DOCARGS_6	DOCARGS_5
+# define UNDOCARGS_6	UNDOCARGS_5
+
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl PLTJMP(__pthread_enable_asynccancel)
 #  define CDISABLE	bl PLTJMP(__pthread_disable_asynccancel)
