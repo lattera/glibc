@@ -1,3 +1,7 @@
+2008-04-21  Khem Raj  <kraj@mvista.com>
+
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Delete file.
+
 2008-04-02  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Add 
