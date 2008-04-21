@@ -1,3 +1,8 @@
+2008-04-21  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Fix comment describing
+	shmid_ds.
+
 2008-04-04  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Remove
