@@ -27,7 +27,7 @@ __times (struct tms *buf)
   INTERNAL_SYSCALL_DECL (err);
   clock_t ret = INTERNAL_SYSCALL (times, err, 1, buf);
   if (INTERNAL_SYSCALL_ERROR_P (ret, err)
-      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == -EFAULT, 0))
+      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0))
     {
       /* This might be an error or not.  For architectures which have
 	 no separate return value and error indicators we cannot
@@ -48,6 +48,11 @@ __times (struct tms *buf)
       /* If we come here the memory is valid and the kernel did not
 	 return an EFAULT error.  Return the value given by the kernel.  */
     }
+
+  /* Return value (clock_t) -1 signals an error, but if there wasn't any,
+     return the following value.  */
+  if (ret == (clock_t) -1)
+    return (clock_t) 0;
 
   return ret;
 }

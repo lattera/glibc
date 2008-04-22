@@ -90,8 +90,7 @@ CFLAGS-nscd_initgroups.c = -fexceptions
 
 nscd-cflags = -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
 ifeq (yesyes,$(have-fpie)$(build-shared))
-#nscd-cflags += -fpie
-nscd-cflags += -fpic
+nscd-cflags += -fpie
 endif
 ifeq (yes,$(have-ssp))
 nscd-cflags += -fstack-protector

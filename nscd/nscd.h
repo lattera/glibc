@@ -130,7 +130,7 @@ struct database_dyn
 
 
 /* Global variables.  */
-extern struct database_dyn dbs[lastdb];
+extern struct database_dyn dbs[lastdb] attribute_hidden;
 extern const char *const dbnames[lastdb];
 extern const char *const serv2str[LASTREQ];
 
@@ -201,7 +201,7 @@ extern __thread struct mem_in_flight
   } block[IDX_last];
 
   struct mem_in_flight *next;
-} mem_in_flight;
+} mem_in_flight attribute_tls_model_ie;
 /* Global list of the mem_in_flight variables of all the threads.  */
 extern struct mem_in_flight *mem_in_flight_list;
 

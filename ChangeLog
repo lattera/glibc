@@ -1,3 +1,14 @@
+2008-04-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/Makefile (nscd-cflags): Set back to -fpie.
+	* nscd/nscd.h (mem_in_flight): Add attribute_tls_model_ie.
+	* nscd/connections.c (mem_in_flight): Likewise.
+
+	* nscd/nscd.h (dbs): Make hidden.
+
+	* sysdeps/unix/sysv/linux/times.c (__times): Fix check for EFAULT.
+	Avoid returning -1, return 0 instead.
+
 2008-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_mkquery.c (__res_nopt): Use NS_PUT16 instead of ns_put16.

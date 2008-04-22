@@ -226,7 +226,7 @@ static int sock;
 unsigned long int client_queued;
 
 /* Data structure for recording in-flight memory allocation.  */
-__thread struct mem_in_flight mem_in_flight;
+__thread struct mem_in_flight mem_in_flight attribute_tls_model_ie;
 /* Global list of the mem_in_flight variables of all the threads.  */
 struct mem_in_flight *mem_in_flight_list;
 
