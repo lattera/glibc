@@ -54,5 +54,5 @@ semctl (int semid, int semnum, int cmd, ...)
   va_end (ap);
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
-			 CHECK_SEMCTL (&arg, semid, cmd));
+			 CHECK_SEMCTL (&arg, semid, cmd)->array);
 }
