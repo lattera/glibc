@@ -1,3 +1,7 @@
+2008-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-setcontext.c: Include unistd.h.
+
 2008-04-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c (semctl):
