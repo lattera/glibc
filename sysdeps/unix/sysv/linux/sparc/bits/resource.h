@@ -174,8 +174,16 @@ enum __rusage_who
 #define RUSAGE_SELF RUSAGE_SELF
 
   /* All of its terminated child processes.  */
-  RUSAGE_CHILDREN = -1
+  RUSAGE_CHILDREN = -1,
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
+
+#ifdef __USE_GNU
+  /* The calling thread.  */
+  RUSAGE_THREAD = 1
+# define RUSAGE_THREAD RUSAGE_THREAD
+  /* Name for the same functionality on Solaris.  */
+# define RUSAGE_LWP RUSAGE_THREAD
+#endif
 };
 
 #define __need_timeval
