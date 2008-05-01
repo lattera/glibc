@@ -1,3 +1,10 @@
+2008-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define RUSAGE_THREAD and
+	RUSAGE_LWP.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+
 2008-04-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/tst-setcontext.c: Include unistd.h.
