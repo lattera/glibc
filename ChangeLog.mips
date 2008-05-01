@@ -1,3 +1,8 @@
+2008-05-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Define
+	RUSAGE_THREAD and RUSAGE_LWP.
+
 2008-04-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Fix comment describing
