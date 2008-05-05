@@ -24,6 +24,50 @@
 /* These macros are also defined in some <bits/ioctls.h> files (with
    numerically identical values), but this serves to shut up cpp's
    complaining. */
+#if defined __USE_MISC || defined __USE_XOPEN
+
+# ifdef NL0
+#  undef NL0
+# endif
+# ifdef NL1
+#  undef NL1
+# endif
+# ifdef TAB0
+#  undef TAB0
+# endif
+# ifdef TAB1
+#  undef TAB1
+# endif
+# ifdef TAB2
+#  undef TAB2
+# endif
+# ifdef CR0
+#  undef CR0
+# endif
+# ifdef CR1
+#  undef CR1
+# endif
+# ifdef CR2
+#  undef CR2
+# endif
+# ifdef CR3
+#  undef CR3
+# endif
+# ifdef FF0
+#  undef FF0
+# endif
+# ifdef FF1
+#  undef FF1
+# endif
+# ifdef BS0
+#  undef BS0
+# endif
+# ifdef BS1
+#  undef BS1
+# endif
+
+#endif /* __USE_MISC || __USE_XOPEN */
+
 #ifdef __USE_BSD
 
 # ifdef MDMBUF
@@ -93,11 +137,43 @@ struct termios
 #define	OPOST	(1 << 0)	/* Perform output processing.  */
 #ifdef	__USE_BSD
 # define ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
-# define OXTABS	(1 << 2)	/* Expand tabs to spaces.  */
+# define OXTABS	TAB3		/* Expand tabs to spaces.  */
 # define ONOEOT	(1 << 3)	/* Discard EOT (^D) on output.  */
 #endif
+#if defined __USE_BSD || defined __USE_XOPEN
+# define OCRNL	(1 << 4)	/* Map CR to NL.  */
+# define ONOCR	(1 << 5)	/* Discard CR's when on column 0.  */
+# define ONLRET	(1 << 6)	/* Move to column 0 on NL.  */
+#endif
+#if defined __USE_MISC || defined __USE_XOPEN
+# define NLDLY	(3 << 8)	/* NL delay.  */
+# define NL0	(0 << 8)	/* NL type 0.  */
+# define NL1	(1 << 8)	/* NL type 1.  */
+# define TABDLY	(3 << 10)	/* TAB delay.  */
+# define TAB0	(0 << 10)	/* TAB delay type 0.  */
+# define TAB1	(1 << 10)	/* TAB delay type 1.  */
+# define TAB2	(2 << 10)	/* TAB delay type 2.  */
+# define TAB3	(1 << 2)	/* Expand tabs to spaces.  */
+# define CRDLY	(3 << 12)	/* CR delay.  */
+# define CR0	(0 << 12)	/* CR delay type 0.  */
+# define CR1	(1 << 12)	/* CR delay type 1.  */
+# define CR2	(2 << 12)	/* CR delay type 2.  */
+# define CR3	(3 << 12)	/* CR delay type 3.  */
+# define FFDLY	(1 << 14)	/* FF delay.  */
+# define FF0	(0 << 14)	/* FF delay type 0.  */
+# define FF1	(1 << 14)	/* FF delay type 1.  */
+# define BSDLY	(1 << 15)	/* BS delay.  */
+# define BS0	(0 << 15)	/* BS delay type 0.  */
+# define BS1	(1 << 15)	/* BS delay type 1.  */
+# define VTDLY	(1 << 16)	/* VT delay.  */
+# define VT0	(0 << 16)	/* VT delay type 0.  */
+# define VT1	(1 << 16)	/* VT delay type 1.  */
+#endif /* __USE_MISC || __USE_XOPEN */
 #ifdef __USE_GNU
-# define OLCUC	(1 << 9)	/* Translate lower case output to upper case */
+# define OLCUC	(1 << 17)	/* Translate lower case output to upper case */
+#endif
+#ifdef __USE_XOPEN
+# define OFILL	(1 << 18)	/* Send fill characters for delays.  */
 #endif
 
   /* Control modes.  */
@@ -117,10 +193,12 @@ struct termios
 #define	HUPCL	(1 << 14)	/* Hang up on last close.  */
 #define	CLOCAL	(1 << 15)	/* Ignore modem status lines.  */
 #ifdef	__USE_BSD
-# define CCTS_OFLOW	(1 << 16)	/* CTS flow control of output.  */
-# define CRTS_IFLOW	(1 << 17)	/* RTS flow control of input.  */
-# define CRTSCTS	(CCTS_OFLOW|CRTS_IFLOW)	/* CTS/RTS flow control.  */
-# define MDMBUF		(1 << 20)	/* Carrier flow control of output.  */
+# define CRTSCTS	(1 << 16)	/* RTS/CTS flow control.  */
+# define CRTS_IFLOW	CRTSCTS		/* Compatibility.  */
+# define CCTS_OFLOW	CRTSCTS		/* Compatibility.  */
+# define CDTRCTS	(1 << 17)	/* DTR/CTS flow control.  */
+# define MDMBUF		(1 << 20)	/* DTR/DCD flow control.  */
+# define CHWFLOW	(MDMBUF|CRTSCTS|CDTRCTS) /* All types of flow control.  */
 #endif
 
   /* Local modes.  */
@@ -210,13 +288,17 @@ struct termios
 #define	B2400	2400		/* 2400 baud.  */
 #define	B4800	4800		/* 4800 baud.  */
 #define	B9600	9600		/* 9600 baud.  */
+#define	B7200	7200		/* 7200 baud.  */
+#define	B14400	14400		/* 14400 baud.  */
 #define	B19200	19200		/* 19200 baud.  */
+#define	B28800	28800		/* 28800 baud.  */
 #define	B38400	38400		/* 38400 baud.  */
 #ifdef	__USE_MISC
 # define EXTA	19200
 # define EXTB	38400
 #endif
 #define	B57600	57600
+#define	B76800	76800
 #define	B115200	115200
 #define	B230400	230400
 #define	B460800	460800
