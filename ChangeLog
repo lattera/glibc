@@ -1,3 +1,26 @@
+2007-09-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix termios bit macros.
+	Move *DLY definitions where they belong, in termios.h.
+	Add *[0-3] definitions.
+	Fixes confusion between VT and FF.
+	* bits/ioctls.h (NL0, NL1, TAB0, TAB1, TAB2, CR0, CR1, CR2, CR3, FF0,
+	FF1, BS0, BS1): Undefine these at start if they are already defined to
+	avoid collision with termios.h.
+	(NLDLY, TABDLY, TAB3, CRDLY, VTDLY, BSDLY): Remove macros.
+	* bits/termios.h [__USE_MISC || __USE_XOPEN] (NL0, NL1, TAB0,
+	TAB1, TAB2, CR0, CR1, CR2, CR3, FF0, FF1, BS0, BS1): Likewise.
+	[__USE_BSD || __USE_XOPEN] (OCRNL, ONOCR, ONLRET): New macros.
+	[__USE_MISC || __USE_XOPEN] (NLDLY, NL0, NL1, TABDLY, TAB0, TAB1, TAB2,
+	TAB3, CRDLY, CR0, CR1, CR2, CR3, FFDLY, FF0, FF1, BSDLY, BS0, BS1,
+	VTDLY, VT0, VT1): New macros.
+	[__USE_GNU] (OLCUC): Change value of macro.
+	[__USE_XOPEN] (OFILL): New macro.
+	[__USE_BSD] (CRTSCTS): Change value.
+	(CRTS_IFLOW, CCTS_OFLOW): Change into compatibility macros.
+	[__USE_BSD] (CDTRCTS, CHWFLOW): New macros.
+	(B7200, B14400, B28800, B76800): New macros.
+
 2008-05-01  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/ucontext_i.sym: New file.
@@ -7,7 +30,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/setcontext.S: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/swapcontext.S: Likewise.
-	
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Add support for
 	six system call parameters.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
