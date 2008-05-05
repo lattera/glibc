@@ -1,5 +1,13 @@
 2008-05-01  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile [$(subdir) = stdlib]:
+	(gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/swapcontext.S: Likewise.
+	
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Add support for
 	six system call parameters.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.

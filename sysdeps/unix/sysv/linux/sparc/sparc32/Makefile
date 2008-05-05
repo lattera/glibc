@@ -2,6 +2,10 @@ asm-CPPFLAGS = -D__ASSEMBLY__
 ASFLAGS-.os += -fPIC
 LD += -melf32_sparc
 
+ifeq ($(subdir),stdlib)
+gen-as-const-headers += ucontext_i.sym
+endif
+
 # When I get this to work, this is the right thing
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -mcpu=v8
