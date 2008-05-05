@@ -27,6 +27,7 @@ ENTRY(syscall)
 	mov	%o3,%o2
 	mov	%o4,%o3
 	mov	%o5,%o4
+	ldx	[%sp + STACK_BIAS + 176],%o5
 
 	ta	0x6d
 

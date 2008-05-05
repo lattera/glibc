@@ -1,3 +1,9 @@
+2008-05-01  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Add support for
+	six system call parameters.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
+
 2008-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h: Define RUSAGE_THREAD and

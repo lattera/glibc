@@ -27,6 +27,7 @@ ENTRY(syscall)
 	mov	%o3, %o2
 	mov	%o4, %o3
 	mov	%o5, %o4
+	ld	[%sp + 92], %o5
 	ta	0x10
 	bcc	1f
 	 mov	%o7, %g1
