@@ -1,3 +1,8 @@
+2008-05-05  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/Makefile: Use -mcpu=v7 for initfini.s build.
+	* sysdeps/sparc/sparc64/Makefile: Use -mcpu=v9 for initfini.s build.
+
 2007-09-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Fix termios bit macros.
