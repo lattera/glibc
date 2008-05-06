@@ -4,9 +4,9 @@
 	Move *DLY definitions where they belong, in termios.h.
 	Add *[0-3] definitions.
 	Fixes confusion between VT and FF.
-	* bits/ioctls.h (NL0, NL1, TAB0, TAB1, TAB2, CR0, CR1, CR2, CR3, FF0,
-	FF1, BS0, BS1): Undefine these at start if they are already defined to
-	avoid collision with termios.h.
+	* sysdeps/mach/hurd/bits/ioctls.h (NL0, NL1, TAB0, TAB1, TAB2, CR0,
+	CR1, CR2, CR3, FF0, FF1, BS0, BS1): Undefine these at start if they
+	are already defined to avoid collision with termios.h.
 	(NLDLY, TABDLY, TAB3, CRDLY, VTDLY, BSDLY): Remove macros.
 	* bits/termios.h [__USE_MISC || __USE_XOPEN] (NL0, NL1, TAB0,
 	TAB1, TAB2, CR0, CR1, CR2, CR3, FF0, FF1, BS0, BS1): Likewise.

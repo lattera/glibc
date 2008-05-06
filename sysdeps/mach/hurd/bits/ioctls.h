@@ -25,6 +25,46 @@
 
 /* These macros are also defined in <bits/termios.h> (with numerically
    identical values) but this serves to shut up cpp's complaining. */
+
+#ifdef NL0
+# undef NL0
+#endif
+#ifdef NL1
+# undef NL1
+#endif
+#ifdef TAB0
+# undef TAB0
+#endif
+#ifdef TAB1
+# undef TAB1
+#endif
+#ifdef TAB2
+# undef TAB2
+#endif
+#ifdef CR0
+# undef CR0
+#endif
+#ifdef CR1
+# undef CR1
+#endif
+#ifdef CR2
+# undef CR2
+#endif
+#ifdef CR3
+# undef CR3
+#endif
+#ifdef FF0
+# undef FF0
+#endif
+#ifdef FF1
+# undef FF1
+#endif
+#ifdef BS0
+# undef BS0
+#endif
+#ifdef BS1
+# undef BS1
+#endif
 #ifdef MDMBUF
 # undef MDMBUF
 #endif
@@ -284,31 +324,25 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define		ODDP		0x00000040	/* get/send odd parity */
 #define		EVENP		0x00000080	/* get/send even parity */
 #define		ANYP		0x000000c0	/* get any parity/send none */
-#define		NLDLY		0x00000300	/* \n delay */
-#define		NLDELAY		NLDLY		/* traditional BSD name */
+#define		NLDELAY		0x00000300	/* \n delay */
 #define			NL0	0x00000000
 #define			NL1	0x00000100	/* tty 37 */
 #define			NL2	0x00000200	/* vt05 */
 #define			NL3	0x00000300
-#define		TABDLY		0x00000c00	/* horizontal tab delay */
-#define		TBDELAY		TABDLY		/* traditional BSD name */
+#define		TBDELAY		0x00000c00	/* horizontal tab delay */
 #define			TAB0	0x00000000
 #define			TAB1	0x00000400	/* tty 37 */
 #define			TAB2	0x00000800
-#define			TAB3	0x00000c00
 #define		XTABS		0x00000c00	/* expand tabs on output */
-#define		CRDLY		0x00003000	/* \r delay */
-#define		CRDELAY		CRDLY		/* traditional BSD name */
+#define		CRDELAY		0x00003000	/* \r delay */
 #define			CR0	0x00000000
 #define			CR1	0x00001000	/* tn 300 */
 #define			CR2	0x00002000	/* tty 37 */
 #define			CR3	0x00003000	/* concept 100 */
-#define		VTDLY		0x00004000	/* vertical tab delay */
-#define		VTDELAY		VTDLY		/* traditional BSD name */
+#define		VTDELAY		0x00004000	/* vertical tab delay */
 #define			FF0	0x00000000
 #define			FF1	0x00004000	/* tty 37 */
-#define		BSDLY		0x00008000	/* \b delay */
-#define		BSDELAY		BSDLY		/* traditional BSD name */
+#define		BSDELAY		0x00008000	/* \b delay */
 #define			BS0	0x00000000
 #define			BS1	0x00008000
 #define		ALLDELAY	(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
