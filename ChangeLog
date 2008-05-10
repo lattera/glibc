@@ -1,3 +1,15 @@
+2008-05-08  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee751_j0l): Use __finitel.
+	(__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Likewise.
+	(__ieee754_y1l): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Use __ldexpl.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Kill bogus prototypes for
+	frexpl and ldexpl.  math_private.h provides them and the latter
+	is not even used.
+	(__log1pl): Use __frexpl.
+
 2008-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/resolv.h: Adjust __libc_res_nquery and __libc_res_nsend

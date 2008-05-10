@@ -120,13 +120,6 @@ static const long double maxlog = 1.1356523406294143949491931077970764891253E4L;
 static const long double big = 2e4932L;
 static const long double zero = 0.0L;
 
-#if 1
-/* Make sure these are prototyped.  */
-long double frexpl (long double, int *);
-long double ldexpl (long double, int);
-#endif
-
-
 long double
 __log1pl (long double xm1)
 {
@@ -160,7 +153,7 @@ __log1pl (long double xm1)
   /* Separate mantissa from exponent.  */
 
   /* Use frexp used so that denormal numbers will be handled properly.  */
-  x = frexpl (x, &e);
+  x = __frexpl (x, &e);
 
   /* Logarithm using log(x) = z + z^3 P(z^2)/Q(z^2),
      where z = 2(x-1)/x+1).  */
