@@ -31,5 +31,5 @@ truncate64 (path, length)
       __set_errno (EINVAL);
       return -1;
     }
-  return truncate (path, (off_t) length);
+  return __truncate (path, (off_t) length);
 }

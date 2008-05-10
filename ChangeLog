@@ -1,5 +1,7 @@
 2008-05-08  David S. Miller  <davem@davemloft.net>
 
+	* misc/truncate64.c (truncate64): Use __truncate not truncate.
+
 	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee751_j0l): Use __finitel.
 	(__ieee754_y0l): Likewise.
 	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Likewise.
