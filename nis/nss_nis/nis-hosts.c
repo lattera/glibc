@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-2000, 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003, 2006, 2007, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -17,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <nss.h>
 #include <ctype.h>
 /* The following is an ugly trick to avoid a prototype declaration for
@@ -61,9 +63,12 @@ LINE_PARSER
 
    STRING_FIELD (addr, isspace, 1);
 
+   assert (af == AF_INET || af == AF_INET6 || af == AF_UNSPEC);
+
    /* Parse address.  */
-   if (af == AF_INET && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+   if (af != AF_INET6 && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
      {
+       assert ((flags & AI_V4MAPPED) == 0 || af != AF_UNSPEC);
        if (flags & AI_V4MAPPED)
          {
            map_v4v6_address ((char *) entdata->host_addr,
@@ -77,7 +82,7 @@ LINE_PARSER
            result->h_length = INADDRSZ;
          }
      }
-   else if (af == AF_INET6
+   else if (af != AF_INET
             && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
      {
        result->h_addrtype = AF_INET6;
@@ -102,6 +107,7 @@ static bool_t new_start = 1;
 static char *oldkey = NULL;
 static int oldkeylen = 0;
 
+
 enum nss_status
 _nss_nis_sethostent (int stayopen)
 {
@@ -123,6 +129,7 @@ _nss_nis_sethostent (int stayopen)
    even though the prototypes don't match.  The argument of sethostent
    is used so this makes no difference.  */
 strong_alias (_nss_nis_sethostent, _nss_nis_endhostent)
+
 
 /* The calling function always need to get a lock first. */
 static enum nss_status
@@ -216,6 +223,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 		       int *errnop, int *h_errnop)
@@ -232,6 +240,7 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 
   return status;
 }
+
 
 static enum nss_status
 internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
@@ -323,15 +332,23 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *h_errnop)
 {
+  if (af != AF_INET && af != AF_INET6)
+    {
+      *h_errnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
+    }
+
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
 				    h_errnop,
 		        ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
 }
+
 
 enum nss_status
 _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
@@ -350,6 +367,7 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
   return internal_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
 				    errnop, h_errnop, 0);
 }
+
 
 enum nss_status
 _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
@@ -430,13 +448,93 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
   return NSS_STATUS_SUCCESS;
 }
 
-#if 0
+
 enum nss_status
-_nss_nis_getipnodebyname_r (const char *name, int af, int flags,
-			    struct hostent *result, char *buffer,
-			    size_t buflen, int *errnop, int *herrnop)
+_nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
+			   char *buffer, size_t buflen, int *errnop,
+			   int *herrnop, int32_t *ttlp)
 {
-  return internal_gethostbyname2_r (name, af, result, buffer, buflen,
-				    errnop, herrnop, flags);
+  char *domain;
+  if (yp_get_default_domain (&domain))
+    return NSS_STATUS_UNAVAIL;
+
+  /* Convert name to lowercase.  */
+  size_t namlen = strlen (name);
+  char name2[namlen + 1];
+  size_t i;
+
+  for (i = 0; i < namlen; ++i)
+    name2[i] = tolower (name[i]);
+  name2[i] = '\0';
+
+  char *result;
+  int len;
+  int yperr = yp_match (domain, "hosts.byname", name2, namlen, &result, &len);
+
+  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+    {
+      enum nss_status retval = yperr2nss (yperr);
+
+      if (retval == NSS_STATUS_TRYAGAIN)
+	{
+	  *herrnop = TRY_AGAIN;
+	  *errnop = errno;
+	}
+      if (retval == NSS_STATUS_NOTFOUND)
+	*herrnop = HOST_NOT_FOUND;
+      return retval;
+    }
+
+  struct parser_data data;
+  struct hostent host;
+  int parse_res = parse_line (result, &host, &data, buflen, errnop, AF_UNSPEC,
+			      0);
+  if (__builtin_expect (parse_res < 1, 0))
+    {
+      if (parse_res == -1)
+	{
+	  *herrnop = NETDB_INTERNAL;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  *herrnop = HOST_NOT_FOUND;
+	  return NSS_STATUS_NOTFOUND;
+	}
+    }
+
+  if (*pat == NULL)
+    {
+      uintptr_t pad = (-(uintptr_t) buffer
+		       % __alignof__ (struct gaih_addrtuple));
+      buffer += pad;
+      buflen = buflen > pad ? buflen - pad : 0;
+
+      if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple), 0))
+	{
+	erange:
+	  free (result);
+	  *errnop = ERANGE;
+	  *herrnop = NETDB_INTERNAL;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      *pat = (struct gaih_addrtuple *) buffer;
+      buffer += sizeof (struct gaih_addrtuple);
+      buflen -= sizeof (struct gaih_addrtuple);
+    }
+
+  (*pat)->next = NULL;
+  size_t h_name_len = strlen (host.h_name);
+  if (h_name_len >= buflen)
+    goto erange;
+  (*pat)->name = memcpy (buffer, host.h_name, h_name_len + 1);
+  (*pat)->family = host.h_addrtype;
+  memcpy ((*pat)->addr, host.h_addr_list[0], host.h_length);
+  (*pat)->scopeid = 0;
+  assert (host.h_addr_list[1] == NULL);
+
+  free (result);
+
+  return NSS_STATUS_SUCCESS;
 }
-#endif

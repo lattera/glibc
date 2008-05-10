@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2003, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <atomic.h>
 #include <ctype.h>
 #include <errno.h>
@@ -58,15 +59,15 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ ||
-      strcmp(NIS_RES_OBJECT (result)[0].EN_data.en_type, "hosts_tbl") != 0 ||
-      NIS_RES_OBJECT (result)[0].EN_data.en_cols.en_cols_len < 4)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)[0].EN_data.en_type, "hosts_tbl") != 0
+      || NIS_RES_OBJECT (result)[0].EN_data.en_cols.en_cols_len < 4)
     return 0;
 
   char *data = first_unused;
 
-  if (room_left < (af == AF_INET6 || (flags & AI_V4MAPPED) != 0
+  if (room_left < (af != AF_INET || (flags & AI_V4MAPPED) != 0
 		   ? IN6ADDRSZ : INADDRSZ))
     {
     no_more_room:
@@ -75,8 +76,10 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
     }
 
   /* Parse address.  */
-  if (af == AF_INET && inet_pton (af, NISENTRYVAL (0, 2, result), data) > 0)
+  if (af != AF_INET6
+      && inet_pton (AF_INET, NISENTRYVAL (0, 2, result), data) > 0)
     {
+      assert ((flags & AI_V4MAPPED) == 0 || af != AF_UNSPEC);
       if (flags & AI_V4MAPPED)
 	{
 	  map_v4v6_address (data, data);
@@ -89,7 +92,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	  host->h_length = INADDRSZ;
 	}
     }
-  else if (af == AF_INET6
+  else if (af != AF_INET
 	   && inet_pton (AF_INET6, NISENTRYVAL (0, 2, result), data) > 0)
     {
       host->h_addrtype = AF_INET6;
@@ -109,27 +112,33 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   first_unused = __stpncpy (first_unused, NISENTRYVAL (0, 0, result),
 			    NISENTRYLEN (0, 0, result));
   *first_unused++ = '\0';
+
   room_left -= NISENTRYLEN (0, 0, result) + 1;
-
-  /* XXX Rewrite at some point to allocate the array first and then
-     copy the strings.  It wasteful to first concatenate the strings
-     to just split them again later.  */
   char *line = first_unused;
-  for (i = 0; i < NIS_RES_NUMOBJ (result); ++i)
-    {
-      if (strcmp (NISENTRYVAL (i, 1, result), host->h_name) != 0)
-	{
-	  if (NISENTRYLEN (i, 1, result) + 2 > room_left)
-	    goto no_more_room;
 
-	  *first_unused++ = ' ';
-	  first_unused = __stpncpy (first_unused, NISENTRYVAL (i, 1, result),
-				    NISENTRYLEN (i, 1, result));
-	  *first_unused = '\0';
-	  room_left -= NISENTRYLEN (i, 1, result) + 1;
+  /* When this is a call to gethostbyname4_r we do not need the aliases.  */
+  if (af != AF_UNSPEC)
+    {
+      /* XXX Rewrite at some point to allocate the array first and then
+	 copy the strings.  It is wasteful to first concatenate the strings
+	 to just split them again later.  */
+      for (i = 0; i < NIS_RES_NUMOBJ (result); ++i)
+	{
+	  if (strcmp (NISENTRYVAL (i, 1, result), host->h_name) != 0)
+	    {
+	      if (NISENTRYLEN (i, 1, result) + 2 > room_left)
+		goto no_more_room;
+
+	      *first_unused++ = ' ';
+	      first_unused = __stpncpy (first_unused,
+					NISENTRYVAL (i, 1, result),
+					NISENTRYLEN (i, 1, result));
+	      *first_unused = '\0';
+	      room_left -= NISENTRYLEN (i, 1, result) + 1;
+	    }
 	}
+      *first_unused++ = '\0';
     }
-  *first_unused++ = '\0';
 
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
@@ -147,30 +156,34 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   host->h_addr_list[1] = NULL;
   host->h_aliases = &host->h_addr_list[2];
 
-  i = 0;
-  while (*line != '\0')
+  /* When this is a call to gethostbyname4_r we do not need the aliases.  */
+  if (af != AF_UNSPEC)
     {
-      /* Skip leading blanks.  */
-      while (isspace (*line))
-	++line;
+      i = 0;
+      while (*line != '\0')
+	{
+	  /* Skip leading blanks.  */
+	  while (isspace (*line))
+	    ++line;
 
-      if (*line == '\0')
-	break;
+	  if (*line == '\0')
+	    break;
 
-      if (room_left < sizeof (char *))
-	goto no_more_room;
+	  if (room_left < sizeof (char *))
+	    goto no_more_room;
 
-      room_left -= sizeof (char *);
-      host->h_aliases[i++] = line;
+	  room_left -= sizeof (char *);
+	  host->h_aliases[i++] = line;
 
-      while (*line != '\0' && *line != ' ')
-	++line;
+	  while (*line != '\0' && *line != ' ')
+	    ++line;
 
-      if (*line == ' ')
-	*line++ = '\0';
+	  if (*line == ' ')
+	    *line++ = '\0';
+	}
+
+      host->h_aliases[i] = NULL;
     }
-
-  host->h_aliases[i] = NULL;
 
   return 1;
 }
@@ -204,6 +217,7 @@ _nss_create_tablename (int *errnop)
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nisplus_sethostent (int stayopen)
 {
@@ -226,6 +240,7 @@ _nss_nisplus_sethostent (int stayopen)
   return status;
 }
 
+
 enum nss_status
 _nss_nisplus_endhostent (void)
 {
@@ -241,6 +256,7 @@ _nss_nisplus_endhostent (void)
 
   return NSS_STATUS_SUCCESS;
 }
+
 
 static enum nss_status
 internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
@@ -329,6 +345,7 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
   return NSS_STATUS_SUCCESS;
 }
 
+
 enum nss_status
 _nss_nisplus_gethostent_r (struct hostent *result, char *buffer,
 			   size_t buflen, int *errnop, int *herrnop)
@@ -345,26 +362,33 @@ _nss_nisplus_gethostent_r (struct hostent *result, char *buffer,
   return status;
 }
 
+
+static enum nss_status
+get_tablename (int *herrnop)
+{
+  __libc_lock_lock (lock);
+
+  enum nss_status status = _nss_create_tablename (herrnop);
+
+  __libc_lock_unlock (lock);
+
+  if (status != NSS_STATUS_SUCCESS)
+    *herrnop = NETDB_INTERNAL;
+
+  return status;
+}
+
+
 static enum nss_status
 internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *herrnop, int flags)
 {
-  int parse_res, retval;
-
   if (tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
-      enum nss_status status = _nss_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
-
+      enum nss_status status = get_tablename (herrnop);
       if (status != NSS_STATUS_SUCCESS)
-	{
-	  *herrnop = NETDB_INTERNAL;
-	  return NSS_STATUS_UNAVAIL;
-	}
+	return status;
     }
 
   if (name == NULL)
@@ -374,38 +398,35 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return NSS_STATUS_NOTFOUND;
     }
 
-  nis_result *result;
   char buf[strlen (name) + 10 + tablename_len];
   int olderr = errno;
 
   /* Search at first in the alias list, and use the correct name
      for the next search.  */
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
   if (result != NULL)
     {
-      char *bufptr = buf;
-
       /* If we did not find it, try it as original name. But if the
 	 database is correct, we should find it in the first case, too.  */
-      if ((result->status != NIS_SUCCESS
-	   && result->status != NIS_S_SUCCESS)
-	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	  || strcmp (result->objects.objects_val->EN_data.en_type,
-		     "hosts_tbl") != 0
-	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
-	snprintf (buf, sizeof (buf), "[cname=%s],%s", name, tablename_val);
-      else
+      char *bufptr = buf;
+      size_t buflen = sizeof (buf);
+
+      if ((result->status == NIS_SUCCESS || result->status == NIS_S_SUCCESS)
+	  && __type_of (result->objects.objects_val) == NIS_ENTRY_OBJ
+	  && strcmp (result->objects.objects_val->EN_data.en_type,
+		     "hosts_tbl") == 0
+	  && result->objects.objects_val->EN_data.en_cols.en_cols_len >= 3)
 	{
 	  /* We need to allocate a new buffer since there is no
-	     guarantee the returned name has a length limit.  */
-	  const char *entryval = NISENTRYVAL(0, 0, result);
-	  size_t buflen = strlen (entryval) + 10 + tablename_len;
+	     guarantee the returned alias name has a length limit.  */
+	  name = NISENTRYVAL(0, 0, result);
+	  size_t buflen = strlen (name) + 10 + tablename_len;
 	  bufptr = alloca (buflen);
-	  snprintf (bufptr, buflen, "[cname=%s],%s",
-		    entryval, tablename_val);
 	}
+
+      snprintf (bufptr, buflen, "[cname=%s],%s", name, tablename_val);
 
       nis_freeresult (result);
       result = nis_list (bufptr, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
@@ -417,7 +438,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  retval = niserr2nss (result->status);
+  int retval = niserr2nss (result->status);
   if (__builtin_expect (retval != NSS_STATUS_SUCCESS, 0))
     {
       if (retval == NSS_STATUS_TRYAGAIN)
@@ -431,8 +452,8 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       return retval;
     }
 
-  parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
-					  buflen, errnop, flags);
+  int parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
+					      buflen, errnop, flags);
 
   nis_freeresult (result);
 
@@ -450,15 +471,23 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
   return NSS_STATUS_NOTFOUND;
 }
 
+
 enum nss_status
 _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			       char *buffer, size_t buflen, int *errnop,
 			       int *herrnop)
 {
+  if (af != AF_INET && af != AF_INET6)
+    {
+      *herrnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
+    }
+
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
 				    herrnop,
 			 ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
 }
+
 
 enum nss_status
 _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
@@ -480,6 +509,7 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 				   buflen, errnop, h_errnop, 0);
 }
 
+
 enum nss_status
 _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 			      struct hostent *host, char *buffer,
@@ -487,12 +517,7 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 {
   if (tablename_val == NULL)
     {
-      __libc_lock_lock (lock);
-
-      enum nss_status status = _nss_create_tablename (errnop);
-
-      __libc_lock_unlock (lock);
-
+      enum nss_status status = get_tablename (herrnop);
       if (status != NSS_STATUS_SUCCESS)
 	return status;
     }
@@ -546,4 +571,45 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 
   __set_errno (olderr);
   return NSS_STATUS_NOTFOUND;
+}
+
+
+enum nss_status
+_nss_nisplus_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
+			       char *buffer, size_t buflen, int *errnop,
+			       int *herrnop, int32_t *ttlp)
+{
+  struct hostent host;
+
+  enum nss_status status = internal_gethostbyname2_r (name, AF_UNSPEC, &host,
+						      buffer, buflen,
+						      errnop, herrnop, 0);
+  if (__builtin_expect (status == NSS_STATUS_SUCCESS, 1))
+    {
+      if (*pat == NULL)
+	{
+	  uintptr_t pad = (-(uintptr_t) buffer
+			   % __alignof__ (struct gaih_addrtuple));
+	  buffer += pad;
+	  buflen = buflen > pad ? buflen - pad : 0;
+
+	  if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple), 0))
+	    {
+	      free (result);
+	      *errnop = ERANGE;
+	      *herrnop = NETDB_INTERNAL;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	}
+
+      (*pat)->next = NULL;
+      (*pat)->name = host.h_name;
+      (*pat)->family = host.h_addrtype;
+
+      memcpy ((*pat)->addr, host.h_addr_list[0], host.h_length);
+      (*pat)->scopeid = 0;
+      assert (host.h_addr_list[1] == NULL);
+    }
+
+  return status;
 }

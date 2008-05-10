@@ -97,7 +97,7 @@ static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vix
 static int
 __libc_res_nquerydomain(res_state statp, const char *name, const char *domain,
 			int class, int type, u_char *answer, int anslen,
-			u_char **answerp);
+			u_char **answerp, u_char **answerp2, int *nanswerp2);
 
 /*
  * Formulate a normal query, send, and await answer.
@@ -115,15 +115,20 @@ __libc_res_nquery(res_state statp,
 		  int class, int type,	/* class and type of query */
 		  u_char *answer,	/* buffer to put answer */
 		  int anslen,		/* size of answer buffer */
-		  u_char **answerp)	/* if buffer needs to be enlarged */
+		  u_char **answerp,	/* if buffer needs to be enlarged */
+		  u_char **answerp2,
+		  int *nanswerp2)
 {
-	u_char *buf;
 	HEADER *hp = (HEADER *) answer;
 	int n, use_malloc = 0;
         u_int oflags = statp->_flags;
 
-	size_t bufsize = QUERYSIZE;
-	buf = alloca (bufsize);
+	size_t bufsize = (type == T_UNSPEC ? 2 : 1) * QUERYSIZE;
+	u_char *buf = alloca (bufsize);
+	u_char *query1 = buf;
+	int nquery1 = -1;
+	u_char *query2 = NULL;
+	int nquery2 = 0;
 
  again:
 	hp->rcode = NOERROR;	/* default */
@@ -133,18 +138,47 @@ __libc_res_nquery(res_state statp,
 		printf(";; res_query(%s, %d, %d)\n", name, class, type);
 #endif
 
-	n = res_nmkquery(statp, QUERY, name, class, type, NULL, 0, NULL,
-			 buf, bufsize);
-	if (n > 0
-	    && (oflags & RES_F_EDNS0ERR) == 0
-	    && (statp->options & RES_USE_EDNS0) != 0)
-		n = __res_nopt(statp, n, buf, bufsize, anslen);
+	if (type == T_UNSPEC)
+	  {
+	    n = res_nmkquery(statp, QUERY, name, class, T_A, NULL, 0, NULL,
+			     query1, bufsize);
+	    if (n > 0)
+	      {
+		if ((oflags & RES_F_EDNS0ERR) == 0
+		    && (statp->options & RES_USE_EDNS0) != 0)
+		  n = __res_nopt(statp, n, query1, bufsize, anslen / 2);
+
+		nquery1 = n;
+		query2 = buf + nquery1;
+		n = res_nmkquery(statp, QUERY, name, class, T_AAAA, NULL, 0,
+				 NULL, query2, bufsize - n);
+		if (n > 0
+		    && (oflags & RES_F_EDNS0ERR) == 0
+		    && (statp->options & RES_USE_EDNS0) != 0)
+		  n = __res_nopt(statp, n, query2, bufsize - n, anslen / 2);
+		nquery2 = n;
+	      }
+	  }
+	else
+	  {
+	    n = res_nmkquery(statp, QUERY, name, class, type, NULL, 0, NULL,
+			     query1, bufsize);
+
+	    if (n > 0
+		&& (oflags & RES_F_EDNS0ERR) == 0
+		&& (statp->options & RES_USE_EDNS0) != 0)
+	      n = __res_nopt(statp, n, query1, bufsize, anslen);
+
+	    nquery1 = n;
+	  }
+
 	if (__builtin_expect (n <= 0, 0) && !use_malloc) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
-		bufsize = MAXPACKET;
+		bufsize = (type == T_UNSPEC ? 2 : 1) * MAXPACKET;
 		buf = malloc (bufsize);
 		if (buf != NULL) {
+			query1 = buf;
 			use_malloc = 1;
 			goto again;
 		}
@@ -168,7 +202,8 @@ __libc_res_nquery(res_state statp,
 		return (n);
 	}
 	assert (answerp == NULL || (void *) *answerp == (void *) answer);
-	n = __libc_res_nsend(statp, buf, n, answer, anslen, answerp);
+	n = __libc_res_nsend(statp, query1, nquery1, query2, nquery2, answer,
+			     anslen, answerp, answerp2, nanswerp2);
 	if (use_malloc)
 		free (buf);
 	if (n < 0) {
@@ -184,20 +219,37 @@ __libc_res_nquery(res_state statp,
 	  /* __libc_res_nsend might have reallocated the buffer.  */
 	  hp = (HEADER *) *answerp;
 
-	if (hp->rcode != NOERROR || ntohs(hp->ancount) == 0) {
+	/* We simplify the following tests by assigning HP to HP2.  It
+	   is easy to verify that this is the same as ignoring all
+	   tests of HP2.  */
+	HEADER *hp2 = answerp2 ? (HEADER *) *answerp2 : hp;
+
+	if ((hp->rcode != NOERROR || ntohs(hp->ancount) == 0)
+	    && (hp2->rcode != NOERROR || ntohs(hp2->ancount) == 0)) {
 #ifdef DEBUG
-		if (statp->options & RES_DEBUG)
+		if (statp->options & RES_DEBUG) {
 			printf(";; rcode = %d, ancount=%d\n", hp->rcode,
 			    ntohs(hp->ancount));
+			if (hp != hp2)
+			  printf(";; rcode2 = %d, ancount2=%d\n", hp2->rcode,
+				 ntohs(hp2->ancount));
+		}
 #endif
-		switch (hp->rcode) {
+		switch (hp->rcode == NOERROR ? hp2->rcode : hp->rcode) {
 		case NXDOMAIN:
+			if ((hp->rcode == NOERROR && ntohs (hp->ancount) != 0)
+			    || (hp2->rcode == NOERROR
+				&& ntohs (hp2->ancount) != 0))
+				goto success;
 			RES_SET_H_ERRNO(statp, HOST_NOT_FOUND);
 			break;
 		case SERVFAIL:
 			RES_SET_H_ERRNO(statp, TRY_AGAIN);
 			break;
 		case NOERROR:
+			if (ntohs (hp->ancount) != 0
+			    || ntohs (hp2->ancount) != 0)
+				goto success;
 			RES_SET_H_ERRNO(statp, NO_DATA);
 			break;
 		case FORMERR:
@@ -209,6 +261,7 @@ __libc_res_nquery(res_state statp,
 		}
 		return (-1);
 	}
+ success:
 	return (n);
 }
 libresolv_hidden_def (__libc_res_nquery)
@@ -221,7 +274,7 @@ res_nquery(res_state statp,
 	   int anslen)		/* size of answer buffer */
 {
 	return __libc_res_nquery(statp, name, class, type, answer, anslen,
-				 NULL);
+				 NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nquery)
 
@@ -233,11 +286,13 @@ libresolv_hidden_def (res_nquery)
  */
 int
 __libc_res_nsearch(res_state statp,
-	    const char *name,	/* domain name */
-	    int class, int type,	/* class and type of query */
-	    u_char *answer,	/* buffer to put answer */
-	    int anslen,		/* size of answer */
-	    u_char **answerp)
+		   const char *name,	/* domain name */
+		   int class, int type,	/* class and type of query */
+		   u_char *answer,	/* buffer to put answer */
+		   int anslen,		/* size of answer */
+		   u_char **answerp,
+		   u_char **answerp2,
+		   int *nanswerp2)
 {
 	const char *cp, * const *domain;
 	HEADER *hp = (HEADER *) answer;
@@ -260,7 +315,8 @@ __libc_res_nsearch(res_state statp,
 	/* If there aren't any dots, it could be a user-level alias. */
 	if (!dots && (cp = res_hostalias(statp, name, tmp, sizeof tmp))!= NULL)
 		return (__libc_res_nquery(statp, cp, class, type, answer,
-					  anslen, answerp));
+					  anslen, answerp, answerp2,
+					  nanswerp2));
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
@@ -276,7 +332,8 @@ __libc_res_nsearch(res_state statp,
 	saved_herrno = -1;
 	if (dots >= statp->ndots || trailing_dot) {
 		ret = __libc_res_nquerydomain(statp, name, NULL, class, type,
-					      answer, anslen, answerp);
+					      answer, anslen, answerp,
+					      answerp2, nanswerp2);
 		if (ret > 0 || trailing_dot)
 			return (ret);
 		saved_herrno = h_errno;
@@ -285,6 +342,12 @@ __libc_res_nsearch(res_state statp,
 			answer = *answerp;
 			anslen = MAXPACKET;
 		}
+		if (answerp2
+		    && (*answerp2 < answer || *answerp2 >= answer + anslen))
+		  {
+		    free (*answerp2);
+		    *answerp2 = NULL;
+		  }
 	}
 
 	/*
@@ -307,7 +370,8 @@ __libc_res_nsearch(res_state statp,
 
 			ret = __libc_res_nquerydomain(statp, name, *domain,
 						      class, type,
-						      answer, anslen, answerp);
+						      answer, anslen, answerp,
+						      answerp2, nanswerp2);
 			if (ret > 0)
 				return (ret);
 
@@ -315,6 +379,13 @@ __libc_res_nsearch(res_state statp,
 				answer = *answerp;
 				anslen = MAXPACKET;
 			}
+			if (answerp2
+			    && (*answerp2 < answer
+				|| *answerp2 >= answer + anslen))
+			  {
+			    free (*answerp2);
+			    *answerp2 = NULL;
+			  }
 
 			/*
 			 * If no server present, give up.
@@ -368,7 +439,8 @@ __libc_res_nsearch(res_state statp,
 	 */
 	if (dots && !(tried_as_is || root_on_list)) {
 		ret = __libc_res_nquerydomain(statp, name, NULL, class, type,
-					      answer, anslen, answerp);
+					      answer, anslen, answerp,
+					      answerp2, nanswerp2);
 		if (ret > 0)
 			return (ret);
 	}
@@ -380,6 +452,11 @@ __libc_res_nsearch(res_state statp,
 	 * else send back meaningless H_ERRNO, that being the one from
 	 * the last DNSRCH we did.
 	 */
+	if (answerp2 && (*answerp2 < answer || *answerp2 >= answer + anslen))
+	  {
+	    free (*answerp2);
+	    *answerp2 = NULL;
+	  }
 	if (saved_herrno != -1)
 		RES_SET_H_ERRNO(statp, saved_herrno);
 	else if (got_nodata)
@@ -398,7 +475,7 @@ res_nsearch(res_state statp,
 	    int anslen)		/* size of answer */
 {
 	return __libc_res_nsearch(statp, name, class, type, answer,
-				  anslen, NULL);
+				  anslen, NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nsearch)
 
@@ -408,12 +485,14 @@ libresolv_hidden_def (res_nsearch)
  */
 static int
 __libc_res_nquerydomain(res_state statp,
-	    const char *name,
-	    const char *domain,
-	    int class, int type,	/* class and type of query */
-	    u_char *answer,		/* buffer to put answer */
-	    int anslen,			/* size of answer */
-	    u_char **answerp)
+			const char *name,
+			const char *domain,
+			int class, int type,	/* class and type of query */
+			u_char *answer,		/* buffer to put answer */
+			int anslen,			/* size of answer */
+			u_char **answerp,
+			u_char **answerp2,
+			int *nanswerp2)
 {
 	char nbuf[MAXDNAME];
 	const char *longname = nbuf;
@@ -450,7 +529,7 @@ __libc_res_nquerydomain(res_state statp,
 		sprintf(nbuf, "%s.%s", name, domain);
 	}
 	return (__libc_res_nquery(statp, longname, class, type, answer,
-				  anslen, answerp));
+				  anslen, answerp, answerp2, nanswerp2));
 }
 
 int
@@ -462,7 +541,7 @@ res_nquerydomain(res_state statp,
 	    int anslen)		/* size of answer */
 {
 	return __libc_res_nquerydomain(statp, name, domain, class, type,
-				       answer, anslen, NULL);
+				       answer, anslen, NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nquerydomain)
 

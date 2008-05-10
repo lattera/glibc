@@ -1,3 +1,48 @@
+2008-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/resolv.h: Adjust __libc_res_nquery and __libc_res_nsend
+	prototypes.
+	* include/arpa/nameser_compat.h: Define T_UNSPEC.
+	* nis/Versions (libnss_nis): Export _nss_nis_gethostbyname4_r.
+	(libnss_nisplus): Export _nss_nisplus_gethostbyname4_r.
+	* nis/nss_nis/nis-hosts.c (LINE_PARSER): Change to also handle
+	af==AF_UNSPEC.
+	(_nss_nis_gethostbyname4_r): New function.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent):
+	Change to also handle af==AF_UNSPEC.
+	(get_tablename): New function.  Use it to avoid duplication.
+	(_nss_nisplus_gethostbyname4_r): New function.
+	* nscd/aicache.c (addhstaiX): Use gethostbyname4_r function is
+	available.
+	* nss/Versions (libnss_files): Export _nss_files_gethostbyname4_r.
+	* nss/nss.h: Define struct gaih_addrtuple.
+	* nss/nss_files/files-hosts.c (LINE_PARSER): Change to also handle
+	af==AF_UNSPEC.
+	(_nss_files_gethostbyname4_r): New function.
+	* resolv/Versions (libnss_dns): Export _nss_dns_gethostbyname4_r.
+	* resolv/gethnmaddr.c: Adjust __libc_res_nsearch and __libc_res_nquery
+	calls.
+	* resolv/res_query.c (__libc_res_nquery): Take two additional
+	parameters for second answer buffer.  Handle type=T_UNSPEC to mean
+	look up IPv4 and IPv6.
+	Change all callers.
+	* resolv/res_send.c (__libc_res_nsend): Take five aditional parameters
+	for an additional query and answer buffer.  Pass to send_vc and
+	send_dg.
+	(send_vc): Send possibly two requests and receive two answers.
+	(send_dg): Likewise.
+	* resolv/nss_dns/dns-host.c: Adjust calls to __libc_res_nsearch and
+	__libc_res_nquery.
+	(_nss_dns_gethostbyname4_r): New function.
+	(gaih_getanswer_slice): Likewise.
+	(gaih_getanswer): Likewise.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Adjust
+	__libc_res_nquery call.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyaddr_r): Likewise.
+	(_nss_dns_getnetbyname_r): Adjust __libc_res_nsearch call.
+	* sysdeps/posix/getaddrinfo.c: Use gethostbyname4_r function is
+	available.
+
 2008-05-05  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/Makefile: Use -mcpu=v7 for initfini.s build.

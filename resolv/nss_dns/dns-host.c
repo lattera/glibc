@@ -71,6 +71,7 @@
  * --Copyright--
  */
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>
@@ -126,6 +127,14 @@ static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    struct hostent *result, char *buffer,
 				    size_t buflen, int *errnop, int *h_errnop,
 				    int map, int32_t *ttlp, char **canonp);
+
+static enum nss_status gaih_getanswer (const querybuf *answer1, int anslen1,
+				       const querybuf *answer2, int anslen2,
+				       const char *qname,
+				       struct gaih_addrtuple **pat,
+				       char *buffer, size_t buflen,
+				       int *errnop, int *h_errnop,
+				       int32_t *ttlp);
 
 extern enum nss_status _nss_dns_gethostbyname3_r (const char *name, int af,
 						  struct hostent *result,
@@ -186,11 +195,11 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
   host_buffer.buf = orig_host_buffer = (querybuf *) alloca (1024);
 
   n = __libc_res_nsearch (&_res, name, C_IN, type, host_buffer.buf->buf,
-			  1024, &host_buffer.ptr);
+			  1024, &host_buffer.ptr, NULL, NULL);
   if (n < 0)
     {
-      enum nss_status status = (errno == ECONNREFUSED
-				? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
+      status = (errno == ECONNREFUSED
+		? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *h_errnop = h_errno;
       if (h_errno == TRY_AGAIN)
 	*errnop = EAGAIN;
@@ -203,7 +212,8 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
       if (af == AF_INET6 && (_res.options & RES_USE_INET6))
 	n = __libc_res_nsearch (&_res, name, C_IN, T_A, host_buffer.buf->buf,
 				host_buffer.buf != orig_host_buffer
-				? MAXPACKET : 1024, &host_buffer.ptr);
+				? MAXPACKET : 1024, &host_buffer.ptr,
+				NULL, NULL);
 
       if (n < 0)
 	{
@@ -250,6 +260,70 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
   if (status == NSS_STATUS_NOTFOUND)
     status = _nss_dns_gethostbyname3_r (name, AF_INET, result, buffer,
 					buflen, errnop, h_errnop, NULL, NULL);
+
+  return status;
+}
+
+
+enum nss_status
+_nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
+			   char *buffer, size_t buflen, int *errnop,
+			   int *herrnop, int32_t *ttlp)
+{
+  if (__res_maybe_init (&_res, 0) == -1)
+    return NSS_STATUS_UNAVAIL;
+
+  char tmp[NS_MAXDNAME];
+
+  /*
+   * if there aren't any dots, it could be a user-level alias.
+   * this is also done in res_query() since we are not the only
+   * function that looks up host names.
+   */
+  if (strchr (name, '.') == NULL)
+    {
+      const char *cp = res_hostalias (&_res, name, tmp, sizeof (tmp));
+      if (cp != NULL)
+	name = cp;
+    }
+
+  union
+  {
+    querybuf *buf;
+    u_char *ptr;
+  } host_buffer;
+  querybuf *orig_host_buffer;
+  host_buffer.buf = orig_host_buffer = (querybuf *) alloca (2048);
+  u_char *ans2p = NULL;
+  int nans2p = 0;
+
+  int olderr = errno;
+  enum nss_status status;
+  int n = __libc_res_nsearch (&_res, name, C_IN, T_UNSPEC,
+			      host_buffer.buf->buf, 2048, &host_buffer.ptr,
+			      &ans2p, &nans2p);
+  if (n < 0)
+    {
+      status = (errno == ECONNREFUSED
+		? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
+      *herrnop = h_errno;
+      if (h_errno == TRY_AGAIN)
+	*errnop = EAGAIN;
+      else
+	__set_errno (olderr);
+
+      if (host_buffer.buf != orig_host_buffer)
+	free (host_buffer.buf);
+
+      return status;
+    }
+
+  status = gaih_getanswer(host_buffer.buf, n, (const querybuf *) ans2p,
+			  nans2p, name, pat, buffer, buflen,
+			  errnop, herrnop, ttlp);
+
+  if (host_buffer.buf != orig_host_buffer)
+    free (host_buffer.buf);
 
   return status;
 }
@@ -342,7 +416,8 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
 	    qp += sprintf (qp, "%02hhx", uaddr[n]);
 	  strcpy (qp, "].ip6.arpa");
 	  n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR,
-				 host_buffer.buf->buf, 1024, &host_buffer.ptr);
+				 host_buffer.buf->buf, 1024, &host_buffer.ptr,
+				 NULL, NULL);
 	  if (n >= 0)
 	    goto got_it_already;
 	}
@@ -363,13 +438,14 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
     }
 
   n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
-			 1024, &host_buffer.ptr);
+			 1024, &host_buffer.ptr, NULL, NULL);
   if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0)
     {
       strcpy (qp, "ip6.int");
       n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			     host_buffer.buf != orig_host_buffer
-			     ? MAXPACKET : 1024, &host_buffer.ptr);
+			     ? MAXPACKET : 1024, &host_buffer.ptr,
+			     NULL, NULL);
     }
   if (n < 0)
     {
@@ -555,7 +631,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   if (n > 0 && bp[0] == '.')
     bp[0] = '\0';
 
-  if (n < 0 || (*name_ok) (bp) == 0)
+  if (__builtin_expect (n < 0 || ((*name_ok) (bp) == 0 && (errno = EBADMSG)),
+			0))
     {
       *errnop = errno;
       *h_errnop = NO_RECOVERY;
@@ -629,7 +706,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  continue;			/* XXX - had_error++ ? */
 	}
 
-      if ((qtype ==T_A || qtype == T_AAAA) && type == T_CNAME)
+      if ((qtype == T_A || qtype == T_AAAA) && type == T_CNAME)
 	{
 	  if (ap >= &host_data->aliases[MAX_NR_ALIASES - 1])
 	    continue;
@@ -856,4 +933,246 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
      we fail with NOTFOUND instead of TRYAGAIN.  */
   return ((qtype == T_A || qtype == T_AAAA) && ap != host_data->aliases
 	   ? NSS_STATUS_NOTFOUND : NSS_STATUS_TRYAGAIN);
+}
+
+
+static enum nss_status
+gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
+		      struct gaih_addrtuple ***patp,
+		      char **bufferp, size_t *buflenp,
+		      int *errnop, int *h_errnop, int32_t *ttlp, int *firstp)
+{
+  char *buffer = *bufferp;
+  size_t buflen = *buflenp;
+
+  struct gaih_addrtuple **pat = *patp;
+  const HEADER *hp = &answer->hdr;
+  int ancount = ntohs (hp->ancount);
+  int qdcount = ntohs (hp->qdcount);
+  const u_char *cp = answer->buf + HFIXEDSZ;
+  const u_char *end_of_message = answer->buf + anslen;
+  if (__builtin_expect (qdcount != 1, 0))
+    {
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+
+   u_char packtmp[NS_MAXCDNAME];
+  int n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			    packtmp, sizeof packtmp);
+  /* We unpack the name to check it for validity.  But we do not need
+     it later.  */
+  if (n != -1 && __ns_name_ntop (packtmp, buffer, buflen) == -1)
+    {
+      if (__builtin_expect (errno, 0) == EMSGSIZE)
+	{
+	too_small:
+	  *errnop = ERANGE;
+	  *h_errnop = NETDB_INTERNAL;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      n = -1;
+    }
+
+  if (__builtin_expect (n < 0 || (res_hnok (buffer) == 0
+				  && (errno = EBADMSG)), 0))
+    {
+      *errnop = errno;
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  cp += n + QFIXEDSZ;
+
+  int haveanswer = 0;
+  int had_error = 0;
+  char *canon = NULL;
+  char *h_name = NULL;
+  int h_namelen = 0;
+
+  while (ancount-- > 0 && cp < end_of_message && had_error == 0)
+    {
+      n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			    packtmp, sizeof packtmp);
+      if (n != -1 &&
+	  (h_namelen = __ns_name_ntop (packtmp, buffer, buflen)) == -1)
+	{
+	  if (__builtin_expect (errno, 0) == EMSGSIZE)
+	    goto too_small;
+
+	  n = -1;
+	}
+      if (n < 0 || res_hnok (buffer) == 0)
+	{
+	  ++had_error;
+	  continue;
+	}
+      if (*firstp)
+	{
+	  h_name = buffer;
+	  buffer += h_namelen;
+	  buflen -= h_namelen;
+	}
+
+      cp += n;				/* name */
+      int type = ns_get16 (cp);
+      cp += INT16SZ;			/* type */
+      int class = ns_get16 (cp);
+      cp += INT16SZ;			/* class */
+      int32_t ttl = ns_get32 (cp);
+      cp += INT32SZ;			/* TTL */
+      n = ns_get16 (cp);
+      cp += INT16SZ;			/* len */
+
+      if (class != C_IN)
+	{
+	  cp += n;
+	  continue;
+	}
+
+      if (type == T_CNAME)
+	{
+	  char tbuf[MAXDNAME];
+	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
+	  if (n < 0 || res_hnok (tbuf) == 0)
+	    {
+	      ++had_error;
+	      continue;
+	    }
+	  cp += n;
+
+	  if (*firstp)
+	    {
+	      /* Reclaim buffer space.  */
+	      if (h_name + h_namelen == buffer)
+		{
+		  buffer = h_name;
+		  buflen += h_namelen;
+		}
+
+	      n = strlen (tbuf) + 1;
+	      if (__builtin_expect (n > buflen, 0))
+		goto too_small;
+	      if (__builtin_expect (n >= MAXHOSTNAMELEN, 0))
+		{
+		  ++had_error;
+		  continue;
+		}
+
+	      canon = buffer;
+	      buffer = __mempcpy (buffer, tbuf, n);
+	      buflen -= n;
+	      h_namelen = 0;
+	    }
+	  continue;
+	}
+      if (__builtin_expect (type == T_SIG, 0)
+	  || __builtin_expect (type == T_KEY, 0)
+	  || __builtin_expect (type == T_NXT, 0)
+	  || __builtin_expect (type == T_PTR, 0))
+	{
+	  /* We don't support DNSSEC yet.  For now, ignore the record
+	     and send a low priority message to syslog.
+
+	     We also don't expect T_PTR messages.  */
+	  syslog (LOG_DEBUG | LOG_AUTH,
+		  "getaddrinfo*.gaih_getanswer: got type \"%s\"",
+		  p_type (type));
+	  cp += n;
+	  continue;
+	}
+      if (type != T_A && type != T_AAAA)
+	abort ();
+
+      if (*pat == NULL)
+	{
+	  uintptr_t pad = (-(uintptr_t) buffer
+			   % __alignof__ (struct gaih_addrtuple));
+	  buffer += pad;
+	  buflen = buflen > pad ? buflen - pad : 0;
+
+	  if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple),
+				0))
+	    {
+	      *errnop = ERANGE;
+	      *h_errnop = NETDB_INTERNAL;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  *pat = (struct gaih_addrtuple *) buffer;
+	  buffer += sizeof (struct gaih_addrtuple);
+	  buflen -= sizeof (struct gaih_addrtuple);
+	}
+
+      (*pat)->name = NULL;
+      (*pat)->next = NULL;
+
+      if (*firstp)
+	{
+	  if (ttl != 0 && ttlp != NULL)
+	    *ttlp = ttl;
+
+	  if (canon != NULL)
+	    {
+	      (*pat)->name = canon;
+
+	      /* Reclaim buffer space.  */
+	      if (h_name + h_namelen == buffer)
+		{
+		  buffer = h_name;
+		  buflen += h_namelen;
+		}
+	    }
+	  else
+	    (*pat)->name = h_name;
+
+	  *firstp = 0;
+	}
+
+      (*pat)->family = type == T_A ? AF_INET : AF_INET6;
+      memcpy ((*pat)->addr, cp, n);
+      cp += n;
+      (*pat)->scopeid = 0;
+
+      pat = &((*pat)->next);
+
+      haveanswer = 1;
+    }
+
+  if (haveanswer)
+    {
+      *patp = pat;
+      *bufferp = buffer;
+      *buflenp = buflen;
+
+      *h_errnop = NETDB_SUCCESS;
+      return NSS_STATUS_SUCCESS;
+    }
+
+  /* Special case here: if the resolver sent a result but it only
+     contains a CNAME while we are looking for a T_A or T_AAAA record,
+     we fail with NOTFOUND instead of TRYAGAIN.  */
+  return canon == NULL ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
+}
+
+
+static enum nss_status
+gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
+		int anslen2, const char *qname,
+		struct gaih_addrtuple **pat, char *buffer, size_t buflen,
+		int *errnop, int *h_errnop, int32_t *ttlp)
+{
+  int first = 1;
+
+  enum nss_status status = gaih_getanswer_slice(answer1, anslen1, qname,
+						&pat, &buffer, &buflen,
+						errnop, h_errnop, ttlp,
+						&first);
+  if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND)
+      && answer2 != NULL)
+    status = gaih_getanswer_slice(answer2, anslen2, qname,
+				  &pat, &buffer, &buflen,
+				  errnop, h_errnop, ttlp, &first);
+
+  return status;
 }

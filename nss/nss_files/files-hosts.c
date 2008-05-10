@@ -1,6 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996-2001, 2003, 2004, 2006, 2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +55,10 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (af, addr, entdata->host_addr) <= 0)
+   if (inet_pton (af == AF_UNSPEC ? AF_INET : af, addr, entdata->host_addr)
+       > 0)
+     af = af == AF_UNSPEC ? AF_INET : af;
+   else
      {
        if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
 	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
@@ -76,6 +78,9 @@ LINE_PARSER
 	     /* Illegal address: ignore line.  */
 	     return 0;
 	 }
+       else if (af == AF_UNSPEC
+		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+	 af = AF_INET6;
        else
 	 /* Illegal address: ignore line.  */
 	 return 0;
@@ -101,8 +106,6 @@ _nss_files_get##name##_r (proto,					      \
 			  struct STRUCTURE *result, char *buffer,	      \
 			  size_t buflen, int *errnop H_ERRNO_PROTO)	      \
 {									      \
-  enum nss_status status;						      \
-									      \
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct hostent_data);    \
   buffer += pad;							      \
   buflen = buflen > pad ? buflen - pad : 0;				      \
@@ -110,7 +113,7 @@ _nss_files_get##name##_r (proto,					      \
   __libc_lock_lock (lock);						      \
 									      \
   /* Reset file pointer to beginning or open file.  */			      \
-  status = internal_setent (keep_stream);				      \
+  enum nss_status status = internal_setent (keep_stream);		      \
 									      \
   if (status == NSS_STATUS_SUCCESS)					      \
     {									      \
@@ -288,9 +291,9 @@ HOST_DB_LOOKUP (hostbyname, ,,
 		{
 		  LOOKUP_NAME_CASE (h_name, h_aliases)
 		}, const char *name)
-
-
 #undef EXTRA_ARGS_VALUE
+
+
 /* XXX Is using _res to determine whether we want to convert IPv4 addresses
    to IPv6 addresses really the right thing to do?  */
 #define EXTRA_ARGS_VALUE \
@@ -299,8 +302,9 @@ HOST_DB_LOOKUP (hostbyname2, ,,
 		{
 		  LOOKUP_NAME_CASE (h_name, h_aliases)
 		}, const char *name, int af)
-
 #undef EXTRA_ARGS_VALUE
+
+
 /* We only need to consider IPv4 mapped addresses if the input to the
    gethostbyaddr() function is an IPv6 address.  */
 #define EXTRA_ARGS_VALUE \
@@ -311,3 +315,116 @@ DB_LOOKUP (hostbyaddr, ,,
 		 && ! memcmp (addr, result->h_addr_list[0], len))
 	       break;
 	   }, const void *addr, socklen_t len, int af)
+#undef EXTRA_ARGS_VALUE
+
+
+enum nss_status
+_nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
+			     char *buffer, size_t buflen, int *errnop,
+			     int *herrnop, int32_t *ttlp)
+{
+  __libc_lock_lock (lock);
+
+  /* Reset file pointer to beginning or open file.  */
+  enum nss_status status = internal_setent (keep_stream);
+
+  if (status == NSS_STATUS_SUCCESS)
+    {
+      /* Tell getent function that we have repositioned the file pointer.  */
+      last_use = getby;
+
+      bool any = false;
+      bool got_canon = false;
+      while (1)
+	{
+	  /* Align the buffer for the next record.  */
+	  uintptr_t pad = (-(uintptr_t) buffer
+			   % __alignof__ (struct hostent_data));
+	  buffer += pad;
+	  buflen = buflen > pad ? buflen - pad : 0;
+
+	  struct hostent result;
+	  status = internal_getent (&result, buffer, buflen, errnop
+				    H_ERRNO_ARG, AF_UNSPEC, 0);
+	  if (status != NSS_STATUS_SUCCESS)
+	    break;
+
+	  int naliases = 0;
+	  if (__strcasecmp (name, result.h_name) != 0)
+	    {
+	      for (; result.h_aliases[naliases] != NULL; ++naliases)
+		if (! __strcasecmp (name, result.h_aliases[naliases]))
+		  break;
+	      if (result.h_aliases[naliases] == NULL)
+		continue;
+
+	      /* We know this alias exist.  Count it.  */
+	      ++naliases;
+	    }
+
+	  /* Determine how much memory has been used so far.  */
+	  // XXX It is not necessary to preserve the aliases array
+	  while (result.h_aliases[naliases] != NULL)
+	    ++naliases;
+	  char *bufferend = (char *) &result.h_aliases[naliases + 1];
+	  assert (buflen >= bufferend - buffer);
+	  buflen -= bufferend - buffer;
+	  buffer = bufferend;
+
+	  /* We found something.  */
+	  any = true;
+
+	  /* Create the record the caller expects.  There is only one
+	     address.  */
+	  assert (result.h_addr_list[1] == NULL);
+	  if (*pat == NULL)
+	    {
+	      uintptr_t pad = (-(uintptr_t) buffer
+			       % __alignof__ (struct gaih_addrtuple));
+	      buffer += pad;
+	      buflen = buflen > pad ? buflen - pad : 0;
+
+	      if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple),
+				    0))
+		{
+		  *errnop = ERANGE;
+		  *herrnop = NETDB_INTERNAL;
+		  status = NSS_STATUS_TRYAGAIN;
+		  break;
+		}
+
+	      *pat = (struct gaih_addrtuple *) buffer;
+	      buffer += sizeof (struct gaih_addrtuple);
+	      buflen -= sizeof (struct gaih_addrtuple);
+	    }
+
+	  (*pat)->next = NULL;
+	  (*pat)->name = got_canon ? NULL : result.h_name;
+	  got_canon = true;
+	  (*pat)->family = result.h_addrtype;
+	  memcpy ((*pat)->addr, result.h_addr_list[0], result.h_length);
+	  (*pat)->scopeid = 0;
+
+	  pat = &((*pat)->next);
+
+	  /* If we only look for the first matching entry we are done.  */
+	  if ((_res_hconf.flags & HCONF_FLAG_MULTI) == 0)
+	    break;
+	}
+
+      /* If we have to look for multiple records and found one, this
+	 is a success.  */
+      if (status == NSS_STATUS_NOTFOUND && any)
+	{
+	  assert ((_res_hconf.flags & HCONF_FLAG_MULTI) != 0);
+	  status = NSS_STATUS_SUCCESS;
+	}
+
+      if (! keep_stream)
+	internal_endent ();
+    }
+
+  __libc_lock_unlock (lock);
+
+  return status;
+}

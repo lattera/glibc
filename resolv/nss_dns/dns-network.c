@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2007
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -130,7 +130,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
   anslen = __libc_res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
-			       1024, &net_buffer.ptr);
+			       1024, &net_buffer.ptr, NULL, NULL);
   if (anslen < 0)
     {
       /* Nothing found.  */
@@ -206,7 +206,7 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
   anslen = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
-			      1024, &net_buffer.ptr);
+			      1024, &net_buffer.ptr, NULL, NULL);
   if (anslen < 0)
     {
       /* Nothing found.  */

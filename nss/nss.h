@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #define _NSS_H	1
 
 #include <features.h>
+#include <stdint.h>
 
 
 __BEGIN_DECLS
@@ -36,6 +37,17 @@ enum nss_status
   NSS_STATUS_SUCCESS,
   NSS_STATUS_RETURN
 };
+
+
+/* Data structure used for the 'gethostbyname4_r' function.  */
+struct gaih_addrtuple
+  {
+    struct gaih_addrtuple *next;
+    char *name;
+    int family;
+    uint32_t addr[4];
+    uint32_t scopeid;
+  };
 
 
 /* Overwrite service selection for database DBNAME using specification

@@ -95,7 +95,7 @@ libnss_nis {
     _nss_nis_setgrent; _nss_nis_sethostent; _nss_nis_setnetent;
     _nss_nis_setnetgrent; _nss_nis_setprotoent; _nss_nis_setpwent;
     _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
-    _nss_nis_initgroups_dyn;
+    _nss_nis_initgroups_dyn; _nss_nis_gethostbyname4_r;
   }
 }
 
@@ -126,5 +126,6 @@ libnss_nisplus {
     _nss_nisplus_setnetent; _nss_nisplus_setnetgrent; _nss_nisplus_setprotoent;
     _nss_nisplus_setpwent; _nss_nisplus_setrpcent; _nss_nisplus_setservent;
     _nss_nisplus_setspent; _nss_nisplus_initgroups_dyn;
+    _nss_nisplus_gethostbyname4_r;
   }
 }

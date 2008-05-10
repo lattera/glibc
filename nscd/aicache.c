@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <libintl.h>
 #include <netdb.h>
+#include <nss.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -33,6 +34,10 @@
 #endif
 
 
+typedef enum nss_status (*nss_gethostbyname4_r)
+  (const char *name, struct gaih_addrtuple **pat,
+   char *buffer, size_t buflen, int *errnop,
+   int *h_errnop, int32_t *ttlp);
 typedef enum nss_status (*nss_gethostbyname3_r)
   (const char *name, int af, struct hostent *host,
    char *buffer, size_t buflen, int *errnop,
@@ -117,16 +122,104 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 
   while (!no_more)
     {
+      void *cp;
       int status[2] = { NSS_STATUS_UNAVAIL, NSS_STATUS_UNAVAIL };
+      int naddrs = 0;
+      size_t addrslen = 0;
+      size_t canonlen;
 
-      /* Prefer the function which also returns the TTL and canonical name.  */
-      nss_gethostbyname3_r fct = __nss_lookup_function (nip,
-							"gethostbyname3_r");
-      if (fct == NULL)
-	fct = __nss_lookup_function (nip, "gethostbyname2_r");
-
-      if (fct != NULL)
+      nss_gethostbyname4_r fct4 = __nss_lookup_function (nip,
+							 "gethostbyname4_r");
+      if (fct4 != NULL)
 	{
+	  struct gaih_addrtuple *at = NULL;
+	  while (1)
+	    {
+	      rc6 = 0;
+	      status[0] = DL_CALL_FCT (fct4, (key, &at, tmpbuf6, tmpbuf6len,
+					      &rc6, &herrno, &ttl));
+	      if (rc6 != ERANGE || herrno != NETDB_INTERNAL)
+		break;
+	      tmpbuf6 = extend_alloca (tmpbuf6, tmpbuf6len, 2 * tmpbuf6len);
+	    }
+
+	  if (rc6 != 0 && herrno == NETDB_INTERNAL)
+	    goto out;
+
+	  if (status[0] != NSS_STATUS_SUCCESS)
+	    goto next_nip;
+
+	  /* We found the data.  Count the addresses and the size.  */
+	  for (struct gaih_addrtuple *at2 = at; at2 != NULL; at2 = at2->next)
+	    {
+	      ++naddrs;
+	      /* We handle unknown types here the best we can: assume
+		 the maximum size for the address.  */
+	      if (at2->family == AF_INET)
+		addrslen += INADDRSZ;
+	      else if (at2->family == AF_INET6
+		       && IN6ADDRSZ != sizeof (at2->addr))
+		addrslen += IN6ADDRSZ;
+	      else
+		addrslen += sizeof (at2->addr);
+	    }
+	  canon = at->name;
+	  canonlen = strlen (canon) + 1;
+
+	  total = sizeof (*dataset) + naddrs + addrslen + canonlen;
+
+	  /* Now we can allocate the data structure.  If the TTL of the
+	     entry is reported as zero do not cache the entry at all.  */
+	  if (ttl != 0 && he == NULL)
+	    {
+	      dataset = (struct dataset *) mempool_alloc (db, total
+							  + req->key_len,
+							  IDX_result_data);
+	      if (dataset == NULL)
+		++db->head->addfailed;
+	    }
+
+	  if (dataset == NULL)
+	    {
+	      /* We cannot permanently add the result in the moment.  But
+		 we can provide the result as is.  Store the data in some
+		 temporary memory.  */
+	      dataset = (struct dataset *) alloca (total + req->key_len);
+
+	      /* We cannot add this record to the permanent database.  */
+	      alloca_used = true;
+	    }
+
+	  /* Fill in the address and address families.  */
+	  char *addrs = (char *) (&dataset->resp + 1);
+	  uint8_t *family = (uint8_t *) (addrs + addrslen);
+
+	  for (struct gaih_addrtuple *at2 = at; at2 != NULL; at2 = at2->next)
+	    {
+	      *family++ = at2->family;
+	      if (at2->family == AF_INET)
+		addrs = mempcpy (addrs, at2->addr, INADDRSZ);
+	      else if (at2->family == AF_INET6
+		       && IN6ADDRSZ != sizeof (at2->addr))
+		addrs = mempcpy (addrs, at2->addr, IN6ADDRSZ);
+	      else
+		addrs = mempcpy (addrs, at2->addr, sizeof (at2->addr));
+	    }
+
+	  cp = family;
+	}
+      else
+	{
+	  /* Prefer the function which also returns the TTL and
+	     canonical name.  */
+	  nss_gethostbyname3_r fct = __nss_lookup_function (nip,
+							    "gethostbyname3_r");
+	  if (fct == NULL)
+	    fct = __nss_lookup_function (nip, "gethostbyname2_r");
+
+	  if (fct == NULL)
+	    goto next_nip;
+
 	  struct hostent th[2];
 
 	  /* Collect IPv6 information first.  */
@@ -134,8 +227,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      rc6 = 0;
 	      status[0] = DL_CALL_FCT (fct, (key, AF_INET6, &th[0], tmpbuf6,
-					     tmpbuf6len, &rc6, &herrno,
-					     &ttl, &canon));
+					     tmpbuf6len, &rc6, &herrno, &ttl,
+					     &canon));
 	      if (rc6 != ERANGE || herrno != NETDB_INTERNAL)
 		break;
 	      tmpbuf6 = extend_alloca (tmpbuf6, tmpbuf6len, 2 * tmpbuf6len);
@@ -173,231 +266,226 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  if (rc4 != 0 && herrno == NETDB_INTERNAL)
 	    goto out;
 
-	  if (status[0] == NSS_STATUS_SUCCESS
-	      || status[1] == NSS_STATUS_SUCCESS)
+	  if (status[0] != NSS_STATUS_SUCCESS
+	      && status[1] != NSS_STATUS_SUCCESS)
+	    goto next_nip;
+
+	  /* We found the data.  Count the addresses and the size.  */
+	  for (int j = 0; j < 2; ++j)
+	    if (status[j] == NSS_STATUS_SUCCESS)
+	      for (int i = 0; th[j].h_addr_list[i] != NULL; ++i)
+		{
+		  ++naddrs;
+		  addrslen += th[j].h_length;
+		}
+
+	  if (canon == NULL)
 	    {
-	      /* We found the data.  Count the addresses and the size.  */
-	      int naddrs = 0;
-	      size_t addrslen = 0;
-	      for (int j = 0; j < 2; ++j)
-		if (status[j] == NSS_STATUS_SUCCESS)
-		  for (int i = 0; th[j].h_addr_list[i] != NULL; ++i)
-		    {
-		      ++naddrs;
-		      addrslen += th[j].h_length;
-		    }
-
-	      if (canon == NULL)
+	      /* Determine the canonical name.  */
+	      nss_getcanonname_r cfct;
+	      cfct = __nss_lookup_function (nip, "getcanonname_r");
+	      if (cfct != NULL)
 		{
-		  /* Determine the canonical name.  */
-		  nss_getcanonname_r cfct;
-		  cfct = __nss_lookup_function (nip, "getcanonname_r");
-		  if (cfct != NULL)
-		    {
-		      const size_t max_fqdn_len = 256;
-		      char *buf = alloca (max_fqdn_len);
-		      char *s;
-		      int rc;
+		  const size_t max_fqdn_len = 256;
+		  char *buf = alloca (max_fqdn_len);
+		  char *s;
+		  int rc;
 
-		      if (DL_CALL_FCT (cfct, (key, buf, max_fqdn_len, &s, &rc,
-					      &herrno)) == NSS_STATUS_SUCCESS)
-			canon = s;
-		      else
-			/* Set to name now to avoid using gethostbyaddr.  */
-			canon = key;
-		    }
+		  if (DL_CALL_FCT (cfct, (key, buf, max_fqdn_len, &s,
+					  &rc, &herrno))
+		      == NSS_STATUS_SUCCESS)
+		    canon = s;
 		  else
-		    {
-		      struct hostent *he = NULL;
-		      int herrno;
-		      struct hostent he_mem;
-		      void *addr;
-		      size_t addrlen;
-		      int addrfamily;
-
-		      if (status[1] == NSS_STATUS_SUCCESS)
-			{
-			  addr = th[1].h_addr_list[0];
-			  addrlen = sizeof (struct in_addr);
-			  addrfamily = AF_INET;
-			}
-		      else
-			{
-			  addr = th[0].h_addr_list[0];
-			  addrlen = sizeof (struct in6_addr);
-			  addrfamily = AF_INET6;
-			}
-
-		      size_t tmpbuflen = 512;
-		      char *tmpbuf = alloca (tmpbuflen);
-		      int rc;
-		      while (1)
-			{
-			  rc = __gethostbyaddr2_r (addr, addrlen, addrfamily,
-						   &he_mem, tmpbuf, tmpbuflen,
-						   &he, &herrno, NULL);
-			  if (rc != ERANGE || herrno != NETDB_INTERNAL)
-			    break;
-			  tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
-						  tmpbuflen * 2);
-			}
-
-		      if (rc == 0)
-			{
-			  if (he != NULL)
-			    canon = he->h_name;
-			  else
-			    canon = key;
-			}
-		    }
-		}
-	      size_t canonlen = canon == NULL ? 0 : (strlen (canon) + 1);
-
-	      total = sizeof (*dataset) + naddrs + addrslen + canonlen;
-
-	      /* Now we can allocate the data structure.  If the TTL
-		 of the entry is reported as zero do not cache the
-		 entry at all.  */
-	      if (ttl != 0 && he == NULL)
-		{
-		  dataset = (struct dataset *) mempool_alloc (db,
-							      total
-							      + req->key_len,
-							      IDX_result_data);
-		  if (dataset == NULL)
-		    ++db->head->addfailed;
-		}
-
-	      if (dataset == NULL)
-		{
-		  /* We cannot permanently add the result in the moment.  But
-		     we can provide the result as is.  Store the data in some
-		     temporary memory.  */
-		  dataset = (struct dataset *) alloca (total + req->key_len);
-
-		  /* We cannot add this record to the permanent database.  */
-		  alloca_used = true;
-		}
-
-	      dataset->head.allocsize = total + req->key_len;
-	      dataset->head.recsize = total - offsetof (struct dataset, resp);
-	      dataset->head.notfound = false;
-	      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
-	      dataset->head.usable = true;
-
-	      /* Compute the timeout time.  */
-	      dataset->head.timeout = time (NULL) + (ttl == INT32_MAX
-						     ? db->postimeout : ttl);
-
-	      dataset->resp.version = NSCD_VERSION;
-	      dataset->resp.found = 1;
-	      dataset->resp.naddrs = naddrs;
-	      dataset->resp.addrslen = addrslen;
-	      dataset->resp.canonlen = canonlen;
-	      dataset->resp.error = NETDB_SUCCESS;
-
-	      char *addrs = (char *) (&dataset->resp + 1);
-	      uint8_t *family = (uint8_t *) (addrs + addrslen);
-
-	      for (int j = 0; j < 2; ++j)
-		if (status[j] == NSS_STATUS_SUCCESS)
-		  for (int i = 0; th[j].h_addr_list[i] != NULL; ++i)
-		    {
-		      addrs = mempcpy (addrs, th[j].h_addr_list[i],
-				       th[j].h_length);
-		      *family++ = th[j].h_addrtype;
-		    }
-
-	      void *cp = family;
-	      if (canon != NULL)
-		cp = mempcpy (cp, canon, canonlen);
-
-	      key_copy = memcpy (cp, key, req->key_len);
-
-	      /* Now we can determine whether on refill we have to
-		 create a new record or not.  */
-	      if (he != NULL)
-		{
-		  assert (fd == -1);
-
-		  if (total + req->key_len == dh->allocsize
-		      && total - offsetof (struct dataset, resp) == dh->recsize
-		      && memcmp (&dataset->resp, dh->data,
-				 dh->allocsize
-				 - offsetof (struct dataset, resp)) == 0)
-		    {
-		      /* The data has not changed.  We will just bump the
-			 timeout value.  Note that the new record has been
-			 allocated on the stack and need not be freed.  */
-		      dh->timeout = dataset->head.timeout;
-		      ++dh->nreloads;
-		    }
-		  else
-		    {
-		      /* We have to create a new record.  Just allocate
-			 appropriate memory and copy it.  */
-		      struct dataset *newp
-			= (struct dataset *) mempool_alloc (db,
-							    total
-							    + req->key_len,
-							    IDX_result_data);
-		      if (__builtin_expect (newp != NULL, 1))
-			{
-			  /* Adjust pointer into the memory block.  */
-			  key_copy = (char *) newp + (key_copy
-						      - (char *) dataset);
-
-			  dataset = memcpy (newp, dataset,
-					    total + req->key_len);
-			  alloca_used = false;
-			}
-		      else
-			++db->head->addfailed;
-
-		      /* Mark the old record as obsolete.  */
-		      dh->usable = false;
-		    }
+		    /* Set to name now to avoid using gethostbyaddr.  */
+		    canon = key;
 		}
 	      else
 		{
-		  /* We write the dataset before inserting it to the
-		     database since while inserting this thread might
-		     block and so would unnecessarily let the receiver
-		     wait.  */
-		  assert (fd != -1);
+		  struct hostent *he = NULL;
+		  int herrno;
+		  struct hostent he_mem;
+		  void *addr;
+		  size_t addrlen;
+		  int addrfamily;
 
-#ifdef HAVE_SENDFILE
-		  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
+		  if (status[1] == NSS_STATUS_SUCCESS)
 		    {
-		      assert (db->wr_fd != -1);
-		      assert ((char *) &dataset->resp > (char *) db->data);
-		      assert ((char *) &dataset->resp - (char *) db->head
-			      + total
-			      <= (sizeof (struct database_pers_head)
-				  + db->head->module * sizeof (ref_t)
-				  + db->head->data_size));
-		      ssize_t written;
-		      written = sendfileall (fd, db->wr_fd,
-					     (char *) &dataset->resp
-					     - (char *) db->head, total);
-# ifndef __ASSUME_SENDFILE
-		      if (written == -1 && errno == ENOSYS)
-			goto use_write;
-# endif
+		      addr = th[1].h_addr_list[0];
+		      addrlen = sizeof (struct in_addr);
+		      addrfamily = AF_INET;
 		    }
 		  else
-# ifndef __ASSUME_SENDFILE
-		  use_write:
-# endif
-#endif
-		    writeall (fd, &dataset->resp, total);
-		}
+		    {
+		      addr = th[0].h_addr_list[0];
+		      addrlen = sizeof (struct in6_addr);
+		      addrfamily = AF_INET6;
+		    }
 
-	      goto out;
+		  size_t tmpbuflen = 512;
+		  char *tmpbuf = alloca (tmpbuflen);
+		  int rc;
+		  while (1)
+		    {
+		      rc = __gethostbyaddr2_r (addr, addrlen, addrfamily,
+					       &he_mem, tmpbuf, tmpbuflen,
+					       &he, &herrno, NULL);
+		      if (rc != ERANGE || herrno != NETDB_INTERNAL)
+			break;
+		      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+					      tmpbuflen * 2);
+		    }
+
+		  if (rc == 0)
+		    {
+		      if (he != NULL)
+			canon = he->h_name;
+		      else
+			canon = key;
+		    }
+		}
 	    }
 
+	  canonlen = canon == NULL ? 0 : (strlen (canon) + 1);
+
+	  total = sizeof (*dataset) + naddrs + addrslen + canonlen;
+
+
+	  /* Now we can allocate the data structure.  If the TTL of the
+	     entry is reported as zero do not cache the entry at all.  */
+	  if (ttl != 0 && he == NULL)
+	    {
+	      dataset = (struct dataset *) mempool_alloc (db, total
+							  + req->key_len,
+							  IDX_result_data);
+	      if (dataset == NULL)
+		++db->head->addfailed;
+	    }
+
+	  if (dataset == NULL)
+	    {
+	      /* We cannot permanently add the result in the moment.  But
+		 we can provide the result as is.  Store the data in some
+		 temporary memory.  */
+	      dataset = (struct dataset *) alloca (total + req->key_len);
+
+	      /* We cannot add this record to the permanent database.  */
+	      alloca_used = true;
+	    }
+
+	  /* Fill in the address and address families.  */
+	  char *addrs = (char *) (&dataset->resp + 1);
+	  uint8_t *family = (uint8_t *) (addrs + addrslen);
+
+	  for (int j = 0; j < 2; ++j)
+	    if (status[j] == NSS_STATUS_SUCCESS)
+	      for (int i = 0; th[j].h_addr_list[i] != NULL; ++i)
+		{
+		  addrs = mempcpy (addrs, th[j].h_addr_list[i],
+				   th[j].h_length);
+		  *family++ = th[j].h_addrtype;
+		}
+
+	  cp = family;
 	}
 
+      /* Fill in the rest of the dataset.  */
+      dataset->head.allocsize = total + req->key_len;
+      dataset->head.recsize = total - offsetof (struct dataset, resp);
+      dataset->head.notfound = false;
+      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
+      dataset->head.usable = true;
+
+      /* Compute the timeout time.  */
+      dataset->head.timeout = time (NULL) + (ttl == INT32_MAX
+					     ? db->postimeout : ttl);
+
+      dataset->resp.version = NSCD_VERSION;
+      dataset->resp.found = 1;
+      dataset->resp.naddrs = naddrs;
+      dataset->resp.addrslen = addrslen;
+      dataset->resp.canonlen = canonlen;
+      dataset->resp.error = NETDB_SUCCESS;
+
+      if (canon != NULL)
+	cp = mempcpy (cp, canon, canonlen);
+
+      key_copy = memcpy (cp, key, req->key_len);
+
+      /* Now we can determine whether on refill we have to create a
+	 new record or not.  */
+      if (he != NULL)
+	{
+	  assert (fd == -1);
+
+	  if (total + req->key_len == dh->allocsize
+	      && total - offsetof (struct dataset, resp) == dh->recsize
+	      && memcmp (&dataset->resp, dh->data,
+			 dh->allocsize - offsetof (struct dataset,
+						   resp)) == 0)
+	    {
+	      /* The data has not changed.  We will just bump the
+		 timeout value.  Note that the new record has been
+		 allocated on the stack and need not be freed.  */
+	      dh->timeout = dataset->head.timeout;
+	      ++dh->nreloads;
+	    }
+	  else
+	    {
+	      /* We have to create a new record.  Just allocate
+		 appropriate memory and copy it.  */
+	      struct dataset *newp
+		= (struct dataset *) mempool_alloc (db, total + req->key_len,
+						    IDX_result_data);
+	      if (__builtin_expect (newp != NULL, 1))
+		{
+		  /* Adjust pointer into the memory block.  */
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
+
+		  dataset = memcpy (newp, dataset, total + req->key_len);
+		  alloca_used = false;
+		}
+	      else
+		++db->head->addfailed;
+
+	      /* Mark the old record as obsolete.  */
+	      dh->usable = false;
+	    }
+	}
+      else
+	{
+	  /* We write the dataset before inserting it to the database
+	     since while inserting this thread might block and so
+	     would unnecessarily let the receiver wait.  */
+	  assert (fd != -1);
+
+#ifdef HAVE_SENDFILE
+	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
+	    {
+	      assert (db->wr_fd != -1);
+	      assert ((char *) &dataset->resp > (char *) db->data);
+	      assert ((char *) &dataset->resp - (char *) db->head + total
+		      <= (sizeof (struct database_pers_head)
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
+	      ssize_t written;
+	      written = sendfileall (fd, db->wr_fd, (char *) &dataset->resp
+				     - (char *) db->head, total);
+# ifndef __ASSUME_SENDFILE
+	      if (written == -1 && errno == ENOSYS)
+		goto use_write;
+# endif
+	    }
+	  else
+# ifndef __ASSUME_SENDFILE
+	  use_write:
+# endif
+#endif
+	    writeall (fd, &dataset->resp, total);
+	}
+
+      goto out;
+
+next_nip:
       if (nss_next_action (nip, status[1]) == NSS_ACTION_RETURN)
 	break;
 
