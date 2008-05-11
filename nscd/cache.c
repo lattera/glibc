@@ -161,6 +161,11 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
     {
       ++table->head->addfailed;
 
+      /* If necessary mark the entry as unusable so that lookups will
+	 not use it.  */
+      if (first)
+	packet->usable = false;
+
       /* Mark the in-flight memory as unused.  */
       for (enum in_flight idx = 0; idx < IDX_record_data; ++idx)
 	mem_in_flight.block[idx].dbidx = -1;
