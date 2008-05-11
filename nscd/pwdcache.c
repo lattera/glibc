@@ -153,11 +153,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
-	      if (cache_add (req->type, key_copy, req->key_len,
-			     &dataset->head, true, db, owner) < 0)
-		/* Ensure the data can be recovered.  */
-		dataset->head.usable = false;
-
+	      (void) cache_add (req->type, key_copy, req->key_len,
+				&dataset->head, true, db, owner);
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -352,12 +349,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      if (cache_add (GETPWBYUID, cp, key_offset, &dataset->head, true,
 			     db, owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the data gets
-		     discarded.  */
-		  dataset->head.usable = false;
-		  goto out;
-		}
+		goto out;
 
 	      first = false;
 	    }
@@ -366,12 +358,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      if (cache_add (GETPWBYNAME, key_copy, key_len + 1,
 			     &dataset->head, true, db, owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the data gets
-		     discarded.  */
-		  dataset->head.usable = false;
-		  goto out;
-		}
+		goto out;
 
 	      first = false;
 	    }
@@ -384,12 +371,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      if (req->type == GETPWBYNAME && db->propagate)
 		(void) cache_add (GETPWBYUID, cp, key_offset, &dataset->head,
-				  req->type != GETPWBYNAME, db, owner);
+				  false, db, owner);
 	    }
-	  else if (first)
-	    /* Could not allocate memory.  Make sure the data gets
-	       discarded.  */
-	    dataset->head.usable = false;
 
 	out:
 	  pthread_rwlock_unlock (&db->lock);

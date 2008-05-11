@@ -230,10 +230,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
-	      if (cache_add (req->type, key_copy, req->key_len,
-			     &dataset->head, true, db, uid) < 0)
-		/* Ensure the data can be recovered.  */
-		dataset->head.usable = false;
+	      (void) cache_add (req->type, key_copy, req->key_len,
+				&dataset->head, true, db, uid);
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -399,11 +397,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  /* Now get the lock to safely insert the records.  */
 	  pthread_rwlock_rdlock (&db->lock);
 
-	  if (cache_add (INITGROUPS, cp, req->key_len, &dataset->head, true,
-			 db, uid) < 0)
-	    /* Could not allocate memory.  Make sure the data gets
-	       discarded.  */
-	    dataset->head.usable = false;
+	  (void) cache_add (INITGROUPS, cp, req->key_len, &dataset->head, true,
+			    db, uid);
 
 	  pthread_rwlock_unlock (&db->lock);
 	}
