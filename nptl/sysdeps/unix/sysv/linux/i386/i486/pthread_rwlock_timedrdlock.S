@@ -162,7 +162,7 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %edx
 #endif
-	movl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
 	call	__lll_lock_wait
 	jmp	2b
 
@@ -177,7 +177,7 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %eax
 #endif
-	movl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
 	call	__lll_unlock_wake
 	jmp	7b
 
@@ -197,7 +197,7 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %eax
 #endif
-	movl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
 	call	__lll_unlock_wake
 	jmp	11b
 
@@ -207,7 +207,7 @@ pthread_rwlock_timedrdlock:
 #else
 	leal	MUTEX(%ebp), %edx
 #endif
-	movl	PSHARED(%ebp), %ecx
+	movzbl	PSHARED(%ebp), %ecx
 	call	__lll_lock_wait
 	jmp	13b
 

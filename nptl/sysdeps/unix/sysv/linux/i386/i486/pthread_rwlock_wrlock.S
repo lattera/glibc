@@ -120,7 +120,7 @@ __pthread_rwlock_wrlock:
 #else
 	leal	MUTEX(%ebx), %edx
 #endif
-	movl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
 	call	__lll_lock_wait
 	jmp	2b
 
@@ -135,7 +135,7 @@ __pthread_rwlock_wrlock:
 #else
 	leal	MUTEX(%ebx), %eax
 #endif
-	movl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
 	call	__lll_unlock_wake
 	jmp	7b
 
@@ -149,7 +149,7 @@ __pthread_rwlock_wrlock:
 #else
 	leal	MUTEX(%ebx), %eax
 #endif
-	movl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
 	call	__lll_unlock_wake
 	jmp	11b
 
@@ -159,7 +159,7 @@ __pthread_rwlock_wrlock:
 #else
 	leal	MUTEX(%ebx), %edx
 #endif
-	movl	PSHARED(%ebx), %ecx
+	movzbl	PSHARED(%ebx), %ecx
 	call	__lll_lock_wait
 	jmp	13b
 	.size	__pthread_rwlock_wrlock,.-__pthread_rwlock_wrlock
