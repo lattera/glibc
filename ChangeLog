@@ -1,3 +1,8 @@
+2008-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/tester.c (test_memcmp): Add a few more tests.
+	Patch by Mats Erik Andersson <ynglingatal@comhem.se>.
+
 2008-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Before returning with failure and this

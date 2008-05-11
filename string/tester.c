@@ -985,15 +985,33 @@ test_strsep (void)
 static void
 test_memcmp (void)
 {
+  int cnt = 1;
+  char one[21];
+  char two[21];
+  
   it = "memcmp";
-  check(memcmp("a", "a", 1) == 0, 1);		/* Identity. */
-  check(memcmp("abc", "abc", 3) == 0, 2);	/* Multicharacter. */
-  check(memcmp("abcd", "abce", 4) < 0, 3);	/* Honestly unequal. */
-  check(memcmp("abce", "abcd", 4) > 0, 4);
-  check(memcmp("alph", "beta", 4) < 0, 5);
-  check(memcmp("a\203", "a\003", 2) > 0, 6);
-  check(memcmp("abce", "abcd", 3) == 0, 7);	/* Count limited. */
-  check(memcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
+  check(memcmp("a", "a", 1) == 0, cnt++);	/* Identity. */
+  check(memcmp("abc", "abc", 3) == 0, cnt++);	/* Multicharacter. */
+  check(memcmp("abcd", "abcf", 4) < 0, cnt++);	/* Honestly unequal. */
+  check(memcmp("abcf", "abcd", 4) > 0, cnt++);
+  check(memcmp("alph", "cold", 4) < 0, cnt++);
+  check(memcmp("a\203", "a\003", 2) > 0, cnt++);
+  check(memcmp("a\003", "a\203", 2) < 0, cnt++);
+  check(memcmp("a\003bc", "a\203bc", 2) < 0, cnt++);
+  check(memcmp("abc\203", "abc\003", 4) > 0, cnt++);
+  check(memcmp("abc\003", "abc\203", 4) < 0, cnt++);
+  check(memcmp("abcf", "abcd", 3) == 0, cnt++);	/* Count limited. */
+  check(memcmp("abc", "def", 0) == 0, cnt++);	/* Zero count. */
+  /* Comparisons with shifting 4-byte boundaries. */
+  for (int i = 0; i < 4; ++i)
+    {
+      char *a = one + i;
+      char *b = two + i;
+      strncpy(a, "--------11112222", 16);
+      strncpy(b, "--------33334444", 16);
+      check(memcmp(b, a, 16) > 0, cnt++);
+      check(memcmp(a, b, 16) < 0, cnt++);
+    }
 }
 
 static void
