@@ -1,3 +1,9 @@
+2008-02-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3406]
+	* sysdeps/ieee754/flt-32/w_expf.c (o_threshold): Correct value.
+	* math/libm-test.inc (exp_test): Test 88.72269439697265625.
+
 2008-05-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/openat.c (__openat_2): Also pass fd to __openat.
