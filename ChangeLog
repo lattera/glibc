@@ -1,3 +1,8 @@
+2008-05-10  Roland McGrath  <roland@redhat.com>
+
+	[BZ #6505]
+	* sysdeps/unix/sysv/linux/sys/user.h: Replace with #error stub.
+
 2008-05-08  David S. Miller  <davem@davemloft.net>
 
 	* misc/truncate64.c (truncate64): Use __truncate not truncate.
