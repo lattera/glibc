@@ -1,5 +1,9 @@
 2008-05-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/openat.c (__openat_2): Also pass fd to __openat.
+	* io/openat64.c (__openat64_2): Also pass fd to __openat64.
+	Patch by Kristian Van Der Vliet <vanders@liqwyd.com>.
+
 	* string/tester.c (test_memcmp): Add a few more tests.
 	Patch by Mats Erik Andersson <ynglingatal@comhem.se>.
 

@@ -79,7 +79,7 @@ __openat64_2 (fd, file, oflag)
   if (oflag & O_CREAT)
     __fortify_fail ("invalid openat64 call: O_CREAT without mode");
 
-  return __openat64 (file, oflag);
+  return __openat64 (fd, file, oflag);
 }
 stub_warning (__openat_2)
 
