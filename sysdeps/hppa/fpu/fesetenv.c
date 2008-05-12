@@ -35,7 +35,7 @@ fesetenv (const fenv_t *envp)
   bufptr = temp.buf;
   __asm__ (
 	   "fstd,ma %%fr0,8(%1)\n"
-	   : "=m" (temp), "+r" (bufptr) : : "%r0");
+	   : "=m" (temp) : "r" (bufptr) : "%r0");
 
   temp.env.__status_word &= ~(FE_ALL_EXCEPT
 			    | (FE_ALL_EXCEPT << 27)
@@ -56,7 +56,7 @@ fesetenv (const fenv_t *envp)
      is loaded last and T-Bit is enabled. */
   __asm__ (
 	   "fldd,mb -8(%1),%%fr0\n"
-	   : "=m" (temp), "+r" (bufptr) : : "%r0" );
+	   : : "m" (temp), "r" (bufptr) : "%r0" );
 
   /* Success.  */
   return 0;

@@ -1,3 +1,9 @@
+2008-05-12  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #6506]
+	* sysdeps/hppa/fpu/fesetenv.c: bufptr is always read, temp is
+	read while writing back status word.
+
 2008-04-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Fix comment describing
