@@ -1,3 +1,8 @@
+2008-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-tls.c (__tls_get_addr): Optimize by moving slow path in
+	its own function.  This reduces the frame setup costs and more.
+
 2008-02-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #3406]

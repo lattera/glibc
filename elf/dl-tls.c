@@ -691,6 +691,61 @@ _dl_update_slotinfo (unsigned long int req_modid)
 }
 
 
+static void *
+__attribute_noinline__
+tls_get_addr_tail (dtv_t *dtv, struct link_map *the_map, size_t module)
+{
+  /* The allocation was deferred.  Do it now.  */
+  if (the_map == NULL)
+    {
+      /* Find the link map for this module.  */
+      size_t idx = module;
+      struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
+
+      while (idx >= listp->len)
+	{
+	  idx -= listp->len;
+	  listp = listp->next;
+	}
+
+      the_map = listp->slotinfo[idx].map;
+    }
+
+ again:
+  /* Make sure that, if a dlopen running in parallel forces the
+     variable into static storage, we'll wait until the address in the
+     static TLS block is set up, and use that.  If we're undecided
+     yet, make sure we make the decision holding the lock as well.  */
+  if (__builtin_expect (the_map->l_tls_offset
+			!= FORCED_DYNAMIC_TLS_OFFSET, 0))
+    {
+      __rtld_lock_lock_recursive (GL(dl_load_lock));
+      if (__builtin_expect (the_map->l_tls_offset == NO_TLS_OFFSET, 1))
+	{
+	  the_map->l_tls_offset = FORCED_DYNAMIC_TLS_OFFSET;
+	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+	}
+      else
+	{
+	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+	  if (__builtin_expect (the_map->l_tls_offset
+				!= FORCED_DYNAMIC_TLS_OFFSET, 1))
+	    {
+	      void *p = dtv[module].pointer.val;
+	      if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+		goto again;
+
+	      return p;
+	    }
+	}
+    }
+  void *p = dtv[module].pointer.val = allocate_and_init (the_map);
+  dtv[module].pointer.is_static = false;
+
+  return p;
+}
+
+
 /* The generic dynamic and local dynamic model cannot be used in
    statically linked applications.  */
 void *
@@ -703,52 +758,10 @@ __tls_get_addr (GET_ADDR_ARGS)
   if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
     the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
 
- retry:
   p = dtv[GET_ADDR_MODULE].pointer.val;
 
   if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
-    {
-      /* The allocation was deferred.  Do it now.  */
-      if (the_map == NULL)
-	{
-	  /* Find the link map for this module.  */
-	  size_t idx = GET_ADDR_MODULE;
-	  struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
-
-	  while (idx >= listp->len)
-	    {
-	      idx -= listp->len;
-	      listp = listp->next;
-	    }
-
-	  the_map = listp->slotinfo[idx].map;
-	}
-
-      /* Make sure that, if a dlopen running in parallel forces the
-	 variable into static storage, we'll wait until the address in
-	 the static TLS block is set up, and use that.  If we're
-	 undecided yet, make sure we make the decision holding the
-	 lock as well.  */
-      if (__builtin_expect (the_map->l_tls_offset
-			    != FORCED_DYNAMIC_TLS_OFFSET, 0))
-	{
-	  __rtld_lock_lock_recursive (GL(dl_load_lock));
-	  if (__builtin_expect (the_map->l_tls_offset == NO_TLS_OFFSET, 1))
-	    {
-	      the_map->l_tls_offset = FORCED_DYNAMIC_TLS_OFFSET;
-	      __rtld_lock_unlock_recursive (GL(dl_load_lock));
-	    }
-	  else
-	    {
-	      __rtld_lock_unlock_recursive (GL(dl_load_lock));
-	      if (__builtin_expect (the_map->l_tls_offset
-				    != FORCED_DYNAMIC_TLS_OFFSET, 1))
-		goto retry;
-	    }
-	}
-      p = dtv[GET_ADDR_MODULE].pointer.val = allocate_and_init (the_map);
-      dtv[GET_ADDR_MODULE].pointer.is_static = false;
-    }
+    p = tls_get_addr_tail (dtv, the_map, GET_ADDR_MODULE);
 
   return (char *) p + GET_ADDR_OFFSET;
 }
