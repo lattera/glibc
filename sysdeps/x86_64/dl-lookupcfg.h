@@ -1,5 +1,5 @@
-/* Thread-local storage handling in the ELF dynamic linker.  x86-64 version.
-   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+/* Configuration of lookup functions.
+   Copyright (C) 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define DL_UNMAP_IS_SPECIAL
 
-/* Type used for the representation of TLS information in the GOT.  */
-typedef struct dl_tls_index
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
-} tls_index;
+#include_next <dl-lookupcfg.h>
 
+struct link_map;
 
-extern void *__tls_get_addr (tls_index *ti);
+extern void internal_function _dl_unmap (struct link_map *map);
+
+#define DL_UNMAP(map) _dl_unmap (map)

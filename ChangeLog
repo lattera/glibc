@@ -1,3 +1,61 @@
+2008-01-30  Alexandre Oliva  <aoliva@redhat.com>
+
+	Introduce TLS descriptors for i386 and x86_64.
+	* include/inline-hashtab.h: New file, copied from 2005's
+	libiberty, with fix for memory leak imported afterwards by
+	Glauber de Oliveira Costa.
+	* elf/tlsdeschtab.h: New file.
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls): Extract from...
+	(_dl_allocate_static_tls): ... here.  Rearrange failure path.
+	(CHECK_STATIC_TLS): Move to...
+	* elf/dynamic-link.h: ... this file.
+	(TRY_STATIC_TLS): New macro.
+	* elf/dl-conflict.c (CHECK_STATIC_TLS, TRY_STATIC_TLS): Override.
+	* elf/elf.h (R_386_TLS_GOTDESC, R_386_TLS_DESC_CALL,
+	R_386_TLS_DESC): Define.
+	(R_X86_64_PC64, R_X86_GOTOFF64, R_X86_64_GOTPC32): Merge from
+	binutils.
+	(R_X86_64_GOTPC32_TLSDESC, R_X86_64_TLSDESC_CALL,
+	R_X86_64_TLSDESC): Define.
+	(R_386_NUM, R_X86_64_NUM): Adjust.
+	* sysdeps/i386/Makefile (sysdep-dl-routines, sysdep_routines,
+	systep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
+	* sysdeps/i386/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
+	release tlsdesc_table.
+	* sysdeps/i386/dl-machine.h: Include dl-tlsdesc.h.
+	(elf_machine_type_class): Mark R_386_TLS_DESC as PLT class.
+	(elf_machine_rel): Handle R_386_TLS_DESC.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	(elf_machine_lazy_rela): Likewise.
+	* sysdeps/i386/dl-tls.h (struct dl_tls_index): Name it.
+	* sysdeps/i386/dl-tlsdesc.S: New file.
+	* sysdeps/i386/dl-tlsdesc.h: New file.
+	* sysdeps/i386/tlsdesc.c: New file.
+	* sysdeps/i386/tlsdesc.sym: New file.
+	* sysdeps/i386/bits/linkmap.h (struct link_map_machine): Add
+	tlsdesc_table.
+	* sysdeps/x86_64/Makefile (sysdep-dl-routines, sysdep_routines,
+	systep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
+	* sysdeps/x86_64/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
+	release tlsdesc_table.
+	* sysdeps/x86_64/dl-machine.h: Include dl-tlsdesc.h.
+	(elf_machine_runtime_setup): Set up lazy TLSDESC GOT entry.
+	(elf_machine_type_class): Mark R_X86_64_TLSDESC as PLT class.
+	(elf_machine_rel): Handle R_X86_64_TLSDESC.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/x86_64/dl-tls.h (struct dl_tls_index): Name it.
+	(__tls_get_addr): Do not declare for non-shared compiles.
+	* sysdeps/x86_64/dl-tlsdesc.S: New file.
+	* sysdeps/x86_64/dl-tlsdesc.h: New file.
+	* sysdeps/x86_64/tlsdesc.c: New file.
+	* sysdeps/x86_64/tlsdesc.sym: New file.
+	* sysdeps/x86_64/bits/linkmap.h (struct link_map_machine): Add
+	tlsdesc_table for both 32- and 64-bit structs.
+
 2008-05-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-tls.c (__tls_get_addr): Optimize by moving slow path in

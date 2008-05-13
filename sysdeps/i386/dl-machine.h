@@ -25,6 +25,7 @@
 #include <sys/param.h>
 #include <sysdep.h>
 #include <tls.h>
+#include <dl-tlsdesc.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -246,7 +247,7 @@ _dl_start_user:\n\
 # define elf_machine_type_class(type) \
   ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
      || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
-     || (type) == R_386_TLS_TPOFF)					      \
+     || (type) == R_386_TLS_TPOFF || (type) == R_386_TLS_DESC)		      \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
@@ -373,6 +374,38 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    *reloc_addr = sym->st_value;
 # endif
 	  break;
+	case R_386_TLS_DESC:
+	  {
+	    struct tlsdesc volatile *td =
+	      (struct tlsdesc volatile *)reloc_addr;
+
+# ifndef RTLD_BOOTSTRAP
+	    if (! sym)
+	      td->entry = _dl_tlsdesc_undefweak;
+	    else
+# endif
+	      {
+# ifndef RTLD_BOOTSTRAP
+#  ifndef SHARED
+		CHECK_STATIC_TLS (map, sym_map);
+#  else
+		if (!TRY_STATIC_TLS (map, sym_map))
+		  {
+		    td->arg = _dl_make_tlsdesc_dynamic
+		      (sym_map, sym->st_value + (ElfW(Word))td->arg);
+		    td->entry = _dl_tlsdesc_dynamic;
+		  }
+		else
+#  endif
+# endif
+		  {
+		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
+				      + (ElfW(Word))td->arg);
+		    td->entry = _dl_tlsdesc_return;
+		  }
+	      }
+	    break;
+	  }
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
 # ifdef RTLD_BOOTSTRAP
@@ -485,6 +518,41 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     Therefore the offset is already correct.  */
 	  *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
 	  break;
+	case R_386_TLS_DESC:
+	  {
+	    struct tlsdesc volatile *td =
+	      (struct tlsdesc volatile *)reloc_addr;
+
+# ifndef RTLD_BOOTSTRAP
+	    if (!sym)
+	      {
+		td->arg = (void*)reloc->r_addend;
+		td->entry = _dl_tlsdesc_undefweak;
+	      }
+	    else
+# endif
+	      {
+# ifndef RTLD_BOOTSTRAP
+#  ifndef SHARED
+		CHECK_STATIC_TLS (map, sym_map);
+#  else
+		if (!TRY_STATIC_TLS (map, sym_map))
+		  {
+		    td->arg = _dl_make_tlsdesc_dynamic
+		      (sym_map, sym->st_value + reloc->r_addend);
+		    td->entry = _dl_tlsdesc_dynamic;
+		  }
+		else
+#  endif
+# endif
+		  {
+		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
+				      + reloc->r_addend);
+		    td->entry = _dl_tlsdesc_return;
+		  }
+	      }
+	  }
+	  break;
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
 	  /* We know the offset of object the symbol is contained in.
@@ -578,6 +646,53 @@ elf_machine_lazy_rel (struct link_map *map,
 	*reloc_addr = (map->l_mach.plt
 		       + (((Elf32_Addr) reloc_addr) - map->l_mach.gotplt) * 4);
     }
+  else if (__builtin_expect (r_type == R_386_TLS_DESC, 1))
+    {
+      struct tlsdesc volatile * __attribute__((__unused__)) td =
+	(struct tlsdesc volatile *)reloc_addr;
+
+      /* Handle relocations that reference the local *ABS* in a simple
+	 way, so as to preserve a potential addend.  */
+      if (ELF32_R_SYM (reloc->r_info) == 0)
+	td->entry = _dl_tlsdesc_resolve_abs_plus_addend;
+      /* Given a known-zero addend, we can store a pointer to the
+	 reloc in the arg position.  */
+      else if (td->arg == 0)
+	{
+	  td->arg = (void*)reloc;
+	  td->entry = _dl_tlsdesc_resolve_rel;
+	}
+      else
+	{
+	  /* We could handle non-*ABS* relocations with non-zero addends
+	     by allocating dynamically an arg to hold a pointer to the
+	     reloc, but that sounds pointless.  */
+	  const Elf32_Rel *const r = reloc;
+	  /* The code below was borrowed from elf_dynamic_do_rel().  */
+	  const ElfW(Sym) *const symtab =
+	    (const void *) D_PTR (map, l_info[DT_SYMTAB]);
+
+#ifdef RTLD_BOOTSTRAP
+	  /* The dynamic linker always uses versioning.  */
+	  assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
+#else
+	  if (map->l_info[VERSYMIDX (DT_VERSYM)])
+#endif
+	    {
+	      const ElfW(Half) *const version =
+		(const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
+	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
+			       &map->l_versions[ndx],
+			       (void *) (l_addr + r->r_offset));
+	    }
+#ifndef RTLD_BOOTSTRAP
+	  else
+	    elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
+			     (void *) (l_addr + r->r_offset));
+#endif
+	}
+    }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
@@ -589,6 +704,20 @@ __attribute__ ((always_inline))
 elf_machine_lazy_rela (struct link_map *map,
 		       Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
+  Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+  if (__builtin_expect (r_type == R_386_JMP_SLOT, 1))
+    ;
+  else if (__builtin_expect (r_type == R_386_TLS_DESC, 1))
+    {
+      struct tlsdesc volatile * __attribute__((__unused__)) td =
+	(struct tlsdesc volatile *)reloc_addr;
+
+      td->arg = (void*)reloc;
+      td->entry = _dl_tlsdesc_resolve_rela;
+    }
+  else
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif	/* !RTLD_BOOTSTRAP */

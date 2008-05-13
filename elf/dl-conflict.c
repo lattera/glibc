@@ -1,5 +1,5 @@
 /* Resolve conflicts against already prelinked libraries.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -44,7 +44,6 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE_MAP(ref, version, flags) (*ref = NULL, NULL)
 #define RESOLVE(ref, version, flags) (*ref = NULL, 0)
-#define CHECK_STATIC_TLS(ref_map, sym_map) ((void) 0)
 #define RESOLVE_CONFLICT_FIND_MAP(map, r_offset) \
   do {									      \
     while ((resolve_conflict_map->l_map_end < (ElfW(Addr)) (r_offset))	      \
@@ -60,6 +59,12 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
       = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
 #include "dynamic-link.h"
+
+    /* Override these, defined in dynamic-link.h.  */
+#undef CHECK_STATIC_TLS
+#define CHECK_STATIC_TLS(ref_map, sym_map) ((void) 0)
+#undef TRY_STATIC_TLS
+#define TRY_STATIC_TLS(ref_map, sym_map) (0)
 
     GL(dl_num_cache_relocations) += conflictend - conflict;
 

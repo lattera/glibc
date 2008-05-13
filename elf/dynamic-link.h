@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,31 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+/* This macro is used as a callback from elf_machine_rel{a,} when a
+   static TLS reloc is about to be performed.  Since (in dl-load.c) we
+   permit dynamic loading of objects that might use such relocs, we
+   have to check whether each use is actually doable.  If the object
+   whose TLS segment the reference resolves to was allocated space in
+   the static TLS block at startup, then it's ok.  Otherwise, we make
+   an attempt to allocate it in surplus space on the fly.  If that
+   can't be done, we fall back to the error that DF_STATIC_TLS is
+   intended to produce.  */
+#define CHECK_STATIC_TLS(map, sym_map)					\
+    do {								\
+      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET	\
+			    || ((sym_map)->l_tls_offset			\
+				== FORCED_DYNAMIC_TLS_OFFSET), 0))	\
+	_dl_allocate_static_tls (sym_map);				\
+    } while (0)
+
+#define TRY_STATIC_TLS(map, sym_map)					\
+    (__builtin_expect ((sym_map)->l_tls_offset				\
+		       != FORCED_DYNAMIC_TLS_OFFSET, 1)			\
+     && (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET, 1)	\
+	 || _dl_try_allocate_static_tls (sym_map) == 0))
+
+int internal_function _dl_try_allocate_static_tls (struct link_map *map);
 
 #include <elf.h>
 #include <assert.h>

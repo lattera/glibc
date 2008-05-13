@@ -1159,8 +1159,17 @@ typedef struct
 #define R_386_TLS_DTPMOD32 35		/* ID of module containing symbol */
 #define R_386_TLS_DTPOFF32 36		/* Offset in TLS block */
 #define R_386_TLS_TPOFF32  37		/* Negated offset in static TLS block */
+/* 38? */
+#define R_386_TLS_GOTDESC  39		/* GOT offset for TLS descriptor.  */
+#define R_386_TLS_DESC_CALL 40		/* Marker of call through TLS
+					   descriptor for
+					   relaxation.  */
+#define R_386_TLS_DESC     41		/* TLS descriptor containing
+					   pointer to code and to
+					   argument, returning the TLS
+					   offset for the symbol.  */
 /* Keep this the last entry.  */
-#define R_386_NUM	   38
+#define R_386_NUM	   42
 
 /* SUN SPARC specific definitions.  */
 
@@ -2557,8 +2566,17 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_X86_64_GOTTPOFF	22	/* 32 bit signed PC relative offset
 					   to GOT entry for IE symbol */
 #define R_X86_64_TPOFF32	23	/* Offset in initial TLS block */
+#define R_X86_64_PC64		24	/* PC relative 64 bit */
+#define R_X86_64_GOTOFF64	25	/* 64 bit offset to GOT */
+#define R_X86_64_GOTPC32	26	/* 32 bit signed pc relative
+					   offset to GOT */
+/* 27 .. 33 */
+#define R_X86_64_GOTPC32_TLSDESC 34	/* GOT offset for TLS descriptor.  */
+#define R_X86_64_TLSDESC_CALL   35	/* Marker for call through TLS
+					   descriptor.  */
+#define R_X86_64_TLSDESC        36	/* TLS descriptor.  */
 
-#define R_X86_64_NUM		24
+#define R_X86_64_NUM		37
 
 
 /* AM33 relocations.  */

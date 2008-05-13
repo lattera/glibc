@@ -26,6 +26,7 @@
 #include <sys/param.h>
 #include <sysdep.h>
 #include <tls.h>
+#include <dl-tlsdesc.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -131,6 +132,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	got[2] = (Elf64_Addr) &_dl_runtime_resolve;
     }
 
+  if (l->l_info[ADDRIDX (DT_TLSDESC_GOT)] && lazy)
+    *(Elf64_Addr*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_GOT)]) + l->l_addr)
+      = (Elf64_Addr) &_dl_tlsdesc_resolve_rela;
+
   return lazy;
 }
 
@@ -194,7 +199,9 @@ _dl_start_user:\n\
 # define elf_machine_type_class(type)					      \
   ((((type) == R_X86_64_JUMP_SLOT					      \
      || (type) == R_X86_64_DTPMOD64					      \
-     || (type) == R_X86_64_DTPOFF64 || (type) == R_X86_64_TPOFF64)	      \
+     || (type) == R_X86_64_DTPOFF64					      \
+     || (type) == R_X86_64_TPOFF64					      \
+     || (type) == R_X86_64_TLSDESC)					      \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
@@ -323,6 +330,41 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    *reloc_addr = sym->st_value + reloc->r_addend;
 # endif
 	  break;
+	case R_X86_64_TLSDESC:
+	  {
+	    struct tlsdesc volatile *td =
+	      (struct tlsdesc volatile *)reloc_addr;
+
+# ifndef RTLD_BOOTSTRAP
+	    if (! sym)
+	      {
+		td->arg = (void*)reloc->r_addend;
+		td->entry = _dl_tlsdesc_undefweak;
+	      }
+	    else
+# endif
+	      {
+# ifndef RTLD_BOOTSTRAP
+#  ifndef SHARED
+		CHECK_STATIC_TLS (map, sym_map);
+#  else
+		if (!TRY_STATIC_TLS (map, sym_map))
+		  {
+		    td->arg = _dl_make_tlsdesc_dynamic
+		      (sym_map, sym->st_value + reloc->r_addend);
+		    td->entry = _dl_tlsdesc_dynamic;
+		  }
+		else
+#  endif
+# endif
+		  {
+		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
+				      + reloc->r_addend);
+		    td->entry = _dl_tlsdesc_return;
+		  }
+	      }
+	    break;
+	  }
 	case R_X86_64_TPOFF64:
 	  /* The offset is negative, forward from the thread pointer.  */
 # ifndef RTLD_BOOTSTRAP
@@ -434,6 +476,15 @@ elf_machine_lazy_rel (struct link_map *map,
 	*reloc_addr =
 	  map->l_mach.plt
 	  + (((Elf64_Addr) reloc_addr) - map->l_mach.gotplt) * 2;
+    }
+  else if (__builtin_expect (r_type == R_X86_64_TLSDESC, 1))
+    {
+      struct tlsdesc volatile * __attribute__((__unused__)) td =
+	(struct tlsdesc volatile *)reloc_addr;
+
+      td->arg = (void*)reloc;
+      td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
+			  + map->l_addr);
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);

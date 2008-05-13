@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,9 +43,9 @@
    This function intentionally does not return any value but signals error
    directly, as static TLS should be rare and code handling it should
    not be inlined as much as possible.  */
-void
-internal_function __attribute_noinline__
-_dl_allocate_static_tls (struct link_map *map)
+int
+internal_function
+_dl_try_allocate_static_tls (struct link_map *map)
 {
   /* If we've already used the variable with dynamic access, or if the
      alignment requirements are too high, fail.  */
@@ -53,8 +53,7 @@ _dl_allocate_static_tls (struct link_map *map)
       || map->l_tls_align > GL(dl_tls_static_align))
     {
     fail:
-      _dl_signal_error (0, map->l_name, NULL, N_("\
-cannot allocate memory in static TLS block"));
+      return -1;
     }
 
 #if TLS_TCB_AT_TP
@@ -108,6 +107,20 @@ cannot allocate memory in static TLS block"));
     }
   else
     map->l_need_tls_init = 1;
+
+  return 0;
+}
+
+void
+internal_function __attribute_noinline__
+_dl_allocate_static_tls (struct link_map *map)
+{
+  if (map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET
+      || _dl_try_allocate_static_tls (map))
+    {
+      _dl_signal_error (0, map->l_name, NULL, N_("\
+cannot allocate memory in static TLS block"));
+    }
 }
 
 /* Initialize static TLS area and DTV for current (only) thread.
@@ -247,23 +260,6 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
-
-    /* This macro is used as a callback from elf_machine_rel{a,} when a
-       static TLS reloc is about to be performed.  Since (in dl-load.c) we
-       permit dynamic loading of objects that might use such relocs, we
-       have to check whether each use is actually doable.  If the object
-       whose TLS segment the reference resolves to was allocated space in
-       the static TLS block at startup, then it's ok.  Otherwise, we make
-       an attempt to allocate it in surplus space on the fly.  If that
-       can't be done, we fall back to the error that DF_STATIC_TLS is
-       intended to produce.  */
-#define CHECK_STATIC_TLS(map, sym_map)					\
-    do {								\
-      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET	\
-			    || ((sym_map)->l_tls_offset			\
-				== FORCED_DYNAMIC_TLS_OFFSET), 0))	\
-	_dl_allocate_static_tls (sym_map);				\
-    } while (0)
 
 #include "dynamic-link.h"
 
