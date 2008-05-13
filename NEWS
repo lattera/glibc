@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-5-10
+GNU C Library NEWS -- history of user-visible changes.  2008-5-12
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -8,7 +8,10 @@ using `glibc' in the "product" field.
 Version 2.9
 
 * Unified lookup for getaddrinfo: IPv4 and IPv6 addresses are now looked
-  up at the same time.
+  up at the same time.  Implemented by Ulrich Drepper.
+
+* TLS descriptors for LD and GD on x86 and x86-64.
+  Implemented by Alexandre Oliva.
 
 Version 2.8
 

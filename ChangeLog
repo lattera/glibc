@@ -1,3 +1,7 @@
+2008-05-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/lt.po: New file.  From Lituanian translation team.
+
 2008-01-30  Alexandre Oliva  <aoliva@redhat.com>
 
 	Introduce TLS descriptors for i386 and x86_64.
@@ -19,7 +23,7 @@
 	R_X86_64_TLSDESC): Define.
 	(R_386_NUM, R_X86_64_NUM): Adjust.
 	* sysdeps/i386/Makefile (sysdep-dl-routines, sysdep_routines,
-	systep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	sysdep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
 	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
 	* sysdeps/i386/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
 	release tlsdesc_table.
@@ -37,7 +41,7 @@
 	* sysdeps/i386/bits/linkmap.h (struct link_map_machine): Add
 	tlsdesc_table.
 	* sysdeps/x86_64/Makefile (sysdep-dl-routines, sysdep_routines,
-	systep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	sysdep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
 	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
 	* sysdeps/x86_64/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
 	release tlsdesc_table.

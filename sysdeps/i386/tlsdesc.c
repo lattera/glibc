@@ -199,7 +199,7 @@ _dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
 
   if (!sym)
     {
-      td->arg = (void*).reloc->r_addend;
+      td->arg = (void*) reloc->r_addend;
       td->entry = _dl_tlsdesc_undefweak;
     }
   else
@@ -216,8 +216,8 @@ _dl_tlsdesc_resolve_rela_fixup (struct tlsdesc volatile *td,
       else
 #  endif
 	{
-	  td->arg = (void*).(sym->st_value - result->l_tls_offset
-			 .   + reloc->r_addend);
+	  td->arg = (void*) (sym->st_value - result->l_tls_offset
+			     + reloc->r_addend);
 	  td->entry = _dl_tlsdesc_return;
 	}
     }
