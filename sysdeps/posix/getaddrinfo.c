@@ -1112,7 +1112,10 @@ get_scope (const struct sockaddr_in6 *in6)
     {
       if (! IN6_IS_ADDR_MULTICAST (&in6->sin6_addr))
 	{
-	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr))
+	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr)
+	      /* RFC 4291 2.5.3 says that the loopback address is to be
+		 treated like a link-local address.  */
+	      || IN6_IS_ADDR_LOOPBACK (&in6->sin6_addr))
 	    scope = 2;
 	  else if (IN6_IS_ADDR_SITELOCAL (&in6->sin6_addr))
 	    scope = 5;

@@ -1,5 +1,8 @@
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (get_scope): Loopback addresses have
+	to be treated like link-local addresses.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Add _res_hconf_init
 	if necessary.
 
