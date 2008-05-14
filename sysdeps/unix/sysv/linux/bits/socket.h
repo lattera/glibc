@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -52,6 +52,8 @@ enum __socket_type
   SOCK_SEQPACKET = 5,		/* Sequenced, reliable, connection-based,
 				   datagrams of fixed maximum length.  */
 #define SOCK_SEQPACKET SOCK_SEQPACKET
+  SOCK_DCCP = 6,
+#define SOCK_DCCP SOCK_DCCP	/* Datagram Congestion Control Protocol.  */
   SOCK_PACKET = 10		/* Linux specific way of getting packets
 				   at the dev level.  For writing rarp and
 				   other similar things on the user level. */

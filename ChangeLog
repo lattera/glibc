@@ -1,3 +1,14 @@
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Implement handling of DCCP and
+	UDPlite.
+
+	* nss/getent.c (ahosts_keys_int): Handle all known socket types.
+
+	* inet/netinet/in.h (IPPIPPROTO_DCCP, IPPROTO_UDPLITE): Define.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (SOCK_DCCP): Define.
+
 2008-05-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/lt.po: New file.  From Lituanian translation team.

@@ -337,6 +337,22 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
 		sockstr = "DGRAM";
 	      else if (runp->ai_socktype == SOCK_RAW)
 		sockstr = "RAW";
+#ifdef SOCK_SEQPACKET
+	      else if (runp->ai_socktype == SOCK_SEQPACKET)
+		sockstr = "SEQPACKET";
+#endif
+#ifdef SOCK_RDM
+	      else if (runp->ai_socktype == SOCK_RDM)
+		sockstr = "RDM";
+#endif
+#ifdef SOCK_DCCP
+	      else if (runp->ai_socktype == SOCK_DCCP)
+		sockstr = "DCCP";
+#endif
+#ifdef SOCK_PACKET
+	      else if (runp->ai_socktype == SOCK_PACKET)
+		sockstr = "PACKET";
+#endif
 	      else
 		{
 		  snprintf (sockbuf, sizeof (sockbuf), "%d",

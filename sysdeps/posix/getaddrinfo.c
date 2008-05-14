@@ -97,8 +97,9 @@ struct gaih_typeproto
   {
     int socktype;
     int protocol;
-    char name[4];
-    int protoflag;
+    uint8_t protoflag;
+    bool defaultflag;
+    char name[8];
   };
 
 /* Values for `protoflag'.  */
@@ -107,11 +108,17 @@ struct gaih_typeproto
 
 static const struct gaih_typeproto gaih_inet_typeproto[] =
 {
-  { 0, 0, "", 0 },
-  { SOCK_STREAM, IPPROTO_TCP, "tcp", 0 },
-  { SOCK_DGRAM, IPPROTO_UDP, "udp", 0 },
-  { SOCK_RAW, 0, "raw", GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE },
-  { 0, 0, "", 0 }
+  { 0, 0, 0, false, "" },
+  { SOCK_STREAM, IPPROTO_TCP, 0, true, "tcp" },
+  { SOCK_DGRAM, IPPROTO_UDP, 0, true, "udp" },
+#if defined SOCK_DCCP && defined IPPROTO_DCCP
+  { SOCK_DCCP, IPPROTO_DCCP, 0, false, "dccp" },
+#endif
+#ifdef IPPROTO_UDPLITE
+  { SOCK_DGRAM, IPPROTO_UDPLITE, 0, false, "udplite" },
+#endif
+  { SOCK_RAW, 0, GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE, true, "raw" },
+  { 0, 0, 0, false, "" }
 };
 
 struct gaih
@@ -363,18 +370,19 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     we know about.  */
 	  struct gaih_servtuple **lastp = &st;
 	  for (++tp; tp->name[0]; ++tp)
-	    {
-	      struct gaih_servtuple *newp;
+	    if (tp->defaultflag)
+	      {
+		struct gaih_servtuple *newp;
 
-	      newp = __alloca (sizeof (struct gaih_servtuple));
-	      newp->next = NULL;
-	      newp->socktype = tp->socktype;
-	      newp->protocol = tp->protocol;
-	      newp->port = port;
+		newp = __alloca (sizeof (struct gaih_servtuple));
+		newp->next = NULL;
+		newp->socktype = tp->socktype;
+		newp->protocol = tp->protocol;
+		newp->port = port;
 
-	      *lastp = newp;
-	      lastp = &newp->next;
-	    }
+		*lastp = newp;
+		lastp = &newp->next;
+	      }
 	}
     }
 
