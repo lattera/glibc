@@ -1248,20 +1248,14 @@ match_prefix (const struct sockaddr_in6 *in6,
     {
       const struct sockaddr_in *in = (const struct sockaddr_in *) in6;
 
-      /* Convert to IPv6 address.  */
+      /* Construct a V4-to-6 mapped address.  */
       in6_mem.sin6_family = PF_INET6;
       in6_mem.sin6_port = in->sin_port;
       in6_mem.sin6_flowinfo = 0;
-      if (in->sin_addr.s_addr == htonl (0x7f000001))
-	in6_mem.sin6_addr = (struct in6_addr) IN6ADDR_LOOPBACK_INIT;
-      else
-	{
-	  /* Construct a V4-to-6 mapped address.  */
-	  memset (&in6_mem.sin6_addr, '\0', sizeof (in6_mem.sin6_addr));
-	  in6_mem.sin6_addr.s6_addr16[5] = 0xffff;
-	  in6_mem.sin6_addr.s6_addr32[3] = in->sin_addr.s_addr;
-	  in6_mem.sin6_scope_id = 0;
-	}
+      memset (&in6_mem.sin6_addr, '\0', sizeof (in6_mem.sin6_addr));
+      in6_mem.sin6_addr.s6_addr16[5] = 0xffff;
+      in6_mem.sin6_addr.s6_addr32[3] = in->sin_addr.s_addr;
+      in6_mem.sin6_scope_id = 0;
 
       in6 = &in6_mem;
     }

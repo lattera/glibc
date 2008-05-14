@@ -3,6 +3,8 @@
 	[BZ #6472]
 	* sysdeps/posix/getaddrinfo.c (get_scope): Loopback addresses have
 	to be treated like link-local addresses.
+	(match_prefix): Don't treat IPv4 loopback address special when
+	converting to v4 mapped addressed.
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Add _res_hconf_init
 	if necessary.
