@@ -1,5 +1,10 @@
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6461]
+	* iconv/gconv_simple.c (BODY for __gconv_transform_ascii_internal):
+	Add missing braces.
+	(BODY for __gconv_transform_internal_ascii): Likewise.
+
 	[BZ #6472]
 	* sysdeps/posix/getaddrinfo.c (get_scope): Loopback addresses have
 	to be treated like link-local addresses.

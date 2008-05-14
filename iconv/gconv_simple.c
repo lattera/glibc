@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997-2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -820,9 +820,11 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
-      /* It's an one byte sequence.  */					      \
-      *((uint32_t *) outptr) = *inptr++;				      \
-      outptr += sizeof (uint32_t);					      \
+      {									      \
+	/* It's an one byte sequence.  */				      \
+	*((uint32_t *) outptr) = *inptr++;				      \
+	outptr += sizeof (uint32_t);					      \
+      }									      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
@@ -851,9 +853,11 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else								      \
-      /* It's an one byte sequence.  */					      \
-      *outptr++ = *((const uint32_t *) inptr);				      \
-      inptr += sizeof (uint32_t);					      \
+      {									      \
+	/* It's an one byte sequence.  */				      \
+	*outptr++ = *((const uint32_t *) inptr);			      \
+	inptr += sizeof (uint32_t);					      \
+      }									      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
