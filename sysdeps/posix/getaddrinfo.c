@@ -61,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
+#include <resolv/res_hconf.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -2088,6 +2089,10 @@ getaddrinfo (const char *name, const char *service,
 
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
+
+  /* Initialize configurations.  */
+  if (__builtin_expect (!_res_hconf.initialized, 0))
+    _res_hconf_init ();
 
   struct in6addrinfo *in6ai = NULL;
   size_t in6ailen = 0;
