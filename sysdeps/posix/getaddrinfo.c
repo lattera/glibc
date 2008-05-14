@@ -117,6 +117,10 @@ static const struct gaih_typeproto gaih_inet_typeproto[] =
 #ifdef IPPROTO_UDPLITE
   { SOCK_DGRAM, IPPROTO_UDPLITE, 0, false, "udplite" },
 #endif
+#ifdef IPPROTO_SCTP
+  { SOCK_STREAM, IPPROTO_SCTP, 0, false, "sctp" },
+  { SOCK_SEQPACKET, IPPROTO_SCTP, 0, false, "sctp" },
+#endif
   { SOCK_RAW, 0, GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE, true, "raw" },
   { 0, 0, 0, false, "" }
 };
