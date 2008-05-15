@@ -1520,7 +1520,7 @@ EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS
 		     -S -o conftest.s conftest.c 1>&AS_MESSAGE_LOG_FD]) \
      && grep -q .note.GNU-stack conftest.s \
-     && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Wa,--noexecstack
+     && AC_TRY_COMMAND([${CC-cc} $ASFLAGS -Wa,--noexecstack
 		       -c -o conftest.o conftest.s 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_as_noexecstack=yes

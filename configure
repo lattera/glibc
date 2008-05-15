@@ -6266,7 +6266,7 @@ EOF
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; } \
      && grep -q .note.GNU-stack conftest.s \
-     && { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Wa,--noexecstack
+     && { ac_try='${CC-cc} $ASFLAGS -Wa,--noexecstack
 		       -c -o conftest.o conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5

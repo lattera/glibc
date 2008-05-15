@@ -1,5 +1,8 @@
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6428]
+	* configure.in: Don't use $CFLAGS when assembling, use $ASFLAGS.
+
 	[BZ #6442]
 	* string/endian.h: Add macros for fixed-size endian conversion.
 	* bits/byteswap.h: Allow inclusion from <endian.h>.
