@@ -1,5 +1,9 @@
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6438]
+	* locales/iso14651_t1_common: Add sorting data for Telugu.
+
+	[BZ #6447]
 	* locales/be_BY: Fix yesexpr.
 	Patch by Alexander Mikhailian <mikhailian@altern.org>.
 

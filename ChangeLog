@@ -1,3 +1,15 @@
+2008-04-11  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (optimize_utf8): Add a note on why we test
+	opr.ctx_type.
+	(calc_first): Initialize constraint field.
+	(duplicate_node_closure): Use it instead of special casing ANCHORS.
+	Use search_duplicated_node to avoid loops.  Fix grammar.
+	(duplicate_node): Merge constraint field for all node types.
+	(calc_eclosure_iter): Look at constraint field for all node types.
+	* posix/regex_internal.c (create_cd_newstate): Don't look at
+	create_cd_newstate.
+
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6428]
@@ -37,6 +49,9 @@
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Add _res_hconf_init
 	if necessary.
+	* posix/tst-rfc3484.c: Add dummy definition of _res_hconf_init.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
 
 	* sysdeps/posix/getaddrinfo.c: Implement handling of DCCP, UDPlite,
 	and SCTP.

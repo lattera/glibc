@@ -18,22 +18,33 @@ __check_pf (bool *p1, bool *p2, struct in6addrinfo **in6ai, size_t *in6ailen)
   *in6ai = NULL;
   *in6ailen = 0;
 }
+
 void
 attribute_hidden
 __check_native (uint32_t a1_index, int *a1_native,
 		uint32_t a2_index, int *a2_native)
 {
 }
+
 int
+attribute_hidden
 __idna_to_ascii_lz (const char *input, char **output, int flags)
 {
   return 0;
 }
+
 int
+attribute_hidden
 __idna_to_unicode_lzlz (const char *input, char **output, int flags)
 {
   *output = NULL;
   return 0;
+}
+
+void
+attribute_hidden
+_res_hconf_init (void)
+{
 }
 
 #include "../sysdeps/posix/getaddrinfo.c"
