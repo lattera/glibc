@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997,1998,2000,2001,2002,2005 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000-2002,2005,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#if !defined _BYTESWAP_H && !defined _NETINET_IN_H
+#if !defined _BYTESWAP_H && !defined _NETINET_IN_H && !defined _ENDIAN_H
 # error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
 #endif
 
