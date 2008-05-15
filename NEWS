@@ -15,6 +15,13 @@ Version 2.9
 
 * getaddrinfo now handles DCCP and UDPlite.
   Implemented by Ulrich Drepper.
+
+* New fixed-size conversion macros: htobe16, htole16, be16toh, le16toh,
+  htobe32, htole32, be32toh, le32toh, htobe64, htole64, be64toh, le64toh.
+  Implemented by Ulrich Drepper.
+
+* New implementation of memmem, strstr, and strcasestr which is O(n).
+  Implemented by Eric Blake.
 
 Version 2.8
 

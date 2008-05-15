@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994,1996,1997,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996,1997,2000,2001,2003,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,107 +17,71 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/*
- * My personal strstr() implementation that beats most other algorithms.
- * Until someone tells me otherwise, I assume that this is the
- * fastest implementation of strstr() in C.
- * I deliberately chose not to comment it.  You should have at least
- * as much fun trying to understand it, as I had to write it :-).
- *
- * Stephen R. van den Berg, berg@pool.informatik.rwth-aachen.de	*/
+/* This particular implementation was written by Eric Blake, 2008.  */
 
-#if HAVE_CONFIG_H
+#ifndef _LIBC
 # include <config.h>
 #endif
 
-#if defined _LIBC || defined HAVE_STRING_H
-# include <string.h>
+/* Specification of strstr.  */
+#include <string.h>
+
+#include <stdbool.h>
+
+#ifndef _LIBC
+# define __builtin_expect(expr, val)   (expr)
 #endif
 
-typedef unsigned chartype;
+#define RETURN_TYPE char *
+#define AVAILABLE(h, h_l, j, n_l)			\
+  (!memchr ((h) + (h_l), '\0', (j) + (n_l) - (h_l))	\
+   && ((h_l) = (j) + (n_l)))
+#include "str-two-way.h"
 
 #undef strstr
 
+/* Return the first occurrence of NEEDLE in HAYSTACK.  Return HAYSTACK
+   if NEEDLE is empty, otherwise NULL if NEEDLE is not found in
+   HAYSTACK.  */
 char *
-strstr (phaystack, pneedle)
-     const char *phaystack;
-     const char *pneedle;
+strstr (const char *haystack_start, const char *needle_start)
 {
-  const unsigned char *haystack, *needle;
-  chartype b;
-  const unsigned char *rneedle;
+  const char *haystack = haystack_start;
+  const char *needle = needle_start;
+  size_t needle_len; /* Length of NEEDLE.  */
+  size_t haystack_len; /* Known minimum length of HAYSTACK.  */
+  bool ok = true; /* True if NEEDLE is prefix of HAYSTACK.  */
 
-  haystack = (const unsigned char *) phaystack;
+  /* Determine length of NEEDLE, and in the process, make sure
+     HAYSTACK is at least as long (no point processing all of a long
+     NEEDLE if HAYSTACK is too short).  */
+  while (*haystack && *needle)
+    ok &= *haystack++ == *needle++;
+  if (*needle)
+    return NULL;
+  if (ok)
+    return (char *) haystack_start;
 
-  if ((b = *(needle = (const unsigned char *) pneedle)))
-    {
-      chartype c;
-      haystack--;		/* possible ANSI violation */
+  /* Reduce the size of haystack using strchr, since it has a smaller
+     linear coefficient than the Two-Way algorithm.  */
+  needle_len = needle - needle_start;
+  haystack = strchr (haystack_start + 1, *needle_start);
+  if (!haystack || __builtin_expect (needle_len == 1, 0))
+    return (char *) haystack;
+  needle -= needle_len;
+  haystack_len = (haystack > haystack_start + needle_len ? 1
+		  : needle_len + haystack_start - haystack);
 
-      {
-	chartype a;
-	do
-	  if (!(a = *++haystack))
-	    goto ret0;
-	while (a != b);
-      }
-
-      if (!(c = *++needle))
-	goto foundneedle;
-      ++needle;
-      goto jin;
-
-      for (;;)
-	{
-	  {
-	    chartype a;
-	    if (0)
-	    jin:{
-		if ((a = *++haystack) == c)
-		  goto crest;
-	      }
-	    else
-	      a = *++haystack;
-	    do
-	      {
-		for (; a != b; a = *++haystack)
-		  {
-		    if (!a)
-		      goto ret0;
-		    if ((a = *++haystack) == b)
-		      break;
-		    if (!a)
-		      goto ret0;
-		  }
-	      }
-	    while ((a = *++haystack) != c);
-	  }
-	crest:
-	  {
-	    chartype a;
-	    {
-	      const unsigned char *rhaystack;
-	      if (*(rhaystack = haystack-- + 1) == (a = *(rneedle = needle)))
-		do
-		  {
-		    if (!a)
-		      goto foundneedle;
-		    if (*++rhaystack != (a = *++needle))
-		      break;
-		    if (!a)
-		      goto foundneedle;
-		  }
-		while (*++rhaystack == (a = *++needle));
-	      needle = rneedle;	/* took the register-poor aproach */
-	    }
-	    if (!a)
-	      break;
-	  }
-	}
-    }
-foundneedle:
-  return (char *) haystack;
-ret0:
-  return 0;
+  /* Perform the search.  Abstract memory is considered to be an array
+     of 'unsigned char' values, not an array of 'char' values.  See
+     ISO C 99 section 6.2.6.1.  */
+  if (needle_len < LONG_NEEDLE_THRESHOLD)
+    return two_way_short_needle ((const unsigned char *) haystack,
+				 haystack_len,
+				 (const unsigned char *) needle, needle_len);
+  return two_way_long_needle ((const unsigned char *) haystack, haystack_len,
+			      (const unsigned char *) needle, needle_len);
 }
 libc_hidden_builtin_def (strstr)
+
+#undef LONG_NEEDLE_THRESHOLD

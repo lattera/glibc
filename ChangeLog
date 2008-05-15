@@ -1,3 +1,16 @@
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (distribute): Add str-two-way.h.
+
+2008-03-29  Eric Blake	<ebb9@byu.net>
+
+	Rewrite string searches to O(n) rather than O(n^2).
+	* string/str-two-way.h: New file.  For linear fixed-allocation
+	string searching.
+	* string/memmem.c: New implementation.
+	* string/strstr.c: New implementation.
+	* string/strcasestr.c: New implementation.
+
 2008-04-11  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (optimize_utf8): Add a note on why we test
@@ -47,7 +60,7 @@
 	(match_prefix): Don't treat IPv4 loopback address special when
 	converting to v4 mapped addressed.
 
-	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Add _res_hconf_init
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Call _res_hconf_init
 	if necessary.
 	* posix/tst-rfc3484.c: Add dummy definition of _res_hconf_init.
 	* posix/tst-rfc3484-2.c: Likewise.

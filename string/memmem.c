@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,2000,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,2000,2004,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,36 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stddef.h>
+/* This particular implementation was written by Eric Blake, 2008.  */
+
+#ifndef _LIBC
+# include <config.h>
+#endif
+
+/* Specification of memmem.  */
 #include <string.h>
 
 #ifndef _LIBC
 # define __builtin_expect(expr, val)   (expr)
 #endif
 
+#define RETURN_TYPE void *
+#define AVAILABLE(h, h_l, j, n_l) ((j) <= (h_l) - (n_l))
+#include "str-two-way.h"
+
 #undef memmem
 
-/* Return the first occurrence of NEEDLE in HAYSTACK.  */
+/* Return the first occurrence of NEEDLE in HAYSTACK.  Return HAYSTACK
+   if NEEDLE_LEN is 0, otherwise NULL if NEEDLE is not found in
+   HAYSTACK.  */
 void *
-memmem (haystack, haystack_len, needle, needle_len)
-     const void *haystack;
-     size_t haystack_len;
-     const void *needle;
-     size_t needle_len;
+memmem (const void *haystack_start, size_t haystack_len,
+	const void *needle_start, size_t needle_len)
 {
-  const char *begin;
-  const char *const last_possible
-    = (const char *) haystack + haystack_len - needle_len;
+  /* Abstract memory is considered to be an array of 'unsigned char' values,
+     not an array of 'char' values.  See ISO C 99 section 6.2.6.1.  */
+  const unsigned char *haystack = (const unsigned char *) haystack_start;
+  const unsigned char *needle = (const unsigned char *) needle_start;
 
   if (needle_len == 0)
     /* The first occurrence of the empty string is deemed to occur at
@@ -47,12 +57,22 @@ memmem (haystack, haystack_len, needle, needle_len)
   if (__builtin_expect (haystack_len < needle_len, 0))
     return NULL;
 
-  for (begin = (const char *) haystack; begin <= last_possible; ++begin)
-    if (begin[0] == ((const char *) needle)[0] &&
-	!memcmp ((const void *) &begin[1],
-		 (const void *) ((const char *) needle + 1),
-		 needle_len - 1))
-      return (void *) begin;
-
-  return NULL;
+  /* Use optimizations in memchr when possible, to reduce the search
+     size of haystack using a linear algorithm with a smaller
+     coefficient.  However, avoid memchr for long needles, since we
+     can often achieve sublinear performance.  */
+  if (needle_len < LONG_NEEDLE_THRESHOLD)
+    {
+      haystack = memchr (haystack, *needle, haystack_len);
+      if (!haystack || __builtin_expect (needle_len == 1, 0))
+	return (void *) haystack;
+      haystack_len -= haystack - (const unsigned char *) haystack_start;
+      if (haystack_len < needle_len)
+	return NULL;
+      return two_way_short_needle (haystack, haystack_len, needle, needle_len);
+    }
+  else
+    return two_way_long_needle (haystack, haystack_len, needle, needle_len);
 }
+
+#undef LONG_NEEDLE_THRESHOLD

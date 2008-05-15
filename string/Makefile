@@ -55,7 +55,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian
-distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h
+distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h	\
+		   str-two-way.h
 
 
 include ../Rules
