@@ -1,4 +1,10 @@
+2008-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* iconvdata/Makefile (bug-iconv6-ENV, tst-iconv7-ENV): Define.
+
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/bug-iconv6.c (do_test): Use de_DE.UTF-8 locale.
 
 	[BZ #6461]
 	* iconv/gconv_simple.c (BODY for __gconv_transform_ascii_internal):

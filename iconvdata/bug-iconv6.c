@@ -13,7 +13,7 @@ static const char testbuf[] = {
 static int
 do_test (void)
 {
-  setlocale (LC_ALL, "en_US.UTF-8");
+  setlocale (LC_ALL, "de_DE.UTF-8");
   iconv_t ic = iconv_open ("ISO-2022-JP//TRANSLIT", "UTF-8");
   if (ic == (iconv_t) -1)
     {
