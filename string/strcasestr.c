@@ -46,7 +46,7 @@
    && ((h_l) = (j) + (n_l)))
 #define CANON_ELEMENT(c) TOLOWER (c)
 #define CMP_FUNC(p1, p2, l)				\
-  strncasecmp ((const char *) (p1), (const char *) (p2), l)
+  __strncasecmp ((const char *) (p1), (const char *) (p2), l)
 #include "str-two-way.h"
 
 #undef strcasestr

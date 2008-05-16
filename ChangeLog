@@ -1,5 +1,7 @@
 2008-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strcasestr.c (CMP_FUNC): Use __strncasecmp, not strncasecmp.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): After gethostbyname4_r
 	lookup, don't assign canon unconditionally.
 
