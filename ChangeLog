@@ -1,3 +1,8 @@
+2008-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): After gethostbyname4_r
+	lookup, don't assign canon unconditionally.
+
 2008-05-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/Makefile (distribute): Add str-two-way.h.

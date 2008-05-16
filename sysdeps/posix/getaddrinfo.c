@@ -729,7 +729,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  if (status == NSS_STATUS_SUCCESS)
 		    {
-		      canon = (*pat)->name;
+		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
+			canon = (*pat)->name;
 
 		      while (*pat != NULL)
 			pat = &((*pat)->next);
@@ -953,7 +954,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    return -EAI_IDN_ENCODE;
 		  }
 		/* In case the output string is the same as the input
-		   string no new string has been allocated.  Otherwise
+		   string no new string has been allocated and we
 		   make a copy.  */
 		if (out == canon)
 		  goto make_copy;
