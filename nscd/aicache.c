@@ -114,7 +114,6 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   char *tmpbuf6 = alloca (tmpbuf6len);
   size_t tmpbuf4len = 0;
   char *tmpbuf4 = NULL;
-  char *canon = NULL;
   int32_t ttl = INT32_MAX;
   ssize_t total = 0;
   char *key_copy = NULL;
@@ -126,6 +125,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       int status[2] = { NSS_STATUS_UNAVAIL, NSS_STATUS_UNAVAIL };
       int naddrs = 0;
       size_t addrslen = 0;
+      char *canon = NULL;
       size_t canonlen;
 
       nss_gethostbyname4_r fct4 = __nss_lookup_function (nip,
@@ -136,9 +136,11 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  while (1)
 	    {
 	      rc6 = 0;
-	      status[0] = DL_CALL_FCT (fct4, (key, &at, tmpbuf6, tmpbuf6len,
+	      herrno = 0;
+	      status[1] = DL_CALL_FCT (fct4, (key, &at, tmpbuf6, tmpbuf6len,
 					      &rc6, &herrno, &ttl));
-	      if (rc6 != ERANGE || herrno != NETDB_INTERNAL)
+	      if (rc6 != ERANGE || (herrno != NETDB_INTERNAL
+				    && herrno != TRY_AGAIN))
 		break;
 	      tmpbuf6 = extend_alloca (tmpbuf6, tmpbuf6len, 2 * tmpbuf6len);
 	    }
@@ -146,22 +148,21 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  if (rc6 != 0 && herrno == NETDB_INTERNAL)
 	    goto out;
 
-	  if (status[0] != NSS_STATUS_SUCCESS)
+	  if (status[1] != NSS_STATUS_SUCCESS)
 	    goto next_nip;
 
 	  /* We found the data.  Count the addresses and the size.  */
-	  for (struct gaih_addrtuple *at2 = at; at2 != NULL; at2 = at2->next)
+	  for (const struct gaih_addrtuple *at2 = at; at2 != NULL;
+	       at2 = at2->next)
 	    {
 	      ++naddrs;
-	      /* We handle unknown types here the best we can: assume
-		 the maximum size for the address.  */
+	      /* We do not handle anything other than IPv4 and IPv6
+		 addresses.  The getaddrinfo implementation does not
+		 either so it is not worth trying to do more.  */
 	      if (at2->family == AF_INET)
 		addrslen += INADDRSZ;
-	      else if (at2->family == AF_INET6
-		       && IN6ADDRSZ != sizeof (at2->addr))
+	      else if (at2->family == AF_INET6)
 		addrslen += IN6ADDRSZ;
-	      else
-		addrslen += sizeof (at2->addr);
 	    }
 	  canon = at->name;
 	  canonlen = strlen (canon) + 1;
@@ -191,19 +192,17 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	    }
 
 	  /* Fill in the address and address families.  */
-	  char *addrs = (char *) (&dataset->resp + 1);
+	  char *addrs = dataset->strdata;
 	  uint8_t *family = (uint8_t *) (addrs + addrslen);
 
-	  for (struct gaih_addrtuple *at2 = at; at2 != NULL; at2 = at2->next)
+	  for (const struct gaih_addrtuple *at2 = at; at2 != NULL;
+	       at2 = at2->next)
 	    {
 	      *family++ = at2->family;
 	      if (at2->family == AF_INET)
 		addrs = mempcpy (addrs, at2->addr, INADDRSZ);
-	      else if (at2->family == AF_INET6
-		       && IN6ADDRSZ != sizeof (at2->addr))
+	      else if (at2->family == AF_INET6)
 		addrs = mempcpy (addrs, at2->addr, IN6ADDRSZ);
-	      else
-		addrs = mempcpy (addrs, at2->addr, sizeof (at2->addr));
 	    }
 
 	  cp = family;
@@ -373,7 +372,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	    }
 
 	  /* Fill in the address and address families.  */
-	  char *addrs = (char *) (&dataset->resp + 1);
+	  char *addrs = dataset->strdata;
 	  uint8_t *family = (uint8_t *) (addrs + addrslen);
 
 	  for (int j = 0; j < 2; ++j)
@@ -410,6 +409,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	cp = mempcpy (cp, canon, canonlen);
 
       key_copy = memcpy (cp, key, req->key_len);
+
+      assert (cp == (char *) dataset + total);
 
       /* Now we can determine whether on refill we have to create a
 	 new record or not.  */

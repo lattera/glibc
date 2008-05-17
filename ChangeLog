@@ -1,5 +1,8 @@
 2008-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/aicache.c (addhstaiX): Fix a few small problems, cleanups,
+	more asserts.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): If nscd reports no
 	entry is available, believe it.
 
