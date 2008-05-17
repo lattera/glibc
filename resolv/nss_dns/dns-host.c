@@ -990,6 +990,9 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
   char *h_name = NULL;
   int h_namelen = 0;
 
+  if (ancount == 0)
+    return NSS_STATUS_NOTFOUND;
+
   while (ancount-- > 0 && cp < end_of_message && had_error == 0)
     {
       n = __ns_name_unpack (answer->buf, end_of_message, cp,
@@ -1164,12 +1167,15 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 {
   int first = 1;
 
-  enum nss_status status = gaih_getanswer_slice(answer1, anslen1, qname,
-						&pat, &buffer, &buflen,
-						errnop, h_errnop, ttlp,
-						&first);
+  enum nss_status status = NSS_STATUS_NOTFOUND;
+
+  if (anslen1 > 0)
+    status = gaih_getanswer_slice(answer1, anslen1, qname,
+				  &pat, &buffer, &buflen,
+				  errnop, h_errnop, ttlp,
+				  &first);
   if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND)
-      && answer2 != NULL)
+      && answer2 != NULL && anslen2 > 0)
     status = gaih_getanswer_slice(answer2, anslen2, qname,
 				  &pat, &buffer, &buflen,
 				  errnop, h_errnop, ttlp, &first);

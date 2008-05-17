@@ -1,3 +1,10 @@
+2008-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): If there are
+	no answers return NSS_STATUS_NOTFOUND.
+	(gaih_getanswer): Don't call gaih_getanswer_slice if the answer
+	buffer does not have any content.
+
 2008-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strcasestr.c (CMP_FUNC): Use __strncasecmp, not strncasecmp.
@@ -174,7 +181,7 @@
 	* nscd/hstcache.c: Likewise.
 	* nscd/initgrcache.c: Likewise.
 	* nscd/pwdcache.c: Likewise.
-	* nscd/servicecache.c: Likewise.
+	* nscd/servicescache.c: Likewise.
 
 2008-05-10  Roland McGrath  <roland@redhat.com>
 
