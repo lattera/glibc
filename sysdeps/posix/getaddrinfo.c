@@ -660,7 +660,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  goto process_list;
 		}
-	      else if (err != 0 && __nss_not_use_nscd_hosts == 0)
+	      else if (err == 0)
+		/* The database contains a negative entry.  */
+		return 0;
+	      else if (__nss_not_use_nscd_hosts == 0)
 		{
 		  if (herrno == NETDB_INTERNAL && errno == ENOMEM)
 		    return -EAI_MEMORY;
