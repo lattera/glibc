@@ -132,12 +132,12 @@ gc (struct database_dyn *db)
     stack_used = 0;
   size_t memory_needed = ((db->head->first_free / BLOCK_ALIGN + BITS - 1)
 			  / BITS) * sizeof (BITMAP_T);
-  if (memory_needed <= MAX_STACK_USE)
+  if (stack_used + memory_needed <= MAX_STACK_USE)
     {
       mark = (BITMAP_T *) alloca (memory_needed);
       mark_use_malloc = false;
       memset (mark, '\0', memory_needed);
-      stack_used = memory_needed;
+      stack_used += memory_needed;
     }
   else
     {
