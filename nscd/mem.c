@@ -79,6 +79,7 @@ static void
 markrange (BITMAP_T *mark, ref_t start, size_t len)
 {
   /* Adjust parameters for block alignment.  */
+  assert ((start & BLOCK_ALIGN_M1) == 0);
   start /= BLOCK_ALIGN;
   len = (len + BLOCK_ALIGN_M1) / BLOCK_ALIGN;
 
@@ -93,7 +94,7 @@ markrange (BITMAP_T *mark, ref_t start, size_t len)
 	  return;
 	}
 
-      mark[elem++] |= 0xff << (start % BITS);
+      mark[elem++] |= ALLBITS << (start % BITS);
       len -= BITS - (start % BITS);
     }
 

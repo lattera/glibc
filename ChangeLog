@@ -1,5 +1,8 @@
 2008-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/mem.c (markrange): Add assert to check entries are all
+	aligned.  Small cleanup in bitmap use.
+
 	* nscd/nscd.h (mem_in_flight): Replace blockaddr field with
 	blockoff of type nscd_ssize_t.
 	* nscd/mem.c (gc): Simplify markrange call for on-flight blocks.
