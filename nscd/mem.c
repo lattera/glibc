@@ -212,11 +212,12 @@ gc (struct database_dyn *db)
       for (enum in_flight idx = IDX_result_data;
 	   idx < IDX_last && mrunp->block[idx].dbidx == db - dbs; ++idx)
 	{
-	 assert ((char *) mrunp->block[idx].blockaddr > db->data);
-	 assert ((char *) mrunp->block[idx].blockaddr
-		 + mrunp->block[0].blocklen <= db->data + db->memsize);
-	 markrange (mark, (char *) mrunp->block[idx].blockaddr -  db->data,
-		    mrunp->block[idx].blocklen);
+	  assert (mrunp->block[idx].blockoff >= 0);
+	  assert (mrunp->block[idx].blocklen < db->memsize);
+	  assert (mrunp->block[idx].blockoff
+		  + mrunp->block[0].blocklen <= db->memsize);
+	  markrange (mark, mrunp->block[idx].blockoff,
+		     mrunp->block[idx].blocklen);
 	}
 
       mrunp = mrunp->next;
@@ -589,15 +590,16 @@ mempool_alloc (struct database_dyn *db, size_t len, enum in_flight idx)
     }
   else
     {
-      db->head->first_free += len;
-
-      db->last_alloc_failed = false;
-
       /* Remember that we have allocated this memory.  */
       assert (idx >= 0 && idx < IDX_last);
       mem_in_flight.block[idx].dbidx = db - dbs;
       mem_in_flight.block[idx].blocklen = len;
-      mem_in_flight.block[idx].blockaddr = res;
+      mem_in_flight.block[idx].blockoff = db->head->first_free;
+
+      db->head->first_free += len;
+
+      db->last_alloc_failed = false;
+
     }
 
   pthread_mutex_unlock (&db->memlock);

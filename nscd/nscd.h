@@ -197,7 +197,7 @@ extern __thread struct mem_in_flight
   {
     int dbidx;
     nscd_ssize_t blocklen;
-    void *blockaddr;
+    nscd_ssize_t blockoff;
   } block[IDX_last];
 
   struct mem_in_flight *next;
