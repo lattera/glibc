@@ -24,6 +24,7 @@
 #include <inttypes.h>
 #include <libintl.h>
 #include <limits.h>
+#include <obstack.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -157,6 +158,7 @@ gc (struct database_dyn *db)
       he = alloca (db->head->nentries * sizeof (struct hashentry *));
       he_data = alloca (db->head->nentries * sizeof (struct hashentry *));
       he_use_malloc = false;
+      stack_used += memory_needed;
     }
   else
     {
@@ -305,6 +307,10 @@ gc (struct database_dyn *db)
     size_t size;
     struct moveinfo *next;
   } *moves = NULL;
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+  struct obstack ob;
+  obstack_init (&ob);
 
   while (byte < high)
     {
@@ -365,8 +371,14 @@ gc (struct database_dyn *db)
 	 displacement.  */
       ref_t disp = off_alloc - off_free;
 
-      struct moveinfo *new_move
-	= (struct moveinfo *) alloca (sizeof (*new_move));
+      struct moveinfo *new_move;
+      if (stack_used + sizeof (*new_move) <= MAX_STACK_USE)
+	{
+	  new_move = alloca (sizeof (*new_move));
+	  stack_used += sizeof (*new_move);
+	}
+      else
+	new_move = obstack_alloc (&ob, sizeof (*new_move));
       new_move->from = db->data + off_alloc;
       new_move->to = db->data + off_free;
       new_move->size = off_allocend - off_alloc;
@@ -526,6 +538,8 @@ gc (struct database_dyn *db)
     free (he);
   if (mark_use_malloc)
     free (mark);
+
+  obstack_free (&ob, NULL);
 }
 
 

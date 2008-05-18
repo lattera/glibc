@@ -1,5 +1,7 @@
 2008-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/mem.c (gc): Avoid stack overflow when allocating move list.
+
 	* nscd/mem.c (gc): Correctly determine highest used array element
 	in mark.
 
