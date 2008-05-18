@@ -1330,11 +1330,14 @@ cannot change to old working directory: %s; disabling paranoia mode"),
     }
 
   /* Synchronize memory.  */
+  int32_t certainly[lastdb];
   for (int cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
       {
 	/* Make sure nobody keeps using the database.  */
 	dbs[cnt].head->timestamp = 0;
+	certainly[cnt] = dbs[cnt].head->nscd_certainly_running;
+	dbs[cnt].head->nscd_certainly_running = 0;
 
 	if (dbs[cnt].persistent)
 	  // XXX async OK?
@@ -1357,6 +1360,15 @@ cannot change to old working directory: %s; disabling paranoia mode"),
     dbg_log (_("cannot change current working directory to \"/\": %s"),
 	     strerror (errno));
   paranoia = 0;
+
+  /* Reenable the databases.  */
+  time_t now = time (NULL);
+  for (int cnt = 0; cnt < lastdb; ++cnt)
+    if (dbs[cnt].enabled)
+      {
+	dbs[cnt].head->timestamp = now;
+	dbs[cnt].head->nscd_certainly_running = certainly[cnt];
+      }
 }
 
 
@@ -1394,42 +1406,68 @@ nscd_run_prune (void *p)
 
   int dont_need_update = setup_thread (&dbs[my_number]);
 
+  time_t now = time (NULL);
+
   /* We are running.  */
-  dbs[my_number].head->timestamp = time (NULL);
+  dbs[my_number].head->timestamp = now;
 
   struct timespec prune_ts;
-  if (clock_gettime (timeout_clock, &prune_ts) == -1)
+  if (__builtin_expect (clock_gettime (timeout_clock, &prune_ts) == -1, 0))
     /* Should never happen.  */
     abort ();
 
   /* Compute the initial timeout time.  Prevent all the timers to go
      off at the same time by adding a db-based value.  */
   prune_ts.tv_sec += CACHE_PRUNE_INTERVAL + my_number;
+  dbs[my_number].wakeup_time = now + CACHE_PRUNE_INTERVAL + my_number;
 
-  pthread_mutex_lock (&dbs[my_number].prune_lock);
+  pthread_mutex_t *prune_lock = &dbs[my_number].prune_lock;
+  pthread_cond_t *prune_cond = &dbs[my_number].prune_cond;
+
+  pthread_mutex_lock (prune_lock);
   while (1)
     {
       /* Wait, but not forever.  */
-      int e = pthread_cond_timedwait (&dbs[my_number].prune_cond,
-				      &dbs[my_number].prune_lock,
-				      &prune_ts);
-      assert (e == 0 || e == ETIMEDOUT);
+      int e = pthread_cond_timedwait (prune_cond, prune_lock, &prune_ts);
+      assert (__builtin_expect (e == 0 || e == ETIMEDOUT, 1));
 
       time_t next_wait;
-      time_t now = time (NULL);
+      now = time (NULL);
       if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time)
 	{
+	  /* We will determine the new timout values based on the
+	     cache content.  Should there be concurrent additions to
+	     the cache which are not accounted for in the cache
+	     pruning we want to know about it.  Therefore set the
+	     timeout to the maximum.  It will be descreased when adding
+	     new entries to the cache, if necessary.  */
+	  if (sizeof (time_t) == sizeof (long int))
+	    dbs[my_number].wakeup_time = LONG_MAX;
+	  else
+	    dbs[my_number].wakeup_time = INT_MAX;
+
+	  pthread_mutex_unlock (prune_lock);
+
 	  next_wait = prune_cache (&dbs[my_number], now, -1);
+
 	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
 	  /* If clients cannot determine for sure whether nscd is running
 	     we need to wake up occasionally to update the timestamp.
 	     Wait 90% of the update period.  */
 #define UPDATE_MAPPING_TIMEOUT (MAPPING_TIMEOUT * 9 / 10)
 	  if (__builtin_expect (! dont_need_update, 0))
-	    next_wait = MIN (UPDATE_MAPPING_TIMEOUT, next_wait);
+	    {
+	      next_wait = MIN (UPDATE_MAPPING_TIMEOUT, next_wait);
+	      dbs[my_number].head->timestamp = now;
+	    }
+
+	  pthread_mutex_lock (prune_lock);
 
 	  /* Make it known when we will wake up again.  */
-	  dbs[my_number].wakeup_time = now + next_wait;
+	  if (now + next_wait < dbs[my_number].wakeup_time)
+	    dbs[my_number].wakeup_time = now + next_wait;
+	  else
+	    next_wait = dbs[my_number].wakeup_time - now;
 	}
       else
 	/* The cache was just pruned.  Do not do it again now.  Just

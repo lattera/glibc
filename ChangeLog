@@ -1,3 +1,23 @@
+2008-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Take additional parameter specifying
+	whether this is in response of a cache refill.  Check alignment
+	of package data.  Revamp waking of pruning thread.
+	(prune_cache): Small optimization.
+	* nscd/nscd.h: Adjust cache_add prototypes.
+	* nscd/aicache.c: Adjust cache_add calls.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/servicescache.c: Likewise.
+	* nscd/connections.c (restart): Really disable cache use before
+	exec attempt.  If it fails, reenable cache.
+	(nscd_run_prune): Initialize wakeup_time.  After wakeup, set wakeup
+	time to max to be able to notice concurrent cache additions.  Unlock
+	prune_lock while performing gc.  Afterwards compute wakeup time with
+	current wakeup_time value in mind.
+
 2008-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/mem.c (gc): Avoid stack overflow when allocating move list.

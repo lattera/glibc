@@ -137,7 +137,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	      pthread_rwlock_rdlock (&db->lock);
 
 	      (void) cache_add (req->type, &dataset->strdata, req->key_len,
-				&dataset->head, true, db, owner);
+				&dataset->head, true, db, owner, he == NULL);
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -331,7 +331,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	  pthread_rwlock_rdlock (&db->lock);
 
 	  (void) cache_add (req->type, key_copy, req->key_len,
-			    &dataset->head, true, db, owner);
+			    &dataset->head, true, db, owner, he == NULL);
 
 	  pthread_rwlock_unlock (&db->lock);
 	}

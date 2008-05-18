@@ -135,7 +135,7 @@ cache_search (request_type type, void *key, size_t len,
 int
 cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	   bool first, struct database_dyn *table,
-	   uid_t owner)
+	   uid_t owner, bool prune_wakeup)
 {
   if (__builtin_expect (debug_level >= 2, 0))
     {
@@ -180,6 +180,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   assert (newp->key + newp->len <= table->head->first_free);
   newp->owner = owner;
   newp->packet = (char *) packet - table->data;
+  assert ((newp->packet & BLOCK_ALIGN_M1) == 0);
 
   /* Put the new entry in the first position.  */
   do
@@ -211,19 +212,27 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	   (char *) &table->head->array[hash] - (char *) table->head
 	   + sizeof (ref_t), MS_ASYNC);
 
-  /* Perhaps the prune thread for the data is not running in a long
-     time.  Wake it if necessary.  */
-  time_t next_wakeup = table->wakeup_time;
-  while (next_wakeup + CACHE_PRUNE_INTERVAL > packet->timeout)
-    if (atomic_compare_and_exchange_bool_acq (&table->wakeup_time,
-					      packet->timeout,
-					      next_wakeup) == 0)
-      {
+  /* We do not have to worry about the pruning thread if we are
+     re-adding the data since this is done by the pruning thread.  We
+     also do not have to do anything in case this is not the first
+     time the data is entered since different data heads all have the
+     same timeout.  */
+  if (first && prune_wakeup)
+    {
+      /* Perhaps the prune thread for the table is not running in a long
+	 time.  Wake it if necessary.  */
+      pthread_mutex_lock (&table->prune_lock);
+      time_t next_wakeup = table->wakeup_time;
+      bool do_wakeup = false;
+      if (next_wakeup > packet->timeout + CACHE_PRUNE_INTERVAL)
+	{
+	  table->wakeup_time = packet->timeout;
+	  do_wakeup = true;
+	}
+      pthread_mutex_unlock (&table->prune_lock);
+      if (do_wakeup)
 	pthread_cond_signal (&table->prune_cond);
-	break;
-      }
-    else
-      next_wakeup = table->wakeup_time;
+    }
 
   /* Mark the in-flight memory as unused.  */
   for (enum in_flight idx = 0; idx < IDX_last; ++idx)
@@ -436,7 +445,8 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	      ref_t *old = &table->head->array[first];
 	      ref_t run = table->head->array[first];
 
-	      while (run != ENDREF)
+	      assert (run != ENDREF);
+	      do
 		{
 		  struct hashentry *runp = (struct hashentry *) (data + run);
 		  struct datahead *dh
@@ -462,6 +472,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		      run = runp->next;
 		    }
 		}
+	      while (run != ENDREF);
 	    }
 
 	  ++first;

@@ -231,7 +231,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      pthread_rwlock_rdlock (&db->lock);
 
 	      (void) cache_add (req->type, key_copy, req->key_len,
-				&dataset->head, true, db, uid);
+				&dataset->head, true, db, uid, he == NULL);
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -398,7 +398,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  pthread_rwlock_rdlock (&db->lock);
 
 	  (void) cache_add (INITGROUPS, cp, req->key_len, &dataset->head, true,
-			    db, uid);
+			    db, uid, he == NULL);
 
 	  pthread_rwlock_unlock (&db->lock);
 	}

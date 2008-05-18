@@ -231,7 +231,8 @@ extern struct datahead *cache_search (request_type, void *key, size_t len,
 				      uid_t owner);
 extern int cache_add (int type, const void *key, size_t len,
 		      struct datahead *packet, bool first,
-		      struct database_dyn *table, uid_t owner);
+		      struct database_dyn *table, uid_t owner,
+		      bool prune_wakeup);
 extern time_t prune_cache (struct database_dyn *table, time_t now, int fd);
 
 /* pwdcache.c */

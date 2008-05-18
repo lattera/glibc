@@ -558,7 +558,7 @@ next_nip:
       pthread_rwlock_rdlock (&db->lock);
 
       (void) cache_add (req->type, key_copy, req->key_len, &dataset->head,
-			true, db, uid);
+			true, db, uid, he == NULL);
 
       pthread_rwlock_unlock (&db->lock);
 

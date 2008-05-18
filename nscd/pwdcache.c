@@ -154,7 +154,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      pthread_rwlock_rdlock (&db->lock);
 
 	      (void) cache_add (req->type, key_copy, req->key_len,
-				&dataset->head, true, db, owner);
+				&dataset->head, true, db, owner, he == NULL);
 
 	      pthread_rwlock_unlock (&db->lock);
 
@@ -348,7 +348,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  if (req->type == GETPWBYUID)
 	    {
 	      if (cache_add (GETPWBYUID, cp, key_offset, &dataset->head, true,
-			     db, owner) < 0)
+			     db, owner, he == NULL) < 0)
 		goto out;
 
 	      first = false;
@@ -357,7 +357,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  else if (strcmp (key_copy, dataset->strdata) != 0)
 	    {
 	      if (cache_add (GETPWBYNAME, key_copy, key_len + 1,
-			     &dataset->head, true, db, owner) < 0)
+			     &dataset->head, true, db, owner, he == NULL) < 0)
 		goto out;
 
 	      first = false;
@@ -367,11 +367,12 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  if ((req->type == GETPWBYNAME || db->propagate)
 	      && __builtin_expect (cache_add (GETPWBYNAME, dataset->strdata,
 					      pw_name_len, &dataset->head,
-					      first, db, owner) == 0, 1))
+					      first, db, owner, he == NULL)
+				   == 0, 1))
 	    {
 	      if (req->type == GETPWBYNAME && db->propagate)
 		(void) cache_add (GETPWBYUID, cp, key_offset, &dataset->head,
-				  false, db, owner);
+				  false, db, owner, false);
 	    }
 
 	out:
