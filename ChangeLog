@@ -1,5 +1,8 @@
 2008-05-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/mem.c (gc): Correctly determine highest used array element
+	in mark.
+
 	* nscd/mem.c (markrange): Add assert to check entries are all
 	aligned.  Small cleanup in bitmap use.
 

@@ -131,8 +131,8 @@ gc (struct database_dyn *db)
   size_t stack_used = sizeof (bool) * db->head->module;
   if (__builtin_expect (stack_used > MAX_STACK_USE, 0))
     stack_used = 0;
-  size_t memory_needed = ((db->head->first_free / BLOCK_ALIGN + BITS - 1)
-			  / BITS) * sizeof (BITMAP_T);
+  size_t nmark = (db->head->first_free / BLOCK_ALIGN + BITS - 1) / BITS;
+  size_t memory_needed = nmark * sizeof (BITMAP_T);
   if (stack_used + memory_needed <= MAX_STACK_USE)
     {
       mark = (BITMAP_T *) alloca (memory_needed);
@@ -234,7 +234,7 @@ gc (struct database_dyn *db)
   qsort (he, cnt, sizeof (struct hashentry *), sort_he);
 
   /* Determine the highest used address.  */
-  size_t high = sizeof (mark);
+  size_t high = nmark;
   while (high > 0 && mark[high - 1] == 0)
     --high;
 
