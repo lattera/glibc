@@ -1,3 +1,12 @@
+2008-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquery): In case one of two
+	answer was too short don't try to read that answer's header.
+
+	* resolv/res_send.c (send_dg): In case of timeout and there are
+	two queries and one has been answered, return value indicating
+	success.
+
 2008-05-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Take additional parameter specifying

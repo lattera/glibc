@@ -224,6 +224,21 @@ __libc_res_nquery(res_state statp,
 	   tests of HP2.  */
 	HEADER *hp2 = answerp2 ? (HEADER *) *answerp2 : hp;
 
+	if (n < sizeof (HEADER) && nanswerp2 != NULL
+	    && *nanswerp2 > sizeof (HEADER))
+	  {
+	    /* Special case of partial answer.  */
+	    assert (hp != hp2);
+	    hp = hp2;
+	  }
+	else if (nanswerp2 != NULL
+		 && *nanswerp2 < sizeof (HEADER) && n > sizeof (HEADER))
+	  {
+	    /* Special case of partial answer.  */
+	    assert (hp != hp2);
+	    hp2 = hp;
+	  }
+
 	if ((hp->rcode != NOERROR || ntohs(hp->ancount) == 0)
 	    && (hp2->rcode != NOERROR || ntohs(hp2->ancount) == 0)) {
 #ifdef DEBUG

@@ -975,6 +975,8 @@ send_dg(res_state statp,
 	int recvresp2 = buf2 == NULL;
 	pfd[0].fd = EXT(statp).nssocks[ns];
 	pfd[0].events = POLLOUT;
+	if (resplen2 != NULL)
+	  *resplen2 = 0;
  wait:
 	if (need_recompute) {
 	recompute_resend:
@@ -1001,6 +1003,11 @@ send_dg(res_state statp,
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout,
 						    ";; timeout sending\n"));
+		if (recvresp1)
+		  return resplen;
+		if (buf2 != NULL && recvresp2)
+		  return 1;
+
 		*gotsomewhere = 1;
 		return (0);
 	}
