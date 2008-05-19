@@ -1,3 +1,7 @@
+2008-05-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/soinit.c (__EH_FRAME_BEGIN__): Remove.
+
 2008-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nquery): In case one of two

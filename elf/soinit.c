@@ -20,10 +20,6 @@ run_hooks (void (*const list[]) (void))
     (**list) ();
 }
 
-static const char __EH_FRAME_BEGIN__[]
-  __attribute__ ((used, section (".eh_frame")))
-  = { };
-
 /* This function will be called from _init in init-first.c.  */
 void
 __libc_global_ctors (void)
