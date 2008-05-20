@@ -1,3 +1,7 @@
+2008-05-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/soinit.c (__EH_FRAME_BEGIN__): Remove.
+
 2008-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Access
