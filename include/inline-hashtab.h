@@ -74,7 +74,7 @@ higher_prime_number (unsigned long n)
 
   while (low != high)
     {
-      const unsigned long *mid = low + (high - low) / 2;
+      const uint32_t *mid = low + (high - low) / 2;
       if (n > *mid)
 	low = mid + 1;
       else
