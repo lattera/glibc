@@ -1,3 +1,8 @@
+2008-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/inline-hashtab.h (higher_prime_number): Fix type of mid
+	variable.
+
 2008-05-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h
