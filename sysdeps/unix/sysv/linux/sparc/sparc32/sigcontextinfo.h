@@ -20,6 +20,9 @@
 #define SIGCONTEXT struct sigcontext *
 #define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.pc))
+#define FIRST_FRAME_POINTER \
+  ({ void *ret;							\
+     asm volatile ("ta 3; add %%fp, 56, %0" : "=r" (ret)); ret; })
 #define ADVANCE_STACK_FRAME(__next) \
 	((void *) (((unsigned *)(__next))+14))
 
