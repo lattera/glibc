@@ -1,3 +1,10 @@
+2008-05-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/machine-gmon.h: New file.
+	* sysdeps/sparc/sparc-mcount.S: Likewise.
+	* sysdeps/sparc/Makefile: Add sparc-mcount target to
+	sysdep_routines in gmon directory.
+
 2008-05-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/soinit.c (__EH_FRAME_BEGIN__): Remove.
