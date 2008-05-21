@@ -1,3 +1,8 @@
+2008-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Remove U0C0D entry added for Telugu.
+	Reported by Pravin Satpute.
+
 2008-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Remove duplicate U0C7B definition.
