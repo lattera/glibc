@@ -1,3 +1,7 @@
+2008-05-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/termios.h (ONLCR): Define under [__USE_XOPEN] too.
+
 2008-05-08  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/setcontext.S: Use
