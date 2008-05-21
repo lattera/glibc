@@ -111,7 +111,7 @@ ENTRY(__start_context)
 	 mov	%g1, %o0
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */
-1:	call	exit
+1:	call	HIDDEN_JUMPTARGET(exit)
 	 nop
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */

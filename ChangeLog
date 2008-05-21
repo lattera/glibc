@@ -1,3 +1,14 @@
+2008-05-08  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setcontext.S: Use
+	HIDDEN_JUMPTARGET.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
+	(__SYSCALL_CLOBBERS): Remove %g* registers.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+	* scripts/data/localplt-sparc-linux-gnu.data: New file.
+	* scripts/data/localplt-sparc64-linux-gnu.data: Likewise.
+
 2008-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
