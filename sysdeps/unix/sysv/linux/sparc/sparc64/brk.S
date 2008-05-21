@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -86,7 +86,11 @@ ENTRY (__brk)
 #endif
 	st	%o0, [%g1]
 #else
+#ifndef NOT_IN_libc
+	call	HIDDEN_JUMPTARGET(__errno_location)
+#else
 	call	__errno_location
+#endif
 	 mov	%o0,%l1
 	st	%l1, [%o0]
 #endif

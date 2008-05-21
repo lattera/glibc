@@ -1,3 +1,14 @@
+2008-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
+	(CALL_ERRNO_LOCATION): Define.
+	(__SYSCALL_STRING, __CLONE_SYSCALL_STRING): Use it.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(CALL_ERRNO_LOCATION): Define.
+	(__SYSCALL_STRING, __CLONE_SYSCALL_STRING): Use it.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S (__brk): Use
+	HIDDEN_JUMPTARGET for __errno_location call in libc.so.
+
 2008-05-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/inline-hashtab.h (higher_prime_number): Fix type of mid

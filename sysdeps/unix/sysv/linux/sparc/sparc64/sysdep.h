@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000, 2002, 2003, 2004, 2006
+/* Copyright (C) 1997, 2000, 2002, 2003, 2004, 2006, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
@@ -106,12 +106,19 @@ ENTRY(name);					\
 
 #else  /* __ASSEMBLER__ */
 
+#if defined SHARED && defined DO_VERSIONING && defined PIC \
+    && !defined NO_HIDDEN && !defined NOT_IN_libc
+# define CALL_ERRNO_LOCATION "call   __GI___errno_location;"
+#else
+# define CALL_ERRNO_LOCATION "call   __errno_location;"
+#endif
+
 #define __SYSCALL_STRING						\
 	"ta	0x6d;"							\
 	"bcc,pt	%%xcc, 1f;"						\
 	" nop;"								\
 	"save	%%sp, -192, %%sp;"					\
-	"call	__errno_location;"					\
+	CALL_ERRNO_LOCATION						\
 	" nop;"								\
 	"st	%%i0,[%%o0];"						\
 	"restore %%g0, -1, %%o0;"					\
@@ -122,7 +129,7 @@ ENTRY(name);					\
 	"bcc,pt	%%xcc, 1f;"						\
 	" sub	%%o1, 1, %%o1;"						\
 	"save	%%sp, -192, %%sp;"					\
-	"call	__errno_location;"					\
+	CALL_ERRNO_LOCATION						\
 	" mov	-1, %%i1;"						\
 	"st	%%i0,[%%o0];"						\
 	"restore %%g0, -1, %%o0;"					\
