@@ -1,6 +1,7 @@
-2008-05-19  Jakub Jelinek  <jakub@redhat.com>
+2008-05-20  Jakub Jelinek  <jakub@redhat.com>
+	    David S. Miller  <davem@davemloft.net>
 
-	* elf/soinit.c (__EH_FRAME_BEGIN__): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.
 
 2008-05-10  Ulrich Drepper  <drepper@redhat.com>
 
