@@ -135,8 +135,10 @@ struct termios
   /* Output modes.  */
   tcflag_t c_oflag;
 #define	OPOST	(1 << 0)	/* Perform output processing.  */
-#ifdef	__USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN
 # define ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
+#endif
+#ifdef	__USE_BSD
 # define OXTABS	TAB3		/* Expand tabs to spaces.  */
 # define ONOEOT	(1 << 3)	/* Discard EOT (^D) on output.  */
 #endif
