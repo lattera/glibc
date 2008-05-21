@@ -3406,7 +3406,6 @@ order_start <TELUGU>;forward;forward;forward;forward,position
 <U0C60> <tvw-vocalicrr>;<BAS>;<MIN>;IGNORE
 <U0C0C> <tvw-vocalicl>;<BAS>;<MIN>;IGNORE
 <U0C61> <tvw-vocalicll>;<BAS>;<MIN>;IGNORE
-<U0C0D> <tvw-candrae>;<BAS>;<MIN>;IGNORE
 <U0C0E> <tvw-shorte>;<BAS>;<MIN>;IGNORE
 <U0C0F> <tvw-e>;<BAS>;<MIN>;IGNORE
 <U0C10> <tvw-ai>;<BAS>;<MIN>;IGNORE
@@ -3416,8 +3415,6 @@ order_start <TELUGU>;forward;forward;forward;forward,position
 <U0C15> <t-ka>;<BAS>;<MIN>;IGNORE
 <U0C16> <t-kha>;<BAS>;<MIN>;IGNORE
 <U0C17> <t-ga>;<BAS>;<MIN>;IGNORE
-#XXX This is wrong since there is already a definition for U0C7B.
-#<U0C7B> <t-gga>;<BAS>;<MIN>;IGNORE
 <U0C18> <t-gha>;<BAS>;<MIN>;IGNORE
 <U0C19> <t-nga>;<BAS>;<MIN>;IGNORE
 <U0C1A> <t-ca>;<BAS>;<MIN>;IGNORE
