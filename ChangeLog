@@ -1,5 +1,8 @@
 2008-05-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/endian.h: Define new fixed-size hto* and *toh macros only
+	is __USE_BSD.
+
 	* iconvdata/Depend: Add localedata.
 
 2008-05-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
