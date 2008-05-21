@@ -1,3 +1,8 @@
+2008-05-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Cleanup namespace.
+	(SOCK_DCCP): Define.
+
 2008-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Define
