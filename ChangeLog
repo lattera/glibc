@@ -1,3 +1,9 @@
+2008-02-20  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* math/libm-test.inc (exp_test): Exclude expl(1000.0L) from
+	being executed on PowerPC as the expected result exceeds IBM
+	long double 128 __LDBL_MAX__.
+
 2008-05-21  Roland McGrath  <roland@redhat.com>
 
 	* shlib-versions (sparc.*-.*-.*, sparc64.*-.*-.*): Add ABI lines.
