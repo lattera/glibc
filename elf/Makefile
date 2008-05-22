@@ -841,10 +841,14 @@ $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
 check-data := $(firstword $(wildcard \
-	        $(patsubst %,../scripts/data/localplt-%.data,\
-			   $(addsuffix -$(config-os),\
-			   	       $(config-machine) $(base-machine))\
-			   generic)))
+	        $(foreach D,$(add-ons) scripts/data,\
+	        	  $(patsubst %,$(..)$D/localplt-%.data,\
+			   	     $(abi-name) \
+			   	     $(addsuffix -$(config-os),\
+				     		 $(config-machine) \
+						 $(base-machine)) \
+			   generic))))
+
 tests: $(objpfx)check-localplt.out
 
 ifeq ($(have-thread-library),yes)

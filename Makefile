@@ -1,4 +1,5 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006,2008
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -246,8 +247,12 @@ tests-clean:
 tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 check-data := $(firstword $(wildcard \
-	        $(foreach M,$(config-machine) $(base-machine),\
-			  scripts/data/c++-types-$M-$(config-os).data)))
+	        $(foreach D,$(add-ons) scripts/data,\
+	        	  $(patsubst %,$D/c++-types-%.data,\
+			   	     $(abi-name) \
+			   	     $(addsuffix -$(config-os),\
+				     		 $(config-machine) \
+						 $(base-machine))))))
 ifneq (,$(check-data))
 $(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
 	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@

@@ -1,7 +1,19 @@
+2008-05-21  Roland McGrath  <roland@redhat.com>
+
+	* shlib-versions (sparc.*-.*-.*, sparc64.*-.*-.*): Add ABI lines.
+
+	* Makefile (check-data): Use $(abi-name) before other guesses.
+	Look in $(add-ons) dirs before scripts/data/.
+	* elf/Makefile (check-data): Likewise.
+
+	* scripts/soversions.awk: Grok ABI line.
+	* Makeconfig ($(common-objpfx)soversions.mk): Likewise.
+	Emit definition for abi-name variable.
+
 2008-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/endian.h: Define new fixed-size hto* and *toh macros only
-	is __USE_BSD.
+	if [__USE_BSD].
 
 	* iconvdata/Depend: Add localedata.
 

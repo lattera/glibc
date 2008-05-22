@@ -43,6 +43,11 @@ powerpc.*-.*-.*		WORDSIZE64		powerpc64-@VENDOR@-@OS@
 sparc64.*-.*-.*		WORDSIZE32		sparc-@VENDOR@-@OS@
 sparc.*-.*-.*		WORDSIZE64		sparc64-@VENDOR@-@OS@
 
+# Configuration		ABI			Identifier for ABI data files
+# -------------		----------		-----------------------------
+sparc64.*-.*-.*		ABI			sparc64-@OS@
+sparc.*-.*-.*		ABI			sparc-@OS@
+
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------
 
