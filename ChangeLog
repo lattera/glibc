@@ -1,3 +1,13 @@
+2008-05-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/stdio.h (vscanf): Fix -std=c99 redirect.
+	* stdio-common/Makefile (tests): Add scanf16 and scanf17.
+	(CFLAGS-scanf17.c): New.
+	* stdio-common/scanf14.c (main): Add fscanf and scanf tests.
+	* stdio-common/scanf15.c (main): Likewise.
+	* stdio-common/scanf16.c: New test.
+	* stdio-common/scanf17.c: New test.
+
 2008-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (send_dg): If we already have one of two

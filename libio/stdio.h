@@ -475,7 +475,7 @@ extern int __REDIRECT (vfscanf,
 		       __isoc99_vfscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 extern int __REDIRECT (vscanf, (__const char *__restrict __format,
-				_G_va_list __arg), __isoc99_vfscanf)
+				_G_va_list __arg), __isoc99_vscanf)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 extern int __REDIRECT (vsscanf,
 		       (__const char *__restrict __s,
