@@ -1,3 +1,9 @@
+2008-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): If we already have one of two
+	answers and the server reports SERVFAI, NOTIMP, or REFUSED, then
+	use the one answer insted of failing.
+
 2008-02-20  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* math/libm-test.inc (exp_test): Exclude expl(1000.0L) from

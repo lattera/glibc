@@ -1001,12 +1001,12 @@ send_dg(res_state statp,
 		need_recompute = 1;
 	}
 	if (n == 0) {
-		Dprint(statp->options & RES_DEBUG, (stdout,
-						    ";; timeout sending\n"));
-		if (recvresp1)
-		  return resplen;
-		if (buf2 != NULL && recvresp2)
-		  return 1;
+		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
+		if (recvresp1 || (buf2 != NULL && recvresp2))
+		  {
+		    *resplen2 = 1;
+		    return resplen;
+		  }
 
 		*gotsomewhere = 1;
 		return (0);
@@ -1184,6 +1184,24 @@ send_dg(res_state statp,
 				thisansp,
 				(*thisresplen > *thisanssiz)
 				? *thisanssiz : *thisresplen);
+
+			if (recvresp1 || (buf2 != NULL && recvresp2))
+			  {
+			    *resplen2 = 1;
+			    return resplen;
+			  }
+			if (buf2 != NULL)
+			  {
+			    /* We are waiting for a possible second reply.  */
+			    resplen = 1;
+			    if (hp->id == anhp->id)
+			      recvresp1 = 1;
+			    else
+			      recvresp2 = 1;
+
+			    goto wait;
+			  }
+
 		next_ns:
 			__res_iclose(statp, false);
 			/* don't retry if called from dig */
