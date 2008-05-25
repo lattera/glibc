@@ -1,5 +1,5 @@
 /* Test and measure string and memory functions.
-   Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -118,6 +118,10 @@ size_t iterations = 100000;
     }									\
   while (0)
 
+#ifndef BUF1PAGES
+# define BUF1PAGES 1
+#endif
+
 static void
 test_init (void)
 {
@@ -126,11 +130,11 @@ test_init (void)
   if (page_size < MIN_PAGE_SIZE)
     page_size = MIN_PAGE_SIZE;
 #endif
-  buf1 = mmap (0, 2 * page_size, PROT_READ | PROT_WRITE,
+  buf1 = mmap (0, (BUF1PAGES + 1) * page_size, PROT_READ | PROT_WRITE,
 	       MAP_PRIVATE | MAP_ANON, -1, 0);
   if (buf1 == MAP_FAILED)
     error (EXIT_FAILURE, errno, "mmap failed");
-  if (mprotect (buf1 + page_size, page_size, PROT_NONE))
+  if (mprotect (buf1 + BUF1PAGES * page_size, page_size, PROT_NONE))
     error (EXIT_FAILURE, errno, "mprotect failed");
   buf2 = mmap (0, 2 * page_size, PROT_READ | PROT_WRITE,
 	       MAP_PRIVATE | MAP_ANON, -1, 0);
@@ -145,7 +149,7 @@ test_init (void)
       srandom (seed);
     }
 
-  memset (buf1, 0xa5, page_size);
+  memset (buf1, 0xa5, BUF1PAGES * page_size);
   memset (buf2, 0x5a, page_size);
 }
 
