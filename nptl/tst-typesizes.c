@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
@@ -21,6 +21,25 @@
 #include <pthreadP.h>
 #include <semaphore.h>
 
+static const struct
+{
+  const char *name;
+  size_t expected;
+  size_t is;
+} types[] =
+  {
+#define T(t, c) \
+    { #t, c, sizeof (t) }
+    T (pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T),
+    T (pthread_mutex_t, __SIZEOF_PTHREAD_MUTEX_T),
+    T (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T),
+    T (pthread_cond_t, __SIZEOF_PTHREAD_COND_T),
+    T (pthread_condattr_t, __SIZEOF_PTHREAD_CONDATTR_T),
+    T (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T),
+    T (pthread_rwlockattr_t, __SIZEOF_PTHREAD_RWLOCKATTR_T),
+    T (pthread_barrier_t, __SIZEOF_PTHREAD_BARRIER_T),
+    T (pthread_barrierattr_t, __SIZEOF_PTHREAD_BARRIERATTR_T)
+  };
 
 static int
 do_test (void)
@@ -61,6 +80,14 @@ do_test (void)
   TEST_TYPE2 (pthread_barrierattr_t, struct pthread_barrierattr);
   TEST_TYPE2 (sem_t, struct new_sem);
   TEST_TYPE2 (sem_t, struct old_sem);
+
+  for (size_t i = 0; i < sizeof (types) / sizeof (types[0]); ++i)
+    if (types[i].expected != types[i].is)
+      {
+	printf ("%s: expected %zu, is %zu\n",
+		types[i].name, types[i].expected, types[i].is);
+	result = 1;
+      }
 
   return result;
 }

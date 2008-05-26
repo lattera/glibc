@@ -1,5 +1,10 @@
+2008-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-typesizes.c: Explicitly check __SIZEOF_PTHREAD_* constants.
+
 2008-05-20  Jakub Jelinek  <jakub@redhat.com>
-	    David S. Miller  <davem@davemloft.net>
+
+	David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.
 
