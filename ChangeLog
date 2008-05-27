@@ -1,3 +1,13 @@
+2008-05-26  Jim Meyering  <meyering@redhat.com>
+
+	Remove useless more "if" tests before "free".
+	* include/inline-hashtab.h (htab_delete): Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* locale/programs/ld-collate.c (collate_read): Likewise.
+	* misc/fstab.c (libc_freeres_fn): Likewise.
+	* posix/glob.c (globfree): Likewise.
+
 2008-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/Makefile (strop-tests): Add memmem.

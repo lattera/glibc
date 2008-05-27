@@ -32,11 +32,19 @@
 	.type	__pthread_cond_broadcast, @function
 	.align	16
 __pthread_cond_broadcast:
-
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%edi, -16)
+	cfi_offset(%ebp, -20)
 
 	movl	20(%esp), %ebx
 
@@ -114,11 +122,24 @@ __pthread_cond_broadcast:
 
 10:	xorl	%eax, %eax
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(16)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%edi, -16)
+	cfi_offset(%ebp, -20)
 	.align	16
 	/* Unlock.  */
 4:	LOCK
@@ -127,11 +148,24 @@ __pthread_cond_broadcast:
 
 6:	xorl	%eax, %eax
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(16)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%esi, -12)
+	cfi_offset(%edi, -16)
+	cfi_offset(%ebp, -20)
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
@@ -199,6 +233,7 @@ __pthread_cond_broadcast:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	jmp	10b
+	cfi_endproc
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

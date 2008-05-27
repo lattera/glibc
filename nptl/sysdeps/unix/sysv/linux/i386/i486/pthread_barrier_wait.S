@@ -27,7 +27,10 @@
 	.type	pthread_barrier_wait,@function
 	.align	16
 pthread_barrier_wait:
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
 
 	movl	8(%esp), %ebx
 
@@ -45,6 +48,8 @@ pthread_barrier_wait:
 
 	/* There are more threads to come.  */
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%esi, -12)
 
 #if CURR_EVENT == 0
 	movl	(%ebx), %edx
@@ -101,9 +106,16 @@ pthread_barrier_wait:
 10:	movl	%esi, %eax		/* != PTHREAD_BARRIER_SERIAL_THREAD */
 
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
+	
 	/* The necessary number of threads arrived.  */
 3:
 #if CURR_EVENT == 0
@@ -140,8 +152,12 @@ pthread_barrier_wait:
 5:	orl	$-1, %eax		/* == PTHREAD_BARRIER_SERIAL_THREAD */
 
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
 1:	movl	PRIVATE(%ebx), %ecx
 	leal	MUTEX(%ebx), %edx
 	xorl	$LLL_SHARED, %ecx
@@ -154,6 +170,8 @@ pthread_barrier_wait:
 	call	__lll_unlock_wake
 	jmp	5b
 
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%esi, -12)
 6:	movl	PRIVATE(%ebx), %ecx
 	leal	MUTEX(%ebx), %eax
 	xorl	$LLL_SHARED, %ecx
@@ -165,4 +183,5 @@ pthread_barrier_wait:
 	xorl	$LLL_SHARED, %ecx
 	call	__lll_unlock_wake
 	jmp	10b
+	cfi_endproc
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -185,6 +186,5 @@ libc_freeres_fn (fstab_free)
   char *buffer;
 
   buffer = fstab_state.fs_buffer;
-  if (buffer != NULL)
-    free ((void *) buffer);
+  free ((void *) buffer);
 }

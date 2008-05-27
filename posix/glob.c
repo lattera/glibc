@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1075,8 +1075,7 @@ globfree (pglob)
     {
       size_t i;
       for (i = 0; i < pglob->gl_pathc; ++i)
-	if (pglob->gl_pathv[pglob->gl_offs + i] != NULL)
-	  free (pglob->gl_pathv[pglob->gl_offs + i]);
+	free (pglob->gl_pathv[pglob->gl_offs + i]);
       free (pglob->gl_pathv);
       pglob->gl_pathv = NULL;
     }

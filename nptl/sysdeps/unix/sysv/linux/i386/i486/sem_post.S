@@ -30,7 +30,10 @@
 	.type	__new_sem_post,@function
 	.align	16
 __new_sem_post:
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
 
 	movl	8(%esp), %ebx
 
@@ -64,8 +67,12 @@ __new_sem_post:
 
 2:	xorl	%eax, %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
 1:
 #ifdef PIC
 	call	__i686.get_pc_thunk.bx
@@ -116,14 +123,20 @@ __new_sem_post:
 
 	orl	$-1, %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
+	cfi_endproc
 	.size	__new_sem_post,.-__new_sem_post
 	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 	.global	__old_sem_post
 	.type	__old_sem_post,@function
 __old_sem_post:
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
 
 	movl	8(%esp), %ebx
 	LOCK
@@ -139,7 +152,10 @@ __old_sem_post:
 
 	xorl	%eax, %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
+	cfi_endproc
 	.size	__old_sem_post,.-__old_sem_post
 	compat_symbol(libpthread, __old_sem_post, sem_post, GLIBC_2_0)
 #endif

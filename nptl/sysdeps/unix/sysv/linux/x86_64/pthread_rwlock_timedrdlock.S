@@ -33,10 +33,19 @@
 	.type	pthread_rwlock_timedrdlock,@function
 	.align	16
 pthread_rwlock_timedrdlock:
+	cfi_startproc
 	pushq	%r12
+	cfi_adjust_cfa_offset(8)
 	pushq	%r13
+	cfi_adjust_cfa_offset(8)
 	pushq	%r14
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%r12, -16)
+	cfi_offset(%r13, -24)
+	cfi_offset(%r14, -32)
+
 	subq	$16, %rsp
+	cfi_adjust_cfa_offset(16)
 
 	movq	%rdi, %r12
 	movq	%rsi, %r13
@@ -155,11 +164,22 @@ pthread_rwlock_timedrdlock:
 7:	movq	%rdx, %rax
 
 	addq	$16, %rsp
+	cfi_adjust_cfa_offset(-16)
 	popq	%r14
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r14)
 	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
 	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 	retq
 
+	cfi_adjust_cfa_offset(40)
+	cfi_offset(%r12, -16)
+	cfi_offset(%r13, -24)
+	cfi_offset(%r14, -32)
 1:	movl	PSHARED(%rdi), %esi
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
@@ -214,4 +234,5 @@ pthread_rwlock_timedrdlock:
 
 19:	movl	$EINVAL, %edx
 	jmp	9b
+	cfi_endproc
 	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock

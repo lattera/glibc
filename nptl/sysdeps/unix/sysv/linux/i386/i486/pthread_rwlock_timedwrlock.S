@@ -30,11 +30,21 @@
 	.type	pthread_rwlock_timedwrlock,@function
 	.align	16
 pthread_rwlock_timedwrlock:
+	cfi_startproc
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%esi, -8)
+	cfi_offset(%edi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 	subl	$8, %esp
+	cfi_adjust_cfa_offset(8)
 
 	movl	28(%esp), %ebp
 	movl	32(%esp), %edi
@@ -148,12 +158,26 @@ pthread_rwlock_timedwrlock:
 7:	movl	%edx, %eax
 
 	addl	$8, %esp
+	cfi_adjust_cfa_offset(-8)
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 	ret
 
+	cfi_adjust_cfa_offset(24)
+	cfi_offset(%esi, -8)
+	cfi_offset(%edi, -12)
+	cfi_offset(%ebx, -16)
+	cfi_offset(%ebp, -20)
 1:
 #if MUTEX == 0
 	movl	%ebp, %edx
@@ -209,4 +233,5 @@ pthread_rwlock_timedwrlock:
 
 19:	movl	$EINVAL, %edx
 	jmp	9b
+	cfi_endproc
 	.size	pthread_rwlock_timedwrlock,.-pthread_rwlock_timedwrlock

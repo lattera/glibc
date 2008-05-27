@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98,2000,2001,2002,2003
+/* Copyright (C) 1993,95,96,97,98,2000,2001,2002,2003,2008
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -80,8 +80,7 @@ freopen (filename, mode, fp)
   if (fd != -1)
     {
       __close (fd);
-      if (filename != NULL)
-	free ((char *) filename);
+      free ((char *) filename);
     }
   _IO_release_lock (fp);
   return result;

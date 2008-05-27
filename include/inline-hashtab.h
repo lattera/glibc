@@ -142,8 +142,7 @@ htab_delete (struct hashtab *htab)
   int i;
 
   for (i = htab->size - 1; i >= 0; i--)
-    if (htab->entries[i])
-      free (htab->entries[i]);
+    free (htab->entries[i]);
 
   if (htab->free)
     htab->free (htab->entries);

@@ -29,8 +29,13 @@
 	.type	__pthread_rwlock_unlock,@function
 	.align	16
 __pthread_rwlock_unlock:
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%edi, -12)
 
 	movl	12(%esp), %edi
 
@@ -87,9 +92,16 @@ __pthread_rwlock_unlock:
 
 	xorl	%eax, %eax
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
 
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%edi, -12)
 	.align	16
 6:	LOCK
 #if MUTEX == 0
@@ -133,7 +145,7 @@ __pthread_rwlock_unlock:
 	movzbl	PSHARED(%edi), %ecx
 	call	__lll_unlock_wake
 	jmp	8b
-
+	cfi_endproc
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 
 	.globl	pthread_rwlock_unlock

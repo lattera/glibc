@@ -33,8 +33,13 @@
 	.align	16
 __pthread_cond_signal:
 
+	cfi_startproc
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%edi, -12)
 
 	movl	12(%esp), %edi
 
@@ -69,7 +74,12 @@ __pthread_cond_signal:
 
 	/* Wake up one thread.  */
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(%esi, -16)
+	cfi_offset(%ebp, -20)
+
 #if FUTEX_PRIVATE_FLAG > 255
 	xorl	%ecx, %ecx
 #endif
@@ -91,7 +101,11 @@ __pthread_cond_signal:
 	ENTER_KERNEL  */
 	int	$0x80
 	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
 
 	/* For any kind of error, we try again with WAKE.
 	   The general test also covers running on old kernels.  */
@@ -100,8 +114,16 @@ __pthread_cond_signal:
 
 6:	xorl	%eax, %eax
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%edi)
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
 	ret
+
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(%ebx, -8)
+	cfi_offset(%edi, -12)
 
 7:	/* %ecx should be either FUTEX_WAKE_OP or
 	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
@@ -152,6 +174,7 @@ __pthread_cond_signal:
 	call	__lll_lock_wait
 	jmp	2b
 
+	cfi_endproc
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)
