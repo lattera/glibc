@@ -1425,7 +1425,7 @@ available on all systems implementing @w{ISO C}.  But often the text
 @code{perror} generates is not what is wanted and there is no way to
 extend or change what @code{perror} does.  The GNU coding standard, for
 instance, requires error messages to be preceded by the program name and
-programs which read some input files should should provide information
+programs which read some input files should provide information
 about the input file name and the line number in case an error is
 encountered while reading the file.  For these occasions there are two
 functions available which are widely used throughout the GNU project.

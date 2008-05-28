@@ -574,7 +574,7 @@ operation itself is avoided.  More importantly, functions like
 introduction of threads) were implemented as macros which are very fast
 if the buffer is not empty.  With the addition of locking requirements
 these functions are no longer implemented as macros since they would
-would expand to too much code.
+expand to too much code.
 But these macros are still available with the same functionality under the new
 names @code{putc_unlocked} and @code{getc_unlocked}.  This possibly huge
 difference of speed also suggests the use of the @code{_unlocked}

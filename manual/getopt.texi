@@ -269,7 +269,7 @@ When @code{getopt_long} has no more options to handle, it returns
 @var{argv} of the next remaining argument.
 @end deftypefun
 
-Since long option names were used before before the @code{getopt_long}
+Since long option names were used before the @code{getopt_long}
 options was invented there are program interfaces which require programs
 to recognize options like @w{@samp{-option value}} instead of
 @w{@samp{--option value}}.  To enable these programs to use the GNU

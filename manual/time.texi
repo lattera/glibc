@@ -972,7 +972,7 @@ This counter represents the number of calibration errors (caused by
 large offsets or jitter).
 
 @item long int stbcnt
-This counter denotes the number of of calibrations where the stability
+This counter denotes the number of calibrations where the stability
 exceeded the threshold.
 @end table
 @end deftp

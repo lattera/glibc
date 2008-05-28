@@ -2379,7 +2379,7 @@ exceed the process' data storage limit.
 @c The Brk system call in Linux (as opposed to the GNU C Library function)
 @c is considerably different.  It always returns the new end of the data
 @c segment, whether it succeeds or fails.  The GNU C library Brk determines
-@c it's a failure if and only if if the system call returns an address less
+@c it's a failure if and only if the system call returns an address less
 @c than the address requested.
 
 @end deftypefun

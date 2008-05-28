@@ -1466,7 +1466,7 @@ have this problem.  But there is a very simple and powerful method to
 handle these kind of problems with the @code{gettext} functions.
 
 @noindent
-As as example consider the following fictional situation.  A GUI program
+As an example consider the following fictional situation.  A GUI program
 has a menu bar with the following entries:
 
 @smallexample

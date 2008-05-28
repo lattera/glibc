@@ -393,7 +393,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-character set always is UCS-4, at least on GNU systems.
+set always is UCS-4, at least on GNU systems.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes that can be necessary to represent one character.  This

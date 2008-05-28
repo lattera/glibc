@@ -1288,7 +1288,7 @@ protected from concurrent accesses from different processors.
 The POSIX standard up to this date is of not much help to solve this
 problem.  The Linux kernel provides a set of interfaces to allow
 specifying @emph{affinity sets} for a process.  The scheduler will
-schedule the thread or process on on CPUs specified by the affinity
+schedule the thread or process on CPUs specified by the affinity
 masks.  The interfaces which the GNU C library define follow to some
 extend the Linux kernel interface.
 

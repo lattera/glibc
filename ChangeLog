@@ -1,3 +1,14 @@
+2010-02-22  Jim Meyering  <meyering@redhat.com>
+
+	* manual/errno.texi (Error Messages): Fix doubled-words and typos.
+	* manual/charset.texi (Selecting the Conversion): Likewise.
+	* manual/getopt.texi (Getopt Long Options): Likewise.
+	* manual/memory.texi (Resizing the Data Segment): Likewise.
+	* manual/message.texi (GUI program problems): Likewise.
+	* manual/resource.texi (CPU Affinity): Likewise.
+	* manual/stdio.texi (Streams and Threads): Likewise.
+	* manual/time.texi (High Accuracy Clock): Likewise.
+
 2009-02-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
