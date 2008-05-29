@@ -1,3 +1,8 @@
+2008-05-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/createthread.c (do_clone): Pass accurate length
+	of CPU set to the kernel.
+
 2008-05-23  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Add
