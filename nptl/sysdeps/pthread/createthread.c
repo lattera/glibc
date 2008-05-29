@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -98,7 +98,7 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
       if (attr->cpuset != NULL)
 	{
 	  res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid,
-				  sizeof (cpu_set_t), attr->cpuset);
+				  attr->cpusetsize, attr->cpuset);
 
 	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
 	    {
