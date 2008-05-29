@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -122,12 +122,12 @@ enum
 
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 # ifdef __USE_GNU
 #  if __WORDSIZE == 64
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,					      \
-      PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+	PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, 0 } }
 #  else
 #   if __BYTE_ORDER == __LITTLE_ENDIAN
 #    define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
@@ -399,7 +399,7 @@ extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
 
 
 /* Initialize thread attribute *ATTR with attributes corresponding to the
-   already running thread TH.  It shall be called on unitialized ATTR
+   already running thread TH.  It shall be called on uninitialized ATTR
    and destroyed with pthread_attr_destroy when no longer needed.  */
 extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr)
      __THROW __nonnull ((2));

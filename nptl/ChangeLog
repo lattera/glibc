@@ -1,3 +1,7 @@
+2008-05-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/pthread/pthread.h: Fix typo in comment.
+
 2008-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/createthread.c (do_clone): Pass accurate length
