@@ -26,14 +26,40 @@ static int
 do_test (void)
 {
   pthread_rwlock_t r;
+  pthread_rwlockattr_t at;
   int e;
 
-  if (pthread_rwlock_init (&r, NULL) != 0)
+  if (pthread_rwlockattr_init (&at) != 0)
+    {
+      puts ("rwlockattr_init failed");
+      return 1;
+    }
+  puts ("rwlockattr_init succeeded");
+
+#ifndef TYPE
+# define TYPE PTHREAD_RWLOCK_PREFER_READER_NP
+#endif
+
+  if (pthread_rwlockattr_setkind_np (&at, TYPE) != 0)
+    {
+      puts ("rwlockattr_setkind failed");
+      return 1;
+    }
+  puts ("rwlockattr_setkind succeeded");
+
+  if (pthread_rwlock_init (&r, &at) != 0)
     {
       puts ("rwlock_init failed");
       return 1;
     }
   puts ("rwlock_init succeeded");
+
+  if (pthread_rwlockattr_destroy (&at) != 0)
+    {
+      puts ("rwlockattr_destroy failed");
+      return 1;
+    }
+  puts ("rwlockattr_destroy succeeded");
 
   if (pthread_rwlock_wrlock (&r) != 0)
     {
