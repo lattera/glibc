@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <errno.h>
+#include <atomic.h>
+#include "pthreadP.h"
 
-	.text
-	.align	4
-
-ENTRY (pthread_spin_lock)
-	mov	r1, #1
-1:	swp	r2, r1, [r0]
-	teq	r2, #0
-	bne	1b
-	mov	r0, #0
-	PSEUDO_RET_NOERRNO
-END (pthread_spin_lock)
+int
+pthread_spin_trylock (pthread_spinlock_t *lock)
+{
+  return atomic_compare_and_exchange_val_acq (lock, 1, 0) ? EBUSY : 0;
+}

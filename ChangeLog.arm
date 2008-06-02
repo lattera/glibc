@@ -1,3 +1,23 @@
+2008-06-01  Paul Brook  <paul@codesourcery.com>
+	    Zack Weinberg  <zack@codesourcery.com>
+	    Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/nptl/pthread_spin_lock.S,
+	sysdeps/arm/nptl/pthread_spin_trylock.S: Delete.
+	* sysdeps/arm/nptl/pthread_spin_lock.c,
+	sysdeps/arm/nptl/pthread_spin_trylock.c: New files using
+	atomic_compare_and_exchange_val_acq to take spinlocks.
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h (lll_trylock,
+	lll_cond_trylock): Use atomic_compare_and_exchange_val_acq.
+	(__lll_trylock, __lll_cond_trylock): Delete.
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h
+	(atomic_exchange_acq): Delete.
+	(atomic_full_barrier): Define.
+	(__arch_compare_and_exchange_val_32_acq): Use named operands.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure.in: Update
+	arch_minimum_kernel to 2.6.16.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure: Regenerated.
+
 2008-04-21  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/check_pf.c: Update from generic

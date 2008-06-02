@@ -37,22 +37,12 @@ typedef uintmax_t uatomic_max_t;
 
 void __arm_link_error (void);
 
-#define atomic_exchange_acq(mem, newvalue)				      \
-  ({ __typeof (*mem) result;						      \
-     if (sizeof (*mem) == 1)						      \
-       __asm__ __volatile__ ("swpb %0, %1, [%2]"			      \
-			     : "=&r,&r" (result)			      \
-			     : "r,0" (newvalue), "r,r" (mem) : "memory");     \
-     else if (sizeof (*mem) == 4)					      \
-       __asm__ __volatile__ ("swp %0, %1, [%2]"				      \
-			     : "=&r,&r" (result)			      \
-			     : "r,0" (newvalue), "r,r" (mem) : "memory");     \
-     else								      \
-       {								      \
-	 result = 0;							      \
-	 abort ();							      \
-       }								      \
-     result; })
+#define atomic_full_barrier() \
+     __asm__ __volatile__						      \
+	     ("mov\tip, #0xffff0fff\n\t"				      \
+	      "mov\tlr, pc\n\t"						      \
+	      "add\tpc, ip, #(0xffff0fa0 - 0xffff0fff)"			      \
+	      : : : "ip", "lr", "cc", "memory");
 
 /* Atomic compare and exchange.  This sequence relies on the kernel to
    provide a compare and exchange operation which is atomic on the
@@ -76,18 +66,19 @@ void __arm_link_error (void);
      register __typeof (oldval) a_tmp asm ("r3");			      \
      register __typeof (oldval) a_oldval2 asm ("r4") = (oldval);	      \
      __asm__ __volatile__						      \
-	     ("0:\tldr\t%1,[%3]\n\t"					      \
-	      "cmp\t%1, %4\n\t"						      \
+	     ("0:\tldr\t%[tmp],[%[ptr]]\n\t"				      \
+	      "cmp\t%[tmp], %[old2]\n\t"				      \
 	      "bne\t1f\n\t"						      \
-	      "mov\t%0, %4\n\t"						      \
-	      "mov\t%1, #0xffff0fff\n\t"				      \
+	      "mov\t%[old], %[old2]\n\t"				      \
+	      "mov\t%[tmp], #0xffff0fff\n\t"				      \
 	      "mov\tlr, pc\n\t"						      \
-	      "add\tpc, %1, #(0xffff0fc0 - 0xffff0fff)\n\t"		      \
+	      "add\tpc, %[tmp], #(0xffff0fc0 - 0xffff0fff)\n\t"		      \
 	      "bcc\t0b\n\t"						      \
-	      "mov\t%1, %4\n\t"						      \
+	      "mov\t%[tmp], %[old2]\n\t"				      \
 	      "1:"							      \
-	      : "=&r" (a_oldval), "=&r" (a_tmp)				      \
-	      : "r" (a_newval), "r" (a_ptr), "r" (a_oldval2)		      \
+	      : [old] "=&r" (a_oldval), [tmp] "=&r" (a_tmp)		      \
+	      : [new] "r" (a_newval), [ptr] "r" (a_ptr),		      \
+		[old2] "r" (a_oldval2)					      \
 	      : "ip", "lr", "cc", "memory");				      \
      a_tmp; })
 

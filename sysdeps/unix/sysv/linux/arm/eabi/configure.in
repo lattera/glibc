@@ -1,5 +1,5 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
 
-arch_minimum_kernel=2.6.14
+arch_minimum_kernel=2.6.16
 libc_cv_gcc_unwind_find_fde=no

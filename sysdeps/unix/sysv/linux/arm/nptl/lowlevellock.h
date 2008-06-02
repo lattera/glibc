@@ -126,43 +126,11 @@
   })
 
 
-static inline int __attribute__((always_inline))
-__lll_trylock (int *futex)
-{
-  int flag = 1, old;
-  asm volatile (
-    "\tswp	%[old], %[flag], [%[futex]]	@ try to take the lock\n"
-    "\tcmp	%[old], #1			@ check old lock value\n"
-    "\tmovlo	%[flag], #0			@ if we got it, return 0\n"
-    "\tswphi	%[flag], %[old], [%[futex]]	@ if it was contested,\n"
-    "						@ restore the contested flag,\n"
-    "						@ and check whether that won."
-    : [futex] "+&r" (futex), [flag] "+&r" (flag), [old] "=&r" (old)
-    : : "memory" );
+#define lll_trylock(lock)	\
+  atomic_compare_and_exchange_val_acq(&(lock), 1, 0)
 
-  return flag;
-}
-#define lll_trylock(lock)	__lll_trylock (&(lock))
-
-
-static inline int __attribute__((always_inline))
-__lll_cond_trylock (int *futex)
-{
-  int flag = 2, old;
-  asm volatile (
-    "\tswp	%[old], %[flag], [%[futex]]	@ try to take the lock\n"
-    "\tcmp	%[old], #1			@ check old lock value\n"
-    "\tmovlo	%[flag], #0			@ if we got it, return 0\n"
-    "\tswphi	%[flag], %[old], [%[futex]]	@ if it was contested,\n"
-    "						@ restore the contested flag,\n"
-    "						@ and check whether that won."
-    : [futex] "+&r" (futex), [flag] "+&r" (flag), [old] "=&r" (old)
-    : : "memory" );
-
-  return flag;
-}
-#define lll_cond_trylock(lock)	__lll_cond_trylock (&(lock))
-
+#define lll_cond_trylock(lock)	\
+  atomic_compare_and_exchange_val_acq(&(lock), 2, 0)
 
 #define __lll_robust_trylock(futex, id) \
   (atomic_compare_and_exchange_val_acq (futex, id, 0) != 0)
