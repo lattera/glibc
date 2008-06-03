@@ -1,3 +1,9 @@
+2008-06-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_getserv_r.c (__nscd_getservbyport_r): Pass cp
+	instead of portstr to nscd_getserv_r.  Patch by
+	Roman Kagan <rkagan@mail.ru>.
+
 2008-05-26  Jim Meyering  <meyering@redhat.com>
 
 	Remove more useless "if" tests before "free".

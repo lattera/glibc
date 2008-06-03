@@ -53,7 +53,7 @@ __nscd_getservbyport_r (int port, const char *proto,
   portstr[sizeof (portstr) - 1] = '\0';
   char *cp = _itoa_word (port, portstr + sizeof (portstr) - 1, 10, 0);
 
-  return nscd_getserv_r (portstr, portstr + sizeof (portstr) - cp, proto,
+  return nscd_getserv_r (cp, portstr + sizeof (portstr) - cp, proto,
 			 GETSERVBYPORT, result_buf, buf, buflen, result);
 }
 
