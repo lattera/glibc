@@ -1,5 +1,7 @@
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 
+	* manual/charset.texi: Adjust grammar.
+
 	* manual/errno.texi (Error Messages): Fix doubled-words and typos.
 	* manual/charset.texi (Selecting the Conversion): Likewise.
 	* manual/getopt.texi (Getopt Long Options): Likewise.

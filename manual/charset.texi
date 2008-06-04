@@ -393,7 +393,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-set always is UCS-4, at least on GNU systems.
+set is always UCS-4, at least on GNU systems.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes that can be necessary to represent one character.  This
@@ -577,8 +577,8 @@ The @code{btowc} function was introduced in @w{Amendment 1} to @w{ISO C90}
 and is declared in @file{wchar.h}.
 @end deftypefun
 
-Despite the limitation that the single byte value always is interpreted
-in the initial state this function is actually useful most of the time.
+Despite the limitation that the single byte value is always interpreted
+in the initial state, this function is actually useful most of the time.
 Most characters are either entirely single-byte character sets or they
 are extension to ASCII.  But then it is possible to write code like this
 (not that this specific example is very useful):
@@ -607,10 +607,10 @@ that there is no guarantee that one can perform this kind of arithmetic
 on the character of the character set used for @code{wchar_t}
 representation.  In other situations the bytes are not constant at
 compile time and so the compiler cannot do the work.  In situations like
-this it is necessary @code{btowc}.
+this, using @code{btowc} is required.
 
 @noindent
-There also is a function for the conversion in the other direction.
+There is also a function for the conversion in the other direction.
 
 @comment wchar.h
 @comment ISO
