@@ -1,3 +1,8 @@
+2008-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/regexp.h (compile): Use __REPB_PREFIX macro.
+	Avoid segfault if first GETC returns eof/'\0'/'\n'.
+
 2008-06-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd_getserv_r.c (__nscd_getservbyport_r): Pass cp

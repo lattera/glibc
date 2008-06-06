@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2004, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -129,8 +130,9 @@ compile (char *__restrict instring, char *__restrict expbuf,
   __expr_ptr = (regex_t *) expbuf;
   /* The remaining space in the buffer can be used for the compiled
      pattern.  */
-  __expr_ptr->buffer = expbuf + sizeof (regex_t);
-  __expr_ptr->allocated = endbuf -  (char *) __expr_ptr->buffer;
+  __expr_ptr->__REPB_PREFIX (buffer) = expbuf + sizeof (regex_t);
+  __expr_ptr->__REPB_PREFIX (allocated)
+    = endbuf - (char *) __expr_ptr->__REPB_PREFIX (buffer);
 
   while ((__ch = (GETC ())) != eof)
     {
@@ -162,7 +164,10 @@ compile (char *__restrict instring, char *__restrict expbuf,
 	}
       __input_buffer[__current_size++] = __ch;
     }
-  __input_buffer[__current_size++] = '\0';
+  if (__current_size)
+    __input_buffer[__current_size++] = '\0';
+  else
+    __input_buffer = "";
 
   /* Now compile the pattern.  */
   __error = regcomp (__expr_ptr, __input_buffer, REG_NEWLINE);
@@ -198,7 +203,8 @@ compile (char *__restrict instring, char *__restrict expbuf,
       }
 
   /* Everything is ok.  */
-  RETURN ((char *) (__expr_ptr->buffer + __expr_ptr->used));
+  RETURN ((char *) (__expr_ptr->__REPB_PREFIX (buffer)
+		    + __expr_ptr->__REPB_PREFIX (used)));
 }
 #endif
 
