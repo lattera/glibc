@@ -1,3 +1,9 @@
+2008-06-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Also log and
+	ignore T_DNAME messages.
+	* resolv/arpa/nameser_compat.h (T_DNAME): Define.
+
 2008-06-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/regexp.h (compile): Use __REPB_PREFIX macro.

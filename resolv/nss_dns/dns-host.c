@@ -1072,12 +1072,13 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       if (__builtin_expect (type == T_SIG, 0)
 	  || __builtin_expect (type == T_KEY, 0)
 	  || __builtin_expect (type == T_NXT, 0)
-	  || __builtin_expect (type == T_PTR, 0))
+	  || __builtin_expect (type == T_PTR, 0)
+	  || __builtin_expect (type == T_DNAME, 0))
 	{
 	  /* We don't support DNSSEC yet.  For now, ignore the record
 	     and send a low priority message to syslog.
 
-	     We also don't expect T_PTR messages.  */
+	     We also don't expect T_PTR or T_DNAME messages.  */
 	  syslog (LOG_DEBUG | LOG_AUTH,
 		  "getaddrinfo*.gaih_getanswer: got type \"%s\"",
 		  p_type (type));
