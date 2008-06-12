@@ -1,3 +1,11 @@
+2008-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/mem.c (gc): Initialize obstack earlier so that if we jump
+	out we don't use uninitialized memory.
+
+	* nscd/hstcache.c (cache_addhst): Send correct number of bytes to
+	the client.
+
 2008-06-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Also log and

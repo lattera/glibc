@@ -83,8 +83,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      struct hashentry *he, struct datahead *dh, int errval,
 	      int32_t ttl)
 {
-  ssize_t total;
-  ssize_t written;
+  bool all_written = true;
   time_t t = time (NULL);
 
   /* We allocate all data in one memory block: the iov vector,
@@ -108,18 +107,17 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
-
-	  written = total = 0;
 	}
       else
 	{
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
-	  written = total = sizeof (notfound);
+	  ssize_t total = sizeof (notfound);
 
-	  if (fd != -1)
-	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
-						MSG_NOSIGNAL));
+	  if (fd != -1 &&
+	      TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+					MSG_NOSIGNAL)) != total)
+	    all_written = false;
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
 				   IDX_result_data);
@@ -181,6 +179,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       char *key_copy = NULL;
       char *cp;
       size_t cnt;
+      ssize_t total;
 
       /* Determine the number of aliases.  */
       h_aliases_cnt = 0;
@@ -208,7 +207,6 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		+ h_name_len
 		+ h_aliases_cnt * sizeof (uint32_t)
 		+ h_addr_list_cnt * hst->h_length);
-      written = total;
 
       /* If we refill the cache, first assume the reconrd did not
 	 change.  Allocate memory on the cache since it is likely
@@ -260,6 +258,9 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       dataset->resp.h_addr_list_cnt = h_addr_list_cnt;
       dataset->resp.error = NETDB_SUCCESS;
 
+      /* Make sure there is no gap.  */
+      assert ((char *) (&dataset->resp.error + 1) == dataset->strdata);
+
       cp = dataset->strdata;
 
       cp = mempcpy (cp, hst->h_name, h_name_len);
@@ -285,6 +286,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	 is extended by the domainnames from /etc/resolv.conf.  Therefore
 	 we explicitly add the name here.  */
       key_copy = memcpy (cp, key, req->key_len);
+
+      assert ((char *) &dataset->resp + dataset->head.recsize == cp);
 
       /* Now we can determine whether on refill we have to create a new
 	 record or not.  */
@@ -351,20 +354,27 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
-	      written = sendfileall (fd, db->wr_fd,
-				     (char *) &dataset->resp
-				     - (char *) db->head, total);
+	      ssize_t written = sendfileall (fd, db->wr_fd,
+					     (char *) &dataset->resp
+					     - (char *) db->head,
+					     dataset->head.recsize);
+	      if (written != dataset->head.recsize)
+		{
 # ifndef __ASSUME_SENDFILE
-	      if (written == -1 && errno == ENOSYS)
-		goto use_write;
+		  if (written == -1 && errno == ENOSYS)
+		    goto use_write;
 # endif
+		  all_written = false;
+		}
 	    }
 	  else
 # ifndef __ASSUME_SENDFILE
 	  use_write:
 # endif
 #endif
-	    written = writeall (fd, &dataset->resp, total);
+	    if (writeall (fd, &dataset->resp, dataset->head.recsize)
+		!= dataset->head.recsize)
+	      all_written = false;
 	}
 
       /* Add the record to the database.  But only if it has not been
@@ -414,7 +424,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	}
     }
 
-  if (__builtin_expect (written != total, 0) && debug_level > 0)
+  if (__builtin_expect (!all_written, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

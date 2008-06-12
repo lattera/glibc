@@ -235,6 +235,11 @@ gc (struct database_dyn *db)
   /* Sort the entries by their address.  */
   qsort (he, cnt, sizeof (struct hashentry *), sort_he);
 
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+  struct obstack ob;
+  obstack_init (&ob);
+
   /* Determine the highest used address.  */
   size_t high = nmark;
   while (high > 0 && mark[high - 1] == 0)
@@ -307,10 +312,6 @@ gc (struct database_dyn *db)
     size_t size;
     struct moveinfo *next;
   } *moves = NULL;
-#define obstack_chunk_alloc xmalloc
-#define obstack_chunk_free free
-  struct obstack ob;
-  obstack_init (&ob);
 
   while (byte < high)
     {
