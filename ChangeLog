@@ -1,3 +1,11 @@
+2008-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/grpcache.c (cache_addgr): Correctly compute size of
+	fixed-size portion of the record.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+
 2008-06-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/mem.c (gc): Initialize obstack earlier so that if we jump

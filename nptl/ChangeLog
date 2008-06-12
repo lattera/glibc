@@ -1,3 +1,7 @@
+2008-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Remove inadvertant checkin.
+
 2008-05-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/pthread.h: Fix typo in comment.

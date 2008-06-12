@@ -190,7 +190,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  gr_mem_len_total += gr_mem_len[gr_mem_cnt];
 	}
 
-      written = total = (sizeof (struct dataset)
+      written = total = (offsetof (struct dataset, strdata)
 			 + gr_mem_cnt * sizeof (uint32_t)
 			 + gr_name_len + gr_passwd_len + gr_mem_len_total);
 
@@ -251,6 +251,9 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       memcpy (cp, buf, n);
       char *key_copy = cp + key_offset;
       assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
+
+      assert (cp == dataset->strdata + total - offsetof (struct dataset,
+							 strdata));
 
       /* Now we can determine whether on refill we have to create a new
 	 record or not.  */

@@ -185,7 +185,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       n = snprintf (buf, buf_len, "%d%c%n%s", pwd->pw_uid, '\0',
 		    &key_offset, (char *) key) + 1;
 
-      written = total = (sizeof (struct dataset) + pw_name_len + pw_passwd_len
+      written = total = (offsetof (struct dataset, strdata)
+			 + pw_name_len + pw_passwd_len
 			 + pw_gecos_len + pw_dir_len + pw_shell_len);
 
       /* If we refill the cache, first assume the reconrd did not
@@ -247,16 +248,28 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       char *key_copy = cp + key_offset;
       assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
 
+      assert (cp == dataset->strdata + total - offsetof (struct dataset,
+							 strdata));
+
       /* Now we can determine whether on refill we have to create a new
 	 record or not.  */
       if (he != NULL)
 	{
 	  assert (fd == -1);
 
-	  if (total + n == dh->allocsize
-	      && total - offsetof (struct dataset, resp) == dh->recsize
+#if 0
+	  if (dataset->head.datasize == dh->allocsize
+	      && dataset->head.recsize == dh->recsize
 	      && memcmp (&dataset->resp, dh->data,
 			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
+#else
+	  if (dataset->head.allocsize != dh->allocsize)
+	    goto nnn;
+	  if (dataset->head.recsize != dh->recsize)
+	    goto nnn;
+	  if(memcmp (&dataset->resp, dh->data,
+			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
+#endif
 	    {
 	      /* The data has not changed.  We will just bump the
 		 timeout value.  Note that the new record has been
@@ -266,6 +279,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    }
 	  else
 	    {
+ nnn:;
 	      /* We have to create a new record.  Just allocate
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
