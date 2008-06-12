@@ -35,6 +35,9 @@
 #ifdef HAVE_EPOLL
 # include <sys/epoll.h>
 #endif
+#ifdef HAVE_INOTIFY
+# include <sys/inotify.h>
+#endif
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
@@ -221,6 +224,11 @@ int max_nthreads = 32;
 
 /* Socket for incoming connections.  */
 static int sock;
+
+#ifdef HAVE_INOTIFY
+/* Inotify descriptor.  */
+static int inotify_fd = -1;
+#endif
 
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
@@ -502,6 +510,13 @@ nscd_init (void)
   if (nthreads == -1)
     /* No configuration for this value, assume a default.  */
     nthreads = 4;
+
+#ifdef HAVE_INOTIFY
+  /* Use inotify to recognize changed files.  */
+  inotify_fd = inotify_init ();
+  if (inotify_fd != -1)
+    fcntl (inotify_fd, F_SETFL, O_NONBLOCK);
+#endif
 
   for (size_t cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
@@ -805,20 +820,30 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	    assert (dbs[cnt].ro_fd == -1);
 	  }
 
+	dbs[cnt].inotify_descr = -1;
 	if (dbs[cnt].check_file)
 	  {
-	    /* We need the modification date of the file.  */
-	    struct stat64 st;
-
-	    if (stat64 (dbs[cnt].filename, &st) < 0)
+#ifdef HAVE_INOTIFY
+	    if (inotify_fd == -1
+		|| (dbs[cnt].inotify_descr
+		    = inotify_add_watch (inotify_fd, dbs[cnt].filename,
+					 IN_DELETE_SELF | IN_MODIFY)) < 0)
+	      /* We cannot notice changes in the main thread.  */
+#endif
 	      {
-		/* We cannot stat() the file, disable file checking.  */
-		dbg_log (_("cannot stat() file `%s': %s"),
-			 dbs[cnt].filename, strerror (errno));
-		dbs[cnt].check_file = 0;
+		/* We need the modification date of the file.  */
+		struct stat64 st;
+
+		if (stat64 (dbs[cnt].filename, &st) < 0)
+		  {
+		    /* We cannot stat() the file, disable file checking.  */
+		    dbg_log (_("cannot stat() file `%s': %s"),
+			     dbs[cnt].filename, strerror (errno));
+		    dbs[cnt].check_file = 0;
+		  }
+		else
+		  dbs[cnt].file_mtime = st.st_mtime;
 	      }
-	    else
-	      dbs[cnt].file_mtime = st.st_mtime;
 	  }
       }
 
@@ -1428,12 +1453,15 @@ nscd_run_prune (void *p)
   while (1)
     {
       /* Wait, but not forever.  */
-      int e = pthread_cond_timedwait (prune_cond, prune_lock, &prune_ts);
+      int e = 0;
+      if (! dbs[my_number].clear_cache)
+	e = pthread_cond_timedwait (prune_cond, prune_lock, &prune_ts);
       assert (__builtin_expect (e == 0 || e == ETIMEDOUT, 1));
 
       time_t next_wait;
       now = time (NULL);
-      if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time)
+      if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time
+	  || dbs[my_number].clear_cache)
 	{
 	  /* We will determine the new timout values based on the
 	     cache content.  Should there be concurrent additions to
@@ -1446,9 +1474,13 @@ nscd_run_prune (void *p)
 	  else
 	    dbs[my_number].wakeup_time = INT_MAX;
 
+	  /* Unconditionally reset the flag.  */
+	  time_t prune_now = dbs[my_number].clear_cache ? LONG_MAX : now;
+	  dbs[my_number].clear_cache = 0;
+
 	  pthread_mutex_unlock (prune_lock);
 
-	  next_wait = prune_cache (&dbs[my_number], now, -1);
+	  next_wait = prune_cache (&dbs[my_number], prune_now, -1);
 
 	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
 	  /* If clients cannot determine for sure whether nscd is running
@@ -1703,6 +1735,16 @@ main_loop_poll (void)
   size_t nused = 1;
   size_t firstfree = 1;
 
+#ifdef HAVE_INOTIFY
+  if (inotify_fd != -1)
+    {
+      conns[1].fd = inotify_fd;
+      conns[1].events = POLLRDNORM;
+      nused = 2;
+      firstfree = 2;
+    }
+#endif
+
   while (1)
     {
       /* Wait for any event.  We wait at most a couple of seconds so
@@ -1750,7 +1792,42 @@ main_loop_poll (void)
 	      --n;
 	    }
 
-	  for (size_t cnt = 1; cnt < nused && n > 0; ++cnt)
+	  size_t first = 1;
+#ifdef HAVE_INOTIFY
+	  if (conns[1].fd == inotify_fd)
+	    {
+	      if (conns[1].revents != 0)
+		{
+		  union
+		  {
+		    struct inotify_event i;
+		    char buf[100];
+		  } inev;
+
+		  while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
+						   sizeof (inev)))
+			 >= sizeof (struct inotify_event))
+		    {
+		      /* Check which of the files changed.  */
+		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+			if (inev.i.wd == dbs[dbcnt].inotify_descr)
+			  {
+			    pthread_mutex_trylock (&dbs[dbcnt].prune_lock);
+			    dbs[dbcnt].clear_cache = 1;
+			    pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
+			    pthread_cond_signal (&dbs[dbcnt].prune_cond);
+			    break;
+			  }
+		    }
+
+		  --n;
+		}
+
+	      first = 2;
+	    }
+#endif
+
+	  for (size_t cnt = first; cnt < nused && n > 0; ++cnt)
 	    if (conns[cnt].revents != 0)
 	      {
 		fd_ready (conns[cnt].fd);
@@ -1816,6 +1893,18 @@ main_loop_epoll (int efd)
     /* We cannot use epoll.  */
     return;
 
+#ifdef HAVE_INOTIFY
+  if (inotify_fd != -1)
+    {
+      ev.events = EPOLLRDNORM;
+      ev.data.fd = inotify_fd;
+      if (epoll_ctl (efd, EPOLL_CTL_ADD, inotify_fd, &ev) == -1)
+	/* We cannot use epoll.  */
+	return;
+      nused = 2;
+    }
+#endif
+
   while (1)
     {
       struct epoll_event revs[100];
@@ -1852,6 +1941,32 @@ main_loop_epoll (int efd)
 		  }
 	      }
 	  }
+#ifdef HAVE_INOTIFY
+	else if (revs[cnt].data.fd == inotify_fd)
+	  {
+	    union
+	    {
+	      struct inotify_event i;
+	      char buf[100];
+	    } inev;
+
+	    while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
+					     sizeof (inev)))
+		   >= sizeof (struct inotify_event))
+	      {
+		/* Check which of the files changed.  */
+		for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+		  if (inev.i.wd == dbs[dbcnt].inotify_descr)
+		    {
+		      pthread_mutex_trylock (&dbs[dbcnt].prune_lock);
+		      dbs[dbcnt].clear_cache = 1;
+		      pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
+		      pthread_cond_signal (&dbs[dbcnt].prune_cond);
+		      break;
+		    }
+	      }
+	  }
+#endif
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */

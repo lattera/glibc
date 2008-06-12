@@ -73,6 +73,8 @@ struct database_dyn
 
   int enabled;
   int check_file;
+  int inotify_descr;
+  int clear_cache;
   int persistent;
   int shared;
   int propagate;

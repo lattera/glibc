@@ -274,7 +274,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
-  if (table->check_file && now != LONG_MAX)
+  if (table->inotify_descr < 0 && table->check_file && now != LONG_MAX)
     {
       struct stat64 st;
 
