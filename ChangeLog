@@ -1,5 +1,13 @@
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/strftime.c: Pass reference to tzset_called around to handle
+	recursive calls.
+
+	[BZ #6612]
+	* time/strftime.c (__strftime_internal): Call tzset() only
+	when printing timezone-dependent values.
+	Based on a patch by Petr Baudis <pasky@suse.cz>.
+
 	* resolv/nss_dns/dns-host.c (gaih_getanswer): Don't
 	unconditionally use second gaih_getanswer_slice result.
 

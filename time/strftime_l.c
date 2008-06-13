@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -455,7 +455,8 @@ static CHAR_T const month_name[][10] =
 #endif
 
 static size_t __strftime_internal (CHAR_T *, size_t, const CHAR_T *,
-				   const struct tm *, bool ut_argument_spec_iso
+				   const struct tm *, bool *
+				   ut_argument_spec_iso
 				   LOCALE_PARAM_PROTO) __THROW;
 
 /* Write information from TP into S according to the format
@@ -481,7 +482,8 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
   tmcopy = *tp;
   tp = &tmcopy;
 #endif
-  return __strftime_internal (s, maxsize, format, tp, false
+  bool tzset_called = false;
+  return __strftime_internal (s, maxsize, format, tp, &tzset_called
 			      ut_argument LOCALE_ARG);
 }
 #ifdef _LIBC
@@ -495,7 +497,7 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
       size_t maxsize;
       const CHAR_T *format;
       const struct tm *tp;
-      bool tzset_called;
+      bool *tzset_called;
       ut_argument_spec
       LOCALE_PARAM_DECL
 {
@@ -562,16 +564,6 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
     {
       if (! (zone && *zone))
 	zone = "GMT";
-    }
-  else
-    {
-      /* POSIX.1 requires that local time zone information is used as
-	 though strftime called tzset.  */
-# if HAVE_TZSET
-      if (!tzset_called)
-	tzset ();
-      tzset_called = true;
-# endif
     }
 #endif
 
@@ -1325,7 +1317,18 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
 #if HAVE_TZNAME
 	  /* The tzset() call might have changed the value.  */
 	  if (!(zone && *zone) && tp->tm_isdst >= 0)
-	    zone = tzname[tp->tm_isdst];
+	    {
+	      /* POSIX.1 requires that local time zone information is used as
+		 though strftime called tzset.  */
+# if HAVE_TZSET
+	      if (!*tzset_called)
+		{
+		  tzset ();
+		  *tzset_called = true;
+		}
+# endif
+	      zone = tzname[tp->tm_isdst];
+	    }
 #endif
 	  if (! zone)
 	    zone = "";
@@ -1360,6 +1363,16 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
 		struct tm gtm;
 		struct tm ltm;
 		time_t lt;
+
+		/* POSIX.1 requires that local time zone information is used as
+		   though strftime called tzset.  */
+# if HAVE_TZSET
+		if (!*tzset_called)
+		  {
+		    tzset ();
+		    *tzset_called = true;
+		  }
+# endif
 
 		ltm = *tp;
 		lt = mktime (&ltm);
