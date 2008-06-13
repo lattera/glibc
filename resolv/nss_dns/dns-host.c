@@ -1097,11 +1097,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
 	  if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple),
 				0))
-	    {
-	      *errnop = ERANGE;
-	      *h_errnop = NETDB_INTERNAL;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	    goto too_small;
 
 	  *pat = (struct gaih_addrtuple *) buffer;
 	  buffer += sizeof (struct gaih_addrtuple);
@@ -1175,11 +1171,17 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 				  &pat, &buffer, &buflen,
 				  errnop, h_errnop, ttlp,
 				  &first);
-  if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND)
+  if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND
+       || status == NSS_STATUS_TRYAGAIN)
       && answer2 != NULL && anslen2 > 0)
-    status = gaih_getanswer_slice(answer2, anslen2, qname,
-				  &pat, &buffer, &buflen,
-				  errnop, h_errnop, ttlp, &first);
+    {
+      enum nss_status status2 = gaih_getanswer_slice(answer2, anslen2, qname,
+						     &pat, &buffer, &buflen,
+						     errnop, h_errnop, ttlp,
+						     &first);
+      if (status != NSS_STATUS_SUCCESS)
+	status = status2;
+    }
 
   return status;
 }

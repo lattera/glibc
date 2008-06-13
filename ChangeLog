@@ -1,5 +1,8 @@
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/nss_dns/dns-host.c (gaih_getanswer): Don't
+	unconditionally use second gaih_getanswer_slice result.
+
 	* sysdeps/posix/getaddrinfo.c (gai_inet): Remove unnecessary test.
 	(getaddrinfo): RES must always be non-NULL.
 
