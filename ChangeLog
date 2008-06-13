@@ -1,3 +1,13 @@
+2008-06-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Avoid using
+	cr[34] registers.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S (__llroundf): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S (__llround):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Avoid using cr3
+	register.
+
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.h (struct database_dyn): Add inotify_descr and clear_cache

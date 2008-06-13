@@ -1,5 +1,5 @@
 /* llround function.  PowerPC64 version.
-   Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,12 +52,12 @@ ENTRY (__llround)
 	fabs	fp2,fp1		/* Get the absolute value of x.  */
 	fsub	fp12,fp10,fp10	/* Compute 0.0 into fp12.  */
 	fcmpu	cr6,fp2,fp10	/* if |x| < 0.5  */
-	fcmpu	cr4,fp2,fp9	/* if |x| >= 2^52  */
-	fcmpu	cr3,fp1,fp12	/* x is negative? x < 0.0  */
+	fcmpu	cr7,fp2,fp9	/* if |x| >= 2^52  */
+	fcmpu	cr1,fp1,fp12	/* x is negative? x < 0.0  */
 	blt-	cr6,.Lretzero	/* 0.5 > x < -0.5 so just return 0.  */
-	bge-	cr4,.Lnobias	/* 2^52 > x < -2^52 just convert with no bias.  */
+	bge-	cr7,.Lnobias	/* 2^52 > x < -2^52 just convert with no bias.  */
 	fadd	fp3,fp2,fp10	/* |x|+=0.5 bias to prepare to round.  */
-	bge	cr3,.Lconvert	/* x is positive so don't negate x.  */
+	bge	cr1,.Lconvert	/* x is positive so don't negate x.  */
 	fnabs	fp3,fp3		/* -(|x|+=0.5)  */
 .Lconvert:
 	fctidz	fp4,fp3		/* Convert to Integer double word round toward 0.  */
