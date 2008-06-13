@@ -51,6 +51,7 @@
 #include "nscd.h"
 #include "dbg_log.h"
 #include "selinux.h"
+#include <resolv/resolv.h>
 #ifdef HAVE_SENDFILE
 # include <kernel-features.h>
 #endif
@@ -228,6 +229,9 @@ static int sock;
 #ifdef HAVE_INOTIFY
 /* Inotify descriptor.  */
 static int inotify_fd = -1;
+
+/* Watch descriptor for resolver configuration file.  */
+static int resolv_conf_descr = -1;
 #endif
 
 /* Number of times clients had to wait.  */
@@ -824,7 +828,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	if (dbs[cnt].check_file)
 	  {
 #ifdef HAVE_INOTIFY
-	    if (inotify_fd == -1
+	    if (inotify_fd < 0
 		|| (dbs[cnt].inotify_descr
 		    = inotify_add_watch (inotify_fd, dbs[cnt].filename,
 					 IN_DELETE_SELF | IN_MODIFY)) < 0)
@@ -845,6 +849,14 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 		  dbs[cnt].file_mtime = st.st_mtime;
 	      }
 	  }
+
+#ifdef HAVE_INOTIFY
+	if (cnt == hstdb && inotify_fd >= -1)
+	  /* We also monitor the resolver configuration file.  */
+	  resolv_conf_descr = inotify_add_watch (inotify_fd,
+						 _PATH_RESCONF,
+						 IN_DELETE_SELF | IN_MODIFY);
+#endif
       }
 
   /* Create the socket.  */
@@ -1798,6 +1810,7 @@ main_loop_poll (void)
 	    {
 	      if (conns[1].revents != 0)
 		{
+		  bool done[lastdb] = { false, };
 		  union
 		  {
 		    struct inotify_event i;
@@ -1810,12 +1823,21 @@ main_loop_poll (void)
 		    {
 		      /* Check which of the files changed.  */
 		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-			if (inev.i.wd == dbs[dbcnt].inotify_descr)
+			if (!done[dbcnt]
+			    && (inev.i.wd == dbs[dbcnt].inotify_descr
+				|| (dbcnt == hstdb
+				    && inev.i.wd == resolv_conf_descr)))
 			  {
-			    pthread_mutex_trylock (&dbs[dbcnt].prune_lock);
+			    if (dbcnt == hstdb
+				&& inev.i.wd == resolv_conf_descr)
+			      res_init ();
+
+			    pthread_mutex_lock (&dbs[dbcnt].prune_lock);
 			    dbs[dbcnt].clear_cache = 1;
 			    pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
 			    pthread_cond_signal (&dbs[dbcnt].prune_cond);
+
+			    done[dbcnt] = true;
 			    break;
 			  }
 		    }

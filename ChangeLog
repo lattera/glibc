@@ -1,3 +1,8 @@
+2008-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Also recognize and handle changes to the
+	resolver configuration file.
+
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strftime.c: Pass reference to tzset_called around to handle
