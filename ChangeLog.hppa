@@ -1,3 +1,12 @@
+2008-06-17  Aurelian Jarno  <aurelien@aurel32.net>
+	    Carlos O'Donell  <carlos@systemhalted.org>
+
+	[BZ #6037]
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Check for -11 
+	(-EAGAIN) instead of 11. Loop again when the kernel
+	returns -45 (-EDEADLOCK). Add back memory clobber. 
+	Do not initialize lws_ret and lws_errno.
+
 2008-06-17  Guy Martin  <gmsoft@tuxicoman.be>
 
 	[BZ #5957]

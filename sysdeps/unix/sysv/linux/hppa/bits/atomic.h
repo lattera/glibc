@@ -51,34 +51,41 @@ typedef uintmax_t uatomic_max_t;
      *addr = new;
    return prev; */
 
-/* Use the kernel atomic light weight syscalls on hppa */ 
-#define LWS "0xb0"
-#define LWS_CAS "0"
-/* Note r31 is the link register */
-#define LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31"
-#define ASM_EAGAIN "11" 
+/* Use the kernel atomic light weight syscalls on hppa.  */ 
+#define _LWS "0xb0"
+#define _LWS_CAS "0"
+/* Note r31 is the link register.  */
+#define _LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
+/* String constant for -EAGAIN.  */
+#define _ASM_EAGAIN "-11" 
+/* String constant for -EDEADLOCK.  */
+#define _ASM_EDEADLOCK "-45"
 
 #if __ASSUME_LWS_CAS
 /* The only basic operation needed is compare and exchange.  */
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) 	\
   ({									\
-     volatile int lws_errno = EFAULT;					\
-     volatile int lws_ret = 0xdeadbeef;					\
+     volatile int lws_errno;						\
+     volatile int lws_ret;						\
      asm volatile(							\
 	"0:					\n\t"			\
-	"copy	%3, %%r26			\n\t"			\
-	"copy	%4, %%r25			\n\t"			\
-	"copy	%5, %%r24			\n\t"			\
-	"ble	" LWS "(%%sr2, %%r0)		\n\t"			\
-	"ldi	" LWS_CAS ", %%r20		\n\t"			\
-	"cmpib,=,n " ASM_EAGAIN ",%%r21,0b	\n\t"			\
+	"copy	%2, %%r26			\n\t"			\
+	"copy	%3, %%r25			\n\t"			\
+	"copy	%4, %%r24			\n\t"			\
+	"ble	" _LWS "(%%sr2, %%r0)		\n\t"			\
+	"ldi	" _LWS_CAS ", %%r20		\n\t"			\
+	"ldi	" _ASM_EAGAIN ", %%r24		\n\t"			\
+	"cmpb,=,n %%r24, %%r21, 0b		\n\t"			\
+	"nop					\n\t"			\
+	"ldi	" _ASM_EDEADLOCK ", %%r25	\n\t"			\
+	"cmpb,=,n %%r25, %%r21, 0b		\n\t"			\
 	"nop					\n\t"			\
 	"stw	%%r28, %0			\n\t"			\
         "sub	%%r0, %%r21, %%r21		\n\t"			\
 	"stw	%%r21, %1			\n\t"			\
-	: "=m" (lws_ret), "=m" (lws_errno), "+m" (*mem)			\
+	: "=m" (lws_ret), "=m" (lws_errno) 				\
         : "r" (mem), "r" (oldval), "r" (newval)				\
-	: LWS_CLOBBER							\
+	: _LWS_CLOBBER							\
      );									\
     									\
      if(lws_errno == EFAULT || lws_errno == ENOSYS)			\
@@ -91,7 +98,7 @@ typedef uintmax_t uatomic_max_t;
   ({									\
      int ret;								\
      ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
-     /* Return 1 if it was already acquired */				\
+     /* Return 1 if it was already acquired.  */			\
      (ret != oldval);							\
    })
 #else
