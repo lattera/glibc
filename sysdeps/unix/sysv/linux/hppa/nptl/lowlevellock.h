@@ -325,12 +325,12 @@ extern int lll_unlock_wake_cb (lll_lock_t *__futex) attribute_hidden;
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
 #define lll_wait_tid(tid) \
-  do						\
-    {						\
-      __typeof (tid) __tid;			\
-      while ((__tid = (tid)) != 0)		\
-        lll_futex_wait (&(tid), __tid, 0);	\
-    }						\
+  do							\
+    {							\
+      __typeof (tid) __tid;				\
+      while ((__tid = (tid)) != 0)			\
+        lll_futex_wait (&(tid), __tid, LLL_SHARED);	\
+    }							\
   while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)

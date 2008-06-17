@@ -1,3 +1,9 @@
+2008-06-17  Guy Martin  <gmsoft@tuxicoman.be>
+
+	[BZ #5957]
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h:
+	Use shared futex in lll_wait_tid().
+
 2008-05-12  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #6506]
