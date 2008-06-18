@@ -1819,7 +1819,7 @@ main_loop_poll (void)
 
 		  while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
 						   sizeof (inev)))
-			 >= sizeof (struct inotify_event))
+			 >= (ssize_t) sizeof (struct inotify_event))
 		    {
 		      /* Check which of the files changed.  */
 		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
@@ -1974,7 +1974,7 @@ main_loop_epoll (int efd)
 
 	    while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
 					     sizeof (inev)))
-		   >= sizeof (struct inotify_event))
+		   >= (ssize_t) sizeof (struct inotify_event))
 	      {
 		/* Check which of the files changed.  */
 		for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
