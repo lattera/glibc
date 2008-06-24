@@ -63,6 +63,7 @@ script <GEORGIAN>
 script <DEVANAGARI>
 script <GUJARATI>
 script <TELUGU>
+script <GURUMUKHI>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -742,6 +743,79 @@ collating-symbol <t-halant>
 collating-symbol <t-lenghtmark>
 collating-symbol <t-ailenghtmark>
 
+#<GURUMUKHI>
+#
+# pm - denotes panjabi matras
+# pvw - panjabi denotes vowels
+# pavd - denotes panjabi vowel modifier
+# PNKT - Punjabi Nukta
+
+# defning symbols
+collating-symbol <PNKT>
+collating-symbol <adi-shakti>
+collating-symbol <onkar>
+collating-symbol <ura>
+collating-symbol <pavw-u>
+collating-symbol <pavw-uu>
+collating-symbol <pavw-o>
+collating-symbol <pavw-a>
+collating-symbol <pavw-aa>
+collating-symbol <pavw-ai>
+collating-symbol <pavw-au>
+collating-symbol <iri>
+collating-symbol <pavw-i>
+collating-symbol <pavw-ii>
+collating-symbol <pavw-e>
+collating-symbol <pa-sa>
+collating-symbol <pa-ha>
+collating-symbol <pa-udatta>
+collating-symbol <pa-ka>
+collating-symbol <pa-kha>
+collating-symbol <pa-ga>
+collating-symbol <pa-gha>
+collating-symbol <pa-nga>
+collating-symbol <pa-ca>
+collating-symbol <pa-cha>
+collating-symbol <pa-ja>
+collating-symbol <pa-jha>
+collating-symbol <pa-nya>
+collating-symbol <pa-tta>
+collating-symbol <pa-ttha>
+collating-symbol <pa-dda>
+collating-symbol <pa-ddha>
+collating-symbol <pa-nna>
+collating-symbol <pa-ta>
+collating-symbol <pa-tha>
+collating-symbol <pa-da>
+collating-symbol <pa-dha>
+collating-symbol <pa-na>
+collating-symbol <pa-pa>
+collating-symbol <pa-pha>
+collating-symbol <pa-ba>
+collating-symbol <pa-bha>
+collating-symbol <pa-ma>
+collating-symbol <pa-ya>
+collating-symbol <sign-yakash>
+collating-symbol <pa-ra>
+collating-symbol <pa-la>
+collating-symbol <pa-va>
+collating-symbol <pa-rra>
+collating-symbol <pam-aa>
+collating-symbol <pam-i>
+collating-symbol <pam-ii>
+collating-symbol <pam-u>
+collating-symbol <pam-uu>
+collating-symbol <pam-e>
+collating-symbol <pam-ai>
+collating-symbol <pam-o>
+collating-symbol <pam-au>
+collating-symbol <pavd-adakbindi>
+collating-symbol <pavd-bindi>
+collating-symbol <pavd-visarg>
+collating-symbol <tippi>
+collating-symbol <adak>
+collating-symbol <pa-halant>
+
 # Ordre des symboles internes / Order of internal symbols
 #
 # SYMB. N°
@@ -1412,6 +1486,76 @@ collating-symbol <t-ailenghtmark>
 <t-halant>
 <t-lenghtmark>
 <t-ailenghtmark>
+
+#
+# <GURUMUKHI>
+#
+# collation weights in order
+
+<PNKT>
+<adak>
+<adi-shakti>
+<onkar>
+<ura>
+<pavw-u>
+<pavw-uu>
+<pavw-o>
+<pavw-a>
+<pavw-aa>
+<pavw-ai>
+<pavw-au>
+<iri>
+<pavw-i>
+<pavw-ii>
+<pavw-e>
+<pa-sa>
+<pa-ha>
+<pa-udatta>
+<pa-ka>
+<pa-kha>
+<pa-ga>
+<pa-gha>
+<pa-nga>
+<pa-ca>
+<pa-cha>
+<pa-ja>
+<pa-jha>
+<pa-nya>
+<pa-tta>
+<pa-ttha>
+<pa-dda>
+<pa-ddha>
+<pa-nna>
+<pa-ta>
+<pa-tha>
+<pa-da>
+<pa-dha>
+<pa-na>
+<pa-pa>
+<pa-pha>
+<pa-ba>
+<pa-bha>
+<pa-ma>
+<pa-ya>
+<sign-yakash>
+<pa-ra>
+<pa-la>
+<pa-va>
+<pa-rra>
+<pam-aa>
+<pam-i>
+<pam-ii>
+<pam-u>
+<pam-uu>
+<pam-e>
+<pam-ai>
+<pam-o>
+<pam-au>
+<pavd-adakbindi>
+<pavd-bindi>
+<pavd-visarg>
+<tippi>
+<pa-halant>
 
 order_start <SPECIAL>;forward;backward;forward;forward,position
 #
@@ -3471,6 +3615,88 @@ order_start <TELUGU>;forward;forward;forward;forward,position
 <U0C4D> <t-halant>;<BAS>;<MIN>;IGNORE
 <U0C55> <t-lenghtmark>;<BAS>;<MIN>;IGNORE
 <U0C56> <t-ailenghtmark>;<BAS>;<MIN>;IGNORE
+
+order_start  <GURUMUKHI>;forward;forward;forward;forward,position
+<U0A66> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A67> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A68> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A69> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6A> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6B> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6C> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6D> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6E> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0A6F> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U262c> <adi-shakti>;<BAS>;<MIN>;IGNORE
+<U0A74> <onkar>;<BAS>;<MIN>;IGNORE
+<U0A73> <ura>;<BAS>;<MIN>;IGNORE
+<U0A09> <pavw-u> ;<BAS>;<MIN>;IGNORE
+<U0A0A> <pavw-uu>;<BAS>;<MIN>;IGNORE
+<U0A13> <pavw-o>;<BAS>;<MIN>;IGNORE
+<U0A05> <pavw-a> ;<BAS>;<MIN>;IGNORE
+<U0A06> <pavw-aa> ;<BAS>;<MIN>;IGNORE
+<U0A10> <pavw-ai>;<BAS>;<MIN>;IGNORE
+<U0A14> <pavw-au>;<BAS>;<MIN>;IGNORE
+<U0A72> <iri>;<BAS>;<MIN>;IGNORE
+<U0A07> <pavw-i> ;<BAS>;<MIN>;IGNORE
+<U0A08> <pavw-ii> ;<BAS>;<MIN>;IGNORE
+<U0A0F> <pavw-e>;<BAS>;<MIN>;IGNORE
+<U0A38> <pa-sa>;<BAS>;<MIN>;IGNORE
+<U0A36> <pa-sa>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A39>   <pa-ha>;<BAS>;<MIN>;IGNORE
+<U0A51> <pa-udatta>;<BAS>;<MIN>;IGNORE
+<U0A15> <pa-ka>;<BAS>;<MIN>;IGNORE
+<U0A16> <pa-kha>;<BAS>;<MIN>;IGNORE
+<U0A59> <pa-kha>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A17> <pa-ga>;<BAS>;<MIN>;IGNORE
+<U0A5A> <pa-ga>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A18> <pa-gha>;<BAS>;<MIN>;IGNORE
+<U0A19> <pa-nga>;<BAS>;<MIN>;IGNORE
+<U0A1A> <pa-ca>;<BAS>;<MIN>;IGNORE
+<U0A1B> <pa-cha>;<BAS>;<MIN>;IGNORE
+<U0A1C> <pa-ja>;<BAS>;<MIN>;IGNORE
+<U0A5B> <pa-ja>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A1D> <pa-jha>;<BAS>;<MIN>;IGNORE
+<U0A1E> <pa-nya>;<BAS>;<MIN>;IGNORE
+<U0A1F> <pa-tta>;<BAS>;<MIN>;IGNORE
+<U0A20> <pa-ttha>;<BAS>;<MIN>;IGNORE
+<U0A21> <pa-dda>;<BAS>;<MIN>;IGNORE
+<U0A22> <pa-ddha>;<BAS>;<MIN>;IGNORE
+<U0A23> <pa-nna>;<BAS>;<MIN>;IGNORE
+<U0A24> <pa-ta>;<BAS>;<MIN>;IGNORE
+<U0A25> <pa-tha>;<BAS>;<MIN>;IGNORE
+<U0A26> <pa-da>;<BAS>;<MIN>;IGNORE
+<U0A27> <pa-dha>;<BAS>;<MIN>;IGNORE
+<U0A28> <pa-na>;<BAS>;<MIN>;IGNORE
+<U0A2A> <pa-pa>;<BAS>;<MIN>;IGNORE
+<U0A2B> <pa-pha>;<BAS>;<MIN>;IGNORE
+<U0A5E> <pa-pha>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A2C> <pa-ba>;<BAS>;<MIN>;IGNORE
+<U0A2D> <pa-bha>;<BAS>;<MIN>;IGNORE
+<U0A2E> <pa-ma>;<BAS>;<MIN>;IGNORE
+<U0A2F> <pa-ya>;<BAS>;<MIN>;IGNORE
+<U0A75> <sign-yakash>;<BAS>;<MIN>;IGNORE
+<U0A30> <pa-ra>;<BAS>;<MIN>;IGNORE
+<U0A32> <pa-la>;<BAS>;<MIN>;IGNORE
+<U0A33> <pa-la>;"<BAS><PNKT>";"<MIN><MIN>";IGNORE
+<U0A35> <pa-va>;<BAS>;<MIN>;IGNORE
+<U0A5C> <pa-rra>;<BAS>;<MIN>;IGNORE
+<U0A3E> <pam-aa>;<BAS>;<MIN>;IGNORE
+<U0A3F> <pam-i>;<BAS>;<MIN>;IGNORE
+<U0A40> <pam-ii>;<BAS>;<MIN>;IGNORE
+<U0A41> <pam-u>;<BAS>;<MIN>;IGNORE
+<U0A42> <pam-uu>;<BAS>;<MIN>;IGNORE
+<U0A47> <pam-e>;<BAS>;<MIN>;IGNORE
+<U0A48> <pam-ai>;<BAS>;<MIN>;IGNORE
+<U0A4B> <pam-o>;<BAS>;<MIN>;IGNORE
+<U0A4C> <pam-au>;<BAS>;<MIN>;IGNORE
+<U0A01> <pavd-adakbindi>;<BAS>;<MIN>;IGNORE
+<U0A02> <pavd-bindi>;<BAS>;<MIN>;IGNORE
+<U0A03> <pavd-visarg>;<BAS>;<MIN>;IGNORE
+<U0A70> <tippi>;<BAS>;<MIN>;IGNORE
+<U0A4D> <pa-halant>;<BAS>;<MIN>;IGNORE
+<U0A3C> IGNORE;<PNKT>;<MIN>;IGNORE
+<U0A71> IGNORE;<adak>;<MIN>;IGNORE
 
 order_end
 
