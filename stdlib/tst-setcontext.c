@@ -150,7 +150,10 @@ main (void)
   if (getcontext (&ctx[1]) != 0)
     {
       if (errno == ENOSYS)
-	exit (0);
+	{
+	  back_in_main = 1;
+	  exit (0);
+	}
 
       printf ("%s: getcontext: %m\n", __FUNCTION__);
       exit (1);

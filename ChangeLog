@@ -1,3 +1,8 @@
+2008-06-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/tst-setcontext.c: Set back_in_main before exit if
+	getcontext returns ENOSYS.
+
 2008-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (main_loop_poll): Fix test for read error.
