@@ -1,5 +1,6 @@
 2008-06-17  Carlos O'Donell  <carlos@codesourcery.com>
 
+	[BZ #6653]
 	* posix/tst-regex.c (main): Rename to...
 	(do_test): ... this. Remove cmdline option processing.
 	(TIMEOUT): Define.
