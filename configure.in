@@ -1638,7 +1638,7 @@ cat > conftest.c <<EOF
 int foo;
 main () { return 0;}
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fstack-protector
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -Werror -fstack-protector
 			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
 then
   libc_cv_ssp=yes

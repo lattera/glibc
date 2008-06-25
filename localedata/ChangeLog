@@ -1,3 +1,8 @@
+2008-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5814]
+	* locales/fi_FI: Fix separator for hours, minutes, and seconds.
+
 2008-06-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add support for Gurumukhi script.

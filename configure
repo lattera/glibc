@@ -6451,7 +6451,7 @@ else
 int foo;
 main () { return 0;}
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fstack-protector
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -Werror -fstack-protector
 			    -o conftest conftest.c 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
