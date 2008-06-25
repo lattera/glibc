@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,8 +55,8 @@ static int run_test_backwards (const char *expr, const char *mem,
 			       size_t memlen, int icase, int expected);
 
 
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
   const char *file;
   int fd;
@@ -66,15 +66,8 @@ main (int argc, char *argv[])
   char *outmem;
   size_t inlen;
   size_t outlen;
-  static const struct option options[] =
-    {
-      {"timing",no_argument,	&timing,	1 },
-      {NULL,	0,		NULL,		0 }
-    };
 
   mtrace ();
-
-  while (getopt_long (argc, argv, "", options, NULL) >= 0);
 
   /* Make the content of the file available in memory.  */
   file = "../ChangeLog.8";
@@ -506,3 +499,10 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
      expect.  */
   return cnt != expected;
 }
+
+/* If --timing is used we will need a larger timout.  */
+#define TIMEOUT 50
+#define CMDLINE_OPTIONS \
+   {"timing", no_argument, &timing, 1 },
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
