@@ -1,5 +1,8 @@
 2008-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #5911]
+	* locales/es_CR: Define first_weekday and first_workday.
+
 	[BZ #5814]
 	* locales/fi_FI: Fix separator for hours, minutes, and seconds.
 
