@@ -1,5 +1,8 @@
 2008-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-strptime.c (do_test): Add test for parsing era year
+	representation.
+
 	[BZ #5911]
 	* locales/es_CR: Define first_weekday and first_workday.
 
