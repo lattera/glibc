@@ -33,22 +33,13 @@
 #endif
 
 
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
-
 #if ! HAVE_LOCALTIME_R && ! defined localtime_r
 # ifdef _LIBC
 #  define localtime_r __localtime_r
 # else
 /* Approximate localtime_r as best we can in its absence.  */
 #  define localtime_r my_localtime_r
-static struct tm *localtime_r __P ((const time_t *, struct tm *));
+static struct tm *localtime_r (const time_t *, struct tm *);
 static struct tm *
 localtime_r (t, tp)
      const time_t *t;
