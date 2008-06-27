@@ -1,3 +1,10 @@
+2008-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6657]
+	* time/strptime_l.c: Don't clear s.era_cnt after successful match
+	of %EY.
+	Patch by Petr Baudis.
+
 2008-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_debig.c (__p_type_syms): Add ns_t_dname entry.

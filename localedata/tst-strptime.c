@@ -37,6 +37,16 @@ r = %p, r-s2 = %tu, tm.tm_mday = %d, tm.tm_mon = %d, tm.tm_year = %d\n",
   result |= (r == NULL || r - s2 != 14 || tm.tm_mday != 25 || tm.tm_mon != 5
 	     || tm.tm_year != 108);
 
+  static const char s3[] = "\
+\x32\x35\x20\x30\x36\x20\xe5\xb9\xb3\xe6\x88\x90\x32\x30\xe5\xb9\xb4\0";
+  memset (&tm, '\0', sizeof (tm));
+  r = strptime (s3, "%d %m %EY", &tm);
+  printf ("\
+r = %p, r-s3 = %tu, tm.tm_mday = %d, tm.tm_mon = %d, tm.tm_year = %d\n",
+	  r, r - s3, tm.tm_mday, tm.tm_mon, tm.tm_year);
+  result |= (r == NULL || r - s3 != 17 || tm.tm_mday != 25 || tm.tm_mon != 5
+	     || tm.tm_year != 108);
+
   return result;
 }
 
