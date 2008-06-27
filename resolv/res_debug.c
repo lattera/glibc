@@ -439,6 +439,7 @@ const struct res_sym __p_type_syms[] = {
 	{ns_t_nimloc,	"NIMLOC",	"NIMROD locator (unimplemented)"},
 	{ns_t_srv,	"SRV",		"server selection"},
 	{ns_t_atma,	"ATMA",		"ATM address (unimplemented)"},
+	{ns_t_dname,	"DNAME",	"Non-terminal DNAME (for IPv6)"},
 	{ns_t_tsig,	"TSIG",		"transaction signature"},
 	{ns_t_ixfr,	"IXFR",		"incremental zone transfer"},
 	{ns_t_axfr,	"AXFR",		"zone transfer"},

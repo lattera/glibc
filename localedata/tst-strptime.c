@@ -34,8 +34,8 @@ do_test (void)
   printf ("\
 r = %p, r-s2 = %tu, tm.tm_mday = %d, tm.tm_mon = %d, tm.tm_year = %d\n",
 	  r, r - s2, tm.tm_mday, tm.tm_mon, tm.tm_year);
-  result = (r == NULL || r - s2 != 14 || tm.tm_mday != 25 || tm.tm_mon != 5
-	    || tm.tm_year != 108);
+  result |= (r == NULL || r - s2 != 14 || tm.tm_mday != 25 || tm.tm_mon != 5
+	     || tm.tm_year != 108);
 
   return result;
 }
