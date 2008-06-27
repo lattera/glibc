@@ -7,7 +7,7 @@
 
 2008-06-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* resolv/res_debig.c (__p_type_syms): Add ns_t_dname entry.
+	* resolv/res_debug.c (__p_type_syms): Add ns_t_dname entry.
 	Patch by Peter Jones <pjones@redhat.com>.
 
 2008-06-25  Ulrich Drepper  <drepper@redhat.com>
