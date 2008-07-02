@@ -34,7 +34,7 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   char *data = NULL;
   mach_msg_type_number_t len = 0;
   mach_port_t *ports;
-  mach_msg_type_number_t nports;
+  mach_msg_type_number_t nports = 0;
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
   size_t amount;

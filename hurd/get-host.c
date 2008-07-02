@@ -51,6 +51,7 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
     }
 
   data = buf;
+  nread = buflen;
   err = __io_read (config, &data, &nread, -1, buflen);
   if (! err)
     /* Check if there is more in the file we didn't read.  */

@@ -367,6 +367,7 @@ __libc_read (int fd, void *buf, size_t nbytes)
   mach_msg_type_number_t nread;
 
   data = buf;
+  nread = nbytes;
   err = __io_read ((mach_port_t) fd, &data, &nread, -1, nbytes);
   if (err)
     return __hurd_fail (err);

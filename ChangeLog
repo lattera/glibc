@@ -10,6 +10,15 @@
 	* sysdeps/mach/hurd/sendto.c (__sendfrom): Likewise.
 	* sysdeps/mach/hurd/sendmsg.c (__sendmsg): Likewise.
 
+2008-03-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/recv.c (__recv): Initialize NPORTS.
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Likewise.
+	* sysdeps/mach/hurd/recvmsg.c (__recvmsg): Likewise.
+	* hurd/fd-read.c (_hurd_fd_read): Initialize NREAD.
+	* hurd/get-host.c (_hurd_get_host_config): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_read): Likewise.
+
 2008-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6657]
