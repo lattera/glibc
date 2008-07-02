@@ -149,7 +149,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   if (dealloc)
     __vm_deallocate (__mach_task_self (), data.addr, len);
 
-  return err ? __hurd_dfail (fd, err) : amount;
+  return err ? __hurd_sockfail (fd, flags, err) : amount;
 }
 
 weak_alias (__libc_sendmsg, sendmsg)

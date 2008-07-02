@@ -38,7 +38,7 @@ __send (fd, buf, n, flags)
 					   NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					   NULL, 0, &wrote));
 
-  return err ? __hurd_dfail (fd, err) : wrote;
+  return err ? __hurd_sockfail (fd, flags, err) : wrote;
 }
 libc_hidden_def (__send)
 weak_alias (__send, send)

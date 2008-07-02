@@ -171,8 +171,10 @@ enum
 #define MSG_CTRUNC MSG_CTRUNC
     MSG_WAITALL		= 0x40,	/* Wait for full request or error.  */
 #define MSG_WAITALL MSG_WAITALL
-    MSG_DONTWAIT	= 0x80	/* This message should be nonblocking.  */
+    MSG_DONTWAIT	= 0x80,	/* This message should be nonblocking.  */
 #define MSG_DONTWAIT MSG_DONTWAIT
+    MSG_NOSIGNAL	= 0x0400	/* Do not generate SIGPIPE on EPIPE.  */
+#define MSG_NOSIGNAL MSG_NOSIGNAL
   };
 
 

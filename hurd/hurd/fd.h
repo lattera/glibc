@@ -27,6 +27,7 @@
 
 #include <hurd/hurd_types.h>
 #include <hurd/port.h>
+#include <sys/socket.h>
 
 
 /* Structure representing a file descriptor.  */
@@ -177,6 +178,18 @@ _HURD_FD_H_EXTERN_INLINE int
 __hurd_dfail (int fd, error_t err)
 {
   errno = _hurd_fd_error (fd, err);
+  return -1;
+}
+
+/* Likewise, but do not raise SIGPIPE on EPIPE if flags contain
+   MSG_NOSIGNAL.  */
+
+_HURD_FD_H_EXTERN_INLINE int
+__hurd_sockfail (int fd, int flags, error_t err)
+{
+  if (!(flags & MSG_NOSIGNAL) || err != EPIPE)
+    err = _hurd_fd_error (fd, err);
+  errno = err;
   return -1;
 }
 

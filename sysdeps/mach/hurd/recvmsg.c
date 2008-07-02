@@ -63,7 +63,7 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 					       &ports, &nports,
 					       &cdata, &clen,
 					       &message->msg_flags, amount)))
-    return __hurd_dfail (fd, err);
+    return __hurd_sockfail (fd, flags, err);
 
   if (message->msg_name != NULL)
     {
@@ -84,7 +84,7 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
       if (err)
 	{
 	  __mach_port_deallocate (__mach_task_self (), aport);
-	  return __hurd_dfail (fd, err);
+	  return __hurd_sockfail (fd, flags, err);
 	}
 
       if (message->msg_namelen > buflen)

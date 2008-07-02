@@ -52,7 +52,7 @@ __recvfrom (fd, buf, n, flags, addrarg, addr_len)
 					       &cdata, &clen,
 					       &flags,
 					       n)))
-    return __hurd_dfail (fd, err);
+    return __hurd_sockfail (fd, flags, err);
 
   /* Get address data for the returned address port if requested.  */
   if (addr != NULL)
@@ -74,7 +74,7 @@ __recvfrom (fd, buf, n, flags, addrarg, addr_len)
       if (err)
 	{
 	  __mach_port_deallocate (__mach_task_self (), addrport);
-	  return __hurd_dfail (fd, err);
+	  return __hurd_sockfail (fd, flags, err);
 	}
       
       if (*addr_len > buflen)
