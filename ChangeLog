@@ -1,3 +1,15 @@
+2008-07-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Define MSG_NOSIGNAL.
+	* hurd/hurd/fd.h (__hurd_sockfail): Add extern inline function.
+	* sysdeps/mach/hurd/recv.c (__recv): Use __hurd_sockfail instead of
+	__hurd_dfail.
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Likewise.
+	* sysdeps/mach/hurd/recvmsg.c (__recvmsg): Likewise.
+	* sysdeps/mach/hurd/send.c (__send): Likewise.
+	* sysdeps/mach/hurd/sendto.c (__sendfrom): Likewise.
+	* sysdeps/mach/hurd/sendmsg.c (__sendmsg): Likewise.
+
 2008-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6657]

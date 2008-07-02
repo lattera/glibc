@@ -79,7 +79,7 @@ __sendto (int fd,
 			  err;
 			}));
 
-  return err ? __hurd_dfail (fd, err) : wrote;
+  return err ? __hurd_sockfail (fd, flags, err) : wrote;
 }
 
 weak_alias (__sendto, sendto)
