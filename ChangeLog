@@ -1,3 +1,8 @@
+2008-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6723]
+	* time/mktime.c (__mktime_internal): Normalize tp->tm_isdst value.
+
 2008-07-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Define MSG_NOSIGNAL.
