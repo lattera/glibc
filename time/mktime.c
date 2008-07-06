@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert <eggert@twinsun.com>.
 
@@ -293,7 +293,9 @@ __mktime_internal (struct tm *tp,
   int mday = tp->tm_mday;
   int mon = tp->tm_mon;
   int year_requested = tp->tm_year;
-  int isdst = tp->tm_isdst;
+  /* Normalize the value.  */
+  int isdst = ((tp->tm_isdst >> (8 * sizeof (tp->tm_isdst) - 1))
+	       | (tp->tm_isdst != 0));
 
   /* 1 if the previous probe was DST.  */
   int dst2;
