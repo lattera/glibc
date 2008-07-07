@@ -1,3 +1,12 @@
+2008-07-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/open.c: Include <stdio.h>.
+	(__open_2): New function.
+	(__open64_2): New alias to __open_2.
+	* sysdeps/mach/hurd/openat.c: Include <stdio.h>.
+	(__openat_2): New function.
+	(__openat64_2): New alias to __openat_2.
+
 2008-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6723]
