@@ -1,3 +1,10 @@
+2008-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6719]
+	* libio/iosetvbuf.c (_IO_setvbuf): Correctly clear buffering flags
+	when selecting fully-buffered stream.
+	Patch by Wang Xin <wxinee@gmail.com>.
+
 2008-07-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/open.c: Include <stdio.h>.
