@@ -1,5 +1,9 @@
 2008-07-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile: Add rules to build and run tst-setvbuf1.
+	* stdio-common/tst-setvbuf1.c: New file.
+	* stdio-common/tst-setvbuf1.expect: New file.
+
 	[BZ #6719]
 	* libio/iosetvbuf.c (_IO_setvbuf): Correctly clear buffering flags
 	when selecting fully-buffered stream.
