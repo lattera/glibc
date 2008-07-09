@@ -1,5 +1,7 @@
 2008-07-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c: Remove unnecessary res_pquery prototype.
+
 	* resolv/res_query.c (__libc_res_nquery): Issue debug message only
 	if DEBUG is defined.
 

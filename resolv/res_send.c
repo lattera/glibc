@@ -194,7 +194,6 @@ static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
 /* Reachover. */
 
 static void convaddr4to6(struct sockaddr_in6 *sa);
-void res_pquery(const res_state, const u_char *, int, FILE *);
 
 /* Public. */
 
