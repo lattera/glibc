@@ -1,3 +1,8 @@
+2008-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquery): Align buffer for T_AAAA
+	query.  Adjust buffer size computation for padding.
+
 2008-07-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/Makefile: Add rules to build and run tst-setvbuf1.
