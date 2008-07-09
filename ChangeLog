@@ -1,5 +1,8 @@
 2008-07-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_query.c (__libc_res_nquery): Issue debug message only
+	if DEBUG is defined.
+
 	* resolv/res_query.c (__libc_res_nquery): Align buffer for T_AAAA
 	query.  Adjust buffer size computation for padding.
 
