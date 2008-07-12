@@ -1806,41 +1806,63 @@ main_loop_poll (void)
 
 	  size_t first = 1;
 #ifdef HAVE_INOTIFY
-	  if (conns[1].fd == inotify_fd)
+	  if (inotify_fd != -1 && conns[1].fd == inotify_fd)
 	    {
 	      if (conns[1].revents != 0)
 		{
-		  bool done[lastdb] = { false, };
+		  bool to_clear[lastdb] = { false, };
 		  union
 		  {
 		    struct inotify_event i;
 		    char buf[100];
 		  } inev;
 
-		  while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
-						   sizeof (inev)))
-			 >= (ssize_t) sizeof (struct inotify_event))
+		  while (1)
 		    {
+		      ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
+							     sizeof (inev)));
+		      if (nb < (ssize_t) sizeof (struct inotify_event))
+			{
+			  if (nb == -1)
+			    {
+			      /* Something went wrong when reading the inotify
+				 data.  Better disable inotify.  */
+			      conns[1].fd = -1;
+			      firstfree = 1;
+			      if (nused == 2)
+				nused = 1;
+			      close (inotify_fd);
+			      inotify_fd = -1;
+			      dbg_log (_("disabled inotify after read error"));
+			    }
+			  break;
+			}
+
 		      /* Check which of the files changed.  */
 		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-			if (!done[dbcnt]
-			    && (inev.i.wd == dbs[dbcnt].inotify_descr
-				|| (dbcnt == hstdb
-				    && inev.i.wd == resolv_conf_descr)))
+			if (inev.i.wd == dbs[dbcnt].inotify_descr)
 			  {
-			    if (dbcnt == hstdb
-				&& inev.i.wd == resolv_conf_descr)
-			      res_init ();
-
-			    pthread_mutex_lock (&dbs[dbcnt].prune_lock);
-			    dbs[dbcnt].clear_cache = 1;
-			    pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
-			    pthread_cond_signal (&dbs[dbcnt].prune_cond);
-
-			    done[dbcnt] = true;
-			    break;
+			    to_clear[dbcnt] = true;
+			    goto next;
 			  }
+
+		      if (inev.i.wd == resolv_conf_descr)
+			{
+			  res_init ();
+			  to_clear[hstdb] = true;
+			}
+		    next:;
 		    }
+
+		  /* Actually perform the cache clearing.  */
+		  for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+		    if (to_clear[dbcnt])
+		      {
+			pthread_mutex_lock (&dbs[dbcnt].prune_lock);
+			dbs[dbcnt].clear_cache = 1;
+			pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
+			pthread_cond_signal (&dbs[dbcnt].prune_cond);
+		      }
 
 		  --n;
 		}
@@ -1966,27 +1988,57 @@ main_loop_epoll (int efd)
 #ifdef HAVE_INOTIFY
 	else if (revs[cnt].data.fd == inotify_fd)
 	  {
+	    bool to_clear[lastdb] = { false, };
 	    union
 	    {
 	      struct inotify_event i;
 	      char buf[100];
 	    } inev;
 
-	    while (TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
-					     sizeof (inev)))
-		   >= (ssize_t) sizeof (struct inotify_event))
+	    while (1)
 	      {
+		ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
+				 		 sizeof (inev)));
+		if (nb < (ssize_t) sizeof (struct inotify_event))
+		  {
+		    if (nb == -1)
+		      {
+			/* Something went wrong when reading the inotify
+			   data.  Better disable inotify.  */
+			(void) epoll_ctl (efd, EPOLL_CTL_DEL, inotify_fd,
+					  NULL);
+			close (inotify_fd);
+			inotify_fd = -1;
+			dbg_log (_("disabled inotify after read error"));
+		      }
+		    break;
+		  }
+
 		/* Check which of the files changed.  */
 		for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
 		  if (inev.i.wd == dbs[dbcnt].inotify_descr)
 		    {
-		      pthread_mutex_trylock (&dbs[dbcnt].prune_lock);
-		      dbs[dbcnt].clear_cache = 1;
-		      pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
-		      pthread_cond_signal (&dbs[dbcnt].prune_cond);
-		      break;
+		      to_clear[dbcnt] = true;
+		      goto next;
 		    }
+
+		if (inev.i.wd == resolv_conf_descr)
+		  {
+		    res_init ();
+		    to_clear[hstdb] = true;
+		  }
+	      next:;
 	      }
+
+	    /* Actually perform the cache clearing.  */
+	    for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+	      if (to_clear[dbcnt])
+		{
+		  pthread_mutex_lock (&dbs[dbcnt].prune_lock);
+		  dbs[dbcnt].clear_cache = 1;
+		  pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
+		  pthread_cond_signal (&dbs[dbcnt].prune_cond);
+		}
 	  }
 #endif
 	else
@@ -2010,8 +2062,10 @@ main_loop_epoll (int efd)
       /*  Now look for descriptors for accepted connections which have
 	  no reply in too long of a time.  */
       time_t laststart = now - ACCEPT_TIMEOUT;
+      assert (starttime[sock] == 0);
+      assert (inotify_fd == -1 || starttime[inotify_fd] == 0);
       for (int cnt = highest; cnt > STDERR_FILENO; --cnt)
-	if (cnt != sock && starttime[cnt] != 0 && starttime[cnt] < laststart)
+	if (starttime[cnt] != 0 && starttime[cnt] < laststart)
 	  {
 	    /* We are waiting for this one for too long.  Close it.  */
 	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, NULL);

@@ -1,3 +1,9 @@
+2008-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_poll): Fix handling of read errors
+	from inotify.
+	(main_loop_epoll): Likewise.
+
 2008-07-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c: Remove unnecessary res_pquery prototype.
