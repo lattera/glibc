@@ -1,3 +1,7 @@
+2008-07-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/fcntl.h: Include <sys/types.h>.
+
 2008-07-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (main_loop_poll): Fix handling of read errors
