@@ -22,6 +22,8 @@
 # error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
+#include <sys/types.h>
+
 /* File access modes.  These are understood by io servers; they can be
    passed in `dir_lookup', and are returned by `io_get_openmodes'.
    Consequently they can be passed to `open', `hurd_file_name_lookup', and
