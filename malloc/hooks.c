@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -96,8 +96,6 @@ __malloc_check_init()
   __free_hook = free_check;
   __realloc_hook = realloc_check;
   __memalign_hook = memalign_check;
-  if(check_action & 1)
-    malloc_printerr (5, "malloc: using debugging hooks", NULL);
 }
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
