@@ -1,5 +1,8 @@
 2008-07-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (_IO_helper_overflow): In case _IO_sputn
+	doesn't manage to write anything, fail.
+
 	* malloc/hooks.c (__malloc_check_init): Remove printf.
 
 2008-07-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>

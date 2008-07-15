@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -2080,6 +2080,8 @@ _IO_helper_overflow (_IO_FILE *s, int c)
     {
       _IO_size_t written = _IO_sputn (target, s->_wide_data->_IO_write_base,
 				      used);
+      if (written == 0)
+	return WEOF;
       s->_wide_data->_IO_write_ptr -= written;
     }
 #else
@@ -2087,6 +2089,8 @@ _IO_helper_overflow (_IO_FILE *s, int c)
   if (used)
     {
       _IO_size_t written = _IO_sputn (target, s->_IO_write_base, used);
+      if (written == 0)
+	return EOF;
       s->_IO_write_ptr -= written;
     }
 #endif
