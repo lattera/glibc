@@ -1,3 +1,7 @@
+2008-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/hooks.c (__malloc_check_init): Remove printf.
+
 2008-07-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/fcntl.h: Include <sys/types.h>.
