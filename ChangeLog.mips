@@ -1,3 +1,8 @@
+2008-07-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/setjmp.h (__jmp_buf): Give name to structure
+	type.
+
 2008-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Cleanup namespace.
