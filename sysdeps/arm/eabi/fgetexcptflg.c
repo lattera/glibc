@@ -1,6 +1,7 @@
-/* Set floating-point environment exception handling.
-   Copyright (C) 1997,98,99,2000,01,05,08 Free Software Foundation, Inc.
+/* Store current representation for exceptions.
+   Copyright (C) 1997, 1999, 2000, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -12,13 +13,12 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with GCC; see the file COPYING.  If not, write to the Free
-   Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
-   02110-1301, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <fenv.h>
-#include <math.h>
 #include <fpu_control.h>
 
 #include <unistd.h>
@@ -27,21 +27,16 @@
 #include <sysdep.h>
 
 int
-__fesetexceptflag (const fexcept_t *flagp, int excepts)
+__fegetexceptflag (fexcept_t *flagp, int excepts)
 {
   if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
     {
-      fexcept_t temp;
+      unsigned long temp;
 
-      /* Get the current environment.  */
+      /* Get the current exceptions.  */
       _FPU_GETCW (temp);
 
-      /* Set the desired exception mask.  */
-      temp &= ~(excepts & FE_ALL_EXCEPT);
-      temp |= (*flagp & excepts & FE_ALL_EXCEPT);
-
-      /* Save state back to the FPU.  */
-      _FPU_SETCW (temp);
+      *flagp = temp & excepts & FE_ALL_EXCEPT;
 
       /* Success.  */
       return 0;
@@ -53,8 +48,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
+strong_alias (__fegetexceptflag, __old_fegetexceptflag)
+compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
 #endif
-
-versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);
+versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);

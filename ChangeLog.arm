@@ -1,5 +1,11 @@
 2008-07-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/eabi/fgetexcptflg.c: New.
+	* sysdeps/arm/eabi/fsetexcptflg.c (__fesetexceptflag): Operate on
+	set exception flags, not on mask of enabled exceptions.
+
+2008-07-18  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/arm/eabi/feupdateenv.c: New.
 
 2008-07-18  Joseph Myers  <joseph@codesourcery.com>
