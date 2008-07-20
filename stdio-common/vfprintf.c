@@ -2080,8 +2080,11 @@ _IO_helper_overflow (_IO_FILE *s, int c)
     {
       _IO_size_t written = _IO_sputn (target, s->_wide_data->_IO_write_base,
 				      used);
-      if (written == 0)
+      if (written == 0 || written == WEOF)
 	return WEOF;
+      __wmemmove (s->_wide_data->_IO_write_base,
+		  s->_wide_data->_IO_write_base + written,
+		  used - written);
       s->_wide_data->_IO_write_ptr -= written;
     }
 #else
@@ -2089,8 +2092,10 @@ _IO_helper_overflow (_IO_FILE *s, int c)
   if (used)
     {
       _IO_size_t written = _IO_sputn (target, s->_IO_write_base, used);
-      if (written == 0)
+      if (written == 0 || written == EOF)
 	return EOF;
+      memmove (s->_IO_write_base, s->_IO_write_base + written,
+	       used - written);
       s->_IO_write_ptr -= written;
     }
 #endif

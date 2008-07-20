@@ -234,9 +234,16 @@ setlocale (int category, const char *locale)
   if (locale == NULL)
     return (char *) _nl_global_locale.__names[category];
 
+  /* Protect global data.  */
+  __libc_rwlock_wrlock (__libc_setlocale_lock);
+
   if (strcmp (locale, _nl_global_locale.__names[category]) == 0)
-    /* Changing to the same thing.  */
-    return (char *) _nl_global_locale.__names[category];
+    {
+      /* Changing to the same thing.  */
+      __libc_rwlock_unlock (__libc_setlocale_lock);
+
+      return (char *) _nl_global_locale.__names[category];
+    }
 
   /* We perhaps really have to load some data.  So we determine the
      path in which to look for the data now.  The environment variable
@@ -250,12 +257,13 @@ setlocale (int category, const char *locale)
   if (locpath_var != NULL && locpath_var[0] != '\0')
     {
       if (__argz_create_sep (locpath_var, ':',
-			     &locale_path, &locale_path_len) != 0)
-	return NULL;
-
-      if (__argz_add_sep (&locale_path, &locale_path_len,
-			  _nl_default_locale_path, ':') != 0)
-	return NULL;
+			     &locale_path, &locale_path_len) != 0
+	  || __argz_add_sep (&locale_path, &locale_path_len,
+			     _nl_default_locale_path, ':') != 0)
+	{
+	  __libc_rwlock_unlock (__libc_setlocale_lock);
+	  return NULL;
+	}
     }
 
   if (category == LC_ALL)
@@ -290,8 +298,13 @@ setlocale (int category, const char *locale)
 		  break;
 
 	      if (cnt == __LC_LAST)
-		/* Bogus category name.  */
-		ERROR_RETURN;
+		{
+		error_return:
+		  __libc_rwlock_unlock (__libc_setlocale_lock);
+
+		  /* Bogus category name.  */
+		  ERROR_RETURN;
+		}
 
 	      /* Found the category this clause sets.  */
 	      newnames[cnt] = ++cp;
@@ -310,11 +323,8 @@ setlocale (int category, const char *locale)
 	  for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	    if (cnt != LC_ALL && newnames[cnt] == locale)
 	      /* The composite name did not specify all categories.  */
-	      ERROR_RETURN;
+	      goto error_return;
 	}
-
-      /* Protect global data.  */
-      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       /* Load the new data for each category.  */
       while (category-- > 0)
@@ -392,9 +402,6 @@ setlocale (int category, const char *locale)
     {
       struct locale_data *newdata = NULL;
       const char *newname[1] = { locale };
-
-      /* Protect global data.  */
-      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       if (CATEGORY_USED (category))
 	{
