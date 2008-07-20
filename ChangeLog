@@ -1,5 +1,8 @@
 2008-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/setlocale.c (setname): Remove inline to avoid compiler
+	warning.
+
 	* locale/setlocale.c (setlocale): Take the setlocale lock earlier.
 
 2008-07-15  Ulrich Drepper  <drepper@redhat.com>

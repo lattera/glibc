@@ -193,7 +193,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 
 
 /* Put NAME in _nl_global_locale.__names.  */
-static inline void
+static void
 setname (int category, const char *name)
 {
   if (_nl_global_locale.__names[category] == name)
