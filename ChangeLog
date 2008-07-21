@@ -1,3 +1,8 @@
+2008-07-21  Roland McGrath  <roland@frob.com>
+
+	* hurd/fd-read.c (_hurd_fd_read): Return EGRATUITOUS if the server
+	returned too much data out of line.
+
 2008-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/setlocale.c (setname): Remove inline to avoid compiler
