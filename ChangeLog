@@ -1,3 +1,7 @@
+2008-07-22  Roland McGrath  <roland@frob.com>
+
+	* hurd/fd-read.c (_hurd_fd_read): Fix last change.
+
 2008-07-21  Roland McGrath  <roland@frob.com>
 
 	* hurd/fd-read.c (_hurd_fd_read): Return EGRATUITOUS if the server

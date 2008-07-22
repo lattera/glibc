@@ -42,7 +42,10 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
   if (data != buf)
     {
       if (nread > *nbytes)	/* Sanity check for bogus server.  */
-	return EGRATUITOUS;
+	{
+	  __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
+	  return EGRATUITOUS;
+	}
       memcpy (buf, data, nread);
       __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }
