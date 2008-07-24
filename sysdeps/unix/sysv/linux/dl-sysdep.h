@@ -27,9 +27,7 @@
 #define NEED_DL_SYSINFO_DSO	1
 
 
-/* The _dl_discover_osversion function is so far only needed in sysconf
-   to check for kernels later than 2.6.23.  */
-#if !defined __ASSEMBLER__ && __LINUX_KERNEL_VERSION < 0x020617
+#ifndef __ASSEMBLER__
 /* Get version of the OS.  */
 extern int _dl_discover_osversion (void) attribute_hidden;
 # define HAVE_DL_DISCOVER_OSVERSION	1
