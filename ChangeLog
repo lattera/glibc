@@ -1,3 +1,8 @@
+2008-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-sysdep.h: Don't declare
+	_dl_discover_osversion only for older kernels.
+
 2008-07-22  Roland McGrath  <roland@frob.com>
 
 	* hurd/fd-read.c (_hurd_fd_read): Fix last change.
@@ -12,6 +17,7 @@
 	* locale/setlocale.c (setname): Remove inline to avoid compiler
 	warning.
 
+	[BZ #6712]
 	* locale/setlocale.c (setlocale): Take the setlocale lock earlier.
 
 2008-07-15  Ulrich Drepper  <drepper@redhat.com>
