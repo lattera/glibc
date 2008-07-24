@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1999-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -491,4 +491,9 @@
 /* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
 #if __LINUX_KERNEL_VERSION >= 0x020618
 # define __ASSUME_ADJ_OFFSET_SS_READ	1
+#endif
+
+/* Support for AT_EXECFN was added in 2.6.27.  */
+#if __LINUX_KERNEL_VERSION >= 0x02061b
+# define __ASSUME_AT_EXECFN	1
 #endif

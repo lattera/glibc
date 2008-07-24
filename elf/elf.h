@@ -970,6 +970,8 @@ typedef struct
 
 #define	AT_SECURE	23		/* Boolean, was exec setuid-like?  */
 
+#define AT_EXECFN	31		/* Filename of executable.  */
+
 /* Pointer to the global system page used for system calls and other
    nice things.  */
 #define AT_SYSINFO	32

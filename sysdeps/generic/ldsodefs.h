@@ -38,6 +38,7 @@
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
+#include <kernel-features.h>
 
 __BEGIN_DECLS
 
@@ -592,8 +593,13 @@ struct rtld_global_ro
   /* Names of shared object for which the RPATH should be ignored.  */
   EXTERN const char *_dl_inhibit_rpath;
 
+#ifndef __ASSUME_AT_EXECFN
   /* Location of the binary.  */
   EXTERN const char *_dl_origin_path;
+#endif
+
+  /* If set, points to the file name of the executable.  */
+  EXTERN const char *_dl_execfn;
 
   /* -1 if the dynamic linker should honor library load bias,
      0 if not, -2 use the default (honor biases for normal

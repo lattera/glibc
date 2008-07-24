@@ -1,5 +1,20 @@
 2008-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Define AT_EXECFN.
+	* elf/rtld.c [!__ASSUME_AT_EXECFN] (process_envvars): Don't handle
+	LD_ORIGIN_PATH.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Handle AT_EXECFN.
+	* elf/dl-support.c: Define _dl_execfn.  Don't define _dl_origin_path
+	if __ASSUME_AT_EXECFN is defined.
+	(_dl_aux_init): Handle AT_EXECFN.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_AT_EXECFN
+	for 2.6.27 and up.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro): Add _dl_execfn.
+	Don't define _dl_origin_path if __ASSUME_AT_EXECFN is defined.
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Use
+	_dl_execfn if available and avoid compatibility code if
+	__ASSUME_AT_EXECFN is defined.
+
 	* sysdeps/unix/sysv/linux/dl-sysdep.h: Don't declare
 	_dl_discover_osversion only for older kernels.
 
