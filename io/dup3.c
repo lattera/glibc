@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +16,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	_SYS_EVENTFD_H
-#define	_SYS_EVENTFD_H	1
-
-#include <stdint.h>
-
-
-/* Type for event counter.  */
-typedef uint64_t eventfd_t;
-
-/* Flags for signalfd.  */
-enum
-  {
-    EFD_CLOEXEC = 02000000,
-#define EFD_CLOEXEC EFD_CLOEXEC
-    EFD_NONBLOCK = 04000
-#define EFD_NONBLOCK EFD_NONBLOCK
-  };
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 
-__BEGIN_DECLS
+/* Duplicate FD to FD2, closing the old FD2 and making FD2 be
+   open the same file as FD is which setting flags according to
+   FLAGS.  Return FD2 or -1.  */
+int
+dup3 (fd, fd2, flags)
+     int fd;
+     int fd2;
+     int flags;
+{
+  if (fd < 0 || fd2 < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
-/* Return file descriptor for generic event channel.  Set initial
-   value to COUNT.  */
-extern int eventfd (int __count, int __flags) __THROW;
+  if (fd == fd2)
+    /* No way to check that they are valid.  */
+    return fd2;
 
-/* Read event counter and possibly wait for events.  */
-extern int eventfd_read (int __fd, eventfd_t *__value);
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (dup3)
 
-/* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t value);
-
-__END_DECLS
-
-#endif /* sys/eventfd.h */
+#include <stub-tag.h>

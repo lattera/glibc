@@ -45,6 +45,14 @@ struct signalfd_siginfo
   uint8_t __pad[48];
 };
 
+/* Flags for signalfd.  */
+enum
+  {
+    SFD_CLOEXEC = 02000000,
+#define SFD_CLOEXEC SFD_CLOEXEC
+    SFD_NONBLOCK = 04000
+#define SFD_NONBLOCK SFD_NONBLOCK
+  };
 
 __BEGIN_DECLS
 

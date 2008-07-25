@@ -1,5 +1,6 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2008.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,31 +18,37 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/eventfd.h>
-#include <sysdep.h>
+#include <signal.h>
+#include <sys/socket.h>
 
+#include <sysdep-cancel.h>
+#include <sys/syscall.h>
 
+#ifdef __NR_paccept
 int
-eventfd (int count, int flags)
+paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
+	 const __sigset_t *ss, int flags)
 {
-#ifdef __NR_eventfd1
-  return INLINE_SYSCALL (eventfd1, 1, flags);
-#else
-  /* The old system call has no flag parameter which is bad.  So we have
-     to wait until we have to support to pass additional values to the
-     kernel (sys_indirect) before implementing setting flags like
-     O_NONBLOCK etc.  */
-  if (flags != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (paccept, 6, fd, addr, addr_len, ss,
+			   _NSIG / 8, flags);
 
-# ifdef __NR_eventfd
-  return INLINE_SYSCALL (eventfd, 1, count);
-# else
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (paccept, 6, fd, addr, addr_len, ss,
+			       _NSIG / 8, flags);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
+}
+#else
+int
+paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
+	 const __sigset_t *ss, int flags)
+{
   __set_errno (ENOSYS);
   return -1;
-# endif
-#endif
+stub_warning (epoll_pwait)
 }
+#endif

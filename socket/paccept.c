@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +16,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	_SYS_EVENTFD_H
-#define	_SYS_EVENTFD_H	1
+#include <errno.h>
+#include <sys/socket.h>
 
-#include <stdint.h>
+/* Await a connection on socket FD.
+   When a connection arrives, open a new socket to communicate with it,
+   set *ADDR (which is *ADDR_LEN bytes long) to the address of the connecting
+   peer and *ADDR_LEN to the address's actual length, and return the
+   new socket's descriptor, or -1 for errors.  SS is installed as
+   the thread's signal mask and FLAGS are additional flags.  */
+int
+paccept (fd, addr, addr_len, ss, flags)
+     int fd;
+     __SOCKADDR_ARG addr;
+     socklen_t *addr_len;
+     const __sigset_t *ss;
+     int flags;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+libc_hidden_def (paccept)
 
 
-/* Type for event counter.  */
-typedef uint64_t eventfd_t;
-
-/* Flags for signalfd.  */
-enum
-  {
-    EFD_CLOEXEC = 02000000,
-#define EFD_CLOEXEC EFD_CLOEXEC
-    EFD_NONBLOCK = 04000
-#define EFD_NONBLOCK EFD_NONBLOCK
-  };
-
-
-__BEGIN_DECLS
-
-/* Return file descriptor for generic event channel.  Set initial
-   value to COUNT.  */
-extern int eventfd (int __count, int __flags) __THROW;
-
-/* Read event counter and possibly wait for events.  */
-extern int eventfd_read (int __fd, eventfd_t *__value);
-
-/* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t value);
-
-__END_DECLS
-
-#endif /* sys/eventfd.h */
+stub_warning (paccept)
+#include <stub-tag.h>

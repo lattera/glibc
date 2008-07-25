@@ -1,5 +1,5 @@
 /* ID for functions called via socketcall system call.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #ifndef _SYS_SOCKETCALL_H
-
 #define _SYS_SOCKETCALL_H	1
 
 /* Define unique numbers for the operations permitted on socket.  Linux
@@ -44,5 +43,6 @@
 #define SOCKOP_getsockopt	15
 #define SOCKOP_sendmsg		16
 #define SOCKOP_recvmsg		17
+#define SOCKOP_paccept		18
 
-#endif /* _SYS_SOCKETCALL_H */
+#endif /* sys/socketcall.h */

@@ -28,9 +28,9 @@ typedef uint64_t eventfd_t;
 /* Flags for signalfd.  */
 enum
   {
-    EFD_CLOEXEC = 02000000,
+    EFD_CLOEXEC = 0x400000,
 #define EFD_CLOEXEC EFD_CLOEXEC
-    EFD_NONBLOCK = 04000
+    EFD_NONBLOCK = 0x4000
 #define EFD_NONBLOCK EFD_NONBLOCK
   };
 

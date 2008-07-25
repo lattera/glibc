@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 2002, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +16,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	_SYS_EVENTFD_H
-#define	_SYS_EVENTFD_H	1
+#include <errno.h>
+#include <unistd.h>
+#include <stddef.h>
 
-#include <stdint.h>
+/* Create a one-way communication channel (__pipe).  If successful,
+   two file descriptors are stored in PIPEDES; bytes written on
+   PIPEDES[1] can be read from PIPEDES[0].  Apply FLAGS to the new
+   file descriptors.  Returns 0 if successful, -1 if not.  */
+int
+pipe2 (pipedes, flags)
+     int pipedes[2];
+     int flags;
+{
+  if (pipedes == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (pipe2)
 
-/* Type for event counter.  */
-typedef uint64_t eventfd_t;
-
-/* Flags for signalfd.  */
-enum
-  {
-    EFD_CLOEXEC = 02000000,
-#define EFD_CLOEXEC EFD_CLOEXEC
-    EFD_NONBLOCK = 04000
-#define EFD_NONBLOCK EFD_NONBLOCK
-  };
-
-
-__BEGIN_DECLS
-
-/* Return file descriptor for generic event channel.  Set initial
-   value to COUNT.  */
-extern int eventfd (int __count, int __flags) __THROW;
-
-/* Read event counter and possibly wait for events.  */
-extern int eventfd_read (int __fd, eventfd_t *__value);
-
-/* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t value);
-
-__END_DECLS
-
-#endif /* sys/eventfd.h */
+#include <stub-tag.h>

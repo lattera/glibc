@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2002,2003,2005,2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1992-2003,2005,2006,2007,2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ routines :=								\
 	open open64 openat openat64 close				\
 	read write lseek lseek64 access euidaccess faccessat		\
 	fcntl flock lockf lockf64					\
-	dup dup2 pipe							\
+	dup dup2 dup3 pipe pipe2					\
 	creat creat64							\
 	chdir fchdir							\
 	getcwd getwd getdirname						\

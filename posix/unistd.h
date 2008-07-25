@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -383,6 +383,12 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
    Returns 0 if successful, -1 if not.  */
 extern int pipe (int __pipedes[2]) __THROW __wur;
 
+#ifdef __USE_GNU
+/* Same as pipe but apply flags passed in FLAGS to the new file
+   descriptors.  */
+extern int pipe2 (int __pipedes[2], int __flags) __THROW __wur;
+#endif
+
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
    The function returns the number of seconds remaining until the last
@@ -491,6 +497,12 @@ extern int dup (int __fd) __THROW __wur;
 
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
 extern int dup2 (int __fd, int __fd2) __THROW;
+
+#ifdef __USE_GNU
+/* Duplicate FD to FD2, closing FD2 and making it open on the same
+   file while setting flags according to FLAGS.  */
+extern int dup3 (int __fd, int __fd2, int __flags) __THROW;
+#endif
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;

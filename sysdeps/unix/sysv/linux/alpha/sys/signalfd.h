@@ -16,37 +16,51 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	_SYS_EVENTFD_H
-#define	_SYS_EVENTFD_H	1
+#ifndef	_SYS_SIGNALFD_H
+#define	_SYS_SIGNALFD_H	1
 
+#define __need_sigset_t
+#include <signal.h>
 #include <stdint.h>
 
 
-/* Type for event counter.  */
-typedef uint64_t eventfd_t;
+struct signalfd_siginfo
+{
+  uint32_t ssi_signo;
+  int32_t ssi_errno;
+  int32_t ssi_code;
+  uint32_t ssi_pid;
+  uint32_t ssi_uid;
+  int32_t ssi_fd;
+  uint32_t ssi_tid;
+  uint32_t ssi_band;
+  uint32_t ssi_overrun;
+  uint32_t ssi_trapno;
+  int32_t ssi_status;
+  int32_t ssi_int;
+  uint64_t ssi_ptr;
+  uint64_t ssi_utime;
+  uint64_t ssi_stime;
+  uint64_t ssi_addr;
+  uint8_t __pad[48];
+};
 
 /* Flags for signalfd.  */
 enum
   {
-    EFD_CLOEXEC = 02000000,
-#define EFD_CLOEXEC EFD_CLOEXEC
-    EFD_NONBLOCK = 04000
-#define EFD_NONBLOCK EFD_NONBLOCK
+    SFD_CLOEXEC = 010000000,
+#define SFD_CLOEXEC SFD_CLOEXEC
+    SFD_NONBLOCK = 04
+#define SFD_NONBLOCK SFD_NONBLOCK
   };
-
 
 __BEGIN_DECLS
 
-/* Return file descriptor for generic event channel.  Set initial
-   value to COUNT.  */
-extern int eventfd (int __count, int __flags) __THROW;
-
-/* Read event counter and possibly wait for events.  */
-extern int eventfd_read (int __fd, eventfd_t *__value);
-
-/* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t value);
+/* Request notification for delivery of signals in MASK to be
+   performed using descriptor FD.*/
+extern int signalfd (int __fd, const sigset_t *__mask, int __flags)
+  __nonnull ((2)) __THROW;
 
 __END_DECLS
 
-#endif /* sys/eventfd.h */
+#endif /* sys/signalfd.h */

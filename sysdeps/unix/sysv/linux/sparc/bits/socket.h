@@ -1,4 +1,4 @@
-/* System-specific socket constants and types.  Linux version.
+/* System-specific socket constants and types.  Linux/SPARC version.
    Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -59,13 +59,12 @@ enum __socket_type
 				   other similar things on the user level. */
 #define SOCK_PACKET SOCK_PACKET
 
-  /* Flags to be ORed into the type parameter of socket and socketpair and
-     used for the flags parameter of paccept.  */
+  /* Flags to be ORed into the type parameter of socket and socketpair.  */
 
-  SOCK_CLOEXEC = 02000000,	/* Atomically set close-on-exec flag for the
+  SOCK_CLOEXEC = 0x400000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
 #define SOCK_CLOEXEC SOCK_CLOEXEC
-  SOCK_NONBLOCK = 04000		/* Atomically mark descriptor(s) as
+  SOCK_NONBLOCK = 0x4000	/* Atomically mark descriptor(s) as
 				   non-blocking.  */
 #define SOCK_NONBLOCK SOCK_NONBLOCK
 };

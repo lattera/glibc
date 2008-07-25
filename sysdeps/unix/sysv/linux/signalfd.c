@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,10 @@
 int
 signalfd (int fd, const sigset_t *mask, int flags)
 {
-  /* The system call has no flag parameter which is bad.  So we have
+#ifdef __NR_signalfd4
+  return INLINE_SYSCALL (signalfd4, 4, fd, mask, _NSIG / 8, flags);
+#else
+  /* The old system call has no flag parameter which is bad.  So we have
      to wait until we have to support to pass additional values to the
      kernel (sys_indirect) before implementing setting flags like
      O_NONBLOCK etc.  */
@@ -35,10 +38,11 @@ signalfd (int fd, const sigset_t *mask, int flags)
       return -1;
     }
 
-#ifdef __NR_signalfd
+# ifdef __NR_signalfd
   return INLINE_SYSCALL (signalfd, 3, fd, mask, _NSIG / 8);
-#else
+# else
   __set_errno (ENOSYS);
   return -1;
+# endif
 #endif
 }

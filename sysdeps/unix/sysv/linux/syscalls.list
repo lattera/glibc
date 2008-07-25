@@ -8,6 +8,7 @@ creat		-	creat		Ci:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 epoll_create	EXTRA	epoll_create	i:i	epoll_create
+epoll_create2	EXTRA	epoll_create2	i:ii	epoll_create2
 epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
 epoll_wait	EXTRA	epoll_wait	Ci:ipii	epoll_wait
 fdatasync	-	fdatasync	Ci:i	fdatasync
@@ -26,6 +27,7 @@ getsid		-	getsid		i:i	getsid
 init_module	EXTRA	init_module	5	init_module
 inotify_add_watch	EXTRA	inotify_add_watch	i:isi	inotify_add_watch
 inotify_init	EXTRA	inotify_init	i:	inotify_init
+inotify_init1	EXTRA	inotify_init1	i:I	inotify_init1
 inotify_rm_watch	EXTRA	inotify_rm_watch	i:ii	inotify_rm_watch
 ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
@@ -45,6 +47,7 @@ nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		Ci:	__libc_pause	pause
 personality	EXTRA	personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
+pipe2		-	pipe2		i:fi	pipe2
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
 putpmsg		-	putpmsg		i:ippii	putpmsg

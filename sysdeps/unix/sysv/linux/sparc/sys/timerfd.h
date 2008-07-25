@@ -25,9 +25,9 @@
 /* Bits to be set in the FLAGS parameter of `timerfd_create'.  */
 enum
   {
-    TFD_CLOEXEC = 02000000,
+    TFD_CLOEXEC = 0x400000,
 #define TFD_CLOEXEC TFD_CLOEXEC
-    TFD_NONBLOCK = 04000
+    TFD_NONBLOCK = 0x4000
 #define TFD_NONBLOCK TFD_NONBLOCK
   };
 

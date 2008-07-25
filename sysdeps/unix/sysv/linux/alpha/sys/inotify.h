@@ -25,9 +25,9 @@
 /* Flags for the parameter of inotify_init1.  */
 enum
   {
-    IN_CLOEXEC = 02000000,
+    IN_CLOEXEC = 010000000,
 #define IN_CLOEXEC IN_CLOEXEC
-    IN_NONBLOCK = 04000
+    IN_NONBLOCK = 04
 #define IN_NONBLOCK IN_NONBLOCK
   };
 

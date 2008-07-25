@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991,92,1994-2001,2003,2005,2007
+   Copyright (C) 1991,92,1994-2001,2003,2005,2007,2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,6 +28,10 @@ __BEGIN_DECLS
 #include <sys/uio.h>
 #define	__need_size_t
 #include <stddef.h>
+#ifdef __USE_GNU
+/* Get the __sigset_t definition.  */
+# include <bits/sigset.h>
+#endif
 
 
 /* This operating system-specific header file defines the SOCK_*, PF_*,
@@ -209,6 +213,18 @@ extern int listen (int __fd, int __n) __THROW;
    __THROW.  */
 extern int accept (int __fd, __SOCKADDR_ARG __addr,
 		   socklen_t *__restrict __addr_len);
+
+#ifdef __USE_GNU
+/* Variant of the accept function which takes additional parameters.  The
+   MASK parameter allows to change the thread signal mask for the duration
+   of the call.  The FLAGS parameter allows to pass additional flags.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int paccept (int __fd, __SOCKADDR_ARG __addr,
+		    socklen_t *__restrict __addr_len,
+		    __const __sigset_t *__restrict __ss, int __flags);
+#endif
 
 /* Shut down all or part of the connection open on socket FD.
    HOW determines what to shut down:

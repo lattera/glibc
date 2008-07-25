@@ -1,5 +1,50 @@
 2008-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def (glibc): Add GLIBC_2.9.
+	* io/Makefile (routines): Add dup3 and pipe2.
+	* io/Versions [glibc] (GLIBC_2.9): Add dup3 and pipe2.
+	* io/dup3.c: New file.
+	* io/pipe2.c: New file.
+	* posix/unistd.h: Declare dup3 and pipe2.
+	* socket/Makefile (routines): Add paccept.
+	* socket/Versions [glibc] (GLIBC_2.9): Add paccept.
+	* socket/paccept.c: New file.
+	* socket/sys/socket.h: Declare paccept.
+	* sysdeps/unix/syscalls.list: Add entry for dup3.
+	* sysdeps/unix/sysv/linux/Versions [glibc] (GLIBC_2.9): Add
+	epoll_create2 and inotify_init1.
+	* sysdeps/unix/sysv/linux/eventfd.c: Use eventfd1 syscall if possible.
+	* sysdeps/unix/sysv/linux/paccept.c: New file.
+	* sysdeps/unix/sysv/linux/signalfd.c: Use signalfd4 syscall if
+	possible.
+	* sysdeps/unix/sysv/linux/socketcall.h: Add SOCKOP_paccept.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_create2,
+	inotify_init1, and pipe2 entries.
+	* sysdeps/unix/sysv/linux/alpha/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define SOCK_CLOEXEC and
+	SOCK_NONBLOCK.
+	* sysdeps/unix/sysv/linux/i386/paccept.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: New file.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Define EPOLL_CLOEXEC and
+	EPOLL_NONBLOCK.  Declare epoll_create2.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Define EFD_CLOEXEC and
+	EFD_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Define IN_CLOEXEC and
+	IN_NONBLOCK.  Declare inotify_init1.
+	* sysdeps/unix/sysv/linux/sys/signalfd.h: Define SFD_CLOEXEC and
+	SFD_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sys/timerfd.h: Define TFD_CLOEXEC and
+	TFD_NONBLOCK.
+
 	* elf/elf.h: Define AT_EXECFN.
 	* elf/rtld.c [!__ASSUME_AT_EXECFN] (process_envvars): Don't handle
 	LD_ORIGIN_PATH.

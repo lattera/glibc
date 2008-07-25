@@ -34,9 +34,9 @@ typedef __sigset_t sigset_t;
 /* Flags to be passed to epoll_create2.  */
 enum
   {
-    EPOLL_CLOEXEC = 02000000,
+    EPOLL_CLOEXEC = 0x400000,
 #define EPOLL_CLOEXEC EPOLL_CLOEXEC
-    EPOLL_NONBLOCK = 04000
+    EPOLL_NONBLOCK = 0x4000
 #define EPOLL_NONBLOCK EPOLL_NONBLOCK
   };
 
