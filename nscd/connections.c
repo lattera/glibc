@@ -234,6 +234,14 @@ static int inotify_fd = -1;
 static int resolv_conf_descr = -1;
 #endif
 
+#ifndef __ASSUME_SOCK_CLOEXEC
+/* Negative if SOCK_CLOEXEC is not supported, positive if it is, zero
+   before be know the result.  */
+static int have_sock_cloexec;
+/* The paccept syscall was introduced at the same time as SOCK_CLOEXEC.  */
+# define have_paccept have_sock_cloexec
+#endif
+
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
 
@@ -517,9 +525,15 @@ nscd_init (void)
 
 #ifdef HAVE_INOTIFY
   /* Use inotify to recognize changed files.  */
-  inotify_fd = inotify_init ();
-  if (inotify_fd != -1)
-    fcntl (inotify_fd, F_SETFL, O_NONBLOCK);
+  inotify_fd = inotify_init1 (IN_NONBLOCK);
+# ifndef __ASSUME_IN_NONBLOCK
+  if (inotify_fd == -1 && errno == ENOSYS)
+    {
+      inotify_fd = inotify_init ();
+      if (inotify_fd != -1)
+	fcntl (inotify_fd, F_SETFL, O_NONBLOCK);
+    }
+# endif
 #endif
 
   for (size_t cnt = 0; cnt < lastdb; ++cnt)
@@ -860,7 +874,21 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
       }
 
   /* Create the socket.  */
-  sock = socket (AF_UNIX, SOCK_STREAM, 0);
+#ifndef __ASSUME_SOCK_CLOEXEC
+  sock = -1;
+  if (have_sock_cloexec >= 0)
+#endif
+    {
+      sock = socket (AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
+#ifdef __ASSUME_SOCK_CLOEXEC
+      if (have_sock_cloexec == 0)
+	have_sock_cloexec = sock != -1 || errno != EINVAL ? 1 : -1;
+#endif
+    }
+#ifndef __ASSUME_SOCK_CLOEXEC
+  if (have_sock_cloexec < 0)
+    sock = socket (AF_UNIX, SOCK_STREAM, 0);
+#endif
   if (sock < 0)
     {
       dbg_log (_("cannot open socket: %s"), strerror (errno));
@@ -876,22 +904,27 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
       exit (errno == EACCES ? 4 : 1);
     }
 
-  /* We don't want to get stuck on accept.  */
-  int fl = fcntl (sock, F_GETFL);
-  if (fl == -1 || fcntl (sock, F_SETFL, fl | O_NONBLOCK) == -1)
+#ifndef __ASSUME_SOCK_CLOEXEC
+  if (have_sock_cloexec < 0)
     {
-      dbg_log (_("cannot change socket to nonblocking mode: %s"),
-	       strerror (errno));
-      exit (1);
-    }
+      /* We don't want to get stuck on accept.  */
+      int fl = fcntl (sock, F_GETFL);
+      if (fl == -1 || fcntl (sock, F_SETFL, fl | O_NONBLOCK) == -1)
+	{
+	  dbg_log (_("cannot change socket to nonblocking mode: %s"),
+		   strerror (errno));
+	  exit (1);
+	}
 
-  /* The descriptor needs to be closed on exec.  */
-  if (paranoia && fcntl (sock, F_SETFD, FD_CLOEXEC) == -1)
-    {
-      dbg_log (_("cannot set socket to close on exec: %s"),
-	       strerror (errno));
-      exit (1);
+      /* The descriptor needs to be closed on exec.  */
+      if (paranoia && fcntl (sock, F_SETFD, FD_CLOEXEC) == -1)
+	{
+	  dbg_log (_("cannot set socket to close on exec: %s"),
+		   strerror (errno));
+	  exit (1);
+	}
     }
+#endif
 
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, DEFFILEMODE);
@@ -1576,10 +1609,15 @@ nscd_run_worker (void *p)
       /* We are done with the list.  */
       pthread_mutex_unlock (&readylist_lock);
 
-      /* We do not want to block on a short read or so.  */
-      int fl = fcntl (fd, F_GETFL);
-      if (fl == -1 || fcntl (fd, F_SETFL, fl | O_NONBLOCK) == -1)
-	goto close_and_out;
+#ifndef __ASSUME_SOCK_CLOEXEC
+      if (have_sock_cloexec < 0)
+	{
+	  /* We do not want to block on a short read or so.  */
+	  int fl = fcntl (fd, F_GETFL);
+	  if (fl == -1 || fcntl (fd, F_SETFL, fl | O_NONBLOCK) == -1)
+	    goto close_and_out;
+	}
+#endif
 
       /* Now read the request.  */
       request_header req;
@@ -1779,7 +1817,24 @@ main_loop_poll (void)
 	  if (conns[0].revents != 0)
 	    {
 	      /* We have a new incoming connection.  Accept the connection.  */
-	      int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+	      int fd;
+
+#ifndef __ASSUME_PACCEPT
+	      fd = -1;
+	      if (have_paccept >= 0)
+#endif
+		{
+		  fd = TEMP_FAILURE_RETRY (paccept (sock, NULL, NULL, NULL,
+						    SOCK_NONBLOCK));
+#ifndef __ASSUME_PACCEPT
+		  if (have_paccept == 0)
+		    have_paccept = fd != -1 || errno != ENOSYS ? 1 : -1;
+#endif
+		}
+#ifndef __ASSUME_PACCEPT
+	      if (have_paccept < 0)
+		fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+#endif
 
 	      /* Use the descriptor if we have not reached the limit.  */
 	      if (fd >= 0)

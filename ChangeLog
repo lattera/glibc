@@ -1,5 +1,11 @@
 2008-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_PACCEPT, __ASSUME_IN_NONBLOCK, and __ASSUME_PACCEPT if
+	appropriate.
+	* nscd/connections.c: Avoid fcntl calls to set close-on-exec flag and
+	non-blocking mode by using socket, paccept, and inotify_init1.
+
 	* Versions.def (glibc): Add GLIBC_2.9.
 	* io/Makefile (routines): Add dup3 and pipe2.
 	* io/Versions [glibc] (GLIBC_2.9): Add dup3 and pipe2.
