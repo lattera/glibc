@@ -21,6 +21,18 @@ extern CLIENT *clntudp_bufcreate_internal (struct sockaddr_in *__raddr,
 					   struct timeval __wait_resend,
 					   int *__sockp, u_int __sendsz,
 					   u_int __recvsz) attribute_hidden;
+extern CLIENT *__libc_clntudp_bufcreate (struct sockaddr_in *__raddr,
+					 u_long __program, u_long __version,
+					 struct timeval __wait_resend,
+					 int *__sockp, u_int __sendsz,
+					 u_int __recvsz, int __flags);
+extern CLIENT *__libc_clntudp_bufcreate_internal (struct sockaddr_in *__raddr,
+						  u_long __program,
+						  u_long __version,
+						  struct timeval __wait_resend,
+						  int *__sockp, u_int __sendsz,
+						  u_int __recvsz, int __flags)
+  attribute_hidden;
 extern CLIENT *clntunix_create_internal (struct sockaddr_un *__raddr,
 					 u_long __program, u_long __version,
 					 int *__sockp, u_int __sendsz,

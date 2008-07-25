@@ -29,6 +29,8 @@ routines := accept bind connect getpeername getsockname getsockopt	\
 	    setsockopt shutdown socket socketpair isfdtype opensock	\
 	    sockatmark paccept
 
+aux	 := have_sock_cloexec
+
 distribute := ifreq.h
 
 include ../Rules

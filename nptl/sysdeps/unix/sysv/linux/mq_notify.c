@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <not-cancel.h>
+#include <kernel-features.h>
 
 
 #ifdef __NR_mq_notify
@@ -152,18 +153,40 @@ reset_once (void)
 static void
 init_mq_netlink (void)
 {
+#ifdef SOCK_CLOEXEC
+# ifndef __ASSUME_SOCK_CLOEXEC
+  static int have_sock_cloexec;
+# else
+#  define have_sock_cloexec 1
+# endif
+#else
+# define have_sock_cloexec -1
+# define SOCK_CLOEXEC 0
+#endif
+
   /* This code might be called a second time after fork().  The file
      descriptor is inherited from the parent.  */
   if (netlink_socket == -1)
     {
       /* Just a normal netlink socket, not bound.  */
-      netlink_socket = socket (AF_NETLINK, SOCK_RAW, 0);
+      if (have_sock_cloexec)
+	{
+	  netlink_socket = socket (AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, 0);
+#if defined SOCK_CLOEXEC && !defined __ASSUME_SOCK_CLOEXEC
+	  if (have_sock_cloexec == 0)
+	    have_sock_cloexec = (netlink_socket != -1 || errno != EINVAL
+				 ? 1 : -1);
+#endif
+	}
+      if (have_sock_cloexec < 0)
+	netlink_socket = socket (AF_NETLINK, SOCK_RAW, 0);
       /* No need to do more if we have no socket.  */
       if (netlink_socket == -1)
 	return;
 
       /* Make sure the descriptor is closed on exec.  */
-      if (fcntl (netlink_socket, F_SETFD, FD_CLOEXEC) != 0)
+      if (have_sock_cloexec < 0
+	  && fcntl (netlink_socket, F_SETFD, FD_CLOEXEC) != 0)
 	goto errout;
     }
 

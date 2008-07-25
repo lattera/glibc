@@ -153,4 +153,12 @@ extern int __libc_sa_len_internal (sa_family_t __af) attribute_hidden;
 # define __connect(fd, addr, len) INTUSE(__connect) (fd, addr, len)
 #endif
 
+#ifdef SOCK_CLOEXEC
+extern int __have_sock_cloexec;
+/* At lot of other functionality became available at the same time as
+   SOCK_CLOEXEC.  Avoid defining separate variables for all of them
+   unless it is really necessary.  */
+# define __have_paccept __have_sock_cloexec
+#endif
+
 #endif

@@ -54,11 +54,14 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 #endif
+#include <fcntl.h>
 
 #ifdef IP_RECVERR
 #include <errqueue.h>
 #include <sys/uio.h>
 #endif
+
+#include <kernel-features.h>
 
 extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
 extern u_long _create_xid (void);
@@ -121,9 +124,9 @@ struct cu_data
  * sent and received.
  */
 CLIENT *
-clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
-		   struct timeval wait, int *sockp, u_int sendsz,
-		   u_int recvsz)
+__libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
+			  u_long version, struct timeval wait, int *sockp,
+			  u_int sendsz, u_int recvsz, int flags)
 {
   CLIENT *cl;
   struct cu_data *cu = NULL;
@@ -178,8 +181,32 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
     {
       int dontblock = 1;
 
-      *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-      if (*sockp < 0)
+#ifdef SOCK_NONBLOCK
+# ifndef __ASSUME_SOCK_CLOEXEC
+      if (__have_sock_cloexec >= 0)
+# endif
+	{
+	  *sockp = __socket (AF_INET, SOCK_DGRAM|SOCK_NONBLOCK|flags,
+			     IPPROTO_UDP);
+# ifndef __ASSUME_SOCK_CLOEXEC
+	  if (__have_sock_cloexec == 0)
+	    __have_sock_cloexec = *sockp >= 0 || errno != EINVAL ? 1 : -1;
+# endif
+	}
+#endif
+#ifndef __ASSUME_SOCK_CLOEXEC
+# ifdef SOCK_CLOEXEC
+      if (__have_sock_cloexec < 0)
+# endif
+	{
+	  *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+# ifdef SOCK_CLOEXEC
+	  if (flags & SOCK_CLOEXEC)
+	    fcntl (*sockp, F_SETFD, FD_CLOEXEC);
+# endif
+	}
+#endif
+      if (__builtin_expect (*sockp < 0, 0))
 	{
 	  struct rpc_createerr *ce = &get_rpc_createerr ();
 	  ce->cf_stat = RPC_SYSTEMERROR;
@@ -188,8 +215,13 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 	}
       /* attempt to bind to prov port */
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
-      /* the sockets rpc controls are non-blocking */
-      (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+#ifndef __ASSUME_SOCK_CLOEXEC
+# ifdef SOCK_CLOEXEC
+      if (__have_sock_cloexec < 0)
+# endif
+	/* the sockets rpc controls are non-blocking */
+	(void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+#endif
 #ifdef IP_RECVERR
       {
 	int on = 1;
@@ -212,6 +244,16 @@ fooy:
     mem_free ((caddr_t) cl, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
+INTDEF (__libc_clntudp_bufcreate)
+
+CLIENT *
+clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
+		   struct timeval wait, int *sockp, u_int sendsz,
+		   u_int recvsz)
+{
+  return INTUSE(__libc_clntudp_bufcreate) (raddr, program, version, wait,
+					   sockp, sendsz, recvsz, 0);
+}
 INTDEF (clntudp_bufcreate)
 
 CLIENT *
@@ -222,8 +264,8 @@ clntudp_create (raddr, program, version, wait, sockp)
      struct timeval wait;
      int *sockp;
 {
-  return INTUSE(clntudp_bufcreate) (raddr, program, version, wait, sockp,
-				    UDPMSGSIZE, UDPMSGSIZE);
+  return INTUSE(__libc_clntudp_bufcreate) (raddr, program, version, wait,
+					   sockp, UDPMSGSIZE, UDPMSGSIZE, 0);
 }
 INTDEF (clntudp_create)
 

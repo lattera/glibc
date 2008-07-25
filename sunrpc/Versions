@@ -116,4 +116,7 @@ libc {
   GLIBC_2.3.4 {
     xdr_quad_t; xdr_u_quad_t;
   }
+  GLIBC_PRIVATE {
+    __libc_clntudp_bufcreate;
+  }
 }

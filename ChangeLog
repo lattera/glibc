@@ -1,3 +1,20 @@
+2008-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/rpc/clnt.h: Declare __libc_clntudp_bufcreate and
+	__libc_clntudp_bufcreate_internal.
+	* include/sys/socket.h: Declare __have_sock_cloexec.
+	* socket/Makefile (aux): Add have_sock_cloexec.
+	* socket/have_sock_cloexec.c: New file.
+	* sunrpc/clnt_udp.h (clntudp_bufcreate): Now a wrapper around
+	__libc_clntudp_bufcreate.
+	(__libc_clntudp_bufcreate): Former implementation of clntudp_bufcreate
+	which takes an additional parameter.  Create socket with non-blocking
+	mode and close-on-exec flag set, if wanted.
+	* sunrpc/Versions: Export __libc_clntudp_bufcreate@GLIBC_PRIVATE.
+	* nis/ypclnt.c (yp_bind_client_create): Use __libc_clntpudp_bufcreate
+	instead of clntudp_create.  The socket has already the close-on-exec
+	flag set if SOCK_CLOEXEC is defined.
+
 2008-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define

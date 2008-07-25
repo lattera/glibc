@@ -1,3 +1,14 @@
+2008-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink): Use
+	SOCK_CLOEXEC if possible.
+
+2008-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-rwlock2a.
+	* tst-rwlock2.c: Use TYPE macro to decide what rwlock type to use.
+	* tst-rwlock2a.c: New file.
+
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Remove inadvertant checkin.
@@ -76,7 +87,7 @@
 
 2008-03-27  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefined ARG_MAX if
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine ARG_MAX if
 	<linux/limits.h> has defined it.
 	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: Likewise.
