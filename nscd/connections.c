@@ -531,7 +531,7 @@ nscd_init (void)
     {
       inotify_fd = inotify_init ();
       if (inotify_fd != -1)
-	fcntl (inotify_fd, F_SETFL, O_NONBLOCK);
+	fcntl (inotify_fd, F_SETFL, O_RDONLY | O_NONBLOCK);
     }
 # endif
 #endif
