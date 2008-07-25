@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
 
@@ -24,7 +24,7 @@
 #include "../locale/outdigitswc.h"
 
 static CHAR_T *
-_i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
+_i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
 {
 #ifdef COMPILE_WPRINTF
 # define decimal NULL
@@ -58,10 +58,23 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 #endif
 
   /* Copy existing string so that nothing gets overwritten.  */
-  CHAR_T *src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
+  CHAR_T *src;
+  bool use_alloca = __libc_use_alloca ((rear_ptr - w) * sizeof (CHAR_T));
+  if (__builtin_expect (use_alloca, true))
+    src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
+  else
+    {
+      src = (CHAR_T *) malloc ((rear_ptr - w) * sizeof (CHAR_T));
+      if (src == NULL)
+	/* If we cannot allocate the memory don't rewrite the string.
+	   It is better than nothing.  */
+	return w;
+    }
+
   CHAR_T *s = (CHAR_T *) __mempcpy (src, w,
 				    (rear_ptr - w) * sizeof (CHAR_T));
-  w = rear_ptr;
+
+  w = end;
 
   /* Process all characters in the string.  */
   while (--s >= src)
@@ -90,6 +103,9 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 	    *--w = *s == '.' ? (CHAR_T) wdecimal : (CHAR_T) wthousands;
 	}
     }
+
+  if (! use_alloca)
+    free (src);
 
   return w;
 }

@@ -625,7 +625,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 				       thousands_sep);			      \
 									      \
 	      if (use_outdigits && base == 10)				      \
-		string = _i18n_number_rewrite (string, workend);	      \
+		string = _i18n_number_rewrite (string, workend, workend);     \
 	    }								      \
 	  /* Simplify further test for num != 0.  */			      \
 	  number.word = number.longlong != 0;				      \
@@ -683,7 +683,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 				       thousands_sep);			      \
 									      \
 	      if (use_outdigits && base == 10)				      \
-		string = _i18n_number_rewrite (string, workend);	      \
+		string = _i18n_number_rewrite (string, workend, workend);     \
 	    }								      \
 	}								      \
 									      \

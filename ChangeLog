@@ -1,5 +1,14 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6698]
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Take additional
+	parameter for end of buffer.  If temporary copy is too large use
+	malloc.
+	* stdio-common/vfprintf.c: Adjust for _i18n_number_rewrite
+	interface change.
+	* stdio-common/printf_fp.c (__printf_fp): Likewise..  Account for
+	string rewrite when allocating buffer.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: PPC has the new
 	syscalls, too.
 

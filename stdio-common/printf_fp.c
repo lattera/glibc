@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995-2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2006, 2007, 2008 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
@@ -1148,6 +1148,7 @@ ___printf_fp (FILE *fp,
 
     {
       char *buffer = NULL;
+      char *buffer_end = NULL;
       char *cp = NULL;
       char *tmpptr;
 
@@ -1157,6 +1158,9 @@ ___printf_fp (FILE *fp,
 	  size_t decimal_len;
 	  size_t thousands_sep_len;
 	  wchar_t *copywc;
+	  size_t factor = (info->i18n
+			   ? _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX)
+			   : 1);
 
 	  decimal_len = strlen (decimal);
 
@@ -1165,10 +1169,11 @@ ___printf_fp (FILE *fp,
 	  else
 	    thousands_sep_len = strlen (thousands_sep);
 
+	  size_t nbuffer = (2 + chars_needed * factor + decimal_len
+			    + ngroups * thousands_sep_len);
 	  if (__builtin_expect (buffer_malloced, 0))
 	    {
-	      buffer = (char *) malloc (2 + chars_needed + decimal_len
-					+ ngroups * thousands_sep_len);
+	      buffer = (char *) malloc (nbuffer);
 	      if (buffer == NULL)
 		{
 		  /* Signal an error to the caller.  */
@@ -1177,8 +1182,8 @@ ___printf_fp (FILE *fp,
 		}
 	    }
 	  else
-	    buffer = (char *) alloca (2 + chars_needed + decimal_len
-				      + ngroups * thousands_sep_len);
+	    buffer = (char *) alloca (nbuffer);
+	  buffer_end = buffer + nbuffer;
 
 	  /* Now copy the wide character string.  Since the character
 	     (except for the decimal point and thousands separator) must
@@ -1197,9 +1202,13 @@ ___printf_fp (FILE *fp,
       if (__builtin_expect (info->i18n, 0))
         {
 #ifdef COMPILE_WPRINTF
-	  wstartp = _i18n_number_rewrite (wstartp, wcp);
+	  wstartp = _i18n_number_rewrite (wstartp, wcp,
+					  wbuffer + wbuffer_to_alloc);
 #else
-	  tmpptr = _i18n_number_rewrite (tmpptr, cp);
+	  tmpptr = _i18n_number_rewrite (tmpptr, cp, buffer_end);
+	  cp = buffer_end;
+	  assert ((uintptr_t) buffer <= (uintptr_t) tmpptr);
+	  assert ((uintptr_t) tmpptr < (uintptr_t) buffer_end);
 #endif
         }
 
