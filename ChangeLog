@@ -1,5 +1,8 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_helper.c (open_socket): Use SOCK_CLOEXEC and
+	SOCK_NONBLOCK if possible.
+
 	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Use
 	SOCK_CLOEXEC if available.
 
