@@ -1,5 +1,8 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: PPC has the new
+	syscalls, too.
+
 	* nscd/connections.c (nscd_init): Clean up fcntl call.
 
 	* nscd/nscd_helper.c (open_socket): Use SOCK_CLOEXEC and
