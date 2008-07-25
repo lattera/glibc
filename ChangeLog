@@ -1,5 +1,8 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Use
+	SOCK_CLOEXEC if available.
+
 	* include/rpc/clnt.h: Declare __libc_clntudp_bufcreate and
 	__libc_clntudp_bufcreate_internal.
 	* include/sys/socket.h: Declare __have_sock_cloexec.
