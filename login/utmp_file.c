@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -167,10 +167,11 @@ setutent_file (void)
 # ifdef O_CLOEXEC
 	      if (__have_o_cloexec == 0)
 		__have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
-# endif
 
-	      result = fcntl_not_cancel (file_fd, F_SETFD,
-					 result | FD_CLOEXEC);
+	      if (__have_o_cloexec < 0)
+# endif
+		result = fcntl_not_cancel (file_fd, F_SETFD,
+					   result | FD_CLOEXEC);
 	    }
 
 	  if (result == -1)

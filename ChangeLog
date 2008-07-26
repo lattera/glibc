@@ -1,3 +1,8 @@
+2008-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/utmp_file.c (setutent_file): Minor optimization in case
+	O_CLOEXEC is available.
+
 2008-07-24  Tom "spot" Callaway  <tcallawa@redhat.com>
 
 	* Makeconfig: Define pie-ccflag and PIE-ccflag variables.
