@@ -1,5 +1,7 @@
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/syslog.c (openlog_internal): Use SOCK_CLOEXEC if possible.
+
 	* malloc/mtrace.c (mtrace): Use 'e' flag in fopen call.  Drop
 	F_SETFD use if we know fopen set the flag.
 

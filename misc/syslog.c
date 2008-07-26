@@ -348,10 +348,35 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			(void)strncpy(SyslogAddr.sun_path, _PATH_LOG,
 				      sizeof(SyslogAddr.sun_path));
 			if (LogStat & LOG_NDELAY) {
-				if ((LogFile = __socket(AF_UNIX, LogType, 0))
-				    == -1)
+#ifdef SOCK_CLOEXEC
+# ifndef __ASSUME_SOCK_CLOEXEC
+				if (__have_sock_cloexec >= 0) {
+# endif
+					LogFile = __socket(AF_UNIX,
+							   LogType
+							   | SOCK_CLOEXEC, 0);
+# ifndef __ASSUME_SOCK_CLOEXEC
+					if (__have_sock_cloexec == 0)
+						__have_sock_cloexec
+						  = (LogFile != -1
+						     || errno != EINVAL);
+#endif
+				}
+#endif
+#ifndef __ASSUME_SOCK_CLOEXEC
+# ifdef SOCK_CLOEXEC
+				if (__have_sock_cloexec < 0)
+# endif
+				  LogFile = __socket(AF_UNIX, LogType, 0);
+#endif
+				if (LogFile == -1)
 					return;
-				(void)__fcntl(LogFile, F_SETFD, 1);
+#ifndef __ASSUME_SOCK_CLOEXEC
+# ifdef SOCK_CLOEXEC
+				if (__have_sock_cloexec < 0)
+# endif
+					__fcntl(LogFile, F_SETFD, FD_CLOEXEC);
+#endif
 			}
 		}
 		if (LogFile != -1 && !connected)
