@@ -39,10 +39,11 @@
 	using 64-bit arithmetic.
 
 	* stdio-common/printf_fp.c (___printf_fp): Give wide outout code
-	the same treatment as narow output code in last patch.
+	the same treatment as narrow output code in last patch.
 
 	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Namespace cleanup.
 
+	[BZ #6763]
 	* elf/dl-load.c (local_strdup): Remove inline.
 	(_dl_map_object_from_fd): Don't allocate l_symbolic_searchlist.r_list.
 	* elf/dl-object.c (_dl_new_object): Allocate symbolic searchlist as
