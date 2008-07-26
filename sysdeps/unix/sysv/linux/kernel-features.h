@@ -498,10 +498,11 @@
 # define __ASSUME_AT_EXECFN	1
 #endif
 
-/* Support for various CLOEXEC and NONBLOCK flags was added for x86 and
-   x86-64 in 2.6.27.  */
+/* Support for various CLOEXEC and NONBLOCK flags was added for x86,
+   x86-64, PPC, and IA-64 in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061b \
-    && (defined __i386__ || defined __x86_64__ || defined __powerpc__)
+    && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
+	|| defined __ia64__)
 # define __ASSUME_SOCK_CLOEXEC	1
 # define __ASSUME_IN_NONBLOCK	1
 # define __ASSUME_PACCEPT	1
