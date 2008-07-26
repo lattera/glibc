@@ -106,6 +106,7 @@ librt {
 }
 libutil {
   GLIBC_2.0
+  GLIBC_2.9
 }
 ld {
   GLIBC_2.0

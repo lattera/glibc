@@ -1,3 +1,37 @@
+2008-07-21  Andreas Krebbel  <krebbel1@de.ibm.com>
+
+	* Versions.def: Add GLIBC_2.9 version tag for libutil.
+	* sysdeps/unix/sysv/linux/s390/bits/utmp.h: Copy of
+	gnu/bits/utmp.h.  Check for __WORDSIZE_COMPAT32 removed.
+	* sysdeps/unix/sysv/linux/s390/bits/utmpx.h: Copy of
+	gnu/bits/utmpx.h.  Check for __WORDSIZE_COMPAT32 removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Add new files
+	utmp32, utmpx32 and login32.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Add 2.9
+	versions of struct utmp functions to libc and libutil.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp-compat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutmp.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxent.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxid.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/login.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/login32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/pututxline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/updwtmp.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/updwtmpx.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp-convert.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx-convert.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.h: New file.
+
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/gen-as-const.awk: Generate more widely usable code by

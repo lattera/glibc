@@ -1,3 +1,8 @@
+ifeq ($(subdir),login)
+sysdep_routines += utmp32 utmpx32
+libutil-routines += login32
+endif
+
 ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h
 endif
