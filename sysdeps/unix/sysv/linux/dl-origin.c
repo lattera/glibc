@@ -38,7 +38,7 @@ _dl_get_origin (void)
 #ifndef __ASSUME_AT_EXECFN
   char linkval[PATH_MAX];
 #endif
-  char *str;
+  const char *str;
   char *result = (char *) -1l;
   int len;
 

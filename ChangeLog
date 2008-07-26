@@ -1,3 +1,14 @@
+2008-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Namespace cleanup.
+
+	* elf/dl-load.c (local_strdup): Remove inline.
+	(_dl_map_object_from_fd): Don't allocate l_symbolic_searchlist.r_list.
+	* elf/dl-object.c (_dl_new_object): Allocate symbolic searchlist as
+	part of the object.
+
+	* sysdeps/unix/sysv/linux/dl-origin.c: Add const to avoid warning.
+
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: IA-64 and SPARC have

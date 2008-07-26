@@ -163,7 +163,7 @@ static const size_t system_dirs_len[] =
 
 
 /* Local version of `strdup' function.  */
-static inline char *
+static char *
 local_strdup (const char *s)
 {
   size_t len = strlen (s) + 1;
@@ -1470,15 +1470,6 @@ cannot enable executable stack as shared object requires");
     {
       /* Create an appropriate searchlist.  It contains only this map.
 	 This is the definition of DT_SYMBOLIC in SysVr4.  */
-      l->l_symbolic_searchlist.r_list =
-	(struct link_map **) malloc (sizeof (struct link_map *));
-
-      if (l->l_symbolic_searchlist.r_list == NULL)
-	{
-	  errstring = N_("cannot create searchlist");
-	  goto call_lose_errno;
-	}
-
       l->l_symbolic_searchlist.r_list[0] = l;
       l->l_symbolic_searchlist.r_nlist = 1;
 

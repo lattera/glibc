@@ -202,7 +202,7 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
 	  *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 # ifdef SOCK_CLOEXEC
 	  if (flags & SOCK_CLOEXEC)
-	    fcntl (*sockp, F_SETFD, FD_CLOEXEC);
+	    __fcntl (*sockp, F_SETFD, FD_CLOEXEC);
 # endif
 	}
 #endif

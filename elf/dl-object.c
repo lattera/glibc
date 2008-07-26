@@ -50,13 +50,17 @@ _dl_new_object (char *realname, const char *libname, int type,
 #endif
 
   new = (struct link_map *) calloc (sizeof (*new) + audit_space
+				    + sizeof (struct r_scope_elem)
 				    + sizeof (*newname) + libname_len, 1);
   if (new == NULL)
     return NULL;
 
   new->l_real = new;
-  new->l_libname = newname = (struct libname_list *) ((char *) (new + 1)
-						      + audit_space);
+  new->l_symbolic_searchlist.r_list = (struct link_map **) ((char *) (new + 1)
+							    + audit_space);
+
+  new->l_libname = newname
+    = (struct libname_list *) (new->l_symbolic_searchlist.r_list + 1);
   newname->name = (char *) memcpy (newname + 1, libname, libname_len);
   /* newname->next = NULL;	We use calloc therefore not necessary.  */
   newname->dont_free = 1;
