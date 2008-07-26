@@ -1,5 +1,8 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i686/memcmp.S: Fix unwind information.
+	Reported by Paul Pluzhnikov <ppluzhnikov@google.com>.
+
 	[BZ #6698]
 	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Take additional
 	parameter for end of buffer.  If temporary copy is too large use
