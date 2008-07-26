@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -34,13 +34,13 @@
 
 #include <stdio-common/_itoa.h>
 
-#ifdef _LIBC
-# include <libc-internal.h>
+#include <libc-internal.h>
 
-# include <libio/iolibio.h>
-# define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
-# define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
-#endif
+#include <libio/iolibio.h>
+#define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
+#define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
+
+#include <kernel-features.h>
 
 #ifndef attribute_hidden
 # define attribute_hidden
@@ -315,9 +315,10 @@ mtrace ()
       if (mtb == NULL)
 	return;
 
-      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wc");
+      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wce");
       if (mallstream != NULL)
 	{
+#ifndef __ASSUME_O_CLOEXEC
 	  /* Make sure we close the file descriptor on exec.  */
 	  int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
 	  if (flags >= 0)
@@ -325,6 +326,7 @@ mtrace ()
 	      flags |= FD_CLOEXEC;
 	      __fcntl (fileno (mallstream), F_SETFD, flags);
 	    }
+#endif
 	  /* Be sure it doesn't malloc its buffer!  */
 	  malloc_trace_buffer = mtb;
 	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
