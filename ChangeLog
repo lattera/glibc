@@ -1,7 +1,7 @@
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/kernel-features.h: IA-64 has the new
-	syscalls, too.
+	* sysdeps/unix/sysv/linux/kernel-features.h: IA-64 and SPARC have
+	the new syscalls, too.
 
 	* sysdeps/i386/i686/memcmp.S: Fix unwind information.
 	Reported by Paul Pluzhnikov <ppluzhnikov@google.com>.
