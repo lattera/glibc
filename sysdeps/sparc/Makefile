@@ -1,6 +1,8 @@
 # The Sparc `long double' is a distinct type we support.
 long-double-fcts = yes
 
+pie-ccflag = -fPIE
+
 ifeq ($(subdir),gmon)
 sysdep_routines += sparc-mcount
 endif

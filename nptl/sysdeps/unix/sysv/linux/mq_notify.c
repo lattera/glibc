@@ -169,7 +169,7 @@ init_mq_netlink (void)
   if (netlink_socket == -1)
     {
       /* Just a normal netlink socket, not bound.  */
-      if (have_sock_cloexec)
+      if (have_sock_cloexec >= 0)
 	{
 	  netlink_socket = socket (AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, 0);
 #if defined SOCK_CLOEXEC && !defined __ASSUME_SOCK_CLOEXEC

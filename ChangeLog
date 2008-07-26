@@ -1,3 +1,10 @@
+2008-07-24  Tom "spot" Callaway  <tcallawa@redhat.com>
+
+	* Makeconfig: Define pie-ccflag and PIE-ccflag variables.
+	* elf/Makefile: Use pie-ccflag variable.
+	* nscd/Makefile: Likewise.
+	* sysdeps/sparc/Makefile: Set $(pie-ccflag) to -fPIE.
+
 2008-07-21  Andreas Krebbel  <krebbel1@de.ibm.com>
 
 	[BZ #6724]

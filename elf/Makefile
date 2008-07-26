@@ -800,7 +800,7 @@ $(objpfx)tst-array5-static.out: $(objpfx)tst-array5-static
 	cmp $@ tst-array5-static.exp > /dev/null
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
-CFLAGS-tst-pie1.c += -fpie
+CFLAGS-tst-pie1.c += $(pie-ccflag)
 
 $(objpfx)tst-pie1.out: $(objpfx)tst-pie1
 	$(elf-objpfx)$(rtld-installed-name) \
