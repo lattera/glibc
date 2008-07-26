@@ -1,5 +1,8 @@
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/printf_fp.c (___printf_fp): Give wide outout code
+	the same treatment as narow output code in last patch.
+
 	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Namespace cleanup.
 
 	* elf/dl-load.c (local_strdup): Remove inline.

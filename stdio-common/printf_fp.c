@@ -1204,6 +1204,10 @@ ___printf_fp (FILE *fp,
 #ifdef COMPILE_WPRINTF
 	  wstartp = _i18n_number_rewrite (wstartp, wcp,
 					  wbuffer + wbuffer_to_alloc);
+	  wcp = wbuffer + wbuffer_to_alloc;
+	  assert ((uintptr_t) wbuffer <= (uintptr_t) wstartp);
+	  assert ((uintptr_t) wstartp
+		  < (uintptr_t) wbuffer + wbuffer_to_alloc);
 #else
 	  tmpptr = _i18n_number_rewrite (tmpptr, cp, buffer_end);
 	  cp = buffer_end;
