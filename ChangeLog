@@ -1,5 +1,6 @@
 2008-07-21  Andreas Krebbel  <krebbel1@de.ibm.com>
 
+	[BZ #6724]
 	* Versions.def: Add GLIBC_2.9 version tag for libutil.
 	* sysdeps/unix/sysv/linux/s390/bits/utmp.h: Copy of
 	gnu/bits/utmp.h.  Check for __WORDSIZE_COMPAT32 removed.
