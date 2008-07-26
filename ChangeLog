@@ -1,5 +1,10 @@
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6771]
+	* libio/fileops.c (_IO_new_file_attach): Preserve errno around
+	success call of _IO_SEEKOFF or calls which failed because the
+	descriptor is for a pipe.
+
 	* sunrpc/key_call.c (getkeyserv_handle): Use FD_CLOEXEC instead of
 	magic number.
 

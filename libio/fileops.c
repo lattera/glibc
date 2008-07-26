@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
@@ -428,9 +428,11 @@ _IO_new_file_attach (fp, fd)
   /* Get the current position of the file. */
   /* We have to do that since that may be junk. */
   fp->_offset = _IO_pos_BAD;
+  int save_errno = errno;
   if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD && errno != ESPIPE)
     return NULL;
+  errno = save_errno;
   return fp;
 }
 INTDEF2(_IO_new_file_attach, _IO_file_attach)
