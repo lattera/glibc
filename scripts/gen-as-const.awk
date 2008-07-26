@@ -14,12 +14,14 @@ BEGIN { started = 0 }
 
 NF >= 1 && !started {
   if (test) {
+    print "\n#include <inttypes.h>";
     print "\n#include <stdio.h>";
+    print "\n#define U(n) UINT64_C (n)";
     print "\nstatic int do_test (void)\n{\n  int bad = 0, good = 0;\n";
     print "#define TEST(name, source, expr) \\\n" \
-      "  if (asconst_##name != (expr)) { ++bad;" \
-      " fprintf (stderr, \"%s: %s is %ld but %s is %ld\\n\"," \
-      " source, #name, (long int) asconst_##name, #expr, (long int) (expr));" \
+      "  if (U (asconst_##name) != (uint64_t) (expr)) { ++bad;" \
+      " fprintf (stderr, \"%s: %s is %\" PRId64 \" but %s is %\"PRId64 \"\\n\"," \
+      " source, #name, U (asconst_##name), #expr, (uint64_t) (expr));" \
       " } else ++good;\n";
   }
   else

@@ -1,5 +1,8 @@
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/gen-as-const.awk: Generate more widely usable code by
+	using 64-bit arithmetic.
+
 	* stdio-common/printf_fp.c (___printf_fp): Give wide outout code
 	the same treatment as narow output code in last patch.
 

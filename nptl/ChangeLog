@@ -1,3 +1,9 @@
+2008-04-28  Hiroki Kaminaga  <kaminaga@sm.sony.co.jp>
+
+	[BZ #6740]
+	* sysdeps/powerpc/tcb-offsets.sym (PRIVATE_FUTEX_OFFSET): Guard symbol
+	definition with #ifndef __ASSUME_PRIVATE_FUTEX.
+
 2008-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink): Use
