@@ -1,5 +1,8 @@
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/key_call.c (getkeyserv_handle): Use FD_CLOEXEC instead of
+	magic number.
+
 	* misc/syslog.c (openlog_internal): Use SOCK_CLOEXEC if possible.
 
 	* malloc/mtrace.c (mtrace): Use 'e' flag in fopen call.  Drop

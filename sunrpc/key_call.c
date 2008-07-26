@@ -462,7 +462,7 @@ getkeyserv_handle (int vers)
   clnt_control (kcp->client, CLSET_RETRY_TIMEOUT,
 		(char *)&wait_time);
   if (clnt_control (kcp->client, CLGET_FD, (char *)&fd))
-    __fcntl (fd, F_SETFD, 1);  /* make it "close on exec" */
+    __fcntl (fd, F_SETFD, FD_CLOEXEC);  /* make it "close on exec" */
 
   return kcp->client;
 }
