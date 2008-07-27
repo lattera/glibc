@@ -1,5 +1,15 @@
 2008-07-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __pipe2 alias.
+	* io/pipe2.c: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PIPE2
+	instead of __ASSUME_PACCEPT.
+	* include/unistd.h: Declare __have_pipe2.
+	* libio/iopopen.c: Implement "e" flag.
+	* libio/Makefile (tests): Add tst-popen1.
+	* libio/tst-popen1.c: New file.
+
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_ISDN and AF_ISDN.
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
 

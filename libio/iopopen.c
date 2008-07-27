@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2002, 2003, 2004, 2007
+/* Copyright (C) 1993, 1997-2002, 2003, 2004, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
@@ -55,15 +55,6 @@ extern _IO_pid_t _IO_fork (void) __THROW;
 #endif
 
 #endif /* _IO_HAVE_SYS_WAIT */
-
-#ifndef _IO_pipe
-#ifdef _LIBC
-#define _IO_pipe __pipe
-#else
-#define _IO_pipe pipe
-#endif
-extern int _IO_pipe (int des[2]) __THROW;
-#endif
 
 #ifndef _IO_dup2
 #ifdef _LIBC
@@ -131,41 +122,99 @@ _IO_new_proc_open (fp, command, mode)
   volatile int parent_end, child_end;
   int pipe_fds[2];
   _IO_pid_t child_pid;
+
+  int do_read = 0;
+  int do_write = 0;
+  int do_cloexec = 0;
+  while (*mode != '\0')
+    switch (*mode++)
+      {
+      case 'r':
+	do_read = 1;
+	break;
+      case 'w':
+	do_write = 1;
+	break;
+      case 'e':
+	do_cloexec = 1;
+	break;
+      default:
+      errout:
+	__set_errno (EINVAL);
+	return NULL;
+      }
+
+  if ((do_read ^ do_write) == 0)
+    goto errout;
+
   if (_IO_file_is_open (fp))
     return NULL;
-  if (_IO_pipe (pipe_fds) < 0)
-    return NULL;
-  if (mode[0] == 'r' && mode[1] == '\0')
+
+#ifdef O_CLOEXEC
+# ifndef __ASSUME_PIPE2
+  if (__have_pipe2 >= 0)
+# endif
+    {
+      int r = __pipe2 (pipe_fds, O_CLOEXEC);
+# ifndef __ASSUME_PIPE2
+      if (__have_pipe2 == 0)
+	__have_pipe2 = r != -1 || errno != ENOSYS ? 1 : -1;
+
+      if (__have_pipe2 > 0)
+# endif
+	if (r < 0)
+	  return NULL;
+    }
+#endif
+#ifndef __ASSUME_PIPE2
+# ifdef O_CLOEXEC
+  if (__have_pipe2 < 0)
+# endif
+    if (__pipe (pipe_fds) < 0)
+      return NULL;
+#endif
+
+  if (do_read)
     {
       parent_end = pipe_fds[0];
       child_end = pipe_fds[1];
       read_or_write = _IO_NO_WRITES;
     }
-  else if (mode[0] == 'w' && mode[1] == '\0')
+  else
     {
       parent_end = pipe_fds[1];
       child_end = pipe_fds[0];
       read_or_write = _IO_NO_READS;
     }
-  else
-    {
-      _IO_close (pipe_fds[0]);
-      _IO_close (pipe_fds[1]);
-      __set_errno (EINVAL);
-      return NULL;
-    }
+
   ((_IO_proc_file *) fp)->pid = child_pid = _IO_fork ();
   if (child_pid == 0)
     {
-      int child_std_end = mode[0] == 'r' ? 1 : 0;
+      int child_std_end = do_read ? 1 : 0;
       struct _IO_proc_file *p;
 
+#ifndef __ASSUME_PIPE2
+      /* If we have pipe2 the descriptor is marked for close-on-exec.  */
       _IO_close (parent_end);
+#endif
       if (child_end != child_std_end)
 	{
 	  _IO_dup2 (child_end, child_std_end);
+#ifndef __ASSUME_PIPE2
 	  _IO_close (child_end);
+#endif
 	}
+#ifdef O_CLOEXEC
+      else
+	{
+	  /* The descriptor is already the one we will use.  But it must
+	     not be marked close-on-exec.  Undo the effects.  */
+# ifndef __ASSUME_PIPE2
+	  if (__have_pipe2 > 0)
+# endif
+	    __fcntl (child_end, F_SETFD, 0);
+	}
+#endif
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
@@ -189,6 +238,28 @@ _IO_new_proc_open (fp, command, mode)
       _IO_close (parent_end);
       return NULL;
     }
+
+  if (do_cloexec)
+    {
+#ifndef __ASSUME_PIPE2
+# ifdef O_CLOEXEC
+      if (__have_pipe2 < 0)
+# endif
+	__fcntl (parent_end, F_SETFD, FD_CLOEXEC);
+#endif
+    }
+  else
+    {
+#ifdef O_CLOEXEC
+      /* Undo the effects of the pipe2 call which set the
+	 close-on-exec flag.  */
+# ifndef __ASSUME_PIPE2
+      if (__have_pipe2 > 0)
+# endif
+	__fcntl (parent_end, F_SETFD, 0);
+#endif
+    }
+
   _IO_fileno (fp) = parent_end;
 
   /* Link into proc_file_chain. */

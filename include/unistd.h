@@ -48,6 +48,7 @@ extern ssize_t __libc_write (int __fd, __const void *__buf, size_t __n);
 libc_hidden_proto (__libc_write)
 extern int __pipe (int __pipedes[2]);
 libc_hidden_proto (__pipe)
+extern int __pipe2 (int __pipedes[2], int __flags);
 extern unsigned int __sleep (unsigned int __seconds);
 extern int __chown (__const char *__file,
 		    __uid_t __owner, __gid_t __group);
@@ -164,5 +165,11 @@ extern __pid_t __libc_fork (void);
 extern int __libc_pause (void);
 /* Not cancelable variant.  */
 extern int __pause_nocancel (void) attribute_hidden;
+
+extern int __have_sock_cloexec;
+/* At lot of other functionality became available at the same time as
+   SOCK_CLOEXEC.  Avoid defining separate variables for all of them
+   unless it is really necessary.  */
+#define __have_pipe2 __have_sock_cloexec
 
 #endif

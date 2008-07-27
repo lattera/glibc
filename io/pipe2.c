@@ -25,7 +25,7 @@
    PIPEDES[1] can be read from PIPEDES[0].  Apply FLAGS to the new
    file descriptors.  Returns 0 if successful, -1 if not.  */
 int
-pipe2 (pipedes, flags)
+__pipe2 (pipedes, flags)
      int pipedes[2];
      int flags;
 {
@@ -38,6 +38,7 @@ pipe2 (pipedes, flags)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__pipe2, pipe2)
 stub_warning (pipe2)
 
 #include <stub-tag.h>

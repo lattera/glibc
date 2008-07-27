@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002,2003,2004,2006,2007 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004,2006,2007,2008 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-memstream1 tst-memstream2 \
 	tst-wmemstream1 tst-wmemstream2 \
 	bug-memstream1 bug-wmemstream1 \
-	tst-setvbuf1
+	tst-setvbuf1 tst-popen1
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.
