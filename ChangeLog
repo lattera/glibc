@@ -1,3 +1,8 @@
+2008-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_ISDN and AF_ISDN.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+
 2008-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6771]

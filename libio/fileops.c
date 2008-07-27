@@ -432,7 +432,7 @@ _IO_new_file_attach (fp, fd)
   if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD && errno != ESPIPE)
     return NULL;
-  errno = save_errno;
+  __set_errno (save_errno);
   return fp;
 }
 INTDEF2(_IO_new_file_attach, _IO_file_attach)

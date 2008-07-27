@@ -102,7 +102,8 @@ enum __socket_type
 #define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
 #define	PF_IUCV		32	/* IUCV sockets.  */
 #define PF_RXRPC	33	/* RxRPC sockets.  */
-#define	PF_MAX		34	/* For now..  */
+#define PF_ISDN		34	/* mISDN sockets.  */
+#define	PF_MAX		35	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -136,6 +137,7 @@ enum __socket_type
 #define	AF_BLUETOOTH	PF_BLUETOOTH
 #define	AF_IUCV		PF_IUCV
 #define AF_RXRPC	PF_RXRPC
+#define AF_ISDN		PF_ISDN
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
