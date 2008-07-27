@@ -44,6 +44,7 @@
 #endif
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <kernel-features.h>
 
 #ifndef _IO_fork
 #ifdef _LIBC

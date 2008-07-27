@@ -1,5 +1,10 @@
 2008-07-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/wordexp.c (exec_comm): Use pipe2 if possible to create
+	file descriptors with close-on-exec set.
+	(exec_comm_child): Fix the case where the write end of the pipe is
+	STDOUT_FILENO already.  In case it is, clear close-on-exec.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add __pipe2 alias.
 	* io/pipe2.c: Likewise.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PIPE2
@@ -8,7 +13,6 @@
 	* libio/iopopen.c: Implement "e" flag.
 	* libio/Makefile (tests): Add tst-popen1.
 	* libio/tst-popen1.c: New file.
-
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_ISDN and AF_ISDN.
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.

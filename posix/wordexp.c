@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -42,6 +42,7 @@
 # include <wchar.h>
 #endif
 #include <wordexp.h>
+#include <kernel-features.h>
 
 #include <bits/libc-lock.h>
 #include <stdio-common/_itoa.h>
@@ -824,17 +825,30 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
     args[1] = "-nc";
 
   /* Redirect output.  */
-  __dup2 (fildes[1], STDOUT_FILENO);
-  __close (fildes[1]);
+  if (__builtin_expect (fildes[1] != STDOUT_FILENO, 1))
+    {
+      __dup2 (fildes[1], STDOUT_FILENO);
+      __close (fildes[1]);
+    }
+  else
+    {
+#ifdef O_CLOEXEC
+      /* Reset the close-on-exec flag (if necessary).  */
+# ifndef __ASSUME_PIPE2
+      if (__have_pipe2 > 0)
+# endif
+	__fcntl (fildes[1], F_SETFD, 0);
+#endif
+    }
 
   /* Redirect stderr to /dev/null if we have to.  */
   if (showerr == 0)
     {
       struct stat64 st;
       int fd;
-      __close (2);
+      __close (STDERR_FILENO);
       fd = __open (_PATH_DEVNULL, O_WRONLY);
-      if (fd >= 0 && fd != 2)
+      if (fd >= 0 && fd != STDERR_FILENO)
 	{
 	  __dup2 (fd, STDERR_FILENO);
 	  __close (fd);
@@ -885,18 +899,38 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   if (!comm || !*comm)
     return 0;
 
-  if (__pipe (fildes))
-    /* Bad */
-    return WRDE_NOSPACE;
+#ifdef O_CLOEXEC
+# ifndef __ASSUME_PIPE2
+  if (__have_pipe2 >= 0)
+# endif
+    {
+      int r = __pipe2 (fildes, O_CLOEXEC);
+# ifndef __ASSUME_PIPE2
+      if (__have_pipe2 == 0)
+	__have_pipe2 = r != -1 || errno != ENOSYS ? 1 : -1;
+
+      if (__have_pipe2 > 0)
+# endif
+	if (r < 0)
+	  /* Bad */
+	  return WRDE_NOSPACE;
+    }
+#endif
+#ifndef __ASSUME_PIPE2
+# ifdef O_CLOEXEC
+  if (__have_pipe2 < 0)
+# endif
+    if (__pipe (fildes) < 0)
+      /* Bad */
+      return WRDE_NOSPACE;
+#endif
 
  again:
   if ((pid = __fork ()) < 0)
     {
       /* Bad */
-      if (fildes[0] != -1)
-	__close (fildes[0]);
-      if (fildes[1] != -1)
-	__close (fildes[1]);
+      __close (fildes[0]);
+      __close (fildes[1]);
       return WRDE_NOSPACE;
     }
 

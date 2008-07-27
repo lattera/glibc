@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-5-14
+GNU C Library NEWS -- history of user-visible changes.  2008-7-27
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -22,10 +22,18 @@ Version 2.9
 
 * New implementation of memmem, strstr, and strcasestr which is O(n).
   Implemented by Eric Blake.
+
+* New Linux interfaces: inotify_init1, paccept, dup3, epoll_create2, pipe2
+
+* Implement "e" option for popen to open file descriptor with the
+  close-on-exec flag set
+
+* Many functions, exported and internal, now atomically set the close-on-exec
+  flag when run on a sufficiently new kernel.  Implemented by Ulrich Drepper.
 
 Version 2.8
 
-* New locales: bo_CN, bo_IN.
+* New locales: bo_CN, bo_IN, shs_CA.
 
 * New encoding: HP-ROMAN9, HP-GREEK8, HP-THAI8, HP-TURKISH8.
 
