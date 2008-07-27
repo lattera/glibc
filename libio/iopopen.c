@@ -119,8 +119,8 @@ _IO_new_proc_open (fp, command, mode)
      const char *mode;
 {
 #if _IO_HAVE_SYS_WAIT
-  volatile int read_or_write;
-  volatile int parent_end, child_end;
+  int read_or_write;
+  int parent_end, child_end;
   int pipe_fds[2];
   _IO_pid_t child_pid;
 
