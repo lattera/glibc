@@ -195,7 +195,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
   host_buffer.buf = orig_host_buffer = (querybuf *) alloca (1024);
 
   n = __libc_res_nsearch (&_res, name, C_IN, type, host_buffer.buf->buf,
-			  1024, &host_buffer.ptr, NULL, NULL);
+			  1024, &host_buffer.ptr, NULL, NULL, NULL);
   if (n < 0)
     {
       status = (errno == ECONNREFUSED
@@ -213,7 +213,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 	n = __libc_res_nsearch (&_res, name, C_IN, T_A, host_buffer.buf->buf,
 				host_buffer.buf != orig_host_buffer
 				? MAXPACKET : 1024, &host_buffer.ptr,
-				NULL, NULL);
+				NULL, NULL, NULL);
 
       if (n < 0)
 	{
@@ -273,8 +273,6 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
-  char tmp[NS_MAXDNAME];
-
   /*
    * if there aren't any dots, it could be a user-level alias.
    * this is also done in res_query() since we are not the only
@@ -282,7 +280,8 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
    */
   if (strchr (name, '.') == NULL)
     {
-      const char *cp = res_hostalias (&_res, name, tmp, sizeof (tmp));
+      char *tmp = alloca (NS_MAXDNAME);
+      const char *cp = res_hostalias (&_res, name, tmp, NS_MAXDNAME);
       if (cp != NULL)
 	name = cp;
     }
@@ -296,12 +295,13 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   host_buffer.buf = orig_host_buffer = (querybuf *) alloca (2048);
   u_char *ans2p = NULL;
   int nans2p = 0;
+  int resplen2 = 0;
 
   int olderr = errno;
   enum nss_status status;
   int n = __libc_res_nsearch (&_res, name, C_IN, T_UNSPEC,
 			      host_buffer.buf->buf, 2048, &host_buffer.ptr,
-			      &ans2p, &nans2p);
+			      &ans2p, &nans2p, &resplen2);
   if (n < 0)
     {
       status = (errno == ECONNREFUSED
@@ -319,7 +319,7 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
     }
 
   status = gaih_getanswer(host_buffer.buf, n, (const querybuf *) ans2p,
-			  nans2p, name, pat, buffer, buflen,
+			  resplen2, name, pat, buffer, buflen,
 			  errnop, herrnop, ttlp);
 
   if (host_buffer.buf != orig_host_buffer)
@@ -417,7 +417,7 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
 	  strcpy (qp, "].ip6.arpa");
 	  n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR,
 				 host_buffer.buf->buf, 1024, &host_buffer.ptr,
-				 NULL, NULL);
+				 NULL, NULL, NULL);
 	  if (n >= 0)
 	    goto got_it_already;
 	}
@@ -438,14 +438,14 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
     }
 
   n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
-			 1024, &host_buffer.ptr, NULL, NULL);
+			 1024, &host_buffer.ptr, NULL, NULL, NULL);
   if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0)
     {
       strcpy (qp, "ip6.int");
       n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			     host_buffer.buf != orig_host_buffer
 			     ? MAXPACKET : 1024, &host_buffer.ptr,
-			     NULL, NULL);
+			     NULL, NULL, NULL);
     }
   if (n < 0)
     {
@@ -685,12 +685,19 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  n = -1;
 	}
 
-      if (n < 0 || (*name_ok) (bp) == 0)
+      if (__builtin_expect (n < 0 || (*name_ok) (bp) == 0, 0))
 	{
 	  ++had_error;
 	  continue;
 	}
       cp += n;				/* name */
+
+      if (__builtin_expect (cp + 10 > end_of_message, 0))
+	{
+	  ++had_error;
+	  continue;
+	}
+
       type = ns_get16 (cp);
       cp += INT16SZ;			/* type */
       class = ns_get16 (cp);
@@ -699,7 +706,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       cp += INT32SZ;			/* TTL */
       n = ns_get16 (cp);
       cp += INT16SZ;			/* len */
-      if (class != C_IN)
+      if (__builtin_expect (class != C_IN, 0))
 	{
 	  /* XXX - debug? syslog? */
 	  cp += n;
@@ -711,7 +718,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (ap >= &host_data->aliases[MAX_NR_ALIASES - 1])
 	    continue;
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
-	  if (n < 0 || (*name_ok) (tbuf) == 0)
+	  if (__builtin_expect (n < 0 || (*name_ok) (tbuf) == 0, 0))
 	    {
 	      ++had_error;
 	      continue;
@@ -745,7 +752,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (qtype == T_PTR && type == T_CNAME)
 	{
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
-	  if (n < 0 || res_dnok (tbuf) == 0)
+	  if (__builtin_expect (n < 0 || res_dnok (tbuf) == 0, 0))
 	    {
 	      ++had_error;
 	      continue;
@@ -792,7 +799,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       switch (type)
 	{
 	case T_PTR:
-	  if (__strcasecmp (tname, bp) != 0)
+	  if (__builtin_expect (__strcasecmp (tname, bp) != 0, 0))
 	    {
 	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, qname, bp);
 	      cp += n;
@@ -809,7 +816,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      n = -1;
 	    }
 
-	  if (n < 0 || res_hnok (bp) == 0)
+	  if (__builtin_expect (n < 0 || res_hnok (bp) == 0, 0))
 	    {
 	      ++had_error;
 	      break;
@@ -839,7 +846,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (have_to_map)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
-	      if (n >= MAXHOSTNAMELEN)
+	      if (__builtin_expect (n >= MAXHOSTNAMELEN, 0))
 		{
 		  ++had_error;
 		  break;
@@ -957,7 +964,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       return NSS_STATUS_UNAVAIL;
     }
 
-   u_char packtmp[NS_MAXCDNAME];
+  u_char packtmp[NS_MAXCDNAME];
   int n = __ns_name_unpack (answer->buf, end_of_message, cp,
 			    packtmp, sizeof packtmp);
   /* We unpack the name to check it for validity.  But we do not need
@@ -1005,7 +1012,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
 	  n = -1;
 	}
-      if (n < 0 || res_hnok (buffer) == 0)
+      if (__builtin_expect (n < 0 || res_hnok (buffer) == 0, 0))
 	{
 	  ++had_error;
 	  continue;
@@ -1018,6 +1025,13 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	}
 
       cp += n;				/* name */
+
+      if (__builtin_expect (cp + 10 > end_of_message, 0))
+	{
+	  ++had_error;
+	  continue;
+	}
+
       int type = ns_get16 (cp);
       cp += INT16SZ;			/* type */
       int class = ns_get16 (cp);
@@ -1037,7 +1051,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	{
 	  char tbuf[MAXDNAME];
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
-	  if (n < 0 || res_hnok (tbuf) == 0)
+	  if (__builtin_expect (n < 0 || res_hnok (tbuf) == 0, 0))
 	    {
 	      ++had_error;
 	      continue;
@@ -1130,6 +1144,12 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	}
 
       (*pat)->family = type == T_A ? AF_INET : AF_INET6;
+      if (__builtin_expect ((type == T_A && n != INADDRSZ)
+			    || (type == T_AAAA && n != IN6ADDRSZ), 0))
+	{
+	  ++had_error;
+	  continue;
+	}
       memcpy ((*pat)->addr, cp, n);
       cp += n;
       (*pat)->scopeid = 0;
@@ -1172,14 +1192,15 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 				  errnop, h_errnop, ttlp,
 				  &first);
   if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND
-       || status == NSS_STATUS_TRYAGAIN)
+       || (status == NSS_STATUS_TRYAGAIN
+	   && (errno != ERANGE || *h_errnop != NO_RECOVERY)))
       && answer2 != NULL && anslen2 > 0)
     {
       enum nss_status status2 = gaih_getanswer_slice(answer2, anslen2, qname,
 						     &pat, &buffer, &buflen,
 						     errnop, h_errnop, ttlp,
 						     &first);
-      if (status != NSS_STATUS_SUCCESS)
+      if (status != NSS_STATUS_SUCCESS && status2 != NSS_STATUS_NOTFOUND)
 	status = status2;
     }
 

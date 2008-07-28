@@ -339,9 +339,9 @@ int
 __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		 const u_char *buf2, int buflen2,
 		 u_char *ans, int anssiz, u_char **ansp, u_char **ansp2,
-		 int *nansp2)
+		 int *nansp2, int *resplen2)
 {
-  int gotsomewhere, terrno, try, v_circuit, resplen, resplen2, ns, n;
+  int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
 
 	if (statp->nscount == 0) {
 		__set_errno (ESRCH);
@@ -539,7 +539,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			try = statp->retry;
 			n = send_vc(statp, buf, buflen, buf2, buflen2,
 				    &ans, &anssiz, &terrno,
-				    ns, ansp, ansp2, nansp2, &resplen2);
+				    ns, ansp, ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
 			if (n == 0)
@@ -549,14 +549,14 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			n = send_dg(statp, buf, buflen, buf2, buflen2,
 				    &ans, &anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere, ansp,
-				    ansp2, nansp2, &resplen2);
+				    ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
 			if (n == 0)
 				goto next_ns;
 			if (v_circuit)
 			  // XXX Check whether both requests failed or
-			  // XXX whether one have been answered successfully
+			  // XXX whether one has been answered successfully
 				goto same_ns;
 		}
 
@@ -575,7 +575,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		  DprintQ((statp->options & RES_DEBUG) ||
 			  (statp->pfcode & RES_PRF_REPLY),
 			  (stdout, "%s", ""),
-			  *ansp2, (resplen2 > *nansp2) ? *nansp2 : resplen2);
+			  *ansp2, (*resplen2 > *nansp2) ? *nansp2 : *resplen2);
 
 		/*
 		 * If we have temporarily opened a virtual circuit,
@@ -638,7 +638,7 @@ res_nsend(res_state statp,
 	  const u_char *buf, int buflen, u_char *ans, int anssiz)
 {
   return __libc_res_nsend(statp, buf, buflen, NULL, 0, ans, anssiz,
-			  NULL, NULL, NULL);
+			  NULL, NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nsend)
 
@@ -665,6 +665,8 @@ send_vc(res_state statp,
 	u_short len2;
 	u_char *cp;
 
+	if (resplen2 != NULL)
+	  *resplen2 = 0;
 	connreset = 0;
  same_ns:
 	truncating = 0;
@@ -734,8 +736,9 @@ send_vc(res_state statp,
 	int recvresp2 = buf2 == NULL;
  read_len:
 	cp = ans;
-	len = INT16SZ;
-	while ((n = TEMP_FAILURE_RETRY (read(statp->_vcsock, (char *)cp,
+	uint16_t rlen16;
+	len = sizeof(rlen16);
+	while ((n = TEMP_FAILURE_RETRY (read(statp->_vcsock, &rlen16,
 					     (int)len))) > 0) {
 		cp += n;
 		if ((len -= n) <= 0)
@@ -760,11 +763,7 @@ send_vc(res_state statp,
 		}
 		return (0);
 	}
-#ifdef _STRING_ARCH_unaligned
-	resplen = ntohs (*(uint16_t *) ans);
-#else
-	resplen = ns_get16(ans);
-#endif
+	int rlen = ntohs (rlen16);
 
 	int *thisanssizp;
 	u_char **thisansp;
@@ -795,11 +794,11 @@ send_vc(res_state statp,
 	}
 	anhp = (HEADER *) *thisansp;
 
-	*thisresplenp = resplen;
-	if (resplen > *thisanssizp) {
+	*thisresplenp = rlen;
+	if (rlen > *thisanssizp) {
 		/* Yes, we test ANSCP here.  If we have two buffers
 		   both will be allocatable.  */
-		if (anscp) {
+		if (__builtin_expect (anscp != NULL, 1)) {
 			u_char *newp = malloc (MAXPACKET);
 			if (newp == NULL) {
 				*terrno = ENOMEM;
@@ -809,7 +808,7 @@ send_vc(res_state statp,
 			*thisanssizp = MAXPACKET;
 			*thisansp = newp;
 			anhp = (HEADER *) newp;
-			len = resplen;
+			len = rlen;
 		} else {
 			Dprint(statp->options & RES_DEBUG,
 				(stdout, ";; response truncated\n")
@@ -818,9 +817,9 @@ send_vc(res_state statp,
 			len = *thisanssizp;
 		}
 	} else
-		len = resplen;
+		len = rlen;
 
-	if (len < HFIXEDSZ) {
+	if (__builtin_expect (len < HFIXEDSZ, 0)) {
 		/*
 		 * Undersized message.
 		 */
@@ -836,18 +835,18 @@ send_vc(res_state statp,
 		cp += n;
 		len -= n;
 	}
-	if (n <= 0) {
+	if (__builtin_expect (n <= 0, 0)) {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
 		__res_iclose(statp, false);
 		return (0);
 	}
-	if (truncating) {
+	if (__builtin_expect (truncating, 0)) {
 		/*
 		 * Flush rest of answer so connection stays in synch.
 		 */
 		anhp->tc = 1;
-		len = resplen - *thisanssizp;
+		len = rlen - *thisanssizp;
 		while (len != 0) {
 			char junk[PACKETSZ];
 
@@ -872,7 +871,7 @@ send_vc(res_state statp,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ";; old answer (unexpected):\n"),
 			*thisansp,
-			(resplen > *thisanssiz) ? *thisanssiz: resplen);
+			(rlen > *thisanssiz) ? *thisanssiz: rlen);
 		goto read_len;
 	}
 
@@ -889,7 +888,7 @@ send_vc(res_state statp,
 	 * All is well, or the error is fatal.  Signal that the
 	 * next nameserver ought not be tried.
 	 */
-	return (resplen);
+	return resplen;
 }
 
 static int
@@ -1084,7 +1083,7 @@ send_dg(res_state statp,
 		*thisresplenp = recvfrom(pfd[0].fd, (char*)*thisansp,
 					 *thisanssizp, 0,
 					(struct sockaddr *)&from, &fromlen);
-		if (*thisresplenp <= 0) {
+		if (__builtin_expect (*thisresplenp <= 0, 0)) {
 			if (errno == EINTR || errno == EAGAIN) {
 				need_recompute = 1;
 				goto wait;
@@ -1093,7 +1092,7 @@ send_dg(res_state statp,
 			goto err_out;
 		}
 		*gotsomewhere = 1;
-		if (*thisresplenp < HFIXEDSZ) {
+		if (__builtin_expect (*thisresplenp < HFIXEDSZ, 0)) {
 			/*
 			 * Undersized message.
 			 */

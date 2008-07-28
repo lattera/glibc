@@ -61,7 +61,8 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
   for (int i = 0; i < nqtypes; ++i)
     {
       int r = __libc_res_nquery (&_res, name, ns_c_in, qtypes[i],
-				 buf, sizeof (buf), &ansp.ptr, NULL, NULL);
+				 buf, sizeof (buf), &ansp.ptr, NULL, NULL,
+				 NULL);
       if (r > 0)
 	{
 	  /* We need to decode the response.  Just one question record.
