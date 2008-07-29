@@ -273,6 +273,7 @@ _dl_show_auxv (void)
       } auxvars[] =
 	{
 	  [AT_EXECFD - 2] =		{ "AT_EXECFD:       ", dec },
+	  [AT_EXECFN - 2] =		{ "AT_EXECFN:       ", str },
 	  [AT_PHDR - 2] =		{ "AT_PHDR:         0x", hex },
 	  [AT_PHENT - 2] =		{ "AT_PHENT:        ", dec },
 	  [AT_PHNUM - 2] =		{ "AT_PHNUM:        ", dec },
