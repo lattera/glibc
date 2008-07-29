@@ -30,12 +30,12 @@ paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
 	 const __sigset_t *ss, int flags)
 {
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (paccept, 6, fd, addr, addr_len, ss,
+    return INLINE_SYSCALL (paccept, 6, fd, addr.__sockaddr__, addr_len, ss,
 			   _NSIG / 8, flags);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = INLINE_SYSCALL (paccept, 6, fd, addr, addr_len, ss,
+  int result = INLINE_SYSCALL (paccept, 6, fd, addr.__sockaddr__, addr_len, ss,
 			       _NSIG / 8, flags);
 
   LIBC_CANCEL_RESET (oldtype);

@@ -1,5 +1,7 @@
 2008-07-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/paccept.c: Fix compile problem.
+
 	* resolv/res_send.c (__libc_res_nsend): Take additional parameter.
 	Use it instead of locally defined resplen2 variable.
 	(res_nsend): Adjust for __libc_res_nsend interface change.
