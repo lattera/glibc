@@ -1,5 +1,7 @@
 2008-07-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftw.c (add_object): Remove inline to avoid warning.
+
 	* sysdeps/unix/sysv/linux/paccept.c: Fix compile problem.
 
 	* resolv/res_send.c (__libc_res_nsend): Take additional parameter.

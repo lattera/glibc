@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996-2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -243,7 +243,7 @@ object_compare (const void *p1, const void *p2)
 }
 
 
-static inline int
+static int
 add_object (struct ftw_data *data, struct STAT *st)
 {
   struct known_object *newp = malloc (sizeof (struct known_object));
