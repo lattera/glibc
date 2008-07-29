@@ -1,3 +1,7 @@
+2008-07-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Add AT_EXECFN to the table.
+
 2008-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/ftw.c (add_object): Remove inline to avoid warning.
