@@ -1,3 +1,7 @@
+2008-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-align2.c (f): Print message that f is reached.
+
 2008-04-28  Hiroki Kaminaga  <kaminaga@sm.sony.co.jp>
 
 	[BZ #6740]

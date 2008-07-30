@@ -31,6 +31,8 @@ f (void *arg)
 {
   bool ok = true;
 
+  puts ("in f");
+
   if (TEST_STACK_ALIGN ())
     ok = false;
 

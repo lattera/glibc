@@ -880,7 +880,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 #endif
     {
       sock = socket (AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
-#ifdef __ASSUME_SOCK_CLOEXEC
+#ifndef __ASSUME_SOCK_CLOEXEC
       if (have_sock_cloexec == 0)
 	have_sock_cloexec = sock != -1 || errno != EINVAL ? 1 : -1;
 #endif

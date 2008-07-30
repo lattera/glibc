@@ -1,5 +1,10 @@
 2008-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (nscd_init): Type if preprocessor directive.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PACCEPT):
+	Define.
+
 	* misc/syslog.c (openlog_internal): Fix compile problem.
 
 2008-07-28  Roland McGrath  <roland@redhat.com>

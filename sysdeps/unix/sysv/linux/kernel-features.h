@@ -506,4 +506,5 @@
 # define __ASSUME_SOCK_CLOEXEC	1
 # define __ASSUME_IN_NONBLOCK	1
 # define __ASSUME_PIPE2		1
+# define __ASSUME_PACCEPT	1
 #endif
