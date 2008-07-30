@@ -1,5 +1,8 @@
 2008-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Raise size of initial
+	buffer passed to NSS functions.
+
 	* nscd/connections.c (nscd_init): Type if preprocessor directive.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PACCEPT):

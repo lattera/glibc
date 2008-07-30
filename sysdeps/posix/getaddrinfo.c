@@ -697,7 +697,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  old_res_options = _res.options;
 	  _res.options &= ~RES_USE_INET6;
 
-	  size_t tmpbuflen = 512;
+	  size_t tmpbuflen = 1024;
 	  char *tmpbuf = alloca (tmpbuflen);
 
 	  while (!no_more)
