@@ -1,3 +1,8 @@
+2008-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_O_CLOEXEC.
+
 2008-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Raise size of initial

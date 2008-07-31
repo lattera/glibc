@@ -488,6 +488,14 @@
 # define __ASSUME_FALLOCATE	1
 #endif
 
+/* Support for various CLOEXEC and NONBLOCK flags was added for x86,
+   x86-64, PPC, IA-64, SPARC< and S390 in 2.6.23.  */
+#if __LINUX_KERNEL_VERSION >= 0x020617 \
+    && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
+	|| defined __ia64__ || defined __sparc__ || defined __s390__)
+# define __ASSUME_O_CLOEXEC	1
+#endif
+
 /* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
 #if __LINUX_KERNEL_VERSION >= 0x020618
 # define __ASSUME_ADJ_OFFSET_SS_READ	1
