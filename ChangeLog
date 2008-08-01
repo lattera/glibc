@@ -1,5 +1,8 @@
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: s390 has the new
+	syscalls, too.
+
 	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): We cannot
 	use the AT_EXECFN value if it is no absolute path.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Never define
