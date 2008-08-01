@@ -860,6 +860,8 @@ $(objpfx)check-localplt.out: $(objpfx)check-localplt \
 		    	     $(common-objpfx)math/libm.so $(thread-dso) \
 		    	     $(common-objpfx)rt/librt.so \
 		    	     $(common-objpfx)dlfcn/libdl.so \
+			     $(common-objpfx)resolv/libresolv.so \
+			     $(common-objpfx)crypt/libcrypt.so \
 			     $(check-data)
 	$(dir $<)$(notdir $<) $(filter-out $< $(check-data),$^) | \
 	  LC_ALL=C sort | \
