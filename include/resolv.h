@@ -98,11 +98,9 @@ libresolv_hidden_proto (__res_nameinquery)
 libresolv_hidden_proto (__res_queriesmatch)
 libresolv_hidden_proto (__res_nsend)
 libresolv_hidden_proto (__b64_ntop)
-libresolv_hidden_proto (__ns_name_ntop)
-libresolv_hidden_proto (__ns_name_unpack)
-libresolv_hidden_proto (__ns_get16)
-libresolv_hidden_proto (__ns_get32)
 libresolv_hidden_proto (__res_nopt)
+libresolv_hidden_proto (__dn_count_labels)
+libresolv_hidden_proto (__p_secstodate)
 
 extern const char *_res_opcodes[];
 libresolv_hidden_proto (_res_opcodes)

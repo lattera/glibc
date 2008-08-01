@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
-extern struct _ns_flagdata _ns_flagdata[] attribute_hidden;
+extern const struct _ns_flagdata _ns_flagdata[] attribute_hidden;
 
 #if _STRING_ARCH_unaligned
 
@@ -44,3 +44,30 @@ extern struct _ns_flagdata _ns_flagdata[] attribute_hidden;
   } while (0)
 
 #endif
+
+extern u_int		__ns_get16 (const u_char *) __THROW;
+extern u_long		__ns_get32 (const u_char *) __THROW;
+
+#define ns_msg_getflag(handle, flag) \
+  (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
+
+libresolv_hidden_proto (ns_get16)
+libresolv_hidden_proto (ns_get32)
+libresolv_hidden_proto (ns_put16)
+libresolv_hidden_proto (ns_put32)
+libresolv_hidden_proto (ns_initparse)
+libresolv_hidden_proto (ns_skiprr)
+libresolv_hidden_proto (ns_parserr)
+libresolv_hidden_proto (ns_name_ntop)
+libresolv_hidden_proto (ns_name_pton)
+libresolv_hidden_proto (ns_name_pack)
+libresolv_hidden_proto (ns_name_skip)
+libresolv_hidden_proto (ns_name_unpack)
+libresolv_hidden_proto (ns_name_compress)
+libresolv_hidden_proto (ns_name_uncompress)
+libresolv_hidden_proto (ns_sprintrr)
+libresolv_hidden_proto (ns_sprintrrf)
+libresolv_hidden_proto (ns_samedomain)
+libresolv_hidden_proto (ns_samename)
+libresolv_hidden_proto (ns_makecanon)
+libresolv_hidden_proto (ns_format_ttl)

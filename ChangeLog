@@ -1,5 +1,32 @@
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add GLIBC_2.9 to libresolv.
+	* include/resolv.h: Remove hidden proto declarations for __ns_*
+	functions.  Add them for __dn_count_labels and __p_secstodate.
+	* include/arpa/nameser.h: Add a number of hidden proto declarations.
+	Define ns_msg_getflags macro here.
+	* resolv/res_debug.c: Add hidden definition for __dn_count_labels
+	and __p_secstodate.
+	* resolv/Versions: Export functions from <arpa/nameser.h> from
+	libresolv in version GLIBC_2.9.
+	* resolv/ns_name.c: Integrate changes from bind 9.5.0.  Add necessary
+	hidden definitions.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/ns_parse.c: Likewise.
+	* resolv/ns_print.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/ns_ttl.c: Likewise.
+	* resolv/arpa/nameser_compat.h: Likewise.
+	* resolv/arpa/nameser.h: Likewise.  Remove macros which redirect
+	function calls.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Use __ns_get16
+	instead of ns_get16.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Use __ns_get16 and
+	__ns_get32 instead of ns_get16 and ns_get32 respectively.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/Makefile (libresolv-routines): Add ns_date.
+	* resolv/ns_date.c: New file.
+
 	* elf/Makefile (check-localplt.out): Also check libresolv and
 	libcrypt.
 

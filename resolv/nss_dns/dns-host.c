@@ -698,13 +698,13 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  continue;
 	}
 
-      type = ns_get16 (cp);
+      type = __ns_get16 (cp);
       cp += INT16SZ;			/* type */
-      class = ns_get16 (cp);
+      class = __ns_get16 (cp);
       cp += INT16SZ;			/* class */
-      ttl = ns_get32 (cp);
+      ttl = __ns_get32 (cp);
       cp += INT32SZ;			/* TTL */
-      n = ns_get16 (cp);
+      n = __ns_get16 (cp);
       cp += INT16SZ;			/* len */
       if (__builtin_expect (class != C_IN, 0))
 	{
@@ -1032,13 +1032,13 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  continue;
 	}
 
-      int type = ns_get16 (cp);
+      int type = __ns_get16 (cp);
       cp += INT16SZ;			/* type */
-      int class = ns_get16 (cp);
+      int class = __ns_get16 (cp);
       cp += INT16SZ;			/* class */
-      int32_t ttl = ns_get32 (cp);
+      int32_t ttl = __ns_get32 (cp);
       cp += INT32SZ;			/* TTL */
-      n = ns_get16 (cp);
+      n = __ns_get16 (cp);
       cp += INT16SZ;			/* len */
 
       if (class != C_IN)

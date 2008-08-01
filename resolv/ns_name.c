@@ -1,18 +1,18 @@
 /*
+ * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
- * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
- * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
- * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
- * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
- * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
 #if !defined(_LIBC) && !defined(lint)
@@ -24,15 +24,40 @@ static const char rcsid[] = "$BINDId: ns_name.c,v 8.15 2000/03/30 22:53:46 vixie
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 
-#include <ctype.h>
 #include <errno.h>
 #include <resolv.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <limits.h>
+
+# define SPRINTF(x) ((size_t)sprintf x)
+
+#define NS_TYPE_ELT			0x40 /*%< EDNS0 extended label type */
+#define DNS_LABELTYPE_BITSTRING		0x41
 
 /* Data. */
 
 static const char	digits[] = "0123456789";
+
+static const char digitvalue[256] = {
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*16*/
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*32*/
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*48*/
+         0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, /*64*/
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*80*/
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*96*/
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*112*/
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*128*/
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*256*/
+};
 
 /* Forward. */
 
@@ -41,31 +66,40 @@ static int		printable(int);
 static int		dn_find(const u_char *, const u_char *,
 				const u_char * const *,
 				const u_char * const *);
+static int		encode_bitstring(const char **, const char *,
+					 unsigned char **, unsigned char **,
+					 unsigned const char *);
+static int		labellen(const u_char *);
+static int		decode_bitstring(const unsigned char **,
+					 char *, const char *);
 
 /* Public. */
 
-/*
- * ns_name_ntop(src, dst, dstsiz)
+/*%
  *	Convert an encoded domain name to printable ascii as per RFC1035.
+
  * return:
- *	Number of bytes written to buffer, or -1 (with errno set)
+ *\li	Number of bytes written to buffer, or -1 (with errno set)
+ *
  * notes:
- *	The root is returned as "."
- *	All other domains are returned in non absolute form
+ *\li	The root is returned as "."
+ *\li	All other domains are returned in non absolute form
  */
 int
-ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
+ns_name_ntop(const u_char *src, char *dst, size_t dstsiz)
+{
 	const u_char *cp;
 	char *dn, *eom;
 	u_char c;
 	u_int n;
+	int l;
 
 	cp = src;
 	dn = dst;
 	eom = dst + dstsiz;
 
 	while ((n = *cp++) != 0) {
-		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {
+		if ((n & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
 			/* Some kind of compression pointer. */
 			__set_errno (EMSGSIZE);
 			return (-1);
@@ -77,34 +111,31 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
 			}
 			*dn++ = '.';
 		}
-
-		if (n == 0x41) {
-			n = *cp++ / 8;
-			if (dn + n * 2 + 4 >= eom) {
-				__set_errno (EMSGSIZE);
-				return (-1);
-			}
-			*dn++ = '\\';
-			*dn++ = '[';
-			*dn++ = 'x';
-
-			while (n-- > 0) {
-				c = *cp++;
-				unsigned u = c >> 4;
-				*dn++ = u > 9 ? 'a' + u - 10 : '0' + u;
-				u = c & 0xf;
-				*dn++ = u > 9 ? 'a' + u - 10 : '0' + u;
-			}
-
-			*dn++ = ']';
-			continue;
+		if ((l = labellen(cp - 1)) < 0) {
+			__set_errno (EMSGSIZE);
+			return(-1);
 		}
-
-		if (dn + n >= eom) {
+		if (dn + l >= eom) {
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
-		for ((void)NULL; n > 0; n--) {
+		if ((n & NS_CMPRSFLGS) == NS_TYPE_ELT) {
+			int m;
+
+			if (n != DNS_LABELTYPE_BITSTRING) {
+				/* XXX: labellen should reject this case */
+				__set_errno (EINVAL);
+				return(-1);
+			}
+			if ((m = decode_bitstring(&cp, dn, eom)) < 0)
+			{
+				__set_errno (EMSGSIZE);
+				return(-1);
+			}
+			dn += m;
+			continue;
+		}
+		for ((void)NULL; l > 0; l--) {
 			c = *cp++;
 			if (special(c)) {
 				if (dn + 1 >= eom) {
@@ -146,22 +177,26 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
 	return (dn - dst);
 }
 libresolv_hidden_def (ns_name_ntop)
+strong_alias (ns_name_ntop, __ns_name_ntop)
 
-/*
- * ns_name_pton(src, dst, dstsiz)
+/*%
  *	Convert a ascii string into an encoded domain name as per RFC1035.
+ *
  * return:
- *	-1 if it fails
- *	1 if string was fully qualified
- *	0 is string was not fully qualified
+ *
+ *\li	-1 if it fails
+ *\li	1 if string was fully qualified
+ *\li	0 is string was not fully qualified
+ *
  * notes:
- *	Enforces label and domain length limits.
+ *\li	Enforces label and domain length limits.
  */
 
 int
-ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
+ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
+{
 	u_char *label, *bp, *eom;
-	int c, n, escaped;
+	int c, n, escaped, e = 0;
 	char *cp;
 
 	escaped = 0;
@@ -171,7 +206,28 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 
 	while ((c = *src++) != 0) {
 		if (escaped) {
-			if ((cp = strchr(digits, c)) != NULL) {
+			if (c == '[') { /*%< start a bit string label */
+				if ((cp = strchr(src, ']')) == NULL) {
+					__set_errno (EINVAL);
+					return(-1);
+				}
+				if ((e = encode_bitstring(&src, cp + 2,
+							  &label, &bp, eom))
+				    != 0) {
+					__set_errno (e);
+					return(-1);
+				}
+				escaped = 0;
+				label = bp++;
+				if ((c = *src++) == 0)
+					goto done;
+				else if (c != '.') {
+					__set_errno (EINVAL);
+					return(-1);
+				}
+				continue;
+			}
+			else if ((cp = strchr(digits, c)) != NULL) {
 				n = (cp - digits) * 100;
 				if ((c = *src++) == 0 ||
 				    (cp = strchr(digits, c)) == NULL) {
@@ -190,41 +246,6 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 					return (-1);
 				}
 				c = n;
-			} else if (c == '[' && label == bp - 1 && *src == 'x') {
-				/* Theoretically we would have to handle \[o
-				   as well but we do not since we do not need
-				   it internally.  */
-				*label = 0x41;
-				label = bp++;
-				++src;
-				while (isxdigit (*src)) {
-					n = *src > '9' ? *src - 'a' + 10 : *src - '0';
-					++src;
-					if (! isxdigit(*src)) {
-						__set_errno (EMSGSIZE);
-						return (-1);
-					}
-					n <<= 4;
-					n += *src > '9' ? *src - 'a' + 10 : *src - '0';
-					if (bp + 1 >= eom) {
-						__set_errno (EMSGSIZE);
-						return (-1);
-					}
-					*bp++ = n;
-					++src;
-				}
-				*label = (bp - label - 1) * 8;
-				if (*src++ != ']' || *src++ != '.') {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				escaped = 0;
-				label = bp++;
-				if (bp >= eom) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				continue;
 			}
 			escaped = 0;
 		} else if (c == '\\') {
@@ -232,7 +253,7 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 			continue;
 		} else if (c == '.') {
 			c = (bp - label - 1);
-			if ((c & NS_CMPRSFLGS) != 0) {	/* Label too big. */
+			if ((c & NS_CMPRSFLGS) != 0) {	/*%< Label too big. */
 				__set_errno (EMSGSIZE);
 				return (-1);
 			}
@@ -270,10 +291,11 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 		*bp++ = (u_char)c;
 	}
 	c = (bp - label - 1);
-	if ((c & NS_CMPRSFLGS) != 0) {		/* Label too big. */
+	if ((c & NS_CMPRSFLGS) != 0) {		/*%< Label too big. */
 		__set_errno (EMSGSIZE);
 		return (-1);
 	}
+  done:
 	if (label >= eom) {
 		__set_errno (EMSGSIZE);
 		return (-1);
@@ -286,45 +308,57 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 		}
 		*bp++ = 0;
 	}
-	if ((bp - dst) > MAXCDNAME) {	/* src too big */
+	if ((bp - dst) > MAXCDNAME) {	/*%< src too big */
 		__set_errno (EMSGSIZE);
 		return (-1);
 	}
 	return (0);
 }
+libresolv_hidden_def (ns_name_pton)
 
-/*
- * ns_name_ntol(src, dst, dstsiz)
+/*%
  *	Convert a network strings labels into all lowercase.
+ *
  * return:
- *	Number of bytes written to buffer, or -1 (with errno set)
+ *\li	Number of bytes written to buffer, or -1 (with errno set)
+ *
  * notes:
- *	Enforces label and domain length limits.
+ *\li	Enforces label and domain length limits.
  */
 
 int
-ns_name_ntol(const u_char *src, u_char *dst, size_t dstsiz) {
+ns_name_ntol(const u_char *src, u_char *dst, size_t dstsiz)
+{
 	const u_char *cp;
 	u_char *dn, *eom;
 	u_char c;
 	u_int n;
+	int l;
 
 	cp = src;
 	dn = dst;
 	eom = dst + dstsiz;
 
+	if (dn >= eom) {
+		__set_errno (EMSGSIZE);
+		return (-1);
+	}
 	while ((n = *cp++) != 0) {
-		if ((n & NS_CMPRSFLGS) != 0) {
+		if ((n & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
 			/* Some kind of compression pointer. */
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
 		*dn++ = n;
-		if (dn + n >= eom) {
+		if ((l = labellen(cp - 1)) < 0) {
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
-		for ((void)NULL; n > 0; n--) {
+		if (dn + l >= eom) {
+			__set_errno (EMSGSIZE);
+			return (-1);
+		}
+		for ((void)NULL; l > 0; l--) {
 			c = *cp++;
 			if (isupper(c))
 				*dn++ = tolower(c);
@@ -336,11 +370,11 @@ ns_name_ntol(const u_char *src, u_char *dst, size_t dstsiz) {
 	return (dn - dst);
 }
 
-/*
- * ns_name_unpack(msg, eom, src, dst, dstsiz)
+/*%
  *	Unpack a domain name from a message, source may be compressed.
+ *
  * return:
- *	-1 if it fails, or consumed octets if it succeeds.
+ *\li	-1 if it fails, or consumed octets if it succeeds.
  */
 int
 ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
@@ -348,7 +382,7 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 {
 	const u_char *srcp, *dstlim;
 	u_char *dstp;
-	int n, len, checked;
+	int n, len, checked, l;
 
 	len = -1;
 	checked = 0;
@@ -363,29 +397,22 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 	while ((n = *srcp++) != 0) {
 		/* Check for indirection. */
 		switch (n & NS_CMPRSFLGS) {
-		case 0x40:
-			if (n == 0x41) {
-				if (dstp + 1 >= dstlim) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-			  	}
-				*dstp++ = 0x41;
-				n = *srcp++ / 8;
-				++checked;
-			} else {
-				__set_errno (EMSGSIZE);
-				return (-1);		/* flag error */
-			}
-			/* FALLTHROUGH */
 		case 0:
+		case NS_TYPE_ELT:
 			/* Limit checks. */
-			if (dstp + n + 1 >= dstlim || srcp + n >= eom) {
+			if ((l = labellen(srcp - 1)) < 0) {
+				__set_errno (EMSGSIZE);
+				return(-1);
+			}
+			if (dstp + l + 1 >= dstlim || srcp + l >= eom) {
 				__set_errno (EMSGSIZE);
 				return (-1);
 			}
-			checked += n + 1;
-			dstp = mempcpy(dstp, srcp - 1, n + 1);
-			srcp += n;
+			checked += l + 1;
+			*dstp++ = n;
+			memcpy(dstp, srcp, l);
+			dstp += l;
+			srcp += l;
 			break;
 
 		case NS_CMPRSFLGS:
@@ -396,7 +423,7 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 			if (len < 0)
 				len = srcp - src + 1;
 			srcp = msg + (((n & 0x3f) << 8) | (*srcp & 0xff));
-			if (srcp < msg || srcp >= eom) {  /* Out of range. */
+			if (srcp < msg || srcp >= eom) {  /*%< Out of range. */
 				__set_errno (EMSGSIZE);
 				return (-1);
 			}
@@ -414,7 +441,7 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 
 		default:
 			__set_errno (EMSGSIZE);
-			return (-1);			/* flag error */
+			return (-1);			/*%< flag error */
 		}
 	}
 	*dstp = '\0';
@@ -423,20 +450,23 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 	return (len);
 }
 libresolv_hidden_def (ns_name_unpack)
+strong_alias (ns_name_unpack, __ns_name_unpack)
 
-/*
- * ns_name_pack(src, dst, dstsiz, dnptrs, lastdnptr)
+/*%
  *	Pack domain name 'domain' into 'comp_dn'.
+ *
  * return:
- *	Size of the compressed name, or -1.
+ *\li	Size of the compressed name, or -1.
+ *
  * notes:
- *	'dnptrs' is an array of pointers to previous compressed names.
- *	dnptrs[0] is a pointer to the beginning of the message. The array
+ *\li	'dnptrs' is an array of pointers to previous compressed names.
+ *\li	dnptrs[0] is a pointer to the beginning of the message. The array
  *	ends with NULL.
- *	'lastdnptr' is a pointer to the end of the array pointed to
+ *\li	'lastdnptr' is a pointer to the end of the array pointed to
  *	by 'dnptrs'.
+ *
  * Side effects:
- *	The list of pointers in dnptrs is updated for labels inserted into
+ *\li	The list of pointers in dnptrs is updated for labels inserted into
  *	the message as we compress the name.  If 'dnptr' is NULL, we don't
  *	try to compress names. If 'lastdnptr' is NULL, we don't update the
  *	list.
@@ -458,7 +488,7 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 		if ((msg = *dnptrs++) != NULL) {
 			for (cpp = dnptrs; *cpp != NULL; cpp++)
 				(void)NULL;
-			lpp = cpp;	/* end of list to search */
+			lpp = cpp;	/*%< end of list to search */
 		}
 	} else
 		msg = NULL;
@@ -466,19 +496,23 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 	/* make sure the domain we are about to add is legal */
 	l = 0;
 	do {
+		int l0;
+
 		n = *srcp;
-		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {
+		if ((n & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
-		if (n == 0x41)
-			n = *++srcp / 8;
-		l += n + 1;
+		if ((l0 = labellen(srcp)) < 0) {
+			__set_errno (EINVAL);
+			return(-1);
+		}
+		l += l0 + 1;
 		if (l > MAXCDNAME) {
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
-		srcp += n + 1;
+		srcp += l0 + 1;
 	} while (n != 0);
 
 	/* from here on we need to reset compression pointer array on error */
@@ -486,7 +520,7 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 	do {
 		/* Look to see if we can use pointers. */
 		n = *srcp;
-		if (n != 0 && n != 0x41 && msg != NULL) {
+		if (n != 0 && msg != NULL) {
 			l = dn_find(srcp, msg, (const u_char * const *)dnptrs,
 				    (const u_char * const *)lpp);
 			if (l >= 0) {
@@ -506,15 +540,11 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 			}
 		}
 		/* copy label to buffer */
-		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {		/* Should not happen. */
+		if ((n & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
+			/* Should not happen. */
 			goto cleanup;
 		}
-		if (n == 0x41) {
-			n = *++srcp / 8;
-			if (dstp + 1 >= eob)
-				goto cleanup;
-			*dstp++ = 0x41;
-		}
+		n = labellen(srcp);
 		if (dstp + 1 + n >= eob) {
 			goto cleanup;
 		}
@@ -532,14 +562,16 @@ cleanup:
 	}
 	return (dstp - dst);
 }
+libresolv_hidden_def (ns_name_pack)
 
-/*
- * ns_name_uncompress(msg, eom, src, dst, dstsiz)
+/*%
  *	Expand compressed domain name to presentation format.
+ *
  * return:
- *	Number of bytes read out of `src', or -1 (with errno set).
+ *\li	Number of bytes read out of `src', or -1 (with errno set).
+ *
  * note:
- *	Root domain returns as "." not "".
+ *\li	Root domain returns as "." not "".
  */
 int
 ns_name_uncompress(const u_char *msg, const u_char *eom, const u_char *src,
@@ -554,19 +586,21 @@ ns_name_uncompress(const u_char *msg, const u_char *eom, const u_char *src,
 		return (-1);
 	return (n);
 }
+libresolv_hidden_def (ns_name_uncompress)
 
-/*
- * ns_name_compress(src, dst, dstsiz, dnptrs, lastdnptr)
+/*%
  *	Compress a domain name into wire format, using compression pointers.
+ *
  * return:
- *	Number of bytes consumed in `dst' or -1 (with errno set).
+ *\li	Number of bytes consumed in `dst' or -1 (with errno set).
+ *
  * notes:
- *	'dnptrs' is an array of pointers to previous compressed names.
- *	dnptrs[0] is a pointer to the beginning of the message.
- *	The list ends with NULL.  'lastdnptr' is a pointer to the end of the
+ *\li	'dnptrs' is an array of pointers to previous compressed names.
+ *\li	dnptrs[0] is a pointer to the beginning of the message.
+ *\li	The list ends with NULL.  'lastdnptr' is a pointer to the end of the
  *	array pointed to by 'dnptrs'. Side effect is to update the list of
  *	pointers for labels inserted into the message as we compress the name.
- *	If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'
+ *\li	If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'
  *	is NULL, we don't update the list.
  */
 int
@@ -579,8 +613,9 @@ ns_name_compress(const char *src, u_char *dst, size_t dstsiz,
 		return (-1);
 	return (ns_name_pack(tmp, dst, dstsiz, dnptrs, lastdnptr));
 }
+libresolv_hidden_def (ns_name_compress)
 
-/*
+/*%
  * Reset dnptrs so that there are no active references to pointers at or
  * after src.
  */
@@ -597,28 +632,37 @@ ns_name_rollback(const u_char *src, const u_char **dnptrs,
 	}
 }
 
-/*
- * ns_name_skip(ptrptr, eom)
+/*%
  *	Advance *ptrptr to skip over the compressed name it points at.
+ *
  * return:
- *	0 on success, -1 (with errno set) on failure.
+ *\li	0 on success, -1 (with errno set) on failure.
  */
 int
-ns_name_skip(const u_char **ptrptr, const u_char *eom) {
+ns_name_skip(const u_char **ptrptr, const u_char *eom)
+{
 	const u_char *cp;
 	u_int n;
+	int l;
 
 	cp = *ptrptr;
 	while (cp < eom && (n = *cp++) != 0) {
 		/* Check for indirection. */
 		switch (n & NS_CMPRSFLGS) {
-		case 0:			/* normal case, n == len */
+		case 0:			/*%< normal case, n == len */
 			cp += n;
 			continue;
-		case NS_CMPRSFLGS:	/* indirection */
+		case NS_TYPE_ELT: /*%< EDNS0 extended label */
+			if ((l = labellen(cp - 1)) < 0) {
+				__set_errno (EMSGSIZE);
+				return(-1);
+			}
+			cp += l;
+			continue;
+		case NS_CMPRSFLGS:	/*%< indirection */
 			cp++;
 			break;
-		default:		/* illegal type */
+		default:		/*%< illegal type */
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
@@ -631,45 +675,48 @@ ns_name_skip(const u_char **ptrptr, const u_char *eom) {
 	*ptrptr = cp;
 	return (0);
 }
+libresolv_hidden_def (ns_name_skip)
 
 /* Private. */
 
-/*
- * special(ch)
+/*%
  *	Thinking in noninternationalized USASCII (per the DNS spec),
  *	is this characted special ("in need of quoting") ?
+ *
  * return:
- *	boolean.
+ *\li	boolean.
  */
 static int
 special(int ch) {
 	switch (ch) {
-	case 0x22: /* '"' */
-	case 0x2E: /* '.' */
-	case 0x3B: /* ';' */
-	case 0x5C: /* '\\' */
+	case 0x22: /*%< '"' */
+	case 0x2E: /*%< '.' */
+	case 0x3B: /*%< ';' */
+	case 0x5C: /*%< '\\' */
+	case 0x28: /*%< '(' */
+	case 0x29: /*%< ')' */
 	/* Special modifiers in zone files. */
-	case 0x40: /* '@' */
-	case 0x24: /* '$' */
+	case 0x40: /*%< '@' */
+	case 0x24: /*%< '$' */
 		return (1);
 	default:
 		return (0);
 	}
 }
 
-/*
- * printable(ch)
+/*%
  *	Thinking in noninternationalized USASCII (per the DNS spec),
  *	is this character visible and not a space when printed ?
+ *
  * return:
- *	boolean.
+ *\li	boolean.
  */
 static int
 printable(int ch) {
 	return (ch > 0x20 && ch < 0x7f);
 }
 
-/*
+/*%
  *	Thinking in noninternationalized USASCII (per the DNS spec),
  *	convert this character to lower case if it's upper case.
  */
@@ -680,14 +727,15 @@ mklower(int ch) {
 	return (ch);
 }
 
-/*
- * dn_find(domain, msg, dnptrs, lastdnptr)
+/*%
  *	Search for the counted-label name in an array of compressed names.
+ *
  * return:
- *	offset from msg if found, or -1.
+ *\li	offset from msg if found, or -1.
+ *
  * notes:
- *	dnptrs is the pointer to the first name on the list,
- *	not the pointer to the start of the message.
+ *\li	dnptrs is the pointer to the first name on the list,
+ *\li	not the pointer to the start of the message.
  */
 static int
 dn_find(const u_char *domain, const u_char *msg,
@@ -715,9 +763,11 @@ dn_find(const u_char *domain, const u_char *msg,
 				 * check for indirection
 				 */
 				switch (n & NS_CMPRSFLGS) {
-				case 0:		/* normal case, n == len */
+				case 0:		/*%< normal case, n == len */
+					n = labellen(cp - 1); /*%< XXX */
 					if (n != *dn++)
 						goto next;
+
 					for ((void)NULL; n > 0; n--)
 						if (mklower(*dn++) !=
 						    mklower(*cp++))
@@ -728,20 +778,197 @@ dn_find(const u_char *domain, const u_char *msg,
 					if (*dn)
 						continue;
 					goto next;
-
-				case NS_CMPRSFLGS:	/* indirection */
+				case NS_CMPRSFLGS:	/*%< indirection */
 					cp = msg + (((n & 0x3f) << 8) | *cp);
 					break;
 
-				default:	/* illegal type */
+				default:	/*%< illegal type */
 					__set_errno (EMSGSIZE);
 					return (-1);
 				}
 			}
- next:
+  next: ;
 			sp += *sp + 1;
 		}
 	}
 	__set_errno (ENOENT);
 	return (-1);
 }
+
+static int
+decode_bitstring(const unsigned char **cpp, char *dn, const char *eom)
+{
+	const unsigned char *cp = *cpp;
+	char *beg = dn, tc;
+	int b, blen, plen, i;
+
+	if ((blen = (*cp & 0xff)) == 0)
+		blen = 256;
+	plen = (blen + 3) / 4;
+	plen += sizeof("\\[x/]") + (blen > 99 ? 3 : (blen > 9) ? 2 : 1);
+	if (dn + plen >= eom)
+		return(-1);
+
+	cp++;
+	i = SPRINTF((dn, "\\[x"));
+	if (i < 0)
+		return (-1);
+	dn += i;
+	for (b = blen; b > 7; b -= 8, cp++) {
+		i = SPRINTF((dn, "%02x", *cp & 0xff));
+		if (i < 0)
+			return (-1);
+		dn += i;
+	}
+	if (b > 4) {
+		tc = *cp++;
+		i = SPRINTF((dn, "%02x", tc & (0xff << (8 - b))));
+		if (i < 0)
+			return (-1);
+		dn += i;
+	} else if (b > 0) {
+		tc = *cp++;
+		i = SPRINTF((dn, "%1x",
+			       ((tc >> 4) & 0x0f) & (0x0f << (4 - b))));
+		if (i < 0)
+			return (-1);
+		dn += i;
+	}
+	i = SPRINTF((dn, "/%d]", blen));
+	if (i < 0)
+		return (-1);
+	dn += i;
+
+	*cpp = cp;
+	return(dn - beg);
+}
+
+static int
+encode_bitstring(const char **bp, const char *end, unsigned char **labelp,
+		 unsigned char ** dst, unsigned const char *eom)
+{
+	int afterslash = 0;
+	const char *cp = *bp;
+	unsigned char *tp;
+	char c;
+	const char *beg_blen;
+	char *end_blen = NULL;
+	int value = 0, count = 0, tbcount = 0, blen = 0;
+
+	beg_blen = end_blen = NULL;
+
+	/* a bitstring must contain at least 2 characters */
+	if (end - cp < 2)
+		return(EINVAL);
+
+	/* XXX: currently, only hex strings are supported */
+	if (*cp++ != 'x')
+		return(EINVAL);
+	if (!isxdigit((*cp) & 0xff)) /*%< reject '\[x/BLEN]' */
+		return(EINVAL);
+
+	for (tp = *dst + 1; cp < end && tp < eom; cp++) {
+		switch((c = *cp)) {
+		case ']':	/*%< end of the bitstring */
+			if (afterslash) {
+				if (beg_blen == NULL)
+					return(EINVAL);
+				blen = (int)strtol(beg_blen, &end_blen, 10);
+				if (*end_blen != ']')
+					return(EINVAL);
+			}
+			if (count)
+				*tp++ = ((value << 4) & 0xff);
+			cp++;	/*%< skip ']' */
+			goto done;
+		case '/':
+			afterslash = 1;
+			break;
+		default:
+			if (afterslash) {
+				if (!isdigit(c&0xff))
+					return(EINVAL);
+				if (beg_blen == NULL) {
+
+					if (c == '0') {
+						/* blen never begings with 0 */
+						return(EINVAL);
+					}
+					beg_blen = cp;
+				}
+			} else {
+				if (!isxdigit(c&0xff))
+					return(EINVAL);
+				value <<= 4;
+				value += digitvalue[(int)c];
+				count += 4;
+				tbcount += 4;
+				if (tbcount > 256)
+					return(EINVAL);
+				if (count == 8) {
+					*tp++ = value;
+					count = 0;
+				}
+			}
+			break;
+		}
+	}
+  done:
+	if (cp >= end || tp >= eom)
+		return(EMSGSIZE);
+
+	/*
+	 * bit length validation:
+	 * If a <length> is present, the number of digits in the <bit-data>
+	 * MUST be just sufficient to contain the number of bits specified
+	 * by the <length>. If there are insignificant bits in a final
+	 * hexadecimal or octal digit, they MUST be zero.
+	 * RFC2673, Section 3.2.
+	 */
+	if (blen > 0) {
+		int traillen;
+
+		if (((blen + 3) & ~3) != tbcount)
+			return(EINVAL);
+		traillen = tbcount - blen; /*%< between 0 and 3 */
+		if (((value << (8 - traillen)) & 0xff) != 0)
+			return(EINVAL);
+	}
+	else
+		blen = tbcount;
+	if (blen == 256)
+		blen = 0;
+
+	/* encode the type and the significant bit fields */
+	**labelp = DNS_LABELTYPE_BITSTRING;
+	**dst = blen;
+
+	*bp = cp;
+	*dst = tp;
+
+	return(0);
+}
+
+static int
+labellen(const u_char *lp)
+{
+	int bitlen;
+	u_char l = *lp;
+
+	if ((l & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
+		/* should be avoided by the caller */
+		return(-1);
+	}
+
+	if ((l & NS_CMPRSFLGS) == NS_TYPE_ELT) {
+		if (l == DNS_LABELTYPE_BITSTRING) {
+			if ((bitlen = *(lp + 1)) == 0)
+				bitlen = 256;
+			return((bitlen + 7 ) / 8 + 1);
+		}
+		return(-1);	/*%< unknwon ELT */
+	}
+	return(l);
+}
+
+/*! \file */

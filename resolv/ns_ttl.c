@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -88,8 +89,8 @@ ns_format_ttl(u_long src, char *dst, size_t dstlen) {
 
 	return (dst - odst);
 }
+libresolv_hidden_def (ns_format_ttl)
 
-#ifndef SHARED
 // Seems not to be needed.  It's not exported from the DSO.  Some libresolv.a
 // might depend on it so we let it in.
 int
@@ -132,7 +133,8 @@ ns_parse_ttl(const char *src, u_long *dst) {
 			goto einval;
 		else
 			ttl += tmp;
-	}
+	} else if (!dirty)
+		goto einval;
 	*dst = ttl;
 	return (0);
 
@@ -140,7 +142,6 @@ ns_parse_ttl(const char *src, u_long *dst) {
 	__set_errno (EINVAL);
 	return (-1);
 }
-#endif
 
 /* Private. */
 
@@ -157,3 +158,5 @@ fmt1(int t, char s, char **buf, size_t *buflen) {
 	*buflen -= len;
 	return (0);
 }
+
+/*! \file */

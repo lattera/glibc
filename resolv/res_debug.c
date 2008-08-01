@@ -1024,6 +1024,7 @@ dn_count_labels(const char *name) {
 		count++;
 	return (count);
 }
+libresolv_hidden_def (__dn_count_labels)
 
 
 /*
@@ -1051,3 +1052,4 @@ p_secstodate (u_long secs) {
 		time->tm_hour, time->tm_min, time->tm_sec);
 	return (output);
 }
+libresolv_hidden_def (__p_secstodate)

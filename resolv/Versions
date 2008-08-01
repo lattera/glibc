@@ -74,6 +74,19 @@ libresolv {
   GLIBC_2.3.2 {
     __p_rcode;
   }
+  GLIBC_2.9 {
+    ns_msg_getflag;
+    ns_get16; ns_get32; ns_put16; ns_put32;
+    ns_initparse; ns_skiprr; ns_parserr;
+    ns_sprintrr; ns_sprintrrf;
+    ns_format_ttl; ns_parse_ttl;
+    ns_datetosecs;
+    ns_name_ntol; ns_name_ntop; ns_name_pton;
+    ns_name_unpack; ns_name_pack;
+    ns_name_uncompress; ns_name_compress;
+    ns_name_skip; ns_name_rollback;
+    ns_samedomain; ns_subdomain; ns_makecanon; ns_samename;
+  }
   GLIBC_PRIVATE {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;
