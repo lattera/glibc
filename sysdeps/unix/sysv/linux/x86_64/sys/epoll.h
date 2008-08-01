@@ -31,6 +31,16 @@ typedef __sigset_t sigset_t;
 #endif
 
 
+/* Flags to be passed to epoll_create2.  */
+enum
+  {
+    EPOLL_CLOEXEC = 02000000,
+#define EPOLL_CLOEXEC EPOLL_CLOEXEC
+    EPOLL_NONBLOCK = 04000
+#define EPOLL_NONBLOCK EPOLL_NONBLOCK
+  };
+
+
 enum EPOLL_EVENTS
   {
     EPOLLIN = 0x001,
@@ -90,6 +100,10 @@ __BEGIN_DECLS
    descriptors to be associated with the new instance.  The fd
    returned by epoll_create() should be closed with close().  */
 extern int epoll_create (int __size) __THROW;
+
+/* Same as epoll_create but with an FLAGS parameter.  The unused SIZE
+   parameter has been dropped.  */
+extern int epoll_create1 (int __flags) __THROW;
 
 
 /* Manipulate an epoll instance "epfd". Returns 0 in case of success,

@@ -136,7 +136,7 @@ libc {
     timerfd_create; timerfd_settime; timerfd_gettime;
   }
   GLIBC_2.9 {
-    epoll_create2; inotify_init1;
+    epoll_create1; inotify_init1;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
