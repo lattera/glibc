@@ -1,5 +1,10 @@
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): We cannot
+	use the AT_EXECFN value if it is no absolute path.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Never define
+	__ASSUME_AT_EXECFN.
+
 	* Versions.def: Add GLIBC_2.9 to libresolv.
 	* include/resolv.h: Remove hidden proto declarations for __ns_*
 	functions.  Add them for __dn_count_labels and __p_secstodate.

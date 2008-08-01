@@ -35,16 +35,13 @@
 const char *
 _dl_get_origin (void)
 {
-#ifndef __ASSUME_AT_EXECFN
   char linkval[PATH_MAX];
-#endif
   const char *str;
   char *result = (char *) -1l;
   int len;
 
   str = GLRO(dl_execfn);
-#ifndef __ASSUME_AT_EXECFN
-  if (str == NULL)
+  if (str == NULL || str[0] != '/')
     {
       INTERNAL_SYSCALL_DECL (err);
 
@@ -53,12 +50,12 @@ _dl_get_origin (void)
       if (! INTERNAL_SYSCALL_ERROR_P (len, err)
 	  && len > 0 && linkval[0] != '[')
 	str = linkval;
+      else
+	str = NULL;
     }
   else
-#endif
     len = strlen (str);
 
-#ifndef __ASSUME_AT_EXECFN
   if (str == NULL)
     {
       /* We use the environment variable LD_ORIGIN_PATH.  If it is set make
@@ -79,7 +76,6 @@ _dl_get_origin (void)
 	}
     }
   else
-#endif
     {
       /* We can use this value.  */
       assert (str[0] == '/');
