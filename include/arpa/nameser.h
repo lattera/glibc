@@ -1,3 +1,5 @@
+#ifndef _ARPA_NAMESER_H_
+
 #include <resolv/arpa/nameser.h>
 
 /* If the machine allows unaligned access we can do better than using
@@ -14,7 +16,7 @@ extern const struct _ns_flagdata _ns_flagdata[] attribute_hidden;
 # undef NS_GET16
 # define NS_GET16(s, cp) \
   do {									      \
-    uint16_t *t_cp = (uint16_t *) (cp);					      \
+    const uint16_t *t_cp = (const uint16_t *) (cp);			      \
     (s) = ntohs (*t_cp);						      \
     (cp) += NS_INT16SZ;							      \
   } while (0)
@@ -22,7 +24,7 @@ extern const struct _ns_flagdata _ns_flagdata[] attribute_hidden;
 # undef NS_GET32
 # define NS_GET32(l, cp) \
   do {									      \
-    uint32_t *t_cp = (uint32_t *) (cp);					      \
+    const uint32_t *t_cp = (const uint32_t *) (cp);			      \
     (l) = ntohl (*t_cp);						      \
     (cp) += NS_INT32SZ;							      \
   } while (0)
@@ -71,3 +73,5 @@ libresolv_hidden_proto (ns_samedomain)
 libresolv_hidden_proto (ns_samename)
 libresolv_hidden_proto (ns_makecanon)
 libresolv_hidden_proto (ns_format_ttl)
+
+#endif

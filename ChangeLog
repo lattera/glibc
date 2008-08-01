@@ -1,5 +1,8 @@
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/arpa/nameser.h (NS_GET16): Use const pointer.
+	(NS_GET32): Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: s390 has the new
 	syscalls, too.
 
