@@ -1,3 +1,8 @@
+2008-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/clock_getres.c (hp_timing_getres): Remove inline
+	to prevent warning.
+
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Versions: Fix changes due to old patch for
