@@ -418,7 +418,7 @@ This function returns @code{-1} if @var{x} represents negative infinity,
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.
 
-@strong{Note:} The @code{isnan} macro defined by @w{ISO C99} overrides
+@strong{NB:} The @code{isnan} macro defined by @w{ISO C99} overrides
 the BSD function.  This is normally not a problem, because the two
 routines behave identically.  However, if you really need to get the BSD
 function for some reason, you can write
@@ -968,7 +968,7 @@ decide whether traps will occur for each of the exceptions, by setting
 bits in the @dfn{control word}.  In C, traps result in the program
 receiving the @code{SIGFPE} signal; see @ref{Signal Handling}.
 
-@strong{Note:} @w{IEEE 754} says that trap handlers are given details of
+@strong{NB:} @w{IEEE 754} says that trap handlers are given details of
 the exceptional situation, and can set the result value.  C signals do
 not provide any mechanism to pass this information back and forth.
 Trapping exceptions in C is therefore not very useful.
@@ -1721,7 +1721,7 @@ Not all machines provide hardware support for these operations.  On
 machines that don't, the macros can be very slow.  Therefore, you should
 not use these functions when NaN is not a concern.
 
-@strong{Note:} There are no macros @code{isequal} or @code{isunequal}.
+@strong{NB:} There are no macros @code{isequal} or @code{isunequal}.
 They are unnecessary, because the @code{==} and @code{!=} operators do
 @emph{not} throw an exception if one or both of the operands are NaN.
 

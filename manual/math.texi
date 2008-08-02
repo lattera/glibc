@@ -1366,7 +1366,7 @@ The prototypes for these functions are in @file{stdlib.h}.
 This function returns the next pseudo-random number in the sequence.
 The value returned ranges from @code{0} to @code{RAND_MAX}.
 
-@strong{Note:} Temporarily this function was defined to return a
+@strong{NB:} Temporarily this function was defined to return a
 @code{int32_t} value to indicate that the return value always contains
 32 bits even if @code{long int} is wider.  The standard demands it
 differently.  Users must always be aware of the 32-bit limitation,

@@ -1652,7 +1652,7 @@ The seconds as a decimal number (range @code{0} through @code{60}).
 
 Leading zeroes are permitted but not required.
 
-@strong{Note:} The Unix specification says the upper bound on this value
+@strong{NB:} The Unix specification says the upper bound on this value
 is @code{61}, a result of a decision to allow double leap seconds.  You
 will not see the value @code{61} because no minute has more than one
 leap second, but the myth persists.

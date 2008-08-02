@@ -217,7 +217,7 @@ sequence of definitions:
 
 Note that if you do this, you must link your program with the BSD
 compatibility library by passing the @samp{-lbsd-compat} option to the
-compiler or linker.  @strong{Note:} If you forget to do this, you may
+compiler or linker.  @strong{NB:} If you forget to do this, you may
 get very strange errors at run time.
 @end defvr
 

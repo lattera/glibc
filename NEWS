@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-8-1
+GNU C Library NEWS -- history of user-visible changes.  2008-8-2
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -30,6 +30,9 @@ Version 2.9
 
 * Many functions, exported and internal, now atomically set the close-on-exec
   flag when run on a sufficiently new kernel.  Implemented by Ulrich Drepper.
+
+* Sorting rules for some Indian languages (Kannada, Gurumukhi, Telugu)
+  Implemented by Pravin Satpute.
 
 Version 2.8
 

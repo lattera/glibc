@@ -2326,7 +2326,7 @@ additional block on each iteration.  This is impossible with
 variable-sized arrays.
 @end itemize
 
-@strong{Note:} If you mix use of @code{alloca} and variable-sized arrays
+@strong{NB:} If you mix use of @code{alloca} and variable-sized arrays
 within one function, exiting a scope in which a variable-sized array was
 declared frees all blocks allocated with @code{alloca} during the
 execution of that scope.

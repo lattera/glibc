@@ -337,7 +337,7 @@ Locally defined
 
 Results are undefined if the facility code is anything else.
 
-@strong{note:} @code{syslog} recognizes one other facility code: that of
+@strong{NB:} @code{syslog} recognizes one other facility code: that of
 the kernel.  But you can't specify that facility code with these
 functions.  If you try, it looks the same to @code{syslog} as if you are
 requesting the default facility.  But you wouldn't want to anyway,

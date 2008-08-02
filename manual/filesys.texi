@@ -3239,7 +3239,7 @@ are replaced with six characters which make the whole string a unique
 file name.  Usually the template string is something like
 @samp{/tmp/@var{prefix}XXXXXX}, and each program uses a unique @var{prefix}.
 
-@strong{Note:} Because @code{mktemp} and @code{mkstemp} modify the
+@strong{NB:} Because @code{mktemp} and @code{mkstemp} modify the
 template string, you @emph{must not} pass string constants to them.
 String constants are normally in read-only storage, so your program
 would crash when @code{mktemp} or @code{mkstemp} tried to modify the
