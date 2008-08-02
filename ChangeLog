@@ -1,3 +1,8 @@
+2008-08-02  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
+	Add memory clobbers.
+
 2008-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/arith.texi: Avoid @strong{Note:}.
