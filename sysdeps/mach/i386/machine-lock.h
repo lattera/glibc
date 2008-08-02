@@ -1,5 +1,5 @@
 /* Machine-specific definition for spin locks.  i386 version.
-   Copyright (C) 1994, 1997, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1994,1997,2007,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,8 @@ __spin_unlock (__spin_lock_t *__lock)
 {
    register int __unlocked;
    __asm__ __volatile ("xchgl %0, %1"
-		       : "=&r" (__unlocked), "=m" (*__lock) : "0" (0));
+		       : "=&r" (__unlocked), "=m" (*__lock) : "0" (0)
+		       : : "memory");
 }
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
@@ -50,7 +51,8 @@ __spin_try_lock (__spin_lock_t *__lock)
 {
   register int __locked;
   __asm__ __volatile ("xchgl %0, %1"
-		      : "=&r" (__locked), "=m" (*__lock) : "0" (1));
+		      : "=&r" (__locked), "=m" (*__lock) : "0" (1)
+		      : : "memory");
   return !__locked;
 }
 
