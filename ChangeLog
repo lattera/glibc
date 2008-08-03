@@ -1,3 +1,10 @@
+2008-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_poll): Pass a buffer which is
+	guaranteed to be large enough to read inotify event.  Ignore
+	EAGAIN error.  Better error message.  Add branch predicition.
+	(main_loop_epoll): Likewise.
+
 2008-08-02  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
