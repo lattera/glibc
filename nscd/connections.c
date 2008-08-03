@@ -1868,8 +1868,11 @@ main_loop_poll (void)
 		  bool to_clear[lastdb] = { false, };
 		  union
 		  {
+# ifndef PATH_MAX
+#  define PATH_MAX 1024
+# endif
 		    struct inotify_event i;
-		    char buf[100];
+		    char buf[sizeof (struct inotify_event) + PATH_MAX];
 		  } inev;
 
 		  while (1)
@@ -1878,17 +1881,20 @@ main_loop_poll (void)
 							     sizeof (inev)));
 		      if (nb < (ssize_t) sizeof (struct inotify_event))
 			{
-			  if (nb == -1)
+			  if (__builtin_expect (nb == -1 && errno != EAGAIN,
+						0))
 			    {
 			      /* Something went wrong when reading the inotify
 				 data.  Better disable inotify.  */
+			      dbg_log (_("\
+disabled inotify after read error %d"),
+				       errno);
 			      conns[1].fd = -1;
 			      firstfree = 1;
 			      if (nused == 2)
 				nused = 1;
 			      close (inotify_fd);
 			      inotify_fd = -1;
-			      dbg_log (_("disabled inotify after read error"));
 			    }
 			  break;
 			}
@@ -2047,7 +2053,7 @@ main_loop_epoll (int efd)
 	    union
 	    {
 	      struct inotify_event i;
-	      char buf[100];
+	      char buf[sizeof (struct inotify_event) + PATH_MAX];
 	    } inev;
 
 	    while (1)
@@ -2056,15 +2062,16 @@ main_loop_epoll (int efd)
 				 		 sizeof (inev)));
 		if (nb < (ssize_t) sizeof (struct inotify_event))
 		  {
-		    if (nb == -1)
+		    if (__builtin_expect (nb == -1 && errno != EAGAIN, 0))
 		      {
 			/* Something went wrong when reading the inotify
 			   data.  Better disable inotify.  */
+			dbg_log (_("disabled inotify after read error %d"),
+				 errno);
 			(void) epoll_ctl (efd, EPOLL_CTL_DEL, inotify_fd,
 					  NULL);
 			close (inotify_fd);
 			inotify_fd = -1;
-			dbg_log (_("disabled inotify after read error"));
 		      }
 		    break;
 		  }
