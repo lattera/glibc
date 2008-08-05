@@ -1,3 +1,10 @@
+2008-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/s_expm1l.S: Simply use exp implementation for large
+	parameters.
+	* sysdeps/x86_64/fpu/s_expm1l.S: Likewise.
+	Patch by Denys Vlasenko <dvlasenk@redhat.com>.
+
 2008-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (main_loop_poll): Pass a buffer which is
@@ -83,7 +90,7 @@
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Raise size of initial
 	buffer passed to NSS functions.
 
-	* nscd/connections.c (nscd_init): Type if preprocessor directive.
+	* nscd/connections.c (nscd_init): Typo in preprocessor directive.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PACCEPT):
 	Define.

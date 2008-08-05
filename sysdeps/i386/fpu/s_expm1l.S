@@ -1,5 +1,5 @@
 /* ix87 specific implementation of exp(x)-1.
-   Copyright (C) 1996, 1997, 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2002, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
    Based on code by John C. Bowman <bowman@ipp-garching.mpg.de>.
@@ -48,6 +48,11 @@ l2e:	.tfloat 1.442695040888963407359924681002
 
 	.text
 ENTRY(__expm1l)
+	movzwl	4+8(%esp), %eax	// load sign bit and 15-bit exponent
+	xorb	$0x80, %ah	// invert sign bit (now 1 is "positive")
+	cmpl	$0xc006, %eax	// is num positive and exp >= 6 (number is >= 128.0)?
+	jae     __ieee754_expl	// (if num is denormal, it is at least >= 64.0)
+
 	fldt	4(%esp)		// x
 	fxam			// Is NaN or +-Inf?
 	fstsw	%ax

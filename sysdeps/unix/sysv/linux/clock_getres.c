@@ -1,5 +1,5 @@
 /* clock_getres -- Get the resolution of a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2005,2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ maybe_syscall_getres_cpu (clockid_t clock_id, struct timespec *res)
 	return 0;
 
       e = INTERNAL_SYSCALL_ERRNO (r, err);
-# ifndef __ASSUME_POSIX_TIMERS
+#  ifndef __ASSUME_POSIX_TIMERS
       if (e == ENOSYS)
 	{
 	  __libc_missing_posix_timers = 1;
@@ -129,7 +129,7 @@ maybe_syscall_getres_cpu (clockid_t clock_id, struct timespec *res)
 	  e = EINVAL;
 	}
       else
-# endif
+#  endif
 	{
 	  if (e == EINVAL)
 	    {
