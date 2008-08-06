@@ -16,12 +16,20 @@ NF >= 1 && !started {
   if (test) {
     print "\n#include <inttypes.h>";
     print "\n#include <stdio.h>";
+    print "\n#if __WORDSIZE__ == 64";
+    print "\ntypedef uint64_t c_t;";
     print "\n#define U(n) UINT64_C (n)";
+    print "\n#define PRI PRId64";
+    print "\n#else";
+    print "\ntypedef uint32_t c_t;";
+    print "\n#define U(n) UINT32_C (n)";
+    print "\n#define PRI PRId32";
+    print "\n#endif";
     print "\nstatic int do_test (void)\n{\n  int bad = 0, good = 0;\n";
     print "#define TEST(name, source, expr) \\\n" \
-      "  if (U (asconst_##name) != (uint64_t) (expr)) { ++bad;" \
-      " fprintf (stderr, \"%s: %s is %\" PRId64 \" but %s is %\"PRId64 \"\\n\"," \
-      " source, #name, U (asconst_##name), #expr, (uint64_t) (expr));" \
+      "  if (U (asconst_##name) != (c_t) (expr)) { ++bad;" \
+      " fprintf (stderr, \"%s: %s is %\" PRI \" but %s is %\"PRI \"\\n\"," \
+      " source, #name, U (asconst_##name), #expr, (c_t) (expr));" \
       " } else ++good;\n";
   }
   else
