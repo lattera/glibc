@@ -1,3 +1,12 @@
+2008-08-07  Helge Deller  <deller@gmx.de>
+
+	* sysdeps/unix/sysv/linux/hppa/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/hppa/Makefile: New file.
+	* sysdeps/unix/sysv/linux/hppa/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/hppa/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/hppa/swapcontext.c: New file.
+
 2008-06-17  Aurelian Jarno  <aurelien@aurel32.net>
 	    Carlos O'Donell  <carlos@systemhalted.org>
 
