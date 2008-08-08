@@ -10,8 +10,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (PROT_SAO): Define.
 
 2008-08-01  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+	    Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	[BZ #6817]
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags):
