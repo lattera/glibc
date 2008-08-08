@@ -70,6 +70,7 @@
 #define IP_PMTUDISC_DONT   0	/* Never send DF frames.  */
 #define IP_PMTUDISC_WANT   1	/* Use per route hints.  */
 #define IP_PMTUDISC_DO     2	/* Always DF.  */
+#define IP_PMTUDISC_PROBE  3	/* Ignore dst pmtu.  */
 
 /* To select the IP level.  */
 #define SOL_IP	0
@@ -162,6 +163,7 @@ struct in_pktinfo
 #define IPV6_PMTUDISC_DONT	0	/* Never send DF frames.  */
 #define IPV6_PMTUDISC_WANT	1	/* Use per route hints.  */
 #define IPV6_PMTUDISC_DO	2	/* Always DF.  */
+#define IPV6_PMTUDISC_PROBE	3	/* Ignore dst pmtu.  */
 
 /* Socket level values for IPv6.  */
 #define SOL_IPV6        41
