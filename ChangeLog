@@ -1,3 +1,19 @@
+2008-08-01  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	[BZ #6817]
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags):
+	Added the members 'vsx' and 'arch_2_06'.
+	(_dl_powerpc_platforms): Add the member 'power7'.
+	* sysdeps/powerpc/dl-procinfo.h: Modify _DL_HWCAP_FIRST
+	to reflect the changes required by VSX and ISA 2.06.
+	Modify _DL_PLATFORMS_COUNT to reflect the addition of
+	'power7'.
+	Defined PPC_PLATFORM_POWER7.
+	(_dl_string_platform): Add support for POWER7.
+	* sysdeps/powerpc/sysdep.h: Define bit masks for VSX
+	capability and ISA 2.06.
+
 2008-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6824]

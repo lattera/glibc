@@ -44,6 +44,8 @@
 #define PPC_FEATURE_PA6T		0x00000800 /* PA Semi 6T Core */
 #define PPC_FEATURE_HAS_DFP		0x00000400 /* Decimal FP Unit */
 #define PPC_FEATURE_POWER6_EXT		0x00000200 /* P6 + mffgpr/mftgpr */
+#define PPC_FEATURE_HAS_VSX		0x00000100 /* P7 Vector Extension.  */
+#define PPC_FEATURE_ARCH_2_06	        0x00000080 /* ISA 2.06 */
 #define PPC_FEATURE_970 (PPC_FEATURE_POWER4 + PPC_FEATURE_HAS_ALTIVEC)
 
 #ifdef __ASSEMBLER__

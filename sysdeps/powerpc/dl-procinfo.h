@@ -23,15 +23,15 @@
 #include <ldsodefs.h>
 #include <sysdep.h>		/* This defines the PPC_FEATURE_* macros.  */
 
-/* There are 20 bits used, but they are bits 12..31.  */
-#define _DL_HWCAP_FIRST		9
+/* There are 25 bits used, but they are bits 7..31.  */
+#define _DL_HWCAP_FIRST		7
 #define _DL_HWCAP_COUNT		32
 
 /* These bits influence library search.  */
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
 				+ PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT	7
+#define _DL_PLATFORMS_COUNT	8
 
 #define _DL_FIRST_PLATFORM      32
 /* Mask to filter out platforms.  */
@@ -46,6 +46,7 @@
 #define PPC_PLATFORM_POWER6		4
 #define PPC_PLATFORM_CELL_BE		5
 #define PPC_PLATFORM_POWER6X		6
+#define PPC_PLATFORM_POWER7		7
 
 static inline const char *
 __attribute__ ((unused))
@@ -102,6 +103,9 @@ _dl_string_platform (const char *str)
 	      ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER6X;
 	      ++str;
 	    }
+	  break;
+	case '7':
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER7;
 	  break;
 	default:
 	  return -1;
