@@ -1,5 +1,5 @@
 /* Definitions of inline math functions implemented by the m68881/2.
-   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002, 2003, 2004
+   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002, 2003, 2004, 2008
      Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,16 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+#ifndef _MATH_H
+# error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+#endif
+
+#ifndef __extern_inline
+# define __MATH_INLINE __inline
+#else
+# define __MATH_INLINE __extern_inline
+#endif
 
 #ifdef	__GNUC__
 
@@ -89,11 +99,7 @@
 # define __m81_inline		static __inline
 #else
 # define __m81_u(x)		x
-# ifdef __cplusplus
-#  define __m81_inline		__inline
-# else
-#  define __m81_inline		extern __inline
-# endif
+# define __m81_inline __MATH_INLINE
 # define __M81_MATH_INLINES	1
 #endif
 
@@ -351,14 +357,14 @@ __inline_functions (long double,l)
 /* Note that there must be no whitespace before the argument passed for
    NAME, to make token pasting work correctly with -traditional.  */
 # define __inline_forward_c(rettype, name, args1, args2)	\
-extern __inline rettype __attribute__((__const__))		\
+__MATH_INLINE rettype __attribute__((__const__))		\
   name args1							\
 {								\
   return __CONCAT(__,name) args2;				\
 }
 
 # define __inline_forward(rettype, name, args1, args2)	\
-extern __inline rettype name args1			\
+__MATH_INLINE rettype name args1			\
 {							\
   return __CONCAT(__,name) args2;			\
 }

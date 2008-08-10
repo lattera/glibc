@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/m68k version.
-   Copyright (C) 1997, 2000, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,6 +88,7 @@
 # define MADV_SEQUENTIAL 2	/* Expect sequential page references.  */
 # define MADV_WILLNEED	 3	/* Will need these pages.  */
 # define MADV_DONTNEED	 4	/* Don't need these pages.  */
+# define MADV_REMOVE	 9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
 # define MADV_DOFORK	 11	/* Do inherit across fork.  */
 #endif

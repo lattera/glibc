@@ -1,3 +1,29 @@
+2008-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/m68k/bits/byteswap.h: Allow inclusion from <endian.h>.
+	(__bswap_constant_16): Define.
+	(__bswap_16): Allow arguments with side effects.
+	(__bswap_constant_32): Ensure result is unsigned.
+	(__bswap_32): Define as inline function in fallback case.
+	(__bswap_constant_64): Define.
+	(__bswap_64): Use it for constant arguments.
+	* sysdeps/m68k/bits/setjmp.h (__jmp_buf): Give name to structure
+	type.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: Only allow inclusion
+	from <math.h>.  Do not use extern inline directly.
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Include <bits/uio.h>.
+	(O_CLOEXEC, SYNC_FILE_RANGE_WAIT_BEFORE, SYNC_FILE_RANGE_WRITE,
+	SYNC_FILE_RANGE_WAIT_AFTER, SPLICE_F_MOVE, SPLICE_F_NONBLOCK,
+	SPLICE_F_MORE, SPLICE_F_GIFT): Define.
+	(sync_file_range, vmsplice, splice, tee): Declare.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h (MADV_REMOVE): Define.
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h (POLLMSG, POLLREMOVE,
+	POLLRDHUP): Define.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h (UTIME_NOW,
+	UTIME_OMIT): Define.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h: New.
+	* sysdeps/unix/sysv/linux/m68k/sys/user.h: New.
+
 2008-03-28  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	Explicitly get address of _DYNAMIC.
