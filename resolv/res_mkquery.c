@@ -160,7 +160,10 @@ res_nmkquery(res_state statp,
 		if ((buflen -= QFIXEDSZ) < 0)
 			return (-1);
 	compose:
-		if ((n = dn_comp(dname, cp, buflen, dnptrs, lastdnptr)) < 0)
+		n = ns_name_compress(dname, cp, buflen,
+				     (const u_char **) dnptrs,
+				     (const u_char **) lastdnptr);
+		if (n < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
@@ -172,7 +175,9 @@ res_nmkquery(res_state statp,
 		/*
 		 * Make an additional record for completion domain.
 		 */
-		n = dn_comp((char *)data, cp, buflen, dnptrs, lastdnptr);
+		n = ns_name_compress((char *)data, cp, buflen,
+				     (const u_char **) dnptrs,
+				     (const u_char **) lastdnptr);
 		if (__builtin_expect (n < 0, 0))
 			return (-1);
 		cp += n;
