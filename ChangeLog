@@ -1,3 +1,8 @@
+2008-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Call ns_name_compress
+	directly instead of going through dn_comp.
+
 2008-08-11  Aurelien Jarno  <aurel32@debian.org>
 
 	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
