@@ -41,7 +41,7 @@ __spin_unlock (__spin_lock_t *__lock)
    register int __unlocked;
    __asm__ __volatile ("xchgl %0, %1"
 		       : "=&r" (__unlocked), "=m" (*__lock) : "0" (0)
-		       : : "memory");
+		       : "memory");
 }
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
@@ -52,7 +52,7 @@ __spin_try_lock (__spin_lock_t *__lock)
   register int __locked;
   __asm__ __volatile ("xchgl %0, %1"
 		      : "=&r" (__locked), "=m" (*__lock) : "0" (1)
-		      : : "memory");
+		      : "memory");
   return !__locked;
 }
 
