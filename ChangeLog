@@ -1,3 +1,8 @@
+2008-08-11  Aurelien Jarno  <aurel32@debian.org>
+
+	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
+	Fix asm constraints.
+
 2008-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6790]
