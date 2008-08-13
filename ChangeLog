@@ -1,3 +1,9 @@
+2008-08-12  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Avoid -Wparenthesis triggers,
+	in case used outside of libc.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>
+
 2008-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_mkquery.c (res_nmkquery): Call ns_name_compress
