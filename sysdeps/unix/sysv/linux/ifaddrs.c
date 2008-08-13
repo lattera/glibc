@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,22 @@ int __no_netlink_support attribute_hidden;
 #endif
 
 
+/* There is a problem with this type.  The address length for
+   Infiniband sockets is much longer than the 8 bytes allocated in the
+   sockaddr_ll definition.  Hence we use here a special
+   definition.  */
+struct sockaddr_ll_max
+  {
+    unsigned short int sll_family;
+    unsigned short int sll_protocol;
+    int sll_ifindex;
+    unsigned short int sll_hatype;
+    unsigned char sll_pkttype;
+    unsigned char sll_halen;
+    unsigned char sll_addr[24];
+  };
+
+
 /* struct to hold the data for one ifaddrs entry, so we can allocate
    everything at once.  */
 struct ifaddrs_storage
@@ -59,7 +75,7 @@ struct ifaddrs_storage
     /* Save space for the biggest of the four used sockaddr types and
        avoid a lot of casts.  */
     struct sockaddr sa;
-    struct sockaddr_ll sl;
+    struct sockaddr_ll_max sl;
     struct sockaddr_in s4;
     struct sockaddr_in6 s6;
   } addr, netmask, broadaddr;
@@ -307,7 +323,7 @@ map_newlink (int index, struct ifaddrs_storage *ifas, int *map, int max)
 
 /* Create a linked list of `struct ifaddrs' structures, one for each
    network interface on the host machine.  If successful, store the
-   list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
+   list in *IFAP and 2004, 2005, 2006, return 0.  On errors, return -1 and set `errno'.  */
 int
 getifaddrs (struct ifaddrs **ifap)
 {

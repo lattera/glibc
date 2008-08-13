@@ -1,3 +1,10 @@
+2008-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6589]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (struct sockaddr_ll_max):
+	Define.
+	(struct ifaddrs_storage): Use it instead of sockaddr_ll.
+
 2008-08-12  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #6839]
