@@ -1,3 +1,9 @@
+2008-08-12  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6839]
+	* sysdeps/powerpc/powerpc32/dl-machine.c (CHECK_STATIC_TLS): Remove
+	macro since it is now available in elf/dynamic-link.h.
+
 2008-08-12  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Avoid -Wparenthesis triggers,
