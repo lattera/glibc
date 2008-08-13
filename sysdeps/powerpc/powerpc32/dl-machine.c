@@ -557,11 +557,6 @@ __process_machine_rela (struct link_map *map,
       }
       break;
 
-#define CHECK_STATIC_TLS(map, sym_map)					      \
-    do {								      \
-      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
-	_dl_allocate_static_tls (sym_map);				      \
-    } while (0)
 #define DO_TLS_RELOC(suffix)						      \
     case R_PPC_DTPREL##suffix:						      \
       /* During relocation all TLS symbols are defined and used.	      \
