@@ -1,5 +1,6 @@
 /* Implementing POSIX.1 signals under the Hurd.
-   Copyright (C) 1993,94,95,96,98,99,2002,2007 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,98,99,2002,2007,2008
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -342,10 +343,12 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
     do									      \
       {									      \
 	/* Get the message port.  */					      \
-	if (__err = (fetch_msgport_expr))				      \
+	__err = (fetch_msgport_expr);					      \
+	if (__err)							      \
 	  break;							      \
 	/* Get the reference port.  */					      \
-	if (__err = (fetch_refport_expr))				      \
+	_err = (fetch_refport_expr);					      \
+	if (__err)							      \
 	  {								      \
 	    /* Couldn't get it; deallocate MSGPORT and fail.  */	      \
 	    __mach_port_deallocate (__mach_task_self (), msgport);	      \
