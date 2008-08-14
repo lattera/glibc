@@ -1,5 +1,7 @@
 2008-08-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/memset.S: Reduce size of tables for PIC.
+
 	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Undo all
 	change related to AT_EXECFN.  We cannot use that string.
 	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove

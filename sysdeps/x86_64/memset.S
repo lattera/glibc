@@ -55,12 +55,14 @@ L(now_dw_aligned):
 	cmp    $0x90,%r8
 	jg     L(ck_mem_ops_method)
 L(now_dw_aligned_small):
-	lea    L(setPxQx)(%rip),%r11
 	add    %r8,%rdi
 #ifndef PIC
+	lea    L(setPxQx)(%rip),%r11
 	jmpq   *(%r11,%r8,8)
 #else
-	movslq (%r11,%r8,4),%rcx
+	lea    L(Got0)(%rip),%r11
+	lea    L(setPxQx)(%rip),%rcx
+	movswq (%rcx,%r8,2),%rcx
 	lea    (%rcx,%r11,1),%r11
 	jmpq   *%r11
 #endif
@@ -115,177 +117,177 @@ L(setPxQx):
 # endif
 #else
 L(setPxQx):
-	.int       L(Got0)-L(setPxQx)
-	.int       L(P1Q0)-L(setPxQx)
-	.int       L(P2Q0)-L(setPxQx)
-	.int       L(P3Q0)-L(setPxQx)
-	.int       L(P4Q0)-L(setPxQx)
-	.int       L(P5Q0)-L(setPxQx)
-	.int       L(P6Q0)-L(setPxQx)
-	.int       L(P7Q0)-L(setPxQx)
+	.short     L(Got0)-L(Got0)
+	.short     L(P1Q0)-L(Got0)
+	.short     L(P2Q0)-L(Got0)
+	.short     L(P3Q0)-L(Got0)
+	.short     L(P4Q0)-L(Got0)
+	.short     L(P5Q0)-L(Got0)
+	.short     L(P6Q0)-L(Got0)
+	.short     L(P7Q0)-L(Got0)
 
-	.int       L(P0Q1)-L(setPxQx)
-	.int       L(P1Q1)-L(setPxQx)
-	.int       L(P2Q1)-L(setPxQx)
-	.int       L(P3Q1)-L(setPxQx)
-	.int       L(P4Q1)-L(setPxQx)
-	.int       L(P5Q1)-L(setPxQx)
-	.int       L(P6Q1)-L(setPxQx)
-	.int       L(P7Q1)-L(setPxQx)
+	.short     L(P0Q1)-L(Got0)
+	.short     L(P1Q1)-L(Got0)
+	.short     L(P2Q1)-L(Got0)
+	.short     L(P3Q1)-L(Got0)
+	.short     L(P4Q1)-L(Got0)
+	.short     L(P5Q1)-L(Got0)
+	.short     L(P6Q1)-L(Got0)
+	.short     L(P7Q1)-L(Got0)
 
-	.int       L(P0Q2)-L(setPxQx)
-	.int       L(P1Q2)-L(setPxQx)
-	.int       L(P2Q2)-L(setPxQx)
-	.int       L(P3Q2)-L(setPxQx)
-	.int       L(P4Q2)-L(setPxQx)
-	.int       L(P5Q2)-L(setPxQx)
-	.int       L(P6Q2)-L(setPxQx)
-	.int       L(P7Q2)-L(setPxQx)
+	.short     L(P0Q2)-L(Got0)
+	.short     L(P1Q2)-L(Got0)
+	.short     L(P2Q2)-L(Got0)
+	.short     L(P3Q2)-L(Got0)
+	.short     L(P4Q2)-L(Got0)
+	.short     L(P5Q2)-L(Got0)
+	.short     L(P6Q2)-L(Got0)
+	.short     L(P7Q2)-L(Got0)
 
-	.int       L(P0Q3)-L(setPxQx)
-	.int       L(P1Q3)-L(setPxQx)
-	.int       L(P2Q3)-L(setPxQx)
-	.int       L(P3Q3)-L(setPxQx)
-	.int       L(P4Q3)-L(setPxQx)
-	.int       L(P5Q3)-L(setPxQx)
-	.int       L(P6Q3)-L(setPxQx)
-	.int       L(P7Q3)-L(setPxQx)
+	.short     L(P0Q3)-L(Got0)
+	.short     L(P1Q3)-L(Got0)
+	.short     L(P2Q3)-L(Got0)
+	.short     L(P3Q3)-L(Got0)
+	.short     L(P4Q3)-L(Got0)
+	.short     L(P5Q3)-L(Got0)
+	.short     L(P6Q3)-L(Got0)
+	.short     L(P7Q3)-L(Got0)
 
-	.int       L(P0Q4)-L(setPxQx)
-	.int       L(P1Q4)-L(setPxQx)
-	.int       L(P2Q4)-L(setPxQx)
-	.int       L(P3Q4)-L(setPxQx)
-	.int       L(P4Q4)-L(setPxQx)
-	.int       L(P5Q4)-L(setPxQx)
-	.int       L(P6Q4)-L(setPxQx)
-	.int       L(P7Q4)-L(setPxQx)
+	.short     L(P0Q4)-L(Got0)
+	.short     L(P1Q4)-L(Got0)
+	.short     L(P2Q4)-L(Got0)
+	.short     L(P3Q4)-L(Got0)
+	.short     L(P4Q4)-L(Got0)
+	.short     L(P5Q4)-L(Got0)
+	.short     L(P6Q4)-L(Got0)
+	.short     L(P7Q4)-L(Got0)
 
-	.int       L(P0Q5)-L(setPxQx)
-	.int       L(P1Q5)-L(setPxQx)
-	.int       L(P2Q5)-L(setPxQx)
-	.int       L(P3Q5)-L(setPxQx)
-	.int       L(P4Q5)-L(setPxQx)
-	.int       L(P5Q5)-L(setPxQx)
-	.int       L(P6Q5)-L(setPxQx)
-	.int       L(P7Q5)-L(setPxQx)
+	.short     L(P0Q5)-L(Got0)
+	.short     L(P1Q5)-L(Got0)
+	.short     L(P2Q5)-L(Got0)
+	.short     L(P3Q5)-L(Got0)
+	.short     L(P4Q5)-L(Got0)
+	.short     L(P5Q5)-L(Got0)
+	.short     L(P6Q5)-L(Got0)
+	.short     L(P7Q5)-L(Got0)
 
-	.int       L(P0Q6)-L(setPxQx)
-	.int       L(P1Q6)-L(setPxQx)
-	.int       L(P2Q6)-L(setPxQx)
-	.int       L(P3Q6)-L(setPxQx)
-	.int       L(P4Q6)-L(setPxQx)
-	.int       L(P5Q6)-L(setPxQx)
-	.int       L(P6Q6)-L(setPxQx)
-	.int       L(P7Q6)-L(setPxQx)
+	.short     L(P0Q6)-L(Got0)
+	.short     L(P1Q6)-L(Got0)
+	.short     L(P2Q6)-L(Got0)
+	.short     L(P3Q6)-L(Got0)
+	.short     L(P4Q6)-L(Got0)
+	.short     L(P5Q6)-L(Got0)
+	.short     L(P6Q6)-L(Got0)
+	.short     L(P7Q6)-L(Got0)
 
-	.int       L(P0Q7)-L(setPxQx)
-	.int       L(P1Q7)-L(setPxQx)
-	.int       L(P2Q7)-L(setPxQx)
-	.int       L(P3Q7)-L(setPxQx)
-	.int       L(P4Q7)-L(setPxQx)
-	.int       L(P5Q7)-L(setPxQx)
-	.int       L(P6Q7)-L(setPxQx)
-	.int       L(P7Q7)-L(setPxQx)
+	.short     L(P0Q7)-L(Got0)
+	.short     L(P1Q7)-L(Got0)
+	.short     L(P2Q7)-L(Got0)
+	.short     L(P3Q7)-L(Got0)
+	.short     L(P4Q7)-L(Got0)
+	.short     L(P5Q7)-L(Got0)
+	.short     L(P6Q7)-L(Got0)
+	.short     L(P7Q7)-L(Got0)
 
-	.int       L(P0Q8)-L(setPxQx)
-	.int       L(P1Q8)-L(setPxQx)
-	.int       L(P2Q8)-L(setPxQx)
-	.int       L(P3Q8)-L(setPxQx)
-	.int       L(P4Q8)-L(setPxQx)
-	.int       L(P5Q8)-L(setPxQx)
-	.int       L(P6Q8)-L(setPxQx)
-	.int       L(P7Q8)-L(setPxQx)
+	.short     L(P0Q8)-L(Got0)
+	.short     L(P1Q8)-L(Got0)
+	.short     L(P2Q8)-L(Got0)
+	.short     L(P3Q8)-L(Got0)
+	.short     L(P4Q8)-L(Got0)
+	.short     L(P5Q8)-L(Got0)
+	.short     L(P6Q8)-L(Got0)
+	.short     L(P7Q8)-L(Got0)
 
-	.int       L(P0Q9)-L(setPxQx)
-	.int       L(P1Q9)-L(setPxQx)
-	.int       L(P2Q9)-L(setPxQx)
-	.int       L(P3Q9)-L(setPxQx)
-	.int       L(P4Q9)-L(setPxQx)
-	.int       L(P5Q9)-L(setPxQx)
-	.int       L(P6Q9)-L(setPxQx)
-	.int       L(P7Q9)-L(setPxQx)
+	.short     L(P0Q9)-L(Got0)
+	.short     L(P1Q9)-L(Got0)
+	.short     L(P2Q9)-L(Got0)
+	.short     L(P3Q9)-L(Got0)
+	.short     L(P4Q9)-L(Got0)
+	.short     L(P5Q9)-L(Got0)
+	.short     L(P6Q9)-L(Got0)
+	.short     L(P7Q9)-L(Got0)
 
-	.int       L(P0QA)-L(setPxQx)
-	.int       L(P1QA)-L(setPxQx)
-	.int       L(P2QA)-L(setPxQx)
-	.int       L(P3QA)-L(setPxQx)
-	.int       L(P4QA)-L(setPxQx)
-	.int       L(P5QA)-L(setPxQx)
-	.int       L(P6QA)-L(setPxQx)
-	.int       L(P7QA)-L(setPxQx)
+	.short     L(P0QA)-L(Got0)
+	.short     L(P1QA)-L(Got0)
+	.short     L(P2QA)-L(Got0)
+	.short     L(P3QA)-L(Got0)
+	.short     L(P4QA)-L(Got0)
+	.short     L(P5QA)-L(Got0)
+	.short     L(P6QA)-L(Got0)
+	.short     L(P7QA)-L(Got0)
 
-	.int       L(P0QB)-L(setPxQx)
-	.int       L(P1QB)-L(setPxQx)
-	.int       L(P2QB)-L(setPxQx)
-	.int       L(P3QB)-L(setPxQx)
-	.int       L(P4QB)-L(setPxQx)
-	.int       L(P5QB)-L(setPxQx)
-	.int       L(P6QB)-L(setPxQx)
-	.int       L(P7QB)-L(setPxQx)
+	.short     L(P0QB)-L(Got0)
+	.short     L(P1QB)-L(Got0)
+	.short     L(P2QB)-L(Got0)
+	.short     L(P3QB)-L(Got0)
+	.short     L(P4QB)-L(Got0)
+	.short     L(P5QB)-L(Got0)
+	.short     L(P6QB)-L(Got0)
+	.short     L(P7QB)-L(Got0)
 
-	.int       L(P0QC)-L(setPxQx)
-	.int       L(P1QC)-L(setPxQx)
-	.int       L(P2QC)-L(setPxQx)
-	.int       L(P3QC)-L(setPxQx)
-	.int       L(P4QC)-L(setPxQx)
-	.int       L(P5QC)-L(setPxQx)
-	.int       L(P6QC)-L(setPxQx)
-	.int       L(P7QC)-L(setPxQx)
+	.short     L(P0QC)-L(Got0)
+	.short     L(P1QC)-L(Got0)
+	.short     L(P2QC)-L(Got0)
+	.short     L(P3QC)-L(Got0)
+	.short     L(P4QC)-L(Got0)
+	.short     L(P5QC)-L(Got0)
+	.short     L(P6QC)-L(Got0)
+	.short     L(P7QC)-L(Got0)
 
-	.int       L(P0QD)-L(setPxQx)
-	.int       L(P1QD)-L(setPxQx)
-	.int       L(P2QD)-L(setPxQx)
-	.int       L(P3QD)-L(setPxQx)
-	.int       L(P4QD)-L(setPxQx)
-	.int       L(P5QD)-L(setPxQx)
-	.int       L(P6QD)-L(setPxQx)
-	.int       L(P7QD)-L(setPxQx)
+	.short     L(P0QD)-L(Got0)
+	.short     L(P1QD)-L(Got0)
+	.short     L(P2QD)-L(Got0)
+	.short     L(P3QD)-L(Got0)
+	.short     L(P4QD)-L(Got0)
+	.short     L(P5QD)-L(Got0)
+	.short     L(P6QD)-L(Got0)
+	.short     L(P7QD)-L(Got0)
 
-	.int       L(P0QE)-L(setPxQx)
-	.int       L(P1QE)-L(setPxQx)
-	.int       L(P2QE)-L(setPxQx)
-	.int       L(P3QE)-L(setPxQx)
-	.int       L(P4QE)-L(setPxQx)
-	.int       L(P5QE)-L(setPxQx)
-	.int       L(P6QE)-L(setPxQx)
-	.int       L(P7QE)-L(setPxQx)
+	.short     L(P0QE)-L(Got0)
+	.short     L(P1QE)-L(Got0)
+	.short     L(P2QE)-L(Got0)
+	.short     L(P3QE)-L(Got0)
+	.short     L(P4QE)-L(Got0)
+	.short     L(P5QE)-L(Got0)
+	.short     L(P6QE)-L(Got0)
+	.short     L(P7QE)-L(Got0)
 
-	.int       L(P0QF)-L(setPxQx)
-	.int       L(P1QF)-L(setPxQx)
-	.int       L(P2QF)-L(setPxQx)
-	.int       L(P3QF)-L(setPxQx)
-	.int       L(P4QF)-L(setPxQx)
-	.int       L(P5QF)-L(setPxQx)
-	.int       L(P6QF)-L(setPxQx)
-	.int       L(P7QF)-L(setPxQx)
+	.short     L(P0QF)-L(Got0)
+	.short     L(P1QF)-L(Got0)
+	.short     L(P2QF)-L(Got0)
+	.short     L(P3QF)-L(Got0)
+	.short     L(P4QF)-L(Got0)
+	.short     L(P5QF)-L(Got0)
+	.short     L(P6QF)-L(Got0)
+	.short     L(P7QF)-L(Got0)
 
-	.int       L(P0QG)-L(setPxQx)
-	.int       L(P1QG)-L(setPxQx)
-	.int       L(P2QG)-L(setPxQx)
-	.int       L(P3QG)-L(setPxQx)
-	.int       L(P4QG)-L(setPxQx)
-	.int       L(P5QG)-L(setPxQx)
-	.int       L(P6QG)-L(setPxQx)
-	.int       L(P7QG)-L(setPxQx)
+	.short     L(P0QG)-L(Got0)
+	.short     L(P1QG)-L(Got0)
+	.short     L(P2QG)-L(Got0)
+	.short     L(P3QG)-L(Got0)
+	.short     L(P4QG)-L(Got0)
+	.short     L(P5QG)-L(Got0)
+	.short     L(P6QG)-L(Got0)
+	.short     L(P7QG)-L(Got0)
 
-	.int       L(P0QH)-L(setPxQx)
-	.int       L(P1QH)-L(setPxQx)
-	.int       L(P2QH)-L(setPxQx)
-	.int       L(P3QH)-L(setPxQx)
-	.int       L(P4QH)-L(setPxQx)
-	.int       L(P5QH)-L(setPxQx)
-	.int       L(P6QH)-L(setPxQx)
-	.int       L(P7QH)-L(setPxQx)
+	.short     L(P0QH)-L(Got0)
+	.short     L(P1QH)-L(Got0)
+	.short     L(P2QH)-L(Got0)
+	.short     L(P3QH)-L(Got0)
+	.short     L(P4QH)-L(Got0)
+	.short     L(P5QH)-L(Got0)
+	.short     L(P6QH)-L(Got0)
+	.short     L(P7QH)-L(Got0)
 
-	.int       L(P0QI)-L(setPxQx)
+	.short     L(P0QI)-L(Got0)
 # ifdef USE_EXTRA_TABLE
-	.int       L(P1QI)-L(setPxQx)
-	.int       L(P2QI)-L(setPxQx)
-	.int       L(P3QI)-L(setPxQx)
-	.int       L(P4QI)-L(setPxQx)
-	.int       L(P5QI)-L(setPxQx)
-	.int       L(P6QI)-L(setPxQx)
-	.int       L(P7QI)-L(setPxQx)
+	.short     L(P1QI)-L(Got0)
+	.short     L(P2QI)-L(Got0)
+	.short     L(P3QI)-L(Got0)
+	.short     L(P4QI)-L(Got0)
+	.short     L(P5QI)-L(Got0)
+	.short     L(P6QI)-L(Got0)
+	.short     L(P7QI)-L(Got0)
 # endif
 #endif
 	.popsection
@@ -499,18 +501,20 @@ L(ck_mem_ops_method):
 # align to 16 byte boundary first
 	#test $0xf,%rdi
 	#jz L(aligned_now)
-	 lea    L(AliPxQx)(%rip),%r11
-	 mov    $0x10,%r10
-	 mov    %rdi,%r9
-	 and    $0xf,%r9
-	 sub    %r9,%r10
-	 and    $0xf,%r10
-	 add    %r10,%rdi
-	 sub    %r10,%r8
+	mov    $0x10,%r10
+	mov    %rdi,%r9
+	and    $0xf,%r9
+	sub    %r9,%r10
+	and    $0xf,%r10
+	add    %r10,%rdi
+	sub    %r10,%r8
 #ifndef PIC
+	lea    L(AliPxQx)(%rip),%r11
 	jmpq   *(%r11,%r10,8)
 #else
-	movslq (%r11,%r10,4),%rcx
+	lea    L(aligned_now)(%rip), %r11
+	lea    L(AliPxQx)(%rip),%rcx
+	movswq (%rcx,%r10,2),%rcx
 	lea    (%rcx,%r11,1),%r11
 	jmpq   *%r11
 #endif
@@ -525,23 +529,23 @@ L(AliPxQx):
 	.quad       L(A4Q1), L(A5Q1), L(A6Q1), L(A7Q1)
 #else
 L(AliPxQx):
-	.int       L(aligned_now)-L(AliPxQx)
-	.int       L(A1Q0)-L(AliPxQx)
-	.int       L(A2Q0)-L(AliPxQx)
-	.int       L(A3Q0)-L(AliPxQx)
-	.int       L(A4Q0)-L(AliPxQx)
-	.int       L(A5Q0)-L(AliPxQx)
-	.int       L(A6Q0)-L(AliPxQx)
-	.int       L(A7Q0)-L(AliPxQx)
+	.short     L(aligned_now)-L(aligned_now)
+	.short     L(A1Q0)-L(aligned_now)
+	.short     L(A2Q0)-L(aligned_now)
+	.short     L(A3Q0)-L(aligned_now)
+	.short     L(A4Q0)-L(aligned_now)
+	.short     L(A5Q0)-L(aligned_now)
+	.short     L(A6Q0)-L(aligned_now)
+	.short     L(A7Q0)-L(aligned_now)
 
-	.int       L(A0Q1)-L(AliPxQx)
-	.int       L(A1Q1)-L(AliPxQx)
-	.int       L(A2Q1)-L(AliPxQx)
-	.int       L(A3Q1)-L(AliPxQx)
-	.int       L(A4Q1)-L(AliPxQx)
-	.int       L(A5Q1)-L(AliPxQx)
-	.int       L(A6Q1)-L(AliPxQx)
-	.int       L(A7Q1)-L(AliPxQx)
+	.short     L(A0Q1)-L(aligned_now)
+	.short     L(A1Q1)-L(aligned_now)
+	.short     L(A2Q1)-L(aligned_now)
+	.short     L(A3Q1)-L(aligned_now)
+	.short     L(A4Q1)-L(aligned_now)
+	.short     L(A5Q1)-L(aligned_now)
+	.short     L(A6Q1)-L(aligned_now)
+	.short     L(A7Q1)-L(aligned_now)
 #endif
 	.popsection
 
@@ -634,12 +638,14 @@ L(8byte_move_loop):
 L(8byte_move_skip):
 	andl	$127,%r8d
 	lea    	(%rdi,%r8,1),%rdi
-	lea    	L(setPxQx)(%rip),%r11
 
 #ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
 	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	movslq	(%r11,%r8,4),%rcx
+	lea    	L(Got0)(%rip),%r11
+	lea	L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
 	lea    	(%rcx,%r11,1),%r11
 	jmpq   	*%r11
 #endif
@@ -676,11 +682,13 @@ L(8byte_stos_skip):
 
 	andl	$7,%r8d
 	lea    	(%rdi,%r8,1),%rdi
-	lea    	L(setPxQx)(%rip),%r11
 #ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
 	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	movslq	(%r11,%r8,4),%rcx
+	lea    	L(Got0)(%rip),%r11
+	lea     L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
 	lea	(%rcx,%r11,1),%r11
 	jmpq   	*%r11
 #endif
@@ -722,11 +730,13 @@ L(8byte_nt_move_skip):
 	andl	$127,%r8d
 
 	lea    	(%rdi,%r8,1),%rdi
-	lea    	L(setPxQx)(%rip),%r11
 #ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
 	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	movslq	(%r11,%r8,4),%rcx
+	lea    	L(Got0)(%rip),%r11
+	lea     L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
 	lea    	(%rcx,%r11,1),%r11
 	jmpq   	*%r11
 #endif
@@ -736,15 +746,17 @@ L(SSE_pre):
 	 movd   %rdx,%xmm0
 	 punpcklqdq %xmm0,%xmm0
 
-	 lea    L(SSExDx)(%rip),%r9        # for later after the alignment
 	 cmp    $0xb0,%r8 # 176
 	 jge    L(byte32sse2_pre)
 
 	 add    %r8,%rdi
 #ifndef PIC
+	 lea    L(SSExDx)(%rip),%r9
 	 jmpq   *(%r9,%r8,8)
 #else
-	 movslq    (%r9,%r8,4),%rcx
+	 lea    L(SSE0Q0)(%rip),%r9
+	 lea    L(SSExDx)(%rip),%rcx
+	 movswq (%rcx,%r8,2),%rcx
 	 lea    (%rcx,%r9,1),%r9
 	 jmpq   *%r9
 #endif
@@ -1012,13 +1024,15 @@ L(byte32sse2):
 
 	lea    0x80(%rdi),%rdi
 	jge    L(byte32sse2)
-	lea    L(SSExDx)(%rip),%r11
 	add    %r8,%rdi
 #ifndef PIC
+	lea    L(SSExDx)(%rip),%r11
 	jmpq   *(%r11,%r8,8)
 #else
-	movslq    (%r11,%r8,4),%rcx
-	lea   (%rcx,%r11,1),%r11
+	lea    L(SSE0Q0)(%rip),%r11
+	lea    L(SSExDx)(%rip),%rcx
+	movswq (%rcx,%r8,2),%rcx
+	lea    (%rcx,%r11,1),%r11
 	jmpq   *%r11
 #endif
 
@@ -1044,13 +1058,15 @@ L(sse2_nt_move):
 
 	lea    0x80(%rdi),%rdi
 	jge    L(sse2_nt_move)
-	lea    L(SSExDx)(%rip),%r11
 	sfence
 	add    %r8,%rdi
 #ifndef PIC
+	lea    L(SSExDx)(%rip),%r11
 	jmpq   *(%r11,%r8,8)
 #else
-	movslq (%r11,%r8,4),%rcx
+	lea    L(SSE0Q0)(%rip),%r11
+	lea    L(SSExDx)(%rip),%rcx
+	movswq (%rcx,%r8,2),%rcx
 	lea   (%rcx,%r11,1),%r11
 	jmpq   *%r11
 #endif
@@ -1109,221 +1125,221 @@ L(SSExDx):
 	.quad       L(SSE12QB), L(SSE13QB), L(SSE14QB), L(SSE15QB)
 #else
 L(SSExDx):
-	.int       L(SSE0Q0) -L(SSExDx)
-	.int       L(SSE1Q0) -L(SSExDx)
-	.int       L(SSE2Q0) -L(SSExDx)
-	.int       L(SSE3Q0) -L(SSExDx)
-	.int       L(SSE4Q0) -L(SSExDx)
-	.int       L(SSE5Q0) -L(SSExDx)
-	.int       L(SSE6Q0) -L(SSExDx)
-	.int       L(SSE7Q0) -L(SSExDx)
+	.short     L(SSE0Q0) -L(SSE0Q0)
+	.short     L(SSE1Q0) -L(SSE0Q0)
+	.short     L(SSE2Q0) -L(SSE0Q0)
+	.short     L(SSE3Q0) -L(SSE0Q0)
+	.short     L(SSE4Q0) -L(SSE0Q0)
+	.short     L(SSE5Q0) -L(SSE0Q0)
+	.short     L(SSE6Q0) -L(SSE0Q0)
+	.short     L(SSE7Q0) -L(SSE0Q0)
 
-	.int       L(SSE8Q0) -L(SSExDx)
-	.int       L(SSE9Q0) -L(SSExDx)
-	.int       L(SSE10Q0)-L(SSExDx)
-	.int       L(SSE11Q0)-L(SSExDx)
-	.int       L(SSE12Q0)-L(SSExDx)
-	.int       L(SSE13Q0)-L(SSExDx)
-	.int       L(SSE14Q0)-L(SSExDx)
-	.int       L(SSE15Q0)-L(SSExDx)
+	.short     L(SSE8Q0) -L(SSE0Q0)
+	.short     L(SSE9Q0) -L(SSE0Q0)
+	.short     L(SSE10Q0)-L(SSE0Q0)
+	.short     L(SSE11Q0)-L(SSE0Q0)
+	.short     L(SSE12Q0)-L(SSE0Q0)
+	.short     L(SSE13Q0)-L(SSE0Q0)
+	.short     L(SSE14Q0)-L(SSE0Q0)
+	.short     L(SSE15Q0)-L(SSE0Q0)
 
-	.int       L(SSE0Q1) -L(SSExDx)
-	.int       L(SSE1Q1) -L(SSExDx)
-	.int       L(SSE2Q1) -L(SSExDx)
-	.int       L(SSE3Q1) -L(SSExDx)
-	.int       L(SSE4Q1) -L(SSExDx)
-	.int       L(SSE5Q1) -L(SSExDx)
-	.int       L(SSE6Q1) -L(SSExDx)
-	.int       L(SSE7Q1) -L(SSExDx)
+	.short     L(SSE0Q1) -L(SSE0Q0)
+	.short     L(SSE1Q1) -L(SSE0Q0)
+	.short     L(SSE2Q1) -L(SSE0Q0)
+	.short     L(SSE3Q1) -L(SSE0Q0)
+	.short     L(SSE4Q1) -L(SSE0Q0)
+	.short     L(SSE5Q1) -L(SSE0Q0)
+	.short     L(SSE6Q1) -L(SSE0Q0)
+	.short     L(SSE7Q1) -L(SSE0Q0)
 
-	.int       L(SSE8Q1) -L(SSExDx)
-	.int       L(SSE9Q1) -L(SSExDx)
-	.int       L(SSE10Q1)-L(SSExDx)
-	.int       L(SSE11Q1)-L(SSExDx)
-	.int       L(SSE12Q1)-L(SSExDx)
-	.int       L(SSE13Q1)-L(SSExDx)
-	.int       L(SSE14Q1)-L(SSExDx)
-	.int       L(SSE15Q1)-L(SSExDx)
+	.short     L(SSE8Q1) -L(SSE0Q0)
+	.short     L(SSE9Q1) -L(SSE0Q0)
+	.short     L(SSE10Q1)-L(SSE0Q0)
+	.short     L(SSE11Q1)-L(SSE0Q0)
+	.short     L(SSE12Q1)-L(SSE0Q0)
+	.short     L(SSE13Q1)-L(SSE0Q0)
+	.short     L(SSE14Q1)-L(SSE0Q0)
+	.short     L(SSE15Q1)-L(SSE0Q0)
 
-	.int       L(SSE0Q2) -L(SSExDx)
-	.int       L(SSE1Q2) -L(SSExDx)
-	.int       L(SSE2Q2) -L(SSExDx)
-	.int       L(SSE3Q2) -L(SSExDx)
-	.int       L(SSE4Q2) -L(SSExDx)
-	.int       L(SSE5Q2) -L(SSExDx)
-	.int       L(SSE6Q2) -L(SSExDx)
-	.int       L(SSE7Q2) -L(SSExDx)
+	.short     L(SSE0Q2) -L(SSE0Q0)
+	.short     L(SSE1Q2) -L(SSE0Q0)
+	.short     L(SSE2Q2) -L(SSE0Q0)
+	.short     L(SSE3Q2) -L(SSE0Q0)
+	.short     L(SSE4Q2) -L(SSE0Q0)
+	.short     L(SSE5Q2) -L(SSE0Q0)
+	.short     L(SSE6Q2) -L(SSE0Q0)
+	.short     L(SSE7Q2) -L(SSE0Q0)
 
-	.int       L(SSE8Q2) -L(SSExDx)
-	.int       L(SSE9Q2) -L(SSExDx)
-	.int       L(SSE10Q2)-L(SSExDx)
-	.int       L(SSE11Q2)-L(SSExDx)
-	.int       L(SSE12Q2)-L(SSExDx)
-	.int       L(SSE13Q2)-L(SSExDx)
-	.int       L(SSE14Q2)-L(SSExDx)
-	.int       L(SSE15Q2)-L(SSExDx)
+	.short     L(SSE8Q2) -L(SSE0Q0)
+	.short     L(SSE9Q2) -L(SSE0Q0)
+	.short     L(SSE10Q2)-L(SSE0Q0)
+	.short     L(SSE11Q2)-L(SSE0Q0)
+	.short     L(SSE12Q2)-L(SSE0Q0)
+	.short     L(SSE13Q2)-L(SSE0Q0)
+	.short     L(SSE14Q2)-L(SSE0Q0)
+	.short     L(SSE15Q2)-L(SSE0Q0)
 
-	.int       L(SSE0Q3) -L(SSExDx)
-	.int       L(SSE1Q3) -L(SSExDx)
-	.int       L(SSE2Q3) -L(SSExDx)
-	.int       L(SSE3Q3) -L(SSExDx)
-	.int       L(SSE4Q3) -L(SSExDx)
-	.int       L(SSE5Q3) -L(SSExDx)
-	.int       L(SSE6Q3) -L(SSExDx)
-	.int       L(SSE7Q3) -L(SSExDx)
+	.short     L(SSE0Q3) -L(SSE0Q0)
+	.short     L(SSE1Q3) -L(SSE0Q0)
+	.short     L(SSE2Q3) -L(SSE0Q0)
+	.short     L(SSE3Q3) -L(SSE0Q0)
+	.short     L(SSE4Q3) -L(SSE0Q0)
+	.short     L(SSE5Q3) -L(SSE0Q0)
+	.short     L(SSE6Q3) -L(SSE0Q0)
+	.short     L(SSE7Q3) -L(SSE0Q0)
 
-	.int       L(SSE8Q3) -L(SSExDx)
-	.int       L(SSE9Q3) -L(SSExDx)
-	.int       L(SSE10Q3)-L(SSExDx)
-	.int       L(SSE11Q3)-L(SSExDx)
-	.int       L(SSE12Q3)-L(SSExDx)
-	.int       L(SSE13Q3)-L(SSExDx)
-	.int       L(SSE14Q3)-L(SSExDx)
-	.int       L(SSE15Q3)-L(SSExDx)
+	.short     L(SSE8Q3) -L(SSE0Q0)
+	.short     L(SSE9Q3) -L(SSE0Q0)
+	.short     L(SSE10Q3)-L(SSE0Q0)
+	.short     L(SSE11Q3)-L(SSE0Q0)
+	.short     L(SSE12Q3)-L(SSE0Q0)
+	.short     L(SSE13Q3)-L(SSE0Q0)
+	.short     L(SSE14Q3)-L(SSE0Q0)
+	.short     L(SSE15Q3)-L(SSE0Q0)
 
-	.int       L(SSE0Q4) -L(SSExDx)
-	.int       L(SSE1Q4) -L(SSExDx)
-	.int       L(SSE2Q4) -L(SSExDx)
-	.int       L(SSE3Q4) -L(SSExDx)
-	.int       L(SSE4Q4) -L(SSExDx)
-	.int       L(SSE5Q4) -L(SSExDx)
-	.int       L(SSE6Q4) -L(SSExDx)
-	.int       L(SSE7Q4) -L(SSExDx)
+	.short     L(SSE0Q4) -L(SSE0Q0)
+	.short     L(SSE1Q4) -L(SSE0Q0)
+	.short     L(SSE2Q4) -L(SSE0Q0)
+	.short     L(SSE3Q4) -L(SSE0Q0)
+	.short     L(SSE4Q4) -L(SSE0Q0)
+	.short     L(SSE5Q4) -L(SSE0Q0)
+	.short     L(SSE6Q4) -L(SSE0Q0)
+	.short     L(SSE7Q4) -L(SSE0Q0)
 
-	.int       L(SSE8Q4) -L(SSExDx)
-	.int       L(SSE9Q4) -L(SSExDx)
-	.int       L(SSE10Q4)-L(SSExDx)
-	.int       L(SSE11Q4)-L(SSExDx)
-	.int       L(SSE12Q4)-L(SSExDx)
-	.int       L(SSE13Q4)-L(SSExDx)
-	.int       L(SSE14Q4)-L(SSExDx)
-	.int       L(SSE15Q4)-L(SSExDx)
+	.short     L(SSE8Q4) -L(SSE0Q0)
+	.short     L(SSE9Q4) -L(SSE0Q0)
+	.short     L(SSE10Q4)-L(SSE0Q0)
+	.short     L(SSE11Q4)-L(SSE0Q0)
+	.short     L(SSE12Q4)-L(SSE0Q0)
+	.short     L(SSE13Q4)-L(SSE0Q0)
+	.short     L(SSE14Q4)-L(SSE0Q0)
+	.short     L(SSE15Q4)-L(SSE0Q0)
 
-	.int       L(SSE0Q5) -L(SSExDx)
-	.int       L(SSE1Q5) -L(SSExDx)
-	.int       L(SSE2Q5) -L(SSExDx)
-	.int       L(SSE3Q5) -L(SSExDx)
-	.int       L(SSE4Q5) -L(SSExDx)
-	.int       L(SSE5Q5) -L(SSExDx)
-	.int       L(SSE6Q5) -L(SSExDx)
-	.int       L(SSE7Q5) -L(SSExDx)
+	.short     L(SSE0Q5) -L(SSE0Q0)
+	.short     L(SSE1Q5) -L(SSE0Q0)
+	.short     L(SSE2Q5) -L(SSE0Q0)
+	.short     L(SSE3Q5) -L(SSE0Q0)
+	.short     L(SSE4Q5) -L(SSE0Q0)
+	.short     L(SSE5Q5) -L(SSE0Q0)
+	.short     L(SSE6Q5) -L(SSE0Q0)
+	.short     L(SSE7Q5) -L(SSE0Q0)
 
-	.int       L(SSE8Q5) -L(SSExDx)
-	.int       L(SSE9Q5) -L(SSExDx)
-	.int       L(SSE10Q5)-L(SSExDx)
-	.int       L(SSE11Q5)-L(SSExDx)
-	.int       L(SSE12Q5)-L(SSExDx)
-	.int       L(SSE13Q5)-L(SSExDx)
-	.int       L(SSE14Q5)-L(SSExDx)
-	.int       L(SSE15Q5)-L(SSExDx)
+	.short     L(SSE8Q5) -L(SSE0Q0)
+	.short     L(SSE9Q5) -L(SSE0Q0)
+	.short     L(SSE10Q5)-L(SSE0Q0)
+	.short     L(SSE11Q5)-L(SSE0Q0)
+	.short     L(SSE12Q5)-L(SSE0Q0)
+	.short     L(SSE13Q5)-L(SSE0Q0)
+	.short     L(SSE14Q5)-L(SSE0Q0)
+	.short     L(SSE15Q5)-L(SSE0Q0)
 
-	.int       L(SSE0Q6) -L(SSExDx)
-	.int       L(SSE1Q6) -L(SSExDx)
-	.int       L(SSE2Q6) -L(SSExDx)
-	.int       L(SSE3Q6) -L(SSExDx)
-	.int       L(SSE4Q6) -L(SSExDx)
-	.int       L(SSE5Q6) -L(SSExDx)
-	.int       L(SSE6Q6) -L(SSExDx)
-	.int       L(SSE7Q6) -L(SSExDx)
+	.short     L(SSE0Q6) -L(SSE0Q0)
+	.short     L(SSE1Q6) -L(SSE0Q0)
+	.short     L(SSE2Q6) -L(SSE0Q0)
+	.short     L(SSE3Q6) -L(SSE0Q0)
+	.short     L(SSE4Q6) -L(SSE0Q0)
+	.short     L(SSE5Q6) -L(SSE0Q0)
+	.short     L(SSE6Q6) -L(SSE0Q0)
+	.short     L(SSE7Q6) -L(SSE0Q0)
 
-	.int       L(SSE8Q6) -L(SSExDx)
-	.int       L(SSE9Q6) -L(SSExDx)
-	.int       L(SSE10Q6)-L(SSExDx)
-	.int       L(SSE11Q6)-L(SSExDx)
-	.int       L(SSE12Q6)-L(SSExDx)
-	.int       L(SSE13Q6)-L(SSExDx)
-	.int       L(SSE14Q6)-L(SSExDx)
-	.int       L(SSE15Q6)-L(SSExDx)
+	.short     L(SSE8Q6) -L(SSE0Q0)
+	.short     L(SSE9Q6) -L(SSE0Q0)
+	.short     L(SSE10Q6)-L(SSE0Q0)
+	.short     L(SSE11Q6)-L(SSE0Q0)
+	.short     L(SSE12Q6)-L(SSE0Q0)
+	.short     L(SSE13Q6)-L(SSE0Q0)
+	.short     L(SSE14Q6)-L(SSE0Q0)
+	.short     L(SSE15Q6)-L(SSE0Q0)
 
-	.int       L(SSE0Q7) -L(SSExDx)
-	.int       L(SSE1Q7) -L(SSExDx)
-	.int       L(SSE2Q7) -L(SSExDx)
-	.int       L(SSE3Q7) -L(SSExDx)
-	.int       L(SSE4Q7) -L(SSExDx)
-	.int       L(SSE5Q7) -L(SSExDx)
-	.int       L(SSE6Q7) -L(SSExDx)
-	.int       L(SSE7Q7) -L(SSExDx)
+	.short     L(SSE0Q7) -L(SSE0Q0)
+	.short     L(SSE1Q7) -L(SSE0Q0)
+	.short     L(SSE2Q7) -L(SSE0Q0)
+	.short     L(SSE3Q7) -L(SSE0Q0)
+	.short     L(SSE4Q7) -L(SSE0Q0)
+	.short     L(SSE5Q7) -L(SSE0Q0)
+	.short     L(SSE6Q7) -L(SSE0Q0)
+	.short     L(SSE7Q7) -L(SSE0Q0)
 
-	.int       L(SSE8Q7) -L(SSExDx)
-	.int       L(SSE9Q7) -L(SSExDx)
-	.int       L(SSE10Q7)-L(SSExDx)
-	.int       L(SSE11Q7)-L(SSExDx)
-	.int       L(SSE12Q7)-L(SSExDx)
-	.int       L(SSE13Q7)-L(SSExDx)
-	.int       L(SSE14Q7)-L(SSExDx)
-	.int       L(SSE15Q7)-L(SSExDx)
+	.short     L(SSE8Q7) -L(SSE0Q0)
+	.short     L(SSE9Q7) -L(SSE0Q0)
+	.short     L(SSE10Q7)-L(SSE0Q0)
+	.short     L(SSE11Q7)-L(SSE0Q0)
+	.short     L(SSE12Q7)-L(SSE0Q0)
+	.short     L(SSE13Q7)-L(SSE0Q0)
+	.short     L(SSE14Q7)-L(SSE0Q0)
+	.short     L(SSE15Q7)-L(SSE0Q0)
 
-	.int       L(SSE0Q8) -L(SSExDx)
-	.int       L(SSE1Q8) -L(SSExDx)
-	.int       L(SSE2Q8) -L(SSExDx)
-	.int       L(SSE3Q8) -L(SSExDx)
-	.int       L(SSE4Q8) -L(SSExDx)
-	.int       L(SSE5Q8) -L(SSExDx)
-	.int       L(SSE6Q8) -L(SSExDx)
-	.int       L(SSE7Q8) -L(SSExDx)
+	.short     L(SSE0Q8) -L(SSE0Q0)
+	.short     L(SSE1Q8) -L(SSE0Q0)
+	.short     L(SSE2Q8) -L(SSE0Q0)
+	.short     L(SSE3Q8) -L(SSE0Q0)
+	.short     L(SSE4Q8) -L(SSE0Q0)
+	.short     L(SSE5Q8) -L(SSE0Q0)
+	.short     L(SSE6Q8) -L(SSE0Q0)
+	.short     L(SSE7Q8) -L(SSE0Q0)
 
-	.int       L(SSE8Q8) -L(SSExDx)
-	.int       L(SSE9Q8) -L(SSExDx)
-	.int       L(SSE10Q8)-L(SSExDx)
-	.int       L(SSE11Q8)-L(SSExDx)
-	.int       L(SSE12Q8)-L(SSExDx)
-	.int       L(SSE13Q8)-L(SSExDx)
-	.int       L(SSE14Q8)-L(SSExDx)
-	.int       L(SSE15Q8)-L(SSExDx)
+	.short     L(SSE8Q8) -L(SSE0Q0)
+	.short     L(SSE9Q8) -L(SSE0Q0)
+	.short     L(SSE10Q8)-L(SSE0Q0)
+	.short     L(SSE11Q8)-L(SSE0Q0)
+	.short     L(SSE12Q8)-L(SSE0Q0)
+	.short     L(SSE13Q8)-L(SSE0Q0)
+	.short     L(SSE14Q8)-L(SSE0Q0)
+	.short     L(SSE15Q8)-L(SSE0Q0)
 
-	.int       L(SSE0Q9) -L(SSExDx)
-	.int       L(SSE1Q9) -L(SSExDx)
-	.int       L(SSE2Q9) -L(SSExDx)
-	.int       L(SSE3Q9) -L(SSExDx)
-	.int       L(SSE4Q9) -L(SSExDx)
-	.int       L(SSE5Q9) -L(SSExDx)
-	.int       L(SSE6Q9) -L(SSExDx)
-	.int       L(SSE7Q9) -L(SSExDx)
+	.short     L(SSE0Q9) -L(SSE0Q0)
+	.short     L(SSE1Q9) -L(SSE0Q0)
+	.short     L(SSE2Q9) -L(SSE0Q0)
+	.short     L(SSE3Q9) -L(SSE0Q0)
+	.short     L(SSE4Q9) -L(SSE0Q0)
+	.short     L(SSE5Q9) -L(SSE0Q0)
+	.short     L(SSE6Q9) -L(SSE0Q0)
+	.short     L(SSE7Q9) -L(SSE0Q0)
 
-	.int       L(SSE8Q9) -L(SSExDx)
-	.int       L(SSE9Q9) -L(SSExDx)
-	.int       L(SSE10Q9)-L(SSExDx)
-	.int       L(SSE11Q9)-L(SSExDx)
-	.int       L(SSE12Q9)-L(SSExDx)
-	.int       L(SSE13Q9)-L(SSExDx)
-	.int       L(SSE14Q9)-L(SSExDx)
-	.int       L(SSE15Q9)-L(SSExDx)
+	.short     L(SSE8Q9) -L(SSE0Q0)
+	.short     L(SSE9Q9) -L(SSE0Q0)
+	.short     L(SSE10Q9)-L(SSE0Q0)
+	.short     L(SSE11Q9)-L(SSE0Q0)
+	.short     L(SSE12Q9)-L(SSE0Q0)
+	.short     L(SSE13Q9)-L(SSE0Q0)
+	.short     L(SSE14Q9)-L(SSE0Q0)
+	.short     L(SSE15Q9)-L(SSE0Q0)
 
-	.int       L(SSE0QA) -L(SSExDx)
-	.int       L(SSE1QA) -L(SSExDx)
-	.int       L(SSE2QA) -L(SSExDx)
-	.int       L(SSE3QA) -L(SSExDx)
-	.int       L(SSE4QA) -L(SSExDx)
-	.int       L(SSE5QA) -L(SSExDx)
-	.int       L(SSE6QA) -L(SSExDx)
-	.int       L(SSE7QA) -L(SSExDx)
+	.short     L(SSE0QA) -L(SSE0Q0)
+	.short     L(SSE1QA) -L(SSE0Q0)
+	.short     L(SSE2QA) -L(SSE0Q0)
+	.short     L(SSE3QA) -L(SSE0Q0)
+	.short     L(SSE4QA) -L(SSE0Q0)
+	.short     L(SSE5QA) -L(SSE0Q0)
+	.short     L(SSE6QA) -L(SSE0Q0)
+	.short     L(SSE7QA) -L(SSE0Q0)
 
-	.int       L(SSE8QA) -L(SSExDx)
-	.int       L(SSE9QA) -L(SSExDx)
-	.int       L(SSE10QA)-L(SSExDx)
-	.int       L(SSE11QA)-L(SSExDx)
-	.int       L(SSE12QA)-L(SSExDx)
-	.int       L(SSE13QA)-L(SSExDx)
-	.int       L(SSE14QA)-L(SSExDx)
-	.int       L(SSE15QA)-L(SSExDx)
+	.short     L(SSE8QA) -L(SSE0Q0)
+	.short     L(SSE9QA) -L(SSE0Q0)
+	.short     L(SSE10QA)-L(SSE0Q0)
+	.short     L(SSE11QA)-L(SSE0Q0)
+	.short     L(SSE12QA)-L(SSE0Q0)
+	.short     L(SSE13QA)-L(SSE0Q0)
+	.short     L(SSE14QA)-L(SSE0Q0)
+	.short     L(SSE15QA)-L(SSE0Q0)
 
-	.int       L(SSE0QB) -L(SSExDx)
-	.int       L(SSE1QB) -L(SSExDx)
-	.int       L(SSE2QB) -L(SSExDx)
-	.int       L(SSE3QB) -L(SSExDx)
-	.int       L(SSE4QB) -L(SSExDx)
-	.int       L(SSE5QB) -L(SSExDx)
-	.int       L(SSE6QB) -L(SSExDx)
-	.int       L(SSE7QB) -L(SSExDx)
+	.short     L(SSE0QB) -L(SSE0Q0)
+	.short     L(SSE1QB) -L(SSE0Q0)
+	.short     L(SSE2QB) -L(SSE0Q0)
+	.short     L(SSE3QB) -L(SSE0Q0)
+	.short     L(SSE4QB) -L(SSE0Q0)
+	.short     L(SSE5QB) -L(SSE0Q0)
+	.short     L(SSE6QB) -L(SSE0Q0)
+	.short     L(SSE7QB) -L(SSE0Q0)
 
-	.int       L(SSE8QB) -L(SSExDx)
-	.int       L(SSE9QB) -L(SSExDx)
-	.int       L(SSE10QB)-L(SSExDx)
-	.int       L(SSE11QB)-L(SSExDx)
-	.int       L(SSE12QB)-L(SSExDx)
-	.int       L(SSE13QB)-L(SSExDx)
-	.int       L(SSE14QB)-L(SSExDx)
-	.int       L(SSE15QB)-L(SSExDx)
+	.short     L(SSE8QB) -L(SSE0Q0)
+	.short     L(SSE9QB) -L(SSE0Q0)
+	.short     L(SSE10QB)-L(SSE0Q0)
+	.short     L(SSE11QB)-L(SSE0Q0)
+	.short     L(SSE12QB)-L(SSE0Q0)
+	.short     L(SSE13QB)-L(SSE0Q0)
+	.short     L(SSE14QB)-L(SSE0Q0)
+	.short     L(SSE15QB)-L(SSE0Q0)
 #endif
 	.popsection
 
