@@ -1,3 +1,14 @@
+2008-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Undo all
+	change related to AT_EXECFN.  We cannot use that string.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_execfn member.
+	* elf/dl-support.c: Remove _dl_execfn variable.
+	(_dl_aux_init): Remove handling of AT_EXECFN.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Remove handling of AT_EXECFN.
+	* elf/rtld.c (process_envvars): Remove use of __ASSUME_AT_EXECFN.
+
 2008-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6544]

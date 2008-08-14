@@ -62,12 +62,8 @@ struct link_map *_dl_profile_map;
 /* This is the address of the last stack address ever used.  */
 void *__libc_stack_end;
 
-#ifndef __ASSUME_AT_EXECFN
 /* Path where the binary is found.  */
 const char *_dl_origin_path;
-#endif
-/* File Name of the executable.  */
-const char *_dl_execfn;
 
 /* Nonzero if runtime lookup should not update the .got/.plt.  */
 int _dl_bind_not;
@@ -219,9 +215,6 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	seen = -1;
 	__libc_enable_secure = av->a_un.a_val;
 	__libc_enable_secure_decided = 1;
-	break;
-      case AT_EXECFN:
-	GLRO(dl_execfn) = (void *) av->a_un.a_val;
 	break;
 # ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV

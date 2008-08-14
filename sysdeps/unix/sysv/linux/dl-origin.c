@@ -1,5 +1,5 @@
 /* Find path of executable.
-   Copyright (C) 1998-2000, 2002, 2004, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -36,28 +36,29 @@ const char *
 _dl_get_origin (void)
 {
   char linkval[PATH_MAX];
-  const char *str;
-  char *result = (char *) -1l;
+  char *result;
   int len;
+  INTERNAL_SYSCALL_DECL (err);
 
-  str = GLRO(dl_execfn);
-  if (str == NULL || str[0] != '/')
+  len = INTERNAL_SYSCALL (readlink, err, 3, "/proc/self/exe", linkval,
+			  sizeof (linkval));
+  if (! INTERNAL_SYSCALL_ERROR_P (len, err) && len > 0 && linkval[0] != '[')
     {
-      INTERNAL_SYSCALL_DECL (err);
-
-      len = INTERNAL_SYSCALL (readlink, err, 3, "/proc/self/exe", linkval,
-			      sizeof (linkval));
-      if (! INTERNAL_SYSCALL_ERROR_P (len, err)
-	  && len > 0 && linkval[0] != '[')
-	str = linkval;
+      /* We can use this value.  */
+      assert (linkval[0] == '/');
+      while (len > 1 && linkval[len - 1] != '/')
+	--len;
+      result = (char *) malloc (len + 1);
+      if (result == NULL)
+	result = (char *) -1;
+      else if (len == 1)
+	memcpy (result, "/", 2);
       else
-	str = NULL;
+	*((char *) __mempcpy (result, linkval, len - 1)) = '\0';
     }
   else
-    len = strlen (str);
-
-  if (str == NULL)
     {
+      result = (char *) -1;
       /* We use the environment variable LD_ORIGIN_PATH.  If it is set make
 	 a copy and strip out trailing slashes.  */
       if (GLRO(dl_origin_path) != NULL)
@@ -74,20 +75,6 @@ _dl_get_origin (void)
 	      *cp = '\0';
 	    }
 	}
-    }
-  else
-    {
-      /* We can use this value.  */
-      assert (str[0] == '/');
-      while (len > 1 && str[len - 1] != '/')
-	--len;
-      result = (char *) malloc (len + 1);
-      if (result == NULL)
-	result = (char *) -1;
-      else if (len == 1)
-	memcpy (result, "/", 2);
-      else
-	*((char *) __mempcpy (result, str, len - 1)) = '\0';
     }
 
   return result;

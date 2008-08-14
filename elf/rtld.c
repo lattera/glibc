@@ -2579,12 +2579,10 @@ process_envvars (enum mode *modep)
 	  break;
 
 	case 11:
-#ifndef __ASSUME_AT_EXECFN
 	  /* Path where the binary is found.  */
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
 	    GLRO(dl_origin_path) = &envline[12];
-#endif
 	  break;
 
 	case 12:

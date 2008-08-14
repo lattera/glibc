@@ -173,9 +173,6 @@ _dl_sysdep_start (void **start_argptr,
 	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;
 #endif
-      case AT_EXECFN:
-	GLRO(dl_execfn) = (void *) av->a_un.a_val;
-	break;
 #ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV
 #endif
