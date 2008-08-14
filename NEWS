@@ -28,6 +28,11 @@ Version 2.9
 * Implement "e" option for popen to open file descriptor with the
   close-on-exec flag set.  Implemented by Ulrich Drepper.
 
+* Implement "b" mode for fmemopen.  In this mode writes writes don't
+  implicitly add a NUL byte and seeks from the end of the buffer really
+  use the buffer end, not the string length as the basis.
+  Implemented by Ulrich Drepper.
+
 * Many functions, exported and internal, now atomically set the close-on-exec
   flag when run on a sufficiently new kernel.  Implemented by Ulrich Drepper.
 

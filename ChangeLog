@@ -1,5 +1,10 @@
 2008-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6544]
+	* libio/fmemopen.c: Implement binary mode.  In this mode no NUL
+	byte gets added to writes and seeks from the end use the length of
+	the buffer and not the currently terminating NUL byte.
+
 	[BZ #6634]
 	* login/utmp_file.c (getutent_r_file): Take additional parameter.
 	Set to true if locking failed.

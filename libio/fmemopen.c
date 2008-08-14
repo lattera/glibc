@@ -1,7 +1,7 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
+   Contributed by Hanno Mueller, kontakt@hanno.de, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -82,6 +82,7 @@ struct fmemopen_cookie_struct
 {
   char *buffer;
   int mybuffer;
+  int binmode;
   size_t size;
   _IO_off64_t pos;
   size_t maxpos;
@@ -120,7 +121,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
   c = (fmemopen_cookie_t *) cookie;
 
-  addnullc = s == 0 || b[s - 1] != '\0';
+  addnullc = c->binmode == 0 && (s == 0 || b[s - 1] != '\0');
 
   if (c->pos + s + addnullc > c->size)
     {
@@ -165,7 +166,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
       break;
 
     case SEEK_END:
-      np = c->maxpos - *p;
+      np = (c->binmode ? c->size : c->maxpos) - *p;
       break;
 
     default:
@@ -247,6 +248,8 @@ fmemopen (void *buf, size_t len, const char *mode)
     c->pos = c->maxpos;
   else
     c->pos = 0;
+
+  c->binmode = mode[0] != '\0' && mode[1] == 'b';
 
   iof.read = fmemopen_read;
   iof.write = fmemopen_write;
