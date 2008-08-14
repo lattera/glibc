@@ -1,3 +1,12 @@
+2008-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6634]
+	* login/utmp_file.c (getutent_r_file): Take additional parameter.
+	Set to true if locking failed.
+	(getutid_r_file): Adjust caller.
+	(pututline_file): Likewise.  Return NULL in this case.
+	Patch mostly by halesh.s@gmail.com.
+
 2008-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6589]
