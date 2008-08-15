@@ -36,16 +36,6 @@
   ({ char *frame; asm ("movq %%rsp, %0" : "=r" (frame)); frame; })
 
 
-/* We prefer to have the stack allocated in the low 4GB since this
-   allows faster context switches.  */
-#define ARCH_MAP_FLAGS MAP_32BIT
-
-/* If it is not possible to allocate memory there retry without that
-   flag.  */
-#define ARCH_RETRY_MMAP(size, prot) \
-  mmap (NULL, size, prot, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
-
-
 /* XXX Until we have a better place keep the definitions here.  */
 
 /* While there is no such syscall.  */

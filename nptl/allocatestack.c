@@ -84,10 +84,10 @@
 #endif
 
 
-/* Let the architecture add some flags to the mmap() call used to
-   allocate stacks.  */
-#ifndef ARCH_MAP_FLAGS
-# define ARCH_MAP_FLAGS 0
+/* Newer kernels have the MAP_STACK flag to indicate a mapping is used for
+   a stack.  Use it when possible.  */
+#ifndef MAP_STACK
+# define MAP_STACK 0
 #endif
 
 /* This yields the pointer that TLS support code calls the thread pointer.  */
@@ -454,20 +454,14 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
 	  mem = mmap (NULL, size, prot,
-		      MAP_PRIVATE | MAP_ANONYMOUS | ARCH_MAP_FLAGS, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
 	    {
-#ifdef ARCH_RETRY_MMAP
-	      mem = ARCH_RETRY_MMAP (size, prot);
-	      if (__builtin_expect (mem == MAP_FAILED, 0))
-#endif
-		{
-		  if (errno == ENOMEM)
-		    errno = EAGAIN;
+	      if (errno == ENOMEM)
+		__set_errno (EAGAIN);
 
-		  return errno;
-		}
+	       return errno;
 	    }
 
 	  /* SIZE is guaranteed to be greater than zero.

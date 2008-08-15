@@ -1,3 +1,12 @@
+2008-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/pthreaddef.h: Remove ARCH_MAP_FLAGS and
+	ARCH_RETRY_MMAP definitions.
+	* allocatestack.c: Remove definition of ARCH_MAP_FLAGS.
+	Define MAP_STACK when not defined.
+	(allocate_stack): Use MAP_STACK instead of ARCH_MAP_FLAGS.  Remove
+	handling of ARCH_RETRY_MMAP.
+
 2008-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-align2.c (f): Print message that f is reached.

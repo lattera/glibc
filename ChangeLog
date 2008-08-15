@@ -1,3 +1,8 @@
+2008-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Define MAP_STACK.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+
 2008-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/memset.S: Reduce size of tables for PIC.
