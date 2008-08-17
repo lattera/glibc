@@ -1,3 +1,12 @@
+2008-08-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6845]
+	* sysdeps/powerpc/fpu/bits/mathinline.h (__signbitl): Copy new
+	__signbitl definition and __LONG_DOUBLE_128__ guard from:
+	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h: Remove as
+	redundant.  Functions which call floating point assembler operations
+	should go into a sysdeps powerpc/fpu directory.
+
 2008-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Define MAP_STACK.

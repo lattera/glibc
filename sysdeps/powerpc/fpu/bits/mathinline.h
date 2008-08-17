@@ -1,5 +1,5 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004, 2006, 2007
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004, 2006, 2007, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -72,6 +72,14 @@ __NTH (__signbit (double __x))
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[0] < 0;
 }
+#  ifdef __LONG_DOUBLE_128__
+__MATH_INLINE int
+__NTH (__signbitl (long double __x))
+{
+  __extension__ union { long double __d; int __i[4]; } __u = { __d: __x };
+  return __u.__i[0] < 0;
+}
+#  endif
 # endif
 #endif /* __USE_ISOC99 */
 
