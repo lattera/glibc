@@ -1,3 +1,11 @@
+2008-08-18  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (--with-cpu): Check compiler support for -march/-mcpu.
+	* configure: Regenerated.
+	* config.make.in (cflags-cpu): New substituted variable.
+	(with-cpu): Variable removed.
+	* Makeconfig (+cflags): Use $(cflags-cpu), not $(with-cpu).
+
 2008-08-14  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #6845]
