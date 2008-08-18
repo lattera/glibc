@@ -326,7 +326,6 @@ AC_ARG_WITH([cpu],
   esac
 ])
 
-
 # An add-on can set this when it wants to disable the sanity check below.
 libc_config_ok=no
 
@@ -1972,6 +1971,22 @@ EOF
     AC_DEFINE(HAVE_TLS_MODEL_ATTRIBUTE)
   fi
 fi
+
+if test -n "$submachine"; then
+  AC_CACHE_CHECK([for compiler option for CPU variant],
+  		 libc_cv_cc_submachine, [dnl
+  libc_cv_cc_submachine=no
+  for opt in "-march=$submachine" "-mcpu=$submachine"; do
+    if AC_TRY_COMMAND([${CC-cc} $opt -xc /dev/null -S -o /dev/null]); then
+      libc_cv_cc_submachine="$opt"
+      break
+    fi
+  done])
+  if test "x$libc_cv_cc_submachine" = xno; then
+    AC_MSG_ERROR([${CC-cc} does not support $submachine])
+  fi
+fi
+AC_SUBST(libc_cv_cc_submachine)
 
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)

@@ -730,6 +730,7 @@ libc_cv_gnu89_inline
 libc_cv_have_initfini
 no_whole_archive
 exceptions
+libc_cv_cc_submachine
 LIBGD
 have_libaudit
 have_libcap
@@ -2327,7 +2328,6 @@ echo "$as_me: error: --with-cpu requires an argument" >&2;}
   esac
 
 fi
-
 
 
 # An add-on can set this when it wants to disable the sanity check below.
@@ -7097,6 +7097,35 @@ _ACEOF
   fi
 fi
 
+if test -n "$submachine"; then
+  { echo "$as_me:$LINENO: checking for compiler option for CPU variant" >&5
+echo $ECHO_N "checking for compiler option for CPU variant... $ECHO_C" >&6; }
+if test "${libc_cv_cc_submachine+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+    libc_cv_cc_submachine=no
+  for opt in "-march=$submachine" "-mcpu=$submachine"; do
+    if { ac_try='${CC-cc} $opt -xc /dev/null -S -o /dev/null'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+      libc_cv_cc_submachine="$opt"
+      break
+    fi
+  done
+fi
+{ echo "$as_me:$LINENO: result: $libc_cv_cc_submachine" >&5
+echo "${ECHO_T}$libc_cv_cc_submachine" >&6; }
+  if test "x$libc_cv_cc_submachine" = xno; then
+    { { echo "$as_me:$LINENO: error: ${CC-cc} does not support $submachine" >&5
+echo "$as_me: error: ${CC-cc} does not support $submachine" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+fi
+
+
 { echo "$as_me:$LINENO: checking for libgd" >&5
 echo $ECHO_N "checking for libgd... $ECHO_C" >&6; }
 if test "$with_gd" != "no"; then
@@ -9264,6 +9293,7 @@ libc_cv_gnu89_inline!$libc_cv_gnu89_inline$ac_delim
 libc_cv_have_initfini!$libc_cv_have_initfini$ac_delim
 no_whole_archive!$no_whole_archive$ac_delim
 exceptions!$exceptions$ac_delim
+libc_cv_cc_submachine!$libc_cv_cc_submachine$ac_delim
 LIBGD!$LIBGD$ac_delim
 have_libaudit!$have_libaudit$ac_delim
 have_libcap!$have_libcap$ac_delim
@@ -9301,7 +9331,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 52; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 53; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

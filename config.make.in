@@ -31,7 +31,7 @@ base-machine = @base_machine@
 config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
-with-cpu = @submachine@
+cflags-cpu = @libc_cv_cc_submachine@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
