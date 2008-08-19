@@ -247,8 +247,8 @@ tests-clean:
 tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 check-data := $(firstword $(wildcard \
-	        $(foreach D,$(add-ons) scripts/data,\
-	        	  $(patsubst %,$D/c++-types-%.data,\
+	        $(foreach D,$(add-ons) scripts,\
+	        	  $(patsubst %,$D/data/c++-types-%.data,\
 			   	     $(abi-name) \
 			   	     $(addsuffix -$(config-os),\
 				     		 $(config-machine) \

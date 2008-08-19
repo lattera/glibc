@@ -841,8 +841,8 @@ $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
 check-data := $(firstword $(wildcard \
-	        $(foreach D,$(add-ons) scripts/data,\
-	        	  $(patsubst %,$(..)$D/localplt-%.data,\
+	        $(foreach D,$(add-ons) scripts,\
+	        	  $(patsubst %,$(..)$D/data/localplt-%.data,\
 			   	     $(abi-name) \
 			   	     $(addsuffix -$(config-os),\
 				     		 $(config-machine) \
