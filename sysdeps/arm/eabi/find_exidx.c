@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,7 +72,7 @@ __gnu_Unwind_Find_exidx (_Unwind_Ptr pc, int * pcount)
 
   data.pc = pc;
   data.exidx_start = 0;
-  if (dl_iterate_phdr (find_exidx_callback, &data) <= 0)
+  if (__dl_iterate_phdr (find_exidx_callback, &data) <= 0)
     return 0;
 
   *pcount = data.exidx_len / 8;

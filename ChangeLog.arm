@@ -1,3 +1,23 @@
+2008-08-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/c++-types-arm-linux-gnueabi.data: New.
+	* data/localplt-arm-linux-gnueabi.data: New.
+	* sysdeps/arm/bsd-_setjmp.S: Use HIDDEN_JUMPTARGET to call
+	__sigsetjmp.
+	* sysdeps/arm/bsd-setjmp.S: Likewise.
+	* sysdeps/arm/eabi/aeabi_localeconv.c: Use __localeconv.
+	* sysdeps/arm/eabi/find_exidx.c (__gnu_Unwind_Find_exidx): Use
+	__dl_iterate_phdr.
+	* sysdeps/arm/eabi/setjmp.S: Add hidden_def (__sigsetjmp).
+	* sysdeps/arm/memmove.S: Use HIDDEN_JUMPTARGET to call memcpy from
+	within libc.
+	* sysdeps/arm/setjmp.S: Add hidden_def (__sigsetjmp).
+	* sysdeps/unix/sysv/linux/arm/clone.S: Use HIDDEN_JUMPTARGET to
+	call _exit.
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Use __sysctl,
+	__readlink and fgets_unlocked.
+	(_ioperm): Use __open and __close.
+
 2008-07-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/fgetexcptflg.c: New.

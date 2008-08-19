@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
@@ -100,7 +100,7 @@ ENTRY(__clone)
 	ldr 	pc, [sp], #8
 
 	@ and we are done, passing the return value through r0
-	b	PLTJMP(_exit)
+	b	PLTJMP(HIDDEN_JUMPTARGET(_exit))
 
 PSEUDO_END (__clone)
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell, based on the Alpha version by
    David Mosberger.
@@ -110,14 +110,14 @@ init_iosys (void)
   static int ioshift_name[] = { CTL_BUS, BUS_ISA, BUS_ISA_PORT_SHIFT };
   size_t len = sizeof(io.base);
 
-  if (! sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)
-      && ! sysctl (ioshift_name, 3, &io.shift, &len, NULL, 0))
+  if (! __sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)
+      && ! __sysctl (ioshift_name, 3, &io.shift, &len, NULL, 0))
     {
       io.initdone = 1;
       return 0;
     }
 
-  n = readlink (PATH_ARM_SYSTYPE, systype, sizeof (systype) - 1);
+  n = __readlink (PATH_ARM_SYSTYPE, systype, sizeof (systype) - 1);
   if (n > 0)
     {
       systype[n] = '\0';
@@ -144,7 +144,7 @@ init_iosys (void)
 	  if (n == 1)
 	    break;
 	  else
-	    fgets (systype, 256, fp);
+	    fgets_unlocked (systype, 256, fp);
 	}
       fclose (fp);
 
@@ -195,7 +195,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	{
 	  int fd;
 
-	  fd = open ("/dev/mem", O_RDWR);
+	  fd = __open ("/dev/mem", O_RDWR);
 	  if (fd < 0)
 	    return -1;
 
@@ -203,7 +203,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	    (unsigned long int) __mmap (0, MAX_PORT << io.shift,
 					PROT_READ | PROT_WRITE,
 					MAP_SHARED, fd, io.io_base);
-	  close (fd);
+	  __close (fd);
 	  if ((long) io.base == -1)
 	    return -1;
 	}

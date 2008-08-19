@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    Contributed by MontaVista Software, Inc. (written by Nicolas Pitre)
@@ -66,7 +66,11 @@ ENTRY(memmove)
 
 		subs	ip, r0, r1
 		cmphi	r2, ip
+#ifdef NOT_IN_libc
 		bls	memcpy
+#else
+		bls	HIDDEN_JUMPTARGET(memcpy)
+#endif
 
 		stmfd	sp!, {r0, r4, lr}
 		add	r1, r1, r2
