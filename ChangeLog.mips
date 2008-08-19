@@ -1,5 +1,15 @@
 2008-08-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Define SOCK_CLOEXEC,
+	SOCK_NONBLOCK, PF_ISDN and AF_ISDN.
+	* sysdeps/unix/sysv/linux/mips/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/timerfd.h: New file.
+
+2008-08-19  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/mips/fpu_control.h (_FPU_GETCW, _FPU_SETCW): Make asms
 	volatile.
 

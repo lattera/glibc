@@ -54,10 +54,20 @@ enum __socket_type
 #define SOCK_SEQPACKET SOCK_SEQPACKET
   SOCK_DCCP = 6,
 #define SOCK_DCCP SOCK_DCCP	/* Datagram Congestion Control Protocol.  */
-  SOCK_PACKET = 10		/* Linux specific way of getting packets
+  SOCK_PACKET = 10,		/* Linux specific way of getting packets
 				   at the dev level.  For writing rarp and
 				   other similar things on the user level. */
 #define SOCK_PACKET SOCK_PACKET
+
+  /* Flags to be ORed into the type parameter of socket and socketpair and
+     used for the flags parameter of paccept.  */
+
+  SOCK_CLOEXEC = 02000000,	/* Atomically set close-on-exec flag for the
+				   new descriptor(s).  */
+#define SOCK_CLOEXEC SOCK_CLOEXEC
+  SOCK_NONBLOCK = 0200		/* Atomically mark descriptor(s) as
+				   non-blocking.  */
+#define SOCK_NONBLOCK SOCK_NONBLOCK
 };
 
 /* Protocol families.  */
@@ -92,7 +102,8 @@ enum __socket_type
 #define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
 #define	PF_IUCV		32	/* IUCV sockets.  */
 #define PF_RXRPC	33	/* RxRPC sockets.  */
-#define	PF_MAX		34	/* For now..  */
+#define PF_ISDN		34	/* mISDN sockets.  */
+#define	PF_MAX		35	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -126,6 +137,7 @@ enum __socket_type
 #define	AF_BLUETOOTH	PF_BLUETOOTH
 #define	AF_IUCV		PF_IUCV
 #define AF_RXRPC	PF_RXRPC
+#define AF_ISDN		PF_ISDN
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
