@@ -1,3 +1,8 @@
+2008-08-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu_control.h (_FPU_GETCW, _FPU_SETCW): Make asms
+	volatile.
+
 2008-07-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/bits/setjmp.h (__jmp_buf): Give name to structure
