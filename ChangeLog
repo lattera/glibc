@@ -1,3 +1,7 @@
+2008-08-26  Aurelien Jarno  <aurelien@aurel32.net>
+
+        * hurd/hurd/signal.h (HURD_MSGPORT_RPC): Fix a typo.
+
 2008-07-18  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* Makefile (check-data): Check data directory in add-ons.

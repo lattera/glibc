@@ -347,7 +347,7 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
 	if (__err)							      \
 	  break;							      \
 	/* Get the reference port.  */					      \
-	_err = (fetch_refport_expr);					      \
+	__err = (fetch_refport_expr);					      \
 	if (__err)							      \
 	  {								      \
 	    /* Couldn't get it; deallocate MSGPORT and fail.  */	      \
