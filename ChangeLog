@@ -1,5 +1,6 @@
 2008-08-26  Aurelien Jarno  <aurelien@aurel32.net>
 
+	[BZ #6860]
         * hurd/hurd/signal.h (HURD_MSGPORT_RPC): Fix a typo.
 
 2008-07-18  Daniel Jacobowitz  <dan@codesourcery.com>
