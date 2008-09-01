@@ -255,6 +255,7 @@ km_KH/UTF-8 \
 kn_IN/UTF-8 \
 ko_KR.EUC-KR/EUC-KR \
 ko_KR.UTF-8/UTF-8 \
+ks_IN@devanagari/UTF-8 \
 ku_TR.UTF-8/UTF-8 \
 ku_TR/ISO-8859-9 \
 kw_GB.UTF-8/UTF-8 \
@@ -324,6 +325,7 @@ ru_UA/KOI8-U \
 rw_RW/UTF-8 \
 sa_IN/UTF-8 \
 sc_IT/UTF-8 \
+sd_IN@devanagari/UTF-8 \
 se_NO/UTF-8 \
 shs_CA/UTF-8 \
 si_LK/UTF-8 \
