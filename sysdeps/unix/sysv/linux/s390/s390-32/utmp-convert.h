@@ -15,3 +15,74 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+
+/* This file provides functions converting between the 32 and 64 bit
+   struct utmp variants.  */
+
+#ifndef _UTMP_CONVERT_H
+#define _UTMP_CONVERT_H 1
+
+#include <string.h>
+
+#include "utmp32.h"
+
+/* Convert the 64 bit struct utmp value in FROM to the 32 bit version
+   returned in TO.  */
+static inline void
+utmp_convert64to32 (__const struct utmp *from, struct utmp32 *to)
+{
+#if _HAVE_UT_TYPE - 0
+  to->ut_type = from->ut_type;
+#endif
+#if _HAVE_UT_PID - 0
+  to->ut_pid = from->ut_pid;
+#endif
+  memcpy (to->ut_line, from->ut_line, UT_LINESIZE);
+  memcpy (to->ut_user, from->ut_user, UT_NAMESIZE);
+#if _HAVE_UT_ID - 0
+  memcpy (to->ut_id, from->ut_id, 4);
+#endif
+#if _HAVE_UT_HOST - 0
+  memcpy (to->ut_host, from->ut_host, UT_HOSTSIZE);
+#endif
+  to->ut_exit = from->ut_exit;
+  to->ut_session = (int32_t) from->ut_session;
+#if _HAVE_UT_TV - 0
+  to->ut_tv.tv_sec = (int32_t) from->ut_tv.tv_sec;
+  to->ut_tv.tv_usec = (int32_t) from->ut_tv.tv_usec;
+#endif
+  memcpy (to->ut_addr_v6, from->ut_addr_v6, 4 * 4);
+}
+
+/* Convert the 32 bit struct utmp value in FROM to the 64 bit version
+   returned in TO.  */
+static inline void
+utmp_convert32to64 (__const struct utmp32 *from, struct utmp *to)
+{
+#if _HAVE_UT_TYPE - 0
+  to->ut_type = from->ut_type;
+#endif
+#if _HAVE_UT_PID - 0
+  to->ut_pid = from->ut_pid;
+#endif
+  memcpy (to->ut_line, from->ut_line, UT_LINESIZE);
+  memcpy (to->ut_user, from->ut_user, UT_NAMESIZE);
+#if _HAVE_UT_ID - 0
+  memcpy (to->ut_id, from->ut_id, 4);
+#endif
+#if _HAVE_UT_HOST - 0
+  memcpy (to->ut_host, from->ut_host, UT_HOSTSIZE);
+#endif
+  to->ut_exit = from->ut_exit;
+  to->ut_session = (int64_t) from->ut_session;
+#if _HAVE_UT_TV - 0
+  to->ut_tv.tv_sec = (int64_t) from->ut_tv.tv_sec;
+  to->ut_tv.tv_usec = (int64_t) from->ut_tv.tv_usec;
+#endif
+  memcpy (to->ut_addr_v6, from->ut_addr_v6, 4 * 4);
+}
+
+#endif /* utmp-convert.h */
