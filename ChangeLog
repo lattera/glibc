@@ -1,3 +1,10 @@
+2008-09-12  Flavio Leitner  <fleitner@redhat.com>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_vALLOc): Try other arenas in case
+	_int_valloc fails.
+	(public_pVALLOc): Likewise.
+
 2008-09-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/utmp-convert.h: Fix last
