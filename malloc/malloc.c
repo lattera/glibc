@@ -3800,17 +3800,39 @@ public_vALLOc(size_t bytes)
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
+  size_t pagesz = mp_.pagesize;
+
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
   if (hook != NULL)
-    return (*hook)(mp_.pagesize, bytes, RETURN_ADDRESS (0));
+    return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
 
-  arena_get(ar_ptr, bytes + mp_.pagesize + MINSIZE);
+  arena_get(ar_ptr, bytes + pagesz + MINSIZE);
   if(!ar_ptr)
     return 0;
   p = _int_valloc(ar_ptr, bytes);
   (void)mutex_unlock(&ar_ptr->mutex);
+  if(!p) {
+    /* Maybe the failure is due to running out of mmapped areas. */
+    if(ar_ptr != &main_arena) {
+      (void)mutex_lock(&main_arena.mutex);
+      p = _int_memalign(&main_arena, pagesz, bytes);
+      (void)mutex_unlock(&main_arena.mutex);
+    } else {
+#if USE_ARENAS
+      /* ... or sbrk() has failed and there is still a chance to mmap() */
+      ar_ptr = arena_get2(ar_ptr->next ? ar_ptr : 0, bytes);
+      if(ar_ptr) {
+        p = _int_memalign(ar_ptr, pagesz, bytes);
+        (void)mutex_unlock(&ar_ptr->mutex);
+      }
+#endif
+    }
+  }
+  assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
+	 ar_ptr == arena_for_chunk(mem2chunk(p)));
+
   return p;
 }
 
@@ -3823,17 +3845,40 @@ public_pVALLOc(size_t bytes)
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
+  size_t pagesz = mp_.pagesize;
+  size_t page_mask = mp_.pagesize - 1;
+  size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
+
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
   if (hook != NULL)
-    return (*hook)(mp_.pagesize,
-		   (bytes + mp_.pagesize - 1) & ~(mp_.pagesize - 1),
-		   RETURN_ADDRESS (0));
+    return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
 
-  arena_get(ar_ptr, bytes + 2*mp_.pagesize + MINSIZE);
+  arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
   p = _int_pvalloc(ar_ptr, bytes);
   (void)mutex_unlock(&ar_ptr->mutex);
+  if(!p) {
+    /* Maybe the failure is due to running out of mmapped areas. */
+    if(ar_ptr != &main_arena) {
+      (void)mutex_lock(&main_arena.mutex);
+      p = _int_memalign(&main_arena, pagesz, rounded_bytes);
+      (void)mutex_unlock(&main_arena.mutex);
+    } else {
+#if USE_ARENAS
+      /* ... or sbrk() has failed and there is still a chance to mmap() */
+      ar_ptr = arena_get2(ar_ptr->next ? ar_ptr : 0,
+			  bytes + 2*pagesz + MINSIZE);
+      if(ar_ptr) {
+        p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
+        (void)mutex_unlock(&ar_ptr->mutex);
+      }
+#endif
+    }
+  }
+  assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
+	 ar_ptr == arena_for_chunk(mem2chunk(p)));
+
   return p;
 }
 
