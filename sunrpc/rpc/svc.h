@@ -303,6 +303,11 @@ extern SVCXPRT *svcudp_bufcreate (int __sock, u_int __sendsz, u_int __recvsz)
 extern SVCXPRT *svctcp_create (int __sock, u_int __sendsize, u_int __recvsize)
      __THROW;
 
+/*
+ * FD based rpc.
+ */
+extern SVCXPRT *svcfd_create (int __sock, u_int __sendsize, u_int __recvsize)
+     __THROW;
 
 /*
  * Unix based rpc.

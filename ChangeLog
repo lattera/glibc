@@ -1,3 +1,8 @@
+2008-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc/svc.h: Declare svcfd_create.
+	Patch by Michael Solberg <msolberg@redhat.com>.
+
 2008-09-12  Flavio Leitner  <fleitner@redhat.com>
             Ulrich Drepper  <drepper@redhat.com>
 
@@ -13,7 +18,7 @@
 2008-08-26  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #6860]
-        * hurd/hurd/signal.h (HURD_MSGPORT_RPC): Fix a typo.
+	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Fix a typo.
 
 2008-07-18  Daniel Jacobowitz  <dan@codesourcery.com>
 
