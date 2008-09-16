@@ -1,3 +1,7 @@
+2008-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_AG: New file.
+
 2008-09-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ht_HT: New file.
