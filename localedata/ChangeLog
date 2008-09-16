@@ -1,5 +1,8 @@
 2008-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ht_HT: New file.
+	* SUPPORTED: Add ht_HT.UTF-8.
+
 	* locales/en_GB: Change dom_tel_fmt to %A %l.
 	* locales/de_DE: Likewise.
 
