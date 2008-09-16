@@ -17,17 +17,17 @@ territory  "India"
 revision   "1.0"
 date       "2008-08-26"
 %
-category  "sd_IN:2008";LC_IDENTIFICATION
-category  "sd_IN:2008";LC_CTYPE
-category  "sd_IN:2008";LC_COLLATE
-category  "sd_IN:2008";LC_TIME
-category  "sd_IN:2008";LC_NUMERIC
-category  "sd_IN:2008";LC_MONETARY
-category  "sd_IN:2008";LC_MESSAGES
-category  "sd_IN:2008";LC_PAPER
-category  "sd_IN:2008";LC_NAME
-category  "sd_IN:2008";LC_ADDRESS
-category  "sd_IN:2008";LC_TELEPHONE
+category  "sd_IN@devanagari:2008";LC_IDENTIFICATION
+category  "sd_IN@devanagari:2008";LC_CTYPE
+category  "sd_IN@devanagari:2008";LC_COLLATE
+category  "sd_IN@devanagari:2008";LC_TIME
+category  "sd_IN@devanagari:2008";LC_NUMERIC
+category  "sd_IN@devanagari:2008";LC_MONETARY
+category  "sd_IN@devanagari:2008";LC_MESSAGES
+category  "sd_IN@devanagari:2008";LC_PAPER
+category  "sd_IN@devanagari:2008";LC_NAME
+category  "sd_IN@devanagari:2008";LC_ADDRESS
+category  "sd_IN@devanagari:2008";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
