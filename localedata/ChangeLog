@@ -1,5 +1,8 @@
 2008-09-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/nl_AW: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add nl_AW.UTF-8.
+
 	* locales/en_AG: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add en_AG.UTF-8.
 
