@@ -203,7 +203,7 @@ END LC_ADDRESS
 LC_TELEPHONE
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
+tel_dom_fmt    "<U0025><U0041><U0020><U0025><U006C>"
 int_select     "<U0030><U0030>"
 int_prefix     "<U0034><U0039>"
 END LC_TELEPHONE
