@@ -1,3 +1,7 @@
+2008-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_GB: Set first weekday and workday to 2.
+
 2008-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/nl_AW: New file.
