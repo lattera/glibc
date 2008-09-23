@@ -1,3 +1,10 @@
+2008-09-08  Richard Guenther  <rguenther@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_lock,
+	lll_robust_lock, lll_cond_lock, lll_robust_cond_lock,
+	lll_timedlock, lll_robust_timedlock, lll_unlock,
+	lll_robust_unlock): Promote private to int.
+
 2008-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/pthreaddef.h: Remove ARCH_MAP_FLAGS and
