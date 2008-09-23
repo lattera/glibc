@@ -1,3 +1,8 @@
+2008-09-22  Deborah S. Townsend  <dstownse@us.ibm.com>
+
+	* sysdeps/s390/s390-64/s390x-mcount.S: Replace ahi with aghi.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S: Likewise.
+
 2008-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/dlopen.c (dlopen_doit): Allow __RTLD_SPROF flag.

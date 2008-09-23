@@ -64,7 +64,7 @@ C_LABEL(_mcount)
 	/* Pop the saved registers.  Please note that `mcount' has no
 	   return value.  */
 	lmg   %r14,%r5,160(%r15)
-        ahi   %r15,224
+        aghi   %r15,224
         br    %r14
 	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(_mcount))
 

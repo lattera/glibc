@@ -61,7 +61,7 @@ ENTRY(__socket)
 	cfi_offset (%r6,-112)
         lgr     %r1,%r15
         lg      %r0,8(%r15)             /* Load eos.  */
-        ahi     %r15,-208               /* Buy stack space.  */
+        aghi     %r15,-208              /* Buy stack space.  */
 	cfi_adjust_cfa_offset (208)
         stg     %r1,0(%r15)             /* Store back chain.  */
         stg     %r0,8(%r15)             /* Store eos.  */
