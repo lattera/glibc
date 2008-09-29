@@ -1,5 +1,9 @@
 2008-09-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* socket/Versions: Remove paccept export for GLIBC_2.9.
+	* socket/Makefile (routines): Remove paccept.
+	* socket/sys/socket.h: Remove paccept declaration.
+
 	* po/sv.po: Update from translation team.
 
 2008-09-22  Deborah S. Townsend  <dstownse@us.ibm.com>

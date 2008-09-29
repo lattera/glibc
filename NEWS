@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-9-16
+GNU C Library NEWS -- history of user-visible changes.  2008-9-29
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -23,7 +23,7 @@ Version 2.9
 * New implementation of memmem, strstr, and strcasestr which is O(n).
   Implemented by Eric Blake.
 
-* New Linux interfaces: inotify_init1, paccept, dup3, epoll_create1, pipe2
+* New Linux interfaces: inotify_init1, dup3, epoll_create1, pipe2
 
 * Implement "e" option for popen to open file descriptor with the
   close-on-exec flag set.  Implemented by Ulrich Drepper.
