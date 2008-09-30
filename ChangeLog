@@ -1,3 +1,7 @@
+2008-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Disable use of paccept for now.
+
 2008-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* socket/Versions: Remove paccept export for GLIBC_2.9.

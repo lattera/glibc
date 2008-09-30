@@ -239,7 +239,7 @@ static int resolv_conf_descr = -1;
    before be know the result.  */
 static int have_sock_cloexec;
 /* The paccept syscall was introduced at the same time as SOCK_CLOEXEC.  */
-# define have_paccept have_sock_cloexec
+# define have_paccept -1	// XXX For the time being there is no such call
 #endif
 
 /* Number of times clients had to wait.  */
