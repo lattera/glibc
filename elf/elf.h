@@ -1397,6 +1397,7 @@ typedef struct
 #define STO_MIPS_INTERNAL		0x1
 #define STO_MIPS_HIDDEN			0x2
 #define STO_MIPS_PROTECTED		0x3
+#define STO_MIPS_PLT			0x8
 #define STO_MIPS_SC_ALIGN_UNUSED	0xff
 
 /* MIPS specific values for `st_info'.  */
@@ -1543,8 +1544,10 @@ typedef struct
 #define R_MIPS_TLS_TPREL_HI16	49	/* TP-relative offset, high 16 bits */
 #define R_MIPS_TLS_TPREL_LO16	50	/* TP-relative offset, low 16 bits */
 #define R_MIPS_GLOB_DAT		51
+#define R_MIPS_COPY		126
+#define R_MIPS_JUMP_SLOT        127
 /* Keep this the last entry.  */
-#define R_MIPS_NUM		52
+#define R_MIPS_NUM		128
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
@@ -1610,7 +1613,13 @@ typedef struct
 #define DT_MIPS_COMPACT_SIZE 0x7000002f /* (O32)Size of compact rel section. */
 #define DT_MIPS_GP_VALUE     0x70000030 /* GP value for aux GOTs.  */
 #define DT_MIPS_AUX_DYNAMIC  0x70000031 /* Address of aux .dynamic.  */
-#define DT_MIPS_NUM	     0x32
+/* The address of .got.plt in an executable using the new non-PIC ABI.  */
+#define DT_MIPS_PLTGOT	     0x70000032
+/* The base of the PLT in an executable using the new non-PIC ABI if that
+   PLT is writable.  For a non-writable PLT, this is omitted or has a zero
+   value.  */
+#define DT_MIPS_RWPLT        0x70000034
+#define DT_MIPS_NUM	     0x35
 
 /* Legal values for DT_MIPS_FLAGS Elf32_Dyn entry.  */
 
