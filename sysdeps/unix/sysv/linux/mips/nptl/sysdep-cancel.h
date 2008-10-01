@@ -25,28 +25,38 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
-#ifdef __PIC__
+# ifdef __PIC__
+#  define PSEUDO_CPLOAD .cpload t9;
+#  define PSEUDO_ERRJMP la t9, __syscall_error; jr t9;
+#  define PSEUDO_SAVEGP sw gp, 32(sp); cfi_rel_offset (gp, 32);
+#  define PSEUDO_LOADGP lw gp, 32(sp);
+# else
+#  define PSEUDO_CPLOAD
+#  define PSEUDO_ERRJMP j __syscall_error;
+#  define PSEUDO_SAVEGP
+#  define PSEUDO_LOADGP
+# endif
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
       .align 2;								      \
   L(pseudo_start):							      \
       cfi_startproc;							      \
-  99: la t9,__syscall_error;						      \
-      jr t9;								      \
+  99: PSEUDO_ERRJMP							      \
   .type __##syscall_name##_nocancel, @function;				      \
   .globl __##syscall_name##_nocancel;					      \
   __##syscall_name##_nocancel:						      \
     .set noreorder;							      \
-    .cpload t9;								      \
+    PSEUDO_CPLOAD							      \
     li v0, SYS_ify(syscall_name);					      \
     syscall;								      \
     .set reorder;							      \
-    bne a3, zero, SYSCALL_ERROR_LABEL;			       		      \
+    bne a3, zero, 99b;					       		      \
     ret;								      \
   .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   ENTRY (name)								      \
     .set noreorder;							      \
-    .cpload t9;								      \
+    PSEUDO_CPLOAD							      \
     .set reorder;							      \
     SINGLE_THREAD_P(v1);						      \
     bne zero, v1, L(pseudo_cancel);					      \
@@ -54,17 +64,16 @@
     li v0, SYS_ify(syscall_name);					      \
     syscall;								      \
     .set reorder;							      \
-    bne a3, zero, SYSCALL_ERROR_LABEL;			       		      \
+    bne a3, zero, 99b;					       		      \
     ret;								      \
   L(pseudo_cancel):							      \
     SAVESTK_##args;						              \
     sw ra, 28(sp);							      \
     cfi_rel_offset (ra, 28);						      \
-    sw gp, 32(sp);							      \
-    cfi_rel_offset (gp, 32);						      \
+    PSEUDO_SAVEGP							      \
     PUSHARGS_##args;			/* save syscall args */	      	      \
     CENABLE;								      \
-    lw gp, 32(sp);							      \
+    PSEUDO_LOADGP							      \
     sw v0, 44(sp);			/* save mask */			      \
     POPARGS_##args;			/* restore syscall args */	      \
     .set noreorder;							      \
@@ -75,20 +84,18 @@
     sw a3, 40(sp);			/* save syscall error flag */	      \
     lw a0, 44(sp);			/* pass mask as arg1 */		      \
     CDISABLE;								      \
-    lw gp, 32(sp);							      \
+    PSEUDO_LOADGP							      \
     lw v0, 36(sp);			/* restore syscall result */          \
     lw a3, 40(sp);			/* restore syscall error flag */      \
     lw ra, 28(sp);			/* restore return address */	      \
     .set noreorder;							      \
-    bne a3, zero, SYSCALL_ERROR_LABEL;					      \
+    bne a3, zero, 99b;							      \
      RESTORESTK;						              \
   L(pseudo_end):							      \
     .set reorder;
 
 # undef PSEUDO_END
 # define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
-
-#endif
 
 # define PUSHARGS_0	/* nothing to do */
 # define PUSHARGS_1	PUSHARGS_0 sw a0, 0(sp); cfi_rel_offset (a0, 0);
@@ -136,19 +143,25 @@
 # define RESTORESTK 	addu sp, STKSPACE; cfi_adjust_cfa_offset(-STKSPACE)
 
 
+# ifdef __PIC__
 /* We use jalr rather than jal.  This means that the assembler will not
    automatically restore $gp (in case libc has multiple GOTs) so we must
    do it manually - which we have to do anyway since we don't use .cprestore.
    It also shuts up the assembler warning about not using .cprestore.  */
-# ifdef IS_IN_libpthread
-#  define CENABLE	la t9, __pthread_enable_asynccancel; jalr t9;
-#  define CDISABLE	la t9, __pthread_disable_asynccancel; jalr t9;
-# elif defined IS_IN_librt
-#  define CENABLE	la t9, __librt_enable_asynccancel; jalr t9;
-#  define CDISABLE	la t9, __librt_disable_asynccancel; jalr t9;
+#  define PSEUDO_JMP(sym) la t9, sym; jalr t9;
 # else
-#  define CENABLE	la t9, __libc_enable_asynccancel; jalr t9;
-#  define CDISABLE	la t9, __libc_disable_asynccancel; jalr t9;
+#  define PSEUDO_JMP(sym) jal sym;
+# endif
+
+# ifdef IS_IN_libpthread
+#  define CENABLE	PSEUDO_JMP (__pthread_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__pthread_disable_asynccancel)
+# elif defined IS_IN_librt
+#  define CENABLE	PSEUDO_JMP (__librt_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__librt_disable_asynccancel)
+# else
+#  define CENABLE	PSEUDO_JMP (__libc_enable_asynccancel)
+#  define CDISABLE	PSEUDO_JMP (__libc_disable_asynccancel)
 # endif
 
 # ifndef __ASSEMBLER__

@@ -35,15 +35,7 @@
 # define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
-#ifdef __ASSEMBLER__
-
-/* We don't want the label for the error handler to be visible in the symbol
-   table when we define it here.  */
-#ifdef __PIC__
-# define SYSCALL_ERROR_LABEL 99b
-#endif
-
-#else   /* ! __ASSEMBLER__ */
+#ifndef __ASSEMBLER__
 
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */

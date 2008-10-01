@@ -200,7 +200,24 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 	lw	$7, 28($29)\n						      \
 "
 
+/* The PLT resolver should also save and restore $2 and $3, which are used
+   as arguments to MIPS16 stub functions.  */
+#define ELF_DL_PLT_FRAME_SIZE 48
+
+#define ELF_DL_PLT_SAVE_ARG_REGS \
+	ELF_DL_SAVE_ARG_REGS "\
+	sw	$2, 40($29)\n						      \
+	sw	$3, 44($29)\n						      \
+"
+
+#define ELF_DL_PLT_RESTORE_ARG_REGS \
+	ELF_DL_RESTORE_ARG_REGS "\
+	lw	$2, 40($29)\n						      \
+	lw	$3, 44($29)\n						      \
+"
+
 #define IFABIO32(X) X
+#define IFNEWABI(X)
 
 #else /* _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64 */
 
@@ -230,7 +247,24 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 	ld	$11, 64($29)\n						      \
 "
 
+/* The PLT resolver should also save and restore $2 and $3, which are used
+   as arguments to MIPS16 stub functions.  */
+#define ELF_DL_PLT_FRAME_SIZE 96
+
+#define ELF_DL_PLT_SAVE_ARG_REGS \
+	ELF_DL_SAVE_ARG_REGS "\
+	sd	$2, 80($29)\n						      \
+	sd	$3, 88($29)\n						      \
+"
+
+#define ELF_DL_PLT_RESTORE_ARG_REGS \
+	ELF_DL_RESTORE_ARG_REGS "\
+	ld	$2, 80($29)\n						      \
+	ld	$3, 88($29)\n						      \
+"
+
 #define IFABIO32(X)
+#define IFNEWABI(X) X
 
 #endif
 
@@ -270,3 +304,56 @@ _dl_runtime_resolve:\n\
 	.end	_dl_runtime_resolve\n\
 	.previous\n\
 ");
+
+/* Assembler veneer called from the PLT header code when using PLTs.
+
+   Code in each PLT entry and the PLT header fills in the arguments to
+   this function:
+
+   - $15 (o32 t7, n32/n64 t3) - caller's return address
+   - $24 (t8) - PLT entry index
+   - $25 (t9) - address of _dl_runtime_pltresolve
+   - o32 $28 (gp), n32/n64 $14 (t2) - address of .got.plt
+
+   Different registers are used for .got.plt because the ABI was
+   originally designed for o32, where gp was available (call
+   clobbered).  On n32/n64 gp is call saved.
+
+   _dl_fixup needs:
+
+   - $4 (a0) - link map address
+   - $5 (a1) - .rel.plt offset (== PLT entry index * 8)  */
+
+asm ("\n\
+	.text\n\
+	.align	2\n\
+	.globl	_dl_runtime_pltresolve\n\
+	.type	_dl_runtime_pltresolve,@function\n\
+	.ent	_dl_runtime_pltresolve\n\
+_dl_runtime_pltresolve:\n\
+	.frame	$29, " STRINGXP(ELF_DL_PLT_FRAME_SIZE) ", $31\n\
+	.set noreorder\n\
+	# Save arguments and sp value in stack.\n\
+	" STRINGXP(PTR_SUBIU) "	$29, " STRINGXP(ELF_DL_PLT_FRAME_SIZE) "\n\
+	" IFABIO32(STRINGXP(PTR_L) "	$13, " STRINGXP(PTRSIZE) "($28)") "\n\
+	" IFNEWABI(STRINGXP(PTR_L) "	$13, " STRINGXP(PTRSIZE) "($14)") "\n\
+	# Modify t9 ($25) so as to point .cpload instruction.\n\
+	" IFABIO32(STRINGXP(PTR_ADDIU) "	$25, 12\n") "\
+	# Compute GP.\n\
+	" STRINGXP(SETUP_GP) "\n\
+	" STRINGXV(SETUP_GP64 (0, _dl_runtime_pltresolve)) "\n\
+	.set reorder\n\
+	" IFABIO32(STRINGXP(CPRESTORE(32))) "\n\
+	" ELF_DL_PLT_SAVE_ARG_REGS "\
+	move	$4, $13\n\
+	sll	$5, $24, " STRINGXP(PTRLOG) " + 1\n\
+	jal	_dl_fixup\n\
+	move	$25, $2\n\
+	" ELF_DL_PLT_RESTORE_ARG_REGS "\
+	" STRINGXP(RESTORE_GP64) "\n\
+	" STRINGXP(PTR_ADDIU) "	$29, " STRINGXP(ELF_DL_PLT_FRAME_SIZE) "\n\
+	jr	$25\n\
+	.end	_dl_runtime_pltresolve\n\
+	.previous\n\
+");
+

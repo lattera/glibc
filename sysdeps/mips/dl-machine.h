@@ -25,8 +25,6 @@
 
 #define ELF_MACHINE_NAME "MIPS"
 
-#define ELF_MACHINE_NO_PLT
-
 #include <entry.h>
 
 #ifndef ENTRY_POINT
@@ -55,11 +53,23 @@
 	".size\t" __STRING(entry) ", . - " __STRING(entry) "\n\t"
 #endif
 
+/* Until elf/elf.h in glibc is updated.  */
+#ifndef STO_MIPS_PLT
+#define STO_MIPS_PLT			0x8
+#define R_MIPS_COPY		126
+#define R_MIPS_JUMP_SLOT        127
+#define DT_MIPS_PLTGOT	     0x70000032
+#endif
+
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.
-   This makes no sense on MIPS but we have to define this to R_MIPS_REL32
-   to avoid the asserts in dl-lookup.c from blowing.  */
-#define ELF_MACHINE_JMP_SLOT			R_MIPS_REL32
-#define elf_machine_type_class(type)		ELF_RTYPE_CLASS_PLT
+   This only makes sense on MIPS when using PLTs, so choose the
+   PLT relocation (not encountered when not using PLTs).  */
+#define ELF_MACHINE_JMP_SLOT			R_MIPS_JUMP_SLOT
+#define elf_machine_type_class(type) \
+  ((((type) == ELF_MACHINE_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_MIPS_COPY) * ELF_RTYPE_CLASS_COPY))
+
+#define ELF_MACHINE_PLT_REL 1
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -72,6 +82,15 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
        *(ElfW(Addr) *)((l)->l_info[DT_MIPS (RLD_MAP)]->d_un.d_ptr) = \
        (ElfW(Addr)) (r); \
    } while (0)
+
+/* Allow ABIVERSION == 1, meaning PLTs and copy relocations are
+   required.  */
+#define VALID_ELF_ABIVERSION(ver)	(ver == 0 || ver == 2)
+#define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
+#define VALID_ELF_HEADER(hdr,exp,size) \
+  memcmp (hdr,exp,size-2) == 0 \
+  && VALID_ELF_OSABI (hdr[EI_OSABI]) \
+  && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__
@@ -294,6 +313,24 @@ do {									\
 #  define ARCH_LA_PLTEXIT mips_n64_gnu_pltexit
 # endif
 
+/* For a non-writable PLT, rewrite the .got.plt entry at RELOC_ADDR to
+   point at the symbol with address VALUE.  For a writable PLT, rewrite
+   the corresponding PLT entry instead.  */
+static inline ElfW(Addr)
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Rel) *reloc,
+		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
+{
+  return *reloc_addr = value;
+}
+
+static inline ElfW(Addr)
+elf_machine_plt_value (struct link_map *map, const ElfW(Rel) *reloc,
+		       ElfW(Addr) value)
+{
+  return value;
+}
+
 #endif /* !dl_machine_h */
 
 #ifdef RESOLVE_MAP
@@ -461,6 +498,57 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 #endif
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
+
+    case R_MIPS_JUMP_SLOT:
+      {
+	struct link_map *sym_map;
+	ElfW(Addr) value;
+
+	/* The addend for a jump slot relocation must always be zero:
+	   calls via the PLT always branch to the symbol's address and
+	   not to the address plus a non-zero offset.  */
+	if (r_addend != 0)
+	  _dl_signal_error (0, map->l_name, NULL,
+			    "found jump slot relocation with non-zero addend");
+
+	sym_map = RESOLVE_MAP (&sym, version, r_type);
+	value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+	*addr_field = value;
+
+	break;
+      }
+
+    case R_MIPS_COPY:
+      {
+	const ElfW(Sym) *const refsym = sym;
+	struct link_map *sym_map;
+	ElfW(Addr) value;
+
+	/* Calculate the address of the symbol.  */
+	sym_map = RESOLVE_MAP (&sym, version, r_type);
+	value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+
+	if (__builtin_expect (sym == NULL, 0))
+	  /* This can happen in trace mode if an object could not be
+	     found.  */
+	  break;
+	if (__builtin_expect (sym->st_size > refsym->st_size, 0)
+	    || (__builtin_expect (sym->st_size < refsym->st_size, 0)
+		&& GLRO(dl_verbose)))
+	  {
+	    const char *strtab;
+
+	    strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+	    _dl_error_printf ("\
+  %s: Symbol `%s' has different size in shared object, consider re-linking\n",
+			      rtld_progname ?: "<program name unknown>",
+			      strtab + refsym->st_name);
+	  }
+	memcpy (reloc_addr, (void *) value,
+	        MIN (sym->st_size, refsym->st_size));
+	break;
+      }
+
 #if _MIPS_SIM == _ABI64
     case R_MIPS_64:
       /* For full compliance with the ELF64 ABI, one must precede the
@@ -504,9 +592,23 @@ elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 auto inline void
 __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc)
+		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
 {
-  /* Do nothing.  */
+  ElfW(Addr) *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELFW(R_TYPE) (reloc->r_info);
+  /* Check for unexpected PLT reloc type.  */
+  if (__builtin_expect (r_type == R_MIPS_JUMP_SLOT, 1))
+    {
+      if (__builtin_expect (map->l_mach.plt, 0) == 0)
+	{
+	  /* Nothing is required here since we only support lazy
+	     relocation in executables.  */
+	}
+      else
+	*reloc_addr = map->l_mach.plt;
+    }
+  else
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 auto inline void
@@ -537,13 +639,13 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   const ElfW(Half) *vernum;
   int i, n, symidx;
 
-#define RESOLVE_GOTSYM(sym,vernum,sym_index)				  \
+#define RESOLVE_GOTSYM(sym,vernum,sym_index,reloc)			  \
     ({									  \
       const ElfW(Sym) *ref = sym;					  \
       const struct r_found_version *version				  \
         = vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
       struct link_map *sym_map;						  \
-      sym_map = RESOLVE_MAP (&ref, version, R_MIPS_REL32);		  \
+      sym_map = RESOLVE_MAP (&ref, version, reloc);			  \
       ref ? sym_map->l_addr + ref->st_value : 0;			  \
     })
 
@@ -584,25 +686,38 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     {
       if (sym->st_shndx == SHN_UNDEF)
 	{
-	  if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
-	      && sym->st_value && lazy)
-	    *got = sym->st_value + map->l_addr;
+	  if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC && sym->st_value
+	      && !(sym->st_other & STO_MIPS_PLT))
+	    {
+	      if (lazy)
+		*got = sym->st_value + map->l_addr;
+	      else
+		/* This is a lazy-binding stub, so we don't need the
+		   canonical address.  */
+		*got = RESOLVE_GOTSYM (sym, vernum, symidx, R_MIPS_JUMP_SLOT);
+	    }
 	  else
-	    *got = RESOLVE_GOTSYM (sym, vernum, symidx);
+	    *got = RESOLVE_GOTSYM (sym, vernum, symidx, R_MIPS_32);
 	}
       else if (sym->st_shndx == SHN_COMMON)
-	*got = RESOLVE_GOTSYM (sym, vernum, symidx);
+	*got = RESOLVE_GOTSYM (sym, vernum, symidx, R_MIPS_32);
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
-	       && *got != sym->st_value
-	       && lazy)
-	*got += map->l_addr;
+	       && *got != sym->st_value)
+	{
+	  if (lazy)
+	    *got += map->l_addr;
+	  else
+	    /* This is a lazy-binding stub, so we don't need the
+	       canonical address.  */
+	    *got = RESOLVE_GOTSYM (sym, vernum, symidx, R_MIPS_JUMP_SLOT);
+	}
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_SECTION)
 	{
 	  if (sym->st_other == 0)
 	    *got += map->l_addr;
 	}
       else
-	*got = RESOLVE_GOTSYM (sym, vernum, symidx);
+	*got = RESOLVE_GOTSYM (sym, vernum, symidx, R_MIPS_32);
 
       ++got;
       ++sym;
@@ -623,6 +738,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 # ifndef RTLD_BOOTSTRAP
   ElfW(Addr) *got;
   extern void _dl_runtime_resolve (ElfW(Word));
+  extern void _dl_runtime_pltresolve (void);
   extern int _dl_mips_gnu_objects;
 
   if (lazy)
@@ -648,6 +764,20 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   /* Relocate global offset table.  */
   elf_machine_got_rel (l, lazy);
+
+  /* If using PLTs, fill in the first two entries of .got.plt.  */
+  if (l->l_info[DT_JMPREL] && lazy)
+    {
+      ElfW(Addr) *gotplt;
+      gotplt = (ElfW(Addr) *) D_PTR (l, l_info[DT_MIPS (PLTGOT)]);
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .got.plt.
+	 The prelinker saved the address of .plt for us here.  */
+      if (gotplt[1])
+	l->l_mach.plt = gotplt[1] + l->l_addr;
+      gotplt[0] = (ElfW(Addr)) &_dl_runtime_pltresolve;
+      gotplt[1] = (ElfW(Addr)) l;
+    }
 
 # endif
   return lazy;
