@@ -1,3 +1,13 @@
+2008-10-01  Mark Shinwell  <shinwell@codesourcery.com>
+
+	* elf/elf.h (STO_MIPS_PLT): New.
+	(R_MIPS_COPY): New.
+	(R_MIPS_JUMP_SLOT): New.
+	(R_MIPS_NUM): Redefine to 128.
+	(DT_MIPS_PLTGOT): New.
+	(DT_MIPS_RWPLT): New.
+	(DT_MIPS_NUM): Redefine to 0x35.
+
 2008-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/africa: Update from tzdata2008f.
