@@ -734,11 +734,11 @@ send_vc(res_state statp,
 	 */
 	int recvresp1 = 0;
 	int recvresp2 = buf2 == NULL;
- read_len:
-	cp = ans;
 	uint16_t rlen16;
+ read_len:
+	cp = (u_char *)&rlen16;
 	len = sizeof(rlen16);
-	while ((n = TEMP_FAILURE_RETRY (read(statp->_vcsock, &rlen16,
+	while ((n = TEMP_FAILURE_RETRY (read(statp->_vcsock, cp,
 					     (int)len))) > 0) {
 		cp += n;
 		if ((len -= n) <= 0)
@@ -778,8 +778,16 @@ send_vc(res_state statp,
 			/* No buffer allocated for the first
 			   reply.  We can try to use the rest
 			   of the user-provided buffer.  */
+#ifdef _STRING_ARCH_unaligned
 			*anssizp2 = orig_anssizp - resplen;
 			*ansp2 = *ansp + resplen;
+#else
+			int aligned_resplen
+			  = ((resplen + __alignof__ (HEADER) - 1)
+			     & (__alignof__ (HEADER) - 1));
+			*anssizp2 = orig_anssizp - aligned_resplen;
+			*ansp2 = *ansp + aligned_resplen;
+#endif
 		} else {
 			/* The first reply did not fit into the
 			   user-provided buffer.  Maybe the second
