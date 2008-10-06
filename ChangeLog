@@ -1,3 +1,9 @@
+2008-09-18  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #6942]
+	* resolv/res_send.c (send_vc): Fix use of unaligned address.
+        Properly handle partial reads.
+
 2008-10-01  Mark Shinwell  <shinwell@codesourcery.com>
 
 	* elf/elf.h (STO_MIPS_PLT): New.
