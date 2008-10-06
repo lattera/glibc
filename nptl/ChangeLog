@@ -1,3 +1,8 @@
+2008-09-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Add memory barrier
+	to force runp->refcntr to be read from memory.
+
 2008-09-08  Richard Guenther  <rguenther@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_lock,
