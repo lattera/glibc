@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -64,6 +64,9 @@ __libc_fork (void)
   struct fork_handler *runp;
   while ((runp = __fork_handlers) != NULL)
     {
+      /* Make sure we read from the current RUNP pointer.  */
+      atomic_full_barrier ();
+
       unsigned int oldval = runp->refcntr;
 
       if (oldval == 0)
