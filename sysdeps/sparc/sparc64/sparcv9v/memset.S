@@ -1,5 +1,5 @@
 /* Set a block of memory to some byte value.  For SUN4V Niagara.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@davemloft.net)
 
@@ -49,7 +49,11 @@ END(memset)
 
 ENTRY(__bzero)
 	clr		%o2
-1:	brz,pn		%o1, 90f
+1:
+#ifndef USE_BRP
+	srl		%o1, 0, %o1
+#endif
+	brz,pn		%o1, 90f
 	 mov		%o0, %o3
 
 	wr		%g0, ASI_P, %asi

@@ -1,3 +1,12 @@
+2008-10-09  Jakub Jelinek <jakub@redhat.com>
+	    David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: When not USE_BPR,
+	make sure any registers used with 64-bit 'branch-on-register'
+	instructions have their top 32-bits clear.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S: Likewise.
+
 2008-09-18  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #6942]
