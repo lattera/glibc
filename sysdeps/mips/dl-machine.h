@@ -53,14 +53,6 @@
 	".size\t" __STRING(entry) ", . - " __STRING(entry) "\n\t"
 #endif
 
-/* Until elf/elf.h in glibc is updated.  */
-#ifndef STO_MIPS_PLT
-#define STO_MIPS_PLT			0x8
-#define R_MIPS_COPY		126
-#define R_MIPS_JUMP_SLOT        127
-#define DT_MIPS_PLTGOT	     0x70000032
-#endif
-
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.
    This only makes sense on MIPS when using PLTs, so choose the
    PLT relocation (not encountered when not using PLTs).  */

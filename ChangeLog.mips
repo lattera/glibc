@@ -1,3 +1,9 @@
+2008-10-15  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/mips/dl-dtprocnum.h (DT_MIPS_NUM): Do not redefine.
+	* sysdeps/mips/dl-machine.h (STO_MIPS_PLT, R_MIPS_COPY,
+	R_MIPS_JUMP_SLOT, DT_MIPS_PLTGOT): Do not redefine.
+
 2008-10-01  Mark Shinwell  <shinwell@codesourcery.com>
 	    Daniel Jacobowitz  <dan@codesourcery.com>
 	    Richard Sandiford  <rdsandiford@googlemail.com>

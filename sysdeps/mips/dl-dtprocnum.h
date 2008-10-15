@@ -17,12 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Until elf/elf.h in glibc is updated.  */
-#ifndef STO_MIPS_PLT
-# undef DT_MIPS_NUM
-# define DT_MIPS_NUM 0x35
-#endif
-
 /* Number of extra dynamic section entries for this architecture.  By
    default there are none.  */
 #define DT_THISPROCNUM	DT_MIPS_NUM
