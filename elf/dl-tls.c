@@ -634,7 +634,7 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		      newp = malloc ((2 + newsize) * sizeof (dtv_t));
 		      if (newp == NULL)
 			oom ();
-		      memcpy (newp, &dtv[-1], oldsize * sizeof (dtv_t));
+		      memcpy (newp, &dtv[-1], (2 * oldsize) * sizeof (dtv_t));
 		    }
 		  else
 		    {
