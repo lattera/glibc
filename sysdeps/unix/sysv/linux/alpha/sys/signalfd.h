@@ -59,7 +59,7 @@ __BEGIN_DECLS
 /* Request notification for delivery of signals in MASK to be
    performed using descriptor FD.*/
 extern int signalfd (int __fd, const sigset_t *__mask, int __flags)
-  __nonnull ((2)) __THROW;
+  __THROW __nonnull ((2));
 
 __END_DECLS
 
