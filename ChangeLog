@@ -1,3 +1,7 @@
+2008-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-tls.c (_dl_update_slotinfo): Copy all of the initial DTV.
+
 2008-10-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/signalfd.h (signalfd): Fix __THROW vs.
