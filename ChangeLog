@@ -1,3 +1,10 @@
+2008-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/signalfd.h (signalfd): Fix __THROW vs.
+	__nonnull order for C++.
+	* sysdeps/unix/sysv/linux/alpha/sys/signalfd.h (signalfd): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/signalfd.h (signalfd): Likewise.
+
 2008-10-01  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* stdlib/longlong.h: Update from GCC.
