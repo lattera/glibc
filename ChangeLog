@@ -1,3 +1,7 @@
+2008-10-01  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* stdlib/longlong.h: Update from GCC.
+
 2008-10-09  Jakub Jelinek <jakub@redhat.com>
 	    David S. Miller  <davem@davemloft.net>
 
