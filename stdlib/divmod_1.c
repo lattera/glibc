@@ -55,7 +55,7 @@ mpn_divmod_1 (quot_ptr, dividend_ptr, dividend_size, divisor_limb)
 {
   mp_size_t i;
   mp_limb_t n1, n0, r;
-  int dummy;
+  mp_limb_t dummy;
 
   /* ??? Should this be handled at all?  Rely on callers?  */
   if (dividend_size == 0)

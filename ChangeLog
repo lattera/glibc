@@ -1,3 +1,8 @@
+2008-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/divmod_1.c: Use correct type for dummy variable.
+	* stdlib/mod_1.c: Likewise.
+
 2008-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-tls.c (_dl_update_slotinfo): Copy all of the initial DTV.
