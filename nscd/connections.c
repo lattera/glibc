@@ -1824,11 +1824,13 @@ main_loop_poll (void)
 	      if (have_paccept >= 0)
 #endif
 		{
+#if 0
 		  fd = TEMP_FAILURE_RETRY (paccept (sock, NULL, NULL, NULL,
 						    SOCK_NONBLOCK));
 #ifndef __ASSUME_PACCEPT
 		  if (have_paccept == 0)
 		    have_paccept = fd != -1 || errno != ENOSYS ? 1 : -1;
+#endif
 #endif
 		}
 #ifndef __ASSUME_PACCEPT

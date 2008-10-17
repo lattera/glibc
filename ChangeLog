@@ -1,3 +1,10 @@
+2008-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run tst-tls17.
+	* elf/tst-tls17.c: New test.
+	* elf/tst-tlsmod17a.c: New file.
+	* elf/tst-tlsmod17b.c: Likewise.
+
 2008-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/divmod_1.c: Use correct type for dummy variable.
