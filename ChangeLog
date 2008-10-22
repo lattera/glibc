@@ -1,3 +1,8 @@
+2008-10-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* misc/syslog.c (openlog_internal): Fix __have_sock_cloexec
+	initialization.
+
 2008-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile: Add rules to build and run tst-tls17.

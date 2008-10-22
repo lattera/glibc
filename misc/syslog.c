@@ -358,10 +358,11 @@ openlog_internal(const char *ident, int logstat, int logfac)
 # ifndef __ASSUME_SOCK_CLOEXEC
 					if (__have_sock_cloexec == 0)
 						__have_sock_cloexec
-						  = (LogFile != -1
-						     || errno != EINVAL);
+						  = ((LogFile != -1
+						      || errno != EINVAL)
+						     ? 1 : -1);
 				}
-#endif
+# endif
 #endif
 #ifndef __ASSUME_SOCK_CLOEXEC
 # ifdef SOCK_CLOEXEC

@@ -161,7 +161,12 @@ typedef struct
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+  do 									      \
+   {									      \
+     __asm __volatile ("" : : : "a0", "a1");				      \
+     THREAD_SETMEM (THREAD_SELF, header.stack_guard, value);		      \
+   }									      \
+  while (0)
 #define THREAD_COPY_STACK_GUARD(descr) \
   ((descr)->header.stack_guard						      \
    = THREAD_GETMEM (THREAD_SELF, header.stack_guard))

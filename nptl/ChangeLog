@@ -1,3 +1,8 @@
+2008-10-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/tls.h (THREAD_SET_STACK_GUARD): Add empty inline
+	assembly with a clobber list for access registers a0 and a1.
+
 2008-09-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Add memory barrier
