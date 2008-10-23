@@ -4,8 +4,8 @@
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and
 # linker.
-echo "$as_me:$LINENO: checking for hppa TLS support" >&5
-echo $ECHO_N "checking for hppa TLS support... $ECHO_C" >&6
+{ echo "$as_me:$LINENO: checking for hppa TLS support" >&5
+echo $ECHO_N "checking for hppa TLS support... $ECHO_C" >&6; }
 if test "${libc_cv_hppa_tls+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -52,8 +52,8 @@ else
 fi
 rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_hppa_tls" >&5
-echo "${ECHO_T}$libc_cv_hppa_tls" >&6
+{ echo "$as_me:$LINENO: result: $libc_cv_hppa_tls" >&5
+echo "${ECHO_T}$libc_cv_hppa_tls" >&6; }
 if test $libc_cv_hppa_tls = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_TLS_SUPPORT 1
