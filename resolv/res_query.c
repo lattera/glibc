@@ -244,15 +244,15 @@ __libc_res_nquery(res_state statp,
 	   tests of HP2.  */
 	HEADER *hp2 = answerp2 ? (HEADER *) *answerp2 : hp;
 
-	if (n < sizeof (HEADER) && nanswerp2 != NULL
-	    && *nanswerp2 > sizeof (HEADER))
+	if (n < (int) sizeof (HEADER) && nanswerp2 != NULL
+	    && *nanswerp2 > (int) sizeof (HEADER))
 	  {
 	    /* Special case of partial answer.  */
 	    assert (hp != hp2);
 	    hp = hp2;
 	  }
-	else if (nanswerp2 != NULL
-		 && *nanswerp2 < sizeof (HEADER) && n > sizeof (HEADER))
+	else if (nanswerp2 != NULL && *nanswerp2 < (int) sizeof (HEADER)
+		 && n > (int) sizeof (HEADER))
 	  {
 	    /* Special case of partial answer.  */
 	    assert (hp != hp2);
