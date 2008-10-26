@@ -1,3 +1,7 @@
+2008-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/id.po: Update from translation team.
+
 2008-10-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nquery): Add a few casts.
