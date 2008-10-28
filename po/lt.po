@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
 "POT-Creation-Date: 2007-10-15 21:18-0700\n"
-"PO-Revision-Date: 2008-05-14 01:35+0300\n"
+"PO-Revision-Date: 2008-10-28 01:02+0200\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -70,8 +70,9 @@ msgid "Set the program name"
 msgstr "Nustatyti programos pavadinimą"
 
 #: argp/argp-parse.c:106
+#, fuzzy
 msgid "Hang for SECS seconds (default 3600)"
-msgstr "Laukti SECS sekundžių (standartiškai 3600)"
+msgstr "Laukti SEK sekundžių (standartiškai 3600)"
 
 #: argp/argp-parse.c:167
 msgid "Print program version"
@@ -360,7 +361,7 @@ msgstr "Nežinoma OS"
 #: elf/cache.c:117
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
-msgstr ""
+msgstr ", OS ABI: %s %d.%d.%d"
 
 #: elf/cache.c:134 elf/ldconfig.c:1270
 #, c-format
@@ -594,9 +595,8 @@ msgid "ELF file ABI version invalid"
 msgstr "ELF failo ABI versioja netaisyklinga"
 
 #: elf/dl-load.c:1712
-#, fuzzy
 msgid "internal error"
-msgstr "Vardų paieškos vidinė klaida"
+msgstr "vidinė klaida"
 
 #: elf/dl-load.c:1719
 msgid "ELF file version does not match current one"
@@ -691,9 +691,8 @@ msgid "cannot create capability list"
 msgstr "nepavyko sukurti paieškos sąrašo"
 
 #: elf/dl-tls.c:825
-#, fuzzy
 msgid "cannot create TLS data structures"
-msgstr "nepavyko apdoroti TLS duomenų"
+msgstr "nepavyko sukurti TLS duomenų struktūrų"
 
 #: elf/dl-version.c:303
 #, fuzzy
@@ -2898,7 +2897,7 @@ msgstr ""
 
 #: misc/error.c:118 timezone/zic.c:417
 msgid "Unknown system error"
-msgstr ""
+msgstr "Nežinoma sistemos klaida"
 
 #: nis/nis_callback.c:189
 #, fuzzy
@@ -3960,11 +3959,11 @@ msgstr "nepavyko sukurti paieškos sąrašo"
 
 #: nscd/nscd_stat.c:156
 msgid "yes"
-msgstr ""
+msgstr "taip"
 
 #: nscd/nscd_stat.c:157
 msgid "no"
-msgstr ""
+msgstr "ne"
 
 #: nscd/nscd_stat.c:168
 #, c-format
@@ -4100,7 +4099,7 @@ msgstr ""
 
 #: nscd/selinux.c:256
 msgid "Failed to determine if kernel supports SELinux"
-msgstr ""
+msgstr "Nepavyko nustatyti, ar branduolys palaiko SELinux"
 
 #: nscd/selinux.c:271
 #, c-format
@@ -4299,7 +4298,7 @@ msgstr "%s: parametras „%c%s“ neleidžia argumento\n"
 #: posix/getopt.c:1035
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr ""
+msgstr "%s: parametrui „%s“ reikia argumento\n"
 
 #: posix/getopt.c:738 posix/getopt.c:741
 #, c-format
@@ -4319,7 +4318,7 @@ msgstr "%s: netinkamas parametras -- %c\n"
 #: posix/getopt.c:813 posix/getopt.c:816
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr ""
+msgstr "%s: netaisyklingas argumentas -- %c\n"
 
 #: posix/getopt.c:868 posix/getopt.c:884 posix/getopt.c:1088
 #: posix/getopt.c:1106
@@ -4391,11 +4390,11 @@ msgstr ""
 
 #: posix/regcomp.c:174
 msgid "Premature end of regular expression"
-msgstr ""
+msgstr "Netikėta reguliariosios išraiškos pabaiga"
 
 #: posix/regcomp.c:177
 msgid "Regular expression too big"
-msgstr ""
+msgstr "Reguliarioji išraiška per didelė"
 
 #: posix/regcomp.c:180
 msgid "Unmatched ) or \\)"
@@ -4403,12 +4402,11 @@ msgstr "Nesuderintas ) arba \\)"
 
 #: posix/regcomp.c:660
 msgid "No previous regular expression"
-msgstr ""
+msgstr "Nėra ankstesniosios reguliariosios išraiškos"
 
 #: posix/wordexp.c:1798
-#, fuzzy
 msgid "parameter null or not set"
-msgstr "%s: parametras tuščias arba nenustatytas"
+msgstr "parametras tuščias arba nenustatytas"
 
 #: resolv/herror.c:68
 msgid "Resolver Error 0 (no error)"
@@ -4481,9 +4479,9 @@ msgid "Unknown error"
 msgstr "Nežinoma klaida"
 
 #: string/strsignal.c:65
-#, fuzzy, c-format
+#, c-format
 msgid "Real-time signal %d"
-msgstr "%s: nutrauktas signalo %d"
+msgstr "Realaus laiko signalas %d"
 
 #: string/strsignal.c:69
 #, c-format
@@ -5001,13 +4999,12 @@ msgid "svc_unix.c - cannot getsockname or listen"
 msgstr ""
 
 #: sunrpc/svc_unix.c:176
-#, fuzzy
 msgid "svcunix_create: out of memory\n"
-msgstr "baigėsi atmintis"
+msgstr "svcunix_create: baigėsi atmintis\n"
 
 #: sunrpc/svc_unix.c:215
 msgid "svc_unix: makefd_xprt: out of memory\n"
-msgstr ""
+msgstr "svc_unix: makefd_xprt: baigėsi atmintis\n"
 
 #: sunrpc/xdr.c:566
 #, fuzzy
@@ -5044,19 +5041,20 @@ msgstr "Pertraukimas"
 
 #: sysdeps/generic/siglist.h:31 sysdeps/unix/siglist.c:29
 msgid "Quit"
-msgstr "Išeita"
+msgstr "Išeita (quit)"
 
 #: sysdeps/generic/siglist.h:32 sysdeps/unix/siglist.c:30
 msgid "Illegal instruction"
 msgstr "Netaisyklinga instrukcija"
 
 #: sysdeps/generic/siglist.h:33 sysdeps/unix/siglist.c:31
+#, fuzzy
 msgid "Trace/breakpoint trap"
-msgstr ""
+msgstr "Trasavimo / stabdos taško "
 
 #: sysdeps/generic/siglist.h:34
 msgid "Aborted"
-msgstr ""
+msgstr "Nutraukta (aborted)"
 
 #: sysdeps/generic/siglist.h:35 sysdeps/unix/siglist.c:34
 msgid "Floating point exception"
@@ -5064,7 +5062,7 @@ msgstr "Slankaus kablelio klaida"
 
 #: sysdeps/generic/siglist.h:36 sysdeps/unix/siglist.c:35
 msgid "Killed"
-msgstr "Nutraukta"
+msgstr "Nutraukta (killed)"
 
 #: sysdeps/generic/siglist.h:37 sysdeps/unix/siglist.c:36
 msgid "Bus error"
@@ -5082,20 +5080,19 @@ msgstr "Segmentavimo klaida"
 #: sysdeps/generic/siglist.h:39 sysdeps/gnu/errlist.c:359
 #: sysdeps/unix/siglist.c:39
 msgid "Broken pipe"
-msgstr ""
+msgstr "Nutrūko saitas (pipe)"
 
 #: sysdeps/generic/siglist.h:40 sysdeps/unix/siglist.c:40
 msgid "Alarm clock"
 msgstr "Žadintuvas"
 
 #: sysdeps/generic/siglist.h:41 sysdeps/unix/siglist.c:41
-#, fuzzy
 msgid "Terminated"
-msgstr "Užbaigta"
+msgstr "Užbaigta (terminated)"
 
 #: sysdeps/generic/siglist.h:42 sysdeps/unix/siglist.c:42
 msgid "Urgent I/O condition"
-msgstr ""
+msgstr "Skubi Įv./Išv. situacija"
 
 #: sysdeps/generic/siglist.h:43 sysdeps/unix/siglist.c:43
 msgid "Stopped (signal)"
@@ -5115,17 +5112,16 @@ msgid "Child exited"
 msgstr "Failas jau egzistuoja"
 
 #: sysdeps/generic/siglist.h:47 sysdeps/unix/siglist.c:47
-#, fuzzy
 msgid "Stopped (tty input)"
-msgstr "Sustabdyta (signalas)"
+msgstr "Sustabdyta (tty įvedimas)"
 
 #: sysdeps/generic/siglist.h:48 sysdeps/unix/siglist.c:48
 msgid "Stopped (tty output)"
-msgstr ""
+msgstr "Sustabdyta (tty išvedimas)"
 
 #: sysdeps/generic/siglist.h:49 sysdeps/unix/siglist.c:49
 msgid "I/O possible"
-msgstr ""
+msgstr "Galimas įvedimas/išvedimas"
 
 #: sysdeps/generic/siglist.h:50 sysdeps/unix/siglist.c:50
 msgid "CPU time limit exceeded"
@@ -5226,17 +5222,15 @@ msgstr "Argumentų sąrašas per ilgas"
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: sysdeps/gnu/errlist.c:104
-#, fuzzy
 msgid "Exec format error"
-msgstr "relokacijos klaida"
+msgstr "Paleidžiamojo failo formato klaida"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
 #: sysdeps/gnu/errlist.c:115
-#, fuzzy
 msgid "Bad file descriptor"
-msgstr "nepavyko užverti failo deskriptoriaus"
+msgstr "Blogas failo deskriptorius"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
@@ -5252,7 +5246,7 @@ msgstr "Tokio proceso nėra"
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
 #: sysdeps/gnu/errlist.c:138
 msgid "Resource deadlock avoided"
-msgstr ""
+msgstr "Išvengta resursų aklavietės (deadlock)"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
@@ -5290,9 +5284,8 @@ msgstr "Failas jau egzistuoja"
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 #: sysdeps/gnu/errlist.c:210
-#, fuzzy
 msgid "Invalid cross-device link"
-msgstr "netaisyklingas naudotojas"
+msgstr ""
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
@@ -5302,23 +5295,20 @@ msgstr "Tokio įrenginio nėra"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: sysdeps/gnu/errlist.c:229
-#, fuzzy
 msgid "Not a directory"
 msgstr "Ne aplankas"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
 #: sysdeps/gnu/errlist.c:239
-#, fuzzy
 msgid "Is a directory"
 msgstr "Aplankas"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
 #: sysdeps/gnu/errlist.c:249
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Galimi argumentai:"
+msgstr "Netinkamas argumentas"
 
 #. TRANS The current process has too many files open and can't open any more.
 #. TRANS Duplicate descriptors do count toward this limit.
@@ -5341,9 +5331,8 @@ msgstr "Sistemoje per daug atvertų failų"
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
 #: sysdeps/gnu/errlist.c:285
-#, fuzzy
 msgid "Inappropriate ioctl for device"
-msgstr "Netinkamas failo tipas ar formatas"
+msgstr "Netinkamas ioctl įrenginiui"
 
 #. TRANS An attempt to execute a file that is currently open for writing, or
 #. TRANS write to a file that is currently being executed.  Often using a
@@ -5356,7 +5345,6 @@ msgstr "Tekstinis failas užimtas"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
 #: sysdeps/gnu/errlist.c:307
-#, fuzzy
 msgid "File too large"
 msgstr "Failas per didelis"
 
@@ -5368,8 +5356,9 @@ msgstr "Įrenginyje neliko vietos"
 
 #. TRANS Invalid seek operation (such as on a pipe).
 #: sysdeps/gnu/errlist.c:326
+#, fuzzy
 msgid "Illegal seek"
-msgstr ""
+msgstr "Netaisyklingas "
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: sysdeps/gnu/errlist.c:335
@@ -5469,12 +5458,11 @@ msgstr "Pranešimas per ilgas"
 #. TRANS The socket type does not support the requested communications protocol.
 #: sysdeps/gnu/errlist.c:483
 msgid "Protocol wrong type for socket"
-msgstr ""
+msgstr "Netinkamas protokolo tipas lizdui"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
 #: sysdeps/gnu/errlist.c:493
-#, fuzzy
 msgid "Protocol not available"
 msgstr "Protokolas nepalaikomas"
 
@@ -5497,9 +5485,8 @@ msgstr "Lizdo tipas nepalaikomas"
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
 #: sysdeps/gnu/errlist.c:527
-#, fuzzy
 msgid "Operation not supported"
-msgstr "Operacija neleidžiama"
+msgstr "Operacija nepalaikoma"
 
 #. TRANS The socket communications protocol family you requested is not supported.
 #: sysdeps/gnu/errlist.c:536
@@ -5538,12 +5525,12 @@ msgstr "Tinklas neprieinamas"
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.c:594
 msgid "Network dropped connection on reset"
-msgstr ""
+msgstr "Prisijungimas nutrauktas iš tinklo pusės"
 
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:603
 msgid "Software caused connection abort"
-msgstr ""
+msgstr "Prisijungimas nutrauktas programiškai"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
@@ -5655,8 +5642,9 @@ msgstr "Viršyta disko kvota"
 #. TRANS Repairing this condition usually requires unmounting and remounting
 #. TRANS the NFS file system on the local host.
 #: sysdeps/gnu/errlist.c:787
+#, fuzzy
 msgid "Stale NFS file handle"
-msgstr ""
+msgstr "Pasenusi NFS failo "
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -5678,9 +5666,8 @@ msgstr "netinkama RPC versija"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:826
-#, fuzzy
 msgid "RPC program not available"
-msgstr "RPC: Programa neregistruota"
+msgstr "RPC programa nerasta"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:835
@@ -5690,16 +5677,15 @@ msgstr "netinkama RPC programos versija"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:844
 msgid "RPC bad procedure for program"
-msgstr ""
+msgstr "RPC bloga procedūra programai"
 
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
 #: sysdeps/gnu/errlist.c:856
-#, fuzzy
 msgid "No locks available"
-msgstr "Nėra vietos buferyje"
+msgstr "Nėra laisvų spynų (locks)"
 
 #. TRANS Inappropriate file type or format.  The file was the wrong type for the
 #. TRANS operation, or a data file had the wrong format.
@@ -5717,9 +5703,8 @@ msgstr "Autentikacijos klaida"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:887
-#, fuzzy
 msgid "Need authenticator"
-msgstr "Autentikacijos klaida"
+msgstr "Reikia autentikatoriaus"
 
 #. TRANS Function not implemented.  This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
@@ -5767,7 +5752,7 @@ msgstr ""
 #. TRANS up, before it has connected to the file.
 #: sysdeps/gnu/errlist.c:955
 msgid "Translator died"
-msgstr ""
+msgstr "Transliatoriaus programa nutrūko"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
@@ -5788,40 +5773,36 @@ msgstr "Kompiuteris nupirko fermą"
 
 #. TRANS This error code has no purpose.
 #: sysdeps/gnu/errlist.c:993
-#, fuzzy
 msgid "Gratuitous error"
-msgstr "relokacijos klaida"
+msgstr "Perteklinė klaida"
 
 #: sysdeps/gnu/errlist.c:1001
-#, fuzzy
 msgid "Bad message"
-msgstr "neužbaigtas pranešimas"
+msgstr "Blogas pranešimas"
 
 #: sysdeps/gnu/errlist.c:1009
 msgid "Identifier removed"
-msgstr ""
+msgstr "Identifikatorius pašalintas"
 
 #: sysdeps/gnu/errlist.c:1017
 msgid "Multihop attempted"
-msgstr ""
+msgstr "Bandomas daugybinis šuolis (multihop)"
 
 #: sysdeps/gnu/errlist.c:1025
-#, fuzzy
 msgid "No data available"
-msgstr "Nėra vietos buferyje"
+msgstr "Nėra duomenų"
 
 #: sysdeps/gnu/errlist.c:1033
-#, fuzzy
 msgid "Link has been severed"
-msgstr "Raktas atšauktas"
+msgstr "Saitas nutrauktas"
 
 #: sysdeps/gnu/errlist.c:1041
 msgid "No message of desired type"
-msgstr ""
+msgstr "Nerasta norimo tipo pranešimų"
 
 #: sysdeps/gnu/errlist.c:1049
 msgid "Out of streams resources"
-msgstr ""
+msgstr "Baigėsi srautų resursai"
 
 #: sysdeps/gnu/errlist.c:1057
 msgid "Device not a stream"
@@ -5875,14 +5856,12 @@ msgid "Link number out of range"
 msgstr "%s: eilutės numeris už ribų"
 
 #: sysdeps/gnu/errlist.c:1149
-#, fuzzy
 msgid "Protocol driver not attached"
-msgstr "Protokolas nepalaikomas"
+msgstr "Neprijungta protokolo tvarkyklė"
 
 #: sysdeps/gnu/errlist.c:1157
-#, fuzzy
 msgid "No CSI structure available"
-msgstr "Nėra vietos buferyje"
+msgstr "Nėra CSI struktūros"
 
 #: sysdeps/gnu/errlist.c:1165
 msgid "Level 2 halted"
@@ -5894,9 +5873,8 @@ msgid "Invalid exchange"
 msgstr "netaisyklingas kvietėjas"
 
 #: sysdeps/gnu/errlist.c:1181
-#, fuzzy
 msgid "Invalid request descriptor"
-msgstr "Blogas failo deskriptorius"
+msgstr "Netaisyklingas užklausos deskriptorius"
 
 #: sysdeps/gnu/errlist.c:1189
 msgid "Exchange full"
@@ -5904,25 +5882,23 @@ msgstr ""
 
 #: sysdeps/gnu/errlist.c:1197
 msgid "No anode"
-msgstr ""
+msgstr "Nėra anodo"
 
 #: sysdeps/gnu/errlist.c:1205
-#, fuzzy
 msgid "Invalid request code"
-msgstr "Visos užklausos baigtos"
+msgstr "Netinkamas užklausos kodas"
 
 #: sysdeps/gnu/errlist.c:1213
-#, fuzzy
 msgid "Invalid slot"
-msgstr "netaisyklingas kvietėjas"
+msgstr "Netinkamas lizdas (slot)"
 
 #: sysdeps/gnu/errlist.c:1221
 msgid "File locking deadlock error"
-msgstr ""
+msgstr "Failų rakinimo aklavietės (deadlock) klaida"
 
 #: sysdeps/gnu/errlist.c:1229
 msgid "Bad font file format"
-msgstr ""
+msgstr "Netinkamas šriftų failo formatas"
 
 #: sysdeps/gnu/errlist.c:1237
 msgid "Machine is not on the network"
@@ -5938,9 +5914,8 @@ msgid "Advertise error"
 msgstr "vidinė klaida"
 
 #: sysdeps/gnu/errlist.c:1261
-#, fuzzy
 msgid "Srmount error"
-msgstr "Protokolo klaida"
+msgstr "Srmount klaida"
 
 #: sysdeps/gnu/errlist.c:1269
 msgid "Communication error on send"
@@ -5955,7 +5930,6 @@ msgid "Name not unique on network"
 msgstr "Vardas tinkle neunikalus"
 
 #: sysdeps/gnu/errlist.c:1293
-#, fuzzy
 msgid "File descriptor in bad state"
 msgstr "Failo deskriptorius nekorektiškoje būsenoje"
 
@@ -5965,52 +5939,49 @@ msgstr "Nutolęs adresas pasikeitė"
 
 #: sysdeps/gnu/errlist.c:1309
 msgid "Can not access a needed shared library"
-msgstr ""
+msgstr "Nepavyko pasiekti reikiamos bendrosios bibliotekos"
 
 #: sysdeps/gnu/errlist.c:1317
 msgid "Accessing a corrupted shared library"
-msgstr ""
+msgstr "Kreipiamasi į sugadintą bendrąją biblioteką"
 
 #: sysdeps/gnu/errlist.c:1325
 msgid ".lib section in a.out corrupted"
-msgstr ""
+msgstr ".lib sekcija a.out faile sugadinta"
 
 #: sysdeps/gnu/errlist.c:1333
-#, fuzzy
 msgid "Attempting to link in too many shared libraries"
-msgstr "klaida įkeliant bendrąsias bibliotekas"
+msgstr "Bandoma įkelti per daug bendrųjų bibliotekų"
 
 #: sysdeps/gnu/errlist.c:1341
 msgid "Cannot exec a shared library directly"
-msgstr ""
+msgstr "Negalima tiesiogiai paleisti bibliotekos"
 
 #: sysdeps/gnu/errlist.c:1349
 msgid "Streams pipe error"
-msgstr ""
+msgstr "Srautų jungties (pipe) klaida"
 
 #: sysdeps/gnu/errlist.c:1357
 msgid "Structure needs cleaning"
-msgstr ""
+msgstr "Reikia išvalyti struktūrą"
 
 #: sysdeps/gnu/errlist.c:1365
 msgid "Not a XENIX named type file"
-msgstr ""
+msgstr "Ne XENIX vardinio tipo failas"
 
 #: sysdeps/gnu/errlist.c:1373
-#, fuzzy
 msgid "No XENIX semaphores available"
-msgstr "Nėra vietos buferyje"
+msgstr "Nėra laisvų XENIX semaforų"
 
 #: sysdeps/gnu/errlist.c:1381
 msgid "Is a named type file"
-msgstr ""
+msgstr "Vardinio tipo failas"
 
 #: sysdeps/gnu/errlist.c:1389
 msgid "Remote I/O error"
 msgstr "Nutolusio įvedimo/išvedimo klaida"
 
 #: sysdeps/gnu/errlist.c:1397
-#, fuzzy
 msgid "No medium found"
 msgstr "Nerasta laikmena"
 
@@ -6040,15 +6011,15 @@ msgstr ""
 
 #: sysdeps/gnu/errlist.c:1453
 msgid "State not recoverable"
-msgstr ""
+msgstr "Būsena neatstatoma"
 
 #: sysdeps/mach/_strerror.c:57
 msgid "Error in unknown error system: "
-msgstr ""
+msgstr "Klaida nežinomoje klaidų sistemoje: "
 
 #: sysdeps/posix/gai_strerror-strs.h:1
 msgid "Address family for hostname not supported"
-msgstr ""
+msgstr "Adresų šeima vardui nepalaikoma"
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Temporary failure in name resolution"
@@ -6056,15 +6027,15 @@ msgstr "Laikinas vardų paieškos sutrikimas"
 
 #: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Bad value for ai_flags"
-msgstr ""
+msgstr "Bloga ai_flags reikšmė"
 
 #: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Non-recoverable failure in name resolution"
-msgstr ""
+msgstr "Kritinė klaida vardų paieškoje"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "ai_family not supported"
-msgstr ""
+msgstr "ai_family nepalaikomas"
 
 #: sysdeps/posix/gai_strerror-strs.h:6
 msgid "Memory allocation failure"
@@ -6072,11 +6043,11 @@ msgstr "Atminties išskyrimo klaida"
 
 #: sysdeps/posix/gai_strerror-strs.h:7
 msgid "No address associated with hostname"
-msgstr ""
+msgstr "Nėra su vardu susieto adreso"
 
 #: sysdeps/posix/gai_strerror-strs.h:8
 msgid "Name or service not known"
-msgstr ""
+msgstr "Pavadinimas arba tarnyba nežinoma"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Servname not supported for ai_socktype"
@@ -6084,11 +6055,11 @@ msgstr ""
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "ai_socktype not supported"
-msgstr ""
+msgstr "ai_socktype nepalaikomas"
 
 #: sysdeps/posix/gai_strerror-strs.h:11
 msgid "System error"
-msgstr ""
+msgstr "Sistemos klaida"
 
 #: sysdeps/posix/gai_strerror-strs.h:12
 msgid "Processing request in progress"
@@ -6112,16 +6083,15 @@ msgstr "Nutraukta signalo"
 
 #: sysdeps/posix/gai_strerror-strs.h:17
 msgid "Parameter string not correctly encoded"
-msgstr ""
+msgstr "Parametrų seka netaisyklingai užkoduota"
 
 #: sysdeps/unix/siglist.c:26
 msgid "Signal 0"
-msgstr ""
+msgstr "Signalas 0"
 
 #: sysdeps/unix/siglist.c:32
-#, fuzzy
 msgid "IOT trap"
-msgstr "EMT gaudyklė"
+msgstr "IOT gaudyklė"
 
 #: sysdeps/unix/sysv/linux/i386/readelflib.c:49
 #, fuzzy, c-format
@@ -6134,14 +6104,14 @@ msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr ""
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:64
-#, fuzzy, c-format
+#, c-format
 msgid "cannot open `%s'"
-msgstr "nepavyko atverti"
+msgstr "nepavyko atverti „%s“"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read header from `%s'"
-msgstr "nepavyko perskaityti antraštės"
+msgstr "nepavyko perskaityti „%s“ antraštės"
 
 #: timezone/zdump.c:211
 #, fuzzy
@@ -6160,7 +6130,7 @@ msgstr "laiko zonos santrumpoje yra daugiau negu 3 raidės"
 
 #: timezone/zdump.c:223
 msgid "differs from POSIX standard"
-msgstr ""
+msgstr "skiriasi nuo POSIX standarto"
 
 #: timezone/zdump.c:229
 #, c-format
@@ -6178,9 +6148,8 @@ msgid "%s: wild -c argument %s\n"
 msgstr "%s: Per daug argumentų\n"
 
 #: timezone/zdump.c:388
-#, fuzzy
 msgid "Error writing to standard output"
-msgstr "standartinis išvedimas"
+msgstr "Klaida rašant į standartinį išvedimą"
 
 #: timezone/zdump.c:411
 #, c-format
@@ -6449,9 +6418,8 @@ msgid "typed single year"
 msgstr ""
 
 #: timezone/zic.c:1401
-#, fuzzy
 msgid "invalid weekday name"
-msgstr "netinkamas mėnesio pavadinimas"
+msgstr "netinkamas savaitės dienos pavadinimas"
 
 #: timezone/zic.c:1579
 #, fuzzy, c-format
