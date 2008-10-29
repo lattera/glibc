@@ -1421,7 +1421,7 @@ pseudo-random number generator.
 
 The GNU C library contains four additional functions which contain the
 state as an explicit parameter and therefore make it possible to handle
-thread-local PRNGs.  Beside this there are no difference.  In fact, the
+thread-local PRNGs.  Beside this there is no difference.  In fact, the
 four functions already discussed are implemented internally using the
 following interfaces.
 

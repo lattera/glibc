@@ -1,5 +1,7 @@
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 
+	* manual/math.texi (BSD Random): Fix a typo: s/are/is/
+
 	* manual/charset.texi: Adjust grammar.
 
 	* manual/errno.texi (Error Messages): Fix doubled-words and typos.
