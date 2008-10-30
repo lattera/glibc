@@ -1,5 +1,8 @@
 2008-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c (internal_getgrouplist): Don't prematurely
+	abort if there is no initgroups_dyn function.
+
 	* resolv/res_send.c (send_dg): On timeout, only return nonzero
 	result if any of the queries really provided an answer.
 

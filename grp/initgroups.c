@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2005,2006,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,13 +94,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
       fct = __nss_lookup_function (nip, "initgroups_dyn");
 
       if (fct == NULL)
-	{
-	  status = compat_call (nip, user, group, &start, size, groupsp,
-				limit, &errno);
-
-	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
-	    break;
-	}
+	status = compat_call (nip, user, group, &start, size, groupsp,
+			      limit, &errno);
       else
 	status = DL_CALL_FCT (fct, (user, group, &start, size, groupsp,
 				    limit, &errno));
