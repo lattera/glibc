@@ -1008,7 +1008,7 @@ send_dg(res_state statp,
 	}
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
-		if (recvresp1 || (buf2 != NULL && recvresp2))
+		if (recvresp1 > 1 || (buf2 != NULL && recvresp2 > 1))
 		  {
 		    *resplen2 = 1;
 		    return resplen;
