@@ -24,8 +24,8 @@
 int
 eventfd (int count, int flags)
 {
-#ifdef __NR_eventfd1
-  return INLINE_SYSCALL (eventfd1, 1, flags);
+#ifdef __NR_eventfd2
+  return INLINE_SYSCALL (eventfd2, 2, count, flags);
 #else
   /* The old system call has no flag parameter which is bad.  So we have
      to wait until we have to support to pass additional values to the
