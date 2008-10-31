@@ -1,5 +1,8 @@
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6867]
+	* sysdeps/powerpc/elf/rtld-global-offsets.sym: Fix typo.
+
 	[BZ #6919]
 	* posix/spawnattr_getschedparam.c (posix_spawnattr_getschedparam):
 	Fix length of copy operation.

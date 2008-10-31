@@ -302,10 +302,10 @@ country_ab2 "<U0055><U0047>"
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 % Representation of postal addresses (minus the addressee's name) in Uganda.
-% "%f%N%a%N%d%N%b%N%s %h %e %r%N%%z %T%N%c%N", which gives -
+% "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N", which gives -
 % "firm name",
 % "end of line",
 % "C/O address",

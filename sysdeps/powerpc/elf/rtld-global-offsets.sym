@@ -2,6 +2,6 @@
 
 #include <ldsodefs.h>
 
-#define rtdl_global_ro_offsetof(mem) offsetof (struct rtld_global_ro, mem)
+#define rtld_global_ro_offsetof(mem) offsetof (struct rtld_global_ro, mem)
 
-RTLD_GLOBAL_RO_DL_HWCAP_OFFSET	rtdl_global_ro_offsetof (_dl_hwcap)
+RTLD_GLOBAL_RO_DL_HWCAP_OFFSET	rtld_global_ro_offsetof (_dl_hwcap)
