@@ -1,8 +1,9 @@
-2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+2008-09-09  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #6875]
-	* iconvdata/gconv-modules: Use LATIN9 as an alias to ISO-8859-15,
-	not LATIN-9.
+	* iconvdata/gconv-modules: Add LATIN9 as an alias to ISO-8859-15.
+
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6867]
 	* sysdeps/powerpc/elf/rtld-global-offsets.sym: Fix typo.
