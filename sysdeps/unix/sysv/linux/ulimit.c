@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,1994-1998,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,1994-1998,2000,2001,2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,26 +48,32 @@ __ulimit (int cmd, ...)
       /* Get limit on file size.  */
       if (__getrlimit (RLIMIT_FSIZE, &limit) == 0)
 	/* Convert from bytes to 512 byte units.  */
-	result =  limit.rlim_cur / 512;
+	result =  (limit.rlim_cur == RLIM_INFINITY
+		   ? LONG_MAX : limit.rlim_cur / 512);
       break;
 
     case UL_SETFSIZE:
       /* Set limit on file size.  */
       {
 	long int newlimit = va_arg (va, long int);
+	long int newlen;
 
 	if ((rlim_t) newlimit > RLIM_INFINITY / 512)
 	  {
 	    limit.rlim_cur = RLIM_INFINITY;
 	    limit.rlim_max = RLIM_INFINITY;
+	    newlen = LONG_MAX;
 	  }
 	else
 	  {
 	    limit.rlim_cur = newlimit * 512;
 	    limit.rlim_max = newlimit * 512;
+	    newlen = newlimit;
 	  }
 
 	result = __setrlimit (RLIMIT_FSIZE, &limit);
+	if (result != -1)
+	  result = newlen;
       }
       break;
 

@@ -1,5 +1,12 @@
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Handle UL_GETFSIZE
+	return value in case rlimit is RLIM_INFINITY.
+
+	[BZ #6947]
+	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Fix return value
+	for UL_SETFSIZE.
+
 	[BZ #6974]
 	* sunrpc/rpc_main.c (mkfile_output): Properly handle filename
 	without dot.  Properly terminate the string with a null byte.
