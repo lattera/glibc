@@ -756,7 +756,10 @@ __tls_get_addr (GET_ADDR_ARGS)
   void *p;
 
   if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
-    the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
+    {
+      the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
+      dtv = THREAD_DTV ();
+    }
 
   p = dtv[GET_ADDR_MODULE].pointer.val;
 
