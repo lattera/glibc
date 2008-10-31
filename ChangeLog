@@ -1,3 +1,8 @@
+2008-09-09  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* iconvdata/gconv-modules: Use LATIN9 as an alias to ISO-8859-15,
+	not LATIN-9.
+
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6867]
