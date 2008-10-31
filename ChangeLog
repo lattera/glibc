@@ -1,3 +1,9 @@
+2008-10-07  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #6942]
+	* resolv/res_send.c (send_vc): Fix last change.
+	(send_dg): Align here as well.
+
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Handle UL_GETFSIZE
