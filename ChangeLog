@@ -1,5 +1,11 @@
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6980]
+	* debug/getgroups_chk.c (__getgroups_chk): Return EINVAL error for
+	negative sizees.
+	* posix/bits/unistd.h (getgroups): Call __getgroups_chk for
+	negative __size.
+
 	[BZ #6995]
 	* sysdeps/powerpc/powerpc32/dl-machine.c: Fix typo in message.
 

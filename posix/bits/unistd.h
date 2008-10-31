@@ -1,5 +1,5 @@
 /* Checking macros for unistd functions.
-   Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -267,7 +267,7 @@ __NTH (getgroups (int __size, __gid_t __list[]))
 {
   if (__bos (__list) != (size_t) -1)
     {
-      if (!__builtin_constant_p (__size))
+      if (!__builtin_constant_p (__size) || __size < 0)
 	return __getgroups_chk (__size, __list, __bos (__list));
 
       if (__size * sizeof (__gid_t) > __bos (__list))
