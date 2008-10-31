@@ -1,5 +1,10 @@
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6974]
+	* sunrpc/rpc_main.c (mkfile_output): Properly handle filename
+	without dot.  Properly terminate the string with a null byte.
+	Based on a patch by Aurelien Jarno <aurelien@aurel32.net>.
+
 	[BZ #6980]
 	* debug/getgroups_chk.c (__getgroups_chk): Return EINVAL error for
 	negative sizees.

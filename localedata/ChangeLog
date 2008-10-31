@@ -1,3 +1,14 @@
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* tests-mbwc/dat_mbtowc.c (tst_mbtowc_loc): Avoid some warnings.
+
+	[BZ #6968]
+	* locales/iso14651_t1_common: Add support for Sinhala.
+	* localedata/si_LK.in: New file.
+	Patch by harshula@gmail.com.
+	* Makefile (test-input): Add si_LK.UTF-8.
+	(LOCALES): Likewise.
+
 2008-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_GB: Set first weekday and workday to 2.
