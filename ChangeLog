@@ -6,6 +6,8 @@
 	[BZ #6947]
 	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Fix return value
 	for UL_SETFSIZE.
+	* resource/Makefile (tests): Add bug-ulimit1.
+	* resource/bug-ulimit1.c: New file.
 
 	[BZ #6974]
 	* sunrpc/rpc_main.c (mkfile_output): Properly handle filename
