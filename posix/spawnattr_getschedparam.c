@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ posix_spawnattr_getschedparam (const posix_spawnattr_t *attr,
 			       struct sched_param *schedparam)
 {
   /* Copy the scheduling parameters.  */
-  memcpy (schedparam, &attr->__sp, sizeof (*attr));
+  memcpy (schedparam, &attr->__sp, sizeof (attr->__sp));
 
   return 0;
 }
