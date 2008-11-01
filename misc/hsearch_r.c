@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1995-1997,2002,2005,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995-1997,2002,2005,2007,2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1993.
 
@@ -154,18 +155,11 @@ hsearch_r (item, action, retval, htab)
     }
 
   /* First hash function: simply take the modul but prevent zero. */
-  hval %= htab->size;
-  if (hval == 0)
-    ++hval;
-
-  /* The first index tried. */
-  idx = hval;
+  idx = hval % htab->size + 1;
 
   if (htab->table[idx].used)
     {
       /* Further action might be required according to the action value. */
-      unsigned hval2;
-
       if (htab->table[idx].used == hval
 	  && strcmp (item.key, htab->table[idx].entry.key) == 0)
 	{
@@ -174,7 +168,8 @@ hsearch_r (item, action, retval, htab)
 	}
 
       /* Second hash function, as suggested in [Knuth] */
-      hval2 = 1 + hval % (htab->size - 2);
+      unsigned int hval2 = 1 + hval % (htab->size - 2);
+      unsigned int first_idx = idx;
 
       do
 	{
@@ -186,7 +181,7 @@ hsearch_r (item, action, retval, htab)
 	    idx -= hval2;
 
 	  /* If we visited all entries leave the loop unsuccessfully.  */
-	  if (idx == hval)
+	  if (idx == first_idx)
 	    break;
 
             /* If entry is found use it. */

@@ -1,9 +1,14 @@
+2008-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6966]
+	* misc/hsearch_r.c (hsearch_r): Fix secondary hash function.
+
 2008-10-24  Joseph Myers  <joseph@codesourcery.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
 	* math/tgmath.h (__floating_type): Use __builtin_classify_type in
 	definition for GCC 3.1 and later.
-		
+
 2008-10-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-tls.c (__tls_get_addr): After calling _dl_update_slotinfo
