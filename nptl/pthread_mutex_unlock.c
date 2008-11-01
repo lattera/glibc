@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -196,9 +196,13 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 						   THREAD_GETMEM (THREAD_SELF,
 								  tid)))
 	{
+	  int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+	  int private = (robust
+			 ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
+			 : PTHREAD_MUTEX_PSHARED (mutex));
 	  INTERNAL_SYSCALL_DECL (__err);
 	  INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
-			    FUTEX_UNLOCK_PI);
+			    __lll_private_flag (FUTEX_UNLOCK_PI, private));
 	}
 
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);

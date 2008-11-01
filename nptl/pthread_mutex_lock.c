@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -269,9 +269,13 @@ __pthread_mutex_lock (mutex)
 	  {
 	    /* The mutex is locked.  The kernel will now take care of
 	       everything.  */
+	    int private = (robust
+			   ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
+			   : PTHREAD_MUTEX_PSHARED (mutex));
 	    INTERNAL_SYSCALL_DECL (__err);
 	    int e = INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-				      FUTEX_LOCK_PI, 1, 0);
+				      __lll_private_flag (FUTEX_LOCK_PI,
+							  private), 1, 0);
 
 	    if (INTERNAL_SYSCALL_ERROR_P (e, __err)
 		&& (INTERNAL_SYSCALL_ERRNO (e, __err) == ESRCH
@@ -327,7 +331,10 @@ __pthread_mutex_lock (mutex)
 
 	    INTERNAL_SYSCALL_DECL (__err);
 	    INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-			      FUTEX_UNLOCK_PI, 0, 0);
+			      __lll_private_flag (FUTEX_UNLOCK_PI,
+						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
+),
+			      0, 0);
 
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	    return ENOTRECOVERABLE;

@@ -1,3 +1,12 @@
+2008-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6955]
+	* pthread_mutex_lock.c: Add support for private PI mutexes.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	Patch mostly by Ben Jackson <ben@ben.com>.
+
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6843]
