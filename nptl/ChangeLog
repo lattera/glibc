@@ -1,3 +1,9 @@
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6843]
+	* sysdeps/pthread/gai_misc.h (__gai_create_helper_thread):
+	Increase stack size for helper thread.
+
 2008-10-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/tls.h (THREAD_SET_STACK_GUARD): Add empty inline
