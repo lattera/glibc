@@ -48,7 +48,14 @@
 
 /* 1 if 'type' is a floating type, 0 if 'type' is an integer type.
    Allows for _Bool.  Expands to an integer constant expression.  */
-# define __floating_type(type) (((type) 0.25) && ((type) 0.25 - 1))
+# if __GNUC_PREREQ (3, 1)
+#  define __floating_type(type) \
+  (__builtin_classify_type ((type) 0) == 8 \
+   || (__builtin_classify_type ((type) 0) == 9 \
+       && __builtin_classify_type (__real__ ((type) 0)) == 8))
+# else
+#  define __floating_type(type) (((type) 0.25) && ((type) 0.25 - 1))
+# endif
 
 /* The tgmath real type for T, where E is 0 if T is an integer type and
    1 for a floating type.  */
