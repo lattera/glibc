@@ -1,3 +1,8 @@
+2008-11-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_rEALLOc): When new arena is used, copy
+	really all bytes.  Patch by Denys Vlasenko <dvlasenk@redhat.com>.
+
 2008-11-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6966]

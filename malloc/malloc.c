@@ -3717,7 +3717,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
       newp = public_mALLOc(bytes);
       if (newp != NULL)
 	{
-	  MALLOC_COPY (newp, oldmem, oldsize - 2 * SIZE_SZ);
+	  MALLOC_COPY (newp, oldmem, oldsize - SIZE_SZ);
 #if THREAD_STATS
 	  if(!mutex_trylock(&ar_ptr->mutex))
 	    ++(ar_ptr->stat_lock_direct);
