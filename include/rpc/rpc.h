@@ -45,7 +45,7 @@ extern void __rpc_thread_key_cleanup (void);
 
 extern void __rpc_thread_destroy (void);
 
-__libc_tsd_define (extern, RPC_VARS)
+__libc_tsd_define (extern, struct rpc_thread_variables *, RPC_VARS)
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
 

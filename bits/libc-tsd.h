@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  Stub or TLS version.
-   Copyright (C) 1998,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1998,2001,2002,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,15 +23,15 @@
 /* This file defines the following macros for accessing a small fixed
    set of thread-specific `void *' data used only internally by libc.
 
-   __libc_tsd_define(CLASS, KEY)	-- Define or declare a `void *' datum
+   __libc_tsd_define(CLASS, TYPE, KEY)	-- Define or declare a datum with TYPE
    					   for KEY.  CLASS can be `static' for
 					   keys used in only one source file,
 					   empty for global definitions, or
 					   `extern' for global declarations.
-   __libc_tsd_address(KEY)		-- Return the `void **' pointing to
+   __libc_tsd_address(TYPE, KEY)	-- Return the `TYPE *' pointing to
    					   the current thread's datum for KEY.
-   __libc_tsd_get(KEY)			-- Return the `void *' datum for KEY.
-   __libc_tsd_set(KEY, VALUE)		-- Set the datum for KEY to VALUE.
+   __libc_tsd_get(TYPE, KEY)		-- Return the `TYPE' datum for KEY.
+   __libc_tsd_set(TYPE, KEY, VALUE)	-- Set the datum for KEY to VALUE.
 
    The set of available KEY's will usually be provided as an enum,
    and contains (at least):
@@ -52,18 +52,19 @@
    translate directly into variables by macro magic.  */
 
 #if USE___THREAD
-# define __libc_tsd_define(CLASS, KEY)	\
-  CLASS __thread void *__libc_tsd_##KEY attribute_tls_model_ie;
+# define __libc_tsd_define(CLASS, TYPE, KEY)	\
+  CLASS __thread TYPE __libc_tsd_##KEY attribute_tls_model_ie;
 
-# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)
-# define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)
-# define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
+# define __libc_tsd_address(TYPE, KEY)		(&__libc_tsd_##KEY)
+# define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY)
+# define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
 #else
-# define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
+# define __libc_tsd_define(CLASS, TYPE, KEY)	\
+  CLASS TYPE __libc_tsd_##KEY##_data;
 
-# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY##_data)
-# define __libc_tsd_get(KEY)		(__libc_tsd_##KEY##_data)
-# define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
+# define __libc_tsd_address(TYPE, KEY)		(&__libc_tsd_##KEY##_data)
+# define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY##_data)
+# define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
 #endif
 
 #endif	/* bits/libc-tsd.h */

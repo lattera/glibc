@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003,2005
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003,2005,2008
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -66,10 +66,11 @@ _nl_postload_ctype (void)
      in fact using the global locale.  */
   if (_NL_CURRENT_LOCALE == &_nl_global_locale)
     {
-      __libc_tsd_set (CTYPE_B, (void *) _nl_global_locale.__ctype_b);
-      __libc_tsd_set (CTYPE_TOUPPER,
+      __libc_tsd_set (const uint16_t *, CTYPE_B,
+		      (void *) _nl_global_locale.__ctype_b);
+      __libc_tsd_set (const int32_t *, CTYPE_TOUPPER,
 		      (void *) _nl_global_locale.__ctype_toupper);
-      __libc_tsd_set (CTYPE_TOLOWER,
+      __libc_tsd_set (const int32_t *, CTYPE_TOLOWER,
 		      (void *) _nl_global_locale.__ctype_tolower);
     }
 

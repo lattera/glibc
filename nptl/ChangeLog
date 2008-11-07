@@ -1,3 +1,10 @@
+2008-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/malloc-machine.h (MALLOC): Adjust __libc_tsd_define
+	arguments.
+	(tsd_setspecific, tsd_getspecific): Adjust __libc_tsd_{set,get}
+	arguments.
+
 2008-11-01  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6955]

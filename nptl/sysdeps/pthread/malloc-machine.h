@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes,
    thread-specific data and parameters for malloc.
-   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,10 +63,10 @@ extern void *__dso_handle __attribute__ ((__weak__));
 #include <bits/libc-tsd.h>
 
 typedef int tsd_key_t[1];	/* no key data structure, libc magic does it */
-__libc_tsd_define (static, MALLOC)	/* declaration/common definition */
+__libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
 #define tsd_key_create(key, destr)	((void) (key))
-#define tsd_setspecific(key, data)	__libc_tsd_set (MALLOC, (data))
-#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (MALLOC))
+#define tsd_setspecific(key, data)	__libc_tsd_set (void *, MALLOC, (data))
+#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (void *, MALLOC))
 
 #include <sysdeps/generic/malloc-machine.h>
 

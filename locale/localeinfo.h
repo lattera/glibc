@@ -1,5 +1,6 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995-2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2005, 2006, 2007, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -203,9 +204,9 @@ extern struct __locale_struct _nl_global_locale attribute_hidden;
 
 /* This fetches the thread-local locale_t pointer, either one set with
    uselocale or &_nl_global_locale.  */
-#define _NL_CURRENT_LOCALE	((__locale_t) __libc_tsd_get (LOCALE))
+#define _NL_CURRENT_LOCALE	(__libc_tsd_get (__locale_t, LOCALE))
 #include <bits/libc-tsd.h>
-__libc_tsd_define (extern, LOCALE)
+__libc_tsd_define (extern, __locale_t, LOCALE)
 
 
 /* For static linking it is desireable to avoid always linking in the code

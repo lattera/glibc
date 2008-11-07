@@ -1,3 +1,33 @@
+2008-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* bits/libc-tsd.h (__libc_tsd_define, __libc_tsd_address,
+	__libc_tsd_get, __libc_tsd_set): Add TYPE argument, use it as the type
+	of the thread variable instead of void *.
+	* sysdeps/mach/hurd/bits/libc-tsd.h (__libc_tsd_define,
+	__libc_tsd_address, __libc_tsd_get, __libc_tsd_set): Likewise.
+	* include/ctype.h (CTYPE_B, CTYPE_TOUPPER, CTYPE_TOLOWER): Adjust
+	__libc_tsd_define arguments.
+	(__ctype_b_loc, __ctype_toupper_loc, __ctype_tolower_loc): Adjust
+	__libc_tsd_address arguments.  Remove union hack.
+	* include/rpc/rpc.h (RPC_VARS): Adjust __libc_tsd_define arguments.
+	* sunrpc/rpc_thread.c (RPC_VARS): Likewise.
+	(__rpc_thread_destroy, rpc_thread_multi, __rpc_thread_variables):
+	Adjust __libc_tsd_{set,get} arguments.
+	* ctype/ctype-info.c (CTYPE_B, CTYPE_TOUPPER, CTYPE_TOLOWER): Adjust
+	__libc_tsd_define arguments.
+	* locale/uselocale.c (__uselocale): Adjust __libc_tsd_{set,get}
+	arguments.
+	* locale/lc-ctype.c (_nl_postload_ctype): Likewise.
+	* locale/global-locale.c (__libc_tsd_LOCALE): Adjust type.
+	(LOCALE): Adjust __libc_tsd_define arguments.
+	* locale/localeinfo.h (_NL_CURRENT_LOCALE): Adjust __libc_tsd_get
+	arguments.
+	(LOCALE): Adjust __libc_tsd_define arguments.
+	* sysdeps/mach/hurd/malloc-machine.h (MALLOC): Adjust __libc_tsd_define
+	arguments.
+	(tsd_setspecific, tsd_getspecific): Adjust __libc_tsd_{set,get}
+	arguments.
+
 2008-11-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_rEALLOc): When new arena is used, copy

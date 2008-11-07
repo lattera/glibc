@@ -18,50 +18,35 @@ extern int __isctype (int __c, int __mask);
 #   define CTYPE_EXTERN_INLINE extern inline
 #  endif
 
-__libc_tsd_define (extern, CTYPE_B)
-__libc_tsd_define (extern, CTYPE_TOUPPER)
-__libc_tsd_define (extern, CTYPE_TOLOWER)
+__libc_tsd_define (extern, const uint16_t *, CTYPE_B)
+__libc_tsd_define (extern, const int32_t *, CTYPE_TOUPPER)
+__libc_tsd_define (extern, const int32_t *, CTYPE_TOLOWER)
 
 CTYPE_EXTERN_INLINE const uint16_t ** __attribute__ ((const))
 __ctype_b_loc (void)
 {
-  union
-    {
-      void **ptr;
-      const uint16_t **tablep;
-    } u;
-  u.ptr = __libc_tsd_address (CTYPE_B);
-  if (__builtin_expect (*u.tablep == NULL, 0))
-    *u.tablep = (const uint16_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS) + 128;
-  return u.tablep;
+  const uint16_t **tablep = __libc_tsd_address (const uint16_t *, CTYPE_B);
+  if (__builtin_expect (*tablep == NULL, 0))
+    *tablep = (const uint16_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS) + 128;
+  return tablep;
 }
 
 CTYPE_EXTERN_INLINE const int32_t ** __attribute__ ((const))
 __ctype_toupper_loc (void)
 {
-  union
-    {
-      void **ptr;
-      const int32_t **tablep;
-    } u;
-  u.ptr = __libc_tsd_address (CTYPE_TOUPPER);
-  if (__builtin_expect (*u.tablep == NULL, 0))
-    *u.tablep = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128);
-  return u.tablep;
+  const int32_t **tablep = __libc_tsd_address (const int32_t *, CTYPE_TOUPPER);
+  if (__builtin_expect (*tablep == NULL, 0))
+    *tablep = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128);
+  return tablep;
 }
 
 CTYPE_EXTERN_INLINE const int32_t ** __attribute__ ((const))
 __ctype_tolower_loc (void)
 {
-  union
-    {
-      void **ptr;
-      const int32_t **tablep;
-    } u;
-  u.ptr = __libc_tsd_address (CTYPE_TOLOWER);
-  if (__builtin_expect (*u.tablep == NULL, 0))
-    *u.tablep = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128);
-  return u.tablep;
+  const int32_t **tablep = __libc_tsd_address (const int32_t *, CTYPE_TOLOWER);
+  if (__builtin_expect (*tablep == NULL, 0))
+    *tablep = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128);
+  return tablep;
 }
 
 # endif	/* Not NOT_IN_libc.  */
