@@ -1,3 +1,8 @@
+2008-11-03  Michael Matz  <matz@suse.de>
+
+	* sysdeps/s390/bits/atomic.h (__arch_compare_and_exchange_val_32_acq,
+	__arch_compare_and_exchange_val_64_acq): Add "memory" clobber.
+
 2008-11-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/stdio.h (__builtin_fwrite, __builtin_fwrite_unlocked):

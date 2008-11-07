@@ -56,7 +56,7 @@ typedef uintmax_t uatomic_max_t;
      __typeof (*mem) __archold = (oldval);				      \
      __asm __volatile ("cs %0,%2,%1"					      \
 		       : "+d" (__archold), "=Q" (*__archmem)		      \
-		       : "d" (newval), "m" (*__archmem) : "cc" );	      \
+		       : "d" (newval), "m" (*__archmem) : "cc", "memory" );	      \
      __archold; })
 
 #ifdef __s390x__
@@ -65,7 +65,7 @@ typedef uintmax_t uatomic_max_t;
      __typeof (*mem) __archold = (oldval);				      \
      __asm __volatile ("csg %0,%2,%1"					      \
 		       : "+d" (__archold), "=Q" (*__archmem)		      \
-		       : "d" ((long) (newval)), "m" (*__archmem) : "cc" );    \
+		       : "d" ((long) (newval)), "m" (*__archmem) : "cc", "memory" );    \
      __archold; })
 #else
 /* For 31 bit we do not really need 64-bit compare-and-exchange. We can
