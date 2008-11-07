@@ -160,17 +160,6 @@ libc_hidden_proto (__vfprintf_chk)
 libc_hidden_proto (__vasprintf_chk)
 libc_hidden_proto (__vdprintf_chk)
 libc_hidden_proto (__obstack_vprintf_chk)
-
-#  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
-  && !defined NO_HIDDEN
-/* Special gcc builtins.  */
-extern size_t __builtin_fwrite (const void *, size_t, size_t, void *)
-     __asm ("__GI_fwrite");
-extern size_t __builtin_fwrite_unlocked (const void *, size_t, size_t, void *)
-     __asm ("__GI_fwrite_unlocked");
-
-#  endif
-
 # endif
 
 #endif

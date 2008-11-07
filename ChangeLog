@@ -1,5 +1,8 @@
 2008-11-07  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/stdio.h (__builtin_fwrite, __builtin_fwrite_unlocked):
+	Remove.
+
 	* bits/libc-tsd.h (__libc_tsd_define, __libc_tsd_address,
 	__libc_tsd_get, __libc_tsd_set): Add TYPE argument, use it as the type
 	of the thread variable instead of void *.
