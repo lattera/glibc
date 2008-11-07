@@ -1,3 +1,8 @@
+2008-11-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-64/dl-trampoline.S (_dl_runtime_profile): Use the
+	correct instruction to remove the stack frame.
+
 2008-11-03  Michael Matz  <matz@suse.de>
 
 	* sysdeps/s390/bits/atomic.h (__arch_compare_and_exchange_val_32_acq,

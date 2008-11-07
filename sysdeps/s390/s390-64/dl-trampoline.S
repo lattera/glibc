@@ -91,7 +91,7 @@ _dl_runtime_profile:
 	ld     %f4,120(%r12)
 	ld     %f6,128(%r12)
 	basr   %r14,%r1			# call resolved function
-0:	lr     %r15,%r12		# remove stack frame
+0:	lgr    %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	lg     %r14,32(%r15)		# restore registers
 	lg     %r12,24(%r15)
