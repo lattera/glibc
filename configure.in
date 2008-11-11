@@ -2181,6 +2181,9 @@ AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)
 AC_SUBST(libc_cv_forced_unwind)
 
+dnl sysdeps/CPU/configure.in checks set this via arch-specific asm tests
+AC_SUBST(libc_cv_cpp_asm_debuginfo)
+
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 

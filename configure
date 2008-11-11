@@ -748,6 +748,7 @@ libc_cv_localedir
 libc_cv_sysconfdir
 libc_cv_rootsbindir
 libc_cv_forced_unwind
+libc_cv_cpp_asm_debuginfo
 use_ldconfig
 ldd_rewrite_script
 elf
@@ -8445,6 +8446,8 @@ fi
 
 
 
+
+
 if test $elf = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_ELF 1
@@ -9311,6 +9314,7 @@ libc_cv_localedir!$libc_cv_localedir$ac_delim
 libc_cv_sysconfdir!$libc_cv_sysconfdir$ac_delim
 libc_cv_rootsbindir!$libc_cv_rootsbindir$ac_delim
 libc_cv_forced_unwind!$libc_cv_forced_unwind$ac_delim
+libc_cv_cpp_asm_debuginfo!$libc_cv_cpp_asm_debuginfo$ac_delim
 use_ldconfig!$use_ldconfig$ac_delim
 ldd_rewrite_script!$ldd_rewrite_script$ac_delim
 elf!$elf$ac_delim
@@ -9331,7 +9335,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 53; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 54; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
