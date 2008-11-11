@@ -1,0 +1,3 @@
+# The i386 fragment also works for x86_64.
+
+. $srcdir/sysdeps/i386/configure
