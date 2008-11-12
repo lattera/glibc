@@ -1,3 +1,13 @@
+2008-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #7008]
+	* pthread_condattr_setclock.c (pthread_condattr_setclock): Fix masking
+	of old value.
+	* pthread_cond_init.c (__pthread_cond_init): Fix
+	cond->__data.__nwaiters initialization.
+	* Makefile (tests): Add tst-cond23.
+	* tst-cond23.c: New test.
+
 2008-11-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/malloc-machine.h (MALLOC): Adjust __libc_tsd_define

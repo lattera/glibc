@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -66,7 +66,7 @@ pthread_condattr_setclock (attr, clock_id)
 
   int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = ((*valuep & ~(1 << (COND_NWAITERS_SHIFT + 1)) & ~1)
+  *valuep = ((*valuep & ~(((1 << COND_NWAITERS_SHIFT) - 1) << 1))
 	     | (clock_id << 1));
 
   return 0;
