@@ -1083,11 +1083,18 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	    }
 	  continue;
 	}
+#if 1
+      // We should not see any types other than those explicitly listed
+      // below.  Some types sent by server seem missing, though.  Just
+      // collect the data for now.
+      if (__builtin_expect (type != T_A && type != T_AAAA, 0))
+#else
       if (__builtin_expect (type == T_SIG, 0)
 	  || __builtin_expect (type == T_KEY, 0)
 	  || __builtin_expect (type == T_NXT, 0)
 	  || __builtin_expect (type == T_PTR, 0)
 	  || __builtin_expect (type == T_DNAME, 0))
+#endif
 	{
 	  /* We don't support DNSSEC yet.  For now, ignore the record
 	     and send a low priority message to syslog.
