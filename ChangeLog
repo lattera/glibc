@@ -1,3 +1,8 @@
+2008-11-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Don't abort for
+	unknown request types for now.
+
 2008-11-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/configure: New file.
