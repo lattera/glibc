@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005,2006,2007
+   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -184,7 +184,7 @@ typedef struct
       __dest; }))
 
 # define __CPU_ALLOC_SIZE(count) \
-  ((((count) + __NCPUBITS - 1) / __NCPUBITS) * 8)
+  ((((count) + __NCPUBITS - 1) / __NCPUBITS) * sizeof (__cpu_mask))
 # define __CPU_ALLOC(count) __sched_cpualloc (count)
 # define __CPU_FREE(cpuset) __sched_cpufree (cpuset)
 

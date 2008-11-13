@@ -1,3 +1,10 @@
+2008-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7029]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ALLOC_SIZE):
+	Multiply with sizeof of __cpu_mask, not 8 unconditionally after
+	all the rounding.
+
 2008-11-11  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #7009]
