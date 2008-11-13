@@ -1,6 +1,7 @@
 2008-11-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Bump for 2.9 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 9.
 
 	[BZ #7029]
 	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ALLOC_SIZE):
