@@ -1,5 +1,5 @@
 /* Save current context and install the given one.
-   Copyright (C) 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,16 @@
 #include "ucontext_i.h"
 #include <asm/errno.h>
 
+	.section	".toc","aw"
+.LC__dl_hwcap:
+#ifdef SHARED
+	.tc _rtld_global_ro[TC],_rtld_global_ro
+#else
+	.tc _dl_hwcap[TC],_dl_hwcap
+#endif
+
 #if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
+	.section	".text"
 ENTRY(__novec_swapcontext)
 	CALL_MCOUNT 2
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
@@ -157,10 +166,31 @@ ENTRY(__novec_swapcontext)
   cmpdi r0,0
   bne	  L(nv_do_sigret)
 
+# ifdef SHARED
+/* Load _rtld-global._dl_hwcap.  */
+  ld    r8,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r8)
+# else
+  ld    r8,0(r8) /* Load extern _dl_hwcap.  */
+# endif
+
   lfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r31)
   lfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r31)
   lfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r31)
+# ifdef _ARCH_PWR6
+  /* Use the extended four-operand version of the mtfsf insn.  */
+  mtfsf  0xff,fp0,1,0
+# else
+  /* Availability of DFP indicates a 64-bit FPSCR.  */
+  andi.  r6,r8,PPC_FEATURE_HAS_DFP
+  beq    5f
+  /* Use the extended four-operand version of the mtfsf insn.  */
+  mtfsf  0xff,fp0,1,0
+  b      6f
+  /* Continue to operate on the FPSCR as if it were 32-bits.  */
+5:
   mtfsf  0xff,fp0
+6:
+#endif /* _ARCH_PWR6 */
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)
   lfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r31)
@@ -283,15 +313,7 @@ compat_symbol (libc, __novec_swapcontext, swapcontext, GLIBC_2_3)
 
 #endif
 
-	.section	".toc","aw"
-.LC__dl_hwcap:
-#ifdef SHARED
-	.tc _rtld_global_ro[TC],_rtld_global_ro
-#else
-	.tc _dl_hwcap[TC],_dl_hwcap
-#endif
 	.section ".text"
-
 	.machine	"altivec"
 ENTRY(__swapcontext)
 	CALL_MCOUNT 2
@@ -409,7 +431,7 @@ ENTRY(__swapcontext)
   la    r10,(SIGCONTEXT_V_RESERVE+8)(r3)
   la    r9,(SIGCONTEXT_V_RESERVE+24)(r3)
 
-  andis.  r8,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
+  andis.  r6,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 
   clrrdi  r10,r10,4
   beq   L(has_no_vec)
@@ -540,7 +562,7 @@ L(has_no_vec):
 # else
   ld    r8,0(r8) /* Load extern _dl_hwcap.  */
 # endif
-  andis.  r8,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
+  andis.  r6,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
   beq   L(has_no_vec2)
 
   cmpdi r10,0
@@ -646,7 +668,21 @@ L(has_no_vec2):
   lfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r31)
   lfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r31)
   lfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r31)
+# ifdef _ARCH_PWR6
+  /* Use the extended four-operand version of the mtfsf insn.  */
+  mtfsf  0xff,fp0,1,0
+# else
+  /* Availability of DFP indicates a 64-bit FPSCR.  */
+  andi.  r6,r8,PPC_FEATURE_HAS_DFP
+  beq    7f
+  /* Use the extended four-operand version of the mtfsf insn.  */
+  mtfsf  0xff,fp0,1,0
+  b      8f
+  /* Continue to operate on the FPSCR as if it were 32-bits.  */
+7:
   mtfsf  0xff,fp0
+8:
+#endif /* _ARCH_PWR6 */
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)
   lfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r31)

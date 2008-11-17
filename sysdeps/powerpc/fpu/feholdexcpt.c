@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
    02111-1307 USA.  */
 
 #include <fenv_libc.h>
+#include <fpu_control.h>
+#define _FPU_MASK_ALL (_FPU_MASK_ZM | _FPU_MASK_OM | _FPU_MASK_UM | _FPU_MASK_XM | _FPU_MASK_IM)
 
 int
 feholdexcept (fenv_t *envp)
@@ -35,7 +37,7 @@ feholdexcept (fenv_t *envp)
   /* If the old env had any eabled exceptions, then mask SIGFPE in the
      MSR FE0/FE1 bits.  This may allow the FPU to run faster because it
      always takes the default action and can not generate SIGFPE. */
-  if ((old.l[1] & 0x000000F8) != 0)
+  if ((old.l[1] & _FPU_MASK_ALL) != 0)
     (void)__fe_mask_env ();
 
   /* Put the new state in effect.  */

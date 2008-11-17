@@ -1,3 +1,49 @@
+2008-11-13  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6411]
+	* sysdeps/powerpc/fpu/Makefile: Added test case tst-setcontext-fpscr.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_register): Dynamically
+	choose mtfsf insn based on PPC_FEATURE_HAS_DFP.
+	(relax_fenv_state): Same as above.
+	(FPSCR_29): Reserve bit in ISA 2.05.
+	(FPSCR_NI): Provide define for compat.
+	* sysdeps/powerpc/fpu/fesetenv.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/feupdateenv.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: New file.  Test case to
+	test setcontext and swapcontext with dynamic 64-bit FPSCR detection.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Adjust
+	access to hwcap to account for hwcap size increase to uint64_t.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S (__sigsetjmp ):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S
+	(*setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/setcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/swapcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+	(*setcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP. Adjust access to hwcap to account for hwcap size
+	increase to uint64_t.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(*swapcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.  Adjust access to hwcap to account for hwcap size
+	increase to uint64_t.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/setcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/swapcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(*setcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(*swapcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.
+
 2008-11-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Bump for 2.9 release.

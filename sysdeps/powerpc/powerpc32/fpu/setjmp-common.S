@@ -98,14 +98,14 @@ ENTRY (BP_SYM (__sigsetjmp))
 	cfi_same_value (lr)
 #  ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
-	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
+	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(r5)
 #  else
 	lwz     r5,_dl_hwcap@got(r5)
-	lwz     r5,0(r5)
+	lwz     r5,4(r5)
 #  endif
 # else
-	lis	r6,_dl_hwcap@ha
-	lwz     r5,_dl_hwcap@l(r6)
+	lis	r6,(_dl_hwcap+4)@ha
+	lwz     r5,(_dl_hwcap+4)@l(r6)
 # endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)

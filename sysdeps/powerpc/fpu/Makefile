@@ -5,3 +5,7 @@ libm-tests += test-powerpc-snan
 # libm needs ld.so to access dl_hwcap
 $(objpfx)libm.so: $(elfobjdir)/ld.so
 endif
+
+ifeq ($(subdir),stdlib)
+tests += tst-setcontext-fpscr
+endif
