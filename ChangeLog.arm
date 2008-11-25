@@ -1,3 +1,10 @@
+2008-11-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (LOAD_ARGS_1, LOAD_ARGS_2,
+	LOAD_ARGS_3, LOAD_ARGS_4, LOAD_ARGS_5, LOAD_ARGS_6, LOAD_ARGS_7):
+	Load all arguments into temporary variables before loading into
+	registers.
+
 2008-08-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/c++-types-arm-linux-gnueabi.data: New.

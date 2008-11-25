@@ -238,32 +238,39 @@ __local_syscall_error:						\
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0
 #define LOAD_ARGS_1(a1)				\
-  _a1 = (int) (a1);				\
-  LOAD_ARGS_0 ()
+  int _a1tmp = (int) (a1);			\
+  LOAD_ARGS_0 ()				\
+  _a1 = _a1tmp;
 #define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
 #define LOAD_ARGS_2(a1, a2)			\
-  register int _a2 asm ("a2") = (int) (a2);	\
-  LOAD_ARGS_1 (a1)
+  int _a2tmp = (int) (a2);			\
+  LOAD_ARGS_1 (a1)				\
+  register int _a2 asm ("a2") = _a2tmp;
 #define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
 #define LOAD_ARGS_3(a1, a2, a3)			\
-  register int _a3 asm ("a3") = (int) (a3);	\
-  LOAD_ARGS_2 (a1, a2)
+  int _a3tmp = (int) (a3);			\
+  LOAD_ARGS_2 (a1, a2)				\
+  register int _a3 asm ("a3") = _a3tmp;
 #define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
 #define LOAD_ARGS_4(a1, a2, a3, a4)		\
-  register int _a4 asm ("a4") = (int) (a4);	\
-  LOAD_ARGS_3 (a1, a2, a3)
+  int _a4tmp = (int) (a4);			\
+  LOAD_ARGS_3 (a1, a2, a3)			\
+  register int _a4 asm ("a4") = _a4tmp;
 #define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
 #define LOAD_ARGS_5(a1, a2, a3, a4, a5)		\
-  register int _v1 asm ("v1") = (int) (a5);	\
-  LOAD_ARGS_4 (a1, a2, a3, a4)
+  int _v1tmp = (int) (a5);			\
+  LOAD_ARGS_4 (a1, a2, a3, a4)			\
+  register int _v1 asm ("v1") = _v1tmp;
 #define ASM_ARGS_5	ASM_ARGS_4, "r" (_v1)
 #define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)	\
-  register int _v2 asm ("v2") = (int) (a6);	\
-  LOAD_ARGS_5 (a1, a2, a3, a4, a5)
+  int _v2tmp = (int) (a6);			\
+  LOAD_ARGS_5 (a1, a2, a3, a4, a5)		\
+  register int _v2 asm ("v2") = _v2tmp;
 #define ASM_ARGS_6	ASM_ARGS_5, "r" (_v2)
 #define LOAD_ARGS_7(a1, a2, a3, a4, a5, a6, a7)	\
-  register int _v3 asm ("v3") = (int) (a7);	\
-  LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)
+  int _v3tmp = (int) (a7);			\
+  LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)		\
+  register int _v3 asm ("v3") = _v3tmp;
 #define ASM_ARGS_7	ASM_ARGS_6, "r" (_v3)
 
 /* We can't implement non-constant syscalls directly since the syscall
