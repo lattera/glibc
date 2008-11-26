@@ -2504,7 +2504,6 @@ fi
 # base_machine, we don't change it.
 test -n "$base_machine" || case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
-alpha*)		base_machine=alpha machine=alpha/$machine ;;
 c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 i[34567]86)	base_machine=i386 machine=i386/$machine ;;
