@@ -1,3 +1,10 @@
+2008-11-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Contents moved to main
+	repository's ia64 file; #include that.
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Contents moved to main
+	repository's powerpc file; #include that.
+
 2008-11-25  Roland McGrath  <roland@redhat.com>
 
 	* ChangeLog.alpha: New file (this one).
