@@ -1,2 +1,0 @@
-# Override ldbl-opt with alpha specific routines.
-alpha/fpu

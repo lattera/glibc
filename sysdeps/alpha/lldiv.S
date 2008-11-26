@@ -1,1 +1,0 @@
-/* lldiv is the same as ldiv on the Alpha.  */

@@ -1,3 +1,9 @@
+2008-11-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/alpha, sysdeps/unix/sysv/linux/alpha:
+	Subdirectories moved to ports repository as
+	sysdeps/.../nptl subdirectories.
+
 2008-11-12  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #7008]
