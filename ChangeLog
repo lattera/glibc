@@ -1,5 +1,12 @@
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h: ... here.
+
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Renamed to ...
+	* sysdeps/unix/sysv/linux/ia64/wordexp.c: ... here.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/wordexp.c: Change #include.
+
 	* elf/elf.h (NT_386_IOPERM): New macro.
 	(NT_PPC_VSX): New macro.
 
