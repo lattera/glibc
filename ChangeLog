@@ -1,3 +1,8 @@
+2008-11-26  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (NT_386_IOPERM): New macro.
+	(NT_PPC_VSX): New macro.
+
 2008-11-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/alpha, sysdeps/unix/bsd/osf/alpha,
