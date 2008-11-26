@@ -1,0 +1,18 @@
+2008-11-25  Roland McGrath  <roland@redhat.com>
+
+	* ChangeLog.alpha: New file (this one).
+	* sysdeps/alpha, sysdeps/unix/bsd/osf/alpha,
+	sysdeps/unix/bsd/Attic/osf1/alpha, sysdeps/unix/sysv/linux/alpha,
+	sysdeps/unix/sysv/linux/alpha/alpha, sysdeps/unix/alpha,
+	sysdeps/mach/alpha, sysdeps/mach/hurd/alpha:
+	Subdirectories moved here from main repository.
+	* sysdeps/alpha/nptl, sysdeps/unix/sysv/linux/alpha/nptl:
+	Subdirectories moved here from main repository's nptl/ subdirectory.
+	* sysdeps/alpha/preconfigure: New file.
+	* sysdeps/alpha/shlib-versions: New file.
+
+Local Variables:
+mode: change-log
+left-margin: 8
+fill-column: 74
+End:
