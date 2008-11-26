@@ -19,6 +19,10 @@
 	Subdirectories moved to ports repository.
 	* configure.in (base_machine): Remove alpha case.
 
+2008-11-25  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* sysdeps/mach/strerror_l.c: New file.
+
 2008-11-13  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #6411]
