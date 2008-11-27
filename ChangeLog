@@ -1,3 +1,8 @@
+2008-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): If the system has
+	neither IPv4 nor IPv6 addresses defined, don't do anything.
+
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Renamed to ...
