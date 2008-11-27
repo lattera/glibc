@@ -2108,13 +2108,8 @@ getaddrinfo (const char *name, const char *service,
 	{
 	  /* If we haven't seen both IPv4 and IPv6 interfaces we can
 	     narrow down the search.  */
-	  if (! seen_ipv4 || ! seen_ipv6)
+	  if ((! seen_ipv4 || ! seen_ipv6) && (seen_ipv4 || seen_ipv6))
 	    {
-	      if (! seen_ipv4 && ! seen_ipv6)
-		/* Neither IPv4 nor IPv6 interfaces exist, nothing to
-		   return.  */
-		goto err_noname;
-
 	      local_hints = *hints;
 	      local_hints.ai_family = seen_ipv4 ? PF_INET : PF_INET6;
 	      hints = &local_hints;
@@ -2124,7 +2119,6 @@ getaddrinfo (const char *name, const char *service,
 	       || (hints->ai_family == PF_INET6 && ! seen_ipv6))
 	{
 	  /* We cannot possibly return a valid answer.  */
-	err_noname:
 	  free (in6ai);
 	  return EAI_NONAME;
 	}

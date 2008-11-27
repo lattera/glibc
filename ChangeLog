@@ -1,7 +1,7 @@
 2008-11-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/posix/getaddrinfo.c (getaddrinfo): If the system has
-	neither IPv4 nor IPv6 addresses defined, don't do anything.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Only restrict search
+	to IPv4 or IPv6 if an interface has been found.
 
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
