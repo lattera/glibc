@@ -1,3 +1,10 @@
+2008-11-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/utmp_file.c (file_writable): New variable.
+	(setutent_file): Don't try to open file for writing.
+	(pututline_file): Before writing, make descriptor writable if
+	necessary.
+
 2008-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Only restrict search
