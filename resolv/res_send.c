@@ -95,11 +95,19 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <kernel-features.h>
 
 #if PACKETSZ > 65536
 #define MAXPACKET       PACKETSZ
 #else
 #define MAXPACKET       65536
+#endif
+
+
+#ifndef __ASSUME_O_CLOEXEC
+static int __have_o_nonblock;
+#else
+# define __have_o_nonblock 0
 #endif
 
 
@@ -920,8 +928,20 @@ send_dg(res_state statp,
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if ((EXT(statp).nscount6 > 0) && !statp->ipv6_unavail) {
-			EXT(statp).nssocks[ns] =
-			    socket(PF_INET6, SOCK_DGRAM, 0);
+			if (__have_o_nonblock >= 0) {
+				EXT(statp).nssocks[ns] =
+				  socket(PF_INET6, SOCK_DGRAM|SOCK_NONBLOCK,
+					 0);
+#ifndef __ASSUME_O_CLOEXEC
+				if (__have_o_nonblock == 0)
+					__have_o_nonblock
+					  = (EXT(statp).nssocks[ns] == -1
+					     && errno == EINVAL ? -1 : 1);
+#endif
+			}
+			if (__have_o_nonblock < 0)
+				EXT(statp).nssocks[ns] =
+				  socket(PF_INET6, SOCK_DGRAM, 0);
 			if (EXT(statp).nssocks[ns] < 0)
 			    statp->ipv6_unavail = errno == EAFNOSUPPORT;
 			/* If IPv6 socket and nsap is IPv4, make it
@@ -929,8 +949,22 @@ send_dg(res_state statp,
 			else if (nsap->sin6_family == AF_INET)
 			    convaddr4to6(nsap);
 		}
-		if (EXT(statp).nssocks[ns] < 0)
-			EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
+		if (EXT(statp).nssocks[ns] < 0) {
+			if (__have_o_nonblock >= 0) {
+				EXT(statp).nssocks[ns]
+				  = socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK,
+					   0);
+#ifndef __ASSUME_O_CLOEXEC
+				if (__have_o_nonblock == 0)
+					__have_o_nonblock
+					  = (EXT(statp).nssocks[ns] == -1
+					     && errno == EINVAL ? -1 : 1);
+#endif
+			}
+			if (__have_o_nonblock < 0)
+				EXT(statp).nssocks[ns]
+				  = socket(PF_INET, SOCK_DGRAM, 0);
+		}
 		if (EXT(statp).nssocks[ns] < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(dg)", errno);
@@ -955,13 +989,15 @@ send_dg(res_state statp,
 			__res_iclose(statp, false);
 			return (0);
 		}
-		/* Make socket non-blocking.  */
-		int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
-		if  (fl != -1)
-			__fcntl (EXT(statp).nssocks[ns], F_SETFL,
-				 fl | O_NONBLOCK);
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; new DG socket\n"))
+		if (__have_o_nonblock < 0) {
+			/* Make socket non-blocking.  */
+			int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
+			if  (fl != -1)
+				__fcntl (EXT(statp).nssocks[ns], F_SETFL,
+					 fl | O_NONBLOCK);
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; new DG socket\n"))
+		}
 	}
 
 	/*

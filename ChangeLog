@@ -1,5 +1,8 @@
 2008-12-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c (send_dg): Create sockets with non-blocking
+	flag already set.
+
 	* stdlib/setenv.c (unsetenv): Don't search environment if it does
 	not exist.
 	* stdlib/Makefile (tests): Add tst-unsetenv1.
