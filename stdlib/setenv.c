@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1995-2001,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1995-2001,2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -292,19 +292,20 @@ unsetenv (name)
   LOCK;
 
   ep = __environ;
-  while (*ep != NULL)
-    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
-      {
-	/* Found it.  Remove this pointer by moving later ones back.  */
-	char **dp = ep;
+  if (ep != NULL)
+    while (*ep != NULL)
+      if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+	{
+	  /* Found it.  Remove this pointer by moving later ones back.  */
+	  char **dp = ep;
 
-	do
-	  dp[0] = dp[1];
-	while (*dp++);
-	/* Continue the loop in case NAME appears again.  */
-      }
-    else
-      ++ep;
+	  do
+	    dp[0] = dp[1];
+	  while (*dp++);
+	  /* Continue the loop in case NAME appears again.  */
+	}
+      else
+	++ep;
 
   UNLOCK;
 
