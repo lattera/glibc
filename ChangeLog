@@ -2,6 +2,8 @@
 
 	* stdlib/setenv.c (unsetenv): Don't search environment if it does
 	not exist.
+	* stdlib/Makefile (tests): Add tst-unsetenv1.
+	* stdlib/tst-unsetenv1.c: New file.
 
 2008-11-29  Ulrich Drepper  <drepper@redhat.com>
 
