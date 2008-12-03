@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-11-17
+GNU C Library NEWS -- history of user-visible changes.  2008-12-2
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -6,6 +6,8 @@ Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
 
 Version 2.10
+
+* New Linux interface: accept4
 
 
 Version 2.9
