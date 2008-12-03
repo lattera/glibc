@@ -1,3 +1,8 @@
+2008-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Define
+	FUTEX_WAIT_BITSET and FUTEX_WAKE_BITSET.
+
 2008-11-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (LOAD_ARGS_1, LOAD_ARGS_2,
