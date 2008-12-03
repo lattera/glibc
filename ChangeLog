@@ -1,5 +1,13 @@
 2008-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Recognize
+	ESRCH return value.
+	(_nss_dns_gethostbyname4_r): Likewise.
+	* resolv/res_init.c (__res_vinit): Initialize nscount to zero.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): In case we use
+	gethostbyname4_r, we don't have a separate IPv6 status, so copy
+	the no_data variable.
+
 	* resolv/res_init.c (__res_vinit): Fill in IPv4 name server
 	information at the correct index.
 

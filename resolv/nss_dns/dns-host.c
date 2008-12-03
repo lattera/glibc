@@ -198,8 +198,14 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			  1024, &host_buffer.ptr, NULL, NULL, NULL);
   if (n < 0)
     {
-      status = (errno == ECONNREFUSED
-		? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
+      if (errno == ESRCH)
+	{
+	  status = NSS_STATUS_TRYAGAIN;
+	  h_errno = TRY_AGAIN;
+	}
+      else
+	status = (errno == ECONNREFUSED
+		  ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *h_errnop = h_errno;
       if (h_errno == TRY_AGAIN)
 	*errnop = EAGAIN;
@@ -304,8 +310,14 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 			      &ans2p, &nans2p, &resplen2);
   if (n < 0)
     {
-      status = (errno == ECONNREFUSED
-		? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
+      if (errno == ESRCH)
+	{
+	  status = NSS_STATUS_TRYAGAIN;
+	  h_errno = TRY_AGAIN;
+	}
+      else
+	status = (errno == ECONNREFUSED
+		  ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *herrnop = h_errno;
       if (h_errno == TRY_AGAIN)
 	*errnop = EAGAIN;

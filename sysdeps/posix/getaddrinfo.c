@@ -733,6 +733,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 					      tmpbuflen, 2 * tmpbuflen);
 		    }
 
+		  no_inet6_data = no_data;
+
 		  if (status == NSS_STATUS_SUCCESS)
 		    {
 		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)

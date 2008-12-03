@@ -183,7 +183,7 @@ __res_vinit(res_state statp, int preinit) {
 #endif
 	statp->nsaddr.sin_family = AF_INET;
 	statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
-	statp->nscount = 1;
+	statp->nscount = 0;
 	statp->ndots = 1;
 	statp->pfcode = 0;
 	statp->_vcsock = -1;

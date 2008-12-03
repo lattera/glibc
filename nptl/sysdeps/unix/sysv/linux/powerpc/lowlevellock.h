@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -38,6 +38,8 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_WAIT_BITSET	9
+#define FUTEX_WAKE_BITSET	10
 #define FUTEX_PRIVATE_FLAG	128
 
 /* Values for 'private' parameter of locking macros.  Yes, the
@@ -67,7 +69,7 @@
       : (fl))								      \
    : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
 	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
-# endif	      
+# endif
 #endif
 
 #define lll_futex_wait(futexp, val, private) \
@@ -131,8 +133,8 @@
 			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
-  
-  
+
+
 #ifdef UP
 # define __lll_acq_instr	""
 # define __lll_rel_instr	""
