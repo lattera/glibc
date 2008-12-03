@@ -31,4 +31,7 @@ libc {
     # Addition from P1003.1-200x
     sockatmark;
   }
+  GLIBC_2.10 {
+    accept4;
+  }
 }

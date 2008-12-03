@@ -23,21 +23,20 @@
    When a connection arrives, open a new socket to communicate with it,
    set *ADDR (which is *ADDR_LEN bytes long) to the address of the connecting
    peer and *ADDR_LEN to the address's actual length, and return the
-   new socket's descriptor, or -1 for errors.  SS is installed as
-   the thread's signal mask and FLAGS are additional flags.  */
+   new socket's descriptor, or -1 for errors.  The operation can be influenced
+   by the FLAGS parameter.  */
 int
-paccept (fd, addr, addr_len, ss, flags)
+accept4 (fd, addr, addr_len, flags)
      int fd;
      __SOCKADDR_ARG addr;
      socklen_t *addr_len;
-     const __sigset_t *ss;
      int flags;
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (paccept)
+libc_hidden_def (accept4)
 
 
-stub_warning (paccept)
+stub_warning (accept4)
 #include <stub-tag.h>

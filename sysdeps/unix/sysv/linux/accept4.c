@@ -24,19 +24,20 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_paccept
+#define __NR_accept4                            288
+
+
+#ifdef __NR_accept4
 int
-paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
-	 const __sigset_t *ss, int flags)
+accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (paccept, 6, fd, addr.__sockaddr__, addr_len, ss,
-			   _NSIG / 8, flags);
+    return INLINE_SYSCALL (accept4, 4, fd, addr.__sockaddr__, addr_len, flags);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = INLINE_SYSCALL (paccept, 6, fd, addr.__sockaddr__, addr_len, ss,
-			       _NSIG / 8, flags);
+  int result = INLINE_SYSCALL (accept4, 4, fd, addr.__sockaddr__, addr_len,
+			       flags);
 
   LIBC_CANCEL_RESET (oldtype);
 
@@ -44,11 +45,10 @@ paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
 }
 #else
 int
-paccept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len,
-	 const __sigset_t *ss, int flags)
+accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
   __set_errno (ENOSYS);
   return -1;
-stub_warning (epoll_pwait)
 }
+stub_warning (accept4)
 #endif

@@ -214,6 +214,15 @@ extern int listen (int __fd, int __n) __THROW;
 extern int accept (int __fd, __SOCKADDR_ARG __addr,
 		   socklen_t *__restrict __addr_len);
 
+#ifdef __USE_GNU
+/* Similar to 'accept' but takes an additional parameter to specify flags.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int accept4 (int __fd, __SOCKADDR_ARG __addr,
+		    socklen_t *__restrict __addr_len, int __flags);
+#endif
+
 /* Shut down all or part of the connection open on socket FD.
    HOW determines what to shut down:
      SHUT_RD   = No more receptions;

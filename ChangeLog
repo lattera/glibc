@@ -1,3 +1,21 @@
+2008-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* socket/sys/socket.h: Declare accept4.
+	* socket/accept4.c: New file.
+	* sysdeps/unix/sysv/linux/accept4.c: New file.
+	* sysdeps/unix/sysv/linux/i386/accept4.S: New file.
+	* socket/Makefile (routines): Add accept4.
+	* socket/Versions: Export accept4 with version GLIBC_2.10.
+	* socket/paccept.c: Removed.
+	* sysdeps/unix/sysv/linux/paccept.c: Removed.
+	* sysdeps/unix/sysv/linux/i386/paccept.S: Removed.
+	* Versions.def: Define GLIBC_2.10 for libc.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_ACCEPT4.
+
+	* nscd/connections.c: Use accept4.
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Fix comment.
+
 2008-12-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (send_dg): Create sockets with non-blocking

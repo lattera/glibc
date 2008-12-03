@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1998,2002,2003,2005,2008 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1998,2002,2003,2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,30 +19,34 @@
 #include <sysdep-cancel.h>
 #include <socketcall.h>
 #include <tls.h>
+#include <kernel-features.h>
 
-#define P(a, b) P2(a, b)
-#define P2(a, b) a##b
+#define EINVAL	22
+#define ENOSYS	38
+
+#ifndef SOCKOP_accept4
+# define SOCKOP_accept4 18
+#endif
+
+#ifdef __ASSUME_ACCEPT4
+# define errlabel SYSCALL_ERROR_LABEL
+#else
+# define errlabel .Lerr
+	.data
+have_accept4:
+	.long	0
+#endif
 
 	.text
 /* The socket-oriented system calls are handled unusally in Linux/i386.
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
    which socket function is being called; and the second is a pointer to
-   the arguments to the specific function.
+   the arguments to the specific function.  */
 
-   The .S files for the other calls just #define socket and #include this.  */
-
-#ifndef __socket
-# ifndef NO_WEAK_ALIAS
-#  define __socket P(__,socket)
-# else
-#  define __socket socket
-# endif
-#endif
-
-.globl __socket
-ENTRY (__socket)
-#if defined NEED_CANCELLATION && defined CENABLE
+.globl __libc_accept4
+ENTRY (__libc_accept4)
+#ifdef CENABLE
 	SINGLE_THREAD_P
 	jne 1f
 #endif
@@ -53,8 +57,7 @@ ENTRY (__socket)
 
 	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
 
-	/* Use ## so `socket' is a separate token that might be #define'd.  */
-	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
+	movl $SOCKOP_accept4, %ebx	/* Subcode is first arg to syscall.  */
 	lea 4(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
@@ -66,14 +69,14 @@ ENTRY (__socket)
 
 	/* %eax is < 0 if there was an error.  */
 	cmpl $-125, %eax
-	jae SYSCALL_ERROR_LABEL
+	jae errlabel
 
 	/* Successful; return the syscall's value.  */
 L(pseudo_end):
 	ret
 
 
-#if defined NEED_CANCELLATION && defined CENABLE
+#ifdef CENABLE
 	/* We need one more register.  */
 1:	pushl %esi
 	cfi_adjust_cfa_offset(4)
@@ -89,8 +92,7 @@ L(pseudo_end):
 
 	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
 
-	/* Use ## so `socket' is a separate token that might be #define'd.  */
-	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
+	movl $SOCKOP_accept4, %ebx	/* Subcode is first arg to syscall.  */
 	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
@@ -112,13 +114,70 @@ L(pseudo_end):
 
 	/* %eax is < 0 if there was an error.  */
 	cmpl $-125, %eax
-	jae SYSCALL_ERROR_LABEL
+	jae errlabel
 
 	/* Successful; return the syscall's value.  */
 	ret
 #endif
-PSEUDO_END (__socket)
 
-#ifndef NO_WEAK_ALIAS
-weak_alias (__socket, socket)
+#ifndef __ASSUME_ACCEPT4
+	/* The kernel returns -EINVAL for unknown socket operations.
+	   We need to convert that error to an ENOSYS error.  */
+.Lerr:	cmpl $-EINVAL, %eax
+	jne SYSCALL_ERROR_LABEL
+
+	/* Save registers.  */
+	pushl %ebx
+	cfi_adjust_cfa_offset(4)
+	cfi_offset(ebx, -8)
+
+# ifdef PIC
+	SETUP_PIC_REG (dx)
+	addl $_GLOBAL_OFFSET_TABLE_, %edx
+	movl have_accept4@GOTOFF(%edx), %eax
+# else
+	movl have_accept4, %eax
+# endif
+	testl %eax, %eax
+	jne 1f
+
+	/* Try another call, this time with the FLAGS parameter
+	   cleared and an invalid file descriptor.  This call will not
+	   cause any harm and it will return immediately.  */
+	movl $-1, 8(%esp)
+	movl $0, 20(%esp)
+
+	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
+
+	movl $SOCKOP_accept4, %ebx	/* Subcode is first arg to syscall.  */
+	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
+
+        /* Do the system call trap.  */
+	ENTER_KERNEL
+
+	cmpl $-EINVAL, %eax
+	movl $-1, %eax
+	je 3f
+	movl $1, %eax
+3:
+# ifdef PIC
+	movl %eax, have_accept4@GOTOFF(%edx)
+# else
+	movl %eax, have_accept4
+# endif
+
+	testl %eax, %eax
+
+1:	movl $-EINVAL, %eax
+	jns 2f
+	movl $-ENOSYS, %eax
+
+	/* Restore registers.  */
+2:	popl %ebx
+	cfi_restore (ebx)
+
+	jmp SYSCALL_ERROR_LABEL
 #endif
+PSEUDO_END (__libc_accept4)
+
+weak_alias (__libc_accept4, accept4)

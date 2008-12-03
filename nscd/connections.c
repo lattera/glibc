@@ -238,8 +238,9 @@ static int resolv_conf_descr = -1;
 /* Negative if SOCK_CLOEXEC is not supported, positive if it is, zero
    before be know the result.  */
 static int have_sock_cloexec;
-/* The paccept syscall was introduced at the same time as SOCK_CLOEXEC.  */
-# define have_paccept -1	// XXX For the time being there is no such call
+#endif
+#ifndef __ASSUME_ACCEPT4
+static int have_accept4;
 #endif
 
 /* Number of times clients had to wait.  */
@@ -1609,8 +1610,8 @@ nscd_run_worker (void *p)
       /* We are done with the list.  */
       pthread_mutex_unlock (&readylist_lock);
 
-#ifndef __ASSUME_SOCK_CLOEXEC
-      if (have_sock_cloexec < 0)
+#ifndef __ASSUME_ACCEPT4
+      if (have_accept4 < 0)
 	{
 	  /* We do not want to block on a short read or so.  */
 	  int fl = fcntl (fd, F_GETFL);
@@ -1819,22 +1820,20 @@ main_loop_poll (void)
 	      /* We have a new incoming connection.  Accept the connection.  */
 	      int fd;
 
-#ifndef __ASSUME_PACCEPT
+#ifndef __ASSUME_ACCEPT4
 	      fd = -1;
-	      if (have_paccept >= 0)
+	      if (have_accept4 >= 0)
 #endif
 		{
-#if 0
-		  fd = TEMP_FAILURE_RETRY (paccept (sock, NULL, NULL, NULL,
+		  fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
 						    SOCK_NONBLOCK));
-#ifndef __ASSUME_PACCEPT
-		  if (have_paccept == 0)
-		    have_paccept = fd != -1 || errno != ENOSYS ? 1 : -1;
-#endif
+#ifndef __ASSUME_ACCEPT4
+		  if (have_accept4 == 0)
+		    have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
 #endif
 		}
-#ifndef __ASSUME_PACCEPT
-	      if (have_paccept < 0)
+#ifndef __ASSUME_ACCEPT4
+	      if (have_accept4 < 0)
 		fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
 #endif
 
@@ -2000,7 +1999,7 @@ main_loop_epoll (int efd)
     /* We cannot use epoll.  */
     return;
 
-#ifdef HAVE_INOTIFY
+# ifdef HAVE_INOTIFY
   if (inotify_fd != -1)
     {
       ev.events = EPOLLRDNORM;
@@ -2010,7 +2009,7 @@ main_loop_epoll (int efd)
 	return;
       nused = 2;
     }
-#endif
+# endif
 
   while (1)
     {
@@ -2025,8 +2024,26 @@ main_loop_epoll (int efd)
 	if (revs[cnt].data.fd == sock)
 	  {
 	    /* A new connection.  */
-	    int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+	    int fd;
 
+# ifndef __ASSUME_ACCEPT4
+	    fd = -1;
+	    if (have_accept4 >= 0)
+# endif
+	      {
+		fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
+						  SOCK_NONBLOCK));
+# ifndef __ASSUME_ACCEPT4
+		if (have_accept4 == 0)
+		  have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
+# endif
+	      }
+# ifndef __ASSUME_ACCEPT4
+	    if (have_accept4 < 0)
+	      fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+# endif
+
+	    /* Use the descriptor if we have not reached the limit.  */
 	    if (fd >= 0)
 	      {
 		/* Try to add the  new descriptor.  */
@@ -2048,7 +2065,7 @@ main_loop_epoll (int efd)
 		  }
 	      }
 	  }
-#ifdef HAVE_INOTIFY
+# ifdef HAVE_INOTIFY
 	else if (revs[cnt].data.fd == inotify_fd)
 	  {
 	    bool to_clear[lastdb] = { false, };
@@ -2104,7 +2121,7 @@ main_loop_epoll (int efd)
 		  pthread_cond_signal (&dbs[dbcnt].prune_cond);
 		}
 	  }
-#endif
+# endif
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */
