@@ -1,3 +1,8 @@
+2008-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h: Define
+	FUTEX_WAIT_BITSET and FUTEX_WAKE_BITSET.
+
 2008-11-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/sys/signalfd.h (signalfd): Fix
