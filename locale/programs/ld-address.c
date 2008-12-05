@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2005, 2006, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -57,6 +57,8 @@ static struct
   { #Ab, #Term, #Lib },
 #define DEFINE_LANGUAGE_CODE3(Name, Term, Lib) \
   { "", #Term, #Lib },
+#define DEFINE_LANGUAGE_CODE2(Name, Term) \
+  { "", #Term, "" },
 #include "iso-639.def"
 };
 
