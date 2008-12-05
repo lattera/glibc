@@ -6,7 +6,7 @@ escape_char     /
 
 LC_IDENTIFICATION
 title      "Sindhi language locale for India"
-source     "Redhat, Pune"
+source     "Red Hat, Pune"
 address    "Marisfot III, Marigold Premises, East-Wing, Kalyaninagar, Pune, India-411014"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
