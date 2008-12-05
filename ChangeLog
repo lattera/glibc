@@ -1,3 +1,8 @@
+2008-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-address.c (DEFINE_LANGUAGE_CODE2): Define.
+	* locale/iso-639.def: Add Chhattisgarhi entry.
+
 2008-12-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Recognize

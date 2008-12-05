@@ -1,8 +1,9 @@
 /*
- * Defines the languages codes and abbreviations according to ISO 639-[12].
+ * Defines the languages codes and abbreviations according to ISO 639-[123].
  * This is used in ld-address.c (address_finish).
  *
  * Format is: ("English name", 639-1-code, 639-2/T-code, 639-2/B-code)
+ * For some languages which have no 639-2 code the 639-3 code is used.
  * If you find something missing or wrong, please go to the URL
  * http://www.gnu.org/software/libc/bugs.html and follow
  * instructions there to file a bug report.
@@ -89,6 +90,7 @@ DEFINE_LANGUAGE_CODE ("Chamorro", ch, cha, cha)
 DEFINE_LANGUAGE_CODE ("Chechen", ce, che, che)
 DEFINE_LANGUAGE_CODE3 ("Cherokee", chr, chr)
 DEFINE_LANGUAGE_CODE3 ("Cheyenne", chy, chy)
+DEFINE_LANGUAGE_CODE2 ("Chhattisgarhi", hne)	/* ISO 639-3 */
 DEFINE_LANGUAGE_CODE3 ("Chibcha", chb, chb)
 DEFINE_LANGUAGE_CODE ("Chichewa; Chewa; Nyanja", ny, nya, nya)
 DEFINE_LANGUAGE_CODE ("Chinese", zh, zho, chi)
