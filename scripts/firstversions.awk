@@ -1,6 +1,31 @@
 # Script to preprocess Versions.all lists based on "earliest version"
 # specifications in the shlib-versions file.
 
+# Return -1, 0 or 1 according to whether v1 is less than, equal to or
+# greater than v2 as a version string. Simplified from GNU Autoconf
+# version; this one does not need to handle .0x fraction-style versions.
+function vers_compare (v1, v2)
+{
+  while (length(v1) && length(v2)) {
+    if (v1 ~ /^[0-9]/ && v2 ~ /^[0-9]/) {
+      for (len1 = 1; substr(v1, len1 + 1) ~ /^[0-9]/; len1++) continue;
+      for (len2 = 1; substr(v2, len2 + 1) ~ /^[0-9]/; len2++) continue;
+      d1 = substr(v1, 1, len1); v1 = substr(v1, len1 + 1);
+      d2 = substr(v2, 1, len2); v2 = substr(v2, len2 + 1);
+      d1 += 0;
+      d2 += 0;
+    } else {
+      d1 = substr(v1, 1, 1); v1 = substr(v1, 2);
+      d2 = substr(v2, 1, 1); v2 = substr(v2, 2);
+    }
+    if (d1 < d2) return -1;
+    if (d1 > d2) return 1;
+  }
+  if (length(v2)) return -1;
+  if (length(v1)) return 1;
+  return 0;
+}
+
 NF > 2 && $2 == ":" {
   for (i = 0; i <= NF - 3; ++i)
     firstversion[$1, i] = $(3 + i);
@@ -25,10 +50,8 @@ $1 == "}" {
 
 {
   if ((thislib, idx[thislib]) in firstversion) {
-    # XXX relative string comparison loses if we ever have multiple digits
-    # between dots in GLIBC_x.y[.z] names.
     f = v = firstversion[thislib, idx[thislib]];
-    while ($1 >= v) {
+    while (vers_compare($1, v) >= 0) {
       delete firstversion[thislib, idx[thislib]];
       idx[thislib]++;
       if ((thislib, idx[thislib]) in firstversion)
@@ -39,7 +62,7 @@ $1 == "}" {
     if ($1 == v || $1 == f)
       # This version was the specified earliest version itself.
       print;
-    else if ($1 < v) {
+    else if (vers_compare($1, v) < 0) {
       # This version is older than the specified earliest version.
       print "  " $1, "=", v;
       # Record that V has been referred to, so we will be sure to emit it
