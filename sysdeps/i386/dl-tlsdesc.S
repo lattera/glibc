@@ -128,8 +128,7 @@ _dl_tlsdesc_dynamic:
 .Lslow:
 	cfi_adjust_cfa_offset (28)
 	movl	%ebx, 16(%esp)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG (bx)
 	call	___tls_get_addr@PLT
 	movl	16(%esp), %ebx
 	jmp	.Lret

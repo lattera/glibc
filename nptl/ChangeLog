@@ -1,3 +1,8 @@
+2008-11-24  Arkadiusz Miśkiewicz  <arekm@maven.pl>
+
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Use LOAD_PIC_REG
+	instead of doing things manually.
+
 2008-11-26  Chris Steel  <chris.steel.lnx@googlemail.com>
 
 	* posix/regex_internal.h (build_wcs_upper_buffer):
