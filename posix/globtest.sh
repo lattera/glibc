@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 common_objpfx=$1; shift
 elf_objpfx=$1; shift
@@ -28,14 +28,11 @@ export LANG
 
 # Create the arena
 : ${TMPDIR=/tmp}
-testdir=$TMPDIR/globtest-dir
-testout=$TMPDIR/globtest-out
+testdir=$(mktemp -d $TMPDIR/globtest-dir.XXXXXX)
+testout=$(mktemp $TMPDIR/globtest-out.XXXXXX)
 
 trap 'chmod 777 $testdir/noread; rm -fr $testdir $testout' 1 2 3 15
 
-test -d $testdir/noread && chmod 777 $testdir/noread
-rm -fr $testdir 2>/dev/null
-mkdir $testdir
 echo 1 > $testdir/file1
 echo 2 > $testdir/file2
 echo 3 > $testdir/-file3

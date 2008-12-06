@@ -131,30 +131,30 @@ typedef struct
   do {									      \
     size_t __i;								      \
     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
-    cpu_set_t *__arr = (cpusetp);					      \
+    __cpu_mask *__bits = (cpusetp)->__bits;				      \
     for (__i = 0; __i < __imax; ++__i)					      \
-      __arr->__bits[__i] = 0;						      \
+      __bits[__i] = 0;							      \
   } while (0)
 # endif
 # define __CPU_SET_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? (((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+      ? (((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]		      \
 	 |= __CPUMASK (__cpu))						      \
       : 0; }))
 # define __CPU_CLR_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? (((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+      ? (((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]		      \
 	 &= ~__CPUMASK (__cpu))						      \
       : 0; }))
 # define __CPU_ISSET_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? ((((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+      ? ((((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]	      \
 	  & __CPUMASK (__cpu))) != 0					      \
       : 0; }))
 
@@ -167,12 +167,12 @@ typedef struct
 # else
 #  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
   (__extension__							      \
-   ({ cpu_set_t *__arr1 = (cpusetp1);					      \
-      cpu_set_t *__arr2 = (cpusetp2);					      \
+   ({ __cpu_mask *__arr1 = (cpusetp1)->__bits;				      \
+      __cpu_mask *__arr2 = (cpusetp2)->__bits;				      \
       size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
       size_t __i;							      \
       for (__i = 0; __i < __imax; ++__i)				      \
-	if (__arr1->__bits[__i] != __arr2->__bits[__i])			      \
+	if (__bits[__i] != __bits[__i])					      \
 	  break;							      \
       __i == __imax; }))
 # endif
@@ -180,12 +180,12 @@ typedef struct
 # define __CPU_OP_S(setsize, destset, srcset1, srcset2, op) \
   (__extension__							      \
    ({ cpu_set_t *__dest = (destset);					      \
-      cpu_set_t *__arr1 = (srcset1);					      \
-      cpu_set_t *__arr2 = (srcset2);					      \
+      __cpu_mask *__arr1 = (srcset1)->__bits;				      \
+      __cpu_mask *__arr2 = (srcset2)->__bits;				      \
       size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
       size_t __i;							      \
       for (__i = 0; __i < __imax; ++__i)				      \
-	__dest->__bits[__i] = __arr1->__bits[__i] op __arr2->__bits[__i];     \
+	((__cpu_mask *) __dest->__bits)[__i] = __arr1[__i] op __arr2[__i];    \
       __dest; }))
 
 # define __CPU_ALLOC_SIZE(count) \
