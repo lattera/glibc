@@ -1,5 +1,7 @@
 2008-12-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add hne_IN.
+
 	* locales/hne_IN: New file.
 	Contributed by Pravin Satpute <psatpute@redhat.com>.
 
