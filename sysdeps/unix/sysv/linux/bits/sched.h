@@ -140,17 +140,22 @@ typedef struct
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? ((cpusetp)->__bits[__CPUELT (__cpu)] |= __CPUMASK (__cpu)) : 0; }))
+      ? (((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+	 |= __CPUMASK (__cpu))						      \
+      : 0; }))
 # define __CPU_CLR_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? ((cpusetp)->__bits[__CPUELT (__cpu)] &= ~__CPUMASK (__cpu)) : 0; }))
+      ? (((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+	 &= ~__CPUMASK (__cpu))						      \
+      : 0; }))
 # define __CPU_ISSET_S(cpu, setsize, cpusetp) \
   (__extension__							      \
    ({ size_t __cpu = (cpu);						      \
       __cpu < 8 * (setsize)						      \
-      ? (((cpusetp)->__bits[__CPUELT (__cpu)] & __CPUMASK (__cpu))) != 0      \
+      ? ((((cpu_set_t *) (cpusetp))->__bits[__CPUELT (__cpu)]		      \
+	  & __CPUMASK (__cpu))) != 0					      \
       : 0; }))
 
 # define __CPU_COUNT_S(setsize, cpusetp) \
