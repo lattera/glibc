@@ -1,3 +1,8 @@
+2008-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Fix memory
+	handling for host name aliases.
+
 2008-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/globtest.sh: Use mktemp to create temporary file and

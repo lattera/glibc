@@ -485,24 +485,6 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
       return retval;
     }
 
-  struct parser_data data;
-  struct hostent host;
-  int parse_res = parse_line (result, &host, &data, buflen, errnop, AF_UNSPEC,
-			      0);
-  if (__builtin_expect (parse_res < 1, 0))
-    {
-      if (parse_res == -1)
-	{
-	  *herrnop = NETDB_INTERNAL;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      else
-	{
-	  *herrnop = HOST_NOT_FOUND;
-	  return NSS_STATUS_NOTFOUND;
-	}
-    }
-
   if (*pat == NULL)
     {
       uintptr_t pad = (-(uintptr_t) buffer
@@ -524,15 +506,47 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
       buflen -= sizeof (struct gaih_addrtuple);
     }
 
-  (*pat)->next = NULL;
-  size_t h_name_len = strlen (host.h_name);
-  if (h_name_len >= buflen)
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct parser_data);
+  buffer += pad;
+
+  struct parser_data *data = (void *) buffer;
+
+  if (__builtin_expect (buflen < sizeof *data + 1 + pad, 0))
     goto erange;
-  (*pat)->name = memcpy (buffer, host.h_name, h_name_len + 1);
+  buflen -= pad;
+
+  struct hostent host;
+  int parse_res = parse_line (result, &host, data, buflen, errnop, AF_UNSPEC,
+			      0);
+  if (__builtin_expect (parse_res < 1, 0))
+    {
+      if (parse_res == -1)
+	{
+	  *herrnop = NETDB_INTERNAL;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  *herrnop = HOST_NOT_FOUND;
+	  return NSS_STATUS_NOTFOUND;
+	}
+    }
+
+  (*pat)->next = NULL;
   (*pat)->family = host.h_addrtype;
   memcpy ((*pat)->addr, host.h_addr_list[0], host.h_length);
   (*pat)->scopeid = 0;
   assert (host.h_addr_list[1] == NULL);
+
+  /* Undo the alignment for parser_data.  */
+  buffer -= pad;
+  buflen += pad;
+
+  size_t h_name_len = strlen (host.h_name) + 1;
+  if (h_name_len >= buflen)
+    goto erange;
+  /* Potentially the string and the destination buffer overlap.  */
+  (*pat)->name = memmove (buffer, host.h_name, h_name_len);
 
   free (result);
 
