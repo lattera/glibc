@@ -545,8 +545,7 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   size_t h_name_len = strlen (host.h_name) + 1;
   if (h_name_len >= buflen)
     goto erange;
-  /* Potentially the string and the destination buffer overlap.  */
-  (*pat)->name = memmove (buffer, host.h_name, h_name_len);
+  (*pat)->name = memcpy (buffer, host.h_name, h_name_len);
 
   free (result);
 

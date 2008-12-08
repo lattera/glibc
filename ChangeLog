@@ -1,5 +1,8 @@
 2008-12-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_init.c (__res_vinit): Always assign to statp->nscount
+	after reading name server list.
+
 	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Fix memory
 	handling for host name aliases.
 
