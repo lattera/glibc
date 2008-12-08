@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -143,7 +143,7 @@ struct pthread
        is private and subject to change without affecting the official ABI.
        We just have it here in case it might be convenient for some
        implementation-specific instrumentation hack or suchlike.  */
-    void *__padding[16];
+    void *__padding[24];
   };
 
   /* This descriptor's link on the `stack_used' or `__stack_user' list.  */
