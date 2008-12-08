@@ -12,6 +12,16 @@
 	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Fix memory
 	handling for host name aliases.
 
+2008-11-24  Arkadiusz Miśkiewicz  <arekm@maven.pl>
+
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Use LOAD_PIC_REG
+	instead of doing things manually.
+
+2008-11-26  Chris Steel  <chris.steel.lnx@googlemail.com>
+
+	* posix/regex_internal.h (build_wcs_upper_buffer):
+	Return type is reg_error_t.
+
 2008-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/globtest.sh: Use mktemp to create temporary file and
