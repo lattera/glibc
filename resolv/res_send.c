@@ -104,7 +104,7 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #endif
 
 
-#ifndef __ASSUME_O_CLOEXEC
+#ifndef __ASSUME_SOCK_CLOEXEC
 static int __have_o_nonblock;
 #else
 # define __have_o_nonblock 0
@@ -932,7 +932,7 @@ send_dg(res_state statp,
 				EXT(statp).nssocks[ns] =
 				  socket(PF_INET6, SOCK_DGRAM|SOCK_NONBLOCK,
 					 0);
-#ifndef __ASSUME_O_CLOEXEC
+#ifndef __ASSUME_SOCK_CLOEXEC
 				if (__have_o_nonblock == 0)
 					__have_o_nonblock
 					  = (EXT(statp).nssocks[ns] == -1
@@ -954,7 +954,7 @@ send_dg(res_state statp,
 				EXT(statp).nssocks[ns]
 				  = socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK,
 					   0);
-#ifndef __ASSUME_O_CLOEXEC
+#ifndef __ASSUME_SOCK_CLOEXEC
 				if (__have_o_nonblock == 0)
 					__have_o_nonblock
 					  = (EXT(statp).nssocks[ns] == -1
