@@ -3126,7 +3126,7 @@
 
 	* nscd/aicache.c (addhstaiX): Fix default TTL handling.
 
-	* inet/getnetgrent.c (setup): Encrypt static pointer.
+	* inet/getnetgrent_r.c (setup): Encrypt static pointer.
 
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 
