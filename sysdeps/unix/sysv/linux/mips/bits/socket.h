@@ -303,7 +303,7 @@ enum
   {
     SCM_RIGHTS = 0x01		/* Transfer file descriptors.  */
 #define SCM_RIGHTS SCM_RIGHTS
-#ifdef __USE_BSD
+#ifdef __USE_GNU
     , SCM_CREDENTIALS = 0x02	/* Credentials passing.  */
 # define SCM_CREDENTIALS SCM_CREDENTIALS
 #endif

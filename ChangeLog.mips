@@ -1,3 +1,8 @@
+2008-12-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (SCM_CREDENTIALS):
+	Make available only for __USE_GNU.
+
 2008-12-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h: Define
