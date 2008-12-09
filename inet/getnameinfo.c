@@ -178,6 +178,9 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   if (sa == NULL || addrlen < sizeof (sa_family_t))
     return EAI_FAMILY;
 
+  if ((flags & NI_NAMEREQD) && host == NULL && serv == NULL)
+    return EAI_NONAME;
+
   switch (sa->sa_family)
     {
     case AF_LOCAL:

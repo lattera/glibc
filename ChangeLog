@@ -1,3 +1,12 @@
+2008-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7080]
+	* inet/getnameinfo.c (getnameinfo): Check for output buffers being
+	NULL when NI_NAMEREQD is set.
+	Patch mostly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/Makefile (tests): Add tst-getni1.
+	* inet/tst-getni1.c: New file.
+
 2008-12-03  Petr Baudis  <pasky@suse.cz>
 
 	[BZ #7067]
