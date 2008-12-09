@@ -1,5 +1,9 @@
 2008-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #6545]
+	* sysdeps/unix/sysv/linux/bits/socket.h (SCM_CREDENTIALS): Make
+	available only for __USE_GNU.
+
 	* inet/Makefile (tests): Add tst-getni2.
 	* inet/tst-getni2.c: New file.
 

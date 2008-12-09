@@ -655,7 +655,7 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 # define pthread_cleanup_pop(execute) \
-      do; while (0); /* Empty to allow label before pthread_cleanup_pop.  */  \
+      do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
     } while (0);							      \
     __pthread_unregister_cancel (&__cancel_buf);			      \
     if (execute)							      \
@@ -691,7 +691,7 @@ extern void __pthread_register_cancel_defer (__pthread_unwind_buf_t *__buf)
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called.  */
 #  define pthread_cleanup_pop_restore_np(execute) \
-      do; while (0); /* Empty to allow label before pthread_cleanup_pop.  */  \
+      do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
     } while (0);							      \
     __pthread_unregister_cancel_restore (&__cancel_buf);		      \
     if (execute)							      \
