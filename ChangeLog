@@ -1,5 +1,8 @@
 2008-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/Makefile (tests): Add tst-getni2.
+	* inet/tst-getni2.c: New file.
+
 	[BZ #7080]
 	* inet/getnameinfo.c (getnameinfo): Check for output buffers being
 	NULL when NI_NAMEREQD is set.
