@@ -109,6 +109,7 @@ struct database_dyn dbs[lastdb] =
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -129,6 +130,7 @@ struct database_dyn dbs[lastdb] =
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -149,6 +151,7 @@ struct database_dyn dbs[lastdb] =
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -169,6 +172,7 @@ struct database_dyn dbs[lastdb] =
   [servdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -976,9 +980,9 @@ invalidate_cache (char *key, int fd)
 
   if (dbs[number].enabled)
     {
-      pthread_mutex_lock (&dbs[number].prune_lock);
+      pthread_mutex_lock (&dbs[number].prune_run_lock);
       prune_cache (&dbs[number], LONG_MAX, fd);
-      pthread_mutex_unlock (&dbs[number].prune_lock);
+      pthread_mutex_unlock (&dbs[number].prune_run_lock);
     }
   else
     {
@@ -1493,6 +1497,7 @@ nscd_run_prune (void *p)
   dbs[my_number].wakeup_time = now + CACHE_PRUNE_INTERVAL + my_number;
 
   pthread_mutex_t *prune_lock = &dbs[my_number].prune_lock;
+  pthread_mutex_t *prune_run_lock = &dbs[my_number].prune_run_lock;
   pthread_cond_t *prune_cond = &dbs[my_number].prune_cond;
 
   pthread_mutex_lock (prune_lock);
@@ -1526,7 +1531,12 @@ nscd_run_prune (void *p)
 
 	  pthread_mutex_unlock (prune_lock);
 
+	  /* We use a separate lock for running the prune function (instead
+	     of keeping prune_lock locked) because this enables concurrent
+	     invocations of cache_add which might modify the timeout value.  */
+	  pthread_mutex_lock (prune_run_lock);
 	  next_wait = prune_cache (&dbs[my_number], prune_now, -1);
+	  pthread_mutex_unlock (prune_run_lock);
 
 	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
 	  /* If clients cannot determine for sure whether nscd is running

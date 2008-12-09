@@ -69,6 +69,7 @@ struct database_dyn
   pthread_rwlock_t lock;
   pthread_cond_t prune_cond;
   pthread_mutex_t prune_lock;
+  pthread_mutex_t prune_run_lock;
   time_t wakeup_time;
 
   int enabled;

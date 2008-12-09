@@ -1,3 +1,11 @@
+2008-12-03  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #7067]
+	* nscd/connections.c (invalidate_cache): Use prune_run_lock
+	instead of prune_lock.
+	(nscd_run_prune): Before calling prune_cache, take prune_run_lock.
+	* nscd/nscd.h (database_dyn): Add prune_run_cache.
+
 2008-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (send_dg): Use correct guards for SOCK_CLOEXEC
