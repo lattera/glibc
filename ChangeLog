@@ -29,6 +29,7 @@
 	* resolv/res_init.c (__res_vinit): Always assign to statp->nscount
 	after reading name server list.
 
+	[BZ #7058]
 	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Fix memory
 	handling for host name aliases.
 
