@@ -1,3 +1,19 @@
+2008-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_mutex_lock.c (__pthread_mutex_lock): Handle only the
+	fast path here, for robust/PI/PP mutexes call
+	__pthread_mutex_lock_full.  Don't use switch, instead use a series
+	of ifs according to their probability.
+	(__pthread_mutex_lock_full): New function.
+	* pthread_mutex_unlock.c: Include assert.h.
+	(__pthread_mutex_unlock_usercnt): Handle only the
+	fast path here, for robust/PI/PP mutexes call
+	__pthread_mutex_unlock_full.  Don't use switch, instead use a series
+	of ifs according to their probability.
+	(__pthread_mutex_unlock_full): New function.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c
+	(__pthread_mutex_lock_full): Define.
+
 2008-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/tls.h (tcbhead_t): Add fields reserved for TM
