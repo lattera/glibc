@@ -1,3 +1,10 @@
+2008-12-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate64.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fallocate64.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fallocate.c: New.
+
 2008-12-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h (SCM_CREDENTIALS):
