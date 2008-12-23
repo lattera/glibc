@@ -437,7 +437,7 @@ pututline_file (const struct utmp *data)
 #endif
 
       if (__lseek64 (new_fd, __lseek64 (file_fd, 0, SEEK_CUR), SEEK_SET) == -1
-	  || dup2 (new_fd, file_fd) < 0)
+	  || __dup2 (new_fd, file_fd) < 0)
 	{
 	  close_not_cancel_no_status (new_fd);
 	  return NULL;

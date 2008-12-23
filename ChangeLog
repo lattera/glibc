@@ -1,3 +1,8 @@
+2008-12-13  Klaus Dittrich  <kladit@arcor.de>
+
+	* login/utmp_file.c (pututline_file): Replace call to dup2 with
+	libc internal symbol __dup2 to avoid access through the PLT.
+
 2008-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6545]
