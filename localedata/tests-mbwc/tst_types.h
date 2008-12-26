@@ -122,7 +122,7 @@ typedef struct
     int t_flg;
     int t_init;
   }
-  seq[WCSTOK_SEQNUM];
+  seq[MBRLEN_SEQNUM];
 }
 TIN_MBRLEN_REC;
 
