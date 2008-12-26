@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2005, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -79,8 +79,12 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
     {
+      mbstate_t temp_state;
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = (const unsigned char *) *src;
+
+      temp_state = *data.__statep;
+      data.__statep = &temp_state;
 
       result = 0;
       data.__outbufend = (unsigned char *) buf + sizeof (buf);

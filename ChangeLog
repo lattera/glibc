@@ -1,3 +1,9 @@
+2008-12-21  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #9677]
+	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Create temporary state object
+	if no output is written.
+
 2008-12-13  Klaus Dittrich  <kladit@arcor.de>
 
 	* login/utmp_file.c (pututline_file): Replace call to dup2 with

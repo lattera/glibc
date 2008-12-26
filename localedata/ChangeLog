@@ -1,6 +1,6 @@
 2008-12-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* tests-mbwc/tst_types.h (TIN)MBRLEN_REC): Use correct array
+	* tests-mbwc/tst_types.h (TIN_MBRLEN_REC): Use correct array
 	length constant.
 
 2008-12-05  Ulrich Drepper  <drepper@redhat.com>
