@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -36,10 +36,24 @@ extern int __nss_not_use_nscd_hosts;
 /* We use the mapping from nscd_gethst.  */
 libc_locked_map_ptr (extern, __hst_map_handle) attribute_hidden;
 
+/* Defined in nscd_gethst_r.c.  */
+extern int __nss_have_localdomain attribute_hidden;
+
 
 int
 __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 {
+  if (__builtin_expect (__nss_have_localdomain >= 0, 0))
+    {
+      if (__nss_have_localdomain == 0)
+	__nss_have_localdomain = getenv ("LOCALDOMAIN") != NULL ? 1 : -1;
+      if (__nss_have_localdomain > 0)
+	{
+	  __nss_not_use_nscd_hosts = 1;
+	  return -1;
+	}
+    }
+
   size_t keylen = strlen (key) + 1;
   int gc_cycle;
   int nretries = 0;

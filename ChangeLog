@@ -1,5 +1,9 @@
 2008-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Don't use nscd if
+	LOCALDOMAIN is defined.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+
 	* sysdeps/x86_64/bits/select.h: New file.
 
 	* resolv/res_init.c (__res_vinit): Count all servers in	statp->nscount.

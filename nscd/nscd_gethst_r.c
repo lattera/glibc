@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -97,12 +97,25 @@ libc_freeres_fn (hst_map_free)
 }
 
 
+int __nss_have_localdomain attribute_hidden;
+
 static int
 internal_function
 nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
 	       struct hostent **result, int *h_errnop)
 {
+  if (__builtin_expect (__nss_have_localdomain >= 0, 0))
+    {
+      if (__nss_have_localdomain == 0)
+	__nss_have_localdomain = getenv ("LOCALDOMAIN") != NULL ? 1 : -1;
+      if (__nss_have_localdomain > 0)
+	{
+	  __nss_not_use_nscd_hosts = 1;
+	  return -1;
+	}
+    }
+
   int gc_cycle;
   int nretries = 0;
 

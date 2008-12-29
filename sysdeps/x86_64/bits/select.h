@@ -20,13 +20,21 @@
 # error "Never use <bits/select.h> directly; include <sys/select.h> instead."
 #endif
 
+#include <bits/wordsize.h>
+
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
 # if __WORDSIZE == 64
 #  define __FD_ZERO_STOS "stosq"
+#  define __FD_SET_BTS "btsq"
+#  define __FD_CLR_BTR "btrq"
+#  define __FD_ISSET_BT "btq"
 # else
 #  define __FD_ZERO_STOS "stosl"
+#  define __FD_SET_BTS "btsl"
+#  define __FD_CLR_BTR "btrl"
+#  define __FD_ISSET_BT "btl"
 # endif
 
 # define __FD_ZERO(fdsp) \
@@ -41,19 +49,19 @@
   } while (0)
 
 # define __FD_SET(fd, fdsp) \
-  __asm__ __volatile__ ("btsl %1,%0"					      \
+  __asm__ __volatile__ (__FD_SET_BTS " %1,%0"				      \
 			: "=m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
 			: "r" (((int) (fd)) % __NFDBITS)		      \
 			: "cc","memory")
 # define __FD_CLR(fd, fdsp) \
-  __asm__ __volatile__ ("btrl %1,%0"					      \
+  __asm__ __volatile__ (__FD_CLR_BTR " %1,%0"				      \
 			: "=m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
 			: "r" (((int) (fd)) % __NFDBITS)		      \
 			: "cc","memory")
 # define __FD_ISSET(fd, fdsp) \
   (__extension__							      \
    ({register char __result;						      \
-     __asm__ __volatile__ ("btl %1,%2 ; setcb %b0"			      \
+     __asm__ __volatile__ (__FD_ISSET_BT " %1,%2 ; setcb %b0"		      \
 			   : "=q" (__result)				      \
 			   : "r" (((int) (fd)) % __NFDBITS),		      \
 			     "m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
