@@ -714,6 +714,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      status = DL_CALL_FCT (fct4, (name, pat, tmpbuf,
 						   tmpbuflen, &rc, &herrno,
 						   NULL));
+		      if (status == NSS_STATUS_SUCCESS)
+			break;
 		      if (status != NSS_STATUS_TRYAGAIN
 			  || rc != ERANGE || herrno != NETDB_INTERNAL)
 			{

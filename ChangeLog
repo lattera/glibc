@@ -1,5 +1,8 @@
 2008-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): When the
+	gethostbyname4_r function call succeeded, just leave the loop.
+
 	[BZ #9694]
 	* wcsmbs/wchar.h: Move undefs for local __need_* constants to the
 	very end.
