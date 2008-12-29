@@ -1,3 +1,10 @@
+2008-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_cleanup_pop): Use { } as empty
+	loop body instead of ; to avoid gcc warnings.
+	(pthread_cleanup_pop_restore_np): Likewise.
+	Patch by Caolán McNamara <caolanm@redhat.com>.
+
 2008-12-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_mutex_lock.c (__pthread_mutex_lock): Handle only the

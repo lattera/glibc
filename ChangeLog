@@ -1,5 +1,7 @@
 2008-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/bits/select.h: New file.
+
 	* resolv/res_init.c (__res_vinit): Count all servers in	statp->nscount.
 
 2008-12-21  Bruno Haible  <bruno@clisp.org>
