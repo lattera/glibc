@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2005, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,9 @@
 #ifndef __need_iswxxx
 # define _WCTYPE_H	1
 
-/* Get wint_t from <wchar.h>.  */
+/* Get wint_t from <stddef.h>.  */
 # define __need_wint_t
-# include <wchar.h>
+# include <stddef.h>
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */

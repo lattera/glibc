@@ -3,6 +3,9 @@
 	[BZ #9694]
 	* wcsmbs/wchar.h: Move undefs for local __need_* constants to the
 	very end.
+	* wctype/wctype.h: Get wint_t definition directly from <stddef.h>.
+	* wctype/Makefile (tests): Add bug-wctypeh.
+	* wctype/bug-wctypeh.c: New file.
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Don't use nscd if
 	LOCALDOMAIN is defined.
