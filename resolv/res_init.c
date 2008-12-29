@@ -420,7 +420,7 @@ __res_vinit(res_state statp, int preinit) {
 		    continue;
 		}
 	    }
-	    statp->nscount = nserv;
+	    statp->nscount = nservall;
 #ifdef _LIBC
 	    if (nservall - nserv > 0) {
 		statp->_u._ext.nscount6 = nservall - nserv;
