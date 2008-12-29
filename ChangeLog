@@ -1,5 +1,9 @@
 2008-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9694]
+	* wcsmbs/wchar.h: Move undefs for local __need_* constants to the
+	very end.
+
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Don't use nscd if
 	LOCALDOMAIN is defined.
 	* nscd/nscd_getai.c (__nscd_getai): Likewise.

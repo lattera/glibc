@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -839,9 +839,9 @@ __END_DECLS
 
 #endif	/* _WCHAR_H defined */
 
+#endif /* wchar.h  */
+
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
 #undef __need_mbstate_t
 #undef __need_wint_t
-
-#endif /* wchar.h  */
