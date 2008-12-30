@@ -286,6 +286,7 @@ $(objpfx)iconv-rules: Makefile
 	{ echo $(filter-out lib%, $(modules)); \
 	  echo 8bit $(gen-8bit-modules); \
 	  echo 8bit-gap $(gen-8bit-gap-modules); } | \
+	LC_ALL=C \
 	$(AWK) 'NR == 1 { \
 		  for (i = 1; i <= NF; i++) { \
 		    printf "%s-routines := %s\n", $$i, tolower($$i); \
