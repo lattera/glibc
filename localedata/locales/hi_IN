@@ -32,7 +32,7 @@ category  "hi_IN:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "mr_IN"
 
 translit_start
 include "translit_combining";""

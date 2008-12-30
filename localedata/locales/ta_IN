@@ -37,6 +37,23 @@ END LC_IDENTIFICATION
 LC_CTYPE
 copy "i18n"
 
+% Tamil uses the alternate digits U+0BE6..U+0BEF
+outdigit <U0BE6>..<U0BEF>
+
+% This is used in the scanf family of functions to read Tamil numbers
+% using "%Id" and such.
+map to_inpunct; /
+  (<U0030>,<U0BE6>); /
+  (<U0031>,<U0BE7>); /
+  (<U0032>,<U0BE8>); /
+  (<U0033>,<U0BE9>); /
+  (<U0034>,<U0BEA>); /
+  (<U0035>,<U0BEB>); /
+  (<U0036>,<U0BEC>); /
+  (<U0037>,<U0BED>); /
+  (<U0038>,<U0BEE>); /
+  (<U0039>,<U0BEF>); 
+
 translit_start
 include  "translit_combining";""
 translit_end

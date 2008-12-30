@@ -36,6 +36,23 @@ END LC_IDENTIFICATION
 LC_CTYPE
 copy "i18n"
 
+% Telugu uses the alternate digits U+0C66..U+0C6F
+outdigit <U0C66>..<U0C6F>
+
+% This is used in the scanf family of functions to read Telugu numbers
+% using "%Id" and such.
+map to_inpunct; /
+  (<U0030>,<U0C66>); /
+  (<U0031>,<U0C67>); /
+  (<U0032>,<U0C68>); /
+  (<U0033>,<U0C69>); /
+  (<U0034>,<U0C6A>); /
+  (<U0035>,<U0C6B>); /
+  (<U0036>,<U0C6C>); /
+  (<U0037>,<U0C6D>); /
+  (<U0038>,<U0C6E>); /
+  (<U0039>,<U0C6F>); 
+
 translit_start
 include  "translit_combining";""
 translit_end

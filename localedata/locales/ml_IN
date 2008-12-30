@@ -32,6 +32,24 @@ category     "ml_IN:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 LC_CTYPE
 copy	"i18n"
+
+% Malayalam uses the alternate digits U+0D66..U+0D6F
+outdigit <U0D66>..<U0D6F>
+
+% This is used in the scanf family of functions to read Malayalam numbers
+% using "%Id" and such.
+map to_inpunct; /
+  (<U0030>,<U0D66>); /
+  (<U0031>,<U0D67>); /
+  (<U0032>,<U0D68>); /
+  (<U0033>,<U0D69>); /
+  (<U0034>,<U0D6A>); /
+  (<U0035>,<U0D6B>); /
+  (<U0036>,<U0D6C>); /
+  (<U0037>,<U0D6D>); /
+  (<U0038>,<U0D6E>); /
+  (<U0039>,<U0D6F>); 
+
 translit_start
 include     "translit_combining";""
 translit_end

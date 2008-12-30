@@ -35,6 +35,23 @@ END LC_IDENTIFICATION
 LC_CTYPE
 copy "i18n"
 
+% Gujarati uses the alternate digits U+0AE6..U+0AEF
+outdigit <U0AE6>..<U0AEF>
+
+% This is used in the scanf family of functions to read Gujarati numbers
+% using "%Id" and such.
+map to_inpunct; /
+  (<U0030>,<U0AE6>); /
+  (<U0031>,<U0AE7>); /
+  (<U0032>,<U0AE8>); /
+  (<U0033>,<U0AE9>); /
+  (<U0034>,<U0AEA>); /
+  (<U0035>,<U0AEB>); /
+  (<U0036>,<U0AEC>); /
+  (<U0037>,<U0AED>); /
+  (<U0038>,<U0AEE>); /
+  (<U0039>,<U0AEF>); 
+
 translit_start
 include "translit_combining";""
 translit_end

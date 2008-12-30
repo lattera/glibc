@@ -36,6 +36,23 @@ END LC_IDENTIFICATION
 LC_CTYPE
 copy "i18n"
 
+% Kannada uses the alternate digits U+0CE6..U+0CEF
+outdigit <U0CE6>..<U0CEF>
+
+% This is used in the scanf family of functions to read Kannada numbers
+% using "%Id" and such.
+map to_inpunct; /
+  (<U0030>,<U0CE6>); /
+  (<U0031>,<U0CE7>); /
+  (<U0032>,<U0CE8>); /
+  (<U0033>,<U0CE9>); /
+  (<U0034>,<U0CEA>); /
+  (<U0035>,<U0CEB>); /
+  (<U0036>,<U0CEC>); /
+  (<U0037>,<U0CED>); /
+  (<U0038>,<U0CEE>); /
+  (<U0039>,<U0CEF>); 
+
 translit_start
 include  "translit_combining";""
 translit_end

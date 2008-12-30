@@ -1,3 +1,19 @@
+2008-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Move Indic Matra characters to punct.
+	* locales/as_IN: Add support for internationalized digits.
+	* locales/bn_BD: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+
 2008-12-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/tst_types.h (TIN_MBRLEN_REC): Use correct array
