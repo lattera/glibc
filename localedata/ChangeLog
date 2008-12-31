@@ -1,3 +1,8 @@
+2008-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Fix sorting of U+0AB3.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
 2008-12-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/i18n: Move Indic Matra characters to punct.

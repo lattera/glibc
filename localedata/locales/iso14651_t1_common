@@ -1465,12 +1465,12 @@ collating-symbol <k-ai_lenght_mark>
 <g-ya>
 <g-ra>
 <g-la>
-<g-lla>
 <g-va>
 <g-sha>
 <g-ssa>
 <g-sa>
 <g-ha>
+<g-lla>
 <g-ksha>
 <g-dnya>
 <g-shra>
@@ -3666,12 +3666,12 @@ order_start  <GUJARATI>;forward;forward;forward;forward,position
 <U0AAF> <g-ya>;<BAS>;<MIN>;IGNORE
 <U0AB0> <g-ra>;<BAS>;<MIN>;IGNORE
 <U0AB2> <g-la>;<BAS>;<MIN>;IGNORE
-<U0AB3> <g-lla>;<BAS>;<MIN>;IGNORE
 <U0AB5> <g-va>;<BAS>;<MIN>;IGNORE
 <U0AB6> <g-sha>;<BAS>;<MIN>;IGNORE
 <U0AB7> <g-ssa>;<BAS>;<MIN>;IGNORE
 <U0AB8> <g-sa>;<BAS>;<MIN>;IGNORE
-<U0AB9>   <g-ha>;<BAS>;<MIN>;IGNORE
+<U0AB9> <g-ha>;<BAS>;<MIN>;IGNORE
+<U0AB3> <g-lla>;<BAS>;<MIN>;IGNORE
 <gu-ksha> <g-ksha>;<BAS>;<MIN>;IGNORE
 <gu-dnya> <g-dnya>;<BAS>;<MIN>;IGNORE
 <gu-shra> <g-shra>;<BAS>;<MIN>;IGNORE
