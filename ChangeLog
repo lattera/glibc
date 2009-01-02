@@ -1,5 +1,7 @@
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h: Bump to 2.10 development.
+
 	* posix/getconf.c: Update copyright year.
 	* nss/getent.c: Likewise.
 	* iconv/iconvconfig.c: Likewise.
