@@ -77,9 +77,13 @@ __wcsnrtombs (dst, src, nwc, len, ps)
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
     {
+      mbstate_t temp_state;
       unsigned char buf[256];		/* Just an arbitrary value.  */
       const unsigned char *inbuf = (const unsigned char *) *src;
       size_t dummy;
+
+      temp_state = *data.__statep;
+      data.__statep = &temp_state;
 
       result = 0;
       data.__outbufend = buf + sizeof (buf);

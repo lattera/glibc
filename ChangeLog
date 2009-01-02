@@ -1,5 +1,8 @@
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Create temporary state object
+	if no output is written.
+
 	* version.h: Bump to 2.10 development.
 
 	* posix/getconf.c: Update copyright year.
