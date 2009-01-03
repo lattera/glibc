@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1999-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -505,7 +505,7 @@
    x86-64, PPC, IA-64, and SPARC in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061b \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || __s390__)
+	|| defined __ia64__ || defined __sparc__ || defined __s390__)
 # define __ASSUME_SOCK_CLOEXEC	1
 # define __ASSUME_IN_NONBLOCK	1
 # define __ASSUME_PIPE2		1
@@ -514,13 +514,11 @@
 /* Support for the accept4 syscall was added in 2.6.28.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061c \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || __s390__)
+	|| defined __ia64__ || defined __sparc__ || defined __s390__)
 # define __ASSUME_ACCEPT4	1
 #endif
 
 /* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061d \
-    && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || __s390__)
+#if __LINUX_KERNEL_VERSION >= 0x02061d
 # define __ASSUME_FUTEX_CLOCK_REALTIME	1
 #endif

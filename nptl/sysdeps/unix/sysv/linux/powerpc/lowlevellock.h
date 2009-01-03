@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -41,6 +41,9 @@
 #define FUTEX_WAIT_BITSET	9
 #define FUTEX_WAKE_BITSET	10
 #define FUTEX_PRIVATE_FLAG	128
+#define FUTEX_CLOCK_REALTIME	256
+
+#define FUTEX_BITSET_MATCH_ANY	0xffffffff
 
 /* Values for 'private' parameter of locking macros.  Yes, the
    definition seems to be backwards.  But it is not.  The bit will be
