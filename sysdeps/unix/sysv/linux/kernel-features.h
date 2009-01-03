@@ -517,3 +517,10 @@
 	|| defined __ia64__ || defined __sparc__ || __s390__)
 # define __ASSUME_ACCEPT4	1
 #endif
+
+/* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
+#if __LINUX_KERNEL_VERSION >= 0x02061d \
+    && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
+	|| defined __ia64__ || defined __sparc__ || __s390__)
+# define __ASSUME_FUTEX_CLOCK_REALTIME	1
+#endif

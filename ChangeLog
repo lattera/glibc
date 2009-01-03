@@ -1,5 +1,8 @@
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_FUTEX_CLOCK_REALTIME): Define.
+
 	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Create temporary state object
 	if no output is written.
 
