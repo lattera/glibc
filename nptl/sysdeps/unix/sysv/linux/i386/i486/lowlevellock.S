@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,6 +31,8 @@
 	movl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
 # define LOAD_FUTEX_WAIT(reg) \
 	xorl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
+# define LOAD_FUTEX_WAIT_ABS(reg) \
+	xorl	$(FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME), reg
 # define LOAD_FUTEX_WAKE(reg) \
 	xorl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
 #else
@@ -55,6 +57,10 @@
 	andl	%gs:PRIVATE_FUTEX, reg ; \
 	orl	$FUTEX_WAIT, reg
 # endif
+# define LOAD_FUTEX_WAIT_ABS(reg) \
+	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
+	andl	%gs:PRIVATE_FUTEX, reg ; \
+	orl	$FUTEX_WAIT | FUTEX_CLOCK_REALTIME, reg
 # define LOAD_FUTEX_WAKE(reg) \
 	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
 	andl	%gs:PRIVATE_FUTEX, reg ; \
@@ -154,28 +160,81 @@ __lll_lock_wait:
 	cfi_endproc
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
+	/*      %ecx: futex
+		%esi: flags
+		%edx: timeout
+		%eax: futex value
+	*/
 	.globl	__lll_timedlock_wait
 	.type	__lll_timedlock_wait,@function
 	.hidden	__lll_timedlock_wait
 	.align	16
 __lll_timedlock_wait:
 	cfi_startproc
+	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%ebp, 0)
+	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%ebx, 0)
+
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	LOAD_PIC_REG (bx)
+	cmpl	$0, __have_futex_clock_realtime@GOTOFF(%ebx)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+# endif
+
+	movl	%ecx, %ebx
+	movl	%esi, %ecx
+	movl	%edx, %esi
+	movl	$0xffffffff, %ebp
+	LOAD_FUTEX_WAIT_ABS (%ecx)
+
+	movl	$2, %edx
+	cmpl	%edx, %eax
+	jne	2f
+
+1:	movl	$SYS_futex, %eax
+	movl	$2, %edx
+	ENTER_KERNEL
+
+2:	xchgl	%edx, (%ebx)	/* NB:   lock is implied */
+
+	testl	%edx, %edx
+	jz	3f
+
+	cmpl	$-ETIMEDOUT, %eax
+	je	4f
+	cmpl	$-EINVAL, %eax
+	jne	1b
+4:	movl	%eax, %edx
+	negl	%edx
+
+3:	movl	%edx, %eax
+7:	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
+	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
+	ret
+
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
 	/* Check for a valid timeout value.  */
 	cmpl	$1000000000, 4(%edx)
 	jae	3f
 
-	pushl	%edi
-	cfi_adjust_cfa_offset(4)
 	pushl	%esi
 	cfi_adjust_cfa_offset(4)
-	pushl	%ebx
+	cfi_rel_offset(%esi, 0)
+	pushl	%edi
 	cfi_adjust_cfa_offset(4)
-	pushl	%ebp
-	cfi_adjust_cfa_offset(4)
-	cfi_offset(%edi, -8)
-	cfi_offset(%esi, -12)
-	cfi_offset(%ebx, -16)
-	cfi_offset(%ebp, -20)
+	cfi_rel_offset(%edi, 0)
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subl	$8, %esp
@@ -236,23 +295,24 @@ __lll_timedlock_wait:
 
 6:	addl	$8, %esp
 	cfi_adjust_cfa_offset(-8)
-	popl	%ebp
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebp)
-	popl	%ebx
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebx)
-	popl	%esi
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%esi)
 	popl	%edi
 	cfi_adjust_cfa_offset(-4)
 	cfi_restore(%edi)
+	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%esi)
+7:	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebx)
+	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 	movl	%edx, %eax
 	ret
 
-3:	movl	$EINVAL, %eax
-	ret
+3:	movl	$EINVAL, %edx
+	jmp	7b
+# endif
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif
