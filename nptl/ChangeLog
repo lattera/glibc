@@ -1,3 +1,12 @@
+2009-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Cheat a bit by
+	only passing five parameters to FUTEX_WAIT_BITSET call.
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_timedlock_wait): Use FUTEX_WAIT_BITSET|FUTEX_CLOCK_READTIME
+	instead of computing relative timeout.
+
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Check for

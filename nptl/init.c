@@ -305,10 +305,14 @@ __pthread_initialize_minimal_internal (void)
 #ifndef __ASSUME_FUTEX_CLOCK_REALTIME
   {
     int word = 0;
-    word = INTERNAL_SYSCALL (futex, err, 6, &word,
+    /* NB: the syscall actually takes six parameters.  The last is the
+       bit mask.  But since we will not actually wait at all the value
+       is irrelevant.  Given that passing six parameters is difficult
+       on some architectures we just pass whatever random value the
+       calling convention calls for to the kernel.  It causes no harm.  */
+    word = INTERNAL_SYSCALL (futex, err, 5, &word,
 			     FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
-			     | FUTEX_PRIVATE_FLAG, 1, NULL, 0,
-			     FUTEX_BITSET_MATCH_ANY);
+			     | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
     if (!INTERNAL_SYSCALL_ERROR_P (word, err)
 	|| (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS
 	    && INTERNAL_SYSCALL_ERRNO (word, err) != EINVAL))
