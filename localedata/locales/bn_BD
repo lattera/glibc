@@ -37,7 +37,7 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_CTYPE
-copy "i18n"
+copy "bn_IN"
 
 translit_start
 include "translit_combining";""

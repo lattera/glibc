@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,6 +31,8 @@
 	movl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
 # define LOAD_FUTEX_WAIT(reg) \
 	xorl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
+# define LOAD_FUTEX_WAIT_ABS(reg) \
+	xorl	$(FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME), reg
 # define LOAD_FUTEX_WAKE(reg) \
 	xorl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
 #else
@@ -55,6 +57,10 @@
 	andl	%fs:PRIVATE_FUTEX, reg ; \
 	orl	$FUTEX_WAIT, reg
 # endif
+# define LOAD_FUTEX_WAIT_ABS(reg) \
+	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
+	andl	%fs:PRIVATE_FUTEX, reg ; \
+	orl	$FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME, reg
 # define LOAD_FUTEX_WAKE(reg) \
 	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
 	andl	%fs:PRIVATE_FUTEX, reg ; \
@@ -143,12 +149,61 @@ __lll_lock_wait:
 	cfi_endproc
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
+	/*      %rdi: futex
+		%rsi: flags
+		%rdx: timeout
+		%eax: futex value
+	*/
 	.globl	__lll_timedlock_wait
 	.type	__lll_timedlock_wait,@function
 	.hidden	__lll_timedlock_wait
 	.align	16
 __lll_timedlock_wait:
 	cfi_startproc
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	cmpl	$0, __have_futex_clock_realtime(%rip)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+# endif
+
+	pushq	%r9
+	cfi_adjust_cfa_offset(9)
+	cfi_offset(%r9, -16)
+	movq	%rdx, %r10
+	movl	$0xffffffff, %r9d
+	LOAD_FUTEX_WAIT_ABS (%esi)
+
+	movl	$2, %edx
+	cmpl	%edx, %eax
+	jne	2f
+
+1:	movl	$SYS_futex, %eax
+	movl	$2, %edx
+	syscall
+
+2:	xchgl	%edx, (%rdi)	/* NB:   lock is implied */
+
+	testl	%edx, %edx
+	jz	3f
+
+	cmpl	$-ETIMEDOUT, %eax
+	je	4f
+	cmpl	$-EINVAL, %eax
+	jne	1b
+4:	movl	%eax, %edx
+	negl	%edx
+
+3:	movl	%edx, %eax
+	popq	%r9
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r9)
+	retq
+
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
 	/* Check for a valid timeout value.  */
 	cmpq	$1000000000, 8(%rdx)
 	jae	3f
@@ -253,6 +308,7 @@ __lll_timedlock_wait:
 
 3:	movl	$EINVAL, %eax
 	retq
+# endif
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif

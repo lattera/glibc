@@ -1,5 +1,11 @@
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* init.c (__pthread_initialize_minimal_internal): Check for
+	FUTEX_CLOCK_REALTIME flag.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S (__lll_timedlock_wait):
+	Use FUTEX_WAIT_BITSET|FUTEX_CLOCK_READTIME instead of computing
+	relative timeout.
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Define
 	FUTEX_CLOCK_REALTIME and FUTEX_BITSET_MATCH_ANY.
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
