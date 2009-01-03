@@ -170,8 +170,8 @@ __lll_timedlock_wait:
 # endif
 
 	pushq	%r9
-	cfi_adjust_cfa_offset(9)
-	cfi_offset(%r9, -16)
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r9, 0)
 	movq	%rdx, %r10
 	movl	$0xffffffff, %r9d
 	LOAD_FUTEX_WAIT_ABS (%esi)

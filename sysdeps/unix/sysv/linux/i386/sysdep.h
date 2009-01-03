@@ -204,9 +204,11 @@
 	arg 3		%edx	     call-clobbered
 	arg 4		%esi	     call-saved
 	arg 5		%edi	     call-saved
+	arg 6		%ebp	     call-saved
 
    The stack layout upon entering the function is:
 
+	24(%esp)	Arg# 6
 	20(%esp)	Arg# 5
 	16(%esp)	Arg# 4
 	12(%esp)	Arg# 3
@@ -215,7 +217,7 @@
 	  (%esp)	Return address
 
    (Of course a function with say 3 arguments does not have entries for
-   arguments 4 and 5.)
+   arguments 4, 5, and 6.)
 
    The following code tries hard to be optimal.  A general assumption
    (which is true according to the data books I have) is that
