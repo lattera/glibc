@@ -300,24 +300,28 @@ __pthread_initialize_minimal_internal (void)
     if (!INTERNAL_SYSCALL_ERROR_P (word, err))
       THREAD_SETMEM (pd, header.private_futex, FUTEX_PRIVATE_FLAG);
   }
-#endif
 
+  /* Private futexes have been introduced earlier than the
+     FUTEX_CLOCK_REALTIME flag.  We don't have to run the test if we
+     know the former are not supported.  This also means we know the
+     kernel will return ENOSYS for unknown operations.  */
+  if (THREAD_GETMEM (pd, header.private_futex) != 0)
+#endif
 #ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-  {
-    int word = 0;
-    /* NB: the syscall actually takes six parameters.  The last is the
-       bit mask.  But since we will not actually wait at all the value
-       is irrelevant.  Given that passing six parameters is difficult
-       on some architectures we just pass whatever random value the
-       calling convention calls for to the kernel.  It causes no harm.  */
-    word = INTERNAL_SYSCALL (futex, err, 5, &word,
-			     FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
-			     | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
-    if (!INTERNAL_SYSCALL_ERROR_P (word, err)
-	|| (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS
-	    && INTERNAL_SYSCALL_ERRNO (word, err) != EINVAL))
-      __set_futex_clock_realtime ();
-  }
+    {
+      int word = 0;
+      /* NB: the syscall actually takes six parameters.  The last is the
+	 bit mask.  But since we will not actually wait at all the value
+	 is irrelevant.  Given that passing six parameters is difficult
+	 on some architectures we just pass whatever random value the
+	 calling convention calls for to the kernel.  It causes no harm.  */
+      word = INTERNAL_SYSCALL (futex, err, 5, &word,
+			       FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
+			       | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
+      assert (INTERNAL_SYSCALL_ERROR_P (word, err));
+      if (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS)
+	__set_futex_clock_realtime ();
+    }
 #endif
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
