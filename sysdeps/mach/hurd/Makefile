@@ -1,4 +1,4 @@
-# Copyright (C) 1993,94,95,96,97,98,99,2000,2001,2002, 2003, 2004
+# Copyright (C) 1993,94,95,96,97,98,99,2000,2001,2002,2003,2004,2009
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -204,6 +204,11 @@ endif
 
 ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
+endif
+
+ifeq ($(subdir),socket)
+sysdep_headers += net/ethernet.h net/if_arp.h net/if_ether.h net/if_ppp.h \
+		  net/route.h
 endif
 
 endif	# in-Makerules

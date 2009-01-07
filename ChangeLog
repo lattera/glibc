@@ -1,3 +1,15 @@
+2009-01-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/Makefile (sysdep_headers) [subdir=socket]:
+	Add net/ethernet.h net/if_arp.h net/if_ether.h net/if_ppp.h
+	net/route.h.
+
+	* hurd/report-wait.c (describe_number): Use __stpcpy to prepend
+	flavor to description only when flavor is not NULL.
+
+	* hurd/hurdsig.c (signal_allowed): Unlock _hurd_dtable_lock
+	mutex after SIGIO/SIGURG lookup loop.
+
 2009-01-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/resource.h (PRIO_PROCESS, PRIO_PGRP, PRIO_USER): Add macros.

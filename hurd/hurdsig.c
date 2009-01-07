@@ -1134,6 +1134,7 @@ signal_allowed (int signo, mach_port_t refport)
 	      }
 	    _hurd_port_free (&_hurd_dtable[d]->port, &ulink, port);
 	  }
+	__mutex_unlock (&_hurd_dtable_lock);
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
 	if (lucky)
 	  goto win;
