@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -112,6 +112,11 @@ static LIST_HEAD (stack_cache);
 /* List of the stacks in use.  */
 static LIST_HEAD (stack_used);
 
+/* We need to record what list operations we are going to do so that,
+   in case of an asynchronous interruption due to a fork() call, we
+   can correct for the work.  */
+static uintptr_t *in_flight_stack;
+
 /* List of the threads with user provided stacks in use.  No need to
    initialize this, since it's done in __pthread_initialize_minimal.  */
 list_t __stack_user __attribute__ ((nocommon));
@@ -125,6 +130,36 @@ static unsigned int nptl_ncreated;
 
 /* Check whether the stack is still used or not.  */
 #define FREE_P(descr) ((descr)->tid <= 0)
+
+
+static void
+stack_list_del (list_t *elem)
+{
+  in_flight_stack = (uintptr_t) elem;
+
+  atomic_write_barrier ();
+
+  list_del (elem);
+
+  atomic_write_barrier ();
+
+  in_flight_stack = 0;
+}
+
+
+static void
+stack_list_add (list_t *elem, list_t *list)
+{
+  in_flight_stack = (uintptr_t) elem | 1;
+
+  atomic_write_barrier ();
+
+  list_add (elem, list);
+
+  atomic_write_barrier ();
+
+  in_flight_stack = 0;
+}
 
 
 /* We create a double linked list of all cache entries.  Double linked
@@ -179,10 +214,10 @@ get_cached_stack (size_t *sizep, void **memp)
     }
 
   /* Dequeue the entry.  */
-  list_del (&result->list);
+  stack_list_del (&result->list);
 
   /* And add to the list of stacks in use.  */
-  list_add (&result->list, &stack_used);
+  stack_list_add (&result->list, &stack_used);
 
   /* And decrease the cache size.  */
   stack_cache_actsize -= result->stackblock_size;
@@ -230,7 +265,7 @@ free_stacks (size_t limit)
       if (FREE_P (curr))
 	{
 	  /* Unlink the block.  */
-	  list_del (entry);
+	  stack_list_del (entry);
 
 	  /* Account for the freed memory.  */
 	  stack_cache_actsize -= curr->stackblock_size;
@@ -260,7 +295,7 @@ queue_stack (struct pthread *stack)
   /* We unconditionally add the stack to the list.  The memory may
      still be in use but it will not be reused until the kernel marks
      the stack as not used anymore.  */
-  list_add (&stack->list, &stack_cache);
+  stack_list_add (&stack->list, &stack_cache);
 
   stack_cache_actsize += stack->stackblock_size;
   if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
@@ -547,7 +582,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  lll_lock (stack_cache_lock, LLL_PRIVATE);
 
 	  /* And add to the list of stacks in use.  */
-	  list_add (&pd->list, &stack_used);
+	  stack_list_add (&pd->list, &stack_used);
 
 	  lll_unlock (stack_cache_lock, LLL_PRIVATE);
 
@@ -601,7 +636,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      lll_lock (stack_cache_lock, LLL_PRIVATE);
 
 	      /* Remove the thread from the list.  */
-	      list_del (&pd->list);
+	      stack_list_del (&pd->list);
 
 	      lll_unlock (stack_cache_lock, LLL_PRIVATE);
 
@@ -703,7 +738,7 @@ __deallocate_stack (struct pthread *pd)
 
   /* Remove the thread from the list of threads with user defined
      stacks.  */
-  list_del (&pd->list);
+  stack_list_del (&pd->list);
 
   /* Not much to do.  Just free the mmap()ed memory.  Note that we do
      not reset the 'used' flag in the 'tid' field.  This is done by
@@ -776,7 +811,47 @@ __reclaim_stacks (void)
 {
   struct pthread *self = (struct pthread *) THREAD_SELF;
 
-  /* No locking necessary.  The caller is the only stack in use.  */
+  /* No locking necessary.  The caller is the only stack in use.  But
+     we have to be aware that we might have interrupted a list
+     operation.  */
+
+  if (in_flight_stack != NULL)
+    {
+      bool add_p = in_flight_stack & 1;
+      in_flight_stack = (list_t *) (in_flight_stack & ~1l);
+
+      if (add_p)
+	{
+	  /* We always add at the beginning of the list.  So in this
+	     case we only need to check the beginning of these lists.  */
+	  int check_list (list_t *l)
+	  {
+	    if (l->next->prev != l)
+	      {
+		assert (l->next->prev == in_flight_stack);
+
+		in_flight_stack->next = l->next;
+		in_flight_stack->prev = l;
+		l->next = in_flight_stack;
+
+		return 1;
+	      }
+
+	    return 0;
+	  }
+
+	  if (check_list (&stack_used) == 0)
+	    (void) check_list (&stack_cache);
+	}
+      else
+	{
+	  /* We can simply always replay the delete operation.  */
+	  in_flight_stack->next->prev = in_flight_stack->prev;
+	  in_flight_stack->prev->next = in_flight_stack->next;
+	}
+
+      in_flight_stack = NULL;
+    }
 
   /* Mark all stacks except the still running one as free.  */
   list_t *runp;
@@ -829,7 +904,7 @@ __reclaim_stacks (void)
   /* Remove the entry for the current thread to from the cache list
      and add it to the list of running threads.  Which of the two
      lists is decided by the user_stack flag.  */
-  list_del (&self->list);
+  stack_list_del (&self->list);
 
   /* Re-initialize the lists for all the threads.  */
   INIT_LIST_HEAD (&stack_used);
@@ -838,7 +913,7 @@ __reclaim_stacks (void)
   if (__builtin_expect (THREAD_GETMEM (self, user_stack), 0))
     list_add (&self->list, &__stack_user);
   else
-    list_add (&self->list, &stack_used);
+    stack_list_add (&self->list, &stack_used);
 
   /* There is one thread running.  */
   __nptl_nthreads = 1;
