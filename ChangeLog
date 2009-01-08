@@ -1,3 +1,17 @@
+2009-01-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/s390/gettimeofday.c: New file.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/s390/Makefile (sysdep_routines): Add dl-vdso
+	for elf subdir.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INLINE_VSYSCALL,
+	INTERNAL_VSYSCALL, INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK,
+	INTERNAL_SYSCALL_NCS, HAVE_CLOCK_GETRES_VSYSCALL and
+	HAVE_CLOCK_GETTIME_VSYSCALL: Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Versions: New file.
+
 2008-12-31  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (re_compile_fastmap_iter): Use __mbrtowc.

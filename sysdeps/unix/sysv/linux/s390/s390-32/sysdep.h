@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006
+/* Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2008
    Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
@@ -25,6 +25,11 @@
 #include <sysdeps/unix/sysdep.h>
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
 #include <tls.h>
+
+/* Define __set_errno() for INLINE_SYSCALL macro below.  */
+#ifndef __ASSEMBLER__
+#include <errno.h>
+#endif
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -276,6 +281,100 @@
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
 #define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
 
+#define CLOBBER_0 , "3", "4", "5"
+#define CLOBBER_1 , "3", "4", "5"
+#define CLOBBER_2 , "4", "5"
+#define CLOBBER_3 , "5"
+#define CLOBBER_4
+#define CLOBBER_5
+#define CLOBBER_6
+
+/* List of system calls which are supported as vsyscalls.  */
+#define HAVE_CLOCK_GETRES_VSYSCALL	1
+#define HAVE_CLOCK_GETTIME_VSYSCALL	1
+
+/* This version is for kernels that implement system calls that
+   behave like function calls as far as register saving.
+   It falls back to the syscall in the case that the vDSO doesn't
+   exist or fails for ENOSYS */
+#ifdef SHARED
+# define INLINE_VSYSCALL(name, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    __label__ iserr;							      \
+    long int _ret;							      \
+									      \
+    if (__vdso_##name != NULL)						      \
+      {									      \
+	_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, , nr, ##args);	      \
+	if (!INTERNAL_SYSCALL_ERROR_P (_ret, ))				      \
+	  goto out;							      \
+	if (INTERNAL_SYSCALL_ERRNO (_ret, ) != ENOSYS)			      \
+	  goto iserr;							      \
+      }									      \
+									      \
+    _ret = INTERNAL_SYSCALL (name, , nr, ##args);			      \
+    if (INTERNAL_SYSCALL_ERROR_P (_ret, ))				      \
+      {									      \
+      iserr:								      \
+        __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
+        _ret = -1L;							      \
+      }									      \
+  out:									      \
+    (int) _ret;								      \
+  })
+#else
+# define INLINE_VSYSCALL(name, nr, args...) \
+  INLINE_SYSCALL (name, nr, ##args)
+#endif
+
+#ifdef SHARED
+# define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  ({									      \
+    __label__ out;							      \
+    long int _ret;							      \
+									      \
+    if (__vdso_##name != NULL)						      \
+      {									      \
+	_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
+	if (!INTERNAL_SYSCALL_ERROR_P (_ret, err)			      \
+	    || INTERNAL_SYSCALL_ERRNO (_ret, err) != ENOSYS)		      \
+	  goto out;							      \
+      }									      \
+    _ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
+  out:									      \
+    _ret;								      \
+  })
+#else
+# define INTERNAL_VSYSCALL(name, err, nr, args...) \
+  INTERNAL_SYSCALL (name, err, nr, ##args)
+#endif
+
+/* This version is for internal uses when there is no desire
+   to set errno */
+#define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, nr, args...)	      \
+  ({									      \
+    long int _ret = ENOSYS;						      \
+									      \
+    if (__vdso_##name != NULL)						      \
+      _ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
+    else								      \
+      err = 1 << 28;							      \
+    _ret;								      \
+  })
+
+#define INTERNAL_VSYSCALL_NCS(fn, err, nr, args...)			      \
+  ({									      \
+    DECLARGS_##nr(args)							      \
+    register long _ret asm("2");						      \
+    asm volatile (							      \
+    "lr 11,14\n\t"							      \
+    "basr 14,%1\n\t"							      \
+    "lr 14,11\n\t"							      \
+    : "=d" (_ret)							      \
+    : "d" (fn) ASMFMT_##nr						      \
+    : "cc", "memory", "0", "1", "11" CLOBBER_##nr);			      \
+    _ret; })
 
 /* Pointer mangling support.  */
 #if defined NOT_IN_libc && defined IS_IN_rtld
