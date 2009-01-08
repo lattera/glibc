@@ -1,3 +1,8 @@
+2009-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/list.h (list_add): Initialize new element first.
+	(list_add_tail): Removed.
+
 2009-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Optimize test

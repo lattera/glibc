@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -46,21 +46,10 @@ typedef struct list_head
 static inline void
 list_add (list_t *newp, list_t *head)
 {
-  head->next->prev = newp;
   newp->next = head->next;
   newp->prev = head;
+  head->next->prev = newp;
   head->next = newp;
-}
-
-
-/* Add new element at the tail of the list.  */
-static inline void
-list_add_tail (list_t *newp, list_t *head)
-{
-  head->prev->next = newp;
-  newp->next = head;
-  newp->prev = head->prev;
-  head->prev = newp;
 }
 
 
