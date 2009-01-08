@@ -1,3 +1,10 @@
+2009-01-04  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ 9697]
+	* posix/bug-regex17.c: Add testcases.
+	* posix/regcomp.c (re_compile_fastmap_iter): Rewrite COMPLEX_BRACKET
+	handling.
+
 2009-01-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/bits/libc-vdso.h: New file.

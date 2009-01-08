@@ -1,5 +1,5 @@
-/* Turkish regular expression tests.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* German regular expression tests.
+   Copyright (C) 2002, 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -33,10 +33,10 @@ struct
   int flags, nmatch;
   regmatch_t rm[5];
 } tests[] = {
-  /* \xc3\x84	LATIN CAPITAL LETTER A WITH DIAERESIS
-     \xc3\x96	LATIN CAPITAL LETTER O WITH DIAERESIS
-     \xc3\xa4	LATIN SMALL LETTER A WITH DIAERESIS
-     \xc3\xb6	LATIN SMALL LETTER O WITH DIAERESIS  */
+  /* U+00C4	\xc3\x84	LATIN CAPITAL LETTER A WITH DIAERESIS
+     U+00D6	\xc3\x96	LATIN CAPITAL LETTER O WITH DIAERESIS
+     U+00E4	\xc3\xa4	LATIN SMALL LETTER A WITH DIAERESIS
+     U+00F6	\xc3\xb6	LATIN SMALL LETTER O WITH DIAERESIS  */
   { "\xc3\x84\xc3\x96*\xc3\xb6$", "aB\xc3\xa4\xc3\xb6\xc3\xb6\xc3\x96", REG_ICASE, 2,
     { { 2, 10 }, { -1, -1 } } },
   { "[\xc3\x84x]\xc3\x96*\xc3\xb6$", "aB\xc3\x84\xc3\xb6\xc3\xb6\xc3\x96", REG_ICASE, 2,
@@ -45,10 +45,22 @@ struct
     { { 2, 10 }, { -1, -1 } } },
   { "[^x]\xc3\x96*\xc3\xb6$", "aB\xc3\xa4\xc3\xb6\xc3\xb6\xc3\x96", REG_ICASE, 2,
     { { 2, 10 }, { -1, -1 } } },
+
+  /* Tests for bug 9697:
+     U+00DF	\xc3\x9f	LATIN SMALL LETTER SHARP S
+     U+02DA	\xcb\x9a	RING ABOVE
+     U+02E2	\xcb\xa2	MODIFIER LETTER SMALL S  */
+  { "[a-z]|[^a-z]", "\xcb\xa2", REG_EXTENDED, 2,
+    { { 0, 2 }, { -1, -1 } } },
+  { "[a-z]", "\xc3\x9f", REG_EXTENDED, 2,
+    { { 0, 2 }, { -1, -1 } } },
+  { "[^a-z]", "\xcb\x9a", REG_EXTENDED, 2,
+    { { 0, 2 }, { -1, -1 } } },
 };
 
-int
-main (void)
+
+static int
+do_test (void)
 {
   regex_t re;
   regmatch_t rm[5];
@@ -93,3 +105,6 @@ main (void)
 
   return ret;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
