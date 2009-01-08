@@ -536,3 +536,7 @@ a.*\b	&	abT	ab
 \B	&	aSbTc
 \B	&	SaT	@SaT
 \B	&	aSTSb	@TSb
+
+o$($|.)	-	oN
+o$($|.)	-	op
+o$($|.)	-	o	o

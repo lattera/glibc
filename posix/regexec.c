@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -1004,6 +1004,11 @@ prune_impossible_nodes (mctx)
       re_node_set_free (&sctx.limits);
       if (BE (ret != REG_NOERROR, 0))
 	goto free_return;
+      if (sifted_states[0] == NULL)
+	{
+	  ret = REG_NOMATCH;
+	  goto free_return;
+	}
     }
   re_free (mctx->state_log);
   mctx->state_log = sifted_states;

@@ -1,3 +1,10 @@
+2009-01-05  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ 697]
+	* posix/regexec.c (prune_impossible_nodes): Handle sifted_states[0]
+	being NULL also if there are no backreferences.
+	* posix/rxspencer/tests: Add testcases.
+
 2009-01-04  Paolo Bonzini  <bonzini@gnu.org>
 
 	[BZ 9697]
