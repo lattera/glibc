@@ -115,7 +115,7 @@ static LIST_HEAD (stack_used);
 /* We need to record what list operations we are going to do so that,
    in case of an asynchronous interruption due to a fork() call, we
    can correct for the work.  */
-static uintptr_t *in_flight_stack;
+static uintptr_t in_flight_stack;
 
 /* List of the threads with user provided stacks in use.  No need to
    initialize this, since it's done in __pthread_initialize_minimal.  */
@@ -815,10 +815,10 @@ __reclaim_stacks (void)
      we have to be aware that we might have interrupted a list
      operation.  */
 
-  if (in_flight_stack != NULL)
+  if (in_flight_stack != 0)
     {
       bool add_p = in_flight_stack & 1;
-      in_flight_stack = (list_t *) (in_flight_stack & ~1l);
+      list_t *elem = (list_t *) (in_flight_stack & ~UINTMAX_C (1));
 
       if (add_p)
 	{
@@ -828,11 +828,11 @@ __reclaim_stacks (void)
 	  {
 	    if (l->next->prev != l)
 	      {
-		assert (l->next->prev == in_flight_stack);
+		assert (l->next->prev == elem);
 
-		in_flight_stack->next = l->next;
-		in_flight_stack->prev = l;
-		l->next = in_flight_stack;
+		elem->next = l->next;
+		elem->prev = l;
+		l->next = elem;
 
 		return 1;
 	      }
@@ -846,11 +846,11 @@ __reclaim_stacks (void)
       else
 	{
 	  /* We can simply always replay the delete operation.  */
-	  in_flight_stack->next->prev = in_flight_stack->prev;
-	  in_flight_stack->prev->next = in_flight_stack->next;
+	  elem->next->prev = elem->prev;
+	  elem->prev->next = elem->next;
 	}
 
-      in_flight_stack = NULL;
+      in_flight_stack = 0;
     }
 
   /* Mark all stacks except the still running one as free.  */

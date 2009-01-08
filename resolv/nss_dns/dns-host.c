@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -375,6 +375,19 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
   size_t size;
   int n, status;
   int olderr = errno;
+
+ uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
+ buffer += pad;
+ buflen = buflen > pad ? buflen - pad : 0;
+
+ if (__builtin_expect (buflen < sizeof (struct host_data), 0))
+   {
+     *errnop = ERANGE;
+     *h_errnop = NETDB_INTERNAL;
+     return NSS_STATUS_TRYAGAIN;
+   }
+
+ host_data = (struct host_data *) buffer;
 
   if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
