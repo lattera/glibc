@@ -1,3 +1,10 @@
+2008-12-31  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Use __mbrtowc.
+	* posix/regex_internal.c (build_wcs_buffer, build_wcs_upper_buffer,
+	re_string_skip_chars, re_string_reconstruct): Likewise.
+	* posix/regex_internal.h [!_LIBC] (__mbrtowc): New #define.
+
 2008-12-31  Rafael Avila de Espindola  <espindola@google.com>
 
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Check and

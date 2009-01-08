@@ -116,6 +116,7 @@
 # define __wctype wctype
 # define __iswctype iswctype
 # define __btowc btowc
+# define __mbrtowc mbrtowc
 # define __mempcpy mempcpy
 # define __wcrtomb wcrtomb
 # define __regfree regfree

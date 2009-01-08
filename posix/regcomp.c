@@ -327,8 +327,8 @@ re_compile_fastmap_iter (regex_t *bufp, const re_dfastate_t *init_state,
 		     && dfa->nodes[node].mb_partial)
 		*p++ = dfa->nodes[node].opr.c;
 	      memset (&state, '\0', sizeof (state));
-	      if (mbrtowc (&wc, (const char *) buf, p - buf,
-			   &state) == p - buf
+	      if (__mbrtowc (&wc, (const char *) buf, p - buf,
+			     &state) == p - buf
 		  && (__wcrtomb ((char *) buf, towlower (wc), &state)
 		      != (size_t) -1))
 		re_set_fastmap (fastmap, 0, buf[0]);
