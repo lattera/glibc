@@ -1,3 +1,11 @@
+2009-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9706]
+	* nss/nss_files/files-parse.c (strtou32): New function.
+	(INT_FIELD): Use strotu32 instead of strtoul to unify behavior
+	across 32-bit and 64-bit platforms.
+	(INT_FIELD_MAYBE_NULL): Likewise.
+
 2009-01-08  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #9720]

@@ -3,6 +3,9 @@
 	[BZ #9701]
 	* locales/sk_SK: Slovakia uses the Euro.
 
+	[BZ #9704]
+	* locales/mt_MT: Malta uses the Euro.
+
 	[BZ #9705]
 	* locales/el_CY: Cyprus uses the Euro.
 
