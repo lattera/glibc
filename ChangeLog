@@ -1,5 +1,7 @@
 2009-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust expm1 errors.
+
 	[BZ #9706]
 	* nss/nss_files/files-parse.c (strtou32): New function.
 	(INT_FIELD): Use strotu32 instead of strtoul to unify behavior

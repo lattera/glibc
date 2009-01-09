@@ -453,6 +453,10 @@ Test "exp10 (3) == 1000":
 ildouble: 8
 ldouble: 8
 
+# expm1
+Test "expm1 (1) == M_El - 1.0":
+ildouble: 1
+
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
 double: 1
@@ -1133,6 +1137,9 @@ ildouble: 754
 Function: "exp10":
 ildouble: 8
 ldouble: 8
+
+Function: "expm1":
+ildouble: 1
 
 Function: "gamma":
 double: 1
