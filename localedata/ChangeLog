@@ -1,5 +1,8 @@
 2009-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9701]
+	* locales/sk_SK: Slovakia uses the Euro.
+
 	[BZ #9705]
 	* locales/el_CY: Cyprus uses the Euro.
 
