@@ -1,5 +1,5 @@
 /* Common code for file-based database parsers in nss_files module.
-   Copyright (C) 1996-2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000, 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -127,10 +127,24 @@ nss_files_parse_hidden_def (parse_line)
       }									      \
   }
 
+/* Helper function.  */
+static inline uint32_t
+__attribute__ ((always_inline))
+strtou32 (const char *nptr, char **endptr, int base)
+{
+  unsigned long int val = strtoul (nptr, endptr, base);
+
+  /* Match the 32-bit behavior on 64-bit platforms.  */
+  if (sizeof (long int) > 4 && val > 0xffffffff)
+    val = 0xffffffff;
+
+  return val;
+}
+
 # define INT_FIELD(variable, terminator_p, swallow, base, convert)	      \
   {									      \
     char *endp;								      \
-    variable = convert (strtoul (line, &endp, base));			      \
+    variable = convert (strtou32 (line, &endp, base));			      \
     if (endp == line)							      \
       return 0;								      \
     else if (terminator_p (*endp))					      \
@@ -148,7 +162,7 @@ nss_files_parse_hidden_def (parse_line)
     if (*line == '\0')							      \
       /* We expect some more input, so don't allow the string to end here. */ \
       return 0;								      \
-    variable = convert (strtoul (line, &endp, base));			      \
+    variable = convert (strtou32 (line, &endp, base));			      \
     if (endp == line)							      \
       variable = default;						      \
     if (terminator_p (*endp))						      \

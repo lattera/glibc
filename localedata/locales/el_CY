@@ -44,8 +44,8 @@ copy "el_GR"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol       "<U0043><U0059><U0050><U0020>"
-currency_symbol       "<U00A3>"
+int_curr_symbol       "<U0045><U0055><U0052><U0020>"
+currency_symbol       "<U20AC>"
 mon_decimal_point     "<U002C>"
 mon_thousands_sep     "<U002E>"
 mon_grouping          3
