@@ -972,6 +972,10 @@ typedef struct
 
 #define	AT_SECURE	23		/* Boolean, was exec setuid-like?  */
 
+#define AT_BASE_PLATFORM 24		/* String identifying real platforms.*/
+
+#define AT_RANDOM	25		/* Address of 16 random bytes.  */
+
 #define AT_EXECFN	31		/* Filename of executable.  */
 
 /* Pointer to the global system page used for system calls and other
