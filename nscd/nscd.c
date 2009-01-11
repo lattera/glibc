@@ -338,7 +338,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	      break;
 
 	  if (cnt == lastdb)
-	    return ARGP_ERR_UNKNOWN;
+	    {
+	      argp_error (state, _("'%s' is not a known database"), arg);
+	      return EINVAL;
+	    }
 
 	  size_t arg_len = strlen (arg) + 1;
 	  struct
