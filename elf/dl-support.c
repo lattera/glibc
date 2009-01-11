@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,6 +83,9 @@ struct r_scope_elem _dl_initial_searchlist;
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
 #endif
+
+/* Random data provided by the kernel.  */
+void *_dl_random;
 
 /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
@@ -215,6 +218,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	seen = -1;
 	__libc_enable_secure = av->a_un.a_val;
 	__libc_enable_secure_decided = 1;
+	break;
+      case AT_RANDOM:
+	_dl_random = (void *) av->a_un.a_val;
 	break;
 # ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV

@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -841,7 +841,7 @@ static void
 security_init (void)
 {
   /* Set up the stack checker's canary.  */
-  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
 #ifdef THREAD_SET_STACK_GUARD
   THREAD_SET_STACK_GUARD (stack_chk_guard);
 #else
@@ -851,18 +851,18 @@ security_init (void)
   /* Set up the pointer guard as well, if necessary.  */
   if (GLRO(dl_pointer_guard))
     {
-      // XXX If it is cheap, we should use a separate value.
-      uintptr_t pointer_chk_guard = stack_chk_guard;
-#ifndef HP_TIMING_NONAVAIL
-      hp_timing_t now;
-      HP_TIMING_NOW (now);
-      pointer_chk_guard ^= now;
-#endif
+      uintptr_t pointer_chk_guard = _dl_setup_pointer_guard (_dl_random,
+							     stack_chk_guard);
 #ifdef THREAD_SET_POINTER_GUARD
       THREAD_SET_POINTER_GUARD (pointer_chk_guard);
 #endif
       __pointer_chk_guard_local = pointer_chk_guard;
     }
+
+  /* We do not need the _dl_random value anymore.  The less
+     information we leave behind, the better, so clear the
+     variable.  */
+  _dl_random = NULL;
 }
 
 

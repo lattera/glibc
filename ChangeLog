@@ -1,3 +1,23 @@
+2009-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Take
+	one parameter.  If non-NULL use it to initialize return value.
+	(_dl_setup_pointer_guard): New function.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_random.
+	* elf/rtld.c (security_init): Pass _dl_random to
+	_dl_setup_stack_chk_guard.  Call _dl_setup_pointer_guard to initialize
+	pointer_chk_guard.
+	* elf/dl-sysdep.c (_dl_random): New variable.
+	(_dl_sysdep_start): Handle AT_RANDOM.
+	(_dl_show_auxv): Likewise.
+	* elf/dl-support.c (_dl_random): New variable.
+	(_dl_aux_init): Handle AT_RANDOM.
+	* csu/libc-start.c [!SHARED] (libc_start_main): Pass _dl_random
+	to _dl_setup_stack_chk_guard.
+
+	* elf/elf.h (AT_RANDOM): Define AT_BASE_PLATFORM and AT_RANDOM.
+
 2009-01-10  Roland McGrath  <roland@redhat.com>
 
 	* nscd/nscd.c (parse_opt): Use argp_error for bad -i argument.

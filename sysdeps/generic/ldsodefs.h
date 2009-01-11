@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -730,6 +730,9 @@ weak_extern (_dl_starting_up)
 #ifdef IS_IN_rtld
 extern int _dl_starting_up_internal attribute_hidden;
 #endif
+
+/* Random data provided by the kernel.  */
+extern void *_dl_random attribute_hidden;
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */

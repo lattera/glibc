@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998, 2000-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,6 +62,7 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 void *__libc_stack_end attribute_relro = NULL;
 rtld_hidden_data_def(__libc_stack_end)
 static ElfW(auxv_t) *_dl_auxv attribute_relro;
+void *_dl_random attribute_relro = NULL;
 
 #ifndef DL_FIND_ARG_COMPONENTS
 # define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
@@ -173,6 +174,9 @@ _dl_sysdep_start (void **start_argptr,
 	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;
 #endif
+      case AT_RANDOM:
+	_dl_random = (void *) av->a_un.a_val;
+	break;
 #ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV
 #endif
@@ -294,6 +298,7 @@ _dl_show_auxv (void)
 	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
 	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex },
+	  [AT_RANDOM - 2] =		{ "AT_RANDOM:       0x", hex },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 

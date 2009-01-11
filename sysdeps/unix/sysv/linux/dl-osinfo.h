@@ -1,5 +1,5 @@
 /* Operating system specific code for generic dynamic loader functions.  Linux.
-   Copyright (C) 2000-2002,2004-2007,2008 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002,2004-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,22 +60,52 @@ dl_fatal (const char *str)
   } while (0)
 
 static inline uintptr_t __attribute__ ((always_inline))
-_dl_setup_stack_chk_guard (void)
+_dl_setup_stack_chk_guard (void *dl_random)
 {
   uintptr_t ret;
-#ifdef ENABLE_STACKGUARD_RANDOMIZE
-  int fd = __open ("/dev/urandom", O_RDONLY);
-  if (fd >= 0)
+#ifndef __ASSUME_AT_RANDOM
+  if (__builtin_expect (dl_random == NULL, 0))
     {
-      ssize_t reslen = __read (fd, &ret, sizeof (ret));
-      __close (fd);
-      if (reslen == (ssize_t) sizeof (ret))
-	return ret;
+# ifdef ENABLE_STACKGUARD_RANDOMIZE
+      int fd = __open ("/dev/urandom", O_RDONLY);
+      if (fd >= 0)
+	{
+	  ssize_t reslen = __read (fd, &ret, sizeof (ret));
+	  __close (fd);
+	  if (reslen == (ssize_t) sizeof (ret))
+	    return ret;
+	}
+# endif
+      ret = 0;
+      unsigned char *p = (unsigned char *) &ret;
+      p[sizeof (ret) - 1] = 255;
+      p[sizeof (ret) - 2] = '\n';
     }
+  else
 #endif
-  ret = 0;
-  unsigned char *p = (unsigned char *) &ret;
-  p[sizeof (ret) - 1] = 255;
-  p[sizeof (ret) - 2] = '\n';
+    /* We need in the moment only 8 bytes on 32-bit platforms and 16
+       bytes on 64-bit platforms.  Therefore we can use the data
+       directly and not use the kernel-provided data to seed a PRNG.  */
+    memcpy (&ret, dl_random, sizeof (ret));
+  return ret;
+}
+
+static inline uintptr_t __attribute__ ((always_inline))
+_dl_setup_pointer_guard (void *dl_random, uintptr_t stack_chk_guard)
+{
+  uintptr_t ret;
+#ifndef __ASSUME_AT_RANDOM
+  if (dl_random == NULL)
+    {
+      ret = stack_chk_guard;
+# ifndef HP_TIMING_NONAVAIL
+      hp_timing_t now;
+      HP_TIMING_NOW (now);
+      ret ^= now;
+# endif
+    }
+  else
+#endif
+    memcpy (&ret, (char *) dl_random + sizeof (ret), sizeof (ret));
   return ret;
 }
