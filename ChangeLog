@@ -1,3 +1,7 @@
+2009-01-10  Roland McGrath  <roland@redhat.com>
+
+	* nscd/nscd.c (parse_opt): Use argp_error for bad -i argument.
+
 2009-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust expm1 errors.
@@ -56,6 +60,7 @@
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Check and
 	adjust the buffer alignment.
 
+>>>>>>> 1.11443
 2009-01-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/Makefile (sysdep_headers) [subdir=socket]:
