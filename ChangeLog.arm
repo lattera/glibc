@@ -1,3 +1,7 @@
+2009-01-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/arm/fpu/setjmp.S: Add hidden_def (__sigsetjmp).
+
 2009-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Define

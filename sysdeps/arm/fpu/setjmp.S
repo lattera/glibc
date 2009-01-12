@@ -33,3 +33,5 @@ ENTRY (__sigsetjmp)
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
 END (__sigsetjmp)
+
+hidden_def (__sigsetjmp)
