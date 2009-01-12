@@ -1,5 +1,11 @@
 2009-01-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (enum
+	__rusage_who): Avoid comma after RUSAGE_CHILDREN if not
+	-D_GNU_SOURCE.
+
+2009-01-12  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h: Define
 	FUTEX_CLOCK_REALTIME and FUTEX_BITSET_MATCH_ANY.
 
