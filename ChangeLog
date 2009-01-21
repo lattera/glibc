@@ -80,7 +80,6 @@
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Check and
 	adjust the buffer alignment.
 
->>>>>>> 1.11443
 2009-01-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/Makefile (sysdep_headers) [subdir=socket]:
@@ -570,7 +569,7 @@
 
 	[BZ #6942]
 	* resolv/res_send.c (send_vc): Fix use of unaligned address.
-        Properly handle partial reads.
+	Properly handle partial reads.
 
 2008-10-01  Mark Shinwell  <shinwell@codesourcery.com>
 
@@ -621,7 +620,7 @@
 	Patch by Michael Solberg <msolberg@redhat.com>.
 
 2008-09-12  Flavio Leitner  <fleitner@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_vALLOc): Try other arenas in case
 	_int_valloc fails.
@@ -4574,7 +4573,7 @@
 2007-08-16  Andreas Jaeger  <aj@suse.de>
 
 	* locale/localeinfo.h: Make _nl_category_name_idxs extern.
-        Reported by Peter Festner <peter.festner@ewetel.net>.
+	Reported by Peter Festner <peter.festner@ewetel.net>.
 
 2007-08-17  Jakub Jelinek  <jakub@redhat.com>
 
@@ -5664,8 +5663,8 @@
 	* sysdeps/generic/ldsodefs.h (_dl_addr_inside_object): New prototype.
 
 2007-06-18  Jakub Jelinek  <jakub@redhat.com>
-            Tomas Janousek  <tjanouse@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Tomas Janousek  <tjanouse@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4647]
 	* resolv/res_send.c (send_dg): Remove socket_pf.  Use ipv6_unavail
