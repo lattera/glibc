@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003,2004,2005,2006,2007,2008
+# Copyright (C) 1991-2003,2004,2005,2006,2007,2008,2009
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -794,7 +794,8 @@ ifeq (yes, $(build-shared))
 # listing both its input files, and any header files that it may reference
 # (but no commands).
 %.v.i: $(common-objpfx)config.h
-	sed '/^[ 	]*#/d;s/^[ 	]*%/#/' $(filter-out FORCE %.h,$^) \
+	sed 's/#.*$$//;//^[ 	]*$$/d;s/^[ 	]*%/#/' \
+	    $(filter-out FORCE %.h,$^) \
 	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - \
 		   > $@T
 	mv -f $@T $@
