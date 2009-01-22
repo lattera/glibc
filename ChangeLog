@@ -1,3 +1,8 @@
+2009-01-22  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (%.v.i): Strip trailing # comments,
+	not only whole-line comments.
+
 2009-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Take

@@ -794,7 +794,7 @@ ifeq (yes, $(build-shared))
 # listing both its input files, and any header files that it may reference
 # (but no commands).
 %.v.i: $(common-objpfx)config.h
-	sed 's/#.*$$//;//^[ 	]*$$/d;s/^[ 	]*%/#/' \
+	sed 's/#.*$$//;/^[ 	]*$$/d;s/^[ 	]*%/#/' \
 	    $(filter-out FORCE %.h,$^) \
 	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - \
 		   > $@T
