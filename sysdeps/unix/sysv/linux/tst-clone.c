@@ -1,5 +1,5 @@
 /* Test for proper error/errno handling in clone.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ do_test (void)
   int result;
 
 #ifdef __ia64__
-  result = __clone2(child_fn, NULL, 0, 0, NULL, NULL, NULL);
+  result = __clone2 (child_fn, NULL, 0, 0, NULL, NULL, NULL);
 #else
-  result = clone(child_fn, NULL, (int) NULL, NULL);
+  result = clone (child_fn, NULL, 0, NULL);
 #endif
 
   if (errno != EINVAL || result != -1)

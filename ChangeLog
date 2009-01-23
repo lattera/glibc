@@ -1,3 +1,12 @@
+2009-01-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-clone.c (do_test): Avoid warning.
+
+	* misc/hsearch_r.c (hcreate_r): We need at least three elements in
+	the hash table.
+	* misc/Makefile (tests): Add bug-hsearch1.
+	* misc/bug-hsearch1.c: New file.
+
 2009-01-22  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (%.v.i): Strip trailing # comments,
