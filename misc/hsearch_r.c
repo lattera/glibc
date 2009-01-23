@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995-1997,2002,2005,2007,2008
+/* Copyright (C) 1993,1995-1997,2002,2005,2007,2008,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1993.
@@ -79,6 +79,10 @@ hcreate_r (nel, htab)
   if (htab->table != NULL)
     return 0;
 
+  /* We need a size of at least 3.  Otherwise the hash functions we
+     use will not work.  */
+  if (nel < 3)
+    nel = 3;
   /* Change nel to the first prime number not smaller as nel. */
   nel |= 1;      /* make odd */
   while (!isprime (nel))
