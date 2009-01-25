@@ -121,7 +121,6 @@ __pthread_mutex_lock (mutex)
       goto simple;
     }
 
- out:
   /* Record the ownership.  */
   mutex->__data.__owner = id;
 #ifndef NO_INCR

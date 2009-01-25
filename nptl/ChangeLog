@@ -1,3 +1,7 @@
+2009-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_mutex_lock.c (__pthread_mutex_lock): Remove unused label out.
+
 2009-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/list.h (list_add): Initialize new element first.
