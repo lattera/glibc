@@ -1,3 +1,8 @@
+2009-01-27  Ryosei Takagi  <ryosei@sm.sony.co.jp>
+
+        * sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+	(lll_futex_wake_unlock, lll_futex_requeue): Return zero if success.
+
 2009-01-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h: Include <tls.h>.

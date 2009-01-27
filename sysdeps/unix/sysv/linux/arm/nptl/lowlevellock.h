@@ -114,7 +114,7 @@
     __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
 			      __lll_private_flag (FUTEX_CMP_REQUEUE, private),\
 			      (nr_wake), (nr_move), (mutex), (val));	      \
-    __ret;								      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
 
@@ -127,7 +127,7 @@
 			      __lll_private_flag (FUTEX_WAKE_OP, private),    \
 			      (nr_wake), (nr_wake2), (futexp2),		      \
 			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
-    __ret;								      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
 
