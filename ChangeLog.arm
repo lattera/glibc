@@ -1,3 +1,7 @@
+2009-01-27  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Include <tls.h>.
+
 2009-01-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/arm/fpu/setjmp.S: Add hidden_def (__sigsetjmp).
