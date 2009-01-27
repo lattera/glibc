@@ -1,3 +1,9 @@
+ld {
+  GLIBC_PRIVATE {
+    # used for loading by static libraries
+    _dl_var_init;
+  }
+}
 libc {
   # The comment lines with "#errlist-compat" are magic; see errlist-compat.awk.
   # When you get an error from errlist-compat.awk, you need to add a new

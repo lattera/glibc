@@ -1,3 +1,13 @@
+2009-01-27  Maciej W. Rozycki  <macro@linux-mips.org>
+	    Atsushi Nemoto  <anemo@mba.ocn.ne.jp>
+
+	PR glibc/1048
+	* sysdeps/unix/sysv/linux/mips/dl-static.c: New file to support
+	variable page size for MIPS.
+	* sysdeps/unix/sysv/linux/mips/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Build dl-static in elf.
+	* sysdeps/unix/sysv/linux/mips/Versions: Add _dl_var_init.
+
 2009-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h (enum
