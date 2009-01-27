@@ -1,3 +1,8 @@
+2009-01-27  Min Zhang  <mzhang@mvista.com>
+
+	* sysdeps/arm/memset.S (memset): Use stm instead of two
+	str instructions.
+
 2009-01-27  Kirill A. Shutemov <kirill@shutemov.name>
 
 	* sysdeps/arm/elf/start.S (_start): Use position-independent code

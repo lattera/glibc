@@ -35,20 +35,17 @@ ENTRY(memset)
 	and	r1, r1, #255	@ clear any sign bits
 	orr	r1, r1, r1, lsl $8
 	orr	r1, r1, r1, lsl $16
+	mov	ip, r1
 
 1:
 	subs	r2, r2, #8
-	strcs	r1, [r3], #4	@ store up to 32 bytes per loop iteration
-	strcs	r1, [r3], #4
+	stmcsia	r3!, {r1, ip}	@ store up to 32 bytes per loop iteration
 	subcss	r2, r2, #8
-	strcs	r1, [r3], #4
-	strcs	r1, [r3], #4
+	stmcsia	r3!, {r1, ip}
 	subcss	r2, r2, #8
-	strcs	r1, [r3], #4
-	strcs	r1, [r3], #4
+	stmcsia	r3!, {r1, ip}
 	subcss	r2, r2, #8
-	strcs	r1, [r3], #4
-	strcs	r1, [r3], #4
+	stmcsia	r3!, {r1, ip}
 	bcs	1b
 
 	and	r2, r2, #7
