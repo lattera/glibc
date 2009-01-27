@@ -1,5 +1,5 @@
 /* Startup code for ARM & ELF
-   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2005
+   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2005, 2008
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -67,11 +67,9 @@ _start:
        /* Protect against unhandled exceptions.  */
        .fnstart
 #endif
-	/* Fetch address of fini */
-	ldr ip, =__libc_csu_fini
-
-	/* Clear the frame pointer since this is the outermost frame.  */
+	/* Clear the frame pointer and link register since this is the outermost frame. */
 	mov fp, #0
+	mov lr, #0
 
 	/* Pop argc off the stack and save a pointer to argv */
 	ldr a2, [sp], #4
@@ -83,20 +81,52 @@ _start:
 	/* Push rtld_fini */
 	str a1, [sp, #-4]!
 
+#ifdef SHARED
+	ldr sl, .L_GOT
+.L_GOT_OFF:
+	add sl, pc, sl
+
+	ldr ip, .L_GOT+4	/* __libc_csu_fini */
+	ldr ip, [sl, ip]
+
+	str ip, [sp, #-4]!	/* Push __libc_csu_fini */
+
+	ldr a4, .L_GOT+8	/* __libc_csu_init */
+	ldr a4, [sl, a4]
+
+	ldr a1, .L_GOT+12	/* main */
+	ldr a1, [sl, a1]
+
+	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end) */
+	/* Let the libc call main and exit with its return code.  */
+	bl __libc_start_main(PLT)
+#else
+	/* Fetch address of __libc_csu_fini */
+	ldr ip, =__libc_csu_fini
+
+	/* Push __libc_csu_fini */
+	str ip, [sp, #-4]!
+
 	/* Set up the other arguments in registers */
 	ldr a1, =main
 	ldr a4, =__libc_csu_init
 
-	/* Push fini */
-	str ip, [sp, #-4]!
-
 	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end) */
-
 	/* Let the libc call main and exit with its return code.  */
 	bl __libc_start_main
+#endif
 
 	/* should never get here....*/
 	bl abort
+
+#ifdef SHARED
+.L_GOT:
+	.word _GLOBAL_OFFSET_TABLE_-(.L_GOT_OFF+8)
+	.word __libc_csu_fini(GOT)
+	.word __libc_csu_init(GOT)
+	.word main(GOT)
+#endif
+
 
 #if !defined(__USING_SJLJ_EXCEPTIONS__)
        .cantunwind

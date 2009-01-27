@@ -1,3 +1,8 @@
+2009-01-27  Kirill A. Shutemov <kirill@shutemov.name>
+
+	* sysdeps/arm/elf/start.S (_start): Use position-independent code
+	if SHARED.  Clear lr.
+
 2009-01-27  Ryosei Takagi  <ryosei@sm.sony.co.jp>
 
         * sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
