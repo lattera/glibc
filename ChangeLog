@@ -1,5 +1,9 @@
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (nscd_init): If database file access be
+	opened check whether this is due to permission problems and bail
+	in that case.
+
 	[BZ #9741]
 	* nscd/mem.c (gc): Fix assignment of he_data in case malloc is used.
 	Reported by Jun'ichi Nomura <j-nomura@ce.jp.nec.com>.

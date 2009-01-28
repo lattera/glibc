@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1998-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -647,6 +647,9 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		if (fd != -1)
 		  close (fd);
 	      }
+	    else if (errno == EACCES)
+	      error (EXIT_FAILURE, 0, _("cannot access '%s'"),
+		     dbs[cnt].db_filename);
 	  }
 
 	if (dbs[cnt].head == NULL)
