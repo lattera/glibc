@@ -1,3 +1,9 @@
+2009-01-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (INTERNAL_SYSCALL):
+	Add "t" to clobber list.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getent.c (print_networks): Don't print comma between aliases.

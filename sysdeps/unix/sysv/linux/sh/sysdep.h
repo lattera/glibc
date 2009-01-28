@@ -1,5 +1,5 @@
 /* Copyright (C) 1992,1993,1995,1996,1997,1998,1999,2000,2002,2003,2004,
-   2005,2006	Free Software Foundation, Inc.
+   2005,2006,2009	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -339,7 +339,7 @@
     asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
 		  : "=z" (resultvar)					      \
 		  : "r" (r3) ASMFMT_##nr				      \
-		  : "memory");						      \
+		  : "memory", "t");					      \
 									      \
     (int) resultvar; })
 
@@ -353,7 +353,7 @@
     asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
 		  : "=z" (resultvar)					      \
 		  : "r" (r3) ASMFMT_##nr				      \
-		  : "memory");						      \
+		  : "memory", "t");					      \
 									      \
     (int) resultvar; })
 

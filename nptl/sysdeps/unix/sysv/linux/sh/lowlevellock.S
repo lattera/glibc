@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2007, 2008
+/* Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -35,6 +35,13 @@
 # define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
 	mov	#(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), tmp; \
 	extu.b	tmp, tmp; \
+	xor	tmp, reg
+# define LOAD_FUTEX_WAIT_ABS(reg,tmp,tmp2) \
+	mov	#(FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG), tmp; \
+	extu.b	tmp, tmp; \
+	mov	#(FUTEX_CLOCK_REALTIME >> 8), tmp2; \
+	swap.b	tmp2, tmp2; \
+	or	tmp2, tmp; \
 	xor	tmp, reg
 # define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
 	mov	#(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), tmp; \
@@ -95,6 +102,22 @@
 	xor	tmp, reg	; \
 	and	tmp2, reg	; \
 	mov	#FUTEX_WAIT, tmp ; \
+	or	tmp, reg
+#  define LOAD_FUTEX_WAIT_ABS(reg,tmp,tmp2) \
+	stc	gbr, tmp	; \
+	mov.w	99f, tmp2	; \
+	add	tmp2, tmp 	; \
+	mov.l	@tmp, tmp2	; \
+	bra	98f		; \
+	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
+99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
+98:	extu.b	tmp, tmp	; \
+	xor	tmp, reg	; \
+	and	tmp2, reg	; \
+	mov	#FUTEX_WAIT_BITSET, tmp ; \
+	mov	#(FUTEX_CLOCK_REALTIME >> 8), tmp2; \
+	swap.b	tmp2, tmp2; \
+	or	tmp2, tmp; \
 	or	tmp, reg
 # endif
 # define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
@@ -193,12 +216,85 @@ __lll_lock_wait:
 	cfi_endproc
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
+	/*      r5  (r8): futex
+		r7 (r11): flags
+		r6  (r9): timeout
+		r4 (r10): futex value
+	*/
 	.globl	__lll_timedlock_wait
 	.type	__lll_timedlock_wait,@function
 	.hidden	__lll_timedlock_wait
 	.align	5
 	cfi_startproc
 __lll_timedlock_wait:
+	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r12, 0)
+
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	mov.l	.Lhave, r1
+#  ifdef PIC
+	mova	.Lgot, r0
+	mov.l	.Lgot, r12
+	add	r0, r12
+	add	r12, r1
+#  endif
+	mov.l	@r1, r0
+	tst	r0, r0
+	bt	.Lreltmo
+# endif
+
+	mov	r4, r2
+	mov	r5, r4
+	mov	r7, r5
+	mov	r6, r7
+	LOAD_FUTEX_WAIT_ABS (r5, r0, r1)
+
+	mov	#2, r6
+	cmp/eq	r6, r2
+	bf/s	2f
+	 mov	r2, r6
+
+1:
+	mov	#2, r6
+	mov	#-1, r1
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x16
+	SYSCALL_INST_PAD
+	mov	r0, r6
+
+2:
+	XCHG	(r2, @r4, r3)	/* NB:   lock is implied */
+
+	tst	r3, r3
+	bt/s	3f
+	 mov	r6, r0
+
+	cmp/eq	#-ETIMEDOUT, r0
+	bt	4f
+	cmp/eq	#-EINVAL, r0
+	bf	1b
+4:
+	neg	r0, r3
+3:
+	mov	r3, r0
+	rts
+	 mov.l	@r15+, r12
+
+	.align	2
+# ifdef PIC
+.Lgot:
+	.long	_GLOBAL_OFFSET_TABLE_
+.Lhave:
+	.long	__have_futex_clock_realtime@GOTOFF
+# else
+.Lhave:
+	.long	__have_futex_clock_realtime
+# endif
+
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
 	/* Check for a valid timeout value.  */
 	mov.l	@(4,r6), r1
 	mov.l	.L1g, r0
@@ -290,12 +386,15 @@ __lll_timedlock_wait:
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
 	mov.l	@r15+, r10
+	mov.l	@r15+, r11
 	rts
-	 mov.l	@r15+, r11
+	 mov.l	@r15+, r12
 
 3:
+	mov.l	@r15+, r12
 	rts
 	 mov	#EINVAL, r0
+# endif
 	cfi_endproc
 
 .L1k:
