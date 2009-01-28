@@ -1,3 +1,9 @@
+2009-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9741]
+	* nscd/mem.c (gc): Fix assignment of he_data in case malloc is used.
+	Reported by Jun'ichi Nomura <j-nomura@ce.jp.nec.com>.
+
 2009-01-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep.h (INTERNAL_SYSCALL):

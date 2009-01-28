@@ -1,5 +1,5 @@
 /* Cache memory handling.
-   Copyright (C) 2004, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -163,7 +163,7 @@ gc (struct database_dyn *db)
   else
     {
       he = xmalloc (memory_needed);
-      he_data = &he[db->head->nentries * sizeof (struct hashentry *)];
+      he_data = &he[db->head->nentries];
       he_use_malloc = true;
     }
 
