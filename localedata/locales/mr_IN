@@ -32,28 +32,7 @@ category  "mr_IN:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
-
-% Devanagari uses the alternate digits U+0966..U+096F
-outdigit <U0966>..<U096F>
-
-% This is used in the scanf family of functions to read devanagari numbers
-% using "%Id" and such.
-map to_inpunct; /
-  (<U0030>,<U0966>); /
-  (<U0031>,<U0967>); /
-  (<U0032>,<U0968>); /
-  (<U0033>,<U0969>); /
-  (<U0034>,<U096A>); /
-  (<U0035>,<U096B>); /
-  (<U0036>,<U096C>); /
-  (<U0037>,<U096D>); /
-  (<U0038>,<U096E>); /
-  (<U0039>,<U096F>); 
-
-translit_start
-include  "translit_combining";""
-translit_end
+copy "hi_IN"
 END LC_CTYPE
 
 LC_COLLATE

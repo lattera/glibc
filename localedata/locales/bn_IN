@@ -34,28 +34,7 @@ END LC_IDENTIFICATION
 
 
 LC_CTYPE
-copy "i18n"
-
-% Bengali uses the alternate digits U+09E6..U+09EF
-outdigit <U09E6>..<U09EF>
-
-% This is used in the scanf family of functions to read Bengali numbers
-% using "%Id" and such.
-map to_inpunct; /
-  (<U0030>,<U09E6>); /
-  (<U0031>,<U09E7>); /
-  (<U0032>,<U09E8>); /
-  (<U0033>,<U09E9>); /
-  (<U0034>,<U09EA>); /
-  (<U0035>,<U09EB>); /
-  (<U0036>,<U09EC>); /
-  (<U0037>,<U09ED>); /
-  (<U0038>,<U09EE>); /
-  (<U0039>,<U09EF>); 
-
-translit_start
-include "translit_combining";""
-translit_end
+copy "bn_BD"
 END LC_CTYPE
 
 

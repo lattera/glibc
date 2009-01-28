@@ -1,3 +1,7 @@
+2009-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (print_networks): Don't print comma between aliases.
+
 2009-01-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-clone.c (do_test): Avoid warning.
