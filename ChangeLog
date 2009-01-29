@@ -1,8 +1,8 @@
 2009-01-29  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
-	* string.h: Define correct C++ prototypes for gcc 4.4.
-	* wchar.h: Likewise.
+	* string/string.h: Define correct C++ prototypes for gcc 4.4.
+	* wcsmbs/wchar.h: Likewise.
 
 2009-01-29  Ulrich Drepper  <drepper@redhat.com>
 
