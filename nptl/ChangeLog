@@ -1,3 +1,19 @@
+2009-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (__free_stacks): Renamed from free_stacks.
+	(__free_stack_cache): Removed.  Change callers to call __free_stacks.
+	* init.c (nptl_freeres): New function.
+	(pthread_functions): Initialize ptr_freeres to nptl_freeres.
+	* pthreadP.h: Don't declare __free_stack_cache.  Declare __free_stacks.
+	* sysdeps/pthread/unwind-forcedunwind.c (libgcc_s_handle): New
+	variable.
+	(pthread_cancel_init): Depend in libgcc_s_handle for decision to
+	load DSO.  Assign last.
+	(__unwind_freeres): New function.
+
+	* allocatestack.c (__reclaim_stacks): Reset in_flight_stack later
+	for better debugging.  No need to use stack_list_add here.
+
 2009-01-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S

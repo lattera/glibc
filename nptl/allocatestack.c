@@ -248,8 +248,8 @@ get_cached_stack (size_t *sizep, void **memp)
 
 
 /* Free stacks until cache size is lower than LIMIT.  */
-static void
-free_stacks (size_t limit)
+void
+__free_stacks (size_t limit)
 {
   /* We reduce the size of the cache.  Remove the last entries until
      the size is below the limit.  */
@@ -299,15 +299,7 @@ queue_stack (struct pthread *stack)
 
   stack_cache_actsize += stack->stackblock_size;
   if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
-    free_stacks (stack_cache_maxsize);
-}
-
-
-/* This function is called indirectly from the freeres code in libc.  */
-void
-__free_stack_cache (void)
-{
-  free_stacks (0);
+    __free_stacks (stack_cache_maxsize);
 }
 
 
@@ -849,8 +841,6 @@ __reclaim_stacks (void)
 	  elem->next->prev = elem->prev;
 	  elem->prev->next = elem->next;
 	}
-
-      in_flight_stack = 0;
     }
 
   /* Mark all stacks except the still running one as free.  */
@@ -913,10 +903,12 @@ __reclaim_stacks (void)
   if (__builtin_expect (THREAD_GETMEM (self, user_stack), 0))
     list_add (&self->list, &__stack_user);
   else
-    stack_list_add (&self->list, &stack_used);
+    list_add (&self->list, &stack_used);
 
   /* There is one thread running.  */
   __nptl_nthreads = 1;
+
+  in_flight_stack = 0;
 
   /* Initialize the lock.  */
   stack_cache_lock = LLL_LOCK_INITIALIZER;

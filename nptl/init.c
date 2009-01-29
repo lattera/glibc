@@ -67,6 +67,8 @@ static const char nptl_version[] __attribute_used__ = VERSION;
 extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 
+static void nptl_freeres (void);
+
 
 #ifdef SHARED
 static const struct pthread_functions pthread_functions =
@@ -128,12 +130,24 @@ static const struct pthread_functions pthread_functions =
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
     .ptr__nptl_setxid = __nptl_setxid,
     /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = __free_stack_cache
+    .ptr_freeres = nptl_freeres
   };
 # define ptr_pthread_functions &pthread_functions
 #else
 # define ptr_pthread_functions NULL
 #endif
+
+
+/* This function is called indirectly from the freeres code in libc.  */
+static void
+__libc_freeres_fn_section
+nptl_freeres (void)
+{
+#ifdef SHARED
+  __unwind_freeres ();
+#endif
+  __free_stacks (0);
+}
 
 
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
