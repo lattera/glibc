@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2004,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,11 @@ __BEGIN_DECLS
 #define	__need_NULL
 #include <stddef.h>
 
+/* Tell the caller that we provide correct C++ prototypes.  */
+#if defined __cplusplus && __GNUC_PREREQ (4, 4)
+# define __CORRECT_ISO_CPP_STRING_H_PROTO
+#endif
+
 
 __BEGIN_NAMESPACE_STD
 /* Copy N bytes of SRC to DEST.  */
@@ -63,19 +68,40 @@ extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 
 /* Search N bytes of S for C.  */
+#ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" void *memchr (void *__s, int __c, size_t __n)
+      __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
+extern "C++" __const void *memchr (__const void *__s, int __c, size_t __n)
+      __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
+#else
 extern void *memchr (__const void *__s, int __c, size_t __n)
       __THROW __attribute_pure__ __nonnull ((1));
+#endif
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" void *rawmemchr (void *__s, int __c)
+     __THROW __asm ("rawmemchr") __attribute_pure__ __nonnull ((1));
+extern "C++" __const void *rawmemchr (__const void *__s, int __c)
+     __THROW __asm ("rawmemchr") __attribute_pure__ __nonnull ((1));
+# else
 extern void *rawmemchr (__const void *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# endif
 
 /* Search N bytes of S for the final occurrence of C.  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" void *memrchr (void *__s, int __c, size_t __n)
+      __THROW __asm ("memrchr") __attribute_pure__ __nonnull ((1));
+extern "C++" __const void *memrchr (__const void *__s, int __c, size_t __n)
+      __THROW __asm ("memrchr") __attribute_pure__ __nonnull ((1));
+# else
 extern void *memrchr (__const void *__s, int __c, size_t __n)
       __THROW __attribute_pure__ __nonnull ((1));
+# endif
 #endif
 
 
@@ -164,18 +190,39 @@ extern char *strndup (__const char *__string, size_t __n)
 
 __BEGIN_NAMESPACE_STD
 /* Find the first occurrence of C in S.  */
+#ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strchr (char *__s, int __c)
+     __THROW __asm ("strchr") __attribute_pure__ __nonnull ((1));
+extern "C++" __const char *strchr (__const char *__s, int __c)
+     __THROW __asm ("strchr") __attribute_pure__ __nonnull ((1));
+#else
 extern char *strchr (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+#endif
 /* Find the last occurrence of C in S.  */
+#ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strrchr (char *__s, int __c)
+     __THROW __asm ("strrchr") __attribute_pure__ __nonnull ((1));
+extern "C++" __const char *strrchr (__const char *__s, int __c)
+     __THROW __asm ("strrchr") __attribute_pure__ __nonnull ((1));
+#else
 extern char *strrchr (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+#endif
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* This function is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strchrnul (char *__s, int __c)
+     __THROW __asm ("strchrnul") __attribute_pure__ __nonnull ((1));
+extern "C++" __const char *strchrnul (__const char *__s, int __c)
+     __THROW __asm ("strchrnul") __attribute_pure__ __nonnull ((1));
+# else
 extern char *strchrnul (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# endif
 #endif
 
 __BEGIN_NAMESPACE_STD
@@ -188,11 +235,26 @@ extern size_t strcspn (__const char *__s, __const char *__reject)
 extern size_t strspn (__const char *__s, __const char *__accept)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 /* Find the first occurrence in S of any character in ACCEPT.  */
+#ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strpbrk (char *__s, __const char *__accept)
+     __THROW __asm ("strpbrk") __attribute_pure__ __nonnull ((1, 2));
+extern "C++" __const char *strpbrk (__const char *__s, __const char *__accept)
+     __THROW __asm ("strpbrk") __attribute_pure__ __nonnull ((1, 2));
+#else
 extern char *strpbrk (__const char *__s, __const char *__accept)
      __THROW __attribute_pure__ __nonnull ((1, 2));
+#endif
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
+#ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strstr (char *__haystack, __const char *__needle)
+     __THROW __asm ("strstr") __attribute_pure__ __nonnull ((1, 2));
+extern "C++" __const char *strstr (__const char *__haystack,
+				   __const char *__needle)
+     __THROW __asm ("strstr") __attribute_pure__ __nonnull ((1, 2));
+#else
 extern char *strstr (__const char *__haystack, __const char *__needle)
      __THROW __attribute_pure__ __nonnull ((1, 2));
+#endif
 
 
 /* Divide S into tokens separated by characters in DELIM.  */
@@ -214,8 +276,16 @@ extern char *strtok_r (char *__restrict __s, __const char *__restrict __delim,
 
 #ifdef __USE_GNU
 /* Similar to `strstr' but this function ignores the case of both strings.  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *strcasestr (char *__haystack, __const char *__needle)
+     __THROW __asm ("strcasestr") __attribute_pure__ __nonnull ((1, 2));
+extern "C++" __const char *strcasestr (__const char *__haystack,
+				       __const char *__needle)
+     __THROW __asm ("strcasestr") __attribute_pure__ __nonnull ((1, 2));
+# else
 extern char *strcasestr (__const char *__haystack, __const char *__needle)
      __THROW __attribute_pure__ __nonnull ((1, 2));
+# endif
 #endif
 
 #ifdef __USE_GNU
@@ -306,12 +376,26 @@ extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 
 /* Find the first occurrence of C in S (same as strchr).  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *index (char *__s, int __c)
+     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
+extern "C++" __const char *index (__const char *__s, int __c)
+     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
+# else
 extern char *index (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# endif
 
 /* Find the last occurrence of C in S (same as strrchr).  */
+# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *rindex (char *__s, int __c)
+     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
+extern "C++" __const char *rindex (__const char *__s, int __c)
+     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
+# else
 extern char *rindex (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# endif
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
@@ -390,7 +474,14 @@ extern void *memfrob (void *__s, size_t __n) __THROW __nonnull ((1));
    declare the function if the `basename' macro is available (defined
    in <libgen.h>) which makes the XPG version of this function
    available.  */
+#  ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
+extern "C++" char *basename (char *__filename)
+     __THROW __asm ("basename") __nonnull ((1));
+extern "C++" __const char *basename (__const char *__filename)
+     __THROW __asm ("basename") __nonnull ((1));
+#  else
 extern char *basename (__const char *__filename) __THROW __nonnull ((1));
+#  endif
 # endif
 #endif
 

@@ -51,6 +51,11 @@
 # define __need_wint_t
 # include <stddef.h>
 
+/* Tell the caller that we provide correct C++ prototypes.  */
+#if defined __cplusplus && __GNUC_PREREQ (4, 4)
+# define __CORRECT_ISO_CPP_WCHAR_H_PROTO
+#endif
+
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
 # ifndef _WINT_T
@@ -210,11 +215,25 @@ extern wchar_t *wcsdup (__const wchar_t *__s) __THROW __attribute_malloc__;
 
 __BEGIN_NAMESPACE_STD
 /* Find the first occurrence of WC in WCS.  */
+#ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wcschr (wchar_t *__wcs, wchar_t __wc)
+     __THROW __asm ("wcschr") __attribute_pure__;
+extern "C++" __const wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
+     __THROW __asm ("wcschr")  __attribute_pure__;
+#else
 extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
+#endif
 /* Find the last occurrence of WC in WCS.  */
+#ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wcsrchr (wchar_t *__wcs, wchar_t __wc)
+     __THROW __asm ("wcsrchr") __attribute_pure__;
+extern "C++" __const wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
+     __THROW __asm ("wcsrchr") __attribute_pure__;
+#else
 extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
+#endif
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
@@ -234,11 +253,27 @@ extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
 extern size_t wcsspn (__const wchar_t *__wcs, __const wchar_t *__accept)
      __THROW __attribute_pure__;
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
+#ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wcspbrk (wchar_t *__wcs, __const wchar_t *__accept)
+     __THROW __asm ("wcspbrk") __attribute_pure__;
+extern "C++" __const wchar_t *wcspbrk (__const wchar_t *__wcs,
+				       __const wchar_t *__accept)
+     __THROW __asm ("wcspbrk") __attribute_pure__;
+#else
 extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
      __THROW __attribute_pure__;
+#endif
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
+#ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wcsstr (wchar_t *__haystack, __const wchar_t *__needle)
+     __THROW __asm ("wcsstr") __attribute_pure__;
+extern "C++" __const wchar_t *wcsstr (__const wchar_t *__haystack,
+				      __const wchar_t *__needle)
+     __THROW __asm ("wcsstr") __attribute_pure__;
+#else
 extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
      __THROW __attribute_pure__;
+#endif
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
 extern wchar_t *wcstok (wchar_t *__restrict __s,
@@ -251,8 +286,16 @@ __END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN
 /* Another name for `wcsstr' from XPG4.  */
+# ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wcswcs (wchar_t *__haystack, __const wchar_t *__needle)
+     __THROW __asm ("wcswcs") __attribute_pure__;
+extern "C++" __const wchar_t *wcswcs (__const wchar_t *__haystack,
+				      __const wchar_t *__needle)
+     __THROW __asm ("wcswcs") __attribute_pure__;
+# else
 extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
      __THROW __attribute_pure__;
+# endif
 #endif
 
 #ifdef __USE_GNU
@@ -264,8 +307,16 @@ extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
 
 __BEGIN_NAMESPACE_STD
 /* Search N wide characters of S for C.  */
+#ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
+extern "C++" wchar_t *wmemchr (wchar_t *__s, wchar_t __c, size_t __n)
+     __THROW __asm ("wmemchr") __attribute_pure__;
+extern "C++" __const wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c,
+				       size_t __n)
+     __THROW __asm ("wmemchr") __attribute_pure__;
+#else
 extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
      __THROW __attribute_pure__;
+#endif
 
 /* Compare N wide characters of S1 and S2.  */
 extern int wmemcmp (__const wchar_t *__restrict __s1,
