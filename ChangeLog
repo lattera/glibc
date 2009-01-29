@@ -1,3 +1,8 @@
+2009-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/stackinfo.h (stackinfo_get_sp): Define.
+	(stackinfo_sub_sp): Define.
+
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9750]

@@ -55,8 +55,8 @@ extern int __libc_alloca_cutoff (size_t size) __attribute__ ((const));
 #else
 # define alloca_account(size, avar) \
   ({ size_t s__ = (size);		    \
-     avar += size__;			    \
-     __alloca (size__); })
+     avar += s__;			    \
+     __alloca (s__); })
 #endif
 
 #endif
