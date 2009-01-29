@@ -1,5 +1,11 @@
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9750]
+	* nscd/mem.c (gc): Use alloca_count to get the real stack usage.
+	* include/alloca.h (alloca_account): Define.
+	* sysdeps/x86_64/stackinfo.h (stackinfo_get_sp): Define.
+	(stackinfo_sub_sp): Define.
+
 	* nscd/connections.c (nscd_init): If database file access be
 	opened check whether this is due to permission problems and bail
 	in that case.

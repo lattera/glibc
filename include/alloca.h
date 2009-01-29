@@ -46,4 +46,17 @@ extern int __libc_alloca_cutoff (size_t size) __attribute__ ((const));
   __alloca (((len) = (newlen)))
 #endif
 
+#if defined stackinfo_get_sp && defined stackinfo_sub_sp
+# define alloca_account(size, avar) \
+  ({ void *old__ = stackinfo_get_sp ();			\
+     void *m__ = __alloca (size);			\
+     avar += stackinfo_sub_sp (old__);			\
+     m__; })
+#else
+# define alloca_account(size, avar) \
+  ({ size_t s__ = (size);		    \
+     avar += size__;			    \
+     __alloca (size__); })
+#endif
+
 #endif

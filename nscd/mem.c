@@ -134,12 +134,11 @@ gc (struct database_dyn *db)
     stack_used = 0;
   size_t nmark = (db->head->first_free / BLOCK_ALIGN + BITS - 1) / BITS;
   size_t memory_needed = nmark * sizeof (BITMAP_T);
-  if (stack_used + memory_needed <= MAX_STACK_USE)
+  if (__builtin_expect (stack_used + memory_needed <= MAX_STACK_USE, 1))
     {
-      mark = (BITMAP_T *) alloca (memory_needed);
+      mark = (BITMAP_T *) alloca_account (memory_needed, stack_used);
       mark_use_malloc = false;
       memset (mark, '\0', memory_needed);
-      stack_used += memory_needed;
     }
   else
     {
@@ -153,19 +152,17 @@ gc (struct database_dyn *db)
   struct hashentry **he;
   struct hashentry **he_data;
   bool he_use_malloc;
-  if (stack_used + memory_needed <= MAX_STACK_USE)
+  if (__builtin_expect (stack_used + memory_needed <= MAX_STACK_USE, 1))
     {
-      he = alloca (db->head->nentries * sizeof (struct hashentry *));
-      he_data = alloca (db->head->nentries * sizeof (struct hashentry *));
+      he = alloca_account (memory_needed, stack_used);
       he_use_malloc = false;
-      stack_used += memory_needed;
     }
   else
     {
       he = xmalloc (memory_needed);
-      he_data = &he[db->head->nentries];
       he_use_malloc = true;
     }
+  he_data = &he[db->head->nentries];
 
   size_t cnt = 0;
   for (size_t idx = 0; idx < db->head->module; ++idx)
@@ -373,11 +370,9 @@ gc (struct database_dyn *db)
       ref_t disp = off_alloc - off_free;
 
       struct moveinfo *new_move;
-      if (stack_used + sizeof (*new_move) <= MAX_STACK_USE)
-	{
-	  new_move = alloca (sizeof (*new_move));
-	  stack_used += sizeof (*new_move);
-	}
+      if (__builtin_expect (stack_used + sizeof (*new_move) <= MAX_STACK_USE,
+			    1))
+	new_move = alloca_account (sizeof (*new_move), stack_used);
       else
 	new_move = obstack_alloc (&ob, sizeof (*new_move));
       new_move->from = db->data + off_alloc;
