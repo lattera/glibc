@@ -1,5 +1,8 @@
 2009-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/unwind-forcedunwind.c: Encrypt all function
+	pointer variables.
+
 	* allocatestack.c (__free_stacks): Renamed from free_stacks.
 	(__free_stack_cache): Removed.  Change callers to call __free_stacks.
 	* init.c (nptl_freeres): New function.
