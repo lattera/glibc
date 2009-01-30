@@ -1,3 +1,17 @@
+2009-01-11  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #9726]
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (_SET_DI_FPSCR,
+	_SET_SI_FPSCR): Clobber fp0 to prevent erroneous test-case passes.
+
+2009-01-08  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #9726]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+	(__CONTEXT_FUNC_NAME): Fix mtfsf to use fp31 instead of fp0.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(__CONTEXT_FUNC_NAME): Fix mtfsf to use fp31 instead of fp0.
+
 2009-01-11  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Use

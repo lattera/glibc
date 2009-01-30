@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2002,2004,2006,2007,2008 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2002,2004,2006-2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ryan S. Arnold <rsa@us.ibm.com>
                   Sean Curry <spcurry@us.ibm.com>
@@ -104,12 +104,16 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
    (__fpscr)=tmp.fpscr;							     \
    tmp.fpscr; })
 
+/* We make sure to zero fp0 after we use it in order to prevent stale data
+   in an fp register from making a test-case pass erroneously.  */
 # define _SET_DI_FPSCR(__fpscr) {					     \
   union { double d; di_fpscr_t fpscr; }					     \
     tmp __attribute__ ((__aligned__(8)));				     \
   tmp.fpscr = __fpscr;							     \
   /* Set the entire 64-bit FPSCR.  */					     \
   __asm__ ("lfd%U0 0,%0; mtfsf 255,0,1,0" : : "m" (tmp.d) : "fr0");	     \
+  tmp.d = 0;								     \
+  __asm__("lfd%U0 0,%0" : : "m" (tmp.d) : "fr0");			     \
 }
 
 # define _GET_SI_FPSCR(__fpscr) ({					     \
@@ -120,6 +124,8 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
    (__fpscr)=tmp.cw[1];							     \
    tmp.cw[0]; })
 
+/* We make sure to zero fp0 after we use it in order to prevent stale data
+   in an fp register from making a test-case pass erroneously.  */
 # define _SET_SI_FPSCR(__fpscr) {					     \
   union { double d; si_fpscr_t fpscr[2]; }				     \
     tmp __attribute__ ((__aligned__(8)));				     \
@@ -127,6 +133,8 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
   tmp.fpscr[0] = 0xFFF80000;						     \
   tmp.fpscr[1] = __fpscr;						     \
   __asm__ ("lfd%U0 0,%0; mtfsf 255,0" : : "m" (tmp.d) : "fr0");		     \
+  tmp.d = 0;								     \
+  __asm__("lfd%U0 0,%0" : : "m" (tmp.d) : "fr0");			     \
 }
 
 void prime_special_regs(int which)

@@ -1,5 +1,5 @@
 /* Save current context and jump to a new context.
-   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,13 @@
    02110-1301 USA.  */
 
 /* This is the common implementation of setcontext for powerpc32.
-   It not complete in itself should be included in to a framework that 
+   It not complete in itself should be included in to a framework that
    defines:
      __CONTEXT_FUNC_NAME
    and if appropriate:
      __CONTEXT_ENABLE_FPRS
      __CONTEXT_ENABLE_VRS
-   Any archecture that implements the Vector unit is assumed to also 
+   Any archecture that implements the Vector unit is assumed to also
    implement the floating unit.  */
 
 /* Stack frame offsets.  */
@@ -51,7 +51,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stw	r0,_UC_GREGS+(PT_R0*4)(r3)
 	mflr	r0
 	stw	r2,_UC_GREGS+(PT_R2*4)(r3)
-	stw	r4,_UC_GREGS+(PT_R4*4)(r3)			
+	stw	r4,_UC_GREGS+(PT_R4*4)(r3)
 /* Set the callers LR_SAVE, and the ucontext LR and NIP to the callers
    return address.  */
 	stw	r0,_UC_GREGS+(PT_LNK*4)(r3)
@@ -85,7 +85,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stw	r29,_UC_GREGS+(PT_R29*4)(r3)
 	stw	r30,_UC_GREGS+(PT_R30*4)(r3)
 	stw	r31,_UC_GREGS+(PT_R31*4)(r3)
-	
+
 /* Save the value of R1.  We had to push the stack before we
    had the address of uc_reg_space.  So compute the address of
    the callers stack pointer and save it as R1.  */
@@ -174,10 +174,10 @@ ENTRY(__CONTEXT_FUNC_NAME)
 
 	la	r10,(_UC_VREGS)(r3)
 	la	r9,(_UC_VREGS+16)(r3)
-	
+
 /*	beq	L(no_vec)*/
 	beq	2f
-/* address of the combined VSCR/VSAVE quadword.  */	
+/* address of the combined VSCR/VSAVE quadword.  */
 	la	r8,(_UC_VREGS+512)(r3)
 
 /* Save the vector registers */
@@ -194,7 +194,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stvx  v3,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
-	
+
 	stvx	v0,0,r8
 
 	stvx  v4,0,r10
@@ -266,7 +266,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	stvx  v30,0,r10
 	stvx  v31,0,r9
  	stw	r0,0(r8)
-	
+
 2: /*L(no_vec):*/
 # endif /* __CONTEXT_ENABLE_VRS */
 #endif /* __CONTEXT_ENABLE_FPRS */
@@ -428,7 +428,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lfd	fp0,_UC_FREGS+(0*8)(r31)
 # ifdef _ARCH_PWR6
 	/* Use the extended four-operand version of the mtfsf insn.  */
-	mtfsf  0xff,fp0,1,0
+	mtfsf	0xff,fp31,1,0
 # else
 	/* Availability of DFP indicates a 64-bit FPSCR.  */
 	andi.	r6,r7,PPC_FEATURE_HAS_DFP
@@ -514,13 +514,13 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lwz	r31,_UC_GREGS+(PT_R31*4)(r31)
 
 	bctr
-	
+
 3:/*L(error_exit):*/
 	lwz	r0,_FRAME_LR_SAVE+16(r1)
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-	
+
 4:/*L(do_sigret):*/
 	addi	r1,r4,-0xd0
 	li	r0,SYS_ify(rt_sigreturn)
@@ -528,4 +528,3 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	/* NOTREACHED */
 
 END(__CONTEXT_FUNC_NAME)
-

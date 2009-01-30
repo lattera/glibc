@@ -1,5 +1,5 @@
 /* Jump to a new context powerpc32 common.
-   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,13 @@
    02110-1301 USA.  */
 
 /* This is the common implementation of setcontext for powerpc32.
-   It not complete in itself should be included in to a framework that 
+   It not complete in itself should be included in to a framework that
    defines:
      __CONTEXT_FUNC_NAME
    and if appropriate:
      __CONTEXT_ENABLE_FPRS
      __CONTEXT_ENABLE_VRS
-   Any archecture that implements the Vector unit is assumed to also 
+   Any archecture that implements the Vector unit is assumed to also
    implement the floating unit.  */
 
 /* Stack frame offsets.  */
@@ -202,7 +202,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	lfd	fp0,_UC_FREGS+(0*8)(r31)
 # ifdef _ARCH_PWR6
 	/* Use the extended four-operand version of the mtfsf insn.  */
-	mtfsf  0xff,fp0,1,0
+	mtfsf	0xff,fp31,1,0
 # else
 	/* Availability of DFP indicates a 64-bit FPSCR.  */
 	andi.	r6,r7,PPC_FEATURE_HAS_DFP
@@ -304,4 +304,3 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	/* NOTREACHED */
 
 END (__CONTEXT_FUNC_NAME)
-
