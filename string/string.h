@@ -69,10 +69,27 @@ extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 /* Search N bytes of S for C.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" void *memchr (void *__s, int __c, size_t __n)
+extern "C++"
+{
+extern void *memchr (void *__s, int __c, size_t __n)
       __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
-extern "C++" __const void *memchr (__const void *__s, int __c, size_t __n)
+extern __const void *memchr (__const void *__s, int __c, size_t __n)
       __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
+
+# ifdef __OPTIMIZE__
+__extern_always_inline void *
+memchr (void *__s, int __c, size_t __n) __THROW
+{
+  return __builtin_memchr (__s, __c, __n);
+}
+
+__extern_always_inline __const void *
+memchr (__const void *__s, int __c, size_t __n) __THROW
+{
+  return __builtin_memchr (__s, __c, __n);
+}
+# endif
+}
 #else
 extern void *memchr (__const void *__s, int __c, size_t __n)
       __THROW __attribute_pure__ __nonnull ((1));
@@ -191,20 +208,54 @@ extern char *strndup (__const char *__string, size_t __n)
 __BEGIN_NAMESPACE_STD
 /* Find the first occurrence of C in S.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *strchr (char *__s, int __c)
+extern "C++"
+{
+extern char *strchr (char *__s, int __c)
      __THROW __asm ("strchr") __attribute_pure__ __nonnull ((1));
-extern "C++" __const char *strchr (__const char *__s, int __c)
+extern __const char *strchr (__const char *__s, int __c)
      __THROW __asm ("strchr") __attribute_pure__ __nonnull ((1));
+
+# ifdef __OPTIMIZE__
+__extern_always_inline char *
+strchr (char *__s, int __c) __THROW
+{
+  return __builtin_strchr (__s, __c);
+}
+
+__extern_always_inline __const char *
+strchr (__const char *__s, int __c) __THROW
+{
+  return __builtin_strchr (__s, __c);
+}
+# endif
+}
 #else
 extern char *strchr (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
 #endif
 /* Find the last occurrence of C in S.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *strrchr (char *__s, int __c)
+extern "C++"
+{
+extern char *strrchr (char *__s, int __c)
      __THROW __asm ("strrchr") __attribute_pure__ __nonnull ((1));
-extern "C++" __const char *strrchr (__const char *__s, int __c)
+extern __const char *strrchr (__const char *__s, int __c)
      __THROW __asm ("strrchr") __attribute_pure__ __nonnull ((1));
+
+# ifdef __OPTIMIZE__
+__extern_always_inline char *
+strrchr (char *__s, int __c) __THROW
+{
+  return __builtin_strrchr (__s, __c);
+}
+
+__extern_always_inline __const char *
+strrchr (__const char *__s, int __c) __THROW
+{
+  return __builtin_strrchr (__s, __c);
+}
+# endif
+}
 #else
 extern char *strrchr (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
@@ -236,21 +287,55 @@ extern size_t strspn (__const char *__s, __const char *__accept)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *strpbrk (char *__s, __const char *__accept)
+extern "C++"
+{
+extern char *strpbrk (char *__s, __const char *__accept)
      __THROW __asm ("strpbrk") __attribute_pure__ __nonnull ((1, 2));
-extern "C++" __const char *strpbrk (__const char *__s, __const char *__accept)
+extern __const char *strpbrk (__const char *__s, __const char *__accept)
      __THROW __asm ("strpbrk") __attribute_pure__ __nonnull ((1, 2));
+
+# ifdef __OPTIMIZE__
+__extern_always_inline char *
+strpbrk (char *__s, __const char *__accept) __THROW
+{
+  return __builtin_strpbrk (__s, __accept);
+}
+
+__extern_always_inline __const char *
+strpbrk (__const char *__s, __const char *__accept) __THROW
+{
+  return __builtin_strpbrk (__s, __accept);
+}
+# endif
+}
 #else
 extern char *strpbrk (__const char *__s, __const char *__accept)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 #endif
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *strstr (char *__haystack, __const char *__needle)
+extern "C++"
+{
+extern char *strstr (char *__haystack, __const char *__needle)
      __THROW __asm ("strstr") __attribute_pure__ __nonnull ((1, 2));
-extern "C++" __const char *strstr (__const char *__haystack,
-				   __const char *__needle)
+extern __const char *strstr (__const char *__haystack,
+			     __const char *__needle)
      __THROW __asm ("strstr") __attribute_pure__ __nonnull ((1, 2));
+
+# ifdef __OPTIMIZE__
+__extern_always_inline char *
+strstr (char *__haystack, __const char *__needle) __THROW
+{
+  return __builtin_strstr (__haystack, __needle);
+}
+
+__extern_always_inline __const char *
+strstr (__const char *__haystack, __const char *__needle) __THROW
+{
+  return __builtin_strstr (__haystack, __needle);
+}
+# endif
+}
 #else
 extern char *strstr (__const char *__haystack, __const char *__needle)
      __THROW __attribute_pure__ __nonnull ((1, 2));
@@ -377,10 +462,27 @@ extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 /* Find the first occurrence of C in S (same as strchr).  */
 # ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *index (char *__s, int __c)
+extern "C++"
+{
+extern char *index (char *__s, int __c)
      __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
-extern "C++" __const char *index (__const char *__s, int __c)
+extern __const char *index (__const char *__s, int __c)
      __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
+
+#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRINGS_H_PROTO
+__extern_always_inline char *
+index (char *__s, int __c) __THROW
+{
+  return __builtin_index (__s, __c);
+}
+
+__extern_always_inline __const char *
+index (__const char *__s, int __c) __THROW
+{
+  return __builtin_index (__s, __c);
+}
+#  endif
+}
 # else
 extern char *index (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
@@ -388,10 +490,27 @@ extern char *index (__const char *__s, int __c)
 
 /* Find the last occurrence of C in S (same as strrchr).  */
 # ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++" char *rindex (char *__s, int __c)
+extern "C++"
+{
+extern char *rindex (char *__s, int __c)
      __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
-extern "C++" __const char *rindex (__const char *__s, int __c)
+extern __const char *rindex (__const char *__s, int __c)
      __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
+
+#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRINGS_H_PROTO
+__extern_always_inline char *
+rindex (char *__s, int __c) __THROW
+{
+  return __builtin_rindex (__s, __c);
+}
+
+__extern_always_inline __const char *
+rindex (__const char *__s, int __c) __THROW
+{
+  return __builtin_rindex (__s, __c);
+}
+#endif
+}
 # else
 extern char *rindex (__const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));

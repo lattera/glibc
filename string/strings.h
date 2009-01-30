@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,97,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,99,2000,2001,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,11 @@
 # define __need_size_t
 # include <stddef.h>
 
+/* Tell the caller that we provide correct C++ prototypes.  */
+# if defined __cplusplus && __GNUC_PREREQ (4, 4)
+#  define __CORRECT_ISO_CPP_STRINGS_H_PROTO
+# endif
+
 __BEGIN_DECLS
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
@@ -45,10 +50,60 @@ extern void bzero (void *__s, size_t __n) __THROW;
 extern int ffs (int __i) __THROW __attribute__ ((const));
 
 /* Find the first occurrence of C in S (same as strchr).  */
-extern char *index (__const char *__s, int __c) __THROW __attribute_pure__;
+# ifdef __CORRECT_ISO_CPP_STRINGS_H_PROTO
+extern "C++"
+{
+extern char *index (char *__s, int __c)
+     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
+extern __const char *index (__const char *__s, int __c)
+     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
+
+#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRING_H_PROTO
+__extern_always_inline char *
+index (char *__s, int __c) __THROW
+{
+  return __builtin_index (__s, __c);
+}
+
+__extern_always_inline __const char *
+index (__const char *__s, int __c) __THROW
+{
+  return __builtin_index (__s, __c);
+}
+#  endif
+}
+# else
+extern char *index (__const char *__s, int __c)
+     __THROW __attribute_pure__ __nonnull ((1));
+# endif
 
 /* Find the last occurrence of C in S (same as strrchr).  */
-extern char *rindex (__const char *__s, int __c) __THROW __attribute_pure__;
+# ifdef __CORRECT_ISO_CPP_STRINGS_H_PROTO
+extern "C++"
+{
+extern char *rindex (char *__s, int __c)
+     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
+extern __const char *rindex (__const char *__s, int __c)
+     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
+
+#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRING_H_PROTO
+__extern_always_inline char *
+rindex (char *__s, int __c) __THROW
+{
+  return __builtin_rindex (__s, __c);
+}
+
+__extern_always_inline __const char *
+rindex (__const char *__s, int __c) __THROW
+{
+  return __builtin_rindex (__s, __c);
+}
+#endif
+}
+# else
+extern char *rindex (__const char *__s, int __c)
+     __THROW __attribute_pure__ __nonnull ((1));
+# endif
 
 /* Compare S1 and S2, ignoring case.  */
 extern int strcasecmp (__const char *__s1, __const char *__s2)
