@@ -1,3 +1,10 @@
+2009-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (sYSMALLOc): Don't use assert when detecting
+	manipulated brk, use malloc_printerr.
+	* misc/sbrk.c (__sbrk): Better error handling for nonsense
+	requests.
+
 2009-01-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/string.h (memchr, strchr, strrchr, strpbrk, strstr, index,
