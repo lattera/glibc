@@ -1,3 +1,9 @@
+2009-01-11  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Use
+	memcpy instead of memcmp.
+	(_dl_setup_pointer_guard): Likewise.
+
 2009-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (sYSMALLOc): Don't use assert when detecting
