@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1995-2007, 2008, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -304,7 +304,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
 		  LC_ALL=C \
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
-		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
+		      -e 's/\. = .* + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
 		  > $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
