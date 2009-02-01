@@ -1,3 +1,8 @@
+2009-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Add new descriptors.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
 2009-01-29  Andrew Stubbs  <ams@codesourcery.com>
 
 	* elf/Makefile (ld.so): Adjust the sed script to insert _begin in to
