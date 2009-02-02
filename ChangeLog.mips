@@ -1,3 +1,7 @@
+2009-02-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h (SHM_EXEC): Define.
+
 2009-01-27  Maciej W. Rozycki  <macro@linux-mips.org>
 	    Atsushi Nemoto  <anemo@mba.ocn.ne.jp>
 
