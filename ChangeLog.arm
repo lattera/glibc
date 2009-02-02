@@ -1,3 +1,7 @@
+2009-02-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/shm.h (SHM_EXEC): Define.
+
 2009-01-27  Min Zhang  <mzhang@mvista.com>
 
 	* sysdeps/arm/memset.S (memset): Use stm instead of two
