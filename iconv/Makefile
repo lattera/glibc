@@ -1,5 +1,4 @@
-# Copyright (C) 1997,1998,2000,2001,2002,2003,2004,2007
-#	Free Software Foundation, Inc.
+# Copyright (C) 1997,1998,2000-2004,2007,2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +49,7 @@ CFLAGS-charmap.c = -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 CFLAGS-linereader.c = -DNO_TRANSLITERATION
 CFLAGS-simple-hash.c = -I../locale
 
-tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv5
+tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5
 
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h \
 		  iconv_charmap.c dummy-repertoire.c gconv_charset.h strtab.c \

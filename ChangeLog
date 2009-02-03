@@ -1,3 +1,11 @@
+2009-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9793]
+	* iconv/gconv_trans.c (__gconv_transliterate): Don't change
+	*OUTBUFSTART unless the whole output fit into the buffer.
+	* iconv/Makefile (tests): Add tst-iconv4.
+	* iconv/tst-iconv4.c: New file.
+
 2009-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Add new descriptors.

@@ -1,5 +1,5 @@
 /* Transliteration using the locale's data.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -139,7 +139,10 @@ __gconv_transliterate (struct __gconv_step *step,
 		      ++*irreversible;
 		      res = __GCONV_OK;
 		    }
-		  *outbufstart = outptr;
+		  /* Do not increment the output pointer if we could not
+		     store the entire output. */
+		  if (res != __GCONV_FULL_OUTPUT)
+		    *outbufstart = outptr;
 
 		  return res;
 		}
