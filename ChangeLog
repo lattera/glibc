@@ -1,3 +1,7 @@
+2009-02-02  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/Makefile (libm.so-no-z-defs): Define.
+
 2009-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9793]
