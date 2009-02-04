@@ -367,7 +367,6 @@ Please note that `make check' might fail for a number of the math tests
 because of problems of the FPU emulation in the Linux kernel (the MIPS FPU
 doesn't handle all cases and needs help from the kernel).
 
-For details check also my page <http://www.suse.de/~aj/glibc-mips.html>.
 
 ??powerpc64	Which compiler should I use for powerpc64?
 
