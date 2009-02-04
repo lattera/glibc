@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2003,2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2004,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -123,8 +123,6 @@ _IO_wfile_underflow (fp)
   struct _IO_codecvt *cd;
   enum __codecvt_result status;
   _IO_ssize_t count;
-  int tries;
-  const char *read_ptr_copy;
 
   if (__builtin_expect (fp->_flags & _IO_NO_READS, 0))
     {
@@ -236,13 +234,15 @@ _IO_wfile_underflow (fp)
   fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr =
     fp->_wide_data->_IO_write_end = fp->_wide_data->_IO_buf_base;
 
-  tries = 0;
+  const char *read_ptr_copy;
+  char accbuf[MB_LEN_MAX];
+  size_t naccbuf = 0;
  again:
   count = _IO_SYSREAD (fp, fp->_IO_read_end,
 		       fp->_IO_buf_end - fp->_IO_read_end);
   if (count <= 0)
     {
-      if (count == 0 && tries == 0)
+      if (count == 0 && naccbuf == 0)
 	fp->_flags |= _IO_EOF_SEEN;
       else
 	fp->_flags |= _IO_ERR_SEEN, count = 0;
@@ -250,7 +250,7 @@ _IO_wfile_underflow (fp)
   fp->_IO_read_end += count;
   if (count == 0)
     {
-      if (tries != 0)
+      if (naccbuf != 0)
 	/* There are some bytes in the external buffer but they don't
            convert to anything.  */
 	__set_errno (EILSEQ);
@@ -262,18 +262,31 @@ _IO_wfile_underflow (fp)
   /* Now convert the read input.  */
   fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
   fp->_IO_read_base = fp->_IO_read_ptr;
+  const char *from = fp->_IO_read_ptr;
+  const char *to = fp->_IO_read_end;
+  size_t to_copy = count;
+  if (__builtin_expect (naccbuf != 0, 0))
+    {
+      to_copy = MIN (sizeof (accbuf) - naccbuf, count);
+      to = __mempcpy (&accbuf[naccbuf], from, to_copy);
+      naccbuf += to_copy;
+      from = accbuf;
+    }
   status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
-				   fp->_IO_read_ptr, fp->_IO_read_end,
-				   &read_ptr_copy,
+				   from, to, &read_ptr_copy,
 				   fp->_wide_data->_IO_read_end,
 				   fp->_wide_data->_IO_buf_end,
 				   &fp->_wide_data->_IO_read_end);
 
-  fp->_IO_read_ptr = (char *) read_ptr_copy;
+  if (__builtin_expect (naccbuf != 0, 0))
+    fp->_IO_read_ptr += MAX (0, read_ptr_copy - &accbuf[naccbuf - to_copy]);
+  else
+    fp->_IO_read_ptr = (char *) read_ptr_copy;
   if (fp->_wide_data->_IO_read_end == fp->_wide_data->_IO_buf_base)
     {
-      if (status == __codecvt_error || fp->_IO_read_end == fp->_IO_buf_end)
+      if (status == __codecvt_error)
 	{
+	out_eilseq:
 	  __set_errno (EILSEQ);
 	  fp->_flags |= _IO_ERR_SEEN;
 	  return WEOF;
@@ -281,7 +294,20 @@ _IO_wfile_underflow (fp)
 
       /* The read bytes make no complete character.  Try reading again.  */
       assert (status == __codecvt_partial);
-      ++tries;
+
+      if (naccbuf == 0)
+	{
+	  naccbuf = fp->_IO_read_end - fp->_IO_read_ptr;
+	  if (naccbuf >= sizeof (accbuf))
+	    goto out_eilseq;
+
+	  memcpy (accbuf, fp->_IO_read_ptr, naccbuf);
+	}
+      else if (naccbuf == sizeof (accbuf))
+	goto out_eilseq;
+
+      fp->_IO_read_ptr = fp->_IO_read_end = fp->_IO_read_base;
+
       goto again;
     }
 

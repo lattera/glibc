@@ -1,6 +1,10 @@
-2009-02-04  Andreas Jaeger  <aj@suse.de>
+2009-02-04  Ulrich Drepper  <drepper@redhat.com>
 
-	* FAQ.in: Remove reference to my mips page.
+	* libio/wfileops.c (_IO_wfile_underflow): Fix handling of
+	incomplete characters at end of input buffer.
+	* libio/Makefile (tests): Add tst-fgetwc.
+	* libio/tst-fgetwc.c: New file.
+	* libio/tst-fgetwc.input: New file.
 
 2009-02-02  Andrew Stubbs  <ams@codesourcery.com>
 
