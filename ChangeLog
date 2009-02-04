@@ -1,3 +1,7 @@
+2009-02-04  Andreas Jaeger  <aj@suse.de>
+
+	* FAQ.in: Remove reference to my mips page.
+
 2009-02-02  Andrew Stubbs  <ams@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/Makefile (libm.so-no-z-defs): Define.
