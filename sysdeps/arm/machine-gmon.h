@@ -50,6 +50,28 @@ static void mcount_internal (u_long frompc, u_long selfpc)
    }
 */
 
+#ifdef __thumb2__
+
+#define MCOUNT								\
+void _mcount (void)							\
+{									\
+  __asm__("push		{r0, r1, r2, r3};"				\
+	  "movs		fp, fp;"				      	\
+	  "it		eq;"						\
+          "moveq	r1, #0;"					\
+	  "itttt	ne;"						\
+	  "ldrne	r1, [fp, $-4];"					\
+	  "ldrne	r0, [fp, $-12];"				\
+	  "movnes	r0, r0;"					\
+	  "ldrne	r0, [r0, $-4];"					\
+	  "movs		r0, r0;"					\
+	  "it		ne;"						\
+	  "blne		mcount_internal;"				\
+	  "pop		{r0, r1, r2, r3}");				\
+}
+
+#else
+
 #define MCOUNT								\
 void _mcount (void)							\
 {									\
@@ -65,3 +87,4 @@ void _mcount (void)							\
 	  "ldmia	sp!, {r0, r1, r2, r3}");			\
 }
 
+#endif

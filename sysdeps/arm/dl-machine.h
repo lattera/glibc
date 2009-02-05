@@ -53,11 +53,22 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
   Elf32_Addr dynamic;
+#ifdef __thumb2__
+  long tmp;
+  asm ("ldr\t%0, 1f\n\t"
+       "adr\t%1, 1f\n\t"
+       "ldr\t%0, [%0, %1]\n\t"
+       "b 2f\n"
+       ".align 2\n"
+       "1: .word _GLOBAL_OFFSET_TABLE_ - 1b\n"
+       "2:" : "=r" (dynamic), "=r"(tmp));
+#else
   asm ("ldr %0, 2f\n"
        "1: ldr %0, [pc, %0]\n"
        "b 3f\n"
        "2: .word _GLOBAL_OFFSET_TABLE_ - (1b+8)\n"
        "3:" : "=r" (dynamic));
+#endif
   return dynamic;
 }
 
@@ -69,6 +80,10 @@ elf_machine_load_address (void)
   extern void __dl_start asm ("_dl_start");
   Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
   Elf32_Addr pcrel_addr;
+#ifdef __thumb__
+  /* Clear the low bit of the funciton address.  */
+  got_addr &= ~(Elf32_Addr) 1;
+#endif
   asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
   return pcrel_addr - got_addr;
 }
@@ -140,7 +155,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define RTLD_START asm ("\
 .text\n\
 .globl _start\n\
+.type _start, %function\n\
 .globl _dl_start_user\n\
+.type _dl_start_user, %function\n\
 _start:\n\
 	@ we are PIC code, so get global offset table\n\
 	ldr	sl, .L_GET_GOT\n\
@@ -152,8 +169,8 @@ _start:\n\
 	bl	_dl_start\n\
 	@ returns user entry point in r0\n\
 _dl_start_user:\n\
-	add	sl, pc, sl\n\
-.L_GOT_GOT:\n\
+	adr	r6, .L_GET_GOT\n\
+	add	sl, sl, r6\n\
 	ldr	r4, [sl, r4]\n\
 	@ save the entry point in another register\n\
 	mov	r6, r0\n\
@@ -210,7 +227,7 @@ _dl_start_user:\n\
 	b	.L_done_fixup\n\
 \n\
 .L_GET_GOT:\n\
-	.word	_GLOBAL_OFFSET_TABLE_ - .L_GOT_GOT - 4\n\
+	.word	_GLOBAL_OFFSET_TABLE_ - .L_GET_GOT\n\
 .L_SKIP_ARGS:\n\
 	.word	_dl_skip_args(GOTOFF)\n\
 .L_FINI_PROC:\n\

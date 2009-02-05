@@ -44,6 +44,30 @@
    argument; otherwise the (optional) compatibility code for APCS binaries
    may be invoked.  */
 
+#ifdef __thumb__
+/* Hide the use of r7 from the compiler, this would be a lot
+   easier but for the fact that the syscalls can exceed 255.
+   For the moment the LOAD_ARGS_7 is sacrificed.
+   We can't use push/pop inside the asm because that breaks
+   unwinding (ie. thread cancellation).  */
+#undef LOAD_ARGS_7
+#undef INTERNAL_SYSCALL_RAW
+#define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
+  ({								\
+      int _sys_buf[2];						\
+      register int _a1 asm ("a1");				\
+      register int *_r6 asm ("r6") = _sys_buf;			\
+      *_r6 = name;						\
+      LOAD_ARGS_##nr (args)					\
+      asm volatile ("str        r7, [r6, #4]\n\t"		\
+                    "ldr      r7, [r6]\n\t"			\
+                    "swi      0       @ syscall " #name "\n\t"	\
+                    "ldr      r7, [r6, #4]"			\
+                   : "=r" (_a1)					\
+                    : "r" (_r6) ASM_ARGS_##nr			\
+                    : "memory");				\
+       _a1; })
+#else /* ARM */
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
   ({								\
@@ -55,6 +79,7 @@
 		     : "r" (_nr) ASM_ARGS_##nr			\
 		     : "memory");				\
        _a1; })
+#endif
 
 /* For EABI, non-constant syscalls are actually pretty easy...  */
 #undef INTERNAL_SYSCALL_NCS

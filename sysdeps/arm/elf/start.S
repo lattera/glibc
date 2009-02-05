@@ -58,6 +58,10 @@
 		...
 					NULL
 */
+#if defined(__thumb2__)
+	.thumb
+	.syntax unified
+#endif
 
 	.text
 	.globl _start
