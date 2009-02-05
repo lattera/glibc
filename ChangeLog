@@ -1,3 +1,12 @@
+2009-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/opendir.c (__alloc_dir): We have a lot more memory
+	today than when the original code was written.  Use larger
+	buffers.  This also makes it unnecessary to have stat information,
+	if this causes extra efforts.
+	(__opendir): In case O_DIRECTORY works, don't call fstat just for
+	__alloc_dir.
+
 2009-02-03  Andrew Stubbs  <ams@codesourcery.com>
 
 	* sysdeps/sh/sh4/dl-trampoline.S: Only set HAVE_FPU if __SH_FPU_ANY__

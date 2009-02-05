@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000-2003,2005,2007
+/* Copyright (C) 1991-1996,98,2000-2003,2005,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -81,6 +81,7 @@ DIR *
 __opendir (const char *name)
 {
   struct stat64 statbuf;
+  struct stat64 *statp = NULL;
 
   if (__builtin_expect (name[0], '\1') == '\0')
     {
@@ -119,16 +120,14 @@ __opendir (const char *name)
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
-  /* Now make sure this really is a directory and nothing changed since
-     the `stat' call.  We do not have to perform the test for the
-     descriptor being associated with a directory if we know the
-     O_DIRECTORY flag is honored by the kernel.  */
-  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
-    goto lose;
 #ifdef O_DIRECTORY
   if (o_directory_works <= 0)
 #endif
     {
+      /* Now make sure this really is a directory and nothing changed since
+	 the `stat' call.  */
+      if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
+	goto lose;
       if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
 	{
 	  __set_errno (ENOTDIR);
@@ -136,9 +135,10 @@ __opendir (const char *name)
 	  close_not_cancel_no_status (fd);
 	  return NULL;
 	}
+      statp = &statbuf;
     }
 
-  return __alloc_dir (fd, true, &statbuf);
+  return __alloc_dir (fd, true, statp);
 }
 weak_alias (__opendir, opendir)
 
@@ -171,29 +171,23 @@ __alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
 	goto lose;
     }
 
-  const size_t default_allocation = (BUFSIZ < sizeof (struct dirent64)
-				     ? sizeof (struct dirent64) : BUFSIZ);
-  size_t allocation;
+  const size_t default_allocation = (4 * BUFSIZ < sizeof (struct dirent64)
+				     ? sizeof (struct dirent64) : 4 * BUFSIZ);
+  const size_t small_allocation = (BUFSIZ < sizeof (struct dirent64)
+				   ? sizeof (struct dirent64) : BUFSIZ);
+  size_t allocation = default_allocation;
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__builtin_expect ((size_t) statp->st_blksize >= sizeof (struct dirent64),
-			1))
+  if (statp != NULL && default_allocation < statp->st_blksize)
     allocation = statp->st_blksize;
-  else
 #endif
-    allocation = default_allocation;
 
   DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation);
   if (dirp == NULL)
     {
-#ifdef _STATBUF_ST_BLKSIZE
-      if (allocation == statp->st_blksize
-	  && allocation != default_allocation)
-	{
-	  allocation = default_allocation;
-	  dirp = (DIR *) malloc (sizeof (DIR) + allocation);
-	}
+      allocation = small_allocation;
+      dirp = (DIR *) malloc (sizeof (DIR) + allocation);
+
       if (dirp == NULL)
-#endif
       lose:
 	{
 	  if (close_fd)
