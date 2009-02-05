@@ -289,6 +289,10 @@ typedef struct sigevent
       {
 	int _pad[__SIGEV_PAD_SIZE];
 
+	/* When SIGEV_SIGNAL and SIGEV_THREAD_ID set, LWP ID of the
+	   thread to receive the signal.  */
+	__pid_t _tid;
+
 	struct
 	  {
 	    void (*_function) (sigval_t);	/* Function to start.  */

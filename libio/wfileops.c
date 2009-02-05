@@ -297,14 +297,34 @@ _IO_wfile_underflow (fp)
 
       if (naccbuf == 0)
 	{
+	  if (fp->_IO_read_base < fp->_IO_read_ptr)
+	    {
+	      /* Partially used the buffer for some input data that
+		 produces no output.  */
+	      size_t avail = fp->_IO_read_end - fp->_IO_read_ptr;
+	      memmove (fp->_IO_read_base, fp->_IO_read_ptr, avail);
+	      fp->_IO_read_ptr = fp->_IO_read_base;
+	      fp->_IO_read_end -= avail;
+	      goto again;
+	    }
 	  naccbuf = fp->_IO_read_end - fp->_IO_read_ptr;
 	  if (naccbuf >= sizeof (accbuf))
 	    goto out_eilseq;
 
 	  memcpy (accbuf, fp->_IO_read_ptr, naccbuf);
 	}
-      else if (naccbuf == sizeof (accbuf))
-	goto out_eilseq;
+      else
+	{
+	  size_t used = read_ptr_copy - accbuf;
+	  if (used > 0)
+	    {
+	      memmove (accbuf, read_ptr_copy, naccbuf - used);
+	      naccbuf -= used;
+	    }
+
+	  if (naccbuf == sizeof (accbuf))
+	    goto out_eilseq;
+	}
 
       fp->_IO_read_ptr = fp->_IO_read_end = fp->_IO_read_base;
 
