@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002,2003,2004,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002,2003,2004,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -244,7 +244,7 @@ __tzset_parse_tz (tz)
 	  ss = 0;
 	case 3:
 	  tz_rules[1].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
-				 (min (hh, 23) * (60 * 60)));
+				 (min (hh, 24) * (60 * 60)));
 	  break;
 	}
       for (l = 0; l < 3; ++l)
