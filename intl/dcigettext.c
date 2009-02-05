@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2005, 2006, 2007, 2008
+   Copyright (C) 1995-2005, 2006, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -553,18 +553,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	}
 
       if (ret == NULL)
-	{
-	  /* We cannot get the current working directory.  Don't signal an
-	     error but simply return the default string.  */
-	  FREE_BLOCKS (block_list);
-	  __libc_rwlock_unlock (__libc_setlocale_lock);
-	  __libc_rwlock_unlock (_nl_state_lock);
-	  __set_errno (saved_errno);
-	  return (plural == 0
-		  ? (char *) msgid1
-		  /* Use the Germanic plural rule.  */
-		  : n == 1 ? (char *) msgid1 : (char *) msgid2);
-	}
+	goto no_translation;
 
       stpcpy (stpcpy (strchr (dirname, '\0'), "/"), binding->dirname);
     }

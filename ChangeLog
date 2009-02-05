@@ -1,5 +1,7 @@
 2009-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/dcigettext.c (DCIGETTEXT): Avoid some code duplication.
+
 	* sysdeps/unix/opendir.c (__alloc_dir): We have a lot more memory
 	today than when the original code was written.  Use larger
 	buffers.  This also makes it unnecessary to have stat information,
