@@ -1,3 +1,7 @@
+2009-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ru.po: Update from translation team.
+
 2008-11-17  Nathan Sidwell  <nathan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (struct sigevent):
