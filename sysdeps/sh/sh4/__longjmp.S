@@ -1,5 +1,5 @@
 /* longjmp for SH.
-   Copyright (C) 1999, 2000, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,6 +52,7 @@ ENTRY (__longjmp)
 	mov.l	@r4+, r15
 	lds.l	@r4+, pr
 #endif
+#ifdef __SH_FPU_ANY__
 	ldc.l	@r4+, gbr
 	lds.l	@r4+, fpscr
 	fmov.s	@r4+, fr12
@@ -59,4 +60,8 @@ ENTRY (__longjmp)
 	fmov.s	@r4+, fr14
 	rts
 	 fmov.s	@r4+, fr15
+#else
+	rts
+	 ldc.l	@r4+, gbr
+#endif  /* !__SH_FPU_ANY__ */
 END (__longjmp)

@@ -1,3 +1,14 @@
+2009-02-03  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/sh4/dl-trampoline.S: Only set HAVE_FPU if __SH_FPU_ANY__
+	is set.
+	* sysdeps/sh/sh4/setjmp.S: Support SH4-NOFPU.
+	* sysdeps/sh/sh4/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Likewise.
+
 2009-02-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ru.po: Update from translation team.

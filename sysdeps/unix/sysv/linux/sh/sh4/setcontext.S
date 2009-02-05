@@ -1,5 +1,5 @@
 /* Install given context.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,13 +43,14 @@ ENTRY(__setcontext)
 	not	r1, r1			// r1=0 means r0 = -1 to -4095
 	tst	r1, r1			// i.e. error in linux
 	bf	.Lsetcontext_restore
-.Lsyscall_error:	
+.Lsyscall_error:
 	SYSCALL_ERROR_HANDLER
 .Lpseudo_end:
 	rts
 	 nop
 
 .Lsetcontext_restore:
+#ifdef __SH_FPU_ANY__
 	mov	r8, r0
 	add	#(oFR0),r0
 	fmov.s	@r0+, fr0
@@ -88,6 +89,7 @@ ENTRY(__setcontext)
 	frchg
 	lds.l	@r0+, fpscr
 	lds.l	@r0+, fpul
+#endif /* __SH_FPU_ANY__ */
 
 	mov	r8, r0
 	add	#(oPC), r0

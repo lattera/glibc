@@ -1,5 +1,5 @@
 /* setjmp for SH4.
-   Copyright (C) 1999, 2000, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,13 @@
 ENTRY (__sigsetjmp)
 	/* Save registers */
 	add	#JB_SIZE, r4
+#ifdef __SH_FPU_ANY__
 	fmov.s	fr15, @-r4
 	fmov.s	fr14, @-r4
 	fmov.s	fr13, @-r4
 	fmov.s	fr12, @-r4
 	sts.l	fpscr, @-r4
+#endif /* __SH_FPU_ANY__ */
 	stc.l	gbr, @-r4
 #ifdef PTR_MANGLE
 	sts	pr, r2
