@@ -1,5 +1,9 @@
 2009-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/rpc/auth.h: Use libc_hidden_proto for _null_auth.
+	* sunrpc/rpc_common.c: Add libc_hidden_def for _null_auth.  Also
+	move _null_auth to .rodata.
+
 	* time/tzset.c (__tzset_parse_tz): DST offset must also allow hour
 	value of 24.
 
