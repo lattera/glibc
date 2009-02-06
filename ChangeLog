@@ -1,5 +1,8 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusage.c (update_data): Fix handling of wrapping back
+	to the beginning of the buffer.
+
 	[BZ #9823]
 	* stdio-common/psignal.c (psignal): Fix test for empty string.
 

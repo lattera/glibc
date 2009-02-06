@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2004-2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <atomic.h>
 #include <dlfcn.h>
 #include <errno.h>
@@ -168,10 +169,11 @@ update_data (struct header *result, size_t len, size_t old_len)
 	     this fails because of another thread increasing the
 	     counter it does not matter since that thread will take
 	     care of the correction.  */
-	  unsigned int reset = idx - 2 * buffer_size;
-	  catomic_compare_and_exchange_val_acq (&buffer_size, reset, idx);
+	  uatomic32_t reset = idx % (2 * buffer_size);
+	  catomic_compare_and_exchange_val_acq (&buffer_cnt, reset, idx);
 	  idx = reset;
 	}
+      assert (idx < 2 * DEFAULT_BUFFER_SIZE);
 
       buffer[idx].heap = current_heap;
       buffer[idx].stack = current_stack;
