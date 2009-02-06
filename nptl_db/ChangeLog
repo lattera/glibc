@@ -1,3 +1,8 @@
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_thr_get_info.c (td_thr_get_info): Initialize schedpolicy in
+	the special case [Coverity CID 251].
+
 2008-03-25  Roland McGrath  <roland@redhat.com>
 
 	[BZ #5983]

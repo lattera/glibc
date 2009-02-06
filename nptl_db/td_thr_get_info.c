@@ -1,5 +1,5 @@
 /* Get thread information.
-   Copyright (C) 1999,2000,2001,2002,2003,2007 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -38,6 +38,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
       copy = NULL;
       tls = 0;
       cancelhandling = 0;
+      schedpolicy = SCHED_OTHER;
       schedprio = 0;
       tid = 0;
       err = DB_GET_VALUE (report_events, th->th_ta_p,
