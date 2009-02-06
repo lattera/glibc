@@ -61,8 +61,10 @@ Profile memory usage of PROGRAM.
 Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
-For bug reporting instructions, please see:
-<http://www.gnu.org/software/libc/bugs.html>."
+"
+  print $"For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>.
+"
   exit 0
 }
 

@@ -1008,13 +1008,27 @@ main (int argc, char *argv[])
 
   if (argc > 1 && strcmp (argv[1], "--version") == 0)
     {
-      fprintf (stderr, "getconf (GNU %s) %s\n", PACKAGE, VERSION);
-      fprintf (stderr, gettext ("\
+      printf ("getconf (GNU %s) %s\n", PACKAGE, VERSION);
+      printf (gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "2009");
-      fprintf (stderr, gettext ("Written by %s.\n"), "Roland McGrath");
+      printf (gettext ("Written by %s.\n"), "Roland McGrath");
+      return 0;
+    }
+
+  if (argc > 1 && strcmp (argv[1], "--help") == 0)
+    {
+      printf (gettext ("\
+Usage: getconf [-v SPEC] VAR\n\
+  or:  getconf [-v SPEC] PATH_VAR PATH\n\
+\n\
+Get the configuration value for variable VAR, or for variable PATH_VAR\n\
+for path PATH.  If SPEC is given, give values for compilation\n\
+environment SPEC.\n\n"));
+      printf (gettext ("For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
       return 0;
     }
 

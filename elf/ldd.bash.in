@@ -52,8 +52,10 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   -r, --function-relocs   process data and function relocations
   -u, --unused            print unused direct dependencies
   -v, --verbose           print all information
-For bug reporting instructions, please see:
-<http://www.gnu.org/software/libc/bugs.html>."
+"
+    echo $"For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>.
+"
     exit 0
     ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \

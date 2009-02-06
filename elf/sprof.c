@@ -86,9 +86,9 @@ static const struct argp_option options[] =
 };
 
 /* Short description of program.  */
-static const char doc[] = N_("Read and display shared object profiling data.\v\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n");
+static const char doc[] = N_("Read and display shared object profiling data.");
+//For bug reporting instructions, please see:\n		\
+//<http://www.gnu.org/software/libc/bugs.html>.\n");
 
 /* Strings for arguments in help texts.  */
 static const char args_doc[] = N_("SHOBJ [PROFDATA]");
@@ -96,10 +96,13 @@ static const char args_doc[] = N_("SHOBJ [PROFDATA]");
 /* Prototype for option handler.  */
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
+
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  options, parse_opt, args_doc, doc
+  options, parse_opt, args_doc, doc, NULL, more_help
 };
 
 
@@ -344,6 +347,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
       return ARGP_ERR_UNKNOWN;
     }
   return 0;
+}
+
+
+static char *
+more_help (int key, const char *text, void *input)
+{
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      return strdup (gettext ("\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
+    default:
+      break;
+    }
+  return (char *) text;
 }
 
 

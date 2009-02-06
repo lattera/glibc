@@ -58,6 +58,9 @@ static char sccsid[] = "@(#)rpcinfo.c 1.22 87/08/12 SMI";
 #include <locale.h>
 #include <libintl.h>
 
+#include "../version.h"
+#define PACKAGE _libc_intl_domainname
+
 #define MAXHOSTLEN 256
 
 #define	MIN_VERS	((u_long) 0)
@@ -70,7 +73,8 @@ static void pmapdump (int argc, char **argv);
 static bool_t reply_proc (void *res, struct sockaddr_in *who);
 static void brdcst (int argc, char **argv) __attribute__ ((noreturn));
 static void deletereg (int argc, char **argv);
-static void usage (void);
+static void usage (FILE *stream);
+static void print_version (void);
 static u_long getprognum (char *arg);
 static u_long getvers (char *arg);
 static void get_inet_address (struct sockaddr_in *addr, char *host);
@@ -92,6 +96,11 @@ main (int argc, char **argv)
   int errflg;
   int function;
   u_short portnum;
+  static const struct option long_options[] = {
+    { "help", no_argument, NULL, 'H' },
+    { "version", no_argument, NULL, 'V' },
+    { NULL, 0, NULL, 0 }
+  };
 
   setlocale (LC_ALL, "");
   textdomain (_libc_intl_domainname);
@@ -99,7 +108,7 @@ main (int argc, char **argv)
   function = NONE;
   portnum = 0;
   errflg = 0;
-  while ((c = getopt (argc, argv, "ptubdn:")) != -1)
+  while ((c = getopt_long (argc, argv, "ptubdn:", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -143,6 +152,14 @@ main (int argc, char **argv)
 	    function = DELETES;
 	  break;
 
+	case 'H':
+	  usage (stdout);
+	  return 0;
+
+	case 'V':
+	  print_version ();
+	  return 0;
+
 	case '?':
 	  errflg = 1;
 	}
@@ -150,7 +167,7 @@ main (int argc, char **argv)
 
   if (errflg || function == NONE)
     {
-      usage ();
+      usage (stderr);
       return 1;
     }
 
@@ -160,7 +177,7 @@ main (int argc, char **argv)
     case PMAPDUMP:
       if (portnum != 0)
 	{
-	  usage ();
+	  usage (stderr);
 	  return 1;
 	}
       pmapdump (argc - optind, argv + optind);
@@ -177,7 +194,7 @@ main (int argc, char **argv)
     case BRDCST:
       if (portnum != 0)
 	{
-	  usage ();
+	  usage (stderr);
 	  return 1;
 	}
       brdcst (argc - optind, argv + optind);
@@ -208,7 +225,7 @@ udpping (portnum, argc, argv)
 
   if (argc < 2 || argc > 3)
     {
-      usage ();
+      usage (stderr);
       exit (1);
     }
   prognum = getprognum (argv[1]);
@@ -363,7 +380,7 @@ tcpping (portnum, argc, argv)
 
   if (argc < 2 || argc > 3)
     {
-      usage ();
+      usage (stderr);
       exit (1);
     }
   prognum = getprognum (argv[1]);
@@ -532,7 +549,7 @@ pmapdump (argc, argv)
 
   if (argc > 1)
     {
-      usage ();
+      usage (stderr);
       exit (1);
     }
   if (argc == 1)
@@ -624,7 +641,7 @@ brdcst (argc, argv)
 
   if (argc != 2)
     {
-      usage ();
+      usage (stderr);
       exit (1);
     }
   prognum = getprognum (argv[0]);
@@ -650,7 +667,7 @@ deletereg (argc, argv)
 
   if (argc != 2)
     {
-      usage ();
+      usage (stderr);
       exit (1);
     }
   if (getuid ())
@@ -669,15 +686,25 @@ deletereg (argc, argv)
 }
 
 static void
-usage ()
+usage (FILE *stream)
 {
   fputs (_("Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"),
-	 stderr);
+	 stream);
   fputs (_("       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"),
-	 stderr);
-  fputs (_("       rpcinfo -p [ host ]\n"), stderr);
-  fputs (_("       rpcinfo -b prognum versnum\n"), stderr);
-  fputs (_("       rpcinfo -d prognum versnum\n"), stderr);
+	 stream);
+  fputs (_("       rpcinfo -p [ host ]\n"), stream);
+  fputs (_("       rpcinfo -b prognum versnum\n"), stream);
+  fputs (_("       rpcinfo -d prognum versnum\n"), stream);
+  fputc ('\n', stream);
+  fprintf (stream, _("\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
+}
+
+static void
+print_version (void)
+{
+  printf ("rpcinfo (GNU %s) %s\n", PACKAGE, VERSION);
 }
 
 static u_long

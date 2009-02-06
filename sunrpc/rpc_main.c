@@ -52,6 +52,9 @@
 #include "rpc_scan.h"
 #include "proto.h"
 
+#include "../version.h"
+#define PACKAGE _libc_intl_domainname
+
 #define EXTEND	1		/* alias for TRUE */
 #define DONT_EXTEND	0	/* alias for FALSE */
 
@@ -132,8 +135,9 @@ static void addarg (const char *cp);
 static void putarg (int whereto, const char *cp);
 static void checkfiles (const char *infile, const char *outfile);
 static int parseargs (int argc, const char *argv[], struct commandline *cmd);
-static void usage (void) __attribute__ ((noreturn));
-static void options_usage (void) __attribute__ ((noreturn));
+static void usage (FILE *stream, int status) __attribute__ ((noreturn));
+static void options_usage (FILE *stream, int status) __attribute__ ((noreturn));
+static void print_version (void);
 static void c_initialize (void);
 static char *generate_guard (const char *pathname);
 
@@ -185,7 +189,7 @@ main (int argc, const char *argv[])
   (void) memset ((char *) &cmd, 0, sizeof (struct commandline));
   clear_args ();
   if (!parseargs (argc, argv, &cmd))
-    usage ();
+    usage (stderr, 1);
 
   if (cmd.cflag || cmd.hflag || cmd.lflag || cmd.tflag || cmd.sflag ||
       cmd.mflag || cmd.nflag || cmd.Ssflag || cmd.Scflag)
@@ -787,7 +791,7 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
 	{
 	  if (outfilename)
 	    unlink (outfilename);
-	  usage ();
+	  usage (stderr, 1);
 	}
       write_rest ();
     }
@@ -1218,6 +1222,10 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 	    }
 	  cmd->infile = argv[i];
 	}
+      else if (strcmp (argv[i], "--help") == 0)
+	usage (stdout, 0);
+      else if (strcmp (argv[i], "--version") == 0)
+	print_version ();
       else
 	{
 	  for (j = 1; argv[i][j] != 0; j++)
@@ -1442,46 +1450,56 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 }
 
 static void
-usage (void)
+usage (FILE *stream, int status)
 {
-  fprintf (stderr, _("usage: %s infile\n"), cmdname);
-  fprintf (stderr, _("\t%s [-abkCLNTM][-Dname[=value]] [-i size] \
+  fprintf (stream, _("usage: %s infile\n"), cmdname);
+  fprintf (stream, _("\t%s [-abkCLNTM][-Dname[=value]] [-i size] \
 [-I [-K seconds]] [-Y path] infile\n"), cmdname);
-  fprintf (stderr, _("\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] \
+  fprintf (stream, _("\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] \
 [-o outfile] [infile]\n"), cmdname);
-  fprintf (stderr, _("\t%s [-s nettype]* [-o outfile] [infile]\n"), cmdname);
-  fprintf (stderr, _("\t%s [-n netid]* [-o outfile] [infile]\n"), cmdname);
-  options_usage ();
-  exit (1);
+  fprintf (stream, _("\t%s [-s nettype]* [-o outfile] [infile]\n"), cmdname);
+  fprintf (stream, _("\t%s [-n netid]* [-o outfile] [infile]\n"), cmdname);
+  options_usage (stream, status);
+  exit (status);
 }
 
 static void
-options_usage (void)
+options_usage (FILE *stream, int status)
 {
-  f_print (stderr, "options:\n");
-  f_print (stderr, "-a\t\tgenerate all files, including samples\n");
-  f_print (stderr, "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n");
-  f_print (stderr, "-c\t\tgenerate XDR routines\n");
-  f_print (stderr, "-C\t\tANSI C mode\n");
-  f_print (stderr, "-Dname[=value]\tdefine a symbol (same as #define)\n");
-  f_print (stderr, "-h\t\tgenerate header file\n");
-  f_print (stderr, "-i size\t\tsize at which to start generating inline code\n");
-  f_print (stderr, "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n");
-  f_print (stderr, "-K seconds\tserver exits after K seconds of inactivity\n");
-  f_print (stderr, "-l\t\tgenerate client side stubs\n");
-  f_print (stderr, "-L\t\tserver errors will be printed to syslog\n");
-  f_print (stderr, "-m\t\tgenerate server side stubs\n");
-  f_print (stderr, "-M\t\tgenerate MT-safe code\n");
-  f_print (stderr, "-n netid\tgenerate server code that supports named netid\n");
-  f_print (stderr, "-N\t\tsupports multiple arguments and call-by-value\n");
-  f_print (stderr, "-o outfile\tname of the output file\n");
-  f_print (stderr, "-s nettype\tgenerate server code that supports named nettype\n");
-  f_print (stderr, "-Sc\t\tgenerate sample client code that uses remote procedures\n");
-  f_print (stderr, "-Ss\t\tgenerate sample server code that defines remote procedures\n");
-  f_print (stderr, "-Sm \t\tgenerate makefile template \n");
-  f_print (stderr, "-t\t\tgenerate RPC dispatch table\n");
-  f_print (stderr, "-T\t\tgenerate code to support RPC dispatch tables\n");
-  f_print (stderr, "-Y path\t\tdirectory name to find C preprocessor (cpp)\n");
+  f_print (stream, _("options:\n"));
+  f_print (stream, _("-a\t\tgenerate all files, including samples\n"));
+  f_print (stream, _("-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"));
+  f_print (stream, _("-c\t\tgenerate XDR routines\n"));
+  f_print (stream, _("-C\t\tANSI C mode\n"));
+  f_print (stream, _("-Dname[=value]\tdefine a symbol (same as #define)\n"));
+  f_print (stream, _("-h\t\tgenerate header file\n"));
+  f_print (stream, _("-i size\t\tsize at which to start generating inline code\n"));
+  f_print (stream, _("-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"));
+  f_print (stream, _("-K seconds\tserver exits after K seconds of inactivity\n"));
+  f_print (stream, _("-l\t\tgenerate client side stubs\n"));
+  f_print (stream, _("-L\t\tserver errors will be printed to syslog\n"));
+  f_print (stream, _("-m\t\tgenerate server side stubs\n"));
+  f_print (stream, _("-M\t\tgenerate MT-safe code\n"));
+  f_print (stream, _("-n netid\tgenerate server code that supports named netid\n"));
+  f_print (stream, _("-N\t\tsupports multiple arguments and call-by-value\n"));
+  f_print (stream, _("-o outfile\tname of the output file\n"));
+  f_print (stream, _("-s nettype\tgenerate server code that supports named nettype\n"));
+  f_print (stream, _("-Sc\t\tgenerate sample client code that uses remote procedures\n"));
+  f_print (stream, _("-Ss\t\tgenerate sample server code that defines remote procedures\n"));
+  f_print (stream, _("-Sm \t\tgenerate makefile template \n"));
+  f_print (stream, _("-t\t\tgenerate RPC dispatch table\n"));
+  f_print (stream, _("-T\t\tgenerate code to support RPC dispatch tables\n"));
+  f_print (stream, _("-Y path\t\tdirectory name to find C preprocessor (cpp)\n"));
 
-  exit (1);
+  f_print (stream, "\n%s", _("\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
+  exit (status);
+}
+
+static void
+print_version (void)
+{
+  printf ("rpcgen (GNU %s) %s\n", PACKAGE, VERSION);
+  exit (0);
 }

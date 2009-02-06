@@ -1,5 +1,5 @@
 /* Stub for ldd script to print Linux libc4 dependencies.
-   Copyright (C) 1998, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -55,6 +55,24 @@ main (int argc, char *argv[])
   /* We expect exactly one argument.  */
   if (argc != 2)
     return 1;
+
+  if (strcmp (argv[1], "--help") == 0)
+    {
+      printf (gettext ("Usage: lddlibc4 FILE\n\n"));
+      printf (gettext ("For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
+      return 0;
+    }
+  else if (strcmp (argv[1], "--version") == 0)
+    {
+      printf ("lddlibc4 (GNU %s) %s\n", PACKAGE, VERSION);
+      printf (gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "2009");
+      return 0;
+    }
 
   filename = argv[1];
 

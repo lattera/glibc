@@ -54,8 +54,10 @@ do_help() {
 Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
-For bug reporting instructions, please see:
-<http://www.gnu.org/software/libc/bugs.html>.\n"
+"
+  printf $"For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>.
+"
   exit 0
 }
 

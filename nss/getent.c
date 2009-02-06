@@ -59,9 +59,7 @@ static const struct argp_option args_options[] =
   };
 
 /* Short description of program.  */
-static const char doc[] = N_("Get entries from administrative database.\v\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n");
+static const char doc[] = N_("Get entries from administrative database.");
 
 /* Prototype for option handler.  */
 static error_t parse_option (int key, char *arg, struct argp_state *state);
@@ -838,6 +836,12 @@ more_help (int key, const char *text, void *input)
 	      fputs_unlocked (databases[i].name, fp);
 	      col += len + 1;
 	    }
+
+	  fputs ("\n\n", fp);
+
+	  fprintf (fp, gettext ("\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
 
 	  if (fclose (fp) == 0)
 	    return doc;

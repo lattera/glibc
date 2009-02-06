@@ -1,5 +1,39 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* debug/xtrace.sh: Unify translatable messages.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* nss/getent.c: Likewise.
+
+2009-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* debug/pcprofiledump.c (print_version,
+	argp_program_version_hook): New function.
+	* elf/ldconfig.c (more_help): New function.
+	(argp): Use it.
+	* elf/sln.c (usage): New function.
+	(main): Support --help and --version.
+	* malloc/memusagestat.c (print_version): New function.
+	(argp_program_version_hook): New variable.
+	* nscd/nscd.c (more_help): New function.
+	(argp): Use it.
+	* posix/getconf.c (main): Send --version output to stdout.
+	Support --help.
+	* sunrpc/rpc_main.c (usage, options_usage): Take STREAM and STATUS
+	arguments.  All callers changed.
+	(print_version): New function.
+	(parseargs): Support --help and --version.
+	* sunrpc/rpcinfo.c (usage): Take STREAM argument.  All callers
+	changed.
+	(print_version): New function.
+	(main): Use getopt_long.  Support --help and --version.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Support --help and
+	--version.
+
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
 	* malloc/memusage.c (DEFAULT_BUFFER_SIZE): Change to 32768.
 	(update_data): Fix handling of wrapping back
 	to the beginning of the buffer.
