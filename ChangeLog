@@ -1,6 +1,7 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/memusage.c (update_data): Fix handling of wrapping back
+	* malloc/memusage.c (DEFAULT_BUFFER_SIZE): Change to 32768.
+	(update_data): Fix handling of wrapping back
 	to the beginning of the buffer.
 
 	[BZ #9823]

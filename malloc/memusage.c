@@ -93,7 +93,7 @@ static __thread uintptr_t start_sp;
 #define peak_stack	peak_use[1]
 #define peak_total	peak_use[2]
 
-#define DEFAULT_BUFFER_SIZE	1024
+#define DEFAULT_BUFFER_SIZE	32768
 static size_t buffer_size;
 
 static int fd = -1;
