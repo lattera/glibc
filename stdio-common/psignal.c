@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004, 2005
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004, 2005, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -37,7 +37,7 @@ psignal (int sig, const char *s)
 {
   const char *colon, *desc;
 
-  if (s == NULL || s == '\0')
+  if (s == NULL || *s == '\0')
     s = colon = "";
   else
     colon = ": ";
