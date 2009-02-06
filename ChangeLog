@@ -1,5 +1,8 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/Makefile (libc.pot): Add f_print as function taking c-format
+	parameter.
+
 	* debug/xtrace.sh: Unify translatable messages.
 	* elf/ldd.bash.in: Likewise.
 	* elf/sprof.c: Likewise.

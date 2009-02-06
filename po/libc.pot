@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.9.90\n"
-"POT-Creation-Date: 2009-02-06 12:01-0800\n"
+"POT-Creation-Date: 2009-02-06 12:40-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4730,6 +4730,7 @@ msgid "Cannot specify more than one input file!\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1394
+#, c-format
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr ""
 
@@ -4739,10 +4740,12 @@ msgid "Cannot use netid flag with inetd flag!\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1415
+#, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1422
+#, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr ""
 
@@ -4784,98 +4787,122 @@ msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1469
+#, c-format
 msgid "options:\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1470
+#, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1471
+#, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1472
+#, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1473
+#, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1474
+#, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1475
+#, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1476
+#, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1477
+#, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1478
+#, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1479
+#, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1480
+#, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1481
+#, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1482
+#, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1483
+#, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1484
+#, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1485
+#, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1486
+#, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1487
+#, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1488
+#, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1489
+#, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1490
+#, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1491
+#, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1492
+#, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr ""
 

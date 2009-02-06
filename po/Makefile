@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2006,2007
+# Copyright (C) 1996-1999,2001,2002,2006,2007,2009
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -64,6 +64,7 @@ libc.pot: header.pot libc.pot.files
 	    $< > $@.new
 	cd ..; $(XGETTEXT) --keyword=_ --keyword=N_ \
 			   --add-comments=TRANS --flag=error:3:c-format \
+			   --flag=f_print:2:c-format \
 			   --sort-by-file --omit-header -E -n -d - \
 			   -f po/$(word 2,$^) >> po/$@.new
 	mv -f $@.new $@
