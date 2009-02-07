@@ -70,8 +70,8 @@ mon_thousands_sep     "<U002E>"
 mon_grouping          3
 positive_sign         ""
 negative_sign         "<U002D>"
-int_frac_digits       4
-frac_digits           4
+int_frac_digits       2
+frac_digits           2
 p_cs_precedes         0
 p_sep_by_space        0
 n_cs_precedes         1

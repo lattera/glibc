@@ -96,10 +96,9 @@ __res_maybe_init (res_state resp, int preinit)
 {
 	if (resp->options & RES_INIT) {
 		if (__res_initstamp != resp->_u._ext.initstamp) {
-			if (resp->nscount > 0) {
+			if (resp->nscount > 0)
 				__res_iclose (resp, true);
-				return __res_vinit (resp, 1);
-			}
+			return __res_vinit (resp, 1);
 		}
 		return 0;
 	} else if (preinit) {

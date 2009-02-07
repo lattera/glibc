@@ -1,5 +1,9 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9781]
+	* grp/compat-initgroups.c (compat_call): Switch to use malloc when
+	the input line is too long.
+
 	* po/Makefile (libc.pot): Add f_print as function taking c-format
 	parameter.
 

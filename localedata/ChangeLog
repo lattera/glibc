@@ -1,3 +1,10 @@
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9736]
+	* locales/el_CY: Fix frac_digits and int_frac_digits.
+	* locales/el_GR: Likewise.
+	Patch by Clint Adams <schizo@debian.org>.
+
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9791]
