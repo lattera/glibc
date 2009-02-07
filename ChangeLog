@@ -1,3 +1,9 @@
+2009-01-16  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #9753]
+	* resolv/res_libc.c (__res_maybe_init): Call __res_vinit()
+	even if we currently have zero nscount.
+
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9781]

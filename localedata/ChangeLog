@@ -1,5 +1,8 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9730]
+	* locales/sv_FI: Fix time formats.
+
 	[BZ #9736]
 	* locales/el_CY: Fix frac_digits and int_frac_digits.
 	* locales/el_GR: Likewise.
