@@ -3131,7 +3131,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
   if (brk != (char*)(MORECORE_FAILURE)) {
     /* Call the `morecore' hook if necessary.  */
-    if (__after_morecore_hook)
+    if (__builtin_expect (__after_morecore_hook != NULL, 0))
       (*__after_morecore_hook) ();
   } else {
   /*
@@ -3270,7 +3270,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           snd_brk = (char*)(MORECORE(0));
         } else
 	  /* Call the `morecore' hook if necessary.  */
-	  if (__after_morecore_hook)
+	  if (__builtin_expect (__after_morecore_hook != NULL, 0))
 	    (*__after_morecore_hook) ();
       }
 
@@ -3415,7 +3415,7 @@ static int sYSTRIm(pad, av) size_t pad; mstate av;
 
       MORECORE(-extra);
       /* Call the `morecore' hook if necessary.  */
-      if (__after_morecore_hook)
+      if (__builtin_expect (__after_morecore_hook != NULL, 0))
 	(*__after_morecore_hook) ();
       new_brk = (char*)(MORECORE(0));
 
@@ -3542,7 +3542,7 @@ public_mALLOc(size_t bytes)
   Void_t *victim;
 
   __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t) = __malloc_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes);
@@ -3585,7 +3585,7 @@ public_fREe(Void_t* mem)
   mchunkptr p;                          /* chunk corresponding to mem */
 
   void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t) = __free_hook;
-  if (hook != NULL) {
+  if (__builtin_expect (hook != NULL, 0)) {
     (*hook)(mem, RETURN_ADDRESS (0));
     return;
   }
@@ -3642,7 +3642,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
 
   __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, __const __malloc_ptr_t) =
     __realloc_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 
 #if REALLOC_ZERO_BYTES_FREES
@@ -3748,7 +3748,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
 
   /* If need less alignment than we give anyway, just relay to malloc */
@@ -3805,7 +3805,7 @@ public_vALLOc(size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes + pagesz + MINSIZE);
@@ -3852,7 +3852,7 @@ public_pVALLOc(size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
@@ -3906,7 +3906,7 @@ public_cALLOc(size_t n, size_t elem_size)
     }
   }
 
-  if (hook != NULL) {
+  if (__builtin_expect (hook != NULL, 0)) {
     sz = bytes;
     mem = (*hook)(sz, RETURN_ADDRESS (0));
     if(mem == 0)
@@ -6020,7 +6020,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 
   /* Call the hook here, so that caller is posix_memalign's caller
      and not posix_memalign itself.  */
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
   else
     mem = public_mEMALIGn (alignment, size);

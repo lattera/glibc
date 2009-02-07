@@ -1,5 +1,7 @@
 2009-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c: Add branch prediction for use of the hooks.
+
 	* grp/compat-initgroups.c [NOT_IN_libc] (__libc_use_alloca): Define.
 
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
