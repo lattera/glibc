@@ -1,3 +1,20 @@
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7095]
+	* bits/confname.h: Add SUSv7 macros for getconf environments.
+	* bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/environments.h: Likewise.
+	* posix/confstr.c: Handle SUSv5 and SUSv7 environments.
+	* posix/getconf.c: Likewise.
+	* posix/sysconf.c: Likewise.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* posix/Makefile (getconf.speclist): Also collect SUSv5 and SUSv7
+	environments.
+
 2009-01-16  Petr Baudis  <pasky@suse.cz>
 
 	[BZ #9753]

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2006, 2007, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -304,7 +304,11 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 $(objpfx)getconf.speclist: $(objpfx)getconf
 ifeq (no,$(cross-compiling))
 	LC_ALL=C GETCONF_DIR=/dev/null \
-	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS > $@.new
+	$(run-program-prefix) $< _POSIX_V7_WIDTH_RESTRICTED_ENVS > $@.new
+	LC_ALL=C GETCONF_DIR=/dev/null \
+	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS >> $@.new
+	LC_ALL=C GETCONF_DIR=/dev/null \
+	$(run-program-prefix) $< _XBS5_WIDTH_RESTRICTED_ENVS >> $@.new
 else
 	> $@.new
 endif

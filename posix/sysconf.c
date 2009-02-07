@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1995-1997,2001,2002,2003
+/* Copyright (C) 1991,1993,1995-1997,2001,2002,2003,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -254,6 +254,16 @@ __sysconf (name)
     case _SC_XBS5_ILP32_OFFBIG:
     case _SC_XBS5_LP64_OFF64:
     case _SC_XBS5_LPBIG_OFFBIG:
+
+    case _SC_POSIX_V6_ILP32_OFF32:
+    case _SC_POSIX_V6_ILP32_OFFBIG:
+    case _SC_POSIX_V6_LP64_OFF64:
+    case _SC_POSIX_V6_LPBIG_OFFBIG:
+
+    case _SC_POSIX_V7_ILP32_OFF32:
+    case _SC_POSIX_V7_ILP32_OFFBIG:
+    case _SC_POSIX_V7_LP64_OFF64:
+    case _SC_POSIX_V7_LPBIG_OFFBIG:
 
     case _SC_XOPEN_LEGACY:
     case _SC_XOPEN_REALTIME:
