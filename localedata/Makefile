@@ -1,4 +1,4 @@
-# Copyright (C) 1996-2003, 2005, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1996-2003,2005,2007,2008,2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -114,7 +114,7 @@ $(inst_i18ndir)/charmaps/%.gz: charmaps/% $(+force)
 	$(make-target-directory)
 	rm -f $(@:.gz=) $@
 	$(INSTALL_DATA) $< $(@:.gz=)
-	gzip -9 $(@:.gz=)
+	gzip -9n $(@:.gz=)
 
 # Install the locale source files in the appropriate directory.
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)

@@ -1,5 +1,10 @@
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #7098]
+	* Makefile ($(inst_i18ndir)/charmaps/%.gz): No need to save
+	timestamp in compressed charmaps.
+	Patch by Gilles Espinasse <g.esp@free.fr>.
+
 	[BZ #9730]
 	* locales/sv_FI: Fix time formats.
 
