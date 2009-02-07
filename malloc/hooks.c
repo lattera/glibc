@@ -354,8 +354,11 @@ realloc_check(oldmem, bytes, caller)
     }
   } else {
 #endif /* HAVE_MMAP */
-    if (top_check() >= 0)
-      newmem = _int_realloc(&main_arena, oldp, bytes+1);
+    if (top_check() >= 0) {
+      INTERNAL_SIZE_T nb;
+      checked_request2size(bytes + 1, nb);
+      newmem = _int_realloc(&main_arena, oldp, nb);
+    }
 #if 0 /* Erase freed memory. */
     if(newmem)
       newp = mem2chunk(newmem);

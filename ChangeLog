@@ -2,8 +2,9 @@
 
 	* malloc/malloc.c (_int_free): Second argument is now mchunkptr.
 	Change all callers.
-	(_int_realloc): Likewise.
+	(_int_realloc): Likewise.  Third argument is now padded size
 	All _int_* functions are now static.
+
 	* malloc/hooks.c: Change all callers to _int_free and _int_realloc.
 	* malloc/arena.c: Likewise.
 	* include/malloc.h: Remove now unnecessary declarations of the _int_*
