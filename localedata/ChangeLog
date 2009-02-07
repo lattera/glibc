@@ -1,5 +1,6 @@
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9791]
 	* locales/as_IN: Break circular include loops introduced in last patch.
 	* locales/bn_BD: Likewise.
 	* locales/bn_IN: Likewise.
