@@ -42,7 +42,7 @@
 /* We are very tricky here.  We want to have _null_auth in a read-only
    section but we cannot add const to the type because this isn't how
    the variable is declared.  So we use the section attribute.  */
-struct opaque_auth _null_auth __attribute__ ((nocommon, section (".rodata")));
+struct opaque_auth _null_auth __attribute__ ((nocommon));
 libc_hidden_def (_null_auth)
 fd_set svc_fdset;
 struct rpc_createerr rpc_createerr;

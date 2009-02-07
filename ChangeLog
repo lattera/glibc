@@ -1,5 +1,8 @@
 2009-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/rpc_common.c: We cannot move _null_auth into .rodata that
+	easily.
+
 	* malloc/malloc.c: Add branch prediction for use of the hooks.
 
 	* grp/compat-initgroups.c [NOT_IN_libc] (__libc_use_alloca): Define.
