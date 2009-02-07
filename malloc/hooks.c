@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001-2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -293,7 +293,7 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
 #if 0 /* Erase freed memory. */
   memset(mem, 0, chunksize(p) - (SIZE_SZ+1));
 #endif
-  _int_free(&main_arena, mem);
+  _int_free(&main_arena, p);
   (void)mutex_unlock(&main_arena.mutex);
 }
 
@@ -305,8 +305,7 @@ realloc_check(oldmem, bytes, caller)
      Void_t* oldmem; size_t bytes; const Void_t *caller;
 #endif
 {
-  mchunkptr oldp;
-  INTERNAL_SIZE_T nb, oldsize;
+  INTERNAL_SIZE_T nb;
   Void_t* newmem = 0;
   unsigned char *magic_p;
 
@@ -320,13 +319,13 @@ realloc_check(oldmem, bytes, caller)
     return NULL;
   }
   (void)mutex_lock(&main_arena.mutex);
-  oldp = mem2chunk_check(oldmem, &magic_p);
+  const mchunkptr oldp = mem2chunk_check(oldmem, &magic_p);
   (void)mutex_unlock(&main_arena.mutex);
   if(!oldp) {
     malloc_printerr(check_action, "realloc(): invalid pointer", oldmem);
     return malloc_check(bytes, NULL);
   }
-  oldsize = chunksize(oldp);
+  const INTERNAL_SIZE_T oldsize = chunksize(oldp);
 
   checked_request2size(bytes+1, nb);
   (void)mutex_lock(&main_arena.mutex);
@@ -356,7 +355,7 @@ realloc_check(oldmem, bytes, caller)
   } else {
 #endif /* HAVE_MMAP */
     if (top_check() >= 0)
-      newmem = _int_realloc(&main_arena, oldmem, bytes+1);
+      newmem = _int_realloc(&main_arena, oldp, bytes+1);
 #if 0 /* Erase freed memory. */
     if(newmem)
       newp = mem2chunk(newmem);
@@ -470,7 +469,7 @@ free_starter(mem, caller) Void_t* mem; const Void_t *caller;
     return;
   }
 #endif
-  _int_free(&main_arena, mem);
+  _int_free(&main_arena, p);
 }
 
 # endif	/* !defiend NO_STARTER */

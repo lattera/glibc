@@ -223,7 +223,7 @@ free_atfork(Void_t* mem, const Void_t *caller)
   tsd_getspecific(arena_key, vptr);
   if(vptr != ATFORK_ARENA_PTR)
     (void)mutex_lock(&ar_ptr->mutex);
-  _int_free(ar_ptr, mem);
+  _int_free(ar_ptr, p);
   if(vptr != ATFORK_ARENA_PTR)
     (void)mutex_unlock(&ar_ptr->mutex);
 }
