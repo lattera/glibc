@@ -1,3 +1,9 @@
+2009-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.h: Define catomic_and if not already defined.
+	* sysdeps/x86_64/bits/atomic.h: Define catomic_and.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
+
 2009-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_free): Second argument is now mchunkptr.

@@ -1,5 +1,5 @@
 /* Internal macros for atomic operations for GNU C Library.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -412,6 +412,22 @@
 	   (atomic_compare_and_exchange_bool_acq (__atg15_memp,		      \
 						  __atg15_old & __atg15_mask, \
 						  __atg15_old), 0));	      \
+  } while (0)
+#endif
+
+#ifndef catomic_and
+# define catomic_and(mem, mask) \
+  do {									      \
+    __typeof (*(mem)) __atg20_old;					      \
+    __typeof (mem) __atg20_memp = (mem);				      \
+    __typeof (*(mem)) __atg20_mask = (mask);				      \
+									      \
+    do									      \
+      __atg20_old = (*__atg20_memp);					      \
+    while (__builtin_expect						      \
+	   (catomic_compare_and_exchange_bool_acq (__atg20_memp,	      \
+						   __atg20_old & __atg20_mask,\
+						   __atg20_old), 0));	      \
   } while (0)
 #endif
 

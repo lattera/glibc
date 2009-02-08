@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -500,23 +500,33 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_delay() asm ("rep; nop")
 
 
-#define atomic_and(mem, mask) \
+#define __arch_and_body(lock, mem, mask) \
   do {									      \
     if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "andb %b1, %0"			      \
+      __asm __volatile (lock "andb %b1, %0"				      \
 			: "=m" (*mem)					      \
-			: "iq" (mask), "m" (*mem));			      \
+			: "iq" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "andw %w1, %0"			      \
+      __asm __volatile (lock "andw %w1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (LOCK_PREFIX "andl %1, %0"			      \
+      __asm __volatile (lock "andl %1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem));			      \
+			: "ir" (mask), "m" (*mem),			      \
+			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else								      \
       abort ();								      \
   } while (0)
+
+#define __arch_cprefix \
+  "cmpl $0, %%gs:%P3\n\tje 0f\n\tlock\n0:\t"
+
+#define atomic_and(mem, mask) __arch_and_body (LOCK_PREFIX, mem, mask)
+
+#define catomic_and(mem, mask) __arch_and_body (__arch_cprefix, mem, mask)
 
 
 #define __arch_or_body(lock, mem, mask) \
@@ -542,7 +552,4 @@ typedef uintmax_t uatomic_max_t;
 
 #define atomic_or(mem, mask) __arch_or_body (LOCK_PREFIX, mem, mask)
 
-#define __arch_or_cprefix \
-  "cmpl $0, %%gs:%P3\n\tje 0f\n\tlock\n0:\t"
-
-#define catomic_or(mem, mask) __arch_or_body (__arch_or_cprefix, mem, mask)
+#define catomic_or(mem, mask) __arch_or_body (__arch_cprefix, mem, mask)
