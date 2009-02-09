@@ -1,3 +1,12 @@
+2009-02-09  Arthur Loiret  <aloiret@debian.org>
+
+	[BZ #9717]
+
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/malloc-machine.h
+	(MALLOC): Adjust __libc_tsd_define arguments.
+	(tsd_setspecific, tsd_getspecific): Adjust __libc_tsd_{set,get}
+	arguments.
+
 2008-08-07  Helge Deller  <deller@gmx.de>
 
 	* sysdeps/unix/sysv/linux/hppa/ucontext_i.sym: New file.
