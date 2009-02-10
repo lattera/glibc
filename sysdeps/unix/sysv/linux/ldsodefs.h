@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,5 +52,25 @@ extern void _dl_non_dynamic_init (void) internal_function;
 #if __ASSUME_AT_PAGESIZE
 # define HAVE_AUX_PAGESIZE
 #endif
+
+/* Accept binaries which identify the binary as using Linux extensions.  */
+#define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0	\
+					 || memcmp (hdr, expected2, size) == 0)
+#define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV \
+					 || osabi == ELFOSABI_LINUX)
+#define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#define MORE_ELF_HEADER_DATA \
+  static const unsigned char expected2[EI_PAD] =	\
+  {							\
+    [EI_MAG0] = ELFMAG0,				\
+    [EI_MAG1] = ELFMAG1,				\
+    [EI_MAG2] = ELFMAG2,				\
+    [EI_MAG3] = ELFMAG3,				\
+    [EI_CLASS] = ELFW(CLASS),				\
+    [EI_DATA] = byteorder,				\
+    [EI_VERSION] = EV_CURRENT,				\
+    [EI_OSABI] = ELFOSABI_LINUX,			\
+    [EI_ABIVERSION] = 0					\
+  }
 
 #endif /* ldsodefs.h */

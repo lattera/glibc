@@ -1,3 +1,11 @@
+2009-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_verify): In case VALID_ELF_HEADER is
+	defined, allow additional data to be added using the optional
+	MORE_ELF_HEADER_DATA macro.
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_HEADER,
+	VALID_ELF_OSABI, VALID_ELF_ABIVERSION, MORE_ELF_HEADER_DATA): Define.
+
 2009-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/atomic.h: Define catomic_and if not already defined.

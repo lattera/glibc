@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2005, 2006, 2007  Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1574,6 +1574,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 # define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
 # define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
 # define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#elif defined MORE_ELF_HEADER_DATA
+  MORE_ELF_HEADER_DATA;
 #endif
   static const unsigned char expected[EI_PAD] =
   {
