@@ -66,6 +66,7 @@ script <TELUGU>
 script <GURUMUKHI>
 script <KANNADA>
 script <SINHALA>
+script <MALAYALAM>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -910,6 +911,129 @@ collating-symbol <kvd-visarg>
 collating-symbol <k-halant>
 collating-symbol <k-lenght_mark>
 collating-symbol <k-ai_lenght_mark>
+#
+# <MALAYALAM>
+# mlvs-  denotes Malayalam vowel sign
+# mlvw- denotes Malayalam vowel
+# ml-visarga - dentos Malayalam Visarga
+# consonant + virama is considered half of consonant or consonant without vowel part
+# so it consonant + virama should be considered as cluster and should be 
+# sorted before the consonant. All consonants are considered to have an implicit a vowel
+# part associated with it.
+collating-element <ml-chillu-n> from "<U0D28><U0D4D>"
+collating-element <ml-chillu-nn> from "<U0D23><U0D4D>"
+collating-element <ml-chillu-r> from "<U0D30><U0D4D>"
+collating-element <ml-chillu-l> from "<U0D32><U0D4D>"
+collating-element <ml-chillu-ll> from "<U0D33><U0D4D>"
+collating-element <ml-chillu-k> from "<U0D15><U0D4D>"
+collating-element <ml-kh> from "<U0D16><U0D4D>"
+collating-element <ml-g> from "<U0D17><U0D4D>"
+collating-element <ml-gh> from "<U0D18><U0D4D>"
+collating-element <ml-ng> from "<U0D19><U0D4D>"
+collating-element <ml-ch> from "<U0D1A><U0D4D>"
+collating-element <ml-chh> from "<U0D1B><U0D4D>"
+collating-element <ml-j> from "<U0D1C><U0D4D>"
+collating-element <ml-jh> from "<U0D1D><U0D4D>"
+collating-element <ml-ny> from "<U0D1E><U0D4D>"
+collating-element <ml-t> from "<U0D1F><U0D4D>"
+collating-element <ml-tt> from "<U0D20><U0D4D>"
+collating-element <ml-d> from "<U0D21><U0D4D>"
+collating-element <ml-dh> from "<U0D22><U0D4D>"
+collating-element <ml-th> from "<U0D24><U0D4D>"
+collating-element <ml-thh> from "<U0D25><U0D4D>"
+collating-element <ml-dd> from "<U0D26><U0D4D>"
+collating-element <ml-ddh> from "<U0D27><U0D4D>"
+collating-element <ml-p> from "<U0D2A><U0D4D>"
+collating-element <ml-ph> from "<U0D2B><U0D4D>"
+collating-element <ml-b> from "<U0D2C><U0D4D>"
+collating-element <ml-bh> from "<U0D2D><U0D4D>"
+collating-element <ml-m> from "<U0D2E><U0D4D>"
+collating-element <ml-y> from "<U0D2F><U0D4D>"
+collating-element <ml-v> from "<U0D35><U0D4D>"
+collating-element <ml-s> from "<U0D38><U0D4D>"
+collating-element <ml-ss> from "<U0D36><U0D4D>"
+collating-element <ml-sh> from "<U0D37><U0D4D>"
+collating-element <ml-h> from "<U0D39><U0D4D>"
+collating-element <ml-zh> from "<U0D34><U0D4D>"
+collating-element <ml-rr> from "<U0D31><U0D4D>"
+collating-element <ml-samvruthokaram> from "<U0D41><U0D4D>"
+collating-element <ml-split-o> from "<U0D46><U0D3E>"  # U+0D4A MALAYALAM VOWEL SIGN O = U+0D46 MALAYALAM VOWEL SIGN E + U+0D3E MALAYALAM VOWEL SIGN AA
+collating-element <ml-split-oo> from "<U0D47><U0D3E>"  # U+0D4B MALAYALAM VOWEL SIGN OO = U+0D47 MALAYALAM VOWEL SIGN EE + U+0D3E MALAYALAM VOWEL SIGN AA
+collating-element <ml-split-au> from "<U0D46><U0D57>" # U+0D4C MALAYALAM VOWEL SIGN AU = U+0D46 MALAYALAM VOWEL SIGN E + U+0D57 MALAYALAM AU LENGTH MARK
+# defning symbols
+collating-symbol <mlvw-shorta>
+collating-symbol <mlvw-aa>
+collating-symbol <mlvw-i>
+collating-symbol <mlvw-ii>
+collating-symbol <mlvw-u>
+collating-symbol <mlvw-uu>
+collating-symbol <mlvw-vocalicr>
+collating-symbol <mlvw-vocalicrr>
+collating-symbol <mlvw-vocalicl>
+collating-symbol <mlvw-vocalicll>
+collating-symbol <mlvw-shorte>
+collating-symbol <mlvw-e>
+collating-symbol <mlvw-ai>
+collating-symbol <mlvw-shorto>
+collating-symbol <mlvw-o>
+collating-symbol <mlvw-au>
+collating-symbol <ml-ka>
+collating-symbol <ml-kha>
+collating-symbol <ml-ga>
+collating-symbol <ml-gga>
+collating-symbol <ml-gha>
+collating-symbol <ml-nga>
+collating-symbol <ml-cha>
+collating-symbol <ml-chha>
+collating-symbol <ml-ja>
+collating-symbol <ml-jja>
+collating-symbol <ml-jha>
+collating-symbol <ml-nya>
+collating-symbol <ml-ta>
+collating-symbol <ml-tta>
+collating-symbol <ml-da>
+collating-symbol <ml-dha>
+collating-symbol <ml-nna>
+collating-symbol <ml-tha>
+collating-symbol <ml-thha>
+collating-symbol <ml-dda>
+collating-symbol <ml-ddha>
+collating-symbol <ml-na>
+collating-symbol <ml-pa>
+collating-symbol <ml-pha>
+collating-symbol <ml-ba>
+collating-symbol <ml-bba>
+collating-symbol <ml-bha>
+collating-symbol <ml-ma>
+collating-symbol <ml-ya>
+collating-symbol <ml-ra>
+collating-symbol <ml-rra>
+collating-symbol <ml-la>
+collating-symbol <ml-lla>
+collating-symbol <ml-va>
+collating-symbol <ml-sha>
+collating-symbol <ml-ssa>
+collating-symbol <ml-sa>
+collating-symbol <ml-ha>
+collating-symbol <ml-avagrah>
+collating-symbol <ml-zha>
+collating-symbol <mlvs-aa>
+collating-symbol <mlvs-i>
+collating-symbol <mlvs-ii>
+collating-symbol <mlvs-u>
+collating-symbol <mlvs-uu>
+collating-symbol <mlvs-vocalicr>
+collating-symbol <mlvs-vocalicrr>
+collating-symbol <mlvs-vocalicl>
+collating-symbol <mlvs-vocalicll>
+collating-symbol <mlvs-shorte>
+collating-symbol <mlvs-e>
+collating-symbol <mlvs-ai>
+collating-symbol <mlvs-shorto>
+collating-symbol <mlvs-o>
+collating-symbol <mlvs-au>
+collating-symbol <ml-visarga>
+collating-symbol <ml-virama>
 
 # Ordre des symboles internes / Order of internal symbols
 #
@@ -1733,6 +1857,83 @@ collating-symbol <k-ai_lenght_mark>
 <k-halant>
 <k-lenght_mark>
 <k-ai_lenght_mark>
+#
+# <MALAYALAM>
+#
+# collation weights in order
+<mlvw-shorta>
+<mlvw-aa>
+<mlvw-i>
+<mlvw-ii>
+<mlvw-u>
+<mlvw-uu>
+<mlvw-vocalicr>
+<mlvw-vocalicrr>
+<mlvw-vocalicl>
+<mlvw-vocalicll>
+<mlvw-shorte>
+<mlvw-e>
+<mlvw-ai>
+<mlvw-shorto>
+<mlvw-o>
+<mlvw-au>
+<ml-ka>
+<ml-kha>
+<ml-ga>
+<ml-gga>
+<ml-gha>
+<ml-nga>
+<ml-cha>
+<ml-chha>
+<ml-ja>
+<ml-jja>
+<ml-jha>
+<ml-nya>
+<ml-ta>
+<ml-tta>
+<ml-da>
+<ml-dha>
+<ml-nna>
+<ml-tha>
+<ml-thha>
+<ml-dda>
+<ml-ddha>
+<ml-na>
+<ml-pa>
+<ml-pha>
+<ml-ba>
+<ml-bba>
+<ml-bha>
+<ml-ma>
+<ml-ya>
+<ml-ra>
+<ml-la>
+<ml-va>
+<ml-ssa>
+<ml-sha>
+<ml-sa>
+<ml-ha>
+<ml-lla>
+<ml-zha>
+<ml-rra>
+<ml-avagrah>
+<ml-virama>
+<mlvs-aa>
+<mlvs-i>
+<mlvs-ii>
+<mlvs-u>
+<mlvs-uu>
+<mlvs-vocalicr>
+<mlvs-vocalicrr>
+<mlvs-vocalicl>
+<mlvs-vocalicll>
+<mlvs-shorte>
+<mlvs-e>
+<mlvs-ai>
+<mlvs-shorto>
+<mlvs-o>
+<mlvs-au>
+<ml-visarga>
 
 order_start <SPECIAL>;forward;backward;forward;forward,position
 #
@@ -4051,6 +4252,130 @@ order_start <SINHALA>;forward;forward;forward;forward,position
 <U0DDD> <U0DDD>;<BAS>;<MIN>;IGNORE
 <U0DDE> <U0DDE>;<BAS>;<MIN>;IGNORE
 <U0DCA> <U0DCA>;<BAS>;<MIN>;IGNORE
+
+order_start <MALAYALAM>;forward;forward;forward;forward,position
+<U0D66> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D67> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D68> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D69> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6A> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6B> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6C> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6D> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6E> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D6F> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0D05> <mlvw-shorta> ;<BAS>;<MIN>;IGNORE
+<U0D06> <mlvw-aa> ;<BAS>;<MIN>;IGNORE
+<U0D07> <mlvw-i> ;<BAS>;<MIN>;IGNORE
+<U0D08> <mlvw-ii> ;<BAS>;<MIN>;IGNORE
+<U0D09> <mlvw-u> ;<BAS>;<MIN>;IGNORE
+<U0D0A> <mlvw-uu>;<BAS>;<MIN>;IGNORE
+<U0D0B> <mlvw-vocalicr>;<BAS>;<MIN>;IGNORE
+<U0D60> <mlvw-vocalicrr>;<BAS>;<MIN>;IGNORE
+<U0D0C> <mlvw-vocalicl>;<BAS>;<MIN>;IGNORE
+<U0D61> <mlvw-vocalicll>;<BAS>;<MIN>;IGNORE
+<U0D0E> <mlvw-shorte>;<BAS>;<MIN>;IGNORE
+<U0D0F> <mlvw-e>;<BAS>;<MIN>;IGNORE
+<U0D10> <mlvw-ai>;<BAS>;<MIN>;IGNORE
+<U0D12> <mlvw-shorto>;<BAS>;<MIN>;IGNORE
+<U0D13> <mlvw-o>;<BAS>;<MIN>;IGNORE
+<U0D14> <mlvw-au>;<BAS>;<MIN>;IGNORE
+<ml-chillu-k>  "<ml-ka><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D15>	"<ml-ka><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-kh>	"<ml-kha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D16>	"<ml-kha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-g>	"<ml-ga><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D17>	"<ml-ga><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-gh>	"<ml-gha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D18>	"<ml-gha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ng>	"<ml-nga><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D19>	"<ml-nga><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ch>	"<ml-cha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1A>	"<ml-cha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-chh> "<ml-chha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1B>	"<ml-chha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-j>	"<ml-ja><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1C>	"<ml-ja><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-jh>	"<ml-jha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1D>	"<ml-jha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ny>	"<ml-nya><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1E>	"<ml-nya><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-t>	"<ml-ta><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D1F>	"<ml-ta><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-tt>	"<ml-tta><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D20>	"<ml-tta><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-d>	"<ml-da><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D21>	"<ml-da><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-dh>	"<ml-dha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D22>	"<ml-dha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-chillu-nn> "<ml-nna><ml-virama>";<BAS>;<MIN>;IGNORE # ണ്‍ = ണ  + ്  + zwj
+<U0D23>	"<ml-nna><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ണ = ണ + ് + അ 
+<ml-th>	"<ml-tha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D24>	"<ml-tha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-thh> "<ml-thha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D25>	"<ml-thha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-dd>	"<ml-dda><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D26>	"<ml-dda><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ddh> "<ml-ddha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D27>	"<ml-ddha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-chillu-n> "<ml-chillu-n>";<BAS>;<MIN>;IGNORE # ന്‍= ന  + ്  + zwj
+<U0D28>	"<ml-chillu-n><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE  #ന = ന + ് + അ
+<ml-p>	"<ml-pa><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D2A>	"<ml-pa><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ph>	"<ml-pha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D2B>	"<ml-pha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-b>	"<ml-ba><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D2C>	"<ml-ba><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-bh>	"<ml-bha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D2D>	"<ml-bha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<U0D02>	"<ml-ma><ml-virama>";<BAS>;<MIN>;IGNORE # ം = മ + ്
+<ml-m>	"<ml-ma><ml-virama>";"<BAS><ml-virama>";<MIN>;IGNORE # ം = മ + ്  
+<U0D2E>	"<ml-ma><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # മ = മ + ് + അ 
+<ml-y>  "<ml-ya><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D2F>	"<ml-ya><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-chillu-r> "<ml-ra><ml-virama>";<BAS>;<MIN>;IGNORE # ര = ര + ്  + zwj
+<U0D30>	"<ml-ra><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ര = ര + ് + അ 
+<ml-chillu-l> <ml-la>;<BAS>;<MIN>;IGNORE # ല്‍ = ല + ്  + zwj
+<U0D32>	"<ml-la><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ല = ല + ് + അ 
+<ml-v>	"<ml-va><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D35>	"<ml-va><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-ss>	"<ml-ssa><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D37>	"<ml-ssa><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-sh>	"<ml-sha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D36>	"<ml-sha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-s>	"<ml-sa><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D38>	"<ml-sa><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-h>	"<ml-ha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D39>	"<ml-ha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-chillu-ll> "<ml-lla><ml-virama>";<BAS>;<MIN>;IGNORE # ള്‍ = ള  + ്  + zwj
+<U0D33>	"<ml-lla><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ള = ള + ് + അ 
+<ml-zh>	"<ml-zha><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D34>	"<ml-zha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<ml-rr>	"<ml-rra><ml-virama>";<BAS>;<MIN>;IGNORE
+<U0D31>	"<ml-rra><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
+<U0D3D>	<ml-avagrah>;<BAS>;<MIN>;IGNORE
+<U0D3E> <mlvs-aa>;<BAS>;<MIN>;IGNORE
+<U0D3F> <mlvs-i>;<BAS>;<MIN>;IGNORE
+<U0D40> <mlvs-ii>;<BAS>;<MIN>;IGNORE
+<ml-samvruthokaram> <mlvs-u>;<BAS>;<MIN>;IGNORE
+<U0D41> <mlvs-u>;"<BAS><ml-samvruthokaram>";<MIN>;IGNORE # sort it after samvruthokaram
+<U0D42> <mlvs-uu>;<BAS>;<MIN>;IGNORE
+<U0D43> <mlvs-vocalicr>;<BAS>;<MIN>;IGNORE
+<U0D44> <mlvs-vocalicrr>;<BAS>;<MIN>;IGNORE
+<U0D62> <mlvs-vocalicl>;<BAS>;<MIN>;IGNORE
+<U0D63> <mlvs-vocalicll>;<BAS>;<MIN>;IGNORE
+<U0D46> <mlvs-shorte>;<BAS>;<MIN>;IGNORE
+<U0D47> <mlvs-e>;<BAS>;<MIN>;IGNORE
+<U0D48> <mlvs-ai>;<BAS>;<MIN>;IGNORE
+<U0D4A> <mlvs-shorto>;<BAS>;<MIN>;IGNORE
+<U0D4B> <mlvs-o>;<BAS>;<MIN>;IGNORE
+<U0D4C> <mlvs-au>;<BAS>;<MIN>;IGNORE
+<U0D57> <mlvs-au>;<BAS>;<MIN>;IGNORE
+<U0D4D> <ml-virama>;<BAS>;<MIN>;IGNORE
+<U0D03> <ml-visarga>;<BAS>;<MIN>;IGNORE
+<ml-split-o>  <mlvs-shorto>;<BAS>;<MIN>;IGNORE
+<ml-split-oo> <mlvs-o>;<BAS>;<MIN>;IGNORE
+<ml-split-au> <mlvs-au>;<BAS>;<MIN>;IGNORE
 
 order_end
 

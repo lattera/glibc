@@ -1,3 +1,8 @@
+2009-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add rules for sorting Malayalam.
+	Patch by Santhosh Thottingal <santhosh.thottingal@gmail.com>.
+
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #7098]
