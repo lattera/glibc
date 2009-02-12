@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
 "POT-Creation-Date: 2007-10-15 21:18-0700\n"
-"PO-Revision-Date: 2008-10-28 01:02+0200\n"
+"PO-Revision-Date: 2009-02-12 05:24+0200\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: argp/argp-help.c:228
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s: ARGP_HELP_FMT parametrui rekia reikšmės"
+msgstr "%.*s: ARGP_HELP_FMT parametrui reikia reikšmės"
 
 #: argp/argp-help.c:238
 #, c-format
@@ -70,7 +70,6 @@ msgid "Set the program name"
 msgstr "Nustatyti programos pavadinimą"
 
 #: argp/argp-parse.c:106
-#, fuzzy
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Laukti SEK sekundžių (standartiškai 3600)"
 
@@ -80,7 +79,7 @@ msgstr "Išspausdinti programos versiją"
 
 #: argp/argp-parse.c:183
 msgid "(PROGRAM ERROR) No version known!?"
-msgstr "(PROGRAM ERROR) Nežinoma joka versija!?"
+msgstr "(PROGRAM ERROR) Nežinoma jokia versija!?"
 
 #: argp/argp-parse.c:623
 #, c-format
@@ -88,9 +87,8 @@ msgid "%s: Too many arguments\n"
 msgstr "%s: Per daug argumentų\n"
 
 #: argp/argp-parse.c:766
-#, fuzzy
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
-msgstr "(PROGRAM ERROR) Nežinoma joka versija!?"
+msgstr "(PROGRAM ERROR) Parametras turėjo būti atpažintas!?"
 
 #: assert/assert-perr.c:57
 #, c-format
@@ -190,7 +188,6 @@ msgid "unknown set `%s'"
 msgstr "nežinomas rinkinys „%s“"
 
 #: catgets/gencat.c:563
-#, fuzzy
 msgid "invalid quote character"
 msgstr "netaisyklingas kabučių simbolis"
 
@@ -208,12 +205,10 @@ msgid "duplicated message identifier"
 msgstr "pakartotas pranešimo identifikatorius"
 
 #: catgets/gencat.c:731
-#, fuzzy
 msgid "invalid character: message ignored"
 msgstr "netaisyklingas simbolis: pranešimas ignoruotas"
 
 #: catgets/gencat.c:774
-#, fuzzy
 msgid "invalid line"
 msgstr "nekorektiška eilutė"
 
@@ -222,9 +217,9 @@ msgid "malformed line ignored"
 msgstr "nekorektiška eilutė ignoruota"
 
 #: catgets/gencat.c:992 catgets/gencat.c:1033 nss/makedb.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "cannot open output file `%s'"
-msgstr "%s: nepavyko atverti laikinojo failo: %s"
+msgstr "nepavyko atverti išvedimo failo: „%s“"
 
 #: catgets/gencat.c:1195 locale/programs/linereader.c:560
 #, fuzzy
@@ -263,9 +258,9 @@ msgid "[FILE]"
 msgstr "[FAILAS]"
 
 #: debug/pcprofiledump.c:104
-#, fuzzy, c-format
+#, c-format
 msgid "cannot open input file"
-msgstr "%s: nepavyko atverti laikinojo failo: %s"
+msgstr "nepavyko atverti įvedimo failo"
 
 #: debug/pcprofiledump.c:111
 #, c-format
@@ -350,9 +345,8 @@ msgid "invalid mode parameter"
 msgstr "netaisyklinga veiksena"
 
 #: elf/cache.c:69
-#, fuzzy
 msgid "unknown"
-msgstr "%s: adresas nežinomas"
+msgstr "nežinoma"
 
 #: elf/cache.c:112
 msgid "Unknown OS"
@@ -401,7 +395,7 @@ msgstr "%s pervardinimas į %s nesėkmingas"
 #: elf/cache.c:440
 #, c-format
 msgid "Renaming of %s to %s failed"
-msgstr "%s pervardinimas į %s nesėkmingas"
+msgstr "%s pervadinimas į %s nesėkmingas"
 
 #: elf/dl-close.c:378 elf/dl-open.c:460
 #, fuzzy
@@ -573,14 +567,12 @@ msgid "invalid ELF header"
 msgstr "netaisyklinga ELF antraštė"
 
 #: elf/dl-load.c:1697
-#, fuzzy
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF failo duomenų koduotė ne big-endian"
 
 #: elf/dl-load.c:1699
-#, fuzzy
 msgid "ELF file data encoding not little-endian"
-msgstr "ELF failo duomenų koduotė ne big-endian"
+msgstr "ELF failo duomenų koduotė ne little-endian"
 
 #: elf/dl-load.c:1703
 msgid "ELF file version ident does not match current one"
@@ -592,7 +584,7 @@ msgstr "ELF failo OS ABI netaisyklingas"
 
 #: elf/dl-load.c:1709
 msgid "ELF file ABI version invalid"
-msgstr "ELF failo ABI versioja netaisyklinga"
+msgstr "ELF failo ABI versija netaisyklinga"
 
 #: elf/dl-load.c:1712
 msgid "internal error"
@@ -619,7 +611,6 @@ msgid "wrong ELF class: ELFCLASS32"
 msgstr "klaidinga ELF klasė: ELFCLASS32"
 
 #: elf/dl-load.c:2244
-#, fuzzy
 msgid "cannot open shared object file"
 msgstr "nepavyko atverti bendrojo objekto failo"
 
@@ -640,7 +631,6 @@ msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS kartų skaitiklis persivertė!  Prašytume apie tai pranešti."
 
 #: elf/dl-open.c:549
-#, fuzzy
 msgid "invalid mode for dlopen()"
 msgstr "netaisyklinga veiksena dlopen()"
 
@@ -764,9 +754,9 @@ msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr ""
 
 #: elf/ldconfig.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Path `%s' given more than once"
-msgstr "%s: laukas „%s“ apibrėžtas daugiau negu vieną kartą"
+msgstr "Kelias „%s“ nurodytas daugiau negu vieną kartą"
 
 #: elf/ldconfig.c:359
 #, c-format
@@ -784,9 +774,9 @@ msgid "Can't stat %s\n"
 msgstr "Nepavyko susaistyti (link) %s su %s"
 
 #: elf/ldconfig.c:468
-#, fuzzy, c-format
+#, c-format
 msgid "%s is not a symbolic link\n"
-msgstr "simbolinė nuoroda"
+msgstr "%s nėra simbolinė nuoroda\n"
 
 #: elf/ldconfig.c:487
 #, fuzzy, c-format
@@ -817,9 +807,9 @@ msgid "Cannot lstat %s"
 msgstr "%s: nepavyko perskaityti: %s"
 
 #: elf/ldconfig.c:579
-#, fuzzy, c-format
+#, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr "ne paprastas failas"
+msgstr "Failas %s praleistas, nes tai nėra paprastas failas"
 
 #: elf/ldconfig.c:588
 #, c-format
@@ -837,9 +827,9 @@ msgid "Cannot stat %s"
 msgstr "%s: nepavyko perskaityti: %s"
 
 #: elf/ldconfig.c:814 elf/readlib.c:91
-#, fuzzy, c-format
+#, c-format
 msgid "Input file %s not found.\n"
-msgstr "Duomenų failas %s nerastas.\n"
+msgstr "Įvedimo failas %s nerastas.\n"
 
 #: elf/ldconfig.c:888
 #, c-format
@@ -898,9 +888,9 @@ msgid "memory exhausted"
 msgstr "baigėsi atmintis"
 
 #: elf/ldconfig.c:1178
-#, fuzzy, c-format
+#, c-format
 msgid "%s:%u: cannot read directory %s"
-msgstr "nepavyko atverti aplanko %s"
+msgstr "%s:%u: nepavyko atverti aplanko %s"
 
 #: elf/ldconfig.c:1223
 #, c-format
@@ -959,9 +949,8 @@ msgid "No such file or directory"
 msgstr "Toks failas ar aplankas neegzistuoja"
 
 #: elf/ldd.bash.in:151 inet/rcmd.c:483
-#, fuzzy
 msgid "not regular file"
-msgstr "paprastas failas"
+msgstr "ne paprastas failas"
 
 #: elf/ldd.bash.in:154
 msgid "warning: you do not have execution permission for"
@@ -1558,9 +1547,9 @@ msgstr "%s: klaida būsenų automate"
 #: locale/programs/ld-numeric.c:384 locale/programs/ld-paper.c:257
 #: locale/programs/ld-telephone.c:329 locale/programs/ld-time.c:1237
 #: locale/programs/locfile.c:826 locale/programs/repertoire.c:324
-#, fuzzy, c-format
+#, c-format
 msgid "%s: premature end of file"
-msgstr "%s: failo pabaiga"
+msgstr "%s: ankstyva failo pabaiga"
 
 #: locale/programs/charmap.c:869 locale/programs/charmap.c:880
 #, c-format
@@ -5839,7 +5828,7 @@ msgstr "Kanalo numeris už ribų"
 
 #: sysdeps/gnu/errlist.c:1117
 msgid "Level 2 not synchronized"
-msgstr "2 lygmuo nesinchonizuotas"
+msgstr "2 lygmuo nesinchronizuotas"
 
 #: sysdeps/gnu/errlist.c:1125
 msgid "Level 3 halted"

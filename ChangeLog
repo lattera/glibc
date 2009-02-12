@@ -1,3 +1,7 @@
+2009-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/lt.po: Update from translation team.
+
 2009-02-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (open_verify): In case VALID_ELF_HEADER is
