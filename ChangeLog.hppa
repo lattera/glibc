@@ -1,3 +1,11 @@
+2009-02-13  Khem Raj  <raj.khem@gmail.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c 
+	(libgcc_s_handle): New variable.
+	(pthread_cancel_init): Depend in libgcc_s_handle for decision to
+	load DSO.  Assign last.
+	(__unwind_freeres): New function.
+
 2009-02-09  Arthur Loiret  <aloiret@debian.org>
 
 	[BZ #9717]
