@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -22,6 +22,7 @@
 #include <unwind.h>
 #include <pthreadP.h>
 
+static void *libgcc_s_handle;
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
 static _Unwind_Reason_Code (*libgcc_s_personality)
   (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
@@ -40,7 +41,7 @@ pthread_cancel_init (void)
   void *handle;
   void *sjlj_register, *sjlj_unregister;
 
-  if (__builtin_expect (libgcc_s_getcfa != NULL, 1))
+  if (__builtin_expect (libgcc_s_handle != NULL, 1))
     {
       /* Force gcc to reload all values.  */
       asm volatile ("" ::: "memory");
@@ -65,11 +66,24 @@ pthread_cancel_init (void)
   libgcc_s_forcedunwind = forcedunwind;
   libgcc_s_sjlj_register = sjlj_register;
   libgcc_s_sjlj_unregister = sjlj_unregister;
+  libgcc_s_getcfa = getcfa;
   /* Make sure libgcc_s_getcfa is written last.  Otherwise,
      pthread_cancel_init might return early even when the pointer the
      caller is interested in is not initialized yet.  */
   atomic_write_barrier ();
-  libgcc_s_getcfa = getcfa;
+  libgcc_s_handle = handle;
+}
+
+void
+__libc_freeres_fn_section
+__unwind_freeres (void)
+{
+  void *handle = libgcc_s_handle;
+  if (handle != NULL)
+    {
+      libgcc_s_handle = NULL;
+      __libc_dlclose (handle);
+    }
 }
 
 void

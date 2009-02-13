@@ -1,3 +1,14 @@
+2009-02-13  Khem Raj  <raj.khem@gmail.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c 
+	(libgcc_s_handle): New variable.
+	(pthread_cancel_init): Depend in libgcc_s_handle for decision to
+	load DSO.  Assign last.
+	(__unwind_freeres): New function.
+
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c: 
+	Likewise.
+
 2009-02-05  Paul Brook  <paul@codesourcery.com>
             Joseph Myers  <joseph@codesourcery.com>
 
@@ -36,7 +47,7 @@
 
 2009-01-27  Ryosei Takagi  <ryosei@sm.sony.co.jp>
 
-        * sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
 	(lll_futex_wake_unlock, lll_futex_requeue): Return zero if success.
 
 2009-01-27  Daniel Jacobowitz  <dan@codesourcery.com>
