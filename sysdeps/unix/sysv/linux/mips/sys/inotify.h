@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ extern int inotify_add_watch (int __fd, const char *__name, uint32_t __mask)
   __THROW;
 
 /* Remove the watch specified by WD from the inotify instance FD.  */
-extern int inotify_rm_watch (int __fd, uint32_t __wd) __THROW;
+extern int inotify_rm_watch (int __fd, int __wd) __THROW;
 
 __END_DECLS
 
