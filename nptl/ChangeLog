@@ -1,3 +1,8 @@
+2009-02-14  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Define
+	LOAD_FUTEX_WAIT_ABS even if (FUTEX_WAIT == 0).
+
 2009-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/unwind-forcedunwind.c: Encrypt all function

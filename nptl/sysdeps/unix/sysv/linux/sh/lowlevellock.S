@@ -103,7 +103,8 @@
 	and	tmp2, reg	; \
 	mov	#FUTEX_WAIT, tmp ; \
 	or	tmp, reg
-#  define LOAD_FUTEX_WAIT_ABS(reg,tmp,tmp2) \
+# endif
+# define LOAD_FUTEX_WAIT_ABS(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
 	add	tmp2, tmp 	; \
@@ -119,7 +120,6 @@
 	swap.b	tmp2, tmp2; \
 	or	tmp2, tmp; \
 	or	tmp, reg
-# endif
 # define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
