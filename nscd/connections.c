@@ -250,11 +250,6 @@ static int have_accept4;
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
 
-/* Data structure for recording in-flight memory allocation.  */
-__thread struct mem_in_flight mem_in_flight attribute_tls_model_ie;
-/* Global list of the mem_in_flight variables of all the threads.  */
-struct mem_in_flight *mem_in_flight_list;
-
 
 ssize_t
 writeall (int fd, const void *buf, size_t len)
@@ -1583,16 +1578,6 @@ __attribute__ ((__noreturn__))
 nscd_run_worker (void *p)
 {
   char buf[256];
-
-  /* Initialize the memory-in-flight list.  */
-  for (enum in_flight idx = 0; idx < IDX_last; ++idx)
-    mem_in_flight.block[idx].dbidx = -1;
-  /* And queue this threads structure.  */
-  do
-    mem_in_flight.next = mem_in_flight_list;
-  while (atomic_compare_and_exchange_bool_acq (&mem_in_flight_list,
-					       &mem_in_flight,
-					       mem_in_flight.next) != 0);
 
   /* Initial locking.  */
   pthread_mutex_lock (&readylist_lock);

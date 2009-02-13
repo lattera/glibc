@@ -1,3 +1,29 @@
+2009-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5381]
+	* nscd/nscd.h: Remove definitions and declarations for mem_in_flight.
+	Change mempool_alloc prototype.
+	* nscd/mem.c (gc): Don't handle mem_in_flight.
+	(mempool_alloc): Third parameter now only indicates whether this is the
+	first call (to allocate data) or not.  If it is, get db rdlock.
+	Release it on error.  Don't handle mem_in_flight.
+	* nscd/aicache.c (addhstaiX): Mark he parameter as const.
+	Adjust third parameter of mempool_alloc calls.
+	Nothing to do here in case mempool_alloc fails.
+	Avoid local variable shadowing parameter.  No need to get db rdlock
+	before calling cache_add.
+	* nscd/cache.c (cache_add): Adjust call to mempool_alloc.  There is
+	no mem_in_flight array anymore.
+	* nscd/connections.c: Remove definition and handling of mem_in_flight.
+	* nscd/grpcache.c (cache_addgr): Adjust third parameter of
+	mempool_alloc calls.  Mark he parameter as const.  Nothing to do here
+	in case mempool_alloc fails. No need to get db rdlock before calling
+	cache_add.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.  Remove some debugging code.
+
 2009-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/lt.po: Update from translation team.

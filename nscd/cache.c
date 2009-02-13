@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -155,20 +155,14 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   unsigned long int hash = __nis_hash (key, len) % table->head->module;
   struct hashentry *newp;
 
-  newp = mempool_alloc (table, sizeof (struct hashentry), IDX_record_data);
+  newp = mempool_alloc (table, sizeof (struct hashentry), 0);
   /* If we cannot allocate memory, just do not do anything.  */
   if (newp == NULL)
     {
-      ++table->head->addfailed;
-
       /* If necessary mark the entry as unusable so that lookups will
 	 not use it.  */
       if (first)
 	packet->usable = false;
-
-      /* Mark the in-flight memory as unused.  */
-      for (enum in_flight idx = 0; idx < IDX_record_data; ++idx)
-	mem_in_flight.block[idx].dbidx = -1;
 
       return -1;
     }
@@ -233,10 +227,6 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
       if (do_wakeup)
 	pthread_cond_signal (&table->prune_cond);
     }
-
-  /* Mark the in-flight memory as unused.  */
-  for (enum in_flight idx = 0; idx < IDX_last; ++idx)
-    mem_in_flight.block[idx].dbidx = -1;
 
   return 0;
 }

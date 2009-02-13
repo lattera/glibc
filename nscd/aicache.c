@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -60,7 +60,8 @@ static const ai_response_header notfound =
 
 static void
 addhstaiX (struct database_dyn *db, int fd, request_header *req,
-	   void *key, uid_t uid, struct hashentry *he, struct datahead *dh)
+	   void *key, uid_t uid, struct hashentry *const he,
+	   struct datahead *dh)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -172,13 +173,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  /* Now we can allocate the data structure.  If the TTL of the
 	     entry is reported as zero do not cache the entry at all.  */
 	  if (ttl != 0 && he == NULL)
-	    {
-	      dataset = (struct dataset *) mempool_alloc (db, total
-							  + req->key_len,
-							  IDX_result_data);
-	      if (dataset == NULL)
-		++db->head->addfailed;
-	    }
+	    dataset = (struct dataset *) mempool_alloc (db, total
+							+ req->key_len, 1);
 
 	  if (dataset == NULL)
 	    {
@@ -300,9 +296,9 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		}
 	      else
 		{
-		  struct hostent *he = NULL;
+		  struct hostent *hstent = NULL;
 		  int herrno;
-		  struct hostent he_mem;
+		  struct hostent hstent_mem;
 		  void *addr;
 		  size_t addrlen;
 		  int addrfamily;
@@ -326,8 +322,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		  while (1)
 		    {
 		      rc = __gethostbyaddr2_r (addr, addrlen, addrfamily,
-					       &he_mem, tmpbuf, tmpbuflen,
-					       &he, &herrno, NULL);
+					       &hstent_mem, tmpbuf, tmpbuflen,
+					       &hstent, &herrno, NULL);
 		      if (rc != ERANGE || herrno != NETDB_INTERNAL)
 			break;
 		      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
@@ -336,8 +332,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 
 		  if (rc == 0)
 		    {
-		      if (he != NULL)
-			canon = he->h_name;
+		      if (hstent != NULL)
+			canon = hstent->h_name;
 		      else
 			canon = key;
 		    }
@@ -352,13 +348,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  /* Now we can allocate the data structure.  If the TTL of the
 	     entry is reported as zero do not cache the entry at all.  */
 	  if (ttl != 0 && he == NULL)
-	    {
-	      dataset = (struct dataset *) mempool_alloc (db, total
-							  + req->key_len,
-							  IDX_result_data);
-	      if (dataset == NULL)
-		++db->head->addfailed;
-	    }
+	    dataset = (struct dataset *) mempool_alloc (db, total
+							+ req->key_len, 1);
 
 	  if (dataset == NULL)
 	    {
@@ -436,7 +427,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
 		= (struct dataset *) mempool_alloc (db, total + req->key_len,
-						    IDX_result_data);
+						    1);
 	      if (__builtin_expect (newp != NULL, 1))
 		{
 		  /* Adjust pointer into the memory block.  */
@@ -445,8 +436,6 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
-	      else
-		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;
@@ -515,8 +504,7 @@ next_nip:
       if (fd != -1)
 	TEMP_FAILURE_RETRY (send (fd, &notfound, total, MSG_NOSIGNAL));
 
-      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
-			       IDX_result_data);
+      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len, 1);
       /* If we cannot permanently store the result, so be it.  */
       if (dataset != NULL)
 	{
@@ -535,8 +523,6 @@ next_nip:
 	  /* Copy the key data.  */
 	  key_copy = memcpy (dataset->strdata, key, req->key_len);
 	}
-      else
-	++db->head->addfailed;
    }
 
  out:
@@ -553,9 +539,6 @@ next_nip:
 		 ((uintptr_t) dataset & pagesize_m1) + total + req->key_len,
 		 MS_ASYNC);
 	}
-
-      /* Now get the lock to safely insert the records.  */
-      pthread_rwlock_rdlock (&db->lock);
 
       (void) cache_add (req->type, key_copy, req->key_len, &dataset->head,
 			true, db, uid, he == NULL);

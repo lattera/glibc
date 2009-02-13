@@ -1,5 +1,5 @@
 /* Cache handling for services lookup.
-   Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@drepper.com>, 2007.
 
@@ -64,7 +64,7 @@ static const serv_response_header notfound =
 static void
 cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	       const void *key, struct servent *serv, uid_t owner,
-	       struct hashentry *he, struct datahead *dh, int errval)
+	       struct hashentry *const he, struct datahead *dh, int errval)
 {
   ssize_t total;
   ssize_t written;
@@ -104,7 +104,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 					      MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
-				   IDX_result_data);
+				   1);
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (dataset != NULL)
 	    {
@@ -133,9 +133,6 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
 		}
 
-	      /* Now get the lock to safely insert the records.  */
-	      pthread_rwlock_rdlock (&db->lock);
-
 	      (void) cache_add (req->type, &dataset->strdata, req->key_len,
 				&dataset->head, true, db, owner, he == NULL);
 
@@ -145,8 +142,6 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	      if (dh != NULL)
 		dh->usable = false;
 	    }
-	  else
-	    ++db->head->addfailed;
 	}
     }
   else
@@ -187,13 +182,8 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
       dataset = NULL;
 
       if (he == NULL)
-	{
-	  dataset = (struct dataset *) mempool_alloc (db,
-						      total + req->key_len,
-						      IDX_result_data);
-	  if (dataset == NULL)
-	    ++db->head->addfailed;
-	}
+	dataset = (struct dataset *) mempool_alloc (db, total + req->key_len,
+						    1);
 
       if (dataset == NULL)
 	{
@@ -262,7 +252,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
 		= (struct dataset *) mempool_alloc (db, total + req->key_len,
-						    IDX_result_data);
+						    1);
 	      if (newp != NULL)
 		{
 		  /* Adjust pointers into the memory block.  */
@@ -273,8 +263,6 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
-	      else
-		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;
@@ -326,9 +314,6 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		     ((uintptr_t) dataset & pagesize_m1)
 		     + total + req->key_len, MS_ASYNC);
 	    }
-
-	  /* Now get the lock to safely insert the records.  */
-	  pthread_rwlock_rdlock (&db->lock);
 
 	  (void) cache_add (req->type, key_copy, req->key_len,
 			    &dataset->head, true, db, owner, he == NULL);

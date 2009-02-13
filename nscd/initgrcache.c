@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -54,7 +54,7 @@ static const initgr_response_header notfound =
 
 static void
 addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
-		void *key, uid_t uid, struct hashentry *he,
+		void *key, uid_t uid, struct hashentry *const he,
 		struct datahead *dh)
 {
   /* Search for the entry matching the key.  Please note that we don't
@@ -198,7 +198,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 						MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
-				   IDX_result_data);
+				   1);
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (dataset != NULL)
 	    {
@@ -227,9 +227,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
 		}
 
-	      /* Now get the lock to safely insert the records.  */
-	      pthread_rwlock_rdlock (&db->lock);
-
 	      (void) cache_add (req->type, key_copy, req->key_len,
 				&dataset->head, true, db, uid, he == NULL);
 
@@ -239,8 +236,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      if (dh != NULL)
 		dh->usable = false;
 	    }
-	  else
-	    ++db->head->addfailed;
 	}
     }
   else
@@ -257,13 +252,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       dataset = NULL;
 
       if (he == NULL)
-	{
-	  dataset = (struct dataset *) mempool_alloc (db,
-						      total + req->key_len,
-						      IDX_result_data);
-	  if (dataset == NULL)
-	    ++db->head->addfailed;
-	}
+	dataset = (struct dataset *) mempool_alloc (db, total + req->key_len,
+						    1);
 
       if (dataset == NULL)
 	{
@@ -334,7 +324,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
 		= (struct dataset *) mempool_alloc (db, total + req->key_len,
-						    IDX_result_data);
+						    1);
 	      if (newp != NULL)
 		{
 		  /* Adjust pointer into the memory block.  */
@@ -343,8 +333,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + req->key_len);
 		  alloca_used = false;
 		}
-	      else
-		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;
@@ -397,9 +385,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 		     ((uintptr_t) dataset & pagesize_m1) + total +
 		     req->key_len, MS_ASYNC);
 	    }
-
-	  /* Now get the lock to safely insert the records.  */
-	  pthread_rwlock_rdlock (&db->lock);
 
 	  (void) cache_add (INITGROUPS, cp, req->key_len, &dataset->head, true,
 			    db, uid, he == NULL);

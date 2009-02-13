@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -80,7 +80,7 @@ static const pw_response_header notfound =
 static void
 cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	     const void *key, struct passwd *pwd, uid_t owner,
-	     struct hashentry *he, struct datahead *dh, int errval)
+	     struct hashentry *const he, struct datahead *dh, int errval)
 {
   ssize_t total;
   ssize_t written;
@@ -121,7 +121,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 						MSG_NOSIGNAL));
 
 	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
-				   IDX_result_data);
+				   1);
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (dataset != NULL)
 	    {
@@ -150,9 +150,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
 		}
 
-	      /* Now get the lock to safely insert the records.  */
-	      pthread_rwlock_rdlock (&db->lock);
-
 	      (void) cache_add (req->type, key_copy, req->key_len,
 				&dataset->head, true, db, owner, he == NULL);
 
@@ -162,8 +159,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      if (dh != NULL)
 		dh->usable = false;
 	    }
-	  else
-	    ++db->head->addfailed;
 	}
     }
   else
@@ -197,12 +192,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       dataset = NULL;
 
       if (he == NULL)
-	{
-	  dataset = (struct dataset *) mempool_alloc (db, total + n,
-						      IDX_result_data);
-	  if (dataset == NULL)
-	    ++db->head->addfailed;
-	}
+	dataset = (struct dataset *) mempool_alloc (db, total + n, 1);
 
       if (dataset == NULL)
 	{
@@ -257,19 +247,10 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	{
 	  assert (fd == -1);
 
-#if 0
-	  if (dataset->head.datasize == dh->allocsize
+	  if (dataset->head.allocsize == dh->allocsize
 	      && dataset->head.recsize == dh->recsize
 	      && memcmp (&dataset->resp, dh->data,
 			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
-#else
-	  if (dataset->head.allocsize != dh->allocsize)
-	    goto nnn;
-	  if (dataset->head.recsize != dh->recsize)
-	    goto nnn;
-	  if(memcmp (&dataset->resp, dh->data,
-			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
-#endif
 	    {
 	      /* The data has not changed.  We will just bump the
 		 timeout value.  Note that the new record has been
@@ -279,12 +260,10 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	    }
 	  else
 	    {
- nnn:;
 	      /* We have to create a new record.  Just allocate
 		 appropriate memory and copy it.  */
 	      struct dataset *newp
-		= (struct dataset *) mempool_alloc (db, total + n,
-						    IDX_result_data);
+		= (struct dataset *) mempool_alloc (db, total + n, 1);
 	      if (newp != NULL)
 		{
 		  /* Adjust pointer into the memory block.  */
@@ -294,8 +273,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 		  dataset = memcpy (newp, dataset, total + n);
 		  alloca_used = false;
 		}
-	      else
-		++db->head->addfailed;
 
 	      /* Mark the old record as obsolete.  */
 	      dh->usable = false;
@@ -348,9 +325,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 		     ((uintptr_t) dataset & pagesize_m1) + total + n,
 		     MS_ASYNC);
 	    }
-
-	  /* Now get the lock to safely insert the records.  */
-	  pthread_rwlock_rdlock (&db->lock);
 
 	  /* NB: in the following code we always must add the entry
 	     marked with FIRST first.  Otherwise we end up with

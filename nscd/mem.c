@@ -197,32 +197,6 @@ gc (struct database_dyn *db)
     }
   assert (cnt == db->head->nentries);
 
-  /* Go through the list of in-flight memory blocks.  */
-  struct mem_in_flight *mrunp = mem_in_flight_list;
-  while (mrunp != NULL)
-    {
-      /* NB: There can be no race between this test and another thread
-        setting the field to the index we are looking for because
-        this would require the other thread to also have the memlock
-        for the database.
-
-	NB2: we do not have to look at latter blocks (higher indices) if
-	earlier blocks are not in flight.  They are always allocated in
-	sequence.  */
-      for (enum in_flight idx = IDX_result_data;
-	   idx < IDX_last && mrunp->block[idx].dbidx == db - dbs; ++idx)
-	{
-	  assert (mrunp->block[idx].blockoff >= 0);
-	  assert (mrunp->block[idx].blocklen < db->memsize);
-	  assert (mrunp->block[idx].blockoff
-		  + mrunp->block[0].blocklen <= db->memsize);
-	  markrange (mark, mrunp->block[idx].blockoff,
-		     mrunp->block[idx].blocklen);
-	}
-
-      mrunp = mrunp->next;
-    }
-
   /* Sort the entries by the addresses of the referenced data.  All
      the entries pointing to the same DATAHEAD object will have the
      same key.  Stability of the sorting is unimportant.  */
@@ -540,12 +514,15 @@ gc (struct database_dyn *db)
 
 
 void *
-mempool_alloc (struct database_dyn *db, size_t len, enum in_flight idx)
+mempool_alloc (struct database_dyn *db, size_t len, int data_alloc)
 {
   /* Make sure LEN is a multiple of our maximum alignment so we can
      keep track of used memory is multiples of this alignment value.  */
   if ((len & BLOCK_ALIGN_M1) != 0)
     len += BLOCK_ALIGN - (len & BLOCK_ALIGN_M1);
+
+  if (data_alloc)
+    pthread_rwlock_rdlock (&db->lock);
 
   pthread_mutex_lock (&db->memlock);
 
@@ -589,6 +566,9 @@ mempool_alloc (struct database_dyn *db, size_t len, enum in_flight idx)
 	    }
 	}
 
+      if (data_alloc)
+	pthread_rwlock_unlock (&db->lock);
+
       if (! db->last_alloc_failed)
 	{
 	  dbg_log (_("no more memory for database '%s'"), dbnames[db - dbs]);
@@ -596,17 +576,13 @@ mempool_alloc (struct database_dyn *db, size_t len, enum in_flight idx)
 	  db->last_alloc_failed = true;
 	}
 
+      ++db->head->addfailed;
+
       /* No luck.  */
       res = NULL;
     }
   else
     {
-      /* Remember that we have allocated this memory.  */
-      assert (idx >= 0 && idx < IDX_last);
-      mem_in_flight.block[idx].dbidx = db - dbs;
-      mem_in_flight.block[idx].blocklen = len;
-      mem_in_flight.block[idx].blockoff = db->head->first_free;
-
       db->head->first_free += len;
 
       db->last_alloc_failed = false;
