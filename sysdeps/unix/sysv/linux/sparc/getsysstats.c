@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux/Sparc version.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de> and
 		  Jakub Jelinek <jj@ultra.linux.cz>
@@ -21,7 +21,7 @@
 
 
 /* We need to define a special parser for /proc/cpuinfo.  */
-#define GET_NPROCS_PARSER(FP, BUFFER, RESULT)				  \
+#define GET_NPROCS_PARSER(FD, BUFFER, CP, RE, BUFFER_END, RESULT)	  \
   do									  \
     {									  \
       (RESULT) = 0;							  \
@@ -29,8 +29,9 @@
 	 active cpus.  We don't have to fear extremely long lines since	  \
 	 the kernel will not generate them.  8192 bytes are really	  \
 	 enough.  */							  \
-      while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	  \
-	if (sscanf (BUFFER, "ncpus active : %d", &(RESULT)) == 1)	  \
+      char *l;								  \
+      while ((l = next_line (FD, BUFFER, &CP, &RE, BUFFER_END)) != NULL)  \
+	if (sscanf (l, "ncpus active : %d", &(RESULT)) == 1)		  \
 	  break;							  \
     }									  \
   while (0)

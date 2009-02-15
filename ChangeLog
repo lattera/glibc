@@ -1,3 +1,11 @@
+2009-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): New function.
+	(GET_NPROCS_PARSER): Change parameters and use next_line.
+	(__get_nprocs): Rewrite to not use stdio routines.
+	* sysdeps/unix/sysv/linux/sparc/getsysstats.c (GET_NPROCS_PARSER):
+	Change parameters and use next_line.
+
 2009-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5381]

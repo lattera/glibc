@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996-2001, 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -49,10 +49,13 @@
    But not all systems have support for the /proc filesystem.  If it
    is not available we simply return 1 since there is no way.  */
 
+#include <not-cancel.h>
+
+
 /* Other architectures use different formats for /proc/cpuinfo.  This
    provides a hook for alternative parsers.  */
 #ifndef GET_NPROCS_PARSER
-# define GET_NPROCS_PARSER(FP, BUFFER, RESULT)				\
+# define GET_NPROCS_PARSER(FD, BUFFER, CP, RE, BUFFER_END, RESULT) \
   do									\
     {									\
       (RESULT) = 0;							\
@@ -60,12 +63,51 @@
 	 "processor".  We don't have to fear extremely long lines since	\
 	 the kernel will not generate them.  8192 bytes are really	\
 	 enough.  */							\
-      while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	\
-	if (strncmp (BUFFER, "processor", 9) == 0)			\
+      char *l;								\
+      while ((l = next_line (FD, BUFFER, &CP, &RE, BUFFER_END)) != NULL) \
+	if (strncmp (l, "processor", 9) == 0)				\
 	  ++(RESULT);							\
     }									\
   while (0)
 #endif
+
+
+static char *
+next_line (int fd, char *const buffer, char **cp, char **re,
+	   char *const buffer_end)
+{
+  char *res = *cp;
+  char *nl = memchr (*cp, '\n', *re - *cp);
+  if (nl == NULL)
+    {
+      if (*cp != buffer)
+	{
+	  if (*re == buffer_end)
+	    {
+	      memmove (buffer, *cp, *re - *cp);
+	      *re = buffer + (*re - *cp);
+	      *cp = buffer;
+
+	      ssize_t n = read_not_cancel (fd, *re, buffer_end - *re);
+	      if (n < 0)
+		return NULL;
+
+	      *re += n;
+	    }
+
+	  res = *cp;
+	  nl = memchr (*cp, '\n', *re - *cp);
+	}
+
+      if (nl == NULL)
+	nl = *re - 1;
+    }
+
+  *cp = nl + 1;
+  assert (*cp <= *re);
+
+  return res == *re ? NULL : res;
+}
 
 
 int
@@ -74,31 +116,36 @@ __get_nprocs ()
   /* XXX Here will come a test for the new system call.  */
 
   char buffer[8192];
+  char *const buffer_end = buffer + sizeof (buffer);
+  char *cp = buffer_end;
+  char *re = buffer_end;
   int result = 1;
 
+#ifdef O_CLOEXEC
+  const int flags = O_RDONLY | O_CLOEXEC;
+#else
+  const int flags = O_RDONLY;
+#endif
   /* The /proc/stat format is more uniform, use it by default.  */
-  FILE *fp = fopen ("/proc/stat", "rc");
-  if (fp != NULL)
+  int fd = open_not_cancel_2 ("/proc/stat", flags);
+  if (fd != -1)
     {
-      /* No threads use this stream.  */
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
       result = 0;
-      while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
-	if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
+
+      char *l;
+      while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
+	if (strncmp (l, "cpu", 3) == 0 && isdigit (l[3]))
 	  ++result;
 
-      fclose (fp);
+      close_not_cancel_no_status (fd);
     }
   else
     {
-      fp = fopen ("/proc/cpuinfo", "rc");
-      if (fp != NULL)
+      fd = open_not_cancel_2 ("/proc/cpuinfo", flags);
+      if (fd != -1)
 	{
-	  /* No threads use this stream.  */
-	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-	  GET_NPROCS_PARSER (fp, buffer, result);
-	  fclose (fp);
+	  GET_NPROCS_PARSER (fd, buffer, cp, re, buffer_end, result);
+	  close_not_cancel_no_status (fd);
 	}
     }
 
@@ -141,7 +188,7 @@ __get_nprocs_conf ()
 
 #ifdef GET_NPROCS_CONF_PARSER
   /* If we haven't found an appropriate entry return 1.  */
-  FILE *fp = fopen ("/proc/cpuinfo", "rc");
+  FILE *fp = fopen ("/proc/cpuinfo", "rce");
   if (fp != NULL)
     {
       char buffer[8192];
