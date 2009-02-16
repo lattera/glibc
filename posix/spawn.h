@@ -1,5 +1,5 @@
 /* Definitions for POSIX spawn interface.
-   Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,8 +74,8 @@ extern int posix_spawn (pid_t *__restrict __pid,
 			__const posix_spawn_file_actions_t *__restrict
 			__file_actions,
 			__const posix_spawnattr_t *__restrict __attrp,
-			char *__const argv[__restrict_arr],
-			char *__const envp[__restrict_arr]);
+			char *__const __argv[__restrict_arr],
+			char *__const __envp[__restrict_arr]);
 
 /* Similar to `posix_spawn' but search for FILE in the PATH.
 
@@ -84,7 +84,7 @@ extern int posix_spawn (pid_t *__restrict __pid,
 extern int posix_spawnp (pid_t *__pid, __const char *__file,
 			 __const posix_spawn_file_actions_t *__file_actions,
 			 __const posix_spawnattr_t *__attrp,
-			 char *__const argv[], char *__const envp[]);
+			 char *__const __argv[], char *__const __envp[]);
 
 
 /* Initialize data structure with attributes for `spawn' to default values.  */

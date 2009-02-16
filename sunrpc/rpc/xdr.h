@@ -316,7 +316,7 @@ extern bool_t xdr_opaque (XDR *__xdrs, caddr_t __cp, u_int __cnt) __THROW;
 extern bool_t xdr_string (XDR *__xdrs, char **__cpp, u_int __maxsize) __THROW;
 extern bool_t xdr_union (XDR *__xdrs, enum_t *__dscmp, char *__unp,
 			 __const struct xdr_discrim *__choices,
-			 xdrproc_t dfault) __THROW;
+			 xdrproc_t __dfault) __THROW;
 extern bool_t xdr_char (XDR *__xdrs, char *__cp) __THROW;
 extern bool_t xdr_u_char (XDR *__xdrs, u_char *__cp) __THROW;
 extern bool_t xdr_vector (XDR *__xdrs, char *__basep, u_int __nelem,

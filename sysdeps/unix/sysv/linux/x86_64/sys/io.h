@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2000, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,138 +41,138 @@ extern int iopl (int __level) __THROW;
 #if defined __GNUC__ && __GNUC__ >= 2
 
 static __inline unsigned char
-inb (unsigned short int port)
+inb (unsigned short int __port)
 {
   unsigned char _v;
 
-  __asm__ __volatile__ ("inb %w1,%0":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inb %w1,%0":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline unsigned char
-inb_p (unsigned short int port)
+inb_p (unsigned short int __port)
 {
   unsigned char _v;
 
-  __asm__ __volatile__ ("inb %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inb %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline unsigned short int
-inw (unsigned short int port)
+inw (unsigned short int __port)
 {
   unsigned short _v;
 
-  __asm__ __volatile__ ("inw %w1,%0":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inw %w1,%0":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline unsigned short int
-inw_p (unsigned short int port)
+inw_p (unsigned short int __port)
 {
   unsigned short int _v;
 
-  __asm__ __volatile__ ("inw %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inw %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline unsigned int
-inl (unsigned short int port)
+inl (unsigned short int __port)
 {
   unsigned int _v;
 
-  __asm__ __volatile__ ("inl %w1,%0":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inl %w1,%0":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline unsigned int
-inl_p (unsigned short int port)
+inl_p (unsigned short int __port)
 {
   unsigned int _v;
-  __asm__ __volatile__ ("inl %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (port));
+  __asm__ __volatile__ ("inl %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (__port));
   return _v;
 }
 
 static __inline void
-outb (unsigned char value, unsigned short int port)
+outb (unsigned char __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outb %b0,%w1": :"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outb %b0,%w1": :"a" (__value), "Nd" (__port));
 }
 
 static __inline void
-outb_p (unsigned char value, unsigned short int port)
+outb_p (unsigned char __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outb %b0,%w1\noutb %%al,$0x80": :"a" (value),
-			"Nd" (port));
+  __asm__ __volatile__ ("outb %b0,%w1\noutb %%al,$0x80": :"a" (__value),
+			"Nd" (__port));
 }
 
 static __inline void
-outw (unsigned short int value, unsigned short int port)
+outw (unsigned short int __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outw %w0,%w1": :"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outw %w0,%w1": :"a" (__value), "Nd" (__port));
 
 }
 
 static __inline void
-outw_p (unsigned short int value, unsigned short int port)
+outw_p (unsigned short int __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outw %w0,%w1\noutb %%al,$0x80": :"a" (value),
-			"Nd" (port));
+  __asm__ __volatile__ ("outw %w0,%w1\noutb %%al,$0x80": :"a" (__value),
+			"Nd" (__port));
 }
 
 static __inline void
-outl (unsigned int value, unsigned short int port)
+outl (unsigned int __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outl %0,%w1": :"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outl %0,%w1": :"a" (__value), "Nd" (__port));
 }
 
 static __inline void
-outl_p (unsigned int value, unsigned short int port)
+outl_p (unsigned int __value, unsigned short int __port)
 {
-  __asm__ __volatile__ ("outl %0,%w1\noutb %%al,$0x80": :"a" (value),
-			"Nd" (port));
+  __asm__ __volatile__ ("outl %0,%w1\noutb %%al,$0x80": :"a" (__value),
+			"Nd" (__port));
 }
 
 static __inline void
-insb (unsigned short int port, void *addr, unsigned long int count)
+insb (unsigned short int __port, void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; insb":"=D" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; insb":"=D" (addr), "=c" (__count)
+			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 static __inline void
-insw (unsigned short int port, void *addr, unsigned long int count)
+insw (unsigned short int __port, void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; insw":"=D" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; insw":"=D" (addr), "=c" (__count)
+			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 static __inline void
-insl (unsigned short int port, void *addr, unsigned long int count)
+insl (unsigned short int __port, void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; insl":"=D" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; insl":"=D" (addr), "=c" (__count)
+			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 static __inline void
-outsb (unsigned short int port, const void *addr, unsigned long int count)
+outsb (unsigned short int __port, const void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; outsb":"=S" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; outsb":"=S" (addr), "=c" (__count)
+			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 static __inline void
-outsw (unsigned short int port, const void *addr, unsigned long int count)
+outsw (unsigned short int __port, const void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; outsw":"=S" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; outsw":"=S" (addr), "=c" (__count)
+  			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 static __inline void
-outsl (unsigned short int port, const void *addr, unsigned long int count)
+outsl (unsigned short int __port, const void *addr, unsigned long int __count)
 {
-  __asm__ __volatile__ ("cld ; rep ; outsl":"=S" (addr),
-			"=c" (count):"d" (port), "0" (addr), "1" (count));
+  __asm__ __volatile__ ("cld ; rep ; outsl":"=S" (addr), "=c" (__count)
+			:"d" (__port), "0" (addr), "1" (__count));
 }
 
 #endif	/* GNU C */

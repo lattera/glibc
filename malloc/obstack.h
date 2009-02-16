@@ -1,5 +1,5 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988-1994,1996-1999,2003,2004,2005
+   Copyright (C) 1988-1994,1996-1999,2003,2004,2005,2009
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -187,7 +187,7 @@ extern int _obstack_begin_1 (struct obstack *, int, int,
 			     void (*) (void *, void *), void *);
 extern int _obstack_memory_used (struct obstack *);
 
-void obstack_free (struct obstack *obstack, void *block);
+void obstack_free (struct obstack *__obstack, void *__block);
 
 
 /* Error handler called when `obstack_chunk_alloc' failed to allocate

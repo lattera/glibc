@@ -1,5 +1,5 @@
 /* Machine-specific declarations for dynamic linker interface.  PowerPC version
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ extern unsigned int la_ppc32_gnu_pltexit (Elf32_Sym *__sym,
 					  uintptr_t *__defcook,
 					  const La_ppc32_regs *__inregs,
 					  La_ppc32_retval *__outregs,
-					  const char *symname);
+					  const char *__symname);
 
 __END_DECLS
 
@@ -104,7 +104,7 @@ extern unsigned int la_ppc64_gnu_pltexit (Elf64_Sym *__sym,
 					  uintptr_t *__defcook,
 					  const La_ppc64_regs *__inregs,
 					  La_ppc64_retval *__outregs,
-					  const char *symname);
+					  const char *__symname);
 
 __END_DECLS
 

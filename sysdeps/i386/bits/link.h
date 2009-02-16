@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,6 +55,6 @@ extern unsigned int la_i86_gnu_pltexit (Elf32_Sym *__sym, unsigned int __ndx,
 					uintptr_t *__defcook,
 					const La_i86_regs *__inregs,
 					La_i86_retval *__outregs,
-					const char *symname);
+					const char *__symname);
 
 __END_DECLS

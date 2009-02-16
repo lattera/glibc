@@ -82,11 +82,11 @@ struct SVCXPRT {
     enum xprt_stat (*xp_stat) (SVCXPRT *__xprt);
 				/* get transport status */
     bool_t	(*xp_getargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
-			       caddr_t args_ptr); /* get arguments */
+			       caddr_t __args_ptr); /* get arguments */
     bool_t	(*xp_reply) (SVCXPRT *__xprt, struct rpc_msg *__msg);
 				/* send reply */
     bool_t	(*xp_freeargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				caddr_t args_ptr);
+				caddr_t __args_ptr);
 				/* free mem allocated for args */
     void	(*xp_destroy) (SVCXPRT *__xprt);
 				/* destroy this struct */
@@ -226,7 +226,7 @@ extern void xprt_unregister (SVCXPRT *__xprt) __THROW;
  * deadlock the caller and server processes!
  */
 
-extern bool_t	svc_sendreply (SVCXPRT *xprt, xdrproc_t __xdr_results,
+extern bool_t	svc_sendreply (SVCXPRT *__xprt, xdrproc_t __xdr_results,
 			       caddr_t __xdr_location) __THROW;
 
 extern void	svcerr_decode (SVCXPRT *__xprt) __THROW;

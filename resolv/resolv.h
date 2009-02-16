@@ -71,19 +71,19 @@
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
 
-typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *ns,
-					   const u_char **query,
-					   int *querylen,
-					   u_char *ans,
-					   int anssiz,
-					   int *resplen);
+typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *__ns,
+					   const u_char **__query,
+					   int *__querylen,
+					   u_char *__ans,
+					   int __anssiz,
+					   int *__resplen);
 
-typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
-					   const u_char *query,
-					   int querylen,
-					   u_char *ans,
-					   int anssiz,
-					   int *resplen);
+typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *__ns,
+					   const u_char *__query,
+					   int __querylen,
+					   u_char *__ans,
+					   int __anssiz,
+					   int *__resplen);
 
 /*
  * Global defines and variables for resolver stub.
@@ -328,8 +328,8 @@ const char *	sym_ntos (const struct res_sym *, int, int *) __THROW;
 const char *	sym_ntop (const struct res_sym *, int, int *) __THROW;
 int		b64_ntop (u_char const *, size_t, char *, size_t) __THROW;
 int		b64_pton (char const *, u_char *, size_t) __THROW;
-int		loc_aton (const char *ascii, u_char *binary) __THROW;
-const char *	loc_ntoa (const u_char *binary, char *ascii) __THROW;
+int		loc_aton (const char *__ascii, u_char *__binary) __THROW;
+const char *	loc_ntoa (const u_char *__binary, char *__ascii) __THROW;
 int		dn_skipname (const u_char *, const u_char *) __THROW;
 void		putlong (u_int32_t, u_char *) __THROW;
 void		putshort (u_int16_t, u_char *) __THROW;
@@ -340,10 +340,10 @@ const char *	p_rcode (int) __THROW;
 const u_char *	p_cdnname (const u_char *, const u_char *, int, FILE *)
      __THROW;
 const u_char *	p_cdname (const u_char *, const u_char *, FILE *) __THROW;
-const u_char *	p_fqnname (const u_char *cp, const u_char *msg,
+const u_char *	p_fqnname (const u_char *__cp, const u_char *__msg,
 			   int, char *, int) __THROW;
 const u_char *	p_fqname (const u_char *, const u_char *, FILE *) __THROW;
-const char *	p_option (u_long option) __THROW;
+const char *	p_option (u_long __option) __THROW;
 char *		p_secstodate (u_long) __THROW;
 int		dn_count_labels (const char *) __THROW;
 int		dn_comp (const char *, u_char *, int, u_char **, u_char **)
@@ -355,7 +355,7 @@ int		res_nameinquery (const char *, int, int,
 				 const u_char *, const u_char *) __THROW;
 int		res_queriesmatch (const u_char *, const u_char *,
 				  const u_char *, const u_char *) __THROW;
-const char *	p_section (int section, int opcode) __THROW;
+const char *	p_section (int __section, int __opcode) __THROW;
 /* Things involving a resolver context. */
 int		res_ninit (res_state) __THROW;
 int		res_nisourserver (const res_state,

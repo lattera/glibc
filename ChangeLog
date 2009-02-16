@@ -1,3 +1,31 @@
+2009-02-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/monetary.h: Uglify function parameter names.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* resolv/arpa/nameser.h: Likewise.
+	* resolv/resolv.h: Likewise.
+	* argp/argp.h: Likewise.
+	* locale/langinfo.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+	* malloc/obstack.h: Likewise.
+	* sysdeps/ia64/bits/link.h: Likewise.
+	* sysdeps/i386/bits/link.h: Likewise.
+	* sysdeps/s390/bits/link.h: Likewise.
+	* sysdeps/powerpc/bits/link.h: Likewise.
+	* sysdeps/x86_64/bits/link.h: Likewise.
+	* sysdeps/sparc/bits/link.h: Likewise.
+	* sysdeps/sh/bits/link.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Likewise.
+
 2008-12-01  Fredrik Unger  <fred@tree.se>
 
 	* soft-fp/double.h [_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_D,

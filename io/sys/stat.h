@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007
+/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -298,7 +298,8 @@ extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #ifdef __USE_ATFILE
 /* Set file access permissions of FILE relative to
    the directory FD is open on.  */
-extern int fchmodat (int __fd, __const char *__file, __mode_t mode, int __flag)
+extern int fchmodat (int __fd, __const char *__file, __mode_t __mode,
+		     int __flag)
      __THROW __nonnull ((2)) __wur;
 #endif /* Use ATFILE.  */
 

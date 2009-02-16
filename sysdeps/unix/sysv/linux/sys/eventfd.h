@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ extern int eventfd (int __count, int __flags) __THROW;
 extern int eventfd_read (int __fd, eventfd_t *__value);
 
 /* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t value);
+extern int eventfd_write (int __fd, eventfd_t __value);
 
 __END_DECLS
 

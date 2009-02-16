@@ -1,4 +1,4 @@
-  /* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+  /* Copyright (C) 1996-2002, 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -421,7 +421,7 @@ extern int getnetgrent (char **__restrict __hostp,
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern int innetgr (__const char *__netgroup, __const char *__host,
-		    __const char *__user, __const char *domain);
+		    __const char *__user, __const char *__domain);
 
 /* Reentrant version of `getnetgrent' where result is placed in BUFFER.
 

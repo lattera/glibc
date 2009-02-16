@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995-1999, 2003, 2004, 2005, 2006, 2007
+   Copyright (C) 1995-1999, 2003, 2004, 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
@@ -150,8 +150,8 @@ struct argp_state;		/* " */
 struct argp_child;		/* " */
 
 /* The type of a pointer to an argp parsing function.  */
-typedef error_t (*argp_parser_t) (int key, char *arg,
-				  struct argp_state *state);
+typedef error_t (*argp_parser_t) (int __key, char *__arg,
+				  struct argp_state *__state);
 
 /* What to return for unrecognized keys.  For special ARGP_KEY_ keys, such
    returns will simply be ignored.  For user keys, this error will be turned

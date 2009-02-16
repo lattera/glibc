@@ -487,7 +487,7 @@ int		ns_sprintrrf (const u_char *, size_t, const char *,
 			      char *, size_t) __THROW;
 int		ns_format_ttl (u_long, char *, size_t) __THROW;
 int		ns_parse_ttl (const char *, u_long *) __THROW;
-u_int32_t	ns_datetosecs (const char *cp, int *errp) __THROW;
+u_int32_t	ns_datetosecs (const char *, int *) __THROW;
 int		ns_name_ntol (const u_char *, u_char *, size_t) __THROW;
 int		ns_name_ntop (const u_char *, char *, size_t) __THROW;
 int		ns_name_pton (const char *, u_char *, size_t) __THROW;
