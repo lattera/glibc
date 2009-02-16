@@ -1,3 +1,9 @@
+2008-12-01  Fredrik Unger  <fred@tree.se>
+
+	* soft-fp/double.h [_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_D,
+	FP_UNPACK_SEMIRAW_DP): Use _FP_UNPACK_RAW_1 instead of
+	_FP_UNPACK_RAW_2, fix up first argument.
+
 2009-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): New function.
