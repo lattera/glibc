@@ -19,6 +19,7 @@ libc {
   GLIBC_2.4 {
     #errlist-compat	256
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
 }
 librt {
   GLIBC_2.3 {
