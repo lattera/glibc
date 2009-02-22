@@ -1,3 +1,7 @@
+2009-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: Update from translation team.
+
 2009-02-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/monetary.h: Uglify function parameter names.
