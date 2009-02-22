@@ -233,7 +233,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
                       GL(dl_profile_map) = l;
                     }
 
-		  if((unsigned long) &_dl_runtime_resolve & 3)
+		  if((unsigned long) &_dl_runtime_profile & 3)
 		    {
                       got[-2] = (Elf32_Addr) ((struct fdesc *)
                                   ((unsigned long) &_dl_runtime_profile & ~3))->ip;

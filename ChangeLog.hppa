@@ -1,3 +1,7 @@
+2009-02-22  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/hppa/dl-machine.h: Use _dl_runtime_profile.
+
 2009-02-13  Khem Raj  <raj.khem@gmail.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c 
