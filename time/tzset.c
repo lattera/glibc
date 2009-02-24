@@ -174,13 +174,25 @@ __tzset_parse_tz (tz)
   /* Get the standard timezone name.  */
   tzbuf = strdupa (tz);
 
-  if (sscanf (tz, "%[^0-9,+-]", tzbuf) != 1 ||
-      (l = strlen (tzbuf)) < 3)
+  if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
+    {
+      /* Check for the quoted version.  */
+      char *wp = tzbuf;
+      if (*tz++ != '<')
+	goto out;
+
+      while (isalnum (*tz) || *tz == '+' || *tz == '-')
+	*wp++ = *tz++;
+      if (*tz++ != '>' || wp - tzbuf < 3)
+	goto out;
+      *wp = '\0';
+    }
+  else if ((l = strlen (tzbuf)) < 3)
     goto out;
+  else
+    tz += l;
 
   tz_rules[0].name = __tzstring (tzbuf);
-
-  tz += l;
 
   /* Figure out the standard offset from UTC.  */
   if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
@@ -217,13 +229,31 @@ __tzset_parse_tz (tz)
   if (*tz != '\0')
     {
       char *n = tzbuf + strlen (tzbuf) + 1;
-      if (sscanf (tz, "%[^0-9,+-]", n) != 1 ||
-	  (l = strlen (n)) < 3)
-	goto done_names;	/* Punt on name, set up the offsets.  */
+
+      if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
+	{
+	  /* Check for the quoted version.  */
+	  char *wp = tzbuf;
+	  const char *rp = tz;
+	  if (*rp++ != '<')
+	    /* Punt on name, set up the offsets.  */
+	    goto done_names;
+
+	  while (isalnum (*rp) || *rp == '+' || *rp == '-')
+	    *wp++ = *rp++;
+	  if (*rp++ != '>' || wp - tzbuf < 3)
+	    /* Punt on name, set up the offsets.  */
+	    goto done_names;
+	  *wp = '\0';
+	  tz = rp;
+	}
+      else if ((l = strlen (tzbuf)) < 3)
+	/* Punt on name, set up the offsets.  */
+	goto done_names;
+      else
+	tz += l;
 
       tz_rules[1].name = __tzstring (n);
-
-      tz += l;
 
       /* Figure out the DST offset from GMT.  */
       if (*tz == '-' || *tz == '+')
