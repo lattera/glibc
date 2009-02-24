@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ __sysconf (int name)
 
   switch (name)
     {
+      struct rlimit rlimit;
 #ifdef __NR_clock_getres
     case _SC_MONOTONIC_CLOCK:
       /* Check using the clock_getres system call.  */
@@ -84,12 +85,9 @@ __sysconf (int name)
 	 size.  */
       if (GLRO(dl_discover_osversion) () >= 0x020617)
 #endif
-	{
-	  /* Use getrlimit to get the stack limit.  */
-	  struct rlimit rlimit;
-	  if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
-	    return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
-	}
+	/* Use getrlimit to get the stack limit.  */
+	if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
+	  return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
 
       return legacy_ARG_MAX;
 
@@ -100,6 +98,9 @@ __sysconf (int name)
       break;
 
     case _SC_SIGQUEUE_MAX:
+      if (__getrlimit (RLIMIT_SIGPENDING, &rlimit) == 0)
+	return rlimit.rlim_cur;
+
       /* The /proc/sys/kernel/rtsig-max file contains the answer.  */
       procfname = "/proc/sys/kernel/rtsig-max";
       break;
