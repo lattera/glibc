@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006,2008
+# Copyright (C) 1991-2002,2003,2004,2005,2006,2008,2009
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -350,15 +350,6 @@ TAGS:
 .PHONY: dist tag-for-dist
 
 generated := $(generated) stubs.h
-
-README: README.template version.h
-	-rm -f $@
-	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
-# Make it unwritable so I won't change it by mistake.
-	chmod 444 $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'Remade for $(release)-$(version)' $@
-endif
 
 files-for-dist := README FAQ INSTALL NOTES configure
 
