@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2004, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef	_POSIX_OPT_H
-#define	_POSIX_OPT_H	1
+#ifndef	_BITS_POSIX_OPT_H
+#define	_BITS_POSIX_OPT_H	1
 
 /* Job control is supported.  */
 #define	_POSIX_JOB_CONTROL	1
@@ -181,4 +181,4 @@
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
 
-#endif /* posix_opt.h */
+#endif /* bits/posix_opt.h */

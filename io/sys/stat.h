@@ -254,7 +254,7 @@ extern int fstatat64 (int __fd, __const char *__restrict __file,
      __THROW __nonnull ((2, 3));
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */

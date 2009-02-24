@@ -1,5 +1,7 @@
 2009-02-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/sys/stat.h: The lstat functions have been mandatory since 2001.
+
 	* time/tzset.c (tzset_internal): Correct parsing of TZ envvar.
 
 2009-02-22  Ulrich Drepper  <drepper@redhat.com>
