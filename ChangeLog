@@ -1,3 +1,11 @@
+2009-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* bits/confname.h: Define _SC_TRACE_EVENT_NAME_MAX, _SC_TRACE_NAME_MAX,
+	_SC_TRACE_SYS_MAX, _SC_TRACE_USER_EVENT_MAX, _SC_XOPEN_STREAMS.
+	* sysdeps/posix/sysconf.c (__sysconf): Handle
+	_SC_TRACE_EVENT_NAME_MAX, _SC_TRACE_NAME_MAX, _SC_TRACE_SYS_MAX,
+	_SC_TRACE_USER_EVENT_MAX, _SC_XOPEN_STREAMS.
+
 2009-02-24  Roland McGrath  <roland@redhat.com>
 
 	[BZ #9895]

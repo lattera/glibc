@@ -1205,6 +1205,16 @@ __sysconf (name)
       return -1;
 #endif
 
+    case _SC_TRACE_EVENT_NAME_MAX:
+    case _SC_TRACE_NAME_MAX:
+    case _SC_TRACE_SYS_MAX:
+    case _SC_TRACE_USER_EVENT_MAX:
+      /* No support for tracing.  */
+
+    case _SC_XOPEN_STREAMS:
+      /* No support for STREAMS.  */
+      return -1;
+
     case _SC_LEVEL1_ICACHE_SIZE:
     case _SC_LEVEL1_ICACHE_ASSOC:
     case _SC_LEVEL1_ICACHE_LINESIZE:
