@@ -41,7 +41,7 @@ extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
 			__const char *__restrict __format, ...)
      __THROW __attribute_format_strfmon__ (3, 4);
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 # include <xlocale.h>
 
 /* Formatting a monetary value according to the current locale.  */

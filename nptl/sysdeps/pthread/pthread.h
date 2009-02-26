@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -63,12 +63,14 @@ enum
 };
 
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K
 /* Robust mutex or not flags.  */
 enum
 {
-  PTHREAD_MUTEX_STALLED_NP,
-  PTHREAD_MUTEX_ROBUST_NP
+  PTHREAD_MUTEX_STALLED,
+  PTHREAD_MUTEX_STALLED_NP = PTHREAD_MUTEX_STALLED,
+  PTHREAD_MUTEX_ROBUST_NP,
+  PTHREAD_MUTEX_ROBUST_NP = PTHREAD_MUTEX_ROBUST
 };
 #endif
 
@@ -762,10 +764,14 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 #endif
 
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Declare the state protected by MUTEX as consistent.  */
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
      __THROW __nonnull ((1));
+# ifdef __USE_GNU
+extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
+     __THROW __nonnull ((1));
+# endif
 #endif
 
 
@@ -827,16 +833,26 @@ extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
      __THROW __nonnull ((1));
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K
 /* Get the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_getrobust (__const pthread_mutexattr_t *__attr,
+					int *__robustness)
+     __THROW __nonnull ((1, 2));
+# ifdef __USE_GNU
 extern int pthread_mutexattr_getrobust_np (__const pthread_mutexattr_t *__attr,
 					   int *__robustness)
      __THROW __nonnull ((1, 2));
+# endif
 
 /* Set the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
+					int __robustness)
+     __THROW __nonnull ((1));
+# ifdef __USE_GNU
 extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
 					   int __robustness)
      __THROW __nonnull ((1));
+# endif
 #endif
 
 

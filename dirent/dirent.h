@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000, 2003-2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,7 +134,7 @@ typedef struct __dirstream DIR;
    marked with __THROW.  */
 extern DIR *opendir (__const char *__name) __nonnull ((1));
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Same as opendir, but open the stream on the file descriptor FD.
 
    This function is a possible cancellation point and therefore not
@@ -218,7 +218,7 @@ extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_BSD || defined __USE_MISC
+#if defined __USE_BSD || defined __USE_MISC || defined __XOPEN_2K8
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
@@ -227,15 +227,17 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 #  define dirfd(dirp)	_DIR_dirfd (dirp)
 # endif
 
-# ifndef MAXNAMLEN
+# if defined __USE_BSD || defined __USE_MISC
+#  ifndef MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */
 #  include <bits/posix1_lim.h>
 
 /* `MAXNAMLEN' is the BSD name for what POSIX calls `NAME_MAX'.  */
-#  ifdef NAME_MAX
-#   define MAXNAMLEN	NAME_MAX
-#  else
-#   define MAXNAMLEN	255
+#   ifdef NAME_MAX
+#    define MAXNAMLEN	NAME_MAX
+#   else
+#    define MAXNAMLEN	255
+#   endif
 #  endif
 # endif
 
@@ -294,57 +296,59 @@ extern int alphasort64 (__const void *__e1, __const void *__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # endif
 
-# ifdef __USE_GNU
-/* Function to compare two `struct dirent's by name & version.  */
-#  ifndef __USE_FILE_OFFSET64
-extern int versionsort (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-#  else
-#   ifdef __REDIRECT
-extern int __REDIRECT_NTH (versionsort,
-			   (__const void *__e1, __const void *__e2),
-			   versionsort64)
-     __attribute_pure__ __nonnull ((1, 2));
-#   else
-#    define versionsort versionsort64
-#   endif
-#  endif
 
-#  ifdef __USE_LARGEFILE64
-extern int versionsort64 (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-#  endif
-# endif
-
+# if defined __USE_BSD || defined __USE_MISC
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
-# ifndef __USE_FILE_OFFSET64
+#  ifndef __USE_FILE_OFFSET64
 extern __ssize_t getdirentries (int __fd, char *__restrict __buf,
 				size_t __nbytes,
 				__off_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
-# else
-#  ifdef __REDIRECT
+#  else
+#   ifdef __REDIRECT
 extern __ssize_t __REDIRECT_NTH (getdirentries,
 				 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
 				  __off64_t *__restrict __basep),
 				 getdirentries64) __nonnull ((2, 4));
-#  else
-#   define getdirentries getdirentries64
+#   else
+#    define getdirentries getdirentries64
+#   endif
 #  endif
-# endif
 
-# ifdef __USE_LARGEFILE64
+#  ifdef __USE_LARGEFILE64
 extern __ssize_t getdirentries64 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
 				  __off64_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
+#  endif
+# endif /* Use BSD or misc.  */
+#endif /* Use BSD or misc or XPG7.  */
+
+#ifdef __USE_GNU
+/* Function to compare two `struct dirent's by name & version.  */
+# ifndef __USE_FILE_OFFSET64
+extern int versionsort (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__ __nonnull ((1, 2));
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT_NTH (versionsort,
+			   (__const void *__e1, __const void *__e2),
+			   versionsort64)
+     __attribute_pure__ __nonnull ((1, 2));
+#  else
+#   define versionsort versionsort64
+#  endif
 # endif
 
-#endif /* Use BSD or misc.  */
+# ifdef __USE_LARGEFILE64
+extern int versionsort64 (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__ __nonnull ((1, 2));
+# endif
+#endif /* Use GNU.  */
 
 __END_DECLS
 

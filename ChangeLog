@@ -1,6 +1,9 @@
 2009-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/features.h: Define macros for XPG7/POSIX 2008.
+	* ctype/ctype.h: The *_l functions are in POSIX 2008.
+	* dirent/dirent.h: alphasort, dirfd, scandir, and fdopendir are in
+	POSIX 2008.
 	* sysdeps/unix/sysv/linux/bits/stat.h: Protect UTIME_NOW and
 	UTIME_OMIT only with __USE_ATFILE.
 	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
@@ -52,7 +55,7 @@
 2009-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf):
-	/proc/sys/kenrel/rtsig_max doesn't exist anymore, use getrlimit
+	/proc/sys/kernel/rtsig_max doesn't exist anymore, use getrlimit
 	instead.
 
 	* io/sys/stat.h: The lstat functions have been mandatory since 2001.

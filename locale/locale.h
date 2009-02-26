@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2002,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2002,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ extern struct lconv *localeconv (void) __THROW;
 __END_NAMESPACE_STD
 
 
-#ifdef	__USE_GNU
+#ifdef	__USE_XOPEN2K
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
    information from several different locales.  Another application is
@@ -144,8 +144,6 @@ __END_NAMESPACE_STD
 
 /* Get locale datatype definition.  */
 # include <xlocale.h>
-
-typedef __locale_t locale_t;
 
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the

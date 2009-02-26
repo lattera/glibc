@@ -1,3 +1,8 @@
+2009-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: The robust mutex functions are in
+	POSIX 2008.
+
 2009-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_BITS_POSIX_OPT_H):

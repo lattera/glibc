@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -216,7 +216,7 @@ __NTH (toupper (int __c))
 #endif /* Not __NO_CTYPE.  */
 
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
    information from several different locales.  Another application is
@@ -292,7 +292,7 @@ extern int toupper_l (int __c, __locale_t __l) __THROW;
 
 #  define __isblank_l(c,l)	__isctype_l((c), _ISblank, (l))
 
-#  if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
+#  if defined __USE_SVID || defined __USE_MISC
 #   define __isascii_l(c,l)	((l), __isascii (c))
 #   define __toascii_l(c,l)	((l), __toascii (c))
 #  endif
@@ -311,14 +311,14 @@ extern int toupper_l (int __c, __locale_t __l) __THROW;
 
 #  define isblank_l(c,l)	__isblank_l ((c), (l))
 
-#  if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
+#  if defined __USE_SVID || defined __USE_MISC
 #   define isascii_l(c,l)	__isascii_l ((c), (l))
 #   define toascii_l(c,l)	__toascii_l ((c), (l))
 #  endif
 
 # endif /* Not __NO_CTYPE.  */
 
-#endif /* Use GNU.  */
+#endif /* Use POSIX 2008.  */
 
 __END_DECLS
 
