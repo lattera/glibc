@@ -1,5 +1,6 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License as
@@ -27,11 +28,6 @@ static _Unwind_Reason_Code (*libgcc_s_personality)
   (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
    struct _Unwind_Context *);
 
-#ifndef LIBGCC_S_SO
-#error LIBGCC_S_SO
-#define LIBGCC_S_SO "libgcc_s.so.1"
-#endif
-
 static void
 init (void)
 {
@@ -43,7 +39,7 @@ init (void)
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
       || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL)
-    __libc_fatal ("libgcc_s.so must be installed for pthread_cancel to work\n");
+    __libc_fatal (LIBGCC_S_SO " must be installed for pthread_cancel to work\n");
 
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;

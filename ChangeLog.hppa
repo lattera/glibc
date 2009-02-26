@@ -1,5 +1,12 @@
 2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c:
+	Update from nptl/sysdeps/pthread/unwind-forcedunwind.c
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-resume.c:
+	Update from nptl/sysdeps/pthread/unwind-resume.c
+
+2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Define 
 	FUTEX_WAIT_BITSET, FUTEX_WAKE_BITSET, FUTEX_CLOCK_REALTIME,
 	and FUTEX_BITSET_MATCH_ANY.
