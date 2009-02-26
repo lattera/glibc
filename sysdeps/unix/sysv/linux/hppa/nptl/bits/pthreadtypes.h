@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,42 +21,29 @@
 
 /* Linuxthread type sizes (bytes):
    sizeof(pthread_attr_t) = 0x24 (36)
+   sizeof(pthread_barrier_t) = 0x30 (48)
+   sizeof(pthread_barrierattr_t) = 0x4 (4) 
+   sizeof(pthread_cond_t) = 0x30 (48)
+   sizeof(pthread_condattr_t) = 0x4 (4)
    sizeof(pthread_mutex_t) = 0x30 (48)
    sizeof(pthread_mutexattr_t) = 0x4 (4)
-   sizeof(pthread_cond_t) = 0x30 (48)
-	= Expanded to 64 bytes in NPTL. 
-   sizeof(pthread_cond_compat_t) = 0xc (12)
-	= Did not exist in Linuxthreads.
-   sizeof(pthread_condattr_t) = 0x4 (4)
    sizeof(pthread_rwlock_t) = 0x40 (64)
    sizeof(pthread_rwlockattr_t) = 0x8 (8)
-   sizeof(pthread_barrier_t) = 0x30 (48)
-   sizeof(pthread_barrierattr_t) = 0x4 (4) */
+   sizeof(pthread_spinlock_t) = 0x10 (16) */
 
 #define __SIZEOF_PTHREAD_ATTR_T 36
-#define __SIZEOF_PTHREAD_MUTEX_T 48 
-#define __SIZEOF_PTHREAD_MUTEXATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 64
-#define __SIZEOF_PTHREAD_COND_COMPAT_T 12
-#define __SIZEOF_PTHREAD_CONDATTR_T 4
-#define __SIZEOF_PTHREAD_RWLOCK_T 64
-#define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 #define __SIZEOF_PTHREAD_BARRIER_T 48
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
+#define __SIZEOF_PTHREAD_COND_T 64
+#define __SIZEOF_PTHREAD_CONDATTR_T 4
+#define __SIZEOF_PTHREAD_MUTEX_T 48 
+#define __SIZEOF_PTHREAD_MUTEXATTR_T 4
+#define __SIZEOF_PTHREAD_RWLOCK_T 64
+#define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 
 /* Thread identifiers.  The structure of the attribute type is not
    exposed on purpose.  */
 typedef unsigned long int pthread_t;
-
-/* Our old basic lock type, listed here for posterity.
-   We needed self-aligning locks for linuxthreads LDCW 
-   implementation. For NPTL we use LWS Compare and 
-   Exchange to implement primitives. */
-#if 0
-typedef volatile struct {
-	int lock[4];
-} __attribute__ ((aligned(16))) __atomic_lock_t;
-#endif
 
 typedef union
 {

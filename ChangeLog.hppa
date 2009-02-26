@@ -1,5 +1,11 @@
 2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h:
+	Adjust comment. Sort macros alphabetically. Remove old
+	lock comments.
+
+2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c:
 	Update from nptl/sysdeps/pthread/unwind-forcedunwind.c
 	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-resume.c:
