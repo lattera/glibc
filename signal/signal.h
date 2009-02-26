@@ -70,6 +70,15 @@ typedef __uid_t uid_t;
 # endif
 #endif	/* Unix98 */
 
+#ifdef __USE_POSIX199309
+/* We need `struct timespec' later on.  */
+# define __need_timespec
+# include <time.h>
+
+/* Get the `siginfo_t' type plus the needed symbols.  */
+# include <bits/siginfo.h>
+#endif
+
 
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) (int);
@@ -208,15 +217,6 @@ typedef __sighandler_t sig_t;
 #endif
 
 #ifdef __USE_POSIX
-
-# ifdef __USE_POSIX199309
-/* We need `struct timespec' later on.  */
-#  define __need_timespec
-#  include <time.h>
-
-/* Get the `siginfo_t' type plus the needed symbols.  */
-#  include <bits/siginfo.h>
-# endif
 
 /* Clear all signals from SET.  */
 extern int sigemptyset (sigset_t *__set) __THROW __nonnull ((1));

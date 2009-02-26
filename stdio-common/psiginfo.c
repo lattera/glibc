@@ -26,6 +26,11 @@
 #include <not-cancel.h>
 
 
+/* Defined in sys_siglist.c.  */
+extern const char *const _sys_siglist[];
+extern const char *const _sys_siglist_internal[] attribute_hidden;
+
+
 #define MF(l) MF1 (l)
 #define MF1(l) str_##l
 #define C(s1, s2) C1 (s1, s2)
