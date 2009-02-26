@@ -1,3 +1,10 @@
+2009-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_THREAD_ROBUST_PRIO_INHERIT and
+	_POSIX_THREAD_ROBUST_PRIO_PROTECT.  Reset value of macros from
+	200112L to 200809L.
+
 2009-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: The robust mutex functions are in

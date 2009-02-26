@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2004,2005,2006,2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +164,7 @@ extern int wcsncmp (__const wchar_t *__s1, __const wchar_t *__s2, size_t __n)
      __THROW __attribute_pure__;
 __END_NAMESPACE_STD
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Compare S1 and S2, ignoring case.  */
 extern int wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
 
@@ -194,7 +194,7 @@ extern size_t wcsxfrm (wchar_t *__restrict __s1,
 		       __const wchar_t *__restrict __s2, size_t __n) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
 
@@ -298,7 +298,7 @@ extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
 # endif
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Return the number of wide characters in S, but at most MAXLEN.  */
 extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
      __THROW __attribute_pure__;
@@ -415,7 +415,7 @@ extern size_t wcsrtombs (char *__restrict __dst,
 __END_NAMESPACE_STD
 
 
-#ifdef	__USE_GNU
+#ifdef	__USE_XOPEN2K8
 /* Write wide character representation of at most NMC bytes of the
    multibyte character string SRC to DST.  */
 extern size_t mbsnrtowcs (wchar_t *__restrict __dst,
@@ -428,7 +428,7 @@ extern size_t wcsnrtombs (char *__restrict __dst,
 			  __const wchar_t **__restrict __src,
 			  size_t __nwc, size_t __len,
 			  mbstate_t *__restrict __ps) __THROW;
-#endif	/* use GNU */
+#endif	/* use POSIX 2008 */
 
 
 /* The following functions are extensions found in X/Open CAE.  */
@@ -558,7 +558,7 @@ extern long double wcstold_l (__const wchar_t *__restrict __nptr,
 #endif /* GNU */
 
 
-#ifdef	__USE_GNU
+#ifdef	__USE_XOPEN2K8
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
 extern wchar_t *wcpcpy (wchar_t *__dest, __const wchar_t *__src) __THROW;
@@ -572,7 +572,7 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 /* Wide character I/O functions.  */
 
-#ifdef	__USE_GNU
+#ifdef	__USE_XOPEN2K8
 /* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
    a wide character string.  */
 extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;

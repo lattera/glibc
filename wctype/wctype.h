@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2005, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002,2005,2007,2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -222,7 +222,7 @@ extern wctrans_t wctrans (__const char *__property) __THROW;
 extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
 __END_NAMESPACE_C99
 
-# ifdef __USE_GNU
+# ifdef __USE_XOPEN2K8
 /* Declare the interface to extended locale model.  */
 #  include <xlocale.h>
 
@@ -310,7 +310,7 @@ extern wctrans_t wctrans_l (__const char *__property, __locale_t __locale)
 extern wint_t towctrans_l (wint_t __wc, wctrans_t __desc,
 			   __locale_t __locale) __THROW;
 
-# endif /* Use GNU.  */
+# endif /* Use POSIX 2008.  */
 
 __END_DECLS
 

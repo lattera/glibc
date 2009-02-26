@@ -365,8 +365,7 @@ extern int utimensat (int __fd, __const char *__path,
      __THROW __nonnull ((2));
 #endif
 
-#ifdef __USE_GNU
-/* XXX This will change to the macro for the next 2008 POSIX revision.  */
+#ifdef __USE_XOPEN2K8
 /* Set file access and modification times of the file associated with FD.  */
 extern int futimens (int __fd, __const struct timespec __times[2]) __THROW;
 #endif

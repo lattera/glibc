@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -516,7 +516,7 @@ extern char **environ;
 extern int execve (__const char *__path, char *__const __argv[],
 		   char *__const __envp[]) __THROW __nonnull ((1));
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
 extern int fexecve (int __fd, char *__const __argv[], char *__const __envp[])

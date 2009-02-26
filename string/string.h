@@ -154,7 +154,7 @@ extern size_t strxfrm (char *__restrict __dest,
      __THROW __nonnull ((2));
 __END_NAMESPACE_STD
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* The following functions are equivalent to the both above but they
    take the locale they use for the collation as an extra argument.
    This is not standardsized but something like will come.  */
@@ -177,7 +177,7 @@ extern char *strdup (__const char *__s)
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
-#if defined __USE_GNU
+#if defined __USE_XOPEN2K8
 extern char *strndup (__const char *__string, size_t __n)
      __THROW __attribute_malloc__ __nonnull ((1));
 #endif
@@ -398,7 +398,7 @@ extern size_t strlen (__const char *__s)
      __THROW __attribute_pure__ __nonnull ((1));
 __END_NAMESPACE_STD
 
-#ifdef	__USE_GNU
+#ifdef	__USE_XOPEN2K8
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
 extern size_t strnlen (__const char *__string, size_t __maxlen)
@@ -438,7 +438,7 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
 # endif
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 /* Translate error number to string according to the locale L.  */
 extern char *strerror_l (int __errnum, __locale_t __l) __THROW;
 #endif
@@ -559,11 +559,7 @@ extern char *strsep (char **__restrict __stringp,
      __THROW __nonnull ((1, 2));
 #endif
 
-#ifdef	__USE_GNU
-/* Compare S1 and S2 as strings holding name & indices/version numbers.  */
-extern int strverscmp (__const char *__s1, __const char *__s2)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-
+#ifdef	__USE_XOPEN2K8
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *strsignal (int __sig) __THROW;
 
@@ -581,6 +577,12 @@ extern char *__stpncpy (char *__restrict __dest,
 extern char *stpncpy (char *__restrict __dest,
 		      __const char *__restrict __src, size_t __n)
      __THROW __nonnull ((1, 2));
+#endif
+
+#ifdef	__USE_GNU
+/* Compare S1 and S2 as strings holding name & indices/version numbers.  */
+extern int strverscmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 
 /* Sautee STRING briskly.  */
 extern char *strfry (char *__string) __THROW __nonnull ((1));

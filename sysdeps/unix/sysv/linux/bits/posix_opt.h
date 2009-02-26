@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996,1997,1999,2000,2002,2003,2008
+   Copyright (C) 1996,1997,1999,2000,2002,2003,2008,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -32,25 +32,25 @@
 #define	_POSIX_SAVED_IDS	1
 
 /* Priority scheduling is supported.  */
-#define	_POSIX_PRIORITY_SCHEDULING	200112L
+#define	_POSIX_PRIORITY_SCHEDULING	200809L
 
 /* Synchronizing file data is supported.  */
-#define	_POSIX_SYNCHRONIZED_IO	200112L
+#define	_POSIX_SYNCHRONIZED_IO	200809L
 
 /* The fsync function is present.  */
-#define	_POSIX_FSYNC	200112L
+#define	_POSIX_FSYNC	200809L
 
 /* Mapping of files to memory is supported.  */
-#define	_POSIX_MAPPED_FILES	200112L
+#define	_POSIX_MAPPED_FILES	200809L
 
 /* Locking of all memory is supported.  */
-#define	_POSIX_MEMLOCK	200112L
+#define	_POSIX_MEMLOCK	200809L
 
 /* Locking of ranges of memory is supported.  */
-#define	_POSIX_MEMLOCK_RANGE	200112L
+#define	_POSIX_MEMLOCK_RANGE	200809L
 
 /* Setting of memory protections is supported.  */
-#define	_POSIX_MEMORY_PROTECTION	200112L
+#define	_POSIX_MEMORY_PROTECTION	200809L
 
 /* Some filesystems allow all users to change file ownership.  */
 #define	_POSIX_CHOWN_RESTRICTED	0
@@ -69,7 +69,7 @@
 #define	_XOPEN_SHM	1
 
 /* Real-time signals are supported.  */
-#define _POSIX_REALTIME_SIGNALS	200112L
+#define _POSIX_REALTIME_SIGNALS	200809L
 
 /* The LFS interface is available, except for the asynchronous I/O.  */
 #define _LFS_LARGEFILE		1
@@ -77,10 +77,10 @@
 #define _LFS64_STDIO		1
 
 /* POSIX timers are available.  */
-#define _POSIX_TIMERS	200112L
+#define _POSIX_TIMERS	200809L
 
 /* POSIX shared memory objects are implemented.  */
-#define _POSIX_SHARED_MEMORY_OBJECTS	200112L
+#define _POSIX_SHARED_MEMORY_OBJECTS	200809L
 
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
@@ -89,7 +89,7 @@
 #define _POSIX_SHELL	1
 
 /* The `spawn' function family is supported.  */
-#define _POSIX_SPAWN	200112L
+#define _POSIX_SPAWN	200809L
 
 /* The monotonic clock might be available.  */
 #define _POSIX_MONOTONIC_CLOCK	0

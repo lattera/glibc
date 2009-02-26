@@ -1,5 +1,23 @@
 2009-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* wctype/wctype.h: The *_l functions are in POSIX 2008.
+	* wcsmbs/wchar.h: mbsnrtowcs, open_wmemstream, wcpcpy, wcpncpy,
+	wcscasecmp, wcsdup, wcsncasecmp, wcsnlen, wcsnrtombs,
+	wcscasecmp_l, wcsncasecmp_l, wcscoll_l, and wcsxfrm_l.
+	* sysdeps/mach/hurd/bits/posix_opt.h: Reset value of macros from
+	200112L to 200809L.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+	* posix/getconf.c (vars): Add _SC_THREAD_ROBUST_PRIO_INHERIT and
+	_SC_THREAD_ROBUST_PRIO_PROTECT entries.
+	* bits/confname.h: Add _SC_THREAD_ROBUST_PRIO_INHERIT and
+	_SC_THREAD_ROBUST_PRIO_PROTECT.
+	* posix/unistd.h: fexecve is in POSIX 2008.
+	* time/time.h: strftime_l is in POSIX 2008.
+	* io/sys/stat.h: futimens is in POSIX 2008.
+	* string/strings.h: strcasecmp_l and strncasecmp_l are in POSIX 2008.
+	* string/string.h: stpcpy, stpncpy, strndup, strnlen, strsignal,
+	strcoll_l, strerror_l, and strxfrm_l are in POSIX 2008.
+	* stdlib/stdlib.h: mkdtemp is in POSIX 2008.
 	* libio/stdio.h: dprintf, fmemopen, getdelim, getline,
 	open_memstream, and vdprintf are in POSIX 2008.
 

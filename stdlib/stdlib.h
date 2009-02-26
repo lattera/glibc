@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -605,7 +605,7 @@ extern int mkstemp64 (char *__template) __nonnull ((1)) __wur;
 # endif
 #endif
 
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K8
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the directory name unique.

@@ -113,6 +113,23 @@ extern int strcasecmp (__const char *__s1, __const char *__s2)
 extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
      __THROW __attribute_pure__;
 
+#ifdef	__USE_XOPEN2K8
+/* The following functions are equivalent to the both above but they
+   take the locale they use for the collation as an extra argument.
+   This is not standardsized but something like will come.  */
+# include <xlocale.h>
+
+/* Again versions of a few functions which use the given locale instead
+   of the global one.  */
+extern int strcasecmp_l (__const char *__s1, __const char *__s2,
+			 __locale_t __loc)
+     __THROW __attribute_pure__ __nonnull ((1, 2, 3));
+
+extern int strncasecmp_l (__const char *__s1, __const char *__s2,
+			  size_t __n, __locale_t __loc)
+     __THROW __attribute_pure__ __nonnull ((1, 2, 4));
+#endif
+
 __END_DECLS
 
 #endif	/* string.h  */
