@@ -1,3 +1,25 @@
+2009-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h: If no feature selection given and we select
+	by default a POSIX mode, also define __USE_POSIX_IMPLICITLY.
+	* posix/Versions: Export __posix_getopt.
+	* posix/getopt.c (_getopt_initialize): Take additional parameter.
+	Use it to alternatively initialize __posixly_correct.
+	(_getopt_internal_r): Take addition parameter.  Pass on to
+	_getopt_initialize.
+	(_getopt_internal): Take addition parameter.  Pass on to
+	_getopt_internal_r.
+	(getopt): Pass additional zero to _getopt_internal.
+	(__posix_getopt): New function.
+	* posix/getopt.h: Add redirection for getopt.
+	* posix/getopt1.c (getopt_long): Pass additional zero to
+	_getopt_internal.
+	(getopt_long_only): Likewise.
+	(_getopt_long_r): Pass additional zero to _getopt_internal_r.
+	(_getopt_long_only_r): Likewise.
+	* posix/getopt_int.h: Adjust declarations of _getopt_internal and
+	_getopt_internal_r.
+
 2009-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* bits/confname.h: Define _SC_TRACE_EVENT_NAME_MAX, _SC_TRACE_NAME_MAX,

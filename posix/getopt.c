@@ -2,7 +2,7 @@
    NOTE: getopt is part of the C library, so if you don't know what
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
-   Copyright (C) 1987-1996,1998-2004,2008 Free Software Foundation, Inc.
+   Copyright (C) 1987-1996,1998-2004,2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -270,7 +270,7 @@ exchange (char **argv, struct _getopt_data *d)
 
 static const char *
 _getopt_initialize (int argc, char *const *argv, const char *optstring,
-		    struct _getopt_data *d)
+		    struct _getopt_data *d, int posixly_correct)
 {
   /* Start processing options with ARGV-element 1 (since ARGV-element 0
      is the program name); the sequence of previously skipped
@@ -280,7 +280,7 @@ _getopt_initialize (int argc, char *const *argv, const char *optstring,
 
   d->__nextchar = NULL;
 
-  d->__posixly_correct = !!getenv ("POSIXLY_CORRECT");
+  d->__posixly_correct = posixly_correct | !!getenv ("POSIXLY_CORRECT");
 
   /* Determine how to handle the ordering of options and nonoptions.  */
 
@@ -391,7 +391,7 @@ _getopt_initialize (int argc, char *const *argv, const char *optstring,
 int
 _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    const struct option *longopts, int *longind,
-		    int long_only, struct _getopt_data *d)
+		    int long_only, struct _getopt_data *d, int posixly_correct)
 {
   int print_errors = d->opterr;
   if (optstring[0] == ':')
@@ -406,7 +406,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
     {
       if (d->optind == 0)
 	d->optind = 1;	/* Don't scan ARGV[0], the program name.  */
-      optstring = _getopt_initialize (argc, argv, optstring, d);
+      optstring = _getopt_initialize (argc, argv, optstring, d,
+				      posixly_correct);
       d->__initialized = 1;
     }
 
@@ -1111,7 +1112,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 
 int
 _getopt_internal (int argc, char *const *argv, const char *optstring,
-		  const struct option *longopts, int *longind, int long_only)
+		  const struct option *longopts, int *longind, int long_only,
+		  int posixly_correct)
 {
   int result;
 
@@ -1119,7 +1121,8 @@ _getopt_internal (int argc, char *const *argv, const char *optstring,
   getopt_data.opterr = opterr;
 
   result = _getopt_internal_r (argc, argv, optstring, longopts,
-			       longind, long_only, &getopt_data);
+			       longind, long_only, &getopt_data,
+			       posixly_correct);
 
   optind = getopt_data.optind;
   optarg = getopt_data.optarg;
@@ -1134,8 +1137,19 @@ getopt (int argc, char *const *argv, const char *optstring)
   return _getopt_internal (argc, argv, optstring,
 			   (const struct option *) 0,
 			   (int *) 0,
-			   0);
+			   0, 0);
 }
+
+#ifdef _LIBC
+int
+__posix_getopt (int argc, char *const *argv, const char *optstring)
+{
+  return _getopt_internal (argc, argv, optstring,
+			   (const struct option *) 0,
+			   (int *) 0,
+			   0, 1);
+}
+#endif
 
 #endif	/* Not ELIDE_CODE.  */
 

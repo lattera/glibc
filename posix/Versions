@@ -128,6 +128,9 @@ libc {
   GLIBC_2.7 {
     __sched_cpualloc; __sched_cpufree;
   }
+  GLIBC_2.10 {
+    __posix_getopt;
+  }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pwrite;
   }
