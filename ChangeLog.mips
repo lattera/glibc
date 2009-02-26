@@ -1,3 +1,8 @@
+2009-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Protect UTIME_NOW and
+	UTIME_OMIT only with __USE_ATFILE.
+
 2009-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #7040]
