@@ -1,5 +1,5 @@
 /* Handle locking of password file.
-   Copyright (C) 1996, 1998, 2000, 2002, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996,1998,2000,2002,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -83,7 +83,6 @@ static void noop_handler (int __sig);
 int
 __lckpwdf (void)
 {
-  int flags;
   sigset_t saved_set;			/* Saved set of caught signals.  */
   struct sigaction saved_act;		/* Saved signal action.  */
   sigset_t new_set;			/* New set of caught signals.  */
@@ -113,7 +112,7 @@ __lckpwdf (void)
 # endif
     {
       /* Make sure file gets correctly closed when process finished.  */
-      flags = __fcntl (lock_fd, F_GETFD, 0);
+      int flags = __fcntl (lock_fd, F_GETFD, 0);
       if (flags == -1)
 	/* Cannot get file flags.  */
 	RETURN_CLOSE_FD (-1);
