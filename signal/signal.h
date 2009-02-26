@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,10 +136,16 @@ extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
 extern int gsignal (int __sig) __THROW;
 #endif /* Use SVID.  */
 
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_XOPEN2K
 /* Print a message describing the meaning of the given signal number.  */
 extern void psignal (int __sig, __const char *__s);
-#endif /* Use misc.  */
+#endif /* Use misc or POSIX 2008.  */
+
+#ifdef __USE_XOPEN2K
+/* Print a message describing the meaning of the given signal information.  */
+extern void psiginfo (__const siginfo_t *__pinfo, __const char *__s);
+#endif /* POSIX 2008.  */
+
 
 
 /* The `sigpause' function has two different interfaces.  The original

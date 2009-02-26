@@ -53,6 +53,9 @@ libc {
     __isoc99_scanf; __isoc99_vscanf; __isoc99_fscanf; __isoc99_vfscanf;
     __isoc99_sscanf; __isoc99_vsscanf;
   }
+  GLIBC_2.10 {
+    psiginfo;
+  }
   GLIBC_PRIVATE {
     # global variables
     _itoa_lower_digits;

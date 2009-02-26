@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,8 @@ routines	:=							      \
 	remove rename renameat						      \
 	flockfile ftrylockfile funlockfile				      \
 	isoc99_scanf isoc99_vscanf isoc99_fscanf isoc99_vfscanf isoc99_sscanf \
-	isoc99_vsscanf
+	isoc99_vsscanf							      \
+	psiginfo
 
 install-others = $(inst_includedir)/bits/stdio_lim.h
 

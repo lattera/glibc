@@ -14,6 +14,8 @@ Version 2.10
 
 * XPG7/POSIX 2008 compilation environment.
 
+* New POSIX 2008 interface: psiginfo
+
 
 Version 2.9
 

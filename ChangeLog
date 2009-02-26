@@ -4,8 +4,19 @@
 	* ctype/ctype.h: The *_l functions are in POSIX 2008.
 	* dirent/dirent.h: alphasort, dirfd, scandir, and fdopendir are in
 	POSIX 2008.
+	* locale/langinfo.h: nl_langinfo_l is in POSIX 2008.
+	* locale/xlocale.h: Define locale_t type.
+	* locale/locale.h: duplocale, freelocale, newlocale, uselocale are
+	in POSIX 2008.  Don't define locale_t here.
+	* stdlib/monetary.h: strfmon_l is in POSIX 2008.
 	* sysdeps/unix/sysv/linux/bits/stat.h: Protect UTIME_NOW and
 	UTIME_OMIT only with __USE_ATFILE.
+	* signal/signal.h: Declare psignal and psiginfo for POSIX 2008.
+	* stdio-common/psiginfo.c: New file.
+	* stdio-common/psiginfo-data.h: New file.
+	* stdio-common/psiginfo-define.h: New file.
+	* stdio-common/Makefile (routines): Add psiginfo.
+	* stdio-common/Versions: Export psiginfo for GLIBC_2.10.
 	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
