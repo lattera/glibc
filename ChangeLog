@@ -1,3 +1,8 @@
+2009-02-26  Roland McGrath  <roland@redhat.com>
+
+	* shadow/lckpwdf.c (__lckpwdf): Move FLAGS inside block using it,
+	avoids unused warning.
+
 2009-02-26  Andrew Stubbs  <ams@codesourcery.com>
 	    SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
 
