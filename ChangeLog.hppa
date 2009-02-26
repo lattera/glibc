@@ -1,3 +1,9 @@
+2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Define 
+	FUTEX_WAIT_BITSET, FUTEX_WAKE_BITSET, FUTEX_CLOCK_REALTIME,
+	and FUTEX_BITSET_MATCH_ANY.
+
 2009-02-22  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/Versions: Add missing bracket.
