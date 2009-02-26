@@ -333,14 +333,14 @@ extern int mkdirat (int __fd, __const char *__path, __mode_t __mode)
 #if defined __USE_MISC || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
      __THROW __nonnull ((1));
-#endif
 
-#ifdef __USE_ATFILE
+# ifdef __USE_ATFILE
 /* Like mknod, create a new device file with permission bits MODE and
    device number DEV.  But interpret relative PATH names relative to
    the directory associated with FD.  */
 extern int mknodat (int __fd, __const char *__path, __mode_t __mode,
 		    __dev_t __dev) __THROW __nonnull ((2));
+# endif
 #endif
 
 

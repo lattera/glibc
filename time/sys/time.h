@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2002,2003,2005,2006
+/* Copyright (C) 1991-1994,1996-2003,2005,2006,2009
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -149,7 +149,7 @@ extern int lutimes (__const char *__file, __const struct timeval __tvp[2])
 extern int futimes (int __fd, __const struct timeval __tvp[2]) __THROW;
 #endif
 
-#ifdef __USE_ATFILE
+#ifdef __USE_GNU
 /* Change the access time of FILE relative to FD to TVP[0] and the
    modification time of FILE to TVP[1].  If TVP is a null pointer, use
    the current time instead.  Returns 0 on success, -1 on errors.  */

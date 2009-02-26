@@ -29,9 +29,10 @@
 			if >=199309L, add IEEE Std 1003.1b-1993;
 			if >=199506L, add IEEE Std 1003.1c-1995;
 			if >=200112L, all of IEEE 1003.1-2004
+			if >=200809L, all of IEEE 1003.1-2008
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted, to 600 for the
-			upcoming sixth revision.
+			sixth revision, to 700 for the seventh revision.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
@@ -65,6 +66,7 @@
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
    __USE_XOPEN2K        Define XPG6 things.
+   __USE_XOPEN2K8       Define XPG7 things.
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
@@ -100,6 +102,7 @@
 #undef	__USE_XOPEN_EXTENDED
 #undef	__USE_UNIX98
 #undef	__USE_XOPEN2K
+#undef	__USE_XOPEN2K8
 #undef	__USE_LARGEFILE
 #undef	__USE_LARGEFILE64
 #undef	__USE_FILE_OFFSET64
@@ -152,9 +155,9 @@
 # undef  _POSIX_SOURCE
 # define _POSIX_SOURCE	1
 # undef  _POSIX_C_SOURCE
-# define _POSIX_C_SOURCE	200112L
+# define _POSIX_C_SOURCE	200809L
 # undef  _XOPEN_SOURCE
-# define _XOPEN_SOURCE	600
+# define _XOPEN_SOURCE	700
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
 # undef	 _LARGEFILE64_SOURCE
@@ -201,8 +204,10 @@
 #  define _POSIX_C_SOURCE	2
 # elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 600
 #  define _POSIX_C_SOURCE	199506L
-# else
+# elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 700
 #  define _POSIX_C_SOURCE	200112L
+# else
+#  define _POSIX_C_SOURCE	200809L
 # endif
 # define __USE_POSIX_IMPLICITLY	1
 #endif
@@ -227,6 +232,12 @@
 # define __USE_XOPEN2K		1
 #endif
 
+#if (_POSIX_C_SOURCE - 0) >= 200809L
+# define __USE_XOPEN2K8		1
+# undef  _ATFILE_SOURCE
+# define _ATFILE_SOURCE	1
+#endif
+
 #ifdef	_XOPEN_SOURCE
 # define __USE_XOPEN	1
 # if (_XOPEN_SOURCE - 0) >= 500
@@ -235,6 +246,9 @@
 #  undef _LARGEFILE_SOURCE
 #  define _LARGEFILE_SOURCE	1
 #  if (_XOPEN_SOURCE - 0) >= 600
+#   if (_XOPEN_SOURCE - 0) >= 700
+#    define __USE_XOPEN2K8	1
+#   endif
 #   define __USE_XOPEN2K	1
 #   undef __USE_ISOC99
 #   define __USE_ISOC99		1

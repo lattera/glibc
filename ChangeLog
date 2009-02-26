@@ -1,5 +1,18 @@
 2009-02-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/features.h: Define macros for XPG7/POSIX 2008.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Protect UTIME_NOW and
+	UTIME_OMIT only with __USE_ATFILE.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* io/sys/stat.h: Move mknodat definition into same conditional as
+	mknod.
+	* time/sys/time.h: futimesat is not among the functions accepted
+	into the POSIX standard.
+
 	* include/features.h: If no feature selection given and we select
 	by default a POSIX mode, also define __USE_POSIX_IMPLICITLY.
 	* posix/Versions: Export __posix_getopt.
