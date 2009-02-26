@@ -1,3 +1,18 @@
+2009-02-26  Andrew Stubbs  <ams@codesourcery.com>
+	    SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sys/procfs.h: Don't include signal.h,
+	sys/ucontext.h and asm/elf.h.  Include sys/user.h.
+	* sysdeps/unix/sysv/linux/sh/sys/user.h: Don't include features.h
+	and asm/user.h.  Include asm/ptrace.h.
+	(PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS,
+	PTRACE_SETFPREGS, PTRACE_GETFDPIC, PTRACE_GETFDPIC_EXEC,
+	PTRACE_GETFDPIC_INTERP, PTRACE_GETDSPREGS, PTRACE_SETDSPREGS):
+	Undefine.
+	(start_thread): Don't undefine.
+	(elf_greg_t, ELF_NGREG, elf_fpregset_t, user_fpu_struct, user):
+	Define.
+
 2009-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* wctype/wctype.h: The *_l functions are in POSIX 2008.
