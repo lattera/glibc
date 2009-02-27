@@ -1,3 +1,7 @@
+2009-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ko.po: Update from translation team.
+
 2009-02-26  Roland McGrath  <roland@redhat.com>
 
 	* shadow/lckpwdf.c (__lckpwdf): Move FLAGS inside block using it,
