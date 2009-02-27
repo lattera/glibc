@@ -1,3 +1,8 @@
+2009-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Protect UTIME_NOW and
+	UTIME_OMIT only with __USE_ATFILE.
+
 2008-08-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/bits/byteswap.h: Allow inclusion from <endian.h>.
