@@ -793,9 +793,9 @@ ifeq (yes, $(build-shared))
 # `FOO.v', and along with that `FOO.v.i' should be given dependencies
 # listing both its input files, and any header files that it may reference
 # (but no commands).
-%.v.i: $(common-objpfx)config.h
-	sed 's/#.*$$//;/^[ 	]*$$/d;s/^[ 	]*%/#/' \
-	    $(filter-out FORCE %.h,$^) \
+%.v.i: $(common-objpfx)config.h $(..)Makeconfig
+	sed '/^[ 	]*%/!s/#.*$$//;/^[ 	]*$$/d;s/^[ 	]*%/#/' \
+	    $(filter-out FORCE %.h $(..)Makeconfig,$^) \
 	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - \
 		   > $@T
 	mv -f $@T $@
