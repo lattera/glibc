@@ -1,3 +1,8 @@
+2009-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: Update from translation team.
+	* po/sv.po: Likewise.
+
 2009-02-27  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (%.v.i): Depend on Makeconfig.
