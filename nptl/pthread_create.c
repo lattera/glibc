@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007,2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -40,10 +40,10 @@ static int start_thread (void *arg);
 int __pthread_debug;
 
 /* Globally enabled events.  */
-static td_thr_events_t __nptl_threads_events;
+static td_thr_events_t __nptl_threads_events __attribute_used__;
 
 /* Pointer to descriptor with the last event.  */
-static struct pthread *__nptl_last_event;
+static struct pthread *__nptl_last_event __attribute_used__;
 
 /* Number of threads running.  */
 unsigned int __nptl_nthreads = 1;

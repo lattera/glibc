@@ -260,7 +260,7 @@ extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
 
 
 /* This can be set by the debugger before initialization is complete.  */
-static bool __nptl_initial_report_events;
+static bool __nptl_initial_report_events __attribute_used__;
 
 void
 __pthread_initialize_minimal_internal (void)

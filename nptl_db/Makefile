@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,8 @@ libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 # The ps_* callback functions are not defined.
 libthread_db.so-no-z-defs = yes
 
-distribute = thread_dbP.h shlib-versions proc_service.h db_info.c structs.def
+distribute = thread_dbP.h shlib-versions proc_service.h \
+	     db_info.c structs.def db-symbols.h db-symbols.awk
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
@@ -58,3 +59,10 @@ include ../Rules
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libthread_db.so: $(common-objpfx)libc.so \
 			  $(common-objpfx)libc_nonshared.a
+
+tests: $(objpfx)db-symbols.out
+$(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
+			 $(common-objpfx)nptl/libpthread.so
+	readelf -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
+
+$(objpfx)db-symbols.v.i: db-symbols.awk

@@ -1,3 +1,13 @@
+2009-02-27  Roland McGrath  <roland@redhat.com>
+
+	* td_symbol_list.c (symbol_list_arr): Move initializer guts to ...
+	* db-symbols.h: ... here, new file.
+	* db-symbols.awk: New file.
+	* Makefile (distribute): Add them.
+	($(objpfx)db-symbols.out): New target.
+	(tests): Depend on it.
+	($(objpfx)db-symbols.v.i): New dependent rule.
+
 2009-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_get_info.c (td_thr_get_info): Initialize schedpolicy in
