@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007
+/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -303,7 +303,12 @@
 #  endif
 # else
 #  define __extern_inline extern __inline
-#  define __extern_always_inline extern __always_inline
+#  if __GNUC_PREREQ (4,3)
+#   define __extern_always_inline \
+  extern __always_inline __attribute__ ((__artificial__))
+#  else
+#   define __extern_always_inline extern __always_inline
+#  endif
 # endif
 #endif
 

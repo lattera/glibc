@@ -1,3 +1,8 @@
+2009-03-02  Richard Guenther  <rguenther@suse.de>
+
+	* misc/sys/cdefs.h (__extern_always_inline): Add __artificial__
+	attribute also for non-C99 inline semantics variant.
+
 2009-02-12  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/fpu/Implies: New file.
