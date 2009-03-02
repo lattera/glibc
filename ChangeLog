@@ -1,5 +1,6 @@
 2009-03-02  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #7083]
 	* sysdeps/unix/sysv/linux/fallocate.c: New file.
 	* sysdeps/unix/sysv/linux/fallocate64.c: New file.
 	* sysdeps/unix/sysv/linux/wordsize-64/fallocate64.c: New file.
