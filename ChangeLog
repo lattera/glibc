@@ -1,3 +1,14 @@
+2009-02-12  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power7/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/fpu/Implies:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/fpu/Implies:
+	Likewise.
+
 2009-03-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/cs.po: Update from translation team.
