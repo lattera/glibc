@@ -1,3 +1,18 @@
+2009-03-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/fallocate64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/Versions: Export fallocate and fallocate64
+	for GLIBC_2.10.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add fallocate and fallocate64.
+
+	* io/fcntl.h: Pretty printing.
+
 2009-03-02  Richard Guenther  <rguenther@suse.de>
 
 	* misc/sys/cdefs.h (__extern_always_inline): Add __artificial__

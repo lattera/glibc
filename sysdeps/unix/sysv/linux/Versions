@@ -138,6 +138,9 @@ libc {
   GLIBC_2.9 {
     epoll_create1; inotify_init1;
   }
+  GLIBC_2.10 {
+    fallocate; fallocate64;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
