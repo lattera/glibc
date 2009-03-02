@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007, 2009
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -158,11 +158,11 @@ extern int creat64 (__const char *__file, __mode_t __mode) __nonnull ((1));
 # ifndef __USE_FILE_OFFSET64
 extern int lockf (int __fd, int __cmd, __off_t __len);
 # else
-# ifdef __REDIRECT
+#  ifdef __REDIRECT
 extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len), lockf64);
-# else
-#  define lockf lockf64
-# endif
+#  else
+#   define lockf lockf64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lockf64 (int __fd, int __cmd, __off64_t __len);
@@ -176,13 +176,13 @@ extern int lockf64 (int __fd, int __cmd, __off64_t __len);
 extern int posix_fadvise (int __fd, __off_t __offset, __off_t __len,
 			  int __advise) __THROW;
 # else
-# ifdef __REDIRECT_NTH
+ # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (posix_fadvise, (int __fd, __off64_t __offset,
 					   __off64_t __len, int __advise),
 			   posix_fadvise64);
-# else
-#  define posix_fadvise posix_fadvise64
-# endif
+#  else
+#   define posix_fadvise posix_fadvise64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
@@ -197,13 +197,13 @@ extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
 # ifndef __USE_FILE_OFFSET64
 extern int posix_fallocate (int __fd, __off_t __offset, __off_t __len);
 # else
-# ifdef __REDIRECT
+ # ifdef __REDIRECT
 extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
 					 __off64_t __len),
 		       posix_fallocate64);
-# else
-#  define posix_fallocate posix_fallocate64
-# endif
+#  else
+#   define posix_fallocate posix_fallocate64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
