@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <sysdep.h>
 
@@ -24,7 +25,7 @@
 int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
-  return INLINE_SYSCALL (fallocate, err, 6, fd, mode,
+  return INLINE_SYSCALL (fallocate, 6, fd, mode,
 			 __LONG_LONG_PAIR (offset >> 31, offset),
 			 __LONG_LONG_PAIR (len >> 31, len));
 }

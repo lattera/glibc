@@ -249,6 +249,22 @@ extern ssize_t splice (int __fdin, __off64_t *__offin, int __fdout,
 extern ssize_t tee (int __fdin, int __fdout, size_t __len,
 		    unsigned int __flags);
 
+/* Reserve storage for the data of the file associated with FD.  */
+# ifndef __USE_FILE_OFFSET64
+extern int fallocate (int __fd, int __mode, __off_t __offset, __off_t __len);
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (fallocate, (int __fd, int __mode, __off_t __offset,
+				   __off_t __len),
+		       fallocate64);
+#  else
+#   define fallocate fallocate64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int fallocate64 (int __fd, int __mode, __off64_t __offset,
+			__off64_t __len);
+# endif
 #endif
 
 __END_DECLS
