@@ -1,3 +1,8 @@
+2009-03-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Declare
+	fallocate{,64}.
+
 2009-02-13  Khem Raj  <raj.khem@gmail.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c 
