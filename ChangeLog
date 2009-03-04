@@ -1,3 +1,7 @@
+2009-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
 2009-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Declare fallocate{,64}.
