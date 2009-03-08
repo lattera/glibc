@@ -515,6 +515,18 @@ extern void abort (void) __THROW __attribute__ ((__noreturn__));
 
 /* Register a function to be called when `exit' is called.  */
 extern int atexit (void (*__func) (void)) __THROW __nonnull ((1));
+
+#ifdef __USE_GNU
+// XXX There should be a macro to signal with C++ revision is used.
+// XXX This function is in the C++1x revision.
+/* Register a function to be called when `quick_exit' is called.  */
+# ifdef __cplusplus
+extern "C++" int at_quick_exit (void (*__func) (void))
+     __THROW __asm ("at_quick_exit") __nonnull ((1));
+# else
+extern int at_quick_exit (void (*__func) (void)) __THROW __nonnull ((1));
+# endif
+#endif
 __END_NAMESPACE_STD
 
 #ifdef	__USE_MISC
@@ -526,9 +538,18 @@ extern int on_exit (void (*__func) (int __status, void *__arg), void *__arg)
 
 __BEGIN_NAMESPACE_STD
 /* Call all functions registered with `atexit' and `on_exit',
-   in the reverse of the order in which they were registered
+   in the reverse of the order in which they were registered,
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) __THROW __attribute__ ((__noreturn__));
+
+#ifdef __USE_GNU
+// XXX There should be a macro to signal with C++ revision is used.
+// XXX This function is in the C++1x revision.
+/* Call all functions registered with `at_quick_exit' in the reverse
+   of the order in which they were registered and terminate program
+   execution with STATUS.  */
+extern void quick_exit (int __status) __THROW __attribute__ ((__noreturn__));
+#endif
 __END_NAMESPACE_STD
 
 #ifdef __USE_ISOC99

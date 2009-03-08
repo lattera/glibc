@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2001,2002,2003,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2001-2003,2005,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,6 +61,16 @@ __cxa_finalize (void *d)
 		goto restart;
 	    }
 	}
+    }
+
+  /* Also remove the quick_exit handlers, but do not call them.  */
+  for (funcs = __quick_exit_funcs; funcs; funcs = funcs->next)
+    {
+      struct exit_function *f;
+
+      for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
+	if (d == NULL || d == f->func.cxa.dso_handle)
+	  f->flavor = ef_free;
     }
 
   /* Remove the registered fork handlers.  We do not have to

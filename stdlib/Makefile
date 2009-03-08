@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@ routines	:=							      \
 	bsearch qsort msort						      \
 	getenv putenv setenv secure-getenv				      \
 	exit on_exit atexit cxa_atexit cxa_finalize old_atexit		      \
+	quick_exit at_quick_exit cxa_at_quick_exit			      \
 	abs labs llabs							      \
 	div ldiv lldiv							      \
 	mblen mbstowcs mbtowc wcstombs wctomb				      \
@@ -57,7 +58,7 @@ aux =	grouping groupingwc tens_in_limb
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = atexit
+static-only-routines = atexit at_quick_exit
 
 distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh   \
 		   allocalim.h

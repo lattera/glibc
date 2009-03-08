@@ -97,6 +97,9 @@ libc {
   GLIBC_2.8 {
     qsort_r;
   }
+  GLIBC_2.10 {
+    quick_exit; __cxa_at_quick_exit;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

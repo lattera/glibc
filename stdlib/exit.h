@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1996,1997,1999,2001,2002,2006
+/* Copyright (C) 1991,1996,1997,1999,2001,2002,2006,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,6 +20,7 @@
 #ifndef	_EXIT_H
 #define _EXIT_H 1
 
+#include <stdbool.h>
 #include <stdint.h>
 
 enum
@@ -59,8 +60,19 @@ struct exit_function_list
     struct exit_function fns[32];
   };
 extern struct exit_function_list *__exit_funcs attribute_hidden;
+extern struct exit_function_list *__quick_exit_funcs attribute_hidden;
 
-extern struct exit_function *__new_exitfn (void);
+extern struct exit_function *__new_exitfn (struct exit_function_list **listp);
 extern uint64_t __new_exitfn_called attribute_hidden;
+
+extern void __run_exit_handlers (int status, struct exit_function_list **listp,
+				 bool run_list_atexit) attribute_hidden;
+
+extern int __internal_atexit (void (*func) (void *), void *arg, void *d,
+			      struct exit_function_list **listp)
+  attribute_hidden;
+extern int __cxa_at_quick_exit (void (*func) (void *), void *d)
+  attribute_hidden;
+
 
 #endif	/* exit.h  */
