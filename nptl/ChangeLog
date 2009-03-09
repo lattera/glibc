@@ -1,3 +1,9 @@
+2009-03-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Define
+	FUTEX_WAIT_BITSET, FUTEX_WAKE_BITSET, FUTEX_CLOCK_REALTIME and
+	FUTEX_BITSET_MATCH_ANY.
+
 2009-02-27  Roland McGrath  <roland@redhat.com>
 
 	* init.c (__nptl_initial_report_events): Mark __attribute_used__.
