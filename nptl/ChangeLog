@@ -1,3 +1,7 @@
+2009-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (nptl_freeres): Compile only for SHARED.
+
 2009-03-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Define
