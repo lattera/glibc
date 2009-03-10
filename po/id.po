@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.9.90\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-03-07 20:30+0700\n"
+"PO-Revision-Date: 2009-03-10 11:30+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "  atau: "
 
 #: argp/argp-help.c:1617
 msgid " [OPTION...]"
-msgstr " [OPSI...]"
+msgstr " [PILIHAN...]"
 
 #: argp/argp-help.c:1644
 #, c-format
@@ -287,7 +287,7 @@ msgstr "ukuran penunjuk tidak valid"
 
 #: debug/xtrace.sh:27 debug/xtrace.sh:45
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
-msgstr "Penggunaan: xtrace [OPSI]... APLIKASI [OPSI-APLIKASI]...\\n"
+msgstr "Penggunaan: xtrace [PILIHAN]... APLIKASI [PILIHAN APLIKASI]...\\n"
 
 #: debug/xtrace.sh:33
 msgid "Try \\`xtrace --help' for more information.\\n"
@@ -298,7 +298,6 @@ msgid "xtrace: option \\`$1' requires an argument.\\n"
 msgstr "xtrace: pilihan \\`$1' membutuhkan sebuah argumen.\\n"
 
 #: debug/xtrace.sh:46
-#, fuzzy
 msgid ""
 "Trace execution of program by printing currently executed function.\n"
 "\n"
@@ -315,6 +314,7 @@ msgstr ""
 "Telusuri jalannya aplikasi dengan menampilkan fungsi yang sedang dijalankan.\n"
 "\n"
 "     --data=BERKAS        Jangan jalankan aplikasi, hanya tampilkan data dari BERKAS.\n"
+"\n"
 "   -?,--help              Tampilkan bantuan ini dan keluar\n"
 "      --usage             Berikan sebuah pesan pendek penggunaan\n"
 "   -V,--version           Tampilkan informasi versi dan keluar\n"
@@ -322,8 +322,6 @@ msgstr ""
 "Argumen wajib untuk pilihan panjang juga wajib untuk setiap pilihan pendek\n"
 "yang berhubungan.\n"
 "\n"
-"Untuk instruksi pelaporan bug, mohon lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\\n"
 
 #: debug/xtrace.sh:127
 msgid "xtrace: unrecognized option \\`$1'\\n"
@@ -910,7 +908,6 @@ msgid "Written by %s and %s.\n"
 msgstr "Ditulis oleh %s dan %s.\n"
 
 #: elf/ldd.bash.in:48
-#, fuzzy
 msgid ""
 "Usage: ldd [OPTION]... FILE...\n"
 "      --help              print this help and exit\n"
@@ -920,15 +917,13 @@ msgid ""
 "  -u, --unused            print unused direct dependencies\n"
 "  -v, --verbose           print all information\n"
 msgstr ""
-"Penggunaan: ldd [OPSI... BERKAS...\n"
+"Penggunaan: ldd [PILIHAN... BERKAS...\n"
 "      --help              tampilkan bantuan ini dan keluar\n"
 "      --version           tampilkan informasi versi dan keluar\n"
 "  -d, --data-relocs       proses relokasi data\n"
 "  -r, --function-relocs   proses data dan relokasi fungsi\n"
 "  -u, --unused            tampilkan tidak digunakan ketergantungan langsung\n"
 "  -v, --verbose           tampilkan seluruh informasi\n"
-"Untuk instruksi pelaporan bug, mohon lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>."
 
 #: elf/ldd.bash.in:82
 msgid "ldd: option \\`$1' is ambiguous"
@@ -1085,7 +1080,7 @@ msgstr "hasilkan call graph"
 
 #: elf/sprof.c:89
 msgid "Read and display shared object profiling data."
-msgstr ""
+msgstr "Baca dan tampilkan data profiling objek terbagi."
 
 #: elf/sprof.c:94
 msgid "SHOBJ [PROFDATA]"
@@ -2828,7 +2823,6 @@ msgid "memusage: option \\`$1' requires an argument"
 msgstr "memusage: pilihan \\`$1' membutuhkan sebuah argumen"
 
 #: malloc/memusage.sh:39
-#, fuzzy
 msgid ""
 "Usage: memusage [OPTION]... PROGRAM [PROGRAMOPTION]...\n"
 "Profile memory usage of PROGRAM.\n"
@@ -2856,7 +2850,7 @@ msgid ""
 "short options.\n"
 "\n"
 msgstr ""
-"Penggunaan: memusage [OPSI]... APLIKASI [OPSIAPLIKASI]...\n"
+"Penggunaan: memusage [PILIHAN]... APLIKASI [PILIHAN APLIKASI]...\n"
 "Profile penggunaan memori dari APLIKASI.\n"
 "\n"
 "   -n,--progname=NAMA     Nama dari berkas aplikasi ke profile\n"
@@ -2880,8 +2874,6 @@ msgstr ""
 "Argumen wajib untuk pilihan panjang juga wajib untuk setiap pilihan pendek\n"
 "yang berhubungan.\n"
 "\n"
-"Untuk instruksi pelaporan bug, mohon lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>."
 
 #: malloc/memusage.sh:101
 msgid ""
@@ -2893,7 +2885,7 @@ msgstr ""
 "Sintaks: memusage [--data=BERKAS] [--progname=NAMA] [--png=BERKAS] [--unbuffered]\n"
 "            [--buffer=UKURAN] [--no-timer] [--time-based] [--total]\n"
 "            [--title=STRING] [--x-size=UKURAN] [--y-size=UKURAN]\n"
-"            APLIKASI [OPSIAPLIKASI]..."
+"            APLIKASI [PILIHAN APLIKASI]..."
 
 #: malloc/memusage.sh:193
 msgid "memusage: option \\`${1##*=}' is ambiguous"
@@ -3708,16 +3700,16 @@ msgstr "tidak dapat menangani versi permintaan lama %d; versi sekarang adalah %d
 #: nscd/connections.c:1077
 #, c-format
 msgid "request from %ld not handled due to missing permission"
-msgstr ""
+msgstr "permintaan dari %ld tidak dapat ditangani karena tidak ada ijin"
 
 #: nscd/connections.c:1082
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
-msgstr ""
+msgstr "permintaan dari '%s' [%ld] tidak dapat ditangani karena tidak ada ijin"
 
 #: nscd/connections.c:1087
 msgid "request not handled due to missing permission"
-msgstr ""
+msgstr "permintaan tidak dapat ditangani karena tidak ada ijin"
 
 #: nscd/connections.c:1125 nscd/connections.c:1178
 #, c-format
@@ -3792,7 +3784,7 @@ msgstr "handle_request: permintaan diterima (Versi = %d)"
 #: nscd/connections.c:1903 nscd/connections.c:2101
 #, c-format
 msgid "disabled inotify after read error %d"
-msgstr ""
+msgstr "menonaktifkan inotify setelah error membaca %d"
 
 #: nscd/connections.c:2230
 msgid "could not initialize conditional variable"
@@ -4220,7 +4212,7 @@ msgstr "Error memperoleh sid dari konteks"
 
 #: nscd/selinux.c:374
 msgid "compile-time support for database policy missing"
-msgstr ""
+msgstr "dukungan waktu-kompilasi untuk kebijakan basis data tidak ada"
 
 #: nscd/selinux.c:407
 #, c-format
@@ -4269,7 +4261,7 @@ msgstr "Konfigurasi layanan yang akan digunakan"
 
 #: nss/getent.c:62
 msgid "Get entries from administrative database."
-msgstr ""
+msgstr "Dapatkan masukan dari basis data administrasi."
 
 #: nss/getent.c:143 nss/getent.c:408
 #, c-format
@@ -4370,6 +4362,13 @@ msgid ""
 "environment SPEC.\n"
 "\n"
 msgstr ""
+"Penggunaan: getconf [-v SPEK] VAR\n"
+"      atau: getconf [-v SPEK] VAR_JALUR JALUR\n"
+"\n"
+"Dapatkan nilai konfigurasi untuk variabel VAR, atau untuk variabel VAR_JALUR\n"
+"untuk jalur PATH. Jika SPEK diberikan, berikan nilai untuk kompilasi\n"
+"lingkungan SPEK.\n"
+"\n"
 
 #: posix/getconf.c:1081
 #, c-format
@@ -4880,82 +4879,82 @@ msgstr "\t%s [-n netid]* [-o outfile] [infile]\n"
 #: sunrpc/rpc_main.c:1469
 #, c-format
 msgid "options:\n"
-msgstr ""
+msgstr "pilihan:\n"
 
 #: sunrpc/rpc_main.c:1470
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
-msgstr ""
+msgstr "-a\t\tbuat seluruh berkas, termasuk contoh\n"
 
 #: sunrpc/rpc_main.c:1471
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
-msgstr ""
+msgstr "-b\t\tmode kompabilitas kebelakang (buat kode untuk SunOS 4.1)\n"
 
 #: sunrpc/rpc_main.c:1472
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
-msgstr ""
+msgstr "-c\t\tbuat rutinitas XDR\n"
 
 #: sunrpc/rpc_main.c:1473
 #, c-format
 msgid "-C\t\tANSI C mode\n"
-msgstr ""
+msgstr "-C\t\tmode ANSI C\n"
 
 #: sunrpc/rpc_main.c:1474
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
-msgstr ""
+msgstr "-Dnama[=nilai]\tdefinisikan sebuah simbol (sama seperti #define)\n"
 
 #: sunrpc/rpc_main.c:1475
 #, c-format
 msgid "-h\t\tgenerate header file\n"
-msgstr ""
+msgstr "-h\t\thasilkan berkas kepala\n"
 
 #: sunrpc/rpc_main.c:1476
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
-msgstr ""
+msgstr "-i ukuran\t\tukuran dimana untuk memulai kodee inline\n"
 
 #: sunrpc/rpc_main.c:1477
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
-msgstr ""
+msgstr "-I\t\thasilkan kode untuk dukungan inetd dalam server (untuk SunOS 4.1)\n"
 
 #: sunrpc/rpc_main.c:1478
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
-msgstr ""
+msgstr "-K detik\tserver keluar setelah K detik untuk istirahat\n"
 
 #: sunrpc/rpc_main.c:1479
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
-msgstr ""
+msgstr "-l\t\tbuat stubs sisi klien\n"
 
 #: sunrpc/rpc_main.c:1480
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
-msgstr ""
+msgstr "-L\t\terror server akan ditampilkan ke sistem pencatatan\n"
 
 #: sunrpc/rpc_main.c:1481
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
-msgstr ""
+msgstr "-m\t\tbuat stubs sisi server\n"
 
 #: sunrpc/rpc_main.c:1482
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
-msgstr ""
+msgstr "-M\t\thasilkan kode MT-safe\n"
 
 #: sunrpc/rpc_main.c:1483
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr ""
+msgstr "-n netid\tbuat kode server yang mendukung netid bernama\n"
 
 #: sunrpc/rpc_main.c:1484
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
-msgstr ""
+msgstr "-N\t\tdukung argumen ganda dan panggil-dengan-nilai\n"
 
 #: sunrpc/rpc_main.c:1485
 #, c-format
@@ -4965,32 +4964,32 @@ msgstr "-o berkas keluar\tnama dari berkas keluaran\n"
 #: sunrpc/rpc_main.c:1486
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr ""
+msgstr "-s nettype\tbuat kode server yang mendukung nettype bernama\n"
 
 #: sunrpc/rpc_main.c:1487
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
-msgstr ""
+msgstr "-Sc\t\tbuat contoh kode klien yang menggunakan prosedur remote\n"
 
 #: sunrpc/rpc_main.c:1488
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
-msgstr ""
+msgstr "-Ss\t\tbuat contoh kode server yang mendefinisikan prosedur remote\n"
 
 #: sunrpc/rpc_main.c:1489
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
-msgstr ""
+msgstr "-Sm \t\tbuat template makefile \n"
 
 #: sunrpc/rpc_main.c:1490
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
-msgstr ""
+msgstr "-t\t\tbuat tabel eksekusi RPC\n"
 
 #: sunrpc/rpc_main.c:1491
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
-msgstr ""
+msgstr "-T\t\tbuat kode untuk mendukung tabel eksekusi RPC\n"
 
 #: sunrpc/rpc_main.c:1492
 #, c-format
@@ -6255,6 +6254,8 @@ msgid ""
 "Usage: lddlibc4 FILE\n"
 "\n"
 msgstr ""
+"Penggunaan: lddlibc4 BERKAS\n"
+"\n"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:82
 #, c-format

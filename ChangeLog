@@ -1,3 +1,7 @@
+2009-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/id.po: Update from translation team.
+
 2009-02-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Use
