@@ -1,5 +1,6 @@
 /* Switch to context.
-   Copyright (C) 2002, 2004, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005, 2006, 2008, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,6 +87,8 @@ ENTRY(__novec_setcontext)
   /* Use the extended four-operand version of the mtfsf insn.  */
   mtfsf  0xff,fp0,1,0
 # else
+  .machine push
+  .machine "power6"
   /* Availability of DFP indicates a 64-bit FPSCR.  */
   andi.  r6,r5,PPC_FEATURE_HAS_DFP
   beq    5f
@@ -96,6 +99,7 @@ ENTRY(__novec_setcontext)
 5:
   mtfsf  0xff,fp0
 6:
+  .machine pop
 # endif /* _ARCH_PWR6 */
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)
@@ -374,6 +378,8 @@ L(has_no_vec):
   /* Use the extended four-operand version of the mtfsf insn.  */
   mtfsf  0xff,fp0,1,0
 # else
+  .machine push
+  .machine "power6"
   /* Availability of DFP indicates a 64-bit FPSCR.  */
   andi.  r6,r5,PPC_FEATURE_HAS_DFP
   beq    7f
@@ -384,6 +390,7 @@ L(has_no_vec):
 7:
   mtfsf  0xff,fp0
 8:
+  .machine pop
 # endif /* _ARCH_PWR6 */
   lfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r31)
   lfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r31)

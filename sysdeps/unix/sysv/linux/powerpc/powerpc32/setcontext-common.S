@@ -204,6 +204,8 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	/* Use the extended four-operand version of the mtfsf insn.  */
 	mtfsf	0xff,fp31,1,0
 # else
+	.machine push
+	.machine "power6"
 	/* Availability of DFP indicates a 64-bit FPSCR.  */
 	andi.	r6,r7,PPC_FEATURE_HAS_DFP
 	beq	7f
@@ -212,7 +214,7 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	b	8f
 	/* Continue to operate on the FPSCR as if it were 32-bits.  */
 7:	mtfsf	0xff,fp31
-8:
+8:	.machine pop
 # endif /* _ARCH_PWR6 */
 	lfd	fp1,_UC_FREGS+(1*8)(r31)
 	lfd	fp2,_UC_FREGS+(2*8)(r31)
