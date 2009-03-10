@@ -26,5 +26,5 @@
 void
 quick_exit (int status)
 {
-  __run_exit_handlers (status, __quick_exit_funcs, false);
+  __run_exit_handlers (status, &__quick_exit_funcs, false);
 }

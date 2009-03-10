@@ -43,6 +43,7 @@ extern void *__dso_handle __attribute__ ((__weak__));
 
 /* Register FUNC to be executed by `quick_exit'.  */
 int
+attribute_hidden
 at_quick_exit (void (*func) (void))
 {
   return __cxa_at_quick_exit ((void (*) (void *)) func,

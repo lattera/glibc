@@ -97,6 +97,6 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 void
 exit (int status)
 {
-  __run_exit_handlers (status, __exit_funcs, true);
+  __run_exit_handlers (status, &__exit_funcs, true);
 }
 libc_hidden_def (exit)

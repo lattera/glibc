@@ -1,3 +1,15 @@
+2009-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/quick_exit.c (quick_exit): Pass &__quick_exit_funcs
+	instead of __quick_exit_funcs to __run_exit_handlers.
+	* stdlib/at_quick_exit.c (at_quick_exit): Add attribute_hidden.
+	* stdlib/exit.h (__run_exit_handlers): Add noreturn attribute.
+	(__cxa_at_quick_exit): Remove attribute_hidden.
+	* stdlib/exit.c (exit): Pass &__exit_funcs instead of __exit_funcs
+	to __run_exit_handlers.
+	* stdlib/cxa_at_quick_exit.c (__cxa_at_quick_exit): Remove
+	attribute_hidden.
+
 2009-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/id.po: Update from translation team.
