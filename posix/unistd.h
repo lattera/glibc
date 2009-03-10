@@ -30,33 +30,35 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
-#define	_POSIX_VERSION	200112L
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
+#define	_POSIX_VERSION	200809L
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
 /* The utilities on GNU systems also correspond to this version.  */
-#define _POSIX2_VERSION	200112L
+#define _POSIX2_VERSION	200809L
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
-#define	_POSIX2_C_BIND	200112L
+#define	_POSIX2_C_BIND	200809L
 
 /* If defined, the implementation supports the
    C Language Development Utilities Option.  */
-#define	_POSIX2_C_DEV	200112L
+#define	_POSIX2_C_DEV	200809L
 
 /* If defined, the implementation supports the
    Software Development Utilities Option.  */
-#define	_POSIX2_SW_DEV	200112L
+#define	_POSIX2_SW_DEV	200809L
 
 /* If defined, the implementation supports the
    creation of locales with the localedef utility.  */
-#define _POSIX2_LOCALEDEF       200112L
+#define _POSIX2_LOCALEDEF       200809L
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
-#ifdef __USE_XOPEN2K
+#ifdef __USE_XOPEN2K8
+# define _XOPEN_VERSION	700
+#elif defined __USE_XOPEN2K
 # define _XOPEN_VERSION	600
 #elif defined __USE_UNIX98
 # define _XOPEN_VERSION	500

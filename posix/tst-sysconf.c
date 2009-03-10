@@ -97,7 +97,7 @@ do_test (void)
 	  result = 1;
 	}
 
-#define STDVER 200112L
+#define STDVER 200809L
       if (scret > 0 && scret != STDVER && !posix_options[i].positive)
 	{
 	  printf ("sysconf(_SC_%s%s) must be %ldL\n",

@@ -1,5 +1,13 @@
 2009-03-10  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/unistd.h (_POSIX_VERSION, _POSIX2_VERSION, _POSIX2_C_BIND,
+	_POSIX2_C_DEV, _POSIX2_SW_DEV, _POSIX2_LOCALEDEF): Define to
+	200809L instead of 200112L.
+	(_XOPEN_VERSION): For __USE_XOPEN2K8 define to 700.
+	* posix/tst-sysconf.c (STDVER): Define to 200809L instead of 200112L.
+
+2009-03-10  Jakub Jelinek  <jakub@redhat.com>
+
 	* stdlib/quick_exit.c (quick_exit): Pass &__quick_exit_funcs
 	instead of __quick_exit_funcs to __run_exit_handlers.
 	* stdlib/at_quick_exit.c (at_quick_exit): Add attribute_hidden.
