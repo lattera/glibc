@@ -87,7 +87,7 @@ static const struct argp_option options[] =
 
 /* Short description of program.  */
 static const char doc[] = N_("Read and display shared object profiling data.");
-//For bug reporting instructions, please see:\n		\
+//For bug reporting instructions, please see:\n
 //<http://www.gnu.org/software/libc/bugs.html>.\n");
 
 /* Strings for arguments in help texts.  */

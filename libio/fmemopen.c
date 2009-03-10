@@ -1,5 +1,6 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2005, 2006, 2008, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -258,3 +259,4 @@ fmemopen (void *buf, size_t len, const char *mode)
 
   return _IO_fopencookie (c, mode, iof);
 }
+libc_hidden_def (fmemopen)

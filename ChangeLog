@@ -1,3 +1,10 @@
+2009-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/stdio.h (fmemopen): Add libc_hidden_proto.
+	* libio/fmemopen.c (fmemopen): Add libc_hidden_def.
+
+	* elf/sprof.c: Avoid warning about multi-line comment.
+
 2009-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzset.c (__tzset_parse_tz): Use correct string when parsing
