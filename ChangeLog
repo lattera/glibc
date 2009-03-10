@@ -1,3 +1,17 @@
+2009-02-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Use
+	.machine push; .machine "power6" and .machine pop around mtfsf
+	insns outside of _ARCH_PWR6 define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (_SET_DI_FPSCR): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_register,
+	relax_fenv_state): Likewise.
+
 2009-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Makefile (routines): Add quick_exit, at_quick_exit, and

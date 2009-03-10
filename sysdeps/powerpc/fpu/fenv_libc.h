@@ -1,5 +1,5 @@
 /* Internal libc stuff for floating point environment routines.
-   Copyright (C) 1997, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,10 @@ libm_hidden_proto (__fe_nomask_env)
 	do { \
 	  double d = (env); \
 	  if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	    asm volatile ("mtfsf 0xff,%0,1,0" : : "f" (d)); \
+	    asm volatile (".machine push; " \
+			  ".machine \"power6\"; " \
+			  "mtfsf 0xff,%0,1,0; " \
+			  ".machine pop" : : "f" (d)); \
 	  else \
 	    asm volatile ("mtfsf 0xff,%0" : : "f" (d)); \
 	} while(0)
@@ -52,8 +55,9 @@ libm_hidden_proto (__fe_nomask_env)
    functions.  */
 #define relax_fenv_state() \
 	do { \
-	   if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	       asm ("mtfsfi 7,0,1"); \
+	   if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
+	     asm (".machine push; .machine \"power6\"; " \
+		  "mtfsfi 7,0,1; .machine pop"); \
 	   asm ("mtfsfi 7,0"); \
 	} while(0)
 

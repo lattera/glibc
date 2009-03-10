@@ -111,7 +111,11 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
     tmp __attribute__ ((__aligned__(8)));				     \
   tmp.fpscr = __fpscr;							     \
   /* Set the entire 64-bit FPSCR.  */					     \
-  __asm__ ("lfd%U0 0,%0; mtfsf 255,0,1,0" : : "m" (tmp.d) : "fr0");	     \
+  __asm__ ("lfd%U0 0,%0; "						     \
+	   ".machine push; "						     \
+	   ".machine \"power6\"; "					     \
+	   "mtfsf 255,0,1,0; "						     \
+	   ".machine pop" : : "m" (tmp.d) : "fr0");			     \
   tmp.d = 0;								     \
   __asm__("lfd%U0 0,%0" : : "m" (tmp.d) : "fr0");			     \
 }
