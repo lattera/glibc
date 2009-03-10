@@ -163,7 +163,6 @@ __tzset_parse_tz (tz)
      const char *tz;
 {
   register size_t l;
-  char *tzbuf;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
 
@@ -172,22 +171,22 @@ __tzset_parse_tz (tz)
   tz_rules[0].name = tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
-  tzbuf = strdupa (tz);
+  char *tzbuf = strdupa (tz);
 
   if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
     {
       /* Check for the quoted version.  */
       char *wp = tzbuf;
-      if (*tz++ != '<')
+      if (__builtin_expect (*tz++ != '<', 0))
 	goto out;
 
       while (isalnum (*tz) || *tz == '+' || *tz == '-')
 	*wp++ = *tz++;
-      if (*tz++ != '>' || wp - tzbuf < 3)
+      if (__builtin_expect (*tz++ != '>' || wp - tzbuf < 3, 0))
 	goto out;
       *wp = '\0';
     }
-  else if ((l = strlen (tzbuf)) < 3)
+  else if (__builtin_expect ((l = strlen (tzbuf)) < 3, 0))
     goto out;
   else
     tz += l;
@@ -219,7 +218,7 @@ __tzset_parse_tz (tz)
 
   for (l = 0; l < 3; ++l)
     {
-      while (isdigit(*tz))
+      while (isdigit (*tz))
 	++tz;
       if (l < 2 && *tz == ':')
 	++tz;
@@ -228,32 +227,30 @@ __tzset_parse_tz (tz)
   /* Get the DST timezone name (if any).  */
   if (*tz != '\0')
     {
-      char *n = tzbuf + strlen (tzbuf) + 1;
-
       if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
 	{
 	  /* Check for the quoted version.  */
 	  char *wp = tzbuf;
 	  const char *rp = tz;
-	  if (*rp++ != '<')
+	  if (__builtin_expect (*rp++ != '<', 0))
 	    /* Punt on name, set up the offsets.  */
 	    goto done_names;
 
 	  while (isalnum (*rp) || *rp == '+' || *rp == '-')
 	    *wp++ = *rp++;
-	  if (*rp++ != '>' || wp - tzbuf < 3)
+	  if (__builtin_expect (*rp++ != '>' || wp - tzbuf < 3, 0))
 	    /* Punt on name, set up the offsets.  */
 	    goto done_names;
 	  *wp = '\0';
 	  tz = rp;
 	}
-      else if ((l = strlen (tzbuf)) < 3)
+      else if (__builtin_expect ((l = strlen (tzbuf)) < 3, 0))
 	/* Punt on name, set up the offsets.  */
 	goto done_names;
       else
 	tz += l;
 
-      tz_rules[1].name = __tzstring (n);
+      tz_rules[1].name = __tzstring (tzbuf);
 
       /* Figure out the DST offset from GMT.  */
       if (*tz == '-' || *tz == '+')

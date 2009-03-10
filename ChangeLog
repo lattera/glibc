@@ -1,3 +1,9 @@
+2009-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzset.c (__tzset_parse_tz): Use correct string when parsing
+	DST name.
+	* time/tst-posixtz.c: Add tests for quoted timezone names.
+
 2009-03-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/unistd.h (_POSIX_VERSION, _POSIX2_VERSION, _POSIX2_C_BIND,

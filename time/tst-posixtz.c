@@ -18,6 +18,10 @@ struct
     "1999/02/26 07:18:12 dst=1 zone=AEDST" },
   { 909312849L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
     "1998/10/25 05:54:09 dst=0 zone=EST" },
+  { 909312849L, "EST5EDT,M4.1.0/2,M10.5.0/2",
+    "1998/10/25 05:54:09 dst=0 zone=EST" },
+  { 909312849L, "<EST5>5EDT,M4.1.0/2,M10.5.0/2",
+    "1998/10/25 05:54:09 dst=0 zone=EST5" },
   { 924864849L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
     "1999/04/23 06:54:09 dst=1 zone=EDT" },
   { 919973892L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
@@ -77,6 +81,32 @@ main (void)
 	  " tzname = { \"%s\", \"%s\" }", daylight, tzname[0], tzname[1]);
   if (daylight
       && strcmp (tzname[0], "AEST") == 0 && strcmp (tzname[1], "AEDST") == 0)
+    puts (", OK");
+  else
+    {
+      result = 1;
+      puts (", FAIL");
+    }
+
+  setenv ("TZ", "<AB1>-10<AB2>-11,M10.5.0,M3.5.0", 1);
+  tzset ();
+  printf ("TZ = \"<AB1>-10<AB2>-11,M10.5.0,M3.5.0\" daylight %d"
+	  " tzname = { \"%s\", \"%s\" }", daylight, tzname[0], tzname[1]);
+  if (daylight
+      && strcmp (tzname[0], "AB1") == 0 && strcmp (tzname[1], "AB2") == 0)
+    puts (", OK");
+  else
+    {
+      result = 1;
+      puts (", FAIL");
+    }
+
+  setenv ("TZ", "<BB1>-10", 1);
+  tzset ();
+  printf ("TZ = \"<BB1>-10\" daylight %d"
+	  " tzname = { \"%s\", \"%s\" }", daylight, tzname[0], tzname[1]);
+  if (daylight == 0
+      && strcmp (tzname[0], "BB1") == 0 && strcmp (tzname[1], "BB1") == 0)
     puts (", OK");
   else
     {
