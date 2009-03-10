@@ -157,23 +157,31 @@ update_vars (void)
     __tzname_cur_max = len1;
 }
 
+
+static unsigned int
+__attribute_noinline__
+compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
+{
+  return min (ss, 59) + min (mm, 59) * 60 + min (hh, 24) * 60 * 60;
+}
+
+
 /* Parse the POSIX TZ-style string.  */
 void
 __tzset_parse_tz (tz)
      const char *tz;
 {
-  register size_t l;
   unsigned short int hh, mm, ss;
-  unsigned short int whichrule;
 
   /* Clear out old state and reset to unnamed UTC.  */
-  memset (tz_rules, 0, sizeof tz_rules);
+  memset (tz_rules, '\0', sizeof tz_rules);
   tz_rules[0].name = tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
   char *tzbuf = strdupa (tz);
 
-  if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
+  int consumed;
+  if (sscanf (tz, "%[A-Za-z]%n", tzbuf, &consumed) != 1)
     {
       /* Check for the quoted version.  */
       char *wp = tzbuf;
@@ -186,10 +194,10 @@ __tzset_parse_tz (tz)
 	goto out;
       *wp = '\0';
     }
-  else if (__builtin_expect ((l = strlen (tzbuf)) < 3, 0))
+  else if (__builtin_expect (consumed < 3, 0))
     goto out;
   else
-    tz += l;
+    tz += consumed;
 
   tz_rules[0].name = __tzstring (tzbuf);
 
@@ -201,7 +209,8 @@ __tzset_parse_tz (tz)
     tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
   else
     tz_rules[0].offset = -1L;
-  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+  switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
+		  &hh, &consumed, &mm, &consumed, &ss, &consumed))
     {
     default:
       tz_rules[0].offset = 0;
@@ -213,21 +222,13 @@ __tzset_parse_tz (tz)
     case 3:
       break;
     }
-  tz_rules[0].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
-			 (min (hh, 24) * 60 * 60));
-
-  for (l = 0; l < 3; ++l)
-    {
-      while (isdigit (*tz))
-	++tz;
-      if (l < 2 && *tz == ':')
-	++tz;
-    }
+  tz_rules[0].offset *= compute_offset (ss, mm, hh);
+  tz += consumed;
 
   /* Get the DST timezone name (if any).  */
   if (*tz != '\0')
     {
-      if (sscanf (tz, "%[A-Za-z]", tzbuf) != 1)
+      if (sscanf (tz, "%[A-Za-z]%n", tzbuf, &consumed) != 1)
 	{
 	  /* Check for the quoted version.  */
 	  char *wp = tzbuf;
@@ -244,11 +245,11 @@ __tzset_parse_tz (tz)
 	  *wp = '\0';
 	  tz = rp;
 	}
-      else if (__builtin_expect ((l = strlen (tzbuf)) < 3, 0))
+      else if (__builtin_expect (consumed < 3, 0))
 	/* Punt on name, set up the offsets.  */
 	goto done_names;
       else
-	tz += l;
+	tz += consumed;
 
       tz_rules[1].name = __tzstring (tzbuf);
 
@@ -258,7 +259,8 @@ __tzset_parse_tz (tz)
       else
 	tz_rules[1].offset = -1L;
 
-      switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+      switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
+		      &hh, &consumed, &mm, &consumed, &ss, &consumed))
 	{
 	default:
 	  /* Default to one hour later than standard time.  */
@@ -270,16 +272,9 @@ __tzset_parse_tz (tz)
 	case 2:
 	  ss = 0;
 	case 3:
-	  tz_rules[1].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
-				 (min (hh, 24) * (60 * 60)));
+	  tz_rules[1].offset *= compute_offset (ss, mm, hh);
+	  tz += consumed;
 	  break;
-	}
-      for (l = 0; l < 3; ++l)
-	{
-	  while (isdigit (*tz))
-	    ++tz;
-	  if (l < 2 && *tz == ':')
-	    ++tz;
 	}
       if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
 	{
@@ -304,7 +299,7 @@ __tzset_parse_tz (tz)
 
  done_names:
   /* Figure out the standard <-> DST rules.  */
-  for (whichrule = 0; whichrule < 2; ++whichrule)
+  for (unsigned int whichrule = 0; whichrule < 2; ++whichrule)
     {
       register tz_rule *tzr = &tz_rules[whichrule];
 
@@ -319,23 +314,23 @@ __tzset_parse_tz (tz)
 	  tzr->type = *tz == 'J' ? J1 : J0;
 	  if (tzr->type == J1 && !isdigit (*++tz))
 	    goto out;
-	  tzr->d = (unsigned short int) strtoul (tz, &end, 10);
-	  if (end == tz || tzr->d > 365)
+	  unsigned long int d = strtoul (tz, &end, 10);
+	  if (end == tz || d > 365)
 	    goto out;
-	  else if (tzr->type == J1 && tzr->d == 0)
+	  if (tzr->type == J1 && d == 0)
 	    goto out;
+	  tzr->d = d;
 	  tz = end;
 	}
       else if (*tz == 'M')
 	{
-	  int n;
 	  tzr->type = M;
 	  if (sscanf (tz, "M%hu.%hu.%hu%n",
-		      &tzr->m, &tzr->n, &tzr->d, &n) != 3 ||
-	      tzr->m < 1 || tzr->m > 12 ||
-	      tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
+		      &tzr->m, &tzr->n, &tzr->d, &consumed) != 3
+	      || tzr->m < 1 || tzr->m > 12
+	      || tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
 	    goto out;
-	  tz += n;
+	  tz += consumed;
 	}
       else if (*tz == '\0')
 	{
@@ -365,7 +360,9 @@ __tzset_parse_tz (tz)
 	  ++tz;
 	  if (*tz == '\0')
 	    goto out;
-	  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+	  consumed = 0;
+	  switch (sscanf (tz, "%hu%n:%hu%n:%hu%n",
+			  &hh, &consumed, &mm, &consumed, &ss, &consumed))
 	    {
 	    default:
 	      hh = 2;		/* Default to 2:00 AM.  */
@@ -376,13 +373,7 @@ __tzset_parse_tz (tz)
 	    case 3:
 	      break;
 	    }
-	  for (l = 0; l < 3; ++l)
-	    {
-	      while (isdigit (*tz))
-		++tz;
-	      if (l < 2 && *tz == ':')
-		++tz;
-	    }
+	  tz += consumed;
 	  tzr->secs = (hh * 60 * 60) + (mm * 60) + ss;
 	}
       else
@@ -454,14 +445,11 @@ tzset_internal (always, explicit)
   if (tz == NULL || *tz == '\0'
       || (TZDEFAULT != NULL && strcmp (tz, TZDEFAULT) == 0))
     {
+      memset (tz_rules, '\0', sizeof tz_rules);
       tz_rules[0].name = tz_rules[1].name = "UTC";
-      tz_rules[0].type = tz_rules[1].type = J0;
-      tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
-      tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
-      tz_rules[0].secs = tz_rules[1].secs = 0;
-      tz_rules[0].offset = tz_rules[1].offset = 0L;
+      if (J0 != 0)
+	tz_rules[0].type = tz_rules[1].type = J0;
       tz_rules[0].change = tz_rules[1].change = (time_t) -1;
-      tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
       update_vars ();
       return;
     }
