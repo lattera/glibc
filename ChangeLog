@@ -1,3 +1,8 @@
+2009-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Add branch
+	prediction.  A few size optimizations.
+
 2009-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzset.c: Optimize a bit for size.
