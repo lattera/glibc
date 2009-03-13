@@ -70,6 +70,7 @@ versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
+multi-arch = @multi_arch@
 
 mach-interface-list = @mach_interface_list@
 
@@ -77,6 +78,8 @@ have-bash2 = @libc_cv_have_bash2@
 have-ksh = @libc_cv_have_ksh@
 
 sizeof-long-double = @sizeof_long_double@
+
+experimental-malloc = @experimental_malloc@
 
 # Configuration options.
 build-static = @static@

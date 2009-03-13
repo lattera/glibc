@@ -23,6 +23,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifdef USE_MULTIARCH
+# include "multiarch/init-arch.h"
+#endif
+
 static const struct intel_02_cache_info
 {
   unsigned int idx;
@@ -443,19 +447,32 @@ init_cacheinfo (void)
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
-  int max_cpuid;
   int max_cpuid_ex;
   long int data = -1;
   long int shared = -1;
   unsigned int level;
   unsigned int threads = 0;
 
+#ifdef USE_MULTIARCH
+  if (__cpu_features.kind == arch_kind_unknown)
+    __init_cpu_features ();
+# define is_intel __cpu_features.kind == arch_kind_intel
+# define is_amd __cpu_features.kind == arch_kind_amd
+# define max_cpuid __cpu_features.max_cpuid
+#else
+  int max_cpuid;
   asm volatile ("cpuid"
 		: "=a" (max_cpuid), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		: "0" (0));
-
   /* This spells out "GenuineIntel".  */
-  if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
+# define is_intel \
+  ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69
+  /* This spells out "AuthenticAMD".  */
+# define is_amd \
+  ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65
+#endif
+
+  if (is_intel)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
 
@@ -470,9 +487,16 @@ init_cacheinfo (void)
           shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
 
+#ifdef USE_MULTIARCH
+      eax = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].eax;
+      ebx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].ebx;
+      ecx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].ecx;
+      edx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].edx;
+#else
       asm volatile ("cpuid"
 		    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		    : "0" (1));
+#endif
 
       /* Intel prefers SSSE3 instructions for memory/string routines
 	 if they are avaiable.  */
@@ -519,7 +543,7 @@ init_cacheinfo (void)
         shared /= threads;
     }
   /* This spells out "AuthenticAMD".  */
-  else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
+  else if (is_amd)
     {
       data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);

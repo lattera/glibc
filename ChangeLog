@@ -1,3 +1,28 @@
+2009-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in (USE_MULTIARCH): Define.
+	* configure.in: Handle --enable-multi-arch.
+	* elf/dl-runtime.c (_dl_fixup): Handle STT_GNU_IFUNC.
+	(_dl_fixup_profile): Likewise.
+	* elf/do-lookup.c (dl_lookup_x): Likewise.
+	* sysdeps/x86_64/dl-machine.h: Handle STT_GNU_IFUNC.
+	* elf/elf.h (STT_GNU_IFUNC): Define.
+	* include/libc-symbols.h (libc_ifunc): Define.
+	* sysdeps/x86_64/cacheinfo.c: If USE_MULTIARCH is defined, use the
+	framework in init-arch.h to get CPUID values.
+	* sysdeps/x86_64/multiarch/Makefile: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c: New file.
+	* sysdeps/x86_64/multiarch/init-arch.h: New file.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: New file.
+
+	* config.make.in (experimental-malloc): Define.
+	* configure.in: Handle --enable-experimental-malloc.
+	* malloc/Makefile: Handle experimental-malloc flag.
+	* malloc/malloc.c: Implement PER_THREAD and ATOMIC_FASTBINS features.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+	* malloc/malloc.h: Define M_ARENA_TEST and M_ARENA_MAX.
+
 2009-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Add branch

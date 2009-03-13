@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
@@ -78,6 +78,10 @@ extern int sanity_check_heap_info_alignment[(sizeof (heap_info)
 
 static tsd_key_t arena_key;
 static mutex_t list_lock;
+#ifdef PER_THREAD
+static size_t narenas;
+static mstate free_list;
+#endif
 
 #if THREAD_STATS
 static int stat_n_heaps;
@@ -105,13 +109,30 @@ int __malloc_initialized = -1;
    in the new arena. */
 
 #define arena_get(ptr, size) do { \
+  arena_lookup(ptr); \
+  arena_lock(ptr, size); \
+} while(0)
+
+#define arena_lookup(ptr) do { \
   Void_t *vptr = NULL; \
   ptr = (mstate)tsd_getspecific(arena_key, vptr); \
+} while(0)
+
+#ifdef PER_THREAD
+#define arena_lock(ptr, size) do { \
+  if(ptr) \
+    (void)mutex_lock(&ptr->mutex); \
+  else \
+    ptr = arena_get2(ptr, (size)); \
+} while(0)
+#else
+#define arena_lock(ptr, size) do { \
   if(ptr && !mutex_trylock(&ptr->mutex)) { \
     THREAD_STAT(++(ptr->stat_lock_direct)); \
   } else \
     ptr = arena_get2(ptr, (size)); \
 } while(0)
+#endif
 
 /* find the heap and corresponding arena for a given ptr */
 
@@ -219,6 +240,11 @@ free_atfork(Void_t* mem, const Void_t *caller)
   }
 #endif
 
+#ifdef ATOMIC_FASTBINS
+  ar_ptr = arena_for_chunk(p);
+  tsd_getspecific(arena_key, vptr);
+  _int_free(ar_ptr, p, vptr == ATFORK_ARENA_PTR);
+#else
   ar_ptr = arena_for_chunk(p);
   tsd_getspecific(arena_key, vptr);
   if(vptr != ATFORK_ARENA_PTR)
@@ -226,6 +252,7 @@ free_atfork(Void_t* mem, const Void_t *caller)
   _int_free(ar_ptr, p);
   if(vptr != ATFORK_ARENA_PTR)
     (void)mutex_unlock(&ar_ptr->mutex);
+#endif
 }
 
 
@@ -312,8 +339,17 @@ ptmalloc_unlock_all2 (void)
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
 #endif
+#ifdef PER_THREAD
+  free_list = NULL;
+#endif
   for(ar_ptr = &main_arena;;) {
     mutex_init(&ar_ptr->mutex);
+#ifdef PER_THREAD
+    if (ar_ptr != save_arena) {
+      ar_ptr->next_free = free_list;
+      free_list = ar_ptr;
+    }
+#endif
     ar_ptr = ar_ptr->next;
     if(ar_ptr == &main_arena) break;
   }
@@ -377,6 +413,11 @@ ptmalloc_init_minimal (void)
   mp_.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
   mp_.trim_threshold = DEFAULT_TRIM_THRESHOLD;
   mp_.pagesize       = malloc_getpagesize;
+#ifdef PER_THREAD
+# define NARENAS_FROM_NCORES(n) ((n) * (sizeof(long) == 4 ? 2 : 8))
+  mp_.arena_test     = NARENAS_FROM_NCORES (1);
+  narenas = 1;
+#endif
 }
 
 
@@ -529,9 +570,25 @@ ptmalloc_init (void)
 		}
 	      break;
 	    case 9:
-	      if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
-		mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
+	      if (! secure)
+		{
+		  if (memcmp (envline, "MMAP_MAX_", 9) == 0)
+		    mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
+#ifdef PER_THREAD
+		  else if (memcmp (envline, "ARENA_MAX", 9) == 0)
+		    mALLOPt(M_ARENA_MAX, atoi(&envline[10]));
+#endif
+		}
 	      break;
+#ifdef PER_THREAD
+	    case 10:
+	      if (! secure)
+		{
+		  if (memcmp (envline, "ARENA_TEST", 10) == 0)
+		    mALLOPt(M_ARENA_TEST, atoi(&envline[11]));
+		}
+	      break;
+#endif
 	    case 15:
 	      if (! secure)
 		{
@@ -875,8 +932,109 @@ _int_new_arena(size_t size)
   top(a) = (mchunkptr)ptr;
   set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
 
+  tsd_setspecific(arena_key, (Void_t *)a);
+  mutex_init(&a->mutex);
+  (void)mutex_lock(&a->mutex);
+
+#ifdef PER_THREAD
+  (void)mutex_lock(&list_lock);
+#endif
+
+  /* Add the new arena to the global list.  */
+  a->next = main_arena.next;
+  atomic_write_barrier ();
+  main_arena.next = a;
+
+#ifdef PER_THREAD
+  ++narenas;
+
+  (void)mutex_unlock(&list_lock);
+#endif
+
+  THREAD_STAT(++(a->stat_lock_loop));
+
   return a;
 }
+
+
+#ifdef PER_THREAD
+static mstate
+get_free_list (void)
+{
+  mstate result = free_list;
+  if (result != NULL)
+    {
+      (void)mutex_lock(&list_lock);
+      result = free_list;
+      if (result != NULL)
+	free_list = result->next_free;
+      (void)mutex_unlock(&list_lock);
+
+      if (result != NULL)
+	{
+	  (void)mutex_lock(&result->mutex);
+	  tsd_setspecific(arena_key, (Void_t *)result);
+	  THREAD_STAT(++(result->stat_lock_loop));
+	}
+    }
+
+  return result;
+}
+
+
+static mstate
+reused_arena (void)
+{
+  if (narenas <= mp_.arena_test)
+    return NULL;
+
+  static int narenas_limit;
+  if (narenas_limit == 0)
+    {
+      if (mp_.arena_max != 0)
+	narenas_limit = mp_.arena_max;
+      else
+	{
+	  int n  = __get_nprocs ();
+
+	  if (n >= 1)
+	    narenas_limit = NARENAS_FROM_NCORES (n);
+	  else
+	    /* We have no information about the system.  Assume two
+	       cores.  */
+	    narenas_limit = NARENAS_FROM_NCORES (2);
+	}
+    }
+
+  if (narenas < narenas_limit)
+    return NULL;
+
+  mstate result;
+  static mstate next_to_use;
+  if (next_to_use == NULL)
+    next_to_use = &main_arena;
+
+  result = next_to_use;
+  do
+    {
+      if (!mutex_trylock(&result->mutex))
+	goto out;
+
+      result = result->next;
+    }
+  while (result != next_to_use);
+
+  /* No arena available.  Wait for the next in line.  */
+  (void)mutex_lock(&result->mutex);
+
+ out:
+  tsd_setspecific(arena_key, (Void_t *)result);
+  THREAD_STAT(++(result->stat_lock_loop));
+  next_to_use = result->next;
+
+  return result;
+}
+#endif
 
 static mstate
 internal_function
@@ -888,6 +1046,12 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
 {
   mstate a;
 
+#ifdef PER_THREAD
+  if ((a = get_free_list ()) == NULL
+      && (a = reused_arena ()) == NULL)
+    /* Nothing immediately available, so generate a new arena.  */
+    a = _int_new_arena(size);
+#else
   if(!a_tsd)
     a = a_tsd = &main_arena;
   else {
@@ -930,23 +1094,30 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
 
   /* Nothing immediately available, so generate a new arena.  */
   a = _int_new_arena(size);
-  if(a)
-    {
-      tsd_setspecific(arena_key, (Void_t *)a);
-      mutex_init(&a->mutex);
-      mutex_lock(&a->mutex); /* remember result */
-
-      /* Add the new arena to the global list.  */
-      a->next = main_arena.next;
-      atomic_write_barrier ();
-      main_arena.next = a;
-
-      THREAD_STAT(++(a->stat_lock_loop));
-    }
   (void)mutex_unlock(&list_lock);
+#endif
 
   return a;
 }
+
+#ifdef PER_THREAD
+static void __attribute__ ((section ("__libc_thread_freeres_fn")))
+arena_thread_freeres (void)
+{
+  Void_t *vptr = NULL;
+  mstate a = tsd_getspecific(arena_key, vptr);
+  tsd_setspecific(arena_key, NULL);
+
+  if (a != NULL)
+    {
+      (void)mutex_lock(&list_lock);
+      a->next_free = free_list;
+      free_list = a;
+      (void)mutex_unlock(&list_lock);
+    }
+}
+text_set_element (__libc_thread_subfreeres, arena_thread_freeres);
+#endif
 
 #endif /* USE_ARENAS */
 

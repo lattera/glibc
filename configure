@@ -660,6 +660,8 @@ oldest_abi
 bindnow
 force_install
 all_warnings
+multi_arch
+experimental_malloc
 build
 build_cpu
 build_vendor
@@ -1380,6 +1382,10 @@ Optional Features:
   --enable-kernel=VERSION compile for compatibility with kernel not older than
                           VERSION
   --enable-all-warnings   enable all useful warnings gcc can issue
+  --enable-multi-arch     enable single DSO with optimizations for multiple
+                          architectures
+  --enable-experimental-malloc
+                          enable experimental malloc features
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -2173,6 +2179,29 @@ fi
 
 
 
+# Check whether --enable-multi-arch was given.
+if test "${enable_multi_arch+set}" = set; then
+  enableval=$enable_multi_arch; multi_arch=$enableval
+else
+  multi_arch=no
+fi
+
+if test x"$multi_arch" = xyes; then
+  cat >>confdefs.h <<\_ACEOF
+#define USE_MULTIARCH 1
+_ACEOF
+
+  multi_arch_d=/multiarch
+fi
+
+
+# Check whether --enable-experimental-malloc was given.
+if test "${enable_experimental_malloc+set}" = set; then
+  enableval=$enable_experimental_malloc; experimental_malloc=$enableval
+fi
+
+
+
 # Make sure we can run config.sub.
 $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
   { { echo "$as_me:$LINENO: error: cannot run $SHELL $ac_aux_dir/config.sub" >&5
@@ -2627,7 +2656,7 @@ for b in $base ''; do
       test "$v" = / && continue
       for o in /$ostry ''; do
 	test "$o" = / && continue
-	for m in $mach ''; do
+	for m in $multi_arch_d $mach ''; do
 	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
 	      if test -n "$m0$m0sub$b$v$o$m$msub"; then
@@ -5682,6 +5711,37 @@ if test "x$libc_cv_asm_type_prefix" != xno; then
 #define ASM_TYPE_DIRECTIVE_PREFIX ${libc_cv_asm_type_prefix}
 _ACEOF
 
+fi
+
+# For the multi-arch option we need support in the assembler.
+if test "$multi_arch" = yes; then
+  if test "x$libc_cv_asm_type_prefix" != xno; then
+{ echo "$as_me:$LINENO: checking for assembler gnu_indirect_function symbol type support" >&5
+echo $ECHO_N "checking for assembler gnu_indirect_function symbol type support... $ECHO_C" >&6; }
+if test "${libc_cv_asm_gnu_indirect_function+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<EOF
+.type foo,%gnu_indirect_function
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5;
+then
+  libc_cv_asm_gnu_indirect_function=yes
+else
+  libc_cv_asm_gnu_indirect_function=no
+fi
+rm -f conftest*
+fi
+{ echo "$as_me:$LINENO: result: $libc_cv_asm_gnu_indirect_function" >&5
+echo "${ECHO_T}$libc_cv_asm_gnu_indirect_function" >&6; }
+  else
+    libc_cv_asm_gnu_indirect_function=no
+  fi
+  if test x"$libc_cv_asm_gnu_indirect_function" != xyes; then
+    { { echo "$as_me:$LINENO: error: --enable-multi-arch support requires assembler and linker support" >&5
+echo "$as_me: error: --enable-multi-arch support requires assembler and linker support" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
 fi
 
 { echo "$as_me:$LINENO: checking for .symver assembler directive" >&5
@@ -9184,6 +9244,8 @@ oldest_abi!$oldest_abi$ac_delim
 bindnow!$bindnow$ac_delim
 force_install!$force_install$ac_delim
 all_warnings!$all_warnings$ac_delim
+multi_arch!$multi_arch$ac_delim
+experimental_malloc!$experimental_malloc$ac_delim
 build!$build$ac_delim
 build_cpu!$build_cpu$ac_delim
 build_vendor!$build_vendor$ac_delim
@@ -9235,8 +9297,6 @@ libc_cv_have_bash2!$libc_cv_have_bash2$ac_delim
 KSH!$KSH$ac_delim
 libc_cv_have_ksh!$libc_cv_have_ksh$ac_delim
 AWK!$AWK$ac_delim
-PERL!$PERL$ac_delim
-INSTALL_INFO!$INSTALL_INFO$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -9278,6 +9338,8 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+PERL!$PERL$ac_delim
+INSTALL_INFO!$INSTALL_INFO$ac_delim
 BISON!$BISON$ac_delim
 VERSIONING!$VERSIONING$ac_delim
 libc_cv_cc_with_libunwind!$libc_cv_cc_with_libunwind$ac_delim
@@ -9334,7 +9396,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 54; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 56; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

@@ -275,17 +275,13 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   mchunkptr p;
 
   if(!mem) return;
-  (void)mutex_lock(&main_arena.mutex);
   p = mem2chunk_check(mem, NULL);
   if(!p) {
-    (void)mutex_unlock(&main_arena.mutex);
-
     malloc_printerr(check_action, "free(): invalid pointer", mem);
     return;
   }
 #if HAVE_MMAP
   if (chunk_is_mmapped(p)) {
-    (void)mutex_unlock(&main_arena.mutex);
     munmap_chunk(p);
     return;
   }
@@ -293,8 +289,13 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
 #if 0 /* Erase freed memory. */
   memset(mem, 0, chunksize(p) - (SIZE_SZ+1));
 #endif
+#ifdef ATOMIC_FASTBINS
+  _int_free(&main_arena, p, 0);
+#else
+  (void)mutex_lock(&main_arena.mutex);
   _int_free(&main_arena, p);
   (void)mutex_unlock(&main_arena.mutex);
+#endif
 }
 
 static Void_t*
@@ -472,7 +473,11 @@ free_starter(mem, caller) Void_t* mem; const Void_t *caller;
     return;
   }
 #endif
+#ifdef ATOMIC_FASTBINS
+  _int_free(&main_arena, p, 1);
+#else
   _int_free(&main_arena, p);
+#endif
 }
 
 # endif	/* !defiend NO_STARTER */
@@ -584,7 +589,7 @@ public_sET_STATe(Void_t* msptr)
   clear_fastchunks(&main_arena);
   set_max_fast(DEFAULT_MXFAST);
   for (i=0; i<NFASTBINS; ++i)
-    main_arena.fastbins[i] = 0;
+    fastbin (&main_arena, i) = 0;
   for (i=0; i<BINMAPSIZE; ++i)
     main_arena.binmap[i] = 0;
   top(&main_arena) = ms->av[2];

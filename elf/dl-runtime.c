@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -130,6 +130,9 @@ _dl_fixup (
   /* And now perhaps the relocation addend.  */
   value = elf_machine_plt_value (l, reloc, value);
 
+  if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
+    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
+
   /* Finally, fix up the plt itself.  */
   if (__builtin_expect (GLRO(dl_bind_not), 0))
     return value;
@@ -215,12 +218,21 @@ _dl_profile_fixup (
 				       defsym != NULL
 				       ? LOOKUP_VALUE_ADDRESS (result)
 					 + defsym->st_value : 0);
+
+	  if (__builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
+				== STT_GNU_IFUNC, 0))
+	    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
 	}
       else
 	{
 	  /* We already found the symbol.  The module (and therefore its load
 	     address) is also known.  */
 	  value = DL_FIXUP_MAKE_VALUE (l, l->l_addr + refsym->st_value);
+
+	  if (__builtin_expect (ELFW(ST_TYPE) (refsym->st_info)
+				== STT_GNU_IFUNC, 0))
+	    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
+
 	  result = l;
 	}
       /* And now perhaps the relocation addend.  */

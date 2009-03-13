@@ -189,6 +189,9 @@
 /* Define if __stack_chk_guard canary should be randomized at program startup.  */
 #undef ENABLE_STACKGUARD_RANDOMIZE
 
+/* Define if multi-arch DSOs should be generated.  */
+#undef USE_MULTIARCH
+
 /*
  */
 

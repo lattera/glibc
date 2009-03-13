@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996, 1997, 1999, 2000, 2002-2004, 2005, 2007
+   Copyright (C) 1996, 1997, 1999, 2000, 2002-2004, 2005, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -127,6 +127,8 @@ extern struct mallinfo mallinfo __MALLOC_P ((void));
 #define M_MMAP_MAX          -4
 #define M_CHECK_ACTION      -5
 #define M_PERTURB	    -6
+#define M_ARENA_TEST	    -7
+#define M_ARENA_MAX	    -8
 
 /* General SVID/XPG interface to tunable parameters. */
 extern int mallopt __MALLOC_P ((int __param, int __val));
