@@ -1,3 +1,9 @@
+2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add nan_TW@latin.
+	* locales/nan_TW@latin: New file.
+	Contributed by Arne Goetje.
+
 2009-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add rules for sorting Malayalam.

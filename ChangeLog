@@ -1,4 +1,10 @@
+2009-03-11  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Add support for AT_BASE_PLATFORM.
+
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (auxvars): Compress data structure.
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Implement
 	STT_GNU_IFUNC handling.

@@ -269,36 +269,37 @@ _dl_show_auxv (void)
     {
       static const struct
       {
-	const char label[20];
-	enum { unknown = 0, dec, hex, str, ignore } form;
+	const char label[17];
+	enum { unknown = 0, dec, hex, str, ignore } form : 8;
       } auxvars[] =
 	{
-	  [AT_EXECFD - 2] =		{ "AT_EXECFD:       ", dec },
-	  [AT_EXECFN - 2] =		{ "AT_EXECFN:       ", str },
-	  [AT_PHDR - 2] =		{ "AT_PHDR:         0x", hex },
-	  [AT_PHENT - 2] =		{ "AT_PHENT:        ", dec },
-	  [AT_PHNUM - 2] =		{ "AT_PHNUM:        ", dec },
-	  [AT_PAGESZ - 2] =		{ "AT_PAGESZ:       ", dec },
-	  [AT_BASE - 2] =		{ "AT_BASE:         0x", hex },
-	  [AT_FLAGS - 2] =		{ "AT_FLAGS:        0x", hex },
-	  [AT_ENTRY - 2] =		{ "AT_ENTRY:        0x", hex },
-	  [AT_NOTELF - 2] =		{ "AT_NOTELF:       ", hex },
-	  [AT_UID - 2] =		{ "AT_UID:          ", dec },
-	  [AT_EUID - 2] =		{ "AT_EUID:         ", dec },
-	  [AT_GID - 2] =		{ "AT_GID:          ", dec },
-	  [AT_EGID - 2] =		{ "AT_EGID:         ", dec },
-	  [AT_PLATFORM - 2] =		{ "AT_PLATFORM:     ", str },
-	  [AT_HWCAP - 2] =		{ "AT_HWCAP:        ", hex },
-	  [AT_CLKTCK - 2] =		{ "AT_CLKTCK:       ", dec },
-	  [AT_FPUCW - 2] =		{ "AT_FPUCW:        ", hex },
-	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE:  0x", hex },
-	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE:  0x", hex },
-	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:  0x", hex },
-	  [AT_IGNOREPPC - 2] =		{ "AT_IGNOREPPC", ignore },
-	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
-	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
-	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex },
-	  [AT_RANDOM - 2] =		{ "AT_RANDOM:       0x", hex },
+	  [AT_EXECFD - 2] =		{ "EXECFD:       ", dec },
+	  [AT_EXECFN - 2] =		{ "EXECFN:       ", str },
+	  [AT_PHDR - 2] =		{ "PHDR:         0x", hex },
+	  [AT_PHENT - 2] =		{ "PHENT:        ", dec },
+	  [AT_PHNUM - 2] =		{ "PHNUM:        ", dec },
+	  [AT_PAGESZ - 2] =		{ "PAGESZ:       ", dec },
+	  [AT_BASE - 2] =		{ "BASE:         0x", hex },
+	  [AT_FLAGS - 2] =		{ "FLAGS:        0x", hex },
+	  [AT_ENTRY - 2] =		{ "ENTRY:        0x", hex },
+	  [AT_NOTELF - 2] =		{ "NOTELF:       ", hex },
+	  [AT_UID - 2] =		{ "UID:          ", dec },
+	  [AT_EUID - 2] =		{ "EUID:         ", dec },
+	  [AT_GID - 2] =		{ "GID:          ", dec },
+	  [AT_EGID - 2] =		{ "EGID:         ", dec },
+	  [AT_PLATFORM - 2] =		{ "PLATFORM:     ", str },
+	  [AT_HWCAP - 2] =		{ "HWCAP:        ", hex },
+	  [AT_CLKTCK - 2] =		{ "CLKTCK:       ", dec },
+	  [AT_FPUCW - 2] =		{ "FPUCW:        ", hex },
+	  [AT_DCACHEBSIZE - 2] =	{ "DCACHEBSIZE:  0x", hex },
+	  [AT_ICACHEBSIZE - 2] =	{ "ICACHEBSIZE:  0x", hex },
+	  [AT_UCACHEBSIZE - 2] =	{ "UCACHEBSIZE:  0x", hex },
+	  [AT_IGNOREPPC - 2] =		{ "IGNOREPPC", ignore },
+	  [AT_SECURE - 2] =		{ "SECURE:       ", dec },
+	  [AT_BASE_PLATFORM - 2] =	{ "BASE_PLATFORM:", str },
+	  [AT_SYSINFO - 2] =		{ "SYSINFO:      0x", hex },
+	  [AT_SYSINFO_EHDR - 2] =	{ "SYSINFO_EHDR: 0x", hex },
+	  [AT_RANDOM - 2] =		{ "RANDOM:       0x", hex },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 
@@ -327,7 +328,7 @@ _dl_show_auxv (void)
 	    val = _itoa ((unsigned long int) av->a_un.a_val,
 			 buf + sizeof buf - 1, 16, 0);
 
-	  _dl_printf ("%s%s\n", auxvars[idx].label, val);
+	  _dl_printf ("AT_%s%s\n", auxvars[idx].label, val);
 
 	  continue;
 	}
