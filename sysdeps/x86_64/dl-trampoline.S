@@ -1,5 +1,5 @@
 /* PLT trampolines.  x86-64 version.
-   Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,132 +61,173 @@ _dl_runtime_resolve:
 	.type _dl_runtime_profile, @function
 	.align 16
 	cfi_startproc
+
 _dl_runtime_profile:
-	subq $88, %rsp
-	cfi_adjust_cfa_offset(104) # Incorporate PLT
-	movq %rax, (%rsp)	# Preserve registers otherwise clobbered.
-	movq %rdx, 8(%rsp)
-	movq %r8, 16(%rsp)
-	movq %r9, 24(%rsp)
-	movq %rcx, 32(%rsp)
-	movq %rsi, 40(%rsp)
-	movq %rdi, 48(%rsp)
-	movq %rbp, 56(%rsp)	# Information for auditors.
-	leaq 104(%rsp), %rax
-	movq %rax, 64(%rsp)
-	leaq 8(%rsp), %rcx
-	movq 104(%rsp), %rdx	# Load return address if needed
-	movq 96(%rsp), %rsi	# Copy args pushed by PLT in register.
-	movq %rsi,%r11		# Multiply by 24
+	/* The La_x86_64_regs data structure pointed to by the
+	   fourth paramater must be 16-byte aligned.  This must
+	   be explicitly enforced.  We have the set up a dynamically
+	   sized stack frame.  %rbx points to the top half which
+	   has a fixed size and preserves the original stack pointer.  */
+
+	subq $32, %rsp		# Allocate the local storage.
+	cfi_adjust_cfa_offset(48) # Incorporate PLT
+	movq %rbx, (%rsp)
+	cfi_rel_offset(%rbx, 0)
+
+	/* On the stack:
+		56(%rbx)	parameter #1
+		48(%rbx)	return address
+
+		40(%rbx)	reloc index
+		32(%rbx)	link_map
+
+		24(%rbx)	La_x86_64_regs pointer
+		16(%rbx)	framesize
+		 8(%rbx)	rax
+		  (%rbx)	rbx
+	*/
+
+	movq %rax, 8(%rsp)
+	movq %rsp, %rbx
+	cfi_def_cfa_register(%rbx)
+
+	/* Actively align the La_x86_64_regs structure.  */
+	andq $0xfffffffffffffff0, %rsp
+	subq $192, %rsp		# sizeof(La_x86_64_regs)
+	movq %rsp, 24(%rbx)
+
+	movq %rdx,   (%rsp)	# Fill the La_x86_64_regs structure.
+	movq %r8,   8(%rsp)
+	movq %r9,  16(%rsp)
+	movq %rcx, 24(%rsp)
+	movq %rsi, 32(%rsp)
+	movq %rdi, 40(%rsp)
+	movq %rbp, 48(%rsp)
+	leaq 48(%rbx), %rax
+	movq %rax, 56(%rsp)
+	movaps %xmm0,  64(%rsp)
+	movaps %xmm1,  80(%rsp)
+	movaps %xmm2,  96(%rsp)
+	movaps %xmm3, 112(%rsp)
+	movaps %xmm4, 128(%rsp)
+	movaps %xmm5, 144(%rsp)
+	movaps %xmm7, 160(%rsp)
+
+	movq %rsp, %rcx		# La_x86_64_regs pointer to %rcx.
+	movq 48(%rbx), %rdx	# Load return address if needed.
+	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
+	movq %rsi,%r11		# Multiply by 24.
 	addq %r11,%rsi
 	addq %r11,%rsi
 	shlq $3, %rsi
-	movq 88(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
-	leaq 72(%rsp), %r8
+	movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_offset
+	leaq 16(%rbx), %r8
 	call _dl_profile_fixup	# Call resolver.
-	movq %rax, %r11		# Save return value
-	movq 8(%rsp), %rdx	# Get back register content.
-	movq 16(%rsp), %r8
-	movq 24(%rsp), %r9
-	movq (%rsp),%rax
-	movq 72(%rsp), %r10
+
+	movq %rax, %r11		# Save return value.
+
+	movq 8(%rbx), %rax	# Get back register content.
+	movq      (%rsp), %rdx
+	movq     8(%rsp), %r8
+	movq    16(%rsp), %r9
+	movaps  64(%rsp), %xmm0
+	movaps  80(%rsp), %xmm1
+	movaps  96(%rsp), %xmm2
+	movaps 112(%rsp), %xmm3
+	movaps 128(%rsp), %xmm4
+	movaps 144(%rsp), %xmm5
+	movaps 160(%rsp), %xmm7
+
+	movq 16(%rbx), %r10	# Anything in framesize?
 	testq %r10, %r10
 	jns 1f
-	movq 32(%rsp), %rcx
-	movq 40(%rsp), %rsi
-	movq 48(%rsp), %rdi
-	addq $104,%rsp		# Adjust stack
-	cfi_adjust_cfa_offset (-104)
+
+	/* There's nothing in the frame size, so there
+	   will be no call to the _dl_call_pltexit. */
+
+	movq 24(%rsp), %rcx	# Get back registers content.
+	movq 32(%rsp), %rsi
+	movq 40(%rsp), %rdi
+
+	movq %rbx, %rsp
+	movq (%rsp), %rbx
+	cfi_restore(rbx)
+	cfi_def_cfa_register(%rsp)
+
+	addq $48, %rsp		# Adjust the stack to the return value
+				# (eats the reloc index and link_map)
+	cfi_adjust_cfa_offset(-48)
 	jmp *%r11		# Jump to function address.
 
-	/*
-	    +104     return address
-	    +96     PLT2
-	    +88     PLT1
-	    +80     free
-	    +72     free
-	    +64     %rsp
-	    +56     %rbp
-	    +48     %rdi
-	    +40     %rsi
-	    +32     %rcx
-	    +24     %r9
-	    +16     %r8
-	    +8      %rdx
-	   %rsp     %rax
-	*/
-	cfi_adjust_cfa_offset (104)
-1:	movq %rbx, 72(%rsp)
-	cfi_rel_offset (rbx, 72)
-	leaq 112(%rsp), %rsi
-	movq %rsp, %rbx
-	cfi_def_cfa_register (%rbx)
-	movq %r10, %rcx
+1:
+	cfi_adjust_cfa_offset(48)
+	cfi_rel_offset(%rbx, 0)
+	cfi_def_cfa_register(%rbx)
+
+	/* At this point we need to prepare new stack for the function
+	   which has to be called.  We copy the original stack to a
+	   temporary buffer of the size specified by the 'framesize'
+	   returned from _dl_profile_fixup */
+
+	leaq 56(%rbx), %rsi	# stack
 	addq $8, %r10
 	andq $0xfffffffffffffff0, %r10
+	movq %r10, %rcx
 	subq %r10, %rsp
 	movq %rsp, %rdi
 	shrq $3, %rcx
 	rep
 	movsq
-	movq 32(%rbx), %rcx
-	movq 40(%rbx), %rsi
-	movq 48(%rbx), %rdi
+
+	movq 24(%rdi), %rcx	# Get back register content.
+	movq 32(%rdi), %rsi
+	movq 40(%rdi), %rdi
+
 	call *%r11
-	movq %rbx, %rsp
-	cfi_def_cfa_register (%rsp)
-	subq $72, %rsp
-	cfi_adjust_cfa_offset (72)
-	movq %rsp, %rcx
-	movq %rax, (%rcx)
+
+	mov 24(%rbx), %rsp	# Drop the copied stack content
+
+	/* Now we have to prepare the La_x86_64_retval structure for the
+	   _dl_call_pltexit.  The La_x86_64_regs is being pointed by rsp now,
+	   so we just need to allocate the sizeof(La_x86_64_retval) space on
+	   the stack, since the alignment has already been taken care of. */
+
+	subq $80, %rsp		# sizeof(La_x86_64_retval)
+	movq %rsp, %rcx		# La_x86_64_retval argument to %rcx.
+
+	movq %rax, (%rcx)	# Fill in the La_x86_64_retval structure.
 	movq %rdx, 8(%rcx)
-	/* Even though the stack is correctly aligned to allow using movaps
-	   we use movups.  Some callers might provide an incorrectly aligned
-	   stack and we do not want to have it blow up here.  */
-	movups %xmm0, 16(%rcx)
-	movups %xmm1, 32(%rcx)
+	movaps %xmm0, 16(%rcx)
+	movaps %xmm1, 32(%rcx)
 	fstpt 48(%rcx)
 	fstpt 64(%rcx)
-	/*
-	    +176    return address
-	    +168    PLT2
-	    +160    PLT1
-	    +152    free
-	    +144    free
-	    +136    %rsp
-	    +128    %rbp
-	    +120    %rdi
-	    +112    %rsi
-	    +104    %rcx
-	    +96     %r9
-	    +88     %r8
-	    +80     %rdx
-	    +64     %st1 result
-	    +48     %st result
-	    +32     %xmm1 result
-	    +16     %xmm0 result
-	    +8      %rdx result
-	   %rsp     %rax result
-	*/
-	leaq 80(%rsp), %rdx
-	movq 144(%rsp), %rbx
-	cfi_restore (rbx)
-	movq 168(%rsp), %rsi	# Copy args pushed by PLT in register.
-	movq %rsi,%r11		# Multiply by 24
+
+	movq 24(%rbx), %rdx	# La_x86_64_regs argument to %rdx.
+	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
+	movq %rsi,%r11		# Multiply by 24.
 	addq %r11,%rsi
 	addq %r11,%rsi
 	shlq $3, %rsi
-	movq 160(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
+        movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_offset
 	call _dl_call_pltexit
-	movq (%rsp), %rax
+
+	movq  (%rsp), %rax	# Restore return registers.
 	movq 8(%rsp), %rdx
-	movups 16(%rsp), %xmm0
-	movups 32(%rsp), %xmm1
+	movaps 16(%rsp), %xmm0
+	movaps 32(%rsp), %xmm1
 	fldt 64(%rsp)
 	fldt 48(%rsp)
-	addq $176, %rsp
-	cfi_adjust_cfa_offset (-176)
+
+	movq %rbx, %rsp
+	movq  (%rsp), %rbx
+	cfi_restore(rbx)
+	cfi_def_cfa_register(%rsp)
+
+	addq $48, %rsp		# Adjust the stack to the return value
+				# (eats the reloc index and link_map)
+	cfi_adjust_cfa_offset(-48)
 	retq
+
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
 #endif

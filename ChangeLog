@@ -1,5 +1,10 @@
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9893]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix
+	alignement of La_x86_64_regs.  Store xmm parameters.
+	Patch mostly by Jiri Olsa <olsajiri@gmail.com>.
+
 	[BZ #9913]
 	* string/strverscmp.c (__strverscmp): Fix case of different digits
 	in fractional part of string.
