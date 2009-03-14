@@ -1,5 +1,10 @@
+2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Add Min Nan.
+
 2009-03-11  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
+	[BZ #9948]
 	* elf/dl-sysdep.c (_dl_show_auxv): Add support for AT_BASE_PLATFORM.
 
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>

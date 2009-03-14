@@ -1,5 +1,6 @@
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9916]
 	* SUPPORTED (SUPPORTED-LOCALES): Add nan_TW@latin.
 	* locales/nan_TW@latin: New file.
 	Contributed by Arne Goetje.
