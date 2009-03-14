@@ -1,5 +1,14 @@
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9913]
+	* string/strverscmp.c (__strverscmp): Fix case of different digits
+	in fractional part of string.
+	Patch by Jingyu Liu <jyliu@fortinet.com>.
+	* string/Makefile (tests): Add tst-svc2.
+	* string/tst-svc2.c: New file.
+
+	* string/strverscmp.c (__strverscmp): Optimize size of tables.
+
 	* locale/iso-639.def: Add Min Nan.
 
 2009-03-11  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
