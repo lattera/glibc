@@ -1,3 +1,9 @@
+2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Implement
+	STT_GNU_IFUNC handling.
+	(elf_machine_rela): Likewise.
+
 2009-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in (USE_MULTIARCH): Define.

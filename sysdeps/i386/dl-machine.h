@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -316,33 +316,38 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
-#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+# if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_386_RELATIVE, 0))
     {
-# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+#  if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* This is defined in rtld.c, but nowhere in the static libc.a;
 	 make the reference weak so static programs can still link.
 	 This declaration cannot be done when compiling rtld.c
 	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
 	 common defn for _dl_rtld_map, which is incompatible with a
 	 weak decl in the same file.  */
-#  ifndef SHARED
+#   ifndef SHARED
       weak_extern (_dl_rtld_map);
-#  endif
+#   endif
       if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
-# endif
+#  endif
 	*reloc_addr += map->l_addr;
     }
-# ifndef RTLD_BOOTSTRAP
+#  ifndef RTLD_BOOTSTRAP
   else if (__builtin_expect (r_type == R_386_NONE, 0))
     return;
-# endif
+#  endif
   else
-#endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
+# endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
     {
       const Elf32_Sym *const refsym = sym;
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+
+      if (sym != NULL
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
+			       0))
+	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (r_type)
 	{
@@ -351,44 +356,44 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  *reloc_addr = value;
 	  break;
 
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
+# if !defined RTLD_BOOTSTRAP || USE___THREAD
 	case R_386_TLS_DTPMOD32:
-# ifdef RTLD_BOOTSTRAP
+#  ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
 	     with index 1.
 	     XXX If this relocation is necessary move before RESOLVE
 	     call.  */
 	  *reloc_addr = 1;
-# else
+#  else
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-# endif
+#  endif
 	  break;
 	case R_386_TLS_DTPOFF32:
-# ifndef RTLD_BOOTSTRAP
+#  ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
 	    *reloc_addr = sym->st_value;
-# endif
+#  endif
 	  break;
 	case R_386_TLS_DESC:
 	  {
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
-# ifndef RTLD_BOOTSTRAP
+#  ifndef RTLD_BOOTSTRAP
 	    if (! sym)
 	      td->entry = _dl_tlsdesc_undefweak;
 	    else
-# endif
+#  endif
 	      {
-# ifndef RTLD_BOOTSTRAP
-#  ifndef SHARED
+#  ifndef RTLD_BOOTSTRAP
+#   ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
-#  else
+#   else
 		if (!TRY_STATIC_TLS (map, sym_map))
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
@@ -396,8 +401,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		    td->entry = _dl_tlsdesc_dynamic;
 		  }
 		else
+#   endif
 #  endif
-# endif
 		  {
 		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
 				      + (ElfW(Word))td->arg);
@@ -408,9 +413,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
-# ifdef RTLD_BOOTSTRAP
+#  ifdef RTLD_BOOTSTRAP
 	  *reloc_addr += map->l_tls_offset - sym->st_value;
-# else
+#  else
 	  /* We know the offset of object the symbol is contained in.
 	     It is a positive value which will be subtracted from the
 	     thread pointer.  To get the variable position in the TLS
@@ -420,13 +425,13 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      CHECK_STATIC_TLS (map, sym_map);
 	      *reloc_addr += sym_map->l_tls_offset - sym->st_value;
 	    }
-# endif
+#  endif
 	  break;
 	case R_386_TLS_TPOFF:
 	  /* The offset is negative, forward from the thread pointer.  */
-# ifdef RTLD_BOOTSTRAP
+#  ifdef RTLD_BOOTSTRAP
 	  *reloc_addr += sym->st_value - map->l_tls_offset;
-# else
+#  else
 	  /* We know the offset of object the symbol is contained in.
 	     It is a negative value which will be added to the
 	     thread pointer.  */
@@ -435,11 +440,11 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      CHECK_STATIC_TLS (map, sym_map);
 	      *reloc_addr += sym->st_value - sym_map->l_tls_offset;
 	    }
-# endif
+#  endif
 	  break;
-#endif	/* use TLS */
+# endif	/* use TLS */
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	case R_386_32:
 	  *reloc_addr += value;
 	  break;
@@ -469,12 +474,12 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
-#endif	/* !RTLD_BOOTSTRAP */
+# endif	/* !RTLD_BOOTSTRAP */
 	}
     }
 }
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
@@ -488,11 +493,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     *reloc_addr = map->l_addr + reloc->r_addend;
   else if (r_type != R_386_NONE)
     {
-# ifndef RESOLVE_CONFLICT_FIND_MAP
+#  ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
-# endif
+#  endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+
+      if (sym != NULL
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
+			       0))
+	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
@@ -501,7 +511,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_386_32:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
-# ifndef RESOLVE_CONFLICT_FIND_MAP
+#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	  /* Not needed for dl-conflict.c.  */
 	case R_386_PC32:
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
@@ -523,19 +533,19 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
-# ifndef RTLD_BOOTSTRAP
+#   ifndef RTLD_BOOTSTRAP
 	    if (!sym)
 	      {
 		td->arg = (void*)reloc->r_addend;
 		td->entry = _dl_tlsdesc_undefweak;
 	      }
 	    else
-# endif
+#   endif
 	      {
-# ifndef RTLD_BOOTSTRAP
-#  ifndef SHARED
+#   ifndef RTLD_BOOTSTRAP
+#    ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
-#  else
+#    else
 		if (!TRY_STATIC_TLS (map, sym_map))
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
@@ -543,8 +553,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		    td->entry = _dl_tlsdesc_dynamic;
 		  }
 		else
-#  endif
-# endif
+#    endif
+#   endif
 		  {
 		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
 				      + reloc->r_addend);
@@ -598,7 +608,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  memcpy (reloc_addr_arg, (void *) value,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
-# endif /* !RESOLVE_CONFLICT_FIND_MAP */
+#  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
@@ -607,7 +617,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 }
-#endif	/* !RTLD_BOOTSTRAP */
+# endif	/* !RTLD_BOOTSTRAP */
 
 auto inline void
 __attribute ((always_inline))
@@ -619,7 +629,7 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
   *reloc_addr += l_addr;
 }
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
@@ -628,7 +638,7 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
-#endif	/* !RTLD_BOOTSTRAP */
+# endif	/* !RTLD_BOOTSTRAP */
 
 auto inline void
 __attribute__ ((always_inline))
@@ -672,12 +682,12 @@ elf_machine_lazy_rel (struct link_map *map,
 	  const ElfW(Sym) *const symtab =
 	    (const void *) D_PTR (map, l_info[DT_SYMTAB]);
 
-#ifdef RTLD_BOOTSTRAP
+# ifdef RTLD_BOOTSTRAP
 	  /* The dynamic linker always uses versioning.  */
 	  assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
-#else
+# else
 	  if (map->l_info[VERSYMIDX (DT_VERSYM)])
-#endif
+# endif
 	    {
 	      const ElfW(Half) *const version =
 		(const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
@@ -686,18 +696,18 @@ elf_machine_lazy_rel (struct link_map *map,
 			       &map->l_versions[ndx],
 			       (void *) (l_addr + r->r_offset));
 	    }
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	  else
 	    elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
 			     (void *) (l_addr + r->r_offset));
-#endif
+# endif
 	}
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 
 auto inline void
 __attribute__ ((always_inline))
@@ -720,6 +730,6 @@ elf_machine_lazy_rela (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif	/* !RTLD_BOOTSTRAP */
+# endif	/* !RTLD_BOOTSTRAP */
 
 #endif /* RESOLVE_MAP */
