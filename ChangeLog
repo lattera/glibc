@@ -1,5 +1,17 @@
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-runtime.c (reloc_offset): Define.
+	(reloc_index): Define.
+	(_dl_fixup): Rename reloc_offset parameter to reloc_arg.
+	(_dl_fixup_profile): Likewise.  Use reloc_index instead of
+	computing index from reloc_offset.
+	(_dl_call_pltexit): Likewise.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve): Just pass
+	the relocation index to _dl_fixup.
+	(_dl_runtime_profile): Likewise for _dl_fixup_profile and
+	_dl_call_pltexit.
+	* sysdeps/x86_64/dl-runtime.c: New file.
+
 	[BZ #9893]
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix
 	alignement of La_x86_64_regs.  Store xmm parameters.

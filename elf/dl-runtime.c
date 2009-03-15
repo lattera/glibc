@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,12 @@
 # define ARCH_FIXUP_ATTRIBUTE
 #endif
 
+#ifndef reloc_offset
+# define reloc_offset reloc_arg
+# define reloc_index  reloc_arg / sizeof (PLTREL)
+#endif
+
+
 
 /* This function is called through a special trampoline from the PLT the
    first time each PLT entry is called.  We must perform the relocation
@@ -63,7 +69,7 @@ _dl_fixup (
 # endif
 	   /* GKM FIXME: Fix trampoline to pass bounds so we can do
 	      without the `__unbounded' qualifier.  */
-	   struct link_map *__unbounded l, ElfW(Word) reloc_offset)
+	   struct link_map *__unbounded l, ElfW(Word) reloc_arg)
 {
   const ElfW(Sym) *const symtab
     = (const void *) D_PTR (l, l_info[DT_SYMTAB]);
@@ -142,22 +148,20 @@ _dl_fixup (
 #endif
 
 #if !defined PROF && !defined ELF_MACHINE_NO_PLT && !__BOUNDED_POINTERS__
-
 DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 		   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
 #endif
-		   struct link_map *l, ElfW(Word) reloc_offset,
+		   struct link_map *l, ElfW(Word) reloc_arg,
 		   ElfW(Addr) retaddr, void *regs, long int *framesizep)
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = INTUSE(_dl_mcount);
 
   /* This is the address in the array where we store the result of previous
      relocations.  */
-  struct reloc_result *reloc_result
-    = &l->l_reloc_result[reloc_offset / sizeof (PLTREL)];
+  struct reloc_result *reloc_result = &l->l_reloc_result[reloc_index];
   DL_FIXUP_VALUE_TYPE *resultp = &reloc_result->addr;
 
   DL_FIXUP_VALUE_TYPE value = *resultp;
@@ -415,7 +419,7 @@ _dl_profile_fixup (
 #include <stdio.h>
 void
 ARCH_FIXUP_ATTRIBUTE
-_dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_offset,
+_dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
 		  const void *inregs, void *outregs)
 {
 #ifdef SHARED
@@ -423,8 +427,7 @@ _dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_offset,
      relocations.  */
   // XXX Maybe the bound information must be stored on the stack since
   // XXX with bind_not a new value could have been stored in the meantime.
-  struct reloc_result *reloc_result
-    = &l->l_reloc_result[reloc_offset / sizeof (PLTREL)];
+  struct reloc_result *reloc_result = &l->l_reloc_result[reloc_index];
   ElfW(Sym) *defsym = ((ElfW(Sym) *) D_PTR (reloc_result->bound,
 					    l_info[DT_SYMTAB])
 		       + reloc_result->boundndx);
