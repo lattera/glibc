@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ extern unsigned int la_mips_o32_gnu_pltexit (Elf32_Sym *__sym, unsigned int __nd
 					     uintptr_t *__defcook,
 					     const La_mips_32_regs *__inregs,
 					     La_mips_32_retval *__outregs,
-					     const char *symname);
+					     const char *__symname);
 
 #elif _MIPS_SIM == _ABIN32
 
@@ -95,7 +95,7 @@ extern unsigned int la_mips_n32_gnu_pltexit (Elf32_Sym *__sym, unsigned int __nd
 					     uintptr_t *__defcook,
 					     const La_mips_64_regs *__inregs,
 					     La_mips_64_retval *__outregs,
-					     const char *symname);
+					     const char *__symname);
 
 #else
 
@@ -111,7 +111,7 @@ extern unsigned int la_mips_n64_gnu_pltexit (Elf64_Sym *__sym, unsigned int __nd
 					     uintptr_t *__defcook,
 					     const La_mips_64_regs *__inregs,
 					     La_mips_64_retval *__outregs,
-					     const char *symname);
+					     const char *__symname);
 
 #endif
 

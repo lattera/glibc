@@ -1,3 +1,11 @@
+2009-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/link.h: Uglify function parameter names.
+	* sysdeps/unix/sysv/linux/mips/sys/cachectl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/eventfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Likewise.
+
 2009-03-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Declare

@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004, 2007, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maciej W. Rozycki <macro@ds2.pg.gda.pl>, 2000.
 
@@ -25,7 +26,7 @@
 
 __BEGIN_DECLS
 
-extern int _test_and_set (int *p, int v) __THROW;
+extern int _test_and_set (int *__p, int __v) __THROW;
 
 #ifdef __USE_EXTERN_INLINES
 
@@ -34,9 +35,9 @@ extern int _test_and_set (int *p, int v) __THROW;
 # endif
 
 _EXTERN_INLINE int
-__NTH (_test_and_set (int *p, int v))
+__NTH (_test_and_set (int *__p, int __v))
 {
-  int r, t;
+  int __r, __t;
 
   __asm__ __volatile__
     ("/* Inline test and set */\n"
@@ -55,11 +56,11 @@ __NTH (_test_and_set (int *p, int v))
      ".set	pop\n\t"
      "2:\n\t"
      "/* End test and set */"
-     : "=&r" (r), "=&r" (t), "=m" (*p)
-     : "m" (*p), "r" (v)
+     : "=&r" (__r), "=&r" (__t), "=m" (*__p)
+     : "m" (*__p), "r" (__v)
      : "memory");
 
-  return r;
+  return __r;
 }
 
 #endif /* __USE_EXTERN_INLINES */

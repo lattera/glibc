@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,13 +29,13 @@
 __BEGIN_DECLS
 
 #ifdef __USE_MISC
-extern int cachectl (void *addr, __const int nbytes, __const int op) __THROW;
+extern int cachectl (void *__addr, __const int __nbytes, __const int __op) __THROW;
 #endif
-extern int __cachectl (void *addr, __const int nbytes, __const int op) __THROW;
+extern int __cachectl (void *__addr, __const int __nbytes, __const int __op) __THROW;
 #ifdef __USE_MISC
-extern int cacheflush (void *addr, __const int nbytes, __const int op) __THROW;
+extern int cacheflush (void *__addr, __const int __nbytes, __const int __op) __THROW;
 #endif
-extern int _flush_cache (char *addr, __const int nbytes, __const int op) __THROW;
+extern int _flush_cache (char *__addr, __const int __nbytes, __const int __op) __THROW;
 
 __END_DECLS
 
