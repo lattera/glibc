@@ -35,7 +35,7 @@ _dl_runtime_resolve:
 	movq %r8, 40(%rsp)
 	movq %r9, 48(%rsp)
 	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.
-	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset
+	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_index
 	call _dl_fixup		# Call resolver.
 	movq %rax, %r11		# Save return value
 	movq 48(%rsp), %r9	# Get register content back.
@@ -112,7 +112,7 @@ _dl_runtime_profile:
 	movq %rsp, %rcx		# La_x86_64_regs pointer to %rcx.
 	movq 48(%rbx), %rdx	# Load return address if needed.
 	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
-	movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_offset
+	movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
 	leaq 16(%rbx), %r8
 	call _dl_profile_fixup	# Call resolver.
 
@@ -196,7 +196,7 @@ _dl_runtime_profile:
 
 	movq 24(%rbx), %rdx	# La_x86_64_regs argument to %rdx.
 	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
-        movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_offset
+        movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
 	call _dl_call_pltexit
 
 	movq  (%rsp), %rax	# Restore return registers.

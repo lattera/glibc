@@ -1,5 +1,11 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9881]
+	* inet/inet6_rth.c (inet6_rth_add): Add some error checking.
+	Patch mostly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/Makefile (tests): Add tst-inet6_rth.
+	* inet/tst-inet6_rth.c: New file.
+
 	[BZ #5807]
 	* string/strlen.c (strlen): Fix omission in the expression to test
 	for NUL bytes.
@@ -22,7 +28,7 @@
 
 	[BZ #9893]
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix
-	alignement of La_x86_64_regs.  Store xmm parameters.
+	alignment of La_x86_64_regs.  Store xmm parameters.
 	Patch mostly by Jiri Olsa <olsajiri@gmail.com>.
 
 	[BZ #9913]
