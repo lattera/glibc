@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998, 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,13 +35,13 @@ extern int ioperm (unsigned long int __from, unsigned long int __num,
 extern int iopl (int __level) __THROW;
 
 /* The functions that actually perform reads and writes.  */
-extern unsigned char inb (unsigned long int port) __THROW;
-extern unsigned short int inw (unsigned long int port) __THROW;
-extern unsigned long int inl (unsigned long int port) __THROW;
+extern unsigned char inb (unsigned long int __port) __THROW;
+extern unsigned short int inw (unsigned long int __port) __THROW;
+extern unsigned long int inl (unsigned long int __port) __THROW;
 
-extern void outb (unsigned char value, unsigned long int port) __THROW;
-extern void outw (unsigned short value, unsigned long int port) __THROW;
-extern void outl (unsigned long value, unsigned long int port) __THROW;
+extern void outb (unsigned char __value, unsigned long int __port) __THROW;
+extern void outw (unsigned short __value, unsigned long int __port) __THROW;
+extern void outl (unsigned long __value, unsigned long int __port) __THROW;
 
 __END_DECLS
 

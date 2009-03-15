@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
    recommends that the buffer contain 64 words.  The first 28 words
    are occupied by v1-v6, sl, fp, sp, pc, d8-d15, and fpscr.  (Note
    that d8-15 require 17 words, due to the use of fstmx.)  */
-typedef int __jmp_buf[64] __attribute__((aligned (8)));
+typedef int __jmp_buf[64] __attribute__((__aligned__ (8)));
 #endif
 
 #endif

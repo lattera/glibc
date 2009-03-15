@@ -1,3 +1,9 @@
+2009-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/bits/link.h: Uglify function parameter names.
+	* sysdeps/unix/sysv/linux/arm/sys/io.h: Likewise.
+	* sysdeps/arm/eabi/bits/setjmp.h: Uglify attribute name.
+
 2009-03-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Declare
