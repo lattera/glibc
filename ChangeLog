@@ -1,5 +1,11 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9880]
+	* inet/inet6_rth.c (inet6_rth_reverse): Compute number of segments
+	correctly.  Set segleft member in output as required.
+	Patch partly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/tst-inet6_rth.c (do_test): Add tests for inet6_rth_reverse.
+
 	[BZ #9881]
 	* inet/inet6_rth.c (inet6_rth_add): Add some error checking.
 	Patch mostly by Yang Hongyang <yanghy@cn.fujitsu.com>.

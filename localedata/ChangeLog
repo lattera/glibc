@@ -1,5 +1,8 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9833]
+	* locales/ko_KR: Fix noexpr.  Add nostr.
+
 	[BZ #9891]
 	* locales/mt_MT: Fix spelling of August (Awwissu).
 	Patch by Martin Pitt.

@@ -130,7 +130,7 @@ inet6_rth_reverse (const void *in, void *out)
       /* Copy header, not the addresses.  The memory regions can overlap.  */
       memmove (out_rthdr0, in_rthdr0, sizeof (struct ip6_rthdr0));
 
-      int total = in_rthdr0->ip6r0_segleft * 8 / sizeof (struct in6_addr);
+      int total = in_rthdr0->ip6r0_len * 8 / sizeof (struct in6_addr);
       for (int i = 0; i < total / 2; ++i)
 	{
 	  /* Remember, IN_RTHDR0 and OUT_RTHDR0 might overlap.  */
@@ -140,6 +140,8 @@ inet6_rth_reverse (const void *in, void *out)
 	}
       if (total % 2 != 0 && in != out)
 	out_rthdr0->ip6r0_addr[total / 2] = in_rthdr0->ip6r0_addr[total / 2];
+
+      out_rthdr0->ip6r0_segleft = total;
 
       return 0;
     }
