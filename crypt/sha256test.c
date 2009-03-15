@@ -84,7 +84,17 @@ main (void)
     "\xf1\x80\x9a\x48\xa4\x97\x20\x0e\x04\x6d\x39\xcc\xc7\x11\x2c\xd0";
   if (memcmp (expected, sum, 32) != 0)
     {
-      printf ("test %d failed\n", cnt);
+      printf ("test %d failed\n", cnt++);
+      result = 1;
+    }
+
+  __sha256_init_ctx (&ctx);
+  for (int i = 0; i < 100000; ++i)
+    __sha256_process_bytes (buf, 10, &ctx);
+  __sha256_finish_ctx (&ctx, sum);
+  if (memcmp (expected, sum, 32) != 0)
+    {
+      printf ("test %d failed\n", cnt++);
       result = 1;
     }
 

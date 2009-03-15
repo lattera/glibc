@@ -1,5 +1,7 @@
 2009-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* crypt/sha256test.c (main): Perform 100,000 'a' test in a second way.
+
 	* elf/dl-runtime.c (reloc_offset): Define.
 	(reloc_index): Define.
 	(_dl_fixup): Rename reloc_offset parameter to reloc_arg.
