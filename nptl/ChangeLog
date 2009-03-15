@@ -1,3 +1,9 @@
+2009-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Change to use cfi directives instead of
+	hand-coded unwind sections.
+
 2009-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (nptl_freeres): Compile only for SHARED.
