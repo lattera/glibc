@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998,2000,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ SCANDIR (dir, namelist, select, cmp)
      const char *dir;
      DIRENT_TYPE ***namelist;
      int (*select) (const DIRENT_TYPE *);
-     int (*cmp) (const void *, const void *);
+     int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **);
 {
   DIR *dp = __opendir (dir);
   DIRENT_TYPE **v = NULL;
@@ -134,7 +134,8 @@ SCANDIR (dir, namelist, select, cmp)
     {
       /* Sort the list if we have a comparison function to sort with.  */
       if (cmp != NULL)
-	qsort (v, c.cnt, sizeof (*v), cmp);
+	qsort (v, c.cnt, sizeof (*v),
+	       (int (*) (const void *, const void *)) cmp);
 
       *namelist = v;
     }

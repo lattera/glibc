@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998, 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,7 @@
 #include <string.h>
 
 int
-alphasort64 (const void *a, const void *b)
+alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
 {
-  return strcoll ((*(const struct dirent64 **) a)->d_name,
-		  (*(const struct dirent64 **) b)->d_name);
+  return strcoll ((*a)->d_name, (*b)->d_name);
 }

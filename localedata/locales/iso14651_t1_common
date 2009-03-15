@@ -917,7 +917,7 @@ collating-symbol <k-ai_lenght_mark>
 # mlvw- denotes Malayalam vowel
 # ml-visarga - dentos Malayalam Visarga
 # consonant + virama is considered half of consonant or consonant without vowel part
-# so it consonant + virama should be considered as cluster and should be 
+# so it consonant + virama should be considered as cluster and should be
 # sorted before the consonant. All consonants are considered to have an implicit a vowel
 # part associated with it.
 collating-element <ml-chillu-n> from "<U0D28><U0D4D>"
@@ -2362,7 +2362,6 @@ endif
 <U1E33> <k>;<BPT>;<MIN>;IGNORE # 337 ḳ
 <U1E35> <k>;<BMA>;<MIN>;IGNORE # 338 ḵ
 <U0199> <k>;<CRL>;<MIN>;IGNORE # 339 ƙ
-<U0138> <k>;<PCL>;<MIN>;IGNORE # 340 <kk>
 <U006C> <l>;<BAS>;<MIN>;IGNORE # 341 l
 <U013A> <l>;<ACA>;<MIN>;IGNORE # 342 <l'>
 <U013E> <l>;<CAR>;<MIN>;IGNORE # 343 <l<>
@@ -2436,6 +2435,7 @@ endif
 <U1E55> <p>;<ACA>;<MIN>;IGNORE # 411 <p'>
 <U1E57> <p>;<PCT>;<MIN>;IGNORE # 412 <p.>
 <U0071> <q>;<BAS>;<MIN>;IGNORE # 413 q
+<U0138> <q>;<PCL>;<MIN>;IGNORE # 340 <kk>
 <U0072> <r>;<BAS>;<MIN>;IGNORE # 414 r
 <U0155> <r>;<ACA>;<MIN>;IGNORE # 415 <r'>
 <U0159> <r>;<CAR>;<MIN>;IGNORE # 416 <r<>
@@ -4309,7 +4309,7 @@ order_start <MALAYALAM>;forward;forward;forward;forward,position
 <ml-dh>	"<ml-dha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D22>	"<ml-dha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-chillu-nn> "<ml-nna><ml-virama>";<BAS>;<MIN>;IGNORE # ണ്‍ = ണ  + ്  + zwj
-<U0D23>	"<ml-nna><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ണ = ണ + ് + അ 
+<U0D23>	"<ml-nna><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ണ = ണ + ് + അ
 <ml-th>	"<ml-tha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D24>	"<ml-tha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-thh> "<ml-thha><ml-virama>";<BAS>;<MIN>;IGNORE
@@ -4329,14 +4329,14 @@ order_start <MALAYALAM>;forward;forward;forward;forward,position
 <ml-bh>	"<ml-bha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D2D>	"<ml-bha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <U0D02>	"<ml-ma><ml-virama>";<BAS>;<MIN>;IGNORE # ം = മ + ്
-<ml-m>	"<ml-ma><ml-virama>";"<BAS><ml-virama>";<MIN>;IGNORE # ം = മ + ്  
-<U0D2E>	"<ml-ma><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # മ = മ + ് + അ 
+<ml-m>	"<ml-ma><ml-virama>";"<BAS><ml-virama>";<MIN>;IGNORE # ം = മ + ്
+<U0D2E>	"<ml-ma><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # മ = മ + ് + അ
 <ml-y>  "<ml-ya><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D2F>	"<ml-ya><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-chillu-r> "<ml-ra><ml-virama>";<BAS>;<MIN>;IGNORE # ര = ര + ്  + zwj
-<U0D30>	"<ml-ra><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ര = ര + ് + അ 
+<U0D30>	"<ml-ra><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ര = ര + ് + അ
 <ml-chillu-l> <ml-la>;<BAS>;<MIN>;IGNORE # ല്‍ = ല + ്  + zwj
-<U0D32>	"<ml-la><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ല = ല + ് + അ 
+<U0D32>	"<ml-la><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ല = ല + ് + അ
 <ml-v>	"<ml-va><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D35>	"<ml-va><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-ss>	"<ml-ssa><ml-virama>";<BAS>;<MIN>;IGNORE
@@ -4348,7 +4348,7 @@ order_start <MALAYALAM>;forward;forward;forward;forward,position
 <ml-h>	"<ml-ha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D39>	"<ml-ha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-chillu-ll> "<ml-lla><ml-virama>";<BAS>;<MIN>;IGNORE # ള്‍ = ള  + ്  + zwj
-<U0D33>	"<ml-lla><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ള = ള + ് + അ 
+<U0D33>	"<ml-lla><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE # ള = ള + ് + അ
 <ml-zh>	"<ml-zha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D34>	"<ml-zha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-rr>	"<ml-rra><ml-virama>";<BAS>;<MIN>;IGNORE

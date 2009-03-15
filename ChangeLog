@@ -1,5 +1,18 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9759]
+	* dirent/dirent.h: Adjust prototypes of scandir, scandir64, alphasort,
+	alphasort64, versionsort, and versionsort64 to POSIX 2008.
+	* dirent/alphasort.c: Adjust implementation to type change.
+	* dirent/alphasort64.c: Likewise.
+	* dirent/scandir.c: Likewise.
+	* dirent/versionsort.c: Likewise.
+	* dirent/versionsort64.c: Likewise.
+	* sysdeps/wordsize-64/alphasort.c: Add hack to hide alphasort64
+	declaration.
+	* sysdeps/wordsize-64/versionsort.c: Add hack to hide versionsort64
+	declaration.
+
 	[BZ #9880]
 	* inet/inet6_rth.c (inet6_rth_reverse): Compute number of segments
 	correctly.  Set segleft member in output as required.

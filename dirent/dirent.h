@@ -252,7 +252,8 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 extern int scandir (__const char *__restrict __dir,
 		    struct dirent ***__restrict __namelist,
 		    int (*__selector) (__const struct dirent *),
-		    int (*__cmp) (__const void *, __const void *))
+		    int (*__cmp) (__const struct dirent **,
+				  __const struct dirent **))
      __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
@@ -260,7 +261,8 @@ extern int __REDIRECT (scandir,
 		       (__const char *__restrict __dir,
 			struct dirent ***__restrict __namelist,
 			int (*__selector) (__const struct dirent *),
-			int (*__cmp) (__const void *, __const void *)),
+			int (*__cmp) (__const struct dirent **,
+				      __const struct dirent **)),
 		       scandir64) __nonnull ((1, 2));
 #  else
 #   define scandir scandir64
@@ -273,18 +275,21 @@ extern int __REDIRECT (scandir,
 extern int scandir64 (__const char *__restrict __dir,
 		      struct dirent64 ***__restrict __namelist,
 		      int (*__selector) (__const struct dirent64 *),
-		      int (*__cmp) (__const void *, __const void *))
+		      int (*__cmp) (__const struct dirent64 **,
+				    __const struct dirent64 **))
      __nonnull ((1, 2));
 # endif
 
 /* Function to compare two `struct dirent's alphabetically.  */
 # ifndef __USE_FILE_OFFSET64
-extern int alphasort (__const void *__e1, __const void *__e2)
+extern int alphasort (__const struct dirent **__e1,
+		      __const struct dirent **__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT_NTH (alphasort,
-			   (__const void *__e1, __const void *__e2),
+			   (__const struct dirent **__e1,
+			    __const struct dirent **__e2),
 			   alphasort64) __attribute_pure__ __nonnull ((1, 2));
 #  else
 #   define alphasort alphasort64
@@ -292,51 +297,54 @@ extern int __REDIRECT_NTH (alphasort,
 # endif
 
 # if defined __USE_GNU && defined __USE_LARGEFILE64
-extern int alphasort64 (__const void *__e1, __const void *__e2)
+extern int alphasort64 (__const struct dirent64 **__e1,
+			__const struct dirent64 **__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # endif
+#endif /* Use BSD or misc or XPG7.  */
 
 
-# if defined __USE_BSD || defined __USE_MISC
+#if defined __USE_BSD || defined __USE_MISC
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
-#  ifndef __USE_FILE_OFFSET64
+# ifndef __USE_FILE_OFFSET64
 extern __ssize_t getdirentries (int __fd, char *__restrict __buf,
 				size_t __nbytes,
 				__off_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
-#  else
-#   ifdef __REDIRECT
+# else
+#  ifdef __REDIRECT
 extern __ssize_t __REDIRECT_NTH (getdirentries,
 				 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
 				  __off64_t *__restrict __basep),
 				 getdirentries64) __nonnull ((2, 4));
-#   else
-#    define getdirentries getdirentries64
-#   endif
+#  else
+#   define getdirentries getdirentries64
 #  endif
+# endif
 
-#  ifdef __USE_LARGEFILE64
+# ifdef __USE_LARGEFILE64
 extern __ssize_t getdirentries64 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
 				  __off64_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
-#  endif
-# endif /* Use BSD or misc.  */
-#endif /* Use BSD or misc or XPG7.  */
+# endif
+#endif /* Use BSD or misc.  */
 
 #ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
 # ifndef __USE_FILE_OFFSET64
-extern int versionsort (__const void *__e1, __const void *__e2)
+extern int versionsort (__const struct dirent **__e1,
+			__const struct dirent **__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT_NTH (versionsort,
-			   (__const void *__e1, __const void *__e2),
+			   (__const struct dirent **__e1,
+			    __const struct dirent **__e2),
 			   versionsort64)
      __attribute_pure__ __nonnull ((1, 2));
 #  else
@@ -345,7 +353,8 @@ extern int __REDIRECT_NTH (versionsort,
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern int versionsort64 (__const void *__e1, __const void *__e2)
+extern int versionsort64 (__const struct dirent64 **__e1,
+			  __const struct dirent64 **__e2)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 # endif
 #endif /* Use GNU.  */
