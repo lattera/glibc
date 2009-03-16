@@ -1418,7 +1418,22 @@ cannot change to old working directory: %s; disabling paranoia mode"),
       }
 
   /* The preparations are done.  */
-  execv ("/proc/self/exe", argv);
+#ifdef PATH_MAX
+  char pathbuf[PATH_MAX];
+#else
+  char pathbuf[256];
+#endif
+  /* Try to exec the real nscd program so the process name (as reported
+     in /proc/PID/status) will be 'nscd', but fall back to /proc/self/exe
+     if readlink fails */
+  ssize_t n = readlink ("/proc/self/exe", pathbuf, sizeof (pathbuf) - 1);
+  if (n == -1)
+    execv ("/proc/self/exe", argv);
+  else
+    {
+      pathbuf[n] = '\0';
+      execv (pathbuf, argv);
+    }
 
   /* If we come here, we will never be able to re-exec.  */
   dbg_log (_("re-exec failed: %s; disabling paranoia mode"),
