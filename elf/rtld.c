@@ -1011,7 +1011,8 @@ of this helper program; chances are you did not intend to run this program.\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
                         variable LD_LIBRARY_PATH\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
-                        in LIST\n");
+                        in LIST\n\
+  --audit LIST          use objects named in LIST as auditors\n");
 
       ++_dl_skip_args;
       --_dl_argc;

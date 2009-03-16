@@ -1,5 +1,7 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (dl_main): Extend help message for --audit option.
+
 	[BZ #9759]
 	* dirent/dirent.h: Adjust prototypes of scandir, scandir64, alphasort,
 	alphasort64, versionsort, and versionsort64 to POSIX 2008.
