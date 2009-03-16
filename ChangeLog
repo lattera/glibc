@@ -1,3 +1,7 @@
+2009-03-16  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* dirent/scandir64.c (scandir64): Adjust declaration to type change.
+
 2009-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (restart): Try to preserve the process name
