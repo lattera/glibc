@@ -574,7 +574,7 @@ _dl_start (void *arg)
 struct relocate_args
 {
   struct link_map *l;
-  int lazy;
+  int reloc_mode;
 };
 
 struct map_args
@@ -613,7 +613,7 @@ relocate_doit (void *a)
 {
   struct relocate_args *args = (struct relocate_args *) a;
 
-  _dl_relocate_object (args->l, args->l->l_scope, args->lazy, 0);
+  _dl_relocate_object (args->l, args->l->l_scope, args->reloc_mode, 0);
 }
 
 static void
@@ -1909,7 +1909,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  struct link_map *l = main_map;
 
 	  /* Relocate the main executable.  */
-	  struct relocate_args args = { .l = l, .lazy = GLRO(dl_lazy) };
+	  struct relocate_args args = { .l = l,
+					.reloc_mode = (GLRO(dl_lazy)
+						       ? RTLD_LAZY : 0) };
 	  _dl_receive_error (print_unresolved, relocate_doit, &args);
 
 	  /* This loop depends on the dependencies of the executable to
@@ -1986,7 +1988,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      struct relocate_args args;
 	      struct link_map *l;
 
-	      args.lazy = GLRO(dl_lazy);
+	      args.reloc_mode = GLRO(dl_lazy) ? RTLD_LAZY : 0;
 
 	      l = main_map;
 	      while (l->l_next != NULL)
@@ -2226,7 +2228,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    }
 
 	  if (l != &GL(dl_rtld_map))
-	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy),
+	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy) ? RTLD_LAZY : 0,
 				 consider_profiling);
 
 	  /* Add object to slot information data if necessasy.  */

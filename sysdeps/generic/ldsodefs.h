@@ -882,10 +882,10 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.
-   If LAZY is nonzero, don't relocate its PLT.  */
+   If RTLD_LAZY is set in RELOC-MODE, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
 				 struct r_scope_elem *scope[],
-				 int lazy, int consider_profiling)
+				 int reloc_mode, int consider_profiling)
      attribute_hidden;
 
 /* Protect PT_GNU_RELRO area.  */

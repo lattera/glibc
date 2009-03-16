@@ -941,7 +941,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     {
 #ifdef SHARED
       /* Auditing checkpoint: we are going to add new objects.  */
-      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+      if ((mode & __RTLD_AUDIT) == 0
+	  && __builtin_expect (GLRO(dl_naudit) > 0, 0))
 	{
 	  struct link_map *head = GL(dl_ns)[nsid]._ns_loaded;
 	  /* Do not call the functions for any auditing object.  */

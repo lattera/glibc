@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2004, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -151,7 +151,7 @@ _dl_nothread_init_static_tls (struct link_map *map)
 
 void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
-		     int lazy, int consider_profiling)
+		     int reloc_mode, int consider_profiling)
 {
   struct textrels
   {
@@ -162,10 +162,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   } *textrels = NULL;
   /* Initialize it to make the compiler happy.  */
   const char *errstring = NULL;
+  int lazy = reloc_mode & RTLD_LAZY;
 
 #ifdef SHARED
   /* If we are auditing, install the same handlers we need for profiling.  */
-  consider_profiling |= GLRO(dl_audit) != NULL;
+  if ((reloc_mode & __RTLD_AUDIT) == 0)
+    consider_profiling |= GLRO(dl_audit) != NULL;
 #elif defined PROF
   /* Never use dynamic linker profiling for gprof profiling code.  */
 # define consider_profiling 0

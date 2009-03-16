@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -207,7 +207,6 @@ dl_open_worker (void *a)
   const char *file = args->file;
   int mode = args->mode;
   struct link_map *new;
-  int lazy;
   unsigned int i;
   bool any_tls = false;
   struct link_map *call_map = NULL;
@@ -366,7 +365,9 @@ dl_open_worker (void *a)
   _dl_debug_state ();
 
   /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
-  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && GLRO(dl_lazy);
+  int reloc_mode = mode & __RTLD_AUDIT;
+  if (GLRO(dl_lazy))
+    reloc_mode |= mode & RTLD_LAZY;
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
@@ -388,7 +389,7 @@ dl_open_worker (void *a)
 		 start the profiling.  */
 	      struct link_map *old_profile_map = GL(dl_profile_map);
 
-	      _dl_relocate_object (l, l->l_scope, 1, 1);
+	      _dl_relocate_object (l, l->l_scope, reloc_mode | RTLD_LAZY, 1);
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		{
@@ -401,7 +402,7 @@ dl_open_worker (void *a)
 	    }
 	  else
 #endif
-	    _dl_relocate_object (l, l->l_scope, lazy, 0);
+	    _dl_relocate_object (l, l->l_scope, reloc_mode, 0);
 	}
 
       if (l == new)

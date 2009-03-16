@@ -1,5 +1,15 @@
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9733]
+	* elf/dl-load.c (_dl_map_object_from_fd): Only call audit hooks
+	if we are not loading a new audit library.
+	* elf/dl-reloc (_dl_relocate_object): Third parameter is now a bitmask.
+	Only use profiling trampoline for auditing if we are not relocating
+	an audit library.
+	* elf/dl-open.c (dl_open_worker): Adjust _dl_relocate_object call.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Adjust _dl_relocate_object prototype.
+
 	* elf/rtld.c (dl_main): Extend help message for --audit option.
 
 	[BZ #9759]
