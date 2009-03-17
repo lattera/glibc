@@ -1,3 +1,9 @@
+2009-03-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Include errno.h.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 2009-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/bits/link.h: Uglify function parameter names.

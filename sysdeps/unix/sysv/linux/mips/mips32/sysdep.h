@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004, 2005,
+   2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +24,11 @@
 #include <sysdeps/unix/mips/mips32/sysdep.h>
 
 #include <tls.h>
+
+/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
+#ifndef __ASSEMBLER__
+#include <errno.h>
+#endif
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
