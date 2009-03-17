@@ -1,3 +1,7 @@
+2009-03-16  Khem Raj  <raj.khem@gmail.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Include errno.h.
+
 2009-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/bits/link.h: Uglify function parameter names.
