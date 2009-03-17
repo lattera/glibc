@@ -1,3 +1,8 @@
+2009-03-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/getsysstats.c (GET_NPROCS_PARSER):
+	Change parameters and use next_line.
+
 2009-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/bits/link.h: Uglify function parameter names.
