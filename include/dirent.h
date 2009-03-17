@@ -17,14 +17,16 @@ extern int __readdir64_r (DIR *__dirp, struct dirent64 *__entry,
 extern int __scandir64 (__const char * __dir,
 			struct dirent64 *** __namelist,
 			int (*__selector) (__const struct dirent64 *),
-			int (*__cmp) (__const void *, __const void *));
+			int (*__cmp) (__const struct dirent64 **,
+				      __const struct dirent64 **));
 extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
      internal_function;
-extern int __alphasort64 (const void *a, const void *b)
+extern int __alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
      __attribute_pure__;
-extern int __versionsort64 (const void *a, const void *b)
+extern int __versionsort64 (const struct dirent64 **a,
+			    const struct dirent64 **b)
      __attribute_pure__;
 extern DIR *__alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
      internal_function;

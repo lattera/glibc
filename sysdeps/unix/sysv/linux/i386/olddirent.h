@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,7 @@ extern __ssize_t __old_getdents64 (int __fd, char *__buf, size_t __nbytes)
 int __old_scandir64 (__const char * __dir,
 		     struct __old_dirent64 *** __namelist,
 		     int (*__selector) (__const struct __old_dirent64 *),
-		     int (*__cmp) (__const void *, __const void *));
+		     int (*__cmp) (__const struct __old_dirent64 **,
+				   __const struct __old_dirent64 **));
 
 #endif
