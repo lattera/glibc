@@ -1,5 +1,10 @@
 2009-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/getsysstats.c (GET_NPROCS_PARSER):
+	Change parameters and use next_line.
+
+2009-03-17  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Include errno.h.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
