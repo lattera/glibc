@@ -1,3 +1,11 @@
+2009-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/dirent.h: Yet more changes to match sort function type
+	change.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+
 2009-03-16  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* dirent/scandir64.c (scandir64): Adjust declaration to type change.
