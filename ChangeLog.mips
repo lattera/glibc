@@ -1,3 +1,8 @@
+2009-03-18  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/readelflib.c (process_elf_file):
+	Use the Elf32_Ehdr type to check for EF_MIPS_ABI2 in the flags.
+
 2009-03-18  Zhang Le  <r0bertz@gentoo.org>
 
 	[BZ #7074]
