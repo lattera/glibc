@@ -1,3 +1,9 @@
+2009-03-18  Zhang Le  <r0bertz@gentoo.org>
+
+	[BZ #7074]
+	* sysdeps/unix/sysv/linux/mips/readelflib.c (process_elf_file):
+	Fix the condition used to annotate n32 objects.
+
 2009-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/getsysstats.c (GET_NPROCS_PARSER):

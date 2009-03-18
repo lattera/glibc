@@ -43,7 +43,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 				file_contents, file_length);
 
       /* n32 libraries are always libc.so.6+.  */
-      if (ret && (elf_header->e_flags & EF_MIPS_ABI2) != 0)
+      if (!ret && (elf_header->e_flags & EF_MIPS_ABI2) != 0)
 	*flag = FLAG_MIPS64_LIBN32|FLAG_ELF_LIBC6;
     }
   else
