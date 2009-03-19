@@ -1,3 +1,8 @@
+2009-03-19  Roland McGrath  <roland@redhat.com>
+
+	* td_symbol_list.c (DB_LOOKUP_NAME, DB_LOOKUP_NAME_TH_UNIQUE):
+	Use STRINGIFY macro in place of #argument.
+
 2009-02-27  Roland McGrath  <roland@redhat.com>
 
 	* td_symbol_list.c (symbol_list_arr): Move initializer guts to ...
