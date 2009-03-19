@@ -24,8 +24,8 @@
 
 static const char *symbol_list_arr[] =
 {
-# define DB_LOOKUP_NAME(idx, name)		[idx] = #name,
-# define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)	[idx] = #name,
+# define DB_LOOKUP_NAME(idx, name)		[idx] = STRINGIFY (name),
+# define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)	[idx] = STRINGIFY (name),
 # include "db-symbols.h"
 # undef	DB_LOOKUP_NAME
 # undef	DB_LOOKUP_NAME_TH_UNIQUE
