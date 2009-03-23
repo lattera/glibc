@@ -1,3 +1,9 @@
+2009-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #9985]
+	* charmaps/UTF-8: Fix encoding of <U1080>..<U109F>, <U12AF>.
+	Based on patch by Keith Stribley <devel@thanlwinsoft.org>.
+
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9844]
