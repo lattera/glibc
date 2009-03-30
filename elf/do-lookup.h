@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,18 +79,18 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       __attribute_noinline__
       check_match (const ElfW(Sym) *sym)
       {
+	unsigned int stt = ELFW(ST_TYPE) (sym->st_info);
 	assert (ELF_RTYPE_CLASS_PLT == 1);
 	if (__builtin_expect ((sym->st_value == 0 /* No value.  */
-			       && ELFW(ST_TYPE) (sym->st_info) != STT_TLS)
+			       && stt != STT_TLS)
 			      || (type_class & (sym->st_shndx == SHN_UNDEF)),
 			      0))
 	  return NULL;
 
-	if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC
-			      && ELFW(ST_TYPE) (sym->st_info) != STT_COMMON
-			      && ELFW(ST_TYPE) (sym->st_info) != STT_TLS
-			      && ELFW(ST_TYPE) (sym->st_info) != STT_GNU_IFUNC,
-			      0))
+	if (__builtin_expect (stt > STT_FUNC
+			      && stt != STT_COMMON
+			      && stt != STT_TLS
+			      && stt != STT_GNU_IFUNC, 0))
 	  /* Ignore all but STT_NOTYPE, STT_OBJECT, STT_FUNC, STT_COMMON,
 	     STT_TLS, and STT_GNU_IFUNC since these are no code/data
 	     definitions.  */

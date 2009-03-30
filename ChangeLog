@@ -1,5 +1,8 @@
 2009-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-lookup.h (do_lookup_x): Minor optimization and cleanup.
+	Avoid reuse of complex expression.
+
 	* po/fr.po: Update from translation team.
 
 2009-03-16  Ulrich Drepper  <drepper@redhat.com>
