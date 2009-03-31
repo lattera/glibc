@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004-2006,2007
+   Copyright (C) 1995-1998,2000-2002,2004-2006,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -51,16 +51,6 @@ extern unsigned long int weak_function strtoul (const char *nptr,
 void * weak_function
 __libc_memalign (size_t align, size_t n)
 {
-#ifdef MAP_ANON
-#define	_dl_zerofd (-1)
-#else
-  extern int _dl_zerofd;
-
-  if (_dl_zerofd == -1)
-    _dl_zerofd = _dl_sysdep_open_zero_fill ();
-#define MAP_ANON 0
-#endif
-
   if (alloc_end == 0)
     {
       /* Consume any unused space in the last page of our data segment.  */
@@ -87,7 +77,7 @@ __libc_memalign (size_t align, size_t n)
 	  nup = GLRO(dl_pagesize);
 	}
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
-		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
+		     MAP_ANON|MAP_PRIVATE, -1, 0);
       if (page == MAP_FAILED)
 	return NULL;
       if (page != alloc_end)

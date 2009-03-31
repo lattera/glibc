@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <ldsodefs.h>
@@ -1781,12 +1781,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   /* Mark all objects as being in the global scope.  */
   for (i = main_map->l_searchlist.r_nlist; i > 0; )
     main_map->l_searchlist.r_list[--i]->l_global = 1;
-
-#ifndef MAP_ANON
-  /* We are done mapping things, so close the zero-fill descriptor.  */
-  __close (_dl_zerofd);
-  _dl_zerofd = -1;
-#endif
 
   /* Remove _dl_rtld_map from the chain.  */
   GL(dl_rtld_map).l_prev->l_next = GL(dl_rtld_map).l_next;

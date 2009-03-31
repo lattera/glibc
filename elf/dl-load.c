@@ -85,14 +85,6 @@
 
 #define STRING(x) __STRING (x)
 
-#ifdef MAP_ANON
-/* The fd is not examined when using MAP_ANON.  */
-# define ANONFD -1
-#else
-int _dl_zerofd = -1;
-# define ANONFD _dl_zerofd
-#endif
-
 /* Handle situations where we have a preferred location in memory for
    the shared objects.  */
 #ifdef ELF_PREFERRED_ADDRESS_DATA
@@ -1312,7 +1304,7 @@ cannot allocate TLS data structures for initial thread");
 		caddr_t mapat;
 		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
-				ANONFD, 0);
+				-1, 0);
 		if (__builtin_expect (mapat == MAP_FAILED, 0))
 		  {
 		    errstring = N_("cannot map zero-fill pages");

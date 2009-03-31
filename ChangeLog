@@ -1,3 +1,11 @@
+2009-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c: Remove support for systems without MAP_ANON.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+
 2009-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h (do_lookup_x): Minor optimization and cleanup.

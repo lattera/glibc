@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2004, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,17 +33,6 @@
 #include <sysdep.h>
 #include <stdio-common/_itoa.h>
 #include <bits/libc-lock.h>
-
-#ifndef MAP_ANON
-/* This is the only dl-sysdep.c function that is actually needed at run-time
-   by _dl_map_object.  */
-
-int
-_dl_sysdep_open_zero_fill (void)
-{
-  return __open ("/dev/zero", O_RDONLY);
-}
-#endif
 
 /* Read the whole contents of FILE into new mmap'd space with given
    protections.  *SIZEP gets the size of the file.  On error MAP_FAILED

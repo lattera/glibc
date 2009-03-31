@@ -399,11 +399,6 @@ struct rtld_global
   /* Incremented whenever something may have been added to dl_loaded.  */
   EXTERN unsigned long long _dl_load_adds;
 
-#ifndef MAP_ANON
-  /* File descriptor referring to the zero-fill device.  */
-  EXTERN int _dl_zerofd;
-#endif
-
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
 
