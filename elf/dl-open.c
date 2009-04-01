@@ -206,9 +206,6 @@ dl_open_worker (void *a)
   struct dl_open_args *args = a;
   const char *file = args->file;
   int mode = args->mode;
-  struct link_map *new;
-  unsigned int i;
-  bool any_tls = false;
   struct link_map *call_map = NULL;
 
   /* Check whether _dl_open() has been called from a valid DSO.  */
@@ -231,7 +228,7 @@ dl_open_worker (void *a)
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
       struct link_map *l;
-      for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+      for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
 	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
 	  if (caller_dlopen >= (const void *) l->l_map_start
 	      && caller_dlopen < (const void *) l->l_map_end
@@ -262,15 +259,14 @@ dl_open_worker (void *a)
   if (__builtin_expect (dst != NULL, 0))
     {
       size_t len = strlen (file);
-      size_t required;
-      char *new_file;
 
       /* Determine how much space we need.  We have to allocate the
 	 memory locally.  */
-      required = DL_DST_REQUIRED (call_map, file, len, _dl_dst_count (dst, 0));
+      size_t required = DL_DST_REQUIRED (call_map, file, len,
+					 _dl_dst_count (dst, 0));
 
       /* Get space for the new file name.  */
-      new_file = (char *) alloca (required + 1);
+      char *new_file = (char *) alloca (required + 1);
 
       /* Generate the new file name.  */
       _dl_dst_substitute (call_map, file, new_file, 0);
@@ -289,6 +285,7 @@ dl_open_worker (void *a)
     }
 
   /* Load the named object.  */
+  struct link_map *new;
   args->map = new = _dl_map_object (call_map, file, 0, lt_loaded, 0,
 				    mode | __RTLD_CALLMAP, args->nsid);
 
@@ -330,7 +327,7 @@ dl_open_worker (void *a)
 		       mode & (__RTLD_DLOPEN | RTLD_DEEPBIND | __RTLD_AUDIT));
 
   /* So far, so good.  Now check the versions.  */
-  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     if (new->l_searchlist.r_list[i]->l_real->l_versions == NULL)
       (void) _dl_check_map_versions (new->l_searchlist.r_list[i]->l_real,
 				     0, 0);
@@ -412,7 +409,8 @@ dl_open_worker (void *a)
 
   /* If the file is not loaded now as a dependency, add the search
      list of the newly loaded object to the scope.  */
-  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+  bool any_tls = false;
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     {
       struct link_map *imap = new->l_searchlist.r_list[i];
 
@@ -552,10 +550,10 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  if (nsid == LM_ID_NEWLM)
+  if (__builtin_expect (nsid == LM_ID_NEWLM, 0))
     {
       /* Find a new namespace.  */
-      for (nsid = 1; nsid < DL_NNS; ++nsid)
+      for (nsid = 1; nsid < GL(dl_nns); ++nsid)
 	if (GL(dl_ns)[nsid]._ns_loaded == NULL)
 	  break;
 
@@ -568,16 +566,24 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 no more namespaces available for dlmopen()"));
 	}
 
+      if (nsid == GL(dl_nns))
+	++GL(dl_nns);
+
       _dl_debug_initialize (0, nsid)->r_state = RT_CONSISTENT;
     }
   /* Never allow loading a DSO in a namespace which is empty.  Such
      direct placements is only causing problems.  Also don't allow
      loading into a namespace used for auditing.  */
-  else if (nsid != LM_ID_BASE && nsid != __LM_ID_CALLER
+  else if (__builtin_expect (nsid != LM_ID_BASE && nsid != __LM_ID_CALLER, 0)
 	   && (GL(dl_ns)[nsid]._ns_nloaded == 0
 	       || GL(dl_ns)[nsid]._ns_loaded->l_auditing))
     _dl_signal_error (EINVAL, file, NULL,
 		      N_("invalid target namespace in dlmopen()"));
+#ifndef SHARED
+  else if (nsid == LM_ID_BASE && GL(dl_ns)[LM_ID_BASE]._ns_loaded == NULL
+	   && GL(dl_nns) == 0)
+    GL(dl_nns) = 1;
+#endif
 
   struct dl_open_args args;
   args.file = file;

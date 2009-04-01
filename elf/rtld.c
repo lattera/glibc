@@ -125,8 +125,9 @@ struct rtld_global _rtld_global =
     /* Default presumption without further information is executable stack.  */
     ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
-    ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER
+    ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
 #endif
+    ._dl_nns = 1
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -2753,7 +2754,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 #endif
 
   unsigned long int num_relative_relocations = 0;
-  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
     {
       if (GL(dl_ns)[ns]._ns_loaded == NULL)
 	continue;

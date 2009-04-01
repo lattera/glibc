@@ -1,5 +1,18 @@
 2009-03-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-open.c: Keep track of used name spaces and only iterate over
+	those which are used.
+	* elf/dl-addr.c: Likewise.
+	* elf/dl-caller.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+
 	* elf/dl-load.c: Remove support for systems without MAP_ANON.
 	* elf/dl-minimal.c: Likewise.
 	* elf/dl-misc.c: Likewise.

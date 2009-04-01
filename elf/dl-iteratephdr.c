@@ -1,5 +1,5 @@
 /* Get loaded objects program headers.
-   Copyright (C) 2001-2004,2006,2007,2008 Free Software Foundation, Inc.
+   Copyright (C) 2001-2004, 2006-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -47,7 +47,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
   const void *caller = RETURN_ADDRESS (0);
   size_t nloaded = GL(dl_ns)[0]._ns_nloaded;
   Lmid_t ns = 0;
-  for (Lmid_t cnt = DL_NNS - 1; cnt > 0; --cnt)
+  for (Lmid_t cnt = GL(dl_nns) - 1; cnt > 0; --cnt)
     for (struct link_map *l = GL(dl_ns)[cnt]._ns_loaded; l; l = l->l_next)
       {
 	/* We have to count the total number of loaded objects.  */

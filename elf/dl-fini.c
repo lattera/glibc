@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,1998-2002,2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,1998-2002,2004-2005,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,7 +140,7 @@ _dl_fini (void)
   int do_audit = 0;
  again:
 #endif
-  for (Lmid_t ns = DL_NNS - 1; ns >= 0; --ns)
+  for (Lmid_t ns = GL(dl_nns) - 1; ns >= 0; --ns)
     {
       /* Protect against concurrent loads and unloads.  */
       __rtld_lock_lock_recursive (GL(dl_load_lock));

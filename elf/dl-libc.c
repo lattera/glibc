@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999-2002,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002,2004,2005,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -236,7 +236,7 @@ libc_freeres_fn (free_mem)
     }
 
   /* Remove all additional names added to the objects.  */
-  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
     for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
       {
 	struct libname_list *lnp = l->l_libname->next;

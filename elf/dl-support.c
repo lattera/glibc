@@ -70,6 +70,7 @@ int _dl_bind_not;
 
 /* Namespace information.  */
 struct link_namespaces _dl_ns[DL_NNS];
+size_t _dl_nns;
 
 /* Incremented whenever something may have been added to dl_loaded. */
 unsigned long long _dl_load_adds;

@@ -386,6 +386,8 @@ struct rtld_global
     /* Keep track of changes to each namespace' list.  */
     struct r_debug _ns_debug;
   } _dl_ns[DL_NNS];
+  /* One higher than index of last used namespace.  */
+  EXTERN size_t _dl_nns;
 
   /* During the program run we must not modify the global data of
      loaded shared object simultanously in two threads.  Therefore we

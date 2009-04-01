@@ -1959,7 +1959,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   struct filebuf fb;
 
   assert (nsid >= 0);
-  assert (nsid < DL_NNS);
+  assert (nsid < GL(dl_nns));
 
   /* Look for this name among those already loaded.  */
   for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)

@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,7 +132,7 @@ _dl_addr (const void *address, Dl_info *info,
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
-  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l; l = l->l_next)
       if (addr >= l->l_map_start && addr < l->l_map_end
 	  && (l->l_contiguous || _dl_addr_inside_object (l, addr)))

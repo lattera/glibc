@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -695,6 +695,18 @@ _dl_close_worker (struct link_map *map)
     }
 #endif
 
+  if (__builtin_expect (ns->_ns_loaded == NULL, 0)
+      && nsid == GL(dl_nns) - 1)
+    do
+      {
+	--GL(dl_nns);
+#ifndef SHARED
+	if (GL(dl_nns) == 0)
+	  break;
+#endif
+      }
+    while (GL(dl_ns)[GL(dl_nns) - 1]._ns_loaded == NULL);
+
   /* Notify the debugger those objects are finalized and gone.  */
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
@@ -763,7 +775,7 @@ free_slotinfo (struct dtv_slotinfo_list **elemp)
 
 libc_freeres_fn (free_mem)
 {
-  for (Lmid_t nsid = 0; nsid < DL_NNS; ++nsid)
+  for (Lmid_t nsid = 0; nsid < GL(dl_nns); ++nsid)
     if (__builtin_expect (GL(dl_ns)[nsid]._ns_global_scope_alloc, 0) != 0
 	&& (GL(dl_ns)[nsid]._ns_main_searchlist->r_nlist
 	    // XXX Check whether we need NS-specific initial_searchlist
