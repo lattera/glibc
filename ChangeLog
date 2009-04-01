@@ -1,3 +1,7 @@
+2009-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/eventfd.h (EFD_SEMAPHORE): Define.
+
 2009-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c: Keep track of used name spaces and only iterate over
