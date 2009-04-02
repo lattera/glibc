@@ -1,6 +1,6 @@
 /* One way encryption based on MD5 sum.
    Compatible with the behavior of MD5 crypt introduced in FreeBSD 2.0.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004
+   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -27,6 +27,52 @@
 #include <sys/param.h>
 
 #include "md5.h"
+
+
+#ifdef USE_NSS
+typedef int PRBool;
+# include <hasht.h>
+# include <nsslowhash.h>
+
+# define md5_init_ctx(ctxp, nss_ctxp) \
+  do									      \
+    {									      \
+      if (((nss_ctxp = NSSLOWHASH_NewContext (nss_ictx, HASH_AlgMD5))         \
+	   == NULL))							      \
+	{								      \
+	  if (nss_ctx != NULL)						      \
+	    NSSLOWHASH_Destroy (nss_ctx);				      \
+	  if (nss_alt_ctx != NULL)					      \
+	    NSSLOWHASH_Destroy (nss_alt_ctx);				      \
+	  return NULL;							      \
+	}								      \
+      NSSLOWHASH_Begin (nss_ctxp);					      \
+    }									      \
+  while (0)
+
+# define md5_process_bytes(buf, len, ctxp, nss_ctxp) \
+  NSSLOWHASH_Update (nss_ctxp, (const unsigned char *) buf, len)
+
+# define md5_finish_ctx(ctxp, nss_ctxp, result) \
+  do									      \
+    {									      \
+      unsigned int ret;							      \
+      NSSLOWHASH_End (nss_ctxp, result, &ret, sizeof (result));		      \
+      assert (ret == sizeof (result));					      \
+      NSSLOWHASH_Destroy (nss_ctxp);					      \
+      nss_ctxp = NULL;							      \
+    }									      \
+  while (0)
+#else
+# define md5_init_ctx(ctxp, nss_ctxp) \
+  __md5_init_ctx (ctxp)
+
+# define md5_process_bytes(buf, len, ctxp, nss_ctxp) \
+  __md5_process_bytes(buf, len, ctxp)
+
+# define md5_finish_ctx(ctxp, nss_ctxp, result) \
+  __md5_finish_ctx (ctxp, result)
+#endif
 
 
 /* Define our magic string to mark salt for MD5 "encryption"
@@ -56,8 +102,6 @@ __md5_crypt_r (key, salt, buffer, buflen)
 {
   unsigned char alt_result[16]
     __attribute__ ((__aligned__ (__alignof__ (md5_uint32))));
-  struct md5_ctx ctx;
-  struct md5_ctx alt_ctx;
   size_t salt_len;
   size_t key_len;
   size_t cnt;
@@ -94,43 +138,56 @@ __md5_crypt_r (key, salt, buffer, buflen)
       assert ((salt - (char *) 0) % __alignof__ (md5_uint32) == 0);
     }
 
+#ifdef USE_NSS
+  /* Initialize libfreebl3.  */
+  NSSLOWInitContext *nss_ictx = NSSLOW_Init ();
+  if (nss_ictx == NULL)
+    return NULL;
+  NSSLOWHASHContext *nss_ctx = NULL;
+  NSSLOWHASHContext *nss_alt_ctx = NULL;
+#else
+  struct md5_ctx ctx;
+  struct md5_ctx alt_ctx;
+#endif
+
   /* Prepare for the real work.  */
-  __md5_init_ctx (&ctx);
+  md5_init_ctx (&ctx, nss_ctx);
 
   /* Add the key string.  */
-  __md5_process_bytes (key, key_len, &ctx);
+  md5_process_bytes (key, key_len, &ctx, nss_ctx);
 
   /* Because the SALT argument need not always have the salt prefix we
      add it separately.  */
-  __md5_process_bytes (md5_salt_prefix, sizeof (md5_salt_prefix) - 1, &ctx);
+  md5_process_bytes (md5_salt_prefix, sizeof (md5_salt_prefix) - 1,
+		     &ctx, nss_ctx);
 
   /* The last part is the salt string.  This must be at most 8
      characters and it ends at the first `$' character (for
      compatibility with existing implementations).  */
-  __md5_process_bytes (salt, salt_len, &ctx);
+  md5_process_bytes (salt, salt_len, &ctx, nss_ctx);
 
 
   /* Compute alternate MD5 sum with input KEY, SALT, and KEY.  The
      final result will be added to the first context.  */
-  __md5_init_ctx (&alt_ctx);
+  md5_init_ctx (&alt_ctx, nss_alt_ctx);
 
   /* Add key.  */
-  __md5_process_bytes (key, key_len, &alt_ctx);
+  md5_process_bytes (key, key_len, &alt_ctx, nss_alt_ctx);
 
   /* Add salt.  */
-  __md5_process_bytes (salt, salt_len, &alt_ctx);
+  md5_process_bytes (salt, salt_len, &alt_ctx, nss_alt_ctx);
 
   /* Add key again.  */
-  __md5_process_bytes (key, key_len, &alt_ctx);
+  md5_process_bytes (key, key_len, &alt_ctx, nss_alt_ctx);
 
   /* Now get result of this (16 bytes) and add it to the other
      context.  */
-  __md5_finish_ctx (&alt_ctx, alt_result);
+  md5_finish_ctx (&alt_ctx, nss_alt_ctx, alt_result);
 
   /* Add for any character in the key one byte of the alternate sum.  */
   for (cnt = key_len; cnt > 16; cnt -= 16)
-    __md5_process_bytes (alt_result, 16, &ctx);
-  __md5_process_bytes (alt_result, cnt, &ctx);
+    md5_process_bytes (alt_result, 16, &ctx, nss_ctx);
+  md5_process_bytes (alt_result, cnt, &ctx, nss_ctx);
 
   /* For the following code we need a NUL byte.  */
   *alt_result = '\0';
@@ -140,11 +197,12 @@ __md5_crypt_r (key, salt, buffer, buflen)
      bit the first character of the key.  This does not seem to be
      what was intended but we have to follow this to be compatible.  */
   for (cnt = key_len; cnt > 0; cnt >>= 1)
-    __md5_process_bytes ((cnt & 1) != 0 ? (const char *) alt_result : key, 1,
-			 &ctx);
+    md5_process_bytes ((cnt & 1) != 0
+		       ? (const void *) alt_result : (const void *) key, 1,
+		       &ctx, nss_ctx);
 
   /* Create intermediate result.  */
-  __md5_finish_ctx (&ctx, alt_result);
+  md5_finish_ctx (&ctx, nss_ctx, alt_result);
 
   /* Now comes another weirdness.  In fear of password crackers here
      comes a quite long loop which just processes the output of the
@@ -152,31 +210,36 @@ __md5_crypt_r (key, salt, buffer, buflen)
   for (cnt = 0; cnt < 1000; ++cnt)
     {
       /* New context.  */
-      __md5_init_ctx (&ctx);
+      md5_init_ctx (&ctx, nss_ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	__md5_process_bytes (key, key_len, &ctx);
+	md5_process_bytes (key, key_len, &ctx, nss_ctx);
       else
-	__md5_process_bytes (alt_result, 16, &ctx);
+	md5_process_bytes (alt_result, 16, &ctx, nss_ctx);
 
       /* Add salt for numbers not divisible by 3.  */
       if (cnt % 3 != 0)
-	__md5_process_bytes (salt, salt_len, &ctx);
+	md5_process_bytes (salt, salt_len, &ctx, nss_ctx);
 
       /* Add key for numbers not divisible by 7.  */
       if (cnt % 7 != 0)
-	__md5_process_bytes (key, key_len, &ctx);
+	md5_process_bytes (key, key_len, &ctx, nss_ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	__md5_process_bytes (alt_result, 16, &ctx);
+	md5_process_bytes (alt_result, 16, &ctx, nss_ctx);
       else
-	__md5_process_bytes (key, key_len, &ctx);
+	md5_process_bytes (key, key_len, &ctx, nss_ctx);
 
       /* Create intermediate result.  */
-      __md5_finish_ctx (&ctx, alt_result);
+      md5_finish_ctx (&ctx, nss_ctx, alt_result);
     }
+
+#ifdef USE_NSS
+  /* Free libfreebl3 resources. */
+  NSSLOW_Shutdown (nss_ictx);
+#endif
 
   /* Now we can construct the result string.  It consists of three
      parts.  */
@@ -192,18 +255,17 @@ __md5_crypt_r (key, salt, buffer, buflen)
       --buflen;
     }
 
-#define b64_from_24bit(B2, B1, B0, N)					      \
-  do {									      \
-    unsigned int w = ((B2) << 16) | ((B1) << 8) | (B0);			      \
-    int n = (N);							      \
-    while (n-- > 0 && buflen > 0)					      \
-      {									      \
-	*cp++ = b64t[w & 0x3f];						      \
-	--buflen;							      \
-	w >>= 6;							      \
-      }									      \
-  } while (0)
-
+  void b64_from_24bit (unsigned int b2, unsigned int b1, unsigned int b0,
+		       int n)
+  {
+    unsigned int w = (b2 << 16) | (b1 << 8) | b0;
+    while (n-- > 0 && buflen > 0)
+      {
+	*cp++ = b64t[w & 0x3f];
+	--buflen;
+	w >>= 6;
+      }
+  }
 
   b64_from_24bit (alt_result[0], alt_result[6], alt_result[12], 4);
   b64_from_24bit (alt_result[1], alt_result[7], alt_result[13], 4);
@@ -223,10 +285,12 @@ __md5_crypt_r (key, salt, buffer, buflen)
      attaching to processes or reading core dumps cannot get any
      information.  We do it in this way to clear correct_words[]
      inside the MD5 implementation as well.  */
+#ifndef USE_NSS
   __md5_init_ctx (&ctx);
   __md5_finish_ctx (&ctx, alt_result);
   memset (&ctx, '\0', sizeof (ctx));
   memset (&alt_ctx, '\0', sizeof (alt_ctx));
+#endif
   if (copied_key != NULL)
     memset (copied_key, '\0', key_len);
   if (copied_salt != NULL)

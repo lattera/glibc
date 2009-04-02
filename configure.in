@@ -272,6 +272,41 @@ AC_ARG_ENABLE([experimental-malloc],
 	      [])
 AC_SUBST(experimental_malloc)
 
+AC_ARG_ENABLE([nss-crypt],
+	      AC_HELP_STRING([--enable-nss-crypt],
+			     [enable libcrypt to use nss]),
+	      [nss_crypt=$enableval],
+	      [nss_crypt=no])
+if test x$nss_crypt = xyes; then
+  nss_includes=-I$(nss-config --includedir 2>/dev/null)
+  if test $? -ne 0; then
+    AC_MSG_ERROR([cannot find include directory with nss-config])
+  fi
+  old_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS $nss_includes"
+  AC_COMPILE_IFELSE([typedef int PRBool;
+#include <hasht.h>
+#include <nsslowhash.h>
+void f (void) { NSSLOW_Init (); }],
+	     libc_cv_nss_crypt=yes,
+	     AC_MSG_ERROR([
+cannot find NSS headers with lowlevel hash function interfaces]))
+  old_LIBS="$LIBS"
+  LIBS="$LIBS -lfreebl3"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([typedef int PRBool;
+#include <hasht.h>
+#include <nsslowhash.h>],
+				  [NSSLOW_Init();])],
+		 libc_cv_nss_crypt=yes,
+		 AC_MSG_ERROR([
+cannot link program using lowlevel NSS hash functions]))
+  CFLAGS="$old_CFLAGS"
+  LIBS="$old_LIBS"
+else
+  libc_cv_nss_crypt=no
+fi
+AC_SUBST(libc_cv_nss_crypt)
+
 AC_CANONICAL_HOST
 
 # The way shlib-versions is used to generate soversions.mk uses a
@@ -2241,18 +2276,18 @@ if test $shared = default; then
   shared=$elf
 fi
 
-AC_CACHE_CHECK([whether -fPIC is default], pic_default,
-[pic_default=yes
+AC_CACHE_CHECK([whether -fPIC is default], libc_cv_pic_default,
+[libc_cv_pic_default=yes
 cat > conftest.c <<EOF
 #if defined __PIC__ || defined __pic__ || defined PIC || defined pic
 # error PIC is default.
 #endif
 EOF
 if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
-  pic_default=no
+  libc_cv_pic_default=no
 fi
 rm -f conftest.*])
-AC_SUBST(pic_default)
+AC_SUBST(libc_cv_pic_default)
 
 AC_SUBST(profile)
 AC_SUBST(omitfp)

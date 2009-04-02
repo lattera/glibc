@@ -1,3 +1,21 @@
+2009-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Recognize --enable-nss-crypt.
+	* config.make.in: Add nss-crypt entry.
+	* crypt/Makefile: If nss-crypt==yes, don't build md5.c, sha256.c,
+	sha512.c.  Don't run md5test, sha256test, sha512test.  Pass -DUSE_NSS
+	and include path for NSS directory to compiler for md5-crypt,
+	sha256-crypt, sha512-crypt.  Link libcrypt.so with -lfreebl3.
+	* crypt/md5-crypt.c: If USE_NSS is defined, don't use local hash
+	function implementation, use NSS.  Introduce wrappers around the
+	hash function calls.  Little code size optimization.
+	* crypt/sha256-crypt.c: Likewise.
+	* crypt/sha512-crypt.c: Likewise.
+	* scripts/check-local-headers.sh: Ignore nss3 directory.
+
+	* configure.in: Rename pic_default to libc_cv_pic_default.
+	* config.make.in: Likewise.
+
 2009-04-01  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (R_SPARC_GLOB_JMP): New macro.

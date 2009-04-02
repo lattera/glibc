@@ -1,5 +1,5 @@
 /* One way encryption based on SHA256 sum.
-   Copyright (C) 2007 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
 
@@ -26,6 +26,52 @@
 #include <sys/param.h>
 
 #include "sha256.h"
+
+
+#ifdef USE_NSS
+typedef int PRBool;
+# include <hasht.h>
+# include <nsslowhash.h>
+
+# define sha256_init_ctx(ctxp, nss_ctxp) \
+  do									      \
+    {									      \
+      if (((nss_ctxp = NSSLOWHASH_NewContext (nss_ictx, HASH_AlgSHA256))      \
+	   == NULL))							      \
+	{								      \
+	  if (nss_ctx != NULL)						      \
+	    NSSLOWHASH_Destroy (nss_ctx);				      \
+	  if (nss_alt_ctx != NULL)					      \
+	    NSSLOWHASH_Destroy (nss_alt_ctx);				      \
+	  return NULL;							      \
+	}								      \
+      NSSLOWHASH_Begin (nss_ctxp);					      \
+    }									      \
+  while (0)
+
+# define sha256_process_bytes(buf, len, ctxp, nss_ctxp) \
+  NSSLOWHASH_Update (nss_ctxp, (const unsigned char *) buf, len)
+
+# define sha256_finish_ctx(ctxp, nss_ctxp, result) \
+  do									      \
+    {									      \
+      unsigned int ret;							      \
+      NSSLOWHASH_End (nss_ctxp, result, &ret, sizeof (result));		      \
+      assert (ret == sizeof (result));					      \
+      NSSLOWHASH_Destroy (nss_ctxp);					      \
+      nss_ctxp = NULL;							      \
+    }									      \
+  while (0)
+#else
+# define sha256_init_ctx(ctxp, nss_ctxp) \
+  __sha256_init_ctx (ctxp)
+
+# define sha256_process_bytes(buf, len, ctxp, nss_ctxp) \
+  __sha256_process_bytes(buf, len, ctxp)
+
+# define sha256_finish_ctx(ctxp, nss_ctxp, result) \
+  __sha256_finish_ctx (ctxp, result)
+#endif
 
 
 /* Define our magic string to mark salt for SHA256 "encryption"
@@ -66,8 +112,6 @@ __sha256_crypt_r (key, salt, buffer, buflen)
     __attribute__ ((__aligned__ (__alignof__ (uint32_t))));
   unsigned char temp_result[32]
     __attribute__ ((__aligned__ (__alignof__ (uint32_t))));
-  struct sha256_ctx ctx;
-  struct sha256_ctx alt_ctx;
   size_t salt_len;
   size_t key_len;
   size_t cnt;
@@ -123,59 +167,71 @@ __sha256_crypt_r (key, salt, buffer, buflen)
       assert ((salt - (char *) 0) % __alignof__ (uint32_t) == 0);
     }
 
+#ifdef USE_NSS
+  /* Initialize libfreebl3.  */
+  NSSLOWInitContext *nss_ictx = NSSLOW_Init ();
+  if (nss_ictx == NULL)
+    return NULL;
+  NSSLOWHASHContext *nss_ctx = NULL;
+  NSSLOWHASHContext *nss_alt_ctx = NULL;
+#else
+  struct sha256_ctx ctx;
+  struct sha256_ctx alt_ctx;
+#endif
+
   /* Prepare for the real work.  */
-  __sha256_init_ctx (&ctx);
+  sha256_init_ctx (&ctx, nss_ctx);
 
   /* Add the key string.  */
-  __sha256_process_bytes (key, key_len, &ctx);
+  sha256_process_bytes (key, key_len, &ctx, nss_ctx);
 
   /* The last part is the salt string.  This must be at most 16
      characters and it ends at the first `$' character.  */
-  __sha256_process_bytes (salt, salt_len, &ctx);
+  sha256_process_bytes (salt, salt_len, &ctx, nss_ctx);
 
 
   /* Compute alternate SHA256 sum with input KEY, SALT, and KEY.  The
      final result will be added to the first context.  */
-  __sha256_init_ctx (&alt_ctx);
+  sha256_init_ctx (&alt_ctx, nss_alt_ctx);
 
   /* Add key.  */
-  __sha256_process_bytes (key, key_len, &alt_ctx);
+  sha256_process_bytes (key, key_len, &alt_ctx, nss_alt_ctx);
 
   /* Add salt.  */
-  __sha256_process_bytes (salt, salt_len, &alt_ctx);
+  sha256_process_bytes (salt, salt_len, &alt_ctx, nss_alt_ctx);
 
   /* Add key again.  */
-  __sha256_process_bytes (key, key_len, &alt_ctx);
+  sha256_process_bytes (key, key_len, &alt_ctx, nss_alt_ctx);
 
   /* Now get result of this (32 bytes) and add it to the other
      context.  */
-  __sha256_finish_ctx (&alt_ctx, alt_result);
+  sha256_finish_ctx (&alt_ctx, nss_alt_ctx, alt_result);
 
   /* Add for any character in the key one byte of the alternate sum.  */
   for (cnt = key_len; cnt > 32; cnt -= 32)
-    __sha256_process_bytes (alt_result, 32, &ctx);
-  __sha256_process_bytes (alt_result, cnt, &ctx);
+    sha256_process_bytes (alt_result, 32, &ctx, nss_ctx);
+  sha256_process_bytes (alt_result, cnt, &ctx, nss_ctx);
 
   /* Take the binary representation of the length of the key and for every
      1 add the alternate sum, for every 0 the key.  */
   for (cnt = key_len; cnt > 0; cnt >>= 1)
     if ((cnt & 1) != 0)
-      __sha256_process_bytes (alt_result, 32, &ctx);
+      sha256_process_bytes (alt_result, 32, &ctx, nss_ctx);
     else
-      __sha256_process_bytes (key, key_len, &ctx);
+      sha256_process_bytes (key, key_len, &ctx, nss_ctx);
 
   /* Create intermediate result.  */
-  __sha256_finish_ctx (&ctx, alt_result);
+  sha256_finish_ctx (&ctx, nss_ctx, alt_result);
 
   /* Start computation of P byte sequence.  */
-  __sha256_init_ctx (&alt_ctx);
+  sha256_init_ctx (&alt_ctx, nss_alt_ctx);
 
   /* For every character in the password add the entire password.  */
   for (cnt = 0; cnt < key_len; ++cnt)
-    __sha256_process_bytes (key, key_len, &alt_ctx);
+    sha256_process_bytes (key, key_len, &alt_ctx, nss_alt_ctx);
 
   /* Finish the digest.  */
-  __sha256_finish_ctx (&alt_ctx, temp_result);
+  sha256_finish_ctx (&alt_ctx, nss_alt_ctx, temp_result);
 
   /* Create byte sequence P.  */
   cp = p_bytes = alloca (key_len);
@@ -184,14 +240,14 @@ __sha256_crypt_r (key, salt, buffer, buflen)
   memcpy (cp, temp_result, cnt);
 
   /* Start computation of S byte sequence.  */
-  __sha256_init_ctx (&alt_ctx);
+  sha256_init_ctx (&alt_ctx, nss_alt_ctx);
 
   /* For every character in the password add the entire password.  */
   for (cnt = 0; cnt < 16 + alt_result[0]; ++cnt)
-    __sha256_process_bytes (salt, salt_len, &alt_ctx);
+    sha256_process_bytes (salt, salt_len, &alt_ctx, nss_alt_ctx);
 
   /* Finish the digest.  */
-  __sha256_finish_ctx (&alt_ctx, temp_result);
+  sha256_finish_ctx (&alt_ctx, nss_alt_ctx, temp_result);
 
   /* Create byte sequence S.  */
   cp = s_bytes = alloca (salt_len);
@@ -204,31 +260,36 @@ __sha256_crypt_r (key, salt, buffer, buflen)
   for (cnt = 0; cnt < rounds; ++cnt)
     {
       /* New context.  */
-      __sha256_init_ctx (&ctx);
+      sha256_init_ctx (&ctx, nss_ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	__sha256_process_bytes (p_bytes, key_len, &ctx);
+	sha256_process_bytes (p_bytes, key_len, &ctx, nss_ctx);
       else
-	__sha256_process_bytes (alt_result, 32, &ctx);
+	sha256_process_bytes (alt_result, 32, &ctx, nss_ctx);
 
       /* Add salt for numbers not divisible by 3.  */
       if (cnt % 3 != 0)
-	__sha256_process_bytes (s_bytes, salt_len, &ctx);
+	sha256_process_bytes (s_bytes, salt_len, &ctx, nss_ctx);
 
       /* Add key for numbers not divisible by 7.  */
       if (cnt % 7 != 0)
-	__sha256_process_bytes (p_bytes, key_len, &ctx);
+	sha256_process_bytes (p_bytes, key_len, &ctx, nss_ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	__sha256_process_bytes (alt_result, 32, &ctx);
+	sha256_process_bytes (alt_result, 32, &ctx, nss_ctx);
       else
-	__sha256_process_bytes (p_bytes, key_len, &ctx);
+	sha256_process_bytes (p_bytes, key_len, &ctx, nss_ctx);
 
       /* Create intermediate result.  */
-      __sha256_finish_ctx (&ctx, alt_result);
+      sha256_finish_ctx (&ctx, nss_ctx, alt_result);
     }
+
+#ifdef USE_NSS
+  /* Free libfreebl3 resources. */
+  NSSLOW_Shutdown (nss_ictx);
+#endif
 
   /* Now we can construct the result string.  It consists of three
      parts.  */
@@ -252,17 +313,17 @@ __sha256_crypt_r (key, salt, buffer, buflen)
       --buflen;
     }
 
-#define b64_from_24bit(B2, B1, B0, N)					      \
-  do {									      \
-    unsigned int w = ((B2) << 16) | ((B1) << 8) | (B0);			      \
-    int n = (N);							      \
-    while (n-- > 0 && buflen > 0)					      \
-      {									      \
-	*cp++ = b64t[w & 0x3f];						      \
-	--buflen;							      \
-	w >>= 6;							      \
-      }									      \
-  } while (0)
+  void b64_from_24bit (unsigned int b2, unsigned int b1, unsigned int b0,
+		       int n)
+  {
+    unsigned int w = (b2 << 16) | (b1 << 8) | b0;
+    while (n-- > 0 && buflen > 0)
+      {
+	*cp++ = b64t[w & 0x3f];
+	--buflen;
+	w >>= 6;
+      }
+  }
 
   b64_from_24bit (alt_result[0], alt_result[10], alt_result[20], 4);
   b64_from_24bit (alt_result[21], alt_result[1], alt_result[11], 4);
@@ -287,13 +348,15 @@ __sha256_crypt_r (key, salt, buffer, buflen)
      attaching to processes or reading core dumps cannot get any
      information.  We do it in this way to clear correct_words[]
      inside the SHA256 implementation as well.  */
+#ifndef USE_NSS
   __sha256_init_ctx (&ctx);
   __sha256_finish_ctx (&ctx, alt_result);
+  memset (&ctx, '\0', sizeof (ctx));
+  memset (&alt_ctx, '\0', sizeof (alt_ctx));
+#endif
   memset (temp_result, '\0', sizeof (temp_result));
   memset (p_bytes, '\0', key_len);
   memset (s_bytes, '\0', salt_len);
-  memset (&ctx, '\0', sizeof (ctx));
-  memset (&alt_ctx, '\0', sizeof (alt_ctx));
   if (copied_key != NULL)
     memset (copied_key, '\0', key_len);
   if (copied_salt != NULL)

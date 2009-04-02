@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2007, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,8 @@ fgrep -v "$includedir/asm" |
 fgrep -v "$includedir/linux" |
 fgrep -v "$includedir/selinux" |
 fgrep -v "$includedir/sys/capability.h" |
-fgrep -v "$includedir/gd"; then
+fgrep -v "$includedir/gd" |
+fgrep -v "$includedir/nss3"; then
   # If we found a match something is wrong.
   exit 1
 fi
