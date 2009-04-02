@@ -1246,6 +1246,7 @@ typedef struct
 #define R_SPARC_PC_LM22		39	/* Low miggle 22 bits of ... */
 #define R_SPARC_WDISP16		40	/* PC relative 16 bit shifted */
 #define R_SPARC_WDISP19		41	/* PC relative 19 bit shifted */
+#define R_SPARC_GLOB_JMP	42	/* was part of v9 ABI but was removed */
 #define R_SPARC_7		43	/* Direct 7 bit */
 #define R_SPARC_5		44	/* Direct 5 bit */
 #define R_SPARC_6		45	/* Direct 6 bit */
@@ -1283,8 +1284,19 @@ typedef struct
 #define R_SPARC_TLS_DTPOFF64	77
 #define R_SPARC_TLS_TPOFF32	78
 #define R_SPARC_TLS_TPOFF64	79
+#define R_SPARC_GOTDATA_HIX22	80
+#define R_SPARC_GOTDATA_LOX10	81
+#define R_SPARC_GOTDATA_OP_HIX22	82
+#define R_SPARC_GOTDATA_OP_LOX10	83
+#define R_SPARC_GOTDATA_OP	84
+#define R_SPARC_H34		85
+#define R_SPARC_SIZE32		86
+#define R_SPARC_SIZE64		87
+#define R_SPARC_GNU_VTINHERIT	250
+#define R_SPARC_GNU_VTENTRY	251
+#define R_SPARC_REV32		252
 /* Keep this the last entry.  */
-#define R_SPARC_NUM		80
+#define R_SPARC_NUM		253
 
 /* For Sparc64, legal values for d_tag of Elf64_Dyn.  */
 
