@@ -81,10 +81,12 @@ sizeof-long-double = @sizeof_long_double@
 
 experimental-malloc = @experimental_malloc@
 
+nss-crypt = @libc_cv_nss_crypt@
+
 # Configuration options.
 build-static = @static@
 build-shared = @shared@
-build-pic-default= @pic_default@
+build-pic-default= @libc_cv_pic_default@
 build-profile = @profile@
 build-omitfp = @omitfp@
 build-bounded = @bounded@
