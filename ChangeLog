@@ -1,3 +1,14 @@
+2009-04-01  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (R_SPARC_GLOB_JMP): New macro.
+	(R_SPARC_GOTDATA_HIX22, R_SPARC_GOTDATA_LOX10): New macros.
+	(R_SPARC_GOTDATA_OP_HIX22, R_SPARC_GOTDATA_OP_LOX10): Likewise.
+	(R_SPARC_GOTDATA_OP, R_SPARC_H34): Likewise.
+	(R_SPARC_SIZE32, R_SPARC_SIZE64): Likewise.
+	(R_SPARC_GNU_VTINHERIT, R_SPARC_GNU_VTENTRY, R_SPARC_REV32): Likewise.
+	(R_SPARC_NUM): Update.
+	From Dave Miller <davem@davemloft.net>.
+
 2009-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/eventfd.h (EFD_SEMAPHORE): Define.
