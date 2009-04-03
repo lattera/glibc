@@ -1,5 +1,7 @@
 2009-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: We need to test for the compiler earlier.
+
 	* misc/Makefile (routines): Add preadv, preadv64, pwritev, pwritev64.
 	* misc/Versions: Export preadv, preadv64, pwritev, pwritev64 for
 	GLIBC_2.10.

@@ -6,6 +6,15 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+AC_PROG_CC
+if test $host != $build; then
+  AC_CHECK_PROGS(BUILD_CC, gcc cc)
+fi
+AC_SUBST(cross_compiling)
+AC_PROG_CPP
+# We need the C++ compiler only for testing.
+AC_PROG_CXX
+
 if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
 fi
@@ -882,14 +891,6 @@ if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
 fi
 AC_PROG_LN_S
 
-AC_PROG_CC
-if test $host != $build; then
-  AC_CHECK_PROGS(BUILD_CC, gcc cc)
-fi
-AC_SUBST(cross_compiling)
-AC_PROG_CPP
-# We need the C++ compiler only for testing.
-AC_PROG_CXX
 LIBC_PROG_BINUTILS
 AC_SUBST(MIG)dnl Needed by sysdeps/mach/configure.in
 
