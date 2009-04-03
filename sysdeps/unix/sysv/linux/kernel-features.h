@@ -529,3 +529,10 @@
 #if __LINUX_KERNEL_VERSION >= 0x02061d
 # define __ASSUME_FUTEX_CLOCK_REALTIME	1
 #endif
+
+/* Support for preadv and pwritev was added in 2.6.30.  */
+#if __LINUX_KERNEL_VERSION >= 0x02061e \
+    && (defined __i386__ || defined __x86_64__)
+# define __ASSUME_PREADV	1
+# define __ASSUME_PWRITEV	1
+#endif

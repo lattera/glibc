@@ -1,5 +1,26 @@
 2009-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/Makefile (routines): Add preadv, preadv64, pwritev, pwritev64.
+	* misc/Versions: Export preadv, preadv64, pwritev, pwritev64 for
+	GLIBC_2.10.
+	* misc/sys/uio.h: Declare preadv, preadv64, pwritev, pwritev64.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add entries for preadv
+	and pwritev.
+	* misc/preadv.c: New file.
+	* misc/preadv64.c: New file.
+	* misc/pwritev.c: New file.
+	* misc/pwritev64.c: New file.
+	* sysdeps/posx/preadv.c: New file.
+	* sysdeps/posx/preadv64.c: New file.
+	* sysdeps/posx/pwritev.c: New file.
+	* sysdeps/posx/pwritev64.c: New file.
+	* sysdeps/unix/sysv/linux/preadv.c: New file.
+	* sysdeps/unix/sysv/linux/preadv64.c: New file.
+	* sysdeps/unix/sysv/linux/pwritev.c: New file.
+	* sysdeps/unix/sysv/linux/pwritev64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev64.c: New file.
+
 	* sysdeps/unix/sysv/linux/readv.c (__libc_readv): Fix calling of
 	compatibility code.
 	* sysdeps/unix/sysv/linux/writev.c (__libc_writev): Likewise.

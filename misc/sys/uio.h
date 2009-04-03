@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1996-1999,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,24 +30,93 @@ __BEGIN_DECLS
 
 
 /* Read data from file descriptor FD, and put the result in the
-   buffers described by IOVEC, which is a vector of COUNT `struct iovec's.
+   buffers described by IOVEC, which is a vector of COUNT 'struct iovec's.
    The buffers are filled in the order specified.
-   Operates just like `read' (see <unistd.h>) except that data are
+   Operates just like 'read' (see <unistd.h>) except that data are
    put in IOVEC instead of a contiguous buffer.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t readv (int __fd, __const struct iovec *__iovec, int __count);
+extern ssize_t readv (int __fd, __const struct iovec *__iovec, int __count)
+  __wur;
 
 /* Write data pointed by the buffers described by IOVEC, which
-   is a vector of COUNT `struct iovec's, to file descriptor FD.
+   is a vector of COUNT 'struct iovec's, to file descriptor FD.
    The data is written in the order specified.
-   Operates just like `write' (see <unistd.h>) except that the data
+   Operates just like 'write' (see <unistd.h>) except that the data
    are taken from IOVEC instead of a contiguous buffer.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t writev (int __fd, __const struct iovec *__iovec, int __count);
+extern ssize_t writev (int __fd, __const struct iovec *__iovec, int __count)
+  __wur;
+
+
+#ifdef __USE_BSD
+# ifndef __USE_FILE_OFFSET64
+/* Read data from file descriptor FD at the given position OFFSET
+   without change the file pointer, and put the result in the buffers
+   described by IOVEC, which is a vector of COUNT 'struct iovec's.
+   The buffers are filled in the order specified.  Operates just like
+   'read' (see <unistd.h>) except that data are put in IOVEC instead
+   of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t preadv (int __fd, __const struct iovec *__iovec, int __count,
+		       __off_t __offset) __wur;
+
+/* Write data pointed by the buffers described by IOVEC, which is a
+   vector of COUNT 'struct iovec's, to file descriptor FD at the given
+   position OFFSET without change the file pointer.  The data is
+   written in the order specified.  Operates just like 'write' (see
+   <unistd.h>) except that the data are taken from IOVEC instead of a
+   contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t pwritev (int __fd, __const struct iovec *__iovec, int __count,
+			__off_t __offset) __wur;
+# else
+#  ifdef __REDIRECT
+extern ssize_t __REDIRECT (preadv, (int __fd, __const struct iovec *__iovec,
+				    int __count, __off_t __offset),
+			   preadv64) __wur;
+extern ssize_t __REDIRECT (pwritev, (int __fd, __const struct iovec *__iovec,
+				     int __count, __off_t __offset),
+			   pwritev64) __wur;
+#  else
+#   define preadv preadv64
+#   define pwritev pwritev64
+#  endif
+# endif
+
+# ifdef __USE_LARGEFILE64
+/* Read data from file descriptor FD at the given position OFFSET
+   without change the file pointer, and put the result in the buffers
+   described by IOVEC, which is a vector of COUNT 'struct iovec's.
+   The buffers are filled in the order specified.  Operates just like
+   'read' (see <unistd.h>) except that data are put in IOVEC instead
+   of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t preadv64 (int __fd, __const struct iovec *__iovec, int __count,
+			 __off64_t __offset) __wur;
+
+/* Write data pointed by the buffers described by IOVEC, which is a
+   vector of COUNT 'struct iovec's, to file descriptor FD at the given
+   position OFFSET without change the file pointer.  The data is
+   written in the order specified.  Operates just like 'write' (see
+   <unistd.h>) except that the data are taken from IOVEC instead of a
+   contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t pwritev64 (int __fd, __const struct iovec *__iovec, int __count,
+			  __off64_t __offset) __wur;
+# endif
+#endif	/* Use BSD */
 
 __END_DECLS
 
