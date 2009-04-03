@@ -462,6 +462,13 @@
 # define __ASSUME_SET_ROBUST_LIST	1
 #endif
 
+/* Pessimistically assume that 2.6.18 introduced real handling of
+   large numbers of requests to readv and writev and that we don't
+   need a fallback.  It likely worked for much longer.  */
+#if __LINUX_KERNEL_VERSION >= 0x020612
+# define __ASSUME_COMPLETE_READV_WRITEV	1
+#endif
+
 /* Support for PI futexes was added in 2.6.18.  */
 #if __LINUX_KERNEL_VERSION >= 0x020612
 # define __ASSUME_FUTEX_LOCK_PI	1

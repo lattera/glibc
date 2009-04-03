@@ -1,3 +1,15 @@
+2009-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_COMPLETE_READV_WRITEV.
+	* sysdeps/unix/sysv/linux/readv.c: No need for userlevel fallback
+	with modern kernels.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* sysdeps/posix/readv.c: Since read is a cancellation point we have
+	to free a possible malloced buffer in case of cancellation.
+	* sysdeps/posix/writev.c: Likewise for write.
+
 2009-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Add missing protocol numbers.
@@ -29,7 +41,7 @@
 	(R_SPARC_NUM): Update.
 	From Dave Miller <davem@davemloft.net>.
 
-2009-04-01  Ulrich Drepper  <drepper@redhat.com>
+c2009-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/eventfd.h (EFD_SEMAPHORE): Define.
 

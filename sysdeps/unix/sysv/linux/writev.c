@@ -1,5 +1,5 @@
 /* writev supports all Linux kernels >= 2.0.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+#include <kernel-features.h>
 
 static ssize_t __atomic_writev_replacement (int, const struct iovec *,
 					    int) internal_function;
@@ -43,12 +44,17 @@ do_writev (int fd, const struct iovec *vector, int count)
 {
   ssize_t bytes_written;
 
-  bytes_written = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
+  bytes_written = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count),
+				  count);
 
+#ifdef __ASSUME_COMPLETE_READV_WRITEV
+  return bytes_written;
+#else
   if (bytes_written >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_written;
 
   return __atomic_writev_replacement (fd, vector, count);
+#endif
 }
 
 ssize_t
@@ -71,5 +77,7 @@ __libc_writev (fd, vector, count)
 strong_alias (__libc_writev, __writev)
 weak_alias (__libc_writev, writev)
 
-#define __libc_writev static internal_function __atomic_writev_replacement
-#include <sysdeps/posix/writev.c>
+#ifndef __ASSUME_COMPLETE_READV_WRITEV
+# define __libc_writev static internal_function __atomic_writev_replacement
+# include <sysdeps/posix/writev.c>
+#endif

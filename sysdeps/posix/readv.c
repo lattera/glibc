@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1996,1997,2002,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,24 +25,24 @@
 #include <sys/uio.h>
 #include <errno.h>
 
+
+static void
+ifree (char **ptrp)
+{
+  free (*ptrp);
+}
+
 /* Read data from file descriptor FD, and put the result in the
-   buffers described by VECTOR, which is a vector of COUNT `struct iovec's.
+   buffers described by VECTOR, which is a vector of COUNT 'struct iovec's.
    The buffers are filled in the order specified.
-   Operates just like `read' (see <unistd.h>) except that data are
+   Operates just like 'read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
 ssize_t
 __libc_readv (int fd, const struct iovec *vector, int count)
 {
-  char *buffer;
-  char *buffer_start;
-  size_t bytes;
-  ssize_t bytes_read;
-  int i;
-  bool use_malloc = false;
-
   /* Find the total number of bytes to be read.  */
-  bytes = 0;
-  for (i = 0; i < count; ++i)
+  size_t bytes = 0;
+  for (int i = 0; i < count; ++i)
     {
       /* Check for ssize_t overflow.  */
       if (SSIZE_MAX - bytes < vector[i].iov_len)
@@ -57,28 +57,25 @@ __libc_readv (int fd, const struct iovec *vector, int count)
      use alloca since it's faster and does not require synchronization
      with other threads.  But we cannot if the amount of memory
      required is too large.  */
+  char *buffer;
+  char *malloced_buffer __attribute__ ((__cleanup__ (ifree))) = NULL;
   if (__libc_use_alloca (bytes))
     buffer = (char *) __alloca (bytes);
   else
     {
-      buffer = (char *) malloc (bytes);
+      malloced_buffer = buffer = (char *) malloc (bytes);
       if (buffer == NULL)
-	/* XXX I don't know whether it is acceptable to try reading
-	   the data in chunks.  Probably not so we just fail here.  */
 	return -1;
-
-      use_malloc = true;
     }
 
   /* Read the data.  */
-  bytes_read = __read (fd, buffer, bytes);
+  ssize_t bytes_read = __read (fd, buffer, bytes);
   if (bytes_read <= 0)
     return -1;
 
   /* Copy the data from BUFFER into the memory specified by VECTOR.  */
   bytes = bytes_read;
-  buffer_start = buffer;
-  for (i = 0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
     {
       size_t copy = MIN (vector[i].iov_len, bytes);
 
@@ -89,9 +86,6 @@ __libc_readv (int fd, const struct iovec *vector, int count)
       if (bytes == 0)
 	break;
     }
-
-  if (use_malloc)
-    free (buffer_start);
 
   return bytes_read;
 }

@@ -1,5 +1,5 @@
 /* readv supports all Linux kernels >= 2.0.
-   Copyright (C) 1997,1998,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+#include <kernel-features.h>
 
 static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 					   int) internal_function;
@@ -45,10 +46,14 @@ do_readv (int fd, const struct iovec *vector, int count)
 
   bytes_read = INLINE_SYSCALL (readv, 3, fd, CHECK_N (vector, count), count);
 
+#ifdef __ASSUME_COMPLETE_READV_WRITEV
+  return bytes_read;
+#else
   if (bytes_read >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_read;
 
   return __atomic_readv_replacement (fd, vector, count);
+#endif
 }
 
 
@@ -72,5 +77,7 @@ __libc_readv (fd, vector, count)
 strong_alias (__libc_readv, __readv)
 weak_alias (__libc_readv, readv)
 
-#define __libc_readv static internal_function __atomic_readv_replacement
-#include <sysdeps/posix/readv.c>
+#ifndef __ASSUME_COMPLETE_READV_WRITEV
+# define __libc_readv static internal_function __atomic_readv_replacement
+# include <sysdeps/posix/readv.c>
+#endif
