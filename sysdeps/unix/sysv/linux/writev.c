@@ -37,42 +37,33 @@ static ssize_t __atomic_writev_replacement (int, const struct iovec *,
 #endif
 
 
-/* We should deal with kernel which have a smaller UIO_FASTIOV as well
-   as a very big count.  */
-static ssize_t
-do_writev (int fd, const struct iovec *vector, int count)
-{
-  ssize_t bytes_written;
-
-  bytes_written = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count),
-				  count);
-
-#ifdef __ASSUME_COMPLETE_READV_WRITEV
-  return bytes_written;
-#else
-  if (bytes_written >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
-    return bytes_written;
-
-  return __atomic_writev_replacement (fd, vector, count);
-#endif
-}
-
 ssize_t
 __libc_writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
 {
+  ssize_t result;
+
   if (SINGLE_THREAD_P)
-    return do_writev (fd, vector, count);
+    result = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
+  else
+    {
+      int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int oldtype = LIBC_CANCEL_ASYNC ();
+      result = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
 
-  ssize_t result = do_writev (fd, vector, count);
+      LIBC_CANCEL_RESET (oldtype);
+    }
 
-  LIBC_CANCEL_RESET (oldtype);
-
+#ifdef __ASSUME_COMPLETE_READV_WRITEV
   return result;
+#else
+  if (result >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
+    return result;
+
+  return __atomic_writev_replacement (fd, vector, count);
+#endif
 }
 strong_alias (__libc_writev, __writev)
 weak_alias (__libc_writev, writev)

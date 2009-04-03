@@ -1,5 +1,9 @@
 2009-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/readv.c (__libc_readv): Fix calling of
+	compatibility code.
+	* sysdeps/unix/sysv/linux/writev.c (__libc_writev): Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_COMPLETE_READV_WRITEV.
 	* sysdeps/unix/sysv/linux/readv.c: No need for userlevel fallback
@@ -41,7 +45,7 @@
 	(R_SPARC_NUM): Update.
 	From Dave Miller <davem@davemloft.net>.
 
-c2009-04-01  Ulrich Drepper  <drepper@redhat.com>
+2009-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/eventfd.h (EFD_SEMAPHORE): Define.
 
