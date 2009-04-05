@@ -1,3 +1,7 @@
+2009-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strlen.S: Optimize by using SSE2 instructions.
+
 2009-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: We need to test for the compiler earlier.
