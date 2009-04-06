@@ -1,6 +1,7 @@
 2009-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strlen.S: Optimize by using SSE2 instructions.
+	* sysdeps/x86_64/strchr.S: Likewise.
 
 2009-04-03  Ulrich Drepper  <drepper@redhat.com>
 

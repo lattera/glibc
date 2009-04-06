@@ -37,7 +37,7 @@ Version 2.10
 
 * New locale: nan_TW@latin
 
-* Faster strlen on x86-64.
+* Faster strlen and strchr on x86-64.
   Implemented by Ulrich Drepper.
 
 
