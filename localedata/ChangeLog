@@ -1,3 +1,9 @@
+2009-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ks_IN: New file.
+	Patch by Mohammad Nayeem <mohammad.nayeem@gmail.com> and
+	Pravin Satpute <psatpute@redhat.com>.
+
 2009-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #9985]
