@@ -923,12 +923,12 @@ send_dg(res_state statp,
 	struct pollfd pfd[1];
         int ptimeout;
 	struct sockaddr_in6 from;
-	int resplen, seconds, n;
+	int resplen, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if ((EXT(statp).nscount6 > 0) && !statp->ipv6_unavail) {
-			if (__have_o_nonblock >= 0) {
+			if (__builtin_expect (__have_o_nonblock >= 0, 1)) {
 				EXT(statp).nssocks[ns] =
 				  socket(PF_INET6, SOCK_DGRAM|SOCK_NONBLOCK,
 					 0);
@@ -939,7 +939,7 @@ send_dg(res_state statp,
 					     && errno == EINVAL ? -1 : 1);
 #endif
 			}
-			if (__have_o_nonblock < 0)
+			if (__builtin_expect (__have_o_nonblock < 0, 0))
 				EXT(statp).nssocks[ns] =
 				  socket(PF_INET6, SOCK_DGRAM, 0);
 			if (EXT(statp).nssocks[ns] < 0)
@@ -950,7 +950,7 @@ send_dg(res_state statp,
 			    convaddr4to6(nsap);
 		}
 		if (EXT(statp).nssocks[ns] < 0) {
-			if (__have_o_nonblock >= 0) {
+			if (__builtin_expect (__have_o_nonblock >= 0, 1)) {
 				EXT(statp).nssocks[ns]
 				  = socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK,
 					   0);
@@ -961,7 +961,7 @@ send_dg(res_state statp,
 					     && errno == EINVAL ? -1 : 1);
 #endif
 			}
-			if (__have_o_nonblock < 0)
+			if (__builtin_expect (__have_o_nonblock < 0, 0))
 				EXT(statp).nssocks[ns]
 				  = socket(PF_INET, SOCK_DGRAM, 0);
 		}
@@ -989,7 +989,7 @@ send_dg(res_state statp,
 			__res_iclose(statp, false);
 			return (0);
 		}
-		if (__have_o_nonblock < 0) {
+		if (__builtin_expect (__have_o_nonblock < 0, 0)) {
 			/* Make socket non-blocking.  */
 			int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
 			if  (fl != -1)
@@ -1003,11 +1003,14 @@ send_dg(res_state statp,
 	/*
 	 * Compute time for the total operation.
 	 */
-	seconds = (statp->retrans << ns);
+	int seconds = (statp->retrans << ns);
 	if (ns > 0)
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
+	bool single_request = ((statp->options) & RES_SNGLKUP) != 0;// XXX
+	int save_gotsomewhere = *gotsomewhere;
+ retry:
 	evNowTime(&now);
 	evConsTime(&timeout, seconds, 0);
 	evAddTime(&finish, &now, &timeout);
@@ -1031,6 +1034,7 @@ send_dg(res_state statp,
 			return (0);
 		}
 		evSubTime(&timeout, &finish, &now);
+		need_recompute = 0;
 	}
         /* Convert struct timespec in milliseconds.  */
 	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
@@ -1046,8 +1050,16 @@ send_dg(res_state statp,
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
 		if (resplen > 1 && (recvresp1 || (buf2 != NULL && recvresp2)))
 		  {
-		    *resplen2 = 1;
-		    return resplen;
+		    /* There are quite a few broken name servers out
+		       there which don't handle two outstanding
+		       requests from the same source.  There are also
+		       broken firewall settings.  If we time out after
+		       having received one answer switch to the mode
+		       where we send the second request only once we
+		       have received the first answer.  */
+		    single_request = true;
+		    *gotsomewhere = save_gotsomewhere;
+		    goto retry;
 		  }
 
 		*gotsomewhere = 1;
@@ -1073,7 +1085,7 @@ send_dg(res_state statp,
 			Perror(statp, stderr, "send", errno);
 			goto err_out;
 		}
-		if (nwritten != 0 || buf2 == NULL)
+		if (nwritten != 0 || buf2 == NULL || single_request)
 		  pfd[0].events = POLLIN;
 		else
 		  pfd[0].events = POLLIN | POLLOUT;
@@ -1286,8 +1298,11 @@ send_dg(res_state statp,
 		else
 			recvresp2 = 1;
 		/* Repeat waiting if we have a second answer to arrive.  */
-		if ((recvresp1 & recvresp2) == 0)
+		if ((recvresp1 & recvresp2) == 0) {
+			if (single_request)
+				pfd[0].events = POLLOUT;
 			goto wait;
+		}
 		/*
 		 * All is well, or the error is fatal.  Signal that the
 		 * next nameserver ought not be tried.

@@ -215,6 +215,7 @@ struct res_sym {
 #define RES_NOIP6DOTINT	0x00080000	/* Do not use .ip6.int in IPv6
 					   reverse lookup */
 #define RES_USE_EDNS0	0x00100000	/* Use EDNS0.  */
+#define RES_SNGLKUP	0x00200000	/* one outstanding request at a time */
 
 #define RES_DEFAULT	(RES_RECURSE|RES_DEFNAMES|RES_DNSRCH|RES_NOIP6DOTINT)
 

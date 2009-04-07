@@ -1,3 +1,11 @@
+2009-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h (RES_SNGLKUP): Define.
+	* resolv/res_init.c (res_setoptions): Recognize single-request option.
+	* resolv/res_send.c (send_dg): If we sent two requests at once and
+	only get one reply before timeout switch to mode where we send the
+	second request only after the first answer has been received.
+
 2009-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strlen.S: Optimize by using SSE2 instructions.

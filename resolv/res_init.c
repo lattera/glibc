@@ -540,6 +540,9 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 			statp->options |= RES_NOCHECKNAME;
                 } else if (!strncmp(cp, "edns0", sizeof("edns0") - 1)) {
 			statp->options |= RES_USE_EDNS0;
+                } else if (!strncmp(cp, "single-request",
+				    sizeof("single-request") - 1)) {
+			statp->options |= RES_SNGLKUP;
 		} else {
 			/* XXX - print a warning here? */
 		}
