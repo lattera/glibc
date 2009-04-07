@@ -1,5 +1,10 @@
 2009-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strverscmp.c (__strverscmp): Fix last cleanups.
+	* string/tst-svc.input: Add new test case.
+	* string/tst-svc.expect: Adjust.
+	* string/Makefile: Don't ignore tst-svc error.
+
 	* sysdeps/x86_64/memchr.S: New file.
 
 	* resolv/resolv.h (RES_SNGLKUP): Define.
