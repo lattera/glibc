@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996,1997,1999-2002,2003,2007 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999-2003,2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -46,6 +46,7 @@
 # define STPNCPY stpncpy
 # define MEMCPY memcpy
 # define MEMPCPY mempcpy
+# define MEMCHR memchr
 #endif
 
 
@@ -202,6 +203,37 @@ do_test (void)
 		  adr[inner] = L('T');
 		  adr[middle] = L('T');
 		}
+	    }
+        }
+
+      /* memchr test */
+      for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
+        {
+	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
+	    {
+	      adr[middle] = L('V');
+
+	      CHAR *cp = MEMCHR (&adr[outer], L('V'), 3 * size);
+
+	      if (cp - &adr[outer] != middle - outer)
+		{
+		  printf ("%s flunked for outer = %d, middle = %d\n",
+			  STRINGIFY (MEMCHR), outer, middle);
+		  result = 1;
+		}
+
+	      adr[middle] = L('T');
+	    }
+        }
+      for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
+        {
+	  CHAR *cp = MEMCHR (&adr[outer], L('V'), nchars - outer);
+
+	  if (cp != NULL)
+	    {
+	      printf ("%s flunked for outer = %d\n",
+		      STRINGIFY (MEMCHR), outer);
+	      result = 1;
 	    }
         }
 

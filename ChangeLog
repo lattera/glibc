@@ -1,3 +1,9 @@
+2009-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/stratcliff.c (do_test): Add memchr tests..
+	* sysdeps/x86_64/memchr.S: Fix handling of end of buffer after
+	first read quad word.
+
 2009-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strverscmp.c (__strverscmp): Fix last cleanups.

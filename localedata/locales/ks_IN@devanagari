@@ -1,11 +1,11 @@
 comment_char    %
 escape_char     /
-% Kashmiri language locale for India.
+% Kashmiri(devanagari) language locale for India.
 % Contributed by Rakesh Pandit <rakesh.pandit@gmail.com> and 
 % Pravin Satpute <psatpute@redhat.com>
 
 LC_IDENTIFICATION
-title      "Kashmiri language locale for India"
+title      "Kashmiri(devanagari) language locale for India"
 source     ""
 address    ""
 contact    ""
@@ -32,51 +32,20 @@ category  "ks_IN@devanagari:2008";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
-
-translit_start
-include "translit_combining";""
-translit_end
+copy "ks_IN"
 END LC_CTYPE
 
 LC_COLLATE
-
-% Copy the template from ISO/IEC 14651
-copy "iso14651_t1"
-
+copy "ks_IN"
 END LC_COLLATE
 
 LC_MONETARY
-% This is the POSIX Locale definition the LC_MONETARY category.
-% These are generated based on XML base Locale difintion file
-% for IBM Class for Unicode/Java
-%
-int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U0930><U0942>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
-mon_grouping          3
-positive_sign         ""
-negative_sign         "<U002D>"
-int_frac_digits       2
-frac_digits           2
-p_cs_precedes         1
-p_sep_by_space        1
-n_cs_precedes         1
-n_sep_by_space        1
-p_sign_posn           1
-n_sign_posn           1
-%
+copy "ks_IN"
 END LC_MONETARY
 
 
 LC_NUMERIC
-% This is the POSIX Locale definition for the LC_NUMERIC  category.
-%
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
-grouping               3
-%
+copy "ks_IN"
 END LC_NUMERIC
 
 
@@ -185,12 +154,7 @@ END LC_NAME
 
 
 LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-
-country_ab2 "<U0049><U004E>"
-country_ab3 "<U0049><U004E><U0044>"
-country_num 356
+copy "ks_IN"
 END LC_ADDRESS
 
 

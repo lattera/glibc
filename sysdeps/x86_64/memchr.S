@@ -37,12 +37,12 @@ ENTRY (memchr)
 	shl	%cl, %esi
 	pmovmskb %xmm0, %ecx
 	andl	%esi, %ecx
-	movl	$0, %esi
+	movl	$16, %esi
 	jnz	1f
 	cmpq	%rsi, %rdx
 	jle	3f
 
-2:	movdqa	16(%rdi,%rsi), %xmm0
+2:	movdqa	(%rdi,%rsi), %xmm0
 	leaq	16(%rsi), %rsi
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %ecx
@@ -54,10 +54,10 @@ ENTRY (memchr)
 3:	xorl	%eax, %eax
 	ret
 
-1:	leaq	(%rdi,%rsi), %rax
+1:	leaq	-16(%rdi,%rsi), %rax
 	bsfl	%ecx, %ecx
 	addq	%rcx, %rax
-	addq	%rcx, %rsi
+	leaq	-16(%rsi,%rcx), %rsi
 	cmpq	%rsi, %rdx
 	jle	3b
 	ret
