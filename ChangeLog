@@ -1,5 +1,8 @@
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Power also has
+	preadv/pwritev in 2.6.30.
+
 	* resolv/res_hconf.c (_res_hconf_trim_domain): Use strcasecmp
 	instead of __strcasecmp.
 	* resolv/nss_dns/dns-host.c (getanswer_r): Likewise.
