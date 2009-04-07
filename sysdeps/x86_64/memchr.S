@@ -22,33 +22,46 @@
 
 
 	.text
-ENTRY(strlen)
+ENTRY (memchr)
+	movd	%esi, %xmm1
 	movq	%rdi, %rcx
-	movq	%rdi, %r8
+	punpcklbw %xmm1, %xmm1
 	andq	$~15, %rdi
-	pxor	%xmm1, %xmm1
+	punpcklbw %xmm1, %xmm1
 	orl	$0xffffffff, %esi
 	movdqa	(%rdi), %xmm0
+	pshufd	$0, %xmm1, %xmm1
 	subq	%rdi, %rcx
-	leaq	16(%rdi), %rdi
 	pcmpeqb	%xmm1, %xmm0
+	addq	%rcx, %rdx
 	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	xorl	%eax, %eax
-	negq	%r8
-	andl	%esi, %edx
+	pmovmskb %xmm0, %ecx
+	andl	%esi, %ecx
+	movl	$0, %esi
 	jnz	1f
+	cmpq	%rsi, %rdx
+	jle	3f
 
-2:	movdqa	(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
+2:	movdqa	16(%rdi,%rsi), %xmm0
+	leaq	16(%rsi), %rsi
 	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %edx
-	testl	%edx, %edx
-	jz	2b
+	pmovmskb %xmm0, %ecx
+	testl	%ecx, %ecx
+	jnz	1f
+	cmpq	%rsi, %rdx
+	jg	2b
 
-1:	leaq	-16(%rdi,%r8), %rdi
-	bsfl	%edx, %eax
-	addq	%rdi, %rax
+3:	xorl	%eax, %eax
 	ret
-END(strlen)
-libc_hidden_builtin_def (strlen)
+
+1:	leaq	(%rdi,%rsi), %rax
+	bsfl	%ecx, %ecx
+	addq	%rcx, %rax
+	addq	%rcx, %rsi
+	cmpq	%rsi, %rdx
+	jle	3b
+	ret
+END (memchr)
+
+strong_alias (memchr, __memchr)
+libc_hidden_builtin_def (memchr)

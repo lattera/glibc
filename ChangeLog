@@ -1,5 +1,7 @@
 2009-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/memchr.S: New file.
+
 	* resolv/resolv.h (RES_SNGLKUP): Define.
 	* resolv/res_init.c (res_setoptions): Recognize single-request option.
 	* resolv/res_send.c (send_dg): If we sent two requests at once and
