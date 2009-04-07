@@ -15,6 +15,7 @@
 #define STPNCPY wcpncpy
 #define MEMCPY wmemcpy
 #define MEMPCPY wmempcpy
+#define MEMCHR wmemchr
 
 
 #include "../string/stratcliff.c"

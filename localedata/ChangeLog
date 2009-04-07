@@ -1,3 +1,8 @@
+2009-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ks_IN@devanagari: Replace duplicated information with copy.
+	Fix title.  Patch by Pravin Satpute <psatpute@redhat.com>.
+
 2009-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ks_IN: New file.

@@ -1,6 +1,7 @@
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/stratcliff.c (do_test): Add memchr tests..
+	* wcsmbs/wcsatcliff.c (MEMCHR): Define.
 	* sysdeps/x86_64/memchr.S: Fix handling of end of buffer after
 	first read quad word.
 
