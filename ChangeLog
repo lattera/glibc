@@ -1,7 +1,9 @@
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/strchrnul.S: New file.
+
 	* crypt/Makefile (LDLIBS-crypt.so): Use this variable instead of
-	depending libcrypt in -lfreebl3.
+	depending libcrypt on -lfreebl3.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Power also has
 	preadv/pwritev in 2.6.30.
