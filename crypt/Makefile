@@ -44,7 +44,7 @@ ifeq ($(nss-crypt),yes)
 CPPFLAGS-sha256-crypt.c = -DUSE_NSS -I$(shell nss-config --includedir)
 CPPFLAGS-sha512-crypt.c = -DUSE_NSS -I$(shell nss-config --includedir)
 CPPFLAGS-md5-crypt.c = -DUSE_NSS -I$(shell nss-config --includedir)
-$(objpfx)libcrypt.so: -lfreebl3
+LDLIBS-crypt.so = -lfreebl3
 else
 libcrypt-routines += md5 sha256 sha512
 
