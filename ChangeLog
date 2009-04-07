@@ -1,5 +1,9 @@
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_hconf.c (_res_hconf_trim_domain): Use strcasecmp
+	instead of __strcasecmp.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Likewise.
+
 	* string/stratcliff.c (do_test): Add memchr tests..
 	* wcsmbs/wcsatcliff.c (MEMCHR): Define.
 	* sysdeps/x86_64/memchr.S: Fix handling of end of buffer after

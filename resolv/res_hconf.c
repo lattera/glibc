@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -518,7 +518,7 @@ _res_hconf_trim_domain (char *hostname)
 
       trim_len = strlen (trim);
       if (hostname_len > trim_len
-	  && __strcasecmp (&hostname[hostname_len - trim_len], trim) == 0)
+	  && strcasecmp (&hostname[hostname_len - trim_len], trim) == 0)
 	{
 	  hostname[hostname_len - trim_len] = '\0';
 	  break;

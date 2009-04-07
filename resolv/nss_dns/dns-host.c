@@ -824,7 +824,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       switch (type)
 	{
 	case T_PTR:
-	  if (__builtin_expect (__strcasecmp (tname, bp) != 0, 0))
+	  if (__builtin_expect (strcasecmp (tname, bp) != 0, 0))
 	    {
 	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, qname, bp);
 	      cp += n;
