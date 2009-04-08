@@ -1,5 +1,8 @@
 2009-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/preadv64.c (PREAD): Use __libc_pread64
+	to avoid PLT slot.
+
 	* malloc/malloc.c (_int_realloc): Add parameter with old block
 	size.  Remove duplicated test.  Don't handle mmap'ed blocks here.
 	Adjust all callers.
