@@ -1586,7 +1586,8 @@ static void     _int_free(mstate, mchunkptr, int);
 #else
 static void     _int_free(mstate, mchunkptr);
 #endif
-static Void_t*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T);
+static Void_t*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
+			     INTERNAL_SIZE_T);
 static Void_t*  _int_memalign(mstate, size_t, size_t);
 static Void_t*  _int_valloc(mstate, size_t);
 static Void_t*  _int_pvalloc(mstate, size_t);
@@ -3778,7 +3779,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   tsd_setspecific(arena_key, (Void_t *)ar_ptr);
 #endif
 
-  newp = _int_realloc(ar_ptr, oldp, nb);
+  newp = _int_realloc(ar_ptr, oldp, oldsize, nb);
 
   (void)mutex_unlock(&ar_ptr->mutex);
   assert(!newp || chunk_is_mmapped(mem2chunk(newp)) ||
@@ -5102,7 +5103,8 @@ static void malloc_consolidate(av) mstate av;
 */
 
 Void_t*
-_int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T nb)
+_int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
+	     INTERNAL_SIZE_T nb)
 {
   mchunkptr        newp;            /* chunk to return */
   INTERNAL_SIZE_T  newsize;         /* its size */
@@ -5123,28 +5125,25 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T nb)
 
   const char *errstr = NULL;
 
-  /* Simple tests for old block integrity.  */
-  if (__builtin_expect (misaligned_chunk (oldp), 0))
+  /* oldmem size */
+  if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
+      || __builtin_expect (oldsize >= av->system_mem, 0))
     {
-      errstr = "realloc(): invalid pointer";
+      errstr = "realloc(): invalid old size";
     errout:
       malloc_printerr (check_action, errstr, chunk2mem(oldp));
       return NULL;
     }
 
-  /* oldmem size */
-  const INTERNAL_SIZE_T oldsize = chunksize(oldp);
-
-  if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
-      || __builtin_expect (oldsize >= av->system_mem, 0))
-    {
-      errstr = "realloc(): invalid old size";
-      goto errout;
-    }
-
   check_inuse_chunk(av, oldp);
 
-  if (!chunk_is_mmapped(oldp)) {
+  /* All callers already filter out mmap'ed chunks.  */
+#if 0
+  if (!chunk_is_mmapped(oldp))
+#else
+  assert (!chunk_is_mmapped(oldp));
+#endif
+  {
 
     next = chunk_at_offset(oldp, oldsize);
     INTERNAL_SIZE_T nextsize = chunksize(next);
@@ -5271,6 +5270,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T nb)
     return chunk2mem(newp);
   }
 
+#if 0
   /*
     Handle mmap cases
   */
@@ -5339,6 +5339,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T nb)
     return 0;
 #endif
   }
+#endif
 }
 
 /*

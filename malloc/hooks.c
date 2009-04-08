@@ -358,7 +358,7 @@ realloc_check(oldmem, bytes, caller)
     if (top_check() >= 0) {
       INTERNAL_SIZE_T nb;
       checked_request2size(bytes + 1, nb);
-      newmem = _int_realloc(&main_arena, oldp, nb);
+      newmem = _int_realloc(&main_arena, oldp, oldsize, nb);
     }
 #if 0 /* Erase freed memory. */
     if(newmem)
@@ -501,7 +501,7 @@ free_starter(mem, caller) Void_t* mem; const Void_t *caller;
    then the hooks are reset to 0.  */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
-#define MALLOC_STATE_VERSION (0*0x100l + 3l) /* major*0x100 + minor */
+#define MALLOC_STATE_VERSION (0*0x100l + 4l) /* major*0x100 + minor */
 
 struct malloc_save_state {
   long          magic;
@@ -521,6 +521,10 @@ struct malloc_save_state {
   unsigned long mmapped_mem;
   unsigned long max_mmapped_mem;
   int           using_malloc_checking;
+  unsigned long max_fast;
+  unsigned long arena_test;
+  unsigned long arena_max;
+  unsigned long narenas;
 };
 
 Void_t*
@@ -568,6 +572,12 @@ public_gET_STATe(void)
   ms->mmapped_mem = mp_.mmapped_mem;
   ms->max_mmapped_mem = mp_.max_mmapped_mem;
   ms->using_malloc_checking = using_malloc_checking;
+  ms->max_fast = get_max_fast();
+#ifdef PER_THREAD
+  ms->arena_test = mp_.arena_test;
+  ms->arena_max = mp_.arena_max;
+  ms->narenas = narenas;
+#endif
   (void)mutex_unlock(&main_arena.mutex);
   return (Void_t*)ms;
 }
@@ -587,7 +597,10 @@ public_sET_STATe(Void_t* msptr)
   (void)mutex_lock(&main_arena.mutex);
   /* There are no fastchunks.  */
   clear_fastchunks(&main_arena);
-  set_max_fast(DEFAULT_MXFAST);
+  if (ms->version >= 4)
+    set_max_fast(ms->max_fast);
+  else
+    set_max_fast(64);	/* 64 used to be the value we always used.  */
   for (i=0; i<NFASTBINS; ++i)
     fastbin (&main_arena, i) = 0;
   for (i=0; i<BINMAPSIZE; ++i)
@@ -662,6 +675,13 @@ public_sET_STATe(Void_t* msptr)
       __memalign_hook = 0;
       using_malloc_checking = 0;
     }
+  }
+  if (ms->version >= 4) {
+#ifdef PER_THREAD
+    mp_.arena_test = ms->arena_test;
+    mp_.arena_max = ms->arena_max;
+    narenas = ms->narenas;
+#endif
   }
   check_malloc_state(&main_arena);
 

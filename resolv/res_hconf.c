@@ -518,7 +518,7 @@ _res_hconf_trim_domain (char *hostname)
 
       trim_len = strlen (trim);
       if (hostname_len > trim_len
-	  && strcasecmp (&hostname[hostname_len - trim_len], trim) == 0)
+	  && __strcasecmp (&hostname[hostname_len - trim_len], trim) == 0)
 	{
 	  hostname[hostname_len - trim_len] = '\0';
 	  break;

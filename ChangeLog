@@ -1,3 +1,10 @@
+2009-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_realloc): Add parameter with old block
+	size.  Remove duplicated test.  Don't handle mmap'ed blocks here.
+	Adjust all callers.
+	* malloc/hooks.c (realloc_check): Adjust _int_realloc call.
+
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strchrnul.S: New file.

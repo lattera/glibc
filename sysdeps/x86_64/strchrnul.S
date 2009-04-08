@@ -41,9 +41,8 @@ ENTRY (__strchrnul)
 	shl	%cl, %esi
 	pmovmskb %xmm0, %edx
 	pmovmskb %xmm3, %ecx
-	andl	%esi, %edx
-	andl	%esi, %ecx
 	orl	%edx, %ecx
+	andl	%esi, %ecx
 	jnz	1f
 
 2:	movdqa	(%rdi), %xmm0
