@@ -36,8 +36,10 @@
 # define OFF_T off_t
 #endif
 
+#ifndef __ASSUME_PREADV
 static ssize_t PREADV_REPLACEMENT (int, __const struct iovec *,
 				   int, OFF_T) internal_function;
+#endif
 
 
 ssize_t

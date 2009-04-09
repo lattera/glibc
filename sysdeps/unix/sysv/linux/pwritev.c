@@ -36,8 +36,10 @@
 # define OFF_T off_t
 #endif
 
+#ifndef __ASSUME_PWRITEV
 static ssize_t PWRITEV_REPLACEMENT (int, __const struct iovec *,
 				    int, OFF_T) internal_function;
+#endif
 
 
 ssize_t
