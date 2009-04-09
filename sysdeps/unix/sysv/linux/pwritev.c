@@ -29,6 +29,13 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
+#ifdef __x86_64__
+#define __NR_pwritev				296
+#elif defined __i386__
+#define __NR_pwritev		334
+#endif
+
+
 #ifndef PWRITEV
 # define PWRITEV pwritev
 # define PWRITEV_REPLACEMENT __atomic_pwritev_replacement
@@ -53,14 +60,16 @@ PWRITEV (fd, vector, count, offset)
   ssize_t result;
 
   if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (pwritev, 5, fd, vector, count, offset >> 32,
-			     offset & 0xffffffff);
+    result = INLINE_SYSCALL (pwritev, 5, fd, vector, count,
+			     (off_t) ((off64_t) offset >> 32),
+			     (off_t) (offset & 0xffffffff));
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
-      result = INLINE_SYSCALL (pwritev, 5, fd, vector, count, offset >> 32,
-			       offset & 0xffffffff);
+      result = INLINE_SYSCALL (pwritev, 5, fd, vector, count,
+			       (off_t) ((off64_t) offset >> 32),
+			       (off_t) (offset & 0xffffffff));
 
       LIBC_CANCEL_RESET (oldtype);
     }
