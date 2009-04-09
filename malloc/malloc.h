@@ -23,6 +23,7 @@
 
 #include <features.h>
 #include <stddef.h>
+#include <stdio.h>
 # define __malloc_ptr_t  void *
 
 /* Used by GNU libc internals. */
@@ -143,6 +144,9 @@ extern size_t malloc_usable_size __MALLOC_P ((void *__ptr));
 
 /* Prints brief summary statistics on stderr. */
 extern void malloc_stats __MALLOC_P ((void));
+
+/* Output information about state of allocator to stream FP.  */
+extern int malloc_info (int __options, FILE *__fp);
 
 /* Record the state of all malloc variables in an opaque data structure. */
 extern void *malloc_get_state __MALLOC_P ((void));

@@ -55,6 +55,9 @@ libc {
     # p*
     posix_memalign;
   }
+  GLIBC_2.10 {
+    malloc_info;
+  }
   GLIBC_PRIVATE {
     # Internal startup hook for libpthread.
     __libc_malloc_pthread_startup;

@@ -6219,6 +6219,152 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 }
 weak_alias (__posix_memalign, posix_memalign)
 
+
+int
+malloc_info (int options, FILE *fp)
+{
+  /* For now, at least.  */
+  if (options != 0)
+    return EINVAL;
+
+  int n = 0;
+  size_t total_nblocks = 0;
+  size_t total_nfastblocks = 0;
+  size_t total_avail = 0;
+  size_t total_fastavail = 0;
+
+  void mi_arena (mstate ar_ptr)
+  {
+    fprintf (fp, "<heap nr=\"%d\">\n<sizes>\n", n++);
+
+    size_t nblocks = 0;
+    size_t nfastblocks = 0;
+    size_t avail = 0;
+    size_t fastavail = 0;
+    struct
+    {
+      size_t from;
+      size_t to;
+      size_t total;
+      size_t count;
+    } sizes[NFASTBINS + NBINS - 1];
+#define nsizes (sizeof (sizes) / sizeof (sizes[0]))
+
+    mutex_lock (&ar_ptr->mutex);
+
+    for (size_t i = 0; i < NFASTBINS; ++i)
+      {
+	mchunkptr p = fastbin (ar_ptr, i);
+	if (p != NULL)
+	  {
+	    size_t nthissize = 0;
+	    size_t thissize = chunksize (p);
+
+	    while (p != NULL)
+	      {
+		++nthissize;
+		p = p->fd;
+	      }
+
+	    fastavail += nthissize * thissize;
+	    nfastblocks += nthissize;
+	    sizes[i].from = thissize - (MALLOC_ALIGNMENT - 1);
+	    sizes[i].to = thissize;
+	    sizes[i].count = nthissize;
+	  }
+	else
+	  sizes[i].from = sizes[i].to = sizes[i].count = 0;
+
+	sizes[i].total = sizes[i].count * sizes[i].to;
+      }
+
+    mbinptr bin = bin_at (ar_ptr, 1);
+    struct malloc_chunk *r = bin->fd;
+    while (r != bin)
+      {
+	++sizes[NFASTBINS].count;
+	sizes[NFASTBINS].total += r->size;
+	sizes[NFASTBINS].from = MIN (sizes[NFASTBINS].from, r->size);
+	sizes[NFASTBINS].to = MAX (sizes[NFASTBINS].to, r->size);
+	r = r->fd;
+      }
+    nblocks += sizes[NFASTBINS].count;
+    avail += sizes[NFASTBINS].total;
+
+    for (size_t i = 2; i < NBINS; ++i)
+      {
+	bin = bin_at (ar_ptr, i);
+	r = bin->fd;
+	sizes[NFASTBINS - 1 + i].from = ~((size_t) 0);
+	sizes[NFASTBINS - 1 + i].to = sizes[NFASTBINS - 1 + i].total
+	  = sizes[NFASTBINS - 1 + i].count = 0;
+
+	while (r != bin)
+	  {
+	    ++sizes[NFASTBINS - 1 + i].count;
+	    sizes[NFASTBINS - 1 + i].total += r->size;
+	    sizes[NFASTBINS - 1 + i].from = MIN (sizes[NFASTBINS - 1 + i].from,
+						 r->size);
+	    sizes[NFASTBINS - 1 + i].to = MAX (sizes[NFASTBINS - 1 + i].to,
+					       r->size);
+
+	    r = r->fd;
+	  }
+
+	if (sizes[NFASTBINS - 1 + i].count == 0)
+	  sizes[NFASTBINS - 1 + i].from = 0;
+	nblocks += sizes[NFASTBINS - 1 + i].count;
+	avail += sizes[NFASTBINS - 1 + i].total;
+      }
+
+    mutex_unlock (&ar_ptr->mutex);
+
+    total_nfastblocks += nfastblocks;
+    total_fastavail += fastavail;
+
+    total_nblocks += nblocks;
+    total_avail += avail;
+
+    for (size_t i = 0; i < nsizes; ++i)
+      if (sizes[i].count != 0 && i != NFASTBINS)
+	fprintf (fp, "\
+<size from=\"%zu\" to=\"%zu\" total=\"%zu\" count=\"%zu\"/>\n",
+		 sizes[i].from, sizes[i].to, sizes[i].total, sizes[i].count);
+
+    if (sizes[NFASTBINS].count != 0)
+      fprintf (fp, "\
+<unsorted from=\"%zu\" to=\"%zu\" total=\"%zu\" count=\"%zu\"/>\n",
+	       sizes[NFASTBINS].from, sizes[NFASTBINS].to,
+	       sizes[NFASTBINS].total, sizes[NFASTBINS].count);
+
+    fprintf (fp,
+	     "</sizes>\n<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
+	     "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
+	     "</heap>\n",
+	     nfastblocks, fastavail, nblocks, avail);
+  }
+
+  fputs ("<malloc version=\"1\">\n", fp);
+
+  /* Iterate over all arenas currently in use.  */
+  mstate ar_ptr = &main_arena;
+  do
+    {
+      mi_arena (ar_ptr);
+      ar_ptr = ar_ptr->next;
+    }
+  while (ar_ptr != &main_arena);
+
+  fprintf (fp,
+	   "<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "</malloc>\n",
+	   total_nfastblocks, total_fastavail, total_nblocks, total_avail);
+
+  return 0;
+}
+
+
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
 strong_alias (__libc_free, __cfree) weak_alias (__libc_free, cfree)
 strong_alias (__libc_free, __free) strong_alias (__libc_free, free)
