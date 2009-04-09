@@ -95,15 +95,20 @@ enum __socket_type
 #define	PF_ASH		18	/* Ash.  */
 #define	PF_ECONET	19	/* Acorn Econet.  */
 #define	PF_ATMSVC	20	/* ATM SVCs.  */
+#define PF_RDS		21	/* RDS sockets.  */
 #define	PF_SNA		22	/* Linux SNA Project */
 #define	PF_IRDA		23	/* IRDA sockets.  */
 #define	PF_PPPOX	24	/* PPPoX sockets.  */
 #define	PF_WANPIPE	25	/* Wanpipe API sockets.  */
+#define PF_LLC		26	/* Linux LLC.  */
+#define PF_CAN		29	/* Controller Area Network.  */
+#define PF_TIPC		30	/* TIPC sockets.  */
 #define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
 #define	PF_IUCV		32	/* IUCV sockets.  */
 #define PF_RXRPC	33	/* RxRPC sockets.  */
 #define PF_ISDN		34	/* mISDN sockets.  */
-#define	PF_MAX		35	/* For now..  */
+#define PF_PHONET	35	/* Phonet sockets.  */
+#define	PF_MAX		36	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -130,14 +135,19 @@ enum __socket_type
 #define	AF_ASH		PF_ASH
 #define	AF_ECONET	PF_ECONET
 #define	AF_ATMSVC	PF_ATMSVC
+#define AF_RDS		PF_RDS
 #define	AF_SNA		PF_SNA
 #define	AF_IRDA		PF_IRDA
 #define	AF_PPPOX	PF_PPPOX
 #define	AF_WANPIPE	PF_WANPIPE
+#define AF_LLC		PF_LLC
+#define AF_CAN		PF_CAN
+#define AF_TIPC		PF_TIPC
 #define	AF_BLUETOOTH	PF_BLUETOOTH
 #define	AF_IUCV		PF_IUCV
 #define AF_RXRPC	PF_RXRPC
 #define AF_ISDN		PF_ISDN
+#define AF_PHONET	PF_PHONET
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.

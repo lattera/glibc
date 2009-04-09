@@ -1,3 +1,12 @@
+2009-04-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Add missing protocol
+	numbers.
+	* sysdeps/unix/sysv/linux/mips/sys/eventfd.h (EFD_SEMAPHORE):
+	Define.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h: Add entries for
+	preadv and pwritev.
+
 2009-03-18  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/readelflib.c (process_elf_file):
