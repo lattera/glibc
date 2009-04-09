@@ -1,3 +1,8 @@
+2009-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: SPARC and IA64 also
+	have preadv/pwritev in 2.6.30.
+
 2009-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (malloc_info): New function.
