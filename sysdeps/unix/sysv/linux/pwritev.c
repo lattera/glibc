@@ -29,12 +29,6 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
-#ifdef __x86_64__
-#define __NR_pwritev				296
-#elif defined __i386__
-#define __NR_pwritev		334
-#endif
-
 
 #ifndef PWRITEV
 # define PWRITEV pwritev

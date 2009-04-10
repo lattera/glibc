@@ -29,12 +29,6 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
-#ifdef __x86_64__
-#define __NR_preadv				295
-#elif defined __i386__
-#define __NR_preadv		333
-#endif
-
 
 #ifndef PREADV
 # define PREADV preadv

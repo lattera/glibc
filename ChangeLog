@@ -1,5 +1,7 @@
 2009-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Slightly more compact code.
+
 	* sysdeps/unix/sysv/linux/preadv.c: Avoid prototype for static
 	function if it is not defined.  Add some necessary casts.
 	* sysdeps/unix/sysv/linux/pwritev.c: Likewise.
