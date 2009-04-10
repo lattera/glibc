@@ -1662,24 +1662,10 @@ do_positional:
 	  {
 	    /* Extend the array of format specifiers.  */
 	    struct printf_spec *old = specs;
+	    specs = extend_alloca (specs, nspecs_max, 2 * nspecs_max);
 
-	    nspecs_max *= 2;
-	    specs = alloca (nspecs_max * sizeof (struct printf_spec));
-
-	    if (specs == &old[nspecs])
-	      /* Stack grows up, OLD was the last thing allocated;
-		 extend it.  */
-	      nspecs_max += nspecs_max / 2;
-	    else
-	      {
-		/* Copy the old array's elements to the new space.  */
-		memcpy (specs, old, nspecs * sizeof (struct printf_spec));
-		if (old == &specs[nspecs])
-		  /* Stack grows down, OLD was just below the new
-		     SPECS.  We can use that space when the new space
-		     runs out.  */
-		  nspecs_max += nspecs_max / 2;
-	      }
+	    /* Copy the old array's elements to the new space.  */
+	    memmove (specs, old, nspecs * sizeof (struct printf_spec));
 	  }
 
 	/* Parse the format specifier.  */
