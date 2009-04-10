@@ -21,7 +21,7 @@
 
 
 	.text
-ENTRY (memchr)
+ENTRY (rawmemchr)
 	movd	%esi, %xmm1
 	movq	%rdi, %rcx
 	punpcklbw %xmm1, %xmm1
@@ -32,35 +32,23 @@ ENTRY (memchr)
 	pshufd	$0, %xmm1, %xmm1
 	subq	%rdi, %rcx
 	pcmpeqb	%xmm1, %xmm0
-	addq	%rcx, %rdx
 	shl	%cl, %esi
 	pmovmskb %xmm0, %ecx
+	leaq	16(%rdi), %rdi
 	andl	%esi, %ecx
-	movl	$16, %esi
 	jnz	1f
-	cmpq	%rsi, %rdx
-	jle	3f
 
-2:	movdqa	(%rdi,%rsi), %xmm0
-	leaq	16(%rsi), %rsi
+2:	movdqa	(%rdi), %xmm0
+	leaq	16(%rdi), %rdi
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %ecx
 	testl	%ecx, %ecx
-	jnz	1f
-	cmpq	%rsi, %rdx
-	jg	2b
+	jz	2b
 
-3:	xorl	%eax, %eax
+1:	bsfl	%ecx, %ecx
+	leaq	-16(%rcx,%rdi), %rax
 	ret
+END (rawmemchr)
 
-1:	leaq	-16(%rdi,%rsi), %rax
-	bsfl	%ecx, %ecx
-	addq	%rcx, %rax
-	leaq	-16(%rsi,%rcx), %rsi
-	cmpq	%rsi, %rdx
-	jle	3b
-	ret
-END (memchr)
-
-strong_alias (memchr, __memchr)
-libc_hidden_builtin_def (memchr)
+strong_alias (rawmemchr, __rawmemchr)
+libc_hidden_builtin_def (__rawmemchr)

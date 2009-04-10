@@ -1,5 +1,7 @@
 2009-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/rawmemchr.S: New file.
+
 	* stdio-common/vfprintf.c (vfprintf): Slightly more compact code.
 	Simplified code and possible copy problem fixed.
 
