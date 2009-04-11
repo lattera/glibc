@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002, 2003, 2004, 2005,
-   2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002-2005, 2007, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +97,8 @@ parse_printf_format (fmt, n, argtypes)
 	    /* We have more than one argument for this format spec.  We must
                call the arginfo function again to determine all the types.  */
 	    (void) (*__printf_arginfo_table[spec.info.spec])
-	      (&spec.info, n - spec.data_arg, &argtypes[spec.data_arg]);
+	      (&spec.info, n - spec.data_arg, &argtypes[spec.data_arg],
+	       &spec.size);
 	    break;
 	  }
     }

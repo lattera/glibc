@@ -55,6 +55,7 @@ libc {
   }
   GLIBC_2.10 {
     psiginfo;
+    register_printf_modifier; register_printf_type; register_printf_specifier;
   }
   GLIBC_PRIVATE {
     # global variables
