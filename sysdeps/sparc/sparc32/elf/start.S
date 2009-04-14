@@ -1,5 +1,6 @@
 /* Startup code for elf32-sparc
-   Copyright (C) 1997, 1998, 2002, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002, 2004, 2007, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -96,4 +97,5 @@ _start:
 	.data
 	.globl	__data_start
 __data_start:
+	.long	0
 weak_alias (__data_start, data_start)

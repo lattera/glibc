@@ -1,3 +1,10 @@
+2009-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/elf/start.S: Ensure .data is non-empty.
+	* sysdeps/powerpc/powerpc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+
 2009-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: SH also has
