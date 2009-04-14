@@ -1,3 +1,14 @@
+2009-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	Optimizations from GMP.
+	* sysdeps/x86_64/add_n.S: New file.
+	* sysdeps/x86_64/addmul_1.S: New file.
+	* sysdeps/x86_64/lshift.S: New file.
+	* sysdeps/x86_64/mul_1.S: New file.
+	* sysdeps/x86_64/rshift.S: New file.
+	* sysdeps/x86_64/sub_n.S: New file.
+	* sysdeps/x86_64/submul_1.S: New file.
+
 2009-04-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/elf/start.S: Ensure .data is non-empty.
