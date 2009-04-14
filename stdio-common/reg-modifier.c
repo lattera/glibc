@@ -82,7 +82,7 @@ __register_printf_modifier (wchar_t *str)
 
   newp->next = __printf_modifier_table[(unsigned char) *str];
   newp->bit = 1 << next_bit++;
-  wmemcpy (newp->str, str + 1, wc - str);
+  __wmemcpy (newp->str, str + 1, wc - str);
 
   __printf_modifier_table[(unsigned char) *str] = newp;
 
