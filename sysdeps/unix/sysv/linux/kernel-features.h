@@ -533,7 +533,7 @@
 /* Support for preadv and pwritev was added in 2.6.30.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061e \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__)
+	|| defined __ia64__ || defined __sparc__ && defined __sh__)
 # define __ASSUME_PREADV	1
 # define __ASSUME_PWRITEV	1
 #endif
