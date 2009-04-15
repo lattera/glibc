@@ -1,3 +1,7 @@
+2009-04-15  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/mips/sys/fpregdef.h: Update for new ABIs.
+
 2009-04-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Add missing protocol
