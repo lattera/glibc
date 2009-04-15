@@ -25,7 +25,7 @@
 int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
-#ifndef __NR_fallocate
+#ifdef __NR_fallocate
   return INLINE_SYSCALL (fallocate, 6, fd, mode,
 			 __LONG_LONG_PAIR (offset >> 31, offset),
 			 __LONG_LONG_PAIR (len >> 31, len));

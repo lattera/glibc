@@ -25,6 +25,11 @@
 int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
+#ifdef __NR_fallocate
   return INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
+#else
+  __set_errno (ENOSYS);
+  return -1;
+#endif
 }
 strong_alias (fallocate, fallocate64)

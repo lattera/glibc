@@ -22,6 +22,7 @@
 
 	* sysdeps/unix/sysv/linux/fallocate.c: Handle old kernel headers.
 	* sysdeps/unix/sysv/linux/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
 
 2009-03-25  Andrew Stubbs  <ams@codesourcery.com>
 
