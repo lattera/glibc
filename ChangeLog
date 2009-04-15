@@ -1,3 +1,7 @@
+2009-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/mp_clz_tab.c: New file.
+
 2009-03-17  Ryan S. Arnold  <rsa@us.ibm.com>
             Ulrich Drepper  <drepper@redhat.com>
 
