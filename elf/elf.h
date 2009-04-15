@@ -2205,42 +2205,62 @@ typedef Elf32_Addr Elf32_Conflict;
 /* ARM specific declarations */
 
 /* Processor specific flags for the ELF header e_flags field.  */
-#define EF_ARM_RELEXEC     0x01
-#define EF_ARM_HASENTRY    0x02
-#define EF_ARM_INTERWORK   0x04
-#define EF_ARM_APCS_26     0x08
-#define EF_ARM_APCS_FLOAT  0x10
-#define EF_ARM_PIC         0x20
-#define EF_ARM_ALIGN8      0x40		/* 8-bit structure alignment is in use */
-#define EF_ARM_NEW_ABI     0x80
-#define EF_ARM_OLD_ABI     0x100
+#define EF_ARM_RELEXEC		0x01
+#define EF_ARM_HASENTRY		0x02
+#define EF_ARM_INTERWORK	0x04
+#define EF_ARM_APCS_26		0x08
+#define EF_ARM_APCS_FLOAT	0x10
+#define EF_ARM_PIC		0x20
+#define EF_ARM_ALIGN8		0x40 /* 8-bit structure alignment is in use */
+#define EF_ARM_NEW_ABI		0x80
+#define EF_ARM_OLD_ABI		0x100
+#define EF_ARM_SOFT_FLOAT	0x200
+#define EF_ARM_VFP_FLOAT	0x400
+#define EF_ARM_MAVERICK_FLOAT	0x800
+
 
 /* Other constants defined in the ARM ELF spec. version B-01.  */
 /* NB. These conflict with values defined above.  */
 #define EF_ARM_SYMSARESORTED	0x04
-#define EF_ARM_DYNSYMSUSESEGIDX 0x08
+#define EF_ARM_DYNSYMSUSESEGIDX	0x08
 #define EF_ARM_MAPSYMSFIRST	0x10
 #define EF_ARM_EABIMASK		0XFF000000
 
-#define EF_ARM_EABI_VERSION(flags) ((flags) & EF_ARM_EABIMASK)
-#define EF_ARM_EABI_UNKNOWN  0x00000000
-#define EF_ARM_EABI_VER1     0x01000000
-#define EF_ARM_EABI_VER2     0x02000000
+/* Constants defined in AAELF.  */
+#define EF_ARM_BE8	    0x00800000
+#define EF_ARM_LE8	    0x00400000
 
-/* Additional symbol types for Thumb */
-#define STT_ARM_TFUNC      0xd
+#define EF_ARM_EABI_VERSION(flags)	((flags) & EF_ARM_EABIMASK)
+#define EF_ARM_EABI_UNKNOWN	0x00000000
+#define EF_ARM_EABI_VER1	0x01000000
+#define EF_ARM_EABI_VER2	0x02000000
+#define EF_ARM_EABI_VER3	0x03000000
+#define EF_ARM_EABI_VER4	0x04000000
+#define EF_ARM_EABI_VER5	0x05000000
+
+/* Additional symbol types for Thumb.  */
+#define STT_ARM_TFUNC		STT_LOPROC /* A Thumb function.  */
+#define STT_ARM_16BIT		STT_HIPROC /* A Thumb label.  */
 
 /* ARM-specific values for sh_flags */
-#define SHF_ARM_ENTRYSECT  0x10000000   /* Section contains an entry point */
-#define SHF_ARM_COMDEF     0x80000000   /* Section may be multiply defined
-					   in the input to a link step */
+#define SHF_ARM_ENTRYSECT	0x10000000 /* Section contains an entry point */
+#define SHF_ARM_COMDEF		0x80000000 /* Section may be multiply defined
+					      in the input to a link step.  */
 
 /* ARM-specific program header flags */
-#define PF_ARM_SB          0x10000000   /* Segment contains the location
-					   addressed by the static base */
+#define PF_ARM_SB		0x10000000 /* Segment contains the location
+					      addressed by the static base. */
+#define PF_ARM_PI		0x20000000 /* Position-independent segment.  */
+#define PF_ARM_ABS		0x40000000 /* Absolute segment.  */
 
 /* Processor specific values for the Phdr p_type field.  */
-#define PT_ARM_EXIDX	0x70000001	/* .ARM.exidx segment */
+#define PT_ARM_EXIDX		(PT_LOPROC + 1)	/* ARM unwind segment.  */
+
+/* Processor specific values for the Shdr sh_type field.  */
+#define SHT_ARM_EXIDX		(SHT_LOPROC + 1) /* ARM unwind section.  */
+#define SHT_ARM_PREEMPTMAP	(SHT_LOPROC + 2) /* Preemption details.  */
+#define SHT_ARM_ATTRIBUTES	(SHT_LOPROC + 3) /* ARM attributes section.  */
+
 
 /* ARM relocs.  */
 
