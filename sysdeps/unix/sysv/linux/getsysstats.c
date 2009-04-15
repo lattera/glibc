@@ -93,14 +93,41 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 		return NULL;
 
 	      *re += n;
+
+	      nl = memchr (*cp, '\n', *re - *cp);
+	      while (nl == NULL && *re == buffer_end)
+		{
+		  /* Truncate too long lines.  */
+		  *re = buffer + 3 * (buffer_end - buffer) / 4;
+		  n = read_not_cancel (fd, *re, buffer_end - *re);
+		  if (n < 0)
+		    return NULL;
+
+		  nl = memchr (*re, '\n', n);
+		  **re = '\n';
+		  *re += n;
+		}
 	    }
+	  else
+	    nl = memchr (*cp, '\n', *re - *cp);
 
 	  res = *cp;
-	  nl = memchr (*cp, '\n', *re - *cp);
 	}
 
       if (nl == NULL)
 	nl = *re - 1;
+    }
+  else if (nl + 5 >= *re)
+    {
+      memmove (buffer, nl, *re - nl);
+      *re = buffer + (*re - nl);
+      nl = *cp = buffer;
+
+      ssize_t n = read_not_cancel (fd, *re, buffer_end - *re);
+      if (n < 0)
+	return NULL;
+
+      *re += n;
     }
 
   *cp = nl + 1;
@@ -115,8 +142,9 @@ __get_nprocs ()
 {
   /* XXX Here will come a test for the new system call.  */
 
-  char buffer[8192];
-  char *const buffer_end = buffer + sizeof (buffer);
+  const size_t buffer_size = __libc_use_alloca (8192) ? 8192 : 512;
+  char *buffer = alloca (buffer_size);
+  char *buffer_end = buffer + buffer_size;
   char *cp = buffer_end;
   char *re = buffer_end;
   int result = 1;
@@ -134,7 +162,11 @@ __get_nprocs ()
 
       char *l;
       while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
-	if (strncmp (l, "cpu", 3) == 0 && isdigit (l[3]))
+	/* The current format of /proc/stat has all the cpu* entries
+	   at the front.  We assume here that stays this way.  */
+	if (strncmp (l, "cpu", 3) != 0)
+	  break;
+	else if (isdigit (l[3]))
 	  ++result;
 
       close_not_cancel_no_status (fd);

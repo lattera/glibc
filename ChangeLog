@@ -1,3 +1,18 @@
+2009-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Make sure there
+	are always at least 4 bytes in the returned line.
+
+2009-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Check
+	__libc_use_alloca (8192), if the stack is too small use 512 bytes
+	instead of 8K.  Stop searching in /proc/stat after hitting first
+	line not starting with cpu.
+	(next_line): Truncate too long
+	lines at buffer size * 3/4 instead of pretending there were line
+	breaks inside of large lines.
+
 2009-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/mp_clz_tab.c: New file.
