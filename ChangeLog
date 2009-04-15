@@ -1,3 +1,7 @@
+2009-04-14  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h: Add various missing ARM constants, to match binutils.
+
 2009-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	Optimizations from GMP.
