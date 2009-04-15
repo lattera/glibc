@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2003,2005,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #endif
 
 #ifndef _ASM
-typedef struct
+typedef struct __jmp_buf_internal_tag
   {
     /* Callee-saved registers r8 through r15.  */
     int __regs[8];

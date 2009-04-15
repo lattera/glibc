@@ -1,3 +1,9 @@
+2009-03-25  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/libc-tls.c: New file.
+
+	* sysdeps/sh/bits/setjmp.h (__jmp_buf): Give name to structure type.
+
 2009-04-14  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h: Add various missing ARM constants, to match binutils.
