@@ -1048,9 +1048,7 @@ send_dg(res_state statp,
 	}
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
-		if (!single_request
-		    && resplen > 1
-		    && (recvresp1 || (buf2 != NULL && recvresp2)))
+		if (resplen > 1 && (recvresp1 || (buf2 != NULL && recvresp2)))
 		  {
 		    /* There are quite a few broken name servers out
 		       there which don't handle two outstanding
@@ -1059,9 +1057,15 @@ send_dg(res_state statp,
 		       having received one answer switch to the mode
 		       where we send the second request only once we
 		       have received the first answer.  */
-		    single_request = true;
-		    *gotsomewhere = save_gotsomewhere;
-		    goto retry;
+		    if (!single_request)
+		      {
+			single_request = true;
+			*gotsomewhere = save_gotsomewhere;
+			goto retry;
+		      }
+
+		    *resplen2 = 1;
+		    return resplen;
 		  }
 
 		*gotsomewhere = 1;
