@@ -1,3 +1,8 @@
+2009-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Don't switch into single-request
+	mode if we already are in it.
+
 2009-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Make sure there
