@@ -1,3 +1,26 @@
+2009-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9957]
+	* malloc/malloc.c (force_reg): Define.
+	(sYSMALLOc): Load hook variable into variable
+	before test and force into register.
+	(sYSTRIm): Likewise.
+	(public_mALLOc): Force hook value into register.
+	(public_fREe): Likewise.
+	(public_rEALLOc): Likewise.
+	(public_mEMALIGn): Likewise.
+	(public_vALLOc): Likewise.
+	(public_pVALLOc): Likewise.
+	(public_cALLOc): Likewise.
+	(__posix_memalign): Likewise.
+	* malloc/arena.c (ptmalloc_init): Load hook variable into variable
+	before test and force into register.
+	* malloc/hooks.c (top_check): Likewise.
+	(public_s_ET_STATe): Pretty printing.
+
+	* resolv/res_send.c (send_dg): Don't just ignore the result we got
+	in case we only receive one reply in single-request mode.
+
 2009-04-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (_dl_open): Bump GL(dl_nns) to 1 if no libraries

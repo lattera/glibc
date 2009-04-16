@@ -564,6 +564,13 @@ Void_t* memcpy();
 #endif
 #endif
 
+
+/* Force a value to be in a register and stop the compiler referring
+   to the source (mostly memory location) again.  */
+#define force_reg(val) \
+  ({ __typeof (val) _v; asm ("" : "=r" (_v) : "0" (val)); _v; })
+
+
 /*
   MALLOC_FAILURE_ACTION is the action to take before "return 0" when
   malloc fails to be able to return memory, either because memory is
@@ -3165,8 +3172,9 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
   if (brk != (char*)(MORECORE_FAILURE)) {
     /* Call the `morecore' hook if necessary.  */
-    if (__builtin_expect (__after_morecore_hook != NULL, 0))
-      (*__after_morecore_hook) ();
+    void (*hook) (void) = force_reg (__after_morecore_hook);
+    if (__builtin_expect (hook != NULL, 0))
+      (*hook) ();
   } else {
   /*
     If have mmap, try using it as a backup when MORECORE fails or
@@ -3302,10 +3310,12 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
         if (snd_brk == (char*)(MORECORE_FAILURE)) {
           correction = 0;
           snd_brk = (char*)(MORECORE(0));
-        } else
+        } else {
 	  /* Call the `morecore' hook if necessary.  */
-	  if (__builtin_expect (__after_morecore_hook != NULL, 0))
-	    (*__after_morecore_hook) ();
+	  void (*hook) (void) = force_reg (__after_morecore_hook);
+	  if (__builtin_expect (hook != NULL, 0))
+	    (*hook) ();
+	}
       }
 
       /* handle non-contiguous cases */
@@ -3453,8 +3463,9 @@ static int sYSTRIm(pad, av) size_t pad; mstate av;
 
       MORECORE(-extra);
       /* Call the `morecore' hook if necessary.  */
-      if (__builtin_expect (__after_morecore_hook != NULL, 0))
-	(*__after_morecore_hook) ();
+      void (*hook) (void) = force_reg (__after_morecore_hook);
+      if (__builtin_expect (hook != NULL, 0))
+	(*hook) ();
       new_brk = (char*)(MORECORE(0));
 
       if (new_brk != (char*)MORECORE_FAILURE) {
@@ -3579,7 +3590,8 @@ public_mALLOc(size_t bytes)
   mstate ar_ptr;
   Void_t *victim;
 
-  __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t) = __malloc_hook;
+  __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t)
+    = force_reg (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
@@ -3655,7 +3667,8 @@ public_fREe(Void_t* mem)
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-  void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t) = __free_hook;
+  void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t)
+    = force_reg (__free_hook);
   if (__builtin_expect (hook != NULL, 0)) {
     (*hook)(mem, RETURN_ADDRESS (0));
     return;
@@ -3713,7 +3726,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   Void_t* newp;             /* chunk to return */
 
   __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, __const __malloc_ptr_t) =
-    __realloc_hook;
+    force_reg (__realloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 
@@ -3825,7 +3838,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
-    __memalign_hook;
+    force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
 
@@ -3882,7 +3895,7 @@ public_vALLOc(size_t bytes)
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
-    __memalign_hook;
+    force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
 
@@ -3929,7 +3942,7 @@ public_pVALLOc(size_t bytes)
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
-    __memalign_hook;
+    force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
 
@@ -3970,8 +3983,6 @@ public_cALLOc(size_t n, size_t elem_size)
   unsigned long clearsize;
   unsigned long nclears;
   INTERNAL_SIZE_T* d;
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
-    __malloc_hook;
 
   /* size_t is unsigned so the behavior on overflow is defined.  */
   bytes = n * elem_size;
@@ -3984,6 +3995,8 @@ public_cALLOc(size_t n, size_t elem_size)
     }
   }
 
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
+    force_reg (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0)) {
     sz = bytes;
     mem = (*hook)(sz, RETURN_ADDRESS (0));
@@ -6192,9 +6205,6 @@ int
 __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					__const __malloc_ptr_t)) =
-    __memalign_hook;
 
   /* Test whether the SIZE argument is valid.  It must be a power of
      two multiple of sizeof (void *).  */
@@ -6205,6 +6215,9 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 
   /* Call the hook here, so that caller is posix_memalign's caller
      and not posix_memalign itself.  */
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
+					__const __malloc_ptr_t)) =
+    force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
   else

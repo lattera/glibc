@@ -235,8 +235,9 @@ top_check()
       return -1;
     }
   /* Call the `morecore' hook if necessary.  */
-  if (__after_morecore_hook)
-    (*__after_morecore_hook) ();
+  void (*hook) (void) = __after_morecore_hook;
+  if (hook)
+    (*hook) ();
   main_arena.system_mem = (new_brk - mp_.sbrk_base) + sbrk_size;
 
   top(&main_arena) = (mchunkptr)(brk + front_misalign);
@@ -669,10 +670,10 @@ public_sET_STATe(Void_t* msptr)
         !disallow_malloc_check)
       __malloc_check_init ();
     else if (!ms->using_malloc_checking && using_malloc_checking) {
-      __malloc_hook = 0;
-      __free_hook = 0;
-      __realloc_hook = 0;
-      __memalign_hook = 0;
+      __malloc_hook = NULL;
+      __free_hook = NULL;
+      __realloc_hook = NULL;
+      __memalign_hook = NULL;
       using_malloc_checking = 0;
     }
   }
