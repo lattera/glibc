@@ -580,7 +580,8 @@ no more namespaces available for dlmopen()"));
     _dl_signal_error (EINVAL, file, NULL,
 		      N_("invalid target namespace in dlmopen()"));
 #ifndef SHARED
-  else if (nsid == LM_ID_BASE && GL(dl_ns)[LM_ID_BASE]._ns_loaded == NULL
+  else if ((nsid == LM_ID_BASE || nsid == __LM_ID_CALLER)
+	   && GL(dl_ns)[LM_ID_BASE]._ns_loaded == NULL
 	   && GL(dl_nns) == 0)
     GL(dl_nns) = 1;
 #endif
