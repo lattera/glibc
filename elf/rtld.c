@@ -2181,8 +2181,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
 	    _dl_add_to_slotinfo (l);
 	}
-
-      _dl_sysdep_start_cleanup ();
     }
   else
     {
@@ -2236,13 +2234,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_NOW (stop);
 
       HP_TIMING_DIFF (relocate_time, start, stop);
-
-      /* Do any necessary cleanups for the startup OS interface code.
-	 We do these now so that no calls are made after rtld re-relocation
-	 which might be resolved to different functions than we expect.
-	 We cannot do this before relocating the other objects because
-	 _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
-      _dl_sysdep_start_cleanup ();
 
       /* Now enable profiling if needed.  Like the previous call,
 	 this has to go here because the calls it makes should use the
@@ -2298,6 +2289,13 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_DIFF (add, start, stop);
       HP_TIMING_ACCUM_NT (relocate_time, add);
     }
+
+  /* Do any necessary cleanups for the startup OS interface code.
+     We do these now so that no calls are made after rtld re-relocation
+     which might be resolved to different functions than we expect.
+     We cannot do this before relocating the other objects because
+     _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
+  _dl_sysdep_start_cleanup ();
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
