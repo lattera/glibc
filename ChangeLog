@@ -1,3 +1,7 @@
+2009-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/hooks.c (top_check): Force hook value into register.
+
 2009-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* elf/rtld.c (dl_main): Really call _dl_sysdep_start_cleanup after all
