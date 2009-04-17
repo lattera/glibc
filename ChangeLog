@@ -1,3 +1,8 @@
+2009-04-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* elf/rtld.c (dl_main): Really call _dl_sysdep_start_cleanup after all
+	calls to _dl_relocate_object.
+
 2009-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9957]
