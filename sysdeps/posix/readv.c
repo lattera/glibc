@@ -70,7 +70,7 @@ __libc_readv (int fd, const struct iovec *vector, int count)
 
   /* Read the data.  */
   ssize_t bytes_read = __read (fd, buffer, bytes);
-  if (bytes_read <= 0)
+  if (bytes_read < 0)
     return -1;
 
   /* Copy the data from BUFFER into the memory specified by VECTOR.  */

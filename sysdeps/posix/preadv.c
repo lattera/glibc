@@ -83,7 +83,7 @@ PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
 
   /* Read the data.  */
   ssize_t bytes_read = PREAD (fd, buffer, bytes, offset);
-  if (bytes_read <= 0)
+  if (bytes_read < 0)
     return -1;
 
   /* Copy the data from BUFFER into the memory specified by VECTOR.  */
