@@ -235,7 +235,7 @@ top_check()
       return -1;
     }
   /* Call the `morecore' hook if necessary.  */
-  void (*hook) (void) = __after_morecore_hook;
+  void (*hook) (void) = force_reg (__after_morecore_hook);
   if (hook)
     (*hook) ();
   main_arena.system_mem = (new_brk - mp_.sbrk_base) + sbrk_size;
