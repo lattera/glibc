@@ -6251,6 +6251,8 @@ malloc_info (int options, FILE *fp)
   size_t total_fastavail = 0;
   size_t total_system = 0;
   size_t total_max_system = 0;
+  size_t total_aspace = 0;
+  size_t total_aspace_mprotect = 0;
 
   void mi_arena (mstate ar_ptr)
   {
@@ -6363,10 +6365,31 @@ malloc_info (int options, FILE *fp)
 	     "</sizes>\n<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
 	     "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
 	     "<system type=\"current\" size=\"%zu\"/>\n"
-	     "<system type=\"max\" size=\"%zu\"/>\n"
-	     "</heap>\n",
+	     "<system type=\"max\" size=\"%zu\"/>\n",
 	     nfastblocks, fastavail, nblocks, avail,
 	     ar_ptr->system_mem, ar_ptr->max_system_mem);
+
+    if (ar_ptr != &main_arena)
+      {
+	heap_info *heap = heap_for_ptr(top(ar_ptr));
+	fprintf (fp,
+		 "<aspace type=\"total\" size=\"%zu\"/>\n"
+		 "<aspace type=\"mprotect\" size=\"%zu\"/>\n",
+		 heap->size, heap->mprotect_size);
+	total_aspace += heap->size;
+	total_aspace_mprotect += heap->mprotect_size;
+      }
+    else
+      {
+	fprintf (fp,
+		 "<aspace type=\"total\" size=\"%zu\"/>\n"
+		 "<aspace type=\"mprotect\" size=\"%zu\"/>\n",
+		 ar_ptr->system_mem, ar_ptr->system_mem);
+	total_aspace += ar_ptr->system_mem;
+	total_aspace_mprotect += ar_ptr->system_mem;
+      }
+
+    fputs ("</heap>\n", fp);
   }
 
   fputs ("<malloc version=\"1\">\n", fp);
@@ -6385,9 +6408,12 @@ malloc_info (int options, FILE *fp)
 	   "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
 	   "<system type=\"current\" size=\"%zu\n/>\n"
 	   "<system type=\"max\" size=\"%zu\n/>\n"
+	   "<aspace type=\"total\" size=\"%zu\"/>\n"
+	   "<aspace type=\"mprotect\" size=\"%zu\"/>\n"
 	   "</malloc>\n",
 	   total_nfastblocks, total_fastavail, total_nblocks, total_avail,
-	   total_system, total_max_system);
+	   total_system, total_max_system,
+	   total_aspace, total_aspace_mprotect);
 
   return 0;
 }

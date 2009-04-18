@@ -1,3 +1,7 @@
+2009-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (malloc_info): Output address space information.
+
 2009-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (malloc_info): Also output system memory information.

@@ -1,3 +1,7 @@
+2009-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add ks_IN.
+
 2009-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ks_IN@devanagari: Replace duplicated information with copy.
