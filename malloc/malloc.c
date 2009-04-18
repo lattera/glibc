@@ -23,6 +23,10 @@
   This is a version (aka ptmalloc2) of malloc/free/realloc written by
   Doug Lea and adapted to multiple threads/arenas by Wolfram Gloger.
 
+  There have been substantial changesmade after the integration into
+  glibc in all parts of the code.  Do not look for much commonality
+  with the ptmalloc2 version.
+
 * Version ptmalloc2-20011215
   based on:
   VERSION 2.7.0 Sun Mar 11 14:14:06 2001  Doug Lea  (dl at gee)
@@ -6245,6 +6249,8 @@ malloc_info (int options, FILE *fp)
   size_t total_nfastblocks = 0;
   size_t total_avail = 0;
   size_t total_fastavail = 0;
+  size_t total_system = 0;
+  size_t total_max_system = 0;
 
   void mi_arena (mstate ar_ptr)
   {
@@ -6350,11 +6356,17 @@ malloc_info (int options, FILE *fp)
 	       sizes[NFASTBINS].from, sizes[NFASTBINS].to,
 	       sizes[NFASTBINS].total, sizes[NFASTBINS].count);
 
+    total_system += ar_ptr->system_mem;
+    total_max_system += ar_ptr->max_system_mem;
+
     fprintf (fp,
 	     "</sizes>\n<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
 	     "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
+	     "<system type=\"current\" size=\"%zu\"/>\n"
+	     "<system type=\"max\" size=\"%zu\"/>\n"
 	     "</heap>\n",
-	     nfastblocks, fastavail, nblocks, avail);
+	     nfastblocks, fastavail, nblocks, avail,
+	     ar_ptr->system_mem, ar_ptr->max_system_mem);
   }
 
   fputs ("<malloc version=\"1\">\n", fp);
@@ -6371,8 +6383,11 @@ malloc_info (int options, FILE *fp)
   fprintf (fp,
 	   "<total type=\"fast\" count=\"%zu\" size=\"%zu\"/>\n"
 	   "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
+	   "<system type=\"current\" size=\"%zu\n/>\n"
+	   "<system type=\"max\" size=\"%zu\n/>\n"
 	   "</malloc>\n",
-	   total_nfastblocks, total_fastavail, total_nblocks, total_avail);
+	   total_nfastblocks, total_fastavail, total_nblocks, total_avail,
+	   total_system, total_max_system);
 
   return 0;
 }
