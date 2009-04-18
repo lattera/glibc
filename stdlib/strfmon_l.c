@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the given locale.
-   Copyright (C) 1996, 1997, 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,2002,2004,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -133,7 +133,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
       int done;
       const char *currency_symbol;
       size_t currency_symbol_len;
-      int width;
+      long int width;
       char *startp;
       const void *ptr;
       char space_char;
@@ -221,13 +221,21 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 
 	  while (isdigit (*++fmt))
 	    {
-	      width *= 10;
-	      width += to_digit (*fmt);
+	      int val = to_digit (*fmt);
+
+	      if (width > LONG_MAX / 10
+		  || (width == LONG_MAX && val > LONG_MAX % 10))
+		{
+		  __set_errno (E2BIG);
+		  return -1;
+		}
+
+	      width = width * 10 + val;
 	    }
 
 	  /* If we don't have enough room for the demanded width we
 	     can stop now and return an error.  */
-	  if (dest + width >= s + maxsize)
+	  if (width >= maxsize - (dest - s))
 	    {
 	      __set_errno (E2BIG);
 	      return -1;
@@ -560,7 +568,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 		out_char (space_char);
 	      out_nstring (currency_symbol, currency_symbol_len);
 	    }
-	    
+
 	  if (sign_posn == 4)
 	    {
 	      if (sep_by_space == 2)
@@ -589,9 +597,8 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	    while (dest - startp < width);
 	  else
 	    {
-	      int dist = width - (dest - startp);
-	      char *cp;
-	      for (cp = dest - 1; cp >= startp; --cp)
+	      long int dist = width - (dest - startp);
+	      for (char *cp = dest - 1; cp >= startp; --cp)
 		cp[dist] = cp[0];
 
 	      dest += dist;

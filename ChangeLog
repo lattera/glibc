@@ -1,5 +1,8 @@
 2009-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/strfmon_l.c (__vstrfmon_l): Don't wrap when computing width.
+	Numerically stable check for valid width.
+
 	* locale/programs/locarchive.c (open_archive): Map the entire file
 	and not just the administrative data.
 	(add_locale): When we find a hash sum match compare the content
