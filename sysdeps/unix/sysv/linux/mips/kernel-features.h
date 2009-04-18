@@ -31,10 +31,4 @@
 # define __ASSUME_FCNTL64		1
 #endif
 
-/* Support for preadv and pwritev was added in 2.6.30.  */
-#if __LINUX_KERNEL_VERSION >= 0x02061e
-# define __ASSUME_PREADV	1
-# define __ASSUME_PWRITEV	1
-#endif
-
 #include_next <kernel-features.h>

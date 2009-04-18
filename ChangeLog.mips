@@ -1,3 +1,8 @@
+2009-04-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h (__ASSUME_PREADV,
+	__ASSUME_PWRITEV): Don't define here.
+
 2009-04-15  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/mips/sys/fpregdef.h: Update for new ABIs.
