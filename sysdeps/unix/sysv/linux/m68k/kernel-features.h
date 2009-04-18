@@ -39,3 +39,5 @@
 /* These syscalls are not implemented yet for m68k.  */
 #undef __ASSUME_PSELECT
 #undef __ASSUME_PPOLL
+#undef __ASSUME_PREADV
+#undef __ASSUME_PWRITEV

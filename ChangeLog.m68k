@@ -1,3 +1,8 @@
+2009-04-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h (__ASSUME_PREADV,
+	__ASSUME_PWRITEV): Undefine.
+
 2009-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/getsysstats.c (GET_NPROCS_PARSER):
