@@ -135,3 +135,7 @@ sysdep_routines += dl-static
 sysdep-rtld-routines += dl-static
 endif
 endif
+
+ifeq ($(subdir),stdlib)
+gen-as-const-headers += ucontext_i.sym
+endif

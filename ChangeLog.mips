@@ -1,3 +1,16 @@
+2009-04-18  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/mips/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/mips/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/mips/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (mcontext_t):
+	Update comment.
+	* sysdeps/unix/sysv/linux/mips/kernel_rt_sigframe.h: New file.
+	* sysdeps/unix/sysv/linux/mips/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/mips/Makefile (gen-as-const-headers): 
+	Add ucontext_i.sym.
+
 2009-04-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h (__ASSUME_PREADV,
