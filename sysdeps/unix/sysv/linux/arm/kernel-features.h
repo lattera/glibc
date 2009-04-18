@@ -56,3 +56,5 @@
 /* These syscalls are not implemented yet for ARM.  */
 #undef __ASSUME_PSELECT
 #undef __ASSUME_PPOLL
+#undef __ASSUME_PREADV
+#undef __ASSUME_PWRITEV

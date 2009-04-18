@@ -1,3 +1,8 @@
+2009-04-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_PREADV,
+	__ASSUME_PWRITEV): Undefine.
+
 2009-03-16  Khem Raj  <raj.khem@gmail.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h: Include errno.h.
