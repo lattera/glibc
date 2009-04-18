@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -380,7 +380,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 	    = ((char *) ah->addr
 	       + oldnamehashtab[oldlocrecarray[cnt - 1].cnt].name_offset);
 
-	  add_alias (&new_ah, 
+	  add_alias (&new_ah,
 		     ((char *) ah->addr
 		      + oldnamehashtab[oldlocrecarray[cnt].cnt].name_offset),
 		     0, oldname, &last_locrec_offset);
@@ -517,9 +517,9 @@ open_archive (struct locarhandle *ah, bool readonly)
   ah->len = (head.sumhash_offset
 	     + head.sumhash_size * sizeof (struct sumhashent));
 
-  /* Now we know how large the administrative information part is.
-     Map all of it.  */
-  ah->addr = mmap64 (NULL, ah->len, PROT_READ | (readonly ? 0 : PROT_WRITE),
+  /* Map the entire file.  We might need to compare the category data
+     in the file with the newly added data.  */
+  ah->addr = mmap64 (NULL, st.st_size, PROT_READ | (readonly ? 0 : PROT_WRITE),
 		     MAP_SHARED, fd, 0);
   if (ah->addr == MAP_FAILED)
     {
@@ -760,10 +760,32 @@ add_locale (struct locarhandle *ah,
 	  {
 	    if (memcmp (data[cnt].sum, sumhashtab[idx].sum, 16) == 0)
 	      {
-		/* Found it.  */
-		file_offsets[cnt] = sumhashtab[idx].file_offset;
-		--num_new_offsets;
-		break;
+		/* Check the content, there could be a collision of
+		   the hash sum.
+
+		   Unfortunately the sumhashent record does not include
+		   the size of the stored data.  So we have to search for
+		   it.  */
+		locrecent = (struct locrecent *) ((char *) ah->addr
+						  + head->locrectab_offset);
+		size_t iloc;
+		for (iloc = 0; iloc < head->locrectab_used; ++iloc)
+		  if (locrecent[iloc].refs != 0
+		      && (locrecent[iloc].record[cnt].offset
+			  == sumhashtab[idx].file_offset))
+		    break;
+
+		if (iloc != head->locrectab_used
+		    && data[cnt].size == locrecent[iloc].record[cnt].len
+		    && memcmp (data[cnt].addr,
+			       (char *) ah->addr + sumhashtab[idx].file_offset,
+			       data[cnt].size) == 0)
+		  {
+		    /* Found it.  */
+		    file_offsets[cnt] = sumhashtab[idx].file_offset;
+		    --num_new_offsets;
+		    break;
+		  }
 	      }
 
 	    idx += incr;
