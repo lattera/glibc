@@ -1,5 +1,8 @@
 2009-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: All supported
+	architectures have preadv/pwritev in 2.6.30.
+
 	* sysdeps/posix/preadv.c: Reading of zero bytes is no error.
 	* sysdeps/posix/readv.c: Likewise.
 	Reported by Markus Armbruster <armbru@redhat.com>.
