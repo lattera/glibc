@@ -1,3 +1,10 @@
+2009-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10069]
+	* elf/dl-open.c (dl_open_worker): We cannot guarantee that we can load
+	an object that uses static TLS if the TLS modid is higher than the
+	reserve we always allocate.  At least for multi-threaded code.
+
 2009-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/strfmon_l.c (__vstrfmon_l): Don't wrap when computing width.
