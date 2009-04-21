@@ -1,5 +1,8 @@
 2009-04-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/timex.h: Add definitions from kernel
+	headers up to 2.6.30.
+
 	* po/ca.po: Update from translation team.
 
 2009-04-19  Ulrich Drepper  <drepper@redhat.com>

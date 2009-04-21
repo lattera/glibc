@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997, 1999, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <features.h>
 #include <sys/time.h>
 
-/* These definitions from linux/timex.h as of 2.2.0.  */
+/* These definitions from linux/timex.h as of 2.6.30.  */
 
 struct ntptimeval
 {
@@ -54,10 +54,12 @@ struct timex
   long int errcnt;	/* calibration errors (ro) */
   long int stbcnt;	/* stability limit exceeded (ro) */
 
+  int tai;		/* TAI offset (ro) */
+
   /* ??? */
   int  :32; int  :32; int  :32; int  :32;
   int  :32; int  :32; int  :32; int  :32;
-  int  :32; int  :32; int  :32; int  :32;
+  int  :32; int  :32; int  :32;
 };
 
 /* Mode codes (timex.mode) */
@@ -67,6 +69,9 @@ struct timex
 #define ADJ_ESTERROR		0x0008	/* estimated time error */
 #define ADJ_STATUS		0x0010	/* clock status */
 #define ADJ_TIMECONST		0x0020	/* pll time constant */
+#define ADJ_TAI			0x0080	/* set TAI offset */
+#define ADJ_MICRO		0x1000	/* select microsecond resolution */
+#define ADJ_NANO		0x2000	/* select nanosecond resolution */
 #define ADJ_TICK		0x4000	/* tick value */
 #define ADJ_OFFSET_SINGLESHOT	0x8001	/* old-fashioned adjtime */
 #define ADJ_OFFSET_SS_READ	0xa001	/* read-only adjtime */
@@ -99,6 +104,9 @@ struct timex
 #define STA_PPSERROR	0x0800	/* PPS signal calibration error (ro) */
 
 #define STA_CLOCKERR	0x1000	/* clock hardware fault (ro) */
+#define STA_NANO	0x2000	/* resolution (0 = us, 1 = ns) (ro) */
+#define STA_MODE	0x4000	/* mode (0 = PLL, 1 = FLL) (ro) */
+#define STA_CLK		0x8000	/* clock source (0 = A, 1 = B) (ro) */
 
 #define STA_RONLY (STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \
     STA_PPSERROR | STA_CLOCKERR) /* read-only bits */
