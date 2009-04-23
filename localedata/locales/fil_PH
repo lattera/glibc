@@ -150,8 +150,7 @@ noexpr      "<U005B><U0068><U0048><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-height      297
-width       210
+copy "tl_PH"
 END LC_PAPER
 
 LC_MEASUREMENT

@@ -119,10 +119,8 @@ yesexpr     "<U005B><U0079><U0059><U0073><U0053><U005D><U002E><U002A>"
 noexpr      "<U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
-% Default paper: A4
 LC_PAPER
-height 297
-width 210
+copy "en_CA"
 END LC_PAPER
 
 % FIXME

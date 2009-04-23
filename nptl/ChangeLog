@@ -1,5 +1,6 @@
 2009-04-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10090]
 	* pthread_attr_setschedparam.c (__pthread_attr_setschedparam):
 	Check policy and priority for validity.
 	Patch mostly by Zhang Xiliang <zhangxiliang@cn.fujitsu.com>.

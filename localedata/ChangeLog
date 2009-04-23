@@ -1,3 +1,17 @@
+2009-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9963]
+	* locales/en_PH: Fix LC_PAPER.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/iu_CA: Likewise.
+	* locales/tl_PH: Likewise.
+
 2009-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add ks_IN.
