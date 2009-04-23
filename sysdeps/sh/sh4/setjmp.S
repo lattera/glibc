@@ -22,13 +22,15 @@
 
 ENTRY (__sigsetjmp)
 	/* Save registers */
-	add	#JB_SIZE, r4
 #ifdef __SH_FPU_ANY__
+	add	#JB_SIZE, r4
 	fmov.s	fr15, @-r4
 	fmov.s	fr14, @-r4
 	fmov.s	fr13, @-r4
 	fmov.s	fr12, @-r4
 	sts.l	fpscr, @-r4
+#else
+	add	#(JB_SIZE - 4 * 5), r4
 #endif /* __SH_FPU_ANY__ */
 	stc.l	gbr, @-r4
 #ifdef PTR_MANGLE

@@ -39,7 +39,7 @@ static int next_bit;
 
 
 int
-__register_printf_modifier (wchar_t *str)
+__register_printf_modifier (const wchar_t *str)
 {
   if (str[0] == L'\0')
     {
@@ -48,7 +48,7 @@ __register_printf_modifier (wchar_t *str)
       return -1;
     }
 
-  wchar_t *wc = str;
+  const wchar_t *wc = str;
   while (*wc != L'\0')
     if (*wc < 0 || *wc > (wchar_t) UCHAR_MAX)
       goto einval;

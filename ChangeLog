@@ -1,3 +1,13 @@
+2009-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf.h: Add missing const to register_printf_modifier.
+	* stdio-common/reg-modifier.c: Likewise.
+
+2009-04-22  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/sh4/setjmp.S (__sigsetjmp): Adjust JB_SIZE when there
+	is no FPU.
+
 2009-04-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10086]

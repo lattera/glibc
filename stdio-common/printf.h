@@ -113,7 +113,7 @@ extern int register_printf_function (int __spec, printf_function __func,
    it returns a positive value representing the bit set in the USER
    field in 'struct printf_info'.  */
 
-extern int register_printf_modifier (wchar_t *__str) __wur __THROW;
+extern int register_printf_modifier (__const wchar_t *__str) __wur __THROW;
 
 
 /* Register variable argument handler for user type.  The return value
