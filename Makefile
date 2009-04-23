@@ -271,7 +271,7 @@ installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
 		    crypt/crypt.h ctype/ctype.h debug/execinfo.h \
 		    dirent/dirent.h dlfcn/dlfcn.h elf/elf.h elf/link.h \
 		    gmon/sys/gmon.h gmon/sys/gmon_out.h gmon/sys/profil.h \
-		    grp/grp.h iconv/iconv.h iconv/gconv.h \
+		    grp/grp.h gshadow/gshadow.h iconv/iconv.h iconv/gconv.h \
 		    $(wildcard inet/netinet/*.h) \
 		    $(wildcard inet/arpa/*.h inet/protocols/*.h) \
 		    inet/aliases.h inet/ifaddrs.h inet/netinet/ip6.h \

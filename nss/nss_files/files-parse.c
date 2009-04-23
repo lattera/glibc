@@ -103,6 +103,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 	    EXTRA_ARGS_DECL)						      \
 {									      \
   ENTDATA_DECL (data)							      \
+  BUFFER_PREPARE							      \
   char *p = strpbrk (line, EOLSET "\n");				      \
   if (p != NULL)							      \
     *p = '\0';								      \
@@ -125,6 +126,21 @@ nss_files_parse_hidden_def (parse_line)
 	  ++line;							      \
 	while (swallow && terminator_p (*line));			      \
       }									      \
+  }
+
+# define STRING_LIST(variable, terminator_c) \
+  {									      \
+    char **list = parse_list (&line, buf_start, buf_end, terminator_c,	      \
+			      errnop);					      \
+    if (list)								      \
+      variable = list;							      \
+    else								      \
+      return -1;		/* -1 indicates we ran out of space.  */      \
+									      \
+    /* Determine the new end of the buffer.  */				      \
+    while (*list != NULL)						      \
+      ++list;								      \
+    buf_start = (char *) (list + 1);					      \
   }
 
 /* Helper function.  */
@@ -178,12 +194,39 @@ strtou32 (const char *nptr, char **endptr, int base)
 
 
 # ifndef TRAILING_LIST_MEMBER
+#  define BUFFER_PREPARE /* Nothing to do.  */
 #  define TRAILING_LIST_PARSER /* Nothing to do.  */
 # else
 
-#  define TRAILING_LIST_PARSER						      \
+# define BUFFER_PREPARE \
+  char *buf_start = NULL;						      \
+  char *buf_end = (char *) data + datalen;				      \
+  if (line >= data->linebuffer && line < buf_end)			      \
+    /* Find the end of the line buffer, we will use the space in	      \
+       DATA after it for storing the vector of pointers.  */		      \
+    buf_start = strchr (line, '\0') + 1;				      \
+  else									      \
+    /* LINE does not point within DATA->linebuffer, so that space is	      \
+       not being used for scratch space right now.  We can use all of	      \
+       it for the pointer vector storage.  */				      \
+    buf_start = data->linebuffer;					      \
+
+#  define TRAILING_LIST_PARSER \
 {									      \
-  char **list = parse_list (line, data, datalen, errnop);		      \
+  if (buf_start == NULL)						      \
+    {									      \
+      if (line >= data->linebuffer && line < buf_end)			      \
+	/* Find the end of the line buffer, we will use the space in	      \
+	   DATA after it for storing the vector of pointers.  */	      \
+	buf_start = strchr (line, '\0') + 1;				      \
+      else								      \
+	/* LINE does not point within DATA->linebuffer, so that space is      \
+	   not being used for scratch space right now.  We can use all of     \
+	   it for the pointer vector storage.  */			      \
+	buf_start = data->linebuffer;					      \
+    }									      \
+									      \
+  char **list = parse_list (&line, buf_start, buf_end, '\0', errnop);	      \
   if (list)								      \
     result->TRAILING_LIST_MEMBER = list;				      \
   else 									      \
@@ -192,19 +235,12 @@ strtou32 (const char *nptr, char **endptr, int base)
 
 static inline char **
 __attribute ((always_inline))
-parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
+parse_list (char **linep, char *eol, char *buf_end, int terminator_c,
+	    int *errnop)
 {
-  char *eol, **list, **p;
+  char *line = *linep;
+  char **list, **p;
 
-  if (line >= data->linebuffer && line < (char *) data + datalen)
-    /* Find the end of the line buffer, we will use the space in DATA after
-       it for storing the vector of pointers.  */
-    eol = strchr (line, '\0') + 1;
-  else
-    /* LINE does not point within DATA->linebuffer, so that space is
-       not being used for scratch space right now.  We can use all of
-       it for the pointer vector storage.  */
-    eol = data->linebuffer;
   /* Adjust the pointer so it is aligned for storing pointers.  */
   eol += __alignof__ (char *) - 1;
   eol -= (eol - (char *) 0) % __alignof__ (char *);
@@ -214,25 +250,30 @@ parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
   p = list;
   while (1)
     {
-      char *elt;
-
-      if ((size_t) ((char *) &p[1] - (char *) data) > datalen)
+      if ((char *) (p + 2) > buf_end)
 	{
 	  /* We cannot fit another pointer in the buffer.  */
 	  *errnop = ERANGE;
 	  return NULL;
 	}
+
       if (*line == '\0')
 	break;
+      if (*line == terminator_c)
+	{
+	  ++line;
+	  break;
+	}
 
       /* Skip leading white space.  This might not be portable but useful.  */
       while (isspace (*line))
 	++line;
 
-      elt = line;
+      char *elt = line;
       while (1)
 	{
-	  if (*line == '\0' || TRAILING_LIST_SEPARATOR_P (*line))
+	  if (*line == '\0' || *line == terminator_c
+	      || TRAILING_LIST_SEPARATOR_P (*line))
 	    {
 	      /* End of the next entry.  */
 	      if (line > elt)
@@ -241,13 +282,20 @@ parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
 
 	      /* Terminate string if necessary.  */
 	      if (*line != '\0')
-		*line++ = '\0';
+		{
+		  char endc = *line;
+		  *line++ = '\0';
+		  if (endc == terminator_c)
+		    goto out;
+		}
 	      break;
 	    }
 	  ++line;
 	}
     }
+ out:
   *p = NULL;
+  *linep = line;
 
   return list;
 }

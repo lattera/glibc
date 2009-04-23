@@ -1,3 +1,32 @@
+2009-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9955]
+	* gshadow/Makefile: New file.
+	* gshadow/Versions: New file.
+	* gshadow/fgetsgent.c: New file.
+	* gshadow/fgetsgent_r.c: New file.
+	* gshadow/getsgent.c: New file.
+	* gshadow/getsgent_r.c: New file.
+	* gshadow/getsgnam.c: New file.
+	* gshadow/getsgnam_r.c: New file.
+	* gshadow/gshadow.h: New file.
+	* gshadow/putsgent.c: New file.
+	* gshadow/sgetsgent.c: New file.
+	* gshadow/sgetsgent_r.c: New file.
+	* gshadow/tst-gshadow.c: New file.
+	* include/gshadow.h: New file.
+	* Makeconfig (all-subdirs): Add gshadow.
+	* Makefile (installed-headers): Add gshadow/gshadow.h.
+	* nss/Makefile (databases): Add sgrp.
+	* nss/Versions: Add gshadow functions as private exports.
+	* nss/nsswitch.conf: Add gshadow entry.
+	* nss/sgrp-lookup.c: New file.
+	* nss/nss_files/files-parse.c: Add STRING_LIST macro.  Rewrite
+	parse_list to handle STRING_LIST and TRAILING_LIST_PARSER.
+	* nss/nss_files/files-sgrp.c: New file.
+	* sysdeps/generic/paths.h: Add _PATH_GSHADOW.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+
 2009-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/printf.h: Add missing const to register_printf_modifier.

@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1998,2000,2001,2002,2007 Free Software Foundation, Inc.
+# Copyright (C) 1996-1998,2000-2002,2007,2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ routines		= nsswitch getnssent getnssent_r digits_dots \
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
 databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd netgrp key alias
+			  spwd netgrp key alias sgrp
 
 others                  := getent
 install-bin             := getent

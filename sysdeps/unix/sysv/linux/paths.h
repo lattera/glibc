@@ -44,6 +44,7 @@
 #define	_PATH_DEVDB	"/var/run/dev.db"
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_DRUM	"/dev/drum"
+#define	_PATH_GSHADOW	"/etc/gshadow"
 #define	_PATH_KLOG	"/proc/kmsg"
 #define	_PATH_KMEM	"/dev/kmem"
 #define	_PATH_LASTLOG	"/var/log/lastlog"

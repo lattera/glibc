@@ -9,7 +9,7 @@ libc {
   }
   GLIBC_PRIVATE {
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
-    __nss_disable_nscd; __nss_lookup_function;
+    __nss_disable_nscd; __nss_lookup_function; _nss_files_parse_sgent;
 
     __nss_passwd_lookup2; __nss_group_lookup2; __nss_hosts_lookup2;
     __nss_services_lookup2; __nss_next2;
@@ -86,6 +86,11 @@ libnss_files {
     _nss_files_endspent;
     _nss_files_getspent_r;
     _nss_files_getspnam_r;
+
+    _nss_files_setsgent;
+    _nss_files_endsgent;
+    _nss_files_getsgent_r;
+    _nss_files_getsgnam_r;
 
     _nss_netgroup_parseline;
     _nss_files_getpublickey;
