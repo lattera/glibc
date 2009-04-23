@@ -1,3 +1,9 @@
+2009-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_attr_setschedparam.c (__pthread_attr_setschedparam):
+	Check policy and priority for validity.
+	Patch mostly by Zhang Xiliang <zhangxiliang@cn.fujitsu.com>.
+
 2009-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
