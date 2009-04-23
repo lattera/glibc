@@ -1,5 +1,8 @@
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* shadow/Makefile (tests): Add tst-shadow.
+	* shadow/tst-shadow.c: New file.
+
 	[BZ #9955]
 	* gshadow/Makefile: New file.
 	* gshadow/Versions: New file.
@@ -100,7 +103,7 @@
 	* malloc/arena.c (ptmalloc_init): Load hook variable into variable
 	before test and force into register.
 	* malloc/hooks.c (top_check): Likewise.
-	(public_s_ET_STATe): Pretty printing.
+	(public_sET_STATe): Pretty printing.
 
 	* resolv/res_send.c (send_dg): Don't just ignore the result we got
 	in case we only receive one reply in single-request mode.

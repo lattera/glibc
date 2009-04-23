@@ -27,10 +27,10 @@ static const struct sgrp data[] =
 #define ndata (sizeof (data) / sizeof (data[0]))
 
 
-int
-main (void)
+static int
+do_test (void)
 {
-  FILE *fp = fopen ("/tmp/aaa", "w+");//tmpfile ();
+  FILE *fp = tmpfile ();
   if (fp == NULL)
     {
       puts ("cannot open temporary file");
@@ -136,3 +136,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
