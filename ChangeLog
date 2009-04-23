@@ -1,5 +1,7 @@
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* shadow/sgetspent_r.c (__sgetspent_r): Recognize too small buffers.
+
 	* shadow/Makefile (tests): Add tst-shadow.
 	* shadow/tst-shadow.c: New file.
 
