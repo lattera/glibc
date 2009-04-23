@@ -1,5 +1,22 @@
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/preadv.c: The kernel API changed.  Adjust.
+	* sysdeps/unix/sysv/linux/pwritev.c: Likewise.
+
+2009-04-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/pwritev.c (PWRITEV): Fix up comment.  Copy
+	data from vector to temporary buffer and call PWRITEV after it
+	instead of vice versa.
+	* sysdeps/posix/preadv.c: Fix up comment.
+	* misc/preadv.c: Likewise.
+	* misc/preadv64.c: Likewise.
+	* misc/pwritev.c: Likewise.
+	* misc/pwritev64.c: Likewise.
+	* misc/sys/uio.h (preadv, pwritev, preadv64, pwritev64): Likewise.
+
+2009-04-23  Ulrich Drepper  <drepper@redhat.com>
+
 	* shadow/sgetspent_r.c (__sgetspent_r): Recognize too small buffers.
 
 	* shadow/Makefile (tests): Add tst-shadow.

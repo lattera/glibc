@@ -44,12 +44,12 @@ ifree (char **ptrp)
 }
 
 
-/* Read data from file descriptor FD at the given position OFFSET
-   without change the file pointer, and put the result in the buffers
-   described by VECTOR, which is a vector of COUNT 'struct iovec's.
-   The buffers are filled in the order specified.  Operates just like
-   'read' (see <unistd.h>) except that data are put in VECTOR instead
-   of a contiguous buffer.  */
+/* Write data pointed by the buffers described by IOVEC, which is a
+   vector of COUNT 'struct iovec's, to file descriptor FD at the given
+   position OFFSET without change the file pointer.  The data is
+   written in the order specified.  Operates just like 'write' (see
+   <unistd.h>) except that the data are taken from IOVEC instead of a
+   contiguous buffer.  */
 ssize_t
 PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
 {
@@ -81,26 +81,14 @@ PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
 	return -1;
     }
 
-  /* Read the data.  */
-  ssize_t bytes_read = PWRITE (fd, buffer, bytes, offset);
-  if (bytes_read <= 0)
-    return -1;
-
   /* Copy the data from BUFFER into the memory specified by VECTOR.  */
-  bytes = bytes_read;
+  char *ptr = buffer;
   for (int i = 0; i < count; ++i)
-    {
-      size_t copy = MIN (vector[i].iov_len, bytes);
+    ptr = __mempcpy ((void *) ptr, (void *) vector[i].iov_base,
+		     vector[i].iov_len);
 
-      (void) memcpy ((void *) vector[i].iov_base, (void *) buffer, copy);
-
-      buffer += copy;
-      bytes -= copy;
-      if (bytes == 0)
-	break;
-    }
-
-  return bytes_read;
+  /* Write the data.  */
+  return PWRITE (fd, buffer, bytes, offset);
 }
 #if __WORDSIZE == 64 && defined pwritev64
 # undef pwritev64

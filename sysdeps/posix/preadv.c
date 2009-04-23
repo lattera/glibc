@@ -48,7 +48,7 @@ ifree (char **ptrp)
    without change the file pointer, and put the result in the buffers
    described by VECTOR, which is a vector of COUNT 'struct iovec's.
    The buffers are filled in the order specified.  Operates just like
-   'read' (see <unistd.h>) except that data are put in VECTOR instead
+   'pread' (see <unistd.h>) except that data are put in VECTOR instead
    of a contiguous buffer.  */
 ssize_t
 PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)

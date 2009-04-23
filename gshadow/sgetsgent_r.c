@@ -58,7 +58,12 @@ __sgetsgent_r (const char *string, struct sgrp *resbuf, char *buffer,
 {
   char *sp;
   if (string < buffer || string >= buffer + buflen)
-    sp = strncpy (buffer, string, buflen);
+    {
+      buffer[buflen - 1] = '\0';
+      sp = strncpy (buffer, string, buflen);
+      if (buffer[buflen - 1] != '\0')
+	return ERANGE;
+    }
   else
     sp = (char *) string;
 

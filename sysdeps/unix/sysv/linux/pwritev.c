@@ -37,6 +37,10 @@
 # define OFF_T off_t
 #endif
 
+#define LO_HI_LONG(val) \
+  (off_t) val,								\
+  (off_t) ((((uint64_t) (val)) >> (sizeof (long) * 4)) >> (sizeof (long) * 4))
+
 #ifndef __ASSUME_PWRITEV
 static ssize_t PWRITEV_REPLACEMENT (int, __const struct iovec *,
 				    int, OFF_T) internal_function;
@@ -55,15 +59,13 @@ PWRITEV (fd, vector, count, offset)
 
   if (SINGLE_THREAD_P)
     result = INLINE_SYSCALL (pwritev, 5, fd, vector, count,
-			     (off_t) ((off64_t) offset >> 32),
-			     (off_t) (offset & 0xffffffff));
+			     LO_HI_LONG (offset));
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
       result = INLINE_SYSCALL (pwritev, 5, fd, vector, count,
-			       (off_t) ((off64_t) offset >> 32),
-			       (off_t) (offset & 0xffffffff));
+			     LO_HI_LONG (offset));
 
       LIBC_CANCEL_RESET (oldtype);
     }

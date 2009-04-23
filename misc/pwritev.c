@@ -23,7 +23,7 @@
 /* Write data pointed by the buffers described by VECTOR, which is a
    vector of COUNT 'struct iovec's, to file descriptor FD at the given
    position OFFSET without change the file pointer.  The data is
-   written in the order specified.  Operates just like 'write' (see
+   written in the order specified.  Operates just like 'pwrite' (see
    <unistd.h>) except that the data are taken from VECTOR instead of a
    contiguous buffer.  */
 ssize_t
