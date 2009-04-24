@@ -17,10 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stdint.h>
-#include <sysdep.h>
-#include <abort-instr.h>
-#include <kernel-features.h>
+#include <stdint.h> /*  Required for type definitions e.g. uint8_t.  */
+#include <abort-instr.h> /*  Required for ABORT_INSTRUCTIUON.  */
+#include <kernel-features.h> /*  Required for __ASSUME_LWS_CAS.  */
 
 /* We need EFAULT, ENONSYS */
 #if !defined EFAULT && !defined ENOSYS
