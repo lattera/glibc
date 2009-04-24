@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997-2005, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1037,7 +1037,9 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	/* If i < cnt, some trail byte was not >= 0x80, < 0xc0.		      \
 	   If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could	      \
 	   have been represented with fewer than cnt bytes.  */		      \
-	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))		      \
+	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0)		      \
+	    /* Do not accept UTF-16 surrogates.  */			      \
+	    || (ch >= 0xd800 && ch <= 0xdfff))				      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
 	    goto errout;						      \

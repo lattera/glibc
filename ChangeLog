@@ -1,5 +1,9 @@
 2009-04-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10093]
+	* iconv/gconv_simple.c (BODY for UTF-8 to INTERNAL): Don't accept
+	UTF-16 surrogates.
+
 	* locale/programs/locarchive.c (enlarge_archive): Conserve address
 	space when temporarily mapping the whole content of the old file.
 
