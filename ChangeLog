@@ -1,3 +1,10 @@
+2009-04-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconvdata/sjis.c (BODY): Don't advance inptr before
+	STANDARD_FROM_LOOP_ERR_HANDLER (2) for 2 byte invalid input.
+	Use STANDARD_FROM_LOOP_ERR_HANDLER with 2 instead of 1 for
+	two byte chars.
+
 2009-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/locarchive.h (struct locarhandle): Rename len field to
