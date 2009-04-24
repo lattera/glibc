@@ -157,6 +157,8 @@ hsearch_r (item, action, retval, htab)
       hval <<= 4;
       hval += item.key[count];
     }
+  if (hval == 0)
+    ++hval;
 
   /* First hash function: simply take the modul but prevent zero. */
   idx = hval % htab->size + 1;

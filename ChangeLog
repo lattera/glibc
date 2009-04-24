@@ -1,3 +1,9 @@
+2009-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10100]
+	* misc/hsearch_r.c (hsearch_r): Add back ensurance that hval is
+	not zero.
+
 2009-04-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconvdata/sjis.c (BODY): Don't advance inptr before

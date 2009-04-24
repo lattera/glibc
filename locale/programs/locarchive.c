@@ -131,14 +131,12 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 
   /* To prepare for enlargements of the mmaped area reserve some
      address space.  */
-  size_t reserved;
+  size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
-  p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0);
-  if (p != MAP_FAILED)
-    {
-      xflags = MAP_FIXED;
-      reserved = RESERVE_MMAP_SIZE;
-    }
+  if (total < RESERVE_MMAP_SIZE
+      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_ANON, -1, 0))
+	  != MAP_FAILED))
+    xflags = MAP_FIXED;
   else
     {
       p = NULL;
@@ -580,14 +578,13 @@ open_archive (struct locarhandle *ah, bool readonly)
 
   /* To prepare for enlargements of the mmaped area reserve some
      address space.  */
-  size_t reserved;
+  size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
-  void *p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0);
-  if (p != MAP_FAILED)
-    {
-      xflags = MAP_FIXED;
-      reserved = RESERVE_MMAP_SIZE;
-    }
+  void *p;
+  if (st.st_size < RESERVE_MMAP_SIZE
+      && ((p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0))
+	  != MAP_FAILED))
+    xflags = MAP_FIXED;
   else
     {
       p = NULL;
@@ -612,7 +609,7 @@ close_archive (struct locarhandle *ah)
 {
   if (ah->fd != -1)
     {
-      munmap (ah->addr, ah->mmaped);
+      munmap (ah->addr, MAX (ah->reserved, ah->mmaped));
       close (ah->fd);
     }
 }
