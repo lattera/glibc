@@ -1,5 +1,10 @@
 2009-04-23  Carlos O'Donell  <carlos@codesourcery.com>
 
+	* sysdeps/hppa/dl-machine.h: Remove VALID_ELF_OSABI,
+	VALID_ELF_ABIVERSION, and VALID_ELF_HEADER.
+
+2009-04-23  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Do not include
 	sysdep.h. Document the reason for other includes.
 

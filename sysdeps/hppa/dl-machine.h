@@ -33,13 +33,6 @@
 #include <abort-instr.h>
 #include <tls.h>
 
-# define VALID_ELF_OSABI(osabi)		((osabi == ELFOSABI_SYSV) || (osabi == ELFOSABI_LINUX))
-# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
-# define VALID_ELF_HEADER(hdr,exp,size) \
-  memcmp (hdr,exp,size-2) == 0 \
-  && VALID_ELF_OSABI (hdr[EI_OSABI]) \
-  && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
-
 /* These two definitions must match the definition of the stub in 
    bfd/elf32-hppa.c (see plt_stub[]).
    
