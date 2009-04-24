@@ -71,6 +71,10 @@ static const char *locnames[] =
 #define INITIAL_NUM_SUMS	2000
 
 
+/* Size of the reserved address space area.  */
+#define RESERVE_MMAP_SIZE	512 * 1024 * 1024
+
+
 static void
 create_archive (const char *archivefname, struct locarhandle *ah)
 {
@@ -125,8 +129,24 @@ create_archive (const char *archivefname, struct locarhandle *ah)
       error (EXIT_FAILURE, errval, _("cannot resize archive file"));
     }
 
+  /* To prepare for enlargements of the mmaped area reserve some
+     address space.  */
+  size_t reserved;
+  int xflags = 0;
+  p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0);
+  if (p != MAP_FAILED)
+    {
+      xflags = MAP_FIXED;
+      reserved = RESERVE_MMAP_SIZE;
+    }
+  else
+    {
+      p = NULL;
+      reserved = 0;
+    }
+
   /* Map the header and all the administration data structures.  */
-  p = mmap64 (NULL, total, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  p = mmap64 (p, total, PROT_READ | PROT_WRITE, MAP_SHARED | xflags, fd, 0);
   if (p == MAP_FAILED)
     {
       int errval = errno;
@@ -170,7 +190,8 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 
   ah->fd = fd;
   ah->addr = p;
-  ah->len = total;
+  ah->mmaped = total;
+  ah->reserved = reserved;
 }
 
 
@@ -226,6 +247,45 @@ static void add_alias (struct locarhandle *ah, const char *alias,
 		       bool replace, const char *oldname,
 		       uint32_t *locrec_offset_p);
 
+
+static bool
+file_data_available_p (struct locarhandle *ah, uint32_t offset, uint32_t size)
+{
+  if (offset < ah->mmaped && offset + size <= ah->mmaped)
+    return true;
+
+  struct stat64 st;
+  if (fstat64 (ah->fd, &st) != 0)
+    return false;
+
+  if (st.st_size > ah->reserved)
+    return false;
+
+  void *p = mremap (ah->addr, ah->mmaped, st.st_size,
+		    MREMAP_FIXED | MREMAP_MAYMOVE, ah->addr);
+  if (p == MAP_FAILED)
+    return false;
+
+  ah->mmaped = st.st_size;
+  return true;
+}
+
+
+static int
+compare_from_file (struct locarhandle *ah, void *p1, uint32_t offset2,
+		   uint32_t size)
+{
+  void *p2 = xmalloc (size);
+  if (pread (ah->fd, p2, size, offset2) != size)
+    WITH_CUR_LOCALE (error (4, errno,
+			    _("cannot read data from locale archive")));
+
+  int res = memcmp (p1, p2, size);
+  free (p2);
+  return res;
+}
+
+
 static void
 enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 {
@@ -250,10 +310,11 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   /* Not all of the old file has to be mapped.  Change this now this
      we will have to access the whole content.  */
   if (fstat64 (ah->fd, &st) != 0
-      || (ah->addr = mmap64 (NULL, st.st_size, PROT_READ | PROT_WRITE,
-			     MAP_SHARED, ah->fd, 0)) == MAP_FAILED)
+      || (st.st_size > ah->mmaped
+	  && (ah->addr = mmap64 (NULL, st.st_size, PROT_READ | PROT_WRITE,
+				 MAP_SHARED, ah->fd, 0)) == MAP_FAILED))
     error (EXIT_FAILURE, errno, _("cannot map locale archive file"));
-  ah->len = st.st_size;
+  ah->mmaped = st.st_size;
 
   /* Create a temporary file in the correct directory.  */
   fd = mkstemp (fname);
@@ -331,9 +392,10 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
       error (EXIT_FAILURE, errval, _("cannot lock new archive"));
     }
 
-  new_ah.len = total;
+  new_ah.mmaped = total;
   new_ah.addr = p;
   new_ah.fd = fd;
+  new_ah.reserved = total;
 
   /* Walk through the hash name hash table to find out what data is
      still referenced and transfer it into the new file.  */
@@ -514,18 +576,34 @@ open_archive (struct locarhandle *ah, bool readonly)
     }
 
   ah->fd = fd;
-  ah->len = (head.sumhash_offset
-	     + head.sumhash_size * sizeof (struct sumhashent));
+  ah->mmaped = st.st_size;
+
+  /* To prepare for enlargements of the mmaped area reserve some
+     address space.  */
+  size_t reserved;
+  int xflags = 0;
+  void *p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0);
+  if (p != MAP_FAILED)
+    {
+      xflags = MAP_FIXED;
+      reserved = RESERVE_MMAP_SIZE;
+    }
+  else
+    {
+      p = NULL;
+      reserved = 0;
+    }
 
   /* Map the entire file.  We might need to compare the category data
      in the file with the newly added data.  */
-  ah->addr = mmap64 (NULL, st.st_size, PROT_READ | (readonly ? 0 : PROT_WRITE),
-		     MAP_SHARED, fd, 0);
+  ah->addr = mmap64 (p, st.st_size, PROT_READ | (readonly ? 0 : PROT_WRITE),
+		     MAP_SHARED | xflags, fd, 0);
   if (ah->addr == MAP_FAILED)
     {
       (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
       error (EXIT_FAILURE, errno, _("cannot map archive header"));
     }
+  ah->reserved = reserved;
 }
 
 
@@ -534,7 +612,7 @@ close_archive (struct locarhandle *ah)
 {
   if (ah->fd != -1)
     {
-      munmap (ah->addr, ah->len);
+      munmap (ah->addr, ah->mmaped);
       close (ah->fd);
     }
 }
@@ -777,9 +855,18 @@ add_locale (struct locarhandle *ah,
 
 		if (iloc != head->locrectab_used
 		    && data[cnt].size == locrecent[iloc].record[cnt].len
-		    && memcmp (data[cnt].addr,
-			       (char *) ah->addr + sumhashtab[idx].file_offset,
-			       data[cnt].size) == 0)
+		    /* We have to compare the content.  Either we can
+		       have the data mmaped or we have to read from
+		       the file.  */
+		    && (file_data_available_p (ah, sumhashtab[idx].file_offset,
+					       data[cnt].size)
+			? memcmp (data[cnt].addr,
+				  (char *) ah->addr
+				  + sumhashtab[idx].file_offset,
+				  data[cnt].size) == 0
+			: compare_from_file (ah, data[cnt].addr,
+					     sumhashtab[idx].file_offset,
+					     data[cnt].size) == 0))
 		  {
 		    /* Found it.  */
 		    file_offsets[cnt] = sumhashtab[idx].file_offset;

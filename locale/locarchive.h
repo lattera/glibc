@@ -1,5 +1,5 @@
 /* Definitions for locale archive handling.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,8 @@ struct locarhandle
 {
   int fd;
   void *addr;
-  size_t len;
+  size_t mmaped;
+  size_t reserved;
 };
 
 

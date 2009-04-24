@@ -1,3 +1,16 @@
+2009-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/locarchive.h (struct locarhandle): Rename len field to
+	mmaped and add new reserved field.
+	* locale/programs/locarchive.c (RESERVE_MMAP_SIZE): Define.
+	(create_archive): Reserve address space and then map file into it.
+	(open_archive): Likewise.
+	(file_data_available_p): New function.
+	(compare_from_file): New function.
+	(close_archive): Adjust to member name changes.
+	(add_locale): Before comparing locale data, check it is mapped.
+	Otherwise fall back to reading from the file.
+
 2009-04-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdio-common/psiginfo.c: Include <errno.h>.
