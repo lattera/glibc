@@ -1,3 +1,10 @@
+2009-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10052]
+	* sysdeps/unix/make-syscalls.sh: Add rule to create target
+	directory for dummy syscall rules.
+	Patch by Chris Steinbroner <hesh@pobox.com>.
+
 2009-04-23  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #10092]

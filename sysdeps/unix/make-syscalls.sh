@@ -155,6 +155,7 @@ shared-only-routines += $file
   case x"$callnum" in
   x_)
   echo "\
+	\$(make-target-directory)
 	(echo '/* Dummy module requested by syscalls.list */'; \\"
   ;;
   x*)
