@@ -133,14 +133,14 @@ create_archive (const char *archivefname, struct locarhandle *ah)
      address space.  */
   size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
-  if (total < RESERVE_MMAP_SIZE
+  if (total < reserved
       && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_ANON, -1, 0))
 	  != MAP_FAILED))
     xflags = MAP_FIXED;
   else
     {
       p = NULL;
-      reserved = 0;
+      reserved = total;
     }
 
   /* Map the header and all the administration data structures.  */
@@ -307,11 +307,22 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 
   /* Not all of the old file has to be mapped.  Change this now this
      we will have to access the whole content.  */
-  if (fstat64 (ah->fd, &st) != 0
-      || (st.st_size > ah->mmaped
-	  && (ah->addr = mmap64 (NULL, st.st_size, PROT_READ | PROT_WRITE,
-				 MAP_SHARED, ah->fd, 0)) == MAP_FAILED))
+  if (fstat64 (ah->fd, &st) != 0)
+  enomap:
     error (EXIT_FAILURE, errno, _("cannot map locale archive file"));
+
+  if (st.st_size < ah->reserved)
+    ah->addr = mremap (ah->addr, ah->mmaped, st.st_size,
+		       MREMAP_MAYMOVE | MREMAP_FIXED, ah->addr);
+  else
+    {
+      munmap (ah->addr, ah->reserved);
+      ah->addr = mmap64 (NULL, st.st_size, PROT_READ | PROT_WRITE,
+			 MAP_SHARED, ah->fd, 0);
+      ah->reserved = st.st_size;
+    }
+  if (ah->addr == MAP_FAILED)
+    goto enomap;
   ah->mmaped = st.st_size;
 
   /* Create a temporary file in the correct directory.  */
@@ -581,14 +592,14 @@ open_archive (struct locarhandle *ah, bool readonly)
   size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
   void *p;
-  if (st.st_size < RESERVE_MMAP_SIZE
+  if (st.st_size < reserved
       && ((p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_ANON, -1, 0))
 	  != MAP_FAILED))
     xflags = MAP_FIXED;
   else
     {
       p = NULL;
-      reserved = 0;
+      reserved = st.st_size;
     }
 
   /* Map the entire file.  We might need to compare the category data
@@ -609,7 +620,7 @@ close_archive (struct locarhandle *ah)
 {
   if (ah->fd != -1)
     {
-      munmap (ah->addr, MAX (ah->reserved, ah->mmaped));
+      munmap (ah->addr, ah->reserved);
       close (ah->fd);
     }
 }
