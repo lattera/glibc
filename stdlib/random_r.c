@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 1995, 2005 Free Software Foundation
+   Copyright (C) 1995, 2005, 2009 Free Software Foundation
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -166,7 +166,7 @@ __srandom_r (seed, buf)
   int type;
   int32_t *state;
   long int i;
-  long int word;
+  int32_t word;
   int32_t *dst;
   int kc;
 

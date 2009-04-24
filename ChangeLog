@@ -1,5 +1,9 @@
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9920]
+	* stdlib/random_r.c (__srandom_r): Change type of word to int32_t
+	to get consistency between 32 and 64 bit architectures.
+
 	[BZ #10052]
 	* sysdeps/unix/make-syscalls.sh: Add rule to create target
 	directory for dummy syscall rules.
