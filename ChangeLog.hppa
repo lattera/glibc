@@ -1,3 +1,8 @@
+2009-04-23  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h [!__ASSEMBLER__]:
+	Include errno.h.
+
 2009-02-25  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h:

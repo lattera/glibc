@@ -24,6 +24,11 @@
 #include <sysdeps/generic/sysdep.h>
 #include <sys/syscall.h>
 
+/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
+#ifndef __ASSEMBLER__
+#include <errno.h>
+#endif
+
 #undef ASM_LINE_SEP
 #define ASM_LINE_SEP ! 
 
