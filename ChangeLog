@@ -1,3 +1,9 @@
+2009-04-23  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #10092]
+	* sysdeps/unix/sysv/linux/sys/mount.h: Define MNT_DETACH and
+	MNT_EXPIRE.
+
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/preadv.c: The kernel API changed.  Adjust.
