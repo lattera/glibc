@@ -1,3 +1,7 @@
+2009-04-24  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/hppa/hppa1.1/s_signbit.c: New file.
+
 2009-04-23  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/hppa/dl-machine.h: Remove VALID_ELF_OSABI,
