@@ -230,6 +230,8 @@
 
 #if (_POSIX_C_SOURCE - 0) >= 200112L
 # define __USE_XOPEN2K		1
+# undef __USE_ISOC99
+# define __USE_ISOC99		1
 #endif
 
 #if (_POSIX_C_SOURCE - 0) >= 200809L
