@@ -901,7 +901,9 @@ LC_TIME
 %
 % ISO 8601 conforming applications should use the values 7, 19971201 (a
 % Monday), and 4 (Thursday), respectively.
-week 7;19971201;4
+% week 7;19971201;4
+% But see BUG below.
+week 7;19971130;4
 
 % A list of abbreviated weekday names. (%a)
 %
@@ -1015,10 +1017,10 @@ am_pm     "";""
 
 % Define the first day of the week to be displayed in a calendar.
 % This weekday is relative to the date defined in the <week> keyword.
-first_weekday 1
+first_weekday 2
 
 % Define the first workday relative to the <week> keyword
-first_workday 1
+first_workday 2
 
 % Zymovyj CHas (winter time) or z.ch. (or nothing)
 % Litnij CHas (summer time) or l.ch.

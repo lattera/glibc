@@ -1,3 +1,34 @@
+2009-03-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* locales/cs.CZ: Change week[2] to 19971130, change first_weekday and
+	first_workday to 2.
+	* locales/da_DK: Likewise.
+	* locales/de_DE: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/fur_IT: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/ht_HT: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/li_BE: Likewise.
+	* locales/li_NL: Likewise.
+	* locales/mk_MK: Likewise.
+	* locales/nb_NO: Likewise.
+	* locales/nds_DE: Likewise.
+	* locales/nds_NL: Likewise.
+	* locales/nn_NO: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/sk_SK: Likewise.
+	* locales/uk_UA: Likewise.
+
+	* locales/csb_PL: Change week[2] to 19971130.
+	* locales/en_GB: Likewise.
+	* locales/et_EE: Likewise.
+
+	* locales/sr_ME: Set week to 7;19971130;4.
+	* locales/sr_RS: Likewise.
+	* locales/sr_RS@latin: Likewise.
+
 2009-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9963]

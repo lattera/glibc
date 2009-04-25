@@ -85,9 +85,9 @@ t_fmt_ampm ""
 date_fmt "<U0025><U0061><U002C><U0020><U0025><U0064><U0020><U0025><U0062>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
-week    7;19971201;4
-first_weekday 1 % Monday
-first_workday 1 % Monday
+week    7;19971130;4
+first_weekday 2 % Monday
+first_workday 2 % Monday
 END LC_TIME
 
 LC_MONETARY
