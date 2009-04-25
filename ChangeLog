@@ -1,5 +1,9 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/strtod_l.c (round_and_return): We have to set errno to
+	ERANGE for underflows.
+	* stdlib/tst-strtod.c (tests): Two tests should set errno to ERANGE.
+
 	* stdio-common/stdio_lim.h.in (L_cuserid): Not part of POSIX since
 	the 2001 revision.
 

@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008
+   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -232,6 +232,7 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 # define DENORM_EXP (MIN_EXP - 2)
 #endif
       exponent = DENORM_EXP;
+      __set_errno (ERANGE);
     }
 
   if ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
