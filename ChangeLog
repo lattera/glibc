@@ -1,5 +1,8 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/stdio_lim.h.in (L_cuserid): Not part of POSIX since
+	the 2001 revision.
+
 	* libio/tst-widetext.input: Remove surrogates.
 
 	* include/features.h: _POSIX_C_SOURCE >= 200112L implies C99.
