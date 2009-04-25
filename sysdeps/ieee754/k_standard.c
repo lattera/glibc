@@ -383,7 +383,7 @@ static double zero = 0.0;	/* used as const */
                 else
                   exc.retval = HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
-		  __set_errno (EDOM);
+		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
 			(void) WRITE2("lgamma: SING error\n", 19);
@@ -990,7 +990,7 @@ static double zero = 0.0;	/* used as const */
 		  __set_errno (ERANGE);
 		}
 		break;
-		
+
 		/* #### Last used is 50/150/250 ### */
 	}
 	return exc.retval;

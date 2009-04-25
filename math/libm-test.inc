@@ -3241,7 +3241,9 @@ lgamma_test (void)
   TEST_f_f (lgamma, nan_value, nan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
+  errno = 0;
   TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for lgamma(-integer) == ERANGE", errno, ERANGE, 0, 0, 0);
   TEST_f_f (lgamma, minus_infty, plus_infty);
 
   TEST_f_f1 (lgamma, 1, 0, 1);
