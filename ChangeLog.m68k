@@ -1,3 +1,8 @@
+2009-04-25  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h: Revert last
+	change, the syscalls have been added to 2.6.30-rc4.
+
 2009-04-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/kernel-features.h (__ASSUME_PREADV,
@@ -343,7 +348,7 @@
 	(catch_segfault): Likewise.
 	(register_dump): Use the Coldfire-specific sigcontext fields to
 	display call-saved data and address registers (rather than the
-	data stored in sc_fpstate by real_catch_segfault).  Display 8-byte 
+	data stored in sc_fpstate by real_catch_segfault).  Display 8-byte
 	floating-point registers on Coldfire.
 	* sysdeps/unix/sysv/linux/m68k/socket.S (__socket): Pass a temporary
 	register to SINGLE_THREAD_P.

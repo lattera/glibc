@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,5 +39,3 @@
 /* These syscalls are not implemented yet for m68k.  */
 #undef __ASSUME_PSELECT
 #undef __ASSUME_PPOLL
-#undef __ASSUME_PREADV
-#undef __ASSUME_PWRITEV
