@@ -1,3 +1,8 @@
+2009-04-25  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/arm/eabi/fpu_control.h: If soft-float, don't use
+	floating-point registers.
+
 2009-04-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_PREADV,

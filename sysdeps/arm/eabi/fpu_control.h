@@ -1,5 +1,5 @@
 /* FPU control word definitions.  ARM VFP version.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,17 @@
 
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
+
+#if !defined(_LIBC) && defined(__SOFTFP__)
+
+#define _FPU_RESERVED 0xffffffff
+#define _FPU_DEFAULT  0x00000000
+typedef unsigned int fpu_control_t;
+#define _FPU_GETCW(cw) 0
+#define _FPU_SETCW(cw) do { } while (0)
+extern fpu_control_t __fpu_control;
+
+#else
 
 /* masking of interrupts */
 #define _FPU_MASK_IM	0x00000100	/* invalid operation */
@@ -47,5 +58,7 @@ typedef unsigned int fpu_control_t;
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
+
+#endif /* __SOFTFP__ */
 
 #endif /* _FPU_CONTROL_H */
