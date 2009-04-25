@@ -5,11 +5,8 @@
 	* include/features.h: _POSIX_C_SOURCE >= 200112L implies C99.
 
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors
-	for lgamma should se errno to ERANGE, not EDOM.
+	for lgamma should set errno to ERANGE, not EDOM.
 	* math/libm-test.inc (lgamma_test): Check errno for pole errors.
-
-	* sysdeps/generic/stdint.h (WINT_MAX): Define as 2147483647 since
-	this is the maximum UCS4 value.
 
 2009-04-24  Ulrich Drepper  <drepper@redhat.com>
 

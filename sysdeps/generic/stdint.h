@@ -277,7 +277,7 @@ typedef unsigned long long int	uintmax_t;
 
 /* Limits of `wint_t'.  */
 # define WINT_MIN		(0u)
-# define WINT_MAX		(2147483647)
+# define WINT_MAX		(4294967295u)
 
 #endif	/* C++ && limit macros */
 
