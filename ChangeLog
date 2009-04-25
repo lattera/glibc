@@ -1,5 +1,7 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/tst-widetext.input: Remove surrogates.
+
 	* include/features.h: _POSIX_C_SOURCE >= 200112L implies C99.
 
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors
