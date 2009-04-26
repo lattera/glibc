@@ -1,5 +1,14 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/s_tan.S: Set errno for ±Inf.
+	* sysdeps/i386/fpu/s_tanf.S: Likewise.
+	* sysdeps/i386/fpu/s_tanl.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_tanf.c: Likewise.
+	* sysdeps/x86_64/fpu/s_tanl.S: Likewise.
+	* math/libm-test.inc: Add tests for errno after tan calls with
+	±Inf.
+
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Use correct
 	errno value vor pow(+-0,neg).
 	* math/libm-test.inc (pow_test): Add tests for errno value for

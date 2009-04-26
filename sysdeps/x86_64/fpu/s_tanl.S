@@ -4,15 +4,24 @@
  *
  * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
  * Adapted for x86-64 by Andreas Jaeger <aj@suse.de>.
+ * Fixed errno handling by Ulrich Drepper <drepper@redhat.com>.
  */
 
+#define __need_Emath
+#include <bits/errno.h>
 #include <machine/asm.h>
 
 RCSID("$NetBSD: $")
 
 ENTRY(__tanl)
 	fldt	8(%rsp)
-	fptan
+	fxam
+	fstsw	%ax
+	movb	$0x45, %dh
+	andb	%ah, %dh
+	cmpb	$0x05, %dh
+	je	3f
+4:	fptan
 	fnstsw	%ax
 	testl	$0x400,%eax
 	jnz	1f
@@ -29,5 +38,8 @@ ENTRY(__tanl)
 	fptan
 	fstp	%st(0)
 	ret
+3:	call	__errno_location@PLT
+	movl	$EDOM, (%rax)
+	jmp	4b
 END (__tanl)
 weak_alias (__tanl, tanl)

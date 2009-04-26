@@ -5653,9 +5653,15 @@ tan_test (void)
 
   TEST_f_f (tan, 0, 0);
   TEST_f_f (tan, minus_zero, minus_zero);
+  errno = 0;
   TEST_f_f (tan, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for tan(Inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (tan, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for tan(-Inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (tan, nan_value, nan_value);
+  check_int ("errno for tan(NaN) == 0", errno, 0, 0, 0, 0);
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.75L, 0.931596459944072461165202756573936428L);

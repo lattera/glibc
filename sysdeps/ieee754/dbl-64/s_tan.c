@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2009 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -33,6 +33,8 @@
 /* round to nearest mode of IEEE 754 standard.                       */
 /*                                                                   */
 /*********************************************************************/
+
+#include <errno.h>
 #include "endian.h"
 #include "dla.h"
 #include "mpa.h"
@@ -61,7 +63,11 @@ double tan(double x) {
 
   /* x=+-INF, x=NaN */
   num.d = x;  ux = num.i[HIGH_HALF];
-  if ((ux&0x7ff00000)==0x7ff00000) return x-x;
+  if ((ux&0x7ff00000)==0x7ff00000) {
+    if ((ux&0x7fffffff)==0x7ff00000)
+      __set_errno (EDOM);
+    return x-x;
+  }
 
   w=(x<ZERO) ? -x : x;
 
