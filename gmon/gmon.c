@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <libc-internal.h>
 #include <not-cancel.h>
@@ -180,10 +181,18 @@ write_hist (fd)
      int fd;
 {
   u_char tag = GMON_TAG_TIME_HIST;
-  struct gmon_hist_hdr thdr __attribute__ ((aligned (__alignof__ (char *))));
 
   if (_gmonparam.kcountsize > 0)
     {
+      struct real_gmon_hist_hdr
+      {
+	char *low_pc;
+	char *high_pc;
+	int32_t hist_size;
+	int32_t prof_rate;
+	char dimen[15];
+	char dimen_abbrev;
+      } thdr;
       struct iovec iov[3] =
         {
 	  { &tag, sizeof (tag) },
@@ -191,11 +200,25 @@ write_hist (fd)
 	  { _gmonparam.kcount, _gmonparam.kcountsize }
 	};
 
-      *(char **) thdr.low_pc = (char *) _gmonparam.lowpc;
-      *(char **) thdr.high_pc = (char *) _gmonparam.highpc;
-      *(int32_t *) thdr.hist_size = (_gmonparam.kcountsize
-				     / sizeof (HISTCOUNTER));
-      *(int32_t *) thdr.prof_rate = __profile_frequency ();
+      if (sizeof (thdr) != sizeof (struct gmon_hist_hdr)
+	  || (offsetof (struct real_gmon_hist_hdr, low_pc)
+	      != offsetof (struct gmon_hist_hdr, low_pc))
+	  || (offsetof (struct real_gmon_hist_hdr, high_pc)
+	      != offsetof (struct gmon_hist_hdr, high_pc))
+	  || (offsetof (struct real_gmon_hist_hdr, hist_size)
+	      != offsetof (struct gmon_hist_hdr, hist_size))
+	  || (offsetof (struct real_gmon_hist_hdr, prof_rate)
+	      != offsetof (struct gmon_hist_hdr, prof_rate))
+	  || (offsetof (struct real_gmon_hist_hdr, dimen)
+	      != offsetof (struct gmon_hist_hdr, dimen))
+	  || (offsetof (struct real_gmon_hist_hdr, dimen_abbrev)
+	      != offsetof (struct gmon_hist_hdr, dimen_abbrev)))
+	abort ();
+
+      thdr.low_pc = (char *) _gmonparam.lowpc;
+      thdr.high_pc = (char *) _gmonparam.highpc;
+      thdr.hist_size = _gmonparam.kcountsize / sizeof (HISTCOUNTER);
+      thdr.prof_rate = __profile_frequency ();
       strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
       thdr.dimen_abbrev = 's';
 
@@ -318,7 +341,6 @@ write_bb_counts (fd)
 static void
 write_gmon (void)
 {
-    struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd = -1;
     char *env;
 
@@ -350,9 +372,21 @@ write_gmon (void)
       }
 
     /* write gmon.out header: */
-    memset (&ghdr, '\0', sizeof (struct gmon_hdr));
+    struct real_gmon_hdr
+    {
+      char cookie[4];
+      int32_t version;
+      char spare[3 * 4];
+    } ghdr;
+    if (sizeof (ghdr) != sizeof (struct gmon_hdr)
+	|| (offsetof (struct real_gmon_hdr, cookie)
+	    != offsetof (struct gmon_hdr, cookie))
+	|| (offsetof (struct real_gmon_hdr, version)
+	    != offsetof (struct gmon_hdr, version)))
+      abort ();
     memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
-    *(int32_t *) ghdr.version = GMON_VERSION;
+    ghdr.version = GMON_VERSION;
+    memset (ghdr.spare, '\0', sizeof (ghdr.spare));
     write_not_cancel (fd, &ghdr, sizeof (struct gmon_hdr));
 
     /* write PC histogram: */

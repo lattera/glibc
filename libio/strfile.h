@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,1999,2005,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ struct _IO_str_fields
 struct _IO_streambuf
 {
   struct _IO_FILE _f;
-  const void *_vtable;
+  const struct _IO_jump_t *vtable;
 };
 
 typedef struct _IO_strfile_

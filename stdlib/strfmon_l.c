@@ -90,9 +90,6 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 {
   struct locale_data *current = loc->__locales[LC_MONETARY];
   _IO_strfile f;
-#ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-#endif
   struct printf_info info;
   char *dest;			/* Pointer so copy the output.  */
   const char *fmt;		/* Pointer that walks through format.  */
@@ -517,11 +514,11 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 
       /* Print the number.  */
 #ifdef _IO_MTSAFE_IO
-      f._sbf._f._lock = &lock;
+      f._sbf._f._lock = NULL;
 #endif
-      INTUSE(_IO_init) ((_IO_FILE *) &f, 0);
-      _IO_JUMPS ((struct _IO_FILE_plus *) &f) = &_IO_str_jumps;
-      INTUSE(_IO_str_init_static) ((_IO_strfile *) &f, dest,
+      INTUSE(_IO_init) (&f._sbf._f, 0);
+      _IO_JUMPS (&f._sbf) = &_IO_str_jumps;
+      INTUSE(_IO_str_init_static) (&f, dest,
 				   (s + maxsize) - dest, dest);
       /* We clear the last available byte so we can find out whether
 	 the numeric representation is too long.  */
@@ -537,7 +534,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
       info.extra = 1;		/* This means use values from LC_MONETARY.  */
 
       ptr = &fpnum;
-      done = __printf_fp ((FILE *) &f, &info, &ptr);
+      done = __printf_fp (&f._sbf._f, &info, &ptr);
       if (done < 0)
 	return -1;
 

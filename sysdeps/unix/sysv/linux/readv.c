@@ -27,8 +27,10 @@
 #include <bp-checks.h>
 #include <kernel-features.h>
 
+#ifndef __ASSUME_COMPLETE_READV_WRITEV
 static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 					   int) internal_function;
+#endif
 
 
 /* Not all versions of the kernel support the large number of records.  */

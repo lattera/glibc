@@ -1,3 +1,8 @@
+2009-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Avoid warning by using may_alias attribute on ptrhack.
+
 2009-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10090]

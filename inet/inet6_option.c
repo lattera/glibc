@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -216,7 +216,8 @@ option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
     /* Too long.  */
     return NULL;
 
-  ((struct ip6_ext *) CMSG_DATA (cmsg))->ip6e_len = len8b;
+  struct ip6_ext *ie = (void *) CMSG_DATA (cmsg);
+  ie->ip6e_len = len8b;
 
   return result;
 }
