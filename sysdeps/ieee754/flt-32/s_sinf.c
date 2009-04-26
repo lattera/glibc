@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: s_sinf.c,v 1.4 1995/05/10 20:48:16 jtc Exp $";
 #endif
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -37,7 +38,11 @@ static char rcsid[] = "$NetBSD: s_sinf.c,v 1.4 1995/05/10 20:48:16 jtc Exp $";
 	if(ix <= 0x3f490fd8) return __kernel_sinf(x,z,0);
 
     /* sin(Inf or NaN) is NaN */
-	else if (ix>=0x7f800000) return x-x;
+	else if (ix>=0x7f800000) {
+	  if (ix == 0x7f800000)
+	    __set_errno (EDOM);
+	  return x-x;
+	}
 
     /* argument reduction needed */
 	else {

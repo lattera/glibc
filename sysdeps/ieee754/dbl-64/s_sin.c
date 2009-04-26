@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2009 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -48,6 +48,7 @@
 /****************************************************************************/
 
 
+#include <errno.h>
 #include "endian.h"
 #include "mydefs.h"
 #include "usncs.h"
@@ -329,7 +330,11 @@ double __sin(double x){
 	}    /*   else  if (k <  0x7ff00000 )    */
 
 /*--------------------- |x| > 2^1024 ----------------------------------*/
-	else return x / x;
+	else {
+	  if (k == 0x7ff00000 && u.i[LOW_HALF] == 0)
+	    __set_errno (EDOM);
+	  return x / x;
+	}
 	return 0;         /* unreachable */
 }
 
@@ -572,7 +577,11 @@ double __cos(double x)
 
 
 
-  else return x / x; /* |x| > 2^1024 */
+  else {
+    if (k == 0x7ff00000 && u.i[LOW_HALF] == 0)
+      __set_errno (EDOM);
+    return x / x; /* |x| > 2^1024 */
+  }
   return 0;
 
 }

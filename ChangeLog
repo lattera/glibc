@@ -1,5 +1,21 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/s_cos.S: Set errno for ±Inf.
+	* sysdeps/i386/fpu/s_cosf.S: Likewise.
+	* sysdeps/i386/fpu/s_cosl.S: Likewise.
+	* sysdeps/i386/fpu/s_sin.S: Likewise.
+	* sysdeps/i386/fpu/s_sinf.S: Likewise.
+	* sysdeps/i386/fpu/s_sinl.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_cosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_sinf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_sinl.c: Likewise.
+	* sysdeps/x86_64/fpu/s_cosl.S: Likewise.
+	* sysdeps/x86_64/fpu/s_sinl.S: Likewise.
+	* math/libm-test.inc: Add tests for errno after sin/cos calls with
+	±Inf.
+
 	* stdlib/strtod_l.c (round_and_return): We have to set errno to
 	ERANGE for underflows.
 	* stdlib/tst-strtod.c (tests): Two tests should set errno to ERANGE.

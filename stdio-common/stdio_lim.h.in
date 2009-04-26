@@ -27,7 +27,7 @@
 
 # ifdef __USE_POSIX
 #  define L_ctermid @L_ctermid@
-#  ifndef __USE_XOPEN2K
+#  if !defined __USE_XOPEN2K || defined __USE_GNU
 #   define L_cuserid @L_cuserid@
 #  endif
 # endif

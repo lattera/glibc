@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -1993,9 +1993,15 @@ cos_test (void)
 
   TEST_f_f (cos, 0, 1);
   TEST_f_f (cos, minus_zero, 1);
+  errno = 0;
   TEST_f_f (cos, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for cos(+inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (cos, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for cos(-inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (cos, nan_value, nan_value);
+  check_int ("errno for cos(NaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
@@ -5497,9 +5503,15 @@ sin_test (void)
 
   TEST_f_f (sin, 0, 0);
   TEST_f_f (sin, minus_zero, minus_zero);
+  errno = 0;
   TEST_f_f (sin, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for sin(+inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (sin, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for sin(-inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (sin, nan_value, nan_value);
+  check_int ("errno for sin(NaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (sin, M_PI_6l, 0.5);
   TEST_f_f (sin, -M_PI_6l, -0.5);

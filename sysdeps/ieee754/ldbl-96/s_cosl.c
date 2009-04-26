@@ -49,6 +49,7 @@ static char rcsid[] = "$NetBSD: $";
  *	TRIG(x) returns trig(x) nearly rounded
  */
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -71,7 +72,11 @@ static char rcsid[] = "$NetBSD: $";
 	  return __kernel_cosl(x,z);
 
     /* cos(Inf or NaN) is NaN */
-	else if (se==0x7fff) return x-x;
+	else if (se==0x7fff) {
+	  if ((i0 | i1) == 0)
+	    __set_errno (EDOM);
+	  return x-x;
+	}
 
     /* argument reduction needed */
 	else {
