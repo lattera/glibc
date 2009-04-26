@@ -1,3 +1,7 @@
+2009-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Fix -Wsequence-point warnings.
+
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bits/posix1_lim.h: Cleanup namespace a bit.

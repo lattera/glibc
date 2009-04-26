@@ -114,7 +114,8 @@ double tan(double x) {
     fi = xfg[i][1].d;   gi = xfg[i][2].d;   t2 = pz*(gi+fi)/(gi-pz);
     if ((y=fi+(t2-fi*u3.d))==fi+(t2+fi*u3.d))  return (s*y);
     t3 = (t2<ZERO) ? -t2 : t2;
-    if ((y=fi+(t2-(t4=fi*ua3.d+t3*ub3.d)))==fi+(t2+t4))  return (s*y);
+    t4 = fi*ua3.d+t3*ub3.d;
+    if ((y=fi+(t2-t4))==fi+(t2+t4))  return (s*y);
 
     /* Second stage */
     ffi = xfg[i][3].d;
@@ -222,13 +223,15 @@ double tan(double x) {
       t2 = pz*(fi+gi)/(fi+pz);
       if ((y=gi-(t2-gi*u10.d))==gi-(t2+gi*u10.d))  return (-sy*y);
       t3 = (t2<ZERO) ? -t2 : t2;
-      if ((y=gi-(t2-(t4=gi*ua10.d+t3*ub10.d)))==gi-(t2+t4))  return (-sy*y); }
+      t4 = gi*ua10.d+t3*ub10.d;
+      if ((y=gi-(t2-t4))==gi-(t2+t4))  return (-sy*y); }
     else   {
       /* tan */
       t2 = pz*(gi+fi)/(gi-pz);
       if ((y=fi+(t2-fi*u9.d))==fi+(t2+fi*u9.d))  return (sy*y);
       t3 = (t2<ZERO) ? -t2 : t2;
-      if ((y=fi+(t2-(t4=fi*ua9.d+t3*ub9.d)))==fi+(t2+t4))  return (sy*y); }
+      t4 = fi*ua9.d+t3*ub9.d;
+      if ((y=fi+(t2-t4))==fi+(t2+t4))  return (sy*y); }
 
     /* Second stage */
     ffi = xfg[i][3].d;
@@ -333,13 +336,15 @@ double tan(double x) {
       t2 = pz*(fi+gi)/(fi+pz);
       if ((y=gi-(t2-gi*u18.d))==gi-(t2+gi*u18.d))  return (-sy*y);
       t3 = (t2<ZERO) ? -t2 : t2;
-      if ((y=gi-(t2-(t4=gi*ua18.d+t3*ub18.d)))==gi-(t2+t4))  return (-sy*y); }
+      t4 = gi*ua18.d+t3*ub18.d;
+      if ((y=gi-(t2-t4))==gi-(t2+t4))  return (-sy*y); }
     else   {
       /* tan */
       t2 = pz*(gi+fi)/(gi-pz);
       if ((y=fi+(t2-fi*u17.d))==fi+(t2+fi*u17.d))  return (sy*y);
       t3 = (t2<ZERO) ? -t2 : t2;
-      if ((y=fi+(t2-(t4=fi*ua17.d+t3*ub17.d)))==fi+(t2+t4))  return (sy*y); }
+      t4 = fi*ua17.d+t3*ub17.d;
+      if ((y=fi+(t2-t4))==fi+(t2+t4))  return (sy*y); }
 
     /* Second stage */
     ffi = xfg[i][3].d;
@@ -437,13 +442,15 @@ double tan(double x) {
     t2 = pz*(fi+gi)/(fi+pz);
     if ((y=gi-(t2-gi*u26.d))==gi-(t2+gi*u26.d))  return (-sy*y);
     t3 = (t2<ZERO) ? -t2 : t2;
-    if ((y=gi-(t2-(t4=gi*ua26.d+t3*ub26.d)))==gi-(t2+t4))  return (-sy*y); }
+    t4 = gi*ua26.d+t3*ub26.d;
+    if ((y=gi-(t2-t4))==gi-(t2+t4))  return (-sy*y); }
   else   {
     /* tan */
     t2 = pz*(gi+fi)/(gi-pz);
     if ((y=fi+(t2-fi*u25.d))==fi+(t2+fi*u25.d))  return (sy*y);
     t3 = (t2<ZERO) ? -t2 : t2;
-    if ((y=fi+(t2-(t4=fi*ua25.d+t3*ub25.d)))==fi+(t2+t4))  return (sy*y); }
+    t4 = fi*ua25.d+t3*ub25.d;
+    if ((y=fi+(t2-t4))==fi+(t2+t4))  return (sy*y); }
 
   /* Second stage */
   ffi = xfg[i][3].d;
