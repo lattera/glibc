@@ -87,9 +87,11 @@
 # define _POSIX_OPEN_MAX	16
 #endif
 
+#if !defined __USE_XOPEN2K || defined __USE_GNU
 /* Number of descriptors that a process may examine with `pselect' or
    `select'.  */
-#define	_POSIX_FD_SETSIZE	_POSIX_OPEN_MAX
+# define _POSIX_FD_SETSIZE	_POSIX_OPEN_MAX
+#endif
 
 /* Number of bytes in a pathname.  */
 #define	_POSIX_PATH_MAX		256
@@ -135,15 +137,17 @@
 /* Maximum length of a timezone name (element of `tzname').  */
 #define	_POSIX_TZNAME_MAX	6
 
+#if !defined __USE_XOPEN2K || defined __USE_GNU
 /* Maximum number of connections that can be queued on a socket.  */
-#define	_POSIX_QLIMIT		1
+# define _POSIX_QLIMIT		1
 
 /* Maximum number of bytes that can be buffered on a socket for send
    or receive.  */
-#define	_POSIX_HIWAT		_POSIX_PIPE_BUF
+# define _POSIX_HIWAT		_POSIX_PIPE_BUF
 
 /* Maximum number of elements in an `iovec' array.  */
-#define	_POSIX_UIO_MAXIOV	16
+# define _POSIX_UIO_MAXIOV	16
+#endif
 
 /* Maximum clock resolution in nanoseconds.  */
 #define _POSIX_CLOCKRES_MIN	20000000

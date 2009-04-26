@@ -1,5 +1,7 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/bits/posix1_lim.h: Cleanup namespace a bit.
+
 	* sysdeps/i386/fpu/s_tan.S: Set errno for ±Inf.
 	* sysdeps/i386/fpu/s_tanf.S: Likewise.
 	* sysdeps/i386/fpu/s_tanl.S: Likewise.
