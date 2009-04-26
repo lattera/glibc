@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,7 +17,7 @@
 static char rcsid[] = "$NetBSD: w_fmodf.c,v 1.3 1995/05/10 20:48:57 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper fmodf(x,y)
  */
 
@@ -38,8 +38,8 @@ static char rcsid[] = "$NetBSD: w_fmodf.c,v 1.3 1995/05/10 20:48:57 jtc Exp $";
 	float z;
 	z = __ieee754_fmodf(x,y);
 	if(_LIB_VERSION == _IEEE_ ||__isnanf(y)||__isnanf(x)) return z;
-	if(y==(float)0.0) {
-		/* fmodf(x,0) */
+	if(__isinff(x)||y==(float)0.0) {
+		/* fmodf(+-Inf,y) or fmodf(x,0) */
 	        return (float)__kernel_standard((double)x,(double)y,127);
 	} else
 	    return z;

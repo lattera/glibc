@@ -1,5 +1,11 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/w_fmod.c: Also handle x=±Inf as error.
+	* math/w_fmodf.c: Likewise.
+	* math/w_fmodl.c: Likewise.
+	* math/libm-test.inc (fmod_test): Add tests for errno after calls for
+	x=±Inf or y=0.
+
 	* sysdeps/i386/fpu/s_cos.S: Set errno for ±Inf.
 	* sysdeps/i386/fpu/s_cosf.S: Likewise.
 	* sysdeps/i386/fpu/s_cosl.S: Likewise.

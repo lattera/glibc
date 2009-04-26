@@ -39,8 +39,9 @@ static char rcsid[] = "$NetBSD: $";
 	long double z;
 	z = __ieee754_fmodl(x,y);
 	if(_LIB_VERSION == _IEEE_ ||__isnanl(y)||__isnanl(x)) return z;
-	if(y==0.0) {
-	        return __kernel_standard(x,y,227); /* fmod(x,0) */
+	if(__isinfl(x)||y==0.0) {
+		/* fmodl(+-Inf,y) or fmodl(x,0) */
+	        return __kernel_standard(x,y,227);
 	} else
 	    return z;
 #endif

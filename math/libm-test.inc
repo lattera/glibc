@@ -2883,11 +2883,17 @@ fmod_test (void)
   TEST_ff_f (fmod, minus_zero, 3, minus_zero);
 
   /* fmod (+inf, y) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, plus_infty, 3, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(Inf,3) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (-inf, y) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, minus_infty, 3, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(-Inf,3) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (x, +0) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, 3, 0, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(3,0) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (x, -0) == NaN plus invalid exception.  */
   TEST_ff_f (fmod, 3, minus_zero, nan_value, INVALID_EXCEPTION);
 
