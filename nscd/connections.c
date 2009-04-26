@@ -1023,7 +1023,8 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
   cmsg->cmsg_type = SCM_RIGHTS;
   cmsg->cmsg_len = CMSG_LEN (sizeof (int));
 
-  *(int *) CMSG_DATA (cmsg) = db->ro_fd;
+  int *ip = (int *) CMSG_DATA (cmsg);
+  *ip = db->ro_fd;
 
   msg.msg_controllen = cmsg->cmsg_len;
 
@@ -1719,6 +1720,7 @@ handle_request: request received (Version = %d)"), req.version);
       /* One more thread available.  */
       ++nready;
     }
+  /* NOTREACHED */
 }
 
 

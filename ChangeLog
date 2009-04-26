@@ -1,5 +1,8 @@
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (send_ro_fd): Define temporary variable to avoid
+	warning.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (dl_fatal): Remove inline
 	from definition.
 
@@ -8,6 +11,7 @@
 
 	* elf/dl-profile.c (_dl_start_profile): Define real-type variant
 	of gmon_hist_hdr and gmon_hdr structures and use them.
+	* elf/sprof.c: Likewise.
 
 	* elf/dl-load.c (open_verify): Add temporary variable to avoid
 	warning.

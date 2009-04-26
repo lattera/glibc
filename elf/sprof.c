@@ -195,13 +195,24 @@ struct shobj
 };
 
 
+struct real_gmon_hist_hdr
+{
+  char *low_pc;
+  char *high_pc;
+  int32_t hist_size;
+  int32_t prof_rate;
+  char dimen[15];
+  char dimen_abbrev;
+};
+
+
 struct profdata
 {
   void *addr;
   off_t size;
 
   char *hist;
-  struct gmon_hist_hdr *hist_hdr;
+  struct real_gmon_hist_hdr *hist_hdr;
   uint16_t *kcount;
   uint32_t narcs;		/* Number of arcs in toset.  */
   struct here_cg_arc_record *data;
@@ -740,8 +751,6 @@ load_profdata (const char *name, struct shobj *shobj)
   int fd;
   struct stat st;
   void *addr;
-  struct gmon_hdr gmon_hdr;
-  struct gmon_hist_hdr hist_hdr;
   uint32_t *narcsp;
   size_t fromlimit;
   struct here_cg_arc_record *data;
@@ -828,10 +837,10 @@ load_profdata (const char *name, struct shobj *shobj)
 
   /* Pointer to data after the header.  */
   result->hist = (char *) ((struct gmon_hdr *) addr + 1);
-  result->hist_hdr = (struct gmon_hist_hdr *) ((char *) result->hist
-					       + sizeof (uint32_t));
+  result->hist_hdr = (struct real_gmon_hist_hdr *) ((char *) result->hist
+						    + sizeof (uint32_t));
   result->kcount = (uint16_t *) ((char *) result->hist + sizeof (uint32_t)
-				 + sizeof (struct gmon_hist_hdr));
+				 + sizeof (struct real_gmon_hist_hdr));
 
   /* Compute pointer to array of the arc information.  */
   narcsp = (uint32_t *) ((char *) result->kcount + shobj->kcountsize
@@ -841,18 +850,46 @@ load_profdata (const char *name, struct shobj *shobj)
 						+ sizeof (uint32_t));
 
   /* Create the gmon_hdr we expect or write.  */
-  memset (&gmon_hdr, '\0', sizeof (struct gmon_hdr));
+  struct real_gmon_hdr
+  {
+    char cookie[4];
+    int32_t version;
+    char spare[3 * 4];
+  } gmon_hdr;
+  if (sizeof (gmon_hdr) != sizeof (struct gmon_hdr)
+      || (offsetof (struct real_gmon_hdr, cookie)
+	  != offsetof (struct gmon_hdr, cookie))
+      || (offsetof (struct real_gmon_hdr, version)
+	  != offsetof (struct gmon_hdr, version)))
+    abort ();
+
   memcpy (&gmon_hdr.cookie[0], GMON_MAGIC, sizeof (gmon_hdr.cookie));
-  *(int32_t *) gmon_hdr.version = GMON_SHOBJ_VERSION;
+  gmon_hdr.version = GMON_SHOBJ_VERSION;
+  memset (gmon_hdr.spare, '\0', sizeof (gmon_hdr.spare));
 
   /* Create the hist_hdr we expect or write.  */
-  *(char **) hist_hdr.low_pc = (char *) shobj->lowpc - shobj->map->l_addr;
-  *(char **) hist_hdr.high_pc = (char *) shobj->highpc - shobj->map->l_addr;
+  struct real_gmon_hist_hdr hist_hdr;
+  if (sizeof (hist_hdr) != sizeof (struct gmon_hist_hdr)
+      || (offsetof (struct real_gmon_hist_hdr, low_pc)
+	  != offsetof (struct gmon_hist_hdr, low_pc))
+      || (offsetof (struct real_gmon_hist_hdr, high_pc)
+	  != offsetof (struct gmon_hist_hdr, high_pc))
+      || (offsetof (struct real_gmon_hist_hdr, hist_size)
+	  != offsetof (struct gmon_hist_hdr, hist_size))
+      || (offsetof (struct real_gmon_hist_hdr, prof_rate)
+	  != offsetof (struct gmon_hist_hdr, prof_rate))
+      || (offsetof (struct real_gmon_hist_hdr, dimen)
+	  != offsetof (struct gmon_hist_hdr, dimen))
+      || (offsetof (struct real_gmon_hist_hdr, dimen_abbrev)
+	  != offsetof (struct gmon_hist_hdr, dimen_abbrev)))
+    abort ();
+
+  hist_hdr.low_pc = (char *) shobj->lowpc - shobj->map->l_addr;
+  hist_hdr.high_pc = (char *) shobj->highpc - shobj->map->l_addr;
   if (do_test)
-    printf ("low_pc = %p\nhigh_pc = %p\n",
-	    *(char **) hist_hdr.low_pc, *(char **) hist_hdr.high_pc);
-  *(int32_t *) hist_hdr.hist_size = shobj->kcountsize / sizeof (HISTCOUNTER);
-  *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
+    printf ("low_pc = %p\nhigh_pc = %p\n", hist_hdr.low_pc, hist_hdr.high_pc);
+  hist_hdr.hist_size = shobj->kcountsize / sizeof (HISTCOUNTER);
+  hist_hdr.prof_rate = __profile_frequency ();
   strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
   hist_hdr.dimen_abbrev = 's';
 
@@ -1280,7 +1317,7 @@ generate_flat_profile (struct profdata *profdata)
   size_t n;
   void *data = NULL;
 
-  tick_unit = 1.0 / *(uint32_t *) profdata->hist_hdr->prof_rate;
+  tick_unit = 1.0 / profdata->hist_hdr->prof_rate;
 
   printf ("Flat profile:\n\n"
 	  "Each sample counts as %g %s.\n",
