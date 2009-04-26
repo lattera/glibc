@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -318,7 +318,7 @@ get_mapping (request_type type, const char *key,
 
   /* This access is well-aligned since BUF is correctly aligned for an
      int and CMSG_DATA preserves this alignment.  */
-  *(int *) CMSG_DATA (cmsg) = -1;
+  memset (CMSG_DATA (cmsg), '\xff', sizeof (int));
 
   msg.msg_controllen = cmsg->cmsg_len;
 
@@ -335,7 +335,8 @@ get_mapping (request_type type, const char *key,
 			    != CMSG_LEN (sizeof (int))), 0))
     goto out_close2;
 
-  mapfd = *(int *) CMSG_DATA (cmsg);
+  int *ip = (void *) CMSG_DATA (cmsg);
+  mapfd = *ip;
 
   if (__builtin_expect (n != keylen && n != keylen + sizeof (mapsize), 0))
     goto out_close;

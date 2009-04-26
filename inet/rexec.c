@@ -56,7 +56,7 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	int *fd2p;
 	sa_family_t af;
 {
-	struct sockaddr_storage sa2, from;
+	struct sockaddr_storage from;
 	struct addrinfo hints, *res0;
 	const char *orig_name = name;
 	const char *orig_pass = pass;
@@ -115,6 +115,11 @@ retry:
 	} else {
 		char num[32];
 		int s2;
+		union
+		{
+		  struct sockaddr_storage ss;
+		  struct sockaddr sa;
+		} sa2;
 		socklen_t sa2len;
 
 		s2 = __socket(res0->ai_family, res0->ai_socktype, 0);
@@ -124,17 +129,17 @@ retry:
 		}
 		__listen(s2, 1);
 		sa2len = sizeof (sa2);
-		if (__getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0) {
+		if (__getsockname(s2, &sa2.sa, &sa2len) < 0) {
 			perror("getsockname");
 			(void) __close(s2);
 			goto bad;
-		} else if (sa2len != SA_LEN((struct sockaddr *)&sa2)) {
+		} else if (sa2len != SA_LEN(&sa2.sa)) {
 			__set_errno(EINVAL);
 			(void) __close(s2);
 			goto bad;
 		}
 		port = 0;
-		if (!getnameinfo((struct sockaddr *)&sa2, sa2len,
+		if (!getnameinfo(&sa2.sa, sa2len,
 				 NULL, 0, servbuff, sizeof(servbuff),
 				 NI_NUMERICSERV))
 			port = atoi(servbuff);

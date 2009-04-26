@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2004, 2006
+/* Copyright (C) 1991, 1995, 1997, 1998, 2004, 2006, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,7 +53,7 @@ ___vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
     }
 
   _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS ((struct _IO_FILE_plus *) &sf.f._sbf) = &_IO_strn_jumps;
+  _IO_JUMPS (&sf.f._sbf) = &_IO_strn_jumps;
   s[0] = '\0';
 
   /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
@@ -62,7 +62,7 @@ ___vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
     sf.f._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
   _IO_str_init_static_internal (&sf.f, s, maxlen - 1, s);
-  ret = INTUSE(_IO_vfprintf) ((_IO_FILE *) &sf.f._sbf, format, args);
+  ret = INTUSE(_IO_vfprintf) (&sf.f._sbf._f, format, args);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._IO_write_ptr = '\0';

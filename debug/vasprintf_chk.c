@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1997,1999-2002,2004,2006,2008
+/* Copyright (C) 1995,1997,1999-2002,2004,2006,2008,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,8 +53,8 @@ __vasprintf_chk (char **result_ptr, int flags, const char *format,
 #ifdef _IO_MTSAFE_IO
   sf._sbf._f._lock = NULL;
 #endif
-  _IO_no_init ((_IO_FILE *) &sf._sbf, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS ((struct _IO_FILE_plus *) &sf._sbf) = &_IO_str_jumps;
+  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
+  _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static_internal (&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer = (_IO_alloc_type) malloc;

@@ -1,5 +1,50 @@
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (dl_fatal): Remove inline
+	from definition.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Don't define
+	label if it is not used.
+
+	* elf/dl-profile.c (_dl_start_profile): Define real-type variant
+	of gmon_hist_hdr and gmon_hdr structures and use them.
+
+	* elf/dl-load.c (open_verify): Add temporary variable to avoid
+	warning.
+
+	* nscd/nscd_helper.c (get_mapping): Avoid casts to avoid warnings.
+
+	* sunrpc/clnt_raw.c (clntraw_private_s): Use union in definition
+	to avoid cast.
+
+	* inet/rexec.c (rexec_af): Make sa2 a union to avoid warnings.
+	* inet/rcmd.c (rcmd_af): Make from a union of the various needed types
+	to avoid warnings.
+	(iruserok_af): Use ss_family instead of casts.
+
+	* gmon/gmon.c (write_hist): Define real-type variant of
+	gmon_hist_hdr structure and use it.
+	(write_gmon): Likewise for gmon_hdr.
+
+	* sysdeps/unix/sysv/linux/readv.c: Avoid declaration of replacement
+	function if we are not going to define it.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* inet/inet6_option.c (optin_alloc): Add temporary variable to
+	avoid warning.
+
+	* libio/strfile.h (struct _IO_streambuf): Use correct type and
+	name of VTable element.
+	* libio/iovsprintf.c: Avoid casts to avoid warnings.
+	* libio/iovsscanf.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+	* stdio-common/isoc99_vsscanf.c: Likewise.
+	* stdlib/strfmon_l.c: Likewise.
+	* debug/vasprintf_chk.c: Likewise.
+	* debug/vsnprintf_chk.c: Likewise.
+	* debug/vsprintf_chk.c: Likewise.
+
 	* nss/nsswitch.c (__nss_lookup_function): En/Decrypt cached
 	function pointers.
 

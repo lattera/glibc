@@ -57,7 +57,11 @@ struct clntraw_private_s
     CLIENT client_object;
     XDR xdr_stream;
     char _raw_buf[UDPMSGSIZE];
-    char mashl_callmsg[MCALL_MSG_SIZE];
+    union
+    {
+      char msg[MCALL_MSG_SIZE];
+      u_long rm_xid;
+    } mashl_callmsg;
     u_int mcnt;
   };
 #ifdef _RPC_THREAD_SAFE_
@@ -111,7 +115,8 @@ clntraw_create (u_long prog, u_long vers)
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = prog;
   call_msg.rm_call.cb_vers = vers;
-  INTUSE(xdrmem_create) (xdrs, clp->mashl_callmsg, MCALL_MSG_SIZE, XDR_ENCODE);
+  INTUSE(xdrmem_create) (xdrs, clp->mashl_callmsg.msg, MCALL_MSG_SIZE,
+			 XDR_ENCODE);
   if (!INTUSE(xdr_callhdr) (xdrs, &call_msg))
     {
       perror (_ ("clnt_raw.c: fatal header serialization error"));
@@ -156,8 +161,11 @@ call_again:
    */
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
-  ((struct rpc_msg *) clp->mashl_callmsg)->rm_xid++;
-  if ((!XDR_PUTBYTES (xdrs, clp->mashl_callmsg, clp->mcnt)) ||
+  /* Just checking the union definition to access rm_xid is correct.  */
+  if (offsetof (struct rpc_msg, rm_xid) != 0)
+    abort ();
+  clp->mashl_callmsg.rm_xid++;
+  if ((!XDR_PUTBYTES (xdrs, clp->mashl_callmsg.msg, clp->mcnt)) ||
       (!XDR_PUTLONG (xdrs, (long *) &proc)) ||
       (!AUTH_MARSHALL (h->cl_auth, xdrs)) ||
       (!(*xargs) (xdrs, argsp)))

@@ -1655,7 +1655,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 						EI_PAD), 0))
 	{
 	  /* Something is wrong.  */
-	  if (*(Elf32_Word *) &ehdr->e_ident !=
+	  const Elf32_Word *magp = (const void *) ehdr->e_ident;
+	  if (*magp !=
 #if BYTE_ORDER == LITTLE_ENDIAN
 	      ((ELFMAG0 << (EI_MAG0 * 8)) |
 	       (ELFMAG1 << (EI_MAG1 * 8)) |

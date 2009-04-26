@@ -29,7 +29,7 @@
 #ifdef SHARED
 /* This is the function used in the dynamic linker to print the fatal error
    message.  */
-static inline void
+static void
 __attribute__ ((__noreturn__))
 dl_fatal (const char *str)
 {

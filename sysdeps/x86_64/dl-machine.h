@@ -403,7 +403,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
 	      fmt = "\
 %s: Symbol `%s' causes overflow in R_X86_64_32 relocation\n";
+#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	    print_err:
+#  endif
 	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
 
 	      _dl_error_printf (fmt,

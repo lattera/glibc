@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2004, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -178,8 +178,6 @@ _dl_start_profile (void)
   const ElfW(Phdr) *ph;
   ElfW(Addr) mapstart = ~((ElfW(Addr)) 0);
   ElfW(Addr) mapend = 0;
-  struct gmon_hdr gmon_hdr;
-  struct gmon_hist_hdr hist_hdr;
   char *hist, *cp;
   size_t idx;
   size_t tossize;
@@ -251,15 +249,52 @@ _dl_start_profile (void)
 		   + 4 + 4 + fromssize * sizeof (struct here_cg_arc_record));
 
   /* Create the gmon_hdr we expect or write.  */
-  memset (&gmon_hdr, '\0', sizeof (struct gmon_hdr));
+  struct real_gmon_hdr
+  {
+    char cookie[4];
+    int32_t version;
+    char spare[3 * 4];
+  } gmon_hdr;
+  if (sizeof (gmon_hdr) != sizeof (struct gmon_hdr)
+      || (offsetof (struct real_gmon_hdr, cookie)
+	  != offsetof (struct gmon_hdr, cookie))
+      || (offsetof (struct real_gmon_hdr, version)
+	  != offsetof (struct gmon_hdr, version)))
+    abort ();
+
   memcpy (&gmon_hdr.cookie[0], GMON_MAGIC, sizeof (gmon_hdr.cookie));
-  *(int32_t *) gmon_hdr.version = GMON_SHOBJ_VERSION;
+  gmon_hdr.version = GMON_SHOBJ_VERSION;
+  memset (gmon_hdr.spare, '\0', sizeof (gmon_hdr.spare));
 
   /* Create the hist_hdr we expect or write.  */
-  *(char **) hist_hdr.low_pc = (char *) mapstart;
-  *(char **) hist_hdr.high_pc = (char *) mapend;
-  *(int32_t *) hist_hdr.hist_size = kcountsize / sizeof (HISTCOUNTER);
-  *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
+  struct real_gmon_hist_hdr
+  {
+    char *low_pc;
+    char *high_pc;
+    int32_t hist_size;
+    int32_t prof_rate;
+    char dimen[15];
+    char dimen_abbrev;
+  } hist_hdr;
+  if (sizeof (hist_hdr) != sizeof (struct gmon_hist_hdr)
+      || (offsetof (struct real_gmon_hist_hdr, low_pc)
+	  != offsetof (struct gmon_hist_hdr, low_pc))
+      || (offsetof (struct real_gmon_hist_hdr, high_pc)
+	  != offsetof (struct gmon_hist_hdr, high_pc))
+      || (offsetof (struct real_gmon_hist_hdr, hist_size)
+	  != offsetof (struct gmon_hist_hdr, hist_size))
+      || (offsetof (struct real_gmon_hist_hdr, prof_rate)
+	  != offsetof (struct gmon_hist_hdr, prof_rate))
+      || (offsetof (struct real_gmon_hist_hdr, dimen)
+	  != offsetof (struct gmon_hist_hdr, dimen))
+      || (offsetof (struct real_gmon_hist_hdr, dimen_abbrev)
+	  != offsetof (struct gmon_hist_hdr, dimen_abbrev)))
+    abort ();
+
+  hist_hdr.low_pc = (char *) mapstart;
+  hist_hdr.high_pc = (char *) mapend;
+  hist_hdr.hist_size = kcountsize / sizeof (HISTCOUNTER);
+  hist_hdr.prof_rate = __profile_frequency ();
   if (sizeof (hist_hdr.dimen) >= sizeof ("seconds"))
     {
       memcpy (hist_hdr.dimen, "seconds", sizeof ("seconds"));
