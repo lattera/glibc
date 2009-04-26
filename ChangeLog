@@ -1,3 +1,8 @@
+2009-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nsswitch.c (__nss_lookup_function): En/Decrypt cached
+	function pointers.
+
 2009-04-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Fix -Wsequence-point warnings.
