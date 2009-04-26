@@ -1,5 +1,10 @@
 2009-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Use correct
+	errno value vor pow(+-0,neg).
+	* math/libm-test.inc (pow_test): Add tests for errno value for
+	pole errors.
+
 	* math/w_fmod.c: Also handle x=±Inf as error.
 	* math/w_fmodf.c: Likewise.
 	* math/w_fmodl.c: Likewise.

@@ -4742,15 +4742,31 @@ pow_test (void)
   TEST_ff_f (pow, -10.1L, 1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -10.1L, -1.1L, nan_value, INVALID_EXCEPTION);
 
+  errno = 0;
   TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_ff_f (pow, minus_zero, -11, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (pow, minus_zero, -11L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
 
+  errno = 0;
   TEST_ff_f (pow, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
 
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty);
   TEST_ff_f (pow, 10, -0x1p72L, 0);
@@ -4763,10 +4779,8 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, 1, minus_zero);
   TEST_ff_f (pow, minus_zero, 11, minus_zero);
 
-
   TEST_ff_f (pow, 0, 2, 0);
   TEST_ff_f (pow, 0, 11.1L, 0);
-
 
   TEST_ff_f (pow, minus_zero, 2, 0);
   TEST_ff_f (pow, minus_zero, 11.1L, 0);
