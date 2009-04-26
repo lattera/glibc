@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -302,15 +302,18 @@ sem_open (const char *name, int oflag, ...)
 	}
 
       /* Create the initial file content.  */
-      sem_t initsem;
+      union
+      {
+	sem_t initsem;
+	struct new_sem newsem;
+      } sem;
 
-      struct new_sem *iinitsem = (struct new_sem *) &initsem;
-      iinitsem->value = value;
-      iinitsem->private = 0;
-      iinitsem->nwaiters = 0;
+      sem.newsem.value = value;
+      sem.newsem.private = 0;
+      sem.newsem.nwaiters = 0;
 
       /* Initialize the remaining bytes as well.  */
-      memset ((char *) &initsem + sizeof (struct new_sem), '\0',
+      memset ((char *) &sem.initsem + sizeof (struct new_sem), '\0',
 	      sizeof (sem_t) - sizeof (struct new_sem));
 
       tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
@@ -349,7 +352,7 @@ sem_open (const char *name, int oflag, ...)
 	  break;
 	}
 
-      if (TEMP_FAILURE_RETRY (__libc_write (fd, &initsem, sizeof (sem_t)))
+      if (TEMP_FAILURE_RETRY (__libc_write (fd, &sem.initsem, sizeof (sem_t)))
 	  == sizeof (sem_t)
 	  /* Map the sem_t structure from the file.  */
 	  && (result = (sem_t *) mmap (NULL, sizeof (sem_t),
