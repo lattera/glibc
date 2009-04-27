@@ -692,7 +692,7 @@ static double zero = 0.0;	/* used as const */
 						   ? "atanhf" : "atanhl");
 		exc.retval = x/zero;	/* sign(x)*inf */
                 if (_LIB_VERSION == _POSIX_)
-                  __set_errno (EDOM);
+                  __set_errno (ERANGE);
                 else if (!matherr(&exc)) {
                   if (_LIB_VERSION == _SVID_) {
                     (void) WRITE2("atanh: SING error\n", 18);

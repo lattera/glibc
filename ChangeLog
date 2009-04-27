@@ -1,5 +1,8 @@
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors in
+	atanh should set ERANGE.
+
 	[BZ #10087]
 	* elf/dl-runtime.c (_dl_fixup): Use DL_FIXUP_VALUE_ADDR to access
 	result of lookup to make call to implement STT_GNU_IFUNC.
