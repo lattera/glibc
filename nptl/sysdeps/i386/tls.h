@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/i386 version.
-   Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,11 @@ typedef struct
   int gscope_flag;
 #ifndef __ASSUME_PRIVATE_FUTEX
   int private_futex;
+#else
+  int __unused1;
 #endif
+  /* Reservation of some values for the TM ABI.  */
+  void *__private_tm[5];
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
@@ -392,6 +396,17 @@ union user_desc_init
        /* Not necessary for other sizes in the moment.  */		      \
        abort ();							      \
      __ret; })
+
+
+/* Atomic logical and.  */
+#define THREAD_ATOMIC_AND(descr, member, val) \
+  (void) ({ if (sizeof ((descr)->member) == 4)				      \
+	      asm volatile (LOCK_PREFIX "andl %1, %%gs:%P0"		      \
+			    :: "i" (offsetof (struct pthread, member)),	      \
+			       "ir" (val));				      \
+	    else							      \
+	      /* Not necessary for other sizes in the moment.  */	      \
+	      abort (); })
 
 
 /* Atomic set bit.  */

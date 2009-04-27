@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -310,6 +310,17 @@ typedef struct
        /* Not necessary for other sizes in the moment.  */		      \
        abort ();							      \
      __ret; })
+
+
+/* Atomic logical and.  */
+#define THREAD_ATOMIC_AND(descr, member, val) \
+  (void) ({ if (sizeof ((descr)->member) == 4)				      \
+	      asm volatile (LOCK_PREFIX "andl %1, %%fs:%P0"		      \
+			    :: "i" (offsetof (struct pthread, member)),	      \
+			       "ir" (val));				      \
+	    else							      \
+	      /* Not necessary for other sizes in the moment.  */	      \
+	      abort (); })
 
 
 /* Atomic set bit.  */

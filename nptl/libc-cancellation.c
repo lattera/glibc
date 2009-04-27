@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -86,6 +86,10 @@ __libc_disable_asynccancel (int oldtype)
     return;
 
   struct pthread *self = THREAD_SELF;
+
+#ifdef THREAD_ATOMIC_AND
+  THREAD_ATOMIC_AND (self, cancelhandling, ~CANCELTYPE_BITMASK);
+#else
   int oldval = THREAD_GETMEM (self, cancelhandling);
 
   while (1)
@@ -103,6 +107,7 @@ __libc_disable_asynccancel (int oldtype)
       /* Prepare the next round.  */
       oldval = curval;
     }
+#endif
 }
 
 
