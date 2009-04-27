@@ -1,5 +1,9 @@
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Set errno for overflow.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+	* sysdeps/x86_64/fpu/s_expm1l.S: Likewise.
+
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors in
 	atanh should set ERANGE.
 

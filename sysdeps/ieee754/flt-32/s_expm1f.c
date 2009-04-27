@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: s_expm1f.c,v 1.5 1995/05/10 20:47:11 jtc Exp $";
 #endif
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -63,7 +64,10 @@ Q5  =  -2.0109921195e-07; /* 0xb457edbb */
 		    return x+x; 	 /* NaN */
 		if(hx==0x7f800000)
 		    return (xsb==0)? x:-1.0;/* exp(+-inf)={inf,-1} */
-	        if(x > o_threshold) return huge*huge; /* overflow */
+	        if(x > o_threshold) {
+		  __set_errno (ERANGE);
+		  return huge*huge; /* overflow */
+		}
 	    }
 	    if(xsb!=0) { /* x < -27*ln2, return -1.0 with inexact */
 		if(x+tiny<(float)0.0)	/* raise inexact */
