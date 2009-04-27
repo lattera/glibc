@@ -40,7 +40,7 @@
 	function if we are not going to define it.
 	* sysdeps/unix/sysv/linux/writev.c: Likewise.
 
-	* inet/inet6_option.c (optin_alloc): Add temporary variable to
+	* inet/inet6_option.c (option_alloc): Add temporary variable to
 	avoid warning.
 
 	* libio/strfile.h (struct _IO_streambuf): Use correct type and
