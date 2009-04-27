@@ -137,7 +137,7 @@ _dl_fixup (
   value = elf_machine_plt_value (l, reloc, value);
 
   if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
-    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
+    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (value)) ();
 
   /* Finally, fix up the plt itself.  */
   if (__builtin_expect (GLRO(dl_bind_not), 0))
@@ -225,7 +225,8 @@ _dl_profile_fixup (
 
 	  if (__builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
 				== STT_GNU_IFUNC, 0))
-	    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
+	    value = ((DL_FIXUP_VALUE_TYPE (*) (void))
+		     DL_FIXUP_VALUE_ADDR (value)) ();
 	}
       else
 	{
@@ -235,7 +236,8 @@ _dl_profile_fixup (
 
 	  if (__builtin_expect (ELFW(ST_TYPE) (refsym->st_info)
 				== STT_GNU_IFUNC, 0))
-	    value = ((DL_FIXUP_VALUE_TYPE (*) (void)) value) ();
+	    value = ((DL_FIXUP_VALUE_TYPE (*) (void))
+		     DL_FIXUP_VALUE_ADDR (value)) ();
 
 	  result = l;
 	}

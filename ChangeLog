@@ -1,5 +1,11 @@
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10087]
+	* elf/dl-runtime.c (_dl_fixup): Use DL_FIXUP_VALUE_ADDR to access
+	result of lookup to make call to implement STT_GNU_IFUNC.
+	(_dl_profile_fixup): Likewise.
+	Patch by H.J. Lu <hjl.tools@gmail.com>.
+
 	* nscd/connections.c (send_ro_fd): Define temporary variable to avoid
 	warning.
 
