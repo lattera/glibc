@@ -1,3 +1,12 @@
+2009-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (create_archive): Add MAP_PRIVATE
+	to MAP_ANON in PROT_NONE mmap64 call.
+	(open_archive): Likewise.
+	(file_data_available_p): Use mmap64 instead of mremap.
+	(enlarge_archive): Likewise.  Update head if ah->addr changed.
+	Attempt to reserve address space after mmap64 region.
+
 2009-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/s_expm1.c: Set errno for overflow.
