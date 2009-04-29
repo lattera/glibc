@@ -101,6 +101,15 @@
 	* sysdeps/pthread/list.h (list_add): Initialize new element first.
 	(list_add_tail): Removed.
 
+2009-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* (in_flight_stack): New variable.
+	(stack_list_del): New function.  Use instead of list_del.
+	(stack_list_add): New function.  Use instead of list_add when adding to
+	stack_cache and stack_used lists.
+	(__reclaim_stacks): Complete operations on stack_cache and stack_used lists
+	when the fork call interrupted another thread.
+
 2009-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Optimize test
