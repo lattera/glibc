@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -323,7 +323,7 @@ map_newlink (int index, struct ifaddrs_storage *ifas, int *map, int max)
 
 /* Create a linked list of `struct ifaddrs' structures, one for each
    network interface on the host machine.  If successful, store the
-   list in *IFAP and 2004, 2005, 2006, return 0.  On errors, return -1 and set `errno'.  */
+   list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
 int
 getifaddrs (struct ifaddrs **ifap)
 {
