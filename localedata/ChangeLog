@@ -1,3 +1,10 @@
+2009-05-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/locales/bn_BD: Remove comment about missing collation
+	rules.
+	* localedata/locales/iso14651_t1_common: Add Bengali collation rules.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
 2009-03-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* locales/cs.CZ: Change week[2] to 19971130, change first_weekday and

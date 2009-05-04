@@ -67,6 +67,7 @@ script <GURUMUKHI>
 script <KANNADA>
 script <SINHALA>
 script <MALAYALAM>
+script <BENGALI>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -1034,6 +1035,85 @@ collating-symbol <mlvs-o>
 collating-symbol <mlvs-au>
 collating-symbol <ml-visarga>
 collating-symbol <ml-virama>
+#
+# <BENGALI>
+#
+# bvd- denotes bengali vowel modifier
+# bm-  denotes bengali matras
+# bnw- denotes bengali vowels
+#
+# defning symbols
+collating-symbol <U_09F8>
+collating-symbol <U_09F9>
+collating-symbol <U_09FA>
+collating-symbol <bnw-a>
+collating-symbol <bnw-aa>
+collating-symbol <bnw-i>
+collating-symbol <bnw-ii>
+collating-symbol <bnw-u>
+collating-symbol <bnw-uu>
+collating-symbol <bnw-vocalicr>
+collating-symbol <bnw-vocalicrr>
+collating-symbol <bnw-vocalicl>
+collating-symbol <bnw-vocalicll>
+collating-symbol <bnw-e>
+collating-symbol <bnw-ai>
+collating-symbol <bnw-o>
+collating-symbol <bnw-au>
+collating-symbol <bvd-anuswara>
+collating-symbol <bvd-visarg>
+collating-symbol <bvd-chandrabindu>
+collating-symbol <b_ka>
+collating-symbol <b_kha>
+collating-symbol <b_ga>
+collating-symbol <b_gha>
+collating-symbol <b_nga>
+collating-symbol <b_ca>
+collating-symbol <b_cha>
+collating-symbol <b_ja>
+collating-symbol <b_jha>
+collating-symbol <b_nya>
+collating-symbol <b_tta>
+collating-symbol <b_ttha>
+collating-symbol <b_dda>
+collating-symbol <b_ddha>
+collating-symbol <b_nna>
+collating-symbol <b_ta>
+collating-symbol <b_khand_ta>
+collating-symbol <b_tha>
+collating-symbol <b_da>
+collating-symbol <b_dha>
+collating-symbol <b_na>
+collating-symbol <b_pa>
+collating-symbol <b_pha>
+collating-symbol <b_va>
+collating-symbol <b_bha>
+collating-symbol <b_ma>
+collating-symbol <b_ya>
+collating-symbol <b_ra>
+collating-symbol <b_ra_diagonal>
+collating-symbol <b_la>
+collating-symbol <b_ra_lower_diagonal>
+collating-symbol <b_sha>
+collating-symbol <b_ssa>
+collating-symbol <b_sa>
+collating-symbol <b_ha>
+collating-symbol <b_avagrah>
+collating-symbol <bm-aa>
+collating-symbol <bm-i>
+collating-symbol <bm-ii>
+collating-symbol <bm-u>
+collating-symbol <bm-uu>
+collating-symbol <bm-vocalicr>
+collating-symbol <bm-vocalicrr>
+collating-symbol <bm-vocalicl>
+collating-symbol <bm-vocalicll>
+collating-symbol <bm-e>
+collating-symbol <bm-ai>
+collating-symbol <bm-o>
+collating-symbol <bm-au>
+collating-symbol <b_halant>
+collating-symbol <bm_au_lenght>
 
 # Ordre des symboles internes / Order of internal symbols
 #
@@ -1934,6 +2014,81 @@ collating-symbol <ml-virama>
 <mlvs-o>
 <mlvs-au>
 <ml-visarga>
+#
+# <BENGALI>
+#
+# collation weights in order
+<U_09F8>
+<U_09F9>
+<U_09FA>
+<bnw-a>
+<bnw-aa>
+<bnw-i>
+<bnw-ii>
+<bnw-u>
+<bnw-uu>
+<bnw-vocalicr>
+<bnw-vocalicrr>
+<bnw-vocalicl>
+<bnw-vocalicll>
+<bnw-e>
+<bnw-ai>
+<bnw-o>
+<bnw-au>
+<bvd-anuswara>
+<bvd-visarg>
+<bvd-chandrabindu>
+<b_ka>
+<b_kha>
+<b_ga>
+<b_gha>
+<b_nga>
+<b_ca>
+<b_cha>
+<b_ja>
+<b_jha>
+<b_nya>
+<b_tta>
+<b_ttha>
+<b_dda>
+<b_ddha>
+<b_nna>
+<b_ta>
+<b_khand_ta>
+<b_tha>
+<b_da>
+<b_dha>
+<b_na>
+<b_pa>
+<b_pha>
+<b_va>
+<b_bha>
+<b_ma>
+<b_ya>
+<b_ra>
+<b_ra_diagonal>
+<b_la>
+<b_ra_lower_diagonal>
+<b_sha>
+<b_ssa>
+<b_sa>
+<b_ha>
+<b_avagrah>
+<bm-aa>
+<bm-i>
+<bm-ii>
+<bm-u>
+<bm-uu>
+<bm-vocalicr>
+<bm-vocalicrr>
+<bm-vocalicl>
+<bm-vocalicll>
+<bm-e>
+<bm-ai>
+<bm-o>
+<bm-au>
+<b_halant>
+<bm_au_lenght>
 
 order_start <SPECIAL>;forward;backward;forward;forward,position
 #
@@ -4376,6 +4531,96 @@ order_start <MALAYALAM>;forward;forward;forward;forward,position
 <ml-split-o>  <mlvs-shorto>;<BAS>;<MIN>;IGNORE
 <ml-split-oo> <mlvs-o>;<BAS>;<MIN>;IGNORE
 <ml-split-au> <mlvs-au>;<BAS>;<MIN>;IGNORE
+
+order_start <BENGALI>;forward;forward;forward;forward,position
+<U09F2> IGNORE;IGNORE;IGNORE;<U09F2> # BENGALI RUPEE MARK
+<U09F3> IGNORE;IGNORE;IGNORE;<U09F3> # BENGALI RUPEE SIGN
+<U09F8> <U_09F8>;<BAS>;<MIN>;IGNORE # BENGALI CURRENCY NUMERATOR ONE LESS THAN THE DENOMINATOR
+<U09F9> <U_09F9>;<BAS>;<MIN>;IGNORE # BENGALI CURRENCY DENOMINATOR SIXTEEN
+<U09FA> <U_09FA>;<BAS>;<MIN>;IGNORE # BENGALI ISSHAR
+#Fix Require for <U09F4>..<U09F9>
+<U09E6> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09E7> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09E8> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09E9> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09EA> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09EB> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09EC> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09ED> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09EE> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U09EF> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0985> <bnw-a> ;<BAS>;<MIN>;IGNORE
+<U0986> <bnw-aa> ;<BAS>;<MIN>;IGNORE
+<U0987> <bnw-i> ;<BAS>;<MIN>;IGNORE
+<U0988> <bnw-ii> ;<BAS>;<MIN>;IGNORE
+<U0989> <bnw-u> ;<BAS>;<MIN>;IGNORE
+<U098A> <bnw-uu>;<BAS>;<MIN>;IGNORE
+<U098B> <bnw-vocalicr>;<BAS>;<MIN>;IGNORE
+<U09E0> <bnw-vocalicrr>;<BAS>;<MIN>;IGNORE
+<U098C> <bnw-vocalicl>;<BAS>;<MIN>;IGNORE
+<U09E1> <bnw-vocalicll>;<BAS>;<MIN>;IGNORE
+<U098F> <bnw-e>;<BAS>;<MIN>;IGNORE
+<U0990> <bnw-ai>;<BAS>;<MIN>;IGNORE
+<U0993> <bnw-o>;<BAS>;<MIN>;IGNORE
+<U0994> <bnw-au>;<BAS>;<MIN>;IGNORE
+<U0982> <bvd-anuswara>;<BAS>;<MIN>;IGNORE
+<U0983> <bvd-visarg>;<BAS>;<MIN>;IGNORE
+<U0981> <bvd-chandrabindu>;<BAS>;<MIN>;IGNORE
+<U0995> <b_ka>;<BAS>;<MIN>;IGNORE
+<U0996> <b_kha>;<BAS>;<MIN>;IGNORE
+<U0997> <b_ga>;<BAS>;<MIN>;IGNORE
+<U0998> <b_gha>;<BAS>;<MIN>;IGNORE
+<U0999> <b_nga>;<BAS>;<MIN>;IGNORE
+<U099A> <b_ca>;<BAS>;<MIN>;IGNORE
+<U099B> <b_cha>;<BAS>;<MIN>;IGNORE
+<U099C> <b_ja>;<BAS>;<MIN>;IGNORE
+<U099D> <b_jha>;<BAS>;<MIN>;IGNORE
+<U099E> <b_nya>;<BAS>;<MIN>;IGNORE
+<U099F> <b_tta>;<BAS>;<MIN>;IGNORE
+<U09A0> <b_ttha>;<BAS>;<MIN>;IGNORE
+<U09A1> <b_dda>;<BAS>;<MIN>;IGNORE
+<U09DC> <b_dda>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U09A2> <b_ddha>;<BAS>;<MIN>;IGNORE
+<U09DD> <b_ddha>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U09A3> <b_nna>;<BAS>;<MIN>;IGNORE
+<U09A4> <b_ta>;<BAS>;<MIN>;IGNORE
+<U09CE> <b_khand_ta>;<BAS>;<MIN>;IGNORE
+<U09A5> <b_tha>;<BAS>;<MIN>;IGNORE
+<U09A6> <b_da>;<BAS>;<MIN>;IGNORE
+<U09A7> <b_dha>;<BAS>;<MIN>;IGNORE
+<U09A8> <b_na>;<BAS>;<MIN>;IGNORE
+<U09AA> <b_pa>;<BAS>;<MIN>;IGNORE
+<U09AB> <b_pha>;<BAS>;<MIN>;IGNORE
+<U09AC> <b_va>;<BAS>;<MIN>;IGNORE
+<U09AD> <b_bha>;<BAS>;<MIN>;IGNORE
+<U09AE> <b_ma>;<BAS>;<MIN>;IGNORE
+<U09AF> <b_ya>;<BAS>;<MIN>;IGNORE
+<U09DF> <b_ya>;"<BAS><NKT>";"<MIN><MIN>";IGNORE
+<U09B0> <b_ra>;<BAS>;<MIN>;IGNORE
+<U09F0> <b_ra_diagonal>;<BAS>;<MIN>;IGNORE
+<U09B2> <b_la>;<BAS>;<MIN>;IGNORE
+<U09F1> <b_ra_lower_diagonal>;<BAS>;<MIN>;IGNORE
+<U09B6> <b_sha>;<BAS>;<MIN>;IGNORE
+<U09B7> <b_ssa>;<BAS>;<MIN>;IGNORE
+<U09B8> <b_sa>;<BAS>;<MIN>;IGNORE
+<U09B9> <b_ha>;<BAS>;<MIN>;IGNORE
+<U09BD> <b_avagrah>;<BAS>;<MIN>;IGNORE
+<U09BE> <bm-aa>;<BAS>;<MIN>;IGNORE
+<U09BF> <bm-i>;<BAS>;<MIN>;IGNORE
+<U09C0> <bm-ii>;<BAS>;<MIN>;IGNORE
+<U09C1> <bm-u>;<BAS>;<MIN>;IGNORE
+<U09C2> <bm-uu>;<BAS>;<MIN>;IGNORE
+<U09C3> <bm-vocalicr>;<BAS>;<MIN>;IGNORE
+<U09C4> <bm-vocalicrr>;<BAS>;<MIN>;IGNORE
+<U09E2> <bm-vocalicl>;<BAS>;<MIN>;IGNORE
+<U09E3> <bm-vocalicll>;<BAS>;<MIN>;IGNORE
+<U09C7> <bm-e>;<BAS>;<MIN>;IGNORE
+<U09C8> <bm-ai>;<BAS>;<MIN>;IGNORE
+<U09CB> <bm-o>;<BAS>;<MIN>;IGNORE
+<U09CC> <bm-au>;<BAS>;<MIN>;IGNORE
+<U09CD> <b_halant>;<BAS>;<MIN>;IGNORE
+<U09D7> <bm_au_lenght>;<BAS>;<MIN>;IGNORE
+<U09BC> IGNORE;<NKT>;<MIN>;IGNORE
 
 order_end
 

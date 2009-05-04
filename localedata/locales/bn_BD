@@ -32,7 +32,6 @@ category "bn_BD:2001";LC_NAME
 END LC_IDENTIFICATION
 
 LC_COLLATE
-% TODO: Bengali sorting should be added
 copy "iso14651_t1"
 END LC_COLLATE
 
