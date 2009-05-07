@@ -249,9 +249,11 @@ extern int __REDIRECT_NTH (fstatat, (int __fd, __const char *__restrict __file,
 #  endif
 # endif
 
+# ifdef __USE_LARGEFILE64
 extern int fstatat64 (int __fd, __const char *__restrict __file,
 		      struct stat64 *__restrict __buf, int __flag)
      __THROW __nonnull ((2, 3));
+# endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
@@ -516,7 +518,7 @@ __NTH (fstat64 (int __fd, struct stat64 *__statbuf))
   return __fxstat64 (_STAT_VER, __fd, __statbuf);
 }
 
-#  ifdef __USE_GNU
+#  ifdef __USE_ATFILE
 __extern_inline int
 __NTH (fstatat64 (int __fd, __const char *__filename, struct stat64 *__statbuf,
 		  int __flag))

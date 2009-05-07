@@ -1,3 +1,8 @@
+2009-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h (fstatat64): Guard prototype with __USE_LARGEFILE64,
+	guard __extern_inline wrapper with __USE_ATFILE instead of __USE_GNU.
+		
 2009-04-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Revert unintended 2008-08-12
