@@ -1,3 +1,9 @@
+2009-05-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #10128]
+	* resolv/res_query.c (__libc_res_nquery): If one query returns NOTIMP
+	or FORMERR and the other NOERROR, don't raise an error.
+
 2009-05-06  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #10118]

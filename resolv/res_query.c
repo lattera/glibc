@@ -289,6 +289,13 @@ __libc_res_nquery(res_state statp,
 			break;
 		case FORMERR:
 		case NOTIMP:
+			/* Servers must not reply to AAAA queries with
+			   NOTIMP etc but some of them do.  */
+			if ((hp->rcode == NOERROR && ntohs (hp->ancount) != 0)
+			    || (hp2->rcode == NOERROR
+				&& ntohs (hp2->ancount) != 0))
+				goto success;
+			/* FALLTHROUGH */
 		case REFUSED:
 		default:
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
