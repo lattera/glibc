@@ -1,12 +1,15 @@
 2009-05-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/memchr.S: Handle invalid buffer pointers when
+	count is zero.
+
 	* po/da.po: Update from translation team.
 
 2009-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/sys/stat.h (fstatat64): Guard prototype with __USE_LARGEFILE64,
 	guard __extern_inline wrapper with __USE_ATFILE instead of __USE_GNU.
-		
+
 2009-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/personality.h: Add ADDR_COMPAT_LAYOUT

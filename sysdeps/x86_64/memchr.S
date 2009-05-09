@@ -26,7 +26,9 @@ ENTRY (memchr)
 	movq	%rdi, %rcx
 	punpcklbw %xmm1, %xmm1
 	andq	$~15, %rdi
+	testq	%rdx, %rdx
 	punpcklbw %xmm1, %xmm1
+	jz	3f
 	orl	$0xffffffff, %esi
 	movdqa	(%rdi), %xmm0
 	pshufd	$0, %xmm1, %xmm1
