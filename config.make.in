@@ -32,6 +32,7 @@ config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
 cflags-cpu = @libc_cv_cc_submachine@
+asflags-cpu = @libc_cv_cc_submachine@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@

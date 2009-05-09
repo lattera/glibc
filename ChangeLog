@@ -1,3 +1,23 @@
+2009-05-06  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #10118]
+	* Makeconfig (+asflags): New variable based upon ASFLAG or
+	asflags-cpu.
+	(ASFLAGS): Add override to set ASFLAGS to +asflags.
+	* config.make.in (asflags-cpu): Add variable based upon
+	@libc_cv_cc_submachine@ to propagate -mcpu=CPU from --with-cpu=CPU to
+	the assembler.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/setcontext.S:
+	Remove unneeded file now that the assembler emits _ARCH_PWR6 and
+	recognizes power6 instruction set due to passing -mcpu=power6 from
+	--with-cpu=power6 when compiling .S files.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/swapcontext.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/setcontext.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/swapcontext.S:
+	Likewise.
+
 2009-05-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/stratcliff.c (do_test): Test for zero length
