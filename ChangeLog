@@ -1,5 +1,7 @@
 2009-05-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_AT_RANDOM.
+
 	* sysdeps/x86_64/memchr.S: Handle invalid buffer pointers when
 	count is zero.
 

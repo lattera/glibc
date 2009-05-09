@@ -530,6 +530,11 @@
 # define __ASSUME_FUTEX_CLOCK_REALTIME	1
 #endif
 
+/* Support for the AT_RANDOM auxiliary vector entry was added in 2.6.29.  */
+#if __LINUX_KERNEL_VERSION >= 0x02061d
+# define __ASSUME_AT_RANDOM	1
+#endif
+
 /* Support for preadv and pwritev was added in 2.6.30.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061e
 # define __ASSUME_PREADV	1
