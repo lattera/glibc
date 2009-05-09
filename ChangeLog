@@ -1,3 +1,9 @@
+2009-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/stratcliff.c (do_test): Test for zero length
+	STRNLEN, MEMCHR, STRNCPY, STPNCPY, MEMCPY, MEMPCPY and memccpy
+	at the end of the page.
+
 2009-05-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_AT_RANDOM.
