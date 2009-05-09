@@ -3,6 +3,9 @@
 	* version.h (VERSION): Bump for 2.10 release.
 	* include/features.h (__GLIBC_MINOR__): Bump to 10.
 
+	* Makeconfig: Undo last change.  Add asflags-cpu to ASFLAGS in the
+	same place we add ASFLAGS-config.
+
 2009-05-05  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #10128]

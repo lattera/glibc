@@ -649,17 +649,6 @@ endif	# $(+cflags) == ""
 # Don't duplicate options if we inherited variables from the parent.
 +cflags	:= $(sort $(+cflags))
 
-# These are the flags given to the compiler to tell it what sort of
-# optimization and/or debugging output to do for .S files.
-ifndef +asflags
-# If `ASFLAGS' was defined, use that.
-ifdef		ASFLAGS
-+asflags := $(ASFLAGS)
-endif		#ASFLAGS
-endif	# +asflags
-
-+asflags +=  $(asflags-cpu)
-
 # These are flags given to the C compiler to tell it to look for
 # include files (including ones given in angle brackets) in the parent
 # library source directory, in the include directory, and in the
@@ -690,8 +679,6 @@ override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) \
 override CXXFLAGS = $(c++-sysincludes) \
 		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
-
-override ASFLAGS = $(+asflags)
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by
 # defining the PIC symbol.
@@ -782,7 +769,7 @@ else
 ASFLAGS :=
 endif
 endif
-ASFLAGS += $(ASFLAGS-config)
+ASFLAGS += $(ASFLAGS-config) $(asflags-cpu)
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)
