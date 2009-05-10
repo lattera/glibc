@@ -7,7 +7,7 @@ libc {
     fgetsgent; fgetsgent_r;
 
     # g*
-    getsgent; getsgent_r; getsgnam; getsgnam_r; getsgent_r; getsgnam_r;
+    getsgent; getsgent_r; getsgnam; getsgnam_r;
 
     # p*
     putsgent;

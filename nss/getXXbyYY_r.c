@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -301,7 +301,9 @@ done:
 }
 
 
-#ifndef FUNCTION2_NAME
+#ifdef NO_COMPAT_NEEDED
+strong_alias (INTERNAL (REENTRANT_NAME), REENTRANT_NAME);
+#elif !defined FUNCTION2_NAME
 # include <shlib-compat.h>
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1_2)
 #  define OLD(name) OLD1 (name)

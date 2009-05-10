@@ -1,3 +1,19 @@
+2009-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.10.1.
+
+	* nss/getXXbyYY_r.c: If NO_COMPAT_NEEDED is defined don't define any
+	compatibility functions.
+	* nss/getXXent_r.c: Likewise.
+	* gshadow/getsgent_r.c: Define NO_COMPAT_NEEDED.
+	* gshadow/getsgnam_r.c: Likewise.
+	* gshadow/Version: Remove duplicate entries.
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_cache_info): Add missing entries
+	for recent processor.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_cache_info):
+	Likewise.
+
 2009-05-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump for 2.10 release.

@@ -26,5 +26,6 @@
 #define	ENDFUNC_NAME		endsgent
 #define DATABASE_NAME		gshadow
 #define BUFLEN			1024
+#define NO_COMPAT_NEEDED	1
 
 #include "../nss/getXXent_r.c"

@@ -80,6 +80,7 @@ static const struct intel_02_cache_info
     { 0x0a, _SC_LEVEL1_DCACHE_SIZE, 8192, 2, 32 },
     { 0x0c, _SC_LEVEL1_DCACHE_SIZE, 16384, 4, 32 },
     { 0x0d, _SC_LEVEL1_DCACHE_SIZE, 16384, 4, 64 },
+    { 0x21, _SC_LEVEL2_CACHE_SIZE, 262144, 8, 64 },
     { 0x22, _SC_LEVEL3_CACHE_SIZE, 524288, 4, 64 },
     { 0x23, _SC_LEVEL3_CACHE_SIZE, 1048576, 8, 64 },
     { 0x25, _SC_LEVEL3_CACHE_SIZE, 2097152, 8, 64 },
