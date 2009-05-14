@@ -1,3 +1,8 @@
+2009-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/preadv64.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/pwritev64.c: New files.
+
 2009-04-18  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/getcontext.S: New file.
