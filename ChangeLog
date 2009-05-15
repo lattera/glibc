@@ -1,5 +1,7 @@
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h: Bump for 2.11 development.
+
 	* elf/check-execstack.c: New file.
 	* elf/Makefile: Add rules to build and run check-execstack.
 
