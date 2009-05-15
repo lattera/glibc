@@ -1,3 +1,9 @@
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancellation.c (__pthread_disable_asynccancel): Don't return if
+	thread is canceled.
+	* libc-cancellation.c (__libc_disable_asynccancel): Likewise.
+
 2009-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* cancellation.c (__pthread_disable_asynccancel): Use THREAD_ATOMIC_AND
