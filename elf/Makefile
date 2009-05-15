@@ -93,7 +93,7 @@ distribute	:= rtld-Rules \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
-		   tst-array5.exp tst-leaks1.c
+		   tst-array5.exp tst-leaks1.c check-execstack.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -842,18 +842,28 @@ check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 
+check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99
+$(objpfx)check-execstack: check-execstack.c
+	$(native-compile)
+
 check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
 $(objpfx)check-localplt: check-localplt.c
 	$(native-compile)
 
 ifeq (yes,$(build-shared))
-tests: $(objpfx)check-textrel.out
+tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
 
 $(objpfx)check-textrel.out: $(objpfx)check-textrel
 	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
 	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
 			    $(common-objpfx)iconvdata/*.so)) > $@
 generated += check-textrel check-textrel.out
+
+$(objpfx)check-execstack.out: $(objpfx)check-execstack
+	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
+	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
+			    $(common-objpfx)iconvdata/*.so)) > $@
+generated += check-execstack check-execstack.out
 
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
