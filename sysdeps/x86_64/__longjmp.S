@@ -33,6 +33,9 @@ ENTRY(__longjmp)
 	PTR_DEMANGLE (%r9)
 	PTR_DEMANGLE (%rdx)
 #endif
+#ifdef CHECK_RSP
+	CHECK_RSP (%r8)
+#endif
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)

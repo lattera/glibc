@@ -1,5 +1,24 @@
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add GLIBC_2.11 for libc.
+	* debug/Makefile (routines): Add longjmp_chk.
+	Add rules to build and run tst-longjmp_chk.
+	* debug/Versions: Export __longjmp_chk for GLIBC_2.11.
+	* debug/longjmp_chk.c: New file.
+	* debug/tst-longjmp_chk.c: New file.
+	* include/bits/setjmp2.: New file.
+	* include/stdio.h: Mark __fortify_fail as internal_function.
+	* setjmp/Makefile (headers): Add bits/setjmp2.h.
+	* setjmp/bits/setjmp2.h: New file.
+	* setjmp/longjmp.c: If __libc_siglongjmp is defined, don't define any
+	of the aliases.
+	* setjmp/setjmp.h: Include <bits/setjmp2.h> if _FORTIFY_SOURCE is
+	defined.
+	* sysdeps/i386/____longjmp_chk.S: New file.
+	* sysdeps/x86_64/____longjmp_chk.S: New file.
+	* sysdeps/i386/__longjmp.S: If CHECK_ESP is defined, use it.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+
 	* version.h: Bump for 2.11 development.
 
 	* elf/check-execstack.c: New file.

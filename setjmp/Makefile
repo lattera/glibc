@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 97, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= setjmp
 
-headers	:= setjmp.h bits/setjmp.h
+headers	:= setjmp.h bits/setjmp.h bits/setjmp2.h
 
 routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \
 		   longjmp __longjmp jmp-unwind

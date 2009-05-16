@@ -1,5 +1,6 @@
 /* longjmp for i386.
-   Copyright (C) 1995-1998,2000,2002,2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000,2002,2005,2006,2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +41,9 @@ ENTRY (BP_SYM (__longjmp))
 	movl (JB_SP*4)(%eax), %ecx
 	PTR_DEMANGLE (%edx)
 	PTR_DEMANGLE (%ecx)
+# ifdef CHECK_ESP
+	CHECK_ESP (%ecx)
+# endif
 	cfi_def_cfa(%eax, 0)
 	cfi_register(%eip, %edx)
 	cfi_register(%esp, %ecx)
@@ -62,6 +66,11 @@ ENTRY (BP_SYM (__longjmp))
 #else
 	movl JBUF(%esp), %ecx	/* User's jmp_buf in %ecx.  */
 	CHECK_BOUNDS_BOTH_WIDE (%ecx, JBUF(%esp), $JB_SIZE)
+
+# ifdef CHECK_ESP
+	movl (JB_SP*4)(%ecx), %eax
+	CHECK_ESP (%eax)
+# endif
 
 	movl VAL(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */

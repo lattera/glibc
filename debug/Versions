@@ -46,6 +46,9 @@ libc {
     __asprintf_chk; __vasprintf_chk;  __dprintf_chk; __vdprintf_chk;
     __obstack_printf_chk; __obstack_vprintf_chk;
   }
+  GLIBC_2.11 {
+    __longjmp_chk;
+  }
   GLIBC_PRIVATE {
     __fortify_fail;
   }

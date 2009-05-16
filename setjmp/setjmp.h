@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2001, 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2001,2002,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,6 +110,12 @@ typedef struct __jmp_buf_tag sigjmp_buf[1];
 extern void siglongjmp (sigjmp_buf __env, int __val)
      __THROW __attribute__ ((__noreturn__));
 #endif /* Use POSIX.  */
+
+
+/* Define helper functions to catch unsafe code.  */
+#if __USE_FORTIFY_LEVEL > 0
+# include <bits/setjmp2.h>
+#endif
 
 __END_DECLS
 

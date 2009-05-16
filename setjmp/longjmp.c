@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,94,95,97,98,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,97,98,2000,2002,2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,8 +40,10 @@ __libc_siglongjmp (sigjmp_buf env, int val)
   __longjmp (env[0].__jmpbuf, val ?: 1);
 }
 
+#ifndef __libc_siglongjmp
 strong_alias (__libc_siglongjmp, __libc_longjmp)
 libc_hidden_def (__libc_longjmp)
 weak_alias (__libc_siglongjmp, _longjmp)
 weak_alias (__libc_siglongjmp, longjmp)
 weak_alias (__libc_siglongjmp, siglongjmp)
+#endif

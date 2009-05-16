@@ -90,7 +90,8 @@ extern int __gen_tempname (char *__tmpl, int __flags, int __kind);
 extern void __libc_fatal (__const char *__message)
      __attribute__ ((__noreturn__));
 extern void __libc_message (int do_abort, __const char *__fnt, ...);
-extern void __fortify_fail (const char *msg) __attribute__ ((noreturn));
+extern void __fortify_fail (const char *msg)
+     __attribute__ ((__noreturn__)) internal_function;
 libc_hidden_proto (__fortify_fail)
 
 /* Acquire ownership of STREAM.  */
