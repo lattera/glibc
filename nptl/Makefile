@@ -31,7 +31,7 @@ install-lib-ldscripts := libpthread.so
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation
 shared-only-routines = forward
 
-libpthread-routines = init vars events version \
+libpthread-routines = nptl-init vars events version \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_self pthread_equal pthread_yield \
@@ -139,8 +139,8 @@ CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 # we have to compile some files with exception handling enabled, some
 # even with asynchronous unwind tables.
 
-# init.c contains sigcancel_handler().
-CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
+# nptl-init.c contains sigcancel_handler().
+CFLAGS-nptl-init.c = -fexceptions -fasynchronous-unwind-tables
 # The unwind code itself,
 CFLAGS-unwind.c = -fexceptions
 CFLAGS-unwind-forcedunwind.c = -fexceptions -fasynchronous-unwind-tables
