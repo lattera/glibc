@@ -95,14 +95,15 @@
 #endif
 
 
-#if !defined catomic_compare_and_exchange_val_acq \
-    && defined __arch_c_compare_and_exchange_val_32_acq
-# define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+#ifndef catomic_compare_and_exchange_val_acq
+# ifdef __arch_c_compare_and_exchange_val_32_acq
+#  define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   __atomic_val_bysize (__arch_c_compare_and_exchange_val,acq,		      \
 		       mem, newval, oldval)
-#else
-# define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+# else
+#  define catomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   atomic_compare_and_exchange_val_acq (mem, newval, oldval)
+# endif
 #endif
 
 
@@ -125,8 +126,8 @@
 #  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   __atomic_bool_bysize (__arch_compare_and_exchange_bool,acq,		      \
 		        mem, newval, oldval)
-#  else
-#   define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+# else
+#  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({ /* Cannot use __oldval here, because macros later in this file might     \
 	call this macro with __oldval argument.	 */			      \
      __typeof (oldval) __atg3_old = (oldval);				      \
@@ -142,8 +143,8 @@
 #  define catomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   __atomic_bool_bysize (__arch_c_compare_and_exchange_bool,acq,		      \
 		        mem, newval, oldval)
-#  else
-#   define catomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+# else
+#  define catomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({ /* Cannot use __oldval here, because macros later in this file might     \
 	call this macro with __oldval argument.	 */			      \
      __typeof (oldval) __atg4_old = (oldval);				      \

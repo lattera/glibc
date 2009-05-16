@@ -1,3 +1,9 @@
+2009-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Formatting.
+	(catomic_compare_and_exchange_val_acq): Don't define if already
+	defined by bits/atomic.h.
+
 2009-05-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/fallocate64.c (__fallocate64_l64):
