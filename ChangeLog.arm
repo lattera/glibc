@@ -1,3 +1,8 @@
+2009-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/Versions (libc): Add
+	fallocate64@@GLIBC_2.11.
+
 2009-04-25  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/arm/eabi/fpu_control.h: If soft-float, don't use
