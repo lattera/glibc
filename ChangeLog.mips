@@ -1,5 +1,12 @@
 2009-05-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate64.c: New.
+
+2009-05-16  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/Versions (libc): Add
 	fallocate64@@GLIBC_2.11.
 
