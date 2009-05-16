@@ -1,14 +1,32 @@
-*.d *.o *.so *.po *.go stamp.* *.stamp *.ustamp *.udeps
-*.gz *.Z *.tar *.tgz *.bz2
-=*
-TODO COPYING* AUTHORS copyr-* copying.*
-glibc-*
+*.dvi*
+*.info*
+*.c.texi
+*.ps
+*.pdf
+*.toc
+*.aux
+*.log
+*.tmp
+*.cp
+*.cps
+*.fn
+*.fns
+*.vr
+*.vrs
+*.tp
+*.tps
+*.ky
+*.kys
+*.pg
+*.pgs
 
-*.dvi* *.info* *.c.texi *.ps *.pdf
-*.toc *.aux *.log *.tmp
-*.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
-
-texis top-menu.texi chapters.texi summary.texi stamp-*
-distinfo dir-add.texinfo dir-add.texi
+texis
+top-menu.texi
+chapters.texi
+summary.texi
+stamp-*
+distinfo
+dir-add.texinfo
+dir-add.texi
 
 libm-err.texi

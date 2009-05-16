@@ -1,15 +1,35 @@
 *~
-*.d *.o *.so *.po *.go *.bo stamp.* *.stamp *.ustamp *.udeps
-*.gz *.Z *.tar *.tgz *.bz2
+*.d
+*.o
+*.so
+*.po
+*.go
+*.bo
+stamp.*
+*.stamp
+*.ustamp
+*.udeps
+*.gz
+*.Z
+*.tar
+*.tgz
+*.bz2
 =*
-TODO AUTHORS copyr-* copying.*
+TODO
+AUTHORS
+copyr-*
+copying.*
 glibc-*
 
 configparms
 
-sun[43]* i[345]86* hp300*
+sun[43]*
+i[345]86*
+hp300*
 
-ieeetest hppa-sysdeps regex
+ieeetest
+hppa-sysdeps
+regex
 
 gpl2lgpl.sed
 distinfo
@@ -20,8 +40,10 @@ analysis
 docs
 releases
 
-libc.prj .libc.prcs_aux
-libc.proj .snprj
+libc.prj
+.libc.prcs_aux
+libc.proj
+.snprj
 
 TODO.html
 
