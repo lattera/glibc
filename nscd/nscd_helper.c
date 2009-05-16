@@ -528,7 +528,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
       work = atomic_forced_read (here->next);
       /* Prevent endless loops.  This should never happen but perhaps
 	 the database got corrupted, accidentally or deliberately.  */
-      if (work == trail || loop_cnt-- > 0)
+      if (work == trail || loop_cnt-- == 0)
 	break;
       if (tick)
 	{

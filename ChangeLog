@@ -1,3 +1,8 @@
+2009-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Fix exit condition in last
+	patch.
+
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.h: Move Definition for BLOCK_ALIGN_LOG, BLOCK_ALIGN, and
