@@ -1,5 +1,10 @@
 2009-05-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_PREADV,
+	__ASSUME_PWRITEV): Don't undefine.
+
+2009-05-16  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/arm/Versions (libc): Add
 	fallocate64@@GLIBC_2.11.
 
