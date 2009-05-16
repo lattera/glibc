@@ -20,6 +20,9 @@
 #include "pthreadP.h"
 
 
-#define __pthread_enable_asynccancel __libc_enable_asynccancel
-#define __pthread_disable_asynccancel __libc_disable_asynccancel
-#include <nptl/cancellation.c>
+void
+__libc_cleanup_routine (struct __pthread_cleanup_frame *f)
+{
+  if (f->__do_it)
+    f->__cancel_routine (f->__cancel_arg);
+}

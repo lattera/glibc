@@ -1,5 +1,9 @@
 2009-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* libc-cancellation.c: Move __libc_cleanup_routine to...
+	* libc-cleanup.c: ...here.  New file.
+	* Makefile (routines): Add libc-cleanup.
+
 	* cancellation.c (__pthread_disable_asynccancel): Remove unnecessary
 	test.
 	* libc-cancellation.c: Use <nptl/cancellation.c: to define the code.
