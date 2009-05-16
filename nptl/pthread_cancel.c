@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -44,6 +44,7 @@ pthread_cancel (th)
   int newval;
   do
     {
+    again:
       oldval = pd->cancelhandling;
       newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
@@ -59,7 +60,10 @@ pthread_cancel (th)
       if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	{
 	  /* Mark the cancellation as "in progress".  */
-	  atomic_bit_set (&pd->cancelhandling, CANCELING_BIT);
+	  if (atomic_compare_and_exchange_bool_acq (&pd->cancelhandling,
+						    oldval | CANCELING_BITMASK,
+						    oldval))
+	    goto again;
 
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */

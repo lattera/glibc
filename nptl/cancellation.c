@@ -72,10 +72,6 @@ __pthread_disable_asynccancel (int oldtype)
   struct pthread *self = THREAD_SELF;
   int newval;
 
-#ifdef THREAD_ATOMIC_AND
-  THREAD_ATOMIC_AND (self, cancelhandling, ~CANCELTYPE_BITMASK);
-  newval = THREAD_GETMEM (self, cancelhandling);
-#else
   int oldval = THREAD_GETMEM (self, cancelhandling);
 
   while (1)
@@ -93,13 +89,13 @@ __pthread_disable_asynccancel (int oldtype)
       /* Prepare the next round.  */
       oldval = curval;
     }
-#endif
 
   /* We cannot return when we are being canceled.  Upon return the
      thread might be things which would have to be undone.  The
      following loop should loop until the cancellation signal is
      delivered.  */
-  while (__builtin_expect (newval & CANCELED_BITMASK, 0))
+  while (__builtin_expect ((newval & (CANCELING_BITMASK | CANCELED_BITMASK))
+			   == CANCELING_BITMASK, 0))
     {
       lll_futex_wait (&self->cancelhandling, newval, LLL_PRIVATE);
       newval = THREAD_GETMEM (self, cancelhandling);

@@ -1,5 +1,11 @@
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* cancellation.c (__pthread_disable_asynccancel): Correct the bits
+	to test when deciding on the delay.
+	* libc-cancellation.c (__libc_disable_asynccancel): Likewise.
+	* pthread_cancel.c: Close race between deciding on sending a signal
+	and setting the CANCELING_BIT bit.
+
 	* cancellation.c (__pthread_disable_asynccancel): Don't return if
 	thread is canceled.
 	* libc-cancellation.c (__libc_disable_asynccancel): Likewise.
