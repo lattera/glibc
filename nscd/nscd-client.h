@@ -47,11 +47,6 @@
 /* Maximum allowed length for the key.  */
 #define MAXKEYLEN 1024
 
-/* Maximum alignment requirement we will encounter.  */
-#define BLOCK_ALIGN_LOG 3
-#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
-#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
-
 
 /* Available services.  */
 typedef enum
