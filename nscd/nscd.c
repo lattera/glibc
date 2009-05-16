@@ -488,10 +488,6 @@ termination_handler (int signum)
 	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
     }
 
-  /* Shutdown the SELinux AVC.  */
-  if (selinux_enabled)
-    nscd_avc_destroy ();
-
   _exit (EXIT_SUCCESS);
 }
 

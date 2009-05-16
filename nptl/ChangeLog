@@ -1,3 +1,10 @@
+2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/selinux.c (nscd_avc_destroy): Removed.
+	* nscd/selinux.h (nscd_avc_destroy): Likewise.
+	* nscd/nscd.c (termination_handler): Don't call
+	nscd_avc_destroy.
+
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* cancellation.c (__pthread_disable_asynccancel): Correct the bits

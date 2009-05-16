@@ -1,5 +1,5 @@
 /* Header for nscd SELinux access controls.
-   Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -35,8 +35,6 @@ struct avc_cache_stats;
 
 /* Initialize the userspace AVC.  */
 extern void nscd_avc_init (void);
-/* Destroy the userspace AVC.  */
-extern void nscd_avc_destroy (void);
 /* Determine if we are running on an SELinux kernel.  */
 extern void nscd_selinux_enabled (int *selinux_enabled);
 /* Check if the client has permission for the request type.  */
@@ -55,7 +53,6 @@ extern void install_real_capabilities (cap_t new_caps);
 #else
 # define selinux_enabled 0
 # define nscd_avc_init() (void) 0
-# define nscd_avc_destroy() (void) 0
 # define nscd_selinux_enabled(selinux_enabled) (void) 0
 # define nscd_request_avc_has_perm(fd, req) 0
 # define nscd_avc_cache_stats(cstats) (void) 0

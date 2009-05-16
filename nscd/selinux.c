@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -416,17 +416,6 @@ nscd_avc_print_stats (struct avc_cache_stats *cstats)
 	  cstats->entry_lookups, cstats->entry_hits, cstats->entry_misses,
 	  cstats->entry_discards, cstats->cav_lookups, cstats->cav_hits,
 	  cstats->cav_probes, cstats->cav_misses);
-}
-
-
-/* Clean up the AVC before exiting.  */
-void
-nscd_avc_destroy (void)
-{
-  avc_destroy ();
-#ifdef HAVE_LIBAUDIT
-  audit_close (audit_fd);
-#endif
 }
 
 #endif /* HAVE_SELINUX */
