@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2005, 2006, 2007, 2008, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -137,7 +138,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   if (mapped != NO_MAPPING)
     {
       /* No const qualifier, as it can change during garbage collection.  */
-      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped,
+						    sizeof hst_resp);
       if (found != NULL)
 	{
 	  h_name = (char *) (&found->data[0].hstdata + 1);

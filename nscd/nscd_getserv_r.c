@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
 
@@ -104,7 +104,8 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 
   if (mapped != NO_MAPPING)
     {
-      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped,
+						    sizeof serv_resp);
 
       if (found != NULL)
 	{

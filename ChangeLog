@@ -1,10 +1,17 @@
-2009-05-12  Jakub Jelinek  <jakub@redhat.com>
-
-	* include/atomic.h: Formatting.
-	(catomic_compare_and_exchange_val_acq): Don't define if already
-	defined by bits/atomic.h.
-
 2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_helper.c: Include stddef.h.
+	(__nscd_cache_search): Add datalen argument.  Use atomic_forced_read
+	in a couple of places.  Return NULL if trail is not less than
+	datasize, don't consider dataheads with length smaller than
+	offsetof (struct datahead, data) + datalen.
+	* nscd/nscd_client.h (__nscd_cache_search): Adjust prototype.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Adjust callers.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/fallocate64.c (__fallocate64_l64):
 	Rename ...
@@ -22,12 +29,16 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (libc): Likewise.
 	* sysdeps/unix/sysv/linux/sh/Versions (libc): Likewise.
 
-2009-05-14  Jakub Jelinek  <jakub@redhat.com>
-
 	* nscd/selinux.c (nscd_avc_destroy): Removed.
 	* nscd/selinux.h (nscd_avc_destroy): Likewise.
 	* nscd/nscd.c (termination_handler): Don't call
 	nscd_avc_destroy.
+
+2009-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Formatting.
+	(catomic_compare_and_exchange_val_acq): Don't define if already
+	defined by bits/atomic.h.
 
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 

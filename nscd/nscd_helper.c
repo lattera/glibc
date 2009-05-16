@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -472,18 +473,20 @@ __nscd_get_map_ref (request_type type, const char *name,
    garbage collection.  */
 struct datahead *
 __nscd_cache_search (request_type type, const char *key, size_t keylen,
-		     const struct mapped_database *mapped)
+		     const struct mapped_database *mapped, size_t datalen)
 {
   unsigned long int hash = __nis_hash (key, keylen) % mapped->head->module;
   size_t datasize = mapped->datasize;
 
   ref_t trail = mapped->head->array[hash];
+  trail = atomic_forced_read (trail);
   ref_t work = trail;
   int tick = 0;
 
   while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
+      ref_t here_key, here_packet;
 
 #ifndef _STRING_ARCH_unaligned
       /* Although during garbage collection when moving struct hashentry
@@ -498,13 +501,14 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 
       if (type == here->type
 	  && keylen == here->len
-	  && here->key + keylen <= datasize
-	  && memcmp (key, mapped->data + here->key, keylen) == 0
-	  && here->packet + sizeof (struct datahead) <= datasize)
+	  && (here_key = atomic_forced_read (here->key)) + keylen <= datasize
+	  && memcmp (key, mapped->data + here_key, keylen) == 0
+	  && ((here_packet = atomic_forced_read (here->packet))
+	      + sizeof (struct datahead) <= datasize))
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
 	  struct datahead *dh
-	    = (struct datahead *) (mapped->data + here->packet);
+	    = (struct datahead *) (mapped->data + here_packet);
 
 #ifndef _STRING_ARCH_unaligned
 	  if ((uintptr_t) dh & (__alignof__ (*dh) - 1))
@@ -513,11 +517,14 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 
 	  /* See whether we must ignore the entry or whether something
 	     is wrong because garbage collection is in progress.  */
-	  if (dh->usable && here->packet + dh->allocsize <= datasize)
+	  if (dh->usable
+	      && here_packet + dh->allocsize <= datasize
+	      && (here_packet + offsetof (struct datahead, data) + datalen
+		  <= datasize))
 	    return dh;
 	}
 
-      work = here->next;
+      work = atomic_forced_read (here->next);
       /* Prevent endless loops.  This should never happen but perhaps
 	 the database got corrupted, accidentally or deliberately.  */
       if (work == trail)
@@ -532,7 +539,11 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	  if ((uintptr_t) trailelem & (__alignof__ (*trailelem) - 1))
 	    return NULL;
 #endif
-	  trail = trailelem->next;
+
+	  if (trail + sizeof (struct hashentry) > datasize)
+	    return NULL;
+
+	  trail = atomic_forced_read (trailelem->next);
 	}
       tick = 1 - tick;
     }

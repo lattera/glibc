@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007
+/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -329,7 +329,8 @@ static inline int __nscd_drop_map_ref (struct mapped_database *map,
 extern struct datahead *__nscd_cache_search (request_type type,
 					     const char *key,
 					     size_t keylen,
-					     const struct mapped_database *mapped);
+					     const struct mapped_database *mapped,
+					     size_t datalen);
 
 /* Wrappers around read, readv and write that only read/write less than LEN
    bytes on error or EOF.  */

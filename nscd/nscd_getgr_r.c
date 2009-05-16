@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2000, 2002-2005, 2006, 2007
+/* Copyright (C) 1998-2000, 2002-2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
@@ -107,7 +107,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
   if (mapped != NO_MAPPING)
     {
-      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped);
+      struct datahead *found = __nscd_cache_search (type, key, keylen, mapped,
+						    sizeof gr_resp);
       if (found != NULL)
 	{
 	  len = (const uint32_t *) (&found->data[0].grdata + 1);

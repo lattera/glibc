@@ -1,4 +1,5 @@
-/* Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -75,7 +76,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
   if (mapped != NO_MAPPING)
     {
       struct datahead *found = __nscd_cache_search (GETAI, key, keylen,
-						    mapped);
+						    mapped, sizeof ai_resp);
       if (found != NULL)
 	{
 	  respdata = (char *) (&found->data[0].aidata + 1);

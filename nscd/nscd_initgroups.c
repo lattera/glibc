@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -55,7 +55,8 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
   if (mapped != NO_MAPPING)
     {
       struct datahead *found = __nscd_cache_search (INITGROUPS, user,
-						    userlen, mapped);
+						    userlen, mapped,
+						    sizeof initgr_resp);
       if (found != NULL)
 	{
 	  respdata = (char *) (&found->data[0].initgrdata + 1);
