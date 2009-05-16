@@ -1,8 +1,1 @@
-*.d *.o *.so *.po *.go stamp.* *.stamp *.ustamp *.udeps
-*.gz *.Z *.tar *.tgz
-=*
-TODO AUTHORS copyr-* copying.*
-glibc-*
-
 rpcsrc-4.0
-distinfo
