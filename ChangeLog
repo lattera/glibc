@@ -1,5 +1,7 @@
 2009-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/libm-test.inc (expm1_test): Add test for range error.
+
 	* Versions.def: Add GLIBC_2.11 for libc.
 	* debug/Makefile (routines): Add longjmp_chk.
 	Add rules to build and run tst-longjmp_chk.

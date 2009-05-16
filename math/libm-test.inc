@@ -2603,6 +2603,10 @@ expm1_test (void)
   TEST_f_f (expm1, 1, M_El - 1.0);
   TEST_f_f (expm1, 0.75L, 1.11700001661267466854536981983709561L);
 
+  errno = 0;
+  TEST_f_f (expm1, 100000.0, plus_infty);
+  check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);
+
   END (expm1);
 }
 
