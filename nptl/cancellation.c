@@ -78,9 +78,6 @@ __pthread_disable_asynccancel (int oldtype)
     {
       newval = oldval & ~CANCELTYPE_BITMASK;
 
-      if (newval == oldval)
-	break;
-
       int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
 					      oldval);
       if (__builtin_expect (curval == oldval, 1))

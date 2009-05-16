@@ -1,5 +1,10 @@
 2009-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* cancellation.c (__pthread_disable_asynccancel): Remove unnecessary
+	test.
+	* libc-cancellation.c: Use <nptl/cancellation.c: to define the code.
+	* sysdeps/pthread/librt-cancellation.c: Likewise.
+
 	[BZ #9924]
 	* nptl-init.c: Renamed from init.c.
 	* Makefile: Change all occurences of init.c to nptl-init.c.
