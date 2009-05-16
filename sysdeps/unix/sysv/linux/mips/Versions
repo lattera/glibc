@@ -34,4 +34,7 @@ libc {
     # _*
     _test_and_set;
   }
+  GLIBC_2.11 {
+    fallocate64;
+  }
 }
