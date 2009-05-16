@@ -1,5 +1,23 @@
 2009-05-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c (__fallocate64_l64):
+	Rename ...
+	(fallocate64): ... to this.
+	* sysdeps/unix/sysv/linux/fallocate64.c (__fallocate64_l64):
+	Rename ...
+	(fallocate64): ... to this.
+	* sysdeps/unix/sysv/linux/Versions (libc): Remove fallocate64.
+	* sysdeps/unix/sysv/linux/wordsize-64/Versions (libc): Add
+	fallocate64@@GLIBC_2.10.
+	* sysdeps/unix/sysv/linux/i386/Versions (libc): Add
+	fallocate64@@GLIBC_2.11.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/sh/Versions (libc): Likewise.
+
+2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
 	* nscd/selinux.c (nscd_avc_destroy): Removed.
 	* nscd/selinux.h (nscd_avc_destroy): Likewise.
 	* nscd/nscd.c (termination_handler): Don't call

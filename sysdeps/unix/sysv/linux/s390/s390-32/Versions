@@ -43,6 +43,9 @@ libc {
     getutmp;
     getutmpx;
   }
+  GLIBC_2.11 {
+    fallocate64;
+  }
 }
 
 libutil {

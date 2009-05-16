@@ -23,7 +23,7 @@
 
 /* Reserve storage for the data of the file associated with FD.  */
 int
-__fallocate64_l64 (int fd, int mode, __off64_t offset, __off64_t len)
+fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
   return INLINE_SYSCALL (fallocate, 6, fd, mode,

@@ -26,7 +26,7 @@ extern int __call_fallocate (int fd, int mode, __off64_t offset, __off64_t len)
 
 /* Reserve storage for the data of the file associated with FD.  */
 int
-__fallocate64_l64 (int fd, int mode, __off64_t offset, __off64_t len)
+fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
   return __call_fallocate (fd, mode, offset, len);
 }
