@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 2000, 2003, 2004
+/* Copyright (C) 1992, 1995, 1997, 2000, 2003, 2004, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -22,8 +22,6 @@
 #include <sgidefs.h>
 #include <stdlib.h>
 
-#undef __longjmp
-
 #ifndef	__GNUC__
   #error This file uses GNU C extensions; you must compile with GCC.
 #endif
@@ -38,6 +36,11 @@ __longjmp (env, val_arg)
      Without this it saves $a1 in a register which gets clobbered
      along the way.  */
   register int val asm ("a1");
+#ifdef CHECK_SP
+  register long long sp asm ("$29");
+  if ((long long) (env[0].__sp) < sp)
+    __fortify_fail ("longjmp causes uninitialized stack frame");
+#endif
 
 #ifdef __mips_hard_float
   /* Pull back the floating point callee-saved registers.  */

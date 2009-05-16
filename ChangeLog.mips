@@ -1,5 +1,12 @@
 2009-05-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/____longjmp_chk.c: New file.
+	* sysdeps/mips/__longjmp.c: If CHECK_SP is defined, use it.  Don't
+	undefine __longjmp.
+	* sysdeps/mips64/__longjmp.c: Likewise.
+
+2009-05-16  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c,
 	sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c,
 	sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate.c,
