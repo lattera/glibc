@@ -111,11 +111,6 @@ struct database_dyn
 /* Path used when not using persistent storage.  */
 #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
 
-/* Maximum alignment requirement we will encounter.  */
-#define BLOCK_ALIGN_LOG 3
-#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
-#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
-
 /* Default value for the maximum size of the database files.  */
 #define DEFAULT_MAX_DB_SIZE	(32 * 1024 * 1024)
 

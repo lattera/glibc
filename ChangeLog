@@ -1,3 +1,12 @@
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h: Move Definition for BLOCK_ALIGN_LOG, BLOCK_ALIGN, and
+	BLOCK_ALIGN_M1 to ...
+	* nscd/nscd-client.h: ...here.
+	* nscd/nscd_helper.c (__nscd_cache_search): Introduce loop counter.
+	Use it if we absolutely cannot reach any more correct list elements
+	because that many do not fit into the currently mapped database.
+
 2009-05-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd_helper.c: Include stddef.h.

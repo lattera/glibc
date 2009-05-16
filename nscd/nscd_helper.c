@@ -481,6 +481,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
   ref_t trail = mapped->head->array[hash];
   trail = atomic_forced_read (trail);
   ref_t work = trail;
+  size_t loop_cnt = datasize / (offsetof (struct datahead, data) + datalen);
   int tick = 0;
 
   while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
@@ -527,7 +528,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
       work = atomic_forced_read (here->next);
       /* Prevent endless loops.  This should never happen but perhaps
 	 the database got corrupted, accidentally or deliberately.  */
-      if (work == trail)
+      if (work == trail || loop_cnt-- > 0)
 	break;
       if (tick)
 	{
