@@ -1,6 +1,7 @@
 2009-05-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* stdlib/stdlib.h: Fix types.  Pretty printing.  Correct comments.
+	* posix/sys/wait.h: Fix typos.  Pretty printing.
+	* stdlib/stdlib.h: Likewise.  Correct comments.
 
 	[BZ #10159]
 	* stdlib/stdlib.h (__WAIT_INT): Match the definition in <sys/wait.h>.

@@ -1,5 +1,5 @@
-/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ __BEGIN_DECLS
 #  endif
 
 /* This is the type of the argument to `wait'.  The funky union
-   causes redeclarations with ether `int *' or `union wait *' to be
+   causes redeclarations with either `int *' or `union wait *' to be
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
@@ -79,22 +79,22 @@ typedef union
 /* This will define all the `__W*' macros.  */
 # include <bits/waitstatus.h>
 
-# define WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
-# define WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
-# define WSTOPSIG(status)	__WSTOPSIG(__WAIT_INT(status))
-# define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
-# define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
-# define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
+# define WEXITSTATUS(status)	__WEXITSTATUS (__WAIT_INT (status))
+# define WTERMSIG(status)	__WTERMSIG (__WAIT_INT (status))
+# define WSTOPSIG(status)	__WSTOPSIG (__WAIT_INT (status))
+# define WIFEXITED(status)	__WIFEXITED (__WAIT_INT (status))
+# define WIFSIGNALED(status)	__WIFSIGNALED (__WAIT_INT (status))
+# define WIFSTOPPED(status)	__WIFSTOPPED (__WAIT_INT (status))
 # ifdef __WIFCONTINUED
-#  define WIFCONTINUED(status)	__WIFCONTINUED(__WAIT_INT(status))
+#  define WIFCONTINUED(status)	__WIFCONTINUED (__WAIT_INT (status))
 # endif
 #endif	/* <stdlib.h> not included.  */
 
 #ifdef	__USE_BSD
 # define WCOREFLAG		__WCOREFLAG
-# define WCOREDUMP(status)	__WCOREDUMP(__WAIT_INT(status))
-# define W_EXITCODE(ret, sig)	__W_EXITCODE(ret, sig)
-# define W_STOPCODE(sig)	__W_STOPCODE(sig)
+# define WCOREDUMP(status)	__WCOREDUMP (__WAIT_INT (status))
+# define W_EXITCODE(ret, sig)	__W_EXITCODE (ret, sig)
+# define W_STOPCODE(sig)	__W_STOPCODE (sig)
 #endif
 
 /* The following values are used by the `waitid' function.  */
