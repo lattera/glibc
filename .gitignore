@@ -36,4 +36,7 @@ TODO.html
 
 autom4te*.cache
 
-rtkaio
+/linuxthreads
+/linuxthreads_db
+/ports
+/rtkaio
