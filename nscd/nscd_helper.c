@@ -468,6 +468,15 @@ __nscd_get_map_ref (request_type type, const char *name,
 }
 
 
+/* Using sizeof (hashentry) is not always correct to determine the size of
+   the data structure as found in the nscd cache.  The program could be
+   a 64-bit process and nscd could be a 32-bit process.  In this case
+   sizeof (hashentry) would overestimate the size.  The following is
+   the minimum size of such an entry, good enough for our tests here.  */
+#define MINIMUM_HASHENTRY_SIZE \
+  (offsetof (struct hashentry, dellist) + sizeof (int32_t))
+
+
 /* Don't return const struct datahead *, as eventhough the record
    is normally constant, it can change arbitrarily during nscd
    garbage collection.  */
@@ -481,10 +490,11 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
   ref_t trail = mapped->head->array[hash];
   trail = atomic_forced_read (trail);
   ref_t work = trail;
-  size_t loop_cnt = datasize / (offsetof (struct datahead, data) + datalen);
+  size_t loop_cnt = datasize / (MINIMUM_HASHENTRY_SIZE
+				+ offsetof (struct datahead, data) / 2);
   int tick = 0;
 
-  while (work != ENDREF && work + sizeof (struct hashentry) <= datasize)
+  while (work != ENDREF && work + MINIMUM_HASHENTRY_SIZE <= datasize)
     {
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
       ref_t here_key, here_packet;
@@ -541,7 +551,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	    return NULL;
 #endif
 
-	  if (trail + sizeof (struct hashentry) > datasize)
+	  if (trail + MINIMUM_HASHENTRY_SIZE > datasize)
 	    return NULL;
 
 	  trail = atomic_forced_read (trailelem->next);

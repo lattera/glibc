@@ -1,3 +1,11 @@
+2009-05-18  Jakub Jelinek  <jakub@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (MINIMUM_HASHENTRY_SIZE): Define.
+	(__nscd_cache_search): Assume each entry in the
+	hash chain needs one hashentry and half of datahead.  Use
+	MINIMUM_HASHENTRY_SIZE instead of sizeof(hashentry).
+
 2009-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/sys/wait.h: Fix typos.  Pretty printing.
