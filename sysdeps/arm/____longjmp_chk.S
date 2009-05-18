@@ -48,7 +48,7 @@ longjmp_msg:
 
 #define CHECK_SP(reg)				\
 	cmp	sp, reg;				\
-	ble	.Lok;				\
+	bls	.Lok;				\
 	CALL_FAIL				\
 .Lok:
 
