@@ -1,3 +1,9 @@
+2009-05-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/____longjmp_chk.S: New file.
+	* sysdeps/sh/sh3/__longjmp.S: If CHECK_SP is defined, use it.
+	* sysdeps/sh/sh4/__longjmp.S: Likewise.
+			
 2009-05-18  Jakub Jelinek  <jakub@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 

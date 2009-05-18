@@ -1,5 +1,5 @@
 /* longjmp for SH.
-   Copyright (C) 1999, 2000, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,6 +42,9 @@ ENTRY (__longjmp)
 	mov	r2, r14
 	mov.l	@r4+, r2
 	PTR_DEMANGLE2 (r2, r1)
+# ifdef CHECK_SP
+	CHECK_SP (r2)
+# endif
 	mov	r2, r15
 	mov.l	@r4+, r2
 	PTR_DEMANGLE2 (r2, r1)
@@ -49,6 +52,10 @@ ENTRY (__longjmp)
 	mov	#0, r1
 #else
 	mov.l	@r4+, r14
+# ifdef CHECK_SP
+	mov.l	@r4, r2
+	CHECK_SP (r2)
+# endif
 	mov.l	@r4+, r15
 	lds.l	@r4+, pr
 #endif
