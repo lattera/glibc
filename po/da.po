@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.9.90\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-05-07 21:37+0200\n"
+"PO-Revision-Date: 2009-05-20 11:37+0200\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -190,7 +190,7 @@ msgstr "kan ikke åbne indfil '%s'"
 
 #: catgets/gencat.c:417 catgets/gencat.c:494
 msgid "illegal set number"
-msgstr "ulovligt sæt-nummer"
+msgstr "ugyldigt sæt-nummer"
 
 #: catgets/gencat.c:444
 msgid "duplicate set definition"
@@ -241,7 +241,7 @@ msgstr "kan ikke åbne uddatafil '%s'"
 
 #: catgets/gencat.c:1195 locale/programs/linereader.c:560
 msgid "invalid escape sequence"
-msgstr "ugyldig nudvigetegnsekvens"
+msgstr "ugyldig undvigetegnsekvens"
 
 #: catgets/gencat.c:1217
 msgid "unterminated message"
@@ -860,7 +860,7 @@ msgstr "Kan ikke åbne konfigurationsfil %s"
 #: elf/ldconfig.c:1115
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
-msgstr "%s:%u: ugyldig syntaks på hwcap-linje"
+msgstr "%s:%u: dårlig syntaks på hwcap-linje"
 
 #: elf/ldconfig.c:1121
 #, c-format
@@ -1149,7 +1149,7 @@ msgstr "kan ikke indlæse profileringsdata"
 #: elf/sprof.c:784
 #, c-format
 msgid "while stat'ing profiling data file"
-msgstr "under stat() af profileringsdatafil"
+msgstr "ved 'stat' af profileringsdatafil"
 
 #: elf/sprof.c:792
 #, c-format
@@ -1194,7 +1194,7 @@ msgstr "fejl ved lukning af inddata '%s'"
 #: iconv/iconv_charmap.c:462
 #, c-format
 msgid "illegal input sequence at position %Zd"
-msgstr "ulovlig inddatasekvens ved position %Zd"
+msgstr "ugyldig inddatasekvens ved position %Zd"
 
 #: iconv/iconv_charmap.c:481 iconv/iconv_prog.c:537
 #, c-format
@@ -1298,12 +1298,12 @@ msgstr "konvertering stoppet på grund af problem ved skrivning af uddata"
 #: iconv/iconv_prog.c:533
 #, c-format
 msgid "illegal input sequence at position %ld"
-msgstr "ulovlig inddatasekvens ved position %ld"
+msgstr "ugyldig inddatasekvens ved position %ld"
 
 #: iconv/iconv_prog.c:541
 #, c-format
 msgid "internal error (illegal descriptor)"
-msgstr "intern fejl (ulovlig deskriptor)"
+msgstr "intern fejl (ugyldig deskriptor)"
 
 #: iconv/iconv_prog.c:544
 #, c-format
@@ -1490,7 +1490,7 @@ msgstr "ugyldig definition"
 #: locale/programs/charmap.c:375 locale/programs/locfile.c:126
 #: locale/programs/locfile.c:153 locale/programs/repertoire.c:175
 msgid "bad argument"
-msgstr "ugyldigt argument"
+msgstr "dårligt argument"
 
 #: locale/programs/charmap.c:403
 #, c-format
@@ -1610,7 +1610,7 @@ msgstr "heksadecimalt interval-format bør bruge kun store bogstaver"
 #: locale/programs/charmap.c:1023 locale/programs/repertoire.c:449
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
-msgstr "<%s> og <%s> er ulovlige navne for tegnområde"
+msgstr "<%s> og <%s> er ugyldige navne for tegnområde"
 
 #: locale/programs/charmap.c:1029 locale/programs/repertoire.c:456
 msgid "upper limit in range is smaller than lower limit"
@@ -1651,7 +1651,7 @@ msgstr "%s: felt '%s' ikke defineret"
 #: locale/programs/ld-name.c:117 locale/programs/ld-telephone.c:117
 #, c-format
 msgid "%s: field `%s' must not be empty"
-msgstr "%s: felt '%s' skal være tomt"
+msgstr "%s: felt '%s' må ikke være tomt"
 
 #: locale/programs/ld-address.c:170
 #, c-format
@@ -1677,7 +1677,7 @@ msgstr "%s: sprog-forkortelsen '%s' ikke defineret"
 #: locale/programs/ld-address.c:329 locale/programs/ld-address.c:341
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
-msgstr "%s: '%s' værdi er ikke sammenlignelig med '%s' værdi"
+msgstr "%s: '%s' værdi passer ikke overens med '%s' værdi"
 
 #: locale/programs/ld-address.c:314
 #, c-format
@@ -1776,7 +1776,7 @@ msgstr "%s: ikke nok sorteringsregler"
 #: locale/programs/ld-collate.c:780
 #, c-format
 msgid "%s: empty weight string not allowed"
-msgstr "%s: tomt vægt-streng ikke tilladt"
+msgstr "%s: tom vægt-streng ikke tilladt"
 
 #: locale/programs/ld-collate.c:875
 #, c-format
@@ -1811,7 +1811,7 @@ msgstr "%s: bytesekvensen af det første tegn i området er ikke mindre end sekven
 #: locale/programs/ld-collate.c:1295
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
-msgstr "%s: symbolsk interval-ellipse må ikke komme umiddelbart efter 'order_end'"
+msgstr "%s: symbolsk interval-ellipse må ikke komme umiddelbart efter 'order_start'"
 
 #: locale/programs/ld-collate.c:1299
 #, c-format
@@ -1836,7 +1836,7 @@ msgstr "%s: '%s' skal være et tegn"
 #: locale/programs/ld-collate.c:1573
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
-msgstr "%s: 'position' skal bruges på det samme niveau i alle sektioner"
+msgstr "%s: 'position' skal bruges på det samme niveau i alle sektioner, ellers ingen"
 
 #: locale/programs/ld-collate.c:1598
 #, c-format
@@ -1846,7 +1846,7 @@ msgstr "symbol '%s' ikke defineret"
 #: locale/programs/ld-collate.c:1674 locale/programs/ld-collate.c:1780
 #, c-format
 msgid "symbol `%s' has the same encoding as"
-msgstr "symbol '%s' har den samme kodning som "
+msgstr "symbol '%s' har den samme kodning som"
 
 #: locale/programs/ld-collate.c:1678 locale/programs/ld-collate.c:1784
 #, c-format
@@ -1876,12 +1876,12 @@ msgstr "%s: Mere end ét 'else'"
 #: locale/programs/ld-collate.c:2852
 #, c-format
 msgid "%s: duplicate definition of `%s'"
-msgstr "%s: duplikeret definition af '%s'"
+msgstr "%s: duplikér definition af '%s'"
 
 #: locale/programs/ld-collate.c:2888
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
-msgstr "%s: duplikeret definition af sektion '%s'"
+msgstr "%s: duplikér definition af sektion '%s'"
 
 #: locale/programs/ld-collate.c:3024
 #, c-format
@@ -1910,7 +1910,7 @@ msgstr "fejl under indsætning af ækvivalens-sammenligningssymbol"
 #: locale/programs/ld-collate.c:3221
 #, c-format
 msgid "duplicate definition of script `%s'"
-msgstr "duplikeret definition af skript '%s'"
+msgstr "duplikér definition af skript '%s'"
 
 #: locale/programs/ld-collate.c:3269
 #, c-format
@@ -1920,17 +1920,17 @@ msgstr "%s: ukendt sektionsnavn '%.*s'"
 #: locale/programs/ld-collate.c:3298
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
-msgstr "%s: duplikerede definitioner af orden for sektion '%s'"
+msgstr "%s: flere definitioner af orden for sektion '%s'"
 
 #: locale/programs/ld-collate.c:3326
 #, c-format
 msgid "%s: invalid number of sorting rules"
-msgstr "%s: ulovligt antal sorteringsregler"
+msgstr "%s: ugyldigt antal sorteringsregler"
 
 #: locale/programs/ld-collate.c:3353
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
-msgstr "%s: duplikerede definitioner af orden for unavngiven sektion"
+msgstr "%s: flere definitioner af orden for unavngiven sektion"
 
 #: locale/programs/ld-collate.c:3407 locale/programs/ld-collate.c:3537
 #: locale/programs/ld-collate.c:3900
@@ -1966,7 +1966,7 @@ msgstr "%s: sektion '%.*s' ukendt"
 #: locale/programs/ld-collate.c:3650
 #, c-format
 msgid "%s: bad symbol <%.*s>"
-msgstr "%s: ugyldigt symbol: <%.*s>"
+msgstr "%s: dårligt symbol: <%.*s>"
 
 #: locale/programs/ld-collate.c:3846
 #, c-format
@@ -2146,7 +2146,7 @@ msgstr "%s: 'translit_start'-sektionen slutter ikke med 'translit_end'"
 #: locale/programs/ld-ctype.c:2863
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
-msgstr "%s: duplikeret definition af 'default_missing'"
+msgstr "%s: duplikér definition af 'default_missing'"
 
 #: locale/programs/ld-ctype.c:2868
 msgid "previous definition was here"
@@ -2214,7 +2214,7 @@ msgstr "%s: ingen identifikation for kategori '%s'"
 #: locale/programs/ld-identification.c:435
 #, c-format
 msgid "%s: duplicate category version definition"
-msgstr "%s: duplikeret definition af kategoriversion"
+msgstr "%s: duplikér definition af kategoriversion"
 
 #: locale/programs/ld-measurement.c:113
 #, c-format
@@ -2230,7 +2230,7 @@ msgstr "%s: felt '%s' udefineret"
 #: locale/programs/ld-monetary.c:256 locale/programs/ld-numeric.c:118
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
-msgstr "%s: værdien på felt '%s' må ikke være en tom streng"
+msgstr "%s: værdien for felt '%s' må ikke være en tom streng"
 
 #: locale/programs/ld-messages.c:137 locale/programs/ld-messages.c:171
 #, c-format
@@ -2240,12 +2240,12 @@ msgstr "%s: intet korrekt regulært udtryk for felt '%s': %s"
 #: locale/programs/ld-monetary.c:224
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
-msgstr "%s: værdien for feltet 'int_curr_symbol' har forkert længde"
+msgstr "%s: værdien for felt 'int_curr_symbol' har forkert længde"
 
 #: locale/programs/ld-monetary.c:237
 #, c-format
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
-msgstr "%s: værdien for feltet 'int_curr_symbol' svarer ikke til et gyldigt navn i ISO 4217"
+msgstr "%s: værdien for felt 'int_curr_symbol' svarer ikke til et gyldigt navn i ISO 4217"
 
 #: locale/programs/ld-monetary.c:285 locale/programs/ld-monetary.c:315
 #, c-format
@@ -2275,7 +2275,7 @@ msgstr "vekselkurs-værdi kan ikke være nul"
 #: locale/programs/ld-telephone.c:149
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
-msgstr "%s: ulovlig undvigetegnsekvens i felt '%s'"
+msgstr "%s: ugyldig undvigetegnsekvens i felt '%s'"
 
 #: locale/programs/ld-time.c:247
 #, c-format
@@ -2290,7 +2290,7 @@ msgstr "%s: retningsflag i streng %Zd i 'era'-felt er ikke et enkelt tegn"
 #: locale/programs/ld-time.c:271
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
-msgstr "%s: ulovligt tal for tillægsværdi i streng %Zd i 'era'-felt"
+msgstr "%s: ugyldigt tal for tillægsværdi i streng %Zd i 'era'-felt"
 
 #: locale/programs/ld-time.c:279
 #, c-format
@@ -2300,7 +2300,7 @@ msgstr "%s: snavs i slutningen af tillægsværdi i streng %Zd i 'era'-felt"
 #: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
-msgstr "%s: ulovlig startdato i streng %Zd i 'era'-felt"
+msgstr "%s: ugyldig startdato i streng %Zd i 'era'-felt"
 
 #: locale/programs/ld-time.c:339
 #, c-format
@@ -2315,7 +2315,7 @@ msgstr "%s: startdato er ugyldig i streng %Zd i 'era'-felt"
 #: locale/programs/ld-time.c:407 locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "%s: ulovlig slutdato i streng %Zd i 'era'-felt"
+msgstr "%s: ugyldig slutdato i streng %Zd i 'era'-felt"
 
 #: locale/programs/ld-time.c:416
 #, c-format
@@ -2375,7 +2375,7 @@ msgstr "uafsluttet symbolsk navn"
 
 #: locale/programs/linereader.c:623
 msgid "illegal escape sequence at end of string"
-msgstr "ulovlig undvigetegnsekvens ved slutningen af streng"
+msgstr "ugyldig undvigetegnsekvens ved slutningen af streng"
 
 #: locale/programs/linereader.c:627 locale/programs/linereader.c:855
 msgid "unterminated string"
@@ -2393,7 +2393,7 @@ msgstr "symbol '%.*s' ikke i tegntabel"
 #: locale/programs/linereader.c:837
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
-msgstr "symbol '%.*s' repertoiretabel"
+msgstr "symbol '%.*s' ikke i repertoiretabel"
 
 #: locale/programs/locale.c:74
 msgid "System information:"
@@ -2401,23 +2401,23 @@ msgstr "Systeminformation:"
 
 #: locale/programs/locale.c:76
 msgid "Write names of available locales"
-msgstr "Skriv navnene til tilgængelige lokaler"
+msgstr "Skriv navnene på tilgængelige lokaler"
 
 #: locale/programs/locale.c:78
 msgid "Write names of available charmaps"
-msgstr "Skriv navnene til tilgængelige tegntabel"
+msgstr "Skriv navnene på tilgængelige tegntabeller"
 
 #: locale/programs/locale.c:79
 msgid "Modify output format:"
-msgstr "Ændre format for uddata:"
+msgstr "Ændr format for uddata:"
 
 #: locale/programs/locale.c:80
 msgid "Write names of selected categories"
-msgstr "Skriv navnene til valgte kategorier"
+msgstr "Skriv navnene på valgte kategorier"
 
 #: locale/programs/locale.c:81
 msgid "Write names of selected keywords"
-msgstr "Skriv navnene til valgte nøgleord"
+msgstr "Skriv navnene på valgte nøgleord"
 
 #: locale/programs/locale.c:82
 msgid "Print more information"
@@ -2438,31 +2438,31 @@ msgstr ""
 #: locale/programs/locale.c:194
 #, c-format
 msgid "Cannot set LC_CTYPE to default locale"
-msgstr "Kan ikke sætte LC_CTYPE til forvalgt locale"
+msgstr "Kan ikke sætte LC_CTYPE til forvalgt lokale"
 
 #: locale/programs/locale.c:196
 #, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "Kan ikke sætte LC_MESSAGES til forvalgt locale"
+msgstr "Kan ikke sætte LC_MESSAGES til forvalgt lokale"
 
 #: locale/programs/locale.c:209
 #, c-format
 msgid "Cannot set LC_COLLATE to default locale"
-msgstr "Kan ikke sætte LC_COLLATE til forvalgt locale"
+msgstr "Kan ikke sætte LC_COLLATE til forvalgt lokale"
 
 #: locale/programs/locale.c:225
 #, c-format
 msgid "Cannot set LC_ALL to default locale"
-msgstr "Kan ikke sætte LC_ALL til forvalgt locale"
+msgstr "Kan ikke sætte LC_ALL til forvalgt lokale"
 
 #: locale/programs/locale.c:518
 #, c-format
 msgid "while preparing output"
-msgstr "da uddata blev forberedt"
+msgstr "under forberedelse af uddata"
 
 #: locale/programs/localedef.c:120
 msgid "Input Files:"
-msgstr "Indfiler:"
+msgstr "Inddatafiler:"
 
 #: locale/programs/localedef.c:122
 msgid "Symbolic character names defined in FILE"
@@ -2470,7 +2470,7 @@ msgstr "Symbolske tegnnavne defineret i FIL"
 
 #: locale/programs/localedef.c:123
 msgid "Source definitions are found in FILE"
-msgstr "Kildedefinitioner ikke fundet i FIL"
+msgstr "Kildedefinitioner er fundet i FIL"
 
 #: locale/programs/localedef.c:125
 msgid "FILE contains mapping from symbolic names to UCS4 values"
@@ -2506,11 +2506,11 @@ msgstr "Arkivkontrol:"
 
 #: locale/programs/localedef.c:138
 msgid "Don't add new data to archive"
-msgstr "Tilføj ikke nye data til arkivet"
+msgstr "Tilføj ikke nye data til arkiv"
 
 #: locale/programs/localedef.c:140
 msgid "Add locales named by parameters to archive"
-msgstr "Tilføj lokaler navngivet af parametre til arkivet"
+msgstr "Tilføj lokaler navngivet af parametre til arkiv"
 
 #: locale/programs/localedef.c:141
 msgid "Replace existing archive content"
@@ -2518,15 +2518,15 @@ msgstr "Erstat eksisterende arkivindhold"
 
 #: locale/programs/localedef.c:143
 msgid "Remove locales named by parameters from archive"
-msgstr "Fjern lokaler navngivet af parametre fra arkivet"
+msgstr "Fjern lokaler navngivet af parametre fra arkiv"
 
 #: locale/programs/localedef.c:144
 msgid "List content of archive"
-msgstr "Vis indeholdet i arkivet"
+msgstr "Vis indeholdet i arkiv"
 
 #: locale/programs/localedef.c:146
 msgid "locale.alias file to consult when making archive"
-msgstr "locale.alias-fil som skal bruges når arkivet laves"
+msgstr "locale.alias-fil som skal bruges når arkiv laves"
 
 #: locale/programs/localedef.c:151
 msgid "Compile locale specification"
@@ -2599,7 +2599,7 @@ msgstr "kan ikke initiere arkivfil"
 #: locale/programs/locarchive.c:125 locale/programs/locarchive.c:314
 #, c-format
 msgid "cannot resize archive file"
-msgstr "kan ikke skifte størrelse på arkivfil"
+msgstr "kan ikke ændre størrelse på arkivfil"
 
 #: locale/programs/locarchive.c:134 locale/programs/locarchive.c:323
 #: locale/programs/locarchive.c:527
@@ -2615,7 +2615,7 @@ msgstr "kunne ikke oprette nyt lokalearkiv"
 #: locale/programs/locarchive.c:168
 #, c-format
 msgid "cannot change mode of new locale archive"
-msgstr "kan ikke ændre adgangtilstand på nyt lokalearkiv"
+msgstr "kan ikke ændre tilstand på nyt lokalearkiv"
 
 #: locale/programs/locarchive.c:255
 #, c-format
@@ -2702,7 +2702,7 @@ msgstr "kan ikke åbne katalog \"%s\": %s: ignoreret"
 #: locale/programs/locarchive.c:1233
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
-msgstr "ufuldstændig opsætning af lokalefiler i \"%s\""
+msgstr "ufuldstændigt sæt af lokalefiler i \"%s\""
 
 #: locale/programs/locarchive.c:1297
 #, c-format
@@ -2712,7 +2712,7 @@ msgstr "kan ikke læse alle filer i \"%s\": ignoreret"
 #: locale/programs/locarchive.c:1367
 #, c-format
 msgid "locale \"%s\" not in archive"
-msgstr "lokale \"%s\" findes ikke i arkivet"
+msgstr "lokale \"%s\" findes ikke i arkiv"
 
 #: locale/programs/locfile.c:132
 #, c-format
@@ -2721,7 +2721,7 @@ msgstr "argument til '%s' skal være et enkelt tegn"
 
 #: locale/programs/locfile.c:252
 msgid "syntax error: not inside a locale definition section"
-msgstr "syntaksfejl: ikke inde i en lokaledefinition"
+msgstr "syntaksfejl: ikke inde i en lokaledefinitionssektion"
 
 #: locale/programs/locfile.c:626
 #, c-format
@@ -2748,7 +2748,7 @@ msgstr "lokale-navn bør bestå af bare portable tegn"
 
 #: locale/programs/locfile.c:805
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "ingen andre nøgleord må angives når 'copy' bruges"
+msgstr "ingen andre nøgleord skal angives når 'copy' bruges"
 
 #: locale/programs/locfile.c:819
 #, c-format
@@ -2807,11 +2807,11 @@ msgstr "hukommelsen er konsistent, biblioteket er fejlbehæftet\n"
 
 #: malloc/mcheck.c:333
 msgid "memory clobbered before allocated block\n"
-msgstr "området foran tildelt hukommelsesblok snavset til\n"
+msgstr "hukommelse før tildelt blok er snavset til\n"
 
 #: malloc/mcheck.c:336
 msgid "memory clobbered past end of allocated block\n"
-msgstr "området efter tildelt hukommelsesblok snavset til\n"
+msgstr "hukommelse efter tildelt blok er snavset til\n"
 
 #: malloc/mcheck.c:339
 msgid "block freed twice\n"
@@ -2889,8 +2889,8 @@ msgid ""
 "            PROGRAM [PROGRAMOPTION]..."
 msgstr ""
 "Syntaks: memusage [--data=FIL] [--progname=NAVN] [--png=FIL] [--unbuffered]\n"
-"            [--buffer=ANTAL] [--no-timer] [--time-based] [--total]\n"
-"            [--title=STRENG] [--x-size=ANTAL] [--y-size=ANTAL]\n"
+"            [--buffer=STØRRELSE] [--no-timer] [--time-based] [--total]\n"
+"            [--title=STRENG] [--x-size=STØRRELSE] [--y-size=STØRRELSE]\n"
 "            PROGRAM [PROGRAMFLAG]..."
 
 #: malloc/memusage.sh:193
@@ -2915,7 +2915,7 @@ msgstr "Overskriftsstreng brugt i uddatagrafik"
 
 #: malloc/memusagestat.c:59
 msgid "Generate output linear to time (default is linear to number of function calls)"
-msgstr "Generér uddata efter tid (standard er efter antal af funktionskald)"
+msgstr "Generér uddata efter lineær tid (standard er efter antal af funktionskald)"
 
 #: malloc/memusagestat.c:61
 msgid "Also draw graph for total memory consumption"
@@ -3033,7 +3033,7 @@ msgstr "Ikke fundet, ikke noget sådant navn"
 
 #: nis/nis_error.h:22
 msgid "Name/entry isn't unique"
-msgstr "Navn/indtastninger er ikke unikt"
+msgstr "Navn/indtastning er ikke unikt"
 
 #: nis/nis_error.h:23
 msgid "Modification failed"
@@ -3049,7 +3049,7 @@ msgstr "Indgangs-/tabel-type stemmer ikke overens"
 
 #: nis/nis_error.h:26
 msgid "Link points to illegal name"
-msgstr "Lænke peger til ulovligt navn"
+msgstr "Lænke peger til ugyldigt navn"
 
 #: nis/nis_error.h:27
 msgid "Partial success"
@@ -3093,7 +3093,7 @@ msgstr "Ændringsoperation fejlede"
 
 #: nis/nis_error.h:37
 msgid "Query illegal for named table"
-msgstr "Spørgsmål ulovligt for given tabel"
+msgstr "Spørgsmål ugyldigt for given tabel"
 
 #: nis/nis_error.h:38
 msgid "Attempt to remove a non-empty table"
@@ -3129,7 +3129,7 @@ msgstr "Ikke i stand til at autentificere NIS+-klient"
 
 #: nis/nis_error.h:46
 msgid "No file space on server"
-msgstr "Ikke mere plads på enheden"
+msgstr "Ikke mere plads på server"
 
 #: nis/nis_error.h:47
 msgid "Unable to create process on server"
@@ -3142,7 +3142,7 @@ msgstr "Hovedserver optaget, fuld lagring udsat."
 #: nis/nis_local_names.c:122
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
-msgstr "LOKALT indtastning for UID %d i katalog %s er ikke unikt\n"
+msgstr "LOKAL indtastning for UID %d i katalog %s er ikke unikt\n"
 
 #: nis/nis_print.c:51
 msgid "UNKNOWN"
@@ -3154,7 +3154,7 @@ msgstr "FALSKT OBJEKT\n"
 
 #: nis/nis_print.c:112
 msgid "NO OBJECT\n"
-msgstr "IKKE NOGET OBJEKT\n"
+msgstr "INTET OBJEKT\n"
 
 #: nis/nis_print.c:115
 msgid "DIRECTORY\n"
@@ -3170,7 +3170,7 @@ msgstr "TABEL\n"
 
 #: nis/nis_print.c:124
 msgid "ENTRY\n"
-msgstr "INDGANG\n"
+msgstr "POST\n"
 
 #: nis/nis_print.c:127
 msgid "LINK\n"
@@ -3402,7 +3402,7 @@ msgstr "Objekt #%d:\n"
 #: nis/nis_print_group_entry.c:117
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr "Gruppeindtastninger for '%s.%s'-gruppen:\n"
+msgstr "Gruppeindtastning for '%s.%s'-gruppen:\n"
 
 #: nis/nis_print_group_entry.c:125
 msgid "    Explicit members:\n"
@@ -3456,7 +3456,7 @@ msgstr "    Ingen rekursive ikke-medlemmer\n"
 #: nis/nss_nisplus/nisplus-publickey.c:183
 #, c-format
 msgid "DES entry for netname %s not unique\n"
-msgstr "DES-indtastninger for netnavn %s er ikke unikt\n"
+msgstr "DES-indtastning for netnavn %s er ikke unikt\n"
 
 #: nis/nss_nisplus/nisplus-publickey.c:220
 #, c-format
@@ -3474,7 +3474,7 @@ msgstr "netname2user: (nis+-opslag): %s\n"
 #: nis/nss_nisplus/nisplus-publickey.c:321
 #, c-format
 msgid "netname2user: DES entry for %s in directory %s not unique"
-msgstr "netname2user: DES-indtastninger for %s i katalog %s er ikke unikt"
+msgstr "netname2user: DES-indtastning for %s i katalog %s er ikke unikt"
 
 #: nis/nss_nisplus/nisplus-publickey.c:339
 #, c-format
@@ -3484,7 +3484,7 @@ msgstr "netname2user: navn på 'principal' '%s' for langt"
 #: nis/nss_nisplus/nisplus-publickey.c:395
 #, c-format
 msgid "netname2user: LOCAL entry for %s in directory %s not unique"
-msgstr "netname2user: LOKAL-indtastninger for %s i katalog %s er ikke unikt"
+msgstr "netname2user: LOKAL-indtastning for %s i katalog %s er ikke unikt"
 
 #: nis/nss_nisplus/nisplus-publickey.c:402
 msgid "netname2user: should not have uid 0"
@@ -3501,7 +3501,7 @@ msgstr "RPC-fejl ved NIS-operation"
 # nis/ypclnt.c:637+
 #: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
-msgstr "Kan ikke koble til server for dette domæne"
+msgstr "Kan ikke forbinde til server for dette domæne"
 
 #: nis/ypclnt.c:845
 msgid "No such map in server's domain"
@@ -3521,7 +3521,7 @@ msgstr "Tildelingsfejl for lokal ressource"
 
 #: nis/ypclnt.c:857
 msgid "No more records in map database"
-msgstr "Ikke flere poster i tabellen"
+msgstr "Ikke flere poster i tabel-database"
 
 #: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
@@ -3541,7 +3541,7 @@ msgstr "Lokalt domænenavn er ikke sat"
 
 #: nis/ypclnt.c:872
 msgid "NIS map database is bad"
-msgstr "NIS' tabel-database er korrupt"
+msgstr "NIS' tabel-database er dårlig"
 
 #: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
@@ -3606,7 +3606,7 @@ msgstr "kan ikke udføre stat() på fil '%s': %s"
 #: nscd/cache.c:328
 #, c-format
 msgid "pruning %s cache; time %ld"
-msgstr "beskærer %s cache; tid %ld"
+msgstr "formindsker %s cache; tid %ld"
 
 #: nscd/cache.c:357
 #, c-format
@@ -3616,7 +3616,7 @@ msgstr "overvejer %s-post \"%s\", tidsgrænse %<PRIu64>"
 #: nscd/connections.c:570
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
-msgstr "Ugyldig viderelevende databasefil '%s': %s"
+msgstr "Ugyldig overlevende databasefil '%s': %s"
 
 #: nscd/connections.c:578
 msgid "uninitialized header"
@@ -3628,7 +3628,7 @@ msgstr "hovedstørrelse er ikke overensstemmende"
 
 #: nscd/connections.c:593
 msgid "file size does not match"
-msgstr "flistørrelse er ikke overensstemmende"
+msgstr "filstørrelse er ikke overensstemmende"
 
 #: nscd/connections.c:610
 msgid "verification failed"
@@ -3637,12 +3637,12 @@ msgstr "efterprøvelse mislykkedes"
 #: nscd/connections.c:624
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
-msgstr "foreslået størrelse på tabellen for database %s er større end den viderelevende databases tabel"
+msgstr "foreslået størrelse på tabellen for database %s er større end den overlevende databases tabel"
 
 #: nscd/connections.c:635 nscd/connections.c:720
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
-msgstr "kan ikke oprette læsbar filidentifikator for \"%s\", ingen mmap"
+msgstr "kan ikke oprette kun læsbar filidentifikator for \"%s\", ingen mmap"
 
 #: nscd/connections.c:651
 #, c-format
@@ -3657,7 +3657,7 @@ msgstr "database for %s ødelagt eller brugt af flere samtidigt; fjern %s manuelt
 #: nscd/connections.c:706
 #, c-format
 msgid "cannot create %s; no persistent database used"
-msgstr "kan ikke oprette %s, ingen viderelevende database brugt"
+msgstr "kan ikke oprette %s, ingen overlevende database brugt"
 
 #: nscd/connections.c:709
 #, c-format
@@ -3687,7 +3687,7 @@ msgstr "kan ikke ændre sokkel til ikke-blokerende tilstand: %s"
 #: nscd/connections.c:930
 #, c-format
 msgid "cannot set socket to close on exec: %s"
-msgstr "kan ikke få sokkel til at lukke ved afslutning: %s"
+msgstr "kan ikke få sokkel til at lukke ved programstart: %s"
 
 #: nscd/connections.c:943
 #, c-format
@@ -3707,16 +3707,16 @@ msgstr "kan ikke håndtere gammel forespørgsel af version %d. Nuværende version e
 #: nscd/connections.c:1077
 #, c-format
 msgid "request from %ld not handled due to missing permission"
-msgstr "forespørgsel fra %ld ikke behandlet da rettigheder mangles"
+msgstr "forespørgsel fra %ld ikke behandlet da rettigheder mangler"
 
 #: nscd/connections.c:1082
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
-msgstr "forespørgsel fra \"%s\" [%ld] ikke behandlet da rettigheder mangles"
+msgstr "forespørgsel fra \"%s\" [%ld] ikke behandlet da rettigheder mangler"
 
 #: nscd/connections.c:1087
 msgid "request not handled due to missing permission"
-msgstr "forespørgsel ikke behandlet da rettigheder mangles"
+msgstr "forespørgsel ikke behandlet da rettigheder mangler"
 
 #: nscd/connections.c:1125 nscd/connections.c:1178
 #, c-format
@@ -3741,17 +3741,17 @@ msgstr "kan ikke læse /proc/self/cmdline: %s, deaktiverer paranoiatilstand"
 #: nscd/connections.c:1374
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
-msgstr "kan ikke skifte til foregående UID: %s; deaktiverer paranoiatilstand"
+msgstr "kan ikke ændre til foregående UID: %s; deaktiverer paranoiatilstand"
 
 #: nscd/connections.c:1384
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
-msgstr "kan ikke skifte til foregående GID: %s; deaktiverer paranoiatilstand"
+msgstr "kan ikke ændre til foregående GID: %s; deaktiverer paranoiatilstand"
 
 #: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
-msgstr "kan ikke skifte til foregående arbejdskatalog: %s; deaktiverer paranoiatilstand"
+msgstr "kan ikke ændre til foregående arbejdskatalog: %s; deaktiverer paranoiatilstand"
 
 #: nscd/connections.c:1429
 #, c-format
@@ -3761,7 +3761,7 @@ msgstr "genstart mislykkedes: %s; deaktiverer paranoiatilstand"
 #: nscd/connections.c:1438
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
-msgstr "kan ikke skifte aktuelt arbejdskatalog to \"/\": %s"
+msgstr "kan ikke ændre aktuelt arbejdskatalog to \"/\": %s"
 
 #: nscd/connections.c:1644
 #, c-format
@@ -3841,7 +3841,7 @@ msgstr "Har ikke fundet '%s' i gruppe-nærbuffer!"
 #: nscd/grpcache.c:440 nscd/initgrcache.c:80
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "Geindlæser '%s' i gruppe-nærbuffer!"
+msgstr "Genindlæser '%s' i gruppe-nærbuffer!"
 
 #: nscd/grpcache.c:517
 #, c-format
@@ -3864,7 +3864,7 @@ msgstr "Læs konfigurationsdata fra NAVN"
 
 #: nscd/nscd.c:103
 msgid "Do not fork and display messages on the current tty"
-msgstr "Udspalt ikke ny proces og vis meddelelser på nuværende tty"
+msgstr "Forgren ikke ny proces og vis meddelelser på nuværende tty"
 
 #: nscd/nscd.c:104
 msgid "NUMBER"
@@ -3876,7 +3876,7 @@ msgstr "Start ANTAL tråde"
 
 #: nscd/nscd.c:105
 msgid "Shut the server down"
-msgstr "Afbryd serveren"
+msgstr "Luk serveren ned"
 
 #: nscd/nscd.c:106
 msgid "Print current configuration statistics"
@@ -3925,7 +3925,7 @@ msgstr "kan ikke duplikere program"
 #: nscd/nscd.c:244
 #, c-format
 msgid "cannot change current working directory to \"/\""
-msgstr "kan ikke skifte aktuelt arbejdskatalog til \"/\""
+msgstr "kan ikke ændre aktuelt arbejdskatalog til \"/\""
 
 #: nscd/nscd.c:252
 msgid "Could not create log file"
@@ -4048,22 +4048,22 @@ msgstr ""
 #: nscd/nscd_stat.c:230
 #, c-format
 msgid "%3ud %2uh %2um %2lus  server runtime\n"
-msgstr "%3ud %2uh %2um %2lus  servers kørselstid\n"
+msgstr "%3ud %2uh %2um %2lus  kørende server\n"
 
 #: nscd/nscd_stat.c:233
 #, c-format
 msgid "    %2uh %2um %2lus  server runtime\n"
-msgstr "    %2uh %2um %2lus  servers kørselstid\n"
+msgstr "    %2uh %2um %2lus  kørende server\n"
 
 #: nscd/nscd_stat.c:235
 #, c-format
 msgid "        %2um %2lus  server runtime\n"
-msgstr "        %2um %2lus  servers kørselstid\n"
+msgstr "        %2um %2lus  kørende server\n"
 
 #: nscd/nscd_stat.c:237
 #, c-format
 msgid "            %2lus  server runtime\n"
-msgstr "            %2lus  servers kørselstid\n"
+msgstr "            %2lus  kørende server\n"
 
 #: nscd/nscd_stat.c:239
 #, c-format
@@ -4111,7 +4111,7 @@ msgstr ""
 "%s hurtigbuffer (cache):\n"
 "\n"
 "%15s  hurtigbuffer er aktiveret\n"
-"%15s  hurtigbuffer viderelever mellem sessioner\n"
+"%15s  hurtigbuffer overlever mellem sessioner\n"
 "%15s  hurtigbuffer er delt\n"
 "%15zu  foreslået størrelse\n"
 "%15zu  total størrelse af datapulje\n"
@@ -4149,11 +4149,11 @@ msgstr "Ugyldig numerisk bruger-id (uid) \"%s\"!"
 #: nscd/selinux.c:156
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
-msgstr "Mislykkedes med at åbne en forbindelse til undersystemet for granskning (audit): %m"
+msgstr "Kunne ikke åbne en forbindelse til undersystemet for revision (audit): %m"
 
 #: nscd/selinux.c:177
 msgid "Failed to set keep-capabilities"
-msgstr "Mislykkedes med at sætte \"keep\"-kapabiliteter"
+msgstr "Kunne ikke sætte \"keep\"-kapabiliteter"
 
 #: nscd/selinux.c:178 nscd/selinux.c:241
 #, c-format
@@ -4162,7 +4162,7 @@ msgstr "prctl(KEEPCAPS) mislykkedes"
 
 #: nscd/selinux.c:192
 msgid "Failed to initialize drop of capabilities"
-msgstr "Mislykkedes med at initiere fjernelse af kapabiliteter"
+msgstr "Kunne ikke initiere fjernelse af kapabiliteter"
 
 #: nscd/selinux.c:193
 #, c-format
@@ -4171,7 +4171,7 @@ msgstr "cap_init mislykkedes"
 
 #: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "Failed to drop capabilities"
-msgstr "Mislykkedes med at fjerne kapabiliteter"
+msgstr "Kunne ikke fjerne kapabiliteter"
 
 #: nscd/selinux.c:215 nscd/selinux.c:232
 #, c-format
@@ -4180,16 +4180,16 @@ msgstr "cap_set_proc mislykkedes"
 
 #: nscd/selinux.c:240
 msgid "Failed to unset keep-capabilities"
-msgstr "Mislykkedes med at fjerne \"keep\"-kapabiliteter"
+msgstr "Kunne ikke fjerne \"keep\"-kapabiliteter"
 
 #: nscd/selinux.c:256
 msgid "Failed to determine if kernel supports SELinux"
-msgstr "Mislykkedes med at finde ud af om kernen understøtter SELinux"
+msgstr "Kunne ikke finde ud af om kernen understøtter SELinux"
 
 #: nscd/selinux.c:271
 #, c-format
 msgid "Failed to start AVC thread"
-msgstr "Mislykkedes med at starte AVC-tråd"
+msgstr "Kunne ikke starte AVC-tråd"
 
 #: nscd/selinux.c:293
 #, c-format
@@ -4219,7 +4219,7 @@ msgstr "Kunne ikke hente \"sid\" fra kontekst"
 
 #: nscd/selinux.c:374
 msgid "compile-time support for database policy missing"
-msgstr "indkompileret understøttelse for databasepolicy mangles"
+msgstr "indkompileret understøttelse for databasepolicy mangler"
 
 #: nscd/selinux.c:407
 #, c-format
@@ -4242,7 +4242,7 @@ msgstr ""
 "%15u  postopslag\n"
 "%15u  posttræffere\n"
 "%15u  postmissere\n"
-"%15u  bortkastede poster\n"
+"%15u  afviste poster\n"
 "%15u  CAV-opslag\n"
 "%15u  CAV-træffere\n"
 "%15u  CAV-sonderinger\n"
@@ -4268,7 +4268,7 @@ msgstr "Tjenestekonfiguration som skal bruges"
 
 #: nss/getent.c:62
 msgid "Get entries from administrative database."
-msgstr "Hent indtastninger fra administrativ database."
+msgstr "Hent poster fra administrativ database."
 
 #: nss/getent.c:143 nss/getent.c:408
 #, c-format
@@ -4299,11 +4299,11 @@ msgstr "Skriv ikke meddelelser under opbygning af databasen"
 
 #: nss/makedb.c:65
 msgid "Print content of database file, one entry a line"
-msgstr "Skriv indholdet af en databasefil ud, en indtastning per linje"
+msgstr "Skriv indholdet af en databasefil ud, en post per linje"
 
 #: nss/makedb.c:70
 msgid "Create simple DB database from textual input."
-msgstr "Lav en enkel DB-database fra tekst-indput."
+msgstr "Lav en enkel DB-database fra tekst-inddata."
 
 #: nss/makedb.c:73
 msgid ""
@@ -4331,7 +4331,7 @@ msgstr "forkert formatteret fil"
 
 #: nss/makedb.c:331
 msgid "duplicate key"
-msgstr "duplikeret nøgle"
+msgstr "duplikér nøgle"
 
 #: nss/makedb.c:337
 #, c-format
@@ -4341,12 +4341,12 @@ msgstr "under skrivning til databasefil"
 #: nss/makedb.c:348
 #, c-format
 msgid "problems while reading `%s'"
-msgstr "problem ved læsning af '%s'"
+msgstr "problemer ved læsning af '%s'"
 
 #: nss/makedb.c:368 nss/makedb.c:385
 #, c-format
 msgid "while reading database"
-msgstr "da databasen blev læst"
+msgstr "ved læsning af database"
 
 #: posix/getconf.c:945
 #, c-format
@@ -4486,7 +4486,7 @@ msgstr "Ubalanceret \\{"
 
 #: posix/regcomp.c:163
 msgid "Invalid content of \\{\\}"
-msgstr "Ugyldig brug af \\{\\}"
+msgstr "Ugyldig indhold af \\{\\}"
 
 #: posix/regcomp.c:166
 msgid "Invalid range end"
@@ -4538,7 +4538,7 @@ msgstr "Ukendt server-fejl"
 
 #: resolv/herror.c:72
 msgid "No address associated with name"
-msgstr "Ingen adresse associeret med navnet"
+msgstr "Ingen adresse knyttet til navnet"
 
 #: resolv/herror.c:107
 msgid "Resolver internal error"
@@ -4566,12 +4566,12 @@ msgstr "%s: linje %d: forventede 'on' eller 'off', fandt '%s'\n"
 #: resolv/res_hconf.c:247
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
-msgstr "%s: linje %d: forkert kommando `%s'\n"
+msgstr "%s: linje %d: dårlig kommando `%s'\n"
 
 #: resolv/res_hconf.c:282
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
-msgstr "%s: linje %d: ignorerer efterfølgende fnadder '%s'\n"
+msgstr "%s: linje %d: ignorerer efterfølgende snavs '%s'\n"
 
 #: stdio-common/psignal.c:51
 #, c-format
@@ -4633,7 +4633,7 @@ msgstr "RPC: Succes"
 
 #: sunrpc/clnt_perr.c:162
 msgid "RPC: Can't encode arguments"
-msgstr "RPC: Kan ikke kode argumentet"
+msgstr "RPC: Kan ikke kode argumenterne"
 
 #: sunrpc/clnt_perr.c:166
 msgid "RPC: Can't decode result"
@@ -4645,7 +4645,7 @@ msgstr "RPC: Kan ikke sende"
 
 #: sunrpc/clnt_perr.c:174
 msgid "RPC: Unable to receive"
-msgstr "RPC: Kan ikke tage imod"
+msgstr "RPC: Kan ikke modtage"
 
 #: sunrpc/clnt_perr.c:178
 msgid "RPC: Timed out"
@@ -4677,7 +4677,7 @@ msgstr "RPC: Server kan ikke afkode argumenterne"
 
 #: sunrpc/clnt_perr.c:206
 msgid "RPC: Remote system error"
-msgstr "RPC: Systemfejl hos modtager"
+msgstr "RPC: Fjernsystemfejl"
 
 #: sunrpc/clnt_perr.c:210
 msgid "RPC: Unknown host"
@@ -4709,11 +4709,11 @@ msgstr "Autentificering OK"
 
 #: sunrpc/clnt_perr.c:333
 msgid "Invalid client credential"
-msgstr "Ugyldige klientreferencer"
+msgstr "Ugyldig klientlegitimation"
 
 #: sunrpc/clnt_perr.c:337
 msgid "Server rejected credential"
-msgstr "Server afviste referencerne"
+msgstr "Server afviste legitimation"
 
 #: sunrpc/clnt_perr.c:341
 msgid "Invalid client verifier"
@@ -4765,7 +4765,7 @@ msgstr "Problem med 'polling' ved rundsending"
 
 #: sunrpc/pmap_rmt.c:345
 msgid "Cannot receive reply to broadcast"
-msgstr "Kan ikke tage imod svar på rundsending"
+msgstr "Kan ikke modtage svar på rundsending"
 
 #: sunrpc/rpc_main.c:290
 #, c-format
@@ -4804,7 +4804,7 @@ msgstr "%s: C-præprocessoren fejlede med slutkode %d\n"
 #: sunrpc/rpc_main.c:464
 #, c-format
 msgid "illegal nettype: `%s'\n"
-msgstr "ulovlig nettype: '%s'\n"
+msgstr "ugyldig nettype: '%s'\n"
 
 #: sunrpc/rpc_main.c:1130
 #, c-format
@@ -4916,7 +4916,7 @@ msgstr "-Dnavn[=værdi]\tdefinér et symbol (samme som #define)\n"
 #: sunrpc/rpc_main.c:1475
 #, c-format
 msgid "-h\t\tgenerate header file\n"
-msgstr "-h\t\tgenerér hovedfiler\n"
+msgstr "-h\t\tgenerér hovedfil\n"
 
 #: sunrpc/rpc_main.c:1476
 #, c-format
@@ -4956,12 +4956,12 @@ msgstr "-M\t\tgenerér trådsikker kode\n"
 #: sunrpc/rpc_main.c:1483
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr "-n netid\tgenerér serverkode som understøtter navngiven netid\n"
+msgstr "-n netid\tgenerér serverkode som understøtter navngivet netid\n"
 
 #: sunrpc/rpc_main.c:1484
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
-msgstr "-N\t\tunderstøtter multiple argumenter og kald-via-værdi\n"
+msgstr "-N\t\tunderstøtter flere argumenter og kald-via-værdi\n"
 
 #: sunrpc/rpc_main.c:1485
 #, c-format
@@ -4971,7 +4971,7 @@ msgstr "-o uddatafil\tnavn på uddatafilen\n"
 #: sunrpc/rpc_main.c:1486
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr "-s nettype\t\tgenerér serverkode som understøtter navngiven nettype\n"
+msgstr "-s nettype\tgenerér serverkode som understøtter navngiven nettype\n"
 
 #: sunrpc/rpc_main.c:1487
 #, c-format
@@ -5009,7 +5009,7 @@ msgstr "konstant eller identifikator ventet"
 
 #: sunrpc/rpc_scan.c:310
 msgid "illegal character in file: "
-msgstr "ulovligt tegn i fil: "
+msgstr "ugyldigt tegn i fil: "
 
 #: sunrpc/rpc_scan.c:349 sunrpc/rpc_scan.c:375
 msgid "unterminated string constant"
@@ -5026,14 +5026,14 @@ msgstr "præprocessorfejl"
 #: sunrpc/rpcinfo.c:254 sunrpc/rpcinfo.c:400
 #, c-format
 msgid "program %lu is not available\n"
-msgstr "program %lu er ikke tilgængelig\n"
+msgstr "program %lu er ikke tilgængeligt\n"
 
 #: sunrpc/rpcinfo.c:281 sunrpc/rpcinfo.c:327 sunrpc/rpcinfo.c:350
 #: sunrpc/rpcinfo.c:424 sunrpc/rpcinfo.c:470 sunrpc/rpcinfo.c:493
 #: sunrpc/rpcinfo.c:527
 #, c-format
 msgid "program %lu version %lu is not available\n"
-msgstr "program %lu version %lu er ikke tilgængelig\n"
+msgstr "program %lu version %lu er ikke tilgængeligt\n"
 
 #: sunrpc/rpcinfo.c:532
 #, c-format
@@ -5218,7 +5218,7 @@ msgstr "Afbrudt (SIGABRT)"
 
 #: sysdeps/generic/siglist.h:35 sysdeps/unix/siglist.c:34
 msgid "Floating point exception"
-msgstr "Undtagelsestilfælde ved flydendetals-operation"
+msgstr "Undtagelsestilfælde ved flydende taloperation"
 
 #: sysdeps/generic/siglist.h:36 sysdeps/unix/siglist.c:35
 msgid "Killed"
@@ -5230,7 +5230,7 @@ msgstr "Busfejl"
 
 #: sysdeps/generic/siglist.h:38 sysdeps/unix/siglist.c:37
 msgid "Segmentation fault"
-msgstr "Lagersegmentfejl"
+msgstr "Segmentfejl"
 
 #. TRANS Broken pipe; there is no process reading from the other end of a pipe.
 #. TRANS Every library function that returns this error code also generates a
@@ -5240,11 +5240,11 @@ msgstr "Lagersegmentfejl"
 #: sysdeps/generic/siglist.h:39 sysdeps/gnu/errlist.c:359
 #: sysdeps/unix/siglist.c:39
 msgid "Broken pipe"
-msgstr "Røret blev brudt"
+msgstr "Kanalen blev brudt"
 
 #: sysdeps/generic/siglist.h:40 sysdeps/unix/siglist.c:40
 msgid "Alarm clock"
-msgstr "Alarmen gik"
+msgstr "Alarmklokke"
 
 #: sysdeps/generic/siglist.h:41 sysdeps/unix/siglist.c:41
 msgid "Terminated"
@@ -5312,7 +5312,7 @@ msgstr "Brugerdefineret signal 2"
 
 #: sysdeps/generic/siglist.h:60 sysdeps/unix/siglist.c:33
 msgid "EMT trap"
-msgstr "Emulatorfælde"
+msgstr "EMT-fælde"
 
 #: sysdeps/generic/siglist.h:63 sysdeps/unix/siglist.c:38
 msgid "Bad system call"
@@ -5359,7 +5359,7 @@ msgstr "Afbrudt systemkald"
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: sysdeps/gnu/errlist.c:69
 msgid "Input/output error"
-msgstr "Ind/ud-fejl"
+msgstr "Inddata/uddata-fejl"
 
 #. TRANS No such device or address.  The system tried to use the device
 #. TRANS represented by a file you specified, and it couldn't find the device.
@@ -5404,7 +5404,7 @@ msgstr "Ingen børneprocesser"
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
 #: sysdeps/gnu/errlist.c:138
 msgid "Resource deadlock avoided"
-msgstr "Klarede at undgå vranglås ved tildeling af ressource"
+msgstr "Klarede at undgå baglås ved tildeling af ressource"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
@@ -5628,7 +5628,7 @@ msgstr "Protokollen er ikke tilgængelig"
 #. TRANS @xref{Creating a Socket}.
 #: sysdeps/gnu/errlist.c:504
 msgid "Protocol not supported"
-msgstr "Protokollen er ikke tilgængelig"
+msgstr "Protokollen er ikke understøttet"
 
 #. TRANS The socket type is not supported.
 #: sysdeps/gnu/errlist.c:513
@@ -5666,7 +5666,7 @@ msgstr "Adressen er allerede i brug"
 #. TRANS @xref{Socket Addresses}.
 #: sysdeps/gnu/errlist.c:566
 msgid "Cannot assign requested address"
-msgstr "Kan ikke benytte den ønskede adresse"
+msgstr "Kan ikke tildele den ønskede adresse"
 
 #. TRANS A socket operation failed because the network was down.
 #: sysdeps/gnu/errlist.c:575
@@ -5707,7 +5707,7 @@ msgstr "Ikke mere buffer-plads tilgængelig"
 #. TRANS @xref{Connecting}.
 #: sysdeps/gnu/errlist.c:635
 msgid "Transport endpoint is already connected"
-msgstr "Transport-endepunkterne er allerede sammenkoblet"
+msgstr "Transport-endepunkt er allerede forbundet"
 
 #. TRANS The socket is not connected to anything.  You get this error when you
 #. TRANS try to transmit data over a socket, without first specifying a
@@ -5715,7 +5715,7 @@ msgstr "Transport-endepunkterne er allerede sammenkoblet"
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
 #: sysdeps/gnu/errlist.c:647
 msgid "Transport endpoint is not connected"
-msgstr "Transport-endepunkterne er ikke sammenkoblet"
+msgstr "Transport-endepunkt er ikke forbundet"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
@@ -5727,7 +5727,7 @@ msgstr "Måladresse kræves"
 #. TRANS The socket has already been shut down.
 #: sysdeps/gnu/errlist.c:667
 msgid "Cannot send after transport endpoint shutdown"
-msgstr "Kan ikke sende efter at transportendepunktet har koblet ned"
+msgstr "Kan ikke sende efter at transportendepunktet er lukket ned"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:676
@@ -5812,7 +5812,7 @@ msgstr "Er et fjernobjekt"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:808
 msgid "RPC struct is bad"
-msgstr "RPC-strukturen er ugyldig"
+msgstr "RPC-strukturen er dårlig"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:817
@@ -5822,7 +5822,7 @@ msgstr "forkert RPC-version"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:826
 msgid "RPC program not available"
-msgstr "RPC-programmet er ikke tilgængelig"
+msgstr "RPC-programmet er ikke tilgængeligt"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:835
@@ -5832,7 +5832,7 @@ msgstr "RPC: forkert programversion"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:844
 msgid "RPC bad procedure for program"
-msgstr "RPC: ugyldig procedure for program"
+msgstr "RPC: dårlig procedure for program"
 
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
@@ -5973,7 +5973,7 @@ msgstr "Protokolfejl"
 
 #: sysdeps/gnu/errlist.c:1081
 msgid "Timer expired"
-msgstr "Tidsgrænse udløb"
+msgstr "Tidstager udløb"
 
 #. TRANS Operation canceled; an asynchronous operation was canceled before it
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
@@ -5985,7 +5985,7 @@ msgstr "Operationen afbrudt"
 
 #: sysdeps/gnu/errlist.c:1101
 msgid "Interrupted system call should be restarted"
-msgstr "Afbrudt systemkald burde startes om"
+msgstr "Afbrudt systemkald bør genstartes"
 
 #: sysdeps/gnu/errlist.c:1109
 msgid "Channel number out of range"
@@ -6045,11 +6045,11 @@ msgstr "Ugyldig plads"
 
 #: sysdeps/gnu/errlist.c:1221
 msgid "File locking deadlock error"
-msgstr "Fillåsning fejlede på grund af vranglås"
+msgstr "Fillåsning fejlede på grund af baglås"
 
 #: sysdeps/gnu/errlist.c:1229
 msgid "Bad font file format"
-msgstr "Ugyldigt format på typesnitsfil"
+msgstr "Ugyldigt format på skrifttypefil"
 
 #: sysdeps/gnu/errlist.c:1237
 msgid "Machine is not on the network"
@@ -6081,7 +6081,7 @@ msgstr "Navnet er ikke unikt på netværket"
 
 #: sysdeps/gnu/errlist.c:1293
 msgid "File descriptor in bad state"
-msgstr "Fildeskriptor i ugyldig tilstand"
+msgstr "Fildeskriptor i dårlig tilstand"
 
 #: sysdeps/gnu/errlist.c:1301
 msgid "Remote address changed"
@@ -6089,11 +6089,11 @@ msgstr "Fjernadresse ændret"
 
 #: sysdeps/gnu/errlist.c:1309
 msgid "Can not access a needed shared library"
-msgstr "Kan ikke tilgå et nødvendig delt bibliotek"
+msgstr "Kan ikke få adgang til et nødvendigt delt bibliotek"
 
 #: sysdeps/gnu/errlist.c:1317
 msgid "Accessing a corrupted shared library"
-msgstr "Aksesserer et skadet delt bibliotek"
+msgstr "Får adgang til et skadet delt bibliotek"
 
 #: sysdeps/gnu/errlist.c:1325
 msgid ".lib section in a.out corrupted"
@@ -6109,7 +6109,7 @@ msgstr "Kan ikke eksekvere et delt bibliotek direkte"
 
 #: sysdeps/gnu/errlist.c:1349
 msgid "Streams pipe error"
-msgstr "Strøm-rørfejl"
+msgstr "Strøm-kanalfejl"
 
 #: sysdeps/gnu/errlist.c:1357
 msgid "Structure needs cleaning"
@@ -6117,7 +6117,7 @@ msgstr "Strukturen trænger til oprydning"
 
 #: sysdeps/gnu/errlist.c:1365
 msgid "Not a XENIX named type file"
-msgstr "Ikke en XENIX navngiven fil"
+msgstr "Ikke en XENIX navngiven typefil"
 
 #: sysdeps/gnu/errlist.c:1373
 msgid "No XENIX semaphores available"
@@ -6129,15 +6129,15 @@ msgstr "Er en navngiven filtype"
 
 #: sysdeps/gnu/errlist.c:1389
 msgid "Remote I/O error"
-msgstr "I/O-fejl på fjern maskine"
+msgstr "I/O-fejl på fjernmaskine"
 
 #: sysdeps/gnu/errlist.c:1397
 msgid "No medium found"
-msgstr "Medium ikke fundet"
+msgstr "Medie ikke fundet"
 
 #: sysdeps/gnu/errlist.c:1405
 msgid "Wrong medium type"
-msgstr "Gal mediatype"
+msgstr "Forkert medietype"
 
 #: sysdeps/gnu/errlist.c:1413
 msgid "Required key not available"
@@ -6213,7 +6213,7 @@ msgstr "Systemfejl"
 
 #: sysdeps/posix/gai_strerror-strs.h:12
 msgid "Processing request in progress"
-msgstr "Operationen er under udførelse"
+msgstr "Procesforespørgsel er under udførelse"
 
 #: sysdeps/posix/gai_strerror-strs.h:13
 msgid "Request canceled"
@@ -6225,7 +6225,7 @@ msgstr "Forespørgsel ikke annulleret"
 
 #: sysdeps/posix/gai_strerror-strs.h:15
 msgid "All requests done"
-msgstr "Alle forespørgsler behandlet"
+msgstr "Alle forespørgsler udført"
 
 #: sysdeps/posix/gai_strerror-strs.h:16
 msgid "Interrupted by a signal"
@@ -6384,7 +6384,7 @@ msgstr "%s: Kan ikke oprette lænke fra %s til %s: %s\n"
 
 #: timezone/zic.c:745 timezone/zic.c:747
 msgid "same rule name in multiple files"
-msgstr "samme regel i flere filer"
+msgstr "samme regelnavn i flere filer"
 
 #: timezone/zic.c:788
 msgid "unruly zone"
@@ -6397,7 +6397,7 @@ msgstr "%s i zone uden regel"
 
 #: timezone/zic.c:816
 msgid "standard input"
-msgstr "standard indkanal"
+msgstr "standard inddata"
 
 #: timezone/zic.c:821
 #, c-format
@@ -6477,7 +6477,7 @@ msgstr "'Zone %s'-linje og flaget -p udelukker hinanden"
 #: timezone/zic.c:1015
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr "duplikeret zonenavn %s (fil '%s', linje %d)"
+msgstr "duplikér zonenavn %s (fil '%s', linje %d)"
 
 #: timezone/zic.c:1031
 msgid "wrong number of fields on Zone continuation line"
@@ -6521,7 +6521,7 @@ msgstr "tid for lille"
 
 #: timezone/zic.c:1186
 msgid "time too large"
-msgstr "For stor tid"
+msgstr "tid for stor"
 
 #: timezone/zic.c:1190 timezone/zic.c:1295
 msgid "invalid time of day"
@@ -6529,15 +6529,15 @@ msgstr "ugyldig tid på dagen"
 
 #: timezone/zic.c:1209
 msgid "illegal CORRECTION field on Leap line"
-msgstr "ulovligt 'CORRECTION'-felt på 'Leap'-linje"
+msgstr "ugyldigt 'CORRECTION'-felt på 'Leap'-linje"
 
 #: timezone/zic.c:1214
 msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "ulovligt 'Rolling/Stationary'-felt på 'Leap'-linje"
+msgstr "ugyldigt 'Rolling/Stationary'-felt på 'Leap'-linje"
 
 #: timezone/zic.c:1230
 msgid "wrong number of fields on Link line"
-msgstr "galt antal felter på 'Link'-linje"
+msgstr "forkert antal felter på 'Link'-linje"
 
 #: timezone/zic.c:1234
 msgid "blank FROM field on Link line"
@@ -6561,7 +6561,7 @@ msgstr "startår er højere end slutår"
 
 #: timezone/zic.c:1349
 msgid "typed single year"
-msgstr "satte type på bare et år"
+msgstr "indtastede enkelt år"
 
 #: timezone/zic.c:1384
 msgid "invalid weekday name"
@@ -6596,15 +6596,15 @@ msgstr "for mange overgange?!"
 
 #: timezone/zic.c:2237
 msgid "internal error - addtype called with bad isdst"
-msgstr "intern fejl - addtype kaldt med fejlagtig isdst"
+msgstr "intern fejl - addtype kaldt med dårlig isdst"
 
 #: timezone/zic.c:2241
 msgid "internal error - addtype called with bad ttisstd"
-msgstr "intern fejl - addtype kaldt med fejlagtig ttisstd"
+msgstr "intern fejl - addtype kaldt med dårlig ttisstd"
 
 #: timezone/zic.c:2245
 msgid "internal error - addtype called with bad ttisgmt"
-msgstr "intern fejl - addtype kaldt med fejlagtig ttisgmt"
+msgstr "intern fejl - addtype kaldt med dårlig ttisgmt"
 
 #: timezone/zic.c:2264
 msgid "too many local time types"

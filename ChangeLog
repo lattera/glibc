@@ -1,3 +1,7 @@
+2009-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/da.po: Update from translation team.
+
 2009-05-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/____longjmp_chk.S: New file.
