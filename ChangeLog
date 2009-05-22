@@ -1,5 +1,7 @@
 2009-05-21  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/accept4.c (__NR_accept4): Don't define.
+
 	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_paccept): Remove.
 	(SOCKOP_accept4): Define.
 
