@@ -96,7 +96,8 @@ ENTRY(__memchr)
 	mov	pr.rot = 1 << 16 ;;
 .l2:
 (p[0])		mov	addr[0] = ret0
-(p[0])		ld8	value[0] = [ret0], 8
+(p[0])		ld8.s	value[0] = [ret0], 8	 // speculative load
+(p[MEMLAT])	chk.s	value[MEMLAT], .recovery // check and recovery
 (p[MEMLAT])	xor	aux[0] = value[MEMLAT], chrx8
 (p[MEMLAT+1])	czx1.r	poschr[0] = aux[1]
 (p[MEMLAT+2])	cmp.ne	p7, p0 = 8, poschr[1]
@@ -123,6 +124,20 @@ ENTRY(__memchr)
 	mov	pr = saved_pr, -1
 	mov	ar.lc = saved_lc
 	br.ret.sptk.many b0
+
+.recovery:
+	adds	ret0 = -((MEMLAT + 1) * 8), ret0;;
+(p[MEMLAT+1])	add	ret0 = -8, ret0;;
+(p[MEMLAT+2])	add	ret0 = -8, ret0;;
+.l4:
+	mov     addr[MEMLAT+2] = ret0
+	ld8	tmp = [ret0];;		// load the first unchecked 8byte
+	xor	aux[1] = tmp, chrx8;;
+	czx1.r	poschr[1] = aux[1];;
+	cmp.ne	p7, p0 = 8, poschr[1]
+(p7)	br.cond.spnt	.foundit;;
+	adds	ret0 = 8, ret0		// load the next unchecked 8byte
+	br.sptk	.l4;;
 
 END(__memchr)
 
