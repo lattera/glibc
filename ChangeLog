@@ -1,3 +1,8 @@
+2009-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_paccept): Remove.
+	(SOCKOP_accept4): Define.
+
 2009-05-20  Ulrich Drepper  <drepper@redhat.com>
 
 	Sun approved the change of the license.
@@ -100,7 +105,7 @@
 	* sysdeps/sh/____longjmp_chk.S: New file.
 	* sysdeps/sh/sh3/__longjmp.S: If CHECK_SP is defined, use it.
 	* sysdeps/sh/sh4/__longjmp.S: Likewise.
-			
+
 2009-05-18  Jakub Jelinek  <jakub@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
