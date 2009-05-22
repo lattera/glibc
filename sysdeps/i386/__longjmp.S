@@ -28,6 +28,7 @@
 #define JBUF	PARMS
 #define VAL	JBUF+PTR_SIZE
 
+	.text
 ENTRY (BP_SYM (__longjmp))
 	ENTER
 

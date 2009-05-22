@@ -1,3 +1,8 @@
+2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/__longjmp.S: Add .text.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+
 2009-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
