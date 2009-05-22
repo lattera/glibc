@@ -1,9 +1,11 @@
+2009-05-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/configure.in: New file.
+
 2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #10162]
 	* sysdeps/ia64/memchr.S: Use speculative load.
-
-2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/____longjmp_chk.S: New file.
 	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: If CHECK_RSP is defined,
