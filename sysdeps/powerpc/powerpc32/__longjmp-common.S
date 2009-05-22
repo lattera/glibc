@@ -1,5 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-1997, 1999-2001, 2003, 2004, 2005, 2006
+   Copyright (C) 1995-1997, 1999-2001, 2003, 2004, 2005, 2006, 2009
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -31,7 +31,7 @@
 ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
-#ifdef PTR_DEMANGLE
+#if defined PTR_DEMANGLE || defined CHECK_SP
 	lwz r24,(JB_GPR1*4)(r3)
 #else
 	lwz r1,(JB_GPR1*4)(r3)
@@ -45,8 +45,16 @@ ENTRY (BP_SYM (__longjmp))
 	lwz r19,((JB_GPRS+5)*4)(r3)
 	lwz r20,((JB_GPRS+6)*4)(r3)
 #ifdef PTR_DEMANGLE
+# ifdef CHECK_SP
+	PTR_DEMANGLE3 (r24, r24, r25)
+# else
 	PTR_DEMANGLE3 (r1, r24, r25)
+# endif
 	PTR_DEMANGLE2 (r0, r25)
+#endif
+#ifdef CHECK_SP
+	CHECK_SP (r24)
+	mr r1,r24
 #endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)

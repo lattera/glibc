@@ -107,11 +107,21 @@ L(aligned_restore_vmx):
 	lvx	v31,0,r6
 L(no_vmx):
 #endif
-#ifdef PTR_DEMANGLE
+#if defined PTR_DEMANGLE || defined CHECK_SP
 	ld r22,(JB_GPR1*8)(r3)
-	PTR_DEMANGLE3 (r1, r22, r25)
 #else
 	ld r1,(JB_GPR1*8)(r3)
+#endif
+#ifdef PTR_DEMANGLE
+# ifdef CHECK_SP
+	PTR_DEMANGLE3 (r22, r22, r25)
+# else
+	PTR_DEMANGLE3 (r1, r22, r25)
+# endif
+#endif
+#ifdef CHECK_SP
+	CHECK_SP (r22)
+	mr r1,r22
 #endif
 	ld r2,(JB_GPR2*8)(r3)
 	ld r0,(JB_LR*8)(r3)

@@ -1,3 +1,12 @@
+2009-05-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/powerpc32/____longjmp_chk.S: New file.
+	* sysdeps/powerpc/powerpc64/____longjmp_chk.S: New file.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Use CHECK_SP if
+	defined.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Likewise.
+
 2009-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/accept4.c: Include kernel-features.h.

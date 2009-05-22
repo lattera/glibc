@@ -114,7 +114,7 @@ L(aligned_restore_vmx):
 	lvx	v31,0,r6
 L(no_vmx):
 #endif
-#ifdef PTR_DEMANGLE
+#if defined PTR_DEMANGLE || defined CHECK_SP
 	lwz r24,(JB_GPR1*4)(r3)
 #else
 	lwz r1,(JB_GPR1*4)(r3)
@@ -135,8 +135,16 @@ L(no_vmx):
 	lwz r20,((JB_GPRS+6)*4)(r3)
 	lfd fp20,((JB_FPRS+6*2)*4)(r3)
 #ifdef PTR_DEMANGLE
+# ifdef CHECK_SP
+	PTR_DEMANGLE3 (r24, r24, r25)
+# else
 	PTR_DEMANGLE3 (r1, r24, r25)
+# endif
 	PTR_DEMANGLE2 (r0, r25)
+#endif
+#ifdef CHECK_SP
+	CHECK_SP (r24)
+	mr r1,r24
 #endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)
