@@ -53,6 +53,13 @@ Version 2.10
 * Handling for group shadow files has been added.
   Implemented by Ulrich Drepper.
 
+* DNS IPv4-IPv6 parallel lookup now deals better with broken DNS
+  servers (the case, e.g., for some people using the built-in DNS
+  server in ADSL modems/routers).  There is a once-per-process timeout
+  in case of a broken server.  To avoid it, users can run nscd or put
+  'options single-request' in /etc/resolv.conf.
+  Implemented by Ulrich Drepper.
+
 
 Version 2.9
 
