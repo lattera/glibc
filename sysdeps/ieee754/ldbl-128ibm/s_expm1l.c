@@ -51,6 +51,7 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA */
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 #include <math_ldbl_opt.h>
@@ -120,7 +121,10 @@ __expm1l (long double x)
 
   /* Overflow.  */
   if (x > maxlog)
-    return (big * big);
+    {
+      __set_errno (ERANGE);
+      return (big * big);
+    }
 
   /* Minimum value.  */
   if (x < minarg)

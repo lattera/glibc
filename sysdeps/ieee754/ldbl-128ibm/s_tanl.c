@@ -44,6 +44,7 @@
  *	TRIG(x) returns trig(x) nearly rounded
  */
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 #include <math_ldbl_opt.h>
@@ -66,8 +67,11 @@
 	if(ix <= 0x3fe921fb54442d10LL) return __kernel_tanl(x,z,1);
 
     /* tanl(Inf or NaN) is NaN */
-	else if (ix>=0x7ff0000000000000LL) return x-x;		/* NaN */
-
+	else if (ix>=0x7ff0000000000000LL) {
+	    if (ix == 0x7ff0000000000000LL)
+		__set_errno (EDOM);
+	    return x-x;		/* NaN */
+	}
     /* argument reduction needed */
 	else {
 	    n = __ieee754_rem_pio2l(x,y);
