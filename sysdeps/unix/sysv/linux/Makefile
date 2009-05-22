@@ -11,6 +11,10 @@ ifeq ($(subdir),malloc)
 CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
+ifeq ($(subdir),socket)
+sysdep_routines += internal_accept4
+endif
+
 ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek umount umount2 readahead \
 		   setfsuid setfsgid makedev epoll_pwait signalfd \

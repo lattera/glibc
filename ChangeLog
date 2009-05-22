@@ -1,3 +1,16 @@
+2009-05-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c: Include kernel-features.h.
+	(accept4): If __NR_accept4 is not defined, but __NR_socketcall
+	is, either do nothing at all if __ASSUME_ACCEPT4, or
+	call __internal_accept4 and handle EINVAL -> ENOSYS translation.
+	* sysdeps/unix/sysv/linux/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/i386/accept4.S (SOCKOP_accept4): Don't
+	define.
+	* sysdeps/unix/sysv/linux/i386/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep-routines): Add
+	internal_accept4 in socket directory.
+
 2009-05-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/configure.in: New file.

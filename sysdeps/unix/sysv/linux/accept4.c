@@ -23,6 +23,7 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
+#include <kernel-features.h>
 
 
 #ifdef __NR_accept4
@@ -41,6 +42,50 @@ accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 
   return result;
 }
+#elif defined __NR_socketcall
+# ifndef __ASSUME_ACCEPT4
+extern int __internal_accept4 (int fd, __SOCKADDR_ARG addr,
+			       socklen_t *addr_len, int flags)
+     attribute_hidden;
+
+static int have_accept4;
+
+int
+accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
+{
+  if (__builtin_expect (have_accept4 >= 0, 1))
+    {
+      int ret = __internal_accept4 (fd, addr, addr_len, flags);
+      /* The kernel returns -EINVAL for unknown socket operations.
+	 We need to convert that error to an ENOSYS error.  */
+      if (__builtin_expect (ret < 0, 0)
+	  && have_accept4 == 0
+	  && errno == EINVAL)
+	{
+	  /* Try another call, this time with the FLAGS parameter
+	     cleared and an invalid file descriptor.  This call will not
+	     cause any harm and it will return immediately.  */
+	  ret = __internal_accept4 (-1, addr, addr_len, 0);
+	  if (errno == EINVAL)
+	    {
+	      have_accept4 = -1;
+	      __set_errno (ENOSYS);
+	    }
+	  else
+	    {
+	      have_accept4 = 1;
+	      __set_errno (EINVAL);
+	    }
+	  return -1;
+	}
+      return ret;
+    }
+  __set_errno (ENOSYS);
+  return -1;
+}
+# else
+/* When __ASSUME_ACCEPT4 accept4 is defined in internal_accept4.S.  */
+# endif
 #else
 int
 accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)

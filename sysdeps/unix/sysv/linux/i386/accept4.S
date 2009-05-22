@@ -24,10 +24,6 @@
 #define EINVAL	22
 #define ENOSYS	38
 
-#ifndef SOCKOP_accept4
-# define SOCKOP_accept4 18
-#endif
-
 #ifdef __ASSUME_ACCEPT4
 # define errlabel SYSCALL_ERROR_LABEL
 #else
