@@ -42,7 +42,11 @@
 	/* __longjmp(__jmp_buf buf, int val) */
 
 LEAF(__longjmp)
+#ifdef CHECK_RSP
+	alloc r8=ar.pfs,2,1,1,0
+#else
 	alloc r8=ar.pfs,2,1,0,0
+#endif
 	mov r27=ar.rsc
 	add r2=0x98,in0		// r2 <- &jmpbuf.orig_jmp_buf_addr
 	;;
@@ -70,14 +74,18 @@ LEAF(__longjmp)
 	add r3=8,in0		// r3 <- &jmpbuf.r1
 	shl r9=r25,r17
 	;;
+	ld8.fill.nta r28=[r2],16	// r28 <- jmpbuf.sp
 	or r25=r8,r9
 	;;
 	mov r26=ar.rnat
 	mov ar.unat=r25		// setup ar.unat (NaT bits for r1, r4-r7, and r12)
 	;;
-	ld8.fill.nta sp=[r2],16	// r12 (sp)
+#ifdef CHECK_RSP
+	CHECK_RSP (r28)
+#endif
 	ld8.fill.nta gp=[r3],16		// r1 (gp)
 	dep r11=-1,r23,3,6	// r11 <- ia64_rse_rnat_addr(jmpbuf.ar_bsp)
+	mov sp=r28		// r12 (sp)
 	;;
 	ld8.nta r16=[r2],16		// caller's unat
 	ld8.nta r17=[r3],16		// fpsr

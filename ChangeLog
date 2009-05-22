@@ -1,5 +1,9 @@
 2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/ia64/____longjmp_chk.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: If CHECK_RSP is defined,
+	use it.
+
 	* sysdeps/i386/__longjmp.S: Add .text.
 	* sysdeps/x86_64/__longjmp.S: Likewise.
 
