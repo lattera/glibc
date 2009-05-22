@@ -521,7 +521,7 @@
 /* Support for the accept4 syscall was added in 2.6.28.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061c \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || defined __s390__)
+	|| defined __sparc__ || defined __s390__)
 # define __ASSUME_ACCEPT4	1
 #endif
 

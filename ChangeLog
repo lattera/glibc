@@ -1,3 +1,8 @@
+2009-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
+	__ASSUME_ACCEPT4 for IA-64.
+
 2009-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/accept4.c (__NR_accept4): Don't define.
