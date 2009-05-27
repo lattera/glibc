@@ -1,3 +1,9 @@
+2009-05-25  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #10200]
+	* db-symbols.awk: Use the last field for the symbol name instead
+	of the 8th one.
+
 2009-03-19  Roland McGrath  <roland@redhat.com>
 
 	* td_symbol_list.c (DB_LOOKUP_NAME, DB_LOOKUP_NAME_TH_UNIQUE):

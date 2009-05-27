@@ -14,7 +14,7 @@ NF == 0 { in_symtab=0; next }
 
 !in_symtab { next }
 
-NF >= 8 && $7 != "UND" { seen[$8] = 1 }
+NF >= 8 && $7 != "UND" { seen[$NF] = 1 }
 
 END {
   status = 0;
