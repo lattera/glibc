@@ -1,3 +1,11 @@
+2009-05-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): If CHECK_SP is
+	defined, use it.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+	* sysdeps/s390/s390-32/____longjmp_chk.c: New file.
+	* sysdeps/s390/s390-64/____longjmp_chk.c: New file.
+
 2009-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c: Compact intel_02_known array.  Adjust

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -33,6 +33,11 @@ __longjmp (__jmp_buf env, int val)
 #ifdef PTR_DEMANGLE
   register uintptr_t r3 __asm ("%r3") = THREAD_GET_POINTER_GUARD ();
   register void *r1 __asm ("%r1") = (void *) env;
+# ifdef CHECK_SP
+  CHECK_SP (env, r3);
+# endif
+#elif defined CHECK_SP
+  CHECK_SP (env, 0);
 #endif
   /* Restore registers and jump back.  */
   asm volatile ("ld   %%f6,48(%1)\n\t"
