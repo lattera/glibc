@@ -53,6 +53,7 @@
 
 
 
+#include <errno.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -121,7 +122,10 @@ __expm1l (long double x)
 
   /* Overflow.  */
   if (x > maxlog)
-    return (big * big);
+    {
+      __set_errno (ERANGE);
+      return (big * big);
+    }
 
   /* Minimum value.  */
   if (x < minarg)
