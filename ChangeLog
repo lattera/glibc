@@ -1,3 +1,9 @@
+2009-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c: Compact intel_02_known array.  Adjust
+	code accessing it.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c: Likewise.
+
 2009-05-22  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: Set errno for ±Inf.
