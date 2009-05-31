@@ -1,3 +1,9 @@
+2009-05-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* configure.in: Move AC_CANONICAL_HOST before first use of $host
+	and $build.
+	* configure: Regenerated.
+
 2009-05-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Include <errno.h>.

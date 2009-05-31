@@ -6,6 +6,8 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+AC_CANONICAL_HOST
+
 AC_PROG_CC
 if test $host != $build; then
   AC_CHECK_PROGS(BUILD_CC, gcc cc)
@@ -315,8 +317,6 @@ else
   libc_cv_nss_crypt=no
 fi
 AC_SUBST(libc_cv_nss_crypt)
-
-AC_CANONICAL_HOST
 
 # The way shlib-versions is used to generate soversions.mk uses a
 # fairly simplistic model for name recognition that can't distinguish
