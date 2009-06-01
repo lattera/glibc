@@ -345,9 +345,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
-			       0))
+			       0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
 	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (r_type)

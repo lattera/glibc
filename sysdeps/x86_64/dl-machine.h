@@ -297,9 +297,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
 
       if (sym != NULL
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
-			       0))
+			       0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
 	value = ((Elf64_Addr (*) (void)) value) ();
 
 # if defined RTLD_BOOTSTRAP && !USE___THREAD

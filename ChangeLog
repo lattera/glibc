@@ -1,5 +1,9 @@
 2009-06-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Reorder conditions
+	for STT_GNU_IFUNC handling for efficiency.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 	* sysdeps/i386/dl-irel.h (elf_irel): Use __libc_fatal instead of just
 	_exit.
 	* sysdeps/x86_64/dl-irel.h (elf_irela): Likewise.
