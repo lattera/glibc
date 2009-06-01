@@ -1,3 +1,9 @@
+2009-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-irel.h (elf_irel): Use __libc_fatal instead of just
+	_exit.
+	* sysdeps/x86_64/dl-irel.h (elf_irela): Likewise.
+
 2009-05-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/sched_cpucount.c: Also use optimized code

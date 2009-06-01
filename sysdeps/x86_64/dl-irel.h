@@ -21,6 +21,7 @@
 #ifndef _DL_IREL_H
 #define _DL_IREL_H
 
+#include <stdio.h>
 #include <unistd.h>
 
 #define ELF_MACHINE_IRELA	1
@@ -38,7 +39,7 @@ elf_irela (const Elf64_Rela *reloc)
       *reloc_addr = value;
     }
   else
-    _exit (-1);
+    __libc_fatal ("unexpected reloc type in static binary");
 }
 
 #endif /* dl-irel.h */
