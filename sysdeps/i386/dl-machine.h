@@ -345,6 +345,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
 			       0))
 	value = ((Elf32_Addr (*) (void)) value) ();
@@ -471,6 +472,11 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  memcpy (reloc_addr_arg, (void *) value,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
+	case R_386_IRELATIVE:
+	  value = map->l_addr + *reloc_addr;
+	  value = ((Elf32_Addr (*) (void)) value) ();
+	  *reloc_addr = value;
+	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
@@ -500,6 +506,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
 			       0))
 	value = ((Elf32_Addr (*) (void)) value) ();
@@ -609,6 +616,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
 #  endif /* !RESOLVE_CONFLICT_FIND_MAP */
+	case R_386_IRELATIVE:
+	  value = map->l_addr + reloc->r_addend;
+	  value = ((Elf32_Addr (*) (void)) value) ();
+	  *reloc_addr = value;
+	  break;
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
@@ -703,6 +715,12 @@ elf_machine_lazy_rel (struct link_map *map,
 # endif
 	}
     }
+  else if (__builtin_expect (r_type == R_386_IRELATIVE, 0))
+    {
+      Elf32_Addr value = map->l_addr + *reloc_addr;
+      value = ((Elf32_Addr (*) (void)) value) ();
+      *reloc_addr = value;
+    }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
@@ -725,6 +743,12 @@ elf_machine_lazy_rela (struct link_map *map,
 
       td->arg = (void*)reloc;
       td->entry = _dl_tlsdesc_resolve_rela;
+    }
+  else if (__builtin_expect (r_type == R_386_IRELATIVE, 0))
+    {
+      Elf32_Addr value = map->l_addr + reloc->r_addend;
+      value = ((Elf32_Addr (*) (void)) value) ();
+      *reloc_addr = value;
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);

@@ -36,6 +36,20 @@
 
 #include <stddef.h>
 
+#ifndef LIBC_NONSHARED
+# include <link.h>
+# include <dl-irel.h>
+
+# ifdef ELF_MACHINE_IRELA
+extern const ElfW(Rela) __rela_iplt_start [];
+extern const ElfW(Rela) __rela_iplt_end [];
+# endif
+
+# ifdef ELF_MACHINE_IREL
+extern const ElfW(Rel) __rel_iplt_start [];
+extern const ElfW(Rel) __rel_iplt_end [];
+# endif
+#endif	/* LIBC_NONSHARED */
 
 /* These magic symbols are provided by the linker.  */
 extern void (*__preinit_array_start []) (int, char **, char **)
@@ -67,6 +81,22 @@ __libc_csu_init (int argc, char **argv, char **envp)
      the dynamic linker (before initializing any shared object.  */
 
 #ifndef LIBC_NONSHARED
+# ifdef ELF_MACHINE_IRELA
+  {
+    const size_t size = __rela_iplt_end - __rela_iplt_start;
+    for (size_t i = 0; i < size; i++)
+      elf_irela (&__rela_iplt_start [i]);
+  }
+# endif
+
+# ifdef ELF_MACHINE_IREL
+  {
+    const size_t size = __rel_iplt_end - __rel_iplt_start;
+    for (size_t i = 0; i < size; i++)
+      elf_irel (&__rel_iplt_start [i]);
+  }
+# endif
+
   /* For static executables, preinit happens rights before init.  */
   {
     const size_t size = __preinit_array_end - __preinit_array_start;

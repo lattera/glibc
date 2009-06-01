@@ -845,4 +845,21 @@ for linking")
   }									\
   __asm__ (".type " #name ", %gnu_indirect_function");
 
+#ifdef HAVE_ASM_SET_DIRECTIVE
+# define libc_ifunc_hidden_def1(local, name)				\
+    __asm__ (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE)	\
+	     " " #local "\n\t"						\
+	     ".hidden " #local "\n\t"					\
+	     ".set " #local ", " #name);
+#else
+# define libc_ifunc_hidden_def1(local, name)				\
+    __asm__ (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE)	\
+	     " " #local "\n\t"						\
+	     ".hidden " #local "\n\t"					\
+	     #local " = " #name);
+#endif
+
+#define libc_ifunc_hidden_def(name) \
+  libc_ifunc_hidden_def1 (__GI_##name, name)
+
 #endif /* libc-symbols.h */

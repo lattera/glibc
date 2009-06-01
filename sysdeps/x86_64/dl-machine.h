@@ -297,6 +297,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
 
       if (sym != NULL
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
 			       0))
 	value = ((Elf64_Addr (*) (void)) value) ();
@@ -442,6 +443,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    }
 	  break;
 #  endif
+	case R_X86_64_IRELATIVE:
+	  value = map->l_addr + reloc->r_addend;
+	  value = ((Elf64_Addr (*) (void)) value) ();
+	  *reloc_addr = value;
+	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
@@ -487,6 +493,12 @@ elf_machine_lazy_rel (struct link_map *map,
       td->arg = (void*)reloc;
       td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
 			  + map->l_addr);
+    }
+  else if (__builtin_expect (r_type == R_X86_64_IRELATIVE, 0))
+    {
+      Elf64_Addr value = map->l_addr + reloc->r_addend;
+      value = ((Elf64_Addr (*) (void)) value) ();
+      *reloc_addr = value;
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);

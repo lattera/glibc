@@ -1,3 +1,30 @@
+2009-05-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/elf-init.c: Include <link.h> and <dl-irel.h> if LIBC_NONSHARED
+	is not defined.
+	(__rela_iplt_start): New declaration.
+	(__rela_iplt_end): Likewise.
+	(__rel_iplt_start): Likewise.
+	(__rel_iplt_end): Likewise.
+	(__libc_csu_init): Process __rela_iplt_start and __rel_iplt_start.
+	* elf/elf.h (R_386_IRELATIVE): New macro.
+	(R_X86_64_IRELATIVE): New macro.
+	(R_386_NUM): Updated.
+	(R_X86_64_NUM): Likewise.
+	* include/libc-symbols.h (libc_ifunc_hidden_def1): New macro.
+	(libc_ifunc_hidden_def): New macro.
+	* sysdeps/generic/dl-irel.h: New file.
+	* sysdeps/i386/dl-irel.h: New file.
+	* sysdeps/x86_64/dl-irel.h: New file.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle R_386_IRELATIVE.
+	(elf_machine_rela): Check SHN_UNDEF for STT_GNU_IFUNC symbol.
+	Handle R_386_IRELATIVE.
+	(elf_machine_lazy_rel): Handle R_386_IRELATIVE.
+	(elf_machine_lazy_rela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Handle
+	R_X86_64_IRELATIVE.
+	(elf_machine_lazy_rel): Handle R_X86_64_IRELATIVE.
+
 2009-05-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.h: Define COMMON_CPUID_INDEX_1
