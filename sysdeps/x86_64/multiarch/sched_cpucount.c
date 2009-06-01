@@ -18,24 +18,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifdef SHARED
-# include <sched.h>
-# include "init-arch.h"
+#include <sched.h>
+#include "init-arch.h"
 
-# define __sched_cpucount static generic_cpucount
-# include <posix/sched_cpucount.c>
-# undef __sched_cpucount
+#define __sched_cpucount static generic_cpucount
+#include <posix/sched_cpucount.c>
+#undef __sched_cpucount
 
-# define POPCNT(l) \
+#define POPCNT(l) \
   ({ __cpu_mask r; \
      asm ("popcntq %1, %0" : "=r" (r) : "0" (l));\
      r; })
-# define __sched_cpucount static popcount_cpucount
-# include <posix/sched_cpucount.c>
-# undef __sched_cpucount
+#define __sched_cpucount static popcount_cpucount
+#include <posix/sched_cpucount.c>
+#undef __sched_cpucount
 
 libc_ifunc (__sched_cpucount,
 	    HAS_POPCOUNT ? popcount_cpucount : generic_cpucount);
-#else
-# include_next <sched_cpucount.c>
-#endif
