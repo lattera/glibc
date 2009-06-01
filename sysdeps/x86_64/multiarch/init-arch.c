@@ -1,6 +1,6 @@
 /* Initialize CPU feature data.
    This file is part of the GNU C Library.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,11 +41,12 @@ __init_cpu_features (void)
     {
       __cpu_features.kind = arch_kind_intel;
 
+    get_common_cpuid:
       asm volatile ("cpuid"
-		    : "=a" (__cpu_features.cpuid[INTEL_CPUID_INDEX_1].eax),
-		      "=b" (__cpu_features.cpuid[INTEL_CPUID_INDEX_1].ebx),
-		      "=c" (__cpu_features.cpuid[INTEL_CPUID_INDEX_1].ecx),
-		      "=d" (__cpu_features.cpuid[INTEL_CPUID_INDEX_1].edx)
+		    : "=a" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax),
+		      "=b" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx),
+		      "=c" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx),
+		      "=d" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx)
 		    : "0" (1));
     }
   /* This spells out "AuthenticAMD".  */
@@ -53,12 +54,7 @@ __init_cpu_features (void)
     {
       __cpu_features.kind = arch_kind_amd;
 
-      asm volatile ("cpuid"
-		    : "=a" (__cpu_features.cpuid[AMD_CPUID_INDEX_1].eax),
-		      "=b" (__cpu_features.cpuid[AMD_CPUID_INDEX_1].ebx),
-		      "=c" (__cpu_features.cpuid[AMD_CPUID_INDEX_1].ecx),
-		      "=d" (__cpu_features.cpuid[AMD_CPUID_INDEX_1].edx)
-		    : "0" (1));
+      goto get_common_cpuid;
     }
   else
     __cpu_features.kind = arch_kind_other;

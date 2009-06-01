@@ -1,8 +1,24 @@
+2009-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Define COMMON_CPUID_INDEX_1
+	instead of INTEL_CPUID_INDEX_1 and AMD_CPUID_INDEX_1.  So far there
+	are no differences.  If an architecture has bits in CPUID index 1
+	meaning different things the values for the COMMON_CPUID_INDEX_1
+	index must not be set.
+	(INTEL_HAS_POPCOUNT, AMD_HAS_POPCOUNT): Removed in favor of...
+	(HAS_POPCOUNT): ...this.  New macro.
+	* sysdeps/x86_64/multiarch/init-arch.c: Use COMMON_CPUID_INDEX_1
+	instead of INTEL_CPUID_INDEX_1 and AMD_CPUID_INDEX_1.  Unify code
+	to set the value for Intel and AMD architectures.
+	* sysdeps/x86_64/cacheinfo.c: Use COMMON_CPUID_INDEX_1 instead of
+	INTEL_CPUID_INDEX_1.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: Adjust for HAS_POPCOUNT
+	change.
+
 2009-05-30  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* configure.in: Move AC_CANONICAL_HOST before first use of $host
 	and $build.
-	* configure: Regenerated.
 
 2009-05-29  Jakub Jelinek  <jakub@redhat.com>
 
@@ -14,8 +30,6 @@
 	(__cosl): Set errno to EDOM for ±Inf.
 	* sysdeps/ieee754/ldbl-128/s_sinl.c: Include <errno.h>.
 	(__sinl): Set errno to EDOM for ±Inf.
-
-2009-05-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): If CHECK_SP is
 	defined, use it.

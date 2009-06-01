@@ -489,10 +489,10 @@ init_cacheinfo (void)
 	}
 
 #ifdef USE_MULTIARCH
-      eax = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].eax;
-      ebx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].ebx;
-      ecx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].ecx;
-      edx = __cpu_features.cpuid[INTEL_CPUID_INDEX_1].edx;
+      eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
+      ebx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
+      ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
+      edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
 #else
       asm volatile ("cpuid"
 		    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
