@@ -1234,7 +1234,7 @@ file_mbsrtowcs (int input, int output)
       /* @r{If any characters must be carried forward,}
          @r{put them at the beginning of @code{buffer}.} */
       if (filled > 0)
-        memmove (inp, buffer, filled);
+        memmove (buffer, inp, filled);
     @}
 
   return 1;
