@@ -551,6 +551,14 @@ extern int execvp (__const char *__file, char *__const __argv[])
 extern int execlp (__const char *__file, __const char *__arg, ...)
      __THROW __nonnull ((1));
 
+#ifdef __USE_GNU
+/* Execute FILE, searching in the `PATH' environment variable if it contains
+   no slashes, with arguments ARGV and environment from `environ'.  */
+extern int execvpe (__const char *__file, char *__const __argv[],
+		    char *__const __envp[])
+     __THROW __nonnull ((1));
+#endif
+
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Add INC to priority of the current process.  */

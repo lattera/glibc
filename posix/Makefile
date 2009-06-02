@@ -43,7 +43,7 @@ routines :=								      \
 	wait waitpid wait3 wait4 waitid					      \
 	alarm sleep pause nanosleep					      \
 	fork vfork _exit						      \
-	execve fexecve execv execle execl execvp execlp			      \
+	execve fexecve execv execle execl execvp execlp execvpe		      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
 	getpgid setpgid getpgrp bsd-getpgrp setpgrp getsid setsid	      \

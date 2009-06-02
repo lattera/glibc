@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2009-5-31
+GNU C Library NEWS -- history of user-visible changes.  2009-6-1
 Copyright (C) 1992-2008, 2009 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -6,6 +6,9 @@ Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
 
 Version 2.11
+
+* New interfaces: execvpe
+  Implemented by Ulrich Drepper.
 
 * checking version of longjmp added that fails if an uninitialized stack
   frame would be created.  Implemented by Ulrich Drepper.

@@ -131,6 +131,9 @@ libc {
   GLIBC_2.10 {
     __posix_getopt;
   }
+  GLIBC_2.11 {
+    execvpe;
+  }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pwrite;
   }

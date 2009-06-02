@@ -1,3 +1,12 @@
+2009-06-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10221]
+	* posix/Makefile (routines): Add execvpe.
+	* posix/Versions: Export execvpe for GLIBC_2.11.
+	* posix/execvp.c: Now only a wrapper.  Move code to...
+	* posix/execvpe.c: ...here.  New file.
+	* posix/unistd.h: Declare execvpe.
+
 2009-06-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Reorder conditions
