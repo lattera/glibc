@@ -61,6 +61,8 @@ extern int __chdir (__const char *__path);
 extern int __fchdir (int __fd);
 extern char *__getcwd (char *__buf, size_t __size);
 extern int __rmdir (const char *__path);
+extern int __execvpe (const char *file, char *const argv[],
+		      char *const envp[]);
 
 /* Get the canonical absolute name of the named directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
