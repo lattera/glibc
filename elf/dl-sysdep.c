@@ -335,7 +335,7 @@ _dl_show_auxv (void)
 
       /* Unknown value: print a generic line.  */
       char buf2[17];
-      buf[sizeof (buf2) - 1] = '\0';
+      buf2[sizeof (buf2) - 1] = '\0';
       const char *val2 = _itoa ((unsigned long int) av->a_un.a_val,
 				buf2 + sizeof buf2 - 1, 16, 0);
       const char *val =  _itoa ((unsigned long int) av->a_type,

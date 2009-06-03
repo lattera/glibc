@@ -1,3 +1,7 @@
+2009-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Terminate correct string.
+
 2009-06-02  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10221]
