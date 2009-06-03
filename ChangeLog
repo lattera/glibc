@@ -1,3 +1,49 @@
+2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Add ifuncmain1.c, ifuncmain1pic.c,
+	ifuncmain1vis.c, ifuncmain1vispic.c, ifuncmain1static.c,
+	ifuncmain1staticpic.c, ifuncmain1picstatic.c, ifuncdep1.c,
+	ifuncdep1pic.c, ifuncmod1.c, ifuncmain1pie.c, ifuncmain1vispie.c,
+	ifuncmain2.c, ifuncmain2static.c, ifuncdep2.c,
+	funcmain2pic.c, ifuncmain2picstatic.c, ifuncdep2pic.c,
+	ifuncmain3.c, ifuncmod3.c,.
+	ifuncmain4.c, ifuncmain4static.c, ifuncmain4picstatic.c.
+	(tests-static): Add ifuncmain1static, ifuncmain1picstatic,
+	ifuncmain2static, ifuncmain2picstatic, ifuncmain4static,
+	ifuncmain4picstatic.
+	(tests): Add ifuncmain1, ifuncmain1pic, ifuncmain1vis,
+	ifuncmain1vispic, ifuncmain1staticpic, ifuncmain2, ifuncmain2pic,
+	ifuncmain3, ifuncmain4.
+	(tests): Depend on $(objpfx)ifuncmain1pie.out and
+	$(objpfx)ifuncmain1vispie.out.
+	(modules-names): Add ifuncmod1 ifuncmod3.
+	(generated): Add ifuncmain1pie ifuncmain1pie.out
+	ifuncmain1vispie ifuncmain1vispie.out.
+	Define rules to build and run the tests.
+	* elf/ifuncdep1.c: New file.
+	* elf/ifuncdep1pic.c: New file.
+	* elf/ifuncdep2.c: New file.
+	* elf/ifuncdep2pic.c: New file.
+	* elf/ifuncmain1.c: New file.
+	* elf/ifuncmain1pic.c: New file.
+	* elf/ifuncmain1picstatic.c: New file.
+	* elf/ifuncmain1pie.c: New file.
+	* elf/ifuncmain1static.c: New file.
+	* elf/ifuncmain1staticpic.c: New file.
+	* elf/ifuncmain1vis.c: New file..
+	* elf/ifuncmain1vispic.c: New file..
+	* elf/ifuncmain1vispie.c: New file.
+	* elf/ifuncmain2.c: New file.
+	* elf/ifuncmain2pic.c: New file.
+	* elf/ifuncmain2picstatic.c: New file.
+	* elf/ifuncmain2static.c: New file.
+	* elf/ifuncmain3.c: New file.
+	* elf/ifuncmain4.c: New file.
+	* elf/ifuncmain4picstatic.c: New file.
+	* elf/ifuncmain4static.c: New file.
+	* elf/ifuncmod1.c: New file.
+	* elf/ifuncmod3.c: New file.
+
 2009-06-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-sysdep.c (_dl_show_auxv): Terminate correct string.

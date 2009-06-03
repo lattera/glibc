@@ -93,7 +93,16 @@ distribute	:= rtld-Rules \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
-		   tst-array5.exp tst-leaks1.c check-execstack.c
+		   tst-array5.exp tst-leaks1.c check-execstack.c \
+		   ifuncmain1.c ifuncmain1pic.c ifuncmain1vis.c \
+		   ifuncmain1vispic.c ifuncmain1static.c \
+		   ifuncmain1staticpic.c ifuncmain1picstatic.c \
+		   ifuncdep1.c ifuncdep1pic.c ifuncmod1.c \
+		   ifuncmain1pie.c ifuncmain1vispie.c \
+		   ifuncmain2.c ifuncmain2static.c ifuncdep2.c \
+		   ifuncmain2pic.c ifuncmain2picstatic.c ifuncdep2pic.c \
+		   ifuncmain3.c ifuncmod3.c \
+		   ifuncmain4.c ifuncmain4static.c ifuncmain4picstatic.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -231,6 +240,22 @@ test-extras += $(modules-names)
 
 # filtmod1.so has a special rule
 modules-names-nobuild := filtmod1
+
+ifeq (yes,$(multi-arch))
+tests-static += ifuncmain1static ifuncmain1picstatic \
+		ifuncmain2static ifuncmain2picstatic \
+		ifuncmain4static ifuncmain4picstatic
+
+ifeq (yes,$(build-shared))
+tests += ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
+	 ifuncmain1staticpic \
+	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4
+ifeq (yes,$(have-fpie))
+tests: $(objpfx)ifuncmain1pie.out $(objpfx)ifuncmain1vispie.out
+endif
+modules-names += ifuncmod1 ifuncmod3
+endif
+endif
 
 
 include ../Rules
@@ -504,6 +529,7 @@ reldep8mod2.so-no-z-defs = yes
 reldep9mod1.so-no-z-defs = yes
 unload3mod4.so-no-z-defs = yes
 unload4mod1.so-no-z-defs = yes
+ifuncmod1.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -951,3 +977,69 @@ tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
 $(objpfx)tst-addr1: $(libdl)
 
 $(objpfx)tst-thrlock: $(libdl) $(shared-thread-library)
+
+CFLAGS-ifuncmain1pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain1picstatic.c += $(pic-ccflag)
+CFLAGS-ifuncmain1staticpic.c += $(pic-ccflag)
+CFLAGS-ifuncdep1pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain1vispic.c += $(pic-ccflag)
+CFLAGS-ifuncmain2pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain2picstatic.c += $(pic-ccflag)
+CFLAGS-ifuncdep2pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain4picstatic.c += $(pic-ccflag)
+
+LDFLAGS-ifuncmain3 = -Wl,-export-dynamic
+
+ifeq (yesyes,$(have-fpie)$(build-shared))
+CFLAGS-ifuncmain1pie.c += $(pie-ccflag)
+CFLAGS-ifuncmain1vispie.c += $(pie-ccflag)
+
+$(objpfx)ifuncmain1pie.out: $(objpfx)ifuncmain1pie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain1pie: $(objpfx)ifuncmain1pie.o $(objpfx)ifuncmod1.so
+	$(LINK.o) -pie -Wl,-O1 \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
+	  $(common-objpfx)libc_nonshared.a
+
+generated += ifuncmain1pie ifuncmain1pie.out
+
+$(objpfx)ifuncmain1vispie.out: $(objpfx)ifuncmain1vispie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain1vispie: $(objpfx)ifuncmain1vispie.o $(objpfx)ifuncmod1.so
+	$(LINK.o) -pie -Wl,-O1 \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
+	  $(common-objpfx)libc_nonshared.a
+
+generated += ifuncmain1vispie ifuncmain1vispie.out
+endif
+
+$(objpfx)ifuncmain1: $(addprefix $(objpfx),ifuncmod1.so)
+$(objpfx)ifuncmain1pic: $(addprefix $(objpfx),ifuncmod1.so)
+$(objpfx)ifuncmain1staticpic: $(addprefix $(objpfx),ifuncdep1pic.o)
+$(objpfx)ifuncmain1static: $(addprefix $(objpfx),ifuncdep1.o)
+$(objpfx)ifuncmain1picstatic: $(addprefix $(objpfx),ifuncdep1pic.o)
+$(objpfx)ifuncmain1vis: $(addprefix $(objpfx),ifuncmod1.so)
+$(objpfx)ifuncmain1vispic: $(addprefix $(objpfx),ifuncmod1.so)
+$(objpfx)ifuncmain2: $(addprefix $(objpfx),ifuncdep2.o)
+$(objpfx)ifuncmain2pic: $(addprefix $(objpfx),ifuncdep2pic.o)
+$(objpfx)ifuncmain2static: $(addprefix $(objpfx),ifuncdep2.o)
+$(objpfx)ifuncmain2picstatic: $(addprefix $(objpfx),ifuncdep2pic.o)
+
+$(objpfx)ifuncmain3: $(libdl)
+$(objpfx)ifuncmain3.out: $(objpfx)ifuncmod3.so
