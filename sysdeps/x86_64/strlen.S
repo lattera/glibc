@@ -23,29 +23,27 @@
 
 	.text
 ENTRY(strlen)
+	pxor	%xmm2, %xmm2
 	movq	%rdi, %rcx
 	movq	%rdi, %r8
 	andq	$~15, %rdi
-	pxor	%xmm1, %xmm1
+	movdqa	%xmm2, %xmm1
+	pcmpeqb	(%rdi), %xmm2
 	orl	$0xffffffff, %esi
-	movdqa	(%rdi), %xmm0
 	subq	%rdi, %rcx
-	leaq	16(%rdi), %rdi
-	pcmpeqb	%xmm1, %xmm0
-	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	negq	%r8
+	shll	%cl, %esi
+	pmovmskb %xmm2, %edx
 	andl	%esi, %edx
 	jnz	1f
 
-2:	movdqa	(%rdi), %xmm0
+2:	movdqa	16(%rdi), %xmm0
 	leaq	16(%rdi), %rdi
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %edx
 	testl	%edx, %edx
 	jz	2b
 
-1:	leaq	-16(%rdi,%r8), %rdi
+1:	subq	%r8, %rdi
 	bsfl	%edx, %eax
 	addq	%rdi, %rax
 	ret
