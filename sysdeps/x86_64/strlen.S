@@ -34,7 +34,6 @@ ENTRY(strlen)
 	pcmpeqb	%xmm1, %xmm0
 	shl	%cl, %esi
 	pmovmskb %xmm0, %edx
-	xorl	%eax, %eax
 	negq	%r8
 	andl	%esi, %edx
 	jnz	1f

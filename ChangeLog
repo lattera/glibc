@@ -1,3 +1,7 @@
+2009-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strlen.S: Remove useless instruction.
+
 2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Makefile (distribute): Add ifuncmain1.c, ifuncmain1pic.c,
