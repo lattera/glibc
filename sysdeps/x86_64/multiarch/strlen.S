@@ -40,6 +40,7 @@ ENTRY(strlen)
 END(strlen)
 
 
+	.align 	16
 	.type	__strlen_sse42, @function
 __strlen_sse42:
 	pxor	%xmm2, %xmm2
@@ -63,9 +64,9 @@ __strlen_sse42:
 	subq	%r8, %rax
 	ret
 
-1:	bsfl	%edx, %eax
-	leaq	(%rdi,%rax), %rax
-	subq	%r8, %rax
+1:	subq	%r8, %rdi
+	bsfl	%edx, %eax
+	addq	%rdi, %rax
 	ret
 	.size	__strlen_sse42, .-__strlen_sse42
 
