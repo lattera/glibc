@@ -1,5 +1,11 @@
 2009-06-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/multiarch/strlen.S: New file.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: New file.
+	* sysdeps/x86_64/multiarch/Makefile: Add rule to build ifunc-defines.h.
+	* sysdeps/x86_64/multiarch/init-arch.h: Name structure with register
+	content.
+
 	* csu/elf-init.c: Only compile in IFUNC functionality if USE_MULTIARCH
 	is defined.
 

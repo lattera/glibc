@@ -35,7 +35,7 @@ extern struct cpu_features
       arch_kind_other
     } kind;
   int max_cpuid;
-  struct
+  struct cpuid_registers
   {
     unsigned int eax;
     unsigned int ebx;

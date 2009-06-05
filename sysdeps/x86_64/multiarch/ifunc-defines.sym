@@ -1,0 +1,15 @@
+#include "init-arch.h"
+#include <stddef.h>
+
+--
+
+CPU_FEATURES_SIZE	sizeof (struct cpu_features)
+KIND_OFFSET		offsetof (struct cpu_features, kind)
+CPUID_OFFSET		offsetof (struct cpu_features, cpuid)
+CPUID_SIZE		sizeof (struct cpuid_registers)
+CPUID_EAX_OFFSET	offsetof (struct cpuid_registers, eax)
+CPUID_EBX_OFFSET	offsetof (struct cpuid_registers, ebx)
+CPUID_ECX_OFFSET	offsetof (struct cpuid_registers, ecx)
+CPUID_EDX_OFFSET	offsetof (struct cpuid_registers, edx)
+
+COMMON_CPUID_INDEX_1
