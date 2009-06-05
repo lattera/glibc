@@ -34,19 +34,18 @@ ENTRY (rawmemchr)
 	pcmpeqb	%xmm1, %xmm0
 	shl	%cl, %esi
 	pmovmskb %xmm0, %ecx
-	leaq	16(%rdi), %rdi
 	andl	%esi, %ecx
 	jnz	1f
 
-2:	movdqa	(%rdi), %xmm0
+2:	movdqa	16(%rdi), %xmm0
 	leaq	16(%rdi), %rdi
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %ecx
 	testl	%ecx, %ecx
 	jz	2b
 
-1:	bsfl	%ecx, %ecx
-	leaq	-16(%rcx,%rdi), %rax
+1:	bsfl	%ecx, %eax
+	addq	%rdi, %rax
 	ret
 END (rawmemchr)
 
