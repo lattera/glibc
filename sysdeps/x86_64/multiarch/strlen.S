@@ -43,6 +43,8 @@ END(strlen)
 	.align 	16
 	.type	__strlen_sse42, @function
 __strlen_sse42:
+	cfi_startproc
+	CALL_MCOUNT
 	pxor	%xmm2, %xmm2
 	movq	%rdi, %rcx
 	movq	%rdi, %r8
@@ -68,15 +70,18 @@ __strlen_sse42:
 	bsfl	%edx, %eax
 	addq	%rdi, %rax
 	ret
+	cfi_endproc
 	.size	__strlen_sse42, .-__strlen_sse42
 
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __strlen_sse2, @function; __strlen_sse2:
+	.type __strlen_sse2, @function; \
+	__strlen_sse2: cfi_startproc; \
+	CALL_MCOUNT
 # undef END
 # define END(name) \
-	.size __strlen_sse2, .-__strlen_sse2
+	cfi_endproc; .size __strlen_sse2, .-__strlen_sse2
 # undef libc_hidden_builtin_def
 /* It doesn't make sense to send libc-internal strlen calls through a PLT.
    The speedup we get from using SSE4.2 instruction is likely eaten away
