@@ -1,5 +1,5 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@
 
 #include <stddef.h>
 
-#ifndef LIBC_NONSHARED
+#if defined USE_MULTIARCH && !defined LIBC_NONSHARED
 # include <link.h>
 # include <dl-irel.h>
 
@@ -80,7 +80,7 @@ __libc_csu_init (int argc, char **argv, char **envp)
   /* For dynamically linked executables the preinit array is executed by
      the dynamic linker (before initializing any shared object.  */
 
-#ifndef LIBC_NONSHARED
+#if defined USE_MULTIARCH && !defined LIBC_NONSHARED
 # ifdef ELF_MACHINE_IRELA
   {
     const size_t size = __rela_iplt_end - __rela_iplt_start;
