@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
@@ -319,11 +319,11 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	  continue;
 	case 'c':
 	  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-	  break;
+	  continue;
 #ifdef O_CLOEXEC
 	case 'e':
 	  oflags |= O_CLOEXEC;
-	  break;
+	  continue;
 #endif
 	default:
 	  /* Ignore.  */
