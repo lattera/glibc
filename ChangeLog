@@ -1,5 +1,8 @@
 2009-06-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/dlfcn.h: Remove comma at end of enum.
+	Patch by J.H.M. Dassen <rdassen@redhat.com>.
+
 	* libio/fileops.c (_IO_new_file_fopen): Don't prematurely stop
 	parsing mode string.
 

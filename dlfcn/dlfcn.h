@@ -1,6 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995-1999,2000,2001,2003,2004,2006
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2001,2003,2004,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +163,7 @@ enum
        segment, or if the calling thread has not allocated a block for it.  */
     RTLD_DI_TLS_DATA = 10,
 
-    RTLD_DI_MAX = 10,
+    RTLD_DI_MAX = 10
   };
 
 
