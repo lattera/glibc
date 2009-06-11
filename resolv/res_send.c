@@ -1008,7 +1008,7 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	bool single_request = ((statp->options) & RES_SNGLKUP) != 0;// XXX
+	bool single_request = (statp->options & RES_SNGLKUP) != 0;// XXX
 	int save_gotsomewhere = *gotsomewhere;
  retry:
 	evNowTime(&now);
@@ -1059,6 +1059,7 @@ send_dg(res_state statp,
 		       have received the first answer.  */
 		    if (!single_request)
 		      {
+			statp->options |= RES_SNGLKUP;
 			single_request = true;
 			*gotsomewhere = save_gotsomewhere;
 			goto retry;
