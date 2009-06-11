@@ -60,7 +60,7 @@
 # define LOAD_FUTEX_WAIT_ABS(reg) \
 	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
 	andl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAIT | FUTEX_CLOCK_REALTIME, reg
+	orl	$FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME, reg
 # define LOAD_FUTEX_WAKE(reg) \
 	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
 	andl	%gs:PRIVATE_FUTEX, reg ; \

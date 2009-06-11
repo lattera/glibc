@@ -1,3 +1,11 @@
+2009-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10262]
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(LOAD_FUTEX_WAIT_ABS): Fix futex parameter in case private futexes
+	cannot be assumed.
+	Patch by Bryan Kadzban <bz-glibc@kdzbn.homelinux.net>.
+
 2009-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* libc-cancellation.c: Move __libc_cleanup_routine to...
