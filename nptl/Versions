@@ -240,6 +240,10 @@ libpthread {
     pthread_mutex_getprioceiling; pthread_mutex_setprioceiling;
   };
 
+  GLIBC_2.11 {
+    pthread_sigqueue;
+  };
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;

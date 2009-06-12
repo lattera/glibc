@@ -1,3 +1,10 @@
+2009-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add pthread_sigqueue.
+	* Versions: Add pthread_sigqueue for GLIBC_2.11.
+	* sysdeps/pthread/bits/sigthread.h: Declare pthread_sigqueue.
+	* sysdeps/unix/sysv/linux/pthread_sigqueue.c: New file.
+
 2009-06-11  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10262]

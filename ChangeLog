@@ -1,3 +1,7 @@
+2009-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.11 for libpthread.
+
 2009-06-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (send_dg): Remember we switched to

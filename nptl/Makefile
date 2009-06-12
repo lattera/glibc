@@ -86,7 +86,7 @@ libpthread-routines = nptl-init vars events version \
 		      pthread_barrierattr_setpshared \
 		      pthread_key_create pthread_key_delete \
 		      pthread_getspecific pthread_setspecific \
-		      pthread_sigmask pthread_kill \
+		      pthread_sigmask pthread_kill pthread_sigqueue \
 		      pthread_cancel pthread_testcancel \
 		      pthread_setcancelstate pthread_setcanceltype \
 		      pthread_once \
