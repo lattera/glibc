@@ -1,3 +1,11 @@
+2009-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10229]
+	* misc/sys/select.h (__NFDBITS): Expression should have type int.
+	* sysdeps/x86_64/bits/select.h: Remove asm versions for __FD_SET,
+	__FD_CLR, and __FD_ISSET.  gcc nowadays generates better code from
+	the C version.
+
 2009-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def: Add GLIBC_2.11 for libpthread.

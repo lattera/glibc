@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ typedef long int __fd_mask;
 #undef	__FDELT
 #undef	__FDMASK
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
-#define __NFDBITS	(8 * sizeof (__fd_mask))
+#define __NFDBITS	(8 * (int) sizeof (__fd_mask))
 #define	__FDELT(d)	((d) / __NFDBITS)
 #define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
 
