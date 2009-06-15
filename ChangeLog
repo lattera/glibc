@@ -1,3 +1,11 @@
+2009-06-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_debug_bindings): When resolving to
+	STT_GNU_IFUNC symbol or in 8 into type_class.
+
+	* sysdeps/i386/dl-irel.h (elf_irel): Use Elf32_Addr type
+	instead of Elf64_Addr.
+
 2009-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.

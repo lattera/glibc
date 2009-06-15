@@ -35,7 +35,7 @@ elf_irel (const Elf32_Rel *reloc)
 
   if (__builtin_expect (r_type == R_386_IRELATIVE, 1))
     {
-      Elf64_Addr value = ((Elf32_Addr (*) (void)) (*reloc_addr)) ();
+      Elf32_Addr value = ((Elf32_Addr (*) (void)) (*reloc_addr)) ();
       *reloc_addr = value;
     }
   else

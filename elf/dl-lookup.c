@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -542,15 +542,20 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	    conflict = 1;
 	}
 
-      if (value->s
-	  && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
-				== STT_TLS, 0)))
-	type_class = 4;
+      if (value->s)
+	{
+	  if (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
+				== STT_TLS, 0))
+	    type_class = 4;
+	  else if (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
+				     == STT_GNU_IFUNC, 0))
+	    type_class |= 8;
+	}
 
       if (conflict
 	  || GLRO(dl_trace_prelink_map) == undef_map
 	  || GLRO(dl_trace_prelink_map) == NULL
-	  || type_class == 4)
+	  || type_class >= 4)
 	{
 	  _dl_printf ("%s 0x%0*Zx 0x%0*Zx -> 0x%0*Zx 0x%0*Zx ",
 		      conflict ? "conflict" : "lookup",
