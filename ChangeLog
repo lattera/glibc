@@ -1,5 +1,10 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10211]
+	* time/tzfile.c (__tzfile_compute): If we use the envvar format still
+	handle leap seconds if they are available.
+	Patch by Akinori Hattori <hattya@gentoo.org>.
+
 	* timezone/tzselect.ksh: Update from tzcode2009i.
 	* timezone/zdump.c: Likewise.
 	* timezone/zic.c: Likewise.

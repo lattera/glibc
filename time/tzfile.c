@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006, 2007
+/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -659,9 +659,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 	      __tzname[1] = __tzstring (&zone_names[strlen (zone_names) + 1]);
 	    }
 
-	  *leap_correct = 0L;
-	  *leap_hit = 0;
-	  return;
+	  goto leap;
 	}
       else
 	{
@@ -762,6 +760,7 @@ __tzfile_compute (time_t timer, int use_localtime,
       tp->tm_gmtoff = info->offset;
     }
 
+ leap:
   *leap_correct = 0L;
   *leap_hit = 0;
 
