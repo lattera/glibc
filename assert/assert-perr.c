@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-1998,2001,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1994-1998,2001,2002,2005,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,9 +65,10 @@ __assert_perror_fail (int errnum,
       (void) __fxprintf (NULL, "%s", buf);
       (void) fflush (stderr);
 
-      /* We have to free the buffer since the appplication might catch the
-	 SIGABRT.  */
-      free (buf);
+      /* We have to free the old buffer since the application might
+	 catch the SIGABRT signal.  */
+      char *old = atomic_exchange_acq (&__abort_msg, buf);
+      free (old);
     }
   else
     {

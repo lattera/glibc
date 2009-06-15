@@ -1,4 +1,5 @@
-/* Copyright (C) 1993-1995,1997,2000,2002-2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993-1995,1997,2000,2002-2005,2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <atomic.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <paths.h>
@@ -131,6 +133,20 @@ __libc_message (int do_abort, const char *fmt, ...)
 
       if (cnt == total)
 	written = true;
+
+      char *buf = do_abort ? malloc (total + 1) : NULL;
+      if (buf != NULL)
+	{
+	  char *wp = buf;
+	  for (int cnt = 0; cnt < nlist; ++cnt)
+	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
+	  *wp = '\0';
+
+	  /* We have to free the old buffer since the application might
+	     catch the SIGABRT signal.  */
+	  char *old = atomic_exchange_acq (&__abort_msg, buf);
+	  free (old);
+	}
     }
 
   va_end (ap);

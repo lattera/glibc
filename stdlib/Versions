@@ -104,5 +104,7 @@ libc {
     # functions which have an additional interface since they are
     # are cancelable.
     __libc_system;
+    # Variable which needs a dynamic symbol table entry.
+    __abort_msg;
   }
 }

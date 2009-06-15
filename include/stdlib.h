@@ -221,6 +221,9 @@ extern int __qfcvt_r (long double __value, int __ndigit,
 extern void *__default_morecore (ptrdiff_t) __THROW;
 libc_hidden_proto (__default_morecore)
 
+extern char *__abort_msg;
+libc_hidden_proto (__abort_msg)
+
 __END_DECLS
 
 #undef __Need_M_And_C

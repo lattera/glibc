@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1994-1996,1998,2001,2002,2005
+/* Copyright (C) 1991,1994-1996,1998,2001,2002,2005,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +44,7 @@ extern const char *__progname;
 # include FATAL_PREPARE_INCLUDE
 #endif
 
+
 #undef __assert_fail
 void
 __assert_fail (const char *assertion, const char *file, unsigned int line,
@@ -64,9 +66,10 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
       (void) __fxprintf (NULL, "%s", buf);
       (void) fflush (stderr);
 
-      /* We have to free the buffer since the application might catch the
-	 SIGABRT.  */
-      free (buf);
+      /* We have to free the old buffer since the application might
+	 catch the SIGABRT signal.  */
+      char *old = atomic_exchange_acq (&__abort_msg, buf);
+      free (old);
     }
   else
     {

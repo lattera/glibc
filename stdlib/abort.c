@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,93,95,96,97,98,2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,1995-1998,2001,02,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,10 @@
 # include <libio/libioP.h>
 # define fflush(s) _IO_flush_all_lockp (0)
 #endif
+
+/* Exported variable to locate abort message in core files etc.  */
+char *__abort_msg __attribute__ ((nocommon));
+libc_hidden_def (__abort_msg)
 
 /* We must avoid to run in circles.  Therefore we remember how far we
    already got.  */

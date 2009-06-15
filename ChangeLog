@@ -1,5 +1,16 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10217]
+	* stdlib/abort.c: Define variable __abort_msg.
+	* stdlib/Versions: Export __abort_msg with GLIBC_PRIVATE version.
+	* include/stdlib.h: Declare __abort_msg.
+	* assert/assert-perr.c: Don't free buffer for message immediately.
+	Store atomically in __abort_msg and free old buffer if necessary.
+	* assert/assert.c: Likewise.
+	* sysdeps/posix/libc_fatal.c: Allocate buffer for message, copy it,
+	store pointer in __abort_msg, and possibly free old string.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Likewise.
+
 	* time/tzfile.c (__tzfile_read): Correct computation of tzspec_len.
 
 	[BZ #10211]
