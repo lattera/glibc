@@ -1,3 +1,25 @@
+2009-06-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/africa: Update from tzdata2009i.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/factory: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/pacificnew: Likewise.
+	* timezone/solar87: Likewise.
+	* timezone/solar88: Likewise.
+	* timezone/solar89: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
+	* timezone/yearistype: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2009-06-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (_dl_debug_bindings): When resolving to
