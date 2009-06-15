@@ -248,7 +248,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 				+ num_transitions * (8 + 1)
 				+ num_types * 6
 				+ chars
-				+ num_leaps * 8
+				+ num_leaps * 12
 				+ num_isstd
 				+ num_isgmt) - 1 : 0);
 

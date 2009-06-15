@@ -1,5 +1,7 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/tzfile.c (__tzfile_read): Correct computation of tzspec_len.
+
 	[BZ #10211]
 	* time/tzfile.c (__tzfile_compute): If we use the envvar format still
 	handle leap seconds if they are available.
