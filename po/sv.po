@@ -1,14 +1,14 @@
-# GNU libc message catalog for swedish
+# GNU libc message catalog for Swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003, 2006, 2008, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009
-# Revision: 1.60
+# Revision: 1.61
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.9.90\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-02-28 17:57+0100\n"
+"PO-Revision-Date: 2009-06-14 20:41+0200\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -295,11 +295,11 @@ msgstr "Användning: xtrace [FLAGGA]... PROGRAM [PROGRAMFLAGGA}...\\n"
 
 #: debug/xtrace.sh:33
 msgid "Try \\`xtrace --help' for more information.\\n"
-msgstr "Försök med \\\"xtrace --help\\\" för mer information\\n"
+msgstr "Försök med \"xtrace --help\" för mer information\\n"
 
 #: debug/xtrace.sh:39
 msgid "xtrace: option \\`$1' requires an argument.\\n"
-msgstr "xtrace: flaggan \\\"$1\\\" behöver ett argument\\n"
+msgstr "xtrace: flaggan \"$1\" behöver ett argument\\n"
 
 #: debug/xtrace.sh:46
 msgid ""
@@ -328,7 +328,7 @@ msgstr ""
 
 #: debug/xtrace.sh:127
 msgid "xtrace: unrecognized option \\`$1'\\n"
-msgstr "xtrace: okänd flagga \\\"$1\\\"\\n"
+msgstr "xtrace: okänd flagga \"$1\"\\n"
 
 #: debug/xtrace.sh:140
 msgid "No program name given\\n"
@@ -337,12 +337,12 @@ msgstr "Inget programnamn givet\\n"
 #: debug/xtrace.sh:148
 #, sh-format
 msgid "executable \\`$program' not found\\n"
-msgstr "program \\\"$program\\\" hittades inte\\n"
+msgstr "program \"$program\" hittades inte\\n"
 
 #: debug/xtrace.sh:152
 #, sh-format
 msgid "\\`$program' is no executable\\n"
-msgstr "\\\"$program\\\" är inte en körbar binär\\n"
+msgstr "\"$program\" är inte en körbar binär\\n"
 
 #: dlfcn/dlinfo.c:64
 msgid "RTLD_SELF used in code not dynamically loaded"
@@ -932,7 +932,7 @@ msgstr ""
 
 #: elf/ldd.bash.in:82
 msgid "ldd: option \\`$1' is ambiguous"
-msgstr "ldd: flaggan \\\"$1\\\" är tvetydig"
+msgstr "ldd: flaggan \"$1\" är tvetydig"
 
 #: elf/ldd.bash.in:89
 msgid "unrecognized option"
@@ -940,7 +940,7 @@ msgstr "okänd flagga"
 
 #: elf/ldd.bash.in:90 elf/ldd.bash.in:128
 msgid "Try \\`ldd --help' for more information."
-msgstr "Försök med \\\"ldd --help\\\" för mer information"
+msgstr "Försök med \"ldd --help\" för mer information"
 
 #: elf/ldd.bash.in:127
 msgid "missing file arguments"
@@ -1051,7 +1051,7 @@ msgstr "Inget mål på rad %d\n"
 #: elf/sln.c:179
 #, c-format
 msgid "%s: destination must not be a directory\n"
-msgstr "%s: målet måste vara en katalog\n"
+msgstr "%s: målet måste inte vara en katalog\n"
 
 #: elf/sln.c:185
 #, c-format
@@ -2824,11 +2824,11 @@ msgstr "felaktig mcheck_status, biblioteket är felaktigt\n"
 
 #: malloc/memusage.sh:27
 msgid "Try \\`memusage --help' for more information."
-msgstr "Försök med \\\"memusage --help\\\" för mer information"
+msgstr "Försök med \"memusage --help\" för mer information"
 
 #: malloc/memusage.sh:33
 msgid "memusage: option \\`$1' requires an argument"
-msgstr "memusage: flaggan \\\"$1\\\" behöver ett argument"
+msgstr "memusage: flaggan \"$1\" behöver ett argument"
 
 #: malloc/memusage.sh:39
 msgid ""
@@ -2897,11 +2897,11 @@ msgstr ""
 
 #: malloc/memusage.sh:193
 msgid "memusage: option \\`${1##*=}' is ambiguous"
-msgstr "memusage: flaggan \\\"${1##*=}\\\" är tvetydig"
+msgstr "memusage: flaggan \"${1##*=}\" är tvetydig"
 
 #: malloc/memusage.sh:202
 msgid "memusage: unrecognized option \\`$1'"
-msgstr "memusage: okänd flagga \\\"$1\\\""
+msgstr "memusage: okänd flagga \"$1\""
 
 #: malloc/memusage.sh:215
 msgid "No program name given"
@@ -3463,7 +3463,7 @@ msgstr "DES-post för nätnamn %s är inte unikt\n"
 #: nis/nss_nisplus/nisplus-publickey.c:220
 #, c-format
 msgid "netname2user: missing group id list in `%s'"
-msgstr "netname2user: gruppid-lista saknas i \"%s\"."
+msgstr "netname2user: gruppid-lista saknas i \"%s\""
 
 #: nis/nss_nisplus/nisplus-publickey.c:302
 #: nis/nss_nisplus/nisplus-publickey.c:308
@@ -4371,10 +4371,10 @@ msgid ""
 "\n"
 msgstr ""
 "Användning: getconf [-v SPEC] VAR\n"
-"  eller:    getconf [-v SPEC] PATH_VAR PATH\n"
+"  eller:    getconf [-v SPEC] VÄG_VAR VÄG\n"
 "\n"
-"Hämta konfigureringsvärdet för variabeln VAR, eller för variabeln PATH_VAR\n"
-"för sökväg PATH.  Om SPEC är given hämta värden för kompileringsspecifikationen\n"
+"Hämta konfigureringsvärdet för variabeln VAR, eller för variabeln VÄG_VAR\n"
+"för sökväg VÄG.  Om SPEC är given hämta värden för kompileringsspecifikationen\n"
 "SPEC.\n"
 "\n"
 
@@ -4431,13 +4431,13 @@ msgstr "%s: okänd flagga \"%c%s\"\n"
 #: posix/getopt.c:800 posix/getopt.c:803
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
-msgstr "%s: ogiltig flagga -- %c\n"
+msgstr "%s: ogiltig flagga -- \"%c\"\n"
 
 #: posix/getopt.c:853 posix/getopt.c:870 posix/getopt.c:1073
 #: posix/getopt.c:1091
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
-msgstr "%s: flaggan behöver ett argument -- %c\n"
+msgstr "%s: flaggan behöver ett argument -- \"%c\"\n"
 
 #: posix/getopt.c:923 posix/getopt.c:939
 #, c-format
@@ -4611,7 +4611,7 @@ msgstr "minnet slut\n"
 
 #: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
-msgstr "auth_unix.c - Fatalt kodningsproblem"
+msgstr "auth_unix.c: Fatalt kodningsproblem"
 
 #: sunrpc/clnt_perr.c:105 sunrpc/clnt_perr.c:121
 #, c-format
@@ -4907,7 +4907,7 @@ msgstr "'-c\t\tgenerera XDR-funktioner\n"
 #: sunrpc/rpc_main.c:1473
 #, c-format
 msgid "-C\t\tANSI C mode\n"
-msgstr "-C\t\tANSI-läge\n"
+msgstr "-C\t\tANSI C-läge\n"
 
 #: sunrpc/rpc_main.c:1474
 #, c-format
@@ -4917,7 +4917,7 @@ msgstr "-Dnamn[=värde]\tdefiniera en symbol (samma som #define)\n"
 #: sunrpc/rpc_main.c:1475
 #, c-format
 msgid "-h\t\tgenerate header file\n"
-msgstr "-h\t\tgenerera huvudfiler\n"
+msgstr "-h\t\tgenerera huvudfil\n"
 
 #: sunrpc/rpc_main.c:1476
 #, c-format

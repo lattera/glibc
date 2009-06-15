@@ -1,5 +1,7 @@
 2009-06-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/sv.po: Update from translation team.
+
 	[BZ #10229]
 	* misc/sys/select.h (__NFDBITS): Expression should have type int.
 	* sysdeps/x86_64/bits/select.h: Remove asm versions for __FD_SET,
