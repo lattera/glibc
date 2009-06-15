@@ -1,5 +1,9 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/tzselect.ksh: Update from tzcode2009i.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 	* timezone/africa: Update from tzdata2009i.
 	* timezone/antarctica: Likewise.
 	* timezone/asia: Likewise.

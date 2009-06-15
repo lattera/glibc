@@ -1,4 +1,9 @@
-static char	elsieid[] = "@(#)zdump.c	8.6";
+/*
+** This file is in the public domain, so clarified as of
+** 2009-05-17 by Arthur David Olson.
+*/
+
+static char	elsieid[] = "@(#)zdump.c	8.9";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -230,6 +235,17 @@ const char * const	zone;
 	warned = TRUE;
 }
 
+static void
+usage(const char *progname, FILE *stream, int status)
+{
+	(void) fprintf(stream,
+_("%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n\
+\n\
+Report bugs to tz@elsie.nci.nih.gov.\n"),
+		       progname, progname);
+	exit(status);
+}
+
 int
 main(argc, argv)
 int	argc;
@@ -266,6 +282,8 @@ char *	argv[];
 		if (strcmp(argv[i], "--version") == 0) {
 			(void) printf("%s\n", elsieid);
 			exit(EXIT_SUCCESS);
+		} else if (strcmp(argv[i], "--help") == 0) {
+			usage(progname, stdout, EXIT_SUCCESS);
 		}
 	vflag = 0;
 	cutarg = NULL;
@@ -275,10 +293,7 @@ char *	argv[];
 		else	cutarg = optarg;
 	if ((c != EOF && c != -1) ||
 		(optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
-			(void) fprintf(stderr,
-_("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
-				progname, progname);
-			exit(EXIT_FAILURE);
+			usage(progname, stderr, EXIT_FAILURE);
 	}
 	if (vflag) {
 		if (cutarg != NULL) {
@@ -349,13 +364,9 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 			(void) strncpy(buf, abbr(&tm), (sizeof buf) - 1);
 		}
 		for ( ; ; ) {
-			if (t >= cuthitime)
+			if (t >= cuthitime || t >= cuthitime - SECSPERHOUR * 12)
 				break;
 			newt = t + SECSPERHOUR * 12;
-			if (newt >= cuthitime)
-				break;
-			if (newt <= t)
-				break;
 			newtmp = localtime(&newt);
 			if (newtmp != NULL)
 				newtm = *newtmp;
