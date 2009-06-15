@@ -1,5 +1,6 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10213]
 	* SUPPORTED (SUPPORTED-LOCALES): Add dv_MV.UTF-8 entry.
 	* locales/dv_MV: New file.
 	Contributed by sofwathullah.mohamed@gmail.com.
