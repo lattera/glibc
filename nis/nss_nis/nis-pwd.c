@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1998,2001,2002,2003,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2001-2003,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -116,7 +116,7 @@ internal_nis_endpwent (void)
       oldkeylen = 0;
     }
 
-  struct response_t *curr = intern.next;
+  struct response_t *curr = intern.start;
 
   while (curr != NULL)
     {

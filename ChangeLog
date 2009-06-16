@@ -1,5 +1,10 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10203]
+	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,
+	not just the currently used one and those which follow.
+	Patch by Joe Landers <jlanders@vmware.com>.
+
 	[BZ #10196]
 	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
 	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
