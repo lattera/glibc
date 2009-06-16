@@ -4,9 +4,8 @@
 	chmod if it is necessary.
 
 	[BZ #10166]
-	* sysdeps/unix/sysv/linux/grantpt.c: If slave device is on devpts or
-	devfs, the mode might not be correct.  Check it and return only if it
-	is correct.
+	* sysdeps/unix/sysv/linux/grantpt.c: Remove shortcut which was used
+	when the slave device is in devpts or devfs.
 
 	[BZ #10183]
 	* posix/tst-cpucount.c: Don't try more than CPU_SETSIZE bits.
@@ -26,6 +25,7 @@
 
 	[BZ #10196]
 	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
+	* libio/Makefile: Run tst-fgetwc with necessary envvar.
 	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
 
 	[BZ #10217]

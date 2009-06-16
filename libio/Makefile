@@ -153,6 +153,7 @@ tst-ungetwc2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-ungetwc2-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swscanf-ENV = LOCPATH=$(common-objpfx)localedata
 bug-ftell-ENV = LOCPATH=$(common-objpfx)localedata
+tst-fgetwc-ENV = LOCPATH=$(common-objpfx)localedata
 
 generated = tst-fopenloc.mtrace tst-fopenloc.check
 
