@@ -1,5 +1,4 @@
-# Copyright (C) 1998,2000,2002,2003,2004,2005,2006,2007,2008
-#	Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002-2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -128,13 +127,7 @@ ifeq (yesyes,$(have-fpie)$(build-shared))
 relro-LDFLAGS += -Wl,-z,now
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
-	$(LINK.o) -pie -Wl,-O1 $(nscd-cflags) \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(relro-LDFLAGS) \
-	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
-	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
-	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $^ $(LDLIBS-nscd) $(common-objpfx)libc_nonshared.a
+	$(+link-pie)
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.

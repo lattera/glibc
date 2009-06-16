@@ -1,3 +1,11 @@
+2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-pie): Define.
+	(+prectorS): Define.
+	(+postctorS): Define.
+	* elf/Makefile ($(objpfx)tst-pie1): Use $(+link-pie).
+	* nscd/Makefile ($(objpfx)nscd): Likewise.
+
 2009-04-22  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	[BZ #10107]

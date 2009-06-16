@@ -852,14 +852,7 @@ $(objpfx)tst-pie1.out: $(objpfx)tst-pie1
 	  $< > $@
 
 $(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
-	$(LINK.o) -pie -Wl,-O1 \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
-	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
-	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
-	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
-	  $(common-objpfx)libc_nonshared.a
+	$(+link-pie)
 
 generated += tst-pie1 tst-pie1.out tst-pie1.o
 endif

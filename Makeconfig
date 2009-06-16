@@ -434,6 +434,19 @@ ifndef +link
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs) $(link-libc) $(+postctor) $(+postinit)
 endif
+# Command for linking PIE programs with the C library.
+ifndef +link-pie
++link-pie = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
+	     $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	     $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
+	     $(addprefix $(csu-objpfx),S$(start-installed-name)) \
+	     $(+preinit) $(+prectorS) \
+	     $(filter-out $(addprefix $(csu-objpfx),start.o \
+	     S$(start-installed-name))\
+	     $(+preinit) $(link-extra-libs) \
+	     $(common-objpfx)libc% $(+postinit),$^) \
+	     $(link-extra-libs) $(link-libc) $(+postctorS) $(+postinit)
+endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
 +link-static = $(CC) -nostdlib -nostartfiles -static -o $@ \
@@ -538,6 +551,9 @@ ifeq ($(elf),yes)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
 +prector = `$(CC) --print-file-name=crtbegin.o`
 +postctor = `$(CC) --print-file-name=crtend.o`
+# Variants of the two previous definitions for linking PIE programs.
++prectorS = `$(CC) --print-file-name=crtbeginS.o`
++postctorS = `$(CC) --print-file-name=crtendS.o`
 +interp = $(addprefix $(elf-objpfx),interp.os)
 endif
 csu-objpfx = $(common-objpfx)csu/
