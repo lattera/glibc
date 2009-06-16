@@ -1,3 +1,10 @@
+2009-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memchr.S (memchr): Use unsigned instead of signed
+	comparisons.
+	* string/test-memchr.c (do_random_tests): Test very large lengths
+	as well.
+
 2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (+link-pie): Define.

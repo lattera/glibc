@@ -41,7 +41,7 @@ ENTRY (memchr)
 	movl	$16, %esi
 	jnz	1f
 	cmpq	%rsi, %rdx
-	jle	3f
+	jbe	3f
 
 2:	movdqa	(%rdi,%rsi), %xmm0
 	leaq	16(%rsi), %rsi
@@ -50,7 +50,7 @@ ENTRY (memchr)
 	testl	%ecx, %ecx
 	jnz	1f
 	cmpq	%rsi, %rdx
-	jg	2b
+	ja	2b
 
 3:	xorl	%eax, %eax
 	ret
@@ -60,7 +60,7 @@ ENTRY (memchr)
 	addq	%rcx, %rax
 	leaq	-16(%rsi,%rcx), %rsi
 	cmpq	%rsi, %rdx
-	jle	3b
+	jbe	3b
 	ret
 END (memchr)
 
