@@ -1,5 +1,5 @@
 /* Optimized 32-bit memset implementation for POWER6.
-   Copyright (C) 1997,99, 2000,02,03,06,2007 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,02,03,06,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -240,7 +240,7 @@ L(nzCacheAligned256):
 	cmplwi	cr1,rLEN,256
 	addi	rMEMP3,rMEMP,64
 #ifdef NOT_IN_libc
-/* When we are not in libc we should use only GPRs to avoid the FPU lock 
+/* When we are not in libc we should use only GPRs to avoid the FPU lock
    interrupt.  */
 	stw	rCHR,0(rMEMP)
         stw     rCHR,4(rMEMP)
@@ -381,7 +381,7 @@ L(cacheAligned):
 	blt	cr1,L(cacheAligned1)
 	li	rMEMP2,128
 L(cacheAlignedx):
-	cmpldi	cr5,rLEN,640
+	cmplwi	cr5,rLEN,640
 	blt	cr6,L(cacheAligned128)
 	bgt	cr5,L(cacheAligned512)
 	cmplwi	cr6,rLEN,512

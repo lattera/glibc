@@ -1,3 +1,10 @@
+2009-04-22  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #10107]
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Replace cmpldi
+	with cmplwi.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+
 2009-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/grantpt.c: Remove file after folding changes
