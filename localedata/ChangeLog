@@ -1,3 +1,9 @@
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10011]
+	* locales/de_AT: Define week, first_weekday, first_workday.
+	Patch by Paul Marcher <flyer@gmail.com>.
+
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10213]
