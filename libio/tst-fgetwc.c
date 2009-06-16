@@ -6,7 +6,7 @@
 static int
 do_test (void)
 {
-  if (setlocale (LC_ALL, "de_DE.utf8") == NULL)
+  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
     {
       puts ("setlocale failed");
       return 1;
