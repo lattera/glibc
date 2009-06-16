@@ -1,5 +1,10 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10195]
+	* inet/netinet/icmp6.h (struct nd_opt_home_agent_info): Change type
+	of nd_opt_home_agent_info_preference to uint16_t.
+	Patch by Arnaud Ebalard <arno@natisbad.org>.
+
 	[BZ #10207]
 	* nss/getent.c: Add support for print gshadow data.
 
