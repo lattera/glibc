@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,9 +70,16 @@ grantpt (int fd)
     return -1;
 
   /* If the slave pseudo terminal lives on a `devpts' filesystem, the
-     ownership and access permission are already set.  */
+     ownership is already set and the access permission might already
+     be set.  */
   if (fsbuf.f_type == DEVPTS_SUPER_MAGIC || fsbuf.f_type == DEVFS_SUPER_MAGIC)
-    return 0;
+    {
+      struct stat64 st;
+
+      if (fstat (fd, &st) == 0
+	  && (st.st_mode & ACCESSPERMS) == (S_IRUSR|S_IWUSR|S_IWGRP))
+	return 0;
+    }
 
   return __unix_grantpt (fd);
 }

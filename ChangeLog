@@ -1,5 +1,10 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10166]
+	* sysdeps/unix/sysv/linux/grantpt.c: If slave device is on devpts or
+	devfs, the mode might not be correct.  Check it and return only if it
+	is correct.
+
 	[BZ #10183]
 	* posix/tst-cpucount.c: Don't try more than CPU_SETSIZE bits.
 
