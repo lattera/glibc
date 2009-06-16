@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -115,8 +115,24 @@ grantpt (int fd)
   gid_t gid;
   pid_t pid;
 
-  if (pts_name (fd, &buf, sizeof (_buf)))
-    return -1;
+  if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf)), 0))
+    {
+      int save_errno = errno;
+
+      /* Check, if the file descriptor is valid.  pts_name returns the
+	 wrong errno number, so we cannot use that.  */
+      if (__libc_fcntl (fd, F_GETFD) == -1 && errno == EBADF)
+	return -1;
+
+       /* If the filedescriptor is no TTY, grantpt has to set errno
+          to EINVAL.  */
+       if (save_errno == ENOTTY)
+         __set_errno (EINVAL);
+       else
+	 __set_errno (save_errno);
+
+       return -1;
+    }
 
   if (__xstat64 (_STAT_VER, buf, &st) < 0)
     goto cleanup;
