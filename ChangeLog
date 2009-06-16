@@ -1,5 +1,8 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10207]
+	* nss/getent.c: Add support for print gshadow data.
+
 	[BZ #10203]
 	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,
 	not just the currently used one and those which follow.
