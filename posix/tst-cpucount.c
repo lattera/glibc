@@ -1,5 +1,6 @@
 #include <sched.h>
 #include <stdio.h>
+#include <sys/param.h>
 
 static int
 do_test (void)
@@ -8,7 +9,7 @@ do_test (void)
 
   CPU_ZERO (&c);
 
-  for (int cnt = 0; cnt < 130; ++cnt)
+  for (int cnt = 0; cnt < MIN (CPU_SETSIZE, 130); ++cnt)
     {
       int n = CPU_COUNT (&c);
       if (n != cnt)
