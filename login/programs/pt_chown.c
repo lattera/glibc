@@ -1,5 +1,5 @@
 /* pt_chmod - helper program for `grantpt'.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by C. Scott Ananian <cananian@alumni.princeton.edu>, 1998.
 
@@ -119,12 +119,13 @@ do_pt_chown (void)
 
   /* Set the owner to the real user ID, and the group to that special
      group ID.  */
-  if (chown (pty, getuid (), gid) < 0)
+  if (st.st_gid != gid && chown (pty, getuid (), gid) < 0)
     return FAIL_EACCES;
 
   /* Set the permission mode to readable and writable by the owner,
      and writable by the group.  */
-  if (chmod (pty, S_IRUSR|S_IWUSR|S_IWGRP) < 0)
+  if ((st.st_mode & ACCESSPERMS) != (S_IRUSR|S_IWUSR|S_IWGRP)
+      && chmod (pty, S_IRUSR|S_IWUSR|S_IWGRP) < 0)
     return FAIL_EACCES;
 
   return 0;

@@ -1,5 +1,8 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/grantpt.c (grantpt): Only call chown and
+	chmod if it is necessary.
+
 	[BZ #10166]
 	* sysdeps/unix/sysv/linux/grantpt.c: If slave device is on devpts or
 	devfs, the mode might not be correct.  Check it and return only if it
