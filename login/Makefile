@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1998,2000-2002,2003,2007 Free Software Foundation, Inc.
+# Copyright (C) 1996-1998,2000-2003,2007, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,11 @@ ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 	     $(resolvobjdir)/libresolv.a $(common-objpfx)libc.a
 endif
+
+ifeq (yes,$(have-libcap))
+libcap = -lcap
+endif
+LDLIBS-pt_chown = $(libcap)
 
 # pt_chown needs to be setuid root.
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)

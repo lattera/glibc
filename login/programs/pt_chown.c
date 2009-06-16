@@ -29,6 +29,10 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef HAVE_LIBCAP
+# include <sys/capability.h>
+# include <sys/prctl.h>
+#endif
 
 #include "pty-private.h"
 
@@ -99,7 +103,7 @@ static int
 do_pt_chown (void)
 {
   char *pty;
-  struct stat st;
+  struct stat64 st;
   struct group *p;
   gid_t gid;
 
@@ -110,7 +114,7 @@ do_pt_chown (void)
 
   /* Check that the returned slave pseudo terminal is a
      character device.  */
-  if (stat (pty, &st) < 0 || !S_ISCHR(st.st_mode))
+  if (stat64 (pty, &st) < 0 || !S_ISCHR (st.st_mode))
     return FAIL_EINVAL;
 
   /* Get the group ID of the special `tty' group.  */
@@ -136,16 +140,43 @@ int
 main (int argc, char *argv[])
 {
   uid_t euid = geteuid ();
+  uid_t uid = getuid ();
   int remaining;
 
-  /* Normal invocation of this program is with no arguments and
-     with privileges.
-     FIXME: Should use capable (CAP_CHOWN|CAP_FOWNER).  */
   if (argc == 1 && euid == 0)
-    return do_pt_chown ();
+    {
+#ifdef HAVE_LIBCAP
+  /* Drop privileges.  */
+      if (uid != euid)
+	{
+	  static const cap_value_t cap_list[] =
+	    { CAP_CHOWN, CAP_FOWNER	};
+# define ncap_list (sizeof (cap_list) / sizeof (cap_list[0]))
+	  cap_t caps = cap_init ();
+	  if (caps == NULL)
+	    error (FAIL_ENOMEM, errno,
+		   _("Failed to initialize drop of capabilities"));
+
+	  /* There is no reason why these should not work.  */
+	  cap_set_flag (caps, CAP_PERMITTED, ncap_list, cap_list, CAP_SET);
+	  cap_set_flag (caps, CAP_EFFECTIVE, ncap_list, cap_list, CAP_SET);
+
+	  int res = cap_set_proc (caps);
+
+	  cap_free (caps);
+
+	  if (__builtin_expect (res != 0, 0))
+	    error (FAIL_EXEC, errno, _("cap_set_proc failed"));
+	}
+#endif
+
+      /* Normal invocation of this program is with no arguments and
+	 with privileges.  */
+      return do_pt_chown ();
+    }
 
   /* We aren't going to be using privileges, so drop them right now. */
-  setuid (getuid ());
+  setuid (uid);
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");

@@ -202,7 +202,7 @@ grantpt (int fd)
       if (!WIFEXITED (w))
 	__set_errno (ENOEXEC);
       else
-	switch (WEXITSTATUS(w))
+	switch (WEXITSTATUS (w))
 	  {
 	  case 0:
 	    retval = 0;
@@ -218,6 +218,9 @@ grantpt (int fd)
 	    break;
 	  case FAIL_EXEC:
 	    __set_errno (ENOEXEC);
+	    break;
+	  case FAIL_ENOMEM:
+	    __set_errno (ENOMEM);
 	    break;
 
 	  default:

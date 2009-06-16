@@ -1,5 +1,5 @@
 /* Internal defenitions and declarations for pseudo terminal functions.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -39,7 +39,8 @@ enum  /* failure modes */
   FAIL_EBADF = 1,
   FAIL_EINVAL,
   FAIL_EACCES,
-  FAIL_EXEC
+  FAIL_EXEC,
+  FAIL_ENOMEM
 };
 
 #endif /* pty-private.h  */
