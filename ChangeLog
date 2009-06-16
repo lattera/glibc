@@ -1,6 +1,10 @@
 2009-06-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* login/programs/pt_chown.c: Use libcap to drop privileges other than
+	those needed.
 	* login/Makefile: If necessary link pt_chown with -lcap.
+	* sysdeps/generic/pty-private.h: Define FAIL_ENOMEM.
+	* sysdeps/unix/grantpt.c: Handle FAIL_ENOMEM.
 
 2009-06-16  Jakub Jelinek  <jakub@redhat.com>
 
