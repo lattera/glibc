@@ -1118,8 +1118,8 @@ Usage: getconf [-v SPEC] VAR\n\
 Get the configuration value for variable VAR, or for variable PATH_VAR\n\
 for path PATH.  If SPEC is given, give values for compilation\n\
 environment SPEC.\n\n"));
-      printf (gettext ("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+      fputs (gettext ("For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
       return 0;
     }
 

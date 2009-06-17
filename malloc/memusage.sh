@@ -62,7 +62,7 @@ Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
 "
-  print $"For bug reporting instructions, please see:
+  echo $"For bug reporting instructions, please see:
 <http://www.gnu.org/software/libc/bugs.html>.
 "
   exit 0

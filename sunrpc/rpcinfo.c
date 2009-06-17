@@ -688,9 +688,9 @@ usage (FILE *stream)
   fputs (_("       rpcinfo -b prognum versnum\n"), stream);
   fputs (_("       rpcinfo -d prognum versnum\n"), stream);
   fputc ('\n', stream);
-  fprintf (stream, _("\
+  fputs (_("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+<http://www.gnu.org/software/libc/bugs.html>.\n"), stream);
 }
 
 static void

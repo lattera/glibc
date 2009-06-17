@@ -905,9 +905,9 @@ more_help (int key, const char *text, void *input)
 
 	  fputs ("\n\n", fp);
 
-	  fprintf (fp, gettext ("\
+	  fputs (gettext ("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+<http://www.gnu.org/software/libc/bugs.html>.\n"), fp);
 
 	  if (fclose (fp) == 0)
 	    return doc;

@@ -59,8 +59,8 @@ main (int argc, char *argv[])
   if (strcmp (argv[1], "--help") == 0)
     {
       printf (gettext ("Usage: lddlibc4 FILE\n\n"));
-      printf (gettext ("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+      fputs (gettext ("For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
       return 0;
     }
   else if (strcmp (argv[1], "--version") == 0)

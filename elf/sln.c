@@ -83,8 +83,8 @@ static void
 usage (void)
 {
   printf (_("Usage: sln src dest|file\n\n"));
-  printf (_("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+  fputs (_("For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
 }
 
 static int

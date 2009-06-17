@@ -1,3 +1,14 @@
+2009-06-15  Andreas Schwab  <aschwab@redhat.com>
+
+	* debug/xtrace.sh (do_help): Don't treat bug reporting message as
+	a format string.
+	* elf/sln.c (usage): Likewise.
+	* malloc/memusage.sh (do_help): Likewise.
+	* nss/getent.c (more_help): Likewise.
+	* posix/getconf.c (main): Likewise.
+	* sunrpc/rpcinfo.c (usage): Likewise.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Likewise.
+
 2009-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/programs/pt_chown.c: Use libcap to drop privileges other than
