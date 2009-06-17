@@ -54,10 +54,23 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 	     $(resolvobjdir)/libresolv.a $(common-objpfx)libc.a
 endif
 
+ifeq (yesyes,$(have-fpie)$(build-shared))
+pt_chown-cflags += $(pie-ccflag)
+endif
+ifeq (yes,$(have-ssp))
+pt_chown-cflags += -fstack-protector
+endif
 ifeq (yes,$(have-libcap))
 libcap = -lcap
 endif
+CFLAGS-pt_chown.c = $(pt_chown-cflags)
 LDLIBS-pt_chown = $(libcap)
+ifeq (yesyes,$(have-fpie)$(build-shared))
+LDFLAGS-pt_chown = -Wl,-z,now
+
+$(objpfx)pt_chown: $(objpfx)pt_chown.o
+	$(+link-pie)
+endif
 
 # pt_chown needs to be setuid root.
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)

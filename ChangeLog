@@ -1,3 +1,7 @@
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/Makefile: Build pt_chown as PIE.
+
 2009-06-15  Andreas Schwab  <aschwab@redhat.com>
 
 	* debug/xtrace.sh (do_help): Don't treat bug reporting message as
