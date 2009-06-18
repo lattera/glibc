@@ -1,5 +1,5 @@
 /* Definitions for Address Resolution Protocol.
-   Copyright (C) 1997,1999,2001,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2001,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -128,6 +128,8 @@ struct arphdr
 #define ARPHRD_IEEE80211 801		/* IEEE 802.11.  */
 #define ARPHRD_IEEE80211_PRISM 802	/* IEEE 802.11 + Prism2 header.  */
 #define ARPHRD_IEEE80211_RADIOTAP 803	/* IEEE 802.11 + radiotap header.  */
+#define ARPHRD_IEEE802154 804		/* IEEE 802.15.4 header.  */
+#define ARPHRD_IEEE802154_PHY 805	/* IEEE 802.15.4 PHY header.  */
 
 #define ARPHRD_VOID	  0xFFFF	/* Void type, nothing is known.  */
 #define ARPHRD_NONE	  0xFFFE	/* Zero header length.  */

@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -108,7 +108,8 @@ enum __socket_type
 #define PF_RXRPC	33	/* RxRPC sockets.  */
 #define PF_ISDN		34	/* mISDN sockets.  */
 #define PF_PHONET	35	/* Phonet sockets.  */
-#define	PF_MAX		36	/* For now..  */
+#define PF_IEEE802154	36	/* IEEE 802.15.4 sockets.  */
+#define	PF_MAX		37	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -148,6 +149,7 @@ enum __socket_type
 #define AF_RXRPC	PF_RXRPC
 #define AF_ISDN		PF_ISDN
 #define AF_PHONET	PF_PHONET
+#define AF_IEEE802154	PF_IEEE802154
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
