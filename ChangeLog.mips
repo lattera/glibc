@@ -1,3 +1,8 @@
+2009-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Define PF_IEEE802154
+	and AF_IEEE802154.
+
 2009-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/____longjmp_chk.c: New file.
