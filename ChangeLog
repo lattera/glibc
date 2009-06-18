@@ -1,3 +1,8 @@
+2009-06-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile ($(objpfx)ifuncmain1pie): Use $(+link-pie).
+	($(objpfx)ifuncmain1vispie): Likewise.
+
 2009-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/Makefile: Build pt_chown as PIE.

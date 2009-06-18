@@ -993,14 +993,7 @@ $(objpfx)ifuncmain1pie.out: $(objpfx)ifuncmain1pie
 	  $< > $@
 
 $(objpfx)ifuncmain1pie: $(objpfx)ifuncmain1pie.o $(objpfx)ifuncmod1.so
-	$(LINK.o) -pie -Wl,-O1 \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
-	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
-	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
-	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
-	  $(common-objpfx)libc_nonshared.a
+	$(+link-pie)
 
 generated += ifuncmain1pie ifuncmain1pie.out
 
@@ -1010,14 +1003,7 @@ $(objpfx)ifuncmain1vispie.out: $(objpfx)ifuncmain1vispie
 	  $< > $@
 
 $(objpfx)ifuncmain1vispie: $(objpfx)ifuncmain1vispie.o $(objpfx)ifuncmod1.so
-	$(LINK.o) -pie -Wl,-O1 \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
-	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
-	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
-	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
-	  $(common-objpfx)libc_nonshared.a
+	$(+link-pie)
 
 generated += ifuncmain1vispie ifuncmain1vispie.out
 endif
