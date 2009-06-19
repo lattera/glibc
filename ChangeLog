@@ -1,5 +1,8 @@
 2009-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_malloc): Add some consistency checks.
+	(_int_free): Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_IEEE802154 and
 	AF_IEEE802154.
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
@@ -83,7 +86,7 @@
 	Patch by Arnaud Ebalard <arno@natisbad.org>.
 
 	[BZ #10207]
-	* nss/getent.c: Add support for print gshadow data.
+	* nss/getent.c: Add support for printing gshadow data.
 
 	[BZ #10203]
 	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,

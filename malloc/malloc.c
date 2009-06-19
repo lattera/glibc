@@ -4241,6 +4241,8 @@ _int_malloc(mstate av, size_t bytes)
   mchunkptr       fwd;              /* misc temp for linking */
   mchunkptr       bck;              /* misc temp for linking */
 
+  const char *errstr = NULL;
+
   /*
     Convert request size to internal form by adding SIZE_SZ bytes
     overhead plus possibly more to obtain necessary alignment and/or
@@ -4276,8 +4278,11 @@ _int_malloc(mstate av, size_t bytes)
 #endif
     if (victim != 0) {
       if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
-	malloc_printerr (check_action, "malloc(): memory corruption (fast)",
-			 chunk2mem (victim));
+	{
+	  errstr = "malloc(): memory corruption (fast)";
+	errout:
+	  malloc_printerr (check_action, errstr, chunk2mem (victim));
+	}
 #ifndef ATOMIC_FASTBINS
       *fb = victim->fd;
 #endif
@@ -4306,6 +4311,11 @@ _int_malloc(mstate av, size_t bytes)
         malloc_consolidate(av);
       else {
         bck = victim->bk;
+	if (__builtin_expect (bck->fd != victim, 0))
+	  {
+	    errstr = "malloc(): smallbin double linked list corrupted";
+	    goto errout;
+	  }
         set_inuse_bit_at_offset(victim, nb);
         bin->bk = bck;
         bck->fd = bin;
@@ -4515,6 +4525,11 @@ _int_malloc(mstate av, size_t bytes)
              have to perform a complete insert here.  */
 	  bck = unsorted_chunks(av);
 	  fwd = bck->fd;
+	  if (__builtin_expect (fwd->bk != bck, 0))
+	    {
+	      errstr = "malloc(): corrupted unsorted chunks";
+	      goto errout;
+	    }
 	  remainder->bk = bck;
 	  remainder->fd = fwd;
 	  bck->fd = remainder;
@@ -4610,6 +4625,11 @@ _int_malloc(mstate av, size_t bytes)
 	     have to perform a complete insert here.  */
 	  bck = unsorted_chunks(av);
 	  fwd = bck->fd;
+	  if (__builtin_expect (fwd->bk != bck, 0))
+	    {
+	      errstr = "malloc(): corrupted unsorted chunks 2";
+	      goto errout;
+	    }
 	  remainder->bk = bck;
 	  remainder->fd = fwd;
 	  bck->fd = remainder;
@@ -4901,6 +4921,11 @@ _int_free(mstate av, mchunkptr p)
 
       bck = unsorted_chunks(av);
       fwd = bck->fd;
+      if (__builtin_expect (fwd->bk != bck, 0))
+	{
+	  errstr = "free(): corrupted unsorted chunks";
+	  goto errout;
+	}
       p->fd = fwd;
       p->bk = bck;
       if (!in_smallbin_range(size))
