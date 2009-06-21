@@ -1,3 +1,24 @@
+2009-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10085]
+	* nis/nss_compat/compat-initgroups.c (nss_setgrent): New variable.
+	(nss_endgrent): New variable.
+	(struct ent_t): Add need_endgrent and skip_initgroups_dyn
+	fields. Change type of files to bool and adjust all users.
+	(init_nss_interface): Initialize nss_setgrent and nss_endgrent.
+	(internal_endgrent): Call nss_endgrent if necessary.
+	(add_group): New function.  Broken out of...
+	(check_and_add_group): ...here.
+	(getgrent_next_nss): Remove test that any callback is available.
+	Use skip_initgroups_dyn to determine whether to use initgroups_dyn
+	callback.  If there is no blacklist we can trust the results returned
+	by the initgroups_dyn callback.  In case there is a callback and we
+	find a group entry for the group ID but it doesn't contain the
+	correct member, switch to the slow mode and use getgrent_r.
+	(internal_getgrent_r): When we see a +: entry, determine whether
+	there is any callback and which we can use the initgroups_dyn
+	callback.
+
 2009-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_malloc): Add some consistency checks.

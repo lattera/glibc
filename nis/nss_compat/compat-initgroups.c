@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -43,8 +43,10 @@ static enum nss_status (*nss_getgrnam_r) (const char *name,
 static enum nss_status (*nss_getgrgid_r) (gid_t gid, struct group * grp,
 					  char *buffer, size_t buflen,
 					  int *errnop);
+static enum nss_status (*nss_setgrent) (int stayopen);
 static enum nss_status (*nss_getgrent_r) (struct group * grp, char *buffer,
 					  size_t buflen, int *errnop);
+static enum nss_status (*nss_endgrent) (void);
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -68,7 +70,9 @@ struct blacklist_t
 
 struct ent_t
 {
-  bool_t files;
+  bool files;
+  bool need_endgrent;
+  bool skip_initgroups_dyn;
   FILE *stream;
   struct blacklist_t blacklist;
 };
@@ -106,7 +110,9 @@ init_nss_interface (void)
       nss_initgroups_dyn = __nss_lookup_function (ni, "initgroups_dyn");
       nss_getgrnam_r = __nss_lookup_function (ni, "getgrnam_r");
       nss_getgrgid_r = __nss_lookup_function (ni, "getgrgid_r");
+      nss_setgrent = __nss_lookup_function (ni, "setgrent");
       nss_getgrent_r = __nss_lookup_function (ni, "getgrent_r");
+      nss_endgrent = __nss_lookup_function (ni, "endgrent");
     }
 
   __libc_lock_unlock (lock);
@@ -117,7 +123,7 @@ internal_setgrent (ent_t *ent)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  ent->files = TRUE;
+  ent->files = true;
 
   if (ni == NULL)
     init_nss_interface ();
@@ -195,54 +201,68 @@ internal_endgrent (ent_t *ent)
   else
     ent->blacklist.current = 0;
 
+  if (ent->need_endgrent && nss_endgrent != NULL)
+    nss_endgrent ();
+
   return NSS_STATUS_SUCCESS;
 }
 
-/* This function checks, if the user is a member of this group and if
-   yes, add the group id to the list.  */
+/* Add new group record.  */
 static void
+add_group (long int *start, long int *size, gid_t **groupsp, long int limit,
+	   gid_t gid)
+{
+  gid_t *groups = *groupsp;
+
+  /* Matches user.  Insert this group.  */
+  if (__builtin_expect (*start == *size, 0))
+    {
+      /* Need a bigger buffer.  */
+      gid_t *newgroups;
+      long int newsize;
+
+      if (limit > 0 && *size == limit)
+	/* We reached the maximum.  */
+	return;
+
+      if (limit <= 0)
+	newsize = 2 * *size;
+      else
+	newsize = MIN (limit, 2 * *size);
+
+      newgroups = realloc (groups, newsize * sizeof (*groups));
+      if (newgroups == NULL)
+	return;
+      *groupsp = groups = newgroups;
+      *size = newsize;
+    }
+
+  groups[*start] = gid;
+  *start += 1;
+}
+
+/* This function checks, if the user is a member of this group and if
+   yes, add the group id to the list.  Return nonzero is we couldn't
+   handle the group because the user is not in the member list.  */
+static int
 check_and_add_group (const char *user, gid_t group, long int *start,
 		     long int *size, gid_t **groupsp, long int limit,
 		     struct group *grp)
 {
-  gid_t *groups = *groupsp;
   char **member;
 
   /* Don't add main group to list of groups.  */
   if (grp->gr_gid == group)
-    return;
+    return 0;
 
   for (member = grp->gr_mem; *member != NULL; ++member)
     if (strcmp (*member, user) == 0)
       {
-	/* Matches user.  Insert this group.  */
-	if (*start == *size)
-	  {
-	    /* Need a bigger buffer.  */
-	    gid_t *newgroups;
-	    long int newsize;
-
-	    if (limit > 0 && *size == limit)
-	      /* We reached the maximum.  */
-	      return;
-
-	    if (limit <= 0)
-	      newsize = 2 * *size;
-	    else
-	      newsize = MIN (limit, 2 * *size);
-
-	    newgroups = realloc (groups, newsize * sizeof (*groups));
-	    if (newgroups == NULL)
-	      return;
-	    *groupsp = groups = newgroups;
-	    *size = newsize;
-	  }
-
-	groups[*start] = grp->gr_gid;
-	*start += 1;
-
-	break;
+	add_group (start, size, groupsp, limit, grp->gr_gid);
+	return 0;
       }
+
+  return 1;
 }
 
 /* Get the next group from NSS  (+ entry). If the NSS module supports
@@ -255,15 +275,10 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
   enum nss_status status;
   struct group grpbuf;
 
-  /* if this module does not support getgrent_r and initgroups_dyn,
-     abort. We cannot find the needed group entries.  */
-  if (nss_getgrent_r == NULL && nss_initgroups_dyn == NULL)
-    return NSS_STATUS_UNAVAIL;
-
   /* Try nss_initgroups_dyn if supported. We also need getgrgid_r.
      If this function is not supported, step through the whole group
      database with getgrent_r.  */
-  if (nss_initgroups_dyn && nss_getgrgid_r)
+  if (! ent->skip_initgroups_dyn)
     {
       long int mystart = 0;
       long int mysize = limit <= 0 ? *size : limit;
@@ -282,39 +297,56 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
       if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroups,
 			      limit, errnop) == NSS_STATUS_SUCCESS)
 	{
-	  /* A temporary buffer. We use the normal buffer, until we find
-	     an entry, for which this buffer is to small.  In this case, we
-	     overwrite the pointer with one to a bigger buffer.  */
-	  char *tmpbuf = buffer;
-	  size_t tmplen = buflen;
-	  int i;
-
-	  for (i = 0; i < mystart; i++)
+	  /* If there is no blacklist we can trust the underlying
+	     initgroups implementation.  */
+	  if (ent->blacklist.current <= 1)
+	    for (int i = 0; i < mystart; i++)
+	      add_group (start, size, groupsp, limit, mygroups[i]);
+	  else
 	    {
-	      while ((status = nss_getgrgid_r (mygroups[i], &grpbuf, tmpbuf,
-					       tmplen,
-					       errnop)) == NSS_STATUS_TRYAGAIN
-		     && *errnop == ERANGE)
-		if (tmpbuf == buffer)
-		  {
-		    tmplen *= 2;
-		    tmpbuf = __alloca (tmplen);
-		  }
-		else
-		  tmpbuf = extend_alloca (tmpbuf, tmplen, 2 * tmplen);
+	      /* A temporary buffer. We use the normal buffer, until we find
+		 an entry, for which this buffer is to small.  In this case, we
+		 overwrite the pointer with one to a bigger buffer.  */
+	      char *tmpbuf = buffer;
+	      size_t tmplen = buflen;
 
-	      if (__builtin_expect  (status != NSS_STATUS_NOTFOUND, 1))
+	      for (int i = 0; i < mystart; i++)
 		{
-		  if (__builtin_expect  (status != NSS_STATUS_SUCCESS, 0))
-		    {
-		      free (mygroups);
-		      return status;
-		    }
+		  while ((status = nss_getgrgid_r (mygroups[i], &grpbuf,
+						   tmpbuf, tmplen, errnop))
+			 == NSS_STATUS_TRYAGAIN
+			 && *errnop == ERANGE)
+		    if (tmpbuf == buffer)
+		      {
+			tmplen *= 2;
+			tmpbuf = __alloca (tmplen);
+		      }
+		    else
+		      tmpbuf = extend_alloca (tmpbuf, tmplen, 2 * tmplen);
 
-		  if (!in_blacklist (grpbuf.gr_name,
-				     strlen (grpbuf.gr_name), ent))
-		    check_and_add_group (user, group, start, size, groupsp,
-					 limit, &grpbuf);
+		  if (__builtin_expect  (status != NSS_STATUS_NOTFOUND, 1))
+		    {
+		      if (__builtin_expect  (status != NSS_STATUS_SUCCESS, 0))
+			{
+			  free (mygroups);
+			  return status;
+			}
+
+		      if (!in_blacklist (grpbuf.gr_name,
+					 strlen (grpbuf.gr_name), ent)
+			  && check_and_add_group (user, group, start, size,
+						  groupsp, limit, &grpbuf))
+			{
+			  if (nss_setgrent != NULL)
+			    {
+			      nss_setgrent (1);
+			      ent->need_endgrent = true;
+			    }
+			  ent->skip_initgroups_dyn = true;
+
+			  goto iter;
+			}
+		    }
 		}
 	    }
 
@@ -327,17 +359,21 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
     }
 
   /* If we come here, the NSS module does not support initgroups_dyn
-     and we have to step through the whole list ourself.  */
+     or we were confronted with a split group.  In these cases we have
+     to step through the whole list ourself.  */
+ iter:
   do
     {
       if ((status = nss_getgrent_r (&grpbuf, buffer, buflen, errnop)) !=
 	  NSS_STATUS_SUCCESS)
-	return status;
+	break;
     }
   while (in_blacklist (grpbuf.gr_name, strlen (grpbuf.gr_name), ent));
 
-  check_and_add_group (user, group, start, size, groupsp, limit, &grpbuf);
-  return NSS_STATUS_SUCCESS;
+  if (status == NSS_STATUS_SUCCESS)
+    check_and_add_group (user, group, start, size, groupsp, limit, &grpbuf);
+
+  return status;
 }
 
 static enum nss_status
@@ -435,7 +471,21 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
       /* +:... */
       if (grpbuf.gr_name[0] == '+' && grpbuf.gr_name[1] == '\0')
 	{
-	  ent->files = FALSE;
+	  /* If the selected module does not support getgrent_r or
+	     initgroups_dyn, abort. We cannot find the needed group
+	     entries.  */
+	  if (nss_getgrent_r == NULL && nss_initgroups_dyn == NULL)
+	    return NSS_STATUS_UNAVAIL;
+
+	  ent->files = false;
+
+	  if (nss_initgroups_dyn == NULL && nss_setgrent != NULL)
+	    {
+	      nss_setgrent (1);
+	      ent->need_endgrent = true;
+	    }
+	  ent->skip_initgroups_dyn = true;
+
 	  return getgrent_next_nss (ent, buffer, buflen, user, group,
 				    start, size, groupsp, limit, errnop);
 	}
@@ -455,7 +505,7 @@ _nss_compat_initgroups_dyn (const char *user, gid_t group, long int *start,
   size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
   enum nss_status status;
-  ent_t intern = { TRUE, NULL, {NULL, 0, 0} };
+  ent_t intern = { true, false, false, NULL, {NULL, 0, 0} };
 
   status = internal_setgrent (&intern);
   if (status != NSS_STATUS_SUCCESS)
