@@ -17,7 +17,7 @@ one (void)
 static void * foo_ifunc (void) __asm__ ("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
-static void * 
+static void *
 __attribute__ ((used))
 foo_ifunc (void)
 {

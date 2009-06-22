@@ -19,7 +19,7 @@ one (void)
 void * foo_ifunc (void) __asm__ ("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
-void * 
+void *
 foo_ifunc (void)
 {
   return one;
