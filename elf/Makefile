@@ -99,10 +99,18 @@ distribute	:= rtld-Rules \
 		   ifuncmain1staticpic.c ifuncmain1picstatic.c \
 		   ifuncdep1.c ifuncdep1pic.c ifuncmod1.c \
 		   ifuncmain1pie.c ifuncmain1vispie.c \
+		   ifuncmain1staticpie.c \
 		   ifuncmain2.c ifuncmain2static.c ifuncdep2.c \
 		   ifuncmain2pic.c ifuncmain2picstatic.c ifuncdep2pic.c \
 		   ifuncmain3.c ifuncmod3.c \
-		   ifuncmain4.c ifuncmain4static.c ifuncmain4picstatic.c
+		   ifuncmain4.c ifuncmain4static.c ifuncmain4picstatic.c \
+		   ifuncmain5.c ifuncmain5pic.c ifuncmain5picstatic.c \
+		   ifuncmain5pie.c ifuncmain5static.c \
+		   ifuncmain5staticpic.c \
+		   ifuncdep5.c ifuncdep5pic.c ifuncmod5.c \
+		   ifuncmain6pie.c ifuncmod6.c \
+		   ifuncmain7.c ifuncmain7pic.c ifuncmain7picstatic.c \
+		   ifuncmain7pie.c ifuncmain7static.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -244,16 +252,22 @@ modules-names-nobuild := filtmod1
 ifeq (yes,$(multi-arch))
 tests-static += ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
-		ifuncmain4static ifuncmain4picstatic
+		ifuncmain4static ifuncmain4picstatic \
+		ifuncmain5static ifuncmain5picstatic \
+		ifuncmain7static ifuncmain7picstatic
 
 ifeq (yes,$(build-shared))
 tests += ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain1staticpic \
-	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4
+	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
+	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
+	 ifuncmain7 ifuncmain7pic
 ifeq (yes,$(have-fpie))
-tests: $(objpfx)ifuncmain1pie.out $(objpfx)ifuncmain1vispie.out
+tests: $(objpfx)ifuncmain1pie.out $(objpfx)ifuncmain1vispie.out \
+	$(objpfx)ifuncmain1staticpie.out $(objpfx)ifuncmain5pie.out \
+	$(objpfx)ifuncmain6pie.out $(objpfx)ifuncmain7pie.out
 endif
-modules-names += ifuncmod1 ifuncmod3
+modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
 endif
 endif
 
@@ -530,6 +544,8 @@ reldep9mod1.so-no-z-defs = yes
 unload3mod4.so-no-z-defs = yes
 unload4mod1.so-no-z-defs = yes
 ifuncmod1.so-no-z-defs = yes
+ifuncmod5.so-no-z-defs = yes
+ifuncmod6.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -980,12 +996,22 @@ CFLAGS-ifuncmain2pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain2picstatic.c += $(pic-ccflag)
 CFLAGS-ifuncdep2pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain4picstatic.c += $(pic-ccflag)
+CFLAGS-ifuncmain5pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain5picstatic.c += $(pic-ccflag)
+CFLAGS-ifuncmain5staticpic.c += $(pic-ccflag)
+CFLAGS-ifuncdep5pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain7pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain7picstatic.c += $(pic-ccflag)
 
 LDFLAGS-ifuncmain3 = -Wl,-export-dynamic
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-ifuncmain1pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain1vispie.c += $(pie-ccflag)
+CFLAGS-ifuncmain1staticpie.c += $(pie-ccflag)
+CFLAGS-ifuncmain5pie.c += $(pie-ccflag)
+CFLAGS-ifuncmain6pie.c += $(pie-ccflag)
+CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
 
 $(objpfx)ifuncmain1pie.out: $(objpfx)ifuncmain1pie
 	$(elf-objpfx)$(rtld-installed-name) \
@@ -997,6 +1023,16 @@ $(objpfx)ifuncmain1pie: $(objpfx)ifuncmain1pie.o $(objpfx)ifuncmod1.so
 
 generated += ifuncmain1pie ifuncmain1pie.out
 
+$(objpfx)ifuncmain1staticpie.out: $(objpfx)ifuncmain1staticpie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain1staticpie: $(objpfx)ifuncmain1staticpie.o $(objpfx)ifuncdep1pic.o
+	$(+link-pie)
+
+generated += ifuncmain1staticpie ifuncmain1staticpie.out
+
 $(objpfx)ifuncmain1vispie.out: $(objpfx)ifuncmain1vispie
 	$(elf-objpfx)$(rtld-installed-name) \
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
@@ -1006,6 +1042,36 @@ $(objpfx)ifuncmain1vispie: $(objpfx)ifuncmain1vispie.o $(objpfx)ifuncmod1.so
 	$(+link-pie)
 
 generated += ifuncmain1vispie ifuncmain1vispie.out
+
+$(objpfx)ifuncmain5pie.out: $(objpfx)ifuncmain5pie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain5pie: $(objpfx)ifuncmain5pie.o $(objpfx)ifuncmod5.so
+	$(+link-pie)
+
+generated += ifuncmain5pie ifuncmain5pie.out
+
+$(objpfx)ifuncmain6pie.out: $(objpfx)ifuncmain6pie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain6pie: $(objpfx)ifuncmain6pie.o $(objpfx)ifuncmod6.so
+	$(+link-pie)
+
+generated += ifuncmain6pie ifuncmain6pie.out
+
+$(objpfx)ifuncmain7pie.out: $(objpfx)ifuncmain7pie
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)ifuncmain7pie: $(objpfx)ifuncmain7pie.o 
+	$(+link-pie)
+
+generated += ifuncmain7pie ifuncmain7pie.out
 endif
 
 $(objpfx)ifuncmain1: $(addprefix $(objpfx),ifuncmod1.so)
@@ -1022,3 +1088,9 @@ $(objpfx)ifuncmain2picstatic: $(addprefix $(objpfx),ifuncdep2pic.o)
 
 $(objpfx)ifuncmain3: $(libdl)
 $(objpfx)ifuncmain3.out: $(objpfx)ifuncmod3.so
+
+$(objpfx)ifuncmain5: $(addprefix $(objpfx),ifuncmod5.so)
+$(objpfx)ifuncmain5pic: $(addprefix $(objpfx),ifuncmod5.so)
+$(objpfx)ifuncmain5static: $(addprefix $(objpfx),ifuncdep5.o)
+$(objpfx)ifuncmain5staticpic: $(addprefix $(objpfx),ifuncdep5pic.o)
+$(objpfx)ifuncmain5picstatic: $(addprefix $(objpfx),ifuncdep5pic.o)

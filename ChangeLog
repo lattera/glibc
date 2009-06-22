@@ -1,3 +1,61 @@
+2009-06-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Add ifuncmain1staticpie.c,
+	ifuncmain5.c, ifuncmain5pic.c, ifuncmain5picstatic.c,
+	ifuncmain5pie.c, ifuncmain5static.c, ifuncmain5staticpic.c,
+	ifuncdep5.c, ifuncdep5pic.c, ifuncmod5.c, ifuncmain7.c,
+	ifuncmain7pic.c, ifuncmain7picstatic.c, ifuncmain7pie.c, and
+	ifuncmain7static.c.
+	(tests-static): Add ifuncmain5static, ifuncmain5picstatic,
+	ifuncmain7static, and ifuncmain7picstatic.
+	(tests): Also depend on $(objpfx)ifuncmain1staticpie.out,
+	$(objpfx)ifuncmain5pie.out, $(objpfx)ifuncmain6pie.out, and
+	$(objpfx)ifuncmain7pie.out.
+	(modules-names): Add ifuncmod5 ifuncmod6
+	(ifuncmod5.so-no-z-defs): Define.
+	(ifuncmod6.so-no-z-defs): Define.
+	(CFLAGS-ifuncmain5pic.c): Define.
+	(CFLAGS-ifuncmain5picstatic.c): Define.
+	(CFLAGS-ifuncmain5staticpic.c): Define.
+	(CFLAGS-ifuncdep5pic.c): Define.
+	(CFLAGS-ifuncmain7pic.c): Define.
+	(CFLAGS-ifuncmain7picstatic.c): Define.
+	(CFLAGS-ifuncmain1staticpie.c): Define.
+	(CFLAGS-ifuncmain5pie.c): Define.
+	(CFLAGS-ifuncmain6pie.c): Define.
+	(CFLAGS-ifuncmain7pie.c): Define.
+	($(objpfx)ifuncmain1staticpie.out): Define.
+	($(objpfx)ifuncmain1staticpie): Define.
+	($(objpfx)ifuncmain5pie.out): Define.
+	($(objpfx)ifuncmain5pie): Define.
+	($(objpfx)ifuncmain6pie.out): Define.
+	($(objpfx)ifuncmain6pie): Define.
+	($(objpfx)ifuncmain5): Define.
+	($(objpfx)ifuncmain5pic): Define.
+	($(objpfx)ifuncmain5static): Define.
+	($(objpfx)ifuncmain5staticpic): Define.
+	($(objpfx)ifuncmain5picstatic): Define.
+	(generated): Add ifuncmain1staticpie, ifuncmain1staticpie.out,
+	ifuncmain5pie, ifuncmain5pie.out, ifuncmain6pie, and
+	ifuncmain6pie.out.
+	* elf/b/elf/ifuncmain1staticpie.c: New file.
+	* elf/ifuncdep5.c: New file.
+	* elf/ifuncdep5pic.c: New file.
+	* elf/ifuncmain5.c: New file.
+	* elf/ifuncmain5pic.c: New file.
+	* elf/ifuncmain5picstatic.c: New file.
+	* elf/ifuncmain5pie.c: New file.
+	* elf/ifuncmain5static.c: New file.
+	* elf/ifuncmain5staticpic.c: New file.
+	* elf/ifuncmain6pie.c: New file.
+	* elf/ifuncmain7.c: New file.
+	* elf/ifuncmain7pic.c: New file.
+	* elf/ifuncmain7picstatic.c: New file.
+	* elf/ifuncmain7pie.c: New file.
+	* elf/ifuncmain7static.c: New file.
+	* elf/ifuncmod5.c: New file.
+	* elf/ifuncmod6.c: New file.
+
 2009-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10085]
