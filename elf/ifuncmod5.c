@@ -15,7 +15,7 @@ minus_one (void)
 }
 
 static int
-zero (void) 
+zero (void)
 {
   return 0;
 }
@@ -23,7 +23,7 @@ zero (void)
 void * foo_ifunc (void) __asm__ ("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
-void * 
+void *
 foo_ifunc (void)
 {
   switch (global)
@@ -40,7 +40,7 @@ foo_ifunc (void)
 void * foo_hidden_ifunc (void) __asm__ ("foo_hidden");
 __asm__(".type foo_hidden, %gnu_indirect_function");
 
-void * 
+void *
 foo_hidden_ifunc (void)
 {
   switch (global)
@@ -57,7 +57,7 @@ foo_hidden_ifunc (void)
 void * foo_protected_ifunc (void) __asm__ ("foo_protected");
 __asm__(".type foo_protected, %gnu_indirect_function");
 
-void * 
+void *
 foo_protected_ifunc (void)
 {
   switch (global)

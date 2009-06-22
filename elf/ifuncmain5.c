@@ -27,7 +27,7 @@ int
 main (void)
 {
   foo_p p;
-  
+
   p = get_foo ();
   if ((*p) () != -1)
     abort ();

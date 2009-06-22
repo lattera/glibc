@@ -1068,7 +1068,7 @@ $(objpfx)ifuncmain7pie.out: $(objpfx)ifuncmain7pie
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $< > $@
 
-$(objpfx)ifuncmain7pie: $(objpfx)ifuncmain7pie.o 
+$(objpfx)ifuncmain7pie: $(objpfx)ifuncmain7pie.o
 	$(+link-pie)
 
 generated += ifuncmain7pie ifuncmain7pie.out
