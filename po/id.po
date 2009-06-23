@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.9.90\n"
+"Project-Id-Version: libc 2.10.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-03-10 11:30+0700\n"
+"PO-Revision-Date: 2009-06-23 12:30+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,7 @@ msgstr "%s: Terlalu banyak argumen\n"
 
 #: argp/argp-parse.c:766
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
-msgstr "(APLIKASI ERROR) Opsi seharusnya telah dikenal!?"
+msgstr "(APLIKASI ERROR) Pilihan seharusnya telah dikenal!?"
 
 #: assert/assert-perr.c:57
 #, c-format
@@ -2864,7 +2864,7 @@ msgstr ""
 "      --usage             Tampilkan sebuah pesan penggunaan singkat\n"
 "   -V,--version           Tampilkan informasi versi dan keluar\n"
 "\n"
-" Opsi berikut hanya berlaku ketika menghasilkan keluaran graphis:\n"
+" Pilihan berikut hanya berlaku ketika menghasilkan keluaran graphis:\n"
 "   -t,--time-based        Buat graphis linear dengan waktu\n"
 "   -T,--total             Juga gambar graphis dari total penggunaan memori\n"
 "      --title=STRING      Gunakan STRING sebagai judul dari grapik\n"
@@ -3987,7 +3987,7 @@ msgstr "Harus menspesifikasikan nilai untuk pilihan restart-interval"
 #: nscd/nscd_conf.c:274
 #, c-format
 msgid "Unknown option: %s %s %s"
-msgstr "Opsi tidak dikenal: %s %s %s"
+msgstr "Pilihan tidak dikenal: %s %s %s"
 
 #: nscd/nscd_conf.c:287
 #, c-format
