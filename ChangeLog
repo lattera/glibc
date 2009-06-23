@@ -1,3 +1,7 @@
+2009-06-23  Andreas Schwab  <aschwab@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Don't use an empty TZ string.
+
 2009-06-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/id.po: Update from translation team.

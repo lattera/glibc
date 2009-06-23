@@ -419,6 +419,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       tzspec = __tzstring (tzstr);
     }
 
+  /* Don't use an empty TZ string.  */
+  if (tzspec != NULL && tzspec[0] == '\0')
+    tzspec = NULL;
+
   fclose (f);
 
   /* First "register" all timezone names.  */
