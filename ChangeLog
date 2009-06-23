@@ -1,3 +1,15 @@
+2009-06-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/strncmp.c (STRNCMP): New.  Defined to strncmp if not
+	defined.
+	(strncmp): Renamed to STRNCMP.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strncmp-c for string.
+	* sysdeps/x86_64/multiarch/init-arch.h (HAS_SSE4_2): Define.
+	* sysdeps/x86_64/multiarch/strcmp.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp-c.c: New file.
+
 2009-06-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Makefile (distribute): Add ifuncmain1staticpie.c,

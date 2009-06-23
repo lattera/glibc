@@ -56,3 +56,6 @@ extern void __init_cpu_features (void) attribute_hidden;
 
 #define HAS_POPCOUNT \
   ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 23)) != 0)
+
+#define HAS_SSE4_2 \
+  ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 20)) != 0)
