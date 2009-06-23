@@ -1,3 +1,7 @@
+2009-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: Update from translation team.
+
 2009-06-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/strncmp.c (STRNCMP): New.  Defined to strncmp if not

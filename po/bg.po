@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.9.90\n"
+"Project-Id-Version: libc 2.10.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-02-28 12:36+0200\n"
+"PO-Revision-Date: 2009-06-23 01:27+0300\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -651,7 +651,7 @@ msgstr "не може да се задели памет в статичен TSL 
 
 #: elf/dl-reloc.c:211
 msgid "cannot make segment writable for relocation"
-msgstr "дялът не може да се маркира като записваем за \"непреместваем код\""
+msgstr "дялът не може да се маркира като записваем за \"преместваем код\""
 
 #: elf/dl-reloc.c:277
 #, c-format
@@ -661,7 +661,7 @@ msgstr "%s: не е намерен PLTREL за обекта %s\n"
 #: elf/dl-reloc.c:288
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
-msgstr "%s: недостиг на памет за съхраняване на резултата за \"непреместваем код\" на %s\n"
+msgstr "%s: недостиг на памет за съхраняване на резултата за \"преместваем код\" на %s\n"
 
 #: elf/dl-reloc.c:304
 msgid "cannot restore segment prot after reloc"
@@ -922,8 +922,8 @@ msgstr ""
 "Употреба: ldd [ОПЦИЯ]... ФАЙЛ...\n"
 "      --help              Извеждане на тази помощ и изход\n"
 "      --version           Извеждане на информация за версията и изход\n"
-"  -d, --data-relocs       Обработване на непреместваеми данни\n"
-"  -r, --function-relocs   Обработване на непреместваеми данни и функции\n"
+"  -d, --data-relocs       Обработване на преместваеми данни\n"
+"  -r, --function-relocs   Обработване на преместваеми данни и функции\n"
 "  -u, --unused            Извеждане на неизползваните директни зависимости\n"
 "  -v, --verbose           Извеждане на подробна информация\n"
 
@@ -1591,7 +1591,7 @@ msgstr "неизвестен знак \"%s\""
 #: locale/programs/charmap.c:888
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
-msgstr "боя на байтовете, в последователност от байтове за начало и край на диапазон, не е същия: %d vs %d"
+msgstr "боя на байтовете, в последователност от байтове за начало и край на диапазон, не е същия: %d с/у %d"
 
 #: locale/programs/charmap.c:993 locale/programs/ld-collate.c:3044
 #: locale/programs/repertoire.c:419
@@ -4791,7 +4791,7 @@ msgstr "не е намерен Си препроцесор: %s \n"
 
 #: sunrpc/rpc_main.c:352
 msgid "cannot find any C preprocessor (cpp)\n"
-msgstr "не е намерен някакъв Си препроцесор (cpp)\n"
+msgstr "не е намерен никакъв Си препроцесор (cpp)\n"
 
 #: sunrpc/rpc_main.c:421
 #, c-format
