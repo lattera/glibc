@@ -11,6 +11,10 @@ static-only-routines += $(aeabi_constants)
 gen-as-const-headers += rtld-global-offsets.sym
 endif
 
+ifeq ($(subdir),debug)
+CFLAGS-backtrace.c += -funwind-tables
+endif
+
 ifeq ($(subdir),elf)
 sysdep_routines += aeabi_unwind_cpp_pr1 find_exidx
 shared-only-routines += aeabi_unwind_cpp_pr1

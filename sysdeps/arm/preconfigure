@@ -11,3 +11,7 @@ arm*)
 	esac
 	;;
 esac
+if [ "${CFLAGS+set}" != "set" ]; then
+  CFLAGS="-g -O2"
+fi
+CFLAGS="$CFLAGS -fno-unwind-tables"

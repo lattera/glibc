@@ -1,5 +1,5 @@
 /* Header file for the ARM EABI unwinder
-   Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2009  Free Software Foundation, Inc.
    Contributed by Paul Brook
 
    This file is free software; you can redistribute it and/or modify it
@@ -266,6 +266,11 @@ extern "C" {
      landing pad uses the same instruction set as the call site.  */
 #define _Unwind_SetIP(context, val) \
   _Unwind_SetGR (context, 15, val | (_Unwind_GetGR (context, 15) & 1))
+
+typedef _Unwind_Reason_Code (*_Unwind_Trace_Fn)
+     (struct _Unwind_Context *, void *);
+
+extern _Unwind_Reason_Code _Unwind_Backtrace (_Unwind_Trace_Fn, void *);
 
 #ifdef __cplusplus
 }   /* extern "C" */

@@ -1,3 +1,19 @@
+2009-06-24  Maxim Kuvyrkov  <maxim@codesourcery.com>
+            Mark Mitchell  <mark@codesourcery.com>
+            Joseph Myers  <joseph@codesourcery.com>
+            Kazu Hirata  <kazu@codesourcery.com>
+
+	* sysdeps/arm/eabi/backtrace.c: New.
+	* sysdeps/arm/eabi/Makefile (CFLAGS-backtrace.c): Add
+	-funwind-tables.
+	* sysdeps/arm/preconfigure: Add -fno-unwind-tables to CFLAGS.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure.in: Remove
+	-fno-unwind-tables from CFLAGS.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind.h (_Unwind_Trace_Fn):
+	Define.
+	(_Unwind_Backtrace): Declare.
+
 2009-05-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/____longjmp_chk.S (CHECK_SP): Use unsigned
