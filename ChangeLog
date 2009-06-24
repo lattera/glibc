@@ -1,3 +1,11 @@
+2009-06-24  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Fix cfa offset
+	for saved registers.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+
 2009-06-23  Andreas Schwab  <aschwab@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Don't use an empty TZ string.

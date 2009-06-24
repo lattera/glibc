@@ -60,8 +60,8 @@ EALIGN (__sqrt, 5, 0)
 	fmr	fp12,fp2
 	stw	r0,20(r1)
 	stw	r30,8(r1)
-	cfi_offset(lr,20)
-	cfi_offset(r30,8)
+	cfi_offset(lr,20-16)
+	cfi_offset(r30,8-16)
 #ifdef SHARED
 # ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,.LCF1
