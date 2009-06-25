@@ -81,4 +81,19 @@ eabi_constant (TMP_MAX);
 eabi_constant (FILENAME_MAX);
 eabi_constant (L_tmpnam);
 
+FILE *__aeabi_stdin attribute_hidden;
+FILE *__aeabi_stdout attribute_hidden;
+FILE *__aeabi_stderr attribute_hidden;
+
+static void __attribute__ ((used))
+setup_aeabi_stdio (void)
+{
+  __aeabi_stdin = stdin;
+  __aeabi_stdout = stdout;
+  __aeabi_stderr = stderr;
+}
+
+static void (*fp) (void) __attribute__ ((used, section (".preinit_array")))
+  = setup_aeabi_stdio;
+
 eabi_constant (CLOCKS_PER_SEC);

@@ -1,3 +1,9 @@
+2009-06-25  Nathan Froyd  <froydnj@codesourcery.com>
+
+	* sysdeps/arm/eabi/aeabi_lcsts.c (__aeabi_stdin, __aeabi_stdout,
+	__aeabi_stderr): New variables.
+	(setup_aeabi_stdio): New function.  Add it to .preinit_array.
+
 2009-06-24  Maxim Kuvyrkov  <maxim@codesourcery.com>
             Mark Mitchell  <mark@codesourcery.com>
             Joseph Myers  <joseph@codesourcery.com>
