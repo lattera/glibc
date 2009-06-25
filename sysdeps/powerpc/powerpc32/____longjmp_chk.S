@@ -26,11 +26,30 @@
 
 #define __longjmp ____longjmp_chk
 
+#ifdef PIC
+# ifdef HAVE_ASM_PPC_REL16
+#  define LOAD_ARG \
+	bcl	20,31,1f;				\
+1:	mflr	r3;					\
+	addis	r3,r3,_GLOBAL_OFFSET_TABLE_-1b@ha;	\
+	addi	r3,r3,_GLOBAL_OFFSET_TABLE_-1b@l;	\
+	lwz	r3,.LC0@got(r3)
+# else
+#  define LOAD_ARG \
+	bl	_GLOBAL_OFFSET_TABLE_-4@local;		\
+	mflr	r3;					\
+	lwz	r3,.LC0@got(r3)
+# endif
+#else
+# define LOAD_ARG \
+	lis	r3,.LC0@ha;				\
+	la	r3,.LC0@l(r3)
+#endif
+
 #define CHECK_SP(reg) \
 	cmplw	reg, r1;				\
 	bge+	.Lok;					\
-	lis	r3,.LC0@ha;				\
-	la	r3,.LC0@l(r3);				\
+	LOAD_ARG;					\
 	bl	HIDDEN_JUMPTARGET (__fortify_fail);	\
 .Lok:
 
