@@ -2,7 +2,7 @@
 
 	* sysdeps/powerpc/powerpc32/____longjmp_chk.S (LOAD_ARG): Define.
 	(CHECK_SP): Use it.
-		
+
 2009-06-24  Andreas Schwab  <aschwab@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Fix cfa offset
