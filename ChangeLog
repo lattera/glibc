@@ -1,3 +1,14 @@
+2009-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h: Define RES_SNGLKUPREOP.
+	* resolv/res_init.c (res_setoptions): Recognize single-request-reopen
+	option.
+	* resolv/res_send.c (reopen): New function.  Broken out of...
+	(send_dg): ... here.  Recognize RES_SNGLKUPREOP.  Implement second
+	fallback mechanism.  If single-request fails switch to
+	single-request-reopen mode which opens a new socket for the second
+	request.
+
 2009-06-25  Andreas Schwab  <aschwab@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/____longjmp_chk.S (LOAD_ARG): Define.

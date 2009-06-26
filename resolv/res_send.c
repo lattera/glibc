@@ -908,24 +908,11 @@ send_vc(res_state statp,
 }
 
 static int
-send_dg(res_state statp,
-	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
-	u_char **ansp, int *anssizp,
-	int *terrno, int ns, int *v_circuit, int *gotsomewhere, u_char **anscp,
-	u_char **ansp2, int *anssizp2, int *resplen2)
+reopen (res_state statp, int *terrno, int ns)
 {
-	const HEADER *hp = (HEADER *) buf;
-	const HEADER *hp2 = (HEADER *) buf2;
-	u_char *ans = *ansp;
-	int orig_anssizp = *anssizp;
-	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
-	struct timespec now, timeout, finish;
-	struct pollfd pfd[1];
-        int ptimeout;
-	struct sockaddr_in6 from;
-	int resplen, n;
-
 	if (EXT(statp).nssocks[ns] == -1) {
+		struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
+
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if ((EXT(statp).nscount6 > 0) && !statp->ipv6_unavail) {
 			if (__builtin_expect (__have_o_nonblock >= 0, 1)) {
@@ -1000,6 +987,26 @@ send_dg(res_state statp,
 		}
 	}
 
+	return 1;
+}
+
+static int
+send_dg(res_state statp,
+	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
+	u_char **ansp, int *anssizp,
+	int *terrno, int ns, int *v_circuit, int *gotsomewhere, u_char **anscp,
+	u_char **ansp2, int *anssizp2, int *resplen2)
+{
+	const HEADER *hp = (HEADER *) buf;
+	const HEADER *hp2 = (HEADER *) buf2;
+	u_char *ans = *ansp;
+	int orig_anssizp = *anssizp;
+	struct timespec now, timeout, finish;
+	struct pollfd pfd[1];
+        int ptimeout;
+	struct sockaddr_in6 from;
+	int resplen, n;
+
 	/*
 	 * Compute time for the total operation.
 	 */
@@ -1008,8 +1015,15 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	bool single_request = (statp->options & RES_SNGLKUP) != 0;// XXX
+	bool single_request = (statp->options & RES_SNGLKUP) != 0;
+	bool single_request_reopen = (statp->options & RES_SNGLKUPREOP) != 0;
 	int save_gotsomewhere = *gotsomewhere;
+
+	int retval;
+ retry_reopen:
+	retval = reopen (statp, terrno, ns);
+	if (retval <= 0)
+		return retval;
  retry:
 	evNowTime(&now);
 	evConsTime(&timeout, seconds, 0);
@@ -1064,6 +1078,14 @@ send_dg(res_state statp,
 			*gotsomewhere = save_gotsomewhere;
 			goto retry;
 		      }
+		    else if (!single_request_reopen)
+		      {
+			statp->options |= RES_SNGLKUPREOP;
+			single_request_reopen = true;
+			*gotsomewhere = save_gotsomewhere;
+			__res_iclose (statp, false);
+			goto retry_reopen;
+		      }
 
 		    *resplen2 = 1;
 		    return resplen;
@@ -1092,7 +1114,8 @@ send_dg(res_state statp,
 			Perror(statp, stderr, "send", errno);
 			goto err_out;
 		}
-		if (nwritten != 0 || buf2 == NULL || single_request)
+		if (nwritten != 0 || buf2 == NULL
+		    || single_request || single_request_reopen)
 		  pfd[0].events = POLLIN;
 		else
 		  pfd[0].events = POLLIN | POLLOUT;
@@ -1306,8 +1329,15 @@ send_dg(res_state statp,
 			recvresp2 = 1;
 		/* Repeat waiting if we have a second answer to arrive.  */
 		if ((recvresp1 & recvresp2) == 0) {
-			if (single_request)
+			if (single_request || single_request_reopen) {
 				pfd[0].events = POLLOUT;
+				if (single_request_reopen) {
+					__res_iclose (statp, false);
+					retval = reopen (statp, terrno, ns);
+					if (retval <= 0)
+						return retval;
+				}
+			}
 			goto wait;
 		}
 		/*
