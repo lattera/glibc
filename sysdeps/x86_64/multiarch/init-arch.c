@@ -62,12 +62,12 @@ __init_cpu_features (void)
       unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
       unsigned int extended_family = (eax >> 20) & 0xff;
       unsigned int extended_model = (eax >> 12) & 0xf0;
-      if (family == 0x0f)
+      if (__cpu_features.family == 0x0f)
 	{
 	  __cpu_features.family += extended_family;
 	  __cpu_features.model += extended_model;
 	}
-      else if (family == 0x06)
+      else if (__cpu_features.family == 0x06)
 	__cpu_features.model += extended_model;
     }
   /* This spells out "AuthenticAMD".  */
