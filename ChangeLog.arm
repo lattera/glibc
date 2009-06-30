@@ -1,3 +1,9 @@
+2009-06-30  Paul Brook  <paul@codesourcery.com>
+
+	* sysdeps/arm/eabi/Makefile (CFLAGS-initfini.s): Add
+	-fno-asynchronous-unwind-tables -fno-unwind-tables.
+	(CFLAGS-pt-initfini.s): Ditto.
+
 2009-06-25  Nathan Froyd  <froydnj@codesourcery.com>
 
 	* sysdeps/arm/eabi/aeabi_lcsts.c (__aeabi_stdin, __aeabi_stdout,
