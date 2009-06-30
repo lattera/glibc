@@ -24,6 +24,22 @@
 struct cpu_features __cpu_features attribute_hidden;
 
 
+static void
+get_common_indeces (void)
+{
+  asm volatile ("cpuid"
+		: "=a" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax),
+		  "=b" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx),
+		  "=c" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx),
+		  "=d" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx)
+		: "0" (1));
+
+  unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
+  __cpu_features.family = (eax >> 8) & 0x0f;
+  __cpu_features.model = (eax >> 4) & 0x0f;
+}
+
+
 void
 __init_cpu_features (void)
 {
@@ -41,20 +57,25 @@ __init_cpu_features (void)
     {
       __cpu_features.kind = arch_kind_intel;
 
-    get_common_cpuid:
-      asm volatile ("cpuid"
-		    : "=a" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax),
-		      "=b" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx),
-		      "=c" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx),
-		      "=d" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx)
-		    : "0" (1));
+      get_common_indeces ();
+
+      unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
+      unsigned int extended_family = (eax >> 20) & 0xff;
+      unsigned int extended_model = (eax >> 12) & 0xf0;
+      if (family == 0x0f)
+	{
+	  __cpu_features.family += extended_family;
+	  __cpu_features.model += extended_model;
+	}
+      else if (family == 0x06)
+	__cpu_features.model += extended_model;
     }
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
     {
       __cpu_features.kind = arch_kind_amd;
 
-      goto get_common_cpuid;
+      get_common_indeces ();
     }
   else
     __cpu_features.kind = arch_kind_other;

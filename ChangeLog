@@ -1,3 +1,13 @@
+2009-06-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym (FAMILIY_OFFSET): Define.
+	(MODEL_OFFSET): Define.
+	* sysdeps/x86_64/multiarch/init-arch.h (cpu_features): Add
+	family and model.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Break
+	out common code into new function get_common_indeces. Determine
+	extended family and model for Intel processors.
+
 2009-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/resolv.h: Define RES_SNGLKUPREOP.

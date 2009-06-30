@@ -42,6 +42,8 @@ extern struct cpu_features
     unsigned int ecx;
     unsigned int edx;
   } cpuid[COMMON_CPUID_INDEX_MAX];
+  unsigned int family;
+  unsigned int model;
 } __cpu_features attribute_hidden;
 
 
