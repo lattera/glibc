@@ -82,7 +82,7 @@ DB_LOOKUP (netbyname, ,,
 DB_LOOKUP (netbyaddr, ,,
 	   {
 	     if ((type == AF_UNSPEC || result->n_addrtype == type)
-		 && result->n_net == htonl (net))
+		 && result->n_net == net)
 	       /* Bingo!  */
 	       break;
 	   }, uint32_t net, int type)
