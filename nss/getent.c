@@ -534,7 +534,7 @@ networks_keys (int number, char *key[])
   for (i = 0; i < number; ++i)
     {
       if (isdigit (key[i][0]))
-	net = getnetbyaddr (inet_addr (key[i]), AF_UNIX);
+	net = getnetbyaddr (inet_addr (key[i]), AF_UNSPEC);
       else
 	net = getnetbyname (key[i]);
 
