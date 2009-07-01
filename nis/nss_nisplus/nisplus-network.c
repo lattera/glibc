@@ -433,7 +433,7 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
     char buf2[18];
     int olderr = errno;
 
-    struct in_addr in = inet_makeaddr (addr, 0);
+    struct in_addr in = { .s_addr = htonl (addr) };
     strcpy (buf2, inet_ntoa (in));
     size_t b2len = strlen (buf2);
 

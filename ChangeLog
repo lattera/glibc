@@ -1,5 +1,10 @@
 2009-07-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyaddr_r): Don't use
+	inet_makeaddr.  This worked only with class-based networks.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Likewise.
+
 	* nss/nss_files/files-network.c (netbyaddr): If type is AF_UNSPEC,
 	recognize all types.
 	* nss/getent.c (networks_keys): Pass AF_UNSPEC instead of AF_UNIX

@@ -241,7 +241,7 @@ _nss_nis_getnetbyaddr_r (uint32_t addr, int type, struct netent *net,
   if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
 
-  struct in_addr in = inet_makeaddr (addr, 0);
+  struct in_addr in = { .s_addr = htonl (addr) };
   char *buf = inet_ntoa (in);
   size_t blen = strlen (buf);
 
