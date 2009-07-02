@@ -1,3 +1,22 @@
+2009-06-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/stpncpy.c (STPNCPY): New.  Defined if not defined.
+	(__stpncpy): Renamed to ...
+	(STPNCPY): This.
+	(stpncpy): Create alias only if STPNCPY is not defined.
+	* string/strncpy.c (STRNCPY): New.  Defined to strncpy if not
+	defined.
+	(strncpy): Renamed to ...
+	(STRNCPY): This.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	 stpncpy-c strncpy-c for string.
+	* sysdeps/x86_64/multiarch/stpcpy.S: New file.
+	* sysdeps/x86_64/multiarch/stpncpy-c.c: New file.
+	* sysdeps/x86_64/multiarch/stpncpy.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy.S: New file.
+	* sysdeps/x86_64/multiarch/strncpy-c.c: New file.
+	* sysdeps/x86_64/multiarch/strncpy.S: New file.
+
 2009-07-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c [ATOMIC_FASTBINS] (_int_free): Add full barrier when

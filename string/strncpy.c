@@ -21,11 +21,12 @@
 
 #undef strncpy
 
+#ifndef STRNCPY
+#define STRNCPY strncpy
+#endif
+
 char *
-strncpy (s1, s2, n)
-     char *s1;
-     const char *s2;
-     size_t n;
+STRNCPY (char *s1, const char *s2, size_t n)
 {
   reg_char c;
   char *s = s1;
