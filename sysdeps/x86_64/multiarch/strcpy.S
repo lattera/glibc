@@ -178,7 +178,7 @@ STRCPY_SSSE3:
 LABEL(ashr_0):
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_aligned)
+	jbe	LABEL(strncpy_truncation_aligned)
 #endif
 	movdqa  (%rsi), %xmm1	   /* fetch first 16 bytes from rsi */
 	movdqa  %xmm1, (%rdi)	   /* store first 16 bytes into rdi */
@@ -266,7 +266,7 @@ LABEL(ashr_15_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $15, (%rsi, %rcx), %xmm3
@@ -285,7 +285,7 @@ LABEL(ashr_15_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $15, (%rsi, %rcx), %xmm3
@@ -322,7 +322,7 @@ LABEL(ashr_14_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $14, (%rsi, %rcx), %xmm3
@@ -341,7 +341,7 @@ LABEL(ashr_14_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $14, (%rsi, %rcx), %xmm3
@@ -378,7 +378,7 @@ LABEL(ashr_13_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $13, (%rsi, %rcx), %xmm3
@@ -397,7 +397,7 @@ LABEL(ashr_13_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $13, (%rsi, %rcx), %xmm3
@@ -434,7 +434,7 @@ LABEL(ashr_12_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $12, (%rsi, %rcx), %xmm3
@@ -453,7 +453,7 @@ LABEL(ashr_12_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $12, (%rsi, %rcx), %xmm3
@@ -490,7 +490,7 @@ LABEL(ashr_11_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $11, (%rsi, %rcx), %xmm3
@@ -509,7 +509,7 @@ LABEL(ashr_11_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $11, (%rsi, %rcx), %xmm3
@@ -546,7 +546,7 @@ LABEL(ashr_10_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $10, (%rsi, %rcx), %xmm3
@@ -565,7 +565,7 @@ LABEL(ashr_10_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $10, (%rsi, %rcx), %xmm3
@@ -602,7 +602,7 @@ LABEL(ashr_9_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $9, (%rsi, %rcx), %xmm3
@@ -621,7 +621,7 @@ LABEL(ashr_9_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $9, (%rsi, %rcx), %xmm3
@@ -658,7 +658,7 @@ LABEL(ashr_8_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $8, (%rsi, %rcx), %xmm3
@@ -677,7 +677,7 @@ LABEL(ashr_8_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $8, (%rsi, %rcx), %xmm3
@@ -714,7 +714,7 @@ LABEL(ashr_7_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $7, (%rsi, %rcx), %xmm3
@@ -733,7 +733,7 @@ LABEL(ashr_7_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $7, (%rsi, %rcx), %xmm3
@@ -770,7 +770,7 @@ LABEL(ashr_6_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $6, (%rsi, %rcx), %xmm3
@@ -789,7 +789,7 @@ LABEL(ashr_6_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $6, (%rsi, %rcx), %xmm3
@@ -826,7 +826,7 @@ LABEL(ashr_5_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $5, (%rsi, %rcx), %xmm3
@@ -845,7 +845,7 @@ LABEL(ashr_5_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $5, (%rsi, %rcx), %xmm3
@@ -883,7 +883,7 @@ LABEL(ashr_4_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $4, (%rsi, %rcx), %xmm3
@@ -902,7 +902,7 @@ LABEL(ashr_4_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $4, (%rsi, %rcx), %xmm3
@@ -940,7 +940,7 @@ LABEL(ashr_3_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $3, (%rsi, %rcx), %xmm3
@@ -959,7 +959,7 @@ LABEL(ashr_3_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $3, (%rsi, %rcx), %xmm3
@@ -997,7 +997,7 @@ LABEL(ashr_2_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $2, (%rsi, %rcx), %xmm3
@@ -1016,7 +1016,7 @@ LABEL(ashr_2_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $2, (%rsi, %rcx), %xmm3
@@ -1054,7 +1054,7 @@ LABEL(ashr_1_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 
 	palignr $1, (%rsi, %rcx), %xmm3
@@ -1072,7 +1072,7 @@ LABEL(ashr_1_use_ssse3):
 	jnz	LABEL(unaligned_exit)
 #ifdef USE_AS_STRNCPY
 	sub	$16, %r8
- 	jbe	LABEL(strncpy_truncation_unaligned)
+	jbe	LABEL(strncpy_truncation_unaligned)
 #endif
 	palignr $1, (%rsi, %rcx), %xmm3
 	movdqa  %xmm3, (%rdi, %rcx)
