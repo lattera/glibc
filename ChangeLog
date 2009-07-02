@@ -1,5 +1,18 @@
 2009-06-30  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/Makefile (distribute): Remove tst-audit.sh.  Add
+	tst-audit2.c, tst-audit3.c, tst-auditmod3a.c, tst-auditmod3b.c.
+	(tests): Add tst-audit3 for x86_64.
+	(modules-names): Add tst-auditmod3a, tst-auditmod3b.
+	($(objpfx)tst-audit3): Define.
+	($(objpfx)tst-audit3.out): Define.
+	(tst-audit3-ENV): Define.
+	* elf/tst-audit3.c: New file.
+	* elf/tst-auditmod3a.c: New file.
+	* elf/tst-auditmod3b.c: New file.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Save
+	and restore xmm6.
+
 	* string/stpncpy.c (STPNCPY): New.  Defined if not defined.
 	(__stpncpy): Renamed to ...
 	(STPNCPY): This.

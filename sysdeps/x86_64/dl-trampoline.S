@@ -107,7 +107,8 @@ _dl_runtime_profile:
 	movaps %xmm3, 112(%rsp)
 	movaps %xmm4, 128(%rsp)
 	movaps %xmm5, 144(%rsp)
-	movaps %xmm7, 160(%rsp)
+	movaps %xmm6, 160(%rsp)
+	movaps %xmm7, 176(%rsp)
 
 	movq %rsp, %rcx		# La_x86_64_regs pointer to %rcx.
 	movq 48(%rbx), %rdx	# Load return address if needed.
@@ -128,7 +129,8 @@ _dl_runtime_profile:
 	movaps 112(%rsp), %xmm3
 	movaps 128(%rsp), %xmm4
 	movaps 144(%rsp), %xmm5
-	movaps 160(%rsp), %xmm7
+	movaps 160(%rsp), %xmm6
+	movaps 176(%rsp), %xmm7
 
 	movq 16(%rbx), %r10	# Anything in framesize?
 	testq %r10, %r10
