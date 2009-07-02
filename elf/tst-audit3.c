@@ -12,7 +12,7 @@ main (void)
 {
   __m128i xmm = _mm_setzero_si128 ();
   __m128i ret = audit_test (xmm, xmm, xmm, xmm, xmm, xmm, xmm, xmm);
-  
+
   if (memcmp (&xmm, &ret, sizeof (ret)))
     abort ();
 
