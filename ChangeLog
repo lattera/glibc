@@ -1,3 +1,19 @@
+2009-07-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (HAVE_SSE4_SUPPORT): New macro.
+	* config.make.in (config-cflags-sse4): New variable.
+	* configure.in: Substitute libc_cv_cc_sse4.
+	* sysdeps/i386/configure.in: Set libc_cv_cc_sse4 and
+	HAVE_SSE4_SUPPORT.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcspn-c, strpbrk-c, strspn-c for string if gcc supports SSE4.
+	* sysdeps/x86_64/multiarch/strcspn-c.c: New file.
+	* sysdeps/x86_64/multiarch/strcspn.S: New file.
+	* sysdeps/x86_64/multiarch/strpbrk-c.c: New file.
+	* sysdeps/x86_64/multiarch/strpbrk.S: New file.
+	* sysdeps/x86_64/multiarch/strspn-c.c: New file.
+	* sysdeps/x86_64/multiarch/strspn.S: New file.
+
 2009-06-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Makefile (distribute): Remove tst-audit.sh.  Add

@@ -1,10 +1,42 @@
+as_nl='
+'
+export as_nl
+# Printing a long string crashes Solaris 7 /usr/bin/printf.
+as_echo='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'
+as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo
+as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo$as_echo
+if (test "X`printf %s $as_echo`" = "X$as_echo") 2>/dev/null; then
+  as_echo='printf %s\n'
+  as_echo_n='printf %s'
+else
+  if test "X`(/usr/ucb/echo -n -n $as_echo) 2>/dev/null`" = "X-n $as_echo"; then
+    as_echo_body='eval /usr/ucb/echo -n "$1$as_nl"'
+    as_echo_n='/usr/ucb/echo -n'
+  else
+    as_echo_body='eval expr "X$1" : "X\\(.*\\)"'
+    as_echo_n_body='eval
+      arg=$1;
+      case $arg in
+      *"$as_nl"*)
+	expr "X$arg" : "X\\(.*\\)$as_nl";
+	arg=`expr "X$arg" : ".*$as_nl\\(.*\\)"`;;
+      esac;
+      expr "X$arg" : "X\\(.*\\)" | tr -d "$as_nl"
+    '
+    export as_echo_n_body
+    as_echo_n='sh -c $as_echo_n_body as_echo'
+  fi
+  export as_echo_body
+  as_echo='sh -c $as_echo_body as_echo'
+fi
+
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/i386.
 
-echo "$as_me:$LINENO: checking if -g produces usable source locations for assembler-with-cpp" >&5
-echo $ECHO_N "checking if -g produces usable source locations for assembler-with-cpp... $ECHO_C" >&6
+{ $as_echo "$as_me:$LINENO: checking if -g produces usable source locations for assembler-with-cpp" >&5
+$as_echo_n "checking if -g produces usable source locations for assembler-with-cpp... " >&6; }
 if test "${libc_cv_cpp_asm_debuginfo+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
   cat > conftest.S <<EOF
 #include "confdefs.h"
@@ -27,7 +59,7 @@ if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; } && {
    ac_pattern='conftest\.S'
    { ac_try='readelf --debug-dump=line conftest.o |
@@ -35,7 +67,7 @@ if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }
   }; then
   libc_cv_cpp_asm_debuginfo=yes
@@ -44,11 +76,36 @@ else
 fi
 rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_cpp_asm_debuginfo" >&5
-echo "${ECHO_T}$libc_cv_cpp_asm_debuginfo" >&6
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_cpp_asm_debuginfo" >&5
+$as_echo "$libc_cv_cpp_asm_debuginfo" >&6; }
 if test $libc_cv_cpp_asm_debuginfo = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_CPP_ASM_DEBUGINFO 1
+_ACEOF
+
+fi
+
+{ $as_echo "$as_me:$LINENO: checking for SSE4 support" >&5
+$as_echo_n "checking for SSE4 support... " >&6; }
+if test "${libc_cv_cc_sse4+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} -msse4 -xc /dev/null -S -o /dev/null'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_cc_sse4=yes
+else
+  libc_cv_cc_sse4=no
+fi
+fi
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_cc_sse4" >&5
+$as_echo "$libc_cv_cc_sse4" >&6; }
+if test $libc_cv_cc_sse4 = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_SSE4_SUPPORT 1
 _ACEOF
 
 fi

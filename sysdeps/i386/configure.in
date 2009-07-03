@@ -33,3 +33,14 @@ rm -f conftest*])AC_SUBST(libc_cv_cpp_asm_debuginfo)
 if test $libc_cv_cpp_asm_debuginfo = yes; then
   AC_DEFINE(HAVE_CPP_ASM_DEBUGINFO)
 fi
+
+dnl Check if -msse4 works.
+AC_CACHE_CHECK(for SSE4 support, libc_cv_cc_sse4, [dnl
+if AC_TRY_COMMAND([${CC-cc} -msse4 -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_sse4=yes
+else
+  libc_cv_cc_sse4=no
+fi])
+if test $libc_cv_cc_sse4 = yes; then
+  AC_DEFINE(HAVE_SSE4_SUPPORT)
+fi

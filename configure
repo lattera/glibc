@@ -657,6 +657,7 @@ xcoff
 elf
 ldd_rewrite_script
 use_ldconfig
+libc_cv_cc_sse4
 libc_cv_cpp_asm_debuginfo
 libc_cv_forced_unwind
 libc_cv_rootsbindir
@@ -8730,6 +8731,7 @@ $as_echo "$as_me: WARNING: *** During \"make install\" old headers from glibc 2.
   { $as_echo "$as_me:$LINENO: WARNING: *** be removed." >&5
 $as_echo "$as_me: WARNING: *** be removed." >&2;}
 fi
+
 
 
 
