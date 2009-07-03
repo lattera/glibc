@@ -77,6 +77,7 @@ __rawmemchr_sse42:
 # undef ENTRY
 # define ENTRY(name) \
 	.type __rawmemchr_sse2, @function; \
+	.align 16; \
 	__rawmemchr_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

@@ -1,3 +1,11 @@
+2009-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strcmp.S: Make sure functions are all
+	aligned to 16 byte boundaries.
+	* sysdeps/x86_64/multiarch/strcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Likewise.
+
 2009-07-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.h.in (HAVE_SSE4_SUPPORT): New macro.

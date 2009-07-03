@@ -1896,6 +1896,7 @@ LABEL(unaligned_table):
 # undef ENTRY
 # define ENTRY(name) \
 	.type STRCPY_SSE2, @function; \
+	.align 16; \
 	STRCPY_SSE2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

@@ -77,6 +77,7 @@ __strlen_sse42:
 # undef ENTRY
 # define ENTRY(name) \
 	.type __strlen_sse2, @function; \
+	.align 16; \
 	__strlen_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
