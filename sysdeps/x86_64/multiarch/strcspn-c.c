@@ -54,8 +54,14 @@
    X for case 1.  */
 
 #ifndef STRCSPN_SSE2
-#define STRCSPN_SSE2 __strcspn_sse2
-#define STRCSPN_SSE42 __strcspn_sse42
+# define STRCSPN_SSE2 __strcspn_sse2
+# define STRCSPN_SSE42 __strcspn_sse42
+#endif
+
+#ifdef USE_AS_STRPBRK
+# define RETURN(val1, val2) return val1
+#else
+# define RETURN(val1, val2) return val2
 #endif
 
 extern
@@ -66,6 +72,7 @@ size_t
 #endif
 STRCSPN_SSE2 (const char *, const char *);
 
+
 #ifdef USE_AS_STRPBRK
 char *
 #else
@@ -74,26 +81,17 @@ size_t
 __attribute__ ((section (".text.sse4.2")))
 STRCSPN_SSE42 (const char *s, const char *a)
 {
-  int offset;
-  const char *aligned;
-  __m128i mask, mask0, mask1;
-  __m128i value;
-  int index, length;
-  int cflag, zflag;
-
   if (*a == 0)
-#ifdef USE_AS_STRPBRK
-    return NULL;
-#else
-    return strlen (s);
-#endif
+    RETURN (NULL, strlen (s));
 
-  offset = (int) ((size_t) a & 15);
+  const char *aligned;
+  __m128i mask;
+  int offset = (int) ((size_t) a & 15);
   if (offset != 0)
     {
       /* Load masks.  */
       aligned = (const char *) ((size_t) a & 0xfffffffffffffff0L);
-      mask0 = _mm_load_si128 ((__m128i *) aligned);
+      __m128i mask0 = _mm_load_si128 ((__m128i *) aligned);
 
       switch (offset)
 	{
@@ -145,12 +143,12 @@ STRCSPN_SSE42 (const char *s, const char *a)
 	}
 
       /* Find where the NULL terminator is.  */
-      length = _mm_cmpistri (mask, mask, 0x3a);
+      int length = _mm_cmpistri (mask, mask, 0x3a);
       if (length == 16 - offset)
 	{
 	  /* There is no NULL terminator.  */
-	  mask1 = _mm_load_si128 ((__m128i *) (aligned + 16));
-	  index = _mm_cmpistri (mask1, mask1, 0x3a);
+	  __m128i mask1 = _mm_load_si128 ((__m128i *) (aligned + 16));
+	  int index = _mm_cmpistri (mask1, mask1, 0x3a);
 	  length += index;
 
 	  /* Don't use SSE4.2 if the length of A > 16.  */
@@ -217,7 +215,7 @@ STRCSPN_SSE42 (const char *s, const char *a)
       mask = _mm_load_si128 ((__m128i *) a);
 
       /* Find where the NULL terminator is.  */
-      length = _mm_cmpistri (mask, mask, 0x3a);
+      int length = _mm_cmpistri (mask, mask, 0x3a);
       if (length == 16)
 	{
 	  /* There is no NULL terminator.  Don't use SSE4.2 if the length
@@ -232,7 +230,7 @@ STRCSPN_SSE42 (const char *s, const char *a)
     {
       /* Check partial string.  */
       aligned = (const char *) ((size_t) s & 0xfffffffffffffff0L);
-      value = _mm_load_si128 ((__m128i *) aligned);
+      __m128i value = _mm_load_si128 ((__m128i *) aligned);
 
       switch (offset)
 	{
@@ -283,49 +281,32 @@ STRCSPN_SSE42 (const char *s, const char *a)
 	  break;
 	}
 
-      length = _mm_cmpistri (mask, value, 0x2);
+      int length = _mm_cmpistri (mask, value, 0x2);
       /* No need to check ZFlag since ZFlag is always 1.  */
-      cflag = _mm_cmpistrc (mask, value, 0x2);
+      int cflag = _mm_cmpistrc (mask, value, 0x2);
       if (cflag)
-#ifdef USE_AS_STRPBRK
-	return (char *) (s + length);
-#else
-	return length;
-#endif
+	RETURN ((char *) (s + length), length);
       /* Find where the NULL terminator is.  */
-      index = _mm_cmpistri (value, value, 0x3a);
+      int index = _mm_cmpistri (value, value, 0x3a);
       if (index < 16 - offset)
-#ifdef USE_AS_STRPBRK
-	return NULL;
-#else
-	return index;
-#endif
+	RETURN (NULL, index);
       aligned += 16;
     }
   else
     aligned = s;
 
-loop:
-  value = _mm_load_si128 ((__m128i *) aligned);
-  index = _mm_cmpistri (mask, value, 0x2);
-  cflag = _mm_cmpistrc (mask, value, 0x2);
-  zflag = _mm_cmpistrz (mask, value, 0x2);
-  if (cflag)
-#ifdef USE_AS_STRPBRK
-    return (char *) (aligned + index);
-#else
-    return (size_t) (aligned + index - s);
-#endif
-  if (zflag)
-#ifdef USE_AS_STRPBRK
-    return NULL;
-#else
+  while (1)
     {
-      /* Find where the NULL terminator is.  */
-      index = _mm_cmpistri (value, value, 0x3a);
-      return (size_t) (aligned + index - s);
+      __m128i value = _mm_load_si128 ((__m128i *) aligned);
+      int index = _mm_cmpistri (mask, value, 0x2);
+      int cflag = _mm_cmpistrc (mask, value, 0x2);
+      int zflag = _mm_cmpistrz (mask, value, 0x2);
+      if (cflag)
+	RETURN ((char *) (aligned + index), (size_t) (aligned + index - s));
+      if (zflag)
+	RETURN (NULL,
+		/* Find where the NULL terminator is.  */
+		(size_t) (aligned + _mm_cmpistri (value, value, 0x3a) - s));
+      aligned += 16;
     }
-#endif
-  aligned += 16;
-  goto loop;
 }
