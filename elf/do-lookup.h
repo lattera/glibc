@@ -87,13 +87,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			      0))
 	  return NULL;
 
-	if (__builtin_expect (stt > STT_FUNC
-			      && stt != STT_COMMON
-			      && stt != STT_TLS
-			      && stt != STT_GNU_IFUNC, 0))
-	  /* Ignore all but STT_NOTYPE, STT_OBJECT, STT_FUNC, STT_COMMON,
-	     STT_TLS, and STT_GNU_IFUNC since these are no code/data
-	     definitions.  */
+	/* Ignore all but STT_NOTYPE, STT_OBJECT, STT_FUNC,
+	   STT_COMMON, STT_TLS, and STT_GNU_IFUNC since these are no
+	   code/data definitions.  */
+#define ALLOWED_STT \
+	((1 << STT_NOTYPE) | (1 << STT_OBJECT) | (1 << STT_FUNC) \
+	 | (1 << STT_COMMON) | (1 << STT_TLS) | (1 << STT_GNU_IFUNC))
+	if (__builtin_expect (((1 << stt) & ALLOWED_STT) == 0, 0))
 	  return NULL;
 
 	if (sym != ref && strcmp (strtab + sym->st_name, undef_name))

@@ -1,3 +1,7 @@
+2009-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h (ALLOWED_STT): Optimize test for valid symbol types.
+
 2009-07-03  Andreas Schwab  <aschwab@redhat.com>
 
 	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_ARCH_2_06): Fix value.
