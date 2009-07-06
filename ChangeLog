@@ -1,3 +1,8 @@
+2009-07-03  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_ARCH_2_06): Fix value.
+	(PPC_FEATURE_HAS_VSX): Likewise.
+
 2009-07-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strcspn-c.c: Minor cleanups.
