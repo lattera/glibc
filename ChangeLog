@@ -1,3 +1,10 @@
+2009-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-misc.c (_dl_higher_prime_number): New function.  Moved here
+	from...
+	* include/inline-hashtab.h: ...here.
+	(htab_expand): Adjust for renamed function.  Correct memory handling.
+
 2009-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h (ALLOWED_STT): Optimize test for valid symbol types.

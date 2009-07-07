@@ -1,7 +1,5 @@
 /* Fully-inline hash table, used mainly for managing TLS descriptors.
-
-   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2008
-     Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2005, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva  <aoliva@redhat.com>
 
@@ -29,69 +27,6 @@
 # define INLINE_HASHTAB_H 1
 
 extern void weak_function free (void *ptr);
-
-inline static unsigned long
-higher_prime_number (unsigned long n)
-{
-  /* These are primes that are near, but slightly smaller than, a
-     power of two.  */
-  static const uint32_t primes[] = {
-    UINT32_C (7),
-    UINT32_C (13),
-    UINT32_C (31),
-    UINT32_C (61),
-    UINT32_C (127),
-    UINT32_C (251),
-    UINT32_C (509),
-    UINT32_C (1021),
-    UINT32_C (2039),
-    UINT32_C (4093),
-    UINT32_C (8191),
-    UINT32_C (16381),
-    UINT32_C (32749),
-    UINT32_C (65521),
-    UINT32_C (131071),
-    UINT32_C (262139),
-    UINT32_C (524287),
-    UINT32_C (1048573),
-    UINT32_C (2097143),
-    UINT32_C (4194301),
-    UINT32_C (8388593),
-    UINT32_C (16777213),
-    UINT32_C (33554393),
-    UINT32_C (67108859),
-    UINT32_C (134217689),
-    UINT32_C (268435399),
-    UINT32_C (536870909),
-    UINT32_C (1073741789),
-    UINT32_C (2147483647),
-					/* 4294967291L */
-    UINT32_C (2147483647) + UINT32_C (2147483644)
-  };
-
-  const uint32_t *low = &primes[0];
-  const uint32_t *high = &primes[sizeof (primes) / sizeof (primes[0])];
-
-  while (low != high)
-    {
-      const uint32_t *mid = low + (high - low) / 2;
-      if (n > *mid)
-	low = mid + 1;
-      else
-	high = mid;
-    }
-
-#if 0
-  /* If we've run out of primes, abort.  */
-  if (n > *low)
-    {
-      fprintf (stderr, "Cannot find prime bigger than %lu\n", n);
-      abort ();
-    }
-#endif
-
-  return *low;
-}
 
 struct hashtab
 {
@@ -203,12 +138,11 @@ htab_expand (struct hashtab *htab, int (*hash_fn) (void *))
   /* Resize only when table after removal of unused elements is either
      too full or too empty.  */
   if (htab->n_elements * 2 > htab->size)
-    nsize = higher_prime_number (htab->n_elements * 2);
+    nsize = _dl_higher_prime_number (htab->n_elements * 2);
   else
     nsize = htab->size;
 
-  nentries = malloc (sizeof (void *) * nsize);
-  memset (nentries, 0, sizeof (void *) * nsize);
+  nentries = calloc (sizeof (void *), nsize);
   if (nentries == NULL)
     return 0;
   htab->entries = nentries;
