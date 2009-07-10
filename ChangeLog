@@ -1,5 +1,8 @@
 2009-07-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-lookup.h: Removed after folding content into...
+	* elf/dl-lookup.c: ...here.
+
 	* sysdeps/unix/sysv/linux/sys/epoll.h: Fix comment.
 
 2009-07-09  Ulrich Drepper  <drepper@redhat.com>
