@@ -1,3 +1,37 @@
+2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in: Add HAVE_AVX_SUPPORT entry.
+	* config.make.in: Add config-cflags-avx entry.
+	* configure.in: Substitute libc_cv_cc_avx.
+	* elf/Makefile: Add rules to build and run tst-audit4 and tst-audit5.
+	* elf/tst-audit4.c: New file.
+	* elf/tst-audit5.c: New file.
+	* elf/tst-auditmod4a.c: New file.
+	* elf/tst-auditmod4b.c: New file.
+	* elf/tst-auditmod5a.c: New file.
+	* elf/tst-auditmod5b.c: New file.
+	* sysdeps/x86_64/Makefile (gen-as-const-headers): Add
+	link-defines.sym.
+	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): New.
+	(La_x86_64_vector): Likewise.
+	(La_x86_64_regs): Append lr_vector.
+	(La_x86_64_retval): Append lr_vector0/lrv_vector1.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Move
+	saving and restoring SSE registers to ...
+	* sysdeps/x86_64/dl-trampoline.h: This.  New file.
+	* sysdeps/x86_64/dl-trampoline.S: Include <config.h> and
+	<link-defines.h>.
+	(_dl_runtime_profile): Use LR_SIZE to allocate space for
+	La_x86_64_regs.  Allocate extra space and jump to memory at
+	save_and_restore_vector if HAVE_AVX_SUPPORT is defined.
+	(save_and_restore_vector_sse): New.
+	(save_and_restore_vector_avx): Likewise.
+	(check_avx): Likewise.
+	(save_and_restore_vector): Likewise.
+	* sysdeps/x86_64/elf/configure.in: Set libc_cv_cc_avx and
+	HAVE_AVX_SUPPORT.
+	* sysdeps/x86_64/link-defines.sym: New file.
+
 2009-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h: Removed after folding content into...

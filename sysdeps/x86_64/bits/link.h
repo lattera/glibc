@@ -65,9 +65,18 @@ __END_DECLS
 /* Registers for entry into PLT on x86-64.  */
 # if __GNUC_PREREQ (4,0)
 typedef float La_x86_64_xmm __attribute__ ((__vector_size__ (16)));
+typedef float La_x86_64_ymm __attribute__ ((__vector_size__ (32)));
 # else
 typedef float La_x86_64_xmm __attribute__ ((__mode__ (__V4SF__)));
 # endif
+
+typedef union
+{
+# if __GNUC_PREREQ (4,0)
+  La_x86_64_ymm ymm[2];
+# endif
+  La_x86_64_xmm xmm[4];
+} La_x86_64_vector __attribute__ ((aligned(16)));
 
 typedef struct La_x86_64_regs
 {
@@ -80,6 +89,7 @@ typedef struct La_x86_64_regs
   uint64_t lr_rbp;
   uint64_t lr_rsp;
   La_x86_64_xmm lr_xmm[8];
+  La_x86_64_vector lr_vector[8];
 } La_x86_64_regs;
 
 /* Return values for calls from PLT on x86-64.  */
@@ -91,6 +101,8 @@ typedef struct La_x86_64_retval
   La_x86_64_xmm lrv_xmm1;
   long double lrv_st0;
   long double lrv_st1;
+  La_x86_64_vector lrv_vector0;
+  La_x86_64_vector lrv_vector1;
 } La_x86_64_retval;
 
 

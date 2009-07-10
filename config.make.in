@@ -35,6 +35,7 @@ cflags-cpu = @libc_cv_cc_submachine@
 asflags-cpu = @libc_cv_cc_submachine@
 
 config-cflags-sse4 = @libc_cv_cc_sse4@
+config-cflags-avx = @libc_cv_cc_avx@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
