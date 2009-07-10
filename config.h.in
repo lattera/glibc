@@ -59,6 +59,9 @@
    assembler's `.type' directive, if it has one.  */
 #undef	ASM_TYPE_DIRECTIVE_PREFIX
 
+/* Define if the assembler supports the gnu_unique_object symbol type.  */
+#undef	HAVE_ASM_UNIQUE_OBJECT
+
 /* Define a symbol_name as a global .symbol_name for ld.  */
 #undef	HAVE_ASM_GLOBAL_DOT_NAME
 

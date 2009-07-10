@@ -569,7 +569,7 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	if (GL(dl_ns)[nsid]._ns_loaded == NULL)
 	  break;
 
-      if (nsid == DL_NNS)
+      if (__builtin_expect (nsid == DL_NNS, 0))
 	{
 	  /* No more namespace available.  */
 	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
@@ -579,7 +579,10 @@ no more namespaces available for dlmopen()"));
 	}
 
       if (nsid == GL(dl_nns))
-	++GL(dl_nns);
+	{
+	  __rtld_lock_initialize (GL(dl_ns)[nsid]._ns_unique_sym_table.lock);
+	  ++GL(dl_nns);
+	}
 
       _dl_debug_initialize (0, nsid)->r_state = RT_CONSISTENT;
     }

@@ -27,7 +27,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	     unsigned long int *old_hash, const ElfW(Sym) *ref,
 	     struct sym_val *result, struct r_scope_elem *scope, size_t i,
 	     const struct r_found_version *const version, int flags,
-	     struct link_map *skip, int type_class)
+	     struct link_map *skip, int type_class, struct link_map *undef_map)
 {
   size_t n = scope->r_nlist;
   /* Make sure we read the value before proceeding.  Otherwise we
@@ -233,7 +233,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
       if (sym != NULL)
 	{
 	found_it:
-	  switch (ELFW(ST_BIND) (sym->st_info))
+	  switch (__builtin_expect (ELFW(ST_BIND) (sym->st_info), STB_GLOBAL))
 	    {
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
@@ -248,10 +248,124 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		}
 	      /* FALLTHROUGH */
 	    case STB_GLOBAL:
+	    success:
 	      /* Global definition.  Just what we need.  */
 	      result->s = sym;
 	      result->m = (struct link_map *) map;
 	      return 1;
+
+	    case STB_GNU_UNIQUE:;
+	      /* We have to determine whether we already found a
+		 symbol with this name before.  If not then we have to
+		 add it to the search table.  If we already found a
+		 definition we have to use it.  */
+	      void enter (struct unique_sym *table, size_t size,
+			  unsigned int hash, const char *name,
+			  const ElfW(Sym) *sym, const struct link_map *map)
+	      {
+		size_t idx = hash % size;
+		size_t hash2 = 1 + hash % (size - 2);
+		while (1)
+		  {
+		    if (table[idx].hashval == 0)
+		      {
+			table[idx].hashval = hash;
+			table[idx].name = strtab + sym->st_name;
+			if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
+			  {
+			    table[idx].sym = ref;
+			    table[idx].map = undef_map;
+			  }
+			else
+			  {
+			    table[idx].sym = sym;
+			    table[idx].map = map;
+			  }
+			return;
+		      }
+
+		    idx += hash2;
+		    if (idx >= size)
+		      idx -= size;
+		  }
+	      }
+
+	      struct unique_sym_table *tab
+		= &GL(dl_ns)[map->l_ns]._ns_unique_sym_table;
+
+	      __rtld_lock_lock_recursive (tab->lock);
+
+	      struct unique_sym *entries = tab->entries;
+	      size_t size = tab->size;
+	      if (entries != NULL)
+		{
+		  size_t idx = new_hash % size;
+		  size_t hash2 = 1 + new_hash % (size - 2);
+		  while (1)
+		    {
+		      if (entries[idx].hashval == new_hash
+			  && strcmp (entries[idx].name, undef_name) == 0)
+			{
+			  result->s = entries[idx].sym;
+			  result->m = (struct link_map *) entries[idx].map;
+			  __rtld_lock_unlock_recursive (tab->lock);
+			  return 1;
+			}
+
+		      if (entries[idx].hashval == 0
+			  && entries[idx].name == NULL)
+			break;
+
+		      idx += hash2;
+		      if (idx >= size)
+			idx -= size;
+		    }
+
+		  if (size * 3 <= tab->n_elements)
+		    {
+		      /* Expand the table.  */
+		      size_t newsize = _dl_higher_prime_number (size);
+		      struct unique_sym *newentries
+			= calloc (sizeof (struct unique_sym), newsize);
+		      if (newentries == NULL)
+			{
+			nomem:
+			  __rtld_lock_unlock_recursive (tab->lock);
+			  _dl_fatal_printf ("out of memory\n");
+			}
+
+		      for (idx = 0; idx < size; ++idx)
+			if (entries[idx].hashval != 0)
+			  enter (newentries, newsize, entries[idx].hashval,
+				 entries[idx].name, entries[idx].sym,
+				 entries[idx].map);
+
+		      tab->free (entries);
+		      tab->size = newsize;
+		      entries = tab->entries = newentries;
+		      tab->free = free;
+		    }
+		}
+	      else
+		{
+#define INITIAL_NUNIQUE_SYM_TABLE 31
+		  size = INITIAL_NUNIQUE_SYM_TABLE;
+		  entries = calloc (sizeof (struct unique_sym), size);
+		  if (entries == NULL)
+		    goto nomem;
+
+		  tab->entries = entries;
+		  tab->size = size;
+		  tab->free = free;
+		}
+
+	      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+	      ++tab->n_elements;
+
+	      __rtld_lock_unlock_recursive (tab->lock);
+
+	      goto success;
+
 	    default:
 	      /* Local symbols are ignored.  */
 	      break;

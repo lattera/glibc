@@ -383,6 +383,21 @@ struct rtld_global
        allocated by rtld.  Later it keeps the size of the map.  It might be
        reset if in _dl_close if the last global object is removed.  */
     size_t _ns_global_scope_alloc;
+    /* Search table for unique objects.  */
+    struct unique_sym_table
+    {
+      __rtld_lock_recursive_t lock;
+      struct unique_sym
+      {
+	uint32_t hashval;
+	const char *name;
+	const ElfW(Sym) *sym;
+	const struct link_map *map;
+      } *entries;
+      size_t size;
+      size_t n_elements;
+      void (*free) (void *);
+    } _ns_unique_sym_table;
     /* Keep track of changes to each namespace' list.  */
     struct r_debug _ns_debug;
   } _dl_ns[DL_NNS];

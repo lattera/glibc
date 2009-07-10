@@ -111,7 +111,9 @@ distribute	:= rtld-Rules \
 		   ifuncdep5.c ifuncdep5pic.c ifuncmod5.c \
 		   ifuncmain6pie.c ifuncmod6.c \
 		   ifuncmain7.c ifuncmain7pic.c ifuncmain7picstatic.c \
-		   ifuncmain7pie.c ifuncmain7static.c
+		   ifuncmain7pie.c ifuncmain7static.c \
+		   tst-unique1.c tst-unique1mod1.c tst-unique1mod2.c \
+		   tst-unique2.c tst-unique2mod1.c tst-unique2mod2.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -190,7 +192,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
-	 tst-stackguard1 tst-addr1 tst-thrlock
+	 tst-stackguard1 tst-addr1 tst-thrlock \
+	 tst-unique1 tst-unique2
 #	 reldep9
 test-srcs = tst-pathopt
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
@@ -239,7 +242,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
 		unload6mod1 unload6mod2 unload6mod3 \
 		unload7mod1 unload7mod2 \
-		order2mod1 order2mod2 order2mod3 order2mod4
+		order2mod1 order2mod2 order2mod3 order2mod4 \
+		tst-unique1mod1 tst-unique1mod2 \
+		tst-unique2mod1 tst-unique2mod2
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep tst-array5dep
 endif
@@ -1103,3 +1108,10 @@ $(objpfx)ifuncmain5pic: $(addprefix $(objpfx),ifuncmod5.so)
 $(objpfx)ifuncmain5static: $(addprefix $(objpfx),ifuncdep5.o)
 $(objpfx)ifuncmain5staticpic: $(addprefix $(objpfx),ifuncdep5pic.o)
 $(objpfx)ifuncmain5picstatic: $(addprefix $(objpfx),ifuncdep5pic.o)
+
+$(objpfx)tst-unique1: $(libdl)
+$(objpfx)tst-unique1.out: $(objpfx)tst-unique1mod1.so \
+			  $(objpfx)tst-unique1mod2.so
+
+$(objpfx)tst-unique2: $(libdl) $(objpfx)tst-unique2mod1.so
+$(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so

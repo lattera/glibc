@@ -1,3 +1,25 @@
+2009-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Check for gnu_unique_symbol symbol type.
+	* config.h.in: Add HAVE_ASM_UNIQUE_OBJECT entry.
+	* elf/do-lookup.h (do_lookup_x): Take new parameter with link map of
+	the undefined symbol.  Handle STB_GNU_UNIQUE binding of found symbol.
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Adjust callers for do_lookup_x
+	change.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add definitions for
+	unique symbol table.
+	* elf/rtld.c (rtld_global): Initialize lock of unique symbol hash table
+	for first namespace.
+	* elf/dl-open.c (_dl_open): For new namespace, initialize lock for
+	unique symbol hash table.
+	* elf/Makefile: Add rules to build and run tst-unique1 and tst-unique2.
+	* elf/tst-unique1.c: New file.
+	* elf/tst-unique1mod1.c: New file.
+	* elf/tst-unique1mod2.c: New file.
+	* elf/tst-unique2.c: New file.
+	* elf/tst-unique2mod1.c: New file.
+	* elf/tst-unique2mod2.c: New file.
+
 2009-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h (STB_GNU_UNIQUE): Define.
@@ -9,7 +31,7 @@
 
 2009-07-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/do-lookup.h (ALLOWED_STT): Optimize test for valid symbol types.
+	* elf/do-lookup.h (do_lookup_x): Optimize test for valid symbol types.
 
 2009-07-03  Andreas Schwab  <aschwab@redhat.com>
 

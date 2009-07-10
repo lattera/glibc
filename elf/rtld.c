@@ -127,7 +127,12 @@ struct rtld_global _rtld_global =
 #ifdef _LIBC_REENTRANT
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
 #endif
-    ._dl_nns = 1
+    ._dl_nns = 1,
+    ._dl_ns =
+    {
+      [LM_ID_BASE] = { ._ns_unique_sym_table
+		       = { .lock = _RTLD_LOCK_RECURSIVE_INITIALIZER } }
+    }
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous

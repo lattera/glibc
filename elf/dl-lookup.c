@@ -337,7 +337,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
     {
       int res = do_lookup_x (undef_name, new_hash, &old_hash, *ref,
 			     &current_value, *scope, start, version, flags,
-			     skip_map, type_class);
+			     skip_map, type_class, undef_map);
       if (res > 0)
 	break;
 
@@ -410,7 +410,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  for (scope = symbol_scope; *scope != NULL; i = 0, ++scope)
 	    if (do_lookup_x (undef_name, new_hash, &old_hash, *ref,
 			     &protected_value, *scope, i, version, flags,
-			     skip_map, ELF_RTYPE_CLASS_PLT) != 0)
+			     skip_map, ELF_RTYPE_CLASS_PLT, NULL) != 0)
 	      break;
 
 	  if (protected_value.s != NULL && protected_value.m != undef_map)
@@ -536,7 +536,7 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
 	  do_lookup_x (undef_name, new_hash, &old_hash, *ref, &val,
 		       undef_map->l_local_scope[0], 0, version, 0, NULL,
-		       type_class);
+		       type_class, undef_map);
 
 	  if (val.s != value->s || val.m != value->m)
 	    conflict = 1;
