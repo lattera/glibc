@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ typedef __sigset_t sigset_t;
 #endif
 
 
-/* Flags to be passed to epoll_create2.  */
+/* Flags to be passed to epoll_create1.  */
 enum
   {
     EPOLL_CLOEXEC = 02000000,
