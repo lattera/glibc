@@ -1,1 +1,1 @@
-#include "../getdents64.c"
+#include <sysdeps/unix/sysv/linux/getdents64.c>

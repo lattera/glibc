@@ -27,4 +27,4 @@
 		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	\
 		  NULL, NULL, &THREAD_SELF->tid, NULL)
 
-#include "../fork.c"
+#include <sysdeps/unix/sysv/linux/fork.c>

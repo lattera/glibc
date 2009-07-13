@@ -149,4 +149,4 @@ __sysconf (int name)
 /* Now the generic Linux version.  */
 #undef __sysconf
 #define __sysconf static linux_sysconf
-#include "../sysconf.c"
+#include <sysdeps/unix/sysv/linux/sysconf.c>

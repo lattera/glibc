@@ -9,6 +9,17 @@
 	FUTEX_WAIT_BITSET, FUTEX_WAKE_BITSET, FUTEX_CLOCK_REALTIME and
 	FUTEX_BITSET_MATCH_ANY.
 
+	[BZ #10161]
+	* sysdeps/unix/sysv/linux/alpha/getdents64.c: Adjust include path.
+	* sysdeps/unix/sysv/linux/alpha/nptl/fork.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/sem_post.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_create.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_delete.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_getoverr.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_settime.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysconf.c: Likewise.
+
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Contents moved to main
