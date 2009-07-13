@@ -4,6 +4,11 @@
         * sysdeps/unix/sysv/linux/alpha/getsysstats.c (GET_NPROCS_PARSER):
         Change parameters and use next_line.
 
+	[BZ #10160]
+	* sysdeps/unix/sysv/linux/alpha/nptl/lowlevellock.h: Define
+	FUTEX_WAIT_BITSET, FUTEX_WAKE_BITSET, FUTEX_CLOCK_REALTIME and
+	FUTEX_BITSET_MATCH_ANY.
+
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Contents moved to main

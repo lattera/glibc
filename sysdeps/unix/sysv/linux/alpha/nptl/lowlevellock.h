@@ -37,7 +37,12 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_WAIT_BITSET	9
+#define FUTEX_WAKE_BITSET	10
 #define FUTEX_PRIVATE_FLAG	128
+#define FUTEX_CLOCK_REALTIME	256
+
+#define FUTEX_BITSET_MATCH_ANY	0xffffffff
 
 /* Values for 'private' parameter of locking macros.  Yes, the
    definition seems to be backwards.  But it is not.  The bit will be
