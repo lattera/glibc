@@ -20,6 +20,11 @@
 	* sysdeps/unix/sysv/linux/alpha/nptl/timer_settime.c: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/sysconf.c: Likewise.
 
+	[BZ #6507]
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h (ELF_NGREG,
+	ELF_NFPREG, elf_greg_t, elf_gregset_t, elf_fpreg_t,
+	elf_fpregset_t): Define. Don't include asm/elf.h.
+
 2008-11-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Contents moved to main
