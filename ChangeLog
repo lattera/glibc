@@ -1,5 +1,10 @@
 2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/Makefile: Don't build modules for tst-audit4 and tst-audit5
+	for anything but x86-64 targets.
+
+2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* config.h.in: Add HAVE_AVX_SUPPORT entry.
 	* config.make.in: Add config-cflags-avx entry.
 	* configure.in: Substitute libc_cv_cc_avx.
