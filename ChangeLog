@@ -1,7 +1,8 @@
-2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+2009-07-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/Makefile: Don't build modules for tst-audit4 and tst-audit5
-	for anything but x86-64 targets.
+	* sysdeps/x86-64/dl-trampoline.h: Remove after integrating code into...
+	* sysdeps/x86-64/dl-trampoline.S: ...here.  Rewrite to avoid function
+	pointers in writable memory.
 
 2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
 
