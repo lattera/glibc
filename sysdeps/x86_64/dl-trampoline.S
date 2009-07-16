@@ -249,17 +249,7 @@ L(no_avx1):
 	jmp	1f
 
 L(no_avx2):
-	vmovdqa		    (LR_XMM_OFFSET)(%rsp), %xmm0
-	vmovdqa	 (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp), %xmm3
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp), %xmm4
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
-	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
-
-1:
-# else
+# endif
 	movaps		    (LR_XMM_OFFSET)(%rsp), %xmm0
 	movaps	 (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
 	movaps (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
@@ -268,9 +258,8 @@ L(no_avx2):
 	movaps (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
 	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
 	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
-# endif
 
-	movq 16(%rbx), %r10	# Anything in framesize?
+1:	movq 16(%rbx), %r10	# Anything in framesize?
 	testq %r10, %r10
 	jns 3f
 
@@ -390,16 +379,11 @@ L(no_avx3):
 	jmp 1f
 
 L(no_avx4):
-	vmovdqa LRV_XMM0_OFFSET(%rsp), %xmm0
-	vmovdqa LRV_XMM1_OFFSET(%rsp), %xmm1
-
-1:
-# else
+# endif
 	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
 	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
-# endif
 
-	fldt LRV_ST1_OFFSET(%rsp)
+1:	fldt LRV_ST1_OFFSET(%rsp)
 	fldt LRV_ST0_OFFSET(%rsp)
 
 	movq %rbx, %rsp
