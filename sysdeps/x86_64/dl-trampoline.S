@@ -142,7 +142,7 @@ L(have_avx):
 	testl	$(1 << 28), %ecx
 	jne	2f
 	negl	%eax
-2:	movl	%eax, L(have_eax)(%rip)
+2:	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
 1:	js	L(no_avx1)
