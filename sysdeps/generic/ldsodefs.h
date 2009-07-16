@@ -335,6 +335,10 @@ struct audit_ifaces
 extern int _dl_name_match_p (const char *__name, const struct link_map *__map)
      internal_function;
 
+/* Compute next higher prime number.  */
+extern unsigned long int _dl_higher_prime_number (unsigned long int n)
+     internal_function;
+
 /* Function used as argument for `_dl_receive_error' function.  The
    arguments are the error code, error string, and the objname the
    error occurred in.  */

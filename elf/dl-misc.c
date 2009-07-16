@@ -315,6 +315,7 @@ _dl_name_match_p (const char *name, const struct link_map *map)
 
 
 unsigned long int
+internal_function
 _dl_higher_prime_number (unsigned long int n)
 {
   /* These are primes that are near, but slightly smaller than, a
