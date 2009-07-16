@@ -26,7 +26,7 @@ ENTRY (memcmp)
 	jz	L(finz)
 	cmpq	$1, %rdx
 	jle	L(finr1b)
-	subq 	%rdi, %rsi
+	subq	%rdi, %rsi
 	movq	%rdx, %r10
 	cmpq	$32, %r10
 	jge	L(gt32)
@@ -37,7 +37,7 @@ L(small):
 	movzbl	(%rdi),	%eax
 	movzbl	(%rdi, %rsi), %edx
 	subq    $1, %r10
-	je	L(finz1)	
+	je	L(finz1)
 	addq	$1, %rdi
 	subl	%edx, %eax
 	jnz	L(exit)
@@ -47,7 +47,7 @@ L(s2b):
 	movzwl	(%rdi),	%eax
 	movzwl	(%rdi, %rsi), %edx
 	subq    $2, %r10
-	je	L(fin2_7)	
+	je	L(fin2_7)
 	addq	$2, %rdi
 	cmpl	%edx, %eax
 	jnz	L(fin2_7)
@@ -57,7 +57,7 @@ L(s4b):
 	movl	(%rdi),	%eax
 	movl	(%rdi, %rsi), %edx
 	subq    $4, %r10
-	je	L(fin2_7)	
+	je	L(fin2_7)
 	addq	$4, %rdi
 	cmpl	%edx, %eax
 	jnz	L(fin2_7)
@@ -67,7 +67,7 @@ L(s8b):
 	movq	(%rdi),	%rax
 	movq	(%rdi, %rsi), %rdx
 	subq    $8, %r10
-	je	L(fin2_7)	
+	je	L(fin2_7)
 	addq	$8, %rdi
 	cmpq	%rdx, %rax
 	jnz	L(fin2_7)
@@ -76,11 +76,11 @@ L(s16b):
 	movdqu    (%rdi, %rsi), %xmm0
 	pcmpeqb   %xmm0, %xmm1
 	pmovmskb  %xmm1, %edx
-	xorl 	  %eax, %eax
+	xorl	  %eax, %eax
 	subl      $0xffff, %edx
 	jz	  L(finz)
-	bsfl      %edx, %ecx 
-	leaq 	 (%rdi, %rcx), %rcx
+	bsfl      %edx, %ecx
+	leaq	 (%rdi, %rcx), %rcx
 	movzbl	 (%rcx), %eax
 	movzbl	 (%rsi, %rcx), %edx
 	jmp	 L(finz1)
@@ -88,7 +88,7 @@ L(s16b):
 	.p2align 4,, 4
 L(finr1b):
 	movzbl	(%rdi), %eax
-	movzbl  (%rsi), %edx   	
+	movzbl  (%rsi), %edx
 L(finz1):
 	subl	%edx, %eax
 L(exit):
@@ -98,24 +98,24 @@ L(exit):
 L(fin2_7):
 	cmpq	%rdx, %rax
 	jz	L(finz)
-	movq 	%rax, %r11
-	subq 	%rdx, %r11
+	movq	%rax, %r11
+	subq	%rdx, %r11
 	bsfq	%r11, %rcx
-	sarq 	$3, %rcx
+	sarq	$3, %rcx
 	salq	$3, %rcx
-	sarq 	%cl, %rax
+	sarq	%cl, %rax
 	movzbl  %al, %eax
-	sarq 	%cl, %rdx
+	sarq	%cl, %rdx
 	movzbl  %dl, %edx
 	subl	%edx, %eax
- 	ret
+	ret
 
 	.p2align 4,, 4
 L(finz):
 	xorl	%eax, %eax
 	ret
 
-	/* For blocks bigger than 32 bytes 
+	/* For blocks bigger than 32 bytes
 	   1. Advance one of the addr pointer to be 16B aligned.
 	   2. Treat the case of both addr pointers aligned to 16B
 	      separately to avoid movdqu.
@@ -128,10 +128,10 @@ L(finz):
 L(gt32):
 	movq	%rdx, %r11
 	addq	%rdi, %r11
-	movq 	%rdi, %r8	
+	movq	%rdi, %r8
 
 	andq	$15, %r8
-	jz 	L(16am)
+	jz	L(16am)
 	/* Both pointers may be misaligned.  */
 	movdqu	(%rdi),	%xmm1
 	movdqu	(%rdi, %rsi), %xmm0
@@ -156,8 +156,8 @@ L(16am):
 L(A32):
 	movq	%r11, %r10
 	andq	$-32, %r10
-	cmpq 	%r10, %rdi
-        jge 	L(mt16)
+	cmpq	%r10, %rdi
+        jge	L(mt16)
 	/* Pre-unroll to be ready for unrolled 64B loop.  */
 	testq	$32, %rdi
 	jz	L(A64)
@@ -167,7 +167,7 @@ L(A32):
 	subl      $0xffff, %edx
 	jnz       L(neq)
 	addq       $16, %rdi
-	
+
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb  (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -178,9 +178,9 @@ L(A32):
 L(A64):
 	movq	%r11, %r10
 	andq	$-64, %r10
-	cmpq 	%r10, %rdi
-        jge 	L(mt32)
-	
+	cmpq	%r10, %rdi
+        jge	L(mt32)
+
 L(A64main):
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
@@ -188,7 +188,7 @@ L(A64main):
 	subl      $0xffff, %edx
 	jnz       L(neq)
 	addq       $16, %rdi
-	
+
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -216,8 +216,8 @@ L(A64main):
 L(mt32):
 	movq	%r11, %r10
 	andq	$-32, %r10
-	cmpq 	%r10, %rdi
-        jge 	L(mt16)
+	cmpq	%r10, %rdi
+        jge	L(mt16)
 
 L(A32main):
 	movdqu    (%rdi,%rsi), %xmm0
@@ -226,7 +226,7 @@ L(A32main):
 	subl      $0xffff, %edx
 	jnz       L(neq)
 	addq       $16, %rdi
-	
+
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb  (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -239,23 +239,23 @@ L(A32main):
 L(mt16):
 	subq       %rdi, %r11
 	je	  L(finz)
-	movq 	  %r11, %r10	
-	jmp 	  L(small)
+	movq	  %r11, %r10
+	jmp	  L(small)
 
 	.p2align 4,, 4
 L(neq):
-	bsfl      %edx, %ecx 
+	bsfl      %edx, %ecx
 	movzbl	 (%rdi, %rcx), %eax
-	addq 	 %rdi, %rsi
+	addq	 %rdi, %rsi
 	movzbl	 (%rsi,%rcx), %edx
 	jmp	 L(finz1)
 
 	.p2align 4,, 4
 L(ATR):
 	movq	%r11, %r10
-	andq	$-32, %r10	
-	cmpq 	%r10, %rdi
-        jge 	L(mt16)
+	andq	$-32, %r10
+	cmpq	%r10, %rdi
+        jge	L(mt16)
 	testq	$16, %rdi
 	jz	L(ATR32)
 
@@ -290,7 +290,7 @@ L(ATR32):
 
 L(ATR64):
 	cmpq       %rdi, %r10
-	je 	   L(mt32)
+	je	   L(mt32)
 
 L(ATR64main):
 	movdqa    (%rdi,%rsi), %xmm0
@@ -324,9 +324,9 @@ L(ATR64main):
 	jne       L(ATR64main)
 
 	movq	%r11, %r10
-	andq	$-32, %r10	
-	cmpq 	%r10, %rdi
-        jge 	L(mt16)
+	andq	$-32, %r10
+	cmpq	%r10, %rdi
+        jge	L(mt16)
 
 L(ATR32res):
 	movdqa    (%rdi,%rsi), %xmm0
@@ -343,13 +343,13 @@ L(ATR32res):
 	jnz       L(neq)
 	addq       $16, %rdi
 
-	cmpq 	  %r10, %rdi
+	cmpq	  %r10, %rdi
 	jne       L(ATR32res)
 
 	subq       %rdi, %r11
 	je	  L(finz)
-	movq 	  %r11, %r10	
-	jmp 	  L(small)
+	movq	  %r11, %r10
+	jmp	  L(small)
 	/* Align to 16byte to improve instruction fetch.  */
 	.p2align 4,, 4
 END(memcmp)
