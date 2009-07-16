@@ -185,71 +185,6 @@ L(no_avx1):
 	movq  LR_R8_OFFSET(%rsp), %r8
 	movq  LR_R9_OFFSET(%rsp), %r9
 
-# ifdef HAVE_AVX_SUPPORT
-	cmpl	$0, L(have_avx)(%rip)
-	js	L(no_avx2)
-
-	/* Check if any xmm0-xmm7 registers are changed by audit
-	   module.  */
-	vmovdqa (LR_XMM_OFFSET)(%rsp), %xmm0
-	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm1
-	vpmovmskb %xmm1, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu			(LR_VECTOR_OFFSET)(%rsp), %ymm0
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
-	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
-	vpmovmskb %xmm2, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu	  (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
-	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm3
-	vpmovmskb %xmm3, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp), %xmm3
-	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm4
-	vpmovmskb %xmm4, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp), %xmm4
-	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm5
-	vpmovmskb %xmm5, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
-	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm6
-	vpmovmskb %xmm6, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
-	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm7
-	vpmovmskb %xmm7, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
-
-1:	vmovdqa (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
-	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
-	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
-	je 1f
-	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
-	jmp	1f
-
-L(no_avx2):
-# endif
 	movaps		    (LR_XMM_OFFSET)(%rsp), %xmm0
 	movaps	 (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
 	movaps (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
@@ -259,7 +194,64 @@ L(no_avx2):
 	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
 	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
 
-1:	movq 16(%rbx), %r10	# Anything in framesize?
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	js	L(no_avx2)
+
+	/* Check if any xmm0-xmm7 registers are changed by audit
+	   module.  */
+	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu			(LR_VECTOR_OFFSET)(%rsp), %ymm0
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu	  (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
+
+L(no_avx2):
+1:
+# endif
+	movq 16(%rbx), %r10	# Anything in framesize?
 	testq %r10, %r10
 	jns 3f
 
@@ -358,32 +350,31 @@ L(no_avx3):
 	movq LRV_RAX_OFFSET(%rsp), %rax
 	movq LRV_RDX_OFFSET(%rsp), %rdx
 
+	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
+	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
+
 # ifdef HAVE_AVX_SUPPORT
 	cmpl	$0, L(have_avx)(%rip)
 	js	L(no_avx4)
 
 	/* Check if xmm0/xmm1 registers are changed by audit module.  */
-	vmovdqa LRV_XMM0_OFFSET(%rsp), %xmm0
-	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm1
-	vpmovmskb %xmm1, %esi
+	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
+	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
 	je 1f
 	vmovdqu LRV_VECTOR0_OFFSET(%rsp), %ymm0
 
-1:	vmovdqa LRV_XMM1_OFFSET(%rsp), %xmm1
-	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
+1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
 	je 1f
 	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
-	jmp 1f
 
 L(no_avx4):
+1:
 # endif
-	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
-	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
 
-1:	fldt LRV_ST1_OFFSET(%rsp)
+	fldt LRV_ST1_OFFSET(%rsp)
 	fldt LRV_ST0_OFFSET(%rsp)
 
 	movq %rbx, %rsp
