@@ -4799,8 +4799,29 @@ _int_free(mstate av, mchunkptr p)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
       {
-	errstr = "free(): invalid next size (fast)";
-	goto errout;
+#ifdef ATOMIC_FASTBINS
+	/* We might not have a lock at this point and concurrent modifications
+	   of system_mem might have let to a false positive.  Redo the test
+	   after getting the lock.  */
+	if (have_lock
+	    || ({ assert (locked == 0);
+		  mutex_lock(&av->mutex);
+		  locked = 1;
+		  chunk_at_offset (p, size)->size <= 2 * SIZE_SZ
+		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
+	      }))
+#endif
+	  {
+	    errstr = "free(): invalid next size (fast)";
+	    goto errout;
+	  }
+#ifdef ATOMIC_FASTBINS
+	if (! have_lock)
+	  {
+	    (void)mutex_unlock(&av->mutex);
+	    locked = 0;
+	  }
+#endif
       }
 
     if (__builtin_expect (perturb_byte, 0))
