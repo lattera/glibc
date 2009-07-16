@@ -146,8 +146,6 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	      (void) cache_add (req->type, &dataset->strdata, req->key_len,
 				&dataset->head, true, db, owner, he == NULL);
 
-	      pthread_rwlock_unlock (&db->lock);
-
 	      /* Mark the old entry as obsolete.  */
 	      if (dh != NULL)
 		dh->usable = false;
@@ -367,12 +365,10 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		(void) cache_add (GETGRBYGID, cp, key_offset, &dataset->head,
 				  false, db, owner, false);
 	    }
-
-	out:
-	  pthread_rwlock_unlock (&db->lock);
 	}
     }
 
+out:
   if (__builtin_expect (written != total, 0) && debug_level > 0)
     {
       char buf[256];
