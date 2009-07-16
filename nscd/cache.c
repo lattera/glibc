@@ -179,7 +179,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   /* Put the new entry in the first position.  */
   do
     newp->next = table->head->array[hash];
-  while (atomic_compare_and_exchange_bool_acq (&table->head->array[hash],
+  while (atomic_compare_and_exchange_bool_rel (&table->head->array[hash],
 					       (ref_t) ((char *) newp
 							- table->data),
 					       (ref_t) newp->next));
