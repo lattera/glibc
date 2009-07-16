@@ -4822,9 +4822,8 @@ _int_free(mstate av, mchunkptr p)
 	    goto errout;
 	  }
 	p->fd = fd = old;
-	atomic_full_barrier ();
       }
-    while ((old = catomic_compare_and_exchange_val_acq (fb, p, fd)) != fd);
+    while ((old = catomic_compare_and_exchange_val_rel (fb, p, fd)) != fd);
 #else
     /* Another simple check: make sure the top of the bin is not the
        record we are going to add (i.e., double free).  */

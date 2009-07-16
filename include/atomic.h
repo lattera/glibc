@@ -107,14 +107,19 @@
 #endif
 
 
-#ifndef atomic_compare_and_exchange_val_rel
-# define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
-  atomic_compare_and_exchange_val_acq (mem, newval, oldval)
+#ifndef catomic_compare_and_exchange_val_rel
+# ifndef atomic_compare_and_exchange_val_rel
+#  define catomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+  catomic_compare_and_exchange_val_acq (mem, newval, oldval)
+# else
+#  define catomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+  atomic_compare_and_exchange_val_rel (mem, newval, oldval)
+# endif
 #endif
 
 
-#ifndef catomic_compare_and_exchange_val_rel
-# define catomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+#ifndef atomic_compare_and_exchange_val_rel
+# define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
   atomic_compare_and_exchange_val_acq (mem, newval, oldval)
 #endif
 
@@ -155,15 +160,20 @@
 #endif
 
 
-#ifndef atomic_compare_and_exchange_bool_rel
-# define atomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
-  atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
+#ifndef catomic_compare_and_exchange_bool_rel
+# ifndef atomic_compare_and_exchange_bool_rel
+#  define catomic_compare_and_exchange_bool_rel(mem, newval, oldval)	      \
+  catomic_compare_and_exchange_bool_acq (mem, newval, oldval)
+# else
+#  define catomic_compare_and_exchange_bool_rel(mem, newval, oldval)	      \
+  atomic_compare_and_exchange_bool_rel (mem, newval, oldval)
+# endif
 #endif
 
 
-#ifndef catomic_compare_and_exchange_bool_rel
-# define catomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
-  catomic_compare_and_exchange_bool_acq (mem, newval, oldval)
+#ifndef atomic_compare_and_exchange_bool_rel
+# define atomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
+  atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
 #endif
 
 
