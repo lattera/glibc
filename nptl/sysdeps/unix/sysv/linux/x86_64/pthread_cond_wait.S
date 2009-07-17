@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,7 +33,10 @@
 	.globl	__condvar_cleanup
 	.hidden	__condvar_cleanup
 __condvar_cleanup:
+	cfi_startproc
 	pushq	%r12
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
 
 	/* Get internal lock.  */
 	movq	%rdi, %r8
@@ -141,8 +144,11 @@ __condvar_cleanup:
 	callq	__pthread_mutex_cond_lock
 
 	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 
 	retq
+	cfi_endproc
 	.size	__condvar_cleanup, .-__condvar_cleanup
 
 
@@ -151,12 +157,14 @@ __condvar_cleanup:
 	.type	__pthread_cond_wait, @function
 	.align	16
 __pthread_cond_wait:
-.LSTARTCODE:
+	cfi_startproc
 	pushq	%r12
-.Lpush_r12:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
 #define FRAME_SIZE 64
 	subq	$FRAME_SIZE, %rsp
-.Lsubq:
+	cfi_adjust_cfa_offset(FRAME_SIZE)
+
 	/* Stack frame:
 
 	   rsp + 64
@@ -332,17 +340,19 @@ __pthread_cond_wait:
 	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
 14:	addq	$FRAME_SIZE, %rsp
-.Laddq:
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
 
 	popq	%r12
-.Lpop_r12:
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 
 	/* We return the result of the mutex_lock operation.  */
 	retq
 
 	/* Initial locking failed.  */
 1:
-.LSbl1:
+	cfi_adjust_cfa_offset(8 + FRAME_SIZE)
+	cfi_rel_offset(%r12, FRAME_SIZE)
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -414,75 +424,7 @@ __pthread_cond_wait:
 
 13:	movq	%r10, %rax
 	jmp	14b
-.LENDCODE:
+	cfi_endproc
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
-
-
-	.section .eh_frame,"a",@progbits
-.LSTARTFRAME:
-	.long	L(ENDCIE)-L(STARTCIE)		# Length of the CIE.
-.LSTARTCIE:
-	.long	0				# CIE ID.
-	.byte	1				# Version number.
-#ifdef SHARED
-	.string	"zR"				# NUL-terminated augmentation
-						# string.
-#else
-	.ascii	"\0"				# NUL-terminated augmentation
-						# string.
-#endif
-	.uleb128 1				# Code alignment factor.
-	.sleb128 -8				# Data alignment factor.
-	.byte	16				# Return address register
-						# column.
-#ifdef SHARED
-	.uleb128 1				# Augmentation value length.
-	.byte	0x1b				# Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-#endif
-	.byte 0x0c				# DW_CFA_def_cfa
-	.uleb128 7
-	.uleb128 8
-	.byte	0x90				# DW_CFA_offset, column 0x8
-	.uleb128 1
-	.align 8
-.LENDCIE:
-
-	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
-.LSTARTFDE:
-	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
-#ifdef SHARED
-	.long	.LSTARTCODE-.			# PC-relative start address
-						# of the code
-#else
-	.long	.LSTARTCODE			# Start address of the code.
-#endif
-	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
-#ifdef SHARED
-	.uleb128 0				# No augmentation data.
-#endif
-	.byte	0x40+.Lpush_r12-.LSTARTCODE	# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte	0x8c				# DW_CFA_offset %r12
-	.uleb128 2
-	.byte	0x40+.Lsubq-.Lpush_r12		# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16+FRAME_SIZE
-	.byte	3				# DW_CFA_advance_loc2
-	.2byte	.Laddq-.Lsubq
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte	0x40+.Lpop_r12-.Laddq		# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte	0xcc				# DW_CFA_restore %r12
-	.byte	0x40+.LSbl1-.Lpop_r12		# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 80
-	.byte	0x8c				# DW_CFA_offset %r12
-	.uleb128 2
-	.align	8
-.LENDFDE:
