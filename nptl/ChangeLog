@@ -3,6 +3,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
 	(__condvar_cleanup): Rewrite to use cfi directives instead of
 	hand-coded unwind tables.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S (__pthread_once):
+	Likewise.
 
 2009-06-12  Ulrich Drepper  <drepper@redhat.com>
 
