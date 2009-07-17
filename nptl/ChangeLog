@@ -9,6 +9,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S (__pthread_once):
 	Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S (sem_wait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Likewise.
 
 2009-06-12  Ulrich Drepper  <drepper@redhat.com>
 
