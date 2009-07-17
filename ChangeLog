@@ -6,6 +6,7 @@
 
 2009-07-16  Petr Baudis  <pasky@suse.cz>
 
+	[BZ #10402]
 	* nscd/mem.c (mempool_alloc): Fix unlock missing in the else branch.
 	* nscd/aicache.c: Remove bogus db->lock unlock.
 	* nscd/grpcache.c: Likewise.
