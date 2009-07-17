@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,10 +31,21 @@
 	.align	16
 sem_wait:
 .LSTARTCODE:
+	cfi_startproc
+#ifdef SHARED
+	cfi_personality(DW_EH_PE_pcrel | DW_EH_PE_sdata4 | DW_EH_PE_indirect,
+			DW.ref.__gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_pcrel | DW_EH_PE_sdata4, .LexceptSTART)
+#else
+	cfi_personality(DW_EH_PE_udata4, __gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
+#endif
 	pushq	%r12
-.Lpush_r12:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
 	pushq	%r13
-.Lpush_r13:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r13, 0)
 	movq	%rdi, %r13
 
 #if VALUE == 0
@@ -57,13 +68,17 @@ sem_wait:
 7:	xorl	%eax, %eax
 
 9:	popq	%r13
-.Lpop_r13:
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
 	popq	%r12
-.Lpop_r12:
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
 
 	retq
 
-.Lafter_retq:
+	cfi_adjust_cfa_offset(2 * 8)
+	cfi_rel_offset(%r12, 8)
+	cfi_rel_offset(%r13, 0)
 1:	LOCK
 	addq	$1, NWAITERS(%r13)
 
@@ -141,15 +156,15 @@ sem_wait_cleanup:
 	call	_Unwind_Resume@PLT
 	hlt
 .LENDCODE:
+	cfi_endproc
 	.size	sem_wait_cleanup,.-sem_wait_cleanup
 
 
 	.section .gcc_except_table,"a",@progbits
 .LexceptSTART:
-	.byte	0xff				# @LPStart format (omit)
-	.byte	0xff				# @TType format (omit)
-	.byte	0x01				# call-site format
-						# DW_EH_PE_uleb128
+	.byte	DW_EH_PE_omit			# @LPStart format
+	.byte	DW_EH_PE_omit			# @TType format
+	.byte	DW_EH_PE_uleb128		# call-site format
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.uleb128 .LcleanupSTART-.LSTARTCODE
@@ -161,97 +176,6 @@ sem_wait_cleanup:
 	.uleb128 0
 	.uleb128  0
 .Lcstend:
-
-
-	.section .eh_frame,"a",@progbits
-.LSTARTFRAME:
-	.long	.LENDCIE-.LSTARTCIE		# Length of the CIE.
-.LSTARTCIE:
-	.long	0				# CIE ID.
-	.byte	1				# Version number.
-#ifdef SHARED
-	.string	"zPLR"				# NUL-terminated augmentation
-						# string.
-#else
-	.string	"zPL"				# NUL-terminated augmentation
-						# string.
-#endif
-	.uleb128 1				# Code alignment factor.
-	.sleb128 -8				# Data alignment factor.
-	.byte	16				# Return address register
-						# column.
-#ifdef SHARED
-	.uleb128 7				# Augmentation value length.
-	.byte	0x9b				# Personality: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4
-						# + DW_EH_PE_indirect
-	.long	DW.ref.__gcc_personality_v0-.
-	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-#else
-	.uleb128 10				# Augmentation value length.
-	.byte	0x0				# Personality: absolute
-	.quad	__gcc_personality_v0
-	.byte	0x0				# LSDA Encoding: absolute
-#endif
-	.byte 0x0c				# DW_CFA_def_cfa
-	.uleb128 7
-	.uleb128 8
-	.byte	0x90				# DW_CFA_offset, column 0x10
-	.uleb128 1
-	.align 8
-.LENDCIE:
-
-	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
-.LSTARTFDE:
-	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
-#ifdef SHARED
-	.long	.LSTARTCODE-.			# PC-relative start address
-						# of the code.
-	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
-	.uleb128 4				# Augmentation size
-	.long	.LexceptSTART-.
-#else
-	.quad	.LSTARTCODE			# Start address of the code.
-	.quad	.LENDCODE-.LSTARTCODE		# Length of the code.
-	.uleb128 8				# Augmentation size
-	.quad	.LexceptSTART
-#endif
-
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_r12-.LSTARTCODE
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte   0x8c				# DW_CFA_offset %r12
-        .uleb128 2
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_r13-.Lpush_r12
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte   0x8d				# DW_CFA_offset %r13
-        .uleb128 3
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_r13-.Lpush_r13
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte	0xcd				# DW_CFA_restore %r13
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_r12-.Lpop_r13
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte	0xcc				# DW_CFA_restore %r12
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lafter_retq-.Lpop_r12
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte   0x8c				# DW_CFA_offset %r12
-        .uleb128 2
-	.byte   0x8d				# DW_CFA_offset %r13
-        .uleb128 3
-	.align	8
-.LENDFDE:
 
 
 #ifdef SHARED
