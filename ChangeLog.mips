@@ -1,3 +1,9 @@
+2009-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/do-lookup.h: Remove.
+	* sysdeps/mips/dl-lookup.c: Update from generic version, with
+	non-PIC handling integrated.
+
 2009-06-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Define PF_IEEE802154
