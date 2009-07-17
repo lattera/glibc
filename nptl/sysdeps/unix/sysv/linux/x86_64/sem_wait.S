@@ -40,18 +40,11 @@ sem_wait:
 	cfi_personality(DW_EH_PE_udata4, __gcc_personality_v0)
 	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
 #endif
-	pushq	%r12
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r12, 0)
-	pushq	%r13
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r13, 0)
-	movq	%rdi, %r13
 
 #if VALUE == 0
-	movl	(%r13), %eax
+	movl	(%rdi), %eax
 #else
-	movl	VALUE(%r13), %eax
+	movl	VALUE(%rdi), %eax
 #endif
 2:	testl	%eax, %eax
 	je	1f
@@ -59,27 +52,24 @@ sem_wait:
 	leal	-1(%rax), %edx
 	LOCK
 #if VALUE == 0
-	cmpxchgl %edx, (%r13)
+	cmpxchgl %edx, (%rdi)
 #else
-	cmpxchgl %edx, VALUE(%r13)
+	cmpxchgl %edx, VALUE(%rdi)
 #endif
 	jne	2b
 
-7:	xorl	%eax, %eax
-
-9:	popq	%r13
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
-
+	xorl	%eax, %eax
 	retq
 
-	cfi_adjust_cfa_offset(2 * 8)
-	cfi_rel_offset(%r12, 8)
+1:	pushq	%r12
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
+	pushq	%r13
+	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r13, 0)
-1:	LOCK
+	movq	%rdi, %r13
+
+	LOCK
 	addq	$1, NWAITERS(%r13)
 
 .LcleanupSTART:
@@ -128,8 +118,21 @@ sem_wait:
 
 	LOCK
 	subq	$1, NWAITERS(%r13)
-	jmp	7b
 
+	xorl	%eax, %eax
+
+9:	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
+
+	retq
+
+	cfi_adjust_cfa_offset(2 * 8)
+	cfi_rel_offset(%r12, 8)
+	cfi_rel_offset(%r13, 0)
 4:	negq	%r12
 #if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
