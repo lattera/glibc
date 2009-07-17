@@ -210,10 +210,9 @@ sem_timedwait_cleanup:
 
 	.section .gcc_except_table,"a",@progbits
 .LexceptSTART:
-	.byte	0xff				# @LPStart format (omit)
-	.byte	0xff				# @TType format (omit)
-	.byte	0x01				# call-site format
-						# DW_EH_PE_uleb128
+	.byte	DW_EH_PE_omit			# @LPStart format
+	.byte	DW_EH_PE_omit			# @TType format
+	.byte	DW_EH_PE_uleb128		# call-site format
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.uleb128 .LcleanupSTART-.LSTARTCODE
