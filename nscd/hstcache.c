@@ -153,6 +153,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      (void) cache_add (req->type, &dataset->strdata, req->key_len,
 				&dataset->head, true, db, owner, he == NULL);
 
+	      pthread_rwlock_unlock (&db->lock);
+
 	      /* Mark the old entry as obsolete.  */
 	      if (dh != NULL)
 		dh->usable = false;
@@ -402,6 +404,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 
 	  (void) cache_add (req->type, key_copy, req->key_len,
 			    &dataset->head, true, db, owner, he == NULL);
+
+	  pthread_rwlock_unlock (&db->lock);
 	}
     }
 

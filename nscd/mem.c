@@ -566,6 +566,9 @@ mempool_alloc (struct database_dyn *db, size_t len, int data_alloc)
 	    }
 	}
 
+      if (data_alloc)
+	pthread_rwlock_unlock (&db->lock);
+
       if (! db->last_alloc_failed)
 	{
 	  dbg_log (_("no more memory for database '%s'"), dbnames[db - dbs]);
@@ -587,9 +590,6 @@ mempool_alloc (struct database_dyn *db, size_t len, int data_alloc)
     }
 
   pthread_mutex_unlock (&db->memlock);
-
-  if (data_alloc)
-    pthread_rwlock_unlock (&db->lock);
 
   return res;
 }

@@ -4,17 +4,6 @@
 	* resolv/res-mkquery.c (__res_nopt): If anslen is > 0xffff store
 	0xffff in the EDNS0 record.
 
-2009-07-16  Petr Baudis  <pasky@suse.cz>
-
-	[BZ #10402]
-	* nscd/mem.c (mempool_alloc): Fix unlock missing in the else branch.
-	* nscd/aicache.c: Remove bogus db->lock unlock.
-	* nscd/grpcache.c: Likewise.
-	* nscd/hstcache.c: Likewise.
-	* nscd/initgrcache.c: Likewise.
-	* nscd/pwdcache.c: Likewise.
-	* nscd/servicescache.c: Likewise.
-
 2009-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Use atomic_compare_and_exchange_bool_rel
