@@ -1,3 +1,9 @@
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10360]
+	* resolv/res-mkquery.c (__res_nopt): If anslen is > 0xffff store
+	0xffff in the EDNS0 record.
+
 2009-07-16  Petr Baudis  <pasky@suse.cz>
 
 	* nscd/mem.c (mempool_alloc): Fix unlock missing in the else branch.

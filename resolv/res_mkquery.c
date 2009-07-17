@@ -244,7 +244,7 @@ __res_nopt(res_state statp,
 	*cp++ = 0;	/* "." */
 
 	NS_PUT16(T_OPT, cp);	/* TYPE */
-	NS_PUT16(anslen & 0xffff, cp);	/* CLASS = UDP payload size */
+	NS_PUT16(MIN(anslen, 0xffff), cp);	/* CLASS = UDP payload size */
 	*cp++ = NOERROR;	/* extended RCODE */
 	*cp++ = 0;		/* EDNS version */
 	/* XXX Once we support DNSSEC we change the flag value here.  */
