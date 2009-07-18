@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -127,6 +127,20 @@ run_test (clockid_t cl)
   else if (e != ETIMEDOUT)
     {
       puts ("cond_timedwait did not return ETIMEDOUT");
+      return 1;
+    }
+
+  struct timespec ts2;
+  if (clock_gettime (cl, &ts2) != 0)
+    {
+      puts ("second clock_gettime failed");
+      return 1;
+    }
+
+  if (ts2.tv_sec < ts.tv_sec
+      || (ts2.tv_sec == ts.tv_sec && ts2.tv_nsec < ts.tv_nsec))
+    {
+      puts ("timeout too short");
       return 1;
     }
 

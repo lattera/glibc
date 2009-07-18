@@ -1,5 +1,8 @@
 2009-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cond11.c (run_test): Add test to check that the timeout is
+	long enough.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
 	(__pthread_cond_timedwait): If possible use FUTEX_WAIT_BITSET to
 	directly use absolute timeout.
