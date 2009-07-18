@@ -58,21 +58,25 @@ __pthread_cond_timedwait:
 	pushq	%r14
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r14, 0)
-#define FRAME_SIZE 48
+#ifdef __ASSUME_FUTEX_CLOCK_REALTIME
+# define FRAME_SIZE 32
+#else
+# define FRAME_SIZE 48
+#endif
 	subq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
 	cmpq	$1000000000, 8(%rdx)
 	movl	$EINVAL, %eax
-	jae	18f
+	jae	48f
 
 	/* Stack frame:
 
 	   rsp + 48
 	            +--------------------------+
-	   rsp + 40 | old wake_seq value       |
+	   rsp + 32 | timeout value            |
 	            +--------------------------+
-	   rsp + 24 | timeout value            |
+	   rsp + 24 | old wake_seq value       |
 	            +--------------------------+
 	   rsp + 16 | mutex pointer            |
 	            +--------------------------+
@@ -94,8 +98,18 @@ __pthread_cond_timedwait:
 	je	22f
 	movq	%rsi, dep_mutex(%rdi)
 
+22:
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	cmpl	$0, __have_futex_clock_realtime(%rip)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+#endif
+
 	/* Get internal lock.  */
-22:	movl	$1, %esi
+	movl	$1, %esi
 	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
@@ -103,15 +117,15 @@ __pthread_cond_timedwait:
 #else
 	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	jnz	1f
+	jnz	31f
 
 	/* Unlock the mutex.  */
-2:	movq	16(%rsp), %rdi
+32:	movq	16(%rsp), %rdi
 	xorl	%esi, %esi
 	callq	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax
-	jne	16f
+	jne	46f
 
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
@@ -122,69 +136,10 @@ __pthread_cond_timedwait:
 	movq	8(%rsp), %rdi
 	movq	wakeup_seq(%rdi), %r9
 	movl	broadcast_seq(%rdi), %edx
-	movq	%r9, 40(%rsp)
+	movq	%r9, 24(%rsp)
 	movl	%edx, 4(%rsp)
 
-	/* Get the current time.  */
-8:
-#ifdef __NR_clock_gettime
-	/* Get the clock number.  Note that the field in the condvar
-	   structure stores the number minus 1.  */
-	movq	8(%rsp), %rdi
-	movl	cond_nwaiters(%rdi), %edi
-	andl	$((1 << nwaiters_shift) - 1), %edi
-	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
-	   kernel.  */
-	leaq	24(%rsp), %rsi
-# ifdef SHARED
-	movq	__vdso_clock_gettime@GOTPCREL(%rip), %rax
-	movq	(%rax), %rax
-	PTR_DEMANGLE (%rax)
-	jz	26f
-	call	*%rax
-	jmp	27f
-# endif
-26:	movl	$__NR_clock_gettime, %eax
-	syscall
-27:
-# ifndef __ASSUME_POSIX_TIMERS
-	cmpq	$-ENOSYS, %rax
-	je	19f
-# endif
-
-	/* Compute relative timeout.  */
-	movq	(%r13), %rcx
-	movq	8(%r13), %rdx
-	subq	24(%rsp), %rcx
-	subq	32(%rsp), %rdx
-#else
-	leaq	24(%rsp), %rdi
-	xorl	%esi, %esi
-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
-	callq	*%rax
-
-	/* Compute relative timeout.  */
-	movq	32(%rsp), %rax
-	movl	$1000, %edx
-	mul	%rdx		/* Milli seconds to nano seconds.  */
-	movq	(%r13), %rcx
-	movq	8(%r13), %rdx
-	subq	24(%rsp), %rcx
-	subq	%rax, %rdx
-#endif
-	jns	12f
-	addq	$1000000000, %rdx
-	decq	%rcx
-12:	testq	%rcx, %rcx
-	movq	8(%rsp), %rdi
-	movq	$-ETIMEDOUT, %r14
-	js	6f
-
-	/* Store relative timeout.  */
-21:	movq	%rcx, 24(%rsp)
-	movq	%rdx, 32(%rsp)
-
-	movl	cond_futex(%rdi), %r12d
+38:	movl	cond_futex(%rdi), %r12d
 
 	/* Unlock.  */
 	LOCK
@@ -193,27 +148,26 @@ __pthread_cond_timedwait:
 #else
 	decl	cond_lock(%rdi)
 #endif
-	jne	3f
+	jne	33f
 
-.LcleanupSTART:
-4:	callq	__pthread_enable_asynccancel
+.LcleanupSTART1:
+34:	callq	__pthread_enable_asynccancel
 	movl	%eax, (%rsp)
 
-	leaq	24(%rsp), %r10
+	movq	%r13, %r10
 	cmpq	$-1, dep_mutex(%rdi)
+	movl	$FUTEX_WAIT_BITSET, %eax
+	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+	/* The following only works like this because we only support
+	   two clocks, represented using a single bit.  */
+	xorl	%eax, %eax
+	testl	$1, cond_nwaiters(%rdi)
+	movl	$FUTEX_CLOCK_REALTIME, %edx
+	movl	$0xffffffff, %r9d
+	cmove	%edx, %eax
+	orl	%eax, %esi
 	movq	%r12, %rdx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAIT, %eax
-	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
-#else
-	movl	$0, %eax
-	movl	%fs:PRIVATE_FUTEX, %esi
-	cmove	%eax, %esi
-# if FUTEX_WAIT != 0
-	orl	$FUTEX_WAIT, %esi
-# endif
-#endif
 	addq	$cond_futex, %rdi
 	movl	$SYS_futex, %eax
 	syscall
@@ -221,7 +175,7 @@ __pthread_cond_timedwait:
 
 	movl	(%rsp), %edi
 	callq	__pthread_disable_asynccancel
-.LcleanupEND:
+.LcleanupEND1:
 
 	/* Lock.  */
 	movq	8(%rsp), %rdi
@@ -233,45 +187,45 @@ __pthread_cond_timedwait:
 #else
 	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	jne	5f
+	jne	35f
 
-6:	movl	broadcast_seq(%rdi), %edx
+36:	movl	broadcast_seq(%rdi), %edx
 
 	movq	woken_seq(%rdi), %rax
 
 	movq	wakeup_seq(%rdi), %r9
 
 	cmpl	4(%rsp), %edx
-	jne	23f
+	jne	53f
 
-	cmpq	40(%rsp), %r9
-	jbe	15f
+	cmpq	24(%rsp), %r9
+	jbe	45f
 
 	cmpq	%rax, %r9
-	ja	9f
+	ja	39f
 
-15:	cmpq	$-ETIMEDOUT, %r14
-	jne	8b
+45:	cmpq	$-ETIMEDOUT, %r14
+	jne	38b
 
-13:	incq	wakeup_seq(%rdi)
+99:	incq	wakeup_seq(%rdi)
 	incl	cond_futex(%rdi)
 	movl	$ETIMEDOUT, %r14d
-	jmp	14f
+	jmp	44f
 
-23:	xorq	%r14, %r14
-	jmp	24f
+53:	xorq	%r14, %r14
+	jmp	54f
 
-9:	xorq	%r14, %r14
-14:	incq	woken_seq(%rdi)
+39:	xorq	%r14, %r14
+44:	incq	woken_seq(%rdi)
 
-24:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
+54:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
 	cmpq	$0xffffffffffffffff, total_seq(%rdi)
-	jne	25f
+	jne	55f
 	movl	cond_nwaiters(%rdi), %eax
 	andl	$~((1 << nwaiters_shift) - 1), %eax
-	jne	25f
+	jne	55f
 
 	addq	$cond_nwaiters, %rdi
 	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
@@ -290,21 +244,21 @@ __pthread_cond_timedwait:
 	syscall
 	subq	$cond_nwaiters, %rdi
 
-25:	LOCK
+55:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
 	decl	cond_lock(%rdi)
 #endif
-	jne	10f
+	jne	40f
 
-11:	movq	16(%rsp), %rdi
+41:	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
 
 	testq	%rax, %rax
 	cmoveq	%r14, %rax
 
-18:	addq	$FRAME_SIZE, %rsp
+48:	addq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(-FRAME_SIZE)
 	popq	%r14
 	cfi_adjust_cfa_offset(-8)
@@ -319,8 +273,7 @@ __pthread_cond_timedwait:
 	retq
 
 	/* Initial locking failed.  */
-1:
-	cfi_adjust_cfa_offset(3 * 8 + FRAME_SIZE)
+31:	cfi_adjust_cfa_offset(3 * 8 + FRAME_SIZE)
 	cfi_rel_offset(%r12, FRAME_SIZE + 16)
 	cfi_rel_offset(%r13, FRAME_SIZE + 8)
 	cfi_rel_offset(%r14, FRAME_SIZE)
@@ -332,10 +285,10 @@ __pthread_cond_timedwait:
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
 	callq	__lll_lock_wait
-	jmp	2b
+	jmp	32b
 
 	/* Unlock in loop requires wakeup.  */
-3:
+33:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -344,10 +297,10 @@ __pthread_cond_timedwait:
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
-	jmp	4b
+	jmp	34b
 
 	/* Locking in loop failed.  */
-5:
+35:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -359,10 +312,10 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
-	jmp	6b
+	jmp	36b
 
 	/* Unlock after loop requires wakeup.  */
-10:
+40:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -371,10 +324,10 @@ __pthread_cond_timedwait:
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
-	jmp	11b
+	jmp	41b
 
 	/* The initial unlocking of the mutex failed.  */
-16:	movq	8(%rsp), %rdi
+46:	movq	8(%rsp), %rdi
 	movq	%rax, (%rsp)
 	LOCK
 #if cond_lock == 0
@@ -382,7 +335,7 @@ __pthread_cond_timedwait:
 #else
 	decl	cond_lock(%rdi)
 #endif
-	jne	17f
+	jne	47f
 
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
@@ -393,23 +346,229 @@ __pthread_cond_timedwait:
 	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 
-17:	movq	(%rsp), %rax
-	jmp	18b
+47:	movq	(%rsp), %rax
+	jmp	48b
 
-#if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
-	/* clock_gettime not available.  */
-19:	leaq	24(%rsp), %rdi
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
+	/* Get internal lock.  */
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+# if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+# else
+	cmpxchgl %esi, cond_lock(%rdi)
+# endif
+	jnz	1f
+
+	/* Unlock the mutex.  */
+2:	movq	16(%rsp), %rdi
+	xorl	%esi, %esi
+	callq	__pthread_mutex_unlock_usercnt
+
+	testl	%eax, %eax
+	jne	46b
+
+	movq	8(%rsp), %rdi
+	incq	total_seq(%rdi)
+	incl	cond_futex(%rdi)
+	addl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
+
+	/* Get and store current wakeup_seq value.  */
+	movq	8(%rsp), %rdi
+	movq	wakeup_seq(%rdi), %r9
+	movl	broadcast_seq(%rdi), %edx
+	movq	%r9, 24(%rsp)
+	movl	%edx, 4(%rsp)
+
+	/* Get the current time.  */
+8:
+# ifdef __NR_clock_gettime
+	/* Get the clock number.  Note that the field in the condvar
+	   structure stores the number minus 1.  */
+	movq	8(%rsp), %rdi
+	movl	cond_nwaiters(%rdi), %edi
+	andl	$((1 << nwaiters_shift) - 1), %edi
+	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
+	   kernel.  */
+	leaq	32(%rsp), %rsi
+#  ifdef SHARED
+	movq	__vdso_clock_gettime@GOTPCREL(%rip), %rax
+	movq	(%rax), %rax
+	PTR_DEMANGLE (%rax)
+	jz	26f
+	call	*%rax
+	jmp	27f
+#  endif
+26:	movl	$__NR_clock_gettime, %eax
+	syscall
+27:
+#  ifndef __ASSUME_POSIX_TIMERS
+	cmpq	$-ENOSYS, %rax
+	je	19f
+#  endif
+
+	/* Compute relative timeout.  */
+	movq	(%r13), %rcx
+	movq	8(%r13), %rdx
+	subq	32(%rsp), %rcx
+	subq	40(%rsp), %rdx
+# else
+	leaq	24(%rsp), %rdi
 	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
-	movq	32(%rsp), %rax
+	movq	40(%rsp), %rax
 	movl	$1000, %edx
 	mul	%rdx		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
 	movq	8(%r13), %rdx
-	subq	24(%rsp), %rcx
+	subq	32(%rsp), %rcx
+	subq	%rax, %rdx
+# endif
+	jns	12f
+	addq	$1000000000, %rdx
+	decq	%rcx
+12:	testq	%rcx, %rcx
+	movq	8(%rsp), %rdi
+	movq	$-ETIMEDOUT, %r14
+	js	6f
+
+	/* Store relative timeout.  */
+21:	movq	%rcx, 32(%rsp)
+	movq	%rdx, 40(%rsp)
+
+	movl	cond_futex(%rdi), %r12d
+
+	/* Unlock.  */
+	LOCK
+# if cond_lock == 0
+	decl	(%rdi)
+# else
+	decl	cond_lock(%rdi)
+# endif
+	jne	3f
+
+.LcleanupSTART2:
+4:	callq	__pthread_enable_asynccancel
+	movl	%eax, (%rsp)
+
+	leaq	32(%rsp), %r10
+	cmpq	$-1, dep_mutex(%rdi)
+	movq	%r12, %rdx
+# ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAIT, %eax
+	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+# else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+#  if FUTEX_WAIT != 0
+	orl	$FUTEX_WAIT, %esi
+#  endif
+# endif
+	addq	$cond_futex, %rdi
+	movl	$SYS_futex, %eax
+	syscall
+	movq	%rax, %r14
+
+	movl	(%rsp), %edi
+	callq	__pthread_disable_asynccancel
+.LcleanupEND2:
+
+	/* Lock.  */
+	movq	8(%rsp), %rdi
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+# if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+# else
+	cmpxchgl %esi, cond_lock(%rdi)
+# endif
+	jne	5f
+
+6:	movl	broadcast_seq(%rdi), %edx
+
+	movq	woken_seq(%rdi), %rax
+
+	movq	wakeup_seq(%rdi), %r9
+
+	cmpl	4(%rsp), %edx
+	jne	53b
+
+	cmpq	24(%rsp), %r9
+	jbe	45b
+
+	cmpq	%rax, %r9
+	ja	39b
+
+	cmpq	$-ETIMEDOUT, %r14
+	jne	8b
+
+	jmp	99b
+
+	/* Initial locking failed.  */
+1:	cfi_adjust_cfa_offset(3 * 8 + FRAME_SIZE)
+	cfi_rel_offset(%r12, FRAME_SIZE + 16)
+	cfi_rel_offset(%r13, FRAME_SIZE + 8)
+	cfi_rel_offset(%r14, FRAME_SIZE)
+# if cond_lock != 0
+	addq	$cond_lock, %rdi
+# endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_lock_wait
+	jmp	2b
+
+	/* Unlock in loop requires wakeup.  */
+3:
+# if cond_lock != 0
+	addq	$cond_lock, %rdi
+# endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_unlock_wake
+	jmp	4b
+
+	/* Locking in loop failed.  */
+5:
+# if cond_lock != 0
+	addq	$cond_lock, %rdi
+# endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_lock_wait
+# if cond_lock != 0
+	subq	$cond_lock, %rdi
+# endif
+	jmp	6b
+
+# if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
+	/* clock_gettime not available.  */
+19:	leaq	32(%rsp), %rdi
+	xorl	%esi, %esi
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
+
+	/* Compute relative timeout.  */
+	movq	40(%rsp), %rax
+	movl	$1000, %edx
+	mul	%rdx		/* Milli seconds to nano seconds.  */
+	movq	(%r13), %rcx
+	movq	8(%r13), %rdx
+	subq	32(%rsp), %rcx
 	subq	%rax, %rdx
 	jns	20f
 	addq	$1000000000, %rdx
@@ -419,6 +578,7 @@ __pthread_cond_timedwait:
 	movq	$-ETIMEDOUT, %r14
 	js	6b
 	jmp	21b
+# endif
 #endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
@@ -575,10 +735,16 @@ __condvar_cleanup2:
 	.byte	DW_EH_PE_uleb128		# call-site format
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
-	.uleb128 .LcleanupSTART-.LSTARTCODE
-	.uleb128 .LcleanupEND-.LcleanupSTART
+	.uleb128 .LcleanupSTART1-.LSTARTCODE
+	.uleb128 .LcleanupEND1-.LcleanupSTART1
 	.uleb128 __condvar_cleanup2-.LSTARTCODE
 	.uleb128  0
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	.uleb128 .LcleanupSTART2-.LSTARTCODE
+	.uleb128 .LcleanupEND2-.LcleanupSTART2
+	.uleb128 __condvar_cleanup2-.LSTARTCODE
+	.uleb128  0
+#endif
 	.uleb128 .LcallUR-.LSTARTCODE
 	.uleb128 .LENDCODE-.LcallUR
 	.uleb128 0
