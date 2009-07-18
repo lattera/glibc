@@ -32,137 +32,23 @@
 	.text
 
 
-	.align	16
-	.type	__condvar_cleanup, @function
-	.globl	__condvar_cleanup
-	.hidden	__condvar_cleanup
-__condvar_cleanup:
-	cfi_startproc
-	pushq	%r12
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r12, 0)
-
-	/* Get internal lock.  */
-	movq	%rdi, %r8
-	movq	8(%rdi), %rdi
-	movl	$1, %esi
-	xorl	%eax, %eax
-	LOCK
-#if cond_lock == 0
-	cmpxchgl %esi, (%rdi)
-#else
-	cmpxchgl %esi, cond_lock(%rdi)
-#endif
-	jz	1f
-
-#if cond_lock != 0
-	addq	$cond_lock, %rdi
-#endif
-	cmpq	$-1, dep_mutex-cond_lock(%rdi)
-	movl	$LLL_PRIVATE, %eax
-	movl	$LLL_SHARED, %esi
-	cmovne	%eax, %esi
-	callq	__lll_lock_wait
-#if cond_lock != 0
-	subq	$cond_lock, %rdi
-#endif
-
-1:	movl	broadcast_seq(%rdi), %edx
-	cmpl	4(%r8), %edx
-	jne	3f
-
-	/* We increment the wakeup_seq counter only if it is lower than
-	   total_seq.  If this is not the case the thread was woken and
-	   then canceled.  In this case we ignore the signal.  */
-	movq	total_seq(%rdi), %rax
-	cmpq	wakeup_seq(%rdi), %rax
-	jbe	6f
-	incq	wakeup_seq(%rdi)
-	incl	cond_futex(%rdi)
-6:	incq	woken_seq(%rdi)
-
-3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
-
-	/* Wake up a thread which wants to destroy the condvar object.  */
-	xorq	%r12, %r12
-	cmpq	$0xffffffffffffffff, total_seq(%rdi)
-	jne	4f
-	movl	cond_nwaiters(%rdi), %eax
-	andl	$~((1 << nwaiters_shift) - 1), %eax
-	jne	4f
-
-	addq	$cond_nwaiters, %rdi
-	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
-	movl	$1, %edx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAKE, %eax
-	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
-#else
-	movl	$0, %eax
-	movl	%fs:PRIVATE_FUTEX, %esi
-	cmove	%eax, %esi
-	orl	$FUTEX_WAKE, %esi
-#endif
-	movl	$SYS_futex, %eax
-	syscall
-	subq	$cond_nwaiters, %rdi
-	movl	$1, %r12d
-
-4:	LOCK
-#if cond_lock == 0
-	decl	(%rdi)
-#else
-	decl	cond_lock(%rdi)
-#endif
-	je	2f
-#if cond_lock != 0
-	addq	$cond_lock, %rdi
-#endif
-	cmpq	$-1, dep_mutex-cond_lock(%rdi)
-	movl	$LLL_PRIVATE, %eax
-	movl	$LLL_SHARED, %esi
-	cmovne	%eax, %esi
-	callq	__lll_unlock_wake
-
-	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	testq	%r12, %r12
-	jnz	5f
-	addq	$cond_futex, %rdi
-	cmpq	$-1, dep_mutex-cond_futex(%rdi)
-	movl	$0x7fffffff, %edx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAKE, %eax
-	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
-#else
-	movl	$0, %eax
-	movl	%fs:PRIVATE_FUTEX, %esi
-	cmove	%eax, %esi
-	orl	$FUTEX_WAKE, %esi
-#endif
-	movl	$SYS_futex, %eax
-	syscall
-
-5:	movq	16(%r8), %rdi
-	callq	__pthread_mutex_cond_lock
-
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
-
-	retq
-	cfi_endproc
-	.size	__condvar_cleanup, .-__condvar_cleanup
-
-
 /* int pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 			       const struct timespec *abstime)  */
 	.globl	__pthread_cond_timedwait
 	.type	__pthread_cond_timedwait, @function
 	.align	16
 __pthread_cond_timedwait:
+.LSTARTCODE:
 	cfi_startproc
+#ifdef SHARED
+	cfi_personality(DW_EH_PE_pcrel | DW_EH_PE_sdata4 | DW_EH_PE_indirect,
+			DW.ref.__gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_pcrel | DW_EH_PE_sdata4, .LexceptSTART)
+#else
+	cfi_personality(DW_EH_PE_udata4, __gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
+#endif
+
 	pushq	%r12
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r12, 0)
@@ -172,7 +58,7 @@ __pthread_cond_timedwait:
 	pushq	%r14
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r14, 0)
-#define FRAME_SIZE 80
+#define FRAME_SIZE 48
 	subq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
@@ -182,9 +68,7 @@ __pthread_cond_timedwait:
 
 	/* Stack frame:
 
-	   rsp + 80
-	            +--------------------------+
-	   rsp + 48 | cleanup buffer           |
+	   rsp + 48
 	            +--------------------------+
 	   rsp + 40 | old wake_seq value       |
 	            +--------------------------+
@@ -233,16 +117,6 @@ __pthread_cond_timedwait:
 	incq	total_seq(%rdi)
 	incl	cond_futex(%rdi)
 	addl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
-
-	/* Install cancellation handler.  */
-#ifdef PIC
-	leaq	__condvar_cleanup(%rip), %rsi
-#else
-	leaq	__condvar_cleanup, %rsi
-#endif
-	leaq	48(%rsp), %rdi
-	movq	%rsp, %rdx
-	callq	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
@@ -321,6 +195,7 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
+.LcleanupSTART:
 4:	callq	__pthread_enable_asynccancel
 	movl	%eax, (%rsp)
 
@@ -346,6 +221,7 @@ __pthread_cond_timedwait:
 
 	movl	(%rsp), %edi
 	callq	__pthread_disable_asynccancel
+.LcleanupEND:
 
 	/* Lock.  */
 	movq	8(%rsp), %rdi
@@ -422,11 +298,7 @@ __pthread_cond_timedwait:
 #endif
 	jne	10f
 
-	/* Remove cancellation handler.  */
-11:	movq	48+CLEANUP_PREV(%rsp), %rdx
-	movq	%rdx, %fs:CLEANUP
-
-	movq	16(%rsp), %rdi
+11:	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
 
 	testq	%rax, %rax
@@ -548,7 +420,179 @@ __pthread_cond_timedwait:
 	js	6b
 	jmp	21b
 #endif
-	cfi_endproc
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
+
+
+	.align	16
+	.type	__condvar_cleanup2, @function
+__condvar_cleanup2:
+	/* Stack frame:
+
+	   rsp + 72
+		    +--------------------------+
+	   rsp + 64 | %r12                     |
+		    +--------------------------+
+	   rsp + 56 | %r13                     |
+		    +--------------------------+
+	   rsp + 48 | %r14                     |
+		    +--------------------------+
+	   rsp + 24 | unused                   |
+	            +--------------------------+
+	   rsp + 16 | mutex pointer            |
+	            +--------------------------+
+	   rsp +  8 | condvar pointer          |
+	            +--------------------------+
+	   rsp +  4 | old broadcast_seq value  |
+	            +--------------------------+
+	   rsp +  0 | old cancellation mode    |
+	            +--------------------------+
+	*/
+
+	movq	%rax, 24(%rsp)
+
+	/* Get internal lock.  */
+	movq	8(%rsp), %rdi
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+#if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+#else
+	cmpxchgl %esi, cond_lock(%rdi)
+#endif
+	jz	1f
+
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_lock_wait
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
+
+1:	movl	broadcast_seq(%rdi), %edx
+	cmpl	4(%rsp), %edx
+	jne	3f
+
+	/* We increment the wakeup_seq counter only if it is lower than
+	   total_seq.  If this is not the case the thread was woken and
+	   then canceled.  In this case we ignore the signal.  */
+	movq	total_seq(%rdi), %rax
+	cmpq	wakeup_seq(%rdi), %rax
+	jbe	6f
+	incq	wakeup_seq(%rdi)
+	incl	cond_futex(%rdi)
+6:	incq	woken_seq(%rdi)
+
+3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	xorq	%r12, %r12
+	cmpq	$0xffffffffffffffff, total_seq(%rdi)
+	jne	4f
+	movl	cond_nwaiters(%rdi), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
+	jne	4f
+
+	cmpq	$-1, dep_mutex(%rdi)
+	leaq	cond_nwaiters(%rdi), %rdi
+	movl	$1, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
+	syscall
+	subq	$cond_nwaiters, %rdi
+	movl	$1, %r12d
+
+4:	LOCK
+#if cond_lock == 0
+	decl	(%rdi)
+#else
+	decl	cond_lock(%rdi)
+#endif
+	je	2f
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_unlock_wake
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	testq	%r12, %r12
+	jnz	5f
+	addq	$cond_futex, %rdi
+	cmpq	$-1, dep_mutex-cond_futex(%rdi)
+	movl	$0x7fffffff, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
+	syscall
+
+5:	movq	16(%rsp), %rdi
+	callq	__pthread_mutex_cond_lock
+
+	movq	24(%rsp), %rdi
+	movq	FRAME_SIZE(%rsp), %r14
+	movq	FRAME_SIZE+8(%rsp), %r13
+	movq	FRAME_SIZE+16(%rsp), %r12
+.LcallUR:
+	call	_Unwind_Resume@PLT
+	hlt
+.LENDCODE:
+	cfi_endproc
+	.size	__condvar_cleanup2, .-__condvar_cleanup2
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	DW_EH_PE_omit			# @LPStart format
+	.byte	DW_EH_PE_omit			# @TType format
+	.byte	DW_EH_PE_uleb128		# call-site format
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.uleb128 .LcleanupSTART-.LSTARTCODE
+	.uleb128 .LcleanupEND-.LcleanupSTART
+	.uleb128 __condvar_cleanup2-.LSTARTCODE
+	.uleb128  0
+	.uleb128 .LcallUR-.LSTARTCODE
+	.uleb128 .LENDCODE-.LcallUR
+	.uleb128 0
+	.uleb128  0
+.Lcstend:
+
+
+#ifdef SHARED
+	.hidden	DW.ref.__gcc_personality_v0
+	.weak	DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align	8
+	.type	DW.ref.__gcc_personality_v0, @object
+	.size	DW.ref.__gcc_personality_v0, 8
+DW.ref.__gcc_personality_v0:
+	.quad	__gcc_personality_v0
+#endif
