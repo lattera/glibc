@@ -31,6 +31,131 @@
 
 	.text
 
+
+	.align	16
+	.type	__condvar_cleanup, @function
+	.globl	__condvar_cleanup
+	.hidden	__condvar_cleanup
+__condvar_cleanup:
+	cfi_startproc
+	pushq	%r12
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
+
+	/* Get internal lock.  */
+	movq	%rdi, %r8
+	movq	8(%rdi), %rdi
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+#if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+#else
+	cmpxchgl %esi, cond_lock(%rdi)
+#endif
+	jz	1f
+
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_lock_wait
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
+
+1:	movl	broadcast_seq(%rdi), %edx
+	cmpl	4(%r8), %edx
+	jne	3f
+
+	/* We increment the wakeup_seq counter only if it is lower than
+	   total_seq.  If this is not the case the thread was woken and
+	   then canceled.  In this case we ignore the signal.  */
+	movq	total_seq(%rdi), %rax
+	cmpq	wakeup_seq(%rdi), %rax
+	jbe	6f
+	incq	wakeup_seq(%rdi)
+	incl	cond_futex(%rdi)
+6:	incq	woken_seq(%rdi)
+
+3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	xorq	%r12, %r12
+	cmpq	$0xffffffffffffffff, total_seq(%rdi)
+	jne	4f
+	movl	cond_nwaiters(%rdi), %eax
+	andl	$~((1 << nwaiters_shift) - 1), %eax
+	jne	4f
+
+	addq	$cond_nwaiters, %rdi
+	cmpq	$-1, dep_mutex-cond_nwaiters(%rdi)
+	movl	$1, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
+	syscall
+	subq	$cond_nwaiters, %rdi
+	movl	$1, %r12d
+
+4:	LOCK
+#if cond_lock == 0
+	decl	(%rdi)
+#else
+	decl	cond_lock(%rdi)
+#endif
+	je	2f
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_unlock_wake
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	testq	%r12, %r12
+	jnz	5f
+	addq	$cond_futex, %rdi
+	cmpq	$-1, dep_mutex-cond_futex(%rdi)
+	movl	$0x7fffffff, %edx
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAKE, %eax
+	movl	$(FUTEX_WAKE|FUTEX_PRIVATE_FLAG), %esi
+	cmove	%eax, %esi
+#else
+	movl	$0, %eax
+	movl	%fs:PRIVATE_FUTEX, %esi
+	cmove	%eax, %esi
+	orl	$FUTEX_WAKE, %esi
+#endif
+	movl	$SYS_futex, %eax
+	syscall
+
+5:	movq	16(%r8), %rdi
+	callq	__pthread_mutex_cond_lock
+
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
+
+	retq
+	cfi_endproc
+	.size	__condvar_cleanup, .-__condvar_cleanup
+
+
 /* int pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 			       const struct timespec *abstime)  */
 	.globl	__pthread_cond_timedwait
