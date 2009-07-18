@@ -514,10 +514,7 @@ __pthread_cond_timedwait:
 	jmp	99b
 
 	/* Initial locking failed.  */
-1:	cfi_adjust_cfa_offset(3 * 8 + FRAME_SIZE)
-	cfi_rel_offset(%r12, FRAME_SIZE + 16)
-	cfi_rel_offset(%r13, FRAME_SIZE + 8)
-	cfi_rel_offset(%r14, FRAME_SIZE)
+1:
 # if cond_lock != 0
 	addq	$cond_lock, %rdi
 # endif
