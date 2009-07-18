@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <kernel-features.h>
 #include <lowlevellock.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
@@ -73,8 +74,13 @@ sem_timedwait:
 	pushq	%r14
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r14, 0)
-	subq	$24, %rsp
-	cfi_adjust_cfa_offset(24)
+#ifdef __ASSUME_FUTEX_CLOCK_REALTIME
+# define STACKFRAME 8
+#else
+# define STACKFRAME 24
+#endif
+	subq	$STACKFRAME, %rsp
+	cfi_adjust_cfa_offset(STACKFRAME)
 
 	movq	%rdi, %r12
 	movq	%rsi, %r13
@@ -87,6 +93,97 @@ sem_timedwait:
 	LOCK
 	addq	$1, NWAITERS(%r12)
 
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	cmpl	$0, __have_futex_clock_realtime(%rip)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+#endif
+
+.LcleanupSTART:
+13:	call	__pthread_enable_asynccancel
+	movl	%eax, (%rsp)
+
+	movq	%r13, %r10
+#if VALUE == 0
+	movq	%r12, %rdi
+#else
+	leaq	VALUE(%r12), %rdi
+#endif
+	movl	$0xffffffff, %r9d
+	movl	$FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, %esi
+	orl	PRIVATE(%rdi), %esi
+	movl	$SYS_futex, %eax
+	xorl	%edx, %edx
+	syscall
+	movq	%rax, %r14
+
+	movl	(%rsp), %edi
+	call	__pthread_disable_asynccancel
+.LcleanupEND:
+
+	testq	%r14, %r14
+	je	11f
+	cmpq	$-EWOULDBLOCK, %r14
+	jne	3f
+
+11:
+#if VALUE == 0
+	movl	(%r12), %eax
+#else
+	movl	VALUE(%r12), %eax
+#endif
+14:	testl	%eax, %eax
+	je	13b
+
+	leaq	-1(%rax), %rcx
+	LOCK
+#if VALUE == 0
+	cmpxchgl %ecx, (%r12)
+#else
+	cmpxchgl %ecx, VALUE(%r12)
+#endif
+	jne	14b
+
+10:	xorl	%eax, %eax
+
+15:	LOCK
+	subq	$1, NWAITERS(%r12)
+
+	addq	$STACKFRAME, %rsp
+	cfi_adjust_cfa_offset(-STACKFRAME)
+	popq	%r14
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r14)
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
+	retq
+
+	cfi_adjust_cfa_offset(STACKFRAME + 3 * 8)
+	cfi_rel_offset(%r12, STACKFRAME + 2 * 8)
+	cfi_rel_offset(%r13, STACKFRAME + 1 * 8)
+	cfi_rel_offset(%r14, STACKFRAME)
+3:	negq	%r14
+6:
+#if USE___THREAD
+	movq	errno@gottpoff(%rip), %rdx
+	movl	%r14d, %fs:(%rdx)
+#else
+	callq	__errno_location@plt
+	movl	%r14d, (%rax)
+#endif
+
+	orl	$-1, %eax
+	jmp	15b
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
 7:	xorl	%esi, %esi
 	movq	%rsp, %rdi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
@@ -105,27 +202,27 @@ sem_timedwait:
 	decq	%rdi
 5:	testq	%rdi, %rdi
 	movl	$ETIMEDOUT, %r14d
-	js	6f		/* Time is already up.  */
+	js	6b		/* Time is already up.  */
 
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
 
-.LcleanupSTART:
+.LcleanupSTART2:
 	call	__pthread_enable_asynccancel
 	movl	%eax, 16(%rsp)
 
 	movq	%rsp, %r10
-#if VALUE == 0
+# if VALUE == 0
 	movq	%r12, %rdi
-#else
+# else
 	leaq	VALUE(%r12), %rdi
-#endif
-#if FUTEX_WAIT == 0
+# endif
+# if FUTEX_WAIT == 0
 	movl	PRIVATE(%rdi), %esi
-#else
+# else
 	movl	$FUTEX_WAIT, %esi
 	orl	PRIVATE(%rdi), %esi
-#endif
+# endif
 	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
 	syscall
@@ -133,65 +230,32 @@ sem_timedwait:
 
 	movl	16(%rsp), %edi
 	call	__pthread_disable_asynccancel
-.LcleanupEND:
+.LcleanupEND2:
 
 	testq	%r14, %r14
 	je	9f
 	cmpq	$-EWOULDBLOCK, %r14
-	jne	3f
+	jne	3b
 
 9:
-#if VALUE == 0
+# if VALUE == 0
 	movl	(%r12), %eax
-#else
+# else
 	movl	VALUE(%r12), %eax
-#endif
+# endif
 8:	testl	%eax, %eax
 	je	7b
 
 	leaq	-1(%rax), %rcx
 	LOCK
-#if VALUE == 0
+# if VALUE == 0
 	cmpxchgl %ecx, (%r12)
-#else
+# else
 	cmpxchgl %ecx, VALUE(%r12)
-#endif
+# endif
 	jne	8b
-
-	xorl	%eax, %eax
-
-10:	LOCK
-	subq	$1, NWAITERS(%r12)
-
-	addq	$24, %rsp
-	cfi_adjust_cfa_offset(-24)
-	popq	%r14
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r14)
-	popq	%r13
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
-	retq
-
-	cfi_adjust_cfa_offset(3 * 8 + 24)
-	cfi_rel_offset(%r12, 24 + 2 * 8)
-	cfi_rel_offset(%r13, 24 + 1 * 8)
-	cfi_rel_offset(%r14, 24)
-3:	negq	%r14
-6:
-#if USE___THREAD
-	movq	errno@gottpoff(%rip), %rdx
-	movl	%r14d, %fs:(%rdx)
-#else
-	callq	__errno_location@plt
-	movl	%r14d, (%rax)
-#endif
-
-	orl	$-1, %eax
 	jmp	10b
+#endif
 	.size	sem_timedwait,.-sem_timedwait
 
 
@@ -219,6 +283,12 @@ sem_timedwait_cleanup:
 	.uleb128 .LcleanupEND-.LcleanupSTART
 	.uleb128 sem_timedwait_cleanup-.LSTARTCODE
 	.uleb128  0
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	.uleb128 .LcleanupSTART2-.LSTARTCODE
+	.uleb128 .LcleanupEND2-.LcleanupSTART2
+	.uleb128 sem_timedwait_cleanup-.LSTARTCODE
+	.uleb128  0
+#endif
 	.uleb128 .LcallUR-.LSTARTCODE
 	.uleb128 .LENDCODE-.LcallUR
 	.uleb128 0

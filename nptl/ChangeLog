@@ -1,5 +1,9 @@
 2009-07-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	If possible use FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME to directly
+	use absolute timeout.
+
 	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S (sem_wait): Optimize
 	handling of uncontested semaphore.
 
