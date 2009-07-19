@@ -1,5 +1,9 @@
 2009-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
+	(__lll_robust_timedlock_wait): If possible use FUTEX_WAIT_BITSET to
+	directly use absolute timeout.
+
 	* tst-sem5.c (do_test): Add test for premature timeout.
 	* Makefile: Linu tst-sem5 with librt.
 
