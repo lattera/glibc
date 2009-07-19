@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -36,16 +36,21 @@ pthread_rwlock_timedwrlock:
 	cfi_startproc
 	pushq	%r12
 	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
 	pushq	%r13
 	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r13, 0)
+#ifdef __ASSUME_FUTEX_CLOCK_REALTIME
+# define VALREG	%edx
+#else
 	pushq	%r14
 	cfi_adjust_cfa_offset(8)
-	cfi_offset(%r12, -16)
-	cfi_offset(%r13, -24)
-	cfi_offset(%r14, -32)
+	cfi_rel_offset(%r14, 0)
 
 	subq	$16, %rsp
 	cfi_adjust_cfa_offset(16)
+# define VALREG %r14d
+#endif
 
 	movq	%rdi, %r12
 	movq	%rsi, %r13
@@ -74,7 +79,7 @@ pthread_rwlock_timedwrlock:
 	incl	WRITERS_QUEUED(%r12)
 	je	4f
 
-	movl	WRITERS_WAKEUP(%r12), %r14d
+	movl	WRITERS_WAKEUP(%r12), VALREG
 
 	LOCK
 #if MUTEX == 0
@@ -84,8 +89,33 @@ pthread_rwlock_timedwrlock:
 #endif
 	jne	10f
 
+11:
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	cmpl	$0, __have_futex_clock_realtime(%rip)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+#endif
+
+	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, %esi
+	xorl	PSHARED(%r12), %esi
+	movq	%r13, %r10
+	movl	$0xffffffff, %r9d
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	movl	%r14d, %edx
+#endif
+21:	leaq	WRITERS_WAKEUP(%r12), %rdi
+	movl	$SYS_futex, %eax
+	syscall
+	movq	%rax, %rdx
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	.subsection 2
+.Lreltmo:
 	/* Get current time.  */
-11:	movq	%rsp, %rdi
+	movq	%rsp, %rdi
 	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
@@ -122,13 +152,12 @@ pthread_rwlock_timedwrlock:
 #endif
 	movq	%rsp, %r10
 	movl	%r14d, %edx
-	leaq	WRITERS_WAKEUP(%r12), %rdi
-	movl	$SYS_futex, %eax
-	syscall
-	movq	%rax, %rdx
-17:
 
-	/* Reget the lock.  */
+	jmp	21b
+	.previous
+#endif
+
+17:	/* Reget the lock.  */
 	movl	$1, %esi
 	xorl	%eax, %eax
 	LOCK
@@ -160,11 +189,13 @@ pthread_rwlock_timedwrlock:
 
 7:	movq	%rdx, %rax
 
+#ifndef __ASSUME_PRIVATE_FUTEX
 	addq	$16, %rsp
 	cfi_adjust_cfa_offset(-16)
 	popq	%r14
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r14)
+#endif
 	popq	%r13
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r13)
@@ -173,10 +204,16 @@ pthread_rwlock_timedwrlock:
 	cfi_restore(%r12)
 	retq
 
+#ifdef __ASSUME_PRIVATE_FUTEX
+	cfi_adjust_cfa_offset(16)
+	cfi_rel_offset(%r12, 8)
+	cfi_rel_offset(%r13, 0)
+#else
 	cfi_adjust_cfa_offset(40)
 	cfi_offset(%r12, -16)
 	cfi_offset(%r13, -24)
 	cfi_offset(%r14, -32)
+#endif
 1:	movl	PSHARED(%rdi), %esi
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
