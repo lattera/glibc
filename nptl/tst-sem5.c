@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -70,6 +70,20 @@ do_test (void)
     {
       printf ("sem_timedwait return errno = %d instead of ETIMEDOUT\n",
 	      errno);
+      return 1;
+    }
+
+  struct timespec ts2;
+  if (clock_gettime (CLOCK_REALTIME, &ts2) != 0)
+    {
+      puts ("clock_gettime failed");
+      return 1;
+    }
+
+  if (ts2.tv_sec < ts.tv_sec
+      || (ts2.tv_sec == ts.tv_sec && ts2.tv_nsec < ts.tv_nsec))
+    {
+      puts ("timeout too short");
       return 1;
     }
 

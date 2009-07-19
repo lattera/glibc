@@ -1,5 +1,8 @@
 2009-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-sem5.c (do_test): Add test for premature timeout.
+	* Makefile: Linu tst-sem5 with librt.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
 	(pthread_rwlock_timedwrlock): If possible use FUTEX_WAIT_BITSET to
 	directly use absolute timeout.
