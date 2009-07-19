@@ -3,6 +3,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
 	(pthread_rwlock_timedwrlock): If possible use FUTEX_WAIT_BITSET to
 	directly use absolute timeout.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Likewise.
 
 	* tst-cond11.c (run_test): Add test to check that the timeout is
 	long enough.
