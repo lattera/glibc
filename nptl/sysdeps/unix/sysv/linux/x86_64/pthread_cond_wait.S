@@ -128,28 +128,15 @@ __pthread_cond_wait:
 	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
 	movq	%r12, %rdx
-	// XXX reverse + lea
-	addq	$cond_futex, %rdi
-	cmpq	$-1, dep_mutex-cond_futex(%rdi)
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAIT, %eax
-	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
-#else
-	movl	$0, %eax
-	movl	%fs:PRIVATE_FUTEX, %esi
-	cmove	%eax, %esi
-# if FUTEX_WAIT != 0
-#  error "cc destroyed by following orl"
-	orl	$FUTEX_WAIT, %esi
-# endif
-#endif
+	cmpq	$-1, dep_mutex(%rdi)
+	leaq	cond_futex(%rdi), %rdi
+	movl	$FUTEX_WAIT, %esi
 	je	60f
 
 	movq	dep_mutex-cond_futex(%rdi), %r8
 	/* Requeue to a PI mutex if the PI bit is set.  */
 	testl	$PI_BIT, MUTEX_KIND(%r8)
-	je	60f
+	je	61f
 
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
 	movl	$SYS_futex, %eax
@@ -162,9 +149,17 @@ __pthread_cond_wait:
 	cmpq	$-4095, %rax
 	jnae	62f
 
-	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+# ifndef __ASSUME_PRIVATE_FUTEX
+	movl	$FUTEX_WAIT, %esi
+# endif
 #endif
 
+61:
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+#else
+	orl	%fs:PRIVATE_FUTEX, %esi
+#endif
 60:	xorl	%r13d, %r13d
 	movl	$SYS_futex, %eax
 	syscall

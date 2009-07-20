@@ -160,16 +160,14 @@ __pthread_cond_timedwait:
 	movq	8(%rsp), %rdi
 
 	movq	%r13, %r10
+	movl	$FUTEX_WAIT_BITSET, %esi
 	cmpq	$-1, dep_mutex(%rdi)
-	movl	$FUTEX_WAIT_BITSET, %eax
-	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
 	je	60f
 
 	movq	dep_mutex(%rdi), %r8
 	/* Requeue to a PI mutex if the PI bit is set.  */
 	testl	$PI_BIT, MUTEX_KIND(%r8)
-	je	60f
+	je	61f
 
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
 	xorl	%eax, %eax
@@ -191,10 +189,10 @@ __pthread_cond_timedwait:
 	cmpq	$-4095, %rax
 	jnae	62f
 
-	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
 	subq	$cond_futex, %rdi
 #endif
 
+61:	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
 60:	xorl	%r15d, %r15d
 	xorl	%eax, %eax
 	/* The following only works like this because we only support
