@@ -1,5 +1,14 @@
 2009-07-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Define
+	FUTEX_WAIT_REQUEUE_PI and FUTEX_CMP_REQUEUE_PI.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: If mutex
+	is a PI mutex, then use FUTEX_CMP_REQUEUE_PI.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: If mutex
+	is a PI mutex, then use FUTEX_WAIT_REQUEUE_PI.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
 	(__pthread_cond_timedwait): Make more robust.
 

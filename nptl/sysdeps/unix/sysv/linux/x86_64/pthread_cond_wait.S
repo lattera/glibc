@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
+#include <pthread-pi-defines.h>
 
 #include <kernel-features.h>
 
@@ -47,6 +48,9 @@ __pthread_cond_wait:
 	pushq	%r12
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r12, 0)
+	pushq	%r13
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r13, 0)
 #define FRAME_SIZE 32
 	subq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
@@ -124,24 +128,48 @@ __pthread_cond_wait:
 	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
 	movq	%r12, %rdx
-	addq	$cond_futex-cond_lock, %rdi
+	// XXX reverse + lea
+	addq	$cond_futex, %rdi
 	cmpq	$-1, dep_mutex-cond_futex(%rdi)
 #ifdef __ASSUME_PRIVATE_FUTEX
 	movl	$FUTEX_WAIT, %eax
 	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
 	cmove	%eax, %esi
 #else
-	movl	$FUTEX_WAIT, %eax
+	movl	$0, %eax
 	movl	%fs:PRIVATE_FUTEX, %esi
 	cmove	%eax, %esi
 # if FUTEX_WAIT != 0
+#  error "cc destroyed by following orl"
 	orl	$FUTEX_WAIT, %esi
 # endif
 #endif
+	je	60f
+
+	movq	dep_mutex-cond_futex(%rdi), %r8
+	/* Requeue to a PI mutex if the PI bit is set.  */
+	testl	$PI_BIT, MUTEX_KIND(%r8)
+	je	60f
+
+	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
 	movl	$SYS_futex, %eax
 	syscall
 
-	movl	(%rsp), %edi
+	movl	$1, %r13d
+#ifdef __ASSUME_REQUEUE_PI
+	jmp	62f
+#else
+	cmpq	$-4095, %rax
+	jnae	62f
+
+	movl	$(FUTEX_WAIT|FUTEX_PRIVATE_FLAG), %esi
+#endif
+
+60:	xorl	%r13d, %r13d
+	movl	$SYS_futex, %eax
+	syscall
+
+62:	movl	(%rsp), %edi
 	callq	__pthread_disable_asynccancel
 .LcleanupEND:
 
@@ -209,11 +237,21 @@ __pthread_cond_wait:
 #endif
 	jne	10f
 
-11:	movq	16(%rsp), %rdi
+	/* If requeue_pi is used the kernel performs the locking of the
+	   mutex. */
+11:	xorl	%eax, %eax
+	testl	%r13d, %r13d
+	jnz	14f
+
+	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
+
 14:	addq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(-FRAME_SIZE)
 
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
 	popq	%r12
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r12)
@@ -223,8 +261,9 @@ __pthread_cond_wait:
 
 	/* Initial locking failed.  */
 1:
-	cfi_adjust_cfa_offset(8 + FRAME_SIZE)
-	cfi_rel_offset(%r12, FRAME_SIZE)
+	cfi_adjust_cfa_offset(16 + FRAME_SIZE)
+	cfi_rel_offset(%r12, FRAME_SIZE + 8)
+	cfi_rel_offset(%r13, FRAME_SIZE)
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -308,9 +347,11 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 __condvar_cleanup1:
 	/* Stack frame:
 
-	   rsp + 40
+	   rsp + 48
 		    +--------------------------+
-	   rsp + 32 | %r12                     |
+	   rsp + 40 | %r12                     |
+		    +--------------------------+
+	   rsp + 32 | %r13                     |
 		    +--------------------------+
 	   rsp + 24 | unused                   |
 	            +--------------------------+
@@ -431,7 +472,8 @@ __condvar_cleanup1:
 	callq	__pthread_mutex_cond_lock
 
 	movq	24(%rsp), %rdi
-	movq	32(%rsp), %r12
+	movq	40(%rsp), %r12
+	movq	32(%rsp), %r13
 .LcallUR:
 	call	_Unwind_Resume@PLT
 	hlt

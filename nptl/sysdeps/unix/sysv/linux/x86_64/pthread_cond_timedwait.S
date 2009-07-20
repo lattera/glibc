@@ -21,6 +21,7 @@
 #include <shlib-compat.h>
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
+#include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
 
 #include <kernel-features.h>
@@ -58,6 +59,9 @@ __pthread_cond_timedwait:
 	pushq	%r14
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r14, 0)
+	pushq	%r15
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r15, 0)
 #ifdef __ASSUME_FUTEX_CLOCK_REALTIME
 # define FRAME_SIZE 32
 #else
@@ -160,9 +164,41 @@ __pthread_cond_timedwait:
 	movl	$FUTEX_WAIT_BITSET, %eax
 	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
 	cmove	%eax, %esi
+	je	60f
+
+	movq	dep_mutex(%rdi), %r8
+	/* Requeue to a PI mutex if the PI bit is set.  */
+	testl	$PI_BIT, MUTEX_KIND(%r8)
+	je	60f
+
+	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
+	xorl	%eax, %eax
 	/* The following only works like this because we only support
 	   two clocks, represented using a single bit.  */
+	testl	$1, cond_nwaiters(%rdi)
+	movl	$FUTEX_CLOCK_REALTIME, %edx
+	cmove	%edx, %eax
+	orl	%eax, %esi
+	movq	%r12, %rdx
+	addq	$cond_futex, %rdi
+	movl	$SYS_futex, %eax
+	syscall
+
+	movl	$1, %r15d
+#ifdef __ASSUME_REQUEUE_PI
+	jmp	62f
+#else
+	cmpq	$-4095, %rax
+	jnae	62f
+
+	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
+	subq	$cond_futex, %rdi
+#endif
+
+60:	xorl	%r15d, %r15d
 	xorl	%eax, %eax
+	/* The following only works like this because we only support
+	   two clocks, represented using a single bit.  */
 	testl	$1, cond_nwaiters(%rdi)
 	movl	$FUTEX_CLOCK_REALTIME, %edx
 	movl	$0xffffffff, %r9d
@@ -172,7 +208,7 @@ __pthread_cond_timedwait:
 	addq	$cond_futex, %rdi
 	movl	$SYS_futex, %eax
 	syscall
-	movq	%rax, %r14
+62:	movq	%rax, %r14
 
 	movl	(%rsp), %edi
 	callq	__pthread_disable_asynccancel
@@ -253,14 +289,23 @@ __pthread_cond_timedwait:
 #endif
 	jne	40f
 
-41:	movq	16(%rsp), %rdi
+	/* If requeue_pi is used the kernel performs the locking of the
+	   mutex. */
+41:	xorl	%eax, %eax
+	testl	%r15d, %r15d
+	jnz	63f
+
+	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
 
-	testq	%rax, %rax
+63:	testq	%rax, %rax
 	cmoveq	%r14, %rax
 
 48:	addq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(-FRAME_SIZE)
+	popq	%r15
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r15)
 	popq	%r14
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r14)
@@ -274,10 +319,11 @@ __pthread_cond_timedwait:
 	retq
 
 	/* Initial locking failed.  */
-31:	cfi_adjust_cfa_offset(3 * 8 + FRAME_SIZE)
-	cfi_rel_offset(%r12, FRAME_SIZE + 16)
-	cfi_rel_offset(%r13, FRAME_SIZE + 8)
-	cfi_rel_offset(%r14, FRAME_SIZE)
+31:	cfi_adjust_cfa_offset(4 * 8 + FRAME_SIZE)
+	cfi_rel_offset(%r12, FRAME_SIZE + 24)
+	cfi_rel_offset(%r13, FRAME_SIZE + 16)
+	cfi_rel_offset(%r14, FRAME_SIZE + 8)
+	cfi_rel_offset(%r15, FRAME_SIZE)
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
@@ -353,6 +399,8 @@ __pthread_cond_timedwait:
 
 #ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 .Lreltmo:
+	xorl	%r15d, %r15d
+
 	/* Get internal lock.  */
 	movl	$1, %esi
 	xorl	%eax, %eax
@@ -716,9 +764,10 @@ __condvar_cleanup2:
 	callq	__pthread_mutex_cond_lock
 
 	movq	24(%rsp), %rdi
-	movq	FRAME_SIZE(%rsp), %r14
-	movq	FRAME_SIZE+8(%rsp), %r13
-	movq	FRAME_SIZE+16(%rsp), %r12
+	movq	FRAME_SIZE(%rsp), %r15
+	movq	FRAME_SIZE+8(%rsp), %r14
+	movq	FRAME_SIZE+16(%rsp), %r13
+	movq	FRAME_SIZE+24(%rsp), %r12
 .LcallUR:
 	call	_Unwind_Resume@PLT
 	hlt

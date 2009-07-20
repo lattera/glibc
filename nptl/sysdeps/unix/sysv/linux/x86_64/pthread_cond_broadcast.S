@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
@@ -70,11 +70,13 @@ __pthread_cond_broadcast:
 8:	cmpq	$-1, %r8
 	je	9f
 
-	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
-	/* XXX: The kernel only supports FUTEX_CMP_REQUEUE to the same
-	   type of futex (private resp. shared).  */
-	testl	$(PI_BIT | PS_BIT), MUTEX_KIND(%r8)
+	/* Do not use requeue for pshared condvars.  */
+	testl	$PS_BIT, MUTEX_KIND(%r8)
 	jne	9f
+
+	/* Requeue to a PI mutex if the PI bit is set.  */
+	testl	$PI_BIT, MUTEX_KIND(%r8)
+	jne	81f
 
 	/* Wake up all threads.  */
 #ifdef __ASSUME_PRIVATE_FUTEX
@@ -96,6 +98,20 @@ __pthread_cond_broadcast:
 
 10:	xorl	%eax, %eax
 	retq
+
+	/* Wake up all threads.  */
+81:	movl	$(FUTEX_CMP_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
+	movl	$SYS_futex, %eax
+	movl	$1, %edx
+	movl	$0x7fffffff, %r10d
+	syscall
+
+	/* For any kind of error, which mainly is EAGAIN, we try again
+	   with WAKE.  The general test also covers running on old
+	   kernels.  */
+	cmpq	$-4095, %rax
+	jb	10b
+	jmp	9f
 
 	.align	16
 	/* Unlock.  */

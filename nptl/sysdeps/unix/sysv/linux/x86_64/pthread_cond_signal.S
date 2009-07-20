@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,6 +21,7 @@
 #include <shlib-compat.h>
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
+#include <pthread-pi-defines.h>
 #include <kernel-features.h>
 #include <pthread-errnos.h>
 
@@ -56,19 +57,23 @@ __pthread_cond_signal:
 
 	/* Wake up one thread.  */
 	cmpq	$-1, dep_mutex(%r8)
+	movl	$FUTEX_WAKE_OP, %esi
 	movl	$1, %edx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAKE_OP, %eax
-	movl	$(FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG), %esi
-	cmove	%eax, %esi
-#else
-	movl	$0, %eax
-	movl	%fs:PRIVATE_FUTEX, %esi
-	cmove	%eax, %esi
-	orl	$FUTEX_WAKE_OP, %esi
-#endif
-	movl	$1, %r10d
 	movl	$SYS_futex, %eax
+	je	8f
+
+	/* Get the address of the mutex used.  */
+	movq    dep_mutex(%r8), %rcx
+	testl	$PI_BIT, MUTEX_KIND(%rcx)
+	jne	9f
+
+#ifdef __ASSUME_PRIVATE_FUTEX
+	movl	$(FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG), %esi
+#else
+	orl	%fs:PRIVATE_FUTEX, %esi
+#endif
+
+8:	movl	$1, %r10d
 #if cond_lock != 0
 	addq	$cond_lock, %r8
 #endif
@@ -85,9 +90,27 @@ __pthread_cond_signal:
 	xorl	%eax, %eax
 	retq
 
-7:	/* %esi should be either FUTEX_WAKE_OP or
-	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
-	xorl	$(FUTEX_WAKE ^ FUTEX_WAKE_OP), %esi
+	/* Wake up one thread and requeue none in the PI Mutex case.  */
+9:	movl	$(FUTEX_CMP_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
+	movq	%rcx, %r8
+	xorq	%r10, %r10
+	movl	(%rdi), %r9d	// XXX Can this be right?
+	syscall
+
+	leaq	-cond_futex(%rdi), %r8
+
+	/* For any kind of error, we try again with WAKE.
+	   The general test also covers running on old kernels.  */
+	cmpq	$-4095, %rax
+	jb	4f
+
+7:
+#ifdef __ASSUME_PRIVATE_FUTEX
+	andl	$FUTEX_PRIVATE_FLAG, %esi
+#else
+	andl	%fs:PRIVATE_FUTEX, %esi
+#endif
+	orl	$FUTEX_WAKE, %esi
 	movl	$SYS_futex, %eax
 	/* %rdx should be 1 already from $FUTEX_WAKE_OP syscall.
 	movl	$1, %edx  */
