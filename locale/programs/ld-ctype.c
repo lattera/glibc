@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -181,6 +181,7 @@ struct locale_ctype_t
   size_t default_missing_lineno;
 
   uint32_t to_nonascii;
+  uint32_t nonascii_case;
 
   /* The arrays for the binary representation.  */
   char_class_t *ctype_b;
@@ -625,6 +626,27 @@ character <SP> not defined in character map")));
   else
     ctype->class256_collection[space_seq->bytes[0]] |= BIT (tok_print);
 
+  /* Check whether all single-byte characters make to their upper/lowercase
+     equivalent according to the ASCII rules.  */
+  for (cnt = 'A'; cnt <= 'Z'; ++cnt)
+    {
+      uint32_t uppval = ctype->map256_collection[0][cnt];
+      uint32_t lowval = ctype->map256_collection[1][cnt];
+      uint32_t lowuppval = ctype->map256_collection[0][lowval];
+      uint32_t lowlowval = ctype->map256_collection[1][lowval];
+
+      if (uppval != cnt
+	  || lowval != cnt + 0x20
+	  || lowuppval != cnt
+	  || lowlowval != cnt + 0x20)
+	ctype->nonascii_case = 1;
+    }
+  for (cnt = 0; cnt < 256; ++cnt)
+    if (cnt < 'A' || (cnt > 'Z' && cnt < 'a') || cnt > 'z')
+      if (ctype->map256_collection[0][cnt] != cnt
+	  || ctype->map256_collection[1][cnt] != cnt)
+	ctype->nonascii_case = 1;
+
   /* Now that the tests are done make sure the name array contains all
      characters which are handled in the WIDTH section of the
      character set definition file.  */
@@ -1044,6 +1066,9 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
 	  CTYPE_DATA (_NL_CTYPE_MAP_TO_NONASCII,
 		      &ctype->to_nonascii, sizeof (uint32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_NONASCII_CASE,
+		      &ctype->nonascii_case, sizeof (uint32_t));
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN):
 	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));

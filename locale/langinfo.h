@@ -348,6 +348,7 @@ enum
   _NL_CTYPE_EXTRA_MAP_12,
   _NL_CTYPE_EXTRA_MAP_13,
   _NL_CTYPE_EXTRA_MAP_14,
+  _NL_CTYPE_NONASCII_CASE,
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.

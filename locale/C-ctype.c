@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -682,6 +682,8 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
     { .string = (const char *) _nl_C_LC_CTYPE_class_alnum.header },
     /* NR_MAPS wctrans_tables */
     { .string = (const char *) _nl_C_LC_CTYPE_map_toupper.header },
-    { .string = (const char *) _nl_C_LC_CTYPE_map_tolower.header }
+    { .string = (const char *) _nl_C_LC_CTYPE_map_tolower.header },
+    /* _NL_CTYPE_NONASCII_CASE */
+    { .word = 0 }
   }
 };

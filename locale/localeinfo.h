@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995-2003, 2005, 2006, 2007, 2008
+   Copyright (C) 1995-2003, 2005, 2006, 2007, 2008, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -35,6 +35,8 @@
 #define	LIMAGIC(category) \
   (category == LC_COLLATE						\
    ? ((unsigned int) (0x20051014 ^ (category)))				\
+   : category == LC_CTYPE						\
+   ? ((unsigned int) (0x20090720 ^ (category)))				\
    : ((unsigned int) (0x20031115 ^ (category))))
 
 /* Two special weight constants for the collation data.  */

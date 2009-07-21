@@ -1,3 +1,16 @@
+2009-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/localeinfo.h (LIMAGIC): Update value for LC_CTYPE.
+	* locale/langinfo.h: Define _NL_CTYPE_NONASCII_CASE.
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Add initializer for
+	_NL_CTYPE_NONASCII_CASE.
+	* locale/programs/ld-ctype.c (locale_ctype_t): Add nonascii_case
+	field.
+	(ctype_finish): Check whether there are any 8-bit characters outside
+	the range ASCII has or whether the mapping isn't the same as for
+	ASCII (±0x20).  Set nonascii_case appropriately.
+	(ctype_output): Add output handler for nonascii_case.
+
 2009-07-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/sysdep.h: Define cfi_personality, cfi_lsda,
