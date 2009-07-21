@@ -29,8 +29,7 @@
 # include <locale/localeinfo.h>
 
 # define LOADBYTE(C)		tolower (C)
-# define CMPBYTE(C1, C2) \
-  ((C1) == (C2) || tolower (C1) == tolower (C2))
+# define CMPBYTE(C1, C2)	(tolower (C1) == tolower (C2))
 #else
 # define LOADBYTE(C)		(C)
 # define CMPBYTE(C1, C2)	((C1) == (C2))
@@ -222,16 +221,14 @@ static int
 __inline__ __attribute__ ((__always_inline__,))
 KMP16Bovrlap (__m128i s2)
 {
-  __m128i a, b;
-  int bmsk, k1;
-
-  b = _mm_unpacklo_epi8 (s2, s2);
-  a = _mm_unpacklo_epi8 (b, b);
+  __m128i b = _mm_unpacklo_epi8 (s2, s2);
+  __m128i a = _mm_unpacklo_epi8 (b, b);
   a = _mm_shuffle_epi32 (a, 0);
   b = _mm_srli_si128 (s2, sizeof (char));
-  bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (b, a));
+  int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (b, a));
 
   /* _BitScanForward(&k1, bmsk); */
+  int k1;
   __asm ("bsfl %[bmsk], %[k1]" : [k1] "=r" (k1) : [bmsk] "r" (bmsk));
   if (!bmsk)
     return 16;
@@ -256,31 +253,18 @@ char *
 __attribute__ ((section (".text.sse4.2")))
 STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 {
-  int len;
-  int len1;
-  const unsigned char *p1 = s1;
+#define p1 s1
   const unsigned char *p2 = s2;
-  __m128i frag1;
-  __m128i frag2;
-  __m128i zero;
-  int cmp;
-  int cmp_c;
-  int cmp_z;
-  int cmp_s;
-  int kmp_fwd;
-  int bmsk;
-  int bmsk1;
-  const unsigned char *pt;
 
-  if (!p2[0])
+  if (p2[0] == '\0')
     return (char *) p1;
 
-  if (!p1[0])
+  if (p1[0] == '\0')
     return NULL;
 
   /* Check if p1 length is 1 byte long.  */
-  if (!p1[1])
-    return !p2[1] && CMPBYTE (p1[0], p2[0]) ? (char *) p1 : NULL;
+  if (p1[1] == '\0')
+    return p2[1] == '\0' && CMPBYTE (p1[0], p2[0]) ? (char *) p1 : NULL;
 
 #ifdef USE_AS_STRCASESTR
   __m128i (*strloadu) (const unsigned char *);
@@ -294,44 +278,39 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 #endif
 
   /* p1 > 1 byte long.  Load up to 16 bytes of fragment.  */
-  frag1 = strloadu (p1);
+  __m128i frag1 = strloadu (p1);
 
-  if (p2[1])
-    {
-      /* p2 is > 1 byte long.  */
-      frag2 = strloadu (p2);
-    }
+  __m128i frag2;
+  if (p2[1] != '\0')
+    /* p2 is > 1 byte long.  */
+    frag2 = strloadu (p2);
   else
-    {
-      zero = _mm_setzero_si128 ();
-      frag2 = _mm_insert_epi8 (zero, LOADBYTE(p2[0]), 0);
-    }
+    frag2 = _mm_insert_epi8 (_mm_setzero_si128 (), LOADBYTE (p2[0]), 0);
 
   /* Unsigned bytes, equal order, does frag2 has null?  */
-  cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
-  cmp_z = _mm_cmpistrz (frag2, frag1, 0x0c);
-  cmp = _mm_cmpistri (frag2, frag1, 0x0c);
-  cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
+  int cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
+  int cmp_z = _mm_cmpistrz (frag2, frag1, 0x0c);
+  int cmp = _mm_cmpistri (frag2, frag1, 0x0c);
+  int cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
   if (cmp_s & cmp_c)
     {
-      zero = _mm_setzero_si128 ();
-      bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (frag2, zero));
+      int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (frag2,
+						    _mm_setzero_si128 ()));
+      int len;
       __asm ("bsfl %[bmsk], %[len]"
 	     : [len] "=r" (len) : [bmsk] "r" (bmsk));
       p1 += cmp;
       if ((len + cmp) <= 16)
 	return (char *) p1;
-      else
-	{
-	  /* Load up to 16 bytes of fragment.  */
-	  frag1 = strloadu (p1);
-	  cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
-	  cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
-	  cmp_z = _mm_cmpistrz (frag2, frag1, 0x0c);
-	  cmp = _mm_cmpistri (frag2, frag1, 0x0c);
-	  if ((len + cmp) <= 16)
-	    return (char *) p1 + cmp;
-	}
+
+      /* Load up to 16 bytes of fragment.  */
+      frag1 = strloadu (p1);
+      cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
+      cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
+      cmp_z = _mm_cmpistrz (frag2, frag1, 0x0c);
+      cmp = _mm_cmpistri (frag2, frag1, 0x0c);
+      if ((len + cmp) <= 16)
+	return (char *) p1 + cmp;
     }
 
   if (cmp_s)
@@ -353,18 +332,16 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 
       if (!cmp_c)
 	return NULL;
-      else
-	{
-	  /* Since s2 is less than 16 bytes, com_c is definitive
-	     determination of full match.  */
-	  return (char *) p1 + cmp;
-	}
+
+      /* Since s2 is less than 16 bytes, com_c is definitive
+	 determination of full match.  */
+      return (char *) p1 + cmp;
     }
 
   /* General case, s2 is at least 16 bytes or more.
      First, the common case of false-match at first byte of p2.  */
-  pt = NULL;
-  kmp_fwd = 0;
+  const unsigned char *pt = NULL;
+  int kmp_fwd = 0;
 re_trace:
   while (!cmp_c)
     {
@@ -378,11 +355,11 @@ re_trace:
       frag1 = strloadu (p1);
       /* Unsigned bytes, equal order, is there a partial match?  */
       cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
-      cmp = _mm_cmpistri(frag2, frag1, 0x0c);
-      cmp_z = _mm_cmpistrz(frag2, frag1, 0x0c);
+      cmp = _mm_cmpistri (frag2, frag1, 0x0c);
+      cmp_z = _mm_cmpistrz (frag2, frag1, 0x0c);
     }
 
-  /* Next, handle inital positive match as first byte of p2.  We have
+  /* Next, handle initial positive match as first byte of p2.  We have
      a partial fragment match, make full determination until we reached
      end of s2.  */
   if (!cmp)
@@ -394,7 +371,7 @@ re_trace:
       p1 += 16;
       p2 += 16;
       /* Load up to 16 bytes of fragment.  */
-      frag2 = strloadu(p2);
+      frag2 = strloadu (p2);
     }
   else
     {
@@ -426,7 +403,7 @@ re_trace:
       cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
     }
 
-  /* Full determination yielded false result, retrace s1 to next
+  /* Full determination yielded a false result, retrace s1 to next
      starting position.
      Zflg	1      0      1			0/1
      Sflg	0      1      1			0/1
@@ -435,18 +412,20 @@ re_trace:
 	      false  match  retrace s1     else false
    */
 
-  if(cmp_s & !cmp)
+  if (cmp_s & !cmp)
     return (char *) pt;
-  else if (cmp_z)
+  if (cmp_z)
     {
       if (!cmp_s)
 	return NULL;
 
       /* Handle both zero and sign flag set and s1 is shorter in
 	 length.  */
-      zero = _mm_setzero_si128 ();
-      bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag2));
-      bmsk1 = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag1));
+      __m128i zero = _mm_setzero_si128 ();
+      int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag2));
+      int bmsk1 = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag1));
+      int len;
+      int len1;
       __asm ("bsfl %[bmsk], %[len]"
 	     : [len] "=r" (len) : [bmsk] "r" (bmsk));
       __asm ("bsfl %[bmsk1], %[len1]"
@@ -471,13 +450,11 @@ re_trace:
 
   /* Since s2 is at least 16 bytes long, we're certain there is no
      match.  */
-  if (!p1[0])
+  if (p1[0] == '\0')
     return NULL;
-  else
-    {
-      /* Load up to 16 bytes of fragment.  */
-      frag1 = strloadu (p1);
-    }
+
+  /* Load up to 16 bytes of fragment.  */
+  frag1 = strloadu (p1);
 
   /* Unsigned bytes, equal order, is there a partial match?  */
   cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
