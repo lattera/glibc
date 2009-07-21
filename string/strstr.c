@@ -1,5 +1,6 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994,1996,1997,2000,2001,2003,2008 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996,1997,2000,2001,2003,2008,2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,11 +41,15 @@
 
 #undef strstr
 
+#ifndef STRSTR
+#define STRSTR strstr
+#endif
+
 /* Return the first occurrence of NEEDLE in HAYSTACK.  Return HAYSTACK
    if NEEDLE is empty, otherwise NULL if NEEDLE is not found in
    HAYSTACK.  */
 char *
-strstr (const char *haystack_start, const char *needle_start)
+STRSTR (const char *haystack_start, const char *needle_start)
 {
   const char *haystack = haystack_start;
   const char *needle = needle_start;

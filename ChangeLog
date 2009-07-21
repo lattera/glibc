@@ -1,3 +1,20 @@
+2009-07-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/strcasestr.c (STRCASESTR): New macro.
+	(__strcasestr): Renamed to ..
+	(STRCASESTR): ...this.
+	* string/strstr.c (STRSTR): New macro.
+	(strstr): Renamed to ..
+	(STRSTR): ...this.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strstr-c strcasestr-c
+	(CFLAGS-strstr.c): New.
+	(CFLAGS-strcasestr.c): Likewise.
+	* sysdeps/x86_64/multiarch/strcasestr-c.c: New file.
+	* sysdeps/x86_64/multiarch/strcasestr.c: New file.
+	* sysdeps/x86_64/multiarch/strstr-c.c: New file.
+	* sysdeps/x86_64/multiarch/strstr.c: New file.
+
 2009-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/localeinfo.h (LIMAGIC): Update value for LC_CTYPE.
