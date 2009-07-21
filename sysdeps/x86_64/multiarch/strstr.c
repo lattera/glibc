@@ -26,8 +26,7 @@
 
 #ifdef USE_AS_STRCASESTR
 # include <ctype.h>
-# include <locale.h>
-# include <string.h>
+# include <locale/localeinfo.h>
 
 # define LOADBYTE(C)		tolower (C)
 # define CMPBYTE(C1, C2) \
@@ -257,12 +256,20 @@ char *
 __attribute__ ((section (".text.sse4.2")))
 STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 {
-  int len, len1;
+  int len;
+  int len1;
   const unsigned char *p1 = s1;
   const unsigned char *p2 = s2;
-  __m128i frag1, frag2, zero;
-  int cmp, cmp_c, cmp_z, cmp_s;
-  int kmp_fwd, bmsk, bmsk1;
+  __m128i frag1;
+  __m128i frag2;
+  __m128i zero;
+  int cmp;
+  int cmp_c;
+  int cmp_z;
+  int cmp_s;
+  int kmp_fwd;
+  int bmsk;
+  int bmsk1;
   const unsigned char *pt;
 
   if (!p2[0])
@@ -277,11 +284,8 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 
 #ifdef USE_AS_STRCASESTR
   __m128i (*strloadu) (const unsigned char *);
-  const char *used_locale = setlocale (LC_CTYPE, NULL);
 
-  if (!used_locale
-      || (used_locale[0] == 'C' && used_locale[1] == '\0')
-      || strcmp (used_locale, "POSIX") == 0)
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_NONASCII_CASE) == 0)
     strloadu = __m128i_strloadu_tolower_posix;
   else
     strloadu = __m128i_strloadu_tolower;
@@ -430,7 +434,7 @@ re_trace:
      action   done   done   continue    continue if s2 < s1
 	      false  match  retrace s1     else false
    */
- 
+
   if(cmp_s & !cmp)
     return (char *) pt;
   else if (cmp_z)
