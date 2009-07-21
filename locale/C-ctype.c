@@ -528,7 +528,7 @@ _nl_C_LC_CTYPE_width attribute_hidden =
 };
 
 /* Number of fields with fixed meanings, starting at 0.  */
-#define NR_FIXED 71
+#define NR_FIXED 72
 /* Number of class fields, starting at CLASS_OFFSET.  */
 #define NR_CLASSES 12
 /* Number of map fields, starting at MAP_OFFSET.  */
@@ -667,6 +667,8 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
     { .wstr = NULL },
     /* _NL_CTYPE_MAP_TO_NONASCII */
     { .word = 0 },
+    /* _NL_CTYPE_NONASCII_CASE */
+    { .word = 0 },
     /* NR_CLASSES wctype_tables */
     { .string = (const char *) _nl_C_LC_CTYPE_class_upper.header },
     { .string = (const char *) _nl_C_LC_CTYPE_class_lower.header },
@@ -682,8 +684,6 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
     { .string = (const char *) _nl_C_LC_CTYPE_class_alnum.header },
     /* NR_MAPS wctrans_tables */
     { .string = (const char *) _nl_C_LC_CTYPE_map_toupper.header },
-    { .string = (const char *) _nl_C_LC_CTYPE_map_tolower.header },
-    /* _NL_CTYPE_NONASCII_CASE */
-    { .word = 0 }
+    { .string = (const char *) _nl_C_LC_CTYPE_map_tolower.header }
   }
 };
