@@ -1,5 +1,10 @@
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Reset
+	SSSE3 bit for Atoms.
+	* sysdeps/x86_64/multiarch/strcpy.S: New need to perform Atom test
+	here anymore.
+
 	* posix/tst-rfc3484.c (do_test): Initialize entire sockaddr_in
 	structure before copying it to avoid warning.
 	* posix/tst-rfc3484-2.c (do_test): Likewise.

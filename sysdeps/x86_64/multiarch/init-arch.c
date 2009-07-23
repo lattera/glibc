@@ -68,7 +68,13 @@ __init_cpu_features (void)
 	  __cpu_features.model += extended_model;
 	}
       else if (__cpu_features.family == 0x06)
-	__cpu_features.model += extended_model;
+	{
+	  __cpu_features.model += extended_model;
+
+	  if (__cpu_features.model == 0x1c)
+	    /* Avoid SSSE3 on Atom since it is slow.  */
+	    __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx &= ~(1 << 9);
+	}
     }
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)

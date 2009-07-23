@@ -64,16 +64,9 @@ ENTRY(STRCPY)
 	call	__init_cpu_features
 1:	leaq	STRCPY_SSE2(%rip), %rax
 	testl	$(1<<9), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
-	jz	3f
-/* Avoid SSSE3 strcpy on Atom since it is slow.  */
-	cmpl	$1, __cpu_features+KIND_OFFSET(%rip)
-	jne	2f
-	cmpl	$6, __cpu_features+FAMILY_OFFSET(%rip)
-	jne	2f
-	cmpl	$28, __cpu_features+MODEL_OFFSET(%rip)
-	jz	3f
-2:	leaq	STRCPY_SSSE3(%rip), %rax
-3:	ret
+	jz	2f
+	leaq	STRCPY_SSSE3(%rip), %rax
+2:	ret
 END(STRCPY)
 
 	.section .text.ssse3,"ax",@progbits
