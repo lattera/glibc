@@ -1,5 +1,9 @@
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add more
+	cache descriptors.
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Likewise.
+
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Reset
 	SSSE3 bit for Atoms.
 	* sysdeps/x86_64/multiarch/strcpy.S: New need to perform Atom test

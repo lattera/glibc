@@ -138,6 +138,9 @@ static const struct intel_02_cache_info
     { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  2097152 },
     { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  4194304 },
     { 0xe4, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  8388608 },
+    { 0xea, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 12582912 },
+    { 0xeb, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 18874368 },
+    { 0xec, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 25165824 },
   };
 #define nintel_02_known (sizeof (intel_02_known) / sizeof (intel_02_known[0]))
 
