@@ -1,5 +1,9 @@
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/cacheinfo.c [USE_MULTIARCH]: Rearrange code to
+	avoid additional cpuid instructions.  Most of the information is
+	stored somewhere.
+
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add more
 	cache descriptors.
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Likewise.
