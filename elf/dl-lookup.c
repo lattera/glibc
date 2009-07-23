@@ -318,7 +318,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		size_t hash2 = 1 + hash % (size - 2);
 		while (1)
 		  {
-		    if (table[idx].hashval == 0)
+		    if (table[idx].name == NULL)
 		      {
 			table[idx].hashval = hash;
 			table[idx].name = strtab + sym->st_name;
@@ -336,7 +336,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			if (table[idx].map->l_type == lt_loaded)
 			  /* Make sure we don't unload this object by
 			     artificially increason the open count.  */
-			  ++table[idx].map->l_direct_opencount;
+			  table[idx].map->l_flags_1 |= DF_1_NODELETE;
 
 			return;
 		      }
@@ -369,8 +369,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			  return 1;
 			}
 
-		      if (entries[idx].hashval == 0
-			  && entries[idx].name == NULL)
+		      if (entries[idx].name == NULL)
 			break;
 
 		      idx += hash2;
@@ -392,7 +391,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			}
 
 		      for (idx = 0; idx < size; ++idx)
-			if (entries[idx].hashval != 0)
+			if (entries[idx].name != NULL)
 			  enter (newentries, newsize, entries[idx].hashval,
 				 entries[idx].name, entries[idx].sym,
 				 entries[idx].map);
