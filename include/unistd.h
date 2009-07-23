@@ -1,6 +1,8 @@
 #ifndef _UNISTD_H
 # include <posix/unistd.h>
 
+__BEGIN_DECLS
+
 libc_hidden_proto (_exit, __noreturn__)
 libc_hidden_proto (alarm)
 libc_hidden_proto (confstr)
@@ -173,5 +175,7 @@ extern int __have_sock_cloexec;
    SOCK_CLOEXEC.  Avoid defining separate variables for all of them
    unless it is really necessary.  */
 #define __have_pipe2 __have_sock_cloexec
+
+__END_DECLS
 
 #endif

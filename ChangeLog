@@ -1,5 +1,9 @@
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10416]
+	* include/unistd.h: Make header file suitable for C++ test cases.
+	Patch by Duncan Simpson <dps@simpson.demon.co.uk>.
+
 	* sysdeps/unix/sysv/linux/i386/makecontext.S: Ensure we preserve the
 	stack alignment in the exit code.
 
