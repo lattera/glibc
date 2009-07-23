@@ -1,3 +1,14 @@
+2009-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-unique1.c: Extend test to check for unloading DSO with
+	unique symbol definition.
+	Patch by Jakub Jelinek.
+	* elf/dl-lookup.c (do_lookup_x): When entering a new unique symbol,
+	make sure the object with the definition cannot be unloaded.  Adjust
+	a few types.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): The map element in
+	the unique symbol hash table should not be const.
+
 2009-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr.c: Minor cleanups.  Remove

@@ -312,7 +312,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		 definition we have to use it.  */
 	      void enter (struct unique_sym *table, size_t size,
 			  unsigned int hash, const char *name,
-			  const ElfW(Sym) *sym, const struct link_map *map)
+			  const ElfW(Sym) *sym, struct link_map *map)
 	      {
 		size_t idx = hash % size;
 		size_t hash2 = 1 + hash % (size - 2);
@@ -332,6 +332,12 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			    table[idx].sym = sym;
 			    table[idx].map = map;
 			  }
+
+			if (table[idx].map->l_type == lt_loaded)
+			  /* Make sure we don't unload this object by
+			     artificially increason the open count.  */
+			  ++table[idx].map->l_direct_opencount;
+
 			return;
 		      }
 
@@ -410,7 +416,8 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  tab->free = free;
 		}
 
-	      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+	      enter (entries, size, new_hash, strtab + sym->st_name, sym,
+		     (struct link_map *) map);
 	      ++tab->n_elements;
 
 	      __rtld_lock_unlock_recursive (tab->lock);

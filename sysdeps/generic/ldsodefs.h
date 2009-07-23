@@ -396,7 +396,7 @@ struct rtld_global
 	uint32_t hashval;
 	const char *name;
 	const ElfW(Sym) *sym;
-	const struct link_map *map;
+	struct link_map *map;
       } *entries;
       size_t size;
       size_t n_elements;
