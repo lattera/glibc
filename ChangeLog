@@ -1,5 +1,10 @@
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-rfc3484.c (do_test): Initialize entire sockaddr_in
+	structure before copying it to avoid warning.
+	* posix/tst-rfc3484-2.c (do_test): Likewise.
+	* posix/tst-rfc3484-3.c (do_test): Likewise.
+
 	[BZ #10416]
 	* include/unistd.h: Make header file suitable for C++ test cases.
 	Patch by Duncan Simpson <dps@simpson.demon.co.uk>.

@@ -102,6 +102,8 @@ do_test (void)
   struct sockaddr_in so;
   so.sin_family = AF_INET;
   so.sin_addr.s_addr = h (0xc0a85f19);
+  /* Clear the rest of the structure to avoid warnings.  */
+  memset (so.sin_zero, '\0', sizeof (so.sin_zero));
 
   for (int i = 0; i < naddrs; ++i)
     {
