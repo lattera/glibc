@@ -551,12 +551,12 @@ __pthread_cond_timedwait:
 	jne	53b
 
 	cmpq	24(%rsp), %r9
-	jbe	45b
+	jbe	15f
 
 	cmpq	%rax, %r9
 	ja	39b
 
-	cmpq	$-ETIMEDOUT, %r14
+15:	cmpq	$-ETIMEDOUT, %r14
 	jne	8b
 
 	jmp	99b
