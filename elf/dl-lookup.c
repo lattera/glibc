@@ -335,7 +335,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 
 			if (table[idx].map->l_type == lt_loaded)
 			  /* Make sure we don't unload this object by
-			     artificially increason the open count.  */
+			     setting the appropriate flag.  */
 			  table[idx].map->l_flags_1 |= DF_1_NODELETE;
 
 			return;
