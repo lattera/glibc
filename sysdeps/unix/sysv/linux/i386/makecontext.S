@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2001, 2002, 2005, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2005,2007,2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -105,17 +105,15 @@ L(exitcode):
 1:	popl	%ebx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx
 #endif
-	popl	%eax			/* This is the next context.  */
-	testl	%eax, %eax
+	cmpl	$0, (%esp)		/* Check the next context.  */
 	je	2f			/* If it is zero exit.  */
 
-	pushl	%eax
 	call	JUMPTARGET(__setcontext)
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */
 
-2:	pushl	%eax
-	call	HIDDEN_JUMPTARGET(exit)
+	movl	%eax, (%esp)
+2:	call	HIDDEN_JUMPTARGET(exit)
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */
 	hlt
