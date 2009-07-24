@@ -103,7 +103,7 @@ gconv_init (struct __gconv_step *step)
   if (__strcasecmp (step->__from_name, "UTF-16BE//") == 0
       && (__strcasecmp (step->__to_name, "UTF-32//") == 0
 	  || __strcasecmp (step->__to_name, "UTF-32BE//") == 0
-      	  || __strcasecmp (step->__to_name, "INTERNAL") == 0))
+	  || __strcasecmp (step->__to_name, "INTERNAL") == 0))
     {
       dir = from_utf16;
     }
@@ -179,7 +179,7 @@ gconv_end (struct __gconv_step *data)
 									\
     inptr = pInput;							\
     outptr = pOutput;							\
-    cc >>= 28;          						\
+    cc >>= 28;								\
 									\
     if (cc == 1)							\
       {									\

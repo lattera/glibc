@@ -187,14 +187,14 @@ gconv_end (struct __gconv_step *data)
     if (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH)				\
       {									\
 	HARDWARE_CONVERT ("cu12 %0, %1, 1");				\
-	  								\
+									\
 	if (inptr != inend)						\
 	  {								\
 	    int i;							\
 	    for (i = 1; inptr + i < inend; ++i)				\
 	      if ((inptr[i] & 0xc0) != 0x80)				\
 		break;							\
-	    								\
+								\
 	    if (__builtin_expect (inptr + i == inend, 1))		\
 	      {								\
 		result = __GCONV_INCOMPLETE_INPUT;			\
@@ -275,7 +275,7 @@ gconv_end (struct __gconv_step *data)
 	    /* For 4 byte UTF-8 chars two UTF-16 chars (high and	\
 	       low) are needed.  */					\
 	    uint16_t zabcd, high, low;					\
-	    								\
+									\
 	    if (__builtin_expect (outptr + 4 > outend, 0))		\
 	      {								\
 		/* Overflow in the output buffer.  */			\
@@ -300,7 +300,7 @@ gconv_end (struct __gconv_step *data)
 	    low |= ((uint16_t)inptr[2] & 0xc) << 6;       /* kl bits */	\
 	    low |= (inptr[2] & 0x3) << 6;                 /* mn bits */	\
 	    low |= inptr[3] & 0x3f;                   /* opqrst bits */	\
-	    								\
+									\
 	    put16 (outptr, high);					\
 	    outptr += 2;						\
 	    put16 (outptr, low);					\
@@ -382,7 +382,7 @@ gconv_end (struct __gconv_step *data)
 									\
         outptr[0] = 0xc0;						\
         outptr[0] |= c >> 6;						\
-      									\
+									\
         outptr[1] = 0x80;						\
         outptr[1] |= c & 0x3f;						\
 									\
