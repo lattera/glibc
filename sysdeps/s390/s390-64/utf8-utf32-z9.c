@@ -55,7 +55,7 @@
       /* Emit the Byte Order Mark.  */					\
       if (__builtin_expect (outbuf + 4 > outend, 0))			\
 	return __GCONV_FULL_OUTPUT;					\
-      									\
+									\
       put32u (outbuf, BOM);						\
       outbuf += 4;							\
     }
@@ -90,7 +90,7 @@ gconv_init (struct __gconv_step *step)
   if (__strcasecmp (step->__from_name, "ISO-10646/UTF8/") == 0
       && (__strcasecmp (step->__to_name, "UTF-32//") == 0
 	  || __strcasecmp (step->__to_name, "UTF-32BE//") == 0
-      	  || __strcasecmp (step->__to_name, "INTERNAL") == 0))
+	  || __strcasecmp (step->__to_name, "INTERNAL") == 0))
     {
       dir = from_utf8;
     }
@@ -165,7 +165,7 @@ gconv_end (struct __gconv_step *data)
 									\
     inptr = pInput;							\
     outptr = pOutput;							\
-    cc >>= 28;          						\
+    cc >>= 28;								\
 									\
     if (cc == 1)							\
       {									\
@@ -186,7 +186,7 @@ gconv_end (struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 /* The software routine is copied from gconv_simple.c.  */
-#define BODY             						\
+#define BODY								\
   {									\
     if (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH)				\
       {									\
