@@ -1,5 +1,5 @@
 /* s390 version of processor capability information handling macros.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2006.
 
@@ -22,9 +22,9 @@
 #define _DL_PROCINFO_H	1
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 7
+#define _DL_HWCAP_COUNT 10
 
-#define _DL_PLATFORMS_COUNT	4
+#define _DL_PLATFORMS_COUNT	5
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32
@@ -45,6 +45,9 @@ enum
   HWCAP_S390_LDISP = 1 << 4,
   HWCAP_S390_EIMM = 1 << 5,
   HWCAP_S390_DFP = 1 << 6,
+  HWCAP_S390_HPAGE = 1 << 7,
+  HWCAP_S390_ETF3EH = 1 << 8,
+  HWCAP_S390_HIGH_GPRS = 1 << 9,
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \

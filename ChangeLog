@@ -1,3 +1,19 @@
+2009-06-16  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): "hpage",
+	"etf3enh" and "highgprs" added.
+	(_dl_s390_platforms): "z10" added.
+	* sysdeps/s390/dl-procinfo.h (_DL_HWCAP_COUNT, _DL_PLATFORMS_COUNT):
+	Increased for the new entries.
+	(HWCAP enum): HWCAP_S390_HPAGE, HWCAP_S390_ETF3EH and
+	HWCAP_S390_HIGH_GPRS added.
+
+	* sysdeps/s390/s390-64/Makefile: Adjusted to build the new modules.
+	* sysdeps/s390/s390-64/iso-8859-1_cp037_z900.c: New file.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: New file.
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: New file.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c: New file.
+
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c [USE_MULTIARCH]: Rearrange code to

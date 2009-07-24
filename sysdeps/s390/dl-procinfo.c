@@ -1,5 +1,5 @@
 /* Data for s390 version of processor capability information.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2006.
 
@@ -47,11 +47,11 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_s390_cap_flags
 #else
-PROCINFO_CLASS const char _dl_s390_cap_flags[7][6]
+PROCINFO_CLASS const char _dl_s390_cap_flags[10][8]
 #endif
 #ifndef PROCINFO_DECL
 = {
-     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp"
+     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp", "hpage", "etf3enh", "highgprs"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
@@ -63,11 +63,11 @@ PROCINFO_CLASS const char _dl_s390_cap_flags[7][6]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_s390_platforms
 #else
-PROCINFO_CLASS const char _dl_s390_platforms[4][7]
+PROCINFO_CLASS const char _dl_s390_platforms[5][7]
 #endif
 #ifndef PROCINFO_DECL
 = {
-     "g5", "z900", "z990", "z9-109"
+    "g5", "z900", "z990", "z9-109", "z10"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
