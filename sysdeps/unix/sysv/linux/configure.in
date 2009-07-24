@@ -1,19 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux.
 
-# The Linux kernel headers can be found in
-#   /lib/modules/$(uname -r)/build/include
-# Check whether this directory is available.
-if test -z "$sysheaders" &&
-   test "x$cross_compiling" = xno &&
-   test -d /lib/modules/`uname -r`/build/include; then
-  sysheaders="/lib/modules/`uname -r`/build/include"
-  ccheaders=`$CC -print-file-name=include`
-  dnl We don't have to use -nostdinc.  We just want one more directory
-  dnl to be used.
-  SYSINCLUDES="-I $sysheaders"
-fi
-
 # Don't bother trying to generate any glue code to be compatible with the
 # existing system library, because we are the only system library.
 inhibit_glue=yes

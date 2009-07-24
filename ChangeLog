@@ -1,3 +1,9 @@
+2009-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Don't automatically include
+	/lib/modules/* headers anymore.  We have sane headers in the standard
+	place now.
+
 2009-06-16  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): "hpage",
