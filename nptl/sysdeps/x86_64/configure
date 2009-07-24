@@ -1,0 +1,36 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/i386.
+
+{ echo "$as_me:$LINENO: checking for .cfi_personality and .cfi_lsda pseudo-ops" >&5
+echo $ECHO_N "checking for .cfi_personality and .cfi_lsda pseudo-ops... $ECHO_C" >&6; }
+if test "${libc_cv_asm_cfi_personality+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+    cat > conftest.s <<EOF
+${libc_cv_dot_text}
+foo:
+	.cfi_startproc
+	.cfi_personality 0, foo
+	.cfi_lsda 0, foo
+	.cfi_endproc
+EOF
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+    libc_cv_asm_cfi_personality=yes
+  else
+    libc_cv_asm_cfi_personality=no
+  fi
+  rm -f conftest*
+
+fi
+{ echo "$as_me:$LINENO: result: $libc_cv_asm_cfi_personality" >&5
+echo "${ECHO_T}$libc_cv_asm_cfi_personality" >&6; }
+if test x"$libc_cv_asm_cfi_personality" != xyes; then
+  { { echo "$as_me:$LINENO: error: assembler too old, .cfi_personality support missing" >&5
+echo "$as_me: error: assembler too old, .cfi_personality support missing" >&2;}
+   { (exit 1); exit 1; }; }
+fi
