@@ -1457,6 +1457,9 @@ LABEL(use_sse4_2_ret):
 	sub	%edx, %eax
 	ret
 
+#if 0
+	/* This code was in the origial submission but isn't used.
+	   --drepper */
 	.p2align 4
 LABEL(aftertail):
 	pcmpeqb	%xmm3, %xmm1
@@ -1467,6 +1470,8 @@ LABEL(aftertail):
 	.p2align 4
 LABEL(exit):
 	lea	-16(%r9, %rcx), %rax	/* locate the exact offset for rdi */
+#endif
+
 LABEL(less32bytes):
 	lea	(%rdi, %rax), %rdi	/* locate the exact address for first operand(rdi) */
 	lea	(%rsi, %rcx), %rsi	/* locate the exact address for second operand(rsi) */
