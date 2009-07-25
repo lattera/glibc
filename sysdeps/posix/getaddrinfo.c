@@ -833,6 +833,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			       && inet6_status != NSS_STATUS_UNAVAIL)
 			status = inet6_status;
 		    }
+		  else
+		    status = NSS_STATUS_UNAVAIL;
 		}
 
 	      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
