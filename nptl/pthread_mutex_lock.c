@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -160,7 +160,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 #endif
 
 	      newval
-		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+		= atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
 						       newval, oldval);
 
 	      if (newval != oldval)
@@ -285,7 +285,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 #ifdef NO_INCR
 	newval |= FUTEX_WAITERS;
 #endif
-	oldval = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+	oldval = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
 						      newval, 0);
 
 	if (oldval != 0)
@@ -420,7 +420,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	    oldprio = ceiling;
 
 	    oldval
-	      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+	      = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
 #ifdef NO_INCR
 						     ceilval | 2,
 #else
@@ -434,7 +434,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	    do
 	      {
 		oldval
-		  = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+		  = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
 							 ceilval | 2,
 							 ceilval | 1);
 
@@ -445,7 +445,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
 				  PTHREAD_MUTEX_PSHARED (mutex));
 	      }
-	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
+	    while (atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
 							ceilval | 2, ceilval)
 		   != ceilval);
 	  }
