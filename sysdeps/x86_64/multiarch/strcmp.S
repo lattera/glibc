@@ -28,9 +28,9 @@
 	/* calculate left number to compare */		\
 	lea	-16(%rcx, %r11), %r9;			\
 	cmp	%r9, %r11;				\
-	jb	LABEL(strcmp_exitz);			\
+	jb	LABEL(strcmp_exitz_sse4_2);		\
 	test	%r9, %r9;				\
-	je	LABEL(strcmp_exitz);			\
+	je	LABEL(strcmp_exitz_sse4_2);		\
 	mov	%r9, %r11
 
 #define STRCMP_SSE42	__strncmp_sse42
@@ -106,9 +106,9 @@ STRCMP_SSE42:
  */
 #ifdef USE_AS_STRNCMP
 	test	%rdx, %rdx
-	je	LABEL(strcmp_exitz)
+	je	LABEL(strcmp_exitz_sse4_2)
 	cmp	$1, %rdx
-	je	LABEL(Byte0)
+	je	LABEL(Byte0_sse4_2)
 	mov	%rdx, %r11
 #endif
 	mov	%esi, %ecx
@@ -117,9 +117,9 @@ STRCMP_SSE42:
 	and	$0x3f, %rcx		/* rsi alignment in cache line */
 	and	$0x3f, %rax		/* rdi alignment in cache line */
 	cmp	$0x30, %ecx
-	ja	LABEL(crosscache)	/* rsi: 16-byte load will cross cache line */
+	ja	LABEL(crosscache_sse4_2)/* rsi: 16-byte load will cross cache line */
 	cmp	$0x30, %eax
-	ja	LABEL(crosscache)	/* rdi: 16-byte load will cross cache line */
+	ja	LABEL(crosscache_sse4_2)/* rdi: 16-byte load will cross cache line */
 	movdqu	(%rdi), %xmm1
 	movdqu	(%rsi), %xmm2
 	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
@@ -128,10 +128,10 @@ STRCMP_SSE42:
 	psubb	%xmm0, %xmm1		/* packed sub of comparison results*/
 	pmovmskb %xmm1, %edx
 	sub	$0xffff, %edx		/* if first 16 bytes are same, edx == 0xffff */
-	jnz	LABEL(less16bytes)	/* If not, find different value or null char */
+	jnz	LABEL(less16bytes_sse4_2)/* If not, find different value or null char */
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)	/* finish comparision */
+	jbe	LABEL(strcmp_exitz_sse4_2)/* finish comparision */
 #endif
 	add	$16, %rsi		/* prepare to search next 16 bytes */
 	add	$16, %rdi		/* prepare to search next 16 bytes */
@@ -142,7 +142,7 @@ STRCMP_SSE42:
 	 * below to use.
 	 */
 	.p2align 4
-LABEL(crosscache):
+LABEL(crosscache_sse4_2):
 	and	$0xfffffffffffffff0, %rsi	/* force %rsi is 16 byte aligned */
 	and	$0xfffffffffffffff0, %rdi	/* force %rdi is 16 byte aligned */
 	mov	$0xffff, %edx			/* for equivalent offset */
@@ -150,15 +150,15 @@ LABEL(crosscache):
 	and	$0xf, %ecx			/* offset of rsi */
 	and	$0xf, %eax			/* offset of rdi */
 	cmp	%eax, %ecx
-	je	LABEL(ashr_0)			/* rsi and rdi relative offset same */
-	ja	LABEL(bigger)
+	je	LABEL(ashr_0_sse4_2)		/* rsi and rdi relative offset same */
+	ja	LABEL(bigger_sse4_2)
 	mov	%edx, %r8d			/* r8d is offset flag for exit tail */
 	xchg	%ecx, %eax
 	xchg	%rsi, %rdi
-LABEL(bigger):
+LABEL(bigger_sse4_2):
 	lea	15(%rax), %r9
 	sub	%rcx, %r9
-	lea	LABEL(unaligned_table)(%rip), %r10
+	lea	LABEL(unaligned_table_sse4_2)(%rip), %r10
 	movslq	(%r10, %r9,4), %r9
 	lea	(%r10, %r9), %r10
 	jmp	*%r10				/* jump to corresponding case */
@@ -169,7 +169,7 @@ LABEL(bigger):
  *        n(0~15)            n(0~15)           15(15+ n-n)         ashr_0
  */
 	.p2align 4
-LABEL(ashr_0):
+LABEL(ashr_0_sse4_2):
 
 	movdqa	(%rsi), %xmm1
 	pxor	%xmm0, %xmm0			/* clear %xmm0 for null char check */
@@ -184,7 +184,7 @@ LABEL(ashr_0):
 	 * edx must be the same with r9d if in left byte (16-rcx) is equal to
 	 * the start from (16-rax) and no null char was seen.
 	 */
-	jne	LABEL(less32bytes)		/* mismatch or null char */
+	jne	LABEL(less32bytes_sse4_2)	/* mismatch or null char */
 	UPDATE_STRNCMP_COUNTER
 	mov	$16, %rcx
 	mov	$16, %r9
@@ -203,7 +203,7 @@ LABEL(ashr_0_use_sse4_2):
 	jbe	LABEL(ashr_0_use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	movdqa	(%rdi,%rdx), %xmm0
@@ -212,17 +212,17 @@ LABEL(ashr_0_use_sse4_2):
 	jbe	LABEL(ashr_0_use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	jmp	LABEL(ashr_0_use_sse4_2)
 
 
 	.p2align 4
 LABEL(ashr_0_use_sse4_2_exit):
-	jnc	LABEL(strcmp_exitz)
+	jnc	LABEL(strcmp_exitz_sse4_2)
 #ifdef USE_AS_STRNCMP
 	sub	%rcx, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	lea	-16(%rdx, %rcx), %rcx
 	movzbl	(%rdi, %rcx), %eax
@@ -239,7 +239,7 @@ LABEL(ashr_0_use_sse4_2_exit):
  *        n(15)            n -15            0(15 +(n-15) - n)         ashr_1
  */
 	.p2align 4
-LABEL(ashr_1):
+LABEL(ashr_1_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -251,7 +251,7 @@ LABEL(ashr_1):
 	shr	%cl, %edx		/* adjust 0xffff for offset */
 	shr	%cl, %r9d		/* adjust for 16-byte offset */
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)	/* mismatch or null char seen */
+	jnz	LABEL(less32bytes_sse4_2)/* mismatch or null char seen */
 	movdqa	(%rdi), %xmm3
 	UPDATE_STRNCMP_COUNTER
 
@@ -279,7 +279,7 @@ LABEL(loop_ashr_1_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -292,7 +292,7 @@ LABEL(loop_ashr_1_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_1_use_sse4_2)
@@ -318,7 +318,7 @@ LABEL(nibble_ashr_1_use_sse4_2):
  *        n(14~15)            n -14         1(15 +(n-14) - n)         ashr_2
  */
 	.p2align 4
-LABEL(ashr_2):
+LABEL(ashr_2_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -330,7 +330,7 @@ LABEL(ashr_2):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 	UPDATE_STRNCMP_COUNTER
 
@@ -358,7 +358,7 @@ LABEL(loop_ashr_2_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -371,7 +371,7 @@ LABEL(loop_ashr_2_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_2_use_sse4_2)
@@ -397,7 +397,7 @@ LABEL(nibble_ashr_2_use_sse4_2):
  *        n(13~15)            n -13         2(15 +(n-13) - n)         ashr_3
  */
 	.p2align 4
-LABEL(ashr_3):
+LABEL(ashr_3_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -409,7 +409,7 @@ LABEL(ashr_3):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -437,7 +437,7 @@ LABEL(loop_ashr_3_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -450,7 +450,7 @@ LABEL(loop_ashr_3_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_3_use_sse4_2)
@@ -476,7 +476,7 @@ LABEL(nibble_ashr_3_use_sse4_2):
  *        n(12~15)            n -12         3(15 +(n-12) - n)         ashr_4
  */
 	.p2align 4
-LABEL(ashr_4):
+LABEL(ashr_4_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -488,7 +488,7 @@ LABEL(ashr_4):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -517,7 +517,7 @@ LABEL(loop_ashr_4_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -530,7 +530,7 @@ LABEL(loop_ashr_4_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_4_use_sse4_2)
@@ -556,7 +556,7 @@ LABEL(nibble_ashr_4_use_sse4_2):
  *        n(11~15)          n - 11      	  4(15 +(n-11) - n)         ashr_5
  */
 	.p2align 4
-LABEL(ashr_5):
+LABEL(ashr_5_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -568,7 +568,7 @@ LABEL(ashr_5):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -597,7 +597,7 @@ LABEL(loop_ashr_5_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -611,7 +611,7 @@ LABEL(loop_ashr_5_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_5_use_sse4_2)
@@ -637,7 +637,7 @@ LABEL(nibble_ashr_5_use_sse4_2):
  *        n(10~15)          n - 10      	  5(15 +(n-10) - n)         ashr_6
  */
 	.p2align 4
-LABEL(ashr_6):
+LABEL(ashr_6_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -649,7 +649,7 @@ LABEL(ashr_6):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -678,7 +678,7 @@ LABEL(loop_ashr_6_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -691,7 +691,7 @@ LABEL(loop_ashr_6_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_6_use_sse4_2)
@@ -717,7 +717,7 @@ LABEL(nibble_ashr_6_use_sse4_2):
  *        n(9~15)          n - 9      	        6(15 +(n - 9) - n)         ashr_7
  */
 	.p2align 4
-LABEL(ashr_7):
+LABEL(ashr_7_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -729,7 +729,7 @@ LABEL(ashr_7):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -758,7 +758,7 @@ LABEL(loop_ashr_7_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -771,7 +771,7 @@ LABEL(loop_ashr_7_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_7_use_sse4_2)
@@ -797,7 +797,7 @@ LABEL(nibble_ashr_7_use_sse4_2):
  *        n(8~15)          n - 8      	        7(15 +(n - 8) - n)         ashr_8
  */
 	.p2align 4
-LABEL(ashr_8):
+LABEL(ashr_8_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -809,7 +809,7 @@ LABEL(ashr_8):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -838,7 +838,7 @@ LABEL(loop_ashr_8_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -851,7 +851,7 @@ LABEL(loop_ashr_8_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_8_use_sse4_2)
@@ -877,7 +877,7 @@ LABEL(nibble_ashr_8_use_sse4_2):
  *        n(7~15)          n - 7      	        8(15 +(n - 7) - n)         ashr_9
  */
 	.p2align 4
-LABEL(ashr_9):
+LABEL(ashr_9_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -889,7 +889,7 @@ LABEL(ashr_9):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -919,7 +919,7 @@ LABEL(loop_ashr_9_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -932,7 +932,7 @@ LABEL(loop_ashr_9_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_9_use_sse4_2)
@@ -958,7 +958,7 @@ LABEL(nibble_ashr_9_use_sse4_2):
  *        n(6~15)          n - 6      	        9(15 +(n - 6) - n)         ashr_10
  */
 	.p2align 4
-LABEL(ashr_10):
+LABEL(ashr_10_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -970,7 +970,7 @@ LABEL(ashr_10):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -999,7 +999,7 @@ LABEL(loop_ashr_10_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1012,7 +1012,7 @@ LABEL(loop_ashr_10_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_10_use_sse4_2)
@@ -1038,7 +1038,7 @@ LABEL(nibble_ashr_10_use_sse4_2):
  *        n(5~15)          n - 5      	        10(15 +(n - 5) - n)         ashr_11
  */
 	.p2align 4
-LABEL(ashr_11):
+LABEL(ashr_11_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -1050,7 +1050,7 @@ LABEL(ashr_11):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -1079,7 +1079,7 @@ LABEL(loop_ashr_11_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1092,7 +1092,7 @@ LABEL(loop_ashr_11_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_11_use_sse4_2)
@@ -1118,7 +1118,7 @@ LABEL(nibble_ashr_11_use_sse4_2):
  *        n(4~15)          n - 4      	        11(15 +(n - 4) - n)         ashr_12
  */
 	.p2align 4
-LABEL(ashr_12):
+LABEL(ashr_12_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -1130,7 +1130,7 @@ LABEL(ashr_12):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -1159,7 +1159,7 @@ LABEL(loop_ashr_12_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1172,7 +1172,7 @@ LABEL(loop_ashr_12_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_12_use_sse4_2)
@@ -1198,7 +1198,7 @@ LABEL(nibble_ashr_12_use_sse4_2):
  *        n(3~15)          n - 3      	        12(15 +(n - 3) - n)         ashr_13
  */
 	.p2align 4
-LABEL(ashr_13):
+LABEL(ashr_13_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -1210,7 +1210,7 @@ LABEL(ashr_13):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -1240,7 +1240,7 @@ LABEL(loop_ashr_13_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1253,7 +1253,7 @@ LABEL(loop_ashr_13_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_13_use_sse4_2)
@@ -1279,7 +1279,7 @@ LABEL(nibble_ashr_13_use_sse4_2):
  *        n(2~15)          n - 2      	        13(15 +(n - 2) - n)         ashr_14
  */
 	.p2align 4
-LABEL(ashr_14):
+LABEL(ashr_14_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -1291,7 +1291,7 @@ LABEL(ashr_14):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 	movdqa	(%rdi), %xmm3
 
 	UPDATE_STRNCMP_COUNTER
@@ -1321,7 +1321,7 @@ LABEL(loop_ashr_14_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1334,7 +1334,7 @@ LABEL(loop_ashr_14_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_14_use_sse4_2)
@@ -1360,7 +1360,7 @@ LABEL(nibble_ashr_14_use_sse4_2):
  *        n(1~15)          n - 1      	        14(15 +(n - 1) - n)         ashr_15
  */
 	.p2align 4
-LABEL(ashr_15):
+LABEL(ashr_15_sse4_2):
 	pxor	%xmm0, %xmm0
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -1372,7 +1372,7 @@ LABEL(ashr_15):
 	shr	%cl, %edx
 	shr	%cl, %r9d
 	sub	%r9d, %edx
-	jnz	LABEL(less32bytes)
+	jnz	LABEL(less32bytes_sse4_2)
 
 	movdqa	(%rdi), %xmm3
 
@@ -1404,7 +1404,7 @@ LABEL(loop_ashr_15_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 
 	add	$16, %rdx
@@ -1417,7 +1417,7 @@ LABEL(loop_ashr_15_use_sse4_2):
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	$16, %rdx
 	jmp	LABEL(loop_ashr_15_use_sse4_2)
@@ -1439,56 +1439,37 @@ LABEL(nibble_ashr_use_sse4_2_exit):
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
 	.p2align 4
 LABEL(use_sse4_2_exit):
-	jnc	LABEL(strcmp_exitz)
+	jnc	LABEL(strcmp_exitz_sse4_2)
 #ifdef USE_AS_STRNCMP
 	sub	%rcx, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	add	%rcx, %rdx
 	lea	-16(%rdi, %r9), %rdi
 	movzbl	(%rdi, %rdx), %eax
 	movzbl	(%rsi, %rdx), %edx
 	test	%r8d, %r8d
-	jz	LABEL(use_sse4_2_ret)
+	jz	LABEL(use_sse4_2_ret_sse4_2)
 	xchg	%eax, %edx
-LABEL(use_sse4_2_ret):
+LABEL(use_sse4_2_ret_sse4_2):
 	sub	%edx, %eax
 	ret
 
-#if 0
-	/* This code was in the origial submission but isn't used.
-	   --drepper */
-	.p2align 4
-LABEL(aftertail):
-	pcmpeqb	%xmm3, %xmm1
-	psubb	%xmm0, %xmm1
-	pmovmskb %xmm1, %edx
-	not	%edx
-
-	.p2align 4
-LABEL(exit):
-	lea	-16(%r9, %rcx), %rax	/* locate the exact offset for rdi */
-#endif
-
-LABEL(less32bytes):
+LABEL(less32bytes_sse4_2):
 	lea	(%rdi, %rax), %rdi	/* locate the exact address for first operand(rdi) */
 	lea	(%rsi, %rcx), %rsi	/* locate the exact address for second operand(rsi) */
 	test	%r8d, %r8d
-	jz	LABEL(ret)
+	jz	LABEL(ret_sse4_2)
 	xchg	%rsi, %rdi		/* recover original order according to flag(%r8d) */
 
 	.p2align 4
-LABEL(ret):
-LABEL(less16bytes):
-	/*
-	 * Check to see if BSF is fast on this processor. If not, use a different
-	 * exit tail.
-	 */
+LABEL(ret_sse4_2):
+LABEL(less16bytes_sse4_2):
 	bsf	%rdx, %rdx		/* find and store bit index in %rdx */
 
 #ifdef USE_AS_STRNCMP
 	sub	%rdx, %r11
-	jbe	LABEL(strcmp_exitz)
+	jbe	LABEL(strcmp_exitz_sse4_2)
 #endif
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax
@@ -1496,138 +1477,14 @@ LABEL(less16bytes):
 	sub	%ecx, %eax
 	ret
 
-LABEL(strcmp_exitz):
+LABEL(strcmp_exitz_sse4_2):
 	xor	%eax, %eax
 	ret
 
 	.p2align 4
-LABEL(Byte0):
-	/*
-	 * never need to handle byte 0 for strncmpy
-#ifdef USE_AS_STRNCMP
-	sub	$0, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	*/
+LABEL(Byte0_sse4_2):
 	movzx	(%rsi), %ecx
 	movzx	(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte1):
-
-#ifdef USE_AS_STRNCMP
-	sub	$1, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	1(%rsi), %ecx
-	movzx	1(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte2):
-
-#ifdef USE_AS_STRNCMP
-	sub	$2, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	2(%rsi), %ecx
-	movzx	2(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte3):
-
-#ifdef USE_AS_STRNCMP
-	sub	$3, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	3(%rsi), %ecx
-	movzx	3(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte4):
-
-#ifdef USE_AS_STRNCMP
-	sub	$4, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	4(%rsi), %ecx
-	movzx	4(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte5):
-
-#ifdef USE_AS_STRNCMP
-	sub	$5, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	5(%rsi), %ecx
-	movzx	5(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(Byte6):
-
-#ifdef USE_AS_STRNCMP
-	sub	$6, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	6(%rsi), %ecx
-	movzx	6(%rdi), %eax
-
-	sub	%ecx, %eax
-	ret
-
-	.p2align 4
-LABEL(next_8_bytes):
-	add	$8, %rdi
-	add	$8, %rsi
-#ifdef USE_AS_STRNCMP
-	sub	$8, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	test	$0x01, %dh
-	jnz	LABEL(Byte0)
-
-	test	$0x02, %dh
-	jnz	LABEL(Byte1)
-
-	test	$0x04, %dh
-	jnz	LABEL(Byte2)
-
-	test	$0x08, %dh
-	jnz	LABEL(Byte3)
-
-	test	$0x10, %dh
-	jnz	LABEL(Byte4)
-
-	test	$0x20, %dh
-	jnz	LABEL(Byte5)
-
-	test	$0x40, %dh
-	jnz	LABEL(Byte6)
-
-#ifdef USE_AS_STRNCMP
-	sub	$7, %r11
-	jbe	LABEL(strcmp_exitz)
-#endif
-	movzx	7(%rsi), %ecx
-	movzx	7(%rdi), %eax
 
 	sub	%ecx, %eax
 	ret
@@ -1636,24 +1493,24 @@ LABEL(next_8_bytes):
 
 	/* Put all SSE 4.2 functions together.  */
 	.section .rodata.sse4.2,"a",@progbits
-	.p2align 4
-LABEL(unaligned_table):
-	.int	LABEL(ashr_1) - LABEL(unaligned_table)
-	.int	LABEL(ashr_2) - LABEL(unaligned_table)
-	.int	LABEL(ashr_3) - LABEL(unaligned_table)
-	.int	LABEL(ashr_4) - LABEL(unaligned_table)
-	.int	LABEL(ashr_5) - LABEL(unaligned_table)
-	.int	LABEL(ashr_6) - LABEL(unaligned_table)
-	.int	LABEL(ashr_7) - LABEL(unaligned_table)
-	.int	LABEL(ashr_8) - LABEL(unaligned_table)
-	.int	LABEL(ashr_9) - LABEL(unaligned_table)
-	.int	LABEL(ashr_10) - LABEL(unaligned_table)
-	.int	LABEL(ashr_11) - LABEL(unaligned_table)
-	.int	LABEL(ashr_12) - LABEL(unaligned_table)
-	.int	LABEL(ashr_13) - LABEL(unaligned_table)
-	.int	LABEL(ashr_14) - LABEL(unaligned_table)
-	.int	LABEL(ashr_15) - LABEL(unaligned_table)
-	.int	LABEL(ashr_0) - LABEL(unaligned_table)
+	.p2align 3
+LABEL(unaligned_table_sse4_2):
+	.int	LABEL(ashr_1_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_2_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_3_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_4_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_5_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_6_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_7_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_8_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_9_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_10_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_11_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_12_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_13_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_14_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_15_sse4_2) - LABEL(unaligned_table_sse4_2)
+	.int	LABEL(ashr_0_sse4_2) - LABEL(unaligned_table_sse4_2)
 
 
 # undef ENTRY
@@ -1673,6 +1530,4 @@ LABEL(unaligned_table):
 	.globl __GI_STRCMP; __GI_STRCMP = STRCMP_SSE2
 #endif
 
-#ifndef USE_AS_STRNCMP
 #include "../strcmp.S"
-#endif
