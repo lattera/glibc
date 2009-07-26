@@ -1,0 +1,1 @@
+#include "../rtld-strlen.S"
