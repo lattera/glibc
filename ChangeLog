@@ -1,5 +1,8 @@
 2009-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/multiarch/strcmp.S: Some more optimizations for
+	modern processor versions.  Patch by H.J. Lu <hongjiu.lu@intel.com>.
+
 	[BZ #10448]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): If NSS module contains no
 	callback we must touch the status to avoid using stale value.

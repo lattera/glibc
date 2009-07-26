@@ -120,10 +120,8 @@ STRCMP_SSE42:
 	ja	LABEL(crosscache)	/* rsi: 16-byte load will cross cache line */
 	cmp	$0x30, %eax
 	ja	LABEL(crosscache)	/* rdi: 16-byte load will cross cache line */
-	movlpd	(%rdi), %xmm1
-	movlpd	(%rsi), %xmm2
-	movhpd	8(%rdi), %xmm1
-	movhpd	8(%rsi), %xmm2
+	movdqu	(%rdi), %xmm1
+	movdqu	(%rsi), %xmm2
 	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
 	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
 	pcmpeqb	%xmm2, %xmm1		/* compare first 16 bytes for equality */
@@ -1492,11 +1490,8 @@ LABEL(less16bytes):
 	sub	%rdx, %r11
 	jbe	LABEL(strcmp_exitz)
 #endif
-	xor	%ecx, %ecx		/* clear %ecx */
-	xor	%eax, %eax		/* clear %eax */
-
-	movb	(%rsi, %rdx), %cl
-	movb	(%rdi, %rdx), %al
+	movzbl	(%rsi, %rdx), %ecx
+	movzbl	(%rdi, %rdx), %eax
 
 	sub	%ecx, %eax
 	ret
