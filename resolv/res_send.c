@@ -1278,14 +1278,10 @@ send_dg(res_state statp,
 				? *thisanssiz : *thisresplen);
 
 			if (recvresp1 || (buf2 != NULL && recvresp2))
-			  {
-			    *resplen2 = 1;
-			    return resplen;
-			  }
+			  return resplen;
 			if (buf2 != NULL)
 			  {
 			    /* We are waiting for a possible second reply.  */
-			    resplen = 1;
 			    if (hp->id == anhp->id)
 			      recvresp1 = 1;
 			    else
