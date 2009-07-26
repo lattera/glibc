@@ -1,5 +1,13 @@
 2009-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10422]
+	* sysdeps/unix/sysv/linux/eventfd.c: Add compatibility for old
+	kernels, dropped when eventfd2 support was added.
+	* sysdeps/unix/sysv/linux/signalfd.c: Add compatibility for old
+	kernels, dropped when signalfd4 support was added.
+	* sysdeps/unix/sysv/linux/kernel-features.h: More CLOEXEC syscalls
+	added, name them.
+
 	[BZ #10452]
 	* resolv/res_send.c (send_dg): Pass full SERVFAIL, NOTIMP, REFUSED
 	replies up.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,14 +19,21 @@
 #include <errno.h>
 #include <sys/eventfd.h>
 #include <sysdep.h>
+#include <kernel-features.h>
 
 
 int
 eventfd (int count, int flags)
 {
 #ifdef __NR_eventfd2
-  return INLINE_SYSCALL (eventfd2, 2, count, flags);
-#else
+  int res = INLINE_SYSCALL (eventfd2, 2, count, flags);
+# ifndef __ASSUME_EVENTFD2
+  if (res != -1 || errno != ENOSYS)
+# endif
+    return res;
+#endif
+
+#ifndef __ASSUME_EVENTFD2
   /* The old system call has no flag parameter which is bad.  So we have
      to wait until we have to support to pass additional values to the
      kernel (sys_indirect) before implementing setting flags like
@@ -43,5 +50,7 @@ eventfd (int count, int flags)
   __set_errno (ENOSYS);
   return -1;
 # endif
+#elif !defined __NR_eventfd2
+# error "__ASSUME_EVENTFD2 defined but not __NR_eventfd2"
 #endif
 }

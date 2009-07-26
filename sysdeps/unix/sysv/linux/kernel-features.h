@@ -516,6 +516,8 @@
 # define __ASSUME_SOCK_CLOEXEC	1
 # define __ASSUME_IN_NONBLOCK	1
 # define __ASSUME_PIPE2		1
+# define __ASSUME_EVENTFD2	1
+# define __ASSUME_SIGNALFD4	1
 #endif
 
 /* Support for the accept4 syscall was added in 2.6.28.  */
