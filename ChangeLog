@@ -1,3 +1,23 @@
+2009-07-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	strncmp-c.
+	* sysdeps/x86_64/multiarch/strcmp.S (aftertail): Removed.
+	(exit): Likewise.
+	(Byte1): Likewise.
+	(Byte2): Likewise.
+	(Byte3): Likewise.
+	(Byte4): Likewise.
+	(Byte5): Likewise.
+	(Byte6): Likewise.
+	(next_8_bytes): Likewise.
+	(Byte0): Remove commented out codes.
+	(unaligned_table): Align jump table at 8 bytes.
+	Add _sse4_2 to all labels.  Always include "../strcmp.S".
+	* sysdeps/x86_64/multiarch/strncmp-c.c: Removed.
+	* sysdeps/x86_64/strcmp.S: Add SSE2 support.
+	* sysdeps/x86_64/strncmp.S: New file.
+
 2009-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10422]
