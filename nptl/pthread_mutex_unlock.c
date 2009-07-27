@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -213,7 +213,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 
       /* Unlock.  */
       if ((mutex->__data.__lock & FUTEX_WAITERS) != 0
-	  || atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock, 0,
+	  || atomic_compare_and_exchange_bool_rel (&mutex->__data.__lock, 0,
 						   THREAD_GETMEM (THREAD_SELF,
 								  tid)))
 	{
@@ -263,7 +263,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	  oldval = mutex->__data.__lock;
 	  newval = oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK;
 	}
-      while (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
+      while (atomic_compare_and_exchange_bool_rel (&mutex->__data.__lock,
 						   newval, oldval));
 
       if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
