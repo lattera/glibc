@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -126,7 +126,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      int newval = id | (oldval & FUTEX_WAITERS);
 
 	      newval
-		= atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
+		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						       newval, oldval);
 	      if (newval != oldval)
 		{
@@ -246,7 +246,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	      }
 	  }
 
-	oldval = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
+	oldval = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						      id, 0);
 
 	if (oldval != 0)
@@ -404,7 +404,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	    oldprio = ceiling;
 
 	    oldval
-	      = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
+	      = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						     ceilval | 1, ceilval);
 
 	    if (oldval == ceilval)
@@ -413,7 +413,7 @@ pthread_mutex_timedlock (mutex, abstime)
 	    do
 	      {
 		oldval
-		  = atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
+		  = atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 							 ceilval | 2,
 							 ceilval | 1);
 
@@ -456,7 +456,7 @@ pthread_mutex_timedlock (mutex, abstime)
 					  PTHREAD_MUTEX_PSHARED (mutex));
 		  }
 	      }
-	    while (atomic_compare_and_exchange_val_rel (&mutex->__data.__lock,
+	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 							ceilval | 2, ceilval)
 		   != ceilval);
 	  }

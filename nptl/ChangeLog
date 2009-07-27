@@ -1,10 +1,3 @@
-2009-07-26  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #10418]
-	* pthread_mutex_lock.c (pthread_mutex_lock): Use _rel instead of of
-	_acq variants of cmpxchg.
-	* pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
-
 2009-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/configure.in: New file.
