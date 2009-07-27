@@ -377,10 +377,10 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			idx -= size;
 		    }
 
-		  if (size * 3 <= tab->n_elements)
+		  if (size * 3 <= tab->n_elements * 4)
 		    {
 		      /* Expand the table.  */
-		      size_t newsize = _dl_higher_prime_number (size);
+		      size_t newsize = _dl_higher_prime_number (size + 1);
 		      struct unique_sym *newentries
 			= calloc (sizeof (struct unique_sym), newsize);
 		      if (newentries == NULL)
@@ -398,6 +398,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 
 		      tab->free (entries);
 		      tab->size = newsize;
+		      size = newsize;
 		      entries = tab->entries = newentries;
 		      tab->free = free;
 		    }
