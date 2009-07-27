@@ -165,41 +165,6 @@ add_to_global (struct link_map *new)
   return 0;
 }
 
-int
-_dl_scope_free (void *old)
-{
-  struct dl_scope_free_list *fsl;
-#define DL_SCOPE_FREE_LIST_SIZE (sizeof (fsl->list) / sizeof (fsl->list[0]))
-
-  if (RTLD_SINGLE_THREAD_P)
-    free (old);
-  else if ((fsl = GL(dl_scope_free_list)) == NULL)
-    {
-      GL(dl_scope_free_list) = fsl = malloc (sizeof (*fsl));
-      if (fsl == NULL)
-	{
-	  THREAD_GSCOPE_WAIT ();
-	  free (old);
-	  return 1;
-	}
-      else
-	{
-	  fsl->list[0] = old;
-	  fsl->count = 1;
-	}
-    }
-  else if (fsl->count < DL_SCOPE_FREE_LIST_SIZE)
-    fsl->list[fsl->count++] = old;
-  else
-    {
-      THREAD_GSCOPE_WAIT ();
-      while (fsl->count > 0)
-	free (fsl->list[--fsl->count]);
-      return 1;
-    }
-  return 0;
-}
-
 static void
 dl_open_worker (void *a)
 {
