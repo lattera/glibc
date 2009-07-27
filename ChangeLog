@@ -1,3 +1,13 @@
+2009-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h (RES_USE_DNSSEC): Define.
+	* resolv/res_debug.c (p_option): Handle RES_USE_EDNS0 and
+	RES_USE_DNSSEC.
+	* resolv/res_mkquery.c (__res_nopt): Set flags for RES_USE_DNSSEC.
+	* resolv/res_query.c (__libc_res_nquery): Handle RES_USE_DNSSEC in
+	all the places we handled RES_USE_EDNS0 only before.
+	Patch by Adam Tkac <atkac@redhat.com>.
+
 2009-07-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (do_lookup_x): Fix check for table more than

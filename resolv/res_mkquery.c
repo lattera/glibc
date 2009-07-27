@@ -247,7 +247,15 @@ __res_nopt(res_state statp,
 	NS_PUT16(MIN(anslen, 0xffff), cp);	/* CLASS = UDP payload size */
 	*cp++ = NOERROR;	/* extended RCODE */
 	*cp++ = 0;		/* EDNS version */
-	/* XXX Once we support DNSSEC we change the flag value here.  */
+
+	if (statp->options & RES_USE_DNSSEC) {
+#ifdef DEBUG
+		if (statp->options & RES_DEBUG)
+			printf(";; res_opt()... ENDS0 DNSSEC\n");
+#endif
+		flags |= NS_OPT_DNSSEC_OK;
+	}
+
 	NS_PUT16(flags, cp);
 	NS_PUT16(0, cp);	/* RDLEN */
 	hp->arcount = htons(ntohs(hp->arcount) + 1);

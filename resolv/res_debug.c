@@ -586,6 +586,8 @@ p_option(u_long option) {
 	case RES_ROTATE:	return "rotate";
 	case RES_NOCHECKNAME:	return "no-check-names";
 	case RES_USEBSTRING:	return "ip6-bytstring";
+	case RES_USE_EDNS0:	return "edns0";
+	case RES_USE_DNSSEC:	return "dnssec";
 				/* XXX nonreentrant */
 	default:		sprintf(nbuf, "?0x%lx?", (u_long)option);
 				return (nbuf);

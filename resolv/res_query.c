@@ -147,7 +147,7 @@ __libc_res_nquery(res_state statp,
 	    if (n > 0)
 	      {
 		if ((oflags & RES_F_EDNS0ERR) == 0
-		    && (statp->options & RES_USE_EDNS0) != 0)
+		    && (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 		  {
 		    n = __res_nopt(statp, n, query1, bufsize, anslen / 2);
 		    if (n < 0)
@@ -169,7 +169,7 @@ __libc_res_nquery(res_state statp,
 				 NULL, query2, bufsize - nused);
 		if (n > 0
 		    && (oflags & RES_F_EDNS0ERR) == 0
-		    && (statp->options & RES_USE_EDNS0) != 0)
+		    && (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 		  n = __res_nopt(statp, n, query2, bufsize - nused - n,
 				 anslen / 2);
 		nquery2 = n;
@@ -184,7 +184,7 @@ __libc_res_nquery(res_state statp,
 
 	    if (n > 0
 		&& (oflags & RES_F_EDNS0ERR) == 0
-		&& (statp->options & RES_USE_EDNS0) != 0)
+		&& (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 	      n = __res_nopt(statp, n, query1, bufsize, anslen);
 
 	    nquery1 = n;
@@ -203,7 +203,7 @@ __libc_res_nquery(res_state statp,
 	}
 	if (__builtin_expect (n <= 0, 0)) {
 		/* If the query choked with EDNS0, retry without EDNS0.  */
-		if ((statp->options & RES_USE_EDNS0) != 0
+		if ((statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0
 		    && ((oflags ^ statp->_flags) & RES_F_EDNS0ERR) != 0) {
 			statp->_flags |= RES_F_EDNS0ERR;
 #ifdef DEBUG
