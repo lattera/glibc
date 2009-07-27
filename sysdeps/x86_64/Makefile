@@ -22,6 +22,7 @@ sysdep-rtld-routines += tlsdesc dl-tlsdesc
 
 tests: $(objpfx)tst-xmmymm.out
 $(objpfx)tst-xmmymm.out: ../sysdeps/x86_64/tst-xmmymm.sh $(objpfx)ld.so
+	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
 	$(SHELL) -e $< $(objpfx) > $@
 endif
 
