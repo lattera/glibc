@@ -7,7 +7,6 @@
 	* sysdeps/x86_64/rtld-memcmp.c: New file.
 	* sysdeps/x86_64/rtld-rawmemchr.c: New file.
 	* sysdeps/x86_64/rtld-strchr.S: New file.
-	* sysdeps/x86_64/rtld-strcmp.S: New file.
 	* sysdeps/x86_64/rtld-strlen.S: New file.
 	* sysdeps/x86_64/multiarch/rtld-rawmemchr.c: New file.
 	* sysdeps/x86_64/multiarch/rtld-strlen.S: New file.
