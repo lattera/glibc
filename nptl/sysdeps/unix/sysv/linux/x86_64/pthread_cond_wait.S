@@ -134,9 +134,12 @@ __pthread_cond_wait:
 	je	60f
 
 	movq	dep_mutex-cond_futex(%rdi), %r8
-	/* Requeue to a PI mutex if the PI bit is set.  */
-	testl	$PI_BIT, MUTEX_KIND(%r8)
-	je	61f
+	/* Requeue to a non-robust PI mutex if the PI bit is set and
+	the robust bit is not set.  */
+	movl	MUTEX_KIND(%r8), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	jne	61f
 
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
 	movl	$SYS_futex, %eax
@@ -234,11 +237,10 @@ __pthread_cond_wait:
 
 	/* If requeue_pi is used the kernel performs the locking of the
 	   mutex. */
-11:	xorl	%eax, %eax
+11:	movq	16(%rsp), %rdi
 	testl	%r13d, %r13d
-	jnz	14f
+	jnz	18f
 
-	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
 
 14:	addq	$FRAME_SIZE, %rsp
@@ -254,11 +256,16 @@ __pthread_cond_wait:
 	/* We return the result of the mutex_lock operation.  */
 	retq
 
-	/* Initial locking failed.  */
-1:
 	cfi_adjust_cfa_offset(16 + FRAME_SIZE)
 	cfi_rel_offset(%r12, FRAME_SIZE + 8)
 	cfi_rel_offset(%r13, FRAME_SIZE)
+
+18:	callq	__pthread_mutex_cond_lock_adjust
+	xorl	%eax, %eax
+	jmp	14b
+
+	/* Initial locking failed.  */
+1:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif

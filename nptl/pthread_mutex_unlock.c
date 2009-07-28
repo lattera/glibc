@@ -150,7 +150,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       if (--mutex->__data.__count != 0)
 	/* We still hold the mutex.  */
 	return 0;
-      goto continue_pi;
+      goto continue_pi_non_robust;
 
     case PTHREAD_MUTEX_PI_ROBUST_RECURSIVE_NP:
       /* Recursive mutex.  */
@@ -173,7 +173,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	/* We still hold the mutex.  */
 	return 0;
 
-      goto continue_pi;
+      goto continue_pi_robust;
 
     case PTHREAD_MUTEX_PI_ERRORCHECK_NP:
     case PTHREAD_MUTEX_PI_NORMAL_NP:
@@ -195,9 +195,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       pi_notrecoverable:
        newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
 
-    continue_pi:
       if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0)
 	{
+	continue_pi_robust:
 	  /* Remove mutex from the list.
 	     Note: robust PI futexes are signaled by setting bit 0.  */
 	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
@@ -206,6 +206,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	  DEQUEUE_MUTEX (mutex);
 	}
 
+    continue_pi_non_robust:
       mutex->__data.__owner = newowner;
       if (decr)
 	/* One less user.  */

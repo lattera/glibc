@@ -75,8 +75,10 @@ __pthread_cond_broadcast:
 	jne	9f
 
 	/* Requeue to a PI mutex if the PI bit is set.  */
-	testl	$PI_BIT, MUTEX_KIND(%r8)
-	jne	81f
+	movl	MUTEX_KIND(%r8), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	je	81f
 
 	/* Wake up all threads.  */
 #ifdef __ASSUME_PRIVATE_FUTEX

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -472,4 +472,23 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 #ifndef __pthread_mutex_lock
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
 strong_alias (__pthread_mutex_lock, __pthread_mutex_lock_internal)
+#endif
+
+
+#ifdef NO_INCR
+void
+__pthread_mutex_cond_lock_adjust (mutex)
+     pthread_mutex_t *mutex;
+{
+  assert ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_INHERIT_NP) != 0);
+  assert ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0);
+  assert ((mutex->__data.__kind & PTHREAD_MUTEX_PSHARED_BIT) == 0);
+
+  /* Record the ownership.  */
+  pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
+  mutex->__data.__owner = id;
+
+  if (mutex->__data.__kind == PTHREAD_MUTEX_PI_RECURSIVE_NP)
+    ++mutex->__data.__count;
+}
 #endif
