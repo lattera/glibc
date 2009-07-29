@@ -59,10 +59,11 @@ for f in $tocheck; do
   objdump -d "$objpfx"../*/"$f" |
   awk 'BEGIN { last="" } /^[[:xdigit:]]* <[_[:alnum:]]*>:$/ { fct=substr($2, 2, length($2)-3) } /,%[xy]mm[[:digit:]]*$/ { if (last != fct) { print fct; last=fct} }' |
   while read fct; do
-    if test "$fct" != "_dl_runtime_profile"; then
-      echo "function $fct in $f modifies xmm/ymm" >> "$tmp"
-      result=1
+    if test "$fct" = "_dl_runtime_profile" -o "$fct" = "_dl_x86_64_restore_sse"; then
+      continue;
     fi
+    echo "function $fct in $f modifies xmm/ymm" >> "$tmp"
+    result=1
   done
 done
 

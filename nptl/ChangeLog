@@ -1,3 +1,11 @@
+2009-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/tls.h (tcbhead_t): Add room for SSE registers the
+	dynamic linker might have to save.  Define RTLD_CHECK_FOREIGN_CALL,
+	RTLD_ENABLE_FOREIGN_CALL, RTLD_PREPARE_FOREIGN_CALL, and
+	RTLD_FINALIZE_FOREIGN_CALL.  Pretty printing.
+	* sysdeps/x86_64/tcb-offsets.sym: Add RTLD_SAVESPACE_SSE.
+
 2009-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_mutex_lock.c [NO_INCR] (__pthread_mutex_cond_lock_adjust):

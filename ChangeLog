@@ -1,3 +1,18 @@
+2009-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-runtime.c (_dl_fixup): Indicate before _dl_lookup_symbol_x
+	call that registers used in calling conventions need to be preserved.
+	* elf/dl-lookup.c (do_lookup_x): Use RTLD_*_FOREIGN_CALL macros
+	to preserve register content if necessary.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_x86_64_save_sse): New function.
+	(_dl_x86_64_restore_sse): New function.
+	* sysdeps/x86_64/tst-xmmymm.sh: There is now one more function that
+	is allowed to modify xmm/ymm registers.
+
+	* stdio-common/scanf15.c: Undefine _LIBC.  We want to test from an
+	application's perspective.
+	* stdio-common/scanf17.c: Likewise.
+
 2009-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/libc-tls.c (__libc_setup_tls) [TLS_TCB_AT_TP]: Don't add TCB

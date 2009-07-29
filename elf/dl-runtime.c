@@ -111,12 +111,20 @@ _dl_fixup (
 	  flags |= DL_LOOKUP_GSCOPE_LOCK;
 	}
 
+#ifdef RTLD_ENABLE_FOREIGN_CALL
+      RTLD_ENABLE_FOREIGN_CALL;
+#endif
+
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym, l->l_scope,
 				    version, ELF_RTYPE_CLASS_PLT, flags, NULL);
 
       /* We are done with the global scope.  */
       if (!RTLD_SINGLE_THREAD_P)
 	THREAD_GSCOPE_RESET_FLAG ();
+
+#ifdef RTLD_FINALIZE_FOREIGN_CALL
+      RTLD_FINALIZE_FOREIGN_CALL;
+#endif
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol

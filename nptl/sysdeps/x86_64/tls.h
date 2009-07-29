@@ -29,6 +29,7 @@
 # include <sysdep.h>
 # include <kernel-features.h>
 # include <bits/wordsize.h>
+# include <xmmintrin.h>
 
 
 /* Type for the dtv.  */
@@ -55,16 +56,23 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   unsigned long int vgetcpu_cache[2];
-#ifndef __ASSUME_PRIVATE_FUTEX
+# ifndef __ASSUME_PRIVATE_FUTEX
   int private_futex;
-#else
+# else
   int __unused1;
-#endif
-#if __WORDSIZE == 64
-  int __pad1;
-#endif
+# endif
+# if __WORDSIZE == 64
+  int rtld_must_xmm_save;
+# endif
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[5];
+# if __WORDSIZE == 64
+  long int __unused2;
+  /* Have space for the post-AVX register size.  */
+  __m128 rtld_savespace_sse[8][4];
+
+  void *__padding[8];
+# endif
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
@@ -298,7 +306,7 @@ typedef struct
 
 
 /* Atomic compare and exchange on TLS, returning old value.  */
-#define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, newval, oldval) \
+# define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, newval, oldval) \
   ({ __typeof (descr->member) __ret;					      \
      __typeof (oldval) __old = (oldval);				      \
      if (sizeof (descr->member) == 4)					      \
@@ -313,7 +321,7 @@ typedef struct
 
 
 /* Atomic logical and.  */
-#define THREAD_ATOMIC_AND(descr, member, val) \
+# define THREAD_ATOMIC_AND(descr, member, val) \
   (void) ({ if (sizeof ((descr)->member) == 4)				      \
 	      asm volatile (LOCK_PREFIX "andl %1, %%fs:%P0"		      \
 			    :: "i" (offsetof (struct pthread, member)),	      \
@@ -324,7 +332,7 @@ typedef struct
 
 
 /* Atomic set bit.  */
-#define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
+# define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
   (void) ({ if (sizeof ((descr)->member) == 4)				      \
 	      asm volatile (LOCK_PREFIX "orl %1, %%fs:%P0"		      \
 			    :: "i" (offsetof (struct pthread, member)),	      \
@@ -334,7 +342,7 @@ typedef struct
 	      abort (); })
 
 
-#define CALL_THREAD_FCT(descr) \
+# define CALL_THREAD_FCT(descr) \
   ({ void *__res;							      \
      asm volatile ("movq %%fs:%P2, %%rdi\n\t"				      \
 		   "callq *%%fs:%P1"					      \
@@ -355,18 +363,18 @@ typedef struct
 
 
 /* Set the pointer guard field in the TCB head.  */
-#define THREAD_SET_POINTER_GUARD(value) \
+# define THREAD_SET_POINTER_GUARD(value) \
   THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
-#define THREAD_COPY_POINTER_GUARD(descr) \
+# define THREAD_COPY_POINTER_GUARD(descr) \
   ((descr)->header.pointer_guard					      \
    = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
 
 
 /* Get and set the global scope generation counter in the TCB head.  */
-#define THREAD_GSCOPE_FLAG_UNUSED 0
-#define THREAD_GSCOPE_FLAG_USED   1
-#define THREAD_GSCOPE_FLAG_WAIT   2
-#define THREAD_GSCOPE_RESET_FLAG() \
+# define THREAD_GSCOPE_FLAG_UNUSED 0
+# define THREAD_GSCOPE_FLAG_USED   1
+# define THREAD_GSCOPE_FLAG_WAIT   2
+# define THREAD_GSCOPE_RESET_FLAG() \
   do									      \
     { int __res;							      \
       asm volatile ("xchgl %0, %%fs:%P1"				      \
@@ -377,10 +385,39 @@ typedef struct
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
     }									      \
   while (0)
-#define THREAD_GSCOPE_SET_FLAG() \
+# define THREAD_GSCOPE_SET_FLAG() \
   THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
-#define THREAD_GSCOPE_WAIT() \
+# define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
+
+
+# ifdef SHARED
+/* Defined in dl-trampoline.S.  */
+extern void _dl_x86_64_save_sse (void);
+extern void _dl_x86_64_restore_sse (void);
+
+# define RTLD_CHECK_FOREIGN_CALL \
+  (THREAD_GETMEM (THREAD_SELF, header.rtld_must_xmm_save) != 0)
+
+#  define RTLD_ENABLE_FOREIGN_CALL \
+  THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save, 1)
+
+#  define RTLD_PREPARE_FOREIGN_CALL \
+  do if (THREAD_GETMEM (THREAD_SELF, header.rtld_must_xmm_save))	      \
+    {									      \
+      _dl_x86_64_save_sse ();						      \
+      THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save, 0);	      \
+    }									      \
+  while (0)
+
+#  define RTLD_FINALIZE_FOREIGN_CALL \
+  do {									      \
+    if (THREAD_GETMEM (THREAD_SELF, header.rtld_must_xmm_save) == 0)	      \
+      _dl_x86_64_restore_sse ();					      \
+    THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save, 0);		      \
+  } while (0)
+# endif
+
 
 #endif /* __ASSEMBLER__ */
 

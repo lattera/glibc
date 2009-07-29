@@ -1,5 +1,6 @@
 #undef _GNU_SOURCE
 #define _XOPEN_SOURCE 600
+#undef _LIBC
 /* The following macro definitions are a hack.  They word around disabling
    the GNU extension while still using a few internal headers.  */
 #define u_char unsigned char

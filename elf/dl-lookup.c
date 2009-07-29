@@ -380,6 +380,10 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  if (size * 3 <= tab->n_elements * 4)
 		    {
 		      /* Expand the table.  */
+#ifdef RTLD_CHECK_FOREIGN_CALL
+		      /* This must not happen during runtime relocations.  */
+		      assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
 		      size_t newsize = _dl_higher_prime_number (size + 1);
 		      struct unique_sym *newentries
 			= calloc (sizeof (struct unique_sym), newsize);
@@ -405,6 +409,11 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		}
 	      else
 		{
+#ifdef RTLD_CHECK_FOREIGN_CALL
+		  /* This must not happen during runtime relocations.  */
+		  assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+
 #define INITIAL_NUNIQUE_SYM_TABLE 31
 		  size = INITIAL_NUNIQUE_SYM_TABLE;
 		  entries = calloc (sizeof (struct unique_sym), size);
@@ -599,6 +608,10 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	  struct link_map_reldeps *newp;
 	  unsigned int max
 	    = undef_map->l_reldepsmax ? undef_map->l_reldepsmax * 2 : 10;
+
+#ifdef RTLD_PREPARE_FOREIGN_CALL
+	  RTLD_PREPARE_FOREIGN_CALL;
+#endif
 
 	  newp = malloc (sizeof (*newp) + max * sizeof (struct link_map *));
 	  if (newp == NULL)
