@@ -203,49 +203,49 @@ L(no_avx1):
 	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu			(LR_VECTOR_OFFSET)(%rsp), %ymm0
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu	  (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
 
 L(no_avx2):
@@ -361,13 +361,13 @@ L(no_avx3):
 	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu LRV_VECTOR0_OFFSET(%rsp), %ymm0
 
 1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
 
 L(no_avx4):
