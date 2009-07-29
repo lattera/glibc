@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,6 +99,9 @@ init_static_tls (size_t memsz, size_t align)
      surplus that permits dynamic loading of modules with IE-model TLS.  */
   GL(dl_tls_static_size) = roundup (memsz + GL(dl_tls_static_size),
 				    TLS_TCB_ALIGN);
+#if TLS_TCB_AT_TP
+  GL(dl_tls_static_size) += TLS_TCB_SIZE;
+#endif
   GL(dl_tls_static_used) = memsz;
   /* The alignment requirement for the static TLS block.  */
   GL(dl_tls_static_align) = align;
@@ -211,9 +214,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   memsz = roundup (memsz, align ?: 1);
 
-#if TLS_TCB_AT_TP
-  memsz += tcbsize;
-#elif TLS_DTV_AT_TP
+#if TLS_DTV_AT_TP
   memsz += tcb_offset;
 #endif
 

@@ -61,7 +61,10 @@ _dl_try_allocate_static_tls (struct link_map *map)
   size_t n;
   size_t blsize;
 
-  freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used) - TLS_TCB_SIZE;
+  freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used);
+  if (freebytes < TLS_TCB_SIZE)
+    goto fail;
+  freebytes -= TLS_TCB_SIZE;
 
   blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;
   if (freebytes < blsize)

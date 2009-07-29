@@ -1,3 +1,12 @@
+2009-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/libc-tls.c (__libc_setup_tls) [TLS_TCB_AT_TP]: Don't add TCB
+	size to memsz.
+	(init_static_tls) [TLS_TCB_AT_TP]: Add it to GL(dl_tls_static_size)
+	here.
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls): Compute freebytes in
+	two steps to catch bugs.
+
 2009-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/tst-xmmymm.sh: Refine testing.  The script now
