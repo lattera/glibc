@@ -1,3 +1,8 @@
+2009-07-20  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h: Define
+	__ASSUME_EVENTFD2 and __ASSUME_SIGNALFD4.
+
 2009-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/do-lookup.h: Remove.
