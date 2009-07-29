@@ -51,6 +51,12 @@
 # define __ASSUME_SIGFRAME_V2	1
 #endif
 
+/* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
+#if __LINUX_KERNEL_VERSION >= 0x02061b
+# define __ASSUME_EVENTFD2	1
+# define __ASSUME_SIGNALFD4	1
+#endif
+
 #include_next <kernel-features.h>
 
 /* These syscalls are not implemented yet for ARM.  */
