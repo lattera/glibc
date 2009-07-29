@@ -61,6 +61,7 @@ _dl_runtime_resolve:
 	cfi_startproc
 
 _dl_runtime_profile:
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
 	/* The La_x86_64_regs data structure pointed to by the
 	   fourth paramater must be 16-byte aligned.  This must
 	   be explicitly enforced.  We have the set up a dynamically
@@ -68,7 +69,7 @@ _dl_runtime_profile:
 	   has a fixed size and preserves the original stack pointer.  */
 
 	subq $32, %rsp		# Allocate the local storage.
-	cfi_adjust_cfa_offset(48) # Incorporate PLT
+	cfi_adjust_cfa_offset(32)
 	movq %rbx, (%rsp)
 	cfi_rel_offset(%rbx, 0)
 

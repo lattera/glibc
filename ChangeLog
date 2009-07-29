@@ -1,3 +1,8 @@
+2009-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Improve CFI
+	information.
+
 2009-07-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-trampoline.S: Properly restore AVX registers.
