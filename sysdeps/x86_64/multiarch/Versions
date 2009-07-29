@@ -1,0 +1,5 @@
+libc {
+  GLIBC_PRIVATE {
+    __get_cpu_features;
+  }
+}
