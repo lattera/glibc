@@ -54,10 +54,28 @@ extern void __init_cpu_features (void) attribute_hidden;
       __init_cpu_features ();				\
   while (0)
 
+/* Used from outside libc.so to get access to the CPU features structure.  */
+extern const struct cpu_features *__get_cpu_features (void)
+     __attribute__ ((const));
+
 /* Following are the feature tests used throughout libc.  */
 
-#define HAS_POPCOUNT \
+#ifndef NOT_IN_libc
+# define HAS_POPCOUNT \
   ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 23)) != 0)
 
-#define HAS_SSE4_2 \
+# define HAS_SSE4_2 \
   ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 20)) != 0)
+
+# define HAS_FMA \
+  ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 12)) != 0)
+#else
+# define HAS_POPCOUNT \
+  ((__get_cpu_features ()->cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 23)) != 0)
+
+# define HAS_SSE4_2 \
+  ((__get_cpu_features ()->cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 20)) != 0)
+
+# define HAS_FMA \
+  ((__get_cpu_features ()->cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 12)) != 0)
+#endif

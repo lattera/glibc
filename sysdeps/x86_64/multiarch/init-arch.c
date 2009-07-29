@@ -86,3 +86,13 @@ __init_cpu_features (void)
   else
     __cpu_features.kind = arch_kind_other;
 }
+
+
+const struct cpu_features *
+__get_cpu_features (void)
+{
+  if (__cpu_features.kind == arch_kind_unknown)
+    __init_cpu_features ();
+
+  return &__cpu_features;
+}
