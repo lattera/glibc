@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -61,7 +61,13 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
   /* We are first called with address in the __backtrace function.
      Skip it.  */
   if (arg->cnt != -1)
-    arg->array[arg->cnt] = (void *) unwind_getip (ctx);
+    {
+      arg->array[arg->cnt] = (void *) unwind_getip (ctx);
+
+      /* Check whether we make any progress.  */
+      if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt])
+	return _URC_END_OF_STACK;
+    }
   if (++arg->cnt == arg->size)
     return _URC_END_OF_STACK;
   return _URC_NO_REASON;
