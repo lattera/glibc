@@ -1,3 +1,8 @@
+2009-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (longjmp_msg): Get
+	ss_flags from the correct location.
+
 2009-07-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/Makefile (sysdep_routines): Add cacheinfo.

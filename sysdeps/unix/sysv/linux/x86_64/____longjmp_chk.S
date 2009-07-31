@@ -77,7 +77,7 @@ ENTRY(____longjmp_chk)
 	leaq	24(%rsp), %rsp
 	cfi_adjust_cfa_offset(-24)
 	jne	.Lok
-	movl	8(%rsp), %eax
+	movl	-16(%rsp), %eax
 	andl	$1, %eax
 
 .Lok:
@@ -122,7 +122,7 @@ ENTRY(____longjmp_chk)
 	syscall
 	addq	$24, %rsp
 	cfi_adjust_cfa_offset(-24)
-	testl	$1, 8(%rsp)
+	testl	$1, -16(%rsp)
 	je	.Lout
 
 .Lfail:	xchgq	%r8, %rsp
