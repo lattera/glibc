@@ -104,6 +104,7 @@ $(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
 include ../Rules
 
 CFLAGS-mcheck-init.c = $(PIC-ccflag)
+CFLAGS-obstack.c = $(uses-callbacks)
 
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 	-rm -f $@
