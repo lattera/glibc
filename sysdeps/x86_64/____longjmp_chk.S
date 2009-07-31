@@ -74,6 +74,8 @@ ENTRY(____longjmp_chk)
 	syscall
 	testl	%eax, %eax
 	movl	$0, %eax
+	leaq	24(%rsp), %rsp
+	cfi_adjust_cfa_offset(-24)
 	jne	.Lok
 	movl	8(%rsp), %eax
 	andl	$1, %eax
@@ -125,7 +127,7 @@ ENTRY(____longjmp_chk)
 
 .Lfail:	xchgq	%r8, %rsp
 	/* We want the stack trace to show that of the caller.  */
-	cfi_def_cfa(%rsp, 32)
+	cfi_def_cfa(%rsp, 8)
 	cfi_restore(%rsp)
 	cfi_register(%rbp, %r9)
 	cfi_restore(%rip)
