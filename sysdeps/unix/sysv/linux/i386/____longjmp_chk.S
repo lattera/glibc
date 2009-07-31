@@ -93,7 +93,7 @@ ENTRY (____longjmp_chk)
 	cmpl	%esp, %edi
 	jnbe	.Lcheck
 
-     	/* Restore registers.  */
+	/* Restore registers.  */
 .Lout:	movl	(JB_BX*4)(%ecx), %ebx
 	movl	(JB_SI*4)(%ecx), %esi
 	movl	(JB_DI*4)(%ecx), %edi
@@ -104,7 +104,7 @@ ENTRY (____longjmp_chk)
 	cfi_restore(%ebp)
 
 	/* Jump to saved PC.  */
-     	jmp	*%edx
+	jmp	*%edx
 
 	cfi_def_cfa(%ecx, 0)
 	cfi_register(%eip, %edx)
