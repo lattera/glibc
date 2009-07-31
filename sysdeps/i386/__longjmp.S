@@ -33,9 +33,6 @@ ENTRY (__longjmp)
 	movl (JB_SP*4)(%eax), %ecx
 	PTR_DEMANGLE (%edx)
 	PTR_DEMANGLE (%ecx)
-# ifdef CHECK_ESP
-	CHECK_ESP (%ecx)
-# endif
 	cfi_def_cfa(%eax, 0)
 	cfi_register(%eip, %edx)
 	cfi_register(%esp, %ecx)
@@ -57,12 +54,6 @@ ENTRY (__longjmp)
 	movl %ecx, %esp
 #else
 	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
-
-# ifdef CHECK_ESP
-	movl (JB_SP*4)(%ecx), %eax
-	CHECK_ESP (%eax)
-# endif
-
 	movl 8(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */
 	movl (JB_PC*4)(%ecx), %edx
