@@ -82,6 +82,8 @@ CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-longjmp_chk.c = -fexceptions -fasynchronous-unwind-tables \
 			   -D_FORTIFY_SOURCE=1
+CFLAGS-tst-longjmp_chk2.c = -fexceptions -fasynchronous-unwind-tables \
+			    -D_FORTIFY_SOURCE=1
 
 # We know these tests have problems with format strings, this is what
 # we are testing.  Disable that warning.
