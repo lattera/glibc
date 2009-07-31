@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <cpuid.h>
 #include "init-arch.h"
 
 
@@ -27,12 +28,10 @@ struct cpu_features __cpu_features attribute_hidden;
 static void
 get_common_indeces (void)
 {
-  asm volatile ("cpuid"
-		: "=a" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax),
-		  "=b" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx),
-		  "=c" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx),
-		  "=d" (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx)
-		: "0" (1));
+  __cpuid (1, __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax,
+	   __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx,
+	   __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx,
+	   __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx);
 
   unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
   __cpu_features.family = (eax >> 8) & 0x0f;
@@ -47,10 +46,7 @@ __init_cpu_features (void)
   unsigned int ecx;
   unsigned int edx;
 
-  asm volatile ("cpuid"
-		: "=a" (__cpu_features.max_cpuid), "=b" (ebx), "=c" (ecx),
-		  "=d" (edx)
-		: "0" (0));
+  __cpuid (0, __cpu_features.max_cpuid, ebx, ecx, edx);
 
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
@@ -71,9 +67,11 @@ __init_cpu_features (void)
 	{
 	  __cpu_features.model += extended_model;
 
+#ifndef ENABLE_SSSE3_ON_ATOM
 	  if (__cpu_features.model == 0x1c)
 	    /* Avoid SSSE3 on Atom since it is slow.  */
 	    __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx &= ~(1 << 9);
+#endif
 	}
     }
   /* This spells out "AuthenticAMD".  */

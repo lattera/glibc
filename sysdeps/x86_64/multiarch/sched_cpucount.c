@@ -27,7 +27,7 @@
 
 #define POPCNT(l) \
   ({ __cpu_mask r; \
-     asm ("popcntq %1, %0" : "=r" (r) : "0" (l));\
+     asm ("popcnt %1, %0" : "=r" (r) : "0" (l));\
      r; })
 #define __sched_cpucount static popcount_cpucount
 #include <posix/sched_cpucount.c>

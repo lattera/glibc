@@ -61,6 +61,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 /* Following are the feature tests used throughout libc.  */
 
 #ifndef NOT_IN_libc
+# define HAS_SSE2 \
+  ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx & (1 << 26)) != 0)
+
 # define HAS_POPCOUNT \
   ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 23)) != 0)
 
@@ -70,6 +73,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_FMA \
   ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 12)) != 0)
 #else
+# define HAS_SSE2 \
+  ((__get_cpu_features ()->cpuid[COMMON_CPUID_INDEX_1].edx & (1 << 26)) != 0)
+
 # define HAS_POPCOUNT \
   ((__get_cpu_features ()->cpuid[COMMON_CPUID_INDEX_1].ecx & (1 << 23)) != 0)
 

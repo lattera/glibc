@@ -5,3 +5,7 @@ endif
 
 # So that we can test __m128's alignment
 stack-align-test-flags += -msse
+
+ifeq ($(subdir),string)
+sysdep_routines += cacheinfo
+endif

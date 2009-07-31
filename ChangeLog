@@ -1,3 +1,33 @@
+2009-07-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/Makefile (sysdep_routines): Add cacheinfo.
+	* sysdeps/i386/i686/cacheinfo.c: New file.
+	* sysdeps/i386/i686/multiarch/Makefile: New file.
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: New file.
+	* sysdeps/i386/i686/multiarch/init-arch.c: New file.
+	* sysdeps/i386/i686/multiarch/init-arch.h: New file.
+	* sysdeps/i386/i686/multiarch/sched_cpucount.c: New file.
+	* sysdeps/unix/sysv/linux/i386/i686/sysconf.c: New file.
+	* sysdeps/x86_64/cacheinfo.c: Include <cpuid.h>.
+	(__cpuid_count): New. Provide the default.
+	(__x86_64_prefetchw): Define only if DISABLE_PREFETCHW is not defined.
+	(__x86_64_preferred_memory_instruction): Define only if
+	DISABLE_PREFERRED_MEMORY_INSTRUCTION is not defined.
+	(intel_check_word): Use __cpuid.
+	(handle_intel): Likewise.
+	(handle_amd): Likewise.
+	(__cache_sysconf): Likewise.
+	(init_cacheinfo): Updated.  Use __cpuid and __cpuid_count.
+	(__cache_sysconf): Likewise.
+	(init_cacheinfo): Updated.  Use __cpuid and __cpuid_count.
+	* sysdeps/x86_64/multiarch/init-arch.c: Include <cpuid.h>.
+	(get_common_indeces): Use __cpuid.
+	(__init_cpu_features): Likewise.  Disable SSSE3 on Atom only
+	if ENABLE_SSSE3_ON_ATOM is not defined.
+	* sysdeps/x86_64/multiarch/init-arch.h (HAS_SSE2): Define.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c (POPCNT): Use
+	popcnt instead of popcntq.
+
 2009-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/Makefile (CFLAGS-obstack.c): Add $(uses-callbacks).

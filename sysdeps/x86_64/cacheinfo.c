@@ -22,6 +22,26 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <cpuid.h>
+
+#ifndef __cpuid_count
+/* FIXME: Provide __cpuid_count if it isn't defined.  Copied from gcc
+   4.4.0.  Remove this if gcc 4.4 is the minimum requirement.  */
+# if defined(__i386__) && defined(__PIC__)
+/* %ebx may be the PIC register.  */
+#  define __cpuid_count(level, count, a, b, c, d)		\
+  __asm__ ("xchg{l}\t{%%}ebx, %1\n\t"			\
+	   "cpuid\n\t"					\
+	   "xchg{l}\t{%%}ebx, %1\n\t"			\
+	   : "=a" (a), "=r" (b), "=c" (c), "=d" (d)	\
+	   : "0" (level), "2" (count))
+# else
+#  define __cpuid_count(level, count, a, b, c, d)		\
+  __asm__ ("cpuid\n\t"					\
+	   : "=a" (a), "=b" (b), "=c" (c), "=d" (d)	\
+	   : "0" (level), "2" (count))
+# endif
+#endif
 
 #ifdef USE_MULTIARCH
 # include "multiarch/init-arch.h"
@@ -176,9 +196,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      unsigned int ebx;
 	      unsigned int ecx;
 	      unsigned int edx;
-	      asm volatile ("cpuid"
-			    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-			    : "0" (1));
+	      __cpuid (1, eax, ebx, ecx, edx);
 
 	      family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
 	      model = (((eax >>16) & 0xf) << 4) + ((eax >> 4) & 0xf);
@@ -250,9 +268,7 @@ handle_intel (int name, unsigned int maxidx)
       unsigned int ebx;
       unsigned int ecx;
       unsigned int edx;
-      asm volatile ("cpuid"
-		    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		    : "0" (2));
+      __cpuid (2, eax, ebx, ecx, edx);
 
       /* The low byte of EAX in the first round contain the number of
 	 rounds we have to make.  At least one, the one we are already
@@ -296,9 +312,7 @@ handle_amd (int name)
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
-  asm volatile ("cpuid"
-		: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		: "0" (0x80000000));
+  __cpuid (0x80000000, eax, ebx, ecx, edx);
 
   /* No level 4 cache (yet).  */
   if (name > _SC_LEVEL3_CACHE_LINESIZE)
@@ -308,9 +322,7 @@ handle_amd (int name)
   if (eax < fn)
     return 0;
 
-  asm volatile ("cpuid"
-		: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		: "0" (fn));
+  __cpuid (fn, eax, ebx, ecx, edx);
 
   if (name < _SC_LEVEL1_DCACHE_SIZE)
     {
@@ -424,9 +436,7 @@ __cache_sysconf (int name)
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
-  asm volatile ("cpuid"
-		: "=a" (max_cpuid), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		: "0" (0));
+  __cpuid (0, max_cpuid, ebx, ecx, edx);
 #endif
 
   if (is_intel)
@@ -449,9 +459,13 @@ long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
    L2 or L3 size.  */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 long int __x86_64_shared_cache_size attribute_hidden = 1024 * 1024;
+
+#ifndef DISABLE_PREFETCHW
 /* PREFETCHW support flag for use in memory and string routines.  */
 int __x86_64_prefetchw attribute_hidden;
+#endif
 
+#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
 /* Instructions preferred for memory and string routines.
 
   0: Regular instructions
@@ -461,6 +475,7 @@ int __x86_64_prefetchw attribute_hidden;
 
   */
 int __x86_64_preferred_memory_instruction attribute_hidden;
+#endif
 
 
 static void
@@ -483,9 +498,7 @@ init_cacheinfo (void)
     __init_cpu_features ();
 #else
   int max_cpuid;
-  asm volatile ("cpuid"
-		: "=a" (max_cpuid), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		: "0" (0));
+  __cpuid (0, max_cpuid, ebx, ecx, edx);
 #endif
 
   if (is_intel)
@@ -509,17 +522,17 @@ init_cacheinfo (void)
       ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
       edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
 #else
-      asm volatile ("cpuid"
-		    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		    : "0" (1));
+      __cpuid (1, eax, ebx, ecx, edx);
 #endif
 
+#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
       /* Intel prefers SSSE3 instructions for memory/string routines
 	 if they are avaiable.  */
       if ((ecx & 0x200))
 	__x86_64_preferred_memory_instruction = 3;
       else
 	__x86_64_preferred_memory_instruction = 2;
+#endif
 
       /* Figure out the number of logical threads that share the
 	 highest cache level.  */
@@ -530,9 +543,7 @@ init_cacheinfo (void)
 	  /* Query until desired cache level is enumerated.  */
 	  do
 	    {
-              asm volatile ("cpuid"
-		            : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		            : "0" (4), "2" (i++));
+	      __cpuid_count (4, i++, eax, ebx, ecx, edx);
 
 	      /* There seems to be a bug in at least some Pentium Ds
 		 which sometimes fail to iterate all cache parameters.
@@ -566,9 +577,7 @@ init_cacheinfo (void)
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
 
       /* Get maximum extended function. */
-      asm volatile ("cpuid"
-		    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		    : "0" (0x80000000));
+      __cpuid (0x80000000, max_cpuid_ex, ebx, ecx, edx);
 
       if (shared <= 0)
 	/* No shared L3 cache.  All we have is the L2 cache.  */
@@ -579,10 +588,7 @@ init_cacheinfo (void)
 	  if (max_cpuid_ex >= 0x80000008)
 	    {
 	      /* Get width of APIC ID.  */
-	      asm volatile ("cpuid"
-			    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx),
-			      "=d" (edx)
-			    : "0" (0x80000008));
+	      __cpuid (0x80000008, max_cpuid_ex, ebx, ecx, edx);
 	      threads = 1 << ((ecx >> 12) & 0x0f);
 	    }
 
@@ -590,10 +596,7 @@ init_cacheinfo (void)
 	    {
 	      /* If APIC ID width is not available, use logical
 		 processor count.  */
-	      asm volatile ("cpuid"
-			    : "=a" (max_cpuid_ex), "=b" (ebx), "=c" (ecx),
-			      "=d" (edx)
-			    : "0" (0x00000001));
+	      __cpuid (0x00000001, max_cpuid_ex, ebx, ecx, edx);
 
 	      if ((edx & (1 << 28)) != 0)
 		threads = (ebx >> 16) & 0xff;
@@ -608,15 +611,15 @@ init_cacheinfo (void)
 	  shared += core;
 	}
 
+#ifndef DISABLE_PREFETCHW
       if (max_cpuid_ex >= 0x80000001)
 	{
-	  asm volatile ("cpuid"
-			: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-			: "0" (0x80000001));
+	  __cpuid (0x80000001, eax, ebx, ecx, edx);
 	  /*  PREFETCHW     || 3DNow!  */
 	  if ((ecx & 0x100) || (edx & 0x80000000))
 	    __x86_64_prefetchw = -1;
 	}
+#endif
     }
 
   if (data > 0)
