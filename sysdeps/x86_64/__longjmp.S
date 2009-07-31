@@ -34,16 +34,12 @@ ENTRY(__longjmp)
 	PTR_DEMANGLE (%r9)
 	PTR_DEMANGLE (%rdx)
 #endif
-#ifdef CHECK_RSP
-	CHECK_RSP (%r8)
-#endif
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)
 	cfi_register(%rbp,%r9)
 	cfi_register(%rip,%rdx)
 	cfi_offset(%rbx,JB_RBX*8)
-	cfi_offset(%rbp,JB_RBP*8)
 	cfi_offset(%r12,JB_R12*8)
 	cfi_offset(%r13,JB_R13*8)
 	cfi_offset(%r14,JB_R14*8)
@@ -58,4 +54,4 @@ ENTRY(__longjmp)
 	movq %r8,%rsp
 	movq %r9,%rbp
 	jmpq *%rdx
-END (BP_SYM (__longjmp))
+END (__longjmp)
