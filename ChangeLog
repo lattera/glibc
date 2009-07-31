@@ -1,5 +1,11 @@
 2009-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: New file.
+	* sysdeps/i386/____longjmp_chk.S: Remove all code.  This is now a file
+	which always causes a compile error.
+
+	* sysdeps/i386/__longjmp.S: Remove bound-checking pointer support.
+
 	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: New file.  Content
 	comes from...
 	* sysdeps/x86_64/____longjmp_chk.S: ...here.  This is now a file

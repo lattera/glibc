@@ -21,20 +21,11 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
-
-#define PARMS	LINKAGE		/* no space for saved regs */
-#define JBUF	PARMS
-#define VAL	JBUF+PTR_SIZE
 
 	.text
-ENTRY (BP_SYM (__longjmp))
-	ENTER
-
+ENTRY (__longjmp)
 #ifdef PTR_DEMANGLE
-	movl JBUF(%esp), %eax	/* User's jmp_buf in %eax.  */
-	CHECK_BOUNDS_BOTH_WIDE (%eax, JBUF(%esp), $JB_SIZE)
+	movl 4(%esp), %eax	/* User's jmp_buf in %eax.  */
 
 	/* Save the return address now.  */
 	movl (JB_PC*4)(%eax), %edx
@@ -62,18 +53,17 @@ ENTRY (BP_SYM (__longjmp))
 	cfi_restore(%edi)
 	cfi_restore(%ebp)
 
-	movl VAL(%esp), %eax	/* Second argument is return value.  */
+	movl 8(%esp), %eax	/* Second argument is return value.  */
 	movl %ecx, %esp
 #else
-	movl JBUF(%esp), %ecx	/* User's jmp_buf in %ecx.  */
-	CHECK_BOUNDS_BOTH_WIDE (%ecx, JBUF(%esp), $JB_SIZE)
+	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
 
 # ifdef CHECK_ESP
 	movl (JB_SP*4)(%ecx), %eax
 	CHECK_ESP (%eax)
 # endif
 
-	movl VAL(%esp), %eax	/* Second argument is return value.  */
+	movl 8(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */
 	movl (JB_PC*4)(%ecx), %edx
      	/* Restore registers.  */
@@ -85,4 +75,4 @@ ENTRY (BP_SYM (__longjmp))
 #endif
 	/* Jump to saved PC.  */
      	jmp *%edx
-END (BP_SYM (__longjmp))
+END (__longjmp)
