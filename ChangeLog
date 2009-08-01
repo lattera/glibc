@@ -1,5 +1,9 @@
 2009-07-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (longjmp_msg): Yet
+	another rewrite.  Much smaller and faster.
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (longjmp_msg): Get
 	ss_flags from the correct location.
 
