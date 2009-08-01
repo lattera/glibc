@@ -106,4 +106,4 @@ ENTRY(____longjmp_chk)
 	movq	%r8,%rsp
 	movq	%r9,%rbp
 	jmpq	*%rdx
-END (BP_SYM (____longjmp_chk))
+END (____longjmp_chk)
