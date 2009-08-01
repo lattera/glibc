@@ -58,8 +58,6 @@ ENTRY (____longjmp_chk)
 	PTR_DEMANGLE (%edx)
 	PTR_DEMANGLE (%edi)
 
-	pushl	$0
-	cfi_adjust_cfa_offset(4)
 	cmpl	%edi, %esp
 	jbe	.Lok
 
@@ -69,15 +67,25 @@ ENTRY (____longjmp_chk)
 	movl	%esp, %ecx
 	movl	$__NR_sigaltstack, %eax
 	ENTER_KERNEL
-	movl	4(%esp), %ebx
-	addl	$12, %esp
+	/* Without working sigaltstack we cannot perform the test.  */
+	test	%eax, %eax
+	jne	.Lok2
+	testl	$1, 4(%esp)
+	jz	.Lfail
+
+	movl	(%esp), %eax
+	addl	8(%esp), %eax
+	subl	%edi, %eax
+	cmpl	8(%esp), %eax
+	jae	.Lok2
+
+.Lfail:	CALL_FAIL
+
+.Lok2:	addl	$12, %esp
 	cfi_adjust_cfa_offset(-12)
-	movl	8(%esp), %ecx
-	testl	%eax, %eax
-	jne	.Lok
-	andl	$1, %ebx
-	movl	%ebx, (%esp)
-.Lok:
+	movl	4(%esp), %ecx
+
+.Lok:	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%ecx, 0)
 	cfi_register(%eip, %edx)
 	cfi_register(%esp, %edi)
@@ -86,15 +94,11 @@ ENTRY (____longjmp_chk)
 	cfi_offset(%edi, JB_DI*4)
 	cfi_offset(%ebp, JB_BP*4)
 
-	movl	12(%esp), %eax	/* Second argument is return value.  */
-	xchgl	%edi, %esp
-	cfi_restore(%edi)
-
-	cmpl	%esp, %edi
-	jnbe	.Lcheck
+	movl	8(%esp), %eax	/* Second argument is return value.  */
+	movl	%edi, %esp
 
 	/* Restore registers.  */
-.Lout:	movl	(JB_BX*4)(%ecx), %ebx
+	movl	(JB_BX*4)(%ecx), %ebx
 	movl	(JB_SI*4)(%ecx), %esi
 	movl	(JB_DI*4)(%ecx), %edi
 	movl	(JB_BP*4)(%ecx), %ebp
@@ -105,39 +109,4 @@ ENTRY (____longjmp_chk)
 
 	/* Jump to saved PC.  */
 	jmp	*%edx
-
-	cfi_def_cfa(%ecx, 0)
-	cfi_register(%eip, %edx)
-	cfi_offset(%ebx, JB_BX*4)
-	cfi_offset(%esi, JB_SI*4)
-	cfi_offset(%edi, JB_DI*4)
-	cfi_offset(%ebp, JB_BP*4)
-
-.Lcheck:
-	cmpl	$0, (%edi)
-	je	.Lfail
-
-	subl	$12, %esp
-	cfi_adjust_cfa_offset(12)
-	xorl	%ebx, %ebx
-	movl	%esp, %ecx
-	movl	$__NR_sigaltstack, %eax
-	ENTER_KERNEL
-	testl	$1, 4(%esp)
-	leal	12(%esp), %esp
-	movl	8(%edi), %ecx
-	movl	12(%edi), %eax
-	cfi_adjust_cfa_offset(-12)
-	je	.Lout
-
-.Lfail:	xchgl	%edi, %esp
-	cfi_def_cfa(%esp, 8)
-	cfi_restore(%esp)
-	cfi_restore(%ebx)
-	cfi_restore(%esi)
-	cfi_undefined(%edi)
-	cfi_restore(%ebp)
-
-	CALL_FAIL
-	hlt
 END (____longjmp_chk)

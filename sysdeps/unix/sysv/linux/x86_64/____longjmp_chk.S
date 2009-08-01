@@ -58,31 +58,36 @@ ENTRY(____longjmp_chk)
 	PTR_DEMANGLE (%rdx)
 #endif
 
+	cmpq	%r8, %rsp
+	jbe	.Lok
+
 	/* Save function parameters.  */
 	movq	%rdi, %r10
 	movl	%esi, %ecx
 
-	xorl	%eax, %eax
-	cmpq	%r8, %rsp
-	jbe	.Lok
-
-	subq	$24, %rsp
-	cfi_adjust_cfa_offset(24)
 	xorl	%edi, %edi
-	movq	%rsp, %rsi
+	leaq	-24(%rsp), %rsi
 	movl	$__NR_sigaltstack, %eax
 	syscall
+	/* Without working sigaltstack we cannot perform the test.  */
 	testl	%eax, %eax
-	movl	$0, %eax
-	leaq	24(%rsp), %rsp
-	cfi_adjust_cfa_offset(-24)
-	jne	.Lok
-	movl	8(%rsp), %eax
-	andl	$1, %eax
+	jne	.Lok2
+	testl	$1, -16(%rsp)
+	jz	.Lfail
 
-.Lok:
-	/* We add unwind information for the target here.  */
-	cfi_def_cfa(%r10, 0)
+	movq	-24(%rsp), %rax
+	addq	-8(%rsp), %rax
+	subq	%r8, %rax
+	cmpq	-8(%rsp), %rax
+	jae	.Lok2
+
+.Lfail:	CALL_FAIL
+
+.Lok2:	movq	%r10, %rdi
+	movl	%ecx, %esi
+
+.Lok:	/* We add unwind information for the target here.  */
+	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)
 	cfi_register(%rbp,%r9)
 	cfi_register(%rip,%rdx)
@@ -91,55 +96,14 @@ ENTRY(____longjmp_chk)
 	cfi_offset(%r13,JB_R13*8)
 	cfi_offset(%r14,JB_R14*8)
 	cfi_offset(%r15,JB_R15*8)
-
-	xchgq	%r8, %rsp
-	cfi_restore(%rsp)
-	xchgq	%r9, %rbp
-	cfi_restore(%rbp)
-
-	movq	(JB_RBX*8)(%r10),%rbx
-	movq	(JB_R12*8)(%r10),%r12
-	movq	(JB_R13*8)(%r10),%r13
-	movq	(JB_R14*8)(%r10),%r14
-	movq	(JB_R15*8)(%r10),%r15
-
-	cmpq	%rsp, %r8
-	jnbe	.Lcheck
-
+	movq	(JB_RBX*8)(%rdi),%rbx
+	movq	(JB_R12*8)(%rdi),%r12
+	movq	(JB_R13*8)(%rdi),%r13
+	movq	(JB_R14*8)(%rdi),%r14
+	movq	(JB_R15*8)(%rdi),%r15
 	/* Set return value for setjmp.  */
-.Lout:	movl	%ecx, %eax
+	movl	%esi, %eax
+	movq	%r8,%rsp
+	movq	%r9,%rbp
 	jmpq	*%rdx
-
-.Lcheck:
-	testl	%eax, %eax
-	je	.Lfail
-
-	subq	$24, %rsp
-	cfi_adjust_cfa_offset(24)
-	xorl	%edi, %edi
-	movq	%rsp, %rsi
-	movl	$__NR_sigaltstack, %eax
-	syscall
-	addq	$24, %rsp
-	cfi_adjust_cfa_offset(-24)
-	testl	$1, 8(%rsp)
-	je	.Lout
-
-.Lfail:	xchgq	%r8, %rsp
-	/* We want the stack trace to show that of the caller.  */
-	cfi_def_cfa(%rsp, 8)
-	cfi_restore(%rsp)
-	cfi_register(%rbp, %r9)
-	cfi_restore(%rip)
-	cfi_restore(%rbx)
-	cfi_restore(%r12)
-	cfi_restore(%r13)
-	cfi_restore(%r14)
-	cfi_restore(%r15)
-
-	xchgq	%r9, %rbp
-	cfi_restore(%rbp)
-
-	CALL_FAIL
-	hlt
 END (BP_SYM (____longjmp_chk))
