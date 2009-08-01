@@ -1,3 +1,7 @@
+2009-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h: Better definition of *_BITMASK macros for cancellation.
+
 2009-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/tls.h (TLS_TCB_ALIGN): Define explicitly to 32.

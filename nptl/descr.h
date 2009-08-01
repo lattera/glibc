@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -243,25 +243,25 @@ struct pthread
   int cancelhandling;
   /* Bit set if cancellation is disabled.  */
 #define CANCELSTATE_BIT		0
-#define CANCELSTATE_BITMASK	0x01
+#define CANCELSTATE_BITMASK	(0x01 << CANCELSTATE_BIT)
   /* Bit set if asynchronous cancellation mode is selected.  */
 #define CANCELTYPE_BIT		1
-#define CANCELTYPE_BITMASK	0x02
+#define CANCELTYPE_BITMASK	(0x01 << CANCELTYPE_BIT)
   /* Bit set if canceling has been initiated.  */
 #define CANCELING_BIT		2
-#define CANCELING_BITMASK	0x04
+#define CANCELING_BITMASK	(0x01 << CANCELING_BIT)
   /* Bit set if canceled.  */
 #define CANCELED_BIT		3
-#define CANCELED_BITMASK	0x08
+#define CANCELED_BITMASK	(0x01 << CANCELED_BIT)
   /* Bit set if thread is exiting.  */
 #define EXITING_BIT		4
-#define EXITING_BITMASK		0x10
+#define EXITING_BITMASK		(0x01 << EXITING_BIT)
   /* Bit set if thread terminated and TCB is freed.  */
 #define TERMINATED_BIT		5
-#define TERMINATED_BITMASK	0x20
+#define TERMINATED_BITMASK	(0x01 << TERMINATED_BIT)
   /* Bit set if thread is supposed to change XID.  */
 #define SETXID_BIT		6
-#define SETXID_BITMASK		0x40
+#define SETXID_BITMASK		(0x01 << SETXID_BIT)
   /* Mask for the rest.  Helps the compiler to optimize.  */
 #define CANCEL_RESTMASK		0xffffff80
 
