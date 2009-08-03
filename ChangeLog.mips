@@ -1,3 +1,8 @@
+2009-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/accept4.c,
+	sysdeps/unix/sysv/linux/mips/mips32/internal_accept4.S: New.
+
 2009-07-20  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h: Define
