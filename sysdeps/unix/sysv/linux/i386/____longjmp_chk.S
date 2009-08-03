@@ -39,12 +39,6 @@ longjmp_msg:
 			call	__fortify_fail
 #endif
 
-#define CHECK_ESP(reg) \
-	cmpl	reg, %esp;						      \
-	jbe	.Lok;							      \
-	CALL_FAIL;							      \
-.Lok:
-
 
 	.text
 ENTRY (____longjmp_chk)
