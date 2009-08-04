@@ -1,3 +1,15 @@
+2009-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/libc-cancellation.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/librt-cancellation.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (PSEUDO): Optimize
+	since we can assume the special __*_{en,dis}able_asynccancel
+	functions.
+	(PUSHARGS_*, POPARGS_*, SAVESTK_*, RESTSTK_*): Removed.
+	* sysdeps/x86_64/tcb-offsets.sym: Add cancellation-related bits
+	and PTHREAD_CANCELED.
+
 2009-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h: Better definition of *_BITMASK macros for cancellation.
