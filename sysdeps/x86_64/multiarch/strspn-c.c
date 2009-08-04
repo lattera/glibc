@@ -68,7 +68,7 @@ __strspn_sse42 (const char *s, const char *a)
   if (offset != 0)
     {
       /* Load masks.  */
-      aligned = (const char *) ((size_t) a & 0xfffffffffffffff0L);
+      aligned = (const char *) ((size_t) a & -16L);
       __m128i mask0 = _mm_load_si128 ((__m128i *) aligned);
 
       switch (offset)
@@ -207,7 +207,7 @@ __strspn_sse42 (const char *s, const char *a)
   if (offset != 0)
     {
       /* Check partial string.  */
-      aligned = (const char *) ((size_t) s & 0xfffffffffffffff0L);
+      aligned = (const char *) ((size_t) s & -16L);
       __m128i value = _mm_load_si128 ((__m128i *) aligned);
 
       switch (offset)

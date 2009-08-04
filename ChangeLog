@@ -1,3 +1,27 @@
+2009-08-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile [subdir=string]
+	(sysdep_routines): Add strcspn-c, strpbrk-c, strspn-c, strstr-c, and
+	strcasestr-c.
+	(CFLAGS-strcspn-c.c): Define.
+	(CFLAGS-strpbrk-c.c): Define.
+	(CFLAGS-strspn-c.c): Define.
+	(CFLAGS-strstr.c): Define.
+	(CFLAGS-strcasestr.c): Define.
+	* sysdeps/i386/i686/multiarch/strcspn-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strcspn.S: New file.
+	* sysdeps/i386/i686/multiarch/strpbrk-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strpbrk.S: New file.
+	* sysdeps/i386/i686/multiarch/strspn-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strspn.S: New file.
+	* sysdeps/i386/i686/multiarch/strstr-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strstr.c: New file.
+	* sysdeps/i386/i686/multiarch/strcasestr-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strcasestr.c: New file.
+	* sysdeps/x86_64/multiarch/strcspn-c.c (STRCSPN_SSE42): Use
+	-16L instead of 0xfffffffffffffff0L.
+	* sysdeps/x86_64/multiarch/strspn-c.c (__strspn_sse42): Likewise.
+
 2009-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/configure.in: Add test for <cpuid.h>.
