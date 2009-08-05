@@ -1,5 +1,11 @@
 2009-08-03  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/strcspn.S: Add comments for no
+	hidden IFUNC functions.
+	* sysdeps/i386/i686/multiarch/strspn.S: Likewise.
+
+	* sysdeps/i386/i686/multiarch/strlen.S: New file.
+
 	* sysdeps/i386/i686/multiarch/Makefile [subdir=string]
 	(sysdep_routines): Add strcspn-c, strpbrk-c, strspn-c, strstr-c, and
 	strcasestr-c.

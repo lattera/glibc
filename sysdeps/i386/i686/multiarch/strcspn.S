@@ -83,9 +83,9 @@ END(STRCSPN)
 # define END(name) \
 	cfi_endproc; .size STRCSPN_IA32, .-STRCSPN_IA32
 # undef libc_hidden_builtin_def
-/* It doesn't make sense to send libc-internal strcspn calls through a PLT.
-   The speedup we get from using SSE4.2 instruction is likely eaten away
-   by the indirect call in the PLT.  */
+/* IFUNC doesn't work with the hidden functions in shared library since
+   they will be called without setting up EBX needed for PLT which is
+   used by IFUNC.  */
 # define libc_hidden_builtin_def(name) \
 	.globl __GI_STRCSPN; __GI_STRCSPN = STRCSPN_IA32
 #endif
