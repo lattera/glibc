@@ -1,3 +1,11 @@
+2009-08-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/____longjmp_chk.c: Remove.  Replaced by....
+	* sysdeps/unix/sysv/linux/mips/____longjmp_chk.c: This.  New file.
+	* sysdeps/mips/__longjmp.c (__longjmp): Use explicit register
+	variable for env.  Use expansion of CHECK_SP macro for check.
+	* sysdeps/mips/mips64/__longjmp.c (__Longjmp): Likewise.
+
 2009-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/accept4.c,

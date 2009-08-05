@@ -25,19 +25,19 @@
 #endif
 
 void
-__longjmp (env, val_arg)
-     __jmp_buf env;
+__longjmp (env_arg, val_arg)
+     __jmp_buf env_arg;
      int val_arg;
 {
   /* gcc 1.39.19 miscompiled the longjmp routine (as it did setjmp before
      the hack around it); force it to use $a1 for the longjmp value.
      Without this it saves $a1 in a register which gets clobbered
      along the way.  */
+  register struct __jmp_buf_internal_tag *env asm ("a0");
   register int val asm ("a1");
 #ifdef CHECK_SP
   register long sp asm ("$29");
-  if ((long) (env[0].__sp) < sp)
-    __fortify_fail ("longjmp causes uninitialized stack frame");
+  CHECK_SP (env[0].__sp, sp, long);
 #endif
 
 #ifdef __mips_hard_float
