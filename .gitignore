@@ -15,6 +15,7 @@ stamp.*
 *.tgz
 *.bz2
 =*
+TAGS
 TODO
 AUTHORS
 copyr-*
