@@ -30,8 +30,8 @@ ENTRY (__longjmp)
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 #ifdef CHECK_SP
-	ldr	r1, [ip, #32]
-	CHECK_SP (r1)
+	ldr	r4, [ip, #32]
+	CHECK_SP (r4)
 #endif
 	LOADREGS(ia, ip, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)

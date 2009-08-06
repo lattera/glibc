@@ -1,3 +1,12 @@
+2009-08-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/____longjmp_chk.S: Remove.  Replaced by....
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S,
+	sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S: This.  New
+	files.
+	* sysdeps/arm/__longjmp.S, sysdeps/arm/eabi/__longjmp.S: Use r4
+	for saved sp.
+
 2009-07-29  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h: Define

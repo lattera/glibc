@@ -16,6 +16,7 @@
    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
    02110-1301, USA.  */
 
+#include <sysdep.h>
 
 	.section .rodata.str1.1,"aMS",%progbits,1
 	.type	longjmp_msg,%object
@@ -47,9 +48,28 @@ longjmp_msg:
 #endif
 
 #define CHECK_SP(reg)				\
-	cmp	sp, reg;				\
+	cmp	sp, reg;			\
 	bls	.Lok;				\
+	mov	r5, r0;				\
+	mov	r0, #0;				\
+	sub	sp, sp, #16;			\
+	mov	r1, sp;				\
+	swi	#SYS_ify(sigaltstack);		\
+	cmp	r0, #0;				\
+	bne	.Lok2;				\
+	ldr	r1, [sp, #4];			\
+	tst	r1, #1;				\
+	beq	.Lfail;				\
+	ldr	r2, [sp, #0];			\
+	ldr	r3, [sp, #8];			\
+	add	r2, r2, r3;			\
+	sub	r2, r2, reg;			\
+	cmp	r2, r3;				\
+	bhi	.Lok2;				\
+.Lfail:						\
 	CALL_FAIL				\
+.Lok2:						\
+	mov	r0, r5;				\
 .Lok:
 
 #include <__longjmp.S>
