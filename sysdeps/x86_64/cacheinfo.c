@@ -557,7 +557,7 @@ init_cacheinfo (void)
           while (((eax >> 5) & 0x7) != level);
 
 	  threads = (eax >> 14) & 0x3ff;
-	
+
 	  /* If max_cpuid >= 11, THREADS is the maximum number of
 	      addressable IDs for logical processors sharing the
 	      cache, instead of the maximum number of threads
