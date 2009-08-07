@@ -137,7 +137,7 @@ END (__strlen_sse2)
 # define ENTRY(name) \
 	.type __strlen_ia32, @function; \
 	.globl __strlen_ia32; \
-	.p2align 4; \ 
+	.p2align 4; \
 	__strlen_ia32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
