@@ -1,3 +1,8 @@
+2009-08-07  Andreas Schwab  <schwab@redhat.com>
+
+	* Makefile (TAGS): Use separate sed -e expressions to avoid \
+	inside ''.
+
 2009-08-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn.S: Add comments for no
