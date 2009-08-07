@@ -516,13 +516,15 @@ init_cacheinfo (void)
           shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
 
+      unsigned int ebx_1;
+
 #ifdef USE_MULTIARCH
       eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
-      ebx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
+      ebx_1 = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
       ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
       edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
 #else
-      __cpuid (1, eax, ebx, ecx, edx);
+      __cpuid (1, eax, ebx_1, ecx, edx);
 #endif
 
 #ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
@@ -554,14 +556,46 @@ init_cacheinfo (void)
 	    }
           while (((eax >> 5) & 0x7) != level);
 
-	  threads = ((eax >> 14) & 0x3ff) + 1;
+	  threads = (eax >> 14) & 0x3ff;
+	
+	  /* If max_cpuid >= 11, THREADS is the maximum number of
+	      addressable IDs for logical processors sharing the
+	      cache, instead of the maximum number of threads
+	      sharing the cache.  */
+	  if (threads && max_cpuid >= 11)
+	    {
+	      /* Find the number of logical processors shipped in
+		 one core and apply count mask.  */
+	      i = 0;
+	      while (1)
+		{
+		  __cpuid_count (11, i++, eax, ebx, ecx, edx);
+
+		  int shipped = ebx & 0xff;
+		  int type = ecx & 0xff0;
+		  if (shipped == 0 || type == 0)
+		    break;
+		  else if (type == 0x200)
+		    {
+		      int count_mask;
+
+		      /* Compute count mask.  */
+		      asm ("bsr %1, %0"
+			   : "=r" (count_mask) : "g" (threads));
+		      count_mask = ~(-1 << (count_mask + 1));
+		      threads = (shipped - 1) & count_mask;
+		      break;
+		    }
+		}
+	    }
+	  threads += 1;
 	}
       else
         {
 	intel_bug_no_cache_info:
 	  /* Assume that all logical threads share the highest cache level.  */
 
-	  threads = (ebx >> 16) & 0xff;
+	  threads = (ebx_1 >> 16) & 0xff;
 	}
 
       /* Cap usage of highest cache level to the number of supported
