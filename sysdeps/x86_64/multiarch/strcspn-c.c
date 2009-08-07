@@ -86,6 +86,8 @@ STRCSPN_SSE42 (const char *s, const char *a)
 
   const char *aligned;
   __m128i mask;
+  /* Fake initialization.  gcc otherwise will warn.  */
+  asm ("" : "=xm" (mask));
   int offset = (int) ((size_t) a & 15);
   if (offset != 0)
     {

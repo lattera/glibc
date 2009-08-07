@@ -1,3 +1,8 @@
+2009-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strcspn-c.c (STRCSPN_SSE42): Avoid
+	warning through fake initialization.
+
 2009-08-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strlen.S (ENTRY): Add the missing "; \".
