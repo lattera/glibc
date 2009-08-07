@@ -1,3 +1,7 @@
+2009-08-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strlen.S (ENTRY): Add the missing "; \".
+
 2009-08-07  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-lookup.c (do_lookup_x): Enter correct name into table of
