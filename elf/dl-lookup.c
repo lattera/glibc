@@ -321,7 +321,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		    if (table[idx].name == NULL)
 		      {
 			table[idx].hashval = hash;
-			table[idx].name = strtab + sym->st_name;
+			table[idx].name = name;
 			if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
 			  {
 			    table[idx].sym = ref;

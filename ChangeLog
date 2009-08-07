@@ -1,3 +1,8 @@
+2009-08-07  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-lookup.c (do_lookup_x): Enter correct name into table of
+	unique symbols.
+
 2009-08-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Properly use
