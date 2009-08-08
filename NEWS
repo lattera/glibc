@@ -45,9 +45,6 @@ Version 2.11
   necessity is every process again.
   Implemented by Ulrich Drepper.
 
-* More checking functions: longjmp checks for use of uninitialized stack
-  frames.  Implemented by Ulrich Drepper.
-
 * New resolver flag RES_USE_DNSSEC to enable use of verified lookup.
   Implemented by Adam Tkac.
 
