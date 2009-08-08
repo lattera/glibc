@@ -40,6 +40,7 @@ ENTRY(strlen)
 END(strlen)
 
 
+	.section .text.sse4.2,"ax",@progbits
 	.align 	16
 	.type	__strlen_sse42, @function
 __strlen_sse42:

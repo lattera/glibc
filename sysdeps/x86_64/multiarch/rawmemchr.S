@@ -38,6 +38,7 @@ END(rawmemchr)
 strong_alias (rawmemchr, __rawmemchr)
 
 
+	.section .text.sse4.2,"ax",@progbits
 	.align 	16
 	.type	__rawmemchr_sse42, @function
 __rawmemchr_sse42:

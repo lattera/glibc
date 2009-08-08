@@ -1,3 +1,9 @@
+2009-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strlen.S: Move SSE4.2 version into the same
+	section as the other functions for this architecture.
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Likewise.
+
 2009-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strcmp.S: Add support to compile with
