@@ -1,3 +1,12 @@
+2009-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Little optimizations
+	enabled by the special *_asynccancel functions.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Include lowlevellock.h.
+
 2009-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: New file.

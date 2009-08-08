@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <tcb-offsets.h>
 #include <kernel-features.h>
+#include "lowlevellock.h"
 
 #ifdef IS_IN_libpthread
 # ifdef SHARED

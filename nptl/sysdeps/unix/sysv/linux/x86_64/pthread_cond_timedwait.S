@@ -157,7 +157,6 @@ __pthread_cond_timedwait:
 .LcleanupSTART1:
 34:	callq	__pthread_enable_asynccancel
 	movl	%eax, (%rsp)
-	movq	8(%rsp), %rdi
 
 	movq	%r13, %r10
 	movl	$FUTEX_WAIT_BITSET, %esi
@@ -511,7 +510,6 @@ __pthread_cond_timedwait:
 .LcleanupSTART2:
 4:	callq	__pthread_enable_asynccancel
 	movl	%eax, (%rsp)
-	movq	8(%rsp), %rdi
 
 	leaq	32(%rsp), %r10
 	cmpq	$-1, dep_mutex(%rdi)

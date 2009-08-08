@@ -45,14 +45,11 @@ __pthread_cond_wait:
 	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
 #endif
 
-	pushq	%r12
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r12, 0)
 	pushq	%r13
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r13, 0)
 #define FRAME_SIZE 32
-	subq	$FRAME_SIZE, %rsp
+	leaq	-FRAME_SIZE(%rsp), %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
 	/* Stack frame:
@@ -112,7 +109,7 @@ __pthread_cond_wait:
 	movl	%edx, 4(%rsp)
 
 	/* Unlock.  */
-8:	movl	cond_futex(%rdi), %r12d
+8:	movl	cond_futex(%rdi), %edx
 	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
@@ -125,9 +122,7 @@ __pthread_cond_wait:
 4:	callq	__pthread_enable_asynccancel
 	movl	%eax, (%rsp)
 
-	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
-	movq	%r12, %rdx
 	cmpq	$-1, dep_mutex(%rdi)
 	leaq	cond_futex(%rdi), %rdi
 	movl	$FUTEX_WAIT, %esi
@@ -243,21 +238,14 @@ __pthread_cond_wait:
 
 	callq	__pthread_mutex_cond_lock
 
-14:	addq	$FRAME_SIZE, %rsp
-	cfi_adjust_cfa_offset(-FRAME_SIZE)
-
-	popq	%r13
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
+14:	movq	FRAME_SIZE(%rsp), %r13
+	leaq	FRAME_SIZE+8(%rsp), %rsp
+	cfi_adjust_cfa_offset(-(FRAME_SIZE + 8))
 
 	/* We return the result of the mutex_lock operation.  */
 	retq
 
-	cfi_adjust_cfa_offset(16 + FRAME_SIZE)
-	cfi_rel_offset(%r12, FRAME_SIZE + 8)
+	cfi_adjust_cfa_offset(8 + FRAME_SIZE)
 	cfi_rel_offset(%r13, FRAME_SIZE)
 
 18:	callq	__pthread_mutex_cond_lock_adjust
@@ -285,7 +273,11 @@ __pthread_cond_wait:
 	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
+	/* The call preserves %rdx.  */
 	callq	__lll_unlock_wake
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
 	jmp	4b
 
 	/* Locking in loop failed.  */
@@ -349,9 +341,7 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 __condvar_cleanup1:
 	/* Stack frame:
 
-	   rsp + 48
-		    +--------------------------+
-	   rsp + 40 | %r12                     |
+	   rsp + 40
 		    +--------------------------+
 	   rsp + 32 | %r13                     |
 		    +--------------------------+
@@ -410,7 +400,7 @@ __condvar_cleanup1:
 3:	subl	$(1 << nwaiters_shift), cond_nwaiters(%rdi)
 
 	/* Wake up a thread which wants to destroy the condvar object.  */
-	xorq	%r12, %r12
+	xorl	%ecx, %ecx
 	cmpq	$0xffffffffffffffff, total_seq(%rdi)
 	jne	4f
 	movl	cond_nwaiters(%rdi), %eax
@@ -433,7 +423,7 @@ __condvar_cleanup1:
 	movl	$SYS_futex, %eax
 	syscall
 	subq	$cond_nwaiters, %rdi
-	movl	$1, %r12d
+	movl	$1, %ecx
 
 4:	LOCK
 #if cond_lock == 0
@@ -449,10 +439,11 @@ __condvar_cleanup1:
 	movl	$LLL_PRIVATE, %eax
 	movl	$LLL_SHARED, %esi
 	cmovne	%eax, %esi
+	/* The call preserves %rcx.  */
 	callq	__lll_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	testq	%r12, %r12
+2:	testl	%ecx, %ecx
 	jnz	5f
 	addq	$cond_futex, %rdi
 	cmpq	$-1, dep_mutex-cond_futex(%rdi)
@@ -474,7 +465,6 @@ __condvar_cleanup1:
 	callq	__pthread_mutex_cond_lock
 
 	movq	24(%rsp), %rdi
-	movq	40(%rsp), %r12
 	movq	32(%rsp), %r13
 .LcallUR:
 	call	_Unwind_Resume@PLT

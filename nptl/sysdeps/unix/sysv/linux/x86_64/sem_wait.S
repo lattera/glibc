@@ -61,16 +61,13 @@ sem_wait:
 	xorl	%eax, %eax
 	retq
 
-1:	pushq	%r12
+	/* This push is only needed to store the sem_t pointer for the
+	   exception handler.  */
+1:	pushq	%rdi
 	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r12, 0)
-	pushq	%r13
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r13, 0)
-	movq	%rdi, %r13
 
 	LOCK
-	addq	$1, NWAITERS(%r13)
+	addq	$1, NWAITERS(%rdi)
 
 .LcleanupSTART:
 6:	call	__pthread_enable_asynccancel
@@ -78,7 +75,6 @@ sem_wait:
 
 	xorq	%r10, %r10
 	movl	$SYS_futex, %eax
-	movq	%r13, %rdi
 #if FUTEX_WAIT == 0
 	movl	PRIVATE(%rdi), %esi
 #else
@@ -87,22 +83,23 @@ sem_wait:
 #endif
 	xorl	%edx, %edx
 	syscall
-	movq	%rax, %r12
+	movq	%rax, %rcx
 
-	movl	%r8d, %edi
+	xchgq	%r8, %rdi
 	call	__pthread_disable_asynccancel
 .LcleanupEND:
+	movq	%r8, %rdi
 
-	testq	%r12, %r12
+	testq	%rcx, %rcx
 	je	3f
-	cmpq	$-EWOULDBLOCK, %r12
+	cmpq	$-EWOULDBLOCK, %rcx
 	jne	4f
 
 3:
 #if VALUE == 0
-	movl	(%r13), %eax
+	movl	(%rdi), %eax
 #else
-	movl	VALUE(%r13), %eax
+	movl	VALUE(%rdi), %eax
 #endif
 5:	testl	%eax, %eax
 	je	6b
@@ -110,41 +107,33 @@ sem_wait:
 	leal	-1(%rax), %edx
 	LOCK
 #if VALUE == 0
-	cmpxchgl %edx, (%r13)
+	cmpxchgl %edx, (%rdi)
 #else
-	cmpxchgl %edx, VALUE(%r13)
+	cmpxchgl %edx, VALUE(%rdi)
 #endif
 	jne	5b
 
-	LOCK
-	subq	$1, NWAITERS(%r13)
-
 	xorl	%eax, %eax
 
-9:	popq	%r13
+9:	LOCK
+	subq	$1, NWAITERS(%rdi)
+
+	leaq	8(%rsp), %rsp
 	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
 
 	retq
 
-	cfi_adjust_cfa_offset(2 * 8)
-	cfi_rel_offset(%r12, 8)
-	cfi_rel_offset(%r13, 0)
-4:	negq	%r12
+	cfi_adjust_cfa_offset(8)
+4:	negq	%rcx
 #if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
-	movl	%r12d, %fs:(%rdx)
+	movl	%ecx, %fs:(%rdx)
 #else
+# error "not supported.  %rcx and %rdi must be preserved"
 	callq	__errno_location@plt
-	movl	%r12d, (%rax)
+	movl	%ecx, (%rax)
 #endif
 	orl	$-1, %eax
-
-	LOCK
-	subq	$1, NWAITERS(%r13)
 
 	jmp 9b
 	.size	sem_wait,.-sem_wait
@@ -152,8 +141,9 @@ sem_wait:
 
 	.type	sem_wait_cleanup,@function
 sem_wait_cleanup:
+	movq	(%rsp), %rdi
 	LOCK
-	subq	$1, NWAITERS(%r13)
+	subq	$1, NWAITERS(%rdi)
 	movq	%rax, %rdi
 .LcallUR:
 	call	_Unwind_Resume@PLT
