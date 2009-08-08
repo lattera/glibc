@@ -45,9 +45,6 @@ __pthread_cond_wait:
 	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
 #endif
 
-	pushq	%r13
-	cfi_adjust_cfa_offset(8)
-	cfi_rel_offset(%r13, 0)
 #define FRAME_SIZE 32
 	leaq	-FRAME_SIZE(%rsp), %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
@@ -140,7 +137,7 @@ __pthread_cond_wait:
 	movl	$SYS_futex, %eax
 	syscall
 
-	movl	$1, %r13d
+	movl	$1, %r8d
 #ifdef __ASSUME_REQUEUE_PI
 	jmp	62f
 #else
@@ -158,7 +155,7 @@ __pthread_cond_wait:
 #else
 	orl	%fs:PRIVATE_FUTEX, %esi
 #endif
-60:	xorl	%r13d, %r13d
+60:	xorl	%r8d, %r8d
 	movl	$SYS_futex, %eax
 	syscall
 
@@ -233,20 +230,18 @@ __pthread_cond_wait:
 	/* If requeue_pi is used the kernel performs the locking of the
 	   mutex. */
 11:	movq	16(%rsp), %rdi
-	testl	%r13d, %r13d
+	testl	%r8d, %r8d
 	jnz	18f
 
 	callq	__pthread_mutex_cond_lock
 
-14:	movq	FRAME_SIZE(%rsp), %r13
-	leaq	FRAME_SIZE+8(%rsp), %rsp
-	cfi_adjust_cfa_offset(-(FRAME_SIZE + 8))
+14:	leaq	FRAME_SIZE(%rsp), %rsp
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
 
 	/* We return the result of the mutex_lock operation.  */
 	retq
 
-	cfi_adjust_cfa_offset(8 + FRAME_SIZE)
-	cfi_rel_offset(%r13, FRAME_SIZE)
+	cfi_adjust_cfa_offset(FRAME_SIZE)
 
 18:	callq	__pthread_mutex_cond_lock_adjust
 	xorl	%eax, %eax
@@ -341,9 +336,7 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 __condvar_cleanup1:
 	/* Stack frame:
 
-	   rsp + 40
-		    +--------------------------+
-	   rsp + 32 | %r13                     |
+	   rsp + 32
 		    +--------------------------+
 	   rsp + 24 | unused                   |
 	            +--------------------------+
@@ -465,7 +458,6 @@ __condvar_cleanup1:
 	callq	__pthread_mutex_cond_lock
 
 	movq	24(%rsp), %rdi
-	movq	32(%rsp), %r13
 .LcallUR:
 	call	_Unwind_Resume@PLT
 	hlt

@@ -1,3 +1,9 @@
+2009-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__pthread_cond_wait): Optimize by avoiding use of callee-safe
+	register.
+
 2009-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Little optimizations
