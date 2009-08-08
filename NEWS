@@ -54,6 +54,10 @@ Version 2.11
 * Optimized iconv conversions for S390x.
   Implemented by Andreas Krebbel.
 
+* Using condvars with PI mutexes is now more efficient due to kernel
+  support for requeueing to PI futexes.  NPTL support added for x86-64.
+  Implemented by Ulrich Drepper.
+
 
 Version 2.10
 
