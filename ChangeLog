@@ -1,3 +1,7 @@
+2009-08-03  Jim Meyering  <meyering@redhat.com>
+
+	* sysdeps/i386/configure.in: Use AC_HEADER_CHECK.
+
 2009-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strlen.S: Move SSE4.2 version into the same
