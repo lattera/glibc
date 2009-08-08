@@ -1,5 +1,14 @@
 2009-08-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/strcmp.S: Add support to compile with
+	USE_SSSE3.  In this case palignr is used.
+	* sysdeps/x86_64/multiarch/strcmp.S (strcmp): If SSE4.3 is not
+	available but SSSE3 is, pick __str{,n}cmp_ssse3.
+	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
+	Add strcmp-ssse3 and strncmp-ssse3.
+	* sysdeps/x86_64/multiarch/strcmp-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp-ssse3.S: New file.
+
 	* sysdeps/x86_64/multiarch/strcspn-c.c (STRCSPN_SSE42): Avoid
 	warning through fake initialization.
 

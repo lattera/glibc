@@ -51,7 +51,12 @@
 # endif
 #endif
 
+#ifndef USE_SSSE3
 	.text
+#else
+        .section .text.ssse3,"ax",@progbits
+#endif
+
 ENTRY (BP_SYM (STRCMP))
 #ifdef NOT_IN_libc
 /* Simple version since we can't use SSE registers in ld.so.  */
@@ -244,9 +249,13 @@ LABEL(gobble_ashr_1):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4		 /* store for next cycle */
 
+#ifndef USE_SSSE3
 	psrldq	$1, %xmm3
 	pslldq	$15, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -269,9 +278,13 @@ LABEL(gobble_ashr_1):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4		/* store for next cycle */
 
+#ifndef USE_SSSE3
 	psrldq	$1, %xmm3
-	pslldq 	$15, %xmm2
+	pslldq	$15, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -363,9 +376,13 @@ LABEL(gobble_ashr_2):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$2, %xmm3
 	pslldq	$14, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -389,9 +406,13 @@ LABEL(gobble_ashr_2):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$2, %xmm3
-	pslldq 	$14, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$14, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -477,9 +498,13 @@ LABEL(gobble_ashr_3):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$3, %xmm3
 	pslldq	$13, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -503,9 +528,13 @@ LABEL(gobble_ashr_3):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$3, %xmm3
-	pslldq 	$13, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$13, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -591,9 +620,13 @@ LABEL(gobble_ashr_4):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$4, %xmm3
 	pslldq	$12, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -617,9 +650,13 @@ LABEL(gobble_ashr_4):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$4, %xmm3
-	pslldq 	$12, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$12, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -705,9 +742,13 @@ LABEL(gobble_ashr_5):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$5, %xmm3
 	pslldq	$11, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -731,9 +772,13 @@ LABEL(gobble_ashr_5):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$5, %xmm3
-	pslldq 	$11, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$11, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -819,9 +864,13 @@ LABEL(gobble_ashr_6):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$6, %xmm3
 	pslldq	$10, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -845,9 +894,13 @@ LABEL(gobble_ashr_6):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$6, %xmm3
-	pslldq 	$10, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$10, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -933,9 +986,13 @@ LABEL(gobble_ashr_7):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$7, %xmm3
 	pslldq	$9, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -959,9 +1016,13 @@ LABEL(gobble_ashr_7):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$7, %xmm3
-	pslldq 	$9, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$9, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1047,9 +1108,13 @@ LABEL(gobble_ashr_8):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$8, %xmm3
 	pslldq	$8, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1073,9 +1138,13 @@ LABEL(gobble_ashr_8):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$8, %xmm3
-	pslldq 	$8, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$8, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1161,9 +1230,13 @@ LABEL(gobble_ashr_9):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$9, %xmm3
 	pslldq	$7, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1187,9 +1260,13 @@ LABEL(gobble_ashr_9):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$9, %xmm3
-	pslldq 	$7, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$7, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1275,9 +1352,13 @@ LABEL(gobble_ashr_10):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$10, %xmm3
 	pslldq	$6, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1301,9 +1382,13 @@ LABEL(gobble_ashr_10):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$10, %xmm3
-	pslldq 	$6, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$6, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1389,9 +1474,13 @@ LABEL(gobble_ashr_11):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$11, %xmm3
 	pslldq	$5, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1415,9 +1504,13 @@ LABEL(gobble_ashr_11):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$11, %xmm3
-	pslldq 	$5, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$5, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1503,9 +1596,13 @@ LABEL(gobble_ashr_12):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$12, %xmm3
 	pslldq	$4, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1529,9 +1626,13 @@ LABEL(gobble_ashr_12):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$12, %xmm3
-	pslldq 	$4, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$4, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1617,9 +1718,13 @@ LABEL(gobble_ashr_13):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$13, %xmm3
 	pslldq	$3, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1643,9 +1748,13 @@ LABEL(gobble_ashr_13):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$13, %xmm3
-	pslldq 	$3, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1731,9 +1840,13 @@ LABEL(gobble_ashr_14):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$14, %xmm3
 	pslldq	$2, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1757,9 +1870,13 @@ LABEL(gobble_ashr_14):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$14, %xmm3
-	pslldq 	$2, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$2, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1847,9 +1964,13 @@ LABEL(gobble_ashr_15):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$15, %xmm3
 	pslldq	$1, %xmm2
-	por	%xmm3, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1873,9 +1994,13 @@ LABEL(gobble_ashr_15):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
+#ifndef USE_SSSE3
 	psrldq	$15, %xmm3
-	pslldq 	$1, %xmm2
-	por	%xmm3, %xmm2
+	pslldq	$1, %xmm2
+	por	%xmm3, %xmm2		/* merge into one 16byte value */
+#else
+	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
+#endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1

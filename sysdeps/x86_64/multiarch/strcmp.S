@@ -34,6 +34,7 @@
 	mov	%r9, %r11
 
 #define STRCMP_SSE42	__strncmp_sse42
+#define STRCMP_SSSE3	__strncmp_ssse3
 #define STRCMP_SSE2	__strncmp_sse2
 #define __GI_STRCMP	__GI_strncmp
 #else
@@ -41,6 +42,7 @@
 #ifndef STRCMP
 #define STRCMP		strcmp
 #define STRCMP_SSE42	__strcmp_sse42
+#define STRCMP_SSSE3	__strcmp_ssse3
 #define STRCMP_SSE2	__strcmp_sse2
 #define __GI_STRCMP	__GI_strcmp
 #endif
@@ -60,10 +62,14 @@ ENTRY(STRCMP)
 	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
 	jne	1f
 	call	__init_cpu_features
-1:	leaq	STRCMP_SSE2(%rip), %rax
-	testl	$(1<<20), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
-	jz	2f
+1:
 	leaq	STRCMP_SSE42(%rip), %rax
+	testl	$(1<<20), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	jnz	2f
+	leaq	STRCMP_SSSE3(%rip), %rax
+	testl	$(1<<9), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	jnz	2f
+	leaq	STRCMP_SSE2(%rip), %rax
 2:	ret
 END(STRCMP)
 
