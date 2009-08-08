@@ -1,3 +1,9 @@
+2009-08-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcspn.S (STRCSPN): Use PIC
+	only if SHARED is defined.
+	* sysdeps/i386/i686/multiarch/strspn.S (strspn): Likewise.
+
 2009-08-03  Jim Meyering  <meyering@redhat.com>
 
 	* sysdeps/i386/configure.in: Use AC_HEADER_CHECK.

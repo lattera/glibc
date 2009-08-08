@@ -27,6 +27,7 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #ifndef NOT_IN_libc
+# ifdef SHARED
 	.section	.gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
 	.globl	__i686.get_pc_thunk.bx
 	.hidden	__i686.get_pc_thunk.bx
@@ -56,6 +57,20 @@ ENTRY(strspn)
 	cfi_restore (ebx)
 	ret
 END(strspn)
+# else
+	.text
+ENTRY(strspn)
+	.type	strspn, @gnu_indirect_function
+	cmpl	$0, KIND_OFFSET+__cpu_features
+	jne	1f
+	call	__init_cpu_features
+1:	leal	__strspn_ia32, %eax
+	testl	$(1<<20), CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET+__cpu_features
+	jz	2f
+	leal	__strspn_sse42, %eax
+2:	ret
+END(strspn)
+# endif
 
 # undef ENTRY
 # define ENTRY(name) \
