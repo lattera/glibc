@@ -1,3 +1,31 @@
+2009-08-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Add tst-audit6.c tst-auditmod6a.c
+	tst-auditmod6b.c tst-auditmod6c.c tst-audit7.c tst-auditmod7a.c
+	tst-auditmod7b.c.
+	(tests): Add tst-audit6 tst-audit7.
+	(modules-names): Add st-auditmod6a tst-auditmod6b tst-auditmod6c
+	tst-auditmod7a tst-auditmod7b.
+	($(objpfx)tst-audit6): New.
+	($(objpfx)tst-audit6.out): Likewise.
+	($(objpfx)tst-audit7): Likewise.
+	($(objpfx)tst-audit7.out): Likewise.
+	(tst-audit6-ENV): Likewise.
+	(tst-audit7-ENV): Likewise.
+	(CFLAGS-tst-auditmod6b.c): Likewise.
+	(CFLAGS-tst-auditmod6c.c): Likewise.
+	(CFLAGS-tst-auditmod7b.c): Likewise.
+	* elf/tst-audit6.c: New file.
+	* elf/tst-audit7.c: New file.
+	* elf/tst-auditmod6a.c: New file.
+	* elf/tst-auditmod6b.c: New file.
+	* elf/tst-auditmod6c.c: New file.
+	* elf/tst-auditmod7a.c: New file.
+	* elf/tst-auditmod7b.c: New file.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Move
+	saving and restoring SSE/AVX registers to ...
+	* sysdeps/x86_64/dl-trampoline.h: This.  New file.
+
 2009-08-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn.S (STRCSPN): Use PIC

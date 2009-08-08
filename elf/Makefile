@@ -93,6 +93,9 @@ distribute	:= rtld-Rules \
 		   tst-auditmod1.c tst-auditmod3a.c tst-auditmod3b.c \
 		   tst-auditmod4a.c tst-auditmod4b.c \
 		   tst-audit5.c tst-auditmod5a.c tst-auditmod5b.c \
+		   tst-audit6.c tst-auditmod6a.c tst-auditmod6b.c \
+		   tst-auditmod6c.c \
+		   tst-audit7.c tst-auditmod7a.c tst-auditmod7b.c \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
@@ -200,7 +203,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 test-srcs = tst-pathopt
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 ifeq (x86_64,$(config-machine))
-tests += tst-audit3 tst-audit4 tst-audit5
+tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7
 endif
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
@@ -255,7 +258,9 @@ endif
 ifeq (x86_64,$(config-machine))
 modules-names += tst-auditmod3a tst-auditmod3b \
 		tst-auditmod4a tst-auditmod4b \
-		tst-auditmod5a tst-auditmod5b
+		tst-auditmod5a tst-auditmod5b \
+		tst-auditmod6a tst-auditmod6b tst-auditmod6c \
+		tst-auditmod7a tst-auditmod7b
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
@@ -987,6 +992,15 @@ $(objpfx)tst-audit5: $(objpfx)tst-auditmod5a.so
 $(objpfx)tst-audit5.out: $(objpfx)tst-auditmod5b.so
 tst-audit5-ENV = LD_AUDIT=$(objpfx)tst-auditmod5b.so
 
+$(objpfx)tst-audit6: $(objpfx)tst-auditmod6a.so
+$(objpfx)tst-audit6.out: $(objpfx)tst-auditmod6b.so \
+			 $(objpfx)tst-auditmod6c.so
+tst-audit6-ENV = LD_AUDIT=$(objpfx)tst-auditmod6b.so:$(objpfx)tst-auditmod6c.so
+
+$(objpfx)tst-audit7: $(objpfx)tst-auditmod7a.so
+$(objpfx)tst-audit7.out: $(objpfx)tst-auditmod7b.so
+tst-audit7-ENV = LD_AUDIT=$(objpfx)tst-auditmod7b.so
+
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
 
@@ -1134,4 +1148,7 @@ ifeq (yes,$(config-cflags-avx))
 CFLAGS-tst-audit4.c += -mavx
 CFLAGS-tst-auditmod4a.c += -mavx
 CFLAGS-tst-auditmod4b.c += -mavx
+CFLAGS-tst-auditmod6b.c += -mavx
+CFLAGS-tst-auditmod6c.c += -mavx
+CFLAGS-tst-auditmod7b.c += -mavx
 endif
