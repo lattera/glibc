@@ -1,5 +1,8 @@
 2009-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Optimize code path used when FUTEX_CLOCK_REALTIME is supported.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
 	(__pthread_cond_wait): Optimize by avoiding use of callee-safe
 	register.
