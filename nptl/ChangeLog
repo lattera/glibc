@@ -1,3 +1,9 @@
+2009-08-10  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
+	(__pthread_cond_signal): Don't clobber register used for syscall
+	number.
+
 2009-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):

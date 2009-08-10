@@ -64,9 +64,9 @@ __pthread_cond_signal:
 
 	/* Get the address of the mutex used.  */
 	movq    dep_mutex(%r8), %rcx
-	movl	MUTEX_KIND(%rcx), %eax
-	andl	$(ROBUST_BIT|PI_BIT), %eax
-	cmpl	$PI_BIT, %eax
+	movl	MUTEX_KIND(%rcx), %r11d
+	andl	$(ROBUST_BIT|PI_BIT), %r11d
+	cmpl	$PI_BIT, %r11d
 	je	9f
 
 #ifdef __ASSUME_PRIVATE_FUTEX
