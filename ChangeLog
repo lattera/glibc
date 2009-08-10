@@ -1,3 +1,8 @@
+2009-08-10  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* stdlib/longlong.h [__sh__] (udiv_qrnnd, sub_ddmmss): Add "t" to
+	clobber list.
+
 2009-08-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Makefile (distribute): Add tst-audit6.c tst-auditmod6a.c
