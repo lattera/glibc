@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -30,6 +30,7 @@
 	.type	__pthread_rwlock_wrlock,@function
 	.align	16
 __pthread_rwlock_wrlock:
+	cfi_startproc
 	xorq	%r10, %r10
 
 	/* Get the lock.  */
@@ -155,6 +156,7 @@ __pthread_rwlock_wrlock:
 	subq	$MUTEX, %rdi
 #endif
 	jmp	13b
+	cfi_endproc
 	.size	__pthread_rwlock_wrlock,.-__pthread_rwlock_wrlock
 
 	.globl	pthread_rwlock_wrlock
