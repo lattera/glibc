@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,6 +29,7 @@
 	.type	__pthread_rwlock_unlock,@function
 	.align	16
 __pthread_rwlock_unlock:
+	cfi_startproc
 	/* Get the lock.  */
 	movl	$1, %esi
 	xorl	%eax, %eax
@@ -119,7 +120,7 @@ __pthread_rwlock_unlock:
 #endif
 	callq	__lll_unlock_wake
 	jmp	8b
-
+	cfi_endproc
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 
 	.globl	pthread_rwlock_unlock

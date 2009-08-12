@@ -1,3 +1,8 @@
+2009-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Add CFI
+	directives.
+
 2009-08-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Add CFI
