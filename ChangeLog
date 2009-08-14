@@ -1,3 +1,10 @@
+2009-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (signal_handler): Renamed from timeout_handler.
+	Also handle SIGINT.  In that case only do the cleanup and then
+	re-raise the signal.
+	(main): Install handler for SIGINT.
+
 2009-08-10  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
 
 	* stdlib/longlong.h [__sh__] (udiv_qrnnd, sub_ddmmss): Add "t" to
