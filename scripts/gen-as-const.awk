@@ -16,7 +16,8 @@ NF >= 1 && !started {
   if (test) {
     print "\n#include <inttypes.h>";
     print "\n#include <stdio.h>";
-    print "\n#if __WORDSIZE__ == 64";
+    print "\n#include <bits/wordsize.h>";
+    print "\n#if __WORDSIZE == 64";
     print "\ntypedef uint64_t c_t;";
     print "\n#define U(n) UINT64_C (n)";
     print "\n#define PRI PRId64";

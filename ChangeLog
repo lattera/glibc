@@ -1,3 +1,7 @@
+2009-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/gen-as-const.awk: Fix test for 64-bit platform.
+
 2009-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (signal_handler): Renamed from timeout_handler.
@@ -58,7 +62,7 @@
 
 	* sysdeps/x86_64/strcmp.S: Add support to compile with
 	USE_SSSE3.  In this case palignr is used.
-	* sysdeps/x86_64/multiarch/strcmp.S (strcmp): If SSE4.3 is not
+	* sysdeps/x86_64/multiarch/strcmp.S (strcmp): If SSE4.2 is not
 	available but SSSE3 is, pick __str{,n}cmp_ssse3.
 	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
 	Add strcmp-ssse3 and strncmp-ssse3.
@@ -1803,7 +1807,7 @@
 	* sysdeps/x86_64/mp_clz_tab.c: New file.
 
 2009-03-17  Ryan S. Arnold  <rsa@us.ibm.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fallocate.c: Handle old kernel headers.
 	* sysdeps/unix/sysv/linux/fallocate64.c: Likewise.
