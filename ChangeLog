@@ -1,3 +1,12 @@
+2009-08-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
+	Use l_addr instead of l_map_start (dli_fbase).
+	Print "FILE([+-]OFFSET) [ADDRESS]" with the file-relative
+	address when there is no proximate symbol.
+	* sysdeps/generic/elf/backtracesymsfd.c (__backtrace_symbols_fd):
+	Likewise.
+
 2009-08-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/gen-as-const.awk: Fix test for 64-bit platform.

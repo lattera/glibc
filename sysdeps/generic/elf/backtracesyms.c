@@ -1,5 +1,5 @@
 /* Return list with names for address in backtrace.
-   Copyright (C) 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -48,15 +48,22 @@ __backtrace_symbols (array, size)
   /* Fill in the information we can get from `dladdr'.  */
   for (cnt = 0; cnt < size; ++cnt)
     {
-      status[cnt] = _dl_addr (array[cnt], &info[cnt], NULL, NULL);
+      struct link_map *map;
+      status[cnt] = _dl_addr (array[cnt], &info[cnt], &map, NULL);
       if (status[cnt] && info[cnt].dli_fname && info[cnt].dli_fname[0] != '\0')
-	/* We have some info, compute the length of the string which will be
-	   "<file-name>(<sym-name>) [+offset].  */
-	total += (strlen (info[cnt].dli_fname ?: "")
-		  + (info[cnt].dli_sname
-		     ? strlen (info[cnt].dli_sname) + 3 + WORD_WIDTH + 3
-		     : 1)
-		  + WORD_WIDTH + 5);
+	{
+	  /* We have some info, compute the length of the string which will be
+	     "<file-name>(<sym-name>+offset) [address].  */
+	  total += (strlen (info[cnt].dli_fname ?: "")
+		    + strlen (info[cnt].dli_sname ?: "")
+		    + 3 + WORD_WIDTH + 3 + WORD_WIDTH + 5);
+
+	  /* The load bias is more useful to the user than the load
+	     address.  The use of these addresses is to calculate an
+	     address in the ELF file, so its prelinked bias is not
+	     something we want to subtract out.  */
+	  info[cnt].dli_fbase = (void *) map->l_addr;
+	}
       else
 	total += 5 + WORD_WIDTH;
     }
@@ -71,25 +78,39 @@ __backtrace_symbols (array, size)
 	{
 	  result[cnt] = last;
 
-	  if (status[cnt] && info[cnt].dli_fname
-	      && info[cnt].dli_fname[0] != '\0')
+	  if (status[cnt]
+	      && info[cnt].dli_fname != NULL && info[cnt].dli_fname[0] != '\0')
 	    {
-	      char buf[20];
+	      if (info[cnt].dli_sname == NULL)
+		/* We found no symbol name to use, so describe it as
+		   relative to the file.  */
+		info[cnt].dli_saddr = info[cnt].dli_fbase;
 
-	      if (array[cnt] >= (void *) info[cnt].dli_saddr)
-		sprintf (buf, "+%#lx",
-			 (unsigned long)(array[cnt] - info[cnt].dli_saddr));
+	      if (info[cnt].dli_sname == NULL && info[cnt].dli_saddr == 0)
+		last += 1 + sprintf (last, "%s(%s) [%p]",
+				     info[cnt].dli_fname ?: "",
+				     info[cnt].dli_sname ?: "",
+				     array[cnt]);
 	      else
-		sprintf (buf, "-%#lx",
-			 (unsigned long)(info[cnt].dli_saddr - array[cnt]));
+		{
+		  char sign;
+		  ptrdiff_t offset;
+		  if (array[cnt] >= (void *) info[cnt].dli_saddr)
+		    {
+		      sign = '+';
+		      offset = array[cnt] - info[cnt].dli_saddr;
+		    }
+		  else
+		    {
+		      sign = '-';
+		      offset = info[cnt].dli_saddr - array[cnt];
+		    }
 
-	      last += 1 + sprintf (last, "%s%s%s%s%s[%p]",
-				   info[cnt].dli_fname ?: "",
-				   info[cnt].dli_sname ? "(" : "",
-				   info[cnt].dli_sname ?: "",
-				   info[cnt].dli_sname ? buf : "",
-				   info[cnt].dli_sname ? ") " : " ",
-				   array[cnt]);
+		  last += 1 + sprintf (last, "%s(%s%c%#tx) [%p]",
+				       info[cnt].dli_fname ?: "",
+				       info[cnt].dli_sname ?: "",
+				       sign, offset, array[cnt]);
+		}
 	    }
 	  else
 	    last += 1 + sprintf (last, "[%p]", array[cnt]);
