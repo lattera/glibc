@@ -19,7 +19,8 @@
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 
-	.section .rodata.str1.1,"aMS",@progbits,1
+	.section .rodata.str1.4,"aMS",@progbits,1
+	.align 2
 .LC0:
 	.string "longjmp causes uninitialized stack frame"
 	.text
@@ -49,8 +50,36 @@
 #define CHECK_SP(reg) \
 	cmplw	reg, r1;				\
 	bge+	.Lok;					\
+	mflr	r0;					\
+	stwu	r1,-32(r1);				\
+	cfi_remember_state;				\
+	cfi_adjust_cfa_offset (32);			\
+	stw	r0,36(r1);				\
+	cfi_offset (lr, 4);				\
+	mr	r31,r3;					\
+	mr	r30,r4;					\
+	li	r3,0;					\
+	addi	r4,r1,8;				\
+	li	r0,__NR_sigaltstack;			\
+	sc;						\
+	/* Without working sigaltstack we cannot perform the test.  */ \
+	bso	.Lok2;					\
+	lwz	r0,12(r1);				\
+	andi.	r3,r0,1;				\
+	beq	.Lfail;					\
+	lwz	r0,16(r1);				\
+	lwz	r3,8(r1);				\
+	add	r3,r3,r0;				\
+	sub	r3,r3,reg;				\
+	cmplw	r3,r0;					\
+	bge+	.Lok2;					\
+.Lfail:							\
 	LOAD_ARG;					\
 	bl	HIDDEN_JUMPTARGET (__fortify_fail);	\
+.Lok2:							\
+	mr	r3,r31;					\
+	mr	r4,r30;					\
+	cfi_restore_state;				\
 .Lok:
 
 #include <__longjmp-common.S>

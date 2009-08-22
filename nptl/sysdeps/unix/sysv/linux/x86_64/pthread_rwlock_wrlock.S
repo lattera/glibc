@@ -31,6 +31,94 @@
 	.align	16
 __pthread_rwlock_wrlock:
 	cfi_startproc
+	movq	NRW_WORD(%rdi), %rax
+.Lagain:
+	movq	$(NRW_WW_MASK|NRW_WL|NRW_RC_MASK), %rdx
+	testq	%rdx, %rax
+	jnz	.Lwait
+
+	// XXX Probably make AR a don't-care for !WP.  Unconditionally set it
+	movq	$(NRW_AR|NRW_WL), %rdx
+	movq	$NRW_WL, %rcx
+	testq	$NRW_WP, %rax
+	cmovz	%rcx, %rdx
+	orq	%rax, %rdx
+	LOCK
+	cmpxchgq %rdx, NRW_WORD(%rdi)
+	jnz	.Lagain
+
+	movl	%fs:TID, %eax
+	movl	%eax, WRITER(%rdi)
+
+	xorl	%eax, %eax
+	ret
+
+.Lwait:	movq	$NRW_WL, %rcx
+	testq	%rcx, %rax
+	jz	1f
+
+	movl	%fs:TID, %eax
+	cmpl	%eax, WRITER(%rdi)
+	je	.Ldeadlk
+
+1:	leaq	NRW_WORD+4(%rdi), %rdi
+
+	movq	$NRW_WW, %rdx
+	movq	$NRW_WW_MASK, %rcx
+	addq	%rax, %rdx
+	testq	%rcx, %rdx
+	jz	.Lovfl
+
+	LOCK
+	cmpxchgq  %rdx, -4(%rdi)
+	jnz	.Lagain
+
+	xorq	%r10, %r10
+	movl	$NRW_W_WAKEUP, %r9d
+.Lwait2:
+	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
+	movl	$__NR_futex, %eax
+	xorl	PSHARED-(NRW_WORD+4)(%rdi), %esi
+	syscall
+	movq	-4(%rdi), %rax
+
+.Lagain2:
+	movq	$(NRW_WL|NRW_RC_MASK), %rdx
+	movq	$(NRW_WL|NRW_AR), %rcx
+	testq	%rdx, %rax
+	movq	$NRW_AR, %rsi
+	setz	%cl
+	andq	%rax, %rcx
+	cmpq	%rsi, %rcx
+	sete	%cl
+	orb	%dl, %cl
+	jz	.Lwait2
+
+	movq	$-NRW_WW, %rdx
+	addq	%rax, %rdx
+	xorl	%ecx, %ecx
+	testq	$NRW_WP, %rax
+	cmovz	%rcx, %rsi
+	orq	%rsi, %rdx
+
+	LOCK
+	cmpxchgq %rdx, -4(%rdi)
+	jnz	.Lagain2
+
+	movl	%fs:TID, %eax
+	movl	%eax, WRITER(%rdi)
+
+	xorl	%eax, %eax
+	ret
+
+.Lovfl:	movl	$EAGAIN, %eax
+	ret
+
+.Ldeadlk:
+	movl	$EDEADLK, %eax
+	ret
+
+#if 0
 	xorq	%r10, %r10
 
 	/* Get the lock.  */
@@ -156,6 +244,7 @@ __pthread_rwlock_wrlock:
 	subq	$MUTEX, %rdi
 #endif
 	jmp	13b
+#endif
 	cfi_endproc
 	.size	__pthread_rwlock_wrlock,.-__pthread_rwlock_wrlock
 

@@ -1,3 +1,12 @@
+2009-08-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/____longjmp_chk.S: Removed.
+	* sysdeps/powerpc/powerpc64/____longjmp_chk.S: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/____longjmp_chk.S: New file.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Move CHECK_SP earlier.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+
 2009-08-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
