@@ -130,7 +130,7 @@ extern struct lconv *localeconv (void) __THROW;
 __END_NAMESPACE_STD
 
 
-#ifdef	__USE_XOPEN2K
+#ifdef	__USE_XOPEN2K8
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
    information from several different locales.  Another application is

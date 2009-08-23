@@ -1,3 +1,8 @@
+2009-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/locale.h: Include xlocale.h and the thread-local locale
+	declarations for XPG7, not XPG6.
+
 2009-08-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/____longjmp_chk.S: Removed.
