@@ -2,6 +2,8 @@
 
 	* posix/regcomp.c (parse_dup_op): Verify the expression is correctly
 	terminated.
+	* posix/Makefile (tests): Add bug-regex29.
+	* posix/bug-regex29.c: New file.
 
 	* posix/unistd.h: Define _POSIX_VERSION and _POSIX2_* correctly if
 	older POSIX versions are selected.
