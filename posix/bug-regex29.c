@@ -8,7 +8,14 @@ do_test (void)
   char buf[100];
   regerror(e, &r, buf, sizeof (buf));
   printf ("e = %d (%s)\n", e, buf);
-  return e != REG_BADBR;
+  int res = e != REG_BADBR;
+
+  e = regcomp(&r, "xy\\{4,5a\\}zabc", 0);
+  regerror(e, &r, buf, sizeof (buf));
+  printf ("e = %d (%s)\n", e, buf);
+  res |= e != REG_BADBR;
+
+  return res;
 }
 
 #define TEST_FUNCTION do_test ()
