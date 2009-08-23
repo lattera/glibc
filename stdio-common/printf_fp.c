@@ -28,6 +28,7 @@
 #include <float.h>
 #include <gmp-mparam.h>
 #include <gmp.h>
+#include <ieee754.h>
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
 #include <stdlib/fpioconst.h>
@@ -335,6 +336,8 @@ ___printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl))
 	{
+	  union ieee854_long_double u = { .d = fpnum.ldbl };
+	  is_neg = u.ieee.negative != 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
@@ -345,10 +348,10 @@ ___printf_fp (FILE *fp,
 		special = "nan";
 		wspecial = L"nan";
 	      }
-	  is_neg = 0;
 	}
       else if (__isinfl (fpnum.ldbl))
 	{
+	  is_neg = fpnum.ldbl < 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "INF";
@@ -359,7 +362,6 @@ ___printf_fp (FILE *fp,
 	      special = "inf";
 	      wspecial = L"inf";
 	    }
-	  is_neg = fpnum.ldbl < 0;
 	}
       else
 	{
@@ -379,7 +381,8 @@ ___printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl))
 	{
-	  is_neg = 0;
+	  union ieee754_double u = { .d = fpnum.dbl };
+	  is_neg = u.ieee.negative != 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";

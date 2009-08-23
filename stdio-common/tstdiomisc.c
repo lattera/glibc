@@ -47,33 +47,129 @@ t2 (void)
 }
 
 volatile double nanval;
+volatile double infval;
+volatile long double lnanval;
+volatile long double linfval;
 
 
 static int
 F (void)
 {
-  char buf[20];
-  wchar_t wbuf[10];
+  char buf[80];
+  wchar_t wbuf[40];
   int result;
 
   nanval = NAN;
 
-  snprintf (buf, sizeof buf, "%f %F", nanval, nanval);
-  result = strcmp (buf, "nan NAN") != 0;
-  printf ("expected \"nan NAN\", got \"%s\"\n", buf);
+  snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
+	    nanval, nanval, nanval, nanval, nanval, nanval, nanval, nanval);
+  result = strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n", buf);
 
-  snprintf (buf, sizeof buf, "%f %F", DBL_MAX * DBL_MAX, DBL_MAX * DBL_MAX);
-  result |= strcmp (buf, "inf INF") != 0;
-  printf ("expected \"inf INF\", got \"%s\"\n", buf);
+  snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
+	    -nanval, -nanval, -nanval, -nanval,
+	    -nanval, -nanval, -nanval, -nanval);
+  result = strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
+	  buf);
 
-  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F", nanval, nanval);
-  result |= wcscmp (wbuf, L"nan NAN") != 0;
-  printf ("expected L\"nan NAN\", got L\"%S\"\n", wbuf);
+  infval = DBL_MAX * DBL_MAX;
 
-  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F",
-	    DBL_MAX * DBL_MAX, DBL_MAX * DBL_MAX);
-  result |= wcscmp (wbuf, L"inf INF") != 0;
-  printf ("expected L\"inf INF\", got L\"%S\"\n", wbuf);
+  snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
+	    infval, infval, infval, infval, infval, infval, infval, infval);
+  result |= strcmp (buf, "inf INF inf INF inf INF inf INF") != 0;
+  printf ("expected \"inf INF inf INF inf INF inf INF\", got \"%s\"\n", buf);
+
+  snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
+	    -infval, -infval, -infval, -infval,
+	    -infval, -infval, -infval, -infval);
+  result |= strcmp (buf, "-inf -INF -inf -INF -inf -INF -inf -INF") != 0;
+  printf ("expected \"-inf -INF -inf -INF -inf -INF -inf -INF\", got \"%s\"\n",
+	  buf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
+	    nanval, nanval, nanval, nanval, nanval, nanval, nanval, nanval);
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n", wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
+	    -nanval, -nanval, -nanval, -nanval,
+	    -nanval, -nanval, -nanval, -nanval);
+  result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
+	  wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
+	    infval, infval, infval, infval, infval, infval, infval, infval);
+  result |= wcscmp (wbuf, L"inf INF inf INF inf INF inf INF") != 0;
+  printf ("expected L\"inf INF inf INF inf INF inf INF\", got L\"%S\"\n", wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
+	    -infval, -infval, -infval, -infval,
+	    -infval, -infval, -infval, -infval);
+  result |= wcscmp (wbuf, L"-inf -INF -inf -INF -inf -INF -inf -INF") != 0;
+  printf ("expected L\"-inf -INF -inf -INF -inf -INF -inf -INF\", got L\"%S\"\n",
+	  wbuf);
+
+  lnanval = NAN;
+
+  snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    lnanval, lnanval, lnanval, lnanval,
+	    lnanval, lnanval, lnanval, lnanval);
+  result = strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n", buf);
+
+  snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    -lnanval, -lnanval, -lnanval, -lnanval,
+	    -lnanval, -lnanval, -lnanval, -lnanval);
+  result = strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
+	  buf);
+
+  linfval = LDBL_MAX * LDBL_MAX;
+
+  snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    linfval, linfval, linfval, linfval,
+	    linfval, linfval, linfval, linfval);
+  result |= strcmp (buf, "inf INF inf INF inf INF inf INF") != 0;
+  printf ("expected \"inf INF inf INF inf INF inf INF\", got \"%s\"\n", buf);
+
+  snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    -linfval, -linfval, -linfval, -linfval,
+	    -linfval, -linfval, -linfval, -linfval);
+  result |= strcmp (buf, "-inf -INF -inf -INF -inf -INF -inf -INF") != 0;
+  printf ("expected \"-inf -INF -inf -INF -inf -INF -inf -INF\", got \"%s\"\n",
+	  buf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
+	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    lnanval, lnanval, lnanval, lnanval,
+	    lnanval, lnanval, lnanval, lnanval);
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n", wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
+	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    -lnanval, -lnanval, -lnanval, -lnanval,
+	    -lnanval, -lnanval, -lnanval, -lnanval);
+  result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
+	  wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
+	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    linfval, linfval, linfval, linfval,
+	    linfval, linfval, linfval, linfval);
+  result |= wcscmp (wbuf, L"inf INF inf INF inf INF inf INF") != 0;
+  printf ("expected L\"inf INF inf INF inf INF inf INF\", got L\"%S\"\n", wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
+	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
+	    -linfval, -linfval, -linfval, -linfval,
+	    -linfval, -linfval, -linfval, -linfval);
+  result |= wcscmp (wbuf, L"-inf -INF -inf -INF -inf -INF -inf -INF") != 0;
+  printf ("expected L\"-inf -INF -inf -INF -inf -INF -inf -INF\", got L\"%S\"\n",
+	  wbuf);
 
   return result;
 }

@@ -1,5 +1,10 @@
 2009-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/printf_fp.c: ISO C expects to print the sign of NaN
+	as well.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/tstdiomisc.c: Add more tests.
+
 	* locale/locale.h: Include xlocale.h and the thread-local locale
 	declarations for XPG7, not XPG6.
 
