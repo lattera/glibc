@@ -1,5 +1,8 @@
 2009-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regcomp.c (parse_dup_op): Verify the expression is correctly
+	terminated.
+
 	* posix/unistd.h: Define _POSIX_VERSION and _POSIX2_* correctly if
 	older POSIX versions are selected.
 
