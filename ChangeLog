@@ -1,7 +1,7 @@
 2009-08-23  Ulrich Drepper  <drepper@redhat.com>
 
-	* posix/unistd.h: Define _POSIX_VERSION correctly if older POSIX
-	versions are selected.
+	* posix/unistd.h: Define _POSIX_VERSION and _POSIX2_* correctly if
+	older POSIX versions are selected.
 
 	* stdio-common/printf_fp.c: ISO C expects to print the sign of NaN
 	as well.
