@@ -1,3 +1,7 @@
+2009-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Clean up namespace.
+
 2009-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Add CFI

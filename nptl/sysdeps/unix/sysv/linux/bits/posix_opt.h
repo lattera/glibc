@@ -85,15 +85,17 @@
 /* We support priority inheritence.  */
 #define _POSIX_THREAD_PRIO_INHERIT	200809L
 
-/* We support priority inheritence for robust mutexes.  */
-#define _POSIX_THREAD_ROBUST_PRIO_INHERIT	200809L
-
 /* We support priority protection, though only for non-robust
    mutexes.  */
 #define _POSIX_THREAD_PRIO_PROTECT	200809L
 
+#ifdef __USE_XOPEN2K8
+/* We support priority inheritence for robust mutexes.  */
+# define _POSIX_THREAD_ROBUST_PRIO_INHERIT	200809L
+
 /* We do not support priority protection for robust mutexes.  */
-#define _POSIX_THREAD_ROBUST_PRIO_PROTECT	-1
+# define _POSIX_THREAD_ROBUST_PRIO_PROTECT	-1
+#endif
 
 /* We support POSIX.1b semaphores.  */
 #define _POSIX_SEMAPHORES	200809L
