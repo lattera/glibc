@@ -30,97 +30,6 @@
 	.align	16
 __pthread_rwlock_unlock:
 	cfi_startproc
-	movq	NRW_WORD(%rdi), %rax
-	movq	$NRW_WL, %rdx
-	testq	%rdx, %rax
-	jnz	.Lunlock_writer
-
-.Lagain:
-	movq	$-NRW_RC, %rdx
-	addq	%rax, %rdx
-	movq	$NRW_RC_MASK, %rcx
-	testq	%rcx, %rdx
-	jz	.Llast_reader
-
-1:	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lagain
-
-	xorl	%eax, %eax
-	ret
-
-.Llast_reader:
-	movq	$NRW_WW_MASK, %rcx
-	testq	%rax, %rcx
-	jz	1b
-
-	movq	$NRW_AR, %rcx
-	xorl	%esi, %esi
-	testq	$NRW_WP, %rax
-	cmovz	%esi, %ecx
-	orq	%rcx, %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lagain
-
-.Lwake_writer:
-	movl	$1, %edx
-	movl	$NRW_W_WAKEUP, %r9d
-.Lwake:	movl	$(FUTEX_WAKE_BITSET|FUTEX_PRIVATE_FLAG), %esi
-	xorl	PSHARED(%rdi), %esi
-	leaq	NRW_WORD(%rdi), %rdi
-	movl	$__NR_futex, %eax
-	syscall
-
-.Lout:	xorl	%eax, %eax
-	ret
-
-.Lunlock_writer:
-	movq	%rax, %rdx
-	movq	$NRW_WW_MASK, %rcx
-	testq	%rcx, %rax
-	jz	.Lno_writers
-	movq	$NRW_RC_MASK, %rcx
-	testq	%rcx, %rax
-	jz	2f
-	testq	$NRW_WP, %rax
-	jz	.Lwake_readers
-
-2:	movq	$~NRW_WL, %rcx
-	andq	%rcx, %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lunlock_writer
-	jmp	.Lwake_writer
-
-.Lno_writers:
-	movq	$~(NRW_WL|NRW_AR), %rcx
-	andq	%rcx, %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lunlock_writer
-
-	movq	$(NRW_RW_MASK|NRW_RC_MASK), %rcx
-	testq	%rcx, %rax
-	jz	.Lout
-
-	movl	$0x7fffffff, %edx
-	movl	$NRW_R_WAKEUP, %r9d
-	jmp	.Lwake
-
-.Lwake_readers:
-	movq	$~NRW_WL, %rcx
-	andq	%rcx, %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lunlock_writer
-
-	movl	$0x7fffffff, %edx
-	movl	$NRW_R_WAKEUP, %r9d
-	jmp	.Lwake
-
-
-#if 0
 	/* Get the lock.  */
 	movl	$1, %esi
 	xorl	%eax, %eax
@@ -211,7 +120,6 @@ __pthread_rwlock_unlock:
 #endif
 	callq	__lll_unlock_wake
 	jmp	8b
-#endif
 	cfi_endproc
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 

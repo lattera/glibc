@@ -31,127 +31,6 @@
 	.align	16
 __pthread_rwlock_rdlock:
 	cfi_startproc
-	movq	$NRW_RC, %rax
-	LOCK
-	xaddq	%rax, NRW_WORD(%rdi)
-	js	.Lundo
-
-.Lagain1:
-	movq	$(NRW_WL|NRW_WP), %rcx
-	movq	$(NRW_WL|NRW_WW_MASK), %rdx
-	testq	%rax, %rcx
-	setnz	%cl
-	testq	%rax, %rdx
-	setnz	%dl
-	orb	%cl, %dl
-	jnz	.Lwait
-
-	xorl	%eax, %eax
-	ret
-
-.Lwait:	movq	$NRW_WL, %rcx
-	testq	%rcx, %rax
-	jz	4f
-
-	movl	%fs:TID, %ecx
-	cmpl	%ecx, WRITER(%rdi)
-	je	.Ldeadlk
-
-4:	xorq	%r8, %r8
-	movq	$NRW_RC, %rdx
-	addq	%rdx, %rax
-	movq	$(NRW_WL|NRW_AR), %rcx
-	movq	$(NRW_WP|NRW_WW_MASK), %rdx
-	testq	%rax, %rcx
-	setz	%cl
-	testq	%rax, %rdx
-	setnz	%dl
-	testb	%dl, %cl
-	jz	1f
-
-	movq	$NRW_RW-NRW_RC, %rdx
-	addq	%rax, %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lagain1
-
-	movq	$NRW_RC_MASK, %rax
-	testq	%rdx, %rax
-	movl	$1, %r8d
-	jz	.Lwake_waiter
-
-1:	xorq	%r10, %r10
-	movl	$NRW_R_WAKEUP, %r9d
-	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
-	xorl	PSHARED(%rdi), %esi
-	leaq	NRW_WORD+4(%rdi), %rdi
-2:	shldq	$32, %rax, %rdx
-	movl	$__NR_futex, %eax
-	syscall
-	movq	-4(%rdi), %rax
-
-5:	movq	$(NRW_WL|NRW_WP), %rcx
-	movq	$(NRW_WL|NRW_WW_MASK), %rdx
-	testq	%rax, %rcx
-	setnz	%cl
-	testq	%rax, %rdx
-	setnz	%dl
-	orb	%cl, %dl
-	jnz	2b
-
-	testl	%r8d, %r8d
-	jz	3f
-
-	movq	$NRW_RC-NRW_RW, %rcx
-	addq	%rcx, %rdx
-	LOCK
-	cmpxchgq %rdx, -4(%rdi)
-	jnz	5b
-
-3:	xorl	%eax, %eax
-	ret
-
-.Lwake_waiter:
-	movq	%rdx, %r10
-	movl	$__NR_futex, %eax
-	movl	$(FUTEX_WAKE_BITSET|FUTEX_PRIVATE_FLAG), %esi
-	xorl	PSHARED(%rdi), %esi
-	leaq	NRW_WORD(%rdi), %rdi
-	movl	$1, %edx
-	movl	$NRW_W_WAKEUP, %r9d
-	syscall
-	leaq	-NRW_WORD(%rdi), %rdi
-	movq	%r10, %rdx
-	jmp	1b
-
-.Lundo:	movq	$-NRW_RC, %rcx
-	movq	%rax, %rdx
-	subq	%rcx, %rax
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jz	.Lret
-
-	movq	$NRW_RC_OVFL, %r8
-.Lagain2:
-	testq	%r8, %rax
-	jz	.Lagain1
-	leaq	(%rax,%rcx), %rdx
-	LOCK
-	cmpxchgq %rdx, NRW_WORD(%rdi)
-	jnz	.Lagain2
-
-.Lret:	movl	$EAGAIN, %eax
-	ret
-
-.Ldeadlk:
-	movq	$NRW_RC, %rdx
-	LOCK
-	subq	%rdx, NRW_WORD(%rdi)
-
-	movl	$EDEADLK, %eax
-	ret
-
-#if 0
 	xorq	%r10, %r10
 
 	/* Get the lock.  */
@@ -289,7 +168,6 @@ __pthread_rwlock_rdlock:
 	subq	$MUTEX, %rdi
 #endif
 	jmp	13b
-#endif
 	cfi_endproc
 	.size	__pthread_rwlock_rdlock,.-__pthread_rwlock_rdlock
 
