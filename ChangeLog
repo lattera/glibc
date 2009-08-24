@@ -1,3 +1,8 @@
+2009-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbit): Optimize.
+	(__signbitf): Likewise.
+
 2009-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (parse_dup_op): Verify the expression is correctly
