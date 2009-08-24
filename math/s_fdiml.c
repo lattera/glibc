@@ -1,5 +1,5 @@
 /* Return positive difference between arguments.
-   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,19 +18,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <math.h>
 
 long double
 __fdiml (long double x, long double y)
 {
-  int clsx = fpclassify (x);
-  int clsy = fpclassify (y);
+  int clsx = fpclassifyl (x);
+  int clsy = fpclassifyl (y);
 
   if (clsx == FP_NAN || clsy == FP_NAN
       || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
     /* Raise invalid flag.  */
     return x - y;
 
-  return x <= y ? 0 : x - y;
+  if (x <= y)
+    return 0.0f;
+
+  long double r = x - y;
+  if (fpclassify (r) == FP_INFINITE)
+    __set_errno (ERANGE);
+
+  return r;
 }
 weak_alias (__fdiml, fdiml)

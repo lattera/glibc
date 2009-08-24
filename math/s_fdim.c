@@ -1,5 +1,5 @@
 /* Return positive difference between arguments.
-   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <math.h>
 
 double
@@ -31,7 +32,14 @@ __fdim (double x, double y)
     /* Raise invalid flag.  */
     return x - y;
 
-  return x <= y ? 0 : x - y;
+  if (x <= y)
+    return 0.0;
+
+  double r = x - y;
+  if (fpclassify (r) == FP_INFINITE)
+    __set_errno (ERANGE);
+
+  return r;
 }
 weak_alias (__fdim, fdim)
 #ifdef NO_LONG_DOUBLE
