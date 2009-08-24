@@ -1,3 +1,12 @@
+2009-08-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/syscall-template.S: New file.
+	* sysdeps/unix/make-syscalls.sh: Generate rules to use it.
+	* sysdeps/unix/Makefile (omit-deps): Do not omit syscall stubs' deps.
+	(compile-syscall): Pass mkdep and -g options as normal.
+	(s-proto.d, s-proto-cancel.d): Don't "-include" these.
+	(common-generated): Don't add them here.
+
 2009-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/s_fdim.c: In case of overflows set errno.
