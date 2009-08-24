@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006
+   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -101,7 +101,7 @@ __BEGIN_DECLS
      && (!defined __NO_LONG_DOUBLE_MATH || defined __LDBL_COMPAT)
 #  ifdef __LDBL_COMPAT
 
-#   ifdef __USE_ISOC99 
+#   ifdef __USE_ISOC99
 extern float __nldbl_nexttowardf (float __x, long double __y)
 				  __THROW __attribute__ ((__const__));
 #    ifdef __REDIRECT_NTH
@@ -276,6 +276,13 @@ enum
 /* Bitmasks for the math_errhandling macro.  */
 # define MATH_ERRNO	1	/* errno set by math functions.  */
 # define MATH_ERREXCEPT	2	/* Exceptions raised by math functions.  */
+
+/* By default all functions support both errno and exception handling.
+   In gcc's fast math mode and if inline functions are defined this
+   might not be true.  */
+# ifndef __FAST_MATH__
+#  define math_errhandling	(MATH_ERRNO | MATH_ERREXCEPT)
+# endif
 
 #endif /* Use ISO C99.  */
 

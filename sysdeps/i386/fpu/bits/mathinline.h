@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2003,2004,2006,2007
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2003,2004,2006,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
@@ -152,6 +152,10 @@ __NTH (__signbitl (long double __x))
 
 #if ((!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
      && defined __OPTIMIZE__)
+
+/* The inline functions do not set errno or raise necessarily the
+   correct exceptions.  */
+# undef math_errhandling
 
 /* A macro to define float, double, and long double versions of various
    math functions for the ix87 FPU.  FUNC is the function name (which will

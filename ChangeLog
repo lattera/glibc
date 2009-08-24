@@ -1,5 +1,9 @@
 2009-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/math.h: Define math_errhandling of __FAST_MATH__ is not defined.
+	* sysdeps/i386/fpu/bits/mathinline.h: Undefine math_errhandling if we
+	are using the inline optimizations.
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbit): Optimize.
 	(__signbitf): Likewise.
 
