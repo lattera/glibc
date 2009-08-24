@@ -18,4 +18,24 @@ do							\
 while (0)
 
 #include <math/math_private.h>
+
+/* We can do a few things better on x86-64.  */
+
+/* Direct movement of float into integer register.  */
+#undef GET_FLOAT_WORD
+#define GET_FLOAT_WORD(i,d) \
+do {								\
+  int i_;							\
+  asm ("movd %1, %0" : "=rm" (i_) : "x" (d));			\
+  (i) = i_;							\
+} while (0)
+
+/* And the reverse.  */
+#undef SET_FLOAT_WORD
+#define SET_FLOAT_WORD(d,i) \
+do {								\
+  int i_ = i;							\
+  asm ("movd %1, %0" : "=x" (d) : "rm" (i_));			\
+} while (0)
+
 #endif
