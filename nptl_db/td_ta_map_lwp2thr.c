@@ -1,5 +1,5 @@
 /* Which thread is running on an LWP?
-   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,12 +32,6 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
   td_err_e terr;
   prgregset_t regs;
   psaddr_t addr;
-
-  LOG ("td_ta_map_lwp2thr");
-
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
 
   if (ta->ta_howto == ta_howto_unknown)
     {
@@ -180,6 +174,12 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
 		   lwpid_t lwpid, td_thrhandle_t *th)
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+
+  LOG ("td_ta_map_lwp2thr");
+
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
 
   /* We cannot rely on thread registers and such information at all
      before __pthread_initialize_minimal has gotten far enough.  They

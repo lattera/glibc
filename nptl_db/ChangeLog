@@ -1,3 +1,10 @@
+2009-08-23  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_map_lwp2thr.c (__td_ta_lookup_th_unique): Move ta_ok check
+	and LOG call back to ...
+	(td_ta_map_lwp2thr): ... here.
+	Reported by Maciej W. Rozycki <macro@codesourcery.com>.
+
 2009-05-25  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #10200]
