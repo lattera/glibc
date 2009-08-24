@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003, 2006, 2008
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003,2006,2008,2009
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -260,7 +260,6 @@ ifndef inhibit-unix-syscalls
 # which specifies objects to be compiled as simple Unix system calls.
 
 -include $(common-objpfx)sysd-syscalls
-omit-deps += $(foreach t,$(sysd-rules-targets),$(unix-syscalls:%=$t))
 
 ifeq (misc,$(subdir))
 sysdep_routines += $(unix-extra-syscalls)
@@ -306,9 +305,9 @@ endif
 endif
 
 # This is the end of the pipeline for compiling the syscall stubs.
-# The stdin in assembler with cpp using sysdep.h macros.
-# Be sure to disable debugging info since it would all just say "<stdin>".
-compile-syscall = $(filter-out -g%,$(COMPILE.S)) -x assembler-with-cpp -o $@ -
+# The stdin is assembler with cpp using sysdep.h macros.
+compile-syscall = $(COMPILE.S) -o $@ -x assembler-with-cpp - \
+			       $(compile-mkdep-flags)
 
 ifndef avoid-generated
 $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
@@ -323,16 +322,13 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	mv -f $@T $@
 endif
 
-# The syscall objects depend on s-proto.d or s-proto-cancel.d, which
-# are generated to specify dependencies generated syscalls have on
-# headers.
+# The $(bppfx)syscall.ob objects depend on s-proto-bp.d, which are
+# generated to specify dependencies generated BP stubs have on headers.
 # These deps use file names relative to a subdir, so don't
 # include them in the parent directory.
 ifneq (,$(filter $(unix-syscalls),$(routines) $(sysdep_routines) $(aux)))
 ifndef no_deps
--include $(common-objpfx)s-proto.d
 -include $(common-objpfx)s-proto-bp.d
--include $(common-objpfx)s-proto-cancel.d
 endif
 endif
 
@@ -340,7 +336,7 @@ $(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
 		       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	$(+make-deps)
 
-common-generated += s-proto.d s-proto-bp.d s-proto-cancel.d
+common-generated += s-proto-bp.d
 postclean-generated += sysd-syscalls
 
 endif

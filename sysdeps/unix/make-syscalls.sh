@@ -83,12 +83,13 @@ while read file srcfile caller syscall args strong weak; do
   ;;
   esac
 
-  cancellable=
-  noerrno=
+  cancellable=0
+  noerrno=0
+  errval=0
   case $args in
-  C*) cancellable=-cancel; args=`echo $args | sed 's/C:\?//'`;;
-  E*) noerrno=_NOERRNO; args=`echo $args | sed 's/E:\?//'`;;
-  V*) noerrno=_ERRVAL; args=`echo $args | sed 's/V:\?//'`;;
+  C*) cancellable=1; args=`echo $args | sed 's/C:\?//'`;;
+  E*) noerrno=1; args=`echo $args | sed 's/E:\?//'`;;
+  V*) errval=1; args=`echo $args | sed 's/V:\?//'`;;
   esac
 
   # Derive the number of arguments from the argument signature
@@ -115,7 +116,7 @@ while read file srcfile caller syscall args strong weak; do
  x--)
   # Undefined callnum for an extra syscall.
   if [ x$caller != x- ]; then
-    if [ x$noerrno != x ]; then
+    if [ $noerrno != 0 ]; then
       echo >&2 "$0: no number for $fileno, no-error syscall ($strong $weak)"
       exit 2
     fi
@@ -151,7 +152,7 @@ shared-only-routines += $file
     ;;
   esac
 
-  echo "		\$(common-objpfx)s-proto$cancellable.d"
+  echo "		\$(..)sysdeps/unix/make-syscalls.sh"
   case x"$callnum" in
   x_)
   echo "\
@@ -161,11 +162,17 @@ shared-only-routines += $file
   x*)
   echo "\
 	\$(make-target-directory)
-	(echo '#include <sysdep$cancellable.h>'; \\
-	 echo 'PSEUDO$noerrno ($strong, $syscall, $nargs)'; \\
-	 echo '	ret$noerrno'; \\
-	 echo 'PSEUDO_END$noerrno($strong)'; \\
-	 echo 'libc_hidden_def ($strong)'; \\"
+	(echo '#define SYSCALL_NAME $syscall'; \\
+	 echo '#define SYSCALL_NARGS $nargs'; \\
+	 echo '#define SYSCALL_SYMBOL $strong'; \\"
+  [ $cancellable = 0 ] || echo "\
+	 echo '#define SYSCALL_CANCELLABLE 1'; \\"
+  [ $noerrno = 0 ] || echo "\
+	 echo '#define SYSCALL_NOERRNO 1'; \\"
+  [ $errval = 0 ] || echo "\
+	 echo '#define SYSCALL_ERRVAL 1'; \\"
+  echo "\
+	 echo '#include <syscall-template.S>'; \\"
   ;;
   esac
 
@@ -201,7 +208,7 @@ shared-only-routines += $file
 	  vcount=`expr $vcount + 1`
 	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
 	fi
-	echo "	 echo 'symbol_version($source, $base, $ver)'; \\"
+	echo "	 echo 'symbol_version ($source, $base, $ver)'; \\"
 	;;
       !*)
 	name=`echo $name | sed 's/.//'`
