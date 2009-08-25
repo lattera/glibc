@@ -1,5 +1,8 @@
 2009-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/fpu/s_signbit.S: New file.
+	* sysdeps/x86_64/fpu/s_signbitf.S: New file.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: New file.
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: New file.
 
