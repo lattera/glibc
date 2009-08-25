@@ -1,5 +1,12 @@
 2009-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/math_private.h (ieee_double_shape_type): Add uint64_t word to
+	union.
+	(EXTRACT_WORDS64, INSERT_WORDS64): Define.
+	* sysdeps/x86_64/fpu/math_private.h (EXTRACT_WORDS64, INSERT_WORDS64):
+	Redefine.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: New file.
+
 	* sysdeps/x86_64/fpu/math_private.h: Add specialized GET_FLOAT_WORD
 	and SET_FLOAT_WORD definitions.
 

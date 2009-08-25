@@ -22,6 +22,23 @@ while (0)
 /* We can do a few things better on x86-64.  */
 
 /* Direct movement of float into integer register.  */
+#undef EXTRACT_WORDS64
+#define EXTRACT_WORDS64(i,d)					\
+do {								\
+  long int i_;							\
+  asm ("movd %1, %0" : "=rm" (i_) : "x" (d));			\
+  (i) = i_;							\
+} while (0)
+
+/* And the reverse.  */
+#undef INSERT_WORDS64
+#define INSERT_WORDS64(d,i) \
+do {								\
+  long int i_ = i;						\
+  asm ("movd %1, %0" : "=x" (d) : "rm" (i_));			\
+} while (0)
+
+/* Direct movement of float into integer register.  */
 #undef GET_FLOAT_WORD
 #define GET_FLOAT_WORD(i,d) \
 do {								\

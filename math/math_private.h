@@ -17,6 +17,7 @@
 #define _MATH_PRIVATE_H_
 
 #include <endian.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 /* The original fdlibm code used statements like:
@@ -43,6 +44,7 @@ typedef union
     u_int32_t msw;
     u_int32_t lsw;
   } parts;
+  uint64_t word;
 } ieee_double_shape_type;
 
 #endif
@@ -57,6 +59,7 @@ typedef union
     u_int32_t lsw;
     u_int32_t msw;
   } parts;
+  uint64_t word;
 } ieee_double_shape_type;
 
 #endif
@@ -89,6 +92,14 @@ do {								\
   (i) = gl_u.parts.lsw;						\
 } while (0)
 
+/* Get all in one, efficient on 64-bit machines.  */
+#define EXTRACT_WORDS64(i,d)					\
+do {								\
+  ieee_double_shape_type gh_u;					\
+  gh_u.value = (d);						\
+  (i) = gh_u.word;						\
+} while (0)
+
 /* Set a double from two 32 bit ints.  */
 
 #define INSERT_WORDS(d,ix0,ix1)					\
@@ -96,6 +107,14 @@ do {								\
   ieee_double_shape_type iw_u;					\
   iw_u.parts.msw = (ix0);					\
   iw_u.parts.lsw = (ix1);					\
+  (d) = iw_u.value;						\
+} while (0)
+
+/* Get all in one, efficient on 64-bit machines.  */
+#define INSERT_WORDS64(i,d)					\
+do {								\
+  ieee_double_shape_type iw_u;					\
+  iw_u.word = (i);						\
   (d) = iw_u.value;						\
 } while (0)
 
