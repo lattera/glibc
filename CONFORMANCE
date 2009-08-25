@@ -125,7 +125,9 @@ C99 added %a as another scanf format specifier for floating point
 values.  This conflicts with the glibc extension where %as, %a[ and
 %aS mean to allocate the string for the data read.  A strictly
 conforming C99 program using %as, %a[ or %aS in a scanf format string
-will misbehave under glibc.
+will misbehave under glibc if it does not include <stdio.h> and
+instead declares scanf itself; if it gets the declaration of scanf
+from <stdio.h>, it will use a C99-conforming version.
 
 
 Compiler limitations
@@ -144,29 +146,21 @@ GCC doesn't support the optional imaginary types.  Nor does it
 understand the keyword _Complex before GCC 3.0.  This has the
 corresponding impact on the relevant headers.
 
-glibc's use of extern inline conflicts with C99: in C99, extern inline
-means that an external definition is generated as well as possibly an
-inline definition, but in GCC it means that no external definition is
-generated.  When GCC's C99 mode implements C99 inline semantics, this
-will break the uses of extern inline in glibc's headers.  (Actually,
-glibc uses `extern __inline', which is beyond the scope of the
-standard, but it would clearly be very confusing for `__inline' and
-plain `inline' to have different meanings in C99 mode.)
-
 glibc's <tgmath.h> implementation is arcane but thought to work
 correctly; a clean and comprehensible version requires compiler
 builtins.
 
 For most of the headers required of freestanding implementations,
 glibc relies on GCC to provide correct versions.  (At present, glibc
-provides <stdint.h>, and GCC doesn't.)
+provides <stdint.h>, and GCC doesn't before version 4.5.)
 
-Implementing MATH_ERRNO, MATH_ERREXCEPT and math_errhandling in
-<math.h> needs compiler support: see
-
-http://sources.redhat.com/ml/libc-hacker/2000-06/msg00008.html
-http://sources.redhat.com/ml/libc-hacker/2000-06/msg00014.html
-http://sources.redhat.com/ml/libc-hacker/2000-06/msg00015.html
+The definition of math_errhandling conforms so long as no translation
+unit using math_errhandling is compiled with -fno-math-errno,
+-fno-trapping-math or options such as -ffast-math that imply these
+options.  math_errhandling is only conditionally defined depending on
+__FAST_MATH__; the compiler does not provide the information needed
+for more exact definitions based on settings of -fno-math-errno and
+-fno-trapping-math, possibly for only some source files in a program.
 
 
 Issues with headers
