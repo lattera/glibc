@@ -1,3 +1,10 @@
+2009-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/tls.h (RTLD_ENABLE_FOREIGN_CALL): Store old value
+	of the field in local variables.
+	(RTLD_FINALIZE_FOREIGN_CALL): Restore rtld_must_xmm_save from local
+	variable and don't unconditionally clear it.
+
 2009-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (start_thread): Hint to the kernel that memory for

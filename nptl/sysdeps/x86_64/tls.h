@@ -188,7 +188,7 @@ typedef struct
 
    The contained asm must *not* be marked volatile since otherwise
    assignments like
-        pthread_descr self = thread_self();
+	pthread_descr self = thread_self();
    do not get optimized away.  */
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
@@ -404,7 +404,12 @@ extern void _dl_x86_64_restore_sse (void);
 # define RTLD_CHECK_FOREIGN_CALL \
   (THREAD_GETMEM (THREAD_SELF, header.rtld_must_xmm_save) != 0)
 
+/* NB: Don't use the xchg operation because that would imply a lock
+   prefix which is expensive and unnecessary.  The cache line is also
+   not contested at all.  */
 #  define RTLD_ENABLE_FOREIGN_CALL \
+  int old_rtld_must_xmm_save = THREAD_GETMEM (THREAD_SELF,		      \
+					      header.rtld_must_xmm_save);     \
   THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save, 1)
 
 #  define RTLD_PREPARE_FOREIGN_CALL \
@@ -419,7 +424,8 @@ extern void _dl_x86_64_restore_sse (void);
   do {									      \
     if (THREAD_GETMEM (THREAD_SELF, header.rtld_must_xmm_save) == 0)	      \
       _dl_x86_64_restore_sse ();					      \
-    THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save, 0);		      \
+    THREAD_SETMEM (THREAD_SELF, header.rtld_must_xmm_save,		      \
+		   old_rtld_must_xmm_save);				      \
   } while (0)
 # endif
 

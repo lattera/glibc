@@ -197,7 +197,6 @@ _dl_x86_64_save_sse:
 	ret
 L(no_avx5):
 # endif
-# define YMM_SIZE 16
 	movdqa	%xmm0, %fs:RTLD_SAVESPACE_SSE+0*XMM_SIZE
 	movdqa	%xmm1, %fs:RTLD_SAVESPACE_SSE+1*XMM_SIZE
 	movdqa	%xmm2, %fs:RTLD_SAVESPACE_SSE+2*XMM_SIZE
