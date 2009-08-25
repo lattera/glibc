@@ -31,10 +31,10 @@ huge   = 1.0e+300,
 tiny   = 1.0e-300;
 
 #ifdef __STDC__
-	double __scalbln (double x, long int n)
+	double __scalbn (double x, int n)
 #else
-	double __scalbln (x,n)
-	double x; long int n;
+	double __scalbn (x,n)
+	double x; int n;
 #endif
 {
 	int64_t ix;
@@ -61,8 +61,8 @@ tiny   = 1.0e-300;
 	INSERT_WORDS64(x,(ix&INT64_C(0x800fffffffffffff))|(k<<52));
 	return x*twom54;
 }
-weak_alias (__scalbln, scalbln)
+weak_alias (__scalbn, scalbn)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__scalbln, __scalblnl)
-weak_alias (__scalbln, scalblnl)
+strong_alias (__scalbn, __scalbnl)
+weak_alias (__scalbn, scalbnl)
 #endif

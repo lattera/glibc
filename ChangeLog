@@ -4,7 +4,10 @@
 
 2009-08-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c: New file.
+	* sysdeps/x86_64/fpu/s_scalbln.c: New file.
+	* sysdeps/x86_64/fpu/s_scalbn.c: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: New file.
 
 	* sysdeps/x86_64/fpu/s_signbit.S: New file.
 	* sysdeps/x86_64/fpu/s_signbitf.S: New file.
