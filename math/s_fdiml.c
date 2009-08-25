@@ -24,8 +24,8 @@
 long double
 __fdiml (long double x, long double y)
 {
-  int clsx = fpclassifyl (x);
-  int clsy = fpclassifyl (y);
+  int clsx = fpclassify (x);
+  int clsy = fpclassify (y);
 
   if (clsx == FP_NAN || clsy == FP_NAN
       || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
