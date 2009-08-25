@@ -1,5 +1,6 @@
 2009-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: New file.
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: New file.
 
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Remove
