@@ -1,5 +1,8 @@
 2009-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Add llround aliases.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c: New file.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: New file
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: New file.

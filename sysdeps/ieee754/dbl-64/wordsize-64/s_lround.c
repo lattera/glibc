@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define llround __hidden_llround
+#define __llround __hidden___llround
+
 #include <math.h>
 
 #include "math_private.h"
@@ -64,4 +67,14 @@ weak_alias (__lround, lround)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__lround, __lroundl)
 weak_alias (__lround, lroundl)
+#endif
+
+/* long long has the same width as long on 64-bit machines.  */
+#undef llround
+#undef __llround
+strong_alias (__lround, __llround)
+weak_alias (__lround, llround)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__lround, __llroundl)
+weak_alias (__lround, llroundl)
 #endif
