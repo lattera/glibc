@@ -1,5 +1,7 @@
 2009-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: New file.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: New file.
 
 2009-08-25  Ulrich Drepper  <drepper@redhat.com>
