@@ -52,7 +52,7 @@
 #  define LOAD_PRIVATE_FUTEX_WAIT(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, reg	; \
-	add	reg, tmp 	; \
+	add	reg, tmp	; \
 	bra	98f		; \
 	 mov.l	@tmp, reg	; \
 99:	.word	PRIVATE_FUTEX - TLS_PRE_TCB_SIZE ; \
@@ -61,7 +61,7 @@
 #  define LOAD_PRIVATE_FUTEX_WAIT(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, reg	; \
-	add	reg, tmp 	; \
+	add	reg, tmp	; \
 	mov.l	@tmp, reg	; \
 	bra	98f		; \
 	 mov	#FUTEX_WAIT, tmp ; \
@@ -71,7 +71,7 @@
 # define LOAD_PRIVATE_FUTEX_WAKE(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, reg	; \
-	add	reg, tmp 	; \
+	add	reg, tmp	; \
 	mov.l	@tmp, reg	; \
 	bra	98f		; \
 	 mov	#FUTEX_WAKE, tmp ; \
@@ -81,7 +81,7 @@
 #  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
-	add	tmp2, tmp 	; \
+	add	tmp2, tmp	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
 	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
@@ -93,7 +93,7 @@
 #  define LOAD_FUTEX_WAIT(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
-	add	tmp2, tmp 	; \
+	add	tmp2, tmp	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
 	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
@@ -107,7 +107,7 @@
 # define LOAD_FUTEX_WAIT_ABS(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
-	add	tmp2, tmp 	; \
+	add	tmp2, tmp	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
 	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
@@ -123,7 +123,7 @@
 # define LOAD_FUTEX_WAKE(reg,tmp,tmp2) \
 	stc	gbr, tmp	; \
 	mov.w	99f, tmp2	; \
-	add	tmp2, tmp 	; \
+	add	tmp2, tmp	; \
 	mov.l	@tmp, tmp2	; \
 	bra	98f		; \
 	 mov	#FUTEX_PRIVATE_FLAG, tmp ; \
@@ -253,7 +253,7 @@ __lll_timedlock_wait:
 	mov	#2, r6
 	cmp/eq	r6, r2
 	bf/s	2f
-	 mov	r2, r6
+	 mov	r6, r2
 
 1:
 	mov	#2, r6
@@ -327,7 +327,7 @@ __lll_timedlock_wait:
 
 	tst	r3, r3
 	bt	6f
-	
+
 1:
 	/* Get current time.  */
 	mov	r15, r4
