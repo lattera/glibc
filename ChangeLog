@@ -1,3 +1,10 @@
+2009-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/init-arch.c (ENABLE_SSSE3_ON_ATOM):
+	Removed.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Don't
+	turn off SSSE3 on Atom.
+
 2009-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/tst-strtol.c (tests): More tests.
