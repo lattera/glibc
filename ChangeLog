@@ -1,3 +1,8 @@
+2009-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/tst-strtol.c (tests): More tests.
+	* stdlib/tst-strtoll.c (tests): Likewise.
+
 2009-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: New file.
