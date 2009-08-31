@@ -36,14 +36,14 @@ __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
   int __m;
-  asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
+  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x8;
 }
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
   int __m;
-  asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
+  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x80;
 }
 __MATH_INLINE int
