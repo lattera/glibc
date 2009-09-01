@@ -1,3 +1,9 @@
+2009-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Remove dead code and
+	reformulate in-buffer optimisation check to match code in
+	_IO_new_file_seekoff.
+
 2009-08-31  Joshua W. Boyer  <jwboyer@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Change srdi instruction
