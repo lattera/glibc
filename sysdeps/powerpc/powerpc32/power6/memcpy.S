@@ -220,7 +220,7 @@ L(word_unaligned_short):
     subf  10,0,5
     add   12,4,0
     blt   cr6,5f
-    srdi  7,6,16
+    srwi  7,6,16
     bgt	  cr6,3f
     sth   6,0(3)
     b     7f
