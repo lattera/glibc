@@ -1,3 +1,8 @@
+2009-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Include bits/wordsize.h.
+	(__signbitf, __signbit): Only use SSE inline asm for 64-bit.
+		
 2009-08-31  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Use __asm instead of asm.

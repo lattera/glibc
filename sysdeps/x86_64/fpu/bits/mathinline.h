@@ -22,6 +22,8 @@
 # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
 #endif
 
+#include <bits/wordsize.h>
+
 #ifndef __extern_inline
 # define __MATH_INLINE __inline
 #else
@@ -35,16 +37,26 @@
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
+#if __WORDSIZE == 32
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
+  return __u.__i < 0;
+#else
   int __m;
   __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x8;
+#endif
 }
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
+#if __WORDSIZE == 32
+  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
+  return __u.__i[1] < 0;
+#else
   int __m;
   __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x80;
+#endif
 }
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
