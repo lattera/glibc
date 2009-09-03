@@ -1,3 +1,10 @@
+2009-09-02  Andreas Schwab  <schwab@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Account for readahead in
+	external buffer.  Always discard readahead in internal buffer.
+	* libio/Makefile (tests): Add bug-wsetpos.
+	* libio/bug-wsetpos.c: New file.
+
 2009-09-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr-c.c (__strstr_sse42, __strstr_sse2):
