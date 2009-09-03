@@ -1,3 +1,8 @@
+2009-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strstr-c.c (__strstr_sse42,
+	__strstr_ia32): Add attribute_hidden.
+
 2009-09-01  Andreas Schwab  <schwab@redhat.com>
 
 	* hesiod/nss_hesiod/hesiod-grp.c (internal_gid_from_group): Fix
