@@ -1,3 +1,8 @@
+2009-09-01  Andreas Schwab  <schwab@redhat.com>
+
+	* hesiod/nss_hesiod/hesiod-grp.c (internal_gid_from_group): Fix
+	parsing of group entry.
+
 2009-09-02  Andreas Schwab  <schwab@redhat.com>
 
 	* libio/wfileops.c (_IO_wfile_seekoff): Account for readahead in

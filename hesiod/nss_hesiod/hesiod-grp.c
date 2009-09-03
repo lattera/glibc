@@ -139,21 +139,19 @@ internal_gid_from_group (void *context, const char *groupname, gid_t *group)
     {
       char *p = *grp_res;
 
+      /* Skip to third field.  */
       while (*p != '\0' && *p != ':')
 	++p;
-      while (*p != '\0' && *p == ':')
+      if (*p != '\0')
 	++p;
       while (*p != '\0' && *p != ':')
 	++p;
-      while (*p != '\0' && *p == ':')
-	++p;
-      if (*p == ':')
+      if (*p != '\0')
 	{
 	  char *endp;
 	  char *q = ++p;
 	  long int val;
 
-	  q = p;
 	  while (*q != '\0' && *q != ':')
 	    ++q;
 
