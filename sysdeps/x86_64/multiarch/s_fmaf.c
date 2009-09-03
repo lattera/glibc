@@ -23,10 +23,10 @@
 
 #ifdef HAVE_AVX_SUPPORT
 
-extern float __fmaf_sse2 (float x, float y, float z);
+extern float __fmaf_sse2 (float x, float y, float z) attribute_hidden;
 
 
-float
+static float
 __fmaf_fma (float x, float y, float z)
 {
   asm ("vfmadd213ss %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));

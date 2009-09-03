@@ -24,10 +24,10 @@
 
 #ifdef HAVE_AVX_SUPPORT
 
-extern double __fma_sse2 (double x, double y, double z);
+extern double __fma_sse2 (double x, double y, double z) attribute_hidden;
 
 
-double
+static double
 __fma_fma (double x, double y, double z)
 {
   asm ("vfmadd213sd %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));

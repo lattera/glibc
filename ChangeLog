@@ -1,3 +1,14 @@
+2009-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strstr-c.c (__strstr_sse42, __strstr_sse2):
+	Add attribute_hidden.
+	* sysdeps/x86_64/multiarch/strcasestr-c.c (__strcasestr_sse42,
+	__strcasestr_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/s_fma.c (__fma_sse2): Add attribute_hidden.
+	(__fma_fma): Make static.
+	* sysdeps/x86_64/multiarch/s_fmaf.c (__fmaf_sse2): Add attribute_hidden.
+	(__fmaf_fma): Make static.
+
 2009-08-31  Andreas Schwab  <schwab@redhat.com>
 
 	* libio/wfileops.c (_IO_wfile_seekoff): Remove dead code and
