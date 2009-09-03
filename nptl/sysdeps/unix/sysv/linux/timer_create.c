@@ -1,4 +1,4 @@
-/* Copyright (C) 2003,2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003,2004, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -167,6 +167,7 @@ timer_create (clock_id, evp, timerid)
 	      /* Copy the thread parameters the user provided.  */
 	      newp->sival = evp->sigev_value;
 	      newp->thrfunc = evp->sigev_notify_function;
+	      newp->sigev_notify = SIGEV_THREAD;
 
 	      /* We cannot simply copy the thread attributes since the
 		 implementation might keep internal information for

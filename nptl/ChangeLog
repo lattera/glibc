@@ -1,3 +1,11 @@
+2009-09-02  Suzuki K P  <suzuki@in.ibm.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #7094]
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create):
+	Initialize the sigev_notify field for newly created timer to make sure
+	the timer gets deleted from the active timer's list upon timer_delete.  
+
 2009-08-27  Andrew Stubbs  <ams@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_timedlock_wait):
