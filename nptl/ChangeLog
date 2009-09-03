@@ -4,7 +4,7 @@
 	[BZ #7094]
 	* sysdeps/unix/sysv/linux/timer_create.c (timer_create):
 	Initialize the sigev_notify field for newly created timer to make sure
-	the timer gets deleted from the active timer's list upon timer_delete.  
+	the timer gets deleted from the active timer's list upon timer_delete.
 
 2009-08-27  Andrew Stubbs  <ams@codesourcery.com>
 
