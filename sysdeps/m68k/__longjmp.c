@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1997, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +27,10 @@ __longjmp (__jmp_buf env, int val)
 {
   /* This restores the FP and SP that setjmp's caller had,
      and puts the return address into A0 and VAL into D0. */
+
+#ifdef CHECK_SP
+  CHECK_SP (env[0].__sp);
+#endif
 
 #if	defined(__HAVE_68881__) || defined(__HAVE_FPU__)
   /* Restore the floating-point registers.  */

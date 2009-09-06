@@ -1,3 +1,9 @@
+2009-09-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/____longjmp_chk.c: New file.
+
+	* sysdeps/m68k/__longjmp.c (__longjmp): Call CHECK_SP if defined.
+
 2009-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/Versions (libc): Add
