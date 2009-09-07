@@ -1,5 +1,9 @@
 2009-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (struct locale_collate_t): Add
+	unnamed_section_defined field.
+	(collate_read): Test and set unnamed_section_defined.
+
 	* posix/getconf.c (vars): Handle POSIX2_LINE_MAX in addition to
 	_POSIX2_LINE_MAX.
 
