@@ -1,3 +1,8 @@
+2009-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c (vars): Handle POSIX2_LINE_MAX in addition to
+	_POSIX2_LINE_MAX.
+
 2009-09-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in: Support binutils 2.20.

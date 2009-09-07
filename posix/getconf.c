@@ -484,6 +484,7 @@ static const struct conf vars[] =
 #endif
 #ifdef _SC_LINE_MAX
     { "_POSIX2_LINE_MAX", _SC_LINE_MAX, SYSCONF },
+    { "POSIX2_LINE_MAX", _SC_LINE_MAX, SYSCONF },
 #endif
 #ifdef _SC_2_LOCALEDEF
     { "POSIX2_LOCALEDEF", _SC_2_LOCALEDEF, SYSCONF },
