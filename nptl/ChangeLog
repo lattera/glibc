@@ -1,3 +1,7 @@
+2009-09-07  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (BP_SYM): Remove space before paren.
+
 2009-09-02  Suzuki K P  <suzuki@in.ibm.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 

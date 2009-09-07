@@ -529,7 +529,7 @@ extern int __pthread_atfork (void (*__prepare) (void),
 #  if _LIBC
 #   include <bp-sym.h>
 #  else
-#   define BP_SYM (sym) sym
+#   define BP_SYM(sym) sym
 #  endif
 weak_extern (BP_SYM (__pthread_mutex_init))
 weak_extern (BP_SYM (__pthread_mutex_destroy))
