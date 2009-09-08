@@ -1,3 +1,7 @@
+2009-09-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.100 and 3.0.
+
 2009-09-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/s390/s390-32/____longjmp_chk.c: Removed.
