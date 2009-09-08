@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <signal.h>
+#include <sys/syscall.h>
 
 #define __longjmp ____longjmp_chk
 
@@ -32,10 +35,21 @@
     {									\
       uintptr_t cur_sp;							\
       uintptr_t new_sp = env->__gregs[9];				\
-      __asm ("lr %0, %%r15" : "=r" (cur_sp));				\
+      __asm ("lgr %0, %%r15" : "=r" (cur_sp));				\
       new_sp ^= guard;							\
       if (new_sp < cur_sp)						\
-	__fortify_fail ("longjmp causes uninitialized stack frame");	\
+	{								\
+	  stack_t oss;							\
+	  INTERNAL_SYSCALL_DECL (err);					\
+	  int res = INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &oss);	\
+	  if (!INTERNAL_SYSCALL_ERROR_P (res, err))			\
+	    {								\
+	      if ((oss.ss_flags & SS_ONSTACK) == 0			\
+		  || ((uintptr_t) (oss.ss_sp + oss.ss_size) - new_sp	\
+		      >= oss.ss_size))					\
+		__fortify_fail ("longjmp causes uninitialized stack frame");\
+	    }								\
+	}								\
     } while (0)
 
 #include "__longjmp.c"
