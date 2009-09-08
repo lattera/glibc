@@ -1,3 +1,21 @@
+2009-09-08  Carlos O'Donell  <carlos@codesourcery.com>
+ 
+	sysdeps/unix/sysv/linux/hppa/
+	* internaltypes.h: New file.
+ 
+	sysdeps/unix/sysv/linux/hppa/nptl/
+	* pthreadP.h: New file.
+	* pthread.h: New file.
+	* pthread_cond_broadcast.c: New file.
+	* pthread_cond_destroy.c: New file.
+	* pthread_cond_init.c: New file.
+	* pthread_cond_signal.c: New file.
+	* pthread_cond_timedwait.c: New file.
+	* pthread_cond_wait.c: New file.
+	* bits/pthreadtypes.h: Make pthread_mutex_t,
+	pthread_rwlock_t, and pthread_cond_t backwards
+	compatible.
+
 2009-04-24  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/hppa/hppa1.1/s_signbit.c: New file.

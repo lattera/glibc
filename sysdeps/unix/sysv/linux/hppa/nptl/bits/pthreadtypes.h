@@ -34,7 +34,7 @@
 #define __SIZEOF_PTHREAD_ATTR_T 36
 #define __SIZEOF_PTHREAD_BARRIER_T 48
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 64
+#define __SIZEOF_PTHREAD_COND_T 48 
 #define __SIZEOF_PTHREAD_CONDATTR_T 4
 #define __SIZEOF_PTHREAD_MUTEX_T 48 
 #define __SIZEOF_PTHREAD_MUTEXATTR_T 4
@@ -70,12 +70,22 @@ typedef union
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
+    /* The old 4-word 16-byte aligned lock. This is initalized
+       to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER. 
+       Unused in NPTL.  */
+    int __compat_padding[4];
+    /* In the old structure there are 4 words left due to alignment.
+       In NPTL two words are used.  */
     unsigned int __nusers;
     __extension__ union
     {
       int __spins;
       __pthread_slist_t __list;
     };
+    /* Two more words are left before the NPTL
+       pthread_mutex_t is larger than Linuxthreads.  */
+    int __reserved1;
+    int __reserved2;
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;
@@ -89,19 +99,37 @@ typedef union
 
 
 /* Data structure for conditional variable handling.  The structure of
-   the attribute type is not exposed on purpose.  */
+   the attribute type is not exposed on purpose. However, this structure
+   is exposed via PTHREAD_COND_INITIALIZER, and because of this, the
+   Linuxthreads version sets the first four ints to one. In the NPTL
+   version we must check, in every function using pthread_cond_t, 
+   for the static Linuxthreads initializer and clear the appropriate
+   words. */
 typedef union
 {
   struct
   {
+    /* In the old Linuxthreads pthread_cond_t, this is the
+       start of the 4-word lock structure, the next four words
+       are set all to 1 by the Linuxthreads 
+       PTHREAD_COND_INITIALIZER.  */
     int __lock;
+    /* Tracks the initialization of this structure:
+       0  initialized with NPTL PTHREAD_COND_INITIALIZER.
+       1  initialized with Linuxthreads PTHREAD_COND_INITIALIZER.
+       2  initialization in progress.  */
+    int __initializer;
     unsigned int __futex;
+    void *__mutex;
+    /* In the old Linuxthreads this would have been the start
+       of the pthread_fastlock status word.  */
     __extension__ unsigned long long int __total_seq;
     __extension__ unsigned long long int __wakeup_seq;
     __extension__ unsigned long long int __woken_seq;
-    void *__mutex;
     unsigned int __nwaiters;
     unsigned int __broadcast_seq;
+    /* The NPTL pthread_cond_t is exactly the same size as
+       the Linuxthreads version, there are no words to spare.  */
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
   __extension__ long long int __align;
@@ -129,19 +157,34 @@ typedef union
 {
   struct
   {
+    /* In the old Linuxthreads pthread_rwlock_t, this is the
+       start of the 4-word 16-byte aligned lock structure. The
+       next four words are all set to 1 by the Linuxthreads
+       PTHREAD_RWLOCK_INITIALIZER. We ignore them in NPTL.  */
+    int __compat_padding[4];
     int __lock;
     unsigned int __nr_readers;
     unsigned int __readers_wakeup;
     unsigned int __writer_wakeup;
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
+    int __writer;
+    /* An unused word, reserved for future use. It was added
+       to maintain the location of the flags from the Linuxthreads
+       layout of this structure.  */
+    int __reserved1;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned char __pad2;
     unsigned char __pad1;
     unsigned char __shared;
     unsigned char __flags;
-    int __writer;
+    /* The NPTL pthread_rwlock_t is 4 words smaller than the
+       Linuxthreads version. One word is in the middle of the
+       structure, the other three are at the end.  */
+    int __reserved2;
+    int __reserved3;
+    int __reserved4;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;
