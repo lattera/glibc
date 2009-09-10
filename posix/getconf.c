@@ -1052,34 +1052,34 @@ print_all (const char *path)
     printf("%-35s", c->name);
     switch (c->call) {
       case PATHCONF:
-        value = pathconf (path, c->call_name);
-        if (value != -1) {
-          printf("%ld", value);
-        }
-        printf("\n");
-        break;
+	value = pathconf (path, c->call_name);
+	if (value != -1) {
+	  printf("%ld", value);
+	}
+	printf("\n");
+	break;
       case SYSCONF:
-        value = sysconf (c->call_name);
-        if (value == -1l) {
-          if (c->call_name == _SC_UINT_MAX
-            || c->call_name == _SC_ULONG_MAX)
-            printf ("%lu", value);
-        }
-        else {
-          printf ("%ld", value);
-        }
-        printf ("\n");
-        break;
+	value = sysconf (c->call_name);
+	if (value == -1l) {
+	  if (c->call_name == _SC_UINT_MAX
+	    || c->call_name == _SC_ULONG_MAX)
+	    printf ("%lu", value);
+	}
+	else {
+	  printf ("%ld", value);
+	}
+	printf ("\n");
+	break;
       case CONFSTR:
-        clen = confstr (c->call_name, (char *) NULL, 0);
-        cvalue = (char *) malloc (clen);
-        if (cvalue == NULL)
-          error (3, 0, _("memory exhausted"));
-        if (confstr (c->call_name, cvalue, clen) != clen)
-          error (3, errno, "confstr");
-        printf ("%.*s\n", (int) clen, cvalue);
+	clen = confstr (c->call_name, (char *) NULL, 0);
+	cvalue = (char *) malloc (clen);
+	if (cvalue == NULL)
+	  error (3, 0, _("memory exhausted"));
+	if (confstr (c->call_name, cvalue, clen) != clen)
+	  error (3, errno, "confstr");
+	printf ("%.*s\n", (int) clen, cvalue);
 	free (cvalue);
-        break;
+	break;
     }
   }
   exit (0);
@@ -1239,13 +1239,17 @@ environment SPEC.\n\n"));
 	usage ();
     }
 
-  if (argc < 2 || argc > 3)
+  int ai = 1;
+  if (argc > ai && strcmp (argv[ai], "--") == 0)
+    ++ai;
+
+  if (argc - ai < 1 || argc - ai > 2)
     usage ();
 
   for (c = vars; c->name != NULL; ++c)
-    if (strcmp (c->name, argv[1]) == 0
+    if (strcmp (c->name, argv[ai]) == 0
 	|| (strncmp (c->name, "_POSIX_", 7) == 0
-	    && strcmp (c->name + 7, argv[1]) == 0))
+	    && strcmp (c->name + 7, argv[ai]) == 0))
       {
 	long int value;
 	size_t clen;
@@ -1253,14 +1257,14 @@ environment SPEC.\n\n"));
 	switch (c->call)
 	  {
 	  case PATHCONF:
-	    if (argc < 3)
+	    if (argc - ai < 2)
 	      usage ();
 	    errno = 0;
-	    value = pathconf (argv[2], c->call_name);
+	    value = pathconf (argv[ai + 1], c->call_name);
 	    if (value == -1)
 	      {
 		if (errno)
-		  error (3, errno, "pathconf: %s", argv[2]);
+		  error (3, errno, "pathconf: %s", argv[ai + 1]);
 		else
 		  puts (_("undefined"));
 	      }
@@ -1269,7 +1273,7 @@ environment SPEC.\n\n"));
 	    exit (0);
 
 	  case SYSCONF:
-	    if (argc > 2)
+	    if (argc - ai > 1)
 	      usage ();
 	    value = sysconf (c->call_name);
 	    if (value == -1l)
@@ -1285,7 +1289,7 @@ environment SPEC.\n\n"));
 	    exit (0);
 
 	  case CONFSTR:
-	    if (argc > 2)
+	    if (argc - ai > 1)
 	      usage ();
 	    clen = confstr (c->call_name, (char *) NULL, 0);
 	    cvalue = (char *) malloc (clen);
@@ -1300,7 +1304,7 @@ environment SPEC.\n\n"));
 	  }
       }
 
-  error (2, 0, _("Unrecognized variable `%s'"), argv[1]);
+  error (2, 0, _("Unrecognized variable `%s'"), argv[ai]);
   /* NOTREACHED */
   return 2;
 }
