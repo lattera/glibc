@@ -1,3 +1,8 @@
+2012-10-02  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #10631]
+	* malloc.c (malloc_printerr): Clarify error message.
+
 2012-10-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14648]

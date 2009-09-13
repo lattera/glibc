@@ -4899,8 +4899,7 @@ malloc_printerr(int action, const char *str, void *ptr)
       while (cp > buf)
 	*--cp = '0';
 
-      __libc_message (action & 2,
-		      "*** glibc detected *** %s: %s: 0x%s ***\n",
+      __libc_message (action & 2, "*** Error in `%s': %s: 0x%s ***\n",
 		      __libc_argv[0] ?: "<unknown>", str, cp);
     }
   else if (action & 2)
