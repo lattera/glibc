@@ -1,3 +1,18 @@
+2009-09-15  Roland McGrath  <roland@redhat.com>
+
+	* aclocal.m4 (GLIBC_PROVIDES): Add _AS_ECHO_PREPARE.
+	* nptl/sysdeps/pthread/configure: Regenerated.
+	* nptl/sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/x86_64/elf/configure: Regenerated.
+
+	* Makefile (autoconf-it): Set execute bit only on top-level configure.
+
+	* configure.in: Let add-ons set $libc_add_on_config_subdirs to have
+	the effect of AC_CONFIG_SUBDIRS relative to the add-on directory.
+	* aclocal.m4 (GLIBC_PROVIDES): Add AC_CONFIG_SUBDIRS.
+	* configure: Regenerated.
+
 2009-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c (main): Handle -- on command line.

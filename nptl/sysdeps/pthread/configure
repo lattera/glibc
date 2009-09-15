@@ -1,33 +1,33 @@
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
 
 if test "x$libc_cv_gcc___thread" != xyes; then
-  { { echo "$as_me:$LINENO: error: compiler support for __thread is required" >&5
-echo "$as_me: error: compiler support for __thread is required" >&2;}
+  { { $as_echo "$as_me:$LINENO: error: compiler support for __thread is required" >&5
+$as_echo "$as_me: error: compiler support for __thread is required" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 if test "x${libc_cv_visibility_attribute}" != xyes ||
    test "x${libc_cv_broken_visibility_attribute}" != xno; then
-  { { echo "$as_me:$LINENO: error: working compiler support for visibility attribute is required" >&5
-echo "$as_me: error: working compiler support for visibility attribute is required" >&2;}
+  { { $as_echo "$as_me:$LINENO: error: working compiler support for visibility attribute is required" >&5
+$as_echo "$as_me: error: working compiler support for visibility attribute is required" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
     case "$base_machine" in
     i386 | x86_64 | powerpc | s390)
-      { { echo "$as_me:$LINENO: error: CFI directive support in assembler is required" >&5
-echo "$as_me: error: CFI directive support in assembler is required" >&2;}
+      { { $as_echo "$as_me:$LINENO: error: CFI directive support in assembler is required" >&5
+$as_echo "$as_me: error: CFI directive support in assembler is required" >&2;}
    { (exit 1); exit 1; }; } ;;
     *) ;;
   esac
 fi
 
 
-{ echo "$as_me:$LINENO: checking for forced unwind support" >&5
-echo $ECHO_N "checking for forced unwind support... $ECHO_C" >&6; }
+{ $as_echo "$as_me:$LINENO: checking for forced unwind support" >&5
+$as_echo_n "checking for forced unwind support... " >&6; }
 if test "${libc_cv_forced_unwind+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -53,31 +53,35 @@ case "(($ac_try" in
   *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
   *) ac_try_echo=$ac_try;;
 esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
+$as_echo "$ac_try_echo") >&5
   (eval "$ac_link") 2>conftest.er1
   ac_status=$?
   grep -v '^ *+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } && {
 	 test -z "$ac_c_werror_flag" ||
 	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
+       } && test -s conftest$ac_exeext && {
+	 test "$cross_compiling" = yes ||
+	 $as_test_x conftest$ac_exeext
+       }; then
   libc_cv_forced_unwind=yes
 else
-  echo "$as_me: failed program was:" >&5
+  $as_echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
 	libc_cv_forced_unwind=no
 fi
 
+rm -rf conftest.dSYM
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 fi
-{ echo "$as_me:$LINENO: result: $libc_cv_forced_unwind" >&5
-echo "${ECHO_T}$libc_cv_forced_unwind" >&6; }
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_forced_unwind" >&5
+$as_echo "$libc_cv_forced_unwind" >&6; }
 if test $libc_cv_forced_unwind = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_FORCED_UNWIND 1
@@ -85,10 +89,10 @@ _ACEOF
 
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS -Werror -fexceptions"
-  { echo "$as_me:$LINENO: checking for C cleanup handling" >&5
-echo $ECHO_N "checking for C cleanup handling... $ECHO_C" >&6; }
+  { $as_echo "$as_me:$LINENO: checking for C cleanup handling" >&5
+$as_echo_n "checking for C cleanup handling... " >&6; }
 if test "${libc_cv_c_cleanup+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
     cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -115,39 +119,43 @@ case "(($ac_try" in
   *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
   *) ac_try_echo=$ac_try;;
 esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
+$as_echo "$ac_try_echo") >&5
   (eval "$ac_link") 2>conftest.er1
   ac_status=$?
   grep -v '^ *+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } && {
 	 test -z "$ac_c_werror_flag" ||
 	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
+       } && test -s conftest$ac_exeext && {
+	 test "$cross_compiling" = yes ||
+	 $as_test_x conftest$ac_exeext
+       }; then
   libc_cv_c_cleanup=yes
 else
-  echo "$as_me: failed program was:" >&5
+  $as_echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
 	libc_cv_c_cleanup=no
 fi
 
+rm -rf conftest.dSYM
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 fi
-{ echo "$as_me:$LINENO: result: $libc_cv_c_cleanup" >&5
-echo "${ECHO_T}$libc_cv_c_cleanup" >&6; }
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_c_cleanup" >&5
+$as_echo "$libc_cv_c_cleanup" >&6; }
   CFLAGS="$old_CFLAGS"
   if test $libc_cv_c_cleanup = no; then
-    { { echo "$as_me:$LINENO: error: the compiler must support C cleanup handling" >&5
-echo "$as_me: error: the compiler must support C cleanup handling" >&2;}
+    { { $as_echo "$as_me:$LINENO: error: the compiler must support C cleanup handling" >&5
+$as_echo "$as_me: error: the compiler must support C cleanup handling" >&2;}
    { (exit 1); exit 1; }; }
   fi
 else
-  { { echo "$as_me:$LINENO: error: forced unwind support is required" >&5
-echo "$as_me: error: forced unwind support is required" >&2;}
+  { { $as_echo "$as_me:$LINENO: error: forced unwind support is required" >&5
+$as_echo "$as_me: error: forced unwind support is required" >&2;}
    { (exit 1); exit 1; }; }
 fi

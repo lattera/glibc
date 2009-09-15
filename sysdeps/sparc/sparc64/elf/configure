@@ -3,10 +3,10 @@
 
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and linker.
-echo "$as_me:$LINENO: checking for sparc64 TLS support" >&5
-echo $ECHO_N "checking for sparc64 TLS support... $ECHO_C" >&6
+{ $as_echo "$as_me:$LINENO: checking for sparc64 TLS support" >&5
+$as_echo_n "checking for sparc64 TLS support... " >&6; }
 if test "${libc_cv_sparc64_tls+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
   cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
@@ -39,7 +39,7 @@ if { ac_try='${CC-cc} -o conftest.bin $CFLAGS conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   libc_cv_sparc64_tls=yes
 else
@@ -47,8 +47,8 @@ else
 fi
 rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_sparc64_tls" >&5
-echo "${ECHO_T}$libc_cv_sparc64_tls" >&6
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_sparc64_tls" >&5
+$as_echo "$libc_cv_sparc64_tls" >&6; }
 if test $libc_cv_sparc64_tls = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_TLS_SUPPORT 1
@@ -58,10 +58,10 @@ fi
 fi
 
 # Check for broken WDISP22 in the linker.
-echo "$as_me:$LINENO: checking for sparc64 ld WDISP22 handling" >&5
-echo $ECHO_N "checking for sparc64 ld WDISP22 handling... $ECHO_C" >&6
+{ $as_echo "$as_me:$LINENO: checking for sparc64 ld WDISP22 handling" >&5
+$as_echo_n "checking for sparc64 ld WDISP22 handling... " >&6; }
 if test "${libc_cv_sparc64_wdisp22+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
   echo 'bne foo; nop' > conftest1.s
 echo '.globl foo; .hidden foo; foo: nop' > conftest2.s
@@ -70,7 +70,7 @@ if { ac_try='${CC-cc} -nostdlib -shared $CFLAGS conftest1.s conftest2.s -o conft
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if readelf -r conftest.so | grep -q R_SPARC_WDISP22; then
     libc_cv_sparc64_wdisp22=broken
@@ -80,8 +80,8 @@ if { ac_try='${CC-cc} -nostdlib -shared $CFLAGS conftest1.s conftest2.s -o conft
 fi
 rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_sparc64_wdisp22" >&5
-echo "${ECHO_T}$libc_cv_sparc64_wdisp22" >&6
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_sparc64_wdisp22" >&5
+$as_echo "$libc_cv_sparc64_wdisp22" >&6; }
 if test $libc_cv_sparc64_wdisp22 != ok; then
   cat >>confdefs.h <<\_ACEOF
 #define BROKEN_SPARC_WDISP22 1

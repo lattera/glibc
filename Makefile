@@ -44,7 +44,7 @@ endif
 define autoconf-it
 @-rm -f $@.new
 $(AUTOCONF) $(ACFLAGS) $< > $@.new
-chmod a-w,a+x $@.new
+chmod a-w$(patsubst %,$(comma)a+x,$(filter .,$(@D))) $@.new
 mv -f $@.new $@
 $(autoconf-it-cvs)
 endef

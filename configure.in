@@ -6,6 +6,9 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+dnl This is here so we can set $subdirs directly based on configure fragments.
+AC_CONFIG_SUBDIRS()
+
 AC_CANONICAL_HOST
 
 AC_PROG_CC
@@ -458,6 +461,7 @@ if test x"$add_ons" != x; then
 
     libc_add_on_frag=$libc_add_on_srcdir/configure
     libc_add_on_canonical=
+    libc_add_on_config_subdirs=
     if test -r "$libc_add_on_frag"; then
       AC_MSG_NOTICE(running configure fragment for add-on $libc_add_on)
       libc_add_on_canonical=unknown
@@ -488,6 +492,20 @@ if test x"$add_ons" != x; then
 	  add_on_subdirs="$add_on_subdirs $d"
 	  test "$subdir_srcdir" = "\$(..)$d" || config_vars="$config_vars
 $d-srcdir = $subdir_srcdir"
+	done
+	for d in $libc_add_on_config_subdirs; do
+	  case "$d" in
+	  /*) AC_MSG_ERROR(dnl
+fragment uses absolute path in \$libc_add_on_config_subdirs) ;;
+	  esac
+	  if test ! -d "$libc_add_on_srcdir/$d"; then
+	    AC_MSG_ERROR(fragment wants to configure missing directory $d)
+	  fi
+	  case "$libc_add_on" in
+	  /*) AC_MSG_ERROR(dnl
+relative path required for add-on using \$libc_add_on_config_subdirs) ;;
+	  esac
+	  subdirs="$subdirs $libc_add_on/$d"
 	done
       }
     fi

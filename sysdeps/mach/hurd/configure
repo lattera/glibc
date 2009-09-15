@@ -13,8 +13,8 @@ _ACEOF
 inhibit_glue=yes
 
 if test "x$prefix" != x; then
-  { echo "$as_me:$LINENO: WARNING: --prefix= (empty) is required for GNU/Hurd to work normally" >&5
-echo "$as_me: WARNING: --prefix= (empty) is required for GNU/Hurd to work normally" >&2;}
+  { $as_echo "$as_me:$LINENO: WARNING: --prefix= (empty) is required for GNU/Hurd to work normally" >&5
+$as_echo "$as_me: WARNING: --prefix= (empty) is required for GNU/Hurd to work normally" >&2;}
 fi
 
 case "$machine" in
@@ -28,10 +28,10 @@ case "$machine" in
 esac
 
 
-echo "$as_me:$LINENO: checking Hurd header version" >&5
-echo $ECHO_N "checking Hurd header version... $ECHO_C" >&6
+{ $as_echo "$as_me:$LINENO: checking Hurd header version" >&5
+$as_echo_n "checking Hurd header version... " >&6; }
 if test "${libc_cv_hurd_version+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+  $as_echo_n "(cached) " >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -53,40 +53,37 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>conftest.er1
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
+$as_echo "$ac_try_echo") >&5
+  (eval "$ac_compile") 2>conftest.er1
   ac_status=$?
   grep -v '^ *+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
   libc_cv_hurd_version=ok
 else
-  echo "$as_me: failed program was:" >&5
+  $as_echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-libc_cv_hurd_version=bad
+	libc_cv_hurd_version=bad
 fi
-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
-echo "$as_me:$LINENO: result: $libc_cv_hurd_version" >&5
-echo "${ECHO_T}$libc_cv_hurd_version" >&6
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_hurd_version" >&5
+$as_echo "$libc_cv_hurd_version" >&6; }
 if test "x$libc_cv_hurd_version" != xok; then
-  { { echo "$as_me:$LINENO: error: Hurd headers not installed or too old" >&5
-echo "$as_me: error: Hurd headers not installed or too old" >&2;}
+  { { $as_echo "$as_me:$LINENO: error: Hurd headers not installed or too old" >&5
+$as_echo "$as_me: error: Hurd headers not installed or too old" >&2;}
    { (exit 1); exit 1; }; }
 fi

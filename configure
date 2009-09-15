@@ -727,7 +727,6 @@ submachine
 base_machine
 add_on_subdirs
 add_ons
-subdirs
 libc_cv_nss_crypt
 experimental_malloc
 multi_arch
@@ -758,6 +757,7 @@ build_os
 build_vendor
 build_cpu
 build
+subdirs
 target_alias
 host_alias
 build_alias
@@ -843,7 +843,8 @@ CPP
 CXX
 CXXFLAGS
 CCC'
-ac_subdirs_all=''
+ac_subdirs_all='
+'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2011,6 +2012,11 @@ ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
+
+
+
+
+subdirs="$subdirs "
 
 
 # Make sure we can run config.sub.
@@ -4007,8 +4013,6 @@ fi
 # An add-on can set this when it wants to disable the sanity check below.
 libc_config_ok=no
 
-
-
 subdirs="$subdirs "
 
 
@@ -4088,6 +4092,7 @@ $as_echo "$as_me: error: add-on directory \"$libc_add_on\" does not exist" >&2;}
 
     libc_add_on_frag=$libc_add_on_srcdir/configure
     libc_add_on_canonical=
+    libc_add_on_config_subdirs=
     if test -r "$libc_add_on_frag"; then
       { $as_echo "$as_me:$LINENO: running configure fragment for add-on $libc_add_on" >&5
 $as_echo "$as_me: running configure fragment for add-on $libc_add_on" >&6;}
@@ -4121,6 +4126,24 @@ $as_echo "$as_me: error: fragment must set \$libc_add_on_canonical" >&2;}
 	  add_on_subdirs="$add_on_subdirs $d"
 	  test "$subdir_srcdir" = "\$(..)$d" || config_vars="$config_vars
 $d-srcdir = $subdir_srcdir"
+	done
+	for d in $libc_add_on_config_subdirs; do
+	  case "$d" in
+	  /*) { { $as_echo "$as_me:$LINENO: error: fragment uses absolute path in \$libc_add_on_config_subdirs" >&5
+$as_echo "$as_me: error: fragment uses absolute path in \$libc_add_on_config_subdirs" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	  esac
+	  if test ! -d "$libc_add_on_srcdir/$d"; then
+	    { { $as_echo "$as_me:$LINENO: error: fragment wants to configure missing directory $d" >&5
+$as_echo "$as_me: error: fragment wants to configure missing directory $d" >&2;}
+   { (exit 1); exit 1; }; }
+	  fi
+	  case "$libc_add_on" in
+	  /*) { { $as_echo "$as_me:$LINENO: error: relative path required for add-on using \$libc_add_on_config_subdirs" >&5
+$as_echo "$as_me: error: relative path required for add-on using \$libc_add_on_config_subdirs" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	  esac
+	  subdirs="$subdirs $libc_add_on/$d"
 	done
       }
     fi
