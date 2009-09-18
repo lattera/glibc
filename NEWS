@@ -7,10 +7,10 @@ using `glibc' in the "product" field.
 
 Version 2.11
 
-* New interfaces: execvpe
+* New interfaces: execvpe, pthread_sigqueue
   Implemented by Ulrich Drepper.
 
-* checking version of longjmp added that fails if an uninitialized stack
+* Checking version of longjmp added that fails if an uninitialized stack
   frame would be created.  Implemented by Ulrich Drepper.
 
 * STT_GNU_IFUNC is now supported in static executables.
