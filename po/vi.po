@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.9.90\n"
+"Project-Id-Version: libc 2.10.1\n"
 "Report-Msgid-Bugs-To: http://www.gnu.org/software/libc/bugs.html\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-03-01 16:49+0930\n"
+"PO-Revision-Date: 2009-09-19 18:50+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
