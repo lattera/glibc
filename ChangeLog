@@ -1,3 +1,7 @@
+2009-09-19  Roland McGrath  <roland@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Remove unused variables.
+
 2009-09-15  Roland McGrath  <roland@redhat.com>
 
 	* aclocal.m4 (GLIBC_PROVIDES): Add _AS_ECHO_PREPARE.

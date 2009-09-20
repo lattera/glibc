@@ -686,10 +686,6 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 				  - (fp->_IO_read_end - fp->_IO_buf_base));
       if (offset >= start_offset && offset < fp->_offset)
 	{
-	  enum __codecvt_result status;
-	  struct _IO_codecvt *cd = fp->_codecvt;
-	  const char *read_ptr_copy;
-
 	  _IO_setg (fp, fp->_IO_buf_base,
 		    fp->_IO_buf_base + (offset - start_offset),
 		    fp->_IO_read_end);
