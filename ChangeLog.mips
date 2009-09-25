@@ -1,3 +1,12 @@
+2009-09-25  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(__SYSCALL_CLOBBERS): Add "hi" and "lo".
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+
 2009-08-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/____longjmp_chk.c: Remove.  Replaced by....
