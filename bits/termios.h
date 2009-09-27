@@ -124,8 +124,10 @@ struct termios
 #define	ICRNL	(1 << 8)	/* Map CR to NL on input.  */
 #define	IXON	(1 << 9)	/* Enable start/stop output control.  */
 #define	IXOFF	(1 << 10)	/* Enable start/stop input control.  */
-#ifdef	__USE_BSD
+#if defined __USE_BSD || defined __USE_UNIX98
 # define IXANY	(1 << 11)	/* Any character will restart after stop.  */
+#endif
+#ifdef	__USE_BSD
 # define IMAXBEL (1 << 13)	/* Ring bell when input queue is full.  */
 #endif
 #ifdef __USE_GNU
