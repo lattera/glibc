@@ -1,3 +1,8 @@
+2009-09-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Exclude binutils 2.X.  Support binutils 2.100
+	and XX.
+
 2009-09-25  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-reloc.c (RESOLVE_MAP): Always pass
