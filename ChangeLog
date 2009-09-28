@@ -1,3 +1,8 @@
+2009-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locale-spec.c (locale_special): If nothing matches
+	fail with an appropriate message.
+
 2009-09-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in: Exclude binutils 2.X.  Support binutils 2.100
