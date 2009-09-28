@@ -1,3 +1,8 @@
+2009-09-25  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-reloc.c (RESOLVE_MAP): Always pass
+	DL_LOOKUP_ADD_DEPENDENCY to _dl_lookup_symbol_x.
+
 2009-09-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/termios.h [__USE_UNIX98] (IXANY): Define macro.

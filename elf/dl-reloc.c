@@ -254,14 +254,11 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
 	     const struct r_found_version *v = NULL;			      \
-	     int flags = DL_LOOKUP_ADD_DEPENDENCY;			      \
 	     if ((version) != NULL && (version)->hash != 0)		      \
-	       {							      \
-		 v = (version);						      \
-		 flags = 0;						      \
-	       }							      \
+	       v = (version);						      \
 	     _lr = _dl_lookup_symbol_x (strtab + (*ref)->st_name, l, (ref),   \
-					scope, v, _tc, flags, NULL);	      \
+					scope, v, _tc,			      \
+					DL_LOOKUP_ADD_DEPENDENCY, NULL);      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
