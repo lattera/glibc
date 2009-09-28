@@ -1,3 +1,9 @@
+2009-09-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mkdirat.c: Include <hurd/fd.h>.
+        (mkdirat): Call __directory_name_split_at instead of
+        __directory_name_split.
+
 2009-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale-spec.c (locale_special): If nothing matches
