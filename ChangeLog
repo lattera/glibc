@@ -1,3 +1,8 @@
+2009-09-28  Andreas Schwab  <schwab@redhat.com>
+
+	* stdio-common/printf_fp.c: Check for and avoid integer overflows.
+	* stdio-common/vfprintf.c: Likewise.
+
 2009-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale-spec.c (locale_special): If nothing matches

@@ -1439,23 +1439,29 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    left = 1;
 	  }
 
-	if (width + 32 >= (int) (sizeof (work_buffer)
-				 / sizeof (work_buffer[0])))
+	if (__builtin_expect (width >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
+	  {
+	    __set_errno (ERANGE);
+	    done = -1;
+	    goto all_done;
+	  }
+
+	if (width >= sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
 	  {
 	    /* We have to use a special buffer.  The "32" is just a safe
 	       bet for all the output which is not counted in the width.  */
-	    if (__libc_use_alloca ((width + 32) * sizeof (CHAR_T)))
-	      workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-			 + (width + 32));
+	    size_t needed = ((size_t) width + 32) * sizeof (CHAR_T);
+	    if (__libc_use_alloca (needed))
+	      workend = (CHAR_T *) alloca (needed) + width + 32;
 	    else
 	      {
-		workstart = (CHAR_T *) malloc ((width + 32) * sizeof (CHAR_T));
+		workstart = (CHAR_T *) malloc (needed);
 		if (workstart == NULL)
 		  {
 		    done = -1;
 		    goto all_done;
 		  }
-		workend = workstart + (width + 32);
+		workend = workstart + width + 32;
 	      }
 	  }
       }
@@ -1465,22 +1471,29 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
 
-      if (width + 32 >= (int) (sizeof (work_buffer) / sizeof (work_buffer[0])))
+      if (__builtin_expect (width >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
+	{
+	  __set_errno (ERANGE);
+	  done = -1;
+	  goto all_done;
+	}
+
+      if (width >= sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
 	{
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
-	  if (__libc_use_alloca ((width + 32) * sizeof (CHAR_T)))
-	    workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-		       + (width + 32));
+	  size_t needed = ((size_t) width + 32) * sizeof (CHAR_T);
+	  if (__libc_use_alloca (needed))
+	    workend = (CHAR_T *) alloca (needed) + width + 32;
 	  else
 	    {
-	      workstart = (CHAR_T *) malloc ((width + 32) * sizeof (CHAR_T));
+	      workstart = (CHAR_T *) malloc (needed);
 	      if (workstart == NULL)
 		{
 		  done = -1;
 		  goto all_done;
 		}
-	      workend = workstart + (width + 32);
+	      workend = workstart + width + 32;
 	    }
 	}
       if (*f == L_('$'))
@@ -1510,18 +1523,18 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       else
 	prec = 0;
       if (prec > width
-	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
+	  && prec > sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
 	{
-	  if (__builtin_expect (prec > ~((size_t) 0) / sizeof (CHAR_T) - 31,
-				0))
+	  if (__builtin_expect (prec >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
 	    {
+	      __set_errno (ERANGE);
 	      done = -1;
 	      goto all_done;
 	    }
 	  size_t needed = ((size_t) prec + 32) * sizeof (CHAR_T);
 
 	  if (__libc_use_alloca (needed))
-	    workend = (((CHAR_T *) alloca (needed)) + ((size_t) prec + 32));
+	    workend = (CHAR_T *) alloca (needed) + prec + 32;
 	  else
 	    {
 	      workstart = (CHAR_T *) malloc (needed);
@@ -1530,7 +1543,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		  done = -1;
 		  goto all_done;
 		}
-	      workend = workstart + ((size_t) prec + 32);
+	      workend = workstart + prec + 32;
 	    }
 	}
       JUMP (*f, step2_jumps);

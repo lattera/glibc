@@ -891,8 +891,15 @@ ___printf_fp (FILE *fp,
        it is possible that we need two more characters in front of all the
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
-    size_t wbuffer_to_alloc = (2 + (size_t) chars_needed) * sizeof (wchar_t);
-    buffer_malloced = ! __libc_use_alloca (chars_needed * 2 * sizeof (wchar_t));
+    if (__builtin_expect (chars_needed >= (size_t) -1 / sizeof (wchar_t) - 2
+			  || chars_needed < fracdig_max, 0))
+      {
+	/* Some overflow occurred.  */
+	__set_errno (ERANGE);
+	return -1;
+      }
+    size_t wbuffer_to_alloc = (2 + chars_needed) * sizeof (wchar_t);
+    buffer_malloced = ! __libc_use_alloca (wbuffer_to_alloc);
     if (__builtin_expect (buffer_malloced, 0))
       {
 	wbuffer = (wchar_t *) malloc (wbuffer_to_alloc);
