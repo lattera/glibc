@@ -1,3 +1,8 @@
+2009-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Define F_SETOWN_EX
+	and F_GETOWN_EX.
+
 2009-09-25  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
