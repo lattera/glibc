@@ -1,3 +1,8 @@
+2009-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* locale/C-time.c: Revert week-1stday back to 19971130 and set
+	first_weekday to 1 and first_workday to 2.
+
 2009-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Define F_SETOWN_EX and
