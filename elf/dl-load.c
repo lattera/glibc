@@ -903,9 +903,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #endif
 
   if (mode & RTLD_NOLOAD)
-    /* We are not supposed to load the object unless it is already
-       loaded.  So return now.  */
-    return NULL;
+    {
+      /* We are not supposed to load the object unless it is already
+	 loaded.  So return now.  */
+      __close (fd);
+      return NULL;
+    }
 
   /* Print debugging message.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))

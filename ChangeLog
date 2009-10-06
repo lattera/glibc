@@ -1,3 +1,8 @@
+2009-10-06  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Close fd before
+	returning if RTLD_NOLOAD.
+
 2009-10-06  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr-c.c
