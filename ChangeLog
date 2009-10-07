@@ -1,3 +1,12 @@
+2009-10-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h
+	[NOT_IN_libc] (__get_cpu_features): Define it as a macro.
+	(HAS_CPU_FEATURE): New macro.
+	(HAS_SSE2, HAS_POPCOUNT, HAS_SSE4_2, HAS_FMA): Use it.
+	* sysdeps/x86_64/multiarch/init-arch.c
+	(__get_cpu_features): #undef it before definition.
+
 2009-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* locale/C-time.c: Revert week-1stday back to 19971130 and set

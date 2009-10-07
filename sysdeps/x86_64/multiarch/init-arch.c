@@ -77,6 +77,7 @@ __init_cpu_features (void)
     __cpu_features.kind = arch_kind_other;
 }
 
+#undef __get_cpu_features
 
 const struct cpu_features *
 __get_cpu_features (void)
