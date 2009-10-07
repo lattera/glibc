@@ -1,9 +1,11 @@
 #include "init-arch.h"
 
 #define STRSTR __strstr_sse2
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(name) \
+#ifdef SHARED
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name) \
   __hidden_ver1 (__strstr_sse2, __GI_strstr, __strstr_sse2);
+#endif
 
 #include "string/strstr.c"
 

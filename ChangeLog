@@ -1,5 +1,11 @@
 2009-10-06  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/x86_64/multiarch/strstr-c.c
+	[! SHARED]: Omit libc_hidden_builtin_def fiddling.
+
+	* sysdeps/x86_64/multiarch/strcasestr-c.c: Remove
+	libc_hidden_builtin_def fiddling, does not apply to strcasestr at all.
+
 	* sysdeps/x86_64/multiarch/init-arch.h
 	[NOT_IN_libc] (__get_cpu_features): Define it as a macro.
 	(HAS_CPU_FEATURE): New macro.
