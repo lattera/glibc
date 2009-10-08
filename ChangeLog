@@ -1,5 +1,9 @@
 2009-10-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10730]
+	* stdlib/random_r.c (__initstate_r): Remove duplicate __set-errno.
+	Patch in part by Steve Ward <planet36@gmail.com>.
+
 	[BZ #10731]
 	* stdlib/rand_r.c: Fix typo.
 

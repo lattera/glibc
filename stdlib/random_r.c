@@ -255,10 +255,8 @@ __initstate_r (seed, arg_state, n, buf)
   else if (n < BREAK_1)
     {
       if (n < BREAK_0)
-	{
-	  __set_errno (EINVAL);
-	  goto fail;
-	}
+	goto fail;
+
       type = TYPE_0;
     }
   else
