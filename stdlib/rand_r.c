@@ -1,5 +1,5 @@
-/* Reentrant random function frm POSIX.1c.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+/* Reentrant random function from POSIX.1c.
+   Copyright (C) 1996, 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
