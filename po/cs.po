@@ -22,9 +22,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.9.90\n"
+"Project-Id-Version: libc 2.10.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-03-02 10:03+0100\n"
+"PO-Revision-Date: 2009-10-08 21:33+0200\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -4072,7 +4072,7 @@ msgid ""
 msgstr ""
 "konfigurace nscd:\n"
 "\n"
-"%15d  ladící úroveň serveru\n"
+"%15d  úroveň ladění serveru\n"
 
 #: nscd/nscd_stat.c:230
 #, c-format
@@ -4622,11 +4622,10 @@ msgstr "Neznámá chyba "
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
-# Signál reálného času %d"
 #: string/strsignal.c:65
 #, c-format
 msgid "Real-time signal %d"
-msgstr "Real-timeový signál %d"
+msgstr "Signál reálného času %d"
 
 #: string/strsignal.c:69
 #, c-format
@@ -5313,11 +5312,11 @@ msgstr "Potomek skončil (SIGCHLD)"
 
 #: sysdeps/generic/siglist.h:47 sysdeps/unix/siglist.c:47
 msgid "Stopped (tty input)"
-msgstr "Pozastaven (tty input) (SIGTTIN)"
+msgstr "Pozastaven (vstup TTY) (SIGTTIN)"
 
 #: sysdeps/generic/siglist.h:48 sysdeps/unix/siglist.c:48
 msgid "Stopped (tty output)"
-msgstr "Pozastaven (tty output) (SIGTTOU)"
+msgstr "Pozastaven (výstup TTY) (SIGTTOU)"
 
 #: sysdeps/generic/siglist.h:49 sysdeps/unix/siglist.c:49
 msgid "I/O possible"
@@ -5361,7 +5360,7 @@ msgstr "Chybné volání systému (SIGSYS)"
 
 #: sysdeps/generic/siglist.h:66
 msgid "Stack fault"
-msgstr "Porušen zásobník (SIGSTKFLT)\""
+msgstr "Porušen zásobník (SIGSTKFLT)"
 
 #: sysdeps/generic/siglist.h:69
 msgid "Information request"
@@ -5373,7 +5372,7 @@ msgstr "Výpadek napájení (SIGPWR)"
 
 #: sysdeps/generic/siglist.h:74 sysdeps/unix/siglist.c:55
 msgid "Resource lost"
-msgstr "Prostředek byl ztracen"
+msgstr "Prostředek byl ztracen (SIGLOST)"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
