@@ -80,24 +80,26 @@ __libc_csu_init (int argc, char **argv, char **envp)
   /* For dynamically linked executables the preinit array is executed by
      the dynamic linker (before initializing any shared object.  */
 
-#if defined USE_MULTIARCH && !defined LIBC_NONSHARED
-# ifdef ELF_MACHINE_IRELA
+#ifndef LIBC_NONSHARED
+# ifdef USE_MULTIARCH
+#  ifdef ELF_MACHINE_IRELA
   {
     const size_t size = __rela_iplt_end - __rela_iplt_start;
     for (size_t i = 0; i < size; i++)
       elf_irela (&__rela_iplt_start [i]);
   }
-# endif
+#  endif
 
-# ifdef ELF_MACHINE_IREL
+#  ifdef ELF_MACHINE_IREL
   {
     const size_t size = __rel_iplt_end - __rel_iplt_start;
     for (size_t i = 0; i < size; i++)
       elf_irel (&__rel_iplt_start [i]);
   }
+#  endif
 # endif
 
-  /* For static executables, preinit happens rights before init.  */
+  /* For static executables, preinit happens right before init.  */
   {
     const size_t size = __preinit_array_end - __preinit_array_start;
     size_t i;
