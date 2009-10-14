@@ -1,0 +1,71 @@
+/* Copyright (C) 2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/* longjmp is implemented in terms of the setcontext trap on Linux/Sparc64.  */
+
+#include <sysdep.h>
+
+/* Offsets into the jmp_buf structure.  */
+
+#define O_mask_was_saved	512
+#define O_gregs			32
+#define O_g1			(O_gregs + 4*8)
+#define O_sp			(O_gregs + 17*8)
+
+.section .rodata.str1.1,"aMS",@progbits,1
+	.type	longjmp_msg,@object
+longjmp_msg:
+	.string "longjmp causes uninitialized stack frame"
+	.size	longjmp_msg, .-longjmp_msg
+
+	.text
+ENTRY (____longjmp_chk)
+	ldx	[%o0 + O_sp], %o2
+	cmp	%sp, %o2
+	bleu,pt	%xcc, .Lok
+	 nop
+
+	save	%sp, -128, %sp
+
+#ifdef PIC
+1:	call	2f
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+2:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+	add	%l7, %o7, %l7
+#endif
+	sethi	%hi(longjmp_msg), %o0
+	or	%o0, %lo(longjmp_msg), %o0
+#ifdef PIC
+	ldx	[%l7 + %o0], %o0
+#endif
+	call	HIDDEN_JUMPTARGET(__fortify_fail)
+	 nop
+
+	restore
+
+.Lok:
+	/* Modify the context with the value we want to return.  */
+	movre	%o1, 1, %o1
+	stx	%o1, [%o0 + O_g1]
+
+	/* Let setcontext know if we want to modify the current sigmask. */
+	ld	[%o0 + O_mask_was_saved], %o1
+
+	/* And bamf back to where we belong!  */
+	ta	0x6f
+END(____longjmp_chk)

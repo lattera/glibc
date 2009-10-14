@@ -1,3 +1,8 @@
+2009-10-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/____longjmp_chk.S: New file.
+
 2009-10-13  Andreas Schwab  <schwab@redhat.com>
 
 	* csu/elf-init.c (__libc_csu_init): Run preinit array even if

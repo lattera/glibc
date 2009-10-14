@@ -1,0 +1,113 @@
+/* Copyright (C) 2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+#include <jmpbuf-offsets.h>
+
+#define ENV(base,reg) [%base + (reg * 4)]
+#define ST_FLUSH_WINDOWS 3
+#define RW_FP [%fp + 0x48]
+
+.section .rodata.str1.1,"aMS",@progbits,1
+	.type	longjmp_msg,@object
+longjmp_msg:
+	.string "longjmp causes uninitialized stack frame"
+	.size	longjmp_msg, .-longjmp_msg
+
+	.text
+ENTRY (____longjmp_chk)
+	ld	ENV(o0,JB_SP), %g5
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (%g5, %g5, %g4)
+#endif
+
+	cmp	%sp, %g5
+	bleu	.Lok_norestore
+	 nop
+
+	save	%sp, -80, %sp
+
+	clr	%o0
+	add	%sp, 64, %o1
+	set	__NR_sigaltstack, %g1
+	ta	0x10
+	bcs	.Lok
+	 ld	[%sp + 64 + 4], %o2
+	andcc	%o2, 0x1, %g0
+	be	.Lfail
+	 ld	[%sp + 64 + 0], %o0
+
+	ld	[%sp + 64 + 8], %o1
+	add	%o0, %o1, %o0
+	sub	%o0, %g3, %o0
+	cmp	%o1, %o0
+	bgeu	.Lok
+	 nop
+
+.Lfail:
+#ifdef PIC
+1:	call	2f
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+2:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+	add	%l7, %o7, %l7
+#endif
+	sethi	%hi(longjmp_msg), %o0
+	or	%o0, %lo(longjmp_msg), %o0
+#ifdef PIC
+	ld	[%l7 + %o0], %o0
+#endif
+	call	HIDDEN_JUMPTARGET(__fortify_fail)
+	 nop
+
+.Lok:
+	restore
+
+.Lok_norestore:
+	ld	ENV(o0,JB_FP), %g3	/* Cache target FP in register %g3.  */
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE2 (%g3, %g3, %g4)
+#endif
+
+	mov %o0, %g1		/* ENV in %g1 */
+	orcc %o1, %g0, %g2	/* VAL in %g2 */
+	be,a 0f			/* Branch if zero; else skip delay slot.  */
+	 mov 1, %g2		/* Delay slot only hit if zero: VAL = 1.  */
+0:
+
+	/*
+	 * Do a "flush register windows trap".  The trap handler in the
+	 * kernel writes all the register windows to their stack slots, and
+	 * marks them all as invalid (needing to be sucked up from the
+	 * stack when used).  This ensures that all information needed to
+	 * unwind to these callers is in memory, not in the register
+	 * windows.
+	 */
+	ta	ST_FLUSH_WINDOWS
+#ifdef PTR_DEMANGLE
+	ld	ENV(g1,JB_PC), %g1 /* Set return PC. */
+	PTR_DEMANGLE2 (%o7, %g1, %g4)
+#else
+	ld	ENV(g1,JB_PC), %o7 /* Set return PC. */
+#endif
+	mov	%g5, %fp
+	sub	%fp, 64, %sp	/* Allocate a register frame. */
+	st	%g3, RW_FP	/* Set saved FP on restore below. */
+	retl
+	 restore %g2, 0, %o0	/* Restore values from above register frame. */
+
+END(____longjmp_chk)
