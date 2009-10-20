@@ -1,3 +1,14 @@
+2009-10-19  Andreas Schwab  <schwab@redhat.com>
+
+	* include/math.h: Add hidden protos for __exp/__expf/__expl.
+	* sysdeps/ieee754/dbl-64/w_exp.c: Add hidden alias.
+	* sysdeps/ieee754/flt-32/w_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c: Likewise.
+	* sysdeps/i386/fpu/s_expm1.S: Call __exp to handle overflow.
+	* sysdeps/i386/fpu/s_expm1f.S: Call __expf to handle overflow.
+	* sysdeps/i386/fpu/s_expm1l.S: Call __expl instead of
+	__ieee751_expl to handle overflow.
+
 2009-10-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: New file.

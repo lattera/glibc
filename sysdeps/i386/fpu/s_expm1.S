@@ -22,6 +22,7 @@
 
 	/* Using: e^x - 1 = 2^(x * log2(e)) - 1 */
 
+#include <sysdep.h>
 #include <machine/asm.h>
 
 #ifdef __ELF__
@@ -48,6 +49,11 @@ l2e:	.tfloat 1.442695040888963407359924681002
 
 	.text
 ENTRY(__expm1)
+	movzwl	4+6(%esp), %eax
+	xorb	$0x80, %ah	// invert sign bit (now 1 is "positive")
+	cmpl	$0xc086, %eax	// is num >= 704?
+	jae	HIDDEN_JUMPTARGET (__exp)
+
 	fldl	4(%esp)		// x
 	fxam			// Is NaN or +-Inf?
 	fstsw	%ax
