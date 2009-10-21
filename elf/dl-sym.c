@@ -191,6 +191,11 @@ RTLD_NEXT used in code not dynamically loaded"));
 #endif
 	value = DL_SYMBOL_ADDRESS (result, ref);
 
+      /* Resolve indirect function address.  */
+      if (__builtin_expect (ELFW(ST_TYPE) (ref->st_info) == STT_GNU_IFUNC, 0))
+	value
+	  = ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (value)) ();
+
 #ifdef SHARED
       /* Auditing checkpoint: we have a new binding.  Provide the
 	 auditing libraries the possibility to change the value and

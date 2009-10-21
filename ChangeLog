@@ -1,3 +1,7 @@
+2009-10-21  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-sym.c (do_sym): Resolve STT_GNU_IFUNC symbols.
+
 2009-10-19  Andreas Schwab  <schwab@redhat.com>
 
 	* include/math.h: Add hidden protos for __exp/__expf/__expl.
