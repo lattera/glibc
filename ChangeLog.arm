@@ -1,3 +1,12 @@
+2009-10-22  Daniel Gutson  <dgutson@codesourcery.com>
+
+	* sysdeps/arm/sysdep.h: (Tag_ABI_align8_preserved,
+	Tag_ABI_align8_needed): Attributes added.
+	* sysdeps/arm/elf/start.S: Likewise.
+	* sysdeps/arm/eabi/abi-note.S: New file.
+	* sysdeps/unix/sysv/linux/arm/eabi/internal_accept4.S: New
+	file.
+
 2009-10-22  Andrew Stubbs  <ams@codesourcery.com>
             Julian Brown  <julian@codesourcery.com>
 
