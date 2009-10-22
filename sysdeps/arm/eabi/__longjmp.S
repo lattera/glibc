@@ -59,12 +59,12 @@ ENTRY (__longjmp)
 	beq	Lno_vfp
 
 	/* Restore the VFP registers.  */
-	/* Following instruction is fldmiax ip!, {d8-d15}.  */
-	ldc	p11, cr8, [r12], #68
+	/* Following instruction is vldmia ip!, {d8-d15}.  */
+	ldc	p11, cr8, [r12], #64
 	/* Restore the floating-point status register.  */
-	ldr     r1, [ip], #4
-	/* Following instruction is fmxr fpscr, r1.  */
-	mcr	p10, 7, r1, cr1, cr0, 0
+	ldr     a3, [ip], #4
+	/* Following instruction is fmxr fpscr, a3.  */
+	mcr	p10, 7, a3, cr1, cr0, 0
 Lno_vfp:
 
 	tst	a2, #HWCAP_ARM_IWMMXT

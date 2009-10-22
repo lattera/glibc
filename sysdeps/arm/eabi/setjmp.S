@@ -52,13 +52,15 @@ ENTRY (__sigsetjmp)
 	tst	a3, #HWCAP_ARM_VFP
 	beq	Lno_vfp
 
-	/* Store the VFP registers.  */
-	/* Following instruction is fstmiax ip!, {d8-d15}.  */
-	stc	p11, cr8, [r12], #68
+	/* Store the VFP registers.
+	   Don't use VFP instructions directly because this code
+	   is used in non-VFP multilibs.  */
+	/* Following instruction is vstmia ip!, {d8-d15}.  */
+	stc	p11, cr8, [ip], #64
 	/* Store the floating-point status register.  */
-	/* Following instruction is fmrx r2, fpscr.  */
-	mrc	p10, 7, r2, cr1, cr0, 0
-	str	r2, [ip], #4
+	/* Following instruction is vmrs a4, fpscr.  */
+	mrc	p10, 7, a4, cr1, cr0, 0
+	str	a4, [ip], #4
 Lno_vfp:
 
 	tst	a3, #HWCAP_ARM_IWMMXT

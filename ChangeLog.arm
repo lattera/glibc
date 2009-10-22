@@ -1,3 +1,12 @@
+2009-10-22  Andrew Stubbs  <ams@codesourcery.com>
+            Julian Brown  <julian@codesourcery.com>
+
+	* sysdeps/arm/eabi/setjmp.S (__sigsetjmp): Replace deprecated
+	instruction fstmiax with vstmia.
+	Correct register conflict and comment.
+	* sysdeps/arm/eabi/__longjmp.S (__longjmp): Use vldmia not fldmiax.
+	Don't clobber r1/a2 register before testing IWMMXT hwcap.
+
 2009-10-22  Julian Brown  <julian@codesourcery.com>
 
 	* sysdeps/arm/elf/start.S (_start): Avoid dependency on PC pipeline
