@@ -22,6 +22,7 @@
 
 	/* Using: e^x - 1 = 2^(x * log2(e)) - 1 */
 
+#include <sysdep.h>
 #include <machine/asm.h>
 
 #ifdef __ELF__
@@ -51,7 +52,7 @@ ENTRY(__expm1l)
 	movzwl	4+8(%esp), %eax	// load sign bit and 15-bit exponent
 	xorb	$0x80, %ah	// invert sign bit (now 1 is "positive")
 	cmpl	$0xc006, %eax	// is num positive and exp >= 6 (number is >= 128.0)?
-	jae     __ieee754_expl	// (if num is denormal, it is at least >= 64.0)
+	jae	HIDDEN_JUMPTARGET (__expl) // (if num is denormal, it is at least >= 64.0)
 
 	fldt	4(%esp)		// x
 	fxam			// Is NaN or +-Inf?

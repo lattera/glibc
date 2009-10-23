@@ -51,6 +51,7 @@ u_threshold= -7.45133219101941108420e+02;  /* 0xc0874910, 0xD52D3051 */
 	return z;
 #endif
 }
+hidden_def (__exp)
 weak_alias (__exp, exp)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__exp, __expl)

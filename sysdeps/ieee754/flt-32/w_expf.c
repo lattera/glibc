@@ -56,4 +56,5 @@ u_threshold= -1.0397208405e+02;  /* 0xc2cff1b5 */
 	return z;
 #endif
 }
+hidden_def (__expf)
 weak_alias (__expf, expf)
