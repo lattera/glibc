@@ -1,3 +1,11 @@
+2009-10-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strend-sse4.
+	* sysdeps/x86_64/multiarch/strchr.S: New file.
+	* sysdeps/x86_64/multiarch/strend-sse4.S: New file.
+	* sysdeps/x86_64/multiarch/strrchr.S: New file.
+
 2009-10-21  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-sym.c (do_sym): Resolve STT_GNU_IFUNC symbols.
