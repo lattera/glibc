@@ -82,7 +82,7 @@ END(strrchr)
 
 
 	.section .text.sse4.2,"ax",@progbits
-	.align 	16
+	.align	16
 	.type	__strrchr_sse42, @function
 __strrchr_sse42:
 	cfi_startproc
@@ -141,10 +141,10 @@ L(match_or_eos):
 L(match_no_eos):
 	leaq	(%r8,%rcx), %rax
 	addq	$16, %r8
-        jmp     L(loop)
+	jmp     L(loop)
 	.p2align 4
 L(had_eos):
-        jnc     L(exit)
+	jnc     L(exit)
 	leaq	(%r8,%rcx), %rax
 	.p2align 4
 L(exit):

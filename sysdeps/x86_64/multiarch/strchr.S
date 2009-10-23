@@ -77,7 +77,7 @@ END(strchr)
    X for case 1.  */
 
 	.section .text.sse4.2,"ax",@progbits
-	.align 	16
+	.align	16
 	.type	__strchr_sse42, @function
 __strchr_sse42:
 	cfi_startproc
@@ -129,16 +129,16 @@ L(loop):
 	addq	$16, %r8
 L(aligned_start):
 	pcmpistri	$0x2, (%r8), %xmm1
-	jbe 	L(wrap)
+	jbe	L(wrap)
 	addq	$16, %r8
 	pcmpistri	$0x2, (%r8), %xmm1
-	jbe 	L(wrap)
-	addq 	$16, %r8
-        pcmpistri       $0x2, (%r8), %xmm1
-  	jbe     L(wrap)
+	jbe	L(wrap)
 	addq	$16, %r8
-	pcmpistri 	$0x2, (%r8), %xmm1
-	jbe 	L(wrap)
+	pcmpistri       $0x2, (%r8), %xmm1
+	jbe     L(wrap)
+	addq	$16, %r8
+	pcmpistri	$0x2, (%r8), %xmm1
+	jbe	L(wrap)
 	jmp	L(loop)
 L(wrap):
 	jc	L(loop_exit)

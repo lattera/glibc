@@ -54,16 +54,16 @@ LC_COLLATE
 % see rh bug 482881
 copy "iso14651_t1"
 
-collating-symbol  <teh_with_ring>	
+collating-symbol  <teh_with_ring>
 collating-symbol  <hah_with_hamza_above>
-collating-symbol  <hah_with_three_dots>	
+collating-symbol  <hah_with_three_dots>
 collating-symbol  <dal_with_ring>
 collating-symbol  <reh_with_ring>
-collating-symbol <reh_with_dot_below_and_above>	
+collating-symbol <reh_with_dot_below_and_above>
 collating-symbol  <seen_with_dot_below_and_above>
 collating-symbol  <kaaf_with_ring>
 collating-symbol  <noon_with_ring>
-collating-symbol  <farsi_yeh>	
+collating-symbol  <farsi_yeh>
 collating-symbol  <arabic_letter_e>
 collating-symbol  <yeh_with_tail>
 
@@ -105,25 +105,25 @@ reorder-after <alef_maksura>
 reorder-after <U062A>
 <U067C>  <teh_with_ring>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U062C> 
+reorder-after <U062C>
 <U0681> <hah_with_hamza_above>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U0686> 
+reorder-after <U0686>
 <U0685> <hah_with_three_dots>;<BAS>;<MIN>;IGNORE
 
-reorder-after  <U062F> 
+reorder-after  <U062F>
 <U0689> <dal_with_ring>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U0631> 
+reorder-after <U0631>
 <U0693> <reh_with_ring>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U0698> 
+reorder-after <U0698>
 <U0696> <reh_with_dot_below_and_above>;<BAS>;<MIN>;IGNORE
 
 reorder-after <U0634>
 <U069A> <seen_with_dot_below_and_above>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U06A9> 
+reorder-after <U06A9>
 <U06AB> <kaaf_with_ring>;<BAS>;<MIN>;IGNORE
 
 reorder-after  <U0646>
@@ -280,4 +280,3 @@ LC_TELEPHONE
 END LC_TELEPHONE
 
 %%%%%%%%%%%%%%%%%%%% locale definition file "ps_AF" ends %%%%%%%%%%%%%%%%%%%%%
-
