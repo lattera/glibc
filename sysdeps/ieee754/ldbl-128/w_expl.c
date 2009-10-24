@@ -55,4 +55,5 @@ u_threshold= -1.1433462743336297878837243843452621503410E4;
 	return z;
 #endif
 }
+hidden_def (__expl)
 weak_alias (__expl, expl)
