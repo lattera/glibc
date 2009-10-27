@@ -38,8 +38,8 @@ static char rcsid[] = "$NetBSD: $";
 	long double z;
 	z = __ieee754_coshl(x);
 	if(_LIB_VERSION == _IEEE_ || __isnanl(x)) return z;
-	if(!__finite(z) && __finite(x)) {
-	        return __kernel_standard(x,x,205); /* cosh overflow */
+	if(!__finitel(z) && __finitel(x)) {
+		return __kernel_standard(x,x,205); /* cosh overflow */
 	} else
 	    return z;
 #endif
