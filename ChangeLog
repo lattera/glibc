@@ -1,3 +1,16 @@
+2009-10-28  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (dist-prepare): New target.
+	(tag-for-dist): Target removed.
+	(glibc-%.tar): Pattern rule removed.
+	(%.tar): New pattern rule, does simple use of git archive.
+	(dist-version): Remove variable definition.
+	(dist): Just depend on that.  Add .tar.xz dependency.
+	If dist-version variable not set on command line, depend on
+	dist-prepare, re-invoke with dist-version set via git describe.
+
+	* Makerules (%.xz): New pattern rule.
+
 2009-10-28  Alan Modra  <amodra@bigpond.net.au>
 
 	* elf/ifuncdep2.c: Include ifunc-sel.h.

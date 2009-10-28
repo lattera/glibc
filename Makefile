@@ -347,51 +347,38 @@ TAGS:
 	| $(ETAGS) -o $@ -
 
 # Make the distribution tarfile.
-.PHONY: dist tag-for-dist
+.PHONY: dist dist-prepare
 
 generated := $(generated) stubs.h
 
-files-for-dist := README FAQ INSTALL NOTES configure
+files-for-dist := README FAQ INSTALL NOTES configure ChangeLog NEWS
 
-tag-of-stem = glibc-$(subst .,_,$*)
-dist-selector = -r $(tag-of-stem)
+# Regenerate stuff, then error if these things are not committed yet.
+dist-prepare: $(files-for-dist)
+	conf=`find sysdeps $(addsuffix /sysdeps,$(sysdeps-add-ons)) \
+		   -name configure`; \
+	$(MAKE) $$conf && \
+	git diff --stat HEAD -- $^ $$conf \
+	| $(AWK) '{ print; rc=1 } END { exit rc }'
 
-# Add-ons in the main repository but distributed in their own tar files.
-dist-separate = libidn
-
-glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
-					      $(foreach D,$(dist-separate),\
-							$D/configure)
-	@rm -fr glibc-$*
-	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(sysdeps-add-ons)) \
-			 -name configure`
-	cvs $(CVSOPTS) -Q export -d glibc-$* $(dist-selector) libc
-# Touch all the configure scripts going into the tarball since cvs export
-# might have delivered configure.in newer than configure.
-	find glibc-$* -name configure -print | xargs touch
-	$(dist-do-separate-dirs)
-	tar cf glibc-$*.tar glibc-$*
-	rm -fr glibc-$*
-define dist-do-separate-dirs
-$(foreach dir,$(dist-separate),
-	@rm -fr glibc-$(dir)-$*
-	mv glibc-$*/$(dir) glibc-$(dir)-$*
-	tar cf glibc-$(dir)-$*.tar glibc-$(dir)-$*
-	rm -fr glibc-$(dir)-$*
-)
-endef
+%.tar: FORCE
+	git archive --prefix=$*/ $* > $@.new
+	mv -f $@.new $@
 
 # Do `make dist dist-version=X.Y.Z' to make tar files of an older version.
-dist-version = $(version)
 
-dist: $(foreach Z,.bz2 .gz,glibc-$(dist-version).tar$Z \
-		           $(foreach D,$(dist-separate),\
-				     glibc-$D-$(dist-version).tar$Z))
+ifneq (,$(strip $(dist-version)))
+dist: $(foreach Z,.bz2 .gz .xz,$(dist-version).tar$Z)
 	md5sum $^
-
-tag-for-dist: tag-$(dist-version)
-tag-%: $(files-for-dist)
-	cvs $(CVSOPTS) -Q tag -c $(tag-of-stem)
+else
+dist: dist-prepare
+	@if v=`git describe`; then \
+	  echo Distribution version $$v; \
+	  $(MAKE) dist dist-version=$$v; \
+	else \
+	  false; \
+	fi
+endif
 
 define format-me
 @rm -f $@
