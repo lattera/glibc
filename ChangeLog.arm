@@ -1,3 +1,8 @@
+2009-10-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define F_OWNER_* and
+	f_owner_ex.
+
 2009-10-22  Daniel Gutson  <dgutson@codesourcery.com>
 
 	* sysdeps/arm/sysdep.h: (Tag_ABI_align8_preserved,
