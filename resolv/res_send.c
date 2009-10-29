@@ -219,33 +219,33 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 {
 	int ns;
 
-        if (inp->sin6_family == AF_INET) {
-            struct sockaddr_in *in4p = (struct sockaddr_in *) inp;
+	if (inp->sin6_family == AF_INET) {
+	    struct sockaddr_in *in4p = (struct sockaddr_in *) inp;
 	    in_port_t port = in4p->sin_port;
 	    in_addr_t addr = in4p->sin_addr.s_addr;
 
-            for (ns = 0;  ns < MAXNS;  ns++) {
-                const struct sockaddr_in *srv =
+	    for (ns = 0;  ns < MAXNS;  ns++) {
+		const struct sockaddr_in *srv =
 		    (struct sockaddr_in *)EXT(statp).nsaddrs[ns];
 
-                if ((srv != NULL) && (srv->sin_family == AF_INET) &&
-                    (srv->sin_port == port) &&
-                    (srv->sin_addr.s_addr == INADDR_ANY ||
-                     srv->sin_addr.s_addr == addr))
-                    return (1);
-            }
-        } else if (inp->sin6_family == AF_INET6) {
-            for (ns = 0;  ns < MAXNS;  ns++) {
-                const struct sockaddr_in6 *srv = EXT(statp).nsaddrs[ns];
-                if ((srv != NULL) && (srv->sin6_family == AF_INET6) &&
-                    (srv->sin6_port == inp->sin6_port) &&
-                    !(memcmp(&srv->sin6_addr, &in6addr_any,
-                             sizeof (struct in6_addr)) &&
-                      memcmp(&srv->sin6_addr, &inp->sin6_addr,
-                             sizeof (struct in6_addr))))
-                    return (1);
-            }
-        }
+		if ((srv != NULL) && (srv->sin_family == AF_INET) &&
+		    (srv->sin_port == port) &&
+		    (srv->sin_addr.s_addr == INADDR_ANY ||
+		     srv->sin_addr.s_addr == addr))
+		    return (1);
+	    }
+	} else if (inp->sin6_family == AF_INET6) {
+	    for (ns = 0;  ns < MAXNS;  ns++) {
+		const struct sockaddr_in6 *srv = EXT(statp).nsaddrs[ns];
+		if ((srv != NULL) && (srv->sin6_family == AF_INET6) &&
+		    (srv->sin6_port == inp->sin6_port) &&
+		    !(memcmp(&srv->sin6_addr, &in6addr_any,
+			     sizeof (struct in6_addr)) &&
+		      memcmp(&srv->sin6_addr, &inp->sin6_addr,
+			     sizeof (struct in6_addr))))
+		    return (1);
+	    }
+	}
 	return (0);
 }
 
@@ -445,7 +445,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				    malloc(sizeof (struct sockaddr_in6));
 			if (EXT(statp).nsaddrs[n] != NULL) {
 				memset (mempcpy(EXT(statp).nsaddrs[n],
-						&statp->nsaddr_list[ns],
+						&statp->nsaddr_list[n],
 						sizeof (struct sockaddr_in)),
 					'\0',
 					sizeof (struct sockaddr_in6)
@@ -1003,7 +1003,7 @@ send_dg(res_state statp,
 	int orig_anssizp = *anssizp;
 	struct timespec now, timeout, finish;
 	struct pollfd pfd[1];
-        int ptimeout;
+	int ptimeout;
 	struct sockaddr_in6 from;
 	int resplen, n;
 
@@ -1050,7 +1050,7 @@ send_dg(res_state statp,
 		evSubTime(&timeout, &finish, &now);
 		need_recompute = 0;
 	}
-        /* Convert struct timespec in milliseconds.  */
+	/* Convert struct timespec in milliseconds.  */
 	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
 
 	n = 0;
@@ -1244,7 +1244,7 @@ send_dg(res_state statp,
 			/* record the error */
 			statp->_flags |= RES_F_EDNS0ERR;
 			goto err_out;
-        }
+	}
 #endif
 		if (!(statp->options & RES_INSECURE2)
 		    && (recvresp1 || !res_queriesmatch(buf, buf + buflen,

@@ -1,3 +1,8 @@
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (__libc_res_nsend): Fix copying of IPv4 server
+	addresses.  Patch by Petar Bogdanovic <petar@smokva.net>.
+
 2009-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/w_expl.c: Add hidden_def (__expl).
