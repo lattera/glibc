@@ -1,3 +1,8 @@
+2009-10-29  Andreas Schwab  <schwab@redhat.com>
+
+	* malloc/memusage.c (update_data): Fix index wraparound handling
+	so that buffer_cnt is actually reset.
+
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10784]

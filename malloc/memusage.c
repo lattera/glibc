@@ -163,15 +163,16 @@ update_data (struct header *result, size_t len, size_t old_len)
   if (fd != -1)
     {
       uatomic32_t idx = catomic_exchange_and_add (&buffer_cnt, 1);
-      if (idx >= 2 * buffer_size)
+      if (idx + 1 >= 2 * buffer_size)
 	{
 	  /* We try to reset the counter to the correct range.  If
 	     this fails because of another thread increasing the
 	     counter it does not matter since that thread will take
 	     care of the correction.  */
-	  uatomic32_t reset = idx % (2 * buffer_size);
-	  catomic_compare_and_exchange_val_acq (&buffer_cnt, reset, idx);
-	  idx = reset;
+	  uatomic32_t reset = (idx + 1) % (2 * buffer_size);
+	  catomic_compare_and_exchange_val_acq (&buffer_cnt, reset, idx + 1);
+	  if (idx >= 2 * buffer_size)
+	    idx = reset - 1;
 	}
       assert (idx < 2 * DEFAULT_BUFFER_SIZE);
 
