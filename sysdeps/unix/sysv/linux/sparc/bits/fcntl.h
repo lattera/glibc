@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2007
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -184,6 +184,23 @@ struct flock64
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
     __pid_t l_pid;	/* Process holding the lock.  */
     short int __unused;
+  };
+#endif
+
+#ifdef __USE_GNU
+/* Owner types.  */
+enum __pid_type
+  {
+    F_OWNER_TID = 0,	/* Kernel thread.  */
+    F_OWNER_PID,	/* Process.  */
+    F_OWNER_GID		/* Process group.  */
+  };
+
+/* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
+struct f_owner_ex
+  {
+    enum __pid_type type;	/* Owner type of ID.  */
+    __pid_t pid;		/* ID of owner.  */
   };
 #endif
 
