@@ -542,3 +542,8 @@
 # define __ASSUME_PREADV	1
 # define __ASSUME_PWRITEV	1
 #endif
+
+/* Support for F_GETOWN_EX was introduced in 2.6.32.  */
+#if __LINUX_KERNEL_VERSION >= 0x020620
+# define __ASSUME_F_GETOWN_EX	1
+#endif
