@@ -1,3 +1,8 @@
+2009-10-27  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getpt.c (__posix_openpt): Make sure
+	errno is always set when returning unsuccessfully.
+
 2009-10-29  Andreas Schwab  <schwab@redhat.com>
 
 	* malloc/memusage.c (update_data): Fix index wraparound handling

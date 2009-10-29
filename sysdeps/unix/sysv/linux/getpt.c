@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -64,9 +64,10 @@ __posix_openpt (oflag)
 	    }
 
 	  /* If /dev/pts is not mounted then the UNIX98 pseudo terminals
-             are not usable.  */
+	     are not usable.  */
 	  __close (fd);
 	  have_no_dev_ptmx = 1;
+	  __set_errno (ENOENT);
 	}
       else
 	{
@@ -76,6 +77,8 @@ __posix_openpt (oflag)
 	    return -1;
 	}
     }
+  else
+    __set_errno (ENOENT);
 
   return -1;
 }
