@@ -1,3 +1,9 @@
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10742]
+	* nscd/dbg_log.c (dbg_log): Print timestamp before the message text.
+	Based on patch by Jeffrey Bastian <jbastian@redhat.com>.
+
 2009-10-27  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getpt.c (__posix_openpt): Make sure
