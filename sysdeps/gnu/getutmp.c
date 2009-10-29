@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,12 @@
 #include <assert.h>
 #include <string.h>
 #include <utmp.h>
+#ifndef _UTMPX_H
 /* This is an ugly hack but we must not see the getutmpx declaration.  */
-#define getutmpx XXXgetutmpx
-#include <utmpx.h>
-#undef getutmpx
+# define getutmpx XXXgetutmpx
+# include <utmpx.h>
+# undef getutmpx
+#endif
 
 void
 getutmp (const struct utmpx *utmpx, struct utmp *utmp)

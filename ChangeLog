@@ -1,5 +1,10 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10847]
+	* sysdeps/gnu/getutmp.c: Allow compatibility code to play around with
+	getutmpx symbol.
+
+	[BZ #10823]
 	* resolv/res_send.c (__libc_res_nsend): Fix copying of IPv4 server
 	addresses.  Patch by Petar Bogdanovic <petar@smokva.net>.
 
