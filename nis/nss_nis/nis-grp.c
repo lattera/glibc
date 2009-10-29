@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999, 2001-2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2004,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -55,7 +55,7 @@ internal_nis_endgrent (void)
       oldkeylen = 0;
     }
 
-  struct response_t *curr = intern.next;
+  struct response_t *curr = intern.start;
 
   while (curr != NULL)
     {
@@ -203,16 +203,16 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 	}
 
       if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
-        {
-          free (result);
-          *errnop = ERANGE;
-          return NSS_STATUS_TRYAGAIN;
-        }
+	{
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
-        ++p;
+	++p;
       if (!batch_read)
 	free (result);
 
@@ -280,7 +280,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
       enum nss_status retval = yperr2nss (yperr);
 
       if (retval == NSS_STATUS_TRYAGAIN)
-        *errnop = errno;
+	*errnop = errno;
       return retval;
     }
 
@@ -329,7 +329,7 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
       enum nss_status retval = yperr2nss (yperr);
 
       if (retval == NSS_STATUS_TRYAGAIN)
-        *errnop = errno;
+	*errnop = errno;
       return retval;
     }
 

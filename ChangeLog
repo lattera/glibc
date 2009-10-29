@@ -1,5 +1,9 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10713]
+	* nis/nss_nis/nis-grp.c (internal_nis_endgrent): Start freeing blocks
+	from intern.start.  Patch by Joe Landers <jlanders@vmware.com>.
+
 	[BZ #10780]
 	* libio/ioputs.c (_IO_puts): Make sure to not return a number which
 	overflows the int return type.
