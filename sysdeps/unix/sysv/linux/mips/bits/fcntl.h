@@ -181,6 +181,23 @@ struct flock64
   };
 #endif
 
+#ifdef __USE_GNU
+/* Owner types.  */
+enum __pid_type
+  {
+    F_OWNER_TID = 0,	/* Kernel thread.  */
+    F_OWNER_PID,	/* Process.  */
+    F_OWNER_GID		/* Process group.  */
+  };
+
+/* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
+struct f_owner_ex
+  {
+    enum __pid_type type;	/* Owner type of ID.  */
+    __pid_t pid;		/* ID of owner.  */
+  };
+#endif
+
 /* Define some more compatibility macros to be backward compatible with
    BSD systems which did not managed to hide these kernel macros.  */
 #ifdef	__USE_BSD
