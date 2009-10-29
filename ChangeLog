@@ -1,5 +1,10 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10717]
+	* malloc/memusagestat.c (main): Fix repairing of trace files.  We also
+	have to compute maxsize_total, we have to update the variables, and
+	the also_total handling must happen after the repair.
+
 	[BZ #10742]
 	* nscd/dbg_log.c (dbg_log): Print timestamp before the message text.
 	Based on patch by Jeffrey Bastian <jbastian@redhat.com>.
