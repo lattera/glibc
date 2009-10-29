@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,1996-2002,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1996-2002,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,6 +58,11 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
       *dostat = -1;
       return NULL;
     }
+
+  /* Prepare for the loop.  If we already have a buffer copy the directory
+     name we look at into it.  */
+  if (devlen < namelen)
+    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
 
   while ((d = __readdir64 (dirstream)) != NULL)
     if ((d->d_fileno == myino || *dostat)

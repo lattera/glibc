@@ -1,8 +1,13 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10784]
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Always copy name
+	of the directory we look at into the static buffer if there is one
+	at the start of the loop.
+
 	[BZ #10789]
 	* sysdeps/generic/netinet/ip.h: Define IPTOS_ENC* and IPTOS_DSCP*
-	macros.  Patch by  Philip Prindeville <philipp@redfish-solutions.com>.
+	macros.  Patch by Philip Prindeville <philipp@redfish-solutions.com>.
 
 	[BZ #10840]
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
