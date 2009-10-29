@@ -1,5 +1,9 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10789]
+	* sysdeps/generic/netinet/ip.h: Define IPTOS_ENC* and IPTOS_DSCP*
+	macros.  Patch by  Philip Prindeville <philipp@redfish-solutions.com>.
+
 	[BZ #10840]
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_F_GETOWN_EX.

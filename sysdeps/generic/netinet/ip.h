@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000,2009 Free Software
+   Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -151,6 +152,41 @@ struct ip_timestamp
 
 #define	IPVERSION	4               /* IP version number */
 #define	IP_MAXPACKET	65535		/* maximum packet size */
+
+/*
+ * Definitions for Explicit Congestion Notification (ECN)
+ *
+ * Taken from RFC-3168, Section 5.
+ */
+
+#define	IPTOS_ECN_MASK		0x03
+#define	IPTOS_ECN(x)		((x) & IPTOS_ECN_MASK)
+#define	IPTOS_ECN_NOT_ECT	0x00
+#define	IPTOS_ECN_ECT1		0x01
+#define	IPTOS_ECN_ECT0		0x02
+#define	IPTOS_ECN_CE		0x03
+
+/*
+ * Definitions for IP differentiated services code points (DSCP)
+ *
+ * Taken from RFC-2597, Section 6 and RFC-2598, Section 2.3.
+ */
+
+#define	IPTOS_DSCP_MASK		0xfc
+#define	IPTOS_DSCP(x)		((x) & IPTOS_DSCP_MASK)
+#define	IPTOS_DSCP_AF11		0x28
+#define	IPTOS_DSCP_AF12		0x30
+#define	IPTOS_DSCP_AF13		0x38
+#define	IPTOS_DSCP_AF21		0x48
+#define	IPTOS_DSCP_AF22		0x50
+#define	IPTOS_DSCP_AF23		0x58
+#define	IPTOS_DSCP_AF31		0x68
+#define	IPTOS_DSCP_AF32		0x70
+#define	IPTOS_DSCP_AF33		0x78
+#define	IPTOS_DSCP_AF41		0x88
+#define	IPTOS_DSCP_AF42		0x90
+#define	IPTOS_DSCP_AF43		0x98
+#define	IPTOS_DSCP_EF		0xb8
 
 /*
  * Definitions for IP type of service (ip_tos)
