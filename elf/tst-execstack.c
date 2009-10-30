@@ -148,7 +148,7 @@ do_test (void)
      Let them run to test it.  */
   pthread_barrier_wait (&go_barrier);
 
-  pthread_exit (! allow_execstack);
+  pthread_exit ((void *) (long int) (! allow_execstack));
 #endif
 
   return ! allow_execstack;

@@ -1,5 +1,7 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-execstack.c (do_test): Add cast to avoid warning.
+
 	* stdio-common/scanf13.c (main): Remove unused variable wbuf.
 
 	* stdlib/tst-strtol.c (tests): Mark one more constant as unsigned
