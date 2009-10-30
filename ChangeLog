@@ -1,5 +1,26 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10609]
+	* sysdeps/unix/sysv/linux/faccessat.c: Fix handling of empty parameters
+	for file names in case the syscall is not available.
+	* sysdeps/unix/sysv/linux/fchmodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Likewise.
+
 	[BZ #10643]
 	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): If thread
 	creation filed, remove the request from the 'requests' list and signal

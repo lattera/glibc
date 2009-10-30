@@ -1,4 +1,4 @@
-/* Copyright (C) 2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,12 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
+      if (__builtin_expect (filelen == 0, 0))
+	{
+	  __set_errno (ENOENT);
+	  return -1;
+	}
+
       static const char procfd[] = "/proc/self/fd/%d/%s";
       /* Buffer for the path name we are going to use.  It consists of
 	 - the string /proc/self/fd/
