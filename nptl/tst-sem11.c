@@ -23,23 +23,25 @@ main (void)
 {
   int tries = 5;
   pthread_t th;
-  sem_t s;
+  union
+  {
+    sem_t s;
+    struct new_sem ns;
+  } u;
  again:
-  if (sem_init (&s, 0, 0) != 0)
+  if (sem_init (&u.s, 0, 0) != 0)
     {
       puts ("sem_init failed");
       return 1;
     }
 
-  struct new_sem *is = (struct new_sem *) &s;
-
-  if (is->nwaiters != 0)
+  if (u.ns.nwaiters != 0)
     {
       puts ("nwaiters not initialized");
       return 1;
     }
 
-  if (pthread_create (&th, NULL, tf, &s) != 0)
+  if (pthread_create (&th, NULL, tf, &u.s) != 0)
     {
       puts ("pthread_create failed");
       return 1;
@@ -62,11 +64,11 @@ main (void)
   if (r != PTHREAD_CANCELED && --tries > 0)
     {
       /* Maybe we get the scheduling right the next time.  */
-      sem_destroy (&s);
+      sem_destroy (&u.s);
       goto again;
     }
 
-  if (is->nwaiters != 0)
+  if (u.ns.nwaiters != 0)
     {
       puts ("nwaiters not reset");
       return 1;

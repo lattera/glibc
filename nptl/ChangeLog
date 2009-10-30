@@ -1,5 +1,7 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-sem11.c (main): Rewrite to avoid aliasing problems.
+
 	[BZ #3270]
 	* allocatestack.c (__nptl_setxid): Perform the operation in multiple
 	steps to avoid races with creation and terminations.
