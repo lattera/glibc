@@ -1,5 +1,8 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10286]
+	* locales/ast_ES: Define first_weekday.
+
 	[BZ #10312]
 	* locales/es_CO: Define am_pm , t_fmt_ampm, first_weekday.
 	Patch by Jorge Guerrero <geojorg@gmail.com>.
