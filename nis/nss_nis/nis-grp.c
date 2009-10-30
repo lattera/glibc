@@ -204,7 +204,8 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 
       if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
 	{
-	  free (result);
+	  if (!batch_read)
+	    free (result);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
