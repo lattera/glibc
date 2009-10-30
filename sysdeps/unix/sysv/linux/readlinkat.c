@@ -59,7 +59,7 @@ readlinkat (fd, path, buf, len)
   if (fd != AT_FDCWD && path[0] != '/')
     {
       size_t pathlen = strlen (path);
-      if (__builtin_expect (filelen == 0, 0))
+      if (__builtin_expect (pathlen == 0, 0))
 	{
 	  __set_errno (ENOENT);
 	  return -1;

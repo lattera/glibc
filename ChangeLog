@@ -1,3 +1,7 @@
+2009-10-30  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readlinkat.c: Fix last change.
+
 2009-10-28  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (dist-prepare): New target.
