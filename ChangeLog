@@ -1,5 +1,9 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/tst-strtol.c (tests): Mark one more constant as unsigned
+	to avoid warning.
+	* stdlib/tst-strtoll.c (tests): Likewise.
+
 	[BZ #9986]
 	* time/strftime_l.c (__strftime_internal): Allow %OC.
 
