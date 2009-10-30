@@ -1,3 +1,8 @@
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/crh_UA: Fix first day of week and a few spellings.
+	Patch by Reþat SABIQ <tilde.birlik@gmail.com>.
+
 2009-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add ps_AF.UTF-8.
