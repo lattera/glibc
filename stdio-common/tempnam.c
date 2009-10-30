@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996-2000,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996-2000,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ tempnam (const char *dir, const char *pfx)
   if (__path_search (buf, FILENAME_MAX, dir, pfx, 1))
     return NULL;
 
-  if (__gen_tempname (buf, 0, __GT_NOCREATE))
+  if (__gen_tempname (buf, 0, 0, __GT_NOCREATE))
     return NULL;
 
   return __strdup (buf);

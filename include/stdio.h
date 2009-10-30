@@ -80,7 +80,8 @@ extern int __path_search (char *__tmpl, size_t __tmpl_len,
 			  __const char *__dir, __const char *__pfx,
 			  int __try_tempdir);
 
-extern int __gen_tempname (char *__tmpl, int __flags, int __kind);
+extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
+			   int __kind);
 /* The __kind argument to __gen_tempname may be one of: */
 #  define __GT_FILE	0	/* create a file */
 #  define __GT_DIR	1	/* create a directory */

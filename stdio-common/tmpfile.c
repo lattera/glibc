@@ -1,5 +1,5 @@
 /* Open a stdio stream on an anonymous temporary file.  Generic/POSIX version.
-   Copyright (C) 1991,1993,1996-2000,2002,2003,2007
+   Copyright (C) 1991,1993,1996-2000,2002,2003,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -48,7 +48,7 @@ tmpfile (void)
 #ifdef FLAGS
   flags = FLAGS;
 #endif
-  fd = __gen_tempname (buf, flags, __GT_FILE);
+  fd = __gen_tempname (buf, 0, flags, __GT_FILE);
   if (fd < 0)
     return NULL;
 

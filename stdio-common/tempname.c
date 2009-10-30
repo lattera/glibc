@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95-98, 99, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95-99, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,8 +47,9 @@ stub_warning (__path_search)
  */
 
 int
-__gen_tempname (tmpl, flags, kind)
+__gen_tempname (tmpl, suffixlen, flags, kind)
      char *tmpl;
+     int suffixlen;
      int flags;
      int kind;
 {

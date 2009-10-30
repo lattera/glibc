@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996-1999,2000,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996-2000,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ tmpnam (char *s)
 			0))
     return NULL;
 
-  if (__builtin_expect (__gen_tempname (tmpbuf, 0, __GT_NOCREATE), 0))
+  if (__builtin_expect (__gen_tempname (tmpbuf, 0, 0, __GT_NOCREATE), 0))
     return NULL;
 
   if (s == NULL)

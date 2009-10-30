@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2001, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2001, 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -210,9 +210,9 @@ static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 /* Generate a temporary file name based on TMPL.  TMPL must match the
-   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
-   does not exist at the time of the call to __gen_tempname.  TMPL is
-   overwritten with the result.
+   rules for mk[s]temp (i.e. end in "XXXXXX", possibly with a suffix).
+   The name constructed does not exist at the time of the call to
+   __gen_tempname.  TMPL is overwritten with the result.
 
    KIND may be one of:
    __GT_NOCREATE:	simply verify that the name does not exist
@@ -223,7 +223,7 @@ static const char letters[] =
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-__gen_tempname (char *tmpl, int flags, int kind)
+__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 {
   int len;
   char *XXXXXX;
@@ -251,14 +251,14 @@ __gen_tempname (char *tmpl, int flags, int kind)
 #endif
 
   len = strlen (tmpl);
-  if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
+  if (len < 6 + suffixlen || memcmp (&tmpl[len - 6 - suffixlen], "XXXXXX", 6))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
   /* This is where the Xs start.  */
-  XXXXXX = &tmpl[len - 6];
+  XXXXXX = &tmpl[len - 6 - suffixlen];
 
   /* Get some more or less random data.  */
 #ifdef RANDOM_BITS

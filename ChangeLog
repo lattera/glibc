@@ -1,3 +1,27 @@
+2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10349]
+	* sysdeps/posix/tempname.c (__gen_tempname): Take new second
+	parameter, specifying length of prefix.
+	* stdio-common/tempname.c: Likewise.
+	* include/stdio.h: Adjust prototypes.
+	* libio/oldtmpfile.c: Adjust caller.
+	* misc/mkdtemp.c: Likewise.
+	* misc/mkostemp.c: Likewise.
+	* misc/mkostemp64.c: Likewise.
+	* misc/mkstemp.c:  Likewise.
+	* misc/mkstemp64.c: Likewise.
+	* misc/mktemp.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+	* misc/mkstemps.c: New file.
+	* misc/mkstemps64.c: New file.
+	* stdlib/stdlib.h: Add prototypes.
+	* misc/Makefile (routines): Add mkstemps and mkstemps64.
+	* misc/Versions: Export mkstemps and mkstemps64 for GLIBC_2.11.
+
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Add sml entry.

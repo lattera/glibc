@@ -50,7 +50,7 @@ __BEGIN_DECLS
 #  if defined __GNUC__ && !defined __cplusplus
 #   define __WAIT_INT(status) \
   (__extension__ (((union { __typeof(status) __in; int __i; }) \
-                   { .__in = (status) }).__i))
+		   { .__in = (status) }).__i))
 #  else
 #   define __WAIT_INT(status)	(*(int *) &(status))
 #  endif
@@ -609,7 +609,7 @@ extern char *mktemp (char *__template) __THROW __nonnull ((1)) __wur;
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int mkstemp (char *__template) __nonnull ((1)) __wur;
@@ -623,6 +623,29 @@ extern int __REDIRECT (mkstemp, (char *__template), mkstemp64)
 # endif
 # ifdef __USE_LARGEFILE64
 extern int mkstemp64 (char *__template) __nonnull ((1)) __wur;
+# endif
+#endif
+
+#ifdef __USE_MISC
+/* Similar to mkstemp, but the template can have a suffix after the
+   XXXXXX.  The length of the suffix is specified in the second
+   parameter.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+# ifndef __USE_FILE_OFFSET64
+extern int mkstemps (char *__template, int __suffixlen) __nonnull ((1)) __wur;
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (mkstemps, (char *__template, int __suffixlen),
+		       mkstemps64) __nonnull ((1)) __wur;
+#  else
+#   define mkstemps mkstemps64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int mkstemps64 (char *__template, int __suffixlen)
+     __nonnull ((1)) __wur;
 # endif
 #endif
 
