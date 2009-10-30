@@ -1,5 +1,8 @@
 2009-10-30  Andreas Schwab  <schwab@redhat.com>
 
+	* locale/programs/locale-spec.c: Include <error.h> and
+	<libintl.h>.
+
 	* sysdeps/unix/sysv/linux/readlinkat.c: Fix last change.
 
 2009-10-28  Roland McGrath  <roland@redhat.com>
