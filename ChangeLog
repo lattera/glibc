@@ -1,3 +1,8 @@
+2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mkostemps.c: New file.
+	* misc/mkostemps64.c: New file.
+
 2009-10-30  Andreas Schwab  <schwab@redhat.com>
 
 	* locale/programs/locale-spec.c: Include <error.h> and

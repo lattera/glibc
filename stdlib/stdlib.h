@@ -678,6 +678,29 @@ extern int __REDIRECT (mkostemp, (char *__template, int __flags), mkostemp64)
 # ifdef __USE_LARGEFILE64
 extern int mkostemp64 (char *__template, int __flags) __nonnull ((1)) __wur;
 # endif
+
+/* Similar to mkostemp, but the template can have a suffix after the
+   XXXXXX.  The length of the suffix is specified in the second
+   parameter.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+# ifndef __USE_FILE_OFFSET64
+extern int mkostemps (char *__template, int __suffixlen, int __flags)
+     __nonnull ((1)) __wur;
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (mkostemps, (char *__template, int __suffixlen,
+				   int __flags), mkostemps64)
+     __nonnull ((1)) __wur;
+#  else
+#   define mkostemps mkostemps64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int mkostemps64 (char *__template, int __suffixlen, int __flags)
+     __nonnull ((1)) __wur;
+# endif
 #endif
 
 

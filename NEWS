@@ -7,7 +7,8 @@ using `glibc' in the "product" field.
 
 Version 2.11
 
-* New interfaces: execvpe, pthread_sigqueue, mkstemps, mkstemps64
+* New interfaces: execvpe, pthread_sigqueue, mkstemps, mkstemps64, mkostemps,
+  mkostemps64
   Implemented by Ulrich Drepper.
 
 * Checking version of longjmp added that fails if an uninitialized stack

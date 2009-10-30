@@ -141,6 +141,6 @@ libc {
     preadv; preadv64; pwritev; pwritev64;
   }
   GLIBC_2.11 {
-    mkstemps; mkstemps64;
+    mkstemps; mkstemps64; mkostemps; mkostemps64;
   }
 }
