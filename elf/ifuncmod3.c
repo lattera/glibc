@@ -5,4 +5,3 @@
 int ret_foo;
 int ret_foo_hidden;
 int ret_foo_protected;
-int global = -1;

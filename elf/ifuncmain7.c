@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include "ifunc-sel.h"
 
 extern int foo (void);
 
@@ -21,7 +22,7 @@ static void *
 __attribute__ ((used))
 foo_ifunc (void)
 {
-  return one;
+  return ifunc_one (one);
 }
 
 typedef int (*foo_p) (void);

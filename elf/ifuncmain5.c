@@ -2,8 +2,6 @@
 
 #include <stdlib.h>
 
-int global = -1;
-
 extern int foo (void);
 extern int foo_protected (void);
 

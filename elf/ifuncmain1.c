@@ -7,8 +7,6 @@
 
 #include <stdlib.h>
 
-int global = -1;
-
 int ret_foo;
 int ret_foo_hidden;
 int ret_foo_protected;

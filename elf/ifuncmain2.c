@@ -3,8 +3,6 @@
 
 #include <stdlib.h>
 
-int global = -1;
-
 extern int foo1 (void);
 
 int

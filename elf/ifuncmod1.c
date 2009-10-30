@@ -4,8 +4,9 @@
    2. Function pointer.
    3. Visibility.
  */
+#include "ifunc-sel.h"
 
-extern int global;
+int global __attribute__ ((visibility ("protected"))) = -1;
 
 static int
 one (void)
@@ -20,7 +21,7 @@ minus_one (void)
 }
 
 static int
-zero (void) 
+zero (void)
 {
   return 0;
 }
@@ -28,52 +29,28 @@ zero (void)
 void * foo_ifunc (void) __asm__ ("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
-void * 
+void *
 foo_ifunc (void)
 {
-  switch (global)
-    {
-    case 1:
-      return one;
-    case -1:
-      return minus_one;
-    default:
-      return zero;
-    }
+  return ifunc_sel (one, minus_one, zero);
 }
 
 void * foo_hidden_ifunc (void) __asm__ ("foo_hidden");
 __asm__(".type foo_hidden, %gnu_indirect_function");
 
-void * 
+void *
 foo_hidden_ifunc (void)
 {
-  switch (global)
-    {
-    case 1:
-      return minus_one;
-    case -1:
-      return one;
-    default:
-      return zero;
-    }
+  return ifunc_sel (minus_one, one, zero);
 }
 
 void * foo_protected_ifunc (void) __asm__ ("foo_protected");
 __asm__(".type foo_protected, %gnu_indirect_function");
 
-void * 
+void *
 foo_protected_ifunc (void)
 {
-  switch (global)
-    {
-    case 1:
-      return one;
-    case -1:
-      return zero;
-    default:
-      return minus_one;
-    }
+  return ifunc_sel (one, zero, minus_one);
 }
 
 /* Test hidden indirect function.  */

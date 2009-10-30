@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include "ifunc-sel.h"
 
 typedef int (*foo_p) (void);
 extern foo_p foo_ptr;
@@ -22,7 +23,7 @@ __asm__(".type foo, %gnu_indirect_function");
 void *
 foo_ifunc (void)
 {
-  return one;
+  return ifunc_one (one);
 }
 
 extern int foo (void);

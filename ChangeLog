@@ -1,3 +1,23 @@
+2009-10-28  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/ifuncdep2.c: Include ifunc-sel.h.
+	(global): Delete.
+	(foo1_ifunc, foo2_ifunc, foo3_ifunc): Use ifunc_sel.
+	* elf/ifuncmain1.c (global): Delete.
+	* elf/ifuncmain1vis.c: Likewise.
+	* elf/ifuncmain2.c: Likewise.
+	* elf/ifuncmain5.c: Likewise.
+	* elf/ifuncmod3.c: Likewise.
+	* elf/ifuncmain6pie.c: Include ifunc-sel.h.
+	(foo_ifunc): Use ifunc_one.
+	* elf/ifuncmain7.c: Likewise.
+	* elf/ifuncmod1.c: Include ifunc-sel.h.
+	(global): Define protected var.
+	(foo_ifunc, foo_hidden_ifunc, foo_protected_ifunc): Use ifunc_sel.
+	* elf/ifuncmod5.c: Likewise.
+	* sysdeps/generic/elf/ifunc-sel.h: New file.
+	* sysdeps/powerpc/elf/ifunc-sel.h: New file.
+
 2009-07-30  Alan Modra  <amodra@bigpond.net.au>
 
 	* elf/elf.h (R_PPC_NUM, R_PPC64_NUM): Delete unused and incorrect.
