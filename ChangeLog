@@ -1,3 +1,10 @@
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10446]
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Match sigevent
+	definition to the kernel's.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+
 2009-08-18  Anders Johansson  <ajohansson@novell.com>
 
 	* nscd/aicache.c: Fix mixing up dataset and dataset->resp

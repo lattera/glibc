@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/ia64 version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000-2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -309,6 +309,10 @@ typedef struct sigevent
     union
       {
 	int _pad[__SIGEV_PAD_SIZE];
+
+	/* When SIGEV_SIGNAL and SIGEV_THREAD_ID set, LWP ID of the
+	   thread to receive the signal.  */
+	__pid_t _tid;
 
 	struct
 	  {

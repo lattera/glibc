@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  S/390 version.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 #if (!defined __have_sigval_t \
      && (defined _SIGNAL_H || defined __need_siginfo_t \
-         || defined __need_sigevent_t))
+	 || defined __need_sigevent_t))
 # define __have_sigval_t	1
 
 /* Type for data associated with a signal.  */
@@ -96,7 +96,7 @@ typedef struct siginfo
 	struct
 	  {
 	    void *si_addr;	/* Faulting insn/memory ref.  */
-            int si_trapno;
+	    int si_trapno;
 	  } _sigfault;
 
 	/* SIGPOLL.  */
@@ -281,6 +281,10 @@ typedef struct sigevent
     union
       {
 	int _pad[__SIGEV_PAD_SIZE];
+
+	/* When SIGEV_SIGNAL and SIGEV_THREAD_ID set, LWP ID of the
+	   thread to receive the signal.  */
+	__pid_t _tid;
 
 	struct
 	  {
