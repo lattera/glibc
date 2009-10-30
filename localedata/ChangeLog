@@ -1,5 +1,9 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10312]
+	* locales/es_CO: Define am_pm , t_fmt_ampm, first_weekday.
+	Patch by Jorge Guerrero <geojorg@gmail.com>.
+
 	[BZ #10319]
 	* locales/shs_CA: Fix accents.
 	Patch by Neskie Manuel <neskiem@gmail.com>.
