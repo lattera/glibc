@@ -1,5 +1,7 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-639.def: Add sml entry.
+
 	[BZ #10391]
 	* resolv/res_send.c (send_dg): Initialize resplen.
 
