@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -45,7 +45,7 @@ static struct utmp last_entry;
 
 /* Locking timeout.  */
 #ifndef TIMEOUT
-# define TIMEOUT 1
+# define TIMEOUT 10
 #endif
 
 /* Do-nothing handler for locking timeout.  */

@@ -1,5 +1,8 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10564]
+	* login/utmp_file.c (TIMEOUT): Increase to 10.
+
 	[BZ #10609]
 	* sysdeps/unix/sysv/linux/faccessat.c: Fix handling of empty parameters
 	for file names in case the syscall is not available.
