@@ -1,5 +1,10 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10425]
+	* locales/it_IT: Fix date_fmt.
+	* locales/it_CH: Likewise.
+	Patch by Nicolo' Chieffo <nicolo.chieffo@gmail.com>.
+
 	* locales/POSIX: Define yesstr and nostr.
 	* locales/en_US: Likewise.
 	Patch by Petr Machata <pmachata@redhat.com>.
