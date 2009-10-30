@@ -11,7 +11,6 @@ main (void)
   wchar_t *lsp1, *lsp2, *lsp3, *lsp4;
   int result = 0;
   char buf[2048+64];
-  wchar_t wbuf[2048+64];
   size_t i;
 
 #define FAIL() \

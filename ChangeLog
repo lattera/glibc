@@ -1,5 +1,7 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/scanf13.c (main): Remove unused variable wbuf.
+
 	* stdlib/tst-strtol.c (tests): Mark one more constant as unsigned
 	to avoid warning.
 	* stdlib/tst-strtoll.c (tests): Likewise.
