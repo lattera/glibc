@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -884,8 +884,6 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
 #endif
 
 	case L_('C'):
-	  if (modifier == L_('O'))
-	    goto bad_format;
 	  if (modifier == L_('E'))
 	    {
 #if HAVE_STRUCT_ERA_ENTRY
