@@ -1,5 +1,8 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/it_CH: Fix typos in last change.
+	* locales/it_IT: Likewise.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add my_MM.
 
 	[BZ #9986]
