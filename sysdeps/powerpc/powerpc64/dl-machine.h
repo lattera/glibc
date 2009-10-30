@@ -526,6 +526,29 @@ elf_machine_tprel (struct link_map *map,
 }
 #endif
 
+/* Call function at address VALUE (an OPD entry) to resolve ifunc relocs.  */
+auto inline Elf64_Addr __attribute__ ((always_inline))
+resolve_ifunc (Elf64_Addr value,
+	       const struct link_map *map, const struct link_map *sym_map)
+{
+  /* The function we are calling may not yet have its opd entry relocated.  */
+  Elf64_FuncDesc opd;
+  if (map != sym_map
+#if !defined RTLD_BOOTSTRAP && defined SHARED
+      /* Bootstrap map doesn't have l_relocated set for it.  */
+      && sym_map != &GL(dl_rtld_map)
+#endif
+      && !sym_map->l_relocated)
+    {
+      Elf64_FuncDesc *func = (Elf64_FuncDesc *) value;
+      opd.fd_func = func->fd_func + sym_map->l_addr;
+      opd.fd_toc = func->fd_toc + sym_map->l_addr;
+      opd.fd_aux = func->fd_aux;
+      value = (Elf64_Addr) &opd;
+    }
+  return ((Elf64_Addr (*) (void)) value) ();
+}
+
 /* Perform the relocation specified by RELOC and SYM (which is fully
    resolved).  MAP is the object containing the reloc.  */
 auto inline void __attribute__ ((always_inline))
@@ -550,10 +573,16 @@ elf_machine_rela (struct link_map *map,
   if (__builtin_expect (r_type == R_PPC64_NONE, 0))
     return;
 
-  /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt.  */
+  /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
+     and STT_GNU_IFUNC.  */
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
   Elf64_Addr value = ((sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value)
 		      + reloc->r_addend);
+
+  if (sym != NULL
+      && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
+      && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+    value = resolve_ifunc (value, map, sym_map);
 
   /* For relocs that don't edit code, return.
      For relocs that might edit instructions, break from the switch.  */
@@ -564,6 +593,14 @@ elf_machine_rela (struct link_map *map,
       *reloc_addr = value;
       return;
 
+    case R_PPC64_IRELATIVE:
+      value = resolve_ifunc (value, map, sym_map);
+      *reloc_addr = value;
+      return;
+
+    case R_PPC64_JMP_IREL:
+      value = resolve_ifunc (value, map, sym_map);
+      /* Fall thru */
     case R_PPC64_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
       elf_machine_plt_conflict (reloc_addr, value);

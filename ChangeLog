@@ -1,4 +1,24 @@
-2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+2009-07-30  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/elf.h (R_PPC_NUM, R_PPC64_NUM): Delete unused and incorrect.
+	(R_PPC_REL16*): Correct comments.
+	(R_PPC_IRELATIVE, R_PPC64_IRELATIVE, R_PPC64_JMP_IREL): Define.
+	(R_PPC64_REL16, R_PPC64_REL16_LO, R_PPC64_REL16_HI,
+	 R_PPC64_REL16_HA): Define.
+	* sysdeps/powerpc/powerpc32/dl-irel.h: New file.
+	* sysdeps/powerpc/powerpc64/dl-irel.h: New file.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_machine_fixup_plt):
+	Delete unused "reloc" param.
+	(__process_machine_rela): Handle R_PPC_IRELATIVE.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (__elf_machine_fixup_plt):
+	Delete "reloc" param.
+	(elf_machine_rela): Handle STT_GNU_IFUNC functions and
+	R_PPC_IRELATIVE.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): New function.
+	(elf_machine_rela): Handle STT_GNU_IFUNC functions and new ifunc
+	relocations.
+
+d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10315]
 	* sysdeps/gnu/netinet/udp.h: Define UDP_CORK, UDP_ENCAP,

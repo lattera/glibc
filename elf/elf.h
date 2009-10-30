@@ -2041,9 +2041,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_GOT_DTPREL16_HI	93 /* half16*	(sym+add)@got@dtprel@h */
 #define R_PPC_GOT_DTPREL16_HA	94 /* half16*	(sym+add)@got@dtprel@ha */
 
-/* Keep this the last entry.  */
-#define R_PPC_NUM		95
-
 /* The remaining relocs are from the Embedded ELF ABI, and are not
    in the SVR4 ELF ABI.  */
 #define R_PPC_EMB_NADDR32	101
@@ -2071,11 +2068,14 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_DIAB_RELSDA_HI	184	/* like EMB_RELSDA, but high 16 bit */
 #define R_PPC_DIAB_RELSDA_HA	185	/* like EMB_RELSDA, adjusted high 16 */
 
+/* GNU extension to support local ifunc.  */
+#define R_PPC_IRELATIVE		248
+
 /* GNU relocs used in PIC code sequences.  */
-#define R_PPC_REL16		249	/* word32   (sym-.) */
-#define R_PPC_REL16_LO		250	/* half16   (sym-.)@l */
-#define R_PPC_REL16_HI		251	/* half16   (sym-.)@h */
-#define R_PPC_REL16_HA		252	/* half16   (sym-.)@ha */
+#define R_PPC_REL16		249	/* half16   (sym+add-.) */
+#define R_PPC_REL16_LO		250	/* half16   (sym+add-.)@l */
+#define R_PPC_REL16_HI		251	/* half16   (sym+add-.)@h */
+#define R_PPC_REL16_HA		252	/* half16   (sym+add-.)@ha */
 
 /* This is a phony reloc to handle any old fashioned TOC16 references
    that may still be in object files.  */
@@ -2197,8 +2197,13 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC64_DTPREL16_HIGHEST 105 /* half16	(sym+add)@dtprel@highest */
 #define R_PPC64_DTPREL16_HIGHESTA 106 /* half16	(sym+add)@dtprel@highesta */
 
-/* Keep this the last entry.  */
-#define R_PPC64_NUM		107
+/* GNU extension to support local ifunc.  */
+#define R_PPC64_JMP_IREL	247
+#define R_PPC64_IRELATIVE	248
+#define R_PPC64_REL16		249	/* half16   (sym+add-.) */
+#define R_PPC64_REL16_LO	250	/* half16   (sym+add-.)@l */
+#define R_PPC64_REL16_HI	251	/* half16   (sym+add-.)@h */
+#define R_PPC64_REL16_HA	252	/* half16   (sym+add-.)@ha */
 
 /* PowerPC64 specific values for the Dyn d_tag field.  */
 #define DT_PPC64_GLINK  (DT_LOPROC + 0)

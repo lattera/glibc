@@ -337,7 +337,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 }
 
 Elf32_Addr
-__elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+__elf_machine_fixup_plt (struct link_map *map,
 			 Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
 {
   Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
@@ -428,6 +428,10 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_GLOB_DAT:
     case R_PPC_RELATIVE:
       *reloc_addr = finaladdr;
+      return;
+
+    case R_PPC_IRELATIVE:
+      *reloc_addr = ((Elf32_Addr (*) (void)) finaladdr) ();
       return;
 
     case R_PPC_UADDR32:
