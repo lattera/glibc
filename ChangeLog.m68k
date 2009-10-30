@@ -1,3 +1,9 @@
+2009-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10609]
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c (fchownat): Fix handling
+	of empty parameters for file names.
+
 2009-09-06  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/____longjmp_chk.c: New file.
