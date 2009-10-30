@@ -965,22 +965,53 @@ __find_thread_by_id (pid_t tid)
 
 static void
 internal_function
+setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
+{
+  int ch;
+
+  /* Don't let the thread exit before the setxid handler runs.  */
+  t->setxid_futex = 0;
+
+  do
+    {
+      ch = t->cancelhandling;
+
+      /* If the thread is exiting right now, ignore it.  */
+      if ((ch & EXITING_BITMASK) != 0)
+	return;
+    }
+  while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
+					       ch | SETXID_BITMASK, ch));
+}
+
+
+static void
+internal_function
+setxid_unmark_thread (struct xid_command *cmdp, struct pthread *t)
+{
+  int ch;
+
+  do
+    {
+      ch = t->cancelhandling;
+      if ((ch & SETXID_BITMASK) == 0)
+	return;
+    }
+  while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
+					       ch & ~SETXID_BITMASK, ch));
+
+  /* Release the futex just in case.  */
+  t->setxid_futex = 1;
+  lll_futex_wake (&t->setxid_futex, 1, LLL_PRIVATE);
+}
+
+
+static int
+internal_function
 setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
 {
-  if (! IS_DETACHED (t))
-    {
-      int ch;
-      do
-	{
-	  ch = t->cancelhandling;
-
-	  /* If the thread is exiting right now, ignore it.  */
-	  if ((ch & EXITING_BITMASK) != 0)
-	    return;
-	}
-      while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
-						   ch | SETXID_BITMASK, ch));
-    }
+  if ((t->cancelhandling & SETXID_BITMASK) == 0)
+    return 0;
 
   int val;
   INTERNAL_SYSCALL_DECL (err);
@@ -997,8 +1028,14 @@ setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
     val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
 #endif
 
+  /* If this failed, it must have had not started yet or else exited.  */
   if (!INTERNAL_SYSCALL_ERROR_P (val, err))
-    atomic_increment (&cmdp->cntr);
+    {
+      atomic_increment (&cmdp->cntr);
+      return 1;
+    }
+  else
+    return 0;
 }
 
 
@@ -1006,6 +1043,7 @@ int
 attribute_hidden
 __nptl_setxid (struct xid_command *cmdp)
 {
+  int signalled;
   int result;
   lll_lock (stack_cache_lock, LLL_PRIVATE);
 
@@ -1022,7 +1060,7 @@ __nptl_setxid (struct xid_command *cmdp)
       if (t == self)
 	continue;
 
-      setxid_signal_thread (cmdp, t);
+      setxid_mark_thread (cmdp, t);
     }
 
   /* Now the list with threads using user-allocated stacks.  */
@@ -1032,14 +1070,61 @@ __nptl_setxid (struct xid_command *cmdp)
       if (t == self)
 	continue;
 
-      setxid_signal_thread (cmdp, t);
+      setxid_mark_thread (cmdp, t);
     }
 
-  int cur = cmdp->cntr;
-  while (cur != 0)
+  /* Iterate until we don't succeed in signalling anyone.  That means
+     we have gotten all running threads, and their children will be
+     automatically correct once started.  */
+  do
     {
-      lll_futex_wait (&cmdp->cntr, cur, LLL_PRIVATE);
-      cur = cmdp->cntr;
+      signalled = 0;
+
+      list_for_each (runp, &stack_used)
+	{
+	  struct pthread *t = list_entry (runp, struct pthread, list);
+	  if (t == self)
+	    continue;
+
+	  signalled += setxid_signal_thread (cmdp, t);
+	}
+
+      list_for_each (runp, &__stack_user)
+	{
+	  struct pthread *t = list_entry (runp, struct pthread, list);
+	  if (t == self)
+	    continue;
+
+	  signalled += setxid_signal_thread (cmdp, t);
+	}
+
+      int cur = cmdp->cntr;
+      while (cur != 0)
+	{
+	  lll_futex_wait (&cmdp->cntr, cur, LLL_PRIVATE);
+	  cur = cmdp->cntr;
+	}
+    }
+  while (signalled != 0);
+
+  /* Clean up flags, so that no thread blocks during exit waiting
+     for a signal which will never come.  */
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self)
+	continue;
+
+      setxid_unmark_thread (cmdp, t);
+    }
+
+  list_for_each (runp, &__stack_user)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t == self)
+	continue;
+
+      setxid_unmark_thread (cmdp, t);
     }
 
   /* This must be last, otherwise the current thread might not have

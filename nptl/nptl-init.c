@@ -240,17 +240,23 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
   INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
 			__xidcmd->id[1], __xidcmd->id[2]);
 
-  if (atomic_decrement_val (&__xidcmd->cntr) == 0)
-    lll_futex_wake (&__xidcmd->cntr, 1, LLL_PRIVATE);
-
   /* Reset the SETXID flag.  */
   struct pthread *self = THREAD_SELF;
-  int flags = THREAD_GETMEM (self, cancelhandling);
-  THREAD_SETMEM (self, cancelhandling, flags & ~SETXID_BITMASK);
+  int flags, newval;
+  do
+    {
+      flags = THREAD_GETMEM (self, cancelhandling);
+      newval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+					  flags & ~SETXID_BITMASK, flags);
+    }
+  while (flags != newval);
 
   /* And release the futex.  */
   self->setxid_futex = 1;
   lll_futex_wake (&self->setxid_futex, 1, LLL_PRIVATE);
+
+  if (atomic_decrement_val (&__xidcmd->cntr) == 0)
+    lll_futex_wake (&__xidcmd->cntr, 1, LLL_PRIVATE);
 }
 
 
