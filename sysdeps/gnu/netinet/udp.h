@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-1997,2004,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,6 +73,16 @@ struct udphdr
   u_int16_t check;
 };
 #endif
+
+/* UDP socket options */
+#define UDP_CORK	1	/* Never send partially complete segments.  */
+#define UDP_ENCAP	100	/* Set the socket to accept
+				   encapsulated packets.  */
+
+/* UDP encapsulation types */
+#define UDP_ENCAP_ESPINUDP_NON_IKE 1	/* draft-ietf-ipsec-nat-t-ike-00/01 */
+#define UDP_ENCAP_ESPINUDP	2	/* draft-ietf-ipsec-udp-encaps-06 */
+#define UDP_ENCAP_L2TPINUDP	3	/* rfc2661 */
 
 #define SOL_UDP            17      /* sockopt level for UDP */
 

@@ -1,5 +1,10 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10315]
+	* sysdeps/gnu/netinet/udp.h: Define UDP_CORK, UDP_ENCAP,
+	UDP_ENCAP_ESPINUDP_NON_IKE, UDP_ENCAP_ESPINUDP, and
+	UDP_ENCAP_L2TPINUDP.
+
 	[BZ #10349]
 	* sysdeps/posix/tempname.c (__gen_tempname): Take new second
 	parameter, specifying length of prefix.
