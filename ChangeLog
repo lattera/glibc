@@ -1,5 +1,9 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10553]
+	* malloc/malloc.c (malloc_info): Fix typos in format strings.
+	Patch by John Sullivan <jsrhbz@kanargh.force9.co.uk>.
+
 	[BZ #10564]
 	* login/utmp_file.c (TIMEOUT): Increase to 10.
 
