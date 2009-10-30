@@ -16,6 +16,8 @@ Version 2.11
 * STT_GNU_IFUNC is now supported in static executables.
   Implemented by H.J. Lu.
 
+* STT_GNU_IFUNC implemented for PPC by Alan Modra.
+
 * New optimized string functions for x86-64: strstr, strcasestr, memcmp,
   strcspn, strpbrk, strspn, strcpy, stpcpy, strncpy, strcmp (SSE2, SSE4.2),
   strncmp (SSE2, SSE4.2), strchr (SSE4.2), strrchr (SSE4.2).
