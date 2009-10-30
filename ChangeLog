@@ -1,5 +1,8 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump for 2.11 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 11.
+
 	* elf/tst-execstack.c (do_test): Add cast to avoid warning.
 
 	* stdio-common/scanf13.c (main): Remove unused variable wbuf.
