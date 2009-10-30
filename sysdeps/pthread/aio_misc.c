@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006, 2007
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -372,9 +372,13 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 
       /* Simply enqueue it after the running one according to the
 	 priority.  */
+      last = NULL;
       while (runp->next_prio != NULL
 	     && runp->next_prio->aiocbp->aiocb.__abs_prio >= prio)
-	runp = runp->next_prio;
+	{
+	  last = runp;
+	  runp = runp->next_prio;
+	}
 
       newp->next_prio = runp->next_prio;
       runp->next_prio = newp;
@@ -403,6 +407,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	}
 
       newp->next_prio = NULL;
+      last = NULL;
     }
 
   if (running == yes)
@@ -423,7 +428,8 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	  running = newp->running = allocated;
 
 	  /* Now try to start a thread.  */
-	  if (aio_create_helper_thread (&thid, handle_fildes_io, newp) == 0)
+	  result = aio_create_helper_thread (&thid, handle_fildes_io, newp);
+	  if (result == 0)
 	    /* We managed to enqueue the request.  All errors which can
 	       happen now can be recognized by calls to `aio_return' and
 	       `aio_error'.  */
@@ -434,10 +440,14 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	      running = newp->running = yes;
 
 	      if (nthreads == 0)
-		/* We cannot create a thread in the moment and there is
-		   also no thread running.  This is a problem.  `errno' is
-		   set to EAGAIN if this is only a temporary problem.  */
-		result = -1;
+		{
+		  /* We cannot create a thread in the moment and there is
+		     also no thread running.  This is a problem.  `errno' is
+		     set to EAGAIN if this is only a temporary problem.  */
+		  __aio_remove_request (last, newp, 0);
+		}
+	      else
+		result = 0;
 	    }
 	}
     }
@@ -459,6 +469,8 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
     {
       /* Something went wrong.  */
       __aio_free_request (newp);
+      aiocbp->aiocb.__error_code = result;
+      __set_errno (result);
       newp = NULL;
     }
 

@@ -1,5 +1,10 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10643]
+	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): If thread
+	creation filed, remove the request from the 'requests' list and signal
+	the caller that the request is finished.
+
 	[BZ #10692]
 	* nis/nss_nis/nis-grp.c (internal_nis_getgrent_r): Don't free buffer
 	in error if batch_read.  Patch by Joe Landers <jlanders@vmware.com>.
