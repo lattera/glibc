@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996-2001, 2003-2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -422,6 +422,11 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
       if (! keep_stream)
 	internal_endent ();
+    }
+  else
+    {
+      *errnop = errno;
+      *herrnop = NO_DATA;
     }
 
   __libc_lock_unlock (lock);

@@ -1,5 +1,10 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10540]
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyname4_r): If
+	/etc/hosts does not exist set errnop and herrnop appropriately.
+	Patch by Steve Langasek <vorlon@debian.org>.
+
 	[BZ #10553]
 	* malloc/malloc.c (malloc_info): Fix typos in format strings.
 	Patch by John Sullivan <jsrhbz@kanargh.force9.co.uk>.
