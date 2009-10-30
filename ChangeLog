@@ -1,5 +1,8 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10391]
+	* resolv/res_send.c (send_dg): Initialize resplen.
+
 	[BZ #10446]
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Match sigevent
 	definition to the kernel's.

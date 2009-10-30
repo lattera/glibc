@@ -1005,7 +1005,8 @@ send_dg(res_state statp,
 	struct pollfd pfd[1];
 	int ptimeout;
 	struct sockaddr_in6 from;
-	int resplen, n;
+	int resplen = 0;
+	int n;
 
 	/*
 	 * Compute time for the total operation.
