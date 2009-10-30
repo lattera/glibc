@@ -1,5 +1,9 @@
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/POSIX: Define yesstr and nostr.
+	* locales/en_US: Likewise.
+	Patch by Petr Machata <pmachata@redhat.com>.
+
 	* locales/crh_UA: Fix first day of week and a few spellings.
 	Patch by Reþat SABIQ <tilde.birlik@gmail.com>.
 
