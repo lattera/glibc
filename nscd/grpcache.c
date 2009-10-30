@@ -295,14 +295,14 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) &dataset->resp > (char *) db->data);
-	      assert ((char *) &dataset->resp - (char *) db->head
+	      assert ((char *) dataset - (char *) db->head
 		      + total
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
 	      written = sendfileall (fd, db->wr_fd,
 				     (char *) &dataset->resp
-				     - (char *) db->head, total);
+				     - (char *) db->head, dataset->head.recsize);
 # ifndef __ASSUME_SENDFILE
 	      if (written == -1 && errno == ENOSYS)
 		goto use_write;
@@ -313,7 +313,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  use_write:
 # endif
 #endif
-	    written = writeall (fd, &dataset->resp, total);
+	    written = writeall (fd, &dataset->resp, dataset->head.recsize);
 	}
 
       /* Add the record to the database.  But only if it has not been

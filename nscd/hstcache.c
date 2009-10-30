@@ -337,7 +337,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) &dataset->resp > (char *) db->data);
-	      assert ((char *) &dataset->resp - (char *) db->head
+	      assert ((char *) dataset - (char *) db->head
 		      + total
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)

@@ -1,3 +1,12 @@
+2009-08-18  Anders Johansson  <ajohansson@novell.com>
+
+	* nscd/aicache.c: Fix mixing up dataset and dataset->resp
+	offsets and record sizes in assert()s and response sending.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 2009-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10540]
