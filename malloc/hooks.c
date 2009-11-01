@@ -162,8 +162,8 @@ mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
 	 ((char*)p + sz)>=(mp_.sbrk_base+main_arena.system_mem) )) ||
        sz<MINSIZE || sz&MALLOC_ALIGN_MASK || !inuse(p) ||
        ( !prev_inuse(p) && (p->prev_size&MALLOC_ALIGN_MASK ||
-                            (contig && (char*)prev_chunk(p)<mp_.sbrk_base) ||
-                            next_chunk(prev_chunk(p))!=p) ))
+			    (contig && (char*)prev_chunk(p)<mp_.sbrk_base) ||
+			    next_chunk(prev_chunk(p))!=p) ))
       return NULL;
     magic = MAGICBYTE(p);
     for(sz += SIZE_SZ-1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
@@ -177,9 +177,9 @@ mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
        first. */
     offset = (unsigned long)mem & page_mask;
     if((offset!=MALLOC_ALIGNMENT && offset!=0 && offset!=0x10 &&
-        offset!=0x20 && offset!=0x40 && offset!=0x80 && offset!=0x100 &&
-        offset!=0x200 && offset!=0x400 && offset!=0x800 && offset!=0x1000 &&
-        offset<0x2000) ||
+	offset!=0x20 && offset!=0x40 && offset!=0x80 && offset!=0x100 &&
+	offset!=0x200 && offset!=0x400 && offset!=0x800 && offset!=0x1000 &&
+	offset<0x2000) ||
        !chunk_is_mmapped(p) || (p->size & PREV_INUSE) ||
        ( (((unsigned long)p - p->prev_size) & page_mask) != 0 ) ||
        ( (sz = chunksize(p)), ((p->prev_size + sz) & page_mask) != 0 ) )
@@ -276,13 +276,17 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   mchunkptr p;
 
   if(!mem) return;
+  (void)mutex_lock(&main_arena.mutex);
   p = mem2chunk_check(mem, NULL);
   if(!p) {
+    (void)mutex_unlock(&main_arena.mutex);
+
     malloc_printerr(check_action, "free(): invalid pointer", mem);
     return;
   }
 #if HAVE_MMAP
   if (chunk_is_mmapped(p)) {
+    (void)mutex_unlock(&main_arena.mutex);
     munmap_chunk(p);
     return;
   }
@@ -291,12 +295,11 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   memset(mem, 0, chunksize(p) - (SIZE_SZ+1));
 #endif
 #ifdef ATOMIC_FASTBINS
-  _int_free(&main_arena, p, 0);
+  _int_free(&main_arena, p, 1);
 #else
-  (void)mutex_lock(&main_arena.mutex);
   _int_free(&main_arena, p);
-  (void)mutex_unlock(&main_arena.mutex);
 #endif
+  (void)mutex_unlock(&main_arena.mutex);
 }
 
 static Void_t*
@@ -345,13 +348,13 @@ realloc_check(oldmem, bytes, caller)
       if(oldsize - SIZE_SZ >= nb)
 	newmem = oldmem; /* do nothing */
       else {
-        /* Must alloc, copy, free. */
-        if (top_check() >= 0)
+	/* Must alloc, copy, free. */
+	if (top_check() >= 0)
 	  newmem = _int_malloc(&main_arena, bytes+1);
-        if (newmem) {
-          MALLOC_COPY(BOUNDED_N(newmem, bytes+1), oldmem, oldsize - 2*SIZE_SZ);
-          munmap_chunk(oldp);
-        }
+	if (newmem) {
+	  MALLOC_COPY(BOUNDED_N(newmem, bytes+1), oldmem, oldsize - 2*SIZE_SZ);
+	  munmap_chunk(oldp);
+	}
       }
     }
   } else {
@@ -367,7 +370,7 @@ realloc_check(oldmem, bytes, caller)
     nb = chunksize(newp);
     if(oldp<newp || oldp>=chunk_at_offset(newp, nb)) {
       memset((char*)oldmem + 2*sizeof(mbinptr), 0,
-             oldsize - (2*sizeof(mbinptr)+2*SIZE_SZ+1));
+	     oldsize - (2*sizeof(mbinptr)+2*SIZE_SZ+1));
     } else if(nb > oldsize+SIZE_SZ) {
       memset((char*)BOUNDED_N(chunk2mem(newp), bytes) + oldsize,
 	     0, nb - (oldsize+SIZE_SZ));
@@ -626,7 +629,7 @@ public_sET_STATe(Void_t* msptr)
 	mark_bin(&main_arena, i);
       } else {
 	/* Oops, index computation from chunksize must have changed.
-           Link the whole list into unsorted_chunks.  */
+	   Link the whole list into unsorted_chunks.  */
 	first(b) = last(b) = b;
 	b = unsorted_chunks(&main_arena);
 	ms->av[2*i+2]->bk = b;
@@ -667,7 +670,7 @@ public_sET_STATe(Void_t* msptr)
     /* Check whether it is safe to enable malloc checking, or whether
        it is necessary to disable it.  */
     if (ms->using_malloc_checking && !using_malloc_checking &&
-        !disallow_malloc_check)
+	!disallow_malloc_check)
       __malloc_check_init ();
     else if (!ms->using_malloc_checking && using_malloc_checking) {
       __malloc_hook = NULL;
