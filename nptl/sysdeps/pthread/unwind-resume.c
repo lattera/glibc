@@ -20,6 +20,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <unwind.h>
+#include <libgcc_s.h>
 
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
 static _Unwind_Reason_Code (*libgcc_s_personality)
@@ -32,12 +33,12 @@ init (void)
   void *resume, *personality;
   void *handle;
 
-  handle = __libc_dlopen ("libgcc_s.so.1");
+  handle = __libc_dlopen (LIBGCC_S_SO);
 
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
       || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL)
-    __libc_fatal ("libgcc_s.so.1 must be installed for pthread_cancel to work\n");
+    __libc_fatal (LIBGCC_S_SO " must be installed for pthread_cancel to work\n");
 
   libgcc_s_resume = resume;
   libgcc_s_personality = personality;

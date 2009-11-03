@@ -1,3 +1,10 @@
+2009-11-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #4457]
+	* sysdeps/pthread/unwind-resume.c: Include <libgcc_s.h> and use
+	LIBGCC_S_SO.
+	* sysdeps/pthread/unwind-forcedunwind.c: Likewise.
+
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-sem11.c (main): Rewrite to avoid aliasing problems.

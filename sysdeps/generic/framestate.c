@@ -24,6 +24,7 @@
 #define __frame_state_for fallback_frame_state_for
 #include <unwind-dw2.c>
 #undef __frame_state_for
+#include <libgcc_s.h>
 
 typedef struct frame_state * (*framesf)(void *pc, struct frame_state *);
 struct frame_state *__frame_state_for (void *pc,
@@ -36,7 +37,7 @@ __frame_state_for (void *pc, struct frame_state *frame_state)
 
   if (frame_state_for == NULL)
     {
-      void *handle = __libc_dlopen ("libgcc_s.so.1");
+      void *handle = __libc_dlopen (LIBGCC_S_SO);
 
       if (handle == NULL
 	  || (frame_state_for
