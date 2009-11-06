@@ -1,3 +1,10 @@
+2009-11-04  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/clone.S: Support V4T interworking.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (__local_syscall_error): Likewise.
+	* sysdeps/arm/memcpy.S: Likewise.
+	* sysdeps/arm/memmove.S: Likewise.
+
 2009-10-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define F_OWNER_* and

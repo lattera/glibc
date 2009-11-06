@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005, 2006
+/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005, 2006, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
@@ -129,6 +129,11 @@ __local_syscall_error:						\
        DO_RET(lr);						\
 1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - 8;
 # else
+#if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
+#define POP_PC  ldr     lr, [sp], #4; bx lr
+#else
+#define POP_PC  ldr     pc, [sp], #4
+#endif
 #  define SYSCALL_ERROR_HANDLER					\
 __local_syscall_error:						\
 	str	lr, [sp, #-4]!;					\
@@ -138,7 +143,7 @@ __local_syscall_error:						\
 	rsb	r1, r1, #0;					\
 	str	r1, [r0];					\
 	mvn	r0, #0;						\
-	ldr	pc, [sp], #4;
+	POP_PC;
 # endif
 #else
 # define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    Contributed by MontaVista Software, Inc. (written by Nicolas Pitre)
@@ -144,7 +144,12 @@ ENTRY(memmove)
 		strneb	r3, [r0, #-1]!
 		strcsb	r4, [r0, #-1]!
 		strcsb	ip, [r0, #-1]
+#if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
+		ldmfd	sp!, {r0, r4, lr}
+		bx      lr
+#else
 		ldmfd	sp!, {r0, r4, pc}
+#endif
 
 9:		cmp	ip, #2
 		ldrgtb	r3, [r1, #-1]!
