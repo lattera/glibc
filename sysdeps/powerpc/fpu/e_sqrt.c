@@ -35,7 +35,7 @@ extern const float __t_sqrt[1024];
 /* The method is based on a description in
    Computation of elementary functions on the IBM RISC System/6000 processor,
    P. W. Markstein, IBM J. Res. Develop, 34(1) 1990.
-   Basically, it consists of two interleaved Newton-Rhapson approximations,
+   Basically, it consists of two interleaved Newton-Raphson approximations,
    one to find the actual square root, and one to find its reciprocal
    without the expense of a division operation.   The tricky bit here
    is the use of the POWER/PowerPC multiply-add operation to get the
@@ -44,7 +44,7 @@ extern const float __t_sqrt[1024];
    The argument reduction works by a combination of table lookup to
    obtain the initial guesses, and some careful modification of the
    generated guesses (which mostly runs on the integer unit, while the
-   Newton-Rhapson is running on the FPU).  */
+   Newton-Raphson is running on the FPU).  */
 
 #ifdef __STDC__
 double
@@ -102,7 +102,7 @@ __slow_ieee754_sqrt (x)
 	  /* complete the INSERT_WORDS (sx, sxi, xi1) operation.  */
 	  sx = iw_u.value;
 
-	  /* Here we have three Newton-Rhapson iterations each of a
+	  /* Here we have three Newton-Raphson iterations each of a
 	     division and a square root and the remainder of the
 	     argument reduction, all interleaved.   */
 	  sd = -(sg * sg - sx);

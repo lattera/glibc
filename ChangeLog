@@ -1,3 +1,8 @@
+2009-11-04  Philippe De Muyter  <phdm@macqel.be>
+
+	* sysdeps/powerpc/fpu/e_sqrt.c: Fix spelling of (Newton-)Raphson.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+
 2009-10-30  Holger Hans Peter Freyther  <zecke@selfish.org>
 
 	* malloc/memusagestat.c (main): Fix spelling in an error message.
