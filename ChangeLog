@@ -1,3 +1,8 @@
+2009-11-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Don't
+	relocate opd entry when resolving prelink conflicts.
+
 2009-11-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/sys/uio.h (preadv, pwritev): Fix type of last argument

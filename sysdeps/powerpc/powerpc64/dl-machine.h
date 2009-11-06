@@ -531,13 +531,14 @@ auto inline Elf64_Addr __attribute__ ((always_inline))
 resolve_ifunc (Elf64_Addr value,
 	       const struct link_map *map, const struct link_map *sym_map)
 {
+#ifndef RESOLVE_CONFLICT_FIND_MAP
   /* The function we are calling may not yet have its opd entry relocated.  */
   Elf64_FuncDesc opd;
   if (map != sym_map
-#if !defined RTLD_BOOTSTRAP && defined SHARED
+# if !defined RTLD_BOOTSTRAP && defined SHARED
       /* Bootstrap map doesn't have l_relocated set for it.  */
       && sym_map != &GL(dl_rtld_map)
-#endif
+# endif
       && !sym_map->l_relocated)
     {
       Elf64_FuncDesc *func = (Elf64_FuncDesc *) value;
@@ -546,6 +547,7 @@ resolve_ifunc (Elf64_Addr value,
       opd.fd_aux = func->fd_aux;
       value = (Elf64_Addr) &opd;
     }
+#endif
   return ((Elf64_Addr (*) (void)) value) ();
 }
 
