@@ -193,8 +193,13 @@ RTLD_NEXT used in code not dynamically loaded"));
 
       /* Resolve indirect function address.  */
       if (__builtin_expect (ELFW(ST_TYPE) (ref->st_info) == STT_GNU_IFUNC, 0))
-	value
-	  = ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (value)) ();
+	{
+	  DL_FIXUP_VALUE_TYPE fixup
+	    = DL_FIXUP_MAKE_VALUE (result, (ElfW(Addr)) value);
+	  fixup = 
+	    ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (fixup)) ();
+	  value = (void *) DL_FIXUP_VALUE_CODE_ADDR (fixup);
+	}
 
 #ifdef SHARED
       /* Auditing checkpoint: we have a new binding.  Provide the

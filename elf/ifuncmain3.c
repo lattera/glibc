@@ -46,6 +46,15 @@ main (void)
       return 1;
     }
 
+  p = dlsym (h, "foo");
+  if (p == NULL)
+    {
+      printf ("symbol not found: %s\n", dlerror ());
+      return 1;
+    }
+  if ((*p) () != -1)
+    abort ();
+
   f = dlsym (h, "get_foo_p");
   if (f == NULL)
     {

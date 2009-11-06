@@ -1,3 +1,8 @@
+2009-11-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-sym.c (do_sym): Properly handle STT_GNU_IFUNC symbols.
+	* elf/ifuncmain3.c (main): Test dlopen STT_GNU_IFUNC symbol.
+
 2009-11-03  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
