@@ -3,3 +3,6 @@
 # System calls with wrappers.
 oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
 oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
+
+# Due to 64bit alignment there is a dummy second parameter
+readahead	-	readahead	i:iiiii	__readahead	readahead

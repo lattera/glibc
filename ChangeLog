@@ -1,3 +1,8 @@
+2009-11-03  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	readahead.
+
 2009-11-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Don't
