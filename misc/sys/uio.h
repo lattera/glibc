@@ -80,10 +80,10 @@ extern ssize_t pwritev (int __fd, __const struct iovec *__iovec, int __count,
 # else
 #  ifdef __REDIRECT
 extern ssize_t __REDIRECT (preadv, (int __fd, __const struct iovec *__iovec,
-				    int __count, __off_t __offset),
+				    int __count, __off64_t __offset),
 			   preadv64) __wur;
 extern ssize_t __REDIRECT (pwritev, (int __fd, __const struct iovec *__iovec,
-				     int __count, __off_t __offset),
+				     int __count, __off64_t __offset),
 			   pwritev64) __wur;
 #  else
 #   define preadv preadv64

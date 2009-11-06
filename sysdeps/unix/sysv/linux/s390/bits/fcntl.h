@@ -279,8 +279,8 @@ extern ssize_t tee (int __fdin, int __fdout, size_t __len,
 extern int fallocate (int __fd, int __mode, __off_t __offset, __off_t __len);
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (fallocate, (int __fd, int __mode, __off_t __offset,
-				   __off_t __len),
+extern int __REDIRECT (fallocate, (int __fd, int __mode, __off64_t __offset,
+				   __off64_t __len),
 		       fallocate64);
 #  else
 #   define fallocate fallocate64

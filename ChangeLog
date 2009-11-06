@@ -1,3 +1,17 @@
+2009-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/uio.h (preadv, pwritev): Fix type of last argument
+	when -D_FILE_OFFSET_BITS=64.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (fallocate): Fix types
+	of last two arguments when -D_FILE_OFFSET_BITS=64.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (fallocate): Likewise.
+
 2009-11-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #4457]
