@@ -196,7 +196,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	{
 	  DL_FIXUP_VALUE_TYPE fixup
 	    = DL_FIXUP_MAKE_VALUE (result, (ElfW(Addr)) value);
-	  fixup = 
+	  fixup =
 	    ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (fixup)) ();
 	  value = (void *) DL_FIXUP_VALUE_CODE_ADDR (fixup);
 	}
