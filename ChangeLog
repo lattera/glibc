@@ -1,3 +1,7 @@
+2009-10-30  Holger Hans Peter Freyther  <zecke@selfish.org>
+
+	* malloc/memusagestat.c (main): Fix spelling in an error message.
+
 2009-11-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-sym.c (do_sym): Properly handle STT_GNU_IFUNC symbols.

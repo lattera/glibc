@@ -181,7 +181,7 @@ main (int argc, char *argv[])
       || st.st_size < 2 * sizeof (struct entry))
     {
       close (fd);
-      error (EXIT_FAILURE, 0, "input file as incorrect size");
+      error (EXIT_FAILURE, 0, "input file has incorrect size");
     }
   /* Compute number of data entries.  */
   total = st.st_size / sizeof (struct entry) - 2;
