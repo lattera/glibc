@@ -878,7 +878,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 		}
 	      bp += n;
 	      linebuflen -= n;
-	      map_v4v6_hostent (result, &bp, &linebuflen);
+	      if (map_v4v6_hostent (result, &bp, &linebuflen))
+		goto too_small;
 	    }
 	  *h_errnop = NETDB_SUCCESS;
 	  return NSS_STATUS_SUCCESS;
@@ -953,7 +954,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	}
 
       if (have_to_map)
-	map_v4v6_hostent (result, &bp, &linebuflen);
+	if (map_v4v6_hostent (result, &bp, &linebuflen))
+	  goto too_small;
       *h_errnop = NETDB_SUCCESS;
       return NSS_STATUS_SUCCESS;
     }

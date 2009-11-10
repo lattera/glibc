@@ -1,7 +1,15 @@
+2009-11-10  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/mapv4v6hostent.h (map_v4v6_hostent): Return non-zero if
+	out of buffer space.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Check for
+	map_v4v6_hostent running out of space.
+
 2009-11-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/bits/string3.h (memset): If the second parameter is constant
 	and zero there is likely no transposition.
+	Patch by Caolan McNamara <caolanm@redhat.com.
 
 2009-11-04  Philippe De Muyter  <phdm@macqel.be>
 

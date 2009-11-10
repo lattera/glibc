@@ -57,13 +57,13 @@ typedef union {
     char ac;
 } align;
 
-static void
+static int
 map_v4v6_hostent (struct hostent *hp, char **bpp, int *lenp)
 {
   char **ap;
 
   if (hp->h_addrtype != AF_INET || hp->h_length != INADDRSZ)
-    return;
+    return 0;
   hp->h_addrtype = AF_INET6;
   hp->h_length = IN6ADDRSZ;
   for (ap = hp->h_addr_list; *ap; ap++)
@@ -71,11 +71,8 @@ map_v4v6_hostent (struct hostent *hp, char **bpp, int *lenp)
       int i = sizeof (align) - ((u_long) *bpp % sizeof (align));
 
       if (*lenp < (i + IN6ADDRSZ))
-	{
-	  /* Out of memory.  Truncate address list here.  XXX */
-	  *ap = NULL;
-	  return;
-	}
+	/* Out of memory.  */
+	return 1;
       *bpp += i;
       *lenp -= i;
       map_v4v6_address (*ap, *bpp);
@@ -83,4 +80,5 @@ map_v4v6_hostent (struct hostent *hp, char **bpp, int *lenp)
       *bpp += IN6ADDRSZ;
       *lenp -= IN6ADDRSZ;
     }
+  return 0;
 }
