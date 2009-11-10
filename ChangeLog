@@ -1,3 +1,8 @@
+2009-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/bits/string3.h (memset): If the second parameter is constant
+	and zero there is likely no transposition.
+
 2009-11-04  Philippe De Muyter  <phdm@macqel.be>
 
 	* sysdeps/powerpc/fpu/e_sqrt.c: Fix spelling of (Newton-)Raphson.

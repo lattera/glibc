@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,8 @@ __NTH (mempcpy (void *__restrict __dest, __const void *__restrict __src,
 __extern_always_inline void *
 __NTH (memset (void *__dest, int __ch, size_t __len))
 {
-  if (__builtin_constant_p (__len) && __len == 0)
+  if (__builtin_constant_p (__len) && __len == 0
+      && (!__builtin_constant_p (__ch) || __ch != 0))
     {
       __warn_memset_zero_len ();
       return __dest;
