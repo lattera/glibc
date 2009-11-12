@@ -1,3 +1,7 @@
+2009-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h: Bump for 2.12 development.
+
 2009-11-10  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/mapv4v6hostent.h (map_v4v6_hostent): Return non-zero if
