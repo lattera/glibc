@@ -1265,6 +1265,12 @@ They are not yet documented.}
 @comment errno ???/???
 @end deftypevr
 
+@comment errno.h
+@comment Linux: Operation not possible due to RF-kill
+@deftypevr Macro int ERFKILL
+@comment errno ???/???
+@end deftypevr
+
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 

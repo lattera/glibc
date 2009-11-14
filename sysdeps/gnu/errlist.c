@@ -1456,6 +1456,14 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # define ERR_MAX ENOTRECOVERABLE
 # endif
 #endif
+#ifdef ERFKILL
+/* */
+    [ERR_REMAP (ERFKILL)] = N_("Operation not possible due to RF-kill"),
+# if ERFKILL > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX ERFKILL
+# endif
+#endif
   };
 
 #define NERR \

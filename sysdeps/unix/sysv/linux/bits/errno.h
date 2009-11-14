@@ -1,5 +1,5 @@
 /* Error constants.  Linux specific version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,10 @@
 # ifndef EOWNERDEAD
 #  define EOWNERDEAD		130
 #  define ENOTRECOVERABLE	131
+# endif
+
+# ifndef ERFKILL
+#  define ERFKILL		132
 # endif
 
 # ifndef __ASSEMBLER__

@@ -1,5 +1,13 @@
 2009-11-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10939]
+	* Versions.def: Define GLIBC_2.12 for libc.
+	* manual/errno.texi: Add ERFKILL entry.
+	* sysdeps/unix/sysv/linux/Versions: Add new errlist compat entries
+	for 2.12.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define ERFKILL is not done.
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Update F_SETOWN_EX and
 	F_GETOWN_EX definitions according to corrected kernel definitions.
 	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
