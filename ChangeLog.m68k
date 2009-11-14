@@ -1,3 +1,9 @@
+2009-11-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (F_SETOWN_EX)
+	(F_GETOWN_EX, F_OWNER_TID, F_OWNER_PID, F_OWNER_GID, f_owner_ex):
+	Define.
+
 2009-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (fallocate): Fix types
