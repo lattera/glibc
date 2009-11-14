@@ -156,7 +156,9 @@ tests += tst-audit6 tst-audit7
 endif
 endif
 endif
+ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-leaks1-mem $(objpfx)noload-mem
+endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod17a-modules = $(addprefix tst-tlsmod17a, $(tlsmod17a-suffixes))
@@ -1119,7 +1121,9 @@ $(objpfx)tst-relsort1mod2.so: $(libm)
 $(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
 			   $(objpfx)tst-relsort1mod2.so
 
+ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-unused-dep.out
+endif
 
 $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 	LD_TRACE_LOADED_OBJECTS=1 \

@@ -1,3 +1,8 @@
+2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/Makefile ($(objpfx)tst-leaks1-mem, $(objpfx)noload-mem)
+	($(objpfx)tst-unused-dep.out): Don't run when cross-compiling.
+
 2012-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/conformtest.pl: Remove duplicate typed-constant

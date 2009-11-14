@@ -1,3 +1,8 @@
+2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* Makefile ($(objpfx)tst-stack3-mem, $(objpfx)tst-tls6.out): Don't
+	run when cross-compiling.
+
 2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/pthread/unwind-forcedunwind.c: Include gnu/lib-names.h
