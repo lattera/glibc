@@ -1,3 +1,14 @@
+2009-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Update F_SETOWN_EX and
+	F_GETOWN_EX definitions according to corrected kernel definitions.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
 2009-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Bump for 2.12 development.

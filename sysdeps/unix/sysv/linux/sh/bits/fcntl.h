@@ -85,15 +85,15 @@
 #define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 
 #if defined __USE_BSD || defined __USE_UNIX98
-# define F_SETOWN	8	/* Get owner (process receiving of SIGIO).  */
-# define F_GETOWN	9	/* Set owner (process receiving of SIGIO).  */
+# define F_SETOWN	8	/* Get owner (process receiving SIGIO).  */
+# define F_GETOWN	9	/* Set owner (process receiving SIGIO).  */
 #endif
 
 #ifdef __USE_GNU
 # define F_SETSIG	10	/* Set number of signal to be sent.  */
 # define F_GETSIG	11	/* Get number of signal to be sent.  */
-# define F_SETOWN_EX	12	/* Get owner (thread receiving of SIGIO).  */
-# define F_GETOWN_EX	13	/* Set owner (thread receiving of SIGIO).  */
+# define F_SETOWN_EX	15	/* Get owner (thread receiving SIGIO).  */
+# define F_GETOWN_EX	16	/* Set owner (thread receiving SIGIO).  */
 #endif
 
 #ifdef __USE_GNU
