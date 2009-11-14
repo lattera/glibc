@@ -1,3 +1,8 @@
+2009-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (F_SETOWN_EX,
+	F_GETOWN_EX): Update values.
+
 2009-11-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (fallocate): Fix types
