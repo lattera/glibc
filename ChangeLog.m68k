@@ -1,3 +1,7 @@
+2009-11-15  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/libgcc_s.h: New file.
+
 2009-11-14  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (F_SETOWN_EX)
