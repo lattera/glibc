@@ -1,3 +1,9 @@
+2009-11-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Use a simple loop on data shorter than
+	software pipeline.
+
 2009-11-09  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/i386/fallocate.c: Include errno.h.

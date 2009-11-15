@@ -71,7 +71,8 @@ ENTRY(__memchr)
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1
 	mov	len = in2
-	cmp.gtu	p6, p0 = 16, in2	// use a simple loop for short
+	// use a simple loop on data shorter than software pipeline
+	cmp.gtu	p6, p0 = ((MEMLAT + 1) * 8), in2
 (p6)	br.cond.spnt .srchfew ;;	// searches
 	sub	loopcnt = 8, tmp	// loopcnt = 8 - tmp
 	cmp.eq	p6, p0 = tmp, r0
