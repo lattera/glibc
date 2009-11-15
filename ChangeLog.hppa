@@ -1,3 +1,11 @@
+2009-11-08  Carlos O'Donell  <carlos@codesourcery.com>
+
+	[BZ #10920]
+
+	* sysdeps/hppa/libgcc_s.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-forcedunwind.c: Remove.
+	* sysdeps/unix/sysv/linux/hppa/nptl/unwind-resume.c: Remove.
+
 2009-09-08  Carlos O'Donell  <carlos@codesourcery.com>
  
 	sysdeps/unix/sysv/linux/hppa/
