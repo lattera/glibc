@@ -1,5 +1,17 @@
 2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/hppa/Versions (libc): Add 
+	fallocate64@@GLIBC_2.11.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h
+	[__USE_GNU]: Define F_GETOWN_EX, and F_SETOWN_EX.
+	[!__USE_FILE_OFFSET64]: Define fallocate.
+	[__USE_FILE_OFFSET64 && __REDIRECT]: Define __REDIRECT.
+	[__USE_FILE_OFFSET64 && !__REDIRECT]: Define fallocate as
+	fallocate64.
+	[__USE_LARGEFILE64]: define fallocate64. 	
+
+2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/hppa/dl-fptr.h: Update copyright year.
 	Reduce ELF_MACHINE_BOOT_FPTR_TABLE_LEN to 64.
 	Implement ELF_MACHINE_LOAD_ADDRESS using PC relative loads.
