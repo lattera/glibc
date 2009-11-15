@@ -1,5 +1,12 @@
 2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
 
+	[BZ #6676]
+
+	* sysdeps/unix/sysv/linux/hppa/socket.h: Move from here...
+	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: ... to here.
+
+2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/hppa/Versions (libc): Add 
 	fallocate64@@GLIBC_2.11.
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h
