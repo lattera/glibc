@@ -1,5 +1,5 @@
 /* Function descriptors.  HPPA version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,14 +22,16 @@
 
 #include <sysdeps/generic/dl-fptr.h>
 
-/* There are currently 20 dynamic symbols in ld.so.
+/* There are currently 33 dynamic symbols in ld.so.
    ELF_MACHINE_BOOT_FPTR_TABLE_LEN needs to be at least that big.  */
-#define ELF_MACHINE_BOOT_FPTR_TABLE_LEN	200
+#define ELF_MACHINE_BOOT_FPTR_TABLE_LEN 64	
 
-#define ELF_MACHINE_LOAD_ADDRESS(var, symbol)		\
-  asm ("	addil LT%%" #symbol ", %%r19\n"		\
-       "	ldw RT%%" #symbol "(%%sr0,%%r1), %0\n"	\
-      : "=&r" (var));
-
+#define ELF_MACHINE_LOAD_ADDRESS(var, symbol) \
+  asm (								\
+"	b,l	1f,%0\n"					\
+"	depi	0,31,2,%0\n"					\
+"1:	addil	L'" #symbol " - ($PIC_pcrel$0 - 8),%0\n"	\
+"	ldo	R'" #symbol " - ($PIC_pcrel$0 - 12)(%%r1),%0\n"	\
+   : "=&r" (var) : : "r1");
 
 #endif /* !dl_hppa_fptr_h */
