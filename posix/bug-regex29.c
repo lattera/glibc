@@ -1,4 +1,5 @@
 #include <regex.h>
+#include <stdio.h>
 
 static int
 do_test (void)

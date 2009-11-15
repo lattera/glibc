@@ -1,3 +1,7 @@
+2009-11-06  Mike Frsyinger  <vapier@gentoo.org>
+
+	* posix/bug-regex29.c: Include stdio.h.
+
 2009-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10939]
