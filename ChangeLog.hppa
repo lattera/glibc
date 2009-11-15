@@ -1,3 +1,10 @@
+2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
+
+	[BZ #6676]
+
+	* sysdeps/hppa/elf/start.S: Use R_PARISC_DLTIND* relocations
+	to support -fPIE.
+
 2009-11-08  Carlos O'Donell  <carlos@codesourcery.com>
 
 	[BZ #10920]

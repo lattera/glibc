@@ -1,5 +1,5 @@
 /* ELF startup code for HPPA.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,16 +96,16 @@ _start:
 
 #if SHARED
 	/* load main (1st argument) */
-	addil	LR'.Lpmain, %r19
-	ldw	RR'.Lpmain(%r1), %r26
+	addil	LT'.Lpmain, %r19
+	ldw	RT'.Lpmain(%r1), %r26
 	ldw	0(%r26),%r26
 	/* void (*init) (void) (4th argument) */
-	addil	LR'.Lp__libc_csu_init, %r19
-	ldw	RR'.Lp__libc_csu_init(%r1), %r23
+	addil	LT'.Lp__libc_csu_init, %r19
+	ldw	RT'.Lp__libc_csu_init(%r1), %r23
 	ldw	0(%r23), %r23
 	/* void (*fini) (void) (5th argument) */
-	addil	LR'.Lp__libc_csu_fini, %r19
-	ldw	RR'.Lp__libc_csu_fini(%r1), %r22
+	addil	LT'.Lp__libc_csu_fini, %r19
+	ldw	RT'.Lp__libc_csu_fini(%r1), %r22
 	ldw	0(%r22), %r22
 #else
 	/* load main (1st argument) */
