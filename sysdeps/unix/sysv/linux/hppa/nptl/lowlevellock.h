@@ -48,11 +48,6 @@
 
 #define FUTEX_BITSET_MATCH_ANY	0xffffffff
 
-/* Bits used in robust mutex implementation.  */
-#define FUTEX_WAITERS		0x80000000
-#define FUTEX_OWNER_DIED	0x40000000
-#define FUTEX_TID_MASK		0x3fffffff
-
 /* Values for 'private' parameter of locking macros.  Yes, the
    definition seems to be backwards.  But it is not.  The bit will be
    reversed before passing to the system call.  */

@@ -1,4 +1,9 @@
 2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h:
+	Remove FUTEX_WAITERS, FUTEX_OWNER_DIED, and FUTEX_TID_MASK.
+
+2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
 	    Aurelian Jarno  <aurelien@aurel32.net>
 
 	[BZ #10527]
