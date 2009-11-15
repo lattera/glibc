@@ -1,4 +1,11 @@
 2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
+	    Aurelian Jarno  <aurelien@aurel32.net>
+
+	[BZ #10527]
+
+	* sysdeps/unix/sysv/linux/hppa/socket.h: New file.
+
+2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
 
 	[BZ #6676]
 
