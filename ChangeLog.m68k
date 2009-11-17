@@ -1,3 +1,9 @@
+2009-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+
 2009-11-15  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/libgcc_s.h: New file.
