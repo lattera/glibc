@@ -568,7 +568,8 @@ enum
 
 /* This macro produces an item you can pass to `nl_langinfo' or
    `nl_langinfo_l' to get the name of the locale in use for CATEGORY.  */
-#define _NL_LOCALE_NAME(category)	_NL_ITEM ((category), -1)
+#define _NL_LOCALE_NAME(category)	_NL_ITEM ((category),		      \
+						  _NL_ITEM_INDEX (-1))
 #ifdef __USE_GNU
 # define NL_LOCALE_NAME(category)	_NL_LOCALE_NAME (category)
 #endif

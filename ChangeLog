@@ -1,5 +1,11 @@
 2009-11-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10968]
+	* locale/langinfo.h (_NL_LOCALE_NAME): Correct definition.
+	Patch by Bruno Haible <bruno@clisp.org>.
+	* locale/tst-locname.c: New file.
+	* locale/Makefile (tests): Add tst-locname.
+
 	[BZ #10972]
 	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Add new MADV_*
 	constants from recent kernels.
