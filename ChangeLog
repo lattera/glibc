@@ -1,3 +1,15 @@
+2009-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+
 2009-11-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #10162]
@@ -10,7 +22,7 @@
 	(fallocate): Return ENOSYS if __NR_fallocate is not defined.
 	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
 
-2009-11-06  Mike Frsyinger  <vapier@gentoo.org>
+2009-11-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* posix/bug-regex29.c: Include stdio.h.
 
