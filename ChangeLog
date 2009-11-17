@@ -1,5 +1,10 @@
 2009-11-17  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10969]
+	* locale/duplocale.c (__duplocale): Handle LC_GLOBAL_LOCALE special.
+	* locale/tst-duplocale.c: New file.
+	* locale/Makefile (tests): Add tst-duplocale.
+
 	[BZ #10968]
 	* locale/langinfo.h (_NL_LOCALE_NAME): Correct definition.
 	Patch by Bruno Haible <bruno@clisp.org>.
