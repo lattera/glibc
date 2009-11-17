@@ -1,5 +1,11 @@
 2009-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+
+2009-11-17  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h (ERFKILL): Define if
 	not already defined.
 
