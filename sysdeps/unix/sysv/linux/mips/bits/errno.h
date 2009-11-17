@@ -38,6 +38,10 @@
 #  define ENOTRECOVERABLE	166
 # endif
 
+# ifndef ERFKILL
+#  define ERFKILL		167
+# endif
+
 # ifndef __ASSEMBLER__
 /* Function to get address of global `errno' variable.  */
 extern int *__errno_location (void) __THROW __attribute__ ((__const__));
