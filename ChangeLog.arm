@@ -1,3 +1,9 @@
+2009-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+
 2009-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (F_SETOWN_EX,
