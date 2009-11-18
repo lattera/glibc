@@ -69,6 +69,7 @@ __pthread_cond_timedwait:
 #endif
 	subq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
+	cfi_remember_state
 
 	cmpq	$1000000000, 8(%rdx)
 	movl	$EINVAL, %eax
@@ -77,19 +78,19 @@ __pthread_cond_timedwait:
 	/* Stack frame:
 
 	   rsp + 48
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 32 | timeout value            |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 24 | old wake_seq value       |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 16 | mutex pointer            |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  8 | condvar pointer          |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  4 | old broadcast_seq value  |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  0 | old cancellation mode    |
-	            +--------------------------+
+		    +--------------------------+
 	*/
 
 	cmpq	$-1, dep_mutex(%rdi)
@@ -317,11 +318,7 @@ __pthread_cond_timedwait:
 
 	retq
 
-	cfi_adjust_cfa_offset(4 * 8 + FRAME_SIZE)
-	cfi_rel_offset(%r12, FRAME_SIZE + 24)
-	cfi_rel_offset(%r13, FRAME_SIZE + 16)
-	cfi_rel_offset(%r14, FRAME_SIZE + 8)
-	cfi_rel_offset(%r15, FRAME_SIZE)
+	cfi_restore_state
 
 64:	callq	__pthread_mutex_cond_lock_adjust
 	movq	%r14, %rax
@@ -650,15 +647,15 @@ __condvar_cleanup2:
 	   rsp + 48 | %r14                     |
 		    +--------------------------+
 	   rsp + 24 | unused                   |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 16 | mutex pointer            |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  8 | condvar pointer          |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  4 | old broadcast_seq value  |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  0 | old cancellation mode    |
-	            +--------------------------+
+		    +--------------------------+
 	*/
 
 	movq	%rax, 24(%rsp)

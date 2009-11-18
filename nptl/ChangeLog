@@ -1,5 +1,8 @@
 2009-11-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Minimally
+	reduce size of unwind info.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Convert to use
 	cfi directives.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
