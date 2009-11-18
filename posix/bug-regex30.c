@@ -34,7 +34,7 @@ struct
   regmatch_t rm[5];
 } tests[] = {
   /* U+0413	\xd0\x93	CYRILLIC CAPITAL LETTER GHE
-     U+0420	\xd0\xa0        CYRILLIC CAPITAL LETTER ER 
+     U+0420	\xd0\xa0        CYRILLIC CAPITAL LETTER ER
      U+0430	\xd0\xb0	CYRILLIC SMALL LETTER A
      U+0433	\xd0\xb3	CYRILLIC SMALL LETTER GHE
      U+0440	\xd1\x80	CYRILLIC SMALL LETTER ER
@@ -83,7 +83,7 @@ do_test (void)
 
       for (n = 0; n < tests[i].nmatch; ++n)
 	if (rm[n].rm_so != tests[i].rm[n].rm_so
-              || rm[n].rm_eo != tests[i].rm[n].rm_eo)
+	      || rm[n].rm_eo != tests[i].rm[n].rm_eo)
 	  {
 	    if (tests[i].rm[n].rm_so == -1 && tests[i].rm[n].rm_eo == -1)
 	      break;
