@@ -1,3 +1,11 @@
+2009-11-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/bug-regex30.c: New file.
+	* posix/Makefile: Add rules to build and run bug-regex30.
+	* posix/regcomp.c (re_compile_fastmap_iter): Add all multibyte
+	character lead bytes when there is a range in a COMPLEX_BRACKET.
+	Reported by Oleg Bylatov.
+
 2009-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10969]
