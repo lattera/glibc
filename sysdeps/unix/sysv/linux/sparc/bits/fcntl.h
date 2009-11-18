@@ -256,7 +256,7 @@ extern ssize_t readahead (int __fd, __off64_t __offset, size_t __count)
 
 
 /* Selective file content synch'ing.  */
-extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
+extern int sync_file_range (int __fd, __off64_t __offset, __off64_t __count,
 			    unsigned int __flags);
 
 
