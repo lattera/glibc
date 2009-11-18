@@ -1,3 +1,10 @@
+2009-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Convert to use
+	cfi directives.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	Based on a patch by Dinakar Guniguntala <dino@in.ibm.com>.
+
 2009-11-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #4457]
