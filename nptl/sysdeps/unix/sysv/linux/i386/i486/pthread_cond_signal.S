@@ -36,10 +36,11 @@ __pthread_cond_signal:
 	cfi_startproc
 	pushl	%ebx
 	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%ebx, 0)
 	pushl	%edi
 	cfi_adjust_cfa_offset(4)
-	cfi_offset(%ebx, -8)
-	cfi_offset(%edi, -12)
+	cfi_rel_offset(%edi, 0)
+	cfi_remember_state
 
 	movl	12(%esp), %edi
 
@@ -75,10 +76,10 @@ __pthread_cond_signal:
 	/* Wake up one thread.  */
 	pushl	%esi
 	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%esi, 0)
 	pushl	%ebp
 	cfi_adjust_cfa_offset(4)
-	cfi_offset(%esi, -16)
-	cfi_offset(%ebp, -20)
+	cfi_rel_offset(%ebp, 0)
 
 #if FUTEX_PRIVATE_FLAG > 255
 	xorl	%ecx, %ecx
@@ -121,9 +122,7 @@ __pthread_cond_signal:
 	cfi_restore(%ebx)
 	ret
 
-	cfi_adjust_cfa_offset(8)
-	cfi_offset(%ebx, -8)
-	cfi_offset(%edi, -12)
+	cfi_restore_state
 
 7:	/* %ecx should be either FUTEX_WAKE_OP or
 	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */

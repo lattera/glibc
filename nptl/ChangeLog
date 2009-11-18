@@ -1,3 +1,10 @@
+2009-11-18  Dinakar Guniguntala  <dino@in.ibm.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S:
+	Remove redundant code. Fix cfi offsets.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S:
+	Fix cfi offsets.
+
 2009-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Minimally
