@@ -1,3 +1,8 @@
+2009-11-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Minor
+	optimizations and cleanups.
+
 2009-11-18  Dinakar Guniguntala  <dino@in.ibm.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S:

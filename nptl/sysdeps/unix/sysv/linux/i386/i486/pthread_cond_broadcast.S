@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2006,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -138,13 +138,6 @@ __pthread_cond_broadcast:
 
 	cfi_restore_state
 
-	.align	16
-	/* Unlock.  */
-4:	LOCK
-	subl	$1, cond_lock-cond_futex(%ebx)
-	jne	5f
-	jmp	6b
-
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
@@ -165,7 +158,13 @@ __pthread_cond_broadcast:
 	call	__lll_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	.align	16
+	/* Unlock.  */
+4:	LOCK
+	subl	$1, cond_lock-cond_futex(%ebx)
+	je	6b
+
+	/* Unlock in loop requires wakeup.  */
 5:	leal	cond_lock-cond_futex(%ebx), %eax
 #if (LLL_SHARED-LLL_PRIVATE) > 255
 	xorl	%ecx, %ecx
@@ -180,7 +179,7 @@ __pthread_cond_broadcast:
 	call	__lll_unlock_wake
 	jmp	6b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 7:	leal	cond_lock-cond_futex(%ebx), %eax
 #if (LLL_SHARED-LLL_PRIVATE) > 255
 	xorl	%ecx, %ecx
