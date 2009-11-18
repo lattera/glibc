@@ -1,3 +1,8 @@
+2009-11-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Change misleading
+	names of parameters of sync_file_range.
+
 2009-11-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #10972]
