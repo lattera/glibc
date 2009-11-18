@@ -25,22 +25,11 @@
 #include <sys/syscall.h>
 
 
-#ifdef __NR_sync_file_range
+#if defined __NR_sync_file_range2
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-  return INLINE_SYSCALL (sync_file_range, 6, fd,
-			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
-			 flags);
-}
-#elif defined __NR_sync_file_range2
-int
-sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
-{
-  return INLINE_SYSCALL (sync_file_range2, 6, fd, flags,
-			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to));
+  return INLINE_SYSCALL (sync_file_range2, 4, fd, flags, from, to);
 }
 #else
 int

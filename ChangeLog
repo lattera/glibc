@@ -1,3 +1,11 @@
+2009-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Implement using sync_file_range2 syscall if __NR_sync_file_range2
+	is defined.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c: New
+	file.
+
 2009-11-17  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/bug-regex30.c: New file.
