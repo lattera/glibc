@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1995,1997-2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -442,13 +442,15 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
 
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # define _IO_getwc_unlocked(_fp) \
-  (_IO_BE ((_fp)->_wide_data->_IO_read_ptr >= (_fp)->_wide_data->_IO_read_end,\
-	   0) \
+  (_IO_BE ((_fp)->_wide_data == NULL					\
+	   || ((_fp)->_wide_data->_IO_read_ptr				\
+	       >= (_fp)->_wide_data->_IO_read_end), 0)			\
    ? __wuflow (_fp) : (_IO_wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
 # define _IO_putwc_unlocked(_wch, _fp) \
-  (_IO_BE ((_fp)->_wide_data->_IO_write_ptr \
-	   >= (_fp)->_wide_data->_IO_write_end, 0) \
-   ? __woverflow (_fp, _wch) \
+  (_IO_BE ((_fp)->_wide_data == NULL					\
+	   || ((_fp)->_wide_data->_IO_write_ptr				\
+	       >= (_fp)->_wide_data->_IO_write_end), 0)			\
+   ? __woverflow (_fp, _wch)						\
    : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
 #endif
 

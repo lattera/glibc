@@ -1,5 +1,10 @@
 2009-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10958]
+	* libio/libio.h (_IO_getwc_unlocked): Check for _wide_data being
+	initialized before using it.
+	(_IO_putwc_unlocked): Likewise.
+
 	[BZ #10918]
 	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ISSET_S): Use __const
 	in cast to not throw away const-ness of parameters.
