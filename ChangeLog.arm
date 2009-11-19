@@ -1,3 +1,8 @@
+2009-11-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_PSELECT,
+	__ASSUME_PPOLL): Don't undefine for kernel 2.6.32 and later.
+
 2009-11-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Change misleading

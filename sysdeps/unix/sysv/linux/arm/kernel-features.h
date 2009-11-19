@@ -59,6 +59,8 @@
 
 #include_next <kernel-features.h>
 
-/* These syscalls are not implemented yet for ARM.  */
-#undef __ASSUME_PSELECT
-#undef __ASSUME_PPOLL
+/* Support for pselect6, ppoll and epoll_pwait was added in 2.6.32.  */
+#if __LINUX_KERNEL_VERSION < 0x020620
+# undef __ASSUME_PSELECT
+# undef __ASSUME_PPOLL
+#endif
