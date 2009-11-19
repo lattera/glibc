@@ -191,9 +191,10 @@ struct flock64
 /* Owner types.  */
 enum __pid_type
   {
-    F_OWNER_TID = 0,	/* Kernel thread.  */
-    F_OWNER_PID,	/* Process.  */
-    F_OWNER_GID		/* Process group.  */
+    F_OWNER_TID = 0,		/* Kernel thread.  */
+    F_OWNER_PID,		/* Process.  */
+    F_OWNER_PGRP,		/* Process group.  */
+    F_OWNER_GID = F_OWNER_PGRP	/* Alternative, obsolete name.  */
   };
 
 /* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
