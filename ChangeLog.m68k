@@ -1,3 +1,8 @@
+2009-11-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Introduce new symbol
+	F_OWNER_PGRP and mark F_OWNER_GID obsolete.
+
 2009-11-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Change misleading
