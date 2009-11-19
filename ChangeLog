@@ -1,5 +1,11 @@
 2009-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10918]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ISSET_S): Use __const
+	in cast to not throw away const-ness of parameters.
+	(__CPU_EQUAL_S): Likewise.
+	(__CPU_OP_S): Likewise.
+
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Introduce new symbol
 	F_OWNER_PGRP and mark F_OWNER_GID obsolete.  The kernel people made
 	this gratuitous change and we have to keep compatibility.
