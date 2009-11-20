@@ -71,8 +71,7 @@ ENTRY(__memchr)
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1
 	mov	len = in2
-	// use a simple loop on data shorter than software pipeline
-	cmp.gtu	p6, p0 = ((MEMLAT + 1) * 8), in2
+	cmp.gtu	p6, p0 = 16, in2	// use a simple loop for short
 (p6)	br.cond.spnt .srchfew ;;	// searches
 	sub	loopcnt = 8, tmp	// loopcnt = 8 - tmp
 	cmp.eq	p6, p0 = tmp, r0
@@ -127,7 +126,16 @@ ENTRY(__memchr)
 	br.ret.sptk.many b0
 
 .recovery:
-	adds	ret0 = -((MEMLAT + 1) * 8), ret0;;
+#if MEMLAT != 6
+# error "MEMLAT must be 6!"
+#endif
+(p[MEMLAT-6])	add	ret0 = -8, ret0;;
+(p[MEMLAT-5])	add	ret0 = -8, ret0;;
+(p[MEMLAT-4])	add	ret0 = -8, ret0;;
+(p[MEMLAT-3])	add	ret0 = -8, ret0;;
+(p[MEMLAT-2])	add	ret0 = -8, ret0;;
+(p[MEMLAT-1])	add	ret0 = -8, ret0;;
+(p[MEMLAT])	add	ret0 = -8, ret0;;
 (p[MEMLAT+1])	add	ret0 = -8, ret0;;
 (p[MEMLAT+2])	add	ret0 = -8, ret0;;
 .l4:
