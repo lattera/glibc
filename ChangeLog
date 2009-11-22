@@ -1,5 +1,7 @@
 2009-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/create_xid.c (_create_xid): Reinitialize state after fork.
+
 	* sysdeps/unix/sysv/linux/ntp_gettimex.c:  New file.
 	* sysdeps/unix/sysv/linux/Makefile: Add rules to build ntp_gettimex.
 	* sysdeps/unix/sysv/linux/Versions: Export ntp_gettimex for GLIBC_2.12.

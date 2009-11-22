@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -27,7 +27,7 @@
 
 __libc_lock_define_initialized (static, createxid_lock)
 
-static int is_initialized;
+static pid_t is_initialized;
 static struct drand48_data __rpc_lrand48_data;
 
 unsigned long
@@ -37,13 +37,15 @@ _create_xid (void)
 
   __libc_lock_lock (createxid_lock);
 
-  if (!is_initialized)
+  pid_t pid = getpid ();
+  if (is_initialized != pid)
     {
       struct timeval now;
 
       __gettimeofday (&now, (struct timezone *) 0);
-      __srand48_r (now.tv_sec ^ now.tv_usec, &__rpc_lrand48_data);
-      is_initialized = 1;
+      __srand48_r (now.tv_sec ^ now.tv_usec ^ pid,
+		   &__rpc_lrand48_data);
+      is_initialized = pid;
     }
 
   lrand48_r (&__rpc_lrand48_data, &res);
