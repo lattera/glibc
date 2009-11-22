@@ -1,3 +1,8 @@
+2009-11-22  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Avoid warnings
+	by casting oldval to int.
+
 2009-11-15  Carlos O'Donell  <carlos@codesourcery.com>
 
 	[BZ #6676]

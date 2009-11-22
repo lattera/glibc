@@ -98,7 +98,7 @@ typedef uintmax_t uatomic_max_t;
      int ret;								\
      ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
      /* Return 1 if it was already acquired.  */			\
-     (ret != oldval);							\
+     (ret != (int)oldval);						\
    })
 #else
 # error __ASSUME_LWS_CAS is required to build glibc.
