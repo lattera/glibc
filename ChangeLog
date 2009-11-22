@@ -1,3 +1,9 @@
+2009-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h (MOD_TAI, MOD_MICRO, MOD_NANO):
+	Define.
+	(STA_RONLY): Add STA_NANO, STA_MODE, and STA_CLK.
+
 2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #10162]

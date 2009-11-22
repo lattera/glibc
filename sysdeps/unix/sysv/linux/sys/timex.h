@@ -85,6 +85,9 @@ struct timex
 #define MOD_TIMECONST	ADJ_TIMECONST
 #define MOD_CLKB	ADJ_TICK
 #define MOD_CLKA	ADJ_OFFSET_SINGLESHOT /* 0x8000 in original */
+#define MOD_TAI		ADJ_TAI
+#define MOD_MICRO	ADJ_MICRO
+#define MOD_NANO	ADJ_NANO
 
 
 /* Status codes (timex.status) */
@@ -108,8 +111,9 @@ struct timex
 #define STA_MODE	0x4000	/* mode (0 = PLL, 1 = FLL) (ro) */
 #define STA_CLK		0x8000	/* clock source (0 = A, 1 = B) (ro) */
 
+/* Read-only bits */
 #define STA_RONLY (STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \
-    STA_PPSERROR | STA_CLOCKERR) /* read-only bits */
+    STA_PPSERROR | STA_CLOCKERR | STA_NANO | STA_MODE | STA_CLK)
 
 /* Clock states (time_state) */
 #define TIME_OK		0	/* clock synchronized, no leap second */
