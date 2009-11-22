@@ -144,6 +144,8 @@ libc {
   GLIBC_2.12 {
     #errlist-compat	134
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
+    ntp_gettimex;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

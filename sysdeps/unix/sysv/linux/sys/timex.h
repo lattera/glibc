@@ -24,11 +24,19 @@
 
 /* These definitions from linux/timex.h as of 2.6.30.  */
 
+#define NTP_API	4	/* NTP API version */
+
 struct ntptimeval
 {
   struct timeval time;	/* current time (ro) */
   long int maxerror;	/* maximum error (us) (ro) */
   long int esterror;	/* estimated error (us) (ro) */
+  long int tai;		/* TAI offset (ro) */
+
+  long int __unused1;
+  long int __unused2;
+  long int __unused3;
+  long int __unused4;
 };
 
 struct timex
@@ -132,7 +140,13 @@ __BEGIN_DECLS
 extern int __adjtimex (struct timex *__ntx) __THROW;
 extern int adjtimex (struct timex *__ntx) __THROW;
 
-extern int ntp_gettime (struct ntptimeval *__ntv) __THROW;
+#if defined __GNUC__ && __GNUC__ >= 2
+extern int ntp_gettime (struct ntptimeval *__ntv)
+     __asm__ ("ntp_gettimex") __THROW;
+#else
+extern int ntp_gettimex (struct ntptimeval *__ntv) __THROW;
+# define ntp_gettime ntp_gettimex
+#endif
 extern int ntp_adjtime (struct timex *__tntx) __THROW;
 
 __END_DECLS

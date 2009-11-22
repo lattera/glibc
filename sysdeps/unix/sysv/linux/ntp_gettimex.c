@@ -16,11 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define ntp_gettime ntp_gettime_redirect
-
 #include <sys/timex.h>
-
-#undef ntp_gettime
 
 #ifndef MOD_OFFSET
 # define modes mode
@@ -31,7 +27,7 @@ extern int INTUSE(__adjtimex) (struct timex *__ntx);
 
 
 int
-ntp_gettime (struct ntptimeval *ntv)
+ntp_gettimex (struct ntptimeval *ntv)
 {
   struct timex tntx;
   int result;
@@ -41,5 +37,10 @@ ntp_gettime (struct ntptimeval *ntv)
   ntv->time = tntx.time;
   ntv->maxerror = tntx.maxerror;
   ntv->esterror = tntx.esterror;
+  ntv->tai = tntx.tai;
+  ntv->__unused1 = 0;
+  ntv->__unused2 = 0;
+  ntv->__unused3 = 0;
+  ntv->__unused4 = 0;
   return result;
 }
