@@ -1,3 +1,9 @@
+2009-11-23  Matt Turner  <mattst88@gmail.com>
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+
 2009-11-10  Matt Turner  <mattst88@gmail.com>
 
 	[BZ #10609]
