@@ -61,7 +61,7 @@ struct stat
     long int st_pad2[3];
     __off64_t st_size;		/* Size of file, in bytes.  */
 #endif
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the
@@ -105,7 +105,7 @@ struct stat64
     unsigned long int st_rdev;	/* Device number, if device.  */
     long int st_pad2[3];
     __off64_t st_size;		/* Size of file, in bytes.  */
-#ifdef __USE_MISC
+# if defined __USE_MISC || defined __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the
@@ -115,14 +115,14 @@ struct stat64
     struct timespec st_atim;            /* Time of last access.  */
     struct timespec st_mtim;            /* Time of last modification.  */
     struct timespec st_ctim;            /* Time of last status change.  */
-#else
+# else
     __time_t st_atime;		/* Time of last access.  */
     long int __reserved0;
     __time_t st_mtime;		/* Time of last modification.  */
     long int __reserved1;
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;
-#endif
+# endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     long int st_pad3;
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
@@ -152,7 +152,7 @@ struct stat
     unsigned int st_pad2[3];	/* Reserved for st_rdev expansion  */
     __off64_t st_size;
 #endif
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the
@@ -196,7 +196,7 @@ struct stat64
     __dev_t st_rdev;
     unsigned int st_pad2[3];	/* Reserved for st_rdev expansion  */
     __off64_t st_size;
-#ifdef __USE_MISC
+# if defined __USE_MISC || defined __USE_XOPEN2K8
     /* Nanosecond resolution timestamps are stored in a format
        equivalent to 'struct timespec'.  This is the type used
        whenever possible but the Unix namespace rules do not allow the
@@ -206,14 +206,14 @@ struct stat64
     struct timespec st_atim;            /* Time of last access.  */
     struct timespec st_mtim;            /* Time of last modification.  */
     struct timespec st_ctim;            /* Time of last status change.  */
-#else
+# else
     __time_t st_atime;
     int __reserved0;
     __time_t st_mtime;
     int __reserved1;
     __time_t st_ctime;
     int __reserved2;
-#endif
+# endif
     __blksize_t st_blksize;
     unsigned int st_pad3;
     __blkcnt64_t st_blocks;
