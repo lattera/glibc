@@ -1,3 +1,8 @@
+2009-11-23  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Use struct timespec
+	for timestamps also if __USE_XOPEN2K8.
+
 2009-11-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Introduce new symbol
