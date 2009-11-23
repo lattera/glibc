@@ -1,3 +1,7 @@
+2009-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/nl_NL: Define week, first_weekday, and first_workday.
+
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/it_CH: Fix typos in last change.
