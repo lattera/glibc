@@ -1,5 +1,7 @@
 2009-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (restart): Try harder to re-exec.
+
 	* sunrpc/create_xid.c (_create_xid): Reinitialize state after fork.
 
 	* sysdeps/unix/sysv/linux/ntp_gettimex.c:  New file.
