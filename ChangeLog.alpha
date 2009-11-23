@@ -1,5 +1,10 @@
 2009-11-23  Matt Turner  <mattst88@gmail.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Change misleading
+	names of parameters of sync_file_range.
+
+2009-11-23  Matt Turner  <mattst88@gmail.com>
+
 	[BZ #10972]
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Add new MADV_*
 	constants from recent kernels.
