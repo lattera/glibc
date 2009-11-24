@@ -24,6 +24,9 @@
 #include <bp-sym.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
+#ifndef SHARED
+extern void __libc_csu_irel (void);
+#endif
 
 extern int __libc_multiple_libcs;
 
@@ -133,6 +136,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       DL_SYSDEP_OSCHECK (__libc_fatal);
     }
 # endif
+
+  /* Performe IREL{,A} relocations.  */
+  __libc_csu_irel ();
 
   /* Initialize the thread library at least a bit since the libgcc
      functions are using thread functions if these are available and
