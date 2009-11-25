@@ -1,5 +1,8 @@
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/grantpt.c (grantpt): Only get tty group information
+	once.
+
 	* csu/elf-init.c (__libc_csu_irel): New function.  Code to perform
 	irel relocations split out from...
 	(__libc_csu_init): ...here.

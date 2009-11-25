@@ -107,14 +107,6 @@ grantpt (int fd)
   char _buf[512];
 #endif
   char *buf = _buf;
-  struct stat64 st;
-  char *grtmpbuf;
-  struct group grbuf;
-  size_t grbuflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
-  struct group *p;
-  uid_t uid;
-  gid_t gid;
-  pid_t pid;
 
   if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf)), 0))
     {
@@ -126,34 +118,46 @@ grantpt (int fd)
 	return -1;
 
        /* If the filedescriptor is no TTY, grantpt has to set errno
-          to EINVAL.  */
+	  to EINVAL.  */
        if (save_errno == ENOTTY)
-         __set_errno (EINVAL);
+	 __set_errno (EINVAL);
        else
 	 __set_errno (save_errno);
 
        return -1;
     }
 
+  struct stat64 st;
   if (__xstat64 (_STAT_VER, buf, &st) < 0)
     goto cleanup;
 
   /* Make sure that we own the device.  */
-  uid = __getuid ();
+  uid_t uid = __getuid ();
   if (st.st_uid != uid)
     {
       if (__chown (buf, uid, st.st_gid) < 0)
 	goto helper;
     }
 
-  /* Get the group ID of the special `tty' group.  */
-  if (grbuflen == (size_t) -1L)
-    /* `sysconf' does not support _SC_GETGR_R_SIZE_MAX.
-       Try a moderate value.  */
-    grbuflen = 1024;
-  grtmpbuf = (char *) __alloca (grbuflen);
-  __getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
-  gid = p ? p->gr_gid : __getgid ();
+  static int tty_gid = -1;
+  if (__builtin_expect (tty_gid == -1, 0))
+    {
+      char *grtmpbuf;
+      struct group grbuf;
+      size_t grbuflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
+      struct group *p;
+
+      /* Get the group ID of the special `tty' group.  */
+      if (grbuflen == (size_t) -1L)
+	/* `sysconf' does not support _SC_GETGR_R_SIZE_MAX.
+	   Try a moderate value.  */
+	grbuflen = 1024;
+      grtmpbuf = (char *) __alloca (grbuflen);
+      __getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
+      if (p != NULL)
+	tty_gid = p->gr_gid;
+    }
+  gid_t gid = tty_gid == -1 ? __getgid () : tty_gid;
 
   /* Make sure the group of the device is that special group.  */
   if (st.st_gid != gid)
@@ -174,9 +178,9 @@ grantpt (int fd)
   goto cleanup;
 
   /* We have to use the helper program.  */
- helper:
+ helper:;
 
-  pid = __fork ();
+  pid_t pid = __fork ();
   if (pid == -1)
     goto cleanup;
   else if (pid == 0)
