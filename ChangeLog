@@ -1,5 +1,11 @@
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/grantpt.c (grantpt): Use CLOSE_ALL_FDS is available
+	before the exec.
+	* sysdeps/unix/sysv/linux/grantpt.c: New file.
+	* login/programs/pt_chown.c (main): Don't print message on errors
+	when doing real work.
+
 	* sysdeps/unix/grantpt.c (grantpt): Only get tty group information
 	once.
 

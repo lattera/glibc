@@ -154,8 +154,7 @@ main (int argc, char *argv[])
 # define ncap_list (sizeof (cap_list) / sizeof (cap_list[0]))
 	  cap_t caps = cap_init ();
 	  if (caps == NULL)
-	    error (FAIL_ENOMEM, errno,
-		   _("Failed to initialize drop of capabilities"));
+	    return FAIL_ENOMEM;
 
 	  /* There is no reason why these should not work.  */
 	  cap_set_flag (caps, CAP_PERMITTED, ncap_list, cap_list, CAP_SET);
@@ -166,7 +165,7 @@ main (int argc, char *argv[])
 	  cap_free (caps);
 
 	  if (__builtin_expect (res != 0, 0))
-	    error (FAIL_EXEC, errno, _("cap_set_proc failed"));
+	    return FAIL_EXEC;
 	}
 #endif
 

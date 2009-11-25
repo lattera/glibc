@@ -194,6 +194,10 @@ grantpt (int fd)
 	if (__dup2 (fd, PTY_FILENO) < 0)
 	  _exit (FAIL_EBADF);
 
+#ifdef CLOSE_ALL_FDS
+      CLOSE_ALL_FDS ();
+#endif
+
       execle (_PATH_PT_CHOWN, basename (_PATH_PT_CHOWN), NULL, NULL);
       _exit (FAIL_EXEC);
     }
