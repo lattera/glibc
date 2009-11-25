@@ -228,7 +228,7 @@ weak_alias (__srandom_r, srandom_r)
    lose this information and will be able to restart with setstate.
    Note: The first thing we do is save the current state, if any, just like
    setstate so that it doesn't matter when initstate is called.
-   Returns a pointer to the old state.  */
+   Returns 0 on success, non-zero on failure.  */
 int
 __initstate_r (seed, arg_state, n, buf)
      unsigned int seed;
@@ -296,7 +296,7 @@ weak_alias (__initstate_r, initstate_r)
    location into the zeroth word of the state information. Note that due
    to the order in which things are done, it is OK to call setstate with the
    same state as the current state
-   Returns a pointer to the old state information.  */
+   Returns 0 on success, non-zero on failure.  */
 int
 __setstate_r (arg_state, buf)
      char *arg_state;
