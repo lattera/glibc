@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -67,14 +67,10 @@ ptsname (int fd)
 }
 
 
-/* Store at most BUFLEN characters of the pathname of the slave pseudo
-   terminal associated with the master FD is open on in BUF.
-   Return 0 on success, otherwise an error number.  */
 int
-__ptsname_r (int fd, char *buf, size_t buflen)
+__ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 {
   int save_errno = errno;
-  struct stat64 st;
   unsigned int ptyno;
 
   if (buf == NULL)
@@ -93,7 +89,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
   if (__ioctl (fd, TIOCGPTN, &ptyno) == 0)
     {
       /* Buffer we use to print the number in.  For a maximum size for
-         `int' of 8 bytes we never need more than 20 digits.  */
+	 `int' of 8 bytes we never need more than 20 digits.  */
       char numbuf[21];
       const char *devpts = _PATH_DEVPTS;
       const size_t devptslen = strlen (_PATH_DEVPTS);
@@ -121,20 +117,20 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 	  return ERANGE;
 	}
 
-      if (__fxstat64 (_STAT_VER, fd, &st) < 0)
+      if (__fxstat64 (_STAT_VER, fd, stp) < 0)
 	return errno;
 
       /* Check if FD really is a master pseudo terminal.  */
-      if (! MASTER_P (st.st_rdev))
+      if (! MASTER_P (stp->st_rdev))
 	{
 	  __set_errno (ENOTTY);
 	  return ENOTTY;
 	}
 
-      ptyno = minor (st.st_rdev);
+      ptyno = minor (stp->st_rdev);
       /* This is for the old BSD pseudo terminals.  As of Linux
-         2.1.115 these are no longer supported.  */
-      if (major (st.st_rdev) == 4)
+	 2.1.115 these are no longer supported.  */
+      if (major (stp->st_rdev) == 4)
 	ptyno -= 128;
 
       if (ptyno / 16 >= strlen (__libc_ptyname1))
@@ -149,12 +145,12 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       p[2] = '\0';
     }
 
-  if (__xstat64 (_STAT_VER, buf, &st) < 0)
+  if (__xstat64 (_STAT_VER, buf, stp) < 0)
     return errno;
 
   /* Check if the name we're about to return really corresponds to a
      slave pseudo terminal.  */
-  if (! S_ISCHR (st.st_mode) || ! SLAVE_P (st.st_rdev))
+  if (! S_ISCHR (stp->st_mode) || ! SLAVE_P (stp->st_rdev))
     {
       /* This really is a configuration problem.  */
       __set_errno (ENOTTY);
@@ -163,5 +159,16 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 
   __set_errno (save_errno);
   return 0;
+}
+
+
+/* Store at most BUFLEN characters of the pathname of the slave pseudo
+   terminal associated with the master FD is open on in BUF.
+   Return 0 on success, otherwise an error number.  */
+int
+__ptsname_r (int fd, char *buf, size_t buflen)
+{
+  struct stat64 st;
+  return __ptsname_internal (fd, buf, buflen, &st);
 }
 weak_alias (__ptsname_r, ptsname_r)

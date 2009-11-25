@@ -38,7 +38,7 @@
    this buffer, a sufficiently long buffer is allocated using malloc,
    and returned in PTS.  0 is returned upon success, -1 otherwise.  */
 static int
-pts_name (int fd, char **pts, size_t buf_len)
+pts_name (int fd, char **pts, size_t buf_len, struct stat64 *stp)
 {
   int rv;
   char *buf = *pts;
@@ -49,7 +49,7 @@ pts_name (int fd, char **pts, size_t buf_len)
 
       if (buf_len)
 	{
-	  rv = __ptsname_r (fd, buf, buf_len);
+	  rv = __ptsname_internal (fd, buf, buf_len, stp);
 	  if (rv != 0)
 	    {
 	      if (rv == ENOTTY)
@@ -107,8 +107,9 @@ grantpt (int fd)
   char _buf[512];
 #endif
   char *buf = _buf;
+  struct stat64 st;
 
-  if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf)), 0))
+  if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf), &st), 0))
     {
       int save_errno = errno;
 
@@ -126,10 +127,6 @@ grantpt (int fd)
 
        return -1;
     }
-
-  struct stat64 st;
-  if (__xstat64 (_STAT_VER, buf, &st) < 0)
-    goto cleanup;
 
   /* Make sure that we own the device.  */
   uid_t uid = __getuid ();

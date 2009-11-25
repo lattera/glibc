@@ -9,6 +9,7 @@
 
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
+# include <sys/stat.h>
 
 __BEGIN_DECLS
 
@@ -77,6 +78,8 @@ extern int __clearenv (void);
 extern char *__canonicalize_file_name (__const char *__name);
 extern char *__realpath (__const char *__name, char *__resolved);
 extern int __ptsname_r (int __fd, char *__buf, size_t __buflen);
+extern int __ptsname_internal (int fd, char *buf, size_t buflen,
+			       struct stat64 *stp);
 extern int __getpt (void);
 extern int __posix_openpt (int __oflag);
 

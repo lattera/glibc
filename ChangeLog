@@ -1,5 +1,15 @@
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/grantpt.c (pts_name): Take additional parameter,
+	pass it on to __ptsname_internal.
+	(grantpt): Pass stat64 pointer to pts_name.  Remove stat call here.
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal): New function.
+	All the code from __ptsname_r but take additional parameter.  Use that
+	instead of pointer to local stat64 variable.
+	(__ptsname_r): Call __ptsname_internal with pointer to local stat64
+	variable.
+	* include/stdlib.h: Declare __ptsname_internal.
+
 	* sysdeps/unix/grantpt.c (grantpt): Use CLOSE_ALL_FDS is available
 	before the exec.
 	* sysdeps/unix/sysv/linux/grantpt.c: New file.
