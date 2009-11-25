@@ -15,11 +15,11 @@
 static void
 close_all_fds (void)
 {
-  DIR *dir = opendir ("/proc/self/fd");
+  DIR *dir = __opendir ("/proc/self/fd");
   if (dir != NULL)
     {
       struct dirent64 *d;
-      while ((d = readdir64 (dir)) != NULL)
+      while ((d = __readdir64 (dir)) != NULL)
 	if (isdigit (d->d_name[0]))
 	  {
 	    char *endp;
@@ -28,7 +28,7 @@ close_all_fds (void)
 	      close_not_cancel_no_status (fd);
 	  }
 
-      closedir (dir);
+      __closedir (dir);
 
       int nullfd = open_not_cancel_2 (_PATH_DEVNULL, O_RDONLY);
       assert (nullfd == STDIN_FILENO);
