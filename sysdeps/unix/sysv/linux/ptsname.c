@@ -128,10 +128,12 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 	}
 
       ptyno = minor (stp->st_rdev);
+#if __LINUX_KERNEL_VERSION >= 131443
       /* This is for the old BSD pseudo terminals.  As of Linux
 	 2.1.115 these are no longer supported.  */
       if (major (stp->st_rdev) == 4)
 	ptyno -= 128;
+#endif
 
       if (ptyno / 16 >= strlen (__libc_ptyname1))
 	{
