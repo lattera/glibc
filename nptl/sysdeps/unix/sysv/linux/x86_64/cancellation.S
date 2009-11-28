@@ -96,8 +96,8 @@ ENTRY(__pthread_disable_asynccancel)
 	cmpxchgl %r11d, %fs:CANCELHANDLING
 	jnz	2b
 
-3:	movl	%r11d, %eax
-	andl	$(TCB_CANCELING_BITMASK|TCB_CANCELED_BITMASK), %eax
+	movl	%r11d, %eax
+3:	andl	$(TCB_CANCELING_BITMASK|TCB_CANCELED_BITMASK), %eax
 	cmpl	$TCB_CANCELING_BITMASK, %eax
 	je	4f
 1:	ret
@@ -111,5 +111,6 @@ ENTRY(__pthread_disable_asynccancel)
 	addq	$CANCELHANDLING, %rdi
 	LOAD_PRIVATE_FUTEX_WAIT (%esi)
 	syscall
+	movl	%fs:CANCELHANDLING, %eax
 	jmp	3b
 END(__pthread_disable_asynccancel)

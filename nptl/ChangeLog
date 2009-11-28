@@ -1,3 +1,8 @@
+2009-11-27  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Reload
+	THREAD_SELF->cancelhandling after returning from futex call.
+
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-sem13.c: New file.
