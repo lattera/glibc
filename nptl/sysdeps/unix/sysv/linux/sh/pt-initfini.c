@@ -1,5 +1,5 @@
-/* Special .init and .fini section support for SH. NPTL version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+/* Special .init and .fini section support for SH.  NPTL version.
+   Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -62,19 +62,12 @@ _init:\n\
 	mov.l	.L24,r1\n\
 	add	r0,r1\n\
 	jsr	@r1\n\
-	 nop\n\
-	mova	.L23,r0\n\
-	mov.l	.L23,r1\n\
-	add	r0,r1\n\
-	jsr	@r1\n\
 	 mov	r15,r14\n\
 	bra	1f\n\
 	 nop\n\
 	.align 2\n\
 .L22:\n\
 	.long	_GLOBAL_OFFSET_TABLE_\n\
-.L23:\n\
-	.long	__gmon_start__@PLT\n\
 .L24:\n\
 	.long	__pthread_initialize_minimal_internal@PLT\n\
 1:\n\
@@ -91,16 +84,6 @@ _init:\n\
 	rts	\n\
 	mov.l	@r15+,r12\n\
 	END_INIT\n\
-	.section .text\n\
-	.align 5\n\
-	.weak	__gmon_start__\n\
-	.type	__gmon_start__,@function\n\
-__gmon_start__:\n\
-	mov.l	r14,@-r15\n\
-	mov	r15,r14\n\
-	mov	r14,r15\n\
-	rts	\n\
-	mov.l	@r15+,r14\n\
 	\n\
 /*@_init_EPILOG_ENDS*/\n\
 \n\

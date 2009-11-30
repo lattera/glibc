@@ -1,3 +1,8 @@
+2009-11-27  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/pt-initfini.c (_init): Don't call
+	__gmon_start__.
+
 2009-11-27  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Reload
