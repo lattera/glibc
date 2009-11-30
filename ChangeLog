@@ -1,3 +1,8 @@
+2009-11-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define SCHED_IDLE and
+	SCHED_RESET_ON_FORK.
+
 2009-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal): Avoid code
