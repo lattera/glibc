@@ -1,5 +1,13 @@
 2009-12-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list
+	(posix_fadvise): Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c: New.
+
+2009-12-01  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/mips/dl-lookup.c: Update from generic version.
 
 2009-11-23  Joseph Myers  <joseph@codesourcery.com>

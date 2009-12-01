@@ -2,6 +2,5 @@
 
 readahead	-	readahead	i:iii	__readahead	readahead
 sync_file_range	-	sync_file_range	i:iiii	sync_file_range
-posix_fadvise	-	fadvise64	i:iiii	posix_fadvise
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
 truncate	-	truncate	i:si	truncate	truncate64
