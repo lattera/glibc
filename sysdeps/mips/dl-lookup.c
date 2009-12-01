@@ -329,16 +329,16 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		 definition we have to use it.  */
 	      void enter (struct unique_sym *table, size_t size,
 			  unsigned int hash, const char *name,
-			  const ElfW(Sym) *sym, const struct link_map *map)
+			  const ElfW(Sym) *sym, struct link_map *map)
 	      {
 		size_t idx = hash % size;
 		size_t hash2 = 1 + hash % (size - 2);
 		while (1)
 		  {
-		    if (table[idx].hashval == 0)
+		    if (table[idx].name == NULL)
 		      {
 			table[idx].hashval = hash;
-			table[idx].name = strtab + sym->st_name;
+			table[idx].name = name;
 			if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
 			  {
 			    table[idx].sym = ref;
@@ -348,7 +348,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			  {
 			    table[idx].sym = sym;
 			    table[idx].map = map;
+
+			    if (map->l_type == lt_loaded)
+			      /* Make sure we don't unload this object by
+				 setting the appropriate flag.  */
+			      map->l_flags_1 |= DF_1_NODELETE;
 			  }
+
 			return;
 		      }
 
@@ -380,8 +386,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			  return 1;
 			}
 
-		      if (entries[idx].hashval == 0
-			  && entries[idx].name == NULL)
+		      if (entries[idx].name == NULL)
 			break;
 
 		      idx += hash2;
@@ -389,10 +394,14 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			idx -= size;
 		    }
 
-		  if (size * 3 <= tab->n_elements)
+		  if (size * 3 <= tab->n_elements * 4)
 		    {
 		      /* Expand the table.  */
-		      size_t newsize = _dl_higher_prime_number (size);
+#ifdef RTLD_CHECK_FOREIGN_CALL
+		      /* This must not happen during runtime relocations.  */
+		      assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+		      size_t newsize = _dl_higher_prime_number (size + 1);
 		      struct unique_sym *newentries
 			= calloc (sizeof (struct unique_sym), newsize);
 		      if (newentries == NULL)
@@ -403,19 +412,25 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			}
 
 		      for (idx = 0; idx < size; ++idx)
-			if (entries[idx].hashval != 0)
+			if (entries[idx].name != NULL)
 			  enter (newentries, newsize, entries[idx].hashval,
 				 entries[idx].name, entries[idx].sym,
 				 entries[idx].map);
 
 		      tab->free (entries);
 		      tab->size = newsize;
+		      size = newsize;
 		      entries = tab->entries = newentries;
 		      tab->free = free;
 		    }
 		}
 	      else
 		{
+#ifdef RTLD_CHECK_FOREIGN_CALL
+		  /* This must not happen during runtime relocations.  */
+		  assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+
 #define INITIAL_NUNIQUE_SYM_TABLE 31
 		  size = INITIAL_NUNIQUE_SYM_TABLE;
 		  entries = calloc (sizeof (struct unique_sym), size);
@@ -427,7 +442,8 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  tab->free = free;
 		}
 
-	      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+	      enter (entries, size, new_hash, strtab + sym->st_name, sym,
+		     (struct link_map *) map);
 	      ++tab->n_elements;
 
 	      __rtld_lock_unlock_recursive (tab->lock);
@@ -609,6 +625,10 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	  struct link_map_reldeps *newp;
 	  unsigned int max
 	    = undef_map->l_reldepsmax ? undef_map->l_reldepsmax * 2 : 10;
+
+#ifdef RTLD_PREPARE_FOREIGN_CALL
+	  RTLD_PREPARE_FOREIGN_CALL;
+#endif
 
 	  newp = malloc (sizeof (*newp) + max * sizeof (struct link_map *));
 	  if (newp == NULL)
