@@ -1,3 +1,10 @@
+2009-11-29  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h:
+	Rearrange file to reduce future maintenance.
+	[__USE_GNU]: Update F_GETOWN_EX, and F_SETOWN_EX.
+	Define f_owner_ex an __pid_type.
+
 2009-11-25  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h:
