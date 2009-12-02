@@ -1,14 +1,4 @@
 *~
-*.d
-*.o
-*.so
-*.po
-*.go
-*.bo
-stamp.*
-*.stamp
-*.ustamp
-*.udeps
 *.gz
 *.Z
 *.tar
