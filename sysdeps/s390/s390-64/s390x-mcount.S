@@ -46,11 +46,15 @@
 
 	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(_mcount)
 	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
+	cfi_startproc
 	.align ALIGNARG(4)
 C_LABEL(_mcount)
 	/* Save the caller-clobbered registers.  */
         aghi  %r15,-224
+	cfi_adjust_cfa_offset (224)
         stmg  %r14,%r5,160(%r15)
+	cfi_offset (r14, 0)
+	cfi_offset (r15, 8)
         lg    %r2,232(%r15)       # callers address  = first parameter
         la    %r2,0(%r2)          # clear bit 0
         la    %r3,0(%r14)         # callees address  = second parameter
@@ -65,7 +69,9 @@ C_LABEL(_mcount)
 	   return value.  */
 	lmg   %r14,%r5,160(%r15)
         aghi   %r15,224
+	cfi_adjust_cfa_offset (-224)
         br    %r14
+	cfi_endproc
 	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(_mcount))
 
 #undef mcount

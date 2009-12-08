@@ -42,6 +42,7 @@
 _dl_runtime_resolve:
 	stmg   2,5,64(15)	# save registers
 	stg    14,96(15)
+	cfi_offset (r14, -64)
 	lgr    0,15		# create stack frame
 	aghi   15,-160
 	cfi_adjust_cfa_offset (160)
@@ -72,6 +73,13 @@ _dl_runtime_profile:
 	stg    %r6,16(%r15)
 	stg    %r12,24(%r15)
 	stg    %r14,32(%r15)
+	cfi_offset (r6, -96)
+	cfi_offset (f0, -56)
+	cfi_offset (f2, -48)
+	cfi_offset (f4, -40)
+	cfi_offset (f6, -32)
+	cfi_offset (r12, -136)
+	cfi_offset (r14, -128)
 	lgr    %r12,%r15		# create stack frame
 	cfi_def_cfa_register (12)
 	aghi   %r15,-160

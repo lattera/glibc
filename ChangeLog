@@ -1,3 +1,11 @@
+2009-12-04  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/dl-trampoline.S: Add CFI for the call saved
+	registers.
+	* sysdeps/s390/s390-32/dl-trampoline.S: Likewise.
+	* sysdeps/s390/s390-32/s390-mcount.S: Add CFI.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Add CFI.
+
 2009-11-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Define SCHED_IDLE and
