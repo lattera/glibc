@@ -128,7 +128,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 	}
 
       ptyno = minor (stp->st_rdev);
-#if __LINUX_KERNEL_VERSION >= 131443
+#if __LINUX_KERNEL_VERSION < 131443
       /* This is for the old BSD pseudo terminals.  As of Linux
 	 2.1.115 these are no longer supported.  */
       if (major (stp->st_rdev) == 4)

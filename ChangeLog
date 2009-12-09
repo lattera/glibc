@@ -1,3 +1,9 @@
+2009-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11046]
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal): Fix kernel
+	version check.
+
 2009-11-05  Bruno Haible  <bruno@clisp.org>
 
 	[BZ #11056]
