@@ -1,3 +1,10 @@
+2009-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define mmsghdr and declare
+	recvmmsg.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add entry for recvmmsg.
+	* sysdeps/unix/sysv/linux/Versions: Add recvmmsg for GLIBC_2.12.
+
 2009-12-04  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-64/dl-trampoline.S: Add CFI for the call saved
