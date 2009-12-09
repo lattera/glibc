@@ -1,3 +1,8 @@
+2009-12-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Define mmsghdr and
+	declare recvmmsg.
+
 2009-12-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list
