@@ -1,4 +1,11 @@
-2009-12-08  Ulrich Drepper  <drepper@redhat.com>
+2009-11-05  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #11056]
+	* posix/unistd.h (execve, fexecve, execv, execvp, execvpe): Mark the
+	argv argument as non-NULL.
+	(execle, execl, execlp): Mark the first ARG argument as non-NULL.
+
+-2009-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define mmsghdr and declare
 	recvmmsg.

@@ -544,47 +544,47 @@ extern char **environ;
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 extern int execve (__const char *__path, char *__const __argv[],
-		   char *__const __envp[]) __THROW __nonnull ((1));
+		   char *__const __envp[]) __THROW __nonnull ((1, 2));
 
 #ifdef __USE_XOPEN2K8
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
 extern int fexecve (int __fd, char *__const __argv[], char *__const __envp[])
-     __THROW;
+     __THROW __nonnull ((2));
 #endif
 
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
 extern int execv (__const char *__path, char *__const __argv[])
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
 extern int execle (__const char *__path, __const char *__arg, ...)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
 extern int execl (__const char *__path, __const char *__arg, ...)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
 extern int execvp (__const char *__file, char *__const __argv[])
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
 extern int execlp (__const char *__file, __const char *__arg, ...)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 
 #ifdef __USE_GNU
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
 extern int execvpe (__const char *__file, char *__const __argv[],
 		    char *__const __envp[])
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1, 2));
 #endif
 
 
