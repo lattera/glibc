@@ -1,3 +1,15 @@
+2009-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11000]
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Always set
+	*herrnop before returning.
+	* nis/nss_nisplus/nisplus-hosts.c (internal_gethostbyname2_r):
+	Likewise.
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyname4_r): Handle
+	TRYAGAIN errors separately.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix error handling of
+	*name4_r after functions.
+
 2009-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11046]

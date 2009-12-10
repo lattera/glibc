@@ -719,13 +719,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      if (status != NSS_STATUS_TRYAGAIN
 			  || rc != ERANGE || herrno != NETDB_INTERNAL)
 			{
-			  if (herrno == NETDB_INTERNAL)
-			    {
-			      __set_h_errno (herrno);
-			      _res.options = old_res_options;
-			      return -EAI_SYSTEM;
-			    }
-			  if (herrno == TRY_AGAIN)
+			  if (status == NSS_STATUS_TRYAGAIN
+			      && herrno == TRY_AGAIN)
 			    no_data = EAI_AGAIN;
 			  else
 			    no_data = herrno == NO_DATA;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2003, 2005, 2006, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2003, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -38,10 +38,10 @@ static nis_name tablename_val;
 static u_long tablename_len;
 
 #define NISENTRYVAL(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
+	(NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
 #define NISENTRYLEN(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+	(NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 /* Get implementation for some internal functions. */
 #include <resolv/mapv4v6addr.h>
@@ -287,15 +287,15 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-            {
-              enum nss_status retval = niserr2nss (result->status);
-              if (retval == NSS_STATUS_TRYAGAIN)
-                {
-                  *herrnop = NETDB_INTERNAL;
-                  *errnop = errno;
-                }
-              return retval;
-            }
+	    {
+	      enum nss_status retval = niserr2nss (result->status);
+	      if (retval == NSS_STATUS_TRYAGAIN)
+		{
+		  *herrnop = NETDB_INTERNAL;
+		  *errnop = errno;
+		}
+	      return retval;
+	    }
 
 	}
       else
@@ -308,18 +308,18 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-            {
-              enum nss_status retval= niserr2nss (result->status);
+	    {
+	      enum nss_status retval= niserr2nss (result->status);
 
 	      nis_freeresult (result);
 	      result = saved_res;
-              if (retval == NSS_STATUS_TRYAGAIN)
-                {
-                  *herrnop = NETDB_INTERNAL;
+	      if (retval == NSS_STATUS_TRYAGAIN)
+		{
+		  *herrnop = NETDB_INTERNAL;
 		  *errnop = errno;
-                }
-              return retval;
-            }
+		}
+	      return retval;
+	    }
 	}
 
       if (_res.options & RES_USE_INET6)
@@ -330,13 +330,13 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 						buflen, errnop, 0);
 
       if (parse_res == -1)
-        {
+	{
 	  nis_freeresult (result);
 	  result = saved_res;
-          *herrnop = NETDB_INTERNAL;
+	  *herrnop = NETDB_INTERNAL;
 	  *errnop = ERANGE;
-          return NSS_STATUS_TRYAGAIN;
-        }
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (saved_res != NULL)
 	nis_freeresult (saved_res);
 
@@ -435,6 +435,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
   if (result == NULL)
     {
       *errnop = ENOMEM;
+      *herrnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -444,10 +445,13 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *errnop = errno;
-	  *herrnop = NETDB_INTERNAL;
+	  *herrnop = TRY_AGAIN;
 	}
       else
-	__set_errno (olderr);
+	{
+	  __set_errno (olderr);
+	  *herrnop = NETDB_INTERNAL;
+	}
       nis_freeresult (result);
       return retval;
     }
@@ -502,7 +506,7 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 					  buflen, errnop, h_errnop,
 					  AI_V4MAPPED);
       if (status == NSS_STATUS_SUCCESS)
-        return status;
+	return status;
     }
 
   return internal_gethostbyname2_r (name, AF_INET, host, buffer,

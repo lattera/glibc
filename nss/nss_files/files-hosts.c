@@ -423,6 +423,11 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
       if (! keep_stream)
 	internal_endent ();
     }
+  else if (status == NSS_STATUS_TRYAGAIN)
+    {
+      *errnop = errno;
+      *herrnop = TRY_AGAIN;
+    }
   else
     {
       *errnop = errno;

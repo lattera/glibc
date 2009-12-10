@@ -70,20 +70,20 @@ LINE_PARSER
      {
        assert ((flags & AI_V4MAPPED) == 0 || af != AF_UNSPEC);
        if (flags & AI_V4MAPPED)
-         {
-           map_v4v6_address ((char *) entdata->host_addr,
-                             (char *) entdata->host_addr);
-           result->h_addrtype = AF_INET6;
-           result->h_length = IN6ADDRSZ;
-         }
+	 {
+	   map_v4v6_address ((char *) entdata->host_addr,
+			     (char *) entdata->host_addr);
+	   result->h_addrtype = AF_INET6;
+	   result->h_length = IN6ADDRSZ;
+	 }
        else
-         {
-           result->h_addrtype = AF_INET;
-           result->h_length = INADDRSZ;
-         }
+	 {
+	   result->h_addrtype = AF_INET;
+	   result->h_length = INADDRSZ;
+	 }
      }
    else if (af != AF_INET
-            && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+	    && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
      {
        result->h_addrtype = AF_INET6;
        result->h_length = IN6ADDRSZ;
@@ -164,14 +164,14 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
       int keylen;
       int yperr;
       if (new_start)
-        yperr = yp_first (domain, "hosts.byname", &outkey, &keylen, &result,
+	yperr = yp_first (domain, "hosts.byname", &outkey, &keylen, &result,
 			  &len);
       else
-        yperr = yp_next (domain, "hosts.byname", oldkey, oldkeylen, &outkey,
+	yperr = yp_next (domain, "hosts.byname", oldkey, oldkeylen, &outkey,
 			 &keylen, &result, &len);
 
       if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
-        {
+	{
 	  enum nss_status retval = yperr2nss (yperr);
 
 	  switch (retval)
@@ -191,12 +191,12 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	}
 
       if (__builtin_expect ((size_t) (len + 1) > linebuflen, 0))
-        {
-          free (result);
+	{
+	  free (result);
 	  *h_errnop = NETDB_INTERNAL;
-          *errnop = ERANGE;
-          return NSS_STATUS_TRYAGAIN;
-        }
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       char *p = strncpy (data->linebuffer, result, len);
       data->linebuffer[len] = '\0';
@@ -233,7 +233,7 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
   __libc_lock_lock (lock);
 
   status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop,
-		        ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),
+			((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),
 			((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0 ));
 
   __libc_lock_unlock (lock);
@@ -346,7 +346,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
 				    h_errnop,
-		        ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
+			((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
 }
 
 
@@ -456,7 +456,10 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 {
   char *domain;
   if (yp_get_default_domain (&domain))
-    return NSS_STATUS_UNAVAIL;
+    {
+      *herrnop = NO_DATA;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   /* Convert name to lowercase.  */
   size_t namlen = strlen (name);
