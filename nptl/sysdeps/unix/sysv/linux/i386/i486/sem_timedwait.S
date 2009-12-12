@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -131,10 +131,10 @@ sem_timedwait:
 
 	xorl	%eax, %eax
 
-10:	LOCK
+	LOCK
 	decl	NWAITERS(%ebx)
 
-	addl	$12, %esp
+10:	addl	$12, %esp
 .Ladd_esp:
 	popl	%ebx
 .Lpop_ebx:
@@ -268,19 +268,19 @@ sem_wait_cleanup:
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 8
 	.byte   0x86				# DW_CFA_offset %esi
-        .uleb128 2
+	.uleb128 2
 	.byte	4				# DW_CFA_advance_loc4
 	.long	.Lpush_edi-.Lpush_esi
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 12
 	.byte   0x87				# DW_CFA_offset %edi
-        .uleb128 3
+	.uleb128 3
 	.byte	4				# DW_CFA_advance_loc4
 	.long	.Lpush_ebx-.Lpush_edi
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte   0x83				# DW_CFA_offset %ebx
-        .uleb128 4
+	.uleb128 4
 	.byte	4				# DW_CFA_advance_loc4
 	.long	.Lsub_esp-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -309,11 +309,11 @@ sem_wait_cleanup:
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 28
 	.byte   0x86				# DW_CFA_offset %esi
-        .uleb128 2
+	.uleb128 2
 	.byte   0x87				# DW_CFA_offset %edi
-        .uleb128 3
+	.uleb128 3
 	.byte   0x83				# DW_CFA_offset %ebx
-        .uleb128 4
+	.uleb128 4
 	.align	4
 .LENDFDE:
 

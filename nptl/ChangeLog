@@ -1,3 +1,8 @@
+2009-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Don't update nwaiters after invalid timeout is recognized.
+
 2009-11-27  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/pt-initfini.c (_init): Don't call
