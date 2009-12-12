@@ -29,7 +29,7 @@
 #endif
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
-   located on an ext2 file system */
+   located on a few file systems.  */
 #define O_RDONLY	0x0000
 #define O_WRONLY	0x0001
 #define O_RDWR		0x0002
@@ -39,7 +39,7 @@
 #define O_CREAT		0x0200	/* not fcntl */
 #define O_TRUNC		0x0400	/* not fcntl */
 #define O_EXCL		0x0800	/* not fcntl */
-#define O_SYNC		0x2000
+#define O_SYNC		0x802000
 #define O_NONBLOCK	0x4000
 #define O_NDELAY	(0x0004 | O_NONBLOCK)
 #define O_NOCTTY	0x8000	/* not fcntl */
@@ -64,7 +64,7 @@
    operations.  We define the symbols here but let them do the same as
    O_SYNC since this is a superset.  */
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
-# define O_DSYNC	O_SYNC	/* Synchronize data.  */
+# define O_DSYNC	0x2000	/* Synchronize data.  */
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.  */
 #endif
 

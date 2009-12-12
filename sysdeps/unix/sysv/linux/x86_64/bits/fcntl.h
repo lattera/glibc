@@ -29,7 +29,7 @@
 
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
-   located on an ext2 file system */
+   located on a few file systems.  */
 #define O_ACCMODE	   0003
 #define O_RDONLY	     00
 #define O_WRONLY	     01
@@ -41,7 +41,7 @@
 #define O_APPEND	  02000
 #define O_NONBLOCK	  04000
 #define O_NDELAY	O_NONBLOCK
-#define O_SYNC		 010000
+#define O_SYNC	       04010000
 #define O_FSYNC		 O_SYNC
 #define O_ASYNC		 020000
 
@@ -57,7 +57,7 @@
    We define the symbols here but let them do the same as O_SYNC since
    this is a superset.	*/
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
-# define O_DSYNC	O_SYNC	/* Synchronize data.  */
+# define O_DSYNC	010000	/* Synchronize data.  */
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.	 */
 #endif
 
