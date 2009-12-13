@@ -107,7 +107,7 @@ __pthread_cond_wait:
 	/* Reset the pi-requeued flag.  */
 8:	movl	$0, 16(%esp)
  	movl	cond_futex(%ebx), %ebp
-	
+
 	/* Unlock.  */
 	LOCK
 #if cond_lock == 0
@@ -133,7 +133,7 @@ __pthread_cond_wait:
 	andl	$(ROBUST_BIT|PI_BIT), %eax
 	cmpl	$PI_BIT, %eax
 	jne	18f
-	
+
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
 	movl	%ebp, %edx
 	xorl	%esi, %esi
@@ -152,7 +152,7 @@ __pthread_cond_wait:
 	cmpl	$-ENOSYS, %eax
 	jne	19f
 	xorl	%ecx, %ecx
-	
+
 18:	subl	$1, %ecx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx

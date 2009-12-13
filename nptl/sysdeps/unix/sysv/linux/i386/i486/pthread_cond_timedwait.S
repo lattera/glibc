@@ -190,7 +190,7 @@ __pthread_cond_timedwait:
 	andl	$(ROBUST_BIT|PI_BIT), %eax
 	cmpl	$PI_BIT, %eax
 	jne	40f
-	
+
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
 	/* The following only works like this because we only support
 	   two clocks, represented using a single bit.  */
@@ -198,7 +198,7 @@ __pthread_cond_timedwait:
 	/* XXX Need to implement using sete instead of a jump.  */
 	jne	42f
 	orl	$FUTEX_CLOCK_REALTIME, %ecx
-	
+
 	/* Requeue-PI uses absolute timeout */
 42:	leal	(%ebp), %esi
 	movl	28(%esp), %edx
@@ -218,7 +218,7 @@ __pthread_cond_timedwait:
 	cmpl	$-ENOSYS, %eax
 	jne	41f
 	xorl	%ecx, %ecx
-	
+
 40:	subl	$1, %ecx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx
