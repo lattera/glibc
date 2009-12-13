@@ -1,3 +1,7 @@
+2009-12-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/elf/initfini.c: Update according to generic/initfini.c.
+
 2009-12-01  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/sh/sh4/fpu/fpu_control.h (__set_fpscr): New prototype.

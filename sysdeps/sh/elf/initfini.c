@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for SH.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,52 +47,48 @@
 __asm__ ("\
 \n\
 #include \"defs.h\"\n\
-#define SHARED\n\
 \n\
 /*@HEADER_ENDS*/\n\
 \n\
 /*@TESTS_BEGIN*/\n\
-\n\
+	.align 5\n\
 /*@TESTS_END*/\n\
 \n\
 /*@_init_PROLOG_BEGINS*/\n\
-	.section .init\n\
+	.section	.init,\"ax\",@progbits\n\
 	.align 5\n\
 	.global	_init\n\
-	.type	_init,@function\n\
+	.type	_init, @function\n\
 _init:\n\
 	mov.l	r12,@-r15\n\
+	mova	.L12,r0\n\
+	mov.l	.L12,r12\n\
 	mov.l	r14,@-r15\n\
-	sts.l	pr,@-r15\n\
-#ifdef SHARED\n\
-	mova	.L22,r0\n\
-	mov.l	.L22,r12\n\
 	add	r0,r12\n\
-	mova	.L23,r0\n\
-	mov.l	.L23,r1\n\
-	add	r0,r1\n\
-#else\n\
-	mov.l	.L23,r1\n\
-#endif\n\
-	jsr	@r1\n\
-	 mov	r15,r14\n\
+	mov.l	.L13,r0\n\
+	sts.l	pr,@-r15\n\
+	mov.l	@(r0,r12),r1\n\
+	tst	r1,r1\n\
+	bt/s	.L8\n\
+	mov	r15,r14\n\
+	mov.l	.L14,r1\n\
+	bsrf	r1\n\
+.LPCS0:\n\
+	nop\n\
+.L8:\n\
 	bra	1f\n\
-	 nop\n\
+	nop\n\
 	.align 2\n\
-#ifdef SHARED\n\
-.L22:\n\
+.L12:\n\
 	.long	_GLOBAL_OFFSET_TABLE_\n\
-.L23:\n\
-	.long	__gmon_start__@PLT\n\
-#else\n\
-.L23:\n\
-	.long	__gmon_start__\n\
-#endif\n\
+.L13:\n\
+	.long	__gmon_start__@GOT\n\
+.L14:\n\
+	.long	__gmon_start__@PLT-(.LPCS0+2-(.))\n\
 1:\n\
 	ALIGN\n\
 	END_INIT\n\
 \n\
-	\n\
 /*@_init_PROLOG_ENDS*/\n\
 \n\
 /*@_init_EPILOG_BEGINS*/\n\
@@ -100,60 +96,58 @@ _init:\n\
 	mov	r14,r15\n\
 	lds.l	@r15+,pr\n\
 	mov.l	@r15+,r14\n\
-	rts	\n\
 	mov.l	@r15+,r12\n\
-	END_INIT\n\
-	.section .text\n\
-	.align 5\n\
-	.weak	__gmon_start__\n\
-	.type	__gmon_start__,@function\n\
-__gmon_start__:\n\
-	mov.l	r14,@-r15\n\
-	mov	r15,r14\n\
-	mov	r14,r15\n\
 	rts	\n\
-	mov.l	@r15+,r14\n\
-	\n\
+	nop\n\
+	END_INIT\n\
+\n\
 /*@_init_EPILOG_ENDS*/\n\
 \n\
 /*@_fini_PROLOG_BEGINS*/\n\
-	.section .fini\n\
+	.section	.fini,\"ax\",@progbits\n\
 	.align 5\n\
 	.global	_fini\n\
-	.type	_fini,@function\n\
+	.type	_fini, @function\n\
 _fini:\n\
 	mov.l	r12,@-r15\n\
+	mova	.L19,r0\n\
 	mov.l	r14,@-r15\n\
 	sts.l	pr,@-r15\n\
-#ifdef SHARED\n\
-	mova	.L27,r0\n\
-	mov.l	.L27,r12\n\
-	add	r0,r12\n\
-#endif\n\
+	mov.l	.L19,r12\n\
 	mov	r15,r14\n\
+	add	r0,r12\n\
+	bra	0f\n\
+	nop\n\
+	.align 2\n\
+.L19:\n\
+	.long	_GLOBAL_OFFSET_TABLE_\n\
+0:\n\
 	ALIGN\n\
 	END_FINI\n\
-#ifdef SHARED\n\
-	bra	1f\n\
-	 nop\n\
-	.align	2\n\
-.L27:\n\
-	.long	_GLOBAL_OFFSET_TABLE_\n\
-#endif\n\
-1:\n\
-/*@_fini_PROLOG_ENDS*/\n\
 \n\
+/*@_fini_PROLOG_ENDS*/\n\
+	mov.l	.L20,r1\n\
+	bsrf	r1\n\
+.LPCS1:\n\
+	nop\n\
+	bra	1f\n\
+	nop\n\
+	.align 2\n\
+.L20:\n\
+	.long	i_am_not_a_leaf@PLT-(.LPCS1+2-(.))\n\
+1:\n\
 /*@_fini_EPILOG_BEGINS*/\n\
 	.section .fini\n\
 	mov	r14,r15\n\
 	lds.l	@r15+,pr\n\
 	mov.l	@r15+,r14\n\
-	rts	\n\
 	mov.l	@r15+,r12\n\
-\n\
+	rts	\n\
+	nop\n\
 	END_FINI\n\
-	\n\
+\n\
 /*@_fini_EPILOG_ENDS*/\n\
 \n\
-/*@TRAILER_BEGINS*/\
+/*@TRAILER_BEGINS*/\n\
+	.weak	__gmon_start__\n\
 ");
