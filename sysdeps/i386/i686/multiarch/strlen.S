@@ -19,7 +19,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <ifunc-defines.h>
+#include <init-arch.h>
 
 /* Define multiple versions only for the definition in libc and for the
    DSO.  In static binaries, we need strlen before the initialization
@@ -46,7 +46,7 @@ ENTRY(strlen)
 	jne	1f
 	call	__init_cpu_features
 1:	leal	__strlen_ia32@GOTOFF(%ebx), %eax
-	testl	$(1<<26), CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET+__cpu_features@GOTOFF(%ebx)
+	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
 	jz	2f
 	leal	__strlen_sse2@GOTOFF(%ebx), %eax
 2:	popl	%ebx

@@ -1,3 +1,13 @@
+2009-12-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcspn.S Include <init-arch.h>
+	instead of <ifunc-defines.h>.  Use bit_XXX and index_XXX to
+	check processor feature.
+	* sysdeps/i386/i686/multiarch/strlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_SSE2): New definition.
+	(index_SSE2): Likewise.
+
 2009-12-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.h: Include <ifunc-defines.h>
