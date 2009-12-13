@@ -16,6 +16,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifdef	__ASSEMBLER__
+
+#include <ifunc-defines.h>
+
+#define bit_SSSE3	(1 << 9)
+#define bit_SSE4_2	(1 << 20)
+
+#define index_SSSE3	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+#define index_SSE4_2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+
+#else	/* __ASSEMBLER__ */
+
 #include <sys/param.h>
 
 enum
@@ -71,3 +83,5 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define HAS_POPCOUNT	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 23)
 #define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 20)
 #define HAS_FMA		HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 12)
+
+#endif	/* __ASSEMBLER__ */

@@ -19,7 +19,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <ifunc-defines.h>
+#include <init-arch.h>
 
 #ifdef USE_AS_STRNCMP
 /* Since the counter, %r11, is unsigned, we branch to strcmp_exitz
@@ -64,10 +64,10 @@ ENTRY(STRCMP)
 	call	__init_cpu_features
 1:
 	leaq	STRCMP_SSE42(%rip), %rax
-	testl	$(1<<20), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jnz	2f
 	leaq	STRCMP_SSSE3(%rip), %rax
-	testl	$(1<<9), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	2f
 	leaq	STRCMP_SSE2(%rip), %rax
 2:	ret

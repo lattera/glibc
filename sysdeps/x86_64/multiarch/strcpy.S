@@ -19,7 +19,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <ifunc-defines.h>
+#include <init-arch.h>
 
 #if !defined (USE_AS_STPCPY) && !defined (USE_AS_STRNCPY)
 # ifndef STRCPY
@@ -63,7 +63,7 @@ ENTRY(STRCPY)
 	jne	1f
 	call	__init_cpu_features
 1:	leaq	STRCPY_SSE2(%rip), %rax
-	testl	$(1<<9), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jz	2f
 	leaq	STRCPY_SSSE3(%rip), %rax
 2:	ret

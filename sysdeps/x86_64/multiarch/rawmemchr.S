@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <ifunc-defines.h>
+#include <init-arch.h>
 
 
 /* Define multiple versions only for the definition in lib.  */
@@ -30,7 +30,7 @@ ENTRY(rawmemchr)
 	jne	1f
 	call	__init_cpu_features
 1:	leaq	__rawmemchr_sse2(%rip), %rax
-	testl	$(1<<20), __cpu_features+CPUID_OFFSET+COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET(%rip)
+	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jz	2f
 	leaq	__rawmemchr_sse42(%rip), %rax
 2:	ret

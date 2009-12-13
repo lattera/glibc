@@ -1,3 +1,22 @@
+2009-12-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Include <ifunc-defines.h>
+	if __ASSEMBLER__ is defined.
+	(bit_SSSE3): New.  Defined for __ASSEMBLER__.
+	(bit_SSE4_2): Likewise.
+	(index_SSSE3): Likewise.
+	(index_SSE4_2): Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Include <init-arch.h>
+	instead of <ifunc-defines.h>.  Use bit_XXX and index_XXX to
+	check processor feature.
+	* sysdeps/x86_64/multiarch/strchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/strrchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/strspn.S: Likewise.
+
 2009-12-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/elf/initfini.c: Update according to generic/initfini.c.
