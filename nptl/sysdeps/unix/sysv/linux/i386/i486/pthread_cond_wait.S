@@ -106,7 +106,7 @@ __pthread_cond_wait:
 
 	/* Reset the pi-requeued flag.  */
 8:	movl	$0, 16(%esp)
- 	movl	cond_futex(%ebx), %ebp
+	movl	cond_futex(%ebx), %ebp
 
 	/* Unlock.  */
 	LOCK
@@ -124,7 +124,7 @@ __pthread_cond_wait:
 	xorl	%ecx, %ecx
 	cmpl	$-1, dep_mutex(%ebx)
 	sete	%cl
-	je 	18f
+	je	18f
 
 	movl	dep_mutex(%ebx), %edi
 	/* Requeue to a non-robust PI mutex if the PI bit is set and
