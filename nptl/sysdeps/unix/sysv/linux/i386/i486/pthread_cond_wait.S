@@ -22,6 +22,8 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
+#include <pthread-errnos.h>
+#include <pthread-pi-defines.h>
 #include <kernel-features.h>
 
 
@@ -43,6 +45,9 @@ __pthread_cond_wait:
 	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
 #endif
 
+	pushl	%ebp
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%ebp, 0)
 	pushl	%edi
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset(%edi, 0)
@@ -55,7 +60,7 @@ __pthread_cond_wait:
 	cfi_remember_state
 
 	xorl	%esi, %esi
-	movl	16(%esp), %ebx
+	movl	20(%esp), %ebx
 
 	/* Get internal lock.  */
 	movl	$1, %edx
@@ -71,7 +76,7 @@ __pthread_cond_wait:
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
 2:	cmpl	$-1, dep_mutex(%ebx)
-	movl	20(%esp), %eax
+	movl	24(%esp), %eax
 	je	15f
 	movl	%eax, dep_mutex(%ebx)
 
@@ -87,7 +92,7 @@ __pthread_cond_wait:
 	addl	$1, cond_futex(%ebx)
 	addl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
-#define FRAME_SIZE 16
+#define FRAME_SIZE 20
 	subl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
@@ -99,8 +104,10 @@ __pthread_cond_wait:
 	movl	%edx, 8(%esp)
 	movl	%eax, 12(%esp)
 
-8:	movl	cond_futex(%ebx), %edi
-
+	/* Reset the pi-requeued flag.  */
+8:	movl	$0, 16(%esp)
+ 	movl	cond_futex(%ebx), %ebp
+	
 	/* Unlock.  */
 	LOCK
 #if cond_lock == 0
@@ -114,12 +121,39 @@ __pthread_cond_wait:
 4:	call	__pthread_enable_asynccancel
 	movl	%eax, (%esp)
 
-#if FUTEX_PRIVATE_FLAG > 255
 	xorl	%ecx, %ecx
-#endif
 	cmpl	$-1, dep_mutex(%ebx)
 	sete	%cl
-	subl	$1, %ecx
+	je 	18f
+
+	movl	dep_mutex(%ebx), %edi
+	/* Requeue to a non-robust PI mutex if the PI bit is set and
+	   the robust bit is not set.  */
+	movl	MUTEX_KIND(%edi), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	jne	18f
+	
+	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
+	movl	%ebp, %edx
+	xorl	%esi, %esi
+	addl	$cond_futex, %ebx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	subl	$cond_futex, %ebx
+	/* Set the pi-requeued flag only if the kernel has returned 0. The
+	   kernel does not hold the mutex on error.  */
+	cmpl	$0, %eax
+	sete	16(%esp)
+	je	19f
+
+	/* Normal and PI futexes dont mix. Use normal futex functions only
+	   if the kernel does not support the PI futex functions.  */
+	cmpl	$-ENOSYS, %eax
+	jne	19f
+	xorl	%ecx, %ecx
+	
+18:	subl	$1, %ecx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx
 #else
@@ -128,7 +162,7 @@ __pthread_cond_wait:
 #if FUTEX_WAIT != 0
 	addl	$FUTEX_WAIT, %ecx
 #endif
-	movl	%edi, %edx
+	movl	%ebp, %edx
 	addl	$cond_futex, %ebx
 .Ladd_cond_futex:
 	movl	$SYS_futex, %eax
@@ -136,7 +170,7 @@ __pthread_cond_wait:
 	subl	$cond_futex, %ebx
 .Lsub_cond_futex:
 
-	movl	(%esp), %eax
+19:	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
 .LcleanupEND:
 
@@ -212,9 +246,15 @@ __pthread_cond_wait:
 #endif
 	jne	10f
 
-11:	movl	20+FRAME_SIZE(%esp), %eax
+	/* With requeue_pi, the mutex lock is held in the kernel.  */
+11:	xorl	%eax, %eax
+	movl	16(%esp), %ecx
+	testl	%ecx, %ecx
+	jnz	20f
+
+	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$FRAME_SIZE, %esp
+20:	addl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(-FRAME_SIZE);
 
 14:	popl	%ebx
@@ -226,11 +266,18 @@ __pthread_cond_wait:
 	popl	%edi
 	cfi_adjust_cfa_offset(-4)
 	cfi_restore(%edi)
+	popl	%ebp
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(%ebp)
 
 	/* We return the result of the mutex_lock operation.  */
 	ret
 
 	cfi_restore_state
+
+21:	call	__pthread_mutex_cond_lock_adjust
+	xorl	%eax, %eax
+	jmp	20b
 
 	/* Initial locking failed.  */
 1:
@@ -484,7 +531,7 @@ __condvar_w_cleanup:
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
-5:	movl	20+FRAME_SIZE(%esp), %eax
+5:	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
 
 	movl	%esi, (%esp)

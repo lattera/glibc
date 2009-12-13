@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <kernel-features.h>
+#include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
 
 
@@ -86,7 +87,17 @@ __pthread_cond_signal:
 #endif
 	cmpl	$-1, dep_mutex-cond_futex(%ebx)
 	sete	%cl
-	subl	$1, %ecx
+	je	8f
+
+	movl	dep_mutex-cond_futex(%ebx), %edx
+	/* Requeue to a non-robust PI mutex if the PI bit is set and
+	   the robust bit is not set.  */
+	movl	MUTEX_KIND(%edx), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	je	9f
+
+8:	subl	$1, %ecx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx
 #else
@@ -124,8 +135,34 @@ __pthread_cond_signal:
 
 	cfi_restore_state
 
-7:	/* %ecx should be either FUTEX_WAKE_OP or
-	   FUTEX_WAKE_OP|FUTEX_PRIVATE_FLAG from the previous syscall.  */
+9:	movl	$(FUTEX_CMP_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
+	movl	$SYS_futex, %eax
+	movl	$1, %edx
+	xorl	%esi, %esi
+	movl	dep_mutex-cond_futex(%ebx), %edi
+	movl	(%ebx), %ebp
+	/* FIXME: Until Ingo fixes 4G/4G vDSO, 6 arg syscalls are broken for
+	   sysenter.
+	ENTER_KERNEL  */
+	int	$0x80
+	popl	%ebp
+	popl	%esi
+
+	leal	-cond_futex(%ebx), %edi
+
+	/* For any kind of error, we try again with WAKE.
+	   The general test also covers running on old kernels.  */
+	cmpl	$-4095, %eax
+	jb	4f
+
+7:
+#ifdef __ASSUME_PRIVATE_FUTEX
+	andl	$FUTEX_PRIVATE_FLAG, %ecx
+#else
+	andl	%gs:PRIVATE_FUTEX, %ecx
+#endif
+	orl	$FUTEX_WAKE, %ecx
+
 	xorl	$(FUTEX_WAKE ^ FUTEX_WAKE_OP), %ecx
 	movl	$SYS_futex, %eax
 	/* %edx should be 1 already from $FUTEX_WAKE_OP syscall.

@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <lowlevelcond.h>
 #include <pthread-errnos.h>
+#include <pthread-pi-defines.h>
 #include <kernel-features.h>
 
 
@@ -95,7 +96,7 @@ __pthread_cond_timedwait:
 	addl	$1, cond_futex(%ebx)
 	addl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
-#define FRAME_SIZE 24
+#define FRAME_SIZE 32
 	subl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
@@ -107,8 +108,10 @@ __pthread_cond_timedwait:
 	movl	%edx, 16(%esp)
 	movl	%eax, 20(%esp)
 
+	/* Reset the pi-requeued flag.  */
+8:	movl	$0, 24(%esp)
 	/* Get the current time.  */
-8:	movl	%ebx, %edx
+	movl	%ebx, %edx
 #ifdef __NR_clock_gettime
 	/* Get the clock number.  */
 	movl	cond_nwaiters(%ebx), %ebx
@@ -158,6 +161,7 @@ __pthread_cond_timedwait:
 	movl	%edx, 8(%esp)
 
 	movl	cond_futex(%ebx), %edi
+	movl	%edi, 28(%esp)
 
 	/* Unlock.  */
 	LOCK
@@ -172,13 +176,50 @@ __pthread_cond_timedwait:
 4:	call	__pthread_enable_asynccancel
 	movl	%eax, (%esp)
 
-	leal	4(%esp), %esi
 #if FUTEX_PRIVATE_FLAG > 255
 	xorl	%ecx, %ecx
 #endif
 	cmpl	$-1, dep_mutex(%ebx)
 	sete	%cl
-	subl	$1, %ecx
+	je	40f
+
+	movl	dep_mutex(%ebx), %edi
+	/* Requeue to a non-robust PI mutex if the PI bit is set and
+	   the robust bit is not set.  */
+	movl	MUTEX_KIND(%edi), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	jne	40f
+	
+	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
+	/* The following only works like this because we only support
+	   two clocks, represented using a single bit.  */
+	testl	$1, cond_nwaiters(%ebx)
+	/* XXX Need to implement using sete instead of a jump.  */
+	jne	42f
+	orl	$FUTEX_CLOCK_REALTIME, %ecx
+	
+	/* Requeue-PI uses absolute timeout */
+42:	leal	(%ebp), %esi
+	movl	28(%esp), %edx
+	addl	$cond_futex, %ebx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	subl	$cond_futex, %ebx
+	movl	%eax, %esi
+	/* Set the pi-requeued flag only if the kernel has returned 0. The
+	   kernel does not hold the mutex on ETIMEDOUT or any other error.  */
+	cmpl	$0, %eax
+	sete	24(%esp)
+	je	41f
+
+	/* Normal and PI futexes dont mix. Use normal futex functions only
+	   if the kernel does not support the PI futex functions.  */
+	cmpl	$-ENOSYS, %eax
+	jne	41f
+	xorl	%ecx, %ecx
+	
+40:	subl	$1, %ecx
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx
 #else
@@ -187,7 +228,8 @@ __pthread_cond_timedwait:
 #if FUTEX_WAIT != 0
 	addl	$FUTEX_WAIT, %ecx
 #endif
-	movl	%edi, %edx
+	leal	4(%esp), %esi
+	movl	28(%esp), %edx
 	addl	$cond_futex, %ebx
 .Ladd_cond_futex:
 	movl	$SYS_futex, %eax
@@ -196,7 +238,7 @@ __pthread_cond_timedwait:
 .Lsub_cond_futex:
 	movl	%eax, %esi
 
-	movl	(%esp), %eax
+41:	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
 .LcleanupEND:
 
@@ -284,10 +326,16 @@ __pthread_cond_timedwait:
 #endif
 	jne	10f
 
+11:	xorl	%eax, %eax
+	/* With requeue_pi, the mutex lock is held in the kernel.  */
+	movl	24(%esp), %ecx
+	testl	%ecx, %ecx
+	jnz	26f
+
 	/* Remove cancellation handler.  */
-11:	movl	24+FRAME_SIZE(%esp), %eax
+	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$FRAME_SIZE, %esp
+26:	addl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(-FRAME_SIZE);
 
 	/* We return the result of the mutex_lock operation if it failed.  */
@@ -316,6 +364,9 @@ __pthread_cond_timedwait:
 	ret
 
 	cfi_restore_state
+
+27:	call	__pthread_mutex_cond_lock_adjust
+	jmp	26b
 
 	/* Initial locking failed.  */
 1:

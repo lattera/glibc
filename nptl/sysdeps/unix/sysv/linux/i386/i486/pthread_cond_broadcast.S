@@ -91,11 +91,16 @@ __pthread_cond_broadcast:
 8:	cmpl	$-1, %edi
 	je	9f
 
-	/* XXX: The kernel so far doesn't support requeue to PI futex.  */
-	/* XXX: The kernel only supports FUTEX_CMP_REQUEUE to the same
-	   type of futex (private resp. shared).  */
-	testl	$(PI_BIT | PS_BIT), MUTEX_KIND(%edi)
+	/* Do not use requeue for pshared condvars.  */
+	testl	$PS_BIT, MUTEX_KIND(%edi)
 	jne	9f
+
+	/* Requeue to a non-robust PI mutex if the PI bit is set and
+	   the robust bit is not set.  */
+	movl	MUTEX_KIND(%edi), %eax
+	andl	$(ROBUST_BIT|PI_BIT), %eax
+	cmpl	$PI_BIT, %eax
+	je	81f
 
 	/* Wake up all threads.  */
 #ifdef __ASSUME_PRIVATE_FUTEX
@@ -137,6 +142,23 @@ __pthread_cond_broadcast:
 	ret
 
 	cfi_restore_state
+
+81:	movl	$(FUTEX_CMP_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %esi
+	movl	$1, %edx
+	/* Get the address of the futex involved.  */
+# if MUTEX_FUTEX != 0
+	addl	$MUTEX_FUTEX, %edi
+# endif
+	int	$0x80
+
+	/* For any kind of error, which mainly is EAGAIN, we try again
+	with WAKE.  The general test also covers running on old
+	kernels.  */
+	cmpl	$0xfffff001, %eax
+	jb	6b
+	jmp	9f
 
 	/* Initial locking failed.  */
 1:
