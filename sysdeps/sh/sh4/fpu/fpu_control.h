@@ -1,5 +1,5 @@
 /* FPU control word definitions.  SH version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,8 @@ typedef unsigned int fpu_control_t;
 #define _FPU_GETCW(cw) __asm__ ("sts fpscr,%0" : "=r" (cw))
 
 #if defined __GNUC__
+/* GCC provides this function.  */
+extern void __set_fpscr (unsigned long);
 #define _FPU_SETCW(cw) __set_fpscr ((cw))
 #else
 #define _FPU_SETCW(cw) __asm__ ("lds %0,fpscr" : : "r" (cw))

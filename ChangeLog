@@ -1,3 +1,7 @@
+2009-12-01  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/sh/sh4/fpu/fpu_control.h (__set_fpscr): New prototype.
+
 2009-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Redefine O_SYNC and
