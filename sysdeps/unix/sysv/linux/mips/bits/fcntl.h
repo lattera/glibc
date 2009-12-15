@@ -36,7 +36,7 @@
 #define O_WRONLY	     01
 #define O_RDWR		     02
 #define O_APPEND	 0x0008
-#define O_SYNC		 0x0010
+#define O_SYNC		 0x4010
 #define O_NONBLOCK	 0x0080
 #define O_NDELAY	O_NONBLOCK
 #define O_CREAT		 0x0100	/* not fcntl */
@@ -58,7 +58,7 @@
    We define the symbols here but let them do the same as O_SYNC since
    this is a superset.	*/
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
-# define O_DSYNC	O_SYNC	/* Synchronize data.  */
+# define O_DSYNC	0x0010	/* Synchronize data.  */
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.	 */
 #endif
 

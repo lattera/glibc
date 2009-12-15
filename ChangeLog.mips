@@ -1,3 +1,8 @@
+2009-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Redefine O_SYNC and
+	O_DSYNC to match 2.6.33+ kernels.
+
 2009-12-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Define mmsghdr and
