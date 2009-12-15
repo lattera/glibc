@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #define POLLPRI		0x002		/* There is urgent data to read.  */
 #define POLLOUT		0x004		/* Writing now will not block.  */
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* These values are defined in XPG4.2.  */
 # define POLLRDNORM	0x040		/* Normal data may be read.  */
 # define POLLRDBAND	0x080		/* Priority data may be read.  */

@@ -1,5 +1,11 @@
 2009-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11093]
+	* bits/poll.h: Define POLLRDNORM, POLLRDBAND, POLLWRNORM, and
+	POLLWRBAND also for POSIX 2008.
+	* sysdeps/unix/sysv/linux/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: Likewise.
+
 	* include/link.h (struct link_map): Move l_used into its own word.
 	* elf/dl-lookup.c (_dl_lookup_symbol_x): Only update l_used when it is
 	still zero.
