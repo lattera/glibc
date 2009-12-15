@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995-2002,2004,2006,2007,2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2004,2006-2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,6 +67,10 @@ _dl_new_object (char *realname, const char *libname, int type,
 
   new->l_name = realname;
   new->l_type = type;
+  /* If we set the bit now since we know it is never used we avoid
+     dirtying the cache line later.  */
+  if ((GLRO(dl_debug_mask) & DL_DEBUG_UNUSED) == 0)
+    new->l_used = 1;
   new->l_loader = loader;
 #if NO_TLS_OFFSET != 0
   new->l_tls_offset = NO_TLS_OFFSET;
@@ -174,7 +178,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 	  if (result == NULL)
 	    {
 	      /* We were not able to determine the current directory.
-	         Note that free(origin) is OK if origin == NULL.  */
+		 Note that free(origin) is OK if origin == NULL.  */
 	      free (origin);
 	      origin = (char *) -1;
 	      goto out;

@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -180,7 +180,6 @@ struct link_map
     unsigned int l_need_tls_init:1; /* Nonzero if GL(dl_init_static_tls)
 				       should be called on this link map
 				       when relocation finishes.  */
-    unsigned int l_used:1;	/* Nonzero if the DSO is used.  */
     unsigned int l_auditing:1;	/* Nonzero if the DSO is used in auditing.  */
     unsigned int l_audit_any_plt:1; /* Nonzero if at least one audit module
 				       is interested in the PLT interception.*/
@@ -239,12 +238,15 @@ struct link_map
     struct link_map **l_initfini;
 
     /* List of the dependencies introduced through symbol binding.  */
-    unsigned int l_reldepsmax;
     struct link_map_reldeps
       {
 	unsigned int act;
 	struct link_map *list[];
       } *l_reldeps;
+    unsigned int l_reldepsmax;
+
+    /* Nonzero if the DSO is used.  */
+    unsigned int l_used;
 
     /* Various flag words.  */
     ElfW(Word) l_feature_1;

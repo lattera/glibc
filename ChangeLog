@@ -1,3 +1,11 @@
+2009-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h (struct link_map): Move l_used into its own word.
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Only update l_used when it is
+	still zero.
+	* elf/dl-object.c (_dl_new_object): Set dl_used if we know it is
+	never really used.
+
 2009-12-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn.S Include <init-arch.h>

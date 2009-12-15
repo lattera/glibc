@@ -777,7 +777,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__builtin_expect (protected != 0, 0))
     {
       /* It is very tricky.  We need to figure out what value to
-         return for the protected symbol.  */
+	 return for the protected symbol.  */
       if (type_class == ELF_RTYPE_CLASS_PLT)
 	{
 	  if (current_value.s != NULL && current_value.m != undef_map)
@@ -822,7 +822,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 				  version, type_class, flags, skip_map);
 
   /* The object is used.  */
-  current_value.m->l_used = 1;
+  if (__builtin_expect (current_value.m->l_used == 0, 0))
+    current_value.m->l_used = 1;
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
@@ -844,7 +845,7 @@ _dl_setup_hash (struct link_map *map)
   Elf_Symndx nchain;
 
   if (__builtin_expect (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
-  				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
+				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
 				    + DT_EXTRANUM + DT_VALNUM] != NULL, 1))
     {
       Elf32_Word *hash32
