@@ -1,3 +1,8 @@
+2009-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Redefine O_SYNC and
+	O_DSYNC to match 2.6.33+ kernels.
+
 2009-11-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Introduce new symbol
