@@ -1,5 +1,11 @@
 2009-12-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #11093]
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h: Define POLLRDNORM,
+	POLLRDBAND, POLLWRNORM, and POLLWRBAND also for POSIX 2008.
+
+2009-12-16  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Redefine O_SYNC and
 	O_DSYNC to match 2.6.33+ kernels.
 
