@@ -1,3 +1,7 @@
+2009-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/dl-lookup.c: Update from generic version.
+
 2009-12-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Redefine O_SYNC and
