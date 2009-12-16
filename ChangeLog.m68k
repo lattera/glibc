@@ -1,3 +1,8 @@
+2009-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Redefine O_SYNC and
+	O_DSYNC to match 2.6.33+ kernels.
+
 2009-11-23  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Use struct timespec
