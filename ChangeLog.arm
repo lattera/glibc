@@ -1,3 +1,12 @@
+2009-12-16  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/arm/eabi/Makefile [gmon] (sysdep_routines): Add arm-mcount.
+	* sysdeps/arm/eabi/machine-gmon.h (mcount_internal): Define to
+	`__mcount_internal'.
+	(MCOUNT (__gnu_mcount_nc), OLD_MCOUNT (_mcount), mcount): Move to...
+	* sysdeps/arm/eabi/arm-mcount.S: ... this new file as __gnu_mcount_nc,
+	_mcount, and mcount, respectively.
+
 2009-12-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Redefine O_SYNC and

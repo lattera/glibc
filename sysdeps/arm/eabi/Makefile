@@ -12,6 +12,10 @@ static-only-routines += $(aeabi_constants)
 gen-as-const-headers += rtld-global-offsets.sym
 endif
 
+ifeq ($(subdir),gmon)
+sysdep_routines += arm-mcount
+endif
+
 ifeq ($(subdir),debug)
 CFLAGS-backtrace.c += -funwind-tables
 endif
