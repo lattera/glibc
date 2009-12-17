@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -37,13 +37,7 @@ __pthread_rwlock_init (rwlock, attr)
 
   iattr = ((const struct pthread_rwlockattr *) attr) ?: &default_attr;
 
-  rwlock->__data.__lock = 0;
-  rwlock->__data.__nr_readers = 0;
-  rwlock->__data.__readers_wakeup = 0;
-  rwlock->__data.__writer_wakeup = 0;
-  rwlock->__data.__nr_readers_queued = 0;
-  rwlock->__data.__nr_writers_queued = 0;
-  rwlock->__data.__writer = 0;
+  memset (rwlock, '\0', sizeof (*rwlock));
 
   rwlock->__data.__flags
     = iattr->lockkind == PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP;
@@ -56,8 +50,8 @@ __pthread_rwlock_init (rwlock, attr)
      0x80 in case private futexes are available and zero otherwise.
      This leads to the following table:
 
-                 |     pshared     |     result
-                 | shared  private | shared  private |
+		 |     pshared     |     result
+		 | shared  private | shared  private |
      ------------+-----------------+-----------------+
      !avail 0    |     0       0   |     0       0   |
       avail 0x80 |  0x80       0   |     0    0x80   |
@@ -73,9 +67,6 @@ __pthread_rwlock_init (rwlock, attr)
 			     : THREAD_GETMEM (THREAD_SELF,
 					      header.private_futex));
 #endif
-
-  rwlock->__data.__pad1 = 0;
-  rwlock->__data.__pad2 = 0;
 
   return 0;
 }
