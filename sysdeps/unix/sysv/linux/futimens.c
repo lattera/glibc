@@ -33,6 +33,11 @@ int
 futimens (int fd, const struct timespec tsp[2])
 {
 #ifdef __NR_utimensat
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
   return INLINE_SYSCALL (utimensat, 4, fd, NULL, tsp, 0);
 #else
   __set_errno (ENOSYS);

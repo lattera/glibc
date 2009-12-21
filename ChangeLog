@@ -1,3 +1,7 @@
+2009-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimens.c: Handle AT_FDCWD.
+
 2009-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11093]
