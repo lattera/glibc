@@ -1,3 +1,8 @@
+2009-12-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/getcwd.c (cleanup): Do not call
+	__mach_port_deallocate on rootdevid.
+
 2009-12-17  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Handle

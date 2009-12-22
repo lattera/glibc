@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,2002,04 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,2002,2004,2009
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +61,6 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
       __mach_port_deallocate (__mach_task_self (), thisid);
       __mach_port_deallocate (__mach_task_self (), thisdevid);
       __mach_port_deallocate (__mach_task_self (), rootid);
-      __mach_port_deallocate (__mach_task_self (), rootdevid);
 
       if (dirbuf != NULL)
 	__vm_deallocate (__mach_task_self (),
