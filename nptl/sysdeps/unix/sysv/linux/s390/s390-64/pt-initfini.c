@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for 64 bit S/390.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -68,12 +68,6 @@ _init:\n\
 	STG	1,0(15)\n\
 	LARL	12,_GLOBAL_OFFSET_TABLE_\n\
 	BRASL	14,__pthread_initialize_minimal_internal\n\
-	LARL	1,__gmon_start__@GOTENT\n\
-	LG	1,0(1)\n\
-	LTGR	1,1\n\
-	JE	.L22\n\
-	BASR	14,1\n\
-.L22:\n\
 #APP\n\
 	.align 4,0x07\n\
 	END_INIT\n\

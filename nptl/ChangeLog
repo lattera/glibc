@@ -1,3 +1,9 @@
+2009-12-18  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c (_init): Don't
+	call __gmon_start__.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c (_init): Likewise.
+
 2009-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_rwlock_init.c (__pthread_rwlock_init): Simplify code by

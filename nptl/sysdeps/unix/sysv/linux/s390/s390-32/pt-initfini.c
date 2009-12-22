@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for S/390.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -67,8 +67,6 @@ _init:\n\
 .LT1_0:\n\
 .LC13:\n\
 	.long	__pthread_initialize_minimal_internal-.LT1_0\n\
-.LC14:\n\
-	.long	__gmon_start__@GOT\n\
 .LC15:\n\
 	.long	_GLOBAL_OFFSET_TABLE_-.LT1_0\n\
 .LTN1_0:\n\
@@ -80,12 +78,6 @@ _init:\n\
 	L     1,.LC13-.LT1_0(13)\n\
 	LA    1,0(1,13)\n\
 	BASR  14,1\n\
-	L     1,.LC14-.LT1_0(13)\n\
-	L     1,0(1,12)\n\
-	LTR   1,1\n\
-	JE    .L22\n\
-	BASR  14,1\n\
-.L22:\n\
 #APP\n\
 	.align 4,0x07\n\
 	END_INIT\n\
