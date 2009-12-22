@@ -1,3 +1,8 @@
+2009-12-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdioctl.c (_hurd_locked_install_cttyid): Set newctty to
+	MACH_PORT_NULL when id != cttyid.
+
 2009-12-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/getcwd.c (cleanup): Do not call
