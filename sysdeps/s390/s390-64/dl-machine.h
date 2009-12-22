@@ -371,7 +371,6 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *reloc_addr = value +reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
 	case R_390_PC32DBL:
-	case R_390_PLT32DBL:
 	  *(unsigned int *) reloc_addr = (unsigned int)
 	    ((int) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
 	  break;
@@ -380,7 +379,6 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
 	case R_390_PC16DBL:
-	case R_390_PLT16DBL:
 	  *(unsigned short *) reloc_addr = (unsigned short)
 	    ((short) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
 	  break;

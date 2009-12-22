@@ -1,3 +1,10 @@
+2009-12-17  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Handle
+	R_390_PC32DBL. Remove unneeded R_390_PLT16DBL.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Remove
+	unneeded R_390_PLT16DBL and R_390_PLT32DBL.
+
 2009-12-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/futimens.c: Handle AT_FDCWD.
