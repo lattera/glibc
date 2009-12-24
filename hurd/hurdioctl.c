@@ -1,5 +1,6 @@
 /* ioctl commands which must be done in the C library.
-   Copyright (C) 1994,95,96,97,99,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,99,2001,2002,2009
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -169,33 +170,28 @@ _hurd_locked_install_cttyid (mach_port_t cttyid)
   for (i = 0; i < _hurd_dtablesize; ++i)
     {
       struct hurd_fd *const d = _hurd_dtable[i];
-      mach_port_t newctty;
+      mach_port_t newctty = MACH_PORT_NULL;
 
       if (d == NULL)
 	/* Nothing to do for an unused descriptor cell.  */
 	continue;
 
-      if (cttyid == MACH_PORT_NULL)
-	/* We now have no controlling tty at all.  */
-	newctty = MACH_PORT_NULL;
-      else
+      if (cttyid != MACH_PORT_NULL)
+	/* We do have some controlling tty.  */
 	HURD_PORT_USE (&d->port,
 		       ({ mach_port_t id;
 			  /* Get the io object's cttyid port.  */
 			  if (! __term_getctty (port, &id))
 			    {
-			      if (id == cttyid && /* Is it ours?  */
+			      if (id == cttyid /* Is it ours?  */
 				  /* Get the ctty io port.  */
-				  __term_open_ctty (port,
-						    _hurd_pid, _hurd_pgrp,
-						    &newctty))
+				  && __term_open_ctty (port,
+						       _hurd_pid, _hurd_pgrp,
+						       &newctty))
 				/* XXX it is our ctty but the call failed? */
 				newctty = MACH_PORT_NULL;
-			      __mach_port_deallocate
-				(__mach_task_self (), (mach_port_t) id);
+			      __mach_port_deallocate (__mach_task_self (), id);
 			    }
-			  else
-			    newctty = MACH_PORT_NULL;
 			  0;
 			}));
 
