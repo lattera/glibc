@@ -133,7 +133,7 @@ check_called (void)
 {
   if (back_in_main == 0)
     {
-      puts ("program did no reach main again");
+      puts ("program did not reach main again");
       _exit (1);
     }
 }

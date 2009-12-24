@@ -1,3 +1,11 @@
+2009-12-15  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* stdlib/tst-makecontext3.c: New file.
+	* stdlib/tst-sigcontext.c: file.
+	* stdlib/Makefile (tests): Add new tests.
+
+	* stdlib/tst-setcontext.c (check_called): Fix a typo.
+
 2009-12-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in: Enable multi-arch by default if the assembler
