@@ -272,12 +272,10 @@ AC_ARG_ENABLE([multi-arch],
 	      AC_HELP_STRING([--enable-multi-arch],
 			     [enable single DSO with optimizations for multiple architectures]),
 	      [multi_arch=$enableval],
-	      [multi_arch=no])
-if test x"$multi_arch" = xyes; then
-  AC_DEFINE(USE_MULTIARCH)
+	      [multi_arch=default])
+if test x"$multi_arch" != xno; then
   multi_arch_d=/multiarch
 fi
-AC_SUBST(multi_arch)
 
 AC_ARG_ENABLE([experimental-malloc],
 	      AC_HELP_STRING([--enable-experimental-malloc],
@@ -721,6 +719,35 @@ for b in $base ''; do
     done
   done
 done
+
+# If the assembler supports gnu_indirect_function symbol type and the
+# architecture supports multi-arch, we enable multi-arch by default.
+if test "$multi_arch" = default; then
+AC_CACHE_CHECK([for assembler gnu_indirect_function symbol type support],
+               libc_cv_asm_gnu_indirect_function, [dnl
+cat > conftest.s <<EOF
+.type foo,%gnu_indirect_function
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD;
+then
+  libc_cv_asm_gnu_indirect_function=yes
+else
+  libc_cv_asm_gnu_indirect_function=no
+fi
+rm -f conftest*])
+  multi_arch=no
+  if test "$libc_cv_asm_gnu_indirect_function" = yes; then
+    case $sysnames_add_ons$sysnames in
+    *"$multi_arch_d"*)
+       multi_arch=yes
+      ;;
+    esac
+  fi
+fi
+if test x"$multi_arch" = xyes; then
+  AC_DEFINE(USE_MULTIARCH)
+fi
+AC_SUBST(multi_arch)
 
 if test -z "$os_used" && test "$os" != none; then
   AC_MSG_ERROR(Operating system $os is not supported.)

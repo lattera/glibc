@@ -1,3 +1,9 @@
+2009-12-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Enable multi-arch by default if the assembler
+	supports gnu_indirect_function symbol type and the architecture
+	supports it.
+
 2009-12-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/stdlib.h: Exclude some includes and prototypes if _ISOMAC

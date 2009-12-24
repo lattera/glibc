@@ -724,12 +724,12 @@ INSTALL_PROGRAM
 sysdeps_add_ons
 sysnames
 submachine
+multi_arch
 base_machine
 add_on_subdirs
 add_ons
 libc_cv_nss_crypt
 experimental_malloc
-multi_arch
 all_warnings
 force_install
 bindnow
@@ -3801,17 +3801,12 @@ fi
 if test "${enable_multi_arch+set}" = set; then
   enableval=$enable_multi_arch; multi_arch=$enableval
 else
-  multi_arch=no
+  multi_arch=default
 fi
 
-if test x"$multi_arch" = xyes; then
-  cat >>confdefs.h <<\_ACEOF
-#define USE_MULTIARCH 1
-_ACEOF
-
+if test x"$multi_arch" != xno; then
   multi_arch_d=/multiarch
 fi
-
 
 # Check whether --enable-experimental-malloc was given.
 if test "${enable_experimental_malloc+set}" = set; then
@@ -4358,6 +4353,44 @@ for b in $base ''; do
     done
   done
 done
+
+# If the assembler supports gnu_indirect_function symbol type and the
+# architecture supports multi-arch, we enable multi-arch by default.
+if test "$multi_arch" = default; then
+{ $as_echo "$as_me:$LINENO: checking for assembler gnu_indirect_function symbol type support" >&5
+$as_echo_n "checking for assembler gnu_indirect_function symbol type support... " >&6; }
+if test "${libc_cv_asm_gnu_indirect_function+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<EOF
+.type foo,%gnu_indirect_function
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5;
+then
+  libc_cv_asm_gnu_indirect_function=yes
+else
+  libc_cv_asm_gnu_indirect_function=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_asm_gnu_indirect_function" >&5
+$as_echo "$libc_cv_asm_gnu_indirect_function" >&6; }
+  multi_arch=no
+  if test "$libc_cv_asm_gnu_indirect_function" = yes; then
+    case $sysnames_add_ons$sysnames in
+    *"$multi_arch_d"*)
+       multi_arch=yes
+      ;;
+    esac
+  fi
+fi
+if test x"$multi_arch" = xyes; then
+  cat >>confdefs.h <<\_ACEOF
+#define USE_MULTIARCH 1
+_ACEOF
+
+fi
+
 
 if test -z "$os_used" && test "$os" != none; then
   { { $as_echo "$as_me:$LINENO: error: Operating system $os is not supported." >&5
