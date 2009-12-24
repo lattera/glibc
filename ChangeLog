@@ -1,3 +1,8 @@
+2009-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: Exclude some includes and prototypes if _ISOMAC
+	is defined.
+
 2009-12-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdioctl.c (_hurd_locked_install_cttyid): Set newctty to
