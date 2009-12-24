@@ -71,7 +71,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
 		   tst-makecontext tst-strtod4 tst-strtod5 tst-qsort2	    \
 		   tst-makecontext2 tst-strtod6 tst-unsetenv1		    \
-		   tst-makecontext3 tst-sigcontext
+		   tst-makecontext3
 
 include ../Makeconfig
 

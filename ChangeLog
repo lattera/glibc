@@ -1,5 +1,6 @@
 2009-12-15  Maciej W. Rozycki  <macro@codesourcery.com>
 
+	[BZ #11115]
 	* stdlib/tst-makecontext3.c: New file.
 	* stdlib/tst-sigcontext.c: file.
 	* stdlib/Makefile (tests): Add new tests.
