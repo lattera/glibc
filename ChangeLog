@@ -7,7 +7,9 @@
 
 2009-12-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10992]
 	* sysdeps/unix/sysv/linux/futimens.c: Handle AT_FDCWD.
+	Patch by Eric Blake <ebb9@byu.net>.
 
 2009-12-15  Ulrich Drepper  <drepper@redhat.com>
 
