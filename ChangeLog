@@ -2,8 +2,7 @@
 
 	[BZ #11115]
 	* stdlib/tst-makecontext3.c: New file.
-	* stdlib/tst-sigcontext.c: file.
-	* stdlib/Makefile (tests): Add new tests.
+	* stdlib/Makefile (tests): Add new test.
 
 	* stdlib/tst-setcontext.c (check_called): Fix a typo.
 
