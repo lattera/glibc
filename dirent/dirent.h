@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2000, 2003-2005, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000,2003-2005,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -218,7 +218,7 @@ extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_BSD || defined __USE_MISC || defined __XOPEN_2K8
+#if defined __USE_BSD || defined __USE_MISC || defined __XOPEN2K8
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
