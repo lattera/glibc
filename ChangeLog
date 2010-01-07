@@ -1,3 +1,8 @@
+2010-01-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Use NT_GNU_HWCAP instead of
+	literal 2.
+
 2010-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/dirent.h: Fix typo in feature selection macro use.
