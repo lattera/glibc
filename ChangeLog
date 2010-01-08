@@ -1,5 +1,7 @@
 2010-01-07  Roland McGrath  <roland@redhat.com>
 
+	* elf/elf.h (PN_XNUM): New macro.
+
 	* elf/dl-sysdep.c (_dl_important_hwcaps): Use NT_GNU_HWCAP instead of
 	literal 2.
 
