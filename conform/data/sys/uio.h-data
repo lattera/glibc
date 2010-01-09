@@ -1,3 +1,4 @@
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 type {struct iovec}
 
 element {struct iovec} {void*} iov_base
@@ -10,3 +11,4 @@ allow iov_*
 allow IOV_*
 allow *_t
 allow UIO_MAXIOV
+#endif

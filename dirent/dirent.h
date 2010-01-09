@@ -218,7 +218,7 @@ extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
-#if defined __USE_BSD || defined __USE_MISC || defined __XOPEN2K8
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN2K8
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));

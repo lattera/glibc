@@ -1,14 +1,19 @@
+#ifndef ISO
 type blkcnt_t
 type blksize_t
 type clock_t
 type clockid_t
 type dev_t
+# if !defined POSIX && !defined POSIX2008
 type fsblkcnt_t
 type fsfilcnt_t
+# endif
 type gid_t
 type id_t
 type ino_t
+# if !defined POSIX && !defined POSIX2008
 type key_t
+# endif
 type mode_t
 type nlink_t
 type off_t
@@ -28,10 +33,13 @@ type pthread_spinlock_t
 type pthread_t
 type size_t
 type ssize_t
+# if !defined POSIX && !defined POSIX2008
 type suseconds_t
+# endif
 type time_t
 type timer_t
 type uid_t
 type useconds_t
 
 allow *_t
+#endif

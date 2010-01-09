@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1993,1995-2004,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2004,2007,2009,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -168,7 +169,8 @@ extern size_t strxfrm_l (char *__dest, __const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
-#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED \
+    || defined __USE_XOPEN2K8
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup (__const char *__s)
      __THROW __attribute_malloc__ __nonnull ((1));

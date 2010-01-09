@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002,2004,2005,2008 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2004,2005,2008,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -150,7 +150,7 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 /* Load conversion functions for the currently selected locale.  */
 void
 internal_function
-__wcsmbs_load_conv (struct locale_data *new_category)
+__wcsmbs_load_conv (struct __locale_data *new_category)
 {
   /* Acquire the lock.  */
   __libc_rwlock_wrlock (__libc_setlocale_lock);
@@ -253,7 +253,7 @@ __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 }
 
 void internal_function
-_nl_cleanup_ctype (struct locale_data *locale)
+_nl_cleanup_ctype (struct __locale_data *locale)
 {
   const struct gconv_fcts *const data = locale->private.ctype;
   if (data != NULL)

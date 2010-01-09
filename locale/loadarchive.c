@@ -1,5 +1,5 @@
 /* Code to load locale data from the locale archive file.
-   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ struct locale_in_archive
 {
   struct locale_in_archive *next;
   char *name;
-  struct locale_data *data[__LC_LAST];
+  struct __locale_data *data[__LC_LAST];
 };
 static struct locale_in_archive *archloaded;
 
@@ -129,7 +129,7 @@ calculate_head_size (const struct locarhead *h)
    already been loaded from the archive, just returns the existing data
    structure.  If successful, sets *NAMEP to point directly into the mapped
    archive string table; that way, the next call can short-circuit strcmp.  */
-struct locale_data *
+struct __locale_data *
 internal_function
 _nl_load_locale_from_archive (int category, const char **namep)
 {

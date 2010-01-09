@@ -1,3 +1,4 @@
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 type {struct msqid_ds}
 
 type msgqnum_t
@@ -30,3 +31,4 @@ allow-header sys/ipc.h
 allow msg*
 allow MSG*
 allow *_h
+#endif

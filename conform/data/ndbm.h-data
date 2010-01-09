@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 type datum
 element datum {void*} dptr
 element datum size_t dsize

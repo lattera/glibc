@@ -3,7 +3,9 @@ constant FNM_NOMATCH
 constant FNM_PATHNAME
 constant FNM_PERIOD
 constant FNM_NOESCAPE
+#if !defined XOPEN2K8 && !defined POSIX2008
 constant FNM_NOSYS
+#endif
 
 function int fnmatch (const char*, const char*, int)
 

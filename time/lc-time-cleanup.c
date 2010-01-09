@@ -1,5 +1,5 @@
 /* Cleanup code for data structures kept by strftime/strptime helper functions.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <stdlib.h>
 
 void internal_function
-_nl_cleanup_time (struct locale_data *locale)
+_nl_cleanup_time (struct __locale_data *locale)
 {
   struct lc_time_data *const data = locale->private.time;
   if (data != NULL)

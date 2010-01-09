@@ -14,7 +14,7 @@ function int sem_trywait (sem_t*)
 function int sem_unlink (const char*)
 function int sem_wait (sem_t*)
 
-# if !defined POSIX
+# ifndef POSIX
 allow-header fcntl.h
 allow-header sys/types.h
 # endif

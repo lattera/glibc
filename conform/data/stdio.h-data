@@ -7,7 +7,9 @@ constant _IOLBF
 constant _IONBF
 
 constant L_ctermid
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant L_cuserid
+#endif
 constant L_tmpnam
 
 constant SEEK_CUR
@@ -20,7 +22,9 @@ constant EOF
 
 constant NULL
 
+#if !defined POSIX && !defined POSIX2008
 constant P_tmpdir
+#endif
 
 macro stdin
 macro stdout
@@ -30,10 +34,16 @@ type FILE
 type fpos_t
 type va_list
 type size_t
+#if defined XOPEN2K8 || defined POSIX2008
+type off_t
+#endif
 
 function void clearerr (FILE*)
 function {char*} ctermid (char*)
 function {char*} cuserid (char*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int dprintf (int, const char*, ...)
+#endif
 function int fclose (FILE*)
 function {FILE*} fdopen (int, const char*)
 function int feof (FILE*)
@@ -44,6 +54,9 @@ function int fgetpos (FILE*, fpos_t*)
 function {char*} fgets (char*, int, FILE*)
 function int fileno (FILE*)
 function void flockfile (FILE*)
+#if defined XOPEN2K8 || defined POSIX2008
+function {FILE*} fmemopen (void*, size_t, const char*)
+#endif
 function {FILE*} fopen (const char*, const char*)
 function int fprintf (FILE*, const char*, ...)
 function int fputc (int, FILE*)
@@ -63,12 +76,19 @@ function int getc (FILE*)
 function int getchar (void)
 function int getc_unlocked (FILE*)
 function int getchar_unlocked ()
-#ifndef XOPEN2K
+#if defined XOPEN2K8 || defined POSIX2008
+function ssize_t getdelim (char**, size_t*, int, FILE*)
+function ssize_t getline (char**, size_t*, FILE*)
+#endif
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int getopt (int, char *const[], const char *)
 #endif
 function {char*} gets (char*)
-#ifndef XOPEN2K
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int getw (FILE*)
+#endif
+#if defined XOPEN2K8 || defined POSIX2008
+function {FILE*} open_memstream (char**, size_t*)
 #endif
 function int pclose (FILE*)
 function void perror (const char*)
@@ -79,11 +99,14 @@ function int putchar (int)
 function int putc_unlocked (int, FILE*)
 function int putchar_unlocked (int)
 function int puts (const char*)
-#ifndef XOPEN2K
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int putw (int, FILE*)
 #endif
 function int remove (const char*)
 function int rename (const char*, const char*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int renameat (int, const char*, int, const char*)
+#endif
 function void rewind (FILE*)
 function int scanf (const char*, ...)
 function void setbuf (FILE*, char*)
@@ -91,26 +114,31 @@ function int setvbuf (FILE*, char*, int, size_t)
 function int snprintf (char*, size_t, const char*, ...)
 function int sprintf (char *, const char *, ...)
 function int sscanf (const char*, const char*, ...)
+#if !defined POSIX && !defined POSIX2008
 function {char*} tempnam (const char*, const char*)
+#endif
 function {FILE*} tmpfile (void)
 function {char*} tmpnam (char*)
 function int ungetc (int, FILE*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int vdprintf (int, const char*, va_list)
+#endif
 function int vfprintf (FILE*, const char*, va_list)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int vfscanf (FILE*, const char*, va_list)
 #endif
 function int vprintf (const char*, va_list)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int vscanf (const char*, va_list)
 #endif
 function int vsnprintf (char*, size_t, const char*, va_list)
 function int vsprintf (char*, const char*, va_list)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int vsscanf (const char*, const char*, va_list)
 #endif
 
 #if !defined ISO && !defined POSIX
-#ifndef XOPEN2K
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 variable {char*} optarg
 variable int opterr
 variable int optind

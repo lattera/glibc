@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -538,7 +538,7 @@ _nl_C_LC_CTYPE_width attribute_hidden =
    NR_FIXED == _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1). */
 typedef int assertion1[1 - 2 * (NR_FIXED != _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1))];
 
-const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
+const struct __locale_data _nl_C_LC_CTYPE attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */

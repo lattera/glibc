@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2004,2005,2007,2008,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,7 +119,7 @@ localtime_r (t, tp)
 
 #ifdef _LIBC
 /* This is defined in locale/C-time.c in the GNU libc.  */
-extern const struct locale_data _nl_C_LC_TIME attribute_hidden;
+extern const struct __locale_data _nl_C_LC_TIME attribute_hidden;
 
 # define weekday_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (DAY_1)].string)
 # define ab_weekday_name \
@@ -249,7 +249,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
      LOCALE_PARAM_DECL
 {
 #ifdef _LIBC
-  struct locale_data *const current = locale->__locales[LC_TIME];
+  struct __locale_data *const current = locale->__locales[LC_TIME];
 #endif
 
   const char *rp_backup;

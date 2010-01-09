@@ -3,6 +3,11 @@ type socklen_t
 
 type sa_family_t
 
+# if defined XOPEN2K8 || defined POSIX2008
+type size_t
+type ssize_t
+# endif
+
 type {struct sockaddr}
 
 element {struct sockaddr} sa_family_t sa_family
@@ -76,6 +81,9 @@ macro MSG_OOB
 macro MSG_PEEK
 macro MSG_TRUNC
 macro MSG_WAITALL
+# if defined XOPEN2K8 || defined POSIX2008
+constant MSG_NOSIGNAL
+# endif
 
 macro AF_UNIX
 macro AF_UNSPEC

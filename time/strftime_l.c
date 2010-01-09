@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2007-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -502,7 +502,7 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
       LOCALE_PARAM_DECL
 {
 #if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
-  struct locale_data *const current = loc->__locales[LC_TIME];
+  struct __locale_data *const current = loc->__locales[LC_TIME];
 #endif
 
   int hour12 = tp->tm_hour;

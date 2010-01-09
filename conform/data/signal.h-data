@@ -6,6 +6,20 @@ typed-constant SIG_IGN {void(*)(int)}
 type sig_atomic_t
 type sigset_t
 type pid_t
+#if defined XOPEN2K8 || defined POSIX2008
+type size_t
+type pthread_t
+type uid_t
+
+type mcontext_t
+
+type ucontext_t
+
+element ucontext_t {ucontext_t*} uc_link
+element ucontext_t sigset_t uc_sigmask
+element ucontext_t stack_t uc_stack
+element ucontext_t mcontext_t uc_mcontext
+#endif
 
 element {union sigval} int sival_int
 element {union sigval} {void*} sival_ptr
@@ -52,7 +66,9 @@ constant SIGBUS
 constant SIGPOLL
 constant SIGPROF
 constant SIGSYS
+#if !defined POSIX && !defined POSIX2008
 constant SIGTRAP
+#endif
 constant SIGURG
 constant SIGVTALRM
 constant SIGXCPU
@@ -69,16 +85,20 @@ constant SA_NOCLDSTOP
 constant SIG_BLOCK
 constant SIG_UNBLOCK
 constant SIG_SETMASK
+#if !defined POSIX && !defined POSIX2008
 constant SA_ONSTACK
+#endif
 constant SA_RESETHAND
 constant SA_RESTART
 constant SA_SIGINFO
 constant SA_NOCLDWAIT
 constant SA_NODEFER
+#if !defined POSIX && !defined POSIX2008
 constant SS_ONSTACK
 constant SS_DISABLE
 constant MINSIGSTKSZ
 constant SIGSTKSZ
+#endif
 
 type ucontext_t
 
@@ -101,7 +121,9 @@ element {struct sigstack} {void*} ss_sp
 type siginfo_t
 
 element siginfo_t int si_signo
+#if !defined POSIX && !defined POSIX2008
 element siginfo_t int si_errno
+#endif
 element siginfo_t int si_code
 element siginfo_t pid_t si_pid
 element siginfo_t uid_t si_uid
@@ -153,32 +175,46 @@ constant SI_MESGQ
 
 function void (*bsd_signal (int, void(*)(int)))(int)
 function int kill (pid_t, int)
+#if !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)
+#endif
 function int pthread_kill (pthread_t, int)
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
 function int raise (int)
 function int sigaction (int, const struct sigaction*, struct sigaction*)
 function int sigaddset (sigset_t*, int)
+#if !defined POSIX && !defined POSIX2008
 function int sigaltstack (const stack_t*, stack_t*)
+#endif
 function int sigdelset (sigset_t*, int)
 function int sigemptyset (sigset_t*)
 function int sigfillset (sigset_t*)
+#if !defined POSIX && !defined POSIX2008
 function int sighold (int)
 function int sigignore (int)
 function int siginterrupt (int, int)
+#endif
 function int sigismember (const sigset_t*, int)
 function void (*signal (int, void(*)(int)))(int)
+#if !defined POSIX && !defined POSIX2008
 function int sigpause (int)
+#endif
 function int sigpending (sigset_t*)
 function int sigprocmask (int, const sigset_t*, sigset_t*)
 function int sigqueue (pid_t, int, const union sigval)
+#if !defined POSIX && !defined POSIX2008
 function int sigrelse (int)
 function void (*sigset (int, void(*)(int)))(int)
+#endif
 function int sigstack (struct sigstack*, struct sigstack*)
 function int sigsuspend (const sigset_t*)
 function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
 function int sigwait (const sigset_t*, int*)
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function void psiginfo (const siginfo_t*, const char*)
+function void psignal (int, const char*)
+#endif
 
 // The following expressions are not entirely correct but the current
 // poorfnmatch implementation doesn't grok the right form.

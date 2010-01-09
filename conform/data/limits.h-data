@@ -11,7 +11,9 @@ allow LOGIN_NAME_MAX
 allow MQ_OPEN_MAX
 allow OPEN_MAX
 allow PAGESIZE
+#if !defined POSIX && !defined POSIX2008
 allow PAGE_SIZE
+#endif
 allow PTHREAD_DESTRUCTOR_ITERATIONS
 allow PTHREAD_KEYS_MAX
 allow PTHREAD_STACK_MIN
@@ -131,12 +133,18 @@ constant SHRT_MIN <= -32767
 
 optional-constant CHARCLASS_NAME_MAX >= 14
 optional-constant NL_ARGMAX >= 9
+#if !defined POSIX && !defined POSIX2008
 optional-constant NL_LANGMAX >= 14
+#endif
 optional-constant NL_MSGMAX >= 32767
+#if !defined XOPEN2K8 && !defined POSIX2008
 optional-constant NL_NMAX
+#endif
 optional-constant NL_SETMAX >= 255
 optional-constant NL_TEXTMAX
+#if !defined POSIX && !defined POSIX2008
 optional-constant NZERO >= 20
+#endif
 optional-constant TMP_MAX >= 10000
 
 allow *_MAX

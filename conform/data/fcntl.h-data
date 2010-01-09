@@ -60,9 +60,11 @@ constant S_IWOTH
 constant S_IXOTH
 constant S_ISUID
 constant S_ISGID
+#if !defined POSIX && !defined POSIX2008
 constant S_ISVTX
+#endif
 
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 constant POSIX_FADV_NORMAL
 constant POSIX_FADV_SEQUENTIAL
 constant POSIX_FADV_RANDOM
@@ -86,9 +88,30 @@ type pid_t
 function int creat (const char*, mode_t)
 function int fcntl (int, int, ...)
 function int open (const char*, int, ...)
-#ifdef XOPEN2K
+#if defined XOPEN2K8 || defined POSIX2008
+function int openat (int, const char*, int, ...)
+#endif
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int posix_fadvise (int, off_t, off_t, int)
 function int posix_fallocate (int, off_t, off_t)
+#endif
+
+#if defined XOPEN2K8 || defined POSIX2008
+constant O_TTY_INIT
+constant O_CLOEXEC
+constant O_EXEC
+constant O_SEARCH
+constant O_DIRECTORY
+constant O_NOFOLLOW
+constant FD_CLOEXEC
+constant F_DUPFD_CLOEXEC
+constant AT_FDCWD
+constant AT_EACCESS
+constant AT_SYMLINK_NOFOLLOW
+constant AT_SYMLINK_FOLLOW
+constant AT_REMOVEDIR
+
+function int openat(int, const char*, int, ...)
 #endif
 
 allow-header sys/stat.h
@@ -99,4 +122,8 @@ allow F_*
 allow O_*
 allow S_*
 allow *_t
+
+allow timespec
+allow tv_nsec
+allow tv_sec
 #endif

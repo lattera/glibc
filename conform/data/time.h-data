@@ -11,7 +11,7 @@ element {struct tm} int tm_yday
 element {struct tm} int tm_isdst
 
 constant NULL
-#ifndef XOPEN2K
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant CLK_TCK
 #endif
 constant CLOCKS_PER_SEC
@@ -38,6 +38,12 @@ type size_t
 type time_t
 type timer_t
 
+#if defined XOPEN2K8 || defined POSIX2008
+type pid_t
+type locale_t
+tag {struct sigevent}
+#endif
+
 variable int getdate_err
 
 function {char*} asctime (const struct tm*)
@@ -51,7 +57,9 @@ function int clock_settime (clockid_t, const struct timespec*)
 function {char*} ctime (const time_t*)
 function {char*} ctime_r (const time_t*, char*)
 function double difftime (time_t, time_t)
+#if !defined POSIX && !defined POSIX2008
 function {struct tm*} getdate (const char*)
+#endif
 function {struct tm*} gmtime (const time_t*)
 function {struct tm*} gmtime_r (const time_t*, struct tm*)
 function {struct tm*} localtime (const time_t*)
@@ -59,7 +67,12 @@ function {struct tm*} localtime_r (const time_t*, struct tm*)
 function time_t mktime (struct tm*)
 function int nanosleep (const struct timespec*, struct timespec*)
 function size_t strftime (char*, size_t, const char*, const struct tm*)
+#if defined XOPEN2K8 || defined POSIX2008
+function size_t strftime_l (char*, size_t, const char*, const struct tm*, locale_t)
+#endif
+#if !defined POSIX && !defined POSIX2008
 function {char*} strptime (const char*, const char*, struct tm*)
+#endif
 function time_t time (time_t*)
 function int timer_create (clockid_t, struct sigevent*, timer_t*)
 function int timer_delete (timer_t)
@@ -68,8 +81,10 @@ function int timer_getoverrun (timer_t)
 function int timer_settime (timer_t, int, const struct itimerspec*, struct itimerspec*)
 function void tzset (void)
 
+#if !defined POSIX && !defined POSIX2008
 variable int daylight
 variable {long int} timezone
+#endif
 variable {char*} tzname [2]
 
 allow tm_*

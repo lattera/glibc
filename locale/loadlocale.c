@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -61,7 +61,7 @@ static const enum value_type *const _nl_value_types[] =
 };
 
 
-struct locale_data *
+struct __locale_data *
 internal_function
 _nl_intern_locale_data (int category, const void *data, size_t datasize)
 {
@@ -71,7 +71,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
       unsigned int nstrings;
       unsigned int strindex[0];
     } *const filedata = data;
-  struct locale_data *newdata;
+  struct __locale_data *newdata;
   size_t cnt;
 
   if (__builtin_expect (datasize < sizeof *filedata, 0)
@@ -166,7 +166,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   int fd;
   void *filedata;
   struct stat64 st;
-  struct locale_data *newdata;
+  struct __locale_data *newdata;
   int save_err;
   int alloc = ld_mapped;
 
@@ -187,7 +187,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   if (__builtin_expect (S_ISDIR (st.st_mode), 0))
     {
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
-           instead.  */
+	   instead.  */
       char *newp;
       size_t filenamelen;
 
@@ -282,7 +282,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 
 void
 internal_function
-_nl_unload_locale (struct locale_data *locale)
+_nl_unload_locale (struct __locale_data *locale)
 {
   if (locale->private.cleanup)
     (*locale->private.cleanup) (locale);

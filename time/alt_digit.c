@@ -1,5 +1,5 @@
 /* Helper functions used by strftime/strptime to handle alternate digits.
-   Copyright (C) 1995-2002, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
   ((wchar_t *) current->values[_NL_ITEM_INDEX (item)].wstr)
 
 static void
-_nl_init_alt_digit (struct locale_data *current)
+_nl_init_alt_digit (struct __locale_data *current)
 {
   struct lc_time_data *data;
 
@@ -70,7 +70,7 @@ _nl_init_alt_digit (struct locale_data *current)
 
 const char *
 internal_function
-_nl_get_alt_digit (unsigned int number, struct locale_data *current)
+_nl_get_alt_digit (unsigned int number, struct __locale_data *current)
 {
   const char *result;
 
@@ -96,7 +96,7 @@ _nl_get_alt_digit (unsigned int number, struct locale_data *current)
 
 const wchar_t *
 internal_function
-_nl_get_walt_digit (unsigned int number, struct locale_data *current)
+_nl_get_walt_digit (unsigned int number, struct __locale_data *current)
 {
   const wchar_t *result = NULL;
   struct lc_time_data *data;
@@ -149,7 +149,7 @@ _nl_get_walt_digit (unsigned int number, struct locale_data *current)
 
 int
 internal_function
-_nl_parse_alt_digit (const char **strp, struct locale_data *current)
+_nl_parse_alt_digit (const char **strp, struct __locale_data *current)
 {
   const char *str = *strp;
   int result = -1;

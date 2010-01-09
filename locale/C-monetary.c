@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -28,7 +28,7 @@ static const char not_available[] = "\377";
 static const char not_available[] = "\177";
 #endif
 
-const struct locale_data _nl_C_LC_MONETARY attribute_hidden =
+const struct __locale_data _nl_C_LC_MONETARY attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */

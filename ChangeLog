@@ -1,3 +1,135 @@
+2010-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl: Update for XPG7 and some bug fixes.
+	* conform/data/ctype.h-data: Likewise.
+	* conform/data/dirent.h-data: Likewise.
+	* conform/data/errno.h-data: Likewise.
+	* conform/data/fcntl.h-data: Likewise.
+	* conform/data/fmtmsg.h-data: Likewise.
+	* conform/data/fnmatch.h-data: Likewise.
+	* conform/data/ftw.h-data: Likewise.
+	* conform/data/glob.h-data: Likewise.
+	* conform/data/grp.h-data: Likewise.
+	* conform/data/iconv.h-data: Likewise.
+	* conform/data/langinfo.h-data: Likewise.
+	* conform/data/libgen.h-data: Likewise.
+	* conform/data/limits.h-data: Likewise.
+	* conform/data/locale.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/monetary.h-data: Likewise.
+	* conform/data/mqueue.h-data: Likewise.
+	* conform/data/ndbm.h-data: Likewise.
+	* conform/data/netdb.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/pwd.h-data: Likewise.
+	* conform/data/regex.h-data: Likewise.
+	* conform/data/sched.h-data: Likewise.
+	* conform/data/search.h-data: Likewise.
+	* conform/data/semaphore.h-data: Likewise.
+	* conform/data/setjmp.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/spawn.h-data: Likewise.
+	* conform/data/stdio.h-data: Likewise.
+	* conform/data/stdlib.h-data: Likewise.
+	* conform/data/string.h-data: Likewise.
+	* conform/data/strings.h-data: Likewise.
+	* conform/data/sys/ipc.h-data: Likewise.
+	* conform/data/sys/msg.h-data: Likewise.
+	* conform/data/sys/resource.h-data: Likewise.
+	* conform/data/sys/sem.h-data: Likewise.
+	* conform/data/sys/shm.h-data: Likewise.
+	* conform/data/sys/socket.h-data: Likewise.
+	* conform/data/sys/stat.h-data: Likewise.
+	* conform/data/sys/time.h-data: Likewise.
+	* conform/data/sys/types.h-data: Likewise.
+	* conform/data/sys/uio.h-data: Likewise.
+	* conform/data/sys/wait.h-data: Likewise.
+	* conform/data/syslog.h-data: Likewise.
+	* conform/data/tar.h-data: Likewise.
+	* conform/data/termios.h-data: Likewise.
+	* conform/data/time.h-data: Likewise.
+	* conform/data/ulimit.h-data: Likewise.
+	* conform/data/unistd.h-data: Likewise.
+	* conform/data/utmpx.h-data: Likewise.
+	* conform/data/wchar.h-data: Likewise.
+	* conform/data/wctype.h-data: Likewise.
+	* conform/data/wordexp.h-data: Likewise.
+
+	* io/fcntl.h: Define mode_t macros instead of including sys/stat.h.
+	* sysdeps/unix/bsd/bits/stat.h: Enable using from fcntl.h.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h: Likewise.
+
+	* stdlib/stdlib.h: Define wait-related bits for XPG7.
+	Don't declare valloc, mktemp, ecvt, fcvt, gcvt for XPG6 and  up.
+	Declare mkstemp and getsubopt for XPG7.
+	Declare posix_openpt for XPG6 XSI.
+
+	* include/features.h: Define __USE_XOPEN2KXSI for _XOPEN_SOURCE >= 600
+	and __USE_XOPEN2K8XSI for _XOPEN_SOURCE >= 700.
+
+	* string/string.h: Declare strdup for XPG7.
+
+2010-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* bits/confname.h: Define _CS_V6_ENV and _CS_V7_ENV.
+	* posix/confstr.c: Implement _CS_V6_ENV and _CS_V7_ENV.
+
+	* dirent/dirent.h: Really fix feature selection.
+
+	* locale/localeinfo.h: Rename struct locale_data to __locale_data.
+	Fix all users.
+	* locale/C-address.c: Fix all users.
+	* locale/C-collate.c: Likewise.
+	* locale/C-ctype.c: Likewise.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/findlocale.c: Likewise.
+	* locale/global-locale.c: Likewise.
+	* locale/loadarchive.c: Likewise.
+	* locale/loadlocale.c: Likewise.
+	* locale/nl_langinfo_l.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	* locale/xlocale.c: Likewise.
+	* locale/xlocale.h: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/strfmon_l.c: Likewise.
+	* stdlib/strtod_l.c: Likewise.
+	* stdlib/strtol_l.c: Likewise.
+	* string/strcoll_l.c: Likewise.
+	* string/strxfrm_l.c: Likewise.
+	* time/alt_digit.c: Likewise.
+	* time/asctime.c: Likewise.
+	* time/era.c: Likewise.
+	* time/lc-time-cleanup.c: Likewise.
+	* time/strftime_l.c: Likewise.
+	* time/strptime_l.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* wcsmbs/wcsmbsload.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Define O_DIRECTORY,
+	O_NOFOLLOW, O_CLOEXEC, F_DUPFD_CLOEXEC, F_SETOWN, and F_GETOWN
+	for XPG7.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
 2010-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/dirent.h: Fix typo in feature selection macro use.

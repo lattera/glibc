@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -33,14 +33,14 @@
 
 #ifdef NL_CURRENT_INDIRECT
 # define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data _nl_C_##category; \
+extern struct __locale_data _nl_C_##category; \
 weak_extern (_nl_C_##category)
 # include "categories.def"
 # undef	DEFINE_CATEGORY
 
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.
    Elements are zero for categories whose data is never used.  */
-struct locale_data *const _nl_C[] attribute_hidden =
+struct __locale_data *const _nl_C[] attribute_hidden =
   {
 # define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = &_nl_C_##category,
@@ -59,7 +59,7 @@ struct loaded_l10nfile *_nl_locale_file_list[__LC_LAST];
 const char _nl_default_locale_path[] attribute_hidden = LOCALEDIR;
 
 
-struct locale_data *
+struct __locale_data *
 internal_function
 _nl_find_locale (const char *locale_path, size_t locale_path_len,
 		 int category, const char **name)
@@ -104,7 +104,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
      but only if there was no LOCPATH environment variable specified.  */
   if (__builtin_expect (locale_path == NULL, 1))
     {
-      struct locale_data *data = _nl_load_locale_from_archive (category, name);
+      struct __locale_data *data
+	= _nl_load_locale_from_archive (category, name);
       if (__builtin_expect (data != NULL, 1))
 	return data;
 
@@ -214,12 +215,12 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	  [__LC_MEASUREMENT] = _NL_ITEM_INDEX (_NL_MEASUREMENT_CODESET),
 	  [__LC_IDENTIFICATION] = _NL_ITEM_INDEX (_NL_IDENTIFICATION_CODESET)
 	};
-      const struct locale_data *data;
+      const struct __locale_data *data;
       const char *locale_codeset;
       char *clocale_codeset;
       char *ccodeset;
 
-      data = (const struct locale_data *) locale_file->data;
+      data = (const struct __locale_data *) locale_file->data;
       locale_codeset =
 	(const char *) data->values[codeset_idx[category]].string;
       assert (locale_codeset != NULL);
@@ -241,7 +242,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   /* Determine the locale name for which loading succeeded.  This
      information comes from the file name.  The form is
      <path>/<locale>/LC_foo.  We must extract the <locale> part.  */
-  if (((const struct locale_data *) locale_file->data)->name == NULL)
+  if (((const struct __locale_data *) locale_file->data)->name == NULL)
     {
       char *cp, *endp;
 
@@ -249,20 +250,20 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       cp = endp - 1;
       while (cp[-1] != '/')
 	--cp;
-      ((struct locale_data *) locale_file->data)->name = __strndup (cp,
-								    endp - cp);
+      ((struct __locale_data *) locale_file->data)->name
+	= __strndup (cp, endp - cp);
     }
 
   /* Determine whether the user wants transliteration or not.  */
   if (modifier != NULL && __strcasecmp (modifier, "TRANSLIT") == 0)
-    ((struct locale_data *) locale_file->data)->use_translit = 1;
+    ((struct __locale_data *) locale_file->data)->use_translit = 1;
 
   /* Increment the usage count.  */
-  if (((const struct locale_data *) locale_file->data)->usage_count
+  if (((const struct __locale_data *) locale_file->data)->usage_count
       < MAX_USAGE_COUNT)
-    ++((struct locale_data *) locale_file->data)->usage_count;
+    ++((struct __locale_data *) locale_file->data)->usage_count;
 
-  return (struct locale_data *) locale_file->data;
+  return (struct __locale_data *) locale_file->data;
 }
 
 
@@ -270,7 +271,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
    is acquired.  */
 void
 internal_function
-_nl_remove_locale (int locale, struct locale_data *data)
+_nl_remove_locale (int locale, struct __locale_data *data)
 {
   if (--data->usage_count == 0)
     {
@@ -281,7 +282,7 @@ _nl_remove_locale (int locale, struct locale_data *data)
 
 	  /* Search for the entry.  It must be in the list.  Otherwise it
 	     is a bug and we crash badly.  */
-	  while ((struct locale_data *) ptr->data != data)
+	  while ((struct __locale_data *) ptr->data != data)
 	    ptr = ptr->next;
 
 	  /* Mark the data as not available anymore.  So when the data has

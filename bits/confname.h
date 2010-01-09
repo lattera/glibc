@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007,2009
+   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007,2009,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -669,4 +669,9 @@ enum
 #define _CS_POSIX_V7_LPBIG_OFFBIG_LIBS _CS_POSIX_V7_LPBIG_OFFBIG_LIBS
     _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS
 #define _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS
+
+    _CS_V6_ENV,
+#define _CS_V6_ENV			_CS_V6_ENV
+    _CS_V7_ENV,
+#define _CS_V7_ENV			_CS_V7_ENV
   };

@@ -15,7 +15,9 @@ constant GLOB_NOSORT
 constant GLOB_ABORTED
 constant GLOB_NOMATCH
 constant GLOB_NOSPACE
+# if !defined XOPEN2K8 && !defined POSIX2008
 constant GLOB_NOSYS
+# endif
 
 function int glob (const char*, int, int (*) (const char*, int), glob_t*)
 function void globfree (glob_t *)

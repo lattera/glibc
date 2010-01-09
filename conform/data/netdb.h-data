@@ -34,6 +34,7 @@ element {struct servent} {char*} s_proto
 
 macro IPPORT_RESERVED
 
+#if !defined XOPEN2K8 && !defined POSIX2008
 // variable int h_errno
 allow h_errno
 
@@ -41,6 +42,7 @@ macro HOST_NOT_FOUND
 macro NO_DATA
 macro NO_RECOVERY
 macro TRY_AGAIN
+#endif
 
 type {struct addrinfo}
 element {struct addrinfo} int ai_flags

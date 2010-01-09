@@ -1,5 +1,6 @@
 /* O_*, F_*, FD_* bit values for Linux/IA64.
-   Copyright (C) 1999,2000,2004,2006,2007,2009 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2004, 2006, 2007, 2009, 2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,12 +45,14 @@
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000
 
-#ifdef __USE_GNU
-# define O_DIRECT	040000
+#ifdef __USE_XOPEN2K8
 # define O_DIRECTORY	0200000	/* must be a directory */
 # define O_NOFOLLOW	0400000 /* don't follow links */
-# define O_NOATIME	01000000 /* Do not set atime.  */
 # define O_CLOEXEC	02000000 /* Set close_on_exec.  */
+#endif
+#ifdef __USE_GNU
+# define O_DIRECT	040000
+# define O_NOATIME	01000000 /* Do not set atime.  */
 #endif
 
 #ifdef __USE_LARGEFILE64
@@ -80,7 +83,7 @@
 #define F_SETLK64	6	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	7	/* Set record locking info (blocking).	*/
 
-#if defined __USE_BSD || defined __USE_UNIX98
+#if defined __USE_BSD || defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define F_SETOWN	8	/* Get owner (process receiving SIGIO).  */
 # define F_GETOWN	9	/* Set owner (process receiving SIGIO).  */
 #endif
@@ -96,6 +99,8 @@
 # define F_SETLEASE	1024	/* Set a lease.	 */
 # define F_GETLEASE	1025	/* Enquire what lease is active.  */
 # define F_NOTIFY	1026	/* Request notfications on a directory.	 */
+#endif
+#ifdef __USE_XOPEN2K8
 # define F_DUPFD_CLOEXEC 1030	/* Duplicate file descriptor with
 				   close-on-exit set.  */
 #endif

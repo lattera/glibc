@@ -1,3 +1,4 @@
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 constant PRIO_PROCESS
 constant PRIO_PGRP
 constant PRIO_USER
@@ -48,3 +49,4 @@ allow RLIM_*
 allow RLIMIT_*
 allow RUSAGE_*
 allow *_t
+#endif

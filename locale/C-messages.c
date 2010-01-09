@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1997,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,2000,2001,2002,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -24,7 +24,7 @@
 
    The last two fields are a GNU extension.  */
 
-const struct locale_data _nl_C_LC_MESSAGES attribute_hidden =
+const struct __locale_data _nl_C_LC_MESSAGES attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */

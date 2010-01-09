@@ -18,9 +18,17 @@ function ssize_t mq_receive (mqd_t, char*, size_t, unsigned int*)
 function int mq_send (mqd_t, const char*, size_t, unsigned int)
 function int mq_setattr (mqd_t, const struct mq_attr*, struct mq_attr*)
 function int mq_unlink (const char*)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 optional-function ssize_t mq_timedreceive (mqd_t, char*, size_t, unsigned int*, const struct timespec*)
 optional-function int mq_timedsend (mqd_t, const char*, size_t, unsigned int, const struct timespec*)
+#endif
+
+#if defined XOPEN2K8 || defined POSIX2008
+type pthread_attr_t
+type size_t
+type ssize_t
+type {struct timespec}
+type {struct sigevent}
 #endif
 
 allow-header fcntl.h

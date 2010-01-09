@@ -17,7 +17,7 @@ element {struct lconv} char p_cs_precedes
 element {struct lconv} char p_sep_by_space
 element {struct lconv} char p_sign_posn
 element {struct lconv} {char*} thousands_sep
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 element {struct lconv} char int_n_cs_precedes
 element {struct lconv} char int_n_sep_by_space
 element {struct lconv} char int_n_sign_posn
@@ -36,8 +36,31 @@ macro LC_MONETARY
 macro LC_NUMERIC
 macro LC_TIME
 
+#if defined XOPEN2K8 || defined POSIX2008
+constant LC_GLOBAL_LOCALE
+
+macro LC_COLLATE_MASK
+macro LC_CTYPE_MASK
+macro LC_MESSAGES_MASK
+macro LC_MONETARY_MASK
+macro LC_NUMERIC_MASK
+macro LC_TIME_MASK
+macro LC_ALL_MASK
+
+type locale_t
+#endif
+
 function {struct lconv*} localeconv (void)
 function {char*} setlocale (int, const char*)
+#if defined XOPEN2K8 || defined POSIX2008
+function locale_t duplocale (locale_t)
+function void freelocale (locale_t)
+function locale_t newlocale (int, const char*, locale_t)
+function locale_t uselocale (locale_t)
+#endif
 
 allow LC_*
 allow *_t
+#if defined XOPEN2K8 || defined POSIX2008
+allow LC_*_MASK
+#endif

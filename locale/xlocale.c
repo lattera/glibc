@@ -1,5 +1,5 @@
 /* C locale object.
-   Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -22,7 +22,7 @@
 #include "localeinfo.h"
 
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data _nl_C_##category;
+extern struct __locale_data _nl_C_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 

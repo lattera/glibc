@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2002, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997,2002,2004-2006,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -86,7 +85,7 @@ utf8_encode (char *buf, int val)
 size_t
 STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 {
-  struct locale_data *current = l->__locales[LC_COLLATE];
+  struct __locale_data *current = l->__locales[LC_COLLATE];
   uint_fast32_t nrules = current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].word;
   /* We don't assign the following values right away since it might be
      unnecessary in case there are no rules.  */
@@ -137,7 +136,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   if (srclen == 0)
     {
       if (n != 0)
-        *dest = L('\0');
+	*dest = L('\0');
       return 0;
     }
 

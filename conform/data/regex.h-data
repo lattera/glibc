@@ -28,7 +28,9 @@ constant REG_EBRACE
 constant REG_BADBR
 constant REG_ESPACE
 constant REG_BADRPT
+# if !defined XOPEN2K8 && !defined POSIX2008
 constant REG_ENOSYS
+# endif
 
 function int regcomp (regex_t*, const char*, int)
 function int regexec (const regex_t*, const char*, size_t, regmatch_t[], int)

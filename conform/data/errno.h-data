@@ -79,6 +79,11 @@ constant ETXTBSY
 constant EWOULDBLOCK
 constant EXDEV
 
+# if defined XOPEN2K8 || defined POSIX2008
+constant ENOTRECOVERABLE
+constant EOWNERDEAD
+# endif
+
 // variable int errno
 allow errno
 

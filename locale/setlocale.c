@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006, 2008
+/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -207,7 +207,7 @@ setname (int category, const char *name)
 
 /* Put DATA in *_nl_current[CATEGORY].  */
 static inline void
-setdata (int category, struct locale_data *data)
+setdata (int category, struct __locale_data *data)
 {
   if (CATEGORY_USED (category))
     {
@@ -273,7 +273,7 @@ setlocale (int category, const char *locale)
 	 composite locale name.  This is a semi-colon separated list
 	 of entries of the form `CATEGORY=VALUE'.  */
       const char *newnames[__LC_LAST];
-      struct locale_data *newdata[__LC_LAST];
+      struct __locale_data *newdata[__LC_LAST];
 
       /* Set all name pointers to the argument name.  */
       for (category = 0; category < __LC_LAST; ++category)
@@ -400,7 +400,7 @@ setlocale (int category, const char *locale)
     }
   else
     {
-      struct locale_data *newdata = NULL;
+      struct __locale_data *newdata = NULL;
       const char *newname[1] = { locale };
 
       if (CATEGORY_USED (category))
@@ -465,7 +465,7 @@ libc_hidden_def (setlocale)
 
 static void __libc_freeres_fn_section
 free_category (int category,
-	       struct locale_data *here, struct locale_data *c_data)
+	       struct __locale_data *here, struct locale_data *c_data)
 {
   struct loaded_l10nfile *runp = _nl_locale_file_list[category];
 
@@ -481,7 +481,7 @@ free_category (int category,
   while (runp != NULL)
     {
       struct loaded_l10nfile *curr = runp;
-      struct locale_data *data = (struct locale_data *) runp->data;
+      struct __locale_data *data = (struct locale_data *) runp->data;
 
       if (data != NULL && data != c_data)
 	_nl_unload_locale (data);
@@ -502,7 +502,7 @@ _nl_locale_subfreeres (void)
 # define DEFINE_CATEGORY(category, category_name, items, a)		      \
   if (CATEGORY_USED (category))						      \
     {									      \
-      extern struct locale_data _nl_C_##category;			      \
+      extern struct __locale_data _nl_C_##category;			      \
       weak_extern (_nl_C_##category)					      \
       free_category (category, *_nl_current_##category, &_nl_C_##category);   \
     }

@@ -1,14 +1,19 @@
 type wchar_t
 type wint_t
+# if !defined ISO && !defined POSIX && !defined POSIX2008
 type wctype_t
+#endif
 type mbstate_t
 type FILE
 type size_t
+#if defined XOPEN2K8 || defined POSIX2008
+type locale_t
+#endif
 
 function wint_t btowc (int)
 function int fwprintf (FILE*, const wchar_t*, ...)
 function int fwscanf (FILE*, const wchar_t*, ...)
-#if !ISO
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 function int iswalnum (wint_t)
 function int iswalpha (wint_t)
 function int iswcntrl (wint_t)
@@ -32,13 +37,21 @@ function wint_t getwchar (void)
 function int mbsinit (const mbstate_t*)
 function size_t mbrlen (const char*, size_t, mbstate_t*)
 function size_t mbrtowc (wchar_t*, const char*, size_t, mbstate_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function size_t mbsnrtowcs (wchar_t*, const char**, size_t, size_t, mbstate_t*)
+#endif
 function size_t mbsrtowcs (wchar_t*, const char**, size_t, mbstate_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function {FILE*} open_wmemstream (wchar_t**, size_t*)
+#endif
 function wint_t putwc (wchar_t, FILE*)
 function wint_t putwchar (wchar_t)
 function int swprintf (wchar_t*, size_t, const wchar_t*, ...)
 function int swscanf (const wchar_t*, const wchar_t*, ...)
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 function wint_t towlower (wint_t)
 function wint_t towupper (wint_t)
+#endif
 function wint_t ungetwc (wint_t, FILE*)
 function int vfwprintf (FILE*, const wchar_t*, va_list)
 function int vfwscanf (FILE*, const wchar_t*, va_list)
@@ -46,18 +59,40 @@ function int vwprintf (const wchar_t*, va_list)
 function int vwscanf (const wchar_t*, va_list)
 function int vswprintf (wchar_t*, size_t, const wchar_t*, va_list)
 function int vswscanf (const wchar_t*, const wchar_t*, va_list)
+#if defined XOPEN2K8 || defined POSIX2008
+function {wchar_t*} wcpcpy (wchar_t*, const wchar_t*)
+function {wchar_t*} wcpncpy (wchar_t*, const wchar_t*, size_t)
+#endif
 function size_t wcrtomb (char*, wchar_t, mbstate_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int wcscasecmp(const wchar_t*, const wchar_t*)
+function int wcscasecmp_l(const wchar_t*, const wchar_t*, locale_t)
+#endif
 function {wchar_t*} wcscat (wchar_t*, const wchar_t*)
 function {wchar_t*} wcschr (const wchar_t*, wchar_t)
 function int wcscmp (const wchar_t*, const wchar_t*)
 function int wcscoll (const wchar_t*, const wchar_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int wcscoll_l (const wchar_t*, const wchar_t*, locale_t)
+#endif
 function {wchar_t*} wcscpy (wchar_t*, const wchar_t*)
 function size_t wcscspn (const wchar_t*, const wchar_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function {wchar_t*} wcsdup (const wchar_t*)
+#endif
 function size_t wcsftime (wchar_t*, size_t, const wchar_t*, const struct tm*)
 function size_t wcslen (const wchar_t*)
+#if defined XOPEN2K8 || defined POSIX2008
+function int wcsncasecmp (const wchar_t*, const wchar_t*, size_t)
+function int wcsncasecmp_l (const wchar_t*, const wchar_t*, size_t, locale_t)
+#endif
 function {wchar_t*} wcsncat (wchar_t*, const wchar_t*, size_t)
 function int wcsncmp (const wchar_t*, const wchar_t*, size_t)
 function {wchar_t*} wcsncpy (wchar_t*, const wchar_t*, size_t)
+#if defined XOPEN2K8 || defined POSIX2008
+function size_t wcsnlen (const wchar_t*, size_t)
+function size_t wcsnrtombs (char*, const wchar_t**, size_t, size_t, mbstate_t*)
+#endif
 function {wchar_t*} wcspbrk (const wchar_t*, const wchar_t*)
 function {wchar_t*} wcsrchr (const wchar_t*, wchar_t)
 function size_t wcsrtombs (char*, const wchar_t**, size_t, mbstate_t*)
@@ -68,11 +103,18 @@ function {wchar_t*} wcstok (wchar_t*, const wchar_t*, wchar_t**)
 function {long int} wcstol (const wchar_t*, wchar_t**, int)
 function {unsigned long int} wcstoul (const wchar_t*, wchar_t**, int)
 function {wchar_t*} wcswcs (const wchar_t*, const wchar_t*)
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 function int wcswidth (const wchar_t*, size_t)
+#endif
 function size_t wcsxfrm (wchar_t*, const wchar_t*, size_t)
+#if defined XOPEN2K8 || defined POSIX2008
+function size_t wcsxfrm_l (wchar_t*, const wchar_t*, size_t, locale_t)
+#endif
 function int wctob (wint_t)
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 function wctype_t wctype (const char*)
 function int wcwidth (wchar_t)
+#endif
 function {wchar_t*} wmemchr (const wchar_t*, wchar_t, size_t)
 function int wmemcmp (const wchar_t*, const wchar_t*, size_t)
 function {wchar_t*} wmemcpy (wchar_t*, const wchar_t*, size_t)

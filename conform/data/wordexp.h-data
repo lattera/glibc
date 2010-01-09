@@ -14,7 +14,9 @@ constant WRDE_UNDEF
 constant WRDE_BADCHAR
 constant WRDE_CMDSUB
 constant WRDE_NOSPACE
+#if defined XOPEN2K8 || defined POSIX2008
 constant WRDE_NOSYS
+#endif
 constant WRDE_SYNTAX
 
 function int wordexp (const char*, wordexp_t*, int)

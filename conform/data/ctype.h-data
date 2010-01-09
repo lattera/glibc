@@ -12,7 +12,7 @@ function int isxdigit (int)
 function int tolower (int)
 function int toupper (int)
 
-#ifndef ISO
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 function int isascii (int)
 function int toascii (int)
 
@@ -26,4 +26,22 @@ allow is*
 allow to*
 
 allow *_t
+
+# if defined XOPEN2K8 || defined XOPEN2K8 || defined POSIX2008
+type locale_t
+
+function int isalnum_l (int, locale_t)
+function int isalpha_l (int, locale_t)
+function int iscntrl_l (int, locale_t)
+function int isdigit_l (int, locale_t)
+function int isgraph_l (int, locale_t)
+function int islower_l (int, locale_t)
+function int isprint_l (int, locale_t)
+function int ispunct_l (int, locale_t)
+function int isspace_l (int, locale_t)
+function int isupper_l (int, locale_t)
+function int isxdigit_l (int, locale_t)
+function int tolower_l (int, locale_t)
+function int toupper_l (int, locale_t)
+# endif
 #endif

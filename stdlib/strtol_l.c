@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 2002, 2004, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2004, 2006, 2007, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -243,7 +243,7 @@ INTERNAL (__strtol_l) (nptr, endptr, base, group, loc)
 #endif
 
 #ifdef USE_NUMBER_GROUPING
-  struct locale_data *current = loc->__locales[LC_NUMERIC];
+  struct __locale_data *current = loc->__locales[LC_NUMERIC];
   /* The thousands character of the current locale.  */
 # ifdef USE_WIDE_CHAR
   wchar_t thousands = L'\0';

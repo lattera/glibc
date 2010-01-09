@@ -8,13 +8,17 @@ element {struct stat} mode_t st_mode
 element {struct stat} nlink_t st_nlink
 element {struct stat} uid_t st_uid
 element {struct stat} gid_t st_gid
+#if !defined POSIX && !defined POSIX2008
 element {struct stat} dev_t st_rdev
+#endif
 element {struct stat} off_t st_size
 element {struct stat} time_t st_atime
 element {struct stat} time_t st_mtime
 element {struct stat} time_t st_ctime
+#if !defined POSIX && !defined POSIX2008
 element {struct stat} blksize_t st_blksize
 element {struct stat} blkcnt_t st_blocks
+#endif
 
 type blkcnt_t
 type blksize_t
@@ -26,7 +30,13 @@ type uid_t
 type gid_t
 type off_t
 type time_t
+# ifdef XOPEN2K8
+type {struct timespec}
+element {struct timespec} time_t tv_sec
+element {struct timespec} long tv_nsec
+# endif
 
+#if !defined POSIX && !defined POSIX2008
 constant S_IFMT
 constant S_IFBLK
 constant S_IFCHR
@@ -34,6 +44,8 @@ constant S_IFIFO
 constant S_IFREG
 constant S_IFDIR
 constant S_IFLNK
+constant S_IFSOCK
+#endif
 
 constant S_IRWXU
 constant S_IRUSR
@@ -48,14 +60,20 @@ constant S_IWOTH
 constant S_IXOTH
 constant S_ISUID
 constant S_ISGID
+#if !defined POSIX && !defined POSIX2008
 constant S_ISVTX
+#endif
 
+#if !defined POSIX && !defined POSIX2008
+macro S_IFMT
 macro S_ISBLK
 macro S_ISCHR
 macro S_ISDIR
 macro S_ISFIFO
 macro S_ISREG
 macro S_ISLNK
+macro S_IFSOCK
+#endif
 
 // How to represent optional tests?
 optional-macro S_TYPEISMQ
@@ -63,15 +81,41 @@ optional-macro S_TYPEISSEM
 optional-macro S_TYPEISSHM
 optional-macro S_TYPEISTMO
 
+# if defined XOPEN2K8 || defined POSIX2008
+constant UTIME_NOW
+constant UTIME_OMIT
+# endif
+
 function int chmod (const char*, mode_t)
 function int fchmod (int, mode_t)
+# if defined XOPEN2K8 || defined POSIX2008
+function int fchmodat (int, const char*, mode_t, int)
+# endif
 function int fstat (int, struct stat*)
+# if defined XOPEN2K8 || defined POSIX2008
+function int fstatat (int, const char*, struct stat*, int)
+function int futimens (int, const struct timespec[2])
+# endif
 function int lstat (const char*, struct stat*)
 function int mkdir (const char*, mode_t)
+# if defined XOPEN2K8 || defined POSIX2008
+function int mkdirat (int, const char*, mode_t)
+# endif
 function int mkfifo (const char*, mode_t)
+# if defined XOPEN2K8 || defined POSIX2008
+function int mkfifoat (int, const char*, mode_t)
+# endif
+# if !defined POSIX && !defined POSIX2008
 function int mknod (const char*, mode_t, dev_t)
+# endif
+# if defined XOPEN2K8 || defined POSIX2008
+function int mknodat (int, const char*, mode_t, dev_t)
+# endif
 function int stat (const char*, struct stat*)
 function mode_t umask (mode_t)
+# if defined XOPEN2K8 || defined POSIX2008
+function int utimensat (int, const char*, const struct timespec[2], int)
+# endif
 
 allow st_*
 allow S_*

@@ -1,6 +1,12 @@
 #ifndef ISO
 type posix_spawnattr_t
 type posix_spawn_file_actions_t
+# if defined XOPEN2K8 || defined POSIX2008
+type mode_t
+type pid_t
+type sigset_t
+type {struct sched_param}
+# endif
 
 constant POSIX_SPAWN_RESETIDS
 constant POSIX_SPAWN_SETPGROUP

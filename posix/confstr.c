@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1996,1997,2000-2004,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,2000-2004,2009,2010 Free
+   Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,52 +59,52 @@ confstr (name, buf, len)
 
 	string_len = 0;
 #ifndef _POSIX_V7_ILP32_OFF32
-        if (__sysconf (_SC_V7_ILP32_OFF32) > 0)
+	if (__sysconf (_SC_V7_ILP32_OFF32) > 0)
 #endif
 #if !defined _POSIX_V7_ILP32_OFF32 || _POSIX_V7_ILP32_OFF32 > 0
-          {
-            memcpy (restenvs + string_len, "POSIX_V7_ILP32_OFF32",
-                    sizeof "POSIX_V7_ILP32_OFF32" - 1);
-            string_len += sizeof "POSIX_V7_ILP32_OFF32" - 1;
-          }
+	  {
+	    memcpy (restenvs + string_len, "POSIX_V7_ILP32_OFF32",
+		    sizeof "POSIX_V7_ILP32_OFF32" - 1);
+	    string_len += sizeof "POSIX_V7_ILP32_OFF32" - 1;
+	  }
 #endif
 #ifndef _POSIX_V7_ILP32_OFFBIG
-        if (__sysconf (_SC_V7_ILP32_OFFBIG) > 0)
+	if (__sysconf (_SC_V7_ILP32_OFFBIG) > 0)
 #endif
 #if !defined _POSIX_V7_ILP32_OFFBIG || _POSIX_V7_ILP32_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V7_ILP32_OFFBIG",
-                    sizeof "POSIX_V7_ILP32_OFFBIG" - 1);
-            string_len += sizeof "POSIX_V7_ILP32_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V7_ILP32_OFFBIG",
+		    sizeof "POSIX_V7_ILP32_OFFBIG" - 1);
+	    string_len += sizeof "POSIX_V7_ILP32_OFFBIG" - 1;
+	  }
 #endif
 #ifndef _POSIX_V7_LP64_OFF64
-        if (__sysconf (_SC_V7_LP64_OFF64) > 0)
+	if (__sysconf (_SC_V7_LP64_OFF64) > 0)
 #endif
 #if !defined _POSIX_V7_LP64_OFF64 || _POSIX_V7_LP64_OFF64 > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V7_LP64_OFF64",
-                    sizeof "POSIX_V7_LP64_OFF64" - 1);
-            string_len += sizeof "POSIX_V7_LP64_OFF64" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V7_LP64_OFF64",
+		    sizeof "POSIX_V7_LP64_OFF64" - 1);
+	    string_len += sizeof "POSIX_V7_LP64_OFF64" - 1;
+	  }
 #endif
 #ifndef _POSIX_V7_LPBIG_OFFBIG
-        if (__sysconf (_SC_V7_LPBIG_OFFBIG) > 0)
+	if (__sysconf (_SC_V7_LPBIG_OFFBIG) > 0)
 #endif
 #if !defined _POSIX_V7_LPBIG_OFFBIG || _POSIX_V7_LPBIG_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V7_LPBIG_OFFBIG",
-                    sizeof "POSIX_V7_LPBIG_OFFBIG" - 1);
-            string_len += sizeof "POSIX_V7_LPBIG_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V7_LPBIG_OFFBIG",
+		    sizeof "POSIX_V7_LPBIG_OFFBIG" - 1);
+	    string_len += sizeof "POSIX_V7_LPBIG_OFFBIG" - 1;
+	  }
 #endif
-        restenvs[string_len++] = '\0';
+	restenvs[string_len++] = '\0';
 	string = restenvs;
       }
       break;
@@ -121,52 +122,52 @@ confstr (name, buf, len)
 
 	string_len = 0;
 #ifndef _POSIX_V6_ILP32_OFF32
-        if (__sysconf (_SC_V6_ILP32_OFF32) > 0)
+	if (__sysconf (_SC_V6_ILP32_OFF32) > 0)
 #endif
 #if !defined _POSIX_V6_ILP32_OFF32 || _POSIX_V6_ILP32_OFF32 > 0
-          {
-            memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFF32",
-                    sizeof "POSIX_V6_ILP32_OFF32" - 1);
-            string_len += sizeof "POSIX_V6_ILP32_OFF32" - 1;
-          }
+	  {
+	    memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFF32",
+		    sizeof "POSIX_V6_ILP32_OFF32" - 1);
+	    string_len += sizeof "POSIX_V6_ILP32_OFF32" - 1;
+	  }
 #endif
 #ifndef _POSIX_V6_ILP32_OFFBIG
-        if (__sysconf (_SC_V6_ILP32_OFFBIG) > 0)
+	if (__sysconf (_SC_V6_ILP32_OFFBIG) > 0)
 #endif
 #if !defined _POSIX_V6_ILP32_OFFBIG || _POSIX_V6_ILP32_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFFBIG",
-                    sizeof "POSIX_V6_ILP32_OFFBIG" - 1);
-            string_len += sizeof "POSIX_V6_ILP32_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFFBIG",
+		    sizeof "POSIX_V6_ILP32_OFFBIG" - 1);
+	    string_len += sizeof "POSIX_V6_ILP32_OFFBIG" - 1;
+	  }
 #endif
 #ifndef _POSIX_V6_LP64_OFF64
-        if (__sysconf (_SC_V6_LP64_OFF64) > 0)
+	if (__sysconf (_SC_V6_LP64_OFF64) > 0)
 #endif
 #if !defined _POSIX_V6_LP64_OFF64 || _POSIX_V6_LP64_OFF64 > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V6_LP64_OFF64",
-                    sizeof "POSIX_V6_LP64_OFF64" - 1);
-            string_len += sizeof "POSIX_V6_LP64_OFF64" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V6_LP64_OFF64",
+		    sizeof "POSIX_V6_LP64_OFF64" - 1);
+	    string_len += sizeof "POSIX_V6_LP64_OFF64" - 1;
+	  }
 #endif
 #ifndef _POSIX_V6_LPBIG_OFFBIG
-        if (__sysconf (_SC_V6_LPBIG_OFFBIG) > 0)
+	if (__sysconf (_SC_V6_LPBIG_OFFBIG) > 0)
 #endif
 #if !defined _POSIX_V6_LPBIG_OFFBIG || _POSIX_V6_LPBIG_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "POSIX_V6_LPBIG_OFFBIG",
-                    sizeof "POSIX_V6_LPBIG_OFFBIG" - 1);
-            string_len += sizeof "POSIX_V6_LPBIG_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "POSIX_V6_LPBIG_OFFBIG",
+		    sizeof "POSIX_V6_LPBIG_OFFBIG" - 1);
+	    string_len += sizeof "POSIX_V6_LPBIG_OFFBIG" - 1;
+	  }
 #endif
-        restenvs[string_len++] = '\0';
+	restenvs[string_len++] = '\0';
 	string = restenvs;
       }
       break;
@@ -184,52 +185,52 @@ confstr (name, buf, len)
 
 	string_len = 0;
 #ifndef _XBS5_ILP32_OFF32
-        if (__sysconf (_SC_XBS5_ILP32_OFF32) > 0)
+	if (__sysconf (_SC_XBS5_ILP32_OFF32) > 0)
 #endif
 #if !defined _XBS5_ILP32_OFF32 || _XBS5_ILP32_OFF32 > 0
-          {
-            memcpy (restenvs + string_len, "XBS5_ILP32_OFF32",
-                    sizeof "XBS5_ILP32_OFF32" - 1);
-            string_len += sizeof "XBS5_ILP32_OFF32" - 1;
-          }
+	  {
+	    memcpy (restenvs + string_len, "XBS5_ILP32_OFF32",
+		    sizeof "XBS5_ILP32_OFF32" - 1);
+	    string_len += sizeof "XBS5_ILP32_OFF32" - 1;
+	  }
 #endif
 #ifndef _XBS5_ILP32_OFFBIG
-        if (__sysconf (_SC_XBS5_ILP32_OFFBIG) > 0)
+	if (__sysconf (_SC_XBS5_ILP32_OFFBIG) > 0)
 #endif
 #if !defined _XBS5_ILP32_OFFBIG || _XBS5_ILP32_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "XBS5_ILP32_OFFBIG",
-                    sizeof "XBS5_ILP32_OFFBIG" - 1);
-            string_len += sizeof "XBS5_ILP32_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "XBS5_ILP32_OFFBIG",
+		    sizeof "XBS5_ILP32_OFFBIG" - 1);
+	    string_len += sizeof "XBS5_ILP32_OFFBIG" - 1;
+	  }
 #endif
 #ifndef _XBS5_LP64_OFF64
-        if (__sysconf (_SC_XBS5_LP64_OFF64) > 0)
+	if (__sysconf (_SC_XBS5_LP64_OFF64) > 0)
 #endif
 #if !defined _XBS5_LP64_OFF64 || _XBS5_LP64_OFF64 > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "XBS5_LP64_OFF64",
-                    sizeof "XBS5_LP64_OFF64" - 1);
-            string_len += sizeof "XBS5_LP64_OFF64" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "XBS5_LP64_OFF64",
+		    sizeof "XBS5_LP64_OFF64" - 1);
+	    string_len += sizeof "XBS5_LP64_OFF64" - 1;
+	  }
 #endif
 #ifndef _XBS5_LPBIG_OFFBIG
-        if (__sysconf (_SC_XBS5_LPBIG_OFFBIG) > 0)
+	if (__sysconf (_SC_XBS5_LPBIG_OFFBIG) > 0)
 #endif
 #if !defined _XBS5_LPBIG_OFFBIG || _XBS5_LPBIG_OFFBIG > 0
-          {
-            if (string_len)
-              restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "XBS5_LPBIG_OFFBIG",
-                    sizeof "XBS5_LPBIG_OFFBIG" - 1);
-            string_len += sizeof "XBS5_LPBIG_OFFBIG" - 1;
-          }
+	  {
+	    if (string_len)
+	      restenvs[string_len++] = '\n';
+	    memcpy (restenvs + string_len, "XBS5_LPBIG_OFFBIG",
+		    sizeof "XBS5_LPBIG_OFFBIG" - 1);
+	    string_len += sizeof "XBS5_LPBIG_OFFBIG" - 1;
+	  }
 #endif
-        restenvs[string_len++] = '\0';
+	restenvs[string_len++] = '\0';
 	string = restenvs;
       }
       break;
@@ -242,7 +243,7 @@ confstr (name, buf, len)
 #  error "__ILP32_OFF32_CFLAGS should not be defined"
 # elif !defined _POSIX_V7_ILP32_OFF32
       if (__sysconf (_SC_V7_ILP32_OFF32) < 0)
-        break;
+	break;
 # endif
       string = __ILP32_OFF32_CFLAGS;
       string_len = sizeof (__ILP32_OFF32_CFLAGS);
@@ -257,7 +258,7 @@ confstr (name, buf, len)
 #  error "__ILP32_OFFBIG_CFLAGS should not be defined"
 # elif !defined _POSIX_V7_ILP32_OFFBIG
       if (__sysconf (_SC_V7_ILP32_OFFBIG) < 0)
-        break;
+	break;
 # endif
       string = __ILP32_OFFBIG_CFLAGS;
       string_len = sizeof (__ILP32_OFFBIG_CFLAGS);
@@ -272,7 +273,7 @@ confstr (name, buf, len)
 #  error "__LP64_OFF64_CFLAGS should not be defined"
 # elif !defined _POSIX_V7_LP64_OFF64
       if (__sysconf (_SC_V7_LP64_OFF64) < 0)
-        break;
+	break;
 # endif
       string = __LP64_OFF64_CFLAGS;
       string_len = sizeof (__LP64_OFF64_CFLAGS);
@@ -287,7 +288,7 @@ confstr (name, buf, len)
 #  error "__ILP32_OFF32_LDFLAGS should not be defined"
 # elif !defined _POSIX_V7_ILP32_OFF32
       if (__sysconf (_SC_V7_ILP32_OFF32) < 0)
-        break;
+	break;
 # endif
       string = __ILP32_OFF32_LDFLAGS;
       string_len = sizeof (__ILP32_OFF32_LDFLAGS);
@@ -302,7 +303,7 @@ confstr (name, buf, len)
 #  error "__ILP32_OFFBIG_LDFLAGS should not be defined"
 # elif !defined _POSIX_V7_ILP32_OFFBIG
       if (__sysconf (_SC_V7_ILP32_OFFBIG) < 0)
-        break;
+	break;
 # endif
       string = __ILP32_OFFBIG_LDFLAGS;
       string_len = sizeof (__ILP32_OFFBIG_LDFLAGS);
@@ -317,7 +318,7 @@ confstr (name, buf, len)
 #  error "__LP64_OFF64_LDFLAGS should not be defined"
 # elif !defined _POSIX_V7_LP64_OFF64
       if (__sysconf (_SC_V7_LP64_OFF64) < 0)
-        break;
+	break;
 # endif
       string = __LP64_OFF64_LDFLAGS;
       string_len = sizeof (__LP64_OFF64_LDFLAGS);
@@ -401,6 +402,13 @@ confstr (name, buf, len)
       __set_errno (EINVAL);
       return 0;
 #endif
+
+    case _CS_V6_ENV:
+    case _CS_V7_ENV:
+      /* Maybe something else is needed in future.  */
+      string = "POSIXLY_CORRECT=1";
+      string_len = sizeof ("POSIXLY_CORRECT=1");
+      break;
 
     default:
       __set_errno (EINVAL);

@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008,2009
+   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008,2009,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -214,15 +214,15 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 			!= 0);
 
 	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
-                               RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
-                               shift % BITS_PER_MP_LIMB);
-          MPN_ZERO (&retval[RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB)],
-                    shift / BITS_PER_MP_LIMB);
+			       RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
+			       shift % BITS_PER_MP_LIMB);
+	  MPN_ZERO (&retval[RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB)],
+		    shift / BITS_PER_MP_LIMB);
 	}
       else if (shift > 0)
 	{
-          round_limb = retval[0];
-          round_bit = shift - 1;
+	  round_limb = retval[0];
+	  round_bit = shift - 1;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, shift);
 	}
       /* This is a hook for the m68k long double format, where the
@@ -237,14 +237,14 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 
   if ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
       && (more_bits || (retval[0] & 1) != 0
-          || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
+	  || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
     {
       mp_limb_t cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
 
       if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
-          ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
-           (retval[RETURN_LIMB_SIZE - 1]
-            & (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
+	  ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
+	   (retval[RETURN_LIMB_SIZE - 1]
+	    & (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
 	{
 	  ++exponent;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, 1);
@@ -465,7 +465,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   /* Used in several places.  */
   int cnt;
 
-  struct locale_data *current = loc->__locales[LC_NUMERIC];
+  struct __locale_data *current = loc->__locales[LC_NUMERIC];
 
   if (__builtin_expect (group, 0))
     {
@@ -738,7 +738,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 					 grouping);
 #endif
       if (cp != tp)
-        {
+	{
 	  /* Less than the entire string was correctly grouped.  */
 
 	  if (tp == start_of_digits)
@@ -1113,14 +1113,14 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	    memcpy (retval, &num[least_idx],
 		    RETURN_LIMB_SIZE * sizeof (mp_limb_t));
 	  else
-            {
-              for (i = least_idx; i < numsize - 1; ++i)
-                retval[i - least_idx] = (num[i] >> least_bit)
-                                        | (num[i + 1]
-                                           << (BITS_PER_MP_LIMB - least_bit));
-              if (i - least_idx < RETURN_LIMB_SIZE)
-                retval[RETURN_LIMB_SIZE - 1] = num[i] >> least_bit;
-            }
+	    {
+	      for (i = least_idx; i < numsize - 1; ++i)
+		retval[i - least_idx] = (num[i] >> least_bit)
+					| (num[i + 1]
+					   << (BITS_PER_MP_LIMB - least_bit));
+	      if (i - least_idx < RETURN_LIMB_SIZE)
+		retval[RETURN_LIMB_SIZE - 1] = num[i] >> least_bit;
+	    }
 
 	  /* Check whether any limb beside the ones in RETVAL are non-zero.  */
 	  for (i = 0; num[i] == 0; ++i)
@@ -1174,7 +1174,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 #if RETURN_LIMB_SIZE > 1
       if (numsize < RETURN_LIMB_SIZE)
 # if RETURN_LIMB_SIZE == 2
-        retval[numsize] = 0;
+	retval[numsize] = 0;
 # else
 	MPN_ZERO (retval + numsize, RETURN_LIMB_SIZE - numsize);
 # endif
@@ -1201,14 +1201,14 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
     /* For the fractional part we need not process too many digits.  One
        decimal digits gives us log_2(10) ~ 3.32 bits.  If we now compute
-                        ceil(BITS / 3) =: N
+			ceil(BITS / 3) =: N
        digits we should have enough bits for the result.  The remaining
        decimal digits give us the information that more bits are following.
        This can be used while rounding.  (Two added as a safety margin.)  */
     if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 2)
       {
-        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 2;
-        more_bits = 1;
+	dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 2;
+	more_bits = 1;
       }
     else
       more_bits = 0;
@@ -1264,9 +1264,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
        digits.  This is done by a "quasi fix point" number representation.
 
        num:   ddddddddddd . 0000000000000000000000
-              |--- m ---|
+	      |--- m ---|
        den:                            ddddddddddd      n >= m
-                                       |--- n ---|
+				       |--- n ---|
      */
 
     count_leading_zeros (cnt, den[densize - 1]);

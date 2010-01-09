@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -24,7 +24,7 @@
 /* This table's entries are taken from ISO 14652, the table in section
    4.9 "LC_NAME".  */
 
-const struct locale_data _nl_C_LC_NAME attribute_hidden =
+const struct __locale_data _nl_C_LC_NAME attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */

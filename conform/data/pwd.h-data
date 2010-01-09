@@ -9,15 +9,20 @@ element {struct passwd} {char*} pw_shell
 # ifndef POSIX
 type uid_t
 type gid_t
+#  if defined XOPEN2K8 || defined POSIX2008
+type size_t
+#  endif
 # endif
 
 function {struct passwd*} getpwnam (const char*)
 function {struct passwd*} getpwuid (uid_t)
 function int getpwnam_r (const char*, struct passwd*, char*, size_t, struct passwd**)
 function int getpwuid_r (uid_t, struct passwd*, char*, size_t, struct passwd**)
+# ifndef POSIX2008
 function void endpwent (void)
 function {struct passwd*} getpwent (void)
 function void setpwent (void)
+# endif
 
 allow pw_*
 allow *_t

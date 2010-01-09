@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007, 2009
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007,2009,2010
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -34,8 +34,54 @@ __BEGIN_DECLS
 #include <bits/fcntl.h>
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
-#ifdef __USE_XOPEN
-# include <sys/stat.h>
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+# include <bits/types.h>         /* For __mode_t and __dev_t.  */
+# define __need_timespec
+# include <time.h>
+# include <bits/stat.h>
+
+# define S_IFMT		__S_IFMT
+# define S_IFDIR	__S_IFDIR
+# define S_IFCHR	__S_IFCHR
+# define S_IFBLK	__S_IFBLK
+# define S_IFREG	__S_IFREG
+# ifdef __S_IFIFO
+#  define S_IFIFO	__S_IFIFO
+# endif
+# ifdef __S_IFLNK
+#  define S_IFLNK	__S_IFLNK
+# endif
+# if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) && defined __S_IFSOCK
+#  define S_IFSOCK	__S_IFSOCK
+# endif
+
+/* Protection bits.  */
+
+# define S_ISUID	__S_ISUID       /* Set user ID on execution.  */
+# define S_ISGID	__S_ISGID       /* Set group ID on execution.  */
+
+# if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
+/* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
+#  define S_ISVTX	__S_ISVTX
+# endif
+
+# define S_IRUSR	__S_IREAD       /* Read by owner.  */
+# define S_IWUSR	__S_IWRITE      /* Write by owner.  */
+# define S_IXUSR	__S_IEXEC       /* Execute by owner.  */
+/* Read, write, and execute by owner.  */
+# define S_IRWXU	(__S_IREAD|__S_IWRITE|__S_IEXEC)
+
+# define S_IRGRP	(S_IRUSR >> 3)  /* Read by group.  */
+# define S_IWGRP	(S_IWUSR >> 3)  /* Write by group.  */
+# define S_IXGRP	(S_IXUSR >> 3)  /* Execute by group.  */
+/* Read, write, and execute by group.  */
+# define S_IRWXG	(S_IRWXU >> 3)
+
+# define S_IROTH	(S_IRGRP >> 3)  /* Read by others.  */
+# define S_IWOTH	(S_IWGRP >> 3)  /* Write by others.  */
+# define S_IXOTH	(S_IXGRP >> 3)  /* Execute by others.  */
+/* Read, write, and execute by others.  */
+# define S_IRWXO	(S_IRWXG >> 3)
 #endif
 
 #ifdef	__USE_MISC
@@ -49,8 +95,8 @@ __BEGIN_DECLS
 # endif
 #endif /* Use misc.  */
 
-/* XPG wants the following symbols.  */
-#ifdef __USE_XOPEN		/* <stdio.h> has the same definitions.  */
+/* XPG wants the following symbols.   <stdio.h> has the same definitions.  */
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # define SEEK_SET	0	/* Seek from beginning of file.  */
 # define SEEK_CUR	1	/* Seek from current position.  */
 # define SEEK_END	2	/* Seek from end of file.  */
@@ -116,9 +162,10 @@ extern int __REDIRECT (openat, (int __fd, __const char *__file, int __oflag,
 #   define openat openat64
 #  endif
 # endif
-
+# ifdef __USE_LARGEFILE64
 extern int openat64 (int __fd, __const char *__file, int __oflag, ...)
      __nonnull ((2));
+# endif
 #endif
 
 /* Create and open FILE, with mode MODE.  This takes an `int' MODE

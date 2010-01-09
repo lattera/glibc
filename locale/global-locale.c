@@ -1,5 +1,5 @@
 /* Locale object representing the global locale controlled by setlocale.
-   Copyright (C) 2002, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2006, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include "localeinfo.h"
 
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data _nl_C_##category; weak_extern (_nl_C_##category)
+extern struct __locale_data _nl_C_##category; weak_extern (_nl_C_##category)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 

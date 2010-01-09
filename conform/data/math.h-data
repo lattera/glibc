@@ -12,6 +12,7 @@ macro islessequal
 macro islessgreater
 macro isunordered
 
+# ifndef POSIX2008
 constant M_E
 constant M_LOG2E
 constant M_LOG10E
@@ -27,6 +28,7 @@ constant M_SQRT2
 constant M_SQRT1_2
 
 constant MAXFLOAT
+# endif
 constant HUGE_VAL
 constant HUGE_VALF
 constant HUGE_VALL
@@ -79,14 +81,18 @@ function double erf (double)
 function double erfc (double)
 function double gamma (double)
 function double hypot (double, double)
+#if !defined POSIX && !defined POSIX2008
 function double j0 (double)
 function double j1 (double)
 function double jn (int, double)
+#endif
 function double lgamma (double)
 function double tgamma (double)
+#if !defined POSIX && !defined POSIX2008
 function double y0 (double)
 function double y1 (double)
 function double yn (int, double)
+#endif
 function int isnan (double)
 function double acosh (double)
 function double asinh (double)
@@ -117,8 +123,10 @@ function double fmin (double, double)
 function double fma (double, double, double)
 function double nan (const char*)
 
+#if !defined POSIX && !defined POSIX2008
 // variable signgam
 allow signgam
+#endif
 
 #if !defined ISO && !defined POSIX
 function float acosf (float)

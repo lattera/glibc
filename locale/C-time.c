@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2004, 2007, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -23,7 +23,7 @@
    ``LC_TIME Category Definition in the POSIX Locale'',
    with additions from ISO 14652, section 4.6.  */
 
-const struct locale_data _nl_C_LC_TIME attribute_hidden =
+const struct __locale_data _nl_C_LC_TIME attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */

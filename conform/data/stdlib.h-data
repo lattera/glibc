@@ -10,7 +10,7 @@ element div_t int rem
 type ldiv_t
 element ldiv_t long quot
 element ldiv_t long rem
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 type lldiv_t
 element lldiv_t {long long} quot
 element lldiv_t {long long} rem
@@ -29,77 +29,116 @@ macro WSTOPSIG
 macro WTERMSIG
 
 function void _Exit (int)
+#if !defined POSIX && !defined POSIX2008
 function long a64l (const char*)
+#endif
 function void abort (void)
 function int abs (int)
 function int atexit (void(*)(void))
 function double atof (const char*)
 function int atoi (const char*)
 function {long int} atol (const char*)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function {long long} atoll (const char*)
 #endif
 function {void*} bsearch (const void*, const void*, size_t, size_t, int(*)(const void*, const void*))
 function {void*} calloc (size_t, size_t)
 function div_t div (int, int)
+#if !defined POSIX && !defined POSIX2008
 function double drand48 (void)
+#endif
+#if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008
 function {char*} ecvt (double, int, int*, int*)
+#endif
+#if !defined POSIX && !defined POSIX2008
 function double erand48 (unsigned short int[3])
+#endif
 function void exit (int)
+#if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008
 function {char*} fcvt (double, int, int*, int*)
+#endif
 function void free (void*)
+#if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008
 function {char*} gcvt (double, int, char*)
+#endif
 function {char*} getenv (const char*)
 function int getsubopt (char**, char *const*, char**)
+#if !defined POSIX && !defined POSIX2008
 function int grantpt (int)
 function {char*} initstate (unsigned int, char*, size_t)
 function {long int} jrand48 (unsigned short int[3])
 function {char*} l64a (long)
+#endif
 function {long int} labs (long int)
+#if !defined POSIX && !defined POSIX2008
 function void lcong48 (unsigned short int[7])
+#endif
 function ldiv_t ldiv (long int, long int)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function {long long} llabs (long long)
 function lldiv_t lldiv (long long, long long)
 #endif
+#if !defined POSIX && !defined POSIX2008
 function {long int} lrand48 (void)
+#endif
 function {void*} malloc (size_t)
 function int mblen (const char*, size_t)
 function size_t mbstowcs (wchar_t*, const char*, size_t)
 function int mbtowc (wchar_t*, const char*, size_t)
+#if defined XOPEN2K8 || defined POSIX2008
+function {char*} mkdtemp (char*)
+#endif
+#if !defined XOPEN2K8 && !defined POSIX2008
 function {char*} mktemp (char*)
+#endif
 function int mkstemp (char*)
+#if !defined POSIX && !defined POSIX2008
 function {long int} mrand48 (void)
 function {long int} nrand48 (unsigned short int[3])
+#endif
 function int posix_memalign (void**, size_t, size_t)
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined XOPEN2K8
 function int posix_openpt (int)
 #endif
+#if !defined POSIX && !defined POSIX2008
 function {char*} ptsname (int)
 function int putenv (char*)
+#endif
 function void qsort (void*, size_t, size_t, int(*)(const void*, const void*))
 function int rand (void)
 function int rand_r (unsigned int*)
+#if !defined POSIX && !defined POSIX2008
 function long random (void)
+#endif
 function {void*} realloc (void*, size_t)
+#if !defined POSIX && !defined POSIX2008
 function {char*} realpath (const char*, char*)
 function {unsigned short int*} seed48 (unsigned short int[3])
+#endif
 function int setenv (const char*, const char*, int)
+#if !defined POSIX && !defined POSIX2008
 function void setkey (const char*)
 function {char*} setstate (char*)
+#endif
 function void srand (unsigned int)
+#if !defined POSIX && !defined POSIX2008
 function void srand48 (long int)
 function void srandom (unsigned)
+#endif
 function double strtod (const char*, char**)
 function {long int} strtol (const char*, char**, int)
 function {unsigned long int} strtoul (const char*, char**, int)
 function int system (const char*)
-#ifndef XOPEN2K
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int ttyslot (void)
 #endif
+#if !defined POSIX && !defined POSIX2008
 function int unlockpt (int)
+#endif
 function int unsetenv (const char*)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function {void*} valloc (size_t)
+#endif
 function size_t wcstombs (char*, const wchar_t*, size_t)
 function int wctomb (char*, wchar_t)
 

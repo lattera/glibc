@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -739,8 +739,8 @@ extern int pthread_mutex_lock (pthread_mutex_t *__mutex)
 #ifdef __USE_XOPEN2K
 /* Wait until lock becomes available, or specified time passes. */
 extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
-                                    __const struct timespec *__restrict
-                                    __abstime) __THROW __nonnull ((1, 2));
+				    __const struct timespec *__restrict
+				    __abstime) __THROW __nonnull ((1, 2));
 #endif
 
 /* Unlock a mutex.  */
@@ -766,7 +766,7 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 
 #ifdef __USE_XOPEN2K8
 /* Declare the state protected by MUTEX as consistent.  */
-extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
+extern int pthread_mutex_consistent (pthread_mutex_t *__mutex)
      __THROW __nonnull ((1));
 # ifdef __USE_GNU
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
@@ -990,13 +990,13 @@ extern int pthread_condattr_destroy (pthread_condattr_t *__attr)
 
 /* Get the process-shared flag of the condition variable attribute ATTR.  */
 extern int pthread_condattr_getpshared (__const pthread_condattr_t *
-                                        __restrict __attr,
-                                        int *__restrict __pshared)
+					__restrict __attr,
+					int *__restrict __pshared)
      __THROW __nonnull ((1, 2));
 
 /* Set the process-shared flag of the condition variable attribute ATTR.  */
 extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
-                                        int __pshared) __THROW __nonnull ((1));
+					int __pshared) __THROW __nonnull ((1));
 
 #ifdef __USE_XOPEN2K
 /* Get the clock selected for the conditon variable attribute ATTR.  */
@@ -1071,7 +1071,7 @@ extern int pthread_barrierattr_getpshared (__const pthread_barrierattr_t *
 
 /* Set the process-shared flag of the barrier attribute ATTR.  */
 extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
-                                           int __pshared)
+					   int __pshared)
      __THROW __nonnull ((1));
 #endif
 

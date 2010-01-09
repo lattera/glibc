@@ -1,8 +1,11 @@
+#ifndef ISO
 constant WNOHANG
 constant WUNTRACED
 
 macro WEXITSTATUS
+# if !defined POSIX && !defined POSIX2008
 macro WIFCONTINUED
+# endif
 macro WIFEXITED
 macro WIFSIGNALED
 macro WIFSTOPPED
@@ -11,7 +14,9 @@ macro WTERMSIG
 
 constant WEXITED
 constant WSTOPPED
+# if !defined POSIX && !defined POSIX2008
 constant WCONTINUED
+# endif
 constant WNOHANG
 constant WNOWAIT
 
@@ -62,3 +67,4 @@ allow SEGV_
 allow SI_
 allow TRAP_
 allow *_t
+#endif

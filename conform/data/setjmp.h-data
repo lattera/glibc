@@ -6,7 +6,7 @@ type sigjmp_buf
 function void longjmp (jmp_buf, int)
 #ifndef ISO
 function void siglongjmp (sigjmp_buf, int)
-# ifndef POSIX
+# if !defined POSIX && !defined POSIX2008
 function void _longjmp (jmp_buf, int)
 # endif
 #endif
@@ -14,7 +14,7 @@ function void _longjmp (jmp_buf, int)
 macro-function int setjmp (jmp_buf)
 #ifndef ISO
 macro-function int sigsetjmp (sigjmp_buf, int)
-# ifndef POSIX
+# if !defined POSIX && !defined POSIX2008
 macro-function int _setjmp (jmp_buf)
 # endif
 #endif
