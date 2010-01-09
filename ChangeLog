@@ -130,6 +130,13 @@
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
 
+2010-01-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (PN_XNUM): New macro.
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Use NT_GNU_HWCAP instead of
+	literal 2.
+
 2010-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/dirent.h: Fix typo in feature selection macro use.
