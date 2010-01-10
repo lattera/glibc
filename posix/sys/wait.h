@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009
+/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -45,7 +45,7 @@ __BEGIN_DECLS
 #  if defined __GNUC__ && !defined __cplusplus
 #   define __WAIT_INT(status) \
   (__extension__ (((union { __typeof(status) __in; int __i; }) \
-                   { .__in = (status) }).__i))
+		   { .__in = (status) }).__i))
 #  else
 #   define __WAIT_INT(status)	(*(__const int *) &(status))
 #  endif
@@ -98,7 +98,7 @@ typedef union
 #endif
 
 /* The following values are used by the `waitid' function.  */
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8
 typedef enum
 {
   P_ALL,		/* Wait for any child.  */
@@ -138,7 +138,7 @@ extern __pid_t wait (__WAIT_STATUS __stat_loc);
    __THROW.  */
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8
 # define __need_siginfo_t
 # include <bits/siginfo.h>
 /* Wait for a childing matching IDTYPE and ID to change the status and

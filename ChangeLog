@@ -13,6 +13,8 @@
 
 	* posix/glob.h: Define size_t.
 
+	* posix/sys/wait.h: Define idtype_t and declare waitid for XPG7.
+
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/conformtest.pl: For XPG7 testing the headers are supposed to

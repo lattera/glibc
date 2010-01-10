@@ -48,7 +48,9 @@ element {struct rusage} {struct timeval} ru_stime
 type pid_t
 
 function pid_t wait (int*)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function pid_t wait3 (int*, int, struct rusage*)
+#endif
 function int waitid (idtype_t, id_t, siginfo_t*, int)
 function pid_t waitpid (pid_t, int*, int)
 
