@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,95,96,97,98,99,2000,2001,2002,2008,2009
+/* Copyright (C) 1992,95,96,97,98,99,2000,2001,2002,2008,2009,2010
      Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _SYS_STAT_H
+#if !defined _SYS_STAT_H && !defined _FCNTL_H
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
 

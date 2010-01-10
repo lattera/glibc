@@ -1,3 +1,11 @@
+2010-01-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Define O_DIRECTORY,
+	O_NOFOLLOW, O_CLOEXEC, F_DUPFD_CLOEXEC, F_SETOWN, and F_GETOWN for
+	XPG7.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Enable using from
+	fcntl.h.
+
 2009-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #11093]
