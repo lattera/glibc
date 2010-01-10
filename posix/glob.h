@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,95-98,2000,2001,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-1998,2000,2001,2004,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +28,7 @@ __BEGIN_DECLS
 #ifndef __size_t
 # if defined __GNUC__ && __GNUC__ >= 2
 typedef __SIZE_TYPE__ __size_t;
-#  ifdef __USE_XOPEN
+#  if defined __USE_XOPEN || __USE_XOPEN2K8
 typedef __SIZE_TYPE__ size_t;
 #  endif
 # else

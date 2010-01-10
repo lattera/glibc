@@ -9,6 +9,8 @@
 	[BZ #11125]
 	* libio/stdio.h: Define va_list, off_t, and ssize_t.
 
+	* posix/glob.h: Define size_t.
+
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/conformtest.pl: For XPG7 testing the headers are supposed to
