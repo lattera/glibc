@@ -3,6 +3,11 @@
 	[BZ #11125]
 	* libio/stdio.h: Define va_list, off_t, and ssize_t.
 
+	* conform/conformtest.pl: For XPG7 testing the headers are supposed to
+	be self-contained.
+
+	* conform/data/stdio.h-data: Expect off_t and ssize_t.
+
 2010-01-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Define va_list also for XPG7.
