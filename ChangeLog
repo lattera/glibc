@@ -1,5 +1,7 @@
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/sys/types.h: Define id_t, clock_t, blksize_t for XPG7.
+
 	* string/strings.h: Don't declare obsolete functions for XPG7.
 	Declare ffs only for XSI.
 	* conform/data/strings.h-data: Update for XPG7.

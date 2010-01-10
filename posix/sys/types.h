@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006
-   	Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2002,2006,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,7 +100,8 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
-#if (defined __USE_SVID || defined __USE_XOPEN) && !defined __id_t_defined
+#if (defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8) \
+    && !defined __id_t_defined
 typedef __id_t id_t;
 # define __id_t_defined
 #endif
@@ -124,7 +124,7 @@ typedef __key_t key_t;
 # define __key_t_defined
 #endif
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # define __need_clock_t
 #endif
 #define	__need_time_t
@@ -224,7 +224,8 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 #endif /* Use BSD.  */
 
 
-#if defined __USE_UNIX98 && !defined __blksize_t_defined
+#if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) \
+    && !defined __blksize_t_defined
 typedef __blksize_t blksize_t;
 # define __blksize_t_defined
 #endif

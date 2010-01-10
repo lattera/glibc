@@ -39,7 +39,6 @@ type suseconds_t
 type time_t
 type timer_t
 type uid_t
-type useconds_t
 
 allow *_t
 #endif
