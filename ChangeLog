@@ -1,4 +1,11 @@
+2010-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11125]
+	* libio/stdio.h: Define va_list, off_t, and ssize_t.
+
 2010-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h: Define va_list also for XPG7.
 
 	* conform/conformtest.pl: Update for XPG7 and some bug fixes.
 	* conform/data/ctype.h-data: Likewise.

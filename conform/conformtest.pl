@@ -56,14 +56,17 @@ $CFLAGS{"POSIX2008"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE
 # These are symbols which are known to pollute the namespace.
 @knownproblems = ('unix', 'linux', 'i386');
 
-# Some headers need a bit more attention.
-$mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
-$mustprepend{'regex.h'} = "#include <sys/types.h>\n";
-$mustprepend{'sched.h'} = "#include <sys/types.h>\n";
-$mustprepend{'signal.h'} = "#include <pthread.h>\n";
-$mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
-$mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
-$mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
+if ($dialect ne "XOPEN2K8" && $dialect ne "POSIX2008") {
+  # Some headers need a bit more attention.  At least with XPG7
+  # all headers should be self-contained.
+  $mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
+  $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'signal.h'} = "#include <pthread.h>\n";
+  $mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
+  $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
+}
 
 # Make a hash table from this information.
 while ($#keywords >= 0) {
