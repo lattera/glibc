@@ -1,11 +1,13 @@
+#if !defined XOPEN2K8 && !defined POSIX2008
 function int bcmp (const void*, const void*, size_t)
 function void bcopy (const void*, void*, size_t)
 function void bzero (void*, size_t)
+function {char*} index (const char*, int)
+function {char*} rindex (const char*, int)
+#endif
 #if !defined POSIX && !defined POSIX2008
 function int ffs (int)
 #endif
-function {char*} index (const char*, int)
-function {char*} rindex (const char*, int)
 function int strcasecmp (const char*, const char*)
 function int strncasecmp (const char*, const char*, size_t)
 #if defined XOPEN2K8 || defined POSIX2008

@@ -1,7 +1,15 @@
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strings.h: Don't declare obsolete functions for XPG7.
+	Declare ffs only for XSI.
+	* conform/data/strings.h-data: Update for XPG7.
+
+2010-01-10  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #11125]
 	* libio/stdio.h: Define va_list, off_t, and ssize_t.
+
+2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/conformtest.pl: For XPG7 testing the headers are supposed to
 	be self-contained.
