@@ -1,3 +1,9 @@
+2010-01-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define O_DIRECTORY,
+	O_NOFOLLOW, O_CLOEXEC, F_DUPFD_CLOEXEC, F_SETOWN, and F_GETOWN for
+	XPG7.
+
 2009-12-16  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/arm/eabi/Makefile [gmon] (sysdep_routines): Add arm-mcount.
