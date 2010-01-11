@@ -1,3 +1,8 @@
+2010-01-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Define
+	SA_RESTART, SA_NODEFER and SA_RESETHAND if __USE_XOPEN2K8.
+
 2010-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Define O_DIRECTORY,
