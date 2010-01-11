@@ -1,5 +1,12 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Include environments.h also for XPG6 and up.
+	Define intptr_t for XPG6 and up.
+	Fix up for XPG7.
+	* conform/data/unistd.h-data: Fix up for XPG6 and XPG7.
+
+	* conform/data/sys/types.h-data: Fix up for XPG7.
+
 	* sysdeps/unix/bsd/bits/stat.h: Fix double-inclusion problem.
 	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.

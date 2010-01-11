@@ -4,7 +4,7 @@ type blksize_t
 type clock_t
 type clockid_t
 type dev_t
-# if !defined POSIX && !defined POSIX2008
+# if !defined POSIX
 type fsblkcnt_t
 type fsfilcnt_t
 # endif

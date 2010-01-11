@@ -342,7 +342,9 @@ type intptr_t
 
 function int access (const char*, int)
 function {unsigned int} alarm (unsigned int)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function int brk (void*)
+#endif
 function int chdir (const char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
 function int chroot (const char*)
@@ -386,7 +388,9 @@ function {long int} fpathconf (int, int)
 function int fsync (int)
 function int ftruncate (int, off_t)
 function {char*} getcwd (char*, size_t)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function int getdtablesize (void)
+#endif
 function gid_t getegid (void)
 function uid_t geteuid (void)
 function gid_t getgid (void)
@@ -398,17 +402,21 @@ function int gethostname (char*, size_t)
 function {char*} getlogin (void)
 function int getlogin_r (char*, size_t)
 function int getopt (int, char*const[], const char*)
-function int getpagesize (void)
 #if defined XPG3 || defined XPG4 || defined UNIX98
+function int getpagesize (void)
 function {char*} getpass (const char*)
 #endif
+#ifndef POSIX
 function pid_t getpgid (pid_t)
+#endif
 function pid_t getpgrp (void)
 function pid_t getpid (void)
 function pid_t getppid (void)
 function pid_t getsid (pid_t)
 function uid_t getuid (void)
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function {char*} getwd (char*)
+#endif
 function int isatty (int)
 function int lchown (const char*, uid_t, gid_t)
 function int link (const char*, const char*)
@@ -436,7 +444,9 @@ function ssize_t readlink (const char*, char*, size_t)
 function ssize_t readlinkat (int, const char*, char*, size_t)
 # endif
 function int rmdir (const char*)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function {void*} sbrk (intptr_t)
+#endif
 function int setegid (gid_t)
 function int seteuid (uid_t)
 function int setgid (gid_t)
@@ -465,13 +475,17 @@ function int tcsetpgrp (int, pid_t)
 function int truncate (const char*, off_t)
 function {char*} ttyname (int)
 function int ttyname_r (int, char*, size_t)
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function useconds_t ualarm (useconds_t, useconds_t)
+#endif
 function int unlink (const char*)
 # if defined XOPEN2K8 || defined POSIX2008
 function int unlinkat (int, const char*, int)
 # endif
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function int usleep (useconds_t)
 function pid_t vfork (void)
+#endif
 function ssize_t write (int, const void*, size_t)
 
 variable {char*} optarg
