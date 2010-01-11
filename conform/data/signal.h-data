@@ -1,6 +1,8 @@
 typed-constant SIG_DFL {void(*)(int)}
 typed-constant SIG_ERR {void(*)(int)}
+#if !defined ISO && !defined POSIX && !defined POSIX2008
 typed-constant SIG_HOLD {void(*)(int)}
+#endif
 typed-constant SIG_IGN {void(*)(int)}
 
 type sig_atomic_t
@@ -14,11 +16,14 @@ type uid_t
 type mcontext_t
 
 type ucontext_t
-
 element ucontext_t {ucontext_t*} uc_link
 element ucontext_t sigset_t uc_sigmask
 element ucontext_t stack_t uc_stack
 element ucontext_t mcontext_t uc_mcontext
+
+type {struct timespec}
+element {struct timespec} __time_t tv_sec
+element {struct timespec} long tv_nsec
 #endif
 
 element {union sigval} int sival_int
@@ -173,7 +178,9 @@ constant SI_TIMER
 constant SI_ASYNCIO
 constant SI_MESGQ
 
+#if !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function void (*bsd_signal (int, void(*)(int)))(int)
+#endif
 function int kill (pid_t, int)
 #if !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)

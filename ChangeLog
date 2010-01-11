@@ -1,5 +1,12 @@
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: SA_RESTART, SA_NODEFER,
+	and SA_RESETHAND now available in Base.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* conform/data/signal.h-data: Update for XPG7.
+
 	* posix/sys/types.h: Define id_t, clock_t, blksize_t for XPG7.
 
 	* string/strings.h: Don't declare obsolete functions for XPG7.
@@ -14,6 +21,8 @@
 	* posix/glob.h: Define size_t.
 
 	* posix/sys/wait.h: Define idtype_t and declare waitid for XPG7.
+
+	* signal/signal.h: Define size_t, mcontext_t, and ucontext_t for XPG7.
 
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 

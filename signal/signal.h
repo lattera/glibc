@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2004, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -344,7 +344,7 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 #endif /*  use BSD.  */
 
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define __need_size_t
 # include <stddef.h>
 
@@ -354,7 +354,7 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
 # include <bits/sigstack.h>
-# ifdef __USE_XOPEN
+# if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* This will define `ucontext_t' and `mcontext_t'.  */
 #  include <sys/ucontext.h>
 # endif
