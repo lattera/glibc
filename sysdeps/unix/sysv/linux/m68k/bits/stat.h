@@ -21,6 +21,9 @@
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
 
+#ifndef _BITS_STAT_H
+#define _BITS_STAT_H	1
+
 /* Versions of the `struct stat' data structure.  */
 #define _STAT_VER_LINUX_OLD	1
 #define _STAT_VER_KERNEL	1
@@ -167,3 +170,5 @@ struct stat64
 # define UTIME_NOW	((1l << 30) - 1l)
 # define UTIME_OMIT	((1l << 30) - 2l)
 #endif
+
+#endif	/* bits/stat.h */
