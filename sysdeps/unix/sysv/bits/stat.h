@@ -20,6 +20,9 @@
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
 
+#ifndef _BITS_STAT_H
+#define _BITS_STAT_H	1
+
 struct stat
   {
     short int st_dev;
@@ -63,3 +66,5 @@ struct stat
 #define	__S_IREAD	0400	/* Read by owner.  */
 #define	__S_IWRITE	0200	/* Write by owner.  */
 #define	__S_IEXEC	0100	/* Execute by owner.  */
+
+#endif	/* bits/stat.h */

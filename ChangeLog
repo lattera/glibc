@@ -1,5 +1,15 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/bsd/bits/stat.h: Fix double-inclusion problem.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h: Likewise.
+
 	* bits/confname.h: Fix typo in last change.
 
 	* conform/data/unistd.h-data: lockf-constants Not needed for POSIX.

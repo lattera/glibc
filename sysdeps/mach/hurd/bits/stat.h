@@ -21,6 +21,9 @@
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
 
+#ifndef _BITS_STAT_H
+#define _BITS_STAT_H	1
+
 #include <bits/types.h>
 
 /* NOTE: The size of this structure (32 ints) is known in
@@ -193,5 +196,7 @@ struct stat64
 
 /* Default file creation mask (umask).  */
 #ifdef	__USE_BSD
-#define	CMASK		0022
+# define CMASK		0022
 #endif
+
+#endif	/* bits/stat.h */
