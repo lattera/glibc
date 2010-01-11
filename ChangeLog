@@ -1,5 +1,8 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/stdlib.h: Fix handling symbols removed in XPG7.
+	* posix/unistd.h: Likewise.
+
 	* posix/unistd.h: Include environments.h also for XPG6 and up.
 	Define intptr_t for XPG6 and up.
 	Fix up for XPG7.

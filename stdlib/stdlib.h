@@ -497,8 +497,8 @@ extern void cfree (void *__ptr) __THROW;
 # include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
-#if (defined __USE_BSD || defined __USE_XOPEN_EXTENDED) \
-    && !defined __USE_XOPEN2K
+#if ((defined __USE_BSD || defined __USE_XOPEN_EXTENDED)	\
+     && !defined __USE_XOPEN2K) || defined __USE_GNU
 /* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
 extern void *valloc (size_t __size) __THROW __attribute_malloc__ __wur;
 #endif
@@ -597,8 +597,8 @@ extern int clearenv (void) __THROW;
 #endif
 
 
-#if (defined __USE_MISC || defined __USE_XOPEN_EXTENDED) \
-    && !defined __USE_XOPEN2K
+#if ((defined __USE_MISC || defined __USE_XOPEN_EXTENDED)	\
+     && !defined __USE_XOPEN2K) || defined __USE_GNU
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.
@@ -797,8 +797,8 @@ __END_NAMESPACE_C99
 #endif
 
 
-#if (defined __USE_SVID || defined __USE_XOPEN_EXTENDED) \
-    && !defined __USE_XOPEN2K
+#if ((defined __USE_SVID || defined __USE_XOPEN_EXTENDED)	\
+     && !defined __USE_XOPEN2K) || defined __USE_GNU
 /* Convert floating point numbers to strings.  The returned values are
    valid only until another call to the same function.  */
 
