@@ -300,10 +300,12 @@ constant _CS_V7_ENV
 constant _SC_THREAD_ROBUST_PRIO_INHERIT
 constant _SC_THREAD_ROBUST_PRIO_PROTECT
 
+#if !defined POSIX && !defined POSIX2008
 constant F_LOCK
 constant F_ULOCK
 constant F_TEST
 constant F_TLOCK
+#endif
 
 constant _PC_ASYNC_IO
 constant _PC_CHOWN_RESTRICTED

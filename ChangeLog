@@ -1,3 +1,9 @@
+2010-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* bits/confname.h: Fix typo in last change.
+
+	* conform/data/unistd.h-data: lockf-constants Not needed for POSIX.
+
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sigaction.h: SA_RESTART, SA_NODEFER,
