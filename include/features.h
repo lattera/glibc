@@ -153,6 +153,8 @@
 
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE
+# undef  _ISOC95_SOURCE
+# define _ISOC95_SOURCE	1
 # undef  _ISOC99_SOURCE
 # define _ISOC99_SOURCE	1
 # undef  _POSIX_SOURCE
@@ -233,6 +235,8 @@
 
 #if (_POSIX_C_SOURCE - 0) >= 200112L
 # define __USE_XOPEN2K		1
+# undef __USE_ISOC95
+# define __USE_ISOC95		1
 # undef __USE_ISOC99
 # define __USE_ISOC99		1
 #endif
@@ -257,6 +261,8 @@
 #   endif
 #   define __USE_XOPEN2K	1
 #   define __USE_XOPEN2KXSI	1
+#   undef __USE_ISOC95
+#   define __USE_ISOC95		1
 #   undef __USE_ISOC99
 #   define __USE_ISOC99		1
 #  endif

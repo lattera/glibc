@@ -1,5 +1,9 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/wchar.h-data: Fix up XPG7 tests.
+
+	* include/features.h: Fix __USE_ISOC95 handling.
+
 	* conform/data/wordexp.h-data: Fix typo in last change.
 
 	* conform/data/unistd.h-data: Fix up older POSIX tests.

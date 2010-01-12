@@ -53,12 +53,12 @@ function wint_t towlower (wint_t)
 function wint_t towupper (wint_t)
 #endif
 function wint_t ungetwc (wint_t, FILE*)
-function int vfwprintf (FILE*, const wchar_t*, va_list)
-function int vfwscanf (FILE*, const wchar_t*, va_list)
-function int vwprintf (const wchar_t*, va_list)
-function int vwscanf (const wchar_t*, va_list)
-function int vswprintf (wchar_t*, size_t, const wchar_t*, va_list)
-function int vswscanf (const wchar_t*, const wchar_t*, va_list)
+function int vfwprintf (FILE*, const wchar_t*, __gnuc_va_list)
+function int vfwscanf (FILE*, const wchar_t*, __gnuc_va_list)
+function int vwprintf (const wchar_t*, __gnuc_va_list)
+function int vwscanf (const wchar_t*, __gnuc_va_list)
+function int vswprintf (wchar_t*, size_t, const wchar_t*, __gnuc_va_list)
+function int vswscanf (const wchar_t*, const wchar_t*, __gnuc_va_list)
 #if defined XOPEN2K8 || defined POSIX2008
 function {wchar_t*} wcpcpy (wchar_t*, const wchar_t*)
 function {wchar_t*} wcpncpy (wchar_t*, const wchar_t*, size_t)
@@ -102,7 +102,9 @@ function double wcstod (const wchar_t*, wchar_t**)
 function {wchar_t*} wcstok (wchar_t*, const wchar_t*, wchar_t**)
 function {long int} wcstol (const wchar_t*, wchar_t**, int)
 function {unsigned long int} wcstoul (const wchar_t*, wchar_t**, int)
+#if defined UNIX98 || defined XOPEN2K
 function {wchar_t*} wcswcs (const wchar_t*, const wchar_t*)
+#endif
 #if !defined ISO && !defined POSIX && !defined POSIX2008
 function int wcswidth (const wchar_t*, size_t)
 #endif
