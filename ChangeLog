@@ -1,5 +1,8 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/sys/stat.h: Declare fchmod for XPG7.
+	* conform/data/sys/stat.h-data: Fix up for XPG7.
+
 	* termios/termios.h: Define pid_t for XPG7.
 
 	* conform/data/math.h-data: Fix up for XPG6 and XPG7.

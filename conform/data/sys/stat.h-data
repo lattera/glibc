@@ -20,8 +20,10 @@ element {struct stat} blksize_t st_blksize
 element {struct stat} blkcnt_t st_blocks
 #endif
 
+#if !defined POSIX && !defined POSIX2008
 type blkcnt_t
 type blksize_t
+#endif
 type dev_t
 type ino_t
 type mode_t
@@ -30,7 +32,7 @@ type uid_t
 type gid_t
 type off_t
 type time_t
-# ifdef XOPEN2K8
+# if defined XOPEN2K8 || defined POSIX2008
 type {struct timespec}
 element {struct timespec} time_t tv_sec
 element {struct timespec} long tv_nsec
@@ -107,8 +109,6 @@ function int mkfifoat (int, const char*, mode_t)
 # endif
 # if !defined POSIX && !defined POSIX2008
 function int mknod (const char*, mode_t, dev_t)
-# endif
-# if defined XOPEN2K8 || defined POSIX2008
 function int mknodat (int, const char*, mode_t, dev_t)
 # endif
 function int stat (const char*, struct stat*)
