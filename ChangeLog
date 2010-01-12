@@ -1,5 +1,10 @@
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl (checknamespace): Implement tag for
+	allow-header.
+	* conform/data/time.h-data: Use allow-header instead of duplicating
+	information.
+
 	* conform/data/time.h-data: Allow sigevent tag.
 
 	* posix/sched.h: Define time_t and pid_t for XPG7.

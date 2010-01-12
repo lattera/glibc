@@ -89,12 +89,5 @@ variable {long int} timezone
 #endif
 variable {char*} tzname [2]
 
-allow tm_*
-allow clock_*
-allow timer_*
-allow it_*
-allow tv_*
-allow CLOCK_*
-allow TIMER_*
-allow *_t
-allow sigevent
+allow-header sched.h
+allow-header time.h

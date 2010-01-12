@@ -1057,8 +1057,8 @@ while ($#headers >= 0) {
 	push @allow, $1;
       } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
 	push @allow, 1;
-      } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
-	my($type) = "$2$3";
+      } elsif (/^(type|tag) *({([^}]*)|([a-zA-Z0-9_]*))/) {
+	my($type) = "$3$4";
 
 	# Remember that this name is allowed.
 	if ($type =~ /^struct *(.*)/) {
