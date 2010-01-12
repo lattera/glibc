@@ -22,7 +22,7 @@
 
 #if !defined NOT_IN_libc \
     && (defined SHARED \
-        || defined USE_AS_MEMMOVE \
+	|| defined USE_AS_MEMMOVE \
 	|| !defined USE_MULTIARCH)
 
 #include "asm-syntax.h"
@@ -75,8 +75,8 @@
     jmp		*%ebx
 
 # define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)			\
-    addl	$(TABLE - .), %ebx	
-			
+    addl	$(TABLE - .), %ebx
+
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)	\
     addl	(%ebx,INDEX,SCALE), %ebx;			\
     /* We loaded the jump table.  Go.  */			\
@@ -103,7 +103,7 @@ __i686.get_pc_thunk.bx:
 # define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
     jmp		*TABLE(,INDEX,SCALE)
 
-# define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)			
+# define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)
 
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)		\
     jmp		*TABLE(,INDEX,SCALE)
@@ -1268,7 +1268,7 @@ L(large_page_loop):
 	movdqu	0x60(%eax), %xmm6
 	movdqu	0x70(%eax), %xmm7
 	lea	0x80(%eax), %eax
-	lfence	
+	lfence
 	sub	$0x80, %ecx
 	movntdq	%xmm0, (%edx)
 	movntdq	%xmm1, 0x10(%edx)
@@ -1325,8 +1325,8 @@ L(copy_page_by_rep):
 	jb	L(copy_page_by_rep_left_1)
 	movzwl	(%esi), %eax
 	movw	%ax, (%edi)
-	add	$2, %esi 
-	add	$2, %edi 
+	add	$2, %esi
+	add	$2, %edi
 	sub	$2, %edx
 	jz	L(copy_page_by_rep_exit)
 L(copy_page_by_rep_left_1):

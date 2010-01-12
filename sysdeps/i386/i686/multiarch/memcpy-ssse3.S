@@ -22,7 +22,7 @@
 
 #if !defined NOT_IN_libc \
     && (defined SHARED \
-        || defined USE_AS_MEMMOVE \
+	|| defined USE_AS_MEMMOVE \
 	|| !defined USE_MULTIARCH)
 
 #include "asm-syntax.h"
@@ -75,8 +75,8 @@
     jmp		*%ebx
 
 # define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)			\
-    addl	$(TABLE - .), %ebx	
-			
+    addl	$(TABLE - .), %ebx
+
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)	\
     addl	(%ebx,INDEX,SCALE), %ebx;			\
     /* We loaded the jump table.  Go.  */			\
@@ -103,7 +103,7 @@ __i686.get_pc_thunk.bx:
 # define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
     jmp		*TABLE(,INDEX,SCALE)
 
-# define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)			
+# define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)
 
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)		\
     jmp		*TABLE(,INDEX,SCALE)

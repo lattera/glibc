@@ -337,7 +337,7 @@ L(128bytesormore_nt):
 	cmp	$2, %edx
 	jb	L(copy_page_by_rep_left_1)
 	movw	%ax, (%edi)
-	add	$2, %edi 
+	add	$2, %edi
 	sub	$2, %edx
 	jz	L(copy_page_by_rep_exit)
 L(copy_page_by_rep_left_1):

@@ -82,7 +82,7 @@ __memmove_chk_ssse3:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memmove_ssse3
-	cfi_endproc 
+	cfi_endproc
 	.size __memmove_chk_ssse3, .-__memmove_chk_ssse3
 
 	.type __memmove_chk_ssse3_rep, @function
@@ -94,7 +94,7 @@ __memmove_chk_ssse3_rep:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memmove_ssse3_rep
-	cfi_endproc 
+	cfi_endproc
 	.size __memmove_chk_ssse3_rep, .-__memmove_chk_ssse3_rep
 
 	.type __memmove_chk_ia32, @function
@@ -106,7 +106,7 @@ __memmove_chk_ia32:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memmove_ia32
-	cfi_endproc 
+	cfi_endproc
 	.size __memmove_chk_ia32, .-__memmove_chk_ia32
 # endif
 #endif

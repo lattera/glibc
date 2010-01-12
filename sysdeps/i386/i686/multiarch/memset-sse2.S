@@ -284,7 +284,7 @@ L(128bytesormore):
 	cmp	%ebx, %ecx
 	jae	L(128bytesormore_nt_start)
 
-	
+
 #ifdef DATA_CACHE_SIZE
 	POP (%ebx)
 	cmp	$DATA_CACHE_SIZE, %ecx
@@ -345,7 +345,7 @@ L(128bytes_L2_normal):
 	movaps	%xmm0, 0x60(%edx)
 	movaps	%xmm0, 0x70(%edx)
 	add	$128, %edx
-	cmp	$128, %ecx 	
+	cmp	$128, %ecx
 	jge	L(128bytes_L2_normal)
 
 L(128bytesless_L2_normal):

@@ -86,7 +86,7 @@ __memset_chk_sse2:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memset_sse2
-	cfi_endproc 
+	cfi_endproc
 	.size __memset_chk_sse2, .-__memset_chk_sse2
 
 	.type __memset_chk_sse2_rep, @function
@@ -98,7 +98,7 @@ __memset_chk_sse2_rep:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memset_sse2_rep
-	cfi_endproc 
+	cfi_endproc
 	.size __memset_chk_sse2_rep, .-__memset_chk_sse2_rep
 
 	.type __memset_chk_ia32, @function
@@ -110,7 +110,7 @@ __memset_chk_ia32:
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
 	jmp	__memset_ia32
-	cfi_endproc 
+	cfi_endproc
 	.size __memset_chk_ia32, .-__memset_chk_ia32
 # endif
 #endif
