@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,99, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-1999,2003,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #define	_TERMIOS_H	1
 
 #include <features.h>
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 /* We need `pid_t'.  */
 # include <bits/types.h>
 # ifndef __pid_t_defined
