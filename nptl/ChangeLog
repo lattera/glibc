@@ -1,3 +1,7 @@
+2010-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Cleanup.  Fix up for XPG7.
+
 2010-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Fix pthread_mutex_consistent declaration.

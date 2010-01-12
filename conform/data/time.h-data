@@ -97,3 +97,4 @@ allow tv_*
 allow CLOCK_*
 allow TIMER_*
 allow *_t
+allow sigevent

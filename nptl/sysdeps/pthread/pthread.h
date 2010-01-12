@@ -25,8 +25,6 @@
 #include <sched.h>
 #include <time.h>
 
-#define __need_sigset_t
-#include <signal.h>
 #include <bits/pthreadtypes.h>
 #include <bits/setjmp.h>
 #include <bits/wordsize.h>
@@ -49,7 +47,7 @@ enum
   PTHREAD_MUTEX_RECURSIVE_NP,
   PTHREAD_MUTEX_ERRORCHECK_NP,
   PTHREAD_MUTEX_ADAPTIVE_NP
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
   ,
   PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
   PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
@@ -748,7 +746,6 @@ extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
      __THROW __nonnull ((1));
 
 
-#ifdef __USE_UNIX98
 /* Get the priority ceiling of MUTEX.  */
 extern int pthread_mutex_getprioceiling (__const pthread_mutex_t *
 					 __restrict __mutex,
@@ -761,7 +758,6 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 					 int __prioceiling,
 					 int *__restrict __old_ceiling)
      __THROW __nonnull ((1, 3));
-#endif
 
 
 #ifdef __USE_XOPEN2K8
@@ -797,7 +793,7 @@ extern int pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
 					 int __pshared)
      __THROW __nonnull ((1));
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 /* Return in *KIND the mutex kind attribute in *ATTR.  */
 extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
 				      __attr, int *__restrict __kind)
@@ -808,6 +804,7 @@ extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
    PTHREAD_MUTEX_DEFAULT).  */
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW __nonnull ((1));
+#endif
 
 /* Return in *PROTOCOL the mutex protocol attribute in *ATTR.  */
 extern int pthread_mutexattr_getprotocol (__const pthread_mutexattr_t *
@@ -831,7 +828,6 @@ extern int pthread_mutexattr_getprioceiling (__const pthread_mutexattr_t *
 extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
 					     int __prioceiling)
      __THROW __nonnull ((1));
-#endif
 
 #ifdef __USE_XOPEN2K
 /* Get the robustness flag of the mutex attribute ATTR.  */
