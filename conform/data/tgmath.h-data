@@ -1,4 +1,4 @@
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined POSIX2008
 // <math.h>
 macro fpclassify
 macro isfinite
@@ -13,6 +13,7 @@ macro islessequal
 macro islessgreater
 macro isunordered
 
+#ifndef POSIX2008
 constant M_E
 constant M_LOG2E
 constant M_LOG10E
@@ -28,6 +29,7 @@ constant M_SQRT2
 constant M_SQRT1_2
 
 constant MAXFLOAT
+#endif
 constant HUGE_VAL
 constant HUGE_VALF
 constant HUGE_VALL
@@ -49,6 +51,8 @@ constant FP_ILOGBNAN
 
 macro MATH_ERRNO == 1
 macro MATH_ERREXCEPT == 2
+
+macro math_errhandling
 
 function double acos (double)
 function double asin (double)
@@ -77,17 +81,22 @@ function double tan (double)
 function double tanh (double)
 function double erf (double)
 function double erfc (double)
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function double gamma (double)
+#endif
 function double hypot (double, double)
+#if !defined POSIX && !defined POSIX2008
 function double j0 (double)
 function double j1 (double)
 function double jn (int, double)
+#endif
 function double lgamma (double)
 function double tgamma (double)
+#if !defined POSIX && !defined POSIX2008
 function double y0 (double)
 function double y1 (double)
 function double yn (int, double)
-function int isnan (double)
+#endif
 function double acosh (double)
 function double asinh (double)
 function double atanh (double)
@@ -108,7 +117,9 @@ function {long long} llrint (double)
 function long lround (double)
 function {long long} llround (double)
 function double remquo (double, double, int*)
+#if defined XPG3 && defined XPG4 && defined UNIX98 && defined XOPEN2K
 function double scalb (double, double)
+#endif
 function double scalbn (double, int)
 function double scalbln (double, long)
 function double fdim (double, double)
@@ -147,17 +158,22 @@ function float tanf (float)
 function float tanhf (float)
 function float erff (float)
 function float erfcf (float)
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function float gammaf (float)
+#endif
 function float hypotf (float, float)
+#if !defined POSIX && !defined POSIX2008
 function float j0f (float)
 function float j1f (float)
 function float jnf (int, float)
+#endif
 function float lgammaf (float)
 function float tgammaf (float)
+#if !defined POSIX && !defined POSIX2008
 function float y0f (float)
 function float y1f (float)
 function float ynf (int, float)
-function int isnanf (float)
+#endif
 function float acoshf (float)
 function float asinhf (float)
 function float atanhf (float)
@@ -178,7 +194,9 @@ function {long long} llrintf (float)
 function long lroundf (float)
 function {long long} llroundf (float)
 function float remquof (float, float, int*)
+#if defined XPG3 && defined XPG4 && defined UNIX98 && defined XOPEN2K
 function float scalbf (float, float)
+#endif
 function float scalbnf (float, int)
 function float scalblnf (float, long)
 function float fdimf (float, float)
@@ -214,17 +232,22 @@ function {long double} tanl (long double)
 function {long double} tanhl (long double)
 function {long double} erfl (long double)
 function {long double} erfcl (long double)
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function {long double} gammal (long double)
+#endif
 function {long double} hypotl (long double, long double)
+#if !defined POSIX && !defined POSIX2008
 function {long double} j0l (long double)
 function {long double} j1l (long double)
 function {long double} jnl (int, long double)
+#endif
 function {long double} lgammal (long double)
 function {long double} tgammal (long double)
+#if !defined POSIX && !defined POSIX2008
 function {long double} y0l (long double)
 function {long double} y1l (long double)
 function {long double} ynl (int, long double)
-function int isnanl (long double)
+#endif
 function {long double} acoshl (long double)
 function {long double} asinhl (long double)
 function {long double} atanhl (long double)
@@ -245,7 +268,9 @@ function {long long} llrintl (long double)
 function long lroundl (long double)
 function {long long} llroundl (long double)
 function {long double} remquol (long double, long double, int*)
+#if defined XPG3 && defined XPG4 && defined UNIX98 && defined XOPEN2K
 function {long double} scalbl (long double, long double)
+#endif
 function {long double} scalbnl (long double, int)
 function {long double} scalblnl (long double, long)
 function {long double} fdiml (long double, long double)

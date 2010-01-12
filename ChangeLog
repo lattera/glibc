@@ -1,5 +1,8 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/math.h-data: Fix up for XPG6 and XPG7.
+	* conform/data/tgmath.h-data: Likewise.
+
 	* conform/data/time.h-data: Fix POSIX tests.
 
 	* conform/data/wchar.h-data: Fix up XPG7 tests.
