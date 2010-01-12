@@ -1,3 +1,8 @@
+2010-01-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/sys/wait.h: Don't define W* macros etc. if
+	stdlib.h has been included with _POSIX_C_SOURCE >= 200809L.
+
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/sys/stat.h: Declare fchmod for XPG7.

@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #include <sys/resource.h>
 
 /* These macros could also be defined in <stdlib.h>.  */
-#if !defined _STDLIB_H || !defined __USE_XOPEN
+#if !defined _STDLIB_H || (!defined __USE_XOPEN && !defined __USE_XOPEN2K8)
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
 # include <bits/waitflags.h>
