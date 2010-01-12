@@ -1,3 +1,7 @@
+2010-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sched.h: Define time_t and pid_t for XPG7.
+
 2010-01-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/bcopy.S: New file.
