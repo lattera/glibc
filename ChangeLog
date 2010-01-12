@@ -1,5 +1,7 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/unistd.h-data: Fix up older POSIX tests.
+
 	* stdlib/stdlib.h: Fix handling symbols removed in XPG7.
 	* posix/unistd.h: Likewise.
 
