@@ -44,7 +44,9 @@ type locale_t
 tag {struct sigevent}
 #endif
 
+#if !defined POSIX && !defined POSIX2008
 variable int getdate_err
+#endif
 
 function {char*} asctime (const struct tm*)
 function {char*} asctime_r (const struct tm*, char*)

@@ -1,5 +1,7 @@
 2010-01-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/time.h-data: Fix POSIX tests.
+
 	* conform/data/wchar.h-data: Fix up XPG7 tests.
 
 	* include/features.h: Fix __USE_ISOC95 handling.
