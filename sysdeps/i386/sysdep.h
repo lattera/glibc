@@ -67,6 +67,9 @@
   ASM_SIZE_DIRECTIVE(name)						      \
   STABS_FUN_END(name)
 
+#define ENTRY_CHK(name) ENTRY (name)
+#define END_CHK(name) END (name)
+
 #ifdef HAVE_CPP_ASM_DEBUGINFO
 /* Disable that goop, because we just pass -g through to the assembler
    and it generates proper line number information directly.  */

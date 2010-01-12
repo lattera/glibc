@@ -16,6 +16,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define bit_Fast_Rep_String	(1 << 0)
+
 #ifdef	__ASSEMBLER__
 
 #include <ifunc-defines.h>
@@ -28,6 +30,8 @@
 #define index_SSSE3	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 #define index_SSE4_2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 
+#define index_Fast_Rep_String	FEATURE_INDEX_1*FEATURE_SIZE
+
 #else	/* __ASSEMBLER__ */
 
 #include <sys/param.h>
@@ -37,6 +41,13 @@ enum
     COMMON_CPUID_INDEX_1 = 0,
     /* Keep the following line at the end.  */
     COMMON_CPUID_INDEX_MAX
+  };
+
+enum
+  {
+    FEATURE_INDEX_1 = 0,
+    /* Keep the following line at the end.  */
+    FEATURE_INDEX_MAX
   };
 
 extern struct cpu_features
@@ -58,6 +69,7 @@ extern struct cpu_features
   } cpuid[COMMON_CPUID_INDEX_MAX];
   unsigned int family;
   unsigned int model;
+  unsigned int feature[FEATURE_INDEX_MAX];
 } __cpu_features attribute_hidden;
 
 
@@ -85,5 +97,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define HAS_POPCOUNT	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 23)
 #define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 20)
 #define HAS_FMA		HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 12)
+
+#define index_Fast_Rep_String	FEATURE_INDEX_1
 
 #endif	/* __ASSEMBLER__ */

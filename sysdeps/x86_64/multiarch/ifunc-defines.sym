@@ -13,5 +13,8 @@ CPUID_ECX_OFFSET	offsetof (struct cpuid_registers, ecx)
 CPUID_EDX_OFFSET	offsetof (struct cpuid_registers, edx)
 FAMILY_OFFSET		offsetof (struct cpu_features, family)
 MODEL_OFFSET		offsetof (struct cpu_features, model)
+FEATURE_OFFSET		offsetof (struct cpu_features, feature)
+FEATURE_SIZE		sizeof (unsigned int)
 
 COMMON_CPUID_INDEX_1
+FEATURE_INDEX_1

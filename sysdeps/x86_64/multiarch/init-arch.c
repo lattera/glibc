@@ -64,7 +64,23 @@ __init_cpu_features (void)
 	  __cpu_features.model += extended_model;
 	}
       else if (__cpu_features.family == 0x06)
-	__cpu_features.model += extended_model;
+	{
+	  __cpu_features.model += extended_model;
+	  switch (__cpu_features.model)
+	    {
+	    case 0x1a:
+	    case 0x1e:
+	    case 0x1f:
+	    case 0x25:
+	    case 0x2e:
+	    case 0x2f:
+	      /* Rep string instructions are fast on Intel Core i3, i5
+		 and i7.  */
+	      __cpu_features.feature[index_Fast_Rep_String]
+		|= bit_Fast_Rep_String;
+	      break;
+	    }
+	}
     }
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)

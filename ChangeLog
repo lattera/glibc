@@ -1,3 +1,65 @@
+2010-01-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/bcopy.S: New file.
+
+	* sysdeps/i386/i686/cacheinfo.c (__x86_64_data_cache_size): Define.
+
+	* sysdeps/i386/i686/memcpy.S (__memcpy_chk): Use ENTRY_CHK
+	and END_CHK.
+	* sysdeps/i386/i686/memmove.S (__memmove_chk): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (__mempcpy_chk): Likewise.
+	* sysdeps/i386/i686/memset.S (__memset_chk): Likewise.
+
+	* sysdeps/i386/i686/memmove.S: Support USE_AS_BCOPY.
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 memmove-ssse3
+	memcpy-ssse3-rep mempcpy-ssse3-rep memmove-ssse3-rep
+	bcopy-ssse3 bcopy-ssse3-rep memset-sse2-rep bzero-sse2-rep
+	* sysdeps/i386/i686/multiarch/bcopy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/bcopy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/bcopy.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero-sse2-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/memset.S: New file.
+	* sysdeps/i386/i686/multiarch/memset_chk.S: New file.
+
+	* sysdeps/i386/sysdep.h (ENTRY_CHK): New.
+	(END_CHK): Likewise.
+
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: Add
+	FEATURE_OFFSET, FEATURE_SIZE and FEATURE_INDEX_1.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Likewise.
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_cache_info): Add entries
+	for 0x0e and 0x80.
+	(__x86_64_data_cache_size): New.
+	(init_cacheinfo): Set __x86_64_data_cache_size.
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Turn
+	on bit_Fast_Rep_String for Intel Core i7.
+
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Fast_Rep_String): New.
+	(index_Fast_Rep_String): Likewise.
+	(FEATURE_INDEX_1): Likewise.
+	(FEATURE_INDEX_MAX): Likewise.
+	(cpu_features): Add feature.
+
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/sys/select.h-data: Fix up for XPG7.
