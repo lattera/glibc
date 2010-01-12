@@ -1,3 +1,7 @@
+2010-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/sys/select.h-data: Fix up for XPG7.
+
 2010-01-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/sys/wait.h: Don't define W* macros etc. if

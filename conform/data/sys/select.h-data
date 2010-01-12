@@ -13,16 +13,18 @@ element {struct timespec} time_t tv_sec
 element {struct timespec} long tv_nsec
 
 type fd_set
+#if defined XPG3 || defined XPG4 || defined UNIX98
 element fd_set long fds_bits []
+#endif
 
-function-macro void FD_CLR (int, fd_set*)
-function-macro int FD_ISSET (int, fd_set*)
-function-macro void FD_SET (int, fd_set*)
-function-macro void FD_ZERO (fd_set*)
+macro FD_CLR
+macro FD_ISSET
+macro FD_SET
+macro FD_ZERO
 
 macro FD_SETSIZE
 
-#ifdef XOPEN2K
+#if defined XOPEN2K || defined POSIX2008
 function int pselect (int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*)
 #endif
 function int select (int, fd_set*, fd_set*, fd_set*, struct timeval*)
