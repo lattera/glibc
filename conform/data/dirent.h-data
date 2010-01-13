@@ -8,7 +8,9 @@ element {struct dirent} ino_t d_ino
 # endif
 element {struct dirent} char d_name []
 
+# if !defined POSIX && !defined POSIX2008
 type ino_t
+#endif
 
 function int closedir (DIR*)
 function {DIR*} opendir (const char*)

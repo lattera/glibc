@@ -1,5 +1,11 @@
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/complex.h-data: Test for POSIX2008.
+
+	* conform/data/ctype.h-data: Fix POSIX testing.
+
+	* conform/data/dirent.h-data: ino_t only needed for XSI.
+
 	* grp/grp.h: Declare getgrent and endgrent for XPG7.
 
 	* conform/data/inttypes.h-data: Use same types as the headers.
