@@ -597,8 +597,8 @@ extern int clearenv (void) __THROW;
 #endif
 
 
-#if ((defined __USE_MISC || defined __USE_XOPEN_EXTENDED)	\
-     && !defined __USE_XOPEN2K) || defined __USE_GNU
+#if defined __USE_MISC \
+    || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K)
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.

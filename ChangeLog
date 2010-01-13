@@ -1,3 +1,7 @@
+2010-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/stdlib.h: Be a bit more relaxed about obsoleted mktemp symbol.
+
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/complex.h-data: Test for POSIX2008.
