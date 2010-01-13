@@ -1,5 +1,9 @@
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/grp.h: Declare getgrent and endgrent for XPG7.
+
+	* conform/data/inttypes.h-data: Use same types as the headers.
+
 	* resolv/netdb.h: Don't define old resolver macros for XPG7.
 
 	* conform/data/sys/uio.h-data: Don't exclude POSIX2008.

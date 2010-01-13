@@ -17,8 +17,8 @@ function intmax_t imaxabs (intmax_t)
 function imaxdiv_t imaxdiv (intmax_t, intmax_t)
 function intmax_t strtoimax (const char*, char**, int)
 function uintmax_t strtoumax (const char*, char**, int)
-function intmax_t wcstoimax (const wchar_t*, wchar_t**, int)
-function uintmax_t wcstoumax (const wchar_t*, wchar_t**, int)
+function intmax_t wcstoimax (const __gwchar_t*, __gwchar_t**, int)
+function uintmax_t wcstoumax (const __gwchar_t*, __gwchar_t**, int)
 
 allow PRI*
 allow SCN*
