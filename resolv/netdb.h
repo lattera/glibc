@@ -1,4 +1,4 @@
-  /* Copyright (C) 1996-2002, 2003, 2004, 2009 Free Software Foundation, Inc.
+  /* Copyright (C) 1996-2004, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,7 @@
 
 __BEGIN_DECLS
 
+#if defined __USE_GNU || !defined __USE_XOPEN2K8
 /* Error status for non-reentrant lookup functions.
    We use a macro to access always the thread-specific `h_errno' variable.  */
 #define h_errno (*__h_errno_location ())
@@ -69,6 +70,7 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 				   NOTIMP.  */
 #define	NO_DATA		4	/* Valid name, no data record of requested
 				   type.  */
+#endif
 #if defined __USE_MISC || defined __USE_GNU
 # define NETDB_INTERNAL	-1	/* See errno.  */
 # define NETDB_SUCCESS	0	/* No problem.  */

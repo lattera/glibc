@@ -1,7 +1,12 @@
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 
-	* conform/conformtest.pl (checknamespace): Implement tag for
-	allow-header.
+	* resolv/netdb.h: Don't define old resolver macros for XPG7.
+
+	* conform/data/sys/uio.h-data: Don't exclude POSIX2008.
+
+	* conform/conformtest.pl: Implement tag for allow-header.
+	Fix newline handling in allow-header implementation.
+
 	* conform/data/time.h-data: Use allow-header instead of duplicating
 	information.
 

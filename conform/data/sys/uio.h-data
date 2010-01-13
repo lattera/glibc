@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined POSIX
 type {struct iovec}
 
 element {struct iovec} {void*} iov_base

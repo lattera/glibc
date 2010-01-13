@@ -1048,6 +1048,7 @@ while ($#headers >= 0) {
 
     open (ALLOW, "$CC -E -D$dialect - < data/$ah-data |");
     acontrol: while (<ALLOW>) {
+      chop;
       next acontrol if (/^#/);
       next acontrol if (/^[	]*$/);
 
