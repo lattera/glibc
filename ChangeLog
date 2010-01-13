@@ -1,3 +1,7 @@
+2010-01-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/strlen.S: Unroll the loop.
+
 2010-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/stdlib.h: Be a bit more relaxed about obsoleted mktemp symbol.

@@ -46,28 +46,58 @@ END(strlen)
 __strlen_sse42:
 	cfi_startproc
 	CALL_MCOUNT
-	pxor	%xmm2, %xmm2
-	movq	%rdi, %rcx
+	pxor	%xmm1, %xmm1
+	movl	%edi, %ecx
 	movq	%rdi, %r8
 	andq	$~15, %rdi
-	movdqa	%xmm2, %xmm1
-	pcmpeqb	(%rdi), %xmm2
-	orl	$0xffffffff, %esi
-	subq	%rdi, %rcx
-	shll	%cl, %esi
-	pmovmskb %xmm2, %edx
-	andl	%esi, %edx
-	jnz	1f
+	xor	%edi, %ecx
+	pcmpeqb	(%rdi), %xmm1
+	pmovmskb %xmm1, %edx
+	shrl	%cl, %edx
+	shll	%cl, %edx
+	andl	%edx, %edx
+	jnz	L(less16bytes)
+	pxor	%xmm1, %xmm1
 
-2:	pcmpistri $0x08, 16(%rdi), %xmm1
-	leaq	16(%rdi), %rdi
-	jnz	2b
+	.p2align 4
+L(more64bytes_loop):
+	pcmpistri $0x08, 16(%rdi), %xmm1
+	jz	L(more32bytes)
 
+	pcmpistri $0x08, 32(%rdi), %xmm1
+	jz	L(more48bytes)
+
+	pcmpistri $0x08, 48(%rdi), %xmm1
+	jz	L(more64bytes)
+
+	add	$64, %rdi
+	pcmpistri $0x08, (%rdi), %xmm1
+	jnz	L(more64bytes_loop)
 	leaq	(%rdi,%rcx), %rax
 	subq	%r8, %rax
 	ret
 
-1:	subq	%r8, %rdi
+	.p2align 4
+L(more32bytes):
+	leaq	16(%rdi,%rcx, 1), %rax
+	subq	%r8, %rax
+	ret
+
+	.p2align 4
+L(more48bytes):
+	leaq	32(%rdi,%rcx, 1), %rax
+	subq	%r8, %rax
+	ret
+
+	.p2align 4
+L(more64bytes):
+	leaq	48(%rdi,%rcx, 1), %rax
+	subq	%r8, %rax
+	ret
+
+	.p2align 4
+L(less16bytes):
+	subq	%r8, %rdi
 	bsfl	%edx, %eax
 	addq	%rdi, %rax
 	ret
