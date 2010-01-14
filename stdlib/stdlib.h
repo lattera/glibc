@@ -586,7 +586,7 @@ extern int setenv (__const char *__name, __const char *__value, int __replace)
      __THROW __nonnull ((2));
 
 /* Remove the variable NAME from the environment.  */
-extern int unsetenv (__const char *__name) __THROW;
+extern int unsetenv (__const char *__name) __THROW __nonnull ((1));
 #endif
 
 #ifdef	__USE_MISC
