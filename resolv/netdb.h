@@ -53,7 +53,7 @@
 
 __BEGIN_DECLS
 
-#if defined __USE_MISC || defined __USE_GNU || !defined __USE_XOPEN2K8
+#if defined __USE_MISC || !defined __USE_XOPEN2K8
 /* Error status for non-reentrant lookup functions.
    We use a macro to access always the thread-specific `h_errno' variable.  */
 # define h_errno (*__h_errno_location ())
@@ -87,7 +87,7 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 # define SCOPE_DELIMITER	'%'
 #endif
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* Print error indicated by `h_errno' variable on standard error.  STR
    if non-null is printed before the error string.  */
 extern void herror (__const char *__str) __THROW;

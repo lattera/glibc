@@ -1,5 +1,8 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Change getpagesize and getdtablesize declaration
+	visibility some more.
+
 	* resolv/netdb.h: Relax condition to elide obsolete resolver constants.
 
 	* posix/unistd.h: Declare getpagesize in _GNU_SOURCE mode.

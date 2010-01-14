@@ -986,16 +986,16 @@ extern long int gethostid (void);
 extern void sync (void) __THROW;
 
 
-# if defined __USE_GNU || !defined __USE_XOPEN2K
+# if defined __USE_BSD || !defined __USE_XOPEN2K
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
 extern int getpagesize (void)  __THROW __attribute__ ((__const__));
-# endif
 
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
 extern int getdtablesize (void) __THROW;
+# endif
 
 #endif /* Use BSD || X/Open Unix.  */
 
