@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -986,7 +986,7 @@ extern long int gethostid (void);
 extern void sync (void) __THROW;
 
 
-# ifndef __USE_XOPEN2K
+# if defined __USE_GNU || !defined __USE_XOPEN2K
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
 extern int getpagesize (void)  __THROW __attribute__ ((__const__));

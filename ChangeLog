@@ -1,5 +1,7 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Declare getpagesize in _GNU_SOURCE mode.
+
 	[BZ #11120]
 	* sysdeps/x86_64/strcmp.S: Prevent silent errors should strncmp be
 	needed outside libc.
