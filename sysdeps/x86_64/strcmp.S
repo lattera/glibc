@@ -1,5 +1,5 @@
 /* Highly optimized version for x86-64.
-   Copyright (C) 1999, 2000, 2002, 2003, 2005, 2009
+   Copyright (C) 1999, 2000, 2002, 2003, 2005, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i686 version contributed by Ulrich Drepper
@@ -33,6 +33,13 @@
 #endif
 
 #ifdef USE_AS_STRNCMP
+/* The simplified code below is not set up to handle strncmp() so far.
+   Should this become necessary it has to be implemented.  For now
+   just report the problem.  */
+# ifdef NOT_IN_lib
+#  error "strncmp not implemented so far"
+# endif
+
 /* Since the counter, %r11, is unsigned, we branch to strcmp_exitz
    if the new counter > the old one or is 0.  */
 # define UPDATE_STRNCMP_COUNTER				\
@@ -54,7 +61,7 @@
 #ifndef USE_SSSE3
 	.text
 #else
-        .section .text.ssse3,"ax",@progbits
+	.section .text.ssse3,"ax",@progbits
 #endif
 
 ENTRY (BP_SYM (STRCMP))
@@ -80,13 +87,13 @@ END (BP_SYM (STRCMP))
 /*
  * This implementation uses SSE to compare up to 16 bytes at a time.
  */
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	test	%rdx, %rdx
 	je	LABEL(strcmp_exitz)
 	cmp	$1, %rdx
 	je	LABEL(Byte0)
 	mov	%rdx, %r11
-#endif
+# endif
 	mov	%esi, %ecx
 	mov	%edi, %eax
 /* Use 64bit AND here to avoid long NOP padding.  */
@@ -107,10 +114,10 @@ END (BP_SYM (STRCMP))
 	pmovmskb %xmm1, %edx
 	sub	$0xffff, %edx		/* if first 16 bytes are same, edx == 0xffff */
 	jnz	LABEL(less16bytes)	/* If not, find different value or null char */
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)	/* finish comparision */
-#endif
+# endif
 	add	$16, %rsi		/* prepare to search next 16 bytes */
 	add	$16, %rdi		/* prepare to search next 16 bytes */
 
@@ -184,10 +191,10 @@ LABEL(loop_ashr_0):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)		/* mismatch or null char seen */
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 	add	$16, %rcx
 	movdqa	(%rsi, %rcx), %xmm1
 	movdqa	(%rdi, %rcx), %xmm2
@@ -198,10 +205,10 @@ LABEL(loop_ashr_0):
 	pmovmskb %xmm1, %edx
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 	add	$16, %rcx
 	jmp	LABEL(loop_ashr_0)
 
@@ -249,13 +256,13 @@ LABEL(gobble_ashr_1):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4		 /* store for next cycle */
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$1, %xmm3
 	pslldq	$15, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -264,10 +271,10 @@ LABEL(gobble_ashr_1):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
 
@@ -278,13 +285,13 @@ LABEL(gobble_ashr_1):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4		/* store for next cycle */
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$1, %xmm3
 	pslldq	$15, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -293,10 +300,10 @@ LABEL(gobble_ashr_1):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
 	jmp	LABEL(loop_ashr_1)
@@ -312,10 +319,10 @@ LABEL(nibble_ashr_1):
 	test	$0xfffe, %edx
 	jnz	LABEL(ashr_1_exittail)	/* find null char*/
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$14, %r11
 	jbe	LABEL(ashr_1_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10		/* substract 4K from %r10 */
@@ -334,7 +341,7 @@ LABEL(ashr_1_exittail):
 
 /*
  * The following cases will be handled by ashr_2
- * rcx(offset of rsi)  rax(offset of rdi)   relative offset   	corresponding case
+ * rcx(offset of rsi)  rax(offset of rdi)   relative offset   corresponding case
  *        n(14~15)            n -14         1(15 +(n-14) - n)         ashr_2
  */
 	.p2align 4
@@ -376,13 +383,13 @@ LABEL(gobble_ashr_2):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$2, %xmm3
 	pslldq	$14, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -391,10 +398,10 @@ LABEL(gobble_ashr_2):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -406,13 +413,13 @@ LABEL(gobble_ashr_2):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$2, %xmm3
 	pslldq	$14, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -421,10 +428,10 @@ LABEL(gobble_ashr_2):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -437,10 +444,10 @@ LABEL(nibble_ashr_2):
 	test	$0xfffc, %edx
 	jnz	LABEL(ashr_2_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$13, %r11
 	jbe	LABEL(ashr_2_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -498,13 +505,13 @@ LABEL(gobble_ashr_3):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$3, %xmm3
 	pslldq	$13, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -513,10 +520,10 @@ LABEL(gobble_ashr_3):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -528,13 +535,13 @@ LABEL(gobble_ashr_3):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$3, %xmm3
 	pslldq	$13, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -543,10 +550,10 @@ LABEL(gobble_ashr_3):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -559,10 +566,10 @@ LABEL(nibble_ashr_3):
 	test	$0xfff8, %edx
 	jnz	LABEL(ashr_3_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$12, %r11
 	jbe	LABEL(ashr_3_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -620,13 +627,13 @@ LABEL(gobble_ashr_4):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$4, %xmm3
 	pslldq	$12, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -635,10 +642,10 @@ LABEL(gobble_ashr_4):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -650,13 +657,13 @@ LABEL(gobble_ashr_4):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$4, %xmm3
 	pslldq	$12, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -665,10 +672,10 @@ LABEL(gobble_ashr_4):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -681,10 +688,10 @@ LABEL(nibble_ashr_4):
 	test	$0xfff0, %edx
 	jnz	LABEL(ashr_4_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$11, %r11
 	jbe	LABEL(ashr_4_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -700,7 +707,7 @@ LABEL(ashr_4_exittail):
 /*
  * The following cases will be handled by ashr_5
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(11~15)          n - 11      	  4(15 +(n-11) - n)         ashr_5
+ *        n(11~15)          n - 11		  4(15 +(n-11) - n)         ashr_5
  */
 	.p2align 4
 LABEL(ashr_5):
@@ -742,13 +749,13 @@ LABEL(gobble_ashr_5):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$5, %xmm3
 	pslldq	$11, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -757,10 +764,10 @@ LABEL(gobble_ashr_5):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -772,13 +779,13 @@ LABEL(gobble_ashr_5):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$5, %xmm3
 	pslldq	$11, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -787,10 +794,10 @@ LABEL(gobble_ashr_5):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -803,10 +810,10 @@ LABEL(nibble_ashr_5):
 	test	$0xffe0, %edx
 	jnz	LABEL(ashr_5_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$10, %r11
 	jbe	LABEL(ashr_5_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -822,7 +829,7 @@ LABEL(ashr_5_exittail):
 /*
  * The following cases will be handled by ashr_6
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(10~15)          n - 10      	  5(15 +(n-10) - n)         ashr_6
+ *        n(10~15)          n - 10		  5(15 +(n-10) - n)         ashr_6
  */
 	.p2align 4
 LABEL(ashr_6):
@@ -864,13 +871,13 @@ LABEL(gobble_ashr_6):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$6, %xmm3
 	pslldq	$10, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -879,10 +886,10 @@ LABEL(gobble_ashr_6):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -894,13 +901,13 @@ LABEL(gobble_ashr_6):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$6, %xmm3
 	pslldq	$10, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -909,10 +916,10 @@ LABEL(gobble_ashr_6):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -925,10 +932,10 @@ LABEL(nibble_ashr_6):
 	test	$0xffc0, %edx
 	jnz	LABEL(ashr_6_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$9, %r11
 	jbe	LABEL(ashr_6_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -944,7 +951,7 @@ LABEL(ashr_6_exittail):
 /*
  * The following cases will be handled by ashr_7
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(9~15)          n - 9      	        6(15 +(n - 9) - n)         ashr_7
+ *        n(9~15)          n - 9                6(15 +(n - 9) - n)         ashr_7
  */
 	.p2align 4
 LABEL(ashr_7):
@@ -986,13 +993,13 @@ LABEL(gobble_ashr_7):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$7, %xmm3
 	pslldq	$9, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1001,10 +1008,10 @@ LABEL(gobble_ashr_7):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1016,13 +1023,13 @@ LABEL(gobble_ashr_7):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$7, %xmm3
 	pslldq	$9, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1031,10 +1038,10 @@ LABEL(gobble_ashr_7):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1047,10 +1054,10 @@ LABEL(nibble_ashr_7):
 	test	$0xff80, %edx
 	jnz	LABEL(ashr_7_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$8, %r11
 	jbe	LABEL(ashr_7_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1066,7 +1073,7 @@ LABEL(ashr_7_exittail):
 /*
  *  The following cases will be handled by ashr_8
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(8~15)          n - 8      	        7(15 +(n - 8) - n)         ashr_8
+ *        n(8~15)          n - 8                7(15 +(n - 8) - n)         ashr_8
  */
 	.p2align 4
 LABEL(ashr_8):
@@ -1108,13 +1115,13 @@ LABEL(gobble_ashr_8):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$8, %xmm3
 	pslldq	$8, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1123,10 +1130,10 @@ LABEL(gobble_ashr_8):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1138,13 +1145,13 @@ LABEL(gobble_ashr_8):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$8, %xmm3
 	pslldq	$8, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1153,10 +1160,10 @@ LABEL(gobble_ashr_8):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1169,10 +1176,10 @@ LABEL(nibble_ashr_8):
 	test	$0xff00, %edx
 	jnz	LABEL(ashr_8_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$7, %r11
 	jbe	LABEL(ashr_8_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1188,7 +1195,7 @@ LABEL(ashr_8_exittail):
 /*
  *  The following cases will be handled by ashr_9
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(7~15)          n - 7      	        8(15 +(n - 7) - n)         ashr_9
+ *        n(7~15)          n - 7                8(15 +(n - 7) - n)         ashr_9
  */
 	.p2align 4
 LABEL(ashr_9):
@@ -1230,13 +1237,13 @@ LABEL(gobble_ashr_9):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$9, %xmm3
 	pslldq	$7, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1245,10 +1252,10 @@ LABEL(gobble_ashr_9):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1260,13 +1267,13 @@ LABEL(gobble_ashr_9):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$9, %xmm3
 	pslldq	$7, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1275,10 +1282,10 @@ LABEL(gobble_ashr_9):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3		/* store for next cycle */
@@ -1291,10 +1298,10 @@ LABEL(nibble_ashr_9):
 	test	$0xfe00, %edx
 	jnz	LABEL(ashr_9_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$6, %r11
 	jbe	LABEL(ashr_9_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1310,7 +1317,7 @@ LABEL(ashr_9_exittail):
 /*
  *  The following cases will be handled by ashr_10
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(6~15)          n - 6      	        9(15 +(n - 6) - n)         ashr_10
+ *        n(6~15)          n - 6                9(15 +(n - 6) - n)         ashr_10
  */
 	.p2align 4
 LABEL(ashr_10):
@@ -1352,13 +1359,13 @@ LABEL(gobble_ashr_10):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$10, %xmm3
 	pslldq	$6, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1367,10 +1374,10 @@ LABEL(gobble_ashr_10):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1382,13 +1389,13 @@ LABEL(gobble_ashr_10):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$10, %xmm3
 	pslldq	$6, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1397,10 +1404,10 @@ LABEL(gobble_ashr_10):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1413,10 +1420,10 @@ LABEL(nibble_ashr_10):
 	test	$0xfc00, %edx
 	jnz	LABEL(ashr_10_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$5, %r11
 	jbe	LABEL(ashr_10_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1432,7 +1439,7 @@ LABEL(ashr_10_exittail):
 /*
  *  The following cases will be handled by ashr_11
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(5~15)          n - 5      	        10(15 +(n - 5) - n)         ashr_11
+ *        n(5~15)          n - 5               10(15 +(n - 5) - n)         ashr_11
  */
 	.p2align 4
 LABEL(ashr_11):
@@ -1474,13 +1481,13 @@ LABEL(gobble_ashr_11):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$11, %xmm3
 	pslldq	$5, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1489,10 +1496,10 @@ LABEL(gobble_ashr_11):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1504,13 +1511,13 @@ LABEL(gobble_ashr_11):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$11, %xmm3
 	pslldq	$5, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1519,10 +1526,10 @@ LABEL(gobble_ashr_11):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1535,10 +1542,10 @@ LABEL(nibble_ashr_11):
 	test	$0xf800, %edx
 	jnz	LABEL(ashr_11_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$4, %r11
 	jbe	LABEL(ashr_11_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1554,7 +1561,7 @@ LABEL(ashr_11_exittail):
 /*
  *  The following cases will be handled by ashr_12
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(4~15)          n - 4      	        11(15 +(n - 4) - n)         ashr_12
+ *        n(4~15)          n - 4                11(15 +(n - 4) - n)         ashr_12
  */
 	.p2align 4
 LABEL(ashr_12):
@@ -1596,13 +1603,13 @@ LABEL(gobble_ashr_12):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$12, %xmm3
 	pslldq	$4, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1611,10 +1618,10 @@ LABEL(gobble_ashr_12):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1626,13 +1633,13 @@ LABEL(gobble_ashr_12):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$12, %xmm3
 	pslldq	$4, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1641,10 +1648,10 @@ LABEL(gobble_ashr_12):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1657,10 +1664,10 @@ LABEL(nibble_ashr_12):
 	test	$0xf000, %edx
 	jnz	LABEL(ashr_12_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$3, %r11
 	jbe	LABEL(ashr_12_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1676,7 +1683,7 @@ LABEL(ashr_12_exittail):
 /*
  *  The following cases will be handled by ashr_13
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(3~15)          n - 3      	        12(15 +(n - 3) - n)         ashr_13
+ *        n(3~15)          n - 3                12(15 +(n - 3) - n)         ashr_13
  */
 	.p2align 4
 LABEL(ashr_13):
@@ -1718,13 +1725,13 @@ LABEL(gobble_ashr_13):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$13, %xmm3
 	pslldq	$3, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1733,10 +1740,10 @@ LABEL(gobble_ashr_13):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1748,13 +1755,13 @@ LABEL(gobble_ashr_13):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$13, %xmm3
 	pslldq	$3, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1763,10 +1770,10 @@ LABEL(gobble_ashr_13):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1779,10 +1786,10 @@ LABEL(nibble_ashr_13):
 	test	$0xe000, %edx
 	jnz	LABEL(ashr_13_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$2, %r11
 	jbe	LABEL(ashr_13_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1798,7 +1805,7 @@ LABEL(ashr_13_exittail):
 /*
  *  The following cases will be handled by ashr_14
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(2~15)          n - 2      	        13(15 +(n - 2) - n)         ashr_14
+ *        n(2~15)          n - 2                13(15 +(n - 2) - n)         ashr_14
  */
 	.p2align 4
 LABEL(ashr_14):
@@ -1840,13 +1847,13 @@ LABEL(gobble_ashr_14):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$14, %xmm3
 	pslldq	$2, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1855,10 +1862,10 @@ LABEL(gobble_ashr_14):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1870,13 +1877,13 @@ LABEL(gobble_ashr_14):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$14, %xmm3
 	pslldq	$2, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1885,10 +1892,10 @@ LABEL(gobble_ashr_14):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1901,10 +1908,10 @@ LABEL(nibble_ashr_14):
 	test	$0xc000, %edx
 	jnz	LABEL(ashr_14_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	cmp	$1, %r11
 	jbe	LABEL(ashr_14_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -1920,7 +1927,7 @@ LABEL(ashr_14_exittail):
 /*
  *  The following cases will be handled by ashr_15
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(1~15)          n - 1      	        14(15 +(n - 1) - n)         ashr_15
+ *        n(1~15)          n - 1                14(15 +(n - 1) - n)         ashr_15
  */
 	.p2align 4
 LABEL(ashr_15):
@@ -1964,13 +1971,13 @@ LABEL(gobble_ashr_15):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$15, %xmm3
 	pslldq	$1, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1979,10 +1986,10 @@ LABEL(gobble_ashr_15):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -1994,13 +2001,13 @@ LABEL(gobble_ashr_15):
 	movdqa	(%rdi, %rcx), %xmm2
 	movdqa	%xmm2, %xmm4
 
-#ifndef USE_SSSE3
+# ifndef USE_SSSE3
 	psrldq	$15, %xmm3
 	pslldq	$1, %xmm2
 	por	%xmm3, %xmm2		/* merge into one 16byte value */
-#else
+# else
 	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
-#endif
+# endif
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -2009,10 +2016,10 @@ LABEL(gobble_ashr_15):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 
 	add	$16, %rcx
 	movdqa	%xmm4, %xmm3
@@ -2025,10 +2032,10 @@ LABEL(nibble_ashr_15):
 	test	$0x8000, %edx
 	jnz	LABEL(ashr_15_exittail)
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	test	%r11, %r11
 	je	LABEL(ashr_15_exittail)
-#endif
+# endif
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
@@ -2062,10 +2069,10 @@ LABEL(ret):
 LABEL(less16bytes):
 	bsf	%rdx, %rdx		/* find and store bit index in %rdx */
 
-#ifdef USE_AS_STRNCMP
+# ifdef USE_AS_STRNCMP
 	sub	%rdx, %r11
 	jbe	LABEL(strcmp_exitz)
-#endif
+# endif
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax
 
