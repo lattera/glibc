@@ -1,5 +1,7 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add GLIBC_2.12 for libpthread.
+
 	[BZ #11126]
 	* malloc/malloc.c (malloc_info): Initialize malloc if not already
 	done.  Handle empty bin lists.

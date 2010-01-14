@@ -244,6 +244,10 @@ libpthread {
     pthread_sigqueue;
   };
 
+  GLIBC_2.12 {
+    pthread_mutex_consistent;
+  };
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;
