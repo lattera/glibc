@@ -6369,16 +6369,19 @@ malloc_info (int options, FILE *fp)
 
     mbinptr bin = bin_at (ar_ptr, 1);
     struct malloc_chunk *r = bin->fd;
-    while (r != bin)
+    if (r != NULL)
       {
-	++sizes[NFASTBINS].count;
-	sizes[NFASTBINS].total += r->size;
-	sizes[NFASTBINS].from = MIN (sizes[NFASTBINS].from, r->size);
-	sizes[NFASTBINS].to = MAX (sizes[NFASTBINS].to, r->size);
-	r = r->fd;
+	while (r != bin)
+	  {
+	    ++sizes[NFASTBINS].count;
+	    sizes[NFASTBINS].total += r->size;
+	    sizes[NFASTBINS].from = MIN (sizes[NFASTBINS].from, r->size);
+	    sizes[NFASTBINS].to = MAX (sizes[NFASTBINS].to, r->size);
+	    r = r->fd;
+	  }
+	nblocks += sizes[NFASTBINS].count;
+	avail += sizes[NFASTBINS].total;
       }
-    nblocks += sizes[NFASTBINS].count;
-    avail += sizes[NFASTBINS].total;
 
     for (size_t i = 2; i < NBINS; ++i)
       {
@@ -6388,17 +6391,18 @@ malloc_info (int options, FILE *fp)
 	sizes[NFASTBINS - 1 + i].to = sizes[NFASTBINS - 1 + i].total
 	  = sizes[NFASTBINS - 1 + i].count = 0;
 
-	while (r != bin)
-	  {
-	    ++sizes[NFASTBINS - 1 + i].count;
-	    sizes[NFASTBINS - 1 + i].total += r->size;
-	    sizes[NFASTBINS - 1 + i].from = MIN (sizes[NFASTBINS - 1 + i].from,
+	if (r != NULL)
+	  while (r != bin)
+	    {
+	      ++sizes[NFASTBINS - 1 + i].count;
+	      sizes[NFASTBINS - 1 + i].total += r->size;
+	      sizes[NFASTBINS - 1 + i].from
+		= MIN (sizes[NFASTBINS - 1 + i].from, r->size);
+	      sizes[NFASTBINS - 1 + i].to = MAX (sizes[NFASTBINS - 1 + i].to,
 						 r->size);
-	    sizes[NFASTBINS - 1 + i].to = MAX (sizes[NFASTBINS - 1 + i].to,
-					       r->size);
 
-	    r = r->fd;
-	  }
+	      r = r->fd;
+	    }
 
 	if (sizes[NFASTBINS - 1 + i].count == 0)
 	  sizes[NFASTBINS - 1 + i].from = 0;
@@ -6459,6 +6463,9 @@ malloc_info (int options, FILE *fp)
 
     fputs ("</heap>\n", fp);
   }
+
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
 
   fputs ("<malloc version=\"1\">\n", fp);
 
