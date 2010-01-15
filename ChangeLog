@@ -1,5 +1,9 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11141]
+	* resolv/res_send.c (reopen): Don't use IPv6 sockets for IPv4
+	addresses.
+
 	[BZ #11127]
 	* posix/regcomp.c (alc_eclosure_iter): Do not ignore
 	re_node_set_insert failure; return REG_ESPACE.
