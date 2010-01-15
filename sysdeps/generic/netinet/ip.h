@@ -189,7 +189,26 @@ struct ip_timestamp
 #define	IPTOS_DSCP_EF		0xb8
 
 /*
- * Definitions for IP type of service (ip_tos)
+ * In RFC 2474, Section 4.2.2.1, the Class Selector Codepoints subsume
+ * the old ToS Precedence values.
+ */
+
+#define	IPTOS_CLASS_MASK		0xe0
+#define	IPTOS_CLASS(class)		((tos) & IPTOS_CLASS_MASK)
+#define	IPTOS_CLASS_CS0			0x00
+#define	IPTOS_CLASS_CS1			0x20
+#define	IPTOS_CLASS_CS2			0x40
+#define	IPTOS_CLASS_CS3			0x60
+#define	IPTOS_CLASS_CS4			0x80
+#define	IPTOS_CLASS_CS5			0xa0
+#define	IPTOS_CLASS_CS6			0xc0
+#define	IPTOS_CLASS_CS7			0xe0
+
+#define	IPTOS_CLASS_DEFAULT		IPTOS_CLASS_CS0
+
+/*
+ * Definitions for IP type of service (ip_tos) [deprecated; use DSCP
+ * and CS definitions above instead.]
  */
 #define	IPTOS_TOS_MASK		0x1E
 #define	IPTOS_TOS(tos)		((tos) & IPTOS_TOS_MASK)
@@ -200,18 +219,18 @@ struct ip_timestamp
 #define	IPTOS_MINCOST		IPTOS_LOWCOST
 
 /*
- * Definitions for IP precedence (also in ip_tos) (hopefully unused)
+ * Definitions for IP precedence (also in ip_tos) [also deprecated.]
  */
-#define	IPTOS_PREC_MASK			0xe0
-#define	IPTOS_PREC(tos)                ((tos) & IPTOS_PREC_MASK)
-#define	IPTOS_PREC_NETCONTROL		0xe0
-#define	IPTOS_PREC_INTERNETCONTROL	0xc0
-#define	IPTOS_PREC_CRITIC_ECP		0xa0
-#define	IPTOS_PREC_FLASHOVERRIDE	0x80
-#define	IPTOS_PREC_FLASH		0x60
-#define	IPTOS_PREC_IMMEDIATE		0x40
-#define	IPTOS_PREC_PRIORITY		0x20
-#define	IPTOS_PREC_ROUTINE		0x00
+#define	IPTOS_PREC_MASK			IPTOS_CLASS_MASK
+#define	IPTOS_PREC(tos)			IPTOS_CLASS(tos)
+#define	IPTOS_PREC_NETCONTROL		IPTOS_CLASS_CS7
+#define	IPTOS_PREC_INTERNETCONTROL	IPTOS_CLASS_CS6
+#define	IPTOS_PREC_CRITIC_ECP		IPTOS_CLASS_CS5
+#define	IPTOS_PREC_FLASHOVERRIDE	IPTOS_CLASS_CS4
+#define	IPTOS_PREC_FLASH		IPTOS_CLASS_CS3
+#define	IPTOS_PREC_IMMEDIATE		IPTOS_CLASS_CS2
+#define	IPTOS_PREC_PRIORITY		IPTOS_CLASS_CS1
+#define	IPTOS_PREC_ROUTINE		IPTOS_CLASS_CS0
 
 /*
  * Definitions for options.

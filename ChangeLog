@@ -1,5 +1,10 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11027]
+	* sysdeps/generic/netinet/ip.h: Define IPTOS_CLASS_* macros according
+	to RFC 2474.
+	Patch by Philip Prindeville <philipp@redfish-solutions.com>.
+
 	[BZ #11141]
 	* resolv/res_send.c (reopen): Don't use IPv6 sockets for IPv4
 	addresses.
