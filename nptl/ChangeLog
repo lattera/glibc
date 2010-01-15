@@ -1,7 +1,12 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* Versions: Add pthread_mutex_consistent for GLIBC_2.12.
+	* Versions: Add pthread_mutex_consistent, pthread_mutexattr_getrobust,
+	and pthread_mutexattr_setrobust for GLIBC_2.12.
 	* pthread_mutex_consistent.c: Define alias pthread_mutex_consistent.
+	* pthread_mutexattr_getrobust.c: Define alias
+	pthread_mutexattr_getrobust.
+	* pthread_mutexattr_setrobust.c: Define alias
+	pthread_mutexattr_setrobust.
 
 2010-01-12  Ulrich Drepper  <drepper@redhat.com>
 

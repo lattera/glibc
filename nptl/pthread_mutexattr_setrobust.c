@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2005.
 
@@ -22,7 +22,7 @@
 
 
 int
-pthread_mutexattr_setrobust_np (attr, robustness)
+pthread_mutexattr_setrobust (attr, robustness)
      pthread_mutexattr_t *attr;
      int robustness;
 {
@@ -41,3 +41,4 @@ pthread_mutexattr_setrobust_np (attr, robustness)
 
   return 0;
 }
+weak_alias (pthread_mutexattr_setrobust, pthread_mutexattr_setrobust_np)
