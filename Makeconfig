@@ -549,11 +549,11 @@ endif
 ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
-+prector = `$(CC) --print-file-name=crtbegin.o`
-+postctor = `$(CC) --print-file-name=crtend.o`
++prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbegin.o`
++postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
 # Variants of the two previous definitions for linking PIE programs.
-+prectorS = `$(CC) --print-file-name=crtbeginS.o`
-+postctorS = `$(CC) --print-file-name=crtendS.o`
++prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
++postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 +interp = $(addprefix $(elf-objpfx),interp.os)
 endif
 csu-objpfx = $(common-objpfx)csu/

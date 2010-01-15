@@ -1,3 +1,9 @@
+2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* Makeconfig (+prector, +postctor, +prectorS, +postctorS): Add
+	$(sysdep-LDFLAGS) to pre and post ctors so that the proper .o
+	files are found by GCC.
+
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Relax conditions for ualarm, usleep, getwd, vfork,
