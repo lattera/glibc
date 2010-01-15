@@ -1,4 +1,19 @@
-2010-01-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+2010-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h: _XOPEN_SOURCE_EXTENDED is not defined to be
+	used without _XOPEN_SOURCE.  Don't base any decisions on this macro
+	if _XOPEN_SOURCE is not defined as well.
+
+2010-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S (_start): Added check for the
+	high gprs kernel facility.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_matches_host):
+	Added high gprs check for DSOs.
+	* elf/elf.h (EF_S390_HIGH_GPRS): Added macro definition for the
+	new elf header flag.
+
+XS2010-01-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* elf/dl-sysdep.c (_dl_sysdep_start): Added the auxv parameter to
 	dl_main.

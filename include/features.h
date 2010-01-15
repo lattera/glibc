@@ -146,8 +146,7 @@
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
 #if defined _BSD_SOURCE && \
     !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
-      defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_EXTENDED || \
-      defined _GNU_SOURCE || defined _SVID_SOURCE)
+      defined _XOPEN_SOURCE || defined _GNU_SOURCE || defined _SVID_SOURCE)
 # define __FAVOR_BSD	1
 #endif
 
@@ -179,8 +178,7 @@
    define _BSD_SOURCE and _SVID_SOURCE.  */
 #if (!defined __STRICT_ANSI__ && !defined _ISOC99_SOURCE && \
      !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE && \
-     !defined _XOPEN_SOURCE && !defined _XOPEN_SOURCE_EXTENDED && \
-     !defined _BSD_SOURCE && !defined _SVID_SOURCE)
+     !defined _XOPEN_SOURCE && !defined _BSD_SOURCE && !defined _SVID_SOURCE)
 # define _BSD_SOURCE	1
 # define _SVID_SOURCE	1
 #endif
