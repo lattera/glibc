@@ -36,7 +36,7 @@
 
 __BEGIN_DECLS
 
-# if !defined __USE_XOPEN2K8 || defined __USE_GNU
+# if defined __USE_MISC || !defined __USE_XOPEN2K8
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
 extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
      __THROW __attribute_pure__;
@@ -104,7 +104,7 @@ extern char *rindex (__const char *__s, int __c)
 #  endif
 # endif
 
-#if !defined __USE_XOPEN2K8 || defined __USE_XOPEN2K8XSI
+#if defined __USE_MISC || !defined __USE_XOPEN2K8 || defined __USE_XOPEN2K8XSI
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
 extern int ffs (int __i) __THROW __attribute__ ((const));
