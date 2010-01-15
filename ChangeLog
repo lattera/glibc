@@ -1,5 +1,10 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11127]
+	* posix/regcomp.c (alc_eclosure_iter): Do not ignore
+	re_node_set_insert failure; return REG_ESPACE.
+	Patch by Paul Eggert.
+
 	* bits/confname.h: Make pre-C99-safe.
 
 2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
