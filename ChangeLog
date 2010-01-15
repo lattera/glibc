@@ -1,3 +1,7 @@
+2010-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* bits/confname.h: Make pre-C99-safe.
+
 2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* Makeconfig (+prector, +postctor, +prectorS, +postctorS): Add
