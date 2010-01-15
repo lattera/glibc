@@ -1,5 +1,7 @@
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/stdlib.h: Relax conditions for *cvt functions and valloc.
+
 	* Versions.def: Add GLIBC_2.12 for libpthread.
 
 	[BZ #11126]
