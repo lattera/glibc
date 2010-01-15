@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1015,7 +1015,8 @@ extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
 						     ElfW(Word) phnum,
-						     ElfW(Addr) *user_entry))
+						     ElfW(Addr) *user_entry,
+						     ElfW(auxv_t) *auxv))
      attribute_hidden;
 
 extern void _dl_sysdep_start_cleanup (void)

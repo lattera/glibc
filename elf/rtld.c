@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,7 +182,7 @@ extern struct rtld_global_ro _rtld_local_ro
 
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-		     ElfW(Addr) *user_entry);
+		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
 
 /* These two variables cannot be moved into .data.rel.ro.  */
 static struct libname_list _dl_rtld_libname;
@@ -882,7 +882,8 @@ static int version_info attribute_relro;
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
-	 ElfW(Addr) *user_entry)
+	 ElfW(Addr) *user_entry,
+	 ElfW(auxv_t) *auxv)
 {
   const ElfW(Phdr) *ph;
   enum mode mode;
@@ -927,6 +928,8 @@ dl_main (const ElfW(Phdr) *phdr,
 
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {
+      ElfW(auxv_t) *av;
+
       /* Ho ho.  We are not the program interpreter!  We are the program
 	 itself!  This means someone ran ld.so as a command.  Well, that
 	 might be convenient to do sometimes.  We support it by
@@ -1013,11 +1016,11 @@ of this helper program; chances are you did not intend to run this program.\n\
 \n\
   --list                list all dependencies and how they are resolved\n\
   --verify              verify that given object really is a dynamically linked\n\
-                        object we can handle\n\
+			object we can handle\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
-                        variable LD_LIBRARY_PATH\n\
+			variable LD_LIBRARY_PATH\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
-                        in LIST\n\
+			in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n");
 
       ++_dl_skip_args;
@@ -1082,6 +1085,22 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 makes sense to free the old string first.  */
       main_map->l_name = (char *) "";
       *user_entry = main_map->l_entry;
+
+      /* Adjust the on-stack auxiliary vector so that it looks like the
+	 binary was executed directly.  */
+      for (av = auxv; av->a_type != AT_NULL; av++)
+	switch (av->a_type)
+	  {
+	  case AT_PHDR:
+	    av->a_un.a_val = phdr;
+	    break;
+	  case AT_PHNUM:
+	    av->a_un.a_val = phnum;
+	    break;
+	  case AT_ENTRY:
+	    av->a_un.a_val = *user_entry;
+	    break;
+	  }
     }
   else
     {
@@ -2013,7 +2032,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		  _dl_relocate_object (&GL(dl_rtld_map),
 				       main_map->l_scope, 0, 0);
 		}
-            }
+	    }
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
 	  if (version_info)
 	    {
@@ -2682,10 +2701,10 @@ process_envvars (enum mode *modep)
       while (*nextp != '\0');
 
       if (__access ("/etc/suid-debug", F_OK) != 0)
-        {
+	{
 	  unsetenv ("MALLOC_CHECK_");
 	  GLRO(dl_debug_mask) = 0;
-        }
+	}
 
       if (mode != normal)
 	_exit (5);
@@ -2752,7 +2771,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	}
       *wp = '\0';
       _dl_debug_printf ("\
-            time needed for relocation: %s (%s%%)\n", buf, pbuf);
+	    time needed for relocation: %s (%s%%)\n", buf, pbuf);
     }
 #endif
 
@@ -2815,7 +2834,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	}
       *wp = '\0';
       _dl_debug_printf ("\
-           time needed to load objects: %s (%s%%)\n",
+	   time needed to load objects: %s (%s%%)\n",
 				buf, pbuf);
     }
 #endif

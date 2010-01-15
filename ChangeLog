@@ -1,3 +1,13 @@
+2010-01-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* elf/dl-sysdep.c (_dl_sysdep_start): Added the auxv parameter to
+	dl_main.
+	* elf/dl-open.c (_dl_sysdep_start): Likewise..
+	* sysdeps/generic/ldsodefs.h (_dl_sysdep_start): Likewise.
+	* elf/rtld.c (dl_main): Added new parameter auxv.  Adjust the
+	AT_PHDR, AT_PHNUM and AT_ENTRY fields if the ld.so is directly
+	started.
+
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11027]
