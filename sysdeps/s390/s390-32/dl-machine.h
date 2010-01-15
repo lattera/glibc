@@ -27,6 +27,7 @@
 #include <sys/param.h>
 #include <string.h>
 #include <link.h>
+#include <sysdeps/s390/dl-procinfo.h>
 
 /* This is an older, now obsolete value.  */
 #define EM_S390_OLD	0xA390
@@ -35,6 +36,12 @@
 static inline int
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
+  /* Check if the kernel provides the high gpr facility if needed by
+     the binary.  */
+  if ((ehdr->e_flags & EF_S390_HIGH_GPRS)
+      && !(GLRO (dl_hwcap) & HWCAP_S390_HIGH_GPRS))
+    return 0;
+
   return (ehdr->e_machine == EM_S390 || ehdr->e_machine == EM_S390_OLD)
          && ehdr->e_ident[EI_CLASS] == ELFCLASS32;
 }

@@ -59,6 +59,88 @@
 	.globl _start
 	.type _start,@function
 _start:
+	/* Check if the kernel provides highgprs facility if needed by
+	   the binary.  */
+
+	lr	%r6,%r15
+	la	%r6,4(%r6)     /* Skip the argument counter.  */
+
+.L11:	l	%r5,0(%r6)     /* Skip the argument vector.  */
+	la	%r6,4(%r6)
+	ltr	%r5,%r5
+	jne	.L11
+
+.L12:	l	%r5,0(%r6)     /* Skip the environment vector.  */
+	la	%r6,4(%r6)
+	ltr	%r5,%r5
+	jne	.L12
+
+	/* Obtain the needed values from the auxiliary vector.  */
+
+	lhi	%r7,16	       /* AT_HWCAP */
+	lhi	%r8,3	       /* AT_PHDR */
+	lhi	%r9,5          /* AT_PHNUM */
+	lhi	%r2,4          /* AT_PHENT */
+.L13:	l	%r5,0(%r6)
+	clr	%r5,%r7
+	jne	.L15
+	l	%r10,4(%r6)    /* r10 = AT_HWCAP value.  */
+.L15:	clr	%r5,%r8
+	jne	.L16
+	l	%r11,4(%r6)    /* r11 = AT_PHDR value.  */
+.L16:	clr	%r5,%r9
+	jne	.L17
+	l	%r12,4(%r6)    /* r12 = AT_PHNUM value.  */
+.L17:	clr	%r5,%r2
+	jne	.L18
+	l	%r0,4(%r6)     /* r0 = AT_PHENT value.  */
+.L18:	ltr	%r5,%r5
+	la	%r6,8(%r6)
+	jnz	.L13
+
+	/* Locate the ELF header by looking for the first PT_LOAD
+	   segment with a p_offset of zero.  */
+
+	lr	%r4,%r11       /* Backup AT_PHDR.  */
+	lhi	%r7,1          /* PT_LOAD id */
+	lhi	%r8,0
+.L19:	cl	%r7,0(%r4)     /* p_type == PT_LOAD? */
+	jne	.L20
+	cl	%r8,4(%r4)     /* p_offset == 0? */
+	jne	.L20
+	l	%r9,8(%r4)     /* r9 = p_vaddr <- ELF header address  */
+	j	.L24
+.L20:	alr	%r4,%r0        /* r4 += AT_PHENT value */
+	brct	%r12,.L19
+
+	j	.+2            /* Trap, there must be such a phdr.  */
+
+.L24:	lr	%r4,%r11       /* Backup AT_PHDR.  */
+	lhi	%r2,6          /* PT_PHDR id */
+.L23:	cl	%r2,0(%r4)
+	jne	.L22
+	l	%r3,8(%r4)     /* r3 = PT_PHDR p_vaddr */
+	j	.L25
+.L22:	alr	%r4,%r0        /* r4 += AT_PHENT value */
+	brct	%r12,.L23
+
+	ltr	%r9,%r9        /* Load address == 0? */
+	jz	.L14           /* No checking for PIE without PT_PHDR.  */
+	j	.L21
+
+.L25:	clr	%r3,%r11       /* PT_PHDR p_vaddr == AT_PHDR? */
+	je	.L21
+	lr	%r9,%r11
+	slr	%r9,%r3        /* elf_header_addr = AT_PHDR - PT_PHDR.p_vaddr */
+
+.L21:	l	%r5,36(%r9)    /* Load the e_flags field.  */
+	tml	%r5,1
+	jz	.L14	       /* Binary does not require highgprs facility.  */
+
+	tml	%r10,512       /* Check the AT_HWCAP value.  */
+	jz	2              /* Trap if no highgprs facility available.  */
+.L14:
+
 	/* Setup pointer to literal pool of _start */
 	basr    %r13,0
 .L0:    ahi     %r13,.Llit-.L0

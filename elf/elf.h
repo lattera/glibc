@@ -2493,6 +2493,12 @@ typedef Elf32_Addr Elf32_Conflict;
 /* Keep this the last entry.  */
 #define	R_SH_NUM		256
 
+/* S/390 specific definitions.  */
+
+/* Valid values for the e_flags field.  */
+
+#define EF_S390_HIGH_GPRS    0x00000001  /* High GPRs kernel facility needed.  */
+
 /* Additional s390 relocs */
 
 #define R_390_NONE		0	/* No reloc.  */
