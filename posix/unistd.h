@@ -440,8 +440,8 @@ extern unsigned int alarm (unsigned int __seconds) __THROW;
    __THROW.  */
 extern unsigned int sleep (unsigned int __seconds);
 
-#if ((defined __USE_BSD || defined __USE_XOPEN_EXTENDED)	\
-     && !defined __USE_XOPEN2K8) || defined __USE_GNU
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) \
+    || defined __USE_BSD
 /* Set an alarm to go off (generating a SIGALRM signal) in VALUE
    microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
    timer is reset to go off every INTERVAL microseconds thereafter.
@@ -514,8 +514,8 @@ extern char *getcwd (char *__buf, size_t __size) __THROW __wur;
 extern char *get_current_dir_name (void) __THROW;
 #endif
 
-#if ((defined __USE_BSD || defined __USE_XOPEN_EXTENDED)	\
-     && !defined __USE_XOPEN2K8) || defined __USE_GNU
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) \
+    || defined __USE_BSD
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
@@ -774,14 +774,14 @@ extern int setresgid (__gid_t __rgid, __gid_t __egid, __gid_t __sgid)
    and the process ID of the new process to the old process.  */
 extern __pid_t fork (void) __THROW;
 
-#if ((defined __USE_BSD || defined __USE_XOPEN_EXTENDED)	\
-     && !defined __USE_XOPEN2K8) || defined __USE_GNU
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) \
+    || defined __USE_BSD
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 extern __pid_t vfork (void) __THROW;
-#endif /* Use BSD. */
+#endif /* Use BSD or XPG < 7. */
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
@@ -1039,8 +1039,8 @@ extern int ftruncate64 (int __fd, __off64_t __length) __THROW __wur;
 #endif /* Use BSD || X/Open Unix || POSIX 2003.  */
 
 
-#if (defined __USE_MISC || defined __USE_XOPEN_EXTENDED) \
-    && !defined __USE_XOPEN2K
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \
+    || defined __USE_MISC
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
