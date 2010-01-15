@@ -999,7 +999,11 @@ create_initial_state (re_dfa_t *dfa)
 	    int dest_idx = dfa->edests[node_idx].elems[0];
 	    if (!re_node_set_contains (&init_nodes, dest_idx))
 	      {
-		re_node_set_merge (&init_nodes, dfa->eclosures + dest_idx);
+		reg_errcode_t err = re_node_set_merge (&init_nodes,
+						       dfa->eclosures
+						       + dest_idx);
+		if (err != REG_NOERROR)
+		  return err;
 		i = 0;
 	      }
 	  }
@@ -1414,7 +1418,7 @@ link_nfa_nodes (void *extra, bin_tree_t *node)
     case OP_BACK_REF:
       dfa->nexts[idx] = node->next->node_idx;
       if (node->token.type == OP_BACK_REF)
-	re_node_set_init_1 (dfa->edests + idx, dfa->nexts[idx]);
+	err = re_node_set_init_1 (dfa->edests + idx, dfa->nexts[idx]);
       break;
 
     default:
@@ -1690,7 +1694,9 @@ calc_eclosure_iter (re_node_set *new_set, re_dfa_t *dfa, int node, int root)
 	else
 	  eclosure_elem = dfa->eclosures[edest];
 	/* Merge the epsilon closure of `edest'.  */
-	re_node_set_merge (&eclosure, &eclosure_elem);
+	err = re_node_set_merge (&eclosure, &eclosure_elem);
+	if (BE (err != REG_NOERROR, 0))
+	  return err;
 	/* If the epsilon closure of `edest' is incomplete,
 	   the epsilon closure of this node is also incomplete.  */
 	if (dfa->eclosures[edest].nelem == 0)

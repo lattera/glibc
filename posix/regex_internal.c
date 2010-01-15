@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -36,7 +36,7 @@ static re_dfastate_t *create_cd_newstate (const re_dfa_t *dfa,
    re_string_reconstruct before using the object.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_string_allocate (re_string_t *pstr, const char *str, int len, int init_len,
 		    RE_TRANSLATE_TYPE trans, int icase, const re_dfa_t *dfa)
 {
@@ -64,7 +64,7 @@ re_string_allocate (re_string_t *pstr, const char *str, int len, int init_len,
 /* This function allocate the buffers, and initialize them.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_string_construct (re_string_t *pstr, const char *str, int len,
 		     RE_TRANSLATE_TYPE trans, int icase, const re_dfa_t *dfa)
 {
@@ -127,7 +127,7 @@ re_string_construct (re_string_t *pstr, const char *str, int len,
 /* Helper functions for re_string_allocate, and re_string_construct.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_string_realloc_buffers (re_string_t *pstr, int new_buf_len)
 {
 #ifdef RE_ENABLE_I18N
@@ -260,7 +260,7 @@ build_wcs_buffer (re_string_t *pstr)
    but for REG_ICASE.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 build_wcs_upper_buffer (re_string_t *pstr)
 {
   mbstate_t prev_st;
@@ -423,8 +423,8 @@ build_wcs_upper_buffer (re_string_t *pstr)
 		    src_idx += mbclen;
 		    continue;
 		  }
-                else
-                  memcpy (pstr->mbs + byte_idx, p, mbclen);
+		else
+		  memcpy (pstr->mbs + byte_idx, p, mbclen);
 	      }
 	    else
 	      memcpy (pstr->mbs + byte_idx, p, mbclen);
@@ -559,7 +559,7 @@ re_string_translate_buffer (re_string_t *pstr)
    convert to upper case in case of REG_ICASE, apply translation.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
 {
   int offset = idx - pstr->raw_mbs_idx;
@@ -951,7 +951,7 @@ re_string_context_at (const re_string_t *input, int idx, int eflags)
 /* Functions for set operation.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_alloc (re_node_set *set, int size)
 {
   set->alloc = size;
@@ -963,7 +963,7 @@ re_node_set_alloc (re_node_set *set, int size)
 }
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_init_1 (re_node_set *set, int elem)
 {
   set->alloc = 1;
@@ -979,7 +979,7 @@ re_node_set_init_1 (re_node_set *set, int elem)
 }
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_init_2 (re_node_set *set, int elem1, int elem2)
 {
   set->alloc = 2;
@@ -1009,7 +1009,7 @@ re_node_set_init_2 (re_node_set *set, int elem1, int elem2)
 }
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_init_copy (re_node_set *dest, const re_node_set *src)
 {
   dest->nelem = src->nelem;
@@ -1034,7 +1034,7 @@ re_node_set_init_copy (re_node_set *dest, const re_node_set *src)
    Note: We assume dest->elems is NULL, when dest->alloc is 0.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
 			   const re_node_set *src2)
 {
@@ -1049,7 +1049,7 @@ re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
       int new_alloc = src1->nelem + src2->nelem + dest->alloc;
       int *new_elems = re_realloc (dest->elems, int, new_alloc);
       if (BE (new_elems == NULL, 0))
-        return REG_ESPACE;
+	return REG_ESPACE;
       dest->elems = new_elems;
       dest->alloc = new_alloc;
     }
@@ -1068,8 +1068,8 @@ re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
 	  while (id >= 0 && dest->elems[id] > src1->elems[i1])
 	    --id;
 
-          if (id < 0 || dest->elems[id] != src1->elems[i1])
-            dest->elems[--sbase] = src1->elems[i1];
+	  if (id < 0 || dest->elems[id] != src1->elems[i1])
+	    dest->elems[--sbase] = src1->elems[i1];
 
 	  if (--i1 < 0 || --i2 < 0)
 	    break;
@@ -1099,20 +1099,20 @@ re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
   if (delta > 0 && id >= 0)
     for (;;)
       {
-        if (dest->elems[is] > dest->elems[id])
-          {
-            /* Copy from the top.  */
-            dest->elems[id + delta--] = dest->elems[is--];
-            if (delta == 0)
-              break;
-          }
-        else
-          {
-            /* Slide from the bottom.  */
-            dest->elems[id + delta] = dest->elems[id];
-            if (--id < 0)
-              break;
-          }
+	if (dest->elems[is] > dest->elems[id])
+	  {
+	    /* Copy from the top.  */
+	    dest->elems[id + delta--] = dest->elems[is--];
+	    if (delta == 0)
+	      break;
+	  }
+	else
+	  {
+	    /* Slide from the bottom.  */
+	    dest->elems[id + delta] = dest->elems[id];
+	    if (--id < 0)
+	      break;
+	  }
       }
 
   /* Copy remaining SRC elements.  */
@@ -1125,7 +1125,7 @@ re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
    DEST. Return value indicate the error code or REG_NOERROR if succeeded.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_init_union (re_node_set *dest, const re_node_set *src1,
 			const re_node_set *src2)
 {
@@ -1178,7 +1178,7 @@ re_node_set_init_union (re_node_set *dest, const re_node_set *src1,
    DEST. Return value indicate the error code or REG_NOERROR if succeeded.  */
 
 static reg_errcode_t
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_merge (re_node_set *dest, const re_node_set *src)
 {
   int is, id, sbase, delta;
@@ -1207,11 +1207,11 @@ re_node_set_merge (re_node_set *dest, const re_node_set *src)
        is = src->nelem - 1, id = dest->nelem - 1; is >= 0 && id >= 0; )
     {
       if (dest->elems[id] == src->elems[is])
-        is--, id--;
+	is--, id--;
       else if (dest->elems[id] < src->elems[is])
-        dest->elems[--sbase] = src->elems[is--];
+	dest->elems[--sbase] = src->elems[is--];
       else /* if (dest->elems[id] > src->elems[is]) */
-        --id;
+	--id;
     }
 
   if (is >= 0)
@@ -1233,21 +1233,21 @@ re_node_set_merge (re_node_set *dest, const re_node_set *src)
   for (;;)
     {
       if (dest->elems[is] > dest->elems[id])
-        {
+	{
 	  /* Copy from the top.  */
-          dest->elems[id + delta--] = dest->elems[is--];
+	  dest->elems[id + delta--] = dest->elems[is--];
 	  if (delta == 0)
 	    break;
 	}
       else
-        {
-          /* Slide from the bottom.  */
-          dest->elems[id + delta] = dest->elems[id];
+	{
+	  /* Slide from the bottom.  */
+	  dest->elems[id + delta] = dest->elems[id];
 	  if (--id < 0)
 	    {
 	      /* Copy remaining SRC elements.  */
 	      memcpy (dest->elems, dest->elems + sbase,
-	              delta * sizeof (int));
+		      delta * sizeof (int));
 	      break;
 	    }
 	}
@@ -1261,7 +1261,7 @@ re_node_set_merge (re_node_set *dest, const re_node_set *src)
    return -1 if an error is occured, return 1 otherwise.  */
 
 static int
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_insert (re_node_set *set, int elem)
 {
   int idx;
@@ -1299,12 +1299,12 @@ re_node_set_insert (re_node_set *set, int elem)
     {
       idx = 0;
       for (idx = set->nelem; idx > 0; idx--)
-        set->elems[idx] = set->elems[idx - 1];
+	set->elems[idx] = set->elems[idx - 1];
     }
   else
     {
       for (idx = set->nelem; set->elems[idx - 1] > elem; idx--)
-        set->elems[idx] = set->elems[idx - 1];
+	set->elems[idx] = set->elems[idx - 1];
     }
 
   /* Insert the new element.  */
@@ -1318,7 +1318,7 @@ re_node_set_insert (re_node_set *set, int elem)
    Return -1 if an error is occured, return 1 otherwise.  */
 
 static int
-internal_function
+internal_function __attribute_warn_unused_result__
 re_node_set_insert_last (re_node_set *set, int elem)
 {
   /* Realloc if we need.  */
@@ -1458,7 +1458,7 @@ calc_state_hash (const re_node_set *nodes, unsigned int context)
 	   optimization.  */
 
 static re_dfastate_t *
-internal_function
+internal_function __attribute_warn_unused_result__
 re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
 		  const re_node_set *nodes)
 {
@@ -1502,7 +1502,7 @@ re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
 	   optimization.  */
 
 static re_dfastate_t *
-internal_function
+internal_function __attribute_warn_unused_result__
 re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
 			  const re_node_set *nodes, unsigned int context)
 {
@@ -1539,6 +1539,7 @@ re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
    indicates the error code if failed.  */
 
 static reg_errcode_t
+__attribute_warn_unused_result__
 register_state (const re_dfa_t *dfa, re_dfastate_t *newstate,
 		unsigned int hash)
 {
@@ -1554,7 +1555,8 @@ register_state (const re_dfa_t *dfa, re_dfastate_t *newstate,
     {
       int elem = newstate->nodes.elems[i];
       if (!IS_EPSILON_NODE (dfa->nodes[elem].type))
-        re_node_set_insert_last (&newstate->non_eps_nodes, elem);
+	if (re_node_set_insert_last (&newstate->non_eps_nodes, elem) < 0)
+	  return REG_ESPACE;
     }
 
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
@@ -1592,7 +1594,7 @@ free_state (re_dfastate_t *state)
    Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
-internal_function
+internal_function __attribute_warn_unused_result__
 create_ci_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 		    unsigned int hash)
 {
@@ -1642,7 +1644,7 @@ create_ci_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
    Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
-internal_function
+internal_function __attribute_warn_unused_result__
 create_cd_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 		    unsigned int context, unsigned int hash)
 {
@@ -1691,7 +1693,9 @@ create_cd_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 		  free_state (newstate);
 		  return NULL;
 		}
-	      re_node_set_init_copy (newstate->entrance_nodes, nodes);
+	      if (re_node_set_init_copy (newstate->entrance_nodes, nodes)
+		  != REG_NOERROR)
+		return NULL;
 	      nctx_nodes = 0;
 	      newstate->has_constraint = 1;
 	    }
