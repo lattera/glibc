@@ -409,8 +409,8 @@ re_compile_fastmap_iter (regex_t *bufp, const re_dfastate_t *init_state,
 			  != (size_t) -1)
 			re_set_fastmap (fastmap, false, *(unsigned char *) buf);
 		    }
- 		}
- 	    }
+		}
+	    }
 	}
 #endif /* RE_ENABLE_I18N */
       else if (type == OP_PERIOD
