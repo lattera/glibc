@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2004, 2006-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004,2006-2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -57,7 +57,6 @@ __pthread_cond_timedwait:
 	pushl	%ebx
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset(%ebx, 0)
-	cfi_remember_state
 
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
@@ -99,6 +98,7 @@ __pthread_cond_timedwait:
 #define FRAME_SIZE 32
 	subl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
+	cfi_remember_state
 
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
@@ -326,14 +326,12 @@ __pthread_cond_timedwait:
 #endif
 	jne	10f
 
-11:	xorl	%eax, %eax
+11:	movl	24+FRAME_SIZE(%esp), %eax
 	/* With requeue_pi, the mutex lock is held in the kernel.  */
 	movl	24(%esp), %ecx
 	testl	%ecx, %ecx
-	jnz	26f
+	jnz	27f
 
-	/* Remove cancellation handler.  */
-	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
 26:	addl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(-FRAME_SIZE);
@@ -366,8 +364,10 @@ __pthread_cond_timedwait:
 	cfi_restore_state
 
 27:	call	__pthread_mutex_cond_lock_adjust
+	xorl	%eax, %eax
 	jmp	26b
 
+	cfi_adjust_cfa_offset(-FRAME_SIZE);
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
