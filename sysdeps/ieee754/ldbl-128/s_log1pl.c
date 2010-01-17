@@ -117,7 +117,6 @@ static const long double C2 = 1.428606820309417232121458176568075500134E-6L;
 static const long double sqrth = 0.7071067811865475244008443621048490392848L;
 /* ln (2^16384 * (1 - 2^-113)) */
 static const long double maxlog = 1.1356523406294143949491931077970764891253E4L;
-static const long double big = 2e4932L;
 static const long double zero = 0.0L;
 
 long double

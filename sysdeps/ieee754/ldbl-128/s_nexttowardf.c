@@ -44,10 +44,12 @@ static char rcsid[] = "$NetBSD: $";
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
-	    float x2;
+	    float u;
 	    SET_FLOAT_WORD(x,(u_int32_t)((hy>>32)&0x80000000)|1);/* return +-minsub*/
-	    x2 = x*x;
-	    if(x2==x) return x2; else return x;	/* raise underflow flag */
+	    u = math_opt_barrier (x);
+	    u = u * u;
+	    math_force_eval (u);		/* raise underflow flag */
+	    return x;
 	}
 	if(hx>=0) {				/* x > 0 */
 	    if(hy<0||(ix>>23)>(iy>>48)-0x3f80
@@ -68,12 +70,9 @@ static char rcsid[] = "$NetBSD: $";
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) return x+x;	/* overflow  */
-	if(hy<0x00800000) {		/* underflow */
-	    float x2 = x*x;
-	    if(x2!=x) {		/* raise underflow flag */
-	        SET_FLOAT_WORD(x2,hx);
-		return x2;
-	    }
+	if(hy<0x00800000) {
+	    float u = x*x;		/* underflow */
+	    math_force_eval (u);	/* raise underflow flag */
 	}
 	SET_FLOAT_WORD(x,hx);
 	return x;

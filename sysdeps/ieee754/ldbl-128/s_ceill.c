@@ -30,9 +30,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-static const long double huge = 1.0e4930;
+static const long double huge = 1.0e4930L;
 #else
-static long double huge = 1.0e4930;
+static long double huge = 1.0e4930L;
 #endif
 
 #ifdef __STDC__

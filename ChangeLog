@@ -1,3 +1,15 @@
+2010-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_ceill.c (huge): Add L suffix to the
+	constant.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c (huge): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (big): Decrease to avoid
+	overflow.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (big): Remove unused variable.
+
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c (__nexttowardf): Use
+	math_opt_barrier and math_force_eval macros.
+
 2010-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c: Fix a few more cases of ignored return values.
