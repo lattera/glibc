@@ -1,3 +1,10 @@
+2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/cell/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/cell/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/fpu/Implies: New file.
+
 2010-01-18  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Remove duplicate
