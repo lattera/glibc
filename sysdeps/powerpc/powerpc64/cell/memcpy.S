@@ -43,16 +43,16 @@
 .align  7
 
 EALIGN (BP_SYM (memcpy), 5, 0)
-        CALL_MCOUNT 3
+	CALL_MCOUNT 3
 
 	dcbt	0,r4		/* Prefetch ONE SRC cacheline  */
 	cmpldi	cr1,r5,16	/* is size < 16 ?  */
-	mr	r6,r3		
+	mr	r6,r3
 	blt+	cr1,.Lshortcopy
 
 .Lbigcopy:
 	neg	r8,r3		/* LS 3 bits = # bytes to 8-byte dest bdry  */
-        clrldi  r8,r8,64-4	/* aling to 16byte boundary  */
+	clrldi  r8,r8,64-4	/* aling to 16byte boundary  */
 	sub     r7,r4,r3
 	cmpldi	cr0,r8,0
 	beq+	.Ldst_aligned
@@ -112,8 +112,8 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
 .LprefetchSRC:
 	dcbt    r12,r4
-        addi    r12,r12,128
-        bdnz    .LprefetchSRC
+	addi    r12,r12,128
+	bdnz    .LprefetchSRC
 
 .Lnocacheprefetch:
 	mtctr	r7
@@ -122,7 +122,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 	beq	cr6,.Lcachelinealigned
 
 .Laligntocacheline:
-	ld 	r9,0x08(r4)
+	ld	r9,0x08(r4)
 	ldu	r7,0x10(r4)
 	std	r9,0x08(r6)
 	stdu	r7,0x10(r6)
@@ -131,10 +131,10 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
 .Lcachelinealigned:		/* copy while cache lines  */
 
-	blt- 	cr1,.Llessthancacheline	/* size <128  */
+	blt-	cr1,.Llessthancacheline	/* size <128  */
 
 .Louterloop:
-        cmpdi   r11,0
+	cmpdi   r11,0
 	mtctr	r11
 	beq-	.Lendloop
 
@@ -142,7 +142,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
 .align	4
 	/* Copy whole cachelines, optimized by prefetching SRC cacheline  */
-.Lloop: 			/* Copy aligned body  */
+.Lloop:				/* Copy aligned body  */
 	dcbt	r12,r4		/* PREFETCH SOURCE some cache lines ahead  */
 	ld	r9, 0x08(r4)
 	dcbz	r11,r6
@@ -186,7 +186,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 	beq-	.Lendloop2
 	mtctr	r10
 
-.Lloop2: 			/* Copy aligned body  */
+.Lloop2:			/* Copy aligned body  */
 	ld	r9, 0x08(r4)
 	ld	r7, 0x10(r4)
 	ld	r8, 0x18(r4)
@@ -206,7 +206,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 	mtctr	r7
 
 .Lcopy_remaining:
-	ld 	r8,0x08(r4)
+	ld	r8,0x08(r4)
 	ldu	r7,0x10(r4)
 	std	r8,0x08(r6)
 	stdu	r7,0x10(r6)
@@ -214,7 +214,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
 .Ldo_lt16:			/* less than 16 ?  */
 	cmpldi	cr0,r5,0	/* copy remaining bytes (0-15)  */
-	beqlr+			/* no rest to copy  */	
+	beqlr+			/* no rest to copy  */
 	addi	r4,r4,8
 	addi	r6,r6,8
 
