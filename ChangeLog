@@ -1,3 +1,9 @@
+2010-01-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h
+	(__rtld_lock_recursive_t): New type.
+	(__rtld_lock_initialize): New macro.
+
 2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/cell/memcpy.S: New file.
