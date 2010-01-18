@@ -1,3 +1,8 @@
+2010-01-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Ignore negative
+	dynamic entry types.
+
 2010-01-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/s_ceill.c (huge): Add L suffix to the

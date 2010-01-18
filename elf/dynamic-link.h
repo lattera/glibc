@@ -113,7 +113,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 
   while (dyn->d_tag != DT_NULL)
     {
-      if (dyn->d_tag < DT_NUM)
+      if ((Elf32_Word) dyn->d_tag < DT_NUM)
 	info[dyn->d_tag] = dyn;
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
