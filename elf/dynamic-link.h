@@ -103,6 +103,11 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 {
   ElfW(Dyn) *dyn = l->l_ld;
   ElfW(Dyn) **info;
+#if __ELF_NATIVE_CLASS == 32
+  typedef Elf32_Word d_tag_utype;
+#elif __ELF_NATIVE_CLASS == 64
+  typedef Elf64_Xword d_tag_utype;
+#endif
 
 #ifndef RTLD_BOOTSTRAP
   if (dyn == NULL)
@@ -113,20 +118,20 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 
   while (dyn->d_tag != DT_NULL)
     {
-      if ((Elf32_Word) dyn->d_tag < DT_NUM)
+      if ((d_tag_utype) dyn->d_tag < DT_NUM)
 	info[dyn->d_tag] = dyn;
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
 	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
-      else if ((Elf32_Word) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
+      else if ((d_tag_utype) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
 	info[VERSYMIDX (dyn->d_tag)] = dyn;
-      else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
+      else if ((d_tag_utype) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
 	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM] = dyn;
-      else if ((Elf32_Word) DT_VALTAGIDX (dyn->d_tag) < DT_VALNUM)
+      else if ((d_tag_utype) DT_VALTAGIDX (dyn->d_tag) < DT_VALNUM)
 	info[DT_VALTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM + DT_EXTRANUM] = dyn;
-      else if ((Elf32_Word) DT_ADDRTAGIDX (dyn->d_tag) < DT_ADDRNUM)
+      else if ((d_tag_utype) DT_ADDRTAGIDX (dyn->d_tag) < DT_ADDRNUM)
 	info[DT_ADDRTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] = dyn;
       ++dyn;
