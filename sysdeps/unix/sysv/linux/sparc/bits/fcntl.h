@@ -70,14 +70,6 @@
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.  */
 #endif
 
-/* For now Linux has synchronisity options for data and read operations.
-   We define the symbols here but let them do the same as O_SYNC since
-   this is a superset.  */
-#if defined __USE_POSIX199309 || defined __USE_UNIX98
-# define O_DSYNC        O_SYNC  /* Synchronize data.  */
-# define O_RSYNC        O_SYNC  /* Synchronize read operations.  */
-#endif
-
 /* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */
 #define F_GETFD		1	/* Get file descriptor flags.  */

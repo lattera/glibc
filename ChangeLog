@@ -1,5 +1,8 @@
 2010-01-18  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Remove duplicate
+	definitions of O_DSYNC and O_RSYNC.
+
 	* elf/dynamic-link.h (elf_get_dynamic_info): Use correct type when
 	casting d_tag.
 
