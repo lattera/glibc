@@ -1,3 +1,8 @@
+2010-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11194]
+	* misc/bits/syslog.h (syslog, vsyslog): Remove unnecessary return.
+
 2010-01-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/libc-lock.h
