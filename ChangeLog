@@ -1,3 +1,8 @@
+2010-01-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memmove.S: Also check
+	bit_Fast_Rep_String when SHARED isn't defined.
+
 2010-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11194]

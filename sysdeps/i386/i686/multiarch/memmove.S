@@ -74,6 +74,9 @@ ENTRY(memmove)
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features
 	jz	2f
 	leal	__memmove_ssse3, %eax
+	testl	$bit_Fast_Rep_String, FEATURE_OFFSET+index_Fast_Rep_String+__cpu_features
+	jz	2f
+	leal	__memmove_ssse3_rep, %eax
 2:	ret
 END(memmove)
 
