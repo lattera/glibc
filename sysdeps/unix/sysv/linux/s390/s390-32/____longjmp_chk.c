@@ -46,7 +46,7 @@
 	    {								\
 	      if ((oss.ss_flags & SS_ONSTACK) == 0			\
 		  || ((uintptr_t) (oss.ss_sp + oss.ss_size) - new_sp	\
-		      >= oss.ss_size))					\
+		      < oss.ss_size))					\
 		__fortify_fail ("longjmp causes uninitialized stack frame");\
 	    }								\
 	}								\

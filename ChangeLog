@@ -1,3 +1,10 @@
+2010-01-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c
+	(CHECK_SP): Fix check for alternate stack.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c
+	(CHECK_SP): Likewise.
+
 2010-01-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/memmove.S: Also check
