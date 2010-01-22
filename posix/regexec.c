@@ -370,7 +370,7 @@ re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
   int len = length1 + length2;
   char *s = NULL;
 
-  if (BE (length1 < 0 || length2 < 0 || stop < 0, 0))
+  if (BE (length1 < 0 || length2 < 0 || stop < 0 || len < length1, 0))
     return -2;
 
   /* Concatenate the strings.  */
