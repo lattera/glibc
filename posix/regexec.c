@@ -4104,6 +4104,10 @@ extend_buffers (re_match_context_t *mctx)
   reg_errcode_t ret;
   re_string_t *pstr = &mctx->input;
 
+  /* Avoid overflow.  */
+  if (BE (INT_MAX / 2 / sizeof (re_dfastate_t *) <= pstr->bufs_len, 0))
+    return REG_ESPACE;
+
   /* Double the lengthes of the buffers.  */
   ret = re_string_realloc_buffers (pstr, pstr->bufs_len * 2);
   if (BE (ret != REG_NOERROR, 0))

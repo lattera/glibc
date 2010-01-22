@@ -1,5 +1,9 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11193]
+	* posix/regexec.c (extend_buffers): Avoid overflow in realloc
+	buffer length computation.
+
 	[BZ #11192]
 	* posix/regexec.c (re_copy_regs): Don't leak when allocation
 	of the start buffer succeeds but allocation of the "end" one fails.
