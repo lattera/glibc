@@ -1,5 +1,9 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11186]
+	* posix/regex_internal.c (re_string_skip_chars): Don't assume WEOF
+	fits in wchar_t.  Problem reported by Eric Blake.
+
 	[BZ #11185]
 	* posix/regex_internal.c (re_string_reconstruct): Remove declaration
 	and stores into set-but-not-used local, "q".
