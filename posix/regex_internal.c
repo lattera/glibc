@@ -500,7 +500,7 @@ re_string_skip_chars (re_string_t *pstr, int new_raw_idx, wint_t *last_wc)
       prev_st = pstr->cur_state;
       mbclen = __mbrtowc (&wc2, (const char *) pstr->raw_mbs + rawbuf_idx,
 			  remain_len, &pstr->cur_state);
-      if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
+      if (BE ((ssize_t) mbclen <= 0, 0))
 	{
 	  /* We treat these cases as a single byte character.  */
 	  if (mbclen == 0 || remain_len == 0)
