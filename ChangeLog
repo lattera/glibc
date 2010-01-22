@@ -1,3 +1,9 @@
+2010-01-22  Jim Meyering  <jim@meyering.net>
+
+	[BZ #11187]
+	* posix/regexec.c (re_search_2_stub): Use simpler method than
+	boolean for freeing internal storage.
+
 2010-01-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex_internal.c (re_string_skip_chars): Simplify test for
