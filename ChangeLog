@@ -1,3 +1,8 @@
+2010-01-22  Jim Meyering  <jim@meyering.net>
+
+	* posix/regex_internal.c (re_string_realloc_buffers):
+	Detect and handle internal overflow.  Patch by Paul Eggert
+
 2010-01-20  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c
