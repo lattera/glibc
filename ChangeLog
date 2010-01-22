@@ -1,5 +1,9 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11185]
+	* posix/regex_internal.c (re_string_reconstruct): Remove declaration
+	and stores into set-but-not-used local, "q".
+
 	[BZ #11184]
 	* posix/regex_internal.c (re_dfa_add_node): Extend the overflow
 	detection test.  Patch by Paul Eggert.
