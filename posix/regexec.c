@@ -949,6 +949,11 @@ prune_impossible_nodes (mctx)
 #endif
   match_last = mctx->match_last;
   halt_node = mctx->last_node;
+
+  /* Avoid overflow.  */
+  if (BE (SIZE_MAX / sizeof (re_dfastate_t *) <= match_last, 0))
+    return REG_ESPACE;
+
   sifted_states = re_malloc (re_dfastate_t *, match_last + 1);
   if (BE (sifted_states == NULL, 0))
     {

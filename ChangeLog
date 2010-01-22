@@ -1,5 +1,9 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11189]
+	* posix/regexec.c (prune_impossible_nodes): Avoid overflow
+	in computing re_malloc buffer size.
+
 	[BZ #11188]
 	* posix/regexec.c (build_trtable): Avoid arithmetic overflow
 	in size calculation.
