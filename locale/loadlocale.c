@@ -224,6 +224,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 		     PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
   if (__builtin_expect (filedata == MAP_FAILED, 0))
     {
+      filedata = NULL;
       if (__builtin_expect (errno, ENOSYS) == ENOSYS)
 	{
 #endif	/* _POSIX_MAPPED_FILES */
