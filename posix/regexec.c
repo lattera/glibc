@@ -509,9 +509,14 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
   if (regs_allocated == REGS_UNALLOCATED)
     { /* No.  So allocate them with malloc.  */
       regs->start = re_malloc (regoff_t, need_regs);
-      regs->end = re_malloc (regoff_t, need_regs);
-      if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
+      if (BE (regs->start == NULL, 0))
 	return REGS_UNALLOCATED;
+      regs->end = re_malloc (regoff_t, need_regs);
+      if (BE (regs->end == NULL, 0))
+	{
+	  re_free (regs->start);
+	  return REGS_UNALLOCATED;
+	}
       regs->num_regs = need_regs;
     }
   else if (regs_allocated == REGS_REALLOCATE)
@@ -521,9 +526,15 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
       if (BE (need_regs > regs->num_regs, 0))
 	{
 	  regoff_t *new_start = re_realloc (regs->start, regoff_t, need_regs);
-	  regoff_t *new_end = re_realloc (regs->end, regoff_t, need_regs);
-	  if (BE (new_start == NULL, 0) || BE (new_end == NULL, 0))
+	  regoff_t *new_end;
+	  if (BE (new_start == NULL, 0))
 	    return REGS_UNALLOCATED;
+	  new_end = re_realloc (regs->end, regoff_t, need_regs);
+	  if (BE (new_end == NULL, 0))
+	    {
+	      re_free (new_start);
+	      return REGS_UNALLOCATED;
+	    }
 	  regs->start = new_start;
 	  regs->end = new_end;
 	  regs->num_regs = need_regs;
