@@ -1,5 +1,9 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11188]
+	* posix/regexec.c (build_trtable): Avoid arithmetic overflow
+	in size calculation.
+
 	[BZ #11187]
 	* posix/regexec.c (re_search_2_stub): Use simpler method than
 	boolean for freeing internal storage.
