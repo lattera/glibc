@@ -1,5 +1,10 @@
 2010-01-22  Jim Meyering  <jim@meyering.net>
 
+	[BZ #11184]
+	* posix/regex_internal.c (re_dfa_add_node): Extend the overflow
+	detection test.  Patch by Paul Eggert.
+
+	[BZ #11183]
 	* posix/regex_internal.c (re_string_realloc_buffers):
 	Detect and handle internal overflow.  Patch by Paul Eggert
 

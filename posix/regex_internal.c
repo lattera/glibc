@@ -1411,8 +1411,11 @@ re_dfa_add_node (re_dfa_t *dfa, re_token_t token)
       re_node_set *new_edests, *new_eclosures;
       re_token_t *new_nodes;
 
-      /* Avoid overflows.  */
-      if (BE (new_nodes_alloc < dfa->nodes_alloc, 0))
+      /* Avoid overflows in realloc.  */
+      const size_t max_object_size = MAX (sizeof (re_token_t),
+					  MAX (sizeof (re_node_set),
+					       sizeof (int)));
+      if (BE (SIZE_MAX / max_object_size < new_nodes_alloc, 0))
 	return -1;
 
       new_nodes = re_realloc (dfa->nodes, re_token_t, new_nodes_alloc);
