@@ -1,5 +1,6 @@
 2010-01-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11200]
 	* locale/loadlocale.c (_nl_load_locale): Fix recognition of genuine
 	mmap resource problem.  Patch by Joe Landers <jlanders@vmware.com>.
 
