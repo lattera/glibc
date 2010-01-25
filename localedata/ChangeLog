@@ -1,3 +1,7 @@
+2010-01-25  Andreas Schwab  <schwab@redhat.com>
+
+	* locales/i18n: Don't map U00DF to U1E9E in toupper table.
+
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/hsb_DE: Define week, first_weekday, and first_workday.
