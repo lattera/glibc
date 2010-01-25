@@ -442,7 +442,7 @@ write_output (const char *outbuf, const char *outptr, FILE **output,
       if (output_file != NULL && strcmp (output_file, "-") != 0)
 	{
 	  *output = fopen (output_file, "w");
-	  if (output == NULL)
+	  if (*output == NULL)
 	    error (EXIT_FAILURE, errno, _("cannot open output file"));
 	}
       else

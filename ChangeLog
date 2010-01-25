@@ -1,3 +1,7 @@
+2010-01-25  Andreas Schwab  <schwab@redhat.com>
+
+	* iconv/iconv_prog.c (write_output): Fix check for open failure.
+
 2010-01-22  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11200]
