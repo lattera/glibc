@@ -1,3 +1,8 @@
+2010-01-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/getsysstats.c (get_nprocs_conf, get_nprocs,
+	get_phys_pages, get_avphys_pages): Add weak aliases.
+
 2010-01-25  Andreas Schwab  <schwab@redhat.com>
 
 	* iconv/iconv_prog.c (write_output): Fix check for open failure.
