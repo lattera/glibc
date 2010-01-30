@@ -1,3 +1,8 @@
+2009-12-02  Mike Frysinger <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/timer_settime.c: Fix typo in
+	include timer_gettime.c -> timer_settime.c.
+
 2009-11-23  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Use struct timespec
