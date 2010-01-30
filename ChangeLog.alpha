@@ -1,3 +1,8 @@
+2010-01-12  Matt Turner  <mattst88@gmail.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Redefine O_SYNC and
+	O_DSYNC to match 2.6.33+ kernels.
+
 2009-12-02  Mike Frysinger <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/timer_settime.c: Fix typo in
