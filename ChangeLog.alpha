@@ -1,5 +1,13 @@
 2010-01-12  Matt Turner  <mattst88@gmail.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Define O_DIRECTORY,
+	O_NOFOLLOW, O_CLOEXEC, F_DUPFD_CLOEXEC, F_SETOWN, and F_GETOWN for
+	XPG7.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Enable using from
+	fcntl.h.
+
+2010-01-12  Matt Turner  <mattst88@gmail.com>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Redefine O_SYNC and
 	O_DSYNC to match 2.6.33+ kernels.
 

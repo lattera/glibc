@@ -45,12 +45,14 @@
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000	/* fcntl, for BSD compatibility */
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN2K8
 # define O_DIRECTORY	0100000	/* Must be a directory.  */
 # define O_NOFOLLOW	0200000	/* Do not follow links.  */
+# define O_CLOEXEC	010000000 /* Set close_on_exec.  */
+#endif
+#ifdef __USE_GNU
 # define O_DIRECT	02000000 /* Direct disk access.  */
 # define O_NOATIME	04000000 /* Do not set atime.  */
-# define O_CLOEXEC      010000000 /* Set close_on_exec.  */
 #endif
 
 #ifdef __USE_LARGEFILE64
@@ -79,7 +81,7 @@
 #define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).  */
 
-#if defined __USE_BSD || defined __USE_UNIX98
+#if defined __USE_BSD || defined __USE_UNIX98 || defiend __USE_XOPEN2K8
 # define F_SETOWN	5	/* Get owner of socket (receiver of SIGIO).  */
 # define F_GETOWN	6	/* Set owner of socket (receiver of SIGIO).  */
 #endif
@@ -93,6 +95,8 @@
 # define F_SETLEASE	1024	/* Set a lease.	 */
 # define F_GETLEASE	1025	/* Enquire what lease is active.  */
 # define F_NOTIFY	1026	/* Request notfications on a directory.	 */
+#endif
+#ifdef __USE_XOPEN2K8
 # define F_DUPFD_CLOEXEC 1030	/* Duplicate file descriptor with
 				   close-on-exit set.  */
 #endif
