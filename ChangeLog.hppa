@@ -1,3 +1,8 @@
+2010-02-01  Kyle McMartin  <kyle@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Fix value of
+	SOCK_CLOEXEC to match O_CLOEXEC.
+
 2010-02-01  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/Versions: Bump

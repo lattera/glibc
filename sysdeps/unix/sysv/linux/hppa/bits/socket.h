@@ -1,6 +1,6 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009
-   Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009,
+   2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ enum __socket_type
   /* Flags to be ORed into the type parameter of socket and socketpair and
      used for the flags parameter of paccept.  */
 
-  SOCK_CLOEXEC = 02000000,	/* Atomically set close-on-exec flag for the
+  SOCK_CLOEXEC = 01000000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
 #define SOCK_CLOEXEC SOCK_CLOEXEC
 #undef SOCK_NONBLOCK
