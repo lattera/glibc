@@ -30,6 +30,18 @@
 #  define ECANCELED	ECANCELLED
 # endif
 
+# ifndef EOWNERDEAD
+#  define EOWNERDEAD		254
+# endif
+
+# ifndef ENOTRECOVERABLE 
+#  define ENOTRECOVERABLE	255
+# endif
+
+# ifndef ERFKILL
+#  define ERFKILL		256 
+# endif
+
 # ifndef __ASSEMBLER__
 /* Function to get address of global `errno' variable.  */
 extern int *__errno_location (void) __THROW __attribute__ ((__const__));

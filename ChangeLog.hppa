@@ -1,3 +1,12 @@
+2010-02-01  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/Versions: Bump
+	errlist-compat to 257 for GLIBC_2.12.
+	* sysdeps/unix/sysv/linux/hppa/bits/errno.h
+	(EOWNERDEAD): Define if not already defined.
+	(ENOTRECOVERABLE): Likewise.
+	(ERFKILL): Likewise.
+
 2009-11-29  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h:
