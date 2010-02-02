@@ -86,6 +86,8 @@
 # define MADV_REMOVE	  9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
 # define MADV_DOFORK	 11	/* Do inherit across fork.  */
+# define MADV_MERGEABLE   65	/* KSM may merge identical pages */
+# define MADV_UNMERGEABLE 66	/* KSM may not merge identical pages */
 #endif
 
 /* The range 12-64 is reserved for page size specification. */
