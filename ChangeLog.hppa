@@ -1,3 +1,8 @@
+2010-02-02  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/makecontext.c (__makecontext):
+	Support more than 8 arguments. 
+
 2010-02-01  Kyle McMartin  <kyle@redhat.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Fix value of

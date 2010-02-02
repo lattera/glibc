@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Helge Deller <deller@gmx.de>, 2008.
 
@@ -25,24 +25,21 @@
 #include <sysdep.h>
 #include <ucontext.h>
 
-/* XXX: This implementation only handles integer arguments.  */
+/* POSIX only supports integer arguments.  */
+#define STACK_ALIGN 64
+#define FRAME_SIZE 8
 
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
-  unsigned int *sp;
+  unsigned long *sp;
   va_list ap;
   int i;
 
-  if (argc > 8)
-    {
-      fprintf (stderr, _("\
-makecontext: does not know how to handle more than 8 arguments\n"));
-      exit (-1);
-    }
-
-  /* Get stack pointer.  */
-  sp = (unsigned int *) ucp->uc_stack.ss_sp;
+  /* Get stack pointer (64-byte aligned).  */
+  sp = (unsigned long *)((((unsigned long) ucp->uc_stack.ss_sp) 
+			 + FRAME_SIZE + argc + STACK_ALIGN) 
+		        & ~(STACK_ALIGN - 1));
 
   /* Store address to jump to.  */
   ucp->uc_mcontext.sc_gr[2] = (unsigned long) func;
@@ -50,29 +47,27 @@ makecontext: does not know how to handle more than 8 arguments\n"));
   va_start (ap, argc);
   /* Handle arguments.  */
   for (i = 0; i < argc; ++i)
-    switch (i)
-      {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      	ucp->uc_mcontext.sc_gr[26-i] = va_arg (ap, int);
-	break;
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-	if (sizeof(unsigned long) == 4) {
-		/* 32bit: put arg7-arg4 on stack.  */
-		sp[7-i] = va_arg (ap, int);
-	} else {
-		/* 64bit: r19-r22 are arg7-arg4.  */
-		ucp->uc_mcontext.sc_gr[22+4-i] = va_arg (ap, int);
+    {
+      if (i < 4)
+	{
+	  ucp->uc_mcontext.sc_gr[26-i] = va_arg (ap, int);
+	  continue;
 	}
-	break;
-      }
-  va_end (ap);
 
+      if ((i < 8) && (sizeof(unsigned long) == 8))
+	{
+	  /* 64bit: r19-r22 are arg7-arg4.  */
+	  ucp->uc_mcontext.sc_gr[22+4-i] = va_arg (ap, int);
+	  continue;
+	} 
+
+      /* All other arguments go on the stack.  */
+      sp[-1 * (FRAME_SIZE + 1 + i)] = va_arg (ap, int);
+    }
+  va_end (ap); 
+
+  /* Adjust the stack pointer to last used argument.  */
+  ucp->uc_mcontext.sc_gr[30] = (unsigned long) sp;
 }
 
 
