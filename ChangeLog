@@ -1,3 +1,9 @@
+2010-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/setenv.c (__add_to_environ): Don't use alloca if
+	__libc_use_alloca tells us not to.  Fix memory leak in an error
+	situation.  Based partially on patch by Jim Meyering.
+
 2010-01-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/getsysstats.c (get_nprocs_conf, get_nprocs,
