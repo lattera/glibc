@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/hppa version.
-   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,11 +140,13 @@ static inline struct pthread *__get_cr27(void)
   return (struct pthread *) cr27;
 }
 
+/* We write to cr27, clobber r26 as the input argument, and clobber
+   r31 as the link register.  */
 static inline void __set_cr27(struct pthread *cr27)
 {
   asm ( "ble	0xe0(%%sr2, %%r0)\n\t"
 	"copy	%0, %%r26"
-	: : "r" (cr27) : "r26" );
+	: : "r" (cr27) : "r26", "r31" );
 }
 
 /* Get and set the global scope generation counter in struct pthread.  */

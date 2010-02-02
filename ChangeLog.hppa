@@ -1,5 +1,10 @@
 2010-02-02  Carlos O'Donell  <carlos@codesourcery.com>
 
+	* sysdeps/hppa/nptl/tls.h (__set_cr27): Clobber
+	link register r31.
+
+2010-02-02  Carlos O'Donell  <carlos@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/hppa/makecontext.c (__makecontext):
 	Support more than 8 arguments. 
 
