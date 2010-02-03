@@ -65,6 +65,7 @@ script <GUJARATI>
 script <TELUGU>
 script <GURUMUKHI>
 script <KANNADA>
+script <TAMIL>
 script <SINHALA>
 script <MALAYALAM>
 script <BENGALI>
@@ -913,6 +914,87 @@ collating-symbol <kvd-visarg>
 collating-symbol <k-halant>
 collating-symbol <k-lenght_mark>
 collating-symbol <k-ai_lenght_mark>
+#
+# <TAMIL>
+#
+collating-element <ta_split_o> from "<U0BC6><U0BBE>"
+collating-element <ta_split_oo> from "<U0BC7><U0BBE>"
+collating-element <ta_split_au> from "<U0BC6><U0BD7>"
+collating-element <tagl_KSHA> from "<U0B95><U0BCD><U0BB7>"
+collating-element <tagl_SHRI> from "<U0BB8><U0BCD><U0BB0><U0BC0>"
+# defining collating element for sorting <consonent + virama> before <consonent>
+collating-element <pure-ta-k> from "<U0B95><U0BCD>" 
+collating-element <pure-ta-ng> from "<U0B99><U0BCD>"
+collating-element <pure-ta-c> from "<U0B9A><U0BCD>"
+collating-element <pure-ta-j> from "<U0B9C><U0BCD>"
+collating-element <pure-ta-ny> from "<U0B9E><U0BCD>"
+collating-element <pure-ta-tt> from "<U0B9F><U0BCD>"
+collating-element <pure-ta-nn> from "<U0BA3><U0BCD>"
+collating-element <pure-ta-t> from "<U0BA4><U0BCD>"
+collating-element <pure-ta-n> from "<U0BA8><U0BCD>"
+collating-element <pure-ta-nnn> from "<U0BA9><U0BCD>"
+collating-element <pure-ta-p> from "<U0BAA><U0BCD>"
+collating-element <pure-ta-m> from "<U0BAE><U0BCD>"
+collating-element <pure-ta-y> from "<U0BAF><U0BCD>"
+collating-element <pure-ta-r> from "<U0BB0><U0BCD>"
+collating-element <pure-ta-rr> from "<U0BB1><U0BCD>"
+collating-element <pure-ta-l> from "<U0BB2><U0BCD>"
+collating-element <pure-ta-ll> from "<U0BB3><U0BCD>"
+collating-element <pure-ta-lll> from "<U0BB4><U0BCD>"
+collating-element <pure-ta-v> from "<U0BB5><U0BCD>"
+collating-element <pure-ta-sh> from "<U0BB6><U0BCD>"
+collating-element <pure-ta-ss> from "<U0BB7><U0BCD>"
+collating-element <pure-ta-s> from "<U0BB8><U0BCD>"
+collating-element <pure-ta-h> from "<U0BB9><U0BCD>"
+# defning symbols
+collating-symbol <ta-pulli> #virama
+collating-symbol <tavw-a>
+collating-symbol <tavw-aa>
+collating-symbol <tavw-i>
+collating-symbol <tavw-ii>
+collating-symbol <tavw-u>
+collating-symbol <tavw-uu>
+collating-symbol <tavw-e>
+collating-symbol <tavw-ee>
+collating-symbol <tavw-ai>
+collating-symbol <tavw-o>
+collating-symbol <tavw-oo>
+collating-symbol <tavw-au>
+collating-symbol <ta-aytham> #visarga
+collating-symbol <ta-k>
+collating-symbol <ta-ng>
+collating-symbol <ta-c>
+collating-symbol <ta-ny>
+collating-symbol <ta-tt>
+collating-symbol <ta-nn>
+collating-symbol <ta-t>
+collating-symbol <ta-n>
+collating-symbol <ta-p>
+collating-symbol <ta-m>
+collating-symbol <ta-y>
+collating-symbol <ta-r>
+collating-symbol <ta-l>
+collating-symbol <ta-v>
+collating-symbol <ta-zh>
+collating-symbol <ta-ll>
+collating-symbol <ta-rr>
+collating-symbol <ta-nnn>
+collating-symbol <ta-j>
+collating-symbol <ta-sh>
+collating-symbol <ta-ss>
+collating-symbol <ta-s>
+collating-symbol <ta-h>
+collating-symbol <tavs-aa>
+collating-symbol <tavs-i>
+collating-symbol <tavs-ii>
+collating-symbol <tavs-u>
+collating-symbol <tavs-uu>
+collating-symbol <tavs-e>
+collating-symbol <tavs-ee>
+collating-symbol <tavs-ai>
+collating-symbol <tavs-o>
+collating-symbol <tavs-oo>
+collating-symbol <tavs-au>
 #
 # <MALAYALAM>
 # mlvs-  denotes Malayalam vowel sign
@@ -3546,6 +3628,58 @@ collating-symbol  <MMSTACK>
 <k-lenght_mark>
 <k-ai_lenght_mark>
 #
+#<TAMIL>
+#
+# collation weights in order
+<tavw-a>
+<tavw-aa>
+<tavw-i>
+<tavw-ii>
+<tavw-u>
+<tavw-uu>
+<tavw-e>
+<tavw-ee>
+<tavw-ai>
+<tavw-o>
+<tavw-oo>
+<tavw-au>
+<ta-aytham> #visarga
+<ta-k>
+<ta-ng>
+<ta-c>
+<ta-ny>
+<ta-tt>
+<ta-nn>
+<ta-t>
+<ta-n>
+<ta-p>
+<ta-m>
+<ta-y>
+<ta-r>
+<ta-l>
+<ta-v>
+<ta-zh>
+<ta-ll>
+<ta-rr>
+<ta-nnn>
+<ta-j>
+<ta-sh>
+<ta-ss>
+<ta-s>
+<ta-h>
+<ta-pulli> #virama
+<tavs-aa>
+<tavs-i>
+<tavs-ii>
+<tavs-u>
+<tavs-uu>
+<tavs-e>
+<tavs-ee>
+<tavs-ai>
+<tavs-o>
+<tavs-oo>
+<tavs-au>
+#
 # <MALAYALAM>
 #
 # collation weights in order
@@ -6123,6 +6257,93 @@ order_start  <KANNADA>;forward;forward;forward;forward,position
 <U0CD5> <k-lenght_mark>;<BAS>;<MIN>;IGNORE
 <U0CD6> <k-ai_lenght_mark>;<BAS>;<MIN>;IGNORE
 <U0CBC> IGNORE;<KNKT>;<MIN>;IGNORE
+order_start <TAMIL>;forward;forward;forward;forward,position
+<U0BE6> <0>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BE7> <1>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BE8> <2>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BE9> <3>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BEA> <4>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BEB> <5>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BEC> <6>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BED> <7>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BEE> <8>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0BEF> <9>;"<BAS><NUM>";"<MIN><MIN>";IGNORE
+<U0B85> <tavw-a>;<BAS>;<MIN>;IGNORE
+<U0B86> <tavw-aa>;<BAS>;<MIN>;IGNORE
+<U0B87> <tavw-i>;<BAS>;<MIN>;IGNORE
+<U0B88> <tavw-ii>;<BAS>;<MIN>;IGNORE
+<U0B89> <tavw-u>;<BAS>;<MIN>;IGNORE
+<U0B8A> <tavw-uu>;<BAS>;<MIN>;IGNORE
+<U0B8E> <tavw-e>;<BAS>;<MIN>;IGNORE
+<U0B8F> <tavw-ee>;<BAS>;<MIN>;IGNORE
+<U0B90> <tavw-ai>;<BAS>;<MIN>;IGNORE
+<U0B92> <tavw-o>;<BAS>;<MIN>;IGNORE
+<U0B93> <tavw-oo>;<BAS>;<MIN>;IGNORE
+<U0B94> <tavw-au>;<BAS>;<MIN>;IGNORE
+<U0B83> <ta-aytham>;<BAS>;<MIN>;IGNORE
+<pure-ta-k> <ta-k>;<BAS>;<MIN>;IGNORE
+<U0B95> "<ta-k><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-ng> "<ta-ng>";<BAS>;<MIN>;IGNORE
+<U0B99> "<ta-ng><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-c> <ta-c>;<BAS>;<MIN>;IGNORE
+<U0B9A> "<ta-c><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-ny> <ta-ny>;<BAS>;<MIN>;IGNORE
+<U0B9E> "<ta-ny><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-tt> <ta-tt>;<BAS>;<MIN>;IGNORE
+<U0B9F> "<ta-tt><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-nn> <ta-nn>;<BAS>;<MIN>;IGNORE
+<U0BA3> "<ta-nn><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-t> <ta-t>;<BAS>;<MIN>;IGNORE
+<U0BA4> "<ta-t><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-n> <ta-n>;<BAS>;<MIN>;IGNORE
+<U0BA8> "<ta-n><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-p> <ta-p>;<BAS>;<MIN>;IGNORE
+<U0BAA> "<ta-p><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-m> <ta-m>;<BAS>;<MIN>;IGNORE
+<U0BAE> "<ta-m><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-y> <ta-y>;<BAS>;<MIN>;IGNORE
+<U0BAF> "<ta-y><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-r> <ta-r>;<BAS>;<MIN>;IGNORE
+<U0BB0> "<ta-r><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-l> <ta-l>;<BAS>;<MIN>;IGNORE
+<U0BB2> "<ta-l><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-v> <ta-v>;<BAS>;<MIN>;IGNORE
+<U0BB5> "<ta-v><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-zh> <ta-zh>;<BAS>;<MIN>;IGNORE
+<U0BB4> "<ta-zh><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-ll> <ta-ll>;<BAS>;<MIN>;IGNORE
+<U0BB3> "<ta-ll><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-rr> <ta-rr>;<BAS>;<MIN>;IGNORE
+<U0BB1> "<ta-rr><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-nnn> <ta-nnn>;<BAS>;<MIN>;IGNORE
+<U0BA9> "<ta-nnn><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-j> <ta-j>;<BAS>;<MIN>;IGNORE
+<U0B9C> "<ta-j><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-sh> <ta-sh>;<BAS>;<MIN>;IGNORE
+<U0BB6> "<ta-sh><tavw-a>";<BAS>;<MIN>;IGNORE	
+<pure-ta-ss> <ta-ss>;<BAS>;<MIN>;IGNORE
+<U0BB7> "<ta-ss><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-s> <ta-s>;<BAS>;<MIN>;IGNORE
+<U0BB8> "<ta-s><tavw-a>";<BAS>;<MIN>;IGNORE
+<pure-ta-h> <ta-h>;<BAS>;<MIN>;IGNORE
+<U0BB9> "<ta-h><tavw-a>";<BAS>;<MIN>;IGNORE
+<tagl_KSHA> "<U0B95><U0BCD><U0BB7>";<BAS>;<MIN>;IGNORE
+<U0BCD> <ta-pulli>;<BAS>;<MIN>;IGNORE
+<U0BBE> <tavs-aa>;<BAS>;<MIN>;IGNORE
+<U0BBF> <tavs-i>;<BAS>;<MIN>;IGNORE
+<U0BC0> <tavs-ii>;<BAS>;<MIN>;IGNORE
+<U0BC1> <tavs-u>;<BAS>;<MIN>;IGNORE
+<U0BC2> <tavs-uu>;<BAS>;<MIN>;IGNORE
+<U0BC6> <tavs-e>;<BAS>;<MIN>;IGNORE
+<U0BC7> <tavs-ee>;<BAS>;<MIN>;IGNORE
+<U0BC8> <tavs-ai>;<BAS>;<MIN>;IGNORE
+<U0BCA><tavs-o>;<BAS>;<MIN>;IGNORE
+<U0BCB> <tavs-oo>;<BAS>;<MIN>;IGNORE
+<U0BCC> <tavs-au>;<BAS>;<MIN>;IGNORE
+<tagl_SHRI> "<U0BB6><U0BCD><U0BB0><U0BC0>";<BAS>;<MIN>;IGNORE
+<ta_split_o> <tavs-o>;<BAS>;<MIN>;IGNORE
+<ta_split_oo> <tavs-oo>;<BAS>;<MIN>;IGNORE
+<ta_split_au> <tavs-au>;<BAS>;<MIN>;IGNORE
 
 order_start <SINHALA>;forward;forward;forward;forward,position
 # SCCII Part 1 : Collation Sequence (SLS1134)

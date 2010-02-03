@@ -1,5 +1,9 @@
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ta_IN: Move collation data...
+	* locales/iso14651_t1_common: ...here.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
 	* locales/as_IN: Use iso14651_t1 instead of local collation data.
 	Patch by Pravin Satpute <psatpute@redhat.com>.
 
