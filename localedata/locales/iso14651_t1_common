@@ -923,7 +923,7 @@ collating-element <ta_split_au> from "<U0BC6><U0BD7>"
 collating-element <tagl_KSHA> from "<U0B95><U0BCD><U0BB7>"
 collating-element <tagl_SHRI> from "<U0BB8><U0BCD><U0BB0><U0BC0>"
 # defining collating element for sorting <consonent + virama> before <consonent>
-collating-element <pure-ta-k> from "<U0B95><U0BCD>" 
+collating-element <pure-ta-k> from "<U0B95><U0BCD>"
 collating-element <pure-ta-ng> from "<U0B99><U0BCD>"
 collating-element <pure-ta-c> from "<U0B9A><U0BCD>"
 collating-element <pure-ta-j> from "<U0B9C><U0BCD>"
@@ -6320,7 +6320,7 @@ order_start <TAMIL>;forward;forward;forward;forward,position
 <pure-ta-j> <ta-j>;<BAS>;<MIN>;IGNORE
 <U0B9C> "<ta-j><tavw-a>";<BAS>;<MIN>;IGNORE
 <pure-ta-sh> <ta-sh>;<BAS>;<MIN>;IGNORE
-<U0BB6> "<ta-sh><tavw-a>";<BAS>;<MIN>;IGNORE	
+<U0BB6> "<ta-sh><tavw-a>";<BAS>;<MIN>;IGNORE
 <pure-ta-ss> <ta-ss>;<BAS>;<MIN>;IGNORE
 <U0BB7> "<ta-ss><tavw-a>";<BAS>;<MIN>;IGNORE
 <pure-ta-s> <ta-s>;<BAS>;<MIN>;IGNORE
