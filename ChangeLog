@@ -1,3 +1,9 @@
+2010-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11242]
+	* misc/getusershell.c (initshells): Allocate one more byte in input
+	buffer so that fgets doesn't loop undefinitely.
+
 2010-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/setenv.c (__add_to_environ): Don't use alloca if
