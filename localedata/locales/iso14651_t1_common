@@ -6493,8 +6493,8 @@ order_start <MALAYALAM>;forward;forward;forward;forward,position
 <U0D26>	"<ml-dda><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-ddh> "<ml-ddha><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D27>	"<ml-ddha><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
-<ml-chillu-n> "<ml-chillu-n>";<BAS>;<MIN>;IGNORE # ന്‍= ന  + ്  + zwj
-<U0D28>	"<ml-chillu-n><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE  #ന = ന + ് + അ
+<ml-chillu-n> "<ml-na><ml-virama>";<BAS>;<MIN>;IGNORE # ന്‍= ന  + ്  + zwj
+<U0D28>	"<ml-na><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE  #ന = ന + ് + അ
 <ml-p>	"<ml-pa><ml-virama>";<BAS>;<MIN>;IGNORE
 <U0D2A>	"<ml-pa><ml-virama><mlvw-shorta>";<BAS>;<MIN>;IGNORE
 <ml-ph>	"<ml-pha><ml-virama>";<BAS>;<MIN>;IGNORE
