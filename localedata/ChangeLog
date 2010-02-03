@@ -1,5 +1,6 @@
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10414]
 	* locales/iso14651_t1_common: Fix sorting of malayalam letter 'na'.
 	Patch by Pravin Satpute <psatpute@redhat.com>.
 
