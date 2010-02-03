@@ -1,5 +1,13 @@
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11235]
+	* sysdeps/unix/sysv/linux/sys/mount.h: Remove S_WRITE, S_APPEND,
+	S_IMMUTABLE.  Add MS_DIRSYNC, MS_MOVE, MS_SILENT, MS_REC,
+	MS_POSIXACL, MS_UNBINDABLE, MS_PRIVATE, MS_SLAVE, MS_SHARED,
+	MS_RELATIME, MS_KERNMOUNT, MS_I_VERSION, MS_STRICTATIME,
+	MS_ACTIVE, and MS_NOUSER.
+	(MS_RMT_MASK): Update according to current kernels.
+
 	[BZ #11242]
 	* misc/getusershell.c (initshells): Allocate one more byte in input
 	buffer so that fgets doesn't loop undefinitely.
