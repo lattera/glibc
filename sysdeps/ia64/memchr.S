@@ -47,7 +47,7 @@
 #define saved_lc	r16
 #define	chr		r17
 #define len		r18
-#define pos0		r20
+#define last		r20
 #define val		r21
 #define tmp		r24
 #define chrx8		r25
@@ -67,6 +67,7 @@ ENTRY(__memchr)
 	mov	saved_pr = pr		// save the predicates
 	.body
 	mov 	ret0 = str
+	add	last = str, in2		// last byte
 	and 	tmp = 7, str		// tmp = str % 8
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1
@@ -143,7 +144,10 @@ ENTRY(__memchr)
 	ld8	tmp = [ret0];;		// load the first unchecked 8byte
 	xor	aux[1] = tmp, chrx8;;
 	czx1.r	poschr[1] = aux[1];;
-	cmp.ne	p7, p0 = 8, poschr[1]
+	cmp.ne	p7, p0 = 8, poschr[1];;
+(p7)	add	ret0 = addr[MEMLAT+2], poschr[1];;
+(p7)	cmp.geu	p6, p7 = ret0, last	// don't go over the last byte
+(p6)	br.cond.spnt	.notfound;;
 (p7)	br.cond.spnt	.foundit;;
 	adds	ret0 = 8, ret0		// load the next unchecked 8byte
 	br.sptk	.l4;;
