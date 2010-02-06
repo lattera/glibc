@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008, 2010 Free Software Foundation, Inc.
    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -34,7 +34,7 @@
    calls.  */
 #define ALLOCATE_UTMPX32_OUT(OUT)			\
   static struct utmpx32 *OUT = NULL;			\
-  							\
+							\
   if (OUT == NULL)					\
     {							\
       OUT = malloc (sizeof (struct utmpx32));		\

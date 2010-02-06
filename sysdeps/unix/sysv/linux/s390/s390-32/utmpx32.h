@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002, 2008
+   Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
