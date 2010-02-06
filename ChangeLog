@@ -1,3 +1,8 @@
+2010-01-26  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add new errlist compat
+	entry for 2.12.
+
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11235]
