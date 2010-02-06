@@ -49,4 +49,16 @@ struct utmpx32
   char __unused[20];		/* Reserved for future use.  */
 };
 
+/* The internal interface needed by the compat wrapper functions.  */
+extern struct utmpx *__getutxent (void);
+extern struct utmpx *__getutxid (__const struct utmpx *__id);
+extern struct utmpx *__getutxline (__const struct utmpx *__line);
+extern struct utmpx *__pututxline (__const struct utmpx *__utmpx);
+extern void __updwtmpx (__const char *__wtmpx_file,
+			__const struct utmpx *__utmpx);
+extern void __getutmp (__const struct utmpx *__utmpx,
+		       struct utmp *__utmp);
+extern void __getutmpx (__const struct utmp *__utmp,
+			struct utmpx *__utmpx);
+
 #endif /* utmpx32.h */

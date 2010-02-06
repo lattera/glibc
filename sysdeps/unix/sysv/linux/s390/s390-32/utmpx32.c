@@ -68,7 +68,7 @@ getutxent32 (void)
   struct utmpx *out64;
   ALLOCATE_UTMPX32_OUT (out32);
 
-  out64 = getutxent ();
+  out64 = __getutxent ();
   if (!out64)
     return NULL;
 
@@ -82,7 +82,7 @@ symbol_version (getutxent32, getutxent, GLIBC_2.1);
 struct utmpx32 *
 getutxid32 (const struct utmpx32 *id)
 {
-  ACCESS_UTMPX_ENTRY (getutxid, id);
+  ACCESS_UTMPX_ENTRY (__getutxid, id);
 }
 symbol_version (getutxid32, getutxid, GLIBC_2.1);
 
@@ -90,7 +90,7 @@ symbol_version (getutxid32, getutxid, GLIBC_2.1);
 struct utmpx32 *
 getutxline32 (const struct utmpx32 *line)
 {
-  ACCESS_UTMPX_ENTRY (getutxline, line);
+  ACCESS_UTMPX_ENTRY (__getutxline, line);
 }
 symbol_version (getutxline32, getutxline, GLIBC_2.1);
 
@@ -98,7 +98,7 @@ symbol_version (getutxline32, getutxline, GLIBC_2.1);
 struct utmpx32 *
 pututxline32 (const struct utmpx32 *utmpx)
 {
-  ACCESS_UTMPX_ENTRY (pututxline, utmpx);
+  ACCESS_UTMPX_ENTRY (__pututxline, utmpx);
 }
 symbol_version (pututxline32, pututxline, GLIBC_2.1);
 
@@ -109,7 +109,7 @@ updwtmpx32 (const char *wtmpx_file, const struct utmpx32 *utmpx)
   struct utmpx in64;
 
   utmpx_convert32to64 (utmpx, &in64);
-  updwtmpx (wtmpx_file, &in64);
+  __updwtmpx (wtmpx_file, &in64);
 }
 symbol_version (updwtmpx32, updwtmpx, GLIBC_2.1);
 
@@ -121,7 +121,7 @@ getutmp32 (const struct utmpx32 *utmpx, struct utmp32 *utmp)
   struct utmp out64;
 
   utmpx_convert32to64 (utmpx, &in64);
-  getutmp (&in64, &out64);
+  __getutmp (&in64, &out64);
   utmp_convert64to32 (&out64, utmp);
 }
 symbol_version (getutmp32, getutmp, GLIBC_2.1.1);
@@ -134,7 +134,7 @@ getutmpx32 (const struct utmp32 *utmp, struct utmpx32 *utmpx)
   struct utmpx out64;
 
   utmp_convert32to64 (utmp, &in64);
-  getutmpx (&in64, &out64);
+  __getutmpx (&in64, &out64);
   utmpx_convert64to32 (&out64, utmpx);
 }
 symbol_version (getutmpx32, getutmpx, GLIBC_2.1.1);

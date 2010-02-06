@@ -1,5 +1,11 @@
 2010-01-26  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.c: Use internal
+	interface.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.h: Declare internal
+	utmpx interface.
+
 	* sysdeps/unix/sysv/linux/sparc/Versions: Add new errlist compat
 	entry for 2.12.
 
