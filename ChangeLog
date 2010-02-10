@@ -1,3 +1,7 @@
+2010-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/lshift.S: Fix unwind information.
+
 2010-02-08  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnan.S: New file.

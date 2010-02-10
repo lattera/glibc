@@ -1,5 +1,5 @@
 /* i80386 __mpn_lshift --
-   Copyright (C) 1992, 1994, 1997-2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1992,1994,1997-2000,2005,2010 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -55,6 +55,7 @@ ENTRY (BP_SYM (__mpn_lshift))
 
 	movl	(%esi,%edx,4),%ebx	/* read most significant limb */
 	cfi_rel_offset (ebx, 0)
+	cfi_remember_state
 	xorl	%eax,%eax
 	shldl	%cl,%ebx,%eax		/* compute carry limb */
 	decl	%edx
@@ -95,6 +96,7 @@ L(1):	movl	(%esi,%edx,4),%eax
 	LEAVE
 	ret
 
+	cfi_restore_state
 L(end):	shll	%cl,%ebx		/* compute least significant limb */
 	movl	%ebx,(%edi)		/* store it */
 
