@@ -1,6 +1,6 @@
 /* Store current floating-point environment (soft-float edition).
    Copyright (C) 2002 Free Software Foundation, Inc.
-   Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
+   Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002, 2010.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,4 +46,5 @@ strong_alias (__fegetenv, __old_fegetenv)
 compat_symbol (libm, BP_SYM (__old_fegetenv), BP_SYM (fegetenv), GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__fegetenv, fegetenv)
 versioned_symbol (libm, BP_SYM (__fegetenv), BP_SYM (fegetenv), GLIBC_2_2);

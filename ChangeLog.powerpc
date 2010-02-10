@@ -1,3 +1,7 @@
+2010-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fegetenv.c: Add hidden alias.
+
 2008-08-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/shlib-versions: New.
