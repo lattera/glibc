@@ -1,5 +1,7 @@
 2010-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/rshift.S: More compact unwind information.
+
 	* sysdeps/i386/lshift.S: Fix unwind information.
 
 2010-02-08  Luis Machado  <luisgpm@br.ibm.com>
