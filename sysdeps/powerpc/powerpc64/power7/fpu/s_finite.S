@@ -66,4 +66,3 @@ compat_symbol (libc, __finite, __finitel, GLIBC_2_0);
 compat_symbol (libc, finite, finitel, GLIBC_2_0);
 # endif
 #endif
-

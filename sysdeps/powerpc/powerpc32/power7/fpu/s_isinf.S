@@ -86,4 +86,3 @@ compat_symbol (libc, __isinf, __isinfl, GLIBC_2_0);
 compat_symbol (libc, isinf, isinfl, GLIBC_2_0);
 # endif
 #endif
-
