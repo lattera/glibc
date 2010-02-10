@@ -1324,6 +1324,8 @@ typedef struct
 #define R_SPARC_H34		85
 #define R_SPARC_SIZE32		86
 #define R_SPARC_SIZE64		87
+#define R_SPARC_JMP_IREL	248
+#define R_SPARC_IRELATIVE	249
 #define R_SPARC_GNU_VTINHERIT	250
 #define R_SPARC_GNU_VTENTRY	251
 #define R_SPARC_REV32		252

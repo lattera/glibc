@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,19 +27,12 @@
 #include <sys/param.h>
 #include <ldsodefs.h>
 #include <tls.h>
+#include <dl-plt.h>
 
 #ifndef VALIDX
 # define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
 		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
 #endif
-
-/* Some SPARC opcodes we need to use for self-modifying code.  */
-#define OPCODE_NOP	0x01000000 /* nop */
-#define OPCODE_CALL	0x40000000 /* call ?; add PC-rel word address */
-#define OPCODE_SETHI_G1	0x03000000 /* sethi ?, %g1; add value>>10 */
-#define OPCODE_JMP_G1	0x81c06000 /* jmp %g1+?; add lo 10 bits of value */
-#define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
-#define OPCODE_BA	0x30800000 /* b,a ?; add PC-rel word address */
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -312,41 +305,6 @@ _dl_start_user:\n\
 	.size   _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
-static inline __attribute__ ((always_inline)) Elf32_Addr
-sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
-		 Elf32_Addr value, int t, int do_flush)
-{
-  Elf32_Sword disp = value - (Elf32_Addr) reloc_addr;
-
-  if (0 && disp >= -0x800000 && disp < 0x800000)
-    {
-      /* Don't need to worry about thread safety. We're writing just one
-	 instruction.  */
-
-      reloc_addr[0] = OPCODE_BA | ((disp >> 2) & 0x3fffff);
-      if (do_flush)
-	__asm __volatile ("flush %0" : : "r"(reloc_addr));
-    }
-  else
-    {
-      /* For thread safety, write the instructions from the bottom and
-	 flush before we overwrite the critical "b,a".  This of course
-	 need not be done during bootstrapping, since there are no threads.
-	 But we also can't tell if we _can_ use flush, so don't. */
-
-      reloc_addr += t;
-      reloc_addr[1] = OPCODE_JMP_G1 | (value & 0x3ff);
-      if (do_flush)
-	__asm __volatile ("flush %0+4" : : "r"(reloc_addr));
-
-      reloc_addr[0] = OPCODE_SETHI_G1 | (value >> 10);
-      if (do_flush)
-	__asm __volatile ("flush %0" : : "r"(reloc_addr));
-    }
-
-  return value;
-}
-
 static inline Elf32_Addr
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
@@ -433,6 +391,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
   value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
+  if (sym != NULL
+      && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
+      && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+    {
+      value = ((Elf32_Addr (*) (void)) value) ();
+    }
+
   switch (r_type)
     {
 #if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
@@ -460,6 +425,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     case R_SPARC_32:
       *reloc_addr = value;
       break;
+    case R_SPARC_IRELATIVE:
+      value = ((Elf32_Addr (*) (void)) value) ();
+      *reloc_addr = value;
+      break;
+    case R_SPARC_JMP_IREL:
+      value = ((Elf32_Addr (*) (void)) value) ();
+      /* Fall thru */
     case R_SPARC_JMP_SLOT:
       {
 #if !defined RTLD_BOOTSTRAP && !defined __sparc_v9__
@@ -578,16 +550,21 @@ __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
-  switch (ELF32_R_TYPE (reloc->r_info))
+  Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_SPARC_JMP_SLOT, 1))
+    ;
+  else if (r_type == R_SPARC_JMP_IREL)
     {
-    case R_SPARC_NONE:
-      break;
-    case R_SPARC_JMP_SLOT:
-      break;
-    default:
-      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
-      break;
+      Elf32_Addr value = map->l_addr + reloc->r_addend;
+      value = ((Elf32_Addr (*) (void)) value) ();
+      sparc_fixup_plt (reloc, reloc_addr, value, 0, 1);
     }
+  else if (r_type == R_SPARC_NONE)
+    ;
+  else
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif	/* RESOLVE_MAP */

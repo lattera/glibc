@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-	Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
+	2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include <sys/param.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
+#include <dl-plt.h>
 
 #ifndef VALIDX
 # define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
@@ -87,132 +88,6 @@ elf_machine_load_address (void)
      pc[2]*4 is l_addr + _DYNAMIC - (long)pc - 8
      pc[3]*4 is l_addr + _GLOBAL_OFFSET_TABLE_ - (long)pc - 12  */
   return (Elf64_Addr) got - *got + (Elf32_Sword) ((pc[2] - pc[3]) * 4) - 4;
-}
-
-/* We have 4 cases to handle.  And we code different code sequences
-   for each one.  I love V9 code models...  */
-static inline void __attribute__ ((always_inline))
-sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
-		   Elf64_Addr *reloc_addr, Elf64_Addr value,
-		   Elf64_Addr high, int t)
-{
-  unsigned int *insns = (unsigned int *) reloc_addr;
-  Elf64_Addr plt_vaddr = (Elf64_Addr) reloc_addr;
-  Elf64_Sxword disp = value - plt_vaddr;
-
-  /* Now move plt_vaddr up to the call instruction.  */
-  plt_vaddr += ((t + 1) * 4);
-
-  /* PLT entries .PLT32768 and above look always the same.  */
-  if (__builtin_expect (high, 0) != 0)
-    {
-      *reloc_addr = value - map->l_addr;
-    }
-  /* Near destination.  */
-  else if (disp >= -0x800000 && disp < 0x800000)
-    {
-      /* As this is just one instruction, it is thread safe and so
-	 we can avoid the unnecessary sethi FOO, %g1.
-	 b,a target  */
-      insns[0] = 0x30800000 | ((disp >> 2) & 0x3fffff);
-      __asm __volatile ("flush %0" : : "r" (insns));
-    }
-  /* 32-bit Sparc style, the target is in the lower 32-bits of
-     address space.  */
-  else if (insns += t, (value >> 32) == 0)
-    {
-      /* sethi	%hi(target), %g1
-	 jmpl	%g1 + %lo(target), %g0  */
-
-      insns[1] = 0x81c06000 | (value & 0x3ff);
-      __asm __volatile ("flush %0 + 4" : : "r" (insns));
-
-      insns[0] = 0x03000000 | ((unsigned int)(value >> 10));
-      __asm __volatile ("flush %0" : : "r" (insns));
-    }
-  /* We can also get somewhat simple sequences if the distance between
-     the target and the PLT entry is within +/- 2GB.  */
-  else if ((plt_vaddr > value
-	    && ((plt_vaddr - value) >> 31) == 0)
-	   || (value > plt_vaddr
-	       && ((value - plt_vaddr) >> 31) == 0))
-    {
-      unsigned int displacement;
-
-      if (plt_vaddr > value)
-	displacement = (0 - (plt_vaddr - value));
-      else
-	displacement = value - plt_vaddr;
-
-      /* mov	%o7, %g1
-	 call	displacement
-	  mov	%g1, %o7  */
-
-      insns[2] = 0x9e100001;
-      __asm __volatile ("flush %0 + 8" : : "r" (insns));
-
-      insns[1] = 0x40000000 | (displacement >> 2);
-      __asm __volatile ("flush %0 + 4" : : "r" (insns));
-
-      insns[0] = 0x8210000f;
-      __asm __volatile ("flush %0" : : "r" (insns));
-    }
-  /* Worst case, ho hum...  */
-  else
-    {
-      unsigned int high32 = (value >> 32);
-      unsigned int low32 = (unsigned int) value;
-
-      /* ??? Some tricks can be stolen from the sparc64 egcs backend
-	     constant formation code I wrote.  -DaveM  */
-
-      if (__builtin_expect (high32 & 0x3ff, 0))
-	{
-	  /* sethi	%hh(value), %g1
-	     sethi	%lm(value), %g5
-	     or		%g1, %hm(value), %g1
-	     or		%g5, %lo(value), %g5
-	     sllx	%g1, 32, %g1
-	     jmpl	%g1 + %g5, %g0
-	      nop  */
-
-	  insns[5] = 0x81c04005;
-	  __asm __volatile ("flush %0 + 20" : : "r" (insns));
-
-	  insns[4] = 0x83287020;
-	  __asm __volatile ("flush %0 + 16" : : "r" (insns));
-
-	  insns[3] = 0x8a116000 | (low32 & 0x3ff);
-	  __asm __volatile ("flush %0 + 12" : : "r" (insns));
-
-	  insns[2] = 0x82106000 | (high32 & 0x3ff);
-	}
-      else
-	{
-	  /* sethi	%hh(value), %g1
-	     sethi	%lm(value), %g5
-	     sllx	%g1, 32, %g1
-	     or		%g5, %lo(value), %g5
-	     jmpl	%g1 + %g5, %g0
-	      nop  */
-
-	  insns[4] = 0x81c04005;
-	  __asm __volatile ("flush %0 + 16" : : "r" (insns));
-
-	  insns[3] = 0x8a116000 | (low32 & 0x3ff);
-	  __asm __volatile ("flush %0 + 12" : : "r" (insns));
-
-	  insns[2] = 0x83287020;
-	}
-
-      __asm __volatile ("flush %0 + 8" : : "r" (insns));
-
-      insns[1] = 0x0b000000 | (low32 >> 10);
-      __asm __volatile ("flush %0 + 4" : : "r" (insns));
-
-      insns[0] = 0x03000000 | (high32 >> 10);
-      __asm __volatile ("flush %0" : : "r" (insns));
-    }
 }
 
 static inline Elf64_Addr __attribute__ ((always_inline))
@@ -549,6 +424,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
   value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
+  if (sym != NULL
+      && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
+      && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+    value = ((Elf64_Addr (*) (void)) value) ();
+
   switch (r_type)
     {
 #if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
@@ -576,6 +456,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     case R_SPARC_GLOB_DAT:
       *reloc_addr = value;
       break;
+    case R_SPARC_IRELATIVE:
+      value = ((Elf64_Addr (*) (void)) value) ();
+      *reloc_addr = value;
+      break;
+    case R_SPARC_JMP_IREL:
+      value = ((Elf64_Addr (*) (void)) value) ();
+      /* Fall thru */
     case R_SPARC_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
       /* R_SPARC_JMP_SLOT conflicts against .plt[32768+]
@@ -757,16 +644,29 @@ __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
-  switch (ELF64_R_TYPE (reloc->r_info))
+  Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_SPARC_JMP_SLOT, 1))
+    ;
+  else if (r_type == R_SPARC_JMP_IREL
+	   || r_type == R_SPARC_IRELATIVE)
     {
-    case R_SPARC_NONE:
-      break;
-    case R_SPARC_JMP_SLOT:
-      break;
-    default:
-      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
-      break;
+      Elf64_Addr value = map->l_addr + reloc->r_addend;
+      value = ((Elf64_Addr (*) (void)) value) ();
+      if (r_type == R_SPARC_JMP_IREL)
+	{
+	  /* 'high' is always zero, for large PLT entries the linker
+	     emits an R_SPARC_IRELATIVE.  */
+	  sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 0);
+	}
+      else
+	*reloc_addr = value;
     }
+  else if (r_type == R_SPARC_NONE)
+    ;
+  else
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif	/* RESOLVE_MAP */

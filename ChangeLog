@@ -1,3 +1,19 @@
+2010-02-05  David S. Miller  <davem@davemloft.net>
+
+	* elf/elf.h (R_SPARC_JMP_IREL, R_SPARC_IRELATIVE): Define.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Handle new
+	ifunc relocs.
+	(elf_machine_lazy_rel): Likewise.
+	(sparc_fixup_plt): Pull out to...
+	* sysdeps/sparc/sparc32/dl-plt.h: ...here.
+	* sysdeps/sparc/sparc32/dl-irel.h: New file.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handle new
+	ifunc relocs.
+	(elf_machine_lazy_rel): Likewise.
+	(sparc64_fixup_plt): Pull out to...
+	* sysdeps/sparc/sparc64/dl-plt.h: ...here.
+	* sysdeps/sparc/sparc64/dl-irel.h: New file.
+
 2010-02-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* elf/elf.h: Define m68k TLS relocations.
