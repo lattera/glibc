@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1996-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -4850,8 +4850,7 @@ _int_free(mstate av, mchunkptr p)
       free_perturb (chunk2mem(p), size - SIZE_SZ);
 
     set_fastchunks(av);
-    unsigned int idx = fastbin_index(size);
-    fb = &fastbin (av, idx);
+    fb = &fastbin (av, fastbin_index(size));
 
 #ifdef ATOMIC_FASTBINS
     mchunkptr fd;
@@ -4865,12 +4864,6 @@ _int_free(mstate av, mchunkptr p)
 	    errstr = "double free or corruption (fasttop)";
 	    goto errout;
 	  }
-	if (old != NULL && (chunksize(old) > request2size(MAX_FAST_SIZE)
-			    || fastbin_index(chunksize(old)) != idx))
-	  {
-	    errstr = "invalid fastbin entry (free)";
-	    goto errout;
-	  }
 	p->fd = fd = old;
       }
     while ((old = catomic_compare_and_exchange_val_rel (fb, p, fd)) != fd);
@@ -4880,12 +4873,6 @@ _int_free(mstate av, mchunkptr p)
     if (__builtin_expect (*fb == p, 0))
       {
 	errstr = "double free or corruption (fasttop)";
-	goto errout;
-      }
-    if (*fb != NULL && (chunksize(*fb) > request2size(MAX_FAST_SIZE)
-			|| fastbin_index(chunksize(*fb)) != idx))
-      {
-	errstr = "invalid fastbin entry (free)";
 	goto errout;
       }
 
