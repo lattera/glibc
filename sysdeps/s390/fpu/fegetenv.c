@@ -20,10 +20,6 @@
 
 #include <fenv_libc.h>
 #include <fpu_control.h>
-#include <stddef.h>
-#include <asm/ptrace.h>
-#include <sys/ptrace.h>
-#include <unistd.h>
 
 int
 fegetenv (fenv_t *envp)
@@ -33,3 +29,4 @@ fegetenv (fenv_t *envp)
   /* Success.  */
   return 0;
 }
+libm_hidden_def (fegetenv)

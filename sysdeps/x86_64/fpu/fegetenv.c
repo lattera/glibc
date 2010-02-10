@@ -28,3 +28,4 @@ fegetenv (fenv_t *envp)
   /* Success.  */
   return 0;
 }
+libm_hidden_def (fegetenv)

@@ -1,3 +1,15 @@
+2010-02-08  Andreas Schwab  <schwab@redhat.com>
+
+	* include/fenv.h: Add hidden proto for fegetenv.
+	* math/fegetenv.c: Add hidden alias.
+	* sysdeps/i386/fpu/fegetenv.c: Likewise.
+	* sysdeps/ia64/fpu/fegetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fegetenv.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fegetenv.c: Likewise.
+	* sysdeps/sparc/fpu/fegetenv.c: Likewise.
+	* sysdeps/x86_64/fpu/fegetenv.c: Likewise
+	* sysdeps/s390/fpu/fegetenv.c: Likewise.  Remove unused headers.
+
 2010-02-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11230]

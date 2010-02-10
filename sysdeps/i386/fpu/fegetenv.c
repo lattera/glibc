@@ -40,4 +40,5 @@ strong_alias (__fegetenv, __old_fegetenv)
 compat_symbol (libm, BP_SYM (__old_fegetenv), BP_SYM (fegetenv), GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__fegetenv, fegetenv)
 versioned_symbol (libm, BP_SYM (__fegetenv), BP_SYM (fegetenv), GLIBC_2_2);
