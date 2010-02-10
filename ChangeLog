@@ -1,3 +1,7 @@
+2010-02-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* elf/elf.h: Define m68k TLS relocations.
+
 2010-02-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/Implies: Removed.

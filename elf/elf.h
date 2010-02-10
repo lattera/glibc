@@ -1123,8 +1123,29 @@ typedef struct
 #define R_68K_GLOB_DAT	20		/* Create GOT entry */
 #define R_68K_JMP_SLOT	21		/* Create PLT entry */
 #define R_68K_RELATIVE	22		/* Adjust by program base */
+#define R_68K_TLS_GD32      25          /* 32 bit GOT offset for GD */
+#define R_68K_TLS_GD16      26          /* 16 bit GOT offset for GD */
+#define R_68K_TLS_GD8       27          /* 8 bit GOT offset for GD */
+#define R_68K_TLS_LDM32     28          /* 32 bit GOT offset for LDM */
+#define R_68K_TLS_LDM16     29          /* 16 bit GOT offset for LDM */
+#define R_68K_TLS_LDM8      30          /* 8 bit GOT offset for LDM */
+#define R_68K_TLS_LDO32     31          /* 32 bit module-relative offset */
+#define R_68K_TLS_LDO16     32          /* 16 bit module-relative offset */
+#define R_68K_TLS_LDO8      33          /* 8 bit module-relative offset */
+#define R_68K_TLS_IE32      34          /* 32 bit GOT offset for IE */
+#define R_68K_TLS_IE16      35          /* 16 bit GOT offset for IE */
+#define R_68K_TLS_IE8       36          /* 8 bit GOT offset for IE */
+#define R_68K_TLS_LE32      37          /* 32 bit offset relative to
+					   static TLS block */
+#define R_68K_TLS_LE16      38          /* 16 bit offset relative to
+					   static TLS block */
+#define R_68K_TLS_LE8       39          /* 8 bit offset relative to
+					   static TLS block */
+#define R_68K_TLS_DTPMOD32  40          /* 32 bit module number */
+#define R_68K_TLS_DTPREL32  41          /* 32 bit module-relative offset */
+#define R_68K_TLS_TPREL32   42          /* 32 bit TP-relative offset */
 /* Keep this the last entry.  */
-#define R_68K_NUM	23
+#define R_68K_NUM	43
 
 /* Intel 80386 specific definitions.  */
 
