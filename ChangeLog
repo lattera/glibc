@@ -1,3 +1,14 @@
+2010-02-10  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/fpu/Implies: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/fpu/Implies: Add
+	64-bit power7 fpu path.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/fpu/Implies: Add
+	32-bit power7 fpu math.
+
 2010-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/rshift.S: More compact unwind information.
