@@ -1,3 +1,18 @@
+2010-02-08  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinf.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinf.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinff.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinff.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finite.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finitef.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finitef.S: New file.
+
 2010-02-08  Andreas Schwab  <schwab@redhat.com>
 
 	* include/fenv.h: Add hidden proto for fegetenv.
