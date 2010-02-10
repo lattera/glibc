@@ -1,5 +1,5 @@
 /* Store current floating-point environment.
-   Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,01,10 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,4 +37,5 @@ strong_alias (__fegetenv, __old_fegetenv)
 compat_symbol (libm, __old_fegetenv, fegetenv, GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__fegetenv, fegetenv)
 versioned_symbol (libm, __fegetenv, fegetenv, GLIBC_2_2);

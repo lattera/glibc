@@ -1,3 +1,8 @@
+2010-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/fegetenv.c, sysdeps/arm/fpu/fegetenv.c: Add
+	hidden alias.
+
 2010-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define O_DIRECTORY,
