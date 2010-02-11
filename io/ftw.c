@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996-2004, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006-2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -790,6 +790,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
     {
       int save_err = errno;
       __fchdir (cwdfd);
+      close_not_cancel_no_status (cwdfd);
       __set_errno (save_err);
     }
   else if (cwd != NULL)

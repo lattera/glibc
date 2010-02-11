@@ -1,3 +1,9 @@
+2010-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11271]
+	* io/ftw.c (ftw_startup): Close	descriptor for initial directory
+	after changing back to it.
+
 2010-02-05  David S. Miller  <davem@davemloft.net>
 
 	* elf/elf.h (R_SPARC_JMP_IREL, R_SPARC_IRELATIVE): Define.
