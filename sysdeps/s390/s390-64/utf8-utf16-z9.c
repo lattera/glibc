@@ -345,9 +345,12 @@ gconv_end (struct __gconv_step *data)
    Operation.  */
 #define BODY								\
   {									\
-    if (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH)				\
+    /* The hardware instruction currently fails to report an error for	\
+       isolated low surrogates so we have to disable the instruction	\
+       until this gets resolved.  */					\
+    if (0) /* (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH) */			\
       {									\
-	HARDWARE_CONVERT ("cu21 %0, %1");				\
+	HARDWARE_CONVERT ("cu21 %0, %1, 1");				\
 	if (inptr != inend)						\
 	  {								\
 	    /* Check if the third byte is				\
@@ -388,7 +391,7 @@ gconv_end (struct __gconv_step *data)
 									\
 	outptr += 2;							\
       }									\
-    else if (c >= 0x0800 && c <= 0xd7ff)				\
+    else if ((c >= 0x0800 && c <= 0xd7ff) || c > 0xdfff)		\
       {									\
 	/* Three byte UTF-8 char.  */					\
 									\

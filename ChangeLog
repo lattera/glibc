@@ -1,3 +1,10 @@
+2010-02-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Disable hardware
+	instructions cu21 and cu24.  Add well-formedness checking
+	parameter and adjust the software implementation.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Likewise.
+
 2010-02-10  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11271]

@@ -203,7 +203,10 @@ gconv_end (struct __gconv_step *data)
    swapping).  */
 #define BODY								\
   {									\
-    if (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH)				\
+    /* The hardware instruction currently fails to report an error for	\
+       isolated low surrogates so we have to disable the instruction	\
+       until this gets resolved.  */					\
+    if (0) /* (GLRO (dl_hwcap) & HWCAP_S390_ETF3EH) */			\
       {									\
 	HARDWARE_CONVERT ("cu24 %0, %1, 1");				\
 	if (inptr != inend)						\
@@ -229,6 +232,12 @@ gconv_end (struct __gconv_step *data)
       }									\
     else								\
       {									\
+        /* An isolated low-surrogate was found.  This has to be         \
+	   considered ill-formed.  */					\
+        if (__builtin_expect (u1 >= 0xdc00, 0))				\
+	  {								\
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				\
+	  }								\
 	/* It's a surrogate character.  At least the first word says	\
 	   it is.  */							\
 	if (__builtin_expect (inptr + 4 > inend, 0))			\
