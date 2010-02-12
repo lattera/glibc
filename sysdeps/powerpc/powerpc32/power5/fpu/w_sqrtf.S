@@ -63,7 +63,6 @@ EALIGN (__sqrtf, 5, 0)
 	cfi_offset(lr,20-16)
 	cfi_offset(r30,8-16)
 #ifdef SHARED
-# ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,.LCF1
 .LCF1:
 	mflr	r30
@@ -71,12 +70,6 @@ EALIGN (__sqrtf, 5, 0)
 	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-.LCF1@l
 	lwz	r9,_LIB_VERSION@got(30)
 	lwz	r0,0(r9)
-# else
-	bl	_GLOBAL_OFFSET_TABLE_@local-4
-	mflr	r30
-	lwz	r9,_LIB_VERSION@got(30)
-	lwz	r0,0(r9)
-# endif
 #else
 	lis	r9,_LIB_VERSION@ha
 	lwz	r0,_LIB_VERSION@l(r9)

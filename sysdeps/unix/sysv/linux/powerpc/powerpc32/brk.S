@@ -36,17 +36,10 @@ ENTRY (BP_SYM (__brk))
 	DO_CALL(SYS_ify(brk))
 	lwz     r6,8(r1)
 #ifdef PIC
-# ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r5
 	addis	r5,r5,__curbrk-1b@ha
 	stw	r3,__curbrk-1b@l(r5)
-# else
-	bl      _GLOBAL_OFFSET_TABLE_@local-4
-	mflr    r5
-	lwz     r5,__curbrk@got(r5)
-	stw     r3,0(r5)
-# endif
 #else
 	lis     r4,__curbrk@ha
 	stw     r3,__curbrk@l(r4)

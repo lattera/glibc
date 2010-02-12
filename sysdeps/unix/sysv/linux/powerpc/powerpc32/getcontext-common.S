@@ -145,15 +145,10 @@ ENTRY(__CONTEXT_FUNC_NAME)
 # ifdef __CONTEXT_ENABLE_VRS
 #  ifdef PIC
 	mflr    r8
-#   ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r7
 	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-1b@ha
 	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-1b@l
-#   else
-	bl      _GLOBAL_OFFSET_TABLE_@local-4
-	mflr    r7
-#   endif
 #   ifdef SHARED
 	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8

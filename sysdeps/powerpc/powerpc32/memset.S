@@ -256,17 +256,10 @@ L(checklinesize):
 	beq	L(medium)
 /* Establishes GOT addressability so we can load __cache_line_size
    from static. This value was set from the aux vector during startup.  */
-# ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	rGOT
 	addis	rGOT,rGOT,__cache_line_size-1b@ha
 	lwz	rCLS,__cache_line_size-1b@l(rGOT)
-# else
-	bl	_GLOBAL_OFFSET_TABLE_@local-4
-	mflr	rGOT
-	lwz	rGOT,__cache_line_size@got(rGOT)
-	lwz	rCLS,0(rGOT)
-# endif
 	mtlr	rTMP
 #else
 /* Load __cache_line_size from static. This value was set from the

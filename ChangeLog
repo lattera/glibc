@@ -1,3 +1,40 @@
+2010-02-12  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16
+	check.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc32/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc32/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/configure.in: Fail if R_PPC_REL16
+	is not supported.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+
 2010-02-12  Alan Modra  <amodra@gmail.com>
 
 	* elf/tls-macros.h (__TLS_CALL_CLOBBERS <__powerpc__>): Remove r3.

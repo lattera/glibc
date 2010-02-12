@@ -47,15 +47,10 @@ _dl_start_user:
    passed by value!).  */
 
 /*  Put our GOT pointer in r31, */
-#ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r31
 	addis	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@ha
 	addi	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@l
-#else
-	bl	_GLOBAL_OFFSET_TABLE_-4@local
-	mflr	r31
-#endif
 /*  the address of _start in r30, */
 	mr	r30,r3
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */

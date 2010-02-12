@@ -29,17 +29,10 @@ ENTRY (__rintf)
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
-# ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r9
 	addis	r9,r9,.LC0-1b@ha
 	lfs	fp13,.LC0-1b@l(r9)
-# else
-	bl	_GLOBAL_OFFSET_TABLE_@local-4
-	mflr	r10
-	lwz	r9,.LC0@got(10)
-	lfs	fp13,0(r9)
-# endif
 	mtlr	r11
 	cfi_same_value (lr)
 #else

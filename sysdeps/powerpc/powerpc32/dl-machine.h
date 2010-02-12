@@ -41,16 +41,13 @@ static inline Elf32_Addr * __attribute__ ((const))
 ppc_got (void)
 {
   Elf32_Addr *got;
-#ifdef HAVE_ASM_PPC_REL16
+
   asm ("bcl 20,31,1f\n"
        "1:	mflr %0\n"
        "	addis %0,%0,_GLOBAL_OFFSET_TABLE_-1b@ha\n"
        "	addi %0,%0,_GLOBAL_OFFSET_TABLE_-1b@l\n"
        : "=b" (got) : : "lr");
-#else
-  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
-       : "=l" (got));
-#endif
+
   return got;
 }
 

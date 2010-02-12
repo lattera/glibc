@@ -25,11 +25,10 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:$LINENO: result: $libc_cv_ppc_rel16" >&5
 $as_echo "$libc_cv_ppc_rel16" >&6; }
-if test $libc_cv_ppc_rel16 = yes; then
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_ASM_PPC_REL16 1
-_ACEOF
-
+if test $libc_cv_ppc_rel16 = no; then
+  { { $as_echo "$as_me:$LINENO: error: R_PPC_REL16 is not supported. Binutils is too old." >&5
+$as_echo "$as_me: error: R_PPC_REL16 is not supported. Binutils is too old." >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 # See whether GCC uses -msecure-plt.

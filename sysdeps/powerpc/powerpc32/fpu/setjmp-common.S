@@ -85,15 +85,10 @@ ENTRY (BP_SYM (__sigsetjmp))
 # ifdef PIC
 	mflr    r6
 	cfi_register(lr,r6)
-#  ifdef HAVE_ASM_PPC_REL16
 	bcl	20,31,1f
 1:	mflr	r5
 	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@ha
 	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@l
-#  else
-	bl      _GLOBAL_OFFSET_TABLE_@local-4
-	mflr    r5
-#  endif
 	mtlr	r6
 	cfi_same_value (lr)
 #  ifdef SHARED
