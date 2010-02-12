@@ -1,7 +1,6 @@
 2010-02-12  Luis Machado  <luisgpm@br.ibm.com>
 
-	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16
-	check.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16 check.
 	* sysdeps/powerpc/powerpc32/dl-machine.h: Likewise.
 	* sysdeps/powerpc/powerpc32/elf/start.S: Likewise.
 	* sysdeps/powerpc/powerpc32/memset.S: Likewise.
@@ -26,7 +25,8 @@
 	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Likewise.
 	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Likewise.
 	* sysdeps/powerpc/powerpc32/dl-start.S: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S:
+	Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
 	Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
@@ -37,12 +37,12 @@
 
 2010-02-12  Alan Modra  <amodra@gmail.com>
 
-	* elf/tls-macros.h (__TLS_CALL_CLOBBERS <__powerpc__>): Remove r3.
+	* elf/tls-macros.h [__powerpc__] (__TLS_CALL_CLOBBERS): Remove r3.
 	Define and use for __powerpc64__ too.
-	(TLS_LD <__powerpc__>): Add r3 to clobbers.
-	(TLS_GD <__powerpc__>): Set asm output.  Make __result r3 reg.
-	(TLS_GD <__powerpc64__>): Make __result r3 reg.
-	(TLS_IE <__powerpc64__>): Relax output constraint.
+	[__powerpc__] (TLS_LD): Add r3 to clobbers.
+	[__powerpc__] (TLS_GD): Set asm output.  Make __result r3 reg.
+	[__powerpc64__] (TLS_GD): Make __result r3 reg.
+	[__powerpc64__] (TLS_IE): Relax output constraint.
 
 2010-02-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
