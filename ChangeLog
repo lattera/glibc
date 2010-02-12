@@ -1,3 +1,12 @@
+2010-02-12  Alan Modra  <amodra@gmail.com>
+
+	* elf/tls-macros.h (__TLS_CALL_CLOBBERS <__powerpc__>): Remove r3.
+	Define and use for __powerpc64__ too.
+	(TLS_LD <__powerpc__>): Add r3 to clobbers.
+	(TLS_GD <__powerpc__>): Set asm output.  Make __result r3 reg.
+	(TLS_GD <__powerpc64__>): Make __result r3 reg.
+	(TLS_IE <__powerpc64__>): Relax output constraint.
+
 2010-02-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Disable hardware
