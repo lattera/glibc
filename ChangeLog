@@ -1,3 +1,19 @@
+2010-02-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strcmp-ssse3, strcmp-sse4, strncmp-c, strncmp-ssse3, strncmp-sse4,
+	memcmp-c, memcmp-ssse3, and memcmp-sse4.
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memcmp.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp.S: New file.
+
 2010-02-12  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16 check.
