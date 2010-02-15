@@ -176,6 +176,7 @@ L(first4bytes):
 	PUSH	(%ebx)
 	PUSH	(%edi)
 	PUSH	(%esi)
+	cfi_remember_state
 	mov	%edx, %edi
 	mov	%eax, %esi
 	xorl	%eax, %eax
@@ -241,6 +242,7 @@ L(ret):
 #endif
 	ret
 
+	cfi_restore_state
 #ifdef USE_AS_STRNCMP
 L(more16byteseq):
 	POP	(%esi)
@@ -253,6 +255,10 @@ L(eq):
 	POP	(%ebp)
 #endif
 	ret
+
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(neq):
 	mov	$1, %eax
 	ja	L(neq_bigger)
@@ -263,6 +269,9 @@ L(neq_bigger):
 #endif
 	ret
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(less16bytes):
 	add	$0xfefefeff, %ecx
 	jnc	L(less4bytes)
@@ -370,8 +379,13 @@ L(more4bytes):
 	movzbl	7(%eax), %ecx
 	cmpb	%cl, 7(%edx)
 	jne	L(neq)
+#if 0
+	// XXX bug in original code.  It had a fallthru without any code
 	cmpl	$0, %ecx
 	je	L(eq)
+#else
+	jmp	L(eq)
+#endif
 
 END (STRCMP)
 

@@ -160,6 +160,9 @@ L(crosspage):
 	PUSH	(%ebx)
 	PUSH	(%edi)
 	PUSH	(%esi)
+#ifdef USE_AS_STRNCMP
+	cfi_remember_state
+#endif
 
 	movl	%edx, %edi
 	movl	%eax, %ecx
@@ -254,7 +257,7 @@ L(loop_ashr_0):
 
 /*
  * The following cases will be handled by ashr_1
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(15)            n -15            0(15 +(n-15) - n)         ashr_1
  */
 	.p2align 4
@@ -360,7 +363,7 @@ L(ashr_1_exittail):
 
 /*
  * The following cases will be handled by ashr_2
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(14~15)            n -14            1(15 +(n-14) - n)         ashr_2
  */
 	.p2align 4
@@ -467,7 +470,7 @@ L(ashr_2_exittail):
 
 /*
  * The following cases will be handled by ashr_3
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(13~15)            n -13            2(15 +(n-13) - n)         ashr_3
  */
 	.p2align 4
@@ -573,7 +576,7 @@ L(ashr_3_exittail):
 
 /*
  * The following cases will be handled by ashr_4
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(12~15)            n -12            3(15 +(n-12) - n)         ashr_4
  */
 	.p2align 4
@@ -682,7 +685,7 @@ L(ashr_4_exittail):
 
 /*
  * The following cases will be handled by ashr_5
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(11~15)            n -11            4(15 +(n-11) - n)         ashr_5
  */
 	.p2align 4
@@ -788,7 +791,7 @@ L(ashr_5_exittail):
 
 /*
  * The following cases will be handled by ashr_6
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(10~15)            n -10            5(15 +(n-10) - n)         ashr_6
  */
 
@@ -896,7 +899,7 @@ L(ashr_6_exittail):
 
 /*
  * The following cases will be handled by ashr_7
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(9~15)            n - 9            6(15 +(n-9) - n)         ashr_7
  */
 
@@ -1006,7 +1009,7 @@ L(ashr_7_exittail):
 
 /*
  * The following cases will be handled by ashr_8
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(8~15)            n - 8            7(15 +(n-8) - n)         ashr_8
  */
 	.p2align 4
@@ -1113,7 +1116,7 @@ L(ashr_8_exittail):
 
 /*
  * The following cases will be handled by ashr_9
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(7~15)            n - 7            8(15 +(n-7) - n)         ashr_9
  */
 	.p2align 4
@@ -1219,7 +1222,7 @@ L(ashr_9_exittail):
 
 /*
  * The following cases will be handled by ashr_10
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(6~15)            n - 6            9(15 +(n-6) - n)         ashr_10
  */
 	.p2align 4
@@ -1325,7 +1328,7 @@ L(ashr_10_exittail):
 
 /*
  * The following cases will be handled by ashr_11
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(5~15)            n - 5            10(15 +(n-5) - n)         ashr_11
  */
 	.p2align 4
@@ -1431,7 +1434,7 @@ L(ashr_11_exittail):
 
 /*
  * The following cases will be handled by ashr_12
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(4~15)            n - 4            11(15 +(n-4) - n)         ashr_12
  */
 	.p2align 4
@@ -1537,7 +1540,7 @@ L(ashr_12_exittail):
 
 /*
  * The following cases will be handled by ashr_13
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(3~15)            n - 3            12(15 +(n-3) - n)         ashr_13
  */
 	.p2align 4
@@ -1643,7 +1646,7 @@ L(ashr_13_exittail):
 
 /*
  * The following cases will be handled by ashr_14
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(2~15)            n - 2            13(15 +(n-2) - n)         ashr_14
  */
 	.p2align 4
@@ -1749,7 +1752,7 @@ L(ashr_14_exittail):
 
 /*
  * The following cases will be handled by ashr_14
- * ecx(offset of esi)  eax(offset of edi)   relative offset   	corresponding case
+ * ecx(offset of esi)  eax(offset of edi)   relative offset	corresponding case
  *        n(1~15)            n - 1            14(15 +(n-1) - n)         ashr_15
  */
 
@@ -1916,6 +1919,9 @@ L(less16bytes):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte0):
 #ifdef USE_AS_STRNCMP
 	cmp	$0, %ebp
@@ -1931,6 +1937,9 @@ L(Byte0):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte1):
 #ifdef USE_AS_STRNCMP
 	cmp	$1, %ebp
@@ -1946,6 +1955,9 @@ L(Byte1):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte2):
 #ifdef USE_AS_STRNCMP
 	cmp	$2, %ebp
@@ -1961,6 +1973,9 @@ L(Byte2):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte3):
 #ifdef USE_AS_STRNCMP
 	cmp	$3, %ebp
@@ -1976,6 +1991,9 @@ L(Byte3):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte4):
 #ifdef USE_AS_STRNCMP
 	cmp	$4, %ebp
@@ -1989,7 +2007,11 @@ L(Byte4):
 	POP	(%ebp)
 #endif
 	ret
+
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte5):
 #ifdef USE_AS_STRNCMP
 	cmp	$5, %ebp
@@ -2005,6 +2027,9 @@ L(Byte5):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(Byte6):
 #ifdef USE_AS_STRNCMP
 	cmp	$6, %ebp
@@ -2020,6 +2045,9 @@ L(Byte6):
 	ret
 
 	.p2align 4
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(2next_8_bytes):
 	add	$8, %eax
 	add	$8, %edx
@@ -2063,6 +2091,9 @@ L(2next_8_bytes):
 #endif
 	ret
 
+#ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
+#endif
 L(neq):
 	mov	$1, %eax
 	ja	L(neq_bigger)
@@ -2074,6 +2105,7 @@ L(neq_bigger):
 	ret
 
 #ifdef USE_AS_STRNCMP
+	cfi_remember_state
 L(more8byteseq):
 	POP	(%esi)
 	POP	(%edi)
@@ -2087,7 +2119,9 @@ L(eq):
 #endif
 	xorl	%eax, %eax
 	ret
+
 #ifdef USE_AS_STRNCMP
+	CFI_PUSH (%ebp)
 L(less16bytes_sncmp):
 	test	%ebp, %ebp
 	jz	L(eq)

@@ -43,8 +43,7 @@
 #define BLK2		BLK1+4
 #define LEN		BLK2+4
 #define RETURN_END	POP (%edi); POP (%esi); POP (%ebx); ret
-#define RETURN		RETURN_END; CFI_PUSH (%ebx); CFI_PUSH (%edi); \
-			CFI_PUSH (%esi)
+#define RETURN		RETURN_END; cfi_restore_state; cfi_remember_state
 
 	.section .text.ssse3,"ax",@progbits
 ENTRY (MEMCMP)
@@ -76,12 +75,13 @@ L(1bytesend):
 L(zero):
 	mov	$0, %eax
 	ret
-	
+
 	ALIGN (4)
 L(48bytesormore):
 	PUSH (%ebx)
 	PUSH (%esi)
 	PUSH (%edi)
+	cfi_remember_state
 	movdqu    (%eax), %xmm3
 	movdqu    (%edx), %xmm0
 	movl	%eax, %edi
@@ -155,7 +155,7 @@ L(shr_0):
 	add	$32, %esi
 	sub	$0xffff, %edx
 	jnz	L(exit)
-	
+
 
 	lea	(%ecx, %edi,1), %eax
 	lea	(%ecx, %esi,1), %edx
@@ -163,6 +163,8 @@ L(shr_0):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_0_gobble):
 	lea	-48(%ecx), %ecx
@@ -207,6 +209,8 @@ L(shr_0_gobble_loop_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_1):
 	cmp	$80, %ecx
@@ -235,6 +239,8 @@ L(shr_1):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_1_gobble):
 	sub	$32, %ecx
@@ -286,6 +292,8 @@ L(shr_1_gobble_next):
 	jmp	L(less48bytes)
 
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_2):
 	cmp	$80, %ecx
@@ -314,6 +322,8 @@ L(shr_2):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_2_gobble):
 	sub	$32, %ecx
@@ -364,6 +374,8 @@ L(shr_2_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_3):
 	cmp	$80, %ecx
@@ -392,6 +404,8 @@ L(shr_3):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_3_gobble):
 	sub	$32, %ecx
@@ -442,6 +456,8 @@ L(shr_3_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_4):
 	cmp	$80, %ecx
@@ -470,6 +486,8 @@ L(shr_4):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_4_gobble):
 	sub	$32, %ecx
@@ -520,6 +538,8 @@ L(shr_4_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_5):
 	cmp	$80, %ecx
@@ -548,6 +568,8 @@ L(shr_5):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_5_gobble):
 	sub	$32, %ecx
@@ -598,6 +620,8 @@ L(shr_5_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_6):
 	cmp	$80, %ecx
@@ -626,6 +650,8 @@ L(shr_6):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_6_gobble):
 	sub	$32, %ecx
@@ -676,6 +702,8 @@ L(shr_6_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_7):
 	cmp	$80, %ecx
@@ -704,6 +732,8 @@ L(shr_7):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_7_gobble):
 	sub	$32, %ecx
@@ -754,6 +784,8 @@ L(shr_7_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_8):
 	cmp	$80, %ecx
@@ -782,6 +814,8 @@ L(shr_8):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_8_gobble):
 	sub	$32, %ecx
@@ -832,6 +866,8 @@ L(shr_8_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_9):
 	cmp	$80, %ecx
@@ -860,6 +896,8 @@ L(shr_9):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_9_gobble):
 	sub	$32, %ecx
@@ -910,6 +948,8 @@ L(shr_9_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_10):
 	cmp	$80, %ecx
@@ -938,6 +978,8 @@ L(shr_10):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_10_gobble):
 	sub	$32, %ecx
@@ -988,6 +1030,8 @@ L(shr_10_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_11):
 	cmp	$80, %ecx
@@ -1016,6 +1060,8 @@ L(shr_11):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_11_gobble):
 	sub	$32, %ecx
@@ -1066,6 +1112,8 @@ L(shr_11_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_12):
 	cmp	$80, %ecx
@@ -1094,6 +1142,8 @@ L(shr_12):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_12_gobble):
 	sub	$32, %ecx
@@ -1144,6 +1194,8 @@ L(shr_12_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_13):
 	cmp	$80, %ecx
@@ -1172,6 +1224,8 @@ L(shr_13):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_13_gobble):
 	sub	$32, %ecx
@@ -1222,6 +1276,8 @@ L(shr_13_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_14):
 	cmp	$80, %ecx
@@ -1250,6 +1306,8 @@ L(shr_14):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_14_gobble):
 	sub	$32, %ecx
@@ -1300,6 +1358,8 @@ L(shr_14_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_15):
 	cmp	$80, %ecx
@@ -1328,6 +1388,8 @@ L(shr_15):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shr_15_gobble):
 	sub	$32, %ecx
@@ -1378,6 +1440,8 @@ L(shr_15_gobble_next):
 	POP (%esi)
 	jmp	L(less48bytes)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(exit):
 	pmovmskb %xmm1, %ebx
@@ -1497,8 +1561,9 @@ L(Byte31):
 	movzbl	 -9(%edi), %eax
 	movzbl	 -9(%esi), %edx
 	sub	%edx, %eax
-	RETURN
+	RETURN_END
 
+	CFI_PUSH (%ebx)
 	ALIGN (4)
 L(more8bytes):
 	cmp	$16, %ecx

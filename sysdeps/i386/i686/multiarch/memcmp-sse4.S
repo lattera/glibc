@@ -105,43 +105,43 @@ L(less8bytes):
 	mov	1(%eax), %bl
 	cmpb	1(%edx), %bl
 	jne	L(nonzero)
-	
-	cmp	$2, %ecx		
+
+	cmp	$2, %ecx
 	jz	L(0bytes)
 
 	mov	2(%eax), %bl
 	cmpb	2(%edx), %bl
 	jne	L(nonzero)
-	
-	cmp	$3, %ecx		
+
+	cmp	$3, %ecx
 	jz	L(0bytes)
-	
+
 	mov	3(%eax), %bl
 	cmpb	3(%edx), %bl
 	jne	L(nonzero)
-	
-	cmp	$4, %ecx		
+
+	cmp	$4, %ecx
 	jz	L(0bytes)
-	
+
 	mov	4(%eax), %bl
 	cmpb	4(%edx), %bl
 	jne	L(nonzero)
 
-	cmp	$5, %ecx		
+	cmp	$5, %ecx
 	jz	L(0bytes)
-	
+
 	mov	5(%eax), %bl
 	cmpb	5(%edx), %bl
 	jne	L(nonzero)
 
-	cmp	$6, %ecx		
+	cmp	$6, %ecx
 	jz	L(0bytes)
-	
+
 	mov	6(%eax), %bl
 	cmpb	6(%edx), %bl
 	je	L(0bytes)
 L(nonzero):
-	POP (%ebx)	
+	POP (%ebx)
 	mov	$1, %eax
 	ja	L(above)
 	neg	%eax
@@ -151,11 +151,11 @@ L(above):
 
 	ALIGN (4)
 L(0bytes):
-	POP (%ebx)	
+	POP (%ebx)
 	xor	%eax, %eax
 	ret
 	CFI_PUSH (%ebx)
-	
+
 	ALIGN (4)
 L(less1bytes):
 	jb	L(0bytesend)
@@ -609,7 +609,7 @@ L(26bytes):
 	mov	-6(%edx), %ebx
 	cmp	%ebx, %ecx
 	jne	L(find_diff)
-	
+
 	movzwl	-2(%eax), %ecx
 	movzwl	-2(%edx), %ebx
 	cmp	%bl, %cl
@@ -873,7 +873,7 @@ L(32bytes):
 L(less16bytes):
 	add	%ebx, %eax
 	add	%ebx, %edx
-	
+
 	mov	(%eax), %ecx
 	mov	(%edx), %ebx
 	cmp	%ebx, %ecx
@@ -908,7 +908,7 @@ L(find_diff):
 	jne	L(end)
 	cmp	%bx, %cx
 L(end):
-	POP (%ebx)	
+	POP (%ebx)
 	mov	$1, %eax
 	ja	L(bigger)
 	neg	%eax
