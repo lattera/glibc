@@ -379,13 +379,7 @@ L(more4bytes):
 	movzbl	7(%eax), %ecx
 	cmpb	%cl, 7(%edx)
 	jne	L(neq)
-#if 0
-	// XXX bug in original code.  It had a fallthru without any code
-	cmpl	$0, %ecx
-	je	L(eq)
-#else
 	jmp	L(eq)
-#endif
 
 END (STRCMP)
 
