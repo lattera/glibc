@@ -62,7 +62,7 @@ enum __socket_type
   /* Flags to be ORed into the type parameter of socket and socketpair and
      used for the flags parameter of paccept.  */
 
-  SOCK_CLOEXEC = 01000000,	/* Atomically set close-on-exec flag for the
+  SOCK_CLOEXEC = 010000000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
 #define SOCK_CLOEXEC SOCK_CLOEXEC
 #undef SOCK_NONBLOCK

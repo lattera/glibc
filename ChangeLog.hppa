@@ -1,3 +1,8 @@
+2010-02-17  Matt Turner  <mattst88@gmail.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Actually fix
+	SOCK_CLOEXEC to match O_CLOEXEC.
+
 2010-02-02  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Define
