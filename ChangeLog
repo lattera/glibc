@@ -1,5 +1,8 @@
 2010-02-17  Carl Fredrik Hammar  <hammy.lite@gmail.com>
 
+	* hurd/hurdioctl.c (tiocsctty): Only get FD ports, do work in...
+	(tiocsctty_port): ...this new function.
+
 	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS_1): Cast to
 	`ioctl_handler_t'.
 

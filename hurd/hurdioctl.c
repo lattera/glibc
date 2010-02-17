@@ -1,5 +1,5 @@
 /* ioctl commands which must be done in the C library.
-   Copyright (C) 1994,95,96,97,99,2001,2002,2009
+   Copyright (C) 1994,95,96,97,99,2001,2002,2009,2010
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -239,6 +239,32 @@ _hurd_setcttyid (mach_port_t cttyid)
 }
 
 
+static inline error_t
+do_tiocsctty (io_t port, io_t ctty)
+{
+  mach_port_t cttyid;
+  error_t err;
+
+  if (ctty != MACH_PORT_NULL)
+    /* PORT is already the ctty.  Nothing to do.  */
+    return 0;
+
+  /* Get PORT's cttyid port.  */
+  err = __term_getctty (port, &cttyid);
+  if (err)
+    return err;
+
+  /* Change the terminal's pgrp to ours.  */
+  err = __tioctl_tiocspgrp (port, _hurd_pgrp);
+  if (err)
+    __mach_port_deallocate (__mach_task_self (), cttyid);
+  else
+    /* Make it our own.  */
+    install_ctty (cttyid);
+
+  return err;
+}
+
 /* Make FD be the controlling terminal.
    This function is called for `ioctl (fd, TCIOSCTTY)'.  */
 
@@ -246,27 +272,7 @@ static int
 tiocsctty (int fd,
 	   int request)		/* Always TIOCSCTTY.  */
 {
-  mach_port_t cttyid;
-  error_t err;
-
-  /* Get FD's cttyid port, unless it is already ours.  */
-  err = HURD_DPORT_USE (fd, ctty != MACH_PORT_NULL ? EADDRINUSE :
-			__term_getctty (port, &cttyid));
-  if (err == EADDRINUSE)
-    /* FD is already the ctty.  Nothing to do.  */
-    return 0;
-  else if (err)
-    return __hurd_fail (err);
-
-  /* Change the terminal's pgrp to ours.  */
-  err = HURD_DPORT_USE (fd, __tioctl_tiocspgrp (port, _hurd_pgrp));
-  if (err)
-    return __hurd_fail (err);
-
-  /* Make it our own.  */
-  install_ctty (cttyid);
-
-  return 0;
+  return __hurd_fail (HURD_DPORT_USE (fd, tiocsctty_port (port, ctty)));
 }
 _HURD_HANDLE_IOCTL (tiocsctty, TIOCSCTTY);
 
