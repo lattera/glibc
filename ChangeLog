@@ -1,3 +1,7 @@
+2010-02-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Simplify unwind info.
+
 2010-02-17  H.J. Lu  <hongjiu.lu@intel.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 

@@ -40,6 +40,7 @@
 # endif
 # define STR1		4
 # define STR2		STR1+4
+# define RETURN		ret; .p2align 4
 #else
 # ifndef STRCMP
 #  define STRCMP	__strncmp_sse4_2
@@ -47,6 +48,7 @@
 # define STR1		8
 # define STR2		STR1+4
 # define CNT		STR2+4
+# define RETURN		POP (%ebp); ret; .p2align 4; CFI_PUSH (%ebp)
 #endif
 
 	.section .text.sse4.2,"ax",@progbits
@@ -223,6 +225,7 @@ L(crosspage):
 	add	$16, %esi
 	jmp	L(check_offset)
 
+	.p2align 4
 L(end):
 	jnc	L(ret)
 #ifdef USE_AS_STRNCMP
@@ -242,6 +245,7 @@ L(ret):
 #endif
 	ret
 
+	.p2align 4
 	cfi_restore_state
 #ifdef USE_AS_STRNCMP
 L(more16byteseq):
@@ -251,27 +255,15 @@ L(more16byteseq):
 #endif
 L(eq):
 	xorl	%eax, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(neq):
 	mov	$1, %eax
 	ja	L(neq_bigger)
 	neg	%eax
 L(neq_bigger):
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
+	RETURN
+
 L(less16bytes):
 	add	$0xfefefeff, %ecx
 	jnc	L(less4bytes)
