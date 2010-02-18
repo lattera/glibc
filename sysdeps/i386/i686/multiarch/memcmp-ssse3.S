@@ -60,6 +60,7 @@ ENTRY (MEMCMP)
 	jmp	L(less48bytes)
 
 	ALIGN (4)
+	CFI_POP (%ebx)
 L(less1bytes):
 	jb	L(zero)
 	movb	(%eax), %cl
@@ -155,7 +156,6 @@ L(shr_0):
 	add	$32, %esi
 	sub	$0xffff, %edx
 	jnz	L(exit)
-
 
 	lea	(%ecx, %edi,1), %eax
 	lea	(%ecx, %esi,1), %edx
@@ -1662,7 +1662,6 @@ L(more40bytes):
 	je	L(46bytes)
 	jmp	L(47bytes)
 
-
 	ALIGN (4)
 L(less48bytes):
 	cmp	$8, %ecx
@@ -1678,9 +1677,6 @@ L(less48bytes):
 	cmp	$6, %ecx
 	je	L(6bytes)
 	jmp	L(7bytes)
-
-
-
 
 	ALIGN (4)
 L(44bytes):
