@@ -96,8 +96,9 @@ ENTRY (MEMCMP)
 	add	%ecx, %edx
 	add	%ecx, %eax
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %ecx, 4)
-L(less8bytes):
 
+	ALIGN (4)
+L(less8bytes):
 	mov	(%eax), %bl
 	cmpb	(%edx), %bl
 	jne	L(nonzero)
@@ -154,7 +155,6 @@ L(0bytes):
 	POP (%ebx)
 	xor	%eax, %eax
 	ret
-	CFI_PUSH (%ebx)
 
 	ALIGN (4)
 L(less1bytes):
@@ -207,6 +207,8 @@ L(64bytesormore_loop):
 	add	%ecx, %edx
 	add	%ecx, %eax
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %ecx, 4)
+
+	ALIGN (4)
 L(find_16diff):
 	sub	$16, %ecx
 L(find_32diff):
@@ -217,8 +219,8 @@ L(find_64diff):
 	add	%ecx, %edx
 	add	%ecx, %eax
 	jmp	L(16bytes)
-	ALIGN (4)
 
+	ALIGN (4)
 L(16bytes):
 	mov	-16(%eax), %ecx
 	mov	-16(%edx), %ebx
@@ -377,7 +379,7 @@ L(1bytes):
 	jne	L(end)
 	RETURN
 
-
+	ALIGN (4)
 L(52bytes):
 	movdqu	-52(%eax), %xmm1
 	movdqu	-52(%edx), %xmm2
@@ -406,6 +408,7 @@ L(20bytes):
 	jne	L(find_diff)
 	RETURN
 
+	ALIGN (4)
 L(53bytes):
 	movdqu	-53(%eax), %xmm1
 	movdqu	-53(%edx), %xmm2
@@ -437,6 +440,7 @@ L(21bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(54bytes):
 	movdqu	-54(%eax), %xmm1
 	movdqu	-54(%edx), %xmm2
@@ -472,6 +476,7 @@ L(22bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(55bytes):
 	movdqu	-55(%eax), %xmm1
 	movdqu	-55(%edx), %xmm2
@@ -509,6 +514,7 @@ L(23bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(56bytes):
 	movdqu	-56(%eax), %xmm1
 	movdqu	-56(%edx), %xmm2
@@ -543,6 +549,7 @@ L(24bytes):
 	jne	L(find_diff)
 	RETURN
 
+	ALIGN (4)
 L(57bytes):
 	movdqu	-57(%eax), %xmm1
 	movdqu	-57(%edx), %xmm2
@@ -578,6 +585,7 @@ L(25bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(58bytes):
 	movdqu	-58(%eax), %xmm1
 	movdqu	-58(%edx), %xmm2
@@ -619,6 +627,7 @@ L(26bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(59bytes):
 	movdqu	-59(%eax), %xmm1
 	movdqu	-59(%edx), %xmm2
@@ -660,6 +669,7 @@ L(27bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(60bytes):
 	movdqu	-60(%eax), %xmm1
 	movdqu	-60(%edx), %xmm2
@@ -696,6 +706,7 @@ L(28bytes):
 	jne	L(find_diff)
 	RETURN
 
+	ALIGN (4)
 L(61bytes):
 	movdqu	-61(%eax), %xmm1
 	movdqu	-61(%edx), %xmm2
@@ -738,6 +749,7 @@ L(29bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(62bytes):
 	movdqu	-62(%eax), %xmm1
 	movdqu	-62(%edx), %xmm2
@@ -780,6 +792,7 @@ L(30bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(63bytes):
 	movdqu	-63(%eax), %xmm1
 	movdqu	-63(%edx), %xmm2
@@ -826,6 +839,7 @@ L(31bytes):
 	jne	L(end)
 	RETURN
 
+	ALIGN (4)
 L(64bytes):
 	movdqu	-64(%eax), %xmm1
 	movdqu	-64(%edx), %xmm2
@@ -870,6 +884,7 @@ L(32bytes):
 	jne	L(find_diff)
 	RETURN
 
+	ALIGN (4)
 L(less16bytes):
 	add	%ebx, %eax
 	add	%ebx, %edx
@@ -914,8 +929,11 @@ L(end):
 	neg	%eax
 L(bigger):
 	ret
+END (MEMCMP)
 
+	.section .rodata.sse4.2,"a",@progbits
 	ALIGN (2)
+	.type	L(table_64bytes), @object
 L(table_64bytes):
 	.int	JMPTBL (L(0bytes), L(table_64bytes))
 	.int	JMPTBL (L(1bytes), L(table_64bytes))
@@ -982,7 +1000,5 @@ L(table_64bytes):
 	.int	JMPTBL (L(62bytes), L(table_64bytes))
 	.int	JMPTBL (L(63bytes), L(table_64bytes))
 	.int	JMPTBL (L(64bytes), L(table_64bytes))
-
-END (MEMCMP)
-
+	.size	L(table_64bytes), .-L(table_64bytes)
 #endif

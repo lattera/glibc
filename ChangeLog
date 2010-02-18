@@ -1,5 +1,8 @@
 2010-02-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Add alignnments.
+	Fix one unwind info problem.
+
 	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S (less1bytes): Add CFI_POP.
 
 	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Simplify unwind info.
