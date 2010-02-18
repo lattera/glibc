@@ -1,3 +1,9 @@
+2010-02-17  H.J. Lu  <hongjiu.lu@intel.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Fix typo in unwind info.
+	Clean up a bit.
+
 2010-02-17  Carl Fredrik Hammar  <hammy.lite@gmail.com>
 
 	* hurd/hurdioctl.c (tiocsctty): Only get FD ports, do work in...

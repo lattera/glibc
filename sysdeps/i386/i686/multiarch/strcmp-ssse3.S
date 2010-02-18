@@ -40,6 +40,7 @@
 # endif
 # define STR1		4
 # define STR2		STR1+4
+# define RETURN		ret; .p2align 4
 # define UPDATE_STRNCMP_COUNTER
 #else
 # ifndef STRCMP
@@ -48,7 +49,7 @@
 # define STR1		8
 # define STR2		STR1+4
 # define CNT		STR2+4
-
+# define RETURN		POP (%ebp); ret; .p2align 4; CFI_PUSH (%ebp)
 # define UPDATE_STRNCMP_COUNTER				\
 	/* calculate left number to compare */		\
 	mov	$16, %esi;				\
@@ -1913,15 +1914,8 @@ L(less16bytes):
 	movzx	7(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte0):
 #ifdef USE_AS_STRNCMP
 	cmp	$0, %ebp
@@ -1931,15 +1925,8 @@ L(Byte0):
 	movzx	(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte1):
 #ifdef USE_AS_STRNCMP
 	cmp	$1, %ebp
@@ -1949,15 +1936,8 @@ L(Byte1):
 	movzx	1(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte2):
 #ifdef USE_AS_STRNCMP
 	cmp	$2, %ebp
@@ -1967,15 +1947,8 @@ L(Byte2):
 	movzx	2(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte3):
 #ifdef USE_AS_STRNCMP
 	cmp	$3, %ebp
@@ -1985,15 +1958,8 @@ L(Byte3):
 	movzx	3(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte4):
 #ifdef USE_AS_STRNCMP
 	cmp	$4, %ebp
@@ -2003,15 +1969,8 @@ L(Byte4):
 	movzx	4(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte5):
 #ifdef USE_AS_STRNCMP
 	cmp	$5, %ebp
@@ -2021,15 +1980,8 @@ L(Byte5):
 	movzx	5(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(Byte6):
 #ifdef USE_AS_STRNCMP
 	cmp	$6, %ebp
@@ -2039,15 +1991,8 @@ L(Byte6):
 	movzx	6(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-	.p2align 4
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(2next_8_bytes):
 	add	$8, %eax
 	add	$8, %edx
@@ -2086,14 +2031,8 @@ L(2next_8_bytes):
 	movzx	7(%edx), %eax
 
 	sub	%ecx, %eax
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
-#endif
-	ret
+	RETURN
 
-#ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
-#endif
 L(neq):
 	mov	$1, %eax
 	ja	L(neq_bigger)
@@ -2105,7 +2044,8 @@ L(neq_bigger):
 	ret
 
 #ifdef USE_AS_STRNCMP
-	cfi_remember_state
+	.p2align 4
+	cfi_restore_state
 L(more8byteseq):
 	POP	(%esi)
 	POP	(%edi)
@@ -2121,6 +2061,7 @@ L(eq):
 	ret
 
 #ifdef USE_AS_STRNCMP
+	.p2align 4
 	CFI_PUSH (%ebp)
 L(less16bytes_sncmp):
 	test	%ebp, %ebp
