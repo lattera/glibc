@@ -272,7 +272,7 @@ static int
 tiocsctty (int fd,
 	   int request)		/* Always TIOCSCTTY.  */
 {
-  return __hurd_fail (HURD_DPORT_USE (fd, tiocsctty_port (port, ctty)));
+  return __hurd_fail (HURD_DPORT_USE (fd, do_tiocsctty (port, ctty)));
 }
 _HURD_HANDLE_IOCTL (tiocsctty, TIOCSCTTY);
 

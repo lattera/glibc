@@ -1,3 +1,8 @@
+2010-02-19  Carl Fredrik Hammar  <hammy.lite@gmail.com>
+
+	* hurd/hurdioctl.c (tiocsctty): Call `do_tiocsctty' instead of
+	non-existent `tiocsctty_port'.
+
 2010-02-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/memcmp.S (memcmp): Use CPUID_OFFSET
