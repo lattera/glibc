@@ -83,7 +83,7 @@ ENTRY(STRCMP)
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features
 	jz	2f
 	leal	__STRCMP_SSSE3, %eax
-	testl	$bit_SSE4_2, FEATURE_OFFSET+index_SSE4_2+__cpu_features
+	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features
 	jz	2f
 	leal	__STRCMP_SSE4_2, %eax
 2:	ret
