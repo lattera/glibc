@@ -3,7 +3,7 @@
 	* sysdeps/i386/i686/multiarch/memcmp.S (memcmp): Use CPUID_OFFSET
 	instead of FEATURE_OFFSET.
 	* sysdeps/i386/i686/multiarch/strcmp.S (strcmp): Likewise.
-			
+
 	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Add alignnments.
 	Fix one unwind info problem.
 
