@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
-	2010 Free Software Foundation, Inc.
+	2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -227,7 +227,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	    {
 	      if (__builtin_expect (rela->r_addend, 0) != 0)
 		{
-                  Elf64_Addr slot = ((rela->r_offset + 0x400
+		  Elf64_Addr slot = ((rela->r_offset + l->l_addr + 0x400
 				      - (Elf64_Addr) plt)
 				     / 0x1400) * 0x1400
 				    + (Elf64_Addr) plt - 0x400;
@@ -235,20 +235,23 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 		  unsigned int first_ldx = *(unsigned int *)(slot + 12);
 		  Elf64_Addr ptr = slot + (first_ldx & 0xfff) + 4;
 
-		  *(Elf64_Addr *) rela->r_offset
+		  *(Elf64_Addr *) (rela->r_offset + l->l_addr)
 		    = (Elf64_Addr) plt
-		      - (slot + ((rela->r_offset - ptr) / 8) * 24 + 4);
+		      - (slot + ((rela->r_offset + l->l_addr - ptr) / 8) * 24
+			 + 4);
 		  ++rela;
 		  continue;
 		}
 
-	      *(unsigned int *) rela->r_offset
-		= 0x03000000 | (rela->r_offset - (Elf64_Addr) plt);
-	      *(unsigned int *) (rela->r_offset + 4)
-		= 0x30680000 | ((((Elf64_Addr) plt + 32
-				  - rela->r_offset - 4) >> 2) & 0x7ffff);
-	      __asm __volatile ("flush %0" : : "r" (rela->r_offset));
-	      __asm __volatile ("flush %0+4" : : "r" (rela->r_offset));
+	      *(unsigned int *) (rela->r_offset + l->l_addr)
+		= 0x03000000 | (rela->r_offset + l->l_addr - (Elf64_Addr) plt);
+	      *(unsigned int *) (rela->r_offset + l->l_addr + 4)
+		= 0x30680000 | ((((Elf64_Addr) plt + 32 - rela->r_offset
+				  - l->l_addr - 4) >> 2) & 0x7ffff);
+	      __asm __volatile ("flush %0" : : "r" (rela->r_offset
+						    + l->l_addr));
+	      __asm __volatile ("flush %0+4" : : "r" (rela->r_offset
+						      + l->l_addr));
 	      ++rela;
 	    }
 	}

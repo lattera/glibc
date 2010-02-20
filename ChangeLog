@@ -1,3 +1,8 @@
+2009-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
+	Adjust rela->r_offset by l->l_addr when rewriting PLT.
+
 2010-02-19  Carl Fredrik Hammar  <hammy.lite@gmail.com>
 
 	* hurd/hurdioctl.c (tiocsctty): Call `do_tiocsctty' instead of
