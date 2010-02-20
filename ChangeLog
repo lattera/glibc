@@ -6,6 +6,10 @@
 	* sysdeps/sparc/sparc64/memchr.S: Use unsigned branch on greater to
 	test end of buffer.
 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c
+	(__makecontext): Adjust arg counter properly when copying arg
+	stack slots.
+
 2009-02-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):

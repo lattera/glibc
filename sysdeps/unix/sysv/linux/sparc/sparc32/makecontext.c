@@ -77,7 +77,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
       if (i < 6)
 	ucp->uc_mcontext.gregs[REG_O0 + i] = arg;
       else
-	sp[i + 23] = arg;
+	sp[i + 23 - 6] = arg;
     }
 
   va_end (ap);
