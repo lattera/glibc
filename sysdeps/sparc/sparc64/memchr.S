@@ -96,7 +96,7 @@ ENTRY(__memchr)
 							 * %o4 =   value XOR c		*/
 2:	cmp		%o0, %o2			/* IEU1		Group		*/
 
-	bg,pn		%XCC, 11f			/* CTI				*/
+	bgu,pn		%XCC, 11f			/* CTI				*/
 	 ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 	sub		%o4, %g1, %o5			/* IEU0		Group		*/
 	add		%o0, 8, %o0			/* IEU1				*/

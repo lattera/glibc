@@ -3,6 +3,9 @@
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
 	Adjust rela->r_offset by l->l_addr when rewriting PLT.
 
+	* sysdeps/sparc/sparc64/memchr.S: Use unsigned branch on greater to
+	test end of buffer.
+
 2009-02-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
