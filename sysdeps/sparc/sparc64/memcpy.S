@@ -446,65 +446,6 @@ ENTRY(__memcpy_large)
 	 mov		%g4, %o0
 END(__memcpy_large)
 
-#ifdef USE_BPR
-
-	/* void *__align_cpy_4(void *dest, void *src, size_t n)
-	 * SPARC v9 SYSV ABI
-	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 3))
-	 */
-
-	.align		32
-ENTRY(__align_cpy_4)
-	mov		%o0, %g4			/* IEU0		Group		*/
-	cmp		%o2, 15				/* IEU1				*/
-	bleu,pn		%xcc, 208b			/* CTI				*/
-	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
-	bgeu,pn		%xcc, 200b			/* CTI				*/
-	 andcc		%o0, 7, %g2			/* IEU1		Group		*/
-	ba,pt		%xcc, 216f			/* CTI				*/
-	 andcc		%o1, 4, %g0			/* IEU1		Group		*/
-END(__align_cpy_4)
-
-	/* void *__align_cpy_8(void *dest, void *src, size_t n)
-	 * SPARC v9 SYSV ABI
-	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 7))
-	 */
-
-	.align		32
-ENTRY(__align_cpy_8)
-	mov		%o0, %g4			/* IEU0		Group		*/
-	cmp		%o2, 15				/* IEU1				*/
-	bleu,pn		%xcc, 208b			/* CTI				*/
-	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
-	bgeu,pn		%xcc, 201b			/* CTI				*/
-	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
-	andcc		%o2, -128, %g6			/* IEU1		Group		*/
-	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
-	 ldx		[%o1], %g1			/* Load				*/
-	ba,pt		%xcc, 41f			/* CTI		Group		*/
-	 andcc		%o2, 0x70, %g6			/* IEU1				*/
-END(__align_cpy_8)
-
-	/* void *__align_cpy_16(void *dest, void *src, size_t n)
-	 * SPARC v9 SYSV ABI
-	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 15))
-	 */
-
-	.align		32
-ENTRY(__align_cpy_16)
-	mov		%o0, %g4			/* IEU0		Group		*/
-	cmp		%o2, (64 * 6)			/* IEU1				*/
-	bgeu,pn		%xcc, 201b			/* CTI				*/
-	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
-	andcc		%o2, -128, %g6			/* IEU1		Group		*/
-	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
-	 ldx		[%o1], %g1			/* Load				*/
-	ba,pt		%xcc, 41f			/* CTI		Group		*/
-	 andcc		%o2, 0x70, %g6			/* IEU1				*/
-END(__align_cpy_16)
-
-#endif
-
 	.align		32
 ENTRY(memcpy)
 210:
@@ -917,9 +858,5 @@ ENTRY(memmove)
 	 mov		%g4, %o0
 END(memmove)
 
-#ifdef USE_BPR
-weak_alias (memcpy, __align_cpy_1)
-weak_alias (memcpy, __align_cpy_2)
-#endif
 libc_hidden_builtin_def (memcpy)
 libc_hidden_builtin_def (memmove)

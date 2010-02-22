@@ -6,3 +6,7 @@ endif
 ifeq ($(subdir),csu)
 CFLAGS-initfini.s += -mcpu=v9
 endif
+
+ifeq ($(subdir),string)
+sysdep_routines += align-cpy
+endif

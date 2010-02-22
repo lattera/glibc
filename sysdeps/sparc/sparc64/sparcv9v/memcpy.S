@@ -585,12 +585,5 @@ ENTRY(memmove)
 	 mov		%g4, %o0
 END(memmove)
 
-#ifdef USE_BPR
-weak_alias (memcpy, __align_cpy_1)
-weak_alias (memcpy, __align_cpy_2)
-weak_alias (memcpy, __align_cpy_4)
-weak_alias (memcpy, __align_cpy_8)
-weak_alias (memcpy, __align_cpy_16)
-#endif
 libc_hidden_builtin_def (memcpy)
 libc_hidden_builtin_def (memmove)

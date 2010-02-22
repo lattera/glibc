@@ -1,3 +1,19 @@
+2010-02-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Makefile: Add align-cpy rule.
+	* sysdeps/sparc/sparc64/align-cpy.S: New.
+	* sysdeps/sparc/sparc64/memcpy.S (__align_cpy_1, __align_cpy_2,
+	__align_cpy_4, __align_cpy_8, __align_cpy_16): Remove.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+
 2009-02-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
