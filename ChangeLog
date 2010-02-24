@@ -1,3 +1,9 @@
+2010-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5553]
+	* malloc/malloc.c (public_vALLOc): Set ar_ptr when trying main_arena.
+	(public_pVALLOc): Likewise.
+
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 
 	* manual/math.texi (BSD Random): Fix a typo: s/are/is/

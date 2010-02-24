@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -3933,9 +3933,10 @@ public_vALLOc(size_t bytes)
   if(!p) {
     /* Maybe the failure is due to running out of mmapped areas. */
     if(ar_ptr != &main_arena) {
-      (void)mutex_lock(&main_arena.mutex);
-      p = _int_memalign(&main_arena, pagesz, bytes);
-      (void)mutex_unlock(&main_arena.mutex);
+      ar_ptr = &main_arena;
+      (void)mutex_lock(&ar_ptr->mutex);
+      p = _int_memalign(&ar_ptr-> pagesz, bytes);
+      (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
       /* ... or sbrk() has failed and there is still a chance to mmap() */
@@ -3978,9 +3979,10 @@ public_pVALLOc(size_t bytes)
   if(!p) {
     /* Maybe the failure is due to running out of mmapped areas. */
     if(ar_ptr != &main_arena) {
-      (void)mutex_lock(&main_arena.mutex);
-      p = _int_memalign(&main_arena, pagesz, rounded_bytes);
-      (void)mutex_unlock(&main_arena.mutex);
+      ar_ptr = &main_arena;
+      (void)mutex_lock(&ar_ptr->mutex);
+      p = _int_memalign(&ar_ptr-> pagesz, rounded_bytes);
+      (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
       /* ... or sbrk() has failed and there is still a chance to mmap() */
