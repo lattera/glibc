@@ -3935,7 +3935,7 @@ public_vALLOc(size_t bytes)
     if(ar_ptr != &main_arena) {
       ar_ptr = &main_arena;
       (void)mutex_lock(&ar_ptr->mutex);
-      p = _int_memalign(&ar_ptr-> pagesz, bytes);
+      p = _int_memalign(ar_ptr, pagesz, bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
@@ -3981,7 +3981,7 @@ public_pVALLOc(size_t bytes)
     if(ar_ptr != &main_arena) {
       ar_ptr = &main_arena;
       (void)mutex_lock(&ar_ptr->mutex);
-      p = _int_memalign(&ar_ptr-> pagesz, rounded_bytes);
+      p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
 #if USE_ARENAS
