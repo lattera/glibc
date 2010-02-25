@@ -1,8 +1,13 @@
 2010-02-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11319]
+	* libio/iovdprintf.c (_IO_vdprintf): Explicitly flush stream before
+	undoing the stream because _IO_FINISH doesn't report failures.
+
 	[BZ #5553]
 	* malloc/malloc.c (public_vALLOc): Set ar_ptr when trying main_arena.
 	(public_pVALLOc): Likewise.
+	Patch by Petr Baudis.
 
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006
+/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -59,6 +59,9 @@ _IO_vdprintf (d, format, arg)
      | _IO_DELETE_DONT_CLOSE);
 
   done = INTUSE(_IO_vfprintf) (&tmpfil.file, format, arg);
+
+  if (done != EOF && _IO_do_flush (&tmpfil.file) == EOF)
+    done = EOF;
 
   _IO_FINISH (&tmpfil.file);
 
