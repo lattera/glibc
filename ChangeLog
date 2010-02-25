@@ -1,5 +1,14 @@
 2010-02-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S
+	(bk_write_less32bytes_2): Renamed to ...
+	(bk_write_less48bytes): This.
+	Use unsigned conditional jumps.
+	Correct unwind info.
+	Use add/sub instead of lea if possible.
+	(shl_0_gobble_cache_loop_tail): Removed.
+	(large_page): Properly adjust ECX.
+
 	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Use unsigned
 	conditional jumps.
 	Correct unwind info.
