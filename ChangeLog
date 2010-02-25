@@ -1,3 +1,18 @@
+2010-02-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Remove redundant
+	punpcklbw.
+	Use unsigned conditional jumps.
+	(128bytesormore_nt): Renamed to ...
+	(128bytesormore_endof_L1): This.
+	Use add instead of lea if possible.
+	Correct unwind info.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: Remove redundant
+	punpcklbw.
+	Use unsigned conditional jumps.
+	Use add instead of lea if possible.
+	Correct unwind info.
+
 2010-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11319]

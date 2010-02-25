@@ -243,7 +243,6 @@ L(32bytesormore):
 	pxor	%xmm0, %xmm0
 #else
 	movd	%eax, %xmm0
-	punpcklbw %xmm0, %xmm0
 	pshufd	$0, %xmm0, %xmm0
 #endif
 	testl	$0xf, %edx
@@ -261,7 +260,7 @@ L(not_aligned_16):
 	ALIGN (4)
 L(aligned_16):
 	cmp	$128, %ecx
-	jge	L(128bytesormore)
+	jae	L(128bytesormore)
 
 L(aligned_16_less128bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
@@ -287,14 +286,17 @@ L(128bytesormore):
 
 #ifdef DATA_CACHE_SIZE
 	POP (%ebx)
+# define RESTORE_EBX_STATE CFI_PUSH (%ebx)
 	cmp	$DATA_CACHE_SIZE, %ecx
 #else
 # ifdef SHARED
+#  define RESTORE_EBX_STATE
 	call	__i686.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size@GOTOFF(%ebx), %ecx
 # else
 	POP (%ebx)
+#  define RESTORE_EBX_STATE CFI_PUSH (%ebx)
 	cmp	__x86_data_cache_size, %ecx
 # endif
 #endif
@@ -312,7 +314,7 @@ L(128bytesormore_normal):
 	movdqa	%xmm0, 0x60(%edx)
 	movdqa	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
-	jl	L(128bytesless_normal)
+	jb	L(128bytesless_normal)
 
 
 	sub	$128, %ecx
@@ -325,10 +327,10 @@ L(128bytesormore_normal):
 	movdqa	%xmm0, 0x60(%edx)
 	movdqa	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
-	jge	L(128bytesormore_normal)
+	jae	L(128bytesormore_normal)
 
 L(128bytesless_normal):
-	lea	128(%ecx), %ecx
+	add	$128, %ecx
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
 	ALIGN (4)
@@ -346,11 +348,12 @@ L(128bytes_L2_normal):
 	movaps	%xmm0, 0x70(%edx)
 	add	$128, %edx
 	cmp	$128, %ecx
-	jge	L(128bytes_L2_normal)
+	jae	L(128bytes_L2_normal)
 
 L(128bytesless_L2_normal):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
+	RESTORE_EBX_STATE
 L(128bytesormore_nt_start):
 	sub	%ebx, %ecx
 	ALIGN (4)
@@ -368,7 +371,7 @@ L(128bytesormore_shared_cache_loop):
 	movdqa	%xmm0, 0x70(%edx)
 	add	$0x80, %edx
 	cmp	$0x80, %ebx
-	jge	L(128bytesormore_shared_cache_loop)
+	jae	L(128bytesormore_shared_cache_loop)
 	cmp	$0x80, %ecx
 	jb	L(shared_cache_loop_end)
 	ALIGN (4)
@@ -384,7 +387,7 @@ L(128bytesormore_nt):
 	movntdq	%xmm0, 0x70(%edx)
 	add	$0x80, %edx
 	cmp	$0x80, %ecx
-	jge	L(128bytesormore_nt)
+	jae	L(128bytesormore_nt)
 	sfence
 L(shared_cache_loop_end):
 #if defined DATA_CACHE_SIZE || !defined SHARED
