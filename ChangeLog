@@ -1,5 +1,9 @@
 2010-02-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Use unsigned
+	conditional jumps.
+	Correct unwind info.
+
 	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Remove redundant
 	punpcklbw.
 	Use unsigned conditional jumps.
