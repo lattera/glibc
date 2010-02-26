@@ -27,6 +27,34 @@
 	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (bcopy, memmove): Likewise.
 	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (bcopy, memmove): Likewise.
 
+	* sysdeps/sparc/elf/rtld-global-offsets.sym: New file.
+	* sysdeps/sparc/Makefile (csu): Add rtld-global-offsets.sym to
+	gen-as-const-headers.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: New file.
+
 2009-02-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):

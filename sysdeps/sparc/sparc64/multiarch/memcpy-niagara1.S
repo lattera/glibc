@@ -36,6 +36,8 @@
 #define XCC xcc
 #endif
 
+#if !defined NOT_IN_libc
+
 	.register	%g2,#scratch
 	.register	%g3,#scratch
 	.register	%g6,#scratch
@@ -43,10 +45,10 @@
 	.text
 
 	.align		32
-ENTRY(memcpy)
-#ifndef USE_BPR
+ENTRY(__memcpy_niagara1)
+# ifndef USE_BPR
 	srl		%o2, 0, %o2
-#endif
+# endif
 100:	/* %o0=dst, %o1=src, %o2=len */
 	mov		%o0, %g5
 	cmp		%o2, 0
@@ -335,6 +337,6 @@ ENTRY(memcpy)
 	retl
 	 mov		%g5, %o0
 
-END(memcpy)
+END(__memcpy_niagara1)
 
-libc_hidden_builtin_def (memcpy)
+#endif

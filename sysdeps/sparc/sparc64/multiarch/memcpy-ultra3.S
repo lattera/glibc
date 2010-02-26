@@ -31,6 +31,8 @@
 #define XCC xcc
 #endif
 
+#if !defined NOT_IN_libc
+
 	.register	%g2,#scratch
 	.register	%g3,#scratch
 	.register	%g6,#scratch
@@ -52,7 +54,7 @@
 	 * of up to 2.4GB per second.
 	 */
 	.align		32
-ENTRY(memcpy)
+ENTRY(__memcpy_ultra3)
 
 100: /* %o0=dst, %o1=src, %o2=len */
 	mov		%o0, %g5
@@ -313,6 +315,6 @@ small_copy_unaligned:
 	retl
 	 mov		%g5, %o0
 
-END(memcpy)
+END(__memcpy_ultra3)
 
-libc_hidden_builtin_def (memcpy)
+#endif
