@@ -1,3 +1,8 @@
+2010-02-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Use cfi_remember_state
+	and cfi_restore_state only if USE_AS_STRNCMP is defined.
+
 2010-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/Implies: Add ieee754/dbl-64/wordsize-64 entry.

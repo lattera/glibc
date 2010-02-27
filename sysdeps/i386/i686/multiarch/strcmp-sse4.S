@@ -178,7 +178,9 @@ L(first4bytes):
 	PUSH	(%ebx)
 	PUSH	(%edi)
 	PUSH	(%esi)
+#ifdef USE_AS_STRNCMP
 	cfi_remember_state
+#endif
 	mov	%edx, %edi
 	mov	%eax, %esi
 	xorl	%eax, %eax
@@ -246,8 +248,8 @@ L(ret):
 	ret
 
 	.p2align 4
-	cfi_restore_state
 #ifdef USE_AS_STRNCMP
+	cfi_restore_state
 L(more16byteseq):
 	POP	(%esi)
 	POP	(%edi)
