@@ -1,5 +1,6 @@
 2010-02-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #11332]
 	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Use cfi_remember_state
 	and cfi_restore_state only if USE_AS_STRNCMP is defined.
 
