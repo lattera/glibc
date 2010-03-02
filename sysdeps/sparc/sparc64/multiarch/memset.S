@@ -1,0 +1,145 @@
+/* Multiple versions of memset and bzero
+   Copyright (C) 2010 Free Software Foundation, Inc.
+   Contributed by David S. Miller (davem@davemloft.net)
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+#include <rtld-global-offsets.h>
+
+#if !defined NOT_IN_libc
+	.text
+ENTRY(memset)
+	.type	memset, @gnu_indirect_function
+# ifdef SHARED
+	mov	%o7, %o5
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %o3
+	call	1f
+	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
+1:	add	%o7, %o3, %o3
+	mov	%o5, %o7
+	sethi	%hi(_rtld_global_ro), %o2
+	or	%o2, %lo(_rtld_global_ro), %o2
+#  ifdef __arch64__
+	ldx	[%o3 + %o2], %o2
+	ldx	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET], %o2
+#  else
+	ld	[%o3 + %o2], %o2
+	ld	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET + 4], %o2
+#  endif
+# else
+	set	_dl_hwcap, %o3
+#  ifdef __arch64__
+	ldx	[%o3], %o2
+#  else
+	ld	[%o3 + 4], %o2
+#  endif
+# endif
+	andcc	%o2, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	be	9f
+	 nop
+# ifdef SHARED
+	sethi	%gdop_hix22(__memset_niagara1), %o1
+	xor	%o1, %gdop_lox10(__memset_niagara1), %o1
+# else
+	set	__memset_niagara1, %o1
+# endif
+	ba	10f
+	 nop
+9:
+# ifdef SHARED
+	sethi	%gdop_hix22(__memset_ultra1), %o1
+	xor	%o1, %gdop_lox10(__memset_ultra1), %o1
+# else
+	set	__memset_ultra1, %o1
+# endif
+10:
+# ifdef SHARED
+	add	%o3, %o1, %o1
+# endif
+	retl
+	 mov	%o1, %o0
+END(memset)
+
+ENTRY(__bzero)
+	.type	bzero, @gnu_indirect_function
+# ifdef SHARED
+	mov	%o7, %o5
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %o3
+	call	1f
+	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
+1:	add	%o7, %o3, %o3
+	mov	%o5, %o7
+	sethi	%hi(_rtld_global_ro), %o2
+	or	%o2, %lo(_rtld_global_ro), %o2
+#  ifdef __arch64__
+	ldx	[%o3 + %o2], %o2
+	ldx	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET], %o2
+#  else
+	ld	[%o3 + %o2], %o2
+	ld	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET + 4], %o2
+#  endif
+# else
+	set	_dl_hwcap, %o3
+#  ifdef __arch64__
+	ldx	[%o3], %o2
+#  else
+	ld	[%o3 + 4], %o2
+#  endif
+# endif
+	andcc	%o2, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	be	9f
+	 nop
+# ifdef SHARED
+	sethi	%gdop_hix22(__bzero_niagara1), %o1
+	xor	%o1, %gdop_lox10(__bzero_niagara1), %o1
+# else
+	set	__bzero_niagara1, %o1
+# endif
+	ba	10f
+	 nop
+9:
+# ifdef SHARED
+	sethi	%gdop_hix22(__memset_ultra1), %o1
+	xor	%o1, %gdop_lox10(__memset_ultra1), %o1
+# else
+	set	__bzero_ultra1, %o1
+# endif
+10:
+# ifdef SHARED
+	add	%o3, %o1, %o1
+# endif
+	retl
+	 mov	%o1, %o0
+END(__bzero)
+
+weak_alias (__bzero, bzero)
+
+# undef weak_alias
+# define weak_alias(a, b)
+
+# undef libc_hidden_builtin_def
+/* IFUNC doesn't work with the hidden functions in a shared library.  */
+# define libc_hidden_builtin_def(name) \
+	.globl __GI_memset; __GI_memset = __memset_ultra1
+
+#define memset __memset_ultra1
+#define __bzero __bzero_ultra1
+
+#endif
+
+#include "../memset.S"

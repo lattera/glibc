@@ -2,6 +2,63 @@
 
 	* elf/elf.h (NT_X86_XSTATE): New macro.
 
+2010-02-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Makefile: Add align-cpy rule.
+	* sysdeps/sparc/sparc64/align-cpy.S: New.
+	* sysdeps/sparc/sparc64/memcpy.S (__align_cpy_1, __align_cpy_2,
+	__align_cpy_4, __align_cpy_8, __align_cpy_16): Remove.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+
+	* sysdeps/sparc/sparc32/bcopy.c: Delete.
+	* sysdeps/sparc/sparc32/memmove.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/bcopy.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/memmove.c: Delete.
+	* sysdeps/sparc/sparc64/bcopy.c: Delete.
+	* sysdeps/sparc/sparc64/memmove.c: Delete.
+	* sysdeps/sparc/sparc64/memcopy.h: New.
+	* sysdeps/sparc/sparc32/memcpy.S (bcopy, memmove): Remove.
+	* sysdeps/sparc/sparc64/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (bcopy, memmove): Likewise.
+
+	* sysdeps/sparc/elf/rtld-global-offsets.sym: New file.
+	* sysdeps/sparc/Makefile (csu): Add rtld-global-offsets.sym to
+	gen-as-const-headers.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: New file.
+
 2010-02-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11332]

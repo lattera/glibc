@@ -29,12 +29,14 @@
 #define XCC xcc
 #endif
 
+#if !defined NOT_IN_libc
+
 	.register	%g2,#scratch
 
 	.text
 	.align		32
 
-ENTRY(memset)
+ENTRY(__memset_niagara1)
 	/* %o0=buf, %o1=pat, %o2=len */
 	and		%o1, 0xff, %o3
 	mov		%o2, %o1
@@ -45,14 +47,14 @@ ENTRY(memset)
 	sllx		%o2, 32, %g1
 	ba,pt		%XCC, 1f
 	 or		%g1, %o2, %o2
-END(memset)
+END(__memset_niagara1)
 
-ENTRY(__bzero)
+ENTRY(__bzero_niagara1)
 	clr		%o2
 1:
-#ifndef USE_BRP
+# ifndef USE_BRP
 	srl		%o1, 0, %o1
-#endif
+# endif
 	brz,pn		%o1, 90f
 	 mov		%o0, %o3
 
@@ -125,7 +127,6 @@ ENTRY(__bzero)
 90:
 	retl
 	 mov		%o3, %o0
-END(__bzero)
+END(__bzero_niagara1)
 
-libc_hidden_builtin_def (memset)
-weak_alias (__bzero, bzero)
+#endif
