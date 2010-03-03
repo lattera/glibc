@@ -111,7 +111,7 @@ do {								\
 } while (0)
 
 /* Get all in one, efficient on 64-bit machines.  */
-#define INSERT_WORDS64(i,d)					\
+#define INSERT_WORDS64(d,i)					\
 do {								\
   ieee_double_shape_type iw_u;					\
   iw_u.word = (i);						\
