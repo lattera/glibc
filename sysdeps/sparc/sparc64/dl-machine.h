@@ -661,7 +661,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	{
 	  /* 'high' is always zero, for large PLT entries the linker
 	     emits an R_SPARC_IRELATIVE.  */
-	  sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 0);
+	  sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 1);
 	}
       else
 	*reloc_addr = value;

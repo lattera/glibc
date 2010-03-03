@@ -28,7 +28,14 @@ sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
   Elf64_Addr plt_vaddr = (Elf64_Addr) reloc_addr;
   Elf64_Sxword disp = value - plt_vaddr;
 
-  /* Now move plt_vaddr up to the call instruction.  */
+  /* 't' is '0' if we are resolving this PLT entry for RTLD bootstrap,
+     in which case we'll be resolving all PLT entries and thus can
+     optimize by overwriting instructions starting at the first PLT entry
+     instruction and we need not be mindful of thread safety.
+
+     Otherwise, 't' is '1'.
+
+     Now move plt_vaddr up to the call instruction.  */
   plt_vaddr += ((t + 1) * 4);
 
   /* PLT entries .PLT32768 and above look always the same.  */
@@ -39,10 +46,22 @@ sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
   /* Near destination.  */
   else if (disp >= -0x800000 && disp < 0x800000)
     {
-      /* As this is just one instruction, it is thread safe and so
-	 we can avoid the unnecessary sethi FOO, %g1.
-	 b,a target  */
-      insns[0] = 0x30800000 | ((disp >> 2) & 0x3fffff);
+      unsigned int insn;
+
+      /* ba,a */
+      insn = 0x30800000 | ((disp >> 2) & 0x3fffff);
+
+      if (disp >= -0x100000 && disp < 0x100000)
+	{
+	  /* ba,a,pt %icc */
+	  insn = 0x30480000  | ((disp >> 2) & 0x07ffff);
+	}
+
+      /* As this is just one instruction, it is thread safe and so we
+	 can avoid the unnecessary sethi FOO, %g1.  Each 64-bit PLT
+	 entry is 8 instructions long, so we can't run into the 'jmp'
+	 delay slot problems 32-bit PLTs can.  */
+      insns[0] = insn;
       __asm __volatile ("flush %0" : : "r" (insns));
     }
   /* 32-bit Sparc style, the target is in the lower 32-bits of

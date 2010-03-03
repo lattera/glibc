@@ -563,7 +563,7 @@ elf_machine_lazy_rel (struct link_map *map,
     {
       Elf32_Addr value = map->l_addr + reloc->r_addend;
       value = ((Elf32_Addr (*) (void)) value) ();
-      sparc_fixup_plt (reloc, reloc_addr, value, 0, 1);
+      sparc_fixup_plt (reloc, reloc_addr, value, 1, 1);
     }
   else if (r_type == R_SPARC_NONE)
     ;

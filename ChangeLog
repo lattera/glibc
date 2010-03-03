@@ -1,3 +1,19 @@
+2010-03-03  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_lazy_rel): Must
+	pass '1' for 't' argument to sparc_fixup_plt.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_lazy_rel):
+	Likewise.
+	* sysdeps/sparc/sparc32/dl-plt.h (OPCODE_BA_PT): Define.
+	(sparc_fixup_plt): Document 't' argument.  Enable branch
+	optimization and use v9 branches when possible.  Explain why we
+	cannot unconditionally patch the branch into the first PLT
+	instruction.
+	* sysdeps/sparc/sparc64/dl-plt.h (sparc64_fixup_plt): Document 't'
+	argument.  Use v9 branches when possible.  Explain why we can in
+	fact unconditionally use a branch in the first PLT instruction
+	here.
+
 2010-02-28  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (NT_X86_XSTATE): New macro.
