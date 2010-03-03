@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2004, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2004, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,14 +56,26 @@
 # define MCAST_INCLUDE   1
 #endif
 
-#define IP_ROUTER_ALERT    5	/* bool */
-#define IP_PKTINFO         8	/* bool */
-#define IP_PKTOPTIONS      9
-#define IP_PMTUDISC        10	/* obsolete name? */
-#define IP_MTU_DISCOVER    10	/* int; see below */
-#define IP_RECVERR         11	/* bool */
-#define IP_RECVTTL         12	/* bool */
-#define IP_RECVTOS         13	/* bool */
+#define IP_ROUTER_ALERT	5	/* bool */
+#define IP_PKTINFO	8	/* bool */
+#define IP_PKTOPTIONS	9
+#define IP_PMTUDISC	10	/* obsolete name? */
+#define IP_MTU_DISCOVER	10	/* int; see below */
+#define IP_RECVERR	11	/* bool */
+#define IP_RECVTTL	12	/* bool */
+#define IP_RECVTOS	13	/* bool */
+#define IP_MTU		14	/* int */
+#define IP_FREEBIND	15
+#define IP_IPSEC_POLICY 16
+#define IP_XFRM_POLICY	17
+#define IP_PASSSEC	18
+#define IP_TRANSPARENT	19
+
+/* TProxy original addresses */
+#define IP_ORIGDSTADDR       20
+#define IP_RECVORIGDSTADDR   IP_ORIGDSTADDR
+
+#define IP_MINTTL       21
 
 
 /* IP_MTU_DISCOVER arguments.  */

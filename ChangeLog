@@ -1,3 +1,8 @@
+2010-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Add a few more defintions from the
+	kernel headers.
+
 2010-03-03  David S. Miller  <davem@davemloft.net>
 
 	* math/math_private.h (INSERT_WORDS64): Fix argument order.
