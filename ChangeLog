@@ -1,7 +1,14 @@
 2010-03-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/in.h: Add a few more defintions from the
-	kernel headers.
+	* sysdeps/unix/sysv/linux/bits/in.h: Add a few more definitions from
+	the kernel headers.
+
+2010-03-04  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Implies: Add ieee754/dbl-64/wordsize-64 entry.
+
+	* sysdeps/sparc/sparc32/sparcv8/udiv_qrnnd.S: Delete.
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Delete.
 
 2010-03-03  David S. Miller  <davem@davemloft.net>
 
