@@ -2,6 +2,9 @@
 
 	* sysdeps/sparc/sparc64/Implies: Add ieee754/dbl-64/wordsize-64 entry.
 
+	* sysdeps/sparc/sparc32/sparcv8/udiv_qrnnd.S: Delete.
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Delete.
+
 2010-03-03  David S. Miller  <davem@davemloft.net>
 
 	* math/math_private.h (INSERT_WORDS64): Fix argument order.
