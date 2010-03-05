@@ -1,3 +1,8 @@
+2010-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (R_X86_64_SIZE32): Define.
+	(R_X86_64_SIZE64): Define.
+
 2010-03-02  Richard Guenther  <rguenther@suse.de>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): R_X86_64_PC32
