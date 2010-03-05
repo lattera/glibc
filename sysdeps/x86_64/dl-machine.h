@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001-2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -419,7 +419,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	case R_X86_64_PC32:
 	  value += reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  *(unsigned int *) reloc_addr = value;
-	  if (__builtin_expect (value != (unsigned int) value, 0))
+	  if (__builtin_expect (value != (int) value, 0))
 	    {
 	      fmt = "\
 %s: Symbol `%s' causes overflow in R_X86_64_PC32 relocation\n";

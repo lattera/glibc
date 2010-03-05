@@ -1,3 +1,8 @@
+2010-03-02  Richard Guenther  <rguenther@suse.de>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): R_X86_64_PC32
+	is sign-extending.
+
 2010-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h: Add a few more definitions from
