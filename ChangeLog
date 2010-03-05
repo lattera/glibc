@@ -1,3 +1,12 @@
+2010-02-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.make.in (config-asflags-i686): Define.
+	* configure.in: Substitute libc_cv_as_i686.
+	* sysdeps/i386/configure.in: Check if assembler supports -mtune=i686.
+	* sysdeps/i386/i686/Makefile (CFLAGS-.oX): Add -Wa,-mtune=i686
+	if assembler supports -mtune=i686.
+	(ASFLAGS-.oX): Likewise.
+
 2010-03-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h (R_X86_64_SIZE32): Define.

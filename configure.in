@@ -2323,6 +2323,7 @@ dnl sysdeps/CPU/configure.in checks set this via arch-specific asm tests
 AC_SUBST(libc_cv_cpp_asm_debuginfo)
 AC_SUBST(libc_cv_cc_sse4)
 AC_SUBST(libc_cv_cc_avx)
+AC_SUBST(libc_cv_as_i686)
 
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
