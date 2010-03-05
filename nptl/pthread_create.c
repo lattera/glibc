@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007,2008,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -238,6 +238,10 @@ start_thread (void *arg)
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
+
+  /* Allow setxid from now onwards.  */
+  if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0) == -2, 0))
+    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
 
 #ifdef __NR_set_robust_list
 # ifndef __ASSUME_SET_ROBUST_LIST
@@ -537,6 +541,9 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 	  goto errout;
 	}
     }
+
+  /* Don't allow setxid until cloned. */
+  pd->setxid_futex = -1;
 
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,7 +28,7 @@
 #include "kernel-features.h"
 
 
-#define CLONE_SIGNAL    	(CLONE_SIGHAND | CLONE_THREAD)
+#define CLONE_SIGNAL		(CLONE_SIGHAND | CLONE_THREAD)
 
 /* Unless otherwise specified, the thread "register" is going to be
    initialized with a pointer to the TCB.  */
@@ -72,8 +72,14 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
      that cares whether the thread count is correct.  */
   atomic_increment (&__nptl_nthreads);
 
-  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
-		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+  int rc = ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
+		       pd, &pd->tid, TLS_VALUE, &pd->tid);
+
+  /* Allow setxid from now onwards.  */
+  if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0) == -2, 0))
+    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
+
+  if (__builtin_expect (rc == -1, 0))
     {
       atomic_decrement (&__nptl_nthreads); /* Oops, we lied for a second.  */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -380,7 +380,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 			       - TLS_TCB_SIZE - adj);
 #elif TLS_DTV_AT_TP
       pd = (struct pthread *) (((uintptr_t) attr->stackaddr
-			        - __static_tls_size - adj)
+				- __static_tls_size - adj)
 			       - TLS_PRE_TCB_SIZE);
 #endif
 
@@ -546,7 +546,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #ifndef __ASSUME_PRIVATE_FUTEX
 	  /* The thread must know when private futexes are supported.  */
 	  pd->header.private_futex = THREAD_GETMEM (THREAD_SELF,
-                                                    header.private_futex);
+						    header.private_futex);
 #endif
 
 #ifdef NEED_DL_SYSINFO
@@ -968,6 +968,13 @@ internal_function
 setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 {
   int ch;
+
+  /* Wait until this thread is cloned.  */
+  if (t->setxid_futex == -1
+      && ! atomic_compare_and_exchange_bool_acq (&t->setxid_futex, -2, -1))
+    do
+      lll_futex_wait (&t->setxid_futex, -2, LLL_PRIVATE);
+    while (t->setxid_futex == -2);
 
   /* Don't let the thread exit before the setxid handler runs.  */
   t->setxid_futex = 0;
