@@ -490,6 +490,9 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	for (try = 0; try < statp->retry; try++) {
 	    for (ns = 0; ns < MAXNS; ns++)
 	    {
+#ifdef DEBUG
+		char tmpbuf[40];
+#endif
 		struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
 
 		if (nsap == NULL)
@@ -530,9 +533,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		}
 #endif
 
-#ifdef DEBUG
-		char tmpbuf[40];
-#endif
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntop(AF_INET6, &nsap->sin6_addr,
@@ -575,11 +575,12 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, "%s", ""),
 			ans, (resplen > anssiz) ? anssiz : resplen);
-		if (buf2 != NULL)
+		if (buf2 != NULL) {
 		  DprintQ((statp->options & RES_DEBUG) ||
 			  (statp->pfcode & RES_PRF_REPLY),
 			  (stdout, "%s", ""),
 			  *ansp2, (*resplen2 > *nansp2) ? *nansp2 : *resplen2);
+		}
 
 		/*
 		 * If we have temporarily opened a virtual circuit,
@@ -883,7 +884,7 @@ send_vc(res_state statp,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ";; old answer (unexpected):\n"),
 			*thisansp,
-			(rlen > *thisanssiz) ? *thisanssiz: rlen);
+			(rlen > *thisanssizp) ? *thisanssizp: rlen);
 		goto read_len;
 	}
 
@@ -1186,7 +1187,7 @@ send_dg(res_state statp,
 			 */
 			Dprint(statp->options & RES_DEBUG,
 			       (stdout, ";; undersized: %d\n",
-				*thisresplen));
+				*thisresplenp));
 			*terrno = EMSGSIZE;
 			goto err_out;
 		}
@@ -1201,8 +1202,8 @@ send_dg(res_state statp,
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; old answer:\n"),
 				thisansp,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 		if (!(statp->options & RES_INSECURE1) &&
@@ -1216,8 +1217,8 @@ send_dg(res_state statp,
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; not our server:\n"),
 				thisansp,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 #ifdef RES_USE_EDNS0
@@ -1232,9 +1233,9 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout,
 				 "server rejected query with EDNS0:\n"),
-				thisans,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				thisansp,
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 			/* record the error */
 			statp->_flags |= RES_F_EDNS0ERR;
 			goto err_out;
@@ -1258,8 +1259,8 @@ send_dg(res_state statp,
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; wrong query name:\n"),
 				thisansp,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 		if (anhp->rcode == SERVFAIL ||
@@ -1268,8 +1269,8 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "server rejected query:\n"),
 				thisansp,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 
 			if (recvresp1 || (buf2 != NULL && recvresp2))
 			  return resplen;
@@ -1295,8 +1296,8 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "referred query:\n"),
 				thisansp,
-				(*thisresplen > *thisanssiz)
-				? *thisanssiz : *thisresplen);
+				(*thisresplenp > *thisanssizp)
+				? *thisanssizp : *thisresplenp);
 			goto next_ns;
 		}
 		if (!(statp->options & RES_IGNTC) && anhp->tc) {

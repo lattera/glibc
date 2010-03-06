@@ -1,3 +1,9 @@
+2010-02-18  Yann Droneaud  <yann@droneaud.fr>
+
+	* resolv/res_send.c: Fixed DEBUG statements.
+	Moved tmpbuf declaration to block beginning and
+	updated pointer names used in multiple DprintQ() calls
+
 2010-02-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.make.in (config-asflags-i686): Define.
