@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -45,13 +45,15 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 
   const char *fsname = NULL;
   const char *fsname2 = NULL;
+  const char *fsname3 = NULL;
 
   /* Map the filesystem type we got from the statfs call to a string.  */
   switch (fstype)
     {
     case EXT2_SUPER_MAGIC:
-      fsname = "ext3";
-      fsname2 = "ext2";
+      fsname = "ext4";
+      fsname2 = "ext3";
+      fsname3 = "ext2";
       break;
     case DEVPTS_SUPER_MAGIC:
       fsname= "devpts";
@@ -98,6 +100,9 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
     case NTFS_SUPER_MAGIC:
       fsname = "ntfs";
       break;
+    case LOGFS_MAGIC_U32:
+      fsname = "logfs";
+      break;
     }
 
   FILE *mtab = __setmntent ("/proc/mounts", "r");
@@ -126,7 +131,9 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 	  else if (fsname != NULL
 		   && strcmp (fsname, mntbuf.mnt_type) != 0
 		   && (fsname2 == NULL
-		       || strcmp (fsname2, mntbuf.mnt_type) != 0))
+		       || strcmp (fsname2, mntbuf.mnt_type) != 0)
+		   && (fsname3 == NULL
+		       || strcmp (fsname3, mntbuf.mnt_type) != 0))
 	    continue;
 
 	  /* Find out about the device the current entry is for.  */
