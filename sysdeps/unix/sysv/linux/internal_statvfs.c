@@ -183,7 +183,7 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 	    {
 	      /* Try without a filesystem name.  */
 	      assert (fsname != NULL);
-	      fsname = fsname2 = NULL;
+	      fsname = fsname2 = fsname3 = NULL;
 	    }
 
 	  /* It is not strictly allowed to use rewind here.  But

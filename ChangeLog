@@ -1,3 +1,8 @@
+2010-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Little follow-up patch from last change.
+
 2010-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/internal_statvfs.c: Handle ext4 and logfs.
