@@ -1,3 +1,9 @@
+2010-03-08  Andreas Schwab  <schwab@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): Don't set setxid_futex.
+	* allocatestack.c (get_cached_stack): Set setxid_futex.
+	(allocate_stack): Likewise.
+
 2010-03-05  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 

@@ -542,9 +542,6 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 	}
     }
 
-  /* Don't allow setxid until cloned. */
-  pd->setxid_futex = -1;
-
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
 
