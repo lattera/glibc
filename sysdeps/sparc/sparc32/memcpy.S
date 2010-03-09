@@ -117,10 +117,27 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	bleu		90f
 	 andcc		%o1, 3, %g0
 
-	bne		78b
-3:	 andcc		%o1, 4, %g0
+	be		78f
+	 andcc		%o1, 4, %g0
 
-	be		2f
+	andcc		%o1, 1, %g0
+	be		4f
+	 andcc		%o1, 2, %g0
+
+	ldub		[%o1], %g2
+	add		%o1, 1, %o1
+	stb		%g2, [%o0]
+	sub		%o2, 1, %o2
+	bne		77f
+	 add		%o0, 1, %o0
+4:	lduh		[%o1], %g2
+	add		%o1, 2, %o1
+	sth		%g2, [%o0]
+	sub		%o2, 2, %o2
+	add		%o0, 2, %o0
+
+77:	andcc		%o1, 4, %g0
+78:	be		2f
 	 mov		%o2, %g1
 
 	ld		[%o1], %o4
