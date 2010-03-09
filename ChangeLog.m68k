@@ -1,3 +1,8 @@
+2010-03-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/m68k/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ)
+	(_jmpbuf_sp, _JMPBUF_UNWINDS_ADJ, __libc_unwind_longjmp): Define.
+
 2010-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/fpu/fegetenv.c: Add hidden alias.
