@@ -1,3 +1,9 @@
+2010-03-09  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handling
+	of R_SPARC_TLS_LE_* needs to use 32-bit loads and stores, not
+	64-bit ones.
+
 2010-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
