@@ -1,8 +1,9 @@
 /* Determine the length of a string.
    For SPARC v7.
-   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2003, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
+   Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
+                  David S. Miller <davem@davemloft.net>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,86 +22,55 @@
 
 #include <sysdep.h>
 
-	/* Normally, this uses ((xword - 0x01010101) & 0x80808080) test
-	   to find out if any byte in xword could be zero. This is fast, but
-	   also gives false alarm for any byte in range 0x81-0xff. It does
-	   not matter for correctness, as if this test tells us there could
-	   be some zero byte, we check it byte by byte, but if bytes with
-	   high bits set are common in the strings, then this will give poor
-	   performance. You can #define EIGHTBIT_NOT_RARE and the algorithm
-	   will use one tick slower, but more precise test
-	   ((xword - 0x01010101) & (~xword) & 0x80808080),
-	   which does not give any false alarms (but if some bits are set,
-	   one cannot assume from it which bytes are zero and which are not).
-	   It is yet to be measured, what is the correct default for glibc
-	   in these days for an average user.
-	 */
-
 	.text
 	.align		4
 
 ENTRY(strlen)
-	mov		%o0, %o1
-	andcc		%o0, 3, %g0
-	be		20f
-	 sethi		%hi(0x80808080), %o4
+	mov	%o0, %o1
+	andn	%o0, 0x3, %o0
 
-	ldub		[%o0], %o5
-	cmp		%o5, 0
-	be		21f
-	 add		%o0, 1, %o0
-	andcc		%o0, 3, %g0
-	be		4f
-	 or		%o4, %lo(0x80808080), %o3
-	ldub		[%o0], %o5
-	cmp		%o5, 0
-	be		22f
-	 add		%o0, 1, %o0
-	andcc		%o0, 3, %g0
-	be		5f
-	 sethi		%hi(0x01010101), %o4
-	ldub		[%o0], %o5
-	cmp		%o5, 0
-	be		23f
-	 add		%o0, 1, %o0
-	b		11f
-	 or		%o4, %lo(0x01010101), %o2
-21:	retl
-	 mov		0, %o0
-22:	retl
-	 mov		1, %o0
-23:	retl
-	 mov		2, %o0
+	ld	[%o0], %o5
+	and	%o1, 0x3, %g1
+	mov	-1, %g5
 
-20:	or		%o4, %lo(0x80808080), %o3
-4:	sethi		%hi(0x01010101), %o4
-5:	or		%o4, %lo(0x01010101), %o2
-11:	ld		[%o0], %o5
-12:	sub		%o5, %o2, %o4
-#ifdef EIGHTBIT_NOT_RARE
-	andn		%o4, %o5, %o4
-#endif
-	andcc		%o4, %o3, %g0
-	be		11b
-	 add		%o0, 4, %o0
+	sethi	%hi(0x01010101), %o2
+	sll	%g1, 3, %g1
 
-	srl		%o5, 24, %g5
-	andcc		%g5, 0xff, %g0
-	be		13f
-	 add		%o0, -4, %o4
-	srl		%o5, 16, %g5
-	andcc		%g5, 0xff, %g0
-	be		13f
-	 add		%o4, 1, %o4
-	srl		%o5, 8, %g5
-	andcc		%g5, 0xff, %g0
-	be		13f
-	 add		%o4, 1, %o4
-	andcc		%o5, 0xff, %g0
-	bne,a		12b
-	 ld		[%o0], %o5
-	add		%o4, 1, %o4
-13:	retl
-	 sub		%o4, %o1, %o0
+	or	%o2, %lo(0x01010101), %o2
+	srl	%g5, %g1, %g2
+
+	orn	%o5, %g2, %o5
+	sll	%o2, 7, %o3
+10:	add	%o0, 4, %o0
+
+	andn	%o3, %o5, %g1
+	sub	%o5, %o2, %g2
+
+	andcc	%g1, %g2, %g0
+	be,a	10b
+	 ld	[%o0], %o5
+
+	srl	%o5, 24, %g1
+
+	andcc	%g1, 0xff, %g0
+	be	90f
+	 sub	%o0, 4, %o0
+
+	srl	%o5, 16, %g2
+
+	andcc	%g2, 0xff, %g0
+	be	90f
+	 add	%o0, 1, %o0
+
+	srl	%o5, 8, %g1
+
+	andcc	%g1, 0xff, %g0
+	be	90f
+	 add	%o0, 1, %o0
+
+	add	%o0, 1, %o0
+
+90:	retl
+	 sub	%o0, %o1, %o0
 END(strlen)
 libc_hidden_builtin_def (strlen)
