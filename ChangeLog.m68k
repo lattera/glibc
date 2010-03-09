@@ -1,5 +1,8 @@
 2010-03-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/m68k/bits/sigcontext.h: Remove.
+	* sysdeps/unix/sysv/linux/m68k/register-dump.h: Update.
+
 	* sysdeps/unix/sysv/linux/m68k/bits/siginfo.h: Remove.
 
 	* sysdeps/m68k/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ)
