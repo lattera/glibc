@@ -75,19 +75,17 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   int rc = ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
 		       pd, &pd->tid, TLS_VALUE, &pd->tid);
 
-  /* Allow setxid from now onwards.  */
-  if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0) == -2, 0))
-    lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
-
   if (__builtin_expect (rc == -1, 0))
     {
       atomic_decrement (&__nptl_nthreads); /* Oops, we lied for a second.  */
 
-      /* Failed.  If the thread is detached, remove the TCB here since
-	 the caller cannot do this.  The caller remembered the thread
-	 as detached and cannot reverify that it is not since it must
-	 not access the thread descriptor again.  */
-      if (IS_DETACHED (pd))
+      /* Perhaps a thread wants to change the IDs and if waiting
+	 for this stillborn thread.  */
+      if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0)
+			    == -2, 0))
+	lll_futex_wake (&pd->setxid_futex, 1, LLL_PRIVATE);
+
+      /* Free the resources.  */
 	__deallocate_stack (pd);
 
       /* We have to translate error codes.  */
@@ -119,6 +117,9 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 #else
 	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
 #endif
+
+	      /* We do not free the stack here because the canceled thread
+		 itself will do this.  */
 
 	      return (INTERNAL_SYSCALL_ERROR_P (res, err)
 		      ? INTERNAL_SYSCALL_ERRNO (res, err)

@@ -1,3 +1,11 @@
+2010-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): If priorities are incorrect
+	and the call fails wake eventually waiting setxid threads.  Don't free
+	stack here if we try starting a thread.
+	* sysdeps/pthread/createthread.c (do_clone): Only wake setxid waiter
+	if the clone call failed.
+
 2010-03-08  Andreas Schwab  <schwab@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): Don't set setxid_futex.
