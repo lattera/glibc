@@ -2666,7 +2666,13 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_X86_64_GOTOFF64	25	/* 64 bit offset to GOT */
 #define R_X86_64_GOTPC32	26	/* 32 bit signed pc relative
 					   offset to GOT */
-/* 27 .. 31 */
+#define R_X86_64_GOT64		27	/* 64-bit GOT entry offset */
+#define R_X86_64_GOTPCREL64	28	/* 64-bit PC relative offset
+					   to GOT entry */
+#define R_X86_64_GOTPC64	29	/* 64-bit PC relative offset to GOT */
+#define R_X86_64_GOTPLT64	30 	/* like GOT64, says PLT entry needed */
+#define R_X86_64_PLTOFF64	31	/* 64-bit GOT relative offset
+					   to PLT entry */
 #define R_X86_64_SIZE32		32	/* Size of symbol plus 32-bit addend */
 #define R_X86_64_SIZE64		33	/* Size of symbol plus 64-bit addend */
 #define R_X86_64_GOTPC32_TLSDESC 34	/* GOT offset for TLS descriptor.  */

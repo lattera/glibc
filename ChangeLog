@@ -1,3 +1,8 @@
+2010-03-11  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (R_X86_64_GOT64, R_X86_64_GOTPCREL64): New macros.
+	(R_X86_64_GOTPC64, R_X86_64_GOTPLT64, R_X86_64_PLTOFF64): New macros.
+
 2010-03-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/memcpy.S: New file.
