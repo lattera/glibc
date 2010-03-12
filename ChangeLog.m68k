@@ -1,5 +1,8 @@
 2010-03-12  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h: Don't include
+	<sysdep.h>.
+
 	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: Renamed ...
 	* sysdeps/unix/sysv/linux/m68k/coldfire/m68k-helpers.S: ... to
 	this.
