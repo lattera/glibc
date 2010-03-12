@@ -1,3 +1,10 @@
+2010-03-12  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: Renamed ...
+	* sysdeps/unix/sysv/linux/m68k/coldfire/m68k-helpers.S: ... to
+	this.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/m68k-helpers.S: New file.
+
 2010-03-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	NPTL support for m68k/ColdFire
