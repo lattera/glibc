@@ -1,3 +1,7 @@
+2010-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h (UMOUNT_NOFOLLOW): Define.
+
 2010-03-12  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-dst.h: Include "trusted-dirs.h".
