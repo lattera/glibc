@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,8 +41,11 @@
 
 .globl __socket
 ENTRY (__socket)
-#if defined NEED_CANCELLATION && defined CENABLE
-	SINGLE_THREAD_P (%a0)
+#ifdef NEED_CANCELLATION
+# if !defined CENABLE || !defined CDISABLE
+#  error CENABLE and/or CDISABLE is not defined
+# endif
+	SINGLE_THREAD_P
 	jne 1f
 #endif
 
@@ -69,21 +72,26 @@ ENTRY (__socket)
 	/* Successful; return the syscall's value.  */
 	rts
 
-#if defined NEED_CANCELLATION && defined CENABLE
-1:	/* Enable asynchronous cancellation.  */
+#ifdef NEED_CANCELLATION
+1:	cfi_startproc
+	/* Enable asynchronous cancellation.  */
 	CENABLE
 
-	/* Save registers.  */
+	/* Save D2.  */
 	move.l %d2, -(%sp)
-	move.l %d0, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%d2, 0)
 
-	move.l #SYS_ify (socketcall), %d0 /* System call number in %d0.  */
+	/* Save the result of CENABLE.  */
+	move.l %d0, -(%sp)
+	cfi_adjust_cfa_offset (4)
 
 	/* Use ## so `socket' is a separate token that might be #define'd.  */
 	move.l #P (SOCKOP_,socket), %d1	/* Subcode is first arg to syscall.  */
 	lea 4+8(%sp), %a1		/* Address of args is 2nd arg.  */
 	move.l %a1, %d2
 
+	move.l #SYS_ify (socketcall), %d0 /* System call number in %d0.  */
 	/* Do the system call trap.  */
 	trap #0
 
@@ -91,14 +99,18 @@ ENTRY (__socket)
 	move.l %d0, %d2
 	CDISABLE
 	addq.l #4, %sp
+	cfi_adjust_cfa_offset (-4)
 	move.l %d2, %d0
 
 	/* Restore registers.  */
 	move.l (%sp)+, %d2
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (%d2)
 
 	/* %d0 is < 0 if there was an error.  */
 	tst.l %d0
 	jmi SYSCALL_ERROR_LABEL
+	cfi_endproc
 
 	/* Successful; return the syscall's value.  */
 	rts

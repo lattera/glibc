@@ -1,5 +1,45 @@
 2010-03-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
+	NPTL support for m68k/ColdFire
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (tls.h): Include.
+	(INTERNAL_SYSCALL): Convert to INTERNAL_SYSCALL_NCS.
+	(PTR_MANGLE, PTR_DEMANGLE): Define.
+	(NEED_STATIC_SYSINFO_DSO): Define.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Support RESET_PID.
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: New.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Add new files to lists.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Add SAVE_PID/RESTORE_PID.
+	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.c: New.
+	* sysdeps/unix/sysv/linux/m68k/libc-m68k-vdso.c: New.
+	* sysdeps/unix/sysv/linux/m68k/bits/m68k-vdso.h: New.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/bits/atomic.h: New.
+	* sysdeps/unix/sysv/linux/m68k/Versions: Add symbols for NPTL support.
+	* sysdeps/unix/sysv/linux/m68k/init-first.c: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/sysdep-cancel.h: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/semaphore.h: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/clone.S: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/fork.c: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/vfork.S: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/pt-vfork.S: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/createthread.c: New.
+	* sysdeps/unix/sysv/linux/m68k/nptl/pthread_once.c: New.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Update cancelation code.
+	* sysdeps/m68k/dl-tls.h: New.
+	* sysdeps/m68k/libc-tls.c: New.
+	* sysdeps/m68k/tls-macros.h: New.
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Terminate stack frame to
+	generate better backtraces.
+	(elf_machine_type_class, elf_machine_rela): Handle TLS relocations.
+	* sysdeps/m68k/dl-machine.h: Handle TLS relocations.
+	* sysdeps/m68k/nptl/tcb-offsets.sym: New.
+	* sysdeps/m68k/nptl/pthread_spin_trylock.c: New.
+	* sysdeps/m68k/nptl/tls.h: New.
+	* sysdeps/m68k/nptl/pthread_spin_lock.c: New.
+	* sysdeps/m68k/nptl/pthreaddef.h: New.
+	* sysdeps/m68k/nptl/Makefile: New.
+
 	* sysdeps/unix/sysv/linux/m68k/bits/sigcontext.h: Remove.
 	* sysdeps/unix/sysv/linux/m68k/register-dump.h: Update.
 

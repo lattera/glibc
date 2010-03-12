@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.
@@ -23,6 +24,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/m68k/sysdep.h>
+#include <tls.h>
 
 /* Defines RTLD_PRIVATE_ERRNO.  */
 #include <dl-sysdep.h>
@@ -148,9 +150,11 @@ SYSCALL_ERROR_LABEL:							      \
 	arg 3		%d3	     call-saved
 	arg 4		%d4	     call-saved
 	arg 5		%d5	     call-saved
+	arg 6		%a0	     call-clobbered
 
    The stack layout upon entering the function is:
 
+	24(%sp)		Arg# 6
 	20(%sp)		Arg# 5
 	16(%sp)		Arg# 4
 	12(%sp)		Arg# 3
@@ -229,7 +233,7 @@ SYSCALL_ERROR_LABEL:							      \
    normally.  It will never touch errno.  This returns just what the kernel
    gave back.  */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)	\
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...)	\
   ({ unsigned int _sys_result;				\
      {							\
        /* Load argument values in temporary variables
@@ -237,7 +241,7 @@ SYSCALL_ERROR_LABEL:							      \
 	  before the call used registers are set.  */	\
        LOAD_ARGS_##nr (args)				\
        LOAD_REGS_##nr					\
-       register int _d0 asm ("%d0") = __NR_##name;	\
+       register int _d0 asm ("%d0") = name;		\
        asm volatile ("trap #0"				\
 		     : "=d" (_d0)			\
 		     : "0" (_d0) ASM_ARGS_##nr		\
@@ -245,6 +249,8 @@ SYSCALL_ERROR_LABEL:							      \
        _sys_result = _d0;				\
      }							\
      (int) _sys_result; })
+#define INTERNAL_SYSCALL(name, err, nr, args...)	\
+  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err)		\
@@ -300,4 +306,15 @@ SYSCALL_ERROR_LABEL:							      \
 #define ASM_ARGS_6	ASM_ARGS_5, "a" (_a0)
 
 #endif /* not __ASSEMBLER__ */
+
+/* Pointer mangling is not yet supported for M68K.  */
+#define PTR_MANGLE(var) (void) (var)
+#define PTR_DEMANGLE(var) (void) (var)
+
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+/* M68K needs system-supplied DSO to access TLS helpers
+   even when statically linked.  */
+# define NEED_STATIC_SYSINFO_DSO 1
+#endif
+
 #endif

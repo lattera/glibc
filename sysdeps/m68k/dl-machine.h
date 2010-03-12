@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +25,7 @@
 
 #include <sys/param.h>
 #include <sysdep.h>
+#include <dl-tls.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -121,6 +123,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.globl _start\n\
 	.type _start,@function\n\
 _start:\n\
+	sub.l %fp, %fp\n\
 	move.l %sp, -(%sp)\n\
 	jbsr _dl_start\n\
 	addq.l #4, %sp\n\
@@ -159,12 +162,16 @@ _dl_start_user:\n\
 	.size _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
+   TLS variable, so undefined references should not be allowed to
+   define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_68K_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+  ((((type) == R_68K_JMP_SLOT	     \
+     || (type) == R_68K_TLS_DTPMOD32 \
+     || (type) == R_68K_TLS_DTPREL32 \
+     || (type) == R_68K_TLS_TPREL32) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_68K_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
@@ -262,6 +269,25 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_68K_PC32:
 	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
 	  break;
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+	case R_68K_TLS_DTPMOD32:
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+	  break;
+	case R_68K_TLS_DTPREL32:
+	  if (sym != NULL)
+	    *reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
+	  break;
+	case R_68K_TLS_TPREL32:
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
+	    }
+	  break;
+#endif /* defined USE_TLS && !defined RTLD_BOOTSTRAP */
 	case R_68K_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
