@@ -43,7 +43,7 @@ ENTRY (__vfork)
 	   saves data in D1 and A1.  */
 
 	SAVE_PID
-	
+
 	/* Pop the return PC value into A0.  */
 	movel	%sp@+, %a0
 

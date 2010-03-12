@@ -31,6 +31,6 @@
 	tstl	%d0			; \
 	beq	1f			; /* If we are the parent... */ \
 	movel	%d1, PID_OFFSET(%a1)	; /* Restore the PID.  */ \
-1:	
+1:
 
 #include <sysdeps/unix/sysv/linux/m68k/vfork.S>

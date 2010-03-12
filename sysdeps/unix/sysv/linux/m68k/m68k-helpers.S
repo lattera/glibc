@@ -86,7 +86,7 @@ ENTRY (__vdso_atomic_cmpxchg_32_stub)
 	rts
 	cfi_endproc
 END (__vdso_atomic_cmpxchg_32_stub)
-	
+
 	.hidden __vdso_atomic_barrier_stub
 ENTRY (__vdso_atomic_barrier_stub)
 	cfi_startproc
