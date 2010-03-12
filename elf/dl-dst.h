@@ -18,6 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include "trusted-dirs.h"
+
 /* Determine the number of DST elements in the name.  Only if IS_PATH is
    nonzero paths are recognized (i.e., multiple, ':' separated filenames).  */
 #define DL_DST_COUNT(name, is_path) \
@@ -39,12 +41,13 @@
 									      \
     if (__cnt > 0)							      \
       {									      \
-	size_t origin_len;						      \
+	size_t dst_len;						      	      \
 	/* Now we make a guess how many extra characters on top of the	      \
 	   length of S we need to represent the result.  We know that	      \
 	   we have CNT replacements.  Each at most can use		      \
-	     MAX (strlen (ORIGIN), strlen (_dl_platform))		      \
-	   minus 7 (which is the length of "$ORIGIN").			      \
+	     MAX (MAX (strlen (ORIGIN), strlen (_dl_platform)),		      \
+		  strlen (DL_DST_LIB))					      \
+	   minus 4 (which is the length of "$LIB").			      \
 									      \
 	   First get the origin string if it is not available yet.	      \
 	   This can only happen for the map of the executable.  */	      \
@@ -53,14 +56,16 @@
 	  {								      \
 	    assert ((l)->l_name[0] == '\0');				      \
 	    (l)->l_origin = _dl_get_origin ();				      \
-	    origin_len = ((l)->l_origin && (l)->l_origin != (char *) -1	      \
+	    dst_len = ((l)->l_origin && (l)->l_origin != (char *) -1	      \
 			  ? strlen ((l)->l_origin) : 0);		      \
 	  }								      \
 	else								      \
-	  origin_len = (l)->l_origin == (char *) -1			      \
+	  dst_len = (l)->l_origin == (char *) -1			      \
 	    ? 0 : strlen ((l)->l_origin);				      \
-									      \
-	__len += __cnt * (MAX (origin_len, GLRO(dl_platformlen)) - 7);	      \
+	dst_len = MAX (MAX (dst_len, GLRO(dl_platformlen)), 		      \
+		       strlen (DL_DST_LIB));				      \
+	if (dst_len > 4)						      \
+	  __len += __cnt * (dst_len - 4);				      \
       }									      \
 									      \
     __len; })
@@ -72,7 +77,7 @@
   if ((l) == NULL)							      \
     {									      \
       const char *origin = _dl_get_origin ();				      \
-      origin_len = (origin && origin != (char *) -1 ? strlen (origin) : 0);   \
+      dst_len = (origin && origin != (char *) -1 ? strlen (origin) : 0);      \
     }									      \
   else
 #endif
