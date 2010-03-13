@@ -1,5 +1,5 @@
 /* Complex cosine function.  m68k fpu version
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
@@ -48,7 +48,7 @@ s(__ccos) (__complex__ float_type x)
 	     : "f" (__real__ x));
       __real__ retval = cos_rx * m81(__ieee754_cosh) (__imag__ x);
       if (rx_cond & __M81_COND_ZERO)
-	__imag__ retval = (m81(__signbit) (__imag__ x)
+	__imag__ retval = (signbit (__imag__ x)
 			   ? __real__ x : -__real__ x);
       else
 	__imag__ retval = -sin_rx * m81(__ieee754_sinh) (__imag__ x);
