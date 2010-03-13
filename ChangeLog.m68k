@@ -1,5 +1,8 @@
 2010-03-13  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h (__signbit)
+	(__signbitf, __signbitl): Define.
+
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_HANDLER):
 	Add variant for USE__THREAD.
 
