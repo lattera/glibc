@@ -111,10 +111,27 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-# else /* !RTLD_PRIVATE_ERRNO */
-/* Store (- %d0) into errno through the GOT.  */
-#  if defined _LIBC_REENTRANT
-#   define SYSCALL_ERROR_HANDLER					      \
+# elif USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+#  define SYSCALL_ERROR_HANDLER						      \
+SYSCALL_ERROR_LABEL:							      \
+    neg.l %d0;								      \
+    move.l %d0, -(%sp);							      \
+    jbsr __m68k_read_tp@PLTPC;						      \
+    lea (_GLOBAL_OFFSET_TABLE_@GOTPC, %pc), %a1;			      \
+    add.l (SYSCALL_ERROR_ERRNO@TLSIE, %a1), %a0;			      \
+    move.l (%sp)+, (%a0);						      \
+    move.l &-1, %d0;							      \
+    /* Copy return value to %a0 for syscalls that are declared to return      \
+       a pointer (e.g., mmap).  */					      \
+    move.l %d0, %a0;							      \
+    rts;
+# elif defined _LIBC_REENTRANT
+#  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
@@ -125,8 +142,9 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-#  else /* !_LIBC_REENTRANT */
-#   define SYSCALL_ERROR_HANDLER					      \
+# else /* !_LIBC_REENTRANT */
+/* Store (- %d0) into errno through the GOT.  */
+#  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
@@ -136,8 +154,7 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-#  endif /* _LIBC_REENTRANT */
-# endif /* RTLD_PRIVATE_ERRNO */
+# endif /* _LIBC_REENTRANT */
 #else
 # define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #endif /* PIC */
