@@ -301,17 +301,7 @@ __inline_functions(long double,l)
 #ifdef __USE_ISOC99
 
 # define __inline_functions(float_type, s)				  \
-__m81_defun (int, __CONCAT(__signbit,s), (float_type __value))	  	  \
-{									  \
-  /* There is no branch-condition for the sign bit, so we must extract	  \
-     and examine the condition codes manually.  */			  \
-  unsigned long int __fpsr;						  \
-  __asm ("ftst%.x %1\n"							  \
-	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
-  return (__fpsr >> 27) & 1;						  \
-}									  \
-									  \
-  __m81_defun (float_type, __CONCAT(__scalbln,s),			  \
+__m81_defun (float_type, __CONCAT(__scalbln,s),			  \
 	     (float_type __x, long int __n))				  \
 {									  \
   return __CONCAT(__scalbn,s) (__x, __n);				  \
