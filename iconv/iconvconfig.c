@@ -1,5 +1,5 @@
 /* Generate fastloading iconv module configuration files.
-   Copyright (C) 2000-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2000-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -396,7 +396,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -993,24 +993,24 @@ next_prime (uint32_t seed)
    stoff    ???          String table
 
    hoff     8*hsize      Array of tuples
-                            string table offset
-                            module index
+			    string table offset
+			    module index
 
    moff     ???          Array of tuples
-                            canonical name offset
-                            from-internal module dir name offset
-                            from-internal module name off
-                            to-internal module dir name offset
-                            to-internal module name offset
-                            offset into other conversion table
+			    canonical name offset
+			    from-internal module dir name offset
+			    from-internal module name off
+			    to-internal module dir name offset
+			    to-internal module name offset
+			    offset into other conversion table
 
    ooff     ???          One or more of
-                            number of steps/modules
-                            one or more of tuple
-                              canonical name offset for output
-                              module dir name offset
-                              module name offset
-                         (following last entry with step count 0)
+			    number of steps/modules
+			    one or more of tuple
+			      canonical name offset for output
+			      module dir name offset
+			      module name offset
+			 (following last entry with step count 0)
 */
 
 static struct hash_entry *hash_table;

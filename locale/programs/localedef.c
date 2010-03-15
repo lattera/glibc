@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -365,8 +365,8 @@ more_help (int key, const char *text, void *input)
       /* We print some extra information.  */
       if (asprintf (&cp, gettext ("\
 System's directory for character maps : %s\n\
-                       repertoire maps: %s\n\
-                       locale path    : %s\n\
+		       repertoire maps: %s\n\
+		       locale path    : %s\n\
 %s"),
 		    CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, gettext ("\
 For bug reporting instructions, please see:\n\
@@ -388,7 +388,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 

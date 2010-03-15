@@ -1,5 +1,5 @@
 /* Implementation of the locale program according to POSIX 9945-2.
-   Copyright (C) 1995-1997, 1999-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 1999-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -144,7 +144,7 @@ struct category
 #define DEFINE_CATEGORY(category, name, items, postload) \
     static struct cat_item category##_desc[] =				      \
       {									      \
-        NO_PAREN items							      \
+	NO_PAREN items							      \
       };
 
 #include "categories.def"
@@ -294,7 +294,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -539,7 +539,7 @@ write_locales (void)
 	     because
 	     a) we are only interested in the first two fields
 	     b) these fields must be usable as file names and so must
-	        not be that long  */
+		not be that long  */
 	  char buf[BUFSIZ];
 	  char *alias;
 	  char *value;
@@ -886,7 +886,7 @@ show_info (const char *name)
 	    while (cnt > 1)
 	      {
 		printf ("%d;", *val == '\177' ? -1 : *val);
-                --cnt;
+		--cnt;
 		++val;
 	      }
 

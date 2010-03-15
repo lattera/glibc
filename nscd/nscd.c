@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -246,7 +246,7 @@ main (int argc, char **argv)
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 
       if (write_pid (_PATH_NSCDPID) < 0)
-        dbg_log ("%s: %s", _PATH_NSCDPID, strerror (errno));
+	dbg_log ("%s: %s", _PATH_NSCDPID, strerror (errno));
 
       if (!init_logfile ())
 	dbg_log (_("Could not create log file"));
@@ -430,7 +430,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Thorsten Kukuk and Ulrich Drepper");
 }
@@ -511,7 +511,7 @@ check_pid (const char *file)
 	 the PID is the same as the current process' since tha latter
 	 can mean we re-exec.  */
       if ((n != 1 || kill (pid, 0) == 0) && pid != getpid ())
-        return 1;
+	return 1;
     }
 
   return 0;

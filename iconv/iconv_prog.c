@@ -1,5 +1,5 @@
 /* Convert text in given files from the specified from-set to the to-set.
-   Copyright (C) 1998-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -424,7 +424,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -501,7 +501,7 @@ process_block (iconv_t cd, char *addr, size_t len, FILE **output,
       if (n != (size_t) -1)
 	{
 	  /* All the input test is processed.  For state-dependent
-             character sets we have to flush the state now.  */
+	     character sets we have to flush the state now.  */
 	  outptr = outbuf;
 	  outlen = OUTBUF_SIZE;
 	  n = iconv (cd, NULL, NULL, &outptr, &outlen);
